@@ -21,6 +21,7 @@ function suggested_friends_init() {
 	elgg_extend_view('css/elgg', 'suggested_friends/css');
 
 	elgg_register_page_handler('suggested_friends', 'suggested_friends_page_handler');
+	elgg_register_page_handler('suggested_channels', 'suggested_friends_page_handler');
 
 	elgg_register_widget_type('suggested_friends', elgg_echo('suggested_friends:people:you:may:know'), elgg_echo('suggested_friends:widget:description'), 'dashboard,profile');
 }
@@ -57,14 +58,14 @@ function suggested_friends_page_setup(){
 
   // add to site links
   if(elgg_is_logged_in()){
-    $item = new ElggMenuItem('suggested_friends', elgg_echo('suggested_friends:new:people'), elgg_get_site_url() . 'suggested_friends/');
+    $item = new ElggMenuItem('suggested_friends', elgg_echo('suggested_friends:new:people'), elgg_get_site_url() . 'suggested_channels/');
     elgg_register_menu_item('site', $item);
   }
 	
-  if(elgg_get_context() == "suggested_friends"){
-    $all = new ElggMenuItem('suggested_friends_all', elgg_echo('suggested_friends:all'), elgg_get_site_url() . 'suggested_friends/');
-    $friends = new ElggMenuItem('suggested_friends_friends', elgg_echo('suggested_friends:friends:only'), elgg_get_site_url() . 'suggested_friends/friends');
-    $groups = new ElggMenuItem('suggested_friends_groups', elgg_echo('suggested_friends:groups:only'), elgg_get_site_url() . 'suggested_friends/groups');
+  if(elgg_get_context() == "suggested_friends" || elgg_get_context() == "suggested_channels" ){
+    $all = new ElggMenuItem('suggested_friends_all', elgg_echo('suggested_friends:all'), elgg_get_site_url() . 'suggested_channels/');
+    $friends = new ElggMenuItem('suggested_friends_friends', elgg_echo('suggested_friends:friends:only'), elgg_get_site_url() . 'suggested_channels/friends');
+    $groups = new ElggMenuItem('suggested_friends_groups', elgg_echo('suggested_friends:groups:only'), elgg_get_site_url() . 'suggested_channels/groups');
     
     elgg_register_menu_item('page', $all);
     elgg_register_menu_item('page', $friends);
