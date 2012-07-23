@@ -70,10 +70,15 @@ function mobile_detect(){
 			elgg_extend_view('page/elements/head','mobile/desktop');
 		} else {
 			elgg_set_viewtype('mobile');
+			//fallback - incase simple cache is being difficuly!
+			if(!get_input('view')){
+				header("Location: ?view=mobile");
+				}
 		}
 		
 		return true;
 	}
+	
 }
 
 
