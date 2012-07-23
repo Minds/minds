@@ -41,12 +41,12 @@
 				}
 			}
 			$body .= '</script>';
-			$body .= '<script type="text/javascript" src="gzqx.php"></script>';
+			$body .= '<script type="text/javascript" src="' . elgg_get_site_url() . '/mod/westorElggMan/build/gzqx.php"></script>';
 
 			// Fallback, if browser accepts gz, but firewall filters compressed content
 			$body .= '<script type="text/javascript">';
 			$body .= 'if( typeof(qx) == "undefined" ) {';
-			$body .= 'document.write("<SCR" + "IPT LANGUAGE=\'JavaScript\' SRC=\'script/westorelggman.js\' TYPE=\'text/javascript\'><\/SCR" + "IPT>");';
+			$body .= 'document.write("<SCR" + "IPT LANGUAGE=\'JavaScript\' SRC=\'' . elgg_get_site_url() . 'mod/westorElggMan/build/script/westorelggman.js\' TYPE=\'text/javascript\'><\/SCR" + "IPT>");';
 			$body .= '}';
 			$body .= '</script>';
 			$body .= '<div id="content_area_user_title"><h2>' . elgg_echo('ElggMan_:intro') . '</h2></div>';

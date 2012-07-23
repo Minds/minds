@@ -1,6 +1,9 @@
 <?php
+
+	require_once(dirname(dirname(dirname(dirname(__FILE__)))) . "/engine/start.php");
+	
 	$enc = array();
-	$file = 'script/westorelggman.js';
+	$file = elgg_get_site_url() . 'mod/westorElggMan/build/script/westorelggman.js';
 	$zipFile = $file . '.gz';
 	if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && file_exists($zipFile))
 	{

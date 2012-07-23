@@ -26,6 +26,16 @@ function westorElggMan_init()
 
 	westorElggMan_register_plugin_hook('container_permissions_check', 'all', 'westorElggMan_permissions_check');
 	westorElggMan_register_plugin_hook('permissions_check', 'all', 'westorElggMan_permissions_check');
+	
+	//lets have nice urls for minds
+	elgg_register_page_handler('contactmanager','elggman_page_handler');
+}
+
+function elggman_page_handler($page) {
+	
+	include('build/index.php');
+	
+	return true;
 }
 
 /**

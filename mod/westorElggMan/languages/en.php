@@ -1,8 +1,8 @@
 <?php
 
 	$english = array(
-	'ElggMan_' => "ElggMan",
-	'ElggMan_SMS_Sitename' => "ElggMan", // 11 Characters for sender while sending automatic SMS from your Website
+	'ElggMan_' => "Contact Manager",
+	'ElggMan_SMS_Sitename' => "Minds.org", // 11 Characters for sender while sending automatic SMS from your Website
 	'ElggMan:displayname' => "display name",
 	'ElggMan:name' => "Username",
 	'ElggMan:email' => "E-Mail",
