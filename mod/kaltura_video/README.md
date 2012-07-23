@@ -1,0 +1,4 @@
+minds-kaltura-elgg
+==================
+
+Plugin

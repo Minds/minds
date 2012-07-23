@@ -1,0 +1,4 @@
+NEW IN 2.0
+
+- Complete redesign.
+- HTML5 support.

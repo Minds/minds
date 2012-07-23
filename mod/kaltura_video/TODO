@@ -1,0 +1,16 @@
+Light Editor doesn't work!
+
+MIND
+	- Let the users maker collaborative videos without a group
+	  This requires some system to select which users we want
+	- remove rate?
+	- Make a statistic page for administrators
+	- Let the users use his own kaltura partner id?
+
+Errors & future:
+
+- Add download video button using kaltura api:
+	http://corp.kaltura.com/apidocs/index.html#adddownload
+
+Complete list of Kaltura API:
+	http://corp.kaltura.com/wiki/index.php/KalturaAPI:main

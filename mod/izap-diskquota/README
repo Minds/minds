@@ -1,0 +1,20 @@
+iZAP-diskquota
+------------------------
+### Description 
+   The iZAP diskquota plugin empowers you to control the amount of Diskspace used by the users 
+   of your website. Set the amount of space to be used by different users registered to your website.
+   Enable the most active user with more amount of disk-space.
+    
+### Features
+1. Set the default-amount of memory the user will be allotted at the time of registration. 
+2. Control the amount of uploading content anytime from the admin panel.
+
+### Dependencies and other important instruction    
+1. Izap-elgg-bridge must be activated and the same can be get from > [Pluginlotto](http://www.pluginlotto.com).
+2. Read INSTALL before installation.
+    
+ * For more information. Contact "Tarun Jangra<tarun@izap.in>"
+ * For discussion about corresponding plugins, visit http://www.pluginlotto.com/forum/
+ * Follow us on http://facebook.com/PluginLotto and http://twitter.com/PluginLotto
+ * Copyrights (c) 2005-2011. iZAP
+ * All rights reserved   

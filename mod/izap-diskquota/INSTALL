@@ -1,0 +1,14 @@
+Izap-diskquota
+-------------------
+
+### Installation instructions
+
+1. Grab izap-diskquota plugin from http://www.pluginlotto.com.
+2. Uncompress downloaded folder with the name "izap-diskquota"
+3. Move that to mod.
+4. Go to admin panel, find plugin and click "Activate" button.
+5. Configure the plugin settings, set the default amount of space allotted and here you go.
+
+>Note: You can update/modify the default space anytime from the admin panel. Also you can set the 
+       user's diskspace by accessing to there profile as administrator through admin panel.
+

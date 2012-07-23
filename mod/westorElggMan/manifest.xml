@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest xmlns="http://www.elgg.org/plugin_manifest/1.8">
+	<name>Westors Elgg Manager</name>
+	<author>Torsten Wesolek </author>
+	<version>1.8.3 free</version>
+  <license>GNU Public License version 2</license>
+  <requires>
+    <type>elgg_release</type>
+    <version>1.7.5</version>
+  </requires>
+	<description>Comfortable RIA (Rich Internet Application) interface for various functions. Users can view and edit external contacts, send e-mails, manage their friends and groups. Admins can manage Elgg users, groups, mass messages and elgg entities.</description>
+	<website>http://www.community-software-24.com/</website>
+	<copyright>(c) Torsten Wesolek 2010/2011</copyright>
+	<licence>GNU Public License version 2</licence>
+	<activate_on_install>true</activate_on_install>
+</plugin_manifest>

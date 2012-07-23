@@ -1,0 +1,26 @@
+Language Keys That are Not Used Any longer:
+
+kalturavideo:label:subp_id
+kalturavideo:label:admin_secret
+kalturavideo:label:secret
+kalturavideo:descprefix:video
+kalturavideo:text:loginkaltura
+kalturavideo:text:buttoninfo
+kalturavideo:text:signupkaltura
+kalturavideo:label:videotitle
+kalturavideo:label:uid_prefix
+kalturavideo:label:integratetinymce
+kalturavideo:label:publish
+kalturavideo:label:flv
+kalturavideo:label:privateoptions
+kalturavideo:private:public
+kalturavideo:private:me
+kalturavideo:private:friends
+kalturavideo:private:loggedin
+kalturavideo:text:notfound
+kalturavideo:label:latestfrom
+kalturavideo:label:anyvideos
+kalturavideo:river:updated
+kalturavideo:private:thisgroup
+kalturavideo:text:privatestatus
+kalturavideo:label:toolsadmin

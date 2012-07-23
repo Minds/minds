@@ -1,0 +1,7 @@
+## Installation
+1. Grab izap-diskquota from http://www.pluginlotto.com.
+2. Uncompress downloaded folder with the name "izap-diskquota"
+3. Move that to mod.
+4. Go to admin panel, find plugin and click "Activate" button and here you go.
+
+ 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+	<field key="author" value="Ivan Vergés, Condiminds.com, Gered Andrews (minds.com), Mark Harding (Kramnorth)" />
+	<field key="version" value="2.1(1.8)" />
+	<field key="description" value="The Kaltura Elgg Plugin powers Elgg social engine with interactive video and rich-media capabilities. Rewritten for CE5" />
+	<field key="website" value="http://www.minds.com" />
+	<field key="copyright" value="(C) minds.com 2012" />
+	<field key="licence" value="GNU Public License version 3" />
+	<field key="elgg_version" value="1.8" />
+</plugin_manifest>

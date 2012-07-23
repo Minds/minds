@@ -1,0 +1,142 @@
+02/05/2010
+Version 1.2
+              - Fully adapted for Elgg 1.7.1, all obsolete functions changed.
+              - The plugin is no more compatible with Elgg 1.5 or 1.6
+              - Added a new widget for custom_index plugin (latest videos), with configuration options in admin
+26/02/2010
+Version 1.1Beta2
+              - Added security token in all actions
+              - Added 2 configuration options:
+                - Globally enable/disable built-in rating system
+                - Globally choose the behavior of the editor (kcw then kse, kcw only but allow editing, kcw only and not editing allowed)
+              - Solved a bug with custom players (a mistake in the custom player uid)
+              - Now when recreate object it will recreate the players to match the custom defined
+              - Solved other some minor bugs
+20/02/2010
+Version 1.1Beta1
+              - Some bugfixes (the most important: a mistake in the SWF url of KSE and KCW)
+              - Added a new configuration page for the plugin. The new configuration options allows you:
+                     - Easily configure a Kaltura CE Server.
+                     - Easily change the default players, Editors (KSE and KCW). You can now add your own created players.
+              - Improved auto-detect of Elgg version (auto compatible with 1.5)
+
+21/11/2009
+Version 1.0.1 - Minor changes and bugfixes
+
+21/10/2009
+Version 1.0   - Changed behaviour for ajax-update, now it only checks for updated metadata from kaltura
+                when a video is showed, solved some minor bugs related to this issue also
+              - Cleaned some unecessary code
+              - Some minor changes in the views, missing translations
+              - Added transparent color to rating stars instead of white background, this should help with dark Elgg themes
+              - Improved the widget, you can now list the video-thumbnails with some description or the mini-embeded player
+              - Changed the plugin license to GNU Public License version 3
+              - Added a "donate" button in tools administration -> plugin settings
+              - Added a widget for groups showing last 5 videos
+
+13/10/2009
+Version 1.0Beta2
+              - Fixed some minor bugs and translation items.
+              - Fixed incorrect access_id by default
+              - Changed the default players available to the latest from kaltura
+              - Changed the css to a css.php (useful for simplecache)
+              - Added river compatability
+              - Changed the position of the embed video button in longtext form areas
+              - Change the "detail editor" to a standard elgg form (without the modal window).
+                Now it lets choose if wants comments or rate to the video-post
+
+10/10/2009
+Version 1.0Beta
+              - Complete rewrite of the plugin to adapt it to Kaltura API 3.0
+              - Removed all custom privacy options and changed by standard elgg access_id
+              - Many changes in options and the way to see the video-post. More like the blogs plugin does
+              - Added a wizard tool to automatically register to kaltura the new partners
+              - Added a method to import existing videos mixes from kaltura
+              - Cleaning code and many other small things
+05/03/2009
+Version 0.9.5 - A bug in thumbnails creation solved.
+              - A bug when created a video from a group solved.
+			  - Other minor bugs solved also.
+			  - Now the tags coming from kaltura are preserved in the initial video object creation in elgg.
+			  - Added the french language
+			  - Added the geman language
+25/02/2009
+Version 0.9.4 - More bugs solved. Safari and IE 6 related specially.
+              - Update the README file, created a site for make donations:
+                https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3518572
+              - Added extension .txt to the README file to avoid problems with windows/mac!
+
+24/02/2009
+Version 0.9.3 - Added a configuration option to allow disable the TinyMCE integration.
+              - Changed the last video widget to show last created video instead of the last modified
+              - Change the update plays function to update the plays counter
+              - Solved a bug when editing a video from the tinyMCE button
+              - Solved a bug wich crashes Firefox 2 in Mac (maybe Safari also)
+
+23/02/2009
+Version 0.9.2 - Solved IE issues while inserting videos from TinyMCE button.
+
+10/12/2008
+Version 0.9 - GUI changes to be more integrated into Elgg standards.
+            - Added Comments
+            - Added Rating
+            - Added details editor (title, description, tags)
+            - Added videos for groups, this allows to create collaborative videos
+              (the user has to create the video inside the group context and mark
+               the collaborative checkbox). Collaborative videos allows to any member
+               of the group to edit the video (but not the details, title, description, tags).
+            - New "recreate videos" way. Now can be slower but more reliable.
+            - Generally speed up process. Now kaltura is contacted only when is strictly
+              necessary, in most cases by ajax.
+            - Bug fixes (like the update plays status).
+
+08/11/2008
+Version 0.8 - New behaviour of views for friends, public (it shows what the user can see)
+            - New way to show lists of videos (like is usual in elgg)
+            - Added more information in the error messages
+            - Added the ability to show the videos from a user
+            - Added the new videos to the river/activity
+            - Solved bugs:
+                  - Solve some bugs in the widget "latest video"
+                  - Now the videos publics, are publics, even if user is not logged in
+                  - After create new video in tinymce, cannot insert it
+                  - After create & cancel immediatly the video a blank video its created
+                  - Other minor bugs
+
+05/10/2008
+Version 1.0
+				- Many, many changes
+
+
+Version 0.7.1 - Solved bugs:
+                 - After create a new video can not edit it
+                 - Date now uses the friendly format
+                 - Multiple error messages "misconfigured"
+                 - All php code starts now with <?php (and not just <?)
+
+04/10/2008
+Version 0.7 - Solved some bugs, changed some dirty code
+            - Added Elgg Widget (Latest video)
+            - Added automatic creation of player (uses the wordpress plugin)
+            - Now the titles of videos are editables
+            - Added a rebuild Elgg objects
+
+
+31/10/2008
+Version 0.6 - Added public, friends privacity control to videos
+            - Added RSS compatibility
+            - Solved compatibility with tinymcebrowser
+
+22/10/2008
+Version 0.5 - Added a menu for administration, users can view, edit, delete videos from tools menu
+
+21/10/2008
+Version 0.4 - Removed dependecy with tinymce (works with it if present)
+            - Added integration with tinymce, tinymce_adv, tinymcebrowser (detected and added the kaltura to the editor automatically)
+
+06/10/2008
+Version 0.3 - Added video gallery support
+Version 0.2 - Added simple editor support
+
+03/10/2008
+Version 0.1 - initial release

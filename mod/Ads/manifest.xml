@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest xmlns="http://www.elgg.org/plugin_manifest/1.8">
+	<name>Ads Rotator</name>
+	<author>Satheesh PM, BARC, Mumbai</author>
+	<version>1.2.1</version>
+	<blurb>Ads Rotator</blurb>
+	<description>Will Rotate Ads Banner in header and also has option to make same in footer, and sidebar</description>
+	<website>http://satheesh.anushaktinagar.net/</website>
+	<copyright>Satheesh PM, BARC, Mumbai</copyright>
+	<license>GPL 2</license>
+	<requires>
+		<type>elgg_version</type>
+		<version>2010030101</version>
+	</requires>
+	<admin_interface>simple</admin_interface>
+</plugin_manifest>
