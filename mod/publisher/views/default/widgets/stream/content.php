@@ -14,7 +14,7 @@ $owner = elgg_get_page_owner_entity();
 <script type="text/javascript">
   var flashvars = {
 	'streamer':'rtmp://www.minds.tv/oflaDemo',
-    'file':'<?php echo elgg_get_logged_in_user_entity()->username;?>',
+    'file':'<?php echo $owner->username;?>',
 	'type':'rtmp',
 	'controlbar':'bottom',
     'stretching':'none',
