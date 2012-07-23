@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkout_method>
+        <field key="label" value="PayPal Website Payments (Standard)" />
+        <field key="view" value="paypal_standard" />
+</checkout_method>

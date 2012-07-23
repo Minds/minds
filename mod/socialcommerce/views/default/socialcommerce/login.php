@@ -1,0 +1,38 @@
+<?php
+
+     /**
+	 * Elgg login form
+	 * 
+	 * @package Elgg
+	 * @subpackage Core
+
+	 * @author Curverider Ltd
+
+	 * @link http://elgg.org/
+	 */
+	 
+	global $CONFIG;
+	
+	$form_body = "<p class=\"loginbox\"><label>" . elgg_echo('username') . "<br />" . elgg_view('input/text', array('name' => 'username', 'class' => 'login-textarea')) . "</label>";
+	$form_body .= "<br />";
+	$form_body .= "<label>" . elgg_echo('password') . "<br />" . elgg_view('input/password', array('name' => 'password', 'class' => 'login-textarea')) . "</label><br />";
+	$form_body .= elgg_view('input/submit', array('value' => elgg_echo('login'))) . " <div id=\"persistent_login\"><label><input type=\"checkbox\" name=\"persistent\" value=\"true\" />".elgg_echo('user:persistent')."</label></div></p>";
+	$form_body .= "<p class=\"loginbox\">";
+	$form_body .= (!isset($CONFIG->disable_registration) || !($CONFIG->disable_registration)) ? "<a href=\"{$vars['url']}account/register.php\">" . elgg_echo('register') . "</a> | " : "";
+	$form_body .= "<a href=\"{$vars['url']}account/forgotten_password.php\">" . elgg_echo('user:password:lost') . "</a></p>";  
+	
+	//<input name=\"username\" type=\"text\" class="general-textarea" /></label>
+	
+	$login_url = $vars['url'];
+	if ((isset($CONFIG->https_login)) && ($CONFIG->https_login))
+		$login_url = str_replace("http", "https", $vars['url']);
+?>
+	<div id="login_inst">
+		<div style="text-align: center;"><h2><?php echo elgg_echo('login'); ?></h2></div>
+	</div>
+	
+	<div id="login-box">
+		<?php 
+			echo elgg_view('input/form', array('body' => $form_body, 'action' => "{$login_url}action/login"));
+		?>
+	</div>
