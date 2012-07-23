@@ -6,17 +6,17 @@
 $tabs = array(
 	'newest' => array(
 		'title' => elgg_echo('members:label:newest'),
-		'url' => "members/newest",
+		'url' => "channels/newest",
 		'selected' => $vars['selected'] == 'newest',
 	),
 	'popular' => array(
 		'title' => elgg_echo('members:label:popular'),
-		'url' => "members/popular",
+		'url' => "channels/popular",
 		'selected' => $vars['selected'] == 'popular',
 	),
 	'online' => array(
 		'title' => elgg_echo('members:label:online'),
-		'url' => "members/online",
+		'url' => "channels/online",
 		'selected' => $vars['selected'] == 'online',
 	),
 );

@@ -9,9 +9,12 @@ elgg_register_event_handler('init', 'system', 'members_init');
  * Initialize page handler and site menu item
  */
 function members_init() {
+	//still support old urls (in case plugins direct to them) but register new one call 'channels'
 	elgg_register_page_handler('members', 'members_page_handler');
+	elgg_register_page_handler('channels', 'members_page_handler');
 
-	$item = new ElggMenuItem('members', elgg_echo('members'), 'members');
+
+	$item = new ElggMenuItem('members', elgg_echo('members'), 'channels');
 	elgg_register_menu_item('site', $item);
 }
 
