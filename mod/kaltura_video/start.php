@@ -14,6 +14,7 @@ function kaltura_video_init() {
 
 	//Add the javascript
 	elgg_extend_view('page/elements/head', 'kaltura/jscripts');
+	elgg_extend_view('page/elements/head', 'kaltura/meta');
 
 	$addbutton = elgg_get_plugin_setting('addbutton', 'kaltura_video');
 	if (!$addbutton) $addbutton = 'simple';
@@ -49,7 +50,7 @@ function kaltura_video_init() {
 		//add_menu(elgg_echo('kalturavideo:label:adminvideos'), $CONFIG->wwwroot . "kaltura_video/" . $_SESSION['user']->username);
 		elgg_register_menu_item('site', array(
 			'name' => elgg_echo('kalturavideo:label:adminvideos'),
-			'href' =>  $CONFIG->wwwroot . "kaltura_video/" . $_SESSION['user']->username,
+			'href' =>  $CONFIG->wwwroot . "studio/" . $_SESSION['user']->username,
 			'text' =>  elgg_echo('kalturavideo:label:adminvideos'),
 		));
 		
@@ -58,7 +59,7 @@ function kaltura_video_init() {
 	} else {
 		elgg_register_menu_item('site', array(
 			'name' => elgg_echo('kalturavideo:label:adminvideos'),
-			'href' =>  $CONFIG->wwwroot . "kaltura_video/all",
+			'href' =>  $CONFIG->wwwroot . "studio/all",
 			'text' =>  elgg_echo('kalturavideo:label:adminvideos'),
 		));
 	}
@@ -78,7 +79,10 @@ function kaltura_video_init() {
 	add_group_tool_option('kaltura_video',elgg_echo('kalturavideo:enablevideo'),true);
 
 	// Register a page handler, so we can have nice URLs
+	//fallback (in case some links go to kaltura_video
 	elgg_register_page_handler('kaltura_video','kaltura_video_page_handler');
+	//prefered
+	elgg_register_page_handler('studio','kaltura_video_page_handler');
 	// Register a admin page handler
 	elgg_register_page_handler('kaltura_video_admin','kaltura_video_page_handler');
 
@@ -110,6 +114,10 @@ function kaltura_video_init() {
 
 	// Register entity type
 	elgg_register_entity_type('object','kaltura_video');
+	
+	//Add to HTMLawed so that we can allow embedding
+	elgg_unregister_plugin_hook_handler('validate', 'input', 'htmlawed_filter_tags');
+	elgg_register_plugin_hook_handler('validate', 'input', 'kaltura_htmlawed_filter_tags', 1);
 	
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'kaltura_video/actions/';
@@ -155,7 +163,7 @@ function kaltura_video_notify_message($hook, $entity_type, $returnvalue, $params
 function kaltura_video_url($post) {
 		global $CONFIG;
 		$title = $post->title;
-		return elgg_get_site_url() . "kaltura_video/show/" . $post->getGUID() . "/" . $title;
+		return elgg_get_site_url() . "studio/show/" . $post->getGUID() . "/" . $title;
 
 }
 
@@ -173,19 +181,19 @@ function kaltura_video_page_setup()
 
 	$page_owner = elgg_get_page_owner_entity();
 
-	if (elgg_get_context()=='kaltura_video' && elgg_get_plugin_setting("password","kaltura_video"))
+	if ((elgg_get_context()=='kaltura_video' || elgg_get_context() == 'studio') && elgg_get_plugin_setting("password","kaltura_video"))
 	{
 		if ((elgg_get_page_owner_guid() == $_SESSION['guid'] || !elgg_get_page_owner_guid()) && elgg_is_logged_in()) {
 		
 			elgg_register_menu_item('page', array(
 				'name' => elgg_echo('kalturavideo:label:myvideos'),
-				'href' =>  $CONFIG->wwwroot."kaltura_video/" . $_SESSION['user']->username,
+				'href' =>  $CONFIG->wwwroot."studio/" . $_SESSION['user']->username,
 				'text' =>  elgg_echo('kalturavideo:label:myvideos'),
 			));
 			
 			elgg_register_menu_item('page', array(
 				'name' => elgg_echo('kalturavideo:label:friendsvideos'),
-				'href' => $CONFIG->wwwroot."kaltura_video/" . $_SESSION['user']->username ."/friends/",
+				'href' => $CONFIG->wwwroot."studio/" . $_SESSION['user']->username ."/friends/",
 				'text' =>  elgg_echo('kalturavideo:label:friendsvideos'),
 			));
 			
@@ -199,27 +207,27 @@ function kaltura_video_page_setup()
 			}
 			elgg_register_menu_item('page', array(
 				'name' =>elgg_echo('kalturavideo:label:allvideos'),
-				'href' => $CONFIG->wwwroot."kaltura_video/all",
+				'href' => $CONFIG->wwwroot."studio/all",
 				'text' =>  elgg_echo('kalturavideo:label:allvideos'),
 			));
 		
 		} else if (elgg_get_page_owner_guid()) {
 				elgg_register_menu_item('page', array(
 					'name' =>sprintf(elgg_echo('kalturavideo:user'),$page_owner->name),
-					'href' => $CONFIG->wwwroot."kaltura_video/" . $page_owner->username,
+					'href' => $CONFIG->wwwroot."studio/" . $page_owner->username,
 					'text' => sprintf(elgg_echo('kalturavideo:user'),$page_owner->name),
 				));
 			if ($page_owner instanceof ElggUser) { // Sorry groups, this isn't for you.
 				elgg_register_menu_item('page', array(
 					'name' =>sprintf(elgg_echo('kalturavideo:user:friends'),$page_owner->name),
-					'href' => $CONFIG->wwwroot."kaltura_video/" . $page_owner->username ."/friends/",
+					'href' => $CONFIG->wwwroot."studio/" . $page_owner->username ."/friends/",
 					'text' =>  sprintf(elgg_echo('kalturavideo:user:friends'),$page_owner->name),
 				));
 			}
 		} else {
 			elgg_register_menu_item('page', array(
 				'name' =>elgg_echo('kalturavideo:label:allvideos'),
-				'href' => $CONFIG->wwwroot."kaltura_video/all",
+				'href' => $CONFIG->wwwroot."studio/all",
 				'text' =>  elgg_echo('kalturavideo:label:allvideos'),
 			));
 		}
@@ -252,7 +260,7 @@ function kaltura_video_page_setup()
 		if($page_owner->kaltura_video_enable != "no") {
 			elgg_register_menu_item('page', array(
 					'name' =>sprintf(elgg_echo('kalturavideo:label:groupvideos'),$page_owner->name),
-					'href' => $CONFIG->wwwroot . "kaltura_video/" . $page_owner->username,
+					'href' => $CONFIG->wwwroot . "studio/" . $page_owner->username,
 					'text' =>  sprintf(elgg_echo('kalturavideo:label:groupvideos'),$page_owner->name),
 				));
 		}
@@ -417,6 +425,42 @@ function kalturavideo_convert($hook, $entity_type, $returnvalue, $params){
 	logout(); 
     return $resulttext;
   }
+ /* Extend / override htmlawed */ 
+function kaltura_htmlawed_filter_tags($hook, $type, $result, $params) {
+	
+	$var = $result;
+
+	elgg_load_library('htmlawed');
+
+	$htmlawed_config = array(
+		// seems to handle about everything we need.
+		'safe' => 0,
+		'deny_attribute' => 'class, on*',
+		'comments'=>0,
+		'cdata'=>0,
+		'hook_tag' => 'htmlawed_tag_post_processor',
+		'elements'=>'*-applet-iframe-script', // object, embed allowed
+		'schemes' => '*:http,https,ftp,news,mailto,rtsp,teamspeak,gopher,mms,callto',
+		// apparent this doesn't work.
+		// 'style:color,cursor,text-align,font-size,font-weight,font-style,border,margin,padding,float'
+	);
+
+	// add nofollow to all links on output
+	if (!elgg_in_context('input')) {
+		$htmlawed_config['anti_link_spam'] = array('/./', '');
+	}
+
+	$htmlawed_config = elgg_trigger_plugin_hook('config', 'htmlawed', null, $htmlawed_config);
+
+	if (!is_array($var)) {
+		$result = htmLawed($var, $htmlawed_config);
+	} else {
+		array_walk_recursive($var, 'htmLawedArray', $htmlawed_config);
+		$result = $var;
+	}
+
+	return $result;
+}
 
 // Make sure the status initialisation function is called on initialisation
 // we want this register the last, that's is only to hack the html cleaner

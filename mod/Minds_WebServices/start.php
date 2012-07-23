@@ -28,6 +28,8 @@ function minds_web_services_init() {
 	elgg_load_library('webservice:wire');
 	elgg_register_library('webservice:kaltura', elgg_get_plugins_path() . 'Minds_WebServices/lib/kaltura.php');
 	elgg_load_library('webservice:kaltura');
+	elgg_register_library('webservice:events', elgg_get_plugins_path() . 'Minds_WebServices/lib/events.php');
+	elgg_load_library('webservice:events');
 }
 
 

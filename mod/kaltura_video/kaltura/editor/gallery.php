@@ -18,10 +18,10 @@ $page = get_input('page',1);
 $offset = ($page-1) * $limit;
 
 //get the page_owner
-$page_owner = page_owner_entity();
+$page_owner = elgg_get_page_owner_entity();
 if ($page_owner === false || is_null($page_owner)) {
 	$page_owner = $_SESSION['user'];
-	set_page_owner($_SESSION['guid']);
+	elgg_set_page_owner_guid($_SESSION['guid']);
 }
 if (!($page_owner instanceof ElggEntity)) forward();
 
@@ -37,8 +37,8 @@ elseif($type == 'public') {
 
 }
 else {
-	$count = (int) count_user_objects($_SESSION['user']->getGUID(), 'kaltura_video');
-	$result = get_user_objects($_SESSION['user']->getGUID(),'kaltura_video', $limit, $offset);
+	$count = (int) elgg_get_entities($_SESSION['user']->getGUID(), 'kaltura_video');
+	$result = elgg_get_entities(array('type'=>'object', 'subtype'=>'kaltura_video', 'owner_guid' => $_SESSION['user']->getGUID(), 'limit' => $limit, 'offset'=> $offset));
 
 }
 
@@ -71,7 +71,6 @@ if(count($wrapped_entries)>0) {
 		echo '<div class="galleryItem">';
 		echo '<label>'.$entry[1]->kaltura_video_created.'</label>';
 		echo '<img src="'.$entry[1]->kaltura_video_thumbnail.'" alt="'.htmlspecialchars($entry[0]->title).'" title="'.htmlspecialchars($entry[0]->title).'" />';
-
 		echo '<div><a href="'.$CONFIG->wwwroot.'pg/kaltura_video/show/'.$entry[0]->guid.'" rel="'.$entry[1]->kaltura_video_id.'" class="button1 insert">'.elgg_echo('kalturavideo:label:miniinsert').'</a>';
 		if($entry[1]->kaltura_video_editable) {
 			echo '<a href="'.$CONFIG->wwwroot.'pg/kaltura_video/show/'.$entry[0]->guid.'" rel="'.$entry[1]->kaltura_video_id.'" class="button2 edit">'.elgg_echo('kalturavideo:label:miniedit').'</a>';
@@ -97,7 +96,7 @@ else {
 	echo '</div>';
 	echo '<div class="left"><p>';
 	echo '<a href="#" class="kalturaButton cancel">'.elgg_echo('kalturavideo:label:cancel').'</a> &nbsp; ';
-	if(in_array(get_plugin_setting("alloweditor","kaltura_video"), array('simple','no'))) {
+	if(in_array(elgg_get_plugin_setting("alloweditor","kaltura_video"), array('simple','no'))) {
 	    $use_simple_video = true;
 	}
 	echo '<a href="#" class="kalturaButton ' . ($use_simple_video ? 'newsimple' : 'new') . '">'.elgg_echo('kalturavideo:label:newvideo').'</a>';

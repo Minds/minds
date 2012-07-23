@@ -350,3 +350,91 @@ label a.embed_kaltura {
     -webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 }
+
+div.gallery {
+
+}
+
+div.galleryItem {
+	float:left;
+	width:160px;
+	height:160px;
+	overflow:hidden;
+	text-align:center;
+}
+div.galleryItem img {
+	padding:10px;
+	background:#fff;
+	border:1px solid #ccc;
+	height:90px;
+	width:120px;
+}
+div.galleryItem label{
+	font-size:10px;
+	color:#999;
+	padding:1px 1px 5px 1px;
+}
+div.galleryItem div {
+	margin:5px 0 5px 0;
+}
+.kalturaButton,.button1,.button2 {
+	text-decoration:none;
+	font-weight: bold;
+	color: #ffffff;
+	background:#4690d6;
+	border: 1px solid #4690d6;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	width: auto;
+	height: 25px;
+	padding: 2px 6px 2px 6px;
+	margin:10px 0 10px 0;
+	cursor: pointer;
+}
+.kalturaButton:hover,.button1:hover,.button2:hover  {
+	background: #0054a7;
+}
+.button1,.button2 {
+	color: #999999;
+	background:#dddddd;
+	border: 1px solid #999999;
+
+	padding:0 5px 0 5px;
+	margin:0 5px 0 0;
+}
+.button1:hover,.button2:hover {
+	background: #cccccc;
+}
+.loading {
+	height:100%;
+	width:100%;
+	background:url(<?php echo elgg_get_site_url(); ?>kaltura_video/kaltura/images/loadingAnimation.gif) no-repeat center center;
+}
+.defaultSkin .mce_kaltura {
+	width:23px;
+	background:url(../images/interactive_video_button.gif) no-repeat 0px 3px;
+}
+/*-------------------------------- 
+	Modal Window
+---------------------------------*/
+#kalturaOverlay{ position: fixed; top: 0; left: 0; z-index: 8; width: 100%; height: 100%; background:url("../images/trans_bg.png") 0 0 repeat; cursor: wait; }
+* html #kalturaOverlay{ position: absolute; background:#000; filter: alpha(opacity=40); top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(0) + 'px'); }
+
+.kalturaModal{ display:none; position:fixed; z-index:9; top:50%; left:50%; margin-left:-170px; width:340px; pading:10px; border: 4px solid #525252; background-color:#fff; }
+* html .kalturaModal{ position: absolute; top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(0) + 'px'); }
+
+/*-------------------------------- 
+	Contribution Wizard Modal Window
+---------------------------------*/
+* html .modalContributionWizard{ top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(0) + 200 + 'px'); } 
+
+/*-------------------------------- 
+	Simple Editor Modal Window
+---------------------------------*/
+* html .modalSimpleEditor{ top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(0) + 300 + 'px'); }
+
+.kalturaError {
+	padding:1em;
+	background:#ffeedd;
+}
+

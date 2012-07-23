@@ -13,6 +13,9 @@ function publisher_init() {
 		
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('stream','publisher_page_handler');	
+	
+	//register the widget for people profiles.
+	elgg_register_widget_type('stream', elgg_echo("stream"), elgg_echo("stream:desc"), "profile");
 			
 }
 

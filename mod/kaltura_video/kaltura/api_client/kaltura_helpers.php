@@ -391,11 +391,10 @@ class KalturaHelpers
 	    if (!$widgetId)
 	        $widgetId = "_" . elgg_get_plugin_setting("partner_id","kaltura_video");
 
-	    $url = KalturaHelpers::getServerUrl() . "/index.php/kwidget/wid/" . $widgetId;
-	    if ($uiConfId)
-	        $url .= ("/ui_conf_id/" . $uiConfId);
+	  	$player = KalturaHelpers::getPlayerByType($type);
+		if(empty($uiConf)) $uiConf = $player["uiConfId"];
+		return KalturaHelpers::getServerUrl() . "/index.php/kwidget/wid/_" . elgg_get_plugin_setting("partner_id","kaltura_video") . "/ui_conf_id/" . $uiConf;
 
-		return $url;
 	}
 
 	function getContributionWizardUrl($uiConfId)

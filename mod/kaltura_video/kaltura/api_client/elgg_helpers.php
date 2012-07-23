@@ -477,8 +477,8 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 
     $flashVarsStr .= KalturaHelpers::flashVarsToString($viewData["flashVars"]);
 	
-	$widget .= '<script type="text/javascript" src="http://www.minds.tv/p/100/sp/10000/embedIframeJs/uiconf_id/6709463/partner_id/100"></script>';
-
+	/*$widget .= '<script type="text/javascript" src="http://www.minds.tv/p/100/sp/10000/embedIframeJs/uiconf_id/6709463/partner_id/100"></script>';
+	 */
 
 	$widget .= '<object id="kaltura_player_' . $widgetUi .'" name="kaltura_player_' . $widgetUi . '" type="application/x-shockwave-flash" allowFullScreen="true" allowScriptAccess="always" allowNetworking="all" height="' . $height . '" width="' . $width . '"  resource="' . $viewData["swfUrl"] . '" data="'. $viewData["swfUrl"] . '">'.
 		'<param name="allowScriptAccess" value="always" />'.
@@ -487,6 +487,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 		'<param name="bgcolor" value=#000000 />'.
 		'<param name="movie" value="'.$viewData["swfUrl"] . '"/>'.
     	'<param name="flashVars" value="' . $flashVarsStr . '" />' .
+		'<p> loading... </p>' .
 	'</object>';
 
 	return $widget ;

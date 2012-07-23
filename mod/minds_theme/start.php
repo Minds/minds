@@ -11,6 +11,8 @@ function minds_theme_init(){
 										
 	elgg_extend_view('css/elgg','minds/css');
 	
+	elgg_extend_view('page/elements/head','minds/meta');
+	
 	elgg_register_simplecache_view('minds');	
 	
 	//Top Bar Menu

@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo $vars['url']; ?>mod/kaltura_video/kaltura/css/kaltura.css" />
 <?php
 
-if(elgg_get_context()=='kaltura_video') {
+if(elgg_get_context()=='kaltura_video' || elgg_get_context()=='studio') {
 	$js = file_get_contents($CONFIG->path.'mod/kaltura_video/kaltura/js/admin.js');
 
 	$js = str_replace(

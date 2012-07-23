@@ -5,7 +5,7 @@
 
 $translations = array(
 	'publisher:title' => "Stream",
-	
+	'stream' => "Stream",
 	
 );
 

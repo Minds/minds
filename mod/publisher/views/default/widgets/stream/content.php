@@ -1,5 +1,3 @@
-<div class="contentWrapper">
-
 <?php
 /**
  * Stream Widget
@@ -17,9 +15,9 @@ $owner = elgg_get_page_owner_entity();
   var flashvars = {
 	'streamer':'rtmp://www.minds.tv/oflaDemo',
     'file':'<?php echo elgg_get_logged_in_user_entity()->username;?>',
-	'type':'camera',
+	'type':'rtmp',
 	'controlbar':'bottom',
-    'stretching':'exactfit',
+    'stretching':'none',
 	'id': 'jwplayer',
     'autostart':  'true'
 
@@ -38,10 +36,8 @@ $owner = elgg_get_page_owner_entity();
         'name':                         'jwplayer'
       };
 
-  swfobject.embedSWF('<?php echo elgg_get_site_url();?>mod/publisher/jwpublisher.swf','container','750','475','9.0.115','false', flashvars, params,
+  swfobject.embedSWF('<?php echo elgg_get_site_url();?>mod/publisher/jwplayer/player.swf','container','290','270','9.0.115','false', flashvars, params,
   attributes
 
   );
 </script>
-
-</div>
