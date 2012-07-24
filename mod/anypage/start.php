@@ -23,6 +23,27 @@ function anypage_init() {
 
 	elgg_register_plugin_hook_handler('route', 'all', 'anypage_router');
 	elgg_register_plugin_hook_handler('public_pages', 'walled_garden', 'anypage_walled_garden_public_pages');
+	
+	//setup the footer
+	anypage_setup_footer_menu();
+}
+
+/**
+ * Setup the links to site pages
+ */
+function anypage_setup_footer_menu() {
+	
+	$pages = elgg_get_entities(array('types'=>'object', 'subtypes'=>'anypage', 'limit'=>0)); 
+	foreach ($pages as $page) {
+		elgg_register_menu_item('footer', array(
+			'name' => $page->title,
+			'href' => $page->getURL(),
+			'text' => $page->title,
+			'priority' => 150
+		));
+	}
+	
+	
 }
 
 /**

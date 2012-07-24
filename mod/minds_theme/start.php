@@ -47,8 +47,7 @@ function minds_theme_init(){
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
 	elgg_register_menu_item('site', $item);
 		
-	//Footer
-	minds_footer();
+
 		
 	//set the custom index
 	elgg_register_plugin_hook_handler('index', 'system','minds_index');
@@ -66,15 +65,6 @@ function minds_index($hook, $type, $return, $params) {
 	}
 	
 	return true;
-}
-
-function minds_footer(){
-	elgg_register_menu_item('footer', array(
-			'name' => 'Help',
-			'href' => '/',
-			'text' => 'Help',
-			'priority' => 400
-		));
 }
 
 elgg_register_event_handler('init','system','minds_theme_init');		

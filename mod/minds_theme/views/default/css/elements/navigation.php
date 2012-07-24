@@ -421,7 +421,9 @@
 }
 
 .elgg-menu-footer-default {
-	float: right;
+	width:auto;
+    margin:10px auto;
+    text-align:center;
 }
 
 .elgg-menu-footer-alt {

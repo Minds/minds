@@ -122,3 +122,7 @@
 .elgg-page-footer a:hover {
 	color: #666;
 }
+.elgg-page-footer .logo{
+	width:100px;
+	margin:auto;
+}
