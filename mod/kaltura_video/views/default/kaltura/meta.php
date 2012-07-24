@@ -30,9 +30,9 @@ if($guid){
       <meta property="og:video:height" content="720">
     <meta property="og:site_name" content="Minds, Freedom to share">
     
-    <meta name="twitter:card" value="player">
-    <meta name="twitter:site" value="@youtube">
-      <meta name="twitter:player" value="https://www.youtube.com/embed/u_3rGX-MXtM">
+    	<meta name="twitter:card" value="player">
+    	<meta name="twitter:site" value="@kramnorth">
+      <meta name="twitter:player" value="<?php echo $viewData["swfUrl"] . '/entry_id/' . $entryId; ?>">
       <meta property="twitter:player:width" content="1280">
       <meta property="twitter:player:height" content="720">
 
