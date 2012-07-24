@@ -373,7 +373,7 @@ function kaltura_setup_init(){
   *
   */
 function kalturavideo_convert($hook, $entity_type, $returnvalue, $params){
-	login(get_entity(140));
+	login(get_user_by_username('cron'));
 	require_once("kaltura/api_client/includes.php");
     //grab list of videos that are not converted.
 	$videos = elgg_get_entities_from_metadata( array(
