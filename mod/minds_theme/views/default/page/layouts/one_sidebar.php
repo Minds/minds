@@ -26,8 +26,8 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 	<div class="elgg-sidebar">
 		<?php
 			echo elgg_view('page/elements/sidebar', $vars);
-			if((elgg_get_context() == 'activity')) {
-				echo elgg_view('ishouvik_riverdashboard/elements/announcement', $vars);
+			if((elgg_get_context() == 'news')) {
+				echo elgg_view('minds/elements/announcement', $vars);
 			}
 			if (elgg_is_active_plugin('adverts')) {
 				echo elgg_view('adverts/elements/sidebar', $vars);
@@ -37,7 +37,7 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 		?>
 	</div>
 	<?php
-		if (elgg_is_logged_in() && (elgg_get_context() == 'activity')) {		
+		if (elgg_is_logged_in() && (elgg_get_context() == 'news')) {		
 	?>
 
 	<div class="is_riverdash_left">

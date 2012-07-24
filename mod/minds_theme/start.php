@@ -40,6 +40,12 @@ function minds_theme_init(){
 			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds_theme/graphics/topbar_logo.gif\'>',
 			'priority' => 0
 		));
+	
+	//rename activity news	
+	elgg_unregister_menu_item('site', 'activity');
+	elgg_register_page_handler('news', 'elgg_river_page_handler');
+	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
+	elgg_register_menu_item('site', $item);
 		
 	//Footer
 	minds_footer();

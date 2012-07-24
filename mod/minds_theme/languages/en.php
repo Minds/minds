@@ -54,6 +54,12 @@ $english = array(
 	'friends:collections:edit' => "Edit collection",
 	'friends:collections:edited' => "Saved collection",
 	'friends:collection:edit_failed' => 'Could not save collection.',
+	
+	//change activity to news
+	'news' => 'News', 
+	'minds:riverdashboard:addwire' => 'Share your thoughts',
+	'minds:riverdashboard:annoucement' => 'Announcement',
+	'minds:riverdashboard:changeannoucement' => 'Change the announcement'
 
 );
 		
