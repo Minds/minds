@@ -12,7 +12,7 @@
             <form action="<?php echo elgg_get_site_url(); ?>search" method="get">
              
                     <input type="text" name="q" value="" />
-                    <button type="submit" value="search" id="searchsubmit">Search</button>
+                    <button type="submit" value="search" class="elgg-button elgg-button-submit">Search</button>
                     <input type="hidden" name="search" value="1" /></td>
     
             </form>

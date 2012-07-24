@@ -60,9 +60,10 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	float:left;
     width:500px;
 }
-.minds_index > .search button{
-	padding:8px;
-    float:left;
+
+.minds_index > .search form .elgg-button-submit{
+	margin-left:5px;
+    padding:4px;
 
 }
 .minds_index > object{
