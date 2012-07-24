@@ -1,14 +1,19 @@
 <?php
 
-	$entity = $vars['entity'];
-		
-	if($entity){
+	$description = get_input('description');
+	$keywords = get_input('keywords');
+	//are we a blog, wire post, event??
 	
-	$tags = implode(',', $entity->tags);
+	if($description){
+		echo "<meta name=\"description\" content=\"$description\" />";
+	} else {
+		echo "<meta name=\"description\" content=\"" . elgg_get_plugin_setting('default_description', 'minds_theme') . "\" />";
+	}
+	
+	if($keywords){ 
+		echo "<meta name=\"keywords\" content=\"$keywords>\"/>";
+	} else {
+		echo "<meta name=\"keywords\" content=\"" . elgg_get_plugin_setting('default_keywords', 'minds_theme') . "\" />";
+	}
+	
 ?>
-
-<meta name="description" content="<?php echo $entity->excerpt ? $entity->excerpt : $entity->description; ?>" />
-
-<meta name="keywords" content="<?php echo $tags; ?>"/>
-
-<?php } ?>

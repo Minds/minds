@@ -43,6 +43,9 @@ function blog_get_page_content_read($guid = NULL) {
 	if ($blog->comments_on != 'Off') {
 		$return['content'] .= elgg_view_comments($blog);
 	}
+	
+	minds_set_metatags('description', $blog->excerpt ? $blog->excerpt : substr(strip_tags($blog->description), 0, 140));
+	minds_set_metatags('keywords', $blog->tags);
 
 	return $return;
 }
