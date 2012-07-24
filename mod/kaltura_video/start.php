@@ -115,9 +115,11 @@ function kaltura_video_init() {
 	// Register entity type
 	elgg_register_entity_type('object','kaltura_video');
 	
-	//Add to HTMLawed so that we can allow embedding
-	elgg_unregister_plugin_hook_handler('validate', 'input', 'htmlawed_filter_tags');
-	elgg_register_plugin_hook_handler('validate', 'input', 'kaltura_htmlawed_filter_tags', 1);
+	if(elgg_is_active_plugin('htmlawed')){
+		//Add to HTMLawed so that we can allow embedding
+		elgg_unregister_plugin_hook_handler('validate', 'input', 'htmlawed_filter_tags');
+		elgg_register_plugin_hook_handler('validate', 'input', 'kaltura_htmlawed_filter_tags', 1);
+	}
 	
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'kaltura_video/actions/';
