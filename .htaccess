@@ -133,3 +133,6 @@ RewriteRule ^([A-Za-z0-9\_\-]+)\/(.*)$ engine/handlers/page_handler.php?handler=
 
 
 </IfModule>
+
+#hide git
+RedirectMatch 404 "(?:.*)/(?:\.git|file_or_dir)(?:/.*)?$"
