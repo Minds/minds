@@ -207,6 +207,9 @@ if($page > 0) {
 						if($metadata->kaltura_video_rating_on) $ob->kaltura_video_rating_on = $metadata->kaltura_video_rating_on;
 						//echo htmlspecialchars(print_r($metadata,true));
 					}
+					
+					//mark as converted
+					$ob->converted = true;
 
 					if($ob->save()) {
 						$ok_guids[] = $ob->guid;
