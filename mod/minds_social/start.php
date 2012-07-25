@@ -72,17 +72,19 @@ function minds_social_action($event, $object_type, $object){
 	
 	$user = elgg_get_logged_in_user_entity();
 	
+	//twitter
 	$consumer = minds_social_twitter_init();
-		
 	$access_key = elgg_get_plugin_user_setting('minds_social_twitter_access_key', $user->getGuid());
 	$access_secret = elgg_get_plugin_user_setting('minds_social_twitter_access_secret', $user->getGuid());
+	//facebook
+	$fb_access_token = elgg_get_plugin_user_setting('minds_social_facebook_access_token', $user->getGuid());
 	
 	//send a wirepost
 	if(get_subtype_from_id($object->subtype) == 'thewire'){
 		
 		//post to facebook.
 		try{
-			$facebook->api('/me/feed', 'POST', array('message'=>$object->description));
+			$facebook->api('/me/feed', 'POST', array('message'=>$object->description, 'access_token' => $fb_access_token));
 		} catch(Exception $e){
 		}
 		
@@ -96,7 +98,7 @@ function minds_social_action($event, $object_type, $object){
 		
 		//post to facebook.
 		try{
-			$facebook->api('/me/news.publishes', 'POST', array('property_name'=>$object->getURL(), 'article' => $object->getURL()));
+			$facebook->api('/me/news.publishes', 'POST', array('property_name'=>$object->getURL(), 'article' => $object->getURL(),'access_token' => $fb_access_token));
 		} catch(Exception $e){
 		}
 		
