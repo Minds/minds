@@ -15,5 +15,6 @@
 	} else {
 		echo "<meta name=\"keywords\" content=\"" . elgg_get_plugin_setting('default_keywords', 'minds_theme') . "\" />";
 	}
+
 	
 ?>

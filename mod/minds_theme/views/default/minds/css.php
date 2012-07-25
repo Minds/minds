@@ -44,6 +44,12 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 .elgg-button.elgg-button-dropdown:hover{
 	background:#FFF;
     color:#333;
+    -webkit-border-radius-bottomright: 0px; 
+	-moz-border-radius-bottomright: 0px;
+    border-bottom-right-radius:0px;
+    -webkit-border-radius-bottomleft: 0px; 
+	-moz-border-radius-bottomleft: 0px;
+    border-bottom-left-radius:0px;
 }
 /***************
  **CUSTOMINDEX**

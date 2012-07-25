@@ -46,6 +46,11 @@ function blog_get_page_content_read($guid = NULL) {
 	
 	minds_set_metatags('description', $blog->excerpt ? $blog->excerpt : substr(strip_tags($blog->description), 0, 140));
 	minds_set_metatags('keywords', $blog->tags);
+	
+	//set up for facebook
+	minds_set_metatags('og:type', 'article');
+	minds_set_metatags('og:url',$blog->getURL());
+	minds_set_metatags('og:title',$blog->title);
 
 	return $return;
 }
