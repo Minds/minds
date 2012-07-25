@@ -25,7 +25,7 @@ $login_url = $facebook->getLoginUrl(array(
 
 
 echo "<h3> Facebook </h3>";
-if($facebook_id == $user){
+if(!empty($user) && $facebook_id == $user){
 	
 	echo '<div><a href="' . $login_url . '">Re-connect</a></div>';
 
