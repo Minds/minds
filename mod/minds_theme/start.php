@@ -13,37 +13,9 @@ function minds_theme_init(){
 	
 	elgg_register_simplecache_view('minds');	
 	
-	//Top Bar Menu
-	elgg_unregister_menu_item('topbar', 'elgg_logo');
-	elgg_unregister_menu_item('topbar', 'administration');
+	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
 	
-	elgg_register_menu_item('topbar', array(
-			'name' => 'search',
-			'href' => '#',
-			'text' => elgg_view('search/header'),
-			'priority' => 50,
-			'section' => 'alt',
-		));
-		
-	elgg_register_menu_item('topbar', array(
-			'name' => 'login',
-			'href' => '#',
-			'text' => elgg_view('core/account/login_dropdown'),
-			'priority' => 20,
-			'section' => 'alt',
-		));
-	elgg_register_menu_item('topbar', array(
-			'name' => 'minds_logo',
-			'href' => '/',
-			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds_theme/graphics/topbar_logo.gif\'>',
-			'priority' => 0
-		));
-	
-	//rename activity news	
-	elgg_unregister_menu_item('site', 'activity');
 	elgg_register_page_handler('news', 'elgg_river_page_handler');
-	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
-	elgg_register_menu_item('site', $item);
 		
  	elgg_extend_view('page/elements/head','minds/meta');
 		
@@ -70,6 +42,41 @@ function minds_set_metatags($name, $content){
 	
 	return;
 	
+}
+
+function minds_pagesetup(){
+	//Top Bar Menu
+	elgg_unregister_menu_item('topbar', 'elgg_logo');
+	elgg_unregister_menu_item('topbar', 'administration');
+	elgg_unregister_menu_item('topbar', 'friends');
+	
+	elgg_register_menu_item('topbar', array(
+			'name' => 'search',
+			'href' => '#',
+			'text' => elgg_view('search/header'),
+			'priority' => 50,
+			'section' => 'alt',
+		));
+		
+	elgg_register_menu_item('topbar', array(
+			'name' => 'login',
+			'href' => '#',
+			'text' => elgg_view('core/account/login_dropdown'),
+			'priority' => 20,
+			'section' => 'alt',
+		));
+	elgg_register_menu_item('topbar', array(
+			'name' => 'minds_logo',
+			'href' => '/',
+			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds_theme/graphics/topbar_logo.gif\'>',
+			'priority' => 0
+		));
+	
+	//rename activity news	
+	elgg_unregister_menu_item('site', 'activity');
+	
+	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
+	elgg_register_menu_item('site', $item);
 }
 elgg_register_event_handler('init','system','minds_theme_init');		
 
