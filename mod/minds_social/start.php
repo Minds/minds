@@ -67,6 +67,7 @@ function minds_social_page_handler($page)
 }
 
 function minds_social_action($event, $object_type, $object){
+	if(elgg_is_logged_in()){
 	
 	$facebook = minds_social_facebook_init();
 	
@@ -107,6 +108,7 @@ function minds_social_action($event, $object_type, $object){
 		$api->post('statuses/update', array('status' => 'I published a new blog on Minds. ' . $object->getURL()));
 	}
 	
+	}
 	
 	return true;
 }
