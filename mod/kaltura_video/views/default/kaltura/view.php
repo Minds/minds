@@ -154,7 +154,7 @@ if($metadata->kaltura_video_rating_on != 'Off') {
 }
 ?>
 
-<a href="#" class="submit_button showdetails"><?php echo elgg_echo("kalturavideo:show:advoptions"); ?></a>
+<a href="#" onClick="customFunc1()"><?php echo elgg_echo("kalturavideo:show:advoptions"); ?></a>
 
 <?php
 
