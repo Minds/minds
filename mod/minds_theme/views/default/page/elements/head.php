@@ -30,6 +30,8 @@ END;
 	$feedref = "";
 }
 
+elgg_load_css('minds.default');
+
 $js = elgg_get_loaded_js('head');
 $css = elgg_get_loaded_css();
 

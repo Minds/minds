@@ -8,9 +8,7 @@
  */
 
 function minds_theme_init(){
-										
-	elgg_extend_view('css/elgg','minds/css');
-	
+											
 	elgg_register_simplecache_view('minds');	
 	
 	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
@@ -18,6 +16,10 @@ function minds_theme_init(){
 	elgg_register_page_handler('news', 'elgg_river_page_handler');
 		
  	elgg_extend_view('page/elements/head','minds/meta');
+
+	//register our own css files
+	$url = elgg_get_simplecache_url('css', 'minds');
+	elgg_register_css('minds.default', $url);	
 		
 	//set the custom index
 	elgg_register_plugin_hook_handler('index', 'system','minds_index');

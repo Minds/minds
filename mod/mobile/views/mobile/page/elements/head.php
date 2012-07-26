@@ -11,6 +11,9 @@ if (empty($vars['title'])) {
 } else {
 	$title = elgg_get_config('sitename') . ": " . $vars['title'];
 }
+
+elgg_load_css('minds.mobile');
+
 $js = elgg_get_loaded_js('head');
 $css = elgg_get_loaded_css();
 
@@ -29,7 +32,6 @@ $release = get_version(true);
 <?php foreach ($css as $link) { ?>
 	<link rel="stylesheet" href="<?php echo $link; ?>" type="text/css" />
 <?php } ?>
-<link rel="stylesheet" href="<?php echo elgg_get_site_url() . 'mod/mobile/views/mobile/mobile/css.php'; ?>" type="text/css" />
 <?php foreach ($js as $script) { ?>
 	<script type="text/javascript" src="<?php echo $script; ?>"></script>
 <?php } ?>

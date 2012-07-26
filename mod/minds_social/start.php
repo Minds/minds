@@ -25,6 +25,7 @@ function minds_social_init(){
 	elgg_register_page_handler('social', 'minds_social_page_handler');
 	
 	elgg_register_event_handler('create','object','minds_social_action');
+	
 		
  	elgg_extend_view('page/elements/head','minds_social/meta');
 	

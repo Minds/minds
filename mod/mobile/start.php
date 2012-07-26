@@ -16,16 +16,14 @@
 	
 		if(mobile_detect()){
 				elgg_set_viewtype('mobile');
-				elgg_unregister_plugin_hook_handler('index', 'system', 'minds_index');
-				elgg_register_plugin_hook_handler('index', 'system','main_handler');
-				elgg_register_event_handler('pagesetup', 'system', 'mobile_pagesetup');
+				//elgg_unregister_plugin_hook_handler('index', 'system', 'minds_index');
+				//elgg_register_plugin_hook_handler('index', 'system','main_handler');
+				//elgg_register_event_handler('pagesetup', 'system', 'mobile_pagesetup');
 		}
-							
-		elgg_extend_view('css/elgg','mobile/css');
 		
-		elgg_register_simplecache_view('mobile');
-
-		
+		$url = elgg_get_simplecache_url('css', 'minds');
+		elgg_register_css('minds.mobile', $url);		
+			
 		elgg_register_viewtype_fallback('mobile');
 	
 
