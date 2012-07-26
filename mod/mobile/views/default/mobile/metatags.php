@@ -10,6 +10,6 @@
  *
  */
 
-mobile_detect();
+//mobile_detect();
   
   ?>

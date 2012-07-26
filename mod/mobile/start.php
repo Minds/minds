@@ -13,26 +13,19 @@
 	function mobile_init(){
 		
 		//elgg_extend_view('page/elements/head','mobile/metatags');
-		
+	
 		if(mobile_detect()){
-			elgg_set_viewtype('mobile');
+				elgg_set_viewtype('mobile');
+				elgg_unregister_plugin_hook_handler('index', 'system', 'minds_index');
+				elgg_register_plugin_hook_handler('index', 'system','main_handler');
 		}
-						
+							
 		elgg_extend_view('css/elgg','mobile/css');
 		
-		//elgg_register_simplecache_view('mobile');
-		
-		$url = elgg_get_simplecache_url('css', 'mobile');
-		elgg_register_css('elgg.mobile', $url);
-		
-		//set our default index page
-		
-		if(elgg_get_viewtype() == "mobile"){
-		elgg_register_plugin_hook_handler('index', 'system','main_handler');
-		}
-		
-		
-	elgg_register_viewtype_fallback('mobile');
+		elgg_register_simplecache_view('mobile');
+
+		elgg_register_event_handler('pagesetup', 'system', 'mobile_pagesetup');
+		elgg_register_viewtype_fallback('mobile');
 	
 
     }
@@ -50,9 +43,6 @@ function main_handler($hook, $type, $return, $params) {
 	return true;
 }
 	
-if($_SESSION['isMobile']){
-	elgg_set_viewtype('mobile');
-}
 
 function mobile_detect(){
 	$useragent= strtolower ( $_SERVER['HTTP_USER_AGENT'] );	
@@ -68,16 +58,17 @@ function mobile_detect(){
 		
 		if($_SESSION['view_desktop']){
 			elgg_extend_view('page/elements/head','mobile/desktop');
-		} else {
-			elgg_set_viewtype('mobile');
-			//fallback - incase simple cache is being difficuly!
-			if(!get_input('view')){
-				header("Location: ?view=mobile");
-				}
-		}
-		
+		} 
+			
 		return true;
 	}
+	
+}
+
+function mobile_pagesetup(){
+	
+	elgg_set_viewtype('mobile');
+	
 	
 }
 

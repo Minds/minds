@@ -7,9 +7,10 @@ try {
 	$server = oauth_get_server();
 	$req = OAuthRequest::from_request(null, null, oauth_get_params());
 	$token = $server->fetch_request_token($req);
-
+	
 	$consumEnt = oauth_lookup_consumer_entity($req->get_parameter('oauth_consumer_key'));
 	$tokEnt = oauth_lookup_token_entity($token->key, 'request', $consumEnt);
+	
 
 	if ($consumEnt->revA) {
 		// make sure the callback url is a proper extension of the registered one if it exists
