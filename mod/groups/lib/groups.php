@@ -252,6 +252,12 @@ function groups_handle_profile_page($guid) {
 	if (!$group) {
 		forward('groups/all');
 	}
+	
+	//set up for facebook
+	minds_set_metatags('og:type', 'profile');
+	minds_set_metatags('og:url',$group->getURL());
+	minds_set_metatags('og:title',$group->title);
+
 
 	elgg_push_breadcrumb($group->name);
 

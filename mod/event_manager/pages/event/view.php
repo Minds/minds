@@ -14,7 +14,11 @@
 		if($page_owner instanceof ElggGroup){
 			elgg_push_breadcrumb($page_owner->name, "/events/event/list/" . $page_owner->getGUID());
 		}
-		
+		//set up for facebook
+		minds_set_metatags('og:type', 'article');
+		minds_set_metatags('og:url',$event->getURL());
+		minds_set_metatags('og:title',$event->title);
+
 		$title_text = $event->title;
 		elgg_push_breadcrumb($title_text);
 		

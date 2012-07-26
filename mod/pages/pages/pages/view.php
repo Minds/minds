@@ -23,6 +23,12 @@ if (!$container) {
 
 $title = $page->title;
 
+//set up for facebook
+minds_set_metatags('og:type', 'article');
+minds_set_metatags('og:url',$page->getURL());
+minds_set_metatags('og:title',$page->title);
+
+
 if (elgg_instanceof($container, 'group')) {
 	elgg_push_breadcrumb($container->name, "pages/group/$container->guid/all");
 } else {

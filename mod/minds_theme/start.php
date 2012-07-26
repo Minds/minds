@@ -36,13 +36,7 @@ function minds_index($hook, $type, $return, $params) {
 	
 	return true;
 }
-function minds_set_metatags($name, $content){
-	
-	set_input($name, $content);
-	
-	return;
-	
-}
+
 
 function minds_pagesetup(){
 	//Top Bar Menu

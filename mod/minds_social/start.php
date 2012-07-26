@@ -111,6 +111,14 @@ function minds_social_action($event, $object_type, $object){
 	return true;
 }
 
+function minds_set_metatags($name, $content){
+	
+	set_input($name, $content);
+	
+	return;
+	
+}
+
 elgg_register_event_handler('init','system','minds_social_init');		
 
 ?>
