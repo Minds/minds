@@ -40,14 +40,47 @@ fieldset > div {
  */
 .elgg-menu.elgg-menu-widget.elgg-menu-hz.elgg-menu-widget-default{
 	display:none;
-<<<<<<< HEAD
-}
 
 /* Widgets layouts
  */
 .elgg-col-1of3, .elgg-col-2of3, .elgg-col-3of3{
 	width:100%;
-    }
-=======
+ 
 }
->>>>>>> ed4967aef9fc04ffb397cf013d778240d3c4deac
+
+/***** PAGE BODY LAYOUT ******/
+.elgg-layout {
+	min-height: 360px;
+}
+.elgg-layout-one-column {
+	padding: 0;
+}
+
+.elgg-sidebar {
+	clear:both;
+	position: relative;
+	padding: 5px 0px;
+    float:left;
+	width: 100%;
+	margin: 0 0 0 10px;
+}
+.elgg-sidebar-alt {
+	clear:both;
+	position: relative;
+	padding: 20px 10px;
+	float: left;
+	width: 100%;
+	margin: 0 10px 0 0;
+}
+.elgg-main {
+	width:100%;
+	clear:both;
+	position: relative;
+	min-height: 360px;
+	padding: 5px;
+}
+.elgg-main > .elgg-head {
+	padding-bottom: 3px;
+	border-bottom: 1px solid #CCCCCC;
+	margin-bottom: 10px;
+}

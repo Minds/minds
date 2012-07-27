@@ -23,11 +23,14 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 ?>
 
 <div class="<?php echo $class; ?>">
-	<div class="elgg-sidebar">
+
+	<div class="elgg-sidebar-mobile">
 		<?php
 			echo elgg_view('page/elements/sidebar', $vars);
 		?>
 	</div>
+
+	
 
 	<div class="elgg-main elgg-body">
 		<?php
@@ -45,4 +48,6 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 			}
 		?>
 	</div>
+    
 </div>
+
