@@ -1,0 +1,29 @@
+1.8.1 -> 1.8.2
+
+- New input types:
+    -- Entity Icon (entity_icon) : file input to add an icon to entities created through hjform
+    -- Relationship Tags (relationship_tags) : autcomplete tagging input to add custom relationships between an entity being created and other entities of defined type, subtype, meta
+
+- New JS vendor libraries:
+    -- jsTree
+
+- Changed handling of dropdown outputs. Values echoed as "{$field_name}:value:{$field_value}"
+
+- Added sticky form support to hjForm entities
+
+
+1.8.2 -> 1.8.5
+
+- Entities lib helper functions were getting too complicated and unsable, so reworked the entire handling of params.
+Now all params that need to be attached to a url can be passed via vars to the view
+Added additional parameters handled by the js, including 'dom_order' (append|prepend), 'source' and 'target', 'box_x' and 'fbox_y'
+- Changed elgg.action() to form.ajaxSubmit() to handle file uploads in a pseudo-live manner
+- Changed handling of some JS files, including the editor
+- Removed the actual dompdf library. Can still be uploaded independently to enable pdf capabilities
+- Removed FirePHP library, as it was more of a development tool
+- Moved hjAnnotation class from hypeAlive to hypeFramework
+- Introduced ajaxed pagination (show more) mechanism
+
+
+
+
