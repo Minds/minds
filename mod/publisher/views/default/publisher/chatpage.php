@@ -1,17 +1,68 @@
 <div class="contentWrapper">
 
-<script type="text/javascript" src="<?php echo elgg_get_site_url(); ?>/mod/publisher/publisher_fullscreen/assets/swfobject.js"></script>
+<?php
+ 	
+$owner = elgg_get_page_owner_entity();
+  	
+?>
+	  	
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'></script>
+  	
+<div id='container'>The player will be placed here</div>
+	  	
+<script type="text/javascript">
+ var flashvars = {
+	  	
+ 'streamer':'rtmp://www.minds.tv/oflaDemo',
+  	
+   'file':'<?php echo elgg_get_logged_in_user_entity()->username;?>',
+	   'type':'camera',
+	   'controlbar':'bottom',	  	
+   'stretching':'exactfit',
+	  	
+ 'id': 'jwplayer',
+	  	
+  'autostart':  'true'
+ };
+  var params =
+    {
+       'allowfullscreen':              'true',
+       'allowscriptaccess':            'always',
+        'bgcolor':                      '#000'
+    };
+   var attributes =
+    {
+       'id':                           'jwplayer',
+      'name':                         'jwplayer'
+      };
+  swfobject.embedSWF('<?php echo elgg_get_site_url();?>mod/publisher/jwpublisher.swf','container','750','475','9.0.115','false', flashvars, params,
+  attributes
+ );
+  	
+</script>
 
-		<script type="text/javascript">
-			var flashvars = {};
-			var params = {allowfullscreen: "true"};
-			var attributes = {};
-			swfobject.embedSWF("<?php echo elgg_get_site_url(); ?>/mod/publisher/publisher_fullscreen/publisher.swf", "myContent", "100%", "100%", "9.0.0", "assets/expressInstall.swf", flashvars, params, attributes);
-		</script>
-        
-        <div id="myContent">
-			<h1>You need the Adobe Flash Player for this demo, download it by clicking the image below.</h1>
-			<p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>
-		</div>
+<?php
+
+//Create the HTML calling the wigget
+echo "<div align=\" center\">";
+echo "  	<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\""
+  . "		id=\"flashirc\" width=\"980\" height=\"600\""
+  . "		codebase=\"http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab\">"
+  . "		<param name=\"movie\" value=\"" . elgg_get_site_url() . "/mod/publisher/publisher_fullscreen/publisher.swf?nick=$irc_nick\" />"
+  . "		<param name=\"quality\" value=\"high\" />"
+  . "		<param name=\"bgcolor\" value=\"#ffffff\" />"
+  . "		<embed src=\"" . elgg_get_site_url() . "/mod/publisher/publisher_fullscreen/publisher.swf?nick=$irc_nick\" quality=\"high\" "
+  . "gcolor=\"#ffffff\""
+  . "			width=\"800\" height=\"980\" name=\"irc\" align=\"center\""
+  . "			play=\"true\""
+  . "			loop=\"false\""
+  . "			quality=\"high\""
+  . "			type=\"application/x-shockwave-flash\""
+  . "			pluginspage=\"http://www.adobe.com/go/getflashplayer\">"
+  . "		</embed>"
+  . "</object>";
+echo "</div>";
+
+?>
 
 </div>
