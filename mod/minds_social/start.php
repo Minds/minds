@@ -93,7 +93,7 @@ function minds_social_action($event, $object_type, $object){
 		//post to twitter
 		$desc = $object->description;
 		if(strlen($desc) > 140){
-		$desc = substr($desc, 0, 100) . $object->getURL();
+		$desc = substr($desc, 0, 100) . '... ' . $object->getURL();
 		}
 		$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
 		$api->post('statuses/update', array('status' => $desc));
