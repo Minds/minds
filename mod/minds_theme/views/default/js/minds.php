@@ -57,7 +57,7 @@
 								
 
 				if (ul.length < 1) {
-					responses.parent().append(json.output);
+					responses.prepend(json.output);
 				} else {
 					ul.append($(json.output).find('li:first'));
 				};
