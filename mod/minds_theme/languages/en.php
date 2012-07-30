@@ -59,7 +59,12 @@ $english = array(
 	'news' => 'News', 
 	'minds:riverdashboard:addwire' => 'Share your thoughts',
 	'minds:riverdashboard:annoucement' => 'Announcement',
-	'minds:riverdashboard:changeannoucement' => 'Change the announcement'
+	'minds:riverdashboard:changeannoucement' => 'Change the announcement',
+	
+	//Minds Specific
+	'minds:register:terms:failed' => 'Please accept the terms and conditions in order to register',
+	'minds:register:terms:read' => 'I accept the terms and conditions',
+	'minds:regsiter:terms:link' => ' (read)',
 
 );
 		

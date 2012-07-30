@@ -16,6 +16,8 @@ function minds_theme_init(){
 	elgg_register_page_handler('news', 'elgg_river_page_handler');
 		
  	elgg_extend_view('page/elements/head','minds/meta');
+	
+	elgg_extend_view('register/extend', 'minds/register_extend', 500);
 
 	//register our own css files
 	$url = elgg_get_simplecache_url('css', 'minds');
@@ -32,6 +34,8 @@ function minds_theme_init(){
 		
 	//set the custom index
 	elgg_register_plugin_hook_handler('index', 'system','minds_index');
+	//make sure users agree to terms
+	elgg_register_plugin_hook_handler('action', 'register', 'minds_register_hook');
 	
 }
 
@@ -46,6 +50,14 @@ function minds_index($hook, $type, $return, $params) {
 	}
 	
 	return true;
+}
+
+function minds_register_hook()
+{
+	if (get_input('terms',false) != 'true') {
+		register_error(elgg_echo('minds:register:terms:failed'));
+		forward(REFERER);
+	}
 }
 
 
