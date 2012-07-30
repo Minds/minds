@@ -11,10 +11,10 @@ elgg.provide('elgg.thewire');
 
 elgg.thewire.init = function() {
 	$("#thewire-textarea").live('keydown', function() {
-		elgg.thewire.textCounter(this, $("#thewire-characters-remaining span"), 140);
+		elgg.thewire.textCounter(this, $("#thewire-characters-remaining span"), 1000);
 	});
 	$("#thewire-textarea").live('keyup', function() {
-		elgg.thewire.textCounter(this, $("#thewire-characters-remaining span"), 140);
+		elgg.thewire.textCounter(this, $("#thewire-characters-remaining span"), 1000);
 	});
 
 	$(".thewire-previous").live('click', elgg.thewire.viewPrevious);

@@ -27,5 +27,5 @@ $summary = elgg_echo("river:create:object:thewire", array($subject_link, $object
 echo elgg_view('river/elements/layout', array(
 	'item' => $vars['item'],
 	'message' => $excerpt,
-	'summary' => $summary,
+	'summary' => $subject_link,
 ));

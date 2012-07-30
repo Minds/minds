@@ -22,6 +22,7 @@ function embed_extender_init()
 	$wire_show = elgg_get_plugin_setting('wire_show', 'embed_extender');		
 	if($wire_show == 'yes'){
 		elgg_register_plugin_hook_handler('view', 'object/thewire', 'embed_extender_rewrite');
+		elgg_register_plugin_hook_handler('view', 'river/object/thewire/create', 'embed_extender_rewrite');
 	}
 	
 	//Check where embed code - Blog posts

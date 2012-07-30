@@ -27,8 +27,8 @@ function thewire_init() {
 	elgg_register_ajax_view('thewire/previous');
 
 	// add a site navigation item
-	$item = new ElggMenuItem('thewire', elgg_echo('thewire'), 'thewire/all');
-	elgg_register_menu_item('site', $item);
+	//$item = new ElggMenuItem('thewire', elgg_echo('thewire'), 'thewire/all');
+	//elgg_register_menu_item('site', $item);
 
 	// owner block menu
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'thewire_owner_block_menu');
