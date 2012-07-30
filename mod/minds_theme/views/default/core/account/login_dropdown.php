@@ -17,6 +17,7 @@ $body = elgg_view_form('login', array('action' => "{$login_url}action/login"), a
 
 <div id="login-dropdown">
 	<?php 
+	
 		echo elgg_view('output/url', array(
 			'href' => 'login#login-dropdown-box',
 			//'rel' => 'popup',

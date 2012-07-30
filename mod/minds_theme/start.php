@@ -20,6 +20,15 @@ function minds_theme_init(){
 	//register our own css files
 	$url = elgg_get_simplecache_url('css', 'minds');
 	elgg_register_css('minds.default', $url);	
+	
+	//register a js
+	$minds_js = elgg_get_simplecache_url('js', 'minds');
+	elgg_register_js('minds.js', $minds_js);
+	
+	
+	$action_path = elgg_get_plugins_path() . 'minds_theme/actions/';
+	elgg_register_action('comments/add', $action_path . 'comments/add.php'); 
+
 		
 	//set the custom index
 	elgg_register_plugin_hook_handler('index', 'system','minds_index');

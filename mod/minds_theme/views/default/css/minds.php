@@ -192,12 +192,15 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 }
 
 /* ***************************************
-	RIVER RESPONSE
+	RIVER
 **************************************** */
 .elgg-river-responses {
-padding-bottom: 20px;
+	padding-bottom: 20px;
 }
-
+input.comments.inline{
+	height:25px;
+    font-size:11px;
+}
 /* ***************************************
 	SUPPORT TEXT
 **************************************** */
