@@ -8,6 +8,9 @@
  *
  */
  
+require_once(dirname(dirname(dirname(__FILE__))) ."/kaltura_video/kaltura/api_client/includes.php");
+
+
  
  /**
  * Web service to get a list of videos
@@ -155,10 +158,14 @@ expose_function('kaltura.get_video',
  */ 
  function kaltura_web_service_new_video($title, $description, $license, $container_guid) {	
 		
+		//$user = elgg_get_logged_in_user_entity();
+		$user = get_user_by_username('mark');
+		login($user);
+		
 		$kmodel = KalturaModel::getInstance();
 		$ks = $kmodel->getClientSideSession();
 		
-		$user = elgg_get_logged_in_user_entity();
+		
 
 		//setup the blank mix entry
 		try {
@@ -179,10 +186,9 @@ expose_function('kaltura.get_video',
 		    $mediaEntry->description = $description;
 		    $mediaEntry->mediaType = KalturaMediaType_VIDEO;
 
-		    $mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['upload']['tmp_name']);
+		    $mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['upload']['tmp_name']);		 
 		 
-		 
-		  	$ob = kaltura_update_object($mixEntry,null,ACCESS_PRIVATE,$user->getGuid(),$container_guid, false, array('uploaded_id' => $mediaEntry->id, 'license' => $license));
+		  	$ob = kaltura_update_object($mixEntry,null,ACCESS_PRIVATE,$user->getGuid(),0, false, array('uploaded_id' => $mediaEntry->id, 'license' => $license));
 		  
 		  if($ob){
 			  return true;
@@ -198,12 +204,12 @@ expose_function('kaltura.new_video',
 					   	'title' => array ('type' => 'string'),
 						'description' => array ('type' => 'string'),
 						'license' => array ('type' => 'string'),
-						'title' => array ('type' => 'string', 'required' => false),
+						'container_guid' => array ('type' => 'string', 'required' => false),
 					),
 				"Upload a new video",
-				'POST',
-				true,
-				true);
+				'post',
+				false,
+				false);
 				
 /**
  * Web service to delete a video on  Kaltura

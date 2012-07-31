@@ -1,13 +1,13 @@
 <?php
 /**
- * Minds theme
+ * Minds
  *
  * @package Minds
  * @author Kramnorth (Mark Harding)
  *
  */
 
-function minds_theme_init(){
+function minds_init(){
 											
 	elgg_register_simplecache_view('minds');	
 	
@@ -23,7 +23,7 @@ function minds_theme_init(){
 	$url = elgg_get_simplecache_url('css', 'minds');
 	elgg_register_css('minds.default', $url);	
 	
-	//register a js
+	//register our own js files
 	$minds_js = elgg_get_simplecache_url('js', 'minds');
 	elgg_register_js('minds.js', $minds_js);
 		
@@ -32,6 +32,9 @@ function minds_theme_init(){
 	//make sure users agree to terms
 	elgg_register_plugin_hook_handler('action', 'register', 'minds_register_hook');
 	
+	//setup the tracking of user quota - on a file upload, increment, on delete, decrement
+	elgg_register_event_handler('create', 'object', 'minds_quota_increment');
+	elgg_register_event_handler('delete', 'object', 'minds_quota_decrement');
 }
 
 function minds_index($hook, $type, $return, $params) {
@@ -80,7 +83,7 @@ function minds_pagesetup(){
 	elgg_register_menu_item('topbar', array(
 			'name' => 'minds_logo',
 			'href' => '/',
-			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds_theme/graphics/topbar_logo.gif\'>',
+			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds/graphics/topbar_logo.gif\'>',
 			'priority' => 0
 		));
 	
@@ -92,6 +95,18 @@ function minds_pagesetup(){
 }
 
 
-elgg_register_event_handler('init','system','minds_theme_init');		
+function minds_quota_increment($event, $object_type, $object) {
+	
+	if(($object->getSubtype() == "files") || ($object->getSubtype() == "kaltura")){
+		
+	}
+	
+	return;
+}
+
+function minds_quota_decrement($event, $object_type, $object) {
+	return;
+}
+elgg_register_event_handler('init','system','minds_init');		
 
 ?>

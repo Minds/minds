@@ -293,6 +293,10 @@ function kaltura_video_page_handler($page) {
 				include(dirname(__FILE__) . "/everyone.php");
 				return true;
 				break;
+			case 'api_upload':
+				include(dirname(__FILE__) . "/api_upload.php");
+				return true;
+				break;
 			case 'show':
 				set_input('videopost',$page[1]);
 				include(dirname(__FILE__) . "/show.php");
