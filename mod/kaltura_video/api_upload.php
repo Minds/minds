@@ -1,17 +1,23 @@
 <?php
 /**
- * Elgg file uploader/edit action
- *
- * @package ElggFile
- */
- 
-		require_once(dirname(dirname(dirname(dirname(__FILE__)))) ."/kaltura_video/kaltura/api_client/includes.php");
-		
+* Kaltura video client
+* @package ElggKalturaVideo
+* @license http://www.gnu.org/licenses/gpl.html GNU Public License version 3
+* @author Ivan Vergés <ivan@microstudi.net>
+* @copyright Ivan Vergés 2010
+* @link http://microstudi.net/elgg/
+**/
 		oauth_gatekeeper();
 		
+		require_once("kaltura/api_client/includes.php");
+		
+		$title = get_input('title');
+		$description = get_input('description');
+		$license = get_input('license');
+
 		$user = elgg_get_logged_in_user_entity();
-		$user = get_user_by_username('mark');
-		login($user);
+		//$user = get_user_by_username('mark');
+		//login($user);
 		
 		$kmodel = KalturaModel::getInstance();
 		$ks = $kmodel->getClientSideSession();
@@ -37,7 +43,7 @@
 		    $mediaEntry->description = $description;
 		    $mediaEntry->mediaType = KalturaMediaType_VIDEO;
 
-		    $mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['upload']['tmp_name']);		 
+		    $mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['file']['tmp_name']);		 
 		 
 		  	$ob = kaltura_update_object($mixEntry,null,ACCESS_PRIVATE,$user->getGuid(),0, false, array('uploaded_id' => $mediaEntry->id, 'license' => $license));
 		  

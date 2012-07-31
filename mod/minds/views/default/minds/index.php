@@ -5,7 +5,7 @@
 ?>
 <div class='minds_index'>
     <div class="logo">
-        <img src="<?php echo elgg_get_site_url(); ?>mod/minds_theme/graphics/minds_logo.gif" width="200" height="90" />
+        <img src="<?php echo elgg_get_site_url(); ?>mod/minds/graphics/minds_logo.gif" width="200" height="90" />
     </div>
     
     <div class="search">
