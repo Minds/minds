@@ -82,6 +82,7 @@
     }
 
     hj.comments.refresh = function(data, sync) {
+		console.log('loaded');
         if (!data.length) return true;
         if (window.ajaxcommentsready || sync == 'old') {
             window.ajaxcommentsready = false;
@@ -148,6 +149,7 @@
         elgg.action(action + '?' + values, {
 	    contentType : 'application/json',
             success : function(output) {
+				console.log('saving');
                 hj.comments.refresh(ref, 'new');
 
                 input
@@ -162,4 +164,7 @@
     elgg.register_hook_handler('init', 'system', hj.comments.init);
     //elgg.register_hook_handler('init', 'system', hj.comments.triggerRefresh);
     elgg.register_hook_handler('success', 'hj:framework:ajax', hj.comments.init, 500);
+	
+	
+	
 <?php if (FALSE) : ?></script><?php endif; ?>

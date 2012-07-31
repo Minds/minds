@@ -18,6 +18,10 @@ if (isset($vars['entity']) && elgg_is_logged_in()) {
 		$textbox = elgg_view('input/text', array('name' => 'generic_comment', 'class'=>'comments inline'));
 		echo elgg_view_image_block($icon, $textbox);
 		echo elgg_view('input/submit', array('value' => elgg_echo('comment'), 'class' => 'hidden'));
+		echo elgg_view('input/hidden', array(
+		'name' => 'ajax',
+		'value' => true
+	));
 	} else {
 ?>
 	<div>
@@ -30,10 +34,16 @@ if (isset($vars['entity']) && elgg_is_logged_in()) {
 ?>
 	</div>
 <?php
+
+echo elgg_view('input/hidden', array(
+		'name' => 'ajax',
+		'value' => false
+	));
 	}
 	
 	echo elgg_view('input/hidden', array(
 		'name' => 'entity_guid',
 		'value' => $vars['entity']->getGUID()
 	));
+	
 }

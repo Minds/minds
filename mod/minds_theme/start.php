@@ -26,11 +26,6 @@ function minds_theme_init(){
 	//register a js
 	$minds_js = elgg_get_simplecache_url('js', 'minds');
 	elgg_register_js('minds.js', $minds_js);
-	
-	
-	$action_path = elgg_get_plugins_path() . 'minds_theme/actions/';
-	elgg_register_action('comments/add', $action_path . 'comments/add.php'); 
-
 		
 	//set the custom index
 	elgg_register_plugin_hook_handler('index', 'system','minds_index');
@@ -95,6 +90,8 @@ function minds_pagesetup(){
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
 	elgg_register_menu_item('site', $item);
 }
+
+
 elgg_register_event_handler('init','system','minds_theme_init');		
 
 ?>

@@ -65,6 +65,17 @@ $english = array(
 	'minds:register:terms:failed' => 'Please accept the terms and conditions in order to register',
 	'minds:register:terms:read' => 'I accept the terms and conditions',
 	'minds:regsiter:terms:link' => ' (read)',
+	
+	'minds:comments:commentcontent' => '%s: %s',
+	'minds:comments:likebutton' => 'Like',
+    'minds:comments:unlikebutton' => 'Unlike',
+    'minds:comments:commentsbutton' => 'Comment',
+    'minds:comments:sharebutton' => 'Share',
+    'minds:comments:viewall' => 'View all %s comments',
+    'minds:comments:remainder' => 'View remaining %s comments',
+    'minds:comments:nocomments' => 'Be first to comment',
+    'minds:commenton' => 'Comment on %s',
+    'minds:comments:valuecantbeblank' => 'Comment can not be blank',
 
 );
 		
