@@ -14,11 +14,7 @@ if (isset($_SESSION['last_forward_from']) && $_SESSION['last_forward_from']) {
 	$forward_url = REFERER;
 } else {
 	// forward to main index page
- HEAD
-	$forward_url = "www.minds.io/news";
-
 	$forward_url = 'news';
-e04c204fea14cb7226371ce735a7142cb6639852
 }
 
 $username = get_input('username');
