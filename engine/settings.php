@@ -42,14 +42,14 @@ $CONFIG->dbuser = 'root';
  *
  * @global string $CONFIG->dbpass
  */
-$CONFIG->dbpass = 'olvgkd123';
+$CONFIG->dbpass = '';
 
 /**
  * The database name
  *
  * @global string $CONFIG->dbname
  */
-$CONFIG->dbname = 'newone';
+$CONFIG->dbname = 'minds';
 
 /**
  * The database host.
