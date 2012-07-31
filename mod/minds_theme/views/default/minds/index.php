@@ -2,9 +2,6 @@
 /**
  * Index View
  */
- if(elgg_get_logged_in_user_entity()){
-	 forward('/news');
- }
 ?>
 <div class='minds_index'>
     <div class="logo">
