@@ -1,0 +1,1 @@
+Download latest RTMP application version from our site: Read details about setting this up on http://www.videowhisper.com/?p=RTMP+Applications .
