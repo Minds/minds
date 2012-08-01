@@ -127,6 +127,7 @@ function kaltura_video_init() {
 	//actions for the plugin
 	elgg_register_action("kaltura_video/delete", $action_path . "delete.php");
 	elgg_register_action("kaltura_video/update", $action_path . "update.php");
+	elgg_register_action("kaltura_video/upload", $action_path . "upload.php");
 	elgg_register_action("kaltura_video/rate",  $action_path . "rate.php");
 
 	if(elgg_is_admin_logged_in()) {
@@ -238,11 +239,13 @@ function kaltura_video_page_setup()
 		{
              if(in_array(elgg_get_plugin_setting("alloweditor","kaltura_video"), array('full', 'simple')))
              {
+				 elgg_load_js('lightbox');
+				elgg_load_css('lightbox');
 				elgg_register_menu_item('page', array(
 					'name' => elgg_echo('kalturavideo:label:newvideo'),
-					'href' => '#kaltura_create',
+					'href' => '/studio/upload',
 					'text' => elgg_echo('kalturavideo:label:newvideo'),
-					'class' => 'pagesactions'
+					'class' => 'elgg-lightbox pagesactions'
 				));
              }
              else {
@@ -295,6 +298,10 @@ function kaltura_video_page_handler($page) {
 				break;
 			case 'api_upload':
 				include(dirname(__FILE__) . "/api_upload.php");
+				return true;
+				break;
+			case 'upload':
+				include(dirname(__FILE__) . "/inline_upload.php");
 				return true;
 				break;
 			case 'show':
