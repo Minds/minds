@@ -120,7 +120,7 @@ function minds_social_action($event, $object_type, $object){
 
 function minds_set_metatags($name, $content){
 	
-	set_input($name, $content);
+	set_input($name, addslashes($content));
 	
 	return;
 	
