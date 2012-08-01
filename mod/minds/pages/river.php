@@ -26,6 +26,11 @@ switch ($page_type) {
 		$title = elgg_echo('river:friends');
 		$page_filter = 'all';
 		break;
+	case 'mine':
+		$title = elgg_echo('river:mine');
+		$page_filter = 'mine';
+		$options['subject_guid'] = elgg_get_logged_in_user_guid();
+		break;
 	default:
 		$page_filter = 'friends';
 		$options['relationship_guid'] = elgg_get_logged_in_user_guid();
@@ -46,7 +51,7 @@ $sidebar = elgg_view('core/river/sidebar');
 $params = array(
 	'content' =>  $content . $activity,
 	'sidebar' => $sidebar,
-	'filter_context' => $page_type,
+	'filter_context' => $page_filter,
 	'filter_override' => elgg_view('page/layouts/content/river_filter', $vars),
 	'class' => 'elgg-river-layout',
 );
