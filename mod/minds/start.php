@@ -13,7 +13,7 @@ function minds_init(){
 	
 	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
 	
-	elgg_register_page_handler('news', 'elgg_river_page_handler');
+	elgg_register_page_handler('news', 'minds_news_page_handler');
 		
  	elgg_extend_view('page/elements/head','minds/meta');
 	
@@ -47,6 +47,34 @@ function minds_index($hook, $type, $return, $params) {
 		return false;
 	}
 	
+	return true;
+}
+
+/**
+ * Page handler for news
+ *
+ * @param array $page
+ * @return bool
+ * @access private
+ */
+function minds_news_page_handler($page) {
+	global $CONFIG;
+
+	elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
+
+	// make a URL segment available in page handler script
+	$page_type = elgg_extract(0, $page, 'friends');
+	$page_type = preg_replace('[\W]', '', $page_type);
+	if ($page_type == 'owner') {
+		$page_type = 'mine';
+	}
+	set_input('page_type', $page_type);
+
+	// content filter code here
+	$entity_type = '';
+	$entity_subtype = '';
+
+	require_once("pages/river.php");
 	return true;
 }
 
@@ -93,18 +121,32 @@ function minds_pagesetup(){
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
 	elgg_register_menu_item('site', $item);
 }
-
-
+		
 function minds_quota_increment($event, $object_type, $object) {
 	
-	if(($object->getSubtype() == "files") || ($object->getSubtype() == "kaltura")){
-		
-	}
+	$user = elgg_get_logged_in_user_entity();
 	
+	if(($object->getSubtype() == "file") || ($object->getSubtype() == "image")){
+		if($object->size){
+			$user->quota_storage = $user->quota_storage + $object->size;
+			
+			$user->save();
+		}
+		
+	} 
 	return;
 }
 
 function minds_quota_decrement($event, $object_type, $object) {
+	if(($object->getSubtype() == "file") || ($object->getSubtype() == "image")){
+		echo $object->size;
+	}
+	
+	if($object->getSubtype() == "kaltura_video"){
+		//we need to do kaltura differently because it is a remote uplaod
+		require_once(dirname(dirname(__FILE__)) ."/kaltura_video/kaltura/api_client/includes.php");
+		
+	}
 	return;
 }
 elgg_register_event_handler('init','system','minds_init');		

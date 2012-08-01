@@ -164,6 +164,9 @@ if (isset($_FILES['upload']['name']) && !empty($_FILES['upload']['name'])) {
 	$file->setMimeType($mime_type);
 	$file->originalfilename = $_FILES['upload']['name'];
 	$file->simpletype = file_get_simple_type($mime_type);
+	
+	//save the space so we can add it to our quota. 
+	$file->size = $_FILES['upload']['size'];
 
 	// Open the file to guarantee the directory exists
 	$file->open("write");

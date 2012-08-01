@@ -4819,6 +4819,220 @@ class KalturaStatsService extends KalturaServiceBase
 	}
 }
 
+class KalturaFlavorAssetService extends KalturaServiceBase
+{
+	function __construct(KalturaClient $client = null)
+	{
+		parent::__construct($client);
+	}
+
+	function add($entryId, KalturaFlavorAsset $flavorAsset)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "entryId", $entryId);
+		$this->client->addParam($kparams, "flavorAsset", $flavorAsset->toParams());
+		$this->client->queueServiceActionCall("flavorasset", "add", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "KalturaFlavorAsset");
+		return $resultObject;
+	}
+
+	function update($id, KalturaFlavorAsset $flavorAsset)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "id", $id);
+		$this->client->addParam($kparams, "flavorAsset", $flavorAsset->toParams());
+		$this->client->queueServiceActionCall("flavorasset", "update", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "KalturaFlavorAsset");
+		return $resultObject;
+	}
+
+	function setContent($id, KalturaContentResource $contentResource)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "id", $id);
+		$this->client->addParam($kparams, "contentResource", $contentResource->toParams());
+		$this->client->queueServiceActionCall("flavorasset", "setContent", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "KalturaFlavorAsset");
+		return $resultObject;
+	}
+
+	function get($id)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "id", $id);
+		$this->client->queueServiceActionCall("flavorasset", "get", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "KalturaFlavorAsset");
+		return $resultObject;
+	}
+
+	function getByEntryId($entryId)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "entryId", $entryId);
+		$this->client->queueServiceActionCall("flavorasset", "getByEntryId", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "array");
+		return $resultObject;
+	}
+
+	function listAction(KalturaAssetFilter $filter = null, KalturaFilterPager $pager = null)
+	{
+		$kparams = array();
+		if ($filter !== null)
+			$this->client->addParam($kparams, "filter", $filter->toParams());
+		if ($pager !== null)
+			$this->client->addParam($kparams, "pager", $pager->toParams());
+		$this->client->queueServiceActionCall("flavorasset", "list", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "KalturaFlavorAssetListResponse");
+		return $resultObject;
+	}
+
+	function getWebPlayableByEntryId($entryId)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "entryId", $entryId);
+		$this->client->queueServiceActionCall("flavorasset", "getWebPlayableByEntryId", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "array");
+		return $resultObject;
+	}
+
+	function convert($entryId, $flavorParamsId)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "entryId", $entryId);
+		$this->client->addParam($kparams, "flavorParamsId", $flavorParamsId);
+		$this->client->queueServiceActionCall("flavorasset", "convert", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "null");
+		return $resultObject;
+	}
+
+	function reconvert($id)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "id", $id);
+		$this->client->queueServiceActionCall("flavorasset", "reconvert", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "null");
+		return $resultObject;
+	}
+
+	function delete($id)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "id", $id);
+		$this->client->queueServiceActionCall("flavorasset", "delete", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "null");
+		return $resultObject;
+	}
+
+	function getUrl($id, $storageId = null)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "id", $id);
+		$this->client->addParam($kparams, "storageId", $storageId);
+		$this->client->queueServiceActionCall("flavorasset", "getUrl", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "string");
+		return $resultObject;
+	}
+
+	function getRemotePaths($id)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "id", $id);
+		$this->client->queueServiceActionCall("flavorasset", "getRemotePaths", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "KalturaRemotePathListResponse");
+		return $resultObject;
+	}
+
+	function getDownloadUrl($id, $useCdn = false)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "id", $id);
+		$this->client->addParam($kparams, "useCdn", $useCdn);
+		$this->client->queueServiceActionCall("flavorasset", "getDownloadUrl", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "string");
+		return $resultObject;
+	}
+
+	function getFlavorAssetsWithParams($entryId)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "entryId", $entryId);
+		$this->client->queueServiceActionCall("flavorasset", "getFlavorAssetsWithParams", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "array");
+		return $resultObject;
+	}
+
+	function export($assetId, $storageProfileId)
+	{
+		$kparams = array();
+		$this->client->addParam($kparams, "assetId", $assetId);
+		$this->client->addParam($kparams, "storageProfileId", $storageProfileId);
+		$this->client->queueServiceActionCall("flavorasset", "export", $kparams);
+		if ($this->client->isMultiRequest())
+			return $this->client->getMultiRequestResult();
+		$resultObject = $this->client->doQueue();
+		$this->client->throwExceptionIfError($resultObject);
+		$this->client->validateObjectType($resultObject, "KalturaFlavorAsset");
+		return $resultObject;
+	}
+}
+
+
 class KalturaClient extends KalturaClientBase
 {
 	/**
@@ -4962,6 +5176,7 @@ class KalturaClient extends KalturaClientBase
 	{
 		parent::__construct($config);
 		$this->media = new KalturaMediaService($this);
+		$this->flavorAsset = new KalturaFlavorAssetService($this);
 		$this->mixing = new KalturaMixingService($this);
 		$this->baseEntry = new KalturaBaseEntryService($this);
 		$this->session = new KalturaSessionService($this);

@@ -414,11 +414,19 @@ function kalturavideo_convert($hook, $entity_type, $returnvalue, $params){
 					$error = $e->getMessage();
 				}
 				
-				$video->converted = true;
+				$video->converted = true;			
 				if($video->save()){
 					$resulttext = elgg_echo("kalturavideo:cron:converted:video") . $video->kaltura_video_id;
 					//add to the river
 					add_to_river('river/object/kaltura_video/update','update',$video->getOwnerGUID(),$video->getGUID());
+					
+					//increment the owners quota
+					$assets = $kmodel->getflavourAssets($video->uploaded_id);
+					$asset_vars = get_object_vars($assets[0]);
+					$user = get_entity($video->getOwnerGUID());
+					$user->quota_storage = $user->quota_storage + ($asset_vars['size']*1024) ;
+					
+					$user->save;
 			
 				}
 				

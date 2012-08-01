@@ -28,3 +28,10 @@ echo elgg_view("input/plaintext", array("name"=>"params[default_keywords]", "val
 ?>
 </p>
 </div>
+
+<div>
+<h3> Minds Quota </h3>
+<p>
+
+</p>
+</div><br/>

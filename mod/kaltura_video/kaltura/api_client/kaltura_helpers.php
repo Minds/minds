@@ -219,6 +219,12 @@ class KalturaModel {
 		$mediaEntry = $this->client->media->addFromUploadedFile($mediaEntry, $fileKey);
 		return $mediaEntry;
 	}
+	
+	/*Get flavour info */
+	 function getflavourAssets($entryId)
+    {
+        return $this->client->flavorAsset->getByEntryId($entryId);
+    }
 }
 
 class KalturaHelpers
