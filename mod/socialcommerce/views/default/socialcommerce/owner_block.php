@@ -37,6 +37,7 @@
 	 */ 
 	 
 	global $CONFIG;
+if(elgg_get_context() == "socialcommerce"){
 	if(elgg_is_logged_in()){
 		// Check Membership Privileges
 		$permission = membership_privileges_check('buy');
@@ -137,4 +138,5 @@
 <?php
 		}
 	}
+}
 ?>
