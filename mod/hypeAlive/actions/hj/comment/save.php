@@ -9,6 +9,9 @@ $container_guid = get_input('container_guid', null);
 $container = get_entity($container_guid);
 $river_id = get_input('river_id', false);
 
+$object_guid = get_input('object_guid', false);
+$subject_guid = get_input('subject_guid', false);
+
 
 if (!$river_id && !elgg_instanceof($container)) {
     register_error(elgg_echo('hj:comments:cantfind'));
@@ -25,6 +28,8 @@ $annotation->river_id = $river_id;
 $annotation->access_id = get_input('access_id', ACCESS_DEFAULT);
 $guid = $annotation->save();
 
+//send a notifications
+notification_create($subject_guid, elgg_get_logged_in_user_guid(), $object_guid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
 
 if ($guid) {
     system_message(elgg_echo('hj:comments:savesuccess'));

@@ -40,6 +40,15 @@ $form_body .= elgg_view('input/hidden', array(
     'name' => 'access_id',
     'value' => $access
         ));
+		
+$form_body .= elgg_view('input/hidden', array(
+    'name' => 'object_guid',
+    'value' => $entity->object_guid,
+        ));
+$form_body .= elgg_view('input/hidden', array(
+    'name' => 'subject_guid',
+    'value' => $entity->subject_guid,
+        ));
 
 $form_body .= elgg_view('input/submit', array(
     'value' => 'submit',

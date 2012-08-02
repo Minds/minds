@@ -33,8 +33,10 @@ function notifications_plugin_init() {
 	elgg_register_event_handler('create', 'metadata', 'notifications_notify');
 	elgg_register_event_handler('create', 'annotation', 'notifications_notify');
 	
-	//register an icon in the topbar
-	//background-position: 0 -1242px;
+	$notification_js = elgg_get_simplecache_url('js', 'notifications/notify');
+	elgg_register_js('elgg.notifications', $notification_js);
+	elgg_load_js('elgg.notifications');
+	
 
 	$actions_base = elgg_get_plugins_path() . 'notifications/actions';
 	elgg_register_action("notificationsettings/save", "$actions_base/save.php");
@@ -69,6 +71,10 @@ function notifications_page_handler($page) {
 
 	// note: $user passed in
 	switch ($page[0]) {
+		case 'view':
+			set_input('full', true);
+			require "$base/pages/notifications.php";
+			break;
 		case 'group':
 			require "$base/groups.php";
 			break;
@@ -240,32 +246,9 @@ function notification_notifier() {
 			'text' => $text,
 			'priority' => 600,
 			'title' => $tooltip,
+			'id'=>'notify_button'
 		));
 	}
-}
-
-/**
- * Listen out for activity and then notify
- *
- */
-function notifications_notify($event, $object_type, $object) {
-
-	if($object_type == 'annotation'){
-		//this is probably a comment or some sort of messageboard thing. notify who is the owner of the OBJECT
-		//$entity = elgg_get_entities_from_annotations(array('annotation_ids' => array($object->id)));
-		
-		//echo $entity[0]->name;
-		/*//the person to notify
-		$owner_guid = $entity[0]->getOwnerGUID();
-		$notifier_guid = $object[0]->getOwnerGUID();
-		
-		notification_create($to = $owner_guid, $from = $notifier_guid, $object = $entity[0]->getGuid(), array('description'=>$object->value));*/
-				
-	}
-		
-	/*$user_guid = $relationship->guid_one;
-	$friend_guid = $relationship->guid_two;*/
-	
 }
 
 /**
@@ -282,10 +265,24 @@ function notification_create($to, $from, $object, $params){
 	
 	$notification = new ElggNotification();
 	$notification->owner_guid = $to;
-	$notification->object_guid = $object->getGUID();
+	$notification->object_guid = $object;
 	$notification->from_guid = $from;
+	$notification->notification_view = $params['notification_view'];
 	$notification->description = $params['description'];
 	
 	return $notification->save();
 	
+}
+
+/**
+ * Mark notifications as read
+ *
+ */
+function notifications_mark_read($notifications){
+	foreach($notifications as $notification){
+		if(!$notification->read){
+			$notification->read = 1;
+			return $notification->save();
+		}
+	}
 }

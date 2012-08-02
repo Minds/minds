@@ -87,5 +87,22 @@
 	width:250px;
 }
 
+.notify_time{
+	float:right;
+    font-size:10px;
+}
+.notify_description{
+	font-size:11px;
+    
+}
+    
+#notification .notification-unread{
+	background:#EEEED1;
+}
+#notification li div{
+	padding:2px;
+}
+
+
 
 
