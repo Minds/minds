@@ -9,8 +9,8 @@ elgg.notify.init = function() {
 	if (elgg.is_logged_in()) {
 		//setInterval(elgg.chat.markMessageRead, 2000);
 		
-		//elgg.notify.getNotifications();
-		//setInterval(elgg.notify.getNotifications, 10000);
+		//elgg.notify.getUnreadNotifications
+		setInterval(elgg.notify.getUnreadNotifications, 10000);
         
         $("#notify_button").bind("click", elgg.notify.getNotifications);
 	}
@@ -26,18 +26,37 @@ elgg.notify.init = function() {
 };*/
 
 /**
+ * Get the number of unready messages
+ * 
+ */
+elgg.notify.getUnreadNotifications = function() {
+   
+ 	var url = elgg.normalize_url("mod/notifications/pages/count.php");
+    	
+  	 $.get(url, function(data) {
+      		$('#notify_button').html(data);
+            //console.log(data);
+            //$('#notification').append(data);
+     });
+
+
+}
+
+/**
  * Get notifications via AJAX.
  * 
  */
 elgg.notify.getNotifications = function() {
    
-    console.log('triggered');
  	var url = elgg.normalize_url("mod/notifications/pages/notifications.php");
     	
   	 $.get(url, function(data) {
       		$('#notification').html(data);
             //$('#notification').append(data);
      });
+     
+     //reset the counter to 0
+     $(".notification-new").remove();
 
 }
 

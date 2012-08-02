@@ -233,11 +233,11 @@ function notification_notifier() {
 		$tooltip = elgg_echo("notification");
 		
 		// get unread messages
-		/*$num_messages = (int)messages_count_unread();
-		if ($num_messages != 0) {
-			$text .= "<span class=\"messages-new\">$num_messages</span>";
-			$tooltip .= " (" . elgg_echo("messages:unreadcount", array($num_messages)) . ")";
-		}*/
+		$num_notifications = (int)notifications_count_unread();
+		if ($num_notifications != 0) {
+			$text .= "<span class=\"notification-new\">$num_notifications</span>";
+			$tooltip .= " (" . elgg_echo("notifications:unread", array($num_notifications)) . ")";
+		}
 
 		elgg_register_menu_item('topbar', array(
 			'name' => 'notification',
@@ -269,6 +269,7 @@ function notification_create($to, $from, $object, $params){
 	$notification->from_guid = $from;
 	$notification->notification_view = $params['notification_view'];
 	$notification->description = $params['description'];
+	$notification->read = 0;
 	
 	return $notification->save();
 	
@@ -278,11 +279,18 @@ function notification_create($to, $from, $object, $params){
  * Mark notifications as read
  *
  */
-function notifications_mark_read($notifications){
-	foreach($notifications as $notification){
-		if(!$notification->read){
-			$notification->read = 1;
-			return $notification->save();
-		}
-	}
+function notifications_count_unread(){
+	$user = elgg_get_logged_in_user_entity();
+
+
+	$options = array(	'types'=>'object',
+						'subtypes'=>'notification',
+						'owner_guid' => $user->getGUID(),
+						'limit' => 99999999,
+						'metadata_name_value_pairs' => array(array('name'=>'read', 'value' => 1, 'operand'=>'!='))
+					);
+	
+	$notifications = elgg_get_entities_from_metadata($options);
+	
+	return count($notifications);
 }
