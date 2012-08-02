@@ -15,7 +15,31 @@ if (!$container_guid) {
 	$container_guid = elgg_get_logged_in_user_guid();
 }
 
+require_once(dirname(dirname(dirname(dirname(dirname(__FILE__))))) ."/kaltura/api_client/includes.php");
+
+  $userId = KalturaHelpers::getLoggedUserId();
+        $partnerId = elgg_get_plugin_setting('partner_id', 'kaltura_video');
+        $secret = elgg_get_plugin_setting('admin_secret', 'kaltura_video');
 ?>
+            
+            <object id="krecorder" name="krecorder" type="application/x-shockwave-flash" 
+            	allowFullScreen="true" 
+                allowScriptAccess="always" 
+                allowNetworking="all" 
+                height="320" width="400"
+                flashVars="host=www.minds.tv&kshowId=-1&autoPreview=1&pid=<?php echo $partnerId;?>&subpid=<?php echo $partnerId*100;?>&uid=100&ks=<?php echo $secret;?>">
+                
+                <param name="allowScriptAccess" value="always" />
+                <param name="allowNetworking" value="all" />
+                <param name="allowFullScreen" value="true" />
+                <param name="bgcolor" value=#CCC />
+                <param name="movie" value=" <?php echo elgg_get_site_url();?>mod/kaltura_video/kaltura/krecorder/Krecord.swf"/>
+                <param name="flashVars" value="host=www.minds.tv&kshowId=-1&autoPreview=1&pid=<?php echo $partnerId;?>&subpid=<?php echo $partnerId*100;?>&uid=100&ks=<?php echo $secret;?>" />
+                
+                <p> loading... </p>
+                
+           </object>
+  
 <div>
 	<label><?php echo elgg_echo('video'); ?></label><br />
 	<?php echo elgg_view('input/file', array('name' => 'upload')); ?>
