@@ -387,6 +387,10 @@ The system could not find the user based on subscription id:\'%s\'
                 'log:email' => "Email",
                 'log:category' => "Category",
                 'log:upgrade' => "Upgrade",
+				
+				/* Minds changes 
+				 */
+				 'membership:premiumfailed' => 'Your premium account subscription failed! Please try again.'
             
 	);
 					

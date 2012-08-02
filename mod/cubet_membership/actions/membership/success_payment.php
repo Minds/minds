@@ -80,14 +80,14 @@
     } else if($manage_action=="cart_cancel"){
         if(!elgg_is_logged_in())
         {
-            system_message(elgg_echo('uservalidationbyemail:premiumfailed'));
-            system_message(sprintf(elgg_echo("registerok"),$CONFIG->sitename));
+           register_error(elgg_echo('membership:premiumfailed'));
+            /*system_message(sprintf(elgg_echo("registerok"),$CONFIG->sitename));
             request_reconfirm($guid);
 
             if (!$new_user->admin) {
                 $new_user->disable('new_user', false);
 		elgg_set_user_validation_status($guid, FALSE);
-            }
+            }*/
         }
         forward();
     }

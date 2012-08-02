@@ -49,10 +49,46 @@
         if(elgg_is_logged_in ()) {
             elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'membership_owner_block_menu');
         }
-        elgg_register_action('register', dirname(__FILE__)."/actions/membership/register.php", 'public');
+		
+		//make sure users agree to terms
+		elgg_register_plugin_hook_handler('register', 'user', 'membership_register_hook');
+		
+       // elgg_register_action('register', dirname(__FILE__)."/actions/membership/register.php", 'public');
         elgg_register_action('admin/user/delete', dirname(__FILE__)."/actions/membership/delete_user.php", 'admin');
         
     }
+	
+	/* Hook into the registration action 
+	 */
+	function membership_register_hook($hook, $type, $value, $params) {
+		
+		$user = elgg_extract('user', $params);
+		
+		global $CONFIG;	
+		$plugin_settings = $CONFIG->plugin_settings;
+		$allow_payment = $plugin_settings->allow_regpayment;
+		$auth_apiloginid = $plugin_settings->authorizenet_apiloginid;
+		$auth_transkey = $plugin_settings->authorizenet_transactionkey;
+		$email_settings = $CONFIG->plugin_settings->paypal_email;
+		$amount_settings = $CONFIG->plugin_settings->payment_type;
+		
+		// Passed variables //
+		$show_checkout = get_input('payment_method');
+		$usertype = get_input('usertype');
+		
+		if($usertype == "Free"){
+			//Give our free users a Free tag
+			$user->user_type = "Free";
+			$user->save();
+			return $value;
+		} else {
+			$guid = $user->getGUID();
+			forward("$CONFIG->wwwroot"."membership/payment/$guid/$usertype");
+		}
+		
+			
+	}
+
     
     /**
      * Add a menu item to upgrade mebership to the user ownerblock
@@ -584,7 +620,7 @@
             if($user instanceof ElggUser){
                 if($user->isAdmin()) {
                    $CONFIG->user_permissions = 'all';
-                } else if(strtolower ($user->user_type) == 'free') {
+                } else if(strtolower ($user->user_type) == 'free' || !$user->user_type) {
                    $plugin_settings = $CONFIG->plugin_settings;
                    $CONFIG->user_permissions = explode(',', $plugin_settings->permission);
                } else {

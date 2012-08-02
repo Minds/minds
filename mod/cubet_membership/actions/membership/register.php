@@ -82,17 +82,17 @@
                 
                 if($allow_payment == '1'){
 	                if($usertype == "Free"){
-	                    global $registering_admin;
+	                   /* global $registering_admin;
 	                    elgg_push_context('uservalidationbyemail_new_user');
 	                    $hidden_entities = access_get_show_hidden_status();
 	                    access_show_hidden_entities(TRUE);
 	                    $new_user->disable('uservalidationbyemail_new_user', FALSE);
 	                    elgg_set_user_validation_status($guid, FALSE);
 	                    if (!$registering_admin) {
-	                        uservalidationbyemail_request_validation($guid);
+	                        //uservalidationbyemail_request_validation($guid);
 	                    }
 	                    access_show_hidden_entities($hidden_entities);
-	                    elgg_pop_context();
+	                    elgg_pop_context();*/
 	                    system_message(elgg_echo("registerok", array(elgg_get_site_entity()->name)));
 	                    forward();
 	                    
@@ -109,8 +109,8 @@
 	                        forward("$CONFIG->wwwroot"."membership/payment/$guid/$usertype");
 	                    }
 	                }
-               }else{
-                    global $registering_admin;
+                 }else{
+                   /* global $registering_admin;
                     elgg_push_context('uservalidationbyemail_new_user');
                     $hidden_entities = access_get_show_hidden_status();
                     access_show_hidden_entities(TRUE);
@@ -120,13 +120,16 @@
                         uservalidationbyemail_request_validation($guid);
                     }
                     access_show_hidden_entities($hidden_entities);
-                    elgg_pop_context();
+                    elgg_pop_context();*/
                     system_message(elgg_echo("registerok", array(elgg_get_site_entity()->name)));
                     forward();
-               }
+					
+				 }
+               
             } else {
                 register_error(elgg_echo("registerbad"));
-            }
+            } 
+			
         } catch (RegistrationException $r) {
             register_error($r->getMessage());
         }
