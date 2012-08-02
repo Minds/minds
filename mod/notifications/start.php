@@ -14,6 +14,8 @@ function notifications_plugin_init() {
 	elgg_register_page_handler('notifications', 'notifications_page_handler');
 
 	elgg_register_event_handler('pagesetup', 'system', 'notifications_plugin_pagesetup');
+	
+	elgg_register_event_handler('pagesetup', 'system', 'notification_notifier');
 
 	// Unset the default notification settings
 	elgg_unregister_plugin_hook_handler('usersettings:save', 'user', 'notification_user_settings_save');
@@ -26,6 +28,13 @@ function notifications_plugin_init() {
 	// update notifications when new friend or access collection membership
 	elgg_register_event_handler('create', 'friend', 'notifications_update_friend_notify');
 	elgg_register_plugin_hook_handler('access:collections:add_user', 'collection', 'notifications_update_collection_notify');
+	
+	elgg_register_event_handler('create', 'object', 'notifications_notify');
+	elgg_register_event_handler('create', 'metadata', 'notifications_notify');
+	elgg_register_event_handler('create', 'annotation', 'notifications_notify');
+	
+	//register an icon in the topbar
+	//background-position: 0 -1242px;
 
 	$actions_base = elgg_get_plugins_path() . 'notifications/actions';
 	elgg_register_action("notificationsettings/save", "$actions_base/save.php");
@@ -203,4 +212,80 @@ function notifications_update_collection_notify($event, $object_type, $returnval
 			}
 		}
 	}
+}
+
+/**
+ * Display notification of new messages in topbar
+ */
+function notification_notifier() {
+	if (elgg_is_logged_in()) {
+		
+		elgg_extend_view('page/elements/topbar', 'notifications/popup');
+		
+		$class = "elgg-icon elgg-icon-tag";
+		$text = "<span class='$class'></span>";
+		$tooltip = elgg_echo("notification");
+		
+		// get unread messages
+		/*$num_messages = (int)messages_count_unread();
+		if ($num_messages != 0) {
+			$text .= "<span class=\"messages-new\">$num_messages</span>";
+			$tooltip .= " (" . elgg_echo("messages:unreadcount", array($num_messages)) . ")";
+		}*/
+
+		elgg_register_menu_item('topbar', array(
+			'name' => 'notification',
+			'href' => '#notification',
+			'rel' => 'popup',
+			'text' => $text,
+			'priority' => 600,
+			'title' => $tooltip,
+		));
+	}
+}
+
+/**
+ * Listen out for activity and then notify
+ *
+ */
+function notifications_notify($event, $object_type, $object) {
+
+	if($object_type == 'annotation'){
+		//this is probably a comment or some sort of messageboard thing. notify who is the owner of the OBJECT
+		//$entity = elgg_get_entities_from_annotations(array('annotation_ids' => array($object->id)));
+		
+		//echo $entity[0]->name;
+		/*//the person to notify
+		$owner_guid = $entity[0]->getOwnerGUID();
+		$notifier_guid = $object[0]->getOwnerGUID();
+		
+		notification_create($to = $owner_guid, $from = $notifier_guid, $object = $entity[0]->getGuid(), array('description'=>$object->value));*/
+				
+	}
+		
+	/*$user_guid = $relationship->guid_one;
+	$friend_guid = $relationship->guid_two;*/
+	
+}
+
+/**
+ * Create a notification
+ *
+ * @param $to int/arr - guid(s) of the user to recieve the notification
+ * @param $from int - guid of the user making the notification
+ * @param $object object - the entity or object in question
+ * @param $params array - any further information, such as a comment
+ *
+ * @return bool - success or failed
+ */
+function notification_create($to, $from, $object, $params){
+	
+	$notification = new ElggNotification();
+	$notification->owner_guid = $to;
+	$notification->object_guid = $object->getGUID();
+	$notification->from_guid = $from;
+	$notification->description = $params['description'];
+	
+	return $notification->save();
+	
 }

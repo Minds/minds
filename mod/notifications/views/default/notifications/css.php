@@ -83,5 +83,9 @@
 	margin-bottom: 25px;
 }
 
+.notifications.popup{
+	width:250px;
+}
+
 
 
