@@ -76,6 +76,12 @@ $english = array(
     'minds:comments:nocomments' => 'Be first to comment',
     'minds:commenton' => 'Comment on %s',
     'minds:comments:valuecantbeblank' => 'Comment can not be blank',
+	
+	/* Quota 
+	 */
+	'minds:quota:statisitcs:title' => 'Your usage',
+	'minds:quota:statisitcs:storage' => 'Storage',
+	'minds:quota:statisitcs:bandwidth' => 'Bandwidth',
 
 );
 		

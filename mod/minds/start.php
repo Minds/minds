@@ -18,6 +18,9 @@ function minds_init(){
  	elgg_extend_view('page/elements/head','minds/meta');
 	
 	elgg_extend_view('register/extend', 'minds/register_extend', 500);
+	
+	//put the quota in account statistics
+	elgg_extend_view('core/settings/statistics', 'minds/quota/statistics', 500);
 
 	//register our own css files
 	$url = elgg_get_simplecache_url('css', 'minds');
