@@ -43,6 +43,7 @@ if ($entity->owner_guid != $user->guid) {
 
 	likes_notify_user($entity->getOwnerEntity(), $user, $entity);
 }
+likes_notify_user($entity->getOwnerEntity(), $user, $entity);
 
 system_message(elgg_echo("likes:likes"));
 

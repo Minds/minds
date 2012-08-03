@@ -4,7 +4,6 @@ $container_guid = get_input('container_guid', null);
 $container = get_entity($container_guid);
 $river_id = get_input('river_id', null);
 
-
 if (!$river_id && !elgg_instanceof($container)) {
     register_error(elgg_echo('hj:likes:cantfind'));
     return true;
@@ -18,8 +17,8 @@ if (get_input('action_type') == 'like') {
         'container_guid' => $container_guid,
         'river_id' => $river_id
     );
-    $likes = hj_alive_does_user_like($params);
-    $likes = $likes['likes'][0];
+    $dislikes = hj_alive_does_user_dislike($params);
+    $dislikes = $dislikes['dislikes'][0];
     $guid = $likes->guid;
 }
 
@@ -38,7 +37,7 @@ if (!get_input('access_id', false)) {
 if (!$guid) {
     $annotation = new hjAnnotation($guid);
     $annotation->annotation_value = $annotation_value;
-    $annotation->annotation_name = 'likes';
+    $annotation->annotation_name = 'dislikes';
     $annotation->owner_guid = elgg_get_logged_in_user_guid();
     $annotation->container_guid = $container_guid;
     $annotation->river_id = $river_id;
@@ -46,15 +45,14 @@ if (!$guid) {
     $guid = $annotation->save();
 
     if ($guid) {
-        system_message(elgg_echo('hj:likes:savesuccess'));
-		//notification_create($subject_guid, elgg_get_logged_in_user_guid(), $object_guid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
+        system_message(elgg_echo('hj:dislikes:savesuccess'));
     } else {
-        register_error(elgg_echo('hj:likes:saveerror'));
+        register_error(elgg_echo('hj:dislikes:saveerror'));
     }
 } else {
     $annotation = get_entity($guid);
     if ($annotation->delete()) {
-        system_message(elgg_echo('hj:likes:likeremoved'));
+        system_message(elgg_echo('hj:likes:dislikeremoved'));
     }
 }
 

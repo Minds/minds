@@ -20,6 +20,10 @@ $english = array(
 	'notifications:subscriptions:groups:description' => 'To receive notifications when new content is added to a group you are a member of, find it below and select the notification method(s) you would like to use.',
 
 	'notifications:subscriptions:success' => 'Your notifications settings have been saved.',
+	
+	'notification' => 'Notifications',
+	
+	'notifications:unread' => '%s new',
 
 );
 

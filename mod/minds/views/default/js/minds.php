@@ -18,6 +18,7 @@
 		  $("#login-dropdown-box").slideToggle("fast"); 
 		});
 	 };
+	 
 	
 	 elgg.register_hook_handler('init', 'system', minds.init);
 	

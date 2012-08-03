@@ -19,6 +19,15 @@
         $('.elgg-menu-item-unlike')
         .unbind('click')
         .bind('click', hj.likes.saveLike);
+		
+		 $('.elgg-menu-item-dislike')
+        .unbind('click')
+        .bind('click', hj.likes.saveDislike);
+		
+		$('.elgg-menu-item-undislike')
+        .unbind('click')
+        .bind('click', hj.likes.saveDislike);
+
 
         $('.hj-swap-value')
         .unbind('click')
@@ -104,8 +113,35 @@
         data.action_type = action_type;
         ref.push(data);
 
-	elgg.system_message(elgg.echo('hj:framework:processing'));
+	//elgg.system_message(elgg.echo('hj:framework:processing'));
         elgg.action('action/like/save', {
+            data : data,
+            success : function(output) {
+                hj.likes.refresh(ref);
+            }
+        });
+    }
+	
+	 hj.likes.saveDislike = function(event) {
+        event.preventDefault();
+
+        var action_type = $(this).find('a:first').attr('rel');
+        var likesList = $(this)
+        .parents('div.hj-annotations-menu')
+        .siblings('ul:first')
+        .find('div.likes:last')
+        .find('.hj-likes-summary:last');
+
+        var data = new Object();
+        var ref = new Array();
+
+        data = likesList.data('options');
+
+        data.action_type = action_type;
+        ref.push(data);
+
+	//elgg.system_message(elgg.echo('hj:framework:processing'));
+        elgg.action('action/like/save-dislike', {
             data : data,
             success : function(output) {
                 hj.likes.refresh(ref);

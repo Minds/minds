@@ -1,8 +1,6 @@
 <?php
 /**
- * View for chat message objects
- *
- * @package Chat
+ * View for notifications
  */
 
 $entity = elgg_extract('entity', $vars);

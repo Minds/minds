@@ -163,9 +163,12 @@ function likes_notify_user(ElggUser $user, ElggUser $liker, ElggEntity $entity) 
 					$liker->getURL()
 				));
 
-	notify_user($user->guid,
+	
+	notification_create($user->guid, elgg_get_logged_in_user_guid(), $entity->guid, array('notification_view'=>'like'));
+
+	/*notify_user($user->guid,
 				$liker->guid,
 				$subject,
 				$body
-			);
+			);*/
 }

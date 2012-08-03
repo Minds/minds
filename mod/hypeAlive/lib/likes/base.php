@@ -116,3 +116,30 @@ function hj_alive_does_user_like($params) {
     }
     return false;
 }
+
+function hj_alive_does_user_dislike($params) {
+    $container_guid = elgg_extract('container_guid', $params, null);
+    $river_id = elgg_extract('river_id', $params, null);
+    $owner_guid = elgg_get_logged_in_user_guid();
+
+    $options = array(
+        'type' => 'object',
+        'subtype' => 'hjannotation',
+        'owner_guid' => $owner_guid,
+        'container_guid' => $container_guid,
+        'metadata_name_value_pairs' => array(
+            array('name' => 'annotation_name', 'value' => 'dislikes'),
+            array('name' => 'annotation_value', 'value' => '1'),
+            array('name' => 'river_id', 'value' => $river_id)
+        ),
+        'count' => false,
+        'limit' => 0
+    );
+
+    $likes = elgg_get_entities_from_metadata($options);
+
+    if ($likes && sizeof($likes) > 0) {
+        return array('self' => true, 'likes' => $likes);
+    }
+    return false;
+}

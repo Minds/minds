@@ -50,7 +50,7 @@ $likes_view = hj_alive_view_likes_list($params);
 ?>
 <div id="hj-annotations-<?php echo $selector_id ?>" class="hj-annotations-bar clearfix">
     <div class="hj-annotations-menu">
-	<?php echo $menu ?>
+	<?php echo $guid ? $menu : '' ?>
     </div>
     <ul class="hj-annotations-list hj-syncable">
 	<div class="hj-comments-bubble hj-comments-input <?php if($guid){?>hidden<?php }?>"><?php echo $comments_input ?></div>

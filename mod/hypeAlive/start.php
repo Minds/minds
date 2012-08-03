@@ -114,6 +114,7 @@ function hj_alive_comments_init() {
 
 	elgg_register_action('like/get', $shortcuts['actions'] . 'hj/like/get.php');
 	elgg_register_action('like/save', $shortcuts['actions'] . 'hj/like/save.php');
+	elgg_register_action('like/save-dislike', $shortcuts['actions'] . 'hj/like/save-dislike.php');
 
 	// Register JS and CSS libraries
 	$css_url = elgg_get_simplecache_url('css', 'hj/comments/base');
@@ -138,16 +139,16 @@ function hj_alive_comments_init() {
 		elgg_unregister_plugin_hook_handler('search', 'comments', 'search_comments_hook');
 		elgg_register_plugin_hook_handler('search', 'comments', 'hj_alive_search_comments_hook');
 		if (elgg_get_context() !== 'activity') {
-			elgg_unregister_plugin_hook_handler('register', 'menu:entity', 'likes_entity_menu_setup');
+			//elgg_unregister_plugin_hook_handler('register', 'menu:entity', 'likes_entity_menu_setup');
 		}
 	}
 
 	if (elgg_get_plugin_setting('river_comments', 'hypeAlive') !== 'off') {
 		elgg_unregister_plugin_hook_handler('register', 'menu:river', 'elgg_river_menu_setup');
-		elgg_unregister_plugin_hook_handler('register', 'menu:river', 'likes_river_menu_setup');
+		//elgg_unregister_plugin_hook_handler('register', 'menu:river', 'likes_river_menu_setup');
 		elgg_unregister_plugin_hook_handler('register', 'menu:river', 'discussion_add_to_river_menu');
 		if (elgg_get_context() == 'activity') {
-			elgg_unregister_plugin_hook_handler('register', 'menu:entity', 'likes_entity_menu_setup');
+			//elgg_unregister_plugin_hook_handler('register', 'menu:entity', 'likes_entity_menu_setup');
 		}
 	}
 
@@ -207,14 +208,14 @@ function hj_alive_comments_menu($hook, $type, $return, $params) {
 	/**
 	 * Like / Unlike
 	 */
-	if ($entity->getType() == 'river') {
+	/*if ($entity->getType() == 'river') {
 		$show_like = true;
 	} else if (elgg_instanceof($entity, 'object', 'groupforumtopic')) {
 		$container = get_entity($entity->container_guid);
 		$show_like = $container->canWriteToContainer();
 	} else if ($entity->canAnnotate()) {
 		$show_like = true;
-	}
+	}*/
 	if ($show_like) {
 		unset($params['entity']);
 		$likes_owner = hj_alive_does_user_like($params['params']);
@@ -229,7 +230,7 @@ function hj_alive_comments_menu($hook, $type, $return, $params) {
 		}
 		$likes = array(
 			'name' => 'like',
-			'text' => elgg_echo('hj:alive:comments:likebutton'),
+			'text' => elgg_view_icon('thumbs-up'),
 			'entity' => $entity,
 			'title' => elgg_echo('hj:alive:comments:likebutton'),
 			'class' => $likes_class,
@@ -238,7 +239,7 @@ function hj_alive_comments_menu($hook, $type, $return, $params) {
 		);
 		$unlikes = array(
 			'name' => 'unlike',
-			'text' => elgg_echo('hj:alive:comments:unlikebutton'),
+			'text' => elgg_view_icon('thumbs-down'),
 			'entity' => $entity,
 			'title' => elgg_echo('hj:alive:comments:unlikebutton'),
 			'class' => $unlikes_class,
@@ -248,6 +249,38 @@ function hj_alive_comments_menu($hook, $type, $return, $params) {
 
 		$return[] = ElggMenuItem::factory($likes);
 		$return[] = ElggMenuItem::factory($unlikes);
+		
+		$dislikes_owner = hj_alive_does_user_dislike($params['params']);
+		$dislikes_owner = $dislikes_owner['self'];
+		
+		if ($dislikes_owner) {
+			$dislikes_class = "hidden";
+			$undislikes_class = "visible";
+		} else {
+			$undislikes_class = "hidden";
+			$dislikes_class = "visible";
+		}
+		$dislikes = array(
+			'name' => 'dislike',
+			'text' => elgg_view_icon('thumbs-down'),
+			'entity' => $entity,
+			'title' => elgg_echo('hj:alive:comments:dislikebutton'),
+			'class' => $dislikes_class,
+			'rel' => 'dislike',
+			'priority' => 110
+		);
+		$undislikes = array(
+			'name' => 'undislike',
+			'text' => elgg_view_icon('thumbs-up'),
+			'entity' => $entity,
+			'title' => elgg_echo('hj:alive:comments:undislikebutton'),
+			'class' => $undislikes_class,
+			'rel' => 'undislike',
+			'priority' => 115
+		);
+
+		$return[] = ElggMenuItem::factory($dislikes);
+		$return[] = ElggMenuItem::factory($undislikes);
 	}
 
 	/**
