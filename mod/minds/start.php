@@ -35,6 +35,10 @@ function minds_init(){
 	//make sure users agree to terms
 	elgg_register_plugin_hook_handler('action', 'register', 'minds_register_hook');
 	
+	//add an infinite rather than buttons
+	elgg_extend_view('navigation/pagination', 'minds/navigation');
+	elgg_register_ajax_view('page/components/ajax_list');
+	
 	//setup the tracking of user quota - on a file upload, increment, on delete, decrement
 	elgg_register_event_handler('create', 'object', 'minds_quota_increment');
 	elgg_register_event_handler('delete', 'object', 'minds_quota_decrement');

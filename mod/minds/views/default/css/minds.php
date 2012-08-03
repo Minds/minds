@@ -152,6 +152,16 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
     text-decoration:none;
 }
 
+.news-show-more{
+	width:100%;
+    padding:15px 0;
+    text-align:center;
+    background:#EFEFEF;
+    color:#999;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    cursor:pointer;
+}
 
 /* ***************************************
 	ANNOUNCEMENT
