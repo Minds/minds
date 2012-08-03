@@ -1,24 +1,25 @@
 <?php 
-$user = elgg_get_logged_in_user_entity();
 
-$options = array(	'types'=>'object',
-					'subtypes'=>'notification',
-					'owner_guid' => $user->getGUID()
-				);
+$entity = elgg_extract('entity', $vars);
 
-$notifications = elgg_get_entities($options);
+$actor = get_entity($entity->from_guid);
 
-if($notifications){
-	$list = elgg_view_entity_list($notifications);
-	$list .= "See more";
-} else {
-	$list = 'No notifications';
-}
+$object = get_entity($entity->object_guid);
 
-echo elgg_view_module('popup', null, $list, array(
-														'id' => 'notification',
-														'class' => 'notifications popup hidden',
-													));
-													
-													
-								
+
+$description = $entity->description;
+if (strlen($description) > 60){
+  $description = substr($entity->description,0,75) . '...' ;
+} 
+
+$body .= elgg_view('output/url', array('href'=>$actor->getURL(), 'text'=>$actor->name));
+$body .= ' has posted on your ';
+$body .= elgg_view('output/url', array('href'=>$object->getURL(), 'text'=> 'messageboard'));
+
+$body .= "<br/>";
+
+$body .= "<div class='notify_description'>" .  $description . "</div>";
+
+$body .= "<span class='notify_time'>" . elgg_view_friendly_time($entity->time_created) . "</span>";
+
+echo $body;

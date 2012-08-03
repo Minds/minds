@@ -26,6 +26,8 @@ if ($owner && !empty($message_content)) {
 
 		$output = elgg_list_annotations($options);
 		echo $output;
+		
+		notification_create($owner_guid, elgg_get_logged_in_user_guid(), $owner_guid, array('description'=>$message_content,'notification_view'=>'messageboard'));
 
 	} else {
 		register_error(elgg_echo("messageboard:failure"));
