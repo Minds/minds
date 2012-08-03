@@ -192,11 +192,7 @@ if($ob->canEdit()) {
 
 	<!-- options -->
 	<p class="options">
-<?php
-	if($metadata->kaltura_video_editable) {
-		echo ' <a href="#" rel="' . $metadata->kaltura_video_id . '" class="submit_button edit">' . elgg_echo("kalturavideo:label:edit") . '</a> ';
-	}
-?>
+    
 	<a href="<?php echo $CONFIG->wwwroot; ?>mod/kaltura_video/edit.php?videopost=<?php echo $ob->getGUID(); ?>" rel="<?php echo $metadata->kaltura_video_id; ?>" class="submit_button"><?php echo elgg_echo("kalturavideo:label:editdetails"); ?></a>
 <?php
 

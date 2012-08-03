@@ -90,9 +90,7 @@ if($metadata->kaltura_video_rating_on != 'Off') {
 
 <?php
 if($vars['entity']->canEdit()) {
-	if($metadata->kaltura_video_editable) {
-		echo ' <a href="#" rel="' . $metadata->kaltura_video_id . '" class="submit_button edit">' . elgg_echo("kalturavideo:label:edit") . '</a> ';
-	}
+
 ?>
 	<a href="<?php echo $vars['url']; ?>mod/kaltura_video/edit.php?videopost=<?php echo $vars['entity']->getGUID(); ?>"  class="submit_button"><?php echo elgg_echo("kalturavideo:label:editdetails"); ?></a>
 <?php
