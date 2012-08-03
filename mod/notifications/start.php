@@ -263,15 +263,21 @@ function notification_notifier() {
  */
 function notification_create($to, $from, $object, $params){
 	
-	$notification = new ElggNotification();
-	$notification->owner_guid = $to;
-	$notification->object_guid = $object;
-	$notification->from_guid = $from;
-	$notification->notification_view = $params['notification_view'];
-	$notification->description = $params['description'];
-	$notification->read = 0;
+	//if the user and from are not the same then send!
+	if($to != $from){
+		$notification = new ElggNotification();
+		$notification->to_guid = $to;
+		$notification->object_guid = $object;
+		$notification->from_guid = $from;
+		$notification->notification_view = $params['notification_view'];
+		$notification->description = $params['description'];
+		$notification->read = 0;
+		$notification->access_id = 2;
 	
-	return $notification->save();
+		return $notification->save();
+	}
+	
+	return true;
 	
 }
 
@@ -285,9 +291,9 @@ function notifications_count_unread(){
 
 	$options = array(	'types'=>'object',
 						'subtypes'=>'notification',
-						'owner_guid' => $user->getGUID(),
 						'limit' => 99999999,
-						'metadata_name_value_pairs' => array(array('name'=>'read', 'value' => 1, 'operand'=>'!='))
+						'metadata_name_value_pairs' => array(array('name'=>'read', 'value' => 1, 'operand'=>'!='), array('name'=>'to_guid', 'value'=>$user->guid)),
+						'metadata_name_value_pairs_operator' => 'AND'
 					);
 	
 	$notifications = elgg_get_entities_from_metadata($options);
