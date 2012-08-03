@@ -480,7 +480,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 
 	$widget .= '<object id="kaltura_player_' . $widgetUi .'" name="kaltura_player_' . $widgetUi . '" type="application/x-shockwave-flash" 
 	 xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" 
-	allowFullScreen="true" allowScriptAccess="always" allowNetworking="all" height="' . $height . '" width="' . $width . '"  resource="' . $video_location . '" data="'. $video_location . '" rel="media:video">'.
+	allowFullScreen="true" allowScriptAccess="always" allowNetworking="all" height="422" width="750"  resource="' . $video_location . '" data="'. $video_location . '" rel="media:video">'.
            
         '<a rel="media:thumbnail" href="http://www.minds.tv/p/100/sp/10000/thumbnail/entry_id/0_l47o3qy5/width/120/height/90/bgcolor/000000/type/2"></a>' .
 		'<param name="allowScriptAccess" value="always" />'.
@@ -491,8 +491,8 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
     	'<param name="flashVars" value="&{FLAVOR}" />' .
 		'<span property="dc:description" content=""></span>
 		<span property="media:title" content="video.mov"></span> 
-		<span property="media:width" content="400"></span>
-		<span property="media:height" content="333"></span> 
+		<span property="media:width" content="750"></span>
+		<span property="media:height" content="422"></span> 
 		<span property="media:type" content="application/x-shockwave-flash"></span>' .
 	'</object>';
 

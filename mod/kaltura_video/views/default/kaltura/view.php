@@ -135,7 +135,7 @@ if (!empty($categories)) {
 <div class="clearfloat"></div>
 <?php echo elgg_view('share/kaltura', array('widget' => htmlspecialchars($widget))); ?>
 <!-- descrition -->
-<div class="kalturaplayer left bigwidget" style="height:<?php echo $metadata->kaltura_video_widget_height; ?>;width:<?php echo $metadata->kaltura_video_widget_width; ?>;"><?php echo $widget; ?></div>
+<div class="kalturaplayer left bigwidget"><?php echo $widget; ?></div><br/>
 <div class="text">
 <?php
 echo autop($ob->description);

@@ -126,6 +126,7 @@
 	vertical-align:middle;
 }
 .kalturaviewer .text {
+	margin-top:10px;
 }
 .kalturaviewer .kalturaplayer {
 	margin:0 10px 0 0;
