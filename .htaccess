@@ -131,6 +131,13 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([A-Za-z0-9\_\-]+)\/(.*)$ engine/handlers/page_handler.php?handler=$1&page=$2 [QSA]
 
+## SUBDOMAINS TO CHANNELS ##
+RewriteCond %{http_host} .
+RewriteCond %{http_host} !^www.minds.io [NC]
+RewriteCond %{http_host} ^([^.]+)\.minds.io [NC]
+RewriteRule ^(.*) http://www.minds.io/profile/%1/ [R=301,L,QSA] 
+
+
 
 </IfModule>
 
