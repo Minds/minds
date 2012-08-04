@@ -33,11 +33,16 @@ switch ($page_type) {
 		break;
 	default:
 		$page_filter = 'friends';
-		$options['relationship_guid'] = elgg_get_logged_in_user_guid();
-		$options['relationship'] = 'friend';
+		//$options['relationship_guid'] = elgg_get_logged_in_user_guid();
+		//$options['relationship'] = 'friend';
+		$friends = get_user_friends(elgg_get_logged_in_user_guid(), $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10, $offset = 0);
+		foreach($friends as $friend){
+			$friend_guids[] = $friend->guid;
+		}
+		
+		$options['subject_guids'] = array_merge(elgg_get_logged_in_user_guid(), $friend_guids);
 		break;
 }
-
 
 $activity = elgg_list_river($options);
 if (!$activity) {
