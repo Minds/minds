@@ -27,7 +27,8 @@ function hj_alive_init() {
     elgg_register_js('hj.framework.ajax', $hj_js_ajax);
     elgg_load_js('hj.framework.ajax');
 
-	
+	elgg_register_plugin_hook_handler('comments', 'all', 'hj_alive_comments_replacement');
+
 	/* Comments
 	 */
 	// Register Libraries
@@ -66,8 +67,11 @@ function hj_alive_init() {
 	if (elgg_is_logged_in()) {
 		elgg_load_js('hj.likes.base');
 	}
-
 }
+
+
+
+
 
 function minds_comments_menu($hook, $type, $return, $params) {
 	$entity = elgg_extract('entity', $params, false);
@@ -227,4 +231,22 @@ function minds_commentshead_menu($hook, $type, $return, $params) {
 	}
 
 	return $return;
+}
+
+/**
+ *  Replaces native Elgg comments with hypeAlive Comments
+ */
+function hj_alive_comments_replacement($hook, $entity_type, $returnvalue, $params) {
+	
+    $comments =  elgg_view('hj/comments/bar', array(
+	    'entity' => $params['entity'],
+	));
+	
+	$comments .= elgg_view('hj/comments/input', array(
+	    'entity' => $params['entity'],
+		'container_guid' => elgg_get_logged_in_user_guid(),
+		'aname' => elgg_extract('aname', $vars, 'generic_comment')
+	));
+	
+	return $comments;
 }

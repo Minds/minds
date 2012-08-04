@@ -4,17 +4,10 @@ $entity = elgg_extract('entity', $vars);
 
 $actor = get_entity($entity->from_guid);
 $object = get_entity($entity->object_guid);
-$objectOwner = get_entity($object->getOwnerGUID());
 $subtype = $object->getSubtype();
-if($subtype == 'thewire' && $entity->to_guid == $object->getOwnerGUID()){
+if($subtype == 'thewire' && $entity->to_guid == elgg_get_logged_in_user_guid()){
 	$object_title = 'your post';
-} elseif($subtype == 'thewire') {
-	if($entity->from_guid == $object->getOwnerGUID()){
-		$object_title  = 'their own post';
-	} else {
-	$object_title = $objectOwner->name . '\'s post';
-	}
-}else{
+} else {
 	$object_title = $object->title;
 }
 

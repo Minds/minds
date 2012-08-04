@@ -47,7 +47,6 @@ $comments_input = elgg_view('hj/comments/input', $params);
 unset($params['aname']);
 unset($params['entity']);
 $likes_view = hj_alive_view_likes_list($params);
-
 //if(elgg_get_context() == 'news'){
 ?>
 <div id="hj-annotations-<?php echo $selector_id ?>" class="hj-annotations-bar clearfix">

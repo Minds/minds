@@ -262,20 +262,23 @@ function notification_notifier() {
  * @return bool - success or failed
  */
 function notification_create($to, $from, $object, $params){
-	
 	//if the user and from are not the same then send!
-	if($to != $from){
-		$notification = new ElggNotification();
-		$notification->to_guid = $to;
-		$notification->object_guid = $object;
-		$notification->from_guid = $from;
-		$notification->notification_view = $params['notification_view'];
-		$notification->description = $params['description'];
-		$notification->read = 0;
-		$notification->access_id = 2;
-	
-		return $notification->save();
+	//if($to != $from){
+	foreach($to as $t){
+		if($t != $from){
+			$notification = new ElggNotification();
+			$notification->to_guid = $t;
+			$notification->object_guid = $object;
+			$notification->from_guid = $from;
+			$notification->notification_view = $params['notification_view'];
+			$notification->description = $params['description'];
+			$notification->read = 0;
+			$notification->access_id = 2;
+		
+			$notification->save();
+		}
 	}
+	//}
 	
 	return true;
 	

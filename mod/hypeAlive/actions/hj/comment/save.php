@@ -28,8 +28,26 @@ $annotation->river_id = $river_id;
 $annotation->access_id = get_input('access_id', ACCESS_DEFAULT);
 $guid = $annotation->save();
 
-//send a notifications
-notification_create($subject_guid, elgg_get_logged_in_user_guid(), $object_guid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
+//get a list of all the users who have previously commented
+$options = array(
+        'type' => 'object',
+        'subtype' => 'hjannotation',
+        //'owner_guid' => $user->guid,
+        'metadata_name_value_pairs' => array(
+            array('name' => 'river_id', 'value' => $river_id)
+        ),
+        'limit' => 0,
+    );
+$items = elgg_get_entities_from_metadata($options);
+foreach($items as $item){
+	
+	$to_guids[] = $item->owner_guid;
+	
+}
+	$to_guids[] = $subject_guid;
+	$to = array_unique($to_guids);
+
+notification_create($to, elgg_get_logged_in_user_guid(), $object_guid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
 
 if ($guid) {
     system_message(elgg_echo('hj:comments:savesuccess'));
