@@ -551,12 +551,16 @@ function _elgg_load_site_config() {
 		throw new InstallationException(elgg_echo('InstallationException:SiteNotInstalled'));
 	}
 
-	$CONFIG->wwwroot = $CONFIG->site->url;
+	//Changes made for minds to have option of https
+
+	$siteurl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') ? str_replace('http://', 'https://', $CONFIG->site->url) : $CONFIG->site->url);
+
+	$CONFIG->wwwroot = $siteurl;
 	$CONFIG->sitename = $CONFIG->site->name;
 	$CONFIG->sitedescription = $CONFIG->site->description;
 	$CONFIG->siteemail = $CONFIG->site->email;
 	$CONFIG->url = $CONFIG->wwwroot;
-
+	
 	get_all_config();
 }
 
