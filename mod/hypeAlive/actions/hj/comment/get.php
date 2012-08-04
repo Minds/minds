@@ -30,6 +30,7 @@ foreach ($data as $entity) {
     );
     
     if ($sync == 'new') {
+		$options['limit'] = 1;
         $options['wheres'] = "e.time_created > $ts";
     } else {
         $options['wheres'] = "e.time_created < $ts";

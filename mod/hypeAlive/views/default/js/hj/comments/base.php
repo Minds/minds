@@ -10,7 +10,7 @@
         if(window.ajaxcommentsready === undefined) {
             window.ajaxcommentsready = true;
         }
-        hj.comments.triggerRefresh();
+        //hj.comments.triggerRefresh();
 
         var bar_loader = '<div class="hj-ajax-loader hj-loader-bar"></div>';
 
@@ -99,11 +99,10 @@
                             $.each(val.comments, function(key2, val2) {
                                 var new_item = $(val2).hide();
                                 if (sync == 'new') {
-                                    commentsList
-                                    .prepend(new_item.fadeIn(1000));
+                                    commentsList.append(new_item.fadeIn(1000));
                                 } else {
                                     commentsList
-                                    .append(new_item.fadeIn(1000));
+                                    .prepend(new_item.fadeIn(1000));
                                 }
                             });
                         });

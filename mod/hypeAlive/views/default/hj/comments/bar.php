@@ -47,19 +47,22 @@ $comments_input = elgg_view('hj/comments/input', $params);
 unset($params['aname']);
 unset($params['entity']);
 $likes_view = hj_alive_view_likes_list($params);
+
+//if(elgg_get_context() == 'news'){
 ?>
 <div id="hj-annotations-<?php echo $selector_id ?>" class="hj-annotations-bar clearfix">
     <div class="hj-annotations-menu">
-	<?php echo $menu ?>
+	<?php echo $entity->getSubtype() == 'hjannotation' ? $menu : '' ?>
     </div>
     <ul class="hj-annotations-list hj-syncable">
-	<div class="hj-comments-bubble hj-comments-input hidden"><?php echo $comments_input ?></div>
+    
 	<div class="annotations">
 	    <?php echo $comments_view ?>
 	</div>
 	<div class="likes">
 	    <?php echo $likes_view ?>
         </div>
+    <div class="hj-comments-bubble hj-comments-input hidden"><?php echo $comments_input ?></div>
     </ul>
 
 </div>

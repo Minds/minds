@@ -45,7 +45,7 @@ function hj_alive_view_comments_list($entity, $params) {
 
     $vars['class'] = "hj-annotation-list-$annotation_name";
 
-    $visible = elgg_view_entity_list($comments, $vars);
+    $visible = elgg_view_entity_list(array_reverse($comments), $vars);
 
     $limit = elgg_extract('limit', $options, 0);
     if ($count > 0 && $count > $limit) {

@@ -21,6 +21,7 @@ elgg_push_breadcrumb($owner->name, 'thewire/owner/' . $owner->username);
 elgg_push_breadcrumb($title);
 
 $content = elgg_view_entity($post);
+$content .= elgg_view_comments($post);
 
 $body = elgg_view_layout('content', array(
 	'filter' => false,

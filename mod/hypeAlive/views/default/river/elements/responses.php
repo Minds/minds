@@ -25,6 +25,14 @@ if (elgg_get_plugin_setting('river_comments', 'hypeAlive') !== 'off') {
 	echo elgg_view('hj/comments/bar', array(
 	    'entity' => $item,
 	));
+	
+	echo elgg_view('hj/comments/input', array(
+	    'entity' => $item,
+		'river_id'=> $item->id,
+		'container_guid' => elgg_get_logged_in_user_guid(),
+		'aname' => elgg_extract('aname', $vars, 'generic_comment')
+	));
+
     }
 } else {
     $comment_count = $object->countComments();

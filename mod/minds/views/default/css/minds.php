@@ -230,3 +230,22 @@ a.ishouvik:hover {
 	text-decoration: none;
 	border: 3px solid #333;
 }
+
+
+/* Comments 
+ */
+ 
+
+.hj-annotations-bar {
+     -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+form.elgg-form.hj-ajaxed-comment-save {
+	padding:5px;
+}
+form.elgg-form.hj-ajaxed-comment-save input{
+	margin:0;
+    height:25px;
+    width:100%;
+}
