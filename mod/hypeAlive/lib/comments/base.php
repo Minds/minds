@@ -1,7 +1,7 @@
 <?php
 
 function hj_alive_view_comments_list($entity, $params) {
-    $container_guid = elgg_extract('container_guid', $params, null);
+	$parent_guid = elgg_extract('parent_guid', $params, null);
     $river_id = elgg_extract('river_id', $params, null);
     $annotation_name = elgg_extract('aname', $params, 'generic_comment');
 
@@ -9,11 +9,11 @@ function hj_alive_view_comments_list($entity, $params) {
         'type' => 'object',
         'subtype' => 'hjannotation',
         'owner_guid' => null,
-        'container_guid' => $container_guid,
+        //'container_guid' => $container_guid,
         'metadata_name_value_pairs' => array(
             array('name' => 'annotation_name', 'value' => $annotation_name),
             array('name' => 'annotation_value', 'value' => '', 'operand' => '!='),
-            array('name' => 'river_id', 'value' => $river_id)
+            array('name' => 'parent_guid', 'value' => $parent_guid)
         ),
         'count' => false,
         'limit' => 3,

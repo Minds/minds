@@ -27,7 +27,7 @@ function hj_alive_init() {
     elgg_register_js('hj.framework.ajax', $hj_js_ajax);
     elgg_load_js('hj.framework.ajax');
 
-	elgg_register_plugin_hook_handler('comments', 'all', 'hj_alive_comments_replacement');
+    elgg_register_plugin_hook_handler('comments', 'all', 'hj_alive_comments_replacement');
 
 	/* Comments
 	 */
@@ -244,7 +244,7 @@ function hj_alive_comments_replacement($hook, $entity_type, $returnvalue, $param
 	
 	$comments .= elgg_view('hj/comments/input', array(
 	    'entity' => $params['entity'],
-		'container_guid' => elgg_get_logged_in_user_guid(),
+		'parent_guid' =>  $params['entity']->guid,
 		'aname' => elgg_extract('aname', $vars, 'generic_comment')
 	));
 	

@@ -23,13 +23,13 @@ if ($item->annotation_id != 0 || !$object) {
 if (elgg_get_plugin_setting('river_comments', 'hypeAlive') !== 'off') {
     if (elgg_is_logged_in()) {
 	echo elgg_view('hj/comments/bar', array(
-	    'entity' => $item,
+	    'entity' => get_entity($item->object_guid),
 	));
 	
 	echo elgg_view('hj/comments/input', array(
 	    'entity' => $item,
-		'river_id'=> $item->id,
-		'container_guid' => elgg_get_logged_in_user_guid(),
+		//'river_id'=> $item->id,
+		'parent_guid' => $item->object_guid,
 		'aname' => elgg_extract('aname', $vars, 'generic_comment')
 	));
 

@@ -11,7 +11,7 @@ if (!is_array($data)) {
 }
 foreach ($data as $entity) {
     $ts = elgg_extract('timestamp', $entity, get_input('__elgg_ts', time() - 30));
-    $container_guid = elgg_extract('container_guid', $entity, null);
+	$parent_guid = elgg_extract('parent_guid', $entity, null);
     $river_id = elgg_extract('river_id', $entity, null);
     $annotation_name = elgg_extract('aname', $entity, 'generic_comment');
 
@@ -19,11 +19,11 @@ foreach ($data as $entity) {
         'type' => 'object',
         'subtype' => 'hjannotation',
         //'owner_guid' => $user->guid,
-        'container_guid' => $container_guid,
+        //'container_guid' => $container_guid,
         'metadata_name_value_pairs' => array(
             array('name' => 'annotation_name', 'value' => $annotation_name),
             array('name' => 'annotation_value', 'value' => '', 'operand' => '!='),
-            array('name' => 'river_id', 'value' => $river_id)
+            array('name' => 'parent_guid', 'value' => $parent_guid)
         ),
         'limit' => 0,
         'order_by' => 'e.time_created desc'
@@ -50,10 +50,8 @@ foreach ($data as $entity) {
         }
     } 
     if ($comments) {
-        if (!$id = $river_id) {
-            $id = $container_guid;
-        }
-        $output[] = array('id' => $id, 'comments' => $comments);
+        
+        $output[] = array('id' => $parent_guid, 'comments' => $comments);
     }
     unset($comments);
     unset($options);

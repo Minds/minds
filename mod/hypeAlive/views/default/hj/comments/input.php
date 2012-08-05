@@ -19,10 +19,10 @@ $form_body .= elgg_view('input/hidden', array(
     'value' => elgg_extract('aname', $vars, 'generic_comment')
         ));
 
-if ($container_guid = elgg_extract('container_guid', $vars, false)) {
+if ($parent_guid = elgg_extract('parent_guid', $vars, false)) {
     $form_body .= elgg_view('input/hidden', array(
-        'name' => 'container_guid',
-        'value' => $container_guid
+        'name' => 'parent_guid',
+        'value' => $parent_guid
             ));
 }
 

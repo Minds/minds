@@ -1,7 +1,7 @@
 <?php
 
 function hj_alive_view_likes_list($params) {
-    $container_guid = elgg_extract('container_guid', $params, null);
+    $parent_guid = elgg_extract('parent_guid', $params, null);
     $river_id = elgg_extract('river_id', $params, null);
 
     $count = hj_alive_get_likes($params, true);
@@ -62,8 +62,8 @@ function hj_alive_view_likes_list($params) {
             $string = "$likes_short $text_likethis";
         }
     }
-    if (!$container_guid)
-        unset($params['container_guid']);
+    if (!$parent_guid)
+        unset($params['parent_guid']);
     if (!$river_id)
         unset($params['river_id']);
 
@@ -71,17 +71,17 @@ function hj_alive_view_likes_list($params) {
 }
 
 function hj_alive_get_likes($params, $count = false) {
-    $container_guid = elgg_extract('container_guid', $params, null);
+    $parent_guid = elgg_extract('parent_guid', $params, null);
     $river_id = elgg_extract('river_id', $params, null);
     $options = array(
         'type' => 'object',
         'subtype' => 'hjannotation',
         'owner_guid' => null,
-        'container_guid' => $container_guid,
+       // 'container_guid' => $container_guid,
         'metadata_name_value_pairs' => array(
             array('name' => 'annotation_name', 'value' => 'likes'),
             array('name' => 'annotation_value', 'value' => '1'),
-            array('name' => 'river_id', 'value' => $river_id)
+            array('name' => 'parent_guid', 'value' => $parent_guid)
         ),
         'count' => $count,
         'limit' => 0
@@ -91,7 +91,7 @@ function hj_alive_get_likes($params, $count = false) {
 }
 
 function hj_alive_does_user_like($params) {
-    $container_guid = elgg_extract('container_guid', $params, null);
+    $parent_guid = elgg_extract('parent_guid', $params, null);
     $river_id = elgg_extract('river_id', $params, null);
     $owner_guid = elgg_get_logged_in_user_guid();
 
@@ -99,11 +99,11 @@ function hj_alive_does_user_like($params) {
         'type' => 'object',
         'subtype' => 'hjannotation',
         'owner_guid' => $owner_guid,
-        'container_guid' => $container_guid,
+        //'container_guid' => $container_guid,
         'metadata_name_value_pairs' => array(
             array('name' => 'annotation_name', 'value' => 'likes'),
             array('name' => 'annotation_value', 'value' => '1'),
-            array('name' => 'river_id', 'value' => $river_id)
+            array('name' => 'parent_guid', 'value' => $parent_guid)
         ),
         'count' => false,
         'limit' => 0
@@ -118,7 +118,7 @@ function hj_alive_does_user_like($params) {
 }
 
 function hj_alive_does_user_dislike($params) {
-    $container_guid = elgg_extract('container_guid', $params, null);
+    $parent_guid = elgg_extract('parent_guid', $params, null);
     $river_id = elgg_extract('river_id', $params, null);
     $owner_guid = elgg_get_logged_in_user_guid();
 
@@ -126,11 +126,11 @@ function hj_alive_does_user_dislike($params) {
         'type' => 'object',
         'subtype' => 'hjannotation',
         'owner_guid' => $owner_guid,
-        'container_guid' => $container_guid,
+        //'container_guid' => $container_guid,
         'metadata_name_value_pairs' => array(
             array('name' => 'annotation_name', 'value' => 'dislikes'),
             array('name' => 'annotation_value', 'value' => '1'),
-            array('name' => 'river_id', 'value' => $river_id)
+            array('name' => 'parent_guid', 'value' => $parent_guid)
         ),
         'count' => false,
         'limit' => 0

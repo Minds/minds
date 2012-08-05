@@ -97,12 +97,12 @@
                             var container = $('#hj-annotations-'+ val.id);
                             var commentsList = container.find('ul.hj-syncable.hj-comments:first');
                             $.each(val.comments, function(key2, val2) {
-                                var new_item = $(val2).hide();
+                                var new_item = $(val2).show();
                                 if (sync == 'new') {
-                                    commentsList.append(new_item.fadeIn(1000));
+                                    commentsList.append(new_item);
                                 } else {
                                     commentsList
-                                    .prepend(new_item.fadeIn(1000));
+                                    .prepend(new_item);
                                 }
                             });
                         });
@@ -125,7 +125,7 @@
         id,
         container, commentsList;
 
-        data.container_guid = $('input[name="container_guid"]', $(this)).val();
+        data.parent_guid = $('input[name="parent_guid"]', $(this)).val();
         data.river_id = $('input[name="river_id"]', $(this)).val();
         data.aname = $('input[name="aname"]', $(this)).val();
 

@@ -19,15 +19,14 @@ if (!$entity) {
     return true;
 }
 
-if ($entity->getType() == 'river') {
+/*if ($entity->getType() == 'river') {
     $river_id = $entity->id;
     $selector_id = $river_id;
-} else {
+//} else {*/
     $guid = $entity->guid;
     $selector_id = $guid;
-}
-
-$params['container_guid'] = $guid;
+//}
+$params['parent_guid'] = $guid;
 $params['river_id'] = $river_id;
 $params['aname'] = elgg_extract('aname', $vars, 'generic_comment');
 

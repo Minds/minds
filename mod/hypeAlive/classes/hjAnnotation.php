@@ -8,7 +8,7 @@ class hjAnnotation extends ElggObject {
 		$this->attributes['owner_guid'] = elgg_get_logged_in_user_entity()->guid;
 		$this->attributes['access_id'] = ACCESS_DEFAULT;
 	}
-
+/*
 	public function __construct($guid = null) {
 		parent::__construct($guid);
 	}
@@ -33,9 +33,9 @@ class hjAnnotation extends ElggObject {
 			return $this->guid;
 		}
 		return false;
-	}
+	}*/
 
-	public function findOriginalContainer() {
+	/*public function findOriginalContainer() {
 		$check = true;
 		$container = $this;
 		while ($check) {
@@ -51,8 +51,8 @@ class hjAnnotation extends ElggObject {
 			}
 		}
 		return $container;
-	}
-
+	}*/
+/*
 	public function findOriginalOwner() {
 		$container = $this->findOriginalContainer();
 		if ($container->getType() == 'river') {
@@ -61,9 +61,9 @@ class hjAnnotation extends ElggObject {
 			$owner = $container->getOwnerEntity();
 		}
 		return $owner;
-	}
+	}*/
 
-	public function sendNotification() {
+	/*public function sendNotification() {
 		$user = elgg_get_logged_in_user_entity();
 		if (!$user) {
 			return true;
@@ -184,6 +184,5 @@ class hjAnnotation extends ElggObject {
 		}
 
 		return true;
-	}
-
+	}*/
 }
