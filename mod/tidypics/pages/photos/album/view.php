@@ -32,6 +32,7 @@ if (elgg_instanceof($owner, 'group')) {
 elgg_push_breadcrumb($album->getTitle());
 
 $content = elgg_view_entity($album, array('full_view' => true));
+$content .= elgg_view_comments($album);
 
 if ($album->getContainerEntity()->canWriteToContainer()) {
 	elgg_register_menu_item('title', array(
