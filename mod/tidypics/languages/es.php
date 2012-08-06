@@ -11,7 +11,6 @@ $spanish = array(
 			'caption' => "T&iacute;tulo",
 			'photos' => "Fotos",
 			'images:upload' => "Cargar Imagenes",
-			'images:multiupload' => "Herramienta MultiCarga de Flash",
 			'images:multiupload:todo' => "Selecciona uno a m&aacute;s archivos para cargar..",
 			'album' => "&Aacute;lbum de Fotos",
 			'albums' => "&Aacute;lbumnes de Fotos",

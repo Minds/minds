@@ -1,48 +1,66 @@
 <?php
-/**
- * Basic uploader form
- *
- * This only handled uploading the images. Editing the titles and descriptions
- * are handled with the edit forms.
- *
- * @uses $vars['entity']
- *
- * @author Cash Costello
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2
- */
-
 $album = $vars['entity'];
-$access_id = $album->access_id;
+$help = elgg_echo('tidypics:uploader:help');
 
-$maxfilesize = (float) elgg_get_plugin_setting('maxfilesize', 'tidypics');
+$input = elgg_view('input/file', array(
+	'name' => 'images[]',
+	'multiple' => 'multiple',
+	'class' => 'hidden-js',
+));
 
-$instructions = elgg_echo("tidypics:uploader:upload");
-$max = elgg_echo('tidypics:uploader:basic', array($maxfilesize));
+$button = elgg_view('output/url', array(
+	'text' => elgg_echo('tidypics:uploader:choose') . $input,
+	'class' => 'elgg-button elgg-button-action fileinput-button',
+));
 
-$list = '';
-for ($x = 0; $x < 10; $x++) {
-	$list .= '<li>' . elgg_view('input/file', array('name' => 'images[]')) . '</li>';
-}
+$reset = elgg_view('input/reset', array(
+	'value' => elgg_echo('cancel'),
+	'class' => 'hidden',
+));
 
 $foot = elgg_view('input/hidden', array('name' => 'guid', 'value' => $album->getGUID()));
-$foot .= elgg_view('input/submit', array('value' => elgg_echo("save")));
+$upload_button = elgg_view('input/submit', array('value' => elgg_echo("tidypics:uploader:upload")));
 
-$form_body = <<<HTML
+echo <<<HTML
 <div>
 	$max
 </div>
-<div>
-	<ol>
-		$list
-	</ol>
+<div class="fileinput-container">
+	$button
+	$reset
+	$upload_button
+	<p class="elgg-text-help">$help</p>
+</div>
+<div class="mtm"><!-- The table listing the files available for upload/download -->
+        <table role="presentation" class="elgg-table-alt clearfloat mtm">
+			<tbody class="files"></tbody>
+		</table>
 </div>
 <div class='elgg-foot'>
-	$foot
+	$foot 
+	$upload_button
 </div>
 HTML;
 
-echo elgg_view('input/form', array(
-	'body' => $form_body,
-	'action' => 'action/photos/image/upload',
-	'enctype' => 'multipart/form-data',
-));
+?>
+
+<noscript><style type="text/css">hidden-nojs {display: hidden}</style></noscript>
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+	<tr class="template-upload fade">
+		{% if (file.error) { %}
+			<td class="error"><span class="elgg-message elgg-state-error">{%=locale.fileupload.error%} {%=locale.fileupload.errors[file.error] || file.error%}</span></td>
+		{% } else { %}
+			<td class="preview"><span class="fade"></span></td>
+		{% } %}
+		<td class="name"><span>{%=file.name%}</span></td>
+		<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+		
+	</tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl" />
+</script>

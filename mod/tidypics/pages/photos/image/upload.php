@@ -38,15 +38,21 @@ elgg_push_breadcrumb($owner->name, "photos/owner/$owner->username");
 elgg_push_breadcrumb($album->getTitle(), $album->getURL());
 elgg_push_breadcrumb(elgg_echo('album:addpix'));
 
-$uploader = get_input('uploader');
-if ($uploader == 'basic') {
-	$content = elgg_view('forms/photos/basic_upload', array('entity' => $album));
-} else {
-	elgg_load_js('swfobject');
-	elgg_load_js('jquery.uploadify-tp');
-	elgg_load_js('tidypics:uploading');
-	$content = elgg_view('forms/photos/ajax_upload', array('entity' => $album));
-}
+// load javascript dependences
+elgg_load_js('jquery-tmpl');
+elgg_load_js('jquery-load-image');
+elgg_load_js('jquery-canvas-to-blob');
+elgg_load_js('jquery-fileupload');
+elgg_load_js('jquery-fileupload-ui');
+elgg_load_js('tidypics:upload');
+
+$form_vars = array(
+	'id' => 'fileupload',
+	'action' => 'action/photos/image/upload',
+	'enctype' => 'multipart/form-data',
+);
+
+$content = elgg_view_form('photos/basic_upload', $form_vars, array('entity' => $album));
 
 $body = elgg_view_layout('content', array(
 	'content' => $content,

@@ -8,12 +8,9 @@ $english = array(
 			'image' => "Image",
 			'images' => "Images",
 			'caption' => "Caption",
-			//'photos' => "Photos",
-			'photos' => 'Images',
-			//'album' => "Photo Album",
-			'album' => 'Album',
-			//'albums' => "Photo Albums",
-			'albums' => 'Albums',
+			'photos' => "Images",
+			'album' => "Album",
+			'albums' => "Albums",
 			'tidypics:disabled' => 'Disabled',
 			'tidypics:enabled' => 'Enabled',
 			'admin:settings:photos' => 'Tidypics',
@@ -60,6 +57,13 @@ $english = array(
 			'tidypics:sort' => 'Sorting the %s album',
 			'tidypics:none' => 'No photo albums',
 			
+		//upload
+			'tidypics:upload:error' => 'Error:',
+			'tidypics:upload:maxfilesize' => 'File is too big',
+			'tidypics:upload:minfilesize' => 'File is too small',
+			'tidypics:upload:acceptfiletypes' => 'Filetype not allowed',
+			'tidypics:upload:maxnumberoffiles' => 'Max number of files exceeded',
+	
 		//settings
 			'tidypics:settings' => 'Settings',
 			'tidypics:settings:main' => 'Primary settings',
@@ -71,7 +75,6 @@ $english = array(
 			'tidypics:settings:photo_ratings' => "Enable photo ratings (requires rate plugin of Miguel Montes or compatible)",
 			'tidypics:settings:exif' => "Display EXIF data",
 			'tidypics:settings:view_count' => "Display view count",
-			'tidypics:settings:uploader' => "Use Flash uploader",
 			'tidypics:settings:grp_perm_override' => "Allow group members full access to group albums",
 			'tidypics:settings:maxfilesize' => "Maximum image size in megabytes (MB):",
 			'tidypics:settings:quota' => "User Quota (MB) - 0 equals no quota",
@@ -104,8 +107,7 @@ $english = array(
 			'tidypics:server_info:post_max_size_desc' => 'Max post size = sum of images + html form',
 			'tidypics:server_info:max_input_time_desc' => 'Time script waits for upload to finish',
 			'tidypics:server_info:max_execution_time_desc' => 'Max time a script will run',
-			'tidypics:server_info:use_only_cookies_desc' => 'Cookie only sessions may affect the Flash uploader',
-
+			
 			'tidypics:server_info:php_version' => 'PHP Version',
 			'tidypics:server_info:memory_limit' => 'Memory Available to PHP',
 			'tidypics:server_info:peak_usage' => 'Memory Used to Load This Page',
@@ -162,8 +164,7 @@ $english = array(
 			'tidypics:uploader:upload' => "Upload photos",
 			'tidypics:uploader:describe' => "Describe photos",
 			'tidypics:uploader:filedesc' => 'Image files (jpeg, png, gif)',
-			'tidypics:uploader:instructs' => 'There are three easy steps for adding photos to your album using this uploader: choosing, uploading, and describing them. There is a %s MB maximum per photo. If you do not have Flash, there is also a <a href="%s">basic uploader</a> available.',
-			'tidypics:uploader:basic' => 'You can upload up to 10 photos at a time (%s MB maximum per photo)',
+			'tidypics:uploader:help' => 'Tip: use <code>Ctrl</code> or <code>Shift</code> keys to select more than one file. You also can drag&drop photos from desktop.',
 			'tidypics:sort:instruct' => 'Sort the album photos by dragging and dropping the images. Then click the save button.',
 			'tidypics:sort:no_images' => 'No images found to sort. Upload images using the link above.',
 

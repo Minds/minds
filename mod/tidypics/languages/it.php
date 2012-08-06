@@ -51,7 +51,6 @@ $italian = array(
 			'tidypics:uploader:choose' => "Scegli le Foto",
 			'tidypics:uploader:upload' => "Carica le Foto",
 			'tidypics:uploader:describe' => "Descrivi le Foto",
-			'tidypics:uploader:instructs' => 'Ci sono tre semplici passaggi per aggiungere le Foto al tuo Album usando questo caricatore: la scelta, il caricamento e il descriverle. Se non hai Flash, è disponibile anche un <a href="%s">caricatore di base</a>.',
 			'tidypics:uploader:basic' => 'Puoi caricare fino a 10 Foto alla volta (%s MB massimo per foto)',
 			'tidypics:sort:instruct' => 'Ordina i Foto Album trascinando le immagini. Poi clicca il bottone salva.',
 

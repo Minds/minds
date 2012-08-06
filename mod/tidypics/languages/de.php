@@ -68,7 +68,6 @@ $german = array(
 			'tidypics:settings:photo_ratings' => "Bewerten von Bildern erlauben (benötigt das Elggx Fivestar-Plugin oder ein vergleichbares)",
 			'tidypics:settings:exif' => "EXIF-Daten anzeigen",
 			'tidypics:settings:view_count' => "Zugriffszähler anzeigen",
-			'tidypics:settings:uploader' => "Flash-Uploader verwenden",
 			'tidypics:settings:grp_perm_override' => "Gruppen-Mitgliedern unbeschränkten Zugriff auf die Verwaltung von Gruppen-Alben geben",
 			'tidypics:settings:maxfilesize' => "Maximal erlaubte Bildgröße in Megabytes (MB):",
 			'tidypics:settings:quota' => "Quota für Benutzer in Megabytes (MB) (0 = kein Quota)",
@@ -101,8 +100,7 @@ $german = array(
 			'tidypics:server_info:post_max_size_desc' => '"Max post size" abzüglich der Größe der HTML-Form = Maximal mögliche Gesamtgröße von gleichzeitig hochzuladenden Bildern.',
 			'tidypics:server_info:max_input_time_desc' => 'Maximale erlaubte Dauer, in der das Hochladen von Daten auf den Server abgeschlossen sein muss.',
 			'tidypics:server_info:max_execution_time_desc' => 'Maximal erlaubte Ausführdauer für ein Skript auf dem Server.',
-			'tidypics:server_info:use_only_cookies_desc' => 'Cookie only sessions können den Flash-Uploader beeinträchtigen.',
-
+			
 			'tidypics:server_info:php_version' => 'PHP-Version',
 			'tidypics:server_info:memory_limit' => 'Für PHP verfügbarer Speicher',
 			'tidypics:server_info:peak_usage' => 'Genutzer Speicher, um diese Seite zu laden',

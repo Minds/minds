@@ -9,7 +9,6 @@ $french = array(
 	 'caption'  =>  "Légende" , 
 	 'photos'  =>  "Photos" , 
 	 'images:upload'  =>  "Charger des images" , 
-	 'images:multiupload'  =>  "Outil Flash de chargement multi fichiers" , 
 	 'images:multiupload:todo'  =>  "Sélectionnez un ou plusieurs fichiers à charger." , 
 	 'album'  =>  "Album photo" , 
 	 'albums'  =>  "Albums photo" , 

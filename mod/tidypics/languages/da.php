@@ -92,7 +92,6 @@ $danish = array(
 			'tidypics:uploader:choose' => "Vælg fotos",
 			'tidypics:uploader:upload' => "Upload fotos",
 			'tidypics:uploader:describe' => "Beskriv fotos",
-			'tidypics:uploader:instructs' => 'Med tre nemme trin kan du tilføje fotos i dit album ved hjælp af denne uploader: vælg, upload og beskriv fotos. Hvis du ikke har Flash, er der også en <a href="%s">standard uploader</a> til rådighed.',
 			'tidypics:uploader:basic' => 'Du kan uploade op til 10 fotos ad gangen (%s MB maksimum pr. foto)',
 			'tidypics:sort:instruct' => 'Sortér fotos i albummet ved hjælp af drag and drop. Klik derefter på knappen Gem.',
 	
