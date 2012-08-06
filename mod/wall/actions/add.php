@@ -46,7 +46,7 @@ echo $output;
 //add the message
 add_to_river('river/object/wall/create', 'create', $from_guid, $guid);
 
-notification_create($to_guid, $from_guid, $guid, array('description'=>$message,'notification_view'=>'messageboard'));
+notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
 
 system_message(elgg_echo("wall:posted"));
 

@@ -15,7 +15,9 @@ if($object){
 		} else {
 		$object_title = $objectOwner->name . '\'s post';
 		}
-	}else{
+	}elseif($subtype == 'wallpost'){
+		$object_title = 'a wall post';
+	}else {
 		$object_title = $object->title;
 	}
 	

@@ -17,8 +17,6 @@ $to = get_entity($post->to_guid);
 
 $title = elgg_echo('wall:singleview', array($owner->name, $to->name));
 
-elgg_push_breadcrumb($owner->name, 'thewire/all');
-elgg_push_breadcrumb($owner->name, 'thewire/owner/' . $owner->username);
 elgg_push_breadcrumb($title);
 
 $content = elgg_view_entity($post, array('full_view' => true));

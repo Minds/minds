@@ -15,6 +15,7 @@
 		'wall:singleview' => '%s &#9658; %s',
 		'wall:viewall' => 'View all',
 		
+		'wall:post' => 'Posted.',
 		'wall:deleted' => 'Removed wall post',
 		'wall:notdeleted' => 'Not delete, try again.',
 		

@@ -4,8 +4,7 @@
  */
 
 $object = $vars['item']->getObjectEntity();
-$excerpt = strip_tags($object->description);
-$excerpt = thewire_filter($excerpt);
+$excerpt = strip_tags($object->message);
 
 $owner = get_entity($object->getOwnerGUID());
 

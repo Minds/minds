@@ -14,6 +14,7 @@ class WallPost extends ElggObject {
 		parent::initializeAttributes();
 
 		$this->attributes['subtype'] = 'wallpost';
+		$this->attributes['access_id'] = 2;
 	}
 
 }
