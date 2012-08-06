@@ -46,7 +46,7 @@ function hj_alive_init() {
 	elgg_register_js('hj.comments.base', $js_generic_url);
 	
 	elgg_register_plugin_hook_handler('register', 'menu:comments', 'minds_comments_menu');
-	elgg_register_plugin_hook_handler('register', 'menu:commentshead', 'minds_commentshead_menu');
+	//elgg_register_plugin_hook_handler('register', 'menu:commentshead', 'minds_commentshead_menu');
 
 	/* Likes
 	 */
@@ -75,17 +75,12 @@ function hj_alive_init() {
 
 function minds_comments_menu($hook, $type, $return, $params) {
 	$entity = elgg_extract('entity', $params, false);
-	$container_guid = elgg_extract('container_guid', $params['params'], null);
-	$river_id = elgg_extract('river_id', $params['params'], null);
-
-	if (!$guid = $container_guid) {
-		$guid = $river_id;
-	}
+	$parent_guid = elgg_extract('parent_guid', $params['params'], null);
 
 	if (!$entity) {
 		return $return;
 	}
-	unset($return);
+	//unset($return);
 
 	/**
 	 * TimeStamp
@@ -211,12 +206,12 @@ function minds_commentshead_menu($hook, $type, $return, $params) {
 	if (!$entity && !elgg_instanceof($entity, 'object', 'hjannotation')) {
 		return $return;
 	}
-	unset($return);
+	//unset($return);
 
 	/**
 	 * Delete
 	 */
-	if (($entity->canEdit())) {
+	/*if (($entity->canEdit())) {
 		$delete = array(
 			'name' => 'delete',
 			'text' => elgg_view_icon('delete'),
@@ -229,7 +224,7 @@ function minds_commentshead_menu($hook, $type, $return, $params) {
 		);
 		$return[] = ElggMenuItem::factory($delete);
 	}
-
+*/
 	return $return;
 }
 
