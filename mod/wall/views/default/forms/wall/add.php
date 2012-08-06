@@ -7,6 +7,9 @@
 
 //elgg_load_js('elgg.thewire');
 
+
+elgg_load_js('elgg.wall');
+
 echo elgg_view('input/plaintext', array(
 	'name' => 'body',
 	'class' => 'mtm',

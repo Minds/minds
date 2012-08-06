@@ -29,7 +29,7 @@ if ($history_user) {
 	elgg_push_breadcrumb($history_user->name);
 }
 
-$content = elgg_view_form('wall/add', null,array('to_guid'=>$page_owner_guid));
+$content = elgg_view_form('wall/add',array('name'=>'elgg-wall'),array('to_guid'=>$page_owner_guid));
 $content .= elgg_list_entities_from_metadata($options);
 
 if (!$content) {
