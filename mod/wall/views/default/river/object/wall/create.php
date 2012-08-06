@@ -6,7 +6,7 @@
 $object = $vars['item']->getObjectEntity();
 $excerpt = strip_tags($object->message);
 
-$owner = get_entity($object->getOwnerGUID());
+$to = get_entity($object->to_guid);
 
 $subject = $vars['item']->getSubjectEntity();
 $subject_link = elgg_view('output/url', array(
@@ -17,8 +17,8 @@ $subject_link = elgg_view('output/url', array(
 ));
 
 $owner_link = elgg_view('output/url', array(
-	'href' => "wall/$owner->username",
-	'text' => $owner->name,
+	'href' => "wall/$to->username",
+	'text' => $to->name,
 	'class' => 'elgg-river-object',
 	'is_trusted' => true,
 ));
