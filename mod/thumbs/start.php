@@ -40,18 +40,27 @@ function thumbs_entity_menu_setup($hook, $type, $return, $params) {
 			'name' => 'thumbs:up',
 			'text' => elgg_view('thumbs/button-up', array('entity' => $entity)),
 			'href' => false,
-			'priority' => 1000,
+			'priority' => 100,
+		);
+		$return[] = ElggMenuItem::factory($options);
+		
+		// down button
+		$options = array(
+			'name' => 'thumbs:down',
+			'text' => elgg_view('thumbs/button-down', array('entity' => $entity)),
+			'href' => false,
+			'priority' => 110,
 		);
 		$return[] = ElggMenuItem::factory($options);
 	
 		// likes count
-		$count = elgg_view('likes/count', array('entity' => $entity));
+		$count = elgg_view('thumbs/count', array('entity' => $entity));
 		if ($count) {
 			$options = array(
 				'name' => 'thumbs:count',
 				'text' => $count,
 				'href' => false,
-				'priority' => 1001,
+				'priority' => 50,
 			);
 			$return[] = ElggMenuItem::factory($options);
 		}
