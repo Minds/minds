@@ -1,33 +1,32 @@
 <?php
 /**
- * Count of who has liked something
+ * Count thumbs up
  *
  *  @uses $vars['entity']
  */
 
 
 $list = '';
-$num_of_likes = likes_count($vars['entity']);
+$votes_up = thumbs_up_count($vars['entity']);
+$votes_down = thumbs_down_count($vars['entity']);
 $guid = $vars['entity']->getGUID();
 
-if ($num_of_likes) {
+if ($votes_up) {
 	// display the number of likes
-	if ($num_of_likes == 1) {
-		$likes_string = elgg_echo('likes:userlikedthis', array($num_of_likes));
-	} else {
-		$likes_string = elgg_echo('likes:userslikedthis', array($num_of_likes));
-	}
+	
+	$string = elgg_echo('thumbs:up:count', array($votes_up));
+
 	$params = array(
-		'text' => $likes_string,
+		'text' => $string,
 		'title' => elgg_echo('likes:see'),
 		'rel' => 'popup',
-		'href' => "#likes-$guid"
+		'href' => "#thumbs-up-$guid"
 	);
 	$list = elgg_view('output/url', $params);
-	$list .= "<div class='elgg-module elgg-module-popup elgg-likes hidden clearfix' id='likes-$guid'>";
+	$list .= "<div class='elgg-module elgg-module-popup elgg-likes hidden clearfix' id='thumbs-up-$guid'>";
 	$list .= elgg_list_annotations(array(
 		'guid' => $guid,
-		'annotation_name' => 'likes',
+		'annotation_name' => 'thumbs:up',
 		'limit' => 99,
 		'list_class' => 'elgg-list-likes'
 	));

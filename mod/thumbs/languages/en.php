@@ -12,6 +12,8 @@ $english = array(
 	'thumbs:removed:up' => 'Removed your up vote.',
 	'thumbs:removed:down' => 'Removed your down vote.',
 	
+	'thumbs:up:count' => '%s up votes',
+	
 	'thumbs:already:up' => 'You have already voted this item UP. In order to vote it down, please remove your UP vote. ',
 	'thumbs:already:down' => 'You have already voted this item DOWN. In order to vote it down, please remove your DOWN vote. ',
 	

@@ -48,7 +48,7 @@ function thumbs_entity_menu_setup($hook, $type, $return, $params) {
 		$count = elgg_view('likes/count', array('entity' => $entity));
 		if ($count) {
 			$options = array(
-				'name' => 'likes_count',
+				'name' => 'thumbs:count',
 				'text' => $count,
 				'href' => false,
 				'priority' => 1001,
@@ -99,16 +99,16 @@ function thumbs_river_menu_setup($hook, $type, $return, $params) {
 				);
 				$return[] = ElggMenuItem::factory($options);
 
-				// likes count
-				$count = elgg_view('likes/count', array('entity' => $object));
+				// count
+				$count = elgg_view('thumbs/count', array('entity' => $object));
 				if ($count) {
 					$options = array(
-						'name' => 'likes_count',
+						'name' => 'thumbs:count',
 						'text' => $count,
 						'href' => false,
-						'priority' => 101,
+						'priority' => 90,
 					);
-					$return[] = ElggMenuItem::factory($options);
+				$return[] = ElggMenuItem::factory($options);
 				}
 			}
 		}
@@ -118,72 +118,21 @@ function thumbs_river_menu_setup($hook, $type, $return, $params) {
 }
 
 /**
- * Count how many people have liked an entity.
+ * Count how many people have voted up and entity
  *
  * @param  ElggEntity $entity
- *
- * @return int Number of likes
  */
-function likes_count($entity) {
+function thumbs_up_count($entity) {
 	$type = $entity->getType();
 	$params = array('entity' => $entity);
-	$number = elgg_trigger_plugin_hook('likes:count', $type, $params, false);
 
-	if ($number) {
-		return $number;
-	} else {
-		return $entity->countAnnotations('likes');
-	}
+	
+	return $entity->countAnnotations('thumbs:up');
+
 }
-
-/**
- * Notify $user that $liker liked his $entity.
- *
- * @param type $user
- * @param type $liker
- * @param type $entity 
- */
-function thumbs_notify_user(ElggUser $user, ElggUser $liker, ElggEntity $entity) {
+function thumbs_down_count($entity) {
+	$type = $entity->getType();
+	$params = array('entity' => $entity);
 	
-	if (!$user instanceof ElggUser) {
-		return false;
-	}
-	
-	if (!$liker instanceof ElggUser) {
-		return false;
-	}
-	
-	if (!$entity instanceof ElggEntity) {
-		return false;
-	}
-	
-	$title_str = $entity->title;
-	if (!$title_str) {
-		$title_str = elgg_get_excerpt($entity->description);
-	}
-
-	$site = get_config('site');
-
-	$subject = elgg_echo('likes:notifications:subject', array(
-					$liker->name,
-					$title_str
-				));
-
-	$body = elgg_echo('likes:notifications:body', array(
-					$user->name,
-					$liker->name,
-					$title_str,
-					$site->name,
-					$entity->getURL(),
-					$liker->getURL()
-				));
-
-	
-	notification_create($user->guid, elgg_get_logged_in_user_guid(), $entity->guid, array('notification_view'=>'like'));
-
-	/*notify_user($user->guid,
-				$liker->guid,
-				$subject,
-				$body
-			);*/
+	return $entity->countAnnotations('thumbs:down');
 }
