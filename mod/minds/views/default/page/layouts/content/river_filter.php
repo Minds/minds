@@ -23,10 +23,10 @@ if (elgg_is_logged_in() && $context) {
 			'selected' => ($filter_context == 'friends'),
 			'priority' => 400,
 		),
-		'mine' => array(
-			'text' => elgg_echo('mine'),
-			'href' => (isset($vars['mine_link'])) ? $vars['mine_link'] : "$context/owner/$username",
-			'selected' => ($filter_context == 'mine'),
+		'trending' => array(
+			'text' => elgg_echo('river:trending'),
+			'href' => (isset($vars['trending_link'])) ? $vars['trending_link'] : "$context/trending",
+			'selected' => ($filter_context == 'trending'),
 			'priority' => 300,
 		),
 

@@ -55,6 +55,9 @@ $english = array(
 	'friends:collections:edited' => "Saved collection",
 	'friends:collection:edit_failed' => 'Could not save collection.',
 	
+	//river menu
+	'river:trending' => 'Trending',
+	
 	//change activity to news
 	'news' => 'News', 
 	'minds:riverdashboard:addwire' => 'Share your thoughts',

@@ -145,3 +145,26 @@ function thumbs_down_count($entity) {
 	
 	return $entity->countAnnotations('thumbs:down');
 }
+
+/**
+ * Returns trending entities guids based on how many thumbs up they recieve
+ *
+ */
+function thumbs_trending($return_type = 'guids'){
+	$options = array('annotation_names' => 'thumbs:up');
+	$entities = elgg_get_entities_from_annotation_calculation($options);
+	
+	if($return_type == 'guids'){
+		foreach($entities as $entity){
+			if($entity->countAnnotations('thumbs:up') > 10){
+				$guids[] = $entity->guid;
+			}
+		}
+		return $guids;
+	} elseif ($return_type == 'up_count'){
+		foreach($entities as $entity){
+			$guids[$entity->guid] = $entity->countAnnotations('thumbs:up');
+		}
+		return $guids;
+	}
+}

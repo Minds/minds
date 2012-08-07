@@ -26,10 +26,11 @@ switch ($page_type) {
 		$title = elgg_echo('river:friends');
 		$page_filter = 'all';
 		break;
-	case 'mine':
-		$title = elgg_echo('river:mine');
-		$page_filter = 'mine';
-		$options['subject_guid'] = elgg_get_logged_in_user_guid();
+	case 'trending':
+		$title = elgg_echo('river:trending');
+		$page_filter = 'trending';
+		//GET THE TRENDING FEATURES
+		$options['object_guids'] = thumbs_trending('guids');
 		break;
 	default:
 		$page_filter = 'friends';
