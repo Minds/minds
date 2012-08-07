@@ -14,9 +14,9 @@ $entity_guid = (int) get_input('guid');
 if (elgg_annotation_exists($entity_guid, 'thumbs:up')) {
 	$options = array('annotation_names'=> array('thumbs:up'), 'annotation_owner_guids'=> array(elgg_get_logged_in_user_guid()));
 	$delete = elgg_delete_annotations($options);
-	/*if($delete){
+	///if($delete){
 		echo elgg_view_icon('thumbs-up');
-	}*/
+	//}
 	
 } else {
 	
@@ -53,6 +53,8 @@ if (elgg_annotation_exists($entity_guid, 'thumbs:up')) {
 	}
 	
 	echo elgg_view_icon('thumbs-up-alt');
+	
+	notification_create(array($entity->getOwnerGUID()), elgg_get_logged_in_user_guid(), $entity->guid, array('notification_view'=>'like'));
 	
 	}
 

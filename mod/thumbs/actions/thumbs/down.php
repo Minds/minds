@@ -14,10 +14,9 @@ $entity_guid = (int) get_input('guid');
 if (elgg_annotation_exists($entity_guid, 'thumbs:down')) {
 	$options = array('annotation_names'=> array('thumbs:down'), 'annotation_owner_guids'=> array(elgg_get_logged_in_user_guid()));
 	$delete = elgg_delete_annotations($options);
-	/*if($delete){
-		system_message(elgg_echo("thumbs:removed:down"));
+	//if($delete){
 		echo elgg_view_icon('thumbs-down');
-	}*/
+	//}
 	
 } else {
 
