@@ -1,0 +1,189 @@
+<?php
+/**
+ * Thumbs plugin
+ *
+ */
+
+elgg_register_event_handler('init', 'system', 'thumbs_init');
+
+function thumbs_init() {
+
+	elgg_extend_view('css/elgg', 'thumbs/css');
+	
+	$thumbs_js = elgg_get_simplecache_url('js', 'thumbs');
+	elgg_register_simplecache_view('js/thumbs');
+	elgg_register_js('elgg.thumbs', $thumbs_js, 'footer');
+
+	// registered with priority < 500 so other plugins can remove likes
+	elgg_register_plugin_hook_handler('register', 'menu:river', 'thumbs_river_menu_setup', 400);
+	elgg_register_plugin_hook_handler('register', 'menu:entity', 'thumbs_entity_menu_setup', 400);
+
+	$actions_base = elgg_get_plugins_path() . 'thumbs/actions/thumbs';
+	elgg_register_action('thumbs/up', "$actions_base/up.php");
+	elgg_register_action('thumbs/down', "$actions_base/down.php");
+}
+
+/**
+ * Add likes to entity menu at end of the menu
+ */
+function thumbs_entity_menu_setup($hook, $type, $return, $params) {
+	if (elgg_in_context('widgets')) {
+		return $return;
+	}
+
+	$entity = $params['entity'];
+	
+	if($entity->type != "group"){
+
+		// likes button
+		$options = array(
+			'name' => 'thumbs:up',
+			'text' => elgg_view('thumbs/button-up', array('entity' => $entity)),
+			'href' => false,
+			'priority' => 1000,
+		);
+		$return[] = ElggMenuItem::factory($options);
+	
+		// likes count
+		$count = elgg_view('likes/count', array('entity' => $entity));
+		if ($count) {
+			$options = array(
+				'name' => 'likes_count',
+				'text' => $count,
+				'href' => false,
+				'priority' => 1001,
+			);
+			$return[] = ElggMenuItem::factory($options);
+		}
+	}
+
+	return $return;
+}
+
+/**
+ * Add a like button to river actions
+ */
+function thumbs_river_menu_setup($hook, $type, $return, $params) {
+	if (elgg_is_logged_in()) {
+		$item = $params['item'];
+		
+
+		// only like group creation #3958
+		if ($item->type == "group" && $item->view != "river/group/create") {
+			return $return;
+		}
+
+		// don't like users #4116
+		if ($item->type == "user") {
+			return $return;
+		}
+		
+		$object = $item->getObjectEntity();
+		if (!elgg_in_context('widgets') && $item->annotation_id == 0) {
+			if ($object->canAnnotate(0, 'thumbs:up')) {
+				// up button
+				$options = array(
+					'name' => 'thumbs:up',
+					'text' => elgg_view('thumbs/button-up', array('entity' => $object)),
+					'href' => false,
+					'priority' => 100,
+				);
+				$return[] = ElggMenuItem::factory($options);
+				
+				// down button
+				$options = array(
+					'name' => 'thumbs:down',
+					'text' => elgg_view('thumbs/button-down', array('entity' => $object)),
+					'href' => false,
+					'priority' => 150,
+				);
+				$return[] = ElggMenuItem::factory($options);
+
+				// likes count
+				$count = elgg_view('likes/count', array('entity' => $object));
+				if ($count) {
+					$options = array(
+						'name' => 'likes_count',
+						'text' => $count,
+						'href' => false,
+						'priority' => 101,
+					);
+					$return[] = ElggMenuItem::factory($options);
+				}
+			}
+		}
+	}
+
+	return $return;
+}
+
+/**
+ * Count how many people have liked an entity.
+ *
+ * @param  ElggEntity $entity
+ *
+ * @return int Number of likes
+ */
+function likes_count($entity) {
+	$type = $entity->getType();
+	$params = array('entity' => $entity);
+	$number = elgg_trigger_plugin_hook('likes:count', $type, $params, false);
+
+	if ($number) {
+		return $number;
+	} else {
+		return $entity->countAnnotations('likes');
+	}
+}
+
+/**
+ * Notify $user that $liker liked his $entity.
+ *
+ * @param type $user
+ * @param type $liker
+ * @param type $entity 
+ */
+function thumbs_notify_user(ElggUser $user, ElggUser $liker, ElggEntity $entity) {
+	
+	if (!$user instanceof ElggUser) {
+		return false;
+	}
+	
+	if (!$liker instanceof ElggUser) {
+		return false;
+	}
+	
+	if (!$entity instanceof ElggEntity) {
+		return false;
+	}
+	
+	$title_str = $entity->title;
+	if (!$title_str) {
+		$title_str = elgg_get_excerpt($entity->description);
+	}
+
+	$site = get_config('site');
+
+	$subject = elgg_echo('likes:notifications:subject', array(
+					$liker->name,
+					$title_str
+				));
+
+	$body = elgg_echo('likes:notifications:body', array(
+					$user->name,
+					$liker->name,
+					$title_str,
+					$site->name,
+					$entity->getURL(),
+					$liker->getURL()
+				));
+
+	
+	notification_create($user->guid, elgg_get_logged_in_user_guid(), $entity->guid, array('notification_view'=>'like'));
+
+	/*notify_user($user->guid,
+				$liker->guid,
+				$subject,
+				$body
+			);*/
+}
