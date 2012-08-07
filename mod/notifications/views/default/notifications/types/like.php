@@ -7,6 +7,8 @@ $object = get_entity($entity->object_guid);
 $subtype = $object->getSubtype();
 if($subtype == 'thewire'){
 	$object_title = 'your post';
+}elseif($subtype == 'wallpost'){
+		$object_title = 'a wall post';
 } else {
 	$object_title = $object->title;
 }
