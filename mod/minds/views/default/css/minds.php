@@ -248,4 +248,5 @@ form.elgg-form.hj-ajaxed-comment-save input{
 	margin:0;
     height:25px;
     width:100%;
+    font-size:12px;
 }
