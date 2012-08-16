@@ -2,6 +2,8 @@
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/engine/start.php');
 
+gatekeeper();
+
 if(get_input('full')){
 	
 	$title = elgg_echo('notifications');
