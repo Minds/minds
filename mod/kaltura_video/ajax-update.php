@@ -18,8 +18,8 @@ $collaborative = get_input('collaborative');
 $uploaded_entry_id = get_input('uploaded_entry_id');
 $update_entry_id = get_input('update_entry_id');
 
-if(empty($access_id) && empty($update_plays) && empty($delete_entry_id) && empty($video_id) && empty($collaborative)
-    && empty($uploaded_entry_id) && empty($update_entry_id)) die;
+if(empty($access_id) && empty($update_plays) && empty($delete_entry_id) && empty($collaborative)
+    && empty($uploaded_entry_id)) die;
 
 if($update_plays) {
 	//update plays status
@@ -136,42 +136,23 @@ if(!empty($delete_entry_id)) {
 	exit;
 }
 
-if(!empty($uploaded_entry_id) && !empty($update_entry_id)) {
-	$error = '';
-	$code = '';
-
-	$ob = kaltura_get_entity($update_entry_id);
-	$metadata = kaltura_get_metadata($ob);
+if(!empty($uploaded_entry_id)) {
 
         try {
-		//check if belongs to this user (or is admin)
-		if($ob->canEdit()) {
+		
 			$kmodel = KalturaModel::getInstance();
 
 			$uploaded_entry = $kmodel->getEntry ( $uploaded_entry_id );
 
-                        $mixEntry = new KalturaMixEntry();
-			$mixEntry->name = $uploaded_entry->name;
-                        $updated_entry = $kmodel->updateMixEntry($update_entry_id, $mixEntry);
-
-			if($updated_entry instanceof KalturaMixEntry) {
-				$ob = kaltura_update_object($updated_entry,null,$access,null,null,true);
+			$ob = kaltura_update_object($uploaded_entry,null,$access,elgg_get_logged_in_user_guid(),null,true);
 				if($ob) $ob->save();
-				echo str_replace("%ID%",$updated_entry_id,elgg_echo("kalturavideo:action:updateok"));
-			}
-			else {
-				$error = str_replace("%ID%",$updated_entry_id,elgg_echo("kalturavideo:action:updateko"));
-			}
-		}
-		else {
-			$error = elgg_echo('kalturavideo:edit:notallowed');
-		}
+				var_dump($ob);
 	}
 	catch(Exception $e) {
 		$code = $e->getCode();
 		$error = $e->getMessage();
 	}
-
+	
 	if( $code == 'ENTRY_ID_NOT_FOUND') {
 		//we can delete the elgg object
 		$ob = kaltura_get_entity($delete_entry_id);

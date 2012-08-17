@@ -192,20 +192,24 @@ function deleteVideo() {
 
 //after press the save button on editor
 function onEditorSave (entries) {
-	renameMixVideo(entries);
-<?php
-if(empty($_REQUEST['entryId']) && !isset($_REQUEST['new'])) {
-?>
-	//addentry();
-	loadGallery(1);
-<?php
-}
-else {
-?>
-	finished(2);
-<?php
-}
-?>
+	
+
+	if(entries != undefined) {
+        var uploaded_entry_id = entries[0].entryId;
+	
+		// we need a synchronous call here
+        $.ajax({	
+			url:'<?php echo elgg_get_site_url(); ?>mod/kaltura_video/ajax-update.php?uploaded_entry_id='+uploaded_entry_id, 
+			async:false
+		});
+		
+		<?php
+			//go to edit details window
+			$refresh_loc = $CONFIG->wwwroot."mod/kaltura_video/edit.php?entryid=";
+		?>
+		var topWindow = Kaltura.getTopWindow();	
+		topWindow.location =  '<?php echo $refresh_loc; ?>' + uploaded_entry_id;
+    }
 
 }
 

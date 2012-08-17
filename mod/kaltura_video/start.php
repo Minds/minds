@@ -239,11 +239,12 @@ function kaltura_video_page_setup()
 		{
              if(in_array(elgg_get_plugin_setting("alloweditor","kaltura_video"), array('full', 'simple')))
              {
-				// elgg_load_js('lightbox');
+				//elgg_load_js('lightbox');
 				//elgg_load_css('lightbox');
 				elgg_register_menu_item('page', array(
 					'name' => elgg_echo('kalturavideo:label:newvideo'),
 					'href' => '#kaltura_create',
+					//'href' => 'studio/upload',
 					'text' => elgg_echo('kalturavideo:label:newvideo'),
 					'class' => 'pagesactions'
 				));

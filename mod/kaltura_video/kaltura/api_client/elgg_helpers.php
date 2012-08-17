@@ -148,13 +148,11 @@ function kaltura_get_entity($video_id) {
 function kaltura_update_object(&$entry,$kmodel=null,$access=null,$user_guid=null,$container_guid=null,$force=false, $params = null) {
 	global $CONFIG,$KALTURA_GLOBAL_UICONF;
 
-	if(!($entry instanceof KalturaMixEntry)) {
-		return false;
-	}
 
-	$ob = kaltura_get_entity($entry->id);
+	//$ob = kaltura_get_entity($entry->id);
 	//print_r($ob);echo "[$user_guid $container_guid] ";die;
 	if($user_guid){
+		
 		if($ob instanceof ElggEntity) {
 			$ob->owner_guid = $user_guid;
 			$ob->container_guid = ($container_guid ? $container_guid : $user_guid);
@@ -459,7 +457,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 
    
         $kmodel = KalturaModel::getInstance();
-    try {
+   /* try {
         $mediaEntries = $kmodel->listMixMediaEntries($entryId);
     } catch(Exception $e) {
     }
@@ -467,6 +465,8 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 	    $mediaEntry = $mediaEntries[0];
 	}
 	$entryForPlayer = ($mediaEntry ? $mediaEntry->id : $entryId);
+	*/
+	$entryForPlayer = $entryId;
 	//$flashVarsStr = "streamerType=rtmp&streamerUrl=rtmp://rtmpakmi.kaltura.com/ondemand&rtmpFlavors=1&&";
       
     $viewData["flashVars"]["entryId"] = $entryForPlayer;

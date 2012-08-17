@@ -280,14 +280,14 @@ class KalturaHelpers
 		$flashVars["sessionId"] 	= $ks;
 		$flashVars["partnerId"] 	= elgg_get_plugin_setting("partner_id","kaltura_video");
 		$flashVars["subPartnerId"] 	= elgg_get_plugin_setting("subp_id", "kaltura_video");
-		if ($entryId)
+		/*if ($entryId)
 		    $flashVars["kshowId"] 		= "entry-".$entryId;
 		else
-		    $flashVars["kshowId"] 		= "-2";
-		$flashVars["afterAddentry"] = "renameAndEditMixVideo";
-		if(in_array(elgg_get_plugin_setting("alloweditor","kaltura_video"), array('simple','no'))) {
+		    $flashVars["kshowId"] 		= "-2";*/
+		//$flashVars["afterAddentry"] = "renameAndEditMixVideo";
+		//if(in_array(elgg_get_plugin_setting("alloweditor","kaltura_video"), array('simple','no'))) {
 			$flashVars["afterAddentry"] = "onEditorSave";
-		}
+		//}
 		$flashVars["close"] 		= "deleteVideo";
 		$flashVars["termsOfUse"] 	= "http://corp.kaltura.com/static/tandc" ;
 		//$flashVars["lang"] 	= $_SESSION['user']->language ;

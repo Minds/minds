@@ -33,51 +33,8 @@ if($video_id) {
 	try {
 		$kmodel = KalturaModel::getInstance();
 
-		if($is_simple_video) {
-		    $mediaEntry = new KalturaMediaEntry();
-		    $mediaEntry->name = $title;
-		    $mediaEntry->description = $description;
-		    $mediaEntry->mediaType = KalturaMediaType_VIDEO;
-
-		    $mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['fileData']['tmp_name']);
-		    $is_conversion_ready = false;
-		    while(!$is_conversion_ready)
-		    {
-			$mediaEntry = $kmodel->getEntry($mediaEntry->id);
-			if($mediaEntry->status == 2)
-			{
-			    $is_conversion_ready = true;
-			}
-			else
-			{
-			    sleep(2);
-			}
-		    }
-
-		    $entry = $kmodel->appendMediaToMix($video_id, $mediaEntry->id);
-		}
-		elseif($uploaded_id)
-		{
-			/* $is_conversion_ready = false;
-		    while(!$is_conversion_ready)
-		    {*/
-			//$mediaEntry = $kmodel->getEntry($uploaded_id);
-			/*
-			if($mediaEntry->status == 2)
-			{
-			    $is_conversion_ready = true;
-			}
-			else
-			{
-			    sleep(2);
-			}
-		    }*/
-			$entry = $kmodel->getEntry($video_id);
-		    //$entry = $kmodel->appendMediaToMix($video_id, $uploaded_id);
-		} else {
-			 $entry = $kmodel->getEntry($video_id);
-		}
-
+		$entry = $kmodel->getEntry($video_id);
+	
 		$ob = kaltura_get_entity($video_id);
 
 		//check if belongs to this user (or is admin)
@@ -91,7 +48,7 @@ if($video_id) {
 	}
 
 
-	if(empty($error) && $entry instanceof KalturaMixEntry) {
+	if(empty($error)) {
 		// Convert string of tags into a preformatted array
 		$tagarray = string_to_tag_array($tags);
 
@@ -103,12 +60,12 @@ if($video_id) {
 		}
 		try {
 			$kmodel = KalturaModel::getInstance();
-			$mixEntry = new KalturaMixEntry();
-			$mixEntry->name = $entry->name;
-			$mixEntry->description = $entry->description;
-			$mixEntry->tags = $entry->tags;
-			$mixEntry->adminTags = KALTURA_ADMIN_TAGS;
-			$entry = $kmodel->updateMixEntry($video_id,$mixEntry);
+			$mediaEntry = new KalturaMediaEntry();
+			$mediaEntry->name = $entry->name;
+			$mediaEntry->description = $entry->description;
+			$mediaEntry->tags = $entry->tags;
+			$mediaEntry->adminTags = KALTURA_ADMIN_TAGS;
+			$entry = $kmodel->updateMediaEntry($video_id,$mediaEntry);
 		}
 		catch(Exception $e) {
 			$error = $e->getMessage();
@@ -118,7 +75,7 @@ if($video_id) {
 			//now update the object!
 			$entry->comments_on = $comments_on; //whether the users wants to allow comments or not on the blog post
 			$entry->rating_on = $rating_on; //whether the users wants to allow comments or not on the blog post
-			if(!($ob = kaltura_update_object($entry,null,$access,null,null,true, array('license'=> $license, 'uploaded_id' => $uploaded_id)))) {
+			if(!($ob = kaltura_update_object($entry,null,$access,$ob->owner_guid,null,true, array('license'=> $license)))) {
 				$error = "Error update Elgg object";
 			}
 			else {

@@ -24,10 +24,12 @@ if($page_owner = elgg_get_page_owner_entity()) {
 		$container_guid = $page_owner->getGUID();
 	}
 }
-
+$kmodel = KalturaModel::getInstance();
+$ks = $kmodel->getClientSideSession();
+/*
 try {
 	//get the current session
-	$kmodel = KalturaModel::getInstance();
+	
 	$ks = $kmodel->getClientSideSession();
 
 	$mixEntry = new KalturaMixEntry();
@@ -44,7 +46,7 @@ catch(Exception $e) {
 if (!$entryId && !$error) {
 	$error = elgg_echo('kalturavideo:error:noid');
 }
-
+*/
 if($error) {
 	echo kaltura_get_error_page('',$error);
 	die;
@@ -52,7 +54,7 @@ if($error) {
 else {
 
 	//create the elgg object
-	$ob = kaltura_update_object($mixEntry,null,ACCESS_PRIVATE,$user_guid,$container_guid);
+	///$ob = kaltura_update_object($mixEntry,null,ACCESS_PRIVATE,$user_guid,$container_guid);
 	//add to the river
 	$viewData = array();
 
@@ -67,11 +69,11 @@ else {
 		$kcw_uid = $kswf['uiConfId'];
 	}
 
-	$viewData["flashVars"] 	= KalturaHelpers::getContributionWizardFlashVars($ks,$entryId);
+	$viewData["flashVars"] 	= KalturaHelpers::getContributionWizardFlashVars($ks);
     //$viewData["flashVars"]["showCloseButton"] 	= "false";
     $viewData["swfUrl"]    	= KalturaHelpers::getContributionWizardUrl($kcw_uid);
-    $viewData["entryId"] = $entryId;
-    $viewData["flashVars"]["kshowId"] = "entry-".$entryId;
+    //$viewData["entryId"] = $entryId;
+    //$viewData["flashVars"]["kshowId"] = "entry-".$entryId;
 
     $flashVarsStr = KalturaHelpers::flashVarsToString($viewData["flashVars"]);
 
@@ -89,6 +91,3 @@ else {
 	echo $widget;
 }
 ?>
-<script type='text/javascript'>
-	var entryId = "<?php echo $entryId; ?>";
-</script>

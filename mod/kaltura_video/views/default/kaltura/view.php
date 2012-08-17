@@ -15,16 +15,22 @@ $guid = (int) get_input('videopost');
 $ob = get_entity($guid);
 if(!$ob) forward();
 
-if(!$ob->converted){
+$kmodel = KalturaModel::getInstance();
+$mediaEntry = $kmodel->getEntry($ob->kaltura_video_id);
+
+if($mediaEntry->status != 2){
 	//Not converted so say
 	echo '<div class="notconverted">';
 		
 		echo elgg_echo('kalturavideo:notconverted');
 	
 	echo '</div>';
+	
+	
+	
 } else {
 $access_id = $ob->access_id;
-$metadata = kaltura_get_metadata($ob);
+
 
 $standard_entity = elgg_view_entity($ob);
 //get the number of comments
@@ -45,8 +51,8 @@ if($group instanceof ElggGroup) {
 else $group = false;
 
 //generic widget
-$widget = kaltura_create_generic_widget_html ( $metadata->kaltura_video_id , 'l' );
-$widgetm = kaltura_create_generic_widget_html ( $metadata->kaltura_video_id , 'm' );
+$widget = kaltura_create_generic_widget_html ( $ob->kaltura_video_id , 'l' );
+$widgetm = kaltura_create_generic_widget_html ( $ob->kaltura_video_id , 'm' );
 
 //if widget exists
 if($metadata->kaltura_video_widget_html &&
