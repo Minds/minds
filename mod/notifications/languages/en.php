@@ -24,6 +24,8 @@ $english = array(
 	'notification' => 'Notifications',
 	'notifications' => 'Notifications',
 	
+	'notifications:not_logged_in' => 'Your session has expired. Please log back in.',
+	
 	'notifications:unread' => '%s new',
 
 );
