@@ -10,20 +10,19 @@ if(get_input('full')){
 	
 	$options = array(	'types'=>'object',
 					'subtypes'=>'notification',
-					'limit' => 10,
 					'metadata_name_value_pairs' => array(array('name'=>'to_guid', 'value'=>$user->getGUID(), 'operand' => '='))
 				);
 	
 	$notifications = elgg_get_entities_from_metadata($options);
 	
 
-	$content = elgg_view_entity_list($notifications);
+	$content = elgg_list_entities_from_metadata($options);
 	
 	$params = array(
 		'content' => $content,
 		'title' => $title,
 		'sidebar' => $sidebar,
-		'filter_override' => ''
+		'filter_override' => '',
 		);
 
 

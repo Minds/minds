@@ -22,6 +22,7 @@ $english = array(
 	'notifications:subscriptions:success' => 'Your notifications settings have been saved.',
 	
 	'notification' => 'Notifications',
+	'notifications' => 'Notifications',
 	
 	'notifications:unread' => '%s new',
 
