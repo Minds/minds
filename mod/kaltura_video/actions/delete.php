@@ -25,7 +25,6 @@ if($delete_video) {
 			$kmodel = KalturaModel::getInstance();
 			//open the kaltura list without admin privileges
 			$entry = $kmodel->getEntry ( $delete_video );
-			if($entry instanceof KalturaMixEntry) {
 				//deleting media related
 				//TODO: MAYBE should ask before do this!!!
 				$list = $kmodel->listMixMediaEntries($delete_video);
@@ -38,10 +37,6 @@ if($delete_video) {
 				$ob = kaltura_get_entity($delete_video);
 				if($ob) $ob->delete();
 				system_message(str_replace("%ID%",$delete_video,elgg_echo("kalturavideo:action:deleteok")));
-			}
-			else {
-				$error = str_replace("%ID%",$delete_video,elgg_echo("kalturavideo:action:deleteko"));
-			}
 		}
 		else {
 			$error = elgg_echo('kalturavideo:edit:notallowed');

@@ -149,7 +149,7 @@ function kaltura_update_object(&$entry,$kmodel=null,$access=null,$user_guid=null
 	global $CONFIG,$KALTURA_GLOBAL_UICONF;
 
 
-	//$ob = kaltura_get_entity($entry->id);
+	$ob = kaltura_get_entity($entry->id);
 	//print_r($ob);echo "[$user_guid $container_guid] ";die;
 	if($user_guid){
 		
