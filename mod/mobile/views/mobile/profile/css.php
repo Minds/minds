@@ -12,6 +12,7 @@
 	float: left;
     width:100%;
 	margin-bottom: 15px;
+    background:none;
 }
 .profile .elgg-inner {
 	margin: 0 5px;
@@ -20,16 +21,19 @@
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;
 	border-radius: 8px;
+     background:none;
 }
 #profile-details {
 	padding: 15px;
+    float:left;
 }
 /*** ownerblock ***/
 #profile-owner-block {
-	width: 100px;
+	width: 100%;
 	float: left;
 	background-color: #eee;
 	padding: 15px;
+    display:none;
 }
 #profile-owner-block .large {
 	margin-bottom: 10px;
@@ -39,7 +43,7 @@
 	display: table;
 }
 .profile-content-menu a {
-	display: block;
+	display: none;
 	
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;

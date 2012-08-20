@@ -23,10 +23,10 @@
 	width: 50%;
 }
 .elgg-col-1of3 {
-	width: 33.33%;
+	width: 100%;
 }
 .elgg-col-2of3 {
-	width: 66.66%;
+	width: 100%;
 }
 .elgg-col-1of4 {
 	width: 25%;

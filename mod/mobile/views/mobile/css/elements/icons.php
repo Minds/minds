@@ -200,20 +200,20 @@
 }
 .elgg-icon-thumbs-down:hover,
 .elgg-icon-thumbs-down-alt {
-	background-position: 0 -1080px;
+	background-position: 0 -1278px;
 }
 .elgg-icon-thumbs-down {
-	background-position: 0 -1098px;
+	background-position: 0 -1314px;
 }
 .elgg-icon-thumbs-up-alt:hover {
-	background-position: 0 -1116px;
+	background-position: 0 -1332px;
 }
 .elgg-icon-thumbs-up:hover,
 .elgg-icon-thumbs-up-alt {
-	background-position: 0 -1134px;
+	background-position: 0 -1332px;
 }
 .elgg-icon-thumbs-up {
-	background-position: 0 -1152px;
+	background-position: 0 -1368px;
 }
 .elgg-icon-trash {
 	background-position: 0 -1170px;

@@ -11,7 +11,7 @@ if (!$user) {
 	return TRUE;
 }
 
-$icon = elgg_view_entity_icon($user, 'medium', array(
+$icon = elgg_view_entity_icon($user, 'large', array(
 	'use_hover' => false,
 	'use_link' => false,
 ));
