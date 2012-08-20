@@ -158,7 +158,7 @@ if (!empty($categories)) {
 ?>
 
 <video controls>
-  <source src="http://www.minds.tv/p/100/sp/0/playManifest/entryId/<?php echo $ob->kaltura_video_id;?>/format/url/flavorParamId/16/video.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+  <source src="http://www.minds.tv/p/100/sp/0/playManifest/entryId/<?php echo $ob->kaltura_video_id;?>/format/url/flavorParamId/9/video.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
 </video>
 
 </div>
