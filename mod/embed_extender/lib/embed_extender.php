@@ -33,7 +33,7 @@ function embed_extender_parser($input, $view, $context)
 		}
 	}
 	else{
-		$width = elgg_get_plugin_setting('width', 'embed_extender');			
+		$width = elgg_get_viewtype() == 'mobile' ? 280 : elgg_get_plugin_setting('width', 'embed_extender');			
 		if (!isset($width) || !is_numeric($width) || $width < 0) {
 			$width = 400; //Size for content
 		}
