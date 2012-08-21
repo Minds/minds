@@ -48,46 +48,15 @@ if ($new_file) {
 	if(file_get_simple_type($mime_type) == 'video'){
 		$kmodel = KalturaModel::getInstance();
 		$ks = $kmodel->getClientSideSession();
-		
-		//setup the blank mix entry
-		try {
-		    $mixEntry = new KalturaMixEntry();
-		    $mixEntry->name = $title;
-		    $mixEntry->editorType = KalturaEditorType_SIMPLE;
-		    $mixEntry->adminTags = KALTURA_ADMIN_TAGS;
-		    $mixEntry = $kmodel->addMixEntry($mixEntry);
-		    $entryId = $mixEntry->id;
-		}
-		catch(Exception $e) {
-			$error = $e->getMessage();
-		}
-	
-	
-			$mediaEntry = new KalturaMediaEntry();
-		    $mediaEntry->name = $title;
-		    $mediaEntry->description = $description;
-		    $mediaEntry->mediaType = KalturaMediaType_VIDEO;
 
-		    $mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['upload']['tmp_name']);
-	
-		    /*$is_conversion_ready = false;
-		    while(!$is_conversion_ready)
-		    {
-			$mediaEntry = $kmodel->getEntry($mediaEntry->id);
-			if($mediaEntry->status == 2)
-			{
-			    $is_conversion_ready = true;
-			}
-			else
-			{
-			    sleep(2);
-			}
-		    }*/
+		$mediaEntry = new KalturaMediaEntry();
+		$mediaEntry->name = $title;
+		$mediaEntry->description = $description;
+		$mediaEntry->mediaType = KalturaMediaType_VIDEO;
 
-		 // $entry = $kmodel->appendMediaToMix($entryId, $mediaEntry->id);
-		 
-		 
-		  	$ob = kaltura_update_object($mixEntry,null,ACCESS_PRIVATE,$user_guid,$container_guid, false, array('uploaded_id' => $mediaEntry->id, 'license' => $license));
+		$mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['upload']['tmp_name']);
+	
+		$ob = kaltura_update_object($mediaEntry,null,ACCESS_PRIVATE,$user_guid,$container_guid, false, array('uploaded_id' => $mediaEntry->id, 'license' => $license));
 		  
 		  if($ob){
 			  elgg_clear_sticky_form('file');

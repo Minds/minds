@@ -166,7 +166,10 @@ function kaltura_update_object(&$entry,$kmodel=null,$access=null,$user_guid=null
 			$ob->owner_guid = $user_guid;
 			$ob->container_guid = ($container_guid ? $container_guid : $user_guid);
 			$ob->access_id = ($access!==null ? $access : get_default_access());
-			$ob->save(); //save here to get the guid
+			$guid = $ob->save(); //save here to get the guid
+			
+			add_to_river('river/object/kaltura_video/update','update',$user_guid,$guid);
+
 		}
 	}
 	if(!($ob instanceof ElggEntity)) {
