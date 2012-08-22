@@ -31,9 +31,9 @@ elgg.notify.init = function() {
  */
 elgg.notify.getUnreadNotifications = function() {
    
- 	var url = elgg.normalize_url("mod/notifications/pages/count.php");
+ 	var url = elgg.normalize_url("mod/notifications/pages/count.php"  + '?' + Math.random());
     	
-  	 $.get(url, function(data) {
+  	$.get(url, function(data) {
       		$('#notify_button').html(data);
             //console.log(data);
             //$('#notification').append(data);
