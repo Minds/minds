@@ -45,7 +45,7 @@ if ($new_file) {
 	
 	$mime_type = $_FILES['upload']['type'];
 	//if the file is a video then we upload to kaltura!
-	if(file_get_simple_type($mime_type) == 'video'){
+	if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_type) == 'audio'){
 		$kmodel = KalturaModel::getInstance();
 		$ks = $kmodel->getClientSideSession();
 
