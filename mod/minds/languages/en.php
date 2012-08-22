@@ -55,6 +55,8 @@ $english = array(
 	'friends:collections:edited' => "Saved collection",
 	'friends:collection:edit_failed' => 'Could not save collection.',
 	
+	'river:friend:user:default' => "%s subscribed to %s",
+	
 	//river menu
 	'river:trending' => 'Trending',
 	
