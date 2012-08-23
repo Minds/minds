@@ -11,13 +11,13 @@
 require_once($CONFIG->pluginspath."kaltura_video/kaltura/api_client/includes.php");
 gatekeeper();
 
-$delete_video = get_input('delete_video');
+$delete_video = get_input('guid');
 
 if($delete_video) {
 	$error = '';
 	$code = '';
 
-	$ob = kaltura_get_entity($delete_video);
+	$ob = get_entity($delete_video);
 
 	try {
 		//check if belongs to this user (or is admin)
