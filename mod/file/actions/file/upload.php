@@ -52,7 +52,7 @@ if ($new_file) {
 		$mediaEntry = new KalturaMediaEntry();
 		$mediaEntry->name = $title;
 		$mediaEntry->description = $description;
-		$mediaEntry->mediaType = KalturaMediaType_VIDEO;
+		$mediaEntry->mediaType = file_get_simple_type($mime_type) == 'video' ? KalturaMediaType_VIDEO : KalturaMediaType_AUDIO;
 
 		$mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['upload']['tmp_name']);
 	
