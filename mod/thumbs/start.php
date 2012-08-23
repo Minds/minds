@@ -45,7 +45,7 @@ function thumbs_entity_menu_setup($hook, $type, $return, $params) {
 			'name' => 'thumbs:up',
 			'text' => elgg_view('thumbs/button-up', array('entity' => $entity)),
 			'href' => false,
-			'priority' => 100,
+			'priority' => 98,
 		);
 		$return[] = ElggMenuItem::factory($options);
 		
@@ -54,7 +54,7 @@ function thumbs_entity_menu_setup($hook, $type, $return, $params) {
 			'name' => 'thumbs:down',
 			'text' => elgg_view('thumbs/button-down', array('entity' => $entity)),
 			'href' => false,
-			'priority' => 110,
+			'priority' => 99,
 		);
 		$return[] = ElggMenuItem::factory($options);
 	
