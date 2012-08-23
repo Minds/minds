@@ -24,17 +24,18 @@ if($delete_video) {
 		if($ob->canEdit()) {
 			$kmodel = KalturaModel::getInstance();
 			//open the kaltura list without admin privileges
-			$entry = $kmodel->getEntry ( $delete_video );
-				//deleting media related
+			$entry = $kmodel->getEntry ( $ob->kaltura_video_id );
+			$kmodel->deleteEntry ( $ob->kaltura_video_id );
+				/*//deleting media related
 				//TODO: MAYBE should ask before do this!!!
-				$list = $kmodel->listMixMediaEntries($delete_video);
+				$list = $kmodel->listMixMediaEntries($ob->kaltura_video_id);
 				//print_r($list);die;
 				foreach($list as $subEntry) {
 					$kmodel->deleteEntry($subEntry->id);
 				}
 				//Delete the mix
 				$kmodel->deleteEntry ( $delete_video );
-				$ob = kaltura_get_entity($delete_video);
+				$ob = kaltura_get_entity($delete_video);*/
 				if($ob) $ob->delete();
 				system_message(str_replace("%ID%",$delete_video,elgg_echo("kalturavideo:action:deleteok")));
 		}
