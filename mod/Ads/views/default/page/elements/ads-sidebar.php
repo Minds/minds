@@ -9,7 +9,7 @@ $view = elgg_get_plugin_setting('view_ads_sidebar', 'Ads');
 $title = elgg_echo('Ads:sponsor');
 
 $body = '<div id="ads-sidebar">'.$adssidebar.'</div>';
-/*$body .= <<<HTML
+$body .= <<<HTML
 
      <script type="text/javascript">
     	$(document).ready(function(){ $('#ads-sidebar').jshowoff({
@@ -26,7 +26,7 @@ $body = '<div id="ads-sidebar">'.$adssidebar.'</div>';
 
         }); });
     </script>
-HTML;*/
+HTML;
 
 echo elgg_view_module($view, $title, $body);
 
