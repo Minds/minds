@@ -15,8 +15,8 @@ $english = array(
 	'suggested_friends:friends:only' => 'Channels my other channels are following',
 	'suggested_friends:groups:only' => 'Members of my groups',
 
-	'suggested_friends:is:friend:of' => 'Friend of %s',
-	'suggested_friends:mutual:friends' => '%s mutual friends: %s',
+	'suggested_friends:is:friend:of' => 'Channel of %s',
+	'suggested_friends:mutual:friends' => '%s mutual Channels: %s',
 
 	'suggested_friends:is:member:of' => 'Member of %s',
 	'suggested_friends:shared:groups' => '%s shared groups: %s',
