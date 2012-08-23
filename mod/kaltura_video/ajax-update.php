@@ -51,7 +51,7 @@ if($update_plays) {
 		//get the metadata for plays only
 		$metadata = kaltura_get_metadata($ob);
 
-		if($metadata->kaltura_video_plays != $entry->plays) {
+		if($ob->kaltura_video_plays != $entry->plays) {
 			$value = add_metastring($entry->plays);
 			$name = add_metastring('kaltura_video_plays');
 

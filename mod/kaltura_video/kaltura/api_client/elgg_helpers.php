@@ -328,6 +328,12 @@ function kaltura_parse_time($seconds,$complete=true) {
 	}
 }
 
+function kaltura_get_plays_count($entry){
+	
+	return $entry->plays;
+	
+}
+
 
 function kaltura_build_widget_object($ob,$widget_html) {
 	//echo htmlspecialchars(print_r($widget_html,true));

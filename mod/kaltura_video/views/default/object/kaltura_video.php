@@ -13,11 +13,7 @@ include_once($CONFIG->pluginspath."kaltura_video/kaltura/api_client/includes.php
 $owner = $vars['entity']->getOwnerEntity();
 $access_id = $vars['entity']->access_id;
 
-$metadata = kaltura_get_metadata($vars['entity']);
-if(@empty($metadata->kaltura_video_id)) {
-	$vars['entity']->delete();
-	return false;
-}
+$ob = $vars['entity'];
 
 list($votes,$rating_image,$rating) = kaltura_get_rating($vars['entity']);
 
@@ -36,10 +32,10 @@ if(elgg_get_context()!='search') {
 
 <div class="contentWrapper singleview">
 
-<div class="kalturavideoitem" id="kaltura_video_<?php echo $metadata->kaltura_video_id; ?>">
+<div class="kalturavideoitem" id="kaltura_video_<?php echo $ob->kaltura_video_id; ?>">
 
 <div class="left">
-<p><a href="<?php echo $vars['entity']->getURL(); ?>" rel="<?php echo $metadata->kaltura_video_id; ?>" class="play"><img src="<?php echo $metadata->kaltura_video_thumbnail; ?>" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
+<p><a href="<?php echo $vars['entity']->getURL(); ?>" rel="<?php echo $ob->kaltura_video_id; ?>" class="play"><img src="<?php echo $ob->kaltura_video_thumbnail; ?>" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
 </div>
 
 <div class="left">
@@ -48,7 +44,7 @@ if(elgg_get_context()!='search') {
 
 
 <p class="small">
-<?php echo ' <b class="kaltura_video_created">'.$metadata->kaltura_video_created.'</b>'; ?>
+<?php echo ' <b class="kaltura_video_created">'. elgg_view_friendly_time($ob->time_created).'</b>'; ?>
  <?php echo elgg_echo('by'); ?> <a href="<?php echo $CONFIG->wwwroot.'pg/kaltura_video/'.$owner->username; ?>" title="<?php echo htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos")); ?>"><?php echo $owner->name; ?></a>
 
 <?php
@@ -56,7 +52,7 @@ if($group) {
 	echo elgg_echo('ingroup')." <a href=\"{$CONFIG->wwwroot}pg/kaltura_video/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
 }
 
-if($metadata->kaltura_video_comments_on != 'Off') {
+if($ob->kaltura_video_comments_on != 'Off') {
  ?>
  - <a href="<?php echo $vars['entity']->getURL(); ?>#comments"><?php echo sprintf(elgg_echo("comments")) . " (" . $num_comments . ")"; ?></a>
 <?php
@@ -66,9 +62,9 @@ if($metadata->kaltura_video_comments_on != 'Off') {
 
 
 <p class="small">
-<?php echo elgg_echo("kalturavideo:label:length"); echo ' <strong class="kaltura_video_length">'.$metadata->kaltura_video_length.'</strong>'; ?>
+<?php echo elgg_echo("kalturavideo:label:length"); echo ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>'; ?>
 
-<?php echo elgg_echo("kalturavideo:label:plays"); echo ' <strong class="kaltura_video_plays" rel="'.$metadata->kaltura_video_id.'">'.intval($metadata->kaltura_video_plays).'</strong>'; ?>
+<?php echo elgg_echo("kalturavideo:label:plays"); echo ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.intval($ob->kaltura_video_plays).'</strong>'; ?>
 
 <?php
 

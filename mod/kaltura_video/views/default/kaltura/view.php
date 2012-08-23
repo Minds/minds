@@ -105,7 +105,7 @@ echo elgg_view_entity_icon($uob, 'tiny');
 </div>
 <p class="strapline">
 <?php
-	echo sprintf(elgg_echo("kalturavideo:strapline"),$metadata->kaltura_video_created);
+	echo sprintf(elgg_echo("kalturavideo:strapline"),elgg_view_friendly_time($ob->time_created));
 ?>
 
 <?php echo elgg_echo('by'); ?> <a href="<?php echo $CONFIG->wwwroot.'pg/kaltura_video/'.$uob->username; ?>" title="<?php echo htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos")); ?>"><?php echo $uob->name; ?></a>
@@ -113,10 +113,10 @@ echo elgg_view_entity_icon($uob, 'tiny');
 if($group) echo elgg_echo('ingroup')." <a href=\"{$CONFIG->wwwroot}pg/kaltura_video/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
  ?>
 <?php echo elgg_echo("kalturavideo:label:length"); ?> <strong><?php echo $metadata->kaltura_video_length; ?></strong>
-<?php echo elgg_echo("kalturavideo:label:plays"); ?> <strong class="ajax_play" rel="<?php echo $metadata->kaltura_video_id; ?>"><?php echo intval($metadata->kaltura_video_plays); ?></strong>
+<?php echo elgg_echo("kalturavideo:label:plays"); ?> <strong class="ajax_play" rel="<?php echo $ob->kaltura_video_id; ?>"><?php echo intval($ob->kaltura_video_plays); ?></strong>
 <!-- display the comments link -->
 <?php
-if($metadata->kaltura_video_comments_on != 'Off') {
+if($metadata->kaltura_video_comments_on == 'Off') {
 ?>
 	<a href="<?php echo $ob->getURL(); ?>#comments"><?php echo sprintf(elgg_echo("comments")) . " (" . $num_comments . ")"; ?></a><br />
 <?php
