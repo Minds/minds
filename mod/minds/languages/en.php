@@ -87,6 +87,12 @@ $english = array(
 	'minds:quota:statisitcs:title' => 'Your usage',
 	'minds:quota:statisitcs:storage' => 'Storage',
 	'minds:quota:statisitcs:bandwidth' => 'Bandwidth',
+	
+	/**
+	 * ONLINE USER STATUS
+	 *
+	 */
+	'minds:online_status:online' => 'Online',
 
 );
 		
