@@ -50,7 +50,7 @@ if($delete_video) {
 
 	if( $code == 'ENTRY_ID_NOT_FOUND') {
 		//we can delete the elgg object
-		$ob = kaltura_get_entity($delete_video);
+		$ob = get_entity($delete_video);
 		if($ob instanceOf ElggObject) {
 			$ob->delete();
 		}
@@ -62,9 +62,6 @@ if($delete_video) {
 	}
 }
 
-$url = $_SERVER['HTTP_REFERER'];
-if(strpos($url,'/kaltura_video/') === false) $url = $CONFIG->url.'pg/kaltura_video/';
-if(!$error && strpos($url,'/show/')!==false) $url = $CONFIG->url.'pg/kaltura_video/';
-forward($url);
+forward(REFERRER);
 
 ?>
