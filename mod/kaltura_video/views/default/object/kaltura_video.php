@@ -15,9 +15,6 @@ $access_id = $vars['entity']->access_id;
 
 $ob = $vars['entity'];
 
-list($votes,$rating_image,$rating) = kaltura_get_rating($vars['entity']);
-
-$rating = round($rating);
 
 //get the number of comments
 $num_comments = $vars['entity']->countComments();
@@ -27,6 +24,14 @@ if(!($group instanceof ElggGroup)) $group = false;
 
 if(elgg_get_context()!='search') {
 	//this view is for My videos:
+	
+	
+	echo elgg_view_menu('entity', array(
+	'entity' => $ob,
+	'handler' => 'kaltura',
+	'sort_by' => 'priority',
+	'class' => 'elgg-menu-hz',
+));
 
 ?>
 
@@ -66,20 +71,8 @@ if($ob->kaltura_video_comments_on != 'Off') {
 
 <?php echo elgg_echo("kalturavideo:label:plays"); echo ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.intval($ob->kaltura_video_plays).'</strong>'; ?>
 
-<?php
-
-if($metadata->kaltura_video_rating_on != 'Off') {
-
-?>
-	<span class="kaltura_video_rating">
-	<img src="<?php echo $CONFIG->wwwroot."mod/kaltura_video/kaltura/images/ratings/$rating_image"; ?>" alt="<?php echo "$rating"; ?>" /> <?php echo ("($votes " . elgg_echo('kalturavideo:votes') . ")"); ?>
-	</span>
-<?php
-}
-?>
-
 </p>
-
+<?php if(1==2){?>
 <p class="options">
 
 <a href="<?php echo $vars['entity']->getURL(); ?>" class="submit_button"><?php echo elgg_echo("kalturavideo:label:view"); ?></a>
@@ -112,6 +105,7 @@ elseif($metadata->kaltura_video_cancollaborate) {
 }
 ?>
 </p>
+<?php } ?>
 </div>
 
 <div class="clear"></div>
@@ -138,10 +132,6 @@ else {
 	if($group) $info .= elgg_echo('ingroup')." <a href=\"{$vars['url']}pg/kaltura_video/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
 	$info .= elgg_echo("kalturavideo:label:length"). ' <strong>'.$metadata->kaltura_video_length.'</strong> ';
 	$info .= elgg_echo("kalturavideo:label:plays"). ' <strong>'.((int)$metadata->kaltura_video_plays).'</strong>';
-
-	if($metadata->kaltura_video_rating_on != 'Off') {
-		$info .= " ".elgg_echo("kalturavideo:rating").": <strong>".$rating."</strong>";
-	}
 	
 
 	if ($num_comments && $metadata->kaltura_video_comments_on != 'Off')
@@ -168,9 +158,6 @@ else {
 
 		$info .= '<span class="shared_timestamp">'.$metadata->kaltura_video_created.'</span>';
 
-		if($metadata->kaltura_video_rating_on != 'Off') {
-			$info .= " ".elgg_echo("kalturavideo:rating").": <strong>".$rating."</strong>";
-		}
 
 		if ($num_comments && $metadata->kaltura_video_comments_on != 'Off')
 			$info .= ", <a href=\"{$vars['entity']->getURL()}\">".sprintf(elgg_echo("comments")). " (" . $num_comments . ")</a>";
