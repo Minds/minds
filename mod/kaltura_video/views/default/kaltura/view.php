@@ -87,6 +87,14 @@ if(elgg_get_viewtype() != 'default') {
 	return true;
 }
 
+
+	echo elgg_view_menu('entity', array(
+	'entity' => $ob,
+	'handler' => 'kaltura',
+	'sort_by' => 'priority',
+	'class' => 'elgg-menu-hz',
+));
+
 ?>
 
 <div class="contentWrapper singleview">
@@ -150,39 +158,6 @@ echo autop($ob->description);
 <p><?php echo elgg_echo('kalturavideo:license:label') . ': ' . elgg_echo('kalturavideo:license:' . $ob->license); ?>
 <div class="clear"></div>
 
-<p class="kaltura_video_rating">
-<?php
-if($metadata->kaltura_video_rating_on != 'Off') {
-?>
-	<img src="<?php echo $CONFIG->wwwroot."mod/kaltura_video/kaltura/images/ratings/$rating_image"; ?>" alt="<?php echo "$rating"; ?>" /> <?php echo ("($votes " . elgg_echo('kalturavideo:votes') . ")"); ?>
-
-<?php
-}
-?>
-
-<a href="#" onClick="customFunc1()"><?php echo elgg_echo("kalturavideo:show:advoptions"); ?></a>
-
-<?php
-
-if($metadata->kaltura_video_cancollaborate && !$metadata->kaltura_video_editable) {
-
-?>
-	&nbsp;
-	<strong><?php echo elgg_echo("kalturavideo:label:collaborative"); ?>:</strong>
-	<a href="#" rel="<?php echo $metadata->kaltura_video_id; ?>" class="submit_button edit" title="<?php echo htmlspecialchars(elgg_echo("kalturavideo:text:iscollaborative")); ?>"><img src="<?php echo $CONFIG->wwwroot; ?>mod/kaltura_video/kaltura/images/group.png" alt="<?php echo htmlspecialchars(elgg_echo("kalturavideo:text:iscollaborative")); ?>" style="vertical-align:middle;" />
-	<?php echo elgg_echo("kalturavideo:label:edit"); ?></a>
-
-<?php
-}
-?>
-</p>
-
-<?php
-
-if ($can_rate && $metadata->kaltura_video_rating_on != 'Off') {
-	echo elgg_view('input/form', array('action' => "{$CONFIG->wwwroot}action/kaltura_video/rate", "name"=>"form1", "id"=>"form1", 'body' => elgg_view("kaltura/view.rate",array('entity' => $ob))));
-}
-?>
 
 <div class="hide kaltura_video_details">
 <p><strong><?php echo elgg_echo("kalturavideo:label:thumbnail");?></strong></p>
