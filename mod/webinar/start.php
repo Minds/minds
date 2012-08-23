@@ -19,15 +19,19 @@
 		elgg_register_library('elgg:webinar', elgg_get_plugins_path() . 'webinar/lib/webinar.php');
 		// register BigBlueButton API
 		elgg_register_library('elgg:bbb', elgg_get_plugins_path() . 'webinar/vendors/bbb-api-php/bbb_api.php');
-		// Register a url handler for the new object
+		// Register a url handler for the new object -- FALLBACK
 		elgg_register_entity_url_handler('object', 'webinar', 'webinar_url');
+		// Register a url handler for the new object -- CURRENT AND PREFERRED
+		elgg_register_entity_url_handler('object', 'gatherings', 'webinar_url');
 		
 		//add a tab in site menu
-		$item = new ElggMenuItem('webinar', elgg_echo('webinar:menu:site'), 'webinar/all');
+		$item = new ElggMenuItem('webinar', elgg_echo('webinar:menu:site'), 'gatherings/all');
 		elgg_register_menu_item('site', $item);
 		
-		// Register a page handler, so we can have nice URLs
+		// Register a page handler, so we can have nice URLs -- FALLBACK
 		elgg_register_page_handler('webinar','webinar_page_handler');
+		// Register a page handler, so we can have nice URLs -- CURRENT AND PREFFERED
+		elgg_register_page_handler('gatherings','webinar_page_handler');
 		
 		// Register some actions
 		$action_base = elgg_get_plugins_path() . 'webinar/actions/webinar';
@@ -96,7 +100,7 @@
 		elgg_load_library('elgg:webinar');
 		
 		// push all webinars breadcrumb
-		elgg_push_breadcrumb(elgg_echo('webinar:webinars'), "webinar/all");
+		elgg_push_breadcrumb(elgg_echo('webinar:webinars'), "gatherings/all");
 		
 		if (!isset($page[0])) {
 			$page[0] = 'all';
@@ -155,12 +159,12 @@
 	 */
 	function webinar_handler_menu_owner_block($hook, $type, $return, $params) {
 		if (elgg_instanceof($params['entity'], 'user')) {
-			$url = "webinar/owner/{$params['entity']->username}";
+			$url = "gatherings/owner/{$params['entity']->username}";
 			$item = new ElggMenuItem('webinar', elgg_echo('webinar:webinars'), $url);
 			$return[] = $item;
 		} else {
 			if ($params['entity']->webinar_enable == "yes") {
-				$url = "webinar/group/{$params['entity']->guid}/all";
+				$url = "gatherings/group/{$params['entity']->guid}/all";
 				$item = new ElggMenuItem('webinar', elgg_echo('webinar:group'), $url);
 				$return[] = $item;
 			}
@@ -260,5 +264,5 @@
 		global $CONFIG;
 		$title = $entity->title;
 		$title = elgg_get_friendly_title($title);
-		return $CONFIG->url . "pg/webinar/view/" . $entity->getGUID() . "/" . $title;
+		return $CONFIG->url . "gatherings/view/" . $entity->getGUID() . "/" . $title;
 	}

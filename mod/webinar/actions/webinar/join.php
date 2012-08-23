@@ -32,7 +32,7 @@
 			}
 			
 			$webinar->join($user);
-			add_to_river('river/relationship/attendee/create','attendee',$user->guid,$webinar->guid);
+			//add_to_river('river/relationship/attendee/create','attendee',$user->guid,$webinar->guid);
 			
 		
 			$url = $webinar->joinAdminURL($user);
