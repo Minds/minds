@@ -90,7 +90,7 @@ if(elgg_get_viewtype() != 'default') {
 
 	echo elgg_view_menu('entity', array(
 	'entity' => $ob,
-	'handler' => 'kaltura',
+	'handler' => 'kaltura_video',
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
 ));
@@ -169,6 +169,7 @@ echo autop($ob->description);
 </div>
 <?php
 if($ob->canEdit()) {
+	if(1==2){
 ?>
 
 	<!-- options -->
@@ -185,6 +186,7 @@ if($ob->canEdit()) {
 ?>
 	</p>
 <?php
+}
 }
 ?>
 
