@@ -28,7 +28,7 @@
 	List
 *************************************** */
 .elgg-list {
-	border-top: 1px dotted #CCCCCC;
+	/*border-top: 1px dotted #CCCCCC;*/
 	margin: 5px 0;
 	clear: both;
 }

@@ -263,19 +263,30 @@ function chat_notifier() {
 	if (elgg_is_logged_in()) {
 		// Add hidden popup module to topbar
 		elgg_extend_view('page/elements/topbar', 'chat/preview');
-
-		$counter = '<span class="messages-new hidden"></span>';
-		$icon = elgg_view_icon('speech-bubble-alt');
+					  
+		$class = "message notifier";
+		$text = "<span class='$class'></span>";
+		$tooltip = elgg_echo("chat:messages");
+		// get unread messages
+		$num_unread = (int)chat_count_unread_messages();
+		if ($num_unread != 0) {
+			$class = "message notifier new";
+			$text = "<span class='$class'>".
+						//"<span class=\"notification-new\">$num_unread</span>".
+					  "</span>";
+			$tooltip .= " (" . elgg_echo("notifications:unread", array($num_unread)) . ")";
+		}
 
 		// This link opens the popup module
 		elgg_register_menu_item('topbar', array(
 			'name' => 'chat-notifier',
 			'href' => '#chat-messages-preview',
-			'text' => $icon .$counter,
-			'priority' => 600,
-			'title' => elgg_echo("chat:messages"),
+			'text' => $text,
+			'priority' => 700,
+			'title' => $tooltip,
 			'rel' => 'popup',
 			'id' => 'chat-preview-link',
+			'section' => 'alt' //this is custom to minds theme.
 		));
 	}
 }
@@ -309,16 +320,30 @@ function chat_get_unread_chats($options = array()) {
 function chat_count_unread_messages() {
 	$user = elgg_get_logged_in_user_entity();
 
-	$options = array(
+	$chats = elgg_get_entities_from_annotations(array(
 		'type' => 'object',
-		'subtype' => 'chat_message',
-		'annotation_names' => 'unread',
-		'annotation_values' => 1,
+		'subtype' => 'chat',
+		'annotation_name' => 'unread_messages',
 		'annotation_owner_guids' => $user->getGUID(),
-		'count' => true,
-	);
+		'limit' => 5,
+		/* @todo Ordering doesn't seem to work
+		'order_by_annotation' => array(
+			'name' => 'unread_messages',
+			'direction' => 'desc',
+			'as' => 'integer',
+		),
+		*/
+	));
 	
-	return elgg_get_entities_from_annotations($options);
+	$message_count = 0;
+	$guids = array();
+	if ($chats) {
+		foreach ($chats as $chat) {
+			$message_count += $chat->getUnreadMessagesCount();
+			
+		}
+	}
+	return $message_count;
 }
 
 /**

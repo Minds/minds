@@ -26,7 +26,7 @@
 }
 .elgg-page-default .elgg-page-body > .elgg-inner {
 	width: 990px;
-	margin: 30px auto;
+	margin: 70px auto;
 }
 .elgg-page-default .elgg-page-footer > .elgg-inner {
 	width: 990px;
@@ -37,17 +37,18 @@
 
 /***** TOPBAR ******/
 .elgg-page-topbar {
-	background: #333333 url(<?php echo elgg_get_site_url(); ?>_graphics/toptoolbar_background.gif) repeat-x top left;
-	border-bottom: 1px solid #000000;
+	background: #E3E3E3 url(<?php echo elgg_get_site_url(); ?>mod/minds/graphics/header_bg.png) repeat-x top left;
+	border-bottom: 1px solid #CCC;
 	position: fixed;
     top:0;
     width:100%;
-	height: 24px;
+	height: 65px;
 	z-index: 9000;
 }
 .elgg-page-topbar > .elgg-inner {
-	padding: 0px 10px;
-    min-width:990px;
+	padding: 10px 10px;
+    margin:auto;
+    width:990px;
 }
 
 /***** PAGE MESSAGES ******/

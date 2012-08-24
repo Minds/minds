@@ -95,6 +95,7 @@ function minds_register_hook()
 
 
 function minds_pagesetup(){
+	$user = elgg_get_logged_in_user_entity();
 	//Top Bar Menu
 	elgg_unregister_menu_item('topbar', 'elgg_logo');
 	elgg_unregister_menu_item('topbar', 'administration');
@@ -109,23 +110,49 @@ function minds_pagesetup(){
 		));
 		
 	elgg_register_menu_item('topbar', array(
+			'name' => 'minds_logo',
+			'href' => '/',
+			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds/graphics/minds_logo_transparent.png\' class=\'minds_logo\'>',
+			'priority' => 0
+		));
+	
+	//RIGHT MENU	
+	//profile
+	elgg_unregister_menu_item('topbar', 'profile');
+	if($user)
+	elgg_register_menu_item('topbar', array(
+			'name' => 'profile',
+			'href' => '/profile/' . elgg_get_logged_in_user_entity()->username,
+			'class'=> 'profile',
+			'text' => elgg_view_entity_icon(elgg_get_logged_in_user_entity(), 'tiny', array('use_hover'=>false)),
+			'priority' => 60,
+			'section' => 'alt',
+		));
+	//settings
+	elgg_unregister_menu_item('topbar', 'usersettings');
+	if($user)
+	elgg_register_menu_item('topbar', array(
+			'name' => 'usersettings',
+			'href' => '/settings/user/' . $user->username,
+			'text' => elgg_view_icon('settings-alt'),
+			'priority' => 800,
+			'section' => 'alt',
+		));
+	if(!$user)
+	elgg_register_menu_item('topbar', array(
 			'name' => 'login',
 			'href' => '#',
 			'text' => elgg_view('core/account/login_dropdown'),
-			'priority' => 20,
+			'priority' => 900,
 			'section' => 'alt',
 		));
-	elgg_register_menu_item('topbar', array(
-			'name' => 'minds_logo',
-			'href' => '/',
-			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds/graphics/topbar_logo.gif\'>',
-			'priority' => 0
-		));
+	
 	
 	//rename activity news	
 	elgg_unregister_menu_item('site', 'activity');
 	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
+	if($user)
 	elgg_register_menu_item('site', $item);
 }
 		

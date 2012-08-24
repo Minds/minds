@@ -230,14 +230,17 @@ function notification_notifier() {
 		
 		elgg_extend_view('page/elements/topbar', 'notifications/popup');
 		
-		$class = "elgg-icon elgg-icon-tag";
+		$class = "elgg-icon notification notifier";
 		$text = "<span class='$class'></span>";
 		$tooltip = elgg_echo("notification");
 		
 		// get unread messages
 		$num_notifications = (int)notifications_count_unread();
 		if ($num_notifications != 0) {
-			$text .= "<span class=\"notification-new\">$num_notifications</span>";
+			$class = "elgg-icon notification notifier new";
+			$text = "<span class='$class'>" .
+						//"<span class=\"notification-new\">$num_notifications</span>" .
+					  "</span>";
 			$tooltip .= " (" . elgg_echo("notifications:unread", array($num_notifications)) . ")";
 		}
 
@@ -248,7 +251,8 @@ function notification_notifier() {
 			'text' => $text,
 			'priority' => 600,
 			'title' => $tooltip,
-			'id'=>'notify_button'
+			'id'=>'notify_button',
+			'section' => 'alt',//this is custom to the minds theme. 
 		));
 	}
 }

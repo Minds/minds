@@ -95,7 +95,14 @@
 	font-size:11px;
     
 }
-    
+
+.notification.notifier{
+	background-position: 0 -486px;
+}  
+.notification.notifier:hover, .notification.notifier.new{
+	background-position: 0 -468px;
+}  
+  
 #notification .notification-unread{
 	background:#EEEED1;
 }
@@ -116,8 +123,8 @@
 	
 	position: absolute;
 	text-align: center;
-	top: 0px;
-	left: 26px;
+	top: 5px;
+	left: 10px;
 	min-width: 16px;
 	height: 16px;
 	font-size: 10px;

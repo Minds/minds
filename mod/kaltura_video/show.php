@@ -41,7 +41,7 @@
 		$area2 = elgg_view("kaltura/view");
 	// Set the title appropriately
 		$title = sprintf(elgg_echo("kalturavideo:posttitle"),$page_owner->name,$videopost->title);
-		$area1 = elgg_view_title($videopost->title);
+		$area1 = $videopost->title;
 
 	// Display through the correct canvas area
 		$body = elgg_view_layout("content", array(	'filter'=> '', 

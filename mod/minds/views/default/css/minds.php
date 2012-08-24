@@ -3,6 +3,13 @@
  * CSS Extensions for Minds Theme
  */
 ?>
+/**************
+ **** BODY ****
+ **************/
+ 
+body{
+	background:#FEFEFE;
+ }
 
 /***************
  *** TOP BAR ***
@@ -18,6 +25,14 @@
     padding-top:2px;
    	
 }
+.elgg-page-topbar .elgg-menu-item-minds-logo{
+	margin-top:-20px;
+	
+ }
+.elgg-page-topbar .elgg-menu-item-profile{
+	margin:0px 5px 0 0;
+ }
+
 /* More Drop Down
  */
 .elgg-menu.elgg-menu-site.elgg-menu-site-more{
@@ -40,6 +55,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	font-size:12px;
 	width:65px;
     border:0;
+    color:#333;
 }
 .elgg-button.elgg-button-dropdown:hover{
 	background:#FFF;
@@ -261,16 +277,19 @@ form.elgg-form.hj-ajaxed-comment-save input{
     margin: -13px 0 0;
     right:0;
     position: absolute;
+    z-index:2;
 }
 .minds_online_status_tiny{
     margin: -9px 0 0;
     right:0;
     position: absolute;
+     z-index:2;
 }
 .minds_online_status_medium{
     margin: -16px 0 0;
     right:0;
     position: absolute;
+     z-index:2;
 }
 .minds_online_status_large{
     margin: -20px 0 0;
@@ -282,3 +301,13 @@ form.elgg-form.hj-ajaxed-comment-save input{
     right:0;
     position: absolute;
 }
+
+/**
+ * Hover menu left instead of right
+ */
+.elgg-avatar > .elgg-icon-hover-menu {
+	left:0;
+}
+.elgg-menu.elgg-menu-hover{
+	margin-left:-25px;
+    }

@@ -87,6 +87,8 @@ h4 { font-size: 1.0em; }
 h5 { font-size: 0.9em; }
 h6 { font-size: 0.8em; }
 
+h3 a{ color:#333; }
+
 .elgg-heading-site, .elgg-heading-site:hover {
 	font-size: 2em;
 	line-height: 1.4em;
