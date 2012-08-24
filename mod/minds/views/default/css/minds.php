@@ -158,9 +158,11 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
     font-weight:bold;
     border-bottom:1px solid #cccccc;
     text-decoration:none;
+    display:block;
 }
 #dashboard_navigation ul li:hover {
-	background:#E5F6FF;
+	background:#F2F2F2;
+    color:#333;
 }
 
 #dashboard_navigation ul li a {
@@ -220,31 +222,17 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 /* ***************************************
 	RIVER
 **************************************** */
+.elgg-river-item form{
+	-moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
 .elgg-river-responses {
 	padding-bottom: 20px;
 }
 input.comments.inline{
 	height:25px;
     font-size:11px;
-}
-/* ***************************************
-	SUPPORT TEXT
-**************************************** */
-a.ishouvik {
-	margin: 10px;
-	height:50px;
-	width: 200px;
-	color: #333;
-	font-weight: bold;
-	font-size: 14px;
-	background: white url(<?php echo $vars['url']; ?>mod/ishouvik_riverdashboard/graphics/ishouvik.jpg) no-repeat center;
-	border: 3px solid #dedede;
-	display:block;
-}
-a.ishouvik:hover {
-	color: #333;
-	text-decoration: none;
-	border: 3px solid #333;
 }
 
 
