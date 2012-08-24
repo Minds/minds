@@ -125,7 +125,8 @@ function kaltura_video_init() {
 	$action_path = elgg_get_plugins_path() . 'kaltura_video/actions/';
 
 	//actions for the plugin
-	elgg_register_action("kaltura_video/delete", $action_path . "delete.php");
+	elgg_register_action("kaltura_video/delete", $action_path . "delete.php");//fallback
+	elgg_register_action("studio/delete", $action_path . "delete.php");//new (studio)
 	elgg_register_action("kaltura_video/update", $action_path . "update.php");
 	elgg_register_action("kaltura_video/upload", $action_path . "upload.php");
 	elgg_register_action("kaltura_video/rate",  $action_path . "rate.php");
@@ -308,6 +309,11 @@ function kaltura_video_page_handler($page) {
 			case 'show':
 				set_input('videopost',$page[1]);
 				include(dirname(__FILE__) . "/show.php");
+				return true;
+				break;
+			case 'edit':
+				set_input('videopost',$page[1]);
+				include(dirname(__FILE__) . "/edit.php");
 				return true;
 				break;
 			

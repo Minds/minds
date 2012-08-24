@@ -90,7 +90,7 @@ if(elgg_get_viewtype() != 'default') {
 
 	echo elgg_view_menu('entity', array(
 	'entity' => $ob,
-	'handler' => 'kaltura_video',
+	'handler' => 'studio',
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
 ));
