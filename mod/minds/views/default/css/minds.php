@@ -58,8 +58,8 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
     color:#333;
 }
 .elgg-button.elgg-button-dropdown:hover{
-	background:#FFF;
-    color:#333;
+	background:transparent;
+    color:#4690D6;
     -webkit-border-radius-bottomright: 0px; 
 	-moz-border-radius-bottomright: 0px;
     border-bottom-right-radius:0px;
