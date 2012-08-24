@@ -40,15 +40,18 @@ if(elgg_get_context()!='search') {
 <div class="kalturavideoitem" id="kaltura_video_<?php echo $ob->kaltura_video_id; ?>">
 
 <div class="left">
-<p><a href="<?php echo $vars['entity']->getURL(); ?>" rel="<?php echo $ob->kaltura_video_id; ?>" class="play"><img src="<?php echo $ob->kaltura_video_thumbnail; ?>" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
+<p><a href="<?php echo $vars['entity']->getURL(); ?>" rel="<?php echo $ob->kaltura_video_id; ?>" class="play"><img src="<?php echo $ob->kaltura_video_thumbnail; ?>" height="68px" width="120px" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
 </div>
 
-<div class="left">
+<div class="main_block">
 
 <h3><a href="<?php echo $vars['entity']->getURL(); ?>"><?php echo $vars['entity']->title; ?></a></h3>
 
+<p class='description'>
+	<?php echo $ob->description ? substr(strip_tags($ob->description), 0, 125) . '...' : '';?>
+</p>
 
-<p class="small">
+<p class="stamp">
 <?php echo ' <b class="kaltura_video_created">'. elgg_view_friendly_time($ob->time_created).'</b>'; ?>
  <?php echo elgg_echo('by'); ?> <a href="<?php echo $CONFIG->wwwroot.'pg/kaltura_video/'.$owner->username; ?>" title="<?php echo htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos")); ?>"><?php echo $owner->name; ?></a>
 
@@ -57,17 +60,7 @@ if($group) {
 	echo elgg_echo('ingroup')." <a href=\"{$CONFIG->wwwroot}pg/kaltura_video/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
 }
 
-if($ob->kaltura_video_comments_on != 'Off') {
- ?>
- - <a href="<?php echo $vars['entity']->getURL(); ?>#comments"><?php echo sprintf(elgg_echo("comments")) . " (" . $num_comments . ")"; ?></a>
-<?php
-}
-?>
-</p>
-
-
-<p class="small">
-<?php echo elgg_echo("kalturavideo:label:length"); echo ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>'; ?>
+echo elgg_echo("kalturavideo:label:length"); echo ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>'; ?>
 
 <?php echo elgg_echo("kalturavideo:label:plays"); echo ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.intval($ob->kaltura_video_plays).'</strong>'; ?>
 

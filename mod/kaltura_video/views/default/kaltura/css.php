@@ -19,6 +19,13 @@
 .kalturavideoitem .left,.kalturaviewer .left {
 	float:left;
 }
+.kalturavideoitem .main_block,.kalturaviewer .main_block {
+	float:left;
+    margin:0  0 0 140px;
+    padding:0;
+    position:absolute;
+    max-width:425px;
+}
 .kalturavideoitem .right,.kalturaviewer .right {
 	float:right;
 }
@@ -89,6 +96,15 @@
 }
 .kalturavideoitem p.options label {
 	font-size:0.9em;
+}
+.kalturavideoitem p.description {
+	color:#666666;
+    font-size:12px;
+
+}
+.kalturavideoitem p.stamp {
+    font-size:12px;
+    padding:5px 0;
 }
 .kalturaviewer {
 	margin-bottom: 0px;
