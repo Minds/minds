@@ -34,5 +34,5 @@
 .message.notifier:hover, .message.notifier.new{
 	background: transparent url(<?php echo elgg_get_site_url(); ?>_graphics/elgg_sprites.png) no-repeat left;
 
-	background-position: 0 -629px;
+	background-position: 0 -630px;
 }  
