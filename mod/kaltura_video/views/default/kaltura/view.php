@@ -156,7 +156,11 @@ echo autop($ob->description);
 ?>
 </div>
 <p><?php echo elgg_echo('kalturavideo:license:label') . ': ' . elgg_echo('kalturavideo:license:' . $ob->license); ?></p>
-<p> <a href="http://www.minds.tv/p/100/sp/0/playManifest/entryId/<?php echo $ob->kaltura_video_id;?>/format/url/flavorParamId/10/video.mp4"> Download (right click to save to disk)</a></p>
+<p> <?php echo elgg_view('output/url', array(	'href'=>'/action/studio/download?guid='.$ob->guid,
+												'text'=> elgg_echo('file:download'),
+												'is_action' => true
+										));?>
+</p>
 <div class="clear"></div>
 
 

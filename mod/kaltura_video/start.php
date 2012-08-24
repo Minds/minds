@@ -127,6 +127,7 @@ function kaltura_video_init() {
 	//actions for the plugin
 	elgg_register_action("kaltura_video/delete", $action_path . "delete.php");//fallback
 	elgg_register_action("studio/delete", $action_path . "delete.php");//new (studio)
+	elgg_register_action("studio/download", $action_path . "download.php");
 	elgg_register_action("kaltura_video/update", $action_path . "update.php");
 	elgg_register_action("kaltura_video/upload", $action_path . "upload.php");
 	elgg_register_action("kaltura_video/rate",  $action_path . "rate.php");
