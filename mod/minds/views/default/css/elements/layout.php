@@ -57,7 +57,7 @@
 	top: 24px;
 	right: 20px;
 	max-width: 500px;
-	z-index: 2000;
+	z-index: 20000;
 }
 .elgg-system-messages li {
 	margin-top: 10px;

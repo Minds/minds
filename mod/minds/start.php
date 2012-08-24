@@ -39,9 +39,14 @@ function minds_init(){
 	elgg_extend_view('navigation/pagination', 'minds/navigation');
 	elgg_register_ajax_view('page/components/ajax_list');
 	
+	elgg_register_plugin_hook_handler('register', 'menu:river', 'minds_river_menu_setup');
+	
 	//setup the tracking of user quota - on a file upload, increment, on delete, decrement
 	elgg_register_event_handler('create', 'object', 'minds_quota_increment');
 	elgg_register_event_handler('delete', 'object', 'minds_quota_decrement');
+	
+	$actionspath = elgg_get_plugins_path() . "minds/actions/river";
+	elgg_register_action("minds/river/delete", "$actionspath/delete.php");
 }
 
 function minds_index($hook, $type, $return, $params) {
@@ -186,6 +191,32 @@ function minds_quota_decrement($event, $object_type, $object) {
 }
 
 
+/**
+ * Edit the river menu defaults
+ */
+function minds_river_menu_setup($hook, $type, $return, $params) {
+	if (elgg_is_logged_in()) {
+		$item = $params['item'];
+		$object = $item->getObjectEntity();
+		$subject = $item->getSubjectEntity();
+	
+		elgg_unregister_menu_item('delete');
+		if ($subject->canEdit() || $object->canEdit()) {
+			$options = array(
+				'name' => 'delete',
+				'href' => "action/minds/river/delete?id=$item->id",
+				'text' => elgg_view_icon('delete'),
+				'title' => elgg_echo('delete'),
+				'confirm' => elgg_echo('deleteconfirm'),
+				'is_action' => true,
+				'priority' => 200,
+			);
+			$return[] = ElggMenuItem::factory($options);
+		}
+	}
+
+	return $return;
+}
 
 
 elgg_register_event_handler('init','system','minds_init');		

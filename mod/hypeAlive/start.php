@@ -203,9 +203,9 @@ function minds_comments_menu($hook, $type, $return, $params) {
 function minds_commentshead_menu($hook, $type, $return, $params) {
 	$entity = elgg_extract('entity', $params, false);
 
-	if (!$entity && !elgg_instanceof($entity, 'object', 'hjannotation')) {
+	/*if (!$entity && !elgg_instanceof($entity, 'object', 'hjannotation')) {
 		return $return;
-	}
+	}*/
 	//unset($return);
 
 	/**
@@ -223,8 +223,8 @@ function minds_commentshead_menu($hook, $type, $return, $params) {
 			'priority' => 1000
 		);
 		$return[] = ElggMenuItem::factory($delete);
-	}
-*/
+	}*/
+
 	return $return;
 }
 
