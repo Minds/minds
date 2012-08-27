@@ -735,7 +735,7 @@ function discussion_init() {
 	elgg_register_action('discussion/reply/delete', "$action_base/reply/delete.php");
 
 	// add link to owner block
-	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'discussion_owner_block_menu');
+	//elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'discussion_owner_block_menu');
 
 	// Register for search.
 	elgg_register_entity_type('object', 'groupforumtopic');
@@ -744,8 +744,8 @@ function discussion_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:river', 'discussion_add_to_river_menu');
 
 	// add the forum tool option
-	add_group_tool_option('forum', elgg_echo('groups:enableforum'), true);
-	elgg_extend_view('groups/tool_latest', 'discussion/group_module');
+	//add_group_tool_option('forum', elgg_echo('groups:enableforum'), true);
+	//elgg_extend_view('groups/tool_latest', 'discussion/group_module');
 
 	// notifications
 	register_notification_object('object', 'groupforumtopic', elgg_echo('discussion:notification:topic:subject'));
