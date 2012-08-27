@@ -17,7 +17,7 @@ $subject_link = elgg_view('output/url', array(
 ));
 
 $owner_link = elgg_view('output/url', array(
-	'href' => "wall/$to->username",
+	'href' => elgg_instanceof($to, 'group') ? "wall/group/$to->guid" : "wall/$to->username",
 	'text' => $to->name,
 	'class' => 'elgg-river-object',
 	'is_trusted' => true,
