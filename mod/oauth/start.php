@@ -46,9 +46,9 @@ function oauth_init() {
 	elgg_register_plugin_hook_handler('cron', 'hourly', 'oauth_cron_cleanup');
 
 	// add our menu pieces
-	/*elgg_register_menu_item('site', array('name' => elgg_echo('oauth:menu'),
+	elgg_register_menu_item('site', array('name' => elgg_echo('oauth:menu'),
 	    'text' => elgg_echo('oauth:menu'),
-	    'href' => $CONFIG->wwwroot . 'oauth/authorize'));*/
+	    'href' => $CONFIG->wwwroot . 'oauth/authorize'));
 
 	// hook for the PAM permissions system
 	register_pam_handler('oauth_pam_handler', 'sufficient', 'user');
@@ -74,10 +74,10 @@ function oauth_init() {
 function oauth_pagesetup() {
 	global $CONFIG;
 	// add our page menus as needed
-	/*elgg_register_menu_item('page', array('name' => elgg_echo('oauth:authorized'),
+	elgg_register_menu_item('page', array('name' => elgg_echo('oauth:authorized'),
 	    'text' => elgg_echo('oauth:authorized'),
 	    'context' => 'oauth',
-	    'href' => $CONFIG->wwwroot . 'oauth/authorize'));*/
+	    'href' => $CONFIG->wwwroot . 'oauth/authorize'));
 
 	elgg_register_menu_item('page', array(
 	    'name' => 'oauthregister',
@@ -92,11 +92,6 @@ function oauth_pagesetup() {
 	    'context' => 'admin',
 	    'href' => $CONFIG->wwwroot . 'oauth/register'));
 	*/
-	if(elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()){
-		elgg_register_menu_item('page', array('name' => elgg_echo('oauth:menu'),
-	    'text' => elgg_echo('oauth:menu'),
-	    'href' => $CONFIG->wwwroot . 'oauth/authorize'));
-	}
 }
 
 // API test function
@@ -189,7 +184,7 @@ function oauth_cron_cleanup($hook, $entity_type, $returnvalue, $params) {
 
 function oauth_page_handler($page) {
 	global $CONFIG;
-	elgg_set_context('settings');
+
 	switch ($page[0]) {
 	case 'authorize':
 	case 'gottoken':

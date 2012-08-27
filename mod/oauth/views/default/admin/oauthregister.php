@@ -5,14 +5,6 @@
 		
 $user = elgg_get_logged_in_user_entity();
 
-
-$consumer = oauth_lookup_consumer_entity("1e6aa831dc2838f9227a1062820ba6e4");
-
-$consEnt = oauth_consumer_from_entity($consumer);
-
-var_dump($consEnt);
-
-
 // get a list of all apps
 $apps = elgg_get_entities(array('types' => 'object', 'subtypes' => 'oauthconsumer')); 
 
