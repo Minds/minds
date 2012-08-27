@@ -27,6 +27,11 @@ function wall_init() {
 	// remove edit and access
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'wall_setup_entity_menu_items');
 	
+	//Groups
+	elgg_extend_view('groups/tool_latest', 'wall/group_module');
+	add_group_tool_option('wall',elgg_echo('wall:enable_wall'),TRUE);
+	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'wall_owner_block_menu');
+	
 	// Register actions
 	$action_base = elgg_get_plugins_path() . 'wall/actions';
 	elgg_register_action("wall/add", "$action_base/add.php");
@@ -58,7 +63,11 @@ function wall_page_handler($page) {
 
 			include "$pages/owner.php";
 			break;
-
+		case 'group':
+			$guid = elgg_extract(1, $page);
+			set_input('page_owner_guid', $guid);
+			include "$pages/owner.php";
+			break;
 		case 'view':
 			$guid = elgg_extract(1, $page);
 			set_input('guid', $guid);
@@ -123,3 +132,16 @@ function wall_setup_entity_menu_items($hook, $type, $value, $params) {
 
 	return $value;
 }
+/**
+ * Add a menu item to an owner block
+ */
+function wall_owner_block_menu($hook, $type, $return, $params) {
+	if (elgg_instanceof($params['entity'], 'group')) {
+		$url = "wall/group/{$params['entity']->guid}";
+		$item = new ElggMenuItem('wall:group_wall', elgg_echo('wall:group_wall'), $url);
+		$return[] = $item;
+	} 
+
+	return $return;
+}
+
