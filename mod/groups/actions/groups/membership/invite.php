@@ -27,7 +27,7 @@ if (sizeof($user_guid)) {
 
 				// Send email
 				$url = elgg_normalize_url("groups/invitations/$user->username");
-				$result = notify_user($user->getGUID(), $group->owner_guid,
+				/*$result = notify_user($user->getGUID(), $group->owner_guid,
 						elgg_echo('groups:invite:subject', array($user->name, $group->name)),
 						elgg_echo('groups:invite:body', array(
 							$user->name,
@@ -35,7 +35,8 @@ if (sizeof($user_guid)) {
 							$group->name,
 							$url,
 						)),
-						NULL);
+						NULL);*/
+				$result  = notification_create(array($user->getGUID()), $group->owner_guid, $group_guid, array('invite_url'=> $url,'notification_view'=>'group_invite'));
 				if ($result) {
 					system_message(elgg_echo("groups:userinvited"));
 				} else {
