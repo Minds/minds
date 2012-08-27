@@ -8,6 +8,7 @@
 		'wall'=>'Wall',
 		'wall:title'=>'Wall',
 		'wall:owner'=>'%s\'s Wall',
+		'wall:group_wall' => 'Group wall',
 		
 		'wall:blank' => 'You need to write a message', 
 		'wall:charleft' => 'characters remaining',
