@@ -659,9 +659,9 @@ class OAuthServer {
     // verify that timestamp is recentish
     $now = time();
     if (abs($now - $timestamp) > $this->timestamp_threshold) {
-      throw new OAuthException(
+      /*throw new OAuthException(
         "Expired timestamp, yours $timestamp, ours $now"
-      );
+      );*/
     }
   }
 
