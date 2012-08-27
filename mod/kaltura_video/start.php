@@ -71,12 +71,12 @@ function kaltura_video_init() {
 	elgg_extend_view('profile/menu/links','kaltura/menu');
 
 	// Add to groups context
-	elgg_extend_view('groups/right_column', 'kaltura/groupprofile');
+	//elgg_extend_view('groups/right_column', 'kaltura/groupprofile');
 	//if you prefer to see the widgets in the left part of the groups pages:
 	//extend_view('groups/left_column','kaltura/groupprofile');
 
 	// Add group menu option
-	add_group_tool_option('kaltura_video',elgg_echo('kalturavideo:enablevideo'),true);
+	//add_group_tool_option('kaltura_video',elgg_echo('kalturavideo:enablevideo'),true);
 
 	// Register a page handler, so we can have nice URLs
 	//fallback (in case some links go to kaltura_video
@@ -202,14 +202,14 @@ function kaltura_video_page_setup()
 				'text' =>  elgg_echo('kalturavideo:label:friendsvideos'),
 			));
 			
-			if(elgg_is_active_plugin('groups')) {
+			/*if(elgg_is_active_plugin('groups')) {
 					//this page is to search all groups videos, not ready yet
 				elgg_register_menu_item('page', array(
 				'name' => elgg_echo('kalturavideo:label:allgroupvideos'),
 				'href' =>$CONFIG->wwwroot."mod/kaltura_video/groups.php",
 				'text' =>  elgg_echo('kalturavideo:label:allgroupvideos'),
 				));	
-			}
+			}*/
 			elgg_register_menu_item('page', array(
 				'name' =>elgg_echo('kalturavideo:label:allvideos'),
 				'href' => $CONFIG->wwwroot."studio/all",
