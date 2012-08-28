@@ -499,6 +499,7 @@ function webinar_menu_title($webinar_guid){
 					'text' => elgg_echo("webinar:join"),
 					'is_action' => true,
 					'link_class' => 'elgg-button elgg-button-action',
+					'target'=>'_blank',
 					));
 		}
 	}

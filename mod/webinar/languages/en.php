@@ -112,10 +112,10 @@
 		 * River
 		 **/
 		
-		'river:create:object:webinar' => '%s created a webinar %s',
-		'river:start:object:webinar' => '%s started the webinar %s',
-		'river:attendee:object:webinar' => '%s subscribed to the webinar %s',
-		'river:registered:object:webinar' => '%s joined the webinar %s',
+		'river:create:object:webinar' => '%s created a gathering %s',
+		'river:start:object:webinar' => '%s started the gathering %s',
+		'river:attendee:object:webinar' => '%s subscribed to gathering - %s',
+		'river:registered:object:webinar' => '%s joined the %s gathering',
 		
 		);
 
