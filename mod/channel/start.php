@@ -68,7 +68,7 @@ function channel_init() {
 
 											'medium' => array('w'=>100, 'h'=>100, 'square'=>TRUE, 'upscale'=>TRUE),
 
-											'large' => array('w'=>425, 'h'=>425, 'square'=>FALSE, 'upscale'=>FALSE),
+											'large' => array('w'=>425, 'h'=>425, 'square'=>FALSE, 'upscale'=>TRUE),
 											
 											//'xlarge'=> array('w'=>400, 'h'=>400, 'square'=>false, 'upscale'=>false),
 
@@ -92,6 +92,8 @@ function channel_init() {
  * @return bool
  */
 function channel_page_handler($page) {
+	
+	elgg_set_context('channel');
 
 	if (isset($page[0])) {
 		$username = $page[0];
