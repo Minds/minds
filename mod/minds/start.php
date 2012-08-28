@@ -29,6 +29,10 @@ function minds_init(){
 	//register our own js files
 	$minds_js = elgg_get_simplecache_url('js', 'minds');
 	elgg_register_js('minds.js', $minds_js);
+	
+	elgg_unregister_js('jquery');
+	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
+	elgg_load_js('jquery');
 		
 	//set the custom index
 	elgg_register_plugin_hook_handler('index', 'system','minds_index');
