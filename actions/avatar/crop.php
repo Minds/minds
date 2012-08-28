@@ -30,6 +30,7 @@ if (!file_exists($filename)) {
 
 $icon_sizes = elgg_get_config('icon_sizes');
 unset($icon_sizes['master']);
+unset($icon_sizes['large']);
 
 // get the images and save their file handlers into an array
 // so we can do clean up if one fails.
