@@ -13,7 +13,12 @@
 <!-- displayes user's avatar -->
     <?php 
 	$user = elgg_get_page_owner_entity();
-	$icon = elgg_view_entity_icon($user, 'large', array('use_hover' => false));
+	$icon_url = elgg_format_url($user->getIconURL('large'));
+	$icon = elgg_view('output/img', array(
+							'src' => $icon_url,
+							'alt' => $user->name,
+							'title' => $user->name,
+						));
 	echo "<div id=\"river_avatar\">" . $icon . "</div>"; 
     ?>
 <!-- /river_avatar -->

@@ -76,7 +76,7 @@ function channel_init() {
 						));
 							
 	if(elgg_get_context() == 'channel')
-	elgg_register_menu_item('page', array(	'name' => 'custom_channel',
+		elgg_register_menu_item('page', array(	'name' => 'custom_channel',
 											'text' => elgg_echo('channel:custom'),
 											'href' => 'channel/' . elgg_get_logged_in_user_entity()->username . '/custom'
 											));		
@@ -239,9 +239,12 @@ function channel_hover_menu_setup($hook, $type, $return, $params) {
 	$user = $params['entity'];
 
 	if (elgg_is_logged_in()) {
-		$url = "profile/$user->username/custom/";
+		/*elgg_load_js('lightbox');
+		elgg_load_css('lightbox');*/
+		$url = "channel/$user->username/custom/";
 		$item = new ElggMenuItem('send', elgg_echo('channel:custom'), $url);
 		$item->setSection('action');
+		//$item->setLinkClass('elgg-lightbox');
 		$return[] = $item;
 	}
 

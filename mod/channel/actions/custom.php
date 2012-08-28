@@ -13,6 +13,29 @@ $background_v_pos = get_input('background_v_pos');
 $text_colour = get_input('text_colour');
 $link_colour = get_input('link_colour');
 
+if(get_input('remove_bg') == 'yes'){
+	
+	$thumb = new ElggFile;
+	$thumb->owner_guid = $guid;
+	$thumb->setFilename('profile/background_thumb.jpg');
+	if($thumb->exists())
+	$thumb->delete();
+	
+	$file = new ElggFile;
+	$file->owner_guid = $guid;
+	$file->setFilename('profile/background.jpg');
+	if($file->exists())
+	$file->delete();
+	
+		
+	$user->background = false;
+	$user->save();
+	
+	system_message(elgg_echo('channel:custom:saved'));
+	forward(REFERRER);
+
+}
+
 elgg_make_sticky_form('channel_custom');
 
 if ($guid) {

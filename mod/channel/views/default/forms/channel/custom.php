@@ -13,13 +13,18 @@ if($user->background){
 	$upload_input .= elgg_view('input/file', array(
 		'name' => 'background',
 	));
+	$upload_input .= elgg_view('output/url', array(
+		'href' => 'action/channel/custom?remove_bg=yes&guid='.$user->guid,
+		'text' => elgg_echo('channel:custom:background:remove'),
+		'is_action' =>true
+		));
 } else {
 	$upload_label = elgg_echo('channel:custom:upload');
 	$upload_input = elgg_view('input/file', array(
 		'name' => 'background',
 	));
 }
-//@todo add a delete background link
+
 $bg_repeat_label = elgg_echo('channel:custom:background:repeat');
 $bg_repeat_input = elgg_view('input/dropdown', array(
 		'name' => 'background_repeat',
@@ -34,7 +39,7 @@ $bg_repeat_input = elgg_view('input/dropdown', array(
 $bg_colour_label = elgg_echo('channel:custom:color:background');
 $bg_colour_input = elgg_view('input/text', array(
 		'name' => 'background_colour',
-		'value' => $user->background_colour,
+		'value' => $user->background_colour ? $user->background_colour : '#FEFEFE',
 		'class' => 'colorpicker',
 		'size' => 1
 	));
@@ -42,7 +47,7 @@ $bg_colour_input = elgg_view('input/text', array(
 $text_colour_label = elgg_echo('channel:custom:color:text');
 $text_colour_input = elgg_view('input/text', array(
 		'name' => 'text_colour',
-		'value' => $user->text_colour,
+		'value' => $user->text_colour ? $user->text_colour : '#000',
 		'class' => 'colorpicker',
 		'size' => 1
 	));
@@ -50,7 +55,7 @@ $text_colour_input = elgg_view('input/text', array(
 $link_colour_label = elgg_echo('channel:custom:color:link');
 $link_colour_input = elgg_view('input/text', array(
 		'name' => 'link_colour',
-		'value' => $user->link_colour,
+		'value' => $user->link_colour ? $user->link_colour : '#4690D6',
 		'class' => 'colorpicker',
 		'size' => 1
 	));
@@ -73,36 +78,37 @@ $submit_input = elgg_view('input/submit', array(
 
 $form = <<<FORM
 	
-<div>
-	<label>$upload_label</label>
-	$upload_input
-</div>
-
-<div>
-	<label>$bg_repeat_label</label>
-	$bg_repeat_input
-</div>
-
-<div>
-	<label>$bg_colour_label</label>
-	$bg_colour_input
-</div>
-
-<div>
-	<label>$text_colour_label</label>
-	$text_colour_input
-</div>
-
-<div>
-	<label>$link_colour_label</label>
-	$link_colour_input
-</div>
-
-<div class="elgg-foot">
-	$container_guid_input
-	$guid_input
-	$submit_input
-</div>
+	<div>
+		<label>$upload_label</label>
+		$upload_input
+	</div>
+	
+	<div>
+		<label>$bg_repeat_label</label>
+		$bg_repeat_input
+	</div>
+	
+	<div>
+		<label>$bg_colour_label</label>
+		$bg_colour_input
+	</div>
+	
+	<div>
+		<label>$text_colour_label</label>
+		$text_colour_input
+	</div>
+	
+	<div>
+		<label>$link_colour_label</label>
+		$link_colour_input
+	</div>
+	
+	<div class="elgg-foot">
+		$container_guid_input
+		$guid_input
+		$submit_input
+	</div>
+	
 
 FORM;
 

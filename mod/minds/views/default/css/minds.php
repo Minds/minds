@@ -133,7 +133,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	padding:3px;
 	text-align:center;
 }
-#river_avatar a img{
+#river_avatar img{
 	width: 200px;
 }
 #lastloggedin {
