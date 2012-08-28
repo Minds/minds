@@ -10,6 +10,7 @@
 *************************************** */
 .elgg-avatar-large > a > img{
 	width:425px;
+	height:425px;
 }
 .profile {
 	float:left;
