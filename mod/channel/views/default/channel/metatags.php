@@ -19,8 +19,8 @@ $request = $_SERVER['REQUEST_URI'];
 $split = explode('/', $request);
 $siteURL = elgg_get_site_url();
 
-if(in_array('channel', $split)){
-
+//if(in_array('channel', $split)){
+if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile'){
 	echo '<style>';
 
 	if($owner->background || $owner->text_colour || $owner->link_colour)
