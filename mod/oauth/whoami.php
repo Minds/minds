@@ -4,14 +4,12 @@
 
 //print 0;
 
-
   // Load Elgg engine
     require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 		
-print 1;
+oauth_gatekeeper();
 
 $user = get_loggedin_user();
-print 2;
 
 if ($user) {
 	print $user->name;
