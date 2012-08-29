@@ -8,10 +8,14 @@ $user = get_entity($guid);
 
 $background_colour = get_input('background_colour');
 $background_repeat = get_input('background_repeat');
+$background_attachment = get_input('background_attachment');
 $background_h_pos = get_input('background_h_pos');
 $background_v_pos = get_input('background_v_pos');
 $text_colour = get_input('text_colour');
 $link_colour = get_input('link_colour');
+$widget_bg = get_input('widget_bg');
+$widget_head_title_color = get_input('widget_head_title_color');
+$widget_body_text = get_input('widget_body_text');
 
 if(get_input('remove_bg') == 'yes'){
 	
@@ -66,6 +70,8 @@ if ($guid) {
 			$user->background_colour = $background_colour;
 		//if($background_repeat)
 			$user->background_repeat = $background_repeat;
+		//if($background_attachment)	
+			$user->background_attachment = $background_attachment;
 		//if($background_h_pos)
 			$user->background_h_pos = $background_h_pos;
 		//if($background_v_pos)
@@ -74,6 +80,10 @@ if ($guid) {
 			$user->text_colour = $text_colour;
 		//if($link_colour)
 			$user->link_colour = $link_colour;
+		
+		$user->widget_bg = $widget_bg;
+		$user->widget_head_title_color = $widget_head_title_color;
+		$user->widget_body_text = $widget_body_text;
 		
 		$user->save();
 

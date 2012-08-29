@@ -36,6 +36,8 @@ if(in_array('channel', $split)){
 			
 			background-color:$owner->background_colour;
 			
+			background-attachment:$owner->background_attachment;
+			
 		}
 		
 	body, p, h1,h2,h3,h4,h5, label{
@@ -46,6 +48,21 @@ if(in_array('channel', $split)){
 	a{
 		color:$owner->link_colour;
 	}
+	
+	.elgg-module-widget, .elgg-module-widget:hover{
+		background:$owner->widget_bg;
+	}
+	.elgg-module-widget, .elgg-module-widget p{
+		color:$owner->widget_body_text;
+	}
+	.elgg-module-widget > .elgg-head h3 {
+		color:$owner->widget_head_title_color;
+	}
+	.elgg-module-widget:hover h3, .elgg-module-widget:hover{
+				background:$owner->widget_bg;
+		}
+}
+		
 	
 BODY;
 

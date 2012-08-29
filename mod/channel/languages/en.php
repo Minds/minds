@@ -6,6 +6,7 @@
 $english = array(
 	'channel' => 'Channel',
 	'channel:notfound' => 'Sorry. We could not find the requested channel.',
+ 	'channel:return' => 'Return to channel',
 	
 	//the widget
 	'channel:widget:info:title' => 'About me',
@@ -16,6 +17,9 @@ $english = array(
 	'chanel:custom:saved' => 'Saved!',
 	'channel:custom:background:remove' => 'Remove background',
 	'channel:custom:background:repeat' => 'Repeat background?',
+	'channel:custom:background:attachment' => 'Background attachment',
+	'channel:custom:background:attachment:fixed' => 'Fixed',
+	'channel:custom:background:attachment:scroll' => 'Scroll',
 	'channel:custom:background:position' => 'Background position',
 	'channel:custom:background:repeat:no-repeat' => 'No Repeat',
 	'channel:custom:background:repeat:repeat' => 'Repeat',
@@ -26,6 +30,14 @@ $english = array(
 	'channel:custom:color:text' => 'Text color',
 	'channel:custom:color:link' => 'Link color',
 	
+	'channel:custom:widget:bg' => 'Background color',
+	'channel:custom:widget:head:title:color' => 'Title color',
+	'channel:custom:widget:body_text' => 'Text color',
+	
+	//h3 headers
+	'channel:custom:bg' => 'Background',
+	'channel:custom:text' => 'Text',
+	'channel:custom:widget' => 'Widgets',
 
 );
 

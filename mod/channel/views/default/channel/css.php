@@ -67,11 +67,11 @@
 .profile-admin-menu-wrapper a {
 	display: block;
 	
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	border-radius: 8px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
 	
-	background-color: white;
+	background-color: #EDEDED;
 	margin: 3px 0 5px 0;
 	padding: 2px 4px 2px 8px;
 }
@@ -84,7 +84,7 @@
 }
 .profile-admin-menu-wrapper li a {
 	background-color: white;
-	color: red;
+	color: #333;
 	margin-bottom: 0;
 }
 .profile-admin-menu-wrapper a:hover {
@@ -168,5 +168,6 @@
 .elgg-input-text.colorpicker{
 	width:150px;
 }
+.elgg-button.elgg-button-action.channel{
+	margin-left:5px;
 }
- */

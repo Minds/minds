@@ -40,6 +40,7 @@ function channel_init() {
 	elgg_extend_view('page/elements/head', 'channel/metatags');
 	elgg_extend_view('css/elgg', 'channel/css');
 	elgg_extend_view('js/elgg', 'channel/js');
+	//elgg_extend_view('page/layouts/widgets/add_button', 'channel/top', 1);//add to the top of the widget
 	
 	elgg_register_js('minicolors', elgg_get_site_url() . 'mod/channel/vendors/miniColors/jquery.miniColors.min.js');
 	elgg_register_css('minicolors', elgg_get_site_url() . 'mod/channel/vendors/miniColors/jquery.miniColors.css');
@@ -75,11 +76,16 @@ function channel_init() {
 											'master' => array('w'=>550, 'h'=>550, 'square'=>FALSE, 'upscale'=>FALSE),
 						));
 							
-	if(elgg_get_context() == 'channel')
+	if(elgg_get_context() == 'channel' || elgg_get_context() == 'avatar' || elgg_get_context() == 'profile'){
+		elgg_register_menu_item('page', array(	'name' => 'backtochannel',
+											'text' => elgg_echo('channel:return'),
+											'href' => 'channel/' . elgg_get_logged_in_user_entity()->username,
+											));		
 		elgg_register_menu_item('page', array(	'name' => 'custom_channel',
 											'text' => elgg_echo('channel:custom'),
 											'href' => 'channel/' . elgg_get_logged_in_user_entity()->username . '/custom'
 											));		
+	}
 
 	elgg_register_action("channel/custom", elgg_get_plugins_path() . "channel/actions/custom.php");
 							
