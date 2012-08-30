@@ -4,7 +4,7 @@
  */
 
 $object = $vars['item']->getObjectEntity();
-$excerpt = strip_tags($object->message);
+$excerpt = minds_filter($object->message);
 
 $to = get_entity($object->to_guid);
 

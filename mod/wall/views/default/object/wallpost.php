@@ -34,7 +34,7 @@ $metadata = elgg_view_menu('entity', array(
 
 $subtitle = "$author_text $date";
 
-$content = $post->message;
+$content = minds_filter($post->message);
 
 if(!$full){
 $content .= elgg_view_comments($post);

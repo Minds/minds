@@ -29,15 +29,12 @@ $icon = elgg_view_entity_icon($owner, 'tiny', array('use_hover' => false));
 
 $author = elgg_view('output/url', array(
     'text' => $owner->name,
-//    'href' => $owner->getURL(),
+	'href' => $owner->getURL(),
     'class' => 'hj-comments-item-comment-owner'
 	));
 
-$comment = elgg_view('output/text', array(
-    'value' => $entity->annotation_value
-	));
+$comment = $author . ': ' . minds_filter($entity->annotation_value);
 
-$comment = elgg_echo('hj:alive:comments:commentcontent', array($author, $comment));
 
 $bar = elgg_view('hj/comments/bar', $vars);
 

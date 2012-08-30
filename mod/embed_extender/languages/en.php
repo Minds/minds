@@ -13,6 +13,7 @@ $english = array(
 	'embed_extender:custom_provider' 	=> "Allow custom providers",
 	'embedvideo:novideo' 				=> 'No video set',
 	'embedvideo:unrecognized' 			=> 'Unrecognized video site',
-	'embedvideo:parseerror' 			=> 'Unable to parse %s url'
+	'embedvideo:parseerror' 			=> 'Unable to parse %s url',
+	'embed_extender:custom:views'		=> '<b>Advanced</b>: Display video in custom views.  Enter one view per line.'
 );
 add_translation("en",$english);

@@ -1,24 +1,15 @@
 <?php
 function embed_extender_rewrite($hook, $entity_type, $returnvalue, $params){
-	global $CONFIG;
-	
 	$view = $params['view'];
 	$context = elgg_get_context();
-	
-	//echo $view . ' Inicio ';
-	//echo 'Contexto: ' . $context;
-	//return $returnvalue . $view . ' Fim ';
-	//$returnvalue = embed_extender_parser(' ' . $returnvalue . ' ', $view, $context);
-	//return $returnvalue;
 
-	$returnvalue = embed_extender_parser(' ' . $returnvalue . ' ', $view, $context);
-	
-	return $returnvalue;
+	return embed_extender_parser(' ' . $returnvalue . ' ', $view, $context);
 }
 
 function embed_extender_parser($input, $view, $context)
 {
-	if (($view == 'annotation/generic_comment' || $view == 'annotation/default') && ($context != 'blog' && $context != 'messageboard' && $context != 'widgets' && $context != 'pages' && $context != 'bookmarks')){
+	$allowed_contexts = array('blog', 'messageboard', 'widgets', 'pages', 'bookmarks', 'file', 'event_calendar', 'photos', 'polls');
+	if (($view == 'annotation/generic_comment' || $view == 'annotation/default') && !in_array($context, $allowed_contexts)){
 		return $input;
 	}
 	
@@ -56,16 +47,17 @@ function embed_extender_parser($input, $view, $context)
 	//Replace video providers with embebed content
 	if(preg_match_all("/$regexp/siU", $input, $matches, PREG_SET_ORDER)){
 		foreach($matches as $match){
+			if(empty($match[3])){ continue; }
 			foreach ($patterns as $pattern){
 				if (preg_match($pattern, $match[2]) > 0){
-					$input = str_replace($match[0], videoembed_create_embed_object($match[2], uniqid('embed_'), $width), $input);
+					$input = str_replace($match[0], videoembed_create_embed_object($match[2], uniqid('embed_'), $width, $match[0]), $input);
 				}				
 			}
 			
 			if($custom_provider == 'yes'){
 				foreach ($customPatterns as $pattern){
 					if (preg_match($pattern, $match[2]) > 0){
-						$input = str_replace($match[0], custom_videoembed_create_embed_object($match[2], uniqid('embed_'), $width), $input);
+						$input = str_replace($match[0], custom_videoembed_create_embed_object($match[2], uniqid('embed_'), $width, $match[0]), $input);
 					}				
 				}
 			}

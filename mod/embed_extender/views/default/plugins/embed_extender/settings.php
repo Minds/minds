@@ -125,6 +125,14 @@ echo elgg_view('input/dropdown', array(
 ));
 echo '</p>';
 
+
+//Show in custom views (for power users)
+echo '<p>';
+echo elgg_echo('embed_extender:custom:views');
+echo elgg_view('input/plaintext', array('name' => 'params[custom_views]', 'value' => $vars['entity']->custom_views));
+echo '</p>';
+
+
 //Allow custom providers?
 echo '<p>';
 echo elgg_echo('embed_extender:custom_provider');
