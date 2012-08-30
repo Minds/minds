@@ -3,8 +3,8 @@ elgg.provide('elgg.thumbs');
 
 elgg.thumbs.init = function() {
 		
-	$('.thumbs-button-up').click(elgg.thumbs.action);
-	$('.thumbs-button-down').click(elgg.thumbs.action);
+	$('body').on('click', '.thumbs-button-up', elgg.thumbs.action);
+	$('body').on('click', '.thumbs-button-down', elgg.thumbs.action);
 };
 
 
