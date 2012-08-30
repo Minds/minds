@@ -1,18 +1,21 @@
 <?php
-/* MINDS.ORG Publisher plugin
+/* MINDS.ORG Stream Plugin
+ * @author Mark Harding (mark@minds.com)
  */
 
-function publisher_init() {
+function stream_init() {
 	
 	//Register site wide menu
 	elgg_register_menu_item('site', array(
-			'name' => elgg_echo('publisher:title'),
+			'name' => elgg_echo('stream:title'),
 			'href' =>  elgg_get_site_url() . "stream/",
-			'text' =>  elgg_echo('publisher:title'),
+			'text' =>  elgg_echo('stream:title'),
 		));
 		
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('stream','publisher_page_handler');	
+	
+	elgg_extend_view('css/elgg','stream/css');
 	
 	//register the widget for people profiles.
 	elgg_register_widget_type('stream', elgg_echo("stream"), elgg_echo("stream:desc"), "profile");
@@ -38,12 +41,12 @@ function publisher_page_handler($page) {
 				break;
 			
 			default:
-				include(dirname(__FILE__) . "/index.php");
+				include(dirname(__FILE__) . "/pages/index.php");
 				return true;
 		
 		}
 	} else {
-		include(dirname(__FILE__) . "/index.php");
+		include(dirname(__FILE__) . "/pages/index.php");
 		return true;
 	}
 	
@@ -51,6 +54,6 @@ function publisher_page_handler($page) {
 }
 
 
-register_elgg_event_handler('init','system','publisher_init');
+register_elgg_event_handler('init','system','stream_init');
 
 ?>

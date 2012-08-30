@@ -4,11 +4,11 @@
     gatekeeper();
  
     // set the title
-    $title = elgg_echo('publisher:title');
+    $title = elgg_echo('stream:title');
  
  
     // Add the form to this section
-    $content .= elgg_view("publisher/chatpage");
+    $content .= elgg_view("stream/index");
  
     // layout the page
     $body = elgg_view_layout('one_column', array('content' => $content));
