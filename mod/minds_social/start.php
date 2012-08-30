@@ -86,12 +86,12 @@ function minds_social_action($event, $object_type, $object){
 		
 		//post to facebook.
 		try{
-			$facebook->api('/me/feed', 'POST', array('message'=>$object->description, 'access_token' => $fb_access_token));
+			$facebook->api('/me/feed', 'POST', array('message'=>$object->message, 'access_token' => $fb_access_token));
 		} catch(Exception $e){
 		}
 		
 		//post to twitter
-		$desc = $object->description;
+		$desc = $object->message;
 		if(strlen($desc) > 140){
 		$desc = substr($desc, 0, 100) . '... ' . $object->getURL();
 		}
