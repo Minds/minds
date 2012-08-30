@@ -180,7 +180,9 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
     -moz-border-radius: 5px;
     cursor:pointer;
 }
-
+.elgg-list-river{
+	border-top:0;
+}
 /* ***************************************
 	ANNOUNCEMENT
 **************************************** */

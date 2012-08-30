@@ -50,10 +50,15 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 
 	<div class="elgg-body is_riverdash_middle">
 		<?php
-		    if (elgg_is_active_plugin('thewire')) {
-			echo elgg_view('page/elements/riverwire');			
+		   
+		   elgg_load_js('elgg.wall');
+			
+			$content .= elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid()));
+
+			echo elgg_view_module('wall', null, $content);
+			
 			echo $nav;
-		    }
+		    
 
 			if (isset($vars['title'])) {
 				echo elgg_view_title($vars['title']);

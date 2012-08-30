@@ -1,18 +1,23 @@
 //<script>
 elgg.provide('elgg.wall');
+elgg.provide('elgg.wall.news');
 
 elgg.wall.init = function() {
-	var form = $('form[name=elgg-wall]');
-	form.find('input[type=submit]').live('click', elgg.wall.submit);
+	
+	var news = $('form[name=elgg-wall-news]');
+	news.on('click', 'input[type=submit]', elgg.wall.news.submit);
+	
+	var body = $('body');
+	body.on('click', 'form[name=elgg-wall] input[type=submit]', elgg.wall.submit);
 
 	// remove the default binding for confirmation since we're doing extra stuff.
 	// @todo remove if we add a hook to the requires confirmation callback
-	form.parent().find('a.elgg-requires-confirmation')
+	/*form.parent().find('a.elgg-requires-confirmation')
 		.click(elgg.wall.deletePost)
 
 		// double whammy for in case the load order changes.
 		.unbind('click', elgg.ui.requiresConfirmation)
-		.removeClass('elgg-requires-confirmation');
+		.removeClass('elgg-requires-confirmation');*/
 		
 	$("#wall-textarea").live('keydown', function() {
 		elgg.wall.textCounter(this, $("#wall-characters-remaining span"), 1000);
@@ -46,6 +51,44 @@ elgg.wall.submit = function(e) {
 
 	e.preventDefault();
 };
+
+elgg.wall.news.submit = function(e) {
+	var form = $(this).parents('form');
+	var data = form.serialize();
+
+	elgg.action('wall/add', {
+		data: data,
+		success: function(json) {
+			
+			$list = $(this).parent();
+			
+			$params = elgg.parse_str(elgg.parse_url(location.href).query);
+			$params = $.extend($params, {
+				path: location.href,
+				items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
+							$list.hasClass('elgg-list-river') ? 'river' :
+							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
+				offset: 0,
+				limit: 1,
+				subject_guids: <?php echo elgg_get_logged_in_user_guid(); ?>
+			});
+			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
+						
+			elgg.get(url, function(data) {
+				//$list.toggleClass('infinite-scroll-ajax-loading', false);
+				
+				$('.elgg-list.elgg-list-river.elgg-river').first('.elgg-list.elgg-list-river.elgg-river').prepend(data);
+
+			});
+			
+			
+			$(document).find('textarea').val('');
+		}
+	});
+
+	e.preventDefault();
+};
+
 
 elgg.wall.deletePost = function(e) {
 	var link = $(this);
