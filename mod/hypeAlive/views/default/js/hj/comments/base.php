@@ -48,10 +48,12 @@
             });
         });
 
-        $('.hj-ajaxed-comment-save')
+       /* $('.hj-ajaxed-comment-save')
         .removeAttr('onsubmit')
         .unbind('submit')
-        .bind('submit', hj.comments.saveComment);
+        .bind('submit', hj.comments.saveComment);*/
+       
+       $('body').on('submit', '.hj-ajaxed-comment-save', hj.comments.saveComment);
 
     };
 
@@ -116,6 +118,7 @@
     }
 
     hj.comments.saveComment = function(event) {
+    	alert('clicked');
         event.preventDefault();
 
         var     values = $(this).serialize(),
