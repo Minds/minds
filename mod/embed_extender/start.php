@@ -23,6 +23,9 @@ function embed_extender_init()
 	if($wire_show == 'yes'){
 		elgg_register_plugin_hook_handler('view', 'object/thewire', 'embed_extender_rewrite');
 		elgg_register_plugin_hook_handler('view', 'river/object/thewire/create', 'embed_extender_rewrite');
+		
+		elgg_register_plugin_hook_handler('view', 'object/wallpost', 'embed_extender_rewrite');
+		elgg_register_plugin_hook_handler('view', 'river/object/wall/create', 'embed_extender_rewrite');
 	}
 	
 	//Check where embed code - Blog posts
@@ -36,6 +39,8 @@ function embed_extender_init()
 	if($comment_show == 'yes'){
 		elgg_register_plugin_hook_handler('view', 'annotation/generic_comment', 'embed_extender_rewrite');
 		elgg_register_plugin_hook_handler('view', 'annotation/default', 'embed_extender_rewrite');
+		
+		elgg_register_plugin_hook_handler('view', 'object/hjannotation', 'embed_extender_rewrite');
 	}
 	
 	//Check where embed code - Group topics
