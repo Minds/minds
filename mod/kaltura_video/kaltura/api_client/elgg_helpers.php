@@ -424,13 +424,13 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 	if(empty($entryId)) return "Error entryId: $entryId";
     if ( $size == "m" ) {
     	// medium size
-    	$height = 201 + 20;
-    	$width = 268;
+    	$height = 225;
+    	$width = 400;
     }
     else {
     	// large size "410", "364"
-    	$height = 300 + 20;
-    	$width = 400;
+    	$height = 422;
+    	$width = 750;
 
     }
 
@@ -438,14 +438,6 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 
     if($default_player == 'custom') {
 		$widgetUi = elgg_get_plugin_setting('custom_kdp', 'kaltura_video');
-		$w  = elgg_get_plugin_setting('custom_kdp_width', 'kaltura_video');
-		$h  = elgg_get_plugin_setting('custom_kdp_height', 'kaltura_video');
-		if($size != 'm') {
-			if($w && $h) {
-				$width = $w;
-				$height = $h;
-			}
-		}
 	}
 	else {
 		$t = elgg_get_plugin_setting('kaltura_server_type',"kaltura_video");
@@ -453,12 +445,6 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 		$players = $KALTURA_GLOBAL_UICONF['kdp'][$t];
 		if(!array_key_exists($default_player,$players)) $default_player = key($players);
 		$widgetUi = $players[$default_player]['uiConfId'];
-		if($size != 'm') {
-			if($players[$default_player]['width'] && $players[$default_player]['height']) {
-				$width = $players[$default_player]['width'];
-				$height = $players[$default_player]['height'];
-			}
-		}
 	}
 
 	$viewData = array();
@@ -489,7 +475,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 
 	$widget .= '<object id="kaltura_player_' . $widgetUi .'" name="kaltura_player_' . $widgetUi . '" type="application/x-shockwave-flash" 
 	 xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" 
-	allowFullScreen="true" allowScriptAccess="always" allowNetworking="all" height="422" width="750"  resource="' . $video_location . '" data="'. $video_location . '" rel="media:video">'.
+	allowFullScreen="true" allowScriptAccess="always" allowNetworking="all" height="' . $height . '" width="' . $width . '"  resource="' . $video_location . '" data="'. $video_location . '" rel="media:video">'.
            
         '<a rel="media:thumbnail" href="http://www.minds.tv/p/100/sp/10000/thumbnail/entry_id/0_l47o3qy5/width/120/height/90/bgcolor/000000/type/2"></a>' .
 		'<param name="allowScriptAccess" value="always" />'.
@@ -500,8 +486,8 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
     	'<param name="flashVars" value="&{FLAVOR}" />' .
 		'<span property="dc:description" content=""></span>
 		<span property="media:title" content="video.mov"></span> 
-		<span property="media:width" content="750"></span>
-		<span property="media:height" content="422"></span> 
+		<span property="media:width" content="' . $width . '"></span>
+		<span property="media:height" content="' . $height . '"></span> 
 		<span property="media:type" content="application/x-shockwave-flash"></span>' .
 	'</object>';
 

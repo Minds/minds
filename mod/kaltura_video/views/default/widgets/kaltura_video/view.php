@@ -36,14 +36,6 @@ if($result) {
 
 				$body .= '<p>' . sprintf(elgg_echo("kalturavideo:strapline"),$metadata->kaltura_video_created) . '</p>';
 
-				if($metadata->kaltura_video_rating_on != 'Off') {
-
-					list($votes,$rating_image,$rating) = kaltura_get_rating($ob);
-					$rating = round($rating);
-
-					$rating = '<img src="'.$CONFIG->wwwroot.'mod/kaltura_video/kaltura/images/ratings/'.$rating_image.'" alt="'.$rating.'" /> ('.$votes.' '.elgg_echo('kalturavideo:votes').')';
-					$body .= '<p class="rating">'.$rating.'</p>';
-				}
 
 
 				if(trim($ob->description)) $body .= '<p><a href="#" onclick="$(this).parent().next().slideToggle(\'fast\');return false;">'.elgg_echo('kalturavideo:more').'</a></p>';
@@ -56,7 +48,8 @@ if($result) {
 			else {
 				$body .= '<div class="kaltura_video_widget">';
 				$body .= '<a class="tit" href="'.$ob->getURL().'">'.$ob->title.'</a>';
-				$body .= $metadata->kaltura_video_widget_m_html;
+				$widgetm = kaltura_create_generic_widget_html ( $ob->kaltura_video_id , 'm' );
+				$body .= $widgetm;
 				//$body .= '<a class="tit" href="'.$ob->getURL().'">'.elgg_echo('kalturavideo:label:details').'</a>';
 				$body .= "</div>\n";
 			}

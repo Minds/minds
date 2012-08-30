@@ -169,7 +169,7 @@ Objects not created by the Kaltura Elgg Plugin will not be touched.",
 	'kaltura_video:river:annotate' => "a comment on this media",
 	'kalturavideo:river:rates' => "%s rates this media",
 	//widget title label
-	'kalturavideo:label:latest' => "Latests media",
+	'kalturavideo:label:latest' => "Media",
 	//widget options
 	'kalturavideo:showmode' => "List mode",
 	'kalturavideo:showmode:thumbnail' => "Thumbnails list",
