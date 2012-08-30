@@ -118,7 +118,6 @@
     }
 
     hj.comments.saveComment = function(event) {
-    	alert('clicked');
         event.preventDefault();
 
         var     values = $(this).serialize(),
