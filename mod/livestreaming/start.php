@@ -34,11 +34,11 @@ function livestreaming_init() {
     	elgg_register_library('elgg:livestreaming', $CONFIG->pluginspath . "livestreaming/lib/livestreaming.php");
 
     	// menus
-    	elgg_register_menu_item('site', array(
+    	/*elgg_register_menu_item('site', array(
     		'name' => 'livestreaming',
     		'text' => elgg_echo('livestreaming'),
     		'href' => 'livestreaming/all'
-    	));
+    	));*/
     }
 		else add_menu(elgg_echo('livestreaming'), $CONFIG->wwwroot."pg/livestreaming/all");
 	}
