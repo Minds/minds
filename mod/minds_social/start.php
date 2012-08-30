@@ -82,7 +82,7 @@ function minds_social_action($event, $object_type, $object){
 	$fb_access_token = elgg_get_plugin_user_setting('minds_social_facebook_access_token', $user->getGuid());
 	
 	//send a wirepost
-	if(get_subtype_from_id($object->subtype) == 'thewire'){
+	if(get_subtype_from_id($object->subtype) == 'wallpost' && $object->owner_guid == $object->to_guid){
 		
 		//post to facebook.
 		try{
