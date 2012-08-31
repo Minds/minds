@@ -14,8 +14,8 @@ $powered_url = elgg_get_site_url() . "mod/minds/graphics/minds_footer.gif";
 
 echo '<div class="logo">';
 echo elgg_view('output/url', array(
-	'href' => 'http://www.minds.com',
-	'text' => "<img src=\"$powered_url\" alt=\"Minds\" width=\"106\" height=\"15\" />",
+	'href' => elgg_get_site_url(),
+	'text' => "<img src=\"" . elgg_get_site_url() . "mod/minds/graphics/mindscc.png\" alt=\"Minds\" width=\"100\" height=\"25\" />",
 	'class' => '',
 	'is_trusted' => true,
 ));
