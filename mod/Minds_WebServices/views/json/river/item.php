@@ -35,6 +35,20 @@ if($object->type == "user" || $object->type == "group"){
 		$item->object_metadata['message'] = $annotation->value;
 		} 
 		$item->object_metadata['description'] = $object->description;
+		
+		//small hack for wall
+		if(get_subtype_from_id($object)->subtype == 'wallpost'){
+			$item->object_metadata['owner_username'] = get_entity($object->owner_guid)->username;
+			$item->object_metadata['message'] = $object->message;
+		}
+		//small hack for bookmarks
+		if(get_subtype_from_id($object)->subtype == 'bookmarks'){
+			$item->object_metadata['address'] = $object->address;
+		}
+		//small hack for studio videos
+		if(get_subtype_from_id($object)->subtype == 'bookmarks'){
+			$item->object_metadata['thumbnail'] = $object->kaltura_video_thumbnail;
+		}
 
 }
 
