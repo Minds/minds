@@ -48,7 +48,7 @@ if($object->type == "user" || $object->type == "group"){
 			$item->object_metadata['address'] = $object->address;
 		}
 		//small hack for studio videos
-		if(get_subtype_from_id($object->subtype) == 'bookmarks'){
+		if(get_subtype_from_id($object->subtype) == 'kaltura_video'){
 			$item->object_metadata['thumbnail'] = $object->kaltura_video_thumbnail;
 		}
 
