@@ -24,45 +24,22 @@ if($widgets->totalCount>0){
 				//print_r($widget);
 			}
 
-$main_widget = kaltura_create_generic_widget_html($entryId);
-
-
-$medium_widget = preg_replace(array('/width="([0-9]*)"/','/height="([0-9]*)"/'),array('width="225"','height="260"'),$main_widget);
+$widget_l = kaltura_create_generic_widget_html ( $entryId , 'l' );
+$widget_m = kaltura_create_generic_widget_html ( $entryId , 'm' );
 
 $ob = kaltura_get_entity($entryId);
 $metadata = kaltura_get_metadata($ob);
 
-/*
-if($metadata->kaltura_video_widget_html && !in_array(elgg_get_plugin_setting("alloweditor","kaltura_video"), array('no'))){
-	$widget_l = $metadata->kaltura_video_widget_html;
-}
-if($metadata->kaltura_video_widget_m_html && !in_array(elgg_get_plugin_setting("alloweditor","kaltura_video"), array('no'))){
-	 $widget_m = $metadata->kaltura_video_widget_m_html;
-}
-*/
 //create the object manually
-$obj_l = kaltura_build_widget_object($metadata,$main_widget);
-$obj_m = kaltura_build_widget_object($metadata,$medium_widget);
+$obj_l = kaltura_build_widget_object($metadata,$widget_l);
+$obj_m = kaltura_build_widget_object($metadata,$widget_m);
 
-$pop_out_l_url = $obj_l->swf;
-$pop_out_m_url = $obj_m->swf;
-
-$entryForPopout = $entryId;
-$kmodel = KalturaModel::getInstance();
-try {
-    $mediaEntries = $kmodel->listMixMediaEntries($entryId);
-} catch(Exception $e) {
-}
-if(count($mediaEntries) > 0){
-    $entryForPopout = $mediaEntries[0]->id . "&streamerType=rtmp&streamerUrl=rtmp://rtmpakmi.kaltura.com/ondemand&rtmpFlavors=1&&";
-}
-
-
+//echo addslashes($main_widget); 
 ?>
 	<script type='text/javascript'>
 	
-		widget_html_l = '<?php echo addslashes($main_widget ); ?>';
-		widget_html_m = '<?php echo addslashes($medium_widget ); ?>';
+widget_html_l = $('.widget_html_l').html();
+widget_html_m = $('.widget_html_m').html();
 		
 		obj_l = {<?php
 			$parts = array();
@@ -89,6 +66,12 @@ if(count($mediaEntries) > 0){
 <!--
 maybe can be added: crop_provider/wordpress_comment_placeholder when click img works
 -->
+</div>
+<div class='widget_html_l hidden'>
+	<?php echo $widget_l; ?>
+</div>
+<div class='widget_html_m hidden'>
+	<?php echo $widget_m; ?>
 </div>
 
 <div class="box">

@@ -25,7 +25,7 @@ function KalturaVideoStartModal() {
 </script>
 
 
-<a class="embed_kaltura" href="Javascript://" onclick="return KalturaVideoStartModal();"><img src="<?php echo $vars['url']; ?>mod/kaltura_video/kaltura/images/interactive_video_button.gif" alt="<?php echo elgg_echo('kalturavideo:label:addvideo'); ?>" title="<?php echo elgg_echo('kalturavideo:label:addvideo'); ?>" style="vertical-align:top;" /><?php echo elgg_echo('kalturavideo:label:addvideo'); ?></a>
+<a class="elgg-longtext-control" href="Javascript://" onclick="return KalturaVideoStartModal();"><img src="<?php echo $vars['url']; ?>mod/kaltura_video/kaltura/images/interactive_video_button.gif" alt="<?php echo elgg_echo('kalturavideo:label:addvideo'); ?>" title="<?php echo elgg_echo('kalturavideo:label:addvideo'); ?>" style="vertical-align:top;" /><?php echo elgg_echo('kalturavideo:label:addvideo'); ?></a>
 
 <?php
 }

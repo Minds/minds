@@ -43,6 +43,20 @@ function kaltura_video_init() {
 			//elgg_extend_view('input/longtext','embed/link',10);
 		}
 	}
+	
+	// embed support
+	$item = ElggMenuItem::factory(array(
+		'name' => 'studio',
+		'text' => elgg_echo('Media'),
+		'priority' => 20,
+		'data' => array(
+			'options' => array(
+				'type' => 'object',
+				'subtype' => 'kaltura_video',
+			),
+		),
+	));
+	elgg_register_menu_item('embed', $item);
 
 
 	// Set up menu for logged in users
