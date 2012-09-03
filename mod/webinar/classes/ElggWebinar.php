@@ -21,7 +21,13 @@ class ElggWebinar extends ElggObject {
 		return $server->elgg_createWebinarArray($admin);
 	}
 	public function getServer() {
-		return new BigBlueButton('adminname', $this->guid, $this->welcome_msg, $this->admin_pwd, $this->user_pwd, $this->server_salt, $this->server_url, $this->logout_url);
+		//backup variables in the event these are not sent along in the form
+		$admin_pwd = $this->admin_pwd ? $this->admin_pwd :  elgg_get_plugin_setting('admin_pwd', 'webinar');
+		$user_pwd = $this->user_pwd ? $this->user_pwd : elgg_get_plugin_setting('user_pwd', 'webinar');
+		$server_salt =  $this->server_salt ? $this->server_salt : elgg_get_plugin_setting('server_salt', 'webinar');
+		$server_url = $this->server_url ? $this->server_url : elgg_get_plugin_setting('server_url', 'webinar');
+		$logout_url = $this->logout_url ? $this->logout_url : elgg_get_plugin_setting('logout_url', 'webinar');
+		return new BigBlueButton('adminname', $this->guid, $this->welcome_msg, $admin_pwd, $user_pwd, $server_salt, $server_url, $logout_url);
 	}
 	public function isRunning(){
 		return $this->status == 'running';
@@ -127,11 +133,11 @@ class ElggWebinar extends ElggObject {
 	}
 	public function joinURL(ElggUser $user){
 		$server = $this->getServer();
-		return $server->elgg_joinURL($this->guid, $user->name, $this->user_pwd);
+		return $server->elgg_joinURL($this->guid, $user->name, $this->user_pwd ? $this->user_pwd : elgg_get_plugin_setting('user_pwd', 'webinar'));
 	}
 	public function joinAdminURL(ElggUser $admin){
 		$server = $this->getServer();
-		return  $server->elgg_joinURL($this->guid, $admin->name, $this->admin_pwd);
+		return  $server->elgg_joinURL($this->guid, $admin->name, $this->admin_pwd ? $this->admin_pwd : elgg_get_plugin_setting('admin_pwd', 'webinar'));
 	}
 	public function isCreated(){
 		$server = $this->getServer();

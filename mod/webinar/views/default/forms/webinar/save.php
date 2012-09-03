@@ -113,14 +113,14 @@ if ( elgg_is_admin_logged_in() ) {
 		));
 	}
 }else{
-	$admin_pwd_input = elgg_view('input/hidden', array('name' => 'webinar_admin_pwd', 'value' => $vars['admin_pwd']));
+	/*$admin_pwd_input = elgg_view('input/hidden', array('name' => 'webinar_admin_pwd', 'value' => $vars['admin_pwd']));
 	$user_pwd_input = elgg_view('input/hidden', array('name' => 'webinar_user_pwd', 'value' => $vars['user_pwd']));
 	$server_salt_input = elgg_view('input/hidden', array('name' => 'webinar_server_salt', 'value' => $vars['server_salt']));
 	$server_url_input = elgg_view('input/hidden', array('name' => 'webinar_server_url', 'value' => $vars['server_url']));
 	if ($vars['logout_url']) {
 		$logout_url_input = elgg_view('input/hidden', array('name' => 'webinar_logout_url', 'value' => $vars['logout_url']));
 	}
-	$user_bloc = $admin_pwd_input . $user_pwd_input . $server_salt_input . $server_url_input . $logout_url_input; 
+	$user_bloc = $admin_pwd_input . $user_pwd_input . $server_salt_input . $server_url_input . $logout_url_input; */
 }
 
 $container_guid_input = elgg_view('input/hidden', array('name' => 'container_guid', 'value' => elgg_get_page_owner_guid()));
