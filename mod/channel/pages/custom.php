@@ -6,6 +6,20 @@
  */
 
 gatekeeper();
+
+$user = elgg_get_page_owner_entity();
+
+if (!$user) {
+	register_error(elgg_echo("profile:notfound"));
+	forward();
+}
+
+// check if logged in user can edit this profile
+if (!$user->canEdit()) {
+	register_error(elgg_echo("profile:noaccess"));
+	forward();
+}
+
  
 elgg_set_context('profile_edit');
  

@@ -246,7 +246,7 @@ function channel_default_widgets_hook($hook, $type, $return) {
 function channel_hover_menu_setup($hook, $type, $return, $params) {
 	$user = $params['entity'];
 
-	if (elgg_is_logged_in()) {
+	if (elgg_is_logged_in() && $user->canEdit()) {
 		/*elgg_load_js('lightbox');
 		elgg_load_css('lightbox');*/
 		$url = "channel/$user->username/custom/";
