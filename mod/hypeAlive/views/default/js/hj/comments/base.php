@@ -116,9 +116,18 @@
             });
         }
     }
-
-    hj.comments.saveComment = function(event) {
+    
+    hj.comments.saveCommentNew = function(event) {
+    	        
         event.preventDefault();
+        
+    	console.log('submit');
+    }
+
+    hj.comments.saveComment = function(e) {
+    	        
+        e.preventDefault();
+        $('body').off('submit', '.hj-ajaxed-comment-save');
 
         var     values = $(this).serialize(),
         action = $(this).attr('action'),
@@ -160,6 +169,7 @@
                 .toggle();
             }
         });
+
     }
 
     elgg.register_hook_handler('init', 'system', hj.comments.init);
