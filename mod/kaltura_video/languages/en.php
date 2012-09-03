@@ -34,7 +34,7 @@ $translations = array(
 	'kalturavideo:label:gotoconfig' => "Please configure properly the Kaltura under ",
 
 	//title of the menu, put whatever you want, for example 'Kaltura videos'
-	'kalturavideo:label:adminvideos' => "Studio",
+	'kalturavideo:label:adminvideos' => "Archive",
 	'kalturavideo:label:myvideos' => "My media",
 	'kalturavideo:label:length' => "Length:",
 	'kalturavideo:label:plays' => "Plays:",
