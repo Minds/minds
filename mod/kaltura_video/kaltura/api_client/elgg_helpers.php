@@ -429,8 +429,8 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
     }
     else {
     	// large size "410", "364"
-    	$height = 422;
-    	$width = 750;
+    	$height = 410;
+    	$width = 730;
 
     }
 
