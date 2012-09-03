@@ -2,9 +2,9 @@
 
 $english = array(
 
-	'suggested_friends' => 'Suggested Channels',
+	'suggested_friends' => 'Find Channels',
 
-	'suggested_friends:new:people' => 'Suggested Channels',
+	'suggested_friends:new:people' => 'Find Channels',
 
 	'suggested_friends:people:you:may:know' => 'Suggested Channels',
 	'suggested_friends:widget:description' => 'This widget suggests people you may know',
