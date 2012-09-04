@@ -16,7 +16,7 @@ function embed_extender_parser($input, $view, $context)
 	if($view == 'annotation/default' && elgg_get_plugin_setting('messageboard_show', 'embed_extender') == 'no'){
 		return $input;
 	}
-
+	
 	if ($context == 'widgets' || $context == 'profile'){
 		$width = elgg_get_plugin_setting('widget_width', 'embed_extender');
 		if (!isset($width) || !is_numeric($width) || $width < 0) {
@@ -28,6 +28,10 @@ function embed_extender_parser($input, $view, $context)
 		if (!isset($width) || !is_numeric($width) || $width < 0) {
 			$width = 400; //Size for content
 		}
+	}
+	//if this is a comment then we need to change the size so it fits.	
+	if($view == 'object/hjannotation'){
+		$width = 410;
 	}
 	$patterns = array('#(((http://)?)|(^./))(((www.)?)|(^./))youtube\.com/watch[?]v=([^\[\]()<.,\s\n\t\r]+)#i'
 						,'#(((http://)?)|(^./))(((www.)?)|(^./))youtu\.be/([^\[\]()<.,\s\n\t\r]+)#i'

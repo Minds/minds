@@ -168,7 +168,7 @@ function videoembed_youtube_handler($url, $guid, $videowidth) {
 		return '<p><b>' . elgg_echo('embedvideo:parseerror', array('youtube')) . '</b></p>';
 	}
 
-	videoembed_calc_size($videowidth, $videoheight, 425/320, 24);
+	videoembed_calc_size($videowidth, $videoheight, 16/9, 24);
 
 	$embed_object = videoembed_add_css($guid, $videowidth, $videoheight);
 

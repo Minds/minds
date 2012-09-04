@@ -4,7 +4,7 @@ EMBED VIDEO
 
 .videoembed_video {
   padding: 0; 
-  margin:0 0 10px 10px;
+  margin:10px 0;
   overflow: hidden;
   align: center;
 }
