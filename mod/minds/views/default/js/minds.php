@@ -59,7 +59,7 @@
 												
 				
 				
-				riverOffset += +10;
+				riverOffset += +20;
 			
 				$('.news-show-more').html('more');
 				
