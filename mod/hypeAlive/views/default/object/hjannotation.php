@@ -46,9 +46,10 @@ $bar = elgg_view('hj/comments/bar', $vars);
 
 $content = <<<HTML
     <div class="clearfix">
+        $metadata
         $menu
         $comment
-        $metadata
+
     </div>
     $bar
 HTML;
