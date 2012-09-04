@@ -25,6 +25,12 @@ $menu = elgg_view_menu('commentshead', array(
     'sort_by' => 'priority',
     'params' => $params
 	));
+$metadata = elgg_view_menu('entity', array(
+	'entity' => $vars['entity'],
+	'handler' => 'file',
+	'sort_by' => 'priority',
+	'class' => 'elgg-menu-hz',
+));	
 $icon = elgg_view_entity_icon($owner, 'tiny', array('use_hover' => false));
 
 $author = elgg_view('output/url', array(
@@ -42,6 +48,7 @@ $content = <<<HTML
     <div class="clearfix">
         $menu
         $comment
+        $metadata
     </div>
     $bar
 HTML;

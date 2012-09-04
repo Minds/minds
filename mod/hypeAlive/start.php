@@ -37,6 +37,7 @@ function hj_alive_init() {
 	// Register actions
 	elgg_register_action('comment/get', $path. 'actions/hj/comment/get.php');
 	elgg_register_action('comment/save', $path . 'actions/hj/comment/save.php');
+	elgg_register_action('comment/delete', $path . 'actions/hj/comment/delete.php');
 	
 	// Register JS and CSS libraries
 	$css_url = elgg_get_simplecache_url('css', 'hj/comments/base');
@@ -46,7 +47,7 @@ function hj_alive_init() {
 	elgg_register_js('hj.comments.base', $js_generic_url);
 	
 	elgg_register_plugin_hook_handler('register', 'menu:comments', 'minds_comments_menu');
-	//elgg_register_plugin_hook_handler('register', 'menu:commentshead', 'minds_commentshead_menu');
+	elgg_register_plugin_hook_handler('register', 'menu:entity', 'minds_comment_entity_menu');
 
 	/* Likes
 	 */
@@ -200,30 +201,28 @@ function minds_comments_menu($hook, $type, $return, $params) {
 	return $return;
 }
 
-function minds_commentshead_menu($hook, $type, $return, $params) {
+function minds_comment_entity_menu($hook, $type, $return, $params) {
 	$entity = elgg_extract('entity', $params, false);
 
-	/*if (!$entity && !elgg_instanceof($entity, 'object', 'hjannotation')) {
+	if (!$entity && !elgg_instanceof($entity, 'object', 'hjannotation')) {
 		return $return;
-	}*/
-	//unset($return);
+	}
+	unset($return);
 
 	/**
 	 * Delete
 	 */
-	/*if (($entity->canEdit())) {
+	if (($entity->canEdit())) {
 		$delete = array(
 			'name' => 'delete',
 			'text' => elgg_view_icon('delete'),
 			'entity' => $entity,
-			'class' => 'hj-ajaxed-remove hidden',
-			'id' => "hj-ajaxed-remove-$entity->guid",
-			'href' => "action/framework/entities/delete?e=$entity->guid",
+			'href' => "action/comment/delete?guid=$entity->guid",
 			'is_action' => true,
 			'priority' => 1000
 		);
 		$return[] = ElggMenuItem::factory($delete);
-	}*/
+	}
 
 	return $return;
 }
