@@ -11,6 +11,10 @@ $english = array(
 	//the widget
 	'channel:widget:info:title' => 'About me',
 	
+	//the avatar widget
+	'channel:widget:avatar:title' => 'Avatar',
+	'channel:widget:avatar:desc' => 'The avatar for your channel',
+	
 	'channel:custom' => 'Customise your profile',
 	'channel:custom:upload' => 'Upload a background',
 	'channel:custom:reupload' => 'Upload a new background',

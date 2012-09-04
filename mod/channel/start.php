@@ -57,7 +57,12 @@ function channel_init() {
 			elgg_echo('channel:widget:info:title'),
 			elgg_echo('channel:widget:info:desc')
 	);
-	
+	//setup the profile icon widget
+	elgg_register_widget_type(
+			'channel_avatar',
+			elgg_echo('channel:widget:avatar:title'),
+			elgg_echo('channel:widget:avatar:desc')
+	);
 	
 	//set a new file size
 	elgg_set_config('icon_sizes', array(	
@@ -135,7 +140,7 @@ function channel_page_handler($page) {
 
 	// main profile page
 	$params = array(
-		'content' => elgg_view('channel/wrapper'),
+		//'content' => elgg_view('channel/wrapper'),
 		'num_columns' => 2,
 	);
 	$content = elgg_view_layout('widgets', $params);
