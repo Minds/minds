@@ -45,7 +45,7 @@ function kaltura_video_init() {
 	}
 	
 	// embed support
-	$item = ElggMenuItem::factory(array(
+	/*$item = ElggMenuItem::factory(array(
 		'name' => 'studio',
 		'text' => elgg_echo('Media'),
 		'priority' => 20,
@@ -56,7 +56,7 @@ function kaltura_video_init() {
 			),
 		),
 	));
-	elgg_register_menu_item('embed', $item);
+	elgg_register_menu_item('embed', $item);*/
 
 
 	// Set up menu for logged in users
@@ -64,7 +64,7 @@ function kaltura_video_init() {
 		//add_menu(elgg_echo('kalturavideo:label:adminvideos'), $CONFIG->wwwroot . "kaltura_video/" . $_SESSION['user']->username);
 		elgg_register_menu_item('site', array(
 			'name' => elgg_echo('kalturavideo:label:adminvideos'),
-			'href' =>  $CONFIG->wwwroot . "studio/" . $_SESSION['user']->username,
+			'href' =>  $CONFIG->wwwroot . "archive/" . $_SESSION['user']->username,
 			'text' =>  elgg_echo('kalturavideo:label:adminvideos'),
 		));
 		
@@ -73,7 +73,7 @@ function kaltura_video_init() {
 	} else {
 		elgg_register_menu_item('site', array(
 			'name' => elgg_echo('kalturavideo:label:adminvideos'),
-			'href' =>  $CONFIG->wwwroot . "studio/all",
+			'href' =>  $CONFIG->wwwroot . "archive/all",
 			'text' =>  elgg_echo('kalturavideo:label:adminvideos'),
 		));
 	}
@@ -96,7 +96,7 @@ function kaltura_video_init() {
 	//fallback (in case some links go to kaltura_video
 	elgg_register_page_handler('kaltura_video','kaltura_video_page_handler');
 	//prefered
-	elgg_register_page_handler('studio','kaltura_video_page_handler');
+	elgg_register_page_handler('archive','kaltura_video_page_handler');
 	// Register a admin page handler
 	elgg_register_page_handler('kaltura_video_admin','kaltura_video_page_handler');
 
@@ -140,8 +140,8 @@ function kaltura_video_init() {
 
 	//actions for the plugin
 	elgg_register_action("kaltura_video/delete", $action_path . "delete.php");//fallback
-	elgg_register_action("studio/delete", $action_path . "delete.php");//new (studio)
-	elgg_register_action("studio/download", $action_path . "download.php");
+	elgg_register_action("archive/delete", $action_path . "delete.php");//new (studio)
+	elgg_register_action("archive/download", $action_path . "download.php");
 	elgg_register_action("kaltura_video/update", $action_path . "update.php");
 	elgg_register_action("kaltura_video/upload", $action_path . "upload.php");
 	elgg_register_action("kaltura_video/rate",  $action_path . "rate.php");
@@ -182,7 +182,7 @@ function kaltura_video_notify_message($hook, $entity_type, $returnvalue, $params
 function kaltura_video_url($post) {
 		global $CONFIG;
 		$title = $post->title;
-		return elgg_get_site_url() . "studio/show/" . $post->getGUID() . "/" . $title;
+		return elgg_get_site_url() . "archive/show/" . $post->getGUID() . "/" . $title;
 
 }
 
@@ -200,56 +200,48 @@ function kaltura_video_page_setup()
 
 	$page_owner = elgg_get_page_owner_entity();
 
-	if ((elgg_get_context()=='kaltura_video' || elgg_get_context() == 'studio') && elgg_get_plugin_setting("password","kaltura_video"))
+	if ((elgg_get_context()=='kaltura_video' || elgg_get_context() == 'archive') && elgg_get_plugin_setting("password","kaltura_video"))
 	{
 		if ((elgg_get_page_owner_guid() == $_SESSION['guid'] || !elgg_get_page_owner_guid()) && elgg_is_logged_in()) {
 		
 			elgg_register_menu_item('page', array(
 				'name' => elgg_echo('kalturavideo:label:myvideos'),
-				'href' =>  $CONFIG->wwwroot."studio/" . $_SESSION['user']->username,
+				'href' =>  $CONFIG->wwwroot."archive/" . $_SESSION['user']->username,
 				'text' =>  elgg_echo('kalturavideo:label:myvideos'),
 			));
 			
 			elgg_register_menu_item('page', array(
 				'name' => elgg_echo('kalturavideo:label:friendsvideos'),
-				'href' => $CONFIG->wwwroot."studio/" . $_SESSION['user']->username ."/friends/",
+				'href' => $CONFIG->wwwroot."archive/" . $_SESSION['user']->username ."/friends/",
 				'text' =>  elgg_echo('kalturavideo:label:friendsvideos'),
-			));
-			
-			/*if(elgg_is_active_plugin('groups')) {
-					//this page is to search all groups videos, not ready yet
-				elgg_register_menu_item('page', array(
-				'name' => elgg_echo('kalturavideo:label:allgroupvideos'),
-				'href' =>$CONFIG->wwwroot."mod/kaltura_video/groups.php",
-				'text' =>  elgg_echo('kalturavideo:label:allgroupvideos'),
-				));	
-			}*/
-			elgg_register_menu_item('page', array(
-				'name' =>elgg_echo('kalturavideo:label:allvideos'),
-				'href' => $CONFIG->wwwroot."studio/all",
-				'text' =>  elgg_echo('kalturavideo:label:allvideos'),
 			));
 		
 		} else if (elgg_get_page_owner_guid()) {
 				elgg_register_menu_item('page', array(
 					'name' =>sprintf(elgg_echo('kalturavideo:user'),$page_owner->name),
-					'href' => $CONFIG->wwwroot."studio/" . $page_owner->username,
+					'href' => $CONFIG->wwwroot."archive/" . $page_owner->username,
 					'text' => sprintf(elgg_echo('kalturavideo:user'),$page_owner->name),
 				));
 			if ($page_owner instanceof ElggUser) { // Sorry groups, this isn't for you.
 				elgg_register_menu_item('page', array(
 					'name' =>sprintf(elgg_echo('kalturavideo:user:friends'),$page_owner->name),
-					'href' => $CONFIG->wwwroot."studio/" . $page_owner->username ."/friends/",
+					'href' => $CONFIG->wwwroot."archive/" . $page_owner->username ."/friends/",
 					'text' =>  sprintf(elgg_echo('kalturavideo:user:friends'),$page_owner->name),
 				));
 			}
-		} else {
+		} 
+		
 			elgg_register_menu_item('page', array(
 				'name' =>elgg_echo('kalturavideo:label:allvideos'),
-				'href' => $CONFIG->wwwroot."studio/all",
+				'href' => $CONFIG->wwwroot."archive/all",
 				'text' =>  elgg_echo('kalturavideo:label:allvideos'),
 			));
-		}
+			
+			elgg_register_menu_item('page', array(
+				'name' =>elgg_echo('kalturavideo:label:trendingvideos'),
+				'href' => $CONFIG->wwwroot."archive/trending",
+				'text' =>  elgg_echo('kalturavideo:label:trendingvideos'),
+			));
 
 		if (can_write_to_container(0, elgg_get_page_owner_guid()) && elgg_is_logged_in())
 		{
@@ -282,7 +274,7 @@ function kaltura_video_page_setup()
 		if($page_owner->kaltura_video_enable != "no") {
 			elgg_register_menu_item('page', array(
 					'name' =>sprintf(elgg_echo('kalturavideo:label:groupvideos'),$page_owner->name),
-					'href' => $CONFIG->wwwroot . "studio/" . $page_owner->username,
+					'href' => $CONFIG->wwwroot . "archive/" . $page_owner->username,
 					'text' =>  sprintf(elgg_echo('kalturavideo:label:groupvideos'),$page_owner->name),
 				));
 		}
@@ -311,6 +303,10 @@ function kaltura_video_page_handler($page) {
 		switch($page[0]) {
 			case 'all':
 				include(dirname(__FILE__) . "/everyone.php");
+				return true;
+				break;
+			case 'trending':
+				include(dirname(__FILE__) . "/trending.php");
 				return true;
 				break;
 			case 'api_upload':

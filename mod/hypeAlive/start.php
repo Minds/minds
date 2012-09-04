@@ -203,8 +203,8 @@ function minds_comments_menu($hook, $type, $return, $params) {
 
 function minds_comment_entity_menu($hook, $type, $return, $params) {
 	$entity = elgg_extract('entity', $params, false);
-
-	if (!$entity && !elgg_instanceof($entity, 'object', 'hjannotation')) {
+	
+	if (!$entity || !elgg_instanceof($entity, 'object', 'hjannotation')) {
 		return $return;
 	}
 	unset($return);
