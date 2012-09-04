@@ -236,8 +236,8 @@ function channel_ecml_views_hook($hook, $entity_type, $return_value) {
  */
 function channel_default_widgets_hook($hook, $type, $return) {
 	$return[] = array(
-		'name' => elgg_echo('profile'),
-		'widget_context' => 'profile',
+		'name' => elgg_echo('channel'),
+		'widget_context' => 'channel',
 		'widget_columns' => 2,
 
 		'event' => 'create',
