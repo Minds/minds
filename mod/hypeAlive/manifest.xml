@@ -13,11 +13,6 @@
         <type>elgg_version</type>
 		<version>2011123101</version>
     </requires>
-    <requires>
-        <type>plugin</type>
-        <name>hypeFramework</name>
-        <version>1.8.5</version>
-    </requires>
     <conflicts>
         <type>plugin</type>
         <name>private_river</name>
