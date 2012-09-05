@@ -15,3 +15,10 @@ if (elgg_is_logged_in() && $actions) {
 }
 
 echo $profile_actions;
+
+$user = elgg_get_page_owner_entity();
+
+echo elgg_view('output/url', array(	'href' => '/channel/' . $user->username .'/edit',
+										'text' => elgg_echo('profile:edit'),
+										'class' => 'elgg-button elgg-button-action widget'
+									));
