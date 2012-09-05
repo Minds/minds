@@ -84,3 +84,14 @@ fieldset > div {
 	border-bottom: 1px solid #CCCCCC;
 	margin-bottom: 10px;
 }
+
+/**
+ * River mods
+ */
+.news-show-more{
+	width:100%;
+	text-align:center;
+	height:50px;
+	background-color:#CCC;
+	color:#333;
+}

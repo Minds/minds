@@ -26,7 +26,7 @@ label {
 input, textarea {
 	border: 1px solid #ccc;
 	color: #666;
-	font: 120% Arial, Helvetica, sans-serif;
+	font: 12px Arial, Helvetica, sans-serif;
 	padding: 5px;
 	width: 100%;	
 	-webkit-border-radius: 5px;

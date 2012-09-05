@@ -20,7 +20,7 @@
 	float: none;
 }
 .elgg-col-1of2 {
-	width: 50%;
+	width: 100%;
 }
 .elgg-col-1of3 {
 	width: 100%;

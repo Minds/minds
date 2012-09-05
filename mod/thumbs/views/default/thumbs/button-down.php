@@ -23,6 +23,8 @@ if (elgg_is_logged_in() && $vars['entity']->canAnnotate(0, 'thumbs:down')) {
 			'text' => $already ? elgg_view_icon('thumbs-down-alt') : elgg_view_icon('thumbs-down'),
 			'title' => elgg_echo('thumbs:down'),
 			'class'=>'thumbs-button-down',
+			'data-role' => 'none',
+			'rel'=>'external',
 			'is_action' => true,
 			'is_trusted' => true,
 		);

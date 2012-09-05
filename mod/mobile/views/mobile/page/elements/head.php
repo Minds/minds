@@ -13,6 +13,8 @@ if (empty($vars['title'])) {
 }
 
 elgg_load_css('minds.mobile');
+elgg_load_js('minds.js');
+
 
 $js = elgg_get_loaded_js('head');
 $css = elgg_get_loaded_css();

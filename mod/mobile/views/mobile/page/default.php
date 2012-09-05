@@ -15,7 +15,9 @@
             <a href="#menu" data-icon="grid"  class="ui-btn-left" data-transition="slidedown">Menu</a>
             <?php if(elgg_is_logged_in()){?>
             <a href="<?php echo elgg_get_site_url(); ?>settings" data-icon="gear" class="ui-btn-right">Settings</a>
-            <?php }?>
+            <?php } else { ?>
+            <a href="<?php echo elgg_get_site_url(); ?>" data-icon="key" class="ui-btn-right">Login</a>	
+            <?php } ?>
        </div> 
        
         <div data-role="content">
