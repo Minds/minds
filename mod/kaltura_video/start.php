@@ -27,13 +27,7 @@ function kaltura_video_init() {
 		//this is for allow html <object> tags
 		$CONFIG->htmlawed_config['safe'] = false;
 
-		$KALTURA_CURRENT_TINYMCE_FILE = '';
-		foreach($KALTURA_TINYMCE_PATHS as $plugin => $path) {
-			if(elgg_is_active_plugin($plugin) && is_file($CONFIG->pluginspath.$path)) {
-				$KALTURA_CURRENT_TINYMCE_FILE = $path;
-				break;
-			}
-		}
+
 
 		if( $addbutton == 'tinymce'	) {
 			set_view_location('input/longtext', $CONFIG->pluginspath . 'kaltura_video/kaltura/views/');
