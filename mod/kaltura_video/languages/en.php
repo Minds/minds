@@ -29,7 +29,7 @@ $translations = array(
 	'kalturavideo:label:next' => "Next",
 	'kalturavideo:label:prev' => "Previous",
 	'kalturavideo:label:start' => "Start",
-	'kalturavideo:label:newvideo' => "Create new media",
+	'kalturavideo:label:newvideo' => "Upload new media",
 	'kalturavideo:label:newsimplevideo' => "Create a media",
 	'kalturavideo:label:gotoconfig' => "Please configure properly the Kaltura under ",
 
@@ -59,7 +59,7 @@ $translations = array(
 	'kalturavideo:label:showvideo' => "Show the media",
 	'kalturavideo:show:advoptions' => "Show sharing",
 	'kalturavideo:hide:advoptions' => "Hide sharing",
-	'kalturavideo:label:trendingvideos' => "Trending Media",
+	'kalturavideo:label:trendingvideos' => "Top media",
 
 	'kalturavideo:text:widgetdesc' => "This widget allows you to show automatically your latest media.",
 	'kalturavideo:error:edittitle' => "Error! This title can not be changed!",
@@ -70,7 +70,7 @@ $translations = array(
 	'kalturavideo:river:annotate' => "%s commented on",
 	'kalturavideo:river:item' => "an video",
 	'kalturavideo:river:shared' => "Collaborative video",
-	'river:update:object:kaltura_video' => '%s created new media titled %s',
+	'river:update:object:kaltura_video' => '%s uploaded new media titled %s',
 	'kalturavideo:label:videosfrom' => "Media by %s",
 	'kalturavideo:user:showallvideos' => "Show all media from this user",
 	'kalturavideo:strapline' => "%s",
