@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<checkout_method>
-        <field key="label" value="FedEx Shipping" />
-        <field key="view" value="fedex" />
-</checkout_method>
