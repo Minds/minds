@@ -143,6 +143,7 @@
 }
 .kalturaviewer .text {
 	margin-top:10px;
+	border-bottom:#DEDEDE 1px solid;
 }
 .kalturaviewer .kalturaplayer {
 	margin:0 10px 0 0;

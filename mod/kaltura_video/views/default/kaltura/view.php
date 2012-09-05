@@ -90,7 +90,7 @@ if(elgg_get_viewtype() != 'default') {
 
 	echo elgg_view_menu('entity', array(
 	'entity' => $ob,
-	'handler' => 'studio',
+	'handler' => 'archive',
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
 ));
@@ -156,7 +156,7 @@ echo autop($ob->description);
 ?>
 </div>
 <p><?php echo elgg_echo('kalturavideo:license:label') . ': ' . elgg_echo('kalturavideo:license:' . $ob->license); ?></p>
-<p> <?php echo elgg_view('output/url', array(	'href'=>'/action/studio/download?guid='.$ob->guid,
+<p> <?php echo elgg_view('output/url', array(	'href'=>'/action/archive/download?guid='.$ob->guid,
 												'text'=> elgg_echo('file:download'),
 												'is_action' => true
 										));?>
