@@ -157,7 +157,9 @@ function channel_page_handler($page) {
  * @return string User URL
  */
 function channel_url($user) {
-	return elgg_get_site_url() . "channel/" . $user->username;
+	$url = elgg_get_site_url();
+	$split = explode('://', $url);
+	return $split[0] . '://' . $user->username . '.' . $split[1];
 }
 
 /**
