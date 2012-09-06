@@ -84,6 +84,7 @@ header('Expires: ' . date('r', strtotime("+6 months")), true);
 header("Pragma: public", true);
 header("Cache-Control: public", true);
 header("ETag: $etag");
+header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']); //fix for XMLHTTPREQUEST
 
 $filename = $dataroot . 'views_simplecache/' . md5($viewtype . $view);
 
