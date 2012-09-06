@@ -1809,6 +1809,8 @@ function elgg_ajax_page_handler($page) {
 		if (isset($vars['guid'])) {
 			$vars['entity'] = get_entity($vars['guid']);
 		}
+		
+		header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
 
 		echo elgg_view($view, $vars);
 		return true;
