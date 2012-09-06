@@ -51,12 +51,13 @@ if ($new_file) {
 
 		$mediaEntry = new KalturaMediaEntry();
 		$mediaEntry->name = $title;
-		$mediaEntry->description = $description;
+		$mediaEntry->description = $desc;
+		$mediaEntry->tags = $tags;
 		$mediaEntry->mediaType = file_get_simple_type($mime_type) == 'video' ? KalturaMediaType_VIDEO : KalturaMediaType_AUDIO;
 
 		$mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['upload']['tmp_name']);
 	
-		$ob = kaltura_update_object($mediaEntry,null,ACCESS_PRIVATE,$user_guid,$container_guid, false, array('uploaded_id' => $mediaEntry->id, 'license' => $license));
+		$ob = kaltura_update_object($mediaEntry,null,$access_id,$user_guid,$container_guid, false, array('uploaded_id' => $mediaEntry->id, 'license' => $license));
 		  
 		  if($ob){
 			  elgg_clear_sticky_form('file');
