@@ -24,16 +24,14 @@
 		
 	//set the tags
 	$widgetUi = elgg_get_plugin_setting('custom_kdp', 'kaltura_video');
-	
-	$viewData["swfUrl"]	= KalturaHelpers::getSwfUrlForBaseWidget($widgetUi);
-	
-	$entryId = $ob->kaltura_video_id;
-	
+		
+	$video_location = 'http://www.minds.tv/index.php/kwidget/wid/_100/uiconf_id/' . $widgetUi . '/entry_id/'. $videopost->kaltura_video_id;
+		
 	 minds_set_metatags('og:type', 'video.other');
 	 minds_set_metatags('og:image', $videopost->kaltura_video_thumbnail);
 	 minds_set_metatags('og:title', $videopost->title);
 	 minds_set_metatags('og:description', $videopost->description);
-	 minds_set_metatags('og:video', $videoData["swfUrl"] . "/entry_id/" . $entryId);
+	 minds_set_metatags('og:video', $video_location);
 	 minds_set_metatags('og:video:width', '1280');
 	 minds_set_metatags('og:video:height', '720');
 
