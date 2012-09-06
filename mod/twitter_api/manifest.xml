@@ -15,7 +15,7 @@
 	</requires>
 	<requires>
 		<type>plugin</type>
-		<name>oauth_api</name>
+		<name>oauth</name>
 	</requires>
 	<requires>
 		<type>php_extension</type>
