@@ -21,14 +21,15 @@ body{
  }
 .elgg-menu.elgg-menu-site.elgg-menu-site-default{
 	position:relative;
-	float:left;
-    padding-top:2px;
-   	
+	float:left;   	
 }
 .elgg-page-topbar .elgg-menu-item-minds-logo{
-	margin-top:-20px;
-	
+	margin-top:-8px;
  }
+.elgg-menu-topbar .elgg-menu-item-minds-logo > a{
+	padding:0; 
+	margin:0 15px 0 0;
+}
 .elgg-page-topbar .elgg-menu-item-profile{
 	margin:0px 5px 0 0;
  }

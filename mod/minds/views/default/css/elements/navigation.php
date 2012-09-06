@@ -122,7 +122,7 @@
 	TOPBAR MENU
 *************************************** */
 .elgg-menu-topbar {
-	margin:15px 0 0 0;
+	margin:8px 0;
 	float: left;
 }
 
@@ -175,7 +175,7 @@
 *************************************** */
 .elgg-menu-site {
 	z-index: 1;
-    margin:15px 0 0 0;
+    margin:8px 0;
 }
 
 .elgg-menu-site > li > a {
@@ -230,7 +230,7 @@
 
 .elgg-menu-site-more {
 	position: absolute;
-    top:8px;
+    top:12px;
 	left: -1px;
 	width: 100%;
 	min-width: 150px;

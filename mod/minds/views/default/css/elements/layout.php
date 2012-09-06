@@ -26,7 +26,7 @@
 }
 .elgg-page-default .elgg-page-body > .elgg-inner {
 	width: 990px;
-	margin: 70px auto;
+	margin: 50px auto;
 }
 .elgg-page-default .elgg-page-footer > .elgg-inner {
 	width: 990px;
@@ -42,11 +42,11 @@
 	position: fixed;
     top:0;
     width:100%;
-	height: 65px;
+	height: 40px;
 	z-index: 9000;
 }
 .elgg-page-topbar > .elgg-inner {
-	padding: 10px 10px;
+	padding: 0px 10px;
     margin:auto;
     width:990px;
 }
