@@ -44,5 +44,8 @@ $handler = get_input('handler');
 $page = get_input('page');
 
 if (!page_handler($handler, $page)) {
-	forward('', '404');
+	//try a profile then
+	if(!page_handler('channel', $handler)){
+		forward('', '404');
+	}
 }
