@@ -1810,7 +1810,7 @@ function elgg_ajax_page_handler($page) {
 			$vars['entity'] = get_entity($vars['guid']);
 		}
 		
-		header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
+		header('Access-Control-Allow-Origin: http://minds.io');
 
 		echo elgg_view($view, $vars);
 		return true;
