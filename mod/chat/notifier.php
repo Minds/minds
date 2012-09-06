@@ -9,6 +9,8 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/engine/start.php');
 
+header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
+
 /**
  * @todo Could we just make a straight query that checks how many
  * "unread_messages" annotations the user has? Is it possible
