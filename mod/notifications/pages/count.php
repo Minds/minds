@@ -1,6 +1,7 @@
 <?php
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/engine/start.php');
+header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
 
 		$class = "elgg-icon notification notifier";
 		$text = "<span class='$class'></span>";
