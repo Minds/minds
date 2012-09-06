@@ -17,6 +17,7 @@ $widget_bg = get_input('widget_bg');
 $widget_head_title_color = get_input('widget_head_title_color');
 $widget_body_text = get_input('widget_body_text');
 
+
 if(get_input('remove_bg') == 'yes'){
 	
 	$thumb = new ElggFile;
@@ -40,8 +41,9 @@ if(get_input('remove_bg') == 'yes'){
 
 }
 if(get_input('reset') == 'yes'){
-	$user->background_colour = $user->background_repeat = $user->background_attachment = $user->background_h_pos = $user->background_v_pos = $user->text_colour = $user->link_colour = null;
+	$user->background_colour = $user->background_repeat = $user->background_attachment = $user->background_h_pos = $user->background_v_pos = $user->text_colour = $user->link_colour = $user->background= null;
 	$user->save();
+	//channel_custom_remove_bg();
 	forward(REFERRER); 
 }
 
