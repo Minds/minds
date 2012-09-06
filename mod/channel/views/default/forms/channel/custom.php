@@ -112,6 +112,13 @@ $submit_input = elgg_view('input/submit', array(
 	'value' => elgg_echo('save'),
 ));
 
+$reset_input = elgg_view('output/url', array(	
+										'text' => elgg_echo('channel:custom:reset'),
+										'href' => "action/channel/custom?reset=yes&guid=" . $user->guid,
+										'class' => 'elgg-button elgg-button-cancel channel',
+										'is_action' => true
+									));
+
 $form = <<<FORM
 	<div>
 		<h3> $bg_header_label </h3>
@@ -174,6 +181,7 @@ $form = <<<FORM
 		$container_guid_input
 		$guid_input
 		$submit_input
+		$reset_input
 	</div>
 	
 

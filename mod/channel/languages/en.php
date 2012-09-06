@@ -19,6 +19,7 @@ $english = array(
 	'channel:custom:upload' => 'Upload a background',
 	'channel:custom:reupload' => 'Upload a new background',
 	'chanel:custom:saved' => 'Saved!',
+	'channel:custom:reset' => 'Reset',
 	'channel:custom:background:remove' => 'Remove background',
 	'channel:custom:background:repeat' => 'Repeat background?',
 	'channel:custom:background:attachment' => 'Background attachment',

@@ -39,6 +39,11 @@ if(get_input('remove_bg') == 'yes'){
 	forward(REFERRER);
 
 }
+if(get_input('reset') == 'yes'){
+	$user->background_colour = $user->background_repeat = $user->background_attachment = $user->background_h_pos = $user->background_v_pos = $user->text_colour = $user->link_colour = null;
+	$user->save();
+	forward(REFERRER); 
+}
 
 elgg_make_sticky_form('channel_custom');
 
