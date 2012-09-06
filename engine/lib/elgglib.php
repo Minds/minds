@@ -1877,6 +1877,7 @@ function elgg_cacheable_view_page_handler($page, $type) {
 		$return = elgg_view("$type/$view");
 
 		header("Content-type: $content_type");
+		header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
 
 		// @todo should js be cached when simple cache turned off
 		//header('Expires: ' . date('r', time() + 864000));
