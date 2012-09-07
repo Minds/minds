@@ -39,8 +39,8 @@ if($object->type == "user" || $object->type == "group"){
 		//small hack for wall
 		if(get_subtype_from_id($object->subtype) == 'wallpost'){
 			//@todo make this blend in with the standard functions
-			$item->object_metadata['owner_username'] = get_entity($object->owner_guid)->username;
-			$item->object_metadata['owner_name'] = get_entity($object->owner_guid)->name;
+			$item->object_metadata['to_username'] = get_entity($object->to_guid)->username;
+			$item->object_metadata['to_name'] = get_entity($object->to_guid)->name;
 			$item->object_metadata['message'] = $object->message;
 		}
 		//small hack for bookmarks
