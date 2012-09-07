@@ -13,7 +13,8 @@ function hj_alive_view_comments_list($entity, $params) {
         'metadata_name_value_pairs' => array(
             array('name' => 'annotation_name', 'value' => $annotation_name),
             array('name' => 'annotation_value', 'value' => '', 'operand' => '!='),
-            array('name' => 'parent_guid', 'value' => $parent_guid)
+            array('name' => 'parent_guid', 'value' => $parent_guid),
+            array('name' => 'river_id', 'value' => $river_id)
         ),
         'count' => false,
         'limit' => 3,

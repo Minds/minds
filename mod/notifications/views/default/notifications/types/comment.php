@@ -27,7 +27,7 @@ if($object){
 	} 
 	
 	$body .= elgg_view('output/url', array('href'=>$actor->getURL(), 'text'=>$actor->name));
-	$body .= ' commented on ';
+	$body .= $object_title == '' ? elgg_view('output/url', array('href'=>elgg_get_site_url() . 'news/single?id=' . $entity->object_guid, 'text'=> ' commented')) : ' commented on ';
 	$body .= elgg_view('output/url', array('href'=>$object->getURL(), 'text'=> $object_title));
 	
 	$body .= "<br/>";

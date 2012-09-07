@@ -14,18 +14,18 @@ if (!elgg_is_logged_in()) {
 }
 
 $entity = elgg_extract('entity', $vars, false);
+$item = elgg_extract('item', $vars, false);
 
 if (!$entity) {
     return true;
 }
-
-/*if ($entity->getType() == 'river') {
-    $river_id = $entity->id;
+if ($item->action_type != 'create' && $item) {
+    $river_id = $item->id;
     $selector_id = $river_id;
-//} else {*/
+} else {
     $guid = $entity->guid;
     $selector_id = $guid;
-//}
+}
 $params['parent_guid'] = $guid;
 $params['river_id'] = $river_id;
 $params['aname'] = elgg_extract('aname', $vars, 'generic_comment');
@@ -57,9 +57,6 @@ $likes_view = hj_alive_view_likes_list($params);
 	<div class="annotations">
 	    <?php echo $comments_view ?>
 	</div>
-	<div class="likes">
-	    <?php echo $likes_view ?>
-        </div>
     <div class="hj-comments-bubble hj-comments-input hidden"><?php echo $comments_input ?></div>
     </ul>
 

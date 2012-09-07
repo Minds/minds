@@ -24,6 +24,7 @@ if (elgg_get_plugin_setting('river_comments', 'hypeAlive') !== 'off') {
     if (elgg_is_logged_in()) {
 	echo elgg_view('hj/comments/bar', array(
 	    'entity' => get_entity($item->object_guid),
+	    'item' => $item
 	));
 	
 	echo elgg_view('hj/comments/input', array(

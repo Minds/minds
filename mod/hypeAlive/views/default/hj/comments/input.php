@@ -19,18 +19,22 @@ $form_body .= elgg_view('input/hidden', array(
     'value' => elgg_extract('aname', $vars, 'generic_comment')
         ));
 
-if ($parent_guid = elgg_extract('parent_guid', $vars, false)) {
+if ($entity->action_type != 'create' && $entity->getType() == 'river') {
+$form_body .= elgg_view('input/hidden', array(
+    'name' => 'river_id',
+    'value' => $entity->id
+        ));
+$form_body .= elgg_view('input/hidden', array(
+    'name' => 'parent_guid',
+    'value' =>  $entity->id
+         ));
+} else {
+	if ($parent_guid = elgg_extract('parent_guid', $vars, false)) {
     $form_body .= elgg_view('input/hidden', array(
         'name' => 'parent_guid',
         'value' => $parent_guid
             ));
 }
-
-if ($river_id = elgg_extract('river_id', $vars, false)) {
-$form_body .= elgg_view('input/hidden', array(
-    'name' => 'river_id',
-    'value' => $river_id
-        ));
 }
 
 if (!$access = $entity->access_id) {

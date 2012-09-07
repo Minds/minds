@@ -32,6 +32,9 @@ switch ($page_type) {
 		//GET THE TRENDING FEATURES
 		$options['object_guids'] = thumbs_trending('guids');
 		break;
+	case 'single':
+		$id = get_input('id');
+		$options['ids'] = $id;
 	default:
 		$page_filter = 'friends';
 		//$options['relationship_guid'] = elgg_get_logged_in_user_guid();
