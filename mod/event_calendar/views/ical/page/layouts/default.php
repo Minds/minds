@@ -1,0 +1,2 @@
+<?php
+echo $vars['content'];
