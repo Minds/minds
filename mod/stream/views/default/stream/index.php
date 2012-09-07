@@ -1,7 +1,7 @@
 <?php
  	
 $owner = elgg_get_logged_in_user_entity();
-  	elgg_set_context('studio');
+  	elgg_set_context('archive');
 ?>
 <div class="stream">
 	<div class="elgg-col-1of3">
