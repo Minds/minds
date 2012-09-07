@@ -65,18 +65,22 @@ expose_function('site.getinfo',
  *
  * @return array $river_feed contains all information for river
  */			
-function site_river_feed($limit){
+function site_river_feed($limit, $offset){
 	
 	global $jsonexport;
 	
-	elgg_view_river_items();
+	elgg_list_river(array(
+							'limit' => $limit,
+							'offset' => $offset
+						));
 
 	return $jsonexport['activity'];
 	
 }
 expose_function('site.river_feed',
 				"site_river_feed",
-				array('limit' => array('type' => 'int', 'required' => 'no')),
+				array('limit' => array('type' => 'int', 'required' => false, 'default' => 10),
+						'offset' => array('type' => 'int', 'required' => false, 'default' => 0)),
 				"Get river feed",
 				'GET',
 				false,
