@@ -62,6 +62,7 @@ if ($new_file) {
 		  if($ob){
 			  elgg_clear_sticky_form('file');
 			  system_message(str_replace("%ID%",$video_id,elgg_echo("kalturavideo:action:updatedok")));
+			  system_message(elgg_echo("file:movedtoarchive"));
 			  forward($ob->getURL());
 			  return true;
 		  } else {

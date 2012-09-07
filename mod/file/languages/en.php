@@ -105,6 +105,11 @@ $english = array(
 		'file:noaccess' => "You do not have permissions to change this file",
 		'file:cannotload' => "There was an error uploading the file",
 		'file:nofile' => "You must select a file",
+		
+	/** 
+	 * Moved to archive message
+	 */
+	 'file:movedtoarchive' => 'This file has been sent to the Archive because it is a media format. You can find it by navigating to Archive at the top of the page.',
 );
 
 add_translation("en", $english);
