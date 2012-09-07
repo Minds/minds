@@ -21,7 +21,7 @@ if ($group->polls_enable == 'yes'){
 		'is_trusted' => true,
 	));
 	
-	if(elgg_is_logged_in()){}
+	if(elgg_is_logged_in()){
 		$content = elgg_view_form('wall/add', array('name' => 'elgg-wall'), array('to_guid'=>$group->guid));
 	}
 	
