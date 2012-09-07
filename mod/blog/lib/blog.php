@@ -13,6 +13,8 @@
  * @return array
  */
 function blog_get_page_content_read($guid = NULL) {
+	
+	header('X-XSS-Protection: 0');
 
 	$return = array();
 
