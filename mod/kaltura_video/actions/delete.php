@@ -62,6 +62,6 @@ if($delete_video) {
 	}
 }
 
-forward(REFERRER);
+forward('archive/all');
 
 ?>

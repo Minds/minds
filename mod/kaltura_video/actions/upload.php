@@ -31,34 +31,19 @@ if (!empty($_FILES['upload']['name']) && $_FILES['upload']['error'] != 0) {
 	
 	$mime_type = $_FILES['upload']['type'];
 	//if the file is a video then we upload to kaltura!
-	if(file_get_simple_type($mime_type) == 'video'){
+	if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_type) == 'audio'){
 		$kmodel = KalturaModel::getInstance();
 		$ks = $kmodel->getClientSideSession();
-		
-		//setup the blank mix entry
-		try {
-		    $mixEntry = new KalturaMixEntry();
-		    $mixEntry->name = $title;
-		    $mixEntry->editorType = KalturaEditorType_SIMPLE;
-		    $mixEntry->adminTags = KALTURA_ADMIN_TAGS;
-		    $mixEntry = $kmodel->addMixEntry($mixEntry);
-		    $entryId = $mixEntry->id;
-		}
-		catch(Exception $e) {
-			$error = $e->getMessage();
-		}
-	
-	
-			$mediaEntry = new KalturaMediaEntry();
-		    $mediaEntry->name = $title;
-		    $mediaEntry->description = $description;
-		    $mediaEntry->mediaType = KalturaMediaType_VIDEO;
 
-		    $mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['upload']['tmp_name']);
+		$mediaEntry = new KalturaMediaEntry();
+		$mediaEntry->name = $title;
+		$mediaEntry->description = $desc;
+		$mediaEntry->tags = $tags;
+		$mediaEntry->mediaType = file_get_simple_type($mime_type) == 'video' ? KalturaMediaType_VIDEO : KalturaMediaType_AUDIO;
+
+		$mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['upload']['tmp_name']);
 	
-		 
-		 
-		  	$ob = kaltura_update_object($mixEntry,null,ACCESS_PRIVATE,$user_guid,$container_guid, false, array('uploaded_id' => $mediaEntry->id, 'license' => $license));
+		$ob = kaltura_update_object($mediaEntry,null,$access_id,$user_guid,$container_guid, false, array('uploaded_id' => $mediaEntry->id, 'license' => $license));
 		  
 		  if($ob){
 			  elgg_clear_sticky_form('file');
@@ -69,5 +54,5 @@ if (!empty($_FILES['upload']['name']) && $_FILES['upload']['error'] != 0) {
 			  register_error(str_replace("%ID%",$video_id,elgg_echo("kalturavideo:action:updatedko"))."\n$error");
 			  return false;
 		  }
-		  
+	
 	}

@@ -30,6 +30,7 @@ $translations = array(
 	'kalturavideo:label:prev' => "Previous",
 	'kalturavideo:label:start' => "Start",
 	'kalturavideo:label:newvideo' => "Upload new media",
+	'kalturavideo:label:newvideocam' => "Record from webcam",
 	'kalturavideo:label:newsimplevideo' => "Create a media",
 	'kalturavideo:label:gotoconfig' => "Please configure properly the Kaltura under ",
 

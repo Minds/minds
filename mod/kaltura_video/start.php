@@ -229,26 +229,39 @@ function kaltura_video_page_setup()
 				'name' =>elgg_echo('kalturavideo:label:allvideos'),
 				'href' => $CONFIG->wwwroot."archive/all",
 				'text' =>  elgg_echo('kalturavideo:label:allvideos'),
+				'priority' => 400
 			));
 			
 			elgg_register_menu_item('page', array(
 				'name' =>elgg_echo('kalturavideo:label:trendingvideos'),
 				'href' => $CONFIG->wwwroot."archive/trending",
 				'text' =>  elgg_echo('kalturavideo:label:trendingvideos'),
+				'priority' => 500
 			));
 
 		if (can_write_to_container(0, elgg_get_page_owner_guid()) && elgg_is_logged_in())
 		{
              if(in_array(elgg_get_plugin_setting("alloweditor","kaltura_video"), array('full', 'simple')))
              {
-				//elgg_load_js('lightbox');
-				//elgg_load_css('lightbox');
+				elgg_load_js('lightbox');
+				elgg_load_css('lightbox');
 				elgg_register_menu_item('page', array(
 					'name' => elgg_echo('kalturavideo:label:newvideo'),
+					//'href' => '#kaltura_create',
+					'href' => 'archive/upload',
+					'text' => elgg_echo('kalturavideo:label:newvideo'),
+					'class' => 'pagesactions elgg-lightbox',
+					'priority' => 0,
+					'section'=>'actions'
+				));
+				elgg_register_menu_item('page', array(
+					'name' => elgg_echo('kalturavideo:label:newvideocam'),
 					'href' => '#kaltura_create',
 					//'href' => 'studio/upload',
-					'text' => elgg_echo('kalturavideo:label:newvideo'),
-					'class' => 'pagesactions'
+					'text' => elgg_echo('kalturavideo:label:newvideocam'),
+					'class' => 'pagesactions',
+					'priority' => 1,
+					'section'=>'actions'
 				));
              }
              else {
