@@ -25,8 +25,8 @@
 		elgg_register_entity_url_handler('object', 'gatherings', 'webinar_url');
 		
 		//add a tab in site menu
-		$item = new ElggMenuItem('webinar', elgg_echo('webinar:menu:site'), 'gatherings/all');
-		elgg_register_menu_item('site', $item);
+		//$item = new ElggMenuItem('webinar', elgg_echo('webinar:menu:site'), 'gatherings/all');
+		//elgg_register_menu_item('site', $item);
 		
 		// Register a page handler, so we can have nice URLs -- FALLBACK
 		elgg_register_page_handler('webinar','webinar_page_handler');
