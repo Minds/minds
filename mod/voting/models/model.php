@@ -124,13 +124,13 @@ function polls_get_page_edit($page_type,$guid = 0) {
 			);
 	
 			if ($poll->canEdit()) {
-				$content = elgg_view_form("polls/edit", $form_vars, $body_vars);
+				$content = elgg_view_form("vote/edit", $form_vars, $body_vars);
 			} else {
 				$content = elgg_echo('polls:permission_error');
 			}
 			
 			// set breadcrumb
-			elgg_push_breadcrumb(elgg_echo('item:object:poll'),'polls/all');
+			elgg_push_breadcrumb(elgg_echo('item:object:poll'),'voting/all');
 			
 			$container = get_entity($container_guid);
 			if (elgg_instanceof($container,'group')) {
@@ -145,23 +145,23 @@ function polls_get_page_edit($page_type,$guid = 0) {
 		}
 	} else {
 		// set breadcrumb
-		elgg_push_breadcrumb(elgg_echo('item:object:poll'),'polls/all');
+		elgg_push_breadcrumb(elgg_echo('item:object:poll'),'voting/all');
 		if ($guid) {
 			elgg_set_page_owner_guid($guid);
 			$container = get_entity($guid);
 			
-			elgg_push_breadcrumb($container->name, 'polls/group/' . $container->getGUID());
+			elgg_push_breadcrumb($container->name, 'voting/group/' . $container->getGUID());
 		} else {
 			$user = elgg_get_logged_in_user_entity();
 			elgg_set_page_owner_guid($user->getGUID());
 			
-			elgg_push_breadcrumb($user->name, 'polls/owner/' . $user->username);
+			elgg_push_breadcrumb($user->name, 'voting/owner/' . $user->username);
 		}
 		elgg_push_breadcrumb(elgg_echo('polls:add'));
 		
 		$title = elgg_echo('polls:addpost');
 		$body_vars = array('fd'=>polls_prepare_edit_body_vars(),'container_guid'=>$guid);
-		$content = elgg_view_form("polls/edit",$form_vars,$body_vars);
+		$content = elgg_view_form("vote/edit",$form_vars,$body_vars);
 	}
 	
 	$params = array(
@@ -252,7 +252,7 @@ function polls_get_page_list($page_type, $container_guid = NULL) {
 		if (elgg_get_page_owner_entity()->canWriteToContainer($user_guid)){
 			elgg_register_menu_item('title', array(
 				'name' => 'add',
-				'href' => "polls/add/".$container_guid,
+				'href' => "vote/add/".$container_guid,
 				'text' => elgg_echo('polls:add'),
 				'class' => 'elgg-button elgg-button-action',
 			));
@@ -300,7 +300,7 @@ function polls_get_page_list($page_type, $container_guid = NULL) {
 		if ((elgg_is_logged_in() && ($polls_site_access != 'admins')) || elgg_is_admin_logged_in()) {		
 			elgg_register_menu_item('title', array(
 				'name' => 'add',
-				'href' => "polls/add",
+				'href' => "vote/add",
 				'text' => elgg_echo('polls:add'),
 				'class' => 'elgg-button elgg-button-action',
 			));
@@ -338,9 +338,9 @@ function polls_get_page_view($guid) {
 		
 		elgg_push_breadcrumb(elgg_echo('item:object:poll'), "polls/all");
 		if (elgg_instanceof($page_owner,'user')) {
-			elgg_push_breadcrumb($page_owner->name, "polls/owner/{$page_owner->username}");
+			elgg_push_breadcrumb($page_owner->name, "voting/owner/{$page_owner->username}");
 		} else {
-			elgg_push_breadcrumb($page_owner->name, "polls/group/{$page_owner->guid}");
+			elgg_push_breadcrumb($page_owner->name, "voting/group/{$page_owner->guid}");
 		}
 		elgg_push_breadcrumb($poll->title);
 	} else {			

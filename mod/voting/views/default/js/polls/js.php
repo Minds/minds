@@ -8,7 +8,7 @@ elgg.polls.init = function() {
 		// prevent multiple clicks
 		$(this).attr("disabled", "disabled");
 		// submit the vote and display the response when it arrives 	 
-	    elgg.action('action/polls/vote', {data: $('#poll-vote-form-'+guid).serialize(),
+	    elgg.action('action/vote/vote', {data: $('#poll-vote-form-'+guid).serialize(),
 			success : function(response) {
 			        	$('#poll-container-'+guid).html(response.result);
 			        }

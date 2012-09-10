@@ -8,7 +8,7 @@
 if (isset($vars['entity'])) {
 
 	//set img src
-	$img_src = $vars['url'] . "mod/polls/graphics/poll.gif";
+	$img_src = $vars['url'] . "mod/voting/graphics/poll.gif";
 
 	$question = $vars['entity']->question;
 
@@ -64,7 +64,7 @@ if (isset($vars['entity'])) {
 else
 {
 	register_error(elgg_echo("polls:blank"));
-	forward("polls/all");
+	forward("voting/all");
 }
 
 

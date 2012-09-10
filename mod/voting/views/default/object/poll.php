@@ -16,7 +16,7 @@ if (isset($vars['entity'])) {
 		
 	$owner_icon = elgg_view_entity_icon($owner, 'tiny');
 	$owner_link = elgg_view('output/url', array(
-				'href' => "polls/owner/$owner->username",
+				'href' => "voting/owner/$owner->username",
 				'text' => $owner->name,
 				'is_trusted' => true,
 	));
@@ -49,7 +49,7 @@ if (isset($vars['entity'])) {
 	} else {
 		$metadata = elgg_view_menu('entity', array(
 					'entity' => $poll,
-					'handler' => 'polls',
+					'handler' => 'vote',
 					'sort_by' => 'priority',
 					'class' => 'elgg-menu-hz',
 		));

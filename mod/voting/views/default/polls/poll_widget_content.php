@@ -34,7 +34,7 @@ if (elgg_is_logged_in()) {
 <?php if (!$can_vote) {echo '<p>'.$voted_text.'</p>';}?>
 <?php echo elgg_view('polls/results_for_widget', array('entity' => $poll)); ?>
 </div>
-<?php echo elgg_view_form('polls/vote', array('id'=>'poll-vote-form-'.$poll->guid),array('entity' => $poll,'callback'=>1,'form_display'=>$poll_display));
+<?php echo elgg_view_form('vote/vote', array('id'=>'poll-vote-form-'.$poll->guid),array('entity' => $poll,'callback'=>1,'form_display'=>$poll_display));
 	
 if ($can_vote) {			
 ?>

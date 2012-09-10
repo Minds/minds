@@ -108,14 +108,14 @@
 *************************************** */
 
 .river_object_poll_create {
-	background: url(<?php echo $vars['url']; ?>mod/polls/graphics/river_icon_poll.gif) no-repeat left -1px;
+	background: url(<?php echo $vars['url']; ?>mod/voting/graphics/river_icon_poll.gif) no-repeat left -1px;
 }
 .river_object_poll_update {
-	background: url(<?php echo $vars['url']; ?>mod/polls/graphics/river_icon_poll.gif) no-repeat left -1px;
+	background: url(<?php echo $vars['url']; ?>mod/voting/graphics/river_icon_poll.gif) no-repeat left -1px;
 }
 .river_object_poll_comment {
 	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_comment.gif) no-repeat left -1px;
 }
 .river_object_poll_vote {
-	background: url(<?php echo $vars['url']; ?>mod/polls/graphics/river_icon_vote.gif) no-repeat left -1px;
+	background: url(<?php echo $vars['url']; ?>mod/voting/graphics/river_icon_vote.gif) no-repeat left -1px;
 }
