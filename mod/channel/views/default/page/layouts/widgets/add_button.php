@@ -9,6 +9,7 @@ elgg_load_js('elgg.wall');
 ?>
 <div class="elgg-widget-add-control">
 <?php
+if($user instanceof ElggUser){
 	echo elgg_view_title($user->name);
 	
 	if($user->canEdit())
@@ -27,7 +28,7 @@ elgg_load_js('elgg.wall');
 										'class' => 'elgg-button elgg-button-action channel'
 									));
 	}
-	
+
 	/**
 	 * Subscribe/Un-Subscribe button
 	 */
@@ -51,7 +52,7 @@ elgg_load_js('elgg.wall');
 			}
 		}
 	}
-									
+}									
 	echo elgg_view('output/url', array(
 		'href' => '#widgets-add-panel',
 		'text' => elgg_echo('widgets:add'),
