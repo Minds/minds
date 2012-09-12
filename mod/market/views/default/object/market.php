@@ -12,6 +12,8 @@
 $full = elgg_extract('full_view', $vars, FALSE);
 $marketpost = $vars['entity'];
 
+elgg_load_library('elgg:pay');
+
 if (!$marketpost) {
 	return TRUE;
 }
@@ -84,7 +86,8 @@ if ($full && !elgg_in_context('gallery')) {
 	}
 	$body .= "</td></tr><tr>";
 	$body .= "<td><center>";
-	$body .= "<span class='market_pricetag'><b>" . elgg_echo('market:price') . "</b> {$currency}{$marketpost->price}</span>";
+	//$body .= "<span class='market_pricetag'><b>" . elgg_echo('market:price') . "</b> {$currency}{$marketpost->price}</span>";
+	$body .= pay_basket_add_button($marketpost->guid, $marketpost->title, $marketpost->description, $marketpost->price, 1);
 	$body .= "</center></td><td><center>";
 	if (elgg_get_plugin_setting('market_pmbutton', 'market') == 'yes') {
 		if ($owner->guid != elgg_get_logged_in_user_guid()) {

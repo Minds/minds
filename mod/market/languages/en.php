@@ -14,7 +14,7 @@ $english = array(
 	// Menu items and titles	
 	'market' => "Market post",
 	'market:posts' => "Market Posts",
-	'market:title' => "The Market",
+	'market:title' => "Market",
 	'market:user:title' => "%s's posts on The Market",
 	'market:user' => "%s's Market",
 	'market:user:friends' => "%s's friends Market",
