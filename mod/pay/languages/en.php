@@ -14,7 +14,7 @@ $english = array(
 	
 	'pay:topbar:count' => '%s items',
 	
-	'pay:admin:withdraw' => 'Withdrawel Admin',
+	'pay:admin:withdraw' => 'Withdrawal Admin',
 	
 	'pay:basket' => 'Basket',
 	'pay:basket:total' => '<b>Your total is </b>',
@@ -40,7 +40,7 @@ $english = array(
 	'pay:withdraw' => 'Withdraw',
 	'pay:withdraw:balance' => 'Balance: $%s',
 	'pay:withdraw:label:amount' => 'How much do you want to withdraw? (You have $%s available)',
-	'pay:withdraw:title' => 'Withdrawel',
+	'pay:withdraw:title' => 'Withdrawal',
 	'pay:withdraw:insufficientfunds' => 'Sorry, you do not have sufficient funds to withdraw that amount. Please try again.',
 	'pay:withdraw:mark:completed' => 'Mark as completed',
 	'pay:withdraw:paypal_address' => 'Paypal email address',
