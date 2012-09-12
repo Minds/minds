@@ -50,6 +50,8 @@ if($full){
 	
 	
 } else {
+	
+	$user = get_entity($order->owner_guid);
 
 	if($order->withdraw){
 		$title = elgg_view('output/url', array('text' => elgg_echo('pay:withdraw:title') . ': ' . $order->guid, 'href'=>$order->getUrl()));
@@ -62,13 +64,13 @@ if($full){
 		'entity' => $order,
 		'metadata' => $metadata,
 		'title' => $title,
-		'subtitle' => elgg_get_friendly_time($order->time_created),
+		'subtitle' => elgg_view('output/url', array('text' => $user->name, 'href'=>$user->getUrl())) . ' | ' . elgg_get_friendly_time($order->time_created),
 		'content' => '',
 	);
 	
 	$params = $params + $vars;
 	$list_body = elgg_view('object/elements/summary', $params);
-
-	echo elgg_view_image_block(null, $list_body);
+	$icon = elgg_view_entity_icon($user, 'small');
+	echo elgg_view_image_block($icon, $list_body);
 
 }
