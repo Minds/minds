@@ -11,6 +11,18 @@
             window.ajaxcommentsready = true;
         }
         //hj.comments.triggerRefresh();
+        
+        $('body').on('focus', '.comments-input',function(e){ $(this).autosize();});
+        
+        $('body').on('keyup', '.comments-input',function(e){
+															  e = e || event;
+															  if (e.keyCode === 13 && !e.ctrlKey) {
+															    // start your submit function
+															    $(this).submit();
+															    $(this).height('25px');
+															  }
+															  return true;
+															 });
 
         var bar_loader = '<div class="hj-ajax-loader hj-loader-bar"></div>';
 
@@ -151,7 +163,7 @@
         data.timestamp = $('li.elgg-item:first', commentsList).data('timestamp');
         ref.push(data);
 
-        var input = $('input[name="annotation_value"]', $(this));
+        var input = $('textarea[name="annotation_value"]', $(this));
 
         input
         .addClass('hj-input-processing');

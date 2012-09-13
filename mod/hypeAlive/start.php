@@ -26,6 +26,8 @@ function hj_alive_init() {
 	$hj_js_ajax = elgg_get_simplecache_url('js', 'hj/framework/ajax');
     elgg_register_js('hj.framework.ajax', $hj_js_ajax);
     elgg_load_js('hj.framework.ajax');
+	
+	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/hypeAlive/vendors/autosize/jquery.autosize.js');
 
     elgg_register_plugin_hook_handler('comments', 'all', 'hj_alive_comments_replacement');
 
