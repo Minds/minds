@@ -35,15 +35,17 @@ $content = elgg_list_entities_from_metadata(array(
 ));
 
 if(pay_get_user_balance($user->guid) > 0){
-	elgg_load_js('lightbox');
-	elgg_load_css('lightbox');
+
 	elgg_register_menu_item('title', array(
 		'name' => 'payment_withdraw',
 		'text' => elgg_echo('pay:withdraw'),
-		'href' => "pay/account/withdraw/$user->username",
-		'class' => 'elgg-lightbox',
+		'href' => "#withdraw",
+		'rel' => 'popup',
 		'link_class' => 'elgg-button elgg-button-action elgg-lightbox',
 	));
+	
+	$content .= elgg_view_module('popup', elgg_echo('pay:withdraw'), elgg_view_form('pay/withdraw'),
+									 array('id'=> 'withdraw', 'class'=>'hidden pay-withdraw-module'));
 	
 	elgg_register_menu_item('title', array(
 		'name' => 'seller_balance',
