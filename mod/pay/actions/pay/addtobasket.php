@@ -20,7 +20,7 @@ $item = new ElggObject();
 $item->type = 'object';
 $item->subtype = 'pay_basket';
 
-
+$item->object_guid = $type_guid;
 $item->title = $title;
 $item->description = $desc;
 $item->quantity = $quantity;
