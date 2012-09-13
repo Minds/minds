@@ -207,10 +207,12 @@ function pay_entity_menu_setup($hook, $type, $return, $params) {
 	} elseif (elgg_get_context() == 'pay'){
 		$return = NULL;
 		
+		//for now, if the seller guid is equal to the page owner, it shows the sellers amount
+		$amount =  $entity->seller_guid == elgg_get_page_owner_guid() ? $entity->seller_amount : $entity->amount;
 		$currency = pay_get_currency();
 		$options = array(
 			'name' => 'amount',
-			'text' => '<b>' . $currency['symbol'] . $entity->amount . '</b>',
+			'text' => '<b>' . $currency['symbol'] . $amount. '</b>',
 			'title' => elgg_echo('pay:amount'),
 			'href' => '#',
 			'priority' => 50,

@@ -174,7 +174,7 @@ function pay_get_user_balance($guid){
 									));
 	foreach($orders as $order){
 		if($order->status=='Completed'){
-			$balance += +$order->amount;
+			$balance += +$order->seller_amount;
 		}
 	}
 	
@@ -234,6 +234,13 @@ function pay_call_payment_handler_callback($handler, $order_guid){
 	if($callback == true){
 		//send messages
 		//update order
+		$order = get_entity($order_guid);
+		//This gives 98% to the seller.
+		$order->seller_amount = ($order->amount * 0.98);
+		$order->save();
+		if($order->status == 'Completed'){
+			//notification to go here
+		}
 	} else {
 		return false;
 	}
