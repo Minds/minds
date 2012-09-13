@@ -9,6 +9,7 @@ elgg_load_library('elgg:pay');
 $full = elgg_extract('full_view', $vars, FALSE);
 $order = elgg_extract('entity', $vars, FALSE);
 
+$user = get_entity($order->owner_guid);
 
 if (!$order) {
 	return TRUE;
@@ -31,6 +32,9 @@ $metadata = elgg_view_menu('entity', array(
 
 if($full){
 	
+	$icon = elgg_view_entity_icon($user, 'small');
+	echo elgg_view_image_block($icon, elgg_view('output/url', array('href'=> $user->getURL(), 'text'=> $user->name)));
+	
 	echo '<div>';
 	echo elgg_echo('pay:account:order:status') . elgg_echo('pay:account:order:status:' .$order->status);
 	echo '</div><br/>';
@@ -50,8 +54,6 @@ if($full){
 	
 	
 } else {
-	
-	$user = get_entity($order->owner_guid);
 
 	if($order->withdraw){
 		$title = elgg_view('output/url', array('text' => elgg_echo('pay:withdraw:title') . ': ' . $order->guid, 'href'=>$order->getUrl()));
