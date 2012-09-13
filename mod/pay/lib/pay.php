@@ -241,6 +241,7 @@ function pay_call_payment_handler_callback($handler, $order_guid){
 		$order->save();
 		if($order->status == 'Completed'){
 			//notification to go here
+			notification_create(array($order->seller_guid), elgg_get_logged_in_user_guid(), $order->guid, array('notification_view'=>'pay_order_paid'));
 		}
 	} else {
 		return false;

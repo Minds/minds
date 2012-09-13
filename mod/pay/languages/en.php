@@ -48,6 +48,12 @@ $english = array(
 	 */
 	'pay:settings:currency' => '<b>Currency</b> - enter the currency symbol EG. GBP, USD, EUR ...',
 	'pay:settings:enabled_payment_handlers' => '<b>Payment Handlers</b> - select the payment handlers you wish to enable',
+	/**
+	 * Notifications
+	 */
+	 'pay:notification:order' => '%s has placed an order for %s with you.',
+	 'pay:notification:order_paid' => '%s has made payment for %s',
+	 'pay:notification:withdraw' => 'Your request for funds to be transfered to your account has been accepted. Please allow 3-4 days before the funds appear in your account.',
 );
 
 add_translation("en", $english);
