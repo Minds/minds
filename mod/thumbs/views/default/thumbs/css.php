@@ -15,3 +15,7 @@
 .elgg-menu .elgg-menu-item-likes-count {
 	margin-left: 3px;
 }
+.elgg-menu-item-thumbs-count{
+	padding-top:2px;
+	font-size:14px;
+}

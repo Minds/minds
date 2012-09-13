@@ -14,7 +14,7 @@ $guid = $vars['entity']->getGUID();
 if ($votes_up) {
 	// display the number of likes
 	
-	$string = elgg_echo('thumbs:up:count', array($votes_up));
+	$string = elgg_echo('thumbs:up:count', array($votes_up-$votes_down));
 
 	$params = array(
 		'text' => $string,
