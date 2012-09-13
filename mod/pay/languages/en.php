@@ -51,8 +51,10 @@ $english = array(
 	/**
 	 * Notifications
 	 */
-	 'pay:notification:order' => '%s has placed an order for %s with you.',
-	 'pay:notification:order_paid' => '%s has made payment for %s',
+	 'pay:notification:order' => 'Thankyou for placing your order. Please check your payment account for updates',
+	 'pay:notification:order_paid' => 'Thankyou for payment. Order:%s has now been paid.',
+	 'pay:notification:seller:order' => '%s has placed an order with you. %s',
+	 'pay:notification:seller:order_paid' => '%s has made payment for Order:%s',
 	 'pay:notification:withdraw' => 'Your request for funds to be transfered to your account has been accepted. Please allow 3-4 days before the funds appear in your account.',
 );
 
