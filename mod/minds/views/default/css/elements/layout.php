@@ -119,6 +119,7 @@
 }
 .elgg-page-footer {
 	color: #999;
+	font-size:11px;
 }
 .elgg-page-footer a:hover {
 	color: #666;
