@@ -45,7 +45,7 @@ $order->status = 'created';
 $order->payment_method = 'paypal';
 
 if($order->save()){
-	notification_create(array($order->seller_guid, $order->getOwnerGUID()), elgg_get_logged_in_user_guid(), $order->guid, array('notification_view'=>'pay_order'));
+	notification_create(array($order->seller_guid, $order->getOwnerGUID()), 0, $order->guid, array('notification_view'=>'pay_order'));
 	
 	return pay_call_payment_handler($order->payment_method, array( 'order_guid' => $order->getGuid(),
 																   'user_guid' => $user_guid,
