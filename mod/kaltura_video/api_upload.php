@@ -7,7 +7,9 @@
 * @copyright Ivan Vergés 2010
 * @link http://microstudi.net/elgg/
 **/
-		oauth_gatekeeper();
+		//oauth_gatekeeper();
+		//listens out for consumer key and access token and logs a user in
+		minds_auth_gatekeeper();
 		
 		require_once("kaltura/api_client/includes.php");
 		
