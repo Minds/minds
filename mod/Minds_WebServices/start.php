@@ -32,6 +32,8 @@ function minds_web_services_init() {
 	elgg_load_library('webservice:wall');
 	elgg_register_library('webservice:thumbs', elgg_get_plugins_path() . 'Minds_WebServices/lib/thumbs.php');
 	elgg_load_library('webservice:thumbs');
+	elgg_register_library('webservice:notifications', elgg_get_plugins_path() . 'Minds_WebServices/lib/notifications.php');
+	elgg_load_library('webservice:notifications');
 }
 
 
