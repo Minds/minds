@@ -52,7 +52,7 @@ function wall_post($message, $access = ACCESS_PUBLIC, $wall_method = "api",	$to,
 		$return['success'] = true;
 		
 	//add the message
-	add_to_river('river/object/wall/create', 'create', $from_guid, $guid);
+	add_to_river('river/object/wall/create', 'create', $user->guid, $guid);
 	
 	notification_create(array($to_user->guid), $user->guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
 	}
