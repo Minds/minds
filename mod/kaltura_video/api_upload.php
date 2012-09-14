@@ -9,7 +9,8 @@
 **/
 		//oauth_gatekeeper();
 		//listens out for consumer key and access token and logs a user in
-		minds_auth_gatekeeper();
+		//minds_auth_gatekeeper();
+		//register_pam_handler('pam_auth_usertoken');
 		
 		require_once("kaltura/api_client/includes.php");
 		
