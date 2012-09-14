@@ -17,7 +17,7 @@
  *
  * @return bool
  */
-function wall_post($to, $message, $access = ACCESS_PUBLIC, $wall_method = "api", $username) {
+function wall_post($message, $access = ACCESS_PUBLIC, $wall_method = "api",	$to,  $username) {
 	if(!$username) {
 		$user = get_loggedin_user();
 	} else {
@@ -27,7 +27,14 @@ function wall_post($to, $message, $access = ACCESS_PUBLIC, $wall_method = "api",
 		}
 	}
 	
-	$to_user = get_user_by_username($to);
+	if(!$to) {
+		$to_user = get_loggedin_user();
+	} else {
+		$to_user = get_user_by_username($to_user);
+		if (!$to_user) {
+			throw new InvalidParameterException('registration:usernamenotvalid');
+		}
+	}
 	
 	$post = new WallPost;
 	$post->to_guid = $to_user->guid;
@@ -56,10 +63,10 @@ function wall_post($to, $message, $access = ACCESS_PUBLIC, $wall_method = "api",
 expose_function('wall.post',
 				"wall_post",
 				array(	
-						'to' => array ('type' => 'string'),
 						'message' => array ('type' => 'string'),
 						'access' => array ('type' => 'string', 'required' => false),
 						'wall_method' => array ('type' => 'string', 'required' => false),
+						'to' => array ('type' => 'string'),
 						'username' => array ('type' => 'string', 'required' => false),
 					),
 				"Post to the wall",
