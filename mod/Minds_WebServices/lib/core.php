@@ -176,7 +176,7 @@ function temp_token($username){
 		}
 	}
 
-	$token = create_user_token($username, 30);
+	$token = create_user_token($user->username, 30);
 		if ($token) {
 			return $token;
 		}
