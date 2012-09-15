@@ -66,8 +66,8 @@ function notification_get_posts($limit = 10, $offset = 0) {
 			
 			if ($read != 1) {
 				// Mark message read
-				$update->read = 1;
-				$update->save();
+				$single->read = 1;
+				$single->save();
 			}
 			
 			$notification['read'] = $single->read;
