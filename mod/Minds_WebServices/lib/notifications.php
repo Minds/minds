@@ -37,7 +37,7 @@ function notification_get_posts($limit = 10, $offset = 0) {
 	$options = array(	'types'=>'object',
 					'subtypes'=>'notification',
 					'metadata_name_value_pairs' => array(array('name'=>'to_guid', 'value'=>$user->getGUID(), 'operand' => '='))
-				);
+, 'limit' => $limit				);
 	
 	$notifications = elgg_get_entities_from_metadata($options);
 	
@@ -46,21 +46,22 @@ function notification_get_posts($limit = 10, $offset = 0) {
 			$notification['guid'] = $single->guid;
 			
 			//subject
-			$actor = get_entity($single->from_guid);
+			$actor = get_entity($single->owner_guid);
 			$notification['actor']['guid'] = $actor->guid;
 			$notification['actor']['name'] = $actor->name;
 			$notification['actor']['username'] = $actor->name;
-			$notification['actor']['avatar_url'] = get_entity_icon_url($actor,'small');
+			$notification['actor']['avatar_url'] = $actor->getIconURL('small');
 			
 			//object
 			$object = get_entity($single->object_guid);
 			$notification['object']['guid'] = $object->guid;
 			$notification['object']['name'] = $object->name ? $object->name : $object->title;
 			$notification['object']['description'] = $object->description;
+			$notification['object']['url'] = $object->getURL();
 				
 			$notification['time_created'] = (int)$single->time_created;
 			$notification['description'] = $single->description;
-			$notification['view'] = $entity->notification_view;
+			$notification['view'] = $single->notification_view;
 			
 			$read = $single->read;
 			
