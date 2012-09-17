@@ -13,18 +13,21 @@ $description = get_input('description');
 $license = get_input('license');
 
 //find the users mobile upload album
-$album = elgg_get_entities_from_metadata(array(
+$albums = elgg_get_entities_from_metadata(array(
 													'type'=> 'object',
 													'subtype' => 'album',
 													'owner_guid' => elgg_get_logged_in_user_guid(),
 													'metadata_name_value_pairs' => array('name'=>'mobile', 'value'=>true)
 													
 										));
+
+$album = $albums[0];
 //if the album cant be found then lets create one
 if (!$album) {
 	$album = new TidypicsAlbum();
 	$album->owner_guid = elgg_get_logged_in_user_guid();
 	$album->title = 'Mobile Uploads';
+	$album->access_id = 1;
 	$album->mobile = true;
 	
 	if (!$album->save()) {
@@ -32,6 +35,7 @@ if (!$album) {
 		forward(REFERER);
 	}
 }
+
 // post limit exceeded
 if (count($_FILES) == 0) {
 	trigger_error('Tidypics warning: user exceeded post limit on image upload', E_USER_WARNING);
@@ -39,52 +43,20 @@ if (count($_FILES) == 0) {
 	forward(REFERER);
 }
 
-// test to make sure at least 1 image was selected by user
-$num_images = 0;
-foreach($_FILES['file']['name'] as $name) {
-	if (!empty($name)) {
-		$num_images++;
-	}
-}
-if ($num_images == 0) {
-	// have user try again
-	register_error(elgg_echo('tidypics:noimages'));
-	forward(REFERER);
-}
-
 // create the image object for each upload
-$uploaded_images = array();
-$not_uploaded = array();
-$error_msgs = array();
-foreach ($_FILES['file']['name'] as $index => $value) {
-	$data = array();
-	foreach ($_FILES['file'] as $key => $values) {
-		$data[$key] = $values[$index];
-	}
 
-	if (empty($data['name'])) {
-		continue;
-	}
-
-	$mime = tp_upload_get_mimetype($data['name']);
-
+	$mime = $_FILES['file']['type'];
 	$image = new TidypicsImage();
 	$image->container_guid = $album->getGUID();
 	$image->setMimeType($mime);
 	$image->access_id = $album->access_id;
 
-	try {
-		$result = $image->save($data);
-	} catch (Exception $e) {
-		array_push($not_uploaded, $data['name']);
-		array_push($error_msgs, $e->getMessage());
-	}
-
+	$result = $image->save($_FILES['file']);
+	//error_log('Save: ' . $image->getGUID());
 	if ($result) {
-		array_push($uploaded_images, $image->getGUID());
-
+	//array_push($uploaded_images, $image->getGUID());
+	$album->prependImageList(array($image->getGUID()));
 		if ($img_river_view == "all") {
 			add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
 		}
 	}
-}
