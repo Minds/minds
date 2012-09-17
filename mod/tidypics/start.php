@@ -203,6 +203,10 @@ function tidypics_page_handler($page) {
 			set_input('uploader', elgg_extract(2, $page, $default_uploader));
 			require "$base/image/upload.php";
 			break;
+		
+		case "api_upload": //upload images to tidypics from the api
+			include(elgg_get_plugins_path() . "tidypics/pages/api_upload.php");
+			break;
 
 		case "batch": //update titles and descriptions
 			if (isset($page[1])) {
