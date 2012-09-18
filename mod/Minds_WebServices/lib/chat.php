@@ -82,7 +82,7 @@ function chat_get($guid){
 	$messages = elgg_get_entities(array(
 										'type' => 'object',
 										'subtype' => 'chat_message', 
-										//'container_guid' => $guid,
+										'container_guid' => $guid,
 										'limit' => 10,
 										'order_by' => 'e.time_created desc',
 										'pagination' => false,
@@ -100,6 +100,7 @@ function chat_get($guid){
 				$message['owner']['avatar_url'] = $owner->getIconURL('small');
 				
 				$message['description'] = strip_tags($single->description);
+				$message['time_created'] = (int)$single->time_created;
 				
 				$return[] = $message;
 			}
