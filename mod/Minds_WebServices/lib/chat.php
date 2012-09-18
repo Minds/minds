@@ -106,6 +106,8 @@ function chat_get($guid){
 			}
 	}
 	
+	remove_entity_relationship($guid, 'unread', elgg_get_logged_in_user_guid());
+	
 	return $return;
 	
 }
