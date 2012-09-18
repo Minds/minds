@@ -108,7 +108,8 @@ function chat_get($guid){
 				
 			}
 	}
-		
+	$chat = get_entity($guid);
+	$chat->resetUnreadMessageCount();	
 	return $return;
 	
 }
