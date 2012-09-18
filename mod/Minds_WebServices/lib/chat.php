@@ -103,11 +103,12 @@ function chat_get($guid){
 				$message['time_created'] = (int)$single->time_created;
 				
 				$return[] = $message;
+				
+				remove_entity_relationship($single->guid, 'unread', elgg_get_logged_in_user_guid());
+				
 			}
 	}
-	
-	remove_entity_relationship($guid, 'unread', elgg_get_logged_in_user_guid());
-	
+		
 	return $return;
 	
 }
