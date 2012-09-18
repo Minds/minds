@@ -156,3 +156,12 @@ function chat_reply($container_guid, $message){
 		return false;
 	}
 }
+expose_function('chat.reply',
+				"chat_reply",
+				array(	'container_guid' => array ('type' => 'int'),
+						'message' => array ('type' => 'string'),
+					),
+				"Reply to a chat thread",
+				'POST',
+				true,
+				true);
