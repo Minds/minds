@@ -117,3 +117,42 @@ expose_function('chat.get',
 				'GET',
 				true,
 				true);
+ /**
+  * Web service to reply in a chat thread
+  * 
+  * @return return
+  */				
+function chat_reply($container_guid, $message){
+	$entity = new ElggObject();
+	$entity->subtype = 'chat_message';
+	$entity->access_id = ACCESS_LOGGED_IN;
+	$entity->container_guid = $container_guid;
+	
+	$entity->description = $message;
+
+	if ($entity->save()) {
+		$chat = $entity->getContainerEntity();
+		
+		$members = $chat->getMemberEntities();
+		foreach ($members as $member) {
+			// No unread annotations for user's own message
+			if ($member->getGUID() === $user->getGUID()) {
+				continue;
+			}
+			
+			// Mark the message as unread
+			$entity->addRelationship($member->getGUID(), 'unread');
+			
+			// Add number of unread messages also to the chat object
+			$chat->increaseUnreadMessageCount($member);
+		}
+		
+		// @todo Should we update the container chat so we can order chats by
+		// time_updated? Or is it possible to order by "unread_messages" annotation?
+		//$chat->time_updated = time();
+		return true;
+	} else {
+		register_error(elgg_echo('chat:error:cannot_save_message'));
+		return false;
+	}
+}
