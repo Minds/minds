@@ -36,6 +36,8 @@ function minds_web_services_init() {
 	elgg_load_library('webservice:notifications');
 	elgg_register_library('webservice:chat', elgg_get_plugins_path() . 'Minds_WebServices/lib/chat.php');
 	elgg_load_library('webservice:chat');
+	elgg_register_library('webservice:comments', elgg_get_plugins_path() . 'Minds_WebServices/lib/comments.php');
+	elgg_load_library('webservice:comments');
 	
 }
 
