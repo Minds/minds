@@ -42,7 +42,7 @@ function comments_get($guid, $river_id){
 		$comment['owner']['guid'] = $owner->guid;
 		$comment['owner']['name'] = $owner->name;
 		$comment['owner']['username'] = $owner->username;
-		$comment['owner']['avatar_url'] = $owner->getIconURL();
+		$comment['owner']['avatar_url'] = $owner->getIconURL('small');
 		
 		$comment['time_created'] = $single->time_created;
 
