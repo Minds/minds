@@ -32,7 +32,7 @@ function comments_get($guid, $river_id){
     );
 	
 	$comments = elgg_get_entities_from_metadata($options);
-	
+	$comments = array_reverse($comments);
 	foreach($comments as $single){
 		$comment['guid'] = $single->guid;
 		$comment['comment'] = $single->annotation_value;
