@@ -89,7 +89,7 @@ if (!elgg_instanceof($entity, 'object', 'hjannotation')) {
 			break;
 
 		case 'group_topic_post' :
-			$container = $entity->findOriginalContainer();
+			/*$container = $entity->findOriginalContainer();
 
 			if (elgg_instanceof($container)) {
 				$title = $container->title;
@@ -110,7 +110,7 @@ if (!elgg_instanceof($entity, 'object', 'hjannotation')) {
 			$body .= "<p>$description</p>";
 			$body .= "<p class=\"elgg-subtext\">$time</p>";
 
-			echo elgg_view_image_block($icon, $body);
+			echo elgg_view_image_block($icon, $body);*/
 
 			break;
 
