@@ -55,7 +55,7 @@ if (!elgg_instanceof($entity, 'object', 'hjannotation')) {
 	switch ($entity->annotation_name) {
 
 		case 'generic_comment' :
-			$container = $entity->findOriginalContainer();
+			/*$container = $entity->findOriginalContainer();
 
 			if (elgg_instanceof($container, 'object', 'groupforumtopic')) {
 				$title = $container->title;
@@ -85,7 +85,7 @@ if (!elgg_instanceof($entity, 'object', 'hjannotation')) {
 			$body .= "<p class=\"elgg-subtext\">$time</p>";
 
 			echo elgg_view_image_block($icon, $body);
-
+*/
 			break;
 
 		case 'group_topic_post' :

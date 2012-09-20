@@ -29,14 +29,14 @@ if (!isset($CONFIG)) {
  * to explain, but if you know you need it, skip past this section.
  */
 
-$CONFIG->dbuser = 'elgg_user';
+$CONFIG->dbuser = 'root';
 
 
-$CONFIG->dbpass = 'M!/|/d$C0m';
+$CONFIG->dbpass = '';
 
-$CONFIG->dbname = 'elgg';
+$CONFIG->dbname = 'minds';
 
-$CONFIG->dbhost = '10.0.0.43';
+$CONFIG->dbhost = 'localhost';
 
 //I AM KEEPING THE ABOVE IN FOR FALLBACK
 
@@ -44,7 +44,7 @@ $CONFIG->dbprefix = 'elgg_';
 /**
  * Master/Slave database setup
  */
-$CONFIG->db['split'] = true;
+//$CONFIG->db['split'] = true;
 
 $CONFIG->db['write']->dbuser = 'elgg_user';
 $CONFIG->db['write']->dbpass = 'M!/|/d$C0m';
