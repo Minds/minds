@@ -7,7 +7,10 @@
 * @copyright Ivan Vergés 2010
 * @link http://microstudi.net/elgg/
 **/
-		oauth_gatekeeper();
+		//oauth_gatekeeper();
+		//listens out for consumer key and access token and logs a user in
+		//minds_auth_gatekeeper();
+		//register_pam_handler('pam_auth_usertoken');
 		
 		require_once("kaltura/api_client/includes.php");
 		
@@ -21,12 +24,14 @@
 		
 		$kmodel = KalturaModel::getInstance();
 		$ks = $kmodel->getClientSideSession();
-
+		
+		$mime_type = $_FILES['file']['type'];
+		//if the file is a video then we upload to kaltura!
 	
 		$mediaEntry = new KalturaMediaEntry();
 		$mediaEntry->name = $title;
 		$mediaEntry->description = $description;
-		$mediaEntry->mediaType = KalturaMediaType_VIDEO;
+		$mediaEntry->mediaType = file_get_simple_type($mime_type) == 'video' ? KalturaMediaType_VIDEO : KalturaMediaType_AUDIO;
 
 		$mediaEntry = $kmodel->addMediaEntry($mediaEntry, $_FILES['file']['tmp_name']);		 
 		 

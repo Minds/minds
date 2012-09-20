@@ -37,6 +37,7 @@ function kaltura_web_service_get_videos_list($context,  $limit = 10, $offset = 0
 										'type' => 'object',
 										'subtype' => 'kaltura_video',
 										'limit' => $limit,
+										'offset' => $offset,
 										'full_view' => FALSE,
 										));
 		} elseif( $context == 'mine' || $context == 'user'){
@@ -45,6 +46,7 @@ function kaltura_web_service_get_videos_list($context,  $limit = 10, $offset = 0
 										'subtype' => 'kaltura_video',
 										'owner_guid' => $user->guid,
 										'limit' => $limit,
+										'offset' => $offset,
 										'full_view' => FALSE,
 										));
 		} elseif( $context == 'friends'){

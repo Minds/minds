@@ -5,9 +5,10 @@ $entity = elgg_extract('entity', $vars, false);
 if (!$entity) {
     return true;
 }
-
-$input_text = elgg_view('input/text', array(
-    'name' => 'annotation_value'
+elgg_load_js('jquery.autosize');
+$input_text = elgg_view('input/plaintext', array(
+    'name' => 'annotation_value',
+    'class' => 'comments-input',
         ));
 $icon = elgg_view_entity_icon(elgg_get_logged_in_user_entity(), 'tiny');
 

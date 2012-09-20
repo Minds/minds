@@ -29,7 +29,7 @@ $friendlytime = elgg_view_friendly_time($like->time_created);
 
 $body = <<<HTML
 <p class="mbn">
-	$user_link $likes_string
+	$user_link +1 $likes_string
 	<span class="elgg-subtext">
 		$friendlytime
 	</span>

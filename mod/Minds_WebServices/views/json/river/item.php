@@ -50,6 +50,7 @@ if($object->type == "user" || $object->type == "group"){
 		//small hack for studio videos
 		if(get_subtype_from_id($object->subtype) == 'kaltura_video'){
 			$item->object_metadata['thumbnail'] = $object->kaltura_video_thumbnail;
+			$item->object_metadata['video_id'] = $object->kaltura_video_id;
 		}
 
 }

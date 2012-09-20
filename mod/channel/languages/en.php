@@ -43,6 +43,8 @@ $english = array(
 	'channel:custom:bg' => 'Background',
 	'channel:custom:text' => 'Text',
 	'channel:custom:widget' => 'Widgets',
+	
+	'channel:subscriber_count' => 'Subscribers',
 
 );
 

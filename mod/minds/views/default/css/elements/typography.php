@@ -13,7 +13,7 @@
 body {
 	font-size: 80%;
 	line-height: 1.4em;
-	font-family: "Lucida Grande", Arial, Tahoma, Verdana, sans-serif;
+	font-family: Arial, Tahoma, Verdana, sans-serif;
 }
 
 a {

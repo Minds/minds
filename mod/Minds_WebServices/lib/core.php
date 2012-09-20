@@ -162,3 +162,34 @@ expose_function('site.search',
 				'GET',
 				false,
 				false);
+/**
+ * Provides a temporary token for acts where OAuth can not be sent. The token should last 30 mins at this time to be secure. Possibly less. 
+ *
+ */
+function temp_token($username){
+	if(!$username) {
+		$user = get_loggedin_user();
+	} else {
+		$user = get_user_by_username($username);
+		if (!$user) {
+			throw new InvalidParameterException('registration:usernamenotvalid');
+		}
+	}
+
+	$token = create_user_token($user->username, 30);
+		if ($token) {
+			return $token;
+		}
+
+	throw new SecurityException(elgg_echo('SecurityException:authenticationfailed'));
+}
+
+expose_function('core.temptoken',
+				"temp_token",
+				array(	
+						'username' => array ('type' => 'string', 'required' => false),
+					),
+				"get a temp token",
+				'GET',
+				true,
+				true);
