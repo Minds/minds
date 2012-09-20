@@ -28,7 +28,7 @@ if (!isset($CONFIG)) {
  * and implement database replication.  That's beyond the scope of this configuration file
  * to explain, but if you know you need it, skip past this section.
  */
-/*
+
 $CONFIG->dbuser = 'elgg_user';
 
 
@@ -38,8 +38,8 @@ $CONFIG->dbname = 'elgg';
 
 $CONFIG->dbhost = '10.0.0.43';
 
-$CONFIG->dbprefix = 'elgg_';
-*/
+//I AM KEEPING THE ABOVE IN FOR FALLBACK
+
 $CONFIG->dbprefix = 'elgg_';
 /**
  * Master/Slave database setup
