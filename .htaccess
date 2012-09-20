@@ -137,7 +137,7 @@ RewriteCond %{HTTP_HOST} (.+)\.minds\.io$
 RewriteRule ^(.*)$ engine/handlers/page_handler.php?handler=profile&page=%1 [QSA]
 
 ##Keeps sessions on all domains
-php_value session.cookie_domain .minds.io
+#php_value session.cookie_domain .minds.io
 
 </IfModule>
 
