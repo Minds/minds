@@ -28,49 +28,35 @@ if (!isset($CONFIG)) {
  * and implement database replication.  That's beyond the scope of this configuration file
  * to explain, but if you know you need it, skip past this section.
  */
+/*
+$CONFIG->dbuser = 'elgg_user';
 
-/**
- * The database username
- *
- * @global string $CONFIG->dbuser
- * @name $CONFIG->dbuser
- */
-$CONFIG->dbuser = 'root';
 
-/**
- * The database password
- *
- * @global string $CONFIG->dbpass
- */
-$CONFIG->dbpass = '';
+$CONFIG->dbpass = 'M!/|/d$C0m';
 
-/**
- * The database name
- *
- * @global string $CONFIG->dbname
- */
-$CONFIG->dbname = 'minds';
+$CONFIG->dbname = 'elgg';
 
-/**
- * The database host.
- *
- * For most installations, this is 'localhost'
- *
- * @global string $CONFIG->dbhost
- */
-$CONFIG->dbhost = 'localhost';
+$CONFIG->dbhost = '10.0.0.43';
 
-/**
- * The database prefix
- *
- * This prefix will be appended to all Elgg tables.  If you're sharing
- * a database with other applications, use a database prefix to namespace tables
- * in order to avoid table name collisions.
- *
- * @global string $CONFIG->dbprefix
- */
 $CONFIG->dbprefix = 'elgg_';
+*/
+$CONFIG->dbprefix = 'elgg_';
+/**
+ * Master/Slave database setup
+ */
+$CONFIG->db['split'] = true;
 
+$CONFIG->db['write']->dbuser = 'elgg_user';
+$CONFIG->db['write']->dbpass = 'M!/|/d$C0m';
+$CONFIG->db['write']->dbname = 'elgg';
+$CONFIG->db['write']->dbhost = '10.0.0.43';
+$CONFIG->db['write']->dbprefix = 'elgg_';
+
+$CONFIG->db['read'][0]->dbuser = 'elgg_user';
+$CONFIG->db['read'][0]->dbpass = 'M!/|/d$C0m';
+$CONFIG->db['read'][0]->dbname = 'elgg';
+$CONFIG->db['read'][0]->dbhost = '10.0.0.75';
+$CONFIG->db['read'][0]->dbprefix = 'elgg_';
 
 /**
  * Memcache setup (optional)

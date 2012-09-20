@@ -80,7 +80,7 @@ function establish_db_link($dblinkname = "readwrite") {
 
 	if ($dblinkname != "readwrite" && isset($CONFIG->db[$dblinkname])) {
 		if (is_array($CONFIG->db[$dblinkname])) {
-			$index = rand(0, sizeof($CONFIG->db[$dblinkname]));
+			$index = rand(0, sizeof($CONFIG->db[$dblinkname])-1);
 			$dbhost = $CONFIG->db[$dblinkname][$index]->dbhost;
 			$dbuser = $CONFIG->db[$dblinkname][$index]->dbuser;
 			$dbpass = $CONFIG->db[$dblinkname][$index]->dbpass;
@@ -136,7 +136,7 @@ function establish_db_link($dblinkname = "readwrite") {
 function setup_db_connections() {
 	global $CONFIG, $dblink;
 
-	if (!empty($CONFIG->db->split)) {
+	if (!empty($CONFIG->db['split'])) {
 		establish_db_link('read');
 		establish_db_link('write');
 	} else {
