@@ -123,11 +123,11 @@
 	
 	position: absolute;
 	text-align: center;
-	top: 5px;
+	top: 10px;
 	left: 10px;
-	min-width: 16px;
-	height: 16px;
-	font-size: 10px;
+	min-width: 14px;
+	height: 14px;
+	font-size: 8px;
 	font-weight: bold;
 }
 

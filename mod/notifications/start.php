@@ -236,10 +236,10 @@ function notification_notifier() {
 		
 		// get unread messages
 		$num_notifications = (int)notifications_count_unread();
-		if ($num_notifications != 0) {
+		if ($num_notifications > 0) {
 			$class = "elgg-icon notification notifier new";
 			$text = "<span class='$class'>" .
-						//"<span class=\"notification-new\">$num_notifications</span>" .
+						"<span class=\"notification-new\">$num_notifications</span>" .
 					  "</span>";
 			$tooltip .= " (" . elgg_echo("notifications:unread", array($num_notifications)) . ")";
 		}
