@@ -16,6 +16,7 @@ function kaltura_video_init() {
 	elgg_extend_view('page/elements/head', 'kaltura/jscripts');
 	elgg_extend_view('page/elements/head', 'kaltura/meta');
 
+
 	$addbutton = elgg_get_plugin_setting('addbutton', 'kaltura_video');
 	if (!$addbutton) $addbutton = 'simple';
 
@@ -327,6 +328,11 @@ function kaltura_video_page_handler($page) {
 			case 'show':
 				set_input('videopost',$page[1]);
 				include(dirname(__FILE__) . "/show.php");
+				return true;
+				break;
+			case 'inline':
+				set_input('video_id',$page[1]);
+				include(dirname(__FILE__) . "/uiVideoInline.php");
 				return true;
 				break;
 			case 'edit':

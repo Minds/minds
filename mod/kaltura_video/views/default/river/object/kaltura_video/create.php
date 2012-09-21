@@ -15,16 +15,19 @@
 	//elgg_load_js('lightbox');
 	//elgg_load_css('lightbox');
 	 
-	$image = elgg_view('output/url', array(
+	/*$image = elgg_view('output/url', array(
 		'href' => $viewData["swfUrl"] . '?entryId=' . $object->kaltura_video_id,
 		'text' =>  kaltura_create_generic_widget_html ( $object->kaltura_video_id , 'news' ),
 		'title' => $object->title,
-	));
-	/*$image = elgg_view('output/url', array(
-		'href' =>$object->getUrl(),
-		'text' =>  '<img src=\''. $object->kaltura_video_thumbnail . '\'>',
-		'title' => $object->title,
 	));*/
+	elgg_load_js('uiVideoInline');
+	$image = elgg_view('output/url', array(
+		'href' => '#inlineNews_' . $object->kaltura_video_id,
+		'class' => 'uiVideoInline archive',
+		'text' =>  '<img src=\'' . kaltura_get_thumnail($object->kaltura_video_id, 450, 253, 100) . '\'>',
+		'title' => $object->title,
+	));
+
 ?>
 
 
