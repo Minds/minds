@@ -19,7 +19,7 @@ if (strlen($description) > 60){
 } 
 
 $body .= elgg_view('output/url', array('href'=>$actor->getURL(), 'text'=>$actor->name));
-$body .= ' has liked ';
+$body .= ' has voted up ';
 $body .= elgg_view('output/url', array('href'=>$object->getURL(), 'text'=> $object_title));
 
 $body .= "<br/>";
