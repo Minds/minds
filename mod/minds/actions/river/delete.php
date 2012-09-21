@@ -15,10 +15,15 @@ $subject = $item->getSubjectEntity();
 	
 
 if ($id !== false && ($object->canEdit() || $subject->canEdit())) {
-	if (elgg_delete_river(array('id' => $id))) {
-		system_message(elgg_echo('river:delete:success'));
+	//delete the object if its a create post
+	if($item->action_type == 'create'){
+		$object->delete(); //this deletes the river item too!
 	} else {
-		register_error(elgg_echo('river:delete:fail'));
+		if (elgg_delete_river(array('id' => $id))) {
+			system_message(elgg_echo('river:delete:success'));
+		} else {
+			register_error(elgg_echo('river:delete:fail'));
+		}
 	}
 } else {
 	register_error(elgg_echo('river:delete:fail'));
