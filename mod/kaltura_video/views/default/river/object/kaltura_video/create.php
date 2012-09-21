@@ -1,14 +1,42 @@
 <?php
+	include_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__))))))."/kaltura/api_client/includes.php");
 
 	$performed_by = get_entity($vars['item']->subject_guid); // $statement->getSubject();
 	$object = get_entity($vars['item']->object_guid);
 	$url = $object->getURL();
 
 	$url = "<a href=\"{$performed_by->getURL()}\">{$performed_by->name}</a>";
-	$string = sprintf(elgg_echo("kalturavideo:river:created"),$url) . " ";
-	$string .= elgg_echo("kalturavideo:river:create") . " <a href=\"" . $object->getURL() . "\">" . $object->title . "</a>";
+	$string = sprintf(elgg_echo("kalturavideo:river:updated"),$url) . " ";
+    $string .= elgg_echo("kalturavideo:river:update") . " <a href=\"" . $object->getURL() . "\">" . $object->title . "</a>";
 
-
+	$widgetUi = elgg_get_plugin_setting('custom_kdp', 'kaltura_video');
+	$viewData["swfUrl"]	= KalturaHelpers::getSwfUrlForBaseWidget($widgetUi);
+	
+	//elgg_load_js('lightbox');
+	//elgg_load_css('lightbox');
+	 
+	$image = elgg_view('output/url', array(
+		'href' => $viewData["swfUrl"] . '?entryId=' . $object->kaltura_video_id,
+		'text' =>  kaltura_create_generic_widget_html ( $object->kaltura_video_id , 'news' ),
+		'title' => $object->title,
+	));
+	/*$image = elgg_view('output/url', array(
+		'href' =>$object->getUrl(),
+		'text' =>  '<img src=\''. $object->kaltura_video_thumbnail . '\'>',
+		'title' => $object->title,
+	));*/
 ?>
 
-<?php echo $string; ?>
+
+<?php 
+$object = $vars['item']->getObjectEntity();
+
+$excerpt = strip_tags($object->excerpt);
+$excerpt = elgg_get_excerpt($excerpt);
+
+echo elgg_view('river/elements/layout', array(
+	'item' => $vars['item'],
+	'message' => $image,
+));
+
+?>
