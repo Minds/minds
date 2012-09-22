@@ -276,7 +276,7 @@ function paypal_handler($params){
 	//for callback we should add a '/paypal' so we know the callback should point the the paypal callback handler
 	$callback_url =  $urls['callback'].'/paypal';
 	
-	$paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+	$paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
 	
 	$variables = array ( 'cmd' => '_xclick',
 					'business' => elgg_get_plugin_setting('paypal_business', 'pay'),
