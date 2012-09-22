@@ -14,6 +14,8 @@ $english = array(
 	'logout' => 'Exit',
 	'register' => 'Request Access',
 	
+	'post' => 'Post',
+	
 	//change friends to channels
 	'access:friends:label' => "Channels",
 	

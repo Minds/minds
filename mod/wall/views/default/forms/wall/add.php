@@ -29,7 +29,7 @@ echo elgg_view('input/hidden', array(
 ));
 
 echo elgg_view('input/submit', array(
-	'value' => $text,
+	'value' => elgg_echo('post'),
 	'id' => 'wall-submit-button',
 ));
 ?>
