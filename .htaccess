@@ -132,9 +132,9 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([A-Za-z0-9\_\-]+)\/(.*)$ engine/handlers/page_handler.php?handler=$1&page=$2 [QSA]
 
 ## SUBDOMAINS TO CHANNELS ##
-RewriteCond %{HTTP_HOST} !^www\.minds\.io$
-RewriteCond %{HTTP_HOST} (.+)\.minds\.io$
-RewriteRule ^(.*)$ engine/handlers/page_handler.php?handler=profile&page=%1 [QSA]
+RewriteCond %{HTTP_HOST} !^www\.minds\.com$
+RewriteCond %{HTTP_HOST} (.+)\.minds\.com$
+RewriteRule ^(.*)$ http://www.minds.com/$1 [R=3012, L]
 
 ##Keeps sessions on all domains
 #php_value session.cookie_domain .minds.io
