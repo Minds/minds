@@ -249,13 +249,13 @@ function minds_filter($text) {
 	// usernames
 	$text = preg_replace(
 				'/(^|[^\w])@([\p{L}\p{Nd}._]+)/u',
-				'$1<a href="' . $CONFIG->wwwroot . 'thewire/owner/$2">@$2</a>',
+				'$1<a href="' . $CONFIG->wwwroot . 'channel/$2">@$2</a>',
 				$text);
 
 	// hashtags
 	$text = preg_replace(
 				'/(^|[^\w])#(\w*[^\s\d!-\/:-@]+\w*)/',
-				'$1<a href="' . $CONFIG->wwwroot . 'thewire/tag/$2">#$2</a>',
+				'$1<a href="' . $CONFIG->wwwroot . 'search/?q=$2">#$2</a>',
 				$text);
 
 	$text = trim($text);
