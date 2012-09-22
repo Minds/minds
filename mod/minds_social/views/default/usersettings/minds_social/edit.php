@@ -31,7 +31,7 @@ if(!empty($user) && $facebook_id == $user){
 
 
 } else {
-	echo '<div><a href="' . $login_url . '">Login</a></div>';
+	echo '<div><a href="' . $login_url . '"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/facebook_connect.gif"/></a></div>';
 
 }
 
