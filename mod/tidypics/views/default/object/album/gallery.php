@@ -25,7 +25,6 @@ $footer = elgg_view('output/url', array(
 	'is_trusted' => true,
 ));
 $footer .= '<div class="elgg-subtext">' . elgg_echo('album:num', array($album->getSize())) . '</div>';
-
 $params = array(
 	'footer' => $footer,
 );
