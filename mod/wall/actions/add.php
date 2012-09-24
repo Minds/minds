@@ -7,7 +7,7 @@
 // don't filter since we strip and filter escapes some characters
 $body = get_input('body', '', false);
 
-$access_id = ACCESS_PUBLIC;
+$access_id = ACCESS_DEFAULT;
 $method = 'site';
 $to_guid = get_input('to_guid');
 $from_guid = elgg_get_logged_in_user_guid();
