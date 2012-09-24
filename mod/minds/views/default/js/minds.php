@@ -6,7 +6,11 @@
 	 elgg.provide('minds');
 	 
 	 minds.init = function() {
-		 
+		
+		//GENERIC UPLOADS - SHOW LOADING GIF
+		$('body').on('click', '.elgg-form-minds-upload .elgg-button-submit', function(e){   //$(this).parent().append('Uploading...');
+																							$(this).attr('value', 'Uploading...');
+																						});		 
 
 		$(".elgg-button.elgg-button-dropdown").mouseenter(function(){ 
 			$("#login-dropdown-box").slideToggle("fast"); 

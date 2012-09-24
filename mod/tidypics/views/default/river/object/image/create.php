@@ -22,12 +22,13 @@ $image_link = elgg_view('output/url', array(
 	'text' => $image->getTitle(),
 	'is_trusted' => true,
 ));
-
-$album_link = elgg_view('output/url', array(
-	'href' => $image->getContainerEntity()->getURL(),
-	'text' => $image->getContainerEntity()->getTitle(),
-	'is_trusted' => true,
-));
+if($image->getContainerEntity()){
+	$album_link = elgg_view('output/url', array(
+		'href' => $image->getContainerEntity()->getURL(),
+		'text' => $image->getContainerEntity()->getTitle(),
+		'is_trusted' => true,
+	));
+}
 
 echo elgg_view('river/elements/layout', array(
 	'item' => $vars['item'],

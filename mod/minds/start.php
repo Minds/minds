@@ -51,12 +51,16 @@ function minds_init(){
 	
 	elgg_register_plugin_hook_handler('register', 'menu:river', 'minds_river_menu_setup');
 	
+	//setup the generic upload endpoint
+	elgg_register_page_handler('upload', 'minds_upload');
+	
 	//setup the tracking of user quota - on a file upload, increment, on delete, decrement
 	elgg_register_event_handler('create', 'object', 'minds_quota_increment');
 	elgg_register_event_handler('delete', 'object', 'minds_quota_decrement');
 	
-	$actionspath = elgg_get_plugins_path() . "minds/actions/river";
-	elgg_register_action("minds/river/delete", "$actionspath/delete.php");
+	$actionspath = elgg_get_plugins_path() . "minds/actions";
+	elgg_register_action("minds/river/delete", "$actionspath/river/delete.php");
+	elgg_register_action("minds/upload", "$actionspath/minds/upload.php");
 }
 
 function minds_index($hook, $type, $return, $params) {
@@ -130,6 +134,18 @@ function minds_pagesetup(){
 			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds/graphics/minds_logo_transparent.png\' class=\'minds_logo\'>',
 			'priority' => 0
 		));
+		
+	if($user){		
+		elgg_load_js('lightbox');
+		elgg_load_css('lightbox');
+		elgg_register_menu_item('site', array(
+						'name' => elgg_echo('minds:upload'),
+						'href' => 'upload',
+						'text' => elgg_echo('minds:upload'),
+						'class' => 'elgg-lightbox',
+					));
+	}
+		
 	
 	//RIGHT MENU	
 	//profile
@@ -169,6 +185,11 @@ function minds_pagesetup(){
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
 	if($user)
 	elgg_register_menu_item('site', $item);
+}
+
+function minds_upload($page){
+	include(dirname(__FILE__) . "/pages/inline_upload.php");
+	return true;
 }
 		
 function minds_quota_increment($event, $object_type, $object) {

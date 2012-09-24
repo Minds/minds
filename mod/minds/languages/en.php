@@ -97,6 +97,13 @@ $english = array(
 	 *
 	 */
 	'minds:online_status:online' => 'Online',
+	
+	/**
+	 * Minds Universal upload form
+	 */
+	'minds:upload'=>'Upload',
+	'minds:upload:file'=>'File',
+	'minds:upload:nofile' => 'No file was uploaded.'
 
 );
 		

@@ -63,7 +63,6 @@ function kaltura_video_init() {
 			'text' =>  elgg_echo('kalturavideo:label:adminvideos'),
 		));
 		
-		
 	// And for logged out users
 	} else {
 		elgg_register_menu_item('site', array(
