@@ -72,6 +72,7 @@ $translations = array(
 	'kalturavideo:river:item' => "an video",
 	'kalturavideo:river:shared' => "Collaborative video",
 	'river:update:object:kaltura_video' => '%s uploaded new media titled %s',
+	'river:create:object:kaltura_video' => '%s uploaded new media titled %s',
 	'kalturavideo:label:videosfrom' => "Media by %s",
 	'kalturavideo:user:showallvideos' => "Show all media from this user",
 	'kalturavideo:strapline' => "%s",
