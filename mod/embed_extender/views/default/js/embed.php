@@ -9,7 +9,7 @@ elgg.embed.init = function() {
 																			autoplay: true,
 																			vimeo: { autoplay: true},
 																			youtube: { autoplay: true}
-																		}
+																}
 																);
 													$(this).parent().find('span').remove();
 													});
