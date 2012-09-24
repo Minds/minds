@@ -22,7 +22,7 @@
 	));*/
 	elgg_load_js('uiVideoInline');
 	$image = elgg_view('output/url', array(
-		'href' => '#inlineNews_' . $object->kaltura_video_id,
+		'href' => false,
 		'class' => 'uiVideoInline archive',
 		'video_id'=> $object->kaltura_video_id,
 		'text' =>  '<img src=\'' . kaltura_get_thumnail($object->kaltura_video_id, 450, 253, 100) . '\' width="450px"/>',
