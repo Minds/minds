@@ -35,6 +35,8 @@ if ($marketpost = get_entity($post)) {
 	// Set the title appropriately
 	$title = elgg_echo("market:category") . ": " . elgg_echo("market:{$category}");
 
+	$content .= elgg_view_comments($marketpost);
+	
 } else {
 			
 	// Display the 'post not found' page instead
