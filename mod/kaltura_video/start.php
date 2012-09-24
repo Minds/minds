@@ -248,7 +248,7 @@ function kaltura_video_page_setup()
 				elgg_register_menu_item('page', array(
 					'name' => elgg_echo('kalturavideo:label:newvideo'),
 					//'href' => '#kaltura_create',
-					'href' => 'archive/upload',
+					'href' => 'upload',
 					'text' => elgg_echo('kalturavideo:label:newvideo'),
 					'class' => 'pagesactions elgg-lightbox',
 					'priority' => 0,
