@@ -40,7 +40,7 @@ if(elgg_get_context()!='search') {
 <div class="kalturavideoitem" id="kaltura_video_<?php echo $ob->kaltura_video_id; ?>">
 
 <div class="left">
-<p><a href="<?php echo $vars['entity']->getURL(); ?>" rel="<?php echo $ob->kaltura_video_id; ?>" class="play"><img src="<?php echo $ob->kaltura_video_thumbnail; ?>" height="68px" width="120px" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
+<p><a href="<?php echo $vars['entity']->getURL(); ?>" class="play"><img src="<?php echo kaltura_get_thumnail($ob->kaltura_video_id, 120, 68, 100); ?>" height="68px" width="120px" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
 </div>
 
 <div class="main_block">
