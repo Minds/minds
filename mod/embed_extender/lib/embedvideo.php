@@ -230,7 +230,7 @@ function videoembed_youtube_shortener_parse_url($url, $guid, $videowidth) {
 	$path = parse_url($url, PHP_URL_PATH);
 	$videourl = 'youtube.com/v' . $path;
 
-	videoembed_calc_size($videowidth, $videoheight, 425/320, 24);
+	videoembed_calc_size($videowidth, $videoheight, 16/9, 0);
 
 	$embed_object = videoembed_add_css($guid, $videowidth, $videoheight);
 
