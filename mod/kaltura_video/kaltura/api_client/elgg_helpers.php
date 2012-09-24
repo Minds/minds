@@ -495,7 +495,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 		'<param name="allowFullScreen" value="true" />'.
 		'<param name="bgcolor" value="#000000" />'.
 		'<param name="movie" value="' . $video_location . '"/>'.
-    	'<param name="flashVars" value="&{FLAVOR}" />' .
+    	'<param name="flashVars" value="&{FLAVOR}&autoPlay=true" />' .
 		'<span property="dc:description" content=""></span>
 		<span property="media:title" content="video.mov"></span> 
 		<span property="media:width" content="' . $width . '"></span>

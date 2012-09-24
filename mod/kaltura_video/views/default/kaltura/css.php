@@ -456,3 +456,13 @@ div.galleryItem div {
 	background:#ffeedd;
 }
 
+.uiVideoInline.archive span {
+	position:absolute;
+	display:block;
+	margin:auto;
+	width:50px;
+	height:50px;
+	margin:10px;
+	background: transparent url(<?php echo elgg_get_site_url(); ?>mod/embed_extender/graphics/play_button.png) no-repeat;
+	z-index:2;
+}
