@@ -4,7 +4,7 @@
  * 
  * @author Mark Harding (mark@minds.com)
  */
- 
+gatekeeper(); 
 elgg_load_library('tidypics:upload');
 $img_river_view = elgg_get_plugin_setting('img_river_view', 'tidypics');
 
