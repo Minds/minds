@@ -71,7 +71,12 @@ function embed_extender_init()
 	
 	
 	elgg_extend_view('css','embed_extender/css');
-
+	
+	//register JS
+	$embed_js = elgg_get_simplecache_url('js', 'embed');
+	elgg_register_js('embed', $embed_js);
+	//register OEMBED
+	elgg_register_js('oembed', elgg_get_site_url() . 'mod/embed_extender/vendors/oembed/jquery.oembed.min.js');
 	
 	// register example hook handler
 	// for providing custom video handler (yahoo)

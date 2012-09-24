@@ -88,6 +88,17 @@ function videoembed_add_css($guid, $width, $height) {
 	return $videocss;
 }
 
+function videoembed_get_thumbnail($url, $provider){
+	if($provider=='youtube'){
+		$split = explode('/',$url);
+		$videoid = $split[2];
+		return 'http://img.youtube.com/vi/'.$videoid .'/hqdefault.jpg';
+	} elseif($provider =='vimeo'){
+		$hash = unserialize(file_get_contents("http://vimeo.com/api/v2/video/$url.php"));
+		return $hash[0]['thumbnail_large'];  
+	}
+}
+
 /**
  * generic <object> creator
  *
@@ -100,17 +111,20 @@ function videoembed_add_css($guid, $width, $height) {
  */
 function videoembed_add_object($type, $url, $guid, $width, $height) {
 	$videodiv = "<div id=\"embedvideo{$guid}\" class=\"videoembed_video\">";
-
+	elgg_load_js('oembed');
+	elgg_load_js('embed');
 	// could move these into an array and use sprintf
 	switch ($type) {
 		case 'youtube':
-			$videodiv .= "<object width=\"$width\" height=\"$height\"><param name=\"movie\" value=\"http://{$url}&hl=en&fs=1&showinfo=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><embed src=\"http://{$url}&hl=en&fs=1&showinfo=0\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"$width\" height=\"$height\"></embed></object>";
+			//$videodiv .= "<object width=\"$width\" height=\"$height\"><param name=\"movie\" value=\"http://{$url}&hl=en&fs=1&showinfo=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><embed src=\"http://{$url}&hl=en&fs=1&showinfo=0\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"$width\" height=\"$height\"></embed></object>";
+			$videodiv .= "<img src='". videoembed_get_thumbnail($url, 'youtube') . "' width='".$width."'  height='".$height."' oembed_url='".$url."' class='oembed'/>";
 			break;
 		case 'google':
 			$videodiv .= "<embed id=\"VideoPlayback\" src=\"http://video.google.com/googleplayer.swf?docid={$url}&hl=en&fs=true\" style=\"width:{$width}px;height:{$height}px\" allowFullScreen=\"true\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\"> </embed>";
 			break;
 		case 'vimeo':
-			$videodiv .= "<object width=\"$width\" height=\"$height\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" /><param name=\"movie\" value=\"http://vimeo.com/moogaloop.swf?clip_id={$url}&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id={$url}&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"$width\" height=\"$height\"></embed></object>";
+			//$videodiv .= "<object width=\"$width\" height=\"$height\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" /><param name=\"movie\" value=\"http://vimeo.com/moogaloop.swf?clip_id={$url}&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id={$url}&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"$width\" height=\"$height\"></embed></object>";
+			$videodiv .= "<img src='". videoembed_get_thumbnail($url, 'vimeo') . "' width='".$width."'  height='".$height."' oembed_url='http://vimeo.com/".$url."' class='oembed'/>";
 			break;
 		case 'metacafe':
 			$videodiv .= "<embed src=\"http://www.metacafe.com/fplayer/{$url}.swf\" width=\"$width\" height=\"$height\" wmode=\"transparent\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\"></embed>";
@@ -168,7 +182,7 @@ function videoembed_youtube_handler($url, $guid, $videowidth) {
 		return '<p><b>' . elgg_echo('embedvideo:parseerror', array('youtube')) . '</b></p>';
 	}
 
-	videoembed_calc_size($videowidth, $videoheight, 16/9, 24);
+	videoembed_calc_size($videowidth, $videoheight, 16/9, 0);
 
 	$embed_object = videoembed_add_css($guid, $videowidth, $videoheight);
 
@@ -319,7 +333,7 @@ function videoembed_vimeo_handler($url, $guid, $videowidth) {
 	}
 
 	// aspect ratio changes based on video - need to investigate
-	videoembed_calc_size($videowidth, $videoheight, 400/300, 0);
+	videoembed_calc_size($videowidth, $videoheight, 16/9, 0);
 
 	$embed_object = videoembed_add_css($guid, $videowidth, $videoheight);
 
