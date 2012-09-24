@@ -20,6 +20,9 @@ if (isset($vars['class'])) {
 // navigation defaults to breadcrumbs
 $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 
+//load the inline JS because we have them in news feeds
+elgg_load_js('uiVideoInline');
+
 ?>
       
 <div class="<?php echo $class; ?>">
