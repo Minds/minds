@@ -117,14 +117,14 @@ function videoembed_add_object($type, $url, $guid, $width, $height) {
 	switch ($type) {
 		case 'youtube':
 			//$videodiv .= "<object width=\"$width\" height=\"$height\"><param name=\"movie\" value=\"http://{$url}&hl=en&fs=1&showinfo=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><embed src=\"http://{$url}&hl=en&fs=1&showinfo=0\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"$width\" height=\"$height\"></embed></object>";
-			$videodiv .= "<img src='". videoembed_get_thumbnail($url, 'youtube') . "' width='".$width."'  height='".$height."' oembed_url='".$url."' class='oembed'/>";
+			$videodiv .= "<span></span><img src='". videoembed_get_thumbnail($url, 'youtube') . "' width='".$width."'  height='".$height."' oembed_url='".$url."' class='oembed'/>";
 			break;
 		case 'google':
 			$videodiv .= "<embed id=\"VideoPlayback\" src=\"http://video.google.com/googleplayer.swf?docid={$url}&hl=en&fs=true\" style=\"width:{$width}px;height:{$height}px\" allowFullScreen=\"true\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\"> </embed>";
 			break;
 		case 'vimeo':
 			//$videodiv .= "<object width=\"$width\" height=\"$height\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" /><param name=\"movie\" value=\"http://vimeo.com/moogaloop.swf?clip_id={$url}&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id={$url}&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"$width\" height=\"$height\"></embed></object>";
-			$videodiv .= "<img src='". videoembed_get_thumbnail($url, 'vimeo') . "' width='".$width."'  height='".$height."' oembed_url='http://vimeo.com/".$url."' class='oembed'/>";
+			$videodiv .= "<span></span><img src='". videoembed_get_thumbnail($url, 'vimeo') . "' width='".$width."'  height='".$height."' oembed_url='http://vimeo.com/".$url."' class='oembed'/>";
 			break;
 		case 'metacafe':
 			$videodiv .= "<embed src=\"http://www.metacafe.com/fplayer/{$url}.swf\" width=\"$width\" height=\"$height\" wmode=\"transparent\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\"></embed>";

@@ -11,6 +11,7 @@ elgg.embed.init = function() {
 																			youtube: { autoplay: true}
 																		}
 																);
+													$(this).parent().find('span').remove();
 													});
 }
 
