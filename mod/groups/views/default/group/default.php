@@ -7,7 +7,7 @@
 
 $group = $vars['entity'];
 
-$icon = elgg_view_entity_icon($group, 'large', array('link_class'=>'groups')); 
+$icon = elgg_view_entity_icon($group, 'tiny');
 
 $metadata = elgg_view_menu('entity', array(
 	'entity' => $group,
@@ -33,5 +33,5 @@ if ($vars['full_view']) {
 	$params = $params + $vars;
 	$list_body = elgg_view('group/elements/summary', $params);
 
-	echo $icon;
+	echo elgg_view_image_block($icon, $list_body, $vars);
 }
