@@ -52,7 +52,8 @@ if($user instanceof ElggUser){
 			}
 		}
 	}
-}									
+}	
+	if($user->canEdit())							
 	echo elgg_view('output/url', array(
 		'href' => '#widgets-add-panel',
 		'text' => elgg_echo('widgets:add'),
