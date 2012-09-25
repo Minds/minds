@@ -488,22 +488,20 @@
 .elgg-menu-owner-block li a {
 	display: block;
 	
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	border-radius: 8px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
 	
-	background-color: white;
+	background-color: transparent;
 	margin: 3px 0 5px 0;
 	padding: 2px 4px 2px 8px;
 }
 .elgg-menu-owner-block li a:hover {
-	background-color: #0054A7;
-	color: white;
+	background-color: #EEE;
 	text-decoration: none;
 }
 .elgg-menu-owner-block li.elgg-state-selected > a {
-	background-color: #4690D6;
-	color: white;
+	background-color: #EEE;
 }
 
 /* ***************************************

@@ -53,11 +53,11 @@ function groups_init() {
 	elgg_register_widget_type('a_users_groups', elgg_echo('groups:widget:membership'), elgg_echo('groups:widgets:description'));
 
 	// add group activity tool option
-	add_group_tool_option('activity', elgg_echo('groups:enableactivity'), true);
-	elgg_extend_view('groups/tool_latest', 'groups/profile/activity_module');
+	//add_group_tool_option('activity', elgg_echo('groups:enableactivity'), true);
+	//elgg_extend_view('groups/tool_latest', 'groups/profile/activity_module');
 
 	// add link to owner block
-	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'groups_activity_owner_block_menu');
+	//elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'groups_activity_owner_block_menu');
 
 	// group entity menu
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'groups_entity_menu_setup');
@@ -77,8 +77,8 @@ function groups_init() {
 	//elgg_register_plugin_hook_handler('access:collections:read', 'all', 'groups_read_acl_plugin_hook');
 
 	// Register profile menu hook
-	elgg_register_plugin_hook_handler('profile_menu', 'profile', 'forum_profile_menu');
-	elgg_register_plugin_hook_handler('profile_menu', 'profile', 'activity_profile_menu');
+	//elgg_register_plugin_hook_handler('profile_menu', 'profile', 'forum_profile_menu');
+	//elgg_register_plugin_hook_handler('profile_menu', 'profile', 'activity_profile_menu');
 
 	// allow ecml in discussion and profiles
 	elgg_register_plugin_hook_handler('get_views', 'ecml', 'groups_ecml_views_hook');
@@ -741,7 +741,7 @@ function discussion_init() {
 	elgg_register_entity_type('object', 'groupforumtopic');
 
 	// because replies are not comments, need of our menu item
-	elgg_register_plugin_hook_handler('register', 'menu:river', 'discussion_add_to_river_menu');
+	//elgg_register_plugin_hook_handler('register', 'menu:river', 'discussion_add_to_river_menu');
 
 	// add the forum tool option
 	//add_group_tool_option('forum', elgg_echo('groups:enableforum'), true);

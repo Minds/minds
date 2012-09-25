@@ -23,6 +23,7 @@ if (empty($body)) {
 
 $post = new WallPost;
 $post->to_guid = $to_guid;
+$post->container_guid = $to_guid;
 $post->owner_guid = $from_guid;
 $post->message = $message;
 $post->method = $method;

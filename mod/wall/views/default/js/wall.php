@@ -1,11 +1,15 @@
 //<script>
 elgg.provide('elgg.wall');
 elgg.provide('elgg.wall.news');
+elgg.provide('elgg.wall.groups');
 
 elgg.wall.init = function() {
 	
 	var news = $('form[name=elgg-wall-news]');
 	news.on('click', 'input[type=submit]', elgg.wall.news.submit);
+	
+	var news = $('form[name=elgg-wall-news-groups]');
+	news.on('click', 'input[type=submit]', elgg.wall.groups.submit);
 	
 	var body = $('body');
 	body.on('click', 'form[name=elgg-wall] input[type=submit]', elgg.wall.submit);
@@ -83,6 +87,34 @@ elgg.wall.news.submit = function(e) {
 			
 			
 			$(document).find('textarea').val('');
+		}
+	});
+
+	e.preventDefault();
+};
+
+elgg.wall.groups.submit = function(e) {
+	var form = $(this).parents('form');
+	var data = form.serialize();
+
+	elgg.action('wall/add', {
+		data: data,
+		success: function(json) {
+			
+			$list = $(this).parent();
+			
+			$params = elgg.parse_str(elgg.parse_url(location.href).query);
+			$params = $.extend($params, {
+				path: location.href,
+				items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
+							$list.hasClass('elgg-list-river') ? 'river' :
+							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
+				offset: 0,
+				limit: 1,
+				subject_guids: <?php echo elgg_get_logged_in_user_guid(); ?>
+			});
+			
+			location.reload();
 		}
 	});
 

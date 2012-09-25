@@ -28,9 +28,9 @@ function wall_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'wall_setup_entity_menu_items');
 	
 	//Groups
-	elgg_extend_view('groups/tool_latest', 'wall/group_module');
-	add_group_tool_option('wall',elgg_echo('wall:enable_wall'),TRUE);
-	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'wall_owner_block_menu');
+	//elgg_extend_view('groups/tool_latest', 'wall/group_module');
+	//add_group_tool_option('wall',elgg_echo('wall:enable_wall'),TRUE);
+	//elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'wall_owner_block_menu');
 	
 	// Register actions
 	$action_base = elgg_get_plugins_path() . 'wall/actions';
