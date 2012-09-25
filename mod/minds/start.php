@@ -36,6 +36,9 @@ function minds_init(){
 	$uiVideoInline = elgg_get_simplecache_url('js', 'uiVideoInline');
 	elgg_register_js('uiVideoInline', $uiVideoInline);
 	
+	//register textarea expander
+	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js');
+	
 	elgg_unregister_js('jquery');
 	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
 	elgg_load_js('jquery');

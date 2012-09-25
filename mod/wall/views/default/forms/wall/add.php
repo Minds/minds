@@ -9,6 +9,7 @@
 
 
 elgg_load_js('elgg.wall');
+elgg_load_js('jquery.autosize');
 
 echo elgg_view('input/plaintext', array(
 	'name' => 'body',

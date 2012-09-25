@@ -30,6 +30,9 @@ elgg.wall.init = function() {
 		elgg.wall.textCounter(this, $("#wall-characters-remaining span"), 1000);
 	});
 	
+	//AUTOSIZE TEXTAREAS
+	$('body').on('focus', '#wall-textarea',function(e){ $(this).autosize(); }); 
+	
 	console.log('loaded');
 };
 
