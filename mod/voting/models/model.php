@@ -293,7 +293,31 @@ function polls_get_page_list($page_type, $container_guid = NULL) {
 				$params['filter_context'] = 'all';
 				$params['title'] = elgg_echo('item:object:poll');
 				break;
+			case 'top':
+				elgg_push_breadcrumb(elgg_echo('polls:top'));
+				$params['filter_context'] = 'top';
+				$params['title'] = elgg_echo('polls:top');
+				$options['calculation'] = 'count';
+				$options['order_by'] = 'annotation_calculation desc';
+				$options['annoation_names'] = 'vote';
+				break;
+			case 'history':
+				elgg_push_breadcrumb(elgg_echo('polls:history'));
+				$params['filter_context'] = 'history';
+				$options['annotation_names'] = array('vote');
+				$options['annotation_owner_guids'] = array(elgg_get_logged_in_user_guid());
+				break;
 		}
+		
+		elgg_register_menu_item('filter', array(	'name' => 'polls:top',
+													'text' => elgg_echo('polls:top'),
+													'href' => '/voting/top'
+														));
+	    elgg_register_menu_item('filter', array(	'name' => 'polls:history',
+													'text' => elgg_echo('polls:history'),
+													'href' => '/voting/history',
+													'priority'=>500
+														));
 		
 		$polls_site_access = elgg_get_plugin_setting('site_access', 'polls');
 		
@@ -310,6 +334,10 @@ function polls_get_page_list($page_type, $container_guid = NULL) {
 	if (($page_type == 'friends') && (count($options['container_guids']) == 0)) {
 		// this person has no friends
 		$params['content'] = '';
+	} elseif($page_type == 'top') {
+		$params['content'] =  elgg_list_entities_from_annotation_calculation($options);
+	} elseif($page_type == 'history') {
+		$params['content'] = elgg_list_entities_from_annotations($options);	
 	} else {
 		$params['content'] = elgg_list_entities($options);
 	}

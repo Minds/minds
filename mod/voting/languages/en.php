@@ -108,7 +108,13 @@
 			'polls:novote' => "Sorry: you need to choose an option to vote in this vote.",
 			'polls:notfound' => "Sorry: we could not find the specified vote.",
 			'polls:nonefound' => "No polls were found from %s",
-			'polls:notdeleted' => "Sorry: we could not delete this vote."
+			'polls:notdeleted' => "Sorry: we could not delete this vote.",
+		
+		/**
+		 * Filters
+		 */
+		 	'polls:top' => 'Top',
+		 	'polls:history' => 'History',
 	);
 					
 	add_translation("en",$english);

@@ -10,7 +10,7 @@ function polls_init() {
 	if (elgg_is_logged_in()) {
 		$item = new ElggMenuItem('polls', elgg_echo('polls'), 'voting/owner/' . elgg_get_logged_in_user_entity()->username);
 	} else {
-		$item = new ElggMenuItem('polls', elgg_echo('poll'), 'voting/all');
+		$item = new ElggMenuItem('polls', elgg_echo('polls'), 'voting/top');
 	}
 	elgg_register_menu_item('site', $item);
 
@@ -86,6 +86,12 @@ function voting_page_handler($page) {
 			echo polls_get_page_list($page_type,$user_guid);
 			break;
 		case "group":
+			echo polls_get_page_list($page_type,$page[1]);
+			break;
+		case "history":
+			echo polls_get_page_list($page_type,$page[1]);
+			break;
+		case "top":
 			echo polls_get_page_list($page_type,$page[1]);
 			break;
 		default:
