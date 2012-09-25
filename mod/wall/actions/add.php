@@ -7,10 +7,10 @@
 // don't filter since we strip and filter escapes some characters
 $body = get_input('body', '', false);
 
-$access_id = ACCESS_DEFAULT;
 $method = 'site';
 $to_guid = get_input('to_guid');
 $from_guid = elgg_get_logged_in_user_guid();
+$access_id = ACCESS_DEFAULT;
 $message = get_input('body');
 
 // make sure the post isn't blank
@@ -19,12 +19,18 @@ if (empty($body)) {
 	forward(REFERER);
 }
 
+$to = get_entity($to_guid);
+if($to instanceof ElggGroup){
+	$access_id = $to->group_acl;
+}
+
 //elgg_set_context('wall_post');
 
 $post = new WallPost;
 $post->to_guid = $to_guid;
 $post->container_guid = $to_guid;
 $post->owner_guid = $from_guid;
+$post->access_id = $access_id;
 $post->message = $message;
 $post->method = $method;
 
