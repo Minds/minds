@@ -13,6 +13,9 @@ elgg.embed.init = function() {
 																);
 													$(this).parent().find('span').remove();
 													});
+	$('body').on('click', '.videoembed_video span', function(e,oembed){
+		$(this).parent().find('img').trigger('click');
+	});
 }
 
 elgg.register_hook_handler('init', 'system', elgg.embed.init);

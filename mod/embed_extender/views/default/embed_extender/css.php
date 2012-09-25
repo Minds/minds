@@ -7,6 +7,7 @@ EMBED VIDEO
   margin:10px 0;
   overflow: hidden;
   align: center;
+  cursor:pointer;
 }
 .videoembed_video img{
 	z-index:1;
@@ -23,8 +24,13 @@ EMBED VIDEO
 	z-index:2;
 }
 .videoembed_video span h1{
+	font-weight:bold;
+	font-size:16px;
+	background: rgb(0, 0, 0);/*fallback for browsers that dont support rgba*/
+	background: rgba(0, 0, 0, 0.6);
 	color:#FFF;
-	padding:15px 0 0 55px;
+	margin:0 60px;
+	padding:15px;
 }
 .videoembed_video span h1:hover{
 	color:#4690D6;
