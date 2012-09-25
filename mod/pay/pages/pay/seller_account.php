@@ -41,7 +41,7 @@ if(pay_get_user_balance($user->guid) > 0){
 		'text' => elgg_echo('pay:withdraw'),
 		'href' => "#withdraw",
 		'rel' => 'popup',
-		'link_class' => 'elgg-button elgg-button-action elgg-lightbox',
+		'link_class' => 'elgg-button elgg-button-action',
 	));
 	
 	$content .= elgg_view_module('popup', elgg_echo('pay:withdraw'), elgg_view_form('pay/withdraw'),
