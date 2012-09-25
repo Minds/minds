@@ -9,6 +9,12 @@
 .groups-profile > .elgg-image {
 	margin-right: 10px;
 }
+.groups img{
+	width:200px;
+	height:200px;
+	clear:both;
+	display:block;
+}
 
 .groups-stats {
 	background: #eeeeee;

@@ -274,6 +274,9 @@ function groups_handle_profile_page($guid) {
 		$sidebar = '';
 	}
 
+	elgg_unregister_menu_item('extras', 'bookmark');
+	elgg_unregister_menu_item('extras', 'rss');
+
 	$params = array(
 		'content' => $content,
 		'sidebar' => $sidebar,
