@@ -56,7 +56,5 @@ if (count($_FILES) == 0) {
 	if ($result) {
 	//array_push($uploaded_images, $image->getGUID());
 	$album->prependImageList(array($image->getGUID()));
-		if ($img_river_view == "all") {
 			add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
-		}
 	}
