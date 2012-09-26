@@ -17,17 +17,29 @@ if (elgg_is_logged_in() && $context) {
 	$filter_context = elgg_extract('filter_context', $vars);
 
 	$tabs = array(
-		'friend' => array(
-			'text' => elgg_echo('friends'),
-			'href' => $context."/channels/$username",
-			'selected' => ($filter_context == 'friends'),
-			'priority' => 400,
-		),
 		'trending' => array(
 			'text' => elgg_echo('river:trending'),
 			'href' => (isset($vars['trending_link'])) ? $vars['trending_link'] : "$context/trending",
 			'selected' => ($filter_context == 'trending'),
 			'priority' => 300,
+		),
+		'friend' => array(
+			'text' => elgg_echo('friends'),
+			'href' => $context."/channels/$username",
+			'selected' => ($filter_context == 'friends' || !$filter_context),
+			'priority' => 400,
+		),
+		'thumbsup' => array(
+			'text' => elgg_view_icon('thumbs-up-alt'),
+			'href' => $context."/thumbsup",
+			'selected' => ($filter_context == 'thumbsup'),
+			'priority' => 500,
+		),
+		'thumbsdown' => array(
+			'text' => elgg_view_icon('thumbs-down-alt'),
+			'href' => $context."/thumbsdown",
+			'selected' => ($filter_context == 'thumbsdown'),
+			'priority' => 600,
 		),
 
 	);

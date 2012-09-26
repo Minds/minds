@@ -63,6 +63,8 @@ $english = array(
 	
 	//river menu
 	'river:trending' => 'Trending',
+	'river:thumbs-up' => 'Thumbs up',
+	'river:thumbs-down' => 'Thumbs down',
 	
 	//change activity to news
 	'news' => 'News', 

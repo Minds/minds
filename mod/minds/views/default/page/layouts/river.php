@@ -17,8 +17,11 @@ if (isset($vars['class'])) {
 	$class = "$class {$vars['class']}";
 }
 
-// navigation defaults to breadcrumbs
-$nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
+// allow page handlers to override the default filter
+if (isset($vars['filter'])) {
+	$vars['filter_override'] = $vars['filter'];
+}
+$filter = elgg_view('page/layouts/content/river_filter', $vars);
 
 //load the inline JS because we have them in news feeds
 elgg_load_js('uiVideoInline');
@@ -47,7 +50,7 @@ elgg_load_js('uiVideoInline');
 
 			echo elgg_view_module('wall', null, $content);
 			
-			echo $nav;
+			echo $filter;
 		    
 
 			if (isset($vars['title'])) {

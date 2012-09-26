@@ -186,3 +186,32 @@ function thumbs_trending($return_type = 'guids'){
 		return $guids;
 	}
 }
+
+/**
+ * Returns entity guids for everything a user has every thumbed up
+ *
+ */
+function thumbs_up_history(){
+	$options = array('annotation_names' => 'thumbs:up',  'annotation_owner_guid'=>elgg_get_logged_in_user_guid());
+	$entities = elgg_get_entities_from_annotation_calculation($options);
+
+	foreach($entities as $entity){
+				$guids[] = $entity->guid;
+	}
+
+	return $guids;
+}
+/**
+ * Returns entity guids for everything a user has every thumbed down
+ *
+ */
+function thumbs_down_history(){
+	$options = array('annotation_names' => 'thumbs:down',  'annotation_owner_guid'=>elgg_get_logged_in_user_guid());
+	$entities = elgg_get_entities_from_annotation_calculation($options);
+
+	foreach($entities as $entity){
+				$guids[] = $entity->guid;
+	}
+
+	return $guids;
+}

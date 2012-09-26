@@ -35,6 +35,18 @@ switch ($page_type) {
 	case 'single':
 		$id = get_input('id');
 		$options['ids'] = $id;
+	case 'thumbsup':
+		$title = elgg_echo('river:thumbs-up');
+		$page_filter = 'thumbsup';
+		//GET THE TRENDING FEATURES
+		$options['object_guids'] = thumbs_up_history();
+		break;
+	case 'thumbsdown':
+		$title = elgg_echo('river:thumbs-down');
+		$page_filter = 'thumbsdown';
+		//GET THE TRENDING FEATURES
+		$options['object_guids'] = thumbs_down_history();
+		break;
 	default:
 		$page_filter = 'friends';
 		//$options['relationship_guid'] = elgg_get_logged_in_user_guid();
@@ -43,7 +55,7 @@ switch ($page_type) {
 		foreach($friends as $friend){
 			$friend_guids[] = $friend->guid;
 		}
-		
+		$page_filter = 'friends';
 		$options['subject_guids'] = array_merge(elgg_get_logged_in_user_guid(), $friend_guids);
 		break;
 }
