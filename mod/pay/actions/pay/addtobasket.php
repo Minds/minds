@@ -30,7 +30,7 @@ $item->seller_guid = $type->owner_guid;
 
 
 $item->owner_guid = $user_guid;
-$item->access_id = 0; 
+$item->access_id = 1; 
 
 if($item->save()){
 	//system_message(elgg_echo("pay:bakset:item:add:success"));

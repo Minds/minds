@@ -27,7 +27,7 @@ class ElggWebinar extends ElggObject {
 		$server_salt =  $this->server_salt ? $this->server_salt : elgg_get_plugin_setting('server_salt', 'webinar');
 		$server_url = $this->server_url ? $this->server_url : elgg_get_plugin_setting('server_url', 'webinar');
 		$logout_url = $this->logout_url ? $this->logout_url : elgg_get_plugin_setting('logout_url', 'webinar');
-		return new BigBlueButton('adminname', $this->guid, $this->welcome_msg, $admin_pwd, $user_pwd, $server_salt, $server_url, $logout_url);
+		return new BigBlueButton('adminname', $this->guid, $this->description, $admin_pwd, $user_pwd, $server_salt, $server_url, $logout_url);
 	}
 	public function isRunning(){
 		return $this->status == 'running';

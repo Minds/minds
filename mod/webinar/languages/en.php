@@ -106,7 +106,8 @@
 		'webinar:widget:more' => 'More gatherings',
 		'webinar:widget:no' => 'No gathering',
 		'webinar:write_access_id' => 'Write access',
-	
+		'webinar:fee' => 'Fee ($ USD)(leave blank or enter 0 for a free gathering)',
+		'webinar:join:fee' => 'Join for $%s',
 		
 		/**
 		 * River

@@ -186,6 +186,17 @@
 			return $return;
 		}
 		
+		// fee
+		if($entity->fee > 0){
+			$options = array(
+					'name' => 'fee',
+					'text' => '$' . $entity->fee,
+					'href' => false,
+					'priority' => 25,
+			);
+			$return[] = ElggMenuItem::factory($options);
+		}
+		
 		// status
 		$status = elgg_view('output/status', array('entity' => $entity));
 		$options = array(

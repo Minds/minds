@@ -107,7 +107,7 @@ if ($event || !$vars['group_guid']) {
 }
 
 if($event_calendar_bbb_server_url) {
-	$body .= '<p>';
+	$body .= '<p><label>'.elgg_echo("item:object:webinar").'</label>';
 	if ($fd['web_conference']) {
 		$body .= elgg_view('input/checkbox',array('name'=>'web_conference','value'=>1,'checked'=>'checked'));
 	} else {

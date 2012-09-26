@@ -42,6 +42,8 @@ $order->items = serialize($items);
 $order->amount = $amount;
 $order->status = 'created';
 
+$order->access_id = 1;
+
 $order->payment_method = 'paypal';
 
 if($order->save()){

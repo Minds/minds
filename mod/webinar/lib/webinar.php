@@ -133,7 +133,7 @@ function webinar_prepare_form_vars($webinar = null) {
 			'access_id' => ACCESS_DEFAULT,
 			'tags' => '',
 			'status' => 'upcoming',
-			'welcome_msg' => '',
+			'fee' => '',
 			'server_salt' => $plugin->server_salt,
 			'server_url' => $plugin->server_url,
 			'logout_url' => null,
@@ -496,7 +496,7 @@ function webinar_menu_title($webinar_guid){
 			elgg_register_menu_item('title', array(
 					'name' => 'join',
 					'href' => "action/webinar/join?webinar_guid={$webinar->getGUID()}",
-					'text' => elgg_echo("webinar:join"),
+					'text' => $webinar->fee > 0 && !webinar_has_paid(elgg_get_logged_in_user_guid(), $webinar->getGUID()) ? elgg_echo("webinar:join:fee", array($webinar->fee)) : elgg_echo("webinar:join"),
 					'is_action' => true,
 					'link_class' => 'elgg-button elgg-button-action',
 					'target'=>'_blank',
@@ -504,6 +504,30 @@ function webinar_menu_title($webinar_guid){
 		}
 	}
 	return true;
+}
+/** 
+ * Returns bool to whether or not a user has paid for access to the event
+ */
+function webinar_has_paid($user_guid, $webinar_guid){
+	//find the relationship between the user and the webinar
+	/*elgg_get_entities_from_relationship(	array(	'relationship_guid'	=> $user_guid,
+													'relationship' => 
+									));*/
+	$results = elgg_get_entities_from_metadata( array('type' => 'object',
+													'subtype' => 'pay',
+													'owner_guid' => $user_guid,
+													'metadata_name_value_pairs' => array(	array(	'name'=> 'object_guid',
+																									'value'=> $webinar_guid),
+																							array(	'name'=> 'status',
+																									'value'=> 'confirmed')
+																						),
+									));
+	
+	if(count($results) > 0){
+		return true;
+	} else {
+		return false;
+	}
 }
 /*
  function get_webinar_relationship($relationship, $webinar_guid, $limit = 10, $offset = 0, $site_guid = 0, $count = false) {

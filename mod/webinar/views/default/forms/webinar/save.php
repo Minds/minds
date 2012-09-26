@@ -65,13 +65,12 @@ $status_input = elgg_view('input/dropdown', array(
 		)
 ));
 
-$welcome_msg_label = elgg_echo('webinar:welcome_msg');
-$welcome_msg_input = elgg_view('input/text', array(
-		'name' => 'welcome_msg',
-		'id' => 'webinar_welcome_msg',
-		'value' => $vars['welcome_msg']
+$fee_label = elgg_echo('webinar:fee');
+$fee_input = elgg_view('input/text', array(
+		'name' => 'fee',
+		'id' => 'webinar_fee',
+		'value' => $vars['fee'],
 ));
-
 
 if ( elgg_is_admin_logged_in() ) {
 	$server_url_label = elgg_echo('webinar:server_url');
@@ -148,6 +147,11 @@ $description_input
 <div>
 	<label for="webinar_tags">$tags_label</label>
 	$tags_input
+</div>
+
+<div>
+	<label for="webinar_fee">$fee_label</label>
+	$fee_input
 </div>
 
 <div>
