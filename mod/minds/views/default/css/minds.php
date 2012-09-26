@@ -110,19 +110,35 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 }
 .is_riverdash_middle {
 	float: right;
-	width:500px !important;
+	width:525px !important;
 	margin:15px;
 	min-height:360px;
 	float:left;
-	padding:0 10px;
+	padding:0;
 	background: rgb(255, 255, 255); /* The Fallback */
     background: rgba(255, 255, 255, 0.9); 
 	/*border-left:2px solid #cccccc;*/
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
 }
+.is_riverdash_middle .elgg-module-wall {
+	padding:10px;
+}
+.is_riverdash_middle .elgg-menu-filter {
+	padding:0 10px;
+	margin:0;
+}
+.is_riverdash_middle .elgg-list-river{
+	margin:0;
+	background:#FFF;
+	padding:0 10px;
+}
+.is_riverdash_middle #elgg-river-selector{
+	margin:-25px 10px;
+	width:100px;
+}
 .is_riverdash_right {
-	width:200px;
+	width:175px;
 	margin:15px 0;
 	padding: 10px;
 	min-height:360px;
