@@ -311,3 +311,11 @@ form.elgg-form.hj-ajaxed-comment-save input{
 .elgg-menu.elgg-menu-hover{
 	margin-left:-25px;
     }
+/**
+ * Hide RSS
+ */
+li.elgg-menu-item-rss{
+	display:none;
+}
+}
+ */
