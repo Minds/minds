@@ -103,7 +103,8 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	min-height:360px;
 	float:left;
 	padding:5px;
-	background:#FFF;	
+	background: rgb(255, 255, 255); /* The Fallback */
+    background: rgba(255, 255, 255, 0.9); 
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
 }
@@ -114,7 +115,8 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	min-height:360px;
 	float:left;
 	padding:0 10px;
-	background:#FFF; 
+	background: rgb(255, 255, 255); /* The Fallback */
+    background: rgba(255, 255, 255, 0.9); 
 	/*border-left:2px solid #cccccc;*/
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -125,7 +127,8 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	padding: 10px;
 	min-height:360px;
 	float:right;
-	background:#FFF;
+	background: rgb(255, 255, 255); /* The Fallback */
+    background: rgba(255, 255, 255, 0.9); 
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
 }
