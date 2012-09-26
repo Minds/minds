@@ -97,31 +97,40 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 /******************
  ** CUSTOM RIVER **
  *****************/
-.is_riverdash_right {
-	width:200px;
-	margin:0 0 20px 0;
-	padding: 10px 0 0 0 !important;
-	min-height:360px;
-	float:right;
-	padding:0;
-}
-
 .is_riverdash_left {
-	width:200px;
-	margin:0 0 20px 0px;
-	padding: 10px 0 0 0 !important;
+	width:210px;
+	margin:15px 0 20px 0px;
 	min-height:360px;
 	float:left;
-	padding:0;
+	padding:5px;
+	background: rgb(255, 255, 255); /* The Fallback */
+    background: rgba(255, 255, 255, 0.9); 
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
 }
 .is_riverdash_middle {
 	float: right;
 	width:500px !important;
-	margin:15px 15px;
+	margin:15px;
 	min-height:360px;
 	float:left;
 	padding:0 10px;
+	background: rgb(255, 255, 255); /* The Fallback */
+    background: rgba(255, 255, 255, 0.9); 
 	/*border-left:2px solid #cccccc;*/
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.is_riverdash_right {
+	width:200px;
+	margin:15px 0;
+	padding: 10px;
+	min-height:360px;
+	float:right;
+	background: rgb(255, 255, 255); /* The Fallback */
+    background: rgba(255, 255, 255, 0.9); 
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
 }
 
 #dashboard1 {
