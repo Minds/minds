@@ -137,11 +137,13 @@ function pay_get_basket(){
 function pay_basket_add_button($type_guid, $title, $description, $price, $quantity){
 	 $currecy = pay_get_currency();	 
 	 
-	 return elgg_view('output/url', array('is_action' => true,
+	 $link =  elgg_view('output/confirmlink', array('is_action' => true,
 	 									  'href' => 'action/pay/basket/add?type_guid=' . $type_guid .'&title=' . $title . '&description=' . $description  . '&price=' . $price . '&quantity=' . $quantity,
 										  'text' => $currecy['symbol'] . $price . ' - Buy Now',
-										  'class' => 'pay buynow',
+										  'class' => 'pay buynow'
 									));
+	$button = $link;								
+	return $button;
 }
 /********************
  * Orders
