@@ -200,13 +200,13 @@ function kaltura_video_page_setup()
 		
 			elgg_register_menu_item('page', array(
 				'name' => elgg_echo('kalturavideo:label:myvideos'),
-				'href' =>  $CONFIG->wwwroot."archive/" . $_SESSION['user']->username,
+				'href' =>  $CONFIG->wwwroot."archive/owner/" . $_SESSION['user']->username,
 				'text' =>  elgg_echo('kalturavideo:label:myvideos'),
 			));
 			
 			elgg_register_menu_item('page', array(
 				'name' => elgg_echo('kalturavideo:label:friendsvideos'),
-				'href' => $CONFIG->wwwroot."archive/" . $_SESSION['user']->username ."/friends/",
+				'href' => $CONFIG->wwwroot."archive/friends/" . $_SESSION['user']->username,
 				'text' =>  elgg_echo('kalturavideo:label:friendsvideos'),
 			));
 		
@@ -234,10 +234,16 @@ function kaltura_video_page_setup()
 			
 			elgg_register_menu_item('page', array(
 				'name' =>elgg_echo('kalturavideo:label:trendingvideos'),
-				'href' => $CONFIG->wwwroot."archive/trending",
+				'href' => $CONFIG->wwwroot."archive/top",
 				'text' =>  elgg_echo('kalturavideo:label:trendingvideos'),
 				'priority' => 500
 			));
+			
+			//FILTER MENUS
+			elgg_register_menu_item('filter', array(	'name' => 'archive:top',
+														'text' => elgg_echo('kalturavideo:label:trendingvideos'),
+														'href' => '/archive/top'
+													));
 
 		if (can_write_to_container(0, elgg_get_page_owner_guid()) && elgg_is_logged_in())
 		{
@@ -309,11 +315,11 @@ function kaltura_video_page_handler($page) {
 	if (isset($page[0])) {
 		switch($page[0]) {
 			case 'all':
-				include(dirname(__FILE__) . "/everyone.php");
+				include(dirname(__FILE__) . "/pages/kaltura/all.php");
 				return true;
 				break;
-			case 'trending':
-				include(dirname(__FILE__) . "/trending.php");
+			case 'top':
+				include(dirname(__FILE__) . "/pages/kaltura/top.php");
 				return true;
 				break;
 			case 'api_upload':
@@ -326,7 +332,7 @@ function kaltura_video_page_handler($page) {
 				break;
 			case 'show':
 				set_input('videopost',$page[1]);
-				include(dirname(__FILE__) . "/show.php");
+				include(dirname(__FILE__) . "/pages/kaltura/show.php");
 				return true;
 				break;
 			case 'inline':
@@ -336,10 +342,19 @@ function kaltura_video_page_handler($page) {
 				break;
 			case 'edit':
 				set_input('videopost',$page[1]);
-				include(dirname(__FILE__) . "/edit.php");
+				include(dirname(__FILE__) . "/pages/kaltura/edit.php");
 				return true;
 				break;
-			
+			case 'owner':
+				set_input('username', $page[1]);
+				include(dirname(__FILE__) . "/pages/kaltura/owner.php");
+				return true;
+				break;
+			case 'friends':
+				set_input('username', $page[1]);
+				include(dirname(__FILE__) . "/pages/kaltura/friends.php");
+				return true;
+				break;	
 		default:
 			set_input('username',$page[0]);
 			$user = get_user_by_username($page[0]);
@@ -347,12 +362,12 @@ function kaltura_video_page_handler($page) {
 			if (isset($page[1])) {
 					switch($page[1]) {
 						case 'friends':
-										include(dirname(__FILE__) . "/friends.php");
+										include(dirname(__FILE__) . "/pages/kaltura/friends.php");
 										return true;
 										break;
 						case 'show':
 										set_input('videopost',$page[2]);
-										include(dirname(__FILE__) . "/show.php");
+										include(dirname(__FILE__) . "/pages/kaltura/show.php");
 										return true;
 										break;
 			
@@ -362,13 +377,13 @@ function kaltura_video_page_handler($page) {
 					}
 				// If the URL is just 'blog/username', or just 'blog/', load the standard blog index
 				} else {
-					include(dirname(__FILE__) . "/index.php");
+					include(dirname(__FILE__) . "/pages/kaltura/all.php");
 					return true;
 				}
 
 		}
 	} else {
-		include(dirname(__FILE__) . "/index.php");
+		include(dirname(__FILE__) . "/pages/kaltura/all.php");
 	}
 
 	return true;

@@ -26,6 +26,7 @@ $area3 = elgg_view('kaltura/categorylist',array('baseurl' => $CONFIG->wwwroot . 
 $body = elgg_view_layout("content", array(
 					'content' => $content, 
 					'sidebar' => $area3, 
+					'filter_context'=>'archive:top',
 					'title' => elgg_echo('kalturavideo:label:allvideos')
 					));
 
