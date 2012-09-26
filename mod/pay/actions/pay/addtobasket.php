@@ -15,6 +15,7 @@ $desc = get_input("description", $type->description);
 $price = get_input("price", $type->price);
 $quantity = get_input("quantity", 1);
 $user_guid = (int) elgg_get_logged_in_user_guid();
+$seller_guid = get_input("seller_guid", $type->owner_guid);
 
 $item = new ElggObject();
 $item->type = 'object';
@@ -26,7 +27,7 @@ $item->description = $desc;
 $item->quantity = $quantity;
 $item->price = $price*$quantity;
 $item->object_guid = $type_guid;
-$item->seller_guid = $type->owner_guid;
+$item->seller_guid = $seller_guid;
 
 
 $item->owner_guid = $user_guid;

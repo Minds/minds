@@ -134,6 +134,7 @@ function webinar_prepare_form_vars($webinar = null) {
 			'tags' => '',
 			'status' => 'upcoming',
 			'fee' => '',
+			'enterprise' => 0,
 			'server_salt' => $plugin->server_salt,
 			'server_url' => $plugin->server_url,
 			'logout_url' => null,

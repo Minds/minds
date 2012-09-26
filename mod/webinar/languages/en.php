@@ -109,7 +109,7 @@
 		'webinar:fee' => 'Fee ($ USD)(leave blank or enter 0 for a free gathering)',
 		'webinar:join:fee' => 'Join for $%s',
 		'webinar:enterprise' => 'Enterprise?',
-		'webinar:enterprise:description' => 'Selecting enterprise makes sure that you have the best possible Gathering experience as we setup your own server. Please give at least 24 hours notice if you plan on hosting an Enterprise Gathering.',
+		'webinar:enterprise:description' => 'Selecting enterprise makes sure that you have the best possible Gathering experience as we setup your own server. Please give at least 24 hours notice if you plan on hosting an Enterprise Gathering. There is a fee of $1.00 if you select this option.',
 		
 		/**
 		 * River

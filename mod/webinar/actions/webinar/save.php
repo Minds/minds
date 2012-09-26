@@ -45,13 +45,19 @@ if (sizeof($input) > 0) {
 		elgg_clear_sticky_form('webinar');
 	
 		system_message(elgg_echo('webinar:saved'));
-	
 		
 		if ($new_webinar) {
 			$webinar->logout_url = $webinar->getURL();
 			$webinar->save();
 			
 			add_to_river('river/object/webinar/create', 'create', elgg_get_logged_in_user_guid(), $webinar->getGUID());
+		}
+		
+		if($webinar->enterprise == 'on'){
+			//@todo notice when a user has already paid for enterprise and dont ask again
+			$seller = get_user_by_username('mark');
+			$pay_url = elgg_add_action_tokens_to_url('action/pay/basket/add?type_guid=' . $webinar->getGUID() .'&seller_guid='.$seller->guid.'&title=' . $webinar->title . '&description=' . $webinar->description  . '&price=1&quantity=1');
+			forward($pay_url, 301);
 		}
 		
 		forward($webinar->getURL());

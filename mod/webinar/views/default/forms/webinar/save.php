@@ -77,7 +77,7 @@ $enterprise_description = elgg_echo('webinar:enterprise:description');
 $enterprise_input = elgg_view('input/checkbox', array(
 		'name' => 'enterprise',
 		'id' => 'webinar_enteprise',
-		'value' => $vars['enterprise'],
+		'checked' => $vars['enterprise'] ? 'checked' : false,
 ));
 
 if ( elgg_is_admin_logged_in() ) {
