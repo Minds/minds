@@ -59,7 +59,7 @@ function kaltura_video_init() {
 		//add_menu(elgg_echo('kalturavideo:label:adminvideos'), $CONFIG->wwwroot . "kaltura_video/" . $_SESSION['user']->username);
 		elgg_register_menu_item('site', array(
 			'name' => elgg_echo('kalturavideo:label:adminvideos'),
-			'href' =>  $CONFIG->wwwroot . "archive/" . $_SESSION['user']->username,
+			'href' =>  $CONFIG->wwwroot . "archive/owner/" . $_SESSION['user']->username,
 			'text' =>  elgg_echo('kalturavideo:label:adminvideos'),
 		));
 		
