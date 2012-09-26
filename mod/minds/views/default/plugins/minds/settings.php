@@ -2,7 +2,7 @@
 <p>
 <?php
 
-echo "<h3>" . elgg_echo('minds:riverdashboard:annoucement') . "</h3>" . elgg_view("input/plaintext", array("name"=>"params[announcement_content]", "value"=>$vars['entity']->announcement_code));
+echo "<h3>" . elgg_echo('minds:riverdashboard:annoucement') . "</h3>" . elgg_view("input/plaintext", array("name"=>"params[announcement_content]", "value"=> elgg_get_plugin_setting('announcement_content', 'minds')));
 
 ?>
 </p>
@@ -14,7 +14,7 @@ echo "<h3>" . elgg_echo('minds:riverdashboard:annoucement') . "</h3>" . elgg_vie
 <b> Description (used if not defined by an object)</b><br/>
 <?php
 
-echo elgg_view("input/plaintext", array("name"=>"params[default_description]", "value"=>elgg_get_plugin_setting('default_description', 'minds_theme')));
+echo elgg_view("input/plaintext", array("name"=>"params[default_description]", "value"=>elgg_get_plugin_setting('default_description', 'minds')));
 
 ?>
 </p>
@@ -23,7 +23,7 @@ echo elgg_view("input/plaintext", array("name"=>"params[default_description]", "
 <b> Keywords (used if not defined by an object)</b><br/>
 <?php
 
-echo elgg_view("input/plaintext", array("name"=>"params[default_keywords]", "value"=>elgg_get_plugin_setting('default_keywords', 'minds_theme')));
+echo elgg_view("input/plaintext", array("name"=>"params[default_keywords]", "value"=>elgg_get_plugin_setting('default_keywords', 'minds')));
 
 ?>
 </p>
