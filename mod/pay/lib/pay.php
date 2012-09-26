@@ -140,6 +140,7 @@ function pay_basket_add_button($type_guid, $title, $description, $price, $quanti
 	 $link =  elgg_view('output/confirmlink', array('is_action' => true,
 	 									  'href' => 'action/pay/basket/add?type_guid=' . $type_guid .'&title=' . $title . '&description=' . $description  . '&price=' . $price . '&quantity=' . $quantity,
 										  'text' => $currecy['symbol'] . $price . ' - Buy Now',
+										  'confirm' => 'Are you sure you wish to purchase this item?',
 										  'class' => 'pay buynow'
 									));
 	$button = $link;								
