@@ -72,6 +72,14 @@ $fee_input = elgg_view('input/text', array(
 		'value' => $vars['fee'],
 ));
 
+$enterprise_label = elgg_echo('webinar:enterprise');
+$enterprise_description = elgg_echo('webinar:enterprise:description');
+$enterprise_input = elgg_view('input/checkbox', array(
+		'name' => 'enterprise',
+		'id' => 'webinar_enteprise',
+		'value' => $vars['enterprise'],
+));
+
 if ( elgg_is_admin_logged_in() ) {
 	$server_url_label = elgg_echo('webinar:server_url');
 	$server_url_input = elgg_view('input/text', array(
@@ -152,6 +160,12 @@ $description_input
 <div>
 	<label for="webinar_fee">$fee_label</label>
 	$fee_input
+</div>
+
+<div>
+	<label for="webinar_enterprise">$enterprise_label</label>
+	$enterprise_input
+	<span>$enterprise_description</span>
 </div>
 
 <div>
