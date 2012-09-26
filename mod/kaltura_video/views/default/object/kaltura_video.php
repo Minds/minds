@@ -22,7 +22,7 @@ $num_comments = $vars['entity']->countComments();
 $group = get_entity($vars['entity']->container_guid);
 if(!($group instanceof ElggGroup)) $group = false;
 
-if(elgg_get_context()!='search') {
+if(elgg_get_context()=='archive') {
 	//this view is for My videos:
 	
 	
@@ -108,7 +108,34 @@ elseif($metadata->kaltura_video_cancollaborate) {
 
 <?php
 }
-else {
+elseif(elgg_get_context()=='sidebar') {
+	?>
+	<div class="kalturavideoitem" id="kaltura_video_<?php echo $ob->kaltura_video_id; ?>">
+
+	<div class="left">
+	<p><a href="<?php echo $vars['entity']->getURL(); ?>" class="play"><img src="<?php echo kaltura_get_thumnail($ob->kaltura_video_id, 75, 75, 100); ?>" width="75px" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
+	</div>
+
+	<h3><a href="<?php echo $vars['entity']->getURL(); ?>"><?php echo $vars['entity']->title; ?></a></h3>
+	
+	
+	<p class="stamp">
+	 <?php echo elgg_echo('by'); ?> <a href="<?php echo $CONFIG->wwwroot.'pg/kaltura_video/'.$owner->username; ?>" title="<?php echo htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos")); ?>"><?php echo $owner->name; ?></a>
+	
+	<?php
+	if($group) {
+		echo elgg_echo('ingroup')." <a href=\"{$CONFIG->wwwroot}pg/kaltura_video/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
+	}
+	
+	echo elgg_echo("kalturavideo:label:length"); echo ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>'; ?>
+	
+	<?php echo elgg_echo("kalturavideo:label:plays"); echo ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.intval($ob->kaltura_video_plays).'</strong>'; ?>
+	
+	</p>
+	</div>
+<?php
+	
+} else {
 	//this view is for everything else
 
 	$icon = '<a href="'.$vars['entity']->getURL().'">';

@@ -466,3 +466,17 @@ div.galleryItem div {
 	background: transparent url(<?php echo elgg_get_site_url(); ?>mod/embed_extender/graphics/play_button.png) no-repeat;
 	z-index:2;
 }
+/**
+ * Right sidebar modules
+ */
+.elgg-module.sidebar .kalturavideoitem{
+	padding:10px;
+}
+.elgg-module.sidebar .kalturavideoitem h3 a{
+	font-size:13px;
+	color:#4690D6;
+}
+.elgg-module.sidebar .kalturavideoitem p{
+	font-size:11px;
+	display:block;
+}
