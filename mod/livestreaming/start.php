@@ -56,6 +56,7 @@ function livestreaming_init() {
 
 	// Register a URL handler for livestreaming rooms
 	elgg_register_entity_url_handler('livestreaming_url','object','livestreaming');
+	elgg_register_entity_url_handler('object', 'livestreaming', 'livestreaming_url');
 
 	elgg_register_entity_type('object', 'livestreaming');
 	
