@@ -24,10 +24,7 @@ function embed_extender_parser($input, $view, $context)
 		}
 	}
 	else{
-		$width = elgg_get_viewtype() == 'mobile' ? 200 : elgg_get_plugin_setting('width', 'embed_extender');			
-		if (!isset($width) || !is_numeric($width) || $width < 0) {
-			$width = 400; //Size for content
-		}
+		$width = elgg_get_viewtype() == 'mobile' ? 200 : 525;			
 	}
 	//if this is a comment then we need to change the size so it fits.	
 	if($view == 'object/hjannotation'){
