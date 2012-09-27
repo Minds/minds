@@ -70,15 +70,12 @@ elgg_load_js('uiVideoInline');
 	</div>
 	<div class="elgg-body is_riverdash_right">
 		<?php
-			echo elgg_view('page/elements/sidebar', $vars);
+			elgg_unregister_menu_item('extras','bookmark');
 			if((elgg_get_context() == 'news')) {
 				echo elgg_view('minds/elements/announcement', $vars);
 			}
-			if (elgg_is_active_plugin('adverts')) {
-				echo elgg_view('adverts/elements/sidebar', $vars);
-			} else { // If the Adverts plugin is disabled, show the ishouvik advert here	
-				
-			}
+
+			echo elgg_view('adverts/elements/sidebar', $vars);
 		?>
 	</div>
 	<?php 	} else { //end of elgg_is_logged_in() condition ?>
