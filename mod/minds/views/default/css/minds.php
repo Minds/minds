@@ -111,11 +111,11 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
  ** CUSTOM RIVER **
  *****************/
 .is_riverdash_left {
-	width:210px;
+	width:215px;
 	margin:15px 0 20px 0px;
 	min-height:360px;
 	float:left;
-	padding:5px;
+	padding:0 0 15px 0;
 	background: rgb(255, 255, 255); /* The Fallback */
     background: rgba(255, 255, 255, 0.75); 
 	-webkit-border-radius: 5px;
@@ -163,7 +163,23 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 }
 
 #dashboard1 {
-	margin-bottom:20px;
+	padding:5px;
+}
+.is_riverdash_left .elgg-module{
+	border-top:2px solid #CCC;
+	background:#FFF;
+	-webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    margin:0;
+}
+.is_riverdash_left .elgg-module .elgg-head{
+	background:transparent;
+}
+
+.is-groups-element li.elgg-menu-item-membership, .is-groups-element li.elgg-menu-item-feature{
+  display: none;
+}
+
 }
 #river_avatar {
 	text-align:center;
@@ -198,10 +214,6 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
     border-bottom:1px solid #cccccc;
     text-decoration:none;
     display:block;
-}
-#dashboard_navigation ul li:hover {
-	background:#F2F2F2;
-    color:#333;
 }
 
 #dashboard_navigation ul li a {
@@ -240,25 +252,6 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
   font-weight: bold;
 }
 
-/* ***************************************
-	GROUPS ELEMENT
-**************************************** */
-.is-groups-element {
-	margin-right: 3px;
-	-webkit-border-radius: 5px; 
-	-moz-border-radius: 5px;
-	borer-radius: 5px;
-	padding:3px;
-    border:2px solid #dedede;	
-}
-.is-groups-element h2 {
-   color: #333;
-   font-weight: bold;
-   font-size: 14px;
-}
-.is-groups-element li.elgg-menu-item-membership, .is-groups-element li.elgg-menu-item-feature{
-  display: none;
-}
 
 /* ***************************************
 	RIVER

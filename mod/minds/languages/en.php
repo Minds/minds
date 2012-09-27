@@ -102,6 +102,11 @@ $english = array(
 	'minds:online_status:online' => 'Online',
 	
 	/**
+	 * Thoughts
+	 */
+	 'minds:thoughts' => 'Thoughts',
+	
+	/**
 	 * Minds Universal upload form
 	 */
 	'minds:upload'=>'Upload',
