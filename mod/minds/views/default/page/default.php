@@ -33,6 +33,7 @@ header("Content-type: text/html; charset=UTF-8");
 
 ?>
 <!DOCTYPE html>
+<html lang="en">
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# video: http://ogp.me/ns/video#">
 <?php echo elgg_view('page/elements/head', $vars); ?>
 </head>
