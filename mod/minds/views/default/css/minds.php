@@ -111,7 +111,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
  ** CUSTOM RIVER **
  *****************/
 .is_riverdash_left {
-	width:215px;
+	width:210px;
 	margin:15px 0 20px 0px;
 	min-height:360px;
 	float:left;
@@ -123,7 +123,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 }
 .is_riverdash_middle {
 	float: right;
-	width:580px !important;
+	width:585px !important;
 	margin:15px;
 	min-height:360px;
 	float:left;
