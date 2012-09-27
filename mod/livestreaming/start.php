@@ -19,6 +19,8 @@ class Livestreaming extends ElggObject {
 	// more customizations here
 }
 
+// Make sure the livestreaming initialisation function is called on initialisation
+elgg_register_event_handler('init', 'system', 'livestreaming_init');
 
 function livestreaming_init() {
 
@@ -50,13 +52,19 @@ function livestreaming_init() {
 	add_widget_type('livestreamingrooms',"Live Streaming Rooms","Live Streaming Rooms");
 
 	//register a page
-	register_page_handler('livestreaming', 'livestreaming_page_handler');
+	elgg_register_page_handler('livestreaming', 'livestreaming_page_handler');
 
 	// Register a URL handler for livestreaming rooms
-	register_entity_url_handler('livestreaming_url','object','livestreaming');
+	elgg_register_entity_url_handler('livestreaming_url','object','livestreaming');
 
-	register_entity_type('object', 'livestreaming');
-	add_subtype('object', 'livestreaming', 'Livestreaming');
+	elgg_register_entity_type('object', 'livestreaming');
+	
+	elgg_register_event_handler('pagesetup', 'system', 'livestreaming_pagesetup');
+	
+	elgg_register_action('livestreaming/create', elgg_get_plugins_path() . "livestreaming/actions/create.php");
+	elgg_register_action('livestreaming/edit', elgg_get_plugins_path() . "livestreaming/actions/edit.php");
+	elgg_register_action('livestreaming/delete', elgg_get_plugins_path() . "livestreaming/actions/delete.php");
+	elgg_register_action('livestreaming/setting', elgg_get_plugins_path() . "livestreaming/actions/setting.php");
 }
 
 
@@ -179,15 +187,4 @@ function livestreaming_url($streamingroom) {
 	else return $CONFIG->url . "pg/livestreaming/" . urlencode($room);
 }
 
-
-// Make sure the livestreaming initialisation function is called on initialisation
-register_elgg_event_handler('init','system','livestreaming_init');
-register_elgg_event_handler('pagesetup','system','livestreaming_pagesetup');
-
-// Register actions
-global $CONFIG;
-register_action("livestreaming/create",false,$CONFIG->pluginspath . "livestreaming/actions/create.php");
-register_action("livestreaming/edit",false,$CONFIG->pluginspath . "livestreaming/actions/edit.php");
-register_action('livestreaming/delete',false,$CONFIG->pluginspath . "livestreaming/actions/delete.php");
-register_action('livestreaming/setting',false,$CONFIG->pluginspath . "livestreaming/actions/setting.php");
 ?>
