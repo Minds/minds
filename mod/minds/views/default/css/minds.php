@@ -93,7 +93,20 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	margin-top:10px;
 	background:#000;
 }
-
+.minds_index > .earlyAccess{
+	width:600px;
+	margin:0 auto 15px auto;
+}
+.minds_index > .earlyAccess .elgg-input-text{
+	float:left;
+	width:175px;
+	margin:0 5px;
+}
+.minds_index > .earlyAccess .elgg-button{
+	float:left;
+	margin:0 5px;
+	padding:5px;
+}
 /******************
  ** CUSTOM RIVER **
  *****************/
