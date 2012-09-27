@@ -488,7 +488,7 @@ function webinar_menu_title($webinar_guid){
 				elgg_register_menu_item('title', array(
 						'name' => 'subscribe',
 						'href' => "action/webinar/subscribe?webinar_guid={$webinar->getGUID()}",
-						'text' => elgg_echo("webinar:subscribe"),
+						'text' => $webinar->fee > 0 && !webinar_has_paid(elgg_get_logged_in_user_guid(), $webinar->getGUID()) ? elgg_echo("webinar:subscribe:fee", array($webinar->fee)) : elgg_echo("webinar:subscribe"),
 						'is_action' => true,
 						'link_class' => 'elgg-button elgg-button-action',
 						));
