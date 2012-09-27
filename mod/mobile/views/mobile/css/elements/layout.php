@@ -55,6 +55,9 @@
 	width: 160px;
 	margin: 0 10px 0 0;
 }
+.elgg-sidebar-mobile {
+	display:none;
+}
 .elgg-main {
 	position: relative;
 	min-height: 360px;

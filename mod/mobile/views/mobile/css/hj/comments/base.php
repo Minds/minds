@@ -55,9 +55,8 @@ overflow:hidden;
 padding:0;
 }
 
-.hj-comments-input {
-font-size:10px;
-padding:0;
+.comments-input {
+height:25px;
 }
 
 .hj-comments-bubble-pointer {

@@ -30,6 +30,7 @@ if (isset($vars['class'])) {
 
 $vars['action'] = elgg_normalize_url($vars['action']);
 $vars['method'] = strtolower($vars['method']);
+$vars['data-role'] = 'none';
 
 $body = $vars['body'];
 unset($vars['body']);
