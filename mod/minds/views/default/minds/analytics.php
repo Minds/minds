@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-35022911-1']);
+  _gaq.push(['_setAccount', 'UA-35146796-1']);
   _gaq.push(['_setDomainName', 'minds.com']);
   _gaq.push(['_trackPageview']);
 
