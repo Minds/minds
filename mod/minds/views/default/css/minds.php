@@ -104,19 +104,19 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	float:left;
 	padding:5px;
 	background: rgb(255, 255, 255); /* The Fallback */
-    background: rgba(255, 255, 255, 0.9); 
+    background: rgba(255, 255, 255, 0.75); 
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
 }
 .is_riverdash_middle {
 	float: right;
-	width:525px !important;
+	width:580px !important;
 	margin:15px;
 	min-height:360px;
 	float:left;
 	padding:0;
 	background: rgb(255, 255, 255); /* The Fallback */
-    background: rgba(255, 255, 255, 0.9); 
+    background: rgba(255, 255, 255, 0.75); 
 	/*border-left:2px solid #cccccc;*/
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -138,13 +138,13 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	width:100px;
 }
 .is_riverdash_right {
-	width:175px;
+	width:140px;
 	margin:15px 0;
 	padding: 10px;
 	min-height:360px;
-	float:right;
+	float:left;
 	background: rgb(255, 255, 255); /* The Fallback */
-    background: rgba(255, 255, 255, 0.9); 
+    background: rgba(255, 255, 255, 0.75); 
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
 }
