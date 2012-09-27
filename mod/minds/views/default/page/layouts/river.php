@@ -75,7 +75,7 @@ elgg_load_js('uiVideoInline');
 				echo elgg_view('minds/elements/announcement', $vars);
 			}
 
-			echo elgg_view('adverts/elements/sidebar', $vars);
+			echo elgg_view('page/elements/sidebar', $vars);
 		?>
 	</div>
 	<?php 	} else { //end of elgg_is_logged_in() condition ?>
