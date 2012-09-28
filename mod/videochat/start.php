@@ -19,6 +19,8 @@ class Videochat extends ElggObject {
 	// more customizations here
 }
 
+// Make sure the videochat initialisation function is called on initialisation
+elgg_register_event_handler('init','system','videochat_init');
 
 function videochat_init() {
 
@@ -50,13 +52,19 @@ function videochat_init() {
 	add_widget_type('videochatrooms',"Video Chat Rooms","Video Chat Rooms");
 
 	//register a page
-	register_page_handler('videochat', 'videochat_page_handler');
+	elgg_register_page_handler('videochat', 'videochat_page_handler');
 
 	// Register a URL handler for videochat rooms
-	register_entity_url_handler('videochat_url','object','videochat');
+	elgg_register_entity_url_handler('videochat_url','object','videochat');
 
-	register_entity_type('object', 'videochat');
-	add_subtype('object', 'videochat', 'Videochat');
+	elgg_register_entity_type('object', 'videochat');
+	
+	elgg_register_event_handler('pagesetup','system','videochat_pagesetup');
+
+	elgg_register_action("videochat/create",  elgg_get_plugins_path() . "videochat/actions/create.php");
+	elgg_register_action("videochat/edit", elgg_get_plugins_path() . "videochat/actions/edit.php");
+	elgg_register_action('videochat/delete', elgg_get_plugins_path() . "videochat/actions/delete.php");
+	elgg_register_action('videochat/setting', elgg_get_plugins_path() . "videochat/actions/setting.php");
 }
 
 
@@ -163,15 +171,4 @@ function videochat_url($chatroom) {
 	else return $CONFIG->url . "pg/videochat/" . urlencode($room);
 }
 
-
-// Make sure the videochat initialisation function is called on initialisation
-register_elgg_event_handler('init','system','videochat_init');
-register_elgg_event_handler('pagesetup','system','videochat_pagesetup');
-
-// Register actions
-global $CONFIG;
-register_action("videochat/create",false,$CONFIG->pluginspath . "videochat/actions/create.php");
-register_action("videochat/edit",false,$CONFIG->pluginspath . "videochat/actions/edit.php");
-register_action('videochat/delete',false,$CONFIG->pluginspath . "videochat/actions/delete.php");
-register_action('videochat/setting',false,$CONFIG->pluginspath . "videochat/actions/setting.php");
 ?>

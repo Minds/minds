@@ -62,6 +62,17 @@ if($subject->type == "user" || $object->type == "group"){
 	} else {
 		$item->subject_metadata['name'] = $subject->title;
 }
+//@todo make this 
+if ($item->action_type != 'create' && $item) {
+    $river_id = $item->id;
+    $selector_id = $river_id;
+} else {
+    $guid = $object->guid;
+    $selector_id = $guid;
+}
+$params['parent_guid'] = $guid;
+$params['river_id'] = $river_id;
 
+$item->comments['count'] =  hj_alive_count_comments($object,$params);
 
 $jsonexport['activity'][] = $vars['item'];
