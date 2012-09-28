@@ -6,6 +6,7 @@ $to = get_entity($entity->to_guid);
 $actor = get_entity($entity->from_guid);
 $group = get_entity($entity->object_guid);
 
+if($group){
 $description = $entity->description;
 
 $url = elgg_normalize_url("groups/invitations/$to->username");;
@@ -25,3 +26,6 @@ $body .= "<div class='notify_description'>" .  elgg_view('output/url', array('hr
 $body .= "<span class='notify_time'>" . elgg_view_friendly_time($entity->time_created) . "</span>";
 
 echo $body;
+} else {
+	$entity->delete();
+}
