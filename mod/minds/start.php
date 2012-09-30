@@ -130,7 +130,7 @@ function minds_pagesetup(){
 			'priority' => 50,
 			'section' => 'alt',
 		));
-		
+	if(elgg_get_context()!='main')	
 	elgg_register_menu_item('topbar', array(
 			'name' => 'minds_logo',
 			'href' => '/',
