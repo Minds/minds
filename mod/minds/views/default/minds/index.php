@@ -8,16 +8,12 @@
         <img src="<?php echo elgg_get_site_url(); ?>mod/minds/graphics/minds_logo.gif" width="200" height="90" />
     </div>
     
-    <div class="search">
-            <form action="<?php echo elgg_get_site_url(); ?>search" method="get">
-             
-                    <input type="text" name="q" value="" />
-                    <button type="submit" value="search" class="elgg-button elgg-button-submit">Search</button>
-                    <input type="hidden" name="search" value="1" /></td>
-    
-            </form>
-        
-    </div>
+    <?php if(!elgg_is_logged_in()) {
+ 		echo "<div class='earlyAccess'>";
+	    echo elgg_view_form('minds/front_register', array('action'=> '/register'));
+    	echo "</div>";
+   }
+   ?>
     
     <script type="text/javascript" src="http://local.minds.tv/p/100/sp/10000/embedIframeJs/uiconf_id/6709457/partner_id/100"></script>
     
