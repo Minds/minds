@@ -2,7 +2,7 @@
 /**
  * Index View
  */
-$img_src = elgg_get_site_url() == 'http://www.minds.com' ? elgg_get_site_url().'mod/minds/graphics/minds_logo.png' : elgg_get_site_url().'mod/minds/graphics/minds_logo.gif';
+$img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().'mod/minds/graphics/minds_logo.png' : elgg_get_site_url().'mod/minds/graphics/minds_logo.gif';
 ?>
 <div class='minds_index'>
     <div class="logo">
