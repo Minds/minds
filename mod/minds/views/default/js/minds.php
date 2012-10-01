@@ -35,11 +35,13 @@
 	
 		 
 	 };
-	 var riverOffset = 20;
+	 var riverOffset = 0;
 	 river.extend.trigger = function() {
 			
 			$list = $(this).parent();
 			$('.news-show-more').html('loading...');
+			
+			riverOffset += +20;
 			
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {
@@ -50,6 +52,7 @@
 				offset: riverOffset
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
+			console.log(url);
 						
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
@@ -59,11 +62,8 @@
 					$('.news-show-more').html('no more posts');
 				} else {
 
-				$('.elgg-list.elgg-list-river.elgg-river').append(data);
+				$('.elgg-list.elgg-list-river.elgg-river').parents('.is_riverdash_middle').find('.elgg-list.elgg-list-river.elgg-river').first().append(data);
 												
-				
-				
-				riverOffset += +20;
 			
 				$('.news-show-more').html('more');
 				
