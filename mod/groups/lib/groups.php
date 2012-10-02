@@ -138,8 +138,9 @@ function groups_handle_owned_page() {
  * List groups the user is memober of
  */
 function groups_handle_mine_page() {
-
-	$page_owner = elgg_get_page_owner_entity();
+	
+	$username = get_input('username', elgg_get_logged_in_user_entity()->username);
+	$page_owner = get_user_by_username($username);
 
 	if ($page_owner->guid == elgg_get_logged_in_user_guid()) {
 		$title = elgg_echo('groups:yours');
