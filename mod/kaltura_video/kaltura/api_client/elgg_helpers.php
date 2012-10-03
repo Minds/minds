@@ -422,6 +422,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 	global $KALTURA_GLOBAL_UICONF;
 	
 	$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'kaltura_video');
+	$partnerId = elgg_get_plugin_setting('partner_id', 'kaltura_video');
 
 	if(empty($entryId)) return "Error entryId: $entryId";
     if ( $size == "m" ) {
@@ -434,7 +435,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 		$context = elgg_get_context();
 		if($context == 'news'){
 			$height = 295;
-    		$width = 525;
+    		$width = 515;
 		} else {
 			$height = 214;
     		$width = 380;
@@ -481,16 +482,16 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 
     $flashVarsStr .= KalturaHelpers::flashVarsToString($viewData["flashVars"]);
 	
-	$video_location = $kaltura_server . '/index.php/kwidget/wid/_100/uiconf_id/' . $widgetUi . '/entry_id/'. $entryForPlayer;
+	$video_location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $entryForPlayer;
 	
-	$widget .= '<script type="text/javascript" src="' . $kaltura_server . '/p/100/sp/10000/embedIframeJs/uiconf_id/'.$widgetUi.'/partner_id/100"></script>';
+	$widget .= '<script type="text/javascript" src="' . $kaltura_server . '/p/'.$partnerId.'/sp/'.$partnerId.'00/embedIframeJs/uiconf_id/'.$widgetUi.'/partner_id/100"></script>';
 	 
 
 	$widget .= '<object id="kaltura_player_' . $widgetUi .'" name="kaltura_player_' . $widgetUi . '" type="application/x-shockwave-flash" 
 	 xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" 
 	allowFullScreen="true" allowScriptAccess="always" allowNetworking="all" height="' . $height . '" width="' . $width . '"  resource="' . $video_location . '" data="'. $video_location . '" rel="media:video">'.
            
-        '<a rel="media:thumbnail" href="' . $kaltura_server . '/p/100/sp/10000/thumbnail/entry_id/0_l47o3qy5/width/120/height/90/bgcolor/000000/type/2"></a>' .
+        '<a rel="media:thumbnail" href="' . $kaltura_server . '/p/'.$partnerId.'/sp/10000/thumbnail/entry_id/0_l47o3qy5/width/120/height/90/bgcolor/000000/type/2"></a>' .
 		'<param name="allowScriptAccess" value="always" />'.
 		'<param name="allowNetworking" value="all" />'.
 		'<param name="allowFullScreen" value="true" />'.
