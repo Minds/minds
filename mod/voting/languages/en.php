@@ -84,7 +84,7 @@
 	     **/
 	        'polls:settings:create_in_river:title' => "Show vote creation in activity river",
 			'polls:settings:vote_in_river:title' => "Show vote voting in activity river",
-			'river:create:object:poll' => '%s created a voed %s',
+			'river:create:object:poll' => '%s created a vote %s',
 			'river:vote:object:poll' => '%s voted on %s',
 			'river:comment:object:poll' => '%s commented on %s',
 		/**
