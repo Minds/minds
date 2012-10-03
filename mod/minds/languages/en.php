@@ -88,6 +88,11 @@ $english = array(
     'minds:comments:nocomments' => 'Be first to comment',
     'minds:commenton' => 'Comment on %s',
     'minds:comments:valuecantbeblank' => 'Comment can not be blank',
+    'minds:remind' => 'ReMind (repost)',
+    'minds:remind:success' => 'Successfuly',
+    
+	//river
+	'river:remind:object:wall' => '%s reMinded %s\'s thought',
 	
 	/* Quota 
 	 */

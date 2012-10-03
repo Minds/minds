@@ -22,6 +22,7 @@ function embed_extender_init()
 	}
 	
 	elgg_register_plugin_hook_handler('view', 'river/object/wall/create', 'embed_extender_rewrite');
+	elgg_register_plugin_hook_handler('view', 'river/object/wall/remind', 'embed_extender_rewrite');
 	elgg_register_plugin_hook_handler('view', 'object/wallpost', 'embed_extender_rewrite');
 	elgg_register_plugin_hook_handler('view', 'object/hjannotation', 'embed_extender_rewrite');
 	

@@ -64,6 +64,7 @@ function minds_init(){
 	$actionspath = elgg_get_plugins_path() . "minds/actions";
 	elgg_register_action("minds/river/delete", "$actionspath/river/delete.php");
 	elgg_register_action("minds/upload", "$actionspath/minds/upload.php");
+	elgg_register_action("minds/remind", "$actionspath/minds/remind.php");
 }
 
 function minds_index($hook, $type, $return, $params) {
@@ -233,7 +234,8 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 		$item = $params['item'];
 		$object = $item->getObjectEntity();
 		$subject = $item->getSubjectEntity();
-	
+		
+		//Delete button
 		elgg_unregister_menu_item('delete');
 		if ($subject->canEdit() || $object->canEdit()) {
 			$options = array(
@@ -245,6 +247,19 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 				'is_action' => true,
 				'priority' => 200,
 			);
+			$return[] = ElggMenuItem::factory($options);
+		}
+		
+		//Remind button
+		if($object->getSubtype() == 'wallpost'){ //only display remind for wallposts (thoughts)
+			$options = array(
+					'name' => 'remind',
+					'href' => "action/minds/remind?guid=$object->guid",
+					'text' => elgg_view_icon('share'),
+					'title' => elgg_echo('minds:remind'),
+					'is_action' => true,
+					'priority' => 1,
+				);
 			$return[] = ElggMenuItem::factory($options);
 		}
 	}
