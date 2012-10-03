@@ -25,7 +25,7 @@
 		'href' => false,
 		'class' => 'uiVideoInline archive',
 		'video_id'=> $object->kaltura_video_id,
-		'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($object->kaltura_video_id, 450, 253, 100) . '\' width="450px"/>',
+		'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($object->kaltura_video_id, 525, 0, 100) . '\' width="525px"/>',
 		'title' => $object->title,
 	));
 

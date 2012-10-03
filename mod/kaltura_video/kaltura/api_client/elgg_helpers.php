@@ -433,8 +433,8 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 		$view = $params['view'];
 		$context = elgg_get_context();
 		if($context == 'news'){
-			$height = 253;
-    		$width = 450;
+			$height = 295;
+    		$width = 525;
 		} else {
 			$height = 214;
     		$width = 380;
