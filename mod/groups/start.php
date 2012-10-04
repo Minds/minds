@@ -297,7 +297,7 @@ function groups_icon_url_override($hook, $type, $returnvalue, $params) {
 	}
 	if ($icontime) {
 		// return thumbnail
-		return "groupicon/$group->guid/$size/$icontime.jpg";
+		return "groupicon/$group->guid/$size";
 	}
 
 	return "mod/groups/graphics/default{$size}.gif";
