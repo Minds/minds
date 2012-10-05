@@ -129,6 +129,20 @@ function minds_set_metatags($name, $content){
 	
 }
 
+function minds_get_fbimage($description) {
+  
+  global $post, $posts;
+  $fbimage = '';
+  $output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i',
+  $description, $matches);
+  $fbimage = $matches [1] [0];
+ 
+  if(empty($fbimage)) {
+    $fbimage = elgg_get_site_url() . 'mod/minds/graphics/minds_logo.png';
+  }
+  return $fbimage;
+}
+
 elgg_register_event_handler('init','system','minds_social_init');		
 
 ?>

@@ -53,6 +53,7 @@ function blog_get_page_content_read($guid = NULL) {
 	minds_set_metatags('og:type', 'article');
 	minds_set_metatags('og:url',$blog->getURL());
 	minds_set_metatags('og:title',$blog->title);
+	minds_set_metatags('og:image', minds_get_fbimage($blog->description));
 
 	return $return;
 }
