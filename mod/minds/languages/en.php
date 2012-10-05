@@ -93,6 +93,7 @@ $english = array(
     
 	//river
 	'river:remind:object:wall' => '%s reMinded %s\'s thought',
+	'river:remind:object:kaltura' => '%s reMinded %s\'s media',
 	
 	/* Quota 
 	 */

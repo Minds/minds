@@ -251,7 +251,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 		}
 		
 		//Remind button
-		if($object->getSubtype() == 'wallpost'){ //only display remind for wallposts (thoughts)
+		if($object->getSubtype() == 'wallpost' || $object->getSubtype() == 'kaltura_video'){
 			$options = array(
 					'name' => 'remind',
 					'href' => "action/minds/remind?guid=$object->guid",
