@@ -9,7 +9,7 @@
 
 function minds_social_init(){
 										
-	elgg_extend_view('css/elgg','mind_social/css');
+	elgg_extend_view('css/elgg','minds_social/css');
 	
 	elgg_register_class('TwitterOAuth', elgg_get_plugins_path() . "minds_social/vendors/twitteroauth/twitterOAuth.php");
 	
@@ -28,6 +28,8 @@ function minds_social_init(){
 	
 		
  	elgg_extend_view('page/elements/head','minds_social/meta');
+	
+	elgg_extend_view('object/elements/full', 'minds_social/social_footer');
 	
 }
 
