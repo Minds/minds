@@ -10,10 +10,7 @@
     float:left !important;
     display:inline-block !important;
     margin:0 10px 0 0 !important;
+    width:80px;
     border:none;
     overflow:hidden;
-}
-
-.fb-like {
-    width:75px!important;
 }
