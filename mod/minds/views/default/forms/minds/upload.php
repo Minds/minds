@@ -66,7 +66,7 @@ if ($guid) {
 	echo elgg_view('input/hidden', array('name' => 'file_guid', 'value' => $guid));
 }
 
-echo elgg_view('input/submit', array('value' => $submit_label));
+echo elgg_view('input/submit', array('value' => elgg_echo('upload')));
 
 ?>
 </div>
