@@ -6,6 +6,7 @@
  */
 
 $full = elgg_extract('full_view', $vars, FALSE);
+$archive = elgg_extract('archive_view', $vars, FALSE);
 $file = elgg_extract('entity', $vars, FALSE);
 
 if (!$file) {
@@ -93,6 +94,25 @@ if ($full && !elgg_in_context('gallery')) {
 	echo elgg_view_entity_icon($file, 'medium');
 	echo "<p class='subtitle'>$owner_link $date</p>";
 	echo '</div>';
+} elseif ($archive) {
+	$icon = elgg_view('output/img', array(
+		'src' => $file->getIconURL('medium'),
+		'class' => 'elgg-photo',
+		'title' => $file->title,
+		'alt' => $file->title,
+		'width'=>'120px'
+	));
+	$params = array(
+		'entity' => $file,
+		'metadata' => $metadata,
+		'subtitle' => $subtitle,
+		'tags' => $tags,
+		'content' => $excerpt,
+	);
+	$params = $params + $vars;
+	$list_body = elgg_view('object/elements/summary', $params);
+
+	echo elgg_view_image_block($icon, $list_body);
 } else {
 	// brief view
 

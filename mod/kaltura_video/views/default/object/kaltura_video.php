@@ -26,87 +26,57 @@ if(elgg_get_context()=='archive') {
 	//this view is for My videos:
 	
 	
-	echo elgg_view_menu('entity', array(
+$menu = elgg_view_menu('entity', array(
 	'entity' => $ob,
 	'handler' => 'archive',
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
 ));
 
-?>
+$owner = get_entity($ob->owner_guid);
+$owner_link = elgg_view('output/url', array(
+	'text' => $owner->name,
+	'href' => 'archive/owner/' . $owner->username
+));
 
-<div class="contentWrapper singleview">
+$title = elgg_view('output/url', array(
+	'text' => $ob->title,
+	'href' => $ob->getURL(),
+));
 
-<div class="kalturavideoitem" id="kaltura_video_<?php echo $ob->kaltura_video_id; ?>">
+$description = $ob->description ? substr(strip_tags($ob->description), 0, 125) . '...' : '';
 
-<div class="left">
-<p><a href="<?php echo $vars['entity']->getURL(); ?>" class="play"><img src="<?php echo kaltura_get_thumnail($ob->kaltura_video_id, 120, 68, 100); ?>" height="68px" width="120px" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
-</div>
+$subtitle .= 
+	elgg_echo('by') . ' ' . $owner_link . ' ' .
+	
+	elgg_echo("kalturavideo:label:length") . ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>' .
 
-<div class="main_block">
+	elgg_echo("kalturavideo:label:plays") . ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.intval($ob->kaltura_video_plays).'</strong>';
 
-<h3><a href="<?php echo $vars['entity']->getURL(); ?>"><?php echo $vars['entity']->title; ?></a></h3>
 
-<p class='description'>
-	<?php echo $ob->description ? substr(strip_tags($ob->description), 0, 125) . '...' : '';?>
-</p>
+'<b class="kaltura_video_created">'. elgg_view_friendly_time($ob->time_created).'</b> by ' . $owner_link . elgg_echo("kalturavideo:label:length") . '<strong class="kaltura_video_length">' . $ob->kaltura_video_length . '</strong>';
 
-<p class="stamp">
-<?php echo ' <b class="kaltura_video_created">'. elgg_view_friendly_time($ob->time_created).'</b>'; ?>
- <?php echo elgg_echo('by'); ?> <a href="<?php echo $CONFIG->wwwroot.'archive/owner/'.$owner->username; ?>" title="<?php echo htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos")); ?>"><?php echo $owner->name; ?></a>
+$params = array(
+	'entity' => $album,
+	'title' => $title,
+	'metadata' => $menu,
+	'subtitle' => $subtitle,
+	'content'=>$description,
+	'tags' => elgg_view('output/tags', array('tags' => $ob->tags)),
+);
+$params = $params + $vars;
+$summary = elgg_view('object/elements/summary', $params);
 
-<?php
-if($group) {
-	echo elgg_echo('ingroup')." <a href=\"{$CONFIG->wwwroot}arhive/owner/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
-}
+$icon = elgg_view('output/img', array(
+			'src' => kaltura_get_thumnail($ob->kaltura_video_id, 120, 68, 100),
+			'class' => 'elgg-photo',
+			'title' => $ob->title,
+			'alt' => $ob->title,
+			'width'=>'120px',
+			'height' => '68px'
+	));
+echo elgg_view_image_block($icon, $summary);
 
-echo elgg_echo("kalturavideo:label:length"); echo ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>'; ?>
-
-<?php echo elgg_echo("kalturavideo:label:plays"); echo ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.intval($ob->kaltura_video_plays).'</strong>'; ?>
-
-</p>
-<?php if(1==2){?>
-<p class="options">
-
-<a href="<?php echo $vars['entity']->getURL(); ?>" class="submit_button"><?php echo elgg_echo("kalturavideo:label:view"); ?></a>
-
-<?php
-if($vars['entity']->canEdit()) {
-
-?>
-	<a href="<?php echo $vars['url']; ?>mod/kaltura_video/edit.php?videopost=<?php echo $vars['entity']->getGUID(); ?>"  class="submit_button"><?php echo elgg_echo("kalturavideo:label:editdetails"); ?></a>
-<?php
-	echo elgg_view("output/confirmlink",array("text" => elgg_echo("kalturavideo:label:delete"), "href" => $vars['url'] . 'action/kaltura_video/delete?delete_video=' . $ob->kaltura_video_id , "confirm" => elgg_echo("kalturavideo:prompt:delete") , "class" => 'submit_button'));
-?>
-
-	</p>
-	<p class="options" style="padding-top:0;">
-<?php
-
-	echo elgg_echo('access').': ';
-	echo kaltura_view_select_privacity($metadata->kaltura_video_id,$access_id,$group,$metadata->kaltura_video_collaborative);
-
-}
-elseif($metadata->kaltura_video_cancollaborate) {
-
-?>
-	<a href="#" rel="<?php echo $metadata->kaltura_video_id; ?>" class="submit_button edit" title="<?php echo htmlspecialchars(elgg_echo("kalturavideo:text:iscollaborative")); ?>">
-	<img src="<?php echo $CONFIG->wwwroot; ?>mod/kaltura_video/kaltura/images/group.png" alt="<?php echo htmlspecialchars(elgg_echo("kalturavideo:text:iscollaborative")); ?>" style="vertical-align:middle;" />
-	<?php echo elgg_echo("kalturavideo:label:edit"); ?></a>
-
-<?php
-}
-?>
-</p>
-<?php } ?>
-</div>
-
-<div class="clear"></div>
-</div>
-
-</div>
-
-<?php
 }
 elseif(elgg_get_context()=='sidebar') {
 	?>

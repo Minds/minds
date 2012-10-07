@@ -238,12 +238,6 @@ function kaltura_video_page_setup()
 				'text' =>  elgg_echo('kalturavideo:label:trendingvideos'),
 				'priority' => 500
 			));
-			
-			//FILTER MENUS
-			elgg_register_menu_item('filter', array(	'name' => 'archive:top',
-														'text' => elgg_echo('kalturavideo:label:trendingvideos'),
-														'href' => '/archive/top'
-													));
 
 		if (can_write_to_container(0, elgg_get_page_owner_guid()) && elgg_is_logged_in())
 		{

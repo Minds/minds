@@ -48,7 +48,7 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 }
 
 textarea {
-	height: 200px;
+	/*height: 200px;*/
 }
 
 

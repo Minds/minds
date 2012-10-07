@@ -54,7 +54,7 @@ if ($categories) {
 
 ?>
 <div>
-	<label><?php echo elgg_echo('access'); ?></label><br />
+	<label><?php echo elgg_echo('access'); ?></label>
 	<?php echo elgg_view('input/access', array('name' => 'access_id', 'value' => $access_id)); ?>
 </div>
 <div class="elgg-foot">

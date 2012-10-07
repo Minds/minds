@@ -439,7 +439,7 @@ $offset = 0, $timelower = 0, $timeupper = 0) {
 		}
 		return elgg_get_entities(array(
 			'type' => 'object',
-			'subtype' => $subtype,
+			'subtypes' => $subtype,
 			'owner_guids' => $friendguids,
 			'limit' => $limit,
 			'offset' => $offset,
@@ -513,6 +513,7 @@ $listtypetoggle = true, $pagination = true, $timelower = 0, $timeupper = 0) {
 		'offset' => $offset,
 		'limit' => $limit,
 		'full_view' => $full_view,
+		'archive_view' => elgg_get_context() == 'archive' ? true : false,
 		'list_type_toggle' => $listtypetoggle,
 		'pagination' => $pagination,
 	));

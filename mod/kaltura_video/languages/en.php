@@ -279,7 +279,14 @@ Custom players are defined in "Application Studio" sub menu in KMC',
 	'kalturavideo:license:gpl' => 'GPL',
 	
 	'kalturavideo:notconverted' => 'This media is still being converted.',
-
+	
+	/*
+	 * Archive Menus
+	 */
+	'archive:all' => 'Archive: All',
+	'archive:owner' => 'Archive: %s',
+	'archive:top' => 'Archive: Top',
+	'archive:network' => 'Archive: Network',
 );
 
 add_translation("en", $translations);
