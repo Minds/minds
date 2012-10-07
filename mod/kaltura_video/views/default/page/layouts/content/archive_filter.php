@@ -12,7 +12,7 @@
 
 $context = elgg_extract('context', $vars, elgg_get_context());
 
-if (elgg_is_logged_in() && $context) {
+if ($context) {
 	$username = elgg_get_logged_in_user_entity()->username;
 	$filter_context = get_input('filter', 'all');
 
