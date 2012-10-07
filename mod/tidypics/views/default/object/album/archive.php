@@ -54,6 +54,10 @@ if($cover){
 		'alt' => $album->getTitle(),
 		'width'=>'120px'
 	));
+	$icon = elgg_view('output/url', array(
+		'text' => $icon,
+		'href' => $album->getURL()
+	));
 }else{
 	$url = "mod/tidypics/graphics/empty_album.png";
 	$url = elgg_normalize_url($url);

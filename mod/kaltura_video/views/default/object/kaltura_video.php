@@ -75,6 +75,10 @@ $icon = elgg_view('output/img', array(
 			'width'=>'120px',
 			'height' => '68px'
 	));
+$icon = elgg_view('output/url', array(
+		'text' => $icon,
+		'href' => $ob->getURL()
+	));
 echo elgg_view_image_block($icon, $summary);
 
 }

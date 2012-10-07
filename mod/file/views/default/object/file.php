@@ -102,6 +102,10 @@ if ($full && !elgg_in_context('gallery')) {
 		'alt' => $file->title,
 		'width'=>'120px'
 	));
+	$icon = elgg_view('output/url', array(
+		'text' => $icon,
+		'href' => $file->getURL()
+	));
 	$params = array(
 		'entity' => $file,
 		'metadata' => $metadata,
