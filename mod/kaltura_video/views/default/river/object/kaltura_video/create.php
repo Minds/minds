@@ -38,9 +38,16 @@ $object = $vars['item']->getObjectEntity();
 $excerpt = strip_tags($object->excerpt);
 $excerpt = elgg_get_excerpt($excerpt);
 
-echo elgg_view('river/elements/layout', array(
-	'item' => $vars['item'],
-	'message' => $image,
-));
+//@todo - cache this info so that we are not calling the kaltura server each time @MH
+$kmodel = KalturaModel::getInstance();
+$mediaEntry = $kmodel->getEntry($object->kaltura_video_id);
+
+if($mediaEntry->status >= 2){
+	
+	echo elgg_view('river/elements/layout', array(
+		'item' => $vars['item'],
+		'message' => $image,
+	));
+}
 
 ?>
