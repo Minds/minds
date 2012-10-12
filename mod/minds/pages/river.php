@@ -57,7 +57,6 @@ switch ($page_type) {
 		}
 		$page_filter = 'friends';
 		$options['subject_guids'] = array_merge(array(elgg_get_logged_in_user_guid()), $friend_guids);
-		var_dump($options['subject_guids']);
 		break;
 }
 
