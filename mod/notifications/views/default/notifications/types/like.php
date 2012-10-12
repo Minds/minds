@@ -4,6 +4,7 @@ $entity = elgg_extract('entity', $vars);
 
 $actor = get_entity($entity->from_guid);
 $object = get_entity($entity->object_guid);
+if($object){
 $subtype = $object->getSubtype();
 if($subtype == 'thewire'){
 	$object_title = 'your post';
@@ -29,3 +30,4 @@ $body .= "<div class='notify_description'>" .  $description . "</div>";
 $body .= "<span class='notify_time'>" . elgg_view_friendly_time($entity->time_created) . "</span>";
 
 echo $body;
+}
