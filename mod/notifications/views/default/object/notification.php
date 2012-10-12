@@ -37,4 +37,10 @@ if ($read != 1) {
 	$entity->read = 1;
 	$entity->save();
 }
+$object = get_entity($entity->object_guid);
+
+if($object)
 echo elgg_view_image_block($owner_icon, $body, $vars);
+else
+echo ' ';
+
