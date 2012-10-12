@@ -22,13 +22,14 @@ if (empty($body)) {
 $to = get_entity($to_guid);
 if($to instanceof ElggGroup){
 	$access_id = $to->group_acl;
+	$container_guid = $to_guid;
 }
 
 //elgg_set_context('wall_post');
 
 $post = new WallPost;
 $post->to_guid = $to_guid;
-$post->container_guid = $to_guid;
+$post->container_guid = $container_guid;
 $post->owner_guid = $from_guid;
 $post->access_id = $access_id;
 $post->message = $message;
