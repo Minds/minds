@@ -200,7 +200,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 #dashboard_navigation {
 	margin-top:20px;
     width:100%;
-    font-size:12px;
+    font-size:13px;
 }
 #dashboard_navigation ul {
 	margin:0 0 15px 0;
