@@ -109,12 +109,7 @@ function selectAccess2 ($data,$default) {
       <label><?php echo elgg_echo("livestreaming:overLink"); ?>:</label><br />
       <textarea name="overLink" cols="32" rows="3"><?php echo $overLink; ?></textarea> <br />
       <?php echo elgg_echo("livestreaming:overLink_descr"); ?><br /><br />
-			<label><?php echo elgg_echo("livestreaming:filterRegex"); ?>:</label><br />
-			<input name='filterRegex' value='<?php echo $filterRegex; ?>' size="70"> <br />
-			<?php echo elgg_echo("livestreaming:filterRegex_descr"); ?><br /><br />
-			<label><?php echo elgg_echo("livestreaming:filterReplace"); ?>:</label><br />
-			<input name='filterReplace' value='<?php echo $filterReplace; ?>' maxlength="22" size="22"> <br />
-			<?php echo elgg_echo("livestreaming:filterReplace_descr"); ?><br /><br />
+			
       <label><?php echo elgg_echo("livestreaming:userList"); ?>:</label><br />
       <textarea name="userList" cols="32" rows="3"><?php echo $userList; ?></textarea> <br />
       <?php echo elgg_echo("livestreaming:userList_descr"); ?><br /><br />

@@ -34,29 +34,7 @@ if (defined('ACCESS_DEFAULT')) $access_id = ACCESS_DEFAULT;
 else $access_id=2;
 
 ?>
-			<script language="JavaScript">
-			function censorName()
-			{
-				document.roomForm.room.value = document.roomForm.room.value.replace(/^[\s]+|[\s]+$/g, '');
-				document.roomForm.room.value = document.roomForm.room.value.replace(/[^0-9a-zA-Z_\-]+/g, '-');
-				document.roomForm.room.value = document.roomForm.room.value.replace(/\-+/g, '-');
-				document.roomForm.room.value = document.roomForm.room.value.replace(/^\-+|\-+$/g, '');
-				if (document.roomForm.room.value.length>2) return true;
-				else return false;
-			}
-
-			function textCounter(field,cntfield,maxlimit) {
-				// if too long...trim it!
-				if (field.value.length > maxlimit) {
-					field.value = field.value.substring(0, maxlimit);
-				} else {
-					// otherwise, update 'characters left' counter
-					cntfield.value = maxlimit - field.value.length;
-				}
-			}
-
-			</script>
-
+			
 <div class="livestreaming_new">
 
 	<form action="<?php echo elgg_add_action_tokens_to_url($vars['url']."action/livestreaming/create"); ?>" method="post" name="roomForm">
@@ -93,14 +71,9 @@ else $access_id=2;
 			<input name='overLogo' value="logo.png" size="10"><br />
 			<?php echo elgg_echo("livestreaming:overLogo_descr"); ?><br /><br />
       <label><?php echo elgg_echo("livestreaming:overLink"); ?>:</label><br />
-      <textarea name="overLink" cols="32" rows="3">http://www.videowhisper.com</textarea> <br />
+      <textarea name="overLink" cols="32" rows="3">http://www.minds.com</textarea> <br />
       <?php echo elgg_echo("livestreaming:overLink_descr"); ?><br /><br />
-			<label><?php echo elgg_echo("livestreaming:filterRegex"); ?>:</label><br />
-			<input name='filterRegex' value='(?i)(fuck|cunt)(?-i)' size="70"> <br />
-			<?php echo elgg_echo("livestreaming:filterRegex_descr"); ?><br /><br />
-			<label><?php echo elgg_echo("livestreaming:filterReplace"); ?>:</label><br />
-			<input name='filterReplace' value=' ** ' maxlength="22" size="22"> <br />
-			<?php echo elgg_echo("livestreaming:filterReplace_descr"); ?><br /><br />
+
       <label><?php echo elgg_echo("livestreaming:userList"); ?>:</label><br />
       <textarea name="userList" cols="32" rows="3"></textarea> <br />
       <?php echo elgg_echo("livestreaming:userList_descr"); ?><br /><br />
