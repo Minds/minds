@@ -341,3 +341,29 @@ li.elgg-menu-item-rss{
 }
 }
  */
+/** 
+ * Upload Form
+ */
+.elgg-form-minds-upload .progressbox {
+    border: 1px solid #0099CC;
+    padding: 1px;
+    position:relative;
+    width:400px;
+    border-radius: 3px;
+    margin: 10px;
+    display:none;
+    text-align:left;
+}
+.elgg-form-minds-upload .progressbar {
+    height:20px;
+    border-radius: 3px;
+    background-color: #003333;
+    width:1%;
+}
+.elgg-form-minds-upload .statustxt {
+    float:left;
+
+    display:inline-block;
+    color: #000000;
+}
+ */

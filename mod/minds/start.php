@@ -32,6 +32,7 @@ function minds_init(){
 	$minds_js = elgg_get_simplecache_url('js', 'minds');
 	elgg_register_js('minds.js', $minds_js);
 	
+	
 	//register inline js player
 	$uiVideoInline = elgg_get_simplecache_url('js', 'uiVideoInline');
 	elgg_register_js('uiVideoInline', $uiVideoInline);
@@ -42,6 +43,10 @@ function minds_init(){
 	elgg_unregister_js('jquery');
 	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
 	elgg_load_js('jquery');
+	
+	//register jquery.form
+	elgg_register_js('jquery.form', elgg_get_site_url() . 'mod/minds/vendors/jquery/jquery.form.js');
+	elgg_load_js('jquery.form');
 		
 	//set the custom index
 	elgg_register_plugin_hook_handler('index', 'system','minds_index');
