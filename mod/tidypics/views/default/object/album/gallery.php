@@ -10,7 +10,7 @@
 
 $album = elgg_extract('entity', $vars);
 
-$album_cover = elgg_view_entity_icon($album, 'small');
+$album_cover = elgg_view_entity_icon($album, 'small', array('href'=>$album->getURL()));
 
 $header = elgg_view('output/url', array(
 	'text' => $album->getTitle(),
