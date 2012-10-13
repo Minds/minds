@@ -62,6 +62,42 @@ $english = array(
 	
 	'river:friend:user:default' => "%s subscribed to %s",
 	
+	/**
+ * Emails
+ */
+	'email:settings' => "Email settings",
+	'email:address:label' => "Your email address",
+
+	'email:save:success' => "New email address saved.",
+	'email:save:fail' => "Your new email address could not be saved.",
+
+	'friend:newfriend:subject' => "%s has subscribed to you!",
+	'friend:newfriend:body' => "%s has subscribed to you on Minds!
+
+To view their channel, click here:
+
+%s
+
+You cannot reply to this email.",
+
+
+
+	'email:resetpassword:subject' => "Password reset!",
+	'email:resetpassword:body' => "Hi %s,
+
+Your password has been reset to: %s",
+
+
+	'email:resetreq:subject' => "Request for new password.",
+	'email:resetreq:body' => "Hi %s,
+
+Somebody (from the IP address %s) has requested a new password for their account.
+
+If you requested this, click on the link below. Otherwise ignore this email.
+
+%s
+",
+	
 	//river menu
 	'river:trending' => 'Trending',
 	'river:thumbs-up' => 'Thumbs up',
