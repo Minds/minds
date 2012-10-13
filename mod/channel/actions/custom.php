@@ -87,6 +87,8 @@ if ($guid) {
 			$user->text_colour = $text_colour;
 		//if($link_colour)
 			$user->link_colour = $link_colour;
+		//bg_timestamp for updating cached content
+			$user->background_timestamp = time();
 		
 		$user->widget_bg = $widget_bg;
 		$user->widget_head_title_color = $widget_head_title_color;
