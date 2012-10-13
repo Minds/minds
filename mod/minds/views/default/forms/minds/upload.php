@@ -41,6 +41,10 @@ if (!$container_guid) {
                             {
                                 //statustxt.css('color','#fff'); //change status text to white after 50%
                             }
+                        if(percentComplete==100)
+                        	{
+                        		statustxt.html('Upload complete. Please wait until the upload is processed. This could take a few moments depending on the file size.')
+                        	}
                         },
                     complete: function(response) { // on complete
                     	//console.log(response);
