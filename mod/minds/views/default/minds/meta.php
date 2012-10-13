@@ -32,7 +32,7 @@ if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_ge
 	
 	body{
 			
-			background-image:url({$siteURL}mod/channel/background.php?guid=$owner->guid);
+			background-image:url({$siteURL}mod/channel/background.php?guid=$owner->guid&t=$owner->background_timestamp);
 			
 			background-repeat:$owner->background_repeat;
 			
