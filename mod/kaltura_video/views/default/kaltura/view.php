@@ -161,6 +161,7 @@ echo autop($ob->description);
 												'is_action' => true
 										));?>
 </p>
+<?php echo elgg_view('minds_social/social_footer');?>
 <div class="clear"></div>
 
 
@@ -172,28 +173,6 @@ echo autop($ob->description);
 <p><strong><?php echo elgg_echo("kalturavideo:label:sharem");?></strong></p>
 <p><input type="text" class="input-text" value="<?php echo htmlspecialchars($widgetm); ?>" /></p>
 </div>
-<?php
-if($ob->canEdit()) {
-	if(1==2){
-?>
-
-	<!-- options -->
-	<p class="options">
-    
-	<a href="<?php echo $CONFIG->wwwroot; ?>mod/kaltura_video/edit.php?videopost=<?php echo $ob->getGUID(); ?>" rel="<?php echo $metadata->kaltura_video_id; ?>" class="submit_button"><?php echo elgg_echo("kalturavideo:label:editdetails"); ?></a>
-<?php
-
-	echo elgg_view("output/confirmlink",array("text" => elgg_echo("kalturavideo:label:delete"), "href" => $CONFIG->wwwroot . 'action/kaltura_video/delete?delete_video=' . $metadata->kaltura_video_id , "confirm" => elgg_echo("kalturavideo:prompt:delete") , "class" => 'submit_button'));
-
-	echo ' '.elgg_echo('access').': ';
-	echo kaltura_view_select_privacity($metadata->kaltura_video_id,$access_id,$group,$metadata->kaltura_video_collaborative);
-
-?>
-	</p>
-<?php
-}
-}
-?>
 
 </div>
 
