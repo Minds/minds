@@ -44,7 +44,7 @@ if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_ge
 			
 		}
 		
-	body, p, h1,h2,h3,h4,h5, label{
+	h1,h2,h3,h4,h5, .elgg-module-widget{
 			
 		color:$owner->text_colour;
 	}
