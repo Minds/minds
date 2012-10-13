@@ -39,7 +39,7 @@ if (!$container_guid) {
                         statustxt.html(percentComplete + '%'); //update status text
                         if(percentComplete>50)
                             {
-                                statustxt.css('color','#fff'); //change status text to white after 50%
+                                //statustxt.css('color','#fff'); //change status text to white after 50%
                             }
                         },
                     complete: function(response) { // on complete
