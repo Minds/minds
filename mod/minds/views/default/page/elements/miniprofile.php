@@ -22,9 +22,18 @@ $wallposts = elgg_get_entities($options);
 <!-- /river_avatar -->
 <div id="dashboard_navigation">
 <ul>
-	<li><?php echo elgg_echo('friends:of');?>: <?php echo count($user->getFriendsOf());?></li>
-	<li><?php echo elgg_echo('friends');?>: <?php echo count($user->getFriends());?></li>
-	<li><?php echo elgg_echo('minds:thoughts');?>: <?php echo count($wallposts); ?></li>
+	<li><?php echo elgg_view('output/url', array( 	'text' => elgg_echo('friends:of') . ': ' . count($user->getFriendsOf()),
+													'href' => 'friendsof/'. $user->username
+												));?>
+	</li>
+	<li><?php echo elgg_view('output/url', array( 	'text' => elgg_echo('friends') . ': ' . count($user->getFriends()),
+													'href' => 'friends/'. $user->username
+												));?>
+	</li>
+	<li><?php echo elgg_view('output/url', array( 	'text' => elgg_echo('minds:thoughts') . ': ' . count($wallposts),
+													'href' => 'wall/'. $user->username
+												));?>
+	</li>
 </ul>
 </ul>
 </div> <!-- /dashboard_navigation -->
