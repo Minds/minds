@@ -23,9 +23,12 @@
 		$page_owner = get_entity($videopost->getOwnerGUID());
 		
 	//set the tags
+	$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'kaltura_video');
+	$partnerId = elgg_get_plugin_setting('partner_id', 'kaltura_video');
+
 	$widgetUi = elgg_get_plugin_setting('custom_kdp', 'kaltura_video');
 		
-	$video_location = 'http://www.minds.tv/index.php/kwidget/wid/_100/uiconf_id/' . $widgetUi . '/entry_id/'. $videopost->kaltura_video_id;
+	$video_location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $videopost->kaltura_video_id;
 		
 	 minds_set_metatags('og:type', 'video.other');
 	 minds_set_metatags('og:image', $videopost->kaltura_video_thumbnail);
