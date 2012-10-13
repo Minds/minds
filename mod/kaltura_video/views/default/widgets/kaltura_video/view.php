@@ -59,7 +59,7 @@ if($result) {
 		}
 	}
 	$body .= '<div class="kaltura_video_widget last">';
-	$body .= '<a class="tit" href="'.$CONFIG->wwwroot.'pg/kaltura_video/'.$owner->username.'">'.elgg_echo("kalturavideo:label:morevideos").'</a>';
+	$body .= '<a class="tit" href="'.elgg_get_site_url().'archive/owner/'.$owner->username.'">'.elgg_echo("kalturavideo:label:morevideos").'</a>';
 	$body .= "</div>\n";
 }
 else {
