@@ -24,6 +24,10 @@ if (!$container_guid) {
         var myform          = $(".elgg-form-minds-upload");
         var output          = $("#output");
         var completed       = '0%';
+        
+        //test if the browser support xmlhttprequest
+        var xhr = new XMLHttpRequest();
+        if(xhr && ('upload' in xhr)){
  
                 $(myform).ajaxForm({
                     beforeSend: function() { //brfore sending form
@@ -54,6 +58,9 @@ if (!$container_guid) {
                         progressbox.slideUp(); // hide progressbar
                     }
             });
+        } else {
+        	progressbox.hide();
+        }
 </script>
 <div>
 	<label><?php echo elgg_echo('minds:upload:file'); ?></label><br />
