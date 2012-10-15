@@ -241,7 +241,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 		$subject = $item->getSubjectEntity();
 		
 		//Delete button
-		elgg_unregister_menu_item('delete');
+		elgg_unregister_menu_item('river', 'delete'); 
 		if ($subject->canEdit() || $object->canEdit()) {
 			$options = array(
 				'name' => 'delete',
