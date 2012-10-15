@@ -9,6 +9,8 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/engine/start.php');
 
+gatekeeper();
+
 header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
 
 /**
