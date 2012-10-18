@@ -8,6 +8,7 @@
 	$og_description = get_input('og:description');
 	$og_image = get_input('og:image');
 	$og_video = get_input('og:video');
+	$og_video_secure = get_input('og:video:secure_url');
 	$og_video_type = get_input('og:video:type');
 	$og_video_width = get_input('og:video:width');
 	$og_video_height = get_input('og:video:height');
@@ -24,6 +25,8 @@
   	echo "<meta property=\"og:image\"  content=\"$og_image\" />";
 	if($og_video)
 	echo "<meta property=\"og:video\" content=\"$og_video\">";
+	if($og_video_secure)
+	echo "<meta property=\"og:video:secure_url\" content=\"$og_video_secure\">";
 	if($og_video_type)
     echo "<meta property=\"og:video:type\" content=\"$og_video_type\">";
     if($og_video_width)
