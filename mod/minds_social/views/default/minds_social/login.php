@@ -12,7 +12,7 @@ $return_url = elgg_get_site_url() . 'social/fb/login';
 $login_url = $facebook->getLoginUrl(array(
 				'redirect_uri' => $return_url,
 				'canvas' => 1,
-				'scope' => 'publish_stream, offline_access',
+				'scope' => 'publish_stream,email, offline_access',
 				'ext_perm' =>  'offline_access',
 			));
 			
