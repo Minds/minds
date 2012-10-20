@@ -147,8 +147,5 @@ function minds_social_facebook_login(){
 			}
 		}
 	}
-	
-	var_dump($session);
-	exit;
 }
 
