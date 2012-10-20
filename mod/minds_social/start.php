@@ -26,6 +26,7 @@ function minds_social_init(){
 	
 	elgg_register_event_handler('create','object','minds_social_action');
 	
+	elgg_extend_view('login/extend', 'minds_social/login');
 		
  	elgg_extend_view('page/elements/head','minds_social/meta');
 	
@@ -50,6 +51,8 @@ function minds_social_page_handler($page)
 			case 'auth':
 				minds_social_facebook_auth();
 				break;
+			case 'login':
+				minds_social_facebook_login();
 			default:
 				forward();
 				break;
