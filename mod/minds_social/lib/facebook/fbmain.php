@@ -64,14 +64,14 @@ function minds_social_facebook_login(){
 	$options = array(
 		'type' => 'user',
 		'plugin_user_setting_name_value_pairs' => array(
-			'minds_social_facebook_uid' => $session['uid'],
+			'minds_social_facebook_uid' => is_array($session) ? $session['uid'] : $session,
 			'minds_social_facebook_access_token' => $session['access_token'],
 		),
 		'plugin_user_setting_name_value_pairs_operator' => 'OR',
 		'limit' => 0
 	);
 
-	$users = elgg_get_entities_from_plugin_user_settings($options);
+	$users = elgg_get_entities_from_plugin_user_settings($options);	
 	
 	if ($users){
                  
@@ -99,7 +99,7 @@ function minds_social_facebook_login(){
 		$email= $data['email'];
 		
 		$users= get_user_by_email($email);
-		
+	
 		if(!$users){
 			//try and get the facebook username, if not - use their name
 			$username = $data->username;
@@ -144,6 +144,16 @@ function minds_social_facebook_login(){
 				// register user's access tokens
 				elgg_set_plugin_user_setting('minds_social_facebook_uid', $session);
 				elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+			}
+		}else{
+			try {
+				login($users[0]);
+				forward('news');
+				// re-register at least the core language file for users with language other than site default
+				register_translations(dirname(dirname(__FILE__)) . "/languages/");
+			} catch (LoginException $e) {
+				register_error($e->getMessage());
+				forward(REFERER);
 			}
 		}
 	}
