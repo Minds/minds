@@ -120,6 +120,13 @@ function minds_social_facebook_login(){
 				elgg_clear_sticky_form('register');
 				
 				$new_user = get_entity($guid);
+				
+				//get our access token 
+				$access_token = $facebook->getAccessToken();
+			
+				// register user's access tokens
+				elgg_set_plugin_user_setting('minds_social_facebook_uid', $session);
+				elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 	
 				//trigger the validator plugins
 				$params = array(
@@ -137,13 +144,7 @@ function minds_social_facebook_login(){
 					// for the plugin hooks system.
 					throw new RegistrationException(elgg_echo('registerbad'));
 				}
-				
-				//get our access token 
-				$access_token = $facebook->getAccessToken();
 			
-				// register user's access tokens
-				elgg_set_plugin_user_setting('minds_social_facebook_uid', $session);
-				elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 			}
 		}else{
 			try {
