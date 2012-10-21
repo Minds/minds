@@ -89,7 +89,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
     padding:4px;
 
 }
-.minds_index > object{
+.minds_index > .video{
 	width:445px;
 	margin-top:10px;
 	float:left;
