@@ -81,7 +81,8 @@ BODY;
 				-moz-background-size: cover;
 				-o-background-size: cover;
 				background-size: cover;
-			}";
+			}
+		.elgg-page-footer, .elgg-menu-footer > li > a { color:#FFF; }";
 	}
 	echo '</style>';
 	

@@ -112,7 +112,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 .minds_index > .splash{
 	width:500px;
 	font-size:52px;
-	font-weight: bold;
+	font-weight: normal;
 	text-align:center;
 	line-height:75px;
 	color:#FEFEFE;
