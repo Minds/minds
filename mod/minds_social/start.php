@@ -26,7 +26,7 @@ function minds_social_init(){
 	
 	elgg_register_event_handler('create','object','minds_social_action');
 	
-	elgg_extend_view('login/extend', 'minds_social/login');
+	elgg_extend_view('forms/login', 'minds_social/login');
 		
  	elgg_extend_view('page/elements/head','minds_social/meta');
 	
@@ -64,6 +64,9 @@ function minds_social_page_handler($page)
 				break;
 			case 'forward':
 				minds_social_twitter_forward();
+				break;
+			case 'login':
+				minds_social_twitter_login();
 				break;
 			default:
 				forward();
