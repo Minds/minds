@@ -24,10 +24,10 @@ $split = explode('/', $request);
 $siteURL = elgg_get_site_url();
 
 //if(in_array('channel', $split)){
-if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news'){
+if(elgg_get_context() == 'channel' || elgg_get_context() == 'main' || elgg_get_context() == 'profile' || elgg_get_context() == 'news'){
 	echo '<style>';
 
-	if($owner->background || $owner->text_colour || $owner->link_colour)
+	if($owner->background || $owner->text_colour || $owner->link_colour){
 	echo <<<BODY
 	
 	body{
@@ -69,7 +69,20 @@ if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_ge
 		
 	
 BODY;
-
+	}elseif(elgg_get_context() != 'channel') {
+	$bgs = array('city.jpg', 'crowd-1.jpg', 'sunrise-1.jpg', 'space-1.jpg', 'space-2.jpg', 'space-3.jpg');
+	$rand_bg = $bgs[rand(0, 5)];
+	echo "body{
+				background-image:url(mod/minds/graphics/bg/{$rand_bg}); 
+				background-attachment:fixed;
+				background-position: top center;
+				background-repeat:no-repeat;
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover;
+			}";
+	}
 	echo '</style>';
 	
 }

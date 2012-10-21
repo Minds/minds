@@ -90,7 +90,9 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 
 }
 .minds_index > object{
+	width:445px;
 	margin-top:10px;
+	float:left;
 	background:#000;
 }
 .minds_index > .earlyAccess{
@@ -106,6 +108,16 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	float:left;
 	margin:0 5px;
 	padding:5px;
+}
+.minds_index > .splash{
+	width:500px;
+	font-size:52px;
+	font-weight: bold;
+	text-align:center;
+	line-height:75px;
+	color:#FEFEFE;
+	margin-top:10px;
+	float:right;
 }
 /******************
  ** CUSTOM RIVER **
