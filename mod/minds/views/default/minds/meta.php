@@ -69,7 +69,7 @@ if(elgg_get_context() == 'channel' || elgg_get_context() == 'main' || elgg_get_c
 		
 	
 BODY;
-	}elseif(elgg_get_context() != 'channel') {
+	}elseif(elgg_get_context() != 'channel' && elgg_get_site_url() != 'http://www.minds.com/') {
 	$bgs = array('city.jpg', 'crowd-1.jpg', 'sunrise-1.jpg', 'space-1.jpg', 'space-2.jpg', 'space-3.jpg');
 	$rand_bg = $bgs[rand(0, 5)];
 	echo "body{
