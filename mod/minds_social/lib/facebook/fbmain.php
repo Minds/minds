@@ -49,4 +49,114 @@ function minds_social_facebook_auth(){
 	forward(REFERER);
 	
 }
+/**
+ * Begin the signin process for facebook
+ */
+function minds_social_facebook_login(){
+	$facebook = minds_social_facebook_init();
+	
+	if (!$session = $facebook->getUser()) {
+		forward(REFERER);
+	}
+	
+	// attempt to find user and log them in.
+	// else, create a new user.
+	$options = array(
+		'type' => 'user',
+		'plugin_user_setting_name_value_pairs' => array(
+			'minds_social_facebook_uid' => is_array($session) ? $session['uid'] : $session,
+			'minds_social_facebook_access_token' => $session['access_token'],
+		),
+		'plugin_user_setting_name_value_pairs_operator' => 'OR',
+		'limit' => 0
+	);
+
+	$users = elgg_get_entities_from_plugin_user_settings($options);	
+	
+	if ($users){
+                 
+		if (count($users) == 1 && login($users[0])){
+			system_message(elgg_echo('facebook_connect:login:success'));
+			elgg_set_plugin_user_setting('access_token', $session['access_token'], $users[0]->guid);
+			
+			if(empty($users[0]->email)) {
+				$data = $facebook->api('/me');
+				$email= $data['email'];
+				$user = get_entity($users[0]->guid);
+				$user->email = $email;
+				$user->save();
+			}
+			
+		} else {
+			system_message(elgg_echo('facebook_connect:login:error'));
+		}
+
+       
+       forward();
+	} else {
+		// need facebook account credentials
+		$data = $facebook->api('/me');     
+		$email= $data['email'];
+		
+		$users= get_user_by_email($email);
+	
+		if(!$users){
+			//try and get the facebook username, if not - use their name
+			$username = $data->username;
+			if(!$data->username){
+				$username = str_replace(' ', '', strtolower($data['name']));
+			}
+			while (get_user_by_username($username)){
+				$username = $username . '.' . rand(0,100);
+			}
+			
+			$name = $data['name'];
+			$password = generate_random_cleartext_password();
+			$email = $data['email'];
+			
+			$guid = register_user($username, $password, $name, $email);
+			
+			if($guid) {
+				elgg_clear_sticky_form('register');
+				
+				$new_user = get_entity($guid);
+				
+				//get our access token 
+				$access_token = $facebook->getAccessToken();
+			
+				// register user's access tokens
+				elgg_set_plugin_user_setting('minds_social_facebook_uid', $session);
+				elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+	
+				//trigger the validator plugins
+				$params = array(
+					'user' => $new_user,
+					'password' => $password,
+					'friend_guid' => $friend_guid,
+					'invitecode' => $invitecode
+				);
+	
+				// @todo should registration be allowed no matter what the plugins return?
+				if (!elgg_trigger_plugin_hook('register', 'user', $params, TRUE)) {
+					$new_user->delete();
+					// @todo this is a generic messages. We could have plugins
+					// throw a RegistrationException, but that is very odd
+					// for the plugin hooks system.
+					throw new RegistrationException(elgg_echo('registerbad'));
+				}
+			
+			}
+		}else{
+			try {
+				login($users[0]);
+				forward('news');
+				// re-register at least the core language file for users with language other than site default
+				register_translations(dirname(dirname(__FILE__)) . "/languages/");
+			} catch (LoginException $e) {
+				register_error($e->getMessage());
+				forward(REFERER);
+			}
+		}
+	}
+}
 
