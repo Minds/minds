@@ -115,7 +115,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	font-weight: normal;
 	text-align:center;
 	line-height:75px;
-	color:#FEFEFE;
+	color:#666;
 	margin-top:10px;
 	float:right;
 }
