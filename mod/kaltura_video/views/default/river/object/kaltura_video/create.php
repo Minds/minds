@@ -23,11 +23,12 @@
 	elgg_load_js('uiVideoInline');
 	$image = elgg_view('output/url', array(
 		'href' => false,
-		'class' => 'uiVideoInline archive',
+		//'class' => 'uiVideoInline archive',
 		'video_id'=> $object->kaltura_video_id,
 		'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($object->kaltura_video_id, 525, 0, 100) . '\' width="525px"/>',
 		'title' => $object->title,
 	));
+//$image = kaltura_create_generic_widget_html ( $object->kaltura_video_id , 'news' );
 
 ?>
 
