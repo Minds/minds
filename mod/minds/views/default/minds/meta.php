@@ -82,7 +82,8 @@ BODY;
 				-o-background-size: cover;
 				background-size: cover;
 			}
-		.elgg-page-footer, .elgg-menu-footer > li > a { color:#FFF; }";
+		.elgg-page-footer, .elgg-menu-footer > li > a { color:#FFF; }
+		.minds_index > .splash{ color:#FFF; }";
 	}
 	echo '</style>';
 	
