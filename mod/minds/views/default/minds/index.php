@@ -28,7 +28,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 			allowFullScreen="true" 
 			allowNetworking="all" 
 			allowScriptAccess="always" 
-			height="550" width="980" bgcolor="#000000" 
+			height="551" width="980" bgcolor="#000000" 
 			xmlns:dc="http://purl.org/dc/terms/" 
 			xmlns:media="http://search.yahoo.com/searchmonkey/media/" 
 			rel="media:video" 
