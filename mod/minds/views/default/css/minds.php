@@ -110,7 +110,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	padding:5px;
 }
 .minds_index > .splash{
-	font-size:52px;
+	font-size:50px;
 	font-weight: normal;
 	text-align:center;
 	line-height:75px;
