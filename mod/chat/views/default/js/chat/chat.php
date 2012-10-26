@@ -7,10 +7,8 @@ elgg.provide('elgg.chat');
 
 elgg.chat.init = function() {
 	if (elgg.is_logged_in()) {
-		setInterval(elgg.chat.markMessageRead, 2000);
-		
-		elgg.chat.getMessages();
-		setInterval(elgg.chat.getMessages, 10000);
+	
+//		elgg.chat.getMessages();
 	}
 };
 

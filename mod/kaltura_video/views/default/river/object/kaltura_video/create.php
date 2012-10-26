@@ -28,6 +28,7 @@
 		'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($object->kaltura_video_id, 525, 0, 100) . '\' width="525px"/>',
 		'title' => $object->title,
 	));
+//$image = kaltura_create_generic_widget_html ( $object->kaltura_video_id , 'news' );
 
 ?>
 
