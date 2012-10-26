@@ -15,6 +15,11 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
     	echo "</div>";
    }
    ?>
+   <div class='splash'>
+		Free & Open Source
+		Social Video
+		Revolution
+	</div>
    <div class='video'>
 		<script type="text/javascript" src="http://local.minds.tv/p/100/sp/10000/embedIframeJs/uiconf_id/6709458/partner_id/100"></script>
 		<object id="kaltura_player_1350827151" 
@@ -23,7 +28,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 			allowFullScreen="true" 
 			allowNetworking="all" 
 			allowScriptAccess="always" 
-			height="250" width="445" bgcolor="#000000" 
+			height="551" width="980" bgcolor="#000000" 
 			xmlns:dc="http://purl.org/dc/terms/" 
 			xmlns:media="http://search.yahoo.com/searchmonkey/media/" 
 			rel="media:video" 
@@ -37,10 +42,5 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 				<param name="movie" value="http://local.minds.tv/index.php/kwidget/cache_st/1350827151/wid/_100/uiconf_id/6709458/entry_id/0_kdt8luvc" />
 				<a rel="media:thumbnail" href="http://local.minds.tv/p/100/sp/10000/thumbnail/entry_id/0_kdt8luvc/width/120/height/90/bgcolor/000000/type/2"></a> <span property="dc:description" content="a remix of some Remixes that discuss Creative Commons, Open Source, and a tidbit about Minds.com in there"></span><span property="media:title" content="Minds Creative Commons Video"></span> <span property="media:width" content="400"></span><span property="media:height" content="300"></span> <span property="media:type" content="application/x-shockwave-flash"></span> 
 		</object>
-	</div>
-	<div class='splash'>
-		Free & Open Source
-		Social Video
-		Revolution
 	</div>
    </div>

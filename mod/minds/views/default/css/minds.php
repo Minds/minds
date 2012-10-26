@@ -89,12 +89,6 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
     padding:4px;
 
 }
-.minds_index > .video{
-	width:445px;
-	margin-top:10px;
-	float:left;
-	background:#000;
-}
 .minds_index > .earlyAccess{
 	width:575px;
 	margin:0 auto 15px auto;
@@ -110,14 +104,14 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	padding:5px;
 }
 .minds_index > .splash{
-	width:500px;
-	font-size:52px;
+	font-size:50px;
 	font-weight: normal;
 	text-align:center;
 	line-height:75px;
 	color:#666;
+	font-family: 'Ubuntu Light', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
 	margin-top:10px;
-	float:right;
+	float:left;
 }
 /******************
  ** CUSTOM RIVER **
