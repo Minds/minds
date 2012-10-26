@@ -89,12 +89,6 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
     padding:4px;
 
 }
-.minds_index > .video{
-	width:445px;
-	margin-top:10px;
-	float:left;
-	background:#000;
-}
 .minds_index > .earlyAccess{
 	width:575px;
 	margin:0 auto 15px auto;
