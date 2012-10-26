@@ -110,7 +110,6 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	padding:5px;
 }
 .minds_index > .splash{
-	width:500px;
 	font-size:52px;
 	font-weight: normal;
 	text-align:center;
@@ -118,7 +117,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	color:#666;
 	font-family: 'Ubuntu Light', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
 	margin-top:10px;
-	float:right;
+	float:left;
 }
 /******************
  ** CUSTOM RIVER **
