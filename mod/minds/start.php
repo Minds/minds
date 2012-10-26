@@ -23,6 +23,10 @@ function minds_init(){
 	
 	//put the quota in account statistics
 	elgg_extend_view('core/settings/statistics', 'minds/quota/statistics', 500);
+	
+	//register the ubuntu font
+	elgg_register_css('ubuntu.font', 'http://fonts.googleapis.com/css?family=Ubuntu:300');
+	elgg_load_css('ubuntu.font');
 
 	//register our own css files
 	$url = elgg_get_simplecache_url('css', 'minds');

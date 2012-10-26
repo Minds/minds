@@ -116,6 +116,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	text-align:center;
 	line-height:75px;
 	color:#666;
+	font-family: 'Ubuntu Light', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
 	margin-top:10px;
 	float:right;
 }
