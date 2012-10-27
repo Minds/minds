@@ -339,6 +339,18 @@ function minds_subscribe_default($hook, $type, $value, $params){
 	
 	return $value;
 }
+/* 
+ * A one time run function to subscribe all users to the minds account
+ */
+function minds_subscribe_multi_default(){
+	$users = elgg_get_entities(array('type'=> 'user', 'limit'=>9999999));
+	$minds = get_user_by_username('minds');
+	
+	foreach($users as $user){
+		$user->addFriend($minds->guid);
+	}
+}
+elgg_register_event_handler('upgrade','system','minds_subscribe_multi_default');
 
 elgg_register_event_handler('init','system','minds_init');		
 
