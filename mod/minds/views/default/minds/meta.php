@@ -27,7 +27,7 @@ $siteURL = elgg_get_site_url();
 if(elgg_get_context() == 'channel' || elgg_get_context() == 'main' || elgg_get_context() == 'profile' || elgg_get_context() == 'news'){
 	echo '<style>';
 
-	if($owner->background || $owner->text_colour || $owner->link_colour){
+	if(($owner->background || $owner->text_colour || $owner->link_colour) && elgg_get_context() != 'main'){
 	echo <<<BODY
 	
 	body{
