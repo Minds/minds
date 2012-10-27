@@ -57,6 +57,12 @@ $configured = $vars['configured'];
                 echo elgg_view('input/text', array('name' => 'params[kaltura_server_url]','id' => 'kaltura_server_url','disabled'=>$configured, 'value' => (elgg_get_plugin_setting('kaltura_server_url',  'kaltura_video') ? elgg_get_plugin_setting('kaltura_server_url',  'kaltura_video') : $CONFIG->wwwroot.'kalturaCE/') ));
             ?>
         </p>
+        <p>
+            <?php echo elgg_echo('kalturavideo:server:ceurl:api'); ?>: <br />
+            <?php
+                echo elgg_view('input/text', array('name' => 'params[kaltura_server_url_api]','id' => 'kaltura_server_url_api','disabled'=>$configured, 'value' => (elgg_get_plugin_setting('kaltura_server_url_api',  'kaltura_video') ? elgg_get_plugin_setting('kaltura_server_url_api',  'kaltura_video') : $CONFIG->wwwroot.'kalturaCE/') ));
+            ?>
+        </p>
     
         <p>
             <?php echo elgg_echo('kalturavideo:server:ceinfo'); ?>
