@@ -241,7 +241,8 @@ class KalturaHelpers
     {
 
 		$type = elgg_get_plugin_setting('kaltura_server_type', 'kaltura_video');
-		$url = elgg_get_plugin_setting('kaltura_server_url', 'kaltura_video');
+		$url = elgg_get_plugin_setting('kaltura_server_url_api', 'kaltura_video');
+		
     	if(empty($url) || $type=='corp' || empty($type)) $url = KALTURA_SERVER_URL;
 
     	// remove the last slash from the url

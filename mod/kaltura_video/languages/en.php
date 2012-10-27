@@ -210,7 +210,10 @@ Objects not created by the Kaltura Elgg Plugin will not be touched.",
 Your trial account includes 10GB of free hosting and streaming.",
 	'kalturavideo:server:ceinfo' => "Kaltura Community Edition is a self-hosted, community supported version of Kaltura's Open Source Online Video Platform.",
 	'kalturavideo:server:moreinfo' => "Find more information about",
+	
 	'kalturavideo:server:ceurl' => "Kaltura CE Server URL",
+	'kalturavideo:server:ceurl:api' => "Kaltura CE API Server URL",
+	
 	'kalturavideo:server:alertchange' => "WARNING: By changing this data will lose your existing videos!
 Are you sure?
 Probably you want to recreate objects after this action.",
