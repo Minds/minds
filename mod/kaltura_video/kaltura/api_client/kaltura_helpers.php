@@ -406,7 +406,8 @@ class KalturaHelpers
 
 	function getContributionWizardUrl($uiConfId)
 	{
-		return KalturaHelpers::getServerUrl() . "/kcw/ui_conf_id/" . $uiConfId;
+		$url = elgg_get_plugin_setting('kaltura_server_url', 'kaltura_video');
+		return $url . "/kcw/ui_conf_id/" . $uiConfId;
 	}
 
 	function getSimpleEditorUrl($uiConfId)

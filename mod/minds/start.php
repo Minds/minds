@@ -70,6 +70,9 @@ function minds_init(){
 	elgg_register_event_handler('create', 'object', 'minds_quota_increment');
 	elgg_register_event_handler('delete', 'object', 'minds_quota_decrement');
 	
+	//subscribe users to the minds channel once they register
+	elgg_register_plugin_hook_handler('register', 'user', 'minds_subscribe_default', 1);
+	
 	$actionspath = elgg_get_plugins_path() . "minds/actions";
 	elgg_register_action("minds/river/delete", "$actionspath/river/delete.php");
 	elgg_register_action("minds/upload", "$actionspath/minds/upload.php");
@@ -312,6 +315,42 @@ function minds_filter($text) {
 
 	return $text;
 }
+
+/*
+ * New users are automatically subscribed to the minds channel
+ */
+function minds_subscribe_default($hook, $type, $value, $params){
+	$user = elgg_extract('user', $params);
+
+	// no clue what's going on, so don't react.
+	if (!$user instanceof ElggUser) {
+		return;
+	}
+
+	// another plugin is requesting that registration be terminated
+	// no need for uservalidationbyadmin
+	if (!$value) {
+		return $value;
+	}
+	
+	$minds = get_user_by_username('minds');
+	
+	$user->addFriend($minds->guid);
+	
+	return $value;
+}
+/* 
+ * A one time run function to subscribe all users to the minds account
+ */
+function minds_subscribe_multi_default(){
+	$users = elgg_get_entities(array('type'=> 'user', 'limit'=>9999999));
+	$minds = get_user_by_username('minds');
+	
+	foreach($users as $user){
+		$user->addFriend($minds->guid);
+	}
+}
+elgg_register_event_handler('upgrade','system','minds_subscribe_multi_default');
 
 elgg_register_event_handler('init','system','minds_init');		
 
