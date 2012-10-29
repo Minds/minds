@@ -62,6 +62,7 @@ function minds_init(){
 	elgg_register_ajax_view('page/components/ajax_list');
 	
 	elgg_register_plugin_hook_handler('register', 'menu:river', 'minds_river_menu_setup');
+	elgg_register_plugin_hook_handler('register', 'menu:entity', 'minds_entity_menu_setup');
 	
 	//setup the generic upload endpoint
 	elgg_register_page_handler('upload', 'minds_upload');
@@ -273,6 +274,33 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 					'priority' => 1,
 				);
 			$return[] = ElggMenuItem::factory($options);
+		}
+	}
+
+	return $return;
+}
+/**
+ * Edit the river menu defaults
+ */
+function minds_entity_menu_setup($hook, $type, $return, $params) {
+	if (elgg_is_logged_in()) {
+
+		$entity = $params['entity'];
+		$handler = elgg_extract('handler', $params, false);
+		
+		if (elgg_get_context() == 'archive') {
+		
+			//Remind button
+				$options = array(
+						'name' => 'remind',
+						'href' => "action/minds/remind?guid=$entity->guid",
+						'text' => elgg_view_icon('share'),
+						'title' => elgg_echo('minds:remind'),
+						'is_action' => true,
+						'priority' => 1,
+					);
+				$return[] = ElggMenuItem::factory($options);
+			
 		}
 	}
 
