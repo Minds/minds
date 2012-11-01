@@ -316,6 +316,10 @@ function kaltura_video_page_handler($page) {
 				include(dirname(__FILE__) . "/pages/kaltura/top.php");
 				return true;
 				break;
+			case 'popular':
+				include(dirname(__FILE__) . "/pages/kaltura/popular.php");
+				return true;
+				break;
 			case 'api_upload':
 				include(dirname(__FILE__) . "/api_upload.php");
 				return true;

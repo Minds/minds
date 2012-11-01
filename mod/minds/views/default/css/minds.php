@@ -185,8 +185,6 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 .is-groups-element li.elgg-menu-item-membership, .is-groups-element li.elgg-menu-item-feature{
   display: none;
 }
-
-}
 #river_avatar {
 	text-align:center;
 	margin-bottom:20px;
@@ -345,8 +343,7 @@ form.elgg-form.hj-ajaxed-comment-save input{
 li.elgg-menu-item-rss{
 	display:none;
 }
-}
- */
+
 /** 
  * Upload Form
  */
@@ -372,4 +369,21 @@ li.elgg-menu-item-rss{
     display:inline-block;
     color: #000000;
 }
- */
+.thumbnail-tile{
+	width:300px;
+	height:150px;
+	margin:10px;
+	background:#EEE;
+	display:block;
+	float:left;
+}
+.thumbnail-tile img{
+	width:100%;
+	height:100%;
+}
+.thumbnail-tile .elgg-menu{
+	margin:-25px 5px;
+}
+.thumbnail-tile .elgg-menu li{
+	float:right;
+}

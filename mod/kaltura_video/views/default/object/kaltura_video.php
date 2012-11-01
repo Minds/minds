@@ -81,6 +81,20 @@ $icon = elgg_view('output/url', array(
 	));
 echo elgg_view_image_block($icon, $summary);
 
+} elseif(elgg_get_context() == 'archive-tiles'){
+	$icon = elgg_view('output/img', array(
+			'src' => kaltura_get_thumnail($ob->kaltura_video_id, 120, 68, 100),
+			'class' => 'elgg-photo',
+			'title' => $ob->title,
+			'alt' => $ob->title,
+			'width'=>'120px',
+			'height' => '68px'
+	));
+	$icon = elgg_view('output/url', array(
+			'text' => $icon,
+			'href' => $ob->getURL()
+		));
+	echo $icon;
 }
 elseif(elgg_get_context()=='sidebar') {
 	?>

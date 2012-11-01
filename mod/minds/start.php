@@ -147,7 +147,7 @@ function minds_pagesetup(){
 	if(elgg_get_context()!='main')	
 	elgg_register_menu_item('topbar', array(
 			'name' => 'minds_logo',
-			'href' => '/',
+			'href' => '/archive/popular',
 			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds/graphics/minds_logo_transparent.png\' class=\'minds_logo\'>',
 			'priority' => 0
 		));
