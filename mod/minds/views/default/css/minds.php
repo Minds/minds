@@ -387,3 +387,6 @@ li.elgg-menu-item-rss{
 .thumbnail-tile .elgg-menu li{
 	float:right;
 }
+.elgg-river-attachments .elgg-photo.large{
+	width:500px;
+}
