@@ -4,4 +4,4 @@ echo elgg_view('input/text', array(	'name'=> 'u', 'placeholder'=>elgg_echo('user
 
 echo elgg_view('input/text', array(	'name'=> 'e', 'placeholder'=>elgg_echo('email')));
  
-echo elgg_view('input/submit', array('value' => elgg_echo('register:early')));
+echo elgg_view('input/submit', array('value' => elgg_echo('register:early'), 'class'=>'elgg-button-action'));
