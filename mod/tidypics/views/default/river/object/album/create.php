@@ -21,7 +21,7 @@ if ($album_river_view == "cover") {
 		$attachments = '<ul class="tidypics-river-list">';
 		foreach($images as $image) {
 			$attachments .= '<li class="tidypics-photo-item">';
-			$attachments .= elgg_view_entity_icon($image, 'tiny');
+			$attachments .= elgg_view_entity_icon($image, 'medium');
 			$attachments .= '</li>';
 		}
 		$attachments .= '</ul>';
