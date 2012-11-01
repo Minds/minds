@@ -71,7 +71,7 @@ if(elgg_get_context() == 'channel' || elgg_get_context() == 'main' || elgg_get_c
 BODY;
 	}elseif(elgg_get_context() != 'channel') {
 	$bgs = array('city.jpg', 'sunrise-1.jpg', 'space-1.jpg', 'space-2.jpg', 'space-3.jpg');
-	$rand_bg = $bgs[rand(0, 5)];
+	$rand_bg = $bgs[rand(0, 4)];
 	echo "body{
 				background-image:url(mod/minds/graphics/bg/{$rand_bg}); 
 				background-attachment:fixed;
