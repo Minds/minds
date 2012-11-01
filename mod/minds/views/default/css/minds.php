@@ -371,7 +371,7 @@ li.elgg-menu-item-rss{
 }
 .thumbnail-tile{
 	width:300px;
-	height:150px;
+	height:185px;
 	margin:10px;
 	background:#EEE;
 	display:block;

@@ -17,7 +17,7 @@ $subtypes = 'album';
 elseif ($filter == 'files')
 $subtypes = 'file';
 else
-$subtypes = array('kaltura_video', 'album', 'file');
+$subtypes = array('kaltura_video', 'image', 'file');
 
 $options = array('annotation_names' => 'thumbs:up', 'types' => 'object', 'subtypes' => $subtypes, 'limit' => $limit, 'offset' => $offset,);
 $entities = elgg_get_entities_from_annotation_calculation($options);
