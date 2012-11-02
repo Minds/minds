@@ -32,16 +32,14 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 			xmlns:dc="http://purl.org/dc/terms/" 
 			xmlns:media="http://search.yahoo.com/searchmonkey/media/" 
 			rel="media:video" 
-			resource="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709469/entry_id/0_alhv657k" 
-			data="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709469/entry_id/0_alhv657
-k">
+			resource="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709469/entry_id/0_hpag8aj4" 
+			data="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709469/entry_id/0_hpag8aj4">
 				<param name="allowFullScreen" value="true" />
 				<param name="allowNetworking" value="all" />
 				<param name="allowScriptAccess" value="always" />
 				<param name="bgcolor" value="#000000" />
 				<param name="flashVars" value="&{FLAVOR}" />
-				<param name="movie" value="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709469/entry_id/0_alhv657
-k" />
+				<param name="movie" value="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709469/entry_id/0_hpag8aj4" />
 			 <span property="dc:description" content="a remix of some Remixes that discuss Creative Commons, Open Source, and a tidbit about Minds.com in there"></span><span property="media:title" content="Minds Creative Commons Video"></span> <span property="media:width" content="400"></span><span property="media:height" content="300"></span> <span property="media:type" content="application/x-shockwave-flash"></span> 
 		</object>
 	</div>
