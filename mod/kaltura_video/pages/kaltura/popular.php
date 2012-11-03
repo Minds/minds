@@ -25,18 +25,20 @@ $vars['entities'] = $entities;
 
 $content = elgg_view('minds/tiles',$vars);
 
-elgg_register_menu_item('title', array(
-		'name' => 'record',
-		'text' => elgg_echo('kalturavideo:label:newvideocam'),
-		'href' => "#kaltura_create",
-		'link_class' => 'elgg-button elgg-button-action',
-	));
-elgg_register_menu_item('title', array(
-		'name' => 'upload',
-		'text' => elgg_echo('kalturavideo:label:upload'),
-		'href' => "/upload",
-		'link_class' => 'elgg-button elgg-button-action elgg-lightbox',
-	));
+if(elgg_is_logged_in()){
+	elgg_register_menu_item('title', array(
+			'name' => 'record',
+			'text' => elgg_echo('kalturavideo:label:newvideocam'),
+			'href' => "#kaltura_create",
+			'link_class' => 'elgg-button elgg-button-action',
+		));
+	elgg_register_menu_item('title', array(
+			'name' => 'upload',
+			'text' => elgg_echo('kalturavideo:label:upload'),
+			'href' => "/upload",
+			'link_class' => 'elgg-button elgg-button-action elgg-lightbox',
+		));
+}
 
 // get tagcloud
 // $area3 = "This will be a tagcloud for all blog posts";
