@@ -24,10 +24,10 @@ $split = explode('/', $request);
 $siteURL = elgg_get_site_url();
 
 //if(in_array('channel', $split)){
-if(elgg_get_context() == 'channel' || elgg_get_context() == 'main' || elgg_get_context() == 'profile' || elgg_get_context() == 'news'){
+if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news'){
 	echo '<style>';
 
-	if(($owner->background || $owner->text_colour || $owner->link_colour) && elgg_get_context() != 'main'){
+	if($owner->background || $owner->text_colour || $owner->link_colour){
 	echo <<<BODY
 	
 	body{
@@ -69,7 +69,8 @@ if(elgg_get_context() == 'channel' || elgg_get_context() == 'main' || elgg_get_c
 		
 	
 BODY;
-	}elseif(elgg_get_context() != 'channel') {
+	}}
+	/*elseif(elgg_get_context() != 'channel') {
 	$bgs = array('city.jpg', 'sunrise-1.jpg', 'space-1.jpg', 'space-2.jpg', 'space-3.jpg');
 	$rand_bg = $bgs[rand(0, 4)];
 	echo "body{
@@ -87,4 +88,4 @@ BODY;
 	}
 	echo '</style>';
 	
-}
+}*/
