@@ -6,14 +6,14 @@
 
 
 
-$limit = get_input("limit", 10);
+$limit = get_input("limit", 24);
 $offset = get_input("offset", 0);
 $filter = get_input("filter", "all");
 
 if($filter == 'media')
 $subtypes = 'kaltura_video';
 elseif ($filter == 'images')
-$subtypes = 'album';
+$subtypes = array('image', 'album');
 elseif ($filter == 'files')
 $subtypes = 'file';
 else
