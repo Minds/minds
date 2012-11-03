@@ -14,7 +14,7 @@ if (isset($_SESSION['last_forward_from']) && $_SESSION['last_forward_from']) {
 	$forward_url = REFERER;
 } else {
 	// forward to main index page
-	$forward_url = 'news';
+	$forward_url = 'archive/popular';
 }
 
 $username = get_input('username');
