@@ -37,11 +37,13 @@ $subject_link = elgg_view('output/url', array(
 	'is_trusted' => true,
 ));
 
-if (count($images)) {
+if (count($images) == 1){
+	 $attachments = elgg_view_entity_icon($images[0], 'large', array('img_class'=>'large'));
+}else{
 	$attachments = '<ul class="tidypics-river-list">';
 	foreach($images as $image) {
 		$attachments .= '<li class="tidypics-photo-item">';
-		$attachments .= elgg_view_entity_icon($image, 'tiny');
+		$attachments .= elgg_view_entity_icon($image, 'medium');
 		$attachments .= '</li>';
 	}
 	$attachments .= '</ul>';
