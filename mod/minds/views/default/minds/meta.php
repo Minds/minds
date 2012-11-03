@@ -69,23 +69,7 @@ if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_ge
 		
 	
 BODY;
-	}}
-	/*elseif(elgg_get_context() != 'channel') {
-	$bgs = array('city.jpg', 'sunrise-1.jpg', 'space-1.jpg', 'space-2.jpg', 'space-3.jpg');
-	$rand_bg = $bgs[rand(0, 4)];
-	echo "body{
-				background-image:url(mod/minds/graphics/bg/{$rand_bg}); 
-				background-attachment:fixed;
-				background-position: top center;
-				background-repeat:no-repeat;
-				-webkit-background-size: cover;
-				-moz-background-size: cover;
-				-o-background-size: cover;
-				background-size: cover;
-			}
-		.elgg-page-footer, .elgg-menu-footer > li > a { color:#FFF; }
-		.minds_index > .splash{ color:#FFF; }";
-	}
+
 	echo '</style>';
-	
-}*/
+	}	
+}
