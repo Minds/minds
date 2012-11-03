@@ -12,7 +12,7 @@ foreach($entities as $entity){
 	
 	if($entity->getSubtype() == 'kaltura_video'){
 		$icon = elgg_view('output/img', array(
-				'src' => kaltura_get_thumnail($entity->kaltura_video_id, 250, 100, 100),
+				'src' => kaltura_get_thumnail($entity->kaltura_video_id, 300, 185, 100),
 				'title' => $entity->title,
 				'alt' => $entity->title,
 		));
