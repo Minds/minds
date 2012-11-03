@@ -51,7 +51,7 @@ $body = elgg_view_layout("tiles", array(
 					'content' => $content, 
 					'sidebar' => false,
 					'filter_override' => elgg_view('page/layouts/content/archive_filter', $vars),
-					'title' => elgg_echo('kalturavideo:label:trendingvideos')
+					'title' => elgg_echo('archive:popular')
 					));
 
 // Display page
