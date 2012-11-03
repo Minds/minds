@@ -70,6 +70,7 @@ if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_ge
 	
 BODY;
 
-	echo '</style>';
 	}	
+	
+	echo '</style>';
 }
