@@ -14,7 +14,7 @@ if (isset($_SESSION['last_forward_from']) && $_SESSION['last_forward_from']) {
 	$forward_url = REFERER;
 } else {
 	// forward to main index page
-	$forward_url = 'archive/popular';
+	$forward_url =  elgg_get_viewtype() == 'mobile' ? 'news' : 'archive/popular';
 }
 
 $username = get_input('username');
