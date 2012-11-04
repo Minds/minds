@@ -24,7 +24,7 @@ if ($context) {
 			'priority' => 0,
 		),
 		'media' => array(
-			'text' => elgg_echo('kalturavideo:label:latest'),
+			'text' => elgg_echo('kalturavideo:label:videoaudio'),
 			'href' => '?filter=media',
 			'selected' => ($filter_context == 'media'),
 			'priority' => 100,
