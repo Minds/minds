@@ -45,8 +45,8 @@ Password : the one you provided during registration
 	'email:confirm:success' => "The user account is now validated",
 	'email:confirm:fail' => "The user account could not be validated...",
 
-	'uservalidationbyadmin:registerok' => "You will be notified once the admin approves your account",
-	'uservalidationbyadmin:login:fail' => "Your account is not validated so the log in attempt failed. YOu have to wait till admin validates your account.",
+	'uservalidationbyadmin:registerok' => "Welcome!  You will receive an email in the near future enabling your account.",
+	'uservalidationbyadmin:login:fail' => "Your account is not validated so the log in attempt failed. Please be patient until we can validate your account.",
 
 	'uservalidationbyadmin:admin:no_unvalidated_users' => 'No unvalidated users.',
 
