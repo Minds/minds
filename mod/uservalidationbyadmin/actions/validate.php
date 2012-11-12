@@ -34,7 +34,7 @@ foreach ($user_guids as $guid) {
 	} else {
 		$site = elgg_get_site_entity();
 		$subject = elgg_echo('user:validate:subject', array($user->name));
-		$body = elgg_echo('user:validate:body', array($user->name, $site->name, $user->username, $site->name, $site->url));
+		$body = elgg_echo('user:validate:body', array($user->name, $user->username, $site->name, $site->url));
 		$result = notify_user($user->guid, $site->guid, $subject, $body, NULL, 'email');	
 	}
 }
