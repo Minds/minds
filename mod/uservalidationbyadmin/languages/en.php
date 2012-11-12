@@ -28,7 +28,7 @@ If you can't click on the link, copy and paste it to your browser manually.
 %s
 ",
 
-	'user:validate:subject' => "Congrats %s! Your account is activated",
+	'user:validate:subject' => "Welcome to Minds!",
 	'user:validate:body' => "Hello %s,
 
 Welcome to Minds!  Your account is now activated.  We hope you will setup your channel and create some media to share with the world.  Post your ideas to get voted into action!
