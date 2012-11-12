@@ -93,6 +93,7 @@ if (!$_FILES['upload']['name']) {
 		$image->description = $description;
 		$image->container_guid = $album->getGUID();
 		$image->setMimeType($mime);
+		$image->tags = $tags;
 		$image->access_id = $album->access_id;
 	
 		$result = $image->save($_FILES['upload']);
@@ -120,6 +121,7 @@ if (!$_FILES['upload']['name']) {
 		$file->description = $desc;
 		$file->access_id = $access_id;
 		$file->container_guid = $container_guid;
+		$file->tags = $tags;
 		$file->license = $license;
 		
 		$tags = explode(",", $tags);

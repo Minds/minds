@@ -163,6 +163,9 @@ function kaltura_update_object(&$entry,$kmodel=null,$access=null,$user_guid=null
 			//echo "Creating new: $user_guid:$container_guid\n";
 			$ob = new ElggObject();
 			$ob->subtype = 'kaltura_video';
+			$ob->title = $entry->title;
+			$ob->description = $entry->description;
+			$ob->tags = $entry->tags;
 			$ob->owner_guid = $user_guid;
 			$ob->container_guid = ($container_guid ? $container_guid : $user_guid);
 			$ob->access_id = ($access!==null ? $access : get_default_access());
