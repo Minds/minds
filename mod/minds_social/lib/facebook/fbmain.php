@@ -54,11 +54,16 @@ function minds_social_facebook_auth(){
  */
 function minds_social_facebook_login(){
 	$facebook = minds_social_facebook_init();
-	
-	if (!$session = $facebook->getUser()) {
-		forward(REFERER);
+
+	if (!$session = $facebook->getUser()){		
+		forward($facebook->getLoginURL());
+		if($_SESSION['fb_referrer']){
+			forward($_SESSION['fb_referrer']);
+		} else {
+			forward('login');
+		}
 	}
-	
+
 	// attempt to find user and log them in.
 	// else, create a new user.
 	$options = array(
@@ -74,7 +79,7 @@ function minds_social_facebook_login(){
 	$users = elgg_get_entities_from_plugin_user_settings($options);	
 	
 	if ($users){
-                 
+        	echo $_SESSION['fb_referrer']; 
 		if (count($users) == 1 && login($users[0])){
 			system_message(elgg_echo('facebook_connect:login:success'));
 			elgg_set_plugin_user_setting('access_token', $session['access_token'], $users[0]->guid);
@@ -92,7 +97,12 @@ function minds_social_facebook_login(){
 		}
 
        
-       forward();
+       		login($users[0]);
+		if($_SESSION['fb_referrer']){
+                        forward($_SESSION['fb_referrer']);
+                } else {
+                        forward(REFERRER);
+                }
 	} else {
 		// need facebook account credentials
 		$data = $facebook->api('/me');     
@@ -149,12 +159,20 @@ function minds_social_facebook_login(){
 		}else{
 			try {
 				login($users[0]);
-				forward('news');
+				if($_SESSION['fb_referrer']){
+                        		forward($_SESSION['fb_referrer']);
+                		} else {
+                        		forward('news');
+                		}
 				// re-register at least the core language file for users with language other than site default
 				register_translations(dirname(dirname(__FILE__)) . "/languages/");
 			} catch (LoginException $e) {
 				register_error($e->getMessage());
-				forward(REFERER);
+				if($_SESSION['fb_referrer']){
+                 	      		 forward($_SESSION['fb_referrer']);
+                		} else {
+                       			 forward(REFERRER);
+                		}
 			}
 		}
 	}
