@@ -9,7 +9,7 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))) ."/kaltura_video/kaltu
 
 // Get variables
 $title = get_input("title");
-$desc = get_input("description");
+$desc = htmlspecialchars(get_input('title', '', false), ENT_QUOTES, 'UTF-8');
 $access_id = (int) get_input("access_id");
 $container_guid = (int) get_input('container_guid', 0);
 $guid = (int) get_input('file_guid');
@@ -77,7 +77,7 @@ if ($new_file) {
 	
 		// if no title on new upload, grab filename
 		if (empty($title)) {
-			$title = $_FILES['upload']['name'];
+			$title = htmlspecialchars($_FILES['upload']['name'], ENT_QUOTES, 'UTF-8');
 		}
 	
 	}
