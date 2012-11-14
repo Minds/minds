@@ -31,8 +31,8 @@ function minds_social_init(){
  	elgg_extend_view('page/elements/head','minds_social/meta');
 	
 	elgg_extend_view('object/elements/full', 'minds_social/social_footer');
-
-	if (stripos(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), 'facebook')){
+	
+	if (stripos(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), 'facebook')|| get_input('fb_source') || get_input('code')){
 		$facebook = minds_social_facebook_init();
 		$_SESSION['fb_referrer'] = $_SERVER['REQUEST_URI'];
 		if(!elgg_is_logged_in()){
