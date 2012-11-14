@@ -79,7 +79,6 @@ function minds_social_facebook_login(){
 	$users = elgg_get_entities_from_plugin_user_settings($options);	
 	
 	if ($users){
-        	echo $_SESSION['fb_referrer']; 
 		if (count($users) == 1 && login($users[0])){
 			system_message(elgg_echo('facebook_connect:login:success'));
 			elgg_set_plugin_user_setting('access_token', $session['access_token'], $users[0]->guid);
@@ -91,18 +90,15 @@ function minds_social_facebook_login(){
 				$user->email = $email;
 				$user->save();
 			}
+
+			//we need to update the users access token so that we can post to their facebook walls
+			//get our access token
+       			 $access_token = $facebook->getAccessToken();
+        		elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 			
 		} else {
 			system_message(elgg_echo('facebook_connect:login:error'));
 		}
-
-       
-       		login($users[0]);
-		if($_SESSION['fb_referrer']){
-                        forward($_SESSION['fb_referrer']);
-                } else {
-                        forward(REFERRER);
-                }
 	} else {
 		// need facebook account credentials
 		$data = $facebook->api('/me');     
@@ -164,6 +160,8 @@ function minds_social_facebook_login(){
                 		} else {
                         		forward('news');
                 		}
+				 $access_token = $facebook->getAccessToken();                       
+				 elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 				// re-register at least the core language file for users with language other than site default
 				register_translations(dirname(dirname(__FILE__)) . "/languages/");
 			} catch (LoginException $e) {

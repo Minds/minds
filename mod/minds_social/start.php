@@ -38,7 +38,7 @@ function minds_social_init(){
 		if(!elgg_is_logged_in()){
 			minds_social_facebook_login();
 		}
-	}	
+	}
 }
 
 /**
