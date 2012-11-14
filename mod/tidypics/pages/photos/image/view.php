@@ -28,6 +28,7 @@ if (elgg_get_plugin_setting('tagging', 'tidypics')) {
 	 minds_set_metatags('og:title', $photo->getTitle());
 	 minds_set_metatags('og:description', $photo->description ? $photo->description : $photo->getUrl());
 	 minds_set_metatags('og:image',$photo->getIconURL('large'));
+	  minds_set_metatags('og:photo',$photo->getIconURL('large'));
 	 minds_set_metatags('og:url',$photo->getUrl());
 
 // set page owner based on owner of photo album
