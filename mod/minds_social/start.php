@@ -148,10 +148,10 @@ function minds_social_action($event, $object_type, $object){
 			
 			//post to facebook.
 			try{
-				$facebook->api('/me/mindscom:post', 'POST', array( 'photo' => $object->getURL(),'access_token' => $fb_access_token));
+				$facebook->api('/me/mindscom:posted', 'POST', array( 'photo' => url_encode($object->getURL()),'access_token' => $fb_access_token));
 			} catch(Exception $e){
 			}
-			
+	
 			//post to twitter
 			$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
 			$api->post('statuses/update', array('status' => 'I created new media on Minds. ' . $object->getURL()));
