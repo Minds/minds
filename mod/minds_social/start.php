@@ -25,6 +25,7 @@ function minds_social_init(){
 	elgg_register_page_handler('social', 'minds_social_page_handler');
 	
 	elgg_register_event_handler('create','object','minds_social_action');
+	elgg_register_event_handler('create','annotation','minds_social_action');
 	
 	elgg_extend_view('forms/login', 'minds_social/login');
 		
@@ -96,65 +97,73 @@ function minds_social_action($event, $object_type, $object){
 	//facebook
 	$fb_access_token = elgg_get_plugin_user_setting('minds_social_facebook_access_token', $user->getGuid());
 	
-	//send a wirepost
-	if(get_subtype_from_id($object->subtype) == 'wallpost' && $object->owner_guid == $object->to_guid){
-		
-		//post to facebook.
-		try{
-			$facebook->api('/me/feed', 'POST', array('message'=>$object->message, 'access_token' => $fb_access_token));
-		} catch(Exception $e){
+	if($object_type == 'object'){
+		//send a wirepost
+		if(get_subtype_from_id($object->subtype) == 'wallpost' && $object->owner_guid == $object->to_guid){
+			
+			//post to facebook.
+			try{
+				$facebook->api('/me/feed', 'POST', array('message'=>$object->message, 'access_token' => $fb_access_token));
+			} catch(Exception $e){
+			}
+			
+			//post to twitter
+			$desc = $object->message;
+			if(strlen($desc) > 140){
+			$desc = substr($desc, 0, 100) . '... ' . $object->getURL();
+			}
+			$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
+			$api->post('statuses/update', array('status' => $desc));
 		}
 		
-		//post to twitter
-		$desc = $object->message;
-		if(strlen($desc) > 140){
-		$desc = substr($desc, 0, 100) . '... ' . $object->getURL();
+		//say blog has been written
+		if(get_subtype_from_id($object->subtype) == 'blog'){
+			
+			//post to facebook.
+			try{
+				$facebook->api('/me/news.publishes', 'POST', array('property_name'=>$object->getURL(), 'article' => $object->getURL(),'access_token' => $fb_access_token));
+			} catch(Exception $e){
+			}
+			
+			//post to twitter
+			$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
+			$api->post('statuses/update', array('status' => 'I published a new blog on Minds. ' . $object->getURL()));
 		}
-		$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
-		$api->post('statuses/update', array('status' => $desc));
+		
+		//say video has been posted
+		if($object->getSubtype() == 'kaltura_video'){
+			
+			//post to facebook.
+			try{
+				$facebook->api('/me/mindscom:added', 'POST', array('property_name'=>$object->getURL(), 'other' => $object->getURL(),'access_token' => $fb_access_token));
+			} catch(Exception $e){
+			}
+			
+			//post to twitter
+			$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
+			$api->post('statuses/update', array('status' => 'I created new media on Minds. ' . $object->getURL()));
+		}
+		
+		if($object->getSubtype() == 'image'){
+			
+			//post to facebook.
+			try{
+				$facebook->api('/me/mindscom:added', 'POST', array( 'photo' => $object->getURL(),'access_token' => $fb_access_token));
+			} catch(Exception $e){
+			}
+			
+			//post to twitter
+			$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
+			$api->post('statuses/update', array('status' => 'I created new media on Minds. ' . $object->getURL()));
+		}
+	} elseif($object_type == 'annotation'){
+		if($object->name == 'thumbs:up'){
+			try{
+				$facebook->api('/me/og.likes', 'POST', array( 'object' => $object->getURL(),'access_token' => $fb_access_token));
+			} catch(Exception $e){
+			}
+		}
 	}
-	
-	//say blog has been written
-	if(get_subtype_from_id($object->subtype) == 'blog'){
-		
-		//post to facebook.
-		try{
-			$facebook->api('/me/news.publishes', 'POST', array('property_name'=>$object->getURL(), 'article' => $object->getURL(),'access_token' => $fb_access_token));
-		} catch(Exception $e){
-		}
-		
-		//post to twitter
-		$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
-		$api->post('statuses/update', array('status' => 'I published a new blog on Minds. ' . $object->getURL()));
-	}
-	
-	//say video has been posted
-	if($object->getSubtype() == 'kaltura_video'){
-		
-		//post to facebook.
-		try{
-			$facebook->api('/me/mindscom:added', 'POST', array('property_name'=>$object->getURL(), 'other' => $object->getURL(),'access_token' => $fb_access_token));
-		} catch(Exception $e){
-		}
-		
-		//post to twitter
-		$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
-		$api->post('statuses/update', array('status' => 'I created new media on Minds. ' . $object->getURL()));
-	}
-	
-	if($object->getSubtype() == 'image'){
-		
-		//post to facebook.
-		try{
-			$facebook->api('/me/mindscom:added', 'POST', array( 'photo' => $object->getURL(),'access_token' => $fb_access_token));
-		} catch(Exception $e){
-		}
-		
-		//post to twitter
-		$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
-		$api->post('statuses/update', array('status' => 'I created new media on Minds. ' . $object->getURL()));
-	}
-	
 	
 	}
 	
