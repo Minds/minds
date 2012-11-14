@@ -128,6 +128,20 @@ function minds_social_action($event, $object_type, $object){
 		$api->post('statuses/update', array('status' => 'I published a new blog on Minds. ' . $object->getURL()));
 	}
 	
+	//say video has been posted
+	if(get_subtype_from_id($object->subtype) == 'kaltura_video'){
+		
+		//post to facebook.
+		try{
+			$facebook->api('/me/mindscom:added', 'POST', array('property_name'=>$object->getURL(), 'other' => $object->getURL(),'access_token' => $fb_access_token));
+		} catch(Exception $e){
+		}
+		
+		//post to twitter
+		$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
+		$api->post('statuses/update', array('status' => 'I created new media on Minds. ' . $object->getURL()));
+	}
+	
 	}
 	
 	return true;
