@@ -12,6 +12,8 @@
 	$og_video_type = get_input('og:video:type');
 	$og_video_width = get_input('og:video:width');
 	$og_video_height = get_input('og:video:height');
+	$og_other = get_input('og:other');
+	$og_mindscom_photo = get_input('mindscom:photo');
 	
 	if($og_type)
  	echo "<meta property=\"og:type\"   content=\"$og_type\" />";
@@ -33,6 +35,10 @@
 	echo "<meta property=\"og:video:width\" content=\"$og_video_width\">";
 	if($og_video_height)
     echo "<meta property=\"og:video:height\" content=\"$og_video_height\">";
+	if($og_other)
+    echo "<meta property=\"og:other\" content=\"$og_other\">";
+	if($og_mindscom_photo)
+    echo "<meta property=\"mindscom:photo\" content=\"$og_mindscom_photo\">";
 	
     echo "<meta property=\"og:site_name\" content=\"Minds, Freedom to share\">";
 	
