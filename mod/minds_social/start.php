@@ -158,8 +158,9 @@ function minds_social_action($event, $object_type, $object){
 		}
 	} elseif($object_type == 'annotation'){
 		if($object->name == 'thumbs:up'){
+			$entity = get_entity($object->entity_guid);
 			try{
-				$facebook->api('/me/og.likes', 'POST', array( 'object' => $object->getURL(),'access_token' => $fb_access_token));
+				$facebook->api('/me/og.likes', 'POST', array( 'object' => $entity->getURL(),'access_token' => $fb_access_token));
 			} catch(Exception $e){
 			}
 		}
