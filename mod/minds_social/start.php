@@ -129,7 +129,7 @@ function minds_social_action($event, $object_type, $object){
 	}
 	
 	//say video has been posted
-	if(get_subtype_from_id($object->subtype) == 'kaltura_video'){
+	if($object->getSubtype() == 'kaltura_video' || $object->getSubtype() == 'image'){
 		
 		//post to facebook.
 		try{
@@ -141,6 +141,7 @@ function minds_social_action($event, $object_type, $object){
 		$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
 		$api->post('statuses/update', array('status' => 'I created new media on Minds. ' . $object->getURL()));
 	}
+	
 	
 	}
 	
