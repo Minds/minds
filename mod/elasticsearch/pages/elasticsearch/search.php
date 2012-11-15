@@ -9,24 +9,34 @@ elgg_set_context('search');
 
 // Get the guid
 $query = get_input("q");
+$object_type = get_input("o_type");
+$limit = get_input("limit", 25);
+$offset = get_input("offset");
 
-$call = elasticsearch_parse($query);
+$call = elasticsearch_parse($query, $object_type, $limit, $offset);
 $hits = $call['hits'];
 $items = $hits['hits'];
 
-
-foreach($items as $item){
-	$guids[] = $item['_source']['guid'];
-
+if($hits['total'] > 0){
+	
+	foreach($items as $item){
+		$guids[] = $item['_source']['guid'];
+	
+	}
+	
+	$entities = elgg_get_entities(array('guids'=>$guids));
+	
+	$results = elgg_view('elasticsearch/results', array('results'=>$entities));
+	
+	$results .= elgg_view('navigation/pagination', array('count'=>$hits['total'], 'limit'=>$limit, 'offset'=>$offset));
+	
+	$params['content'] = $results;
+} else {
+	$params['content'] = 'sorry, no results';
 }
-
-$entities = elgg_list_entities(array('guids'=>$guids));
-
-
-$params['content'] = $entities;
 //$params['title'] = $title;
-//$params['sidebar'] = $sidebar;
+$params['sidebar'] = elgg_view('elasticsearch/stats', array('stats'=>$call));
 
-$body = elgg_view_layout('content', $params);
+$body = elgg_view_layout('one_sidebar', $params);
 
 echo elgg_view_page($title, $body);

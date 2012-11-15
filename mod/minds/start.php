@@ -140,7 +140,7 @@ function minds_pagesetup(){
 	elgg_register_menu_item('topbar', array(
 			'name' => 'search',
 			'href' => '#',
-			'text' => elgg_view('search/header'),
+			'text' => elgg_view('elasticsearch/header'),
 			'priority' => 50,
 			'section' => 'alt',
 		));
