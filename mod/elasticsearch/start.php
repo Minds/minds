@@ -265,7 +265,7 @@ function elasticsearch_index_allowed($object){
 		return true;
 	}
 		
-	return false;
+	return;
 }
 /**
  * Add an entity to the elastic search
@@ -281,7 +281,7 @@ function elasticsearch_add($event, $object_type, $object){
 		$es->index = elasticsearch_index;
 		return $es->add($object_type, $object->getGUID(), elasticsearch_encode($object));
 	}
-	return false;
+	return;
 }
 
 /**
