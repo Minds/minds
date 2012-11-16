@@ -18,12 +18,12 @@ $description = $item->description;
 if (strlen($description) > 500) {
 
     // truncate string
-    $stringCut = substr($string, 0, 500);
+    $stringCut = substr($description, 0, 500);
 
     // make sure it ends in a word so assassinate doesn't become ass...
-    $string = substr($stringCut, 0, strrpos($stringCut, ' ')).'...'; 
+    $description = substr($stringCut, 0, strrpos($stringCut, ' ')).'...'; 
 }
-$body .= $string;
+$body .= $description;
 if ($extra_info) {
 	$body .= "<p class=\"elgg-subtext\">$extra_info</p>";
 }

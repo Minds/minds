@@ -70,3 +70,8 @@ Search plugin
 .ui-autocomplete{
 	width:200px;
 }
+.elasticsearch-round-corners{
+	-webkit-border-radius:6px;
+	-moz-border-radius:6px;
+	border-radius:6px;
+}

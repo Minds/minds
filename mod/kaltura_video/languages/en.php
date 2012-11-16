@@ -9,6 +9,7 @@
 **/
 
 $translations = array(
+	'kaltura_video' => 'Video/Audio',
 	'kalturavideo:label:partner_id' => "Partner ID",
 	'kalturavideo:error:misconfigured' => "Misconfigured plugin or auth error with Kaltura!",
 	'kalturavideo:error:notconfigured' => "The plugin is not configured!",

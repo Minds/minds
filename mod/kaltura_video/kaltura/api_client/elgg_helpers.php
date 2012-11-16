@@ -530,7 +530,7 @@ function kaltura_view_select_privacity($video_id,$access_id,$group_mode=false,$c
 function kaltura_get_thumnail($entry_id, $width=100, $height=100, $quality=100, $slice = 5){
 	$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'kaltura_video');
 	$partnerId = elgg_get_plugin_setting('partner_id', 'kaltura_video');
-	$thumbnail_url = "$kaltura_server/p/$partnerId/thumbnail/entry_id/$entry_id/width/$width/height/$height/quality/$quality";
+	$thumbnail_url = "$kaltura_server/p/$partnerId/thumbnail/entry_id/$entry_id/width/$width/height/$height/quality/$quality/type/3";
 	return $thumbnail_url;
 }
 
