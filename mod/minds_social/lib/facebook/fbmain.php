@@ -167,11 +167,11 @@ function minds_social_facebook_login(){
 				}
 			} catch (LoginException $e) {
 				register_error($e->getMessage());
-				if($_SESSION['fb_referrer']){
+				/*if($_SESSION['fb_referrer']){
                  	      		 forward($_SESSION['fb_referrer']);
                 		} else {
                        			 forward(REFERRER);
-                		}
+                		}*/
 			}
 		}
 	}
