@@ -81,26 +81,35 @@ function minds_social_facebook_login(){
 	$users = elgg_get_entities_from_plugin_user_settings($options);	
 	
 	if ($users){
-		if (count($users) == 1 && login($users[0])){
-			system_message(elgg_echo('facebook_connect:login:success'));
-			elgg_set_plugin_user_setting('access_token', $session['access_token'], $users[0]->guid);
-			
-			if(empty($users[0]->email)) {
-				$data = $facebook->api('/me');
-				$email= $data['email'];
-				$user = get_entity($users[0]->guid);
-				$user->email = $email;
-				$user->save();
+		try{
+			if (count($users) == 1 && login($users[0])){
+				system_message(elgg_echo('facebook_connect:login:success'));
+				elgg_set_plugin_user_setting('access_token', $session['access_token'], $users[0]->guid);
+				
+				if(empty($users[0]->email)) {
+					$data = $facebook->api('/me');
+					$email= $data['email'];
+					$user = get_entity($users[0]->guid);
+					$user->email = $email;
+					$user->save();
+				}
+	
+				//we need to update the users access token so that we can post to their facebook walls
+				//get our access token
+	       			 $access_token = $facebook->getAccessToken();
+	        		elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+				
+			} else {
+				system_message(elgg_echo('facebook_connect:login:error'));
 			}
-
-			//we need to update the users access token so that we can post to their facebook walls
-			//get our access token
-       			 $access_token = $facebook->getAccessToken();
-        		elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
-			
-		} else {
-			system_message(elgg_echo('facebook_connect:login:error'));
-		}
+		} catch (LoginException $e) {
+				register_error($e->getMessage());
+				if($_SESSION['fb_referrer']){
+                 	      		 forward($_SESSION['fb_referrer']);
+                		} else {
+                       			 forward(REFERRER);
+                		}
+			}
 	} else {
 		// need facebook account credentials
 		$data = $facebook->api('/me');     
@@ -156,16 +165,15 @@ function minds_social_facebook_login(){
 		}else{
 			try {
 				if(login($users[0])){
-				$access_token = $facebook->getAccessToken();                        
-                                 elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
-				if($_SESSION['fb_referrer']){
+					$access_token = $facebook->getAccessToken();                        
+               	 	elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+					
+					if($_SESSION['fb_referrer']){
                         		//forward($_SESSION['fb_referrer']);
-                		} else {
+                	} else {
                         		forward('news');
-                		}
+                	}
 				}
-				// re-register at least the core language file for users with language other than site default
-				register_translations(dirname(dirname(__FILE__)) . "/languages/");
 			} catch (LoginException $e) {
 				register_error($e->getMessage());
 				if($_SESSION['fb_referrer']){
