@@ -5,7 +5,7 @@
 class elasticsearch {
   public $index;
 
-  function __construct($server = 'http://107.23.117.9:9200'){
+  function __construct($server = elasticsearch_server){
     $this->server = $server;
   }
 

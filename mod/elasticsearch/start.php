@@ -33,7 +33,8 @@ function elasticsearch_init() {
 	// Page handler for the modal media embed
 	elgg_register_page_handler('search', 'elasticsearch_page_handler');
 		
-	define('elasticsearch_server', 'http://107.23.117.9:9200');
+	define('elasticsearch_server', elgg_get_plugin_setting('server'));
+	define('elasticsearch_index', elgg_get_plugin_setting('index'));
 }
 /**
  * Search page handler
@@ -77,7 +78,7 @@ function elasticsearch_index_once(){
 	foreach($entities as $entity){
 		if(elasticsearch_index_allowed($entity)){
 			$es = new elasticsearch();
-			$es->index = 'minds';
+			$es->index = elasticsearch_index;
 			echo $es->add($entity->getType(), $entity->getGUID(), elasticsearch_encode($entity));
 		}
 	}
@@ -94,7 +95,7 @@ function elasticsearch_index_once(){
 function elasticsearch_parse($query, $object_type, $limit, $offset){
 	
 	$es = new elasticsearch();
-	$es->index = 'minds';
+	$es->index = elasticsearch_index;
 	return $es->query($object_type, $query, $limit, $offset);
 }
 /**
@@ -277,7 +278,7 @@ function elasticsearch_index_allowed($object){
 function elasticsearch_add($event, $object_type, $object){
 	if(elasticsearch_index_allowed($object)){
 		$es = new elasticsearch();
-		$es->index = 'minds';
+		$es->index = elasticsearch_index;
 		return $es->add($object_type, $object->getGUID(), elasticsearch_encode($object));
 	}
 	return false;
@@ -294,7 +295,7 @@ function elasticsearch_add($event, $object_type, $object){
 function elasticsearch_update($event, $object_type, $object){
 		
 	$es = new elasticsearch();
-	$es->index = 'minds';
+	$es->index = elasticsearch_index;
 	$es->add($object_type, $object->getGUID(), elasticsearch_encode($object));
 	
 	return $es;
@@ -311,7 +312,7 @@ function elasticsearch_update($event, $object_type, $object){
 function elasticsearch_remove($event, $object_type, $object){
 
 	$es = new elasticsearch();
-	$es->index = 'minds';
+	$es->index = elasticsearch_index;
 	$es->remove($object_type, $object->getGUID());
 	
 	return $es;
