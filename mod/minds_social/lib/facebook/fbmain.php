@@ -81,35 +81,26 @@ function minds_social_facebook_login(){
 	$users = elgg_get_entities_from_plugin_user_settings($options);	
 	
 	if ($users){
-		try{
-			if (count($users) == 1 && login($users[0])){
-				system_message(elgg_echo('facebook_connect:login:success'));
-				elgg_set_plugin_user_setting('access_token', $session['access_token'], $users[0]->guid);
-				
-				if(empty($users[0]->email)) {
-					$data = $facebook->api('/me');
-					$email= $data['email'];
-					$user = get_entity($users[0]->guid);
-					$user->email = $email;
-					$user->save();
-				}
-	
-				//we need to update the users access token so that we can post to their facebook walls
-				//get our access token
-	       			 $access_token = $facebook->getAccessToken();
-	        		elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
-				
-			} else {
-				system_message(elgg_echo('facebook_connect:login:error'));
+		if (count($users) == 1 && login($users[0])){
+			system_message(elgg_echo('facebook_connect:login:success'));
+			elgg_set_plugin_user_setting('access_token', $session['access_token'], $users[0]->guid);
+			
+			if(empty($users[0]->email)) {
+				$data = $facebook->api('/me');
+				$email= $data['email'];
+				$user = get_entity($users[0]->guid);
+				$user->email = $email;
+				$user->save();
 			}
-		} catch (LoginException $e) {
-				register_error($e->getMessage());
-				if($_SESSION['fb_referrer']){
-                 	      		 forward($_SESSION['fb_referrer']);
-                		} else {
-                       			 forward(REFERRER);
-                		}
-			}
+
+			//we need to update the users access token so that we can post to their facebook walls
+			//get our access token
+       			 $access_token = $facebook->getAccessToken();
+        		elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+			
+		} else {
+			system_message(elgg_echo('facebook_connect:login:error'));
+		}
 	} else {
 		// need facebook account credentials
 		$data = $facebook->api('/me');     
