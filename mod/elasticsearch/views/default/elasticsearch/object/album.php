@@ -10,7 +10,7 @@ $item = $vars['item'];
 $cover = $item->getCoverImage();
 
 if($cover){
-	$icon = elgg_view('output/img', array('src'=> $cover->getIconURL('tiny'), 'width'=> 50, 'class'=>'elasticsearch-round-corners'));
+	$icon = elgg_view('output/img', array('src'=> $cover->getIconURL('tiny'), 'width'=> 40, 'class'=>'elasticsearch-round-corners'));
 } else {
 	$icon = elgg_view('output/img', array('src'=> "mod/tidypics/graphics/empty_album.png", 'width'=> 50, 'class'=>'elasticsearch-round-corners'));	
 }

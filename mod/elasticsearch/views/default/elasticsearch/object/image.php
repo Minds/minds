@@ -7,7 +7,7 @@
 
 $item = $vars['item'];
 
-$icon = elgg_view('output/img', array('src'=> $item->getIconURL('tiny'), 'width'=> 50, 'class'=>'elasticsearch-round-corners'));
+$icon = elgg_view('output/img', array('src'=> $item->getIconURL('tiny'), 'width'=> 40, 'class'=>'elasticsearch-round-corners'));
 
 $title = "<a href=\"{$item->getURL()}\">{$item->getTitle()}</a>";
 
