@@ -35,9 +35,11 @@ function minds_social_init(){
 	
 	if (stripos(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), 'facebook')|| get_input('fb_source') || get_input('code')){
 		$facebook = minds_social_facebook_init();
-		$_SESSION['fb_referrer'] = $_SERVER['REQUEST_URI'];
-		if(!elgg_is_logged_in()){
-			minds_social_facebook_login();
+		if(!$session = $facebook->getUser()){
+			$_SESSION['fb_referrer'] = $_SERVER['REQUEST_URI'];
+			if(!elgg_is_logged_in()){
+				minds_social_facebook_login();
+			}
 		}
 	}
 }

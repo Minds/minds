@@ -155,13 +155,13 @@ function minds_social_facebook_login(){
 		}else{
 			try {
 				login($users[0]);
+				$access_token = $facebook->getAccessToken();                        
+                                 elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 				if($_SESSION['fb_referrer']){
                         		forward($_SESSION['fb_referrer']);
                 		} else {
                         		forward('news');
                 		}
-				 $access_token = $facebook->getAccessToken();                       
-				 elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 				// re-register at least the core language file for users with language other than site default
 				register_translations(dirname(dirname(__FILE__)) . "/languages/");
 			} catch (LoginException $e) {
