@@ -137,7 +137,7 @@ function minds_social_action($event, $object_type, $object){
 			
 			//post to facebook.
 			try{
-				$facebook->api('/me/mindscom:added', 'POST', array('property_name'=>$object->getURL(), 'other' => $object->getURL(),'access_token' => $fb_access_token));
+				$facebook->api('/me/mindscom:add', 'POST', array('other' => $object->getURL(),'access_token' => $fb_access_token));
 			} catch(Exception $e){
 			}
 			
@@ -150,7 +150,7 @@ function minds_social_action($event, $object_type, $object){
 			
 			//post to facebook.
 			try{
-				$facebook->api('/me/mindscom:posted', 'POST', array( 'photo' => url_encode($object->getURL()),'access_token' => $fb_access_token));
+				$facebook->api('/me/mindscom:post', 'POST', array( 'photo' => url_encode($object->getURL()),'access_token' => $fb_access_token));
 			} catch(Exception $e){
 			}
 	
