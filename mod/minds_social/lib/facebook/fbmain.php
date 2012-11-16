@@ -56,7 +56,9 @@ function minds_social_facebook_login(){
 	$facebook = minds_social_facebook_init();
 
 	if (!$session = $facebook->getUser()){		
-		forward($facebook->getLoginURL());
+		forward($facebook->getLoginURL(array('canvas' => 1,
+				'scope' => 'publish_stream,email, offline_access',
+				'ext_perm' =>  'offline_access',)));
 		if($_SESSION['fb_referrer']){
 			forward($_SESSION['fb_referrer']);
 		} else {
@@ -133,7 +135,7 @@ function minds_social_facebook_login(){
 				// register user's access tokens
 				elgg_set_plugin_user_setting('minds_social_facebook_uid', $session);
 				elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
-	
+				
 				//trigger the validator plugins
 				$params = array(
 					'user' => $new_user,
@@ -141,7 +143,7 @@ function minds_social_facebook_login(){
 					'friend_guid' => $friend_guid,
 					'invitecode' => $invitecode
 				);
-	
+				
 				// @todo should registration be allowed no matter what the plugins return?
 				if (!elgg_trigger_plugin_hook('register', 'user', $params, TRUE)) {
 					$new_user->delete();
@@ -150,18 +152,18 @@ function minds_social_facebook_login(){
 					// for the plugin hooks system.
 					throw new RegistrationException(elgg_echo('registerbad'));
 				}
-			
-			}
+			}	
 		}else{
 			try {
-				login($users[0]);
+				if(login($users[0])){
 				$access_token = $facebook->getAccessToken();                        
                                  elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 				if($_SESSION['fb_referrer']){
-                        		forward($_SESSION['fb_referrer']);
+                        		//forward($_SESSION['fb_referrer']);
                 		} else {
                         		forward('news');
                 		}
+				}
 				// re-register at least the core language file for users with language other than site default
 				register_translations(dirname(dirname(__FILE__)) . "/languages/");
 			} catch (LoginException $e) {
