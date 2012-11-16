@@ -15,10 +15,10 @@ $body = "<p class=\"mbn\">$title</p>";
 
 $description = $item->description;
 
-if (strlen($description) > 500) {
+if (strlen($description) > 75) {
 
     // truncate string
-    $stringCut = substr($description, 0, 500);
+    $stringCut = substr($description, 0, 75);
 
     // make sure it ends in a word so assassinate doesn't become ass...
     $description = substr($stringCut, 0, strrpos($stringCut, ' ')).'...'; 

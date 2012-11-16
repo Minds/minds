@@ -7,7 +7,7 @@
 
 $item = $vars['item'];
 
-$icon = elgg_view('output/img', array('src'=> kaltura_get_thumnail($item->kaltura_video_id, 40, 40, 100), 'width' => 50, 'class'=>'elasticsearch-round-corners'));
+$icon = elgg_view('output/img', array('src'=> kaltura_get_thumnail($item->kaltura_video_id, 40, 40, 100), 'width' => 40, 'class'=>'elasticsearch-round-corners'));
 
 $title = "<a href=\"{$item->getURL()}\">$item->title</a>";
 
@@ -15,10 +15,10 @@ $body = "<p class=\"mbn\">$title</p>";
 
 $description = $item->description;
 
-if (strlen($description) > 500) {
+if (strlen($description) > 75) {
 
     // truncate string
-    $stringCut = substr($description, 0, 500);
+    $stringCut = substr($description, 0, 75);
 
     // make sure it ends in a word so assassinate doesn't become ass...
     $description = substr($stringCut, 0, strrpos($stringCut, ' ')).'...'; 
