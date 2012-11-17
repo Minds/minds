@@ -92,11 +92,11 @@ function elasticsearch_index_once(){
  * @param string $query
  * @return array
  */
-function elasticsearch_parse($query, $object_type, $limit, $offset){
+function elasticsearch_parse($query, $object_type, $sort, $limit, $offset){
 	
 	$es = new elasticsearch();
 	$es->index = elasticsearch_index;
-	return $es->query($object_type, $query, $limit, $offset);
+	return $es->query($object_type, $query, $sort, $limit, $offset);
 }
 /**
  * Returns the view and fallbacks for search results
@@ -145,7 +145,8 @@ function elasticsearch_live(){
 	if (!$q = get_input('term', get_input('q'))) {
 		exit;
 	}
-	$call = elasticsearch_parse($q, null);
+	$sort = array('name:desc', 'title:desc');
+	$call = elasticsearch_parse($q, null, $sort);
 	$hits = $call['hits'];
 	$items = $hits['hits'];
 	
