@@ -62,10 +62,12 @@
 					$('.news-show-more').html('no more posts');
 				} else {
 
-				$('.elgg-list.elgg-list-river.elgg-river').parents('.is_riverdash_middle').find('.elgg-list.elgg-list-river.elgg-river').first().append(data);
-												
-			
-				$('.news-show-more').html('more');
+					$('.news-show-more').remove();
+					
+					$('.elgg-list.elgg-list-river.elgg-river').parents('.is_riverdash_middle').append(data);							
+					
+					$('.elgg-list.elgg-list-river.elgg-river').parents('.is_riverdash_middle').append('<div class="news-show-more" onclick="river.extend.trigger()">more</div>');
+				
 				
 				}
 			});
