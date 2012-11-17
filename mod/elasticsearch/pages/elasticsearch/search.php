@@ -12,7 +12,7 @@ $query = get_input("q");
 $object_type = get_input("o_type");
 $limit = get_input("limit", 25);
 $offset = get_input("offset");
-$sort = array('name:desc', 'title:desc');
+$sort = 'name:asc';
 
 $call = elasticsearch_parse($query, $object_type, $sort, $limit, $offset);
 $hits = $call['hits'];
