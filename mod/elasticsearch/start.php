@@ -266,7 +266,7 @@ function elasticsearch_index_allowed($object){
 		return true;
 	}
 		
-	return;
+	return false;
 }
 /**
  * Add an entity to the elastic search
