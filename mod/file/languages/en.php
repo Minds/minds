@@ -12,7 +12,7 @@ $english = array(
 	 */
 	'file' => "Files",
 	'file:user' => "%s's files",
-	'file:friends' => "Friends' files",
+	'file:friends' => "Channels' files",
 	'file:all' => "All site files",
 	'file:edit' => "Edit file",
 	'file:more' => "More files",
@@ -26,7 +26,7 @@ $english = array(
 	'file:upload' => "Upload a file",
 	'file:replace' => 'Replace file content (leave blank to not change file)',
 	'file:list:title' => "%s's %s %s",
-	'file:title:friends' => "Friends'",
+	'file:title:friends' => "Channels'",
 
 	'file:add' => 'Upload a file',
 
@@ -54,11 +54,11 @@ $english = array(
 	'file:user:type:image' => "%s's pictures",
 	'file:user:type:general' => "%s's general files",
 
-	'file:friends:type:video' => "Your friends' videos",
-	'file:friends:type:document' => "Your friends' documents",
-	'file:friends:type:audio' => "Your friends' audio",
-	'file:friends:type:image' => "Your friends' pictures",
-	'file:friends:type:general' => "Your friends' general files",
+	'file:friends:type:video' => "Your channels' videos",
+	'file:friends:type:document' => "Your channels' documents",
+	'file:friends:type:audio' => "Your channels' audio",
+	'file:friends:type:image' => "Your channels' pictures",
+	'file:friends:type:general' => "Your channels' general files",
 
 	'file:widget' => "File widget",
 	'file:widget:description' => "Showcase your latest files",
