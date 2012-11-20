@@ -27,15 +27,9 @@ $content = elgg_view('minds/tiles',$vars);
 
 if(elgg_is_logged_in()){
 	elgg_register_menu_item('title', array(
-			'name' => 'record',
-			'text' => elgg_echo('kalturavideo:label:newvideocam'),
-			'href' => "#kaltura_create",
-			'link_class' => 'elgg-button elgg-button-action',
-		));
-	elgg_register_menu_item('title', array(
 			'name' => 'upload',
-			'text' => elgg_echo('kalturavideo:label:upload'),
-			'href' => "/upload",
+			'text' => elgg_echo('kalturavideo:label:newvideo'),
+			'href' => "/archive/upload",
 			'link_class' => 'elgg-button elgg-button-action elgg-lightbox',
 		));
 }
