@@ -406,7 +406,12 @@ class KalturaHelpers
 
 	function getContributionWizardUrl($uiConfId)
 	{
-		$url = elgg_get_plugin_setting('kaltura_server_url', 'kaltura_video');
+		if(elgg_get_site_url()=='http://www.minds.com/'){
+			$url = 'http://upload.minds.tv';
+		} else {
+			$url = elgg_get_plugin_setting('kaltura_server_url', 'kaltura_video');
+		}
+		
 		return $url . "/kcw/ui_conf_id/" . $uiConfId;
 	}
 
