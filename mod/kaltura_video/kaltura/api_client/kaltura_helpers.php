@@ -290,7 +290,7 @@ class KalturaHelpers
 			$flashVars["afterAddentry"] = "onEditorSave";
 		//}
 		$flashVars["close"] 		= "deleteVideo";
-		$flashVars["termsOfUse"] 	= "http://corp.kaltura.com/static/tandc" ;
+		//$flashVars["termsOfUse"] 	= "http://corp.kaltura.com/static/tandc" ;
 		//$flashVars["lang"] 	= $_SESSION['user']->language ;
 
 		return $flashVars;

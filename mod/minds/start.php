@@ -153,13 +153,10 @@ function minds_pagesetup(){
 		));
 		
 	if($user){		
-		elgg_load_js('lightbox');
-		elgg_load_css('lightbox');
 		elgg_register_menu_item('site', array(
 						'name' => elgg_echo('minds:upload'),
-						'href' => 'upload',
+						'href' => 'archive/upload',
 						'text' => elgg_echo('minds:upload'),
-						'class' => 'elgg-lightbox',
 					));
 	}
 		

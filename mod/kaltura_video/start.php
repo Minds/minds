@@ -325,7 +325,16 @@ function kaltura_video_page_handler($page) {
 				return true;
 				break;
 			case 'upload':
-				include(dirname(__FILE__) . "/inline_upload.php");
+				switch($page[1]) {
+					case 'videoaudio':
+						include(dirname(__FILE__) . "/pages/kaltura/kaltura_upload.php");
+						break;
+					case 'others':
+						include(dirname(__FILE__) . "/pages/kaltura/others_upload.php");
+						break;
+					default:
+						include(dirname(__FILE__) . "/pages/kaltura/upload.php");
+				}
 				return true;
 				break;
 			case 'show':
@@ -340,6 +349,7 @@ function kaltura_video_page_handler($page) {
 				break;
 			case 'edit':
 				set_input('videopost',$page[1]);
+				set_input('entryid',$page[1]);
 				include(dirname(__FILE__) . "/pages/kaltura/edit.php");
 				return true;
 				break;

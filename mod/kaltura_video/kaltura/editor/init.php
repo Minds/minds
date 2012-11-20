@@ -1,33 +1,3 @@
-<?php
-/**
-* Kaltura video client
-* @package ElggKalturaVideo
-* @license http://www.gnu.org/licenses/gpl.html GNU Public License version 3
-* @author Ivan Vergés <ivan@microstudi.net>
-* @copyright Ivan Vergés 2010
-* @link http://microstudi.net/elgg/
-**/
-
-require_once(dirname(dirname(__FILE__))."/api_client/includes.php");
-
-$js = elgg_get_loaded_js('head');
-$css = elgg_get_loaded_css();
-?><html>
-<head>
-
-
-<?php foreach ($js as $script) { ?>
-	<script type="text/javascript" src="<?php echo $script; ?>"></script>
-<?php } ?>
-
-<script type="text/javascript">
-	<?php echo elgg_view('js/initialize_elgg'); ?>
-</script>
-
-<?php foreach ($css as $link) { ?>
-	<link rel="stylesheet" href="<?php echo $link; ?>" type="text/css" />
-<?php } ?>
-
 <script type='text/javascript' src="../js/kaltura.js"></script>
 
 <script type='text/javascript'>
@@ -192,7 +162,6 @@ function deleteVideo() {
 
 //after press the save button on editor
 function onEditorSave (entries) {
-	
 
 	if(entries != undefined) {
         var uploaded_entry_id = entries[0].entryId;
@@ -205,10 +174,9 @@ function onEditorSave (entries) {
 		
 		<?php
 			//go to edit details window
-			$refresh_loc = $CONFIG->wwwroot."mod/kaltura_video/edit.php?entryid=";
+			$refresh_loc = $CONFIG->wwwroot."archive/edit/";
 		?>
-		var topWindow = Kaltura.getTopWindow();	
-		topWindow.location =  '<?php echo $refresh_loc; ?>' + uploaded_entry_id;
+		window.location =  '<?php echo $refresh_loc; ?>' + uploaded_entry_id;
     }
 
 }
@@ -347,35 +315,5 @@ function gotoadmin() {
 	topWindow.KalturaModal.closeModal();
 	topWindow.location = url;
 }
-
-//at start
-$(document).ready(function() {
-<?php
-if(isset($_REQUEST['new'])) {
-?>
-	loadNew();
-<?php
-}
-elseif(empty($_REQUEST['entryId'])) {
-?>
-	loadGallery(1);
-<?php
-}
-else {
-?>
-	entryId = '<?php echo $_REQUEST['entryId']; ?>';
-	thumb = '<?php echo $_REQUEST['thumbnail']; ?>';
-	editVideo();
-<?php
-}
-?>
-});
 /* ]]> */
 </script>
-</head>
-<body>
-<div id="loading" class="loading">
-	<div id="flash-container"></div>
-</div>
-</body>
-</html>

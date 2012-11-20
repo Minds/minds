@@ -480,3 +480,19 @@ div.galleryItem div {
 	font-size:11px;
 	display:block;
 }
+
+.archive{
+	width:500px;
+	margin:auto;
+}
+.archive > .column {
+	float:left;
+}
+.archive > .column > a >img{
+	margin:25px 40px;
+}
+.archive > .column > a > h3{
+	width:100%;
+	text-align:center;
+}
+
