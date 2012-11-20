@@ -502,7 +502,7 @@ function kaltura_htmlawed_filter_tags($hook, $type, $result, $params) {
 		'comments'=>0,
 		'cdata'=>0,
 		'hook_tag' => 'htmlawed_tag_post_processor',
-		'elements'=>'*-applet-iframe-script', // object, embed allowed
+		'elements'=>'*-applet-script', // object, embed allowed
 		'schemes' => '*:http,https,ftp,news,mailto,rtsp,teamspeak,gopher,mms,callto',
 		// apparent this doesn't work.
 		// 'style:color,cursor,text-align,font-size,font-weight,font-style,border,margin,padding,float'
