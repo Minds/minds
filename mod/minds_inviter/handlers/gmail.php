@@ -1,8 +1,8 @@
 <?php
 
-$client_id = '81109256529.apps.googleusercontent.com';
-$client_secret = 'NxxEdQmIZsFvJiI7yJ7PsMr7';
-$redirect_uri = 'http://www.minds.io/invite/handler/gmail';
+$client_id = elgg_get_plugin_setting('gmail_client_id');
+$client_secret = elgg_get_plugin_setting('gmail_client_secret');
+$redirect_uri = elgg_get_site_url() . '/invite/handler/gmail';
 $max_results = 10000;
 
 $auth_code = $_GET["code"];
