@@ -4,7 +4,7 @@
  *
  */
 
-$title = '';
+$title = elgg_echo('minds_inviter:title');
 
 $content = elgg_view('minds_inviter/index');
 
