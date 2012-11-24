@@ -14,7 +14,7 @@ foreach($emails as $email){
 //		continue;
 	}
 	
-	elgg_send_email('minds@minds.com', $email, elgg_echo('minds_inviter:subject'), elgg_echo('minds_inviter:body', array($user->name)));
+	elgg_send_email('minds@minds.com', $email, elgg_echo('minds_inviter:subject', array($user->name)), elgg_echo('minds_inviter:body', array($user->name, $user->email)));
 }
  echo '<script type="text/javascript">
      self.close();
