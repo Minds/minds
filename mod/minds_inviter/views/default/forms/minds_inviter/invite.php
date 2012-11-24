@@ -1,9 +1,8 @@
 <?php
 	$contacts = $vars['contacts'];
 	
-	foreach($contacts as $contact){
-		$name = $contact['name'];
-		$options[$name] = $contact['email'];
+	foreach($contacts as $k => $v){
+		$options[$k] = $v;;
 	}
 ?>
  

@@ -2,7 +2,7 @@
 
 $client_id = elgg_get_plugin_setting('gmail_client_id');
 $client_secret = elgg_get_plugin_setting('gmail_client_secret');
-$redirect_uri = elgg_get_site_url() . '/invite/handler/gmail';
+$redirect_uri = elgg_get_site_url() . 'invite/handler/gmail';
 $max_results = 10000;
 
 $auth_code = $_GET["code"];
@@ -65,7 +65,7 @@ $response = curl_file_get_contents($url);
 $temp = json_decode($response,true);
 
 foreach($temp['feed']['entry'] as $contact){
-	$contacts[]['name'] = $contact['title']['$t'];
-	$contacts[]['email'] = $contact['gd$email']['0']['address'];
+	$name  = $contact['title']['$t'];
+	$contacts[$name] = $contact['gd$email']['0']['address'];
 }
 echo elgg_view_form('minds_inviter/invite', '', array('contacts'=>$contacts));
