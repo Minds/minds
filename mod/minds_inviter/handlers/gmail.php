@@ -59,18 +59,13 @@ curl_close($curl);
 $response = json_decode($result);
 $accesstoken = $response -> access_token;
 
-$url = 'https://www.google.com/m8/feeds/contacts/default/full?max-results=' . $max_results . '&oauth_token=' . $accesstoken;
-$xmlresponse = curl_file_get_contents($url);
-if ((strlen(stristr($xmlresponse, 'Authorization required')) > 0) && (strlen(stristr($xmlresponse, 'Error ')) > 0))//At times you get Authorization error from Google.
-{
-	echo "<h2>OOPS !! Something went wrong. Please try reloading the page.</h2>";
-	exit();
-}
-echo "<h3>Email Addresses:</h3>";
-$xml = new SimpleXMLElement($xmlresponse);
-$xml -> registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
-$result = $xml -> xpath('//gd:email');
+$url = 'https://www.google.com/m8/feeds/contacts/default/full?max-results=' . $max_results . '&alt=json&v=3.0&oauth_token=' . $accesstoken;
+$response = curl_file_get_contents($url);
 
-foreach ($result as $title) {
-	echo $title -> attributes() -> address . "<br>";
+$temp = json_decode($response,true);
+
+foreach($temp['feed']['entry'] as $contact){
+	$contacts[]['name'] = $contact['title']['$t'];
+	$contacts[]['email'] = $contact['gd$email']['0']['address'];
 }
+echo elgg_view_form('minds_inviter/invite', '', array('contacts'=>$contacts));
