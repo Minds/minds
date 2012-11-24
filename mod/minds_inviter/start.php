@@ -18,6 +18,7 @@ function minds_inviter_init(){
 	
 	//register gmail
 	minds_inviter_register_service('gmail');
+	minds_inviter_register_service('facebook');
 	
 	if (elgg_is_logged_in()) {
 		$params = array(
@@ -47,6 +48,11 @@ function minds_inviter_page_handler($page)
 			case 'handler':
 				set_input('provider', $page[1]);
 				require_once "$base/handler.php";
+				break;
+			case 'closewindow':
+				 echo '<script type="text/javascript">
+						     self.close();
+						</script>';
 				break;
 			default:
 				require_once "$base/index.php";
