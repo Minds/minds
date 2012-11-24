@@ -3,9 +3,13 @@
 $client_id = '81109256529.apps.googleusercontent.com';
 $client_secret = 'NxxEdQmIZsFvJiI7yJ7PsMr7';
 $redirect_uri = 'http://www.minds.io/invite/handler/gmail';
-$max_results = 25;
+$max_results = 10000;
 
 $auth_code = $_GET["code"];
+
+if(!$auth_code){
+ 	forward("https://accounts.google.com/o/oauth2/auth?client_id=$client_id&redirect_uri=$redirect_uri&scope=https://www.google.com/m8/feeds/&response_type=code");
+}
 
 function curl_file_get_contents($url) {
 	$curl = curl_init();
@@ -28,6 +32,7 @@ function curl_file_get_contents($url) {
 	//The maximum number of seconds to allow cURL functions to execute.
 	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 	//To stop cURL from verifying the peer's certificate.
+	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST,0);
 
 	$contents = curl_exec($curl);
 	curl_close($curl);
