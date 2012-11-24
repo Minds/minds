@@ -8,9 +8,26 @@
  */
 
 function minds_inviter_init(){
+	
+	//set a global
+	global $INVITE_SERVICES;
 										
 	elgg_extend_view('css/elgg','minds_inviter/css');
 	
+	elgg_register_page_handler('invite', 'minds_inviter_page_handler');
+	
+	//register gmail
+	minds_inviter_register_service('gmail');
+	
+	if (elgg_is_logged_in()) {
+		$params = array(
+			'name' => 'invite',
+			'text' => elgg_echo('friends:invite'),
+			'href' => "invite",
+			'contexts' => array('friends'),
+		);
+		elgg_register_menu_item('page', $params);
+	}
 }
 
 /**
@@ -24,8 +41,9 @@ function minds_inviter_page_handler($page)
 			case 'networks':
 				require_once "$base/index.php";
 				break;
-			case 'callback':
-				require_once "$base/callback.php";
+			case 'handler':
+				set_input('provider', $page[1]);
+				require_once "$base/handler.php";
 				break;
 			default:
 				require_once "$base/index.php";
@@ -34,6 +52,25 @@ function minds_inviter_page_handler($page)
 	return true;
 }
 
+/**
+ * Register a service handler
+ */
+function minds_inviter_register_service($name){
+	global $INVITE_SERVICES;
+	
+	$INVITE_SERVICES[] = $name;
+	
+	return true;
+}
+/**
+ * Retrieve service handlers
+ */
+function minds_inviter_retrieve_services(){
+	global $INVITE_SERVICES;
+	
+	return $INVITE_SERVICES;
+} 
+ 
 elgg_register_event_handler('init','system','minds_inviter_init');		
 
 ?>

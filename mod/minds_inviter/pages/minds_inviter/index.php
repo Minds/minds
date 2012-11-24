@@ -11,7 +11,7 @@ $content = elgg_view('minds_inviter/index');
 $params = array(
 	'content' => $content,
 	'sidebar' => elgg_view('minds_inviter/sidebar'),
-	'title' => $title . " ($num_members)",
+	'title' => $title,
 );
 
 $body = elgg_view_layout('one_column', $params);
