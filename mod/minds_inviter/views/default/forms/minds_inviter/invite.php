@@ -9,7 +9,7 @@
  
 <div>
 	<label><?php echo elgg_echo('minds_inviter:invite'); ?></label><br />
-	<?php echo elgg_view('input/checkboxes', array('options' => $options)); ?>
+	<?php echo elgg_view('input/checkboxes', array('name'=>'emails','options' => $options)); ?>
 </div>
 
 <div class="elgg-foot">

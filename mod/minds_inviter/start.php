@@ -28,6 +28,9 @@ function minds_inviter_init(){
 		);
 		elgg_register_menu_item('page', $params);
 	}
+	
+	$action_base = elgg_get_plugins_path() . 'minds_inviter/actions/minds_inviter';
+	elgg_register_action("minds_inviter/invite", "$action_base/invite.php");
 }
 
 /**

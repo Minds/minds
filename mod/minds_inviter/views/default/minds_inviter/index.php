@@ -11,7 +11,7 @@ $services = minds_inviter_retrieve_services();
 		
 	<?php foreach($services as $service){ ?>
 			<div class="provider">
-				<a class="provider_launch" rel="<?php echo $service;?>" href="#" ><?php echo elgg_echo('minds_inviter:service:'. $service);?></a>
+				<a class="provider_launch" rel="<?php echo $service;?>" href="#" ><?php echo elgg_view('output/img', array('src'=> elgg_get_site_url() . 'mod/minds_inviter/graphics/' . $service . '.jpg', 'width'=> 250, 'title'=>elgg_echo('minds_inviter:service:'. $service)));?></a>
 			</div>
 	<?php } ?>
 	
