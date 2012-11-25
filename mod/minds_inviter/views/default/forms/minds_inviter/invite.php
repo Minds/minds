@@ -17,7 +17,7 @@
 
 echo elgg_view('input/hidden', array('name'=>'user_guid','value' => elgg_get_logged_in_user_guid()));
 
-echo elgg_view('input/submit', array('value' => elgg_echo('minds_inviter:invite')));
+echo elgg_view('input/submit', array('value' => elgg_echo('minds_inviter:invite:submit')));
 
 ?>
 
