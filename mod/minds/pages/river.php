@@ -51,7 +51,7 @@ switch ($page_type) {
 		$page_filter = 'friends';
 		//$options['relationship_guid'] = elgg_get_logged_in_user_guid();
 		//$options['relationship'] = 'friend';
-		$friends = get_user_friends(elgg_get_logged_in_user_guid(), $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10, $offset = 0);
+		$friends = get_user_friends(elgg_get_logged_in_user_guid(), $subtype = ELGG_ENTITIES_ANY_VALUE, 0, 0);
 		foreach($friends as $friend){
 			$friend_guids[] = $friend->guid;
 		}
