@@ -12,7 +12,7 @@ $owner = elgg_get_logged_in_user_entity();
 	</div>
 	
 	<div class="elgg-col-1of3">
-		<a href="#kaltura_create">
+		<a href="archive/upload/videoaudio">
 			<img src="<?php echo elgg_get_site_url();?>mod/stream/graphics/ven.png"/>
 			<h3><?php echo elgg_echo('stream:webcam');?></h3>
 		</a>
