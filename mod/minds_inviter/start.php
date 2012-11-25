@@ -23,6 +23,12 @@ function minds_inviter_init(){
 	//minds_inviter_register_service('windows');
 	minds_inviter_register_service('email');
 	
+	//On first login, promt users to invite friends
+	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted')){
+		elgg_set_plugin_user_setting('prompted', 'yes');
+		forward('invite?intro=true');
+	}
+	
 	if (elgg_is_logged_in()) {
 		$params = array(
 			'name' => 'invite',

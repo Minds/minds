@@ -22,8 +22,11 @@ if(get_input('success')){
 			<div class="provider">
 				<a class="provider_launch" rel="<?php echo $service;?>" href="#" ><?php echo elgg_view('output/img', array('src'=> elgg_get_site_url() . 'mod/minds_inviter/graphics/' . $service . '.jpg', 'width'=> 200, 'title'=>elgg_echo('minds_inviter:service:'. $service)));?></a>
 			</div>
-	<?php } ?>
+	<?php } 
 	
+	if(get_input('intro')){
+		echo elgg_view('output/url', array('text'=>'Continue', 'href'=> 'archive/popular', 'class'=>'elgg-button elgg-button-action'));
+	} ?>
 	</div>
 		<script>
 

@@ -6,6 +6,8 @@
 ?>
 #provider_container{
 	margin:auto;
+	width:100%;
+	float:left;
 }
 #provider_container .blurb{
 	padding:25px 0;
@@ -13,5 +15,10 @@
 #provider_container .provider{
 	width:200px;
 	float:left;
-	margin:10px;
+	margin:20px;
+}
+#provider_container .elgg-button{
+	margin-top:50px;
+	clear:both;
+	float:right;
 }
