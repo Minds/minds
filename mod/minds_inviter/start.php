@@ -21,6 +21,7 @@ function minds_inviter_init(){
 	minds_inviter_register_service('facebook');
 	minds_inviter_register_service('yahoo');
 	//minds_inviter_register_service('windows');
+	minds_inviter_register_service('email');
 	
 	if (elgg_is_logged_in()) {
 		$params = array(

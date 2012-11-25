@@ -15,11 +15,21 @@ function checkAll(bx) {
   }
 }
 </script>
+<style>
+	textarea{
+		width:600px;
+	}
+</style>
 <div>
 	<label><?php echo elgg_echo('minds_inviter:invite'); ?></label><br />
-	<?php echo elgg_view('input/checkboxes', array('name'=>'check-all', 'options'=> array('Select All'=>'all'), 'onclick'=>'checkAll(this)'));?>
-	<br />
-	<?php echo elgg_view('input/checkboxes', array('name'=>'emails','options' => $options)); ?>
+	<?php if($contacts){?>
+		<?php echo elgg_view('input/checkboxes', array('name'=>'check-all', 'options'=> array('Select All'=>'all'), 'onclick'=>'checkAll(this)'));?>
+		<br />
+		<?php 
+			echo elgg_view('input/checkboxes', array('name'=>'emails','options' => $options)); 
+		} else {
+			echo elgg_view('input/plaintext', array('name'=>'emails')); 
+		}?>
 </div>
 
 <div class="elgg-foot">

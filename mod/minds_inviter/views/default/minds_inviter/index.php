@@ -5,6 +5,10 @@
  */
  
 $services = minds_inviter_retrieve_services();
+
+if(get_input('success')){
+	system_message(elgg_echo('minds_inviter:success'));
+}
 ?>
 
 	<div id="provider_container">

@@ -5,8 +5,12 @@ $english = array(
 	
 	'minds_inviter:service:gmail' => 'Gmail',
 	'minds_inviter:service:facebook' => 'Facebook',
+	'minds_inviter:service:yahoo' => 'Yahoo',
+	'minds_inviter:service:email' => 'Import a list of emails',
 	
 	'minds_inviter:title' => 'Invite your friends to Minds.',
+	
+	'minds_inviter:success' => 'Done!',
 	
 	'minds_inviter:blurb' => 'Please select a service below to invite your friends to Minds. We will never ask you for, or store, your passwords for any other application.',
 	
