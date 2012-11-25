@@ -20,7 +20,7 @@ function minds_inviter_init(){
 	minds_inviter_register_service('gmail');
 	minds_inviter_register_service('facebook');
 	minds_inviter_register_service('yahoo');
-	minds_inviter_register_service('windows');
+	//minds_inviter_register_service('windows');
 	
 	if (elgg_is_logged_in()) {
 		$params = array(
@@ -34,6 +34,8 @@ function minds_inviter_init(){
 	
 	$action_base = elgg_get_plugins_path() . 'minds_inviter/actions/minds_inviter';
 	elgg_register_action("minds_inviter/invite", "$action_base/invite.php");
+	
+	elgg_register_viewtype_fallback('popup');
 }
 
 /**

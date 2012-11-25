@@ -68,4 +68,5 @@ foreach($temp['feed']['entry'] as $contact){
 	$name  = $contact['title']['$t'];
 	$contacts[$name] = $contact['gd$email']['0']['address'];
 }
-echo elgg_view_form('minds_inviter/invite', '', array('contacts'=>$contacts));
+$form = elgg_view_form('minds_inviter/invite', '', array('contacts'=>$contacts));
+echo elgg_view_page('', $form);

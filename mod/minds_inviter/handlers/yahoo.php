@@ -47,5 +47,6 @@ if(isset($_SESSION['yahoo_oauth_access_token'])){
 } else {
 	forward($oauthapp->getOpenIDUrl($oauthapp->callback_url));
 }
-print_r($contacts[2]);
-echo elgg_view_form('minds_inviter/invite', '', array('contacts'=>$imported_contacts));
+
+$form = elgg_view_form('minds_inviter/invite', '', array('contacts'=>$imported_contacts));
+echo elgg_view_page('', $form);
