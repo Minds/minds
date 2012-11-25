@@ -13,7 +13,7 @@ function kaltura_video_init() {
 	global $CONFIG,$KALTURA_CURRENT_TINYMCE_FILE;
 
 	//Add the javascript
-	elgg_extend_view('page/elements/head', 'kaltura/jscripts');
+	//elgg_extend_view('page/elements/head', 'kaltura/jscripts');
 	elgg_extend_view('page/elements/head', 'kaltura/meta');
 
 
