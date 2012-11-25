@@ -28,6 +28,14 @@ function minds_inviter_init(){
 		elgg_set_plugin_user_setting('prompted', 'yes');
 		forward('invite?intro=true');
 	}
+		
+	$params = array(
+		'name'=>'invite_side',
+		'text'=>elgg_echo('minds_inviter:invite_link'), 
+		'href'=> 'invite', 
+		'class'=>'elgg-button elgg-button-action'
+		);
+	elgg_register_menu_item('extras', $params);
 	
 	if (elgg_is_logged_in()) {
 		$params = array(

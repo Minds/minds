@@ -22,10 +22,10 @@ function Ads_init() {
             	}
             }
             if ($sidebar_ads == yes) {
-            elgg_extend_view('page/elements/sidebar', 'page/elements/ads-sidebar','700');
+            elgg_extend_view('page/elements/sidebar', 'page/elements/ads-sidebar',700);
             }
             if ($footer_ads == yes){
-            elgg_extend_view('page/elements/footer', 'page/elements/ads-footer', '701');
+            elgg_extend_view('page/elements/footer', 'page/elements/ads-footer', 700);
             }
 }
 ?>
