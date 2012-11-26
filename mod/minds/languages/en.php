@@ -129,7 +129,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
     
 	//river
 	'river:remind:object:wall' => '%s reMinded %s\'s thought',
-	'river:remind:object:kaltura' => '%s reMinded %s\'s media',
+	'river:remind:object:kaltura' => '%s reMinded %s\'s media: %s',
 	
 	/* Quota 
 	 */

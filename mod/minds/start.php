@@ -261,7 +261,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 		}
 		
 		//Remind button
-		if($object->getSubtype() == 'wallpost' || $object->getSubtype() == 'kaltura_video'){
+		if($object->getSubtype() == 'wallpost' || $object->getSubtype() == 'kaltura_video' ||  $object->getSubtype() == 'album' || $object->getSubtype() == 'image' || $object->getSubtype() == 'tidypics_batch'){
 			$options = array(
 					'name' => 'remind',
 					'href' => "action/minds/remind?guid=$object->guid",
@@ -285,7 +285,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
 		
-		if (elgg_get_context() == 'archive') {
+		if (elgg_get_context() == 'archive' || elgg_get_context() == 'photos') {
 		
 			//Remind button
 				$options = array(

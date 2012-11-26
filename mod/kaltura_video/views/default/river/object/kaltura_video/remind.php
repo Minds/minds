@@ -31,9 +31,16 @@ $owner_link = elgg_view('output/url', array(
 		'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($object->kaltura_video_id, 515, 290, 100) . '\' width="525px"/>',
 		'title' => $object->title,
 	));
+	
+$object_link = elgg_view('output/url', array(
+	'href' => $object->getURL(),
+	'text' => $object->title,
+	'class' => 'elgg-river-object',
+	'is_trusted' => true,
+));
 
 
-$summary = elgg_echo("river:remind:object:kaltura", array($subject_link, $owner_link));
+$summary = elgg_echo("river:remind:object:kaltura", array($subject_link, $owner_link, $object_link));
 
 
 echo elgg_view('river/elements/layout', array(
