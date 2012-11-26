@@ -231,8 +231,8 @@ The photo can be viewed here: %s",
 			'river:comment:object:image' => '%s commented on the photo %s',
 			'river:comment:object:album' => '%s commented on the album %s',
 			'river:remind:object:tidypics_batch' => '%s reMinded %s\'s images',
-			'river:remind:object:image' => '%s reMinded %s\'s image',
-			'river:remind:object:album' => '%s reMinded %s\'s album',
+			'river:remind:object:image' => '%s reMinded %s\'s image: %s',
+			'river:remind:object:album' => '%s reMinded %s\'s album: %s',
 
 		// notifications
 			'tidypics:newalbum_subject' => 'New photo album',

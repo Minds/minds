@@ -36,8 +36,15 @@ $owner_link = elgg_view('output/url', array(
 	'is_trusted' => true,
 ));
 
+$object_link = elgg_view('output/url', array(
+	'href' => $image->getURL(),
+	'text' => $image->getTitle(),
+	'class' => 'elgg-river-object',
+	'is_trusted' => true,
+));
 
-$summary = elgg_echo("river:remind:object:image", array($subject_link, $owner_link));
+
+$summary = elgg_echo("river:remind:object:image", array($subject_link, $owner_link, $object_link));
 
 
 echo elgg_view('river/elements/layout', array(
