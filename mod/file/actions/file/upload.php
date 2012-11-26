@@ -9,7 +9,7 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))) ."/kaltura_video/kaltu
 
 // Get variables
 $title = get_input("title");
-$desc = htmlspecialchars(get_input('title', '', false), ENT_QUOTES, 'UTF-8');
+$desc = htmlspecialchars(get_input('description', '', false), ENT_QUOTES, 'UTF-8');
 $access_id = (int) get_input("access_id");
 $container_guid = (int) get_input('container_guid', 0);
 $guid = (int) get_input('file_guid');
