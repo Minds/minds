@@ -160,7 +160,7 @@ class BigBlueButton {
 		if( trim( $welcome ) ) 
 			$params .= '&welcome='.urlencode($welcome);
 
-		return ( $url_create.$params.'&checksum='.sha1("create".$params.$SALT) );
+		return ( $url_create.$params.'&checksum='.sha1("create".$params.$SALT).'&record=true' );
 	}
 	
 	
