@@ -155,7 +155,7 @@ class BigBlueButton {
 		$url_create = $URL."api/create?";
 		$voiceBridge = 70000 + rand(0, 9999);
 
-		$params = 'name='.urlencode($name).'&meetingID='.urlencode($meetingID).'&attendeePW='.urlencode($attendeePW).'&moderatorPW='.urlencode($moderatorPW).'&voiceBridge='.$voiceBridge.'&logoutURL='.urlencode($logoutURL);
+		$params = 'name='.urlencode($name).'&meetingID='.urlencode($meetingID).'&attendeePW='.urlencode($attendeePW).'&moderatorPW='.urlencode($moderatorPW).'&voiceBridge='.$voiceBridge.'&record=true&logoutURL='.urlencode($logoutURL);
 
 		if( trim( $welcome ) ) 
 			$params .= '&welcome='.urlencode($welcome);
