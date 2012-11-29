@@ -17,10 +17,10 @@
 			 "LEFT(".$CONFIG->dbprefix."objects_entity.description,1) = '4' ORDER BY guid DESC LIMIT 1;";
 			 
 	$lastaccesku = "";
-	
+/*	
 	if ($rowlastaccesku = get_data_row($sqllastaccesku)) {
 		$lastaccesku = explode(":", $rowlastaccesku->description);
-	}
+	} */
 $sqlliveusercount = "SELECT ".$CONFIG->dbprefix."objects_entity.description, ".
 			 $CONFIG->dbprefix."objects_entity.guid ".
 			 "FROM ( ".$CONFIG->dbprefix."entities ".$CONFIG->dbprefix."entities ".
@@ -39,7 +39,7 @@ $sqlliveusercount = "SELECT ".$CONFIG->dbprefix."objects_entity.description, ".
 	$exptime=$ztime-30;
 	$users = "";
 	
-	if ($rows = get_data($sqlliveusercount)) {
+	/*if ($rows = get_data($sqlliveusercount)) {
 		foreach($rows as $row) {
 			$descriptionx = $row->description; 
 			$guid = $row->guid;
@@ -66,7 +66,7 @@ $sqlliveusercount = "SELECT ".$CONFIG->dbprefix."objects_entity.description, ".
 			
 		}
 		$users = substr($users, 0, (strlen($users) - 2));
-	}
+	}*/
 
 	$user_name = $object->getOwnerEntity()->name;
 	$url = $object->getURL();
