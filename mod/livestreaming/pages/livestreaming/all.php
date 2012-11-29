@@ -3,54 +3,9 @@
 	/**
 	 * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
 	 */
-
-	// If we're not logged in, forward to the front page
-		if (!isloggedin()) forward();
-
 	// Load Elgg engine
 		require_once(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . "/engine/start.php");
     global $CONFIG;
-$sql = "SELECT ".$CONFIG->dbprefix."objects_entity.guid, ".
-       $CONFIG->dbprefix."objects_entity.title, ".
-       $CONFIG->dbprefix."objects_entity.description, ".
-       $CONFIG->dbprefix."entities.subtype AS subtype_id, ".
-       $CONFIG->dbprefix."entities.owner_guid, ".
-       $CONFIG->dbprefix."entity_subtypes.subtype ".
-			 "FROM ( ".$CONFIG->dbprefix."entities ".$CONFIG->dbprefix."entities ".
-       "INNER JOIN ".
-       $CONFIG->dbprefix."entity_subtypes ".$CONFIG->dbprefix."entity_subtypes ".
-       "ON (".$CONFIG->dbprefix."entities.subtype = ".$CONFIG->dbprefix."entity_subtypes.id)) ".
-       "INNER JOIN ".
-       $CONFIG->dbprefix."objects_entity ".$CONFIG->dbprefix."objects_entity ".
-       "ON (".$CONFIG->dbprefix."objects_entity.guid = ".$CONFIG->dbprefix."entities.guid) ".
-			 "WHERE ".$CONFIG->dbprefix."entity_subtypes.subtype = 'livestreaming'; ";
-
-
-if ($rooms = get_data($sql)) { 
-	foreach($rooms as $room) {
-		$ztime = time();
-		$description = $room->description; 
-		$nilai = explode("^", $description);
-		$cleanup = $nilai[32];
-		$timelastaccess = $nilai[34];
-		$mastercleanup = (datalist_get('lstr_availability') * 86400);
-		//echo $room->title." -> ".$timelastaccess." -> ".$cleanup." -> ".$ztime." -> ".$mastercleanup."<br />";
-		if (($cleanup>0) AND (($ztime-$timelastaccess)>$cleanup)) {
-			// delete_records('objects_entity','guid',$room->guid);
-			delete_data("delete from {$CONFIG->dbprefix}objects_entity where guid = {$room->guid} OR title = '".mysql_real_escape_string($room->title)."'");
-			delete_data("delete from {$CONFIG->dbprefix}entities where guid = {$room->guid}");
-		}
-		
-		if ($mastercleanup > 0) {
-			if (($ztime-$timelastaccess)>$mastercleanup) {
-				// delete_records('objects_entity','guid',$room->guid);
-				delete_data("delete from {$CONFIG->dbprefix}objects_entity where guid = {$room->guid} OR title = '".mysql_real_escape_string($room->title)."'");
-				delete_data("delete from {$CONFIG->dbprefix}entities where guid = {$room->guid}");
-			}
-		}
-	} 
-}
-// end cleanup
 
     $ver=explode('.', get_version(true));
   	if ($ver[1]>7) {
@@ -58,9 +13,8 @@ if ($rooms = get_data($sql)) {
       elgg_push_breadcrumb(elgg_echo('livestreaming'));
     }
 
-		$title = elgg_view_title(elgg_echo("livestreaming:rooms"));
-		
-  	if ($ver[1]>7) {
+	$title = elgg_view_title(elgg_echo("livestreaming:rooms"));
+	
       $options = elgg_list_entities(array(
       	'type' => 'object',
       	'subtype' => 'livestreaming',
@@ -68,17 +22,8 @@ if ($rooms = get_data($sql)) {
       	'full_view' => false,
       	'view_toggle_type' => false
       ));
-    } else {
-  		$options = array();
-  		$options['types']='object';
-  		$options['subtypes']='livestreaming';
-    }
-
-    if (!$options) {
-    	$options = elgg_echo('livestreaming:none');
-    }
+    
   	
-  	if ($ver[1]>7) {
       $sidebar = elgg_view('livestreaming/sidebar');
       $body = elgg_view_layout('content', array(
       	'filter_context' => 'all',
@@ -87,14 +32,6 @@ if ($rooms = get_data($sql)) {
       	'sidebar' => $sidebar,
       ));
 
-    } else {
-      $area2 = $title;
-    	$area2 .= elgg_list_entities($options);
-      $body = elgg_view_layout("two_column_left_sidebar", '', $area2);
-    }
-
 	// Display page
-  	if ($ver[1]>7) echo elgg_view_page(elgg_echo('livestreaming:rooms'),$body, 'default', array( 'sidebar' => "" ));
-    else page_draw(elgg_echo('livestreaming:rooms'),$body);
-
-?>
+ 	echo elgg_view_page(elgg_echo('livestreaming:rooms'),$body, 'default', array( 'sidebar' => "" ));
+ 
