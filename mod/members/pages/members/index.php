@@ -27,7 +27,7 @@ switch ($vars['page']) {
 $params = array(
 	'content' => $content,
 	'sidebar' => elgg_view('members/sidebar'),
-	'title' => $title . " ($num_members)",
+	'title' => $title,
 	'filter_override' => elgg_view('members/nav', array('selected' => $vars['page'])),
 );
 
