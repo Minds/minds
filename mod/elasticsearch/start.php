@@ -294,10 +294,11 @@ function elasticsearch_add($event, $object_type, $object){
  * @return array
  */
 function elasticsearch_update($event, $object_type, $object){
-		
-	$es = new elasticsearch();
-	$es->index = elasticsearch_index;
-	$es->add($object_type, $object->getGUID(), elasticsearch_encode($object));
+	if(elasticsearch_index_allowed($object)){	
+		$es = new elasticsearch();
+		$es->index = elasticsearch_index;
+		$es->add($object_type, $object->getGUID(), elasticsearch_encode($object));
+	}
 	
 	return $es;
 }
