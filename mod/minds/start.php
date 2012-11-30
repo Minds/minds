@@ -81,6 +81,7 @@ function minds_init(){
 	elgg_register_action("minds/river/delete", "$actionspath/river/delete.php");
 	elgg_register_action("minds/upload", "$actionspath/minds/upload.php");
 	elgg_register_action("minds/remind", "$actionspath/minds/remind.php");
+	elgg_register_action("friends/add", "$actionspath/friends/add.php");
 }
 
 function minds_index($hook, $type, $return, $params) {
