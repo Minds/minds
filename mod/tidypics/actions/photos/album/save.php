@@ -11,6 +11,7 @@
 $title = get_input('title');
 $description = get_input('description');
 $tags = get_input('tags');
+$license = get_input('license');
 $access_id = get_input('access_id');
 $container_guid = get_input('container_guid', elgg_get_logged_in_user_guid());
 $guid = get_input('guid');
@@ -36,6 +37,7 @@ $album->description = $description;
 if ($tags) {
 	$album->tags = string_to_tag_array($tags);
 }
+$album->license = $license;
 
 if (!$album->save()) {
 	register_error(elgg_echo("album:error"));

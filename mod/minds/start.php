@@ -67,6 +67,9 @@ function minds_init(){
 	//setup the generic upload endpoint
 	elgg_register_page_handler('upload', 'minds_upload');
 	
+	//setup the licenses pages
+	elgg_register_page_handler('licenses', 'minds_license_page_handler');
+	
 	//setup the tracking of user quota - on a file upload, increment, on delete, decrement
 	elgg_register_event_handler('create', 'object', 'minds_quota_increment');
 	elgg_register_event_handler('delete', 'object', 'minds_quota_decrement');
@@ -203,6 +206,14 @@ function minds_pagesetup(){
 
 function minds_upload($page){
 	include(dirname(__FILE__) . "/pages/inline_upload.php");
+	return true;
+}
+
+/*
+ * License Page
+ */
+function minds_license_page_handler($page){
+	include(dirname(__FILE__) . "/pages/license.php");
 	return true;
 }
 		

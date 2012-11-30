@@ -51,6 +51,8 @@ if ($album->description) {
 
 $body .= $album->viewImages();
 
+$body .= elgg_view('minds/license', array('license'=>$album->license)); 
+
 echo elgg_view('object/elements/full', array(
 	'entity' => $album,
 	'icon' => $owner_icon,
