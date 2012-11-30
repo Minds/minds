@@ -145,13 +145,13 @@ function minds_social_facebook_login(){
 				);
 				
 				// @todo should registration be allowed no matter what the plugins return?
-				if (!elgg_trigger_plugin_hook('register', 'user', $params, TRUE)) {
+				/*if (!elgg_trigger_plugin_hook('register', 'user', $params, TRUE)) {
 					$new_user->delete();
 					// @todo this is a generic messages. We could have plugins
 					// throw a RegistrationException, but that is very odd
 					// for the plugin hooks system.
 					throw new RegistrationException(elgg_echo('registerbad'));
-				}
+				}*/
 			}	
 		}else{
 			try {

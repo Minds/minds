@@ -14,10 +14,10 @@ $login_url = $facebook->getLoginUrl(array(
 				'canvas' => 1,
 				'scope' => 'publish_stream,email, offline_access',
 				'ext_perm' =>  'offline_access',
-				'display' => 'popup',
+				//'display' => 'popup',
 			));
 			
-echo '<div><a href="' . $login_url . '"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/facebook_connect.gif"/></a></div>';
+echo '<div><a href="' . $login_url . '" target="_self"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/facebook_connect.gif"/></a></div>';
 
 /**
  * Twitter Button
