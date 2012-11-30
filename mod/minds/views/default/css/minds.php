@@ -391,3 +391,16 @@ li.elgg-menu-item-rss{
 .elgg-river-attachments .elgg-photo.large{
 	width:500px;
 }
+
+.minds-licenses .license{
+	float:left;
+	width:400px;
+	margin:10px;
+}
+.minds-licenses .license h3{
+	padding:5px 0;
+}
+.minds-licenses .license img{
+	float:left;
+	margin:10px;
+}

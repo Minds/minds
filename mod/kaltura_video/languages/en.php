@@ -277,12 +277,10 @@ Custom players are defined in "Application Studio" sub menu in KMC',
 	'kalturavideo:index:commented' => "Commented",
 	'kalturavideo:index:rated' => "Rated",
 	
-	/* Licenses
-	 */
-	'kalturavideo:license:label' => 'License',
-	'kalturavideo:license:cca' => 'Creative Commons Attribution',
-	'kalturavideo:license:ccs' => 'Creative Commons Sharealike',
-	'kalturavideo:license:gpl' => 'GPL',
+	/* Fallback for early videos */
+	'minds:license:cca' => 'Creative Commons Attribution',
+	'minds:license:ccs' => 'Creative Commons Sharealike',
+	'minds:license:gpl' => 'GPL',
 	
 	'kalturavideo:notconverted' => 'This media is still being converted.',
 	

@@ -10,6 +10,7 @@
 $title = get_input('title');
 $description = get_input('description');
 $tags = get_input('tags');
+$license = get_input('license');
 $access_id = get_input('access_id');
 $guid = get_input('guid');
 
@@ -28,6 +29,7 @@ $image->description = $description;
 if ($tags) {
 	$image->tags = string_to_tag_array($tags);
 }
+$image->license = $license;
 
 if (!$image->save()) {
 	register_error(elgg_echo("image:error"));

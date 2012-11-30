@@ -155,10 +155,11 @@ if (!empty($categories)) {
 echo autop($ob->description);
 ?>
 </div>
-<p><?php echo elgg_echo('kalturavideo:license:label') . ': ' . elgg_echo('kalturavideo:license:' . $ob->license); ?></p>
-<p> <?php echo elgg_view('output/url', array(	'href'=>'/action/archive/download?guid='.$ob->guid,
+<p><?php echo elgg_view('minds/license', array('license'=>$ob->license)); ?> <?php echo elgg_view('output/url', array(	'href'=>'/action/archive/download?guid='.$ob->guid,
 												'text'=> elgg_echo('file:download'),
-												'is_action' => true
+												'is_action' => true,
+												'class'=> 'elgg-button elgg-button-action right'
+																		
 										));?>
 </p>
 <?php echo elgg_view('minds_social/social_footer');?>

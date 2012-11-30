@@ -60,16 +60,8 @@
 		$title_textbox = elgg_view('input/text', array('name' => 'title', 'value' => $title));
 		$text_label = elgg_echo('description');
 		$text_textarea = elgg_view('input/longtext', array('name' => 'description', 'value' => $body));
-		$license_label = elgg_echo('kalturavideo:license:label');
-		$license_dropdown = elgg_view('input/dropdown', array(	'name' => 'license',
-																'id' => 'license',
-																'options_values' => array(
-																	'cca' => elgg_echo('kalturavideo:license:cca'),
-																	'ccs' => elgg_echo('kalturavideo:license:ccs'),
-																	'gpl' => elgg_echo('kalturavideo:license:gpl')
-																	),
-																'value' => $license
-																));
+		$license_label = elgg_echo('minds:license:label');
+		$license_dropdown =  elgg_view('input/licenses', array(	'name' => 'license', 'value' => $license ));
 		$tag_label = elgg_echo('tags');
 		$tag_input = elgg_view('input/tags', array('name' => 'tags', 'value' => $tags));
 		$access_label = elgg_echo('access');

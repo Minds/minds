@@ -19,6 +19,7 @@ function file_prepare_form_vars($file = null) {
 		'description' => '',
 		'access_id' => ACCESS_DEFAULT,
 		'tags' => '',
+		'license' => '',
 		'container_guid' => elgg_get_page_owner_guid(),
 		'guid' => null,
 		'entity' => $file,

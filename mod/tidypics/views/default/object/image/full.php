@@ -63,5 +63,15 @@ if ($photo->description) {
 		'class' => 'mbl',
 	));
 }
+if(!$image->license){
+	$album = get_entity($image->container_guid);
+	$license = $album->license;
+} else {
+	$license = $image->license;
+}
+
+echo elgg_view('minds/license', array('license'=>$license)); 
+
+echo elgg_view('minds_social/social_footer');
 
 echo elgg_view_comments($photo);

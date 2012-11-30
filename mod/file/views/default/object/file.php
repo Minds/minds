@@ -78,7 +78,8 @@ if ($full && !elgg_in_context('gallery')) {
 	$summary = elgg_view('object/elements/summary', $params);
 
 	$text = elgg_view('output/longtext', array('value' => $file->description));
-	$body = "$text $extra";
+	$license =  elgg_view('minds/license', array('license'=>$file->license)); 
+	$body = "$text $extra $license";
 
 	echo elgg_view('object/elements/full', array(
 		'entity' => $file,

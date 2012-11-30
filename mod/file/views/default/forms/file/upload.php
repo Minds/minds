@@ -9,6 +9,7 @@
 $title = elgg_extract('title', $vars, '');
 $desc = elgg_extract('description', $vars, '');
 $tags = elgg_extract('tags', $vars, '');
+$license = elgg_extract('license', $vars, '');
 $access_id = elgg_extract('access_id', $vars, ACCESS_DEFAULT);
 $container_guid = elgg_extract('container_guid', $vars);
 if (!$container_guid) {
@@ -42,16 +43,8 @@ if ($guid) {
 	<?php echo elgg_view('input/tags', array('name' => 'tags', 'value' => $tags)); ?>
 </div>
 <div>
-	<label><?php echo elgg_echo('kalturavideo:license:label'); ?></label>
-    <?php echo elgg_view('input/dropdown', array(	'name' => 'license',
-																'id' => 'license',
-																'options_values' => array(
-																	'cca' => elgg_echo('kalturavideo:license:cca'),
-																	'ccs' => elgg_echo('kalturavideo:license:ccs'),
-																	'gpl' => elgg_echo('kalturavideo:license:gpl')
-																	),
-																
-																));?>
+	<label><?php echo elgg_echo('minds:license:label'); ?></label>
+    <?php echo elgg_view('input/licenses', array(	'name' => 'license', 'value' => $license )); ?>
 </div>                                                             															
 <?php
 

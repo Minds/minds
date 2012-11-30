@@ -153,7 +153,22 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	 */
 	'minds:upload'=>'Upload',
 	'minds:upload:file'=>'File',
-	'minds:upload:nofile' => 'No file was uploaded.'
+	'minds:upload:nofile' => 'No file was uploaded.',
+	
+	/* Licenses
+	 */
+	'minds:license:label' => 'License <a href="' . elgg_get_site_url() . 'licenses" target="_blank"> (?) </a>',
+	'minds:license:attribution-cc' => 'Attribution CC BY',
+	'minds:license:attribution-sharealike-cc' => 'Attribution-ShareAlike BY-SA',
+	'minds:license:attribution-noderivs-cc' => 'Attribution-NoDerivs CC BY-ND',
+	'minds:license:attribution-noncommerical-cc' => 'Attribution-NonCommerical CC BY-NC',
+	'minds:license:attribution-noncommercial-sharealike-cc' => 'Attribution-NonCommerical-ShareAlike CC BY-NC-SA',
+	'minds:license:attribution-noncommercial-noderivs-cc' => 'Attribution-NonCommerical-NoDerivs CC BY-NC-ND',
+	'minds:license:publicdomaincco' => 'Public Domain CCO "No Rights Reserved"',
+	'minds:license:gnuv3' => 'GNU v3 General Public License',
+	'minds:license:gnuv1.3' => 'GNU v1.3 Free Documentation License',
+	'minds:license:mozillapublic' => 'Mozilla Public License',
+	'minds:license:bsd' => 'BSD License',
 
 );
 		
