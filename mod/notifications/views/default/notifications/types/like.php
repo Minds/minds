@@ -13,6 +13,8 @@ if($subtype == 'thewire'){
 } elseif($subtype == 'hjannotation') {
 	$object = get_entity($object->parent_guid);
 	$object_title = ' your comment';
+}elseif($subtype == 'image'){
+	$object_title = $object->getTitle();
 }else{
 	$object_title = $object->title;
 }
