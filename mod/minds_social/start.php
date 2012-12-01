@@ -103,19 +103,23 @@ function minds_social_action($event, $object_type, $object){
 		//send a wirepost
 		if(get_subtype_from_id($object->subtype) == 'wallpost' && $object->owner_guid == $object->to_guid){
 			
-			//post to facebook.
-			try{
-				$facebook->api('/me/feed', 'POST', array('message'=>$object->message, 'access_token' => $fb_access_token));
-			} catch(Exception $e){
+			if($object->facebook == 'on'){
+				//post to facebook.
+				try{
+					$facebook->api('/me/feed', 'POST', array('message'=>$object->message, 'access_token' => $fb_access_token));
+				} catch(Exception $e){
+				}
 			}
 			
-			//post to twitter
-			$desc = $object->message;
-			if(strlen($desc) > 140){
-			$desc = substr($desc, 0, 100) . '... ' . $object->getURL();
+			if($object->twitter == 'on'){
+				//post to twitter
+				$desc = $object->message;
+				if(strlen($desc) > 140){
+				$desc = substr($desc, 0, 100) . '... ' . $object->getURL();
+				}
+				$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
+				$api->post('statuses/update', array('status' => $desc));
 			}
-			$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
-			$api->post('statuses/update', array('status' => $desc));
 		}
 		
 		//say blog has been written

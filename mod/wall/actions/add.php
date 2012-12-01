@@ -13,6 +13,10 @@ $from_guid = elgg_get_logged_in_user_guid();
 $access_id = 1; //hard coded as we seem to be getting errors with ACCESS_DEFAULT
 $message = get_input('body');
 
+// get social permissions
+$facebook = get_input('facebook');
+$twitter =  get_input('twitter');
+
 // make sure the post isn't blank
 if (empty($body)) {
 	register_error(elgg_echo("wall:blank"));
@@ -34,6 +38,9 @@ $post->owner_guid = $from_guid;
 $post->access_id = $access_id;
 $post->message = $message;
 $post->method = $method;
+
+$post->facebook = $facebook;
+$post->twitter = $twitter;
 
 $guid = $post->save();
 if (!$guid) {

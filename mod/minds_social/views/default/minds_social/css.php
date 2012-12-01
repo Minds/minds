@@ -14,3 +14,16 @@
     border:none;
     overflow:hidden;
 }
+
+.social-post-icons{
+	float:right;
+	margin-top:1px;
+}
+.social-post-icons input{
+	float:left;
+	margin:2px 5px;
+}
+.social-post-icons img{
+	float:left;
+	height:15px;
+}
