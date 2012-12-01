@@ -15,6 +15,9 @@ if($subtype == 'thewire'){
 	$object_title = ' your comment';
 }elseif($subtype == 'image'){
 	$object_title = $object->getTitle();
+}elseif($subtype == 'tidypics_batch'){
+	$object = $object->getContainerEntity();
+	$object_title = ' your images in ' . $object->title;
 }else{
 	$object_title = $object->title;
 }
