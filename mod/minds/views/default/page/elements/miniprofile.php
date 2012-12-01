@@ -22,11 +22,11 @@ $wallposts = elgg_get_entities($options);
 <!-- /river_avatar -->
 <div id="dashboard_navigation">
 <ul>
-	<li><?php echo elgg_view('output/url', array( 	'text' => elgg_echo('friends:of') . ': ' . count($user->getFriendsOf()),
+	<li><?php echo elgg_view('output/url', array( 	'text' => elgg_echo('friends:of') . ': ' . count($user->getFriendsOf('', 0)),
 													'href' => 'friendsof/'. $user->username
 												));?>
 	</li>
-	<li><?php echo elgg_view('output/url', array( 	'text' => elgg_echo('friends') . ': ' . count($user->getFriends()),
+	<li><?php echo elgg_view('output/url', array( 	'text' => elgg_echo('friends') . ': ' . count($user->getFriends('', 0)),
 													'href' => 'friends/'. $user->username
 												));?>
 	</li>
