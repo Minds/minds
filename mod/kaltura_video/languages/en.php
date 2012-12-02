@@ -294,6 +294,14 @@ Custom players are defined in "Application Studio" sub menu in KMC',
 	
 	'archive:upload:videoaudio' => 'Video & Audio',
 	'archive:upload:others' => 'Images & Files',
+	
+	/*
+	 * Archive featured, sponsored& trending/popular
+	 */
+	'archive:popular:title' => 'Popular',
+	'archive:featured:title' => 'Featured',
+	'archive:featured:action' => 'Feature',
+	'archive:featured:un-action' => 'Un-feature'
 );
 
 add_translation("en", $translations);

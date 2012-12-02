@@ -161,6 +161,12 @@ echo autop($ob->description);
 												'class'=> 'elgg-button elgg-button-action right'
 																		
 										));?>
+										<?php if(elgg_is_admin_logged_in()){
+											echo elgg_view('output/url', array(	'href'=>'/action/archive/feature?guid='.$ob->guid,
+												'text'=> $ob->featured == true ? elgg_echo('archive:featured:un-action') : elgg_echo('archive:featured:action'),
+												'is_action' => true,
+												'class'=> 'elgg-button elgg-button-action right'
+											));}?>
 </p>
 <?php echo elgg_view('minds_social/social_footer');?>
 <div class="clear"></div>
