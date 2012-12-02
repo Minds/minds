@@ -101,7 +101,9 @@ elseif(elgg_get_context()=='sidebar') {
 	<div class="kalturavideoitem" id="kaltura_video_<?php echo $ob->kaltura_video_id; ?>">
 
 	<div class="left">
-	<p><a href="<?php echo $vars['entity']->getURL(); ?>" class="play"><img src="<?php echo kaltura_get_thumnail($ob->kaltura_video_id, 215, 121, 100); ?>" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
+	<?php 
+		elgg_pop_context(); if(elgg_get_context()=='news'){ $width=140;$height=79;} else {$width=215;$height=121;} elgg_push_context('sidebar');?>
+	<p><a href="<?php echo $vars['entity']->getURL(); ?>" class="play"><img src="<?php echo kaltura_get_thumnail($ob->kaltura_video_id, $width, $height, 100); ?>" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
 	</div>
 
 	<h3><a href="<?php echo $vars['entity']->getURL(); ?>"><?php echo $vars['entity']->title; ?></a></h3>
