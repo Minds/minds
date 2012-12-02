@@ -10,7 +10,7 @@
 
 echo elgg_view_menu('footer', array('sort_by' => 'priority', 'class' => 'elgg-menu-hz'));
 
-echo '<p align="center">Content created and shared here is <a href="http://creativecommons.org/licenses/by/3.0/">free for the world</a></p>';
+echo '<p align="center">Content created and shared here is <a href="' . elgg_get_site_url() . 'licenses">free for the world</a></p>';
 
 $powered_url = elgg_get_site_url() . "mod/minds/graphics/minds_footer.gif";
 

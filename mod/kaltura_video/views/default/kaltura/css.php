@@ -470,7 +470,7 @@ div.galleryItem div {
  * Right sidebar modules
  */
 .elgg-module.sidebar .kalturavideoitem{
-	padding:10px;
+	/*padding:10px;*/
 }
 .elgg-module.sidebar .kalturavideoitem h3 a{
 	font-size:13px;

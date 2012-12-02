@@ -15,7 +15,9 @@ function kaltura_video_init() {
 	//Add the javascript
 	//elgg_extend_view('page/elements/head', 'kaltura/jscripts');
 	elgg_extend_view('page/elements/head', 'kaltura/meta');
-
+	
+	//list featured videos on sidebar
+	elgg_extend_view('page/elements/sidebar', 'archive/featured');
 
 	$addbutton = elgg_get_plugin_setting('addbutton', 'kaltura_video');
 	if (!$addbutton) $addbutton = 'simple';
@@ -136,6 +138,7 @@ function kaltura_video_init() {
 	elgg_register_action("kaltura_video/delete", $action_path . "delete.php");//fallback
 	elgg_register_action("archive/delete", $action_path . "delete.php");//new (studio)
 	elgg_register_action("archive/download", $action_path . "download.php");
+	elgg_register_action("archive/feature", $action_path . "feature.php");
 	elgg_register_action("kaltura_video/update", $action_path . "update.php");
 	elgg_register_action("kaltura_video/upload", $action_path . "upload.php");
 	elgg_register_action("kaltura_video/rate",  $action_path . "rate.php");
