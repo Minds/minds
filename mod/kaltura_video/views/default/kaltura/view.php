@@ -139,11 +139,6 @@ if (!empty($tags)) {
 	echo $tags ;
 }
 
-$categories = elgg_view('categories/view', array('entity' => $ob));
-if (!empty($categories)) {
-	echo ($tags ? ' - ' : '' ).$categories;
-}
-
 ?>
 </p>
 <div class="clearfloat"></div>

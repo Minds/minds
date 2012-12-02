@@ -91,24 +91,10 @@
 		$allowrating = elgg_echo('kalturavideo:rating:allow');
 		$allowcollaborate = elgg_echo('kalturavideo:label:collaborative');
 
-		//collaborate part
-		if(get_entity($vars['entity']->container_guid) instanceof ElggGroup) {
-			$collaborate_part = '<p><label><input type="checkbox" name="collaborate_select" '.$collaborate_on_switch.' /><img src="'. $CONFIG->wwwroot .'mod/kaltura_video/kaltura/images/group.png" alt="'. htmlspecialchars(elgg_echo("kalturavideo:text:iscollaborative")). '" style="vertical-align:middle;" /> '.$allowcollaborate.'</label></p>';
-		}
-		else {
-			$collaborate_part = '';
-		}
-
-		//rating part
-		$rating_part = "<p><label><input type=\"checkbox\" name=\"rating_select\"  {$rating_on_switch} /> {$allowrating}</label></p>";
-		if(elgg_get_plugin_setting("enablerating","kaltura_video") == 'no') {
-			$rating_part = '';
-			$collaborate_part = '';
-		}
 
 		// INSERT EXTRAS HERE
-		$extras = elgg_view('categories',$vars);
-		if (!empty($extras)) $extras = '<div id="kaltura_edit_sidebar">' . $extras . '</div>';
+		$category_label = elgg_echo('categories');
+		$categories = elgg_view('categories',$vars);
 
 ?>
 
@@ -117,27 +103,6 @@
 	$form_body = <<<EOT
 
 	<div id="two_column_left_sidebar_210">
-
-    	<div id="kaltura_edit_sidebar">
-			<div id="content_area_user_title">
-			{$thumb}
-			</div>
-
-			<div class="kaltura_access">
-				<p>{$privacy}: {$access_input}</p>
-			</div>
-
-			<div class="allow_comments">
-				<p><label><input type="checkbox" name="comments_select"  {$comments_on_switch} /> {$allowcomments}</label></p>
-				$rating_part
-				$collaborate_part
-			</div>
-			<div class="publish_kaltura">
-				{$submit_input}
-			</div>
-		</div>
-
-		{$extras}
 
 		$container
 
@@ -166,26 +131,28 @@ EOT;
 			<label>$title_label</label><br />
                         $title_textbox
 		</p>
-		<p class='longtext_editarea'>
-			<label>$text_label</label><br />
+		<p>
+			<label>$text_label</label>
                         $text_textarea
 		</p>
 		<p>
-			<label>$license_label</label><br />
+			<label>$license_label</label>
                         $license_dropdown
 		</p>
 		<p>
+				$categories
+		<p>
+		<p>
+			<label>$access_label</label>
+                        $access_input
+		</p>
 			<label>$tag_label</label><br />
                         $tag_input
 		</p>
-		<!-- <p>
-			<label>$access_label</label><br />
-                        $access_input
-		</p> -->
 		<p>
 			$entity_hidden
 			$uploaded_video
-			<!-- $submit_input -->
+			$submit_input
 		</p>
 	</div><div class="clearfloat"></div><!-- /two_column_left_sidebar_maincontent -->
 EOT;

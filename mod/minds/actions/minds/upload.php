@@ -132,19 +132,8 @@ if (!$_FILES['upload']['name']) {
 		
 			$prefix = "file/";
 		
-			// if previous file, delete it
-			if ($new_file == false) {
-				$filename = $file->getFilenameOnFilestore();
-				if (file_exists($filename)) {
-					unlink($filename);
-				}
-		
-				// use same filename on the disk - ensures thumbnails are overwritten
-				$filestorename = $file->getFilename();
-				$filestorename = elgg_substr($filestorename, elgg_strlen($prefix));
-			} else {
-				$filestorename = elgg_strtolower(time().$_FILES['upload']['name']);
-			}
+			$filestorename = elgg_strtolower(time().$_FILES['upload']['name']);
+			
 		
 			$mime_type = $file->detectMimeType($_FILES['upload']['tmp_name'], $_FILES['upload']['type']);
 			$file->setFilename($prefix . $filestorename);
