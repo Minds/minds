@@ -141,7 +141,12 @@ function minds_social_action($event, $object_type, $object){
 			
 			//post to facebook.
 			try{
-				$facebook->api('/me/mindscom:add', 'POST', array('other' => $object->getURL(),'access_token' => $fb_access_token));
+				$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'kaltura_video');
+				$partnerId = elgg_get_plugin_setting('partner_id', 'kaltura_video');
+				$widgetUi = elgg_get_plugin_setting('custom_kdp', 'kaltura_video');
+				$video_location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $object->kaltura_video_id;
+				$video_location_secure = str_replace('http://', 'https://', $video_location);	
+				$facebook->api('/me/feed', 'POST', array('source' => $video_location,'access_token' => $fb_access_token));
 			} catch(Exception $e){
 			}
 			
@@ -154,7 +159,8 @@ function minds_social_action($event, $object_type, $object){
 			
 			//post to facebook.
 			try{
-				$facebook->api('/me/mindscom:post', 'POST', array( 'photo' => $object->getURL(),'access_token' => $fb_access_token));
+				$photo_source = file_get_contents($object->getIconURL('large'));
+				$facebook->api('/me/feed', 'POST', array('source'=>$object->getIconURL('large'),'name'=>$object->getTitle(),'link'=> $object->getURL(),'access_token' => $fb_access_token));
 			} catch(Exception $e){
 			}
 	
