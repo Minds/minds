@@ -131,7 +131,6 @@ if (!$_FILES['upload']['name']) {
 		if (isset($_FILES['upload']['name']) && !empty($_FILES['upload']['name'])) {
 		
 			$prefix = "file/";
-		
 			$filestorename = elgg_strtolower(time().$_FILES['upload']['name']);
 			
 		
