@@ -34,7 +34,10 @@ function embed_extender_parser($input, $view, $context)
 						,'#(((http://)?)|(^./))(((www.)?)|(^./))youtu\.be/([^\[\]()<.,\s\n\t\r]+)#i'
 						,'/(http:\/\/)(www\.)?(vimeo\.com\/groups)(.*)(\/videos\/)([0-9]*)/'
 						,'/(http:\/\/)(www\.)?(metacafe\.com\/watch\/)([0-9a-zA-Z_-]*)(\/[0-9a-zA-Z_-]*)(\/)/'
-						,'/(http:\/\/)(www\.)?(vimeo.com\/)([0-9]+)/');
+						,'/(http:\/\/)(www\.)?(vimeo.com\/)([0-9]+)/'
+						,'/(http:\/\/)(www\.)?(mehmac\.local\/minds\/archive\/show\/)([0-9]+)/'
+						,'/(http:\/\/)(www\.)?(minds\.com\/minds\/archive\/show\/)([0-9]+)/'
+						,'/(http:\/\/)(www\.)?(minds\.io\/minds\/archive\/show\/)([0-9]+)/');
 	
 	$custom_provider = elgg_get_plugin_setting('custom_provider', 'embed_extender');		
 

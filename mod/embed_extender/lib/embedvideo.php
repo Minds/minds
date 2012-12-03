@@ -41,6 +41,8 @@ function videoembed_create_embed_object($url, $guid, $videowidth=0, $input) {
 		return videoembed_youtube_handler($url, $guid, $videowidth);
 	} else if (strpos($url, 'youtu.be') != false) {
 		return videoembed_youtube_shortener_parse_url($url, $guid, $videowidth);
+	} else if (strpos($url, 'mehmac.local') != false || strpos($url, 'minds.com') != false || strpos($url, 'minds.io') != false) {
+		return videoembed_minds_handler($url, $guid, $videowidth);
 	} else if (strpos($url, 'video.google.com') != false) {
 		return videoembed_google_handler($url, $guid, $videowidth);
 	} else if (strpos($url, 'vimeo.com') != false) {
@@ -129,6 +131,16 @@ function videoembed_add_object($type, $url, $guid, $width, $height) {
 		case 'youtube':
 			$videodiv .= "<object width=\"$width\" height=\"$height\"><param name=\"movie\" value=\"http://{$url}&hl=en&fs=1&showinfo=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><embed src=\"http://{$url}&hl=en&fs=1&showinfo=0\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"$width\" height=\"$height\"></embed></object>";
 			//$videodiv .= "<span><h1>". videoembed_get_metadata($url, 'youtube')->title ." via YouTube</h1></span><img src='". videoembed_get_metadata($url, 'youtube')->thumbnail . "' width='".$width."'  height='".$height."' oembed_url='".$url."' class='oembed'/>";
+			break;
+		case 'minds':
+			elgg_load_js('uiVideoInline');
+			$image = elgg_view('output/url', array(
+				'href' => false,
+				'class' => 'uiVideoInline archive',
+				'video_id'=> $url,
+				'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($url, $width, $height, 100) . '\'/>',
+			));
+			$videodiv .= $image;
 			break;
 		case 'google':
 			$videodiv .= "<embed id=\"VideoPlayback\" src=\"http://video.google.com/googleplayer.swf?docid={$url}&hl=en&fs=true\" style=\"width:{$width}px;height:{$height}px\" allowFullScreen=\"true\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\"> </embed>";
@@ -249,7 +261,51 @@ function videoembed_youtube_shortener_parse_url($url, $guid, $videowidth) {
 
 	return $embed_object;
 }
+/**
+ * main minds interface
+ *
+ * @param string $url
+ * @param integer $guid unique identifier of the widget
+ * @param integer $videowidth  optional override of admin set width
+ * @return string css style, video div, and flash <object>
+ */
+function videoembed_minds_handler($url, $guid, $videowidth) {
+		
+	// this extracts the core part of the url needed for embeding
+	$videourl = videoembed_minds_parse_url($url);
+	if (!isset($videourl)) {
+		return '<p><b>' . elgg_echo('embedvideo:parseerror', array('minds')) . '</b></p>';
+	}
+	
+	videoembed_calc_size($videowidth, $videoheight, 16/9, 0);
 
+	$embed_object = videoembed_add_css($guid, $videowidth, $videoheight);
+
+	$embed_object .= videoembed_add_object('minds', $videourl, $guid, $videowidth, $videoheight);
+
+	return $embed_object;
+}
+/**
+ * parse google url
+ *
+ * @param string $url
+ * @return string hash
+ */
+function videoembed_minds_parse_url($url) {
+	$path = str_replace(elgg_get_site_url(), '',$url);
+	$path = explode('/', $path);
+	$guid = $path[2];
+
+	$video = get_entity($guid);
+	//set the tags
+	$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'kaltura_video');
+	$partnerId = elgg_get_plugin_setting('partner_id', 'kaltura_video');
+
+	$widgetUi = elgg_get_plugin_setting('custom_kdp', 'kaltura_video');
+		
+	$location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $video->kaltura_video_id;
+	return $video->kaltura_video_id;
+}
 /**
  * main google interface
  *
