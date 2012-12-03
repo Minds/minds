@@ -12,7 +12,7 @@
 	position: absolute;
 }
 
-.elgg-menu .elgg-menu-thumbs li {
+.elgg-menu.elgg-menu-thumbs li {
 	margin-left: 5px;
 }
 
