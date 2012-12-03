@@ -312,6 +312,7 @@ function kaltura_video_page_handler($page) {
 				forward('archive/wall');
 				break;
 			case 'wall':
+				$tab = $page[1] ? $page[1] : 'featured';
 				set_input('tab', $page[1]);
 				include(dirname(__FILE__) . "/pages/kaltura/wall.php");
 				return true;

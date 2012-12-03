@@ -49,7 +49,7 @@ if ($context) {
 		//remove other options if on the featured wall
 		if(get_input('tab')=='popular'){
 			if($name == 'files'){ continue;}
-		} else {
+		} elseif(get_input('tab')=='featured') {
 			if($name == 'files'){ continue;}
 			if($name == 'images'){ continue;}
 			if($name == 'media'){ continue;}
