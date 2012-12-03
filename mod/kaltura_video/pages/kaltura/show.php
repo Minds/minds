@@ -30,9 +30,12 @@
 		
 	$video_location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $videopost->kaltura_video_id;
 	$video_location_secure = str_replace('http://', 'https://', $video_location);	
+	
+	$thumbnail = kaltura_get_thumnail($videopost->kaltura_video_id, 640, 360, 100);	
 
 	 minds_set_metatags('og:type', 'video.other');
-	 minds_set_metatags('og:image', $videopost->kaltura_video_thumbnail);
+	 //minds_set_metatags('og:url',trim($videopost->getURL()));
+	 minds_set_metatags('og:image', $thumbnail);
 	 minds_set_metatags('og:title', $videopost->title);
 	 minds_set_metatags('og:description', $videopost->description);
 	 minds_set_metatags('og:video', $video_location);

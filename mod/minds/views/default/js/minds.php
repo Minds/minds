@@ -21,6 +21,14 @@
 		  $(".elgg-button.elgg-button-dropdown").toggleClass("elgg-state-active");
 		  $("#login-dropdown-box").slideToggle("fast"); 
 		});
+		
+		$('.thumbnail-tile').hover(
+			function(){
+		   		$(this).children('.hover').fadeIn();
+			},
+			function(){
+		   		$(this).children('.hover').fadeOut();
+			}); 
 	 };
 	 
 	

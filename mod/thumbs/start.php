@@ -21,6 +21,7 @@ function thumbs_init() {
 	// registered with priority < 500 so other plugins can remove likes
 	elgg_register_plugin_hook_handler('register', 'menu:river', 'thumbs_river_menu_setup');
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'thumbs_entity_menu_setup');
+	elgg_register_plugin_hook_handler('register', 'menu:thumbs', 'thumbs_entity_menu_setup');
 	
 
 	$actions_base = elgg_get_plugins_path() . 'thumbs/actions/thumbs';

@@ -12,6 +12,10 @@
 	position: absolute;
 }
 
+.elgg-menu .elgg-menu-thumbs li {
+	margin-left: 5px;
+}
+
 .elgg-menu .elgg-menu-item-likes-count {
 	margin-left: 3px;
 }

@@ -169,6 +169,8 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	'minds:license:gnuv1.3' => 'GNU v1.3 Free Documentation License',
 	'minds:license:mozillapublic' => 'Mozilla Public License',
 	'minds:license:bsd' => 'BSD License',
+	
+	'categories' => 'Category',
 
 );
 		
