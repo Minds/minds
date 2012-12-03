@@ -42,13 +42,6 @@ if(elgg_is_logged_in()){
 		));
 }
 
-// get tagcloud
-// $area3 = "This will be a tagcloud for all blog posts";
-
-// Get categories, if they're installed
-global $CONFIG;
-$area3 = elgg_view('kaltura/categorylist',array('baseurl' => $CONFIG->wwwroot . 'search/?subtype=kaltura_video&tagtype=universal_categories&tag=','subtype' => 'kaltura_video'));
-
 $body = elgg_view_layout("tiles", array(
 					'content' => $content, 
 					'sidebar' => false,

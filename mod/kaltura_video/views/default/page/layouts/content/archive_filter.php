@@ -45,6 +45,17 @@ if ($context) {
 	);
 	
 	foreach ($tabs as $name => $tab) {
+		
+		//remove other options if on the featured wall
+		if(get_input('tab')=='popular'){
+			if($name == 'files'){ continue;}
+		} else {
+			if($name == 'files'){ continue;}
+			if($name == 'images'){ continue;}
+			if($name == 'media'){ continue;}
+			if($name == 'all'){ continue;}
+		}
+		
 		$tab['name'] = $name;
 		
 		elgg_register_menu_item('filter', $tab);
