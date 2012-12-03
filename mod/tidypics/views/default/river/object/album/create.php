@@ -12,7 +12,7 @@ $album_river_view = elgg_get_plugin_setting('album_river_view', 'tidypics');
 if ($album_river_view == "cover") {
 	$image = $album->getCoverImage();
 	if ($image) {
-		$attachments = elgg_view_entity_icon($image, 'tiny');
+		$attachments = elgg_view_entity_icon($image, 'medium');
 	}
 } else {
 	$images = $album->getImages(7);

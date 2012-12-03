@@ -10,7 +10,7 @@ elgg_set_context('search');
 // Get the guid
 $query = get_input("q");
 $object_type = get_input("o_type");
-$limit = get_input("limit", 25);
+$limit = get_input("limit", 10);
 $offset = get_input("offset");
 $sort = 'name:asc';
 

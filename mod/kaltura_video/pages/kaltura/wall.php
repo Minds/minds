@@ -24,7 +24,7 @@ if($tab == 'popular'){
 	$entities = elgg_get_entities_from_annotation_calculation($options);
 	$title = elgg_echo('archive:popular:title') . ' | ' .elgg_view('output/url', array('href'=>'archive/wall/featured', 'text'=> elgg_echo('archive:featured:title'))); //this is not the best way to do this MH
 } else {
-	$options = array('types' => 'object', 'subtypes' => $subtypes, 'metadata_name_value_pairs'=> array('name' => 'featured','value'=>true ),'limit' => 5);
+	$options = array('types' => 'object', 'subtypes' => $subtypes, 'metadata_name_value_pairs'=> array('name' => 'featured','value'=>true ),'limit' => $limit);
 	$entities = elgg_get_entities_from_metadata($options);
 	$title = elgg_view('output/url', array('href'=>'archive/wall/popular', 'text'=> elgg_echo('archive:popular:title'))) . ' | ' . elgg_echo('archive:featured:title'); //this is not the best way to do this MH
 }

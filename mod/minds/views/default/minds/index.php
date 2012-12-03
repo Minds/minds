@@ -21,7 +21,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 		Revolution
 	</div>
    <?php 
-   	$options = array('types' => 'object', 'subtypes' => $subtypes, 'metadata_name_value_pairs'=> array('name' => 'featured','value'=>true ),'limit' => 5);
+   	$options = array('types' => 'object', 'subtypes' => $subtypes, 'metadata_name_value_pairs'=> array('name' => 'featured','value'=>true ),'limit' => 12);
 	$entities = elgg_get_entities_from_metadata($options);
 	$vars['entities'] = $entities;
 
