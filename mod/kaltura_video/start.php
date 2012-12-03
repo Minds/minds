@@ -309,7 +309,11 @@ function kaltura_video_page_handler($page) {
 				return true;
 				break;
 			case 'popular':
-				include(dirname(__FILE__) . "/pages/kaltura/popular.php");
+				forward('archive/wall');
+				break;
+			case 'wall':
+				set_input('tab', $page[1]);
+				include(dirname(__FILE__) . "/pages/kaltura/wall.php");
 				return true;
 				break;
 			case 'api_upload':

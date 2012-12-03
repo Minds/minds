@@ -16,24 +16,32 @@ foreach($entities as $entity){
 				'title' => $entity->title,
 				'alt' => $entity->title,
 		));
+		$title = $entity->title;
 	} elseif($entity->getSubtype() == 'image') {
 		$icon = elgg_view('output/img', array(
 				'src' => $entity->getIconURL('large'),
 				'title' => $entity->title,
 				'alt' => $entity->title,
 		));
+		$title = $entity->getTitle();
 	} elseif($entity->getSubtype() == 'file') {
 		continue;
 	}
 	
+	$owner = $entity->getOwnerEntity();
+	
 	echo '<div class="thumbnail-tile">';
 	
-	echo elgg_view('output/url', array(
-			'text' => $icon,
-			'href' => $entity->getURL(),
-		));
-		
-	echo elgg_view_menu('entity', array('entity'=>$entity));
+		echo elgg_view('output/url', array(
+				'text' => $icon,
+				'href' => $entity->getURL(),
+			));
+	
+		echo '<div class="hover"> <div class="inner">';	
+			echo '<div class="title">' . elgg_view('output/url', array('href'=>$entity->getURL(), 'text' =>$title)) . '</div>';
+			echo '<div class="owner">' . elgg_echo('archive:owner_tag') . elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=> $owner->name)) . '</div>'; 
+			echo elgg_view_menu('thumbs', array('entity'=>$entity));
+		echo '</div></div>';
 	
 	echo '</div>';
 }

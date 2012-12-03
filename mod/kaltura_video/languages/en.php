@@ -301,7 +301,9 @@ Custom players are defined in "Application Studio" sub menu in KMC',
 	'archive:popular:title' => 'Popular',
 	'archive:featured:title' => 'Featured',
 	'archive:featured:action' => 'Feature',
-	'archive:featured:un-action' => 'Un-feature'
+	'archive:featured:un-action' => 'Un-feature',
+	
+	'archive:owner_tag' => 'By ',
 );
 
 add_translation("en", $translations);

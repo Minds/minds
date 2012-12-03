@@ -382,6 +382,28 @@ li.elgg-menu-item-rss{
 	width:100%;
 	height:100%;
 }
+.thumbnail-tile .hover{
+	width:300px;
+	height:50px;
+	background:url(<?php echo elgg_get_site_url();?>mod/minds/graphics/transparent_white.png);
+	position:absolute;
+	margin:-50px 0;
+	display:none;
+}
+.thumbnail-tile > .hover > .inner{
+	padding:8px;
+}
+.thumbnail-tile > .hover > .inner > .title{
+	font-size:12px;
+	font-weight:bold;
+	padding:0;
+	margin:0;
+}
+.thumbnail-tile > .hover > .inner > .owner{
+	padding:0;
+	margin:0;
+	font-size:10px;
+}
 .thumbnail-tile .elgg-menu{
 	margin:-25px 5px;
 }
