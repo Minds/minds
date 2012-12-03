@@ -39,7 +39,7 @@
 	 minds_set_metatags('og:video:secure_url',  $video_location_secure); 
 	 minds_set_metatags('og:video:width', '1280');
 	 minds_set_metatags('og:video:height', '720');
-
+	minds_set_metatags('og:other', $video_location);
 	// Display it
 		$area2 = elgg_view("kaltura/view");
 	// Set the title appropriately
