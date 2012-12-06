@@ -121,7 +121,7 @@ echo elgg_view_entity_icon($uob, 'tiny');
 if($group) echo elgg_echo('ingroup')." <a href=\"{$CONFIG->wwwroot}archive/owner/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
  ?>
 <?php echo elgg_echo("kalturavideo:label:length"); ?> <strong><?php echo $metadata->kaltura_video_length; ?></strong>
-<?php echo elgg_echo("kalturavideo:label:plays"); ?> <strong class="ajax_play" rel="<?php echo $ob->kaltura_video_id; ?>"><?php echo intval($ob->kaltura_video_plays); ?></strong>
+<?php echo elgg_echo("kalturavideo:label:plays"); ?> <strong class="ajax_play" rel="<?php echo $ob->kaltura_video_id; ?>"><?php echo kaltura_get_plays_count($mediaEntry); ?></strong>
 <!-- display the comments link -->
 <?php
 if($metadata->kaltura_video_comments_on == 'Off') {
