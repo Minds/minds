@@ -15,6 +15,8 @@ $access_id = $vars['entity']->access_id;
 
 $ob = $vars['entity'];
 
+$kmodel = KalturaModel::getInstance();
+$mediaEntry = $kmodel->getEntry($ob->kaltura_video_id);
 
 //get the number of comments
 $num_comments = $vars['entity']->countComments();
@@ -51,7 +53,7 @@ $subtitle .=
 	
 	elgg_echo("kalturavideo:label:length") . ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>' .
 
-	elgg_echo("kalturavideo:label:plays") . ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.intval($ob->kaltura_video_plays).'</strong>';
+	elgg_echo("kalturavideo:label:plays") . ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.kaltura_get_plays_count($mediaEntry).'</strong>';
 
 
 '<b class="kaltura_video_created">'. elgg_view_friendly_time($ob->time_created).'</b> by ' . $owner_link . elgg_echo("kalturavideo:label:length") . '<strong class="kaltura_video_length">' . $ob->kaltura_video_length . '</strong>';
@@ -119,7 +121,7 @@ elseif(elgg_get_context()=='sidebar') {
 	
 	echo elgg_echo("kalturavideo:label:length"); echo ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>'; ?>
 	
-	<?php echo elgg_echo("kalturavideo:label:plays"); echo ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.intval($ob->kaltura_video_plays).'</strong>'; ?>
+	<?php echo elgg_echo("kalturavideo:label:plays"); echo ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.kaltura_get_plays_count($mediaEntry).'</strong>'; ?>
 	
 	</p>
 	</div>
@@ -141,7 +143,7 @@ elseif(elgg_get_context()=='sidebar') {
 	$info .= elgg_echo('by')." <a href=\"{$vars['url']}pg/kaltura_video/{$owner->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$owner->name}</a> ";
 	if($group) $info .= elgg_echo('ingroup')." <a href=\"{$vars['url']}pg/kaltura_video/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
 	$info .= elgg_echo("kalturavideo:label:length"). ' <strong>'.$metadata->kaltura_video_length.'</strong> ';
-	$info .= elgg_echo("kalturavideo:label:plays"). ' <strong>'.((int)$metadata->kaltura_video_plays).'</strong>';
+	$info .= elgg_echo("kalturavideo:label:plays"). ' <strong>'.kaltura_get_plays_count($mediaEntry).'</strong>';
 	
 
 	if ($num_comments && $metadata->kaltura_video_comments_on != 'Off')
