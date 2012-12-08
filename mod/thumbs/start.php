@@ -39,7 +39,7 @@ function thumbs_entity_menu_setup($hook, $type, $return, $params) {
 
 	$entity = $params['entity'];
 	
-	if($entity->type != "group"){
+	if($entity->type != "group" && $entity->type != "user"){
 
 		// likes button
 		$options = array(
