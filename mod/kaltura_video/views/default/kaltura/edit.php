@@ -65,6 +65,8 @@
 		$tag_label = elgg_echo('tags');
 		$tag_input = elgg_view('input/tags', array('name' => 'tags', 'value' => $tags));
 		$access_label = elgg_echo('access');
+		
+		$thumbnail_input = elgg_view('input/thumbnail_picker', array('entry_id'=>$vars['entity']->kaltura_video_id, 'default'=>$vars['entity']->thumbnail_sec));
 
 		if($comments_on)
 			$comments_on_switch = "checked=\"checked\"";
@@ -148,6 +150,10 @@ EOT;
 		</p>
 			<label>$tag_label</label><br />
                         $tag_input
+		</p>
+		</p>
+			<label>$thumbnail_label</label><br />
+                        $thumbnail_input
 		</p>
 		<p>
 			$entity_hidden

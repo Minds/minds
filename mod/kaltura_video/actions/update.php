@@ -16,6 +16,7 @@ $title = get_input('title');
 $desc = get_input('description');
 $license = get_input('license');
 $tags = get_input('tags');
+$thumbnail_sec = get_input('thumbnail_selector');
 $access = get_input('access_id');
 $comments_on = get_input('comments_select','Off');
 $rating_on = get_input('rating_select','Off');
@@ -75,7 +76,7 @@ if($video_id) {
 			//now update the object!
 			$entry->comments_on = $comments_on; //whether the users wants to allow comments or not on the blog post
 			$entry->rating_on = $rating_on; //whether the users wants to allow comments or not on the blog post
-			if(!($ob = kaltura_update_object($entry,null,$access,$ob->owner_guid,null,true, array('license'=> $license)))) {
+			if(!($ob = kaltura_update_object($entry,null,$access,$ob->owner_guid,null,true, array('license'=> $license, 'thumbnail_sec'=>$thumbnail_sec)))) {
 				$error = "Error update Elgg object";
 			}
 			else {

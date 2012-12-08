@@ -7,7 +7,7 @@ $english = array(
 	 */
 	'more' => 'Elements',
 	
-	'widgets:add' => 'Element Gallery',
+	'widgets:add' => 'Widgets',
 	
 	//login
 	'login' => 'Enter',

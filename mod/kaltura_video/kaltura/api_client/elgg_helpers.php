@@ -291,6 +291,10 @@ function kaltura_update_object(&$entry,$kmodel=null,$access=null,$user_guid=null
 	if($params['license']){
 		$ob->license = $params['license'];
 	}
+	//setup the setup thumbnail time
+	if($params['thumbnail_sec']){
+		$ob->thumbnail_sec = $params['thumbnail_sec'];
+	}
 	$ob->save();
 	return $ob;
 }
@@ -527,14 +531,18 @@ function kaltura_view_select_privacity($video_id,$access_id,$group_mode=false,$c
 	return $ret;
 }
 
-function kaltura_get_thumnail($entry_id, $width=100, $height=100, $quality=100, $slice = 5){
+function kaltura_get_thumnail($entry_id, $width=100, $height=100, $quality=100, $vid_sec = 2){
+	$ob = kaltura_get_entity($entry_id);
+	if($ob->thumbnail_sec){
+		$vid_sec = $ob->thumbnail_sec;
+	}
 	if(elgg_get_site_url() == 'http://www.minds.com/'){
 		$kaltura_server = 'http://thumbnails.minds.tv';
 	} else {
 		$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'kaltura_video');
 	}
 	$partnerId = elgg_get_plugin_setting('partner_id', 'kaltura_video');
-	$thumbnail_url = "$kaltura_server/p/$partnerId/thumbnail/entry_id/$entry_id/width/$width/height/$height/quality/$quality/type/3";
+	$thumbnail_url = "$kaltura_server/p/$partnerId/thumbnail/entry_id/$entry_id/width/$width/height/$height/quality/$quality/type/3/vid_sec/$vid_sec/";
 	return $thumbnail_url;
 }
 
