@@ -175,7 +175,7 @@ function thumbs_trending($return_type = 'guids'){
 	
 	if($return_type == 'guids'){
 		foreach($entities as $entity){
-			if($entity->countAnnotations('thumbs:up') > 10){
+			if($entity->countAnnotations('thumbs:up') > 3){
 				$guids[] = $entity->guid;
 			}
 		}
