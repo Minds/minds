@@ -7,6 +7,9 @@ $english = array(
 	'channel' => 'Channel',
 	'channel:notfound' => 'Sorry. We could not find the requested channel.',
  	'channel:return' => 'Return to channel',
+ 	
+	//channel elements menu title
+	'channel:elements' => 'Elements',
 	
 	//the widget
 	'channel:widget:info:title' => 'About me',

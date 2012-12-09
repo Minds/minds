@@ -171,3 +171,95 @@
 .elgg-button.elgg-button-action.channel{
 	margin-left:5px;
 }
+
+/**
+ * Subscribed will show a blue colour
+ */
+.subscribed{
+	background:#4690D6 url(http://www.minds.com/_graphics/button_graduation.png) repeat-x;
+	border:#4690D6;
+	color:#FFF;
+	font-weight:normal;
+}
+.subscribed:hover{
+	background:#4999D6;
+	border:#4690D6;
+	color:#FFF;
+}
+
+/**
+ * Channel elements dropdown
+ */
+.elgg-button-channel-elements{
+	margin-left:10px;
+	color:#FFF;
+	background: #333 url(http://www.minds.com/_graphics/button_graduation.png) repeat-x left 10px;
+}
+
+.elgg-button-channel-elements:before {
+	content: "\25BC";
+	font-size: smaller;
+	margin-right: 4px;
+}
+.elgg-menu-channel-elements.owner_block{
+	margin-top:-30px;
+}
+.elgg-menu-channel-elements{
+	float:right;
+}
+.elgg-menu-channel-elements > ul {
+	display: none;
+	background-color: rgba(0, 0, 0, 0.75);
+}
+
+.elgg-menu-channel-elements:hover > ul {
+	display: block;
+}
+
+.elgg-menu-channel-elements-dropdown {
+	position: absolute;
+	right:15px;
+	width: 150px;
+	border: 1px solid #000;
+	z-index:10;
+
+	-webkit-border-radius: 4px 4px 4px 4px;
+	-moz-border-radius:	4px 4px 4px 4px;
+	border-radius:	4px 4px 4px 4px;
+
+	-webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+	-moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+}
+
+.elgg-menu-channel-elements-dropdown > li > a {
+	color: #CCC;
+	
+	font-weight: bold;
+	text-decoration:none;
+	padding: 3px 13px 0px 13px;
+	height: 20px;
+	
+	float:right;
+	clear:both;
+
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.elgg-menu-channel-elements-dropdown > li > a:hover {
+	/*background: #EEE;*/
+    color:#4690D6;
+}
+
+.elgg-menu-channel-elements-dropdown > li:last-child > a,
+.elgg-menu-channel-elements-dropdown > li:last-child > a:hover {
+	-webkit-border-radius: 0 0 4px 4px;
+	-moz-border-radius: 0 0 4px 4px;
+	border-radius: 0 0 4px 4px;
+}

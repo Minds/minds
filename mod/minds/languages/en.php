@@ -24,7 +24,7 @@ $english = array(
 	'friends:yours' => "Channels you have subscribed to",
 	'friends:owned' => "Channels %s's subscribed to",
 	'friend:add' => "Subscribe",
-	'friend:remove' => "Un-subscribe",
+	'friend:remove' => "Subscribed",
 
 	'friends:add:successful' => "You have successfully subscribed to %s.",
 	'friends:add:failure' => "We couldn't subscribe to %s.",

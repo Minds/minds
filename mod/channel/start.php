@@ -25,6 +25,9 @@ function channel_init() {
 	
 	elgg_register_plugin_hook_handler('register', 'menu:user_hover', 'channel_hover_menu_setup');
 	
+	//setup the channel elements menu content with defaults
+	elgg_register_plugin_hook_handler('register', 'menu:channel_elements', 'channel_elements_menu_setup');
+	
 
 	elgg_register_simplecache_view('icon/user/default/tiny');
 	elgg_register_simplecache_view('icon/user/default/topbar');
@@ -267,4 +270,71 @@ function channel_hover_menu_setup($hook, $type, $return, $params) {
 
 	return $return;
 }
+
+function channel_elements_menu_setup($hook, $type, $return, $params) {
+	$user = elgg_get_page_owner_entity();
+
+	//archive
+	$url = "archive/owner/$user->username/";
+	$item = new ElggMenuItem('archive', elgg_echo('archive'), $url);
+	$item->setPriority(1);
+	$return[] = $item;
+	
+	//blogs
+	$url = "blog/owner/$user->username/";
+	$item = new ElggMenuItem('blog', elgg_echo('blog'), $url);
+	$item->setPriority(2);
+	$return[] = $item;
+	
+	//bookmarks
+	$url = "bookmarks/owner/$user->username/";
+	$item = new ElggMenuItem('bookmark', elgg_echo('bookmarks'), $url);
+	$item->setPriority(3);
+	$return[] = $item;
+	
+	//events
+	$url = "event_calendar/owner/$user->username/";
+	$item = new ElggMenuItem('events', elgg_echo('events'), $url);
+	$item->setPriority(4);
+	$return[] = $item;
+	
+	//files
+	$url = "file/owner/$user->username/";
+	$item = new ElggMenuItem('file', elgg_echo('file'), $url);
+	$item->setPriority(5);
+	$return[] = $item;
+	
+	//groups
+	$url = "groups/owner/$user->username/";
+	$item = new ElggMenuItem('group', elgg_echo('groups'), $url);
+	$item->setPriority(6);
+	$return[] = $item;
+	
+	//images
+	$url = "photos/owner/$user->username/";
+	$item = new ElggMenuItem('images', elgg_echo('photos'), $url);
+	$item->setPriority(7);
+	$return[] = $item;
+	
+	//market
+	$url = "market/owner/$user->username/";
+	$item = new ElggMenuItem('market', elgg_echo('market'), $url);
+	$item->setPriority(8);
+	$return[] = $item;
+	
+	//pages
+	$url = "pages/owner/$user->username/";
+	$item = new ElggMenuItem('pages', elgg_echo('pages'), $url);
+	$item->setPriority(9);
+	$return[] = $item;
+	
+	//voting
+	$url = "voting/owner/$user->username/";
+	$item = new ElggMenuItem('voting', elgg_echo('poll'), $url);
+	$item->setPriority(10);
+	$return[] = $item;
+
+	return $return;
+}
+
 

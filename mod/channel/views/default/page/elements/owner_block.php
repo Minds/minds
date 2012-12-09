@@ -24,17 +24,16 @@ if ($owner instanceof ElggGroup){
 		'class' => 'elgg-owner-block',
 	));
 	
-}elseif($owner instanceof ElggUser) {
+}elseif(($owner instanceof ElggUser && $owner->getGUID() != elgg_get_logged_in_user_guid())) {
 
 	$header = elgg_view_entity($owner, array('full_view' => false));
 
-	$body = elgg_view_menu('owner_block', array('entity' => $owner));
+	$body = elgg_view_menu('channel_elements', array('class'=>'owner_block'));
 
 	$body .= elgg_view('page/elements/owner_block/extend', $vars);
 
 	echo elgg_view('page/components/module', array(
-		'header' => $header,
-		'body' => $body,
+		'body' => $header . $body,
 		'class' => 'elgg-owner-block',
 	));
 }

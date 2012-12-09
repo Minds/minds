@@ -3,6 +3,7 @@
 	$english = array(
 	
 	'item:object:event_calendar' => "Event calendar",
+	'events' => "Events",
 	'tag_names:event_tags' => "Tags",
 	'event_calendar:optional' => "Optional.",
 	'event_calendar:required' => "Required.",

@@ -39,7 +39,7 @@ if($user instanceof ElggUser){
 				echo elgg_view('output/url', array(
 										'text' => elgg_echo('friend:remove'),
 										'href' => "action/friends/remove?friend={$user->guid}",
-										'class' => 'elgg-button elgg-button-action channel',
+										'class' => 'elgg-button elgg-button-action channel subscribed',
 										'is_action' => true
 									));
 			} else {
@@ -61,5 +61,11 @@ if($user instanceof ElggUser){
 		'rel' => 'toggle',
 		'is_trusted' => true,
 	));
+	
+	/**
+	 * Elements drop down
+	 * 
+	 */
+	echo elgg_view_menu('channel_elements');
 ?>
 </div>
