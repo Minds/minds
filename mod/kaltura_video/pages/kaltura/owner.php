@@ -7,7 +7,7 @@ $user = get_user_by_username($username);
 $filter = get_input("filter", "all");
 
 $page_owner = get_user_by_username($username);
-elgg_set_page_owner_guid($page_owner);
+elgg_set_page_owner_guid($page_owner->getGUID());
 
 if($filter == 'media')
 $subtypes = 'kaltura_video';
