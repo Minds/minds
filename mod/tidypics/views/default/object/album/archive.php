@@ -12,7 +12,7 @@ $album = elgg_extract('entity', $vars);
 $owner = $album->getOwnerEntity();
 
 $owner_link = elgg_view('output/url', array(
-	'href' => "photos/owner/$owner->username",
+	'href' => $owner->getURL(),
 	'text' => $owner->name,
 	'is_trusted' => true,
 ));

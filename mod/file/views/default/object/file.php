@@ -21,7 +21,7 @@ $mime = $file->mimetype;
 $base_type = substr($mime, 0, strpos($mime,'/'));
 
 $owner_link = elgg_view('output/url', array(
-	'href' => "file/owner/$owner->username",
+	'href' => $owner->getURL(),
 	'text' => $owner->name,
 	'is_trusted' => true,
 ));
