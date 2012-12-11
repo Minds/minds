@@ -12,7 +12,7 @@ $english = array(
 	'channel:elements' => 'Elements',
 	
 	//the widget
-	'channel:widget:info:title' => 'About me',
+	'channel:widget:info:title' => 'About',
 	
 	//the avatar widget
 	'channel:widget:avatar:title' => 'Avatar',
