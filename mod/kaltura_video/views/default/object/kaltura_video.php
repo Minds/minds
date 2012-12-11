@@ -38,7 +38,7 @@ $menu = elgg_view_menu('entity', array(
 $owner = get_entity($ob->owner_guid);
 $owner_link = elgg_view('output/url', array(
 	'text' => $owner->name,
-	'href' => 'archive/owner/' . $owner->username
+	'href' => $owner->getURL()
 ));
 
 $title = elgg_view('output/url', array(
