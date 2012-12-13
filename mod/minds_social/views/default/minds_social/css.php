@@ -27,3 +27,7 @@
 	float:left;
 	height:15px;
 }
+
+.reddit-share{
+	margin-left:20px;
+}
