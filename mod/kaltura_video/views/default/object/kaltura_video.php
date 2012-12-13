@@ -46,7 +46,7 @@ $title = elgg_view('output/url', array(
 	'href' => $ob->getURL(),
 ));
 
-$description = $ob->description ? substr(strip_tags($ob->description), 0, 125) . '...' : '';
+$description = $ob->description ? minds_filter(substr(strip_tags($ob->description), 0, 125) . '...') : '';
 
 $subtitle .= 
 	elgg_echo('by') . ' ' . $owner_link . ' ' .
