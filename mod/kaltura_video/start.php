@@ -131,6 +131,10 @@ function kaltura_video_init() {
 		elgg_register_plugin_hook_handler('validate', 'input', 'kaltura_htmlawed_filter_tags', 1);
 	}
 	
+	//register adapt.tv ad script
+	elgg_register_js('adapt.tv', 'http://redir.adap.tv/redir/javascript/lightintegration.js');
+	elgg_load_js('adapt.tv');
+	
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'kaltura_video/actions/';
 
