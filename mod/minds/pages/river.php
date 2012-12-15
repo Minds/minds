@@ -35,6 +35,7 @@ switch ($page_type) {
 	case 'single':
 		$id = get_input('id');
 		$options['ids'] = $id;
+		break;
 	case 'thumbsup':
 		$title = elgg_echo('river:thumbs-up');
 		$page_filter = 'thumbsup';
