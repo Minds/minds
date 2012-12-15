@@ -9,8 +9,8 @@ elgg_load_library('channels:suggested');
 $page_owner = elgg_get_logged_in_user_entity();
 elgg_set_page_owner_guid($page_owner->guid);
 
-$friends = get_input('friends', 0);
-$groups = get_input('groups', 0);
+$friends = get_input('friends', 10);
+$groups = get_input('groups', 10);
 
 $num_members = get_number_users();
 
@@ -31,7 +31,7 @@ switch ($vars['page']) {
 		break;
 	case 'suggested':
 		$people = suggested_friends_get_people($page_owner->guid, $friends, $groups);
-		$content = elgg_view_entity_list($people);
+		$content = elgg_view('suggested_friends/list', array('people' => $people));
 		break;
 	case 'online':
 		$content = get_online_users();
