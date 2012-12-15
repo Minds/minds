@@ -28,6 +28,10 @@ function channel_init() {
 	//setup the channel elements menu content with defaults
 	elgg_register_plugin_hook_handler('register', 'menu:channel_elements', 'channel_elements_menu_setup');
 	
+	elgg_register_library('channels:suggested', elgg_get_plugins_path() . 'channel/lib/suggested.php');
+	
+	$item = new ElggMenuItem('channels', elgg_echo('channels'), 'channels');
+	elgg_register_menu_item('site', $item);
 
 	elgg_register_simplecache_view('icon/user/default/tiny');
 	elgg_register_simplecache_view('icon/user/default/topbar');
@@ -39,6 +43,8 @@ function channel_init() {
 
 	elgg_register_page_handler('profile', 'channel_page_handler');
 	elgg_register_page_handler('channel', 'channel_page_handler');
+	//register a page handler for channels search and suggestions
+	elgg_register_page_handler('channels', 'channels_page_handler');
 
 	elgg_extend_view('page/elements/head', 'channel/metatags');
 	elgg_extend_view('css/elgg', 'channel/css');
@@ -100,7 +106,7 @@ function channel_init() {
 }
 
 /**
- * Channel page handler
+ * Channel page handler (for profiles)
  *
  * @param array $page Array of URL segments passed by the page handling mechanism
  * @return bool
@@ -152,6 +158,33 @@ function channel_page_handler($page) {
 	echo elgg_view_page($user->name, $body);
 	return true;
 }
+
+
+/**
+ * Channels page handler (for suggested and search etc)
+ *
+ * @param array $page url segments
+ * @return bool
+ */
+function channels_page_handler($page) {
+	$base = elgg_get_plugins_path() . 'channel/pages';
+
+	if (!isset($page[0])) {
+		$page[0] = 'popular';
+	}
+
+	$vars = array();
+	$vars['page'] = $page[0];
+
+	if ($page[0] == 'search') {
+		$vars['search_type'] = $page[1];
+		require_once "$base/search.php";
+	} else {
+		require_once "$base/index.php";
+	}
+	return true;
+}
+
 
 /**
  * Channel URL generator for $user->getUrl();

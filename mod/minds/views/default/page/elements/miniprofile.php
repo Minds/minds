@@ -23,11 +23,11 @@ $wallposts = elgg_get_entities($options);
 <div id="dashboard_navigation">
 <ul>
 	<li><?php echo elgg_view('output/url', array( 	'text' => elgg_echo('friends:of') . ': ' . count($user->getFriendsOf('', 0)),
-													'href' => 'friendsof/'. $user->username
+													'href' => 'channels/subscribers'
 												));?>
 	</li>
 	<li><?php echo elgg_view('output/url', array( 	'text' => elgg_echo('friends') . ': ' . count($user->getFriends('', 0)),
-													'href' => 'friends/'. $user->username
+													'href' => 'channels/subscriptions'
 												));?>
 	</li>
 	<li><?php echo elgg_view('output/url', array( 	'text' => elgg_echo('minds:thoughts') . ': ' . count($wallposts),
