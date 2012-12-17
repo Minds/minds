@@ -56,7 +56,10 @@ function minds_social_facebook_login(){
 	$facebook = minds_social_facebook_init();
 
 	if (!$session = $facebook->getUser()){		
-		forward($facebook->getLoginURL(array('canvas' => 1,
+		$return_url = elgg_get_site_url() . 'social/fb/login';
+		forward($facebook->getLoginURL(array(
+				'redirect_uri' => $return_url,
+				'canvas' => 1,
 				'scope' => 'publish_stream,email, offline_access',
 				'ext_perm' =>  'offline_access',)));
 		if($_SESSION['fb_referrer']){
@@ -152,6 +155,10 @@ function minds_social_facebook_login(){
 					// for the plugin hooks system.
 					throw new RegistrationException(elgg_echo('registerbad'));
 				}*/
+				login($new_user);
+				if($_SESSION['fb_referrer']){
+					forward($_SESSION['fb_referrer']);
+				}
 			}	
 		}else{
 			try {
