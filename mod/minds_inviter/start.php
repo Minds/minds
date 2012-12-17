@@ -24,7 +24,7 @@ function minds_inviter_init(){
 	minds_inviter_register_service('email');
 	
 	//On first login, promt users to invite friends
-	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted')){
+	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted')&&!$_SESSION['fb_referrer']){
 		elgg_set_plugin_user_setting('prompted', 'yes');
 		forward('invite?intro=true');
 	}
