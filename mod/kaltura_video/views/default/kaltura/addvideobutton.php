@@ -10,7 +10,7 @@
 
 global $SKIP_KALTURA_REWRITE;
 if(empty($SKIP_KALTURA_REWRITE)) {
-
+elgg_load_js('kaltura.js');
 ?>
 <script type="text/javascript">
 /* <![CDATA[ */

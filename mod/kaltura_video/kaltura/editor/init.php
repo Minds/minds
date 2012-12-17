@@ -1,4 +1,24 @@
-<script type='text/javascript' src="../js/kaltura.js"></script>
+<?php 
+require_once(dirname(dirname(__FILE__))."/api_client/includes.php");
+if(elgg_get_context() != 'upload'){
+
+elgg_load_js('kaltura.js');
+$js = elgg_get_loaded_js('head');
+$css = elgg_get_loaded_css();
+?><html>
+<head>
+<?php foreach ($js as $script) { ?>
+<script type="text/javascript" src="<?php echo $script; ?>"></script>
+<?php } ?>
+
+<script type="text/javascript">
+<?php echo elgg_view('js/initialize_elgg'); ?>
+</script>
+
+<?php foreach ($css as $link) { ?>
+<link rel="stylesheet" href="<?php echo $link; ?>" type="text/css" />
+<?php } 
+}?>
 
 <script type='text/javascript'>
 /* <![CDATA[ */
@@ -315,5 +335,37 @@ function gotoadmin() {
 	topWindow.KalturaModal.closeModal();
 	topWindow.location = url;
 }
+<?php if(elgg_get_context() != 'upload'){?>
+//at start
+$(document).ready(function() {
+<?php
+if(isset($_REQUEST['new'])) {
+?>
+	loadNew();
+<?php
+}
+elseif(empty($_REQUEST['entryId'])) {
+?>
+	loadGallery(1);
+<?php
+}
+else {
+?>
+	entryId = '<?php echo $_REQUEST['entryId']; ?>';
+	thumb = '<?php echo $_REQUEST['thumbnail']; ?>';
+	editVideo();
+<?php
+}
+?>
+}); <?php } ?>
 /* ]]> */
 </script>
+<?php if(elgg_get_context() != 'upload'){?>
+</head>
+<body>
+<div id="loading" class="loading">
+	<div id="flash-container"></div>
+</div>
+</body>
+</html>
+<?php }?>

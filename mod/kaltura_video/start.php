@@ -37,6 +37,7 @@ function kaltura_video_init() {
 		}
 		else {
 			elgg_extend_view('input/longtext', 'kaltura/addvideobutton',9);
+			elgg_register_js('kaltura.js', elgg_get_site_url() . 'mod/kaltura_video/kaltura/js/kaltura.js');
 			//elgg_extend_view('input/longtext','embed/link',10);
 		}
 	}

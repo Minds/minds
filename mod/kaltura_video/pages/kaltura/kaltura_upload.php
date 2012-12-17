@@ -2,7 +2,7 @@
 /**
  * Contribution wizard page
  */
-
+elgg_set_context('upload');
 require_once(dirname(dirname(dirname(__FILE__)))."/kaltura/api_client/includes.php");
 require_once(dirname(dirname(dirname(__FILE__)))."/kaltura/editor/init.php");
 global $KALTURA_GLOBAL_UICONF;
