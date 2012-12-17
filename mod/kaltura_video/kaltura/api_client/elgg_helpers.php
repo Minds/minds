@@ -145,7 +145,7 @@ function kaltura_get_entity($video_id) {
 }
 
 //creates or updates a kaltura object with all metadata
-function kaltura_update_object(&$entry,$kmodel=null,$access=null,$user_guid=null,$container_guid=null,$force=false, $params = null) {
+function kaltura_update_object(&$entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_guid=null,$container_guid=null,$force=false, $params = null) {
 	global $CONFIG,$KALTURA_GLOBAL_UICONF;
 
 
@@ -168,7 +168,7 @@ function kaltura_update_object(&$entry,$kmodel=null,$access=null,$user_guid=null
 			$ob->tags = $entry->tags;
 			$ob->owner_guid = $user_guid;
 			$ob->container_guid = ($container_guid ? $container_guid : $user_guid);
-			$ob->access_id = ($access!==null ? $access : get_default_access());
+			$ob->access_id = $access;
 			$guid = $ob->save(); //save here to get the guid
 			
 			add_to_river('river/object/kaltura_video/create','create',$user_guid,$guid);
@@ -208,7 +208,7 @@ function kaltura_update_object(&$entry,$kmodel=null,$access=null,$user_guid=null
 		$ob->time_updated = $entry->createdAt;
 	}
 
-	if($access) $ob->access_id = $access;
+	$ob->access_id = $access;
 
 	//group perms
 	$ob->kaltura_video_isgroup = 0;
