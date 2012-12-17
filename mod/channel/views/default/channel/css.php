@@ -11,6 +11,24 @@
 .elgg-avatar-large > a > img{
 	width:425px;
 }
+.elgg-avatar-medium > a > img{
+	width: 100px;
+	height: 100px;
+	
+	/* remove the border-radius if you don't want rounded avatars in supported browsers */
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	
+	-moz-background-clip:  border;
+	background-clip:  border;
+
+	-webkit-background-size: 40px;
+	-khtml-background-size: 40px;
+	-moz-background-size: 40px;
+	-o-background-size: 40px;
+	background-size: 40px;
+}
 .profile {
 	float:left;
 	margin-bottom: 15px;
