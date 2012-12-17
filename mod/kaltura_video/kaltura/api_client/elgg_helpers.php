@@ -341,6 +341,18 @@ function kaltura_get_plays_count($entry){
 	
 }
 
+/*
+ * Get a list of video objects by most viewed
+ */
+function archive_kaltura_get_most_viewed($limit = 25, $offset = 0){
+	$kmodel = KalturaModel::getInstance();
+	$entries = (array) $kmodel->listEntriesbyPlays($limit, $offset);
+
+	foreach($entries["objects"] as $entry){
+		$entry_ids[] = $entry->id;
+	}
+	return $entry_ids;
+}
 
 function kaltura_build_widget_object($ob,$widget_html) {
 	//echo htmlspecialchars(print_r($widget_html,true));

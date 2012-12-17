@@ -155,6 +155,20 @@ class KalturaModel {
 
 		return $this->client->baseEntry->listAction($filter, $pager);
 	}
+	function listEntriesbyPlays($pageSize, $page)
+	{
+		if (!$this->session)
+			$this->startSession();
+
+		$filter = new KalturaMediaEntryFilter();
+		$filter->orderBy = "-plays";
+
+		$pager = new KalturaFilterPager();
+		$pager->pageSize = $pageSize;
+		$pager->pageIndex = $page;
+
+		return $this->client->baseEntry->listAction($filter, $pager);
+	}
 	function listWidgets($pageSize, $page,$uiConfIdEqual=null,$entryIdEqual=null)
 	{
 		if (!$this->session)

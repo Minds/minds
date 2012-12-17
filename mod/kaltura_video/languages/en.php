@@ -65,6 +65,7 @@ $translations = array(
 	'kalturavideo:hide:advoptions' => "Hide sharing",
 	'kalturavideo:label:trendingvideos' => "Top media",
 	'archive:popular' => 'Popular',
+	'archive:mostviewed:title' => 'Most viewed',
 
 	'kalturavideo:text:widgetdesc' => "This widget allows you to show automatically your latest media.",
 	'kalturavideo:error:edittitle' => "Error! This title can not be changed!",

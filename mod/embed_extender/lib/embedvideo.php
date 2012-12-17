@@ -129,7 +129,7 @@ function videoembed_add_object($type, $url, $guid, $width, $height) {
 	// could move these into an array and use sprintf
 	switch ($type) {
 		case 'youtube':
-			$videodiv .= "<object width=\"$width\" height=\"$height\"><param name=\"movie\" value=\"http://{$url}&hl=en&fs=1&showinfo=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><embed src=\"http://{$url}&hl=en&fs=1&showinfo=0\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"$width\" height=\"$height\"></embed></object>";
+			$videodiv .= "<object width=\"$width\" height=\"$height\"><param name=\"movie\" value=\"http://{$url}&hl=en&fs=1&wmode=transparent\"></param><param name=\"allowFullScreen\" value=\"true\"></param><embed src=\"http://{$url}&hl=en&fs=1&wmode=transparent\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"$width\" height=\"$height\"></embed></object>";
 			//$videodiv .= "<span><h1>". videoembed_get_metadata($url, 'youtube')->title ." via YouTube</h1></span><img src='". videoembed_get_metadata($url, 'youtube')->thumbnail . "' width='".$width."'  height='".$height."' oembed_url='".$url."' class='oembed'/>";
 			break;
 		case 'minds':
