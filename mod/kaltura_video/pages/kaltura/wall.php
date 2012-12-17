@@ -24,7 +24,8 @@ if($tab == 'popular'){
 	$entities = elgg_get_entities_from_annotation_calculation($options);
 	$title = elgg_view('archive/wall/title', array('current'=>'popular')); 
 } elseif ($tab == 'mostviewed') {
-	$options = array('types' => 'object', 'subtypes' => $subtypes, 'metadata_name_value_pairs'=> array('name' => 'kaltura_video_id','value'=>archive_kaltura_get_most_viewed()),'limit' => $limit);
+	$mostviewed = archive_kaltura_get_most_viewed();
+	$options = array('types' => 'object', 'subtypes' => $subtypes, 'metadata_name_value_pairs'=> array('name' => 'kaltura_video_id','value'=>$mostviewed),'order_by'=>null,'limit' => $limit);
 	$entities = elgg_get_entities_from_metadata($options);
 	$title = elgg_view('archive/wall/title', array('current'=>'mostviewed')); 
 } else {
