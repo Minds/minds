@@ -54,6 +54,8 @@ if ($context) {
 			if($name == 'images'){ continue;}
 			if($name == 'media'){ continue;}
 			if($name == 'all'){ continue;}
+		} elseif(get_input('tab')=='mostviewed'){
+			if($name == 'files'){ continue;}
 		}
 		
 		$tab['name'] = $name;

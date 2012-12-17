@@ -495,4 +495,7 @@ div.galleryItem div {
 	width:100%;
 	text-align:center;
 }
+.archive-wall-title{
+	margin:0 10px;
+}
 

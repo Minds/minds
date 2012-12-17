@@ -22,11 +22,15 @@ $subtypes = array('kaltura_video', 'image', 'file');
 if($tab == 'popular'){
 	$options = array('annotation_names' => 'thumbs:up', 'types' => 'object', 'subtypes' => $subtypes, 'limit' => $limit, 'offset' => $offset,);
 	$entities = elgg_get_entities_from_annotation_calculation($options);
-	$title = elgg_echo('archive:popular:title') . ' | ' .elgg_view('output/url', array('href'=>'archive/wall/featured', 'text'=> elgg_echo('archive:featured:title'))); //this is not the best way to do this MH
+	$title = elgg_view('archive/wall/title', array('current'=>'popular')); 
+} elseif ($tab == 'mostviewed') {
+	$options = array('types' => 'object', 'subtypes' => $subtypes, 'metadata_name_value_pairs'=> array('name' => 'kaltura_video_id','value'=>archive_kaltura_get_most_viewed() ),'limit' => $limit);
+	$entities = elgg_get_entities_from_metadata($options);
+	$title = elgg_view('archive/wall/title', array('current'=>'mostviewed')); 
 } else {
 	$options = array('types' => 'object', 'subtypes' => $subtypes, 'metadata_name_value_pairs'=> array('name' => 'featured','value'=>true ),'limit' => $limit);
 	$entities = elgg_get_entities_from_metadata($options);
-	$title = elgg_view('output/url', array('href'=>'archive/wall/popular', 'text'=> elgg_echo('archive:popular:title'))) . ' | ' . elgg_echo('archive:featured:title'); //this is not the best way to do this MH
+	$title = elgg_view('archive/wall/title', array('current'=>'featured')); 
 }
 
 $vars['entities'] = $entities;
