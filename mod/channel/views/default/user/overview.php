@@ -10,14 +10,14 @@ if (elgg_is_logged_in()) {
 				echo elgg_view('output/url', array(
 										'text' => elgg_echo('friend:remove'),
 										'href' => "action/friends/remove?friend={$user->guid}",
-										'class' => 'elgg-button elgg-button-action channel subscribed',
+										'class' => 'elgg-button elgg-button-action subscribe subscribed',
 										'is_action' => true
 									));
 			} else {
 				echo elgg_view('output/url', array(	
 										'text' => elgg_echo('friend:add'),
 										'href' => "action/friends/add?friend={$user->guid}",
-										'class' => 'elgg-button elgg-button-action channel',
+										'class' => 'elgg-button elgg-button-action subscribe',
 										'is_action' => true
 									));
 			}
