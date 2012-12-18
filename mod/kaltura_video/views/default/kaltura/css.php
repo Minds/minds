@@ -455,15 +455,20 @@ div.galleryItem div {
 	padding:1em;
 	background:#ffeedd;
 }
-
+.uiVideoInline.archive{
+	width:auto;
+	display:block;
+	position:relative;
+	overflow:hidden;
+}
+/* If anyone has a better way of getting this centred, please left me know!! /MH */
 .uiVideoInline.archive span {
 	position:absolute;
-	display:block;
+	display:inline-block;
 	margin:auto;
-	width:50px;
-	height:50px;
-	margin:10px;
-	background: transparent url(<?php echo elgg_get_site_url(); ?>mod/embed_extender/graphics/play_button.png) no-repeat;
+	height:100%;
+	width:100%;
+	background: transparent url(<?php echo elgg_get_site_url(); ?>mod/embed_extender/graphics/play_button.png) no-repeat center center;
 	z-index:2;
 }
 /**

@@ -138,7 +138,7 @@ function videoembed_add_object($type, $url, $guid, $width, $height) {
 				'href' => false,
 				'class' => 'uiVideoInline archive',
 				'video_id'=> $url,
-				'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($url, $width, $height, 100) . '\'/>',
+				'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($url, $width, $height, 100) . '\' width=\'' . $width . '\'/>',
 			));
 			$videodiv .= $image;
 			break;
