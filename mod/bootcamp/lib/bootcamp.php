@@ -55,7 +55,7 @@ function bootcamp_calculate_progress(){
 			$completed++;
 		} 
 	}
-	$percentage = (count($steps) / (int) $completed) *100;
+	$percentage = ($completed /  count($steps)) *100;
 	return $percentage;
 }
 
@@ -66,7 +66,7 @@ $user = elgg_get_logged_in_user_entity();
 bootcamp_register_step(	array(	'name'=> 'avatar',
 								'title'=> elgg_echo('bootcamp:step:avatar:title'),
 								'content'=> elgg_echo('bootcamp:step:avatar:content'),
-								'href'=> elgg_get_site_url() . 'avatar/edit',
+								'href'=> elgg_get_site_url() . 'avatar/edit/'.$user->username,
 								'priority' => 1,
 								'completed' => $user->icontime ? true : false,
 								'required' => true,
@@ -100,7 +100,7 @@ function bootcamp_has_uploaded_media($user){
 bootcamp_register_step(	array(	'name'=> 'upload',
 								'title'=> elgg_echo('bootcamp:step:upload:title'),
 								'content'=> elgg_echo('bootcamp:step:upload:content'),
-								'href' => elgg_get_site_url() . 'archive/uploader',
+								'href' => elgg_get_site_url() . 'archive/upload',
 								'priority' => 3,
 								'completed' => bootcamp_has_uploaded_media($user),
 								'required' => true,
