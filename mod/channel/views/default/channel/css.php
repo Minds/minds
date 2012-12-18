@@ -207,7 +207,7 @@
 .elgg-owner-block .subscribe{
 	margin:5px 0;
 }
-.elgg-image-block .subscribe{
+.elgg-list .subscribe{
 	margin:0 -5px;
 }
 
