@@ -204,6 +204,12 @@
 	border:#4690D6;
 	color:#FFF;
 }
+.elgg-owner-block .subscribe{
+	margin:5px 0;
+}
+.elgg-image-block .subscribe{
+	margin:0 -5px;
+}
 
 /**
  * Channel elements dropdown

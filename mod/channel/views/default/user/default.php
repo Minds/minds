@@ -44,10 +44,10 @@ if (elgg_get_context() == 'gallery') {
 	} else {
 		$params = array(
 			'entity' => $entity,
-			'title' => $title . elgg_view('user/overview', array('entity' => $entity)),
+			'title' => $title,
 			'metadata' => $metadata,
 			'subtitle' => $entity->briefdescription,
-		//	'content' => elgg_view('user/overview', array('entity' => $entity)),
+			'content' => elgg_view('user/overview', array('entity' => $entity)),
 		);
 	}
 
