@@ -17,7 +17,9 @@ if($object){
 		}
 	}elseif($subtype == 'wallpost'){
 		$object_title = 'a wall post';
-	}else {
+	}elseif($object->river_id) {
+		$object_title = 'a post';
+	}else{
 		$object_title = $object->title;
 	}
 	
