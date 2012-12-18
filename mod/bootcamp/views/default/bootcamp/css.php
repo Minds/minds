@@ -51,3 +51,17 @@
 .bootcamp .step.completed > .number{
 	color:#2C6700;
 }
+
+/**
+ * Sidebar specifics
+ */
+.bootcamp.sidebar .step{
+	padding:10px;
+}
+.bootcamp.sidebar .step > .number{
+	height:45px;
+	padding:0;
+	width:100%;
+	font-size:64px;
+	text-align:center;
+}
