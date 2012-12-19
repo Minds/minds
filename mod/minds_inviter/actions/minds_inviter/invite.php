@@ -30,6 +30,9 @@ foreach($emails as $email){
 	
 	elgg_send_email('minds@minds.com', $email, elgg_echo('minds_inviter:subject', array($user->name)), elgg_echo('minds_inviter:body', array($user->name, $user->email, $link)));
 }
+//update the user to say they have invited someone.
+$user->hasInvited = true;
+$user->save();
 echo '<script type="text/javascript">
 	 window.opener.location = "' . elgg_get_site_url() .'invite?success=true";
      self.close();

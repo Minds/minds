@@ -14,9 +14,13 @@ $english = array(
 	'bootcamp:step:channel:title' => 'Setup your channel',
 	'bootcamp:step:channel:content' => 'Your channel is a representation of you on Minds. Add some widgets and background and make your profile look great!',
 	'bootcamp:step:subscribe:title' => 'Subscribe to other channels',
-	'bootcamp:step:subscribe:content' => 'Connect to other channels on Minds and and follow people who interest you.',
+	'bootcamp:step:subscribe:content' => 'Connect to other channels on Minds and and follow people who interest you',
 	'bootcamp:step:upload:title'=> 'Upload media',
 	'bootcamp:step:upload:content'=>'Contribute a piece of creative commons media to the community',
+	'bootcamp:step:wallpost:title'=> 'Write a status',
+	'bootcamp:step:wallpost:content'=>'Post a status to the news to engage with other users',
+	'bootcamp:step:invite:title'=> 'Invite',
+	'bootcamp:step:invite:content'=>'Introduce your friends to Minds and help to grow the community',
 	
 );
 

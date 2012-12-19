@@ -101,7 +101,33 @@ bootcamp_register_step(	array(	'name'=> 'upload',
 								'title'=> elgg_echo('bootcamp:step:upload:title'),
 								'content'=> elgg_echo('bootcamp:step:upload:content'),
 								'href' => elgg_get_site_url() . 'archive/upload',
-								'priority' => 3,
+								'priority' => 4,
 								'completed' => bootcamp_has_uploaded_media($user),
+								'required' => true,
+							));
+function bootcamp_has_wallpost($user){
+	$return = false;
+	
+	$options = array( 'types'=>'object', 'subtypes'=>array('wallpost'), 'owner_guid'=>$user->getGUID());
+	$posts = elgg_get_entities($options);
+	if($posts){
+		$return = true;
+	}
+	return $return;
+}
+bootcamp_register_step(	array(	'name'=> 'wallpost',
+								'title'=> elgg_echo('bootcamp:step:wallpost:title'),
+								'content'=> elgg_echo('bootcamp:step:wallpost:content'),
+								'href' => elgg_get_site_url() . 'news',
+								'priority' => 5,
+								'completed' => bootcamp_has_wallpost($user),
+								'required' => true,
+							));
+bootcamp_register_step(	array(	'name'=> 'invite',
+								'title'=> elgg_echo('bootcamp:step:invite:title'),
+								'content'=> elgg_echo('bootcamp:step:invite:content'),
+								'href' => elgg_get_site_url() . 'invite',
+								'priority' => 6,
+								'completed' => $user->hasInvited,
 								'required' => true,
 							));
