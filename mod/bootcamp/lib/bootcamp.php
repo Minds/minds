@@ -56,7 +56,7 @@ function bootcamp_calculate_progress(){
 		} 
 	}
 	$percentage = ($completed /  count($steps)) *100;
-	return $percentage;
+	return round($percentage);
 }
 
 /*
