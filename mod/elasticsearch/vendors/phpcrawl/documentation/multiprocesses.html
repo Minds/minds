@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+<head>
+  <title>PHPCrawl webcrawler library for PHP - Using multiple processes</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+  <div id="page">
+    
+       <div id="top">
+        <h1 style="margin: 0px; float: left;">PHPCrawl webcrawler library/framework</h1>
+      </div>
+      
+
+      <div id="container">
+        
+        <iframe id="menuframe" src="menu.html" scrolling="no" frameborder="0"></iframe>
+        
+        <div id="content">
+        <h3>Using multiple processes</h3><br />
+        Since version 0.8 phpcrawl is able to use multiple processes to spider a website. In most cases using
+        more processes simultaneously will speed up the crawling-procedure dramatically.<br /><br />
+        
+        In order to start phpcrawl in multi-process-mode, simply call the <a href="classreferences/PHPCrawler/method_detail_tpl_method_goMultiProcessed.htm" target="blank">goMultiProcessed()</a>-method
+        instead of the <a href="classreferences/PHPCrawler/method_detail_tpl_method_go.htm" target="blank">go()</a>-method to start the crawler.
+        
+        <p id="code">
+        <span style="color: #0000BB">$crawler&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MyCrawler</span><span style="color: #007700">();
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setURL</span><span style="color: #007700">(</span><span style="color: #DD0000">"www.foo.com"</span><span style="color: #007700">);
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addContentTypeReceiveRule</span><span style="color: #007700">(</span><span style="color: #DD0000">"#text/html#"</span><span style="color: #007700">);
+
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;...
+        <br />
+        <br />//&nbsp;Start&nbsp;crawling&nbsp;by&nbsp;using&nbsp;5&nbsp;processes
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">goMultiProcessed</span><span style="color: #007700">(</span><span style="color: #0000BB">5</span><span style="color: #007700">);
+
+        <br /></span>
+        </span>
+        </p>
+        
+        However, there are some things to consider when using the multi-process mode:
+        
+        <ul>
+          <li>Some PHP-extensions are required to successfully run phpcrawl in multi-process mode (PCNTL-extension, SEMAPHORE-extension, PDO-extension). For more details see the <a href="requirements.html">requirements page</a>.</li>
+          <li>The multi-process mode only works on unix/linux-based systems</li>
+          <li>Scripts using phpcrawl with mutliple processes have to be run from the commandline (php CLI)</li>
+          <li>Increasing the number of processes to very high values does't automatically mean that the crawling-process will go off faster!
+              The ideally number of processes depends on a lot of circumstances like the available bandwidth, the local technical environment (CPU),
+              the delivery-rate and data-rate of the server hosting the taget-website and so on.<br />
+              Using something between 3 to 10 processes should be good values to start from.
+          </li>
+        </ul>
+        </div>
+        
+        <!--
+        <?php
+        include("google_code.php");
+        ?>
+        -->
+        
+      </div>
+  
+      <div id="footer">Copyright © 2003 - 2012 Uwe Hunfeld phpcrawl@cuab.de</div>
+  </div>
+  
+</div>
+
+</body>
+</html>

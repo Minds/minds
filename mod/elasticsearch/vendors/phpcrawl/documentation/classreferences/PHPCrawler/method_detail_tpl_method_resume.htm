@@ -1,0 +1,108 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+ <title>Documentation for method: 
+PHPCrawler::resume()</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples(mode)
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+
+<h1 id="head">
+  <span>Method: 
+PHPCrawler::resume()</span>
+</h1>
+
+<h2 id="head">
+ <span><a href="overview.html"><< Back to class-overview</a></span>
+</h2>
+
+<br>
+
+
+
+
+
+<!--<?php include("google_code.php"); ?> -->
+
+<div id="docframe">
+
+<div id="section">
+
+Resumes the crawling-process with the given crawler-ID
+</div>
+
+<div id="section">
+<b>Signature:</b>
+<p id="signature">
+  
+public resume($crawler_id)
+</p>
+</div>
+
+<div id="section">
+<b>Parameters:</b>
+<p>
+<table id="param_list">
+  
+<tr><td id="paramname" width="1%"><b>$crawler_id</b>&nbsp;</td><td width="1%"><i><i>int</i></i>&nbsp;</td><td width="*">The crawler-ID of the crawling-process that should be resumed.<br>                       (see <a href="method_detail_tpl_method_getCrawlerId.htm" class="inline">getCrawlerId()</a>)</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Returns:</b>
+<p>
+<table id="param_list">
+  
+<tr><td><i>No information</i></td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Description:</b>
+<p>
+
+  
+If a crawling-process was aborted (for whatever reasons), it is possible<br>to resume it by calling the resume()-method before calling the go() or goMultiProcessed() method<br>and passing the crawler-ID of the aborted process to it (as returned by <a href="method_detail_tpl_method_getCrawlerId.htm" class="inline">getCrawlerId()</a>).<br><br>In order to be able to resume a process, it is necessary that it was initially<br>started with resumption enabled (by calling the <a href="method_detail_tpl_method_enableResumption.htm" class="inline">enableResumption()</a> method).<br><br>This method throws an exception if resuming of a crawling-process failed.<br><br><br>Example of a resumeable crawler-script:<code>// ...<br>$crawler = new MyCrawler();<br>$crawler-&gt;enableResumption();<br>$crawler-&gt;setURL("www.url123.com");<br><br>// If process was started the first time:<br>// Get the crawler-ID and store it somewhere in order to be able to resume the process later on<br>if (!file_exists("/tmp/crawlerid_for_url123.tmp"))<br>{<br>&nbsp; $crawler_id = $crawler-&gt;getCrawlerId();<br>&nbsp; file_put_contents("/tmp/crawlerid_for_url123.tmp", $crawler_id);<br>}<br><br>// If process was restarted again (after a termination):<br>// Read the crawler-id and resume the process<br>else<br>{<br>&nbsp; $crawler_id = file_get_contents("/tmp/crawlerid_for_url123.tmp");<br>&nbsp; $crawler-&gt;resume($crawler_id);<br>}<br><br>// ...<br><br>// Start your crawling process<br>$crawler-&gt;goMultiProcessed(5);<br><br>// After the process is finished completely: Delete the crawler-ID<br>unlink("/tmp/crawlerid_for_url123.tmp");</code>
+  
+</p>
+</div>
+
+
+
+
+
+</div>
+
+
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de"  target="_parent">PhpClassView</a></div>
+
+</div>
+
+</body>
+</html>
