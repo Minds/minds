@@ -11,7 +11,10 @@ elgg_register_event_handler('init', 'system', 'bootcamp_init');
 function bootcamp_init() {
 		
 	elgg_extend_view('css/elgg','bootcamp/css');
-	elgg_extend_view('page/elements/sidebar','bootcamp/sidebar', 1);
+	
+	if(elgg_is_logged_in()){
+		elgg_extend_view('page/elements/sidebar','bootcamp/sidebar', 1);
+	}
 	
 	elgg_register_page_handler('bootcamp', 'bootcamp_page_handler');
 	
