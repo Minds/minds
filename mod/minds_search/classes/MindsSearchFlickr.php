@@ -12,7 +12,7 @@ class MindsSearchFlickr extends MindsSearch {
 
 	function query($q, $limit=10, $page=1) {
 		$q = urlencode($q);
-		$get = $this->get($this->end_point.'api_key='.$this->api_key.'&method=flickr.photos.search&license=cc&text='.$q.'&format=php_serial&per_page='.$limit.'&page='.$page);
+		$get = $this->get($this->end_point.'api_key='.$this->api_key.'&method=flickr.photos.search&license=1,2,3,4,5,6,7&text='.$q.'&format=php_serial&per_page='.$limit.'&page='.$page);
 		$obj = unserialize($get);
 		return $this->renderData($obj['photos']);
 	}
