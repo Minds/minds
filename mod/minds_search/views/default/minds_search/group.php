@@ -7,7 +7,7 @@
 
 $item = $vars['item'];
 
-$icon = elgg_view_entity_icon($item, 'small');
+$icon = elgg_view_entity_icon($item, 'medium');
 
 $title = "<a href=\"{$item->getURL()}\">$item->name</a>";
 
