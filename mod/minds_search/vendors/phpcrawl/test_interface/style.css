@@ -1,0 +1,50 @@
+td, input, select, textarea {
+  font-family: verdana;
+  font-size: 10px;
+}
+
+td.red {
+  color: red;
+}
+
+td.head {
+  background-color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+td.white {
+  background-color: #ffffff;
+}
+
+table {
+  background-color:#e1e1e1;
+}
+
+table.bordered {
+  border-color:#000000;
+  border-width:1px;
+  border-style:solid;
+}
+
+a {
+  font-size: 10px;
+  font-weight: normal;
+}
+
+.warning {
+  color: red;
+  font-size: 12px;
+}
+
+div#comment_div {
+  position:absolute;
+  visibility:hidden;
+  border-right:3px solid black;
+  border-bottom:3px solid black;
+  border-left:1px solid black;
+  border-top:1px solid black;
+  background-color:#e1e1e1;
+  padding:3px;
+  display: inline;
+}

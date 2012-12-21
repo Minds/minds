@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+<head>
+  <title>PHPCrawl webcrawler library for PHP - Example script</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+  <div id="page" style="width: 950px">
+    
+      <div id="top">
+        <h1 style="margin: 0px; float: left;">PHPCrawl webcrawler library/framework</h1>
+      </div>
+      
+
+      <div id="container">
+        
+        <iframe id="menuframe" src="menu.html" scrolling="no" frameborder="0"></iframe>
+        
+        <div id="content">
+        <h3>Tutorial: Example Script</h3><br />
+        The following code is a simple example of using phpcrawl.<br /><br />
+        The listed script just "spiders" some pages of www.php.net until a traffic-limit of 1 mb is reached and prints out some information about all found documents.<br /><br />
+
+        Please note that this example-script (and others) also comes in a file called "example.php" with the phpcrawl-package. It's recommended to run it from the commandline (php CLI).
+        
+        <p id="code" style="width: 670px">
+        <span style="color: #000000">
+        <span style="color: #0000BB">&lt;?php
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;It&nbsp;may&nbsp;take&nbsp;a&nbsp;whils&nbsp;to&nbsp;crawl&nbsp;a&nbsp;site&nbsp;...
+        <br /></span><span style="color: #0000BB">set_time_limit</span><span style="color: #007700">(</span><span style="color: #0000BB">10000</span><span style="color: #007700">);
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Inculde&nbsp;the&nbsp;phpcrawl-mainclass
+        <br /></span><span style="color: #007700">include(</span><span style="color: #DD0000">"libs/PHPCrawler.class.php"</span><span style="color: #007700">);
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Extend&nbsp;the&nbsp;class&nbsp;and&nbsp;override&nbsp;the&nbsp;handleDocumentInfo()-method&nbsp;
+        <br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">MyCrawler&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">PHPCrawler&nbsp;
+        <br /></span><span style="color: #007700">{
+        <br />&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">handleDocumentInfo</span><span style="color: #007700">(</span><span style="color: #0000BB">$DocInfo</span><span style="color: #007700">)&nbsp;
+        <br />&nbsp;&nbsp;{
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Just&nbsp;detect&nbsp;linebreak&nbsp;for&nbsp;output&nbsp;("\n"&nbsp;in&nbsp;CLI-mode,&nbsp;otherwise&nbsp;"&lt;br&gt;").
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">PHP_SAPI&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #DD0000">"cli"</span><span style="color: #007700">)&nbsp;</span><span style="color: #0000BB">$lb&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;</span><span style="color: #0000BB">$lb&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"&lt;br&nbsp;/&gt;"</span><span style="color: #007700">;
+        <br />
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Print&nbsp;the&nbsp;URL&nbsp;and&nbsp;the&nbsp;HTTP-status-Code
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"Page&nbsp;requested:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$DocInfo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">url</span><span style="color: #007700">.</span><span style="color: #DD0000">"&nbsp;("</span><span style="color: #007700">.</span><span style="color: #0000BB">$DocInfo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">http_status_code</span><span style="color: #007700">.</span><span style="color: #DD0000">")"</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Print&nbsp;the&nbsp;refering&nbsp;URL
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"Referer-page:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$DocInfo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">referer_url</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Print&nbsp;if&nbsp;the&nbsp;content&nbsp;of&nbsp;the&nbsp;document&nbsp;was&nbsp;be&nbsp;recieved&nbsp;or&nbsp;not
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$DocInfo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">received&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">)
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Content&nbsp;received:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$DocInfo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">bytes_received</span><span style="color: #007700">.</span><span style="color: #DD0000">"&nbsp;bytes"</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;else
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Content&nbsp;not&nbsp;received"</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;&nbsp;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Now&nbsp;you&nbsp;should&nbsp;do&nbsp;something&nbsp;with&nbsp;the&nbsp;content&nbsp;of&nbsp;the&nbsp;actual
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;received&nbsp;page&nbsp;or&nbsp;file&nbsp;($DocInfo-&gt;source),&nbsp;we&nbsp;skip&nbsp;it&nbsp;in&nbsp;this&nbsp;example&nbsp;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">flush</span><span style="color: #007700">();
+        <br />&nbsp;&nbsp;}&nbsp;
+        <br />}
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Now,&nbsp;create&nbsp;a&nbsp;instance&nbsp;of&nbsp;your&nbsp;class,&nbsp;define&nbsp;the&nbsp;behaviour
+        <br />//&nbsp;of&nbsp;the&nbsp;crawler&nbsp;(see&nbsp;class-reference&nbsp;for&nbsp;more&nbsp;options&nbsp;and&nbsp;details)
+        <br />//&nbsp;and&nbsp;start&nbsp;the&nbsp;crawling-process.&nbsp;
+        <br />
+        <br /></span><span style="color: #0000BB">$crawler&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MyCrawler</span><span style="color: #007700">();
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;URL&nbsp;to&nbsp;crawl
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setURL</span><span style="color: #007700">(</span><span style="color: #DD0000">"www.php.net"</span><span style="color: #007700">);
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Only&nbsp;receive&nbsp;content&nbsp;of&nbsp;files&nbsp;with&nbsp;content-type&nbsp;"text/html"
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addContentTypeReceiveRule</span><span style="color: #007700">(</span><span style="color: #DD0000">"#text/html#"</span><span style="color: #007700">);
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Ignore&nbsp;links&nbsp;to&nbsp;pictures,&nbsp;dont&nbsp;even&nbsp;request&nbsp;pictures
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addURLFilterRule</span><span style="color: #007700">(</span><span style="color: #DD0000">"#\.(jpg|jpeg|gif|png)$#&nbsp;i"</span><span style="color: #007700">);
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Store&nbsp;and&nbsp;send&nbsp;cookie-data&nbsp;like&nbsp;a&nbsp;browser&nbsp;does
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">enableCookieHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Set&nbsp;the&nbsp;traffic-limit&nbsp;to&nbsp;1&nbsp;MB&nbsp;(in&nbsp;bytes,
+        <br />//&nbsp;for&nbsp;testing&nbsp;we&nbsp;dont&nbsp;want&nbsp;to&nbsp;"suck"&nbsp;the&nbsp;whole&nbsp;site)
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setTrafficLimit</span><span style="color: #007700">(</span><span style="color: #0000BB">1000&nbsp;</span><span style="color: #007700">*&nbsp;</span><span style="color: #0000BB">1024</span><span style="color: #007700">);
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Thats&nbsp;enough,&nbsp;now&nbsp;here&nbsp;we&nbsp;go
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">go</span><span style="color: #007700">();
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;At&nbsp;the&nbsp;end,&nbsp;after&nbsp;the&nbsp;process&nbsp;is&nbsp;finished,&nbsp;we&nbsp;print&nbsp;a&nbsp;short
+        <br />//&nbsp;report&nbsp;(see&nbsp;method&nbsp;getProcessReport()&nbsp;for&nbsp;more&nbsp;information)
+        <br /></span><span style="color: #0000BB">$report&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getProcessReport</span><span style="color: #007700">();
+        <br />
+        <br />if&nbsp;(</span><span style="color: #0000BB">PHP_SAPI&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #DD0000">"cli"</span><span style="color: #007700">)&nbsp;</span><span style="color: #0000BB">$lb&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;
+        <br />else&nbsp;</span><span style="color: #0000BB">$lb&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"&lt;br&nbsp;/&gt;"</span><span style="color: #007700">;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;
+        <br />echo&nbsp;</span><span style="color: #DD0000">"Summary:"</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />echo&nbsp;</span><span style="color: #DD0000">"Links&nbsp;followed:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$report</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">links_followed</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />echo&nbsp;</span><span style="color: #DD0000">"Documents&nbsp;received:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$report</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">files_received</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />echo&nbsp;</span><span style="color: #DD0000">"Bytes&nbsp;received:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$report</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">bytes_received</span><span style="color: #007700">.</span><span style="color: #DD0000">"&nbsp;bytes"</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />echo&nbsp;</span><span style="color: #DD0000">"Process&nbsp;runtime:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$report</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">process_runtime</span><span style="color: #007700">.</span><span style="color: #DD0000">"&nbsp;sec"</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;&nbsp;
+        <br /></span><span style="color: #0000BB">?&gt;</span>
+        </span>
+        </p>
+        
+        </div>
+        
+        <!--
+        <?php
+        include("google_code.php");
+        ?>
+        -->
+        
+      </div>
+  
+      <div id="footer">Copyright © 2003 - 2012 Uwe Hunfeld phpcrawl@cuab.de</div>
+  </div>
+  
+</div>
+
+</body>
+</html>
