@@ -44,7 +44,7 @@ $ip_address = false) {
 	$class = sanitise_string($class);
 	$type = sanitise_string($type);
 	$subtype = sanitise_string($subtype);
-	$ip_address = sanitise_string($ip_address);
+	$ip_address = substr(sanitise_string($ip_address),0,14);//this is due to mysql string mode
 	$limit = (int)$limit;
 	$offset = (int)$offset;
 
