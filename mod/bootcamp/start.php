@@ -12,7 +12,7 @@ function bootcamp_init() {
 		
 	elgg_extend_view('css/elgg','bootcamp/css');
 	
-	if(elgg_is_logged_in()){
+	if(elgg_is_logged_in() && elgg_get_context() == 'news'){
 		elgg_extend_view('page/elements/sidebar','bootcamp/sidebar', 1);
 	}
 	
