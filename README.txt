@@ -1,3 +1,33 @@
+Minds
+
+Copyright (c) Copyleft 2008-2013
+
+http://minds.com, http://minds.org
+
+Minds.org, Inc. is a free and open source network operated and evolved 
+by the planet largely through voluntary contributions and voting.  It 
+aims to provide universal access to information and liberate knowledge globally.
+
+Co-Creators 
+Bill Ottman (bill@minds.com)
+John Ottman (john@minds.com)
+Mark Harding (mark@minds.com)
+Christopher Gross (chris@minds.com)
+Ian Crossland (ian@minds.com)
+Bryce Coster (bryce@minds.com)
+and many more
+
+
+Minds/Elgg is released under the GNU General Public License (GPL) Version 2 and the
+Massachusetts Institute of Technology (MIT) License. See LICENSE.txt 
+in the root of the package you downloaded.
+
+For installation instructions, see INSTALL.txt.
+
+For upgrade instructions, see UPGRADE.txt.
+
+
+
 Elgg
 Copyright (c) 2008-2012 See COPYRIGHT.txt
 
@@ -11,14 +41,3 @@ as an open source project.
 
 The project site can be found at http://elgg.org/
 
-The Elgg project was started in 2004 by:
-Ben Werdmuller <ben@benwerd.com, http://benwerd.com> and
-Dave Tosh <davidgtosh@gmail.com>
-
-Elgg is released under the GNU General Public License (GPL) Version 2 and the
-Massachusetts Institute of Technology (MIT) License. See LICENSE.txt 
-in the root of the package you downloaded.
-
-For installation instructions, see INSTALL.txt.
-
-For upgrade instructions, see UPGRADE.txt.
