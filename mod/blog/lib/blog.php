@@ -99,6 +99,9 @@ function blog_get_page_content_list($container_guid = NULL) {
 			// do not show button or select a tab when viewing someone else's posts
 			$return['filter_context'] = 'none';
 		}
+		if($container instanceof ElggGroup){
+			$isGroupMember = $container->isMember(elgg_get_logged_in_user_entity());
+		}
 	} else {
 		$return['filter_context'] = 'all';
 		$return['title'] = elgg_echo('blog:title:all_blogs');
@@ -110,7 +113,8 @@ function blog_get_page_content_list($container_guid = NULL) {
 
 	// show all posts for admin or users looking at their own blogs
 	// show only published posts for other users.
-	if (!(elgg_is_admin_logged_in() || (elgg_is_logged_in() && $container_guid == $loggedin_userid))) {
+	// also any member of the group can view drafts - we need a better solution here
+	if (!(elgg_is_admin_logged_in() || (elgg_is_logged_in() && $container_guid == $loggedin_userid) || $isGroupMember)) {
 		$options['metadata_name_value_pairs'] = array(
 			array('name' => 'status', 'value' => 'published'),
 		);

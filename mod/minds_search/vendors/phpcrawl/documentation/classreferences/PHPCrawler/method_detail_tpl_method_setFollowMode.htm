@@ -1,0 +1,108 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+ <title>Documentation for method: 
+PHPCrawler::setFollowMode()</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples(mode)
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+
+<h1 id="head">
+  <span>Method: 
+PHPCrawler::setFollowMode()</span>
+</h1>
+
+<h2 id="head">
+ <span><a href="overview.html"><< Back to class-overview</a></span>
+</h2>
+
+<br>
+
+
+
+
+
+<!--<?php include("google_code.php"); ?> -->
+
+<div id="docframe">
+
+<div id="section">
+
+Sets the basic follow-mode of the crawler.
+</div>
+
+<div id="section">
+<b>Signature:</b>
+<p id="signature">
+  
+public setFollowMode($follow_mode)
+</p>
+</div>
+
+<div id="section">
+<b>Parameters:</b>
+<p>
+<table id="param_list">
+  
+<tr><td id="paramname" width="1%"><b>$follow_mode</b>&nbsp;</td><td width="1%"><i><i>int</i></i>&nbsp;</td><td width="*">The basic follow-mode for the crawling-process (0, 1, 2 or 3).</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Returns:</b>
+<p>
+<table id="param_list">
+  
+<tr> <td width="1%"><i><i>bool</i></i>&nbsp;</td> <td width="*"></td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Description:</b>
+<p>
+
+  
+The following list explains the supported follow-modes:<br><br><b>0 - The crawler will follow EVERY link, even if the link leads to a different host or domain.</b><br>If you choose this mode, you really should set a limit to the crawling-process (see limit-options),<br>otherwise the crawler maybe will crawl the whole WWW!<br><br><b>1 - The crawler only follow links that lead to the same domain like the one in the root-url.</b><br>E.g. if the root-url (setURL()) is "http://www.foo.com", the crawler will follow links to "http://www.foo.com/..."<br>and "http://bar.foo.com/...", but not to "http://www.another-domain.com/...".<br><br><b>2 - The crawler will only follow links that lead to the same host like the one in the root-url.</b><br>E.g. if the root-url (setURL()) is "http://www.foo.com", the crawler will ONLY follow links to "http://www.foo.com/...", but not<br>to "http://bar.foo.com/..." and "http://www.another-domain.com/...". <b>This is the default mode.</b><br><br><b>3 - The crawler only follows links to pages or files located in or under the same path like the one of the root-url.</b><br>E.g. if the root-url is "http://www.foo.com/bar/index.html", the crawler will follow links to "http://www.foo.com/bar/page.html" and<br>"http://www.foo.com/bar/path/index.html", but not links to "http://www.foo.com/page.html".
+  
+</p>
+</div>
+
+
+
+
+
+</div>
+
+
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de"  target="_parent">PhpClassView</a></div>
+
+</div>
+
+</body>
+</html>

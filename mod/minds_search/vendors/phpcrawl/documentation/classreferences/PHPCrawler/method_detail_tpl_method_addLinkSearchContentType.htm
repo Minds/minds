@@ -1,0 +1,108 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+ <title>Documentation for method: 
+PHPCrawler::addLinkSearchContentType()</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples(mode)
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+
+<h1 id="head">
+  <span>Method: 
+PHPCrawler::addLinkSearchContentType()</span>
+</h1>
+
+<h2 id="head">
+ <span><a href="overview.html"><< Back to class-overview</a></span>
+</h2>
+
+<br>
+
+
+
+
+
+<!--<?php include("google_code.php"); ?> -->
+
+<div id="docframe">
+
+<div id="section">
+
+Adds a rule to the list of rules that decide in what kind of documents the crawler<br>should search for links in (regarding their content-type)
+</div>
+
+<div id="section">
+<b>Signature:</b>
+<p id="signature">
+  
+public addLinkSearchContentType($regex)
+</p>
+</div>
+
+<div id="section">
+<b>Parameters:</b>
+<p>
+<table id="param_list">
+  
+<tr><td id="paramname" width="1%"><b>$regex</b>&nbsp;</td><td width="1%"><i><i>string</i></i>&nbsp;</td><td width="*">Regular-expression defining the rule</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Returns:</b>
+<p>
+<table id="param_list">
+  
+<tr> <td width="1%"><i><i>bool</i></i>&nbsp;</td> <td width="*">         TRUE if the rule was successfully added</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Description:</b>
+<p>
+
+  
+By default the crawler ONLY searches for links in documents of type "text/html".<br>Use this method to add one or more other content-types the crawler should check for links.<br><br>Example:<code>$crawler-&gt;addLinkSearchContentType("#text/css# i");<br>$crawler-&gt;addLinkSearchContentType("#text/xml# i");</code><br>These rules let the crawler search for links in HTML-, CSS- ans XML-documents.<br><br><b>Please note:</b> It is NOT recommended to let the crawler checkfor links in EVERY document-<br>type! This could slow down the crawling-process dramatically (e.g. if the crawler receives large<br>binary-files like images and tries to find links in them).
+  
+</p>
+</div>
+
+
+
+
+
+</div>
+
+
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de"  target="_parent">PhpClassView</a></div>
+
+</div>
+
+</body>
+</html>

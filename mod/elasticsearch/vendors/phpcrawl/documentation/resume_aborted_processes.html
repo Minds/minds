@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+<head>
+  <title>PHPCrawl webcrawler library for PHP - Requirements</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+  <div id="page">
+    
+       <div id="top">
+        <h1 style="margin: 0px; float: left;">PHPCrawl webcrawler library/framework</h1>
+      </div>
+      
+
+      <div id="container">
+        
+        <iframe id="menuframe" src="menu.html" scrolling="no" frameborder="0"></iframe>
+        
+        <div id="content">
+        <h3>Resume aborted crawling-processes</h3><br />
+        Sometimes it may happen that a crawling-process (or a script thats using phpcrawl) gets aborted/terminated
+        while spidering a website before it was finished completely (for whatever reasons).<br /><br />
+        
+        Since PHPCrawl 0.81 it is possible to resume such a terminated script/process from the point where it was
+        halted (so it's not necessary to restart the script all over again).<br /><br />
+        
+        In order to be able to resume a crawling-process, you'll have to
+        <ul>
+          <li>Initially call the <a href="classreferences/PHPCrawler/method_detail_tpl_method_enableResumption.htm" target="blank">enableResumption()</a> method in your script (from the first start, this prepares the crawler for possible 
+              resumption and is necessary to be able to resume the script later on)<br />
+          </li>
+          
+          <li>
+          Determinate the unique crawler-ID by calling <a href="classreferences/PHPCrawler/method_detail_tpl_method_getCrawlerId.htm" target="blank">getCrawlerId()</a> and store it somewhere (this ID is needed for identifying the process that should be resumed later on)<br />
+          <p id="code">
+            </span><span style="color: #FF8000">//&nbsp;...
+            <br /></span><span style="color: #0000BB">$crawler&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MyCrawler</span><span style="color: #007700">();
+            <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setURL</span><span style="color: #007700">(</span><span style="color: #DD0000">"www.anyurl.com"</span><span style="color: #007700">);
+            <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">enableResumption</span><span style="color: #007700">();
+
+            <br />
+            <br /></span><span style="color: #0000BB">$ID&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getCrawlerId</span><span style="color: #007700">();
+            <br /></span><span style="color: #FF8000">//&nbsp;...
+            <br /></span><span style="color: #0000BB">?&gt;</span>
+            </span>
+          </p>
+          </li>
+        </ul>
+        
+        In order to resume an aborted process, you'll have to
+        <ul>
+          <li>Call the <a href="classreferences/PHPCrawler/method_detail_tpl_method_resume.htm" target="blank">resume()</a>-method before calling the go() or goMultiProcessed() method and pass the crawler-ID of the terminated crawling-process
+              you want to resume to it (as returned by <a href="classreferences/PHPCrawler/method_detail_tpl_method_getCrawlerId.htm" target="blank">getCrawlerId()</a>)<br />
+           <p id="code">  
+           <span style="color: #FF8000">//&nbsp;...
+           <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">resume</span><span style="color: #007700">(</span><span style="color: #0000BB">120912912109</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//ID&nbsp;of&nbsp;the&nbsp;aborted&nbsp;process
+
+           <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">goMultiProcessed</span><span style="color: #007700">(</span><span style="color: #0000BB">5</span><span style="color: #007700">);
+           <br /></span><span style="color: #FF8000">//&nbsp;...
+           <br /></span>
+           <p/>
+           </li>
+        </ul>
+        
+        The following listing is a complete example of a resumable crawler-script (it's also included in the phpcrawl package).
+        You may test it by starting it from the commandline (CLI, type "php resumable_example.php"), abort it (Ctrl^C) and start it again).
+        
+        <p id="code" style="width: 570px">
+        <span style="color: #000000">
+        <span style="color: #0000BB">&lt;?php
+        <br />&nbsp;&nbsp;&nbsp;
+        <br /></span><span style="color: #FF8000">//&nbsp;Inculde&nbsp;the&nbsp;phpcrawl-mainclass
+        <br /></span><span style="color: #007700">include(</span><span style="color: #DD0000">"libs/PHPCrawler.class.php"</span><span style="color: #007700">);
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Extend&nbsp;the&nbsp;class&nbsp;and&nbsp;override&nbsp;the&nbsp;handleDocumentInfo()-method&nbsp;
+
+        <br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">MyCrawler&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">PHPCrawler&nbsp;
+        <br /></span><span style="color: #007700">{
+        <br />&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">handleDocumentInfo</span><span style="color: #007700">(</span><span style="color: #0000BB">$DocInfo</span><span style="color: #007700">)&nbsp;
+        <br />&nbsp;&nbsp;{
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Just&nbsp;detect&nbsp;linebreak&nbsp;for&nbsp;output
+
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">PHP_SAPI&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #DD0000">"cli"</span><span style="color: #007700">)&nbsp;</span><span style="color: #0000BB">$lb&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;</span><span style="color: #0000BB">$lb&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"&lt;br&nbsp;/&gt;"</span><span style="color: #007700">;
+
+        <br />
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Print&nbsp;the&nbsp;URL
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"Page&nbsp;requested:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$DocInfo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">url</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">flush</span><span style="color: #007700">();
+
+        <br />&nbsp;&nbsp;}&nbsp;
+        <br />}
+        <br />
+        <br /></span><span style="color: #0000BB">$crawler&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MyCrawler</span><span style="color: #007700">();
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setURL</span><span style="color: #007700">(</span><span style="color: #DD0000">"www.php.net"</span><span style="color: #007700">);
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addContentTypeReceiveRule</span><span style="color: #007700">(</span><span style="color: #DD0000">"#text/html#"</span><span style="color: #007700">);
+
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addURLFilterRule</span><span style="color: #007700">(</span><span style="color: #DD0000">"#\.(jpg|jpeg|gif|png)$#&nbsp;i"</span><span style="color: #007700">);
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setPageLimit</span><span style="color: #007700">(</span><span style="color: #0000BB">50</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;Set&nbsp;page-limit&nbsp;to&nbsp;50&nbsp;for&nbsp;testing
+
+        <br />
+        <br />//&nbsp;Important&nbsp;for&nbsp;resumable&nbsp;scripts/processes!
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">enableResumption</span><span style="color: #007700">();
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;At&nbsp;the&nbsp;firts&nbsp;start&nbsp;of&nbsp;the&nbsp;script&nbsp;retreive&nbsp;the&nbsp;crawler-ID
+
+        <br />//&nbsp;and&nbsp;store&nbsp;it
+        <br />//&nbsp;(in&nbsp;a&nbsp;temporary&nbsp;file&nbsp;in&nbsp;this&nbsp;example)
+        <br /></span><span style="color: #007700">if&nbsp;(!</span><span style="color: #0000BB">file_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">"/tmp/mycrawlerid_for_php.net.tmp"</span><span style="color: #007700">))
+
+        <br />{
+        <br />&nbsp;&nbsp;</span><span style="color: #0000BB">$crawler_ID&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getCrawlerId</span><span style="color: #007700">();
+        <br />&nbsp;&nbsp;</span><span style="color: #0000BB">file_put_contents</span><span style="color: #007700">(</span><span style="color: #DD0000">"/tmp/mycrawlerid_for_php.net.tmp"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$crawler_ID</span><span style="color: #007700">);
+        <br />}
+        <br /></span><span style="color: #FF8000">//&nbsp;If&nbsp;the&nbsp;script&nbsp;was&nbsp;restarted&nbsp;again&nbsp;(after&nbsp;it&nbsp;was&nbsp;aborted),
+
+        <br />//&nbsp;read&nbsp;the&nbsp;crawler-ID&nbsp;and&nbsp;pass&nbsp;it&nbsp;to&nbsp;the&nbsp;resume()&nbsp;method.
+        <br /></span><span style="color: #007700">else
+        <br />{
+        <br />&nbsp;&nbsp;</span><span style="color: #0000BB">$crawler_ID&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">file_get_contents</span><span style="color: #007700">(</span><span style="color: #DD0000">"/tmp/mycrawlerid_for_php.net.tmp"</span><span style="color: #007700">);
+
+        <br />&nbsp;&nbsp;</span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">resume</span><span style="color: #007700">(</span><span style="color: #0000BB">$crawler_ID</span><span style="color: #007700">);
+        <br />}
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Start&nbsp;crawling
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">goMultiProcessed</span><span style="color: #007700">(</span><span style="color: #0000BB">5</span><span style="color: #007700">);
+
+        <br />
+        <br /></span><span style="color: #FF8000">//&nbsp;Delete&nbsp;the&nbsp;stored&nbsp;crawler-ID&nbsp;after&nbsp;the&nbsp;process&nbsp;is&nbsp;finished
+        <br />//&nbsp;completely&nbsp;and&nbsp;successfully.
+        <br /></span><span style="color: #0000BB">unlink</span><span style="color: #007700">(</span><span style="color: #DD0000">"/tmp/mycrawlerid_for_php.net.tmp"</span><span style="color: #007700">);
+
+        <br />
+        <br /></span><span style="color: #0000BB">$report&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getProcessReport</span><span style="color: #007700">();
+        <br />
+        <br />if&nbsp;(</span><span style="color: #0000BB">PHP_SAPI&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #DD0000">"cli"</span><span style="color: #007700">)&nbsp;</span><span style="color: #0000BB">$lb&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;
+
+        <br />else&nbsp;</span><span style="color: #0000BB">$lb&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"&lt;br&nbsp;/&gt;"</span><span style="color: #007700">;
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;
+        <br />echo&nbsp;</span><span style="color: #DD0000">"Summary:"</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />echo&nbsp;</span><span style="color: #DD0000">"Links&nbsp;followed:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$report</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">links_followed</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+
+        <br />echo&nbsp;</span><span style="color: #DD0000">"Documents&nbsp;received:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$report</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">files_received</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+        <br />echo&nbsp;</span><span style="color: #DD0000">"Bytes&nbsp;received:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$report</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">bytes_received</span><span style="color: #007700">.</span><span style="color: #DD0000">"&nbsp;bytes"</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;
+
+        <br />echo&nbsp;</span><span style="color: #DD0000">"Process&nbsp;runtime:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$report</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">process_runtime</span><span style="color: #007700">.</span><span style="color: #DD0000">"&nbsp;sec"</span><span style="color: #007700">.</span><span style="color: #0000BB">$lb</span><span style="color: #007700">;&nbsp;
+        <br /></span><span style="color: #0000BB">?&gt;</span>&nbsp;</span>
+
+        </p>
+        
+        </div>
+        
+        <!--
+        <?php
+        include("google_code.php");
+        ?>
+        -->
+        
+      </div>
+  
+      <div id="footer">Copyright © 2003 - 2012 Uwe Hunfeld phpcrawl@cuab.de</div>
+  </div>
+  
+</div>
+
+</body>
+</html>

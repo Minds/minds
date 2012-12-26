@@ -1,0 +1,108 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+ <title>Documentation for method: 
+PHPCrawler::obeyRobotsTxt()</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples(mode)
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+
+<h1 id="head">
+  <span>Method: 
+PHPCrawler::obeyRobotsTxt()</span>
+</h1>
+
+<h2 id="head">
+ <span><a href="overview.html"><< Back to class-overview</a></span>
+</h2>
+
+<br>
+
+
+
+
+
+<!--<?php include("google_code.php"); ?> -->
+
+<div id="docframe">
+
+<div id="section">
+
+Decides whether the crawler should parse and obey robots.txt-files.
+</div>
+
+<div id="section">
+<b>Signature:</b>
+<p id="signature">
+  
+public obeyRobotsTxt($mode)
+</p>
+</div>
+
+<div id="section">
+<b>Parameters:</b>
+<p>
+<table id="param_list">
+  
+<tr><td id="paramname" width="1%"><b>$mode</b>&nbsp;</td><td width="1%"><i><i>bool</i></i>&nbsp;</td><td width="*">Set to TRUE if you want the crawler to obey robots.txt-files.</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Returns:</b>
+<p>
+<table id="param_list">
+  
+<tr> <td width="1%"><i><i>bool</i></i>&nbsp;</td> <td width="*"></td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Description:</b>
+<p>
+
+  
+If this is set to TRUE, the crawler looks for a robots.txt-file for every host that sites or files should be received<br>from during the crawling process. If a robots.txt-file for a host was found, the containig directives appliying to the<br>useragent-identification of the cralwer<br>("PHPCrawl" or manually set by calling <a href="method_detail_tpl_method_setUserAgentString.htm" class="inline">setUserAgentString()</a>) will be obeyed.<br><br>The default-value is FALSE (for compatibility reasons).<br><br>Pleas note that the directives found in a robots.txt-file have a higher priority than other settings made by the user.<br>If e.g. <a href="method_detail_tpl_method_addFollowMatch.htm" class="inline">addFollowMatch</a>("#http://foo\.com/path/file\.html#") was set, but a directive in the robots.txt-file of the host<br>foo.com says "Disallow: /path/", the URL http://foo.com/path/file.html will be ignored by the crawler anyway.
+  
+</p>
+</div>
+
+
+
+
+
+</div>
+
+
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de"  target="_parent">PhpClassView</a></div>
+
+</div>
+
+</body>
+</html>

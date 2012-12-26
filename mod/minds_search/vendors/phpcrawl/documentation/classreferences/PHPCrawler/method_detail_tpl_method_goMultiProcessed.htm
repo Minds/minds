@@ -1,0 +1,108 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+ <title>Documentation for method: 
+PHPCrawler::goMultiProcessed()</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples(mode)
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+
+<h1 id="head">
+  <span>Method: 
+PHPCrawler::goMultiProcessed()</span>
+</h1>
+
+<h2 id="head">
+ <span><a href="overview.html"><< Back to class-overview</a></span>
+</h2>
+
+<br>
+
+
+
+
+
+<!--<?php include("google_code.php"); ?> -->
+
+<div id="docframe">
+
+<div id="section">
+
+Starts the cralwer by using multi processes.
+</div>
+
+<div id="section">
+<b>Signature:</b>
+<p id="signature">
+  
+public goMultiProcessed($process_count = 3, $multiprocess_mode = 1)
+</p>
+</div>
+
+<div id="section">
+<b>Parameters:</b>
+<p>
+<table id="param_list">
+  
+<tr><td id="paramname" width="1%"><b>$process_count</b>&nbsp;</td><td width="1%"><i><i>int</i></i>&nbsp;</td><td width="*">Number of processes to use</td></tr><tr><td id="paramname" width="1%"><b>$multiprocess_mode</b>&nbsp;</td><td width="1%"><i><i>int</i></i>&nbsp;</td><td width="*">The multiprocess-mode to use.<br>                              One of the <a href="../PHPCrawlerMultiProcessModes/overview.html" class="inline">PHPCrawlerMultiProcessModes</a>-constants</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Returns:</b>
+<p>
+<table id="param_list">
+  
+<tr><td><i>No information</i></td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Description:</b>
+<p>
+
+  
+When using this method instead of the <a href="method_detail_tpl_method_go.htm" class="inline">go()</a>-method to start the crawler, phpcrawl will use the given<br>number of processes simultaneously for spidering the target-url.<br>Using multi processes will speed up the crawling-progress dramatically in most cases.<br><br>There are some requirements though to successfully run the cralwler in multi-process mode:<br><ul><br><li> The multi-process mode only works on unix-based systems (linux)</li><br><li> Scripts using the crawler have to be run from the commandline (cli)</li><br><li> The <a href="http://php.net/manual/en/pcntl.installation.php">PCNTL-extension</a> for php (process control) has to be installed and activated.</li><br><li> The <a href="http://php.net/manual/en/sem.installation.php">SEMAPHORE-extension</a> for php has to be installed and activated.</li><br><li>The <a href="http://de.php.net/manual/en/posix.installation.php">POSIX-extension</a> for php has to be installed and activated.</li><br><li> The <a href="http://de2.php.net/manual/en/pdo.installation.php">PDO-extension</a> together with the SQLite-driver (PDO_SQLITE) has to be installed and activated.</li><br></ul><br><br>PHPCrawls supports two different modes of multiprocessing:<br><ol><br><li><b><a href="../PHPCrawlerMultiProcessModes/overview.html" class="inline">PHPCrawlerMultiProcessModes</a>::MPMODE_PARENT_EXECUTES_USERCODE</b><br><br>The cralwer uses multi processes simultaneously for spidering the target URL, but the usercode provided to<br>the overridable function <a href="method_detail_tpl_method_handleDocumentInfo.htm" class="inline">handleDocumentInfo()</a> gets always executed on the same main-process. This<br>means that the <b>usercode never gets executed simultaneously</b> and so you dont't have to care about<br>concurrent file/database/handle-accesses or smimilar things.<br>But on the other side the usercode may slow down the crawling-procedure because every child-process has to<br>wait until the usercode got executed on the main-process. <b>This ist the recommended multiprocess-mode!</b><br></li><br><li><b><a href="../PHPCrawlerMultiProcessModes/overview.html" class="inline">PHPCrawlerMultiProcessModes</a>::MPMODE_CHILDS_EXECUTES_USERCODE</b><br><br>The cralwer uses multi processes simultaneously for spidering the target URL, and every chld-process executes<br>the usercode provided to the overridable function <a href="method_detail_tpl_method_handleDocumentInfo.htm" class="inline">handleDocumentInfo()</a> directly from it's process. This<br>means that the <b>usercode gets executed simultaneously</b> by the different child-processes and you should <br>take care of concurrent file/data/handle-accesses proberbly (if used).<br><br>When using this mode and you use any handles like database-connections or filestreams in your extended<br>crawler-class, you should open them within the overridden mehtod <a href="method_detail_tpl_method_initChildProcess.htm" class="inline">initChildProcess()</a> instead of opening<br>them from the constructor. For more details see the documentation of the <a href="method_detail_tpl_method_initChildProcess.htm" class="inline">initChildProcess()</a>-method.<br></li><br></ol><br><br>Example for starting the crawler with 5 processes using the recommended MPMODE_PARENT_EXECUTES_USERCODE-mode:<code>$crawler-&gt;goMultiProcessed(5, PHPCrawlerMultiProcessModes::MPMODE_PARENT_EXECUTES_USERCODE);</code><br><br>Please note that increasing the number of processes to high values does't automatically mean that the crawling-process<br>will go off faster! Using 3 to 5 processes should be good values to start from.
+  
+</p>
+</div>
+
+
+
+
+
+</div>
+
+
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de"  target="_parent">PhpClassView</a></div>
+
+</div>
+
+</body>
+</html>

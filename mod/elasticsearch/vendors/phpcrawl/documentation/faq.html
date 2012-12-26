@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+<head>
+  <title>PHPCrawl webcrawler library for PHP - FAQ</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+  <div id="page">
+    
+      <div id="top">
+        <h1 style="margin: 0px; float: left;">PHPCrawl webcrawler library/framework</h1>
+      </div>
+      
+
+      <div id="container">
+        
+        <iframe id="menuframe" src="menu.html" scrolling="no" frameborder="0"></iframe>
+        
+        <div id="content">
+        <h3>PHPCrawl FAQ</h3>
+        <ol>
+          <li><b>Sometimes it happens that (almost) no information about a document is passed to the user-function handleDocumentInfo(), most
+                 properties of the corresponding PHPCrawlerDocumentInfo-object are emtpy.</b><br /><br />
+                 Mostly the reason for this is an error that occurred during the request of the document. In this case,
+                 the PHPCrawlerDocumentInfo-property "error_occured" will be true and "error_string" contains the error-report as human readable string.
+                 For timeout-errors (like "Socket-stream timed out"), try to increase the connection-timeout and/or the stream-timeout.
+              
+                 <p id="code">
+                 $crawler->setStreamTimeout(5); // defaults to 2 seconds
+                 $crawler->setConnectionTimeout(10); // defaults to 5 seconds
+                 </p>
+          </li>
+          
+          <li><b>When trying to start the crawler in multi-process-mode, a lot of warnings like "sem_get() [function.sem-get]:
+              failed for key 0x5202e59f: No space left on device" are thrown.</b><br><br>
+              PHPCrawl is using semaphores for process-communication. When crawling-processes get aborted, the used sempahores
+              don't get removed. If this happens too often, there will be no more space for new semaphores and the above error(s)
+              occur. To remove "dead" semaphores, use the following unix command:<br />
+              
+              <p id="code">
+              for i in `ipcs -s | awk '/phpcrawl_user/ {print $2}'`; do (ipcrm -s $i); done
+              </p>
+              
+              ... whereas "phpcrawl_user" is the user who is running the crawler.
+          </li>
+        </ol>
+        </div>
+        
+       <!--
+        <?php
+        include("google_code.php");
+        ?>
+        -->
+        
+      </div>
+  
+      <div id="footer">Copyright © 2003 - 2012 Uwe Hunfeld phpcrawl@cuab.de</div>
+  </div>
+  
+</div>
+
+</body>
+</html>
