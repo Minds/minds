@@ -16,9 +16,9 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
    }
    ?>
    <div class='splash'>
-		Free & Open Source
-		Social Video
-		Revolution
+		You are
+		evolving
+		the network
 	</div>
    <?php 
    	$options = array('types' => 'object', 'subtypes' => $subtypes, 'metadata_name_value_pairs'=> array('name' => 'featured','value'=>true ),'limit' => 12);
