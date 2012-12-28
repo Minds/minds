@@ -6,37 +6,39 @@
  */
  
 $data = $vars['data'];
+//var_dump($data);
+$type = get_input('type', 'all');
 
-$photos = $data['photos'];
-shuffle($photos);
-if($photos){
-	echo '<div class="minds-search minds-search-section minds-search-section-image">';
-	echo '<h3>'. 'Photos' . '</h3>';
-	foreach($photos as $photo){
-		echo elgg_view('minds_search/service/image', array('photo'=>$photo));
+if($type == 'all'){
+	foreach($data as $item){
+		if($item['_type'] == 'photo')
+			echo elgg_view('minds_search/service/image', array('photo'=>$item['_source']));
+		if($item['_type'] == 'video')
+			echo elgg_view('minds_search/service/video', array('video'=>$item['_source']));
+		if($item['_type'] == 'sound')
+			echo elgg_view('minds_search/service/sound', array('sound'=>$item['_source']));
 	}
+} elseif($type=='photo') {
+	echo '<div class="minds-search minds-search-section minds-search-section-image">';
+	echo '<h3> '. elgg_echo('minds_search:type:'.$type) . ' </h3>';
+	
+	foreach($data as $item){
+		echo elgg_view('minds_search/service/image', array('photo'=>$item['_source']));
+	}
+		
 	echo '</div>';
-}
-
-$videos = $data['videos'];
-shuffle($videos);
-if($videos){
+} elseif($type=='video'){
 	echo '<div class="minds-search minds-search-section minds-search-section-video">';
 	echo '<h3>'. 'Videos' . '</h3>';
-	foreach($videos as $video){
-		echo elgg_view('minds_search/service/video', array('video'=>$video));
+	foreach($data as $item){
+		echo elgg_view('minds_search/service/video', array('video'=>$item['_source']));
 	}
 	echo '</div>';
-}
-
-
-$sounds = $data['sounds'];
-shuffle($sounds);
-if($sounds){
+} elseif($type=='sound'){
 	echo '<div class="minds-search minds-search-section minds-search-section-sound">';
 	echo '<h3>'. 'Sounds' . '</h3>';
-	foreach($sounds as $sound){
-		echo elgg_view('minds_search/service/video', array('video'=>$sound));
+	foreach($data as $item){
+		echo elgg_view('minds_search/service/sound', array('sound'=>$item['_source']));
 	}
 	echo '</div>';
 }

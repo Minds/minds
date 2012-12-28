@@ -10,23 +10,13 @@ class MindsSearch {
 		return minds_search_return_services();
 	}
 
-	function search($q,$types = array('all'),$services = array('all'), $limit=10, $page=1) {
-		$servicesCount = count($this->services());
-		$serviceLimit = round($limit / $servicesCount);
-		foreach ($this->services() as $service) {
-			if(in_array($service->name, $services)){
-				$classname = $service->classname;
-			} elseif(in_array('all', $services)){
-				$classname = $service->classname;
-				$limit = $serviceLimit;
-			} else{
-				continue;//skip if not states or all
-			}
-			$class = new $classname();
-			$data[] = $class->query($q, $limit, $page);
+	function search($q,$type = 'all',$services = array('all'), $limit=10,$offset=0) {
+		if($type == 'all'){
+			$type = null;
 		}
-		return $this->mergeData($data);;
-		//return $data;
+		$es = new elasticsearch();
+		$es->index = 'ext';
+		return $es->query($type, $q, $sort, $limit, $offset);
 	}
 	
 	function get($url){
