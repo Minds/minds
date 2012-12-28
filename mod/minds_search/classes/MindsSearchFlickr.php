@@ -12,9 +12,30 @@ class MindsSearchFlickr extends MindsSearch {
 
 	function query($q, $limit=10, $page=1) {
 		$q = urlencode($q);
-		$get = $this->get($this->end_point.'api_key='.$this->api_key.'&method=flickr.photos.search&license=1,2,3,4,5,6,7&text='.$q.'&format=php_serial&per_page='.$limit.'&page='.$page);
+		$get = $this->get($this->end_point.'api_key='.$this->api_key.'&method=flickr.photos.search&license=1,2,3,4,5,6,7&extras=description,license,owner_name,tags&text='.$q.'&format=php_serial&per_page='.$limit.'&page='.$page);
 		$obj = unserialize($get);
 		return $this->renderData($obj['photos']);
+	}
+	
+	function index(){
+		$per_page = 500;
+		$page = 1;
+		$data = $this->query(null, $per_page, $page);
+		$pages = $data->total / $per_page;
+		
+		$es = new elasticsearch();
+		$es->index = 'ext';
+		
+		while($page < $pages){
+			$data = $this->query(null, $per_page, $page);//new data based on page
+			foreach($data->photos as $item){
+				$es->add($item->type, $item->id, json_encode($item));
+			}
+			//$page++;
+			//sleep(4);
+		}
+		
+		return;
 	}
 	
 	function renderData($data){
@@ -30,8 +51,13 @@ class MindsSearchFlickr extends MindsSearch {
 			$item->id = $photo['id'];
 			$item->title = $photo['title'];
 			$item->iconURL = 'http://farm'.$photo['farm'].'.staticflickr.com/'.$photo['server'].'/'.$photo['id'].'_'.$photo['secret'].'_q.jpg';
+			$item->description = $photo['description']['content'];
+			$item->tags = $photo['tags'];
+			$item->owner = $photo['ownername'];
+			$item->license = $this->findLicense($photo['license']);
 			$item->href = 'http://www.flickr.com/photos/'.$photo['owner'].'/'.$photo['id'];
 			$item->source = 'flickr';
+			$item->type = 'photo';
 			$rtn[] = $item;
 		}
 		

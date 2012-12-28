@@ -46,9 +46,9 @@ if(elgg_get_plugin_setting('elasticsearch_enabled')=='Yes'){
 }
 $page = ($offset/$limit)+1;
 
-$serviceSearch = new MindsSearch();
-$results .= elgg_view('minds_search/services', array('data'=>$serviceSearch->search($query,$types, $services, $limit,$page)));
-$results .= elgg_view('navigation/pagination', array('count'=>$limit*3, 'limit'=>$limit, 'offset'=>$offset));
+//$serviceSearch = new MindsSearch();
+//$results .= elgg_view('minds_search/services', array('data'=>$serviceSearch->search($query,$types, $services, $limit,$page)));
+//$results .= elgg_view('navigation/pagination', array('count'=>$limit*3, 'limit'=>$limit, 'offset'=>$offset));
 
 minds_search_sidebar_menu();
 

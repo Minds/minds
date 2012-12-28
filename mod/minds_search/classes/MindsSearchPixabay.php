@@ -15,9 +15,30 @@ class MindsSearchPixabay extends MindsSearch {
 
 	function query($q, $limit=10, $page=1) {
 		$q = urlencode($q);
-		$get = $this->get($this->end_point.'username='.$this->username.'&key='.$this->api_key.'&search_term='.$q.'&image_type=photo&per_page='.$limit.'&offset='.$page);
+		$get = $this->get($this->end_point.'username='.$this->username.'&key='.$this->api_key.'&image_type=photo&per_page='.$limit.'&offset='.$page);
 		$obj = json_decode($get);
 		return $this->renderData($obj);
+	}
+	
+	function index(){
+		$per_page = 100;
+		$page = 1;
+		$data = $this->query(null, $per_page, $page);
+		$pages = 2000 / $per_page;
+		
+		$es = new elasticsearch();
+		$es->index = 'ext';
+		
+		while($page < $pages){
+			$data = $this->query(null, $per_page, $page);//new data based on page
+			foreach($data->photos as $item){
+				$id = strlen($item->href) + intval($item->href) + rand(0,100);//how can we update??
+				$es->add($item->type, $id, json_encode($item));
+			}
+			$page++;
+		}
+		
+		return;
 	}
 	
 	function renderData($data){
@@ -34,6 +55,8 @@ class MindsSearchPixabay extends MindsSearch {
 			$item->iconURL = $photo->previewURL;
 			$item->href =  $photo->pageURL;
 			$item->source = 'pixabay';
+			$item->type = 'photo';
+			$item->license = 'publicdomaincco';
 			$rtn[] = $item;
 		}
 		$info->photos = $rtn;

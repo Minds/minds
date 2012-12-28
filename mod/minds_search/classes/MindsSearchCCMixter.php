@@ -18,6 +18,27 @@ class MindsSearchCCMixter extends MindsSearch {
 		return $this->renderData($obj);
 	}
 	
+	function index(){
+		$per_page = 100;
+		$page = 1;
+		$data = $this->query(null, $per_page, $page);
+		$pages = $data->total / $per_page;
+		
+		$es = new elasticsearch();
+		$es->index = 'ext';
+		
+		while($page < $pages){
+			$data = $this->query(null, $per_page, $page);//new data based on page
+			foreach($data->photos as $item){
+				$es->add($item->type, $item->id, json_encode($item));
+			}
+			$page++;
+			//sleep(4);
+		}
+		
+		return;
+	}
+	
 	function renderData($data){
 		parent::renderData();
 				
@@ -28,11 +49,14 @@ class MindsSearchCCMixter extends MindsSearch {
 
 		foreach($data as $sound){
 			$item = new stdClass();
-			$item->id = $sound->upload_id;
+			$item->id = 'ccmx'.$sound->upload_id;
 			$item->title = $sound->upload_name;
 			$item->iconURL = elgg_get_site_url().'mod/minds/graphics/icons/Audio.png';
 			$item->href =  'http://ccmixter.org/files/mindmapthat/40507/'.$sound->upload_id;
 			$item->source = 'CCMixter';
+			$item->license = $this->findLicense($sound->license_name);
+			$item->tags = $sound->usertags;
+			$item->type = 'sound';
 			$rtn[] = $item;
 		}
 		$info->sounds = $rtn;

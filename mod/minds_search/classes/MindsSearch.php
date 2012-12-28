@@ -61,6 +61,103 @@ class MindsSearch {
 		return $return;
 	}
 	
+	
+	function findLicense($code){
+		$cc_by = 'attribution-cc';
+		$cc_by_sa = 'attribution-sharealike-cc';
+		$cc_by_nd = 'attribution-noderivs-cc';
+		$cc_by_nc = 'attribution-noncommerical-cc';
+		$cc_by_nc_sa = 'attribution-noncommercial-sharealike-cc';
+		$cc_by_nc_nd = 'attribution-noncommercial-noderivs-cc';
+		$cc0 = 'publicdomaincco';
+		
+		switch($code){
+			//flickr
+			case 1:
+				return $cc_by_nc_sa;
+				break;
+			case 2:
+				return $cc_by_nc;
+				break;
+			case 3:
+				return $cc_by_nc_nd;
+				break;
+			case 4:
+				return $cc_by;
+				break;
+			case 5:
+				return $cc_by_sa;
+				break;
+			case 6:
+				return $cc_by_nd;
+				break;
+			case 7:
+				return $cc0;
+				break;
+			//ccmixter
+			case 'Attribution (3.0)':
+				return $cc_by;
+				break;
+			case 'Attribution Noncommercial  (3.0)':
+				return $cc_by_nc;
+				break;
+			case 'Attribution Noncommercial Share-Alike  (3.0)':
+				return $cc_by_nc_sa;
+				break;
+			case 'Attribution Share-Alike  (3.0)':
+				return $cc_by_sa;
+				break;
+			case 'CC0 (CC Zero)':
+				return $cc0;
+				break;
+			//soundcloud
+			case 'cc-by':
+				return $cc_by;
+				break;
+			case 'cc-by-sa':
+				return $cc_by_sa;
+				break;
+			case 'cc-by-nd':
+				return $cc_by_nd;
+				break;
+			case 'cc-by-nc':
+				return $cc_by_nc;
+				break;
+			case 'cc-by-nc-sa':
+				return $cc_by_nc_sa;
+				break;
+			case 'cc-by-nc-nd':
+				return $cc_by_nc_nd;
+				break; 	
+			//youtube
+			case 'cc':
+				return $cc_by;
+				break;
+			//archive dot org
+			case 'http://creativecommons.org/licenses/by/2.5/':
+				return $cc_by;
+				break;
+			case 'http://creativecommons.org/licenses/by-sa/2.5/':
+				return $cc_by_sa;
+				break;
+			case 'http://creativecommons.org/licenses/by-nd/2.5/':
+				return $cc_by_nd;
+				break;
+			case 'http://creativecommons.org/licenses/by-nc/2.5/':
+				return $cc_by_nc;
+				break;
+			case 'http://creativecommons.org/licenses/by-nc-sa/2.5/':
+				return $cc_by_nc_sa;
+				break;
+			case 'http://creativecommons.org/licenses/by-nc-nd/2.5/':
+				return $cc_by_nc_nd;
+				break;
+			case 'http://creativecommons.org/licenses/publicdomain/':
+				return $cc0;
+				break;
+		}
+	}
+	
 	function renderData() {
 		if (!is_array($this->data)) {
 			$this->data = array();
