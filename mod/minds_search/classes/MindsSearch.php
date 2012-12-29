@@ -20,6 +20,7 @@ class MindsSearch {
 	}
 	
 	function get($url){
+		set_time_limit(0);
 		$rsp = file_get_contents($url);
 		return $rsp;
 	}
