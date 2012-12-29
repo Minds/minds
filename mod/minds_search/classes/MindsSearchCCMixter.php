@@ -49,7 +49,7 @@ class MindsSearchCCMixter extends MindsSearch {
 
 		foreach($data as $sound){
 			$item = new stdClass();
-			$item->id = 'ccmx'.$sound->upload_id;
+			$item->id = 'ccmx_'.$sound->upload_id;
 			$item->title = $sound->upload_name;
 			$item->iconURL = elgg_get_site_url().'mod/minds/graphics/icons/Audio.png';
 			$item->href =  'http://ccmixter.org/files/mindmapthat/40507/'.$sound->upload_id;

@@ -28,7 +28,7 @@ class MindsSearchOpenClipart extends MindsSearch {
 			while($page < $pages){
 				$data = $this->query($type, $per_page, $page);//new data based on page
 				foreach($data->photos as $item){
-					$es->add($item->type, rand(0,1000000), json_encode($item));
+					$es->add($item->type, 'oc_'.rand(0,1000000), json_encode($item));
 				}
 				$page++;
 				//sleep(4);

@@ -50,7 +50,7 @@ class MindsSearchYoutube extends MindsSearch {
 
 		foreach($data->{'entry'} as $video){
 			$item = new stdClass();
-			$item->id =  'yt_'.$video->{'media$group'}->{'yt$videoid'}->{'$t'};
+			$item->id =  'youtube_'.$video->{'media$group'}->{'yt$videoid'}->{'$t'};
 			$item->title = $video->{'title'}->{'$t'};//we don't get given titles for some odd reason
 			$item->iconURL = $video->{'media$group'}->{'media$thumbnail'}[1]->{'url'};
 			$item->description = $video->{'media$group'}->{'media$description'}->{'$t'};

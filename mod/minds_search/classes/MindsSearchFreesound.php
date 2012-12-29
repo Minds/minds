@@ -53,7 +53,7 @@ class MindsSearchFreesound extends MindsSearch {
 
 		foreach($data->sounds as $sound){
 			$item = new stdClass();
-			$item->id = $sound->id;
+			$item->id = 'freesound_'.$sound->id;
 			$item->title = $sound->original_filename;//we don't get given titles for some odd reason
 			$item->iconURL = $sound->waveform_m;
 			$item->href =  $sound->url;

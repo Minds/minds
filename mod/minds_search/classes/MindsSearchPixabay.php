@@ -2,6 +2,8 @@
 /*
  * http://pixabay.com/api/docs/
  * 
+ * NOTE: This service may have duplicates. Needs attention.
+ * 
  */
 
 class MindsSearchPixabay extends MindsSearch {
@@ -31,9 +33,10 @@ class MindsSearchPixabay extends MindsSearch {
 		
 		while($page < $pages){
 			$data = $this->query(null, $per_page, $page);//new data based on page
+			$id = 0;
 			foreach($data->photos as $item){
-				$id = strlen($item->href) + intval($item->href) + rand(0,100);//how can we update??
-				$es->add($item->type, $id, json_encode($item));
+				$es->add($item->type, 'pixabay_'.$page.$id, json_encode($item));
+				$id++;
 			}
 			$page++;
 		}

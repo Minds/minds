@@ -52,7 +52,7 @@ class MindsSearchSoundcloud extends MindsSearch {
 
 		foreach($data as $sound){
 			$item = new stdClass();
-			$item->id = 'sc'.$sound->id;
+			$item->id = 'soundcloud_'.$sound->id;
 			$item->title = $sound->title;//we don't get given titles for some odd reason
 			$item->iconURL = $sound->artwork_url ? $sound->artwork_url : $sound->waveform_url;
 			$item->description = $sound->description;

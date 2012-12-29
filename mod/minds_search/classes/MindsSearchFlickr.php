@@ -48,7 +48,7 @@ class MindsSearchFlickr extends MindsSearch {
 		
 		foreach($data['photo'] as $photo){
 			$item = new stdClass();
-			$item->id = $photo['id'];
+			$item->id = 'flickr_'.$photo['id'];
 			$item->title = $photo['title'];
 			$item->iconURL = 'http://farm'.$photo['farm'].'.staticflickr.com/'.$photo['server'].'/'.$photo['id'].'_'.$photo['secret'].'_q.jpg';
 			$item->description = $photo['description']['content'];
