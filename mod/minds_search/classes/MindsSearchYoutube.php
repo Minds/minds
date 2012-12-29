@@ -14,28 +14,31 @@ class MindsSearchYoutube extends MindsSearch {
 	function query($q, $limit=10, $page=1) {
 		$q = urlencode($q);
 		(int) $offset = $limit * $page == 0?1:$limit * $page;
-		$get = $this->get($this->end_point.'alt=json&license=cc&v=2&q='.$q.'&max-results='.$limit.'&start-index='.$offset);
+		$get = $this->get($this->end_point.'alt=json&license=cc&v=2&orderby='.$q.'&max-results='.$limit.'&start-index='.$offset);
 		$obj = json_decode($get);
 		//var_dump($obj->feed);
 		return $this->renderData($obj->feed);
 	}
 	
 	function index(){
-		$per_page = 50;
-		$page = 1;
-		$data = $this->query(null, $per_page, $page);
-		$pages = $data->total / $per_page;
-	
-		$es = new elasticsearch();
-		$es->index = 'ext';
-			
-		while($page < $pages){
-			$data = $this->query(null, $per_page, $page);//new data based on page
-			foreach($data->videos as $item){
-				$es->add($item->type, $item->id, json_encode($item));
+		$orderby = array('published', 'viewCount', 'rating', 'relevance');
+		foreach($orderby as $order){
+			$per_page = 50;
+			$page = 0;
+			$data = $this->query($order, $per_page, $page);
+			$pages = 1000;
+		
+			$es = new elasticsearch();
+			$es->index = 'ext';
+				
+			while($page < $pages){
+				$data = $this->query($order, $per_page, $page);//new data based on page
+				foreach($data->videos as $item){
+					$es->add($item->type, $item->id, json_encode($item));
+				}
+				$page++;
+				//sleep(4);
 			}
-			$page++;
-			//sleep(4);
 		}
 		return;
 	}
