@@ -24,7 +24,7 @@ $call = elasticsearch_parse($query, $object_type, $sort, $limit, $offset);
 $hits = $call['hits'];
 $items = $hits['hits'];
 
-if ($hits['total'] > 0) {
+if (count($items) > 0) {
 
 	foreach ($items as $item) {
 		$guids[] = $item['_source']['guid'];
@@ -47,7 +47,7 @@ $serviceSearch = new MindsSearch();
 $call = $serviceSearch->search($query,$type, $services, $limit,$offset);
 $hits = $call['hits'];
 $items = $hits['hits'];
-if ($hits['total'] > 0) {
+if (count($items) > 0) {
 	$results .= '<h3> More </h3>';
 	$results .= elgg_view('minds_search/services', array('data'=>$items));
 	$results .= elgg_view('navigation/pagination', array('count'=>$hits['total'], 'limit'=>$limit, 'offset'=>$offset));
