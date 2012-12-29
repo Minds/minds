@@ -22,8 +22,8 @@ class MindsSearchCCMixter extends MindsSearch {
 		$per_page = 100;
 		$page = 1;
 		$data = $this->query(null, $per_page, $page);
-		$pages = $data->total / $per_page;
-		
+		$pages = 35000;
+			
 		$es = new elasticsearch();
 		$es->index = 'ext';
 		
