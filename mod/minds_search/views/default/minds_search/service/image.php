@@ -9,7 +9,7 @@ $title = strlen($image['title'])>25 ? substr($image['title'], 0, 25) . '...' : $
 $img = elgg_view('output/img', array('src'=>$image['iconURL']));
 $source = $image['source'];
 ?>
-<a href='<?php echo $image->href?>'>
+<a href='<?php echo $image['href'];?>'>
 	<div class='minds-search minds-search-item'>
 		<?php echo $img;?>
 		<h3><?php echo $title;?></h3>
