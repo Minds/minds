@@ -47,7 +47,7 @@ class MindsSearchArchivedotOrg extends MindsSearch {
 			$item->id = 'achorg_'.$media->identifier;
 			$item->title = $media->title;
 			$item->href =  'http://archive.org/details/'.$media->identifier;
-			$item->iconURL = 'http://archive.org/serve/'.$media->identifier.'/format=JPEG';
+			$item->iconURL = 'http://archive.org/serve/'.$media->identifier.'/format=Thumbnail';
 			$item->source = 'archive.org';
 			$item->owner = $media->creator;
 			$item->description = $media->description;
