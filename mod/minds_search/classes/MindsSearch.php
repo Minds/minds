@@ -125,22 +125,64 @@ class MindsSearch {
 				return $cc_by;
 				break;
 			//archive dot org
+			//BY
+			case 'http://creativecommons.org/licenses/by/2.0/':
+				return $cc_by;
+				break;
 			case 'http://creativecommons.org/licenses/by/2.5/':
 				return $cc_by;
+				break;
+			case 'http://creativecommons.org/licenses/by/3.0/':
+				return $cc_by;
+				break;
+			//SA
+			case 'http://creativecommons.org/licenses/by-sa/2.0/':
+				return $cc_by_sa;
 				break;
 			case 'http://creativecommons.org/licenses/by-sa/2.5/':
 				return $cc_by_sa;
 				break;
+			case 'http://creativecommons.org/licenses/by-sa/3.0/':
+				return $cc_by_sa;
+				break;
+			//by-nd
+			case 'http://creativecommons.org/licenses/by-nd/2.0/':
+				return $cc_by_nd;
+				break;
 			case 'http://creativecommons.org/licenses/by-nd/2.5/':
 				return $cc_by_nd;
+				break;
+			case 'http://creativecommons.org/licenses/by-nd/3.0/':
+				return $cc_by_nd;
+				break;
+			//by-nc
+			case 'http://creativecommons.org/licenses/by-nc/2.0/':
+				return $cc_by_nc;
 				break;
 			case 'http://creativecommons.org/licenses/by-nc/2.5/':
 				return $cc_by_nc;
 				break;
+			case 'http://creativecommons.org/licenses/by-nc/3.0/':
+				return $cc_by_nc;
+				break;
+			//by-nc-sa
+			case 'http://creativecommons.org/licenses/by-nc-sa/2.0/':
+				return $cc_by_nc_sa;
+				break;
 			case 'http://creativecommons.org/licenses/by-nc-sa/2.5/':
 				return $cc_by_nc_sa;
 				break;
+			case 'http://creativecommons.org/licenses/by-nc-sa/3.0/':
+				return $cc_by_nc_sa;
+				break;
+			//by-nc-nd
+			case 'http://creativecommons.org/licenses/by-nc-nd/2.0/':
+				return $cc_by_nc_nd;
+				break;
 			case 'http://creativecommons.org/licenses/by-nc-nd/2.5/':
+				return $cc_by_nc_nd;
+				break;
+			case 'http://creativecommons.org/licenses/by-nc-nd/3.0/':
 				return $cc_by_nc_nd;
 				break;
 			case 'http://creativecommons.org/licenses/publicdomain/':
