@@ -1,6 +1,6 @@
 <?php
 /**
- * Elastic Search 
+ * Elastic Search
  *
  * @package elasticsearch
  */
@@ -14,51 +14,55 @@ $limit = get_input("limit", 32);
 $offset = get_input("offset");
 
 $services = get_input("services", array('all'));
-$types = get_input("types",'all');
+$type = get_input("type",'all');
 
-/** 
- * Minds Search. Appears first.
+/**
+ * Minds Search. Local
  */
-if(elgg_get_plugin_setting('elasticsearch_enabled')=='Yes'){
-	$sort = 'name:asc';
-	$call = elasticsearch_parse($query, $object_type, $sort, $limit, $offset);
-	$hits = $call['hits'];
-	$items = $hits['hits'];
-	
-	if($hits['total'] > 0){
-		
-		foreach($items as $item){
-			$guids[] = $item['_source']['guid'];
-		
-		}
-		
-		$entities = elgg_get_entities(array('guids'=>$guids));
-		
-		$results = elgg_view('minds_search/results', array('results'=>$entities));
-		
-		$results .= elgg_view('navigation/pagination', array('count'=>$hits['total'], 'limit'=>$limit, 'offset'=>$offset));
-		
-	} else {
-		$params['content'] = 'sorry, no results';
+$sort = 'name:asc';
+$call = elasticsearch_parse($query, $object_type, $sort, $limit, $offset);
+$hits = $call['hits'];
+$items = $hits['hits'];
+
+if (count($items) > 0) {
+
+	foreach ($items as $item) {
+		$guids[] = $item['_source']['guid'];
+
 	}
-	//$params['title'] = $title;
-	$params['sidebar'] = elgg_view('minds_search/stats', array('stats'=>$call));
+
+	$entities = elgg_get_entities(array('guids' => $guids));
+
+	$results = elgg_view('minds_search/results', array('results' => $entities));
+
+	$results .= elgg_view('navigation/pagination', array('count' => $hits['total'], 'limit' => $limit, 'offset' => $offset));
+
+} else {
+	$params['content'] = 'sorry, no results';
 }
-$page = ($offset/$limit)+1;
+//$params['title'] = $title;
+$params['sidebar'] = elgg_view('minds_search/stats', array('stats' => $call));
 
 $serviceSearch = new MindsSearch();
-$results .= elgg_view('minds_search/services', array('data'=>$serviceSearch->search($query,$types, $services, $limit,$page)));
-$results .= elgg_view('navigation/pagination', array('count'=>$limit*3, 'limit'=>$limit, 'offset'=>$offset));
+$call = $serviceSearch->search($query,$type, $services, $limit,$offset);
+$hits = $call['hits'];
+$items = $hits['hits'];
+if (count($items) > 0) {
+	$results .= '<h3> More </h3>';
+	$results .= elgg_view('minds_search/services', array('data'=>$items));
+	$results .= elgg_view('navigation/pagination', array('count'=>$hits['total'], 'limit'=>$limit, 'offset'=>$offset));
+	
+	minds_search_sidebar_menu();
+	
+	$params['layout'] = 'one_sidebar';
+	$params['content'] = $results;
+	$params['sidebar'] = elgg_view('minds_search/sidebar', array());
+	$params['class'] = 'minds-search';
+} else {
+	$params['content'] = 'sorry, no results';
+}
 
-minds_search_sidebar_menu();
-
-$params['layout'] = 'one_sidebar';
-$params['content'] = $results;
-$params['sidebar'] = elgg_view('minds_search/sidebar', array());
-$params['class'] = 'minds-search';
-
-
-if(!$query){
+if (!$query) {
 	$params['layout'] = 'one_column';
 	$params['content'] = elgg_view('minds_search/splash');
 }
