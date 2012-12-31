@@ -13,7 +13,8 @@ $title = "<a href=\"{$item->getURL()}\">$item->title</a>";
 
 $body = "<p class=\"mbn\">$title</p>";
 
-$description = $item->description;
+$description = strip_tags($item->description);
+
 
 if (strlen($description) > 75) {
 
