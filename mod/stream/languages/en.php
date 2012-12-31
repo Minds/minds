@@ -7,7 +7,7 @@ $translations = array(
 	'stream:title' => "Stream",
 	'stream' => "Stream",
 	
-	'stream:livestream' => 'Live Stream',
+	'stream:livestream' => 'Live Stream <br/> (coming soon)',
 	'stream:webcam' => 'Record from Webcam',
 	'stream:gatherings' => 'Gatherings',
 	

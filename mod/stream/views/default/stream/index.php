@@ -1,11 +1,11 @@
 <?php
  	
 $owner = elgg_get_logged_in_user_entity();
-  	elgg_set_context('archive');
+elgg_set_context('archive');
 ?>
 <div class="stream">
 	<div class="elgg-col-1of3">
-		<a href="<?php echo elgg_get_site_url();?>livestreaming/owner/<?php echo $owner->username;?>">
+		<a href="#">
 			<img src="<?php echo elgg_get_site_url();?>mod/stream/graphics/circle.png"/>
 			<h3><?php echo elgg_echo('stream:livestream');?></h3>
 		</a>
