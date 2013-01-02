@@ -50,13 +50,11 @@ $description = $ob->description ? minds_filter(substr(strip_tags($ob->descriptio
 
 $subtitle .= 
 	elgg_echo('by') . ' ' . $owner_link . ' ' .
-	
-	elgg_echo("kalturavideo:label:length") . ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>' .
-
-	elgg_echo("kalturavideo:label:plays") . ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.kaltura_get_plays_count($mediaEntry).'</strong>';
+	elgg_view_friendly_time($ob->time_created);
+	//elgg_echo("kalturavideo:label:length") . ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>';
 
 
-'<b class="kaltura_video_created">'. elgg_view_friendly_time($ob->time_created).'</b> by ' . $owner_link . elgg_echo("kalturavideo:label:length") . '<strong class="kaltura_video_length">' . $ob->kaltura_video_length . '</strong>';
+'<b class="kaltura_video_created">'. elgg_view_friendly_time($ob->time_created).'</b> by ' . $owner_link;
 
 $params = array(
 	'entity' => $album,
@@ -119,9 +117,12 @@ elseif(elgg_get_context()=='sidebar') {
 		echo elgg_echo('ingroup')." <a href=\"{$CONFIG->wwwroot}archive/owner/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
 	}
 	
-	echo elgg_echo("kalturavideo:label:length"); echo ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>'; ?>
+	//echo elgg_echo("kalturavideo:label:length"); echo ' <strong class="kaltura_video_length">'.$ob->kaltura_video_length.'</strong>'; 
+	echo elgg_view_friendly_time($ob->time_created);
+	?>
 	
-	<?php echo elgg_echo("kalturavideo:label:plays"); echo ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.kaltura_get_plays_count($mediaEntry).'</strong>'; ?>
+	
+	<?php //echo elgg_echo("kalturavideo:label:plays"); echo ' <strong class="kaltura_video_plays" rel="'.$ob->kaltura_video_id.'">'.kaltura_get_plays_count($mediaEntry).'</strong>'; ?>
 	
 	</p>
 	</div>
@@ -142,8 +143,9 @@ elseif(elgg_get_context()=='sidebar') {
 	$info .= $metadata->kaltura_video_created." ";
 	$info .= elgg_echo('by')." <a href=\"{$vars['url']}pg/kaltura_video/{$owner->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$owner->name}</a> ";
 	if($group) $info .= elgg_echo('ingroup')." <a href=\"{$vars['url']}pg/kaltura_video/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
-	$info .= elgg_echo("kalturavideo:label:length"). ' <strong>'.$metadata->kaltura_video_length.'</strong> ';
-	$info .= elgg_echo("kalturavideo:label:plays"). ' <strong>'.kaltura_get_plays_count($mediaEntry).'</strong>';
+	//$info .= elgg_echo("kalturavideo:label:length"). ' <strong>'.$metadata->kaltura_video_length.'</strong> ';
+	$info .= elgg_view_friendly_time($ob->time_created);
+	//$info .= elgg_echo("kalturavideo:label:plays"). ' <strong>'.kaltura_get_plays_count($mediaEntry).'</strong>';
 	
 
 	if ($num_comments && $metadata->kaltura_video_comments_on != 'Off')
@@ -161,8 +163,9 @@ elseif(elgg_get_context()=='sidebar') {
 		$info .= "\">{$vars['entity']->title}</a> ";
 		$info .= "</p>";
 		$info .= "<p class=\"shares_gallery_user\">";
-		$info .= elgg_echo("kalturavideo:label:length"). ' <strong>'.$metadata->kaltura_video_length.'</strong> ';
-		$info .= elgg_echo("kalturavideo:label:plays"). ' <strong>'.intval($metadata->kaltura_video_plays).'</strong>';
+		//$info .= elgg_echo("kalturavideo:label:length"). ' <strong>'.$metadata->kaltura_video_length.'</strong> ';
+		//$info .= elgg_echo("kalturavideo:label:plays"). ' <strong>'.intval($metadata->kaltura_video_plays).'</strong>';
+		$info .= elgg_view_friendly_time($ob->time_created);
 		$info .= "</p>";
 		//when listing user videos is ok:
 		$info .= "<p class=\"shares_gallery_user\"><a href=\"{$vars['url']}pg/kaltura_video/{$owner->username}/\">{$owner->name}</a> ";
