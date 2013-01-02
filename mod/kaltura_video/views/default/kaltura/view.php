@@ -120,7 +120,6 @@ echo elgg_view_entity_icon($uob, 'tiny');
 <?php
 if($group) echo elgg_echo('ingroup')." <a href=\"{$CONFIG->wwwroot}archive/owner/{$group->username}/\" title=\"".htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos"))."\">{$group->name}</a> ";
  ?>
-<?php echo elgg_view_friendly_time($ob->time_created); ?>
 </p>
 <!-- display tags -->
 <p class="tags">
