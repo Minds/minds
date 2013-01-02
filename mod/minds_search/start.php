@@ -65,6 +65,10 @@ function minds_search_page_handler($page) {
 		case 'live' :
 			elasticsearch_live();
 			break;
+		case 'result':
+			set_input('id', $page[1]);
+			include "$file_dir/result.php";
+			break;
 		case 'service-index' :
 			//if(elgg_is_admin_logged_in())
 			minds_search_index($page[1]);
