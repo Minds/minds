@@ -51,12 +51,10 @@ if (count($items) > 0) {
 	$results .= '<h3> More </h3>';
 	$results .= elgg_view('minds_search/services', array('data'=>$items));
 	$results .= elgg_view('navigation/pagination', array('count'=>$hits['total'], 'limit'=>$limit, 'offset'=>$offset));
-	
-	minds_search_sidebar_menu();
-	
+		
 	$params['layout'] = 'one_sidebar';
 	$params['content'] = $results;
-	$params['sidebar'] = elgg_view('minds_search/sidebar', array());
+	$params['sidebar'] = elgg_view('minds_search/sidebar', array('data'=>$items,'stats'=>$call));
 	$params['class'] = 'minds-search';
 } else {
 	$params['content'] = 'sorry, no results';
