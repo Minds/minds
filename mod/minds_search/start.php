@@ -19,7 +19,7 @@ function minds_search_init() {
 
 	elgg_load_library('minds_search');
 	elgg_load_library('elasticsearch');
-	
+
 	//create handlers
 	elgg_register_event_handler('create', 'user', 'elasticsearch_add');
 	elgg_register_event_handler('create', 'group', 'elasticsearch_add');
@@ -37,6 +37,8 @@ function minds_search_init() {
 
 	define('elasticsearch_server', elgg_get_plugin_setting('server'));
 	define('elasticsearch_index', elgg_get_plugin_setting('index'));
+
+	elgg_register_plugin_hook_handler('register', 'menu:search_result', 'minds_search_result_menu_setup');
 
 	// Page handler for the modal media embed
 	elgg_register_page_handler('search', 'minds_search_page_handler');
@@ -65,7 +67,7 @@ function minds_search_page_handler($page) {
 		case 'live' :
 			elasticsearch_live();
 			break;
-		case 'result':
+		case 'result' :
 			set_input('id', $page[1]);
 			include "$file_dir/result.php";
 			break;
@@ -82,4 +84,28 @@ function minds_search_page_handler($page) {
 			return false;
 	}
 	return true;
+}
+
+/**
+ * Setup the search result menu
+ */
+function minds_search_result_menu_setup($hook, $type, $return, $params) {
+	if (elgg_is_logged_in()) {
+
+		$item_id = $params['item_id'];
+		$source = $params['source'];
+		$source_href = $params['source_href'];
+
+		//Remind button
+		$options = array('name' => 'remind', 'href' => "action/minds/remind/external?item_id=$item_id", 'text' => elgg_view_icon('share'), 'title' => elgg_echo('minds:remind'), 'is_action' => true, 'priority' => 1, );
+		$return[] = ElggMenuItem::factory($options);
+
+		/*$options = array('name' => 'download', 'href' => elgg_get_site_url().'search/download/'.$item_id, 'text'=>elgg_echo('minds_search:download'), 'title' =>elgg_echo('minds_search:download'), 'class'=>'elgg-button elgg-button-action');
+		$return[] = ElggMenuItem::factory($options);*/
+		
+		$options = array('name' => 'source_link', 'href' => $source_href, 'text'=>elgg_echo('minds_search:source_link', array($source)),'title' =>elgg_echo('minds_search:download'), 'class'=>'elgg-button elgg-button-action');
+		$return[] = ElggMenuItem::factory($options);		
+	}
+
+	return $return;
 }

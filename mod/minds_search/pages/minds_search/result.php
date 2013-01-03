@@ -16,12 +16,10 @@ if(!$item){
 	forward();
 }
 
-
 $results = elgg_view('minds_search/services/result', array('result'=>$item));
 		
-$params['layout'] = 'content';
+$params['layout'] = 'one_column';
 $params['filter'] = false;
-$params['title'] = $item['_source']['title'];
 $params['content'] = $results;
 //$params['sidebar'] = elgg_view('minds_search/sidebar', array('data'=>$items,'stats'=>$call));
 $params['class'] = 'minds-search';

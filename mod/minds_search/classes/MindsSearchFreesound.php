@@ -61,7 +61,7 @@ class MindsSearchFreesound extends MindsSearch {
 			$item->source = 'freesound';
 			$item->tags = $sound->tags;
 			$item->type = 'sound';
-			$item->license = $sound->license;
+			$item->license = $this->findLicense($sound->license);
 			$rtn[] = $item;
 		}
 		$info->sounds = $rtn;

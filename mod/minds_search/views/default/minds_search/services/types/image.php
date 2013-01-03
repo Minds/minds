@@ -9,7 +9,7 @@ $full_view = $vars['full_view'];
 $title = strlen($image['title'])>25 ? substr($image['title'], 0, 25) . '...' : $image['title'];
 $imageURL = $image['iconURL'];
 $img = elgg_view('output/img', array('src'=>$imageURL));
-$url = $image['href'];
+$url = elgg_get_site_url().'search/result/'.$image['id'];
 $source = $image['source'];
 
 if(!$full_view){
@@ -26,11 +26,11 @@ if(!$full_view){
 </a>
 <?php 
 }else {
-	if($source=='archive.org'){
+	if($source=='archive.org'||$source=='pixabay'){
 		forward($url);
 	}elseif($source=='flickr'){
 		//do some modification to the imageURL to get a large image
-		$imageURL = str_replace('_q', '_c', $imageURL);
-		echo elgg_view('output/img', array('src'=>$imageURL, 'width'=>725));
+		$imageURL = str_replace('_q', '_b', $imageURL);
+		echo elgg_view('output/img', array('src'=>$imageURL, 'width'=>970));
 	}
 }?>

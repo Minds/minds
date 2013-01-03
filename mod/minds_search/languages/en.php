@@ -7,6 +7,11 @@ $english = array(
 	'minds_search:type:photo' => 'Photos / Images',
 	'minds_search:type:video' => 'Videos',
 	'minds_search:type:sound' => 'Sounds',
+	
+	'minds_search:download' => 'Download',
+	'minds_search:source_link' => 'View on %s',
+	
+	'river:remind:external:search' => '%s has reMinded \'%s\' from %s',
 );
 		
 add_translation("en", $english);

@@ -6,7 +6,21 @@
  */
 
 $result = $vars['result'];
+$item_id = $result['_source']['id'];
+$menu = elgg_view_menu('search_result', array(	'item_id'=>$item_id, 
+												'source_href'=>$result['_source']['href'], 
+												'source'=>$result['_source']['source'],
+												));
 
+$title = elgg_view_title($result['_source']['title']);
+$license = elgg_view('minds/license', array('license'=>$result['_source']['license']));
+
+echo <<<HTML
+<div class="elgg-head clearfix">
+	$menu $title 
+</div>
+$license 
+HTML;
 if ($result['_type'] == 'photo')
 	echo elgg_view('minds_search/services/types/image', array('photo' => $result['_source'], 'full_view'=>true));
 if ($result['_type'] == 'video')

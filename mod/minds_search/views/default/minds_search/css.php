@@ -71,7 +71,19 @@ a:hover .minds-search-item p{
 	width:100px;
 	float:right;
 }
-
+/************************
+ * Individual page
+ */
+.elgg-menu-search-result{
+	float:right;
+}
+.elgg-menu-search-result > li{
+	float:left;
+	margin:0 5px;
+}
+.elgg-menu-search-result > .elgg-menu-item-remind{
+	margin:5px;
+}
 /**********************************
 Search plugin
 ***********************************/
