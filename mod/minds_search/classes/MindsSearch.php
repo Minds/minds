@@ -9,6 +9,14 @@ class MindsSearch {
 	function services() {
 		return minds_search_return_services();
 	}
+	
+	//returns a count of the service
+	function total($service){
+		$es = new elasticsearch();
+		$es->index = 'ext';
+		$query = $es->query(null, 'source:'.$service);
+		return $query['hits']['total'];
+	}
 
 	function search($q,$type = 'all',$services = array('all'), $limit=10,$offset=0) {
 		if($type == 'all'){

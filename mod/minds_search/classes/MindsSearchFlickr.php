@@ -12,16 +12,17 @@ class MindsSearchFlickr extends MindsSearch {
 
 	function query($q, $limit=10, $page=1) {
 		$q = urlencode($q);
-		$get = $this->get($this->end_point.'api_key='.$this->api_key.'&method=flickr.photos.search&license=1,2,3,4,5,6,7&extras=description,license,owner_name,tags&text='.$q.'&format=php_serial&per_page='.$limit.'&page='.$page);
+		$get = $this->get($this->end_point.'api_key='.$this->api_key.'&method=flickr.photos.search&license=1,2,3,4,5,6,7&extras=description,license,owner_name,tags&text='.$q.'&format=php_serial&sort=date-post-asc&per_page='.$limit.'&page='.$page);
 		$obj = unserialize($get);
 		return $this->renderData($obj['photos']);
 	}
 	
 	function index(){
 		$per_page = 500;
-		$page = 1;
 		$data = $this->query(null, $per_page, $page);
+		$toIndex = $data->total - $this->total('flickr');
 		$pages = $data->total / $per_page;
+		$page = $this->total('flickr') / $per_page;
 		
 		$es = new elasticsearch();
 		$es->index = 'ext';
