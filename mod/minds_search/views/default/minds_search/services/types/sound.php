@@ -22,12 +22,18 @@ if(!$full_view){
 </a>
 <?php 
 } else {
+	minds_set_metatags('og:title', $image['title']);
+	minds_set_metatags('og:type', 'video.other');
+	minds_set_metatags('og:url', $url);
+	minds_set_metatags('og:image', $imageURL);
 	if($source=='freesound'){
 		$fs_id = str_replace('freesound_', '', $sound['id']);
 		echo '<iframe src="http://www.freesound.org/embed/sound/iframe/'.$fs_id.'/simple/large" width="975px" height="300px"></iframe>';
+		minds_set_metatags('og:video', 'http://www.freesound.org/embed/sound/iframe/'.$fs_id.'/simple/large');
 	}elseif($source=='soundcloud'){
 		$sc_id = str_replace('soundcloud_', '', $sound['id']);
 		echo '<iframe width="975px" height="175px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$sc_id.'"></iframe>';
+		minds_set_metatags('og:video','https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$sc_id);
 	}elseif($source=='ccmixter'){
 		forward();
 	}

@@ -26,6 +26,12 @@ if(!$full_view){
 </a>
 <?php 
 }else {
+	minds_set_metatags('og:title', $image['title']);
+	minds_set_metatags('og:type', 'mindscom:photo');
+	minds_set_metatags('og:url', $url);
+	minds_set_metatags('og:image', $imageURL);
+	minds_set_metatags('mindscom:photo', $imageURL);
+	
 	if($source=='archive.org'||$source=='pixabay'){
 		forward($url);
 	}elseif($source=='flickr'){

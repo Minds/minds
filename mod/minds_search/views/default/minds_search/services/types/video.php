@@ -22,10 +22,15 @@ if(!$full_view){
 </a>
 <?php 
 }else {
+	minds_set_metatags('og:title', $image['title']);
+	minds_set_metatags('og:type', 'video.other');
+	minds_set_metatags('og:url', $url);
+	minds_set_metatags('og:image', $imageURL);
 	if($source=='archive.org'){
 		forward($url);
 	}elseif($source=='youtube'){
 		$yt_id = str_replace('youtube_', '', $video['id']);
 		echo '<iframe src="http://youtube.com/embed/'.$yt_id.'" width="975px" height="500px"></iframe>';
+		minds_set_metatags('og:video', 'http://youtube.com/embed/'.$yt_id);
 	}
 }
