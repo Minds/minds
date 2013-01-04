@@ -14,12 +14,18 @@ $menu = elgg_view_menu('search_result', array(	'item_id'=>$item_id,
 
 $title = elgg_view_title($result['_source']['title']);
 $license = elgg_view('minds/license', array('license'=>$result['_source']['license']));
+$share = elgg_view('minds_social/social_footer');
 
 echo <<<HTML
 <div class="elgg-head clearfix">
 	$menu $title 
 </div>
-$license 
+<div class="search-result-license">
+	$license
+</div> 
+<div class="search-result-social">
+	$share
+</div>
 HTML;
 if ($result['_type'] == 'photo')
 	echo elgg_view('minds_search/services/types/image', array('photo' => $result['_source'], 'full_view'=>true));

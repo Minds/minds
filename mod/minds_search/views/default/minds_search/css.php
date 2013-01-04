@@ -84,6 +84,13 @@ a:hover .minds-search-item p{
 .elgg-menu-search-result > .elgg-menu-item-remind{
 	margin:5px;
 }
+.search-result-license{
+	float:left;
+	margin-right:25px;
+}
+.search-result-social > .minds-social{
+	margin-top:15px;
+}
 /**********************************
 Search plugin
 ***********************************/
