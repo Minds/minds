@@ -102,6 +102,9 @@ Search plugin
 	/*width: 230px;*/
     width:275px;
 }
+.elgg-menu-item-search.main input[type=text]{
+	width:350px;
+}
 .elgg-search input[type=submit] {
 	display: none;
 }

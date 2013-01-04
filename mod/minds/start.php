@@ -146,8 +146,9 @@ function minds_pagesetup(){
 			'name' => 'search',
 			'href' => '#',
 			'text' => elgg_view('minds_search/header'),
-			'priority' => 50,
-			'section' => 'alt',
+			'priority' => 1,
+			'item_class'=> elgg_get_context()=='main'?'main':null,
+			//'section' => 'alt',
 		));
 	if(elgg_get_context()!='main')	
 	elgg_register_menu_item('topbar', array(
