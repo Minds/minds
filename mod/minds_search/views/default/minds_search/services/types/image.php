@@ -31,7 +31,7 @@ if(!$full_view){
 	minds_set_metatags('og:url', $url);
 	minds_set_metatags('og:image', $imageURL);
 	minds_set_metatags('mindscom:photo', $imageURL);
-	minds_set_metatags('og:description', 'via '. $source . ' License:' . $image['license']);
+	minds_set_metatags('og:description', 'License:' . elgg_echo('minds:license:'.$image['license']));
 	
 	if($source=='archive.org'||$source=='pixabay'){
 		forward($url);
