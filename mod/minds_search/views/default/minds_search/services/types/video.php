@@ -22,10 +22,10 @@ if(!$full_view){
 </a>
 <?php 
 }else {
-	minds_set_metatags('og:title', $sound['title']);
+	minds_set_metatags('og:title', $video['title']);
 	minds_set_metatags('og:type', 'video.other');
 	minds_set_metatags('og:url', $url);
-	minds_set_metatags('og:image', $sound['iconURL']);
+	minds_set_metatags('og:image', $video['iconURL']);
 	minds_set_metatags('og:description', 'License: ' . elgg_echo('minds:license:'.$video['license']));
 	if($source=='archive.org'){
 		forward($video['href']);
