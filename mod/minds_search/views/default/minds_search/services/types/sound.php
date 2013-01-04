@@ -22,11 +22,11 @@ if(!$full_view){
 </a>
 <?php 
 } else {
-	minds_set_metatags('og:title', $image['title']);
+	minds_set_metatags('og:title', $sound['title']);
 	minds_set_metatags('og:type', 'video.other');
 	minds_set_metatags('og:url', $url);
-	minds_set_metatags('og:image', $video['iconURL']);
-	minds_set_metatags('og:description', 'License:' .elgg_echo('minds:license:'.$sound['license']));
+	minds_set_metatags('og:image', $sound['iconURL']);
+	minds_set_metatags('og:description', 'License: ' .elgg_echo('minds:license:'.$sound['license']));
 	if($source=='freesound'){
 		$fs_id = str_replace('freesound_', '', $sound['id']);
 		echo '<iframe src="http://www.freesound.org/embed/sound/iframe/'.$fs_id.'/simple/large" width="975px" height="300px"></iframe>';

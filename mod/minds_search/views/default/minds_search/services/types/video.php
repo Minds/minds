@@ -22,13 +22,13 @@ if(!$full_view){
 </a>
 <?php 
 }else {
-	minds_set_metatags('og:title', $image['title']);
+	minds_set_metatags('og:title', $sound['title']);
 	minds_set_metatags('og:type', 'video.other');
 	minds_set_metatags('og:url', $url);
-	minds_set_metatags('og:image', $video['iconURL']);
-	minds_set_metatags('og:description', 'License:' . elgg_echo('minds:license:'.$video['license']));
+	minds_set_metatags('og:image', $sound['iconURL']);
+	minds_set_metatags('og:description', 'License: ' . elgg_echo('minds:license:'.$video['license']));
 	if($source=='archive.org'){
-		forward($url);
+		forward($video['href']);
 	}elseif($source=='youtube'){
 		$yt_id = str_replace('youtube_', '', $video['id']);
 		echo '<iframe src="http://youtube.com/embed/'.$yt_id.'" width="975px" height="500px"></iframe>';
