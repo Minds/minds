@@ -25,7 +25,8 @@ if(!$full_view){
 	minds_set_metatags('og:title', $image['title']);
 	minds_set_metatags('og:type', 'video.other');
 	minds_set_metatags('og:url', $url);
-	minds_set_metatags('og:image', $imageURL);
+	minds_set_metatags('og:image', $video['iconURL']);
+	minds_set_metatags('og:description', 'via '. $source . ' License:' . $sound['license']);
 	if($source=='freesound'){
 		$fs_id = str_replace('freesound_', '', $sound['id']);
 		echo '<iframe src="http://www.freesound.org/embed/sound/iframe/'.$fs_id.'/simple/large" width="975px" height="300px"></iframe>';

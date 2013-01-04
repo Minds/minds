@@ -25,7 +25,8 @@ if(!$full_view){
 	minds_set_metatags('og:title', $image['title']);
 	minds_set_metatags('og:type', 'video.other');
 	minds_set_metatags('og:url', $url);
-	minds_set_metatags('og:image', $imageURL);
+	minds_set_metatags('og:image', $video['iconURL']);
+	minds_set_metatags('og:description', 'via '. $source . ' License:' . $video['license']);
 	if($source=='archive.org'){
 		forward($url);
 	}elseif($source=='youtube'){
