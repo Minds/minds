@@ -51,8 +51,8 @@ if($group instanceof ElggGroup) {
 else $group = false;
 
 //generic widget
-$widget = kaltura_create_generic_widget_html ( $ob->kaltura_video_id , 'l' );
-$widgetm = kaltura_create_generic_widget_html ( $ob->kaltura_video_id , 'm' );
+$widget = kaltura_create_generic_widget_html ( $ob->kaltura_video_id , 'l',$ob->monetized );
+$widgetm = kaltura_create_generic_widget_html ( $ob->kaltura_video_id , 'm',$ob->monetized  );
 
 //if widget exists
 if($metadata->kaltura_video_widget_html &&
@@ -151,7 +151,13 @@ echo autop($ob->description);
 												'text'=> $ob->featured == true ? elgg_echo('archive:featured:un-action') : elgg_echo('archive:featured:action'),
 												'is_action' => true,
 												'class'=> 'elgg-button elgg-button-action right'
-											));}?>
+											));
+											echo elgg_view('output/url', array(	'href'=>'/action/archive/monetize?guid='.$ob->guid,
+												'text'=> $ob->monetized == true ? elgg_echo('archive:monetized:un-action') : elgg_echo('archive:monetized:action'),
+												'is_action' => true,
+												'class'=> 'elgg-button elgg-button-action right'
+											));
+										}?>
 </p>
 <?php echo elgg_view('minds_social/social_footer');?>
 <div class="clear"></div>

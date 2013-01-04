@@ -112,6 +112,17 @@ $configured = $vars['configured'];
         </p>
     </div>
 </div>
+<!--- Temporary Ad Options -->
+<div class="elgg-module elgg-module-info">
+    <div class="elgg-head">
+		<h3><?php echo elgg_echo('kalturavideo:admin:player'); ?></h3>
+	</div>
+	<div class="elgg-body">
+		 <?php echo elgg_echo('Ad plugin ID'); 
+               echo elgg_view('input/url', array('name' => 'params[adPluginID]','id' => 'adPluginID', 'value' => elgg_get_plugin_setting('adPluginID', 'kaltura_video') ));
+         ?>
+	</div>
+</div>
 <!--- PLAYER SETTINGS ---->
 <div class="elgg-module elgg-module-info">
     <div class="elgg-head">

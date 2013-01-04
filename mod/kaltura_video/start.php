@@ -143,6 +143,7 @@ function kaltura_video_init() {
 	elgg_register_action("kaltura_video/delete", $action_path . "delete.php");//fallback
 	elgg_register_action("archive/delete", $action_path . "delete.php");//new (studio)
 	elgg_register_action("archive/download", $action_path . "download.php");
+	elgg_register_action("archive/monetize", $action_path . "monetize.php");
 	elgg_register_action("archive/feature", $action_path . "feature.php");
 	elgg_register_action("kaltura_video/update", $action_path . "update.php");
 	elgg_register_action("kaltura_video/upload", $action_path . "upload.php");

@@ -436,7 +436,7 @@ function kaltura_get_error_page($code='',$text = "",$popup=true) {
 
 
 //
-function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=null , $version_kshow_name=null , $version_kshow_description=null)
+function kaltura_create_generic_widget_html ( $entryId , $size='l' , $monetized = false)
 {
 	global $KALTURA_GLOBAL_UICONF;
 	
@@ -509,6 +509,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 	
 	$widget .= '<script type="text/javascript" src="' . $kaltura_server . '/p/'.$partnerId.'/sp/'.$partnerId.'00/embedIframeJs/uiconf_id/'.$widgetUi.'/partner_id/' . $partnerId * 100 . '"></script>';
 	 
+	$showAds = elgg_get_plugin_setting('adPluginID', 'kaltura_video').'.plugin=' . ($monetized ? 'true':'false');
 
 	$widget .= '<object id="kaltura_player_' . $widgetUi .'" name="kaltura_player_' . $widgetUi . '" type="application/x-shockwave-flash" 
 	 xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" 
@@ -521,7 +522,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $version=nu
 		'<param name="bgcolor" value="#000000" />'.
 		'<param name="wmode" value="transparent" />' .
 		'<param name="movie" value="' . $video_location . '"/>'.
-    	'<param name="flashVars" value="&{FLAVOR}' . $flashVars . '" />' .
+    	'<param name="flashVars" value="&{FLAVOR}' . $flashVars . '&'.$showAds.'" />' .
 		'<span property="dc:description" content=""></span>
 		<span property="media:title" content="video.mov"></span> 
 		<span property="media:width" content="' . $width . '"></span>
