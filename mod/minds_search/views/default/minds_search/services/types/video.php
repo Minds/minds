@@ -23,7 +23,7 @@ if(!$full_view){
 <?php 
 }else {
 	minds_set_metatags('og:title', $video['title']);
-	minds_set_metatags('og:type', 'video.other');
+	minds_set_metatags('og:type', 'video');
 	minds_set_metatags('og:url', $url);
 	minds_set_metatags('og:image', $video['iconURL']);
 	minds_set_metatags('og:description', 'License: ' . elgg_echo('minds:license:'.$video['license']));
@@ -32,6 +32,10 @@ if(!$full_view){
 	}elseif($source=='youtube'){
 		$yt_id = str_replace('youtube_', '', $video['id']);
 		echo '<iframe src="http://youtube.com/embed/'.$yt_id.'" width="975px" height="500px"></iframe>';
-		minds_set_metatags('og:video', 'http://youtube.com/embed/'.$yt_id);
+		minds_set_metatags('og:video', 'http://youtube.com/v/'.$yt_id);
+		minds_set_metatags('og:video:secure_url', 'https://youtube.com/v/'.$yt_id);
+		minds_set_metatags('og:video:type', 'application/x-shockwave-flash');
+		minds_set_metatags('og:video:width', 1280);
+		minds_set_metatags('og:video:height', 720);
 	}
 }
