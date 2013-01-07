@@ -35,6 +35,9 @@ if(!$full_view){
 		$sc_id = str_replace('soundcloud_', '', $sound['id']);
 		echo '<iframe width="975px" height="175px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$sc_id.'"></iframe>';
 		minds_set_metatags('og:video','https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$sc_id);
+		minds_set_metatags('og:video:type', 'application/x-shockwave-flash');
+		minds_set_metatags('og:video:width', 480);
+		minds_set_metatags('og:video:height', 98);	
 	}elseif($source=='ccmixter' || $source =='archive.org'){
 		forward($sound['href']);
 	}
