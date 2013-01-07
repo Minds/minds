@@ -23,7 +23,7 @@ if(!$full_view){
 <?php 
 } else {
 	minds_set_metatags('og:title', $sound['title']);
-	minds_set_metatags('og:type', 'video.other');
+	minds_set_metatags('og:type', 'mindscom:sound');
 	minds_set_metatags('og:url', $url);
 	minds_set_metatags('og:image', $sound['iconURL']);
 	minds_set_metatags('og:description', 'License: ' .elgg_echo('minds:license:'.$sound['license']));
@@ -34,7 +34,7 @@ if(!$full_view){
 	}elseif($source=='soundcloud'){
 		$sc_id = str_replace('soundcloud_', '', $sound['id']);
 		echo '<iframe width="975px" height="175px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$sc_id.'"></iframe>';
-		minds_set_metatags('og:video','https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$sc_id);
+		minds_set_metatags('og:video','https://player.soundcloud.com/player.swf?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$sc_id);
 		minds_set_metatags('og:video:type', 'application/x-shockwave-flash');
 		minds_set_metatags('og:video:width', 480);
 		minds_set_metatags('og:video:height', 98);	
