@@ -34,7 +34,7 @@ if(!$full_view){
 	minds_set_metatags('og:description', 'License: ' . elgg_echo('minds:license:'.$image['license']));
 	
 	if($source=='archive.org'||$source=='pixabay'){
-		forward($video['href']);
+		forward($image['href']);
 	}elseif($source=='flickr'){
 		//do some modification to the imageURL to get a large image
 		$imageURL = str_replace('_q', '_b', $imageURL);

@@ -35,7 +35,7 @@ if(!$full_view){
 		$sc_id = str_replace('soundcloud_', '', $sound['id']);
 		echo '<iframe width="975px" height="175px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$sc_id.'"></iframe>';
 		minds_set_metatags('og:video','https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$sc_id);
-	}elseif($source=='ccmixter'){
-		forward();
+	}elseif($source=='ccmixter' || $source =='archive.org'){
+		forward($sound['href']);
 	}
 }
