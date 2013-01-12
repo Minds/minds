@@ -3,6 +3,8 @@
 
 $english = array(
 	
+	'search' => 'Search the commons',
+	
 	'minds_search:type:all' => 'All',
 	'minds_search:type:photo' => 'Photos / Images',
 	'minds_search:type:video' => 'Videos',
