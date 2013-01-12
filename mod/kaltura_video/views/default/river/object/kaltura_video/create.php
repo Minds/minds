@@ -47,7 +47,7 @@ if($object->converted){
 	));
 	
 } else {
-
+	try{
 	//@todo - cache this info so that we are not calling the kaltura server each time @MH
 	$kmodel = KalturaModel::getInstance();
 	$mediaEntry = $kmodel->getEntry($object->kaltura_video_id);
@@ -56,6 +56,9 @@ if($object->converted){
 		$object->converted = true;
 		$object->save();
 	}
+	}catch (Exception $e) {
+}
+
 }
 
 ?>
