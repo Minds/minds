@@ -2,10 +2,9 @@
 /**
  * Load CSS and JS libraries
  */
-elgg_load_css('hj.comments.base');
+elgg_load_css('minds_comments');
 if (elgg_is_logged_in()) {
-    elgg_load_js('hj.comments.base');
-    elgg_load_js('hj.likes.base');
+    elgg_load_js('minds_comments');
 }
 elgg_load_js('hj.framework.ajax');
 
@@ -45,7 +44,6 @@ $comments_input = elgg_view('hj/comments/input', $params);
 
 unset($params['aname']);
 unset($params['entity']);
-$likes_view = hj_alive_view_likes_list($params);
 //if(elgg_get_context() == 'news'){
 ?>
 <div id="hj-annotations-<?php echo $selector_id ?>" class="hj-annotations-bar clearfix">

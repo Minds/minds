@@ -41,8 +41,9 @@ $author = elgg_view('output/url', array(
 
 $comment = $author . ': ' . minds_filter($entity->annotation_value);
 
-
-$bar = elgg_view('hj/comments/bar', $vars);
+/*$type = 'comment';
+$pid = bykk
+$bar = elgg_view('minds_comments/bar', arrar);*/
 
 $content = <<<HTML
     <div class="clearfix">
