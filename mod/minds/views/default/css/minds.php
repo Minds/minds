@@ -33,6 +33,10 @@ body{
 .elgg-page-topbar .elgg-menu-item-profile{
 	margin:0px 5px 0 0;
  }
+.elgg-menu-item-register  a{
+	color:#4690D6 !important;
+	padding:0 10px;
+}
 
 /* More Drop Down
  */
@@ -68,6 +72,32 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	-moz-border-radius-bottomleft: 0px;
     border-bottom-left-radius:0px;
 }
+/**
+ * Register page
+ */
+.elgg-form-account{
+	float:left;
+	width:450px;
+	max-width:450px;
+}
+.elgg-form-account-side{
+	float:right;
+	wdith:400px;
+}
+.elgg-form-account .social{
+	clear:both;
+	width:100%;
+	height:25px;
+	margin:5px 0;
+}
+.elgg-form-account .social > div{
+	float:left;
+	margin-right:10px;
+}
+.elgg-form-account .social .facebook{
+	padding-top:1px;
+}
+	
 /***************
  **CUSTOMINDEX**
  **************/

@@ -67,6 +67,9 @@ function minds_init(){
 	//setup the generic upload endpoint
 	elgg_register_page_handler('upload', 'minds_upload');
 	
+	//unregister the register page and register this new one
+	elgg_register_page_handler('register', 'minds_register_page_handler');
+	
 	//setup the licenses pages
 	elgg_register_page_handler('licenses', 'minds_license_page_handler');
 	
@@ -123,6 +126,18 @@ function minds_news_page_handler($page) {
 	$entity_subtype = '';
 
 	require_once("pages/river.php");
+	return true;
+}
+/**
+ * Page handler for register page
+ *
+ * @param array $page
+ * @return bool
+ * @access private
+ */
+function minds_register_page_handler($page) {
+	$base_dir = elgg_get_plugins_path().'minds/pages/account';
+	require_once("$base_dir/register.php");
 	return true;
 }
 
@@ -190,15 +205,22 @@ function minds_pagesetup(){
 			'priority' => 800,
 			'section' => 'alt',
 		));
-	if(!$user)
-	elgg_register_menu_item('topbar', array(
-			'name' => 'login',
-			'href' => '#',
-			'text' => elgg_view('core/account/login_dropdown'),
+	if(!$user){
+		elgg_register_menu_item('topbar', array(
+			'name' => 'register',
+			'href' => '/register',
+			'text' => elgg_echo('register'),
 			'priority' => 900,
 			'section' => 'alt',
 		));
-	
+		elgg_register_menu_item('topbar', array(
+			'name' => 'login',
+			'href' => '#',
+			'text' => elgg_view('core/account/login_dropdown'),
+			'priority' => 1000,
+			'section' => 'alt',
+		));
+	}
 	
 	//rename activity news	
 	elgg_unregister_menu_item('site', 'activity');

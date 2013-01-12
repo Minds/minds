@@ -17,7 +17,7 @@ $login_url = $facebook->getLoginUrl(array(
 				//'display' => 'popup',
 			));
 			
-echo '<div class="facebook"><a href="' . $login_url . '" target="_self"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/facebook_connect.gif"/></a></div>';
+echo '<div><a href="' . $login_url . '" target="_self"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/facebook_connect.gif"/></a></div>';
 
 /**
  * Twitter Button

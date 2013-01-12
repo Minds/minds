@@ -12,7 +12,7 @@ $english = array(
 	//login
 	'login' => 'Enter',
 	'logout' => 'Exit',
-	'register' => 'Request Access',
+	'register' => 'Sign up',
 	'register:early' => 'Request Early Access',
 	
 	'post' => 'Post',
