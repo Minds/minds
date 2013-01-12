@@ -33,7 +33,8 @@ function minds_social_init(){
 	
 	elgg_extend_view('object/elements/full', 'minds_social/social_footer');
 	
-	if (stripos(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), 'facebook')|| get_input('fb_source') || get_input('code')){
+	/**** DISABlING AUTO FACEBOOK REG FOR THE MOMENT ***
+	 if (stripos(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), 'facebook')|| get_input('fb_source') || get_input('code')){
 		$facebook = minds_social_facebook_init();
 		global $CONFIG;
 		$_GET['session'] = $CONFIG->input['session'];
@@ -43,7 +44,7 @@ function minds_social_init(){
 			minds_social_facebook_login();
 			}
 		}
-	}
+	}*/
 }
 
 /**
