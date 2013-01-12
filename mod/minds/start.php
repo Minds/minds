@@ -142,22 +142,23 @@ function minds_pagesetup(){
 	elgg_unregister_menu_item('topbar', 'administration');
 	elgg_unregister_menu_item('topbar', 'friends');
 	
-	elgg_register_menu_item('topbar', array(
+	if(elgg_get_context()!='main')	{
+		elgg_register_menu_item('topbar', array(
 			'name' => 'search',
 			'href' => '#',
 			'text' => elgg_view('minds_search/header'),
 			'priority' => 1,
-			'item_class'=> elgg_get_context()=='main'?'main':null,
 			//'section' => 'alt',
 		));
-	if(elgg_get_context()!='main')	
-	elgg_register_menu_item('topbar', array(
+	
+		elgg_register_menu_item('topbar', array(
 			'name' => 'minds_logo',
 			'href' => '/archive/popular',
 			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds/graphics/minds_logo_transparent.png\' class=\'minds_logo\'>',
 			'priority' => 0
 		));
-		
+	}
+	
 	if($user){		
 		elgg_register_menu_item('site', array(
 						'name' => elgg_echo('minds:upload'),
