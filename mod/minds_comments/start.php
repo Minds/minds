@@ -45,12 +45,13 @@ function minds_comments_menu($hook, $type, $return, $params) {
 	$type = elgg_extract('type', $params, false);
 	$pid = elgg_extract('pid', $params, false);
 	$id = elgg_extract('id', $params, false);
-	
+	$owner_guid = elgg_extract('owner_guid', $params, false);
 	unset($return);
 
 	/**
 	 * Delete
 	 */
+	 if($owner_guid == elgg_get_logged_in_user_guid() || elgg_is_admin_logged_in()){
 		$delete = array(
 			'name' => 'delete',
 			'text' => elgg_view_icon('delete'),
@@ -59,7 +60,7 @@ function minds_comments_menu($hook, $type, $return, $params) {
 			'priority' => 1000
 		);
 		$return[] = ElggMenuItem::factory($delete);
-	
+	 }
 
 	return $return;
 }
