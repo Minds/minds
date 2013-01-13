@@ -135,12 +135,12 @@ function thumbs_comments_menu_setup($hook, $type, $return, $params) {
 		$options = array('name' => 'thumbs:down', 'text' => elgg_view('thumbs/button-down', array('type' => 'comment', 'comment_type'=>$type, 'pid'=>$pid, 'id'=>$id, 'count'=>count($thumbsDOWN), 'already'=>$alreadyDOWN)), 'href' => false, 'priority' => 99, );
 		$return[] = ElggMenuItem::factory($options);
 
-		/*// count
-		$count = elgg_view('thumbs/count', array('entity' => $object));
+		// count
+		$count = elgg_view('thumbs/count', array('type' => 'comment','thumbsUP'=>$thumbsUP, 'thumbsDOWN'=>$thumbsDOWN, 'id'=>$id ));
 		if ($count) {
 			$options = array('name' => 'thumbs:count', 'text' => $count, 'href' => false, 'priority' => 90, );
 			$return[] = ElggMenuItem::factory($options);
-		}*/
+		}
 
 	}
 	//Remove comments link
