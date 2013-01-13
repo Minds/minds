@@ -132,7 +132,7 @@ function thumbs_comments_menu_setup($hook, $type, $return, $params) {
 		$return[] = ElggMenuItem::factory($options);
 
 		// down button
-		$options = array('name' => 'thumbs:down', 'text' => elgg_view('thumbs/button-down', array('entity' => $object)), 'href' => false, 'priority' => 99, );
+		$options = array('name' => 'thumbs:down', 'text' => elgg_view('thumbs/button-down', array('type' => 'comment', 'comment_type'=>$type, 'pid'=>$pid, 'id'=>$id, 'count'=>count($thumbsDOWN), 'already'=>$alreadyDOWN)), 'href' => false, 'priority' => 99, );
 		$return[] = ElggMenuItem::factory($options);
 
 		/*// count
