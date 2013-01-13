@@ -9,9 +9,17 @@ class elasticsearch {
     $this->server = $server;
   }
 
-  function call($path, $http = array()){
+  function call($path, $http = array('method'=>'GET')){
     if (!$this->index) throw new Exception('$this->index needs a value');
-    return json_decode(file_get_contents($this->server . '/' . $this->index . '/' . $path, NULL, stream_context_create(array('http' => $http))),true);
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, '107.23.117.9/'. $this->index . '/' . $path);
+	curl_setopt($ch, CURLOPT_PORT, 9200);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http['method']);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $http['content']);
+	$result = curl_exec($ch);
+	curl_close($ch);
+	return json_decode($result,true);
   }
 
   //curl -X PUT http://localhost:9200/{INDEX}/
