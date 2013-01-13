@@ -24,6 +24,13 @@ class MindsComments {
 		$comments = $es->query($type, 'pid:'.$pid, 'time_created:desc', $limit, $offset);
 		return $comments;
 	}
+	
+	function single($type,$id){
+		$es = new elasticsearch();
+		$es->index = $this->index;
+		$comment = $es->call($type.'/'.$id, array('method' => 'GET'));
+		return $comment;
+	}
 
 	function create($type, $pid, $comment) {
 		$es = new elasticsearch();
@@ -36,6 +43,12 @@ class MindsComments {
 		
 		$id = $data->time_created . $data->owner_guid;
 		return $es->add($type,$id,json_encode($data));
+	}
+	
+	function update($type, $id, $source){
+		$es = new elasticsearch();
+		$es->index = $this->index;
+		return $es->add($type,$id,json_encode($source));
 	}
 	
 	function delete($type, $id){

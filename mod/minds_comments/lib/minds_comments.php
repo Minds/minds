@@ -34,6 +34,8 @@ function minds_comments_view_comment($comment) {
 		    'type' => $comment['_type'],
 		    'pid'=>$comment['_source']['pid'],
 			'id'=>$comment['_id'],
+			'thumbs:up'=>$comment['_source']['thumbs']['up'],
+			'thumbs:down'=>$comment['_source']['thumbs']['down'],
 		    'handler' => $handler,
 		    'class' => 'elgg-menu-hz',
 		    'sort_by' => 'priority',

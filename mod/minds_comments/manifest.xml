@@ -12,7 +12,9 @@
     <requires>
         <type>elgg_version</type>
 		<version>2011123101</version>
-		<type>plugin</type>
+    </requires>
+    <requires>
+        <type>plugin</type>
 		<name>minds_search</name>
     </requires>
     <admin_interface>simple</admin_interface>
