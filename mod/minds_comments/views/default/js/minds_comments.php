@@ -146,6 +146,7 @@
     	        
         e.preventDefault();
         $('body').off('submit', '.hj-ajaxed-comment-save');
+        console.log('hit');
 
         var     values = $(this).serialize(),
         action = $(this).attr('action'),
@@ -170,13 +171,18 @@
 	    contentType : 'application/json',
             success : function(output) {
 				console.log('saving');
-                hj.comments.refresh(ref, 'new');
+               // hj.comments.refresh(ref, 'new');
+                var container = $('#minds-comments-'+ data.pid);
+                var commentsList = container.find('ul.hj-syncable .comments .minds-comments:first');
+				commentsList.append(output);
 
                 input
                 .removeClass('hj-input-processing')
                 .val('')
                 .parents('div.hj-comments-input:first')
                 .toggle();
+                window.ajaxcommentsready = true;
+                    elgg.trigger_hook('success', 'hj:framework:ajax');
             }
         });
 
