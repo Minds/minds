@@ -9,18 +9,9 @@ class elasticsearch {
     $this->server = $server;
   }
 
-  function call($path, $http = array('method'=>'GET')){
+  function call($path, $http = array()){
     if (!$this->index) throw new Exception('$this->index needs a value');
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, elgg_get_plugin_setting('server', 'minds_search').'/'. $this->index . '/' . $path);
-	curl_setopt($ch, CURLOPT_PORT, 9200);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http['method']);
-	curl_setopt($ch,CURLOPT_TIMEOUT_MS, 500);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $http['content']);
-	$result = curl_exec($ch);
-	curl_close($ch);
-	return json_decode($result,true);
+    return json_decode(file_get_contents($this->server . '/' . $this->index . '/' . $path, NULL, stream_context_create(array('http' => $http))),true);
   }
 
   //curl -X PUT http://localhost:9200/{INDEX}/
@@ -60,6 +51,6 @@ class elasticsearch {
 
   //curl -X GET http://localhost:9200/{INDEX}/{TYPE}/_search?q= ...
   function query($type, $q, $sort, $size = 25, $from = 0){
-    return $this->call($type . '/_search?' . http_build_query(array('q' => $q, 'sort'=>$sort,'size'=> $size, 'from'=> $from)));
+    return $this->call($type . '/_search?' . http_build_query(array('q' => $q, 'size'=> $size, 'from'=> $from)));
   }
 }

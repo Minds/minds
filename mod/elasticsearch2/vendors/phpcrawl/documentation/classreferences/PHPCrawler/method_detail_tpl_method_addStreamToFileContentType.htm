@@ -1,0 +1,108 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+ <title>Documentation for method: 
+PHPCrawler::addStreamToFileContentType()</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples(mode)
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+
+<h1 id="head">
+  <span>Method: 
+PHPCrawler::addStreamToFileContentType()</span>
+</h1>
+
+<h2 id="head">
+ <span><a href="overview.html"><< Back to class-overview</a></span>
+</h2>
+
+<br>
+
+
+
+
+
+<!--<?php include("google_code.php"); ?> -->
+
+<div id="docframe">
+
+<div id="section">
+
+Adds a rule to the list of rules that decides what types of content should be streamed diretly to a temporary file.
+</div>
+
+<div id="section">
+<b>Signature:</b>
+<p id="signature">
+  
+public addStreamToFileContentType($regex)
+</p>
+</div>
+
+<div id="section">
+<b>Parameters:</b>
+<p>
+<table id="param_list">
+  
+<tr><td id="paramname" width="1%"><b>$regex</b>&nbsp;</td><td width="1%"><i><i>string</i></i>&nbsp;</td><td width="*">The rule as a regular-expression</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Returns:</b>
+<p>
+<table id="param_list">
+  
+<tr> <td width="1%"><i><i>bool</i></i>&nbsp;</td> <td width="*">         TRUE if the rule was added to the list and the regex is valid.</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Description:</b>
+<p>
+
+  
+If a content-type of a page or file matches with one of these rules, the content will be streamed directly into a<br>temporary file without claiming local RAM.<br><br>It's recommendend to add all content-types of files that may be of bigger size to prevent memory-overflows.<br>By default the crawler will receive every content to memory!<br><br>The content/source of pages and files that were streamed to file are not accessible directly within the overidden method<br><a href="method_detail_tpl_method_handleDocumentInfo.htm" class="inline">handleDocumentInfo()</a>, instead you get information about the file the content was stored in.<br>(see properties <a href="../PHPCrawlerDocumentInfo/property_detail_tpl_property_received_to_file.htm" class="inline">PHPCrawlerDocumentInfo::received_to_file</a> and <a href="../PHPCrawlerDocumentInfo/property_detail_tpl_property_content_tmp_file.htm" class="inline">PHPCrawlerDocumentInfo::content_tmp_file</a>).<br><br>Please note that this setting doesn't effect the link-finding results, also file-streams will be checked for links.<br><br>A common setup may look like this example:<code>// Basically let the crawler receive every content (default-setting)<br>$crawler-&gt;addReceiveContentType("##");<br><br>// Tell the crawler to stream everything but "text/html"-documents to a tmp-file<br>$crawler-&gt;addStreamToFileContentType("#^((?!text/html).)*$#");</code>
+  
+</p>
+</div>
+
+
+
+
+
+</div>
+
+
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de"  target="_parent">PhpClassView</a></div>
+
+</div>
+
+</body>
+</html>

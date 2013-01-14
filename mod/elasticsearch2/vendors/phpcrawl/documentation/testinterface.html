@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+<head>
+  <title>PHPCrawl webcrawler library for PHP - Testinterface</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+  <div id="page">
+    
+       <div id="top">
+        <h1 style="margin: 0px; float: left;">PHPCrawl webcrawler library/framework</h1>
+      </div>
+      
+
+      <div id="container">
+        
+        <iframe id="menuframe" src="menu.html" scrolling="no" frameborder="0"></iframe>
+        
+        <div id="content">
+        <h3>PHPCrawl Testinterface</h3><br />
+        
+        Since PHPCrawl version 0.7, a visual HTML-testinterface comes along with the package.<br /><br />
+        
+        It was build to test the crawler, but since the number of settings and methods is growing, the inteface also may be
+        useful to find the right setups for your needs or just to play around with the different settings.<br /><br />
+
+        <div style="with: 100%; text-align: center">
+        <img src="testinterface.jpg" style="">
+        </div>
+        
+        <br />
+        
+        You'll find the test-interface in the directory "test_interface" of the package (file "index.php").
+        In there you also find a tiny configuration-file called "phpcrawl_testinterface.conf.php".<br /><br />
+        
+        Before using the test-inerface the first time, you have to choose a username and password for the login (http-auth) and put
+        it into the mentioned configuration-file (variables $cfg_authUsername and $cfg_authPassword).<br /><br />
+
+        The interface allows you to quickly setup the crawler-class, choose the output and start the crawling-process with these settings.
+        By clicking the littel info-icons beside the options you get directly to the explanations of the corresponding class-methods in the
+        classreference. Its also possible to save and load different setups.<br /><br />
+        
+        <b>Please note:</b>
+        The testinterface currently does NOT support all available options and settings from phpcrawl verion 0.8.
+        Also note that the testinterface does NOT support multiprocessing (since multiprocessing only works in CLI-environment)
+        </div>
+        
+        <!--
+        <?php
+        include("google_code.php");
+        ?>
+        -->
+        
+      </div>
+  
+      <div id="footer">Copyright © 2003 - 2012 Uwe Hunfeld phpcrawl@cuab.de</div>
+  </div>
+  
+</div>
+
+</body>
+</html>

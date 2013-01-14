@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+<head>
+  <title>PHPCrawl webcrawler library for PHP - Multiprocessing modes</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+  <div id="page">
+    
+      <div id="top">
+        <h1 style="margin: 0px; float: left;">PHPCrawl webcrawler library/framework</h1>
+      </div>
+      
+
+      <div id="container">
+        
+        <iframe id="menuframe" src="menu.html" scrolling="no" frameborder="0"></iframe>
+        
+        <div id="content">
+        <h3>Multiprocessing modes</h3><br />
+        
+        PHPCrawl supports two different types of multiprocessing.<br /><br />
+        
+        The first one and the default is "<b>MPMODE_PARENT_EXECUTES_USERCODE</b>". When running this mode, the overridable function handleDocumentInfo() containing
+        usercode always gets executed by the main-process of the crawler. This means that the code provided by the user never gets executed simultaneously and so you
+        don't have to care about concurrent file/database/handle-accesses or similar things. This is the <b>recommended</b> multiprocessing-mode.<br /><br />
+        
+        Example of starting the crawler in this mode:<br />
+        
+        <p id ="code">
+        <span style="color: #000000">
+        <span style="color: #0000BB">
+        $crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">goMultiProcessed</span><span style="color: #007700">(</span><span style="color: #0000BB">5</span><span style="color: #007700">,<br /></span><span style="color: #0000BB">PHPCrawlerMultiProcessModes</span><span style="color: #007700">::</span><span style="color: #0000BB">MPMODE_PARENT_EXECUTES_USERCODE</span><span style="color: #007700">);
+        <br /></span>
+        </span>
+        </p>
+        
+        or simply
+        
+        <p id ="code">
+        <span style="color: #000000">
+        <span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">goMultiProcessed</span><span style="color: #007700">(</span><span style="color: #0000BB">5</span><span style="color: #007700">);
+        <br /></span>
+        </span>
+        </p>
+        
+        <br />
+        
+        The second one is "<b>MPMODE_CHILDS_EXECUTES_USERCODE</b>".<br />
+        In this mode all used child-processes are calling the function handleDocumentInfo() directly from their process-context, so the code you provided to the overridden
+        method handleDocumentInfo() probably will be executed simultaneously by the different child-processes. This may result in a better performance, but you always should take care
+        of concurrent file/data/handle-accesses and all other typical things to take care of when using parallel-computing.<br /><br />
+        
+        When using the "MPMODE_CHILDS_EXECUTES_USERCODE" mode and you use any handles like database-connections or filestreams in your extended crawler-class, you should open
+        them within the overridden mehtod <a href="classreferences/PHPCrawler/method_detail_tpl_method_initChildProcess.htm" target="blank">initChildProcess()</a> instead of opening them from the constructor.
+        For more details see the documentation of the <a href="classreferences/PHPCrawler/method_detail_tpl_method_initChildProcess.htm" target="blank">initChildProcess()</a>-method.<br /><br />
+
+        Example of starting the crawler in this mode:<br />
+        <p id ="code">
+        <span style="color: #000000">
+        <span style="color: #0000BB">
+        $crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">goMultiProcessed</span><span style="color: #007700">(</span><span style="color: #0000BB">5</span><span style="color: #007700">,<br /></span><span style="color: #0000BB">PHPCrawlerMultiProcessModes</span><span style="color: #007700">::</span><span style="color: #0000BB">MPMODE_CHILDS_EXECUTES_USERCODE</span><span style="color: #007700">);
+        <br /></span>
+        </span>
+        </p>
+        </div>
+        
+        <!--
+        <?php
+        include("google_code.php");
+        ?>
+        -->
+        
+      </div>
+  
+      <div id="footer">Copyright © 2003 - 2012 Uwe Hunfeld phpcrawl@cuab.de</div>
+  </div>
+  
+</div>
+
+</body>
+</html>

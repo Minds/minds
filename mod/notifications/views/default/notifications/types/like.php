@@ -10,7 +10,7 @@ if($subtype == 'thewire'){
 	$object_title = 'your post';
 }elseif($subtype == 'wallpost'){
 		$object_title = 'your thought';
-} elseif($subtype == 'hjannotation') {
+} elseif($subtype == 'hjannotation') { 
 	$object = get_entity($object->parent_guid);
 	$object_title = ' your comment';
 }elseif($subtype == 'image'){
