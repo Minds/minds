@@ -4,6 +4,8 @@
  * 
  * NB. Limited to videos for time being.
  */
+ //temp disable until we optimize @MH
+ return true;
 elgg_push_context('sidebar');
 $options = array('types' => 'object', 'subtypes' => 'kaltura_video', 'metadata_name_value_pairs'=> array('name' => 'featured','value'=>true ),'limit' => 5);
 $entities = elgg_get_entities_from_metadata($options);
