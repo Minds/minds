@@ -51,6 +51,6 @@ class elasticsearch {
 
   //curl -X GET http://localhost:9200/{INDEX}/{TYPE}/_search?q= ...
   function query($type, $q, $sort, $size = 25, $from = 0){
-    return $this->call($type . '/_search?' . http_build_query(array('q' => $q, 'sort'=>$sort,'size'=> $size, 'from'=> $from)));
+    return $this->call($type . '/_search?' . http_build_query(array('q' => $q, 'size'=> $size, 'from'=> $from)));
   }
 }
