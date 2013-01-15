@@ -280,6 +280,7 @@ function notification_create($to, $from, $object, $params){
 			$notification->description = $params['description'];
 			$notification->read = 0;
 			$notification->access_id = 2;
+			$notification->params = serialize($params);
 		
 			$notification->save();
 		}
