@@ -1,17 +1,17 @@
 <?php
 
-$comment = elgg_extract('entity', $vars);
-$params = unserialize($comment->params);
+$notification = elgg_extract('entity', $vars);
+$params = unserialize($notification->params);
 $type = $params['type'] ? $params['type'] : 'entity';
-$actor = get_entity($comment -> from_guid);
+$actor = get_entity($notification -> from_guid);
 
 if ($type == 'entity') {
 
-	$object = get_entity($comment -> object_guid);
+	$object = get_entity($notification -> object_guid);
 	if ($object) {
 		//$objectOwner = get_entity($object->getOwnerGUID());
 		$subtype = $object -> getSubtype();
-		if ($subtype == 'wallpost' && $comment -> to_guid == $object -> getOwnerGUID()) {
+		if ($subtype == 'wallpost' && $notification -> to_guid == $object -> getOwnerGUID()) {
 			$object_title = 'your post';
 		} elseif ($subtype == 'wallpost') {
 			if ($entity -> from_guid == $object -> getOwnerGUID()) {
@@ -30,13 +30,13 @@ if ($type == 'entity') {
 	}
 } elseif ($type == 'river') {
 	//elgg_view('output/url', array('href' => elgg_get_site_url() . 'news/single?id=' . $entity -> object_guid, 'text' => ' commented'))
-	$object_url = elgg_get_site_url() . 'news/single?id=' . $comment -> object_guid;
+	$object_url = elgg_get_site_url() . 'news/single?id=' . $notification -> object_guid;
 	$object_title = 'a post';
 }
 
-$description = $comment -> description;
+$description = $notification -> description;
 if (strlen($description) > 60) {
-	$description = substr($comment -> description, 0, 75) . '...';
+	$description = substr($notification -> description, 0, 75) . '...';
 }
 
 $body .= elgg_view('output/url', array('href' => $actor -> getURL(), 'text' => $actor -> name));
@@ -47,6 +47,6 @@ $body .= "<br/>";
 
 $body .= "<div class='notify_description'>" . $description . "</div>";
 
-$body .= "<span class='notify_time'>" . elgg_view_friendly_time($comment-> time_created) . "</span>";
+$body .= "<span class='notify_time'>" . elgg_view_friendly_time($notification-> time_created) . "</span>";
 
 echo $body;
