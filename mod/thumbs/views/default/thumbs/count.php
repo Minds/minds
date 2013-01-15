@@ -17,10 +17,10 @@ if($type=='entity'){
 	$count = $vars['entity']->thumbcount;
 	$id = $vars['entity']->getGUID();
 } elseif($type=='comment'){
-	$show = elgg_list_entities(array(
+/*	$show = elgg_list_entities(array(
 		'guids' => $vars['thumbsUP'],
 		'class' => 'elgg-list-likes'
-	));
+	));*/
 	$votes_up = count($vars['thumbsUP']);
 	$votes_down = count($vars['thumbsDOWN']);
 	$count = $votes_up-$votes_down;

@@ -12,11 +12,11 @@ class elasticsearch {
   function call($path, $http = array('method'=>'GET')){
     if (!$this->index) throw new Exception('$this->index needs a value');
 	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, '107.23.117.9/'. $this->index . '/' . $path);
+	curl_setopt($ch, CURLOPT_URL, elgg_get_plugin_setting('server', 'minds_search').'/'. $this->index . '/' . $path);
 	curl_setopt($ch, CURLOPT_PORT, 9200);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http['method']);
-	curl_setopt($ch,CURLOPT_TIMEOUT_MS, 25);
+	curl_setopt($ch,CURLOPT_TIMEOUT_MS, 500);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $http['content']);
 	$result = curl_exec($ch);
 	curl_close($ch);
