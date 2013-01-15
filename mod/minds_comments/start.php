@@ -24,7 +24,7 @@ function minds_comments_init() {
 	// Register Libraries
 	elgg_register_library('minds_comments', $path . 'lib/minds_comments.php');
 	elgg_load_library('minds_comments');
-	
+
 	// Register actions
 	elgg_register_action('comment/get', $path. 'actions/minds_comments/get.php');
 	elgg_register_action('comment/save', $path . 'actions/minds_comments/save.php');

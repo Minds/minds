@@ -81,6 +81,23 @@ function minds_comments_notification($type, $pid, $description){
 	notification_create($to, elgg_get_logged_in_user_guid(), $pid, array('type'=>$type,'description'=>$description, 'notification_view'=>'comment'));
 }
 
+/**
+ * Convert any old comments over to the new system
+ */
+function minds_comments_migrate(){
+	$comments = elgg_get_entities(array('types'=>array('object'), 'subtypes'=>array('hjannotation'), 'limit'=>100000));
+	foreach($comments as $comment){
+		if($comment->parent_guid != 0){
+			$type = 'entity';
+			$pid = $comment->parent_guid;
+		}else{
+			$type = 'river';
+			$pid = $comment->river_id;
+		}
+		$mc = new MindsComments();
+		$create = $mc->create($type, $pid, $comment->annotation_value, $comment->owner_guid);
+	}
+}
 function hj_alive_count_comments($entity, $params) {
 	$parent_guid = elgg_extract('parent_guid', $params, null);
 	$river_id = elgg_extract('river_id', $params, null);

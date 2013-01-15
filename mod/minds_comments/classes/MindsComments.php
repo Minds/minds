@@ -32,13 +32,13 @@ class MindsComments {
 		return $comment;
 	}
 
-	function create($type, $pid, $comment) {
+	function create($type, $pid, $comment, $owner_guid) {
 		$es = new elasticsearch();
 		$es->index = $this->index;
 		$data = new stdClass();
 		$data->description = $comment;
 		$data->pid = $pid;
-		$data->owner_guid = elgg_get_logged_in_user_guid();
+		$data->owner_guid = $owner_guid ? $owner_guid :  elgg_get_logged_in_user_guid();
 		$data->time_created = time();
 		
 		$id = $data->time_created . $data->owner_guid;
