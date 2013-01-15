@@ -52,6 +52,35 @@ function minds_comments_view_comment($comment) {
 
 }
 
+/**
+ * An asyncrous function to notify users in the comment thread
+ */
+function minds_comments_notification($type, $pid, $comment){
+	$mc = new MindsComments();
+	$call = $mc -> output($type, $pid, 50, 0);
+	$count = $call['hits']['total'];
+	$comments = $call['hits']['hits'];
+	
+	foreach($comments as $comment){
+	
+		$to_guids[] = $comment['_source']['owner_guid'];
+	
+	}
+	if($type=='entity'){
+		$entity = get_entity($pid);
+		$owner_guid = $entity->getOwnerGUID();
+	}elseif($type=='river'){
+		$post = elgg_get_river(array('ids'=>array($pid)));
+		$owner_guid = $post->owner_guid;
+	}else{
+		return false;
+	}
+	$to_guids[] = $owner_guid;
+	$to = array_unique($to_guids);
+	
+	notification_create($to, elgg_get_logged_in_user_guid(), $pid, array('type'=>$type,'description'=>$comment, 'notification_view'=>'comment'));
+}
+
 function hj_alive_count_comments($entity, $params) {
 	$parent_guid = elgg_extract('parent_guid', $params, null);
 	$river_id = elgg_extract('river_id', $params, null);

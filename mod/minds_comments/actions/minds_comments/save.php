@@ -24,6 +24,7 @@ if($create['ok'] == true){
 	//header('Content-Type: application/json');
 	$output = minds_comments_view_comment($data);
 	print(json_encode($output));
+	minds_comments_notification($type, $pid, $comment);
 } else {
 	 register_error(elgg_echo('minds_comments:save:error'));
 }
