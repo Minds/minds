@@ -49,7 +49,7 @@
 			$list = $(this).parent();
 			$('.news-show-more').html('loading...');
 			
-			riverOffset += +20;
+			riverOffset += +5;
 			
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {

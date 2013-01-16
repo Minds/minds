@@ -99,7 +99,7 @@ function minds_comments_migrate(){
 	}
 }
 function hj_alive_count_comments($entity, $params) {
-	$parent_guid = elgg_extract('parent_guid', $params, null);
+	/*$parent_guid = elgg_extract('parent_guid', $params, null);
 	$river_id = elgg_extract('river_id', $params, null);
 	$annotation_name = elgg_extract('aname', $params, 'generic_comment');
 
@@ -107,7 +107,7 @@ function hj_alive_count_comments($entity, $params) {
 	//'container_guid' => $container_guid,
 	'metadata_name_value_pairs' => array( array('name' => 'annotation_name', 'value' => $annotation_name), array('name' => 'annotation_value', 'value' => '', 'operand' => '!='), array('name' => 'parent_guid', 'value' => $parent_guid), array('name' => 'river_id', 'value' => $river_id)), 'count' => true, 'limit' => 3, 'order_by' => 'e.time_created desc');
 
-	$count = elgg_get_entities_from_metadata($options);
-
+	$count = elgg_get_entities_from_metadata($options);*/
+	$count = 0;
 	return $count;
 }

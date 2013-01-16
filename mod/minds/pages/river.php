@@ -21,6 +21,8 @@ if ($type != 'all') {
 	}
 }
 
+$options['limit'] = 5;
+
 switch ($page_type) {
 	case 'all':
 		$title = elgg_echo('river:friends');
