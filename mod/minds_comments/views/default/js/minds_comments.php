@@ -16,35 +16,30 @@
 															  }
 															  return true;
 															 });
-
-        var bar_loader = '<div class="hj-ajax-loader hj-loader-bar"></div>';
-
-        // Toggle loading of older comments
-        $('.hj-comments-summary')
-        .each(function() {
-            $(this)
-            .unbind('click')
-            .bind('click', function(event) {
-                event.preventDefault();
-                var ref = new Array();
-               	var data = new Object();
-               	
-               	var form = $(this).parents('.elgg-river-responses').find('form');
-               	console.log($(this).parents());
-
-      		  	data.pid = $('input[name="pid"]', form).val();
-        		data.type = $('input[name="type"]', form).val();
-       
-                ref.push(data);
-                console.log(data);
-                $(this).css({'height':'16px'}).html(bar_loader);
-                minds.comments.refresh(ref, 'old');
-            });
-        });
+        
+        $('body').on('click', '.hj-comments-summary', minds.comments.more);
        
        $('body').on('submit', '.hj-ajaxed-comment-save', minds.comments.saveComment);
 
     };
+    
+    minds.comments.more = function(e){
+    	e.preventDefault();
+    	 var ref = new Array();
+         var data = new Object();
+               	
+         var form = $(this).parents('.minds-comments-bar').parent().find('form');
+
+      	data.pid = $('input[name="pid"]', form).val();
+        data.type = $('input[name="type"]', form).val();
+       
+        ref.push(data);
+        console.log(data);
+        
+        var bar_loader = '<div class="hj-ajax-loader hj-loader-bar"></div>';
+		$(this).css({'height':'16px'}).html(bar_loader);
+        minds.comments.refresh(ref, 'old');
+    }
 
     minds.comments.refresh = function(data, sync) {
 		//console.log('loaded');
