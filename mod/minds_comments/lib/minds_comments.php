@@ -27,7 +27,7 @@ function minds_comments_view_list($type, $pid) {
 function minds_comments_view_comment($comment) {
 	$owner = get_entity($comment['_source']['owner_guid']);
 	if(!$owner){
-		return true;
+		return false;
 	}
 	$icon = elgg_view_entity_icon($owner, 'tiny');
 
