@@ -20,7 +20,7 @@
  *
  * @return int/bool River ID or false on failure
  */
-function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_id = "",
+/*function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_id = "",
 $posted = 0, $annotation_id = 0) {
 
 	global $CONFIG;
@@ -101,7 +101,7 @@ $posted = 0, $annotation_id = 0) {
 	} else {
 		return false;
 	}
-}
+}*/
 
 /**
  * Delete river items
@@ -127,7 +127,7 @@ $posted = 0, $annotation_id = 0) {
  * @return bool
  * @since 1.8.0
  */
-function elgg_delete_river(array $options = array()) {
+/*function elgg_delete_river(array $options = array()) {
 	global $CONFIG;
 
 	$defaults = array(
@@ -208,7 +208,7 @@ function elgg_delete_river(array $options = array()) {
 	$query .= "1=1";
 
 	return delete_data($query);
-}
+}*/
 
 /**
  * Get river items

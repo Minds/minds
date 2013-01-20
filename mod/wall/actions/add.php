@@ -12,6 +12,7 @@ $to_guid = get_input('to_guid');
 $from_guid = elgg_get_logged_in_user_guid();
 $access_id = 1; //hard coded as we seem to be getting errors with ACCESS_DEFAULT
 $message = get_input('body');
+$ref = get_input('ref', 'wall');
 
 // get social permissions
 $facebook = get_input('facebook');
@@ -48,18 +49,33 @@ if (!$guid) {
 	//forward(REFERER);
 } else {
 
-$post = get_entity($guid);
+//add the message
+$news_id = add_to_river('river/object/wall/create', 'create', $from_guid, $guid);
 
-$id = "elgg-{$post->getType()}-{$post->guid}";
-$time = $post->time_created;
-$output = "<li id=\"$id\" class=\"elgg-item\" data-timestamp=\"$time\">";
-$output .= elgg_view_list_item($post);
-$output .= '</li>';
+if($ref == 'wall'){
+	$post = get_entity($guid);
+
+	$id = "elgg-{$post->getType()}-{$post->guid}";
+	$time = $post->time_created;
+	$output = "<li id=\"$id\" class=\"elgg-item\" data-timestamp=\"$time\">";
+	$output .= elgg_view_list_item($post);
+	$output .= '</li>';
+} elseif($ref=='news'){
+
+	$data = new stdClass();
+	$data->id = $news_id;
+	$data->action_type = 'create';
+	$data->subject_guid = $from_guid;
+	$data->object_guid = $guid;
+	$data->view = 'river/object/wall/create';
+	$data->posted = time();
+	
+	$item = new MindsNewsItem($data);
+
+	$output = elgg_view_list_item($item, array('list_class'=>'elgg-list-river elgg-river'));
+}
 
 echo $output;
-
-//add the message
-add_to_river('river/object/wall/create', 'create', $from_guid, $guid);
 
 notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
 

@@ -46,7 +46,7 @@ elgg_load_js('uiVideoInline');
 		   
 		   elgg_load_js('elgg.wall');
 			
-			$content .= elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid()));
+			$content .= elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
 
 			echo elgg_view_module('wall', null, $content);
 			
