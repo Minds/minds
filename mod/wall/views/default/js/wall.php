@@ -66,7 +66,7 @@ elgg.wall.news.submit = function(e) {
 	elgg.action('wall/add', {
 		data: data,
 		success: function(json) {
-			console.log(json);	
+		//	console.log(json);	
 			$('.elgg-list.elgg-list-river.elgg-river').first('.elgg-list.elgg-list-river.elgg-river').prepend(json.output);
 			$(document).find('textarea').val('');
 		}});
