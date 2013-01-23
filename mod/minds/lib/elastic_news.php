@@ -171,10 +171,6 @@ function minds_elastic_get_news(array $options = array()) {
 	$singulars = array('id', 'subject_guid', 'object_guid', 'annotation_id', 'action_type', 'type', 'subtype');
 	$options = elgg_normalise_plural_options_array($options, $singulars);
 
-	//get by ids
-	foreach($options['ids'] as $id){
-		$q .= "_id:$id AND ";
-	}
 	//get by view
 	foreach($options['views'] as $view){
 		$q .= "view:$view AND ";
@@ -183,35 +179,43 @@ function minds_elastic_get_news(array $options = array()) {
 	foreach($options['action_types'] as $action_type){
 		$q .= "_type:$action_type AND ";
 	}
-	//get types
-	foreach($options['types'] as $type){
-		$q .= "type:$type AND ";
-	}
-	//get subtypes
-	foreach($options['subtypes'] as $subtype){
-		$q .= "subtype:$subtype AND ";
-	}
-	//get by subject_guids
-	foreach($options['subject_guids'] as $subject_guid){
-		$subject_guid_q .= "subject_guid:$subject_guid OR ";
-	}
-	if($options['subject_guids'] ){
-		$q .= substr($subject_guid_q,0,-4) . ' AND ';
-	}
-	//get by object_guids
-	foreach($options['object_guids'] as $object_guid){
-		$object_guid_q .= "object_guid:$object_guid OR ";
-	}
+	
 	if($options['object_guids'] ){
 		$q .= substr($object_guid_q,0,-4) . ' AND ';
 	}
 	
-	//remove the last and from the end of the string
-	if($q) $q = substr($q,0,-5);
+	if($options['subject_guids']){
+			$bool['must']['terms']['subject_guid'] = $options['subject_guids'];
+			$bool['must']['terms']['minimum_match'] = 1;
+	}
+	
+	if($options['ids']){
+			$bool['must']['terms']['_id'] = $options['ids'];
+			$bool['must']['terms']['minimum_match'] = 1;
+	}
+	
+	if($options['types']){
+			$bool['should']['terms']['type'] = $options['types'];
+			$data['query']['bool']['minimum_number_should_match'] =  +1;
+	}
+	if($options['subtypes']){
+			$bool['should']['terms']['subtypes'] = $options['subtypes'];
+			$data['query']['bool']['minimum_number_should_match'] =  +1;
+	}
+	
 	$es = new elasticsearch();
 	$es->index = 'news';
-	$query = $es->query(null, $q, 'posted:desc', $options['limit'], $options['offset']);
-
+	
+	if($bool){
+		$data['query']['bool'] = $bool;
+	}
+	$data['size'] = $options['limit'];
+	$data['from'] = $options['offset'];
+	$data['sort'] = array('posted'=>'desc');
+	
+	$query = $es->terms(null, json_encode($data));
+	var_dump(json_encode($data));
+	var_dump($query);
 	if (!$options['count']) {
 		return minds_elastic_parse_news($query); 
 	} else {
