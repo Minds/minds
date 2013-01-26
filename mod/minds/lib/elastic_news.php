@@ -258,3 +258,15 @@ function minds_elastic_parse_news($data) {
 
 	return $post;
 }
+
+/**
+ * Convert the old DB news over to elastic
+ */
+function minds_elastic_convert_news(){
+	$river = elgg_get_river(array('limit'=>100000));
+	foreach($river as $row){
+		$item = elgg_row_to_elgg_river_item($row);
+		add_to_river($item->view, $item->action_type, $item->subject_guid, $item->object_guid, $item->access_id, $item->posted, $item->annotation_id);
+	}
+	
+}
