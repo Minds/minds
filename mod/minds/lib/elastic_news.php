@@ -214,8 +214,7 @@ function minds_elastic_get_news(array $options = array()) {
 	$data['sort'] = array('posted'=>'desc');
 	
 	$query = $es->terms(null, json_encode($data));
-	var_dump(json_encode($data));
-	var_dump($query);
+
 	if (!$options['count']) {
 		return minds_elastic_parse_news($query); 
 	} else {
@@ -262,11 +261,15 @@ function minds_elastic_parse_news($data) {
 /**
  * Convert the old DB news over to elastic
  */
+//minds_elastic_convert_news();
 function minds_elastic_convert_news(){
 	$river = elgg_get_river(array('limit'=>100000));
+	$converted = array();//a list of already converted rows to avoid duplicate
 	foreach($river as $row){
-		$item = elgg_row_to_elgg_river_item($row);
-		add_to_river($item->view, $item->action_type, $item->subject_guid, $item->object_guid, $item->access_id, $item->posted, $item->annotation_id);
+		if(!in_array($row->id, $converted)){
+			add_to_river($row->view, $row->action_type, $row->subject_guid, $row->object_guid, $row->access_id, $row->posted, $row->annotation_id);
+		}
+		array_push($converted, $row->id);
 	}
 	
 }
