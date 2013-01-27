@@ -94,11 +94,12 @@
 	font-weight: bold;
 	line-height: 1.2em;
 	color: #bababa;
+	margin:0;
 }
 .elgg-breadcrumbs > li {
 	display: inline-block;
 }
-.elgg-breadcrumbs > li:after{
+.elgg-breadcrumbs > li:after {
 	content: "\003E";
 	padding: 0 4px;
 	font-weight: normal;
@@ -118,6 +119,12 @@
 	left: 0;
 }
 
+/*****************************************
+ 	MENU CLASS
+****************************************/
+.elgg-menu{
+	margin:0;
+}
 /* ***************************************
 	TOPBAR MENU
 *************************************** */
@@ -130,9 +137,9 @@
 }
 
 .elgg-menu-topbar > li > a {
-	padding: 2px 15px;
+	padding-top: 2px;
 	color: #eee;
-	margin-top: 1px;
+	margin: 1px 15px 0;
 }
 
 .elgg-menu-topbar > li > a:hover {
@@ -144,23 +151,39 @@
 	float: right;
 }
 
+.elgg-menu-topbar .elgg-icon {
+	vertical-align: middle;
+	margin-top: -1px;
+}
+
+.elgg-menu-topbar > li > a.elgg-topbar-logo {
+	margin-top: 0;
+	padding-left: 5px;
+	width: 38px;
+	height: 20px;
+}
+
+.elgg-menu-topbar > li > a.elgg-topbar-avatar {
+	width: 18px;
+	height: 18px;
+}
+
 /* ***************************************
 	SITE MENU
 *************************************** */
 .elgg-menu-site {
-	z-index: 7000;
+	z-index: 1;
 }
 
 .elgg-menu-site > li > a {
 	font-weight: bold;
-	padding: 3px 6px 0px 6px;
+	padding: 3px 13px 0px 13px;
 	height: 20px;
 }
 
 .elgg-menu-site > li > a:hover {
 	text-decoration: none;
 }
-
 
 .elgg-menu-site-default {
 	position: absolute;
@@ -174,77 +197,79 @@
 	margin-right: 1px;
 }
 
-.elgg-menu-site-default > li > a {color: white}
+.elgg-menu-site-default > li > a {
+	color: white;
+}
 
+.elgg-menu-site > li > ul {
+	display: none;
+	background-color: white;
+}
+
+.elgg-menu-site > li:hover > ul {
+	display: block;
+}
 
 .elgg-menu-site-default > .elgg-state-selected > a,
 .elgg-menu-site-default > li:hover > a {
 	background: white;
 	color: #555;
-	
+
 	-webkit-box-shadow: 2px -1px 1px rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: 2px -1px 1px rgba(0, 0, 0, 0.25);
 	box-shadow: 2px -1px 1px rgba(0, 0, 0, 0.25);
-	
+
 	-webkit-border-radius: 4px 4px 0 0;
 	-moz-border-radius: 4px 4px 0 0;
 	border-radius: 4px 4px 0 0;
 }
 
 .elgg-menu-site-more {
-	display: none;
 	position: relative;
 	left: -1px;
 	width: 100%;
-	z-index: 7000;
 	min-width: 150px;
 	border: 1px solid #999;
 	border-top: 0;
-	
-    
+
 	-webkit-border-radius: 0 0 4px 4px;
 	-moz-border-radius: 0 0 4px 4px;
 	border-radius: 0 0 4px 4px;
-	
+
 	-webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
 	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
 }
 
-li:hover > .elgg-menu-site-more {
-	display: block;
-}
-
 .elgg-menu-site-more > li > a {
-	background: white;
+	background-color: white;
 	color: #555;
-	
+
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	border-radius: 0;
-	
+
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;
 }
+
 .elgg-menu-site-more > li > a:hover {
 	background: #4690D6;
 	color: white;
 }
+
 .elgg-menu-site-more > li:last-child > a,
 .elgg-menu-site-more > li:last-child > a:hover {
 	-webkit-border-radius: 0 0 4px 4px;
 	-moz-border-radius: 0 0 4px 4px;
 	border-radius: 0 0 4px 4px;
-    
-  
 }
 
 .elgg-more > a:before {
 	content: "\25BC";
 	font-size: smaller;
 	margin-right: 4px;
-   
 }
 
 /* ***************************************
@@ -354,7 +379,10 @@ li:hover > .elgg-menu-site-more {
 	position: absolute;
 	z-index: 10000;
 
-	width: 165px;
+	overflow: hidden;
+
+	min-width: 165px;
+	max-width: 250px;
 	border: solid 1px;
 	border-color: #E5E5E5 #999 #999 #E5E5E5;
 	background-color: #FFF;
@@ -389,12 +417,12 @@ li:hover > .elgg-menu-site-more {
 }
 
 /* ***************************************
-	FOOTER
+	SITE FOOTER
 *************************************** */
 .elgg-menu-footer > li,
 .elgg-menu-footer > li > a {
 	display: inline-block;
-	color:#999;
+	color: #999;
 }
 
 .elgg-menu-footer > li:after {
@@ -411,22 +439,43 @@ li:hover > .elgg-menu-site-more {
 }
 
 /* ***************************************
-	ENTITY
+	GENERAL MENU
 *************************************** */
-.elgg-menu-entity {
+.elgg-menu-general > li,
+.elgg-menu-general > li > a {
+	display: inline-block;
+	color: #999;
+}
+
+.elgg-menu-general > li:after {
+	content: "\007C";
+	padding: 0 4px;
+}
+
+/* ***************************************
+	ENTITY AND ANNOTATION
+*************************************** */
+<?php // height depends on line height/font size ?>
+.elgg-menu-entity, elgg-menu-annotation {
 	float: right;
 	margin-left: 15px;
 	font-size: 90%;
 	color: #aaa;
+	line-height: 16px;
+	height: 16px;
 }
-.elgg-menu-entity > li {
-	display: inline-block;
+.elgg-menu-entity > li, .elgg-menu-annotation > li {
 	margin-left: 15px;
 }
-<?php // height depends on line height/font size ?>
-.elgg-menu-entity > li > a {
+.elgg-menu-entity > li > a, .elgg-menu-annotation > li > a {
 	color: #aaa;
-	height: 18px;
+}
+<?php // need to override .elgg-menu-hz ?>
+.elgg-menu-entity > li > a, .elgg-menu-annotation > li > a {
+	display: block;
+}
+.elgg-menu-entity > li > span, .elgg-menu-annotation > li > span {
+	vertical-align: baseline;
 }
 
 /* ***************************************
@@ -468,10 +517,23 @@ li:hover > .elgg-menu-site-more {
 	margin-left: 15px;
 	font-size: 90%;
 	color: #aaa;
+	line-height: 16px;
+	height: 16px;
 }
 .elgg-menu-river > li {
 	display: inline-block;
 	margin-left: 5px;
+}
+.elgg-menu-river > li > a {
+	color: #aaa;
+	height: 16px;
+}
+<?php // need to override .elgg-menu-hz ?>
+.elgg-menu-river > li > a {
+	display: block;
+}
+.elgg-menu-river > li > span {
+	vertical-align: baseline;
 }
 
 /* ***************************************
@@ -479,4 +541,26 @@ li:hover > .elgg-menu-site-more {
 *************************************** */
 .elgg-menu-extras {
 	margin-bottom: 15px;
+}
+
+/* ***************************************
+	WIDGET MENU
+*************************************** */
+.elgg-menu-widget > li {
+	position: absolute;
+	top: 4px;
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	padding: 2px 2px 0 0;
+}
+
+.elgg-menu-widget > .elgg-menu-item-collapse {
+	left: 5px;
+}
+.elgg-menu-widget > .elgg-menu-item-delete {
+	right: 5px;
+}
+.elgg-menu-widget > .elgg-menu-item-settings {
+	right: 25px;
 }

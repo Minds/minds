@@ -3,33 +3,35 @@
  * Elgg Mobile
  * A Mobile Client For Elgg
  *
- * @package Elgg
- * @subpackage Core
- * @author kramnorth (Mark Harding)
+ * @package Mobile
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ * @author Mark Harding
  * @link http://kramnorth.com
  *
  */
 
-	function mobile_init(){
-		
-		//elgg_extend_view('page/elements/head','mobile/metatags');
+elgg_register_viewtype_fallback('mobile');
+elgg_register_event_handler('init','system','mobile_init');	
 	
-		if(mobile_detect()){
-				elgg_set_viewtype('mobile');
-				//elgg_unregister_plugin_hook_handler('index', 'system', 'minds_index');
-				//elgg_register_plugin_hook_handler('index', 'system','main_handler');
-				//elgg_register_event_handler('pagesetup', 'system', 'mobile_pagesetup');
-		}
-		
-		$url = elgg_get_simplecache_url('css', 'minds');
-		elgg_register_css('minds.mobile', $url);		
+function mobile_init(){
 			
-		elgg_register_viewtype_fallback('mobile');
+	mobile_detect();
+						
+	elgg_extend_view('css/elgg','mobile/css');
+		
+	//set our default index page
+	if(elgg_get_viewtype() == "mobile"){
+		elgg_register_plugin_hook_handler('index', 'system','mobile_main_handler');
+	}
 	
-
-    }
+	elgg_register_simplecache_view('mobile');
 	
-function main_handler($hook, $type, $return, $params) {
+	elgg_register_js('bootstrap', elgg_get_site_url() .'mod/mobile/vendors/bootstrap/js/bootstrap.min.js', 'footer');
+	elgg_register_css('bootstrap',elgg_get_site_url() .'mod/mobile/vendors/bootstrap/css/bootstrap.min.css');
+	elgg_register_css('bootstrap-responsive',elgg_get_site_url().'mod/mobile/vendors/bootstrap/css/bootstrap-responsive.min.css');
+}
+	
+function mobile_main_handler($hook, $type, $return, $params) {
 	if ($return == true) {
 		// another hook has already replaced the front page
 		return $return;
@@ -42,6 +44,9 @@ function main_handler($hook, $type, $return, $params) {
 	return true;
 }
 	
+if($_SESSION['isMobile']){
+	elgg_set_viewtype('mobile');
+}
 
 function mobile_detect(){
 	$useragent= strtolower ( $_SERVER['HTTP_USER_AGENT'] );	
@@ -54,28 +59,11 @@ function mobile_detect(){
 
 	//if there is a mobile device
 	if($mobile == true){
-		
 		if($_SESSION['view_desktop']){
 			elgg_extend_view('page/elements/head','mobile/desktop');
-		} 
-			
-		return true;
+		} else {
+			elgg_set_viewtype('mobile');
+		}
 	}
-	
-	return false;
-	
 }
 
-function mobile_pagesetup(){
-	
-	elgg_set_viewtype('mobile');
-	
-	
-}
-
-
-elgg_register_event_handler('init','system','mobile_init');
-elgg_register_action("mobile/login",$CONFIG->pluginspath . "mobile/actions/login.php",'public');
-		
-
-?>

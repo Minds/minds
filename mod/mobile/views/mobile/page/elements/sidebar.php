@@ -5,6 +5,8 @@
  * @uses $vars['sidebar'] Optional content that is displayed at the bottom of sidebar
  */
 
+echo '<div class="well sidebar-nav">';
+
 echo elgg_view_menu('extras', array(
 	'sort_by' => 'name',
 	'class' => 'elgg-menu-hz',
@@ -30,3 +32,5 @@ if (isset($vars['area2'])) {
 if (isset($vars['area3'])) {
 	echo $vars['area3'];
 }
+
+echo '</div>';
