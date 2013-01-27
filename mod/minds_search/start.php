@@ -12,7 +12,7 @@ elgg_register_event_handler('init', 'system', 'minds_search_init');
  */
 function minds_search_init() {
 	elgg_extend_view('css/elgg', 'minds_search/css');
-	elgg_extend_view('page/elements/header', 'minds_search/header');
+	//elgg_extend_view('page/elements/header', 'minds_search/header');
 
 	elgg_register_library('elasticsearch', elgg_get_plugins_path() . 'minds_search/lib/elasticsearch.php');
 	elgg_register_library('minds_search', elgg_get_plugins_path() . 'minds_search/lib/minds_search.php');
