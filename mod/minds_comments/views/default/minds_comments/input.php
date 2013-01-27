@@ -1,5 +1,7 @@
 <?php
 
+if(!elgg_is_logged_in()) return false;
+
 $type = elgg_extract('type', $vars, false);
 $pid = elgg_extract('pid', $vars, false);
 
