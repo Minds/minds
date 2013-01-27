@@ -54,6 +54,10 @@ else $group = false;
 $widget = kaltura_create_generic_widget_html ( $ob->kaltura_video_id , 'l',$ob->monetized );
 $widgetm = kaltura_create_generic_widget_html ( $ob->kaltura_video_id , 'm',$ob->monetized  );
 
+if(elgg_get_viewtype()=='mobile'){
+	$widget = kaltura_create_generic_widget_html ( $ob->kaltura_video_id , 'mobile',$ob->monetized );
+}
+
 //if widget exists
 if($metadata->kaltura_video_widget_html &&
 	!in_array(elgg_get_plugin_setting("alloweditor","kaltura_video"), array('simple','no'))) {
@@ -79,16 +83,7 @@ else {
 $title = elgg_echo("kalturavideo:label:adminvideos").': ';
 $title .= elgg_echo("kalturavideo:label:showvideo");
 
-if(elgg_get_viewtype() != 'default') {
-	//put here the standard view call: rss, opendd, etc.
-	echo $standard_entity;
-	//add comments
-	echo $comments;
-	return true;
-}
-
-
-	echo elgg_view_menu('entity', array(
+echo elgg_view_menu('entity', array(
 	'entity' => $ob,
 	'handler' => 'archive',
 	'sort_by' => 'priority',
