@@ -39,8 +39,7 @@ if ($read != 1) {
 }
 $object = get_entity($entity->object_guid);
 
-if($object)
-echo elgg_view_image_block($owner_icon, $body, $vars);
-else
-echo ' ';
-
+try{
+	echo elgg_view_image_block($owner_icon, $body, $vars);
+} catch(Exception $e){
+}
