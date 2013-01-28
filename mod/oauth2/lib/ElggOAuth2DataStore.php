@@ -3,7 +3,7 @@
 /**
  * Elgg OAuth2 storage class
  *
- * @author Billy Gunn
+ * @author Billy Gunn (billy@arckinteractive.com)
  * @copyright Minds.com 2013
  * @link http://minds.com
  */
