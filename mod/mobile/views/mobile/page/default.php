@@ -21,6 +21,8 @@ if (elgg_get_context() == 'admin') {
 	echo elgg_view('page/admin', $vars);
 	return true;
 }
+elgg_load_css('minds.default');
+elgg_load_js('minds.js');
 elgg_load_js('bootstrap');
 elgg_load_css('bootstrap');
 elgg_load_css('bootstrap-responsive');
@@ -52,10 +54,8 @@ $lang = get_current_language();
 			<div class="row-fluid">
 				<?php echo $body; ?>
 			</div>
-
-			<?php echo $footer; ?>
-
 		</div>
+		<?php echo $footer; ?>
 		<?php echo elgg_view('page/elements/foot'); ?>
 	</body>
 </html>
