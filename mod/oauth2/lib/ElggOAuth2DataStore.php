@@ -180,11 +180,11 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
 
         if (!empty($results)) {
             return array(
-                'access_token' => $results->access_token,
-                'client_id'    => $results->client_id,
-                'user_id'      => $results->user_id,
-                'expires'      => $results->expires,
-                'scope'        => $results->scope
+                'access_token' => $results[0]->access_token,
+                'client_id'    => $results[0]->client_id,
+                'user_id'      => $results[0]->user_id,
+                'expires'      => $results[0]->expires,
+                'scope'        => $results[0]->scope
             );
         }
 
@@ -254,12 +254,12 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
 
         if (!empty($results)) {
             return array(
-                'authorization_code' => $results->authorization_code,
-                'client_id'          => $results->client_id,
-                'user_id'            => $results->owner_guid,
-                'redirect_uri'       => $results->redirect_uri,
-                'expires'            => $results->expires,
-                'scope'              => $results->scope
+                'authorization_code' => $results[0]->authorization_code,
+                'client_id'          => $results[0]->client_id,
+                'user_id'            => $results[0]->owner_guid,
+                'redirect_uri'       => $results[0]->redirect_uri,
+                'expires'            => $results[0]->expires,
+                'scope'              => $results[0]->scope
             );
         }
 
@@ -409,11 +409,11 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
 
         if (!empty($results)) {
             return array(
-                'refresh_token' => $results->refresh_token,
-                'client_id'     => $results->client_id,
-                'user_id'       => $results->user_id,
-                'expires'       => $results->expires,
-                'scope'         => $results->scope
+                'refresh_token' => $results[0]->refresh_token,
+                'client_id'     => $results[0]->client_id,
+                'user_id'       => $results[0]->user_id,
+                'expires'       => $results[0]->expires,
+                'scope'         => $results[0]->scope
             );
         }
 
@@ -422,50 +422,73 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
 
     public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = null)
     {
-        // convert expires to datestring
-        $expires = date('Y-m-d H:i:s', $expires);
+        // $stmt = $this->db->prepare(sprintf('INSERT INTO %s (refresh_token, client_id, user_id, expires, scope) VALUES (:refresh_token, :client_id, :user_id, :expires, :scope)', $this->config['refresh_token_table']));
+        //return $stmt->execute(compact('refresh_token', 'client_id', 'user_id', 'expires', 'scope'));
 
-        $stmt = $this->db->prepare(sprintf('INSERT INTO %s (refresh_token, client_id, user_id, expires, scope) VALUES (:refresh_token, :client_id, :user_id, :expires, :scope)', $this->config['refresh_token_table']));
+        // Create the token entity
+        $token                  = new ElggObject();
+        $token->owner_guid      = $user_id;
+        $token->container_guid  = $this->getClientDetails($client_id)->guid;
+        $token->access_id       = ACCESS_PRIVATE;
 
-        return $stmt->execute(compact('refresh_token', 'client_id', 'user_id', 'expires', 'scope'));
+        $token->save();
+
+        $token->refresh_token = $refresh_token;
+        $token->client_id     = $client_id;
+        $token->expires       = $expires;
+        $token->scope         = $scope;
+
+        return array(
+            'refresh_token' => $token->refresh_token,
+            'client_id'     => $token->client_id,
+            'user_id'       => $token->owner_guid,
+            'expires'       => $token->expires,
+            'scope'         => $token->scope
+        );
     }
 
     public function unsetRefreshToken($refresh_token)
     {
-        $stmt = $this->db->prepare(sprintf('DELETE FROM %s WHERE refresh_token = :refresh_token', $this->config['refresh_token_table']));
+        $results = $this->getRefreshToken($refresh_token);
 
-        return $stmt->execute(compact('refresh_token'));
-    }
+        if (!empty($results)) {
+            return $results[0]->delete();
+        }
 
-    // plaintext passwords are bad!  Override this for your application
-    protected function checkPassword($user, $password)
-    {
-        return $user['password'] == $password;
+        return false;
     }
 
     public function getUser($username)
     {
-        $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where username=:username', $this->config['user_table']));
-        $stmt->execute(array('username' => $username));
-        return $stmt->fetch();
-    }
 
-    public function setUser($username, $password, $firstName = null, $lastName = null)
-    {
-        // if it exists, update it.
-        if ($this->getUser($username)) {
-            $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET username=:username, password=:password, first_name=:firstName, last_name=:lastName where username=:username', $this->config['user_table']));
-        } else {
-            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (username, password, first_name, last_name) VALUES (:username, :password, :firstName, :lastName)', $this->config['user_table']));
+        if (!$user = get_user_by_username($username)) {
+
+            $users = get_user_by_email($username);
+
+            if (empty($users)) {
+                return false;
+            }
+        
+            $user = $users[0];
         }
-        return $stmt->execute(compact('username', 'password', 'firstName', 'lastName'));
+
+        return array('user_id' => $user->guid, 'username' => $user->username);
+
     }
 
+
+    /**
+     * NOT IMPLEMENTED
+     *
+     * Get the public key associated with a client_id
+     *
+     * @param $client_id Client identifier to be check with.
+     *
+     * @return STRING Return the public key for the client_id if it exists, and MUST return FALSE if it doesn't.
+     * @endcode
+     */
     public function getClientKey($client_id, $subject)
     {
-        $stmt = $this->db->prepare($sql = sprintf('SELECT public_key from %s where client_id=:client_id AND subject=:subject', $this->config['jwt_table']));
-
-        $stmt->execute(array('client_id' => $client_id, 'subject' => $subject));
-        return $stmt->fetch();
+        
     }
 }

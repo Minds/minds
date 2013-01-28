@@ -4,7 +4,6 @@ require_once(elgg_get_plugins_path() . 'oauth2/lib/OAuth2/Autoloader.php');
 
 OAuth2_Autoloader::register();
 
-
 /**
  * Generates and returns a Version 4 UUID
  *
