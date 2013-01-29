@@ -8,15 +8,22 @@
  * @link http://minds.com
  */
 
-$title = elgg_echo('oauth2:applications:title');
-
 $options = array(
     'type'       => 'object',
     'subtype'    => 'oauth2_client',
-    'owner_guid' => elgg_get_logged_in_user_guid(),
     'limit'      => 10,    
+    'full_view'  => false,
 );
     
+if (elgg_is_admin_logged_in() && $page[1] == 'all') {
+    $title = elgg_echo('oauth2:applications:admin_title');
+} else {
+    $title = elgg_echo('oauth2:applications:title');
+    $options['owner_guid'] = elgg_get_logged_in_user_guid();
+}
+    
+elgg_register_title_button('oauth2', 'add');
+
 $content = elgg_list_entities($options);
 
 $params = array(

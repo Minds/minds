@@ -20,7 +20,7 @@ function oauth2_init() {
     // Register our OAuth2 storage implementation
     elgg_register_class('ElggOAuth2DataStore', "$base/lib/ElggOAuth2DataStore.php");
 
-    // Register and load our oauth2 library
+    // Register our oauth2 library
     elgg_register_library('oauth2', "$base/lib/oauth2.php");
 
     // page handler
@@ -29,10 +29,16 @@ function oauth2_init() {
     // Register actions
     elgg_register_action('oauth2/register', $base . '/actions/register.php');
     elgg_register_action('oauth2/unregister', $base . '/actions/unregister.php');
+    elgg_register_action('oauth2/delete', $base . '/actions/delete.php');
 
     // Hook into pam
     register_pam_handler('oauth2_pam_handler', 'sufficient', 'user');
     register_pam_handler('oauth2_pam_handler', 'sufficient', 'api');
+
+    // register javascript
+    $js = elgg_get_simplecache_url('js', 'oauth2/oauth2');
+    elgg_register_simplecache_view('js/oauth2/oauth2');
+    elgg_register_js('oauth2', $js, 'footer');
 			
 	// Add the subtypes
 	run_function_once('oauth_run_once');
@@ -40,7 +46,11 @@ function oauth2_init() {
 
 function oauth2_page_handler($page) {
 
+    // Load our library methods
     elgg_load_library('oauth2');
+
+    // Load the javascript
+    elgg_load_js('oauth2');
 
     $base = elgg_get_plugins_path() . 'oauth2';
 
@@ -60,8 +70,17 @@ function oauth2_page_handler($page) {
             //
             break;
 
+        case 'regenerate':
+            echo oauth2_generate_client_secret();
+            break;
+
+        case 'add':
         case 'register':
             require $pages . "/register.php";
+            break;
+
+        case 'applications':
+            require $pages . "/applications.php";
             break;
 
     }

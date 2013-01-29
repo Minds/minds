@@ -1,12 +1,15 @@
 <?php
 
+elgg_load_library('oauth2');
+
 $guid        = get_input('guid');
 $title       = get_input('name');
 $description = get_input('url');
+$secret      = get_input('secret');
 
 if ($guid) {
 
-    $entity = get_entity($guid)
+    $entity = get_entity($guid);
 
     if (!elgg_instanceof($entity, 'object', 'oauth2_client') || !$entity->canEdit()) {
         register_error(elgg_echo('oauth2:register:app_not_found'));
@@ -27,6 +30,15 @@ $entity->description = $description;
 if (!$entity->save()) {
     register_error(elgg_echo('blog:error:post_not_found'));
     forward(REFERRER);
+}
+
+if (!$guid) {
+    $entity->client_id     = uniqid($entity->guid);
+    $entity->client_secret = oauth2_generate_client_secret();
+}
+
+if ($secret) {
+    $entity->client_secret = $secret;
 }
 
 $label = $guid ? 'updated' : 'registered';

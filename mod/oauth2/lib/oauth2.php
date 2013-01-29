@@ -4,6 +4,7 @@ require_once(elgg_get_plugins_path() . 'oauth2/lib/OAuth2/Autoloader.php');
 
 OAuth2_Autoloader::register();
 
+
 /**
  * Generates and returns a Version 4 UUID
  *
@@ -11,7 +12,7 @@ OAuth2_Autoloader::register();
  *
  * @return string
  */
-function oauth2_generate_client_id() {
+function oauth2_generate_client_secret() {
 
     return sprintf( '%04x%04x%04x%04x%04x%04x%04x%04x',
         // 32 bits for "time_low"
