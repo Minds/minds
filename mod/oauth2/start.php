@@ -30,6 +30,7 @@ function oauth2_init() {
     elgg_register_action('oauth2/register', $base . '/actions/register.php');
     elgg_register_action('oauth2/unregister', $base . '/actions/unregister.php');
     elgg_register_action('oauth2/delete', $base . '/actions/delete.php');
+    elgg_register_action('oauth2/authorize', $base . '/actions/authorize.php');
 
     // Hook into pam
     register_pam_handler('oauth2_pam_handler', 'sufficient', 'user');
@@ -59,7 +60,7 @@ function oauth2_page_handler($page) {
     switch ($page[0]) {
 
         case 'authorize':
-            //
+            require $pages . "/authorize.php";
             break;
 
         case 'grant':

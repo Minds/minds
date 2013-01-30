@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Minds OAuth2 client implementation
+ * Minds Connect - OAuth2 client implementation
  *
  * @author Billy Gunn (billy@arckinteractive.com)
  * @copyright Minds.com 2013
@@ -15,6 +15,8 @@ function minds_connect_init() {
     // Our callback page handler
     elgg_register_page_handler('minds_connect', 'minds_connect_page_handler');
 
+    // Extend the login form to add a Minds Connect button
+    elgg_extend_view('forms/login', 'minds_connect/connect');
 }
 
 function minds_connect_page_handler($page) {

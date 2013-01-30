@@ -134,7 +134,10 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $results = elgg_get_entities_from_metadata($this->getClientOptions($client_id));
 
         if (!empty($results)) {
-            return $results[0];
+            return array(
+                'client_id' => $results[0]->client_id,
+                'client_secret' => $results[0]->client_secret,
+            );
         }
     }
 
@@ -212,6 +215,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
 
             // Create the token entity
             $token                  = new ElggObject();
+            $token->subtype         = 'oauth2_access_token';
             $token->owner_guid      = $user_id;
             $token->container_guid  = $this->getClientDetails($client_id)->guid;
             $token->access_id       = ACCESS_PRIVATE;
@@ -294,6 +298,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
 
             // Create the token entity
             $code                  = new ElggObject();
+            $code->subtype         = 'oauth2_auth_code';
             $code->owner_guid      = $user_id;
             $code->container_guid  = $this->getClientDetails($client_id)->guid;
             $code->access_id       = ACCESS_PRIVATE;
@@ -427,6 +432,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
 
         // Create the token entity
         $token                  = new ElggObject();
+        $token->subtype         = 'oauth2_refresh_token';
         $token->owner_guid      = $user_id;
         $token->container_guid  = $this->getClientDetails($client_id)->guid;
         $token->access_id       = ACCESS_PRIVATE;

@@ -17,6 +17,7 @@ $english = array(
     'oauth2:applications:admin_title'  => 'Registered Applications',
     'oauth2:applications:title'        => 'Your Registered Applications',
     'oauth2:add'                       => 'Register Application',
+    'oauth2:authorize'                 => '%s is requesting access to your personal information in order to connect to minds.com.',
 
     // Forms
     'oauth2:name:label'           => 'Display Name',
