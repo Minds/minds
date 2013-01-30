@@ -17,6 +17,7 @@ if($type == 'entity'){
 		} elseif($subtype == 'hjannotation') { 
 			$object = get_entity($object->parent_guid);
 			$object_title = ' your comment';
+			return true;//do not likes on old comments as some are messed up
 		}elseif($subtype == 'image'){
 			$object_title = $object->getTitle();
 		}elseif($subtype == 'tidypics_batch'){
