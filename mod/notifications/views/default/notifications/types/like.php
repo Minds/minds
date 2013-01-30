@@ -8,7 +8,7 @@ $actor = get_entity($notification->from_guid);
 
 if($type == 'entity'){
 	$object = get_entity($notification->object_guid);
-	if($object){
+	if($object instanceof ElggEntity){
 		$subtype = $object->getSubtype();
 		if($subtype == 'thewire'){
 			$object_title = 'your post';
