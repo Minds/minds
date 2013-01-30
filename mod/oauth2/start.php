@@ -64,11 +64,11 @@ function oauth2_page_handler($page) {
             break;
 
         case 'grant':
-            //
+            oauth2_grant();
             break;
 
-        case 'access':
-            //
+        case 'get_user':
+            oauth2_get_user_by_access_token();
             break;
 
         case 'regenerate':
@@ -99,18 +99,22 @@ function oauth2_pam_handler($credentials = NULL) {
     // Load our oauth2 library
     elgg_load_library('oauth2');
 
-    // Get the server
+    // Get our custom storage object
+    $storage = new ElggOAuth2DataStore();
+
+    // Create a server instance
+    $server = new OAuth2_Server($storage);
 
     // Validate the request
-
-    // Check access token
-
-    if (!$token) {
-        // no token found, bail
+    if (!$server->verifyAccessRequest(OAuth2_Request::createFromGlobals())) {
         return false;
     }
 
+    // Get the token data
+    $token = $storage->getAccessToken(get_input('access_token'));
+
     // get the user associated with this token
+    $user = get_entity($token['user_id']);
 
     // couldn't get the user
     if (!$user || !($user instanceof ElggUser)) {

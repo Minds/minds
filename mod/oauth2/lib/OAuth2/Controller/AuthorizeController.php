@@ -29,6 +29,7 @@ class OAuth2_Controller_AuthorizeController implements OAuth2_Controller_Authori
 
     public function handleAuthorizeRequest(OAuth2_RequestInterface $request, $is_authorized, $user_id = null)
     {
+
         if (!is_bool($is_authorized)) {
             throw new InvalidArgumentException('Argument "is_authorized" must be a boolean.  This method must know if the user has granted access to the client.');
         }

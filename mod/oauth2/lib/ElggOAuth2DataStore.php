@@ -185,9 +185,10 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
             return array(
                 'access_token' => $results[0]->access_token,
                 'client_id'    => $results[0]->client_id,
-                'user_id'      => $results[0]->user_id,
+                'user_id'      => $results[0]->owner_guid,
                 'expires'      => $results[0]->expires,
-                'scope'        => $results[0]->scope
+                'scope'        => $results[0]->scope,
+                'entity'       => $results[0],
             );
         }
 
@@ -210,25 +211,26 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
      */
     public function setAccessToken($token, $client_id, $user_id, $expires, $scope = null)
     {
-
-        if (!$token = $this->getAccessToken($token)) {
+        if (!$access_token = $this->getAccessToken($token)) {
 
             // Create the token entity
-            $token                  = new ElggObject();
-            $token->subtype         = 'oauth2_access_token';
-            $token->owner_guid      = $user_id;
-            $token->container_guid  = $this->getClientDetails($client_id)->guid;
-            $token->access_id       = ACCESS_PRIVATE;
+            $entity                  = new ElggObject();
+            $entity->subtype         = 'oauth2_access_token';
+            $entity->owner_guid      = $user_id;
+            $entity->container_guid  = $this->getClientDetails($client_id)->guid;
+            $entity->access_id       = ACCESS_PRIVATE;
 
-            $token->save();
+            $entity->save();
+        } else {
+            $entity = $access_token['entity'];
         }
 
-        $token->access_token = $token;
-        $token->client_id    = $client_id;
-        $token->expires      = $expires;        
-        $token->scope        = $scope;
+        $entity->access_token = $token;
+        $entity->client_id    = $client_id;
+        $entity->expires      = $expires;        
+        $entity->scope        = $scope;
 
-        return $token->guid;
+        return $this->getAccessToken($token);
     }
 
 
@@ -263,7 +265,8 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
                 'user_id'            => $results[0]->owner_guid,
                 'redirect_uri'       => $results[0]->redirect_uri,
                 'expires'            => $results[0]->expires,
-                'scope'              => $results[0]->scope
+                'scope'              => $results[0]->scope,
+                'entity'             => $results[0],
             );
         }
 
@@ -294,25 +297,28 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
     public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null)
     {
 
-        if (!$token = $this->getAuthorizationCode($code)) {
+        if (!$auth_code = $this->getAuthorizationCode($code)) {
 
             // Create the token entity
-            $code                  = new ElggObject();
-            $code->subtype         = 'oauth2_auth_code';
-            $code->owner_guid      = $user_id;
-            $code->container_guid  = $this->getClientDetails($client_id)->guid;
-            $code->access_id       = ACCESS_PRIVATE;
+            $entity                  = new ElggObject();
+            $entity->subtype         = 'oauth2_auth_code';
+            $entity->owner_guid      = $user_id;
+            $entity->container_guid  = $this->getClientDetails($client_id)->guid;
+            $entity->access_id       = ACCESS_PRIVATE;
 
-            $code->save();
+            $entity->save();
+
+        } else {
+            $entity = $auth_code['entity'];
         }
 
-        $code->authorization_code = $code;
-        $code->client_id          = $client_id;
-        $code->redirect_uri       = $redirect_uri;
-        $code->expires            = $expires;
-        $code->scope              = $scope;
+        $entity->authorization_code = $code;
+        $entity->client_id          = $client_id;
+        $entity->redirect_uri       = $redirect_uri;
+        $entity->expires            = $expires;
+        $entity->scope              = $scope;
 
-        return $code->guid;
+        return $this->getAuthorizationCode($code);
     }
 
 
@@ -381,7 +387,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         return true;
     }
 
-    public function getUserDetails($username)
+    public function getUserDetails($username=null)
     {
         return $this->getUser($username);
     }
@@ -416,7 +422,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
             return array(
                 'refresh_token' => $results[0]->refresh_token,
                 'client_id'     => $results[0]->client_id,
-                'user_id'       => $results[0]->user_id,
+                'user_id'       => $results[0]->owner_guid,
                 'expires'       => $results[0]->expires,
                 'scope'         => $results[0]->scope
             );
@@ -427,9 +433,6 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
 
     public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = null)
     {
-        // $stmt = $this->db->prepare(sprintf('INSERT INTO %s (refresh_token, client_id, user_id, expires, scope) VALUES (:refresh_token, :client_id, :user_id, :expires, :scope)', $this->config['refresh_token_table']));
-        //return $stmt->execute(compact('refresh_token', 'client_id', 'user_id', 'expires', 'scope'));
-
         // Create the token entity
         $token                  = new ElggObject();
         $token->subtype         = 'oauth2_refresh_token';
@@ -464,10 +467,12 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         return false;
     }
 
-    public function getUser($username)
+    public function getUser($username=null)
     {
 
-        if (!$user = get_user_by_username($username)) {
+        if (!$username) {
+            $user = elgg_get_logged_in_user_entity();
+        } else if (!$user = get_user_by_username($username)) {
 
             $users = get_user_by_email($username);
 
@@ -479,7 +484,6 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         }
 
         return array('user_id' => $user->guid, 'username' => $user->username);
-
     }
 
 

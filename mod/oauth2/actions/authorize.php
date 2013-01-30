@@ -21,12 +21,6 @@ $server->addGrantType(new OAuth2_GrantType_AuthorizationCode($storage));
 
 $server->handleAuthorizeRequest(OAuth2_Request::createFromGlobals(), true, elgg_get_logged_in_user_guid())->send();
 
-// Grant
-//return $app['oauth_server']->handleGrantRequest($app['request']);
-
-// Access token
-//$server->handleGrantRequest(OAuth2_Request::createFromGlobals())->send();
-
 // Access
 //if (!$server->verifyAccessRequest($app['request'])) {
 //    return $server->getResponse();

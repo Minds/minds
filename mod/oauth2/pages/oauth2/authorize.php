@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Elgg OAuth2 registered applications
+ * Minds Connect authorization page
  *
  * @author Billy Gunn (billy@arckinteractive.com)
  * @copyright Minds.com 2013

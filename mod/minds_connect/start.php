@@ -12,6 +12,11 @@ elgg_register_event_handler('init','system','minds_connect_init');
 
 function minds_connect_init() {
 
+    $base = elgg_get_plugins_path() . 'minds_connect';
+
+    // Register our OAuth2 storage implementation
+    elgg_register_class('MC_Curl', "$base/lib/MC_Curl.php");
+
     // Our callback page handler
     elgg_register_page_handler('minds_connect', 'minds_connect_page_handler');
 
