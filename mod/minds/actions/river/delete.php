@@ -8,7 +8,7 @@
 
 $id = get_input('id', false);
 
-$items = elgg_get_river(array('ids'=>$id));
+$items = minds_elastic_get_news(array('ids'=>array($id)));
 $item = $items[0];
 $object = $item->getObjectEntity();
 $subject = $item->getSubjectEntity();
@@ -19,7 +19,7 @@ if ($id !== false && ($object->canEdit() || $subject->canEdit())) {
 	if($item->action_type == 'create'){
 		$object->delete(); //this deletes the river item too!
 	} else {
-		if (elgg_delete_river(array('id' => $id))) {
+		if (minds_elastic_delete_news(array('ids' => array($id)))) {
 			system_message(elgg_echo('river:delete:success'));
 		} else {
 			register_error(elgg_echo('river:delete:fail'));

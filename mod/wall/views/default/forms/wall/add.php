@@ -31,6 +31,10 @@ echo elgg_view('input/hidden', array(
 	'name' => 'to_guid',
 	'value' => $vars['to_guid']
 ));
+echo elgg_view('input/hidden', array(
+	'name' => 'ref',
+	'value' => $vars['ref'] ? $vars['ref'] : 'wall'
+));
 
 echo elgg_view('input/submit', array(
 	'value' => elgg_echo('post'),

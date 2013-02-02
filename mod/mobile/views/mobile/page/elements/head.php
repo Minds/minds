@@ -1,8 +1,13 @@
 <?php
 /**
- * The standard HTML head
+ * Elgg Mobile
+ * A Mobile Client For Elgg
  *
- * @uses $vars['title'] The page title
+ * @package Mobile
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ * @author Mark Harding
+ * @link http://kramnorth.com
+ *
  */
 
 // Set title
@@ -11,11 +16,6 @@ if (empty($vars['title'])) {
 } else {
 	$title = elgg_get_config('sitename') . ": " . $vars['title'];
 }
-
-elgg_load_css('minds.mobile');
-elgg_load_js('minds.js');
-
-
 $js = elgg_get_loaded_js('head');
 $css = elgg_get_loaded_css();
 
@@ -26,24 +26,22 @@ $release = get_version(true);
 	<meta name="ElggRelease" content="<?php echo $release; ?>" />
 	<meta name="ElggVersion" content="<?php echo $version; ?>" />
 	<title><?php echo $title; ?></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<link rel="SHORTCUT ICON" href="<?php echo elgg_get_site_url(); ?>_graphics/favicon.ico" />
-   	<link href="<?php echo elgg_get_site_url(); ?>mod/mobile/lib/jquery_mobile/jquery.mobile-1.1.0.min.css" rel="stylesheet" />
+	   	
+   	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
 <?php foreach ($css as $link) { ?>
 	<link rel="stylesheet" href="<?php echo $link; ?>" type="text/css" />
 <?php } ?>
+
 <?php foreach ($js as $script) { ?>
 	<script type="text/javascript" src="<?php echo $script; ?>"></script>
 <?php } ?>
-	<script>
-		$(document).bind("mobileinit", function(){
-			 $.mobile.defaultPageTransition = 'none';
-			 
-		});
-	</script>
-	<script src="<?php echo elgg_get_site_url(); ?>mod/mobile/lib/jquery_mobile/jquery.mobile-1.1.0.min.js"></script> 
 
 <script type="text/javascript">
 	<?php echo elgg_view('js/initialize_elgg'); ?>

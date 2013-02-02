@@ -17,7 +17,7 @@
 	margin: 0 0 0px 0;
 }
 .kalturavideoitem .left,.kalturaviewer .left {
-	float:left;
+	/*float:left;*/
 }
 .kalturavideoitem .main_block,.kalturaviewer .main_block {
 	float:left;
@@ -144,9 +144,6 @@
 .kalturaviewer .text {
 	margin-top:10px;
 	border-bottom:#DEDEDE 1px solid;
-}
-.kalturaviewer .kalturaplayer {
-	margin:0 10px 0 0;
 }
 
 .kalturavideoitem a.submit_button,.kalturaviewer a.submit_button {

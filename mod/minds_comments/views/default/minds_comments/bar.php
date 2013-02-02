@@ -8,10 +8,6 @@ if (elgg_is_logged_in()) {
 }
 elgg_load_js('hj.framework.ajax');
 
-if (!elgg_is_logged_in()) {
-    return true;
-}
-
 $type = elgg_extract('type', $vars, false);
 $pid = elgg_extract('pid', $vars, false);
 

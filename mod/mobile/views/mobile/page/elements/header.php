@@ -1,16 +1,47 @@
-<?php
+<?php /**
+ * Elgg Mobile
+ * A Mobile Client For Elgg
+ *
+ * @package Mobile
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ * @author Mark Harding
+ * @link http://kramnorth.com
+ *
+ */
+elgg_unregister_menu_item('topbar', 'register');
+elgg_unregister_menu_item('topbar', 'login');
+elgg_unregister_menu_item('topbar', 'search');
+elgg_unregister_menu_item('topbar', 'minds_logo');
+elgg_unregister_menu_item('topbar', 'logout');
+
 /**
- * Elgg header contents
- * This file holds the header output that a user will see
- **/
-
-// link back to main site.
-echo elgg_view('page/elements/header_logo', $vars);
-
-// drop-down login
-//echo elgg_view('core/account/login_dropdown');
-
-// insert site-wide navigation
-//if (elgg_is_logged_in()): 
-echo elgg_view_menu('mobile');
-//endif; 
+ * Notifications
+ * @todo do this from the plugin
+ */
+$class = "elgg-icon notification notifier";
+$notify = "<span class='$class'></span>";
+$tooltip = elgg_echo("notification");
+$num_notifications = (int)notifications_count_unread();
+if ($num_notifications < 0) {
+	$class = "elgg-icon notification notifier new";
+	$notify = "<span class='$class'>" . "<span class=\"notification-new\">$num_notifications</span>" . "</span>";
+	$tooltip .= " (" . elgg_echo("notifications:unread", array($num_notifications)) . ")";
+}
+?>
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<a class="minds-nav-logo" href="<?php echo elgg_get_site_url(); ?>"> <img src="http://mehmac/minds/mod/minds/graphics/minds_logo_transparent.png" class="minds_logo"></a>
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+			<?php if(elgg_is_logged_in()){?>
+			<a class="btn" href="<?php echo elgg_get_site_url();?>notifications/view/mark"><?php echo $notify;?></a>
+			<?php } ?>
+			<?php if(!elgg_is_logged_in() && elgg_get_context() != 'main'){ ?>
+			<a href="<?php echo elgg_get_site_url(); ?>login" class="btn pull-right"><?php echo elgg_echo('login'); ?></a>
+			<?php } ?>
+			<div class="nav-collapse collapse">
+				<?php echo elgg_view_menu('site'); ?>
+			</div>
+		</div>
+	</div>
+</div>

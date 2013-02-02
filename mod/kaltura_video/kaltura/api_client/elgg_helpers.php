@@ -460,11 +460,14 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $monetized 
     		$width = 380;
 		}
 		$flashVars = '&autoPlay=true';
+	}elseif($size=='mobile') {
+		$height = '250px';//standard
+		$width = '100%';
 	} elseif(elgg_get_context()=='archive'){
 		$height = 410;
     	$width = 730;
 		$flashVars = '&autoPlay=true';
-	} else {
+	}else{
     	// large size "410", "364"
     	$height = 410;
     	$width = 730;

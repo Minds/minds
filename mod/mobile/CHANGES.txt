@@ -1,4 +1,3 @@
-NEW IN 2.0
+NEW IN 3.0
 
-- Complete redesign.
-- HTML5 support.
+- Uses twitter bootstrap to create a better experience accross a range of devices

@@ -14,12 +14,10 @@ if (isset($vars['class'])) {
 	$class = "$class {$vars['class']}";
 }
 ?>
-<div class="<?php echo $class; ?>">
-	<div class="elgg-body">
+<div class="span12">
 	<?php echo $vars['content']; ?>
 	<?php
 		// @deprecated 1.8
 		echo $vars['area1'];
 	?>
-	</div>
 </div>

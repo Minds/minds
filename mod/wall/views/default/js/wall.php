@@ -66,32 +66,10 @@ elgg.wall.news.submit = function(e) {
 	elgg.action('wall/add', {
 		data: data,
 		success: function(json) {
-			
-			$list = $(this).parent();
-			
-			$params = elgg.parse_str(elgg.parse_url(location.href).query);
-			$params = $.extend($params, {
-				path: location.href,
-				items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
-							$list.hasClass('elgg-list-river') ? 'river' :
-							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
-				offset: 0,
-				limit: 1,
-				subject_guids: <?php echo elgg_get_logged_in_user_guid(); ?>
-			});
-			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-						
-			elgg.get(url, function(data) {
-				//$list.toggleClass('infinite-scroll-ajax-loading', false);
-				
-				$('.elgg-list.elgg-list-river.elgg-river').first('.elgg-list.elgg-list-river.elgg-river').prepend(data);
-
-			});
-			
-			
+		//	console.log(json);	
+			$('.elgg-list.elgg-list-river.elgg-river').first('.elgg-list.elgg-list-river.elgg-river').prepend(json.output);
 			$(document).find('textarea').val('');
-		}
-	});
+		}});
 
 	e.preventDefault();
 };
