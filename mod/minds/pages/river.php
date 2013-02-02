@@ -21,7 +21,7 @@ if ($type != 'all') {
 	}
 }
 
-$options['limit'] = 5;
+$options['limit'] = get_input('limit',5);
 
 switch ($page_type) {
 	case 'all':
@@ -36,7 +36,7 @@ switch ($page_type) {
 		break;
 	case 'single':
 		$id = get_input('id');
-		$options['ids'] = $id;
+		$options['ids'] = array($id);
 		break;
 	case 'thumbsup':
 		$title = elgg_echo('river:thumbs-up');
@@ -63,7 +63,7 @@ switch ($page_type) {
 		break;
 }
 
-$activity = elgg_list_river($options);
+$activity = minds_elastic_list_news($options);
 if (!$activity) {
 	$activity = elgg_echo('river:none');
 }

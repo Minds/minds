@@ -21,6 +21,10 @@ function minds_init(){
 	
 	elgg_extend_view('register/extend', 'minds/register_extend', 500);
 	
+	//Register the minds elastic news library (to override the default elgg river)
+	elgg_register_library('elastic_news', elgg_get_plugins_path().'minds/lib/elastic_news.php');
+	elgg_load_library('elastic_news');
+	
 	//put the quota in account statistics
 	elgg_extend_view('core/settings/statistics', 'minds/quota/statistics', 500);
 	
