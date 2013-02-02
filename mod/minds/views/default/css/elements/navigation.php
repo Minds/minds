@@ -436,6 +436,7 @@
 	width:auto;
     margin:10px auto;
     text-align:center;
+    float:right;
 }
 
 .elgg-menu-footer-alt {

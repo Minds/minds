@@ -10,15 +10,7 @@
 
 echo elgg_view_menu('footer', array('sort_by' => 'priority', 'class' => 'elgg-menu-hz'));
 
-echo '<p align="center">Content created and shared here is <a href="' . elgg_get_site_url() . 'licenses">free for the world</a></p>';
-
-$powered_url = elgg_get_site_url() . "mod/minds/graphics/minds_footer.gif";
-
-echo '<div class="logo">';
-echo elgg_view('output/url', array(
-	'href' => elgg_get_site_url(),
-	'text' => "<img src=\"" . elgg_get_site_url() . "mod/minds/graphics/mindscc.png\" alt=\"Minds\" width=\"100\" height=\"25\" />",
-	'class' => '',
-	'is_trusted' => true,
-));
-echo '</div>';
+echo '<div class="logo"> &copy; Minds 2012-2013 Copyleft <!--[if lte IE 8]><span style="filter: FlipH; -ms-filter: "FlipH"; display: inline-block;"><![endif]-->
+<span style="-moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); display: inline-block;">
+    &copy;
+</span> <!--[if lte IE 8]></span><![endif]--> <br/> Content created and shared here is <a href="' . elgg_get_site_url() . 'licenses">free for the world</a></div>';

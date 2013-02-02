@@ -125,6 +125,6 @@
 	color: #666;
 }
 .elgg-page-footer .logo{
-	width:100px;
-	margin:auto;
+	margin:10px auto;
+	float:left;
 }
