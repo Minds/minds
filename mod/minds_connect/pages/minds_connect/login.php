@@ -97,11 +97,11 @@ try {
     login($user);
 
     // Store the updated tokens
-    $user->mc_access_token  = $access_token;
-    $user->mc_refresh_token = $refresh_token;
-    $user->mc_expires       = $expires;
+    $user->mc_access_token  = $response['access_token'];
+    $user->mc_refresh_token = $response['refresh_token'];
+    $user->mc_expires       = $response['expires'] + time();
 
-    setcookie("MC", $access_token, strtotime('+5 year'), "/");
+    setcookie("MC", $response['access_token'], strtotime('+1 year'), "/");
 
     register_translations(dirname(dirname(__FILE__)) . "/languages/");
 

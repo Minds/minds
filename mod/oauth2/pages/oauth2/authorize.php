@@ -12,6 +12,9 @@ $client_id     = get_input('client_id');
 $response_type = get_input('response_type');
 $redirect_uri  = get_input('redirect_uri');
 
+$access = elgg_get_ignore_access();
+elgg_set_ignore_access(true);
+
 // Get our custom storage object
 $storage = new ElggOAuth2DataStore();
 
@@ -21,13 +24,16 @@ $server = new OAuth2_Server($storage);
 // Make sure this is a valid authorization request
 if (!$server->validateAuthorizeRequest(OAuth2_Request::createFromGlobals())) {
     register_error($server->getResponse());
-    forward();
+    error_log('validateAuthorizeRequest: ' . $server->getResponse());
+    elgg_set_ignore_access($access);
+    forward(); 
 }
 
 if (!$client_id || !$response_type || !$redirect_uri ) {
     forward(REFERER);
 }
 
+// Send the user to the login page if they are not already loged in
 if (!elgg_get_logged_in_user_guid()) {
     $_SESSION['last_forward_from'] = current_page_url();
     forward('/login');
@@ -43,9 +49,6 @@ $options = array(
     ),
     'limit' => 1,
 );
-
-$access = elgg_get_ignore_access();
-elgg_set_ignore_access(true);
 
 $results = elgg_get_entities_from_metadata($options);
 
