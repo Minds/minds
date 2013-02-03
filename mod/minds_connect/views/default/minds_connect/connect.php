@@ -13,7 +13,13 @@ if ($ssl_callback == 'yes') {
 
 $callback = urlencode($callback);
 
-$url = "{$minds_url}/oauth2/authorize?response_type=code&client_id={$client_id}&redirect_uri={$callback}";
+
+
+if (isset($_COOKIE['MC'])) {
+    $url = elgg_get_site_url() . 'minds_connect/login';
+} else {
+    $url = "{$minds_url}/oauth2/authorize?response_type=code&client_id={$client_id}&redirect_uri={$callback}";
+}
 
 ?>
 

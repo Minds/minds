@@ -33,7 +33,7 @@ class OAuth2_GrantType_AuthorizationCode implements OAuth2_GrantTypeInterface, O
     {
         $this->code = $request->request('code');
         if (!$tokenData = $this->storage->getAuthorizationCode($this->code)) {
-            $this->response = new OAuth2_Response_Error(400, 'invalid_grant', "Authorization code doesn't exist or is invalid for the client");
+            $this->response = new OAuth2_Response_Error(400, 'invalid_grant', "getTokenDataFromRequest: Authorization code doesn't exist or is invalid for the client");
             return null;
         }
 
@@ -55,7 +55,7 @@ class OAuth2_GrantType_AuthorizationCode implements OAuth2_GrantTypeInterface, O
     {
         // Check the code exists
         if ($tokenData === null || $clientData['client_id'] != $tokenData['client_id']) {
-            $this->response = new OAuth2_Response_Error(400, 'invalid_grant', "Authorization code doesn't exist or is invalid for the client");
+            $this->response = new OAuth2_Response_Error(400, 'invalid_grant', "validateTokenData: Authorization code doesn't exist or is invalid for the client");
             return false;
         }
 

@@ -40,6 +40,9 @@ function oauth2_init() {
     $js = elgg_get_simplecache_url('js', 'oauth2/oauth2');
     elgg_register_simplecache_view('js/oauth2/oauth2');
     elgg_register_js('oauth2', $js, 'footer');
+
+    // Register a cron to cleanup expired tokens
+    elgg_register_plugin_hook_handler('cron', 'hourly', 'oauth2_expire_tokens');
 			
 	// Add the subtypes
 	run_function_once('oauth_run_once');
@@ -131,6 +134,29 @@ function oauth2_pam_handler($credentials = NULL) {
     // tell the PAM system that it worked
     return true;
 
+}
+
+function oauth2_expire_tokens() {
+
+    $access = elgg_get_ignore_access();
+    elgg_set_ignore_access(true);
+
+    $options = array(
+        'type' => 'object',
+        'subtype' => 'oauth2_access_token',
+        'wheres'  => array('e.time_created < now() + 3600'),
+        'limit'   => 9999
+    );
+
+    $entities = elgg_get_entities($options);
+
+    if (!empty($entities)) {
+        foreach ($entities as $e) {
+            $e->delete();
+        }
+    }
+
+    elgg_set_ignore_access($access);
 }
 
 /*

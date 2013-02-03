@@ -20,16 +20,18 @@ $callback = urlencode($callback);
 
 // exchange authorization code for access token
 $query = array(
-    'grant_type' => 'authorization_code',
-    'code'       => $code,
-    'client_id'  => $client_id,
+    'grant_type'    => 'authorization_code',
+    'code'          => $code,
+    'client_id'     => $client_id,
     'client_secret' => $client_secret,
     'redirect_uri'  => $callback,
 );
 
 $endpoint = "{$minds_url}/oauth2/grant";
 
-// call the API using Curl
+
+/* Get an access token */
+
 $curl = new MC_Curl();
 
 $response = $curl->request($endpoint, $query, 'POST');
@@ -38,17 +40,13 @@ $response = json_decode($response['response'], true);
 
 if (!isset($response['access_token'])) {
     register_error('Failed to retrieve an access token');
-    print_r($response); exit; 
-    //forward();
+    error_log('QUERY: ' . print_r($query, true));
+    error_log('RESPONSE: ' . print_r($response, true));
+    forward();
 }
 
-//    [access_token] => e06b6fe23ac48f75e02aa5992f140c9866c5e240 
-//    [expires_in] => 3600 
-//    [token_type] => bearer 
-//    [scope] => 
-//    [refresh_token] => 20df12522a63fedde56c6340c570f03071dc8ad7 )
 
-// get_user
+/* Get the minds user record */
 
 $query = array(
     'client_id'     => $client_id,
@@ -61,8 +59,30 @@ $endpoint = "{$minds_url}/oauth2/get_user";
 
 $user_response = $curl->request($endpoint, $query, 'GET');
 
-print_r($user_response);
+$response = array_merge($response, json_decode($user_response['response'], true));
 
-exit;
-
+if (!$response['username']) {
+    register_error('Failed to retrieve user record');
+    forward();
+}
  
+
+// Store the access token in the session
+$_SESSION['minds_connect']['access_token']  = $response['access_token'];
+$_SESSION['minds_connect']['refresh_token'] = $response['refresh_token'];
+$_SESSION['minds_connect']['expires']       = time() + $response['expires'];
+
+// Add or link the user
+$content = elgg_view('minds_connect/add_user', array('data' => $response));
+
+$params = array(
+    'title'   => 'Minds Connect',
+    'content' => $content,
+    'filter'  => ''
+);
+
+$body = elgg_view_layout('content', $params);
+
+echo elgg_view_page('Minds Connect', $body);
+
+

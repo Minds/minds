@@ -71,3 +71,6 @@ $params = array(
 $body = elgg_view_layout('content', $params);
 
 echo elgg_view_page($results[0]->title, $body);
+
+
+
