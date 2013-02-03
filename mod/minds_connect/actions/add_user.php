@@ -17,7 +17,7 @@ if ($type == 'link') {
 
     $status = minds_connect_link($username, $password, $access_token, $refresh_token, $expires);
 
-} else if ($link == 'register') {
+} else if ($type == 'register') {
 
     /* Register and link accounts */
 

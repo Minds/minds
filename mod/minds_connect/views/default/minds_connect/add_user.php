@@ -141,7 +141,9 @@ $reg_username = ($link != 'username') ? $data['username'] : '';
 
             <input type="submit" value="Register" name="Register" class="elgg-button elgg-button-action">
 
-            <a id="register-link" href="javascript:void(0);" class="elgg-button elgg-button-action">Link Existing Account</a>
+            <?php if ($link): ?>
+                <a id="register-link" href="javascript:void(0);" class="elgg-button elgg-button-action">Link Existing Account</a>
+            <?php endif; ?>
 
         </form>
 
