@@ -171,6 +171,8 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	'minds:license:bsd' => 'BSD License',
 	
 	'categories' => 'Category',
+	
+	'readmore' => '→ read more',
 
 );
 		

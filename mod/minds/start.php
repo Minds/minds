@@ -406,6 +406,21 @@ function minds_subscribe_default($hook, $type, $value, $params){
 	return $value;
 }
 
+function minds_fetch_image($description) {
+  
+  global $post, $posts;
+  $fbimage = '';
+  $output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i',$description, $matches);
+  $image = $matches [1] [0];
+ 
+  if(empty($image)) {
+    $image = elgg_get_site_url() . 'mod/minds/graphics/minds_logo.png';
+  }
+  
+  return $image;
+}
+
+
 elgg_register_event_handler('init','system','minds_init');		
 
 ?>

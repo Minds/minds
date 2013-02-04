@@ -456,3 +456,24 @@ li.elgg-menu-item-rss{
 	float:left;
 	margin:10px;
 }
+
+
+/**
+ * rich content
+ */
+.rich-content h3{
+	font-size:30px;
+	line-height:30px;
+}
+.rich-content h3 a:hover{
+	color:#4690D6;
+	text-decoration:none;
+}
+.rich-content .readmore{
+	font-weight:bold;
+}
+.rich-content .rich-image{
+	float:left;
+	margin:0 15px 10px 0;
+	width:250px;
+}

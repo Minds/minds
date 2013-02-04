@@ -46,6 +46,9 @@ function blog_get_page_content_read($guid = NULL) {
 		$return['content'] .= elgg_view_comments($blog);
 	}
 	
+	//add the sidebar
+	$return['sidebar'] = blog_sidebar($blog->guid);
+	
 	minds_set_metatags('description', $blog->excerpt ? $blog->excerpt : substr(strip_tags($blog->description), 0, 140));
 	minds_set_metatags('keywords', $blog->tags);
 	
@@ -460,4 +463,19 @@ function blog_url_forwarder($page) {
 
 	register_error(elgg_echo("changebookmark"));
 	forward($url);
+}
+
+/**
+ * Adds a sidebar to each blog which show information such as posts by the owner, popular blogs etc
+ * @param guid (int)
+ */
+function blog_sidebar($guid){
+	$blog = get_entity($guid);
+	
+	//show more posts from this user
+	$owners_blogs = elgg_list_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'full_view'=>false));
+	$return .= elgg_view_module('featured', 'others blogs from x user', $owners_blogs);
+	
+	
+	return $return;
 }
