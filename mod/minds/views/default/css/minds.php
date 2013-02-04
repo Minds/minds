@@ -477,3 +477,15 @@ li.elgg-menu-item-rss{
 	margin:0 15px 10px 0;
 	width:250px;
 }
+.rich-content.sidebar h3{
+	font-size:14px;
+	line-height:14px;
+}
+.rich-content.sidebar h3 a:hover{
+	color:#4690D6;
+	text-decoration:none;
+}
+.rich-content.sidebar .rich-image{
+	margin:0;
+	width:75px;
+}

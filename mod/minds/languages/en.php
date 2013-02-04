@@ -172,6 +172,8 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	
 	'categories' => 'Category',
 	
+	'blog:owner_more_posts' => 'More blogs from %s',
+	'blog:featured' => 'Featured blogs',
 	'readmore' => '→ read more',
 
 );

@@ -473,8 +473,14 @@ function blog_sidebar($guid){
 	$blog = get_entity($guid);
 	
 	//show more posts from this user
-	$owners_blogs = elgg_list_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'full_view'=>false));
-	$return .= elgg_view_module('featured', 'others blogs from x user', $owners_blogs);
+	$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid));
+	if (($key = array_search($blog, $owners_blogs)) !== false) {
+	    unset($owners_blogs[$key]);
+	}
+	$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true));
+	$return .= elgg_view_module('featured', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs);
+	
+	//show featured blogs
 	
 	
 	return $return;
