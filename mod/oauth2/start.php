@@ -43,6 +43,9 @@ function oauth2_init() {
 
     // Register a cron to cleanup expired tokens
     elgg_register_plugin_hook_handler('cron', 'hourly', 'oauth2_expire_tokens');
+
+    // Admin menu to manage applications
+    elgg_register_admin_menu_item('administer', 'oauth2', 'administer_utilities');
 			
 	// Add the subtypes
 	run_function_once('oauth_run_once');
