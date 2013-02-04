@@ -27,7 +27,9 @@ body{
 	margin:auto;
 	display:block;
 }
-
+.facebook{
+	margin:10px auto;
+}
 li.elgg-item .elgg-menu{
 	display:none;
 }
@@ -55,4 +57,10 @@ li.elgg-item .elgg-menu{
 }
 .elgg-list h3 a{
 	font-size:14px;
+}
+
+#wall-textarea{
+	width:98%;
+	height:auto;
+}
 }

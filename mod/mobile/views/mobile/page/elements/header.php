@@ -31,7 +31,7 @@ if ($num_notifications < 0) {
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container-fluid">
-			<a class="minds-nav-logo" href="<?php echo elgg_get_site_url(); ?>"> <img src="http://mehmac/minds/mod/minds/graphics/minds_logo_transparent.png" class="minds_logo"></a>
+			<a class="minds-nav-logo" href="<?php echo elgg_get_site_url(); ?>"> <img src="<?php echo elgg_get_site_url();?>mod/mobile/graphics/minds_logo_transparent.png" class="minds_logo"></a>
 			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
 			<?php if(elgg_is_logged_in()){?>
 			<a class="btn" href="<?php echo elgg_get_site_url();?>notifications/view/mark"><?php echo $notify;?></a>
