@@ -4,7 +4,7 @@
 <div class="minds-social">
 	<div class="fb-like" data-href="<?php echo $og_url;?>" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="arial"></div>
 	
-	<a id="fb-share" style='text-decoration:none;' type="icon_link" onClick="window.open('http://www.facebook.com/sharer.php?s=100&amp;p[url]=' + encodeURIComponent(window.location),'sharer','toolbar=0,status=0,width=580,height=325');" href="javascript: void(0)">
+	<a id="fb-share" style='text-decoration:none;' type="icon_link" onClick="window.open('http://www.facebook.com/sharer.php?u=' + encodeURIComponent(window.location),'sharer','toolbar=0,status=0,width=580,height=325');" href="javascript: void(0)">
 	    <img src="<?php echo elgg_get_site_url();?>mod/minds_social/graphics/facebook_share.png" width="62" height="18" alt="Share"/>
 	</a>
 		
