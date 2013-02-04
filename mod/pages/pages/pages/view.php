@@ -34,6 +34,15 @@ elgg_push_breadcrumb($title);
 $content = elgg_view_entity($page, array('full_view' => true));
 $content .= elgg_view_comments($page);
 
+minds_set_metatags('description', $page->description);
+minds_set_metatags('keywords', $page->tags);
+	
+//set up for facebook
+minds_set_metatags('og:type', 'article');
+minds_set_metatags('og:url',$page->getURL());
+minds_set_metatags('og:title',$page->title);
+minds_set_metatags('og:image', minds_get_fbimage($page->description));
+
 // can add subpage if can edit this page and write to container (such as a group)
 if ($page->canEdit() && $container->canWriteToContainer(0, 'object', 'page')) {
 	$url = "pages/add/$page->guid";
