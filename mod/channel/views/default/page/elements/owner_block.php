@@ -24,7 +24,7 @@ if ($owner instanceof ElggGroup){
 		'class' => 'elgg-owner-block',
 	));
 	
-}elseif(($owner instanceof ElggUser && $owner->getGUID() != elgg_get_logged_in_user_guid())) {
+}elseif($owner instanceof ElggUser) {
 
 	$header = elgg_view_entity($owner, array('full_view' => false));
 
