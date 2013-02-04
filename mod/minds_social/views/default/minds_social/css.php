@@ -28,6 +28,10 @@
 	height:15px;
 }
 
+#fb-share{
+	float:left;
+	margin:0 25px;
+}
 .reddit-share{
 	margin-left:20px;
 }

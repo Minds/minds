@@ -4,10 +4,10 @@
 <div class="minds-social">
 	<div class="fb-like" data-href="<?php echo $og_url;?>" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="arial"></div>
 	
-	<a id="fb-share" style='text-decoration:none;' type="icon_link" onClick="window.open('http://www.facebook.com/sharer.php?s=100&amp;p[title]=foo&amp;p[summary]=bar&amp;p[url]=https://www.foobar.com/&amp;p[images][0]=https://www.foobar.com/thumb.gif','sharer','toolbar=0,status=0,width=580,height=325');" href="javascript: void(0)">
-	    <img src="img/share.gif" width="62" height="18" alt="Share"/>
+	<a id="fb-share" style='text-decoration:none;' type="icon_link" onClick="window.open('http://www.facebook.com/sharer.php?s=100&amp;p[url]=' + encodeURIComponent(window.location),'sharer','toolbar=0,status=0,width=580,height=325');" href="javascript: void(0)">
+	    <img src="<?php echo elgg_get_site_url();?>mod/minds_social/graphics/facebook_share.png" width="62" height="18" alt="Share"/>
 	</a>
-	
+		
 	<a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 	
