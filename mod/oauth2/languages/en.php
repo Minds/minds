@@ -21,6 +21,7 @@ $english = array(
     'oauth2:authorize'                 => '%s is requesting access to your personal information in order to connect to minds.com.',
     'oauth2:register:app_not_found'    => 'Application not found',
     'oauth2:error:save_failed'         => 'Failed to save application',
+    'oauth2:developers'                => 'Developers',
 
     // Forms
     'oauth2:name:label'           => 'Display Name',
