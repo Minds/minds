@@ -489,9 +489,11 @@ function blog_sidebar($guid){
 	foreach($data['hits']['hits'] as $item){
 		$guids[] = $item['_id'];
 	}
-	$featured_blogs = elgg_get_entities(array('guids'=>$guids, 'limit'=>5));
-	$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true));
-	$return .= elgg_view_module('featured', elgg_echo('blog:featured'), $featured_blogs);	
+	if(count($guids) > 0){
+		$featured_blogs = elgg_get_entities(array('guids'=>$guids, 'limit'=>5));
+		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true));
+		$return .= elgg_view_module('featured', elgg_echo('blog:featured'), $featured_blogs);	
+	}
 	
 	return $return;
 }
