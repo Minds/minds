@@ -17,12 +17,12 @@ if($entity->featured != true){
 	$data = new stdClass();
 	$data->time_stamp = time();
 	
-	$es->add($entity->type, $entity->guid, json_encode($data));
+	$es->add($entity->getSubType(), $entity->getGuid(), json_encode($data));
 	
 	$entity->featured = true;
 	
 }else{
-	$es->remove($es->type, $entity->guid);
+	$es->remove($entity->getSubType(), $entity->getGuid);
 	$entity->featured = false;
 }
 
