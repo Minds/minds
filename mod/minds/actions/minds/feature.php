@@ -22,7 +22,7 @@ if($entity->featured != true){
 	$entity->featured = true;
 	
 }else{
-	$es->remove($entity->getSubType(), $entity->getGuid);
+	$es->remove($entity->getSubType(), $entity->getGuid());
 	$entity->featured = false;
 }
 
