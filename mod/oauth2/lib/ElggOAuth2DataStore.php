@@ -131,12 +131,19 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
 
     public function getClientDetails($client_id)
     {
+
+        $access = elgg_get_ignore_access();
+        elgg_set_ignore_access(true);
+
         $results = elgg_get_entities_from_metadata($this->getClientOptions($client_id));
+
+        elgg_set_ignore_access($access);
 
         if (!empty($results)) {
             return array(
-                'client_id' => $results[0]->client_id,
+                'client_id'     => $results[0]->client_id,
                 'client_secret' => $results[0]->client_secret,
+                'entity'        => $results[0],
             );
         }
     }
@@ -433,11 +440,14 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
 
     public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = null)
     {
+
+        $client = $this->getClientDetails($client_id);
+
         // Create the token entity
         $token                  = new ElggObject();
         $token->subtype         = 'oauth2_refresh_token';
         $token->owner_guid      = $user_id;
-        $token->container_guid  = $this->getClientDetails($client_id)->guid;
+        $token->container_guid  = $client['entity']->guid;
         $token->access_id       = ACCESS_PRIVATE;
 
         $token->save();

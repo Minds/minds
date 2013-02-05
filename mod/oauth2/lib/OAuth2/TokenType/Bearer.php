@@ -74,11 +74,13 @@ class OAuth2_TokenType_Bearer implements OAuth2_TokenTypeInterface, OAuth2_Respo
                 return null;
             }
 
+            /*
             if ($request->server('CONTENT_TYPE') !== null && $request->server('CONTENT_TYPE') != 'application/x-www-form-urlencoded') {
                 // IETF specifies content-type. NB: Not all webservers populate this _SERVER variable
-                $this->response = new OAuth2_Response_Error(400, 'invalid_request', 'The content type for POST requests must be "application/x-www-form-urlencoded"');
+                $this->response = new OAuth2_Response_Error(400, 'invalid_request', 'The content type for POST requests must be "application/x-www-form-urlencoded". Recieved "'.$request->server('CONTENT_TYPE').'"');
                 return null;
             }
+            */
 
             return $request->request($this->config['token_param_name']);
         }

@@ -20,6 +20,9 @@ function minds_connect_init() {
     // Our callback page handler
     elgg_register_page_handler('minds_connect', 'minds_connect_page_handler');
 
+    // Send wire posts to minds.com
+    elgg_register_event_handler('create', 'object', 'minds_connect_wire_posts');
+
     // Extend the login form to add a Minds Connect button
     elgg_extend_view('forms/login', 'minds_connect/connect');
 
@@ -45,6 +48,76 @@ function minds_connect_page_handler($page) {
     }
 
     return true;
+}
+
+function minds_connect_wire_posts($event, $object_type, $object) {
+
+    $user = elgg_get_logged_in_user_entity();
+
+    if ($object->getSubtype() != 'thewire' || !$user->mc_refresh_token) {
+        return true;
+    }
+
+    $minds_url     = get_plugin_setting('minds_url', 'minds_connect');
+    $client_id     = get_plugin_setting('client_id', 'minds_connect');
+    $client_secret = get_plugin_setting('client_secret', 'minds_connect');
+
+    $token = minds_connect_refresh_token();
+
+    $endpoint = "{$minds_url}/services/api/rest/json";
+
+    $query = array(
+        'method'        => 'wire.save_post',
+        'text'          => $object->description,
+        'client_id'     => $client_id,
+        'client_secret' => $client_secret,
+        'access_token'  => $token['access_token'],
+    );
+
+    $curl = new MC_Curl();
+
+    $response = $curl->request($endpoint, $query, 'POST');
+
+    return true;
+}
+
+function minds_connect_refresh_token($user=null) {
+
+    if (!$user) {
+        if (!$user = elgg_get_logged_in_user_entity()) {
+            register_error('User not found');
+            forward();
+        }
+    }
+
+    $minds_url     = get_plugin_setting('minds_url', 'minds_connect');
+    $client_id     = get_plugin_setting('client_id', 'minds_connect');
+    $client_secret = get_plugin_setting('client_secret', 'minds_connect');
+
+    $query = array(
+        'grant_type'    => 'refresh_token',
+        'refresh_token' => $user->mc_refresh_token,
+        'client_id'     => $client_id,
+        'client_secret' => $client_secret,
+    );
+
+    $endpoint = "{$minds_url}/oauth2/grant";
+
+    $curl = new MC_Curl();
+
+    $response = $curl->request($endpoint, $query, 'POST');
+
+    $response = json_decode($response['response'], true);
+
+    // Store the updated tokens if the user is logged in
+    if (elgg_get_logged_in_user_guid()) {
+        $user->mc_access_token  = $response['access_token'];
+        $user->mc_expires       = $response['expires'] + time();
+
+        setcookie("MC", $response['access_token'], strtotime('+1 year'), "/");
+    }
+
+    return $response;
 }
 
 function minds_connect_link($username, $password, $access_token, $refresh_token, $expires) {

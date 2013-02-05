@@ -86,6 +86,7 @@ class MC_Curl
             CURLOPT_TIMEOUT         => $options['timeout'],
             CURLOPT_HTTPHEADER      => $headers,
             CURLOPT_SSL_VERIFYPEER  => $options['verifyssl'],
+            CURLINFO_HEADER_OUT     => true,
         );
 
         if (ini_get('open_basedir') == '' && ini_get('safe_mode') != 'On') {

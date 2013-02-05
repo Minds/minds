@@ -40,33 +40,18 @@ if (empty($entities)) {
 
 // Get the refresh token
 $user = $entities[0];
-$refresh_token = $user->mc_refresh_token;
+
+// Get a new access token
+$token = minds_connect_refresh_token($user);
 
 elgg_set_ignore_access($access);
 
-
-/* Get a new access token */
-
-$query = array(
-    'grant_type'    => 'refresh_token',
-    'refresh_token' => $refresh_token,
-    'client_id'     => $client_id,
-    'client_secret' => $client_secret,
-);
-
-$endpoint = "{$minds_url}/oauth2/grant";
-
-$curl = new MC_Curl();
-
-$response = $curl->request($endpoint, $query, 'POST');
-
-$response = json_decode($response['response'], true);
 
 /*
  * The refresh token was possibly expired on the server side. 
  * Allow the user to re-authorize the app.
  */
-if (!isset($response['access_token'])) {
+if (!isset($token['access_token'])) {
 
     if ($ssl_callback == 'yes') {
         $parts    = parse_url(elgg_get_site_url());
@@ -88,20 +73,23 @@ if (!isset($response['access_token'])) {
 $query = array(
     'client_id'     => $client_id,
     'client_secret' => $client_secret,
-    'access_token'  => $response['access_token'],
+    'access_token'  => $token['access_token'],
     'redirect_uri'  => $callback,
 );
 
 $endpoint = "{$minds_url}/oauth2/get_user";
 
-$user_response = $curl->request($endpoint, $query, 'GET');
+$curl = new MC_Curl();
 
-$response = array_merge($response, json_decode($user_response['response'], true));
+$response = $curl->request($endpoint, $query, 'GET');
+
+$response = array_merge($token, json_decode($response['response'], true));
 
 if (!$response['username']) {
     register_error('Failed to retrieve user record');
     forward();
 }
+
 
 /* Log the user in */
 
@@ -109,7 +97,7 @@ try {
 
     login($user);
 
-    // Store the updated tokens
+    // Set the updated token
     $user->mc_access_token  = $response['access_token'];
     $user->mc_expires       = $response['expires'] + time();
 

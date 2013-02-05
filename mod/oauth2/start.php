@@ -102,7 +102,7 @@ function oauth2_page_handler($page) {
 }
 
 /**
- * PAM: Confirm that the call includes a access token
+ * PAM: Confirm that the call includes an access token
  *
  * @return bool
  */
@@ -117,8 +117,13 @@ function oauth2_pam_handler($credentials = NULL) {
     // Create a server instance
     $server = new OAuth2_Server($storage);
 
+    $access = elgg_get_ignore_access();
+    elgg_set_ignore_access(true);
+
     // Validate the request
     if (!$server->verifyAccessRequest(OAuth2_Request::createFromGlobals())) {
+        error_log('oauth2_pam_handler() - ' . $server->getResponse());
+        elgg_set_ignore_access($access);
         return false;
     }
 
@@ -128,13 +133,17 @@ function oauth2_pam_handler($credentials = NULL) {
     // get the user associated with this token
     $user = get_entity($token['user_id']);
 
+    elgg_set_ignore_access($access);
+
     // couldn't get the user
     if (!$user || !($user instanceof ElggUser)) {
+        error_log('oauth2_pam_handler() - Failed to retrieve user');
         return false;
     }
 
     // try logging in the user object here
     if (!login($user)) {
+        error_log('oauth2_pam_handler() - Failed to login user');
         return false;
     }
 
@@ -142,7 +151,6 @@ function oauth2_pam_handler($credentials = NULL) {
 
     // tell the PAM system that it worked
     return true;
-
 }
 
 function oauth2_expire_tokens() {
