@@ -28,7 +28,7 @@ $entity->title       = $title;
 $entity->description = $description;
 
 if (!$entity->save()) {
-    register_error(elgg_echo('blog:error:post_not_found'));
+    register_error(elgg_echo('oauth2:error:save_failed'));
     forward(REFERRER);
 }
 

@@ -12,7 +12,7 @@
 
 $entity = null;
 
-if ($entity = get_entity($page[1])) {
+if ($page[0] == 'edit' && $entity = get_entity($page[1])) {
 
     if (!elgg_instanceof($entity, 'object', 'oauth2_client') || !$entity->canEdit()) {
         register_error(elgg_echo('oauth2:register:app_not_found'));

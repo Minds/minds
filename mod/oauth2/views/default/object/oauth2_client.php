@@ -44,7 +44,7 @@ $owner_link = elgg_view('output/url', array(
 
         <ul class="elgg-menu elgg-menu-entity elgg-menu-hz elgg-menu-entity-default">
             <li class="elgg-menu-item-edit">
-                <a href="<?php echo elgg_get_site_url(); ?>oauth2/register/<?php echo $entity->guid; ?>" title="Edit Application">Edit</a>
+                <a href="<?php echo elgg_get_site_url(); ?>oauth2/edit/<?php echo $entity->guid; ?>" title="Edit Application">Edit</a>
             </li>
             <li class="elgg-menu-item-delete">
                 <?php echo elgg_view('output/confirmlink', array(

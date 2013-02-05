@@ -25,6 +25,10 @@ function oauth2_init() {
 
     // page handler
     elgg_register_page_handler('oauth2', 'oauth2_page_handler');
+    elgg_register_page_handler('developers', 'oauth2_page_handler');
+
+    $item = new ElggMenuItem('developers', elgg_echo('oauth2:developers'), 'developers');
+    elgg_register_menu_item('site', $item);
 
     // Register actions
     elgg_register_action('oauth2/register', $base . '/actions/register.php');
@@ -79,11 +83,13 @@ function oauth2_page_handler($page) {
             break;
 
         case 'add':
+        case 'edit':
         case 'register':
             require $pages . "/register.php";
             break;
 
         case 'applications':
+        default:
             require $pages . "/applications.php";
             break;
 
