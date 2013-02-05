@@ -93,4 +93,44 @@ function minds_connect_link($username, $password, $access_token, $refresh_token,
     return $user->guid;
 }
 
+/*
+ * Auto register a user from minds.com and send them
+ * their password.
+ *
+ */
+function minds_connect_register($name, $email, $username, $password=null, $access_token, $refresh_token, $expires) {
+
+    /* Register and link accounts */
+
+    if (!$password) {
+        $password  = generate_random_cleartext_password();
+    }
+
+    try {
+        $guid = register_user($username, $password, $name, $email, false);
+    } catch (RegistrationException $r) {
+        register_error($r->getMessage());
+        forward(REFERER);
+    }
+
+    $new_user = get_user($guid);
+
+    // Validate the user
+    create_metadata($guid, 'validated', TRUE, '', 0, ACCESS_PUBLIC);
+
+    $subject = elgg_echo('useradd:subject');
+    $body = elgg_echo('useradd:body', array(
+        $name,
+        elgg_get_site_entity()->name,
+        elgg_get_site_entity()->url,
+        $username,
+        $password,
+    ));
+
+    notify_user($new_user->guid, elgg_get_site_entity()->guid, $subject, $body);
+
+    $status = minds_connect_link($username, $password, $access_token, $refresh_token, $expires);
+
+    return $guid;
+}
 

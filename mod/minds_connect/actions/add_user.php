@@ -37,14 +37,7 @@ if ($type == 'link') {
         forward(REFERER);
     }
 
-    try {
-        $guid = register_user($username, $password, $name, $email, false);
-    } catch (RegistrationException $r) {
-        register_error($r->getMessage());
-        forward(REFERER);
-    }
-
-    $status = minds_connect_link($username, $password, $access_token, $refresh_token, $expires);
+    $status = minds_connect_register($name, $email, $username, $password, $access_token, $refresh_token, $expires);
 }
 
 if (!$status) {

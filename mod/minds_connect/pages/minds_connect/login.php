@@ -62,10 +62,24 @@ $response = $curl->request($endpoint, $query, 'POST');
 
 $response = json_decode($response['response'], true);
 
+/*
+ * The refresh token was possibly expired on the server side. 
+ * Allow the user to re-authorize the app.
+ */
 if (!isset($response['access_token'])) {
-    register_error('Failed to retrieve an access token');
-    error_log(print_r($response, true));
-    forward();
+
+    if ($ssl_callback == 'yes') {
+        $parts    = parse_url(elgg_get_site_url());
+        $callback = 'https://' . $parts['host'] . '/minds_connect/authorized';
+    } else {
+        $callback = elgg_get_site_url() . 'minds_connect/authorized';
+    }
+
+    $callback = urlencode($callback);
+
+    $url = "{$minds_url}/oauth2/authorize?response_type=code&client_id={$client_id}&redirect_uri={$callback}";
+
+    forward($url);
 }
 
 
@@ -89,7 +103,6 @@ if (!$response['username']) {
     forward();
 }
 
-
 /* Log the user in */
 
 try {
@@ -98,7 +111,6 @@ try {
 
     // Store the updated tokens
     $user->mc_access_token  = $response['access_token'];
-    $user->mc_refresh_token = $response['refresh_token'];
     $user->mc_expires       = $response['expires'] + time();
 
     setcookie("MC", $response['access_token'], strtotime('+1 year'), "/");

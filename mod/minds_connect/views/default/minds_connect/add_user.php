@@ -1,18 +1,8 @@
 <?php
 
 $data = $vars['data'];
-$link = null;
-
-$results = get_user_by_email($data['email']);
-
-if (empty($results)) {
-    if ($user = get_user_by_username($data['username'])) {
-        $link = 'username';
-    }
-} else {
-    $user = $results[0];
-    $link = 'email';
-}
+$link = $vars['link'];
+$user = $vars['user'];
 
 $type = $link ? 'link' : 'register';
 
