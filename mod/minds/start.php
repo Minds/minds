@@ -343,16 +343,18 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		}
 	}
 	if(elgg_is_admin_logged_in()){
-		//feature button
-		$options = array(
-					'name' => 'feature',
-					'href' => "action/minds/feature?guid=$entity->guid",
-					'text' => $entity->featured ? elgg_echo('un-feature') : elgg_echo('feature'),
-					'title' => elgg_echo('feature'),
-					'is_action' => true,
-					'priority' => 2,
-				);
-		$return[] = ElggMenuItem::factory($options);	
+		if($entity instanceof ElggObject){
+			//feature button
+			$options = array(
+						'name' => 'feature',
+						'href' => "action/minds/feature?guid=$entity->guid",
+						'text' => $entity->featured ? elgg_echo('un-feature') : elgg_echo('feature'),
+						'title' => elgg_echo('feature'),
+						'is_action' => true,
+						'priority' => 2,
+					);
+			$return[] = ElggMenuItem::factory($options);
+		}	
 	}
 
 	return $return;
