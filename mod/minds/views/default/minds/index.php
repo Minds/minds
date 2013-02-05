@@ -25,6 +25,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 	</div>
   
    <?php 
+   	$subtypes = array('kaltura_video');
    	$options = array('types' => 'object', 'subtypes' => $subtypes, 'metadata_name_value_pairs'=> array('name' => 'featured','value'=>true ),'limit' => 12);
 	$entities = elgg_get_entities_from_metadata($options);
 	$vars['entities'] = $entities;
