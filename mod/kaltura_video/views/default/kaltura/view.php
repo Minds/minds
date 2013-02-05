@@ -127,8 +127,6 @@ if (!empty($tags)) {
 ?>
 </p>
 <div class="clearfloat"></div>
-<?php echo elgg_view('share/kaltura', array('widget' => htmlspecialchars($widget))); ?>
-<!-- descrition -->
 <div class="kalturaplayer left bigwidget"><?php echo $widget; ?></div><br/>
 <div class="text">
 <?php

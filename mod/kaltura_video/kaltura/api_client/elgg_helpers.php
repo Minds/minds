@@ -532,6 +532,8 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $monetized 
 		<span property="media:height" content="' . $height . '"></span> 
 		<span property="media:type" content="application/x-shockwave-flash"></span>' .
 	'</object>';
+	
+	$widget .= elgg_view('share/kaltura', array('widget' => htmlspecialchars($widget))); 
 
 	return $widget ;
 }
