@@ -21,12 +21,6 @@ if (isset($vars['class'])) {
 $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 
 ?>
-<div class="span3">
-		<?php
-			echo elgg_view('page/elements/sidebar', $vars);
-		?>
-</div>
-
 <div class="span9">
 		<?php
 			echo $nav;
@@ -41,5 +35,11 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 			if (isset($vars['content'])) {
 				echo $vars['content'];
 			}
+		?>
+</div>
+
+<div class="span3">
+		<?php
+			echo elgg_view('page/elements/sidebar', $vars);
 		?>
 </div>
