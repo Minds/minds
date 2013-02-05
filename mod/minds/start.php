@@ -85,6 +85,7 @@ function minds_init(){
 	elgg_register_plugin_hook_handler('register', 'user', 'minds_subscribe_default', 1);
 	
 	$actionspath = elgg_get_plugins_path() . "minds/actions";
+	elgg_register_action("minds/feature","$actionspath/minds/feature.php");
 	elgg_register_action("minds/river/delete", "$actionspath/river/delete.php");
 	elgg_register_action("minds/upload", "$actionspath/minds/upload.php");
 	elgg_register_action("minds/remind", "$actionspath/minds/remind.php");
@@ -340,6 +341,18 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 				$return[] = ElggMenuItem::factory($options);
 			
 		}
+	}
+	if(elgg_is_admin_logged_in()){
+		//feature button
+		$options = array(
+					'name' => 'feature',
+					'href' => "action/minds/feature?guid=$entity->guid",
+					'text' => $entity->featured ? elgg_echo('un-feature') : elgg_echo('feature'),
+					'title' => elgg_echo('feature'),
+					'is_action' => true,
+					'priority' => 2,
+				);
+		$return[] = ElggMenuItem::factory($options);	
 	}
 
 	return $return;
