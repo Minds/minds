@@ -512,7 +512,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $monetized 
 	
 	$widget .= '<script type="text/javascript" src="' . $kaltura_server . '/p/'.$partnerId.'/sp/'.$partnerId.'00/embedIframeJs/uiconf_id/'.$widgetUi.'/partner_id/' . $partnerId * 100 . '"></script>';
 	 
-	$showAds = 'customAd.path=' . ($monetized ? elgg_get_plugin_setting('adPluginID', 'kaltura_video'):'false');
+	//$showAds = 'customAd.path=' . ($monetized ? elgg_get_plugin_setting('adPluginID', 'kaltura_video'):'false');
 
 	$widget .= '<object id="kaltura_player_' . $widgetUi .'" name="kaltura_player_' . $widgetUi . '" type="application/x-shockwave-flash" 
 	 xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" 
