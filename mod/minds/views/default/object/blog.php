@@ -68,6 +68,8 @@ if ($full) {
 		'value' => $blog->description,
 		'class' => 'blog-post',
 	));
+	
+	$body .= elgg_view('minds/license', array('license'=>$blog->license));
 
 	$params = array(
 		'entity' => $blog,

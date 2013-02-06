@@ -369,6 +369,7 @@ function blog_prepare_form_vars($post = NULL, $revision = NULL) {
 		'container_guid' => NULL,
 		'guid' => NULL,
 		'draft_warning' => '',
+		'license' => '',
 	);
 
 	if ($post) {

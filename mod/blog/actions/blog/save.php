@@ -50,6 +50,7 @@ $values = array(
 	'excerpt' => '',
 	'tags' => '',
 	'container_guid' => (int)get_input('container_guid'),
+	'license' => ''
 );
 
 // fail if a required entity isn't set

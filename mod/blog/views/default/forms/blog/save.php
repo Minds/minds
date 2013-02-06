@@ -82,6 +82,9 @@ $status_input = elgg_view('input/dropdown', array(
 	)
 ));
 
+$license_label = elgg_echo('minds:license:label');
+$license_input = elgg_view('input/licenses', array('name'=>'license', 'value'=>$entity->license));
+
 $comments_label = elgg_echo('comments');
 $comments_input = elgg_view('input/dropdown', array(
 	'name' => 'comments_on',
@@ -136,6 +139,11 @@ $draft_warning
 </div>
 
 $categories_input
+
+<div>
+	<label for="blog_license">$license_label</label>
+	$license_input
+</div>
 
 <div>
 	<label for="blog_comments_on">$comments_label</label>
