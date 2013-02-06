@@ -472,10 +472,21 @@ li.elgg-menu-item-rss{
 .rich-content .readmore{
 	font-weight:bold;
 }
-.rich-content .rich-image{
+.rich-content .rich-image-container{
 	float:left;
 	margin:0 15px 10px 0;
 	width:250px;
+	height:125px;
+	display:block;
+	overflow:hidden;
+	position:relative;
+	border:1px solid #DDD;
+}
+.rich-content .rich-image{
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
 }
 .rich-content.sidebar h3{
 	font-size:14px;
@@ -485,7 +496,12 @@ li.elgg-menu-item-rss{
 	color:#4690D6;
 	text-decoration:none;
 }
+.rich-content.sidebar  .rich-image-container{
+	margin:0;
+	width:100px;
+	height:60px;
+}
 .rich-content.sidebar .rich-image{
 	margin:0;
-	width:75px;
+	width:100%;
 }
