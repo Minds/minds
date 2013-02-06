@@ -14,7 +14,7 @@ $(document).ready(function() {
 	
 	// Using custom configuration
 	$("#<?php echo $id;?>").carouFredSel({
-		items				: <?php echo count($entities);?>,
+		items				: 3,
 		direction			: "right",
 		swipe				: true,
 		infinite			: true,
