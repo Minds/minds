@@ -81,35 +81,6 @@ $(document).ready(function() {
 			
 			echo '</div>';
 			
-				echo '<div class="thumbnail-tile ">';
-				
-				echo '<div class="hover"> <div class="inner">';	
-					echo '<div class="title">' . elgg_view('output/url', array('href'=>$entity->getURL(), 'text' =>$title)) . '</div>';
-					echo '<div class="owner">' . elgg_echo('archive:owner_tag') . elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=> $owner->name)) . '</div>'; 
-					echo elgg_view_menu('thumbs', array('entity'=>$entity));
-				echo '</div></div>';
-				
-				echo elgg_view('output/url', array(
-						'text' => $icon,
-						'href' => $entity->getURL(),
-					));
-			
-			echo '</div>';
-				echo '<div class="thumbnail-tile ">';
-				
-				echo '<div class="hover"> <div class="inner">';	
-					echo '<div class="title">' . elgg_view('output/url', array('href'=>$entity->getURL(), 'text' =>$title)) . '</div>';
-					echo '<div class="owner">' . elgg_echo('archive:owner_tag') . elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=> $owner->name)) . '</div>'; 
-					echo elgg_view_menu('thumbs', array('entity'=>$entity));
-				echo '</div></div>';
-				
-				echo elgg_view('output/url', array(
-						'text' => $icon,
-						'href' => $entity->getURL(),
-					));
-			
-			echo '</div>';
-			
 		}
 	?>
 	</div>
