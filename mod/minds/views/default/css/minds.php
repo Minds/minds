@@ -505,3 +505,7 @@ li.elgg-menu-item-rss{
 	margin:0;
 	width:100%;
 }
+.rich-content.news .rich-image-container{
+	margin:0 15px 0 0;
+	width:225px;
+}
