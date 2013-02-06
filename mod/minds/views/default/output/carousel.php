@@ -30,8 +30,7 @@ $(document).ready(function() {
 		},
 		scroll : {
 			items			: 3,
-			easing			: "elastic",
-			duration		: 1000,							
+			duration		: <?php echo rand(1000, 1250);?>,							
 			pauseOnHover	: true
 		}					
 	});	
