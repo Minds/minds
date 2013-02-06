@@ -24,11 +24,11 @@
 		
 		$('.thumbnail-tile').hover(
 			function(){
-		   		$(this).children('.hover').fadeIn();
+		   		$(this).children('.hover').fadeIn('fast');
 			},
 			function(){
-		   		$(this).children('.hover').fadeOut();
-			}); 
+		   		$(this).children('.hover').fadeOut('fast');
+		}); 
 	 };
 	 
 	

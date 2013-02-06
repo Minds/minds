@@ -415,7 +415,8 @@ li.elgg-menu-item-rss{
 .thumbnail-tile .hover{
 	width:300px;
 	height:50px;
-	background:url(<?php echo elgg_get_site_url();?>mod/minds/graphics/transparent_white.png);
+	/*background:url(<?php echo elgg_get_site_url();?>mod/minds/graphics/transparent_white.png);*/
+	background-color:#EEE;
 	position:absolute;
 	margin:-50px 0;
 	display:none;
