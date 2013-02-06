@@ -14,8 +14,8 @@ $(document).ready(function() {
 	
 	// Using custom configuration
 	$("#<?php echo $id;?>").carouFredSel({
-		items				: 3,
-		direction			: "right",
+		items				: 3r,
+		direction			: "left",
 		swipe				: true,
 		infinite			: true,
 		circular			: true,
@@ -30,7 +30,8 @@ $(document).ready(function() {
 		},
 		scroll : {
 			items			: 3,
-			duration		: <?php echo rand(1000, 1250);?>,							
+			easing			: "elastic",
+			duration		: 1000,							
 			pauseOnHover	: true
 		}					
 	});	
