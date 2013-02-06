@@ -37,6 +37,9 @@ body{
 	color:#4690D6 !important;
 	padding:0 10px;
 }
+.index .elgg-main{
+	overflow: visible !important;
+}
 
 /* More Drop Down
  */
@@ -143,6 +146,14 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	font-family: 'Ubuntu Light', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
 	margin-top:10px;
 	float:left;
+}
+.minds_index > .featured_wall{
+	clear:both;
+	width:100%;
+}
+.minds_index > .featured_wall h3{
+	font-family: 'Ubuntu Bold', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
+	margin: 0 10px;
 }
 /******************
  ** CUSTOM RIVER **
@@ -407,10 +418,12 @@ li.elgg-menu-item-rss{
 	background:#EEE;
 	display:block;
 	float:left;
+	overflow:hidden;
+	position:relative;
 }
 .thumbnail-tile img{
 	width:100%;
-	height:100%;
+	
 }
 .thumbnail-tile .hover{
 	width:300px;
@@ -418,7 +431,7 @@ li.elgg-menu-item-rss{
 	/*background:url(<?php echo elgg_get_site_url();?>mod/minds/graphics/transparent_white.png);*/
 	background-color:#EEE;
 	position:absolute;
-	margin:-50px 0;
+	margin:135px 0;
 	display:none;
 }
 .thumbnail-tile > .hover > .inner{
@@ -509,4 +522,70 @@ li.elgg-menu-item-rss{
 .rich-content.news .rich-image-container{
 	margin:0 15px 0 0;
 	width:225px;
+}
+.rich-content.carousel .rich-image-container{
+	margin:0 15px 0 0;
+	width:100%;
+	height:100%;
+}
+
+/**
+ * Carousel
+ */
+#hz_carousel{
+	clear:both;
+	width:100%;
+	height:auto;
+	position:relative;
+}
+#hz_carousel a.prev, #hz_carousel a.next {
+	background: url(<?php echo elgg_get_site_url();?>mod/minds/vendors/carouFredSel/miscellaneous_sprite.png) no-repeat transparent;
+	width: 45px;
+	height: 50px;
+	display: block;
+	position: absolute;
+	top: 85px;
+}
+#hz_carousel a.prev {			
+	left: -50px;
+	background-position: 0 0; 
+}
+#hz_carousel a.prev:hover {		
+	background-position: 0 -50px; 
+}
+#hz_carousel a.prev.disabled {	
+	background-position: 0 -100px !important;  
+}
+#hz_carousel a.next {			
+	right: -50px;
+	background-position: -50px 0; 
+}
+#hz_carousel a.next:hover {		
+	background-position: -50px -50px; 
+}
+#hz_carousel a.next.disabled {	
+	background-position: -50px -100px !important;  
+}
+#hz_carousel a.prev.disabled, a.next.disabled {
+	cursor: default;
+}
+#hz_carousel a.prev span, #hz_carousel a.next span {
+	display: none;
+}
+#hz_carousel .pagination {
+	text-align: center;
+}
+#hz_carousel .pagination a {
+	background: url(<?php echo elgg_get_site_url();?>mod/minds/vendors/carouFredSel/miscellaneous_sprite.png) 0 -300px no-repeat transparent;
+	width: 15px;
+	height: 15px;
+	margin: 0 5px 0 0;
+	display: inline-block;
+}
+#hz_carousel .pagination a.selected {
+	background-position: -25px -300px;
+	cursor: default;
+}
+#hz_carousel .pagination a span {
+	display: none;
 }

@@ -6,7 +6,7 @@
  * @author Kramnorth (Mark Harding)
  *
  */
-$params = array('content'=> elgg_view('minds/index'));
+$params = array('content'=> elgg_view('minds/index'), 'class'=>'index');
 $body = elgg_view_layout('one_column', $params);
 
 elgg_unregister_menu_item('footer', 'report_this');

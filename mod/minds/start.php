@@ -48,6 +48,9 @@ function minds_init(){
 	//register textarea expander
 	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js');
 	
+	//register carousel js
+	elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js');
+	
 	elgg_unregister_js('jquery');
 	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
 	elgg_load_js('jquery');

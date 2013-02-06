@@ -465,7 +465,22 @@ function blog_url_forwarder($page) {
 	register_error(elgg_echo("changebookmark"));
 	forward($url);
 }
-
+/**
+ * Retrieve featured blogs
+ * 
+ */
+function blog_get_featured($limit=5){
+	$es = new elasticsearch();
+	$es->index = 'featured';
+	$data = $es->query('blog');
+	foreach($data['hits']['hits'] as $item){
+		$guids[] = $item['_id'];
+	}
+	if(count($guids) > 0){
+		return $featured_blogs = elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
+	}
+	return false;
+}
 /**
  * Adds a sidebar to each blog which show information such as posts by the owner, popular blogs etc
  * @param guid (int)
@@ -483,15 +498,8 @@ function blog_sidebar($guid){
 		$return .= elgg_view_module('featured', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs);
 	}
 	//show featured blogs
-	//@todo move this into a function
-	$es = new elasticsearch();
-	$es->index = 'featured';
-	$data = $es->query('blog');
-	foreach($data['hits']['hits'] as $item){
-		$guids[] = $item['_id'];
-	}
-	if(count($guids) > 0){
-		$featured_blogs = elgg_get_entities(array('guids'=>$guids, 'limit'=>5));
+	$featured_blogs = blog_get_featured(5);
+	if($featured_blogs){
 		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true));
 		$return .= elgg_view_module('featured', elgg_echo('blog:featured'), $featured_blogs);	
 	}
