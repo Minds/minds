@@ -20,7 +20,7 @@ $type = get_input("type",'all');
  * Minds Search. Local
  */
 $sort = 'name:asc';
-$call = elasticsearch_parse($query, $object_type, $sort, $limit, $offset);
+$call = elasticsearch_parse($query, $object_type, $sort, 5, $offset);
 $hits = $call['hits'];
 $items = $hits['hits'];
 
@@ -52,13 +52,14 @@ if (count($items) > 0) {
 	$results .= elgg_view('minds_search/services/services', array('data'=>$items));
 	$results .= elgg_view('navigation/pagination', array('count'=>$hits['total'], 'limit'=>$limit, 'offset'=>$offset));
 		
-	$params['layout'] = 'one_sidebar';
-	$params['content'] = $results;
 	$params['sidebar'] = elgg_view('minds_search/sidebar', array('data'=>$items,'stats'=>$call));
 	$params['class'] = 'minds-search';
 } else {
 	$params['content'] = 'sorry, no results';
 }
+
+$params['layout'] = 'one_sidebar';
+$params['content'] = $results;
 
 if (!$query) {
 	$params['layout'] = 'one_column';
