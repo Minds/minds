@@ -438,6 +438,18 @@ function minds_fetch_image($description) {
   return $image;
 }
 
+function minds_get_featured($type, $limit = 5){
+	$es = new elasticsearch();
+	$es->index = 'featured';
+	$data = $es->query($type);
+	foreach($data['hits']['hits'] as $item){
+		$guids[] = $item['_id'];
+	}
+	if(count($guids) > 0){
+		return elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
+	}
+	return false;
+}
 
 elgg_register_event_handler('init','system','minds_init');		
 

@@ -41,6 +41,14 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 		echo '<h3>Blogs</h3>';
 		echo elgg_view('output/carousel', array('id'=>'blogs','entities'=>$blogs));
 		
+		/**
+		 * Images
+		 */
+		//elgg_load_library('elgg:blog');
+		$images = minds_get_featured('image',10);
+		echo '<h3>Images</h3>';
+		echo elgg_view('output/carousel', array('id'=>'images','entities'=>$images));
+		
 		?>
    </div>
 </div>
