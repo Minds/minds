@@ -19,7 +19,7 @@ $type = get_input("type",'all');
 /**
  * Minds Search. Local
  */
-$sort = 'name:asc';
+$sort = array('name:desc', 'title:desc');
 $call = elasticsearch_parse($query, $object_type, $sort, 5, $offset);
 $hits = $call['hits'];
 $items = $hits['hits'];
