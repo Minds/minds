@@ -176,7 +176,7 @@ function minds_pagesetup(){
 	
 		elgg_register_menu_item('topbar', array(
 			'name' => 'minds_logo',
-			'href' => '/archive/popular',
+			'href' => elgg_get_site_url(),
 			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds/graphics/minds_logo_transparent.png\' class=\'minds_logo\'>',
 			'priority' => 0
 		));
