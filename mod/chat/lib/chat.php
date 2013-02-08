@@ -224,7 +224,7 @@ function chat_prepare_form_vars($chat = NULL) {
 		'access_id' => ACCESS_LOGGED_IN,
 		'container_guid' => NULL,
 		'guid' => NULL,
-		'members' => NULL,
+		'members' => get_input('members', NULL),
 	);
 
 	if ($chat) {

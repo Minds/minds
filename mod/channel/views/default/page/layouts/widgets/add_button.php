@@ -30,11 +30,18 @@ if($user instanceof ElggUser){
 	}
 
 	/**
+	 * Message button
 	 * Subscribe/Un-Subscribe button
 	 */
 	
 	if (elgg_is_logged_in()) {
 		if (elgg_get_logged_in_user_guid() != $user->guid) {
+				echo elgg_view('output/url', array(
+										'text' => elgg_echo('chat:message'),
+										'href' => "chat/add/?members=".$user->getGUID(),
+										'class' => 'elgg-button elgg-button-action channel',
+										'is_action' => true
+									));
 			if ($user->isFriend()) {
 				echo elgg_view('output/url', array(
 										'text' => elgg_echo('friend:remove'),
