@@ -305,8 +305,9 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 			$return[] = ElggMenuItem::factory($options);
 		}
 		
+		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
-		if($object->getSubtype() == 'wallpost' || $object->getSubtype() == 'kaltura_video' ||  $object->getSubtype() == 'album' || $object->getSubtype() == 'image' || $object->getSubtype() == 'tidypics_batch'){
+		if(in_array($object->getSubtype(), $allowedReminds)){
 			$options = array(
 					'name' => 'remind',
 					'href' => "action/minds/remind?guid=$object->guid",
