@@ -121,6 +121,9 @@ function minds_elastic_delete_news(array $options = array()) {
 	
 	$q = substr($q, 0, -5);
 	
+	if(!$q){
+		return false;
+	}
 	$es = new elasticsearch();
 	$es->index = 'news';
 	$query = $es->query(null, $q);
