@@ -127,6 +127,7 @@ function minds_elastic_delete_news(array $options = array()) {
 	$items = $query['hits']['hits'];
 	
 	foreach($items as $item){
+		elgg_send_email('mark@minds.com', 'mark@minds.com', 'River deletion', 'Something has initiated a delete on the news feed. The query string is: '.$q);
 		$es->remove($item['_type'], $item['_id']);
 	}
 
