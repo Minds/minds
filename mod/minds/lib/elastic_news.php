@@ -192,6 +192,10 @@ function minds_elastic_get_news(array $options = array()) {
 			$bool['must']['terms']['subject_guid'] = $options['subject_guids'];
 			$bool['must']['terms']['minimum_match'] = 1;
 	}
+	if($options['object_guids']){
+			$bool['must']['terms']['object_guid'] = $options['object_guids'];
+			$bool['must']['terms']['minimum_match'] = 1;
+	}
 	
 	if($options['ids']){
 			$bool['must']['terms']['_id'] = $options['ids'];
