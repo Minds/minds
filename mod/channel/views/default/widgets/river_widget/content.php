@@ -19,7 +19,7 @@ if (elgg_in_context('dashboard')) {
 	$options['subject_guid'] = elgg_get_page_owner_guid();
 }
 
-$content = elgg_list_river($options);
+$content = minds_elastic_list_news($options);
 if (!$content) {
 	$content = elgg_echo('river:none');
 }
