@@ -18,6 +18,8 @@
 <?php // the width is on the page rather than topbar to handle small viewports ?>
 .elgg-page-default {
 	min-width: 998px;
+	height:auto;
+	min-height:100%;
 }
 .elgg-page-default .elgg-page-header > .elgg-inner {
 	width: 990px;
@@ -26,13 +28,13 @@
 }
 .elgg-page-default .elgg-page-body > .elgg-inner {
 	width: 990px;
-	margin: 50px auto;
+	margin: 0 auto;
+	padding-top:50px;
 }
 .elgg-page-default .elgg-page-footer > .elgg-inner {
 	width: 990px;
 	margin: 0 auto;
 	padding: 5px 0;
-	border-top: 1px solid #DEDEDE;
 }
 
 /***** TOPBAR ******/
@@ -75,6 +77,13 @@
 	position: relative;
 }
 
+/***** PAGE BODY ******/
+.elgg-page-body{
+	width:100%;
+	height:auto;
+	min-height:100%;
+}
+
 /***** PAGE BODY LAYOUT ******/
 .elgg-layout {
 	min-height: 360px;
@@ -115,11 +124,15 @@
 
 /***** PAGE FOOTER ******/
 .elgg-page-footer {
-	position: relative;
-}
-.elgg-page-footer {
 	color: #999;
 	font-size:11px;
+	background:#FFF;
+	position: relative;
+	height:80px;
+	width:100%;
+}
+.elgg-page-footer > .elgg-inner{
+	border-top:1px solid #DDD;
 }
 .elgg-page-footer a:hover {
 	color: #666;

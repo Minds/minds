@@ -68,7 +68,7 @@ if (!$activity) {
 	$activity = elgg_echo('river:none');
 }
 
-$content = elgg_view('core/river/filter', array('selector' => $selector));
+//$content = elgg_view('core/river/filter', array('selector' => $selector));
 
 $sidebar = elgg_view('core/river/sidebar');
 
@@ -82,4 +82,4 @@ $params = array(
 
 $body = elgg_view_layout('river', $params);
 
-echo elgg_view_page($title, $body);
+echo elgg_view_page($title, $body, 'default', array('class'=>'news'));

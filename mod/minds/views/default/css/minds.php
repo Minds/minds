@@ -11,6 +11,10 @@ body{
 	background:#FEFEFE;
  }
 
+.elgg-page.news .elgg-page-body{
+	background:#D2D9DF;
+}
+
 /***************
  *** TOP BAR ***
  **************/
@@ -231,11 +235,12 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	text-align:center;
 	margin-bottom:20px;
 	padding: 0;
-	padding:3px;
 	text-align:center;
 }
 #river_avatar img{
 	width: 200px;
+	-webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
 }
 #lastloggedin {
 	color:#777777;

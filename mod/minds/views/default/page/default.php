@@ -21,6 +21,8 @@ if (elgg_get_context() == 'admin') {
 	return true;
 }
 
+$class = $vars['class'];
+
 // render content before head so that JavaScript and CSS can be loaded. See #4032
 $topbar = elgg_view('page/elements/topbar', $vars);
 $messages = elgg_view('page/elements/messages', array('object' => $vars['sysmessages']));
@@ -38,7 +40,7 @@ header("Content-type: text/html; charset=UTF-8");
 <?php echo elgg_view('page/elements/head', $vars); ?>
 </head>
 <body>
-<div class="elgg-page elgg-page-default">
+<div class="elgg-page elgg-page-default <?php echo $class;?>">
 	<div class="elgg-page-messages">
 		<?php echo $messages; ?>
 	</div>
