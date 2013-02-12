@@ -7,7 +7,7 @@ $num = (int) $vars['entity']->num_display;
 
 $options = array(
 	'limit' => $num,
-	'pagination' => false,
+	'pagination' => true,
 );
 
 if (elgg_in_context('dashboard')) {
@@ -19,7 +19,14 @@ if (elgg_in_context('dashboard')) {
 	$options['subject_guid'] = elgg_get_page_owner_guid();
 }
 
-$content = minds_elastic_list_news($options);
+elgg_load_js('elgg.wall');
+			
+$wall_input = elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
+
+$content = elgg_view_module('wall', null, $wall_input);
+
+$content .= minds_elastic_list_news($options);
+
 if (!$content) {
 	$content = elgg_echo('river:none');
 }

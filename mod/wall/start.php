@@ -13,7 +13,7 @@ function wall_init() {
 	
 	elgg_extend_view('css/elgg', 'wall/css');
 	
-	elgg_register_widget_type('wall', elgg_echo('wall:title'), elgg_echo('wall:info'));
+	//elgg_register_widget_type('wall', elgg_echo('wall:title'), elgg_echo('wall:info'));
 	
 	elgg_register_page_handler('wall', 'wall_page_handler');
 	
