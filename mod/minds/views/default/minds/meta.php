@@ -30,9 +30,9 @@ if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_ge
 	if($owner->background || $owner->text_colour || $owner->link_colour){
 	echo <<<BODY
 	
-	body{
+	.elgg-page-body{
 			
-			background-image:url({$siteURL}mod/channel/background.php?guid=$owner->guid&t=$owner->background_timestamp);
+			background-image:url({$siteURL}mod/channel/background.php?guid=$owner->guid&t=$owner->background_timestamp) !important;
 			
 			background-repeat:$owner->background_repeat;
 			
