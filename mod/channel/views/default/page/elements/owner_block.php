@@ -7,7 +7,9 @@
  * @subpackage Core
  *
  */
-
+if(elgg_get_context()=='news'){
+	return true;
+}
 elgg_push_context('owner_block');
 
 // groups and other users get owner block
