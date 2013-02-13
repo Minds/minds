@@ -120,7 +120,7 @@ function minds_connect_refresh_token($user=null) {
     return $response;
 }
 
-function minds_connect_link($username, $password, $access_token, $refresh_token, $expires) {
+function minds_connect_link($username, $password, $access_token, $refresh_token, $expires, $minds_guid) {
 
     if (empty($username) || empty($password)) {
         register_error(elgg_echo('login:empty'));
@@ -160,6 +160,7 @@ function minds_connect_link($username, $password, $access_token, $refresh_token,
     $user->mc_access_token  = $access_token;
     $user->mc_refresh_token = $refresh_token;
     $user->mc_expires       = $expires;
+    $user->mc_guid          = $minds_guid;
 
     setcookie("MC", $access_token, strtotime('+1 year'), "/");
 
@@ -171,7 +172,7 @@ function minds_connect_link($username, $password, $access_token, $refresh_token,
  * their password.
  *
  */
-function minds_connect_register($name, $email, $username, $password=null, $access_token, $refresh_token, $expires) {
+function minds_connect_register($name, $email, $username, $password=null, $access_token, $refresh_token, $expires, $minds_guid) {
 
     /* Register and link accounts */
 
@@ -202,7 +203,7 @@ function minds_connect_register($name, $email, $username, $password=null, $acces
 
     notify_user($new_user->guid, elgg_get_site_entity()->guid, $subject, $body);
 
-    $status = minds_connect_link($username, $password, $access_token, $refresh_token, $expires);
+    $status = minds_connect_link($username, $password, $access_token, $refresh_token, $expires, $minds_guid);
 
     return $guid;
 }

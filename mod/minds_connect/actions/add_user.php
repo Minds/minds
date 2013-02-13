@@ -4,6 +4,7 @@
 $access_token  = $_SESSION['minds_connect']['access_token'];
 $refresh_token = $_SESSION['minds_connect']['refresh_token'];
 $expires       = $_SESSION['minds_connect']['expires'];
+$minds_guid    = $_SESSION['minds_connect']['guid'];
 $type          = get_input('type');
 $status        = null;
 
@@ -15,7 +16,7 @@ if ($type == 'link') {
     $username = get_input('username');
     $password = get_input('password');
 
-    $status = minds_connect_link($username, $password, $access_token, $refresh_token, $expires);
+    $status = minds_connect_link($username, $password, $access_token, $refresh_token, $expires, $minds_guid);
 
 } else if ($type == 'register') {
 
@@ -37,7 +38,7 @@ if ($type == 'link') {
         forward(REFERER);
     }
 
-    $status = minds_connect_register($name, $email, $username, $password, $access_token, $refresh_token, $expires);
+    $status = minds_connect_register($name, $email, $username, $password, $access_token, $refresh_token, $expires, $minds_guid);
 }
 
 if (!$status) {

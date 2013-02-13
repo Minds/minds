@@ -66,11 +66,44 @@ if (!$response['username']) {
     forward();
 }
  
+// Check to see if the users are already linked
+$user = elgg_get_entities_from_metadata(array(
+    'type' => 'user',
+    'limit' => 1,
+    'metadata_name_value_pairs' => array(
+        'name'    => 'mc_guid',
+        'value'   => $response['guid'],
+        'operand' => '='
+    ),
+));
+ 
+if ($user[0]) {
+
+    $user = $user[0];
+
+    // Log the user in
+    try {
+        login($user);
+        // re-register at least the core language file for users with language other than site default
+        register_translations(dirname(dirname(__FILE__)) . "/languages/");
+    } catch (LoginException $e) {
+        register_error($e->getMessage());
+        return null;
+    }
+
+    // Add the oauth 2 metadata
+    $user->mc_access_token  = $response['access_token'];
+    $user->mc_refresh_token = $response['refresh_token'];
+    $user->mc_expires       = $response['expires'];
+
+    setcookie("MC", $response['access_token'], strtotime('+1 year'), "/");
+
+    forward();
+}
 
 
 // Check to see if the minds user exists on this site already
-$link = null;
-
+$link    = null;
 $results = get_user_by_email($response['email']);
 
 if (empty($results)) {
@@ -96,6 +129,7 @@ if ($link) {
     $_SESSION['minds_connect']['access_token']  = $response['access_token'];
     $_SESSION['minds_connect']['refresh_token'] = $response['refresh_token'];
     $_SESSION['minds_connect']['expires']       = time() + $response['expires'];
+    $_SESSION['minds_connect']['guid']          = $response['guid'];
 
     // Add or link the user
     $content = elgg_view('minds_connect/add_user', array('data' => $response, 'link' => $link, 'user' => $user));
@@ -120,8 +154,9 @@ if ($link) {
     $access_token  = $response['access_token'];
     $refresh_token = $response['refresh_token'];
     $expires       = time() + $response['expires'];
+    $minds_guid    = time() + $response['guid'];
 
-    $guid = minds_connect_register($name, $email, $username, null, $access_token, $refresh_token, $expires);
+    $guid = minds_connect_register($name, $email, $username, null, $access_token, $refresh_token, $expires, $minds_guid);
 
     forward();
 }

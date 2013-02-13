@@ -39,6 +39,7 @@ if (!elgg_get_logged_in_user_guid()) {
     forward('/login');
 }
 
+// Get the client record
 $options = array(
     'type'    => 'object',
     'subtype' => 'oauth2_client',
@@ -50,30 +51,54 @@ $options = array(
     'limit' => 1,
 );
 
-$results = elgg_get_entities_from_metadata($options);
+$client = elgg_get_entities_from_metadata($options);
+
+if (empty($client)) {
+    forward(REFERER);
+}
+
+// At this point check to see if the user has already authorized
+// this app.
+
+$options = array(
+    'type'    => 'object',
+    'subtype' => 'oauth2_refresh_token',
+    'owner_guid' => elgg_get_logged_in_user_guid(),
+    'container_guid' => $client[0]->guid,
+    'limit' => 1,
+);
+
+$token = elgg_get_entities($options);
+
+// If already authorized return the user with an access token.
+if (!empty($token)) {
+    $server->addGrantType(new OAuth2_GrantType_AuthorizationCode($storage));
+    $server->handleAuthorizeRequest(OAuth2_Request::createFromGlobals(), true, elgg_get_logged_in_user_guid())->send();
+    exit;
+}
 
 elgg_set_ignore_access($access);
 
-if (empty($results)) {
-    forward(REFERER);
-}
+
+// Show the autorization pae if the user has not already 
+// authorized this app. 
     
 $content = elgg_view('oauth2/authorize', array(
-    'entity'        => $results[0],
+    'entity'        => $client[0],
     'client_id'     => $client_id,
     'response_type' => $response_type,
     'redirect_uri'  => $redirect_uri
 ));
 
 $params = array(
-    'title'   => $results[0]->title, 
+    'title'   => $client[0]->title, 
     'content' => $content,
     'filter'  => ''
 );
 
 $body = elgg_view_layout('content', $params);
 
-echo elgg_view_page($results[0]->title, $body);
+echo elgg_view_page($client[0]->title, $body);
 
 
 
