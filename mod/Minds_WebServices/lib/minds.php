@@ -31,7 +31,7 @@ function minds_service_remind($url, $title, $description, $username) {
 	$remind = new ElggObject();
 	$remind->subtype = 'remind';
 	$remind->owner_guid = elgg_get_logged_in_user_guid();
-	$remind->access_id = ACCESS_DEFAULT;
+	$remind->access_id = get_default_access();
 	$remind->method = 'API';
 	//$remind->site = $site; @MH - is there are way to grab the site the user is on??
 	$remind->title = $title;

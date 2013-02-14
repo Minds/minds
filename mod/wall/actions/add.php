@@ -10,7 +10,7 @@ $body = get_input('body', '', false);
 $method = 'site';
 $to_guid = get_input('to_guid');
 $from_guid = elgg_get_logged_in_user_guid();
-$access_id = 1; //hard coded as we seem to be getting errors with ACCESS_DEFAULT
+$access_id = get_default_access(); //hard coded as we seem to be getting errors with ACCESS_DEFAULT
 $message = get_input('body');
 $ref = get_input('ref', 'wall');
 
