@@ -66,6 +66,8 @@ function minds_social_page_handler($page)
 				break;
 			case 'login':
 				minds_social_facebook_login();
+			case 'remove':
+				minds_social_facebook_remove();
 			default:
 				forward();
 				break;

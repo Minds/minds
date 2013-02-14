@@ -184,3 +184,10 @@ function minds_social_facebook_login(){
 	}
 }
 
+function minds_social_facebook_remove(){
+	$user = elgg_get_logged_in_user_entity();
+	elgg_unset_plugin_user_setting('minds_social_facebook_uid', $user->getGUID());
+	elgg_unset_plugin_user_setting('minds_social_facebook_access_token', $user->getGUID());
+	forward('settings/plugins');
+	return true;
+}
