@@ -44,16 +44,17 @@
 	 minds_set_metatags('og:video:height', '720');
 	minds_set_metatags('og:other', $video_location);
 	// Display it
-		$area2 = elgg_view("kaltura/view");
+		$content = elgg_view("kaltura/view");
 	// Set the title appropriately
-		$title = sprintf(elgg_echo("kalturavideo:posttitle"),$page_owner->name,$videopost->title);
-		$area1 = $videopost->title;
+		$title = $videopost->title;
+		
+		$sidebar = elgg_view('kaltura/sidebar', array('guid'=>$post));
 
 	// Display through the correct canvas area
 		$body = elgg_view_layout("content", array(	'filter'=> '', 
-													'title' => $area1,
-													'content'=> $area2,
-													'sidebar' => $area3 
+													'title' => $title,
+													'content'=> $content,
+													'sidebar' => $sidebar 
 												));
 
 	// If we're not allowed to see the blog post

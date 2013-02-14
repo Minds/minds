@@ -304,6 +304,7 @@ Custom players are defined in "Application Studio" sub menu in KMC',
 	'archive:featured:title' => 'Featured',
 	'archive:featured:action' => 'Feature',
 	'archive:featured:un-action' => 'Un-feature',
+	'archive:morefromuser:title' => 'More from %s',
 	
 	'archive:monetized:action' => 'Monetize',
 	'archive:monetized:un-action' => 'Un-monetize',
