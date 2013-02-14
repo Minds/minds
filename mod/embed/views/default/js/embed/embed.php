@@ -38,7 +38,7 @@ elgg.embed.insert = function(event) {
 
 	// this is a temporary work-around for #3971
 	if (content.indexOf('thumbnail.php') != -1) {
-		content = content.replace('size=small', 'size=medium');
+		content = content.replace('size=small', 'size=large');
 	}
 
 	textArea.val(textArea.val() + content);
