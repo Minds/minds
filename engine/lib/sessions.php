@@ -293,27 +293,28 @@ function login(ElggUser $user, $persistent = false) {
 		throw new LoginException(elgg_echo('LoginException:BannedUser'));
 	}
 
-	$_SESSION['user'] = $user;
-	$_SESSION['guid'] = $user->getGUID();
-	$_SESSION['id'] = $_SESSION['guid'];
-	$_SESSION['username'] = $user->username;
-	$_SESSION['name'] = $user->name;
+	global $SESSION;
+	$SESSION['user'] = $user;
+	$SESSION['guid'] = $user->getGUID();
+	$SESSION['id'] = $SESSION['guid'];
+	$SESSION['username'] = $user->username;
+	$SESSION['name'] = $user->name;
 
 	// if remember me checked, set cookie with token and store token on user
 	if (($persistent)) {
 		$code = (md5($user->name . $user->username . time() . rand()));
-		$_SESSION['code'] = $code;
+		$SESSION['code'] = $code;
 		$user->code = md5($code);
 		setcookie("elggperm", $code, (time() + (86400 * 30)), "/");
 	}
 
 	if (!$user->save() || !elgg_trigger_event('login', 'user', $user)) {
-		unset($_SESSION['username']);
-		unset($_SESSION['name']);
-		unset($_SESSION['code']);
-		unset($_SESSION['guid']);
-		unset($_SESSION['id']);
-		unset($_SESSION['user']);
+		unset($SESSION['username']);
+		unset($SESSION['name']);
+		unset($SESSION['code']);
+		unset($SESSION['guid']);
+		unset($SESSION['id']);
+		unset($SESSION['user']);
 		setcookie("elggperm", "", (time() - (86400 * 30)), "/");
 		throw new LoginException(elgg_echo('LoginException:Unknown'));
 	}
@@ -322,7 +323,7 @@ function login(ElggUser $user, $persistent = false) {
 	session_regenerate_id();
 
 	// Update statistics
-	set_last_login($_SESSION['guid']);
+	set_last_login($SESSION['guid']);
 	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
 
 	return true;
@@ -336,31 +337,32 @@ function login(ElggUser $user, $persistent = false) {
 function logout() {
 	global $CONFIG;
 
-	if (isset($_SESSION['user'])) {
-		if (!elgg_trigger_event('logout', 'user', $_SESSION['user'])) {
+	global $SESSION;
+	if (isset($SESSION['user'])) {
+		if (!elgg_trigger_event('logout', 'user', $SESSION['user'])) {
 			return false;
 		}
-		$_SESSION['user']->code = "";
-		$_SESSION['user']->save();
+		$SESSION['user']->code = "";
+		$SESSION['user']->save();
 	}
 
-	unset($_SESSION['username']);
-	unset($_SESSION['name']);
-	unset($_SESSION['code']);
-	unset($_SESSION['guid']);
-	unset($_SESSION['id']);
-	unset($_SESSION['user']);
+	unset($SESSION['username']);
+	unset($SESSION['name']);
+	unset($SESSION['code']);
+	unset($SESSION['guid']);
+	unset($SESSION['id']);
+	unset($SESSION['user']);
 
 	setcookie("elggperm", "", (time() - (86400 * 30)), "/");
 
 	// pass along any messages
-	$old_msg = $_SESSION['msg'];
+	$old_msg = $SESSION['msg'];
 
 	session_destroy();
 
 	// starting a default session to store any post-logout messages.
 	_elgg_session_boot(NULL, NULL, NULL);
-	$_SESSION['msg'] = $old_msg;
+	$SESSION['msg'] = $old_msg;
 
 	return TRUE;
 }
@@ -397,19 +399,20 @@ function _elgg_session_boot() {
 	session_name('Elgg');
 	session_start();
 
+	global $SESSION;
 	// Generate a simple token (private from potentially public session id)
-	if (!isset($_SESSION['__elgg_session'])) {
-		$_SESSION['__elgg_session'] = md5(microtime() . rand());
+	if (!isset($SESSION['__elgg_session'])) {
+		$SESSION['__elgg_session'] = md5(microtime() . rand());
 	}
 
 	// test whether we have a user session
-	if (empty($_SESSION['guid'])) {
+	if (empty($SESSION['guid'])) {
 
 		// clear session variables before checking cookie
-		unset($_SESSION['user']);
-		unset($_SESSION['id']);
-		unset($_SESSION['guid']);
-		unset($_SESSION['code']);
+		unset($SESSION['user']);
+		unset($SESSION['id']);
+		unset($SESSION['guid']);
+		unset($SESSION['code']);
 
 		// is there a remember me cookie
 		if (isset($_COOKIE['elggperm'])) {
@@ -418,30 +421,30 @@ function _elgg_session_boot() {
 			$code = md5($code);
 			if ($user = get_user_by_code($code)) {
 				// we have a user, log him in
-				$_SESSION['user'] = $user;
-				$_SESSION['id'] = $user->getGUID();
-				$_SESSION['guid'] = $_SESSION['id'];
-				$_SESSION['code'] = $_COOKIE['elggperm'];
+				$SESSION['user'] = $user;
+				$SESSION['id'] = $user->getGUID();
+				$SESSION['guid'] = $SESSION['id'];
+				$SESSION['code'] = $_COOKIE['elggperm'];
 			}
 		}
 	} else {
 		// we have a session and we have already checked the fingerprint
 		// reload the user object from database in case it has changed during the session
-		if ($user = get_user($_SESSION['guid'])) {
-			$_SESSION['user'] = $user;
-			$_SESSION['id'] = $user->getGUID();
-			$_SESSION['guid'] = $_SESSION['id'];
+		if ($user = get_user($SESSION['guid'])) {
+			$SESSION['user'] = $user;
+			$SESSION['id'] = $user->getGUID();
+			$SESSION['guid'] = $SESSION['id'];
 		} else {
 			// user must have been deleted with a session active
-			unset($_SESSION['user']);
-			unset($_SESSION['id']);
-			unset($_SESSION['guid']);
-			unset($_SESSION['code']);
+			unset($SESSION['user']);
+			unset($SESSION['id']);
+			unset($SESSION['guid']);
+			unset($SESSION['code']);
 		}
 	}
 
-	if (isset($_SESSION['guid'])) {
-		set_last_action($_SESSION['guid']);
+	if (isset($SESSION['guid'])) {
+		set_last_action($SESSION['guid']);
 	}
 
 	elgg_register_action('login', '', 'public');
@@ -455,7 +458,7 @@ function _elgg_session_boot() {
 	$SESSION = new ElggSession();
 
 	// Finally we ensure that a user who has been banned with an open session is kicked.
-	if ((isset($_SESSION['user'])) && ($_SESSION['user']->isBanned())) {
+	if ((isset($SESSION['user'])) && ($SESSION['user']->isBanned())) {
 		session_destroy();
 		return false;
 	}
@@ -470,7 +473,8 @@ function _elgg_session_boot() {
  */
 function gatekeeper() {
 	if (!elgg_is_logged_in()) {
-		$_SESSION['last_forward_from'] = current_page_url();
+		global $SESSION;
+		$SESSION['last_forward_from'] = current_page_url();
 		register_error(elgg_echo('loggedinrequired'));
 		forward('', 'login');
 	}
@@ -485,7 +489,8 @@ function admin_gatekeeper() {
 	gatekeeper();
 
 	if (!elgg_is_admin_logged_in()) {
-		$_SESSION['last_forward_from'] = current_page_url();
+		global $SESSION;
+		$SESSION['last_forward_from'] = current_page_url();
 		register_error(elgg_echo('adminrequired'));
 		forward('', 'admin');
 	}

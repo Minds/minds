@@ -267,7 +267,8 @@ function group_gatekeeper($forward = true) {
 				if (!elgg_is_logged_in()) {
 					$allowed = false;
 					if ($forward == true) {
-						$_SESSION['last_forward_from'] = current_page_url();
+						global $SESSION;
+						$SESSION['last_forward_from'] = current_page_url();
 						register_error(elgg_echo('loggedinrequired'));
 						forward('', 'login');
 					}

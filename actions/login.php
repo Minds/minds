@@ -7,9 +7,10 @@
  */
 
 // set forward url
-if (isset($_SESSION['last_forward_from']) && $_SESSION['last_forward_from']) {
-	$forward_url = $_SESSION['last_forward_from'];
-	unset($_SESSION['last_forward_from']);
+global $SESSION;
+if (isset($SESSION['last_forward_from']) && $SESSION['last_forward_from']) {
+	$forward_url = $SESSION['last_forward_from'];
+	unset($SESSION['last_forward_from']);
 } elseif (get_input('returntoreferer')) {
 	$forward_url = REFERER;
 } else {

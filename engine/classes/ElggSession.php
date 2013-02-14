@@ -19,101 +19,42 @@
  * @package    Elgg.Core
  * @subpackage Sessions
  */
-class ElggSession implements ArrayAccess {
-	/** Local cache of trigger retrieved variables */
-	private static $__localcache;
+class ElggSession extends ArrayObject {
 
 	/**
-	 * Test if property is set either as an attribute or metadata.
-	 *
-	 * @param string $key The name of the attribute or metadata.
-	 *
-	 * @return bool
+	 * We use reference to $_SESSION variable as storage. 
 	 */
-	function __isset($key) {
-		return $this->offsetExists($key);
+	public function __construct() {
+		if (!is_array($_SESSION)) {
+			$_SESSION = array();
+		}
+		parent::__construct(&$_SESSION);
 	}
-
+	
 	/**
-	 * Set a value, go straight to session.
-	 *
-	 * @param string $key   Name
-	 * @param mixed  $value Value
-	 *
-	 * @return void
+	 * Nests array parameters in ArrayObject instances to allow unset to work on multidimensional arrays
+	 * @see ArrayAccess::offsetSet()
 	 */
-	function offsetSet($key, $value) {
-		$_SESSION[$key] = $value;
-	}
-
-	/**
-	 * Get a variable from either the session, or if its not in the session
-	 * attempt to get it from an api call.
-	 *
-	 * @see ArrayAccess::offsetGet()
-	 *
-	 * @param mixed $key Name
-	 *
-	 * @return void
-	 */
-	function offsetGet($key) {
-		if (!ElggSession::$__localcache) {
-			ElggSession::$__localcache = array();
-		}
-
-		if (isset($_SESSION[$key])) {
-			return $_SESSION[$key];
-		}
-
-		if (isset(ElggSession::$__localcache[$key])) {
-			return ElggSession::$__localcache[$key];
-		}
-
-		$value = NULL;
-		$value = elgg_trigger_plugin_hook('session:get', $key, NULL, $value);
-
-		ElggSession::$__localcache[$key] = $value;
-
-		return ElggSession::$__localcache[$key];
-	}
-
-	/**
-	 * Unset a value from the cache and the session.
-	 *
-	 * @see ArrayAccess::offsetUnset()
-	 *
-	 * @param mixed $key Name
-	 *
-	 * @return void
-	 */
-	function offsetUnset($key) {
-		unset(ElggSession::$__localcache[$key]);
-		unset($_SESSION[$key]);
-	}
-
-	/**
-	 * Return whether the value is set in either the session or the cache.
-	 *
-	 * @see ArrayAccess::offsetExists()
-	 *
-	 * @param int $offset Offset
-	 *
-	 * @return int
-	 */
-	function offsetExists($offset) {
-		if (isset(ElggSession::$__localcache[$offset])) {
-			return true;
-		}
-
-		if (isset($_SESSION[$offset])) {
-			return true;
-		}
-
-		if ($this->offsetGet($offset)) {
-			return true;
+	public function offsetSet($index, $newval) {
+		if (is_array($newval) && !($newval instanceof ArrayObject)) {
+			unset($this[$index]);
+			$val = new ArrayObject(&$newval);
+			parent::offsetSet($index, $val);
+		} else {
+			parent::offsetSet($index, $newval);
 		}
 	}
-
+	
+// 	/**
+// 	 * Test if property is set either as an attribute or metadata.
+// 	 *
+// 	 * @param string $key The name of the attribute or metadata.
+// 	 *
+// 	 * @return bool
+// 	 */
+// 	function __isset($key) {
+// 		return $this->offsetExists($key);
+// 	}
 
 	/**
 	 * Alias to ::offsetGet()

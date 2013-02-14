@@ -656,7 +656,7 @@ function elgg_view_page($title, $body, $page_shell = 'default', $vars = array())
 
 	$vars['title'] = $title;
 	$vars['body'] = $body;
-	$vars['sysmessages'] = $messages;
+	$vars['sysmessages'] = (array)$messages;
 
 	$vars = elgg_trigger_plugin_hook('output:before', 'page', null, $vars);
 	
