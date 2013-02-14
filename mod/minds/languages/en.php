@@ -131,6 +131,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	'river:remind:object:wall' => '%s reMinded %s\'s thought',
 	'river:remind:object:kaltura' => '%s reMinded %s\'s media: %s',
 	'river:remind:object:blog' => '%s reMinded %s\'s blog: %s',
+	'river:remind:api' => '%s reMinded %s',
 	
 	/* Quota 
 	 */
