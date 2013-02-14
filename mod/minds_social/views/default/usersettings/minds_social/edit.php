@@ -14,6 +14,7 @@ $facebook_id = elgg_get_plugin_user_setting('minds_social_facebook_uid', $user_i
 $access_token = elgg_get_plugin_user_setting('minds_social_facebook_access_token', $user_id, 'minds_social');
 
 $return_url = elgg_get_site_url() . 'social/fb/auth';
+$remove_url = elgg_get_site_url() . 'social/fb/remove';
 $login_url = $facebook->getLoginUrl(array(
 				'redirect_uri' => $return_url,
 				'canvas' => 1,
@@ -25,7 +26,7 @@ $login_url = $facebook->getLoginUrl(array(
 echo "<h3> Facebook </h3>";
 if(!empty($user) && $facebook_id == $user){
 	
-	echo '<div><a href="' . $login_url . '">Remove facebook link</a></div>';
+	echo '<div><a href="' . $remove_url . '">Remove facebook link</a></div>';
 
 
 } else {
