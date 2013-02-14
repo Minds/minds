@@ -50,7 +50,22 @@ $login = <<<__HTML
 </div>
 __HTML;
 
-echo $login;
+$remove_url = elgg_get_site_url() . 'social/twitter/remove';
+
+$remove = <<<__HTML
+<div id="login_with_twitter">
+	<a href="$remove_url">
+		Remove twitter link
+	</a>
+</div>
+__HTML;
+
+$connected = elgg_get_plugin_user_setting('minds_social_twitter_access_key', 'minds_social');
+
+if(!$connect)
+	echo $login;
+else 
+	echo $remove;
 
 
 echo "<br/>";

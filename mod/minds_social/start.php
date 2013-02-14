@@ -81,6 +81,9 @@ function minds_social_page_handler($page)
 			case 'login':
 				minds_social_twitter_login();
 				break;
+			case 'remove':
+				minds_social_twitter_remove();
+				break;
 			default:
 				forward();
 				break;

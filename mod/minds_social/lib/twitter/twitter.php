@@ -228,3 +228,17 @@ function minds_social_twitter_access_token($oauth_verifier = FALSE) {
 	$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $oauth_token, $oauth_token_secret);
 	return $api->getAccessToken($oauth_verifier);
 }
+
+/**
+ * Removes a link for the user
+ *
+ *
+ */
+function minds_social_twitter_remove() {
+	$user = elgg_get_logged_in_user_entity();
+	elgg_unset_plugin_user_setting('twitter_name', $user->getGUID());
+	elgg_unset_plugin_user_setting('minds_social_twitter_access_key', $user->getGUID());
+	elgg_unset_plugin_user_setting('minds_social_twitter_access_secret', $user->getGUID());
+	forward('settings/plugins');
+	return true;
+}
