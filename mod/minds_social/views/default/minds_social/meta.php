@@ -6,7 +6,7 @@
 	$og_url = get_input('og:url');
 	$og_title = get_input('og:title');
 	$og_description = get_input('og:description');
-	$og_image = get_input('og:image');
+	$og_image = htmlspecialchars_decode(get_input('og:image'));
 	$og_video = get_input('og:video');
 	$og_video_secure = get_input('og:video:secure_url');
 	$og_video_type = get_input('og:video:type');

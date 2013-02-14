@@ -206,7 +206,7 @@ function minds_get_fbimage($description) {
   if(empty($fbimage)) {
     $fbimage = elgg_get_site_url() . 'mod/minds/graphics/minds_logo.png';
   }
-  return htmlspecialchars_decode(urldecode($fbimage));
+  return $fbimage;
 }
 
 elgg_register_event_handler('init','system','minds_social_init');		
