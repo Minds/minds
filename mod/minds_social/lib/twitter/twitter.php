@@ -33,6 +33,10 @@ function minds_social_twitter_login() {
 	}
 
 	$user = elgg_get_logged_in_user_entity();
+	if($user){
+		minds_social_twitter_auth();
+		return true;
+	}
 	
 	// attempt to find user and log them in.
 	// else, create a new user.
