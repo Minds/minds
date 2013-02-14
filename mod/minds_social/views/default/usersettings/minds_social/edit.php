@@ -62,7 +62,7 @@ __HTML;
 
 $connected = elgg_get_plugin_user_setting('minds_social_twitter_access_key', 'minds_social');
 
-if(!$connect)
+if(!$connected)
 	echo $login;
 else 
 	echo $remove;
