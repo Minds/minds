@@ -64,7 +64,7 @@ function phpmailer_notify_handler(ElggEntity $from, ElggUser $to, $subject, $mes
 function phpmailer_mail_override($hook, $entity_type, $returnvalue, $params) {
 	return phpmailer_send(
 			$params["from"],
-			$params["from"],
+			elgg_get_site_entity()->name,
 			$params["to"],
 			'',
 			$params["subject"],
