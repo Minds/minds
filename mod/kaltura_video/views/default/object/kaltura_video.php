@@ -15,8 +15,8 @@ $access_id = $vars['entity']->access_id;
 
 $ob = $vars['entity'];
 
-$kmodel = KalturaModel::getInstance();
-$mediaEntry = $kmodel->getEntry($ob->kaltura_video_id);
+//$kmodel = KalturaModel::getInstance();
+//$mediaEntry = $kmodel->getEntry($ob->kaltura_video_id);
 
 //get the number of comments
 $num_comments = $vars['entity']->countComments();
