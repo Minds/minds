@@ -60,7 +60,7 @@ $remove = <<<__HTML
 </div>
 __HTML;
 
-$connected = elgg_get_plugin_user_setting('minds_social_twitter_access_key', 'minds_social');
+$connected = elgg_get_plugin_user_setting('minds_social_twitter_access_key',$user_id, 'minds_social');
 
 if(!$connected)
 	echo $login;
