@@ -8,7 +8,16 @@
  */
 
 function minds_init(){
-											
+// 	$i = 10000;
+// 	$mt = microtime(true);
+// 	while($i-->0) {
+// 		$sql = 'SHOW MASTER STATUS';
+// 		global $DB_QUERY_CACHE;
+// 		$DB_QUERY_CACHE = array();
+// 		$data = get_data($sql);
+// 	}
+// 	var_dump(microtime(true) - $mt, $data);
+	
 	elgg_register_simplecache_view('minds');	
 	
 	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
@@ -40,6 +49,11 @@ function minds_init(){
 	$minds_js = elgg_get_simplecache_url('js', 'minds');
 	elgg_register_js('minds.js', $minds_js);
 	
+	//plugin for cookie manipulation via JS
+	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js');
+	if (!elgg_is_logged_in()) {
+		elgg_load_js('jquery-cookie');
+	}
 	
 	//register inline js player
 	$uiVideoInline = elgg_get_simplecache_url('js', 'uiVideoInline');
@@ -79,6 +93,10 @@ function minds_init(){
 	
 	//setup the licenses pages
 	elgg_register_page_handler('licenses', 'minds_license_page_handler');
+	
+	//add cache headers to pages for logged out users
+	elgg_register_plugin_hook_handler('route', 'all', 'minds_route_page_handler_cache', 100);
+	elgg_register_plugin_hook_handler('index', 'system', 'minds_route_page_handler_cache', 100);
 	
 	//setup the tracking of user quota - on a file upload, increment, on delete, decrement
 	elgg_register_event_handler('create', 'object', 'minds_quota_increment');
@@ -147,6 +165,15 @@ function minds_register_page_handler($page) {
 	$base_dir = elgg_get_plugins_path().'minds/pages/account';
 	require_once("$base_dir/register.php");
 	return true;
+}
+
+function minds_route_page_handler_cache() {
+	if (!elgg_is_logged_in()) {
+// 		header('Expires: ' . date('r', time() + 300), true);//cache for 5min
+// 		header("Pragma: public", true);
+// 		header("Cache-Control: public", true);
+		header("X-No-Client-Cache: 1", true);
+	}
 }
 
 function minds_register_hook()
@@ -440,14 +467,16 @@ function minds_fetch_image($description) {
 }
 
 function minds_get_featured($type, $limit = 5){
-	$es = new elasticsearch();
-	$es->index = 'featured';
-	$data = $es->query($type);
-	foreach($data['hits']['hits'] as $item){
-		$guids[] = $item['_id'];
-	}
-	if(count($guids) > 0){
-		return elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
+	if (class_exists(elasticsearch)) {
+		$es = new elasticsearch();
+		$es->index = 'featured';
+		$data = $es->query($type);
+		foreach($data['hits']['hits'] as $item){
+			$guids[] = $item['_id'];
+		}
+		if(count($guids) > 0){
+			return elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
+		}
 	}
 	return false;
 }

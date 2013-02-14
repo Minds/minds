@@ -33,9 +33,9 @@ class Facebook extends BaseFacebook
    * @see BaseFacebook::__construct in facebook.php
    */
   public function __construct($config) {
-    if (!session_id()) {
-      session_start();
-    }
+//     if (!session_id()) {
+//       session_start();
+//     }
     parent::__construct($config);
   }
 
@@ -55,7 +55,8 @@ class Facebook extends BaseFacebook
     }
 
     $session_var_name = $this->constructSessionVariableName($key);
-    $_SESSION[$session_var_name] = $value;
+    $value = base64_encode(serialize($value));
+    setcookie($session_var_name, $value, null, '/');
   }
 
   protected function getPersistentData($key, $default = false) {
@@ -65,8 +66,8 @@ class Facebook extends BaseFacebook
     }
 
     $session_var_name = $this->constructSessionVariableName($key);
-    return isset($_SESSION[$session_var_name]) ?
-      $_SESSION[$session_var_name] : $default;
+    return isset($_COOKIE[$session_var_name]) ?
+      unserialize(base64_decode($_COOKIE[$session_var_name])) : $default;
   }
 
   protected function clearPersistentData($key) {
@@ -76,7 +77,7 @@ class Facebook extends BaseFacebook
     }
 
     $session_var_name = $this->constructSessionVariableName($key);
-    unset($_SESSION[$session_var_name]);
+    setcookie($session_var_name, $value, time()-3600*24, '/');
   }
 
   protected function clearAllPersistentData() {
@@ -86,7 +87,7 @@ class Facebook extends BaseFacebook
   }
 
   protected function constructSessionVariableName($key) {
-    return implode('_', array('fb',
+    return '_'.implode('_', array('fb',
                               $this->getAppId(),
                               $key));
   }

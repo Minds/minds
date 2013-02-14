@@ -6,18 +6,6 @@
  * @subpackage User.Authentication
  */
 
-// set forward url
-global $SESSION;
-if (isset($SESSION['last_forward_from']) && $SESSION['last_forward_from']) {
-	$forward_url = $SESSION['last_forward_from'];
-	unset($SESSION['last_forward_from']);
-} elseif (get_input('returntoreferer')) {
-	$forward_url = REFERER;
-} else {
-	// forward to main index page
-	$forward_url =  elgg_get_viewtype() == 'mobile' ? 'news' : 'news';
-}
-
 $username = get_input('username');
 $password = get_input('password', null, false);
 $persistent = get_input("persistent", false);
@@ -53,6 +41,19 @@ try {
 	register_error($e->getMessage());
 	forward(REFERER);
 }
+
+// set forward url
+global $SESSION;
+if (isset($SESSION['last_forward_from']) && $SESSION['last_forward_from']) {
+	$forward_url = $SESSION['last_forward_from'];
+	unset($SESSION['last_forward_from']);
+} elseif (get_input('returntoreferer')) {
+	$forward_url = REFERER;
+} else {
+	// forward to main index page
+	$forward_url =  elgg_get_viewtype() == 'mobile' ? 'news' : 'news';
+}
+
 
 // elgg_echo() caches the language and does not provide a way to change the language.
 // @todo we need to use the config object to store this so that the current language

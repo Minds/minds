@@ -24,11 +24,15 @@ class ElggSession extends ArrayObject {
 	/**
 	 * We use reference to $_SESSION variable as storage. 
 	 */
-	public function __construct() {
-		if (!is_array($_SESSION)) {
-			$_SESSION = array();
+	public function __construct($val = null) {
+		if ($val===null) {
+			if (!is_array($_SESSION)) {
+				$_SESSION = array();
+			}
+			parent::__construct(&$_SESSION);
+		} else {
+			parent::__construct(&$val);
 		}
-		parent::__construct(&$_SESSION);
 	}
 	
 	/**

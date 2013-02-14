@@ -293,6 +293,7 @@ function login(ElggUser $user, $persistent = false) {
 		throw new LoginException(elgg_echo('LoginException:BannedUser'));
 	}
 
+	_elgg_session_boot(true);
 	global $SESSION;
 	$SESSION['user'] = $user;
 	$SESSION['guid'] = $user->getGUID();
@@ -316,6 +317,8 @@ function login(ElggUser $user, $persistent = false) {
 		unset($SESSION['id']);
 		unset($SESSION['user']);
 		setcookie("elggperm", "", (time() - (86400 * 30)), "/");
+		_elgg_session_boot();
+		setcookie("Elgg", "", (time() - (86400 * 30)), "/");
 		throw new LoginException(elgg_echo('LoginException:Unknown'));
 	}
 
@@ -359,6 +362,7 @@ function logout() {
 	$old_msg = $SESSION['msg'];
 
 	session_destroy();
+	setcookie("Elgg", '', (time() - (86400 * 30)), "/");
 
 	// starting a default session to store any post-logout messages.
 	_elgg_session_boot(NULL, NULL, NULL);
@@ -381,7 +385,7 @@ function logout() {
  * @return bool
  * @access private
  */
-function _elgg_session_boot() {
+function _elgg_session_boot($force = false) {
 	global $DB_PREFIX, $CONFIG;
 
 	// Use database for sessions
@@ -396,73 +400,86 @@ function _elgg_session_boot() {
 			"_elgg_session_gc");
 	}
 
-	session_name('Elgg');
-	session_start();
-
 	global $SESSION;
-	// Generate a simple token (private from potentially public session id)
-	if (!isset($SESSION['__elgg_session'])) {
-		$SESSION['__elgg_session'] = md5(microtime() . rand());
-	}
-
-	// test whether we have a user session
-	if (empty($SESSION['guid'])) {
-
-		// clear session variables before checking cookie
-		unset($SESSION['user']);
-		unset($SESSION['id']);
-		unset($SESSION['guid']);
-		unset($SESSION['code']);
-
-		// is there a remember me cookie
-		if (isset($_COOKIE['elggperm'])) {
-			// we have a cookie, so try to log the user in
-			$code = $_COOKIE['elggperm'];
-			$code = md5($code);
-			if ($user = get_user_by_code($code)) {
-				// we have a user, log him in
-				$SESSION['user'] = $user;
-				$SESSION['id'] = $user->getGUID();
-				$SESSION['guid'] = $SESSION['id'];
-				$SESSION['code'] = $_COOKIE['elggperm'];
+	
+	if (isset($_COOKIE['Elgg']) || $force) {
+		session_name('Elgg');
+		session_start();
+		
+		// Initialise the magic session
+		$SESSION = new ElggSession();
+		
+		if (!$force && !elgg_is_logged_in()) {
+			setcookie("Elgg", "", (time() - (86400 * 30)), "/");
+		} else {
+			// Generate a simple token (private from potentially public session id)
+			if (!isset($SESSION['__elgg_session'])) {
+				$SESSION['__elgg_session'] = md5(microtime() . rand());
+			}
+		
+			// test whether we have a user session
+			if (empty($SESSION['guid'])) {
+		
+				// clear session variables before checking cookie
+				unset($SESSION['user']);
+				unset($SESSION['id']);
+				unset($SESSION['guid']);
+				unset($SESSION['code']);
+		
+				// is there a remember me cookie
+				if (isset($_COOKIE['elggperm'])) {
+					// we have a cookie, so try to log the user in
+					$code = $_COOKIE['elggperm'];
+					$code = md5($code);
+					if ($user = get_user_by_code($code)) {
+						// we have a user, log him in
+						$SESSION['user'] = $user;
+						$SESSION['id'] = $user->getGUID();
+						$SESSION['guid'] = $SESSION['id'];
+						$SESSION['code'] = $_COOKIE['elggperm'];
+					}
+				}
+			} else {
+				// we have a session and we have already checked the fingerprint
+				// reload the user object from database in case it has changed during the session
+				if ($user = get_user($SESSION['guid'])) {
+					$SESSION['user'] = $user;
+					$SESSION['id'] = $user->getGUID();
+					$SESSION['guid'] = $SESSION['id'];
+				} else {
+					// user must have been deleted with a session active
+					unset($SESSION['user']);
+					unset($SESSION['id']);
+					unset($SESSION['guid']);
+					unset($SESSION['code']);
+					setcookie("Elgg", "", (time() - (86400 * 30)), "/");
+				}
+			}
+		
+			if (isset($SESSION['guid'])) {
+				set_last_action($SESSION['guid']);
+			}
+		
+				
+			// Finally we ensure that a user who has been banned with an open session is kicked.
+			if ((isset($SESSION['user'])) && ($SESSION['user']->isBanned())) {
+				session_destroy();
+				setcookie("Elgg", "", (time() - (86400 * 30)), "/");
+				return false;
 			}
 		}
-	} else {
-		// we have a session and we have already checked the fingerprint
-		// reload the user object from database in case it has changed during the session
-		if ($user = get_user($SESSION['guid'])) {
-			$SESSION['user'] = $user;
-			$SESSION['id'] = $user->getGUID();
-			$SESSION['guid'] = $SESSION['id'];
-		} else {
-			// user must have been deleted with a session active
-			unset($SESSION['user']);
-			unset($SESSION['id']);
-			unset($SESSION['guid']);
-			unset($SESSION['code']);
-		}
 	}
-
-	if (isset($SESSION['guid'])) {
-		set_last_action($SESSION['guid']);
+	if (!($SESSION instanceof ElggSession)) {
+		// Initialise the magic session
+		$SESSION = new ElggSessionCookie(ElggSessionCookie::filterCookiePrefixes($_COOKIE));
 	}
 
 	elgg_register_action('login', '', 'public');
 	elgg_register_action('logout');
-
+	
 	// Register a default PAM handler
 	register_pam_handler('pam_auth_userpass');
-
-	// Initialise the magic session
-	global $SESSION;
-	$SESSION = new ElggSession();
-
-	// Finally we ensure that a user who has been banned with an open session is kicked.
-	if ((isset($SESSION['user'])) && ($SESSION['user']->isBanned())) {
-		session_destroy();
-		return false;
-	}
-
+	
 	return true;
 }
 
