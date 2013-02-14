@@ -28,8 +28,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 	    /**
 		 * Video carousel
 		 */
-	   	$options = array('types' => 'object', 'subtypes' => array('kaltura_video'), 'metadata_name_value_pairs'=> array('name' => 'featured','value'=>true ),'limit' => 12);
-		$videos = elgg_get_entities_from_metadata($options);
+	   	$videos = minds_get_featured('kaltura_video', 12);
 		echo '<h3>Videos</h3>';
 		echo elgg_view('output/carousel', array('id'=>'videos','entities'=>$videos));
 		
@@ -37,7 +36,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 		 * Blog carousel
 		 */
 		elgg_load_library('elgg:blog');
-		$blogs = blog_get_featured(10);
+		$blogs = blog_get_featured(12);
 		echo '<h3>Blogs</h3>';
 		echo elgg_view('output/carousel', array('id'=>'blogs','entities'=>$blogs));
 		
@@ -45,7 +44,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 		 * Images
 		 */
 		//elgg_load_library('elgg:blog');
-		$images = minds_get_featured('image',10);
+		$images = minds_get_featured('image',12);
 		echo '<h3>Images</h3>';
 		echo elgg_view('output/carousel', array('id'=>'images','entities'=>$images));
 		

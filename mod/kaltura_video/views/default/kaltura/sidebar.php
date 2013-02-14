@@ -1,10 +1,9 @@
 <?php
 elgg_push_context('sidebar');
-$options = array('annotation_names' => 'thumbs:up', 'types' => 'object', 'subtypes' => 'kaltura_video', 'limit' => 2);
-$entities = elgg_get_entities_from_annotation_calculation($options);
 
-$content = elgg_view_entity_list($entities);
+$featured = minds_get_featured('kaltura_video', 5);
+$content = elgg_view_entity_list($featured);
 
-echo elgg_view_module('aside', elgg_echo('archive:popular:title'), $content, array('class'=>'sidebar'));
+echo elgg_view_module('aside', elgg_echo('archive:featured:title'), $content, array('class'=>'sidebar'));
 
 elgg_pop_context();
