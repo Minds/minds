@@ -34,7 +34,7 @@ function minds_social_twitter_login() {
 
 	$user = elgg_get_logged_in_user_entity();
 	if($user){
-		minds_social_twitter_auth();
+		minds_social_twitter_auth($token);
 		return true;
 	}
 	
@@ -125,9 +125,9 @@ function minds_social_twitter_login() {
  * Depends upon {@link twitter_api_get_authorize_url} being called previously
  * to establish session request tokens.
  */
-function minds_social_twitter_auth() {
+function minds_social_twitter_auth($token) {
 	
-	$token = minds_social_twitter_access_token();
+	$token = $token != NULL ? $token : minds_social_twitter_access_token();
 	if (!isset($token['oauth_token']) || !isset($token['oauth_token_secret'])) {
 		register_error(elgg_echo('twitter_api:authorize:error'));
 		forward('settings/plugins', 'twitter_api');
