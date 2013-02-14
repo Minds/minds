@@ -69,6 +69,7 @@ function minds_social_page_handler($page)
 				break;
 			case 'remove':
 				minds_social_facebook_remove();
+				break;
 			default:
 				forward();
 				break;
