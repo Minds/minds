@@ -252,6 +252,13 @@ class KalturaModel {
 		return $this->client->uploadToken->add($uploadToken);
 	}
 	
+	function addContent($entryId, $resource){
+		if (!$this->session)
+			$this->startSession();
+		
+		return $this->client->media->addContent($entryId, $resource);
+	}
+	
 	/*Get flavour info */
 	 function getflavourAssets($entryId)
     {

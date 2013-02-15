@@ -54,3 +54,28 @@ expose_function('archive.kaltura.create',
 				'POST',
 				true,
 				true);
+				
+/**
+ * Web services to attach content to entry
+ * 
+ * @return bool true/false
+ */
+function archive_kaltura_link($entryID, $uploadToken) {
+		
+	$kmodel = KalturaModel::getInstance();
+	
+	$resource = new KalturaUploadedFileTokenResource();
+	$resource->token = $uploadToken;
+	$result = $kmodel->media->addContent($entryId, $resource);
+	
+	return $result;
+}
+expose_function('archive.kaltura.link',
+				"archive_kaltura_link",
+				array(	'entryID' => array ('type' => 'string', 'required' => true),
+						'uploadToken' => array ('type' => 'string', 'required' => true),
+					),
+				"Link a kaltura upload token to an upload token",
+				'POST',
+				true,
+				true);
