@@ -19,11 +19,17 @@ require_once(dirname(dirname(dirname(__FILE__))) ."/kaltura_video/kaltura/api_cl
 function archive_kaltura_create($filename, $filesize, $filetype) {
 			
 	$user = elgg_get_logged_in_user_entity();
+	
+	if($filetype == 1){
+		$meme_type == KalturaMediaType_VIDEO;
+	} elseif($filetype == 2){
+		$meme_type == KalturaMediaType_AUDIO;
+	}
 		
 	$kmodel = KalturaModel::getInstance();
 	$mediaEntry = new KalturaMediaEntry();
 	$mediaEntry->name = 'Temporary Entry ID: '.time();
-	$mediaEntry->mediaType = file_get_simple_type($mime_type) == 'audio' ? KalturaMediaType_AUDIO : KalturaMediaType_VIDEO;
+	$mediaEntry->mediaType = $meme_type;
 	$mediaEntry->description = '';
 	$mediaEntry->adminTags = KALTURA_ADMIN_TAGS;
 	$mediaEntry = $kmodel->addMediaEntry($mediaEntry);
