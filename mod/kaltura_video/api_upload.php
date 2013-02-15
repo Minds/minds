@@ -25,10 +25,7 @@
 		
 		$kmodel = KalturaModel::getInstance();
 		$ks = $kmodel->getClientSideSession();
-		
-		$mime_type = $_FILES['file']['type'];
-		//if the file is a video then we upload to kaltura!
-	
+			
 		$mediaEntry = new KalturaMediaEntry();
 		$mediaEntry->name = $title;
 		$mediaEntry->description = $description;
