@@ -36,7 +36,7 @@ class ElggOAuthDataStore extends OAuthDataStore {
 		$key = md5(time());
 		$secret = md5(md5(time() + time()));
 		$token = new OAuthToken($key, $secret);
-    
+		reset($token);    
 		// save the token to the database
 		//   NOTE: it's not attached to a user yet
 		oauth_save_request_token($token, $consumer, NULL, $callback);
