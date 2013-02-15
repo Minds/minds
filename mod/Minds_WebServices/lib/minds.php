@@ -57,3 +57,17 @@ expose_function('remind',
 				'GET',
 				true,
 				true);
+/**
+ * Web service to check the authentication of a user
+ */
+function minds_service_checkauth(){
+	return true;
+}
+expose_function('checkAuth',
+				"minds_service_checkAuth",
+				array(
+					),
+				"Check if a user is authenticated",
+				'POST',
+				true,
+				true);

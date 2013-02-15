@@ -15,6 +15,8 @@ if($guid){
 		$owners_videos = elgg_view_entity_list($owners_videos, array('full_view'=>false, 'sidebar'=>true));
 		echo elgg_view_module('aside', elgg_echo('archive:morefromuser:title', array($video->getOwnerEntity()->name)), $owners_videos, array('class'=>'sidebar'));
 	}
+	
+	echo elgg_view('minds/ads', array('type'=>'content-side'));
 }
 /** 
  * Featured videos
