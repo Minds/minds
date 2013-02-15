@@ -21,9 +21,9 @@ function archive_kaltura_create($filename, $filesize, $filetype) {
 	$user = elgg_get_logged_in_user_entity();
 	
 	if($filetype == 1){
-		$meme_type == KalturaMediaType_VIDEO;
+		$meme_type = KalturaMediaType_AUDIO;
 	} elseif($filetype == 2){
-		$meme_type == KalturaMediaType_AUDIO;
+		$meme_type = KalturaMediaType_VIDEO;
 	}
 		
 	$kmodel = KalturaModel::getInstance();
@@ -72,7 +72,7 @@ function archive_kaltura_link($entryID, $uploadToken) {
 	
 	$resource = new KalturaUploadedFileTokenResource();
 	$resource->token = $uploadToken;
-	$result = $kmodel->media->addContent($entryId, $resource);
+	$result = $kmodel->addContent($entryId, $resource);
 	
 	return $result;
 }
