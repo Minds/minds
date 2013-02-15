@@ -21,9 +21,9 @@ function archive_kaltura_create($filename, $filesize, $filetype) {
 	$user = elgg_get_logged_in_user_entity();
 	
 	if($filetype == 1){
-		$meme_type == KalturaMediaType_VIDEO;
-	} elseif($filetype == 2){
 		$meme_type == KalturaMediaType_AUDIO;
+	} elseif($filetype == 2){
+		$meme_type == KalturaMediaType_VIDEO;
 	}
 		
 	$kmodel = KalturaModel::getInstance();
