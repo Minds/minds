@@ -26,8 +26,10 @@ function minds_web_services_init() {
 	elgg_load_library('webservice:user');
 	elgg_register_library('webservice:wire', elgg_get_plugins_path() . 'Minds_WebServices/lib/wire.php');
 	elgg_load_library('webservice:wire');
-	elgg_register_library('webservice:kaltura', elgg_get_plugins_path() . 'Minds_WebServices/lib/kaltura.php');
-	elgg_load_library('webservice:kaltura');
+			//@depricated elgg_register_library('webservice:kaltura', elgg_get_plugins_path() . 'Minds_WebServices/lib/kaltura.php');
+			//@depricated elgg_load_library('webservice:kaltura');
+	elgg_register_library('webservice:archive', elgg_get_plugins_path() . 'Minds_WebServices/lib/archive.php');
+	elgg_load_library('webservice:archive');
 	elgg_register_library('webservice:wall', elgg_get_plugins_path() . 'Minds_WebServices/lib/wall.php');
 	elgg_load_library('webservice:wall');
 	elgg_register_library('webservice:thumbs', elgg_get_plugins_path() . 'Minds_WebServices/lib/thumbs.php');
