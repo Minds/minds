@@ -72,7 +72,7 @@ function archive_kaltura_link($entryID, $uploadToken) {
 	
 	$resource = new KalturaUploadedFileTokenResource();
 	$resource->token = $uploadToken;
-	$result = $kmodel->media->addContent($entryId, $resource);
+	$result = $kmodel->addContent($entryId, $resource);
 	
 	return $result;
 }
