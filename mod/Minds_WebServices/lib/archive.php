@@ -32,7 +32,7 @@ function archive_kaltura_create($filename, $filesize) {
 	$uploadToken = new KalturaUploadToken();
 	$uploadToken->fileName = $filename;
 	$uploadToken->fileSize = $filesize;
-	$uploadToken = $client->uploadToken->add($uploadToken);
+	$uploadToken = $kmedl->uploadToken->add($uploadToken);
 
 	$return = array( 'entryID'=> $mediaEntry->id,
 					 'ks' => $ks,

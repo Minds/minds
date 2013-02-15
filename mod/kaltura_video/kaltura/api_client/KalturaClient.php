@@ -1,5 +1,6 @@
 <?php
 require_once("KalturaClientBase.php");
+require_once("KalturaTypes.php");
 
 class KalturaAspectRatioType
 {
