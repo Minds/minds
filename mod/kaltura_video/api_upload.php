@@ -17,7 +17,7 @@
 		$title = get_input('title');
 		$description = get_input('description');
 		$license = get_input('license');
-		$mime_type = get_input('mime_type', 'video/');
+		$mime_type = get_input('mime_type', 'video/quicktime');
 
 		$user = elgg_get_logged_in_user_entity();
 		//$user = get_user_by_username('mark');
