@@ -224,13 +224,23 @@ class KalturaModel {
 	    return $this->client->partner->register($partner);
 	}
 
-	function addMediaEntry($mediaEntry, $fileData)
+	function addMediaEntryUpload($mediaEntry, $fileData)
 	{
 	    if (!$this->session)
 			$this->startSession();
 
 		$fileKey = $this->client->media->upload($fileData);
 		$mediaEntry = $this->client->media->addFromUploadedFile($mediaEntry, $fileKey);
+		return $mediaEntry;
+	}
+	
+	function addMediaEntry($mediaEntry)
+	{
+	    if (!$this->session)
+			$this->startSession();
+
+		$fileKey = $this->client->media->upload($fileData);
+		$mediaEntry = $this->client->media->add($mediaEntry);
 		return $mediaEntry;
 	}
 	
