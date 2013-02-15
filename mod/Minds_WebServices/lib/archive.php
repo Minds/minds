@@ -4,7 +4,7 @@
  * Archive
  * 
  * @package Webservice
- * @author Mark Harding
+ * @author Mark Harding (mark@minds.com)
  *
  */
  
@@ -14,9 +14,9 @@ require_once(dirname(dirname(dirname(__FILE__))) ."/kaltura_video/kaltura/api_cl
  /**
  * Web service to create a blank entry
  *
- * @return int ID of video
+ * @return array (entry id, ks, uploadtoken)
  */
-function archive_kaltura_create_blank() {
+function archive_kaltura_create($filename, $filesize) {
 			
 	$user = elgg_get_logged_in_user_entity();
 		
@@ -26,14 +26,28 @@ function archive_kaltura_create_blank() {
 	$mediaEntry->description = '';
 	$mediaEntry->adminTags = KALTURA_ADMIN_TAGS;
 	
+	$kmodel = KalturaModel::getInstance();
+	$ks = $kmodel->getClientSideSession();
+	
+	$uploadToken = new KalturaUploadToken();
+	$uploadToken->fileName = $filename;
+	$uploadToken->fileSize = $filesize;
+	$uploadToken = $client->uploadToken->add($uploadToken);
+
+	$return = array( 'entryID'=> $mediaEntry->id,
+					 'ks' => $ks,
+					 'uploadToken' => $uploadToken
+					);
+					
 	return $mediaEntry->id;
 }
 
-expose_function('archive.kaltura.create_blank',
-				"kaltura_web_service_get_videos_list",
-				array(
+expose_function('archive.kaltura.create',
+				"archive_kaltura_create",
+				array(	'filename' => array ('type' => 'string', 'required' => true),
+					  	'filesize' => array ('type' => 'string', 'required' => true),
 					),
-				"Create a blank kaltura entry",
+				"Create a kaltura entry",
 				'POST',
 				true,
 				true);
