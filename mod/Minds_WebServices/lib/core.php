@@ -69,9 +69,16 @@ function site_river_feed($limit, $offset){
 	
 	global $jsonexport;
 	
-	elgg_list_river(array(
+	$friends = get_user_friends(elgg_get_logged_in_user_guid(), $subtype = ELGG_ENTITIES_ANY_VALUE, 0, 0);
+		foreach($friends as $friend){
+			$friend_guids[] = $friend->guid;
+		}
+	$page_filter = 'friends';
+	
+	minds_elastic_list_news(array(
 							'limit' => $limit,
-							'offset' => $offset
+							'offset' => $offset,
+							'subject_guids' => array_merge(array(elgg_get_logged_in_user_guid()), $friend_guids)
 						));
 
 	return $jsonexport['activity'];
