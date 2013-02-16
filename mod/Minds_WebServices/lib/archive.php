@@ -85,3 +85,49 @@ expose_function('archive.kaltura.link',
 				'POST',
 				true,
 				true);
+
+/**
+ * Web services to save an entry in to elgg
+ * 
+ * @return bool true/false
+ */
+function archive_kaltura_save($entryID, $title, $description, $tags, $license, $access) {
+	
+	$kmodel = KalturaModel::getInstance();
+
+	$entry = $kmodel->getEntry($entryID);
+	
+	$ob = kaltura_get_entity($entryID);
+
+	$entry->name = strip_tags($title);
+	$entry->description = $description;
+	$entry->tags = $tags;
+
+	$kmodel = KalturaModel::getInstance();
+	$mediaEntry = new KalturaMediaEntry();
+	$mediaEntry->name = $entry->name;
+	$mediaEntry->description = $entry->description;
+	$mediaEntry->tags = $entry->tags;
+	$mediaEntry->adminTags = KALTURA_ADMIN_TAGS;
+	$entry = $kmodel->updateMediaEntry($video_id,$mediaEntry);
+
+		
+	$tagarray = string_to_tag_array($tags);
+	
+	$ob = kaltura_update_object($entry,null,$access,$ob->owner_guid,null,true, array('license'=> $license, 'thumbnail_sec'=>$thumbnail_sec));
+	
+	return $ob;
+}
+expose_function('archive.kaltura.save',
+				"archive_kaltura_save",
+				array(	'entryID' => array ('type' => 'string', 'required' => true),
+						'title' => array ('type' => 'string', 'required' => true),
+						'description' => array ('type' => 'string', 'required' => false),
+						'tags' => array ('type' => 'string', 'required' => false),
+						'license' => array ('type' => 'string', 'required' => false),
+						'access' => array ('type' => 'string', 'required' => false, 'default'=> get_default_access()),
+					),
+				"save an entry to elgg",
+				'POST',
+				true,
+				true);
