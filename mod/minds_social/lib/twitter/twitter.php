@@ -111,7 +111,7 @@ function minds_social_twitter_login() {
 					// for the plugin hooks system.
 					throw new RegistrationException(elgg_echo('registerbad'));
 				}*/
-				forward();			
+				login($new_user);			
 		}
 	}
 }
