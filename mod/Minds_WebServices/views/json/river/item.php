@@ -65,14 +65,14 @@ if($subject->type == "user" || $object->type == "group"){
 //@todo make this 
 if ($item->action_type != 'create' && $item) {
     $river_id = $item->id;
-    $selector_id = $river_id;
+    $pid = $river_id;
 } else {
     $guid = $object->guid;
-    $selector_id = $guid;
+    $pid = $guid;
 }
 $params['parent_guid'] = $guid;
 $params['river_id'] = $river_id;
 
-$item->comments['count'] =  hj_alive_count_comments($object,$params);
+$item->comments['count'] = minds_comment_count(null, $pid);
 
 $jsonexport['activity'][] = $vars['item'];

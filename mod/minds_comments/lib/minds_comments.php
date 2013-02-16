@@ -84,6 +84,14 @@ function minds_comments_notification($type, $pid, $description){
 	notification_create($to, elgg_get_logged_in_user_guid(), $pid, array('type'=>$type,'description'=>$description, 'notification_view'=>'comment'));
 }
 
+function minds_comment_count($type, $pid){
+	$mc = new MindsComments();
+	$call = $mc -> output($type, $pid, 0, 0);
+	$count = $call['hits']['total'];
+	
+	return $count;
+}
+
 /**
  * Convert any old comments over to the new system
  */
