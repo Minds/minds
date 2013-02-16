@@ -49,12 +49,21 @@ function wall_post($message, $access = ACCESS_PUBLIC, $wall_method = "api",	$to,
 		register_error(elgg_echo("wall:error"));
 		$return['success'] = false;
 	} else {
-		$return['success'] = true;
 		
-	//add the message
-	add_to_river('river/object/wall/create', 'create', $user->guid, $guid);
+		//add the message
+		add_to_river('river/object/wall/create', 'create', $user->guid, $guid);
 	
-	notification_create(array($to_user->guid), $user->guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
+		notification_create(array($to_user->guid), $user->guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
+		
+		$return['guid'] = $post->guid;
+		
+		$owner = get_entity($post->owner_guid);
+		$return['owner']['guid'] = $owner->guid;
+		$return['owner']['name'] = $owner->name;
+		$return['owner']['avatar_url'] = get_entity_icon_url($owner,'small');
+			
+		$return['time_created'] = (int)$post->time_created;
+		$return['message'] = $post->message;
 	}
 	
 	return $return;
