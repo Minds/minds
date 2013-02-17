@@ -187,12 +187,15 @@ function archive_get_list($context, $type, $limit = 10, $offset = 0, $username){
 				$item['guid'] = $single->guid;
 				$item['title'] = $single->title;
 				
-				if($type == 'kaltura_video'){
+				if($single->getSubtype() == 'kaltura_video'){
 					$item['video_id'] = $single->kaltura_video_id;
 					$item['thumbnail'] = $single->kaltura_video_thumbnail;
 				} else{
-					$item['thumbnail'] = $single->iconURL('large');
+					$item['thumbnail'] = $single->getIconURL('large');
 				}
+				
+				$item['type'] = $single->getType();
+				$item['subtype'] = $single->getSubtype();
 	
 				$owner = get_entity($single->owner_guid);
 				$item['owner']['guid'] = $owner->guid;
@@ -205,7 +208,7 @@ function archive_get_list($context, $type, $limit = 10, $offset = 0, $username){
 				$item['time_created'] = (int)$single->time_created;
 				$item['time_updated'] = (int)$single->time_updated;
 				$item['last_action'] = (int)$single->last_action;
-				$return[] = $video;
+				$return[] = $item;
 			}
 	
 		} else {
