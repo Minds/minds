@@ -98,7 +98,10 @@ function archive_kaltura_save($entryID, $title, $description, $tags, $license, $
 	$entry = $kmodel->getEntry($entryID);
 	
 	$ob = kaltura_get_entity($entryID);
-
+	if(!$ob){
+		$owner_guid = elgg_get_logged_in_user_guid();
+	}
+	
 	$entry->name = strip_tags($title);
 	$entry->description = $description;
 	$entry->tags = $tags;
@@ -109,23 +112,23 @@ function archive_kaltura_save($entryID, $title, $description, $tags, $license, $
 	$mediaEntry->description = $entry->description;
 	$mediaEntry->tags = $entry->tags;
 	$mediaEntry->adminTags = KALTURA_ADMIN_TAGS;
-	$entry = $kmodel->updateMediaEntry($video_id,$mediaEntry);
+	$entry = $kmodel->updateMediaEntry($entryID,$mediaEntry);
 
 		
 	$tagarray = string_to_tag_array($tags);
 	
-	$ob = kaltura_update_object($entry,null,$access,$ob->owner_guid,null,true, array('license'=> $license, 'thumbnail_sec'=>$thumbnail_sec));
+	$ob = kaltura_update_object($entry,null,$access,$owner_guid,null,true, array('license'=> $license, 'thumbnail_sec'=>$thumbnail_sec));
 	
-	return $ob;
+	return true;
 }
 expose_function('archive.kaltura.save',
 				"archive_kaltura_save",
 				array(	'entryID' => array ('type' => 'string', 'required' => true),
 						'title' => array ('type' => 'string', 'required' => true),
 						'description' => array ('type' => 'string', 'required' => false),
-						'tags' => array ('type' => 'string', 'required' => false),
-						'license' => array ('type' => 'string', 'required' => false),
-						'access' => array ('type' => 'string', 'required' => false, 'default'=> get_default_access()),
+						'tags' => array ('type' => 'string', 'required' => false, 'default'=>''),
+						'license' => array ('type' => 'string', 'required' => true),
+						'access' => array ('type' => 'int', 'required' => false, 'default'=> get_default_access()),
 					),
 				"save an entry to elgg",
 				'POST',

@@ -31,7 +31,7 @@ if ($consumEnt->revA) {
 $info .= '<div>';
 if ($tokEnt->canEdit()) {
 	if ($tokEnt->accessToken) {
-		$info .= '<b>' . elgg_echo('oauth:token:access') . ':</b> ' . $tokEnt->accessToken . '<br />';
+		$info .= '<b>' . elgg_echo('oauth:token:access') . ':</b> ' . $tokEnt->accessToken . '<br />';var_dump($tokEnt->accessToken);
 	} else if ($tokEnt->requestToken) {
 		$info .= '<i>' . elgg_echo('oauth:token:request') . ':</i> ' . $tokEnt->requestToken . '<br />';
 	}
