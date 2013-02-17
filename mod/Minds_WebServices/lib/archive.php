@@ -191,7 +191,7 @@ function archive_get_list($context, $type, $limit = 10, $offset = 0, $username){
 					$item['video_id'] = $single->kaltura_video_id;
 					$item['thumbnail'] = $single->kaltura_video_thumbnail;
 				} else{
-					$item['thumbnail'] = $single->getIconURL('large');
+					$item['thumbnail'] = $single->getIconURL('small');
 				}
 				
 				$item['type'] = $single->getType();
@@ -250,14 +250,16 @@ function archive_get_single($guid) {
 				$return['type'] = $item->getType();
 				$return['subtype'] = $item->getSubtype();
 				
-				$return['guid'] = $video->guid;
-				$return['title'] = $video->title;
-				
+				$return['guid'] = $item->guid;
+				$return['title'] = $item->title;
+				if($item->getSubtype() == 'image'){
+					$return['title'] = $item->getTitle();
+				}
 				if($item->getSubtype() == 'kaltura_video'){
 					$return['video_id'] = $item->kaltura_video_id;
-					$return['source'] = $kaltura_server . 'p/'.$partnerId.'/sp/0/playManifest/entryId/' . $item->kaltura_video_id . 'format/url/flavorParamId/9/video.mp4';
+					$return['source'] = $kaltura_server . '/p/'.$partnerId.'/sp/0/playManifest/entryId/' . $item->kaltura_video_id . '/format/url/flavorParamId/9/video.mp4';
 				} else {
-					$item['source'] = $item->iconURL('master');
+					$return['source'] = $item->getIconURL('large');
 				}
 	
 				$owner = get_entity($item->owner_guid);
