@@ -8,9 +8,11 @@ gatekeeper();
 elgg_load_library('tidypics:upload');
 $img_river_view = elgg_get_plugin_setting('img_river_view', 'tidypics');
 
-$title = get_input('title');
+$title = get_input('title', $_FILES['file']['name']);
 $description = get_input('description');
 $license = get_input('license');
+$tags = get_input('tags');
+$access = get_input('access', get_default_access());
 
 //find the users mobile upload album
 $albums = elgg_get_entities_from_metadata(array(
@@ -27,7 +29,7 @@ if (!$album) {
 	$album = new TidypicsAlbum();
 	$album->owner_guid = elgg_get_logged_in_user_guid();
 	$album->title = 'Mobile Uploads';
-	$album->access_id = 1;
+	$album->access_id = $access;
 	$album->mobile = true;
 	
 	if (!$album->save()) {
@@ -47,6 +49,10 @@ if (count($_FILES) == 0) {
 
 	$mime = $_FILES['file']['type'];
 	$image = new TidypicsImage();
+	$image->title = $title;
+	$image->description = $description;
+	$image->tags = $tags;
+	$image->license = $license;
 	$image->container_guid = $album->getGUID();
 	$image->setMimeType($mime);
 	$image->access_id = $album->access_id;

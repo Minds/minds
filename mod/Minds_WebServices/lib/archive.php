@@ -134,3 +134,97 @@ expose_function('archive.kaltura.save',
 				'POST',
 				true,
 				true);
+				
+/**
+ * Retrieve archive list
+ * 
+ * @param string $contet eg. own, friends or all (default all)
+ * @param int $limit  (optional) default 10
+ * @param int $offset (optional) default 0
+ * @param string $username (optional) the username of the user default loggedin user
+ *
+ * @return array $return Array of videos
+ */
+function archive_get_list($context, $type, $limit = 10, $offset = 0, $username){
+	if(!$username) {
+			$user = elgg_get_logged_in_user_entity();
+		} else {
+			$user = get_user_by_username($username);
+			if (!$user) {
+				throw new InvalidParameterException('registration:usernamenotvalid');
+			}
+		}
+		
+		if($type == 'all'){
+			$subtypes = array('kaltura_video', 'image', 'album', 'file');
+		}else{
+			$subtypes = $type;
+		}
+		
+		if($context == 'all'){
+			$media = elgg_get_entities(array(
+										'type' => 'object',
+										'subtypes' => $subtypes,
+										'limit' => $limit,
+										'offset' => $offset,
+										'full_view' => FALSE,
+										));
+		} elseif( $context == 'mine' || $context == 'user'){
+			$media = elgg_get_entities(array(
+										'type' => 'object',
+										'subtypes' => $subtypes,
+										'owner_guid' => $user->guid,
+										'limit' => $limit,
+										'offset' => $offset,
+										'full_view' => FALSE,
+										));
+		} elseif( $context == 'friends'){
+			$media = get_user_friends_objects($user->guid, $subtypes, $limit, $offset); 
+		}
+		
+		if($media){
+			foreach($media as $single ) {
+				$item['guid'] = $single->guid;
+				$item['title'] = $single->title;
+				
+				if($type == 'kaltura_video'){
+					$item['video_id'] = $single->kaltura_video_id;
+					$item['thumbnail'] = $single->kaltura_video_thumbnail;
+				} else{
+					$item['thumbnail'] = $single->iconURL('large');
+				}
+	
+				$owner = get_entity($single->owner_guid);
+				$item['owner']['guid'] = $owner->guid;
+				$item['owner']['name'] = $owner->name;
+				$item['owner']['username'] = $owner->username;
+				$item['owner']['avatar_url'] = $owner->getIconUrl('small');
+				
+				$item['container_guid'] = $single->container_guid;
+				$item['access_id'] = $single->access_id;
+				$item['time_created'] = (int)$single->time_created;
+				$item['time_updated'] = (int)$single->time_updated;
+				$item['last_action'] = (int)$single->last_action;
+				$return[] = $video;
+			}
+	
+		} else {
+			$msg = elgg_echo('kalturavideo:none');
+			throw new InvalidParameterException($msg);
+		}
+	
+	return $return;
+}
+expose_function('archive.list',
+				"archive_get_list",
+				array(
+						'context' => array ('type' => 'string', 'required' => false, 'default' => 'all'),
+						'type' => array ('type' => 'string', 'required' => false, 'default' => 'all'),
+					  	'limit' => array ('type' => 'int', 'required' => false, 'default' => 10),
+					  	'offset' => array ('type' => 'int', 'required' => false, 'default' => 0),
+					   	'username' => array ('type' => 'string', 'required' => false),
+					),
+				"Get list of videos",
+				'GET',
+				false,
+				false);
