@@ -231,3 +231,67 @@ expose_function('archive.list',
 				'GET',
 				false,
 				false);
+				
+ /**
+ * Web service to get more info on an item
+ *
+ * @param int guid
+ *
+ * @return array $return information of the kaltura video
+ */
+function archive_get_single($guid) {	
+	
+	$item = get_entity($guid);	
+	
+	$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'kaltura_video');
+	$partnerId = elgg_get_plugin_setting('partner_id', 'kaltura_video');	
+
+	if($item){
+				$return['type'] = $item->getType();
+				$return['subtype'] = $item->getSubtype();
+				
+				$return['guid'] = $video->guid;
+				$return['title'] = $video->title;
+				
+				if($item->getSubtype() == 'kaltura_video'){
+					$return['video_id'] = $item->kaltura_video_id;
+					$return['source'] = $kaltura_server . 'p/'.$partnerId.'/sp/0/playManifest/entryId/' . $item->kaltura_video_id . 'format/url/flavorParamId/9/video.mp4';
+				} else {
+					$item['source'] = $item->iconURL('master');
+				}
+	
+				$owner = get_entity($item->owner_guid);
+				$return['owner']['guid'] = $owner->guid;
+				$return['owner']['name'] = $owner->name;
+				$return['owner']['username'] = $owner->username;
+				$return['owner']['avatar_url'] = $owner->getIconUrl('small');
+				
+				$return['comments_count'] = minds_comment_count(null, $guid);
+				$return['thumbs']['up'] = thumbs_up_count($item);
+				$return['thumbs']['down'] = thumbs_down_count($item);
+				$return['thumbs']['total'] = thumbs_up_count($item) - thumbs_down_count($item); 
+				
+				$return['container_guid'] = $item->container_guid;
+				$return['access_id'] = $item->access_id;
+				$return['time_created'] = (int)$item->time_created;
+				$return['time_updated'] = (int)$item->time_updated;
+				$return['last_action'] = (int)$item->last_action;
+		
+	
+		} else {
+			$msg = elgg_echo('kalturavideo:none');
+			throw new InvalidParameterException($msg);
+		}
+	
+	return $return;
+}
+
+expose_function('archive.single',
+				"archive_get_single",
+				array(
+					   	'guid' => array ('type' => 'int'),
+					),
+				"Get more info for item in arhive",
+				'GET',
+				false,
+				false);
