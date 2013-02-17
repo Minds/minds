@@ -20,16 +20,16 @@ function archive_kaltura_create($filename, $filesize, $filetype) {
 			
 	$user = elgg_get_logged_in_user_entity();
 	
-	if($filetype == 1){
-		$meme_type = KalturaMediaType_AUDIO;
-	} elseif($filetype == 2){
-		$meme_type = KalturaMediaType_VIDEO;
+	if(file_get_simple_type($filetype) == 'audio'){
+		$mime_type = KalturaMediaType_AUDIO;
+	} elseif(file_get_simple_type($filetype) == 'video'){
+		$mime_type = KalturaMediaType_VIDEO;
 	}
 		
 	$kmodel = KalturaModel::getInstance();
 	$mediaEntry = new KalturaMediaEntry();
 	$mediaEntry->name = 'Temporary Entry ID: '.time();
-	$mediaEntry->mediaType = $meme_type;
+	$mediaEntry->mediaType = $mime_type;
 	$mediaEntry->description = '';
 	$mediaEntry->adminTags = KALTURA_ADMIN_TAGS;
 	$mediaEntry = $kmodel->addMediaEntry($mediaEntry);
