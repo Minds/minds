@@ -62,47 +62,31 @@ expose_function('comments.get',
 /**
  * Posts a comment
  */
-function minds_comments_ws_post($comment,$pid){
-	if (!get_input('comment')) {
-	    register_error(elgg_echo('hj:alive:comments:valuecantbeblank'));
-	    return true;
-	}
-	
-	$type = get_input('type', null);
-	$pid = get_input('pid', null);
-	$comment = get_input('comment', null);
-	
+function minds_comments_ws_post($comment,$pid, $type){
+		
 	$mc = new MindsComments();
 	$create = $mc->create($type, $pid, $comment);
 	
 	if($create['ok'] == true){
 		system_message(elgg_echo('minds_comments:save:success'));
-		
-		$data['_id'] = time().elgg_get_logged_in_user_guid();
-		$data['_type'] = $type;
-		$data['_source']['pid'] = $pid;
-		$data['_source']['owner_guid'] = elgg_get_logged_in_user_guid();
-		$data['_source']['description'] = $comment;
-		$data['_source']['time_created'] = time();
-		//header('Content-Type: application/json');
-		
+	
 		minds_comments_notification($type, $pid, $comment);
 		/**
 		 * OUTPUT
 		 */
-		$single['id'] = $comment['_id'];
+		$single['id'] = time().elgg_get_logged_in_user_guid();
 		
-		$owner = get_entity($comment['_source']['owner_guid']);
+		$owner = elgg_get_logged_in_user_entity();
 		$single['owner']['name'] = $owner->name;
 		$single['owner']['username'] = $owner->username;
 		$single['owner']['guid'] = $owner->guid;
 		$single['owner']['avatar_url'] = $owner->getIconUrl('small');
 
-		$single['description'] = $comment['_source']['description'];
-		$single['time_created'] = $comment['_source']['time_created'];
+		$single['description'] = $comment;
+		$single['time_created'] = time();
 		return $single;
 	} else {
-		 register_error(elgg_echo('minds_comments:save:error'));
+		 return 'minds_comments:save:error';
 	}
 
 }
@@ -112,6 +96,7 @@ expose_function('comments.post',
 				array(
 						'comment' => array ('type' => 'string'),
 						'pid' => array ('type' => 'string', 'required' => true),
+						'type' => array('type'=>'string', 'required'=>false, 'default'=>'entity'),
 					),
 				"Make a comment",
 				'POST',
