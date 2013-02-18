@@ -7,47 +7,33 @@
  *
  */
 /**
- * Retrives a list of comments for an entity
+ * Retrives a list of comments
  */ 
-function comments_get($guid, $river_id){
-	 	
-	if(!$guid && !$river_id){
-		return false;
-	}	
-	
-	 $options = array(
-        'type' => 'object',
-        'subtype' => 'hjannotation',
-        'owner_guid' => null,
-        //'container_guid' => $container_guid,
-        'metadata_name_value_pairs' => array(
-            array('name' => 'annotation_name', 'value' => 'generic_comment'),
-            array('name' => 'annotation_value', 'value' => '', 'operand' => '!='),
-            array('name' => 'parent_guid', 'value' => $guid),
-            array('name' => 'river_id', 'value' => $river_id)
-        ),
-        'count' => false,
-        'limit' => 0,
-        'order_by' => 'e.time_created desc'
-    );
-	
-	$comments = elgg_get_entities_from_metadata($options);
-	$comments = array_reverse($comments);
-	foreach($comments as $single){
-		$comment['guid'] = $single->guid;
-		$comment['comment'] = $single->annotation_value;
+function minds_comments_ws_get($type, $pid, $limit, $offset){
 		
-		//owner
-		$owner = get_entity($single->owner_guid);
-		$comment['owner']['guid'] = $owner->guid;
-		$comment['owner']['name'] = $owner->name;
-		$comment['owner']['username'] = $owner->username;
-		$comment['owner']['avatar_url'] = $owner->getIconURL('small');
-		
-		$comment['time_created'] = $single->time_created;
-
-		$return[] = $comment;
+	if($type=='any'){
+		$type = null;
 	}
+	$limit = 3;
+
+	$mc = new MindsComments();
+	$call = $mc -> output($type, $pid, $limit, $offset);
+	$count = $call['hits']['total'];
+	$comments = array_reverse($call['hits']['hits']);
+
+	foreach ($comments as $comment) {
+		$visible .= minds_comments_view_comment($comment);
+	}
+
+	if ($count > 0 && $count > $limit) {
+		$remainder = $count - $limit;
+		if ($limit > 0) {
+			$summary = elgg_echo('hj:alive:comments:remainder', array($remainder));
+		} else {
+			$summary = elgg_echo('hj:alive:comments:viewall', array($remainder));
+		}
+	}
+
 	
 	return $return;
 	

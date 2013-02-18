@@ -8,6 +8,9 @@
  * @link http://kramnorth.com
  *
  */
+ if(get_input('oauth_token')){
+ 	return true;//dont show header for mobile apps
+ }
 elgg_unregister_menu_item('topbar', 'register');
 elgg_unregister_menu_item('topbar', 'login');
 elgg_unregister_menu_item('topbar', 'search');
