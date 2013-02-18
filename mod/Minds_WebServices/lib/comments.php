@@ -42,8 +42,8 @@ function minds_comments_ws_get($type, $pid, $limit, $offset){
 expose_function('comments.get',
 				"comments_get",
 				array(
-						'guid' => array ('type' => 'int', 'required' => false),
-						'river_id' => array ('type' => 'int', 'required' => false),
+						'type' => array ('type' => 'string', 'required' => false, 'default'=>'any'),
+						'pid' => array ('type' => 'string', 'required' => true),
 					),
 				"Get a list of comments",
 				'GET',
