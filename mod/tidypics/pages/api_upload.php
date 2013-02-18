@@ -49,10 +49,10 @@ if (count($_FILES) == 0) {
 
 	$mime = $_FILES['file']['type'];
 	$image = new TidypicsImage();
-	$image->title = $title;
-	$image->description = $description;
-	$image->tags = $tags;
-	$image->license = $license;
+	$image->title = urldecode($title);
+	$image->description = urldecode($description);
+	$image->tags = urldecode($tags);
+	$image->license = urldecode($license);
 	$image->container_guid = $album->getGUID();
 	$image->setMimeType($mime);
 	$image->access_id = $album->access_id;

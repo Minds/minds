@@ -14,7 +14,8 @@ function minds_comments_ws_get($type, $pid, $limit, $offset){
 	if($type=='any'){
 		$type = null;
 	}
-	$limit = 3;
+	$limit = 10;
+	$offset = 0;
 
 	$mc = new MindsComments();
 	$call = $mc -> output($type, $pid, $limit, $offset);
@@ -22,7 +23,17 @@ function minds_comments_ws_get($type, $pid, $limit, $offset){
 	$comments = array_reverse($call['hits']['hits']);
 
 	foreach ($comments as $comment) {
-		$visible .= minds_comments_view_comment($comment);
+		$single['id'] = $comment['_id'];
+		
+		$owner = get_entity($comment['_source']['owner_guid']);
+		$single['owner']['name'] = $owner->name;
+		$single['owner']['username'] = $owner->username;
+		$single['owner']['guid'] = $owner->guid;
+		$single['owner']['avatar_url'] = $owner->getIconUrl('small');
+
+		$single['description'] = $comment['_source']['description'];
+		$single['time_created'] = $comment['_source']['time_created'];
+		$return[] = $single;
 	}
 
 	if ($count > 0 && $count > $limit) {
@@ -34,13 +45,11 @@ function minds_comments_ws_get($type, $pid, $limit, $offset){
 		}
 	}
 
-	
-	return $return;
-	
+	return $return;	
 } 
 				
 expose_function('comments.get',
-				"comments_get",
+				"minds_comments_ws_get",
 				array(
 						'type' => array ('type' => 'string', 'required' => false, 'default'=>'any'),
 						'pid' => array ('type' => 'string', 'required' => true),
