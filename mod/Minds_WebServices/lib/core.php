@@ -65,28 +65,33 @@ expose_function('site.getinfo',
  *
  * @return array $river_feed contains all information for river
  */			
-function site_river_feed($limit, $offset){
+function site_river_feed($context, $limit, $offset){
 	
-	global $jsonexport;
-	
-	$friends = get_user_friends(elgg_get_logged_in_user_guid(), $subtype = ELGG_ENTITIES_ANY_VALUE, 0, 0);
+	if($context == 'all'){
+		//we have not options for all
+	} elseif( $context == 'trending'){
+		$options['object_guids'] = thumbs_trending('guids');	
+	} elseif( $context == 'friends'){
+		$friends = get_user_friends(elgg_get_logged_in_user_guid(), $subtype = ELGG_ENTITIES_ANY_VALUE, 0, 0);	
 		foreach($friends as $friend){
 			$friend_guids[] = $friend->guid;
 		}
-	$page_filter = 'friends';
+		$options['subject_guids'] = array_merge(array(elgg_get_logged_in_user_guid()), $friend_guids);
+	}
 	
-	minds_elastic_list_news(array(
-							'limit' => $limit,
-							'offset' => $offset,
-							'subject_guids' => array_merge(array(elgg_get_logged_in_user_guid()), $friend_guids)
-						));
+	global $jsonexport;
+		
+	$options['limit'] = $limit;
+	$options['offset'] = $offset;
+	
+	minds_elastic_list_news($options);
 
 	return $jsonexport['activity'];
-	
 }
 expose_function('site.river_feed',
 				"site_river_feed",
-				array('limit' => array('type' => 'int', 'required' => false, 'default' => 10),
+				array(	'context' => array('type' => 'string', 'required' => false, 'default' => 'trending'),
+						'limit' => array('type' => 'int', 'required' => false, 'default' => 10),
 						'offset' => array('type' => 'int', 'required' => false, 'default' => 0)),
 				"Get river feed",
 				'GET',
