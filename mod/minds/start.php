@@ -94,6 +94,10 @@ function minds_init(){
 	elgg_register_action("minds/remind", "$actionspath/minds/remind.php");
 	elgg_register_action("minds/remind/external", "$actionspath/minds/remind_external.php");
 	elgg_register_action("friends/add", "$actionspath/friends/add.php");
+	
+	if(elgg_get_context() == 'oauth2'){
+		pam_auth_usertoken();//auto login users if they are using oauth step1
+	}
 }
 
 function minds_index($hook, $type, $return, $params) {
