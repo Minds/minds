@@ -253,7 +253,7 @@ function blog_get_post($guid, $username) {
 	}
 
 	$return['title'] = htmlspecialchars($blog->title);
-	$return['content'] = strip_tags($blog->description);
+	$return['content'] = $blog->description;
 	$return['excerpt'] = $blog->excerpt;
 	$return['tags'] = $blog->tags;
 	$return['owner_guid'] = $blog->owner_guid;
