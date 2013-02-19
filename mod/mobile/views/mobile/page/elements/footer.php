@@ -8,6 +8,10 @@
  * @link http://kramnorth.com
  *
  */
+ 
+ if(elgg_get_context()=='oauth2'){
+	return true;//dont show footer for mobile apps
+ }
 
 $powered_url = elgg_get_site_url() . "_graphics/powered_by_elgg_badge_drk_bckgnd.gif";
 ?>

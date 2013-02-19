@@ -8,7 +8,7 @@
  * @link http://kramnorth.com
  *
  */
- if(get_input('oauth_token')){
+ if(elgg_get_context()=='oauth2'){
  	return true;//dont show header for mobile apps
  }
 elgg_unregister_menu_item('topbar', 'register');
