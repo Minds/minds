@@ -4,7 +4,10 @@
  *
  * @uses $vars['sidebar'] Optional content that is displayed at the bottom of sidebar
  */
-
+ if(elgg_get_context()=='oauth2'){
+ 	return true;//dont show sidebar for mobile apps
+ }
+ 
 echo '<div class="well sidebar-nav">';
 
 echo elgg_view_menu('extras', array(
