@@ -12,7 +12,7 @@ if (!$title) $title = get_class($consumEnt);
 
 $controls = '';
 if ($consumEnt->canEdit()) {
-	$controls .= '( <a href="' .  $CONFIG->wwwroot . 'pg/oauth/editconsumer?guid=' . $consumEnt->getGUID() . '">'
+	$controls .= '( <a href="' .  $CONFIG->wwwroot . 'oauth/editconsumer?guid=' . $consumEnt->getGUID() . '">'
 		. elgg_echo('oauth:consumer:edit:link') . '</a>'
 		. ' |';
 	$controls .= ' ' . elgg_view('output/confirmlink', array(

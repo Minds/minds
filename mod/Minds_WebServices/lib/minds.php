@@ -71,3 +71,39 @@ expose_function('checkAuth',
 				'POST',
 				true,
 				true);
+
+/** 
+ * Web services to begin the OAuth2.0 auto login
+ */
+function minds_ws_login($username, $password, $client_id, $request_uri){
+	if (true === elgg_authenticate($username, $password)) {
+		// Get our custom storage object
+	    $storage = new ElggOAuth2DataStore();
+	
+	    // Create a server instance
+	    $server = new OAuth2_Server($storage);
+	
+	    // Client entities are private so ignore access during the lookup
+	    $access = elgg_get_ignore_access();
+	    elgg_set_ignore_access(true);
+		
+		$server->addGrantType(new OAuth2_GrantType_UserCredentials($storage));
+		
+	    $server->handleGrantRequest(OAuth2_Request::createFromGlobals())->send();
+	
+	    elgg_set_ignore_access($access);
+	    
+	    return $server;
+	}
+}
+expose_function('minds.login',
+				"minds_ws_login",
+				array(	'username' => array ('type' => 'string', 'required' => true),
+						'password' => array ('type' => 'string', 'required' => true),
+						'client_id' => array ('type' => 'string', 'required' => true),
+						'request_uri' => array ('type' => 'string', 'required' => true),
+					),
+				"Authenticate a user",
+				'POST',
+				false,
+				false);
