@@ -317,11 +317,16 @@ function groups_handle_activity_page($guid) {
 	elgg_push_breadcrumb($title);
 
 	$db_prefix = elgg_get_config('dbprefix');
-
-	$content = elgg_list_river(array(
+	//we want to grab activity from entities where this group is the container guid
+	$entities = elgg_get_entities(array('container_guid'=>$guid, 'limit'=>0));
+	foreach($entities as $entity){
+		$entity_guids[] = $entity->getGUID();
+	}
+	/*$content = elgg_list_river(array(
 		'joins' => array("JOIN {$db_prefix}entities e ON e.guid = rv.object_guid"),
 		'wheres' => array("e.container_guid = $guid")
-	));
+	));*/
+	$content = minds_elastic_list_news(array('object_guids'=>$entity_guids));
 	if (!$content) {
 		$content = '<p>' . elgg_echo('groups:activity:none') . '</p>';
 	}
