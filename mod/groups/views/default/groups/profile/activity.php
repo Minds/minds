@@ -38,7 +38,7 @@ $entities = elgg_get_entities(array('container_guid'=>$group->guid, 'limit'=>0))
 foreach($entities as $entity){
 	$entity_guids[] = $entity->getGUID();
 }
-$content = minds_elastic_list_news(array('object_guids'=>$entity_guids, 'limit' => 25,
+$content .= minds_elastic_list_news(array('object_guids'=>$entity_guids, 'limit' => 25,
 	'pagination' => true));
 
 //echo elgg_view_module('wall', null, $content);
