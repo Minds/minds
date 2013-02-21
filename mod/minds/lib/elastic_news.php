@@ -243,7 +243,7 @@ function minds_elastic_list_news(array $options = array()) {
 	$options = array_merge($defaults, $options);
 
 	$options['count'] = TRUE;
-	$count = elgg_get_river($options);
+	$count = minds_elastic_get_news($options);
 	
 	$options['count'] = FALSE;
 	$items = minds_elastic_get_news($options);
