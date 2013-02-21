@@ -54,6 +54,31 @@ function minds_search_index($service){
 	echo $service;
 }
 
+/**
+ * Web service for perfoming search via the API
+ */
+function minds_search_ws($query, $type, $services, $limit, $offset) {
+	$serviceSearch = new MindsSearch();
+	$call = $serviceSearch->search($query,$type, $services, $limit,$offset);
+	$hits = $call['hits'];
+	$items = $hits['hits'];
+	
+	return $items;
+} 
+
+expose_function('search.cc',
+				"minds_search_ws",
+				array(	'query' => array ('type' => 'string', 'required'=>true),
+						'type' => array ('type' => 'string', 'required'=>false, 'default'=>'all'),
+						'services' => array ('type' => 'string', 'required'=>false, 'default'=>'all'),
+						'limit' => array ('type' => 'int', 'required'=>false, 'default'=>25),
+						'offset' => array ('type' => 'int', 'required'=>false, 'default'=>0),
+					),
+				"Search the commons",
+				'GET',
+				false,
+				false);
+
 minds_search_register_service('flickr', 'MindsSearchFlickr');
 minds_search_register_service('openclipart', 'MindsSearchOpenClipart');
 minds_search_register_service('pixabay', 'MindsSearchPixabay');
