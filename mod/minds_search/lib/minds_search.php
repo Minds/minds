@@ -57,9 +57,9 @@ function minds_search_index($service){
 /**
  * Web service for perfoming search via the API
  */
-function minds_search_ws($query, $type, $services, $limit, $offset) {
+function minds_search_ws($query, $type, $services, $license, $limit, $offset) {
 	$serviceSearch = new MindsSearch();
-	$call = $serviceSearch->search($query,$type, $services, $limit,$offset);
+	$call = $serviceSearch->search($query,$type, $service, $license, $limit,$offset);
 	$hits = $call['hits'];
 	$items = $hits['hits'];
 	
@@ -70,7 +70,8 @@ expose_function('search.cc',
 				"minds_search_ws",
 				array(	'query' => array ('type' => 'string', 'required'=>true),
 						'type' => array ('type' => 'string', 'required'=>false, 'default'=>'all'),
-						'services' => array ('type' => 'string', 'required'=>false, 'default'=>'all'),
+						'service' => array ('type' => 'string', 'required'=>false, 'default'=>'all'),
+						'license' => array ('type' => 'string', 'required'=>false, 'default'=>'all'),
 						'limit' => array ('type' => 'int', 'required'=>false, 'default'=>25),
 						'offset' => array ('type' => 'int', 'required'=>false, 'default'=>0),
 					),

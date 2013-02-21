@@ -18,9 +18,12 @@ class MindsSearch {
 		return $query['hits']['total'];
 	}
 
-	function search($q,$type = 'all',$services = array('all'), $limit=10,$offset=0) {
+	function search($q,$type = 'all',$services = array('all'), $license = 'all', $limit=10,$offset=0) {
 		if($type == 'all'){
 			$type = null;
+		}
+		if($license != 'all'){
+			$q .= ' AND license:' . $license;
 		}
 		$es = new elasticsearch();
 		$es->index = 'ext';
