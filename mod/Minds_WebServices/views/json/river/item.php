@@ -53,7 +53,7 @@ if($object->type == "user" || $object->type == "group"){
 			$item->object_metadata['video_id'] = $object->kaltura_video_id;
 		}
 		//small hack for images
-		if($object->getSubtype()=='image' || $object->getSubtype()=='album'){
+		if($object->getSubtype()=='image' || $object->getSubtype()=='album' || $object->getSubtype()=='tidypics_batch'){
 			$item->object_metadata['thumbnail'] = $object->getIconURL('large');
 		}
 }
