@@ -192,7 +192,7 @@ function archive_get_list($context, $type, $limit = 10, $offset = 0, $username){
 					$item['thumbnail'] = $single->kaltura_video_thumbnail;
 				} elseif($single->getSubtype() == 'album'){
 					$cover = $single->getCoverImage();
-					$item['tumbnail'] = $cover->getIconURL();
+					$item['thumbnail'] = $cover->getIconURL();
 				} else {
 					$item['thumbnail'] = $single->getIconURL('small');
 				}
