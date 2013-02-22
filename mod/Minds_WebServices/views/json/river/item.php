@@ -75,6 +75,7 @@ if($object->type == "user" || $object->type == "group"){
 				$icons[] = $single;
 			}
 			$item->object_guid = $album->guid;
+			$item->object_metadata['guid'] = $album->guid;
 			$item->object_metadata['title'] = $album->getTitle();
 			$item->object_metadata['images'] = $icons;
 		}
