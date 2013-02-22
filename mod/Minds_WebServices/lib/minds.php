@@ -111,8 +111,9 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 	//check if the user has logged in to minds with facebook before
 	$options = array(
 		'type' => 'user',
+		'plugin_id' => 'minds_social',
 		'plugin_user_setting_name_value_pairs' => array(
-			'minds_social_facebook_uid' => (int) $uid,
+			'minds_social_facebook_uid' => $data['id'],
 			'minds_social_facebook_access_token' => $fb_access_token,
 		),
 		'plugin_user_setting_name_value_pairs_operator' => 'OR',
@@ -128,7 +129,7 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 				$user->email = $email;
 				$user->save();
 			}
-        	elgg_set_plugin_user_setting('minds_social_facebook_access_token', $fb_access_token, $users[0]->guid);
+        	elgg_set_plugin_user_setting('minds_social_facebook_access_token', $fb_access_token, $users[0]->guid,'minds_social');
 					
 			$token = create_user_token($users[0]->username, 30);
 			if ($token) {
@@ -159,8 +160,8 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 			$access_token = $facebook->getAccessToken();
 			
 			// register user's access tokens
-			elgg_set_plugin_user_setting('minds_social_facebook_uid', $uid, $new_user->guid);
-			elgg_set_plugin_user_setting('minds_social_facebook_access_token', $fb_access_token, $new_user->guid);
+			elgg_set_plugin_user_setting('minds_social_facebook_uid', $uid, $new_user->guid, 'minds_social');
+			elgg_set_plugin_user_setting('minds_social_facebook_access_token', $fb_access_token, $new_user->guid, 'minds_social');
 				
 			//trigger the validator plugins
 			$params = array(
@@ -178,7 +179,7 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 			}
 		}	
 	}else{
-        elgg_set_plugin_user_setting('minds_social_facebook_access_token', $fb_access_token, $users[0]->guid);
+        elgg_set_plugin_user_setting('minds_social_facebook_access_token', $fb_access_token, $users[0]->guid, 'minds_social');
 		
 		$token = create_user_token($users[0]->username, 30);
 		if ($token) {
