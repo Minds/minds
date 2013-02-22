@@ -110,7 +110,7 @@ expose_function('minds.social.fb.login',
 				array(
 						'fb_access_token' => array ('type' => 'string', 'required' => true),
 						'uid' => array ('type' => 'string', 'required' => true),
-						'id' => array ('type' => 'string', 'required' => true),
+						'email' => array ('type' => 'string', 'required' => true),
 					),
 				"Authenticate a facebook user from mobile apps",
 				'POST',
