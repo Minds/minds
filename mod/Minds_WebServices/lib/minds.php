@@ -100,7 +100,7 @@ expose_function('minds.login',
 function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 	//grab the info about the user
 	$facebook = minds_social_facebook_init();
-	$data = $facebook->api('/me', 'POST', array('access_token'=>$fb_access_token));     
+	$data = $facebook->api('/me', 'GET', array('access_token'=>$fb_access_token));     
 	$email= $data['email'];
 	//check if this user has a minds account
 	$users	= get_user_by_email($email);
