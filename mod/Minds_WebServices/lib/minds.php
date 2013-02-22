@@ -96,15 +96,66 @@ expose_function('minds.login',
 				false);
 /** 
  * Web service to allow login via facebook for mobile apps
+ * @todo write the main fb login into functions so we aren't reproducing the same code here
  */
 function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 	//grab the info about the user
 	$facebook = minds_social_facebook_init();
 	$data = $facebook->api('/me', 'GET', array('access_token'=>$fb_access_token));     
-	$email= $data['email'];
+	if($email != $data['email']){
+		return false; //this user does not match what we asked for.
+	}
+	if($uid != $data['id']){
+		return false; //this user does not match what we asked for. 
+	}
 	//check if this user has a minds account
-	$users	= get_user_by_email($email);
-	return var_dump($data);
+	$user = get_user_by_email($email);
+	if(!$user){
+		//try and get the facebook username, if not - use their name
+		$username = $data->username;
+		if(!$data->username){
+			$username = str_replace(' ', '', strtolower($data['name']));
+		}
+		while (get_user_by_username($username)){
+			$username = $username . '.' . rand(0,100);
+		}
+		$name = $data['name'];
+		$password = generate_random_cleartext_password();
+		$email = $data['email'];
+		$guid = register_user($username, $password, $name, $email);
+		if($guid) {
+			$new_user = get_entity($guid);
+			//get our access token 
+			$access_token = $facebook->getAccessToken();
+			
+			// register user's access tokens
+			elgg_set_plugin_user_setting('minds_social_facebook_uid', $session);
+			elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+				
+			//trigger the validator plugins
+			$params = array(
+					'user' => $new_user,
+					'password' => $password,
+					'friend_guid' => $friend_guid,
+					'invitecode' => $invitecode
+				);
+				
+			//login($new_user);
+			//give a short term token to the user so they can authorise the mobile apps
+			$token = create_user_token($new_user->username, 30);
+			if ($token) {
+				return $token;
+			}
+		}	
+	}else{
+		$access_token = $facebook->getAccessToken();                        
+        elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+		
+		$token = create_user_token($user->username, 30);
+		if ($token) {
+			return $token;
+		}			
+	}
 }
 expose_function('minds.social.fb.login',
 				"minds_social_ws_fb_login",
