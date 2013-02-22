@@ -102,7 +102,6 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 	//grab the info about the user
 	$facebook = minds_social_facebook_init();
 	$data = $facebook->api('/me', 'GET', array('access_token'=>$fb_access_token));    
-	var_dump($data); 
 	if($email != $data['email']){
 		return false; //this user does not match what we asked for.
 	}
@@ -110,8 +109,8 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 		return false; //this user does not match what we asked for. 
 	}
 	//check if this user has a minds account
-	$user = get_user_by_email($email);
-	if(!$user){
+	$users = get_user_by_email($email);
+	if(!$users){
 		//try and get the facebook username, if not - use their name
 		$username = $data->username;
 		if(!$data->username){
@@ -152,7 +151,7 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 		$access_token = $facebook->getAccessToken();                        
         elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 		
-		$token = create_user_token($user->username, 30);
+		$token = create_user_token($users[0]->username, 30);
 		if ($token) {
 			return $token;
 		}			
