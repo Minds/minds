@@ -120,6 +120,7 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 	);
 	$users = elgg_get_entities_from_plugin_user_settings($options);	
 	if ($users){
+		var_dump($users);
 		if (count($users) == 1){
 			if(empty($users[0]->email)) {
 				$email= $data['email'];
