@@ -21,7 +21,7 @@ function bootcamp_init() {
 	elgg_register_library('bootcamp', elgg_get_plugins_path() . 'bootcamp/lib/bootcamp.php');
 	
 	//On first login, promt user for bootcamp
-	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted') && !$_SESSION['fb_referrer']){
+	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted') && !$_SESSION['fb_referrer'] && !get_input('code')){
 		elgg_set_plugin_user_setting('prompted', 'yes');
 		forward('bootcamp');
 	}
