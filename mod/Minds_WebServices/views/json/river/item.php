@@ -53,8 +53,29 @@ if($object->type == "user" || $object->type == "group"){
 			$item->object_metadata['video_id'] = $object->kaltura_video_id;
 		}
 		//small hack for images
-		if($object->getSubtype()=='image' || $object->getSubtype()=='album' || $object->getSubtype()=='tidypics_batch'){
+		if($object->getSubtype()=='image' || $object->getSubtype()=='album'){
 			$item->object_metadata['thumbnail'] = $object->getIconURL('large');
+		}
+		//small hack for tidypics_batch
+		if($object->getSubtype()=='tidypics_batch'){
+			// Get images related to this batch
+			$images = elgg_get_entities_from_relationship(array(
+				'relationship' => 'belongs_to_batch',
+				'relationship_guid' => $object->getGUID(),
+				'inverse_relationship' => true,
+				'type' => 'object',
+				'subtype' => 'image',
+				'offset' => 0,
+			));
+			$album = $batch->getContainerEntity();
+			foreach($images as $image){
+				$icons[$image->guid][$image->guid] = $image->guid;
+				$icons[$image->guid]['title'] = $image->getTitle();
+				$icons[$image->guid]['thumbnail'] = $image->getIconURL('small');
+			}
+			$item->object_guid = $album->guid;
+			$item->object_metadata['title'] = $album->getTitle();
+			$item->object_metadata['images'] = $icons;
 		}
 }
 
