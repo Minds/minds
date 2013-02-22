@@ -108,7 +108,36 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 	if($uid != $data['id']){
 		return false; //this user does not match what we asked for. 
 	}
-	//check if this user has a minds account
+	//check if the user has logged in to minds with facebook before
+	$options = array(
+		'type' => 'user',
+		'plugin_user_setting_name_value_pairs' => array(
+			'minds_social_facebook_uid' => $data['id'],
+			'minds_social_facebook_access_token' => $fb_access_token,
+		),
+		'plugin_user_setting_name_value_pairs_operator' => 'OR',
+		'limit' => 0
+	);
+	$users = elgg_get_entities_from_plugin_user_settings($options);	
+	if ($users){
+		if (count($users) == 1){
+			if(empty($users[0]->email)) {
+				$email= $data['email'];
+				$user = get_entity($users[0]->guid);
+				$user->email = $email;
+				$user->save();
+			}
+        	elgg_set_plugin_user_setting('minds_social_facebook_access_token', $fb_access_token, $users[0]->guid);
+					
+			$token = create_user_token($users[0]->username, 30);
+			if ($token) {
+				return $token;
+			}		
+		} else {
+			system_message(elgg_echo('facebook_connect:login:error'));
+		}
+	}
+	//try to register the user, if an email address for that user already exists then link the accounts
 	$users = get_user_by_email($email);
 	if(!$users){
 		//try and get the facebook username, if not - use their name
@@ -129,8 +158,8 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 			$access_token = $facebook->getAccessToken();
 			
 			// register user's access tokens
-			elgg_set_plugin_user_setting('minds_social_facebook_uid', $session);
-			elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+			elgg_set_plugin_user_setting('minds_social_facebook_uid', $uid, $new_user->guid);
+			elgg_set_plugin_user_setting('minds_social_facebook_access_token', $fb_access_token, $new_user->guid);
 				
 			//trigger the validator plugins
 			$params = array(
@@ -148,8 +177,7 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 			}
 		}	
 	}else{
-		$access_token = $facebook->getAccessToken();                        
-        elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+        elgg_set_plugin_user_setting('minds_social_facebook_access_token', $fb_access_token, $users[0]->guid);
 		
 		$token = create_user_token($users[0]->username, 30);
 		if ($token) {
