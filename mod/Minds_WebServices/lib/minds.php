@@ -113,7 +113,7 @@ function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 		'type' => 'user',
 		'plugin_id' => 'minds_social',
 		'plugin_user_setting_name_value_pairs' => array(
-			'minds_social_facebook_uid' => $data['id'],
+			'minds_social_facebook_uid' => (int) $data['id'],
 			'minds_social_facebook_access_token' => $fb_access_token,
 		),
 		'plugin_user_setting_name_value_pairs_operator' => 'OR',
