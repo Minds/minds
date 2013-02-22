@@ -97,7 +97,7 @@ expose_function('minds.login',
 /** 
  * Web service to allow login via facebook for mobile apps
  */
-function minds_social_ws_fb_login($fb_access_token){
+function minds_social_ws_fb_login($fb_access_token, $email, $uid){
 	//grab the info about the user
 	$data = $facebook->api('/me', 'POST', array('access_token'=>$fb_access_token));     
 	$email= $data['email'];
@@ -109,8 +109,10 @@ expose_function('minds.social.fb.login',
 				"minds_social_ws_fb_login",
 				array(
 						'fb_access_token' => array ('type' => 'string', 'required' => true),
+						'uid' => array ('type' => 'string', 'required' => true),
+						'id' => array ('type' => 'string', 'required' => true),
 					),
 				"Authenticate a facebook user from mobile apps",
 				'POST',
-				true, 
+				false, 
 				false);
