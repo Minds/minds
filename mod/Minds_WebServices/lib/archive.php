@@ -190,7 +190,10 @@ function archive_get_list($context, $type, $limit = 10, $offset = 0, $username){
 				if($single->getSubtype() == 'kaltura_video'){
 					$item['video_id'] = $single->kaltura_video_id;
 					$item['thumbnail'] = $single->kaltura_video_thumbnail;
-				} else{
+				} elseif($single->getSubtype() == 'album'){
+					$cover = $single->getCoverImage();
+					$item['tumbnail'] = $cover->getIconURL();
+				} else {
 					$item['thumbnail'] = $single->getIconURL('small');
 				}
 				
