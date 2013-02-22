@@ -269,9 +269,9 @@ function archive_get_single($guid) {
 						$single['guid'] = $image->guid;
 						$single['title'] = $image->getTitle();
 						$single['source'] = $image->getIconURL();
-						$images[] = $single;
+						$new_images[] = $single;
 					}
-					$return['images'] = $images;
+					$return['images'] = $new_images;
 				} else {
 					$return['source'] = $item->getIconURL('large');
 				}
