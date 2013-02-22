@@ -258,6 +258,17 @@ function archive_get_single($guid) {
 				if($item->getSubtype() == 'kaltura_video'){
 					$return['video_id'] = $item->kaltura_video_id;
 					$return['source'] = $kaltura_server . '/p/'.$partnerId.'/sp/0/playManifest/entryId/' . $item->kaltura_video_id . '/format/url/flavorParamId/9/video.mp4';
+				} elseif($item->getSubtype() == 'album') {
+					$cover = $item->getCoverImage();
+					$return['source'] = $cover->getIconURL();
+					$images = $item->getImages(7);
+					foreach($images as $image) {
+						$single['guid'] = $image->guid;
+						$single['title'] = $image->getTitle();
+						$single['source'] = $image->getIconURL();
+						$images[] = $single;
+					}
+					$return['images'] = $images;
 				} else {
 					$return['source'] = $item->getIconURL('large');
 				}
