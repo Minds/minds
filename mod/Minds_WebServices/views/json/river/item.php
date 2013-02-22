@@ -69,9 +69,10 @@ if($object->type == "user" || $object->type == "group"){
 			));
 			$album = $object->getContainerEntity();
 			foreach($images as $image){
-				$icons[$image->guid]['guid'] = $image->guid;
-				$icons[$image->guid]['title'] = $image->getTitle();
-				$icons[$image->guid]['thumbnail'] = $image->getIconURL('small');
+				$single['guid'] = $image->guid;
+				$single['title'] = $image->getTitle();
+				$single['thumbnail'] = $image->getIconURL('small');
+				$icons[] = $single;
 			}
 			$item->object_guid = $album->guid;
 			$item->object_metadata['title'] = $album->getTitle();
