@@ -19,7 +19,7 @@ $images = elgg_get_entities_from_relationship(array(
 ));
 
 $album = $batch->getContainerEntity();
-if (!$album) {
+if (!$album || !($album instanceof TidypicsAlbum)) {
 	// something went quite wrong - this batch has no associated album
 	return true;
 }
