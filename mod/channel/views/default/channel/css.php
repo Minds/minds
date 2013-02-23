@@ -158,6 +158,12 @@
 	border:none;
 }
 
+.elgg-widget-add-control{
+	display:block;
+	width:100%;
+	height:25px;
+}
+
 /**
  * Custom Channels
  *
@@ -173,6 +179,7 @@
  * Subscribed will show a blue colour
  */
 .subscribed{
+	text-shadow: 0 1px 0 #999;
 	background:#4690D6 url(http://www.minds.com/_graphics/button_graduation.png) repeat-x;
 	border:#4690D6;
 	color:#FFF;

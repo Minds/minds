@@ -48,6 +48,8 @@ function channel_init() {
 	elgg_register_page_handler('channel', 'channel_page_handler');
 	//register a page handler for channels search and suggestions
 	elgg_register_page_handler('channels', 'channels_page_handler');
+	
+	elgg_register_event_handler('create','object','channels_widget_added_action');
 
 	elgg_extend_view('page/elements/head', 'channel/metatags');
 	elgg_extend_view('css/elgg', 'channel/css');
@@ -70,9 +72,11 @@ function channel_init() {
 			elgg_echo('channel:widget:info:desc')
 	);
 	//setup the profile icon widget
+	$username = get_input('handler');
+	$user = get_user_by_username($username);
 	elgg_register_widget_type(
 			'channel_avatar',
-			elgg_echo('channel:widget:avatar:title'),
+			elgg_echo('channel:widget:avatar:title', array($user->name)),
 			elgg_echo('channel:widget:avatar:desc')
 	);
 	
@@ -373,4 +377,34 @@ function channel_elements_menu_setup($hook, $type, $return, $params) {
 	return $return;
 }
 
+/**
+ * run once function to update all users avatar widgets
+ */
+function channels_update_avatar_widgets(){
+	$options = array(
+		'type' => 'object',
+		'subtype' => 'widget',
+		'limit' => 0
+	);
+	$widgets = elgg_get_entities($options);
+	foreach($widgets as $widget){
+		if($widget->handler == 'channel_avatar'){
+			$owner = $widget->getOwnerEntity();
+			$widget->title = $owner->name;
+			$widget->save();
+		}
+	}
+}
+/**
+  * A function to be called every time a user adds a widget so we can add a title to the avatar one. 
+  */
+function channels_widget_added_action($event, $object_type, $object){
+	if($object instanceof ElggWidget){
+		if(get_input('handler') == 'channel_avatar'){
+			$owner = $object->getOwnerEntity();
+			$object->title = $owner->name;
+			$object->save();
+		}
+	}
+}
 
