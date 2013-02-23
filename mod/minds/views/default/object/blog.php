@@ -95,7 +95,7 @@ if ($full) {
 	
 } else {
 	// brief view
-	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description), 'class'=>'rich-image'));
+	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
 	$img_link = '<div class="rich-image-container">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$image)) . '</div>';
 	$readmore = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_echo('readmore'), 'class'=>'readmore'));
 	$params = array(
