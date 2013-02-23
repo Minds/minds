@@ -22,6 +22,10 @@ if (empty($title)) {
 	register_error(elgg_echo("album:blank"));
 	forward(REFERER);
 }
+if($license == 'not-selected'){
+	register_error(elgg_echo('minds:license:not-selected'));
+	forward(REFERER);
+}
 
 if ($guid) {
 	$album = get_entity($guid);

@@ -16,6 +16,11 @@ $error = FALSE;
 $error_forward_url = REFERER;
 $user = elgg_get_logged_in_user_entity();
 
+if(get_input('license') == 'not-selected'){
+	register_error(elgg_echo('minds:license:not-selected'));
+	forward(REFERER);
+}
+
 // edit or create a new entity
 $guid = get_input('guid');
 

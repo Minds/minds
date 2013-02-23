@@ -16,52 +16,6 @@ if (!$container_guid) {
 }
 
 ?>
-<script>
-		var progressbox     = $('.progressbox');
-        var progressbar     = $('.progressbar');
-        var statustxt       = $('.statustxt');
-        var submitbutton    = $(".elgg-button-submit");
-        var myform          = $(".elgg-form-minds-upload");
-        var output          = $("#output");
-        var completed       = '0%';
-        
-        //test if the browser support xmlhttprequest
-        var xhr = new XMLHttpRequest();
-        if(xhr && ('upload' in xhr)){
- 
-                $(myform).ajaxForm({
-                    beforeSend: function() { //brfore sending form
-                        submitbutton.remove(); // disable upload button
-                        statustxt.slideDown();
-                        progressbox.show(); //show progressbar
-                        progressbar.width(completed); //initial value 0% of progressbar
-                        statustxt.html(completed); //set status text
-                        statustxt.css('color','#000'); //initial color of status text
-                    },
-                    uploadProgress: function(event, position, total, percentComplete) { //on progress
-                        progressbar.width(percentComplete + '%') //update progressbar percent complete
-                        statustxt.html(percentComplete + '%'); //update status text
-                        if(percentComplete>50)
-                            {
-                                //statustxt.css('color','#fff'); //change status text to white after 50%
-                            }
-                        if(percentComplete==100)
-                        	{
-                        		statustxt.html('Upload complete. Please wait until the upload is processed. This could take a few moments depending on the file size.')
-                        	}
-                        },
-                    complete: function(response) { // on complete
-                    	//console.log(response);
-                        elgg.forward('/archive/owner/' + elgg.get_logged_in_user_entity().username);
-                        myform.resetForm();  // reset form
-                        submitbutton.removeAttr('disabled'); //enable submit button
-                        progressbox.slideUp(); // hide progressbar
-                    }
-            });
-        } else {
-        	progressbox.hide();
-        }
-</script>
 <div>
 	<label><?php echo elgg_echo('minds:upload:file'); ?></label><br />
 	<?php echo elgg_view('input/file', array('name' => 'upload')); ?>

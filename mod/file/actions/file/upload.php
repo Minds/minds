@@ -16,12 +16,19 @@ $guid = (int) get_input('file_guid');
 $tags = get_input("tags");
 $license = get_input("license");
 
+
 if ($container_guid == 0) {
 	$container_guid = elgg_get_logged_in_user_guid();
 }
 $user_guid = $_SESSION['user']->getGUID();
 
 elgg_make_sticky_form('file');
+
+
+if($license == 'not-selected'){
+	register_error(elgg_echo('minds:license:not-selected'));
+	forward(REFERER);
+}
 
 // check if upload failed
 if (!empty($_FILES['upload']['name']) && $_FILES['upload']['error'] != 0) {

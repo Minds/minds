@@ -25,6 +25,11 @@ $is_simple_video = get_input('is_simple_video','0');
 $fileData = get_input('fileData', '');
 $simpleVideoCreatorModal = get_input('simple_video_creator_modal');
 
+if($license == 'not-selected'){
+	register_error(elgg_echo('minds:license:not-selected'));
+	forward(REFERER);
+}
+
 $url = '';
 if($video_id) {
 

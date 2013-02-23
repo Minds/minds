@@ -23,7 +23,10 @@ if ($container_guid == 0) {
 $user_guid = $_SESSION['user']->getGUID();
 
 elgg_make_sticky_form('generic-upload');
-
+if($license == 'not-selected'){
+	register_error(elgg_echo('minds:license:not-selected'));
+	forward(REFERER);
+}
 // check if upload failed
 if (!$_FILES['upload']['name']) {
 	register_error(elgg_echo('minds:upload:nofile'));

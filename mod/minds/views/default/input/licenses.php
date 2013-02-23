@@ -1,6 +1,7 @@
 <?php echo elgg_view('input/dropdown', array(	'name' => $vars['name'],
 																'id' => 'license',
 																'options_values' => array(
+																	'not-selected' => elgg_echo('minds:license:not-selected'),
 																	'attribution-cc' => elgg_echo('minds:license:attribution-cc'),
 																	'attribution-sharealike-cc' => elgg_echo('minds:license:attribution-sharealike-cc'),
 																	'attribution-noderivs-cc' => elgg_echo('minds:license:attribution-noderivs-cc'),

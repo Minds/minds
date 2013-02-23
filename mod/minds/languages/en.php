@@ -160,6 +160,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	/* Licenses
 	 */
 	'minds:license:label' => 'License <a href="' . elgg_get_site_url() . 'licenses" target="_blank"> (?) </a>',
+	'minds:license:not-selected' => '-- Please select a license --',
 	'minds:license:attribution-cc' => 'Attribution CC BY',
 	'minds:license:attribution-sharealike-cc' => 'Attribution-ShareAlike BY-SA',
 	'minds:license:attribution-noderivs-cc' => 'Attribution-NoDerivs CC BY-ND',

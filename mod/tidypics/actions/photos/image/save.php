@@ -21,6 +21,11 @@ if (empty($title)) {
 	forward(REFERER);
 }
 
+if($license == 'not-selected'){
+	register_error(elgg_echo('minds:license:not-selected'));
+	forward(REFERER);
+}
+
 $image = get_entity($guid);
 
 $image->access_id = $access_id;
