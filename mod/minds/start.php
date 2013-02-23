@@ -429,7 +429,7 @@ function minds_subscribe_default($hook, $type, $value, $params){
 	return $value;
 }
 
-function minds_fetch_image($description) {
+function minds_fetch_image($description, $owner_guid) {
   
   global $post, $posts;
   $fbimage = '';
@@ -437,7 +437,9 @@ function minds_fetch_image($description) {
   $image = $matches [1] [0];
  
   if(empty($image)) {
-    $image = elgg_get_site_url() . 'mod/minds/graphics/minds_logo.png';
+    //$image = elgg_get_site_url() . 'mod/minds/graphics/minds_logo.png';
+    $owner = get_entity($owner_guid);
+    $image = $owner->getIconURL('medium');
   }
   
   return $image;
