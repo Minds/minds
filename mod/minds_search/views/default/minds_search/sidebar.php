@@ -8,7 +8,7 @@ $count = $stats['hits']['total'];
 
 $query = get_input('q');
 $t = get_input('type', 'all');
-$l = get_input('license');
+$l = get_input('license', 'all');
 
 $path = elgg_get_site_url() . 'search/?q=' . $query;
 
