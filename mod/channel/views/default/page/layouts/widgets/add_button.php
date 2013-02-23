@@ -10,7 +10,6 @@ elgg_load_js('elgg.wall');
 <div class="elgg-widget-add-control">
 <?php
 if($user instanceof ElggUser){
-	echo elgg_view_title($user->name);
 	
 	if($user->canEdit())
 	echo elgg_view('output/url', array(	'href' => '/avatar/edit/' . $user->username,
