@@ -19,7 +19,7 @@ function channel_init() {
 	global $CONFIG;
 	$CONFIG->minusername = 2;
 	
-	run_function_once('channels_update_avatar_widgets');
+	//run_function_once('channels_update_avatar_widgets');
 
 	// Register a URL handler for users - this means that profile_url()
 	// will dictate the URL for all ElggUser objects
