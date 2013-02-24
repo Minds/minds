@@ -24,7 +24,7 @@ class MindsSearch {
 		}
 		if($license != 'all'){
 			$q .= ' AND license:' . $license;
-		}echo $q;
+		}
 		$es = new elasticsearch();
 		$es->index = 'ext';
 		return $es->query($type, $q, $sort, $limit, $offset);
