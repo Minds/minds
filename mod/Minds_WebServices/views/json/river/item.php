@@ -41,7 +41,7 @@ if($object->type == "user" || $object->type == "group"){
 			//@todo make this blend in with the standard functions
 			$item->object_metadata['to_username'] = get_entity($object->to_guid)->username;
 			$item->object_metadata['to_name'] = get_entity($object->to_guid)->name;
-			$item->object_metadata['message'] = $object->message;
+			$item->object_metadata['message'] = strip_tags($object->message);
 		}
 		//small hack for bookmarks
 		if(get_subtype_from_id($object->subtype) == 'bookmarks'){
