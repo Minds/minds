@@ -37,7 +37,6 @@ function elgg_get_site_url($site_guid = 0) {
 		return false;
 	}
 	/* @var ElggSite $site */
->>>>>>> upstream/1.8
 
 	return $site->url;
 }

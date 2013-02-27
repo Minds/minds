@@ -2,8 +2,8 @@
 /**
  * Edit
  */
-
-$actions = elgg_extract('action', $menu, array());
+/*
+$actions = elgg_extract('action', $vars);
 
 $profile_actions = '';
 if (elgg_is_logged_in() && $actions) {
@@ -14,4 +14,4 @@ if (elgg_is_logged_in() && $actions) {
 	$profile_actions .= '</ul>';
 }
 
-echo $profile_actions;
+echo $profile_actions;*/

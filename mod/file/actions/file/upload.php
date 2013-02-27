@@ -77,12 +77,13 @@ if ($new_file) {
 	
 	} else {
 
-	$file = new FilePluginFile();
-	$file->subtype = "file";
+		$file = new FilePluginFile();
+		$file->subtype = "file";
 
-	// if no title on new upload, grab filename
-	if (empty($title)) {
-		$title = htmlspecialchars($_FILES['upload']['name'], ENT_QUOTES, 'UTF-8');
+		// if no title on new upload, grab filename
+		if (empty($title)) {
+			$title = htmlspecialchars($_FILES['upload']['name'], ENT_QUOTES, 'UTF-8');
+		}
 	}
 
 } else {
