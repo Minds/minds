@@ -10,7 +10,7 @@ elgg.ui.init = function () {
 	});
 
 	$('.elgg-system-messages li').animate({opacity: 0.9}, 6000);
-	$('.elgg-system-messages li').fadeOut('slow');
+	$('.elgg-system-messages li.elgg-state-success').fadeOut('slow');
 
 	$('[rel=toggle]').live('click', elgg.ui.toggles);
 
@@ -283,7 +283,7 @@ elgg.ui.initDatePicker = function() {
 			dataType: "script",
 			cache: true,
 			success: loadDatePicker,
-			error: loadDatePicker, // english language is already loaded.
+			error: loadDatePicker // english language is already loaded.
 		});
 	}
 };

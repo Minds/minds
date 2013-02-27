@@ -12,7 +12,11 @@ $english = array(
 	 */
 	'file' => "Files",
 	'file:user' => "%s's files",
+<<<<<<< HEAD
 	'file:friends' => "Channels' files",
+=======
+	'file:friends' => "Friends' files",
+>>>>>>> upstream/1.8
 	'file:all' => "All site files",
 	'file:edit' => "Edit file",
 	'file:more' => "More files",
@@ -22,11 +26,18 @@ $english = array(
 	'file:gallery_list' => "Gallery or list view",
 	'file:num_files' => "Number of files to display",
 	'file:user:gallery'=>'View %s gallery',
+<<<<<<< HEAD
 	'file:via' => 'via files',
 	'file:upload' => "Upload a file",
 	'file:replace' => 'Replace file content (leave blank to not change file)',
 	'file:list:title' => "%s's %s %s",
 	'file:title:friends' => "Channels'",
+=======
+	'file:upload' => "Upload a file",
+	'file:replace' => 'Replace file content (leave blank to not change file)',
+	'file:list:title' => "%s's %s %s",
+	'file:title:friends' => "Friends'",
+>>>>>>> upstream/1.8
 
 	'file:add' => 'Upload a file',
 
@@ -54,11 +65,19 @@ $english = array(
 	'file:user:type:image' => "%s's pictures",
 	'file:user:type:general' => "%s's general files",
 
+<<<<<<< HEAD
 	'file:friends:type:video' => "Your channels' videos",
 	'file:friends:type:document' => "Your channels' documents",
 	'file:friends:type:audio' => "Your channels' audio",
 	'file:friends:type:image' => "Your channels' pictures",
 	'file:friends:type:general' => "Your channels' general files",
+=======
+	'file:friends:type:video' => "Your friends' videos",
+	'file:friends:type:document' => "Your friends' documents",
+	'file:friends:type:audio' => "Your friends' audio",
+	'file:friends:type:image' => "Your friends' pictures",
+	'file:friends:type:general' => "Your friends' general files",
+>>>>>>> upstream/1.8
 
 	'file:widget' => "File widget",
 	'file:widget:description' => "Showcase your latest files",
@@ -79,6 +98,18 @@ $english = array(
 	'item:object:file' => 'Files',
 
 	'file:newupload' => 'A new file has been uploaded',
+<<<<<<< HEAD
+=======
+	'file:notification' =>
+'%s uploaded a new file:
+
+%s
+%s
+
+View and comment on the new file:
+%s
+',
+>>>>>>> upstream/1.8
 
 	/**
 	 * Embed media
@@ -105,11 +136,14 @@ $english = array(
 		'file:noaccess' => "You do not have permissions to change this file",
 		'file:cannotload' => "There was an error uploading the file",
 		'file:nofile' => "You must select a file",
+<<<<<<< HEAD
 		
 	/** 
 	 * Moved to archive message
 	 */
 	 'file:movedtoarchive' => 'This file has been sent to the Archive because it is a media format. You can find it by navigating to Archive at the top of the page.',
+=======
+>>>>>>> upstream/1.8
 );
 
 add_translation("en", $english);

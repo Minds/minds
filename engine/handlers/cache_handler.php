@@ -64,7 +64,7 @@ $ts = $matches[4];
 
 // If is the same ETag, content didn't changed.
 $etag = $ts;
-if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
+if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) == "\"$etag\"") {
 	header("HTTP/1.1 304 Not Modified");
 	exit;
 }
@@ -80,10 +80,10 @@ switch ($type) {
 		break;
 }
 
-header('Expires: ' . date('r', strtotime("+6 months")), true);
+header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', strtotime("+6 months")), true);
 header("Pragma: public", true);
 header("Cache-Control: public", true);
-header("ETag: $etag");
+header("ETag: \"$etag\"");
 
 $filename = $dataroot . 'views_simplecache/' . md5($viewtype . $view);
 
@@ -93,7 +93,12 @@ if (file_exists($filename)) {
 	// someone trying to access a non-cached file or a race condition with cache flushing
 	mysql_close($mysql_dblink);
 	require_once(dirname(dirname(__FILE__)) . "/start.php");
-	elgg_regenerate_simplecache();
+
+	global $CONFIG;
+	if (!isset($CONFIG->views->simplecache[$view])) {
+		header("HTTP/1.1 404 Not Found");
+		exit;
+	}
 
 	elgg_set_viewtype($viewtype);
 	$contents = elgg_view($view);

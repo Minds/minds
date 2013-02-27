@@ -121,6 +121,10 @@ function file_page_handler($page) {
 			file_register_toggle();
 			include "$file_dir/friends.php";
 			break;
+		case 'read': // Elgg 1.7 compatibility
+			register_error(elgg_echo("changebookmark"));
+			forward("file/view/{$page[1]}");
+			break;
 		case 'view':
 			set_input('guid', $page[1]);
 			include "$file_dir/view.php";
@@ -199,9 +203,13 @@ function file_notify_message($hook, $entity_type, $returnvalue, $params) {
 	if (($entity instanceof ElggEntity) && ($entity->getSubtype() == 'file')) {
 		$descr = $entity->description;
 		$title = $entity->title;
-		$url = elgg_get_site_url() . "view/" . $entity->guid;
 		$owner = $entity->getOwnerEntity();
-		return $owner->name . ' ' . elgg_echo("file:via") . ': ' . $entity->title . "\n\n" . $descr . "\n\n" . $entity->getURL();
+		return elgg_echo('file:notification', array(
+			$owner->name,
+			$title,
+			$descr,
+			$entity->getURL()
+		));
 	}
 	return null;
 }
@@ -235,10 +243,14 @@ function file_get_simple_type($mimetype) {
 
 	switch ($mimetype) {
 		case "application/msword":
+		case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
 			return "document";
 			break;
 		case "application/pdf":
 			return "document";
+			break;
+		case "application/ogg":
+			return "audio";
 			break;
 	}
 
@@ -352,11 +364,15 @@ function file_icon_url_override($hook, $type, $returnvalue, $params) {
 		$mapping = array(
 			'application/excel' => 'excel',
 			'application/msword' => 'word',
+			'application/ogg' => 'music',
 			'application/pdf' => 'pdf',
 			'application/powerpoint' => 'ppt',
 			'application/vnd.ms-excel' => 'excel',
 			'application/vnd.ms-powerpoint' => 'ppt',
 			'application/vnd.oasis.opendocument.text' => 'openoffice',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'word',
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'excel',
+			'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'ppt',
 			'application/x-gzip' => 'archive',
 			'application/x-rar-compressed' => 'archive',
 			'application/x-stuffit' => 'archive',

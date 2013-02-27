@@ -31,7 +31,7 @@ if (elgg_get_config('allow_registration')) {
 
 		if ($guid) {
 			elgg_clear_sticky_form('register');
-			
+
 			$new_user = get_entity($guid);
 
 			// allow plugins to respond to self registration
@@ -55,7 +55,7 @@ if (elgg_get_config('allow_registration')) {
 			}
 
 			//system_message(elgg_echo("registerok", array(elgg_get_site_entity()->name)));
-
+			elgg_clear_sticky_form('register');
 			// if exception thrown, this probably means there is a validation
 			// plugin that has disabled the user
 			try {
@@ -77,3 +77,4 @@ if (elgg_get_config('allow_registration')) {
 }
 
 forward(REFERER);
+

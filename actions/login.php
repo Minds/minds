@@ -21,7 +21,6 @@ $username = get_input('username');
 $password = get_input('password', null, false);
 $persistent = get_input("persistent", false);
 $result = false;
-
 if (empty($username) || empty($password)) {
 	register_error(elgg_echo('login:empty'));
 	forward();

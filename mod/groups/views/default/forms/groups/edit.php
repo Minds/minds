@@ -83,6 +83,42 @@ if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {
 <?php 	
 }
 
+if (isset($vars['entity'])) {
+	$entity     = $vars['entity'];
+	$owner_guid = $vars['entity']->owner_guid;
+} else {
+	$entity = false;
+}
+
+if ($entity && ($owner_guid == elgg_get_logged_in_user_guid() || elgg_is_admin_logged_in())) {
+	$owner_guid = $vars['entity']->owner_guid;
+	$members = array();
+	foreach ($vars['entity']->getMembers(0) as $member) {
+		$members[$member->guid] = "$member->name (@$member->username)";
+	}
+?>
+
+<div>
+	<label>
+			<?php echo elgg_echo('groups:owner'); ?><br />
+			<?php echo elgg_view('input/dropdown', array(
+				'name' => 'owner_guid',
+				'value' =>  $owner_guid,
+				'options_values' => $members,
+				'class' => 'groups-owner-input',
+			));
+			?>
+	</label>
+	<?php
+	if ($owner_guid == elgg_get_logged_in_user_guid()) {
+		echo '<span class="elgg-text-help">' . elgg_echo('groups:owner:warning') . '</span>';
+	}
+	?>
+</div>
+
+<?php 	
+}
+
 $tools = elgg_get_config('group_tool_options');
 if ($tools) {
 	usort($tools, create_function('$a,$b', 'return strcmp($a->label,$b->label);'));
@@ -111,7 +147,7 @@ if ($tools) {
 <div class="elgg-foot">
 <?php
 
-if (isset($entity)) {
+if ($entity) {
 	echo elgg_view('input/hidden', array(
 		'name' => 'group_guid',
 		'value' => $entity->getGUID(),
@@ -120,7 +156,7 @@ if (isset($entity)) {
 
 echo elgg_view('input/submit', array('value' => elgg_echo('save')));
 
-if (isset($entity)) {
+if ($entity) {
 	$delete_url = 'action/groups/delete?guid=' . $entity->getGUID();
 	echo elgg_view('output/confirmlink', array(
 		'text' => elgg_echo('groups:delete'),

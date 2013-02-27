@@ -38,7 +38,7 @@ elgg.embed.insert = function(event) {
 
 	// this is a temporary work-around for #3971
 	if (content.indexOf('thumbnail.php') != -1) {
-		content = content.replace('size=small', 'size=large');
+		content = content.replace('size=small', 'size=medium');
 	}
 
 	textArea.val(textArea.val() + content);
@@ -67,6 +67,8 @@ echo elgg_view('embed/custom_insert_js');
  * @return bool
  */
 elgg.embed.submit = function(event) {
+	$('.embed-wrapper .elgg-form-file-upload').hide();
+	$('.embed-throbber').show();
 	
 	$(this).ajaxSubmit({
 		dataType : 'json',
@@ -82,6 +84,10 @@ elgg.embed.submit = function(event) {
 					var url = elgg.normalize_url('embed/tab/' + forward);
 					url = elgg.embed.addContainerGUID(url);
 					$('.embed-wrapper').parent().load(url);
+				} else {
+					// incorrect response, presumably an error has been displayed
+					$('.embed-throbber').hide();
+					$('.embed-wrapper .elgg-form-file-upload').show();
 				}
 			}
 		},
@@ -89,9 +95,6 @@ elgg.embed.submit = function(event) {
 			// @todo nothing for now
 		}
 	});
-
-	$('.elgg-form-file-upload').hide();
-	$('.embed-throbber').show();
 
 	// this was bubbling up the DOM causing a submission
 	event.preventDefault();
