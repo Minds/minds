@@ -278,32 +278,20 @@ function group_gatekeeper($forward = true) {
 					$allowed = false;
 				}
 
-	$page_owner_guid = elgg_get_page_owner_guid();
-	if (!$page_owner_guid) {
-		return true;
-	}
-	$visibility = ElggGroupItemVisibility::factory($page_owner_guid);
-
-	if (!$visibility->shouldHideItems) {
-		return true;
-	}
-	if ($forward) {
-		// only forward to group if user can see it
-		$group = get_entity($page_owner_guid);
-		$forward_url = $group ? $group->getURL() : '';
-
-		if (!elgg_is_logged_in()) {
-			$_SESSION['last_forward_from'] = current_page_url();
-			$forward_reason = 'login';
-		} else {
-			$forward_reason = 'member';
+				// Admin override
+				if (elgg_is_admin_logged_in()) {
+					$allowed = true;
+				}
+			}
 		}
-
-		register_error(elgg_echo($visibility->reasonHidden));
-		forward($forward_url, $forward_reason);
 	}
 
-	return false;
+	if ($forward && $allowed == false) {
+		register_error(elgg_echo('membershiprequired'));
+		forward($url, 'member');
+	}
+
+	return $allowed;
 }
 
 /**
