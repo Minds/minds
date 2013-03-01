@@ -532,37 +532,38 @@ function sanitise_filepath($path, $append_slash = TRUE) {
  * @todo Clean up. Separate registering messages and retrieving them.
  */
 function system_messages($message = null, $register = "success", $count = false) {
-	if (!isset($_SESSION['msg'])) {
-		$_SESSION['msg'] = array();
+	global $SESSION;
+	if (!isset($SESSION['msg'])) {
+		$SESSION['msg'] = array();
 	}
-	if (!isset($_SESSION['msg'][$register]) && !empty($register)) {
-		$_SESSION['msg'][$register] = array();
+	if (!isset($SESSION['msg'][$register]) && !empty($register)) {
+		$SESSION['msg'][$register] = array();
 	}
 	if (!$count) {
 		if (!empty($message) && is_array($message)) {
-			$_SESSION['msg'][$register] = array_merge($_SESSION['msg'][$register], $message);
+			$SESSION['msg'][$register] = array_merge($SESSION['msg'][$register], $message);
 			return true;
 		} else if (!empty($message) && is_string($message)) {
-			$_SESSION['msg'][$register][] = $message;
+			$SESSION['msg'][$register][] = $message;
 			return true;
 		} else if (is_null($message)) {
 			if ($register != "") {
 				$returnarray = array();
-				$returnarray[$register] = $_SESSION['msg'][$register];
-				$_SESSION['msg'][$register] = array();
+				$returnarray[$register] = $SESSION['msg'][$register];
+				$SESSION['msg'][$register] = array();
 			} else {
-				$returnarray = $_SESSION['msg'];
-				$_SESSION['msg'] = array();
+				$returnarray = $SESSION['msg'];
+				$SESSION['msg'] = array();
 			}
 			return $returnarray;
 		}
 	} else {
 		if (!empty($register)) {
-			return sizeof($_SESSION['msg'][$register]);
+			return count($SESSION['msg'][$register]);
 		} else {
 			$count = 0;
-			foreach ($_SESSION['msg'] as $submessages) {
-				$count += sizeof($submessages);
+			foreach ($SESSION['msg'] as $register => $submessages) {
+				$count += count((array)$submessages);
 			}
 			return $count;
 		}

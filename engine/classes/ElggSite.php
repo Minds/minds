@@ -380,9 +380,8 @@ class ElggSite extends ElggEntity {
 				elgg_register_plugin_hook_handler('index', 'system', 'elgg_walled_garden_index', 1);
 
 				if (!$this->isPublicPage()) {
-					if (!elgg_is_xhr()) {
-						$_SESSION['last_forward_from'] = current_page_url();
-					}
+					global $SESSION;
+					$SESSION['last_forward_from'] = current_page_url();
 					register_error(elgg_echo('loggedinrequired'));
 					forward();
 				}

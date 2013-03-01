@@ -80,11 +80,6 @@ switch ($type) {
 		break;
 }
 
-header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', strtotime("+6 months")), true);
-header("Pragma: public", true);
-header("Cache-Control: public", true);
-header("ETag: \"$etag\"");
-
 $filename = $dataroot . 'views_simplecache/' . md5($viewtype . $view);
 
 if (file_exists($filename)) {
@@ -103,5 +98,10 @@ if (file_exists($filename)) {
 	elgg_set_viewtype($viewtype);
 	$contents = elgg_view($view);
 }
+
+header('Expires: ' . date('r', strtotime("+6 months")), true);
+header("Pragma: public", true);
+header("Cache-Control: public", true);
+header("ETag: $etag");
 
 echo $contents;

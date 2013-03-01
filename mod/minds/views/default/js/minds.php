@@ -29,6 +29,27 @@
 			function(){
 		   		$(this).children('.hover').fadeOut('fast');
 		}); 
+
+		//handle cookie session messages
+		var msg = $.cookie('_elgg_msg');
+		if (typeof msg == 'string') {
+			msg = $.parseJSON(msg);
+			if (typeof msg == 'object') {
+				console.log(msg);
+				var del = false;
+				if (msg.error != undefined) {
+					del = true;
+					elgg.register_error(msg.error);
+				}
+				if (msg.success != undefined) {
+					del = true;
+					elgg.system_message(msg.success);
+				}
+				if (del) {
+					$.cookie('_elgg_msg', '{}', {path:'/'});
+				}
+			}
+		}
 	 };
 	 
 	

@@ -257,6 +257,26 @@ function get_users_membership($user_guid) {
  * @return bool If $forward is set to false.
  */
 function group_gatekeeper($forward = true) {
+	$allowed = true;
+	$url = '';
+
+	if ($group = elgg_get_page_owner_entity()) {
+		if ($group instanceof ElggGroup) {
+			$url = $group->getURL();
+			if (!$group->isPublicMembership()) {
+				// closed group so must be member or an admin
+
+				if (!elgg_is_logged_in()) {
+					$allowed = false;
+					if ($forward == true) {
+						global $SESSION;
+						$SESSION['last_forward_from'] = current_page_url();
+						register_error(elgg_echo('loggedinrequired'));
+						forward('', 'login');
+					}
+				} else if (!$group->isMember(elgg_get_logged_in_user_entity())) {
+					$allowed = false;
+				}
 
 	$page_owner_guid = elgg_get_page_owner_guid();
 	if (!$page_owner_guid) {
