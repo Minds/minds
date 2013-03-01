@@ -71,6 +71,13 @@ $CONFIG->dbhost = '{{dbhost}}';
  */
 $CONFIG->dbprefix = '{{dbprefix}}';
 
+/**
+ * Overrides default system cache path from inside data root to custom location.
+ *
+ * @global string $CONFIG->system_cache_path
+ * @name $CONFIG->system_cache_path
+ */
+$CONFIG->system_cache_path = '/tmp/elgg_system_cache/';
 
 /**
  * Memcache setup (optional)
