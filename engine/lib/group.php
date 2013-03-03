@@ -33,7 +33,6 @@ function get_group_entity_as_row($guid) {
  * @param string $description Description
  *
  * @return bool
- * @access private
  */
 function create_group_entity($guid, $name, $description) {
 	global $CONFIG;
@@ -170,7 +169,7 @@ function get_group_members($group_guid, $limit = 10, $offset = 0, $site_guid = 0
 		'relationship' => 'member',
 		'relationship_guid' => $group_guid,
 		'inverse_relationship' => TRUE,
-		'type' => 'user',
+		'types' => 'user',
 		'limit' => $limit,
 		'offset' => $offset,
 		'count' => $count,
@@ -248,13 +247,12 @@ function get_users_membership($user_guid) {
 }
 
 /**
- * May the current user access item(s) on this page? If the page owner is a group,
- * membership, visibility, and logged in status are taken into account.
+ * Checks access to a group.
  *
  * @param boolean $forward If set to true (default), will forward the page;
  *                         if set to false, will return true or false.
  *
- * @return bool If $forward is set to false.
+ * @return true|false If $forward is set to false.
  */
 function group_gatekeeper($forward = true) {
 	$allowed = true;
