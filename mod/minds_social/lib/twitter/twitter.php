@@ -111,6 +111,8 @@ function minds_social_twitter_login() {
 					// for the plugin hooks system.
 					throw new RegistrationException(elgg_echo('registerbad'));
 				}*/
+				//Automatically subscribe user to the Minds Channel
+				minds_subscribe_default(null,null,null, array('user'=>$new_user));
 				login($new_user);			
 		}
 	}

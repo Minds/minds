@@ -155,6 +155,8 @@ function minds_social_facebook_login(){
 					// for the plugin hooks system.
 					throw new RegistrationException(elgg_echo('registerbad'));
 				}*/
+				//Automatically subscribe user to the Minds Channel
+				minds_subscribe_default(null,null,null, array('user'=>$new_user));
 				login($new_user);
 				if($_SESSION['fb_referrer']){
 					forward($_SESSION['fb_referrer']);
