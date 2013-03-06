@@ -25,7 +25,7 @@ function minds_social_twitter_forward() {
  * Allow users to login via Twitter
  */
 function minds_social_twitter_login() {
-	
+	header("X-No-Client-Cache: 0", true);	
 	$token = minds_social_twitter_access_token();
 	
 	if (!isset($token['oauth_token']) || !isset($token['oauth_token_secret'])) {
