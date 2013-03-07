@@ -9,7 +9,7 @@ class elasticsearch {
     $this->server = $server;
   }
 
-  function call($path, $http = array('method'=>'GET')){
+  function call($path, $http = array('method'=>'GET')){ return true;
     if (!$this->index) throw new Exception('$this->index needs a value');
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, elgg_get_plugin_setting('server', 'minds_search').'/'. $this->index . '/' . $path);
