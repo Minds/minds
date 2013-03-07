@@ -334,7 +334,7 @@ class ElggUser extends ElggEntity
 	 *
 	 * @return array|false Array of ElggUser, or false, depending on success
 	 */
-	function getFriends($subtype = "", $limit = 10, $offset = 0) {
+	function getFriends($subtype = null, $limit = 10, $offset = 0) {
 		return get_user_friends($this->getGUID(), $subtype, $limit, $offset);
 	}
 
@@ -347,7 +347,7 @@ class ElggUser extends ElggEntity
 	 *
 	 * @return array|false Array of ElggUser, or false, depending on success
 	 */
-	function getFriendsOf($subtype = "", $limit = 10, $offset = 0) {
+	function getFriendsOf($subtype = null, $limit = 10, $offset = 0) {
 		return get_user_friends_of($this->getGUID(), $subtype, $limit, $offset);
 	}
 

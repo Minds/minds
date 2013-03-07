@@ -29,6 +29,10 @@ echo '<div><label>' . elgg_echo("tags") . '</label>';
 echo elgg_view('input/tags', array('name' => 'tags[]'));
 echo '</div>';
 
+echo '<div><label>' . elgg_echo('minds:license:label') . '</label>';
+echo elgg_view('input/licenses', array('name' => 'license', 'value' => $license )); 
+echo '</div>';
+  
 echo elgg_view('input/hidden', array('name' => 'guid[]', 'value' => $image->getGUID()));
 echo '<fieldset></div>';
 
