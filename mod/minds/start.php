@@ -167,12 +167,16 @@ function minds_register_page_handler($page) {
 	return true;
 }
 
-function minds_route_page_handler_cache() {
+function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
 	if (!elgg_is_logged_in()) {
+		$handler = elgg_extract('handler', $returnvalue);
+// 		$page = elgg_extract('segments', $returnvalue);
 // 		header('Expires: ' . date('r', time() + 300), true);//cache for 5min
 // 		header("Pragma: public", true);
 // 		header("Cache-Control: public", true);
-		header("X-No-Client-Cache: 1", true);
+		if (!in_array($handler, array('js', 'css', 'photos'))) {
+			header("X-No-Client-Cache: 1", true);
+		}
 	}
 }
 
