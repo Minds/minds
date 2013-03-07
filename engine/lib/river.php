@@ -101,8 +101,8 @@ $posted = 0, $annotation_id = 0) {
 	} else {
 		return false;
 	}
-}*/
-
+}
+*/
 /**
  * Delete river items
  *
@@ -209,7 +209,6 @@ $posted = 0, $annotation_id = 0) {
 
 	return delete_data($query);
 }*/
-
 /**
  * Get river items
  *
@@ -361,6 +360,7 @@ function elgg_get_river(array $options = array()) {
 		}
 
 		$river_items = get_data($query, 'elgg_row_to_elgg_river_item');
+		_elgg_prefetch_river_entities($river_items);
 
 		return $river_items;
 	} else {
@@ -370,11 +370,56 @@ function elgg_get_river(array $options = array()) {
 }
 
 /**
+ * Prefetch entities that will be displayed in the river.
+ *
+ * @param ElggRiverItem[] $river_items
+ * @access private
+ */
+function _elgg_prefetch_river_entities(array $river_items) {
+	// prefetch objects and subjects
+	$guids = array();
+	foreach ($river_items as $item) {
+		if ($item->subject_guid && !retrieve_cached_entity($item->subject_guid)) {
+			$guids[$item->subject_guid] = true;
+		}
+		if ($item->object_guid && !retrieve_cached_entity($item->object_guid)) {
+			$guids[$item->object_guid] = true;
+		}
+	}
+	if ($guids) {
+		// avoid creating oversized query
+		// @todo how to better handle this?
+		$guids = array_slice($guids, 0, 300, true);
+		// return value unneeded, just priming cache
+		elgg_get_entities(array(
+			'guids' => array_keys($guids),
+			'limit' => 0,
+		));
+	}
+
+	// prefetch object containers
+	$guids = array();
+	foreach ($river_items as $item) {
+		$object = $item->getObjectEntity();
+		if ($object->container_guid && !retrieve_cached_entity($object->container_guid)) {
+			$guids[$object->container_guid] = true;
+		}
+	}
+	if ($guids) {
+		$guids = array_slice($guids, 0, 300, true);
+		elgg_get_entities(array(
+			'guids' => array_keys($guids),
+			'limit' => 0,
+		));
+	}
+}
+
+/**
  * List river items
  *
  * @param array $options Any options from elgg_get_river() plus:
  * 	 pagination => BOOL Display pagination links (true)
-
+ *
  * @return string
  * @since 1.8.0
  */
@@ -454,6 +499,7 @@ function elgg_get_river_type_subtype_where_sql($table, $types, $subtypes, $pairs
 		return '';
 	}
 
+	$wheres = array();
 	$types_wheres = array();
 	$subtypes_wheres = array();
 
@@ -598,7 +644,7 @@ function update_river_access_by_object($object_guid, $access_id) {
 }
 
 /**
- * Page handler for activiy
+ * Page handler for activity
  *
  * @param array $page
  * @return bool
@@ -616,10 +662,6 @@ function elgg_river_page_handler($page) {
 		$page_type = 'mine';
 	}
 	set_input('page_type', $page_type);
-
-	// content filter code here
-	$entity_type = '';
-	$entity_subtype = '';
 
 	require_once("{$CONFIG->path}pages/river.php");
 	return true;

@@ -229,6 +229,7 @@ $english = array(
 	'LoginException:PasswordFailure' => 'We could not log you in. Please check your username/email and password.',
 	'LoginException:AccountLocked' => 'Your account has been locked for too many log in failures.',
 	'LoginException:ChangePasswordFailure' => 'Failed current password check.',
+	'LoginException:Unknown' => 'We could not log you in due to an unknown error.',
 
 	'deprecatedfunction' => 'Warning: This code uses the deprecated function \'%s\' and is not compatible with this version of Elgg',
 
@@ -404,7 +405,8 @@ $english = array(
 	'profile:editdefault:delete:fail' => 'Removed default profile item field failed',
 	'profile:editdefault:delete:success' => 'Profile field deleted',
 	'profile:defaultprofile:reset' => 'Profile fields reset to the system default',
-	'profile:resetdefault' => 'Reset default profile',
+	'profile:resetdefault' => 'Reset profile fields to system defaults',
+	'profile:resetdefault:confirm' => 'Are you sure you want to delete your custom profile fields?',
 	'profile:explainchangefields' => "You can replace the existing profile fields with your own using the form below. \n\n Give the new profile field a label, for example, 'Favorite team', then select the field type (eg. text, url, tags), and click the 'Add' button. To re-order the fields drag on the handle next to the field label. To edit a field label - click on the label's text to make it editable. \n\n At any time you can revert back to the default profile set up, but you will lose any information already entered into custom fields on profile pages.",
 	'profile:editdefault:success' => 'New profile field added',
 	'profile:editdefault:fail' => 'Default profile could not be saved',
@@ -581,6 +583,7 @@ $english = array(
 	'admin:users' => "Users",
 	'admin:users:online' => 'Currently Online',
 	'admin:users:newest' => 'Newest',
+	'admin:users:admins' => 'Administrators',
 	'admin:users:add' => 'Add New User',
 	'admin:users:description' => "This admin panel allows you to control user settings for your site. Choose an option below to get started.",
 	'admin:users:adduser:label' => "Click here to add a new user...",
@@ -661,6 +664,7 @@ $english = array(
 
 
 	'admin:notices:could_not_delete' => 'Could not delete notice.',
+	'item:object:admin_notice' => 'Admin notice',
 
 	'admin:options' => 'Admin options',
 
@@ -686,7 +690,7 @@ $english = array(
 	'admin:plugins:label:author' => "Author",
 	'admin:plugins:label:copyright' => "Copyright",
 	'admin:plugins:label:categories' => 'Categories',
-	'admin:plugins:label:licence' => "Licence",
+	'admin:plugins:label:licence' => "License",
 	'admin:plugins:label:website' => "URL",
 	'admin:plugins:label:repository' => "Code",
 	'admin:plugins:label:bugtracker' => "Report issue",
@@ -732,6 +736,7 @@ $english = array(
 	'admin:statistics:label:numusers' => "Number of users",
 	'admin:statistics:label:numonline' => "Number of users online",
 	'admin:statistics:label:onlineusers' => "Users online now",
+	'admin:statistics:label:admins'=>"Admins",
 	'admin:statistics:label:version' => "Elgg version",
 	'admin:statistics:label:version:release' => "Release",
 	'admin:statistics:label:version:version' => "Version",
@@ -1052,6 +1057,10 @@ Once you have logged in, we highly recommend that you change your password.
 	'upgrading' => 'Upgrading...',
 	'upgrade:db' => 'Your database was upgraded.',
 	'upgrade:core' => 'Your Elgg installation was upgraded.',
+	'upgrade:unlock' => 'Unlock upgrade',
+	'upgrade:unlock:confirm' => "The database is locked for another upgrade. Running concurrent upgrades is dangerous. You should only continue if you know there is not another upgrade running. Unlock?",
+	'upgrade:locked' => "Cannot upgrade. Another upgrade is running. To clear the upgrade lock, visit the Admin section.",
+	'upgrade:unlock:success' => "Upgrade unlocked suscessfully.",
 	'upgrade:unable_to_upgrade' => 'Unable to upgrade.',
 	'upgrade:unable_to_upgrade_info' =>
 		'This installation cannot be upgraded because legacy views
@@ -1132,7 +1141,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 
 	'comments:count' => "%s comments",
 
-	'riveraction:annotation:generic_comment' => '%s commented on %s',
+	'river:comment:object:default' => '%s commented on %s',
 
 	'generic_comments:add' => "Leave a comment",
 	'generic_comments:post' => "Post comment",
@@ -1146,6 +1155,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	'generic_comment:failure' => "An unexpected error occurred when adding your comment.",
 	'generic_comment:none' => 'No comments',
 	'generic_comment:title' => 'Comment by %s',
+	'generic_comment:on' => '%s on %s',
 
 	'generic_comment:email:subject' => 'You have a new comment!',
 	'generic_comment:email:body' => "You have a new comment on your item \"%s\" from %s. It reads:
@@ -1179,7 +1189,7 @@ You cannot reply to this email.",
  * Action gatekeeper
  */
 	'actiongatekeeper:missingfields' => 'Form is missing __token or __ts fields',
-	'actiongatekeeper:tokeninvalid' => "We encountered an error (token mismatch). This probably means that the page you were using expired.",
+	'actiongatekeeper:tokeninvalid' => "The page you were using had expired. Please try again.",
 	'actiongatekeeper:timeerror' => 'The page you were using has expired. Please refresh and try again.',
 	'actiongatekeeper:pluginprevents' => 'A extension has prevented this form from being submitted.',
 	'actiongatekeeper:uploadexceeded' => 'The size of file(s) uploaded exceeded the limit set by your site administrator',
@@ -1201,7 +1211,7 @@ You cannot reply to this email.",
  * Javascript
  */
 
-	'js:security:token_refresh_failed' => 'Cannot contact %s. You may experience problems saving content.',
+	'js:security:token_refresh_failed' => 'Failed to contact %s. You may experience problems saving content. Please refresh this page.',
 	'js:security:token_refreshed' => 'Connection to %s restored!',
 
 /**

@@ -181,9 +181,9 @@ function db_delayedexecution_shutdown_hook() {
 			} elseif (!is_resource($link)) {
 				elgg_log("Link for delayed query not valid resource or db_link type. Query: {$query_details['q']}", 'WARNING');
 			}
-			
+
 			$result = execute_query($query_details['q'], $link);
-			
+
 			if ((isset($query_details['h'])) && (is_callable($query_details['h']))) {
 				$query_details['h']($result);
 			}
@@ -460,7 +460,7 @@ function insert_data($query) {
 	global $CONFIG, $DB_QUERY_CACHE;
 
 	elgg_log("DB query $query", 'NOTICE');
-	
+
 	$dblink = get_db_link('write');
 
 	// Invalidate query cache

@@ -22,6 +22,7 @@ $base_type = substr($mime, 0, strpos($mime,'/'));
 
 $owner_link = elgg_view('output/url', array(
 	'href' => $owner->getURL(),
+	'href' => "file/owner/$owner->username",
 	'text' => $owner->name,
 	'is_trusted' => true,
 ));
@@ -70,9 +71,9 @@ if ($full && !elgg_in_context('gallery')) {
 
 	$params = array(
 		'entity' => $file,
+		'title' => false,
 		'metadata' => $metadata,
 		'subtitle' => $subtitle,
-		'tags' => $tags,
 	);
 	$params = $params + $vars;
 	$summary = elgg_view('object/elements/summary', $params);

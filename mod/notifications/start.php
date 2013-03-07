@@ -301,7 +301,7 @@ function notifications_count_unread(){
 	if($user){
 		$options = array(	'types'=>'object',
 							'subtypes'=>'notification',
-							'limit' => 99999999,
+							'limit' => 10,
 							'metadata_name_value_pairs' => array(array('name'=>'read', 'value' => 1, 'operand'=>'!='), array('name'=>'to_guid', 'value'=>$user->guid)),
 							'metadata_name_value_pairs_operator' => 'AND'
 						);

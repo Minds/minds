@@ -210,23 +210,26 @@ function minds_elastic_get_news(array $options = array()) {
 			$data['query']['bool']['minimum_number_should_match'] =  +1;
 	}
 	
-	$es = new elasticsearch();
-	$es->index = 'news';
+	if (class_exists('elasticsearch')) {
+		$es = new elasticsearch();
+		$es->index = 'news';
+		
+		if($bool){
+			$data['query']['bool'] = $bool;
+		}
+		$data['size'] = $options['limit'];
+		$data['from'] = $options['offset'];
+		$data['sort'] = array('posted'=>'desc');
+		
+		$query = $es->terms(null, json_encode($data));
 	
-	if($bool){
-		$data['query']['bool'] = $bool;
+		if (!$options['count']) {
+			return minds_elastic_parse_news($query); 
+		} else {
+			return $query['hits']['total'];
+		}
 	}
-	$data['size'] = $options['limit'];
-	$data['from'] = $options['offset'];
-	$data['sort'] = array('posted'=>'desc');
-	
-	$query = $es->terms(null, json_encode($data));
-
-	if (!$options['count']) {
-		return minds_elastic_parse_news($query); 
-	} else {
-		return $query['hits']['total'];
-	}
+	return false;
 }
 
 function minds_elastic_list_news(array $options = array()) {

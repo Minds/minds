@@ -233,6 +233,7 @@ function admin_init() {
 	elgg_register_action('admin/site/update_basic', '', 'admin');
 	elgg_register_action('admin/site/update_advanced', '', 'admin');
 	elgg_register_action('admin/site/flush_cache', '', 'admin');
+	elgg_register_action('admin/site/unlock_upgrade', '', 'admin');
 
 	elgg_register_action('admin/menu/save', '', 'admin');
 
@@ -268,8 +269,9 @@ function admin_init() {
 	// users
 	elgg_register_admin_menu_item('administer', 'users', null, 20);
 	elgg_register_admin_menu_item('administer', 'online', 'users', 10);
-	elgg_register_admin_menu_item('administer', 'newest', 'users', 20);
-	elgg_register_admin_menu_item('administer', 'add', 'users', 30);
+	elgg_register_admin_menu_item('administer', 'admins', 'users', 20);
+	elgg_register_admin_menu_item('administer', 'newest', 'users', 30);
+	elgg_register_admin_menu_item('administer', 'add', 'users', 40);
 
 	// configure
 	// plugins
@@ -344,7 +346,7 @@ function elgg_admin_add_plugin_settings_menu() {
 	$active_plugins = elgg_get_plugins('active');
 	if (!$active_plugins) {
 		// nothing added because no items
-		return FALSE;
+		return;
 	}
 
 	foreach ($active_plugins as $plugin) {
@@ -378,6 +380,7 @@ function elgg_admin_add_plugin_settings_menu() {
  */
 function elgg_admin_sort_page_menu($hook, $type, $return, $params) {
 	$configure_items = $return['configure'];
+	/* @var ElggMenuItem[] $configure_items */
 	foreach ($configure_items as $menu_item) {
 		if ($menu_item->getName() == 'settings') {
 			$settings = $menu_item;
@@ -385,6 +388,7 @@ function elgg_admin_sort_page_menu($hook, $type, $return, $params) {
 	}
 
 	// keep the basic and advanced settings at the top
+	/* @var ElggMenuItem $settings */
 	$children = $settings->getChildren();
 	$site_settings = array_splice($children, 0, 2);
 	usort($children, array('ElggMenuBuilder', 'compareByText'));
@@ -421,7 +425,7 @@ function admin_pagesetup() {
 		elgg_register_menu_item('admin_footer', array(
 			'name' => 'community_forums',
 			'text' => elgg_echo('admin:footer:community_forums'),
-			'href' => 'http://community.elgg.org/pg/groups/world/',
+			'href' => 'http://community.elgg.org/groups/all/',
 		));
 
 		elgg_register_menu_item('admin_footer', array(
@@ -550,7 +554,7 @@ function admin_plugin_screenshot_page_handler($pages) {
  *	* COPYRIGHT.txt
  *	* LICENSE.txt
  *
- * @param type $page
+ * @param array $pages
  * @return bool
  * @access private
  */
@@ -613,7 +617,11 @@ function admin_markdown_page_handler($pages) {
 /**
  * Adds default admin widgets to the admin dashboard.
  *
- * @return void
+ * @param string $event
+ * @param string $type
+ * @param ElggUser $user
+ *
+ * @return null|true
  * @access private
  */
 function elgg_add_admin_widgets($event, $type, $user) {
@@ -635,6 +643,7 @@ function elgg_add_admin_widgets($event, $type, $user) {
 			$guid = elgg_create_widget($user->getGUID(), $handler, 'admin');
 			if ($guid) {
 				$widget = get_entity($guid);
+				/* @var ElggWidget $widget */
 				$widget->move($column, $position);
 			}
 		}

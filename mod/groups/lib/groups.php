@@ -13,7 +13,7 @@ function groups_handle_all_page() {
 	elgg_push_breadcrumb(elgg_echo('groups'));
 
 	if (elgg_get_plugin_setting('limited_groups', 'groups') != 'yes' || elgg_is_admin_logged_in()) {
-		 elgg_register_title_button();
+		elgg_register_title_button();
 	}
 
 	$selected_tab = get_input('filter', 'newest');
@@ -79,7 +79,7 @@ function groups_search_page() {
 	$params = array(
 		'metadata_name' => 'interests',
 		'metadata_value' => $tag,
-		'types' => 'group',
+		'type' => 'group',
 		'full_view' => FALSE,
 	);
 	$content = elgg_list_entities_from_metadata($params);
@@ -140,9 +140,8 @@ function groups_handle_owned_page() {
  * List groups the user is memober of
  */
 function groups_handle_mine_page() {
-	
-	$username = get_input('username', elgg_get_logged_in_user_entity()->username);
-	$page_owner = get_user_by_username($username);
+
+	$page_owner = elgg_get_page_owner_entity();
 
 	if ($page_owner->guid == elgg_get_logged_in_user_guid()) {
 		$title = elgg_echo('groups:yours');
@@ -153,7 +152,7 @@ function groups_handle_mine_page() {
 
 	elgg_register_title_button();
 
-	$content = elgg_list_entities_from_relationship_count(array(
+	$content = elgg_list_entities_from_relationship(array(
 		'type' => 'group',
 		'relationship' => 'member',
 		'relationship_guid' => elgg_get_page_owner_guid(),
@@ -271,18 +270,34 @@ function groups_handle_profile_page($guid) {
 	groups_register_profile_buttons($group);
 
 	$content = elgg_view('groups/profile/layout', array('entity' => $group));
-	if (group_gatekeeper(false)) {
-		$sidebar = '';
+	$sidebar = '';
+
+	if (group_gatekeeper(false)) {	
 		if (elgg_is_active_plugin('search')) {
 			$sidebar .= elgg_view('groups/sidebar/search', array('entity' => $group));
 		}
 		$sidebar .= elgg_view('groups/sidebar/members', array('entity' => $group));
-	} else {
-		$sidebar = '';
-	}
 
-	elgg_unregister_menu_item('extras', 'bookmark');
-	elgg_unregister_menu_item('extras', 'rss');
+		$subscribed = false;
+		if (elgg_is_active_plugin('notifications')) {
+			global $NOTIFICATION_HANDLERS;
+			
+			foreach ($NOTIFICATION_HANDLERS as $method => $foo) {
+				$relationship = check_entity_relationship(elgg_get_logged_in_user_guid(),
+						'notify' . $method, $guid);
+				
+				if ($relationship) {
+					$subscribed = true;
+					break;
+				}
+			}
+		}
+		
+		$sidebar .= elgg_view('groups/sidebar/my_status', array(
+			'entity' => $group,
+			'subscribed' => $subscribed
+		));
+	}
 
 	$params = array(
 		'content' => $content,
@@ -366,7 +381,7 @@ function groups_handle_members_page($guid) {
 		'relationship' => 'member',
 		'relationship_guid' => $group->guid,
 		'inverse_relationship' => true,
-		'types' => 'user',
+		'type' => 'user',
 		'limit' => 20,
 	));
 
@@ -557,6 +572,8 @@ function groups_prepare_form_vars($group = null) {
 		if ($group->access_id != ACCESS_PUBLIC && $group->access_id != ACCESS_LOGGED_IN) {
 			// group only access - this is done to handle access not created when group is created
 			$values['vis'] = ACCESS_PRIVATE;
+		} else {
+			$values['vis'] = $group->access_id;
 		}
 
 		$values['entity'] = $group;

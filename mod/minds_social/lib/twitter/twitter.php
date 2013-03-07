@@ -25,7 +25,7 @@ function minds_social_twitter_forward() {
  * Allow users to login via Twitter
  */
 function minds_social_twitter_login() {
-	
+	header("X-No-Client-Cache: 0", true);	
 	$token = minds_social_twitter_access_token();
 	
 	if (!isset($token['oauth_token']) || !isset($token['oauth_token_secret'])) {
@@ -44,6 +44,7 @@ function minds_social_twitter_login() {
 		'type' => 'user',
 		'plugin_user_setting_name_value_pairs' => array(
 			'twitter_name' => $token['screen_name'],
+			'twitter_id' => $token['user_id'],
 			'minds_social_twitter_access_key' => $token['oauth_token'],
 			'minds_social_twitter_access_secret' => $token['oauth_token_secret'],
 		),
@@ -56,8 +57,10 @@ function minds_social_twitter_login() {
 	if ($users) {
 		if (count($users) == 1 && login($users[0])) {
 			system_message(elgg_echo('twitter_api:login:success'));			
+			forward('news');
 		} else {
 			register_error(elgg_echo('twitter_api:login:error'));
+			forward('login');
 		}
 		
 		forward('news');
@@ -89,6 +92,7 @@ function minds_social_twitter_login() {
 	
 				// set twitter services tokens
 				elgg_set_plugin_user_setting('twitter_name', $token['screen_name'], $guid);
+				elgg_set_plugin_user_setting('twitter_name', $token['user_id'], $guid);
 				elgg_set_plugin_user_setting('minds_social_twitter_access_key', $token['oauth_token'], $guid);
 				elgg_set_plugin_user_setting('minds_social_twitter_access_secret', $token['oauth_token_secret'], $guid);
 			
@@ -111,6 +115,8 @@ function minds_social_twitter_login() {
 					// for the plugin hooks system.
 					throw new RegistrationException(elgg_echo('registerbad'));
 				}*/
+				//Automatically subscribe user to the Minds Channel
+				minds_subscribe_default(null,null,null, array('user'=>$new_user));
 				login($new_user);			
 		}
 	}
@@ -126,21 +132,22 @@ function minds_social_twitter_login() {
  * to establish session request tokens.
  */
 function minds_social_twitter_auth($token) {
-	
+	$user = elgg_get_logged_in_user_entity();	
 	$token = $token != NULL ? $token : minds_social_twitter_access_token();
 	if (!isset($token['oauth_token']) || !isset($token['oauth_token_secret'])) {
 		register_error(elgg_echo('twitter_api:authorize:error'));
-		forward('settings/plugins', 'twitter_api');
+		forward('settings/plugins/'.$user->username, 'twitter_api');
 	}
 
-	$user = elgg_get_logged_in_user_entity();
 	elgg_unset_plugin_user_setting('twitter_name', $user->getGUID());
+	elgg_unset_plugin_user_setting('twitter_id', $user->getGUID());
 	elgg_unset_plugin_user_setting('minds_social_twitter_access_key', $user->getGUID());
 	elgg_unset_plugin_user_setting('minds_social_twitter_access_secret', $user->getGUID());
 
 
 	// register user's access tokens
 	elgg_set_plugin_user_setting('twitter_name', $token['screen_name']);
+	elgg_set_plugin_user_setting('twitter_id', $token['user_id']);
 	elgg_set_plugin_user_setting('minds_social_twitter_access_key', $token['oauth_token']);
 	elgg_set_plugin_user_setting('minds_social_twitter_access_secret', $token['oauth_token_secret']);
 	
@@ -148,7 +155,7 @@ function minds_social_twitter_auth($token) {
 	//elgg_trigger_plugin_hook('authorize', 'twitter_api', array('token' => $token));
 
 	system_message(elgg_echo('minds_social:twitter:authsuccess'));
-	forward('settings/plugins');
+	forward('settings/plugins/'.$user->username);
 }
 /**
  * Pull in the latest avatar from twitter.

@@ -12,11 +12,11 @@
  *
  * @param string $text The input string
  *
- * @return string The output stirng with formatted links
+ * @return string The output string with formatted links
  **/
 function parse_urls($text) {
 	// @todo this causes problems with <attr = "val">
-	// must be ing <attr="val"> format (no space).
+	// must be in <attr="val"> format (no space).
 	// By default htmlawed rewrites tags to this format.
 	// if PHP supported conditional negative lookbehinds we could use this:
 	// $r = preg_replace_callback('/(?<!=)(?<![ ])?(?<!["\'])((ht|f)tps?:\/\/[^\s\r\n\t<>"\'\!\(\),]+)/i',
@@ -43,51 +43,26 @@ function parse_urls($text) {
 
 /**
  * Create paragraphs from text with line spacing
- * Borrowed from Wordpress.
  *
  * @param string $pee The string
- * @param bool   $br  Add BRs?
+ * @deprecated Use elgg_autop instead
+ * @todo Add deprecation warning in 1.9
  *
- * @todo Rewrite
  * @return string
  **/
-function autop($pee, $br = 1) {
-	$pee = $pee . "\n"; // just to make things a little easier, pad the end
-	$pee = preg_replace('|<br />\s*<br />|', "\n\n", $pee);
-	// Space things out a little
-	$allblocks = '(?:table|thead|tfoot|caption|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|map|area|blockquote|address|math|style|input|p|h[1-6]|hr)';
-	$pee = preg_replace('!(<' . $allblocks . '[^>]*>)!', "\n$1", $pee);
-	$pee = preg_replace('!(</' . $allblocks . '>)!', "$1\n\n", $pee);
-	$pee = str_replace(array("\r\n", "\r"), "\n", $pee); // cross-platform newlines
-	if (strpos($pee, '<object') !== false) {
-		$pee = preg_replace('|\s*<param([^>]*)>\s*|', "<param$1>", $pee); // no pee inside object/embed
-		$pee = preg_replace('|\s*</embed>\s*|', '</embed>', $pee);
-	}
-	$pee = preg_replace("/\n\n+/", "\n\n", $pee); // take care of duplicates
-	$pee = preg_replace('/\n?(.+?)(?:\n\s*\n|\z)/s', "<p>$1</p>\n", $pee); // make paragraphs, including one at the end
-	$pee = preg_replace('|<p>\s*?</p>|', '', $pee); // under certain strange conditions it could create a P of entirely whitespace
-	$pee = preg_replace('!<p>([^<]+)\s*?(</(?:div|address|form)[^>]*>)!', "<p>$1</p>$2", $pee);
-	$pee = preg_replace('|<p>|', "$1<p>", $pee);
-	$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee); // don't pee all over a tag
-	$pee = preg_replace("|<p>(<li.+?)</p>|", "$1", $pee); // problem with nested lists
-	$pee = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $pee);
-	$pee = str_replace('</blockquote></p>', '</p></blockquote>', $pee);
-	$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', "$1", $pee);
-	$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee);
-	if ($br) {
-		$pee = preg_replace_callback('/<(script|style).*?<\/\\1>/s', create_function('$matches', 'return str_replace("\n", "<WPPreserveNewline />", $matches[0]);'), $pee);
-		$pee = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $pee); // optionally make line breaks
-		$pee = str_replace('<WPPreserveNewline />', "\n", $pee);
-	}
-	$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*<br />!', "$1", $pee);
-	$pee = preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)!', '$1', $pee);
-	//if (strpos($pee, '<pre') !== false) {
-	//	mind the space between the ? and >.  Only there because of the comment.
-	//	$pee = preg_replace_callback('!(<pre.*? >)(.*?)</pre>!is', 'clean_pre', $pee );
-	//}
-	$pee = preg_replace("|\n</p>$|", '</p>', $pee);
+function autop($pee) {
+	return elgg_autop($pee);
+}
 
-	return $pee;
+/**
+ * Create paragraphs from text with line spacing
+ *
+ * @param string $string The string
+ *
+ * @return string
+ **/
+function elgg_autop($string) {
+	return ElggAutoP::getInstance()->process($string);
 }
 
 /**
@@ -249,7 +224,6 @@ function elgg_normalize_url($url) {
 	$php_5_3_0_to_5_3_2 = version_compare(PHP_VERSION, '5.3.0', '>=') &&
 			version_compare(PHP_VERSION, '5.3.3', '<');
 
-	$validated = false;
 	if ($php_5_2_13_and_below || $php_5_3_0_to_5_3_2) {
 		$tmp_address = str_replace("-", "", $url);
 		$validated = filter_var($tmp_address, FILTER_VALIDATE_URL);
@@ -312,6 +286,8 @@ function elgg_get_friendly_title($title) {
 
 	// handle some special cases
 	$title = str_replace('&amp;', 'and', $title);
+	// quotes and angle brackets stored in the database as html encoded
+	$title = htmlspecialchars_decode($title);
 
 	$title = ElggTranslit::urlize($title);
 
@@ -384,7 +360,7 @@ function elgg_get_friendly_time($time) {
 /**
  * Strip tags and offer plugins the chance.
  * Plugins register for output:strip_tags plugin hook.
- * 	Original string included in $params['original_string']
+ * Original string included in $params['original_string']
  *
  * @param string $string Formatted string
  *
@@ -440,3 +416,33 @@ function _elgg_html_decode($string) {
 	);
 	return $string;
 }
+
+/**
+ * Unit tests for Output
+ *
+ * @param string  $hook   unit_test
+ * @param string $type   system
+ * @param mixed  $value  Array of tests
+ * @param mixed  $params Params
+ *
+ * @return array
+ * @access private
+ */
+function output_unit_test($hook, $type, $value, $params) {
+	global $CONFIG;
+	$value[] = $CONFIG->path . 'engine/tests/api/output.php';
+	return $value;
+}
+
+/**
+ * Initialise the Output subsystem.
+ *
+ * @return void
+ * @access private
+ */
+function output_init() {
+	elgg_register_plugin_hook_handler('unit_test', 'system', 'output_unit_test');
+}
+
+elgg_register_event_handler('init', 'system', 'output_init');
+

@@ -10,6 +10,8 @@
 /**
  * Retrieve the system log based on a number of parameters.
  *
+ * @todo too many args, and the first arg is too confusing
+ *
  * @param int|array $by_user    The guid(s) of the user(s) who initiated the event.
  *                              Use 0 for unowned entries. Anything else falsey means anyone.
  * @param string    $event      The event you are searching on.
@@ -22,12 +24,12 @@
  * @param int       $timebefore Lower time limit
  * @param int       $timeafter  Upper time limit
  * @param int       $object_id  GUID of an object
- * @param str       $ip_address The IP address.
+ * @param string    $ip_address The IP address.
  * @return mixed
  */
-function get_system_log($by_user = "", $event = "", $class = "", $type = "", $subtype = "",
-$limit = 10, $offset = 0, $count = false, $timebefore = 0, $timeafter = 0, $object_id = 0,
-$ip_address = false) {
+function get_system_log($by_user = "", $event = "", $class = "", $type = "", $subtype = "", $limit = 10,
+						$offset = 0, $count = false, $timebefore = 0, $timeafter = 0, $object_id = 0,
+						$ip_address = "") {
 
 	global $CONFIG;
 
@@ -44,7 +46,7 @@ $ip_address = false) {
 	$class = sanitise_string($class);
 	$type = sanitise_string($type);
 	$subtype = sanitise_string($subtype);
-	$ip_address = substr(sanitise_string($ip_address),0,14);//this is due to mysql string mode
+	$ip_address = sanitise_string($ip_address);
 	$limit = (int)$limit;
 	$offset = (int)$offset;
 
@@ -166,6 +168,7 @@ function system_log($object, $event) {
 
 	if ($object instanceof Loggable) {
 
+		/* @var ElggEntity|ElggExtender $object */
 		if (datalist_get('version') < 2012012000) {
 			// this is a site that doesn't have the ip_address column yet
 			return;
@@ -184,7 +187,7 @@ function system_log($object, $event) {
 		$object_subtype = $object->getSubtype();
 		$event = sanitise_string($event);
 		$time = time();
-		$ip_address = substr(sanitise_string($_SERVER['HTTP_X_FORWARDED_FOR']),0,14);
+		$ip_address = sanitise_string($_SERVER['REMOTE_ADDR']);
 		$performed_by = elgg_get_logged_in_user_guid();
 
 		if (isset($object->access_id)) {

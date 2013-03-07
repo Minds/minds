@@ -19,7 +19,7 @@ function minds_social_facebook_init(){
 function minds_social_facebook_auth(){
 	$facebook = minds_social_facebook_init();
 	
-	if (!$session = $facebook->getUser()) {
+	if (!$session['_fb'] = $facebook->getUser()) {
 		forward(REFERER);
 	}
 	
@@ -41,7 +41,7 @@ function minds_social_facebook_auth(){
 	$access_token = $facebook->getAccessToken();
 
 	// register user's access tokens
-	elgg_set_plugin_user_setting('minds_social_facebook_uid', $session);
+	elgg_set_plugin_user_setting('minds_social_facebook_uid', $session['_fb']);
 	elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 		
 	system_message(elgg_echo('minds:social:facebook:authsuccess'));
@@ -53,29 +53,29 @@ function minds_social_facebook_auth(){
  * Begin the signin process for facebook
  */
 function minds_social_facebook_login(){
+	header("X-No-Client-Cache: 0", true);
 	$facebook = minds_social_facebook_init();
 
-	if (!$session = $facebook->getUser()){		
+	if (!$session['_fb'] = $facebook->getUser()){		
 		$return_url = elgg_get_site_url() . 'social/fb/login';
 		forward($facebook->getLoginURL(array(
 				'redirect_uri' => $return_url,
 				'canvas' => 1,
 				'scope' => 'publish_stream,email, offline_access',
 				'ext_perm' =>  'offline_access',)));
-		if($_SESSION['fb_referrer']){
+		/*if($_SESSION['fb_referrer']){
 			forward($_SESSION['fb_referrer']);
 		} else {
 			forward('login');
-		}
+		}*/
 	}
-
 	// attempt to find user and log them in.
 	// else, create a new user.
 	$options = array(
 		'type' => 'user',
 		'plugin_user_setting_name_value_pairs' => array(
-			'minds_social_facebook_uid' => is_array($session) ? $session['uid'] : $session,
-			'minds_social_facebook_access_token' => $session['access_token'],
+			'minds_social_facebook_uid' => is_array($session['_fb']) ? $session['_fb']['uid'] : $session['_fb'],
+			'minds_social_facebook_access_token' => $session['_fb']['access_token'],
 		),
 		'plugin_user_setting_name_value_pairs_operator' => 'OR',
 		'limit' => 0
@@ -86,7 +86,7 @@ function minds_social_facebook_login(){
 	if ($users){
 		if (count($users) == 1 && login($users[0])){
 			system_message(elgg_echo('facebook_connect:login:success'));
-			elgg_set_plugin_user_setting('access_token', $session['access_token'], $users[0]->guid);
+			//elgg_set_plugin_user_setting('access_token', $session['_fb']['access_token'], $users[0]->guid);
 			
 			if(empty($users[0]->email)) {
 				$data = $facebook->api('/me');
@@ -129,14 +129,14 @@ function minds_social_facebook_login(){
 			
 			if($guid) {
 				elgg_clear_sticky_form('register');
-				
+	
 				$new_user = get_entity($guid);
 				
 				//get our access token 
 				$access_token = $facebook->getAccessToken();
 			
 				// register user's access tokens
-				elgg_set_plugin_user_setting('minds_social_facebook_uid', $session);
+				elgg_set_plugin_user_setting('minds_social_facebook_uid', $session['_fb']);
 				elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 				
 				//trigger the validator plugins
@@ -155,22 +155,24 @@ function minds_social_facebook_login(){
 					// for the plugin hooks system.
 					throw new RegistrationException(elgg_echo('registerbad'));
 				}*/
+				//Automatically subscribe user to the Minds Channel
+				minds_subscribe_default(null,null,null, array('user'=>$new_user));
 				login($new_user);
-				if($_SESSION['fb_referrer']){
+				/*if($_SESSION['fb_referrer']){
 					forward($_SESSION['fb_referrer']);
-				}
+				}*/
 			}	
 		}else{
 			try {
 				if(login($users[0])){
 					$access_token = $facebook->getAccessToken();                        
-               	 	elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+               	 			elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 					
-					if($_SESSION['fb_referrer']){
+				/*	if($_SESSION['fb_referrer']){
                         		//forward($_SESSION['fb_referrer']);
-                	} else {
+                			} else {
                         		forward('news');
-                	}
+                			}*/
 				}
 			} catch (LoginException $e) {
 				register_error($e->getMessage());

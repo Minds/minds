@@ -8,6 +8,9 @@
  */
 class ElggMenuBuilder {
 
+	/**
+	 * @var ElggMenuItem[]
+	 */
 	protected $menu = array();
 
 	protected $selected = null;
@@ -15,7 +18,7 @@ class ElggMenuBuilder {
 	/**
 	 * ElggMenuBuilder constructor
 	 *
-	 * @param array $menu Array of ElggMenuItem objects
+	 * @param ElggMenuItem[] $menu Array of ElggMenuItem objects
 	 */
 	public function __construct(array $menu) {
 		$this->menu = $menu;
@@ -107,6 +110,7 @@ class ElggMenuBuilder {
 			$children = array();
 			// divide base nodes from children
 			foreach ($section as $menu_item) {
+				/* @var ElggMenuItem $menu_item */
 				$parent_name = $menu_item->getParentName();
 				if (!$parent_name) {
 					$parents[$menu_item->getName()] = $menu_item;
@@ -118,6 +122,7 @@ class ElggMenuBuilder {
 			// attach children to parents
 			$iteration = 0;
 			$current_gen = $parents;
+			$next_gen = null;
 			while (count($children) && $iteration < 5) {
 				foreach ($children as $index => $menu_item) {
 					$parent_name = $menu_item->getParentName();
@@ -205,7 +210,7 @@ class ElggMenuBuilder {
 		// sort each section
 		foreach ($this->menu as $index => $section) {
 			foreach ($section as $key => $node) {
-				$section[$key]->original_order = $key;
+				$section[$key]->setData('original_order', $key);
 			}
 			usort($section, $sort_callback);
 			$this->menu[$index] = $section;
@@ -216,12 +221,12 @@ class ElggMenuBuilder {
 				array_push($stack, $root);
 				while (!empty($stack)) {
 					$node = array_pop($stack);
+					/* @var ElggMenuItem $node */
 					$node->sortChildren($sort_callback);
 					$children = $node->getChildren();
 					if ($children) {
 						$stack = array_merge($stack, $children);
 					}
-					$p = count($stack);
 				}
 			}
 		}
@@ -240,7 +245,7 @@ class ElggMenuBuilder {
 
 		$result = strnatcmp($at, $bt);
 		if ($result === 0) {
-			return $a->original_order - $b->original_order;
+			return $a->getData('original_order') - $b->getData('original_order');
 		}
 		return $result;
 	}
@@ -258,7 +263,7 @@ class ElggMenuBuilder {
 
 		$result = strcmp($an, $bn);
 		if ($result === 0) {
-			return $a->original_order - $b->original_order;
+			return $a->getData('original_order') - $b->getData('original_order');
 		}
 		return $result;
 	}
@@ -269,13 +274,15 @@ class ElggMenuBuilder {
 	 * @param ElggMenuItem $a
 	 * @param ElggMenuItem $b
 	 * @return bool
+	 *
+	 * @todo change name to compareByPriority
 	 */
 	public static function compareByWeight($a, $b) {
 		$aw = $a->getWeight();
 		$bw = $b->getWeight();
 
 		if ($aw == $bw) {
-			return $a->original_order - $b->original_order;
+			return $a->getData('original_order') - $b->getData('original_order');
 		}
 		return $aw - $bw;
 	}

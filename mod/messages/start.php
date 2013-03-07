@@ -74,23 +74,30 @@ function messages_init() {
  */
 function messages_page_handler($page) {
 
+	$current_user = elgg_get_logged_in_user_entity();
+	if (!$current_user) {
+		register_error(elgg_echo('noaccess'));
+		$_SESSION['last_forward_from'] = current_page_url();
+		forward('');
+	}
+
 	elgg_load_library('elgg:messages');
 
-	elgg_push_breadcrumb(elgg_echo('messages'), 'messages/inbox/' . elgg_get_logged_in_user_entity()->username);
+	elgg_push_breadcrumb(elgg_echo('messages'), 'messages/inbox/' . $current_user->username);
 
 	if (!isset($page[0])) {
 		$page[0] = 'inbox';
 	}
 
-	// supporting the old inbox url /messages/<username>
-	$user = get_user_by_username($page[0]);
-	if ($user) {
+	// Support the old inbox url /messages/<username>, but only if it matches the logged in user.
+	// Otherwise having a username like "read" on the system could confuse this function.
+	if ($current_user->username === $page[0]) {
 		$page[1] = $page[0];
 		$page[0] = 'inbox';
 	}
 
 	if (!isset($page[1])) {
-		$page[1] = elgg_get_logged_in_user_entity()->username;
+		$page[1] = $current_user->username;
 	}
 
 	$base_dir = elgg_get_plugins_path() . 'messages/pages/messages';
@@ -212,18 +219,20 @@ function messages_can_edit_container($hook_name, $entity_type, $return_value, $p
  *
  * @param string $subject The subject line of the message
  * @param string $body The body of the mesage
- * @param int $send_to The GUID of the user to send to
- * @param int $from Optionally, the GUID of the user to send from
- * @param int $reply The GUID of the message to reply from (default: none)
- * @param true|false $notify Send a notification (default: true)
- * @param true|false $add_to_sent If true (default), will add a message to the sender's 'sent' tray
+ * @param int $recipient_guid The GUID of the user to send to
+ * @param int $sender_guid Optionally, the GUID of the user to send from
+ * @param int $original_msg_guid The GUID of the message to reply from (default: none)
+ * @param bool $notify Send a notification (default: true)
+ * @param bool $add_to_sent If true (default), will add a message to the sender's 'sent' tray
  * @return bool
  */
-function messages_send($subject, $body, $send_to, $from = 0, $reply = 0, $notify = true, $add_to_sent = true) {
+function messages_send($subject, $body, $recipient_guid, $sender_guid = 0, $original_msg_guid = 0, $notify = true, $add_to_sent = true) {
 
+	// @todo remove globals
 	global $messagesendflag;
 	$messagesendflag = 1;
 
+	// @todo remove globals
 	global $messages_pm;
 	if ($notify) {
 		$messages_pm = 1;
@@ -231,33 +240,40 @@ function messages_send($subject, $body, $send_to, $from = 0, $reply = 0, $notify
 		$messages_pm = 0;
 	}
 
-	// If $from == 0, set to current user
-	if ($from == 0) {
-		$from = (int) elgg_get_logged_in_user_guid();
+	// If $sender_guid == 0, set to current user
+	if ($sender_guid == 0) {
+		$sender_guid = (int) elgg_get_logged_in_user_guid();
 	}
 
 	// Initialise 2 new ElggObject
 	$message_to = new ElggObject();
 	$message_sent = new ElggObject();
+
 	$message_to->subtype = "messages";
 	$message_sent->subtype = "messages";
-	$message_to->owner_guid = $send_to;
-	$message_to->container_guid = $send_to;
-	$message_sent->owner_guid = $from;
-	$message_sent->container_guid = $from;
+
+	$message_to->owner_guid = $recipient_guid;
+	$message_to->container_guid = $recipient_guid;
+	$message_sent->owner_guid = $sender_guid;
+	$message_sent->container_guid = $sender_guid;
+
 	$message_to->access_id = ACCESS_PUBLIC;
 	$message_sent->access_id = ACCESS_PUBLIC;
+
 	$message_to->title = $subject;
 	$message_to->description = $body;
+
 	$message_sent->title = $subject;
 	$message_sent->description = $body;
-	$message_to->toId = $send_to; // the user receiving the message
-	$message_to->fromId = $from; // the user receiving the message
+
+	$message_to->toId = $recipient_guid; // the user receiving the message
+	$message_to->fromId = $sender_guid; // the user receiving the message
 	$message_to->readYet = 0; // this is a toggle between 0 / 1 (1 = read)
 	$message_to->hiddenFrom = 0; // this is used when a user deletes a message in their sentbox, it is a flag
 	$message_to->hiddenTo = 0; // this is used when a user deletes a message in their inbox
-	$message_sent->toId = $send_to; // the user receiving the message
-	$message_sent->fromId = $from; // the user receiving the message
+
+	$message_sent->toId = $recipient_guid; // the user receiving the message
+	$message_sent->fromId = $sender_guid; // the user receiving the message
 	$message_sent->readYet = 0; // this is a toggle between 0 / 1 (1 = read)
 	$message_sent->hiddenFrom = 0; // this is used when a user deletes a message in their sentbox, it is a flag
 	$message_sent->hiddenTo = 0; // this is used when a user deletes a message in their inbox
@@ -270,7 +286,7 @@ function messages_send($subject, $body, $send_to, $from = 0, $reply = 0, $notify
 
 	// Save the copy of the message that goes to the sender
 	if ($add_to_sent) {
-		$success2 = $message_sent->save();
+		$message_sent->save();
 	}
 
 	$message_to->access_id = ACCESS_PRIVATE;
@@ -283,22 +299,25 @@ function messages_send($subject, $body, $send_to, $from = 0, $reply = 0, $notify
 
 	// if the new message is a reply then create a relationship link between the new message
 	// and the message it is in reply to
-	if ($reply && $success){
-		$create_relationship = add_entity_relationship($message_sent->guid, "reply", $reply);
+	if ($original_msg_guid && $success) {
+		add_entity_relationship($message_sent->guid, "reply", $original_msg_guid);
 	}
 
 	$message_contents = strip_tags($body);
-	if ($send_to != elgg_get_logged_in_user_entity() && $notify) {
+	if (($recipient_guid != elgg_get_logged_in_user_guid()) && $notify) {
+		$recipient = get_user($recipient_guid);
+		$sender = get_user($sender_guid);
+		
 		$subject = elgg_echo('messages:email:subject');
 		$body = elgg_echo('messages:email:body', array(
-			elgg_get_logged_in_user_entity()->name,
+			$sender->name,
 			$message_contents,
-			elgg_get_site_url() . "messages/inbox/" . $user->username,
-			elgg_get_logged_in_user_entity()->name,
-			elgg_get_site_url() . "messages/compose?send_to=" . elgg_get_logged_in_user_guid()
+			elgg_get_site_url() . "messages/inbox/" . $recipient->username,
+			$sender->name,
+			elgg_get_site_url() . "messages/compose?send_to=" . $sender_guid
 		));
 
-		notify_user($send_to, elgg_get_logged_in_user_guid(), $subject, $body);
+		notify_user($recipient_guid, $sender_guid, $subject, $body);
 	}
 
 	$messagesendflag = 0;

@@ -22,11 +22,13 @@ $english = array(
 	'file:gallery_list' => "Gallery or list view",
 	'file:num_files' => "Number of files to display",
 	'file:user:gallery'=>'View %s gallery',
+
 	'file:via' => 'via files',
 	'file:upload' => "Upload a file",
 	'file:replace' => 'Replace file content (leave blank to not change file)',
 	'file:list:title' => "%s's %s %s",
 	'file:title:friends' => "Channels'",
+
 
 	'file:add' => 'Upload a file',
 
@@ -60,6 +62,7 @@ $english = array(
 	'file:friends:type:image' => "Your channels' pictures",
 	'file:friends:type:general' => "Your channels' general files",
 
+
 	'file:widget' => "File widget",
 	'file:widget:description' => "Showcase your latest files",
 
@@ -79,6 +82,16 @@ $english = array(
 	'item:object:file' => 'Files',
 
 	'file:newupload' => 'A new file has been uploaded',
+
+	'file:notification' =>
+'%s uploaded a new file:
+
+%s
+%s
+
+View and comment on the new file:
+%s
+',
 
 	/**
 	 * Embed media
@@ -110,6 +123,7 @@ $english = array(
 	 * Moved to archive message
 	 */
 	 'file:movedtoarchive' => 'This file has been sent to the Archive because it is a media format. You can find it by navigating to Archive at the top of the page.',
+
 );
 
 add_translation("en", $english);

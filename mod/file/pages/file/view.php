@@ -6,6 +6,11 @@
  */
 
 $file = get_entity(get_input('guid'));
+if (!$file) {
+	register_error(elgg_echo('noaccess'));
+	$_SESSION['last_forward_from'] = current_page_url();
+	forward('');
+}
 
 $owner = elgg_get_page_owner_entity();
 

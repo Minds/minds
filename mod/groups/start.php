@@ -53,11 +53,11 @@ function groups_init() {
 	elgg_register_widget_type('a_users_groups', elgg_echo('groups:widget:membership'), elgg_echo('groups:widgets:description'));
 
 	// add group activity tool option
-	//add_group_tool_option('activity', elgg_echo('groups:enableactivity'), true);
-	//elgg_extend_view('groups/tool_latest', 'groups/profile/activity_module');
+	add_group_tool_option('activity', elgg_echo('groups:enableactivity'), true);
+	elgg_extend_view('groups/tool_latest', 'groups/profile/activity_module');
 
 	// add link to owner block
-	//elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'groups_activity_owner_block_menu');
+	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'groups_activity_owner_block_menu');
 
 	// group entity menu
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'groups_entity_menu_setup');
@@ -144,9 +144,24 @@ function groups_setup_sidebar_menus() {
 	if (elgg_in_context('group_profile')) {
 		if (elgg_is_logged_in() && $page_owner->canEdit() && !$page_owner->isPublicMembership()) {
 			$url = elgg_get_site_url() . "groups/requests/{$page_owner->getGUID()}";
+
+			$count = elgg_get_entities_from_relationship(array(
+				'type' => 'user',
+				'relationship' => 'membership_request',
+				'relationship_guid' => $page_owner->getGUID(),
+				'inverse_relationship' => true,
+				'count' => true,
+			));
+
+			if ($count) {
+				$text = elgg_echo('groups:membershiprequests:pending', array($count));
+			} else {
+				$text = elgg_echo('groups:membershiprequests');
+			}
+
 			elgg_register_menu_item('page', array(
 				'name' => 'membership_requests',
-				'text' => elgg_echo('groups:membershiprequests'),
+				'text' => $text,
 				'href' => $url,
 			));
 		}
@@ -163,11 +178,21 @@ function groups_setup_sidebar_menus() {
 			$url =  "groups/owner/$user->username";
 			$item = new ElggMenuItem('groups:owned', elgg_echo('groups:owned'), $url);
 			elgg_register_menu_item('page', $item);
+			
 			$url = "groups/member/$user->username";
 			$item = new ElggMenuItem('groups:member', elgg_echo('groups:yours'), $url);
 			elgg_register_menu_item('page', $item);
+
 			$url = "groups/invitations/$user->username";
-			$item = new ElggMenuItem('groups:user:invites', elgg_echo('groups:invitations'), $url);
+			$invitations = groups_get_invited_groups($user->getGUID());
+			if (is_array($invitations) && !empty($invitations)) {
+				$invitation_count = count($invitations);
+				$text = elgg_echo('groups:invitations:pending', array($invitation_count));
+			} else {
+				$text = elgg_echo('groups:invitations');
+			}
+
+			$item = new ElggMenuItem('groups:user:invites', $text, $url);
 			elgg_register_menu_item('page', $item);
 		}
 	}
@@ -194,7 +219,20 @@ function groups_setup_sidebar_menus() {
  */
 function groups_page_handler($page) {
 
+	// forward old profile urls
+	if (is_numeric($page[0])) {
+		$group = get_entity($page[0]);
+		if (elgg_instanceof($group, 'group', '', 'ElggGroup')) {
+			system_message(elgg_echo('changebookmark'));
+			forward($group->getURL());
+		}
+	}
+	
 	elgg_load_library('elgg:groups');
+
+	if (!isset($page[0])) {
+		$page[0] = 'all';
+	}
 
 	elgg_push_breadcrumb(elgg_echo('groups'), "groups/all");
 
@@ -297,7 +335,7 @@ function groups_icon_url_override($hook, $type, $returnvalue, $params) {
 	}
 	if ($icontime) {
 		// return thumbnail
-		return "groupicon/$group->guid/$size";
+		return "groupicon/$group->guid/$size/$icontime.jpg";
 	}
 
 	return "mod/groups/graphics/default{$size}.gif";
@@ -534,7 +572,7 @@ function groups_write_acl_plugin_hook($hook, $entity_type, $returnvalue, $params
 					'relationship' => 'member',
 					'relationship_guid' => $user_guid,
 					'inverse_relationship' => FALSE,
-					'limit' => 999
+					'limit' => false
 				));
 
 		if ($groups) {
@@ -735,17 +773,17 @@ function discussion_init() {
 	elgg_register_action('discussion/reply/delete', "$action_base/reply/delete.php");
 
 	// add link to owner block
-	//elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'discussion_owner_block_menu');
+	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'discussion_owner_block_menu');
 
 	// Register for search.
 	elgg_register_entity_type('object', 'groupforumtopic');
 
 	// because replies are not comments, need of our menu item
-	//elgg_register_plugin_hook_handler('register', 'menu:river', 'discussion_add_to_river_menu');
+	elgg_register_plugin_hook_handler('register', 'menu:river', 'discussion_add_to_river_menu');
 
 	// add the forum tool option
-	//add_group_tool_option('forum', elgg_echo('groups:enableforum'), true);
-	//elgg_extend_view('groups/tool_latest', 'discussion/group_module');
+	add_group_tool_option('forum', elgg_echo('groups:enableforum'), true);
+	elgg_extend_view('groups/tool_latest', 'discussion/group_module');
 
 	// notifications
 	register_notification_object('object', 'groupforumtopic', elgg_echo('discussion:notification:topic:subject'));
@@ -784,6 +822,10 @@ function discussion_forum_page_handler($page) {
 function discussion_page_handler($page) {
 
 	elgg_load_library('elgg:discussion');
+
+	if (!isset($page[0])) {
+		$page[0] = 'all';
+	}
 
 	elgg_push_breadcrumb(elgg_echo('discussion'), 'discussion/all');
 
@@ -971,7 +1013,7 @@ function discussion_reply_notifications($event, $type, $annotation) {
 				'relationship' => 'notify' . $method,
 				'relationship_guid' => $topic->getContainerGUID(),
 				'inverse_relationship' => true,
-				'types' => 'user',
+				'type' => 'user',
 				'limit' => 0,
 			));
 

@@ -3,7 +3,6 @@
 /.htaccess
 .htaccess
 /2
-
 # ignore IDE/hidden/OS cache files
 .*
 *~
