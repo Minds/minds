@@ -335,7 +335,9 @@ function groups_icon_url_override($hook, $type, $returnvalue, $params) {
 	}
 	if ($icontime) {
 		// return thumbnail
-		return "groupicon/$group->guid/$size/$icontime.jpg";
+		//return "groupicon/$group->guid/$size/$icontime.jpg";
+		// QUICK FIX FOR GROUP ICONS
+		return elgg_get_site_url() . 'mod/groups/icon.php?group_guid='.$group->guid.'&size='.$size;
 	}
 
 	return "mod/groups/graphics/default{$size}.gif";
