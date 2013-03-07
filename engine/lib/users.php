@@ -431,7 +431,7 @@ $offset = 0) {
 function get_user_friends_objects($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
 $offset = 0, $timelower = 0, $timeupper = 0) {
 
-	if ($friends = get_user_friends($user_guid, "", 999999, 0)) {
+	if ($friends = get_user_friends($user_guid, null, 999999, 0)) {
 		$friendguids = array();
 		foreach ($friends as $friend) {
 			$friendguids[] = $friend->getGUID();
