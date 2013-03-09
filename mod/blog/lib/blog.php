@@ -41,6 +41,7 @@ function blog_get_page_content_read($guid = NULL) {
 
 	elgg_push_breadcrumb($blog->title);
 	$return['content'] = elgg_view_entity($blog, array('full_view' => true));
+	$return['content'] .= elgg_view('minds/ads', array('type'=>'content-foot'));
 	//check to see if comment are on
 	if ($blog->comments_on != 'Off') {
 		$return['content'] .= elgg_view_comments($blog);
@@ -500,8 +501,10 @@ function blog_get_featured($limit=5){
 		$es = new elasticsearch();
 		$es->index = 'featured';
 		$data = $es->query('blog');
-		foreach($data['hits']['hits'] as $item){
-			$guids[] = $item['_id'];
+		if($data['total'] > 0){
+			foreach($data['hits']['hits'] as $item){
+				$guids[] = $item['_id'];
+			}
 		}
 		if(count($guids) > 0){
 			return $featured_blogs = elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
@@ -513,7 +516,7 @@ function blog_get_featured($limit=5){
  * Adds a sidebar to each blog which show information such as posts by the owner, popular blogs etc
  * @param guid (int)
  */
-function blog_sidebar($guid){
+function blog_sidebar($guid = null){
 	if($guid){	
 		$blog = get_entity($guid);
 		
