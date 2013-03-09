@@ -501,7 +501,7 @@ function blog_get_featured($limit=5){
 		$es = new elasticsearch();
 		$es->index = 'featured';
 		$data = $es->query('blog');
-		if($data['total'] > 0){
+		if($data['hits']['total'] > 0){
 			foreach($data['hits']['hits'] as $item){
 				$guids[] = $item['_id'];
 			}
