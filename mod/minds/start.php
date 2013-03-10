@@ -116,6 +116,8 @@ function minds_init(){
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
 	}
+	//make sure all users are subscribed to minds, only run once.
+	run_function_once('minds_subscribe_bulk');
 }
 
 function minds_index($hook, $type, $return, $params) {
@@ -458,6 +460,22 @@ function minds_subscribe_default($hook, $type, $value, $params){
 	$user->addFriend($minds->guid);
 	
 	return $value;
+}
+/**
+ * Bulk user subscribe to channel
+ */
+function minds_subscribe_bulk($username = 'minds'){
+	$u = get_user_by_username($username);
+	$users = elgg_get_entities(array('type'=>'user'));
+	$i = 0;
+	foreach($users as $user){
+		$user->addFriend($u->guid);
+		$i++;
+		//if 25 users have been done, sleep for 1 second and then carry on - stops db overload
+		if($i % 20 == 0){
+			sleep(1);
+		}
+	}
 }
 
 function minds_fetch_image($description, $owner_guid) {
