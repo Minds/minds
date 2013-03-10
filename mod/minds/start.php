@@ -117,7 +117,7 @@ function minds_init(){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
 	}
 	//make sure all users are subscribed to minds, only run once.
-	run_function_once('minds_subscribe_bulk');
+	//run_function_once('minds_subscribe_bulk');
 }
 
 function minds_index($hook, $type, $return, $params) {
