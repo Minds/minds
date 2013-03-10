@@ -466,7 +466,7 @@ function minds_subscribe_default($hook, $type, $value, $params){
  */
 function minds_subscribe_bulk($username = 'minds'){
 	$u = get_user_by_username($username);
-	$users = elgg_get_entities(array('type'=>'user', 'limit'=0));
+	$users = elgg_get_entities(array('type'=>'user', 'limit'=>0));
 	$i = 0;
 	foreach($users as $user){
 		$user->addFriend($u->guid);
