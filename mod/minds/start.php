@@ -469,11 +469,13 @@ function minds_subscribe_bulk($username = 'minds'){
 	$users = elgg_get_entities(array('type'=>'user', 'limit'=>0));
 	$i = 0;
 	foreach($users as $user){
-		$user->addFriend($u->guid);
-		$i++;
-		//if 25 users have been done, sleep for 1 second and then carry on - stops db overload
-		if($i % 20 == 0){
-			sleep(1);
+		if(!$user->isFriend()){
+			$user->addFriend($u->guid);
+			$i++;
+			//if 25 users have been done, sleep for 1 second and then carry on - stops db overload
+			if($i % 20 == 0){
+				sleep(1);
+			}
 		}
 	}
 }
