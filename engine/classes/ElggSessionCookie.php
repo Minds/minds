@@ -97,12 +97,12 @@ class ElggSessionCookie extends ElggSession {
 	/**
 	 * @see ArrayObject::offsetGet()
 	 */
-	public function &offsetGet($index) {
+	/*public function &offsetGet($index) {
 		if (array_key_exists($index, $this->localstore)) {
 			return $this->localstore[$index];
 		}
 		return null;
-	}
+	}*/
 	
 	/**
 	 * @see ArrayObject::offsetUnset()
