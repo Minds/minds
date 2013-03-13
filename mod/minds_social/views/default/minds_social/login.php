@@ -1,4 +1,3 @@
-<p> - OR - </p>
 <?php
 /*
  * Facebook Button
@@ -14,20 +13,20 @@ $login_url = $facebook->getLoginUrl(array(
 				'canvas' => 1,
 				'scope' => 'publish_stream,email, offline_access',
 				'ext_perm' =>  'offline_access',
-				//'display' => 'popup',
+				'display' => 'popup',
 			));
 			
-echo '<div class="facebook"><a href="' . $login_url . '" target="_self"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/facebook_connect.gif"/></a></div>';
+echo '<div class="facebook"><a href="' . $login_url . '" target="_self"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/fbx32.png"/></a></div>';
 
 /**
  * Twitter Button
  */
 $url = elgg_get_site_url() . 'social/twitter/forward';
-$img_url = elgg_get_site_url() . 'mod/twitter_api/graphics/sign-in-with-twitter-d.png';
+$img_url = elgg_get_site_url() .'mod/minds_social/graphics/twitterx32.png';
 
 $login = <<<__HTML
-<div id="login_with_twitter">
-	<a href="$url">
+<div class="twitter">
+	<a href="$url" target="_self">
 		<img src="$img_url" alt="Twitter" />
 	</a>
 </div>

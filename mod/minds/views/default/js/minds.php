@@ -84,7 +84,6 @@
 				offset: riverOffset,
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-			console.log(url);
 						
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
@@ -96,9 +95,9 @@
 
 					$('.news-show-more').remove();
 					
-					$('.elgg-list.elgg-list-river.elgg-river').parents('.is_riverdash_middle').append(data);							
+					$('.elgg-list.elgg-list-river.elgg-river').parents('.elgg-list-river').append(data);							
 					
-					$('.elgg-list.elgg-list-river.elgg-river').parents('.is_riverdash_middle').append('<div class="news-show-more" onclick="river.extend.trigger()">more</div>');
+					$('.elgg-list.elgg-list-river.elgg-river').parents('.elgg-list-river').append('<div class="news-show-more" onclick="river.extend.trigger()">more</div>');
 				
 				
 				}

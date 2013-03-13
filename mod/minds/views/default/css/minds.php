@@ -108,6 +108,13 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 /***************
  **CUSTOMINDEX**
  **************/
+.minds_index h2, h3{
+	font-family: 'Ubuntu Light', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
+}
+.minds_index h3 a{
+	color:#4690D6;
+	font-weight:normal;
+}
 .minds_index > .logo{
 	margin:auto;
     width:200px;
@@ -167,11 +174,11 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	position:relative;
 }
 .minds_index .news-block{
-	float:left;
+	float:right;
 	width:680px;
 }
 .minds_index .side-block{
-	float:right;
+	float:left;
 	width:250px;
 	background:#EDEDED;
 	border: 1px #CCC solid;
