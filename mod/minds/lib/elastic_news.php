@@ -221,7 +221,7 @@ function minds_elastic_get_news(array $options = array()) {
 		$data['from'] = $options['offset'];
 		$data['sort'] = array('posted'=>'desc');
 		
-		$query = $es->terms(null, json_encode($data));
+		$query = $es->terms($options['action_types'], json_encode($data));
 	
 		if (!$options['count']) {
 			return minds_elastic_parse_news($query); 

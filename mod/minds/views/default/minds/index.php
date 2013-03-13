@@ -27,7 +27,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 		<div class='block'>
 			<div class='news-block'>
 				<h2>News</h2>
-				<?php echo minds_elastic_list_news(array('limit'=>4, 'object_guids'=>thumbs_trending('guids')));?>
+				<?php echo minds_elastic_list_news(array('action_types'=>'create','limit'=>4, 'object_guids'=>thumbs_trending('guids')));?>
 			</div>
 			<div class='side-block'>
 				<?php echo elgg_view_form('login');?>
