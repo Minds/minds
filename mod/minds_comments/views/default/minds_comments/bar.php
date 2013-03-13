@@ -3,9 +3,8 @@
  * Load CSS and JS libraries
  */
 elgg_load_css('minds_comments');
-if (elgg_is_logged_in()) {
-    elgg_load_js('minds_comments');
-}
+elgg_load_js('minds_comments');
+
 elgg_load_js('hj.framework.ajax');
 
 $type = elgg_extract('type', $vars, false);

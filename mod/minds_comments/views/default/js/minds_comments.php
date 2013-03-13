@@ -20,6 +20,10 @@
         $('body').on('click', '.hj-comments-summary', minds.comments.more);
        
        $('body').on('submit', '.hj-ajaxed-comment-save', minds.comments.saveComment);
+       
+       if($.cookie('_minds_comment') && elgg.is_logged_in()){
+       		 minds.comments.saveCachedComment();
+       }
 
     };
     
@@ -89,12 +93,23 @@
 
         data.pid = $('input[name="pid"]', $(this)).val();
         data.type = $('input[name="type"]', $(this)).val();
+        data.comment = $('textarea[name="comment"]', $(this)).val();
 
         ref.push(data);
 
         var input = $('textarea[name="comment"]', $(this));
 
         input.addClass('hj-input-processing');
+        
+        /*
+         * If the user is not logged in the send them to the login page
+         */
+        if(!elgg.is_logged_in()){
+       		//create a cookie with the comment info
+       		$.cookie('_minds_comment',	JSON.stringify(data), { path: '/'});
+       		elgg.forward('login');
+       		return true;
+        }
 
         elgg.action(action + '?' + values, {
 	    contentType : 'application/json',
@@ -112,6 +127,25 @@
             }
         });
  		e.preventDefault();
+    }
+    
+    minds.comments.saveCachedComment = function(e){
+	
+        if($.cookie('_minds_comment')){
+        	data = JSON.parse($.cookie('_minds_comment'));
+        	var action = elgg.normalize_url('action/comment/save');
+			elgg.action(action + '?' + 'comment=test&pid='+data.pid + '&type='+data.type, {
+				    //contentType : 'application/json',
+			            success : function(output) {
+							//console.log('saving');
+			               var container = $('#minds-comments-'+ data.pid);
+			               var commentsList = container.find('ul.hj-syncable .comments .minds-comments:first');
+						   commentsList.append(output);
+			            },
+			        });
+        	$.removeCookie('_minds_comment', { path: '/'});
+        }    
+        return false;	
     }
 
     elgg.register_hook_handler('init', 'system', minds.comments.init);

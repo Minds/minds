@@ -16,6 +16,11 @@ $graphics_url = $base_url . 'mod/hypeAlive/graphics/';
 .elgg-menu-comments-default{
 	float:right;
 }
+.minds-comments-form{
+	border-top:1px solid #CCC;
+	background:#EEE;
+	padding:5px;
+}
 /** Legacy CSS **/
 .elgg-menu-comments {
 font-size:11px;
