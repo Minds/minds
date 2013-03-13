@@ -65,12 +65,13 @@
 		 
 	 };
 	 var riverOffset = 0;
-	 river.extend.trigger = function(context) {
+	 river.extend.trigger = function(context, offset) {
+			offset = offset || 5;
 			
 			$list = $(this).parent();
 			$('.news-show-more').html('loading...');
 			
-			riverOffset += +5;
+			riverOffset += +offset;
 			var loc = location.href;
 			if(context == 'main'){
 				loc = location.href + 'news/all';
