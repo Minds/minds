@@ -22,6 +22,7 @@ function mobile_init(){
 	//set our default index page
 	if(elgg_get_viewtype() == "mobile"){
 		elgg_register_plugin_hook_handler('index', 'system','mobile_main_handler');
+		header('X-ViewType: mobile', true);
 	}
 	
 	elgg_register_simplecache_view('mobile');
