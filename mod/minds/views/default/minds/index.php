@@ -26,13 +26,11 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 	<?php if(!elgg_is_logged_in()):?>
 		<div class='block'>
 			<div class='news-block'>
-				<h3>News</h3>
+				<h2>News</h2>
 				<?php echo minds_elastic_list_news(array('limit'=>4));?>
 			</div>
 			<div class='side-block'>
 				<?php echo elgg_view_form('login');?>
-				
-				<span style="height:10px;display:block;"></span>
 				<object id="kaltura_player_6709481" name="kaltura_player_6709481" type="application/x-shockwave-flash" xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" allowfullscreen="true" allowscriptaccess="always" allownetworking="all" height="140" width="250" resource="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709481/entry_id/0_alhv657k" data="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709481/entry_id/0_alhv657k" rel="media:video" wmode="transparent">
 					<param name="allowScriptAccess" value="always"><param name="allowNetworking" value="all">
 					<param name="allowFullScreen" value="true"><param name="bgcolor" value="#000000">
@@ -48,12 +46,13 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 		</div>
 	<?php endif;?>
   	<div class='featured_wall'>
+  		<h2>Featured content</h2>
 	   <?php 
 	    /**
 		 * Video carousel
 		 */
 	   	$videos = minds_get_featured('kaltura_video', 12);
-		echo '<h3>Videos</h3>';
+		echo '<h3>Videos <a href="'.elgg_get_site_url().'archive/all">(more)</a></h3>';
 		echo elgg_view('output/carousel', array('id'=>'videos','entities'=>$videos));
 		
 		/**
@@ -61,7 +60,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 		 */
 		elgg_load_library('elgg:blog');
 		$blogs = blog_get_featured(12);
-		echo '<h3>Blogs</h3>';
+		echo '<h3>Blogs <a href="'.elgg_get_site_url().'blog/all">(more)</a></h3>';
 		echo elgg_view('output/carousel', array('id'=>'blogs','entities'=>$blogs));
 		
 		/**
@@ -69,7 +68,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 		 */
 		//elgg_load_library('elgg:blog');
 		$images = minds_get_featured('image',12);
-		echo '<h3>Images</h3>';
+		echo '<h3>Images <a href="'.elgg_get_site_url().'photos/all">(more)</a></h3>';
 		echo elgg_view('output/carousel', array('id'=>'images','entities'=>$images));
 		
 		?>

@@ -3,6 +3,15 @@
  * CSS Extensions for Minds Social
  */
 ?>
+.facebook, .twitter{
+	float:left;
+	width:32px;
+	height:32px;
+	margin:0 10px 0 0;
+}
+.twitter{
+	
+}
 .minds-social{
 	margin-top:25px;
 }
