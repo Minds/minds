@@ -65,20 +65,23 @@
 		 
 	 };
 	 var riverOffset = 0;
-	 river.extend.trigger = function() {
+	 river.extend.trigger = function(context) {
 			
 			$list = $(this).parent();
 			$('.news-show-more').html('loading...');
 			
 			riverOffset += +5;
-			
+			var loc = location.href;
+			if(context == 'main'){
+				loc = location.href + 'news/all';
+			}
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {
-				path: location.href,
+				path: loc,
 				items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
 							$list.hasClass('elgg-list-river') ? 'river' :
 							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
-				offset: riverOffset
+				offset: riverOffset,
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
 			console.log(url);

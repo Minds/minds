@@ -1,5 +1,5 @@
+<p> - OR - </p>
 <?php
-
 /*
  * Facebook Button
  */

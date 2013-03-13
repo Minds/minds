@@ -118,7 +118,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 }
 .minds_index > .search input{
 	float:left;
-    width:500px;
+    width:525px;
 }
 
 .minds_index > .search form .elgg-button-submit{
@@ -149,15 +149,36 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	color:#666;
 	font-family: 'Ubuntu Light', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
 	margin-top:10px;
-	float:left;
 }
 .minds_index > .featured_wall{
 	clear:both;
 	width:100%;
+	padding-top:25px;
 }
 .minds_index > .featured_wall h3{
 	font-family: 'Ubuntu Bold', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
 	margin: 0 10px;
+}
+.minds_index .block{
+	margin:25px 0;
+	display:block;
+	width:100%;
+	height:auto;
+	position:relative;
+}
+.minds_index .news-block{
+	float:left;
+	width:680px;
+}
+.minds_index .side-block{
+	float:right;
+	width:250px;
+	background:#EDEDED;
+	border: 1px #CCC solid;
+	padding:10px;
+	border-radius:5px;
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
 }
 /******************
  ** CUSTOM RIVER **
