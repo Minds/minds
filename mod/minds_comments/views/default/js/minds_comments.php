@@ -134,7 +134,7 @@
         if($.cookie('_minds_comment')){
         	data = JSON.parse($.cookie('_minds_comment'));
         	var action = elgg.normalize_url('action/comment/save');
-			elgg.action(action + '?' + 'comment=test&pid='+data.pid + '&type='+data.type, {
+			elgg.action(action + '?' + 'comment='+data.comment+'&pid='+data.pid + '&type='+data.type, {
 				    //contentType : 'application/json',
 			            success : function(output) {
 							//console.log('saving');
