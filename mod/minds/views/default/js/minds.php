@@ -95,9 +95,9 @@
 
 					$('.news-show-more').remove();
 					
-					$('.elgg-list.elgg-list-river.elgg-river').parents('.elgg-list-river').append(data);							
+					$('.elgg-list.elgg-list-river.elgg-river').parent().append(data);							
 					
-					$('.elgg-list.elgg-list-river.elgg-river').parents('.elgg-list-river').append('<div class="news-show-more" onclick="river.extend.trigger()">more</div>');
+					$('.elgg-list.elgg-list-river.elgg-river').parent().append('<div class="news-show-more" onclick="river.extend.trigger()">more</div>');
 				
 				
 				}
