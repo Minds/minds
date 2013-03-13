@@ -174,11 +174,11 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	position:relative;
 }
 .minds_index .news-block{
-	float:right;
+	float:left;
 	width:680px;
 }
 .minds_index .side-block{
-	float:left;
+	float:right;
 	width:250px;
 	background:#EDEDED;
 	border: 1px #CCC solid;
