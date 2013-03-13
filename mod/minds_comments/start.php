@@ -27,7 +27,7 @@ function minds_comments_init() {
 
 	// Register actions
 	elgg_register_action('comment/get', $path. 'actions/minds_comments/get.php');
-	elgg_register_action('comment/save', $path . 'actions/minds_comments/save.php');
+	elgg_register_action('comment/save', $path . 'actions/minds_comments/save.php', 'public');
 	elgg_register_action('comment/delete', $path . 'actions/minds_comments/delete.php');
 	
 	// Register JS and CSS libraries

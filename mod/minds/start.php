@@ -51,9 +51,7 @@ function minds_init(){
 	
 	//plugin for cookie manipulation via JS
 	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js');
-	if (!elgg_is_logged_in()) {
-		elgg_load_js('jquery-cookie');
-	}
+	elgg_load_js('jquery-cookie');
 	
 	//register inline js player
 	$uiVideoInline = elgg_get_simplecache_url('js', 'uiVideoInline');
