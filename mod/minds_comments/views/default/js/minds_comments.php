@@ -93,7 +93,7 @@
 
         data.pid = $('input[name="pid"]', $(this)).val();
         data.type = $('input[name="type"]', $(this)).val();
-        data.comment = $('textarea[name="comment"]', $(this)).val();
+        data.comment = encodeURIComponent($('textarea[name="comment"]', $(this)).val());
 
         ref.push(data);
 
