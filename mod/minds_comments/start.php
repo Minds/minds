@@ -44,7 +44,7 @@ function minds_comments_init() {
 	 * forward users if cookie set
 	 */
 	 $commentCOOKIE = $_COOKIE['_minds_comment'];
-	 if(elgg_is_logged_in() && $commentCOOKIE != 'done'){
+	 if(elgg_is_logged_in() && $commentCOOKIE && $commentCOOKIE != 'done'){
 	 	$data = json_decode($commentCOOKIE, true);
 	 	setcookie('_minds_comment', 'done', 0, '/');
 		$comment = urlencode($data['comment']);
