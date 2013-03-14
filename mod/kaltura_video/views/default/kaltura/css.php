@@ -464,6 +464,7 @@ div.galleryItem div {
 .uiVideoInline.archive span {
 	position:absolute;
 	display:inline-block;
+	cursor:pointer;
 	margin:auto;
 	height:100%;
 	width:100%;
