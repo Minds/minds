@@ -320,7 +320,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 .news-block .elgg-river li.elgg-item{
 	background:#f9f9f9;
 	border:1px #CCC solid;
-	padding:5px;
+	padding:10px;
 	margin:5px 0;
 	border-radius:2px;
 	-webkit-border-radius: 2px;
