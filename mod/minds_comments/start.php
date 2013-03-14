@@ -26,7 +26,7 @@ function minds_comments_init() {
 	elgg_load_library('minds_comments');
 
 	// Register actions
-	elgg_register_action('comment/get', $path. 'actions/minds_comments/get.php');
+	elgg_register_action('comment/get', $path. 'actions/minds_comments/get.php', 'public');
 	elgg_register_action('comment/save', $path . 'actions/minds_comments/save.php', 'public');
 	elgg_register_action('comment/delete', $path . 'actions/minds_comments/delete.php');
 	
@@ -39,6 +39,18 @@ function minds_comments_init() {
 		
 	elgg_register_plugin_hook_handler('register', 'menu:comments', 'minds_comments_menu');
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'minds_comment_entity_menu');
+	
+	/**
+	 * forward users if cookie set
+	 */
+	 $commentCOOKIE = $_COOKIE['_minds_comment'];
+	 if(elgg_is_logged_in() && $commentCOOKIE != 'done'){
+	 	$data = json_decode($commentCOOKIE, true);
+	 	setcookie('_minds_comment', 'done', 0, '/');
+		$comment = urlencode($data['comment']);
+	 	forward(elgg_add_action_tokens_to_url('action/comment/save?comment='. $comment .'&pid='.$data['pid'] .'&type='.$data['type'].'&redirect_url='.urlencode($data['redirect_url'])));
+		//forward($data->redirect_url);
+	 }
 }
 
 function minds_comments_menu($hook, $type, $return, $params) {
@@ -47,11 +59,11 @@ function minds_comments_menu($hook, $type, $return, $params) {
 	$id = elgg_extract('id', $params, false);
 	$owner_guid = elgg_extract('owner_guid', $params, false);
 	unset($return);
-
+	
 	/**
 	 * Delete
 	 */
-	 if($owner_guid == elgg_get_logged_in_user_guid() || elgg_is_admin_logged_in()){
+	 if(($owner_guid == elgg_get_logged_in_user_guid() || elgg_is_admin_logged_in()) && elgg_is_logged_in()){
 		$delete = array(
 			'name' => 'delete',
 			'text' => elgg_view_icon('delete'),

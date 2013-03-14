@@ -106,7 +106,15 @@
          */
         if(!elgg.is_logged_in()){
        		//create a cookie with the comment info
+       		var url = window.location.href;
+       		//if homepage then we redirect to news (we will presume the user is not already on news for the time being as we dont have a site link)
+			if(url == elgg.get_site_url()){
+				data.redirect_url = url + '/news/single/'+data.pid;
+			} else {
+				data.redirect_url = url;
+			}
        		$.cookie('_minds_comment',	JSON.stringify(data), { path: '/'});
+       		elgg.register_error('You must login or create and account before your comments can be saved');
        		elgg.forward('login');
        		return true;
         }
@@ -132,6 +140,7 @@
     minds.comments.saveCachedComment = function(e){
 	
         if($.cookie('_minds_comment')){
+        	//elgg.forward(data.redirect_url);
         	data = JSON.parse($.cookie('_minds_comment'));
         	var action = elgg.normalize_url('action/comment/save');
 			elgg.action(action + '?' + 'comment='+data.comment+'&pid='+data.pid + '&type='+data.type, {
@@ -141,6 +150,7 @@
 			               var container = $('#minds-comments-'+ data.pid);
 			               var commentsList = container.find('ul.hj-syncable .comments .minds-comments:first');
 						   commentsList.append(output);
+						   //elgg.system_message('minds_comments:save:success');
 			            },
 			        });
         	$.removeCookie('_minds_comment', { path: '/'});
