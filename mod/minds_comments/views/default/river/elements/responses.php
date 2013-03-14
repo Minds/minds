@@ -20,21 +20,14 @@ if($item->action_type == 'create'){
 	$type = 'entity';
 	$pid = $item->object_guid;
 }
-if (elgg_is_logged_in()) {
-	echo elgg_view('minds_comments/bar', array(
+echo elgg_view('minds_comments/bar', array(
 		'type' => $type,
 	    'pid' => $pid,
-	));
+));
 	
-	echo elgg_view('minds_comments/input', array(
-	    'type' => $type,
+echo elgg_view('minds_comments/input', array(
+	   'type' => $type,
 		'pid' => $pid
-	));
+));
 
-} else {
-   echo elgg_view('minds_comments/bar', array(
-		'type' => $type,
-	    'pid' => $pid,
-	));
-}
 
