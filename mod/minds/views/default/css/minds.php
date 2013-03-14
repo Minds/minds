@@ -182,10 +182,11 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	width:250px;
 	background:#EDEDED;
 	border: 1px #CCC solid;
+	margin:30px 0;
 	padding:10px;
-	border-radius:5px;
-	-webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
+	border-radius:2px;
+	-webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
 }
 /******************
  ** CUSTOM RIVER **
@@ -312,6 +313,18 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 }
 .elgg-list-river{
 	border-top:0;
+}
+/**
+ * Homepage news
+ */
+.news-block .elgg-river li.elgg-item{
+	background:#f9f9f9;
+	border:1px #CCC solid;
+	padding:5px;
+	margin:5px 0;
+	border-radius:2px;
+	-webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
 }
 /* ***************************************
 	ANNOUNCEMENT
