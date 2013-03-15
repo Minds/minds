@@ -28,7 +28,7 @@ if($entity->featured != true){
 	$es->remove($entity->getSubType(), $entity->getGuid());
 	$entity->featured = false;
 	
-	minds_elastic_delete_news(array('object_guids'=>array($entity->getGuid())));
+	minds_elastic_delete_news(array('action_types'=>'feature', 'object_guids'=>array($entity->getGuid())));
 }
 
 $entity->save();

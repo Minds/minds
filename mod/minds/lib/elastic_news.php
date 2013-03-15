@@ -125,7 +125,7 @@ function minds_elastic_delete_news(array $options = array()) {
 	}
 	$es = new elasticsearch();
 	$es->index = $CONFIG->elasticsearch_prefix . 'news';
-	$query = $es->query(null, $q);
+	$query = $es->query($options['action_types'], $q);
 	$items = $query['hits']['hits'];
 	
 	foreach($items as $item){
