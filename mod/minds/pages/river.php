@@ -36,7 +36,13 @@ switch ($page_type) {
 		break;
 	case 'single':
 		$id = get_input('id');
-		$options['ids'] = array($id);
+		$page_filter = 'single';
+		if(is_numeric($id)){
+			//fully integer = must be a guid. We need a better way!!
+			$options['object_guids'] = array($id);
+		} else {
+			$options['ids'] = array($id);
+		}
 		break;
 	case 'thumbsup':
 		$title = elgg_echo('river:thumbs-up');
