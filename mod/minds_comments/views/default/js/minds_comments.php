@@ -21,9 +21,9 @@
        
        $('body').on('submit', '.hj-ajaxed-comment-save', minds.comments.saveComment);
        
-       if($.cookie('_minds_comment') && elgg.is_logged_in()){
+      /* if($.cookie('_minds_comment') && elgg.is_logged_in()){
        		 minds.comments.saveCachedComment();
-       }
+       }*/
 
     };
     
@@ -108,14 +108,14 @@
        		//create a cookie with the comment info
        		var url = window.location.href;
        		//if homepage then we redirect to news (we will presume the user is not already on news for the time being as we dont have a site link)
-			if(url == elgg.get_site_url()){
+			if(url == elgg.get_site_url() || url.indexOf(elgg.get_site_url()+'news') > -1){
 				data.redirect_url = url + '/news/single/'+data.pid;
 			} else {
 				data.redirect_url = url;
 			}
        		$.cookie('_minds_comment',	JSON.stringify(data), { path: '/'});
        		elgg.register_error('You must login or create and account before your comments can be saved');
-       		elgg.forward('login');
+       		setTimeout("elgg.forward('login')", 1000)
        		return true;
         }
 

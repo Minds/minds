@@ -124,8 +124,8 @@ function thumbs_comments_menu_setup($hook, $type, $return, $params) {
 		$id = $params['id'];
 		$thumbsUP = $params['thumbs:up'];
 		$thumbsDOWN = $params['thumbs:down'];
-		$alreadyUP = in_array(elgg_get_logged_in_user_guid(), $thumbsUP);
-		$alreadyDOWN = in_array(elgg_get_logged_in_user_guid(), $thumbsDOWN);
+		$alreadyUP = is_array($thumbsUP) ? in_array(elgg_get_logged_in_user_guid(), $thumbsUP) : false;
+		$alreadyDOWN = is_array($thumbsDOWN) ? in_array(elgg_get_logged_in_user_guid(), $thumbsDOWN) : false;
 		
 		// up button
 		$options = array('name' => 'thumbs:up', 'text' => elgg_view('thumbs/button-up', array('type' => 'comment', 'comment_type'=>$type, 'pid'=>$pid, 'id'=>$id, 'count'=>count($thumbsUP), 'already'=>$alreadyUP)), 'href' => false, 'priority' => 98, );

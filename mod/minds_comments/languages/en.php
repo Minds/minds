@@ -1,6 +1,7 @@
 <?php
 
 $english = array(
+	'minds_comments:save:success' => 'Your comment has been saved',
     /**
      * Comments
      */
