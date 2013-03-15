@@ -176,6 +176,11 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	'minds:license:publicdomaincco' => 'Public Domain CCO "No Rights Reserved"',
 	'minds:license:gnuv3' => 'GNU v3 General Public License',
 	'minds:license:gnuv1.3' => 'GNU v1.3 Free Documentation License',
+	'minds:license:gnu-lgpl' => 'GNU Lesser General Public License',
+	'minds:license:gnu-affero' => 'GNU Affero General Public License',
+	'minds:license:apache-v1' => 'Apache License, Version 1.0',
+	'minds:license:apache-v1.1' => 'Apache License, Version 1.1',
+	'minds:license:apache-v2' => 'Apache License, Version 2.0',
 	'minds:license:mozillapublic' => 'Mozilla Public License',
 	'minds:license:bsd' => 'BSD License',
 	
