@@ -39,6 +39,7 @@ switch ($page_type) {
 		$page_filter = 'single';
 		if(is_numeric($id)){
 			//fully integer = must be a guid. We need a better way!!
+			$options['action_types'] = 'create';
 			$options['object_guids'] = array($id);
 		} else {
 			$options['ids'] = array($id);
