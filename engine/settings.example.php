@@ -80,6 +80,14 @@ $CONFIG->dbprefix = '{{dbprefix}}';
 $CONFIG->system_cache_path = '/tmp/elgg_system_cache/';
 
 /**
+ * Elasticsearch Settings
+ */
+//server for elasticsearch
+$CONFIG->elasticsearch_server = 'http://107.23.117.9:9200/';
+//namespace
+$CONFIG->elasticsearch_prefix = 'mehmac_';
+
+/**
  * Memcache setup (optional)
  * This is where you may optionally set up memcache.
  *

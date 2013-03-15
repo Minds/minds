@@ -3,7 +3,8 @@
 class MindsComments {
 
 	function __construct() {
-		$this->index = 'comments';
+		global $CONFIG;
+		$this->index = $CONFIG->elasticsearch_prefix . 'comments';
 	}
 
 	function services() {
