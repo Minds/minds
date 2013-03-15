@@ -113,7 +113,7 @@
 			} else {
 				data.redirect_url = url;
 			}
-       		$.cookie('_minds_comment',	JSON.stringify(data), { path: '/'});
+       		$.cookie('minds_comment',	JSON.stringify(data), { path: '/'});
        		elgg.register_error('You must login or create and account before your comments can be saved');
        		setTimeout("elgg.forward('login')", 1000)
        		return true;
@@ -153,7 +153,7 @@
 						   //elgg.system_message('minds_comments:save:success');
 			            },
 			        });
-        	$.removeCookie('_minds_comment', { path: '/'});
+        	$.removeCookie('minds_comment', { path: '/'});
         }    
         return false;	
     }
