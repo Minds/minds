@@ -501,7 +501,7 @@ function minds_get_featured($type, $limit = 5, $output = 'entities'){
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
 		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
-		$data = $es->query($type);
+		$data = $es->query($type,null, null, $limit);
 		foreach($data['hits']['hits'] as $item){
 			$guids[] = intval($item['_id']);
 		}
