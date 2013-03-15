@@ -22,9 +22,13 @@ if($entity->featured != true){
 	
 	$entity->featured = true;
 	
+	add_to_river('river/object/'.$entity->getSubtype().'/feature', 'feature', $entity->getOwnerGUID(), $entity->getGuid());
+	
 }else{
 	$es->remove($entity->getSubType(), $entity->getGuid());
 	$entity->featured = false;
+	
+	minds_elastic_delete_news(array('object_guids'=>array($entity->getGuid())));
 }
 
 $entity->save();
