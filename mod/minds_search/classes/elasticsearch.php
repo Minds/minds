@@ -5,15 +5,17 @@
 class elasticsearch {
   public $index;
 
-  function __construct($server = elasticsearch_server){
-    $this->server = $server;
+  function __construct(){
+  	global $CONFIG;
+    $this->server = $CONFIG->elasticsearch_server;
+	$this->port = $CONFIG->elasticsearch_port ? $CONFIG->elasticsearch_port : 9200;
   }
 
   function call($path, $http = array('method'=>'GET')){ 
     if (!$this->index) throw new Exception('$this->index needs a value');
 	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, elgg_get_plugin_setting('server', 'minds_search').'/'. $this->index . '/' . $path);
-	curl_setopt($ch, CURLOPT_PORT, 9200);
+	curl_setopt($ch, CURLOPT_URL, $this->server . $this->index . '/' . $path);
+	curl_setopt($ch, CURLOPT_PORT, $this->port);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http['method']);
 //	curl_setopt($ch,CURLOPT_TIMEOUT_MS, 500);

@@ -11,7 +11,6 @@
 //rename_function('add_to_river', 'minds_elastic_add_to_news');
 function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_id = "", $posted = 0, $annotation_id = 0) {
 	global $CONFIG;
-	
 	// use default viewtype for when called from web services api
 	if (!elgg_view_exists($view, 'default')) {
 		return false;
@@ -35,7 +34,7 @@ function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_
 	$subtype = $object->getSubtype();
 	
 	$es = new elasticsearch();
-	$es->index = 'news';
+	$es->index = $CONFIG->elasticsearch_prefix . 'news';
 	
 	$view = sanitise_string($view);
 	$action_type = sanitise_string($action_type);
@@ -125,7 +124,7 @@ function minds_elastic_delete_news(array $options = array()) {
 		return false;
 	}
 	$es = new elasticsearch();
-	$es->index = 'news';
+	$es->index = $CONFIG->elasticsearch_prefix . 'news';
 	$query = $es->query(null, $q);
 	$items = $query['hits']['hits'];
 	
@@ -212,7 +211,7 @@ function minds_elastic_get_news(array $options = array()) {
 	
 	if (class_exists('elasticsearch')) {
 		$es = new elasticsearch();
-		$es->index = 'news';
+		$es->index = $CONFIG->elasticsearch_prefix . 'news';
 		
 		if($bool){
 			$data['query']['bool'] = $bool;
