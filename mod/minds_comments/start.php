@@ -44,9 +44,9 @@ function minds_comments_init() {
 	 * forward users if cookie set
 	 */
 	 $commentCOOKIE = $_COOKIE['_minds_comment'];
-	 if(elgg_is_logged_in() && isset($commentCOOKIE) && $commentCOOKIE != 'done'){
+	 if(elgg_is_logged_in() && $commentCOOKIE && $commentCOOKIE != 'done'){
 	 	$data = json_decode($commentCOOKIE, true);
-	 	setcookie('_minds_comment', 'done', 0, '/');
+	 	setcookie('_minds_comment', 'done', time()-3600, '/');
 		$comment = urlencode($data['comment']);
 	 	forward(elgg_add_action_tokens_to_url('action/comment/save?comment='. $comment .'&pid='.$data['pid'] .'&type='.$data['type'].'&redirect_url='.urlencode($data['redirect_url'])));
 		//forward($data->redirect_url);

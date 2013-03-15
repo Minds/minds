@@ -5,6 +5,11 @@ if (!get_input('comment')) {
     return true;
 }
 
+if (!elgg_is_logged_in()){
+	register_error(elgg_echo('minds_comment:mustbeloggedin'));
+	return true;
+}
+
 $type = get_input('type', null);
 $pid = get_input('pid', null);
 $comment = urldecode(get_input('comment', null));
@@ -26,6 +31,7 @@ if($create['ok'] == true){
 	minds_comments_notification($type, $pid, $comment);
 	if(get_input('redirect_url')){
 		forward(get_input('redirect_url'));
+		return true;
 	}
 	print(json_encode($output));
 } else {
