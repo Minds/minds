@@ -496,17 +496,21 @@ function minds_fetch_image($description, $owner_guid) {
   return $image;
 }
 
-function minds_get_featured($type, $limit = 5){
+function minds_get_featured($type, $limit = 5, $output = 'entities'){
 	global $CONFIG;
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
-		$es->index = $CONFIG->elasticsearch_prefix.'featured';
+		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
 		$data = $es->query($type);
 		foreach($data['hits']['hits'] as $item){
-			$guids[] = $item['_id'];
+			$guids[] = intval($item['_id']);
 		}
 		if(count($guids) > 0){
-			return elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
+			if($output == 'entities'){
+				return elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
+			} elseif($output == 'guids'){
+				return $guids;
+			}
 		}
 	}
 	return false;
