@@ -109,7 +109,7 @@
        		var url = window.location.href;
        		//if homepage then we redirect to news (we will presume the user is not already on news for the time being as we dont have a site link)
 			if(url == elgg.get_site_url() || url.indexOf(elgg.get_site_url()+'news') > -1){
-				data.redirect_url = url + '/news/single/'+data.pid;
+				data.redirect_url = url + '/news/single/?id='+data.pid;
 			} else {
 				data.redirect_url = url;
 			}
