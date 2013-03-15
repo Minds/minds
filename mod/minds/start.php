@@ -499,9 +499,10 @@ function minds_fetch_image($description, $owner_guid) {
 }
 
 function minds_get_featured($type, $limit = 5){
+	global $CONFIG;
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
-		$es->index = 'featured';
+		$es->index = $CONFIG->elasticsearch_prefix.'featured';
 		$data = $es->query($type);
 		foreach($data['hits']['hits'] as $item){
 			$guids[] = $item['_id'];

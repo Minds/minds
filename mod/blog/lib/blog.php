@@ -497,9 +497,10 @@ function blog_url_forwarder($page) {
  * 
  */
 function blog_get_featured($limit=5){
+	global $CONFIG;
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
-		$es->index = 'featured';
+		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
 		$data = $es->query('blog');
 		if($data['hits']['total'] > 0){
 			foreach($data['hits']['hits'] as $item){

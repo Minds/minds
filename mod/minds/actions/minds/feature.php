@@ -5,12 +5,13 @@
  */
 
 admin_gatekeeper();
+global $CONFIG;
 
 $guid = get_input('guid');
 $entity = get_entity($guid);
 
 $es = new elasticsearch();
-$es->index = 'featured';
+$es->index = $CONFIG->elasticsearch_prefix.'featured';
 
 if($entity->featured != true){
 
