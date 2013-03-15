@@ -496,7 +496,7 @@ function minds_fetch_image($description, $owner_guid) {
   return $image;
 }
 
-function minds_get_featured($type, $limit = 5){
+function minds_get_featured($type, $limit = 5, $output = 'entities'){
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
 		$es->index = 'featured';
@@ -505,7 +505,11 @@ function minds_get_featured($type, $limit = 5){
 			$guids[] = $item['_id'];
 		}
 		if(count($guids) > 0){
-			return elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
+			if($output == 'entities'){
+				return elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
+			} elseif($output == 'count'){
+				return $guids;
+			}
 		}
 	}
 	return false;

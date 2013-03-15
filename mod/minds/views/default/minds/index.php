@@ -23,11 +23,10 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 		Open Source
 		Everything
 	</div>
-	<?php if(!elgg_is_logged_in()):?>
 		<div class='block'>
 			<div class='news-block'>
-				<h2>Trending News</h2>
-				<?php echo minds_elastic_list_news(array('action_types'=>'create','limit'=>4, 'object_guids'=>thumbs_trending('guids')));?>
+				<h2>Featured News</h2>
+				<?php echo minds_elastic_list_news(array('action_types'=>'create','limit'=>4, 'object_guids'=>minds_get_featured(null, 1000, 'count')));?>
 			</div>
 			<div class='side-block'>
 				<?php echo elgg_view_form('login');?>
@@ -44,7 +43,6 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 				</object>
 			</div>
 		</div>
-	<?php endif;?>
   	<div class='featured_wall'>
   		<h2>Featured content</h2>
 	   <?php 
