@@ -17,6 +17,12 @@ if (elgg_is_logged_in() && $context) {
 	$filter_context = elgg_extract('filter_context', $vars);
 
 	$tabs = array(
+		'featured' => array(
+			'text' => elgg_echo('river:featured'),
+			'href' => $context."/featured",
+			'selected' => ($filter_context == 'featured'),
+			'priority' => 200,
+		),
 		'trending' => array(
 			'text' => elgg_echo('river:trending'),
 			'href' => (isset($vars['trending_link'])) ? $vars['trending_link'] : "$context/trending",
@@ -48,7 +54,7 @@ if (elgg_is_logged_in() && $context) {
 			'text' => elgg_echo('all'),
 			'href' => (isset($vars['all_link'])) ? $vars['all_link'] : "$context/all",
 			'selected' => ($filter_context == 'all'),
-			'priority' => 200,
+			'priority' => 100,
 		);
 	}
 	
