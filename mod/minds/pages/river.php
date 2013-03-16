@@ -34,6 +34,11 @@ switch ($page_type) {
 		//GET THE TRENDING FEATURES
 		$options['object_guids'] = thumbs_trending('guids');
 		break;
+	case 'featured':
+		$title = elgg_echo('river:featured');
+		$page_filter = 'featured';
+		$options['action_types'] = 'feature';
+		break;
 	case 'single':
 		$id = get_input('id');
 		$page_filter = 'single';

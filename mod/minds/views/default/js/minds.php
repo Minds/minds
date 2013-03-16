@@ -74,7 +74,7 @@
 			riverOffset += +offset;
 			var loc = location.href;
 			if(context == 'main'){
-				loc = location.href + 'news/trending';
+				loc = location.href + 'news/featured';
 			}
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {

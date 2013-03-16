@@ -16,7 +16,7 @@ $login_url = $facebook->getLoginUrl(array(
 				'display' => 'popup',
 			));
 			
-echo '<div class="facebook"><a href="' . $login_url . '" target="_self"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/fbx32.png"/></a></div>';
+echo '<div class="social_login facebook"><a href="' . $login_url . '" target="_self"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/fbx32.png"/> <p>Login with Facebook</p></a></div>';
 
 /**
  * Twitter Button
@@ -25,9 +25,9 @@ $url = elgg_get_site_url() . 'social/twitter/forward';
 $img_url = elgg_get_site_url() .'mod/minds_social/graphics/twitterx32.png';
 
 $login = <<<__HTML
-<div class="twitter">
+<div class="social_login twitter">
 	<a href="$url" target="_self">
-		<img src="$img_url" alt="Twitter" />
+		<img src="$img_url" alt="Twitter" /> <p>Login with Twitter</p>
 	</a>
 </div>
 __HTML;

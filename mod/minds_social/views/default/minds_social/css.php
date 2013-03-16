@@ -3,11 +3,20 @@
  * CSS Extensions for Minds Social
  */
 ?>
-.facebook, .twitter{
+.social_login{
+	clear:both;
+	width:100%;
+	height:35px;
+	display:block;
+	margin:5px 0;
+}
+.social_login img{
 	float:left;
-	width:32px;
-	height:32px;
-	margin:0 10px 0 0;
+}
+.social_login p{
+	float:left;
+	margin:6px 10px;
+	font-weight:bold;
 }
 .twitter{
 	

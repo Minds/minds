@@ -99,6 +99,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 ",
 	
 	//river menu
+	'river:featured' => 'Featured',
 	'river:trending' => 'Trending',
 	'river:thumbs-up' => 'Thumbs up',
 	'river:thumbs-down' => 'Thumbs down',
