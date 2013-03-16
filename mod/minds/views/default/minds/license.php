@@ -20,6 +20,11 @@
 							'publicdomaincco' => 'http://creativecommons.org/publicdomain/zero/1.0/',
 							'gnuv3' => 'http://www.gnu.org/licenses/gpl.html',
 							'gnuv1.3' => 'http://www.gnu.org/copyleft/fdl.html',
+							'gnu-lgpl' => 'http://www.gnu.org/licenses/lgpl.html',
+							'gnu-affero' => 'http://www.gnu.org/licenses/agpl.html',
+							'apache-v2' => 'http://www.apache.org/licenses/LICENSE-2.0.html',
+							'apache-v1.1' => 'http://www.apache.org/licenses/LICENSE-1.1',
+							'apache-v1.0' => 'http://www.apache.org/licenses/LICENSE-1.0',
 							'mozillapublic' => 'http://www.mozilla.org/MPL/',
 							'bsd' =>'http://opensource.org/licenses/BSD-2-Clause',
  						);
