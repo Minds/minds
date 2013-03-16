@@ -29,8 +29,15 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 				<?php echo minds_elastic_list_news(array('action_types'=> 'feature', 'limit'=>4));?>
 			</div>
 			<div class='side-block'>
-				<?php echo elgg_view_form('login');?>
-				<p>Minds is a universal network to search, create and share free information.</p>
+				<?php if(!elgg_is_logged_in()) {
+				 echo elgg_view_form('login');
+				 echo '<p>Minds is a universal network to search, create and share free information.</p>';
+				 } else {
+				 	elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
+					echo elgg_view('page/elements/miniprofile');
+					echo elgg_view('page/elements/friends');
+				}
+				?>
 			</div>
 		</div>
   	<div class='featured_wall'>
