@@ -36,5 +36,41 @@
 		<?php echo elgg_view('minds/license', array('license'=>'attribution-noncommercial-noderivs-cc'));?>This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially.
 		
 	</div>
+	
+	<div class='license'>
+		<h3>GNU General Public License</h3>
+		<?php echo elgg_view('minds/license', array('license'=>'gnuv3'));?>
+		The GNU General Public License is often called the GNU GPL for short; it is used by most GNU programs, and by more than half of all free software packages. The latest version is version 3.
+	</div>
+	
+	<div class='license'>
+		<h3>GNU Lesser General Public License</h3>
+		<?php echo elgg_view('minds/license', array('license'=>'gnu-lgpl'));?>
+		The GNU Lesser General Public License is used by a few (not by any means all) GNU libraries. The latest version is version 3. <br/><br/>
+	</div>
+	
+	<div class='license'>
+		<h3>GNU Affero General Public License</h3>
+		<?php echo elgg_view('minds/license', array('license'=>'gnu-affero'));?>
+		The GNU Affero General Public License is based on the GNU GPL, but has an additional term to allow users who interact with the licensed software over a network to receive the source for that program. We recommend that people consider using the GNU AGPL for any software which will commonly be run over a network. The latest version is version 3.
+	</div>
+	
+	<div class='license'>
+		<h3>Apache License, Version 2</h3>
+		<?php echo elgg_view('minds/license', array('license'=>'apache-v2'));?>
+		The goals of this license revision have been to reduce the number of frequently asked questions, to allow the license to be reusable without modification by any project (including non-ASF projects), to allow the license to be included by reference instead of listed in every file, to clarify the license on submission of contributions, to require a patent license on contributions that necessarily infringe the contributor's own patents, and to move comments regarding Apache and other inherited attribution notices to a location outside the license terms. 
+	</div>
+	
+	<div class='license'>
+		<h3>Apache License, Version 1.1</h3>
+		<?php echo elgg_view('minds/license', array('license'=>'apache-v1.1'));?>
+		The 1.1 version of the Apache License was approved by the ASF in 2000. The primary change from the 1.0 license is in the 'advertising clause' (section 3 of the 1.0 license); derived products are no longer required to include attribution in their advertising materials, only in their documentation.
+	</div>
+	
+	<div class='license'>
+		<h3>Apache License, Version 1</h3>
+		<?php echo elgg_view('minds/license', array('license'=>'apache-v1.0'));?>
+		This is the original Apache License which applies only to older versions of Apache packages (such as version 1.2 of the Web server).
+	</div>
 </div>
 
