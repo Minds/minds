@@ -16,7 +16,7 @@ $item = $vars['item'];
 $type = 'river';
 $pid = $item->id;
 
-if($item->action_type == 'create'){
+if($item->action_type == 'create' || $item->action_type == 'feature'){
 	$type = 'entity';
 	$pid = $item->object_guid;
 }
