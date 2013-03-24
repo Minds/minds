@@ -165,7 +165,9 @@ function minds_social_action($event, $object_type, $object){
 			$api->post('statuses/update', array('status' => 'I created new media on Minds. ' . $object->getURL()));
 		}
 		
-		if($object->getSubtype() == 'image'){
+		/**
+		 * TEMP REMOVAL OF THIS AS WE FAIL IF THE IMAGES DO NOT HAVE NAMES...
+		 if($object->getSubtype() == 'image'){
 			
 			//post to facebook.
 			try{
@@ -178,7 +180,8 @@ function minds_social_action($event, $object_type, $object){
 			$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
 			$api->post('statuses/update', array('status' => 'I created new media on Minds. ' . $object->getURL()));
 		}
-	} elseif($object_type == 'annotation'){
+		 */
+	} /*elseif($object_type == 'annotation'){
 		if($object->name == 'thumbs:up'){
 			$entity = get_entity($object->entity_guid);
 			try{
@@ -186,7 +189,7 @@ function minds_social_action($event, $object_type, $object){
 			} catch(Exception $e){
 			}
 		}
-	}
+	}*/
 	
 	}
 	
