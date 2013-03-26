@@ -80,7 +80,10 @@ if ($full && !elgg_in_context('gallery')) {
 
 	$text = elgg_view('output/longtext', array('value' => $file->description));
 	$license =  elgg_view('minds/license', array('license'=>$file->license)); 
-	$body = "$text $extra $license";
+	if($file->access_id == 2){
+		$social_links = elgg_view('minds_social/social_footer');
+	}
+	$body = "$text $extra $license $social_links";
 
 	echo elgg_view('object/elements/full', array(
 		'entity' => $file,

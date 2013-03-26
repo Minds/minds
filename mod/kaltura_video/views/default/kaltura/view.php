@@ -152,7 +152,11 @@ echo autop($ob->description);
 											));
 										}?>
 </p>
-<?php echo elgg_view('minds_social/social_footer');?>
+<?php 
+	if($ob->access_id == 2){
+		echo elgg_view('minds_social/social_footer');
+	}
+?>
 <div class="clear"></div>
 
 

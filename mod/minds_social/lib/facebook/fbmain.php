@@ -16,7 +16,7 @@ function minds_social_facebook_init(){
 /* Begin the authentication process for facebook
  * Links a facebook account to a minds account
  */
-function minds_social_facebook_auth(){
+function minds_social_facebook_auth($display = 'normal'){
 	$facebook = minds_social_facebook_init();
 	
 	if (!$session['_fb'] = $facebook->getUser()) {
@@ -46,7 +46,12 @@ function minds_social_facebook_auth(){
 		
 	system_message(elgg_echo('minds:social:facebook:authsuccess'));
 		
-	forward(REFERER);
+	if($display == 'popup'){
+		echo '<script>window.close();</script>';
+		exit;
+	} else {
+		forward(REFERER);
+	}
 	
 }
 /**

@@ -70,7 +70,12 @@ if ($full) {
 	));
 	
 	$body .= elgg_view('minds/license', array('license'=>$blog->license));
-
+	
+	//if blog is public, show social links
+	if($blog->access_id == 2){
+		$body .= elgg_view('minds_social/social_footer');
+	}
+	
 	$params = array(
 		'entity' => $blog,
 		'title' => false,

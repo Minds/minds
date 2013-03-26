@@ -53,6 +53,10 @@ $body .= $album->viewImages();
 
 $body .= elgg_view('minds/license', array('license'=>$album->license)); 
 
+if($album->access_id == 2){
+	$body .= elgg_view('minds_social/social_footer');
+}
+
 echo elgg_view('object/elements/full', array(
 	'entity' => $album,
 	'icon' => $owner_icon,

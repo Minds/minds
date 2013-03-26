@@ -13,9 +13,9 @@ function minds_social_twitter_init(){
  *
  * This includes the login URL as the callback
  */
-function minds_social_twitter_forward() {
+function minds_social_twitter_forward($type = 'login') {
 
-	$callback = elgg_normalize_url("social/twitter/login");
+	$callback = elgg_normalize_url("social/twitter/".$type);
 	$request_link = minds_social_twitter_authorize_url($callback);
 
 	forward($request_link, 'minds_social');
@@ -131,9 +131,10 @@ function minds_social_twitter_login() {
  * Depends upon {@link twitter_api_get_authorize_url} being called previously
  * to establish session request tokens.
  */
-function minds_social_twitter_auth($token) {
+function minds_social_twitter_auth($display = 'normal') {
+	$token = minds_social_twitter_access_token();
+
 	$user = elgg_get_logged_in_user_entity();	
-	$token = $token != NULL ? $token : minds_social_twitter_access_token();
 	if (!isset($token['oauth_token']) || !isset($token['oauth_token_secret'])) {
 		register_error(elgg_echo('twitter_api:authorize:error'));
 		forward('settings/plugins/'.$user->username, 'twitter_api');
@@ -155,7 +156,13 @@ function minds_social_twitter_auth($token) {
 	//elgg_trigger_plugin_hook('authorize', 'twitter_api', array('token' => $token));
 
 	system_message(elgg_echo('minds_social:twitter:authsuccess'));
-	forward('settings/plugins/'.$user->username);
+	
+	if($display == 'popup'){
+		echo '<script>window.close();</script>';
+		exit;
+	} else {
+		forward('settings/plugins/'.$user->username);
+	}
 }
 /**
  * Pull in the latest avatar from twitter.

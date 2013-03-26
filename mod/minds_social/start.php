@@ -31,7 +31,10 @@ function minds_social_init(){
 		
  	elgg_extend_view('page/elements/head','minds_social/meta');
 	
-	elgg_extend_view('object/elements/full', 'minds_social/social_footer');
+	//elgg_extend_view('object/elements/full', 'minds_social/social_footer');
+	
+	$minds_social_js = elgg_get_simplecache_url('js', 'minds_social');
+	elgg_register_js('minds.social.js', $minds_social_js);
 	
 	/**** DISABlING AUTO FACEBOOK REG FOR THE MOMENT ***
 	 if (stripos(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), 'facebook')|| get_input('fb_source') || get_input('code')){
@@ -62,8 +65,20 @@ function minds_social_page_handler($page)
 	if($page[0] == 'fb'){
 		switch ($page[1]) {
 			case 'auth':
-				minds_social_facebook_auth();
+				minds_social_facebook_auth($page[2]);
 				break;
+			case 'popup':
+				$facebook = minds_social_facebook_init();
+				$return_url = elgg_get_site_url() . 'social/fb/auth/popup';
+				$login_url = $facebook->getLoginUrl(array(
+					'redirect_uri' => $return_url,
+					'canvas' => 1,
+					'scope' => 'publish_stream, offline_access',
+					'ext_perm' =>  'offline_access',
+					'display' => 'popup'
+				));
+				forward($login_url);
+			break;
 			case 'login':
 				minds_social_facebook_login();
 				break;
@@ -77,10 +92,13 @@ function minds_social_page_handler($page)
 	} elseif($page[0] == 'twitter'){
 		switch ($page[1]) {
 			case 'auth':
-				minds_social_twitter_auth();
+				minds_social_twitter_auth('normal');
 				break;
+			case 'popup':
+				minds_social_twitter_auth('popup');	
+				break;		
 			case 'forward':
-				minds_social_twitter_forward();
+				minds_social_twitter_forward($page[2]);
 				break;
 			case 'login':
 				minds_social_twitter_login();

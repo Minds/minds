@@ -72,6 +72,8 @@ if(!$image->license){
 
 echo elgg_view('minds/license', array('license'=>$license)); 
 
-echo elgg_view('minds_social/social_footer');
+if($image->access_id == 2){
+	echo elgg_view('minds_social/social_footer');
+}
 
 echo elgg_view_comments($photo);
