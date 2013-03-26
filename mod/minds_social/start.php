@@ -98,7 +98,8 @@ function minds_social_page_handler($page)
 				minds_social_twitter_auth('popup');	
 				break;		
 			case 'forward':
-				minds_social_twitter_forward($page[2]);
+				$type = $page[2] ? $page[2] : 'login';
+				minds_social_twitter_forward($type);
 				break;
 			case 'login':
 				minds_social_twitter_login();
