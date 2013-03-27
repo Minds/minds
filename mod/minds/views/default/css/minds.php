@@ -9,6 +9,7 @@
  
 body{
 	background:#FEFEFE;
+	font-family: 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
  }
 
 .elgg-page.news .elgg-page-body{
