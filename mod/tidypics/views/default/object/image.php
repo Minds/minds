@@ -224,6 +224,7 @@ if (get_context() == "search") {
 		if($image->access_id == 2){
 			echo elgg_view('minds_social/social_footer');
 		}
+		echo elgg_view('minds/ads', array('type'=>'content-foot'));
 
 		echo elgg_view_comments($image);
 

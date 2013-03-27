@@ -157,6 +157,7 @@ echo autop($ob->description);
 		echo elgg_view('minds_social/social_footer');
 	}
 ?>
+<?php echo elgg_view('minds/ads', array('type'=>'content-foot')); ?>
 <div class="clear"></div>
 
 

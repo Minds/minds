@@ -28,6 +28,7 @@ $title = $file->title;
 elgg_push_breadcrumb($title);
 
 $content = elgg_view_entity($file, array('full_view' => true));
+$content .= elgg_view('minds/ads', array('type'=>'content-foot'));
 $content .= elgg_view_comments($file);
 
 elgg_register_menu_item('title', array(
@@ -41,6 +42,7 @@ $body = elgg_view_layout('content', array(
 	'content' => $content,
 	'title' => $title,
 	'filter' => '',
+	'sidebar' => elgg_view('file/sidebar')
 ));
 
 echo elgg_view_page($title, $body);
