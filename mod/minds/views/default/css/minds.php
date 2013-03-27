@@ -189,6 +189,9 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	-webkit-border-radius: 2px;
     -moz-border-radius: 2px;
 }
+.minds_index .side-block p {
+	font-size: 14px;
+}
 /******************
  ** CUSTOM RIVER **
  *****************/
