@@ -386,6 +386,13 @@ function elgg_create_default_widgets($event, $type, $entity) {
 					foreach ($settings as $name => $value) {
 						$new_widget->$name = $value;
 					}
+					
+					/**
+					 * Event hooks are ignored for some reason we need to put an override here
+					 */
+					if($widget->handler == 'channel_avatar'){
+						$new_widget->title = $entity->name;
+					}
 
 					$new_widget->save();
 				}
