@@ -24,7 +24,7 @@ $login_url = $facebook->getLoginUrl(array(
 
 
 echo "<h3> Facebook </h3>";
-if(!empty($user) && $facebook_id == $user){
+if($facebook_id){
 	
 	echo '<div><a href="' . $remove_url . '">Remove facebook link</a></div>';
 
