@@ -8,7 +8,8 @@
  * @link http://kramnorth.com
  *
  */
- 
+ //no footer for mobile
+ return true;
  if(elgg_get_context()=='oauth2'){
 	return true;//dont show footer for mobile apps
  }
