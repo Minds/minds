@@ -220,6 +220,8 @@ if (get_context() == "search") {
 	</div> <!-- tidypics wrapper-->
 <?php
 		echo elgg_view('minds/license', array('license'=>$image->license)); 
+		
+		echo elgg_view('minds/ads', array('type'=>'content-foot'));
 
 		echo elgg_view_comments($image);
 

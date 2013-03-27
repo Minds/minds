@@ -7,7 +7,7 @@ elgg_push_context('sidebar');
 $guid = elgg_extract('guid', $vars);
 if($guid){
 	$video = get_entity($guid);
-	$owners_videos = elgg_get_entities(array('type'=>'object', 'subtype'=>'kaltura_video', 'owner_guid'=>$video->owner_guid, 'limit'=>5));
+	$owners_videos = elgg_get_entities(array('type'=>'object', 'subtype'=>'kaltura_video', 'owner_guid'=>$video->owner_guid, 'limit'=>2));
 	if (($key = array_search($video, $owners_videos)) !== false) {
 	    unset($owners_videos[$key]);
 	}
@@ -21,7 +21,7 @@ if($guid){
 /** 
  * Featured videos
  */
-$featured = minds_get_featured('kaltura_video', 5);
+$featured = minds_get_featured('kaltura_video', 3);
 $content = elgg_view_entity_list($featured);
 
 echo elgg_view_module('aside', elgg_echo('archive:featured:title'), $content, array('class'=>'sidebar'));

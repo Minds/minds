@@ -74,4 +74,6 @@ echo elgg_view('minds/license', array('license'=>$license));
 
 echo elgg_view('minds_social/social_footer');
 
+echo elgg_view('minds/ads', array('type'=>'content-foot'));
+
 echo elgg_view_comments($photo);

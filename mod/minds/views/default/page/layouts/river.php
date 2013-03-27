@@ -76,6 +76,8 @@ elgg_load_js('uiVideoInline');
 			}
 
 			echo elgg_view('page/elements/sidebar', $vars);
+					
+			echo elgg_view('minds/ads', array('type'=>'news-side'));
 		?>
 	</div>
 	<?php 	} else { //end of elgg_is_logged_in() condition ?>
