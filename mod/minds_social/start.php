@@ -36,6 +36,10 @@ function minds_social_init(){
 	$minds_social_js = elgg_get_simplecache_url('js', 'minds_social');
 	elgg_register_js('minds.social.js', $minds_social_js);
 	
+	minds_set_metatags('fb:app_id', '184865748231073');
+	minds_set_metatags('og:site_name', 'Minds');
+	minds_set_metatags('twitter:site', 'mindsdotcom');
+	
 	/**** DISABlING AUTO FACEBOOK REG FOR THE MOMENT ***
 	 if (stripos(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), 'facebook')|| get_input('fb_source') || get_input('code')){
 		$facebook = minds_social_facebook_init();
@@ -217,8 +221,11 @@ function minds_social_action($event, $object_type, $object){
 
 function minds_set_metatags($name, $content){
 	
+	global $SOCIAL_META_TAGS;
+	
 	$strip = strip_tags($content);
-	set_input($name, str_replace('"', "", $strip));
+	$SOCIAL_META_TAGS[$name]['property'] = $name;
+	$SOCIAL_META_TAGS[$name]['content'] = $content;
 	
 	return;
 	
