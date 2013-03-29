@@ -50,14 +50,22 @@ function blog_get_page_content_read($guid = NULL) {
 	//add the sidebar
 	$return['sidebar'] = blog_sidebar($blog->guid);
 	
-	minds_set_metatags('description', $blog->excerpt ? $blog->excerpt : substr(strip_tags($blog->description), 0, 140));
+	$excerpt = $blog->excerpt ? $blog->excerpt : substr(strip_tags($blog->description), 0, 140);
+	
+	minds_set_metatags('description', $excerpt);
 	minds_set_metatags('keywords', $blog->tags);
 	
 	//set up for facebook
 	minds_set_metatags('og:type', 'article');
 	minds_set_metatags('og:url',$blog->getURL());
 	minds_set_metatags('og:title',$blog->title);
-	minds_set_metatags('og:image', minds_get_fbimage($blog->description));
+	minds_set_metatags('og:image', minds_fetch_image($blog->description, $blog->owner_guid));
+	//setup for twitter
+	minds_set_metatags('twitter:card', 'summary');
+	minds_set_metatags('twitter:url', $blog->getURL());
+	minds_set_metatags('twitter:site', $blog->title);
+	minds_set_metatags('twitter:image', minds_fetch_image($blog->description, $blog->owner_guid));
+	minds_set_metatags('twitter:description', $excerpt);
 
 	return $return;
 }

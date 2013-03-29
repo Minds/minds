@@ -30,6 +30,12 @@ if (elgg_get_plugin_setting('tagging', 'tidypics')) {
 	 minds_set_metatags('og:image',$photo->getIconURL('large'));
 	 minds_set_metatags('mindscom:photo',$photo->getIconURL('large'));
 	 minds_set_metatags('og:url',$photo->getUrl());
+	 
+	 minds_set_metatags('twitter:card', 'photo');
+	 minds_set_metatags('twitter:url', $photo->getURL());
+	 minds_set_metatags('twitter:site', $photo->getTitle());
+	 minds_set_metatags('twitter:image', $photo->getIconURL('large'));
+	 minds_set_metatags('twitter:description', $photo->description ? $photo->description : $photo->getUrl());
 
 // set page owner based on owner of photo album
 $album = $photo->getContainerEntity();

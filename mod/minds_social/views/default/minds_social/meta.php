@@ -42,6 +42,8 @@
 	
     echo "<meta property=\"og:site_name\" content=\"Minds, Freedom to share\">";
 	
+	echo "<meta property=\"twitter:site\" content=\"mindsdotcom\">";
+	
 ?>
 <div id="fb-root"></div>
 <script>(function(d, s, id) {

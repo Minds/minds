@@ -42,7 +42,17 @@
 	 minds_set_metatags('og:video:secure_url',  $video_location_secure); 
 	 minds_set_metatags('og:video:width', '1280');
 	 minds_set_metatags('og:video:height', '720');
-	minds_set_metatags('og:other', $video_location);
+	 minds_set_metatags('og:other', $video_location);
+	 
+	minds_set_metatags('twitter:card', 'player');
+	minds_set_metatags('twitter:url', $videopost->getURL());
+	minds_set_metatags('twitter:site', $videopost->title);
+	minds_set_metatags('twitter:image', $thumbnail);
+	minds_set_metatags('twitter:description', $videopost->description);
+	minds_set_metatags('twitter:player', $video_location);
+	minds_set_metatags('twitter:player:width', '1280');
+	minds_set_metatags('twitter:player:height', '720');
+	
 	// Display it
 		$content = elgg_view("kaltura/view");
 	// Set the title appropriately
