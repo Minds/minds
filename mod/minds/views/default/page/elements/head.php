@@ -66,9 +66,9 @@ $release = get_version(true);
 	<script type="text/javascript" src="<?php echo $script; ?>"></script>
 <?php } ?>
 
-<script type="text/javascript">
-	<?php echo elgg_view('js/initialize_elgg'); ?>
-</script>
+	<script type="text/javascript">
+		<?php echo elgg_view('js/initialize_elgg'); ?>
+	</script>
 
 <?php
 echo $feedref;
