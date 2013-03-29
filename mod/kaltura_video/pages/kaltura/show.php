@@ -32,12 +32,13 @@
 	$video_location_secure = str_replace('http://', 'https://', $video_location);	
 	
 	$thumbnail = kaltura_get_thumnail($videopost->kaltura_video_id, 640, 360, 100);	
+	$description = strip_tags($videopost->description);
 
 	 minds_set_metatags('og:type', 'video.other');
 	 //minds_set_metatags('og:url',trim($videopost->getURL()));
 	 minds_set_metatags('og:image', $thumbnail);
 	 minds_set_metatags('og:title', $videopost->title);
-	 minds_set_metatags('og:description', $videopost->description);
+	 minds_set_metatags('og:description', $description);
 	 minds_set_metatags('og:video', $video_location);
 	 minds_set_metatags('og:video:secure_url',  $video_location_secure); 
 	 minds_set_metatags('og:video:width', '1280');
@@ -48,7 +49,7 @@
 	minds_set_metatags('twitter:url', $videopost->getURL());
 	minds_set_metatags('twitter:title', $videopost->title);
 	minds_set_metatags('twitter:image', $thumbnail);
-	minds_set_metatags('twitter:description', $videopost->description);
+	minds_set_metatags('twitter:description', $description);
 	minds_set_metatags('twitter:player', $video_location);
 	minds_set_metatags('twitter:player:width', '1280');
 	minds_set_metatags('twitter:player:height', '720');
