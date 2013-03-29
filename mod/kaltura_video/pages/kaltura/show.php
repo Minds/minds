@@ -46,7 +46,7 @@
 	 
 	minds_set_metatags('twitter:card', 'player');
 	minds_set_metatags('twitter:url', $videopost->getURL());
-	minds_set_metatags('twitter:site', $videopost->title);
+	minds_set_metatags('twitter:title', $videopost->title);
 	minds_set_metatags('twitter:image', $thumbnail);
 	minds_set_metatags('twitter:description', $videopost->description);
 	minds_set_metatags('twitter:player', $video_location);

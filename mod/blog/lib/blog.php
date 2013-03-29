@@ -63,7 +63,7 @@ function blog_get_page_content_read($guid = NULL) {
 	//setup for twitter
 	minds_set_metatags('twitter:card', 'summary');
 	minds_set_metatags('twitter:url', $blog->getURL());
-	minds_set_metatags('twitter:site', $blog->title);
+	minds_set_metatags('twitter:title', $blog->title);
 	minds_set_metatags('twitter:image', minds_fetch_image($blog->description, $blog->owner_guid));
 	minds_set_metatags('twitter:description', $excerpt);
 
