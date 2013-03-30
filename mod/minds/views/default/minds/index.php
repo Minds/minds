@@ -13,7 +13,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
              
                     <input type="text" name="q" value=""  placeholder="<?php echo elgg_echo('search');?>" />
                     <button type="submit" value="search" class="elgg-button elgg-button-submit">Search</button>
-                    <input type="hidden" name="search" value="1" /></td>
+                    <input type="hidden" name="search" value="1" />
     
             </form>
         
