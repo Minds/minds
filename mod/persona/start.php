@@ -21,7 +21,7 @@
 	// If the administrator has enabled login via Persona, extend the login form with it
 
 	    if (persona_is_enabled()) {
-		elgg_extend_view('login/extend', 'persona/login');
+		//elgg_extend_view('login/extend', 'persona/login');
 		elgg_extend_view('metatags', 'persona/metatags');
 	    }
 

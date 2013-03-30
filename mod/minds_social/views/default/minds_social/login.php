@@ -24,7 +24,7 @@ echo '<div class="social_login facebook"><a href="' . $login_url . '" target="_s
 $url = elgg_get_site_url() . 'social/twitter/forward';
 $img_url = elgg_get_site_url() .'mod/minds_social/graphics/twitterx32.png';
 
-$login = <<<__HTML
+$twitter = <<<__HTML
 <div class="social_login twitter">
 	<a href="$url" target="_self">
 		<img src="$img_url" alt="Twitter" /> <p>Login with Twitter</p>
@@ -32,5 +32,20 @@ $login = <<<__HTML
 </div>
 __HTML;
 
-echo $login;
-			
+echo $twitter;
+
+/**
+ * Persona button (different plugin)
+ */
+$url = elgg_get_site_url() . 'social/twitter/forward';
+$img_url = elgg_get_site_url() .'mod/minds_social/graphics/personax32.png';
+
+$persona = <<<__HTML
+<div class="social_login persona">
+    <a href="#" id="persona_login" onclick="navigator.id.request(); return false;">
+		<img src="$img_url" alt="Persona" /> <p>Login with Persona</p>
+    </a>
+</div>
+__HTML;
+
+echo $persona;
