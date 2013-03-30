@@ -36,7 +36,7 @@ function minds_search_init() {
 	elgg_register_event_handler('delete', 'object', 'elasticsearch_remove');
 
 	define('elasticsearch_server', $CONFIG->elasticsearch_server);
-	define('elasticsearch_index', $CONFIG->elasticsearch_server .'search');
+	define('elasticsearch_index', elgg_get_plugin_setting('index')); //we need to move this over to settings soon, this only used by SITE search
 
 	elgg_register_plugin_hook_handler('register', 'menu:search_result', 'minds_search_result_menu_setup');
 
