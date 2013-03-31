@@ -43,7 +43,7 @@ $img_url = elgg_get_site_url() .'mod/minds_social/graphics/personax32.png';
 $persona = <<<__HTML
 <div class="social_login persona">
     <a href="#" id="persona_login" onclick="navigator.id.request(); return false;">
-		<img src="$img_url" alt="Persona" /> <p>Login with Persona</p>
+		<img src="$img_url" alt="Persona" /> <p>Login with Mozilla Persona</p>
     </a>
 </div>
 __HTML;
