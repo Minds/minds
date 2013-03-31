@@ -98,7 +98,7 @@ if ($current_page < $total_pages) {
 }
 
 if(elgg_get_context() == 'news' || elgg_get_context() == 'main' ){
-echo '<div class="news-show-more" onclick="river.extend.trigger(\'' . elgg_get_context() . '\', 10)">more</div>';
+echo '<div class="news-show-more" onclick="river.extend.trigger(\'' . elgg_get_context() . '\', 5)">more</div>';
 } else {
 
 echo '<ul class="elgg-pagination">';
