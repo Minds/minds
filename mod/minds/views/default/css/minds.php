@@ -331,7 +331,7 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
     -moz-border-radius: 2px;
 }
 .news-block .elgg-river-attachments .elgg-photo.large{
-	width:100%;
+	width:98.5%;
 }
 /* ***************************************
 	ANNOUNCEMENT
