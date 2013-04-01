@@ -330,6 +330,9 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	-webkit-border-radius: 2px;
     -moz-border-radius: 2px;
 }
+.news-block .elgg-river-attachments .elgg-photo.large{
+	width:100%;
+}
 /* ***************************************
 	ANNOUNCEMENT
 **************************************** */
