@@ -48,4 +48,4 @@ $persona = <<<__HTML
 </div>
 __HTML;
 
-echo $persona;
+//echo $persona;
