@@ -64,6 +64,9 @@ li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
 	position:relative;
     top:0;
 }
+#login-dropdown-box{
+	width:225px;
+}
 .elgg-button.elgg-button-dropdown{
 	font-size:12px;
 	width:65px;
