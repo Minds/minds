@@ -14,7 +14,7 @@
 	 		if($(this).attr('name')=='facebook'){
 	 			var url = elgg.get_site_url() + 'social/fb/popup';
 	 		} else {
-	 			var url = elgg.get_site_url() + 'social/twitter/popup';
+	 			var url = elgg.get_site_url() + 'social/twitter/forward/popup';
 	 		}
 	 		window.open(url,'Connect','height=300,width=500');
 	 	}

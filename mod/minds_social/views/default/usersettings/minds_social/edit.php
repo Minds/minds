@@ -38,7 +38,7 @@ elgg_load_library('minds:twitter');
 
 echo "<h3> Twitter </h3>";
 
-$url = elgg_get_site_url() . 'social/twitter/forward';
+$url = elgg_get_site_url() . 'social/twitter/forward/auth';
 $img_url = elgg_get_site_url() . 'mod/twitter_api/graphics/sign-in-with-twitter-d.png';
 
 $login = <<<__HTML
