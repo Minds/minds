@@ -43,4 +43,11 @@ if($type == 'all'){
 		echo elgg_view('minds_search/services/types/sound', array('sound'=>$item['_source']));
 	}
 	echo '</div>';
+} elseif($type=='article'){
+	echo '<div class="minds-search minds-search-section minds-search-section-article">';
+	echo '<h3>'. 'Articles & Wikis' . '</h3>';
+	foreach($data as $item){
+		echo elgg_view('minds_search/services/types/article', array('article'=>$item['_source']));
+	}
+	echo '</div>';
 }

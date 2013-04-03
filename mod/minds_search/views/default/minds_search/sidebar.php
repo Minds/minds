@@ -12,7 +12,7 @@ $l = get_input('license', 'all');
 
 $path = elgg_get_site_url() . 'search/?q=' . $query;
 
-$types = array('all', 'photo', 'video', 'sound');
+$types = array('all', 'photo', 'video', 'sound', 'article');
 
 /**
  * Counts
