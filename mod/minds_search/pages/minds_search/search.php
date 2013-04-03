@@ -20,7 +20,7 @@ $license = get_input("license", 'all');
 /**
  * Minds Search. Local
  */
-$sort = array('name:desc', 'title:desc');
+/*$sort = array('name:desc', 'title:desc');
 $call = elasticsearch_parse($query, $object_type, $sort, 5, $offset);
 $hits = $call['hits'];
 $items = $hits['hits'];
@@ -42,7 +42,7 @@ if (count($items) > 0) {
 	$params['content'] = 'sorry, no results';
 }
 //$params['title'] = $title;
-$params['sidebar'] = elgg_view('minds_search/stats', array('stats' => $call));
+$params['sidebar'] = elgg_view('minds_search/stats', array('stats' => $call));*/
 
 $serviceSearch = new MindsSearch();
 $call = $serviceSearch->search($query,$type, $services, $license,  $limit,$offset);
