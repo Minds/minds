@@ -18,7 +18,7 @@ if(!$full_view){
 	<div class='minds-search minds-search-item'>
 		<h3><?php echo $title;?></h3>
 		<p><?php echo $description;?> <br/>
-		<?php echo $source;?> <br/>
+		<b><?php echo $source;?></b> <br/>
 	</p>
 	</div>
 </a>
