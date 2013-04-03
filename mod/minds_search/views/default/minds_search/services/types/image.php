@@ -11,6 +11,7 @@ $imageURL = $image['iconURL'];
 $img = elgg_view('output/img', array('src'=>$imageURL));
 $url = elgg_get_site_url().'search/result/'.$image['id'];
 $source = $image['source'];
+$owner = $image['owner'];
 
 if(!$full_view){
 	
@@ -19,9 +20,8 @@ if(!$full_view){
 	<div class='minds-search minds-search-item'>
 		<?php echo $img;?>
 		<h3><?php echo $title;?></h3>
-		<p>Source: <?php echo $source;?><br/>
-			Type: Image
-		</p>
+		<p><?php echo $source;?> <br/>
+		   <?php echo $owner;?></p>
 	</div>
 </a>
 <?php 

@@ -34,10 +34,14 @@ function minds_search_init() {
 	elgg_register_event_handler('delete', 'user', 'elasticsearch_remove');
 	elgg_register_event_handler('delete', 'group', 'elasticsearch_remove');
 	elgg_register_event_handler('delete', 'object', 'elasticsearch_remove');
-
+	
+	global $CONFIG;
 	define('elasticsearch_server', $CONFIG->elasticsearch_server);
-	define('elasticsearch_index', elgg_get_plugin_setting('index')); //we need to move this over to settings soon, this only used by SITE search
-
+	define('elasticsearch_index', $CONFIG->elasticsearch_sitesearch_index ? $CONFIG->elasticsearch_sitesearch_index : elgg_get_plugin_setting('index')); //we need to move this over to settings soon, this only used by SITE search
+	
+	$wikiCSS = elgg_get_simplecache_url('css', 'wiki');
+	elgg_register_css('wiki', $wikiCSS);
+	
 	elgg_register_plugin_hook_handler('register', 'menu:search_result', 'minds_search_result_menu_setup');
 
 	// Page handler for the modal media embed

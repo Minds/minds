@@ -17,6 +17,8 @@ if($type == 'all'){
 			echo elgg_view('minds_search/services/types/video', array('video'=>$item['_source']));
 		if($item['_type'] == 'sound')
 			echo elgg_view('minds_search/services/types/sound', array('sound'=>$item['_source']));
+		if($item['_type'] == 'article') 
+			echo elgg_view('minds_search/services/types/article', array('article'=>$item['_source']));
 	}
 } elseif($type=='photo') {
 	echo '<div class="minds-search minds-search-section minds-search-section-image">';

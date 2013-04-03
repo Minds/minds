@@ -49,7 +49,6 @@ $call = $serviceSearch->search($query,$type, $services, $license,  $limit,$offse
 $hits = $call['hits'];
 $items = $hits['hits'];
 if (count($items) > 0) {
-	$results .= '<h3> More </h3>';
 	$results .= elgg_view('minds_search/services/services', array('data'=>$items));
 	$results .= elgg_view('navigation/pagination', array('count'=>$hits['total'], 'limit'=>$limit, 'offset'=>$offset));
 		
