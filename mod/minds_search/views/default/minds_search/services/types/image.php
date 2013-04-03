@@ -20,8 +20,8 @@ if(!$full_view){
 	<div class='minds-search minds-search-item'>
 		<?php echo $img;?>
 		<h3><?php echo $title;?></h3>
-		<p><!--<?php echo $source;?> <br/>-->
-		   <?php echo $owner;?></p>
+		<p><?php echo $source;?> <br/>
+		   <?php //echo $owner;?></p>
 	</div>
 </a>
 <?php 
