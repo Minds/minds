@@ -26,9 +26,7 @@ function kaltura_video_init() {
 
 		include_once(dirname(__FILE__)."/kaltura/api_client/definitions.php");
 
-		//needs to be loaded after htmlawed
-		//this is for allow html <object> tags
-		$CONFIG->htmlawed_config['safe'] = false;
+
 
 
 
@@ -126,11 +124,6 @@ function kaltura_video_init() {
 	// Register entity type
 	elgg_register_entity_type('object','kaltura_video');
 	
-	if(elgg_is_active_plugin('htmlawed')){
-		//Add to HTMLawed so that we can allow embedding
-		elgg_unregister_plugin_hook_handler('validate', 'input', 'htmlawed_filter_tags');
-		elgg_register_plugin_hook_handler('validate', 'input', 'kaltura_htmlawed_filter_tags', 1);
-	}
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'kaltura_video/actions/';
 
@@ -497,42 +490,7 @@ function kalturavideo_convert($hook, $entity_type, $returnvalue, $params){
 	logout(); 
     return $resulttext;
   }
- /* Extend / override htmlawed */ 
-function kaltura_htmlawed_filter_tags($hook, $type, $result, $params) {
-	
-	$var = $result;
 
-	elgg_load_library('htmlawed');
-
-	$htmlawed_config = array(
-		// seems to handle about everything we need.
-		'safe' => 0,
-		'deny_attribute' => 'class, on*',
-		'comments'=>0,
-		'cdata'=>0,
-		'hook_tag' => 'htmlawed_tag_post_processor',
-		'elements'=>'*-applet-script', // object, embed allowed
-		'schemes' => '*:http,https,ftp,news,mailto,rtsp,teamspeak,gopher,mms,callto',
-		// apparent this doesn't work.
-		// 'style:color,cursor,text-align,font-size,font-weight,font-style,border,margin,padding,float'
-	);
-
-	// add nofollow to all links on output
-	if (!elgg_in_context('input')) {
-		$htmlawed_config['anti_link_spam'] = array('/./', '');
-	}
-
-	$htmlawed_config = elgg_trigger_plugin_hook('config', 'htmlawed', null, $htmlawed_config);
-
-	if (!is_array($var)) {
-		$result = htmLawed($var, $htmlawed_config);
-	} else {
-		array_walk_recursive($var, 'htmLawedArray', $htmlawed_config);
-		$result = $var;
-	}
-
-	return $result;
-}
 
 // Make sure the status initialisation function is called on initialisation
 // we want this register the last, that's is only to hack the html cleaner

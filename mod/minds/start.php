@@ -103,6 +103,16 @@ function minds_init(){
 	//subscribe users to the minds channel once they register
 	elgg_register_plugin_hook_handler('register', 'user', 'minds_subscribe_default', 1);
 	
+	if(elgg_is_active_plugin('htmlawed')){
+		//Add to HTMLawed so that we can allow embedding
+		elgg_unregister_plugin_hook_handler('validate', 'input', 'htmlawed_filter_tags');
+		elgg_register_plugin_hook_handler('validate', 'input', 'minds_htmlawed_filter_tags', 1);
+	}
+	
+	//needs to be loaded after htmlawed
+	//this is for allow html <object> tags
+	$CONFIG->htmlawed_config['safe'] = false;
+	
 	$actionspath = elgg_get_plugins_path() . "minds/actions";
 	elgg_register_action("minds/feature","$actionspath/minds/feature.php");
 	elgg_register_action("minds/river/delete", "$actionspath/river/delete.php");
@@ -514,6 +524,46 @@ function minds_get_featured($type, $limit = 5, $output = 'entities'){
 		}
 	}
 	return false;
+}
+
+ /* Extend / override htmlawed */ 
+function minds_htmlawed_filter_tags($hook, $type, $result, $params) {
+	if(strpos($_SERVER['REQUEST_URI'], 'action/plugins/usersettings/save') !== FALSE){
+		$extraALLOW = 'script';
+	}
+	
+	$var = $result;
+
+	elgg_load_library('htmlawed');
+
+	$htmlawed_config = array(
+		// seems to handle about everything we need.
+		'safe' => 0,
+		'deny_attribute' => 'on*',
+		'comments'=>0,
+		'cdata'=>0,
+		'hook_tag' => 'htmlawed_tag_post_processor',
+		'elements'=>'*-applet-script,'.$extraALLOW, // object, embed allowed
+		'schemes' => '*:http,https,ftp,news,mailto,rtsp,teamspeak,gopher,mms,callto',
+		// apparent this doesn't work.
+		// 'style:color,cursor,text-align,font-size,font-weight,font-style,border,margin,padding,float'
+	);
+
+	// add nofollow to all links on output
+	if (!elgg_in_context('input')) {
+		$htmlawed_config['anti_link_spam'] = array('/./', '');
+	}
+
+	$htmlawed_config = elgg_trigger_plugin_hook('config', 'htmlawed', null, $htmlawed_config);
+
+	if (!is_array($var)) {
+		$result = htmLawed($var, $htmlawed_config);
+	} else {
+		array_walk_recursive($var, 'htmLawedArray', $htmlawed_config);
+		$result = $var;
+	}
+
+	return $result;
 }
 
 elgg_register_event_handler('init','system','minds_init');		
