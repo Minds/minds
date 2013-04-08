@@ -39,7 +39,6 @@ if(!$full_view){
 	if($source=='archive.org'){
 		forward($video['href']);
 	}elseif($source=='youtube'){
-		forward($entity->getURL());
 		$yt_id = str_replace('youtube_', '', $video['id']);
 		echo '<iframe src="http://youtube.com/embed/'.$yt_id.'" width="975px" height="500px"></iframe>';
 		minds_set_metatags('og:video', 'http://youtube.com/v/'.$yt_id);
@@ -47,5 +46,7 @@ if(!$full_view){
 		minds_set_metatags('og:video:type', 'application/x-shockwave-flash');
 		minds_set_metatags('og:video:width', 1280);
 		minds_set_metatags('og:video:height', 720);
+	} elseif($source=='minds'){
+		forward($entity->getURL());
 	}
 }
