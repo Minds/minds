@@ -15,12 +15,6 @@ if($source == 'minds'){
 	$entity = get_entity($article['guid']);
 	$iconURL = minds_fetch_image($entity->description);
 	$icon = "<img src='".$iconURL."'/>";
-	
-	if($entity->getSubtype() == 'blog'){
-		$source = "minds blog";
-	} elseif($entity->getSubtype() == 'page'){
-		$source = "minds page";
-	}
 }
 
 if(!$full_view){
