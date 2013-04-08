@@ -73,6 +73,16 @@ a .minds-search-item p{
 	clear:both;
 	width:100%;
 }
+.minds-search-item-video span{
+	position: absolute;
+	display: inline-block;
+	cursor: pointer;
+	margin: auto;
+	height: 100px;
+	width: 160px;
+	background: transparent url(<?php echo elgg_get_site_url();?>mod/embed_extender/graphics/play_button.png) no-repeat center center;
+	z-index: 2;
+}
 /************************
  * Individual page
  */

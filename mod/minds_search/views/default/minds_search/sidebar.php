@@ -12,7 +12,7 @@ $l = get_input('license', 'all');
 
 $path = elgg_get_site_url() . 'search/?q=' . $query;
 
-$types = array('all', 'photo', 'video', 'sound', 'article');
+$types = array(0 => 'all', 1 => 'photo', 2 => 'video', 3 => 'sound', 4 => 'article', 5 => 'user', 6 => 'group');
 
 /**
  * Counts
@@ -29,15 +29,16 @@ foreach($data as $item){
 /**
  * @todo move these to the library rather than view
  */
-foreach ($types as $type) {
+foreach ($types as $k => $type) {
 	if($type=='all'){
 		$text =elgg_echo('minds_search:type:' . $type).' ('.$count.')';
 	} else {
 		$text =elgg_echo('minds_search:type:' . $type);
 	}
-	$params = array(	'name' => 'minds_search:type:' . $type, 
+	$params = array(	'name' => 'minds_search:type:' . $k . $type, 
 						'text' => $text,
 						'href' => $path . '&type=' . $type.'&license='.$l, 
+						'priority' =>$k
 					);
 	elgg_register_menu_item('page', $params);
 }

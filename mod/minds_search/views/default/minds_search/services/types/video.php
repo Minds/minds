@@ -22,7 +22,8 @@ if($source == 'minds'){
 if(!$full_view){
 ?>
 <a href='<?php echo elgg_get_site_url().'search/result/'.$video['id'];?>'>
-	<div class='minds-search minds-search-item'>
+	<div class='minds-search minds-search-item minds-search-item-video'>
+		<span></span>
 		<?php echo $img;?>
 		<h3><?php echo $title;?></h3>
 		<p><b><?php echo $source; ?></b></p>
