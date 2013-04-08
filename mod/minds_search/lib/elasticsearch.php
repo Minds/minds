@@ -3,6 +3,7 @@
  * One time run indexer for first use
  */
 function elasticsearch_index_once(){
+	
 	$entities = elgg_get_entities(array('limit'=> 99999999999999));
 	
 	foreach($entities as $entity){
