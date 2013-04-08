@@ -62,6 +62,6 @@ if(!$full_view){
 		echo $content;
 		echo "</div>";
 	}elseif($source=='minds'){
-		forward($article['href']);
+		forward($entity->getURL());
 	}
 }?>
