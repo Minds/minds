@@ -8,12 +8,28 @@ function elasticsearch_index_once(){
 	foreach($entities as $entity){
 		if(elasticsearch_index_allowed($entity)){
 			$es = new elasticsearch();
-			$es->index = elasticsearch_index;
-			echo $es->add($entity->getType(), $entity->getGUID(), elasticsearch_encode($entity));
+			$es->index = 'ext';
+			
+			$item = elasticsearch_render($entity);
+		
+		var_dump($es->add($item->type, $item->id, json_encode($item)));
 		}
 	}
-	
+
 	return 'All done';
+}
+
+function elasticsearch_get_type($subtype){
+	if(in_array($subtype, array('image', 'album'))){
+		return 'photo';
+	} elseif(in_array($subtype, array('kaltura_video'))){
+		return 'video';
+	} elseif(in_array($subtype, array('blog', 'page'))){
+		return 'article';
+	} elseif(in_array($subtype, array('file'))){
+		return 'file';
+	}
+	return false;
 }
 
 /**
@@ -141,42 +157,29 @@ function elasticsearch_live(){
 	
 	return false;
 }
- 
-/**
- * Encode an object into json block
- *
- * @param array $object
- * @return string
- */
-function elasticsearch_encode($object){
-	
-	$data = new stdClass();
-	
-	$data->guid = $object->getGUID();
-	
-	$data->type = $object->getType();
-	$data->subtype = $object->getSubtype();
-	
-	if($object instanceof ElggUser){
-		
-		$data->name = $object->name;
-		$data->location = $object->location;
-		$data->email = $object->email;
-		
-	} else {
 
-		$data->title = $object->title;
-		$data->tags = $object->tags;
-		
-		$owner = $object->getOwnerEntity();
-		$data->owner["guid"] = $owner->guid;
-		$data->owner["name"] = $owner->name;
-		$data->owner["username"] = $owner->username;
+function elasticsearch_render($entity){
+
+	$item = new stdClass();
+	$item->id = 'minds' . $entity->guid;
+	$item->guid = $entity->guid;
+	$item->title =  $entity->title;
+	if($entity->type == 'object'){
+		$item->type = elasticsearch_get_type($entity->getSubtype());
+	} else {
+		$item->type = $entity->type;
 	}
+	$item->source = 'minds';
+	$excerpt = $entity->description;
+	if(strlen($excerpt) > 300){
+		$excerpt = substr($entity->description, 0, 300) . '...';
+	}	
+	$item->description = $excerpt;
+	$item->href = $entity->getUrl();
+	$item->license = $entity->license;
+	$item->tags = $entity->tags;
 	
-	$data->description = strip_tags($object->description);
-		
-	return json_encode($data);
+	return $item;
 }
 
 /**
@@ -190,7 +193,7 @@ function elasticsearch_index_allowed($object){
 	}
 	
 	//allowed subtypes @todo make some sort of hook
-	$subtypes = array( 'kaltura_video', 'image', 'album', 'file', 'event_calendar', 'blog', 'bookmark', 'webinar', 'livestream', 'market', 'page', 'poll');
+	$subtypes = array( 'kaltura_video', 'image', 'album', 'file', 'blog', 'page', 'page_top');
 
 	if(in_array($object->getSubtype(), $subtypes)){
 		return true;
@@ -209,8 +212,9 @@ function elasticsearch_index_allowed($object){
 function elasticsearch_add($event, $object_type, $object){
 	if(elasticsearch_index_allowed($object)){
 		$es = new elasticsearch();
-		$es->index = elasticsearch_index;
-		return $es->add($object_type, $object->getGUID(), elasticsearch_encode($object));
+		$es->index = 'ext';
+		$item = elasticsearch_render($object);
+		return $es->add($item->type, $item->id, json_encode($item));
 	}
 	return;
 }
@@ -224,10 +228,12 @@ function elasticsearch_add($event, $object_type, $object){
  * @return array
  */
 function elasticsearch_update($event, $object_type, $object){
+
 	if(elasticsearch_index_allowed($object)){	
 		$es = new elasticsearch();
-		$es->index = elasticsearch_index;
-		$es->add($object_type, $object->getGUID(), elasticsearch_encode($object));
+		$es->index = 'ext';
+		$item = elasticsearch_render($object);
+		$es->add($item->type, $item->id, json_encode($item));
 	}
 	
 	return $es;
@@ -242,10 +248,11 @@ function elasticsearch_update($event, $object_type, $object){
  * @return array
  */
 function elasticsearch_remove($event, $object_type, $object){
-
+	
 	$es = new elasticsearch();
-	$es->index = elasticsearch_index;
-	$es->remove($object_type, $object->getGUID());
+	$es->index = 'ext';
+	$item = elasticsearch_render($object);
+	$es->remove($item->type, $item->id);
 	
 	return $es;
 }

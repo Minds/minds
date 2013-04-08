@@ -35,3 +35,5 @@ if ($result['_type'] == 'sound')
 	echo elgg_view('minds_search/services/types/sound', array('sound' => $result['_source'], 'full_view'=>true));
 if ($result['_type'] == 'article')
 	echo elgg_view('minds_search/services/types/article', array('article' => $result['_source'], 'full_view'=>true));
+if ($result['_type'] == 'user')
+	echo elgg_view('minds_search/services/types/user', array('user' => $result['_source'], 'full_view'=>true));

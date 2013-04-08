@@ -60,6 +60,19 @@ a .minds-search-item p{
 	width:100px;
 	float:right;
 }
+.tidypics-album-block .tidypics-photo-item{
+	width:63px;
+	margin:2px;
+	float:left;
+	padding:3px;
+	background:#FFF;
+	border:1px solid #CCC;
+}
+.tidypics-album-block {
+	float:left;
+	clear:both;
+	width:100%;
+}
 /************************
  * Individual page
  */

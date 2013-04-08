@@ -13,6 +13,29 @@ $url = elgg_get_site_url().'search/result/'.$image['id'];
 $source = $image['source'];
 $owner = $image['owner'];
 
+if($source == 'minds'){
+	$entity = get_entity($image['guid']);
+	$title = $entity->getTitle();
+	$iconURL = $entity->getIconURL('small');
+	$img = elgg_view('output/img', array('src'=>$iconURL));
+	$source = 'minds image';
+	
+	if($entity->getSubtype() == 'album'){
+		$images = $entity->getImages(4);
+
+		if (count($images)) {
+			$img = '<ul class="tidypics-album-block">';
+			foreach($images as $icon) {
+				$img .= '<li class="tidypics-photo-item">';
+				$img .= elgg_view('output/img', array('src'=>$icon->getIconURL('small')));
+				$img.= '</li>';
+			}
+			$img .= '</ul>';
+		}
+		$source = 'minds album';
+	}
+}
+
 if(!$full_view){
 	
 ?>
@@ -20,7 +43,7 @@ if(!$full_view){
 	<div class='minds-search minds-search-item'>
 		<?php echo $img;?>
 		<h3><?php echo $title;?></h3>
-		<p><?php echo $source;?> <br/>
+		<p><b><?php echo $source;?></b> <br/>
 		   <?php //echo $owner;?></p>
 	</div>
 </a>

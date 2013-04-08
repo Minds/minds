@@ -6,9 +6,18 @@
 $video = $vars['video'];
 $full_view = $vars['full_view'];
 
-$title = strlen($video['title'])>25 ? substr($video['title'], 0, 25) . '...' : $video['title'];
+$title = strlen($video['title'])>60 ? substr($video['title'], 0, 60) . '...' : $video['title'];
 $img = elgg_view('output/img', array('src'=>$video['iconURL']));
 $source = $video['source'];
+
+if($source == 'minds'){
+	$entity = get_entity($video['guid']);
+	$iconURL = kaltura_get_thumnail($entity->kaltura_video_id, 160, 100, 100, 5);
+	$img = "<img src='".$iconURL."'/>";
+	$source = "minds media";
+} else {
+	$source = "Source: " . $video['source'] . "<br/> Type: Video";
+}
 
 if(!$full_view){
 ?>
@@ -16,8 +25,7 @@ if(!$full_view){
 	<div class='minds-search minds-search-item'>
 		<?php echo $img;?>
 		<h3><?php echo $title;?></h3>
-		<p>Source: <?php echo $video['source'];?><br/>
-			Type: Video</p>
+		<p><b><?php echo $source; ?></b></p>
 	</div>
 </a>
 <?php 

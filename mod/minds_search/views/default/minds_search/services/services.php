@@ -19,6 +19,10 @@ if($type == 'all'){
 			echo elgg_view('minds_search/services/types/sound', array('sound'=>$item['_source']));
 		if($item['_type'] == 'article') 
 			echo elgg_view('minds_search/services/types/article', array('article'=>$item['_source']));
+		if($item['_type'] == 'user') 
+			echo elgg_view('minds_search/services/types/user', array('user'=>$item['_source']));
+		if($item['_type'] == 'group') 
+			echo elgg_view('minds_search/services/types/group', array('group'=>$item['_source']));
 	}
 } elseif($type=='photo') {
 	echo '<div class="minds-search minds-search-section minds-search-section-image">';
@@ -48,6 +52,20 @@ if($type == 'all'){
 	echo '<h3>'. 'Articles & Wikis' . '</h3>';
 	foreach($data as $item){
 		echo elgg_view('minds_search/services/types/article', array('article'=>$item['_source']));
+	}
+	echo '</div>';
+} elseif($type=='user'){
+	echo '<div class="minds-search minds-search-section">';
+	echo '<h3>'. 'Channels on Minds' . '</h3>';
+	foreach($data as $item){
+		echo elgg_view('minds_search/services/types/user', array('user'=>$item['_source']));
+	}
+	echo '</div>';
+} elseif($type=='group'){
+	echo '<div class="minds-search minds-search-section">';
+	echo '<h3>'. 'Groups on Minds' . '</h3>';
+	foreach($data as $item){
+		echo elgg_view('minds_search/services/types/group', array('group'=>$item['_source']));
 	}
 	echo '</div>';
 }

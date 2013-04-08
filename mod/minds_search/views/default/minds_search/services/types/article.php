@@ -9,16 +9,29 @@ $full_view = $vars['full_view'];
 $title = strlen($article['title'])>25 ? substr($article['title'], 0, 25) . '...' : $article['title'];
 $url = elgg_get_site_url().'search/result/'.$article['id'];
 $source = $article['source'];
-$description = $article['description'];
+$description = strip_tags($article['description']);
+
+if($source == 'minds'){
+	$entity = get_entity($article['guid']);
+	$iconURL = minds_fetch_image($entity->description);
+	$icon = "<img src='".$iconURL."'/>";
+	
+	if($entity->getSubtype() == 'blog'){
+		$source = "minds blog";
+	} elseif($entity->getSubtype() == 'page'){
+		$source = "minds page";
+	}
+}
 
 if(!$full_view){
 	
 ?>
 <a href='<?php echo $url;?>'>
 	<div class='minds-search minds-search-item'>
+		<?php echo $icon;?>
 		<h3><?php echo $title;?></h3>
 		<p><?php echo $description;?> <br/>
-		<b><?php echo $source;?></b> <br/>
+		<b><?php echo $source;?></b><br/>
 	</p>
 	</div>
 </a>
