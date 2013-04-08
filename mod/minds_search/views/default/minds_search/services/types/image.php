@@ -18,7 +18,6 @@ if($source == 'minds'){
 	$title = $entity->getTitle();
 	$iconURL = $entity->getIconURL('small');
 	$img = elgg_view('output/img', array('src'=>$iconURL));
-	$source = 'minds image';
 	
 	if($entity->getSubtype() == 'album'){
 		$images = $entity->getImages(4);
@@ -32,7 +31,6 @@ if($source == 'minds'){
 			}
 			$img .= '</ul>';
 		}
-		$source = 'minds album';
 	}
 }
 
@@ -62,5 +60,7 @@ if(!$full_view){
 		//do some modification to the imageURL to get a large image
 		$imageURL = str_replace('_q', '_b', $imageURL);
 		echo elgg_view('output/img', array('src'=>$imageURL, 'width'=>970));
+	} elseif($source =='minds'){
+		forward($image->getURL());
 	}
 }?>
