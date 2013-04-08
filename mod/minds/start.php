@@ -213,7 +213,7 @@ function minds_pagesetup(){
 	if(elgg_get_context()!='main')	{
 		elgg_register_menu_item('topbar', array(
 			'name' => 'search',
-			'href' => '#',
+			'href' => false,
 			'text' => elgg_view('minds_search/header'),
 			'priority' => 1,
 			//'section' => 'alt',
