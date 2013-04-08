@@ -2,7 +2,7 @@
 /**
  * Minds Search CC Image View
  */
- 
+
 $video = $vars['video'];
 $full_view = $vars['full_view'];
 
@@ -14,7 +14,6 @@ if($source == 'minds'){
 	$entity = get_entity($video['guid']);
 	$iconURL = kaltura_get_thumnail($entity->kaltura_video_id, 160, 100, 100, 5);
 	$img = "<img src='".$iconURL."'/>";
-	$source = "minds media";
 } else {
 	$source = "Source: " . $video['source'] . "<br/> Type: Video";
 }
