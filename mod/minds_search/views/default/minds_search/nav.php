@@ -29,6 +29,9 @@ $path = elgg_get_site_url() . 'search/?q=' . $query;
 		</a>
 		<ul class="minds-search-menu-licenses">
 			<?php
+			echo "<a href=\"$path&type=$t&license=$license\"><li>";
+				echo 'All licenses';
+				echo "</li></a>";
 			foreach($licenses as $license){
 				if($type=='all'){
 					$text = elgg_echo('minds:license:' . $license).' ('.$count.')';
