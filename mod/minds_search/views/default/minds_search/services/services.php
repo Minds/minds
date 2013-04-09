@@ -10,6 +10,7 @@ $data = $vars['data'];
 $type = get_input('type', 'all');
 
 if($type == 'all'){
+	$i = 0;
 	foreach($data as $item){
 		if($item['_type'] == 'photo')
 			echo elgg_view('minds_search/services/types/image', array('photo'=>$item['_source']));
@@ -23,6 +24,11 @@ if($type == 'all'){
 			echo elgg_view('minds_search/services/types/user', array('user'=>$item['_source']));
 		if($item['_type'] == 'group') 
 			echo elgg_view('minds_search/services/types/group', array('group'=>$item['_source']));
+		
+		if($i==0 || $i==10 || $i == 30){
+			echo elgg_view('minds_search/services/types/ad');
+		}
+		$i++;
 	}
 } elseif($type=='photo') {
 	echo '<div class="minds-search minds-search-section minds-search-section-image">';

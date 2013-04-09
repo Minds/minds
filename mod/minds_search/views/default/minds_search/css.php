@@ -83,6 +83,9 @@ a .minds-search-item p{
 	background: transparent url(<?php echo elgg_get_site_url();?>mod/embed_extender/graphics/play_button.png) no-repeat center center;
 	z-index: 2;
 }
+.minds-search .ad{
+	padding:25px 15px;
+}
 /************************
  * Individual page
  */
