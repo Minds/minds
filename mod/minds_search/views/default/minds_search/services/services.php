@@ -9,6 +9,10 @@ $data = $vars['data'];
 //var_dump($data);
 $type = get_input('type', 'all');
 
+$ad[1] = rand(0,3);
+$ad[2] = rand(8,12);
+$ad[3] = rand(18,29);
+
 if($type == 'all'){
 	$i = 0;
 	foreach($data as $item){
@@ -25,7 +29,7 @@ if($type == 'all'){
 		if($item['_type'] == 'group') 
 			echo elgg_view('minds_search/services/types/group', array('group'=>$item['_source']));
 		
-		if($i==2 || $i==9 || $i == 29){
+		if($i==$ad[1] || $i==$ad[2] || $i == $ad[3]){
 			echo elgg_view('minds_search/services/types/ad');
 		}
 		$i++;
