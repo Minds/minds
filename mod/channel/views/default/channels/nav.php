@@ -34,6 +34,11 @@ $tabs = array(
 		'url' => "channels/online",
 		'selected' => $vars['selected'] == 'online',
 	),
+	'online' => array(
+		'title' => elgg_echo('friends:collections'),
+		'url' => "channels/collections",
+		'selected' => $vars['selected'] == 'collections',
+	),
 );
 
 echo elgg_view('navigation/tabs', array('tabs' => $tabs));

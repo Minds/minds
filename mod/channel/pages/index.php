@@ -36,6 +36,10 @@ switch ($vars['page']) {
 	case 'online':
 		$content = get_online_users();
 		break;
+	case 'collections':
+		elgg_register_title_button('collections', 'add');
+		$content = elgg_view_access_collections(elgg_get_logged_in_user_guid());
+		break;
 	case 'newest':
 	default:
 		$content = elgg_list_entities($options);
