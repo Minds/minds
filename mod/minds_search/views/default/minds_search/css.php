@@ -39,10 +39,10 @@ a .minds-search-item p{
 	color:#999;
 }
 .minds-search-section-video .minds-search-item{
-	height:125px;
+	/*height:125px;*/
 }
 .minds-search-section-sound .minds-search-item{
-	height:125px;
+	/*height:125px;*/
 }
 .minds-search-section-sound .minds-search-item img{
 	height:75px;

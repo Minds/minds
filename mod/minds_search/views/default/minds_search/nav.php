@@ -13,7 +13,7 @@ $path = elgg_get_site_url() . 'search/?q=' . $query;
 		<?php 
 		foreach($types as $type){
 			if($type=='all'){
-				$text = elgg_echo('minds_search:type:' . $type).' ('.$count.')';
+				$text = elgg_echo('minds_search:type:' . $type).' ';
 			} else {
 				$text = elgg_echo('minds_search:type:' . $type);
 			}
@@ -35,7 +35,7 @@ $path = elgg_get_site_url() . 'search/?q=' . $query;
 				} else {
 					$text = elgg_echo('minds:license:' . $license);
 				}
-				echo "<a href=\"$path&license=$t&license=$l\"><li>";
+				echo "<a href=\"$path&type=$t&license=$license\"><li>";
 				echo $text;
 				echo "</li></a>";
 				}
