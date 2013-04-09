@@ -25,7 +25,7 @@ if($type == 'all'){
 		if($item['_type'] == 'group') 
 			echo elgg_view('minds_search/services/types/group', array('group'=>$item['_source']));
 		
-		if($i==0 || $i==10 || $i == 30){
+		if($i==2 || $i==9 || $i == 29){
 			echo elgg_view('minds_search/services/types/ad');
 		}
 		$i++;
