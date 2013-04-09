@@ -50,9 +50,14 @@ if(!$full_view){
 			 
 		$content = $json->{'parse'}->{'text'}->{'*'};
 		
+		//remove edit tags
+		$content = preg_replace('#<span class="editsection">(.*?)</span>#', '', $content);
+		//replace a tags with wkipedia urls
+		$content = preg_replace('#<a(.*?)href="/wiki/(.*?)"(.*?)>#', '<a$1href="http://en.wikipedia.org/wiki/$2">', $content);
+
 		//@todo Make sure all links go to wikipedia
 		
-		echo "<div style='clear:both;margin-top:10px;'>";
+		echo "<div style='clear:both;margin-top:35px;'>";
 		echo $content;
 		echo "</div>";
 	}elseif($source=='minds'){
