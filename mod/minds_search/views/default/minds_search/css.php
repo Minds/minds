@@ -22,6 +22,7 @@
 	display:block;
 	background:#FFF;
 	border: 1px solid #CCC;
+	overflow:hidden;
 }
 .minds-search-item:hover{
 	background:#F3F3F3;
