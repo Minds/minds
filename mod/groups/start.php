@@ -579,6 +579,9 @@ function groups_write_acl_plugin_hook($hook, $entity_type, $returnvalue, $params
 
 		if ($groups) {
 			foreach ($groups as $group) {
+				if($group->group_acl == 1 || $group->group_acl == 2){
+					continue;
+				}
 				unset($returnvalue[$group->group_acl]);
 			}
 		}
