@@ -86,6 +86,49 @@ a .minds-search-item p{
 .minds-search .ad{
 	padding:25px 15px;
 }
+
+.minds-search-nav{
+	float:left;
+	width:100%;
+	height:35px;
+	clear:both;
+}
+.minds-search-nav-section{
+	float:left;
+	padding-right:25px;
+}
+.minds-search-nav-section li{
+	float:left;
+	padding-right:10px;
+}
+.minds-search-license-menu-item{
+	color:#333;
+}
+
+.minds-search-menu-licenses{
+	display:none;
+}
+.minds-search-licenses:hover .minds-search-menu-licenses{
+	position:absolute;
+	display:block;
+	width:175px;
+	z-index:1;
+	background-color: rgba(0, 0, 0, 0.75);
+	margin-top:15px;
+	border:1px solid #333;
+	padding:5px;
+	border-radius: 4px 4px 4px 4px;
+	-webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+	-moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+}
+.minds-search-menu-licenses a{
+	color:#FFF;
+}
+.minds-search-menu-licenses a:hover{
+	color:#4690D6;
+}
+
 /************************
  * Individual page
  */

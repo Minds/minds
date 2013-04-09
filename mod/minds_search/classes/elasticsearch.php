@@ -65,6 +65,10 @@ class elasticsearch {
     return $this->call($type . '/_search?' . http_build_query(array('q' => $q, 'sort'=>$sort,'size'=> $size, 'from'=> $from)));
   }
   
+  function query_data($type = null, $data, $size = 25, $from =0){
+  	return $this->call($type . '/_search', array('method'=>'POST', 'content'=>$data));
+  }
+  
   function terms($type, $data){
   	return $this->call($type . '/_search', array('method'=>'POST', 'content'=>$data));
   }

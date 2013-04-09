@@ -19,15 +19,23 @@ class MindsSearch {
 	}
 
 	function search($q,$type = 'all',$services = array('all'), $license = 'all', $limit=10,$offset=0) {
+	
 		if($type == 'all'){
 			$type = null;
 		}
 		if($license != 'all'){
-			$q .= ' AND license:' . $license;
+			$q .= ' AND "'.$license.'"';
 		}
+				
+		$data['query']['query_string']['query'] = $q;
+		$data['query']['bool'] = $bool;
+		$data['query']['size'] = $limit;
+		$data['query']['from'] = $offset;
+		
 		$es = new elasticsearch();
 		$es->index = 'ext';
-		return $es->query($type, $q, $sort, $limit, $offset);
+
+		return $es->query_data($type, json_encode($data));
 	}
 	
 	function get($url){
