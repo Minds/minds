@@ -50,6 +50,9 @@ if(!$full_view){
 			 
 		$content = $json->{'parse'}->{'text'}->{'*'};
 		
+		//include ads
+		$content = preg_replace('#<table id="toc" class="toc">#', '<div style="float:right;padding-right:25px;">'.elgg_view('minds/ads', array('type'=>'large-block')) . '</div><table id="toc" class="toc">', $content);
+		$content = preg_replace('#<table class="infobox" (.*)>#',  '<div style="float:right;padding-right:25px;">' . elgg_view('minds/ads', array('type'=>'small-banner')) . '</div><table class="infobox" $1>', $content);
 		//remove edit tags
 		$content = preg_replace('#<span class="editsection">(.*?)</span>#', '', $content);
 		//replace a tags with wkipedia urls
@@ -59,6 +62,7 @@ if(!$full_view){
 		
 		echo "<div style='clear:both;margin-top:35px;'>";
 		echo $content;
+		echo elgg_view('minds/ads', array('type'=>'content-foot'));
 		echo "</div>";
 	}elseif($source=='minds'){
 		forward($entity->getURL());

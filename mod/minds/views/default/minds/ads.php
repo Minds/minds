@@ -53,4 +53,28 @@ if($type == 'content-side'){
 			<script type="text/javascript"
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			</script></div>';
+} elseif($type == 'large-block'){
+	echo '<script type="text/javascript"><!--
+			google_ad_client = "ca-pub-9303771378013875";
+			/* Minds Large Wiki Square */
+			google_ad_slot = "8814173620";
+			google_ad_width = 336;
+			google_ad_height = 280;
+			//-->
+			</script>
+			<script type="text/javascript"
+			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script>';
+} elseif($type == 'small-banner'){
+	echo '<script type="text/javascript"><!--
+			google_ad_client = "ca-pub-9303771378013875";
+			/* Minds Small Banner WIKI */
+			google_ad_slot = "4244373227";
+			google_ad_width = 234;
+			google_ad_height = 60;
+			//-->
+			</script>
+			<script type="text/javascript"
+			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script>';
 }
