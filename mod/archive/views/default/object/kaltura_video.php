@@ -1,0 +1,150 @@
+<?php
+
+elgg_load_library('archive:kaltura');
+
+$full = elgg_extract('full_view', $vars, FALSE);
+$entity = elgg_extract('entity', $vars);
+
+$owner = $entity->getOwnerEntity();
+
+if($full){
+	/**
+	 * Check if the video is converted or not
+	 */
+	$kmodel = KalturaModel::getInstance();
+	$mediaEntry = $kmodel->getEntry($entity->kaltura_video_id);
+	if($mediaEntry->status != 2){
+		echo '<div class="notconverted">';
+			
+			echo elgg_echo('kalturavideo:notconverted');
+		
+		echo '</div>';
+		return true;
+	}
+
+	$widget = kaltura_create_generic_widget_html($entity->kaltura_video_id, 'l',$entity->monetized);
+	$widgetm = kaltura_create_generic_widget_html($entity->kaltura_video_id , 'm',$entity->monetized);
+	
+	if(elgg_get_viewtype()=='mobile'){
+		$widget = kaltura_create_generic_widget_html($entity->kaltura_video_id , 'mobile',$entity->monetized);
+	}
+	
+	echo elgg_view_menu('entity', array(
+		'entity' => $entity,
+		'handler' => 'archive',
+		'sort_by' => 'priority',
+		'class' => 'elgg-menu-hz',
+	));
+	
+	echo $widget; 
+	
+	echo '<div class="archive-description">' . $entity->description . '</div>';
+	
+	echo elgg_view('minds/license', array('license'=>$entity->license)); 
+	echo elgg_view('output/url', array(	'href'=>'/action/archive/download?guid='.$entity->guid,
+												'text'=> elgg_echo('minds:archive:download'),
+												'is_action' => true,
+												'class'=> 'elgg-button elgg-button-action archive-button archive-button-right'
+																		
+										));
+	if(elgg_is_admin_logged_in()){
+		echo elgg_view('output/url', array(	'href'=>'/action/archive/feature?guid='.$entity->guid,
+				'text'=> $entity->featured == true ? elgg_echo('archive:featured:un-action') : elgg_echo('archive:featured:action'),
+				'is_action' => true,
+				'class'=> 'elgg-button elgg-button-action archive-button archive-button-right'
+			));
+											
+		echo elgg_view('output/url', array(	'href'=>'/action/archive/monetize?guid='.$entity->guid,
+			'text'=> $entity->monetized == true ? elgg_echo('archive:monetized:un-action') : elgg_echo('archive:monetized:action'),
+			'is_action' => true,
+			'class'=> 'elgg-button elgg-button-action archive-button archive-button-right'
+		));
+	}
+		
+} elseif(elgg_get_context() == 'archive-tiles'){
+	$icon = elgg_view('output/img', array(
+			'src' => kaltura_get_thumnail($entity->kaltura_video_id, 120, 68, 100),
+			'class' => 'elgg-photo',
+			'title' => $entity->title,
+			'alt' => $entity->title,
+			'width'=>'120px',
+			'height' => '68px'
+	));
+	$icon = elgg_view('output/url', array(
+			'text' => $icon,
+			'href' => $entity->getURL()
+		));
+	echo $icon;
+} elseif(elgg_get_context()=='sidebar') {
+	?>
+	<div class="kalturavideoitem" id="kaltura_video_<?php echo $entity->kaltura_video_id; ?>">
+
+	<div class="left">
+		<?php 
+			elgg_pop_context(); if(elgg_get_context()=='news'){ $width=140;$height=79;} else {$width=215;$height=121;} elgg_push_context('sidebar');?>
+		<p><a href="<?php echo $vars['entity']->getURL(); ?>" class="play"><img src="<?php echo kaltura_get_thumnail($entity->kaltura_video_id, $width, $height, 100); ?>" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
+	</div>
+
+	<h3><a href="<?php echo $vars['entity']->getURL(); ?>"><?php echo $vars['entity']->title; ?></a></h3>
+	
+	
+	<p class="stamp">
+		<?php echo elgg_echo('by'); ?> <a href="<?php echo $CONFIG->wwwroot.'archive/owner/'.$owner->username; ?>" title="<?php echo htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos")); ?>"><?php echo $owner->name; ?></a>?>
+		<?php echo elgg_view_friendly_time($entity->time_created); ?>
+	</p>
+	</div>
+<?php } else {
+		
+	$menu = elgg_view_menu('entity', array(
+		'entity' => $entity,
+		'handler' => 'archive',
+		'sort_by' => 'priority',
+		'class' => 'elgg-menu-hz',
+	));
+	
+	$owner = get_entity($entity->owner_guid);
+	$owner_link = elgg_view('output/url', array(
+		'text' => $owner->name,
+		'href' => $owner->getURL()
+	));
+	
+	$title = elgg_view('output/url', array(
+		'text' => $entity->title,
+		'href' => $entity->getURL(),
+	));
+	
+	$description = $entity->description ? minds_filter(substr(strip_tags($entity->description), 0, 125) . '...') : '';
+	
+	$subtitle .= 
+		elgg_echo('by') . ' ' . $owner_link . ' ' .
+		elgg_view_friendly_time($entity->time_created);
+		//elgg_echo("kalturavideo:label:length") . ' <strong class="kaltura_video_length">'.$entity->kaltura_video_length.'</strong>';
+	
+	
+	'<b class="kaltura_video_created">'. elgg_view_friendly_time($entity->time_created).'</b> by ' . $owner_link;
+	
+	$params = array(
+		'entity' => $album,
+		'title' => $title,
+		'metadata' => $menu,
+		'subtitle' => $subtitle,
+		'content'=>$description,
+		'tags' => elgg_view('output/tags', array('tags' => $entity->tags)),
+	);
+	$params = $params + $vars;
+	$summary = elgg_view('object/elements/summary', $params);
+	
+	$icon = elgg_view('output/img', array(
+				'src' => kaltura_get_thumnail($entity->kaltura_video_id, 120, 68, 100),
+				'class' => 'elgg-photo',
+				'title' => $entity->title,
+				'alt' => $entity->title,
+				'width'=>'120px',
+				'height' => '68px'
+		));
+	$icon = elgg_view('output/url', array(
+			'text' => $icon,
+			'href' => $entity->getURL()
+		));
+	echo elgg_view_image_block($icon, $summary);
+}

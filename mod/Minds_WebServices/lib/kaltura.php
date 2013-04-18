@@ -8,9 +8,7 @@
  *
  */
  
-require_once(dirname(dirname(dirname(__FILE__))) ."/kaltura_video/kaltura/api_client/includes.php");
-
-
+elgg_load_library('archive:kaltura');
  
  /**
  * Web service to get a list of videos
