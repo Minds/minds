@@ -1,7 +1,7 @@
 <?php
 
 	// Load Elgg engine
-	require_once(dirname(__FILE__)."/kaltura/api_client/includes.php");
+	elgg_load_library('archive:kaltura');
 
 	elgg_set_context('news');
 	$video_id = get_input('video_id');
