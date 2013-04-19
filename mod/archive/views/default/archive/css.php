@@ -35,4 +35,51 @@
 	width:100%;
 	margin:20px 0;
 }
+
+.uiVideoInline.archive{
+	width:100%;
+	height:0;
+	display:block;
+	position:relative;
+	overflow:hidden;
+	padding-bottom: 56.25%;
+}
+/* If anyone has a better way of getting this centred, please left me know!! /MH */
+.uiVideoInline.archive span {
+	position:absolute;
+	display:inline-block;
+	cursor:pointer;
+	margin:auto;
+	height:100%;
+	width:100%;
+	background: transparent url(<?php echo elgg_get_site_url(); ?>mod/embed_extender/graphics/play_button.png) no-repeat center center;
+	z-index:2;
+}
+.uiVideoInline.archive img{
+	position:absolute;
+	width:100%;
+}
+.uiVideoInline.archive object, .uiVideoInline.archive embed{
+	position:absolute;
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+	
+}
+/**
+ * Right sidebar modules
+ */
+.elgg-module.sidebar .kalturavideoitem{
+	/*padding:10px;*/
+}
+.elgg-module.sidebar .kalturavideoitem h3 a{
+	font-size:13px;
+	color:#4690D6;
+}
+.elgg-module.sidebar .kalturavideoitem p{
+	font-size:11px;
+	display:block;
+}
+
  
