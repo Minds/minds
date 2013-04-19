@@ -4,7 +4,7 @@
  */
 ?>
 .archive-upload{
-	width:500px;
+	width:750px;
 	margin:auto;
 }
 .archive-upload > .column {

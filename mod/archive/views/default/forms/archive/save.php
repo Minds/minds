@@ -119,6 +119,36 @@ EOT;
 		<div class="clearfloat"></div>
 EOT;
 
+} elseif($entity->getSubtype() == 'album'){
+	$form_body = <<<EOT
+			<p>
+				<label>$title_label</label><br />
+	                        $title_textbox
+			</p>
+			<p>
+				<label>$description_label</label>
+	                        $description_textarea
+			</p>
+			<p>
+				<label>$license_label</label>
+	                        $license_dropdown
+			</p>
+			<p>
+					$categories
+			<p>
+			<p>
+				<label>$access_label</label>
+	                        $access_input
+			</p>
+				<label>$tag_label</label><br />
+	                        $tag_input
+			</p>
+			<p>
+				$guid
+				$submit_input
+			</p>
+		<div class="clearfloat"></div>
+EOT;
 }
 
 

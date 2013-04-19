@@ -28,4 +28,6 @@ if($entity->getSubtype() == 'kaltura_video'){
 		}
 	$entity->delete();
 	
+} elseif($entity->getSubtype() == 'image' || $entity->getSubtype() == 'album'){
+	$entity->delete();
 }

@@ -26,6 +26,10 @@ $translations = array(
 	'minds:archive:file:replace' => 'Replace file',
 	
 	'minds:archive:download' => 'Download',
+	
+	'minds:archive:upload:videoaudio' => 'Upload Video/Audio',
+	'minds:archive:album:create' => 'Create an album',
+	'minds:archive:upload:others' => 'Upload images, files + more',
 
 
 	'kaltura_video' => 'Video/Audio',

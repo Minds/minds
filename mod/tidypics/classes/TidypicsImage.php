@@ -99,17 +99,6 @@ class TidypicsImage extends ElggFile {
 	}
 
 	/**
-	 * Get the URL for the web page of this image
-	 * 
-	 * @return string
-	 */
-	public function getURL() {
-		$title = elgg_get_friendly_title($this->getTitle());
-		$url = "photos/image/$this->guid/$title";
-		return elgg_normalize_url($url);
-	}
-
-	/**
 	 * Get the src URL for the image
 	 * 
 	 * @return string

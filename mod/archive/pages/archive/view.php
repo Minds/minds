@@ -60,6 +60,21 @@ if($entity->getSubtype() == 'kaltura_video'){
 	minds_set_metatags('twitter:image', $entity->getIconURL());
 	minds_set_metatags('twitter:description', $description);
 	
+} elseif($entity->getSubtype() == 'image'){
+	
+	minds_set_metatags('og:type', 'mindscom:photo');
+	minds_set_metatags('og:title', $entity->getTitle());
+	minds_set_metatags('og:description', $entity->description ? $photo->description : $entity->getUrl());
+	minds_set_metatags('og:image',$entity->getIconURL('large'));
+	minds_set_metatags('mindscom:photo',$entity->getIconURL('large'));
+	minds_set_metatags('og:url',$entity->getUrl());
+	 
+	minds_set_metatags('twitter:card', 'photo');
+	minds_set_metatags('twitter:url', $entity->getURL());
+	minds_set_metatags('twitter:title', $entity->getTitle());
+	minds_set_metatags('twitter:image', $entity->getIconURL('large'));
+	minds_set_metatags('twitter:description', $entity->description ? $entity->description : $entity->getUrl());
+	
 }
 
 elgg_push_breadcrumb(elgg_echo('archive:all'), 'archive/all');
@@ -69,6 +84,12 @@ if (elgg_instanceof($owner, 'group')) {
 	elgg_push_breadcrumb($crumbs_title, "archive/group/$owner->guid/all");
 } else {
 	elgg_push_breadcrumb($crumbs_title, "archive/$owner->username");
+}
+
+if($entity->getSubtype() == 'image'){
+	//set the album
+	$album = $entity->getContainerEntity();
+	elgg_push_breadcrumb($album->title, $album->getURL());
 }
 
 elgg_push_breadcrumb($title);

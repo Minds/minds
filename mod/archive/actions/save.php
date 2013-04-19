@@ -8,13 +8,27 @@ $entity = get_entity($guid);
 
 $entity->title = get_input('title');
 $entity->description = get_input('description');
+$entity->license = get_input('license');
+$entity->access_id = get_input('access_id');
+$entity->tags = get_input('tags');
+
+if (empty($entity->title)) {
+	register_error(elgg_echo("album:blank"));
+	forward(REFERER);
+}
+if($entity->license == 'not-selected'){
+	register_error(elgg_echo('minds:license:not-selected'));
+	forward(REFERER);
+}
 
 if($entity->getSubtype() == 'kaltura_video'){
 	$video_id = $entity->kaltura_video_id;
 } elseif($entity->getSubtype() == 'image'){
 	
 } elseif($entity->getSubtype() == 'album'){
-	
+	$entity->save();
+	forward($entity->getURL());
+	return true;
 } elseif($entity->getSubtype() == 'file'){
 
 	// we have a file upload, so process it
@@ -85,12 +99,7 @@ $license = get_input('license');
 $tags = get_input('tags');
 $thumbnail_sec = get_input('thumbnail_selector');
 $access = get_input('access_id');
-$comments_on = get_input('comments_select','Off');
-$rating_on = get_input('rating_select','Off');
-$collaborative = get_input('collaborate_select','Off');
-$is_simple_video = get_input('is_simple_video','0');
-$fileData = get_input('fileData', '');
-$simpleVideoCreatorModal = get_input('simple_video_creator_modal');
+
 
 if($license == 'not-selected'){
 	register_error(elgg_echo('minds:license:not-selected'));

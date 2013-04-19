@@ -142,4 +142,4 @@ if (count($not_uploaded) > 0) {
 	system_message(elgg_echo('tidypics:upl_success'));
 }
 
-forward("photos/edit/$batch->guid");
+forward("archive/upload/batch/$batch->guid");

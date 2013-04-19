@@ -33,12 +33,16 @@ function minds_archive_init() {
 	elgg_extend_view('css','archive/css');
 
 	// Register a page handler, so we can have nice URLs (fallback in case some links go to old kaltura_video)
-	elgg_register_page_handler('kaltura_video','kaltura_video_page_handler');
+	elgg_register_page_handler('kaltura_video','minds_archive_page_handler');
 	elgg_register_page_handler('archive','minds_archive_page_handler');
+	elgg_register_page_handler('file','minds_archive_page_handler');
 
 	// Register a url handler
 	elgg_register_entity_url_handler('object', 'kaltura_video','minds_archive_entity_url');
 	elgg_register_entity_url_handler('object', 'file','minds_archive_entity_url');
+	//tidypics is a separate plugin which we plan on integrating into here shortly. Make sure this plugin is below the tidypics plugin
+	elgg_register_entity_url_handler('object', 'image','minds_archive_entity_url');
+	elgg_register_entity_url_handler('object', 'album','minds_archive_entity_url');
 	
 	//override icon urls
 	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'minds_archive_file_icon_url_override');
@@ -62,6 +66,7 @@ function minds_archive_init() {
 	elgg_register_action("archive/monetize", $action_path . "monetize.php");
 	elgg_register_action("archive/feature", $action_path . "feature.php");
 	elgg_register_action("archive/save", $action_path . "save.php");
+	elgg_register_action("archive/add_album", $action_path . "tidypics/add_album.php");
 	elgg_register_action("archive/upload", $action_path . "upload.php");
 	
 	//Setup kaltura
@@ -72,7 +77,7 @@ function minds_archive_init() {
 function minds_archive_entity_url($entity) {
 		global $CONFIG;
 		$title = str_replace(" ", "-", $entity->title);
-		return elgg_get_site_url() . "archive/view/" . $entity->getGUID() . "/" . $entity;
+		return elgg_get_site_url() . "archive/view/" . $entity->getGUID() . "/" . $entity->title;
 }
 
 
@@ -201,6 +206,18 @@ function minds_archive_page_handler($page) {
 					break;
 				case 'others':
 					include('pages/archive/others_upload.php');
+					break;
+				case 'album':
+					if($page[2] == 'create'){
+						include('pages/archive/add_album.php');
+						return true;
+					}
+					set_input('guid',$page[2]);
+					include(elgg_get_plugins_path().'tidypics/pages/photos/image/upload.php');
+					break;
+				case 'batch':
+					set_input('guid',$page[2]);
+					include(elgg_get_plugins_path().'tidypics/pages/photos/batch/edit.php');
 					break;
 				default:
 					include('pages/archive/upload.php');

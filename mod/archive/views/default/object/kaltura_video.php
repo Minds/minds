@@ -60,6 +60,11 @@ if($full){
 			'class'=> 'elgg-button elgg-button-action archive-button archive-button-right'
 		));
 	}
+	
+	if($entity->access_id == 2){
+		echo elgg_view('minds_social/social_footer');
+	}
+	
 		
 } elseif(elgg_get_context() == 'archive-tiles'){
 	$icon = elgg_view('output/img', array(

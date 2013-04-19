@@ -21,11 +21,11 @@ function tidypics_init() {
 	elgg_load_library('tidypics:core');
 
 	// Set up site menu
-	elgg_register_menu_item('site', array(
+	/*elgg_register_menu_item('site', array(
 		'name' => 'photos',
 		'href' => 'photos/all',
 		'text' => elgg_echo('photos'),
-	));
+	))*/
 
 	// Register a page handler so we can have nice URLs
 	elgg_register_page_handler('photos', 'tidypics_page_handler');
