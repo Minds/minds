@@ -284,7 +284,7 @@ function minds_archive_page_handler($page) {
 	return true;
 }
 
-elgg_register_event_handler('upgrade','system','kaltura_setup_init');
+//elgg_register_event_handler('upgrade','system','kaltura_setup_init');
 /* Setup Kaltura to work with elgg 
  * This is run along side init
  */
