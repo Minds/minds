@@ -476,17 +476,8 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $monetized 
 
     $default_player = elgg_get_plugin_setting('defaultplayer', 'archive');
 
-    if($default_player == 'custom') {
 		$widgetUi = elgg_get_plugin_setting('custom_kdp', 'archive');
-	}
-	else {
-		$t = elgg_get_plugin_setting('kaltura_server_type',"archive");
-		if(empty($t)) $t = 'corp';
-		$players = $KALTURA_GLOBAL_UICONF['kdp'][$t];
-		if(!array_key_exists($default_player,$players)) $default_player = key($players);
-		$widgetUi = $players[$default_player]['uiConfId'];
-	}
-
+		
 	$viewData = array();
     $viewData["swfUrl"]	= KalturaHelpers::getSwfUrlForBaseWidget($widgetUi);
 

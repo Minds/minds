@@ -282,7 +282,6 @@ class KalturaHelpers
 		$type = elgg_get_plugin_setting('kaltura_server_type', 'archive');
 		$url = elgg_get_plugin_setting('kaltura_server_url_api', 'archive');
 		
-    	if(empty($url) || $type=='corp' || empty($type)) $url = KALTURA_SERVER_URL;
 
     	// remove the last slash from the url
     	if (substr($url, strlen($url) - 1, 1) == '/')
