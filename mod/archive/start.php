@@ -175,7 +175,7 @@ function minds_archive_page_handler($page) {
 	
 	elgg_load_library('archive:kaltura');
 
-	if(!elgg_get_plugin_setting("password","archive")){
+	if(!elgg_get_plugin_setting("kaltura_server_url","archive")){
 		// If the URL is just 'feeds/username', or just 'feeds/', load the standard feeds index
 		include(dirname(__FILE__) . "/missconfigured.php");
 		return true;
