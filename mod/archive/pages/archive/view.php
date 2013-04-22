@@ -7,6 +7,13 @@ $entity = get_entity($guid);
 elgg_set_page_owner_guid($entity->getOwnerGUID());
 $owner = elgg_get_page_owner_entity();
 
+$menu = elgg_view_menu('entity', array(
+		'entity' => $entity,
+		'handler' => 'archive',
+		'sort_by' => 'priority',
+		'class' => 'elgg-menu-hz',
+	));
+
 $title = $entity->title;
 $description = strip_tags($videopost->description);
 
@@ -100,9 +107,17 @@ $content .= elgg_view_comments($entity);
 
 $sidebar = elgg_view('archive/sidebar', array('guid'=>$guid));
 
+$title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
+$header = <<<HTML
+<div class="elgg-head clearfix">
+	$title_block$menu
+</div>
+HTML;
+
 $body = elgg_view_layout("content", array(	
 					'filter'=> '', 
 					'title' => $title,
+					'header' => $header,
 					'content'=> $content,
 					'sidebar' => $sidebar 
 				));

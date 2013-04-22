@@ -29,13 +29,6 @@ if($full){
 		$widget = kaltura_create_generic_widget_html($entity->kaltura_video_id , 'mobile',$entity->monetized);
 	}
 	
-	echo elgg_view_menu('entity', array(
-		'entity' => $entity,
-		'handler' => 'archive',
-		'sort_by' => 'priority',
-		'class' => 'elgg-menu-hz',
-	));
-	
 	echo $widget; 
 	
 	echo '<div class="archive-description">' . $entity->description . '</div>';
@@ -94,7 +87,7 @@ if($full){
 	
 	
 	<p class="stamp">
-		<?php echo elgg_echo('by'); ?> <a href="<?php echo $CONFIG->wwwroot.'archive/owner/'.$owner->username; ?>" title="<?php echo htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos")); ?>"><?php echo $owner->name; ?></a>?>
+		<?php echo elgg_echo('by'); ?> <a href="<?php echo $CONFIG->wwwroot.'archive/owner/'.$owner->username; ?>" title="<?php echo htmlspecialchars(elgg_echo("kalturavideo:user:showallvideos")); ?>"><?php echo $owner->name; ?></a>
 		<?php echo elgg_view_friendly_time($entity->time_created); ?>
 	</p>
 	</div>
