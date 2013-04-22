@@ -3,6 +3,9 @@
  * Archive CSS
  */
 ?>
+.elgg-heading-main{
+	max-width:400px;
+}
 .archive-upload{
 	width:750px;
 	margin:auto;
