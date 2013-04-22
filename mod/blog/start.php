@@ -337,6 +337,10 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper')));
 	elgg_load_library('simplepie');
 	foreach($scrapers as $scraper){
+		//if the site was scraped in the last 15 mins then skip
+		if($scraper->timestamp > time() + 900){
+			continue;
+		}
 		$feed = new SimplePie($scraper->feed_url);
 		foreach($feed->get_items() as $item){
 			//if the blog is newer than the scrapers last scrape
