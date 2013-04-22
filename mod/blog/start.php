@@ -51,6 +51,15 @@ function blog_init() {
 	// pingbacks
 	//elgg_register_event_handler('create', 'object', 'blog_incoming_ping');
 	//elgg_register_plugin_hook_handler('pingback:object:subtypes', 'object', 'blog_pingback_subtypes');
+	
+	// Register library for parsing rss
+	$lib = elgg_get_plugins_path() . 'blog/vendors/simplepie.inc';
+	elgg_register_library('simplepie', $lib);
+	//set a cron script to run on the hour
+	elgg_register_plugin_hook_handler('cron', 'fifteenmin', 'minds_blog_scraper');
+	elgg_register_plugin_hook_handler('permissions_check', 'all', 'minds_blog_scraper_permissions_hook');
+	elgg_register_event_handler('pagesetup', 'system', 'blog_pagesetup');
+	elgg_register_plugin_hook_handler('register', 'menu:entity', 'minds_blog_scraper_entity_menu_setup', 1000);
 
 	// Register for search.
 	elgg_register_entity_type('object', 'blog');
@@ -67,6 +76,7 @@ function blog_init() {
 	elgg_register_action('blog/save', "$action_path/save.php");
 	elgg_register_action('blog/auto_save_revision', "$action_path/auto_save_revision.php");
 	elgg_register_action('blog/delete', "$action_path/delete.php");
+	elgg_register_action('scraper/create', "$action_path/../scraper/create.php");
 
 	// entity menu
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'blog_entity_menu_setup');
@@ -143,6 +153,20 @@ function blog_page_handler($page) {
 				$params = blog_get_page_content_list($page[1]);
 			} else {
 				$params = blog_get_page_content_archive($page[1], $page[3], $page[4]);
+			}
+			break;
+		case 'scrapers':
+			switch($page[1]){
+				case 'create':
+					set_input('guid', $page[2]);
+					include('pages/scraper/create.php');
+					break;
+				case 'mine':
+					include('pages/scraper/mine.php');
+					break;
+				default:
+					include('pages/scraper/all.php');
+					return true;
 			}
 			break;
 		case 'all':
@@ -286,4 +310,93 @@ function blog_run_upgrades($event, $type, $details) {
 
 		elgg_set_plugin_setting('upgrade_version', 1, 'blogs');
 	}
+}
+
+/**
+ * Blog pagesetup
+ */
+function blog_pagesetup(){
+	if(elgg_get_context() == 'settings' || elgg_get_context() == 'blog'){
+		$user = elgg_get_logged_in_user_entity();
+
+		$params = array(
+			'name' => 'scrapper_settings',
+			'text' => elgg_echo('blog:minds:scraper:menu'),
+			'href' => "blog/scrapers/mine",
+		);
+		elgg_register_menu_item('page', $params);
+	}
+}
+
+/**
+ * Hourly scraping cron script
+ */
+function minds_blog_scraper($hook, $entity_type, $return_value, $params){ 
+	elgg_set_ignore_access(true);
+	elgg_set_context('scraper');
+	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper')));
+	elgg_load_library('simplepie');
+	foreach($scrapers as $scraper){
+		$feed = new SimplePie($scraper->feed_url);
+		foreach($feed->get_items() as $item){
+			//if the blog is newer than the scrapers last scrape
+			if($item->get_date('U') > $scraper->timestamp){
+				$blog = new ElggBlog();
+				$blog->title = $item->get_title();
+				$blog->excerpt = strip_tags($item->get_description(true), '<a><p><br><b><i><em><del><pre><strong><ul><ol><li><img>');
+				$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();
+				$blog->owner_guid = $scraper->owner_guid;
+				$blog->license = $scraper->license;
+				$blog->access_id = 2;
+				$blog->status = 'published';
+				$blog->save();
+				echo 'Saved a blog titled: ' . $blog->title;
+			}
+		}
+		$scraper->timestamp = time();
+		$scraper->save();
+	}
+	elgg_set_ignore_access(false);
+	return $return_value;	
+}
+/**
+ * Scrapper permission hook
+ * Allows blogs to be created by logged out users
+ */
+function minds_blog_scraper_permissions_hook($hook_name, $entity_type, $return_value, $parameters) {
+	if (elgg_get_context() == 'scraper') {
+		return true;
+	}
+	return null;
+}
+
+/**
+ * Scraper entity menu
+ */
+function minds_blog_scraper_entity_menu_setup($hook, $type, $return, $params) {
+	if (elgg_in_context('widgets')) {
+		return $return;
+	}
+
+	$entity = $params['entity'];
+	$handler = elgg_extract('handler', $params, false);
+	if ($handler != 'scraper') {
+		return $return;
+	}
+	
+	foreach ($return as $index => $item) {
+		if ($item->getName() != 'delete') {
+			unset($return[$index]);
+		}
+	}
+	$options = array(
+		'name' => 'edit',
+		'text' => "edit",
+		'href' => 'blog/scrapers/create/'.$entity->guid,
+		'priority' => 150,
+	);
+	$return[] = ElggMenuItem::factory($options);
+
+
+	return $return;
 }

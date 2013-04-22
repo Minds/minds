@@ -72,7 +72,14 @@ View and comment on the new blog post:
 	'blog:widget:description' => 'Display your latest blog posts',
 	'blog:moreblogs' => 'More blog posts',
 	'blog:numbertodisplay' => 'Number of blog posts to display',
-	'blog:noblogs' => 'No blog posts'
+	'blog:noblogs' => 'No blog posts',
+	
+	// scraper
+	'blog:minds:scraper' => 'Scrapers',
+	'blog:minds:scraper:create' => 'Create new scraper',
+	'blog:minds:scraper:menu' => 'Manage scrapers',
+	'blog:minds:scraper:name' => 'Name',
+	'blog:minds:scraper:url' => 'Url of rss feed',
 );
 
 add_translation('en', $english);
