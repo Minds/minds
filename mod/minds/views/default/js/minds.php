@@ -32,23 +32,15 @@
 
 		//handle cookie session messages
 		var msg = $.cookie('_elgg_msg');
-		if (typeof msg == 'string') {
-			msg = $.parseJSON(msg);
-			if (typeof msg == 'object') {
-				console.log(msg);
-				var del = false;
-				if (msg.error != undefined) {
-					del = true;
-					elgg.register_error(msg.error);
+		var err_msg = $.cookie('_elgg_err_msg');
+		if (typeof err_msg == 'string' || typeof msg == 'string' ) {
+		
+				if (err_msg != undefined) {
+					elgg.register_error(err_msg);
 				}
-				if (msg.success != undefined) {
-					del = true;
-					elgg.system_message(msg.success);
+				if (msg != undefined) {
+					elgg.system_message(msg);
 				}
-				if (del) {
-					//$.cookie('_elgg_msg', '{}', {path:'/'});
-				}
-			}
 		}
 	 };
 	 
