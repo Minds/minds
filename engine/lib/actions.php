@@ -71,6 +71,7 @@ function action($action, $forwarder = "") {
 		'admin/plugins/disable',
 		'logout',
 		'login',
+		'register',
 		'file/download',
 	);
 
