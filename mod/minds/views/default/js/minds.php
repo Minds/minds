@@ -46,7 +46,7 @@
 					elgg.system_message(msg.success);
 				}
 				if (del) {
-					$.cookie('_elgg_msg', '{}', {path:'/'});
+					//$.cookie('_elgg_msg', '{}', {path:'/'});
 				}
 			}
 		}
