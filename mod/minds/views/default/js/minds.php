@@ -31,15 +31,17 @@
 		}); 
 
 		//handle cookie session messages
-		var msg = $.cookie('_elgg_msg');
+		var msg = $.cookie('_elgg_ss_msg');
 		var err_msg = $.cookie('_elgg_err_msg');
 		if (typeof err_msg == 'string' || typeof msg == 'string' ) {
 		
-				if (err_msg != undefined) {
+				if (err_msg != null) {
 					elgg.register_error(err_msg);
+					$.removeCookie('_elgg_err_msg',{path:'/'});
 				}
-				if (msg != undefined) {
+				if (msg != null) {
 					elgg.system_message(msg);
+					$.removeCookie('_elgg_ss_msg', {path:'/'});
 				}
 		}
 	 };
