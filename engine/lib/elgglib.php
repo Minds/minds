@@ -538,7 +538,7 @@ function system_messages($message = null, $register = "success", $count = false)
 			if($register == 'error'){
 				$SESSION['err_msg'] = $message;
 			}  else {
-				$SESSION['msg'] = $message;
+				$SESSION['ss_msg'] = $message;
 			}
 		}
 		return true;
