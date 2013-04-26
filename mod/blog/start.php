@@ -351,7 +351,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			if($item->get_date('U') > $scraper->timestamp){
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
-				$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 100);
+				$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'),0, 100);
 				$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();
 				$blog->owner_guid = $scraper->owner_guid;
 				$blog->license = $scraper->license;
