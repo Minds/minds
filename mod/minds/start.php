@@ -200,6 +200,8 @@ function minds_register_hook()
 		register_error(elgg_echo('minds:register:terms:failed'));
 		forward(REFERER);
 	}
+	
+	return true;
 }
 
 
