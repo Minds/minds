@@ -355,9 +355,10 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				$blog->license = $scraper->license;
 				$blog->access_id = 2;
 				$blog->status = 'published';
+				$blog->time_created = $item->get_date('U');
 				$blog->save();
 				echo 'Saved a blog titled: ' . $blog->title;
-				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID());
+				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));
 			}
 		}
 		$scraper->timestamp = time();
