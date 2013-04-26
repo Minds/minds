@@ -341,14 +341,15 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	foreach($scrapers as $scraper){
 		//if the site was scraped in the last 15 mins then skip
 		echo "loading $scraper->title \n";
-		if($scraper->timestamp > time() + 900){
-			echo "canceling... did it withing the last 15 mines \n";
+		if(isset($scraper->timestamp) && $scraper->timestamp > time() - 300){
+			echo "canceling... scraped it withing the last 5 mins \n";
 			continue;
 		}
 		$feed = new SimplePie($scraper->feed_url);
 		foreach($feed->get_items() as $item){
 			//if the blog is newer than the scrapers last scrape
 			if($item->get_date('U') > $scraper->timestamp){
+				try{
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
 				$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'),0, 100);
@@ -358,11 +359,10 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				$blog->access_id = 2;
 				$blog->status = 'published';
 				$blog->save();
-				//we can only add timecreated after save but 2 saves feels dumb!!
-				$blog->time_created = $item->get_date('U');
-				$blog->save();
 				echo 'Saved a blog titled: ' . $blog->title;
 				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));
+				}catch(EXCEPTION $e){
+				}
 			}
 		}
 		$scraper->timestamp = time();
