@@ -317,14 +317,16 @@ function blog_run_upgrades($event, $type, $details) {
  */
 function blog_pagesetup(){
 	if(elgg_get_context() == 'settings' || elgg_get_context() == 'blog'){
-		$user = elgg_get_logged_in_user_entity();
+		if(elgg_is_logged_in()){
+			$user = elgg_get_logged_in_user_entity();
 
-		$params = array(
-			'name' => 'scrapper_settings',
-			'text' => elgg_echo('blog:minds:scraper:menu'),
-			'href' => "blog/scrapers/mine",
-		);
-		elgg_register_menu_item('page', $params);
+			$params = array(
+				'name' => 'scrapper_settings',
+				'text' => elgg_echo('blog:minds:scraper:menu'),
+				'href' => "blog/scrapers/mine",
+			);
+			elgg_register_menu_item('page', $params);
+		}
 	}
 }
 
