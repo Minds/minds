@@ -340,7 +340,9 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	elgg_load_library('simplepie');
 	foreach($scrapers as $scraper){
 		//if the site was scraped in the last 15 mins then skip
+		echo "loading $scraper->title \n";
 		if($scraper->timestamp > time() + 900){
+			echo "canceling... did it withing the last 15 mines \n";
 			continue;
 		}
 		$feed = new SimplePie($scraper->feed_url);
@@ -349,12 +351,14 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			if($item->get_date('U') > $scraper->timestamp){
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
-				$blog->excerpt = strip_tags($item->get_description(true), '<a><p><b><i>');
+				$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 100);
 				$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();
 				$blog->owner_guid = $scraper->owner_guid;
 				$blog->license = $scraper->license;
 				$blog->access_id = 2;
 				$blog->status = 'published';
+				$blog->save();
+				//we can only add timecreated after save but 2 saves feels dumb!!
 				$blog->time_created = $item->get_date('U');
 				$blog->save();
 				echo 'Saved a blog titled: ' . $blog->title;
