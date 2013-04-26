@@ -334,7 +334,7 @@ function blog_pagesetup(){
 function minds_blog_scraper($hook, $entity_type, $return_value, $params){ 
 	elgg_set_ignore_access(true);
 	elgg_set_context('scraper');
-	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper')));
+	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
 	foreach($scrapers as $scraper){
 		//if the site was scraped in the last 15 mins then skip
