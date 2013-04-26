@@ -225,7 +225,7 @@ function minds_set_metatags($name, $content){
 	
 	$strip = strip_tags($content);
 	$SOCIAL_META_TAGS[$name]['property'] = $name;
-	$SOCIAL_META_TAGS[$name]['content'] = $content;
+	$SOCIAL_META_TAGS[$name]['content'] = strip_tags($content);
 	
 	return;
 	
