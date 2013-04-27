@@ -317,14 +317,16 @@ function blog_run_upgrades($event, $type, $details) {
  */
 function blog_pagesetup(){
 	if(elgg_get_context() == 'settings' || elgg_get_context() == 'blog'){
-		$user = elgg_get_logged_in_user_entity();
+		if(elgg_is_logged_in()){
+			$user = elgg_get_logged_in_user_entity();
 
-		$params = array(
-			'name' => 'scrapper_settings',
-			'text' => elgg_echo('blog:minds:scraper:menu'),
-			'href' => "blog/scrapers/mine",
-		);
-		elgg_register_menu_item('page', $params);
+			$params = array(
+				'name' => 'scrapper_settings',
+				'text' => elgg_echo('blog:minds:scraper:menu'),
+				'href' => "blog/scrapers/mine",
+			);
+			elgg_register_menu_item('page', $params);
+		}
 	}
 }
 
@@ -334,20 +336,23 @@ function blog_pagesetup(){
 function minds_blog_scraper($hook, $entity_type, $return_value, $params){ 
 	elgg_set_ignore_access(true);
 	elgg_set_context('scraper');
-	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper')));
+	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
 	foreach($scrapers as $scraper){
 		//if the site was scraped in the last 15 mins then skip
-		if($scraper->timestamp > time() + 900){
+		echo "loading $scraper->title \n";
+		if(isset($scraper->timestamp) && $scraper->timestamp > time() - 300){
+			echo "canceling... scraped it withing the last 5 mins \n";
 			continue;
 		}
 		$feed = new SimplePie($scraper->feed_url);
 		foreach($feed->get_items() as $item){
 			//if the blog is newer than the scrapers last scrape
 			if($item->get_date('U') > $scraper->timestamp){
+				try{
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
-				$blog->excerpt = strip_tags($item->get_description(true), '<a><p><b><i>');
+				$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'),0, 100);
 				$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();
 				$blog->owner_guid = $scraper->owner_guid;
 				$blog->license = $scraper->license;
@@ -355,6 +360,9 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				$blog->status = 'published';
 				$blog->save();
 				echo 'Saved a blog titled: ' . $blog->title;
+				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));
+				}catch(EXCEPTION $e){
+				}
 			}
 		}
 		$scraper->timestamp = time();

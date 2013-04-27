@@ -38,7 +38,8 @@
 	$s3Capcha .= "</div>";
 	
 	// save in session
-	$_SESSION['image_captcha'] = $value2[$rand];
+	global $SESSION;
+	$SESSION['image_captcha'] = $value2[$rand];
 	
 	$captcha_output = "<div id='image_captcha'>" . $s3Capcha . "</div>";
 

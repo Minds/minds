@@ -71,6 +71,10 @@ function action($action, $forwarder = "") {
 		'admin/plugins/disable',
 		'logout',
 		'login',
+		'register',
+		'user/requestnewpassword',
+		'user/passwordreset',
+		'security/refreshtoken',
 		'file/download',
 	);
 
