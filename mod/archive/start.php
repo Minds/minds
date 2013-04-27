@@ -27,7 +27,9 @@ function minds_archive_init() {
 	elgg_register_menu_item('site', array(
 			'name' => elgg_echo('minds:archive'),
 			'href' => elgg_is_logged_in() ? elgg_get_site_url() . "archive/friends/" . elgg_get_logged_in_user_entity()->username : elgg_get_site_url() . 'archive/all',
-			'text' =>  elgg_echo('minds:archive'),
+			'text' => '&#128193;',
+			'class' => 'entypo',
+			'title' =>  elgg_echo('minds:archive'),
 	));
 		
 	elgg_extend_view('css','archive/css');
