@@ -3,6 +3,15 @@
  * CSS Extensions for Minds Theme
  */
 ?>
+@font-face {
+    font-family: 'entypo';
+    src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.eot?') format('eot'),
+         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.woff') format('woff'),
+         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.ttf') format('truetype'),
+         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
 /**************
  **** BODY ****
  **************/
@@ -28,8 +37,16 @@ body{
 	position:relative;
 	float:left;   	
 }
+.elgg-menu .entypo{
+	font-family:'entypo', 'Ubuntu', Tahoma, sans-serif;
+	font-size:34px;
+	font-weight:normal;
+}
+.elgg-menu .entypo.elements{
+	font-size:40px;
+}
 .elgg-page-topbar .elgg-menu-item-minds-logo{
-	margin-top:-8px;
+	margin-top:-6px;
  }
 .elgg-menu-topbar .elgg-menu-item-minds-logo > a{
 	padding:0; 
@@ -50,30 +67,24 @@ body{
  */
 .elgg-menu.elgg-menu-site.elgg-menu-site-more{
 	position:absolute;
+	color:#333;
 }
 
-/*Search modifications 
- */
-li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
-	padding:0;
+.elgg-search-header{
+	margin-top:1px;
 }
-
 /* Login button 
  */
 #login-dropdown{
-	position:relative;
-    top:0;
+	top:3px;
 }
-#login-dropdown-box{
-	width:225px;
+#login-dropdown:hover #login-dropdown-box{
+	display:block;
 }
-.elgg-button.elgg-button-dropdown{
-	font-size:12px;
-	width:65px;
-    border:0;
-    color:#333;
+.login-button{
+	color:#333;
 }
-.elgg-button.elgg-button-dropdown:hover{
+.login-button:hover{
 	background:transparent;
     color:#4690D6;
     -webkit-border-radius-bottomright: 0px; 

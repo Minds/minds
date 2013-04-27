@@ -35,35 +35,29 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 					echo elgg_view('page/elements/miniprofile');
 					echo elgg_view('page/elements/friends');
 				}
+				
+				/**
+				 * Video carousel
+				 */ 
+				 $videos = minds_get_featured('kaltura_video', 12);
+				 echo '<h3>Videos <a href="'.elgg_get_site_url().'archive/all">(more)</a></h3>';
+				 echo elgg_view('output/carousel', array('id'=>'videos','entities'=>$videos));
+				 
+				/**
+				 * Blog carousel
+				 */
+				 elgg_load_library('elgg:blog');
+				 $blogs = blog_get_featured(12);
+				 echo '<h3>Blogs <a href="'.elgg_get_site_url().'blog/all">(more)</a></h3>';
+				 echo elgg_view('output/carousel', array('id'=>'blogs','entities'=>$blogs));
+				
+				/**
+				 * Images
+				 */
+				 //elgg_load_library('elgg:blog');
+				 $images = minds_get_featured('image',12);
+				 echo '<h3>Images <a href="'.elgg_get_site_url().'photos/all">(more)</a></h3>';
+				 echo elgg_view('output/carousel', array('id'=>'images','entities'=>$images));
 				?>
 			</div>
-		</div>
-  	<div class='featured_wall'>
-  		<h2>Featured content</h2>
-	   <?php 
-	    /**
-		 * Video carousel
-		 */
-	   	$videos = minds_get_featured('kaltura_video', 12);
-		echo '<h3>Videos <a href="'.elgg_get_site_url().'archive/all">(more)</a></h3>';
-		echo elgg_view('output/carousel', array('id'=>'videos','entities'=>$videos));
-		
-		/**
-		 * Blog carousel
-		 */
-		elgg_load_library('elgg:blog');
-		$blogs = blog_get_featured(12);
-		echo '<h3>Blogs <a href="'.elgg_get_site_url().'blog/all">(more)</a></h3>';
-		echo elgg_view('output/carousel', array('id'=>'blogs','entities'=>$blogs));
-		
-		/**
-		 * Images
-		 */
-		//elgg_load_library('elgg:blog');
-		$images = minds_get_featured('image',12);
-		echo '<h3>Images <a href="'.elgg_get_site_url().'photos/all">(more)</a></h3>';
-		echo elgg_view('output/carousel', array('id'=>'images','entities'=>$images));
-		
-		?>
-   </div>
 </div>

@@ -97,10 +97,10 @@
 }
 
 .notification.notifier{
-	background-position: 0 -486px;
+	
 }  
 .notification.notifier:hover, .notification.notifier.new{
-	background-position: 0 -468px;
+	color:#4690D6;
 }  
   
 #notification .notification-unread{
@@ -123,8 +123,8 @@
 	
 	position: absolute;
 	text-align: center;
-	top: 10px;
-	left: 10px;
+	top: 12px;
+	left: 20px;
 	min-width: 14px;
 	height: 14px;
 	font-size: 8px;

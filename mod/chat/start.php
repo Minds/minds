@@ -264,16 +264,13 @@ function chat_notifier() {
 		// Add hidden popup module to topbar
 		elgg_extend_view('page/elements/topbar', 'chat/preview');
 					  
-		$class = "message notifier";
-		$text = "<span class='$class'></span>";
+		$class = "message notifier entypo";
+		$text = "&#59168;";
 		$tooltip = elgg_echo("chat:messages");
 		// get unread messages
 		$num_unread = (int)chat_count_unread_messages();
 		if ($num_unread != 0) {
 			$class = "message notifier new";
-			$text = "<span class='$class'>".
-						//"<span class=\"notification-new\">$num_unread</span>".
-					  "</span>";
 			$tooltip .= " (" . elgg_echo("notifications:unread", array($num_unread)) . ")";
 		}
 
@@ -284,6 +281,7 @@ function chat_notifier() {
 			'text' => $text,
 			'priority' => 700,
 			'title' => $tooltip,
+			'class' => 'entypo',
 			'rel' => 'popup',
 			'id' => 'chat-preview-link',
 			'section' => 'alt' //this is custom to minds theme.
