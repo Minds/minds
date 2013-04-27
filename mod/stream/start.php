@@ -9,7 +9,9 @@ function stream_init() {
 	elgg_register_menu_item('site', array(
 			'name' => elgg_echo('stream:title'),
 			'href' =>  elgg_get_site_url() . "stream/",
-			'text' =>  elgg_echo('stream:title'),
+			'title' =>  elgg_echo('stream:title'),
+			'text' => '&#59254;',
+			'class' => 'entypo',
 		));
 		
 	// Register a page handler, so we can have nice URLs

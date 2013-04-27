@@ -271,9 +271,10 @@
 }
 
 .elgg-more > a:before {
-	content: "\25BC";
-	font-size: smaller;
+	/*content: "\25BC";*/
+	font-size: 12px;
 	margin-right: 4px;
+	padding-top:-5px;
 }
 
 /* ***************************************

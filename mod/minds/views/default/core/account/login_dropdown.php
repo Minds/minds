@@ -21,8 +21,9 @@ $body = elgg_view_form('login', array('action' => "{$login_url}action/login"));
 		echo elgg_view('output/url', array(
 			'href' => 'login#login-dropdown-box',
 			//'rel' => 'popup',
-			'class' => 'elgg-button elgg-button-dropdown',
-			'text' => elgg_echo('login'),
+			'class' => 'login-button entypo',
+			'text' => '&#59200;',
+			
 		)); 
 		echo elgg_view_module('dropdown', '', $body, array('id' => 'login-dropdown-box')); 
 	?>

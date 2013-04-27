@@ -61,7 +61,9 @@ function kaltura_video_init() {
 		elgg_register_menu_item('site', array(
 			'name' => elgg_echo('kalturavideo:label:adminvideos'),
 			'href' =>  $CONFIG->wwwroot . "archive/friends/" . $_SESSION['user']->username,
-			'text' =>  elgg_echo('kalturavideo:label:adminvideos'),
+			'text' => '&#128193;',
+			'class' => 'entypo',
+			'title' =>  elgg_echo('kalturavideo:label:adminvideos'),
 		));
 		
 	// And for logged out users
@@ -69,7 +71,9 @@ function kaltura_video_init() {
 		elgg_register_menu_item('site', array(
 			'name' => elgg_echo('kalturavideo:label:adminvideos'),
 			'href' =>  $CONFIG->wwwroot . "archive/all",
-			'text' =>  elgg_echo('kalturavideo:label:adminvideos'),
+			'text' => '&#128193;',
+			'class' => 'entypo',
+			'title' =>  elgg_echo('kalturavideo:label:adminvideos'),
 		));
 	}
 

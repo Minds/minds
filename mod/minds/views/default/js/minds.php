@@ -12,15 +12,7 @@
 																							$(this).attr('value', 'Uploading...');
 																						});		 
 
-		$(".elgg-button.elgg-button-dropdown").mouseenter(function(){ 
-			$("#login-dropdown-box").slideToggle("fast"); 
-			$(this).toggleClass("elgg-state-active");
-		});
-		
-		$("#login-dropdown").mouseleave(function(){
-		  $(".elgg-button.elgg-button-dropdown").toggleClass("elgg-state-active");
-		  $("#login-dropdown-box").slideToggle("fast"); 
-		});
+		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
 		
 		$('.thumbnail-tile').hover(
 			function(){
