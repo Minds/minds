@@ -12,6 +12,16 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+  font-family: 'fontello';
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?12257265');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?12257265#iefix') format('embedded-opentype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?12257265') format('woff'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?12257265') format('truetype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?12257265#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 /**************
  **** BODY ****
  **************/
@@ -38,7 +48,7 @@ body{
 	float:left;   	
 }
 .elgg-menu .entypo{
-	font-family:'entypo', 'Ubuntu', Tahoma, sans-serif;
+	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
 	font-size:34px;
 	font-weight:normal;
 }
