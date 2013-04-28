@@ -49,11 +49,11 @@ body{
 }
 .elgg-menu .entypo{
 	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
-	font-size:34px;
+	font-size:17px;
 	font-weight:normal;
 }
 .elgg-menu .entypo.elements{
-	font-size:40px;
+	font-size:26px;
 }
 .elgg-page-topbar .elgg-menu-item-minds-logo{
 	margin-top:-6px;
@@ -82,6 +82,12 @@ body{
 
 .elgg-search-header{
 	margin-top:1px;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.elgg-search-header{
+        	box-sizing: initial;
+       		margin-top:-1px;
+	}
 }
 /* Login button 
  */
@@ -614,6 +620,20 @@ li.elgg-menu-item-rss{
 	width:100%;
 	height:auto;
 	position:relative;
+}
+#hz_carousel .thumbnail-tile{
+	width:250px;
+	height:160px;
+	margin:10px 0;
+	padding:0;
+}
+#hz_carousel .thumbnail-tile .hover {
+	width: 100%;
+	height: 40%;
+	background-color: #EEE;
+	position: absolute;
+	margin:0;
+	bottom: 0;
 }
 #hz_carousel a.prev, #hz_carousel a.next {
 	background: url(<?php echo elgg_get_site_url();?>mod/minds/vendors/carouFredSel/miscellaneous_sprite.png) no-repeat transparent;

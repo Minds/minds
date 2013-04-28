@@ -83,7 +83,5 @@ $(document).ready(function() {
 		}
 	?>
 	</div>
-	<a class="prev" id="<?php echo $id;?>_prev" href="#"><span>prev</span></a>
-	<a class="next" id="<?php echo $id;?>_next" href="#"><span>next</span></a>
 	<div class="pagination" id="<?php echo $id;?>_pag"></div>
 </div>
