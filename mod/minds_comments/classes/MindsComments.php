@@ -22,7 +22,11 @@ class MindsComments {
 	function output($type, $pid, $limit= 10, $offset=0){
 		$es = new elasticsearch();
 		$es->index = $this->index;
-		$comments = $es->query($type, 'pid:'.$pid, 'time_created:desc', $limit, $offset, array('age'=>3600, 'id'=>'comments.'.$pid));
+		if($limit = 3){
+			//only use cache for the initial comments
+			$cache = array('age'=>3600, 'id'=>'comments.'.$pid);
+		}
+		$comments = $es->query($type, 'pid:'.$pid, 'time_created:desc', $limit, $offset, $cache);
 		return $comments;
 	}
 	
