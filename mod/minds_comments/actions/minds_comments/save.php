@@ -42,7 +42,7 @@ if($create['ok'] == true){
  * Purge the comments cache
  */
 $es = new elasticsearch();
-$es->purgeCache('comments.'.$pid);
+$es->purgeCache('comments.'.$type.'.'.$pid);
 /*//get a list of all the users who have previously commented
 $options = array(
         'type' => 'object',

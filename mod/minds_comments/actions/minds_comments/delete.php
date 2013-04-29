@@ -19,5 +19,5 @@ if($comment['_source']['owner_guid']==elgg_get_logged_in_user_guid()|| elgg_is_a
  * Purge the comments cache
  */
 $es = new elasticsearch();
-$es->purgeCache('comments.'.$id);
+$es->purgeCache('comments.'.$type.'.'.$id);
 
