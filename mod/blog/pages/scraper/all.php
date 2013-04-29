@@ -3,13 +3,13 @@
  * Show all scrapers
  */
 
-$scrapers = elgg_get_entities(array(	'type'=>'object', 
+$scrapers = elgg_list_entities(array(	'type'=>'object', 
 										'subtypes'=>array('scraper'),
 										));
 							
 $title = elgg_echo('blog:minds:scraper');
 
-$content = elgg_view_entity_list($scrapers);
+$content = $scrapers;
 
 elgg_register_menu_item('title', array(
 			'name' => 'create_scraper',
