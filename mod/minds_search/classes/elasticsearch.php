@@ -13,7 +13,7 @@ class elasticsearch {
   }
   
   function cache($id, $age = 0){
-  	$CACHE = new ElggFileCache($this->cache_path . $id . '/', $age);
+  	$CACHE = new ElggFileCache($this->cache_path . $id, $age);
 	return $CACHE;
   }
   
