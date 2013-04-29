@@ -10,7 +10,7 @@ function stream_init() {
 			'name' => elgg_echo('stream:title'),
 			'href' =>  elgg_get_site_url() . "stream/",
 			'title' =>  elgg_echo('stream:title'),
-			'text' => '&#59254;',
+			'text' => '&#127909;',
 			'class' => 'entypo',
 		));
 		

@@ -14,11 +14,11 @@
 }
 @font-face {
   font-family: 'fontello';
-  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?12257265');
-  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?12257265#iefix') format('embedded-opentype'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?12257265') format('woff'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?12257265') format('truetype'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?12257265#fontello') format('svg');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?42981143');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?42981143#iefix') format('embedded-opentype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?42981143') format('woff'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?42981143') format('truetype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?42981143#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
