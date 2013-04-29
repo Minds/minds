@@ -24,6 +24,7 @@ class TidypicsAlbum extends ElggObject {
 	 */
 	public function __construct($guid = null) {
 		parent::__construct($guid);
+		$this->title = $this->getTitle();
 	}
 
 	/**

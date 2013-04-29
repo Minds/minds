@@ -13,13 +13,6 @@ $owner = $album->getOwnerEntity();
 
 $owner_icon = elgg_view_entity_icon($owner, 'tiny');
 
-$metadata = elgg_view_menu('entity', array(
-	'entity' => $album,
-	'handler' => 'archive',
-	'sort_by' => 'priority',
-	'class' => 'elgg-menu-hz',
-));
-
 $owner_link = elgg_view('output/url', array(
 	'href' => "photos/owner/$owner->username",
 	'text' => $owner->name,
@@ -34,12 +27,10 @@ $subtitle = "$author_text $date $categories";
 $params = array(
 	'entity' => $album,
 	'title' => false,
-	'metadata' => $metadata,
 	'subtitle' => $subtitle,
 	'tags' => elgg_view('output/tags', array('tags' => $album->tags)),
 );
 $params = $params + $vars;
-$summary = elgg_view('object/elements/summary', $params);
 
 $body = '';
 if ($album->description) {
@@ -60,7 +51,5 @@ if($album->access_id == 2){
 
 echo elgg_view('object/elements/full', array(
 	'entity' => $album,
-	'icon' => $owner_icon,
-	'summary' => $summary,
 	'body' => $body,
 ));

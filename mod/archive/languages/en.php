@@ -20,6 +20,8 @@ $translations = array(
 	'minds:archive:top' => 'Top content',
 	'minds:archive:mine' => 'My content',
 	'minds:archive:network' => 'My network content',
+	'minds:archive:owner' => '%s\'s content',
+	'minds:archive:owner:network' => '%s\'s network content',
 	
 	'minds:archive:upload:videoaudio' => 'Video & Audio',
 	

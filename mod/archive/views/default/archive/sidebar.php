@@ -22,7 +22,7 @@ if($guid){
  * Featured videos
  */
 $featured = minds_get_featured('kaltura_video', 3);
-$content = elgg_view_entity_list($featured);
+$content = elgg_view_entity_list($featured, array('full_view'=>false, 'sidebar'=>true));
 
 echo elgg_view_module('aside', elgg_echo('archive:featured:title'), $content, array('class'=>'sidebar'));
 

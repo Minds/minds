@@ -26,7 +26,7 @@ $content = elgg_list_entities(	array(	'types' => 'object',
 										'full_view' => FALSE,
 										'archive_view'=>TRUE
 									));
-$sidebar = elgg_view('kaltura/sidebar');
+$sidebar = elgg_view('archive/sidebar');
 /*
 		// Get categories, if they're installed
 		global $CONFIG;
