@@ -19,7 +19,7 @@ class elasticsearch {
   
   function purgeCache($id){
   	$cache = $this->cache($id);
-	return $cache->clear();
+	return $cache->delete($id);
   }
   
   function getCache($id){

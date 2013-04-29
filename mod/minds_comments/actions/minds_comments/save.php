@@ -19,6 +19,12 @@ $create = $mc->create($type, $pid, $comment);
 
 if($create['ok'] == true){
 	
+	/*
+	 * Purge the comments cache
+	 */
+	$es = new elasticsearch();
+	$es->purgeCache('comments.'.$type.'.'.$pid);
+	
 	system_message(elgg_echo('minds_comments:save:success'));
 	
 	$data['_id'] = time().elgg_get_logged_in_user_guid();
@@ -38,11 +44,6 @@ if($create['ok'] == true){
 } else {
 	 register_error(elgg_echo('minds_comments:save:error'));
 }
-/*
- * Purge the comments cache
- */
-$es = new elasticsearch();
-$es->purgeCache('comments.'.$type.'.'.$pid);
 /*//get a list of all the users who have previously commented
 $options = array(
         'type' => 'object',
