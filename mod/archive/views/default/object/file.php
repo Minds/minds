@@ -46,13 +46,6 @@ if ($comments_count != 0) {
 	$comments_link = '';
 }
 
-$metadata = elgg_view_menu('entity', array(
-	'entity' => $vars['entity'],
-	'handler' => 'archive',
-	'sort_by' => 'priority',
-	'class' => 'elgg-menu-hz',
-));
-
 $subtitle = "$author_text $date $comments_link $categories";
 
 // do not show the metadata and controls in widget view
@@ -71,8 +64,6 @@ if ($full) {
 		'subtitle' => $subtitle,
 	);
 	$params = $params + $vars;
-	$summary = elgg_view('object/elements/summary', $params);
-
 	$download = elgg_view('output/url', array(	'href'=>'/action/archive/download?guid='.$file->guid,
 												'text'=> elgg_echo('archive:download'),
 												'is_action' => true,
@@ -88,8 +79,6 @@ if ($full) {
 	echo elgg_view('object/elements/full', array(
 		'entity' => $file,
 		'title' => false,
-		'icon' => $file_icon,
-		'summary' => $summary,
 		'body' => $body,
 	));
 

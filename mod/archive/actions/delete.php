@@ -26,8 +26,12 @@ if($entity->getSubtype() == 'kaltura_video'){
 				$delfile->delete();
 			}
 		}
-	$entity->delete();
-	
+	if($entity->delete()){
+		success_message(elgg_echo('minds:archive:delete:success'));
+		forward('archive/all');
+	} else {
+		register_error(elgg_echo('minds:archive:delete:error'));
+	}
 } elseif($entity->getSubtype() == 'image' || $entity->getSubtype() == 'album'){
 	$entity->delete();
 }

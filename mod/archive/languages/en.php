@@ -33,6 +33,8 @@ $translations = array(
 	'minds:archive:album:create' => 'Create an album',
 	'minds:archive:upload:others' => 'Upload images, files + more',
 
+	'minds:archive:delete:success' => 'The file has been removed from your archive',
+	'minds:archive:delete:error' => 'There was a problem. We can not delete this file at the moment',
 
 	'kaltura_video' => 'Video/Audio',
 	'kalturavideo:label:partner_id' => "Partner ID",
