@@ -77,6 +77,7 @@ function blog_init() {
 	elgg_register_action('blog/auto_save_revision', "$action_path/auto_save_revision.php");
 	elgg_register_action('blog/delete', "$action_path/delete.php");
 	elgg_register_action('scraper/create', "$action_path/../scraper/create.php");
+	elgg_register_action('scraper/delete', "$action_path/../scraper/delete.php");
 
 	// entity menu
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'blog_entity_menu_setup');
@@ -347,8 +348,9 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 		}
 		$feed = new SimplePie($scraper->feed_url);
 		foreach($feed->get_items() as $item){
-			//if the blog is newer than the scrapers last scrape
-			if($item->get_date('U') > $scraper->timestamp){
+			//if the blog is newer than the scrapers last scrape - but ignore if the timestamp is greater than the time
+			// or else we get duplicates!
+			if($item->get_date('U') > $scraper->timestamp && $item->get_date('U') < time()){
 				try{
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
@@ -361,7 +363,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				$blog->save();
 				echo 'Saved a blog titled: ' . $blog->title;
 				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));
-				}catch(EXCEPTION $e){
+				}catch(Exception $e){
 				}
 			}
 		}

@@ -510,7 +510,7 @@ function blog_get_featured($limit=5){
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
 		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
-		$data = $es->query('blog');
+		$data = $es->query('blog', null, null, $limit, 0, array('age'=>3600));
 		if($data['hits']['total'] > 0){
 			foreach($data['hits']['hits'] as $item){
 				$guids[] = $item['_id'];

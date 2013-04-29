@@ -15,14 +15,14 @@ class MindsComments {
 	function total($type, $pid){
 		$es = new elasticsearch();
 		$es->index = $this->index;
-		$query = $es->query($type, 'pid:'.$service);
+		$query = $es->query($type, 'pid:'.$service, null, 0,0, array('age'=>3600, 'id'=>'comments.total.'.$pid));
 		return $query['hits']['total'];
 	}
 	
 	function output($type, $pid, $limit= 10, $offset=0){
 		$es = new elasticsearch();
 		$es->index = $this->index;
-		$comments = $es->query($type, 'pid:'.$pid, 'time_created:desc', $limit, $offset);
+		$comments = $es->query($type, 'pid:'.$pid, 'time_created:desc', $limit, $offset, array('age'=>3600, 'id'=>'comments.'.$pid));
 		return $comments;
 	}
 	
