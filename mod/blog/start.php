@@ -361,7 +361,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				$blog->save();
 				echo 'Saved a blog titled: ' . $blog->title;
 				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));
-				}catch(EXCEPTION $e){
+				}catch(Exception $e){
 				}
 			}
 		}
