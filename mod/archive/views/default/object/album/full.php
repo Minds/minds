@@ -48,8 +48,15 @@ if($album->access_id == 2){
 	$body .= elgg_view('minds_social/social_footer');
 }
 
+$addphotos = elgg_view('output/url', array(	'name' => 'upload',
+											'href' => 'archive/upload/album/' . $album->getGUID(),
+											'text' => elgg_echo('images:upload'),
+											'class' => 'elgg-button elgg-button-action',
+											));
+
 
 echo elgg_view('object/elements/full', array(
 	'entity' => $album,
+	'summary' => $addphotos,
 	'body' => $body,
 ));
