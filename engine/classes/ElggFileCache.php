@@ -198,7 +198,7 @@ class ElggFileCache extends ElggCache {
 		if (($this->getVariable("max_age") == 0) && ($this->getVariable("max_size") == 0)) {
 			return;
 		}
-exit;
+		
 		$exclude = array(".", "..");
 
 		$files = scandir($dir);
