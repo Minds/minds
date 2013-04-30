@@ -25,10 +25,12 @@ if ($full_view) {
 }
 
 if ($album->getContainerEntity()->canWriteToContainer()) {
-	elgg_register_menu_item('title', array(
+	if($full_view){
+		elgg_register_menu_item('title', array(
 			'name' => 'upload',
 			'href' => 'archive/upload/album/' . $album->getGUID(),
 			'text' => elgg_echo('images:upload'),
 			'link_class' => 'elgg-button elgg-button-action',
-	));
+		));
+	}
 }
