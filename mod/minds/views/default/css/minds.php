@@ -83,6 +83,14 @@ body{
 .elgg-menu-item-delete a:hover{
 	color:red;
 }
+
+.elgg-menu-comments li{
+	padding:0 3px;
+}
+.elgg-menu-comments li a{
+	color:#CCC;
+}
+
 /* More Drop Down
  */
 .elgg-menu.elgg-menu-site.elgg-menu-site-more{

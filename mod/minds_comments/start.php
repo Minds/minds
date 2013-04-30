@@ -66,8 +66,10 @@ function minds_comments_menu($hook, $type, $return, $params) {
 	 if(($owner_guid == elgg_get_logged_in_user_guid() || elgg_is_admin_logged_in()) && elgg_is_logged_in()){
 		$delete = array(
 			'name' => 'delete',
-			'text' => elgg_view_icon('delete'),
 			'href' => "action/comment/delete?id=$id&type=$type",
+			'text' => '&#10062;',
+			'title' => elgg_echo('delete'),
+			'class' => 'entypo',
 			'is_action' => true,
 			'priority' => 1000
 		);
