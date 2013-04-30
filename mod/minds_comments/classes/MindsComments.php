@@ -15,7 +15,7 @@ class MindsComments {
 	function total($type, $pid){
 		$es = new elasticsearch();
 		$es->index = $this->index;
-		$query = $es->query($type, 'pid:'.$service, null, 0,0, array('age'=>3600, 'id'=>'comments.total.'.$type.'.'.$pid));
+		$query = $es->query($type, 'pid:'.$service, null, 0,0, array('age'=>150, 'id'=>'comments.total.'.$type.'.'.$pid));
 		return $query['hits']['total'];
 	}
 	
@@ -24,7 +24,7 @@ class MindsComments {
 		$es->index = $this->index;
 		if($limit == 3){
 			//only use cache for the initial comments
-			$cache = array('age'=>3600, 'id'=>'comments.'.$type.'.'.$pid);
+			$cache = array('age'=>150, 'id'=>'comments.'.$type.'.'.$pid);
 		}
 		$comments = $es->query($type, 'pid:'.$pid, 'time_created:desc', $limit, $offset, $cache);
 		return $comments;
