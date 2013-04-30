@@ -370,8 +370,9 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 			$options = array(
 				'name' => 'delete',
 				'href' => "action/minds/river/delete?id=$item->id",
-				'text' => elgg_view_icon('delete'),
+				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
+				'class' => 'entypo',
 				'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
 				'priority' => 200,
@@ -385,8 +386,9 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 			$options = array(
 					'name' => 'remind',
 					'href' => "action/minds/remind?guid=$object->guid",
-					'text' => elgg_view_icon('share'),
+					'text' => '&#59159;',
 					'title' => elgg_echo('minds:remind'),
+					'class' => 'entypo',
 					'is_action' => true,
 					'priority' => 1,
 				);
@@ -405,19 +407,34 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
 		
-		if (elgg_get_context() == 'archive' || elgg_get_context() == 'photos') {
-		
-			//Remind button
+		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
+		//Remind button
+		if(in_array($entity->getSubtype(), $allowedReminds)){
 				$options = array(
 						'name' => 'remind',
 						'href' => "action/minds/remind?guid=$entity->guid",
-						'text' => elgg_view_icon('share'),
+						'text' => '&#59159;',
 						'title' => elgg_echo('minds:remind'),
+						'class' => 'entypo',
 						'is_action' => true,
 						'priority' => 1,
 					);
-				$return[] = ElggMenuItem::factory($options);
-			
+				$return[] = ElggMenuItem::factory($options);	
+		}
+		//Delete button
+		elgg_unregister_menu_item('entity', 'delete'); 
+		if ($entity->canEdit()) {
+			$options = array(
+				'name' => 'delete',
+				'href' => "action/$handler/delete?guid={$entity->getGUID()}",
+				'text' => '&#10062;',
+				'title' => elgg_echo('delete'),
+				'class' => 'entypo',
+				'confirm' => elgg_echo('deleteconfirm'),
+				'is_action' => true,
+				'priority' => 200,
+			);
+			$return[] = ElggMenuItem::factory($options);
 		}
 	}
 	if(elgg_is_admin_logged_in()){

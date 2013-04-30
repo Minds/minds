@@ -25,7 +25,7 @@ if ($type == 'entity') {
 		$options = array('annotation_names' => array('thumbs:up'), 'annotation_owner_guids' => array(elgg_get_logged_in_user_guid()));
 		$delete = elgg_delete_annotations($options);
 		///if($delete){
-		echo elgg_view_icon('thumbs-up');
+		echo 'not selected';
 		//}
 		$entity -> thumbcount--;
 	} else {
@@ -52,7 +52,7 @@ if ($type == 'entity') {
 			forward(REFERER);
 		}
 
-		echo elgg_view_icon('thumbs-up-alt');
+		echo 'selected';
 
 		notification_create(array($entity -> getOwnerGUID()), elgg_get_logged_in_user_guid(), $entity -> guid, array('notification_view' => 'like'));
 
@@ -67,13 +67,13 @@ if ($type == 'entity') {
 	if (in_array($user_guid, $thumbs['up'])) {
 		//there is a thumbs up for this user so we are going to remove it
 		$comment['_source']['thumbs']['up'] = array_diff($comment['_source']['thumbs']['up'], array($user_guid));
-		$icon = elgg_view_icon('thumbs-up');
+		$icon = 'not-selected';
 	} else {
 		if (!is_array($comment['_source']['thumbs']['up'])) {
 			$comment['_source']['thumbs']['up'] = array();
 		}
 		array_push($comment['_source']['thumbs']['up'], $user_guid);
-		$icon = elgg_view_icon('thumbs-up-alt');
+		$icon = 'selected';
 	}
 	$update = $mc -> update($comment['_type'], $comment['_id'], $comment['_source']);
 	if ($update['ok'] == true) {

@@ -23,3 +23,10 @@
 	padding-top:2px;
 	font-size:14px;
 }
+
+.thumbs-button-down.selected, .thumbs-button-up.selected{
+	color:#4690D6;
+}
+.thumbs-button-down:hover, .thumbs-button-up:hover{
+	color:#999;
+}
