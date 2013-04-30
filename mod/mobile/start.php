@@ -14,22 +14,26 @@ elgg_register_viewtype_fallback('mobile');
 elgg_register_event_handler('init','system','mobile_init');	
 	
 function mobile_init(){
-			
-	mobile_detect();
+
+	//if the site isn't using varnish then detect normally	
+	if(!isset($_SERVER['HTTP_X_UA_DEVICE'])){
+		mobile_detect();
+	} elseif($_SERVER['HTTP_X_UA_DEVICE'] == 'mobile') {
+		elgg_set_viewtype('mobile');
+	}
 						
 	elgg_extend_view('css/elgg','mobile/css');
 		
 	//set our default index page
-	if(elgg_get_viewtype() == "mobile"){
+	if(elgg_get_viewtype() == 'mobile'){
 		elgg_register_plugin_hook_handler('index', 'system','mobile_main_handler');
-		header('X-ViewType: mobile', true);
+	
+		elgg_register_simplecache_view('mobile');
+	
+		elgg_register_js('bootstrap', elgg_get_site_url() .'mod/mobile/vendors/bootstrap/js/bootstrap.min.js', 'footer');
+		elgg_register_css('bootstrap',elgg_get_site_url() .'mod/mobile/vendors/bootstrap/css/bootstrap.min.css');
+		elgg_register_css('bootstrap-responsive',elgg_get_site_url().'mod/mobile/vendors/bootstrap/css/bootstrap-responsive.min.css');
 	}
-	
-	elgg_register_simplecache_view('mobile');
-	
-	elgg_register_js('bootstrap', elgg_get_site_url() .'mod/mobile/vendors/bootstrap/js/bootstrap.min.js', 'footer');
-	elgg_register_css('bootstrap',elgg_get_site_url() .'mod/mobile/vendors/bootstrap/css/bootstrap.min.css');
-	elgg_register_css('bootstrap-responsive',elgg_get_site_url().'mod/mobile/vendors/bootstrap/css/bootstrap-responsive.min.css');
 }
 	
 function mobile_main_handler($hook, $type, $return, $params) {
@@ -45,10 +49,6 @@ function mobile_main_handler($hook, $type, $return, $params) {
 	return true;
 }
 	
-if($_SESSION['isMobile']){
-	elgg_set_viewtype('mobile');
-}
-
 function mobile_detect(){
 	$useragent= strtolower ( $_SERVER['HTTP_USER_AGENT'] );	
 	//detect if there is a mobile device

@@ -27,7 +27,9 @@ function minds_archive_init() {
 	elgg_register_menu_item('site', array(
 			'name' => elgg_echo('minds:archive'),
 			'href' => elgg_is_logged_in() ? elgg_get_site_url() . "archive/friends/" . elgg_get_logged_in_user_entity()->username : elgg_get_site_url() . 'archive/all',
-			'text' =>  elgg_echo('minds:archive'),
+			'text' => '&#128193;',
+			'class' => 'entypo',
+			'title' =>  elgg_echo('minds:archive'),
 	));
 		
 	elgg_extend_view('css','archive/css');
@@ -263,10 +265,10 @@ function minds_archive_page_handler($page) {
 			set_input('username',$page[0]);
 			$user = get_user_by_username($page[0]);
 			elgg_set_page_owner_guid($user->guid);
-			if (isset($page[1])) {
+			if (isset($page[0])) {
 				switch($page[1]) {
 					case 'network':
-						include(dirname(__FILE__) . "/pages/archive/friends.php");
+						include(dirname(__FILE__) . "/pages/archive/network.php");
 						break;
 					case 'show':
 					case 'view':
@@ -274,7 +276,7 @@ function minds_archive_page_handler($page) {
 						include(dirname(__FILE__) . "/pages/archive/show.php");	
 						break;
 					default:
-						include(dirname(__FILE__) . "/index.php");
+						include(dirname(__FILE__) . "/pages/archive/owner.php");
 				}
 			} else {
 				include('pages/archive/all.php');

@@ -5,7 +5,7 @@ $english = array(
 	
 	/* Minds renamings and overrides
 	 */
-	'more' => 'Elements',
+	'more' => '&#57349;',
 	
 	'widgets:add' => 'Widgets',
 	

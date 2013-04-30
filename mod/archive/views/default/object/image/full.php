@@ -26,28 +26,17 @@ $author_text = elgg_echo('byline', array($owner_link));
 
 $owner_icon = elgg_view_entity_icon($photo->getOwnerEntity(), 'tiny');
 
-$metadata = elgg_view_menu('entity', array(
-	'entity' => $vars['entity'],
-	'handler' => 'photos',
-	'sort_by' => 'priority',
-	'class' => 'elgg-menu-hz',
-));
-
 $subtitle = "$author_text $date $categories $comments_link";
 
 $params = array(
 	'entity' => $photo,
 	'title' => false,
-	'metadata' => $metadata,
 	'subtitle' => $subtitle,
 	'tags' => $tags,
 );
 $list_body = elgg_view('object/elements/summary', $params);
 
 $params = array('class' => 'mbl');
-$summary = elgg_view_image_block($owner_icon, $list_body, $params);
-
-echo $summary;
 
 echo '<div class="tidypics-photo-wrapper center">';
 echo elgg_view('object/image/navigation', $vars);

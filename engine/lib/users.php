@@ -463,7 +463,7 @@ $offset = 0, $timelower = 0, $timeupper = 0) {
 function count_user_friends_objects($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE,
 $timelower = 0, $timeupper = 0) {
 
-	if ($friends = get_user_friends($user_guid, "", 999999, 0)) {
+	if ($friends = get_user_friends($user_guid, ELGG_ENTITIES_ANY_VALUE, 999999, 0)) {
 		$friendguids = array();
 		foreach ($friends as $friend) {
 			$friendguids[] = $friend->getGUID();
@@ -497,7 +497,7 @@ $timelower = 0, $timeupper = 0) {
  *
  * @return string
  */
-function list_user_friends_objects($user_guid, $subtype = "", $limit = 10, $full_view = true,
+function list_user_friends_objects($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10, $full_view = true,
 $listtypetoggle = true, $pagination = true, $timelower = 0, $timeupper = 0) {
 
 	$offset = (int)get_input('offset');

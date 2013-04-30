@@ -21,7 +21,7 @@ $subtypes = array('kaltura_video', 'album', 'file');
 
 $content = list_user_friends_objects($user->guid,$subtypes,10,false);
 
-$sidebar = elgg_view('kaltura/sidebar');
+$sidebar = elgg_view('archive/sidebar');
 /*
 		// Get categories, if they're installed
 		global $CONFIG;

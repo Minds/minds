@@ -14,7 +14,7 @@ $(document).ready(function() {
 	
 	// Using custom configuration
 	$("#<?php echo $id;?>").carouFredSel({
-		items				: 3,
+		items				: 1,
 		direction			: "left",
 		swipe				: true,
 		infinite			: true,
@@ -29,7 +29,7 @@ $(document).ready(function() {
 			key		: "right",
 		},
 		scroll : {
-			items			: 3,
+			items			: 1,
 			duration		: <?php echo rand(1000,1500);?>,							
 			pauseOnHover	: true
 		}					
@@ -83,7 +83,5 @@ $(document).ready(function() {
 		}
 	?>
 	</div>
-	<a class="prev" id="<?php echo $id;?>_prev" href="#"><span>prev</span></a>
-	<a class="next" id="<?php echo $id;?>_next" href="#"><span>next</span></a>
 	<div class="pagination" id="<?php echo $id;?>_pag"></div>
 </div>

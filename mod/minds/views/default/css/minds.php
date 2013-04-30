@@ -3,6 +3,25 @@
  * CSS Extensions for Minds Theme
  */
 ?>
+@font-face {
+    font-family: 'entypo';
+    src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.eot?') format('eot'),
+         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.woff') format('woff'),
+         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.ttf') format('truetype'),
+         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+  font-family: 'fontello';
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?17546205');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?17546205#iefix') format('embedded-opentype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?17546205') format('woff'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?17546205') format('truetype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?17546205#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 /**************
  **** BODY ****
  **************/
@@ -28,8 +47,20 @@ body{
 	position:relative;
 	float:left;   	
 }
+.elgg-menu .entypo{
+	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
+	font-size:17px;
+	font-weight:normal;
+	text-decoration:none;
+}
+.elgg-menu .entypo.elements{
+	font-size:26px;
+}
+.elgg-menu .elgg-menu-item-logout .entypo{
+	padding-top:2px;
+}
 .elgg-page-topbar .elgg-menu-item-minds-logo{
-	margin-top:-8px;
+	margin-top:-6px;
  }
 .elgg-menu-topbar .elgg-menu-item-minds-logo > a{
 	padding:0; 
@@ -46,34 +77,48 @@ body{
 	overflow: visible !important;
 }
 
+.elgg-menu-river li{
+	padding:0 3px;
+}
+.elgg-menu-item-delete a:hover{
+	color:red;
+}
+
+.elgg-menu-comments li{
+	padding:0 3px;
+}
+.elgg-menu-comments li a{
+	color:#CCC;
+}
+
 /* More Drop Down
  */
 .elgg-menu.elgg-menu-site.elgg-menu-site-more{
 	position:absolute;
+	color:#333;
 }
 
-/*Search modifications 
- */
-li.elgg-menu-item-search > a, li.elgg-menu-item-login > a  {
-	padding:0;
+.elgg-search-header{
+	margin-top:1px;
 }
-
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.elgg-search-header{
+        	box-sizing: initial;
+       		margin-top:-1px;
+	}
+}
 /* Login button 
  */
 #login-dropdown{
-	position:relative;
-    top:0;
+	top:3px;
 }
-#login-dropdown-box{
-	width:225px;
+#login-dropdown:hover #login-dropdown-box{
+	display:block;
 }
-.elgg-button.elgg-button-dropdown{
-	font-size:12px;
-	width:65px;
-    border:0;
-    color:#333;
+.login-button{
+	color:#333;
 }
-.elgg-button.elgg-button-dropdown:hover{
+.login-button:hover{
 	background:transparent;
     color:#4690D6;
     -webkit-border-radius-bottomright: 0px; 
@@ -593,6 +638,20 @@ li.elgg-menu-item-rss{
 	width:100%;
 	height:auto;
 	position:relative;
+}
+#hz_carousel .thumbnail-tile{
+	width:250px;
+	height:160px;
+	margin:10px 0;
+	padding:0;
+}
+#hz_carousel .thumbnail-tile .hover {
+	width: 100%;
+	height: 40%;
+	background-color: #EEE;
+	position: absolute;
+	margin:0;
+	bottom: 0;
 }
 #hz_carousel a.prev, #hz_carousel a.next {
 	background: url(<?php echo elgg_get_site_url();?>mod/minds/vendors/carouFredSel/miscellaneous_sprite.png) no-repeat transparent;
