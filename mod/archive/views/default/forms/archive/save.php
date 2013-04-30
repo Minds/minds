@@ -119,7 +119,7 @@ EOT;
 		<div class="clearfloat"></div>
 EOT;
 
-} elseif($entity->getSubtype() == 'album'){
+} elseif($entity->getSubtype() == 'album' || $entity->getSubtype() == 'image'){
 	$form_body = <<<EOT
 			<p>
 				<label>$title_label</label><br />
