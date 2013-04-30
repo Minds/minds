@@ -55,6 +55,9 @@ body{
 .elgg-menu .entypo.elements{
 	font-size:26px;
 }
+.elgg-menu .elgg-menu-item-logout .entypo{
+	padding-top:2px;
+}
 .elgg-page-topbar .elgg-menu-item-minds-logo{
 	margin-top:-6px;
  }

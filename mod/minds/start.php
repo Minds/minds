@@ -303,7 +303,7 @@ function minds_pagesetup(){
 		elgg_register_menu_item('topbar', array(
 			'name' => 'logout',
 			'href' => 'action/logout',
-			'text' => '&#10006;',
+			'text' => '&#59278;',
 			'title' => elgg_echo('logout'),
 			'class' => 'entypo',
 			'priority' => 1000,
