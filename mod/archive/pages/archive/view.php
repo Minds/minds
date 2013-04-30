@@ -99,6 +99,19 @@ if($entity->getSubtype() == 'image'){
 	elgg_push_breadcrumb($album->title, $album->getURL());
 }
 
+if($entity->getSubtype() == 'album'){
+	
+	if ($entity->getContainerEntity()->canWriteToContainer()) {
+		elgg_register_menu_item('title', array(
+			'name' => 'upload',
+			'href' => 'archive/upload/album/' . $entity->getGUID(),
+			'text' => elgg_echo('images:upload'),
+			'link_class' => 'elgg-button elgg-button-action',
+		));
+	}
+
+}
+
 elgg_push_breadcrumb($title);
 
 $content = elgg_view_entity($entity, array('full_view' => true));

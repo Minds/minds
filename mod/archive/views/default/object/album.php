@@ -23,14 +23,3 @@ if ($full_view) {
 		echo elgg_view('object/album/gallery', $vars);
 	}
 }
-
-if ($album->getContainerEntity()->canWriteToContainer()) {
-	if($full_view){
-		elgg_register_menu_item('title', array(
-			'name' => 'upload',
-			'href' => 'archive/upload/album/' . $album->getGUID(),
-			'text' => elgg_echo('images:upload'),
-			'link_class' => 'elgg-button elgg-button-action',
-		));
-	}
-}
