@@ -29,7 +29,7 @@ $(document).ready(function() {
 			key		: "right",
 		},
 		scroll : {
-			items			: 3,
+			items			: 1,
 			duration		: <?php echo rand(1000,1500);?>,							
 			pauseOnHover	: true
 		}					
