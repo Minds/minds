@@ -14,11 +14,11 @@
 }
 @font-face {
   font-family: 'fontello';
-  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?42981143');
-  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?42981143#iefix') format('embedded-opentype'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?42981143') format('woff'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?42981143') format('truetype'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?42981143#fontello') format('svg');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?17546205');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?17546205#iefix') format('embedded-opentype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?17546205') format('woff'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?17546205') format('truetype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?17546205#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -51,6 +51,7 @@ body{
 	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
 	font-size:17px;
 	font-weight:normal;
+	text-decoration:none;
 }
 .elgg-menu .entypo.elements{
 	font-size:26px;
@@ -73,6 +74,12 @@ body{
 	overflow: visible !important;
 }
 
+.elgg-menu-river li{
+	padding:0 3px;
+}
+.elgg-menu-item-delete a:hover{
+	color:red;
+}
 /* More Drop Down
  */
 .elgg-menu.elgg-menu-site.elgg-menu-site-more{

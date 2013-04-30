@@ -29,9 +29,9 @@ if (elgg_is_logged_in()) {
 		
 		$params = array(
 			'href' => $url,
-			'text' => $already ? elgg_view_icon('thumbs-down-alt') : elgg_view_icon('thumbs-down'),
+			'text' => '&#128078;',
 			'title' => elgg_echo('thumbs:down'),
-			'class'=>'thumbs-button-down',
+			'class'=> $already ? 'entypo thumbs-button-down selected' : 'entypo thumbs-button-down',
 			'data-role' => 'none',
 			'rel'=>'external',
 			'is_action' => true,

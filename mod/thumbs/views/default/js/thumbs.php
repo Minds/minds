@@ -13,7 +13,12 @@ elgg.thumbs.action = function(e) {
 
 		elgg.action($(this).attr('href'), {
 			success: function(data) {
-				link.html(data.output);
+				if(data.output == 'selected'){
+					link.css('color', '#4690D6');
+				} else {
+					link.css('color', '#AAAAAA');
+				}
+				
 			}
 		});
 
