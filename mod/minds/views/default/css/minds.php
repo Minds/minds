@@ -198,9 +198,10 @@ body{
 }
 .minds_index > .splash{
 	width:100%;
-	font-size:45px;
+	font-size:60px;
 	font-weight: normal;
 	text-align:center;
+	letter-spacing:3px;
 	line-height:75px;
 	color:#666;
 	font-family: 'Ubuntu Light', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;

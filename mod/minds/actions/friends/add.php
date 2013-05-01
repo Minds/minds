@@ -14,6 +14,13 @@ if (!$friend) {
 	forward(REFERER);
 }
 
+if(!elgg_is_logged_in()){
+	global $SESSION;
+	$SESSION['to_friend'] = $friend_guid;
+	$SESSION['last_forward_from'] = elgg_get_site_url().'action/friends/add?friend='.$friend_guid;
+	forward('login?returntoreferer=true');
+} 
+
 $errors = false;
 
 // Get the user

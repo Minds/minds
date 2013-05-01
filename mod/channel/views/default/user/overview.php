@@ -22,4 +22,11 @@ if (elgg_is_logged_in()) {
 									));
 			}
 		}
-	}
+} else {
+	echo elgg_view('output/url', array(	
+										'text' => elgg_echo('friend:add'),
+										'href' => "action/friends/add?friend={$user->guid}",
+										'class' => 'elgg-button elgg-button-action subscribe',
+										'is_action' => true
+									));
+}

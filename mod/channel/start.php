@@ -19,6 +19,13 @@ function channel_init() {
 	global $CONFIG;
 	$CONFIG->minusername = 2;
 	
+	if(isset($_COOKIE['_elgg_to_friend']) && elgg_is_logged_in()){
+		$friend = elgg_get_logged_in_user_entity()->addFriend($_COOKIE['_elgg_to_friend']);
+		if($friend instanceof ElggUser){
+			forward($friend->getURL());
+		}
+	}
+	
 	//run_function_once('channels_update_avatar_widgets');
 
 	// Register a URL handler for users - this means that profile_url()
