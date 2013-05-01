@@ -72,6 +72,7 @@ function action($action, $forwarder = "") {
 		'logout',
 		'login',
 		'register',
+		'friends/add',
 		'user/requestnewpassword',
 		'user/passwordreset',
 		'security/refreshtoken',
