@@ -22,8 +22,8 @@ class elasticsearch {
 	return $cache->clear();
   }
   
-  function getCache($id){
-  	$cache = $this->cache($id);
+  function getCache($id, $age){
+  	$cache = $this->cache($id, $age);
 	return $cache->load($id);
   }
   
@@ -36,7 +36,7 @@ class elasticsearch {
     if (!$this->index) throw new Exception('$this->index needs a value');
 		
 	if($http['method']=='GET' && $cache['age'] > 0){
-		$cache_data = $this->getCache($cache['id']);
+		$cache_data = $this->getCache($cache['id'], $cache['age']);
 		if($cache_data){
 			//echo 'using the cache!! wooo!!';
 			return json_decode($cache_data, true);
