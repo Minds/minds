@@ -34,7 +34,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	}
 } elseif($entity->getSubtype() == 'image' || $entity->getSubtype() == 'album'){
 	if($entity->delete()){
-		success_message(elgg_echo('minds:archive:delete:success'));
+		system_message(elgg_echo('minds:archive:delete:success'));
 		forward('archive/'.$entity->getOwnerEntity()->username);
 	} else {
 		register_error(elgg_echo('minds:archive:delete:error'));
