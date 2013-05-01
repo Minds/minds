@@ -20,7 +20,10 @@ function channel_init() {
 	$CONFIG->minusername = 2;
 	
 	if(isset($_COOKIE['_elgg_to_friend']) && elgg_is_logged_in()){
-		elgg_get_logged_in_user_entity()->addFriend($_COOKIE['_elgg_to_friend']);
+		$friend = elgg_get_logged_in_user_entity()->addFriend($_COOKIE['_elgg_to_friend']);
+		if($friend instanceof ElggUser){
+			forward($friend->getURL());
+		}
 	}
 	
 	//run_function_once('channels_update_avatar_widgets');
