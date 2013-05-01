@@ -342,11 +342,17 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	foreach($scrapers as $scraper){
 		//if the site was scraped in the last 15 mins then skip
 		echo "loading $scraper->title \n";
+		//why would it be an array sometimes?? it is though
+		if(is_array($scraper->timestamp)){
+			$scraper->timestamp = $scraper->timestamp[0];
+		}	
 		if(isset($scraper->timestamp) && $scraper->timestamp > time() - 300){
 			echo "canceling... scraped it withing the last 5 mins \n";
 			continue;
 		}
 		$feed = new SimplePie($scraper->feed_url);
+		//swamp the orderring so we do the latest, last
+		array_reverse($feed);
 		foreach($feed->get_items() as $item){
 			//if the blog is newer than the scrapers last scrape - but ignore if the timestamp is greater than the time
 			// or else we get duplicates!
@@ -363,11 +369,14 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				$blog->save();
 				echo 'Saved a blog titled: ' . $blog->title;
 				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));
+				
+				//make timestamp of last blog so we don't have timezone issues...
+				$scraper->timestamp = $item->get_date('U');
 				}catch(Exception $e){
 				}
 			}
 		}
-		$scraper->timestamp = time();
+		//$scraper->timestamp = time();
 		$scraper->save();
 	}
 	elgg_set_ignore_access(false);
