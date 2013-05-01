@@ -19,7 +19,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
         
     </div>
     <div class='splash'>
-		Organizing the world's free & open information
+		Free & Open Source Social Media
 	</div>
 		<div class='block'>
 			<div class='news-block'>
