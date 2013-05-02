@@ -28,7 +28,7 @@ $img = elgg_view('output/img', array(
 	'class' => $class,
 	'title' => $title,
 	'alt' => $title,
-	'source' => elgg_get_site_url() + 'archive/inline/' + $entity->kaltura_video_id
+	'source' => elgg_get_site_url() . 'archive/inline/' . $entity->kaltura_video_id
 ));
 
 if ($url) {

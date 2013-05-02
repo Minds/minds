@@ -20,7 +20,6 @@ function minds_archive_init() {
 	elgg_register_library('archive:kaltura:editor', elgg_get_plugins_path().'archive/vendors/kaltura/editor/init.php');
 
 	//embed options
-	elgg_extend_view('input/longtext', 'kaltura/addvideobutton',9);
 	elgg_register_js('kaltura.js', elgg_get_site_url() . 'mod/kaltura_video/kaltura/js/kaltura.js');
 	
 	//site menu
@@ -566,7 +565,7 @@ function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $param
 		return $url;
 	} elseif(elgg_instanceof($entity, 'object', 'kaltura_video')) {
 	
-		return kaltura_get_thumnail($entity->kaltura_video_id, 120,120, 100);
+		return kaltura_get_thumnail($entity->kaltura_video_id, 120,68, 100);
 	}
 }
 
