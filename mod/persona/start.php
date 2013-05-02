@@ -56,7 +56,7 @@
  */
     
     function persona_auth_pagehandler($page) {
-	
+	header('X-No-Client-Cache:0');
 	switch($page[0]) {
 	    
 	    case 'assert':	    
