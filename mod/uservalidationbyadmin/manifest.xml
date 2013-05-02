@@ -15,5 +15,5 @@
 		<type>plugin</type>
 		<name>uservalidationbyemail</name>
 	</conflicts>	
-	<activate_on_install>true</activate_on_install>
+	<activate_on_install>false</activate_on_install>
 </plugin_manifest>

@@ -6,4 +6,5 @@
         <field key="website" value="http://www.kramnorth.com/" />
         <field key="copyright" value="(C) Mark Harding Dec 2012" />
         <field key="elgg_version" value="1.8" />
+        <activate_on_install>true</activate_on_install>
 </plugin_manifest>
