@@ -18,5 +18,5 @@
 		<name>minds_search</name>
     </requires>
     <admin_interface>simple</admin_interface>
-    <activate_on_install>false</activate_on_install>
+    <activate_on_install>true</activate_on_install>
 </plugin_manifest>

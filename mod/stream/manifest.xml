@@ -7,4 +7,5 @@
 	<field key="copyright" value="(C) minds.com 2012" />
 	<field key="licence" value="GNU Public License version 3" />
 	<field key="elgg_version" value="1.8" />
+	<activate_on_install>true</activate_on_install>
 </plugin_manifest>

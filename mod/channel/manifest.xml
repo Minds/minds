@@ -16,4 +16,5 @@
 		<type>plugin</type>
 		<name>profile</name>
 	</conflicts>
+	<activate_on_install>true</activate_on_install>
 </plugin_manifest>

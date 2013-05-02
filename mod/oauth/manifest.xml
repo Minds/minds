@@ -18,4 +18,5 @@
 		<type>plugin</type>
 		<name>oauth_lib</name>
 	</conflicts>
+	<activate_on_install>true</activate_on_install>
 </plugin_manifest>

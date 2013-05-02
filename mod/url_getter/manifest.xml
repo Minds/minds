@@ -6,4 +6,5 @@
         <field key="website" value="http://www.mitre.org/" />
         <field key="copyright" value="(C) The MITRE Corporation 2010" />
         <field key="elgg_version" value="2010040201" />
+        <activate_on_install>true</activate_on_install>
 </plugin_manifest>

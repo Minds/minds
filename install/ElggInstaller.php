@@ -1449,13 +1449,52 @@ class ElggInstaller {
 	 * @return void
 	 */
 	protected function enablePlugins() {
-		elgg_generate_plugin_entities();
+		/*elgg_generate_plugin_entities();
 		$plugins = elgg_get_plugins('any');
 		foreach ($plugins as $plugin) {
 			if ($plugin->getManifest()) {
 				if ($plugin->getManifest()->getActivateOnInstall()) {
 					$plugin->activate();
 				}
+			}
+		}*/
+		elgg_generate_plugin_entities();
+		$installed_plugins = elgg_get_plugins('any');
+
+		/**
+		 * Default plugins to install, ordering included
+		 */
+		$defaults = array(	'uservalidationbyemail', 
+							'htmlawed',
+							'logbrowser',
+							'logrotate',
+							'oauth2', 
+							'oauth_api', 
+							'channel', 
+							'groups',
+							'wall',
+							'tidypics', 
+							'archive', 
+							'embed',
+							'embed_extender',
+							'blog',
+							'thumbs',
+							'minds_search', 
+							'minds_comments',
+							'minds_social',
+							'minds_webservices',
+							'persona',
+							'notifications',
+							'minds_connect',
+							'bootcamp',
+							'mobile',
+							'minds'
+						);
+		foreach($defaults as $plugin_id){
+			$plugin = elgg_get_plugin_from_id($plugin_id);
+			if($plugin instanceof ElggPlugin){
+				$plugin->setPriority('last');
+				$plugin->activate();
 			}
 		}
 	}

@@ -47,6 +47,8 @@ $params = array(
 $installer->batchInstall($params, TRUE);
 
 // at this point installation has completed (otherwise an exception halted execution).
+
+// at this point installation has completed (otherwise an exception halted execution).
 function minds_setup_default(){
 	elgg_generate_plugin_entities();
 	$installed_plugins = elgg_get_plugins('any');
@@ -87,6 +89,8 @@ function minds_setup_default(){
 		$plugin->enable();
 	}
 }
+
+minds_setup_default();
 
 // try to rewrite the script to disable it.
 if (is_writable(__FILE__)) {
