@@ -1492,7 +1492,7 @@ class ElggInstaller {
 			$plugin = elgg_get_plugin_from_id($plugin_id);
 			if($plugin instanceof ElggPlugin){
 				$plugin->setPriority('last');
-				$plugin->enable();
+				$plugin->activate();
 			}
 		}
 	}
