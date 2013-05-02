@@ -143,7 +143,7 @@ function embed_get_list_options($options = array()) {
 
 	$defaults = array(
 		'limit' => 6,
-		'container_guids' => $container_guids,
+		'owner_guids' => $container_guids,
 		'item_class' => 'embed-item',
 	);
 

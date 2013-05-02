@@ -13,10 +13,5 @@
 		<type>elgg_release</type>
 		<version>1.8</version>
 	</requires>
-	<requires>
-		<type>plugin</type>
-		<name>file</name>
-		<version>1.8.1</version>
-	</requires>
 	<activate_on_install>true</activate_on_install>
 </plugin_manifest>

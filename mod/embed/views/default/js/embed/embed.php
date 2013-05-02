@@ -38,7 +38,14 @@ elgg.embed.insert = function(event) {
 
 	// this is a temporary work-around for #3971
 	if (content.indexOf('thumbnail.php') != -1) {
-		content = content.replace('size=small', 'size=medium');
+		content = content.replace('size=small', 'size=large');
+	}
+
+	/*
+	 * Make photos look good
+	 */
+	if($(this).find('.elgg-photo')){
+		content = content.replace('/small/', '/large/');
 	}
 
 	textArea.val(textArea.val() + content);
@@ -67,13 +74,13 @@ echo elgg_view('embed/custom_insert_js');
  * @return bool
  */
 elgg.embed.submit = function(event) {
-	$('.embed-wrapper .elgg-form-file-upload').hide();
+	$('.embed-wrapper .elgg-form-embed').hide();
 	$('.embed-throbber').show();
 	
 	$(this).ajaxSubmit({
 		dataType : 'json',
 		data     : { 'X-Requested-With' : 'XMLHttpRequest'},
-		success  : function(response) {
+		success  : function(response, data) {console.log(data);
 			if (response) {
 				if (response.system_messages) {
 					elgg.register_error(response.system_messages.error);
@@ -87,7 +94,7 @@ elgg.embed.submit = function(event) {
 				} else {
 					// incorrect response, presumably an error has been displayed
 					$('.embed-throbber').hide();
-					$('.embed-wrapper .elgg-form-file-upload').show();
+					$('.embed-wrapper .elgg-form-embed').show();
 				}
 			}
 		},

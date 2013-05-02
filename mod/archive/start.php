@@ -47,8 +47,7 @@ function minds_archive_init() {
 	elgg_register_entity_url_handler('object', 'album','minds_archive_entity_url');
 	
 	//override icon urls
-	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'minds_archive_file_icon_url_override');
-	
+	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'minds_archive_file_icon_url_override');	
 
 	// Listen to notification events and supply a more useful message
 	elgg_register_plugin_hook_handler('notify:entity:message', 'object', 'kaltura_notify_message');
@@ -169,6 +168,62 @@ function minds_archive_page_setup() {
 				));
 		}
 	}
+	
+	/**
+	 * EMBED 
+	 */
+	// embed support
+	$item = ElggMenuItem::factory(array(
+		'name' => 'file',
+		'text' => elgg_echo('file'),
+		'priority' => 12,
+		'data' => array(
+			'options' => array(
+				'type' => 'object',
+				'subtype' => 'file',
+			),
+		),
+	));
+	elgg_register_menu_item('embed', $item);
+
+	 // embed support
+        $item = ElggMenuItem::factory(array(
+                'name' => 'image',
+                'text' => elgg_echo('image'),
+                'priority' => 11,
+                'data' => array(
+                        'options' => array(
+                                'type' => 'object',
+                                'subtype' => 'image',
+                        ),
+                ),
+        ));
+        elgg_register_menu_item('embed', $item);
+
+        // embed support
+        $item = ElggMenuItem::factory(array(
+                'name' => 'video',
+                'text' => elgg_echo('kalturavideo:label:videoaudio'),
+                'priority' => 10,
+                'data' => array(
+                        'options' => array(
+                                'type' => 'object',
+                                'subtype' => 'kaltura_video',
+                        ),
+                ),
+        ));
+        elgg_register_menu_item('embed', $item);
+
+	$item = ElggMenuItem::factory(array(
+		'name' => 'file_upload',
+		'text' => elgg_echo('minds:archive:upload'),
+		'priority' => 100,
+		'data' => array(
+			'view' => 'archive/embed_upload',
+		),
+	));
+
+	elgg_register_menu_item('embed', $item);
 }
 
 function minds_archive_page_handler($page) {
@@ -447,7 +502,8 @@ function file_get_simple_type($mimetype) {
  * @return string Relative URL
  */
 function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $params) {
-	$file = $params['entity'];
+	$entity = $params['entity'];
+	$file = $entity;
 	$size = $params['size'];
 	if (elgg_instanceof($file, 'object', 'file')) {
 
@@ -508,6 +564,9 @@ function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $param
 		$url = "mod/archive/graphics/icons/{$type}{$ext}.gif";
 		$url = elgg_trigger_plugin_hook('file:icon:url', 'override', $params, $url);
 		return $url;
+	} elseif(elgg_instanceof($entity, 'object', 'kaltura_video')) {
+	
+		return kaltura_get_thumnail($entity->kaltura_video_id, 120,120, 100);
 	}
 }
 
