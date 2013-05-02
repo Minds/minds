@@ -37,6 +37,3 @@ foreach (array_keys($metastrings) as $string_old) {
 					");
 	}
 }
-
-return $this->includeFile('bbb_api_conf.php');
-
