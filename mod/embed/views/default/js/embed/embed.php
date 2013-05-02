@@ -48,6 +48,20 @@ elgg.embed.insert = function(event) {
 		content = content.replace('/small/', '/large/');
 	}
 
+	/*
+	 * Make videos play.
+ 	 */
+	if($(this).find('.minds-archive-video')){
+		$.ajax({ url:   $(this).find('.minds-archive-video').attr('source'),
+				async: false,
+				success: function(data) {
+					content = data;
+					content = content.replace('width="515"','width="730px"');
+					content = content.replace('height="295"','height="410px"');
+				}
+		});
+	}
+
 	textArea.val(textArea.val() + content);
 	textArea.focus();
 	
