@@ -1488,10 +1488,12 @@ class ElggInstaller {
 							'mobile',
 							'minds'
 						);
-		foreach($defaults as $priority => $plugin_id){
+		foreach($defaults as $plugin_id){
 			$plugin = elgg_get_plugin_from_id($plugin_id);
-			$plugin->setPriority('last');
-			$plugin->enable();
+			if($plugin instanceof ElggPlugin){
+				$plugin->setPriority('last');
+				$plugin->enable();
+			}
 		}
 	}
 
