@@ -77,8 +77,8 @@ function minds_archive_init() {
 function minds_archive_entity_url($entity) {
 		global $CONFIG;
 		$title = str_replace(" ", "-", $entity->title);
-		$title = preg_replace("/\\.[^.\\s]{3,4}$/", "", $entity->title);
-		return elgg_get_site_url() . "archive/view/" . $entity->getGUID() . "/" . $entity->title;
+		$title = preg_replace('/\.[^.]*$/', '', $title);
+		return elgg_get_site_url() . "archive/view/" . $entity->getGUID() . "/" . $title;
 }
 
 
