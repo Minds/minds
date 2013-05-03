@@ -198,7 +198,7 @@ body{
 }
 .minds_index > .splash{
 	width:100%;
-	font-size:60px;
+	font-size:54px;
 	font-weight: normal;
 	text-align:center;
 	letter-spacing:3px;
