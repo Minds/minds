@@ -126,6 +126,7 @@ function minds_init(){
 	elgg_register_action("minds/remind", "$actionspath/minds/remind.php");
 	elgg_register_action("minds/remind/external", "$actionspath/minds/remind_external.php");
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
+	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
 	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
@@ -310,6 +311,17 @@ function minds_pagesetup(){
 			'section' => 'alt',
 		));
 	}
+	
+	// embed support
+        $item = ElggMenuItem::factory(array(
+                'name' => 'youtube',
+                'text' => elgg_echo('minds:embed:youtube'),
+                'priority' => 15,
+                'data' => array(
+                        'view' => 'embed/youtube'
+                ),
+        ));
+        elgg_register_menu_item('embed', $item);
 }
 
 function minds_upload($page){

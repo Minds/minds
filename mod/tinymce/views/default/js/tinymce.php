@@ -52,7 +52,7 @@ elgg.tinymce.init = function() {
 		theme_advanced_resizing : true,
 		theme_advanced_path : true,
 		width : "100%",
-		extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|style],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+		extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|style],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style],iframe[width|height|src|frameborder|allowfullscreen]",
 		setup : function(ed) {
 			//show the number of words
 			ed.onLoadContent.add(function(ed, o) {

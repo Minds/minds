@@ -191,6 +191,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	'blog:owner_more_posts' => 'More blogs from %s',
 	'blog:featured' => 'Featured blogs',
 	'readmore' => '→ read more',
+	'minds:embed:youtube' => 'Youtube',
 
 );
 		

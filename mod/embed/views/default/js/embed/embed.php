@@ -19,6 +19,7 @@ elgg.embed.init = function() {
 	$('.embed-section').live('click', elgg.embed.forward);
 
 	$('.elgg-form-embed').live('submit', elgg.embed.submit);
+	$('.elgg-form-embed-youtube').live('submit', elgg.embed.submityt);
 };
 
 /**
@@ -109,6 +110,58 @@ elgg.embed.submit = function(event) {
 					// incorrect response, presumably an error has been displayed
 					$('.embed-throbber').hide();
 					$('.embed-wrapper .elgg-form-embed').show();
+				}
+			}
+		},
+		error    : function(xhr, status) {
+			// @todo nothing for now
+		}
+	});
+
+	// this was bubbling up the DOM causing a submission
+	event.preventDefault();
+	event.stopPropagation();
+};
+
+/**
+ * Submit youtube embed form and insert
+ *
+ * @param {Object} event
+ * @return bool
+ */
+elgg.embed.submityt = function(event) {
+	console.log('triggered');
+	$('.embed-wrapper .elgg-form-embed-youtube').hide();
+	$('.embed-throbber').show();
+	
+	$(this).ajaxSubmit({
+		dataType : 'json',
+		data     : { 'X-Requested-With' : 'XMLHttpRequest'},
+		success  : function(response, data) {
+			if (response) {
+				if (response.system_messages) {
+					elgg.register_error(response.system_messages.error);
+					elgg.system_message(response.system_messages.success);
+				}
+				if (response.status >= 0) {
+					
+					var textAreaId = elgg.embed.textAreaId;
+					var textArea = $('#' + textAreaId);
+					
+					tinyMCE.execCommand('mceRemoveControl', false, textAreaId);
+			
+					textArea.val(textArea.val() + response.output);
+					textArea.focus();
+					
+					tinyMCE.execCommand('mceAddControl', false, textAreaId);
+
+														
+					$.fancybox.close();
+					
+				} else {
+					// incorrect response, presumably an error has been displayed
+					$('.embed-throbber').hide();
+					$('.embed-wrapper .elgg-form-embed-youtube').show();
 				}
 			}
 		},
