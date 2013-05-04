@@ -10,7 +10,7 @@ elgg.notify.init = function() {
 		//setInterval(elgg.chat.markMessageRead, 2000);
 		
 		//elgg.notify.getUnreadNotifications
-		setInterval(elgg.notify.getUnreadNotifications, 10000);
+		setInterval(elgg.notify.getUnreadNotifications, 20000);
         
         $("#notify_button").bind("click", elgg.notify.getNotifications);
 	}
