@@ -140,8 +140,8 @@ function minds_social_facebook_login(){
 				$access_token = $facebook->getAccessToken();
 			
 				// register user's access tokens
-				elgg_set_plugin_user_setting('minds_social_facebook_uid', $session['_fb']);
-				elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+				elgg_set_plugin_user_setting('minds_social_facebook_uid',  is_array($session['_fb']) ? $session['_fb']['uid'] : $session['_fb'],$guid);
+				elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token, $guid);
 				
 				//trigger the validator plugins
 				$params = array(
@@ -170,7 +170,7 @@ function minds_social_facebook_login(){
 			try {
 				if(login($users[0])){
 					$access_token = $facebook->getAccessToken();                        
-               	 			elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+               	 	elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 					
 				/*	if($_SESSION['fb_referrer']){
                         		//forward($_SESSION['fb_referrer']);
