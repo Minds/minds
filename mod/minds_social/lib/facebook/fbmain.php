@@ -80,7 +80,6 @@ function minds_social_facebook_login(){
 		'type' => 'user',
 		'plugin_user_setting_name_value_pairs' => array(
 			'minds_social_facebook_uid' => is_array($session['_fb']) ? $session['_fb']['uid'] : $session['_fb'],
-			'minds_social_facebook_access_token' => $session['_fb']['access_token'],
 		),
 		'plugin_user_setting_name_value_pairs_operator' => 'OR',
 		'limit' => 0

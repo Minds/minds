@@ -92,7 +92,7 @@ function notifications_page_handler($page) {
  *
  */
 function notifications_plugin_pagesetup() {
-	/*
+	
 	if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
 
 		$user = elgg_get_page_owner_entity();
@@ -116,7 +116,7 @@ function notifications_plugin_pagesetup() {
 			elgg_register_menu_item('page', $params);
 		}
 	}
-	*/
+
 }
 
 /**
