@@ -25,7 +25,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'archive');
 	$partnerId = elgg_get_plugin_setting('partner_id', 'archive');
 	
-	$widgetUi = elgg_get_plugin_setting('custom_kdp', 'kaltura_video');
+	$widgetUi = elgg_get_plugin_setting('custom_kdp', 'archive');
 	
 	$video_location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $entity->kaltura_video_id;
 	$video_location_secure = str_replace('http://', 'https://', $video_location);	
