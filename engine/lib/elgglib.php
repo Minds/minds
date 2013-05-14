@@ -533,7 +533,7 @@ function sanitise_filepath($path, $append_slash = TRUE) {
  */
 function system_messages($message = null, $register = "success", $count = false) {
 	global $SESSION;
-	if(!elgg_is_logged_in()){
+	if(!isset($_COOKIE['Elgg'])){
 		if(!is_null($message)){
 			if($register == 'error'){
 				$SESSION['err_msg'] = $message;
