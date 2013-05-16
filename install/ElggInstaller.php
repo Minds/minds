@@ -35,6 +35,7 @@ class ElggInstaller {
 		'database',
 		'settings',
 		'admin',
+                'minds',
 		'complete',
 		);
 
@@ -43,6 +44,7 @@ class ElggInstaller {
 		'database' => FALSE,
 		'settings' => FALSE,
 		'admin' => FALSE,
+                'minds' => FALSE,
 	);
 
 	protected $isAction = FALSE;
@@ -659,6 +661,13 @@ class ElggInstaller {
 		} else {
 			return;
 		}
+                
+                // See if minds has been connected
+                if (checkMindsConnect()) {
+                    $this->status['minds'] = TRUE;
+		} else {
+			return;
+		}
 	}
 
 	/**
@@ -706,6 +715,11 @@ class ElggInstaller {
 			forward("install.php?step=admin");
 		}
 
+                
+                if ($this->status['minds'] == FALSE) {
+                        forward("install.php?step=minds");
+                }
+                
 		// everything appears to be set up
 		forward("install.php?step=complete");
 	}
@@ -1601,4 +1615,22 @@ class ElggInstaller {
 
 		return TRUE;
 	}
+        
+        /**
+         * Minds controller
+         *
+         * @param array $vars Not used
+         *
+         * @return void
+         */
+        protected function minds($vars) {
+            $this->render('minds');
+        }
+        
+        /**
+         * Check whether this install has been connected to Minds
+         */
+        function checkMindsConnect() {
+            
+        }
 }
