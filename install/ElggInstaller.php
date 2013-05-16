@@ -70,6 +70,9 @@ class ElggInstaller {
 		set_exception_handler('_elgg_php_exception_handler');
 
 		register_translations(dirname(__FILE__) . '/languages/', TRUE);
+                
+                // Load minds translations
+                register_translations(dirname(__FILE__) . '/languages/minds/', TRUE);
 	}
 
 	/**
