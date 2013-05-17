@@ -127,6 +127,7 @@ function minds_init(){
 	elgg_register_action("minds/remind/external", "$actionspath/minds/remind_external.php");
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
+        elgg_register_action("minds/registernode","$actionspath/minds/registernode.php");
 	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
@@ -183,8 +184,21 @@ function minds_news_page_handler($page) {
  * @access private
  */
 function minds_register_page_handler($page) {
-	$base_dir = elgg_get_plugins_path().'minds/pages/account';
-	require_once("$base_dir/register.php");
+        if (isset($page[0]))
+        {
+            switch ($page[0])
+            {
+                case 'node':
+                    $base_dir = elgg_get_plugins_path().'minds/pages/account';
+                    require_once("$base_dir/node.php");
+                    break;
+            }
+        }
+        else
+        {
+            $base_dir = elgg_get_plugins_path().'minds/pages/account';
+            require_once("$base_dir/register.php");
+        }
 	return true;
 }
 
