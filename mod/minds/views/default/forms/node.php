@@ -10,7 +10,6 @@
 ?>
 <input type="hidden" name="minds_user_id" value="<?=$vars['minds_user_guid'];?>" />
 
-<h2>Domains</h2>
 <?php
     for ($n = 0; $n < 10; $n++) {
         ?>
