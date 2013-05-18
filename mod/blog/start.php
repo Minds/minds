@@ -360,8 +360,19 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				try{
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
-				$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'),0, 100);
-				$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();
+				if(strpos($item->get_permalink(), 'youtube.com/')){
+					$url = parse_url($item->get_permalink());
+					parse_str($url['query']);
+					$w = 730;
+					$h = 411;
+					$embed = '<iframe width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0"></iframe>';
+					$icon = '<img src="http://img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
+					$disclaimer = 'This blog is free & open source, however the embed may not be.';
+					$blog->description = $embed . $icon;
+				} else {
+					$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'),0, 100);
+					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();
+				}
 				$blog->owner_guid = $scraper->owner_guid;
 				$blog->license = $scraper->license;
 				$blog->access_id = 2;
