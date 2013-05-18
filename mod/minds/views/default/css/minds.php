@@ -250,7 +250,7 @@ body.news{
 	position:absolute;
 	margin:25px 0;
 	clear:both;
-	text-shadow: 0px -1px 0px rgba(0,0,0,.5);
+	color:#888;
 }
 
 .sidebar-footer .elgg-menu-footer-default{

@@ -48,7 +48,7 @@
 	 	if($loadMoreDiv){
 	 		$list = $loadMoreDiv.parent().find('.elgg-list');
 	 		//console.log('Scroll position: ' + $(window).scrollTop() + ' Page height: ' + $list.height());
-	 		if($(window).scrollTop() > $list.height() - 500){
+	 		if($(window).scrollTop() > $list.height() - 300){
 	 			if(!$loadMoreDiv.hasClass('loading')){
 	 				$loadMoreDiv.trigger('click');
 	 			}
