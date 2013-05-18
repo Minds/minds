@@ -193,6 +193,9 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	'readmore' => '→ read more',
 	'minds:embed:youtube' => 'Youtube',
 
+    
+    
+        'register:node' => 'Register multisite domains',
 );
 		
 add_translation("en", $english);
