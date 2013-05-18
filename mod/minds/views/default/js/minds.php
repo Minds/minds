@@ -31,65 +31,73 @@
 					$.removeCookie('_elgg_ss_msg', {path:'/'});
 				}
 		}
+		
+		$(document).on('click', '.load-more', minds.loadMore);
+		/**
+		 * Now make this autoscroll!
+		 */
+		$(document).on('scroll', minds.onScroll);
 	 };
 	 
 	
 	 elgg.register_hook_handler('init', 'system', minds.init);
 	 
-	 
-	 //Extend the river
-	 elgg.provide('river.extend');
-	 
-	 river.extend.init = function() {
-		 
-	
-		 
-	 };
-	 var riverOffset = 0;
-	 river.extend.trigger = function(context, offset) {
-			offset = offset || 5;
-			
-			$list = $(this).parent();
-			$('.news-show-more').html('loading...');
-			
-			riverOffset += +offset;
+	 minds.onScroll = function(){
+	 	$loadMoreDiv = $(document).find('.load-more');
+	 	//go off the loadmore button being available
+	 	if($loadMoreDiv){
+	 		$list = $loadMoreDiv.parent().find('.elgg-list');
+	 		//console.log('Scroll position: ' + $(window).scrollTop() + ' Page height: ' + $list.height());
+	 		if($(window).scrollTop() > $list.height() - 500){
+	 			if(!$loadMoreDiv.hasClass('loading')){
+	 				$loadMoreDiv.trigger('click');
+	 			}
+	 		}
+	 	}
+	 	
+	 }
+
+	 minds.loadMore = function() {
+						
+			$list = $(this).parent().find('.elgg-list');
+			$('.load-more').html('loading...');
+			$('.load-more').addClass('loading');
+						
 			var loc = location.href;
-			if(context == 'main'){
+			if(loc == elgg.get_site_url()){
 				loc = location.href + 'news/featured';
 			}
+
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {
 				path: loc,
 				items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
 							$list.hasClass('elgg-list-river') ? 'river' :
 							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
-				offset: riverOffset,
+				offset: $list.children().length + (parseInt($params.offset) || 0)
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-						
+
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				
 				if($(data).contents().length == 0){
-					$('.news-show-more').removeAttr('onclick');
-					$('.news-show-more').html('no more posts');
+					
+					$('.load-more').html('no more posts');
+					
 				} else {
+					console.log(data);
 
-					$('.news-show-more').remove();
+					$('.load-more').remove();
 					
-					$('.elgg-list.elgg-list-river.elgg-river').parent().append(data);							
+					$list.parent().append(data);							
 					
-					$('.elgg-list.elgg-list-river.elgg-river').parent().append('<div class="news-show-more" onclick="river.extend.trigger(\''+context+'\', ' + offset + ')">more</div>');
-				
-				
+					$list.parent().append('<div class="news-show-more load-more">click to load more</div>');
+					
 				}
 			});
 		 
-	 };
-	 
-	
-	 elgg.register_hook_handler('init', 'system', river.extend.init);
-	
+	 };	
      
 <?php if (FALSE) : ?>
     </script>
