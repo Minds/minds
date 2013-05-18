@@ -59,6 +59,8 @@ elgg_load_js('uiVideoInline');
 				 $images = minds_get_featured('image',4);
 				 echo '<h3>Images <a href="'.elgg_get_site_url().'photos/all">(more)</a></h3>';
 				 echo elgg_view('output/carousel', array('id'=>'images','entities'=>$images));
+				 
+				 echo elgg_view('page/elements/sidebar', $vars);
 				?>
 			</div>
 </div>
