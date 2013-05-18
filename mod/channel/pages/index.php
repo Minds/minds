@@ -19,10 +19,24 @@ $title = elgg_echo('channels');
 $options = array('type' => 'user', 'full_view' => false);
 switch ($vars['page']) {
 	case 'subscribers':
-		$content = elgg_view_entity_list($page_owner->getFriendsOf());
+		$options = array(
+			'relationship' => 'friend',
+			'relationship_guid' => $page_owner->getGUID(),
+			'inverse_relationship' => TRUE,
+			'type' => 'user',
+			'full_view' => FALSE
+		);
+		$content = elgg_list_entities_from_relationship($options);
 		break;
 	case 'subscriptions':
-		$content = elgg_view_entity_list($page_owner->getFriends());
+		$options = array(
+			'relationship' => 'friend',
+			'relationship_guid' => $page_owner->getGUID(),
+			'inverse_relationship' => FALSE,
+			'type' => 'user',
+			'full_view' => FALSE
+		);
+		$content = elgg_list_entities_from_relationship($options);
 		break;
 	case 'popular':
 		$options['relationship'] = 'friend';
