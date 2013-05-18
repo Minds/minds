@@ -92,6 +92,10 @@ if ($full) {
 		'summary' => $summary,
 		'body' => $body,
 	));
+	
+	if($entity->access_id == 2){
+		echo elgg_view('minds_social/social_footer');
+	}
 
 } else {
 	// brief view
