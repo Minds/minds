@@ -13,7 +13,11 @@
  */
 
 $album = $vars['entity'];
-
+if($album instanceof TidypicsAlbum){
+	
+} else {
+	return false;
+}
 $cover_guid = $album->getCoverImageGuid();
 if ($cover_guid) {
 	$vars['title'] = $album->getTitle();
