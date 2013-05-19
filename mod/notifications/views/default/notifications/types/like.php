@@ -38,6 +38,7 @@ try{
 			$object_url = elgg_get_site_url() . 'news/single?id=' . $notification -> object_guid;	
 		} else {
 			$object = get_entity($notification->object_guid);
+			if($object instanceof ElggObject)
 			$object_url = $object->getURL();
 		}
 		$object_title = 'your comment';

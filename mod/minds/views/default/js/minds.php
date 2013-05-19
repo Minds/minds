@@ -47,7 +47,7 @@
 	 	//go off the loadmore button being available
 	 	if($loadMoreDiv){
 	 		$list = $loadMoreDiv.parent();
-	 		if($(window).scrollTop() > $list.height() - $(window).scrollTop()){
+	 		if($(window).scrollTop() + $(window).height() > $(document).height() - 300){
 	 			if(!$loadMoreDiv.hasClass('loading')){
 	 				$loadMoreDiv.trigger('click');
 	 			}
