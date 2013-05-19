@@ -1,0 +1,13 @@
+#summary Notes about generation of the preprocessed data files
+
+===Reasoning===
+The reason for preprocessing the cachegrind files is that the structure of cachegrind files require you to parse the entire file to retrieve all information about any function. As the files become large the processing time for the file increases dramatically, and because of the stateless nature of web applications this processing would need to be done for each request. 
+
+The format of the preprocessed files are more compact and the information for any function can be reached using random access. There is no need to read the entire file. This is much faster and can therefore be done for each request.
+
+===Preprocessing Process===
+If not done carefully the processing of large cachegrind files can become very memory consuming. At the time of writing typical web server configurations only allow php to use quite small amounts of memory, typically below 8 or 16 mb.
+
+As a rule of thumb the preprocessing script should not store information, not even a single number, for each invocation of functions in memory. This type of information should be written to persistent storage as the during the parsing process. 
+
+Storing information about each function is more reasonable.

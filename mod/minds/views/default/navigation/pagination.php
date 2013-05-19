@@ -97,10 +97,9 @@ if ($current_page < $total_pages) {
 	$pages->items = array_merge($pages->items, range($current_page + 1, $last_page));
 }
 
-if(elgg_get_context() == 'news' || elgg_get_context() == 'main' ){
-echo '<div class="news-show-more" onclick="river.extend.trigger(\'' . elgg_get_context() . '\', 5)">more</div>';
-} else {
+echo '<div class="news-show-more load-more" limit="'.$limit.'" context="'.elgg_get_context().'">more</div>';
 
+ /*
 echo '<ul class="elgg-pagination">';
 
 if ($pages->prev['href']) {
@@ -134,3 +133,4 @@ if ($pages->next['href']) {
 
 echo '</ul>';
 }
+*/

@@ -7,9 +7,8 @@ $options = array(
 );
 $wallposts = elgg_get_entities($options);
 ?>
-<div id="dashboard1">
 <!-- displayes user's avatar -->
-    <?php 
+<?php 
 	$user = elgg_get_page_owner_entity();
 	$icon_url = elgg_format_url($user->getIconURL('large'));
 	$icon = elgg_view('output/img', array(
@@ -37,4 +36,3 @@ $wallposts = elgg_get_entities($options);
 </ul>
 </ul>
 </div> <!-- /dashboard_navigation -->
-</div> <!-- /dasboard1 -->

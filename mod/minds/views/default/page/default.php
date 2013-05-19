@@ -39,7 +39,7 @@ header("Content-type: text/html; charset=UTF-8");
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# video: http://ogp.me/ns/video#">
 <?php echo elgg_view('page/elements/head', $vars); ?>
 </head>
-<body>
+<body class="<?php echo $class;?>">
 <div class="elgg-page elgg-page-default <?php echo $class;?>">
 	<div class="elgg-page-messages">
 		<?php echo $messages; ?>
@@ -54,11 +54,6 @@ header("Content-type: text/html; charset=UTF-8");
 	<div class="elgg-page-body">
 		<div class="elgg-inner">
 			<?php echo $body; ?>
-		</div>
-	</div>
-	<div class="elgg-page-footer">
-		<div class="elgg-inner">
-			<?php echo $footer; ?>
 		</div>
 	</div>
 </div>

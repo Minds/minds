@@ -20,7 +20,7 @@ $options = array(
 	'inverse_relationship' => TRUE,
 	'type' => 'user',
 	'full_view' => FALSE
-);var_dump(elgg_get_entities_from_relationship($options));
+);
 $content = elgg_list_entities_from_relationship($options);
 if (!$content) {
 	$content = elgg_echo('friends:none');

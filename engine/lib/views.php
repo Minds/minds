@@ -1361,7 +1361,7 @@ function elgg_view_access_collections($owner_guid) {
 	if ($collections = get_user_access_collections($owner_guid)) {
 		foreach ($collections as $key => $collection) {
 			$collections[$key]->members = get_members_of_access_collection($collection->id, true);
-			$collections[$key]->entities = get_user_friends($owner_guid, "", 9999);
+			$collections[$key]->entities = get_user_friends($owner_guid, ELGG_ENTITIES_ANY_VALUE, 9999);
 		}
 	}
 

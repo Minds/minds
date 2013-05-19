@@ -65,6 +65,6 @@ if(!$full_view){
 		echo elgg_view('minds/ads', array('type'=>'content-foot'));
 		echo "</div>";
 	}elseif($source=='minds'){
-		forward($entity->getURL());
+		forward($url);
 	}
 }?>

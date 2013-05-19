@@ -28,20 +28,21 @@ elgg_load_js('uiVideoInline');
 
 ?>
       
-<div class="<?php echo $class; ?>">
+<div class="<?php echo $class; ?> news">
 	<?php
 		if (elgg_is_logged_in() && (elgg_get_context() == 'news')) {		
 	?>
 
-	<div class="is_riverdash_left">
+	<div class="side">
 		<?php
 			echo elgg_view('page/elements/miniprofile', $vars);
 			echo elgg_view('page/elements/friends', $vars);
 			echo elgg_view('page/elements/groups', $vars);
+			echo elgg_view('page/elements/sidebar', $vars);
 		?>
 	</div>
 
-	<div class="elgg-body is_riverdash_middle">
+	<div class="elgg-body content">
 		<?php
 		   
 		   elgg_load_js('elgg.wall');
@@ -66,19 +67,6 @@ elgg_load_js('uiVideoInline');
 				echo $vars['content'];
 			}
 
-		?>
-	</div>
-	<div class="elgg-body is_riverdash_right">
-		<?php
-			elgg_unregister_menu_item('extras','bookmark');
-			if((elgg_get_context() == 'news')) {
-				echo elgg_view('minds/elements/announcement', $vars);
-			}
-
-			echo elgg_view('page/elements/sidebar', $vars);
-			
-			//looks terrible!!		
-			//echo elgg_view('minds/ads', array('type'=>'news-side'));
 		?>
 	</div>
 	<?php 	} else { //end of elgg_is_logged_in() condition ?>

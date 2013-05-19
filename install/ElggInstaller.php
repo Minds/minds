@@ -68,6 +68,7 @@ class ElggInstaller {
 		set_exception_handler('_elgg_php_exception_handler');
 
 		register_translations(dirname(__FILE__) . '/languages/', TRUE);
+                
 	}
 
 	/**
@@ -659,6 +660,7 @@ class ElggInstaller {
 		} else {
 			return;
 		}
+                
 	}
 
 	/**
@@ -705,7 +707,7 @@ class ElggInstaller {
 		if ($this->status['admin'] == FALSE) {
 			forward("install.php?step=admin");
 		}
-
+                
 		// everything appears to be set up
 		forward("install.php?step=complete");
 	}
@@ -1601,4 +1603,5 @@ class ElggInstaller {
 
 		return TRUE;
 	}
+        
 }

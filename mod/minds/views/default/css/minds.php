@@ -31,7 +31,7 @@ body{
 	font-family: 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
  }
 
-.elgg-page.news .elgg-page-body{
+body.news{
 	background:#D2D9DF;
 }
 
@@ -241,11 +241,32 @@ body{
 .minds_index .side-block p {
 	font-size: 14px;
 }
+
+/**
+ * Sidebar Footer
+ */
+.sidebar-footer{
+	width:225px;
+	position:absolute;
+	margin:25px 0;
+	clear:both;
+	color:#888;
+	text-shadow: 0px 0px 1px #DDD;
+}
+
+.sidebar-footer .elgg-menu-footer-default{
+	text-align:left;
+}
+.elgg-menu-footer > li, .elgg-menu-footer > li > a {
+	display: inline-block;
+	color: #CCC;
+	font-size: 11px;
+}
 /******************
  ** CUSTOM RIVER **
  *****************/
-.is_riverdash_left {
-	width:210px;
+.news .side{
+	width:230px;
 	margin:15px 0 20px 0px;
 	min-height:360px;
 	float:left;
@@ -254,11 +275,15 @@ body{
     background: rgba(255, 255, 255, 0.75); 
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
+    border-radius:5px;
+    -moz-box-shadow: 0 0 3px #888;
+	-webkit-box-shadow: 0 0 3px#888;
+	box-shadow: 0 0 3px #888;
 }
-.is_riverdash_middle {
+.news .content {
 	float: right;
-	width:585px !important;
-	margin:15px;
+	width:740px !important;
+	margin:15px 0 0 15px;
 	min-height:360px;
 	float:left;
 	padding:0;
@@ -267,47 +292,31 @@ body{
 	/*border-left:2px solid #cccccc;*/
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
+    border-radius:5px;
+    -moz-box-shadow: 0 0 3px #888;
+	-webkit-box-shadow: 0 0 3px#888;
+	box-shadow: 0 0 3px #888;
 }
-.is_riverdash_middle .elgg-module-wall {
+.news .content .elgg-module-wall {
 	padding:10px;
 }
-.is_riverdash_middle .elgg-menu-filter {
+.news .content .elgg-menu-filter {
 	padding:0 10px;
 	margin:0;
 }
-.is_riverdash_middle .elgg-list-river{
+.news .content .elgg-list-river{
 	margin:0;
 	background:#FFF;
 	padding:0 10px;
 }
-.is_riverdash_middle #elgg-river-selector{
-	margin:-25px 10px;
-	width:100px;
-}
-.is_riverdash_right {
-	width:140px;
-	margin:15px 0;
-	padding: 10px;
-	min-height:360px;
-	float:left;
-	background: rgb(255, 255, 255); /* The Fallback */
-    background: rgba(255, 255, 255, 0.75); 
-	-webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-}
 
-#dashboard1 {
-	padding:5px;
-}
-.is_riverdash_left .elgg-module{
+.news .side .elgg-module{
 	border-top:2px solid #CCC;
 	background:#FFF;
 	-webkit-border-radius: 0px;
     -moz-border-radius: 0px;
+    border-radius:0;
     margin:0;
-}
-.is_riverdash_left .elgg-module .elgg-head{
-	background:transparent;
 }
 
 .is-groups-element li.elgg-menu-item-membership, .is-groups-element li.elgg-menu-item-feature{
@@ -315,14 +324,14 @@ body{
 }
 #river_avatar {
 	text-align:center;
-	margin-bottom:20px;
 	padding: 0;
 	text-align:center;
 }
 #river_avatar img{
-	width: 200px;
-	-webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
+	width: 100%;
+	-webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius:5px 5px 0 0;
 }
 #lastloggedin {
 	color:#777777;
@@ -331,7 +340,6 @@ body{
     text-align:center;
 }
 #dashboard_navigation {
-	margin-top:20px;
     width:100%;
     font-size:13px;
 }
@@ -342,7 +350,7 @@ body{
 #dashboard_navigation ul li {
 	list-style:none;
 	float:none;
-	padding:5px;
+	padding:10px;
     font-weight:bold;
     border-bottom:1px solid #cccccc;
     text-decoration:none;
@@ -353,8 +361,14 @@ body{
     font-weight:bold;
     text-decoration:none;
 }
-
-.news-show-more{
+.news .side .bootcamp{
+	padding:10px;
+	background:#FFF;
+}
+.news .side .sidebar-footer{
+	position:absolute;
+}
+.load-more{
 	width:100%;
     padding:15px 0;
     text-align:center;
@@ -367,6 +381,7 @@ body{
 .elgg-list-river{
 	border-top:0;
 }
+
 /**
  * Homepage news
  */
@@ -379,7 +394,7 @@ body{
 	-webkit-border-radius: 2px;
     -moz-border-radius: 2px;
 }
-.news-block .elgg-river-attachments .elgg-photo.large{
+.elgg-river-attachments .elgg-photo.large{
 	width:98.5%;
 }
 /* ***************************************
@@ -557,7 +572,7 @@ li.elgg-menu-item-rss{
 	float:right;
 }
 .elgg-river-attachments .elgg-photo.large{
-	width:500px;
+	width:98.5%;
 }
 
 .minds-licenses .license{
