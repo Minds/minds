@@ -36,7 +36,7 @@
 		/**
 		 * Now make this autoscroll!
 		 */
-		$(document).on('scroll', minds.onScroll);
+		$(window).on('scroll', minds.onScroll);
 	 };
 	 
 	
@@ -46,9 +46,8 @@
 	 	$loadMoreDiv = $(document).find('.load-more');
 	 	//go off the loadmore button being available
 	 	if($loadMoreDiv){
-	 		$list = $loadMoreDiv.parent().find('.elgg-list');
-	 		//console.log('Scroll position: ' + $(window).scrollTop() + ' Page height: ' + $list.height());
-	 		if($(window).scrollTop() > $list.height() - 300){
+	 		$list = $loadMoreDiv.parent();
+	 		if($(window).scrollTop() > $list.height() - $(window).scrollTop()){
 	 			if(!$loadMoreDiv.hasClass('loading')){
 	 				$loadMoreDiv.trigger('click');
 	 			}
@@ -77,7 +76,7 @@
 				offset: $list.children().length + (parseInt($params.offset) || 0)
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-
+			
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				
@@ -86,13 +85,12 @@
 					$('.load-more').html('no more posts');
 					
 				} else {
-					console.log(data);
 
 					$('.load-more').remove();
 					
-					$list.parent().append(data);							
-					
-					$list.parent().append('<div class="news-show-more load-more">click to load more</div>');
+					$list.append(data);							
+	
+					$list.append('<div class="news-show-more load-more">click to load more</div>');
 					
 				}
 			});

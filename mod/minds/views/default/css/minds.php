@@ -251,16 +251,22 @@ body.news{
 	margin:25px 0;
 	clear:both;
 	color:#888;
+	text-shadow: 0px 0px 1px #DDD;
 }
 
 .sidebar-footer .elgg-menu-footer-default{
 	text-align:left;
 }
+.elgg-menu-footer > li, .elgg-menu-footer > li > a {
+	display: inline-block;
+	color: #CCC;
+	font-size: 11px;
+}
 /******************
  ** CUSTOM RIVER **
  *****************/
 .news .side{
-	width:225px;
+	width:230px;
 	margin:15px 0 20px 0px;
 	min-height:360px;
 	float:left;
@@ -276,8 +282,8 @@ body.news{
 }
 .news .content {
 	float: right;
-	width:730px !important;
-	margin:15px;
+	width:740px !important;
+	margin:15px 0 0 15px;
 	min-height:360px;
 	float:left;
 	padding:0;
