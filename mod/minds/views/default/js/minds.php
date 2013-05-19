@@ -69,14 +69,13 @@
 
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {
-				path: loc,
 				items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
 							$list.hasClass('elgg-list-river') ? 'river' :
 							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
 				offset: $list.children().length + (parseInt($params.offset) || 0)
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-			console.log($params);
+
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				
