@@ -62,14 +62,14 @@
 			$('.load-more').html('loading...');
 			$('.load-more').addClass('loading');
 						
-			var loc = location.href;
+			var loc =  elgg.normalize_url(elgg.parse_url(location.href).path);
 			if(loc == elgg.get_site_url()){
 				loc = location.href + 'news/featured';
 			}
 
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {
-				path : elgg.normalize_url(elgg.parse_url(location.href).path), 
+				path : loc,
 				items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
 							$list.hasClass('elgg-list-river') ? 'river' :
 							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
