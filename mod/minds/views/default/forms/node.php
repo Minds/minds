@@ -16,7 +16,13 @@
     for ($n = 0; $n < 10; $n++) {
         ?>
 
-                <input type="text" name="domains[]" placeholder="e.g. foo.<?=$ROOT_DOMAIN; ?>" value="<?= $my_domains[$n];?>" /><br />
+                <p><input type="text" name="domains[]" placeholder="e.g. foo.<?=$ROOT_DOMAIN; ?>" value="<?= $my_domains[$n];?>" /> <?php
+                    if ($my_domains[$n]) {
+                        ?>
+                            <a href="http://<?=$my_domains[$n];?>/install.php" target="_blank">Run Installer...</a>
+                        <?php
+                    }
+                ?><br /></p>
 
         <?php
     }
