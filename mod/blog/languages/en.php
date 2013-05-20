@@ -75,9 +75,9 @@ View and comment on the new blog post:
 	'blog:noblogs' => 'No blog posts',
 	
 	// scraper
-	'blog:minds:scraper' => 'RSS Scrapers',
-	'blog:minds:scraper:create' => 'Create new RSS Scraper',
-	'blog:minds:scraper:menu' => 'Manage RSS Feed Scrapers',
+	'blog:minds:scraper' => 'RSS Mirror Tool',
+	'blog:minds:scraper:create' => 'Create new RSS Mirror',
+	'blog:minds:scraper:menu' => 'Manage RSS Mirrors',
 	'blog:minds:scraper:name' => 'Name',
 	'blog:minds:scraper:url' => 'Url of rss feed',
 );
