@@ -87,6 +87,7 @@ class MC_Curl
             CURLOPT_HTTPHEADER      => $headers,
             CURLOPT_SSL_VERIFYPEER  => $options['verifyssl'],
             CURLINFO_HEADER_OUT     => true,
+            CURLOPT_HTTPHEADER => array('Expect:'), // Allow minds connect to work through a squid reverse proxy
         );
 
         if (ini_get('open_basedir') == '' && ini_get('safe_mode') != 'On') {
