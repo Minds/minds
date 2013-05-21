@@ -10,16 +10,16 @@
     $domains = json_decode(file_get_contents($CONFIG->multisite_endpoint . 'webservices/get_user_domains.php?minds_user_id=' .$vars['minds_user_guid']));
     $my_domains = $domains->domains;
 ?>
-<input type="hidden" name="minds_user_id" value="<?=$vars['minds_user_guid'];?>" />
+<input type="hidden" name="minds_user_id" value="<?php echo $vars['minds_user_guid'];?>" />
 
 <?php
     for ($n = 0; $n < 10; $n++) {
         ?>
 
-                <p><input type="text" name="domains[]" placeholder="e.g. foo.<?=$ROOT_DOMAIN; ?>" value="<?= $my_domains[$n];?>" /> <?php
+                <p><input type="text" name="domains[]" placeholder="e.g. foo.<?php echo $ROOT_DOMAIN; ?>" value="<?php echo  $my_domains[$n];?>" /> <?php
                     if ($my_domains[$n]) {
                         ?>
-                            <a href="http://<?=$my_domains[$n];?>/install.php" target="_blank">Run Installer...</a>
+                            <a href="http://<?php echo $my_domains[$n];?>/install.php" target="_blank">Run Installer...</a>
                         <?php
                     }
                 ?><br /></p>

@@ -1,1 +1,1 @@
-<?= elgg_view('input/text', $vars);?>
+<?php echo  elgg_view('input/text', $vars);?>
