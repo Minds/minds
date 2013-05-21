@@ -1485,6 +1485,7 @@ class ElggInstaller {
 							'minds_comments',
 							'minds_social',
 							'minds_webservices',
+                                                        'minds_themeconfig',
 							'persona',
 							'notifications',
 							'minds_connect',
