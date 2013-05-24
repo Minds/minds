@@ -26,7 +26,7 @@ header('Content-type: text/html; charset=utf-8');
 			text-align:left;
 			margin:0;
 			padding:0;
-			background: #4690d6;
+			background: #fff;
 			font: 80%/1.5  "Lucida Grande", Verdana, sans-serif;
 			color: #333333;
 		}
@@ -40,19 +40,29 @@ header('Content-type: text/html; charset=utf-8');
 			padding:10px 40px;
 			margin-bottom:40px;
 			margin-top:20px;
-			border-right: 1px solid #666666;
-			border-bottom: 1px solid #666666;
+			border: 1px solid #666666;
+			
 		}
 		.elgg-messages-exception {
 			background:#FDFFC3;
 			display:block;
 			padding:10px;
 		}
+                #minds-logo {
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 50px;
+                    margin-top: 20px;
+                    width: 200px;
+                }
 		</style>
 
 	</head>
 	<body>
+        
+            <div id="minds-logo"><img src="<?php echo elgg_get_site_url(); ?>mod/minds/graphics/minds_logo.png" /></div>
 	<div id="elgg-wrapper">
+            
 		<h1><?php echo $vars['title']; ?></h1>
 		<?php echo $vars['body']; ?>
 	</div>

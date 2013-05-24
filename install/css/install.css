@@ -19,7 +19,7 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 
 body {
 	color: #333333;
-	background: #4690d6;
+	background: #fff;
 	font-size: 80%;
 	font-family: "Lucida Grande",Arial,Tahoma,Verdana,sans-serif;
 	text-align: left;
@@ -68,15 +68,16 @@ ul {
 	margin-top: 20px;
 }
 .elgg-page-header {
-	border-right: 1px solid #666666;
 	padding: 15px 50px 10px;
 	background: white;
+        text-align: center;
+        margin-bottom: 30px;
 }
 .elgg-page-body {
-	border-bottom: 1px solid #666666;
-	border-right: 1px solid #666666;
+	border: 1px solid #666666;
 	padding: 0 40px 5px;
 	background: white;
+        padding-top: 40px;
 }
 
 .elgg-page-body:after,
