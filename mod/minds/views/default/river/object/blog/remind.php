@@ -13,7 +13,8 @@ $image = elgg_view('output/img', array('src'=>minds_fetch_image($object->descrip
 $img_link = '<div class="rich-image-container">' . elgg_view('output/url', array('href'=>$object->getURL(), 'text'=>$image)) . '</div>';
 $readmore = elgg_view('output/url', array('href'=>$object->getURL(), 'text'=>elgg_echo('readmore'), 'class'=>'readmore'));
 
-$body = elgg_view_image_block($img_link, $excerpt . $readmore, array('class'=>'rich-content news'));
+$content = elgg_view('output/url', array('href'=>$object->getURL(), 'text' => elgg_view_title($object->title))).$excerpt . $readmore;
+$body = elgg_view_image_block($img_link, $content, array('class'=>'rich-content news'));
 
 $subject = $vars['item']->getSubjectEntity();
 $subject_link = elgg_view('output/url', array(
@@ -40,5 +41,5 @@ $blog_link = elgg_view('output/url', array(
 echo elgg_view('river/elements/layout', array(
 	'item' => $vars['item'],
 	'message' => $body,
-	'summary' => elgg_echo("river:remind:object:blog", array($subject_link, $owner_link, $blog_link)),
+	'summary' => elgg_echo("river:remind:object:blog", array($subject_link, $owner_link)),
 ));

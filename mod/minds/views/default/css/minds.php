@@ -592,6 +592,11 @@ li.elgg-menu-item-rss{
 /**
  * rich content
  */
+.rich-content{
+	overflow:hidden;
+	width:100%;
+	clear:both;
+}
 .rich-content h3{
 	font-size:30px;
 	line-height:30px;
@@ -605,13 +610,17 @@ li.elgg-menu-item-rss{
 }
 .rich-content .rich-image-container{
 	float:left;
-	margin:0 15px 10px 0;
-	width:250px;
-	height:125px;
+	margin:0 15px 0 0;
+	width:325px;
+	height:175px;
 	display:block;
 	overflow:hidden;
 	position:relative;
-	border:1px solid #DDD;
+	box-shadow:0 0 2px #888;
+}
+.elgg-widget-content .rich-content .rich-image-container{
+	width:200px;
+	height:85px;
 }
 .rich-content .rich-image{
 	position:absolute;
@@ -636,10 +645,7 @@ li.elgg-menu-item-rss{
 	margin:0;
 	width:100%;
 }
-.rich-content.news .rich-image-container{
-	margin:0 15px 0 0;
-	width:225px;
-}
+
 .rich-content.carousel .rich-image-container{
 	margin:0 15px 0 0;
 	width:100%;

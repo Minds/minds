@@ -103,11 +103,16 @@ if ($full) {
 	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
 	$img_link = '<div class="rich-image-container">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$image)) . '</div>';
 	$readmore = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_echo('readmore'), 'class'=>'readmore'));
+	
+	$content = elgg_view('output/url', array('href'=>$blog->getURL(), 'text' => elgg_view_title($blog->title))).$excerpt . $readmore;
+	$body = elgg_view_image_block($img_link, $content, array('class'=>'rich-content news'));
+
 	$params = array(
 		'entity' => $blog,
-		'metadata' => $metadata,
 		'subtitle' => $subtitle,
-		'content' => $img_link . $excerpt . $readmore,
+		'metadata' => $metadata,
+		'title' => false,
+		'content' => $body
 	);
 	$params = $params + $vars;
 	$list_body = elgg_view('object/elements/summary', $params);

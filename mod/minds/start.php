@@ -571,7 +571,7 @@ function minds_fetch_image($description, $owner_guid) {
     //$image = elgg_get_site_url() . 'mod/minds/graphics/minds_logo.png';
     if($owner_guid){
    	 	$owner = get_entity($owner_guid);
-    	$image = $owner->getIconURL('medium');
+    	$image = $owner->getIconURL('large');
 	}
   }
   

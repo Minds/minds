@@ -131,11 +131,11 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	//river
 	'river:remind:object:wall' => '%s reMinded %s\'s thought',
 	'river:remind:object:kaltura' => '%s reMinded %s\'s media: %s',
-	'river:remind:object:blog' => '%s reMinded %s\'s blog: %s',
+	'river:remind:object:blog' => '%s reMinded %s\'s blog',
 	'river:remind:api' => '%s reMinded %s',
 	
 	'river:feature:object:kaltura' => '%s\'s media %s was featured',
-	'river:feature:object:blog' => '%s\'s blog %s was featured',
+	'river:feature:object:blog' => '%s\'s blog was featured',
 	'river:feature:object:album' => '%s\'s album %s was featured',
 	'river:feature:object:image' => '%s\'s image %s was featured',
 	'river:feature:object:tidypics_batch' => '%s\'s images %s were featured',
