@@ -353,10 +353,15 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 		$feed = new SimplePie($scraper->feed_url);
 		//swamp the orderring so we do the latest, last
 		array_reverse($feed);
+		
+		//we load an array of previously collected rss ids
+		$item_ids = $scraper->item_ids;
 		foreach($feed->get_items() as $item){
 			//if the blog is newer than the scrapers last scrape - but ignore if the timestamp is greater than the time
 			// or else we get duplicates!
-			if($item->get_date('U') > $scraper->timestamp && $item->get_date('U') < time()){
+			
+			//check if the id is not in the array, if it is then skip
+			if(!in_array($item->get_id(true), $item_ids)){
 				try{
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
@@ -367,7 +372,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					$h = 411;
 					$embed = '<iframe width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0"></iframe>';
 					$icon = '<img src="http://img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
-					$disclaimer = 'This blog is free & open source, however the embed may not be.';
+					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
 					$blog->description = $embed . $icon . $disclaimer;
 				} else {
 					$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'),0, 100);
@@ -377,6 +382,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				$blog->license = $scraper->license;
 				$blog->access_id = 2;
 				$blog->status = 'published';
+				$blog->rss_item_id = $item->get_id(true);
 				$blog->save();
 				echo 'Saved a blog titled: ' . $blog->title;
 				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));
@@ -388,6 +394,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			}
 		}
 		//$scraper->timestamp = time();
+		$scraper->item_ids = $item_ids;
 		$scraper->save();
 	}
 	elgg_set_ignore_access(false);
