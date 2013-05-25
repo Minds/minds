@@ -136,3 +136,8 @@ $CONFIG->db_disable_query_cache = FALSE;
  * @global int $CONFIG->min_password_length
  */
 $CONFIG->min_password_length = 6;
+
+/**
+ * Where multisite admin endpoint is installed
+ */
+$CONFIG->multisite_endpoint = "http://minds-multi.minds.io/minds/";
