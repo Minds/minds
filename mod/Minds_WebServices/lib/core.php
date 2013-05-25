@@ -69,6 +69,8 @@ function site_river_feed($context, $limit, $offset){
 	
 	if($context == 'all'){
 		//we have not options for all
+	} elseif ($context == 'featured'){
+		$options['action_types'] = 'feature';
 	} elseif( $context == 'trending'){
 		$options['object_guids'] = thumbs_trending('guids');	
 	} elseif( $context == 'friends'){

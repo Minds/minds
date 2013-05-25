@@ -155,7 +155,7 @@ function archive_get_list($context, $type, $limit = 10, $offset = 0, $username){
 		}
 		
 		if($type == 'all'){
-			$subtypes = array('kaltura_video', 'image', 'album', 'file');
+			$subtypes = array('kaltura_video',  'album', 'file');
 		}else{
 			$subtypes = $type;
 		}
@@ -190,8 +190,16 @@ function archive_get_list($context, $type, $limit = 10, $offset = 0, $username){
 					$item['video_id'] = $single->kaltura_video_id;
 					$item['thumbnail'] = $single->kaltura_video_thumbnail;
 				} elseif($single->getSubtype() == 'album'){
-					$cover = $single->getCoverImage();
-					$item['thumbnail'] = $cover->getIconURL();
+					$image_guids = $single->getImageList();
+                        		$icons = null;
+                        		foreach($image_guids as $image_guid){
+                              			$image = get_entity($image_guid);
+                               			$img['guid'] = $image->guid;
+                          		     	$img['title'] = $image->getTitle();
+                               			$img['thumbnail'] = $image->getIconURL('large');
+                        			$icons[] = $img;
+					}
+					$item['images'] = $icons;
 				} else {
 					$item['thumbnail'] = $single->getIconURL('small');
 				}

@@ -3,7 +3,9 @@
  * Upload photos/images from the API
  * 
  * @author Mark Harding (mark@minds.com)
+ *
  */
+oauth2_pam_handler();
 gatekeeper(); 
 elgg_load_library('tidypics:upload');
 $img_river_view = elgg_get_plugin_setting('img_river_view', 'tidypics');

@@ -47,7 +47,7 @@
 	 	//go off the loadmore button being available
 	 	if($loadMoreDiv){
 	 		$list = $loadMoreDiv.parent();
-	 		if($(window).scrollTop() + $(window).height() > $(document).height() * 0.40){
+	 		if($(window).scrollTop() + $(window).height() > $(document).height() - 300){
 	 			if(!$loadMoreDiv.hasClass('loading')){
 	 				$loadMoreDiv.trigger('click');
 	 			}
@@ -66,7 +66,7 @@
 			$list = $(this).parent().find('.elgg-list:first').parent();
 			$('.load-more').html('loading...');
 			$('.load-more').addClass('loading');
-			
+					console.log($list.children());	
 			var loc =  elgg.normalize_url(elgg.parse_url(location.href).path);
 			if(loc == elgg.get_site_url()){
 				loc = location.href + 'news/featured';
@@ -75,13 +75,13 @@
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {
 				path : loc,
-				items_type: $list.find('.elgg-list').hasClass('elgg-list-entity') ? 'entity' :
-							$list.find('.elgg-list').hasClass('elgg-list-river') ? 'river' :
+				items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
+							$list.hasClass('elgg-list-river') ? 'river' :
 							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
-				offset: $list.find('.elgg-list').children().length + (parseInt($params.offset) || 0)
+				offset: $list.children().length + (parseInt($params.offset) || 0)
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-			console.log(url);
+			//console.log($params);
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				

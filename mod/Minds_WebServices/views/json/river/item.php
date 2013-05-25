@@ -52,6 +52,11 @@ if($object->type == "user" || $object->type == "group"){
 			$item->object_metadata['thumbnail'] = $object->kaltura_video_thumbnail;
 			$item->object_metadata['video_id'] = $object->kaltura_video_id;
 		}
+		if($object->getSubtype() == 'blog'){
+			$item->object_metadata['thumbnail'] = minds_fetch_image($object->description, $object->owner_guid);
+			$item->object_metadata['excerpt'] = $object->excerpt ?  $object->excerpt :  substr(strip_tags($object->description), 0, 140);
+			$item->object_metadata['description'] = str_replace('<a', '<a id="minds-link"', $object->description); 
+		}
 		//small hack for images
 		if($object->getSubtype()=='image' || $object->getSubtype()=='album'){
 			$item->object_metadata['thumbnail'] = $object->getIconURL('large');
@@ -79,6 +84,22 @@ if($object->type == "user" || $object->type == "group"){
 			$item->object_metadata['title'] = $album->getTitle();
 			$item->object_metadata['images'] = $icons;
 		}
+		//small hack for albums
+		if($object->getSubtype()=='album'){
+			$images = $object->getImageList();
+			$album = $object;
+			foreach($images as $image_guid){
+				$image = get_entity($image_guid);
+				$single['guid'] = $image->guid;
+                                $single['title'] = $image->getTitle();
+                                $single['thumbnail'] = $image->getIconURL('large');
+                                $icons[] = $single;
+			}
+			$item->object_guid = $album->guid;
+                        $item->object_metadata['guid'] = $album->guid;
+                        $item->object_metadata['title'] = $album->getTitle();
+                        $item->object_metadata['images'] = $icons;
+		}	
 }
 
 if($subject->type == "user" || $object->type == "group"){

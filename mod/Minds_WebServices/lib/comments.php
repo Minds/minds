@@ -14,8 +14,6 @@ function minds_comments_ws_get($type, $pid, $limit, $offset){
 	if($type=='any'){
 		$type = null;
 	}
-	$limit = 10;
-	$offset = 0;
 
 	$mc = new MindsComments();
 	$call = $mc -> output($type, $pid, $limit, $offset);
@@ -53,6 +51,8 @@ expose_function('comments.get',
 				array(
 						'type' => array ('type' => 'string', 'required' => false, 'default'=>'any'),
 						'pid' => array ('type' => 'string', 'required' => true),
+						'limit' => array ('type' => 'int', 'required'=> false, 'default'=>10),
+						'offset' =>  array ('type' => 'int', 'required'=> false, 'default'=>0),
 					),
 				"Get a list of comments",
 				'GET',
