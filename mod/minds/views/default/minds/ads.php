@@ -30,17 +30,13 @@ if($type == 'content-side'){
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			</script>';
 } elseif($type == 'content-foot'){
-	echo '<script type="text/javascript"><!--
-			google_ad_client = "ca-pub-9303771378013875";
-			/* Content Bottom Banner */
-			google_ad_slot = "9810862421";
-			google_ad_width = 728;
-			google_ad_height = 90;
-			//-->
-			</script>
-			<script type="text/javascript"
-			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-			</script>';
+	echo '<script id="mNCC" language="javascript">  
+			medianet_width="728";  
+			medianet_height= "90";  
+			medianet_crid="451826483";  
+		 </script> 
+		 <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CU21QO2U" language="javascript"></script>';
+			
 } elseif($type == 'news-side'){
 	echo '<div style="margin:8px;"><script type="text/javascript"><!--
 			google_ad_client = "ca-pub-9303771378013875";
