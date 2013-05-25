@@ -55,10 +55,15 @@
 	 	}
 	 	
 	 }
+	 
+	 minds.listParams = {
+	 	offset : 0,
+	 	limit : 10
+	 };
 
 	 minds.loadMore = function() {
 						
-			$list = $(this).parent().find('.elgg-list');
+			$list = $(this).parent().find('.elgg-list:first');
 			$('.load-more').html('loading...');
 			$('.load-more').addClass('loading');
 						
@@ -88,7 +93,7 @@
 
 					$('.load-more').remove();
 					
-					$list.append(data);							
+					$list.find('.elgg-list:last').append(data);							
 	
 					$list.append('<div class="news-show-more load-more">click to load more</div>');
 					
