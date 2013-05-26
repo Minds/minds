@@ -1,0 +1,222 @@
+body
+{
+  background-color: #818196;
+  font: 14px Tahoma,Arial,Helvetica,sans-serif;
+  text-align: center;
+}
+
+#wrapper
+{
+  background-image: url("img/page.png");
+  background-position: 50% 0;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  padding-top: 20px;
+}
+
+#page
+{
+  border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  background-color: white;
+  border: 1px solid black;
+  color: #4B4B57;
+  margin: 0 auto;
+  padding: 10px;
+  text-align: left;
+  width: 830px;
+  overflow: resize;
+}
+
+#top
+{
+  clear: both;
+  display: block;
+  margin-bottom: 45px;
+  border: 0px solid black;
+  padding: 5px;
+}
+
+#menu
+{
+  border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  background-color: #044A64;
+  width: 100%;
+  border: 1px solid black;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#menu ul
+{
+   background: none repeat-x scroll 0 0;
+   font-size: 15px;
+   font-weight: bold;
+   padding: 0;
+   margin: 5px;
+   color: #ffffff;
+}
+
+#menu li
+{
+    display: inline;
+    font-weight: bold;
+    list-style: none outside none;
+    padding: 10px;
+}
+
+#container
+{
+   clear: both;
+   border: 0px solid black;
+   padding: 5px;
+   overflow: hidden;
+}
+
+#menuframe
+{
+ width: 220px;
+ height: 620px;
+ float: left;
+ border: 0px solid black;
+}
+
+#left
+{
+  -moz-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  float: left;
+  border: 1px solid lightgray;
+  width: 200px;
+  height: 600px;
+  background-color: #F0EFF7;
+  padding: 8px;
+}
+
+#left a
+{
+  text-decoration:none;
+  color: #4B4B57;
+}
+
+#left a:hover
+{
+  text-decoration:underline;
+}
+
+#left ul
+{
+  margin: 0px;
+  padding: 0px;
+  list-style: none outside none;
+  border: 0px solid black;
+}
+
+#left li
+{
+  padding: 3px;
+  font-weight: bold;
+  text-align: left;
+}
+
+#left li.fat
+{
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-decoration:underline;
+}
+
+#left ul#submenu
+{
+  margin-top: 4px;
+}
+
+#left ul#submenu li
+{
+  padding: 2px;
+  font-weight: normal;
+  padding-left: 10px;
+}
+
+#content
+{
+  float: left;
+  margin-left: 20px;
+  border: 0px solid black;
+  width: 520px;
+  color: black;
+  font: 14px/1.3em Arial,Helvetica,sans-serif;
+}
+
+#right
+{
+  float: left;
+  margin-left: 55px;
+  padding: 5px;
+  padding-top: 7px;
+  border: 1px solid lightgray;
+  width: 160px;
+  color: black;
+  font: 14px/1.3em Arial,Helvetica,sans-serif;
+}
+
+#footer
+{
+  width: 100%;
+  text-align: center;
+  font: 10px/1.3em Arial,Helvetica,sans-serif;
+  margin-top: 20px;
+}
+
+h1
+{
+  font-size: 26px;
+}
+
+h3
+{
+  border: 0px solid black;
+  margin: 0px;
+}
+
+li
+{
+  padding: 4px;
+}
+
+p#code
+{
+  background-color: #FCFCFC;
+  font: 10pt courier;
+  padding: 5px;
+  width: 105%;
+  border: 1px dotted black;
+  margin-bottom: 15px;
+}
+
+ol
+{
+  padding-left: 28px; 
+  margin-left: 0px;
+}
+
+ol li
+{
+  padding-left: 0px;
+  padding-bottom: 20px;
+}
+
+#sf
+{
+  width: 100%;
+  text-align: center;
+  margin-top: 35px;
+  margin-bottom: 20px;
+}
+
+ul.changelog li
+{
+ border: 0px solid black;
+ padding-bottom: 8px;
+}

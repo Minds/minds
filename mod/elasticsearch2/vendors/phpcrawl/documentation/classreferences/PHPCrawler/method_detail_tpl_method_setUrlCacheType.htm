@@ -1,0 +1,108 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+ <title>Documentation for method: 
+PHPCrawler::setUrlCacheType()</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples(mode)
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+
+<h1 id="head">
+  <span>Method: 
+PHPCrawler::setUrlCacheType()</span>
+</h1>
+
+<h2 id="head">
+ <span><a href="overview.html"><< Back to class-overview</a></span>
+</h2>
+
+<br>
+
+
+
+
+
+<!--<?php include("google_code.php"); ?> -->
+
+<div id="docframe">
+
+<div id="section">
+
+Defines what type of cache will be internally used for caching URLs.
+</div>
+
+<div id="section">
+<b>Signature:</b>
+<p id="signature">
+  
+public setUrlCacheType($url_cache_type)
+</p>
+</div>
+
+<div id="section">
+<b>Parameters:</b>
+<p>
+<table id="param_list">
+  
+<tr><td id="paramname" width="1%"><b>$url_cache_type</b>&nbsp;</td><td width="1%"><i><i>int</i></i>&nbsp;</td><td width="*">1 -&gt; in-memory-cache (default setting)<br>                           2 -&gt; SQlite-database-cache<br><br>                           Or one of the <a href="../PHPCrawlerUrlCacheTypes/overview.html" class="inline">PHPCrawlerUrlCacheTypes</a>::URLCACHE..-constants.</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Returns:</b>
+<p>
+<table id="param_list">
+  
+<tr> <td width="1%"><i><i>bool</i></i>&nbsp;</td> <td width="*"></td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Description:</b>
+<p>
+
+  
+Currently phpcrawl is able to use a in-memory-cache or a SQlite-database-cache for<br>caching/storing found URLs internally.<br><br>The memory-cache (<a href="../PHPCrawlerUrlCacheTypes/overview.html" class="inline">PHPCrawlerUrlCacheTypes</a>::URLCACHE_MEMORY) is recommended for spidering small to medium websites.<br>It provides better performance, but the php-memory-limit may be hit when too many URLs get added to the cache.<br>This is the default-setting.<br><br>The SQlite-cache (<a href="../PHPCrawlerUrlCacheTypes/overview.html" class="inline">PHPCrawlerUrlCacheTypes</a>::URLCACHE_SQLite) is recommended for spidering huge websites.<br>URLs get cached in a SQLite-database-file, so the cache only is limited by available harddisk-space.<br>To increase performance of the SQLite-cache you may set it's location to a shared-memory device like "/dev/shm/"<br>by using the <a href="method_detail_tpl_method_setWorkingDirectory.htm" class="inline">setWorkingDirectory()</a>-method.<br><br>Example:<code>$crawler-&gt;setUrlCacheType(PHPCrawlerUrlCacheTypes::URLCACHE_SQLITE);<br>$crawler-&gt;setWorkingDirectory("/dev/shm/");</code><br><br><b>NOTE:</b> When using phpcrawl in multi-process-mode (<a href="method_detail_tpl_method_goMultiProcessed.htm" class="inline">goMultiProcessed()</a>), the cache-type is automatically set<br>to PHPCrawlerUrlCacheTypes::URLCACHE_SQLITE.
+  
+</p>
+</div>
+
+
+
+
+
+</div>
+
+
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de"  target="_parent">PhpClassView</a></div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+<head>
+  <title>PHPCrawl webcrawler library for PHP - Quickstart</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+  <div id="page">
+    
+       <div id="top">
+        <h1 style="margin: 0px; float: left;">PHPCrawl webcrawler library/framework</h1>
+      </div>
+      
+
+      <div id="container">
+        
+        <iframe id="menuframe" src="menu.html" scrolling="no" frameborder="0"></iframe>
+        
+        <div id="content">
+        <h3>Installation & Quickstart</h3><br />
+        The following steps show how to use phpcrawl:<br />
+        
+        <ol>
+          <li>
+          Unpack the phpcrawl-package somewhere. That's all you have to do for installation.
+          </li>
+          
+          <li>
+          Include the phpcrawl-mainclass to your script or project. Its located in the "libs"-path of the package.
+          
+          <p id="code">
+          <span style="color: #000000">
+          <span style="color: #007700">include(</span><span style="color: #DD0000">"libs/PHPCrawler.class.php"</span><span style="color: #007700">);
+          <br /></span>
+          </span>
+          </code>
+          </p>
+           
+          There are no other includes needed.
+          </li>
+        
+          <li>
+          Extend the phpcrawler-class and override the <a href="classreferences/PHPCrawler/method_detail_tpl_method_handleDocumentInfo.htm" target="blank">handleDocumentInfo</a>-method with your own code to process the information of every document the crawler finds on its way.
+        
+          <p id="code">
+          <span style="color: #000000">
+          <span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">MyCrawler&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">PHPCrawler
+          <br /></span><span style="color: #007700">{
+          <br />&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">handleDocumentInfo</span><span style="color: #007700">(</span><span style="color: #0000BB">PHPCrawlerDocumentInfo&nbsp;$PageInfo</span><span style="color: #007700">)
+          <br />&nbsp;&nbsp;{
+          <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Your&nbsp;code&nbsp;comes&nbsp;here!
+
+          <br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Do&nbsp;something&nbsp;with&nbsp;the&nbsp;$PageInfo-object&nbsp;that
+          <br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;contains&nbsp;all&nbsp;information&nbsp;about&nbsp;the&nbsp;currently&nbsp;
+          <br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;received&nbsp;document.
+
+          <br />
+          <br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;As&nbsp;example&nbsp;we&nbsp;just&nbsp;print&nbsp;out&nbsp;the&nbsp;URL&nbsp;of&nbsp;the&nbsp;document
+          <br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$PageInfo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">url</span><span style="color: #007700">.</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;
+
+          <br />&nbsp;&nbsp;}
+          <br />}
+          <br /></span>
+          </span>
+          </p>
+          
+          For a list of all available information about a page or file within the
+          <a href="classreferences/PHPCrawler/method_detail_tpl_method_handleDocumentInfo.htm" target="blank">handleDocumentInfo</a>-method see the
+          <a href="classreferences/PHPCrawlerDocumentInfo/overview.html" target="blank">PHPCrawlerDocumentInfo</a>-reference.
+          <br><br>
+          <i>Note to users of phpcrawl 0.7x or before: The old, overridable method "<a href="classreferences/PHPCrawler/method_detail_tpl_method_handlePageData.htm" target="blank">handlePageData()</a>", that receives the document-information as an array, still is
+             present and gets called. PHPcrawl 0.8 is fully compatible with scripts written for earlier versions.</i>
+          </li>
+        
+          <li>
+          Create an instance of that class in your script or project, define the behaviour of the crawler and start the crawling-process.
+        
+          <p id="code">
+          <span style="color: #0000BB">
+          $crawler&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MyCrawler</span><span style="color: #007700">();
+          <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setURL</span><span style="color: #007700">(</span><span style="color: #DD0000">"www.foo.com"</span><span style="color: #007700">);
+          <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addContentTypeReceiveRule</span><span style="color: #007700">(</span><span style="color: #DD0000">"#text/html#"</span><span style="color: #007700">);
+
+          <br /></span><span style="color: #FF8000">//&nbsp;...
+          <br />
+          <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">go</span><span style="color: #007700">();&nbsp;
+          <br /></span>
+          </span>
+          </p>
+          
+          For a list of all available setup-options/methods of the crawler take a look at the <a href="classreferences/PHPCrawler/overview.html" target="blank">PHPCrawler</a>-classreference.
+          </li>
+        </ol>
+        
+        </div>
+        
+        <!--
+        <?php
+        include("google_code.php");
+        ?>
+        -->
+        
+      </div>
+  
+      <div id="footer">Copyright © 2003 - 2012 Uwe Hunfeld phpcrawl@cuab.de</div>
+  </div>
+  
+</div>
+
+</body>
+</html>

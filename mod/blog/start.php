@@ -355,11 +355,15 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 		array_reverse($feed);
 		
 		//we load an array of previously collected rss ids
-		$item_ids = $scraper->item_ids;
+		$item_ids = unserialize($scraper->item_ids) == false ? array() : unserialize($scraper->item_ids);
+		var_dump($item_ids);
 		foreach($feed->get_items() as $item){
 			//if the blog is newer than the scrapers last scrape - but ignore if the timestamp is greater than the time
 			// or else we get duplicates!
-			
+			if($item->get_date('U') > $scraper->timestamp && $item->get_date('U') < time()){
+			} else {
+			continue;
+			}			
 			//check if the id is not in the array, if it is then skip
 			if(!in_array($item->get_id(true), $item_ids)){
 				try{
@@ -391,10 +395,11 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				$scraper->timestamp = $item->get_date('U');
 				}catch(Exception $e){
 				}
+				array_push($item_ids, $item->get_id(true));
 			}
 		}
 		//$scraper->timestamp = time();
-		$scraper->item_ids = $item_ids;
+		$scraper->item_ids = serialize($item_ids);
 		$scraper->save();
 	}
 	elgg_set_ignore_access(false);

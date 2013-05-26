@@ -1,0 +1,108 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+ <title>Documentation for method: 
+PHPCrawler::initChildProcess()</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples(mode)
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+
+<h1 id="head">
+  <span>Method: 
+PHPCrawler::initChildProcess()</span>
+</h1>
+
+<h2 id="head">
+ <span><a href="overview.html"><< Back to class-overview</a></span>
+</h2>
+
+<br>
+
+
+
+
+
+<!--<?php include("google_code.php"); ?> -->
+
+<div id="docframe">
+
+<div id="section">
+
+Overridable method that will be called by every used child-process just before it starts the crawling-procedure.
+</div>
+
+<div id="section">
+<b>Signature:</b>
+<p id="signature">
+  
+public initChildProcess()
+</p>
+</div>
+
+<div id="section">
+<b>Parameters:</b>
+<p>
+<table id="param_list">
+  
+<tr><td><i>No parameter-descriptions available.</i></td></td>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Returns:</b>
+<p>
+<table id="param_list">
+  
+<tr><td><i>No information</i></td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Description:</b>
+<p>
+
+  
+Every child-process of the crawler will call this method just before it starts it's crawling-loop from within it's<br>process-context.<br><br>So when using the multi-process mode "<a href="../PHPCrawlerMultiProcessModes/constant_detail_tpl_constant_MPMODE_CHILDS_EXECUTES_USERCODE.htm" class="inline">PHPCrawlerMultiProcessModes::MPMODE_CHILDS_EXECUTES_USERCODE</a>", this method<br>should be overidden and used to open any needed database-connections, file streams or other similar handles to ensure<br>that they will get opened and accessible for every used child-process.<br><br>Example:<code>class MyCrawler extends PHPCrawler <br>{<br>&nbsp; protected $mysql_link;<br><br>&nbsp; function initChildProcess()<br>&nbsp; {<br>&nbsp; &nbsp; // Open a database-connection for every used process<br>&nbsp; &nbsp; $this-&gt;mysql_link = mysql_connect("myhost", "myusername", "mypassword");<br>&nbsp; &nbsp; mysql_select_db ("mydatabasename", $this-&gt;mysql_link);<br>&nbsp; }<br><br>&nbsp; function handleDocumentInfo($PageInfo) <br>&nbsp; {<br>&nbsp; &nbsp; mysql_query("INSERT INTO urls SET url = '".$PageInfo-&gt;url."';", $this-&gt;mysql_link);<br>&nbsp; }<br>}<br><br>// Start crawler with 5 processes<br>$crawler = new MyCrawler();<br>$crawler-&gt;setURL("http://www.any-url.com");<br>$crawler-&gt;goMultiProcessed(5, PHPCrawlerMultiProcessModes::MPMODE_CHILDS_EXECUTES_USERCODE);</code>
+  
+</p>
+</div>
+
+
+
+
+
+</div>
+
+
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de"  target="_parent">PhpClassView</a></div>
+
+</div>
+
+</body>
+</html>

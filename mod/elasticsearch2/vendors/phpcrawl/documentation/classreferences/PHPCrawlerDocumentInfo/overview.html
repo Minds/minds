@@ -1,0 +1,98 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+ <title>Project Documentation / Classreference</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples()
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+  <h1>
+    <span>
+    
+
+    
+Class:
+    
+PHPCrawlerDocumentInfo
+    </span>
+  </h1>
+
+  
+
+  
+  <h2 id="head">
+  <table id="head_table">
+    
+    
+<tr><td width="1%"><b>Author:</b></td><td width="49%">-</td><td width="1%"><b>Version:</b></td><td width="49%">-</td></tr><tr><td width="1%"><b>Package:</b></td><td width="49%">phpcrawl</td><td width="1%"><b>Category:</b></td><td width="49%">-</td></tr>
+  </table>
+  </h2>
+  
+  
+<div id="section">Contains information about a page or file the crawler found and received during the crawling-process.</div>
+  
+  <div id="section">
+  <b>Description:</b>
+  <p>
+  
+-
+  </p>
+  </div>
+
+  
+
+  
+  <div id="section">
+  <b>Members:</b>
+  <p>
+
+  
+
+
+  
+
+
+  
+<table id="method_list"><tr><th colspan="3">Public Properties</th></tr><tr><td colspan="3" id="section"><b></i>URL-related information</i></b></td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_file.htm" ><nobr>file</nobr></a></td><td width="3%"><b></b></td><td width="72%">The name of the requested page or file, e.g. "page.html".</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_host.htm" ><nobr>host</nobr></a></td><td width="3%"><b></b></td><td width="72%">The host-part of the URL of the requested page or file, e.g. "www.foo.com".</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_path.htm" ><nobr>path</nobr></a></td><td width="3%"><b></b></td><td width="72%">The path in the URL of the requested page or file, e.g. "/page/".</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_port.htm" ><nobr>port</nobr></a></td><td width="3%"><b></b></td><td width="72%">The port of the URL the request was send to, e.g. 80</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_protocol.htm" ><nobr>protocol</nobr></a></td><td width="3%"><b></b></td><td width="72%">The protocol-part of the URL of the page or file, e.g. "http://"</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_query.htm" ><nobr>query</nobr></a></td><td width="3%"><b></b></td><td width="72%">The query-part of the URL of the requested page or file, e.g. "?x=y".</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_url.htm" ><nobr>url</nobr></a></td><td width="3%"><b></b></td><td width="72%">The complete, full qualified URL of the page or file, e.g. "http://www.foo.com/bar/page.html?x=y".</td></tr><tr><td colspan="3" id="section"><b></i>Content-related information</i></b></td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_bytes_received.htm" ><nobr>bytes_received</nobr></a></td><td width="3%"><b></b></td><td width="72%">The number of bytes the crawler received of the content of the document.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_content.htm" ><nobr>content</nobr></a></td><td width="3%"><b></b></td><td width="72%">The content of the requested document (html-sourcecode or content of file).</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_content_tmp_file.htm" ><nobr>content_tmp_file</nobr></a></td><td width="3%"><b></b></td><td width="72%">The temporary file to which the content was received.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_content_type.htm" ><nobr>content_type</nobr></a></td><td width="3%"><b></b></td><td width="72%">The content-type of the page or file, e.g. "text/html" or "image/gif".</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_cookies.htm" ><nobr>cookies</nobr></a></td><td width="3%"><b></b></td><td width="72%">Cookies send by the server.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_header.htm" ><nobr>header</nobr></a></td><td width="3%"><b></b></td><td width="72%">The complete HTTP-header the webserver responded with this page or file.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_http_status_code.htm" ><nobr>http_status_code</nobr></a></td><td width="3%"><b></b></td><td width="72%">The HTTP-statuscode the webserver responded for the request, e.g. 200 (OK) or 404 (file not found).</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_meta_attributes.htm" ><nobr>meta_attributes</nobr></a></td><td width="3%"><b></b></td><td width="72%">All meta-tag atteributes found in the source of the document.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_received.htm" ><nobr>received</nobr></a></td><td width="3%"><b></b></td><td width="72%">Flag indicating whether content was received from the page or file.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_received_completely.htm" ><nobr>received_completely</nobr></a></td><td width="3%"><b></b></td><td width="72%">Flag indicating whether content was completely received from the page or file.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_received_to_file.htm" ><nobr>received_to_file</nobr></a></td><td width="3%"><b></b></td><td width="72%">Will be true if the content was received into temporary file.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_received_to_memory.htm" ><nobr>received_to_memory</nobr></a></td><td width="3%"><b></b></td><td width="72%">Will be true if the content was received into local memory.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_responseHeader.htm" ><nobr>responseHeader</nobr></a></td><td width="3%"><b></b></td><td width="72%">The complete HTTP-header the webserver responded with this page or file as a PHPCrawlerResponseHeader-object.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_source.htm" ><nobr>source</nobr></a></td><td width="3%"><b></b></td><td width="72%">Same as "content", the content of the requested document.</td></tr><tr><td colspan="3" id="section"><b></i>Information about found links</i></b></td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_links_found.htm" ><nobr>links_found</nobr></a></td><td width="3%"><b></b></td><td width="72%">An numeric array containing information about all links that were found in the source of the page.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_links_found_url_descriptors.htm" ><nobr>links_found_url_descriptors</nobr></a></td><td width="3%"><b></b></td><td width="72%">An numeric array containing a PHPCrawlerURLDescriptor-object for every link that was found in the page.</td></tr><tr><td colspan="3" id="section"><b></i>Referer information</i></b></td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_referer_url.htm" ><nobr>referer_url</nobr></a></td><td width="3%"><b></b></td><td width="72%">The complete URL of the page that contained the link to this document.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_refering_link_raw.htm" ><nobr>refering_link_raw</nobr></a></td><td width="3%"><b></b></td><td width="72%">Contains the raw link as it was found in the content of the refering URL. (E.g. "../foo.html")</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_refering_linkcode.htm" ><nobr>refering_linkcode</nobr></a></td><td width="3%"><b></b></td><td width="72%">The html-sourcecode that contained the link to the current document.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_refering_linktext.htm" ><nobr>refering_linktext</nobr></a></td><td width="3%"><b></b></td><td width="72%">The linktext of the link that "linked" to this document.</td></tr><tr><td colspan="3" id="section"><b></i>Error-handling</i></b></td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_error_code.htm" ><nobr>error_code</nobr></a></td><td width="3%"><b></b></td><td width="72%">The code of the error that perhaps occured while requesting/receiving the document.
+(See PHPCrawlerRequestErrors::ERROR_... - constants)</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_error_occured.htm" ><nobr>error_occured</nobr></a></td><td width="3%"><b></b></td><td width="72%">Indicates whether an error occured while requesting/receiving the document.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_error_string.htm" ><nobr>error_string</nobr></a></td><td width="3%"><b></b></td><td width="72%">A representig, human readable string for the error that perhaps occured while requesting/receiving the document.</td></tr><tr><td colspan="3" id="section"><b></i>Benchmarks</i></b></td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_data_transfer_rate.htm" ><nobr>data_transfer_rate</nobr></a></td><td width="3%"><b></b></td><td width="72%">The average data-transferrate for this document.</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_data_transfer_time.htm" ><nobr>data_transfer_time</nobr></a></td><td width="3%"><b></b></td><td width="72%">The time it took to receive the document.</td></tr><tr><td colspan="3" id="section"><b></i>Deprecated</i></b></td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_received_completly.htm" ><nobr>received_completly</nobr></a></td><td width="3%"><b></b></td><td width="72%">Alias for received_completely, was spelled wrong in prevoius versions of phpcrawl. <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr><td colspan="3" id="section"><b></i>Other</i></b></td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_header_send.htm" ><nobr>header_send</nobr></a></td><td width="3%"><b></b></td><td width="72%">The complete HTTP-request-header the crawler sent to the server (debugging info).</td></tr><tr><td width="25%">  <a href="property_detail_tpl_property_traffic_limit_reached.htm" ><nobr>traffic_limit_reached</nobr></a></td><td width="3%"><b></b></td><td width="72%">Indicated whether the traffic-limit set by the user was reached after downloading this document.</td></tr></table><br>
+
+  
+
+
+  
+
+
+  
+
+
+  </p>
+  </div>
+  
+  
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de" target="_parent">PhpClassView</a></div>
+  
+</div>
+
+</body>
+</html>

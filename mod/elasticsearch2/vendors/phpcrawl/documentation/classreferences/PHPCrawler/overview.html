@@ -1,0 +1,99 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+ <title>Project Documentation / Classreference</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples()
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+  <h1>
+    <span>
+    
+
+    
+Class:
+    
+PHPCrawler
+    </span>
+  </h1>
+
+  
+
+  
+  <h2 id="head">
+  <table id="head_table">
+    
+    
+<tr><td width="1%"><b>Author:</b></td><td width="49%">Uwe Hunfeld (phpcrawl@cuab.de)</td><td width="1%"><b>Version:</b></td><td width="49%">0.81</td></tr><tr><td width="1%"><b>Package:</b></td><td width="49%">phpcrawl</td><td width="1%"><b>Category:</b></td><td width="49%">-</td></tr><tr><td width="1%"><b>Licence:</b></td><td width="99%" colspan="3">GPL2</td></tr>
+  </table>
+  </h2>
+  
+  
+<div id="section">PHPCrawl mainclass</div>
+  
+  <div id="section">
+  <b>Description:</b>
+  <p>
+  
+-
+  </p>
+  </div>
+
+  
+
+  
+  <div id="section">
+  <b>Members:</b>
+  <p>
+
+  
+<table id="method_list"><tr><th colspan="2">Constructor</th></tr><tr><td width="25%"><nobr><a href="method_detail_tpl_method_PHPCrawler.htm">PHPCrawler()</a></nobr></td><td width="75%">Initiates a new crawler.</td></tr></table><br>
+
+  
+<table id="method_list"><tr><th colspan="3">Public Methods</th></tr><tr><td colspan="3" id="section"><b><i>Basic settings</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_getProcessReport.htm" ><nobr>getProcessReport</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Retruns summarizing report-information about the crawling-process after it has finished.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_go.htm" ><nobr>go</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Starts the crawling process in single-process-mode.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_goMultiProcessed.htm" ><nobr>goMultiProcessed</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Starts the cralwer by using multi processes.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setFollowMode.htm" ><nobr>setFollowMode</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets the basic follow-mode of the crawler.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setPort.htm" ><nobr>setPort</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets the port to connect to for crawling the starting-url set in setUrl().</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setURL.htm" ><nobr>setURL</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets the URL of the first page the crawler should crawl (root-page).</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setUrlCacheType.htm" ><nobr>setUrlCacheType</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Defines what type of cache will be internally used for caching URLs.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setWorkingDirectory.htm" ><nobr>setWorkingDirectory</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets the working-directory the crawler should use for storing temporary data.</td></tr><tr><td colspan="3" id="section"><b><i>Filter-settings</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addContentTypeReceiveRule.htm" ><nobr>addContentTypeReceiveRule</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Adds a rule to the list of rules that decides which pages or files - regarding their content-type - should be received</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addURLFilterRule.htm" ><nobr>addURLFilterRule</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Adds a rule to the list of rules that decide which URLs found on a page should be ignored by the crawler.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addURLFollowRule.htm" ><nobr>addURLFollowRule</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Adds a rule to the list of rules that decide which URLs found on a page should be followd explicitly.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_obeyNoFollowTags.htm" ><nobr>obeyNoFollowTags</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Decides whether the crawler should obey "nofollow"-tags</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_obeyRobotsTxt.htm" ><nobr>obeyRobotsTxt</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Decides whether the crawler should parse and obey robots.txt-files.</td></tr><tr><td colspan="3" id="section"><b><i>Overridable methods / User data-processing</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_handleDocumentInfo.htm" ><nobr>handleDocumentInfo</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Override this method to get access to all information about a page or file the crawler found and received.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_handleHeaderInfo.htm" ><nobr>handleHeaderInfo</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Overridable method that will be called after the header of a document was received and BEFORE the content
+will be received.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_handlePageData.htm" ><nobr>handlePageData</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Override this method to get access to all information about a page or file the crawler found and received. <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_initChildProcess.htm" ><nobr>initChildProcess</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Overridable method that will be called by every used child-process just before it starts the crawling-procedure.</td></tr><tr><td colspan="3" id="section"><b><i>Limit-settings</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setContentSizeLimit.htm" ><nobr>setContentSizeLimit</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets the content-size-limit for content the crawler should receive from documents.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setPageLimit.htm" ><nobr>setPageLimit</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets a limit to the number of pages/files the crawler should follow.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setTrafficLimit.htm" ><nobr>setTrafficLimit</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets a limit to the number of bytes the crawler should receive alltogether during crawling-process.</td></tr><tr><td colspan="3" id="section"><b><i>Linkfinding settings</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addLinkSearchContentType.htm" ><nobr>addLinkSearchContentType</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Adds a rule to the list of rules that decide in what kind of documents the crawler
+should search for links in (regarding their content-type)</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_enableAggressiveLinkSearch.htm" ><nobr>enableAggressiveLinkSearch</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Enables or disables agressive link-searching.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setLinkExtractionTags.htm" ><nobr>setLinkExtractionTags</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets the list of html-tags the crawler should search for links in.</td></tr><tr><td colspan="3" id="section"><b><i>Process resumption</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_enableResumption.htm" ><nobr>enableResumption</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Prepares the crawler for process-resumption.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_getCrawlerId.htm" ><nobr>getCrawlerId</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Returns the unique ID of the instance of the crawler</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_resume.htm" ><nobr>resume</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Resumes the crawling-process with the given crawler-ID</td></tr><tr><td colspan="3" id="section"><b><i>Other settings</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addBasicAuthentication.htm" ><nobr>addBasicAuthentication</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Adds a basic-authentication (username and password) to the list of basic authentications that will be send with requests.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addLinkPriority.htm" ><nobr>addLinkPriority</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Adds a regular expression togehter with a priority-level to the list of rules that decide what links should be prefered.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addPostData.htm" ><nobr>addPostData</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Adds post-data together with an URL-rule to the list of post-data to send with requests.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addStreamToFileContentType.htm" ><nobr>addStreamToFileContentType</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Adds a rule to the list of rules that decides what types of content should be streamed diretly to a temporary file.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_enableCookieHandling.htm" ><nobr>enableCookieHandling</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Enables or disables cookie-handling.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setConnectionTimeout.htm" ><nobr>setConnectionTimeout</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets the timeout in seconds for connection tries to hosting webservers.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setFollowRedirects.htm" ><nobr>setFollowRedirects</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Defines whether the crawler should follow redirects sent with headers by a webserver or not.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setFollowRedirectsTillContent.htm" ><nobr>setFollowRedirectsTillContent</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Defines whether the crawler should follow HTTP-redirects until first content was found, regardless of defined filter-rules and follow-modes.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setProxy.htm" ><nobr>setProxy</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Assigns a proxy-server the crawler should use for all HTTP-Requests.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setStreamTimeout.htm" ><nobr>setStreamTimeout</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets the timeout in seconds for waiting for data on an established server-connection.</td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setUserAgentString.htm" ><nobr>setUserAgentString</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets the "User-Agent" identification-string that will be send with HTTP-requests.</td></tr><tr><td colspan="3" id="section"><b><i>Deprecated</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addFollowMatch.htm" ><nobr>addFollowMatch</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Alias for addURLFollowRule(). <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addLinkExtractionTags.htm" ><nobr>addLinkExtractionTags</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Sets the list of html-tags from which links should be extracted from. <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addNonFollowMatch.htm" ><nobr>addNonFollowMatch</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Alias for addURLFilterRule(). <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addReceiveContentType.htm" ><nobr>addReceiveContentType</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Alias for addContentTypeReceiveRule(). <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addReceiveToMemoryMatch.htm" ><nobr>addReceiveToMemoryMatch</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Has no function anymore! <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_addReceiveToTmpFileMatch.htm" ><nobr>addReceiveToTmpFileMatch</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Alias for addStreamToFileContentType(). <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_disableExtendedLinkInfo.htm" ><nobr>disableExtendedLinkInfo</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Has no function anymore. <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_getReport.htm" ><nobr>getReport</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Retruns an array with summarizing report-information after the crawling-process has finished <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setAggressiveLinkExtraction.htm" ><nobr>setAggressiveLinkExtraction</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Alias for enableAggressiveLinkSearch() <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setCookieHandling.htm" ><nobr>setCookieHandling</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Alias for enableCookieHandling() <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr><tr>   <td width="25%">   <a href="method_detail_tpl_method_setTmpFile.htm" ><nobr>setTmpFile</nobr></a>  </td>  <td width="3%"><b></b></td>  <td width="72%">Has no function anymore. <b><i style="color: #FF4D00">(deprecated!)</i></b></td></tr></table><br>
+
+  
+<table id="method_list"><tr><th colspan="3">Public Properties</th></tr><tr><td width="25%">  <a href="property_detail_tpl_property_class_version.htm" ><nobr>class_version</nobr></a></td><td width="3%"><b></b></td><td width="72%"></td></tr></table><br>
+
+  
+
+
+  
+
+
+  
+
+
+  </p>
+  </div>
+  
+  
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de" target="_parent">PhpClassView</a></div>
+  
+</div>
+
+</body>
+</html>
