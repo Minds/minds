@@ -28,7 +28,20 @@ function blog_get_page_content_read($guid = NULL) {
 		$_SESSION['last_forward_from'] = current_page_url();
 		forward('');
 	}
-
+	
+	$menu =  elgg_view_menu('entity', array(
+                'entity' => $blog,
+                'handler' => 'blog',
+                'sort_by' => 'priority',
+                'class' => 'elgg-menu-hz',
+        ));
+	$title = elgg_view_title($blog->title, array('class' => 'elgg-heading-main'));
+	$return['header'] = <<<HTML
+		<div class="elgg-head clearfix">
+			$title$menu
+		</div>
+HTML;
+	
 	$return['title'] = $blog->title;
 
 	$container = $blog->getContainerEntity();
