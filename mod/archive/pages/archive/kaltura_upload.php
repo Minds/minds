@@ -2,6 +2,8 @@
 /**
  * Contribution wizard page
  */
+ forward('archive/unavailable');
+ exit;
 elgg_set_context('upload');
 elgg_load_library('archive:kaltura');
 elgg_load_library('archive:kaltura:editor');
