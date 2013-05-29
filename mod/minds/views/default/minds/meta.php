@@ -24,7 +24,8 @@ $split = explode('/', $request);
 $siteURL = elgg_get_site_url();
 
 //if(in_array('channel', $split)){
-if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news'){
+echo elgg_get_context();
+if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news' || elgg_get_context() == 'blog'){
 	echo '<style>';
 
 	if($owner->background || $owner->text_colour || $owner->link_colour){

@@ -75,6 +75,10 @@ body.news{
 }
 .index .elgg-main{
 	overflow: visible !important;
+	border:0;
+	box-shadow:none !important;
+	-webkit-box-shadow:none !important;
+	-moz-box-shadow:none !important;
 }
 
 .elgg-menu-river li{
