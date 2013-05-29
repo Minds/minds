@@ -25,7 +25,7 @@ $siteURL = elgg_get_site_url();
 
 //if(in_array('channel', $split)){
 echo elgg_get_context();
-if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news' || elgg_get_context() == 'blog'){
+if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news' || elgg_get_context() == 'blog' || elgg_get_context() == 'archive'){
 	echo '<style>';
 
 	if($owner->background || $owner->text_colour || $owner->link_colour){
@@ -65,10 +65,17 @@ if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_ge
 	}
 	.elgg-module-widget:hover h3, .elgg-module-widget:hover{
 				background:$owner->widget_bg;
-		}
-}
-		
-	
+	}
+	.elgg-main{
+		-moz-box-shadow: 0 0 3px #888;
+		-webkit-box-shadow: 0 0 3px#888;
+		box-shadow: 0 0 3px #888;	
+	}
+	.elgg-sidebar{
+		-moz-box-shadow: 0 0 3px #888;
+		-webkit-box-shadow: 0 0 3px#888;
+		box-shadow: 0 0 3px #888;
+	}
 BODY;
 
 	}	
