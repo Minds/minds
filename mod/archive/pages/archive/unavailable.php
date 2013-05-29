@@ -14,6 +14,7 @@ $body = elgg_view_layout(	"content", array(
 												'content' => '<h1> Sorry! We are upgrading and videos are unavailable.</h1><br/> <h1>Please check back later! </h1>', 
 												'sidebar' => $sidebar, 
 												//'title' => elgg_echo('archive:all'),
+												'filter_override' => ''
 											));
 
 	// Display page
