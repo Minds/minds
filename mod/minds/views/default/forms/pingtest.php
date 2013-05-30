@@ -18,6 +18,9 @@
         <label>IP Address:</label> <?php echo $CONFIG->multisite_server_ip; ?></p>
     </div>
     
+    <br />
+    
+    
     <p>If you believe this to be a mistake, you could try <a href="http://<?php echo $vars['domain']; ?>/install.php">going there anyway...</a></p>
 </div>
 
