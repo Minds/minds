@@ -7,7 +7,7 @@
 ?>
 
 <div id="pingtest-results">
-    <p>Testing...</p>
+    <p>Testing, one moment please...</p>
 </div>
 <div id="pingtest-fail" style=display:none;>
     <h1>Problem...</h1>
