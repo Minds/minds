@@ -19,7 +19,7 @@
                 <p><input type="text" name="domains[]" placeholder="e.g. foo.<?php echo $ROOT_DOMAIN; ?>" value="<?php echo  $my_domains[$n];?>" /> <?php
                     if ($my_domains[$n]) {
                         ?>
-                            <a href="http://<?php echo $my_domains[$n];?>/install.php" target="_blank">Run Installer...</a>
+                    <a href="<?php echo elgg_get_site_url();?>register/testping?domain=<?php echo urlencode($my_domains[$n]);?>" target="_blank">Go to site...</a>
                         <?php
                     }
                 ?><br /></p>

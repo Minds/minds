@@ -192,6 +192,10 @@ function minds_register_page_handler($page) {
                     $base_dir = elgg_get_plugins_path().'minds/pages/account';
                     require_once("$base_dir/node.php");
                     break;
+                case 'testping':
+                    $base_dir = elgg_get_plugins_path().'minds/pages/account';
+                    require_once("$base_dir/testping.php");
+                    break;
             }
         }
         else
