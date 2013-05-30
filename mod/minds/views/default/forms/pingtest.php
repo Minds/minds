@@ -11,7 +11,7 @@
 </div>
 <div id="pingtest-fail" style=display:none;>
     <h1>Problem...</h1>
-    <p>Unfortunately your new minds node (<?php echo $vars['domain']; ?>) could not be reached. If you are using a custom domain, this may be that you need to modify your DNS settings.</p>
+    <p>Unfortunately your new minds node (<?php echo $vars['domain']; ?>) could not be reached. If you are using a custom domain, it may be that you need to modify your DNS settings.</p>
     <h2>DNS details</h2>
     <div class="dns">
         <p><label>Domain:</label> <?php echo $vars['domain']; ?><br />
