@@ -25,6 +25,12 @@
 </div>
 
 <script>
+
+    // Change message after a period of time
+    setTimeout(function() {
+          $('#pingtest-results').html('<p>Sorry, the test timed out trying to reach <?php echo $vars['domain'];?>. You could try <a href="http://<?php echo $vars['domain']; ?>/install.php">going there anyway...</a></p>');
+    }, 10000);
+
     $(document).ready(function(){
         // Use YQL to bypass cross site restrictions, there is possibly a better way...
         $.getJSON("http://query.yahooapis.com/v1/public/yql?"+
