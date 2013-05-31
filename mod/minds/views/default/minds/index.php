@@ -47,7 +47,7 @@ elgg_load_js('uiVideoInline');
         
         <div class="option right">
             <div class="signup-button-row">
-                <div class="signup-button launch-node elgg-button"><a href="<?php echo elgg_get_site_url(); ?>register/network/">Launch A Network</a></div>
+                <div class="signup-button launch-node elgg-button"><a href="<?php echo elgg_get_site_url(); ?>register/node/">Launch A Network</a></div>
             </div>
             
             <div class="video">VIDEO HERE</div>

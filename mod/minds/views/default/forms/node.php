@@ -1,31 +1,22 @@
 <?php
 
-//TODO: Validation
-
     global $CONFIG;
     
     $ROOT_DOMAIN = 'minds.com';
     
-    // Should probably cache this.
-    $domains = json_decode(file_get_contents($CONFIG->multisite_endpoint . 'webservices/get_user_domains.php?minds_user_id=' .$vars['minds_user_guid']));
-    $my_domains = $domains->domains;
+    
 ?>
-<input type="hidden" name="minds_user_id" value="<?php echo $vars['minds_user_guid'];?>" />
-
-<?php
-    for ($n = 0; $n < 10; $n++) {
-        ?>
-
-                <p><input type="text" name="domains[]" placeholder="e.g. foo.<?php echo $ROOT_DOMAIN; ?>" value="<?php echo  $my_domains[$n];?>" /> <?php
-                    if ($my_domains[$n]) {
-                        ?>
-                    <a href="<?php echo elgg_get_site_url();?>register/testping?domain=<?php echo urlencode($my_domains[$n]);?>" target="_blank">Go to site...</a>
-                        <?php
-                    }
-                ?><br /></p>
-
-        <?php
-    }
-?>
-
-<input type="submit" value="Save" />
+<div class="node-signup">
+    
+    <div class="node">
+        <input id="node" type="text" name="domain_at_minds" placeholder="yournetwork" /> .<?php echo $ROOT_DOMAIN; ?>
+    </div>
+    
+    <div class="blurb-or">...or use your own domain...</div>
+    
+    <div class="full-domain">
+        <input id="full-domain" type="text" name="my_domain" placeholder="your.domain.com" />
+    </div>
+    
+    <input type="submit" value="Save" />
+</div>

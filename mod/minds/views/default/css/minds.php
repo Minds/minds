@@ -800,3 +800,28 @@ div.signup-options .left {
 div.signup-options .right {
     float: right;
 }
+
+div.node-signup {
+    margin-top: 30px;
+    
+}
+
+div.node-signup div.node {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+div.node-signup div.blurb-or {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+div.node-signup div.node input {
+    width: 85%;
+}
+
+div.node-signup div.full-domain {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
