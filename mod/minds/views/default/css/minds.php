@@ -759,3 +759,44 @@ li.elgg-menu-item-rss{
 #hz_carousel .pagination a span {
 	display: none;
 }
+
+
+
+div.signup-options {
+
+    margin-top: 20px;
+}
+
+div.signup-options div.signup-button-row {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+div.signup-options div.signup-button  {
+    margin: 10px;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.signup-options div.video {
+    height: 200px;
+    width: 300px;
+    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #000;
+}
+
+
+div.signup-options div.option {
+    width: 400px;
+}
+
+div.signup-options .left {
+    float: left;
+}
+
+div.signup-options .right {
+    float: right;
+}

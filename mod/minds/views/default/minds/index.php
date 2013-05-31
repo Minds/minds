@@ -22,6 +22,51 @@ elgg_load_js('uiVideoInline');
     <div class='splash'>
 		Free & Open Source Social Media
 	</div>
+    
+    
+    <div class="signup-options">
+        <div class="option left">
+            <div class="signup-button-row">
+                <div class="signup-button launch-channel elgg-button"><a href="<?php echo elgg_get_site_url(); ?>register/">Launch A Channel</a></div>
+            </div>
+            
+            <div class="video">VIDEO HERE</div>
+            
+            <div class="blurb">
+                <ul>
+                    <li>Forever Free</li>
+                    <li>Minds.com/Yourbrand</li>
+                    <li>Guarantee Frontpage Feature</li>
+                    <li>Run Your Own Ads</li>
+                    <li>Record Video, Music, Images, Files
+                    Video Conference. Blogs. Events
+                    Market, Messages, RSS, News Feed</li>	
+                </ul>
+            </div>
+        </div>
+        
+        <div class="option right">
+            <div class="signup-button-row">
+                <div class="signup-button launch-node elgg-button"><a href="<?php echo elgg_get_site_url(); ?>register/network/">Launch A Network</a></div>
+            </div>
+            
+            <div class="video">VIDEO HERE</div>
+            
+            <div class="blurb">
+                <ul>
+                    <li>Imagine This Entire Site With Your Brand!</li>
+                    <li>Free To 100 Channels Or Self-Host It!</li>
+                    <li>Yourbrand.minds.com Or Your Own Domain</li>
+                    <li>Enterprise Mobile Apps For Android & iOS</li>
+                    <li>Run Your Own Ads and API</li>
+                    <li>Protect Your Fans</li>
+                    <li>Cross-Post To All Of Your Social Networks</li>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    
+    
 		<div class='block'>
 			<div class='news-block'>
 				<h2>Featured News</h2>
