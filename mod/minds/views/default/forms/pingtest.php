@@ -7,7 +7,7 @@
 ?>
 
 <div id="pingtest-results">
-    <p>Testing, one moment please...</p>
+    <p>Testing <a href="http://<?php echo $vars['domain']; ?>/install.php"><?php echo $vars['domain']; ?></a>, one moment please...</p>
 </div>
 <div id="pingtest-fail" style=display:none;>
     <h1>Problem...</h1>
