@@ -16,7 +16,7 @@
     <div class="blurb-or">...then enter your network name...</div>
     
     <div class="node">
-        <input id="node" type="text" name="domain_at_minds" placeholder="yournetwork" /> .<?php echo $ROOT_DOMAIN; ?>
+        <input id="node" type="text" name="domain_at_minds" placeholder="yournetwork" /> <?php echo $ROOT_DOMAIN; ?>
     </div>
     
     <div class="blurb-or">...or use your own domain...</div>
