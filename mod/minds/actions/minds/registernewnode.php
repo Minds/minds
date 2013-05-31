@@ -57,6 +57,8 @@ try {
         $results = json_decode(file_get_contents($CONFIG->multisite_endpoint . 'webservices/add_domain.php?domain=' . $domain . '&minds_user_id=' . $minds_user_id));
         if (!$results)
             throw new Exception("Minds multisite could not be reached while registering your domain, please try again later");
+        if (!$results->new_domain_id)
+            throw new Exception("Error creating database for the new minds node");
         if (!$results->success)
             throw new Exception($results->message);
 
