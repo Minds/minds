@@ -8,8 +8,7 @@ $title = elgg_echo("register:node");
 $content = elgg_view_title($title);
 
 // Display original form for logged in users
-//if ($user) {
-if (!$user) {
+if ($user) {
 
     // create the registration url - including switching to https if configured
     $register_url = elgg_get_site_url() . 'action/registernode';
