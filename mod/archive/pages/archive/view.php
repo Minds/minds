@@ -18,9 +18,7 @@ $title = $entity->title;
 $description = strip_tags($videopost->description);
 
 if($entity->getSubtype() == 'kaltura_video'){
-	
-	forward('archive/unavailable');
-	
+		
 	elgg_load_library('archive:kaltura');
 	
 	//set the tags
