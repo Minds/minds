@@ -25,9 +25,11 @@ try {
         // Check whether node exists
         $exists = json_decode(file_get_contents($CONFIG->multisite_endpoint . 'webservices/get_domain_exists.php?domain=' . $domain));
         
-        if (!$exists)
+        if (!$exists) 
             throw new Exception("Minds multisite could not be reached, please try again later");
-
+        if (!$exists->success)
+            throw new Exception($exists->message);
+        
         if ($exists->exists == true)
             throw new Exception("Sorry, domain $domain has already been registered"); // Exists
 
