@@ -806,6 +806,8 @@ div.node-signup {
     
 }
 
+div.node-signup div.email, 
+div.node-signup div.full-domain,
 div.node-signup div.node {
     margin-top: 25px;
     margin-bottom: 25px;
@@ -819,9 +821,4 @@ div.node-signup div.blurb-or {
 
 div.node-signup div.node input {
     width: 85%;
-}
-
-div.node-signup div.full-domain {
-    margin-top: 25px;
-    margin-bottom: 25px;
 }
