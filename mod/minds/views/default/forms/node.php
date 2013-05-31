@@ -2,7 +2,7 @@
 
     global $CONFIG;
     
-    $ROOT_DOMAIN = 'minds.com';
+    $ROOT_DOMAIN = $CONFIG->minds_multisite_root_domain;
     
     
 ?>

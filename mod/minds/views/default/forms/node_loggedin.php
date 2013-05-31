@@ -4,7 +4,7 @@
 
     global $CONFIG;
     
-    $ROOT_DOMAIN = 'minds.com';
+    $ROOT_DOMAIN = $CONFIG->minds_multisite_root_domain;
     
     // Should probably cache this.
     $domains = json_decode(file_get_contents($CONFIG->multisite_endpoint . 'webservices/get_user_domains.php?minds_user_id=' .$vars['minds_user_guid']));
