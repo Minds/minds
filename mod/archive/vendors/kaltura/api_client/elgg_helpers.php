@@ -544,13 +544,13 @@ function kaltura_view_select_privacity($video_id,$access_id,$group_mode=false,$c
 	return $ret;
 }
 
-function kaltura_get_thumnail($entry_id, $width=100, $height=100, $quality=100, $vid_sec = 2){
-	$ob = kaltura_get_entity($entry_id);
-	if($ob->thumbnail_sec){
-		$vid_sec = $ob->thumbnail_sec;
+function kaltura_get_thumnail($entry_id, $width=100, $height=100, $quality=100, $vid_sec = 0){
+	//$ob = kaltura_get_entity($entry_id);
+	if($vid_sec == 0){
+		$vid_sec = 3;
 	}
 	if(elgg_get_site_url() == 'http://www.minds.com/'){
-		$kaltura_server = 'http://thumbnails.minds.tv';
+		$kaltura_server = 'http://dladfude8tdj2.cloudfront.net';
 	} else {
 		$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'archive');
 	}
