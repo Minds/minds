@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+<head>
+  <title>PHPCrawl webcrawler library for PHP - Requirements</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+  <div id="page">
+    
+      <div id="top">
+        <h1 style="margin: 0px; float: left;">PHPCrawl webcrawler library/framework</h1>
+      </div>
+      
+
+      <div id="container">
+        
+        <iframe id="menuframe" src="menu.html" scrolling="no" frameborder="0"></iframe>
+        
+        <div id="content">
+        <h3>Requirements</h3><br />
+        At least the following requirements are necessary to run phpcrawl (v 0.8) in basic <b>single-process-mode</b>:
+        <ul>
+        <li>PHP 5 or later version</li>
+        <li>PHP with <a href="http://php.net/manual/en/book.openssl.php">OpenSSL-support</a> for SSL-connections (https).<br>
+            Not necessary for http-connects.</li>
+        </ul>
+        
+        In order to run phpcrawl in <b>multi-process-mode</b>, some additional requirements are needed:
+        <ul>
+        <li>The multi-process mode only works on unix-based systems (linux)</li>
+        <li>Scripts using the crawler in multi-process-mode have to be run from the commandline (PHP cli)</li>
+        <li>The <a href="http://php.net/manual/en/pcntl.installation.php">PCNTL-extension</a> for php (process control) has to be installed and activated.</li>
+        <li>The <a href="http://php.net/manual/en/sem.installation.php">SEMAPHORE-extension</a> for php has to be installed and activated.</li>
+        <li>The <a href="http://de.php.net/manual/en/posix.installation.php">POSIX-extension</a> for php has to be installed and activated.</li>
+        <li>The <a href="http://de2.php.net/manual/en/pdo.installation.php">PDO-extension</a> together with the SQLite-driver (PDO_SQLITE) has to be installed and activated.
+        </ul>
+        </div>
+        
+        <!--
+        <?php
+        include("google_code.php");
+        ?>
+        -->
+        
+      </div>
+  
+      <div id="footer">Copyright © 2003 - 2012 Uwe Hunfeld phpcrawl@cuab.de</div>
+  </div>
+  
+</div>
+
+</body>
+</html>

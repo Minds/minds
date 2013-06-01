@@ -2,6 +2,7 @@
 /**
  * Contribution wizard page
  */
+
 elgg_set_context('upload');
 elgg_load_library('archive:kaltura');
 elgg_load_library('archive:kaltura:editor');
