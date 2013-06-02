@@ -339,6 +339,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	elgg_set_context('scraper');
 	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
+	$i = 0;
 	foreach($scrapers as $scraper){
 		//if the site was scraped in the last 15 mins then skip
 		echo "loading $scraper->title \n";
@@ -357,13 +358,14 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 		//we load an array of previously collected rss ids
 		$item_ids = unserialize($scraper->item_ids) == false ? array() : unserialize($scraper->item_ids);
 		var_dump($item_ids);
+		$n = 0;
 		foreach($feed->get_items() as $item){
 			//if the blog is newer than the scrapers last scrape - but ignore if the timestamp is greater than the time
 			// or else we get duplicates!
 			if($item->get_date('U') > $scraper->timestamp && $item->get_date('U') < time()){
 			} else {
 			continue;
-			}			
+			}
 			//check if the id is not in the array, if it is then skip
 			if(!in_array($item->get_id(true), $item_ids)){
 				try{
@@ -392,15 +394,18 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));
 				
 				//make timestamp of last blog so we don't have timezone issues...
-				$scraper->timestamp = $item->get_date('U');
+				//$scraper->timestamp = $item->get_date('U');
 				}catch(Exception $e){
 				}
 				array_push($item_ids, $item->get_id(true));
+				$n++;
 			}
 		}
 		//$scraper->timestamp = time();
-		$scraper->item_ids = serialize($item_ids);
-		$scraper->save();
+		if($n != 0){
+			$scraper->item_ids = serialize($item_ids);
+			$scraper->save();
+		}	
 	}
 	elgg_set_ignore_access(false);
 	return $return_value;	
