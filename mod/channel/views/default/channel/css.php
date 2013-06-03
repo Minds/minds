@@ -213,6 +213,7 @@
 }
 .elgg-menu-channel-elements.owner_block{
 	margin-top:-30px;
+	width:50px;
 }
 .elgg-menu-channel-elements{
 	float:right;

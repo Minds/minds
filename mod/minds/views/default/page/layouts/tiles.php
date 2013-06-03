@@ -40,10 +40,12 @@ $params = $vars;
 $params['content'] = $footer_content;
 $footer = elgg_view('page/layouts/content/footer', $params);
 
-$body = $header . $filter . $content . $footer;
+$body = $content . $footer;
 
 $params = array(
+	'header' =>  $header . $filter,
 	'content' => $body,
+	'class' => 'tiles',
 );
 if (isset($vars['class'])) {
 	$params['class'] = $vars['class'];

@@ -122,7 +122,7 @@
 	TOPBAR MENU
 *************************************** */
 .elgg-menu-topbar {
-	margin:8px 0;
+	margin:0;
 	float: left;
 }
 
@@ -175,12 +175,13 @@
 *************************************** */
 .elgg-menu-site {
 	z-index: 1;
-    margin:8px 0;
+    margin:0;
+    clear:left;
 }
 
 .elgg-menu-site > li > a {
 	font-weight: bold;
-	padding: 3px 13px 0px 13px;
+	padding: 3px 8px 0px;
 	height: 20px;
 }
 
@@ -189,10 +190,6 @@
 }
 
 .elgg-menu-site-default {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	height: 23px;
 }
 
 .elgg-menu-site-default > li {
@@ -293,44 +290,26 @@
 	FILTER MENU
 *************************************** */
 .elgg-menu-filter {
-	border-bottom: 2px solid #ccc;
 	display: table;
-	width: 100%;
+	width: auto;
 }
 .elgg-menu-filter > li {
 	float: left;
-	border: 2px solid #ccc;
-	border-bottom: 0;
-	background: #eee;
-	margin: 0 0 0 10px;
-	
-	-webkit-border-radius: 5px 5px 0 0;
-	-moz-border-radius: 5px 5px 0 0;
-	border-radius: 5px 5px 0 0;
-}
-.elgg-menu-filter > li:hover {
-	background: #dedede;
+
+	font-size:16px;
 }
 .elgg-menu-filter > li > a {
 	text-decoration: none;
 	display: block;
-	padding: 3px 10px 0;
-	text-align: center;
-	height: 21px;
-	color: #999;
+	padding: 3px 25px 0 0;
+	color:#333;
 }
 .elgg-menu-filter > li > a:hover {
-	background: #dedede;
-	color: #999;
+	color: #4690D6;
 }
-.elgg-menu-filter > .elgg-state-selected {
-	border-color: #ccc;
-	background: white;
-}
+
 .elgg-menu-filter > .elgg-state-selected > a {
-	position: relative;
-	top: 2px;
-	background: white;
+	color:#4690D6;
 }
 
 /* ***************************************

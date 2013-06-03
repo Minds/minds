@@ -132,17 +132,13 @@ if($full){
 	$params = $params + $vars;
 	$summary = elgg_view('object/elements/summary', $params);
 	
-	$icon = elgg_view('output/img', array(
-				'src' => kaltura_get_thumnail($entity->kaltura_video_id, 120, 68, 100, $entity->thumbnail_sec),
-				'class' => 'elgg-photo',
-				'title' => $entity->title,
-				'alt' => $entity->title,
-				'width'=>'120px',
-				'height' => '68px'
-		));
-	$icon = elgg_view('output/url', array(
-			'text' => $icon,
-			'href' => $entity->getURL()
-		));
-	echo elgg_view_image_block($icon, $summary);
+	$image = elgg_view('output/img', array('src'=>kaltura_get_thumnail($entity->kaltura_video_id, 120, 68, 100, $entity->thumbnail_sec), 'class'=>'rich-image'));
+	$title = elgg_view('output/url', array('href'=>$entity->getURL(), 'text'=>elgg_view_title($entity->title)));
+	$extras = '<span class="extras"> <p class="time">'. $date . '</p>' . $menu .'</span>';
+	
+	$body = '<span class="info">' . $title . $extras . '<span>';
+	
+	$content = $image . $body;
+	echo $content;
+
 }

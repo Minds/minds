@@ -50,11 +50,9 @@ header("Content-type: text/html; charset=UTF-8");
 			<?php echo $topbar; ?>
 		</div>
 	</div>
-	
+
 	<div class="elgg-page-body">
-		<div class="elgg-inner">
 			<?php echo $body; ?>
-		</div>
 	</div>
 </div>
 <?php echo elgg_view('page/elements/foot'); ?>

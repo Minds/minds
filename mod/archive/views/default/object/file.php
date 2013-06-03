@@ -89,26 +89,12 @@ if ($full) {
 	echo "<p class='subtitle'>$owner_link $date</p>";
 	echo '</div>';
 } else {
-	$icon = elgg_view('output/img', array(
-		'src' => $file->getIconURL('medium'),
-		'class' => 'elgg-photo',
-		'title' => $file->title,
-		'alt' => $file->title,
-		'width'=>'120px'
-	));
-	$icon = elgg_view('output/url', array(
-		'text' => $icon,
-		'href' => $file->getURL()
-	));
-	$params = array(
-		'entity' => $file,
-		'metadata' => $metadata,
-		'subtitle' => $subtitle,
-		'tags' => $tags,
-		'content' => $excerpt,
-	);
-	$params = $params + $vars;
-	$list_body = elgg_view('object/elements/summary', $params);
-
-	echo elgg_view_image_block($icon, $list_body);
+	$image = elgg_view('output/img', array('src'=>$file->getIconURL('large'), 'class'=>'rich-image'));
+	$title = elgg_view('output/url', array('href'=>$file->getURL(), 'text'=>elgg_view_title($file->title)));
+	$extras = '<span class="extras"> <p class="time">'. $date . '</p>' . $metadata .'</span>';
+	
+	$body = '<span class="info">' . $title . $extras . '<span>';
+	
+	$content = $image . $body;
+	echo $content;
 }

@@ -30,7 +30,7 @@ $sidebar = elgg_view('archive/sidebar');
 		global $CONFIG;
 		$area3 = elgg_view('kaltura/categorylist',array('baseurl' => $CONFIG->wwwroot . 'search/?subtype=kaltura_video&tagtype=universal_categories&tag=','subtype' => 'kaltura_video'));
 */
-$body = elgg_view_layout(	"content", array(
+$body = elgg_view_layout(	"tiles", array(
 												'content' => $content, 
 												'sidebar' => $sidebar, 
 												'title' => elgg_echo('archive:all'),

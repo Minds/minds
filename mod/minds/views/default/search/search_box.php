@@ -14,7 +14,7 @@ if (array_key_exists('value', $vars)) {
 	$value = elgg_echo('search');
 }
 
-$class = "elgg-search";
+$class = "minds-search";
 if (isset($vars['class'])) {
 	$class = "$class {$vars['class']}";
 }
@@ -38,8 +38,8 @@ $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 <form class="<?php echo $class; ?>" action="<?php echo elgg_get_site_url(); ?>search" method="get">
 	<fieldset>
 		<!--<input type="text" class="search-input" size="21" name="q" value="<?php echo elgg_echo('search'); ?>" onblur="if (this.value=='') { this.value='<?php echo elgg_echo('search'); ?>' }" onfocus="if (this.value=='<?php echo elgg_echo('search'); ?>') { this.value='' };" />-->
-		<?php echo elgg_view('input/autocomplete', array('name'=> 'q', 'class'=>'search-input', 'placeholder'=> elgg_echo('search'), 'match_on' => 'users')); ?>
+		<?php echo elgg_view('input/text', array('name'=> 'q', 'placeholder'=> elgg_echo('search'))); ?>
 		<input type="hidden" name="search_type" value="all" />
-		<input type="submit" value="<?php echo elgg_echo('search:go'); ?>" class="search-submit-button" />
+		<input type="submit" value="<?php echo elgg_echo('search:go'); ?>" class="submit" />
 	</fieldset>
 </form>

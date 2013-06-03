@@ -5,13 +5,35 @@
  * @package Minds
  * @author Kramnorth (Mark Harding)
  *
+ * 
+ * Free & Open Source Social Media
  */
-$params = array('content'=> elgg_view('minds/index'), 'class'=>'index');
-$body = elgg_view_layout('one_column', $params);
 
-elgg_unregister_menu_item('footer', 'report_this');
+$limit = get_input('limit', 24);
+$offset = get_input('offset', 0);
 
-elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
+$entities = minds_get_featured('', $limit); 
+
+$title = elgg_view_title('Free & Open Source Social Media');
+$buttons = elgg_view('output/url', array('href'=>elgg_get_site_url().'register', 'text'=>elgg_echo('register'), 'class'=>'elgg-button elgg-button-action'));
+$buttons .= elgg_view('output/url', array('href'=>elgg_get_site_url().'register/node', 'text'=>elgg_echo('register:node'), 'class'=>'elgg-button elgg-button-action'));
+
+$header = <<<HTML
+<div class="elgg-head clearfix">
+	$title
+	<h3>Minds is a universal network to search, create and share free information. Everything is free & open source, even our code!</h3>
+	<div class="front-page-buttons">
+		$buttons
+	</div>
+</div>
+HTML;
+
+$params = array(	'content'=> elgg_view_entity_list($entities, $vars, $offset, $limit, false, false, true), 
+					'header'=> $header,
+					'filter' => false
+					);
+
+$body = elgg_view_layout('tiles', $params);
 
 echo elgg_view_page('', $body);
 

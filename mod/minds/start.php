@@ -236,25 +236,6 @@ function minds_pagesetup(){
 	elgg_unregister_menu_item('topbar', 'elgg_logo');
 	elgg_unregister_menu_item('topbar', 'administration');
 	elgg_unregister_menu_item('topbar', 'friends');
-	
-	if(elgg_get_context()!='main')	{
-		elgg_register_menu_item('topbar', array(
-			'name' => 'search',
-			'href' => false,
-			'text' => elgg_view('minds_search/header'),
-			'priority' => 1,
-			//'section' => 'alt',
-		));
-	
-		elgg_register_menu_item('topbar', array(
-			'name' => 'minds_logo',
-			'href' => elgg_get_site_url(),
-			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds/graphics/minds_logo_transparent.png\' class=\'minds_logo\'>',
-			'priority' => 0
-		));
-	}
-	
-	//rename activity news	
 	elgg_unregister_menu_item('site', 'activity');
 	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');

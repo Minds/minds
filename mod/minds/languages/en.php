@@ -12,7 +12,7 @@ $english = array(
 	//login
 	'login' => 'Enter',
 	'logout' => 'Exit',
-	'register' => 'Sign up',
+	'register' => 'Create a channel',
 	'register:early' => 'Request Early Access',
 	
 	'post' => 'Post',
@@ -195,7 +195,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 
     
     
-        'register:node' => 'Register multisite domains',
+        'register:node' => 'Build a network',
         "register:node:testping" => 'Multisite node DNS Test',
 );
 		

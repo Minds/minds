@@ -20,10 +20,16 @@ elgg_register_event_handler('init', 'system', 'blog_init');
 function blog_init() {
 
 	elgg_register_library('elgg:blog', elgg_get_plugins_path() . 'blog/lib/blog.php');
-
-	// add a site navigation item
-	$item = new ElggMenuItem('blog', elgg_echo('blog:blogs'), 'blog/all');
-	elgg_register_menu_item('site', $item);
+	
+	// menus
+	elgg_register_menu_item('site', array(
+		'name' => 'blog',
+		'text' => '&#59396;',
+		'href' => 'blog/all',
+		'class' => 'entypo',
+		'title' => elgg_echo('blog:blogs')
+	));
+	
 
 	elgg_register_event_handler('upgrade', 'upgrade', 'blog_run_upgrades');
 
@@ -125,10 +131,22 @@ function blog_page_handler($page) {
 		case 'owner':
 			$user = get_user_by_username($page[1]);
 			$params = blog_get_page_content_list($user->guid);
+			
+			$body = elgg_view_layout('tiles', $params);
+
+			echo elgg_view_page($params['title'], $body);
+			
+			return true;
 			break;
 		case 'friends':
 			$user = get_user_by_username($page[1]);
 			$params = blog_get_page_content_friends($user->guid);
+			
+			$body = elgg_view_layout('tiles', $params);
+
+			echo elgg_view_page($params['title'], $body);
+			
+			return true;
 			break;
 		case 'archive':
 			$user = get_user_by_username($page[1]);
@@ -172,6 +190,11 @@ function blog_page_handler($page) {
 			break;
 		case 'all':
 			$params = blog_get_page_content_list();
+			
+			$body = elgg_view_layout('tiles', $params);
+
+			echo elgg_view_page($params['title'], $body);
+			return true;
 			break;
 		default:
 			return false;

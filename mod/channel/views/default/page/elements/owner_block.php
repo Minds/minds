@@ -28,16 +28,18 @@ if ($owner instanceof ElggGroup){
 	
 }elseif($owner instanceof ElggUser) {
 
-	$avatar = elgg_view('output/img', array('src'=>$owner->getIconURL('large')));
+	$avatar = elgg_view('output/img', array('src'=>$owner->getIconURL('medium')));
 	
-	$header = elgg_view('output/url', array('href'=>$owner->getUrl(), 'text'=>$avatar . elgg_view_title($owner->name)));
-
-	$body = elgg_view_menu('channel_elements', array('class'=>'owner_block'));
+	$img_lnk = elgg_view('output/url', array('href'=>$owner->getUrl(), 'text'=>$avatar));
+	
+	$body = elgg_view('output/url', array('href'=>$owner->getUrl(), 'text'=>elgg_view_title($owner->name)));
+	$body .= elgg_view('output/url', array('href'=>$owner->getUrl(), 'text'=>"<i>" . $owner->username . "</i>"));
+	$body .= elgg_view_menu('channel_elements', array('class'=>'owner_block'));
 
 	$body .= elgg_view('page/elements/owner_block/extend', $vars);
 
 	echo elgg_view('page/components/module', array(
-		'body' => $header . $body,
+		'body' => elgg_view_image_block($img_lnk, $body),
 		'class' => 'elgg-owner-block',
 	));
 }

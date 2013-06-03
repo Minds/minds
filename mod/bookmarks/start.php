@@ -24,8 +24,10 @@ function bookmarks_init() {
 	// menus
 	elgg_register_menu_item('site', array(
 		'name' => 'bookmarks',
-		'text' => elgg_echo('bookmarks'),
-		'href' => 'bookmarks/all'
+		'text' => '&#59159;',
+		'href' => 'bookmarks/all',
+		'class' => 'entypo',
+		'title' => elgg_echo('bookmarks')
 	));
 
 	elgg_register_plugin_hook_handler('register', 'menu:page', 'bookmarks_page_menu');

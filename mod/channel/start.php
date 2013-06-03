@@ -42,8 +42,13 @@ function channel_init() {
 	
 	elgg_register_library('channels:suggested', elgg_get_plugins_path() . 'channel/lib/suggested.php');
 	
-	$item = new ElggMenuItem('channels', elgg_echo('channels'), 'channels');
-	elgg_register_menu_item('site', $item);
+	elgg_register_menu_item('site', array(
+		'name' => 'channels',
+		'text' => '&#59254;',
+		'href' => 'channels',
+		'class' => 'entypo',
+		'title' => elgg_echo('channels')
+	));
 
 	elgg_register_simplecache_view('icon/user/default/tiny');
 	elgg_register_simplecache_view('icon/user/default/topbar');

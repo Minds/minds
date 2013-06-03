@@ -100,7 +100,7 @@ if ($full) {
 	
 } else {
 	// brief view
-	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
+	/*$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
 	$img_link = '<div class="rich-image-container">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$image)) . '</div>';
 	$readmore = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_echo('readmore'), 'class'=>'readmore'));
 	
@@ -117,5 +117,13 @@ if ($full) {
 	$params = $params + $vars;
 	$list_body = elgg_view('object/elements/summary', $params);
 
-	echo elgg_view_image_block($owner_icon, $list_body, array('class'=>'rich-content'));
+	echo elgg_view_image_block($owner_icon, $list_body, array('class'=>'rich-content'));*/
+	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
+	$title = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_view_title($blog->title)));
+	$extras = '<span class="extras"> <p class="time">'. $date . '</p><p class="excerpt">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$excerpt)) . '</p>' . $metadata .'</span>';
+	
+	$body = '<span class="info">' . $title . $extras . '<span>';
+	
+	$content = $image . $body;
+	echo $content;
 }

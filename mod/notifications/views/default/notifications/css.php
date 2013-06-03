@@ -123,8 +123,8 @@
 	
 	position: absolute;
 	text-align: center;
-	top: 12px;
-	left: 20px;
+	top: 10px;
+	left: 10px;
 	min-width: 14px;
 	height: 14px;
 	font-size: 8px;

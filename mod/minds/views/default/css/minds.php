@@ -14,11 +14,11 @@
 }
 @font-face {
   font-family: 'fontello';
-  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?17546205');
-  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?17546205#iefix') format('embedded-opentype'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?17546205') format('woff'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?17546205') format('truetype'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?17546205#fontello') format('svg');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?79538242');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?79538242#iefix') format('embedded-opentype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?79538242') format('woff'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?79538242') format('truetype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?79538242#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -27,11 +27,12 @@
  **************/
  
 body{
-	background:#FEFEFE;
+	background:#F8F8F8;
 	font-family: "Ubuntu", sans-serif;
  }
 h1,h2,h3,h4,h5{
 	font-family:"Ubuntu";
+	font-weight:lighter;
 }
 body.news{
 	background:#D2D9DF;
@@ -40,23 +41,60 @@ body.news{
 /***************
  *** TOP BAR ***
  **************/
+.minds-header-right{
+	margin:15px 0;
+	float:right;
+}
+.minds-header-right .notifications{
+	float:right;
+	margin:0;
+}
+.minds-header-right .notifications li{
+	margin:2px 5px;
+}
+.minds-header-right span.text{
+	float:left;
+	margin-right:5px;
+}
+.minds-header-right img{
+}
+
+.minds-header-right .elgg-form input[type=text], .minds-header-right .elgg-form input[type=password]{
+	float:left;
+	width:125px;
+	height:28px;
+	margin-right:8px;
+}
+.minds-header-right .elgg-form .elgg-button-submit{
+	padding: 4px;
+	min-width: 0;
+	background:#4690D6;
+	border:1px solid #4690D6;
+}
+.minds-header-right .elgg-menu.mtm{
+	margin:0;
+	font-size:11px;
+}
+.minds-header-right .elgg-menu.mtm li{
+	border:0;
+	padding:0 8px 0 2px;
+}
+.minds-header-right .elgg-menu.mtm li a{
+	border:0;
+}
+.minds-header-right .social_login{
+	display:none;
+}
 /* Top Menu
  */
-.elgg-page-topbar > .elgg-inner{
-	
- }
-.elgg-menu.elgg-menu-site.elgg-menu-site-default{
-	position:relative;
-	float:left;   	
-}
 .elgg-menu .entypo{
 	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
-	font-size:17px;
+	font-size:18px;
 	font-weight:normal;
 	text-decoration:none;
 }
 .elgg-menu .entypo.elements{
-	font-size:26px;
+	font-size:2px;
 }
 .elgg-menu .elgg-menu-item-logout .entypo{
 	padding-top:2px;
@@ -135,6 +173,120 @@ body.news{
     border-bottom-left-radius:0px;
 }
 /**
+ * Content
+ */
+.minds-body-header{
+	width: 100%;
+	background: #F8F8F8;
+	padding: 25px 0;
+	margin-bottom: 10px;
+	opacity: .90;
+}
+.minds-body-header > .inner{
+	width:90%;
+	margin:0 auto;
+}
+.minds-body-header h2{
+	font-size:52px;
+	font-weight:lighter;
+}
+.minds-body-header h3{
+	font-size:16px;
+	font-weight:lighter;
+}
+.minds-body-header .elgg-menu-entity, .minds-body-header .elgg-menu-title{
+	margin:10px;
+}
+
+/**
+ * Minds Tiles
+ */
+.tiles .elgg-list{
+	width:100%;
+	height:auto;
+	display:block;
+}
+.tiles .elgg-list li.elgg-item{
+	border:0;
+	float:left;
+	display:block;
+	width:25%;
+	height:170px;
+	overflow:hidden;
+	position:relative;
+}
+.tiles .elgg-list li.elgg-item .rich-image{
+	width:100%;
+	min-height:180px;
+	height:auto;
+}
+.tiles .elgg-list li.elgg-item .info{
+	left:0;
+	bottom:-50px;
+	padding:25px 10px 0;
+	width:100%;
+	
+	position:absolute;
+	
+	
+	
+	background-color: transparent; 
+   	/*background-image: url(images/fallback-gradient.png); */
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(#333));
+   	background-image: -webkit-linear-gradient(top, transparent, #333); 
+   	background-image:    -moz-linear-gradient(top, transparent, #333);
+   	background-image:     -ms-linear-gradient(top, transparent, #333);
+   	background-image:      -o-linear-gradient(top, transparent, #333);
+}
+.tiles .elgg-list li.elgg-item .info .extras{
+	width:100%;
+	height:50px;
+	display:block;
+} 
+.tiles .elgg-list li.elgg-item:hover .info{
+	bottom:0;
+}
+.tiles .elgg-list li.elgg-item .info h2{
+	font-size:14px;
+	color:#FFF;
+	padding:10px 0 3px;
+}
+.tiles .elgg-list li.elgg-item .info h2 a{
+	text-decoration:none;
+}
+.tiles .elgg-list li.elgg-item:hover .info .time{
+	color:#EEE;
+	font-style:italic;
+	margin:0;
+	font-size:11px;
+}
+.tiles .elgg-list li.elgg-item .info .excerpt a{
+	display:none;
+}
+.tiles .elgg-list li.elgg-item:hover .info .excerpt a{
+	display:block;
+	color:#FFF;
+	text-decoration:none;
+	margin:0;
+	width:100%;
+	max-height:70px;
+	display:block;
+	overflow:hidden;
+}
+@media (min-width: 1280px){
+	.tiles .elgg-list li.elgg-item{
+		width:20%;
+	}
+}
+.tiles .elgg-list li.elgg-item .elgg-menu{
+	margin:0 0 5px 0;
+	float:left;
+}
+.tiles .elgg-list li.elgg-item .elgg-menu li{
+	margin:0 15px 0 0;
+}
+
+/**
  * Register page
  */
 .elgg-form-account{
@@ -163,6 +315,12 @@ body.news{
 /***************
  **CUSTOMINDEX**
  **************/
+.front-page-buttons{
+	margin:30px 0 0;
+}
+.front-page-buttons a{
+	margin-right:20px;
+}
 .minds_index h2, h3{
 	font-family: 'Ubuntu Light', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
 }
@@ -273,16 +431,15 @@ body.news{
  ** CUSTOM PAGES **
  *****************/
 .elgg-sidebar .elgg-owner-block{
-	-webkit-border-radius: 5px 5px 0 0;
-	-moz-border-radius: 5px 5px 0 0;
- 	border-radius:5px 5px 0 0;
+	-webkit-border-radius: 3px 3px 0 0;
+	-moz-border-radius: 3px 3px 0 0;
+ 	border-radius:3px 3px 0 0;
 }
-.elgg-sidebar .elgg-owner-block img{
-	width:100%;
-	height:auto;
+.elgg-sidebar .elgg-owner-block .elgg-image-block{
+	padding:0;
 }
-.elgg-sidebar h2{
-	padding-left: 5px;
+.elgg-sidebar .elgg-owner-block .elgg-image-block .elgg-body{
+	padding:5px;
 }
 .elgg-sidebar li a{
 	padding:5px 10px;
@@ -402,6 +559,7 @@ body.news{
 	position:absolute;
 }
 .load-more{
+	clear:both;
 	width:100%;
     padding:15px 0;
     text-align:center;
