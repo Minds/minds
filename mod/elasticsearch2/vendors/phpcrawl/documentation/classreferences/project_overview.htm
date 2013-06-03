@@ -1,0 +1,84 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+ <title>Projet Documentation: 
+PHPCrawl webcrawler library</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script language="javascript">
+ function show_hide_node(name)
+ {
+   if (document["expandimage" + name].src.search(/expand.gif/) > 0)
+   {
+     document["expandimage" + name].src = collapseImage.src;
+   }
+   else
+   {
+     document["expandimage" + name].src = expandImage.src;
+   }
+   
+   cnt = document.getElementsByName(name).length;
+   
+   for (i=0; i<cnt; i++)
+   {
+     node = document.getElementsByName(name)[i];
+     
+     if (node.style.display == "none")
+     {
+       node.style.display = "";
+     }
+     else
+     {
+       node.style.display = "none";
+     }
+   }
+ }
+ 
+ function init()
+ {
+   expandImage = new Image();
+   expandImage.src = "expand.gif";
+   
+   collapseImage = new Image();
+   collapseImage.src = "collapse.gif";
+ }
+ </script>
+
+</head>
+
+<body onLoad="init()">
+
+<h1 id="menu_header">
+<span>
+Project: 
+PHPCrawl webcrawler library
+</span>
+</h1>
+
+<div id="menu">
+
+<ul class="menu">
+<li id="section_head"><b><a href="javascript: show_hide_node('_0')"><img src="expand.gif" name="expandimage_0" border="0">&nbsp;Package: phpcrawl</a></b>
+<ul class="menu" id="_0" name="_0" style="display: none">
+<li><a href='PHPCrawler/overview.html' target='content'>PHPCrawler</a></li>
+<li><a href='PHPCrawlerCookieDescriptor/overview.html' target='content'>PHPCrawlerCookieDescriptor</a></li>
+<li><a href='PHPCrawlerDocumentInfo/overview.html' target='content'>PHPCrawlerDocumentInfo</a></li>
+<li><a href='PHPCrawlerProcessReport/overview.html' target='content'>PHPCrawlerProcessReport</a></li>
+<li><a href='PHPCrawlerResponseHeader/overview.html' target='content'>PHPCrawlerResponseHeader</a></li>
+<li><a href='PHPCrawlerURLDescriptor/overview.html' target='content'>PHPCrawlerURLDescriptor</a></li>
+</ul></li>
+<li id="section_head"><b><a href="javascript: show_hide_node('_7')"><img src="expand.gif" name="expandimage_7" border="0">&nbsp;Package: phpcrawl.enums</a></b>
+<ul class="menu" id="_7" name="_7" style="display: none">
+<li><a href='PHPCrawlerAbortReasons/overview.html' target='content'>PHPCrawlerAbortReasons</a></li>
+<li><a href='PHPCrawlerMultiProcessModes/overview.html' target='content'>PHPCrawlerMultiProcessModes</a></li>
+<li><a href='PHPCrawlerRequestErrors/overview.html' target='content'>PHPCrawlerRequestErrors</a></li>
+<li><a href='PHPCrawlerUrlCacheTypes/overview.html' target='content'>PHPCrawlerUrlCacheTypes</a></li>
+</ul></li>
+</ul>
+
+</div>
+</body>
+</html>

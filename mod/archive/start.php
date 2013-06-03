@@ -316,6 +316,9 @@ function minds_archive_page_handler($page) {
 			set_input('username', $page[1]);
 			include(dirname(__FILE__) . "/pages/archive/network.php");
 			break;	
+		case 'unavailable':
+			include(dirname(__FILE__) . "/pages/archive/unavailable.php");
+			break;
 		default:
 			set_input('username',$page[0]);
 			$user = get_user_by_username($page[0]);

@@ -19,15 +19,20 @@ class MindsSearch {
 	}
 
 	function search($q,$type = 'all',$services = array('all'), $license = 'all', $limit=10,$offset=0) {
-	
+		
+		$rq = $q;
 		if($type == 'all'){
 			$type = null;
 		}
 		if($license != 'all'){
-			$q .= ' AND "'.$license.'"';
+			$rq .= ' AND "'.$license.'"';
 		}
+		
+		//I can't get the elasticsearch way to work - so lets do a query string hack!
+		if(!$type)
+		$rq .= ' AND type:(user^100,video^2,photo^50,article^1) AND source:(minds^10,wikipedia^40,flickr^30,soundcloud^0.8) OR title:('.$q.'^1) OR description:("'.$q.'"^0.5)';
 				
-		$data['query']['query_string']['query'] = $q;
+		$data['query']['query_string']['query'] = $rq;
 		$data['query']['bool'] = $bool;
 		$data['query']['size'] = $limit;
 		$data['query']['from'] = $offset;

@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+<head>
+  <title>PHPCrawl webcrawler library for PHP - Spidering huge websites</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="style.css" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+  <div id="page">
+    
+       <div id="top">
+        <h1 style="margin: 0px; float: left;">PHPCrawl webcrawler library/framework</h1>
+      </div>
+      
+
+      <div id="container">
+        
+        <iframe id="menuframe" src="menu.html" scrolling="no" frameborder="0"></iframe>
+        
+        <div id="content">
+        <h3>Tutorial: Spidering huge websites</h3><br />
+        
+        By default, phpcrawl is using local memory (RAM) for internally caching/queueing found URLs and other data.
+        So when crawling large websites consisting of thousands of pages, the php-memory-limit or the memory-limit in general
+        may be hit at some time.<br /><br />
+        
+        But since version 0.8, phpcrawl alternatively is able to use a SQLite database-file for internally caching URLs. When activating this typ
+        of caching, it shoudln't be a problem anymore to spider huge websites.<br /><br />
+        
+        To activate the SQLite-cache, simply use the following <a href="classreferences/PHPCrawler/method_detail_tpl_method_setUrlCacheType.htm" target="blank">setUrlCacheType()</a>-setting:
+        
+        <p id="code">
+        <span style="color: #000000">
+        <span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setUrlCacheType</span><span style="color: #007700">(</span><span style="color: #0000BB">PHPCrawlerUrlCacheTypes</span><span style="color: #007700">::</span><span style="color: #0000BB">URLCACHE_SQLITE</span><span style="color: #007700">);
+        <br /></span>
+        </span>
+        </p>
+        
+        By default, the SQLite-database-file will be placed in the systems default temporary directory on the local harddrive.<br />
+        To increase performance of the SQLite-cache you may set it's location to a shared-memory device like "/dev/shm/" (for Debian/Ubuntu)
+        by using the <a href="classreferences/PHPCrawler/method_detail_tpl_method_setWorkingDirectory.htm" target="blank">setWorkingDirectory()</a>-method.
+       
+        <p id="code">
+        <span style="color: #000000">
+        <span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setWorkingDirectory</span><span style="color: #007700">(</span><span style="color: #DD0000">"/dev/shm/"</span><span style="color: #007700">);
+        <br /></span><span style="color: #0000BB">$crawler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setUrlCacheType</span><span style="color: #007700">(</span><span style="color: #0000BB">PHPCrawlerUrlCacheTypes</span><span style="color: #007700">::</span><span style="color: #0000BB">URLCACHE_SQLITE</span><span style="color: #007700">);
+        <br /></span>
+        </span>
+        </p>
+        
+        Please note that the PHP PDO-extension together with the SQLite-driver (PDO_SQLITE) has to be installed and activated to use this type of caching.
+      </div>
+      
+        <!--
+        <?php
+        include("google_code.php");
+        ?>
+        -->
+        
+      </div>
+  
+      <div id="footer">Copyright © 2003 - 2012 Uwe Hunfeld phpcrawl@cuab.de</div>
+  </div>
+  
+</div>
+
+</body>
+</html>

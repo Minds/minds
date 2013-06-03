@@ -1,0 +1,258 @@
+Version 0.81
+2012/10/14
+
+* Added the ability to resume aborted/terminated crawling-processes (Feature request 3500669).
+Methods getCrawlerId(), enableResumption() and resume() added.
+
+* Fixed bug 3530805: Links that are partially urlencoded and partially not get rebuild/encoded
+correctly now.
+    
+* Fixed bug 3526202: Removed a unnecessary debug var_dump() from PHPCrawlerRobotsTxtParser.class.php
+    
+* Fixed bug 3533872: Server-name-indication in TLS/SSL works correctly now.
+
+* Fixed bug 3533877: "base-href"-tags in websites get interpreted correctly now again.
+
+
+Version 0.80 beta
+2012/04/23
+
+Version 0.80 was (almost) completely rewritten and ported to "proper" object oriented PHP5-code.
+It brings new features like the ability to use multiple processes to spider a website and a new,
+internal, hdd-based caching-mechanism making it possible to spider even very huge websites. Even 
+though some methods and options were renamded and redone, phpcrawl 0.8 should be fully compatible
+to older versions. 
+
+The changes in detail:
+
+* Code was completely refactored, ported to PHP5-OO-code and a lot of code was rewritten.
+
+* Added the ability to use use multiple processes to spider a website. Method "goMultiProcessed()"
+added.
+
+* New overridable method "initChildProcess()" added for initiating child-processes when using the
+crawler in multi-process-mode.
+
+* Implementet an alternative, internal SQlite caching-mechanism for URLs making it possible to spider
+very large websites. Method "setUrlCacheType()" added.
+  
+* New method setWorkingDirectory() added for defining the location of the crawlers temporary
+working-directory manually. Therefor method "setTmpFile()" is marked as deprecated (has no function
+anymore).
+
+* New method "addContentTypeReceiveRule()" replaces the old method "addReceiveContentType()".
+The function "addReceiveContentType()" still is present, but was marked as deprecated.
+  
+* New method "addURLFollowRule()" replaces the old method "addFollowMatch()".
+The function "addFollowMatch()" still is present, but was marked as deprecated.
+  
+* New method "addURLFilterRule()" replaces the old method "addNonFollowMatch()".
+The function "addNonFollowMatch()" still is present, but was marked as deprecated.
+  
+* The crawler now is able to parse and obey "nofollow"-tags defined as meta-tags or rel-options
+(like "<a href="page.html" rel="nofollow">") Method "obeyNoFollowTags()" added.
+  
+* Overridabel user-method "handleDocumentInfo()" replaces the old method "handlePageData()".
+Method "handlePageData()" still exists, but was marked as deprecated.
+The new method now provides information about a document as a PHPCrawlerDocumentInfo-object instead of an array.
+  
+* New method "enableAggressiveLinkSearch()" replaces the old method "setAggressiveLinkExtraction()".
+The function "setAggressiveLinkExtraction()" still is present, but was marked as deprecated.
+  
+* New method "setLinkExtractionTags()" replaces the old method "addLinkExtractionTags()" (since it
+was named wrong,it didn't add tags, it overwrites tha tag-list).
+The function "addLinkExtractionTags()" still is present, but was marked as deprecated.
+  
+* New method "addStreamToFileContentType()" replaces the old method "addReceiveToTmpFileMatch()".
+The function "addReceiveToTmpFileMatch()" still is present, but was marked as deprecated.
+  
+* New method "enableCookieHandling()" replaces the old method "setCookieHandling()".
+The function "setCookieHandling()" still is present, but was marked as deprecated.
+  
+* It's possible now to use a proxy-server for spidering websites. Method "setProxy()" added.
+
+* Method "addReceiveToMemoryMatch()" has no function anymore and is marked as deprecated (since it
+was redundant). Users should use addStreamToFileContentType() now instead.
+  
+* Method "disableExtendedLinkInfo()" has no function anymore and is marked as deprecated.
+To reduce the memory-usage of the crawler users now should use the internal SQLite-urlcache
+(by calling "setUrlCacheType(PHPCrawlerUrlCacheTypes::URLCACHE_SQLITE)").
+
+* New method "getProcessReport()" replaces the old method "getReport()".
+The function "getReport()" still is present, but was marked as deprecated.
+  
+* Method "setFollowRedirectsTillContent()" has no function anymore and was marked as deprecated
+(since it completely interfered with other settings and rules that can be applied to the crawler).
+
+* New overridable method "handleHeaderInfo()" added. This method will be called after the header
+of a document was received and BEFORE the content will be received. Gives the user the opportunity
+to abort the request (based on the http-header the server responded).
+
+* Added some more information about found documents to the array (respectively PHPCrawlerDocumentInfo-object)
+that is passed to the overridable user-function handleDocumentInfo(): cookies (all cookies the server
+with the document), responseHeader (header the webserver responded a PHPCrawlerResponseHeader-object),
+error_occured (flag indication whether an error occured during the request), data_transfer_rate (average
+data-transferrate for receiving the document), data_transfer_time (time it took to receive the document)
+and meta_attributes (all meta-tag atteributes found in the source of the document).
+
+* Added the ability to send post-data with requests for defined URLs, method "addPostData()" added.
+
+* Fixed bug 3368719: When creating two (or more) instances of the crawler and obeyRobotsTxt() was
+set to true in both of them, the second call of the go()-method caused a fatal error.
+
+* Fixed bug 3368722: Flag "file_limit_reached" in the array that getReport() returns wasn't set to
+true when a page-limimt (setPageLimit()) was hit.
+
+* Fixed bug 3389965: phpcrawl now shouldn't throw any notices and warnings anymore when error_reporting
+is set to E_STRICT or E_ALL.
+
+* Fixed bug 3413627: Links like "<a href="?page=3">" get recognized and rebuild correctly now.
+
+* Fixed bug 3465964: Robots.txt-documents get parsed correctly now, even if the "User-agent"-directive
+in robots.txt-files is written like "user-agent" or "User-Agent".
+
+* Fixed bug 3485155: Links like "test.htm?redirect=http://www.foo.ie&a=b" get recognized and rebuild
+correctly now.
+
+* Fixed bug 3504517: Requests for links containing special characters (like "הצü") sometimes didn't work
+as expected due to wrong character-encoding (server responded 404 NOT FOUND).
+
+* Fixed bug 3510270: The array "links_found" of the array $page_data passed to the function
+handlePageData() never contained a linktext.
+
+
+Version 0.71
+2011/06/30
+    
+* Bugfix: Empty links found in documents (like <a href="">) are rebuild correctly now 
+so that they lead to the same document they were found in.
+
+* Bugfix: It's possible now to initiate more than one instance of the phpcrawler-class 
+without getting an "Fatal error: Call to undefined method stdClass::receivePage()" error.
+
+* A new method "setLinkExtractionTags()" replaces the "addLinkExtractionTags()" method.
+The old method addLinkExtractionTags() is named wrong since it doesn't ADD new tags, it 
+OVERWRITES the tag-list.
+addLinkExtractionTags() still exists for compatibility-reasons, but was marked as deprecated.
+
+* Bugfix: Links containing spaces like <a href="any file.hmtl"> are recognized and 
+processed correctly now.
+
+* Bugfix: Links containing quotes like <a href="any'file.html"> are recognized and 
+processed correctly now.
+
+* The search-patterns used for agressive link-extractions (if setAggressiveLinkExtraction() 
+set to TRUE) were redone. They should give some better results now.
+
+* Bugfix: Phpcrawl doesn't crash anymore with a segmentation fault when parsing links that 
+are laid over very long text or html 
+(like <a href="foo,htm"> ... very very long text goes here ...</a>)
+
+* Method addLinkSearchContentType() added.
+It's possible now to manually define what kind of documents should get parsed in order to 
+find links in (according to their content/mime-type).
+Before (and still by default) only documents of type "text/html" get checked for links.
+
+* Bugfix: Links containing linebreaks are recognized and processed correctly now. 
+
+* Default value for socket-stream-timeout increased to 5 seconds.
+Although this can be set manually by using the setStreamTimeout()-method, the default value of 2 seconds
+was a little to low.
+
+* Fixed some minor-bugs ih the test-interface and updated the containing example-setup (since
+the old one didn't work anymore because of site-changes over at php.net)
+    
+
+Version 0.70
+2007/01/05 
+
+* New function setLinkPriority() added. Its possible now to set different
+priorities (priority-levels) for different links.
+
+* Found links are cached now in a different way so that the general
+performance was improved, especially when cralwing a lot of pages (big sites)
+in one process.
+
+* Added support for Secure Sockets Layer (SSL), so links like "https://.."
+will be followed corretly now.
+Please note that the PHP OpenSSL-extension is required for it to work.
+
+* The link-extraction and other parts were redone and should give better results
+now.
+
+* Methods setAggressiveLinkExtraction() and addLinkExtractionTag() added for
+setting up the link extraction manually.
+
+* Added support for robots.txt-files, method obeyRobotsTxt() added.
+
+* More information about found pages and files will be passed now to the method
+handlePageData(), especially information about all found links in the current
+page is available now. Method disableExtendedLinkInfo() added.
+
+* The crawler now is able to handle links like "http://www.foo.com:123" correctly
+and will send requests to the correct port. Method setPort() added.
+
+* The content of pages and files now can be received/streamed diretly to a temporary
+file instead of to memory, so now it shouldn't be a problem anymore to let the
+crawler receive big files.
+Methods setTmpFile(), addReceiveToTmpFileMatch() and addReceiveToMemoryMatch() added.
+
+* Added support for basic authentication. Now the crawler is able to crawl protected
+content. Method addBasicAuthentication() added.
+
+* Now its possible to abort the crawling-process by letting the overridable function
+handlePageData() return any negative value.
+
+* Method setUserAgentString() added for setting the user-agent-string in
+request-headers the crawler sends.
+
+* A html-testinterface for testing the different setups of the crawler is included in
+the package now.
+
+* The crawler doesn't do DNS-lookups anymore for every single page-request, only if the
+host is changing a lookup will be done once. This improves performance a little bit.
+
+* The crawler doesn't look for links anymore in every file it finds, only
+"text/html"-content will be checked for links.
+
+* Fixed problem with rebuilding links like "*foo".
+
+* Fixed problem with splitting/rebuilding URLs like
+"http://foo.bar.com/?http://foo/bar.html".
+
+* Fixed problem that the crawler handled i.e. "foo.com" and "www.foo.com" as different
+hosts.
+
+
+Version 0.65_pl2
+2005/08/22
+
+* Phpcrawl now doesn't throw any notices anymore when error-reporting
+  is set to E_ALL. Thanks to elitec0der!
+
+* Also there shouldn't be any notices anymore when "allow_call_time_pass_reference"
+  is set to OFF. Thanks philipx!
+  
+* Fixed a bug that appeared when running the crawler in followmode 3.
+  (The crawler never went "path up" anymore)
+  
+* Now the crawler sends the referer-header with requests correctly again.
+
+
+Version 0.65_pl1 (patchlevel 1)
+2004/08/06
+
+Just a few bugs were fixed in this version:
+(Yes, it took a time, sorry)
+
+* The crawler doesn't send empty "Cookie:" header anymore if there's no cookie to send.
+  (A few webserver rerturned a "bad request" header to this) Thanks Mark!
+
+* The crawler doesn't send one and the same cookie-header several times with a request
+  anymore if it was set more than one time by the server. (Didn't really matter though)
+
+* Crawler will find links in metatags used with single quotation marks (') like
+  <META HTTP-EQUIV='refresh' CONTENT='foo; URL=http://bar/'> now. Thanks Arsa!
+
+* HTTP 1.0 requests will be send now because of problems with HTTP 1.1 headers and
+  chunked content. Thanks Arsa again! 

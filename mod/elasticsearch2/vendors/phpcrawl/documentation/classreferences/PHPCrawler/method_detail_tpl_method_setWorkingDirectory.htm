@@ -1,0 +1,108 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+ <title>Documentation for method: 
+PHPCrawler::setWorkingDirectory()</title>
+ <meta name="keywords" content="framework, API, manual, class reference, classreference, documentation" />
+ <meta name="description" content="The class reference contains the detailed description of how to use every class, method, and property." />
+ <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+ 
+ <script name="javascript">
+ 
+ function show_hide_examples(mode)
+ {
+   if (document.getElementById("examples").style.display == "none")
+   {
+     document.getElementById("examples").style.display = "";
+   }
+   else
+   {
+     document.getElementById("examples").style.display = "none";
+   }
+ }
+ </script>
+ 
+</head>
+
+<body>
+
+<div id="outer">
+
+<h1 id="head">
+  <span>Method: 
+PHPCrawler::setWorkingDirectory()</span>
+</h1>
+
+<h2 id="head">
+ <span><a href="overview.html"><< Back to class-overview</a></span>
+</h2>
+
+<br>
+
+
+
+
+
+<!--<?php include("google_code.php"); ?> -->
+
+<div id="docframe">
+
+<div id="section">
+
+Sets the working-directory the crawler should use for storing temporary data.
+</div>
+
+<div id="section">
+<b>Signature:</b>
+<p id="signature">
+  
+public setWorkingDirectory($directory)
+</p>
+</div>
+
+<div id="section">
+<b>Parameters:</b>
+<p>
+<table id="param_list">
+  
+<tr><td id="paramname" width="1%"><b>$directory</b>&nbsp;</td><td width="1%"><i><i>string</i></i>&nbsp;</td><td width="*">The working-directory</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Returns:</b>
+<p>
+<table id="param_list">
+  
+<tr> <td width="1%"><i><i>bool</i></i>&nbsp;</td> <td width="*">             TRUE on success, otherwise false.</td></tr>
+</table>
+</p>
+</div>
+
+<div id="section">
+<b>Description:</b>
+<p>
+
+  
+Every instance of the crawler needs and creates a temporary directory for storing some<br>internal data.<br><br>This setting defines which base-directory the crawler will use to store the temporary<br>directories in. By default, the crawler uses the systems temp-directory as working-directory.<br>(i.e. "/tmp/" on linux-systems)<br><br>All temporary directories created in the working-directory will be deleted automatically<br>after a crawling-process has finished.<br><br>NOTE: To speed up the performance of a crawling-process (especially when using the<br>SQLite-urlcache), try to set a mounted shared-memory device as working-direcotry<br>(i.e. "/dev/shm/" on Debian/Ubuntu-systems).<br><br>Example:<code>$crawler-&gt;setWorkingDirectory("/tmp/");</code>
+  
+</p>
+</div>
+
+
+
+
+
+</div>
+
+
+<div id="footer">Docs created with <a href="http://phpclassview.cuab.de"  target="_parent">PhpClassView</a></div>
+
+</div>
+
+</body>
+</html>
