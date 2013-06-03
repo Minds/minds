@@ -6,9 +6,7 @@ $img_src = elgg_get_site_url() == 'http://www.minds.com/' ? elgg_get_site_url().
 elgg_load_js('uiVideoInline');
 ?>
 <div class='minds_index'>
-    <div class="logo">
-        <img src="<?php echo $img_src;?>" width="200" height="90" />
-    </div>
+    <?php echo elgg_view('minds/elements/logo');?>
     <div class="search">
             <form action="<?php echo elgg_get_site_url(); ?>search" method="get">
              
