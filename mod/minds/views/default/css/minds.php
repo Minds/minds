@@ -28,9 +28,11 @@
  
 body{
 	background:#FEFEFE;
-	font-family: 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
+	font-family: "Ubuntu", sans-serif;
  }
-
+h1,h2,h3,h4,h5{
+	font-family:"Ubuntu";
+}
 body.news{
 	background:#D2D9DF;
 }
@@ -75,6 +77,10 @@ body.news{
 }
 .index .elgg-main{
 	overflow: visible !important;
+	border:0;
+	box-shadow:none !important;
+	-webkit-box-shadow:none !important;
+	-moz-box-shadow:none !important;
 }
 
 .elgg-menu-river li{
@@ -261,6 +267,33 @@ body.news{
 	display: inline-block;
 	color: #CCC;
 	font-size: 11px;
+}
+
+/******************
+ ** CUSTOM PAGES **
+ *****************/
+.elgg-sidebar .elgg-owner-block{
+	-webkit-border-radius: 5px 5px 0 0;
+	-moz-border-radius: 5px 5px 0 0;
+ 	border-radius:5px 5px 0 0;
+}
+.elgg-sidebar .elgg-owner-block img{
+	width:100%;
+	height:auto;
+}
+.elgg-sidebar h2{
+	padding-left: 5px;
+}
+.elgg-sidebar li a{
+	padding:5px 10px;
+	font-weight:bold;
+	background:transparent;
+	border-bottom:1px solid #CCC;
+}
+.elgg-sidebar .elgg-module-aside{
+	background:#FFF;
+	padding:10px;
+	margin:0;
 }
 /******************
  ** CUSTOM RIVER **

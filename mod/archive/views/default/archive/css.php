@@ -25,7 +25,7 @@
 }
 
 .archive-description{
-	margin:10px 0;	
+	margin:10px 10px;	
 }
 
 .archive-button-right{
@@ -36,7 +36,7 @@
 .archive-large-widget{
 	clear:both;
 	width:100%;
-	margin:20px 0;
+	margin: 0;
 }
 
 .uiVideoInline.archive{

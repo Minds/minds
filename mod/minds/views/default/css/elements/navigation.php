@@ -293,7 +293,6 @@
 	FILTER MENU
 *************************************** */
 .elgg-menu-filter {
-	margin-bottom: 5px;
 	border-bottom: 2px solid #ccc;
 	display: table;
 	width: 100%;

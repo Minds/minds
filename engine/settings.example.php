@@ -140,4 +140,5 @@ $CONFIG->min_password_length = 6;
 /**
  * Where multisite admin endpoint is installed
  */
-$CONFIG->multisite_endpoint = "http://minds-multi.minds.io/minds/";
+$CONFIG->multisite_endpoint = "http://minds-multi.minds.io/minds/"; // Where the Web services endpoint is
+$CONFIG->multisite_server_ip = "54.236.202.136"; // IP address to prompt people to set DNS to

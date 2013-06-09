@@ -381,7 +381,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
 					$blog->description = $embed . $icon . $disclaimer;
 				} else {
-					$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'),0, 100);
+					$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'),0, 200);
 					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();
 				}
 				$blog->owner_guid = $scraper->owner_guid;

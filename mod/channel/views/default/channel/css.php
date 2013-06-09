@@ -228,7 +228,7 @@
 
 .elgg-menu-channel-elements-dropdown {
 	position: absolute;
-	right:15px;
+	right:4px;
 	width: 150px;
 	border: 1px solid #000;
 	z-index:10;

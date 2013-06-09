@@ -28,7 +28,9 @@ if ($owner instanceof ElggGroup){
 	
 }elseif($owner instanceof ElggUser) {
 
-	$header = elgg_view_entity($owner, array('full_view' => false));
+	$avatar = elgg_view('output/img', array('src'=>$owner->getIconURL('large')));
+	
+	$header = elgg_view('output/url', array('href'=>$owner->getUrl(), 'text'=>$avatar . elgg_view_title($owner->name)));
 
 	$body = elgg_view_menu('channel_elements', array('class'=>'owner_block'));
 

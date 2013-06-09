@@ -31,8 +31,24 @@
             
     }
     
+    // Background image
+    if (isset($_FILES['background']) && $_FILES['background']['error'] == 0) {
+        global $CONFIG;
+        $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
+        @mkdir($theme_dir);
+        
+        if (move_uploaded_file($_FILES['background']['tmp_name'], $theme_dir . 'background'))
+        {
+            elgg_set_plugin_setting('background_override', 'true', 'minds_themeconfig');
+            elgg_set_plugin_setting('background_override_mime', $_FILES['background']['type'], 'minds_themeconfig');
+        }
+    }
+    
     // Save background colour
     elgg_set_plugin_setting('background_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('background_colour')), "minds_themeconfig");
     
     // Save text colour
     elgg_set_plugin_setting('text_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('text_colour')), "minds_themeconfig");
+    
+    // Save custom CSS
+    elgg_set_plugin_setting('custom_css', get_input('custom_css'), "minds_themeconfig");

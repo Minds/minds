@@ -196,6 +196,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
     
     
         'register:node' => 'Register multisite domains',
+        "register:node:testping" => 'Multisite node DNS Test',
 );
 		
 add_translation("en", $english);

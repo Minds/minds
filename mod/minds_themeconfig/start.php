@@ -11,6 +11,17 @@ elgg_register_event_handler('init','system',function(){
         global $CONFIG;
         
         switch($pages[0]) {
+            case 'background':
+                 $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
+    
+                $contents = file_get_contents($theme_dir . 'background');
+                header("Content-type: " . elgg_get_plugin_setting('background_override_mime', 'minds_themeconfig'));
+                header('Expires: ' . date('r', strtotime("+6 months")), true);
+                header("Pragma: public");
+                header("Cache-Control: public");
+                header("Content-Length: " . strlen($contents));
+                
+                break;
             case 'logo_main' :
             case 'logo_topbar' :
                 $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
@@ -22,13 +33,16 @@ elgg_register_event_handler('init','system',function(){
                 header("Cache-Control: public");
                 header("Content-Length: " . strlen($contents));
                 
+                break;
+        }
+        
+        if ($contents) {
+            
                 $split_string = str_split($contents, 1024);
                 foreach ($split_string as $chunk) {
                         echo $chunk;
                 }
                 exit;
-                
-                break;
         }
     });
     
