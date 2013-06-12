@@ -10,7 +10,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 		$kmodel = KalturaModel::getInstance();
 		$entry = $kmodel->getEntry($entity->kaltura_video_id);
 		$kmodel->deleteEntry($entity->kaltura_video_id);
-		$entity>delete();
+		$entity->delete();
 	} catch(Exception $e){
 		register_error('The video was not deleted, please speak to a minds admin');
 	}
