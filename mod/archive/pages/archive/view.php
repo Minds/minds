@@ -15,7 +15,7 @@ $menu = elgg_view_menu('entity', array(
 	));
 
 $title = $entity->title;
-$description = strip_tags($videopost->description);
+$description = strip_tags($entity->description);
 
 if($entity->getSubtype() == 'kaltura_video'){
 		
