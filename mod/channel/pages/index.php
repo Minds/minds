@@ -45,7 +45,7 @@ switch ($vars['page']) {
 		break;
 	case 'suggested':
 		$people = suggested_friends_get_people($page_owner->guid, $friends, $groups);
-		$content = elgg_view('suggested_friends/list', array('people' => $people));
+		$content = elgg_list_entities(array('entities' => $people));
 		break;
 	case 'online':
 		$content = get_online_users();
