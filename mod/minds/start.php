@@ -358,7 +358,7 @@ function minds_quota_decrement($event, $object_type, $object) {
 	
 	if($object->getSubtype() == "kaltura_video"){
 		//we need to do kaltura differently because it is a remote uplaod
-		require_once(dirname(dirname(__FILE__)) ."/kaltura_video/kaltura/api_client/includes.php");
+		//require_once(dirname(dirname(__FILE__)) ."/kaltura_video/kaltura/api_client/includes.php");
 		
 	}
 	return;

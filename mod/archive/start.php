@@ -513,7 +513,7 @@ function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $param
 		// thumbnails get first priority
 		if ($file->thumbnail) {
 			$ts = (int)$file->icontime;
-			return "mod/file/thumbnail.php?file_guid=$file->guid&size=$size&icontime=$ts";
+			return "mod/archive/thumbnail.php?file_guid=$file->guid&size=$size&icontime=$ts";
 		}
 
 		$mapping = array(
