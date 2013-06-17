@@ -36,15 +36,17 @@ if (elgg_is_logged_in() && $context) {
 			'priority' => 400,
 		),
 		'thumbsup' => array(
-			'text' => elgg_view_icon('thumbs-up-alt'),
+			'text' => '&#128077;',
 			'href' => $context."/thumbsup",
 			'selected' => ($filter_context == 'thumbsup'),
+			'class' => 'entypo',
 			'priority' => 500,
 		),
 		'thumbsdown' => array(
-			'text' => elgg_view_icon('thumbs-down-alt'),
+			'text' => '&#128078;',
 			'href' => $context."/thumbsdown",
 			'selected' => ($filter_context == 'thumbsdown'),
+			'class'=>'entypo',
 			'priority' => 600,
 		),
 

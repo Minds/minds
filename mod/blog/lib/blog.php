@@ -100,6 +100,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		'type' => 'object',
 		'subtype' => 'blog',
 		'full_view' => false,
+		'limit' =>20
 	);
 
 	$current_user = elgg_get_logged_in_user_entity();

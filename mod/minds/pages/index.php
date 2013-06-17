@@ -33,7 +33,7 @@ $params = array(	'content'=> elgg_view_entity_list($entities, $vars, $offset, $l
 					'filter' => false
 					);
 
-$body = elgg_view_layout('tiles', $params);
+$body = elgg_view_layout('one_column', $params);
 
 echo elgg_view_page('', $body);
 

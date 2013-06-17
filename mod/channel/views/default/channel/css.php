@@ -165,6 +165,26 @@
 }
 
 /**
+ * Channel list layout
+ */
+.channels .elgg-list {
+	padding:0;
+	width:100%;
+}
+.channels .elgg-list li{
+	float: left;
+	margin: 15px;
+	border: 0;
+	width: 260px;
+	overflow: hidden;
+	height: auto;
+	display: block;
+	box-shadow:none;
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+}
+
+/**
  * Custom Channels
  *
  */
@@ -178,23 +198,25 @@
 /**
  * Subscribed will show a blue colour
  */
-.subscribed{
-	text-shadow: 0 1px 0 #999;
-	background:#4690D6 url(http://www.minds.com/_graphics/button_graduation.png) repeat-x;
-	border:#4690D6;
+.subscribe.subscribed{
+	background:#4690D6 !important;
 	color:#FFF;
 	font-weight:normal;
 }
 .subscribed:hover{
-	background:#4999D6;
-	border:#4690D6;
+	background:#4690D6;
 	color:#FFF;
 }
 .elgg-owner-block .subscribe{
 	margin:5px 0;
+	background:#333;
 }
 .elgg-list .subscribe{
 	margin:0 -5px;
+	background:#333;
+}
+.subscribe{
+	border:0;
 }
 
 /**

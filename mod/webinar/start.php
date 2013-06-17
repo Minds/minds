@@ -149,7 +149,7 @@
 			$params['sidebar'] = elgg_view('webinar/sidebar', array('page' => $page_type));
 		}
 		
-		$body = elgg_view_layout('content', $params);
+		$body = elgg_view_layout('gallery', $params);
 		
 		echo elgg_view_page($params['title'], $body);
 		return true;

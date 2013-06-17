@@ -64,7 +64,7 @@
 	 minds.loadMore = function() {
 						
 			$list = $(this).parent().find('.elgg-list:first').parent();
-			$('.load-more').html('loading...');
+			$('.load-more').html('...');
 			$('.load-more').addClass('loading');
 			
 			var loc =  elgg.normalize_url(elgg.parse_url(location.href).path);
@@ -87,7 +87,7 @@
 				
 				if($(data).contents().length == 0){
 					
-					$('.load-more').html('no more posts');
+					$('.load-more').html('');
 					
 				} else {
 
@@ -95,7 +95,7 @@
 					
 					$list.append(data);							
 	
-					$list.append('<div class="news-show-more load-more">click to load more</div>');
+					$list.append('<div class="news-show-more load-more">more</div>');
 					
 				}
 			});

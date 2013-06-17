@@ -42,7 +42,7 @@ body.news{
  *** TOP BAR ***
  **************/
 .minds-header-right{
-	margin:15px 0;
+	margin:12px 0;
 	float:right;
 }
 .minds-header-right .notifications{
@@ -51,6 +51,9 @@ body.news{
 }
 .minds-header-right .notifications li{
 	margin:2px 5px;
+}
+.minds-header-right .notifications li a{
+	color:#333;
 }
 .minds-header-right span.text{
 	float:left;
@@ -177,10 +180,12 @@ body.news{
  */
 .minds-body-header{
 	width: 100%;
+	height:auto;
 	background: #F8F8F8;
 	padding: 25px 0;
 	margin-bottom: 10px;
 	opacity: .90;
+	display:inline-block;
 }
 .minds-body-header > .inner{
 	width:90%;
@@ -197,7 +202,18 @@ body.news{
 .minds-body-header .elgg-menu-entity, .minds-body-header .elgg-menu-title{
 	margin:10px;
 }
-
+/**
+ * Index views
+ */
+/*.index .elgg-list .elgg-item{
+	float:none;
+	width:60%;
+	max-width:60%;
+	max-height:auto;
+	height:auto;
+	overflow:show;
+	
+}*/
 /**
  * Minds Tiles
  */
@@ -215,10 +231,12 @@ body.news{
 	overflow:hidden;
 	position:relative;
 }
-.tiles .elgg-list li.elgg-item .rich-image{
-	width:100%;
-	min-height:180px;
-	height:auto;
+li .rich-image{
+	width:110%;
+	margin:0 -10px;
+}
+li .excerpt a{
+	color:#333;
 }
 .tiles .elgg-list li.elgg-item .info{
 	left:0;
@@ -551,7 +569,7 @@ body.news{
     font-weight:bold;
     text-decoration:none;
 }
-.news .side .bootcamp{
+.bootcamp{
 	padding:10px;
 	background:#FFF;
 }
@@ -616,7 +634,6 @@ body.news{
     border-radius: 0px;
 }
 .elgg-river-responses {
-	padding-bottom: 20px;
 }
 input.comments.inline{
 	height:25px;

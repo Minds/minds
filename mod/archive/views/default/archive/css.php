@@ -22,7 +22,9 @@
 }
 
 .archive-description{
-	margin:10px 10px;	
+	background: #F8F8F8;
+	padding: 10px;
+	margin: 0 0 10px;
 }
 
 .archive-button-right{

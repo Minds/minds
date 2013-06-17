@@ -10,14 +10,9 @@
 
 $image = elgg_extract('entity', $vars);
 
-$img = elgg_view_entity_icon($image, 'small');
+$owner = $image->getOwnerEntity();
 
-$header = elgg_view('output/url', array(
-	'text' => $image->getTitle(),
-	'href' => $image->getURL(),
-	'is_trusted' => true,
-	'class' => 'tidypics-heading',
-));
+$img = elgg_view_entity_icon($image, 'small');
 
 $body = elgg_view('output/url', array(
 	'text' => $img,
@@ -38,4 +33,18 @@ $footer .= '<div class="elgg-subtext">' . elgg_echo('album:num', array($album->g
 $params = array(
 	'footer' => $footer,
 );
-echo elgg_view_module('tidypics-image', $header, $body, $params);
+//echo elgg_view_module('tidypics-image', $header, $body, $params);
+
+	$img = elgg_view('output/img', array('src'=>$image->getIconURL('large'), 'class'=>'rich-image'));
+	$title = elgg_view('output/url', array('href'=>$image->getURL(), 'text'=>elgg_view_title($image->title)));
+	
+	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));	
+	
+	$subtitle = '<i>'.
+                elgg_echo('by') . ' ' . $owner_link . ' ' .
+                elgg_view_friendly_time($image->time_created) . '</i>';
+	
+	$content = $img . $body;
+	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+        echo $header;
+        echo $img;

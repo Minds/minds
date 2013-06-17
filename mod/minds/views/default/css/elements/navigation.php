@@ -48,42 +48,26 @@
 	TABS
 *************************************** */
 .elgg-tabs {
-	margin-bottom: 5px;
-	border-bottom: 2px solid #cccccc;
-	display: table;
-	width: 100%;
+	width: auto;
 }
 .elgg-tabs li {
 	float: left;
-	border: 2px solid #ccc;
-	border-bottom: 0;
-	background: #eee;
-	margin: 0 0 0 10px;
-	
-	-webkit-border-radius: 5px 5px 0 0;
-	-moz-border-radius: 5px 5px 0 0;
-	border-radius: 5px 5px 0 0;
+	font-size:16px;	
 }
 .elgg-tabs a {
 	text-decoration: none;
 	display: block;
-	padding: 3px 10px 0 10px;
+	padding: 3px 25px 0 0;
 	text-align: center;
-	height: 21px;
-	color: #999;
+	color: #333;
 }
 .elgg-tabs a:hover {
-	background: #dedede;
-	color: #000;
+	color:  #4690D6;
 }
 .elgg-tabs .elgg-state-selected {
-	border-color: #ccc;
-	background: white;
 }
 .elgg-tabs .elgg-state-selected a {
-	position: relative;
-	top: 2px;
-	background: white;
+	color: #4690D6;
 }
 
 /* ***************************************

@@ -4,7 +4,7 @@
 $page_owner = elgg_get_logged_in_user_guid();
 elgg_set_page_owner_guid($page_owner);
 
-$limit = get_input("limit", 10);
+$limit = get_input("limit", 20);
 $offset = get_input("offset", 0);
 $filter = get_input("filter", "all");
 
@@ -30,7 +30,7 @@ $sidebar = elgg_view('archive/sidebar');
 		global $CONFIG;
 		$area3 = elgg_view('kaltura/categorylist',array('baseurl' => $CONFIG->wwwroot . 'search/?subtype=kaltura_video&tagtype=universal_categories&tag=','subtype' => 'kaltura_video'));
 */
-$body = elgg_view_layout(	"tiles", array(
+$body = elgg_view_layout(	"gallery", array(
 												'content' => $content, 
 												'sidebar' => $sidebar, 
 												'title' => elgg_echo('archive:all'),

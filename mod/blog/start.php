@@ -132,7 +132,7 @@ function blog_page_handler($page) {
 			$user = get_user_by_username($page[1]);
 			$params = blog_get_page_content_list($user->guid);
 			
-			$body = elgg_view_layout('tiles', $params);
+			$body = elgg_view_layout('gallery', $params);
 
 			echo elgg_view_page($params['title'], $body);
 			
@@ -142,7 +142,7 @@ function blog_page_handler($page) {
 			$user = get_user_by_username($page[1]);
 			$params = blog_get_page_content_friends($user->guid);
 			
-			$body = elgg_view_layout('tiles', $params);
+			$body = elgg_view_layout('gallery', $params);
 
 			echo elgg_view_page($params['title'], $body);
 			
@@ -191,7 +191,7 @@ function blog_page_handler($page) {
 		case 'all':
 			$params = blog_get_page_content_list();
 			
-			$body = elgg_view_layout('tiles', $params);
+			$body = elgg_view_layout('gallery', $params);
 
 			echo elgg_view_page($params['title'], $body);
 			return true;

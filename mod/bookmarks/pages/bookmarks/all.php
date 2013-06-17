@@ -13,7 +13,7 @@ elgg_register_title_button();
 $content = elgg_list_entities(array(
 	'type' => 'object',
 	'subtype' => 'bookmarks',
-	'limit' => 10,
+	'limit' => 24,
 	'full_view' => false,
 	'view_toggle_type' => false
 ));
@@ -24,11 +24,10 @@ if (!$content) {
 
 $title = elgg_echo('bookmarks:everyone');
 
-$body = elgg_view_layout('content', array(
+$body = elgg_view_layout('gallery', array(
 	'filter_context' => 'all',
 	'content' => $content,
 	'title' => $title,
-	'sidebar' => elgg_view('bookmarks/sidebar'),
 ));
 
 echo elgg_view_page($title, $body);

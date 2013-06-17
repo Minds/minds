@@ -325,9 +325,13 @@
 	height: 40px;
 	
 	/* remove the border-radius if you don't want rounded avatars in supported browsers */
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+
+	box-shadow:0 0 1px #888;
+	webkit-box-shadow:0 0 1px #888;
+	moz-box-shadow:0 0 1px #888;
 	
 	-moz-background-clip:  border;
 	background-clip:  border;
@@ -342,10 +346,9 @@
 	width: 100px;
 	height: 100px;
 	
-	/* remove the border-radius if you don't want rounded avatars in supported browsers */
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	box-shadow:0 0 1px #888;
+        webkit-box-shadow:0 0 1px #888;
+        moz-box-shadow:0 0 1px #888;
 	
 	-moz-background-clip:  border;
 	background-clip:  border;

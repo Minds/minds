@@ -175,7 +175,18 @@ function channel_page_handler($page) {
 	);
 	$content = elgg_view_layout('widgets', $params);
 
-	$body = elgg_view_layout('one_column', array('content' => $content));
+	$params = array(
+        	'widgets' => $widgets,
+        	'context' => $context,
+        	'exact_match' => $exact_match,
+	);
+
+	//$header = elgg_view_title($user->name);
+	$header .= elgg_view('page/layouts/widgets/add_button');
+	$header .= elgg_view('page/layouts/widgets/add_panel', $params);
+
+
+	$body = elgg_view_layout('one_column', array('content' => $content, 'header'=>$header));
 	echo elgg_view_page($user->name, $body);
 	return true;
 }

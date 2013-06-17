@@ -69,12 +69,25 @@ if($cover){
 		'width'=>'120px'
 	));
 }
-
-	$image = elgg_view('output/img', array('src'=>$cover->getIconURL('large'), 'class'=>'rich-image'));
+	if($cover){
+		$image = elgg_view('output/img', array('src'=>$cover->getIconURL('large'), 'class'=>'rich-image'));
+	} else {
+		$image = elgg_view('output/img', array('src'=>"mod/tidypics/graphics/empty_album.png", 'class'=>'rich-image'));
+	}
 	$title = elgg_view('output/url', array('href'=>$album->getURL(), 'text'=>elgg_view_title($album->title)));
 	$extras = '<span class="extras"> <p class="time">'. $date . '</p>' . $menu .'</span>';
 	
 	$body = '<span class="info">' . $title . $extras . '<span>';
 	
 	$content = $image . $body;
-	echo $content;
+
+	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));
+
+        $subtitle = '<i>'.
+                elgg_echo('by') . ' ' . $owner_link . ' ' .
+                elgg_view_friendly_time($image->time_created) . '</i>';
+
+        $content = $img . $body;
+        $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+        echo $header;
+        echo $image;

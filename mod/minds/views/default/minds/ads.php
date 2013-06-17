@@ -19,16 +19,16 @@ if($type == 'content-side'){
 				</script>';
 	}
 	echo '<script type="text/javascript"><!--
-			google_ad_client = "ca-pub-9303771378013875";
-			/* Minds Content Sidebar */
-			google_ad_slot = "6555161626";
-			google_ad_width = 200;
-			google_ad_height = 200;
-			//-->
-			</script>
-			<script type="text/javascript"
+		google_ad_client = "ca-pub-9303771378013875";
+		/* Minds large block */
+		google_ad_slot = "5788264423";
+		google_ad_width = 336;
+		google_ad_height = 280;
+		//-->
+		</script>
+		<script type="text/javascript"
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-			</script>';
+		</script>';
 } elseif($type == 'content-foot'){
 	echo '<script id="mNCC" language="javascript">  
 			medianet_width="728";  

@@ -81,8 +81,8 @@ if (!$activity) {
 }
 
 //$content = elgg_view('core/river/filter', array('selector' => $selector));
-
-$sidebar = elgg_view('core/river/sidebar');
+$sidebar = elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
+$sidebar .= elgg_view('core/river/sidebar');
 
 $params = array(
 	'content' =>  $content . $activity,

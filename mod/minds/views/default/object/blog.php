@@ -100,30 +100,20 @@ if ($full) {
 	
 } else {
 	// brief view
-	/*$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
-	$img_link = '<div class="rich-image-container">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$image)) . '</div>';
-	$readmore = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_echo('readmore'), 'class'=>'readmore'));
-	
-	$content = elgg_view('output/url', array('href'=>$blog->getURL(), 'text' => elgg_view_title($blog->title))).$excerpt . $readmore;
-	$body = elgg_view_image_block($img_link, $content, array('class'=>'rich-content news'));
 
-	$params = array(
-		'entity' => $blog,
-		'subtitle' => $subtitle,
-		'metadata' => $metadata,
-		'title' => false,
-		'content' => $body
-	);
-	$params = $params + $vars;
-	$list_body = elgg_view('object/elements/summary', $params);
-
-	echo elgg_view_image_block($owner_icon, $list_body, array('class'=>'rich-content'));*/
 	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
 	$title = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_view_title($blog->title)));
-	$extras = '<span class="extras"> <p class="time">'. $date . '</p><p class="excerpt">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$excerpt)) . '</p>' . $metadata .'</span>';
-	
-	$body = '<span class="info">' . $title . $extras . '<span>';
-	
-	$content = $image . $body;
-	echo $content;
+	$extras = '<p class="excerpt">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$excerpt)) . '</p>';
+
+	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));
+
+        $subtitle = '<i>'.
+                elgg_echo('by') . ' ' . $owner_link . ' ' .
+                elgg_view_friendly_time($image->time_created) . '</i>';
+
+        $content = $img . $body;
+        $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+        echo $header;
+	echo $extras;
+        echo $image;
 }

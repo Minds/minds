@@ -97,6 +97,11 @@
 	min-width:998px;
 	min-height: 360px;
 }
+.elgg-layout > .elgg-inner{
+	width:90%;
+	margin:auto;
+}
+
 .elgg-layout-one-sidebar {
 	/*background: transparent url(<?php echo elgg_get_site_url(); ?>_graphics/sidebar_background.gif) repeat-y right top;*/
 }
@@ -110,14 +115,10 @@
 	position: relative;
 	padding:0;
 	float: right;
-	width: 360px;
+	width: 336px;
 	margin: 0 0 0 10px;
 	padding:0 0 15px 0;
-	background: rgb(255, 255, 255); /* The Fallback */
-	background: rgba(255, 255, 255, 0.75); 
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius:5px;
+	background: #F8F8F8; 
 	/*-moz-box-shadow: 0 0 3px #888;
 	-webkit-box-shadow: 0 0 3px#888;
 	box-shadow: 0 0 3px #888;*/
@@ -133,15 +134,13 @@
 	position: relative;
 	min-height: 360px;
 	padding: 10px;
+	background:#F8F8F8;
 }
 .elgg-layout-one-sidebar .elgg-main {
 	position: relative;
 	min-height: 360px;
 	padding:0;
 	/*border-left:2px solid #cccccc;*/
-	-webkit-border-radius: 5px;
-  	-moz-border-radius: 5px;
- 	border-radius:5px;
 	/*-moz-box-shadow: 0 0 3px #888;
 	-webkit-box-shadow: 0 0 3px#888;
 	box-shadow: 0 0 3px #888;*/
@@ -156,8 +155,8 @@
 }
 .elgg-main > .elgg-list,.elgg-main > .elgg-content{
 	margin:0;
-	padding:10px;
-	background:#FFF;
+	padding:1px 10px;
+	background:#F8F8F8;
 }
 
 /***** PAGE FOOTER ******/

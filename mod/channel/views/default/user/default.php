@@ -45,8 +45,7 @@ if (elgg_get_context() == 'gallery') {
 		$params = array(
 			'entity' => $entity,
 			'title' => $title,
-			'metadata' => $metadata,
-			'subtitle' => $entity->briefdescription,
+			'subtitle' => $entity->location . ' ' . $entity->briefdescription,
 			'content' => elgg_view('user/overview', array('entity' => $entity)),
 		);
 	}

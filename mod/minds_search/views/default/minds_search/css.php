@@ -10,7 +10,7 @@
 .minds-search{}
 form.minds-search{
 	float:left;
-	width:60%;
+	width:50%;
 }
 .minds-search input[type=text]{
 	margin:10px;

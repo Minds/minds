@@ -8,10 +8,10 @@
  
  
     // Add the form to this section
-    $content .= elgg_view("stream/index");
+    $content .= '<div class="elgg-inner">' . elgg_view("stream/index") . '</div>';
  
     // layout the page
-    $body = elgg_view_layout('one_column', array('content' => $content));
+    $body = elgg_view_layout('one_column', array('content' => $content, 'header'=>elgg_view_title($title)));
  
     // draw the page
     echo elgg_view_page($title, $body);

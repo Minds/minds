@@ -113,9 +113,9 @@ if($full){
 	
 	$description = $entity->description ? minds_filter(substr(strip_tags($entity->description), 0, 125) . '...') : '';
 	
-	$subtitle .= 
+	$subtitle = '<i>'.
 		elgg_echo('by') . ' ' . $owner_link . ' ' .
-		elgg_view_friendly_time($entity->time_created);
+		elgg_view_friendly_time($entity->time_created) . '</i>'; 
 		//elgg_echo("kalturavideo:label:length") . ' <strong class="kaltura_video_length">'.$entity->kaltura_video_length.'</strong>';
 	
 	
@@ -133,12 +133,20 @@ if($full){
 	$summary = elgg_view('object/elements/summary', $params);
 	
 	$image = elgg_view('output/img', array('src'=>kaltura_get_thumnail($entity->kaltura_video_id, 120, 68, 100, $entity->thumbnail_sec), 'class'=>'rich-image'));
+	$image = elgg_view('output/url', array(
+			'href' => $entity->getURL(),
+			'class' => 'uiVideoInline archive',
+			'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($entity->kaltura_video_id, 515, 290, 100, $entity->thumbmail_sec) . '\'/>',
+			'title' => $entity->title,
+		));
 	$title = elgg_view('output/url', array('href'=>$entity->getURL(), 'text'=>elgg_view_title($entity->title)));
+
 	$extras = '<span class="extras"> <p class="time">'. $date . '</p>' . $menu .'</span>';
 	
 	$body = '<span class="info">' . $title . $extras . '<span>';
 	
 	$content = $image . $body;
-	echo $content;
-
+	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+	echo $header;
+	echo $image;
 }
