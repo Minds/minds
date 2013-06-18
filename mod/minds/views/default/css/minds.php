@@ -44,6 +44,7 @@ body.news{
 .minds-header-right{
 	margin:12px 0;
 	float:right;
+	height:60px;
 }
 .minds-header-right .notifications{
 	float:right;
@@ -58,6 +59,18 @@ body.news{
 .minds-header-right span.text{
 	float:left;
 	margin-right:5px;
+}
+.minds-header-right:hover .more{
+	display:block;
+}
+.minds-header-right .more{
+	display:none;
+	clear:both;
+	height:25px;
+}
+.minds-header-right .more a{
+	color:#333;
+	font-size:11px;
 }
 .minds-header-right img{
 }
@@ -80,13 +93,12 @@ body.news{
 }
 .minds-header-right .elgg-menu.mtm li{
 	border:0;
-	padding:0 8px 0 2px;
+	padding:0 16px 0 2px;
 }
 .minds-header-right .elgg-menu.mtm li a{
 	border:0;
 }
 .minds-header-right .social_login{
-	display:none;
 }
 /* Top Menu
  */
@@ -317,10 +329,7 @@ li .excerpt a{
 	wdith:400px;
 }
 .elgg-form-account .social{
-	clear:both;
-	width:100%;
-	height:25px;
-	margin:5px 0;
+	margin:5px;
 }
 .elgg-form-account .social > div{
 	float:left;

@@ -47,4 +47,4 @@ $params = array(
 	$content = $img . $body;
 	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
         echo $header;
-        echo $img;
+        echo elgg_view('output/url', array('href'=>$image->getURL(), 'text'=>$img));;

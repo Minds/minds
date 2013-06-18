@@ -20,7 +20,7 @@ $english = array(
 	//change friends to channels
 	'access:friends:label' => "Channels",
 	
-	'friends' => "Subscriptions",
+	'friends' => "Network",
 	'friends:yours' => "Channels you have subscribed to",
 	'friends:owned' => "Channels %s's subscribed to",
 	'friend:add' => "Subscribe",

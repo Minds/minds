@@ -27,10 +27,12 @@ $sidebar = elgg_view('archive/sidebar');
 		global $CONFIG;
 		$area3 = elgg_view('kaltura/categorylist',array('baseurl' => $CONFIG->wwwroot . 'search/?subtype=kaltura_video&tagtype=universal_categories&tag=','subtype' => 'kaltura_video'));
 */
+elgg_register_menu_item('title', array('name'=>'upload', 'text'=>elgg_echo('upload'), 'href'=>'archive/upload','class'=>'elgg-button elgg-button-action'));
+$vars['filter_context'] = 'network';
 $body = elgg_view_layout(	"gallery", array(
 												'content' => $content, 
 												'sidebar' => $sidebar, 
-												'title' => elgg_echo('archive:network'),
+												'title' => elgg_echo('archive'),
 												'filter_override' => elgg_view('page/layouts/content/archive_filter', $vars),
 											));
 

@@ -14,32 +14,62 @@ $context = elgg_extract('context', $vars, elgg_get_context());
 
 if ($context) {
 	$username = elgg_get_logged_in_user_entity()->username;
-	$filter_context = get_input('filter', 'all');
-
+	$type_context = get_input('filter', 'all');
+	$filter_context = elgg_extract('filter_context', $vars, 'all');
+	
 	$tabs = array(
+
 		'all' => array(
 			'text' => elgg_echo('all'),
-			'href' => '?filter=all',
-			'selected' => ($filter_context == 'all'),
-			'priority' => 0,
+                        'href' => "$context/all?filter=$type_context",
+                        'selected' => ($filter_context == 'all'),
+                        'priority' => 0,
+                        'section'=>'filter'
+		),		
+
+		'friends' => array(
+                        'text' => elgg_echo('friends'),
+                        'href' => "$context/network?filter=$type_context",
+                        'selected' => ($filter_context == 'network'),
+                        'priority' => 0,
+                        'section'=>'filter'
+                ),
+
+		'mine' => array(
+			'text' => elgg_echo('mine'),
+			'href' => (isset($vars['mine_link'])) ? $vars['mine_link'] : "$context/owner/$username?filter=$type_context",
+			'selected' => ($filter_context == 'mine'),
+			'priority' => 300,
+			'section' => 'filter'
 		),
-		'media' => array(
+
+		'filter:all' => array(
+			'text' => elgg_echo('all'),
+			'href' => '?filter=all',
+			'selected' => ($type_context == 'all'),
+			'priority' => 0,
+			'section'=>'type'
+		),
+		'filter:media' => array(
 			'text' => elgg_echo('kalturavideo:label:videoaudio'),
 			'href' => '?filter=media',
-			'selected' => ($filter_context == 'media'),
+			'selected' => ($type_context == 'media'),
 			'priority' => 100,
+			'section'=>'type'
 		),
-		'images' => array(
+		'filter:images' => array(
 			'text' => elgg_echo('photos'),
 			'href' => '?filter=images',
-			'selected' => ($filter_context == 'images'),
+			'selected' => ($type_context == 'images'),
 			'priority' => 200,
+			'section'=>'type'
 		),
-		'files' => array(
+		'filter:files' => array(
 			'text' => elgg_echo('file'),
 			'href' => '?filter=files',
-			'selected' => ($filter_context == 'files'),
+			'selected' => ($type_context == 'files'),
 			'priority' => 300,
+			'section'=>'type'
 		),
 
 	);
@@ -47,20 +77,7 @@ if ($context) {
 	foreach ($tabs as $name => $tab) {
 		
 		//remove other options if on the featured wall
-		if(get_input('tab')=='popular'){
-			if($name == 'files'){ continue;}
-		} elseif(get_input('tab')=='featured') {
-			if($name == 'files'){ continue;}
-			if($name == 'images'){ continue;}
-			if($name == 'media'){ continue;}
-			if($name == 'all'){ continue;}
-		} elseif(get_input('tab')=='mostviewed'){
-			if($name == 'files'){ continue;}
-			if($name == 'images'){ continue;}
-			if($name == 'media'){ continue;}
-			if($name == 'all'){ continue;}
-		}
-		
+				
 		$tab['name'] = $name;
 		
 		elgg_register_menu_item('filter', $tab);

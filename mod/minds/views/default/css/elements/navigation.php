@@ -276,6 +276,8 @@
 .elgg-menu-filter {
 	display: table;
 	width: auto;
+	margin-right:16px;
+	float:left;
 }
 .elgg-menu-filter > li {
 	float: left;
@@ -415,10 +417,6 @@
 	color: #999;
 }
 
-.elgg-menu-general > li:after {
-	content: "\007C";
-	padding: 0 4px;
-}
 
 /* ***************************************
 	ENTITY AND ANNOTATION

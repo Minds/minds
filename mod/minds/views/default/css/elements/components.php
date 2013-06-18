@@ -59,7 +59,7 @@
 .elgg-list-river > li{
 	width:auto;
 	height:auto;
-	margin:0 15px 0 15px;
+	margin:0;
 	box-shadow:none;
 	-webkit-box-shadow:none;
 	-moz-box-shadow:none;

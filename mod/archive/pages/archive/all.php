@@ -25,6 +25,9 @@ $content = elgg_list_entities(	array(	'types' => 'object',
 										'archive_view' => TRUE
 									));
 $sidebar = elgg_view('archive/sidebar');
+
+$context = elgg_extract('context', $vars, elgg_get_context());
+elgg_register_menu_item('title', array('name'=>'upload', 'text'=>elgg_echo('upload'), 'href'=>'archive/upload','class'=>'elgg-button elgg-button-action'));
 /*
 		// Get categories, if they're installed
 		global $CONFIG;
@@ -32,9 +35,9 @@ $sidebar = elgg_view('archive/sidebar');
 */
 $body = elgg_view_layout(	"gallery", array(
 												'content' => $content, 
-												'sidebar' => $sidebar, 
-												'title' => elgg_echo('archive:all'),
-												'filter_override' => elgg_view('page/layouts/content/archive_filter', $vars),
+												'sidebar' => $sidebar,
+												'title' => elgg_echo('archive'),
+												'filter_override' => elgg_view('page/layouts/content/archive_filter')
 											));
 
 	// Display page

@@ -17,7 +17,10 @@
 		</span>
 		<img src="<?php echo $user->getIconURL('small');?>"/>
 	</a>
-	
+
+	<span class="more">
+		<a href="<?php echo elgg_get_site_url();?>settings/user/<?php echo $user->username;?>">Settings</a> | <a href="<?php echo elgg_get_site_url();?>action/logout">Exit</a>
+	</span>	
 	<?php } else { ?>
 		<?php echo elgg_view_form('login'); ?>
 		

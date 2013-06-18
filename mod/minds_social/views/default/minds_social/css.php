@@ -4,14 +4,12 @@
  */
 ?>
 .social_login{
-	clear:both;
-	width:100%;
-	height:35px;
+	float:right;
 	display:block;
-	margin:5px 0;
+	margin:5px;
 }
 .social_login img{
-	float:left;
+	width:24px;
 }
 .social_login p{
 	float:left;
