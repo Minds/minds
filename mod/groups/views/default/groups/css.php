@@ -6,6 +6,15 @@
  */
 
 ?>
+.groups .elgg-list{
+	width:auto;
+}
+.groups .elgg-item{
+	float:none;
+	width:auto;
+	height:auto;
+	margin:15px 0;
+}
 .groups-profile > .elgg-image {
 	margin-right: 10px;
 }

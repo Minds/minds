@@ -85,7 +85,7 @@ if($cover){
 
         $subtitle = '<i>'.
                 elgg_echo('by') . ' ' . $owner_link . ' ' .
-                elgg_view_friendly_time($image->time_created) . '</i>';
+                elgg_view_friendly_time($album->time_created) . '</i>';
 
         $content = $img . $body;
         $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);

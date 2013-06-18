@@ -109,7 +109,7 @@ if ($full) {
 
         $subtitle = '<i>'.
                 elgg_echo('by') . ' ' . $owner_link . ' ' .
-                elgg_view_friendly_time($image->time_created) . '</i>';
+                elgg_view_friendly_time($blog->time_created) . '</i>';
 
         $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
         echo $header;
