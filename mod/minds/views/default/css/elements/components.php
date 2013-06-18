@@ -31,15 +31,15 @@
 	/*border-top: 1px dotted #CCCCCC;*/
 	margin:5px 0;
 	clear: both;
-	width:125%;
+	width:100%;
 }
 .elgg-list > li {
 	float: left;
-        margin: 15px;
+        margin: 1.1%;
         border: 0;
 	background:#F8F8F8;
-	padding:10px;
-        width: 340px;
+	padding:10px 10px 2% 10px;
+        width: 29%;
         /*width:28%;*/
 	overflow: hidden;
 	height:240px;
@@ -48,6 +48,18 @@
 	box-shadow: 0 0 1px #888;
 	-webkit-box-shadow: 0 0 1px #888;
 	-moz-box-shadow: 0 0 1px #888;
+}
+@media screen and (max-width: 1100px) {
+        .elgg-list > li{
+                width:29%;
+                height:210px;
+        }
+}
+@media screen and (min-width: 1400px) {
+	.elgg-list > li{
+		width:21%;
+		height:210px;
+	}
 }
 .elgg-list > li .elgg-avatar-medium{
 	margin:10px 8px 0 5px;
