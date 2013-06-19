@@ -103,13 +103,19 @@ if ($full) {
 	
 	$params = array(
 		'entity' => $event,
-		'metadata' => $metadata,
+//		'metadata' => $metadata,
 		'subtitle' => $info,
 		'tags' => $tags,
 	);
 	$list_body = elgg_view('object/elements/summary', $params);
 	
-	echo elgg_view_image_block($icon, $list_body);
+	$owner = $event->getOwnerEntity();
+	$title = elgg_view('output/url', array('href'=>$event->getURL(), 'text'=>elgg_view_title($event->title)));
+	$subtitle = $info;
+
+	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+	echo $header;
+	echo '<a href="'. $event->getURL() .'"> <h2 class="event_date">' . date('D d F', $event->start_date) . '</h2></a>';
 }
 
 ?>

@@ -30,7 +30,7 @@ if (elgg_is_logged_in()) {
 		'selected' => ($filter_context == 'friends'),
 		'priority' => 400,
 	);
-	$text_bit = '<li class="event-calendar-filter-menu-show-only">'.elgg_echo('event_calendar:show_only').'</li>';
+//	$text_bit = '<li class="event-calendar-filter-menu-show-only">'.elgg_echo('event_calendar:show_only').'</li>';
 } else {
 	$text_bit = '';
 }

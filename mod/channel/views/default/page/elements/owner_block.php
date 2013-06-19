@@ -37,6 +37,7 @@ if ($owner instanceof ElggGroup){
 	$body .= elgg_view_menu('channel_elements', array('class'=>'owner_block'));
 
 	$body .= elgg_view('page/elements/owner_block/extend', $vars);
+	$body .= elgg_view('channel/subscribe', array('entity'=>$owner));
 
 	echo elgg_view('page/components/module', array(
 		'body' => elgg_view_image_block($img_lnk, $body),

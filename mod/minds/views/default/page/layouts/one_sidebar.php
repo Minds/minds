@@ -25,8 +25,11 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 <div class="minds-body-header">
 	<div class="inner">
 		<?php
-			echo $vars['header'];
-		?>
+//			echo $vars['header'];
+			echo $nav;
+			echo $vars['header'];	
+	?>
+		
 	</div>	
 </div>
 	
@@ -41,7 +44,6 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 	
 		<div class="elgg-main elgg-body">
 			<?php
-				//echo $nav;
 		
 				// @todo deprecated so remove in Elgg 2.0
 				if (isset($vars['area1'])) {

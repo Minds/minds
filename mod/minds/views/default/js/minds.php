@@ -38,11 +38,36 @@
 		 * Now make this autoscroll!
 		 */
 		$(window).on('scroll', minds.onScroll);
+		$(document).on('click', '.elgg-button-action.subscribe', minds.subscribe);
 	 };
 	 
 	
 	 elgg.register_hook_handler('init', 'system', minds.init);
-	 
+
+	minds.subscribe = function(e){
+		e.preventDefault();
+		var button = $(this);
+		elgg.action($(this).attr('href') + '&ajax=true', {
+			success: function(data) {
+				if(data.output == 'subscribed'){
+					button.addClass('subscribed');
+					button.html('Subscribed');
+					button.attr('href', button.attr('href').replace('add', 'remove'));
+				} else {
+					button.removeClass('subscribed');
+                                        button.html('Subscribe');
+					button.attr('href', button.attr('href').replace('remove','add'));
+				}
+				console.log('success');
+				console.log(data);
+			},
+			error: function(data){
+				console.log('error');
+				console.log(data);
+			}
+		});
+	}	 
+
 	 minds.onScroll = function(){
 	 	$loadMoreDiv = $(document).find('.load-more');
 	 	//go off the loadmore button being available
