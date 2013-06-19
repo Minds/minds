@@ -6,7 +6,7 @@
     {
       "uid": "0f99ab40ab0b4d64a74f2d0deeb03e42",
       "css": "videocam",
-      "code": 127909,
+      "code": 58277,
       "src": "fontawesome"
     },
     {
@@ -476,6 +476,12 @@
       "css": "linkedin-circled",
       "code": 62233,
       "src": "entypo"
+    },
+    {
+      "uid": "b387bb08e237859ba573fb32e2117310",
+      "css": "power",
+      "code": 59399,
+      "src": "typicons"
     }
   ]
 }

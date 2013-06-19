@@ -18,6 +18,7 @@
 .icon-quote:before { content: '\275e'; } /* '❞' */
 .icon-forward:before { content: '\27a6'; } /* '➦' */
 .icon-list:before { content: '\e005'; } /* '' */
+.icon-power:before { content: '\e807'; } /* '' */
 .icon-info-circled:before { content: '\e705'; } /* '' */
 .icon-upload-cloud:before { content: '\e711'; } /* '' */
 .icon-reply:before { content: '\e712'; } /* '' */
@@ -62,7 +63,7 @@
 .icon-linkedin-circled:before { content: '\f319'; } /* '' */
 .icon-globe:before { content: '🌎'; } /* '\1f30e' */
 .icon-mic:before { content: '🎤'; } /* '\1f3a4' */
-.icon-videocam:before { content: '🎥'; } /* '\1f3a5' */
+.icon-videocam:before { content: '\e3a5'; } /* '' */
 .icon-thumbs-up:before { content: '👍'; } /* '\1f44d' */
 .icon-thumbs-down:before { content: '👎'; } /* '\1f44e' */
 .icon-user:before { content: '\e806'; } /* '' */
