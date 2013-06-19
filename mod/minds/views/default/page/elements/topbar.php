@@ -1,5 +1,5 @@
 <a href="<?php echo elgg_get_site_url();?>" class="logo">
-	<img src="<?php echo elgg_get_site_url();?>/mod/minds/graphics/logo-topbar.png"/>
+	<img src="<?php echo elgg_get_site_url();?>/mod/minds/graphics/alpha-logo-topbar.png"/>
 </a>
 <?php echo elgg_view('search/search_box'); ?>
 <?php $user = elgg_get_logged_in_user_entity();?>
