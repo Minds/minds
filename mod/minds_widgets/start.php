@@ -18,17 +18,17 @@ elgg_register_event_handler('init','system',function(){
         
         gatekeeper();
         
-        set_input('widget', $pages[0]);
+        set_input('tab', $pages[0]);
         
         if (isset($pages[1])) {
             
             switch ($pages[1]) {
                 case 'getcode':
                 default:
-                    echo htmlentities(elgg_view('minds_widgets/templates/' . $tab, 
+                    echo htmlentities(elgg_view('minds_widgets/templates/' . $pages[0], 
                         array(
                             'user' => elgg_get_logged_in_user_entity(),
-                            'widget' => $pages[0]
+                            'tab' => $pages[0]
                         )
                     ), ENT_NOQUOTES, "UTF-8");
             }
