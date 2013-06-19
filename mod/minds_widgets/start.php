@@ -43,7 +43,19 @@ elgg_register_event_handler('init','system',function(){
         
         global $CONFIG;
         
-        // Set up menus
+        // Set up settings
+        if(elgg_get_context() == 'settings' ){
+		if(elgg_is_logged_in()){
+			$params = array(
+				'name' => 'widget_settings',
+				'text' => elgg_echo('minds_widgets:menu'),
+				'href' => "widgets",
+			);
+			elgg_register_menu_item('page', $params);
+		}
+	}
+        
+        // Set up widget menus
         if (elgg_get_context() == 'widgets') {
             
             foreach ($CONFIG->minds_widgets as $tab) {
