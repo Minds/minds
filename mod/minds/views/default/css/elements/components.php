@@ -44,6 +44,7 @@
 	overflow: hidden;
 	height:240px;
         display: block;
+	position:relative;
 
 	box-shadow: 0 0 1px #888;
 	-webkit-box-shadow: 0 0 1px #888;

@@ -28,6 +28,7 @@ $body = elgg_view_layout('gallery', array(
 	'filter_context' => 'all',
 	'content' => $content,
 	'title' => $title,
+	'class' => 'bookmarks'
 ));
 
 echo elgg_view_page($title, $body);

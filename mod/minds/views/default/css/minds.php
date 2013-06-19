@@ -247,8 +247,19 @@ li .rich-image{
 	width:110%;
 	margin:0 -10px;
 }
+li .excerpt{
+	background: rgb(0, 0, 0); /* The Fallback */
+	background: rgba(0, 0,0, 0.5); 
+	position: absolute;
+	width:auto;
+	height:auto;
+	bottom: 0;
+	left: 0;
+	padding: 15px;
+	color: #FFF;
+}
 li .excerpt a{
-	color:#333;
+	color:#FFF;
 }
 .tiles .elgg-list li.elgg-item .info{
 	left:0;
@@ -469,10 +480,21 @@ li .excerpt a{
 	padding:5px;
 }
 .elgg-sidebar li a{
-	padding:5px 10px;
+	padding:8px;
 	font-weight:bold;
-	background:transparent;
-	border-bottom:1px solid #CCC;
+}
+.blog-sidebar li a{
+	font-weight:bold;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,0.75);
+	z-index: 999;
+	color: #FFF;
+	padding: 5px;
+}
+.elgg-sidebar li a h3{
+	color:#FFF;
 }
 .elgg-sidebar .elgg-module-aside{
 	background:#FFF;

@@ -100,7 +100,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		'type' => 'object',
 		'subtype' => 'blog',
 		'full_view' => false,
-		'limit' =>20
+		'limit' =>12
 	);
 
 	$current_user = elgg_get_logged_in_user_entity();
@@ -129,7 +129,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		}
 	} else {
 		$return['filter_context'] = 'all';
-		$return['title'] = elgg_echo('blog:title:all_blogs');
+		$return['title'] = elgg_echo('blog');
 		elgg_pop_breadcrumb();
 		elgg_push_breadcrumb(elgg_echo('blog:blogs'));
 	}
@@ -549,16 +549,16 @@ function blog_sidebar($guid = null){
 		if (($key = array_search($blog, $owners_blogs)) !== false) {
 		    unset($owners_blogs[$key]);
 		}
-		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true));
-		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs);
+		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar'));
+		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs, array('class'=>'blog-sidebar'));
 		
 		$return .= elgg_view('minds/ads', array('type'=>'content-side'));
 	}
 	//show featured blogs
 	$featured_blogs = blog_get_featured(5);
 	if($featured_blogs){
-		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true));
-		$return .= elgg_view_module('aside', elgg_echo('blog:featured'), $featured_blogs);	
+		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar'));
+		$return .= elgg_view_module('aside', elgg_echo('blog:featured'), $featured_blogs, array('class'=>'blog-sidebar'));	
 	}
 	
 	return $return;

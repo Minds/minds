@@ -9,6 +9,7 @@
  */
 
 $album = elgg_extract('entity', $vars);
+
 $owner = $album->getOwnerEntity();
 
 $owner_link = elgg_view('output/url', array(
@@ -31,7 +32,7 @@ $menu = elgg_view_menu('entity', array(
 $subtitle = "$author_text $date $categories";
 
 $title = elgg_view('output/url', array(
-	'text' => $album->getTitle(),
+	'text' => $album->title,
 	'href' => $album->getURL(),
 ));
 
@@ -90,4 +91,4 @@ if($cover){
         $content = $img . $body;
         $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
         echo $header;
-        echo elgg_view('output/url', array('href'=>$album->getURL(), 'text'=>$image));;
+        echo elgg_view('output/url', array('href'=>$album->getURL(), 'text'=>$image));

@@ -12,14 +12,18 @@ ob_end_clean();
 
 
 $json = json_decode($out);
-
 switch(get_input('items_type')){
 	case 'entity':
-		foreach ($json as $child) foreach ($child as $grandchild) $json = $grandchild;
+		$new_json = array();
+		foreach ($json as $child){
+			 foreach ($child as $grandchild){
+				$new_json = array_merge($new_json,$grandchild);
+			}
+		}
 		
 		// Removing duplicates
 		// This will be unnecessary when #4504 fixed.
-		$buggy = $json;
+		$buggy = $new_json;
 		$json = array();
 		$guids = array();
 		foreach($buggy as $item) {
@@ -29,7 +33,6 @@ switch(get_input('items_type')){
 		foreach(array_keys($guids) as $i) {
 			$json[$i] = $buggy[$i];
 		}
-		
 		break;
 	case 'annotation': 
 		foreach ($json as $child) {
@@ -61,7 +64,16 @@ foreach($json as $item) {
 					$items[] = new ElggGroup($item);
 					break;
 				case 'object':
-					$items[] = new ElggObject($item);
+					switch(get_subtype_from_id($item->subtype)){
+						case 'album':
+							$items[] = new TidypicsAlbum($item);
+							break;
+						case 'image':
+							$item[] = new TidypicsImage($item);
+							break;
+						default:
+							$items[] = new ElggObject($item);
+					}
 					break;
 			}
 			break;

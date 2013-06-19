@@ -6,17 +6,17 @@ if($type == 'content-side'){
 	if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
 		echo elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds');
 	} else {
-		echo '<script type="text/javascript"><!--
-				google_ad_client = "ca-pub-9303771378013875";
-				/* Minds Content Sidebar */
-				google_ad_slot = "6555161626";
-				google_ad_width = 200;
-				google_ad_height = 200;
-				//-->
-				</script>
-				<script type="text/javascript"
-				src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-				</script>';
+	echo '<script type="text/javascript"><!--
+                google_ad_client = "ca-pub-9303771378013875";
+                /* Minds large block */
+                google_ad_slot = "5788264423";
+                google_ad_width = 336;
+                google_ad_height = 280;
+                //-->
+                </script>
+                <script type="text/javascript"
+                        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+                </script>';
 	}
 	echo '<script type="text/javascript"><!--
 		google_ad_client = "ca-pub-9303771378013875";

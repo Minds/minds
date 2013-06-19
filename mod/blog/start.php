@@ -344,12 +344,13 @@ function blog_pagesetup(){
 		if(elgg_is_logged_in()){
 			$user = elgg_get_logged_in_user_entity();
 
-			$params = array(
+	/*		$params = array(
 				'name' => 'scrapper_settings',
 				'text' => elgg_echo('blog:minds:scraper:menu'),
 				'href' => "blog/scrapers/mine",
 			);
 			elgg_register_menu_item('page', $params);
+	*/
 		}
 	}
 }

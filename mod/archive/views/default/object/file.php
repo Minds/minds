@@ -91,10 +91,12 @@ if ($full) {
 } else {
 	$image = elgg_view('output/img', array('src'=>$file->getIconURL('large'), 'class'=>'rich-image'));
 	$title = elgg_view('output/url', array('href'=>$file->getURL(), 'text'=>elgg_view_title($file->title)));
-	$extras = '<span class="extras"> <p class="time">'. $date . '</p>' . $metadata .'</span>';
+	$extras = '<span class="extras"> <p class="time">'. $date . '</p></span>';
 	
 	$body = '<span class="info">' . $title . $extras . '<span>';
 	
 	$content = $image . $body;
-	echo $content;
+	 $header = elgg_view_image_block(elgg_view_entity_icon($file->getOwnerEntity(), 'small'), $title . $subtitle);
+        echo $header;
+        echo elgg_view('output/url', array('href'=>$file->getURL(), 'text'=>$image));
 }

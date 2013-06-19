@@ -8,6 +8,7 @@
 	 minds.init = function() {	 
 
 		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
+		$('.progress_indicator').tipsy({gravity: 'e'});		
 		
 		$('.thumbnail-tile').hover(
 			function(){
@@ -58,7 +59,7 @@
 	 
 	 minds.listParams = {
 	 	offset : 0,
-	 	limit : 10
+	 	limit : 12
 	 };
 
 	 minds.loadMore = function() {
