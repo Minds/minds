@@ -41,6 +41,7 @@ if (get_input('upgrade') == 'upgrade') {
 	elgg_trigger_event('upgrade', 'system', null);
 	elgg_invalidate_simplecache();
 	elgg_reset_system_cache();
+	apc_clear_cache();
 	
 	_elgg_upgrade_unlock();
 	
