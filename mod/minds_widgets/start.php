@@ -20,7 +20,21 @@ elgg_register_event_handler('init','system',function(){
         
         set_input('widget', $pages[0]);
         
-        require_once(dirname(__FILE__) . '/pages/widgets.php');
+        if (isset($pages[1])) {
+            
+            switch ($pages[1]) {
+                case 'getcode':
+                default:
+                    echo htmlentities(elgg_view('minds_widgets/templates/' . $tab, 
+                        array(
+                            'user' => elgg_get_logged_in_user_entity(),
+                            'widget' => $pages[0]
+                        )
+                    ), ENT_NOQUOTES, "UTF-8");
+            }
+        }
+        else
+            require_once(dirname(__FILE__) . '/pages/widgets.php');
         
         return true;
     });
