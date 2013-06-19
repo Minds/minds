@@ -56,6 +56,12 @@ if (elgg_in_context('widgets')) {
 if ($full) {
 
 	$extra = '';
+	if (elgg_view_exists("file/specialcontent/$mime")) {
+		$extra = elgg_view("file/specialcontent/$mime", $vars);
+	} else if (elgg_view_exists("file/specialcontent/$base_type/default")) {
+		$extra = elgg_view("file/specialcontent/$base_type/default", $vars);
+	}
+	
 
 	$params = array(
 		'entity' => $file,
@@ -65,16 +71,17 @@ if ($full) {
 	);
 	$params = $params + $vars;
 	$download = elgg_view('output/url', array(	'href'=>'/action/archive/download?guid='.$file->guid,
-												'text'=> elgg_echo('archive:download'),
+												'text'=> elgg_echo('minds:archive:download'),
 												'is_action' => true,
 												'class'=> 'elgg-button elgg-button-action archive-button archive-button-right'
 										));
 	$text = elgg_view('output/longtext', array('value' => $file->description));
+		
 	$license =  elgg_view('minds/license', array('license'=>$file->license)); 
 	if($file->access_id == 2){
 		$social_links = elgg_view('minds_social/social_footer');
 	}
-	$body = "$text $download $license $social_links";
+	$body = "$text $extra $download $license $social_links";
 
 	echo elgg_view('object/elements/full', array(
 		'entity' => $file,
