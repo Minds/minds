@@ -4,6 +4,10 @@ $guid = (int) get_input('guid');
 
 $entity = get_entity($guid);
 
+if(!$entity){
+	return false;
+}
+
 elgg_set_page_owner_guid($entity->getOwnerGUID());
 $owner = elgg_get_page_owner_entity();
 
