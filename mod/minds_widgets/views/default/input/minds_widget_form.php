@@ -16,9 +16,22 @@
     $(document).ready(function(){
         $('#minds-widget-<?php echo $vars['tab'];?> form').submit(function() {
             
-            $('#minds-widget-<?php echo $vars['tab'];?> textarea').load("<?php echo  current_page_url() ?>/getcode", $(this).serialize());
+            /*$('#minds-widget-<?php echo $vars['tab'];?> textarea').load(elgg.config.wwwroot + "widgets/<?php echo $vars['tab']; ?>/getcode", $(this).serialize()); */
             
-             $('#minds-widget-<?php echo $vars['tab'];?> div.get-the-code').fadeIn();
+            $.ajax({  
+                type: "GET",  
+                url: elgg.config.wwwroot + "widgets/<?php echo $vars['tab']; ?>/getcode",
+                data: $(this).serialize(),  
+                dataType: "text",  
+
+                success: function(msg, status, jqXHR){  
+                    $('#minds-widget-<?php echo $vars['tab'];?> textarea').val(jqXHR.responseText);
+                    $('#minds-widget-<?php echo $vars['tab'];?> div.get-the-code').fadeIn();
+                    $('#minds-widget-<?php echo $vars['tab'];?> textarea').select();
+                },  
+            });  
+            
+            
             
             return false;
         });
