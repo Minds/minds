@@ -10,7 +10,7 @@
     }
     else
     {
-        $content = elgg_view('minds_widgets/service/' . $tab, array('tab' => $tab, 'user' => elgg_get_logged_in_user_entity()));
+        $content = elgg_view('minds_widgets/service/service' . $tab, array('tab' => $tab, 'user' => elgg_get_logged_in_user_entity()));
     }
     
     $params = array(
