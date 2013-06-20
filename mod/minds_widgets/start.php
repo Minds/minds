@@ -14,11 +14,22 @@ elgg_register_event_handler('init','system',function(){
             'newsfeed'
         );
     
+    // Register service endpoints
+    elgg_register_action('minds_widgets/service/remind', dirname(__FILE__) . '/actions/remind.php');
+    
+    // Extend public pages
+    elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
+	$pages = array('widgets/.*/service/');
+	return array_merge($pages, $return);
+    });
+    
+    // Endpoint
     elgg_register_page_handler('widgets', function($pages) {
         
-        gatekeeper();
         
         set_input('tab', $pages[0]);
+        if (!$pages[0])
+            set_input('tab', 'remind');
         
         if (isset($pages[1])) {
             
@@ -26,21 +37,28 @@ elgg_register_event_handler('init','system',function(){
                 // Actually use the service: the service endpoint
                 case 'service' :
                         require_once(dirname(__FILE__) . '/pages/service.php') ;
+                        return true;
                     break;
                 
                 // Get the code
                 case 'getcode':
                 default:
-                    echo htmlentities(elgg_view('minds_widgets/templates/' . $pages[0], 
+                    
+                    gatekeeper();
+                    echo elgg_view('minds_widgets/templates/' . $pages[0], 
                         array(
                             'user' => elgg_get_logged_in_user_entity(),
                             'tab' => $pages[0]
                         )
-                    ), ENT_NOQUOTES, "UTF-8");
+                    );
+                    exit;
             }
         }
-        else
+        else {
+            
+            gatekeeper();
             require_once(dirname(__FILE__) . '/pages/widgets.php');
+        }
         
         return true;
     });
