@@ -15,7 +15,9 @@ elgg_register_event_handler('init','system',function(){
         );
     
     // Register service endpoints
-    elgg_register_action('minds_widgets/service/remind', dirname(__FILE__) . '/actions/remind.php');
+    foreach ($CONFIG->minds_widgets as $tab) {
+        elgg_register_action('minds_widgets/service/'.$tab, dirname(__FILE__) . '/actions/'.$tab.'.php');
+    }
     
     // Extend public pages
     elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
