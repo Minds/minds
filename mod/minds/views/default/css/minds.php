@@ -60,6 +60,7 @@ body.news{
 }
 .elgg-menu .elgg-menu-item-logout .entypo{
 	padding-top:2px;
+	font-size:20px;
 }
 .elgg-page-topbar .elgg-menu-item-minds-logo{
 	margin-top:-6px;
