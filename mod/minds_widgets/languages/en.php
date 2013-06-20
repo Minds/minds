@@ -13,6 +13,8 @@ $english = array(
     'minds_widgets:tab:subscribe' => 'Subscribe to channel',
     'minds_widgets:tab:voting' => 'Voting',
 
+    
+    'minds_widgets:remind:comments' => 'Share content you create with others on the Minds platform.',
 );
 		
 add_translation("en", $english);
