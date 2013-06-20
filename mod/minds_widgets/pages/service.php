@@ -5,7 +5,8 @@
     if (!elgg_is_logged_in()) {
         global $SESSION;
         $SESSION['last_forward_from'] = current_page_url();
-        $content = elgg_view_form('login');
+        $_SESSION['last_forward_from'] = current_page_url();
+        $content = elgg_view_form('login', null, array('returntoreferer' => true));
     }
     else
     {
