@@ -8,7 +8,7 @@ elgg_register_event_handler('init','system',function(){
         $CONFIG->minds_widgets = array(
             'remind',
             'subscribe',
-            'polls',
+           // 'polls',
             'voting',
             'comments',
             'newsfeed'
