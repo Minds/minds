@@ -38,6 +38,7 @@ a.entypo span.mind_graf {
     display: inline !important;
 }
 
+span.mind_fall,
 a.entypo span.mind_fall {
     display: none;
 }
