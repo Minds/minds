@@ -441,6 +441,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
+		$context = elgg_get_context();
 		
 		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
@@ -459,6 +460,9 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		//Delete button
 		elgg_unregister_menu_item('entity', 'delete'); 
 		if ($entity->canEdit()) {
+			if($context == 'admin'){
+				$handler = 'minds';
+			}
 			$options = array(
 				'name' => 'delete',
 				'href' => "action/$handler/delete?guid={$entity->getGUID()}",
