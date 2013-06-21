@@ -13,12 +13,16 @@
         $content = elgg_view('minds_widgets/service/service' , array('tab' => $tab, 'user' => elgg_get_logged_in_user_entity()));
     }
     
-    $params = array(
-            'title' => elgg_echo('minds_widgets:tab:'.$tab),
-            'content' => $content,
-            'sidebar' => ''
-    );
-    $body = elgg_view_layout('default', $params);
+    if (get_input('embed')!='yes') {
+        $params = array(
+                'title' => elgg_echo('minds_widgets:tab:'.$tab),
+                'content' => $content,
+                'sidebar' => ''
+        );
+        $body = elgg_view_layout('default', $params);
 
-    
-    echo elgg_view_page(elgg_echo('minds_widgets:tab:'.$tab), $body);
+
+        echo elgg_view_page(elgg_echo('minds_widgets:tab:'.$tab), $body);
+    } else {
+        echo $content;
+    }
