@@ -36,6 +36,12 @@ elgg_register_event_handler('init','system',function(){
         if (isset($pages[1])) {
             
             switch ($pages[1]) {
+                
+                // Load CSS
+                case 'css' :
+                        echo elgg_view('minds_widgets/css');
+                    break;
+                
                 // Actually use the service: the service endpoint
                 case 'service' :
                         require_once(dirname(__FILE__) . '/pages/service.php') ;
