@@ -221,7 +221,12 @@ function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
 
 function minds_register_hook()
 {
-	if (get_input('terms',false) != 'true') {
+	if (get_input('tac',false) != 'true') {
+		register_error(elgg_echo('minds:register:terms:failed'));
+		forward(REFERER);
+	}
+	//a honey pot
+	if (get_input('terms',false) == 'true') {
 		register_error(elgg_echo('minds:register:terms:failed'));
 		forward(REFERER);
 	}

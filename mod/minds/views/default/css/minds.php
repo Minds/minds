@@ -113,6 +113,13 @@ body.news{
        		margin-top:-1px;
 	}
 }
+
+/**
+ * Register
+ */
+input[name=terms]{
+	display:none;
+}
 /* Login button 
  */
 #login-dropdown{
