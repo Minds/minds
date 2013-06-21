@@ -42,7 +42,7 @@ $lang = get_current_language();
 <?php echo elgg_view('page/elements/head', $vars); ?>
 </head>
 <body>
-<div class="">
+<div class="elgg-body-mindswidgets">
 	
 			<?php echo $body; ?>
 	

@@ -17,6 +17,7 @@ $english = array(
     'minds_widgets:remind:comments' => 'Share content you create with others on the Minds platform.',
     'minds_widgets:subscribe:comments' => 'Allow others to subscribe to your channel',
     'minds_widgets:polls:comments' => 'Embed this poll...',
+    'minds_widgets:newsfeed:comments' => 'Embed your news feed...'
 );
 		
 add_translation("en", $english);
