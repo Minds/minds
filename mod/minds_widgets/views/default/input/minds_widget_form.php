@@ -5,7 +5,7 @@
     <form>
         <?php echo  $vars['form-body']; ?>
         
-        <input id="minds-widget-<?php echo $vars['tab'];?>-submit" type="submit" value="Get the code..." />
+        <input id="minds-widget-<?php echo $vars['tab'];?>-submit" class="elgg-button" type="submit" value="Get the code..." />
     </form>
     
     <div class="get-the-code" style="display:none; padding:20px; margin-top: 30px; background-color: #ddd;" title="<?php echo  elgg_echo('minds_widgets:tab:'.$vars['tab']); ?>">
