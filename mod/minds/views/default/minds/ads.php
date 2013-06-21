@@ -37,18 +37,19 @@ if($type == 'content-side'){
 		 </script> 
 		 <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CU21QO2U" language="javascript"></script>';
 			
-} elseif($type == 'news-side'){
-	echo '<div style="margin:8px;"><script type="text/javascript"><!--
-			google_ad_client = "ca-pub-9303771378013875";
-			/* News ad */
-			google_ad_slot = "9083688828";
-			google_ad_width = 125;
-			google_ad_height = 125;
-			//-->
-			</script>
-			<script type="text/javascript"
-			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-			</script></div>';
+} elseif($type == 'news'){
+ echo '<script type="text/javascript"><!--
+google_ad_client = "ca-pub-9303771378013875";
+/* News */
+google_ad_slot = "6842535224";
+google_ad_width = 300;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>';
+	
 } elseif($type == 'large-block'){
 	echo '<script type="text/javascript"><!--
 			google_ad_client = "ca-pub-9303771378013875";

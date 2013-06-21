@@ -41,6 +41,7 @@
 		$(document).on('click', '.elgg-button-action.subscribe', minds.subscribe);
 		$(document).on('click', '.elgg-menu-item-feature a', minds.feature);
 		$(document).on('click', '.elgg-menu-item-delete a', minds.delete); 
+		$(document).on('click', '.elgg-menu-item-remind a', minds.remind);
 	};
 	 
 	
@@ -89,8 +90,26 @@
 		var item = button.parents('.elgg-item');
                 elgg.action($(this).attr('href') + '&ajax=true', {
                         success: function(data) {
-                  		item.remove(); 
+                  		item.effect('drop'); 
                          },
+
+                        error: function(data){
+                        }
+                });
+        }
+
+        minds.remind = function(e){
+                e.preventDefault();
+                var button = $(this);
+                var item = $(this).parent('elgg-list');
+		elgg.action($(this).attr('href') + '&ajax=true', {
+                        success: function(data) {
+				if(item.length){
+				//we are in a list so we want to add a remind item in
+				}
+        			button.css('color', '#4690D6');        
+			/*	button.effect('explode'); */      
+	  	 },
 
                         error: function(data){
                         }

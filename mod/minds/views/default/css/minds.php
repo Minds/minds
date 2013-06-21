@@ -102,7 +102,7 @@ body.news{
 }
 /* Top Menu
  */
-.elgg-menu .entypo{
+.entypo{
 	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
 	font-size:18px;
 	font-weight:normal;
@@ -213,6 +213,32 @@ body.news{
 }
 .minds-body-header .elgg-menu-entity, .minds-body-header .elgg-menu-title{
 	margin:10px;
+}
+.minds-body-header .elgg-form-wall-add{
+	float:right;
+	width:35%;
+}
+.minds-body-header .elgg-form-wall-add textarea{
+	margin:0;
+	width:100%;
+}
+.minds-body-header .elgg-form-wall-add:hover textarea{
+	width:82%
+}
+.minds-body-header .elgg-form-wall-add .elgg-button-submit{
+	float:right;
+	display:none;
+	min-width:15%;
+	text-align:right;
+}
+.minds-body-header .elgg-form-wall-add:hover .elgg-button-submit{
+	display:block;
+}
+.minds-body-header .elgg-form-wall-add .elgg-foot{
+	display:none;
+}
+.minds-body-header .elgg-form-wall-add:hover .elgg-foot{
+	display:block;
 }
 /**
  * Index views

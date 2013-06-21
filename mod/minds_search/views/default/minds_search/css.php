@@ -103,6 +103,7 @@ a .minds-search-item p{
 	width:100%;
 	height:35px;
 	clear:both;
+	padding:10px;
 }
 .minds-search-nav-section{
 	float:left;
@@ -151,7 +152,7 @@ a .minds-search-item p{
 	margin:0 5px;
 }
 .elgg-menu-search-result > .elgg-menu-item-remind{
-	margin:5px;
+	margin:5px 0 5px 10px;
 }
 .search-result-license{
 	float:left;

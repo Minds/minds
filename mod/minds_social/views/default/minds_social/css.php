@@ -32,14 +32,14 @@
 }
 
 .social-post-icons{
-	float:right;
+	float:left;
 	margin-top:1px;
 }
 .social-post-icons input{
 	float:left;
 	margin:2px 5px;
 }
-.social-post-icons img{
+.social-post-icons span{
 	float:left;
 	height:15px;
 }
