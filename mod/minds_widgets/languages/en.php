@@ -19,6 +19,7 @@ $english = array(
     'minds_widgets:polls:comments' => 'Embed this poll...',
     'minds_widgets:newsfeed:comments' => 'Embed your news feed...',
     'minds_widgets:comments:comments' => 'Embed comments on a page...',
+    'minds_widgets:voting:comments' => 'Embed thumbs up/down on your page',
 );
 		
 add_translation("en", $english);
