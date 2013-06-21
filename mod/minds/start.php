@@ -461,7 +461,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		elgg_unregister_menu_item('entity', 'delete'); 
 		if ($entity->canEdit()) {
 			if($context == 'admin'){
-				$handler = 'minds';
+				$handler = 'admin/user';
 			}
 			$options = array(
 				'name' => 'delete',
