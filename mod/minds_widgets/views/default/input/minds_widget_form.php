@@ -25,7 +25,7 @@
                 dataType: "text",  
 
                 success: function(msg, status, jqXHR){  
-                    $('#minds-widget-<?php echo $vars['tab'];?> textarea').val(jqXHR.responseText);
+                    $('#minds-widget-<?php echo $vars['tab'];?> div.get-the-code textarea').val(jqXHR.responseText);
                     $('#minds-widget-<?php echo $vars['tab'];?> div.get-the-code').fadeIn();
                     $('#minds-widget-<?php echo $vars['tab'];?> textarea').select();
                 },  
