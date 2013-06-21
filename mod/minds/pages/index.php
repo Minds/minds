@@ -35,6 +35,6 @@ $params = array(	'content'=> elgg_view_entity_list($entities, $vars, $offset, $l
 
 $body = elgg_view_layout('one_column', $params);
 
-echo elgg_view_page('', $body);
+echo elgg_view_page('', $body, 'default', array('class'=>'index'));
 
 ?>

@@ -135,7 +135,7 @@ if($full){
 	$image = elgg_view('output/img', array('src'=>kaltura_get_thumnail($entity->kaltura_video_id, 120, 68, 100, $entity->thumbnail_sec), 'class'=>'rich-image'));
 	$image = elgg_view('output/url', array(
 			'href' => $entity->getURL(),
-			'class' => 'uiVideoInline archive',
+			'class' => 'uiVideoInline archive entity',
 			'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($entity->kaltura_video_id, 515, 290, 100, $entity->thumbmail_sec) . '\'/>',
 			'title' => $entity->title,
 		));

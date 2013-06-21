@@ -384,7 +384,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
 				'class' => 'entypo',
-				'confirm' => elgg_echo('deleteconfirm'),
+				//'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
 				'priority' => 200,
 			);
@@ -441,7 +441,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
 				'class' => 'entypo',
-				'confirm' => elgg_echo('deleteconfirm'),
+				//'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
 				'priority' => 200,
 			);

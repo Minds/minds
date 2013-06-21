@@ -23,12 +23,21 @@ if($entity->featured != true){
 	$entity->featured = true;
 	
 	add_to_river('river/object/'.$entity->getSubtype().'/feature', 'feature', $entity->getOwnerGUID(), $entity->getGuid());
+
+	system_message(elgg_echo("Featured..."));
+	
+	echo 'featured';
 	
 }else{
 	$es->remove($entity->getSubType(), $entity->getGuid());
 	$entity->featured = false;
 	
 	minds_elastic_delete_news(array('action_types'=>'feature', 'object_guids'=>array($entity->getGuid())));
+
+	 system_message(elgg_echo("Un-featured..."));
+	
+	echo 'un-featured';
+
 }
 
 $entity->save();

@@ -38,7 +38,7 @@
         margin: 1.1%;
         border: 0;
 	background:#F8F8F8;
-	padding:10px 10px 2% 10px;
+	padding:10px 10px 0 10px;
         width: 29%;
         /*width:28%;*/
 	overflow: hidden;

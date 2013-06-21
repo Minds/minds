@@ -6,6 +6,12 @@
  */
 ?>
 
+#notification li{
+	width:auto;
+	height:auto;
+	float:none;
+}
+
 #notificationstable td.namefield {
 	width:250px;
 	text-align: left;
@@ -84,7 +90,7 @@
 }
 
 .notifications.popup{
-	width:250px;
+	width:336px;
 }
 
 .notify_time{

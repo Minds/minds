@@ -37,7 +37,15 @@
 	width:100%;
 	margin: 0;
 }
-
+.uiVideoInline.archive.entity{
+	width:110%;
+	padding-bottom:60%;
+	margin-left:-10px;
+}
+.uiVideoInline.archive.entity span{
+	height:90%;
+	width:95%;
+}
 .uiVideoInline.archive{
 	width:100%;
 	height:0;

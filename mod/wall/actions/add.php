@@ -72,7 +72,7 @@ if($ref == 'wall'){
 	
 	$item = new MindsNewsItem($data);
 
-	$output = elgg_view_list_item($item, array('list_class'=>'elgg-list-river elgg-river'));
+	$output = elgg_view_list_item($item, array('list_class'=>'elgg-item elgg-list-river elgg-river', 'item_class'=>'elgg-item elgg-river-item'));
 }
 
 echo $output;

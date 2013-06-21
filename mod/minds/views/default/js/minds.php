@@ -39,7 +39,9 @@
 		 */
 		$(window).on('scroll', minds.onScroll);
 		$(document).on('click', '.elgg-button-action.subscribe', minds.subscribe);
-	 };
+		$(document).on('click', '.elgg-menu-item-feature a', minds.feature);
+		$(document).on('click', '.elgg-menu-item-delete a', minds.delete); 
+	};
 	 
 	
 	 elgg.register_hook_handler('init', 'system', minds.init);
@@ -58,15 +60,42 @@
                                         button.html('Subscribe');
 					button.attr('href', button.attr('href').replace('remove','add'));
 				}
-				console.log('success');
-				console.log(data);
 			},
 			error: function(data){
-				console.log('error');
-				console.log(data);
 			}
 		});
 	}	 
+	
+	minds.feature = function(e){
+		e.preventDefault();
+		var button = $(this);
+                elgg.action($(this).attr('href') + '&ajax=true', {
+                        success: function(data) {
+				if(data.output == 'featured'){			
+                                        button.html('un-feature');
+				} else {
+					button.html('feature');
+				}
+                         },
+                   
+                        error: function(data){
+                        }
+                });
+	}
+
+	minds.delete = function(e){
+		e.preventDefault();
+               var button = $(this);
+		var item = button.parents('.elgg-item');
+                elgg.action($(this).attr('href') + '&ajax=true', {
+                        success: function(data) {
+                  		item.remove(); 
+                         },
+
+                        error: function(data){
+                        }
+                });
+        }
 
 	 minds.onScroll = function(){
 	 	$loadMoreDiv = $(document).find('.load-more');
