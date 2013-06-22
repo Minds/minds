@@ -8,6 +8,11 @@
 
 $album = $vars['item']->getObjectEntity();
 
+if($album instanceof TidypicsAlbum){
+} else {
+	return true;
+}
+
 $album_river_view = elgg_get_plugin_setting('album_river_view', 'tidypics');
 if ($album_river_view == "cover") {
 	$image = $album->getCoverImage();
