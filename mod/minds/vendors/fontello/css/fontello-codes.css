@@ -18,6 +18,7 @@
 .icon-quote:before { content: '\275e'; } /* '❞' */
 .icon-forward:before { content: '\27a6'; } /* '➦' */
 .icon-list:before { content: '\e005'; } /* '' */
+.icon-power:before { content: '\e807'; } /* '' */
 .icon-info-circled:before { content: '\e705'; } /* '' */
 .icon-upload-cloud:before { content: '\e711'; } /* '' */
 .icon-reply:before { content: '\e712'; } /* '' */

@@ -585,6 +585,12 @@ class ElggMenuItem {
 			unset($vars['confirm']);
 		}
 
+		 if(elgg_get_viewtype() == 'mobile'){
+                        if($vars['title']){
+				$vars['text'] = $vars['title'];
+                	}  
+		}
+
 		return elgg_view('output/url', $vars);
 	}
 }

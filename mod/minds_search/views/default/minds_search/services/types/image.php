@@ -17,21 +17,24 @@ if($source == 'minds'){
 	try{
 		
 		$entity = get_entity($image['guid']);
-		$title = $entity->getTitle();
-		$iconURL = $entity->getIconURL('small');
-		$img = elgg_view('output/img', array('src'=>$iconURL));
+		if($entity instanceof TidypicsImage || $entity instanceof TidypicsAlbum){
+			$title = $entity->getTitle();
+			$iconURL = $entity->getIconURL('small');
+			$img = elgg_view('output/img', array('src'=>$iconURL));
 		
-		if($entity->getSubtype() == 'album'){
-			$images = $entity->getImages(4);
+			if($entity->getSubtype() == 'album'){
+				$images = $entity->getImages(4);
 	
-			if (count($images)) {
-				$img = '<ul class="tidypics-album-block">';
-				foreach($images as $icon) {
-					$img .= '<li class="tidypics-photo-item">';
-					$img .= elgg_view('output/img', array('src'=>$icon->getIconURL('small')));
-					$img.= '</li>';
+				if (count($images)) {
+					$img = '<ul class="tidypics-album-block">';
+					foreach($images as $icon) {
+						$img .= '<li class="tidypics-photo-item">';
+						$img .= elgg_view('output/img', array('src'=>$icon->getIconURL('small')));
+						$img.= '</li>';
+					}
+					$img .= '</ul>';
 				}
-				$img .= '</ul>';
+			
 			}
 		}
 	} catch (Exception $e){

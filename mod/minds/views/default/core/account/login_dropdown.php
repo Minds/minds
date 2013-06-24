@@ -22,7 +22,7 @@ $body = elgg_view_form('login', array('action' => "{$login_url}action/login"));
 			'href' => 'login#login-dropdown-box',
 			//'rel' => 'popup',
 			'class' => 'login-button entypo',
-			'text' => '&#59278;',
+			'text' => '&#59399;',
 			
 		)); 
 		echo elgg_view_module('dropdown', '', $body, array('id' => 'login-dropdown-box')); 

@@ -222,7 +222,12 @@ function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
 
 function minds_register_hook()
 {
-	if (get_input('terms',false) != 'true') {
+	if (get_input('tac',false) != 'true') {
+		register_error(elgg_echo('minds:register:terms:failed'));
+		forward(REFERER);
+	}
+	//a honey pot
+	if (get_input('terms',false) == 'true') {
 		register_error(elgg_echo('minds:register:terms:failed'));
 		forward(REFERER);
 	}
@@ -304,7 +309,7 @@ function minds_pagesetup(){
 		elgg_register_menu_item('topbar', array(
 			'name' => 'logout',
 			'href' => 'action/logout',
-			'text' => '&#59278;',
+			'text' => '&#59399;',
 			'title' => elgg_echo('logout'),
 			'class' => 'entypo',
 			'priority' => 1000,
@@ -418,6 +423,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
+		$context = elgg_get_context();
 		
 		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
@@ -436,6 +442,9 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		//Delete button
 		elgg_unregister_menu_item('entity', 'delete'); 
 		if ($entity->canEdit()) {
+			if($context == 'admin'){
+				$handler = 'admin/user';
+			}
 			$options = array(
 				'name' => 'delete',
 				'href' => "action/$handler/delete?guid={$entity->getGUID()}",
