@@ -9,10 +9,10 @@
  * Free & Open Source Social Media
  */
 
-$limit = get_input('limit', 24);
+$limit = get_input('limit', 12);
 $offset = get_input('offset', 0);
 
-$entities = minds_get_featured('', $limit); 
+$entities = minds_get_featured('', $limit, 'entities',$offset); 
 
 $title = elgg_view_title('Free & Open Source Social Media');
 $buttons = elgg_view('output/url', array('href'=>elgg_get_site_url().'register', 'text'=>elgg_echo('register'), 'class'=>'elgg-button elgg-button-action'));
@@ -27,8 +27,7 @@ $header = <<<HTML
 	</div>
 </div>
 HTML;
-
-$params = array(	'content'=> elgg_view_entity_list($entities, $vars, $offset, $limit, false, false, true), 
+$params = array(	'content'=> elgg_view_entity_list($entities,$vars, $offset, $limit, false, false, true) . elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000)), 
 					'header'=> $header,
 					'filter' => false
 					);

@@ -506,8 +506,23 @@ li .excerpt a{
 	padding:5px;
 }
 .elgg-sidebar li a{
-	padding:8px;
+        padding:8px;
+}
+.elgg-sidebar li.elgg-item{
+	margin:5px;
+	width:148px;
+	padding:0;
+	height:auto;
+}
+.elgg-sidebar li.elgg-item img{
+	width:100%;
+}
+.elgg-sidebar li.elgg-item a{
+	padding:0;
 	font-weight:bold;
+}
+.elgg-sidebar li.elgg-item h3, .elgg-sidebar li .stamp{
+	padding:8px;
 }
 .blog-sidebar li a{
 	font-weight:bold;

@@ -177,7 +177,7 @@
 	border: 0;
 	width: 260px;
 	overflow: hidden;
-	height: auto;
+	height: 125px;
 	display: block;
 	box-shadow:none;
 	-webkit-box-shadow:none;

@@ -74,6 +74,10 @@ if ($context) {
 
 	);
 	
+	if(!elgg_is_logged_in()){
+		unset($tabs['mine']);
+	}
+	
 	foreach ($tabs as $name => $tab) {
 		
 		//remove other options if on the featured wall

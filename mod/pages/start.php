@@ -16,8 +16,8 @@ function pages_init() {
 	// register a library of helper functions
 	elgg_register_library('elgg:pages', elgg_get_plugins_path() . 'pages/lib/pages.php');
 
-	$item = new ElggMenuItem('pages', elgg_echo('pages'), 'pages/all');
-	elgg_register_menu_item('site', $item);
+//	$item = new ElggMenuItem('pages', elgg_echo('pages'), 'pages/all');
+//	elgg_register_menu_item('site', $item);
 
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('pages', 'pages_page_handler');

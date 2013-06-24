@@ -101,7 +101,7 @@ h3 a{ color:#333; }
 
 .elgg-heading-main {
 	float: left;
-	max-width: 65%;;
+	max-width: 70%;;
 }
 .elgg-heading-basic {
 	color: #333;

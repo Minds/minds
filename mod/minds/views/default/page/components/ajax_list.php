@@ -3,6 +3,20 @@
 $elgg_path = str_replace(elgg_get_site_url(), '', $vars['path']);
 $path = explode('/', $elgg_path);
 
+if($elgg_path == elgg_get_site_url() || $elgg_path == null){
+
+elgg_set_viewtype('json');
+
+if(!include_once(elgg_get_plugins_path() . 'minds/pages/index.php')){
+		return false;
+}
+
+elgg_set_viewtype('default');
+$out = ob_get_contents();
+ob_end_clean();
+
+} else {
+
 ob_start();
 elgg_set_viewtype('json');
 page_handler(array_shift($path), implode('/', $path));
@@ -10,6 +24,7 @@ elgg_set_viewtype('default');
 $out = ob_get_contents();
 ob_end_clean();
 
+}
 
 $json = json_decode($out);
 switch(get_input('items_type')){
@@ -69,7 +84,7 @@ foreach($json as $item) {
 							$items[] = new TidypicsAlbum($item);
 							break;
 						case 'image':
-							$item[] = new TidypicsImage($item);
+							$items[] = new TidypicsImage($item);
 							break;
 						default:
 							$items[] = new ElggObject($item);

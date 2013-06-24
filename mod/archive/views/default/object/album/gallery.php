@@ -9,11 +9,9 @@
  */
 
 $album = elgg_extract('entity', $vars);
-if($album instanceof TidypicsAlbum){
-	
-} else {
-	return true;
-}
+if($album !instanceof TidypicsAlbum){
+return true;	
+} 
 $album_cover = elgg_view_entity_icon($album, 'small', array('href'=>$album->getURL()));
 
 $header = elgg_view('output/url', array(

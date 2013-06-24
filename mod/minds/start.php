@@ -564,12 +564,12 @@ function minds_fetch_image($description, $owner_guid) {
   return $image;
 }
 
-function minds_get_featured($type, $limit = 5, $output = 'entities'){
+function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = 0){
 	global $CONFIG;
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
 		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
-		$data = $es->query($type,null, 'time_stamp:desc', $limit, 0, array('age'=>3600));
+		$data = $es->query($type,null, 'time_stamp:desc', $limit, $offset, array('age'=>3600));
 		foreach($data['hits']['hits'] as $item){
 			$guids[] = intval($item['_id']);
 		}

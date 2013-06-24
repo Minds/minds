@@ -40,7 +40,7 @@
 		$(window).on('scroll', minds.onScroll);
 		$(document).on('click', '.elgg-button-action.subscribe', minds.subscribe);
 		$(document).on('click', '.elgg-menu-item-feature a', minds.feature);
-		$(document).on('click', '.elgg-menu-item-delete a', minds.delete); 
+		$(document).on('click', 'li .elgg-menu-item-delete a', minds.delete); 
 		$(document).on('click', '.elgg-menu-item-remind a', minds.remind);
 	};
 	 
@@ -142,10 +142,10 @@
 			$('.load-more').addClass('loading');
 			
 			var loc =  elgg.normalize_url(elgg.parse_url(location.href).path);
-			if(loc == elgg.get_site_url()){
+/*			if(loc == elgg.get_site_url()){
 				loc = location.href + 'news/featured';
 			}
-
+*/
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {
 				path : loc,
@@ -155,7 +155,7 @@
 				offset: $list.find('.elgg-list').children().length + (parseInt($params.offset) || 0)
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-			console.log(url);
+//			console.log(url);
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				

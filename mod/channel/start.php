@@ -248,7 +248,7 @@ function channel_url($user) {
  * @return string
  */
 function channel_override_avatar_url($hook, $entity_type, $return_value, $params) {
-
+	global $CONFIG;
 	// if someone already set this, quit
 	if ($return_value) {
 		return null;
@@ -279,7 +279,7 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 	try {
 		if ($filehandler->exists()) {
 			$join_date = $user->getTimeCreated();
-			return "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
+			return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
 		}
 	} catch (InvalidParameterException $e) {
 		elgg_log("Unable to get profile icon for user with GUID $user_guid", 'ERROR');
