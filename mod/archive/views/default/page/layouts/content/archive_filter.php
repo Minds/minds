@@ -76,6 +76,7 @@ if ($context) {
 	
 	if(!elgg_is_logged_in()){
 		unset($tabs['mine']);
+		unset($tabs['friends']);
 	}
 	
 	foreach ($tabs as $name => $tab) {
