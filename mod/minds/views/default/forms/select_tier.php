@@ -7,6 +7,9 @@
        'type' => 'object',
         'subtype' => 'minds_tier'
     ));
+    
+    if ($tiers) {
+        
 
 ?>
 <div class="tiers">
@@ -31,6 +34,15 @@
     <?php echo elgg_view('input/submit', array('value' => 'Select tier...')); ?>
 </div>
 <?php
+
+    }
+ else {
+?>
+    
+<p>No tiers have been defined. Please make sure you have activated the minds_tiers plugin and then create some payment tiers!</p>
+
+<?php
+}
 
     elgg_set_ignore_access($ia);
     
