@@ -14,7 +14,6 @@
 }
 @font-face {
   font-family: 'fontello';
-
   src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246');
   src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246#iefix') format('embedded-opentype'),
        url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?96059246') format('woff'),
@@ -80,6 +79,8 @@ body.news{
 	width:125px;
 	height:28px;
 	margin-right:8px;
+	font-size:11px;
+	padding:0 8px;
 }
 .minds-header-right .elgg-form .elgg-button-submit{
 	padding: 4px;
@@ -136,7 +137,19 @@ body.news{
 	-webkit-box-shadow:none !important;
 	-moz-box-shadow:none !important;
 }
-
+.login{
+	width:300px !important;
+	margin:auto;
+}
+.login .social_login{
+	margin:10px 0;
+}
+.login .elgg-button-submit {
+	float:right;
+}
+.login li{
+	width:100%;
+}
 .elgg-menu-river li{
 	padding:0 3px;
 }
@@ -366,19 +379,28 @@ li .excerpt a{
  */
 .elgg-form-account{
 	float:left;
-	width:450px;
-	max-width:450px;
+	max-width:55%;
+	width:55%;
 }
 .elgg-form-account-side{
 	float:right;
-	wdith:400px;
+	width:400px;
 }
 .elgg-form-account .social{
 	margin:5px;
+	width:100%;
+	height:45px;
+	clear:both;
 }
 .elgg-form-account .social > div{
 	float:left;
 	margin-right:10px;
+}
+.elgg-form-account .social_login{
+	margin:5px;
+	width:175px;
+	clear:none;
+	float:left;
 }
 .elgg-form-account .social .facebook{
 	padding-top:1px;
@@ -738,6 +760,7 @@ form.elgg-form.hj-ajaxed-comment-save input{
     height:25px;
     width:100%;
     font-size:12px;
+ 	padding:0 8px;
 }
 
 /** 

@@ -136,7 +136,15 @@
 	font-size: 8px;
 	font-weight: bold;
 }
-
+.notifications .elgg-list{
+	width:auto;
+}
+.notifications .elgg-item{
+	width:auto;
+	height:auto;
+	float:none;
+	margin:5px 0;
+}
 
 
 

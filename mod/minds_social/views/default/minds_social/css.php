@@ -4,12 +4,20 @@
  */
 ?>
 .social_login{
-	float:right;
+	margin:5px 5px 5px 35%;
+	clear:both;
+	height:35px;
+	width:100%;
+}
+.minds-header-right .elgg-form .social_login{
+	display:none;
+}
+.elgg-form-login:hover .social_login{
 	display:block;
-	margin:5px;
 }
 .social_login img{
-	width:24px;
+	width:32px;
+	float:left;
 }
 .social_login p{
 	float:left;

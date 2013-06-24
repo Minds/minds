@@ -26,8 +26,14 @@
 		
 		//add a tab in site menu
 		//$item = new ElggMenuItem('webinar', elgg_echo('webinar:menu:site'), 'gatherings/all');
-		//elgg_register_menu_item('site', $item);
-		
+		if(elgg_is_logged_in()){
+		elgg_register_menu_item('site', array(	'name'=>'gatherings',
+							'title'=>elgg_echo('webinar:menu:site'),
+							'href'=>'gatherings/all',
+							'text' => '&#58277;',
+                        				'class' => 'entypo', 	
+						));
+		}
 		// Register a page handler, so we can have nice URLs -- FALLBACK
 		elgg_register_page_handler('webinar','webinar_page_handler');
 		// Register a page handler, so we can have nice URLs -- CURRENT AND PREFFERED

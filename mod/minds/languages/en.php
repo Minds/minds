@@ -195,7 +195,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 
     
     
-        'register:node' => 'Build a network',
+        'register:node' => 'Launch a social network',
         "register:node:testping" => 'Multisite node DNS Test',
 );
 		

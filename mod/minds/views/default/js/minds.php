@@ -38,8 +38,11 @@
 		 * Now make this autoscroll!
 		 */
 		$(window).on('scroll', minds.onScroll);
-		$(document).on('click', '.elgg-button-action.subscribe', minds.subscribe);
+		if(elgg.is_logged_in()){
+			$(document).on('click', '.elgg-button-action.subscribe', minds.subscribe);
+		}
 		$(document).on('click', '.elgg-menu-item-feature a', minds.feature);
+
 		$(document).on('click', 'li .elgg-menu-item-delete a', minds.delete); 
 		$(document).on('click', '.elgg-menu-item-remind a', minds.remind);
 	};
