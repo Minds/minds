@@ -822,3 +822,18 @@ div.node-signup div.blurb-or {
 div.node-signup div.node input {
     width: 85%;
 }
+
+
+/** Tier selection */ 
+div.tiers {
+    width: 900px;
+}
+div.tiers div.tier {
+
+    border: 1px solid #000;
+    width: 250px;
+    height: 300px;
+    float: left;
+    margin: 10px;
+    margin-bottom:30px;
+}
