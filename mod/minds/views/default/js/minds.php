@@ -9,6 +9,7 @@
 
 		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
 		$('.progress_indicator').tipsy({gravity: 'e'});		
+		$('.elgg-input-text').tipsy({gravity: 'w'});
 		
 		$('.thumbnail-tile').hover(
 			function(){

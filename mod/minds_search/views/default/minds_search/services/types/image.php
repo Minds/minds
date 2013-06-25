@@ -67,7 +67,7 @@ if(!$full_view){
 	}elseif($source=='flickr'){
 		//do some modification to the imageURL to get a large image
 		$imageURL = str_replace('_q', '_b', $imageURL);
-		echo elgg_view('output/img', array('src'=>$imageURL, 'width'=>970));
+		echo elgg_view('output/img', array('src'=>$imageURL));
 	} elseif($source =='minds'){
 		forward($entity->getURL());
 	}

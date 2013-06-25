@@ -40,6 +40,9 @@ form.minds-search{
 .minds-search-item img{	
 	width:100%;
 }
+.minds-search img.full{
+	width:100%;
+}
 .minds-search-item h3{
 	font-size:12px;
 	font-weight:bold;
@@ -99,11 +102,11 @@ a .minds-search-item p{
 }
 
 .minds-search-nav{
-	float:left;
-	width:100%;
+	width:90%;
 	height:35px;
 	clear:both;
 	padding:10px;
+	margin:auto;
 }
 .minds-search-nav-section{
 	float:left;

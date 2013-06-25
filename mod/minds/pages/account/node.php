@@ -33,8 +33,10 @@ if(get_input('access_code') == 'mInDsnOdE'){
     		$content .= elgg_view_form('node', $form_params, $body_params);
 	}
 } else {
-	 $content = '<p>Our hosted node service is only available to selected beta testers for the moment. Please email info@minds.com if you would like to take part.</p>';
+	 $content = '<p>Our hosted node service is only available to selected beta testers for the moment. Please create a channel to keep updated.</p>';
 }
+
+$buttons = elgg_view('output/url', array('href'=>elgg_get_site_url().'register', 'text'=>elgg_echo('register'), 'class'=>'elgg-button elgg-button-action'));
 
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 $header = <<<HTML
@@ -44,6 +46,6 @@ $header = <<<HTML
 HTML;
 
     
-$body = elgg_view_layout("one_column", array('content' => '<div class="elgg-inner">'. $content . '</div>', 'header'=>$header));
+$body = elgg_view_layout("one_column", array('content' => '<div class="elgg-inner">'. $content . ' <br/> '.  $buttons .'</div>', 'header'=>$header));
 
 echo elgg_view_page($title, $body);
