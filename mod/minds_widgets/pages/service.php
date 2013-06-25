@@ -2,11 +2,24 @@
     $tab = get_input('tab', 'remind');
 
     // Logged in, display login box and remember where to go
-    if (!elgg_is_logged_in()) {
+    if (((!elgg_is_logged_in()) && ($tab != "voting")) || (get_input('fl') == 'y' )) { 
         global $SESSION;
         $SESSION['last_forward_from'] = current_page_url();
         $_SESSION['last_forward_from'] = current_page_url();
+        
+        
         $content = elgg_view_form('login', null, array('returntoreferer' => true));
+        
+        // Hack
+        if ($tab == 'voting' && elgg_is_logged_in()) {
+            $content .= "
+                <script>
+                    window.opener.location.reload();  
+
+                    window.close();
+                </script>
+                ";
+        }
     }
     else
     {

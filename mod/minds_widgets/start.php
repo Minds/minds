@@ -25,6 +25,10 @@ elgg_register_event_handler('init','system',function(){
 	return array_merge($pages, $return);
     });
     
+    // Lite embed CSS
+    $url = elgg_get_simplecache_url('css', 'minds_widgets/css');
+    elgg_register_css('minds.themewidgets', $url);
+    
     // Endpoint
     elgg_register_page_handler('widgets', function($pages) {
         

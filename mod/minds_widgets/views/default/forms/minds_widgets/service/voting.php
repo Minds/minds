@@ -1,12 +1,17 @@
 <?php
 
-gatekeeper();
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
-$url=get_input('url');
-$vote = get_input('vote');
+elgg_load_css('minds.themewidgets');
 
+$ts = time();
+$token = generate_action_token($ts);
 
-// See if we have an entity for this
+$tokens = "__elgg_token=$token&__elgg_ts=$ts";
+
+$url = get_input('url');
+
 elgg_set_ignore_access();
 $entity = elgg_get_entities_from_metadata(array(
     'type' => 'object',
@@ -15,75 +20,11 @@ $entity = elgg_get_entities_from_metadata(array(
     'metadata_name' => 'url',
     'metadata_value' => $url,
 ));
-if (!$entity){
-    $entity = new ElggObject();
-    $entity->subtype = 'mind_widget_voting_stub';
-    $entity->access_id = ACCESS_PRIVATE;
-    $entity->owner_guid = 0;
-    
-    $entity->save();
-    $entity->url = $url;
-} else {
+if ($entity){
     $entity = $entity[0];
 }
 
-$entity_guid = $entity->guid;
-
-// We're running into access problems on the centralised object, so we're going to clone the thumbs functionality here
-if ($vote == 'up')
-{
-    if (elgg_annotation_exists($entity_guid, 'thumbs:up')) {
-        $options = array('annotation_names' => array('thumbs:up'), 'annotation_owner_guids' => array(elgg_get_logged_in_user_guid()));
-        $delete = elgg_delete_annotations($options);
-
-        $entity -> thumbcount--;
-    } else {
-
-        if (elgg_annotation_exists($entity_guid, 'thumbs:down')) {
-                $options = array('annotation_names' => array('thumbs:down'), 'annotation_owner_guids' => array(elgg_get_logged_in_user_guid()));
-                elgg_delete_annotations($options);
-
-        }
-        
-
-        $entity -> thumbcount++;
-
-        $annotation = create_annotation($entity -> guid, 'thumbs:up', 1, "", elgg_get_logged_in_user_guid(), $entity -> access_id);
-        $entity -> save();
-
-
-        notification_create(array($entity -> getOwnerGUID()), elgg_get_logged_in_user_guid(), $entity -> guid, array('notification_view' => 'like'));
-    }        
-}
-
-if ($vote == 'down') {
-    
-    if (elgg_annotation_exists($entity_guid, 'thumbs:down')) {
-            $options = array('annotation_names' => array('thumbs:down'), 'annotation_owner_guids' => array(elgg_get_logged_in_user_guid()));
-            $delete = elgg_delete_annotations($options);
-
-            $entity -> thumbcount++;
-    } else {
-
-            if (elgg_annotation_exists($entity_guid, 'thumbs:up')) {
-                    $options = array('annotation_names' => array('thumbs:up'), 'annotation_owner_guids' => array(elgg_get_logged_in_user_guid()));
-                    elgg_delete_annotations($options);
-
-            }
-
-            // limit likes through a plugin hook (to prevent liking your own content for example)
-            if (!$entity -> canAnnotate(0, 'thumbs:up')) {
-                    // plugins should register the error message to explain why liking isn't allowed
-                    forward(REFERER);
-            }
-
-            $entity -> thumbcount--;
-
-            $annotation = create_annotation($entity -> guid, 'thumbs:down', 1, "", elgg_get_logged_in_user_guid(), $entity -> access_id);
-            $entity -> save();
-    }
-}
 ?>
-<script>
-    window.close();
-    </script>
+<span id="likes_count"><?php if ($entity) echo $entity->thumbcount;  ?></span> 
+<a class="entypo minds-vote-up" href="<?php echo elgg_get_site_url(); ?>action/minds_widgets/service/<?php echo $vars['tab']; ?>?<?php echo $tokens; ?>&vote=up&url=<?php echo urlencode(get_input('url')); ?>" title="Vote Up" <?php if (!elgg_is_logged_in()) { ?> onClick='window.open("<?php echo current_page_url() . '&fl=y'; ?>", "Vote Up", "width=800,height=600"); return false;' <?php } ?>><span class="mind_graf" style="display:none;">&#128077;</span><span class="mind_fall">Up</span></a> <span class="mind_fall"> / </span>
+<a class="entypo minds-vote-down" href="<?php echo elgg_get_site_url(); ?>action/minds_widgets/service/<?php echo $vars['tab']; ?>?<?php echo $tokens; ?>&vote=down&url=<?php echo urlencode(get_input('url')); ?>" title="Vote Down" <?php if (!elgg_is_logged_in()) { ?> onClick='window.open(<?php echo current_page_url() . '&fl=y'; ?>, "Vote Down", "width=800,height=600"); return false;' <?php } ?>><span class="mind_graf" style="display:none;">&#128078;</span><span class="mind_fall">Down</span></a>
