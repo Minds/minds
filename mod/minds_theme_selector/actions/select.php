@@ -15,6 +15,10 @@
         // Now, enable the plugin we're actually wanting
         enable_plugin($activated_theme);
         elgg_set_plugin_setting('activated_theme', $activated_theme, 'minds_theme_selector');
+        
+        elgg_invalidate_simplecache();
+        elgg_reset_system_cache();
+
     }
     
     

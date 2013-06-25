@@ -7,7 +7,14 @@ elgg_register_event_handler('init','system',function(){
     // Define "Blessed" themes
     if (!isset($CONFIG->available_themes))
         $CONFIG->available_themes = array(
-            
+            'sociable',
+            'ac-130',
+            'pab_theme',
+            'facebook_theme',
+            'proskin_theme',
+            'vazco_atomic_theme',
+            'cool_theme',
+            'glossy'
         );
     
   
