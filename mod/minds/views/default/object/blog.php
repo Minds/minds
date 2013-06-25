@@ -53,6 +53,7 @@ $metadata = elgg_view_menu('entity', array(
 	'handler' => 'blog',
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
+	'full_view' => $full
 ));
 
 $subtitle = "$author_text $date $comments_link $categories";
@@ -113,6 +114,7 @@ if ($full) {
                 elgg_view_friendly_time($blog->time_created) . '</i>';
 
         $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+	echo $metadata;
         echo $header;
         echo elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$image));
 	echo $extras;

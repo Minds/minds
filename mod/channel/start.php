@@ -193,7 +193,7 @@ function channel_page_handler($page) {
 
 
 	$body = elgg_view_layout('one_column', array('content' => $content, 'header'=>$header));
-	echo elgg_view_page($user->name, $body);
+	echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel'));
 	return true;
 }
 

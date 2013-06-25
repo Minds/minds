@@ -438,6 +438,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
 		$context = elgg_get_context();
+		$full = elgg_extract('full_view', $params, false);
 		
 		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
@@ -472,7 +473,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 			$return[] = ElggMenuItem::factory($options);
 		}
 	}
-	if(elgg_is_admin_logged_in()){
+	if(elgg_is_admin_logged_in() && $full){
 		if($entity instanceof ElggObject){
 			//feature button
 			$options = array(
@@ -485,6 +486,14 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 					);
 			$return[] = ElggMenuItem::factory($options);
 		}	
+	} else {
+		elgg_unregister_menu_item('entity', 'edit');
+		elgg_unregister_menu_item('entity', 'access');
+		foreach($return as $k => $v){
+			if($return[$k]->getName() == 'access' || $return[$k]->getName() == 'edit'){;			
+				unset($return[$k]);
+			}
+		}
 	}
 
 	return $return;

@@ -89,6 +89,7 @@ if($cover){
                 elgg_view_friendly_time($album->time_created) . '</i>';
 
         $content = $img . $body;
-        $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+        echo $menu;
+	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
         echo $header;
         echo elgg_view('output/url', array('href'=>$album->getURL(), 'text'=>$image));

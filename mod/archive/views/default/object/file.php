@@ -103,7 +103,8 @@ if ($full) {
 	$body = '<span class="info">' . $title . $extras . '<span>';
 	
 	$content = $image . $body;
-	 $header = elgg_view_image_block(elgg_view_entity_icon($file->getOwnerEntity(), 'small'), $title . $subtitle);
+	echo $metadata;
+	$header = elgg_view_image_block(elgg_view_entity_icon($file->getOwnerEntity(), 'small'), $title . $subtitle);
         echo $header;
         echo elgg_view('output/url', array('href'=>$file->getURL(), 'text'=>$image));
 }

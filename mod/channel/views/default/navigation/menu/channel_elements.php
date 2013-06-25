@@ -8,8 +8,8 @@
 $items = elgg_extract('default', $vars['menu'], array());
 $class = elgg_extract('class', $vars);
 
-if(elgg_get_context() == 'widgets'){
-	$label = elgg_echo('channel:elements');
+if(elgg_get_context() == 'channel'){
+	$label = elgg_get_page_owner_entity()->name;
 } else {
 	$label = '';
 }

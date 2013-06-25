@@ -262,7 +262,9 @@ function blog_entity_menu_setup($hook, $type, $return, $params) {
 		return $return;
 	}
 
-	if ($entity->status != 'published') {
+	$full = elgg_extract('full', $params, false);
+
+	if ($entity->status != 'published' && $full) {
 		// draft status replaces access
 		foreach ($return as $index => $item) {
 			if ($item->getName() == 'access') {

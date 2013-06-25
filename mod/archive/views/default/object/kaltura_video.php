@@ -146,6 +146,7 @@ if($full){
 	$body = '<span class="info">' . $title . $extras . '<span>';
 	
 	$content = $image . $body;
+	echo $menu;
 	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
 	echo $header;
 	echo $image;

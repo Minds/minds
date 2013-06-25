@@ -296,3 +296,12 @@
 	-moz-border-radius: 0 0 4px 4px;
 	border-radius: 0 0 4px 4px;
 }
+.elgg-widget-instance-channel_avatar img{
+	width:100%;
+}
+.channel .minds-body-header{
+	background:transparent !important;
+}
+.channel .elgg-widget-content .elgg-list-entity .elgg-item{
+	width:42% !important;
+}

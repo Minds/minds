@@ -32,13 +32,14 @@ function event_calendar_init() {
 	$site_calendar = elgg_get_plugin_setting('site_calendar', 'event_calendar');
 	if (!$site_calendar || $site_calendar != 'no') {
 		// add a site navigation item
-		elgg_register_menu_item('site', array(
+/*		elgg_register_menu_item('site', array(
 			'name' => 'event_calendar',
 			'href' => 'event_calendar/list',
 			'text' => '&#59393;',
 			'title' => elgg_echo('item:object:event_calendar'),
 			'class' => 'entypo',
 		));
+*/
 	}
 	// make event calendar title and description searchable
 	elgg_register_entity_type('object','event_calendar');

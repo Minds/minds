@@ -21,6 +21,13 @@ $body = elgg_view('output/url', array(
 	'is_trusted' => true,
 ));
 
+$menu = elgg_view_menu('entity', array(
+            'entity' => $image, 
+            'handler' => 'archive',
+            'sort_by' => 'priority',
+            'class' => 'elgg-menu-hz',
+        ));
+
 /*
 $footer = elgg_view('output/url', array(
 	'text' => $image->getContainerEntity()->name,
@@ -45,6 +52,7 @@ $params = array(
                 elgg_view_friendly_time($image->time_created) . '</i>';
 	
 	$content = $img . $body;
+	echo $menu;
 	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
         echo $header;
         echo elgg_view('output/url', array('href'=>$image->getURL(), 'text'=>$img));;

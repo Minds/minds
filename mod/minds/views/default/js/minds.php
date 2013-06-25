@@ -46,10 +46,40 @@
 
 		$(document).on('click', 'li .elgg-menu-item-delete a', minds.delete); 
 		$(document).on('click', '.elgg-menu-item-remind a', minds.remind);
+
+		$(document).on('keydown', '.minds-search .elgg-input-text', minds.search);
 	};
 	 
 	
 	 elgg.register_hook_handler('init', 'system', minds.init);
+	
+	minds.wallPost = false;
+	
+	minds.search = function(e){
+		if(e.which == 191){
+			minds.wallPost = true;
+		}
+		if(minds.wallPost == true && e.which == 13){
+			e.preventDefault();
+			var data = {};
+			data.to_guid = elgg.get_logged_in_user_guid();
+			data.body = $(this).val();
+			data.ref = 'news';
+			
+			data.body = data.body.replace('/', '');
+
+			elgg.action('wall/add?to_guid=' + data.to_guid + '&body=' + data.body  +'&ref=' + data.ref, {
+				success: function(data) {
+					    $('.elgg-input-text').val("");;
+						$('.elgg-list.elgg-list-river.elgg-river').first('.elgg-list.elgg-list-river.elgg-river').prepend(data.output);
+						minds.wallPost = false;
+				},
+				error: function(data){
+        	                }
+	                });
+
+		}	
+	}
 
 	minds.subscribe = function(e){
 		e.preventDefault();

@@ -14,13 +14,13 @@ elgg_register_event_handler('init','system','market_init');
 function market_init() {
 
 	// Add a site navigation item
-	elgg_register_menu_item('site', array(
+/*	elgg_register_menu_item('site', array(
 		'name' => 'mark',
 		'href' => 'market/category',
 		'text' => '&#59197;',
 		'title' => elgg_echo('market:title'),
 		'class' => 'entypo',
-	));
+	));*/
 
 	// Extend owner block menu
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'market_owner_block_menu');

@@ -4,6 +4,8 @@
 $english = array(
 	
 	'search' => 'Search the commons',
+
+	'search/wall' => 'Search the commons or type / followed by a news post',
 	
 	'minds_search:type:all' => 'All',
 	'minds_search:type:article' => 'Articles',

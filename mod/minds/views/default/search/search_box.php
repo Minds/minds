@@ -32,13 +32,19 @@ if (function_exists('mb_convert_encoding')) {
 }
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 
+if(elgg_is_logged_in()){
+	
+	$placeholder = elgg_echo('search/wall');
 
+} else {
+	$placeholder = elgg_echo('search');
+}
 ?>
 
 <form class="<?php echo $class; ?>" action="<?php echo elgg_get_site_url(); ?>search" method="get">
 	<fieldset>
 		<!--<input type="text" class="search-input" size="21" name="q" value="<?php echo elgg_echo('search'); ?>" onblur="if (this.value=='') { this.value='<?php echo elgg_echo('search'); ?>' }" onfocus="if (this.value=='<?php echo elgg_echo('search'); ?>') { this.value='' };" />-->
-		<?php echo elgg_view('input/text', array('name'=> 'q', 'placeholder'=> elgg_echo('search'), 'title'=>'Hit the enter to search!')); ?>
+		<?php echo elgg_view('input/text', array('name'=> 'q', 'placeholder'=> $placeholder, 'title'=>'Hit the enter key to go!!')); ?>
 		<input type="hidden" name="search_type" value="all" />
 		<input type="submit" value="<?php echo elgg_echo('search:go'); ?>" class="submit" />
 	</fieldset>

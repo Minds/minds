@@ -91,7 +91,10 @@ body.news{
 .minds-header-right .elgg-menu.mtm{
 	margin:0;
 	font-size:11px;
+	width:100%;
+	clear:both;
 }
+
 .minds-header-right .elgg-menu.mtm li{
 	border:0;
 	padding:0 16px 0 2px;

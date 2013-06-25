@@ -445,6 +445,22 @@
 	vertical-align: baseline;
 }
 
+.elgg-list .elgg-menu-entity{
+	top:0;
+	right:0;
+	position:absolute;
+	z-index:12;
+	background:rgba(248, 248, 248, 0.9);
+	width:auto;
+	margin:0;
+	padding:22px 15px;
+	display:none;
+}
+.elgg-list:hover .elgg-menu-entity{
+	display:block;
+}
+.elgg-list .elgg-menu-entity li{
+}
 /* ***************************************
 	OWNER BLOCK
 *************************************** */
