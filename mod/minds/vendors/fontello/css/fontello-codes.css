@@ -10,7 +10,9 @@
 .icon-stop:before { content: '\25a0'; } /* '■' */
 .icon-play:before { content: '\25b6'; } /* '▶' */
 .icon-cloud:before { content: '\e800'; } /* '' */
+.icon-flag:before { content: '\e809'; } /* '' */
 .icon-cog:before { content: '\2699'; } /* '⚙' */
+.icon-attention:before { content: '\e80a'; } /* '' */
 .icon-record:before { content: '\26ab'; } /* '⚫' */
 .icon-tape:before { content: '\2707'; } /* '✇' */
 .icon-cancel:before { content: '\2715'; } /* '✕' */
@@ -19,7 +21,9 @@
 .icon-forward:before { content: '\27a6'; } /* '➦' */
 .icon-list:before { content: '\e005'; } /* '' */
 .icon-power:before { content: '\e807'; } /* '' */
+.icon-help-circled:before { content: '\e808'; } /* '' */
 .icon-info-circled:before { content: '\e705'; } /* '' */
+.icon-eye:before { content: '\e80b'; } /* '' */
 .icon-upload-cloud:before { content: '\e711'; } /* '' */
 .icon-reply:before { content: '\e712'; } /* '' */
 .icon-reply-all:before { content: '\e713'; } /* '' */
