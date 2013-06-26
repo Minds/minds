@@ -179,9 +179,11 @@ function blog_page_handler($page) {
 				case 'create':
 					set_input('guid', $page[2]);
 					include('pages/scraper/create.php');
+					return true;
 					break;
 				case 'mine':
 					include('pages/scraper/mine.php');
+					return true;
 					break;
 				default:
 					include('pages/scraper/all.php');
@@ -342,18 +344,26 @@ function blog_run_upgrades($event, $type, $details) {
  * Blog pagesetup
  */
 function blog_pagesetup(){
-	if(elgg_get_context() == 'settings' || elgg_get_context() == 'blog'){
+	if(elgg_get_context() == 'settings'){
 		if(elgg_is_logged_in()){
 			$user = elgg_get_logged_in_user_entity();
 
-	/*		$params = array(
+			$params = array(
 				'name' => 'scrapper_settings',
 				'text' => elgg_echo('blog:minds:scraper:menu'),
 				'href' => "blog/scrapers/mine",
 			);
 			elgg_register_menu_item('page', $params);
-	*/
 		}
+	} elseif(elgg_get_context() == 'blog' && (elgg_get_page_owner_guid() == elgg_get_logged_in_user_guid() || elgg_get_page_owner_guid() == null)){
+		$params = array(
+                                'name' => 'scrapper_settings',
+                                'text' => elgg_echo('blog:minds:scraper:menu'),
+                                'href' => "blog/scrapers/mine",
+                       		'class'=> 'elgg-button elgg-button-action'
+			);
+                elgg_register_menu_item('title', $params);
+
 	}
 }
 
