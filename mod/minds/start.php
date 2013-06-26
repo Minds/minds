@@ -56,6 +56,7 @@ function minds_init(){
 	//register inline js player
 	$uiVideoInline = elgg_get_simplecache_url('js', 'uiVideoInline');
 	elgg_register_js('uiVideoInline', $uiVideoInline);
+	elgg_load_js('uiVideoInline');
 	
 	//register textarea expander
 	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js');
@@ -441,7 +442,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
 		$context = elgg_get_context();
-		$full = elgg_extract('full_view', $params, false);
+		$full = elgg_extract('full_view', $params, true);
 		
 		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
@@ -476,7 +477,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 			$return[] = ElggMenuItem::factory($options);
 		}
 	}
-	if(elgg_is_admin_logged_in() && $full){
+	if(elgg_is_admin_logged_in()){
 		if($entity instanceof ElggObject){
 			//feature button
 			$options = array(
@@ -489,7 +490,8 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 					);
 			$return[] = ElggMenuItem::factory($options);
 		}	
-	} else {
+	} 
+	if(!$full){
 		elgg_unregister_menu_item('entity', 'edit');
 		elgg_unregister_menu_item('entity', 'access');
 		foreach($return as $k => $v){
@@ -604,7 +606,7 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = 0
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
 		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
-		$data = $es->query($type,null, 'time_stamp:desc', $limit, $offset, array('age'=>3600));
+		$data = $es->query($type,null, 'time_stamp:desc', $limit, $offset, array('age'=>0));
 		foreach($data['hits']['hits'] as $item){
 			$guids[] = intval($item['_id']);
 		}

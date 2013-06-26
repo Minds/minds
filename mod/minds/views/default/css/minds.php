@@ -584,7 +584,7 @@ li .excerpt a{
 	margin:5px;
 	width:148px;
 	padding:0;
-	height:auto;
+	height:125px;;
 }
 .elgg-sidebar li.elgg-item img{
 	width:100%;
