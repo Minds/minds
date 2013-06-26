@@ -96,7 +96,7 @@ foreach($json as $item) {
 			$items = $json;
 			break;
 		case 'river':
-			$items[] = new ElggRiverItem($item);
+			$items[] = new MindsNewsItem($item);
 			break;
 	}
 }
