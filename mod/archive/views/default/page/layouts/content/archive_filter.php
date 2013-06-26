@@ -44,7 +44,7 @@ if ($context) {
 		),
 
 		'filter:all' => array(
-			'text' => elgg_echo('all'),
+			'text' => elgg_echo('All types'),
 			'href' => '?filter=all',
 			'selected' => ($type_context == 'all'),
 			'priority' => 0,

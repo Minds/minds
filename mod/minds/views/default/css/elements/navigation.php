@@ -299,6 +299,11 @@
 	color:#4690D6;
 }
 
+.elgg-menu-filter-type{
+	border-left:2px solid #999;
+	padding-left:25px;
+}
+
 /* ***************************************
 	PAGE MENU
 *************************************** */
