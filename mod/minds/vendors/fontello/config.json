@@ -46,6 +46,12 @@
       "src": "entypo"
     },
     {
+      "uid": "de9a631a7d18106aea1c89ba51b1990a",
+      "css": "help-circled",
+      "code": 59400,
+      "src": "entypo"
+    },
+    {
       "uid": "7e4164950ffa4990961958b2d6318658",
       "css": "info-circled",
       "code": 59141,
@@ -67,6 +73,18 @@
       "uid": "e81fc3a0d39ace6ee735d7b24eedd56d",
       "css": "lock-open",
       "code": 128275,
+      "src": "entypo"
+    },
+    {
+      "uid": "25fc99a30fecc4021fdcae5fff5ba9ac",
+      "css": "eye",
+      "code": 59403,
+      "src": "entypo"
+    },
+    {
+      "uid": "1d2a6c3d9236b88b0f185c7c4530fa52",
+      "css": "flag",
+      "code": 59401,
       "src": "entypo"
     },
     {
@@ -133,6 +151,12 @@
       "uid": "2c0b53280f82068f6bab4e2200025d9f",
       "css": "chat",
       "code": 59168,
+      "src": "entypo"
+    },
+    {
+      "uid": "97902f87200ce74d181044df02a0458d",
+      "css": "attention",
+      "code": 59402,
       "src": "entypo"
     },
     {
