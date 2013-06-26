@@ -23,9 +23,13 @@ function mobile_init(){
 	}
 						
 	elgg_extend_view('css/elgg','mobile/css');
-		
+	
 	//set our default index page
 	if(elgg_get_viewtype() == 'mobile'){
+		
+		$url = elgg_get_simplecache_url('css', 'mobile');
+       		 elgg_register_css('minds.mobile', $url); 
+	
 		elgg_register_plugin_hook_handler('index', 'system','mobile_main_handler');
 	
 		elgg_register_simplecache_view('mobile');
