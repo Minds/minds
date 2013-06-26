@@ -22,7 +22,8 @@
             ?>
     
     <div class="tier tier-<?php echo $tier->product_id; ?>">
-        <?php echo  elgg_view('input/tier', array('tier' => $tier->product_id)); ?>
+        <?php echo  elgg_view('input/tier', array('tier' => $tier)); ?>
+        
     </div>
     
     
@@ -31,7 +32,6 @@
         }
     ?>
     <br class="clearfix" />
-    <?php echo elgg_view('input/submit', array('value' => 'Select tier...')); ?>
 </div>
 <?php
 

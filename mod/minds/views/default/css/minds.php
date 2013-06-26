@@ -837,3 +837,7 @@ div.tiers div.tier {
     margin: 10px;
     margin-bottom:30px;
 }
+
+div.tier div.default-description {
+    padding: 10px;
+}
