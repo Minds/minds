@@ -341,6 +341,10 @@ function minds_pagesetup(){
                 ),
         ));
         elgg_register_menu_item('embed', $item);
+	
+	//footer
+	
+
 }
 
 function minds_upload($page){

@@ -54,6 +54,10 @@ header("Content-type: text/html; charset=UTF-8");
 	<div class="elgg-page-body">
 			<?php echo $body; ?>
 	</div>
+	
+	<div class="minds-static-footer">
+		<?php echo $footer; ?>	
+	</div>
 </div>
 <?php echo elgg_view('page/elements/foot'); ?>
 </body>

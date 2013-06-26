@@ -265,6 +265,41 @@ input[name=terms]{
 	display:block;
 }
 /**
+ * Footer
+ */
+.minds-static-footer{
+	position:fixed;
+	bottom:0;
+	right:0;
+	width:30px;
+	background:#333;
+	height:40px;
+}
+.minds-static-footer:hover{
+	width:auto;
+}
+.elgg-menu-footer-default{
+	margin:0;
+	display:none;
+}
+.minds-static-footer:hover .elgg-menu-footer-default{
+	display:block;
+}
+.elgg-menu-footer-default li{
+	padding:10px 10px;
+}
+.elgg-menu-footer-default li:after{
+	content:none;
+}
+.minds-static-footer .info{
+	color:#FFF;
+	padding: 12px 0 0 10px;
+position: absolute;
+}
+.minds-static-footer:hover .info{
+	display:none;
+}
+/**
  * Index views
  */
 /*.index .elgg-list .elgg-item{
