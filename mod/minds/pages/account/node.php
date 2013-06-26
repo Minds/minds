@@ -8,11 +8,9 @@ $title = elgg_echo("register:node");
 $content = elgg_view_title($title);
 
 // Display original form for logged in users
-if ($user) {
+//if (elgg_is_admin_logged_in()) {
+if (false) {
     
-    if (!elgg_is_admin_logged_in())
-        forward(); // Only admins can access logged in register form stuff now, since we're taking payment etc
-
     // create the registration url - including switching to https if configured
     $register_url = elgg_get_site_url() . 'action/registernode';
     $form_params = array(

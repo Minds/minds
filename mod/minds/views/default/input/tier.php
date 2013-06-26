@@ -3,6 +3,8 @@
 $tier = $vars['tier'];
 $tier_id = $vars['tier']->product_id;
 $name = $tier_id;
+
+
 ?>
     
     <?php 
@@ -22,5 +24,28 @@ $name = $tier_id;
     ?>
     
     <div class="tier_selection">
-        <?php echo pay_basket_add_button($tier->guid, $tier->title, $tier->description, $tier->price, 1); ?>
+        <?php 
+        if (elgg_is_logged_in()) 
+            echo pay_basket_add_button($tier->guid, $tier->title, $tier->description, $tier->price, 1); 
+        else {
+             $currecy = pay_get_currency();	
+             echo elgg_view('output/url', array('id' => $tier->product_id, 'href' => '#', 'text' => $currecy['symbol'] . $tier->price . ' - Buy Now', 'class' => 'pay buynow login'));
+        }
+?>
     </div>
+
+<?php
+if (!elgg_is_logged_in()) {
+    ?>
+<script>
+    $(document).ready(function(){
+        
+        $('a#<?php echo $tier->product_id; ?>').click(function(){
+           
+           window.open("<?php echo elgg_get_site_url(); ?>tierlogin/?tier=<?php echo $tier->guid; ?>", "Please Log In", "width=800,height=600");
+        });
+        
+    });
+</script>
+<?php
+} ?>

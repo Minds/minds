@@ -136,6 +136,43 @@ function minds_init(){
 	}
 	//make sure all users are subscribed to minds, only run once.
 	//run_function_once('minds_subscribe_bulk');
+        
+        
+        
+        // Handle some tier pages
+        
+        // Extend public pages
+        elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
+            $pages = array('tierlogin'); 
+            return array_merge($pages, $return);
+        });
+        
+        // Endpoint
+        elgg_register_page_handler('tierlogin', function($pages) {
+            
+            $_SESSION['__tier_selected'] = get_input('tier');
+            $content = elgg_view_form('login', null, array('returntoreferer' => true));
+            
+            // If we've returned to the window after a successful login, then refresh back to parent
+            if (elgg_is_logged_in()) {
+                $content .= "
+                <script>
+                    window.opener.location.reload();  
+
+                    window.close();
+                </script>
+                ";
+            }
+            
+            $params = array(
+                'title' => elgg_echo('minds_widgets:tab:'.$tab),
+                'content' => $content,
+                'sidebar' => ''
+            );
+            
+            echo elgg_view_page('Login', elgg_view_layout('default', $params));
+            return true;
+        });
 }
 
 function minds_index($hook, $type, $return, $params) {
