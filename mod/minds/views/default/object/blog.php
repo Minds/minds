@@ -96,7 +96,7 @@ if ($full) {
 	
 	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
 	$img_link = '<div class="rich-image-container">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$image)) . '</div>';
-	$title = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=> '<h3>'.$blog->title.'</h3>'));
+	$title = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=> '<h3>'.$blog->title.'</h3>', 'class'=>'title'));
 	//echo elgg_view_image_block($img_link, $title, array('class'=>'rich-content sidebar'));
 	echo $img_link;
 	echo $title;

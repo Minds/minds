@@ -61,7 +61,7 @@ HTML;
 	}
 	
 	//add the sidebar
-	$return['sidebar'] = blog_sidebar($blog->guid);
+	$return['sidebar'] = blog_sidebar($blog);
 	
 	$excerpt = $blog->excerpt ? $blog->excerpt : substr(strip_tags($blog->description), 0, 140);
 	
@@ -540,9 +540,8 @@ function blog_get_featured($limit=5){
  * Adds a sidebar to each blog which show information such as posts by the owner, popular blogs etc
  * @param guid (int)
  */
-function blog_sidebar($guid = null){
-	if($guid){	
-		$blog = get_entity($guid);
+function blog_sidebar($blog){
+	if($blog){	
 		
 		//show more posts from this user
 		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>5));
