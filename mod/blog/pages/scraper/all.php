@@ -19,9 +19,10 @@ elgg_register_menu_item('title', array(
 	));
 
 $body = elgg_view_layout('content', array(	'title' => $title,
-											'content'=>$content,
-											'filter' => ''
-											));
+						'content'=>$content,
+						'filter' => '',
+						'class' => 'scrapers'
+					));
 										
 
 echo elgg_view_page($title, $body);
