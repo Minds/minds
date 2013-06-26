@@ -342,6 +342,10 @@ li .excerpt{
 	left: 0;
 	padding: 15px;
 	color: #FFF;
+	display:none;
+}
+li:hover .excerpt{
+        display:block;
 }
 li .excerpt a{
 	color:#FFF;
