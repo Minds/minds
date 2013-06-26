@@ -265,6 +265,9 @@ function pay_call_payment_handler_callback($handler, $order_guid){
  * forwards user to paypal checkout
  */
 function paypal_handler($params){
+    
+        global $CONFIG;
+    
 	$order = get_entity($params['order_guid']);
 	$user = get_entity($params['user_guid']);
 	$amount = $params['amount'];
@@ -280,6 +283,8 @@ function paypal_handler($params){
 	$callback_url =  $urls['callback'].'/paypal';
 	
 	$paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
+        if ($CONFIG->debug)
+            $paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr"; // If we're in debug mode, then use the debug sandbox endpoint.
 	
 	$variables = array ( 'cmd' => '_xclick',
 					'business' => elgg_get_plugin_setting('paypal_business', 'pay'),
