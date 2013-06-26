@@ -29,6 +29,41 @@ if (false) {
     // TODO: Payment hook here
     
     
+    // Check to see if there is a paid for tier product
+    if ($user) {
+        $tiers_guid = array();
+        $ia = elgg_set_ignore_access();
+    
+        // Get tiers
+        if ($tiers = elgg_get_entities(array(
+           'type' => 'object',
+            'subtype' => 'minds_tier'
+        )))
+        {
+            foreach ($tiers as $tier)
+                $tiers_guid[] = $tier->guid;
+        }
+       
+        elgg_set_ignore_access($ia);
+        
+        
+        $order = elgg_get_entities_from_metadata(array(
+            'type' => 'object',
+            'subtype' => 'pay',
+            'owner_guid' => $user->guid,
+             'metadata_name_value_pairs' => array(
+                array('name' => 'status', 'value' => 'Completed'), // Interested in completed payments
+                array('name' => 'object_guid', 'value' => $tiers_guid) // Which are valid tiers
+                 
+                 
+                 // Note, tier is considered valid until its status is set to something other than Completed, e.g. 'Cancelled'
+                 
+                ),
+        ));
+        
+        if ($order)
+            $payment_received = true; 
+    }
     
     
     // If paid for then allow registration
