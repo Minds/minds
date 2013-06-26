@@ -592,15 +592,18 @@ li .excerpt a{
 .elgg-sidebar li.elgg-item h3, .elgg-sidebar li .stamp{
 	padding:8px;
 }
-.blog-sidebar li a{
+.blog-sidebar li a.title{
 	font-weight:bold;
-	position: absolute;
+	position:absolute;
 	top: 0;
 	left: 0;
 	background: rgba(0,0,0,0.75);
 	z-index: 999;
 	color: #FFF;
 	padding: 5px;
+}
+.blog-sidebar li img.rich-image{
+	margin:0;
 }
 .elgg-sidebar li a h3{
 	color:#FFF;
