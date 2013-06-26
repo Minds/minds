@@ -610,9 +610,13 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = 0
 		foreach($data['hits']['hits'] as $item){
 			$guids[] = intval($item['_id']);
 		}
+		//$guids = array_reverse($guids);
+		$guidsString = implode(',', $guids);
 		if(count($guids) > 0){
 			if($output == 'entities'){
-				return elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
+				return elgg_get_entities(array(	'wheres' => array("e.guid IN ($guidsString)"),
+								'order_by' => "FIELD(e.guid, $guidsString)", 
+								'limit'=>$limit));
 			} elseif($output == 'guids'){
 				return $guids;
 			}
