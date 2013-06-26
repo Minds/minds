@@ -456,7 +456,7 @@
 	padding:22px 15px;
 	display:none;
 }
-.elgg-list:hover .elgg-menu-entity{
+.elgg-item:hover > .elgg-menu-entity{
 	display:block;
 }
 .elgg-list .elgg-menu-entity li{
