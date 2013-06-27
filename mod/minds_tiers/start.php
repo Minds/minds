@@ -78,7 +78,11 @@ function minds_tiers_get_current_valid_tier($user) {
        {
            $t = get_entity($o->object_guid);
            
-           if ($o->time_created >= (time() - $t->expires))
+           $expires = $t->expires;
+           if (!$expires) $expires = MINDS_EXPIRES_YEAR; // Default to year
+           
+           
+           if ($o->time_created >= (time() - $expires))
            {
                 elgg_set_ignore_access($ia);
                 return $o;
