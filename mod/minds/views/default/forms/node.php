@@ -22,7 +22,7 @@
     </div>
     
     <div class="email">
-        <p><label>Enter your email addresss:<br />
+        <p><label>Enter your email address:<br />
                 <input id="email" required type="email" name="email" placeholder="you@yourdomain.com" value="<?php echo elgg_get_logged_in_user_entity()->email; ?>" /> </label></p>
     </div>
     
