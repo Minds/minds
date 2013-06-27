@@ -134,11 +134,13 @@ function pay_get_basket(){
  * Plugins can add items to the basket by using pay_basket_add_button(...); on any pay or view
  * @todo: make this a form rather than a link
  */
-function pay_basket_add_button($type_guid, $title, $description, $price, $quantity){
+function pay_basket_add_button($type_guid, $title, $description, $price, $quantity, $recurring = false){
 	 $currecy = pay_get_currency();	 
 	 
+         $query = 'action/pay/basket/add?type_guid=' . $type_guid .'&title=' . $title . '&description=' . $description  . '&price=' . $price . '&quantity=' . $quantity;
+         if ($recurring) $query .= "&recurring=y";
 	 $link =  elgg_view('output/confirmlink', array('is_action' => true,
-	 									  'href' => 'action/pay/basket/add?type_guid=' . $type_guid .'&title=' . $title . '&description=' . $description  . '&price=' . $price . '&quantity=' . $quantity,
+	 									  'href' => $query,
 										  'text' => $currecy['symbol'] . $price . ' - Buy Now',
 										  'confirm' => 'Are you sure you wish to purchase this item?',
 										  'class' => 'pay buynow'
@@ -299,6 +301,41 @@ function paypal_handler($params){
 					'email' => $user->email
 				);
 	
+        /**
+         * Support for recurring payments.
+         * See https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/subscribe_buttons/
+         */
+        if ($params['recurring'])
+        {
+            // Set the correct command
+            $variables['cmd'] = '_xclick-subscriptions';
+            
+            // Get rid of amount, since this is handled by the subscription
+            unset($variables['amount']);
+            
+            // Set recurring payment info
+            $variables['a3'] = $amount;
+            $variables['p3'] = 1;
+            
+            // Set recurring period based on expiry (default 1 year)
+            $ia = elgg_set_ignore_access($ia);
+            $item = get_entity($order->object_guid);
+            $expires = $item->expires;
+            if (!$expires) $expires = MINDS_EXPIRES_YEAR;
+            $ia = elgg_set_ignore_access($ia);
+            
+            switch ($expires) {
+                case MINDS_EXPIRES_DAY: $variables['t3'] = 'D'; break;
+                case MINDS_EXPIRES_WEEK: $variables['t3'] = 'W'; break;
+                case MINDS_EXPIRES_MONTH: $variables['t3'] = 'M'; break;
+                case MINDS_EXPIRES_YEAR:
+                default: $variables['t3'] = 'Y';
+            }
+            
+            // Now, continue until cancelled
+            $variables['src'] = 1;
+            
+        }
 	
 	//update to process
 	pay_update_order_status($order->guid, 'awaitingpayment');
