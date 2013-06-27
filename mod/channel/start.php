@@ -180,6 +180,10 @@ function channel_page_handler($page) {
 		'num_columns' => 2,
 	);
 	$content = elgg_view_layout('widgets', $params);
+	
+	$context = 'channel';
+
+	$widgets = elgg_get_widgets($user->guid, $context);
 
 	$params = array(
         	'widgets' => $widgets,

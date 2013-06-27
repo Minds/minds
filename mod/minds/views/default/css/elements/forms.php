@@ -10,6 +10,11 @@
 /* ***************************************
 	Form Elements
 *************************************** */
+
+.elgg-body .elgg-form{
+	padding:12px;
+}
+
 fieldset > div {
 	margin-bottom: 15px;
 }

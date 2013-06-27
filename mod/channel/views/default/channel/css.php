@@ -301,6 +301,7 @@
 }
 .channel .minds-body-header{
 	background:transparent !important;
+	opacity:100;
 }
 .channel .elgg-widget-content .elgg-list-entity .elgg-item{
 	width:42% !important;

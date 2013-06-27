@@ -332,6 +332,19 @@ li .rich-image{
 	width:110%;
 	margin:0 -10px;
 }
+li .blog-rich-image-holder{
+	position: relative;
+	width: 110%;
+	height: 100%;
+	display: block;
+	overflow: hidden;
+	margin: 0 -10px;
+}
+li .blog-rich-image-holder .rich-image{
+	top:-45px;
+	left:0;
+	position:absolute;
+}
 li .excerpt{
 	background: rgb(0, 0, 0); /* The Fallback */
 	background: rgba(0, 0,0, 0.5); 
@@ -584,7 +597,7 @@ li .excerpt a{
 	margin:5px;
 	width:148px;
 	padding:0;
-	height:auto;
+	height:125px;;
 }
 .elgg-sidebar li.elgg-item img{
 	width:100%;
