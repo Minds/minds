@@ -16,13 +16,14 @@
         <div class="default-description">
             <h2><?php echo $tier->title; ?></h2>
             <p><?php echo $tier->description; ?></p>
-            <p class ="pay buynow"><?php echo $currecy['symbol'] . $tier->price; ?></p>
+            
         </div>
+        <p class ="pay buynow"><?php echo $currecy['symbol'] . $tier->price; ?></p>
     </div>
     
     <div class="email">
         <p><label>Enter your email addresss:<br />
-                <input id="email" required type="email" name="email" placeholder="you@yourdomain.com" /> </label></p>
+                <input id="email" required type="email" name="email" placeholder="you@yourdomain.com" value="<?php echo elgg_get_logged_in_user_entity()->email; ?>" /> </label></p>
     </div>
     
     <div class="blurb-or">...then enter your network name...</div>
