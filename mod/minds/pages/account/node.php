@@ -50,6 +50,7 @@ if (false) {
         );
 
         $body_params = array(
+            'order' => $order
         );
         $content .= elgg_view_form('node', $form_params, $body_params);
     }
