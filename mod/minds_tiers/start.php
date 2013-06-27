@@ -73,7 +73,10 @@ function minds_tiers_get_current_valid_tier($user) {
             ),
     ));
 
+   
+    
    if ($order) {
+       
        foreach ($order as $o)
        {
            $t = get_entity($o->object_guid);
@@ -81,6 +84,11 @@ function minds_tiers_get_current_valid_tier($user) {
            $expires = $t->expires;
            if (!$expires) $expires = MINDS_EXPIRES_YEAR; // Default to year
            
+           // If cost is 0, then never expire 
+           if ($t->price == 0) {
+               elgg_set_ignore_access($ia);
+               return $o;
+           }
            
            if ($o->time_created >= (time() - $expires))
            {
