@@ -34,7 +34,7 @@ $name = $tier_id;
                 echo pay_basket_add_button($tier->guid, $tier->title, $tier->description, $tier->price, 1, true); 
         else {
              $currecy = pay_get_currency();	
-             echo elgg_view('output/url', array('id' => $tier->product_id, 'href' => '#', 'text' => $currecy['symbol'] . $tier->price . ' - Buy Now', 'class' => 'pay buynow login'));
+             echo elgg_view('output/url', array('id' => $tier->product_id, 'href' => '#', 'text' => $currecy['symbol'] . $tier->price . ' - Buy Now', 'class' => 'pay buynow free'));
         }
 ?>
     </div>
