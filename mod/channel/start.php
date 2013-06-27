@@ -276,21 +276,13 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 		return null;
 	}
 
-	$filehandler = new ElggFile();
+/*	$filehandler = new ElggFile();
 	$filehandler->owner_guid = $user_guid;
 	$filehandler->setFilename("profile/{$user_guid}{$size}.jpg");
+*/
 
-	try {
-		if ($filehandler->exists()) {
-			$join_date = $user->getTimeCreated();
-			return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
-		}
-	} catch (InvalidParameterException $e) {
-		elgg_log("Unable to get profile icon for user with GUID $user_guid", 'ERROR');
-		return "_graphics/icons/default/$size.png";
-	}
-
-	return null;
+	$join_date = $user->getTimeCreated();
+	return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
 }
 
 /**
