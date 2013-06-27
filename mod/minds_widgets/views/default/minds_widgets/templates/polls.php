@@ -1,0 +1,1 @@
+<iframe width="400" height="300" seamless="true" scrolling="no" src="<?php echo elgg_get_site_url(); ?>widgets/<?php echo $vars['tab']; ?>/service/?poll_guid=<?php echo get_input('poll_guid', $vars['poll_guid']);?>&embed=yes"></iframe>
