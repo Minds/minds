@@ -38,3 +38,8 @@ function minds_tiers_get_product($product_id) {
 }
 
 elgg_register_event_handler('init', 'system', 'minds_tiers_init');
+
+define('MINDS_EXPIRES_DAY', 86400);
+define('MINDS_EXPIRES_WEEK', 604800);
+define('MINDS_EXPIRES_MONTH', 2419200);
+define('MINDS_EXPIRES_YEAR', 31536000);

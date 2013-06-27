@@ -30,6 +30,15 @@
         <?=elgg_view('input/text', array('name' => 'price', 'required' => 'required'));?>
     </label></p>    
 
+    <p><label>Expiry after purchase
+        <?=elgg_view('input/dropdown', array('name' => 'expires', 'options_values' => array(
+            MINDS_EXPIRES_NEVER => 'Never',
+            MINDS_EXPIRES_DAY => 'Day',
+            MINDS_EXPIRES_WEEK => 'Week',
+            MINDS_EXPIRES_MONTH => 'Month (28 days)',
+            MINDS_EXPIRES_YEAR => 'Year (365 days)',
+        )));?>
+    </label></p>    
     
     <?=elgg_view('forms/minds/tiers/extension', $vars); ?>
     <p>

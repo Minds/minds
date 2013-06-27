@@ -7,7 +7,7 @@
     $description = get_input('description');
     $currency = get_input('currency', 'GBP');
     $price = get_input('price');
-   // $expires = get_input('expires', Minds_EXPIRES_YEAR); // Lifetime in seconds, or never
+    $expires = get_input('expires', MINDS_EXPIRES_YEAR); // Lifetime in seconds
     $product_id = get_input('product_id');
     
     
@@ -21,7 +21,7 @@
     $product->description = $description;
     $product->currency = $currency;
     $product->price = $price;
-    //$product->expires = $expires;
+    $product->expires = $expires;
     $product->product_id = preg_replace("/[^a-zA-Z0-9\s_]/", "", $product_id);
     
     if ($product->save()) 

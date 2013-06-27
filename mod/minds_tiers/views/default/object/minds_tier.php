@@ -2,13 +2,21 @@
 
 $entity = $vars['entity'];
 
+$expires_lookup = array(
+    -1 => 'NEVER',
+    86400 => 'One Day',
+    604800 => 'One Week',
+    2419200 => 'One Month (28 days)',
+    31536000 => 'One Year'
+);
+
 
 ?>
 <div class="Minds_product elgg-image-block clearfix">
     <div class="elgg-image">
     </div>
     <div class="elgg-body">
-        <h3><?=$entity->title;?> (<?=$entity->product_id;?>): <?=$entity->price;?> <?=$entity->currency;?></h3>
+        <h3><?=$entity->title;?> (<?=$entity->product_id;?>): <?=$entity->price;?> <?=$entity->currency;?>, Expires after: <?=$expires_lookup[$entity->expires]; ?></h3>
         <p><?=$entity->description;?></p> 
         <?= elgg_view('object/minds_tier/extension', $vars); ?>
         <?php if ($entity->canEdit()) { ?>
