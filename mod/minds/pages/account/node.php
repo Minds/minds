@@ -31,6 +31,7 @@ if (false) {
     
     // Check to see if there is a paid for tier product
     if ($user) {
+        
         if (is_callable('minds_tiers_get_current_valid_tier'))
             $order = minds_tiers_get_current_valid_tier($user);
         
@@ -40,7 +41,7 @@ if (false) {
     
     
     // If paid for then allow registration
-    if ($payment_recieved) {
+    if ($payment_received) {
 
         $register_url = elgg_get_site_url() . 'action/registernewnode';
         $form_params = array(
