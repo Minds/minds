@@ -45,6 +45,10 @@ $order->items = serialize($items);
 $order->amount = $amount;
 $order->status = 'created';
 
+// Flag as recurring
+if ($recurring)
+    $order->recurring = true;
+
 $order->access_id = 1;
 
 $order->payment_method = 'paypal';
