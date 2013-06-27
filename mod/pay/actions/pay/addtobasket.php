@@ -29,12 +29,13 @@ $item->quantity = $quantity;
 $item->price = $price*$quantity;
 $item->object_guid = $type_guid;
 $item->seller_guid = $seller_guid;
-$item->recurring = $recurring;
-
 $item->owner_guid = $user_guid;
 $item->access_id = 1; 
 
 if($item->save()){
+    
+        $item->recurring = $recurring; 
+
 	//system_message(elgg_echo("pay:bakset:item:add:success"));
 } else {
 	register_error(elgg_echo("pay:basket:item:add:failed"));

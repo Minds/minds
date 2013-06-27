@@ -334,9 +334,9 @@ function paypal_handler($params){
             
             // Now, continue until cancelled
             $variables['src'] = 1;
-            
         }
 	
+
 	//update to process
 	pay_update_order_status($order->guid, 'awaitingpayment');
 	
