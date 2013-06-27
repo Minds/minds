@@ -37,6 +37,62 @@ function minds_tiers_get_product($product_id) {
     return $products[0];
 }
 
+/**
+ * Looks at products and sees if a user has paid for a tier, which has not expired, returning the payment details
+ * if so.
+ * @param type $user
+ */
+function minds_tiers_get_current_valid_tier($user) {
+    if (!$user) $user = elgg_get_logged_in_user_entity ();
+    if (!$user) return false;
+    
+    $tiers_guid = array();
+    $ia = elgg_set_ignore_access();
+
+    // Get tiers
+    if ($tiers = elgg_get_entities(array(
+       'type' => 'object',
+        'subtype' => 'minds_tier'
+    )))
+    {
+        foreach ($tiers as $tier)
+            $tiers_guid[] = $tier->guid;
+    }
+
+    $order = elgg_get_entities_from_metadata(array(
+        'type' => 'object',
+        'subtype' => 'pay',
+        'owner_guid' => $user->guid,
+         'metadata_name_value_pairs' => array(
+            array('name' => 'status', 'value' => 'Completed'), // Interested in completed payments
+            array('name' => 'object_guid', 'value' => $tiers_guid) // Which are valid tiers
+
+
+             // Note, tier is considered valid until its status is set to something other than Completed, e.g. 'Cancelled', or expired (see below)
+
+            ),
+    ));
+
+   if ($order) {
+       foreach ($order as $o)
+       {
+           $t = get_entity($o->object_guid);
+           
+           if ($o->time_created >= (time() - $t->expires))
+           {
+                elgg_set_ignore_access($ia);
+                return $o;
+           }
+       }
+
+   }
+
+   
+   elgg_set_ignore_access($ia);
+   return false;
+}
+
+
 elgg_register_event_handler('init', 'system', 'minds_tiers_init');
 
 define('MINDS_EXPIRES_DAY', 86400);
