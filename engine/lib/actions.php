@@ -78,6 +78,9 @@ function action($action, $forwarder = "") {
 		'user/passwordreset',
 		'security/refreshtoken',
 		'file/download',
+            
+                // We need to have this here to disable tokens for node registration. This modification to actions is required until fixed in upstream Elgg.
+                'registernewnode',
 	);
 
 	if (!in_array($action, $exceptions)) {

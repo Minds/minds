@@ -505,6 +505,7 @@ function file_get_simple_type($mimetype) {
  * @return string Relative URL
  */
 function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $params) {
+	global $CONFIG;
 	$entity = $params['entity'];
 	$file = $entity;
 	$size = $params['size'];
@@ -513,7 +514,7 @@ function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $param
 		// thumbnails get first priority
 		if ($file->thumbnail) {
 			$ts = (int)$file->icontime;
-			return "mod/archive/thumbnail.php?file_guid=$file->guid&size=$size&icontime=$ts";
+			return $CONFIG->cdn_url .  "mod/archive/thumbnail.php?file_guid=$file->guid&size=$size&icontime=$ts";
 		}
 
 		$mapping = array(
@@ -564,7 +565,7 @@ function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $param
 			$ext = '';
 		}
 		
-		$url = "mod/archive/graphics/icons/{$type}{$ext}.gif";
+		$url = $CONFIG->cdn_url . "mod/archive/graphics/icons/{$type}{$ext}.gif";
 		$url = elgg_trigger_plugin_hook('file:icon:url', 'override', $params, $url);
 		return $url;
 	} elseif(elgg_instanceof($entity, 'object', 'kaltura_video')) {

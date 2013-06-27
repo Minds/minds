@@ -6,11 +6,15 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2
  */
 
+elgg_set_ignore_access(true);
+
 $guid = (int) get_input('guid');
 $size = get_input('size');
 $image = get_entity($guid);
+
 if (!$image) {
 	// @todo
+	return true;
 }
 
 if ($size == 'master') {
@@ -35,4 +39,6 @@ header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT', true)
 
 // Return the thumbnail and exit
 echo $contents;
+
+elgg_set_ignore_access(false);
 exit;

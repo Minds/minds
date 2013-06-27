@@ -105,10 +105,11 @@ class TidypicsImage extends ElggFile {
 	 * @return string
 	 */
 	public function getIconURL($size = 'small') {
+		global $CONFIG;
 		if ($size == 'tiny') {
 			$size = 'thumb';
 		}
-		return elgg_normalize_url("photos/thumbnail/$this->guid/$size/");
+		return elgg_normalize_url($CONFIG->cdn_url . "photos/thumbnail/$this->guid/$size/".$CONFIG->lastcache);
 	}
 
 	/**

@@ -4,13 +4,19 @@
  */
 ?>
 .social_login{
+	margin:5px 5px 5px 35%;
 	clear:both;
-	width:100%;
 	height:35px;
+	width:100%;
+}
+.minds-header-right .elgg-form .social_login{
+	display:none;
+}
+.elgg-form-login:hover .social_login{
 	display:block;
-	margin:5px 0;
 }
 .social_login img{
+	width:32px;
 	float:left;
 }
 .social_login p{
@@ -34,14 +40,14 @@
 }
 
 .social-post-icons{
-	float:right;
+	float:left;
 	margin-top:1px;
 }
 .social-post-icons input{
 	float:left;
 	margin:2px 5px;
 }
-.social-post-icons img{
+.social-post-icons span{
 	float:left;
 	height:15px;
 }

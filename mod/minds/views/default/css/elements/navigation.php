@@ -48,48 +48,33 @@
 	TABS
 *************************************** */
 .elgg-tabs {
-	margin-bottom: 5px;
-	border-bottom: 2px solid #cccccc;
-	display: table;
-	width: 100%;
+	width: auto;
 }
 .elgg-tabs li {
 	float: left;
-	border: 2px solid #ccc;
-	border-bottom: 0;
-	background: #eee;
-	margin: 0 0 0 10px;
-	
-	-webkit-border-radius: 5px 5px 0 0;
-	-moz-border-radius: 5px 5px 0 0;
-	border-radius: 5px 5px 0 0;
+	font-size:16px;	
 }
 .elgg-tabs a {
 	text-decoration: none;
 	display: block;
-	padding: 3px 10px 0 10px;
+	padding: 3px 25px 0 0;
 	text-align: center;
-	height: 21px;
-	color: #999;
+	color: #333;
 }
 .elgg-tabs a:hover {
-	background: #dedede;
-	color: #000;
+	color:  #4690D6;
 }
 .elgg-tabs .elgg-state-selected {
-	border-color: #ccc;
-	background: white;
 }
 .elgg-tabs .elgg-state-selected a {
-	position: relative;
-	top: 2px;
-	background: white;
+	color: #4690D6;
 }
 
 /* ***************************************
 	BREADCRUMBS
 *************************************** */
 .elgg-breadcrumbs {
+	margin:0 0 10px;
 	font-size: 80%;
 	font-weight: bold;
 	line-height: 1.2em;
@@ -122,7 +107,7 @@
 	TOPBAR MENU
 *************************************** */
 .elgg-menu-topbar {
-	margin:8px 0;
+	margin:0;
 	float: left;
 }
 
@@ -175,12 +160,13 @@
 *************************************** */
 .elgg-menu-site {
 	z-index: 1;
-    margin:8px 0;
+    margin:0;
+    clear:left;
 }
 
 .elgg-menu-site > li > a {
 	font-weight: bold;
-	padding: 3px 13px 0px 13px;
+	padding: 3px 8px 0px;
 	height: 20px;
 }
 
@@ -189,10 +175,6 @@
 }
 
 .elgg-menu-site-default {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	height: 23px;
 }
 
 .elgg-menu-site-default > li {
@@ -293,44 +275,28 @@
 	FILTER MENU
 *************************************** */
 .elgg-menu-filter {
-	border-bottom: 2px solid #ccc;
 	display: table;
-	width: 100%;
+	width: auto;
+	margin-right:16px;
+	float:left;
 }
 .elgg-menu-filter > li {
 	float: left;
-	border: 2px solid #ccc;
-	border-bottom: 0;
-	background: #eee;
-	margin: 0 0 0 10px;
-	
-	-webkit-border-radius: 5px 5px 0 0;
-	-moz-border-radius: 5px 5px 0 0;
-	border-radius: 5px 5px 0 0;
-}
-.elgg-menu-filter > li:hover {
-	background: #dedede;
+
+	font-size:16px;
 }
 .elgg-menu-filter > li > a {
 	text-decoration: none;
 	display: block;
-	padding: 3px 10px 0;
-	text-align: center;
-	height: 21px;
-	color: #999;
+	padding: 3px 25px 0 0;
+	color:#333;
 }
 .elgg-menu-filter > li > a:hover {
-	background: #dedede;
-	color: #999;
+	color: #4690D6;
 }
-.elgg-menu-filter > .elgg-state-selected {
-	border-color: #ccc;
-	background: white;
-}
+
 .elgg-menu-filter > .elgg-state-selected > a {
-	position: relative;
-	top: 2px;
-	background: white;
+	color:#4690D6;
 }
 
 /* ***************************************
@@ -452,10 +418,6 @@
 	color: #999;
 }
 
-.elgg-menu-general > li:after {
-	content: "\007C";
-	padding: 0 4px;
-}
 
 /* ***************************************
 	ENTITY AND ANNOTATION
@@ -483,6 +445,22 @@
 	vertical-align: baseline;
 }
 
+.elgg-list .elgg-menu-entity{
+	top:0;
+	right:0;
+	position:absolute;
+	z-index:12;
+	background:rgba(248, 248, 248, 0.9);
+	width:auto;
+	margin:0;
+	padding:22px 15px;
+	display:none;
+}
+.elgg-item:hover > .elgg-menu-entity{
+	display:block;
+}
+.elgg-list .elgg-menu-entity li{
+}
 /* ***************************************
 	OWNER BLOCK
 *************************************** */

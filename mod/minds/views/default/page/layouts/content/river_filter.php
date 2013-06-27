@@ -23,12 +23,6 @@ if (elgg_is_logged_in() && $context) {
 			'selected' => ($filter_context == 'featured'),
 			'priority' => 200,
 		),
-		'trending' => array(
-			'text' => elgg_echo('river:trending'),
-			'href' => (isset($vars['trending_link'])) ? $vars['trending_link'] : "$context/trending",
-			'selected' => ($filter_context == 'trending'),
-			'priority' => 300,
-		),
 		'friend' => array(
 			'text' => elgg_echo('friends'),
 			'href' => $context."/channels/$username",
@@ -36,15 +30,17 @@ if (elgg_is_logged_in() && $context) {
 			'priority' => 400,
 		),
 		'thumbsup' => array(
-			'text' => elgg_view_icon('thumbs-up-alt'),
+			'text' => '&#128077;',
 			'href' => $context."/thumbsup",
 			'selected' => ($filter_context == 'thumbsup'),
+			'class' => 'entypo',
 			'priority' => 500,
 		),
 		'thumbsdown' => array(
-			'text' => elgg_view_icon('thumbs-down-alt'),
+			'text' => '&#128078;',
 			'href' => $context."/thumbsdown",
 			'selected' => ($filter_context == 'thumbsdown'),
+			'class'=>'entypo',
 			'priority' => 600,
 		),
 

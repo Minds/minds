@@ -6,6 +6,12 @@
  */
 ?>
 
+#notification li{
+	width:auto;
+	height:auto;
+	float:none;
+}
+
 #notificationstable td.namefield {
 	width:250px;
 	text-align: left;
@@ -84,7 +90,7 @@
 }
 
 .notifications.popup{
-	width:250px;
+	width:336px;
 }
 
 .notify_time{
@@ -123,14 +129,22 @@
 	
 	position: absolute;
 	text-align: center;
-	top: 12px;
-	left: 20px;
+	top: 10px;
+	left: 10px;
 	min-width: 14px;
 	height: 14px;
 	font-size: 8px;
 	font-weight: bold;
 }
-
+.notifications .elgg-list{
+	width:auto;
+}
+.notifications .elgg-item{
+	width:auto;
+	height:auto;
+	float:none;
+	margin:5px 0;
+}
 
 
 

@@ -7,6 +7,10 @@
  */
 
 $subject = $vars['item']->getSubjectEntity();
+if($subject instanceof TidypicsImage){
+}else{
+return false;
+}
 $subject_link = elgg_view('output/url', array(
 	'href' => $subject->getURL(),
 	'text' => $subject->name,

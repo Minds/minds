@@ -148,7 +148,9 @@ HTML;
 	);
 	$params = $params + $vars;
 	$list_body = elgg_view('object/elements/summary', $params);
-
-	echo elgg_view_image_block($market_img, $list_body);
+	$owner_img = elgg_view_entity_icon($marketpost->getOwnerEntity(), 'small');
+	$image = elgg_view('output/url', array('href'=>$marketpost->getURL(), 'text'=>elgg_view('output/img', array('src'=>elgg_get_site_url() . 'mod/market/thumbnail.php?marketguid='.$marketpost->guid.'&size=large','class'=>'rich-image'))));
+	echo elgg_view_image_block($owner_img, elgg_view('output/url', array('href'=>$marketpost->getURL(), 'text'=> elgg_view_title($marketpost->title))) . $subtitle);
+	echo $image;
 }
 

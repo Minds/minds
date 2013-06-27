@@ -151,7 +151,7 @@ function minds_social_action($event, $object_type, $object){
 				$desc = substr($desc, 0, 100) . '... ' . $object->getURL();
 				}
 				$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
-				$api->post('statuses/update', array('status' => $desc));
+				$api->post('statuses/update', array('status' => $desc . ' @mindsdotcom'));
 			}
 		}
 		
@@ -166,7 +166,7 @@ function minds_social_action($event, $object_type, $object){
 			
 			//post to twitter
 			$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
-			$api->post('statuses/update', array('status' => 'I wrote a new blog on Minds. ' . $object->getURL()));
+			$api->post('statuses/update', array('status' => $object->title . ' - ' . $object->getURL() . ' #minds #blog @mindsdotcom'));
 		}
 		
 		//say video has been posted
@@ -185,7 +185,7 @@ function minds_social_action($event, $object_type, $object){
 			
 			//post to twitter
 			$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $access_key, $access_secret);
-			$api->post('statuses/update', array('status' => 'I created new media on Minds. ' . $object->getURL()));
+			$api->post('statuses/update', array('status' => $object->title . ' - ' . $object->getURL() . ' #minds #video @mindsdotcom'));
 		}
 		
 		/**

@@ -16,10 +16,8 @@ if ($full_view) {
 	echo elgg_view('object/album/full', $vars);
 } else {
 	if (elgg_in_context('widgets')) {
-		echo elgg_view('object/album/list', $vars);
-	} elseif($archive_view) {
+	//	echo elgg_view('object/album/list', $vars);
+	} else{
 		echo elgg_view('object/album/archive', $vars);
-	} else {
-		echo elgg_view('object/album/gallery', $vars);
 	}
 }

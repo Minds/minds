@@ -8,6 +8,16 @@
  * Minds Search
  */
 .minds-search{}
+form.minds-search{
+	float:left;
+	width:50%;
+}
+.minds-search input[type=text]{
+	margin:10px;
+}
+.minds-search .submit{
+	display:none;
+}
 .minds-search-section{
 	clear:both;
 	display:block;
@@ -28,6 +38,9 @@
 	background:#F3F3F3;
 }
 .minds-search-item img{	
+	width:100%;
+}
+.minds-search img.full{
 	width:100%;
 }
 .minds-search-item h3{
@@ -89,10 +102,11 @@ a .minds-search-item p{
 }
 
 .minds-search-nav{
-	float:left;
-	width:100%;
+	width:90%;
 	height:35px;
 	clear:both;
+	padding:10px;
+	margin:auto;
 }
 .minds-search-nav-section{
 	float:left;
@@ -141,7 +155,7 @@ a .minds-search-item p{
 	margin:0 5px;
 }
 .elgg-menu-search-result > .elgg-menu-item-remind{
-	margin:5px;
+	margin:5px 0 5px 10px;
 }
 .search-result-license{
 	float:left;

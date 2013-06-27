@@ -22,35 +22,42 @@
 	min-height:100%;
 }
 .elgg-page-default .elgg-page-header > .elgg-inner {
-	width: 990px;
+	width: 90%;
 	margin: 0 auto;
 	height: 90px;
 }
 .elgg-page-default .elgg-page-body > .elgg-inner {
-	width: 990px;
+	width: 90%;
 	margin: 0 auto;
-	padding-top:50px;
 }
 .elgg-page-default .elgg-page-footer > .elgg-inner {
-	width: 990px;
+	width: 90%;
 	margin: 0 auto;
 	padding: 5px 0;
 }
 
 /***** TOPBAR ******/
 .elgg-page-topbar {
-	background: #E3E3E3 url(<?php echo elgg_get_site_url(); ?>mod/minds/graphics/header_bg.png) repeat-x top left;
-	border-bottom: 1px solid #CCC;
+	background: #F8F8F8;
+	opacity:0.95;
 	position: fixed;
     top:0;
+    min-width:998px;
     width:100%;
-	height: 40px;
+	height: 100px;
 	z-index: 9000;
+	/*box-shadow: 0 0 5px #888;
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px #888;*/
 }
 .elgg-page-topbar > .elgg-inner {
-	padding: 0px 10px;
+	padding: 15px 10px;
     margin:auto;
-    width:990px;
+    width:90%;
+}
+.elgg-page-topbar > .elgg-inner > .logo{
+	padding: 0 8px;
+	float:left;
 }
 
 /***** PAGE MESSAGES ******/
@@ -82,12 +89,19 @@
 	width:100%;
 	height:auto;
 	min-height:100%;
+	margin-top:100px;
 }
 
 /***** PAGE BODY LAYOUT ******/
 .elgg-layout {
+	min-width:998px;
 	min-height: 360px;
 }
+.elgg-layout > .elgg-inner{
+	width:90%;
+	margin:auto;
+}
+
 .elgg-layout-one-sidebar {
 	/*background: transparent url(<?php echo elgg_get_site_url(); ?>_graphics/sidebar_background.gif) repeat-y right top;*/
 }
@@ -101,14 +115,10 @@
 	position: relative;
 	padding:0;
 	float: right;
-	width: 210px;
+	width: 336px;
 	margin: 0 0 0 10px;
 	padding:0 0 15px 0;
-	background: rgb(255, 255, 255); /* The Fallback */
-	background: rgba(255, 255, 255, 0.75); 
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius:5px;
+	background: #F8F8F8; 
 	/*-moz-box-shadow: 0 0 3px #888;
 	-webkit-box-shadow: 0 0 3px#888;
 	box-shadow: 0 0 3px #888;*/
@@ -124,17 +134,13 @@
 	position: relative;
 	min-height: 360px;
 	padding: 10px;
+	background:#F8F8F8;
 }
 .elgg-layout-one-sidebar .elgg-main {
 	position: relative;
 	min-height: 360px;
 	padding:0;
-	background: rgb(255, 255, 255); /* The Fallback */
-    /*background: rgba(255, 255, 255, 0.75); */
 	/*border-left:2px solid #cccccc;*/
-	-webkit-border-radius: 5px;
-  	-moz-border-radius: 5px;
- 	border-radius:5px;
 	/*-moz-box-shadow: 0 0 3px #888;
 	-webkit-box-shadow: 0 0 3px#888;
 	box-shadow: 0 0 3px #888;*/
@@ -149,12 +155,13 @@
 }
 .elgg-main > .elgg-list,.elgg-main > .elgg-content{
 	margin:0;
-	padding:10px;
-	background:#FFF;
+	padding:1px 10px;
+	background:#F8F8F8;
 }
 
 /***** PAGE FOOTER ******/
 .elgg-page-footer {
+	min-width:998px;
 	color: #999;
 	font-size:11px;
 	background:#FFF;

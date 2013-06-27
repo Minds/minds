@@ -29,37 +29,47 @@ if (isset($vars['entity'])) {
 	//create new array to store response and count
 	//$response_count = array();
 
+	$user_guid = elgg_get_logged_in_user_guid();
+	$can_vote = polls_check_for_previous_vote($vars['entity'], elgg_get_logged_in_user_guid());
 
 	//populate array
 	foreach($responses as $response)
 	{
 		//get count per response
 		$response_count = polls_get_response_count($response, $user_responses);
-			
+	
+		//find the users vote
+		foreach($user_responses as $user_response){
+			if($user_response->owner_guid == elgg_get_logged_in_user_guid()){
+				$selected = true;
+			} 
+		}
+
 		//calculate %
 		if ($response_count && $user_responses_count) {
 			$response_percentage = round(100 / ($user_responses_count / $response_count));
 		} else {
 			$response_percentage = 0;
 		}
-			
+					
+		if(!$can_vote){
+			$response_count = '...';
+			$response_percentage = 0;
+		}
 		//html
 		?>
-<div class="progress_indicator">
-	<label><?php echo $response . " (" . $response_count . ")"; ?> </label><br>
+<a href="<?php echo elgg_add_action_tokens_to_url('action/vote/vote?guid='.$vars['entity']->guid. '&response='.urlencode($response)); ?>">
+<div class="progress_indicator" class="<?php if($selected){ echo 'selected'; } ?>" title="Click to place vote">
 	<div class="progressBarContainer" align="left">
 		<div class="polls-filled-bar"
 			style="width: <?php echo $response_percentage; ?>%"></div>
+		<label><?php echo $response . " (" . $response_count . ")"; ?> </label>
 	</div>
 </div>
-<br>
+</a>
 		<?php
 	}
 	?>
-
-<p>
-<?php echo elgg_echo('polls:totalvotes') . $user_responses_count; ?>
-</p>
 
 <?php
 

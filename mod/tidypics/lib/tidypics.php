@@ -154,6 +154,17 @@ function tidypics_is_upgrade_available() {
 }
 
 /**
+ * Returns just a guid from a database $row. Used in elgg_get_entities()'s callback.
+ *
+ * @param stdClass $row
+ * @return type
+ */
+function tp_guid_callback($row) {
+  return ($row->guid) ? $row->guid : false;
+}
+
+
+/**
  * This lists the photos in an album as sorted by metadata
  *
  * @todo this only supports a single album. The only case for use a
@@ -220,9 +231,9 @@ function tidypics_list_photos(array $options = array()) {
  * @param stdClass $row
  * @return type
  */
-function tp_guid_callback($row) {
-	return ($row->guid) ? $row->guid : false;
-}
+//function tp_guid_callback($row) {
+//	return ($row->guid) ? $row->guid : false;
+//}
 
 
 /*********************************************************************

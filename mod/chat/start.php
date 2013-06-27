@@ -275,7 +275,7 @@ function chat_notifier() {
 		}
 
 		// This link opens the popup module
-		elgg_register_menu_item('topbar', array(
+		elgg_register_menu_item('notifications', array(
 			'name' => 'chat-notifier',
 			'href' => '#chat-messages-preview',
 			'text' => $text,

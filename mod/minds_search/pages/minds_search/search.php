@@ -62,6 +62,13 @@ $content = elgg_view('minds_search/nav');
 $content .= $results;
 $params['content'] = $content;
 
+$title_block = elgg_view_title('Searching - <i>' .$query . '</i>', array('class' => 'elgg-heading-main'));
+$params['header'] = <<<HTML
+<div class="elgg-head clearfix">
+	$title_block$menu
+</div>
+HTML;
+
 if (!$query) {
 	$params['layout'] = 'one_column';
 	$params['content'] = elgg_view('minds_search/splash');

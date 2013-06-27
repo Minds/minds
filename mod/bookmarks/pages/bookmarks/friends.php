@@ -26,6 +26,7 @@ $params = array(
 	'filter_context' => 'friends',
 	'content' => $content,
 	'title' => $title,
+	'class' => 'bookmarks'
 );
 
 $body = elgg_view_layout('content', $params);

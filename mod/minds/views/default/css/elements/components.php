@@ -13,11 +13,11 @@
 	Image Block
 *************************************** */
 .elgg-image-block {
-	padding: 3px 0;
+	padding: 3px;
 }
 .elgg-image-block .elgg-image {
 	float: left;
-	margin-right: 5px;
+	margin-right:10px;	
 }
 .elgg-image-block .elgg-image-alt {
 	float: right;
@@ -29,11 +29,62 @@
 *************************************** */
 .elgg-list {
 	/*border-top: 1px dotted #CCCCCC;*/
-	margin: 5px 0;
+	margin:5px 0;
 	clear: both;
+	width:100%;
 }
 .elgg-list > li {
-	border-bottom: 1px dotted #CCCCCC;
+	float: left;
+        margin: 1.1%;
+        border: 0;
+	background:#F8F8F8;
+	padding:10px 10px 0 10px;
+        width: 29%;
+        /*width:28%;*/
+	overflow: hidden;
+	height:240px;
+        display: block;
+	position:relative;
+
+	box-shadow: 0 0 1px #888;
+	-webkit-box-shadow: 0 0 1px #888;
+	-moz-box-shadow: 0 0 1px #888;
+}
+@media screen and (max-width: 1100px) {
+        .elgg-list > li{
+                width:29%;
+                height:210px;
+        }
+}
+@media screen and (min-width: 1400px) {
+	.elgg-list > li{
+		width:21%;
+		height:210px;
+	}
+}
+.elgg-list > li .elgg-avatar-medium{
+	margin:10px 8px 0 5px;
+}
+
+.elgg-list-river{
+	width:auto;
+}
+.elgg-list-river > li{
+	width:auto;
+	height:auto;
+	margin:0;
+	box-shadow:none;
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+}
+
+.elgg-item h2{
+	font-size:16px;
+}
+
+.elgg-item i{
+	color:#999;
+	font-size:11px;
 }
 
 .elgg-item .elgg-subtext {
@@ -143,7 +194,6 @@
 	border-top: 1px solid #CCC;
 }
 .elgg-list-river > li {
-	border-bottom: 1px solid #CCC;
 }
 .elgg-river-item {
 	padding: 7px 0;

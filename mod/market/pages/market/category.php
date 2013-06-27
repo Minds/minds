@@ -64,7 +64,7 @@ $params = array(
 		'sidebar' => $sidebar,
 		);
 
-$body = elgg_view_layout('content', $params);
+$body = elgg_view_layout('gallery', $params);
 
 echo elgg_view_page($title, $body);
 

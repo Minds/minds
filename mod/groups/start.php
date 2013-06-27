@@ -21,8 +21,13 @@ function groups_init() {
 	elgg_register_entity_type('group', '');
 
 	// Set up the menu
-	$item = new ElggMenuItem('groups', elgg_echo('groups'), 'groups/all');
-	elgg_register_menu_item('site', $item);
+	elgg_register_menu_item('site', array(
+			'name' => 'groups',
+			'href' => 'groups/all',
+			'text' => '&#59397;',
+			'title' => elgg_echo('groups'),
+			'class' => 'entypo',
+		));
 
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('groups', 'groups_page_handler');

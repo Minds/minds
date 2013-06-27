@@ -345,7 +345,7 @@ function polls_get_page_list($page_type, $container_guid = NULL) {
 		$params['content'] = elgg_echo('polls:none');
 	}
 
-	$body = elgg_view_layout("content", $params);
+	$body = elgg_view_layout("gallery", $params);
 
 	return elgg_view_page($params['title'],$body);
 }

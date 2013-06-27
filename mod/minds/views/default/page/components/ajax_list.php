@@ -3,6 +3,20 @@
 $elgg_path = str_replace(elgg_get_site_url(), '', $vars['path']);
 $path = explode('/', $elgg_path);
 
+if($elgg_path == elgg_get_site_url() || $elgg_path == null){
+
+elgg_set_viewtype('json');
+
+if(!include_once(elgg_get_plugins_path() . 'minds/pages/index.php')){
+		return false;
+}
+
+elgg_set_viewtype('default');
+$out = ob_get_contents();
+ob_end_clean();
+
+} else {
+
 ob_start();
 elgg_set_viewtype('json');
 page_handler(array_shift($path), implode('/', $path));
@@ -10,16 +24,21 @@ elgg_set_viewtype('default');
 $out = ob_get_contents();
 ob_end_clean();
 
+}
 
 $json = json_decode($out);
-
 switch(get_input('items_type')){
 	case 'entity':
-		foreach ($json as $child) foreach ($child as $grandchild) $json = $grandchild;
+		$new_json = array();
+		foreach ($json as $child){
+			 foreach ($child as $grandchild){
+				$new_json = array_merge($new_json,$grandchild);
+			}
+		}
 		
 		// Removing duplicates
 		// This will be unnecessary when #4504 fixed.
-		$buggy = $json;
+		$buggy = $new_json;
 		$json = array();
 		$guids = array();
 		foreach($buggy as $item) {
@@ -29,7 +48,6 @@ switch(get_input('items_type')){
 		foreach(array_keys($guids) as $i) {
 			$json[$i] = $buggy[$i];
 		}
-		
 		break;
 	case 'annotation': 
 		foreach ($json as $child) {
@@ -61,7 +79,16 @@ foreach($json as $item) {
 					$items[] = new ElggGroup($item);
 					break;
 				case 'object':
-					$items[] = new ElggObject($item);
+					switch(get_subtype_from_id($item->subtype)){
+						case 'album':
+							$items[] = new TidypicsAlbum($item);
+							break;
+						case 'image':
+							$items[] = new TidypicsImage($item);
+							break;
+						default:
+							$items[] = new ElggObject($item);
+					}
 					break;
 			}
 			break;
@@ -69,7 +96,7 @@ foreach($json as $item) {
 			$items = $json;
 			break;
 		case 'river':
-			$items[] = new ElggRiverItem($item);
+			$items[] = new MindsNewsItem($item);
 			break;
 	}
 }

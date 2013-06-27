@@ -1525,7 +1525,7 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 	$menu_item = ElggMenuItem::factory($menu_options);
 	elgg_register_menu_item('extras', $menu_item);
 
-	$body = elgg_view_layout("content", $params);
+	$body = elgg_view_layout("gallery", $params);
 
 	return elgg_view_page($title,$body);
 }
@@ -1833,8 +1833,9 @@ function event_calendar_generate_listing_params($page_type,$container_guid,$orig
 				'filter'		=> $filter,
 				'region'		=> $region,
 				'listing_format' => $event_calendar_listing_format,
+				'full_view' => false
 	);
-
+	
 	$content = elgg_view('event_calendar/show_events', $vars);
 	if ($page_type == 'owner') {
 		$filter_override = '';
@@ -1844,6 +1845,13 @@ function event_calendar_generate_listing_params($page_type,$container_guid,$orig
 
 	if ($event_calendar_listing_format == 'paged') {
 		$title = elgg_echo('event_calendar:upcoming_events_title');
+		$entities = array();	
+		foreach($events as $event){
+			$entities[] = $event['event'];
+		}
+
+		$content = elgg_view_entity_list($entities, $vars, $offset, $limit, false);
+	
 	} else if ($event_calendar_listing_format == 'full') {
 		$title = elgg_echo('event_calendar:show_events_title');
 	} else if ($page_type == 'group') {

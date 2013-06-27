@@ -94,6 +94,7 @@ function minds_init(){
 	
 	//unregister the register page and register this new one
 	elgg_register_page_handler('register', 'minds_register_page_handler');
+	elgg_register_page_handler('login', 'minds_login_page_handler');
 	
 	//setup the licenses pages
 	elgg_register_page_handler('licenses', 'minds_license_page_handler');
@@ -128,6 +129,7 @@ function minds_init(){
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
         elgg_register_action("registernode","$actionspath/minds/registernode.php");
+        elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php", 'public');
 	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
@@ -206,6 +208,19 @@ function minds_register_page_handler($page) {
 	return true;
 }
 
+/**
+ * Page handler for login  page
+ *
+ * @param array $page
+ * @return bool
+ * @access private
+ */
+function minds_login_page_handler($page) {
+            $base_dir = elgg_get_plugins_path().'minds/pages/account';
+            require_once("$base_dir/login.php");
+        return true;
+}
+
 function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
 	if (!elgg_is_logged_in()) {
 		$handler = elgg_extract('handler', $returnvalue);
@@ -241,25 +256,6 @@ function minds_pagesetup(){
 	elgg_unregister_menu_item('topbar', 'elgg_logo');
 	elgg_unregister_menu_item('topbar', 'administration');
 	elgg_unregister_menu_item('topbar', 'friends');
-	
-	if(elgg_get_context()!='main')	{
-		elgg_register_menu_item('topbar', array(
-			'name' => 'search',
-			'href' => false,
-			'text' => elgg_view('minds_search/header'),
-			'priority' => 1,
-			//'section' => 'alt',
-		));
-	
-		elgg_register_menu_item('topbar', array(
-			'name' => 'minds_logo',
-			'href' => elgg_get_site_url(),
-			'text' => '<img src=\''. elgg_get_site_url() . 'mod/minds/graphics/minds_logo_transparent.png\' class=\'minds_logo\'>',
-			'priority' => 0
-		));
-	}
-	
-	//rename activity news	
 	elgg_unregister_menu_item('site', 'activity');
 	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
@@ -345,6 +341,10 @@ function minds_pagesetup(){
                 ),
         ));
         elgg_register_menu_item('embed', $item);
+	
+	//footer
+	
+
 }
 
 function minds_upload($page){
@@ -398,7 +398,6 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 		$item = $params['item'];
 		$object = $item->getObjectEntity();
 		$subject = $item->getSubjectEntity();
-		
 		//Delete button
 		elgg_unregister_menu_item('river', 'delete'); 
 		if ($subject->canEdit() || $object->canEdit()) {
@@ -408,7 +407,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
 				'class' => 'entypo',
-				'confirm' => elgg_echo('deleteconfirm'),
+				//'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
 				'priority' => 200,
 			);
@@ -442,6 +441,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
 		$context = elgg_get_context();
+		$full = elgg_extract('full_view', $params, false);
 		
 		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
@@ -469,14 +469,14 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
 				'class' => 'entypo',
-				'confirm' => elgg_echo('deleteconfirm'),
+				//'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
 				'priority' => 200,
 			);
 			$return[] = ElggMenuItem::factory($options);
 		}
 	}
-	if(elgg_is_admin_logged_in()){
+	if(elgg_is_admin_logged_in() && $full){
 		if($entity instanceof ElggObject){
 			//feature button
 			$options = array(
@@ -489,6 +489,14 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 					);
 			$return[] = ElggMenuItem::factory($options);
 		}	
+	} else {
+		elgg_unregister_menu_item('entity', 'edit');
+		elgg_unregister_menu_item('entity', 'access');
+		foreach($return as $k => $v){
+			if($return[$k]->getName() == 'access' || $return[$k]->getName() == 'edit'){;			
+				unset($return[$k]);
+			}
+		}
 	}
 
 	return $return;
@@ -591,12 +599,12 @@ function minds_fetch_image($description, $owner_guid) {
   return $image;
 }
 
-function minds_get_featured($type, $limit = 5, $output = 'entities'){
+function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = 0){
 	global $CONFIG;
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
 		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
-		$data = $es->query($type,null, 'time_stamp:desc', $limit, 0, array('age'=>3600));
+		$data = $es->query($type,null, 'time_stamp:desc', $limit, $offset, array('age'=>3600));
 		foreach($data['hits']['hits'] as $item){
 			$guids[] = intval($item['_id']);
 		}

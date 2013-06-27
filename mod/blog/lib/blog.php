@@ -61,7 +61,7 @@ HTML;
 	}
 	
 	//add the sidebar
-	$return['sidebar'] = blog_sidebar($blog->guid);
+	$return['sidebar'] = blog_sidebar($blog);
 	
 	$excerpt = $blog->excerpt ? $blog->excerpt : substr(strip_tags($blog->description), 0, 140);
 	
@@ -100,6 +100,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		'type' => 'object',
 		'subtype' => 'blog',
 		'full_view' => false,
+		'limit' =>12
 	);
 
 	$current_user = elgg_get_logged_in_user_entity();
@@ -128,7 +129,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		}
 	} else {
 		$return['filter_context'] = 'all';
-		$return['title'] = elgg_echo('blog:title:all_blogs');
+		$return['title'] = elgg_echo('blog');
 		elgg_pop_breadcrumb();
 		elgg_push_breadcrumb(elgg_echo('blog:blogs'));
 	}
@@ -539,25 +540,24 @@ function blog_get_featured($limit=5){
  * Adds a sidebar to each blog which show information such as posts by the owner, popular blogs etc
  * @param guid (int)
  */
-function blog_sidebar($guid = null){
-	if($guid){	
-		$blog = get_entity($guid);
+function blog_sidebar($blog){
+	if($blog){	
 		
 		//show more posts from this user
 		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>5));
 		if (($key = array_search($blog, $owners_blogs)) !== false) {
 		    unset($owners_blogs[$key]);
 		}
-		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true));
-		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs);
+		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar'));
+		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs, array('class'=>'blog-sidebar'));
 		
 		$return .= elgg_view('minds/ads', array('type'=>'content-side'));
 	}
 	//show featured blogs
 	$featured_blogs = blog_get_featured(5);
 	if($featured_blogs){
-		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true));
-		$return .= elgg_view_module('aside', elgg_echo('blog:featured'), $featured_blogs);	
+		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar'));
+		$return .= elgg_view_module('aside', elgg_echo('blog:featured'), $featured_blogs, array('class'=>'blog-sidebar'));	
 	}
 	
 	return $return;
