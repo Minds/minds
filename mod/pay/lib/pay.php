@@ -421,7 +421,7 @@ function paypal_handler_callback($order_guid) {
 
 
 
-
+mail('marcus@marcus-povey.co.uk', 'IPN Payment', print_r($_POST, true));
 
                 $payment_status = $_REQUEST['payment_status'];
                 //We can now assume that the response is legit so we can update the payment status
