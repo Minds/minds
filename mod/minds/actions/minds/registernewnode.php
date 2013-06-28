@@ -40,9 +40,11 @@ try {
         // Find what tier we're on (note, we use the product code not the guid so its meaningful to the multisite node)
         $ia = elgg_set_ignore_access();
         $order = minds_tiers_get_current_valid_tier($owner_user);
+        if ($order->payment_used) throw new Exception("Order has already been used to create a tier.");
         $tier = get_entity($order->object_guid);
         $tier_id = $tier->product_id;
-        if (!$tier) throw new Exception('No tier attached to user!');
+        if (!$tier) throw new Exception('No tier bought by user!');
+        
         elgg_set_ignore_access($ia);
         
         // We have explicity not got a domain existing already
@@ -76,8 +78,10 @@ try {
             throw new Exception($results->message);
         
         // Now, we create an association
-        
         add_entity_relationship($owner_user, 'owned_multisite_networks', $minds_user_id);
+        
+        // And say we've used the order
+        $order->payment_used = time();
                 
         system_message("New minds network $domain successfully created!");
         forward(elgg_get_site_url() . "register/testping?domain=$domain");
