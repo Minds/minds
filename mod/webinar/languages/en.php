@@ -66,8 +66,8 @@
 		'webinar:river:start' => "The gathering %s is running !!",
 		'webinar:server_salt' => 'BigBlueButton security salt (tip : run on server side the command line, bbb-conf --salt)',
 		'webinar:server_url' => "BigBlueButton server's url",
-		'webinar:settings' => "Erreur : demander à l'admin de vérifier les settings du plugin",
-		'webinar:slot' => " Si oui, choisir un créneau libre : ",
+		'webinar:settings' => "Error: ask the admin to check the settings of the plugin",
+		'webinar:slot' => " If so, choose a free slot : ",
 		'webinar:slot:default' => "Add an event in the agenda ?",
 		'webinar:sms' => " create a gathering named %s ",
 		'webinar:start' => 'Start',
@@ -120,7 +120,6 @@
 		'river:start:object:webinar' => '%s started the gathering %s',
 		'river:attendee:object:webinar' => '%s subscribed to gathering - %s',
 		'river:registered:object:webinar' => '%s joined the %s gathering',
-		
 		);
 
 	add_translation("en",$english);

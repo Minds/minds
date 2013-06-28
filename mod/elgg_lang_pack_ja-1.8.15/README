@@ -1,0 +1,61 @@
+Japanese language pack for Elgg 1.8.9
+=====================================
+
+
+Includes: core ( and, bundled mods)
+
+    documentation/examples/plugis/languages/ja.php
+    views/default/js/languages/ja.php
+    install
+    languages
+    mod
+        blog
+        bookmarks
+        categories
+        custom_index
+        dashboard
+        developers
+        diagnostics
+        embed
+        externalpages
+        file
+        garbagecollector
+        groups
+        invitefriends
+        likes
+        logbrowser
+        logrotate
+        members
+        messageboard
+        messages
+        notifications
+        pages
+        profile
+        reportedcontent
+        search
+        tagcloud
+        thewire
+        tinymce
+        twitter
+        twitter_api
+        uservalidationbyemail
+
+To install:
+
+    Put the downloaded file in elgg root directory, extract it.
+
+----------- Japanese -------------------------------------------------
+
+概要：
+
+Elgg用の日本語翻訳パックです。
+
+コア（と、それに含まれるモジュール)のみですが、すべて日本語に訳してあります。
+
+いくつか意訳がありますので、随時修正してください。
+
+例）the wire -> つぶやき
+
+インストール手順：
+
+    ダウンロードしたファイルをElggのルートにおいて、そのまま解凍してください。翻訳ファイル（ja.php)が適切な場所にインストールされます。

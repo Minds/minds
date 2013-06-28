@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+	<field key="author" value="Cerceau, Renato Mahmoud &amp; Abdelkader &amp; Pedro Prez &amp; Maximus Marius" />
+	<field key="enhanced_by" value="Mahmoud Abdelkader &amp; Pedro Prez" />
+	<field key="original_author" value="Maximus Marius" />
+	<field key="version" value="3.1" />
+	<field key="description" value="Simple edit translation to Elgg (improve to Brazilian Portuguese)" />
+	<field key="website" value="http://www.assetans.org.br/redesocial/" />
+	<field key="copyright" value="(C) Cerceau, Renato &amp; Mahmoud Abdelkader &amp; Pedro Prez &amp; Maximus Marius 2010" />
+	<field key="licence" value="GNU Public License version 2" />
+</plugin_manifest>
