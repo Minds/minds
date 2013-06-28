@@ -94,6 +94,16 @@
 	margin: 10px 5px;
 }
 
+.hz-list .elgg-list{
+	width:auto;
+	margin:0;
+}
+.hz-list .elgg-list .elgg-item{
+	width:auto;
+	height:auto;
+	margin:10px 0;
+	float:none;
+}
 /* ***************************************
 	Gallery
 *************************************** */

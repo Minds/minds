@@ -195,9 +195,12 @@ class TidypicsAlbum extends ElggObject {
 			return array();
 		}
 		$list = unserialize($listString);
-
+		
 		// check access levels
 		$guidsString = implode(',', $list);
+		if($guidsString == ""){
+			return null;
+		}
 		$options = array(
 			'wheres' => array("e.guid IN ($guidsString)"),
 			'order_by' => "FIELD (e.guid, $guidsString)",
