@@ -150,6 +150,7 @@ function minds_init(){
         // Endpoint
         elgg_register_page_handler('tierlogin', function($pages) {
             
+            $_SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
             $_SESSION['__tier_selected'] = get_input('tier');
             $content = elgg_view_form('login', null, array('returntoreferer' => true));
             
@@ -186,7 +187,7 @@ function minds_init(){
                     
                     $tier = get_entity($items[0]->object_guid);
                     if (elgg_instanceof($tier, 'object', 'minds_tier'))
-                            $return['return'] = elgg_get_site_url() . 'register/node/';
+                            $return['return'] = elgg_get_site_url() . 'register/node/?order_complete=y';
                             
                     elgg_set_ignore_access($ia);
              
