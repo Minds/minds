@@ -24,7 +24,7 @@
         
 
 ?>
-<div class="tiers">
+<div id="tiers-selection" class="tiers">
   
     <p><?php echo elgg_echo('minds:tier:blurb');?></p>
     
@@ -45,6 +45,21 @@
     ?>
     <br class="clearfix" />
 </div>
+
+<?php 
+// Returning from an order, so we need to poll while Paypal processes the payment and pings our IPN
+if (get_input('order_complete') == 'y') { 
+?>
+<script>
+
+    $('#tiers-selection').html("<p>Processing payment, please wait...</p>");
+    setTimeout("location.reload(true);", 5000);
+    
+</script>
+
+
+<?php } ?>
+
 <?php
 
     }
