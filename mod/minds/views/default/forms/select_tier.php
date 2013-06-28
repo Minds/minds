@@ -48,7 +48,7 @@
 
 <?php 
 // Returning from an order, so we need to poll while Paypal processes the payment and pings our IPN
-if (get_input('order_complete') == 'y') { 
+if (get_input('auth')) { 
 ?>
 <script>
 
