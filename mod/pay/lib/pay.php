@@ -75,7 +75,10 @@ function pay_urls($order_guid){
 				  'cancel' => elgg_get_site_url() . 'pay/cancel',
 				  'callback' => elgg_get_site_url() . 'pay/callback/' . $order_guid . '/' .$action_token,
 				  );
-	return $urls;
+
+        // Passing order urls through a hook so we can override the return url as necessary (bit of a hack)
+        return trigger_plugin_hook('urls', 'pay', array('order' => $order), $urls);
+
 }
 		
 /********************
