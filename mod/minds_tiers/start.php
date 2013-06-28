@@ -90,7 +90,7 @@ function minds_tiers_get_current_valid_tier($user) {
                return $o;
            }
            
-           if ($o->time_created >= (time() - $expires))
+           if ($o->time_updated >= (time() - $expires))
            {
                 elgg_set_ignore_access($ia);
                 return $o;
