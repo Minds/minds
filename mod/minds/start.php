@@ -187,7 +187,7 @@ function minds_init(){
                     
                     $tier = get_entity($items[0]->object_guid);
                     if (elgg_instanceof($tier, 'object', 'minds_tier'))
-                            $return['return'] = elgg_get_site_url() . 'register/node/?order_complete=y';
+                            $return['return'] = elgg_get_site_url() . 'register/node/';
                             
                     elgg_set_ignore_access($ia);
              
