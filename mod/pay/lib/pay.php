@@ -350,10 +350,100 @@ function paypal_handler($params){
  * 
  * @returns true if successful
  */
-function paypal_handler_callback($order_guid){
-	
-	$order = get_entity($order_guid);
-	/*
+
+function paypal_handler_callback($order_guid) {
+
+    global $CONFIG;
+
+    $order = get_entity($order_guid);
+
+    // We need to actually do some validation in an IPN... MP 
+
+
+    elgg_log('PAYPAL: ********* Paypal IPN triggered **********');
+
+
+    // Read the post from PayPal and add 'cmd' 
+    $req = 'cmd=_notify-validate';
+
+    foreach ($_POST as $key => $value) {
+    // Handle escape characters, which depends on setting of magic quotes 
+        $value = urlencode($value);
+        $req .= "&$key=$value";
+    }
+
+    // Post back to PayPal to validate 
+    elgg_log("PAYPAL: Request received, posting to paypal");
+
+    $connect = $CONFIG->debug ? 'https://www.sandbox.paypal.com' : 'https://www.paypal.com';
+    $ch = curl_init($connect . '/cgi-bin/webscr');
+    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+
+    // In wamp like environments that do not come bundled with root authority certificates,
+    // please download 'cacert.pem' from "http://curl.haxx.se/docs/caextract.html" and set the directory path 
+    // of the certificate as shown below.
+    // curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
+    if (!($res = curl_exec($ch))) {
+        elgg_log("PAYPAL: Got " . curl_error($ch) . " when processing IPN data");
+        curl_close($ch);
+        exit;
+    }
+    curl_close($ch);
+
+
+
+    elgg_log("PAYPAL: Response: $res");
+
+    if (strcmp($res, "VERIFIED") == 0) {
+
+        elgg_log("PAYPAL: POST data is " . print_r($_POST, true));
+
+        switch ($_POST['payment_status']) {
+            case 'Completed' :
+                elgg_echo('PAYPAL: Payment status: completed');
+
+
+
+
+
+                //TODO: More validation - e.g. check currency and gross etc...
+
+
+
+
+
+
+                $payment_status = $_REQUEST['payment_status'];
+                //We can now assume that the response is legit so we can update the payment status
+                pay_update_order_status($order_guid, $payment_status);
+
+                return true;
+
+
+
+                break;
+
+            default: elgg_log("PAYPAL: Payment status unknown : {$_POST['payment_status']}");
+        }
+    } else if (strcmp($res, "INVALID") == 0) {
+        elgg_log("PAYPAL: IPN Query is invalid");
+        foreach ($_POST as $key => $value) {
+            $debugtxt .= $key . " = " . $value . "\n\n";
+        }
+        throw new Exception("PAYPAL: Invalid IPN query! " . $CONFIG->debug ? $debugtxt : '');
+    }
+
+
+
+
+    /*
 	
 	$reciever_address = get_input('receiver_email');
 		if($reciever_address != elgg_get_plugin_setting('paypal_business', 'pay')){
@@ -370,12 +460,12 @@ function paypal_handler_callback($order_guid){
 			return false;
 		}
 		*/
-		
+		/*
 	$payment_status = $_REQUEST['payment_status'];
 	//We can now assume that the response is legit so we can update the payment status
 	pay_update_order_status($order_guid, $payment_status);
 	
-	return true;	
+	return true;	*/
 }
 
 //register paypal
