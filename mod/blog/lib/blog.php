@@ -542,7 +542,7 @@ function blog_get_featured($limit=6){
  */
 function blog_sidebar($blog){
 	if($blog){	
-		
+		$return .= elgg_view('minds/ads', array('type'=>'content-side-single'));
 		//show more posts from this user
 		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>6));
 		if (($key = array_search($blog, $owners_blogs)) !== false) {
@@ -551,7 +551,7 @@ function blog_sidebar($blog){
 		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar'));
 		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs, array('class'=>'blog-sidebar'));
 		
-		$return .= elgg_view('minds/ads', array('type'=>'content-side'));
+		$return .= elgg_view('minds/ads', array('type'=>'content-side-single'));
 	}
 	//show featured blogs
 	$featured_blogs = blog_get_featured(6);
