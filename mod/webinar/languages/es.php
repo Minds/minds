@@ -8,23 +8,23 @@
 	$spanish = array(
 		
 		
-				'item:object:webinar' => "Gathering",
-		        'webinar:access_id' => 'Access',
-				'webinar:add' => "Create a gathering",
-				'gatherings:add' => "Create a gathering",
-				'webinar:admin_pwd' => 'Admin password',
-				'webinar:all' => 'All',
-				'webinar:attendee:title' => "Gathering attendees",
-				'webinar:default:adminPwd' => 'admin',
+				'item:object:webinar' => "Acopio",
+		        'webinar:access_id' => 'Acceso',
+				'webinar:add' => "Crear una reunión",
+				'gatherings:add' => "Crear una reunión",
+				'webinar:admin_pwd' => 'contraseña de administrador',
+				'webinar:all' => 'Todo',
+				'webinar:attendee:title' => "Asistentes gathering",
+				'webinar:default:adminPwd' => 'Administración',
 				'webinar:default:description' => '',
-				'webinar:default:title' => "Group's gatherings %s",
-				'webinar:default:userPwd' => 'user',
-				'webinar:default:welcome' => 'Welcome to the gathering of %s',
-				'webinar:delete' => 'Delete',
-				'webinar:delete:failed' => 'Could not delete this gathering',
-				'webinar:delete:success' => 'Gathering deleted',
-				'webinar:description' => 'Description',
-				'webinar:edit' => 'Edit',
+				'webinar:default:title' => "Reuniones del grupo %s",
+				'webinar:default:userPwd' => 'usuario',
+				'webinar:default:welcome' => 'Bienvenido a la reunión de %s',
+				'webinar:delete' => 'Borrar',
+				'webinar:delete:failed' => 'No se puede eliminar este encuentro',
+				'webinar:delete:success' => 'Recopilación eliminada',
+				'webinar:description' => 'Descripción',
+				'webinar:edit' => 'Editar',
 				'webinar:edit:save' => 'Save',
 				'webinar:saved' => 'Saved',
 				'webinar:enable' => 'Enable the gatherings',
@@ -117,10 +117,10 @@
 				 * River
 				 **/
 				
-				'river:create:object:webinar' => '%s created a gathering %s',
-				'river:start:object:webinar' => '%s started the gathering %s',
-				'river:attendee:object:webinar' => '%s subscribed to gathering - %s',
-				'river:registered:object:webinar' => '%s joined the %s gathering',
+				'river:create:object:webinar' => '%s creado una reunión %s',
+				'river:start:object:webinar' => '%s comenzado la recolección %s',
+				'river:attendee:object:webinar' => '%s suscrito a la recopilación de - %s',
+				'river:registered:object:webinar' => '%s unido a la %s acopio',
 		
 	);
 					
