@@ -57,6 +57,12 @@ function pay_init() {
 	elgg_register_action("pay/admin/accept", "$action_path/admin/accept.php");
 	elgg_register_action("pay/admin/decline", "$action_path/admin/decline.php");
 	elgg_register_action("pay/admin/delete", "$action_path/admin/delete.php");
+        
+         // Extend public pages
+        elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
+            $pages = array('paypalgenericipn');
+            return array_merge($pages, $return);
+        });
 }
 
 /**
