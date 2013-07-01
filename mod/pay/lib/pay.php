@@ -378,6 +378,8 @@ function paypal_generic_ipn_handler($page) {
     
     // If we have an order
     if ($order) {
+        
+        $order_guid = $order->guid;
     
         // Validate the request
         // Read the post from PayPal and add 'cmd' 
