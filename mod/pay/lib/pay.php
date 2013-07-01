@@ -413,9 +413,10 @@ function paypal_handler_callback($order_guid) {
                 elgg_echo('PAYPAL: Payment status: completed');
 
 
-
-
-
+                // Attach a payment history to the order.
+                $order->annotate('order_details', serialize($_POST));
+                
+                
                 //TODO: More validation - e.g. check currency and gross etc...
 
 
