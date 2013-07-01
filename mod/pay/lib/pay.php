@@ -349,6 +349,120 @@ function paypal_handler($params){
 	return;
 }
 
+
+
+/**
+ * This must be configured in your seller account -> profile -> ipn settings and set to http://yoursite/paypalgenericipn.
+ * This handles generic notifications from paypal, most pertinantly, subscriptions
+ * @param type $page
+ */
+function paypal_generic_ipn_handler($page) {
+    
+    global $CONFIG;
+    
+    elgg_log('PAYPAL: ********* Paypal GENERIC IPN triggered **********');
+    
+    // Try and get order we're referring to
+    if ($orders = elgg_get_entities_from_metadata(array(
+        'type' => 'object',
+        'subtype' => 'pay',
+        'limit' => 1,
+        'metadata_name' => 'subscr_id',
+        'metadata_value' => $_POST['subscr_id'],
+    )))
+            $order = $orders[0];
+    
+    
+    // TODO: Other methods of pulling order out
+    
+    
+    // If we have an order
+    if ($order) {
+    
+        // Validate the request
+        // Read the post from PayPal and add 'cmd' 
+        $req = 'cmd=_notify-validate';
+
+        foreach ($_POST as $key => $value) {
+        // Handle escape characters, which depends on setting of magic quotes 
+            $value = urlencode($value);
+            $req .= "&$key=$value";
+        }
+
+        // Post back to PayPal to validate 
+        elgg_log("PAYPAL: Request received, posting to paypal");
+
+        $connect = $CONFIG->debug ? 'https://www.sandbox.paypal.com' : 'https://www.paypal.com';
+        $ch = curl_init($connect . '/cgi-bin/webscr');
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+
+        // In wamp like environments that do not come bundled with root authority certificates,
+        // please download 'cacert.pem' from "http://curl.haxx.se/docs/caextract.html" and set the directory path 
+        // of the certificate as shown below.
+        // curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
+        if (!($res = curl_exec($ch))) {
+            elgg_log("PAYPAL: Got " . curl_error($ch) . " when processing IPN data");
+            curl_close($ch);
+            exit;
+        }
+        curl_close($ch);
+        
+        
+        // Handle request 
+        elgg_log("PAYPAL: Response: $res");
+
+        if (strcmp($res, "VERIFIED") == 0) {
+
+            elgg_log("PAYPAL: POST data is " . print_r($_POST, true));
+            
+            // Attach a payment history to the order.
+            $order->annotate('order_details', serialize($_POST));
+
+            elgg_log("PAYPAL: Transaction type is {$_POST['txn_type']}");
+            mail('marcus@marcus-povey.co.uk', 'IPN GENERIC hit', print_r($_POST));
+            
+            switch ($_POST['txn_type']) {
+                
+                case 'subscr_signup': // Not handled here
+                    break;
+                case 'subscr_cancel': // Cancel the subscription
+mail('marcus@marcus-povey.co.uk', 'IPN GENERIC CANCELLED', print_r($_POST));
+                    pay_update_order_status($order_guid, 'Cancelled');
+                    break;
+                case 'subscr_payment': // Subscription regular payment.
+    
+mail('marcus@marcus-povey.co.uk', 'IPN GENERIC Payment', print_r($_POST));
+                        $payment_status = $_REQUEST['payment_status'];
+                        //We can now assume that the response is legit so we can update the payment status
+                        pay_update_order_status($order_guid, $payment_status);
+                    
+                    
+                    break;
+                default:
+                    elgg_log('PAYPAL: Unsupported transaction type hit generic IPN');
+            }
+            
+            return true;
+            
+        } else if (strcmp($res, "INVALID") == 0) {
+            elgg_log("PAYPAL: IPN Query is invalid");
+            foreach ($_POST as $key => $value) {
+                $debugtxt .= $key . " = " . $value . "\n\n";
+            }
+            throw new Exception("PAYPAL: Invalid IPN query! " . $CONFIG->debug ? $debugtxt : '');
+        }
+        
+    }
+}
+
+
 /* PayPal callback handler 
  * 
  * @returns true if successful
@@ -420,7 +534,12 @@ function paypal_handler_callback($order_guid) {
                 //TODO: More validation - e.g. check currency and gross etc...
 
 
+                
+                // If this is a recurring payment, then we need to link the order to a subscription profile so we can manage the order from its generic IPN
+                if (isset($_POST['subscr_id']))
+                    $order->subscr_id = $_POST['subscr_id'];
 
+mail('marcus@marcus-povey.co.uk', 'IPN Payment', print_r($_POST));
 
                 $payment_status = $_REQUEST['payment_status'];
                 //We can now assume that the response is legit so we can update the payment status

@@ -21,6 +21,9 @@ function pay_init() {
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('pay', 'pay_page_handler');
 
+        // Register a generic Paypal IPN endpoint to handle recurring payments
+        elgg_register_page_handler('paypalgenericipn', 'paypal_generic_ipn_handler');
+        
 	// Register URL handlers
 	elgg_register_entity_url_handler('object', 'pay', 'pay_url_override');
 
