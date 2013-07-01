@@ -179,6 +179,8 @@ function elasticsearch_render($entity){
 	$item->href = $entity->getUrl();
 	$item->license = $entity->license;
 	$item->tags = $entity->tags;
+	$item->access_id = $entity->access_id;
+	$item->category = get_input('universal_categories_list', 'uncategorised');
 	
 	return $item;
 }
@@ -196,7 +198,7 @@ function elasticsearch_index_allowed($object){
 	//allowed subtypes @todo make some sort of hook
 	$subtypes = array( 'kaltura_video', 'image', 'album', 'file', 'blog', 'page', 'page_top');
 
-	if(in_array($object->getSubtype(), $subtypes)){
+	if(in_array($object->getSubtype(), $subtypes) && $object->access_id != 0){
 		return true;
 	}
 		
