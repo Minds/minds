@@ -14,6 +14,7 @@ function pay_init() {
 
 	// register a library of helper functions
 	elgg_register_library('elgg:pay', elgg_get_plugins_path() . 'pay/lib/pay.php');
+        elgg_load_library('elgg:pay');
 
 	// Extend CSS
 	elgg_extend_view('css/elgg', 'pay/css');
