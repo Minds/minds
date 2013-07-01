@@ -360,6 +360,8 @@ function paypal_generic_ipn_handler($page) {
     
     global $CONFIG;
     
+    $ia = elgg_set_ignore_access();
+    
     elgg_log('PAYPAL: ********* Paypal GENERIC IPN triggered **********');
     
     // Try and get order we're referring to
