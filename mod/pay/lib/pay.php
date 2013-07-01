@@ -464,6 +464,8 @@ mail('marcus@marcus-povey.co.uk', 'IPN GENERIC Payment', print_r($_POST, true));
         }
         
     }
+    
+    return true;
 }
 
 
