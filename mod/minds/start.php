@@ -237,6 +237,9 @@ function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
 
 function minds_register_hook()
 {
+	if (get_input('name', false) == true){
+		return false;
+	}
 	if (get_input('tcs',false) != 'true') {
 		register_error(elgg_echo('minds:register:terms:failed'));
 		forward(REFERER);
