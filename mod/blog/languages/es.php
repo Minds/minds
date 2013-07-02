@@ -41,13 +41,13 @@ $spanish = array(
 	'blog:message:saved' => 'Entrada guardada.',
 	'blog:error:cannot_save' => 'No se puede guardar la entrada.',
 	'blog:error:cannot_write_to_container' => 'Acceso insuficiente para guardar la entrada.',
-	'blog:messages:warning:draft' => '¡Este es un borrador no guardado de esta entrada!',
+	'blog:messages:warning:draft' => 'ï¿½Este es un borrador no guardado de esta entrada!',
 	'blog:edit_revision_notice' => '(Versi&oacute;n antigua)',
 	'blog:message:deleted_post' => 'Entrada borrada.',
 	'blog:error:cannot_delete_post' => 'No se puede borrar la entrada.',
 	'blog:none' => 'No hay entradas',
-	'blog:error:missing:title' => '¡Por favor ingresa un t&iacute;tulo!',
-	'blog:error:missing:description' => '¡Por favor ingresa contenidos!',
+	'blog:error:missing:title' => 'ï¿½Por favor ingresa un t&iacute;tulo!',
+	'blog:error:missing:description' => 'ï¿½Por favor ingresa contenidos!',
 	'blog:error:cannot_edit_post' => 'Esta entrada no existe o no tienes permiso para verla.',
 	'blog:error:revision_not_found' => 'No se puede encontrar esta revisi&oacute;n.',
 
@@ -72,7 +72,14 @@ Ver y comentar:
 	'blog:widget:description' => 'Mostrar las &uacute;ltimas entradas del Blog',
 	'blog:moreblogs' => 'M&aacute;s entradas',
 	'blog:numbertodisplay' => 'N&uacute;mero de entradas a mostrar',
-	'blog:noblogs' => 'No hay entradas'
+	'blog:noblogs' => 'No hay entradas',
+	
+	// scraper
+    'blog:minds:scraper' => 'RSS Herramienta Espejo',
+	'blog:minds:scraper:create' => 'Crear RSS Espejo',
+	'blog:minds:scraper:menu' => 'Gestione Espejos RSS',
+	'blog:minds:scraper:name' => 'Nombre',
+	'blog:minds:scraper:url' => 'Url de rss alimentar',
 );
 
 add_translation('es', $spanish);

@@ -72,7 +72,14 @@ View and comment on the new blog post:
 	'blog:widget:description' => 'Dieses Widget zeigt Deine neuesten Blogs an.',
 	'blog:moreblogs' => 'Weitere Blog-Einträge',
 	'blog:numbertodisplay' => 'Anzahl der anzuzeigenden Blog-Einträge',
-	'blog:noblogs' => 'Keine Blog-Einträge vorhanden.'
+	'blog:noblogs' => 'Keine Blog-Einträge vorhanden.',
+	
+	// scraper
+	'blog:minds:scraper' => 'RSS Spiegel Werkzeug',
+	'blog:minds:scraper:create' => 'Neues RSS-Spiegel',
+	'blog:minds:scraper:menu' => 'Verwalten von RSS-Spiegel',
+	'blog:minds:scraper:name' => 'Name',
+	'blog:minds:scraper:url' => 'URL des RSS füttern',
 );
 
 add_translation('de', $german);

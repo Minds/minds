@@ -73,6 +73,13 @@ Voir et commenter ce nouvel envoie sur le blog :
 	'blog:moreblogs' => "Plus d'articles du blog",
 	'blog:numbertodisplay' => "Nombre d'articles du blog à afficher",
 	'blog:noblogs' => "Aucun blog",
+	
+	// scraper
+	'blog:minds:scraper' => 'RSS Outil de miroir',
+	'blog:minds:scraper:create' => 'Créer un nouveau RSS Mirror',
+	'blog:minds:scraper:menu' => 'Gérer Miroirs RSS',
+	'blog:minds:scraper:name' => 'Nom',
+	'blog:minds:scraper:url' => 'URL de flux rss',
 );
 
 add_translation("fr", $french);
