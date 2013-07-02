@@ -126,7 +126,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
     'minds:commenton' => 'Comment on %s',
     'minds:comments:valuecantbeblank' => 'Comment can not be blank',
     'minds:remind' => 'ReMind (repost)',
-    'minds:remind:success' => 'Successfuly reMinded.',
+    'minds:remind:success' => 'Successfully reMinded.',
     
 	//river
 	'river:remind:object:wall' => '%s reMinded %s\'s thought',
