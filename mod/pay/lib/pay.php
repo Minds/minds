@@ -379,7 +379,7 @@ function paypal_generic_ipn_handler($page) {
     
     
     // If we have an order
-    if ($order) {
+    if (($_POST['subscr_id']) && ($order)) {
         
         $order_guid = $order->guid;
     
