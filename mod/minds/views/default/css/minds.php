@@ -846,3 +846,9 @@ div.tier div.default-description {
 div.tier_details {
 border: 1px solid #000;
 }
+
+div.register-popup {
+    width:700px;
+    margin-left: 30px;
+    margin-right: auto;
+}

@@ -47,7 +47,7 @@ if (!elgg_is_logged_in()) {
         
         $('a#<?php echo $tier->product_id; ?>').click(function(){
            
-           window.open("<?php echo elgg_get_site_url(); ?>tierlogin/?tier=<?php echo $tier->guid; ?>", "Please Log In", "width=800,height=600");
+           window.open("<?php echo elgg_get_site_url(); ?>tierlogin/?tier=<?php echo $tier->guid; ?>", "Please Log In", "width=800,height=650");
         });
         
     });

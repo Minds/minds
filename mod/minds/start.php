@@ -152,7 +152,7 @@ function minds_init(){
             
             $_SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
             $_SESSION['__tier_selected'] = get_input('tier');
-            $content = elgg_view_form('login', null, array('returntoreferer' => true));
+            $content = "<div class=\"register-popup\">".elgg_view_form('register', null, array('returntoreferer' => true))."</div>";
             
             // If we've returned to the window after a successful login, then refresh back to parent
             if (elgg_is_logged_in()) {
