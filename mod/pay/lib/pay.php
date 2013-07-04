@@ -430,19 +430,19 @@ function paypal_generic_ipn_handler($page) {
             $order->annotate('order_details', serialize($_POST));
 
             elgg_log("PAYPAL: Transaction type is {$_POST['txn_type']}");
-mail('marcus@marcus-povey.co.uk', 'IPN GENERIC hit', print_r($_POST,true));
+//mail('marcus@marcus-povey.co.uk', 'IPN GENERIC hit', print_r($_POST,true));
             
             switch ($_POST['txn_type']) {
                 
                 case 'subscr_signup': // Not handled here
                     break;
                 case 'subscr_cancel': // Cancel the subscription
-mail('marcus@marcus-povey.co.uk', 'IPN GENERIC CANCELLED', print_r($_POST,true));
+//mail('marcus@marcus-povey.co.uk', 'IPN GENERIC CANCELLED', print_r($_POST,true));
                     pay_update_order_status($order_guid, 'Cancelled');
                     break;
                 case 'subscr_payment': // Subscription regular payment.
     
-mail('marcus@marcus-povey.co.uk', 'IPN GENERIC Payment', print_r($_POST, true));
+//mail('marcus@marcus-povey.co.uk', 'IPN GENERIC Payment', print_r($_POST, true));
                         $payment_status = $_REQUEST['payment_status'];
                         //We can now assume that the response is legit so we can update the payment status
                         pay_update_order_status($order_guid, $payment_status);
@@ -545,7 +545,7 @@ function paypal_handler_callback($order_guid) {
                 if (isset($_POST['subscr_id']))
                     $order->subscr_id = $_POST['subscr_id'];
 
-mail('marcus@marcus-povey.co.uk', 'IPN Payment', print_r($_POST,true));
+//mail('marcus@marcus-povey.co.uk', 'IPN Payment', print_r($_POST,true));
 
                 $payment_status = $_REQUEST['payment_status'];
                 //We can now assume that the response is legit so we can update the payment status
