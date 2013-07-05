@@ -147,6 +147,25 @@ function minds_init(){
             return array_merge($pages, $return);
         });
         
+        
+        // Log a user in automatically if they've registered from a tier login
+        elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
+
+            $object = $params['user'];
+
+            if ($object && elgg_instanceof($object, 'user')) {
+                if ($_SESSION['_from_tier'] == 'y') {
+                    
+                    elgg_set_user_validation_status($object->guid, true, 'tier_signup');
+                    
+                        try {
+                            login($object);
+                        } catch(Exception $e) {}
+                }
+            }
+
+        });
+        
         // Endpoint
         elgg_register_page_handler('tierlogin', function($pages) {
             
@@ -176,20 +195,6 @@ function minds_init(){
             return true;
         });
         
-        // Log a user in automatically if they've registered from a tier login
-        elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
-
-            $object = $params['user'];
-
-            if ($object && elgg_instanceof($object, 'user')) {
-                if ($_SESSION['_from_tier'] == 'y') {
-                        try {
-                            login($object);
-                        } catch(Exception $e) {}
-                }
-            }
-
-        });
         
         // Override the return url on tier orders
         elgg_register_plugin_hook_handler('urls', 'pay', function($hook, $type, $return, $params) {
