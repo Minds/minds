@@ -149,22 +149,30 @@ function minds_init(){
         
         // Override registration action to support tier signup
         elgg_unregister_action('register');
-        elgg_register_action('register', dirname(__FILE__) . '/actions/minds/register.php');
+        elgg_register_action('register', dirname(__FILE__) . '/actions/minds/register.php', 'public');
         
         // Set validation true if this is a tier signup
         elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
 
+            global $SESSION;
+            
             $object = $params['user'];
 
             if ($object && elgg_instanceof($object, 'user')) {
-                if ($_SESSION['_from_tier'] == 'y') {
+//                if ($SESSION['_from_tier'] == 'y') { 
+                if (get_input('returntoreferer') == 'y') // Hack, but sessions seem not to be available here. TODO: Secure this.
                     elgg_set_user_validation_status($object->guid, true, 'tier_signup');       
                 }
-            }
-        }, 999);
+//            } 
+        }, 1);
         
         // Endpoint
         elgg_register_page_handler('tierlogin', function($pages) {
+            
+            global $SESSION;
+            $SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
+            $SESSION['__tier_selected'] = get_input('tier');
+            $SESSION['_from_tier'] = 'y';
             
             $_SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
             $_SESSION['__tier_selected'] = get_input('tier');
