@@ -70,7 +70,7 @@ function pay_urls($order_guid){
 	$user = elgg_get_logged_in_user_entity();
 	$order = get_entity($order_guid);
 	
-	$action_token = create_user_token($user->username, 60);
+	$action_token = create_user_token($user->username, 527040); // Make tokens last a year and a day (since Paypal seems to be pinging the notify URL rather than the generic payment endpoint, contrary to documented behaviou)
 	$urls = array('return' => elgg_get_site_url() . 'pay/',
 				  'cancel' => elgg_get_site_url() . 'pay/cancel',
 				  'callback' => elgg_get_site_url() . 'pay/callback/' . $order_guid . '/' .$action_token,
@@ -547,9 +547,13 @@ function paypal_handler_callback($order_guid) {
 
 //mail('marcus@marcus-povey.co.uk', 'IPN Payment', print_r($_POST,true));
 
-                $payment_status = $_REQUEST['payment_status'];
-                //We can now assume that the response is legit so we can update the payment status
-                pay_update_order_status($order_guid, $payment_status);
+                if ($_POST['txn_type'] == 'subscr_cancel') // Quickly handle subscription cancellations.
+                    pay_update_order_status($order_guid, 'Cancelled');
+                else {
+                    $payment_status = $_REQUEST['payment_status'];
+                    //We can now assume that the response is legit so we can update the payment status
+                    pay_update_order_status($order_guid, $payment_status);
+                }
 
                 return true;
 
