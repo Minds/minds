@@ -1,6 +1,6 @@
 <?php
 /*
- * Bootcamp - step view
+ * Bootcamp renamed orienation - step view
  */
 $step = $vars['step'];
 $number = $vars['number'];

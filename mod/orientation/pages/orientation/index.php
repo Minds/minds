@@ -3,17 +3,17 @@
  * Minds Inviter Index
  *
  */
-elgg_load_library('bootcamp');
+elgg_load_library('orientation');
 
-$title = elgg_echo('bootcamp:title');
+$title = elgg_echo('orientation:title');
 
-$content = elgg_view('bootcamp/index');
+$content = elgg_view('orientation/index');
 
 $params = array(
 	'content' => $content,
-	'sidebar' => elgg_view('bootcamp/sidebar'),
+	'sidebar' => elgg_view('orientation/sidebar'),
 	'title' => $title,
-	'class' => 'bootcamp'
+	'class' => 'orientation'
 );
 
 $body = elgg_view_layout('one_column', $params);
