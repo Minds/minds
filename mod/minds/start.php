@@ -182,7 +182,7 @@ function minds_init(){
             $object = $params['user'];
 
             if ($object && elgg_instanceof($object, 'user')) {
-                if ($_SESSION('_from_tier') == 'y') {
+                if ($_SESSION['_from_tier'] == 'y') {
                         try {
                             login($object);
                         } catch(Exception $e) {}
