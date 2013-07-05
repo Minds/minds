@@ -152,6 +152,7 @@ function minds_init(){
             
             $_SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
             $_SESSION['__tier_selected'] = get_input('tier');
+            $_SESSION['_from_tier'] = 'y';
             $content = "<div class=\"register-popup\">".elgg_view_form('register', null, array('returntoreferer' => true))."</div>";
             
             // If we've returned to the window after a successful login, then refresh back to parent
@@ -173,6 +174,21 @@ function minds_init(){
             
             echo elgg_view_page('Login', elgg_view_layout('default', $params));
             return true;
+        });
+        
+        // Log a user in automatically if they've registered from a tier login
+        elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
+
+            $object = $params['user'];
+
+            if ($object && elgg_instanceof($object, 'user')) {
+                if ($_SESSION('_from_tier') == 'y') {
+                        try {
+                            login($object);
+                        } catch(Exception $e) {}
+                }
+            }
+
         });
         
         // Override the return url on tier orders
