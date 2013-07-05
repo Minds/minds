@@ -147,24 +147,21 @@ function minds_init(){
             return array_merge($pages, $return);
         });
         
+        // Override registration action to support tier signup
+        elgg_unregister_action('register');
+        elgg_register_action('register', dirname(__FILE__) . '/actions/minds/register.php');
         
-        // Log a user in automatically if they've registered from a tier login
+        // Set validation true if this is a tier signup
         elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
 
             $object = $params['user'];
 
             if ($object && elgg_instanceof($object, 'user')) {
                 if ($_SESSION['_from_tier'] == 'y') {
-                    
-                    elgg_set_user_validation_status($object->guid, true, 'tier_signup');
-                    
-                        try {
-                            login($object);
-                        } catch(Exception $e) {}
+                    elgg_set_user_validation_status($object->guid, true, 'tier_signup');       
                 }
             }
-
-        });
+        }, 999);
         
         // Endpoint
         elgg_register_page_handler('tierlogin', function($pages) {
