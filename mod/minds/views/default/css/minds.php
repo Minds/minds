@@ -831,19 +831,16 @@ form.elgg-form.hj-ajaxed-comment-save input{
     margin: -13px 0 0;
     right:0;
     position: absolute;
-    z-index:2;
 }
 .minds_online_status_tiny{
     margin: -9px 0 0;
     right:0;
     position: absolute;
-     z-index:2;
 }
 .minds_online_status_medium{
     margin: -16px 0 0;
     right:0;
     position: absolute;
-     z-index:2;
 }
 .minds_online_status_large{
     margin: -20px 0 0;
