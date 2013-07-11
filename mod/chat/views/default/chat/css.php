@@ -10,9 +10,13 @@
 	position:fixed;
 	bottom:-175px;
 	left:0;
+	z-index:900;
 }
 .minds-live-chat ul li{
-	width:225px;
+	position:relative;
+	width:125px;
+	height:25px;
+	
 	float: left;
 	color: #FFF;
 	position:relative;
@@ -22,7 +26,11 @@
 	padding:5px;
 	margin:0 5px;
 }
-.minds-live-chat ul li.active h3{
+.minds-live-chat ul li.active{
+	 background: rgba(70,144,214,0.9);
+}
+.minds-live-chat ul li.active.toggled{
+	background: rgba(255,255,255,0.9);
 	color:#4690D6;
 }
 .minds-live-chat ul li h3{
@@ -30,6 +38,13 @@
 	width:100%;
 	height:auto;
 	display:block;
+}
+.minds-live-chat ul li .del{
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 10px;
+	color:#888;
 }
 .minds-live-chat ul li .messages{
 	height:125px;
@@ -56,6 +71,26 @@
 }
 .minds-live-chat ul li.toggled{
 	bottom:170px;
+	width:225px;
+	height:auto;
+	overflow:scroll;
+}
+.minds-live-chat ul li.userlist{
+	height:200px;
+	width:200px;
+}
+.minds-live-chat ul li.userlist.toggled{
+	bottom:170px;
+}
+.minds-live-chat ul li.userlist span{
+	color:#333;
+}
+.minds-live-chat ul li.userlist ul li{
+	width:100%;
+	height:auto;
+}
+.minds-live-chat ul li.userlist ul li h3{
+	font-size:12px;
 }
 /* ***************************************
 	Chat

@@ -43,7 +43,9 @@ function chat_init() {
 	elgg_register_js('minds.live', $minds_live);
 	elgg_load_js('minds.live');
 
-	elgg_extend_view('page/elements/foot', 'chat/bar');
+	if(elgg_is_logged_in() && elgg_get_context() != 'admin'){
+		elgg_extend_view('page/elements/foot', 'chat/bar');
+	}
 
 	// Add custom CSS
 	elgg_extend_view('css', 'chat/css');
@@ -102,6 +104,10 @@ function chat_page_handler ($page) {
 		case 'members':
 			gatekeeper();
 			$params = chat_add_members($page[1]);
+			break;
+		case 'box':
+			echo elgg_view('chat/box', array('user_guid'=>get_input('user_guid')));
+			return true;
 			break;
 		case 'all':
 		default:

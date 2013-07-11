@@ -285,3 +285,25 @@ function chat_prepare_message_form_vars($message = NULL) {
 
 	return $values;
 }
+
+/**
+ * Function to cache live chat sessions in sessions cookies
+ * Move this over to a class to be cleaner
+ */
+function minds_live_chat_cache(){
+	$cookie = $_COOKIE['minds_chats'];
+	if(!isset($cookie)){
+		return false;
+	} else {
+		return unserialize($cookie);
+	}
+}
+
+function minds_live_chat_cache_add($id, $data){
+	$cookie = $_COOKIE['minds_chats'];
+        
+	$cookie[$id] = $data;
+	
+	setcookie('minds_chats', serialize($cookie));
+
+}

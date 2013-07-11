@@ -7,13 +7,12 @@ minds.live.init = function() {
 	if(user){
 
 	//load active chats on page loads
-	ls = window.localStorage;
-	var activeChats = JSON.parse(ls.getItem('activeChats'));
+	var activeChats = JSON.parse(sessionStorage.getItem('activeChats'));
 	if(activeChats){
-		$.each(activeChats, function(){
-		console.log(this);		
-			minds.live.openChatWindow(this.id, this.name, '', true);
-		});
+		var length = activeChats.length;
+                for (var i = 0; i < length; i++) {		
+			minds.live.openChatWindow(activeChats[i],  $('.minds-live-chat-userlist').find('li#' + activeChats[i] + ' h3').text(), '', true);
+		}
 	}
 
 	var guid = new String(user.guid);
@@ -45,21 +44,18 @@ minds.live.init = function() {
 				$(this).parent().find('input').focus();
 				//$(this).parent().find('messages').animate({ scrollTop:  $(this).parent().find('messages')[0].scrollHeight},1000);
 			}
-		}
-		toggles.removeClass('active');	
+		}	
 	});
 
 	$(document).on('click', '.minds-live-chat-userlist li .del', function (e) {
-		minds.live.removeCacheChat($(this).parent().attr('id'));
-		$(this).parents('li').remove();		
+		
 	});
 
-	portal.open("http://108.82.235.133:8080/chat", {
+	portal.open("http://108.82.235.132:8080/chat", {
 		sharing:true
 	}).on({
                         open: function() {
                                 console.log("The connection has been opened");
-				portal.find().send("connect", {guid: guid });
 			},
                         close: function(reason) {
                         //         console.log("The connection has been closed due to '" + reason + "'");
@@ -69,11 +65,10 @@ minds.live.init = function() {
 					console.log('you are connected?');
 			},
                         message: function(data) {
-	console.log(data);
 				if(data.from_guid == elgg.get_logged_in_user_guid()){
 					box = $('.minds-live-chat-userlist').find('li.box#' + data.to_guid);
 					var from = "You: ";
-					minds.live.saveCacheChat(data.to_guid, from + data.message, box.find('h3').text());
+					minds.live.saveCacheChat(data.to_guid, from + data.message);
 				} else {
 					//play sound
                                  	document.getElementById('sound').play();
@@ -84,25 +79,16 @@ minds.live.init = function() {
 					}
 					box.addClass('active');
 					var from = box.find('h3').text() + ": ";
-					minds.live.saveCacheChat(data.from_guid, from + data.message, data.from_name);
+					minds.live.saveCacheChat(data.from_guid, from + data.message);
 				}
 				box.find('.messages').append('<span class="message">' + from + data.message + '</span>')
 					.animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
 			
 				//cache in a cookie so new page loads see it
 			},
-			error: function(error){
-				console.log(error);
-				if(error.code == 1){
-					err_msg = "The user could not be reached, your message has not been sent";
-				}
-				box = $('.minds-live-chat-userlist').find('li.box#' + error.to_guid);
-				box.find('.messages').append('<span class="message"><br/><i>' + err_msg + '</span>')
-                                        .animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
-			},
                          waiting: function(delay, attempts) {
                                    console.log("The socket will try to reconnect after " + delay + " ms");
-                                   console.log("The total number of reconnection attempts is " + attempts);
+                                   notify("The total number of reconnection attempts is " + attempts);
                           },
                          heartbeat: function() {
                                   console.log("The server's heart beats");
@@ -143,10 +129,9 @@ minds.live.getCacheChat = function(id){
 	var key = 'chat.'+id;
 	return JSON.parse(sessionStorage.getItem(key));
 }
-minds.live.saveCacheChat = function(id, message, name){
-	ss = window.sessionStorage;
+minds.live.saveCacheChat = function(id, message){
 	var key = 'chat.'+id;
-	var chatSession = JSON.parse(ss.getItem(key));
+	var chatSession = JSON.parse(sessionStorage.getItem(key));
 	if(!chatSession){
 		chatSession = new Array();
 	}
@@ -154,28 +139,25 @@ minds.live.saveCacheChat = function(id, message, name){
 	sessionStorage.setItem(key, JSON.stringify(chatSession));
 
 	//add key to list of active chats
-	ls = window.localStorage;
-	var activeChats = JSON.parse(ls.getItem('activeChats'));
+	var activeChats = JSON.parse(sessionStorage.getItem('activeChats'));
 	if(!activeChats){
-		activeChats = {};
+		activeChats = new Array();
 	}
-	chat = { id: id,
-		 name: name	
-		};
-	activeChats[id] = chat;
-
-	ls.setItem('activeChats', JSON.stringify(activeChats));
+	if($.inArray(id, activeChats)){
+		activeChats.push(id);
+	}
+	sessionStorage.setItem('activeChats', JSON.stringify(activeChats));
 }
 minds.live.removeCacheChat = function(id){
-	ls = window.localStorage;
-	var activeChats = JSON.parse(ls.getItem('activeChats'));
-	$.each(activeChats, function(i, val) {
-		console.log(id);
-		if(i == id){
-			delete activeChats[i];
-		}
-	});
-	ls.setItem('activeChats', JSON.stringify(activeChats));
+	 var key = 'chat.'+id;
+	var activeChats = JSON.parse(sessionStorage.getItem('activeChats'));
+        if(!activeChats){
+                activeChats = new Array();
+        }
+        if($.inArray(id, activeChats)){
+                activeChats.splice(id, 1);
+        }
+	sessionStorage.setItem('activeChats', JSON.stringify(activeChats));
 }
 elgg.register_hook_handler('init', 'system', minds.live.init);
 
