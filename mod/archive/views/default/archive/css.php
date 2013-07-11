@@ -98,4 +98,9 @@
 	display:block;
 }
 
- 
+.elgg-form-archive-save{
+	width: 90%;
+	background: #F8F8F8;
+	padding: 16px;
+	margin: auto;
+}
