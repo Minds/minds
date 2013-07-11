@@ -29,7 +29,7 @@ if($full){
 		$widget = kaltura_create_generic_widget_html($entity->kaltura_video_id , 'mobile',$entity->monetized);
 	}
 	
-	echo $widget; 
+	echo '<div class="archive-video-wrapper">' . $widget . '</div>'; 
 	
 	echo '<div class="archive-description">' . $entity->description . '</div>';
 	
@@ -61,7 +61,7 @@ if($full){
 		
 } elseif(elgg_get_context() == 'archive-tiles'){
 	$icon = elgg_view('output/img', array(
-			'src' => kaltura_get_thumnail($entity->kaltura_video_id, 120, 68, 100),
+			'src' => kaltura_get_thumnail($entity->kaltura_video_id, 120, 68, 100, $entity->thumbnail_sec),
 			'class' => 'elgg-photo',
 			'title' => $entity->title,
 			'alt' => $entity->title,
@@ -136,7 +136,7 @@ if($full){
 	$image = elgg_view('output/url', array(
 			'href' => $entity->getURL(),
 			'class' => 'uiVideoInline archive entity',
-			'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($entity->kaltura_video_id, 515, 290, 100, $entity->thumbmail_sec) . '\'/>',
+			'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($entity->kaltura_video_id, 515, 290, 100, $entity->thumbnail_sec) . '\'/>',
 			'title' => $entity->title,
 		));
 	$title = elgg_view('output/url', array('href'=>$entity->getURL(), 'text'=>elgg_view_title($entity->title)));

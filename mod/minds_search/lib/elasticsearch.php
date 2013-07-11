@@ -4,7 +4,7 @@
  */
 function elasticsearch_index_once(){
 	
-	$entities = elgg_get_entities(array('limit'=> 99999999999999));
+	$entities = elgg_get_entities(array('limit'=> get_input('limit'), 'offset'=>get_input('offset')));
 	
 	foreach($entities as $entity){
 		if(elasticsearch_index_allowed($entity)){

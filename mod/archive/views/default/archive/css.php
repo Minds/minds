@@ -31,11 +31,17 @@
 	float:right;
 	margin:0 2px;
 }
-
+.archive-video-wrapper{
+	position:relative;
+	padding-bottom:55%;
+	height:0;
+}
 .archive-large-widget{
 	clear:both;
 	width:100%;
 	margin: 0;
+	height:100%;
+	position:absolute;
 }
 .uiVideoInline.archive.entity{
 	width:110%;
