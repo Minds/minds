@@ -589,8 +589,8 @@ function minds_subscribe_bulk($username = 'minds'){
 function minds_fetch_image($description, $owner_guid) {
   
   global $post, $posts;
-  $fbimage = '';
-  $output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i',$description, $matches);
+ /* $fbimage = '';
+  $output = preg_match_all('/<(img).+src=[\'"]([^\'"]+)[\'"].*>/i',$description, $matches);
   $image = $matches [1] [0];
  
   if(empty($image)) {
@@ -599,9 +599,20 @@ function minds_fetch_image($description, $owner_guid) {
    	 	$owner = get_entity($owner_guid);
     	$image = $owner->getIconURL('large');
 	}
-  }
-  
-  return $image;
+  }*/
+	$dom = new DOMDocument();
+	$dom->loadHTML($description);
+	$nodes = $dom->getElementsByTagName('img');
+	foreach ($nodes as $img) {
+		$image = $img->getAttribute('src');
+	}
+	if(!$image){
+		if($owner_guid){
+                	$owner = get_entity($owner_guid);
+     			$image = $owner->getIconURL('large');
+        	}
+  	}
+	return $image;
 }
 
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = 0){

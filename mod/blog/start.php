@@ -393,7 +393,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 		
 		//we load an array of previously collected rss ids
 		$item_ids = unserialize($scraper->item_ids) == false ? array() : unserialize($scraper->item_ids);
-		var_dump($item_ids);
+		//var_dump($item_ids);
 		$n = 0;
 		foreach($feed->get_items() as $item){
 			//if the blog is newer than the scrapers last scrape - but ignore if the timestamp is greater than the time
@@ -407,6 +407,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				try{
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
+				$enclosure = $item->get_enclosure();
 				if(strpos($item->get_permalink(), 'youtube.com/')){
 					$url = parse_url($item->get_permalink());
 					parse_str($url['query']);
@@ -417,8 +418,22 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
 					$blog->description = $embed . $icon . $disclaimer;
 				} else {
-					$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'),0, 200);
+					$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200);
 					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();
+					
+					if($enclosure){
+                                                if($player = $enclosure->native_embed()) {
+                                                        $excerpt = strip_tags($item->get_description());
+                                                        $thumb = elgg_view('output/img', array('src'=>$enclosure->get_thumbnail(), 'width'=>0, 'height'=>0));
+                                                        var_dump($player);
+							if(strlen($player) <= 24){
+								$player = $enclosure->get_player();
+                                                                $player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0"></iframe>';
+                                                        }       
+                                                        $blog->description = $excerpt .$thumb . $player;
+                                                }
+						$blog->tags = $enclosure->get_keywords();
+                                        }
 				}
 				$blog->owner_guid = $scraper->owner_guid;
 				$blog->license = $scraper->license;
