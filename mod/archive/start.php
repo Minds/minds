@@ -71,7 +71,7 @@ function minds_archive_init() {
 	
 	//Setup kaltura
 	
-	elgg_register_event_handler('pagesetup','system','minds_archive_page_setup');
+	//elgg_register_event_handler('pagesetup','system','minds_archive_page_setup');
 }
 
 function minds_archive_entity_url($entity) {
