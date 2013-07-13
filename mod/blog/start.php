@@ -430,7 +430,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 								$player = $enclosure->get_player();
                                                                 $player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0"></iframe>';
                                                         }       
-                                                        $blog->description = $excerpt .$thumb . $player;
+                                                        $blog->description = $thumb . $player;
                                                 }
 						$blog->tags = $enclosure->get_keywords();
                                         }
