@@ -71,11 +71,12 @@ if ($full) {
 	));
 	
 	//assume a youtube, vimeo, liveleak scraper
-	if($blog->rss_item_id && $blog->license == 'attribution-noncommercial-noderivs-cc'){
-		//$body .= ' <i>This blog is free & open source, however embeds may not be. </i>';
-	}	
+//	if($blog->rss_item_id && $blog->license == 'attribution-noncommercial-noderivs-cc'){
+//	}	
 
 	$body .= elgg_view('minds/license', array('license'=>$blog->license));
+
+	 $body .= ' <i>This blog is free & open source, however embeds may not be. </i><br/>';
 	
 	//if blog is public, show social links
 	if($blog->access_id == 2){
