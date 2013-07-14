@@ -424,7 +424,11 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					if($enclosure){
                                                 if($player = $enclosure->native_embed()) {
                                                         $excerpt = strip_tags($item->get_description());
-                                                        $thumb = elgg_view('output/img', array('src'=>$enclosure->get_thumbnail(), 'width'=>0, 'height'=>0));
+                                			$thumb_url = $enclosure->get_thumbnail(); 
+							if(strpos($thumb_url, 'liveleak.com/')){
+								$thumb_url = str_replace('_thumb_', '_sf_', $thumb_url);
+							}
+				                        $thumb = elgg_view('output/img', array('src'=>$thumb_url, 'width'=>0, 'height'=>0));
                                                         var_dump($player);
 							if(strlen($player) <= 24){
 								$player = $enclosure->get_player();
