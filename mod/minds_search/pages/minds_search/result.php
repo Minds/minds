@@ -9,8 +9,9 @@ elgg_set_context('search');
 $id = get_input("id");
 
 $search = new MindsSearch();
-$item = $search->search('id:'.$id);
+$item = $search->result($id);
 $item = $item['hits']['hits'][0];
+
 if(!$item){
 	register_error('item does not exist');
 	forward();

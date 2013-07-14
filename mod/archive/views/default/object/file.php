@@ -20,6 +20,13 @@ $excerpt = elgg_get_excerpt($file->description);
 $mime = $file->mimetype;
 $base_type = substr($mime, 0, strpos($mime,'/'));
 
+$menu = elgg_view_menu('entity', array(
+                'entity' => $file,
+                'handler' => 'archive',
+                'sort_by' => 'priority',
+                'class' => 'elgg-menu-hz',
+        ));
+
 $owner_link = elgg_view('output/url', array(
 	'href' => $owner->getURL(),
 	'href' => "file/owner/$owner->username",
@@ -103,7 +110,7 @@ if ($full) {
 	$body = '<span class="info">' . $title . $extras . '<span>';
 	
 	$content = $image . $body;
-	echo $metadata;
+	echo $menu;
 	$header = elgg_view_image_block(elgg_view_entity_icon($file->getOwnerEntity(), 'small'), $title . $subtitle);
         echo $header;
         echo elgg_view('output/url', array('href'=>$file->getURL(), 'text'=>$image));

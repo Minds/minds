@@ -63,7 +63,7 @@
 /***** PAGE MESSAGES ******/
 .elgg-system-messages {
 	position: fixed;
-	top: 24px;
+	top: 48px;
 	right: 20px;
 	max-width: 500px;
 	z-index: 20000;

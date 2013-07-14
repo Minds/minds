@@ -14,6 +14,9 @@
 	color: #333333;
 	margin-bottom: 10px;
 }
+.embed-wrapper .elgg-tabs{
+	height:50px;
+}
 .embed-wrapper .elgg-item {
 	cursor: pointer;
 }

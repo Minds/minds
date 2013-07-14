@@ -21,7 +21,7 @@ if (elgg_in_context('dashboard')) {
 
 elgg_load_js('elgg.wall');
 			
-$wall_input = elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
+$wall_input = elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_page_owner_guid(), 'ref'=>'news'));
 
 $content = elgg_view_module('wall', null, $wall_input);
 
