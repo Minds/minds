@@ -13,13 +13,13 @@
 	z-index:900;
 }
 .minds-live-chat ul li{
-	position:relative;
-	width:125px;
-	height:25px;
+	position:absolute;
+	width:225px;
+	height:200px;
 	
-	float: left;
+	bottom:0;
+	
 	color: #FFF;
-	position:relative;
 	background: rgba(255,255,255,0.9);
 	cursor:pointer;
 	z-index:999;
@@ -71,8 +71,6 @@
 }
 .minds-live-chat ul li.toggled{
 	bottom:170px;
-	width:225px;
-	height:auto;
 	overflow:scroll;
 }
 .minds-live-chat ul li.userlist{
@@ -88,6 +86,8 @@
 .minds-live-chat ul li.userlist ul li{
 	width:100%;
 	height:auto;
+	float:left;
+	position:relative;
 }
 .minds-live-chat ul li.userlist ul li h3{
 	font-size:12px;
