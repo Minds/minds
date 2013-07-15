@@ -16,11 +16,11 @@ $expires_lookup = array(
     <div class="elgg-image">
     </div>
     <div class="elgg-body">
-        <h3><?=$entity->title;?> (<?=$entity->product_id;?>): <?=$entity->price;?> <?=$entity->currency;?>, Expires after: <?=$expires_lookup[$entity->expires]; ?></h3>
-        <p><?=$entity->description;?></p> 
-        <?= elgg_view('object/minds_tier/extension', $vars); ?>
+        <h3><?php echo $entity->title;?> (<?php echo $entity->product_id;?>): <?php echo $entity->price;?> <?php echo $entity->currency;?>, Expires after: <?php echo $expires_lookup[$entity->expires]; ?></h3>
+        <p><?php echo $entity->description;?></p> 
+        <?php echo  elgg_view('object/minds_tier/extension', $vars); ?>
         <?php if ($entity->canEdit()) { ?>
-            <p><small><?=elgg_view('output/confirmlink', array(
+            <p><small><?php echo elgg_view('output/confirmlink', array(
                 'text' => 'Delete',
                 'href' =>  elgg_add_action_tokens_to_url('action/minds/products/delete') . "&id={$entity->guid}"
             )); ?></small></p>
