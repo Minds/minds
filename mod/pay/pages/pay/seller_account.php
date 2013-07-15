@@ -64,6 +64,7 @@ $body = elgg_view_layout('content', array(
 	'content' => $content,
 	'title' => $title,
 	'sidebar' => $sidebar,
+	'class'=>'pay'
 ));
 
 echo elgg_view_page($title, $body);

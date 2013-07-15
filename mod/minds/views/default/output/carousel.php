@@ -63,7 +63,7 @@ $(document).ready(function() {
 				$title = $entity->title; 
 			}
 			
-			$owner = $entity->getOwnerEntity();
+			if ($owner = $entity->getOwnerEntity()) {
 			
 			echo '<div class="thumbnail-tile ">';
 				
@@ -79,6 +79,7 @@ $(document).ready(function() {
 					));
 			
 			echo '</div>';
+                    }
 			
 		}
 	?>

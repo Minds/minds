@@ -16,3 +16,14 @@
 	color:#FFF;
 	font-weight:bold;
 }
+
+.pay .elgg-list{
+	width:auto;
+	margin:0;
+}
+.pay .elgg-list .elgg-item{
+	width:auto;
+	height:auto;
+	margin:0;
+	float:none;
+}

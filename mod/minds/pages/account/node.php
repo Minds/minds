@@ -1,44 +1,97 @@
 <?php
     
-    $user = elgg_get_logged_in_user_entity();
+$user = elgg_get_logged_in_user_entity();
     
     
 $title = elgg_echo("register:node");
 
-if(get_input('access_code') == 'mInDsnOdE'){
-	// Display original form for logged in users
-	if ($user) {
+$content = elgg_view_title($title);
 
-	    // create the registration url - including switching to https if configured
- 	   $register_url = elgg_get_site_url() . 'action/registernode';
- 	   $form_params = array(
-			'action' => $register_url,
-           		'class' => 'elgg-form-account',
-   		 );
+// Display original form for logged in users
+//if (elgg_is_admin_logged_in()) {
+if (false) {
+    
+    // create the registration url - including switching to https if configured
+    $register_url = elgg_get_site_url() . 'action/registernode';
+    $form_params = array(
+            'action' => $register_url,
+            'class' => 'elgg-form-account',
+    );
 
-	    $body_params = array(
-        	    'minds_user_guid' => $user->guid,
- 	   );
-   	 $content .= elgg_view_form('node_loggedin', $form_params, $body_params);
-	} else {
-
-   		$register_url = elgg_get_site_url() . 'action/registernewnode';
-   		 $form_params = array(
-       		     'action' => $register_url,
-       		     'class' => 'elgg-form-account',
-   		 );
-
-   		 $body_params = array(
-   	 	);
-    		$content .= elgg_view_form('node', $form_params, $body_params);
-	}
+    $body_params = array(
+            'minds_user_guid' => $user->guid,
+    );
+    $content .= elgg_view_form('node_loggedin', $form_params, $body_params);
 } else {
-	 $content = '<p>Our hosted node service is only available to selected beta testers for the moment. Please create a channel to keep updated.</p>';
+    
+    $payment_recieved = false; // TODO: Test to see if we've returned from a successful billing workflow
+    
+    // TODO: Payment hook here
+    
+    
+    // Check to see if there is a paid for tier product
+    if ($user) {
+        $tiers_guid = array();
+        $ia = elgg_set_ignore_access();
+    
+        // Get tiers
+        if ($tiers = elgg_get_entities(array(
+           'type' => 'object',
+            'subtype' => 'minds_tier'
+        )))
+        {
+            foreach ($tiers as $tier)
+                $tiers_guid[] = $tier->guid;
+        }
+       
+        elgg_set_ignore_access($ia);
+        
+        
+        $order = elgg_get_entities_from_metadata(array(
+            'type' => 'object',
+            'subtype' => 'pay',
+            'owner_guid' => $user->guid,
+             'metadata_name_value_pairs' => array(
+                array('name' => 'status', 'value' => 'Completed'), // Interested in completed payments
+                array('name' => 'object_guid', 'value' => $tiers_guid) // Which are valid tiers
+                 
+                 
+                 // Note, tier is considered valid until its status is set to something other than Completed, e.g. 'Cancelled'
+                 
+                ),
+        ));
+        
+        if ($order)
+            $payment_received = true; 
+    }
+    
+    
+    // If paid for then allow registration
+    if ($payment_recieved) {
 
-	$buttons = elgg_view('output/url', array('href'=>elgg_get_site_url().'register', 'text'=>elgg_echo('register'), 'class'=>'elgg-button elgg-button-action'));
-	$buttons .= '<br/><br/>';
-	$buttons .= elgg_view('output/url', array('href'=>elgg_get_site_url().'contact', 'text'=>elgg_echo('Contact'), 'class'=>'elgg-button elgg-button-action'));
+        $register_url = elgg_get_site_url() . 'action/registernewnode';
+        $form_params = array(
+                'action' => $register_url,
+                'class' => 'elgg-form-account',
+        );
 
+        $body_params = array(
+        );
+        $content .= elgg_view_form('node', $form_params, $body_params);
+    }
+    else
+    {
+        $register_url = elgg_get_site_url() . 'action/select_tier';
+        $form_params = array(
+                'action' => $register_url,
+                'class' => 'elgg-form-account',
+        );
+
+        $body_params = array(
+        );
+        $content .= elgg_view_form('select_tier', $form_params, $body_params);
+    }
+    
 }
 
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
