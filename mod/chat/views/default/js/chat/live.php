@@ -51,7 +51,8 @@ minds.live.init = function() {
 
 	$(document).on('click', '.minds-live-chat-userlist li .del', function (e) {
 		minds.live.removeCacheChat($(this).parent().attr('id'));
-		$(this).parents('li').remove();		
+		$(this).parents('li').remove();	
+		minds.live.adjustOffset();	
 	});
 
 	portal.open("http://108.82.235.133:8080/chat", {
@@ -108,8 +109,20 @@ minds.live.init = function() {
                                   console.log("The server's heart beats");
                           }
                 });
-		
+
+		//foreach chat window we have, give it an offset 
+		minds.live.adjustOffset();			
 	}
+}
+minds.live.adjustOffset = function(e){
+	 $(document).find('.minds-live-chat-userlist li.box').each( function() {
+                        console.log($(this).offset().left);
+                        prev = $(this).prev();
+                        console.log(prev.html());
+                        if(prev){
+                                $(this).offset({ left:prev.offset().left + prev.width() + 35});
+                        }
+                });
 }
 
 minds.live.openChatWindow = function(id,name,message, minimised){
@@ -137,6 +150,7 @@ minds.live.openChatWindow = function(id,name,message, minimised){
         		 '<div> <input type="text" class="elgg-input" /> </div>' +
 		'</li>';	
 	$('.minds-live-chat-userlist > ul').append(box).find('input').focus();
+	minds.live.adjustOffset();
 }
 
 minds.live.getCacheChat = function(id){
