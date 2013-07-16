@@ -12,9 +12,12 @@ if (version_compare(PHP_VERSION, '5.0.0', '<')) {
 	exit;
 }
 
+require_once(dirname(dirname(__FILE__)) . "/minds/start.php");
 require_once(dirname(__FILE__) . "/install/ElggInstaller.php");
+require_once(dirname(__FILE__) . "/install/MindsMultiInstaller.php");
 
-$installer = new ElggInstaller();
+$installer = new MindsMultiInstaller();
 
-$step = get_input('step', 'welcome');
+$installer->setupMulti();
+$step = get_input('step', 'welcome'); 
 $installer->run($step);
