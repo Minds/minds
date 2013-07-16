@@ -22,6 +22,7 @@ if ($type != 'all') {
 }
 
 $options['limit'] = get_input('limit',5);
+$options['offset'] = get_input('offset',0);
 
 switch ($page_type) {
 	case 'all':
@@ -33,7 +34,7 @@ switch ($page_type) {
 		$page_filter = 'trending';
 		//GET THE TRENDING FEATURES
 		if(elgg_plugin_exists('analytics')){
-			$options['object_guids'] = analytics_retrieve(array('limit'=>5));
+			$options['object_guids'] = analytics_retrieve(array('limit'=>$options['limit'], 'offset'=>$options['offset']));
 			$options['action_types'] = 'create';
 		} else {
 			forward(REFERRER);

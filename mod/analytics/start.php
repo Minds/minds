@@ -109,7 +109,8 @@ function analytics_retrieve(array $options = array()){
 					'dimensions' => 'ga:pagePath',
 					'sort' => '-ga:pageviews',
 					'filters' => 'ga:pagePath=~' . $options['context'] . '/view/*',
-					'max-results' => 10
+					'max-results' => 10,
+					'start-index' => $options['offset'] +1
 				);
 				$results = $analytics->data_ga->get(
       					$profile_id,

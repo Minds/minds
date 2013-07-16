@@ -21,7 +21,8 @@ else
 $subtypes = array('kaltura_video', 'album', 'file');
 
 $guids = analytics_retrieve( array(	'context'=>'archive',
-					'limit' => $limit
+					'limit' => $limit,
+					'offset' => $offset
 			));
 
 $content = elgg_list_entities(	array(	'guids' => $guids,
