@@ -71,7 +71,7 @@ function minds_archive_init() {
 	
 	//Setup kaltura
 	
-	//elgg_register_event_handler('pagesetup','system','minds_archive_page_setup');
+	elgg_register_event_handler('pagesetup','system','minds_archive_page_setup');
 }
 
 function minds_archive_entity_url($entity) {
@@ -88,7 +88,7 @@ function minds_archive_page_setup() {
 	$page_owner = elgg_get_page_owner_entity();
 	$user = elgg_get_logged_in_user_entity();
 	
-	if (elgg_get_context() == 'archive') {
+	/*if (elgg_get_context() == 'archive') {
 		
 		elgg_register_menu_item('page', array(
 			'name' => elgg_echo('upload'),
@@ -156,7 +156,7 @@ function minds_archive_page_setup() {
 			
 		} 
 		
-	}
+	}*/
 	
 	// Group submenu option
 	if ($page_owner instanceof ElggGroup && elgg_get_context() == 'groups') {

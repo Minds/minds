@@ -412,8 +412,8 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			continue;
 			}
 			//check if the id is not in the array, if it is then skip
-			//if(!in_array($item->get_id(true), $item_ids)){
-			if(true){	
+			if(!in_array($item->get_id(true), $item_ids)){
+			//if(true){	
 			try{
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
