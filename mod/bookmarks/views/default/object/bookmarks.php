@@ -13,7 +13,7 @@ if (!$bookmark) {
 }
 
 $owner = $bookmark->getOwnerEntity();
-$owner_icon = elgg_view_entity_icon($owner, 'tiny');
+$owner_icon = elgg_view_entity_icon($owner, 'small');
 $container = $bookmark->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
 
@@ -116,7 +116,6 @@ HTML;
 
 	$params = array(
 		'entity' => $bookmark,
-		'metadata' => $metadata,
 		'subtitle' => $subtitle,
 		'content' => $content,
 	);

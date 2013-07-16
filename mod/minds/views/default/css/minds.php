@@ -14,11 +14,11 @@
 }
 @font-face {
   font-family: 'fontello';
-  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?17546205');
-  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?17546205#iefix') format('embedded-opentype'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?17546205') format('woff'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?17546205') format('truetype'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?17546205#fontello') format('svg');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246#iefix') format('embedded-opentype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?96059246') format('woff'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?96059246') format('truetype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?96059246#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -27,39 +27,97 @@
  **************/
  
 body{
-	background:#FEFEFE;
+	background:#F8F8F8;
 	font-family: "Ubuntu", sans-serif;
  }
 h1,h2,h3,h4,h5{
 	font-family:"Ubuntu";
+	font-weight:lighter;
 }
 body.news{
 	background:#D2D9DF;
 }
-
 /***************
  *** TOP BAR ***
  **************/
+.minds-header-right{
+	margin:12px 0;
+	float:right;
+	height:60px;
+}
+.minds-header-right .notifications{
+	float:right;
+	margin:0;
+}
+.minds-header-right .notifications li{
+	margin:2px 5px;
+}
+.minds-header-right .notifications li a{
+	color:#333;
+}
+.minds-header-right span.text{
+	float:left;
+	margin-right:5px;
+}
+.minds-header-right:hover .more{
+	display:block;
+}
+.minds-header-right .more{
+	display:none;
+	clear:both;
+	height:25px;
+}
+.minds-header-right .more a{
+	color:#333;
+	font-size:11px;
+}
+.minds-header-right img{
+}
+
+.minds-header-right .elgg-form input[type=text], .minds-header-right .elgg-form input[type=password]{
+	float:left;
+	width:125px;
+	height:28px;
+	margin-right:8px;
+	font-size:11px;
+	padding:0 8px;
+}
+.minds-header-right .elgg-form .elgg-button-submit{
+	padding: 4px;
+	min-width: 0;
+	background:#4690D6;
+	border:1px solid #4690D6;
+}
+.minds-header-right .elgg-menu.mtm{
+	margin:0;
+	font-size:11px;
+	width:100%;
+	clear:both;
+}
+
+.minds-header-right .elgg-menu.mtm li{
+	border:0;
+	padding:0 16px 0 2px;
+}
+.minds-header-right .elgg-menu.mtm li a{
+	border:0;
+}
+.minds-header-right .social_login{
+}
 /* Top Menu
  */
-.elgg-page-topbar > .elgg-inner{
-	
- }
-.elgg-menu.elgg-menu-site.elgg-menu-site-default{
-	position:relative;
-	float:left;   	
-}
-.elgg-menu .entypo{
+.entypo{
 	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
-	font-size:17px;
+	font-size:18px;
 	font-weight:normal;
 	text-decoration:none;
 }
 .elgg-menu .entypo.elements{
-	font-size:26px;
+	font-size:2px;
 }
 .elgg-menu .elgg-menu-item-logout .entypo{
 	padding-top:2px;
+	font-size:20px;
 }
 .elgg-page-topbar .elgg-menu-item-minds-logo{
 	margin-top:-6px;
@@ -82,7 +140,19 @@ body.news{
 	-webkit-box-shadow:none !important;
 	-moz-box-shadow:none !important;
 }
-
+.login{
+	width:300px !important;
+	margin:auto;
+}
+.login .social_login{
+	margin:10px 0;
+}
+.login .elgg-button-submit {
+	float:right;
+}
+.login li{
+	width:100%;
+}
 .elgg-menu-river li{
 	padding:0 3px;
 }
@@ -113,6 +183,13 @@ body.news{
        		margin-top:-1px;
 	}
 }
+
+/**
+ * Register
+ */
+input[name=terms]{
+	display:none;
+}
 /* Login button 
  */
 #login-dropdown{
@@ -135,26 +212,250 @@ body.news{
     border-bottom-left-radius:0px;
 }
 /**
+ * Content
+ */
+.minds-body-header{
+	width: 100%;
+	height:auto;
+	background: #F8F8F8;
+	padding: 25px 0;
+	margin-bottom: 10px;
+	opacity: .90;
+	display:inline-block;
+}
+.minds-body-header > .inner{
+	width:90%;
+	margin:0 auto;
+}
+.minds-body-header h2{
+	font-size:52px;
+	font-weight:lighter;
+}
+.minds-body-header h3{
+	font-size:16px;
+	font-weight:lighter;
+}
+.minds-body-header .elgg-menu-entity, .minds-body-header .elgg-menu-title{
+	margin:10px;
+}
+.minds-body-header .elgg-form-wall-add{
+	float:right;
+	width:35%;
+}
+.minds-body-header .elgg-form-wall-add textarea{
+	margin:0;
+	width:100%;
+}
+.minds-body-header .elgg-form-wall-add:hover textarea{
+	width:82%
+}
+.minds-body-header .elgg-form-wall-add .elgg-button-submit{
+	float:right;
+	display:none;
+	min-width:15%;
+	text-align:right;
+}
+.minds-body-header .elgg-form-wall-add:hover .elgg-button-submit{
+	display:block;
+}
+.minds-body-header .elgg-form-wall-add .elgg-foot{
+	display:none;
+}
+.minds-body-header .elgg-form-wall-add:hover .elgg-foot{
+	display:block;
+}
+/**
+ * Footer
+ */
+.minds-static-footer{
+	position:fixed;
+	bottom:0;
+	right:0;
+	width:30px;
+	background:#333;
+	height:40px;
+}
+.minds-static-footer:hover{
+	width:auto;
+}
+.elgg-menu-footer-default{
+	margin:0;
+	display:none;
+}
+.minds-static-footer:hover .elgg-menu-footer-default{
+	display:block;
+}
+.elgg-menu-footer-default li{
+	padding:10px 10px;
+}
+.elgg-menu-footer-default li:after{
+	content:none;
+}
+.minds-static-footer .info{
+	color:#FFF;
+	padding: 12px 0 0 10px;
+position: absolute;
+}
+.minds-static-footer:hover .info{
+	display:none;
+}
+/**
+ * Index views
+ */
+/*.index .elgg-list .elgg-item{
+	float:none;
+	width:60%;
+	max-width:60%;
+	max-height:auto;
+	height:auto;
+	overflow:show;
+	
+}*/
+/**
+ * Minds Tiles
+ */
+.tiles .elgg-list{
+	width:100%;
+	height:auto;
+	display:block;
+}
+.tiles .elgg-list li.elgg-item{
+	border:0;
+	float:left;
+	display:block;
+	width:25%;
+	height:170px;
+	overflow:hidden;
+	position:relative;
+}
+li .rich-image{
+	width:110%;
+	margin:0 -10px;
+}
+li .blog-rich-image-holder{
+	position: relative;
+	width: 110%;
+	height: 100%;
+	display: block;
+	overflow: hidden;
+	margin: 0 -10px;
+}
+li .blog-rich-image-holder .rich-image{
+	top:-45px;
+	left:0;
+	position:absolute;
+}
+li .excerpt{
+	background: rgb(0, 0, 0); /* The Fallback */
+	background: rgba(0, 0,0, 0.5); 
+	position: absolute;
+	width:auto;
+	height:auto;
+	bottom: 0;
+	left: 0;
+	padding: 15px;
+	color: #FFF;
+	display:none;
+}
+li:hover .excerpt{
+        display:block;
+}
+li .excerpt a{
+	color:#FFF;
+}
+.tiles .elgg-list li.elgg-item .info{
+	left:0;
+	bottom:-50px;
+	padding:25px 10px 0;
+	width:100%;
+	
+	position:absolute;
+	
+	
+	
+	background-color: transparent; 
+   	/*background-image: url(images/fallback-gradient.png); */
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(#333));
+   	background-image: -webkit-linear-gradient(top, transparent, #333); 
+   	background-image:    -moz-linear-gradient(top, transparent, #333);
+   	background-image:     -ms-linear-gradient(top, transparent, #333);
+   	background-image:      -o-linear-gradient(top, transparent, #333);
+}
+.tiles .elgg-list li.elgg-item .info .extras{
+	width:100%;
+	height:50px;
+	display:block;
+} 
+.tiles .elgg-list li.elgg-item:hover .info{
+	bottom:0;
+}
+.tiles .elgg-list li.elgg-item .info h2{
+	font-size:14px;
+	color:#FFF;
+	padding:10px 0 3px;
+}
+.tiles .elgg-list li.elgg-item .info h2 a{
+	text-decoration:none;
+}
+.tiles .elgg-list li.elgg-item:hover .info .time{
+	color:#EEE;
+	font-style:italic;
+	margin:0;
+	font-size:11px;
+}
+.tiles .elgg-list li.elgg-item .info .excerpt a{
+	display:none;
+}
+.tiles .elgg-list li.elgg-item:hover .info .excerpt a{
+	display:block;
+	color:#FFF;
+	text-decoration:none;
+	margin:0;
+	width:100%;
+	max-height:70px;
+	display:block;
+	overflow:hidden;
+}
+@media (min-width: 1280px){
+	.tiles .elgg-list li.elgg-item{
+		width:20%;
+	}
+}
+.tiles .elgg-list li.elgg-item .elgg-menu{
+	margin:0 0 5px 0;
+	float:left;
+}
+.tiles .elgg-list li.elgg-item .elgg-menu li{
+	margin:0 15px 0 0;
+}
+
+/**
  * Register page
  */
 .elgg-form-account{
 	float:left;
-	width:450px;
-	max-width:450px;
+	max-width:55%;
+	width:55%;
 }
 .elgg-form-account-side{
 	float:right;
-	wdith:400px;
+	width:400px;
 }
 .elgg-form-account .social{
-	clear:both;
+	margin:5px;
 	width:100%;
-	height:25px;
-	margin:5px 0;
+	height:45px;
+	clear:both;
 }
 .elgg-form-account .social > div{
 	float:left;
 	margin-right:10px;
+}
+.elgg-form-account .social_login{
+	margin:5px;
+	width:175px;
+	clear:none;
+	float:left;
 }
 .elgg-form-account .social .facebook{
 	padding-top:1px;
@@ -163,6 +464,12 @@ body.news{
 /***************
  **CUSTOMINDEX**
  **************/
+.front-page-buttons{
+	margin:30px 0 0;
+}
+.front-page-buttons a{
+	margin-right:20px;
+}
 .minds_index h2, h3{
 	font-family: 'Ubuntu Light', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
 }
@@ -273,22 +580,50 @@ body.news{
  ** CUSTOM PAGES **
  *****************/
 .elgg-sidebar .elgg-owner-block{
-	-webkit-border-radius: 5px 5px 0 0;
-	-moz-border-radius: 5px 5px 0 0;
- 	border-radius:5px 5px 0 0;
+	-webkit-border-radius: 3px 3px 0 0;
+	-moz-border-radius: 3px 3px 0 0;
+ 	border-radius:3px 3px 0 0;
 }
-.elgg-sidebar .elgg-owner-block img{
-	width:100%;
-	height:auto;
+.elgg-sidebar .elgg-owner-block .elgg-image-block{
+	padding:0;
 }
-.elgg-sidebar h2{
-	padding-left: 5px;
+.elgg-sidebar .elgg-owner-block .elgg-image-block .elgg-body{
+	padding:5px;
 }
 .elgg-sidebar li a{
-	padding:5px 10px;
+        padding:8px;
+}
+.elgg-sidebar li.elgg-item{
+	margin:5px;
+	width:148px;
+	padding:0;
+	height:125px;;
+}
+.elgg-sidebar li.elgg-item img{
+	width:100%;
+}
+.elgg-sidebar li.elgg-item a{
+	padding:0;
 	font-weight:bold;
-	background:transparent;
-	border-bottom:1px solid #CCC;
+}
+.elgg-sidebar li.elgg-item h3, .elgg-sidebar li .stamp{
+	padding:8px;
+}
+.blog-sidebar li a.title{
+	font-weight:bold;
+	position:absolute;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,0.75);
+	z-index: 999;
+	color: #FFF;
+	padding: 5px;
+}
+.blog-sidebar li img.rich-image{
+	margin:0;
+}
+.elgg-sidebar li a h3{
+	color:#FFF;
 }
 .elgg-sidebar .elgg-module-aside{
 	background:#FFF;
@@ -394,7 +729,7 @@ body.news{
     font-weight:bold;
     text-decoration:none;
 }
-.news .side .bootcamp{
+.bootcamp{
 	padding:10px;
 	background:#FFF;
 }
@@ -402,6 +737,7 @@ body.news{
 	position:absolute;
 }
 .load-more{
+	clear:both;
 	width:100%;
     padding:15px 0;
     text-align:center;
@@ -458,7 +794,6 @@ body.news{
     border-radius: 0px;
 }
 .elgg-river-responses {
-	padding-bottom: 20px;
 }
 input.comments.inline{
 	height:25px;
@@ -483,6 +818,7 @@ form.elgg-form.hj-ajaxed-comment-save input{
     height:25px;
     width:100%;
     font-size:12px;
+ 	padding:0 8px;
 }
 
 /** 
@@ -760,7 +1096,12 @@ li.elgg-menu-item-rss{
 	display: none;
 }
 
-
+.elgg-widget-more{
+	width: 100%;
+	height: auto;
+	display: block;
+	clear: both;
+}
 
 div.signup-options {
 

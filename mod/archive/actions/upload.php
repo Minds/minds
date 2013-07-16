@@ -16,6 +16,7 @@ $container_guid = (int) get_input('container_guid', 0);
 $guid = (int) get_input('file_guid');
 $tags = get_input("tags");
 $license = get_input("license");
+$category = get_input("category");
 
 if ($container_guid == 0) {
 	$container_guid = elgg_get_logged_in_user_guid();
@@ -74,7 +75,7 @@ if (!$_FILES['upload']['name']) {
 			$album = new TidypicsAlbum();
 			$album->owner_guid = elgg_get_logged_in_user_guid();
 			$album->title = 'Uploads';
-			$album->access_id = 1;
+			$album->access_id = 2;
 			$album->uploads = true;
 			
 			if (!$album->save()) {
@@ -93,11 +94,13 @@ if (!$_FILES['upload']['name']) {
 		$mime = $_FILES['upload']['type'];
 		$image = new TidypicsImage();
 		$image->title = $title;
-		$image->description = $description;
+		$image->description = $desc;
 		$image->container_guid = $album->getGUID();
 		$image->setMimeType($mime);
 		$image->tags = $tags;
-		$image->access_id = $album->access_id;
+		$image->access_id = $access_id;
+		$image->license = $license;
+		$image->category = $category;
 	
 		$result = $image->save($_FILES['upload']);
 		//error_log('Save: ' . $image->getGUID());

@@ -8,6 +8,8 @@
 	 minds.init = function() {	 
 
 		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
+		$('.progress_indicator').tipsy({gravity: 'e'});		
+		$('.elgg-input-text').tipsy({gravity: 'w'});
 		
 		$('.thumbnail-tile').hover(
 			function(){
@@ -37,11 +39,117 @@
 		 * Now make this autoscroll!
 		 */
 		$(window).on('scroll', minds.onScroll);
-	 };
+		if(elgg.is_logged_in()){
+			$(document).on('click', '.elgg-button-action.subscribe', minds.subscribe);
+		}
+		$(document).on('click', '.elgg-menu-item-feature a', minds.feature);
+
+		$(document).on('click', 'li .elgg-menu-item-delete a', minds.delete); 
+		$(document).on('click', '.elgg-menu-item-remind a', minds.remind);
+
+		$(document).on('keydown', '.minds-search .elgg-input-text', minds.search);
+	};
 	 
 	
 	 elgg.register_hook_handler('init', 'system', minds.init);
-	 
+	
+	minds.wallPost = false;
+	
+	minds.search = function(e){
+		if(e.which == 191){
+			minds.wallPost = true;
+		}
+		if(minds.wallPost == true && e.which == 13){
+			e.preventDefault();
+			var data = {};
+			data.to_guid = elgg.get_logged_in_user_guid();
+			data.body = $(this).val();
+			data.ref = 'news';
+			
+			data.body = data.body.replace('/', '');
+
+			elgg.action('wall/add?to_guid=' + data.to_guid + '&body=' + data.body  +'&ref=' + data.ref, {
+				success: function(data) {
+					    $('.elgg-input-text').val("");;
+						$('.elgg-list.elgg-list-river.elgg-river').first('.elgg-list.elgg-list-river.elgg-river').prepend(data.output);
+						minds.wallPost = false;
+				},
+				error: function(data){
+        	                }
+	                });
+
+		}	
+	}
+
+	minds.subscribe = function(e){
+		e.preventDefault();
+		var button = $(this);
+		elgg.action($(this).attr('href') + '&ajax=true', {
+			success: function(data) {
+				if(data.output == 'subscribed'){
+					button.addClass('subscribed');
+					button.html('Subscribed');
+					button.attr('href', button.attr('href').replace('add', 'remove'));
+				} else {
+					button.removeClass('subscribed');
+                                        button.html('Subscribe');
+					button.attr('href', button.attr('href').replace('remove','add'));
+				}
+			},
+			error: function(data){
+			}
+		});
+	}	 
+	
+	minds.feature = function(e){
+		e.preventDefault();
+		var button = $(this);
+                elgg.action($(this).attr('href') + '&ajax=true', {
+                        success: function(data) {
+				if(data.output == 'featured'){			
+                                        button.html('un-feature');
+				} else {
+					button.html('feature');
+				}
+                         },
+                   
+                        error: function(data){
+                        }
+                });
+	}
+
+	minds.delete = function(e){
+		e.preventDefault();
+               var button = $(this);
+		var item = button.parents('.elgg-item');
+                elgg.action($(this).attr('href') + '&ajax=true', {
+                        success: function(data) {
+                  		item.effect('drop'); 
+                         },
+
+                        error: function(data){
+                        }
+                });
+        }
+
+        minds.remind = function(e){
+                e.preventDefault();
+                var button = $(this);
+                var item = $(this).parent('elgg-list');
+		elgg.action($(this).attr('href') + '&ajax=true', {
+                        success: function(data) {
+				if(item.length){
+				//we are in a list so we want to add a remind item in
+				}
+        			button.css('color', '#4690D6');        
+			/*	button.effect('explode'); */      
+	  	 },
+
+                        error: function(data){
+                        }
+                });
+        }
+
 	 minds.onScroll = function(){
 	 	$loadMoreDiv = $(document).find('.load-more');
 	 	//go off the loadmore button being available
@@ -58,20 +166,20 @@
 	 
 	 minds.listParams = {
 	 	offset : 0,
-	 	limit : 10
+	 	limit : 12
 	 };
 
 	 minds.loadMore = function() {
 						
 			$list = $(this).parent().find('.elgg-list:first').parent();
-			$('.load-more').html('loading...');
+			$('.load-more').html('...');
 			$('.load-more').addClass('loading');
 			
 			var loc =  elgg.normalize_url(elgg.parse_url(location.href).path);
-			if(loc == elgg.get_site_url()){
+/*			if(loc == elgg.get_site_url()){
 				loc = location.href + 'news/featured';
 			}
-
+*/
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {
 				path : loc,
@@ -81,13 +189,13 @@
 				offset: $list.find('.elgg-list').children().length + (parseInt($params.offset) || 0)
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-			console.log(url);
+//			console.log(url);
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				
 				if($(data).contents().length == 0){
 					
-					$('.load-more').html('no more posts');
+					$('.load-more').html('');
 					
 				} else {
 
@@ -95,7 +203,7 @@
 					
 					$list.append(data);							
 	
-					$list.append('<div class="news-show-more load-more">click to load more</div>');
+					$list.append('<div class="news-show-more load-more">more</div>');
 					
 				}
 			});

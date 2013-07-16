@@ -9,14 +9,14 @@
 			allownetworking="all" 
 			height="225" 
 			width="400" 
-			resource="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709481/entry_id/0_alhv657k" 
-			data="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709481/entry_id/0_alhv657k" 
+			resource="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709481/entry_id/0_4npbgqdl" 
+			data="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709481/entry_id/0_4npbgqdl" 
 			rel="media:video" 
 			wmode="transparent"/>
 		
 		<param name="allowScriptAccess" value="always"><param name="allowNetworking" value="all">
 		<param name="allowFullScreen" value="true"><param name="bgcolor" value="#000000">
-		<param name="wmode" value="transparent"><param name="movie" value="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709481/entry_id/0_alhv657k">
+		<param name="wmode" value="transparent"><param name="movie" value="http://www.minds.tv/index.php/kwidget/wid/_102/uiconf_id/6709481/entry_id/0_4npbgqdl">
 		<param name="flashVars" value="&amp;{FLAVOR}&amp;autoPlay=false&amp;customAd.path=false">
 		
 		<span property="media:title" content="video.mov"></span> 

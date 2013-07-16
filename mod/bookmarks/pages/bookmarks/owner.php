@@ -39,6 +39,7 @@ $vars = array(
 	'content' => $content,
 	'title' => $title,
 	'sidebar' => elgg_view('bookmarks/sidebar'),
+	'class' => 'bookmarks'
 );
 
 // don't show filter if out of filter context

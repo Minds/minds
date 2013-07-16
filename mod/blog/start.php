@@ -20,10 +20,16 @@ elgg_register_event_handler('init', 'system', 'blog_init');
 function blog_init() {
 
 	elgg_register_library('elgg:blog', elgg_get_plugins_path() . 'blog/lib/blog.php');
-
-	// add a site navigation item
-	$item = new ElggMenuItem('blog', elgg_echo('blog:blogs'), 'blog/all');
-	elgg_register_menu_item('site', $item);
+	
+	// menus
+	elgg_register_menu_item('site', array(
+		'name' => 'blog',
+		'text' => '&#59396;',
+		'href' => 'blog/all',
+		'class' => 'entypo',
+		'title' => elgg_echo('blog:blogs')
+	));
+	
 
 	elgg_register_event_handler('upgrade', 'upgrade', 'blog_run_upgrades');
 
@@ -125,10 +131,22 @@ function blog_page_handler($page) {
 		case 'owner':
 			$user = get_user_by_username($page[1]);
 			$params = blog_get_page_content_list($user->guid);
+			
+			$body = elgg_view_layout('gallery', $params);
+
+			echo elgg_view_page($params['title'], $body);
+			
+			return true;
 			break;
 		case 'friends':
 			$user = get_user_by_username($page[1]);
 			$params = blog_get_page_content_friends($user->guid);
+			
+			$body = elgg_view_layout('gallery', $params);
+
+			echo elgg_view_page($params['title'], $body);
+			
+			return true;
 			break;
 		case 'archive':
 			$user = get_user_by_username($page[1]);
@@ -161,9 +179,11 @@ function blog_page_handler($page) {
 				case 'create':
 					set_input('guid', $page[2]);
 					include('pages/scraper/create.php');
+					return true;
 					break;
 				case 'mine':
 					include('pages/scraper/mine.php');
+					return true;
 					break;
 				default:
 					include('pages/scraper/all.php');
@@ -172,6 +192,11 @@ function blog_page_handler($page) {
 			break;
 		case 'all':
 			$params = blog_get_page_content_list();
+			
+			$body = elgg_view_layout('gallery', $params);
+
+			echo elgg_view_page($params['title'], $body);
+			return true;
 			break;
 		default:
 			return false;
@@ -239,7 +264,9 @@ function blog_entity_menu_setup($hook, $type, $return, $params) {
 		return $return;
 	}
 
-	if ($entity->status != 'published') {
+	$full = elgg_extract('full', $params, false);
+
+	if ($entity->status != 'published' && $full) {
 		// draft status replaces access
 		foreach ($return as $index => $item) {
 			if ($item->getName() == 'access') {
@@ -317,7 +344,7 @@ function blog_run_upgrades($event, $type, $details) {
  * Blog pagesetup
  */
 function blog_pagesetup(){
-	if(elgg_get_context() == 'settings' || elgg_get_context() == 'blog'){
+	if(elgg_get_context() == 'settings'){
 		if(elgg_is_logged_in()){
 			$user = elgg_get_logged_in_user_entity();
 
@@ -328,6 +355,15 @@ function blog_pagesetup(){
 			);
 			elgg_register_menu_item('page', $params);
 		}
+	} elseif(elgg_get_context() == 'blog' && (elgg_get_page_owner_guid() == elgg_get_logged_in_user_guid() || elgg_get_page_owner_guid() == null)){
+		$params = array(
+                                'name' => 'scrapper_settings',
+                                'text' => elgg_echo('blog:minds:scraper:menu'),
+                                'href' => "blog/scrapers/mine",
+                       		'class'=> 'elgg-button elgg-button-action'
+			);
+                elgg_register_menu_item('title', $params);
+
 	}
 }
 
@@ -339,6 +375,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	elgg_set_context('scraper');
 	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
+	$i = 0;
 	foreach($scrapers as $scraper){
 		//if the site was scraped in the last 15 mins then skip
 		echo "loading $scraper->title \n";
@@ -356,31 +393,51 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 		
 		//we load an array of previously collected rss ids
 		$item_ids = unserialize($scraper->item_ids) == false ? array() : unserialize($scraper->item_ids);
-		var_dump($item_ids);
+		//var_dump($item_ids);
+		$n = 0;
 		foreach($feed->get_items() as $item){
 			//if the blog is newer than the scrapers last scrape - but ignore if the timestamp is greater than the time
 			// or else we get duplicates!
 			if($item->get_date('U') > $scraper->timestamp && $item->get_date('U') < time()){
 			} else {
 			continue;
-			}			
+			}
 			//check if the id is not in the array, if it is then skip
 			if(!in_array($item->get_id(true), $item_ids)){
 				try{
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
+				$enclosure = $item->get_enclosure();
 				if(strpos($item->get_permalink(), 'youtube.com/')){
 					$url = parse_url($item->get_permalink());
 					parse_str($url['query']);
-					$w = 730;
+					$w = '100%';
 					$h = 411;
-					$embed = '<iframe width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0"></iframe>';
+					$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0"></iframe>';
 					$icon = '<img src="http://img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
 					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
 					$blog->description = $embed . $icon . $disclaimer;
 				} else {
-					$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'),0, 200);
+					$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200);
 					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();
+					
+					if($enclosure){
+                                                if($player = $enclosure->native_embed()) {
+                                                        $excerpt = strip_tags($item->get_description());
+                                			$thumb_url = $enclosure->get_thumbnail(); 
+							if(strpos($thumb_url, 'liveleak.com/')){
+								$thumb_url = str_replace('_thumb_', '_sf_', $thumb_url);
+							}
+				                        $thumb = elgg_view('output/img', array('src'=>$thumb_url, 'width'=>0, 'height'=>0));
+                                                        var_dump($player);
+							if(strlen($player) <= 24){
+								$player = $enclosure->get_player();
+                                                                $player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0"></iframe>';
+                                                        }       
+                                                        $blog->description = $thumb . $player;
+                                                }
+						$blog->tags = $enclosure->get_keywords();
+                                        }
 				}
 				$blog->owner_guid = $scraper->owner_guid;
 				$blog->license = $scraper->license;
@@ -392,15 +449,18 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));
 				
 				//make timestamp of last blog so we don't have timezone issues...
-				$scraper->timestamp = $item->get_date('U');
+				//$scraper->timestamp = $item->get_date('U');
 				}catch(Exception $e){
 				}
 				array_push($item_ids, $item->get_id(true));
+				$n++;
 			}
 		}
 		//$scraper->timestamp = time();
-		$scraper->item_ids = serialize($item_ids);
-		$scraper->save();
+		if($n != 0){
+			$scraper->item_ids = serialize($item_ids);
+			$scraper->save();
+		}	
 	}
 	elgg_set_ignore_access(false);
 	return $return_value;	

@@ -39,9 +39,8 @@ if ($album->description) {
 		'class' => 'mbm',
 	));
 }
-
+elgg_push_context('album');
 $body .= $album->viewImages();
-
 $body .= elgg_view('minds/license', array('license'=>$album->license)); 
 
 if($album->access_id == 2){

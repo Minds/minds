@@ -12,6 +12,9 @@ Search plugin
 	margin-top:-1px;
 	height: 23px;
 }
+.elgg-search{
+	float:left;
+}
 .elgg-search input[type=text] {
 	/*width: 230px;*/
     width:275px;

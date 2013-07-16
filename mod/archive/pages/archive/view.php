@@ -4,6 +4,10 @@ $guid = (int) get_input('guid');
 
 $entity = get_entity($guid);
 
+if(!$entity){
+	return false;
+}
+
 elgg_set_page_owner_guid($entity->getOwnerGUID());
 $owner = elgg_get_page_owner_entity();
 
@@ -15,7 +19,7 @@ $menu = elgg_view_menu('entity', array(
 	));
 
 $title = $entity->title;
-$description = strip_tags($videopost->description);
+$description = strip_tags($entity->description);
 
 if($entity->getSubtype() == 'kaltura_video'){
 		

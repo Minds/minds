@@ -31,7 +31,9 @@ if (elgg_instanceof($poll,'object','poll')) {
 		
 		// check to see if this user has already voted
 		$options = array('annotation_name' => 'vote', 'annotation_owner_guid' => $user_guid, 'guid' => $guid);
-		if (!elgg_get_annotations($options)) {
+		if (elgg_get_annotations($options)) {
+			elgg_delete_annotations($options);
+		}
 			//add vote as an annotation
 			$poll->annotate('vote', $response, $poll->access_id);
 	
@@ -51,6 +53,6 @@ if (elgg_instanceof($poll,'object','poll')) {
 				// Forward to the poll page
 				forward($poll->getUrl());
 			}
-		}
+		
 	}		
 }

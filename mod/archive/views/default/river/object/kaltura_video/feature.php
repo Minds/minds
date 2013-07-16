@@ -28,7 +28,7 @@ $owner_link = elgg_view('output/url', array(
 		'href' => false,
 		'class' => 'uiVideoInline archive',
 		'video_id'=> $object->kaltura_video_id,
-		'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($object->kaltura_video_id, 515, 290, 100) . '\'/>',
+		'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($object->kaltura_video_id, 515, 290, 100, $object->thumbnail_sec) . '\'/>',
 		'title' => $object->title,
 	));
 	

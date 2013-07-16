@@ -195,23 +195,21 @@ class TidypicsAlbum extends ElggObject {
 			return array();
 		}
 		$list = unserialize($listString);
-
-		// if empty don't need to check the permissions.
-		if (!$list) {
-			return array();
-		}
-
+		
 		// check access levels
 		$guidsString = implode(',', $list);
-
+		if($guidsString == ""){
+			return null;
+		}
 		$options = array(
 			'wheres' => array("e.guid IN ($guidsString)"),
-			'order_by' => "FIELD(e.guid, $guidsString)",
+			'order_by' => "FIELD (e.guid, $guidsString)",
 			'callback' => 'tp_guid_callback',
 			'limit' => ELGG_ENTITIES_NO_VALUE
-		);
-		
+   	 	);
+    
 		$list = elgg_get_entities($options);
+	
 		return $list;
 	}
 

@@ -13,6 +13,12 @@
 body{
 	padding-top: 60px;
 }
+.container-fluid{
+	background:#F8F8F8;
+}
+.elgg-item .elgg-body{
+	clear:both;
+}
 .minds-nav-logo{
 	display: block;
 	float: left;

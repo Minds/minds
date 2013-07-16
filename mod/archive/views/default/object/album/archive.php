@@ -9,6 +9,7 @@
  */
 
 $album = elgg_extract('entity', $vars);
+
 $owner = $album->getOwnerEntity();
 
 $owner_link = elgg_view('output/url', array(
@@ -31,7 +32,7 @@ $menu = elgg_view_menu('entity', array(
 $subtitle = "$author_text $date $categories";
 
 $title = elgg_view('output/url', array(
-	'text' => $album->getTitle(),
+	'text' => $album->title,
 	'href' => $album->getURL(),
 ));
 
@@ -69,5 +70,26 @@ if($cover){
 		'width'=>'120px'
 	));
 }
+	if($cover){
+		$image = elgg_view('output/img', array('src'=>$cover->getIconURL('large'), 'class'=>'rich-image'));
+	} else {
+		$image = elgg_view('output/img', array('src'=>"mod/tidypics/graphics/empty_album.png", 'class'=>'rich-image'));
+	}
+	$title = elgg_view('output/url', array('href'=>$album->getURL(), 'text'=>elgg_view_title($album->title)));
+	$extras = '<span class="extras"> <p class="time">'. $date . '</p>' . $menu .'</span>';
+	
+	$body = '<span class="info">' . $title . $extras . '<span>';
+	
+	$content = $image . $body;
 
-echo $header = elgg_view_image_block($icon, $summary);
+	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));
+
+        $subtitle = '<i>'.
+                elgg_echo('by') . ' ' . $owner_link . ' ' .
+                elgg_view_friendly_time($album->time_created) . '</i>';
+
+        $content = $img . $body;
+        echo $menu;
+	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+        echo $header;
+        echo elgg_view('output/url', array('href'=>$album->getURL(), 'text'=>$image));

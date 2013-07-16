@@ -69,8 +69,14 @@ if (false) {
     
 }
 
+$title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
+$header = <<<HTML
+<div class="elgg-head clearfix">
+        $title_block
+</div>
+HTML;
 
     
-$body = elgg_view_layout("one_column", array('content' => $content));
+$body = elgg_view_layout("one_column", array('content' => '<div class="elgg-inner">'. $content . ' <br/> '.  $buttons .'</div>', 'header'=>$header));
 
 echo elgg_view_page($title, $body);

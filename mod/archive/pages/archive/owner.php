@@ -1,6 +1,6 @@
 <?php
 
-$limit = get_input("limit", 10);
+$limit = get_input("limit", 12);
 $offset = get_input("offset", 0);
 $username = get_input("username", elgg_get_logged_in_user_entity()->username);
 $user = get_user_by_username($username);
@@ -32,10 +32,12 @@ $sidebar = elgg_view('archive/sidebar');
 		global $CONFIG;
 		$area3 = elgg_view('kaltura/categorylist',array('baseurl' => $CONFIG->wwwroot . 'search/?subtype=kaltura_video&tagtype=universal_categories&tag=','subtype' => 'kaltura_video'));
 */
-$body = elgg_view_layout(	"content", array(
+elgg_register_menu_item('title', array('name'=>'upload', 'text'=>elgg_echo('upload'), 'href'=>'archive/upload','class'=>'elgg-button elgg-button-action'));
+$vars['filter_context'] = 'mine';
+$body = elgg_view_layout(	"gallery", array(
 												'content' => $content, 
 												'sidebar' => $sidebar, 
-												'title' => elgg_echo('archive:owner', array($user->name)),
+												'title' => elgg_echo('archive'),
 												'filter_override' => elgg_view('page/layouts/content/archive_filter', $vars),
 											));
 
