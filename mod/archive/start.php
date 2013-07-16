@@ -248,6 +248,9 @@ function minds_archive_page_handler($page) {
 		case 'featured':
 			include('pages/archive/featured.php');
 			break;	
+		case 'trending':
+			include('pages/archive/trending.php');
+			break;
 		case 'wall':
 			$tab = $page[1] ? $page[1] : 'featured';
 			set_input('tab', $tab);

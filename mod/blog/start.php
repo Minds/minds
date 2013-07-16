@@ -148,6 +148,15 @@ function blog_page_handler($page) {
 			
 			return true;
 			break;
+		case 'trending':
+			
+			$params = blog_get_trending_page_content_list();
+			$body = elgg_view_layout('gallery', $params);
+
+                        echo elgg_view_page($params['title'], $body);
+
+                        return true;
+                        break;
 		case 'archive':
 			$user = get_user_by_username($page[1]);
 			$params = blog_get_page_content_archive($user->guid, $page[2], $page[3]);

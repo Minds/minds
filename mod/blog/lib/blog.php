@@ -157,9 +157,35 @@ function blog_get_page_content_list($container_guid = NULL) {
 		$return['content'] = $list;
 	}
 
+	$return['filter'] = elgg_view('page/layouts/content/trending_filter', $return);
 	return $return;
 }
 
+/** 
+ * Get trending page
+ */
+function blog_get_trending_page_content_list() {
+	
+	if(!elgg_plugin_exists('analytics')){
+		forward(REFERRER);
+	}
+	$return = array();
+	
+      	$return['filter_context'] = 'trending';
+
+      	$guids = analytics_retrieve(array('context'=>'blog', 'limit'=>12));
+
+	$list = elgg_list_entities_from_metadata(array('guids'=>$guids));
+        if (!$list) {
+                $return['content'] = elgg_echo('blog:none');
+        } else {
+                $return['content'] = $list;
+        }
+
+        $return['filter'] = elgg_view('page/layouts/content/trending_filter', $return);
+
+	return $return;
+}
 /**
  * Get page components to list of the user's friends' posts.
  *
