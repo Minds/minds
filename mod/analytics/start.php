@@ -100,7 +100,7 @@ function analytics_retrieve(array $options = array()){
 	if($options['filter'] == 'trending'){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
-			$CACHE = new ElggFileCache('/tmp/analytics/trending_'.$context.'/', 360);
+			$CACHE = new ElggFileCache('/tmp/analytics/trending_'.$options['context'].'/', 360);
 			if($guids = $CACHE->load('trending')){
 				return json_decode($guids, true);
 			} else {
@@ -108,7 +108,7 @@ function analytics_retrieve(array $options = array()){
 				$optParams = array(
 					'dimensions' => 'ga:pagePath',
 					'sort' => '-ga:pageviews',
-					'filters' => 'ga:pagePath=~/' . $options['context'] . '/view/*',
+					'filters' => 'ga:pagePath=~' . $options['context'] . '/view/*',
 					'max-results' => 10
 				);
 				$results = $analytics->data_ga->get(
@@ -126,7 +126,6 @@ function analytics_retrieve(array $options = array()){
 					//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
 					$guids[] = $guid;
 				}
-				var_dump($guids);	
 				//save to cache for 1 hour
 				$CACHE->save('trending', json_encode($guids));			
 				return $guids;

@@ -34,6 +34,7 @@ switch ($page_type) {
 		//GET THE TRENDING FEATURES
 		if(elgg_plugin_exists('analytics')){
 			$options['object_guids'] = analytics_retrieve(array('limit'=>5));
+			$options['action_types'] = 'create';
 		} else {
 			forward(REFERRER);
 		}
