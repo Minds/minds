@@ -21,7 +21,16 @@ $english = array(
 	'orientation:step:wallpost:content'=>'Post a status to the news to engage with other users',
 	'orientation:step:invite:title'=> 'Invite',
 	'orientation:step:invite:content'=>'Introduce your friends to Minds and help to grow the community',
-	
+	'orientation:step:blog:title'=> 'Create a blog post',
+	'orientation:step:blog:content'=>'Click here to create your first blog post',
+	'orientation:step:search:title'=> 'Search',
+	'orientation:step:search:content'=>'Search Minds',
+	'orientation:step:comment:title'=> 'Comment',
+	'orientation:step:comment:content'=>'Comment on a status',
+	'orientation:step:thumbs:title'=> 'Thumbs',
+	'orientation:step:thumbs:content'=>'Introduce your friends to Minds and help to grow the community',
+	'orientation:step:remind:title'=> 'Remind',
+	'orientation:step:remind:content'=>'Remind other users of a previous post',
 );
 
 add_translation('en', $english);

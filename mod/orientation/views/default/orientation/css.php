@@ -10,18 +10,18 @@
 	text-align:right;
 }
 .orientation .progress h3{
-	font-size:64px;
+	font-size:65px;
 	font-weight:bold;
 	color:#4690D6;
 }
 .orientation .progress p{
-	margin-top:25px;
+	margin-top:30px;
 }
 
 
 .orientation .step{
 	display:block;
-	position:relative;
+	position:left;
 	clear:both;
 	margin:25px 0;
 	padding:25px 0;
@@ -65,3 +65,5 @@
 	font-size:64px;
 	text-align:center;
 }
+
+
