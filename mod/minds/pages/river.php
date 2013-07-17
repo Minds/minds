@@ -34,8 +34,9 @@ switch ($page_type) {
 		$page_filter = 'trending';
 		//GET THE TRENDING FEATURES
 		if(elgg_plugin_exists('analytics')){
-			$options['object_guids'] = analytics_retrieve(array('limit'=>$options['limit'], 'offset'=>$options['offset']));
+			$options['object_guids'] = analytics_retrieve(array('limit'=>$options['limit']+3, 'offset'=>$options['offset']));
 			$options['action_types'] = 'create';
+			$options['offset'] = 0;
 		} else {
 			forward(REFERRER);
 		}

@@ -25,7 +25,7 @@ function blog_init() {
 	elgg_register_menu_item('site', array(
 		'name' => 'blog',
 		'text' => '&#59396;',
-		'href' => 'blog/all',
+		'href' => 'blog/trending',
 		'class' => 'entypo',
 		'title' => elgg_echo('blog:blogs')
 	));

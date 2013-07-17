@@ -24,11 +24,16 @@ $guids = analytics_retrieve( array(	'context'=>'archive',
 					'limit' => $limit,
 					'offset' => $offset
 			));
-
+$guidsString = implode(',', $guids);
 $content = elgg_list_entities(	array(	'guids' => $guids,
 					'full_view' => FALSE,
-					'archive_view' => TRUE
+					'archive_view' => TRUE,
+					'limit'=>$limit,
+					'offset'=>0,
+					'wheres' => array("e.guid IN ($guidsString)"),
+					'order_by' => "FIELD(e.guid, $guidsString)"
 				));
+$content .= elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000));
 
 $context = elgg_extract('context', $vars, elgg_get_context());
 

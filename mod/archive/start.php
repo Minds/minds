@@ -25,7 +25,7 @@ function minds_archive_init() {
 	//site menu
 	elgg_register_menu_item('site', array(
 			'name' => elgg_echo('minds:archive'),
-			'href' => elgg_is_logged_in() ? elgg_get_site_url() . "archive/friends/" . elgg_get_logged_in_user_entity()->username : elgg_get_site_url() . 'archive/all',
+			'href' => 'archive/trending',
 			'text' => '&#59392;',
 			'class' => 'entypo',
 			'title' =>  elgg_echo('minds:archive'),

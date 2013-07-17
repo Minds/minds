@@ -88,7 +88,7 @@ function analytics_retrieve(array $options = array()){
 		'context'=> '',
 		'filter' => 'trending',
 		'timeframe' => 'day',
-		'limit' => 10,
+		'limit' => 12,
 		'offset' => 0,
 		'cache' => true
 	);
@@ -101,7 +101,7 @@ function analytics_retrieve(array $options = array()){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
 			$CACHE = new ElggFileCache('/tmp/analytics/trending_'.$options['context'].'/', 360);
-			if($guids = $CACHE->load('trending')){
+			if($guids = $CACHE->load('trending_'.$options['offset'])){
 				return json_decode($guids, true);
 			} else {
 				$profile_id = 'ga:' . elgg_get_plugin_setting('profile_id', 'analytics');
@@ -109,7 +109,7 @@ function analytics_retrieve(array $options = array()){
 					'dimensions' => 'ga:pagePath',
 					'sort' => '-ga:pageviews',
 					'filters' => 'ga:pagePath=~' . $options['context'] . '/view/*',
-					'max-results' => 10,
+					'max-results' => $options['limit'],
 					'start-index' => $options['offset'] +1
 				);
 				$results = $analytics->data_ga->get(
@@ -127,8 +127,9 @@ function analytics_retrieve(array $options = array()){
 					//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
 					$guids[] = $guid;
 				}
+				$guids = array_reverse($guids);
 				//save to cache for 1 hour
-				$CACHE->save('trending', json_encode($guids));			
+				$CACHE->save('trending_'.$options['offset'], json_encode($guids));			
 				return $guids;
 			}
 		} catch(Exception $e){
