@@ -46,3 +46,7 @@ if(get_input('ajax')){
 
 // Forward back to the page you friended the user on
 forward(REFERER);
+
+//Send notification...... Chris
+
+notification_create(array($to_guid), $from_guid, $guid, array('description'=>get_input(),'notification_view'=>'friends'));

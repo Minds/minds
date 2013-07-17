@@ -29,3 +29,6 @@ add_entity_relationship($guid, 'remind', elgg_get_logged_in_user_guid());
 system_message(elgg_echo("minds:remind:success"));
 
 forward(REFERRER);
+
+//Send notification Chris
+notification_create(array($to_guid), $from_guid, $guid, array('type'=>$type,'description'=>$description,'notification_view'=>'remind'));
