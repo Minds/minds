@@ -31,4 +31,8 @@ system_message(elgg_echo("minds:remind:success"));
 forward(REFERRER);
 
 //Send notification Chris
-notification_create(array($to_guid), $from_guid, $guid, array('type'=>$type,'description'=>$description,'notification_view'=>'remind'));
+
+$to_guid = $entity->getOwnerGuid();
+$from_guid = elgg_get_logged_in_user_guid();
+ 
+notification_create(array($to_guid), $from_guid, $guid, array('description'=>$description,'notification_view'=>'remind'));
