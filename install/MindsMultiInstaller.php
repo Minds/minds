@@ -268,6 +268,7 @@ class MindsMultiInstaller extends ElggInstaller {
                 //'mobile',
                 //'minds'
             'anypage',
+            'Login-As',
         );
         foreach ($user_editable_plugins as $plugin_id) {
             elggmulti_toggle_plugin($domain->getID(), $plugin_id);
