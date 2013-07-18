@@ -2,7 +2,7 @@
 
     $user = elgg_get_logged_in_user_entity();
 
-    $domain_link = "http://". $vars['domain'] . "/install.php?u=".urlencode($user->username);
+    $domain_link = "http://". $vars['domain'] . "/install.php?username=".urlencode($user->username) . "&name=".urlencode($user->name) . "&email=".urlencode($user->email);
 
 ?>
 
