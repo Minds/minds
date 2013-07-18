@@ -174,7 +174,7 @@ class MindsMultiInstaller extends ElggInstaller {
             ),
             'siteemail' => array(
                 'type' => 'text',
-                'value' => '',
+                'value' => $_SESSION['m_email'],
                 'required' => FALSE,
             ),
             'wwwroot' => array(
