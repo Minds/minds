@@ -12,7 +12,7 @@ $english = array(
 	//login
 	'login' => 'Enter',
 	'logout' => 'Exit',
-	'register' => 'Sign up',
+	'register' => 'Create a channel',
 	'register:early' => 'Request Early Access',
 	
 	'post' => 'Post',
@@ -20,7 +20,7 @@ $english = array(
 	//change friends to channels
 	'access:friends:label' => "Channels",
 	
-	'friends' => "Subscriptions",
+	'friends' => "Network",
 	'friends:yours' => "Channels you have subscribed to",
 	'friends:owned' => "Channels %s's subscribed to",
 	'friend:add' => "Subscribe",
@@ -195,7 +195,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 
     
     
-        'register:node' => 'Register multisite domains',
+        'register:node' => 'Launch a social network',
         "register:node:testping" => 'Multisite node DNS Test',
         'minds:tier:blurb' => 'Thank you for chosing Minds, please select one of the following payment plans...'
 

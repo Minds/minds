@@ -3,9 +3,6 @@
  * Archive CSS
  */
 ?>
-.elgg-heading-main{
-	max-width:400px;
-}
 .archive-upload{
 	width:750px;
 	margin:auto;
@@ -25,20 +22,36 @@
 }
 
 .archive-description{
-	margin:10px 10px;	
+	background: #F8F8F8;
+	padding: 10px;
+	margin: 0 0 10px;
 }
 
 .archive-button-right{
 	float:right;
 	margin:0 2px;
 }
-
+.archive-video-wrapper{
+	position:relative;
+	padding-bottom:55%;
+	height:0;
+}
 .archive-large-widget{
 	clear:both;
 	width:100%;
 	margin: 0;
+	height:100%;
+	position:absolute;
 }
-
+.uiVideoInline.archive.entity{
+	width:110%;
+	padding-bottom:60%;
+	margin-left:-10px;
+}
+.uiVideoInline.archive.entity span{
+	height:90%;
+	width:95%;
+}
 .uiVideoInline.archive{
 	width:100%;
 	height:0;
@@ -85,4 +98,9 @@
 	display:block;
 }
 
- 
+.elgg-form-archive-save{
+	width: 90%;
+	background: #F8F8F8;
+	padding: 16px;
+	margin: auto;
+}

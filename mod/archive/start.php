@@ -26,7 +26,7 @@ function minds_archive_init() {
 	elgg_register_menu_item('site', array(
 			'name' => elgg_echo('minds:archive'),
 			'href' => elgg_is_logged_in() ? elgg_get_site_url() . "archive/friends/" . elgg_get_logged_in_user_entity()->username : elgg_get_site_url() . 'archive/all',
-			'text' => '&#128193;',
+			'text' => '&#59392;',
 			'class' => 'entypo',
 			'title' =>  elgg_echo('minds:archive'),
 	));
@@ -71,7 +71,7 @@ function minds_archive_init() {
 	
 	//Setup kaltura
 	
-	elgg_register_event_handler('pagesetup','system','minds_archive_page_setup');
+	//elgg_register_event_handler('pagesetup','system','minds_archive_page_setup');
 }
 
 function minds_archive_entity_url($entity) {
@@ -505,6 +505,7 @@ function file_get_simple_type($mimetype) {
  * @return string Relative URL
  */
 function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $params) {
+	global $CONFIG;
 	$entity = $params['entity'];
 	$file = $entity;
 	$size = $params['size'];
@@ -513,7 +514,7 @@ function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $param
 		// thumbnails get first priority
 		if ($file->thumbnail) {
 			$ts = (int)$file->icontime;
-			return "mod/file/thumbnail.php?file_guid=$file->guid&size=$size&icontime=$ts";
+			return $CONFIG->cdn_url .  "mod/archive/thumbnail.php?file_guid=$file->guid&size=$size&icontime=$ts";
 		}
 
 		$mapping = array(
@@ -564,7 +565,7 @@ function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $param
 			$ext = '';
 		}
 		
-		$url = "mod/archive/graphics/icons/{$type}{$ext}.gif";
+		$url = $CONFIG->cdn_url . "mod/archive/graphics/icons/{$type}{$ext}.gif";
 		$url = elgg_trigger_plugin_hook('file:icon:url', 'override', $params, $url);
 		return $url;
 	} elseif(elgg_instanceof($entity, 'object', 'kaltura_video')) {

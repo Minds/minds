@@ -244,7 +244,7 @@ function notification_notifier() {
 			$tooltip .= " (" . elgg_echo("notifications:unread", array($num_notifications)) . ")";
 		}
 
-		elgg_register_menu_item('topbar', array(
+		elgg_register_menu_item('notifications', array(
 			'name' => 'notification',
 			'href' => '#notification',
 			'rel' => 'popup',

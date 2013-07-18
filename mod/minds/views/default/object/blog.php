@@ -16,7 +16,7 @@ if (!$blog) {
 $owner = $blog->getOwnerEntity();
 $container = $blog->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
-$excerpt = $blog->excerpt;
+$excerpt = strip_tags($blog->excerpt);
 if (!$excerpt) {
 	$excerpt = elgg_get_excerpt($blog->description);
 }
@@ -53,6 +53,7 @@ $metadata = elgg_view_menu('entity', array(
 	'handler' => 'blog',
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
+	'full_view' => $full
 ));
 
 $subtitle = "$author_text $date $comments_link $categories";
@@ -69,7 +70,13 @@ if ($full) {
 		'class' => 'blog-post',
 	));
 	
+	//assume a youtube, vimeo, liveleak scraper
+//	if($blog->rss_item_id && $blog->license == 'attribution-noncommercial-noderivs-cc'){
+//	}	
+
 	$body .= elgg_view('minds/license', array('license'=>$blog->license));
+
+	 $body .= ' <i>This blog is free & open source, however embeds may not be. </i><br/>';
 	
 	//if blog is public, show social links
 	if($blog->access_id == 2){
@@ -95,27 +102,26 @@ if ($full) {
 	
 	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
 	$img_link = '<div class="rich-image-container">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$image)) . '</div>';
-	$title = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=> '<h3>'.$blog->title.'</h3>'));
-	echo elgg_view_image_block($img_link, $title, array('class'=>'rich-content sidebar'));
-	
+	$title = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=> '<h3>'.$blog->title.'</h3>', 'class'=>'title'));
+	//echo elgg_view_image_block($img_link, $title, array('class'=>'rich-content sidebar'));
+	echo $img_link;
+	echo $title;
 } else {
 	// brief view
+
 	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
-	$img_link = '<div class="rich-image-container">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$image)) . '</div>';
-	$readmore = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_echo('readmore'), 'class'=>'readmore'));
-	
-	$content = elgg_view('output/url', array('href'=>$blog->getURL(), 'text' => elgg_view_title($blog->title))).$excerpt . $readmore;
-	$body = elgg_view_image_block($img_link, $content, array('class'=>'rich-content news'));
+	$title = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_view_title($blog->title)));
+	$extras = '<p class="excerpt">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$excerpt)) . '</p>';
 
-	$params = array(
-		'entity' => $blog,
-		'subtitle' => $subtitle,
-		'metadata' => $metadata,
-		'title' => false,
-		'content' => $body
-	);
-	$params = $params + $vars;
-	$list_body = elgg_view('object/elements/summary', $params);
+	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));
 
-	echo elgg_view_image_block($owner_icon, $list_body, array('class'=>'rich-content'));
+        $subtitle = '<i>'.
+                elgg_echo('by') . ' ' . $owner_link . ' ' .
+                elgg_view_friendly_time($blog->time_created) . '</i>';
+
+        $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+	echo $metadata;
+        echo $header;
+        echo elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$image, 'class'=>'blog-rich-image-holder'));
+	echo $extras;
 }

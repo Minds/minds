@@ -5,14 +5,14 @@ elgg_register_event_handler('init','system','polls_init');
 function polls_init() {
 
 	elgg_register_library('elgg:polls', elgg_get_plugins_path() . 'voting/models/model.php');
-
-	// Set up menu for logged in users
-	if (elgg_is_logged_in()) {
-		$item = new ElggMenuItem('polls', elgg_echo('polls'), 'voting/owner/' . elgg_get_logged_in_user_entity()->username);
-	} else {
-		$item = new ElggMenuItem('polls', elgg_echo('polls'), 'voting/top');
-	}
-	elgg_register_menu_item('site', $item);
+	
+	elgg_register_menu_item('site', array(
+			'name' => 'polls',
+			'href' => 'voting/top',
+			'text' => '&#128077;',
+			'title' => elgg_echo('polls'),
+			'class' => 'entypo',
+		));
 
 	// Extend system CSS with our own styles, which are defined in the polls/css view
 	elgg_extend_view('css/elgg','polls/css');

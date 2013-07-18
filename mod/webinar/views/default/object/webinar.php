@@ -15,7 +15,7 @@ if (!$webinar) {
 }
 
 $owner = $webinar->getOwnerEntity();
-$owner_icon = elgg_view_entity_icon($owner, 'tiny');
+$owner_icon = elgg_view_entity_icon($owner, 'small');
 $container = $webinar->getContainerEntity();
 $description = elgg_view('output/longtext', array('value' => $webinar->description, 'class' => 'pbl'));
 
@@ -28,6 +28,17 @@ $author_text = elgg_echo('byline', array($owner_link));
 
 $tags = elgg_view('output/tags', array('tags' => $webinar->tags));
 $date = elgg_view_friendly_time($webinar->time_created);
+
+$members = elgg_list_entities_from_relationship(array(
+                'relationship' => $relationship,
+                'relationship_guid' => $webinar->guid,
+                'inverse_relationship' => true,
+                'types' => 'user',
+                'limit' => $limit,
+                'list_type' => 'gallery',
+                'gallery_class' => 'elgg-gallery-users gathering',
+));
+
 
 $comments_count = $webinar->countComments();
 //only display if there are commments
@@ -67,20 +78,8 @@ if ($full && !elgg_in_context('gallery')) {
 	);
 	$params = $params + $vars;
 	$summary = elgg_view('object/elements/summary', $params);
-	
-	$body = <<<HTML
-<div class="bookmark elgg-content mts">
-	$description
-</div>
-HTML;
-	
-	echo elgg_view('object/elements/full', array(
-			'entity' => $webinar,
-			'icon' => $owner_icon,
-			'summary' => $summary,
-			'body' => $body,
-	));
 
+	echo $members;
 } elseif (elgg_in_context('gallery')) {
 	echo <<<HTML
 <div class="webinar-gallery-item">
@@ -94,7 +93,6 @@ HTML;
 	
 	$params = array(
 			'entity' => $webinar,
-			'metadata' => $metadata,
 			'subtitle' => $subtitle,
 			'tags' => $tags,
 			'content' => $content,
@@ -103,5 +101,6 @@ HTML;
 	$body = elgg_view('object/elements/summary', $params);
 
 	echo elgg_view_image_block($owner_icon, $body);
+	echo $members;
 }
 

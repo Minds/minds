@@ -54,6 +54,8 @@
 
 .tidypics-gallery > li {
 	padding: 0 10px;
+	width:30%;
+	margin-right:5px;
 }
 
 .tidypics-album-nav {

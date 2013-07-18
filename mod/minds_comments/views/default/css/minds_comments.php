@@ -78,6 +78,7 @@ padding:0;
 font-size:12px;
 height:25px;
 overflow: hidden;
+padding:4px;
 }
 
 .hj-comments-bubble-pointer {

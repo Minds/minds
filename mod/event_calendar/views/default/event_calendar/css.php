@@ -6,6 +6,9 @@ $background_colour = '#F5F5F5';
 $highlight_colour = '#3874B7';
 ?>
 
+h2.event_date{
+	font-size:84px;
+}
 #calendarmenucontainer {
 	position:relative;
 	left: 25px;

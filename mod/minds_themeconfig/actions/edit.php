@@ -28,7 +28,10 @@
                 
                 elgg_set_plugin_setting('logo_override', 'true', 'minds_themeconfig');
             }
-            
+    
+            if (isset($_FILES['logo']) && ($_FILES['logo']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['logo']['error'] != 0) {
+                register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
+            }
     }
     
     // Background image
@@ -42,6 +45,9 @@
             elgg_set_plugin_setting('background_override', 'true', 'minds_themeconfig');
             elgg_set_plugin_setting('background_override_mime', $_FILES['background']['type'], 'minds_themeconfig');
         }
+    }
+    if (isset($_FILES['background']) && ($_FILES['background']['error'] != UPLOAD_ERR_NO_FILE) && ($_FILES['background']['error'] != 0)) {
+        register_error(minds_themeconfig_codeToMessage($_FILES['background']['error'])); // Debug uploads
     }
     
     // Save background colour

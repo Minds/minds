@@ -496,8 +496,9 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $monetized 
 	//$flashVarsStr = "streamerType=rtmp&streamerUrl=rtmp://rtmpakmi.kaltura.com/ondemand&rtmpFlavors=1&&";
       
     $viewData["flashVars"]["entryId"] = $entryForPlayer;
-
     $flashVarsStr .= KalturaHelpers::flashVarsToString($viewData["flashVars"]);
+
+//	$flashVars .= '&watermark.watermarkPath=' . elgg_get_site_url() . '/archive/view/' . $entryForPlayer;
 	
 	$video_location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $entryForPlayer;
 	

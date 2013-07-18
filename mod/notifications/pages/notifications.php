@@ -24,6 +24,7 @@ if(get_input('full')){
 		'title' => $title,
 		'sidebar' => $sidebar,
 		'filter_override' => '',
+		'class' => 'notifications'
 		);
 
 

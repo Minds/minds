@@ -28,7 +28,6 @@ if (elgg_is_logged_in()) {
 
 $title = elgg_echo("register");
 
-$content = elgg_view_title($title);
 
 // create the registration url - including switching to https if configured
 $register_url = elgg_get_site_url() . 'action/register';
@@ -48,6 +47,13 @@ $content .= elgg_view_form('register', $form_params, $body_params);
 
 $content .= elgg_view('minds/register_side');
 
-$body = elgg_view_layout("one_column", array('content' => $content));
+$title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
+$header = <<<HTML
+<div class="elgg-head clearfix">
+	$title_block
+</div>
+HTML;
+
+$body = elgg_view_layout("one_column", array('content' => '<div class="elgg-inner">' . $content . '</div>', 'header'=>$header));
 
 echo elgg_view_page($title, $body);

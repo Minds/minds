@@ -12,7 +12,7 @@ $add_chat_link = elgg_view('output/url', array(
 ));
 
 $vars = array(
-	'class' => 'hidden elgg-chat-messages-preview',
+	'class' => 'hidden elgg-chat-messages-preview hz-list',
 	'id' => 'chat-messages-preview',
 );
 

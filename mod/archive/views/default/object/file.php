@@ -20,6 +20,13 @@ $excerpt = elgg_get_excerpt($file->description);
 $mime = $file->mimetype;
 $base_type = substr($mime, 0, strpos($mime,'/'));
 
+$menu = elgg_view_menu('entity', array(
+                'entity' => $file,
+                'handler' => 'archive',
+                'sort_by' => 'priority',
+                'class' => 'elgg-menu-hz',
+        ));
+
 $owner_link = elgg_view('output/url', array(
 	'href' => $owner->getURL(),
 	'href' => "file/owner/$owner->username",
@@ -56,6 +63,12 @@ if (elgg_in_context('widgets')) {
 if ($full) {
 
 	$extra = '';
+	if (elgg_view_exists("file/specialcontent/$mime")) {
+		$extra = elgg_view("file/specialcontent/$mime", $vars);
+	} else if (elgg_view_exists("file/specialcontent/$base_type/default")) {
+		$extra = elgg_view("file/specialcontent/$base_type/default", $vars);
+	}
+	
 
 	$params = array(
 		'entity' => $file,
@@ -65,16 +78,17 @@ if ($full) {
 	);
 	$params = $params + $vars;
 	$download = elgg_view('output/url', array(	'href'=>'/action/archive/download?guid='.$file->guid,
-												'text'=> elgg_echo('archive:download'),
+												'text'=> elgg_echo('minds:archive:download'),
 												'is_action' => true,
 												'class'=> 'elgg-button elgg-button-action archive-button archive-button-right'
 										));
 	$text = elgg_view('output/longtext', array('value' => $file->description));
+		
 	$license =  elgg_view('minds/license', array('license'=>$file->license)); 
 	if($file->access_id == 2){
 		$social_links = elgg_view('minds_social/social_footer');
 	}
-	$body = "$text $download $license $social_links";
+	$body = "$text $extra $download $license $social_links";
 
 	echo elgg_view('object/elements/full', array(
 		'entity' => $file,
@@ -89,26 +103,15 @@ if ($full) {
 	echo "<p class='subtitle'>$owner_link $date</p>";
 	echo '</div>';
 } else {
-	$icon = elgg_view('output/img', array(
-		'src' => $file->getIconURL('medium'),
-		'class' => 'elgg-photo',
-		'title' => $file->title,
-		'alt' => $file->title,
-		'width'=>'120px'
-	));
-	$icon = elgg_view('output/url', array(
-		'text' => $icon,
-		'href' => $file->getURL()
-	));
-	$params = array(
-		'entity' => $file,
-		'metadata' => $metadata,
-		'subtitle' => $subtitle,
-		'tags' => $tags,
-		'content' => $excerpt,
-	);
-	$params = $params + $vars;
-	$list_body = elgg_view('object/elements/summary', $params);
-
-	echo elgg_view_image_block($icon, $list_body);
+	$image = elgg_view('output/img', array('src'=>$file->getIconURL('large'), 'class'=>'rich-image'));
+	$title = elgg_view('output/url', array('href'=>$file->getURL(), 'text'=>elgg_view_title($file->title)));
+	$extras = '<span class="extras"> <p class="time">'. $date . '</p></span>';
+	
+	$body = '<span class="info">' . $title . $extras . '<span>';
+	
+	$content = $image . $body;
+	echo $menu;
+	$header = elgg_view_image_block(elgg_view_entity_icon($file->getOwnerEntity(), 'small'), $title . $subtitle);
+        echo $header;
+        echo elgg_view('output/url', array('href'=>$file->getURL(), 'text'=>$image));
 }

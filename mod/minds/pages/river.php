@@ -63,6 +63,7 @@ switch ($page_type) {
 		$options['object_guids'] = thumbs_down_history();
 		break;
 	default:
+		$title = elgg_echo('news');
 		$page_filter = 'friends';
 		//$options['relationship_guid'] = elgg_get_logged_in_user_guid();
 		//$options['relationship'] = 'friend';
@@ -81,17 +82,29 @@ if (!$activity) {
 }
 
 //$content = elgg_view('core/river/filter', array('selector' => $selector));
+//$sidebar = elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
+//$sidebar .= elgg_view('core/river/sidebar');
+$sidebar .= elgg_view('minds/ads', array('large-block'));
 
-$sidebar = elgg_view('core/river/sidebar');
+$title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
+$filter = elgg_view('page/layouts/content/river_filter', $vars);
+$wall_add = elgg_view_form('wall/add',  array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
+$header = <<<HTML
+<div class="elgg-head clearfix">
+	$title_block$wall_add
+</div>
+$filter
+HTML;
 
 $params = array(
 	'content' =>  $content . $activity,
 	'sidebar' => $sidebar,
 	'filter_context' => $page_filter,
-	'filter_override' => elgg_view('page/layouts/content/river_filter', $vars),
+	'filter' => false,
+	'header' => $header,
 	'class' => 'elgg-river-layout',
 );
 
-$body = elgg_view_layout('river', $params);
+$body = elgg_view_layout('content', $params);
 
 echo elgg_view_page($title, $body, 'default', array('class'=>'news'));

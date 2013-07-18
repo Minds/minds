@@ -14,7 +14,7 @@ if (isset($vars['entity'])) {
 	$container = $poll->getContainerEntity();
 	$categories = elgg_view('output/categories', $vars);
 		
-	$owner_icon = elgg_view_entity_icon($owner, 'tiny');
+	$owner_icon = elgg_view_entity_icon($owner, 'small');
 	$owner_link = elgg_view('output/url', array(
 				'href' => "voting/owner/$owner->username",
 				'text' => $owner->name,
@@ -80,7 +80,6 @@ if (isset($vars['entity'])) {
 	
 		$params = array(
 			'entity' => $poll,
-			'metadata' => $metadata,
 			'subtitle' => $subtitle,
 			'tags' => $tags
 		);
@@ -88,5 +87,7 @@ if (isset($vars['entity'])) {
 		$list_body = elgg_view('object/elements/summary', $params);
 	
 		echo elgg_view_image_block($owner_icon, $list_body);
+		echo elgg_view('polls/body',$vars);
+
 	}
 }

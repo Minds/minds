@@ -39,4 +39,4 @@ $summary = elgg_view('object/elements/summary', $params);
 
 $icon = elgg_view_entity_icon($album, 'tiny');
 
-echo $header = elgg_view_image_block($icon, $summary);
+echo elgg_view_image_block($icon, $summary);

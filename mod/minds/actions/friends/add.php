@@ -38,5 +38,11 @@ if (!$errors) {
 	system_message(elgg_echo("friends:add:successful", array($friend->name)));
 }
 
+if(get_input('ajax')){
+	if(!$errors){
+		echo 'subscribed';
+	}
+}
+
 // Forward back to the page you friended the user on
 forward(REFERER);

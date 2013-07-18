@@ -14,12 +14,15 @@ $groups = get_input('groups', 10);
 
 $num_members = get_number_users();
 
+$limit = get_input('limit', 20);
+
 $title = elgg_echo('channels');
 
-$options = array('type' => 'user', 'full_view' => false);
+$options = array('type' => 'user', 'full_view' => false, 'limit'=>$limit);
 switch ($vars['page']) {
 	case 'subscribers':
 		$options = array(
+			'limit' => $limit,
 			'relationship' => 'friend',
 			'relationship_guid' => $page_owner->getGUID(),
 			'inverse_relationship' => TRUE,
@@ -30,6 +33,7 @@ switch ($vars['page']) {
 		break;
 	case 'subscriptions':
 		$options = array(
+			'limit' => $limit,
 			'relationship' => 'friend',
 			'relationship_guid' => $page_owner->getGUID(),
 			'inverse_relationship' => FALSE,
@@ -39,16 +43,21 @@ switch ($vars['page']) {
 		$content = elgg_list_entities_from_relationship($options);
 		break;
 	case 'popular':
+		$options['limit'] = $limit;
 		$options['relationship'] = 'friend';
 		$options['inverse_relationship'] = false;
 		$content = elgg_list_entities_from_relationship_count($options);
 		break;
 	case 'suggested':
 		$people = suggested_friends_get_people($page_owner->guid, $friends, $groups);
-		$content = elgg_view('suggested_friends/list', array('people' => $people));
+		$entities = array();
+		foreach($people as $person){
+			$entities[] = $person['entity'];
+		}
+		$content = elgg_view_entity_list($entities);
 		break;
 	case 'online':
-		$content = get_online_users();
+		$content = get_online_users($limit);
 		break;
 	case 'collections':
 		elgg_register_title_button('collections', 'add');
@@ -65,8 +74,9 @@ $params = array(
 	'sidebar' => elgg_view('channels/sidebar'),
 	'title' => $title,
 	'filter_override' => elgg_view('channels/nav', array('selected' => $vars['page'])),
+	'class'=> 'channels'
 );
 
-$body = elgg_view_layout('content', $params);
+$body = elgg_view_layout('tiles', $params);
 
 echo elgg_view_page($title, $body);

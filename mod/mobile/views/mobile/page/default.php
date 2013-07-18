@@ -21,7 +21,7 @@ if (elgg_get_context() == 'admin') {
 	echo elgg_view('page/admin', $vars);
 	return true;
 }
-elgg_load_css('minds.default');
+elgg_load_css('minds.mobile');
 elgg_load_js('minds.js');
 elgg_load_js('bootstrap');
 elgg_load_css('bootstrap');

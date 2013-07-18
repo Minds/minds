@@ -57,6 +57,14 @@ if($user instanceof ElggUser){
 									));
 			}
 		}
+	} else {
+		echo elgg_view('output/url', array(
+                    	                              'text' => elgg_echo('friend:add'),
+                                                      'href' => "action/friends/add?friend={$user->guid}",
+                                                      'class' => 'elgg-button elgg-button-action channel',
+                                                      'is_action' => true
+                                                   ));
+
 	}
 }	
 	if($user->canEdit())							

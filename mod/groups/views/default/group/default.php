@@ -7,7 +7,7 @@
 
 $group = $vars['entity'];
 
-$icon = elgg_view_entity_icon($group, 'tiny');
+$icon = elgg_view_entity_icon($group, 'large');
 
 $metadata = elgg_view_menu('entity', array(
 	'entity' => $group,

@@ -42,8 +42,13 @@ function channel_init() {
 	
 	elgg_register_library('channels:suggested', elgg_get_plugins_path() . 'channel/lib/suggested.php');
 	
-	$item = new ElggMenuItem('channels', elgg_echo('channels'), 'channels');
-	elgg_register_menu_item('site', $item);
+	elgg_register_menu_item('site', array(
+		'name' => 'channels',
+		'text' => '&#59254;',
+		'href' => 'channels',
+		'class' => 'entypo',
+		'title' => elgg_echo('channels')
+	));
 
 	elgg_register_simplecache_view('icon/user/default/tiny');
 	elgg_register_simplecache_view('icon/user/default/topbar');
@@ -134,7 +139,13 @@ function channel_page_handler($page) {
 	if (isset($page[0])) {
 		$username = $page[0];
 		$user = get_user_by_username($username);
-		elgg_set_page_owner_guid($user->guid);
+		if($user){
+			elgg_set_page_owner_guid($user->guid);
+		} else {
+			return false;
+		}
+	}else{
+		return false;
 	}
 
 	// short circuit if invalid or banned username
@@ -169,9 +180,24 @@ function channel_page_handler($page) {
 		'num_columns' => 2,
 	);
 	$content = elgg_view_layout('widgets', $params);
+	
+	$context = 'channel';
 
-	$body = elgg_view_layout('one_column', array('content' => $content));
-	echo elgg_view_page($user->name, $body);
+	$widgets = elgg_get_widgets($user->guid, $context);
+
+	$params = array(
+        	'widgets' => $widgets,
+        	'context' => $context,
+        	'exact_match' => $exact_match,
+	);
+
+	//$header = elgg_view_title($user->name);
+	$header .= elgg_view('page/layouts/widgets/add_button');
+	$header .= elgg_view('page/layouts/widgets/add_panel', $params);
+
+
+	$body = elgg_view_layout('one_column', array('content' => $content, 'header'=>$header));
+	echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel'));
 	return true;
 }
 
@@ -226,7 +252,7 @@ function channel_url($user) {
  * @return string
  */
 function channel_override_avatar_url($hook, $entity_type, $return_value, $params) {
-
+	global $CONFIG;
 	// if someone already set this, quit
 	if ($return_value) {
 		return null;
@@ -250,21 +276,13 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 		return null;
 	}
 
-	$filehandler = new ElggFile();
+/*	$filehandler = new ElggFile();
 	$filehandler->owner_guid = $user_guid;
 	$filehandler->setFilename("profile/{$user_guid}{$size}.jpg");
+*/
 
-	try {
-		if ($filehandler->exists()) {
-			$join_date = $user->getTimeCreated();
-			return "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
-		}
-	} catch (InvalidParameterException $e) {
-		elgg_log("Unable to get profile icon for user with GUID $user_guid", 'ERROR');
-		return "_graphics/icons/default/$size.png";
-	}
-
-	return null;
+	$join_date = $user->getTimeCreated();
+	return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
 }
 
 /**

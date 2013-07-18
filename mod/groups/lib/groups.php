@@ -63,6 +63,7 @@ function groups_handle_all_page() {
 		'content' => $content,
 		'sidebar' => $sidebar,
 		'filter' => $filter,
+		'class' => 'groups'
 	);
 	$body = elgg_view_layout('content', $params);
 

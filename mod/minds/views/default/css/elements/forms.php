@@ -10,6 +10,11 @@
 /* ***************************************
 	Form Elements
 *************************************** */
+
+.elgg-body .elgg-form{
+	padding:12px;
+}
+
 fieldset > div {
 	margin-bottom: 15px;
 }
@@ -28,14 +33,13 @@ label {
 }
 
 input, textarea {
-	border: 1px solid #ccc;
+	border: 1px solid #eee;
 	color: #666;
-	font: 120% Arial, Helvetica, sans-serif;
-	padding: 5px;
+	padding: 8px;
 	width: 100%;	
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;

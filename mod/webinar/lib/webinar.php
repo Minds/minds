@@ -235,7 +235,7 @@ function webinar_get_page_content_list($page = array()){
 	
 	if(!$guid){
 		$return['filter_context'] = 'all';
-		$return['title'] = elgg_echo('webinar:title:site:all');
+		$return['title'] = elgg_echo('webinar:webinars');
 		//remove the link in the breadcrumb
 		elgg_pop_breadcrumb();
 		elgg_push_breadcrumb(elgg_echo('webinar:webinars'));
@@ -253,7 +253,7 @@ function webinar_get_page_content_list($page = array()){
 					//set filter
 					if ($guid == elgg_get_logged_in_user_guid()) {
 						$return['filter_context'] = 'mine';
-						$return['title'] = elgg_echo('webinar:title:user:mine');
+						$return['title'] = elgg_echo('webinar:webinars');
 						elgg_register_title_button();
 					} else if (elgg_instanceof($entity, 'group')) {
 						// access check for closed groups
@@ -264,7 +264,7 @@ function webinar_get_page_content_list($page = array()){
 					}else{
 						// do not show button or select a tab when viewing someone else's posts
 						$return['filter'] = false;
-						$return['title'] = elgg_echo('webinar:title:user:all', array($entity->name));
+						$return['title'] = elgg_echo('webinar:webinars');
 					}
 					
 					//set breadcrumb
@@ -285,7 +285,7 @@ function webinar_get_page_content_list($page = array()){
 					//set filter
 					if ($guid == elgg_get_logged_in_user_guid()) {
 						$return['filter_context'] = 'friend';
-						$return['title'] = elgg_echo('webinar:title:friend:mine');
+						$return['title'] = elgg_echo('webinar:webinars');
 					}else{
 						$return['filter'] = false;
 						$return['title'] = elgg_echo('webinar:title:friend:user', array($entity->name));

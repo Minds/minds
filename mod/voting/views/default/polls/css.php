@@ -71,16 +71,18 @@
 }
 
 .progress_indicator {
-	width:200px;
+	width:auto;
 	padding: 5px;
 }
 	
 .progressBarContainer {
-	height:12px;
+	height:25px;
 	width:100%;
 	border: 1px #00B0E4 solid;
 	padding: 0;
-	margin: 0;
+	margin: 5px 0;
+	position:relative;
+	overflow:hidden;
 }
 
 .progressBarContainer img {
@@ -88,9 +90,18 @@
 	vertical-align: top;
 }
 
+.progressBarContainer label{
+	position:absolute;
+	padding:4px;
+	top:0;
+	left:0;
+}
 .polls-filled-bar {
 	background-color: #00B0E4;
-	height: 12px;
+	height: 100%;
+	position:absolute;
+	top:0;
+	left:0;
 }
 
 .poll-widget-title {
