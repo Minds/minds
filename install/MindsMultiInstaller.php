@@ -36,8 +36,12 @@ class MindsMultiInstaller extends ElggInstaller {
             $this->web_services_url = $CONFIG->web_services_url;
         
         // Now, see if we're passed any setup options - if so, save them to session
+        if ($name = get_input('name'))
+                $_SESSION['m_name'] = $name;
+        if ($email = get_input('email'))
+                $_SESSION['m_email'] = $email;
         if ($username = get_input('username'))
-                $_SESSION['username'] = $username;
+                $_SESSION['m_username'] = $username;
     }
 
     /**
@@ -82,6 +86,73 @@ class MindsMultiInstaller extends ElggInstaller {
         );
         exit;
     }
+    
+    /**
+    * Admin account controller
+    *
+    * Creates an admin user account
+    *
+    * @param array $submissionVars Submitted vars
+    *
+    * @return void
+    */
+   protected function admin($submissionVars) {
+           $formVars = array(
+                   'displayname' => array(
+                           'type' => 'text',
+                           'value' => $_SESSION['m_name'],
+                           'required' => TRUE,
+                           ),
+                   'email' => array(
+                           'type' => 'text',
+                           'value' => $_SESSION['m_email'],
+                           'required' => TRUE,
+                           ),
+                   'username' => array(
+                           'type' => 'text',
+                           'value' => $_SESSION['m_username'],
+                           'required' => TRUE,
+                           ),
+                   'password1' => array(
+                           'type' => 'password',
+                           'value' => '',
+                           'required' => TRUE,
+                           ),
+                   'password2' => array(
+                           'type' => 'password',
+                           'value' => '',
+                           'required' => TRUE,
+                           ),
+           );
+
+           if ($this->isAction) {
+                   do {
+                           if (!$this->validateAdminVars($submissionVars, $formVars)) {
+                                   break;
+                           }
+
+                           if (!$this->createAdminAccount($submissionVars, $this->autoLogin)) {
+                                   break;
+                           }
+
+                           system_message(elgg_echo('install:success:admin'));
+
+                           $this->continueToNextStep('admin');
+
+                   } while (FALSE);  // PHP doesn't support breaking out of if statements
+           }
+
+           // bit of a hack to get the password help to show right number of characters
+           global $CONFIG;
+           $lang = get_current_language();
+           $CONFIG->translations[$lang]['install:admin:help:password1'] =
+                           sprintf($CONFIG->translations[$lang]['install:admin:help:password1'],
+                           $CONFIG->min_password_length);
+
+           $formVars = $this->makeFormSticky($formVars, $submissionVars);
+
+           $this->render('admin', array('variables' => $formVars));
+   }
 
     /**
      * Site settings controller
@@ -321,7 +392,7 @@ class MindsMultiInstaller extends ElggInstaller {
         $formVars = array(
             'minds_username' => array(
                 'type' => 'text',
-                'value' => $_SESSION['username'],
+                'value' => $_SESSION['m_username'],
                 'required' => TRUE,
             ),
             'minds_password' => array(
