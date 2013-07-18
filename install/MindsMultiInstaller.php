@@ -34,6 +34,10 @@ class MindsMultiInstaller extends ElggInstaller {
         global $CONFIG;
         if (isset($CONFIG->web_services_url))
             $this->web_services_url = $CONFIG->web_services_url;
+        
+        // Now, see if we're passed any setup options - if so, save them to session
+        if ($username = get_input('username'))
+                $_SESSION['username'] = $username;
     }
 
     /**
@@ -317,7 +321,7 @@ class MindsMultiInstaller extends ElggInstaller {
         $formVars = array(
             'minds_username' => array(
                 'type' => 'text',
-                'value' => '',
+                'value' => $_SESSION['username'],
                 'required' => TRUE,
             ),
             'minds_password' => array(
