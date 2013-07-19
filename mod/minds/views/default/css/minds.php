@@ -1171,9 +1171,10 @@ div.tiers {
 }
 div.tiers div.tier {
 
-    border: 1px solid #000;
+    background-color: #4690D6;
+    border: 1px solid #4690D6;
     width: 250px;
-    height: 300px;
+    height: 150px;
     float: left;
     margin: 10px;
     margin-bottom:30px;
