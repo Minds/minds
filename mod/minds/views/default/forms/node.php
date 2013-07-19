@@ -22,11 +22,11 @@
     </div>
     
     <div class="email">
-        <p><label>Enter your email address:<br />
-                <input id="email" required type="email" name="email" placeholder="you@yourdomain.com" value="<?php echo elgg_get_logged_in_user_entity()->email; ?>" /> </label></p>
+        <?php /* <p><label>Enter your email address:<br /> */ ?>
+                <input id="email" required type="hidden" name="email" placeholder="you@yourdomain.com" value="<?php echo elgg_get_logged_in_user_entity()->email; ?>" /> </label></p>
     </div>
     
-    <div class="blurb-or">...then enter your network name...</div>
+    <div class="blurb-or">Enter your network name...</div>
     
     <div class="node">
         <input id="node" type="text" name="domain_at_minds" placeholder="yournetwork" /> <?php echo $ROOT_DOMAIN; ?>
