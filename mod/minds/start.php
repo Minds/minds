@@ -198,7 +198,7 @@ function minds_init(){
                 'sidebar' => ''
             );
             
-            echo elgg_view_page('Login', elgg_view_layout('default', $params));
+            echo elgg_view_page('Login', elgg_view_layout('default', $params),'default_popup');
             return true;
         });
         
