@@ -169,6 +169,9 @@ function blog_get_trending_page_content_list() {
 	if(!elgg_plugin_exists('analytics')){
 		forward(REFERRER);
 	}
+	
+	elgg_register_title_button();
+	
 	$return = array();
 	
       	$return['filter_context'] = 'trending';

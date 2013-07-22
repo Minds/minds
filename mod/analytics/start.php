@@ -127,7 +127,6 @@ function analytics_retrieve(array $options = array()){
 					//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
 					$guids[] = $guid;
 				}
-				$guids = array_reverse($guids);
 				//save to cache for 1 hour
 				$CACHE->save('trending_'.$options['offset'], json_encode($guids));			
 				return $guids;
