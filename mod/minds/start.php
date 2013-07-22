@@ -225,6 +225,15 @@ function minds_init(){
             }
             
         });
+        
+        // Remove elgg specific admin menu items
+        elgg_register_event_handler('pagesetup', 'system', function() {    
+            elgg_unregister_menu_item('admin_footer', 'faq');
+            elgg_unregister_menu_item('admin_footer', 'manual');
+            elgg_unregister_menu_item('admin_footer', 'community_forums');
+            elgg_unregister_menu_item('admin_footer', 'blog');
+        }, 1001);
+        
 }
 
 function minds_index($hook, $type, $return, $params) {
