@@ -175,6 +175,39 @@ function minds_init(){
             echo elgg_view_page('Login', elgg_view_layout('default', $params));
             return true;
         });
+        
+        
+        // Override the return url on tier orders
+        elgg_register_plugin_hook_handler('urls', 'pay', function($hook, $type, $return, $params) {
+            
+            if ($order = $params['order']) {
+            
+                $items = unserialize($order->items);
+                if ($items) {
+                    // Assume that if the first one is a tier then everything is
+                    $ia = elgg_set_ignore_access();
+                    
+                    $tier = get_entity($items[0]->object_guid);
+                    if (elgg_instanceof($tier, 'object', 'minds_tier'))
+                            $return['return'] = elgg_get_site_url() . 'register/node/';
+                            
+                    elgg_set_ignore_access($ia);
+             
+                    return $return;
+                }
+                
+            }
+            
+        });
+        
+        // Remove elgg specific admin menu items
+        elgg_register_event_handler('pagesetup', 'system', function() {    
+            elgg_unregister_menu_item('admin_footer', 'faq');
+            elgg_unregister_menu_item('admin_footer', 'manual');
+            elgg_unregister_menu_item('admin_footer', 'community_forums');
+            elgg_unregister_menu_item('admin_footer', 'blog');
+        }, 1001);
+        
 }
 
 function minds_index($hook, $type, $return, $params) {
