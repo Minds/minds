@@ -349,6 +349,18 @@ class MindsMultiInstaller extends ElggInstaller {
         foreach ($user_editable_plugins as $plugin_id) {
             elggmulti_toggle_plugin($domain->getID(), $plugin_id);
         }
+        
+        // Now configure some plugins
+        if (is_array($CONFIG->plugin_install_defaults)) {
+            foreach ($CONFIG->plugin_install_defaults as $plugin => $settings) {
+                if (is_array($settings)) {
+                    foreach ($settings as $key => $value)
+                        elgg_set_plugin_setting($key, $value, $plugin);
+                }
+            }
+        }
+        
+        
     }
 
     protected function setInstallStatus() {
