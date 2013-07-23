@@ -75,7 +75,8 @@
        $CONFIG->elasticsearch_server = 'http://107.23.117.9:9200/';
        //namespace
        //$CONFIG->elasticsearch_prefix = 'mehmac_';
-       $CONFIG->elasticsearch_prefix = $CONFIG->elgg_multisite_settings->getDomain();
+       if ($CONFIG->elgg_multisite_settings)
+            $CONFIG->elasticsearch_prefix = $CONFIG->elgg_multisite_settings->getDomain();
 
        /**
         * Memcache setup (optional)
