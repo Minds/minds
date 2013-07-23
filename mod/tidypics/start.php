@@ -153,7 +153,7 @@ function tidypics_page_handler($page) {
 		case "new":  // create new album
 		case "add":
 			set_input('guid', $page[1]);
-			require "$base/album/add.php";
+			require "$base/album/addAngular.php";
 			break;
 
 		case "edit": //edit image or album

@@ -133,6 +133,7 @@ function kaltura_get_metadata($entity) {
 
 //gets a kaltura object with all metadata from a kaltura id
 function kaltura_get_entity($video_id) {
+
 	if(empty($video_id)) return false;
 
 	$objs = elgg_get_entities_from_metadata(array('metadata_name_value_pairs' => array(
@@ -150,6 +151,9 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 	global $CONFIG,$KALTURA_GLOBAL_UICONF;
 
 	$ob = kaltura_get_entity($entry->id);
+
+//    var_dump($ob);
+//    exit;
 	//print_r($ob);echo "[$user_guid $container_guid] ";die;
 	if($user_guid){
 		
@@ -170,7 +174,8 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 			$ob->container_guid = ($container_guid ? $container_guid : $user_guid);
 			$ob->access_id = $access;
 			$guid = $ob->save(); //save here to get the guid
-			
+            $entry->id = $guid;
+
 			add_to_river('river/object/kaltura_video/create','create',$user_guid,$guid);
 
 		}

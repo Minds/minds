@@ -62,7 +62,7 @@ if (empty($title) || empty($body)) {
 	// Before we can set metadata, we need to save the market post
 	if (!$market->save()) {
 		register_error(elgg_echo("market:error"));
-		forward("mod/market/add.php");
+		forward("mod/market/addAngular.php");
 	}
 			
 	// Now let's add tags

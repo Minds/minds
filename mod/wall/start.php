@@ -34,7 +34,7 @@ function wall_init() {
 	
 	// Register actions
 	$action_base = elgg_get_plugins_path() . 'wall/actions';
-	elgg_register_action("wall/add", "$action_base/add.php");
+	elgg_register_action("wall/add", "$action_base/addAngular.php");
 	elgg_register_action("wall/delete", "$action_base/delete.php");
 }
 

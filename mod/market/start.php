@@ -51,7 +51,7 @@ function market_init() {
 
 	// Register actions
 	$action_url = elgg_get_plugins_path() . "market/actions/";
-	elgg_register_action("market/add", "{$action_url}add.php");
+	elgg_register_action("market/add", "{$action_url}addAngular.php");
 	elgg_register_action("market/edit", "{$action_url}edit.php");
 	elgg_register_action("market/delete", "{$action_url}delete.php");
 
@@ -82,7 +82,7 @@ function market_page_handler($page) {
 			break;
 		case 'add':
 			gatekeeper();
-			include "$pages/add.php";
+			include "$pages/addAngular.php";
 			break;
 		case 'edit':
 			gatekeeper();

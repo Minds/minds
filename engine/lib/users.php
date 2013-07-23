@@ -1098,7 +1098,7 @@ function collections_page_handler($page_elements) {
 		if ($page_elements[0] == "add") {
 			elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
 			collections_submenu_items();
-			require_once "{$base}pages/friends/collections/add.php";
+			require_once "{$base}pages/friends/collections/addAngular.php";
 			return true;
 		} else {
 			$user = get_user_by_username($page_elements[0]);

@@ -138,7 +138,7 @@ function bookmarks_page_handler($page) {
 
 		case "add":
 			gatekeeper();
-			include "$pages/add.php";
+			include "$pages/addAngular.php";
 			break;
 
 		case "edit":

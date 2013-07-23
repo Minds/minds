@@ -39,7 +39,7 @@ if ($market->getSubtype() == "market" && $market->canEdit()) {
 	// Make sure the title / description aren't blank
 	if (empty($title) || empty($body)) {
 		register_error(elgg_echo("market:blank"));
-		forward("mod/market/add.php");
+		forward("mod/market/addAngular.php");
 				
 	// Otherwise, save the market post 
 	} else {

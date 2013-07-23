@@ -234,7 +234,7 @@ function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL)
 
 	$session_id = session_id();
 
-	if (($token) && ($ts) && ($session_id)) {
+    if (($token) && ($ts) && ($session_id)) {
 		// generate token, check with input and forward if invalid
 		$generated_token = generate_action_token($ts);
 
@@ -279,6 +279,7 @@ function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL)
 	} else {
 		if (! empty($_SERVER['CONTENT_LENGTH']) && empty($_POST)) {
 			// The size of $_POST or uploaded file has exceed the size limit
+
 			$error_msg = elgg_trigger_plugin_hook('action_gatekeeper:upload_exceeded_msg', 'all', array(
 				'post_size' => $_SERVER['CONTENT_LENGTH'],
 				'visible_errors' => $visibleerrors,
@@ -479,7 +480,6 @@ function ajax_forward_hook($hook, $type, $reason, $params) {
 		}
 
 		echo json_encode($params);
-		exit;
 	}
 }
 

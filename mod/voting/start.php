@@ -57,7 +57,7 @@ function polls_init() {
 	
 	// Register actions
 	$action_path = elgg_get_plugins_path() . 'voting/actions/voting';
-	elgg_register_action("vote/add","$action_path/add.php");
+	elgg_register_action("vote/add","$action_path/addAngular.php");
 	elgg_register_action("vote/edit","$action_path/edit.php");
 	elgg_register_action("vote/delete","$action_path/delete.php");
 	elgg_register_action("vote/vote","$action_path/vote.php");

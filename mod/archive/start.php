@@ -21,8 +21,46 @@ function minds_archive_init() {
 
 	//embed options
 	elgg_register_js('kaltura.js', elgg_get_site_url() . 'mod/kaltura_video/kaltura/js/kaltura.js');
-	
-	//site menu
+
+    //Loading angularJS
+    $angularRoot = elgg_get_site_url() . 'mod/archive/angular/app/';
+    $templatesPath = $angularRoot . '/partials';
+
+    $angularSettings = array(
+        'templates_path' => $templatesPath
+    );
+
+    elgg_register_js(array('angular' => $angularSettings), 'setting');
+
+    // include library
+    elgg_register_js('angular.min.js' , $angularRoot . 'lib/angular.min.js');
+    elgg_register_js('bootstrap.min.js' , $angularRoot . 'lib/bootstrap/js/bootstrap.min.js');
+    elgg_register_js('jquery.ui.widget.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/vendor/jquery.ui.widget.js');
+    elgg_register_js('jquery.fileupload.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/jquery.fileupload.js');
+    elgg_register_js('jquery.iframe-transport.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/jquery.iframe-transport.js');
+//    elgg_register_js('http://player.kaltura.com/mwEmbedLoader.php', 'external');
+
+    // include directives
+    elgg_register_js('kaltura-embed.js' , $angularRoot . 'directives/kaltura-embed.js');
+    elgg_register_js('kaltura-upload.js' , $angularRoot . 'directives/kaltura-upload.js');
+    elgg_register_js('kaltura-thumbnail.js' , $angularRoot . 'directives/kaltura-thumbnail.js');
+
+    // include controllers
+    elgg_register_js('UploadController.js' , $angularRoot . 'controllers/UploadController.js');
+    elgg_register_js('GalleryController.js' , $angularRoot . 'controllers/GalleryController.js');
+
+    // include services
+    elgg_register_js('NodeService.js' , $angularRoot . 'services/NodeService.js');
+    elgg_register_js('KalturaService.js' , $angularRoot . 'services/KalturaService.js');
+    elgg_register_js('ElggService.js' , $angularRoot . 'services/ElggService.js');
+
+    elgg_register_js('app.js' , $angularRoot . 'app.js');
+
+    // include css
+    elgg_register_css('appstyle.css' , $angularRoot .'css/appstyle.css');
+    elgg_register_css('bootstrap.min.css' , $angularRoot . 'lib/bootstrap/css/bootstrap.min.css');
+
+    //site menu
 	elgg_register_menu_item('site', array(
 			'name' => elgg_echo('minds:archive'),
 			'href' => elgg_is_logged_in() ? elgg_get_site_url() . "archive/friends/" . elgg_get_logged_in_user_entity()->username : elgg_get_site_url() . 'archive/all',
@@ -68,7 +106,11 @@ function minds_archive_init() {
 	elgg_register_action("archive/save", $action_path . "save.php");
 	elgg_register_action("archive/add_album", $action_path . "tidypics/add_album.php");
 	elgg_register_action("archive/upload", $action_path . "upload.php");
-	
+    elgg_register_action("archive/addElggVideo", $action_path . "addAngular.php");
+    elgg_register_action("archive/deleteElggVideo" , $action_path . "deleteAngular.php");
+    elgg_register_action("archive/selectAlbum" , $action_path . "tidypics/album.php");
+    elgg_register_action("archive/getKSession" , $action_path . "generateKalturaSession.php");
+
 	//Setup kaltura
 	
 	elgg_register_event_handler('pagesetup','system','minds_archive_page_setup');
@@ -97,9 +139,9 @@ function minds_archive_page_setup() {
 			'class' => 'pagesactions elgg-lightbox',
 			'priority' => 0,
 			'section'=>'actions'
-		));   
-		
-		elgg_register_menu_item('page', array(
+		));
+
+        elgg_register_menu_item('page', array(
 			'name' =>elgg_echo('minds:archive:all'),
 			'href' => elgg_get_site_url() . "archive/all",
 			'text' =>  elgg_echo('minds:archive:all'),
@@ -122,22 +164,21 @@ function minds_archive_page_setup() {
 			'priority' => 600,
 			'section' => 'menu-a'
 		));
-		
 			
 		if (($page_owner == $user || !$page_owner) && elgg_is_logged_in()) {
-		
+
 			elgg_register_menu_item('page', array(
 				'name' => elgg_echo('minds:archive:mine'),
 				'href' =>  elgg_get_site_url() ."archive/" . $user->username,
 				'text' =>  elgg_echo('minds:archive:mine'),
 			));
-			
+
 			elgg_register_menu_item('page', array(
 				'name' => elgg_echo('minds:archive:network'),
 				'href' => elgg_get_site_url() ."archive/network/" . $user->username,
 				'text' =>  elgg_echo('minds:archive:network'),
 			));
-		
+
 		} elseif ($page_owner) {
 			
 			elgg_register_menu_item('page', array(
@@ -276,6 +317,9 @@ function minds_archive_page_handler($page) {
 					set_input('guid',$page[2]);
 					include(elgg_get_plugins_path().'tidypics/pages/photos/batch/edit.php');
 					break;
+                case 'angularJS':
+                    include('pages/archive/angularJS_upload.php');
+                    break;
 				default:
 					include('pages/archive/upload.php');
 			}
@@ -291,6 +335,9 @@ function minds_archive_page_handler($page) {
 					return false;
 			}
 			break;
+        case 'angular':
+            return;
+            break;
 		case 'show':
 		case 'view':
 			set_input('guid',$page[1]);

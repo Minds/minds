@@ -1,0 +1,132 @@
+/* Plcaeholder change color - all */
+::-webkit-input-placeholder { color:#000000; opacity: 1 !important;}
+::-moz-placeholder { color:#000000; opacity: 1 !important;} /* firefox 19+ */
+:-ms-input-placeholder { color:#000000; opacity: 1 !important;} /* ie */
+input:-moz-placeholder { color:#000000; opacity: 1 !important;}
+
+#dropzone {
+    height: 50px;
+    text-align: center;
+    font-weight: bold;
+}
+#fileupload{
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+#delete{
+    float: right;
+    border: none;
+    background: transparent;
+    position: absolute;
+    top: 10;
+    right: 5;
+}
+#license{
+    margin-left: 160;
+    margin-top: -22;
+    width: 190;
+    height: 24;
+    border: none;
+    background: transparent;
+    color: #000000;
+}
+#boxentry{
+    position: relative;
+    width: 330;
+    height: 250;
+    background: url('background.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+#access_id{
+    width: 130;
+    height: 24;
+    border: none;
+    background: transparent;
+    color: #000000;
+}
+
+/*div.uploadbox-title input.inline-edit:hover {padding: 3px 5px ; border: 1px solid black !important; background-color: #AAA !important;}*/
+/*div.uploadbox-title input.inline-edit:focus {padding: 3px 5px ; border: 1px solid black !important; background-color: #fff !important;}*/
+div.uploadbox-title input.inline-edit{
+    border: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    color: #000000;
+}   /* Plcaeholder change color - tilte */
+.uploadbox-title input::-webkit-input-placeholder {
+    color: #000000;
+    opacity: 1 !important;
+}
+.uploadbox-title input {
+    color: #000000;
+    opacity: 1 !important;
+}
+.uploadbox-title input:-ms-input-placeholder {
+    color: #000000;
+    opacity: 1 !important;
+}
+
+/*div.uploadbox-description textarea.inline-edit:hover {padding: 3px 5px; border: 1px solid black !important; background-color: #AAA !important;}*/
+/*div.uploadbox-description textarea.inline-edit:focus {padding: 3px 5px; border: 1px solid black !important; background-color: #fff !important;}*/
+div.uploadbox-description textarea.inline-edit{
+    height: 48;
+    width: 278;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #000000;
+}   /* Plcaeholder change color - tilte */
+.uploadbox-description textarea::-webkit-input-placeholder {
+    color: #000000;
+    opacity: 1 !important;
+}
+.uploadbox-description textarea{
+    color: #000000;
+    opacity: 1 !important;
+}
+.uploadbox-description textarea:-ms-input-placeholder {
+    color: #000000;
+    opacity: 1 !important;
+}
+
+/*div.uploadbox-tags input.inline-edit:hover {padding: 3px 5px; border: 1px solid black !important; background-color: #AAA !important;}*/
+/*div.uploadbox-tags input.inline-edit:focus {padding: 3px 5px; border: 1px solid black !important; background-color: #fff !important;}*/
+div.uploadbox-tags input.inline-edit{
+    border: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    color: #000000;
+}   /* Plcaeholder change color - tilte */
+.uploadbox-tags input::-webkit-input-placeholder {
+    color: #000000;
+    opacity: 1 !important;
+}
+.uploadbox-tags input {
+    color: #000000;
+    opacity: 1 !important;
+}
+.uploadbox-tags input:-ms-input-placeholder {
+    color: #000000;
+    opacity: 1 !important;
+}
+
+#savebutton{
+    border: none;
+    background: transparent;
+    position: absolute;
+    bottom: 10;
+}
+
+div#boxentry div.bar{
+    position: absolute;
+    bottom: 0;
+    height: 5;
+    width: 95% !important;
+}
+
+div#boxentry div.progress{
+    color: transparent;
+    height: 0;
+}
