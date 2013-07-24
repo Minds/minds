@@ -25,9 +25,7 @@ function minds_init(){
 	elgg_register_page_handler('news', 'minds_news_page_handler');
 		
  	elgg_extend_view('page/elements/head','minds/meta');
-	
-	elgg_extend_view('page/elements/head','minds/analytics', 90000); //such a large number so it is always at the bottom
-	
+		
 	elgg_extend_view('register/extend', 'minds/register_extend', 500);
 	
 	//Register the minds elastic news library (to override the default elgg river)
