@@ -12,6 +12,20 @@
 ?>
 <div class="node-signup">
     
+    <?php if ($order->payment_used) { ?>
+    
+    <div class="tier_details">
+        <div class="default-description">
+            <h2><?php echo $tier->title; ?></h2>
+            <p><?php echo $tier->description; ?></p>
+            
+        </div>
+        <p class ="pay buynow">Current tier! <a href="<?php echo elgg_get_site_url(); ?>pay">View payment history...</a></p>
+    </div>
+    
+    
+    <?php } else { ?>
+    
     <div class="tier_details">
         <div class="default-description">
             <h2><?php echo $tier->title; ?></h2>
@@ -39,6 +53,7 @@
     </div>
         
     <input type="submit" value="Save" class="elgg-button elgg-button-submit" />
+    <?php } ?>
 </div>
 <?php
 elgg_set_ignore_access($ia);
