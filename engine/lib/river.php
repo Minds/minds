@@ -241,7 +241,7 @@ $posted = 0, $annotation_id = 0) {
  * @return array|int
  * @since 1.8.0
  */
-function elgg_get_river(array $options = array()) {
+/*function elgg_get_river(array $options = array()) {
 	global $CONFIG;
 
 	$defaults = array(
@@ -368,7 +368,7 @@ function elgg_get_river(array $options = array()) {
 		return (int)$total->total;
 	}
 }
-
+*/
 /**
  * Prefetch entities that will be displayed in the river.
  *
@@ -423,7 +423,7 @@ function _elgg_prefetch_river_entities(array $river_items) {
  * @return string
  * @since 1.8.0
  */
-function elgg_list_river(array $options = array()) {
+/*function elgg_list_river(array $options = array()) {
 	global $autofeed;
 	$autofeed = true;
 
@@ -446,7 +446,7 @@ function elgg_list_river(array $options = array()) {
 	$options['items'] = $items;
 	return elgg_view('page/components/list', $options);
 }
-
+*/
 /**
  * Convert a database row to a new ElggRiverItem
  *

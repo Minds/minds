@@ -340,9 +340,6 @@ $relationship_guid = NULL, $inverse_relationship = FALSE) {
 		$joins[] = "JOIN {$CONFIG->dbprefix}entity_relationships r on r.guid_two = $column";
 	}
 
-	if ($relationship) {
-		$wheres[] = "r.relationship = '" . sanitise_string($relationship) . "'";
-	}
 
 	if ($relationship_guid) {
 		if ($inverse_relationship) {

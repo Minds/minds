@@ -97,15 +97,15 @@ function elgg_get_config($name, $site_guid = 0) {
 		$value = datalist_get($name);
 	} else {
 		// hit DB only if we're not sure if value exists or not
-		if (!isset($CONFIG->site_config_loaded)) {
+/*		if (!isset($CONFIG->site_config_loaded)) {
 			// site specific setting
 			if ($site_guid == 0) {
 				$site_guid = (int) $CONFIG->site_id;
 			}
 			$value = get_config($name, $site_guid);
-		} else {
+		} else {*/
 			$value = null;
-		}
+	//	}
 	}
 
 	// @todo document why we don't cache false
@@ -181,7 +181,7 @@ function elgg_save_config($name, $value, $site_guid = 0) {
 function verify_installation() {
 	global $CONFIG;
 
-	if (isset($CONFIG->installed)) {
+/*	if (isset($CONFIG->installed)) {
 		return;
 	}
 
@@ -200,7 +200,8 @@ function verify_installation() {
 
 	} catch (DatabaseException $e) {
 		throw new InstallationException(elgg_echo('InstallationException:SiteNotInstalled'));
-	}
+	}*/
+	return;
 }
 
 /**
@@ -234,7 +235,6 @@ function datalist_get($name) {
 		return false;
 	}
 
-	$name = sanitise_string($name);
 	if (isset($DATALIST_CACHE[$name])) {
 		return $DATALIST_CACHE[$name];
 	}
@@ -256,7 +256,7 @@ function datalist_get($name) {
 	// load as this saves about 9 queries per page]
 	// This also causes OOM problems when the datalists table is large
 	// @todo make a list of datalists that we want to get in one grab
-	$result = get_data("SELECT * from {$CONFIG->dbprefix}datalists");
+	/*$result = get_data("SELECT * from {$CONFIG->dbprefix}datalists");
 	if ($result) {
 		foreach ($result as $row) {
 			$DATALIST_CACHE[$row->name] = $row->value;
@@ -270,7 +270,7 @@ function datalist_get($name) {
 		if (isset($DATALIST_CACHE[$name])) {
 			return $DATALIST_CACHE[$name];
 		}
-	}
+	}*/
 
 	return null;
 }
@@ -287,35 +287,7 @@ function datalist_get($name) {
 function datalist_set($name, $value) {
 	global $CONFIG, $DATALIST_CACHE;
 
-	// cannot store anything longer than 255 characters in db, so catch before we set
-	if (elgg_strlen($name) > 255) {
-		elgg_log("The name length for configuration variables cannot be greater than 255", "ERROR");
-		return false;
-	}
-
-	$sanitised_name = sanitise_string($name);
-	$sanitised_value = sanitise_string($value);
-
-	// If memcache is available then invalidate the cached copy
-	static $datalist_memcache;
-	if ((!$datalist_memcache) && (is_memcache_available())) {
-		$datalist_memcache = new ElggMemcache('datalist_memcache');
-	}
-
-	if ($datalist_memcache) {
-		$datalist_memcache->delete($name);
-	}
-
-	$success = insert_data("INSERT into {$CONFIG->dbprefix}datalists"
-		. " set name = '{$sanitised_name}', value = '{$sanitised_value}'"
-		. " ON DUPLICATE KEY UPDATE value='{$sanitised_value}'");
-
-	if ($success !== FALSE) {
-		$DATALIST_CACHE[$name] = $value;
-		return true;
-	} else {
-		return false;
-	}
+	return;
 }
 
 /**
@@ -460,9 +432,8 @@ function set_config($name, $value, $site_guid = 0) {
 function get_config($name, $site_guid = 0) {
 	global $CONFIG;
 
-	$name = sanitise_string($name);
 	$site_guid = (int) $site_guid;
-
+return false;
 	// check for deprecated values.
 	// @todo might be a better spot to define this?
 	$new_name = false;
@@ -530,7 +501,7 @@ function get_all_config($site_guid = 0) {
 		$site_guid = (int) $CONFIG->site_guid;
 	}
 
-	if ($result = get_data("SELECT * FROM {$CONFIG->dbprefix}config WHERE site_guid = $site_guid")) {
+/*	if ($result = get_data("SELECT * FROM {$CONFIG->dbprefix}config WHERE site_guid = $site_guid")) {
 		foreach ($result as $r) {
 			$name = $r->name;
 			$value = $r->value;
@@ -539,6 +510,7 @@ function get_all_config($site_guid = 0) {
 
 		return true;
 	}
+*/
 	return false;
 }
 
@@ -551,9 +523,9 @@ function get_all_config($site_guid = 0) {
 function _elgg_load_site_config() {
 	global $CONFIG;
 
-	$CONFIG->site_guid = (int) datalist_get('default_site');
+	$CONFIG->site_guid = 1;
 	$CONFIG->site_id = $CONFIG->site_guid;
-	$CONFIG->site = get_entity($CONFIG->site_guid);
+	$CONFIG->site = get_entity($CONFIG->site_guid, 'site');
 	if (!$CONFIG->site) {
 		throw new InstallationException(elgg_echo('InstallationException:SiteNotInstalled'));
 	}

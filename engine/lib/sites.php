@@ -205,13 +205,13 @@ function get_site_objects($site_guid, $subtype = "", $limit = 10, $offset = 0) {
 function get_site_by_url($url) {
 	global $CONFIG;
 
-	$url = sanitise_string($url);
+	//$url = sanitise_string($url);
 
-	$row = get_data_row("SELECT * from {$CONFIG->dbprefix}sites_entity where url='$url'");
+	///$row = get_data_row("SELECT * from {$CONFIG->dbprefix}sites_entity where url='$url'");
 
-	if ($row) {
-		return get_entity($row->guid);
-	}
+	//if ($row) {
+	//	return get_entity(1, 'site');
+	//}
 
 	return false;
 }

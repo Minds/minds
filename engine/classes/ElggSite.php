@@ -117,17 +117,11 @@ class ElggSite extends ElggEntity {
 	 * @throws InvalidClassException
 	 */
 	protected function load($guid) {
-		$attr_loader = new ElggAttributeLoader(get_class(), 'site', $this->attributes);
-		$attr_loader->requires_access_control = !($this instanceof ElggPlugin);
-		$attr_loader->secondary_loader = 'get_site_entity_as_row';
-
-		$attrs = $attr_loader->getRequiredAttributes($guid);
-		if (!$attrs) {
-			return false;
+		
+		foreach($guid as $k => $v){
+			$this->attributes[$k] = $v;
 		}
 
-		$this->attributes = $attrs;
-		$this->attributes['tables_loaded'] = 2;
 		cache_entity($this);
 
 		return true;

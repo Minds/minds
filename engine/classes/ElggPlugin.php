@@ -8,7 +8,7 @@
  * @package    Elgg.Core
  * @subpackage Plugins.Settings
  */
-class ElggPlugin extends ElggObject {
+class ElggPlugin extends ElggEntity {
 	private $package;
 	private $manifest;
 
@@ -22,9 +22,10 @@ class ElggPlugin extends ElggObject {
 	 * @return void
 	 */
 	protected function initializeAttributes() {
-		parent::initializeAttributes();
+		//parent::initializeAttributes();
 
-		$this->attributes['subtype'] = "plugin";
+		$this->attributes['type'] = "plugin";
+		$this->attributes['title'] = NULL;
 
 		// plugins must be public.
 		$this->access_id = ACCESS_PUBLIC;
@@ -44,12 +45,21 @@ class ElggPlugin extends ElggObject {
 		if (!$plugin) {
 			throw new PluginException(elgg_echo('PluginException:NullInstantiated'));
 		}
+	
+		$this->initializeAttributes();		
 
 		// ElggEntity can be instantiated with a guid or an object.
 		// @todo plugins w/id 12345
 		if (is_numeric($plugin) || is_object($plugin)) {
-			parent::__construct($plugin);
+			//parent::__construct($plugin);
 			$this->path = elgg_get_plugins_path() . $this->getID();
+			
+			foreach($plugin as $k => $v){
+				$this->attributes[$k] = $v;
+			}		
+		
+			$this->pluginID = $this->attributes['guid'];	
+		
 		} else {
 			$plugin_path = elgg_get_plugins_path();
 
@@ -75,7 +85,7 @@ class ElggPlugin extends ElggObject {
 			}
 
 			// load the rest of the plugin
-			parent::__construct($existing_guid);
+			//	parent::__construct($existing_guid);
 		}
 
 		_elgg_cache_plugin_by_id($this);
@@ -95,15 +105,12 @@ class ElggPlugin extends ElggObject {
 		$this->attributes['container_guid'] = $site->guid;
 		$this->attributes['title'] = $this->pluginID;
 
-		if (parent::save()) {
-			// make sure we have a priority
-			$priority = $this->getPriority();
-			if ($priority === FALSE || $priority === NULL) {
-				return $this->setPriority('last');
-			}
-		} else {
-			return false;
-		}
+		$options = array();
+		$options['type'] = 'plugin';
+		$options['active'] = 0;
+	
+		return db_insert($this->pluginID, $options);
+
 	}
 
 
@@ -192,12 +199,13 @@ class ElggPlugin extends ElggObject {
 	 * @return bool
 	 */
 	public function setPriority($priority, $site_guid = null) {
+	
+		global $DB;		
+
 		if (!$this->guid) {
 			return false;
 		}
 
-		$db_prefix = get_config('dbprefix');
-		$name = elgg_namespace_plugin_private_setting('internal', 'priority');
 		// if no priority assume a priority of 1
 		$old_priority = (int) $this->getPriority();
 		$old_priority = (!$old_priority) ? 1 : $old_priority;
@@ -239,17 +247,10 @@ class ElggPlugin extends ElggObject {
 				$where = "CAST(value as unsigned) BETWEEN $priority AND $old_priority";
 			}
 
-			// displace the ones affected by this change
-			$q = "UPDATE {$db_prefix}private_settings
-				SET value = CAST(value as unsigned) $op 1
-				WHERE entity_guid != $this->guid
-				AND name = '$name'
-				AND $where";
+			$plugin_list = elgg_get_plugins();
 
-			if (!update_data($q)) {
-				return false;
-			}
-
+				
+	
 			// set this priority
 			if ($this->set($name, $priority)) {
 				return true;

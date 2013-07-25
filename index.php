@@ -13,6 +13,8 @@ require_once(dirname(__FILE__) . "/engine/start.php");
 
 elgg_set_context('main');
 
+elgg_generate_plugin_entities();
+
 // allow plugins to override the front page (return true to stop this front page code)
 if (elgg_trigger_plugin_hook('index', 'system', null, FALSE) != FALSE) {
 	exit;
@@ -24,7 +26,6 @@ if (elgg_is_logged_in()) {
 
 
 $content = elgg_view_title(elgg_echo('content:latest'));
-$content .= elgg_list_river();
 
 $login_box = elgg_view('core/account/login_box');
 

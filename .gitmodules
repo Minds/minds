@@ -1,0 +1,6 @@
+[submodule "vendors/cassandra-php"]
+	path = vendors/cassandra-php
+	url = https://github.com/kallaspriit/Cassandra-PHP-Client-Library.git
+[submodule "vendors/phpcassa"]
+	path = vendors/phpcassa
+	url = https://github.com/thobbs/phpcassa.git
