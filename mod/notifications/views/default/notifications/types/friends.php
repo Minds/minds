@@ -10,7 +10,7 @@ $description = $notification->description;
 	  $description = substr($notification->description,0,75) . '...' ;
     }
 	$body .= elgg_view('output/url', array('href'=>$actor->getURL(), 'text'=>$actor->name));
-	$body .= ' has subribed to you.';
+	$body .= ' subscribed to you';
 	
 	$body .= "<br/>";
 	

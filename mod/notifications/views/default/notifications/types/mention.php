@@ -18,7 +18,7 @@ if($object){
 	
 	$body .= elgg_view('output/url', array('href'=>$actor->getURL(), 'text'=>$actor->name));
 	$body .= ' has mentioned you in a ';
-	$body .= elgg_view('output/url', array('href'=>$object->getURL(), 'text'=> 'status.'));
+	$body .= elgg_view('output/url', array('href'=>$object->getURL(), 'text'=> 'status'));
 	
 	$body .= "<br/>";
 	
