@@ -21,6 +21,12 @@ $german = array(
 
 	'notifications:subscriptions:success' => 'Deine Benachrichtigungseinstellungen wurden gespeichert.',
 
+	'notification' => 'Benachrichtigungen',
+	'notifications' => 'Benachrichtigungen',
+	
+	'notifications:not_logged_in' => 'Ihre Sitzung ist abgelaufen. Bitte melden Sie sich wieder in.',
+	
+	'notifications:unread' => '%s neue',
 );
 
 	add_translation("de", $german);
