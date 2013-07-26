@@ -6,6 +6,11 @@
  */
 ?>
 
+#notification{
+	height:300px;
+	overflow-x:hidden;
+	overflow-y:scroll;
+}
 #notification li{
 	width:auto;
 	height:auto;

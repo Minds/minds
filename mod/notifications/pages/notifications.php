@@ -44,7 +44,7 @@ if($user){
 	$options = array(	'types'=>'object',
 						'subtypes'=>'notification',
 						//'owner_guid' => $user->getGUID(),
-						'limit' => 5,
+						'limit' => 10,
 						'metadata_name_value_pairs' => array(array('name'=>'to_guid', 'value'=>$user->getGUID(), 'operand' => '='))
 					);
 	

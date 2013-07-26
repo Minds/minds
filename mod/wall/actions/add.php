@@ -75,9 +75,23 @@ if($ref == 'wall'){
 	$output = '<li class="elgg-item">' . elgg_view_list_item($item, array('list_class'=>'elgg-list elgg-list-river elgg-river', 'class'=>'elgg-item elgg-river-item')) . '</li>';
 }
 
+notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
+
 echo $output;
 
-notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
+//detect @ command and if present check username
+preg_match_all("/@[a-zA-Z0-9_]+/", $message, $matches);
+
+foreach($matches as $value){
+	foreach($value as $value){
+		$username = str_replace('@', '', $value);
+		$mentioned = get_user_by_username($username);
+		if($mentioned){
+			notification_create(array($mentioned->guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'mention'));
+		}
+	}
+}
+
 
 system_message(elgg_echo("wall:posted"));
 
