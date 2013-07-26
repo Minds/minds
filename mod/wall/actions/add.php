@@ -75,6 +75,8 @@ if($ref == 'wall'){
 	$output = '<li class="elgg-item">' . elgg_view_list_item($item, array('list_class'=>'elgg-list elgg-list-river elgg-river', 'class'=>'elgg-item elgg-river-item')) . '</li>';
 }
 
+notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
+
 echo $output;
 
 //detect @ command and if present check username
