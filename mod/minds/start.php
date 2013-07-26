@@ -163,7 +163,7 @@ function minds_init(){
             if ($object && elgg_instanceof($object, 'user')) {
 //                if ($SESSION['_from_tier'] == 'y') { 
                 if (get_input('returntoreferer') == 'y') // Hack, but sessions seem not to be available here. TODO: Secure this.
-                    elgg_set_user_validation_status($object->guid, true, 'tier_signup');       
+                    elgg_set_user_validation_status($object->guid, true, 'tier_signup');      
                 }
 //            } 
         }, 1);
