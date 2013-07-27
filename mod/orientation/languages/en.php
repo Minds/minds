@@ -28,9 +28,9 @@ $english = array(
 	'orientation:step:comment:title'=> 'Comment',
 	'orientation:step:comment:content'=>'Comment on a status',
 	'orientation:step:thumbs:title'=> 'Thumbs',
-	'orientation:step:thumbs:content'=>'Introduce your friends to Minds and help to grow the community',
+	'orientation:step:thumbs:content'=>'Use the thumb icons to vote up or vote down',
 	'orientation:step:remind:title'=> 'Remind',
-	'orientation:step:remind:content'=>'Remind other users of a previous post',
+	'orientation:step:remind:content'=>'Remind other users of a post',
 );
 
 add_translation('en', $english);

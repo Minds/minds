@@ -26,6 +26,7 @@
 	margin:25px 0;
 	padding:25px 0;
 	border-bottom:1px solid #EEE;
+	column-count:3;
 }
 .orientation a .step{
 	color:#333;
