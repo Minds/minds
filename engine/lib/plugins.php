@@ -118,6 +118,7 @@ function elgg_generate_plugin_entities() {
 
 	$physical_plugins = elgg_get_plugin_ids_in_dir($dir);
 	
+
 	if (!$physical_plugins) {
 		return false;
 	}
@@ -144,7 +145,7 @@ function elgg_generate_plugin_entities() {
 			$plugin->save();
 		}
 	}
-
+	
 	// everything remaining in $known_plugins needs to be disabled
 	// because they are entities, but their dirs were removed.
 	// don't delete the entities because they hold settings.
@@ -311,6 +312,7 @@ function elgg_load_plugins() {
 	$return = true;
 	$plugins = elgg_get_plugins('active');
 	if ($plugins) {
+		var_dump($plugins);
 		foreach ($plugins as $plugin) {
 			try {
 				$plugin->start($start_flags);
@@ -349,15 +351,18 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 
 	// grab plugins
 	$plugins = db_get(	array(	'type' => 'plugin',
-					'limit' => 0
+					'limit' => 10000,
+					'attrs' => array('active'=> 1 )
 			));
-	
+
+	if($plugins){	
 	//now order them since cassandra does not do this
 	$ordered_plugins = usort($plugins, function($a, $b) {
-  						  return $a['priority'] - $b['priority'];
-					});
+//  						  return $a['priority'] - $b['priority'];
 
-	return $ordered_plugins;
+					});
+	}
+	return $plugins;
 }
 
 /**

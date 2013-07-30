@@ -18,6 +18,8 @@ use phpcassa\Schema\StrategyClass;
 use phpcassa\Index\IndexClause;
 use phpcassa\Index\IndexExpression;
 use phpcassa\Schema\DataType\LongType;
+use phpcassa\UUID;
+
 
 global $DB;
 $DB = new stdClass(); //make a database class for caching etc
@@ -45,13 +47,27 @@ function db_init() {
 /**
  * Insert to cassandra
  */
-function db_insert($guid, array $options = array()){
+function db_insert($guid = 0, array $options = array()){
 	global $DB;
 
+	if($guid == 0){
+	//	$guid = UUID::uuid1()->string;
+	}
+	
 	$type = $options['type'] ? $options['type'] : 'object'; // assume its an object if no type is specified
 	
-	return $DB->cfs[$type]->insert($guid, $options);
+	//unset guid
+	unset($options['guid']);	
 
+try{	
+	$DB->cfs[$type]->insert($guid, $options);
+} catch(Exception $e){
+echo '<pre>';
+var_dump($e);
+echo '</pre>';
+}
+var_dump($guid); 
+	return $guid;
 }
 
 /**
@@ -94,29 +110,35 @@ function db_get(array $options = array()){
 
         } elseif($type == 'user') {
 
-                $rows = $DB->cfs[$type]->get_range($options['offset'],"", $options['limit']);
+		foreach($options['attrs'] as $k => $v){
+                       $index_exps[] = new IndexExpression($k, $v);
+                }
+
+		$index_clause = new IndexClause($index_exps);
+                $rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
 
         } elseif($type == 'plugin'){
-	
-		$index_exps[] = new IndexExpression('active', 0);
-                $index_clause = new IndexClause($index_exps, $options['offset']);
-
+		
+		foreach($options['attrs'] as $k => $v){
+	               $index_exps[] = new IndexExpression($k, $v);
+		}		
+               
+		$index_clause = new IndexClause($index_exps);
         	$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
         }
-        foreach($rows as $k => $row){
-	     
+        
+	foreach($rows as $k => $row){
+		
 		$row['guid'] = $k;
 		
 		$new_row = new StdClass;
-
+	
 		foreach($row as $k=>$v){
 			$new_row->$k = $v;
 		}
-
-                $entities[] = entity_row_to_elggstar($new_row, 'plugin');
+                $entities[] = entity_row_to_elggstar($new_row, $options['type']);
         
 	}
-		
 		return $entities;
 	}
 

@@ -120,7 +120,7 @@ function default_page_owner_handler($hook, $entity_type, $returnvalue, $params) 
 
 	$owner = get_input("owner_guid");
 	if ($owner) {
-		if ($user = get_entity($owner)) {
+		if ($user = get_entity($owner, 'user')) {
 			elgg_set_ignore_access($ia);
 			return $user->getGUID();
 		}
@@ -149,7 +149,7 @@ function default_page_owner_handler($hook, $entity_type, $returnvalue, $params) 
 					break;
 				case 'view':
 				case 'edit':
-					$entity = get_entity($segments[2]);
+					$entity = get_entity($segments[2], 'user');
 					if ($entity) {
 						elgg_set_ignore_access($ia);
 						return $entity->getContainerGUID();

@@ -210,9 +210,9 @@ function get_user_notification_settings($user_guid = 0) {
  */
 function set_user_notification_setting($user_guid, $method, $value) {
 	$user_guid = (int)$user_guid;
-	$method = sanitise_string($method);
+	$method = $method;
 
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, 'user');
 	if (!$user) {
 		$user = elgg_get_logged_in_user_entity();
 	}

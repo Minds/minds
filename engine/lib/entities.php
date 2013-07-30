@@ -557,7 +557,6 @@ $container_guid = 0) {
 	} catch (Exception $e){
 		var_dump($e);
 	}	
-var_dump($insert); exit;
 }
 
 /**
@@ -603,7 +602,8 @@ if(!$type){
 	foreach($data as $k => $v){
 		$object->$k = $v;
 	}
-	
+
+	$object->guid = $guid;	
 	return $object;
 }
 
@@ -663,7 +663,7 @@ function entity_row_to_elggstar($row, $type) {
 			}
 		}
 	}
-	
+
 	if (!$new_entity) {
 		//@todo Make this into a function
 		switch ($type) {
@@ -732,7 +732,7 @@ function get_entity($guid, $type) {
 	if (!$entity_row) {
 		return false;
 	}
-	
+
 	if ($shared_cache) {
 		$cached_entity = $shared_cache->load($guid);
 		// @todo store ACLs in memcache http://trac.elgg.org/ticket/3018#comment:3
@@ -746,6 +746,7 @@ function get_entity($guid, $type) {
 	try {
 		$new_entity = entity_row_to_elggstar($entity_row, $type);
 	} catch (IncompleteEntityException $e) {
+		var_dump($e);
 		return false;
 	}
 	
@@ -1962,10 +1963,10 @@ function can_edit_entity_metadata($entity_guid, $user_guid = 0, $metadata = null
  * @return string The URL of the entity
  * @see register_entity_url_handler()
  */
-function get_entity_url($entity_guid) {
+function get_entity_url($entity_guid, $type) {
 	global $CONFIG;
 
-	if ($entity = get_entity($entity_guid)) {
+	if ($entity = get_entity($entity_guid, $type)) {
 		$url = "";
 
 		if (isset($CONFIG->entity_url_handler[$entity->getType()][$entity->getSubType()])) {

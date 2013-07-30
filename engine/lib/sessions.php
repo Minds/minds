@@ -53,7 +53,7 @@ function elgg_get_logged_in_user_guid() {
 function elgg_is_logged_in() {
 	$user = elgg_get_logged_in_user_entity();
 
-	if ((isset($user)) && ($user instanceof ElggUser) && ($user->guid > 0)) {
+	if ((isset($user)) && ($user instanceof ElggUser) && $user->guid) {
 		return true;
 	}
 
@@ -249,7 +249,7 @@ function check_rate_limit_exceeded($user_guid) {
 	// 5 failures in 5 minutes causes temporary block on logins
 	$limit = 5;
 	$user_guid = (int)$user_guid;
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid,'user');
 
 	if (($user_guid) && ($user) && ($user instanceof ElggUser)) {
 		$fails = (int)$user->getPrivateSetting("login_failures");
@@ -306,7 +306,7 @@ function login(ElggUser $user, $persistent = false) {
 		$user->code = md5($code);
 		setcookie("elggperm", $code, (time() + (86400 * 30)), "/");
 	}
-
+	
 	if (!$user->save() || !elgg_trigger_event('login', 'user', $user)) {
 		unset($SESSION['username']);
 		unset($SESSION['name']);
@@ -319,13 +319,14 @@ function login(ElggUser $user, $persistent = false) {
 		setcookie("Elgg", "", (time() - (86400 * 30)), "/");
 		throw new LoginException(elgg_echo('LoginException:Unknown'));
 	}
-
-	// Users privilege has been elevated, so change the session id (prevents session fixation)
+var_dump($SESSION);
+exit;
+	// Users privilegeohas been elevated, so change the session id (prevents session fixation)
 	session_regenerate_id();
 
 	// Update statistics
-	set_last_login($SESSION['guid']);
-	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
+//	set_last_login($SESSION['guid']);
+//	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
 
 	return true;
 }
@@ -406,7 +407,7 @@ function _elgg_session_boot($force = false) {
 		
 		// Initialise the magic session
 		$SESSION = new ElggSession();
-		
+var_dump($SESSION);		
 		if (!$force && !elgg_is_logged_in()) {
 			setcookie("Elgg", "", (time() - (86400 * 30)), "/");
 		} else {
@@ -552,24 +553,22 @@ function _elgg_session_close() {
 function _elgg_session_read($id) {
 	global $DB_PREFIX;
 
-	$id = sanitise_string($id);
+//	try {
+//		$result = get_data_row("SELECT * from {$DB_PREFIX}users_sessions where session='$id'");
 
-	try {
-		$result = get_data_row("SELECT * from {$DB_PREFIX}users_sessions where session='$id'");
+//		if ($result) {
+//			return (string)$result->data;
+//		}
 
-		if ($result) {
-			return (string)$result->data;
-		}
-
-	} catch (DatabaseException $e) {
+//	} catch (DatabaseException $e) {
 
 		// Fall back to file store in this case, since this likely means
 		// that the database hasn't been upgraded
 		global $sess_save_path;
-
+		
 		$sess_file = "$sess_save_path/sess_$id";
 		return (string) @file_get_contents($sess_file);
-	}
+//	}
 
 	return '';
 }
@@ -586,20 +585,19 @@ function _elgg_session_read($id) {
 function _elgg_session_write($id, $sess_data) {
 	global $DB_PREFIX;
 
-	$id = sanitise_string($id);
 	$time = time();
 
-	try {
-		$sess_data_sanitised = sanitise_string($sess_data);
-
-		$q = "REPLACE INTO {$DB_PREFIX}users_sessions
-			(session, ts, data) VALUES
-			('$id', '$time', '$sess_data_sanitised')";
-
-		if (insert_data($q) !== false) {
-			return true;
-		}
-	} catch (DatabaseException $e) {
+//	try {
+//		$sess_data_sanitised = sanitise_string($sess_data);
+//
+//		$q = "REPLACE INTO {$DB_PREFIX}users_sessions
+//			(session, ts, data) VALUES
+//			('$id', '$time', '$sess_data_sanitised')";
+//
+//		if (insert_data($q) !== false) {
+//			return true;
+//		}
+//	} catch (DatabaseException $e) {
 		// Fall back to file store in this case, since this likely means
 		// that the database hasn't been upgraded
 		global $sess_save_path;
@@ -610,7 +608,7 @@ function _elgg_session_write($id, $sess_data) {
 			fclose($fp);
 			return $return;
 		}
-	}
+//	}
 
 	return false;
 }
@@ -626,18 +624,16 @@ function _elgg_session_write($id, $sess_data) {
 function _elgg_session_destroy($id) {
 	global $DB_PREFIX;
 
-	$id = sanitise_string($id);
-
-	try {
-		return (bool)delete_data("DELETE from {$DB_PREFIX}users_sessions where session='$id'");
-	} catch (DatabaseException $e) {
+//	try {
+//		return (bool)delete_data("DELETE from {$DB_PREFIX}users_sessions where session='$id'");
+//	} catch (DatabaseException $e) {
 		// Fall back to file store in this case, since this likely means that
 		// the database hasn't been upgraded
 		global $sess_save_path;
 
 		$sess_file = "$sess_save_path/sess_$id";
 		return @unlink($sess_file);
-	}
+//	}
 }
 
 /**

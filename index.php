@@ -13,7 +13,7 @@ require_once(dirname(__FILE__) . "/engine/start.php");
 
 elgg_set_context('main');
 
-elgg_generate_plugin_entities();
+//elgg_generate_plugin_entities();
 
 // allow plugins to override the front page (return true to stop this front page code)
 if (elgg_trigger_plugin_hook('index', 'system', null, FALSE) != FALSE) {
@@ -23,6 +23,9 @@ if (elgg_trigger_plugin_hook('index', 'system', null, FALSE) != FALSE) {
 if (elgg_is_logged_in()) {
 	forward('activity');
 }
+
+var_dump($SESSION);
+$SESSION['testing'] = 'testing';
 
 
 $content = elgg_view_title(elgg_echo('content:latest'));

@@ -42,6 +42,8 @@
  * @since 1.8.0
  */
 function elgg_get_entities_from_private_settings(array $options = array()) {
+	return;
+
 	$defaults = array(
 		'private_setting_names'                     =>	ELGG_ENTITIES_ANY_VALUE,
 		'private_setting_values'                    =>	ELGG_ENTITIES_ANY_VALUE,

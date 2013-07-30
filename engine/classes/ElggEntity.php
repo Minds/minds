@@ -602,12 +602,12 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	function setPrivateSetting($name, $value) {
-		if ((int) $this->guid > 0) {
-			return set_private_setting($this->getGUID(), $name, $value);
-		} else {
-			$this->temp_private_settings[$name] = $value;
-			return true;
-		}
+	//	if ((int) $this->guid > 0) {
+	//		return set_private_setting($this->getGUID(), $name, $value);
+	//	} else {
+	//		$this->temp_private_settings[$name] = $value;
+	//		return true;
+	//	}
 	}
 
 	/**
@@ -618,14 +618,14 @@ abstract class ElggEntity extends ElggData implements
 	 * @return mixed
 	 */
 	function getPrivateSetting($name) {
-		if ((int) ($this->guid) > 0) {
-			return get_private_setting($this->getGUID(), $name);
-		} else {
-			if (isset($this->temp_private_settings[$name])) {
-				return $this->temp_private_settings[$name];
-			}
-		}
-		return null;
+	//	if ((int) ($this->guid) > 0) {
+	//		return get_private_setting($this->getGUID(), $name);
+	//	} else {
+	//		if (isset($this->temp_private_settings[$name])) {
+	//			return $this->temp_private_settings[$name];
+	//		}
+	//	}
+	//	return null;
 	}
 
 	/**
@@ -1165,7 +1165,7 @@ abstract class ElggEntity extends ElggData implements
 		if (!empty($this->url_override)) {
 			return $this->url_override;
 		}
-		return get_entity_url($this->getGUID());
+		return get_entity_url($this->getGUID(), $this->type);
 	}
 
 	/**

@@ -108,7 +108,7 @@ class ElggPlugin extends ElggEntity {
 		$options = array();
 		$options['type'] = 'plugin';
 		$options['active'] = 0;
-	
+		
 		return db_insert($this->pluginID, $options);
 
 	}

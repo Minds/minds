@@ -39,7 +39,7 @@ class ElggUser extends ElggEntity
 		$this->attributes['language'] = NULL;
 		$this->attributes['code'] = NULL;
 		$this->attributes['banned'] = "no";
-		$this->attributes['admin'] = 'no';
+		$this->attributes['admin'] = 'yes';
 		$this->attributes['tables_split'] = 2;
 	}
 
@@ -56,7 +56,7 @@ class ElggUser extends ElggEntity
 
 		// compatibility for 1.7 api.
 		$this->initialise_attributes(false);
-
+		
 		if (!empty($guid)) {
 			// Is $guid is a DB entity row
 			if ($guid instanceof stdClass) {
@@ -67,14 +67,14 @@ class ElggUser extends ElggEntity
 				}
 
 			// See if this is a username
-			} else if (is_string($guid)) {
+/*			} else if (is_string($guid)) {
 				$user = get_user_by_username($guid);
 				if ($user) {
 					foreach ($user->attributes as $key => $value) {
 						$this->attributes[$key] = $value;
 					}
 				}
-
+*/
 			// Is $guid is an ElggUser? Use a copy constructor
 			} else if ($guid instanceof ElggUser) {
 				elgg_deprecated_notice('This type of usage of the ElggUser constructor was deprecated. Please use the clone method.', 1.7);
@@ -88,12 +88,11 @@ class ElggUser extends ElggEntity
 				throw new InvalidParameterException(elgg_echo('InvalidParameterException:NonElggUser'));
 
 			// Is it a GUID
-			} else if (is_numeric($guid)) {
+			} else {
+				$guid = get_user($guid);
 				if (!$this->load($guid)) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
-			} else {
-				throw new InvalidParameterException(elgg_echo('InvalidParameterException:UnrecognisedValue'));
 			}
 		}
 	}
@@ -106,7 +105,7 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	protected function load($guid) {
-		$attr_loader = new ElggAttributeLoader(get_class(), 'user', $this->attributes);
+		/*$attr_loader = new ElggAttributeLoader(get_class(), 'user', $this->attributes);
 		$attr_loader->secondary_loader = 'get_user_entity_as_row';
 
 		$attrs = $attr_loader->getRequiredAttributes($guid);
@@ -117,6 +116,13 @@ class ElggUser extends ElggEntity
 		$this->attributes = $attrs;
 		$this->attributes['tables_loaded'] = 2;
 		cache_entity($this);
+		*/
+
+		foreach($guid as $k => $v){
+                        $this->attributes[$k] = $v;
+                }
+
+                cache_entity($this);
 
 		return true;
 	}
@@ -128,14 +134,15 @@ class ElggUser extends ElggEntity
 	 */
 	public function save() {
 		// Save generic stuff
-		if (!parent::save()) {
-			return false;
-		}
-
+//		if (!parent::save()) {
+//			return false;
+//		}
+		
 		// Now save specific stuff
-		return create_user_entity($this->get('guid'), $this->get('name'), $this->get('username'),
-			$this->get('password'), $this->get('salt'), $this->get('email'), $this->get('language'),
-			$this->get('code'));
+		echo '<hr/>';
+	var_dump($this->attributes);	
+	echo '<hr/>';
+		return create_user_entity($this->attributes);
 	}
 
 	/**

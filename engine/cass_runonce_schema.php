@@ -29,7 +29,10 @@ $cfs = array(	'site' => array(	'site_id' => 'UUIDType'	),
 		'config' => array(),
 		'object' => array(	'guid' => 'UUIDType', 'owner_guid'=>'UUIDType', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UUIDType'),
 		'user' => array(	'guid' => 'UUIDType', 'username' => 'UTF8Type', 'email' => 'UTF8Type'	),
-		'group' => array(	'guid' => 'UUIDType', 'container_guid' => 'UUIDType'	)
+		'group' => array(	'guid' => 'UUIDType', 'container_guid' => 'UUIDType'	),
+
+		'subscribers' => array( 	),
+		'subscriptions' => array(	)
 	);
 
 foreach($cfs as $cf => $indexes){

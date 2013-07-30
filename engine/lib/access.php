@@ -135,7 +135,7 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
 			$access_array[] = ACCESS_LOGGED_IN;
 
 			// Get ACL memberships
-			$query = "SELECT am.access_collection_id"
+			/*$query = "SELECT am.access_collection_id"
 				. " FROM {$CONFIG->dbprefix}access_collection_membership am"
 				. " LEFT JOIN {$CONFIG->dbprefix}access_collections ag ON ag.id = am.access_collection_id"
 				. " WHERE am.user_guid = $user_id AND (ag.site_guid = $site_id OR ag.site_guid = 0)";
@@ -166,7 +166,7 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
 
 			if ($ignore_access == true) {
 				$access_array[] = ACCESS_PRIVATE;
-			}
+			}*/
 		}
 
 		if ($init_finished) {
@@ -263,7 +263,7 @@ function get_access_sql_suffix($table_prefix = '', $owner = null) {
 	$enemies_bit = "";
 
 	if ($table_prefix) {
-		$table_prefix = sanitise_string($table_prefix) . ".";
+		$table_prefix = $table_prefix . ".";
 	}
 
 	if (!isset($owner)) {

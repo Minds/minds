@@ -26,14 +26,14 @@ if (elgg_get_config('allow_registration')) {
 		if (strcmp($password, $password2) != 0) {
 			throw new RegistrationException(elgg_echo('RegistrationException:PasswordMismatch'));
 		}
-
+		
 		$guid = register_user($username, $password, $name, $email, false, $friend_guid, $invitecode);
-
+		
 		if ($guid) {
 			elgg_clear_sticky_form('register');
 
-			$new_user = get_entity($guid);
-
+			$new_user = get_entity($guid, 'user');
+			
 			// allow plugins to respond to self registration
 			// note: To catch all new users, even those created by an admin,
 			// register for the create, user event instead.
