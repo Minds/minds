@@ -82,6 +82,15 @@
 		'webinar:tab' => 'Webinars',
 		'webinar:none' => 'Aucun webinar pour le moment',
 	
+	/**
+		 * River
+		 **/
+		
+		'river:create:object:webinar' => '%s créé un rassemblement%s',
+		'river:start:object:webinar' => '%s commencé la collecte %s',
+		'river:attendee:object:webinar' => '%s souscrit à la collecte - %s',
+		'river:registered:object:webinar' => "%s rejoint l' %s rassemblement",
+		
 	);
 					
 	add_translation("fr",$french);

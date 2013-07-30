@@ -10,7 +10,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	$partnerId = elgg_get_plugin_setting('partner_id', 'archive');
 	
 	$filename = urlencode($entity->title) . '.mp4';
-	$file = $kaltura_server . '/p/'. $partnerId . '/sp/'. $partnerId .'00/playManifest/entryId/' . $entity->kaltura_video_id . '/format/url/flavorParamId/10/' . $filename;
+	$file = $kaltura_server . '/p/'. $partnerId . '/sp/'. $partnerId .'00/playManifest/entryId/' . $entity->kaltura_video_id . '/format/url/flavorParamId/0/' . $filename;
 	$mime = "video/mp4";
 } elseif($entity->getSubtype() == 'file'){
 	$filename = $entity->originalfilename;

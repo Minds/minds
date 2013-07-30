@@ -126,7 +126,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
     'minds:commenton' => 'Comment on %s',
     'minds:comments:valuecantbeblank' => 'Comment can not be blank',
     'minds:remind' => 'ReMind (repost)',
-    'minds:remind:success' => 'Successfuly reMinded.',
+    'minds:remind:success' => 'Successfully reMinded.',
     
 	//river
 	'river:remind:object:wall' => '%s reMinded %s\'s thought',
@@ -197,7 +197,9 @@ If you requested this, click on the link below. Otherwise ignore this email.
     
         'register:node' => 'Launch a social network',
         "register:node:testping" => 'Multisite node DNS Test',
-        'minds:tier:blurb' => 'Thank you for chosing Minds, please select one of the following payment plans...'
+        'minds:tier:blurb' => 'Thank you for chosing Minds, please select one of the following payment plans...',
+	
+	'trending' => 'Trending',
 
 );
 		

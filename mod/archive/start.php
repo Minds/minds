@@ -25,7 +25,7 @@ function minds_archive_init() {
 	//site menu
 	elgg_register_menu_item('site', array(
 			'name' => elgg_echo('minds:archive'),
-			'href' => elgg_is_logged_in() ? elgg_get_site_url() . "archive/friends/" . elgg_get_logged_in_user_entity()->username : elgg_get_site_url() . 'archive/all',
+			'href' => 'archive/trending',
 			'text' => '&#59392;',
 			'class' => 'entypo',
 			'title' =>  elgg_echo('minds:archive'),
@@ -71,7 +71,7 @@ function minds_archive_init() {
 	
 	//Setup kaltura
 	
-	//elgg_register_event_handler('pagesetup','system','minds_archive_page_setup');
+	elgg_register_event_handler('pagesetup','system','minds_archive_page_setup');
 }
 
 function minds_archive_entity_url($entity) {
@@ -88,7 +88,7 @@ function minds_archive_page_setup() {
 	$page_owner = elgg_get_page_owner_entity();
 	$user = elgg_get_logged_in_user_entity();
 	
-	if (elgg_get_context() == 'archive') {
+	/*if (elgg_get_context() == 'archive') {
 		
 		elgg_register_menu_item('page', array(
 			'name' => elgg_echo('upload'),
@@ -156,7 +156,7 @@ function minds_archive_page_setup() {
 			
 		} 
 		
-	}
+	}*/
 	
 	// Group submenu option
 	if ($page_owner instanceof ElggGroup && elgg_get_context() == 'groups') {
@@ -248,6 +248,9 @@ function minds_archive_page_handler($page) {
 		case 'featured':
 			include('pages/archive/featured.php');
 			break;	
+		case 'trending':
+			include('pages/archive/trending.php');
+			break;
 		case 'wall':
 			$tab = $page[1] ? $page[1] : 'featured';
 			set_input('tab', $tab);

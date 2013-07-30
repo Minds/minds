@@ -22,6 +22,7 @@ if ($type != 'all') {
 }
 
 $options['limit'] = get_input('limit',5);
+$options['offset'] = get_input('offset',0);
 
 switch ($page_type) {
 	case 'all':
@@ -32,7 +33,13 @@ switch ($page_type) {
 		$title = elgg_echo('river:trending');
 		$page_filter = 'trending';
 		//GET THE TRENDING FEATURES
-		$options['object_guids'] = thumbs_trending('guids');
+		if(elgg_plugin_exists('analytics')){
+			$options['object_guids'] = analytics_retrieve(array('limit'=>$options['limit']+3, 'offset'=>$options['offset']));
+			$options['action_types'] = 'create';
+			$options['offset'] = 0;
+		} else {
+			forward(REFERRER);
+		}
 		break;
 	case 'featured':
 		$title = elgg_echo('river:featured');
@@ -86,6 +93,7 @@ if (!$activity) {
 //$sidebar .= elgg_view('core/river/sidebar');
 $sidebar .= elgg_view('minds/ads', array('large-block'));
 
+$vars['filter_context'] = $page_filter;
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 $filter = elgg_view('page/layouts/content/river_filter', $vars);
 $wall_add = elgg_view_form('wall/add',  array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));

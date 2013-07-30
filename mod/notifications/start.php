@@ -314,3 +314,9 @@ function notifications_count_unread(){
 		return NULL;
 	}
 }
+
+/**
+ * 
+ * Chris send notifications
+ * 
+ */

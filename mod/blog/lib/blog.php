@@ -157,9 +157,44 @@ function blog_get_page_content_list($container_guid = NULL) {
 		$return['content'] = $list;
 	}
 
+	$return['filter'] = elgg_view('page/layouts/content/trending_filter', $return);
 	return $return;
 }
 
+/** 
+ * Get trending page
+ */
+function blog_get_trending_page_content_list() {
+	
+	if(!elgg_plugin_exists('analytics')){
+		forward(REFERRER);
+	}
+	
+	elgg_register_title_button();
+	
+	$return = array();
+	
+      	$return['filter_context'] = 'trending';
+	
+	$limit = get_input('limit', 12);
+	$offset = get_input('offset', 0);
+
+      	$guids = analytics_retrieve(array('context'=>'blog', 'limit'=>$limit, 'offset'=>$offset));
+
+	$guidsString = implode(',', $guids);	
+	$list = elgg_list_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>0,'full_view'=>false,'wheres' => array( "e.guid IN ($guidsString)"),
+								'order_by' => "FIELD(e.guid, $guidsString)"));
+        if (!$list) {
+                $return['content'] = elgg_echo('blog:none');
+        } else {
+                $return['content'] = $list;
+        }
+	$return['content'] .= elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000));
+
+        $return['filter'] = elgg_view('page/layouts/content/trending_filter', $return);
+
+	return $return;
+}
 /**
  * Get page components to list of the user's friends' posts.
  *

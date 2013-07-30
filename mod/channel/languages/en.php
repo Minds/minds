@@ -31,7 +31,7 @@ $english = array(
 	'channel:custom:background:position' => 'Background position',
 	'channel:custom:background:repeat:no-repeat' => 'No Repeat',
 	'channel:custom:background:repeat:repeat' => 'Repeat',
-	'channel:custom:background:repeat:repeat-x' => 'Repeat hozizontally',
+	'channel:custom:background:repeat:repeat-x' => 'Repeat horizontally',
 	'channel:custom:background:repeat:repeat-y' => 'Repeat vertically',
 	
 	'channel:custom:color:background' => 'Background color',

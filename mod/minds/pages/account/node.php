@@ -1,6 +1,6 @@
 <?php
     
-    $user = elgg_get_logged_in_user_entity();
+$user = elgg_get_logged_in_user_entity();
     
     
 $title = elgg_echo("register:node");

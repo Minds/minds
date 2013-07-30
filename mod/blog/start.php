@@ -25,7 +25,7 @@ function blog_init() {
 	elgg_register_menu_item('site', array(
 		'name' => 'blog',
 		'text' => '&#59396;',
-		'href' => 'blog/all',
+		'href' => 'blog/trending',
 		'class' => 'entypo',
 		'title' => elgg_echo('blog:blogs')
 	));
@@ -148,6 +148,15 @@ function blog_page_handler($page) {
 			
 			return true;
 			break;
+		case 'trending':
+			
+			$params = blog_get_trending_page_content_list();
+			$body = elgg_view_layout('gallery', $params);
+
+                        echo elgg_view_page($params['title'], $body);
+
+                        return true;
+                        break;
 		case 'archive':
 			$user = get_user_by_username($page[1]);
 			$params = blog_get_page_content_archive($user->guid, $page[2], $page[3]);
@@ -404,7 +413,8 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			}
 			//check if the id is not in the array, if it is then skip
 			if(!in_array($item->get_id(true), $item_ids)){
-				try{
+			//if(true){	
+			try{
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
 				$enclosure = $item->get_enclosure();
@@ -419,23 +429,28 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					$blog->description = $embed . $icon . $disclaimer;
 				} else {
 					$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200);
-					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();
-					
+					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();				
 					if($enclosure){
-                                                if($player = $enclosure->native_embed()) {
-                                                        $excerpt = strip_tags($item->get_description());
-                                			$thumb_url = $enclosure->get_thumbnail(); 
-							if(strpos($thumb_url, 'liveleak.com/')){
-								$thumb_url = str_replace('_thumb_', '_sf_', $thumb_url);
+						$thumb_url = $enclosure->get_thumbnail();
+                                                if(strpos($thumb_url, 'liveleak.com/')){
+                                                      $thumb_url = str_replace('_thumb_', '_sf_', $thumb_url);
+                                          	}
+                                                $thumb = elgg_view('output/img', array('src'=>$thumb_url, 'width'=>0, 'height'=>0));
+                                                if($player = $enclosure->get_player()) {
+							//check for native embed now, if thats not got any content
+							if($embed = $enclosure->native_embed()){
+								if(strlen($embed) <= 24){
+									$player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0"></iframe>';             	
+								} else {
+									$player = $embed;
+								}
 							}
-				                        $thumb = elgg_view('output/img', array('src'=>$thumb_url, 'width'=>0, 'height'=>0));
-                                                        var_dump($player);
-							if(strlen($player) <= 24){
-								$player = $enclosure->get_player();
-                                                                $player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0"></iframe>';
-                                                        }       
+							$excerpt = strip_tags($item->get_description());
                                                         $blog->description = $thumb . $player;
-                                                }
+                                                } elseif($player = $enclosure->native_embed()) {
+							var_dump($player);
+							//$blog->description = $thumb . $player;
+						}
 						$blog->tags = $enclosure->get_keywords();
                                         }
 				}
