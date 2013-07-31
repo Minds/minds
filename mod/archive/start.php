@@ -50,7 +50,6 @@ function minds_archive_init() {
     elgg_register_js('GalleryController.js' , $angularRoot . 'controllers/GalleryController.js');
 
     // include services
-    elgg_register_js('NodeService.js' , $angularRoot . 'services/NodeService.js');
     elgg_register_js('KalturaService.js' , $angularRoot . 'services/KalturaService.js');
     elgg_register_js('ElggService.js' , $angularRoot . 'services/ElggService.js');
 

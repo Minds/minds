@@ -11,7 +11,7 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
 
     var kalturaService = {};
     var apiUrl = '/api_v3/index.php';
-    var actionUrl= 'http://localhost/minds/Minds-Elgg/action/archive/';
+    var actionUrl= 'http://roni.innovid.com/minds-elgg-git/action/archive/';
 
     /**
      * Maps media type to Kaltura media type enum.
@@ -228,9 +228,9 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
      * @param token the uploaded content token (or a promise which resolves to it).
      * @returns the updated entry object.
      */
-    kalturaService.baseEntryAddContent = function(entryId, token) {
+    kalturaService.baseEntryAddContent = function(entryId, token, $scope) {
         var deferred = $q.defer();
-
+        console.log('service scope',$scope);
         $q.all([entryId, token])
             .then(
                 function(values) {
@@ -257,7 +257,9 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                         transform: "transformRequest"
                     }).
                         success(function(data, status, headers, config) {
-                            deferred.resolve(data);
+                            var entryId = jQuery(data).find('id').text();
+                            deferred.resolve(entryId);
+                            console.log('content added to: '+entryId);
                         }).
                         error(function(data, status, headers, config) {
                             console.log('error: ' + data);

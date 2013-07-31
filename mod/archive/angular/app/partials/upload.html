@@ -1,65 +1,86 @@
-<div class="row" xmlns="http://www.w3.org/1999/html">
 
-    <div id="dropzone" class="span8 well well-large">
-        Drop files here<input id="fileupload" type="file" name="fileData" multiple/>
+<div class="minds-body-header">
+<div class="inner">
+    <div class="" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+        <div id="dropzone" class="span8 well well-large">
+            Drag and drop files here or <input id="fileupload" type="file" name="fileData" multiple/> <a> click here </a> to select files
+        </div>
+
+
     </div>
+    <div class="elgg-layout elgg-layout-one-column clearfix" ng-cloak>
+        <ul class="uploadlist elgg-list elgg-list-entity">
+            <li class="elgg-item" data-ng-repeat="fileItem in fileInfo" ng-style="{backgroundImage: getFileThumbnail(fileItem.thumbEntryId)}">
 
-</div>
-<div class="row">
+                <!--<div kaltura-thumbnail kaltura-options="thumbConfig" entryid="fileItem.thumbEntryId" width="100px" height="100px"></div>-->
 
-    <div id="boxentry" class="span8 well" data-ng-repeat="file in queue">
-        <button id="delete" ng-click="deleteEntry($index)" ng-disabled="!canDeleteMetadata($index)">Delete</button>
+                <div class="itemControls elgg-image-block">
+                    <button id="delete" ng-click="deleteEntry($index)" class="entypo">&#10005;</button>
 
-        <div class="uploadbox-title">
-            <input type="text" class="inline-edit" ng-model="fileInfo[$index]['name']" placeholder="Enter title…"/>
-        </div>
+                    <div class="uploadbox-title">
+                        <input type="text" class="uploadInput" ng-model="fileItem['name']" placeholder="Enter title…"/>
+                    </div>
 
-        <div class="uploadbox-description">
-            <textarea type="text" rows="2" class="inline-edit" ng-model="fileInfo[$index]['description']" placeholder="Enter description…"/>
-        </div>
+                    <div class="uploadbox-description">
+                        <input type="text" class="uploadInput" ng-model="fileItem['description']" placeholder="Enter description…"/>
+                    </div>
 
-        <div class="uploadbox-tags">
-            <input type="text" class="inline-edit" ng-model="fileInfo[$index]['tags']" placeholder="Enter tags…"/>
-        </div>
+                    <!--<div class="uploadbox-tags">-->
+                        <!--<input type="text" class="inline-edit" ng-model="fileItem['tags']" placeholder="Enter tags…"/>-->
+                    <!--</div>-->
 
-        <select name="access_id" id="access_id" ng-model="fileInfo[$index]['privacy']" class="elgg-input-dropdown elgg-input-access">
-            <option value="0" selected="selected" >Private</option>
-            <option value="-2">Channels</option>
-            <option value="1">Logged in users</option>
-            <option value="2">Public</option></select>
+                    <span class="uploadSpan">License:
+                        <select name="license" id="license" class="elgg-input-dropdown uploadSelect" ng-model="fileItem['license']">
+                            <option value="not-selected" selected="selected">-- Please select a license --</option>
+                            <option value="attribution-cc">Attribution CC BY</option>
+                            <option value="attribution-sharealike-cc">Attribution-ShareAlike BY-SA</option>
+                            <option value="attribution-noderivs-cc">Attribution-NoDerivs CC BY-ND</option>
+                            <option value="attribution-noncommercial-cc">Attribution-NonCommerical CC BY-NC</option>
+                            <option value="attribution-noncommercial-sharealike-cc">Attribution-NonCommerical-ShareAlike CC BY-NC-SA</option>
+                            <option value="attribution-noncommercial-noderivs-cc">Attribution-NonCommerical-NoDerivs CC BY-NC-ND</option>
+                            <option value="publicdomaincco">Public Domain CCO "No Rights Reserved"</option>
+                            <option value="gnuv3">GNU v3 General Public License</option>
+                            <option value="gnuv1.3">GNU v1.3 Free Documentation License</option>
+                            <option value="gnu-lgpl">GNU Lesser General Public License</option>
+                            <option value="gnu-affero">GNU Affero General Public License</option>
+                            <option value="apache-v1">Apache License, Version 1.0</option>
+                            <option value="apache-v1.1">Apache License, Version 1.1</option>
+                            <option value="apache-v2">Apache License, Version 2.0</option>
+                            <option value="mozillapublic">Mozilla Public License</option>
+                            <option value="bsd">BSD License</option>
+                        </select>
+                    </span>
+                    <!--</br>-->
+
+                    <span class="uploadSpan">Privacy:
+                        <select name="access_id" id="access_id" ng-model="fileItem['privacy']" class="elgg-input-dropdown elgg-input-access uploadSelect">
+                            <option value="0" selected="selected" >Private</option>
+                            <option value="-2">Channels</option>
+                            <option value="1">Logged in users</option>
+                            <option value="2">Public</option>
+                        </select>
+                    </span>
 
 
-        <select name="license" id="license" class="elgg-input-dropdown" ng-model="fileInfo[$index]['license']">
-            <option value="not-selected" selected="selected">-- Please select a license --</option>
-            <option value="attribution-cc">Attribution CC BY</option>
-            <option value="attribution-sharealike-cc">Attribution-ShareAlike BY-SA</option>
-            <option value="attribution-noderivs-cc">Attribution-NoDerivs CC BY-ND</option>
-            <option value="attribution-noncommercial-cc">Attribution-NonCommerical CC BY-NC</option>
-            <option value="attribution-noncommercial-sharealike-cc">Attribution-NonCommerical-ShareAlike CC BY-NC-SA</option>
-            <option value="attribution-noncommercial-noderivs-cc">Attribution-NonCommerical-NoDerivs CC BY-NC-ND</option>
-            <option value="publicdomaincco">Public Domain CCO "No Rights Reserved"</option>
-            <option value="gnuv3">GNU v3 General Public License</option>
-            <option value="gnuv1.3">GNU v1.3 Free Documentation License</option>
-            <option value="gnu-lgpl">GNU Lesser General Public License</option>
-            <option value="gnu-affero">GNU Affero General Public License</option>
-            <option value="apache-v1">Apache License, Version 1.0</option>
-            <option value="apache-v1.1">Apache License, Version 1.1</option>
-            <option value="apache-v2">Apache License, Version 2.0</option>
-            <option value="mozillapublic">Mozilla Public License</option>
-            <option value="bsd">BSD License</option></select>
 
 
-        <div class="progress">
-            <div class="bar" ng-style="{width: fileInfo[$index]['progress'] + '%'}"></div>
-        </div>
+                    <div class="progress">
+                        <div class="bar" ng-style="{width: fileItem['progress'] + '%'}"></div>
+                    </div>
+                </div>
 
-        <!--<div class="uploadbox-album">
-            <select ng-model="album" ng-options="fileInfo[$index]['album'] for c in colors"></select>
-            <select type="text" class="inline-edit" ng-model="fileInfo[$index]['album']" placeholder="Choose album…"/></select>
-                <option value="">-- Select Album</option>
-        </div>-->
 
-        <button id="savebutton" ng-click="updateEntry($index)" ng-disabled="!canSaveMetadata($index)">Save</button>
+                <!--<div class="uploadbox-album">
+                    <select ng-model="album" ng-options="fileItem['album'] for c in colors"></select>
+                    <select type="text" class="inline-edit" ng-model="fileItem['album']" placeholder="Choose album…"/></select>
+                        <option value="">-- Select Album</option>
+                </div>-->
+            </li>
+        </ul>
+
+        <br/>
+        <a id="saveButton" class="elgg-button elgg-button-action" ng-click="updateEntry($index)" ng-show="saveEnabled">Save all</a>
     </div>
-
 </div>
+    </div>

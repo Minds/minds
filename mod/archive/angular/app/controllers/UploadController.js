@@ -10,15 +10,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var ks = 'ODMwMGFlOTdlNmVhMTIyMWFiZGE0NTU5NWYwNDIwYjFmNDZjMzUxOXwxMDI7MTAyOzEzNzQyMzIyNTQ7MjsxMzc0MTQ1ODU0LjY5NTthY2Nlc3NAbWluZHMuY29tOyo7Ow==';
-var serviceUrl = 'http://www.minds.tv';
-
 function UploadCtrl($scope, Kaltura, Elgg) {
 
     $scope.fileInfo = [];
     $scope.queue = [];
     $scope.uploaderElement = '#fileupload';
-
+    $scope.saveEnabled = false;
 
 /*TODO use setSession from kaltura services in order to generate dynamic session with Kaltura*/
 
@@ -27,7 +24,19 @@ function UploadCtrl($scope, Kaltura, Elgg) {
         serviceUrl: serviceUrl
     };
 
+    $scope.thumbConfig = {
+        serviceUrl: serviceUrl,
+        pid: partnerId
+    };
 
+
+    $scope.getFileThumbnail = function(entryId) {
+        var thumbnailUrl = 'url('+serviceUrl + '/p/' + partnerId + '/thumbnail/entry_id/' + entryId + '/width/400/)';
+        // return empty string if entryID not set, otherwise return thumbnail URL
+        return entryId ? thumbnailUrl : "";
+    }
+
+    //    $scope.showThumb()
     /**
      * Callback for the uploader add method. Creates a token, uploads a file, creates an entry and adds the uploaded
      * content.
@@ -37,16 +46,20 @@ function UploadCtrl($scope, Kaltura, Elgg) {
     $scope.uploadFiles = function(data, elm) {
         var file = data.files[0];
         $scope.queue.push(file);
-        data.fileIndex = $scope.queue.length - 1;
 
-        $scope.fileInfo[data.fileIndex] = {};
-        $scope.fileInfo[data.fileIndex]['fileType'] = $scope.detectMediaType(file.type);
-        $scope.fileInfo[data.fileIndex]['name'] = file.name;
-        $scope.fileInfo[data.fileIndex]['updateResult'] = false;
-        $scope.fileInfo[data.fileIndex]['license'] = "not-selected";
-        $scope.fileInfo[data.fileIndex]['privacy'] = "0";
-        $scope.fileInfo[data.fileIndex]['album'] = "";
-        console.log($scope.fileInfo[data.fileIndex]['fileType'] );
+        $scope.saveEnabled = true;
+
+        var fileInfoRow = {};
+        fileInfoRow['fileObj'] = file;
+        fileInfoRow['fileType'] = $scope.detectMediaType(file.type);
+        fileInfoRow['name'] = file.name;
+        fileInfoRow['updateResult'] = false;
+        fileInfoRow['license'] = "not-selected";
+        fileInfoRow['privacy'] = "0";
+        fileInfoRow['album'] = "";
+        $scope.fileInfo.push(fileInfoRow);
+        data.fileIndex = $scope.fileInfo.length - 1;
+  //      console.log($scope.fileInfo[data.fileIndex]['fileType'] );
 
         // If file is Video/Audio then add entry to Kaltura and create entity in Elgg
         if ($scope.fileInfo[data.fileIndex]['fileType'] == 'video' || $scope.fileInfo[data.fileIndex]['fileType'] == 'audio' ) {
@@ -71,7 +84,9 @@ function UploadCtrl($scope, Kaltura, Elgg) {
             );
 
             // Add content to entry in Kaltura
-            Kaltura.baseEntryAddContent($scope.fileInfo[data.fileIndex]['entryId'], token);
+            $scope.fileInfo[data.fileIndex]['thumbEntryId'] = Kaltura.baseEntryAddContent($scope.fileInfo[data.fileIndex]['entryId'], token, $scope);
+
+
             //Create an Elgg entity
             $scope.fileInfo[data.fileIndex]['elggId'] = Elgg.addElggEntity($scope.fileInfo[data.fileIndex]);
         }
@@ -154,18 +169,18 @@ function UploadCtrl($scope, Kaltura, Elgg) {
     };
 
     /**
-     * Returns true iff metadata can be currently saved.
+     * Returns true if metadata can be currently saved.
      * @param index the index of the entry in the file info object.
-     * @returns true iff update currently possible.
+     * @returns true if update currently possible.
      */
     $scope.canSaveMetadata = function(index) {
-        return $scope.fileInfo[index]['updateResult'];
+        return $scope.saveEnabled;
     };
 
     /**
-     * Returns true iff metadata can be currently saved.
+     * Returns true if metadata can be currently saved.
      * @param index the index of the entry in the file info object.
-     * @returns true iff update currently possible.
+     * @returns true if update currently possible.
      */
     $scope.canDeleteMetadata = function(index) {
         return $scope.fileInfo[index]['updateResult'];
@@ -178,6 +193,7 @@ function UploadCtrl($scope, Kaltura, Elgg) {
     $scope.bindUploaderEvents = function(elm) {
         jQuery(elm).bind('fileuploadprogress', function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
+
             $scope.fileInfo[data.fileIndex]['progress'] = progress;
             $scope.$apply();
         });

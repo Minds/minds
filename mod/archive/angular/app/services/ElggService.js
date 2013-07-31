@@ -10,7 +10,7 @@ angular.module('services.Elgg', []);
 angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, $q) {
 
     var elggService = {};
-    var actionUrl= 'http://localhost/minds/Minds-Elgg/action/archive/';
+    var actionUrl= 'http://roni.innovid.com/minds-elgg-git/action/archive/';
 
     /**
      * Create new Elgg entity without uploading the files to Elgg.

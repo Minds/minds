@@ -1,9 +1,9 @@
 
 $ = jQuery.noConflict();
 
-angular.module('mindsUploader', ['services.Elgg', 'services.Kaltura', 'mindsApp.directives', 'mindsApp.controllers'], function($routeProvider) {
+angular.module('mindsUploader', ['services.Elgg', 'services.Kaltura', 'mindsApp.directives'], function($routeProvider) {
 
-    var templatesPath = "http://localhost/minds/Minds-Elgg/mod/archive/angular/app/partials";
+    var templatesPath = "http://roni.innovid.com/minds-elgg-git/mod/archive/angular/app/partials";
 
     $routeProvider.when('/', {
         templateUrl: templatesPath + '/upload.html',

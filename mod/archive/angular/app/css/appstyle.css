@@ -6,127 +6,125 @@ input:-moz-placeholder { color:#000000; opacity: 1 !important;}
 
 #dropzone {
     height: 50px;
-    text-align: center;
-    font-weight: bold;
-}
+    text-align: left;
+    border: 1px solid black;
+    padding-left: 10px;
+    }
+
 #fileupload{
     border: none;
-    width: 100%;
-    height: 100%;
+    opacity: 0;
+    float: left;
+    width: 53px;
+    position: absolute;
+    height: 10px;
+    cursor: pointer;
 }
 #delete{
     float: right;
     border: none;
     background: transparent;
     position: absolute;
-    top: 10;
+    top: 5;
     right: 5;
 }
+
+.uploadSelect{
+    border:none;
+    -webkit-appearance: none;
+}
+
 #license{
-    margin-left: 160;
-    margin-top: -22;
-    width: 190;
+    width: 150;
     height: 24;
     border: none;
     background: transparent;
     color: #000000;
+
 }
+
 #boxentry{
     position: relative;
     width: 330;
     height: 250;
-    background: url('background.jpg');
+    /*background: url('background.jpg');*/
     background-repeat: no-repeat;
     background-size: 100%;
 }
 #access_id{
-    width: 130;
+    width: 90;
     height: 24;
     border: none;
     background: transparent;
     color: #000000;
 }
 
-/*div.uploadbox-title input.inline-edit:hover {padding: 3px 5px ; border: 1px solid black !important; background-color: #AAA !important;}*/
-/*div.uploadbox-title input.inline-edit:focus {padding: 3px 5px ; border: 1px solid black !important; background-color: #fff !important;}*/
-div.uploadbox-title input.inline-edit{
+input.uploadInput:hover {border: 1px solid black; background-color: #DDD !important;}
+input.uploadInput:focus { border: 1px solid black; background-color: #fff !important;}
+input.uploadInput{
     border: 0 !important;
     margin: 0 !important;
     background: transparent !important;
     color: #000000;
 }   /* Plcaeholder change color - tilte */
-.uploadbox-title input::-webkit-input-placeholder {
+
+.uploadInput input::-webkit-input-placeholder {
     color: #000000;
     opacity: 1 !important;
 }
-.uploadbox-title input {
+.uploadInput input {
     color: #000000;
     opacity: 1 !important;
 }
-.uploadbox-title input:-ms-input-placeholder {
+.uploadInput input:-ms-input-placeholder {
     color: #000000;
     opacity: 1 !important;
 }
 
-/*div.uploadbox-description textarea.inline-edit:hover {padding: 3px 5px; border: 1px solid black !important; background-color: #AAA !important;}*/
-/*div.uploadbox-description textarea.inline-edit:focus {padding: 3px 5px; border: 1px solid black !important; background-color: #fff !important;}*/
-div.uploadbox-description textarea.inline-edit{
-    height: 48;
-    width: 278;
-    margin: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-    color: #000000;
-}   /* Plcaeholder change color - tilte */
-.uploadbox-description textarea::-webkit-input-placeholder {
-    color: #000000;
-    opacity: 1 !important;
-}
-.uploadbox-description textarea{
-    color: #000000;
-    opacity: 1 !important;
-}
-.uploadbox-description textarea:-ms-input-placeholder {
-    color: #000000;
-    opacity: 1 !important;
+#saveButton{
+    clear: both;
+    width: 40px;
+    display: block;
 }
 
-/*div.uploadbox-tags input.inline-edit:hover {padding: 3px 5px; border: 1px solid black !important; background-color: #AAA !important;}*/
-/*div.uploadbox-tags input.inline-edit:focus {padding: 3px 5px; border: 1px solid black !important; background-color: #fff !important;}*/
-div.uploadbox-tags input.inline-edit{
-    border: 0 !important;
-    margin: 0 !important;
-    background: transparent !important;
-    color: #000000;
-}   /* Plcaeholder change color - tilte */
-.uploadbox-tags input::-webkit-input-placeholder {
-    color: #000000;
-    opacity: 1 !important;
-}
-.uploadbox-tags input {
-    color: #000000;
-    opacity: 1 !important;
-}
-.uploadbox-tags input:-ms-input-placeholder {
-    color: #000000;
-    opacity: 1 !important;
+.uploadlist > li.elgg-item > .itemControls {
+    height: 35px;
+    overflow: hidden;
+    transition: height 0.3s;
+    -webkit-transition: height 0.3s
 }
 
-#savebutton{
-    border: none;
-    background: transparent;
+.uploadlist > li.elgg-item:hover > .itemControls {
+    height: 100px;
+
+}
+
+.uploadlist  .elgg-image-block {
+
+    background-color: rgba(255,255,255, 0.9);
+}
+.uploadlist > li.elgg-item {
+    background-color: #FFF;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding:0;
+    margin-left: 0px;
+
+}
+
+.uploadlist div.bar{
     position: absolute;
-    bottom: 10;
-}
-
-div#boxentry div.bar{
-    position: absolute;
+    right: 0;
     bottom: 0;
     height: 5;
-    width: 95% !important;
+    background-color: #4690D6;
 }
 
-div#boxentry div.progress{
+.uploadlist div.progress{
     color: transparent;
     height: 0;
+}
+
+.uploadSpan{
+    margin-left: 5px;
 }
