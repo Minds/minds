@@ -128,3 +128,17 @@ input.uploadInput{
 .uploadSpan{
     margin-left: 5px;
 }
+
+
+.upload-page-buttons {
+    margin-top: 15px;
+    float: right;
+}
+
+.upload-elgg-head {
+    float: left;
+}
+
+.upload-page-buttons > .elgg-button {
+    margin-left: 40px;
+}
