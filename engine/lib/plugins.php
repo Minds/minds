@@ -226,7 +226,7 @@ function elgg_get_max_plugin_priority() {
 	$priority = elgg_namespace_plugin_private_setting('internal', 'priority');
 	$plugin_subtype = get_subtype_id('object', 'plugin');
 
-	$q = "SELECT MAX(CAST(ps.value AS unsigned)) as max
+/*	$q = "SELECT MAX(CAST(ps.value AS unsigned)) as max
 		FROM {$db_prefix}entities e, {$db_prefix}private_settings ps
 		WHERE ps.name = '$priority'
 		AND ps.entity_guid = e.guid
@@ -239,7 +239,7 @@ function elgg_get_max_plugin_priority() {
 		$max = 1;
 	}
 
-	// can't have a priority of 0.
+	// can't have a priority of 0.*/
 	return ($max) ? $max : 1;
 }
 
@@ -312,7 +312,6 @@ function elgg_load_plugins() {
 	$return = true;
 	$plugins = elgg_get_plugins('active');
 	if ($plugins) {
-		var_dump($plugins);
 		foreach ($plugins as $plugin) {
 			try {
 				$plugin->start($start_flags);
@@ -349,10 +348,15 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 		$site_guid = $site->guid;
 	}
 
+	//convert status to something the db understands
+	if($status == 'active'){
+		$attrs['active'] = 1;
+	} else {
+	}
 	// grab plugins
 	$plugins = db_get(	array(	'type' => 'plugin',
 					'limit' => 10000,
-					'attrs' => array('active'=> 1 )
+					'attrs' => $attrs
 			));
 
 	if($plugins){	

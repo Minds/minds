@@ -180,7 +180,7 @@ class ElggPluginPackage {
 		if (!$have_req_files) {
 			return $this->valid = false;
 		}
-
+		
 		// check for valid manifest.
 		if (!$this->loadManifest()) {
 			return $this->valid = false;

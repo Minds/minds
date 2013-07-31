@@ -319,8 +319,7 @@ function login(ElggUser $user, $persistent = false) {
 		setcookie("Elgg", "", (time() - (86400 * 30)), "/");
 		throw new LoginException(elgg_echo('LoginException:Unknown'));
 	}
-var_dump($SESSION);
-exit;
+
 	// Users privilegeohas been elevated, so change the session id (prevents session fixation)
 	session_regenerate_id();
 
@@ -407,7 +406,7 @@ function _elgg_session_boot($force = false) {
 		
 		// Initialise the magic session
 		$SESSION = new ElggSession();
-var_dump($SESSION);		
+		
 		if (!$force && !elgg_is_logged_in()) {
 			setcookie("Elgg", "", (time() - (86400 * 30)), "/");
 		} else {

@@ -843,12 +843,11 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 	}
 
 	$entity_type = $entity->getType();
-
 	$subtype = $entity->getSubtype();
 	if (empty($subtype)) {
 		$subtype = 'default';
 	}
-
+	
 	$contents = '';
 	if (elgg_view_exists("$entity_type/$subtype")) {
 		$contents = elgg_view("$entity_type/$subtype", $vars, $bypass, $debug);
@@ -856,7 +855,7 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 	if (empty($contents)) {
 		$contents = elgg_view("$entity_type/default", $vars, $bypass, $debug);
 	}
-
+	
 	// Marcus Povey 20090616 : Speculative and low impact approach for fixing #964
 	if ($vars['full_view']) {
 		$annotations = elgg_view_entity_annotations($entity, $vars['full_view']);

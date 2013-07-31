@@ -192,10 +192,10 @@ abstract class ElggEntity extends ElggData implements
 		}
 
 		// No, so see if its in the meta data for this entity
-		$meta = $this->getMetaData($name);
+	//	$meta = $this->getMetaData($name);
 
 		// getMetaData returns NULL if $name is not found
-		return $meta;
+	//	return $meta;
 	}
 
 	/**

@@ -600,5 +600,5 @@ function _elgg_load_application_config() {
 	$CONFIG->i18n_loaded_from_cache = false;
 
 	// this must be synced with the enum for the entities table
-	$CONFIG->entity_types = array('group', 'object', 'site', 'user');
+	$CONFIG->entity_types = array('group', 'object', 'site', 'user', 'plugin');
 }

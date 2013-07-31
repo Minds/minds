@@ -21,6 +21,7 @@
  * @since 1.8.0
  */
 function elgg_get_widgets($user_guid, $context) {
+return;
 	$options = array(
 		'type' => 'object',
 		'subtype' => 'widget',
@@ -61,6 +62,7 @@ function elgg_get_widgets($user_guid, $context) {
  * @since 1.8.0
  */
 function elgg_create_widget($owner_guid, $handler, $context, $access_id = null) {
+return;
 	if (empty($owner_guid) || empty($handler) || !elgg_is_widget_type($handler)) {
 		return false;
 	}
@@ -102,7 +104,7 @@ function elgg_create_widget($owner_guid, $handler, $context, $access_id = null) 
  * @since 1.8.0
  */
 function elgg_can_edit_widget_layout($context, $user_guid = 0) {
-
+return;
 	$user = get_entity((int)$user_guid);
 	if (!$user) {
 		$user = elgg_get_logged_in_user_entity();
@@ -141,7 +143,7 @@ function elgg_can_edit_widget_layout($context, $user_guid = 0) {
  * @since 1.8.0
  */
 function elgg_register_widget_type($handler, $name, $description, $context = "all", $multiple = false) {
-
+return;
 	if (!$handler || !$name) {
 		return false;
 	}
@@ -175,6 +177,7 @@ function elgg_register_widget_type($handler, $name, $description, $context = "al
  * @since 1.8.0
  */
 function elgg_unregister_widget_type($handler) {
+return;
 	global $CONFIG;
 
 	if (!isset($CONFIG->widgets)) {
@@ -199,6 +202,7 @@ function elgg_unregister_widget_type($handler) {
  * @since 1.8.0
  */
 function elgg_is_widget_type($handler) {
+return;
 	global $CONFIG;
 
 	if (!empty($CONFIG->widgets) &&
@@ -224,6 +228,7 @@ function elgg_is_widget_type($handler) {
  * @since 1.8.0
  */
 function elgg_get_widget_types($context = "", $exact = false) {
+return;
 	global $CONFIG;
 
 	if (empty($CONFIG->widgets) ||
@@ -260,6 +265,7 @@ function elgg_get_widget_types($context = "", $exact = false) {
  * @access private
  */
 function elgg_widget_run_once() {
+return;
 	add_subtype("object", "widget", "ElggWidget");
 }
 
@@ -270,6 +276,7 @@ function elgg_widget_run_once() {
  * @access private
  */
 function elgg_widgets_init() {
+return;
 	elgg_register_action('widgets/save');
 	elgg_register_action('widgets/add');
 	elgg_register_action('widgets/move');
@@ -305,6 +312,7 @@ function elgg_widgets_init() {
  * @access private
  */
 function elgg_default_widgets_init() {
+return;
 	global $CONFIG;
 	$default_widgets = elgg_trigger_plugin_hook('get_list', 'default_widgets', null, array());
 
@@ -341,6 +349,7 @@ function elgg_default_widgets_init() {
  * @access private
  */
 function elgg_create_default_widgets($event, $type, $entity) {
+return;
 	$default_widget_info = elgg_get_config('default_widget_info');
 
 	if (!$default_widget_info || !$entity) {
@@ -415,6 +424,7 @@ function elgg_create_default_widgets($event, $type, $entity) {
  * @access private
  */
 function elgg_default_widgets_permissions_override($hook, $type, $return, $params) {
+return;
 	if ($type == 'object' && $params['subtype'] == 'widget') {
 		return elgg_in_context('create_default_widgets') ? true : null;
 	}

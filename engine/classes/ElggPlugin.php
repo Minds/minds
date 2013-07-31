@@ -52,13 +52,14 @@ class ElggPlugin extends ElggEntity {
 		// @todo plugins w/id 12345
 		if (is_numeric($plugin) || is_object($plugin)) {
 			//parent::__construct($plugin);
-			$this->path = elgg_get_plugins_path() . $this->getID();
 			
 			foreach($plugin as $k => $v){
 				$this->attributes[$k] = $v;
 			}		
 		
 			$this->pluginID = $this->attributes['guid'];	
+			$this->title = $this->pluginID;
+		        $this->path = elgg_get_plugins_path() . $this->getID();
 		
 		} else {
 			$plugin_path = elgg_get_plugins_path();
@@ -556,17 +557,17 @@ class ElggPlugin extends ElggEntity {
 			$this->errorMsg = elgg_echo('ElggPlugin:NoId', array($this->guid));
 			return false;
 		}
-
+		
 		if (!$this->getPackage() instanceof ElggPluginPackage) {
 			$this->errorMsg = elgg_echo('ElggPlugin:NoPluginPackagePackage', array($this->getID(), $this->guid));
 			return false;
 		}
-
+		
 		if (!$this->getPackage()->isValid()) {
 			$this->errorMsg = $this->getPackage()->getError();
 			return false;
 		}
-
+		
 		return true;
 	}
 
