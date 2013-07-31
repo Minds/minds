@@ -152,9 +152,6 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 
 	$ob = kaltura_get_entity($entry->id);
 
-//    var_dump($ob);
-//    exit;
-	//print_r($ob);echo "[$user_guid $container_guid] ";die;
 	if($user_guid){
 		
 		if($ob instanceof ElggEntity) {
@@ -174,10 +171,8 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 			$ob->container_guid = ($container_guid ? $container_guid : $user_guid);
 			$ob->access_id = $access;
 			$guid = $ob->save(); //save here to get the guid
-            $entry->id = $guid;
 
 			add_to_river('river/object/kaltura_video/create','create',$user_guid,$guid);
-
 		}
 	}
 	if(!($ob instanceof ElggEntity)) {

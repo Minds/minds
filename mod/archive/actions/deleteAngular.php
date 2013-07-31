@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-$guid = get_input('elggId');
+$guid = get_input('guid');
 $entity = get_entity($guid);
 //find the users uploads album
 $albums = elgg_get_entities_from_metadata(array(

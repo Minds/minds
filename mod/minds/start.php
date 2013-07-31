@@ -127,7 +127,7 @@ function minds_init(){
 	elgg_register_action("minds/upload", "$actionspath/minds/upload.php");
 	elgg_register_action("minds/remind", "$actionspath/minds/remind.php");
 	elgg_register_action("minds/remind/external", "$actionspath/minds/remind_external.php");
-	elgg_register_action("friends/add", "$actionspath/friends/addAngular.php", "public");
+	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
         elgg_register_action("registernode","$actionspath/minds/registernode.php");
         elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php", 'public');

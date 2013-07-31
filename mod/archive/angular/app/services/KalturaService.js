@@ -38,13 +38,13 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             transform: "transformRequest"
         }).
-            success(function(elggId, status, headers, config) {
-                console.log(elggId);
-                deferred.resolve(elggId);
+            success(function(guid, status, headers, config) {
+                console.log(guid);
+                deferred.resolve(guid);
             }).
-            error(function(elggId, status, headers, config) {
-                console.log('error: ' + elggId)
-                deferred.reject(elggId);
+            error(function(guid, status, headers, config) {
+                console.log('error: ' + guid)
+                deferred.reject(guid);
             })
 
         return deferred.promise;
@@ -113,7 +113,7 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                     url: url
                 });
 
-                data.submit().done(function() {
+                $scope.fileInfo[data.fileIndex]['xhr'] = data.submit().done(function() {
                     deferred.resolve(resolvedToken);
                     $scope.$apply();
                 });

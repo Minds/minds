@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
+ * Created by Roy Cohen.
  * User: root
  * Date: 7/22/13
  * Time: 9:59 AM
@@ -14,7 +14,7 @@ $access_id = (int) get_input("privacy");
 $license = get_input("license");
 $tags = get_input("tags");
 $mime_type = get_input("fileType");
-$entityId = get_input("elggId", null);
+$entityId = get_input("guid", null);
 $container_guid = elgg_get_logged_in_user_guid();
 $user_guid = $_SESSION['user']->getGUID();
 

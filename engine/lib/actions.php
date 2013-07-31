@@ -480,6 +480,7 @@ function ajax_forward_hook($hook, $type, $reason, $params) {
 		}
 
 		echo json_encode($params);
+        exit;
 	}
 }
 

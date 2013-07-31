@@ -1,5 +1,5 @@
 /**
- * Created with JetBrains PhpStorm.
+ * Created by Roy Cohen.
  * User: root
  * Date: 7/17/13
  * Time: 11:35 AM
@@ -17,7 +17,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
      * This function being used when uploading Video or Audio so we just need to creare entity without uploading the files.
      * @param fileInfo an object with fields name, description, tags, fileType and entryId. The entryId field may be a
      * promise to wait on (until the entry is created within Kaltura).
-     * @returns a promise which resolves the elggId entity.
+     * @returns a promise which resolves the guid entity.
      */
     elggService.addElggEntity = function(fileInfo){
         var deferred = $q.defer();
@@ -26,7 +26,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
             var data = {
             'title': fileInfo['name'],
             'description': fileInfo['description'],
-            'privacy': fileInfo['privacy'],
+            'accessId': fileInfo['accessId'],
             'license': fileInfo['license'],
             'fileType': fileInfo['fileType'],
             'tags': fileInfo['tags'],
@@ -42,13 +42,13 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 transform: "transformRequest"
             }).
-                success(function(elggId, status, headers, config) {
-                    console.log('success:' + elggId);
-                    deferred.resolve(elggId);
+                success(function(guid, status, headers, config) {
+                    console.log('success:' + guid);
+                    deferred.resolve(guid);
                 }).
-                error(function(elggId, status, headers, config) {
-                    console.log('error: ' + elggId)
-                    deferred.reject(elggId);
+                error(function(guid, status, headers, config) {
+                    console.log('error: ' + guid)
+                    deferred.reject(guid);
                 })
         })
         return deferred.promise;
@@ -58,11 +58,11 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
     /**
      * Create new Elgg entity and uploading the files to Elgg.
      * This function being used when uploading Images or regular files excluding Video/Audio.
-     * @param fileInfo an object with fields name, description, tags, fileType and elggId.
+     * @param fileInfo an object with fields name, description, tags, fileType and guid.
      * @param fileUploader the uploader element id.
      * @param data the uploader data.
      * @param $scope the calling scope.
-     * @returns a promise which resolves to the elggId entity.
+     * @returns a promise which resolves to the guid entity.
      */
      elggService.uploadElggFile = function(fileInfo, fileUploader, data, $scope){
         var deferred = $q.defer();
@@ -71,7 +71,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
         data.formData = {
             'title': fileInfo['name'],
             'description': fileInfo['description'],
-            'privacy': fileInfo['privacy'],
+            'accessId': fileInfo['accessId'],
             'license': fileInfo['license'],
             'fileType': fileInfo['fileType'],
             'tags': fileInfo['tags'],
@@ -82,9 +82,9 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
             url: url
         });
 
-        data.submit().done(function(elggId) {
-            console.log('success:' + elggId);
-            deferred.resolve(elggId);
+        data.submit().done(function(guid) {
+            console.log('success:' + guid);
+            deferred.resolve(guid);
             $scope.$apply();
         });
 
@@ -94,24 +94,24 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
 
     /**
      * Updates an entry.
-     * @param fileInfo an object with fields name, description, tags, fileType and elggId. The elggId field may be a
+     * @param fileInfo an object with fields name, description, tags, fileType and guid. The guid field may be a
      * promise to wait on (until the entry is created).
      * @returns the updated entry object.
      */
     elggService.updateElggEntity = function(fileInfo){
         var deferred  = $q.defer();
 
-        $q.when(fileInfo['elggId']).then(function(elggIg) {
+        $q.when(fileInfo['guid']).then(function(elggIg) {
             var data = {
                 'title': fileInfo['name'],
                 'description': fileInfo['description'],
-                'privacy': fileInfo['privacy'],
+                'accessId': fileInfo['accessId'],
                 'license': fileInfo['license'],
                 'fileType': fileInfo['fileType'],
                 'tags': fileInfo['tags'],
                 '__elgg_token': elgg.security.token.__elgg_token,
                 '__elgg_ts': elgg.security.token.__elgg_ts,
-                'elggId': elggIg
+                'guid': elggIg
             };
 
             $http({
@@ -122,13 +122,13 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 transform: "transformRequest"
             }).
-                success(function(elggId, status, headers, config) {
-                    console.log('success: ' + elggId)
-                    deferred.resolve(elggId);
+                success(function(guid, status, headers, config) {
+                    console.log('success: ' + guid)
+                    deferred.resolve(guid);
                 }).
-                error(function(elggId, status, headers, config) {
-                    console.log('error: ' + elggId)
-                    deferred.reject(elggId);
+                error(function(guid, status, headers, config) {
+                    console.log('error: ' + guid)
+                    deferred.reject(guid);
                 })
         })
         return deferred.promise;
@@ -138,15 +138,15 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
     elggService.deleteElggEntity = function(fileInfo){
         var deferred  = $q.defer();
 
-        $q.when(fileInfo['elggId']).then(function(elggIg) {
+        $q.when(fileInfo['guid']).then(function(elggIg) {
             var data = {
                 'title': fileInfo['name'],
                 'description': fileInfo['description'],
-                'privacy': fileInfo['privacy'],
+                'accessId': fileInfo['accessId'],
                 'license': fileInfo['license'],
                 '__elgg_token': elgg.security.token.__elgg_token,
                 '__elgg_ts': elgg.security.token.__elgg_ts,
-                'elggId': elggIg
+                'guid': elggIg
             };
 
             $http({
@@ -157,13 +157,13 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 transform: "transformRequest"
             }).
-                success(function(elggId, status, headers, config) {
-                    console.log('success: ' + elggId)
-                    deferred.resolve(elggId);
+                success(function(guid, status, headers, config) {
+                    console.log('success: ' + guid)
+                    deferred.resolve(guid);
                 }).
-                error(function(elggId, status, headers, config) {
-                    console.log('error: ' + elggId)
-                    deferred.reject(elggId);
+                error(function(guid, status, headers, config) {
+                    console.log('error: ' + guid)
+                    deferred.reject(guid);
                 })
         })
         return deferred.promise;
@@ -174,17 +174,17 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
     elggService.albumSelector = function(fileInfo){
         var deferred  = $q.defer();
 
-        $q.when(fileInfo['elggId']).then(function(elggIg) {
+        $q.when(fileInfo['guid']).then(function(elggIg) {
             var data = {
                 'title': fileInfo['name'],
                 'description': fileInfo['description'],
-                'privacy': fileInfo['privacy'],
+                'accessId': fileInfo['accessId'],
                 'license': fileInfo['license'],
                 'fileType': fileInfo['fileType'],
                 'tags': fileInfo['tags'],
                 '__elgg_token': elgg.security.token.__elgg_token,
                 '__elgg_ts': elgg.security.token.__elgg_ts,
-                'elggId': elggIg
+                'guid': elggIg
             };
 
             $http({

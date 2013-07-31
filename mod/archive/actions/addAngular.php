@@ -13,16 +13,16 @@ elgg_load_library('tidypics:upload');
 // Get variables
 $title = get_input("title");
 $desc = get_input("description");
-$access_id = (int) get_input("privacy");
+$access_id = (int) get_input("accessId");
 $license = get_input("license");
 $tags = get_input("tags");
 $mime_type = get_input("fileType");
 
 //If the entity doesn't exsits then entityId will be null and will be created later.
-$entityId = get_input("elggId", null);
+$guid = get_input("guid", null);
 
-$container_guid = elgg_get_logged_in_user_guid();
-$user_guid = $_SESSION['user']->getGUID();
+$container_guid = elgg_get_logged_in_user_guid(); //TODO: Not sure if needed, Mark Please tell me.
+$user_guid = elgg_get_logged_in_user_guid();
 
 elgg_make_sticky_form('generic-upload');
 if ($entityId)
@@ -32,7 +32,6 @@ if ($entityId)
         register_error(elgg_echo('minds:license:not-selected'));
         echo "not-selected";
         exit;
-//        forward(REFERER);
     }
 }
 
@@ -41,7 +40,7 @@ $mediaEntry = new KalturaMediaEntry();
 $mediaEntry->name = strip_tags($title);
 $mediaEntry->description = $desc;
 $mediaEntry->tags = $tags;
-$mediaEntry->id = $entityId;
+$mediaEntry->id = $guid; //TODO: get the entry ID istead
 if ($mime_type != null)
     $mediaEntry->mediaType = $mime_type;
 

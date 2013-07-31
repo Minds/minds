@@ -10,7 +10,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function UploadCtrl($scope, Kaltura, Elgg) {
+function UploadCtrl($scope, Kaltura, Elgg, $q) {
 
     $scope.fileInfo = [];
     $scope.queue = [];
@@ -36,7 +36,6 @@ function UploadCtrl($scope, Kaltura, Elgg) {
         return entryId ? thumbnailUrl : "";
     }
 
-    //    $scope.showThumb()
     /**
      * Callback for the uploader add method. Creates a token, uploads a file, creates an entry and adds the uploaded
      * content.
@@ -55,11 +54,10 @@ function UploadCtrl($scope, Kaltura, Elgg) {
         fileInfoRow['name'] = file.name;
         fileInfoRow['updateResult'] = false;
         fileInfoRow['license'] = "not-selected";
-        fileInfoRow['privacy'] = "0";
+        fileInfoRow['accessId'] = "0";
         fileInfoRow['album'] = "";
         $scope.fileInfo.push(fileInfoRow);
         data.fileIndex = $scope.fileInfo.length - 1;
-  //      console.log($scope.fileInfo[data.fileIndex]['fileType'] );
 
         // If file is Video/Audio then add entry to Kaltura and create entity in Elgg
         if ($scope.fileInfo[data.fileIndex]['fileType'] == 'video' || $scope.fileInfo[data.fileIndex]['fileType'] == 'audio' ) {
@@ -76,7 +74,7 @@ function UploadCtrl($scope, Kaltura, Elgg) {
             // Once the entry is added to Kaltura and Elgg, we enable the save and delete button to allow updates.
             $scope.fileInfo[data.fileIndex]['entryId'].then(
                 function() {
-                    $scope.fileInfo[data.fileIndex]['elggId'].then(
+                    $scope.fileInfo[data.fileIndex]['guid'].then(
                         function() {
                             $scope.fileInfo[data.fileIndex]['updateResult'] = true;
                         })
@@ -86,13 +84,12 @@ function UploadCtrl($scope, Kaltura, Elgg) {
             // Add content to entry in Kaltura
             $scope.fileInfo[data.fileIndex]['thumbEntryId'] = Kaltura.baseEntryAddContent($scope.fileInfo[data.fileIndex]['entryId'], token, $scope);
 
-
             //Create an Elgg entity
-            $scope.fileInfo[data.fileIndex]['elggId'] = Elgg.addElggEntity($scope.fileInfo[data.fileIndex]);
+            $scope.fileInfo[data.fileIndex]['guid'] = Elgg.addElggEntity($scope.fileInfo[data.fileIndex]);
         }
         else {
-            $scope.fileInfo[data.fileIndex]['elggId'] = Elgg.uploadElggFile($scope.fileInfo[data.fileIndex], jQuery(elm), data, $scope);
-            $scope.fileInfo[data.fileIndex]['elggId'].then(
+            $scope.fileInfo[data.fileIndex]['guid'] = Elgg.uploadElggFile($scope.fileInfo[data.fileIndex], jQuery(elm), data, $scope);
+            $scope.fileInfo[data.fileIndex]['guid'].then(
                 function() {
                     //TODO finish album Selector - Currently we are returning Album array - I can't translate it.
                     var albums = Elgg.albumSelector($scope.fileInfo[data.fileIndex]);
@@ -138,8 +135,10 @@ function UploadCtrl($scope, Kaltura, Elgg) {
      * @param index the index of the entry in the file info object.
      */
     $scope.deleteEntry = function(index) {
+        console.log("In delete Entry");
         var updateResult = Kaltura.baseEntryDelete($scope.fileInfo[index]);
         var elggUpdateResult = Elgg.deleteElggEntity($scope.fileInfo[index]);
+
         // Disable the button.
         $scope.fileInfo[index]['updateResult'] = false;
 
@@ -150,6 +149,23 @@ function UploadCtrl($scope, Kaltura, Elgg) {
                     }
                 )}
         );
+
+        //Entry was created in kaltura, remove it
+        $q.when($scope.fileInfo[index]['entryId']).then( function(){
+                Kaltura.baseEntryDelete($scope.fileInfo[index]['entryId']);
+            }
+        )
+
+        //Abort XHR requests
+        if($scope.fileInfo[index]['xhr'])
+            $scope.fileInfo[index]['xhr'].abort();
+
+        //Entry was created in Elgg, remove it
+
+        //Removes the thumbnail from the screen and cancels the upload
+        //TODO: check if upload is canceled and item removed from Elgg / Kaltura.
+
+        if ( ~index ) $scope.fileInfo.splice(index, 1);
     }
 
     /**
