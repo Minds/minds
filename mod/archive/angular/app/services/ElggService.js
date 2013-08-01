@@ -10,11 +10,12 @@ angular.module('services.Elgg', []);
 angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, $q) {
 
     var elggService = {};
-    var actionUrl= 'http://roni.innovid.com/minds-elgg-git/action/archive/';
+    var actionUrl= serverUrl + 'action/archive/';
+//    var webServicesUrl = serverUrl + 'services/api/rest/json'; // Not used for now
 
     /**
      * Create new Elgg entity without uploading the files to Elgg.
-     * This function being used when uploading Video or Audio so we just need to creare entity without uploading the files.
+     * This function being used when uploading Video or Audio so we just need to create entity without uploading the files.
      * @param fileInfo an object with fields name, description, tags, fileType and entryId. The entryId field may be a
      * promise to wait on (until the entry is created within Kaltura).
      * @returns a promise which resolves the guid entity.
@@ -22,14 +23,19 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
     elggService.addElggEntity = function(fileInfo){
         var deferred = $q.defer();
 
-        $q.when(fileInfo['entryId']).then(function(values) {
+        console.log("In addElggEntity: ", fileInfo.entryId)
+
+        $q.when(fileInfo.entryId).then(function(resolvedEntryId) {
+            console.log("In addElggEntity when: ", resolvedEntryId)
             var data = {
+            'entryId': resolvedEntryId,
             'title': fileInfo['name'],
             'description': fileInfo['description'],
             'accessId': fileInfo['accessId'],
             'license': fileInfo['license'],
             'fileType': fileInfo['fileType'],
             'tags': fileInfo['tags'],
+            'thumbSecond': fileInfo['thumbSecond'],
             '__elgg_token': elgg.security.token.__elgg_token,
             '__elgg_ts': elgg.security.token.__elgg_ts
             };
@@ -43,7 +49,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 transform: "transformRequest"
             }).
                 success(function(guid, status, headers, config) {
-                    console.log('success:' + guid);
+                    console.log('Add Elgg Entity:' + guid);
                     deferred.resolve(guid);
                 }).
                 error(function(guid, status, headers, config) {
@@ -51,6 +57,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                     deferred.reject(guid);
                 })
         })
+
         return deferred.promise;
 
     }
@@ -101,17 +108,20 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
     elggService.updateElggEntity = function(fileInfo){
         var deferred  = $q.defer();
 
-        $q.when(fileInfo['guid']).then(function(elggIg) {
+        $q.all([fileInfo['guid'], fileInfo['entryId']]).then(function(resolvedValues) {
+            console.log("In update Elgg when: ", resolvedValues);
             var data = {
+                'entryId': resolvedValues[1],
+                'guid': resolvedValues[0],
                 'title': fileInfo['name'],
                 'description': fileInfo['description'],
                 'accessId': fileInfo['accessId'],
                 'license': fileInfo['license'],
                 'fileType': fileInfo['fileType'],
                 'tags': fileInfo['tags'],
+                'thumbSecond': fileInfo['thumbSecond'],
                 '__elgg_token': elgg.security.token.__elgg_token,
-                '__elgg_ts': elgg.security.token.__elgg_ts,
-                'guid': elggIg
+                '__elgg_ts': elgg.security.token.__elgg_ts
             };
 
             $http({
@@ -123,7 +133,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 transform: "transformRequest"
             }).
                 success(function(guid, status, headers, config) {
-                    console.log('success: ' + guid)
+                    console.log('update Elgg entity: ' + guid)
                     deferred.resolve(guid);
                 }).
                 error(function(guid, status, headers, config) {
@@ -135,23 +145,25 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
 
     }
 
+    /**
+     * Deletes an entry.
+     * @param fileInfo an object with fields name, description, tags, fileType and guid. The guid field may be a
+     * promise to wait on (until the entry is created).
+     * @returns null
+     */
     elggService.deleteElggEntity = function(fileInfo){
         var deferred  = $q.defer();
 
-        $q.when(fileInfo['guid']).then(function(elggIg) {
+        $q.when(fileInfo['guid']).then(function(guid) {
             var data = {
-                'title': fileInfo['name'],
-                'description': fileInfo['description'],
-                'accessId': fileInfo['accessId'],
-                'license': fileInfo['license'],
+                'guid': guid,
                 '__elgg_token': elgg.security.token.__elgg_token,
-                '__elgg_ts': elgg.security.token.__elgg_ts,
-                'guid': elggIg
+                '__elgg_ts': elgg.security.token.__elgg_ts
             };
 
             $http({
                 method: 'POST',
-                url: actionUrl + 'deleteElggVideo',
+                url: actionUrl + 'delete',
                 data: data,
                 cache: false,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -164,44 +176,6 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 error(function(guid, status, headers, config) {
                     console.log('error: ' + guid)
                     deferred.reject(guid);
-                })
-        })
-        return deferred.promise;
-
-    }
-
-
-    elggService.albumSelector = function(fileInfo){
-        var deferred  = $q.defer();
-
-        $q.when(fileInfo['guid']).then(function(elggIg) {
-            var data = {
-                'title': fileInfo['name'],
-                'description': fileInfo['description'],
-                'accessId': fileInfo['accessId'],
-                'license': fileInfo['license'],
-                'fileType': fileInfo['fileType'],
-                'tags': fileInfo['tags'],
-                '__elgg_token': elgg.security.token.__elgg_token,
-                '__elgg_ts': elgg.security.token.__elgg_ts,
-                'guid': elggIg
-            };
-
-            $http({
-                method: 'POST',
-                url: actionUrl + 'selectAlbum',
-                data: data,
-                cache: false,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                transform: "transformRequest"
-            }).
-                success(function(albums, status, headers, config) {
-                    console.log(albums)
-                    deferred.resolve(albums);
-                }).
-                error(function(albums, status, headers, config) {
-                    console.log('error: ' + albums)
-                    deferred.reject(albums);
                 })
         })
         return deferred.promise;

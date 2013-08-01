@@ -1,17 +1,16 @@
-
-
 <div class="minds-body-header">
     <div class="inner">
         <div class="upload-elgg-head clearfix">
             <h2>Upload</h2>
         </div>
         <div class="upload-page-buttons" >
-            <a href="" class="elgg-button elgg-button-action" rel="nofollow">Add files</a>
-            <a href="" class="elgg-button elgg-button-action" rel="nofollow">Save / Upload</a>
+            <!--<input id="fileupload1" type="file" name="fileData" multiple=""/>-->
+            <!--<a class="elgg-button elgg-button-action" rel="nofollow">Add files</a>-->
+
+            <a ng-click="saveAll()" class="elgg-button elgg-button-action" rel="nofollow">Save all</a>
         </div>
     </div>
 </div>
-
 <div class="minds-body-header">
     <div class="inner">
         <div id="dropzone" class="span8 well well-large">
@@ -19,9 +18,10 @@
         </div>
         <div class="elgg-layout elgg-layout-one-column clearfix" ng-cloak>
             <ul class="uploadlist elgg-list elgg-list-entity">
-                <li class="elgg-item" data-ng-repeat="fileItem in fileInfo" ng-style="{backgroundImage: getFileThumbnail(fileItem.thumbEntryId)}">
+                <li class="elgg-item" data-ng-repeat="fileItem in fileInfo" ng-style="{backgroundImage: getFileThumbnail(fileItem.entry, fileItem.thumbSecond)}">
 
-                    <!--<div kaltura-thumbnail kaltura-options="thumbConfig" entryid="fileItem.thumbEntryId" width="100px" height="100px"></div>-->
+                    <a ng-show="isShowThumbArrows(fileItem.entryRefresh, $index)" ng-click="rotateImage(fileItem.entryRefresh, 1, $index)" class="uploadLeftArrow entypo">&#59395;</a>
+                    <a ng-show="isShowThumbArrows(fileItem.entryRefresh, $index)" ng-click="rotateImage(fileItem.entryRefresh, 0, $index)" class="uploadRightArrow entypo">&#59230;</a>
 
                     <div class="itemControls elgg-image-block">
                         <button id="delete" ng-click="deleteEntry($index)" class="entypo">&#10005;</button>
@@ -34,13 +34,9 @@
                             <input type="text" class="uploadInput" ng-model="fileItem['description']" placeholder="Enter description…"/>
                         </div>
 
-                        <!--<div class="uploadbox-tags">-->
-                            <!--<input type="text" class="inline-edit" ng-model="fileItem['tags']" placeholder="Enter tags…"/>-->
-                        <!--</div>-->
-
                         <span class="uploadSpan">License:
                             <select name="license" id="license" class="elgg-input-dropdown uploadSelect" ng-model="fileItem['license']">
-                                <option value="not-selected" selected="selected">-- Please select a license --</option>
+                                <option value="not-selected">Select Licence</option>
                                 <option value="attribution-cc">Attribution CC BY</option>
                                 <option value="attribution-sharealike-cc">Attribution-ShareAlike BY-SA</option>
                                 <option value="attribution-noderivs-cc">Attribution-NoDerivs CC BY-ND</option>
@@ -70,25 +66,21 @@
                             </select>
                         </span>
 
-
-
+                        <span ng-show="isImage(fileItem)" class="uploadSpan">Albums:
+                        <select name="album" id="album" ng-model="fileItem['album']" class="elgg-input-dropdown elgg-input-access uploadSelect">
+                            <option data-ng-repeat="album in albums" value="{{album['id']}}" ng-selected="isSelected(album)"> {{album['title']}} </option>
+                        </select>
+                        </span>
 
                         <div class="progress">
                             <div class="bar" ng-style="{width: fileItem['progress'] + '%'}"></div>
                         </div>
                     </div>
-
-
-                    <!--<div class="uploadbox-album">
-                        <select ng-model="album" ng-options="fileItem['album'] for c in colors"></select>
-                        <select type="text" class="inline-edit" ng-model="fileItem['album']" placeholder="Choose album…"/></select>
-                            <option value="">-- Select Album</option>
-                    </div>-->
                 </li>
             </ul>
 
             <br/>
-            <a id="saveButton" class="elgg-button elgg-button-action" ng-click="updateEntry($index)" ng-show="saveEnabled">Save all</a>
+            <a id="saveButton" class="elgg-button elgg-button-action" ng-click="saveAll()" ng-show="saveEnabled">Save all</a>
         </div>
     </div>
 </div>

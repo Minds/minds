@@ -15,9 +15,7 @@ $albums = elgg_get_entities_from_metadata(array(
     'subtype' => 'album',
     'owner_guid' => elgg_get_logged_in_user_guid(),
     'metadata_name_value_pairs' => array('name'=>'uploads', 'value'=>true)
-
 ));
-
 
 if ($entity)
 {

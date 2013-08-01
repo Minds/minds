@@ -15,7 +15,7 @@ function minds_archive_init() {
 	
 	//list featured in sidebar
 	elgg_extend_view('page/elements/sidebar', 'archive/featured');
-	
+
 	elgg_register_library('archive:kaltura', elgg_get_plugins_path().'archive/vendors/kaltura/api_client/includes.php');
 	elgg_register_library('archive:kaltura:editor', elgg_get_plugins_path().'archive/vendors/kaltura/editor/init.php');
 

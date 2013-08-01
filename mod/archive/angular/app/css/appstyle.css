@@ -7,7 +7,6 @@ input:-moz-placeholder { color:#000000; opacity: 1 !important;}
 #dropzone {
     height: 50px;
     text-align: left;
-    border: 1px solid black;
     padding-left: 10px;
     }
 
@@ -20,6 +19,18 @@ input:-moz-placeholder { color:#000000; opacity: 1 !important;}
     height: 10px;
     cursor: pointer;
 }
+
+#fileupload1{
+    width: 152px;
+    height: 35px;
+    margin-left: 40px;
+    border: none;
+    opacity: 0;
+    float: left;
+    position: absolute;
+    cursor: pointer;
+}
+
 #delete{
     float: right;
     border: none;
@@ -40,7 +51,6 @@ input:-moz-placeholder { color:#000000; opacity: 1 !important;}
     border: none;
     background: transparent;
     color: #000000;
-
 }
 
 #boxentry{
@@ -51,13 +61,23 @@ input:-moz-placeholder { color:#000000; opacity: 1 !important;}
     background-repeat: no-repeat;
     background-size: 100%;
 }
+
 #access_id{
+    width: 86;
+    height: 24;
+    border: none;
+    background: transparent;
+    color: #000000;
+}
+
+#album{
     width: 90;
     height: 24;
     border: none;
     background: transparent;
     color: #000000;
 }
+
 
 input.uploadInput:hover {border: 1px solid black; background-color: #DDD !important;}
 input.uploadInput:focus { border: 1px solid black; background-color: #fff !important;}
@@ -94,12 +114,11 @@ input.uploadInput{
     -webkit-transition: height 0.3s
 }
 
-.uploadlist > li.elgg-item:hover > .itemControls {
-    height: 100px;
-
+.uploadlist > li.elgg-item > .itemControls:hover {
+    height: 120px;
 }
 
-.uploadlist  .elgg-image-block {
+.uploadlist .elgg-image-block {
 
     background-color: rgba(255,255,255, 0.9);
 }
@@ -114,7 +133,7 @@ input.uploadInput{
 
 .uploadlist div.bar{
     position: absolute;
-    right: 0;
+    left: 0;
     bottom: 0;
     height: 5;
     background-color: #4690D6;
@@ -141,4 +160,20 @@ input.uploadInput{
 
 .upload-page-buttons > .elgg-button {
     margin-left: 40px;
+}
+
+.uploadLeftArrow{
+    position: absolute;
+    left: 5;
+    top:110;
+    font-size: 30px !important;
+    cursor: pointer;
+}
+
+.uploadRightArrow{
+    position: absolute;
+    right: 5;
+    top:110;
+    font-size: 30px !important;
+    cursor: pointer ;
 }

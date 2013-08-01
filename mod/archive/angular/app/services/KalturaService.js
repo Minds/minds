@@ -11,7 +11,7 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
 
     var kalturaService = {};
     var apiUrl = '/api_v3/index.php';
-    var actionUrl= 'http://roni.innovid.com/minds-elgg-git/action/archive/';
+    var actionUrl= serverUrl + 'action/archive/';
 
     /**
      * Maps media type to Kaltura media type enum.
@@ -36,7 +36,7 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
             data: data,
             cache: false,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            transform: "transformRequest"
+            transform: transformRequest
         }).
             success(function(guid, status, headers, config) {
                 console.log(guid);
@@ -104,10 +104,9 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
 
         $q.when(token).then(
             function(resolvedToken) {
-                var url = kalturaService.config.apiUrl + '?service=uploadtoken&action=upload';
+                var url = kalturaService.config.apiUrl + '?service=uploadtoken&action=upload&ks=' + kalturaService.config.ks;
                 data.formData = {};
                 data.formData.uploadTokenId = resolvedToken;
-                data.formData.ks = kalturaService.config.ks;
 
                 fileUploader.fileupload('option', {
                     url: url
@@ -158,7 +157,7 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                     data: data,
                     cache: false,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    transform: "transformRequest"
+                    transform: transformRequest
 
                 }).
                     success(function(data, status, headers, config) {
@@ -184,7 +183,7 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
     kalturaService.baseEntryUpdate = function(fileInfo) {
         var deferred = $q.defer();
 
-        $q.when(fileInfo['entryId']).then(function(entryId) {
+        $q.when(fileInfo.entryId).then(function(entryId) {
 
             var data = {
                 'entryId': entryId,
@@ -206,7 +205,7 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                 data: data,
                 cache: false,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                transform: "transformRequest"
+                transform: transformRequest
             }).
                 success(function(data, status, headers, config) {
                     deferred.resolve(data);
@@ -228,48 +227,62 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
      * @param token the uploaded content token (or a promise which resolves to it).
      * @returns the updated entry object.
      */
-    kalturaService.baseEntryAddContent = function(entryId, token, $scope) {
+    kalturaService.baseEntryAddContent = function(entryId, token) {
         var deferred = $q.defer();
-        console.log('service scope',$scope);
+
         $q.all([entryId, token])
             .then(
-                function(values) {
+            function(values) {
 
-                    var params = {
-                        'service': 'baseEntry',
-                        'action': 'addContent',
-                        'ks': kalturaService.config.ks
-                    };
+                var params = {
+                    'service': 'baseEntry',
+                    'action': 'addContent',
+                    'ks': kalturaService.config.ks
+                };
 
-                    var data = {
-                        'resource:token': values[1],
-                        'entryId': values[0],
-                        'resource:objectType': 'KalturaUploadedFileTokenResource'
-                    };
+                var data = {
+                    'resource:token': values[1],
+                    'entryId': values[0],
+                    'resource:objectType': 'KalturaUploadedFileTokenResource'
+                };
 
-                    $http({
-                        method: 'POST',
-                        url: kalturaService.config.apiUrl,
-                        data: data,
-                        params: params,
-                        cache: false,
-                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                        transform: "transformRequest"
+                $http({
+                    method: 'POST',
+                    url: kalturaService.config.apiUrl,
+                    data: data,
+                    params: params,
+                    cache: false,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    transformRequest: transformRequest
+                }).
+                    success(function(data, status, headers, config) {
+                        var entry = kalturaService.parseResult(data);
+                        deferred.resolve(entry);
                     }).
-                        success(function(data, status, headers, config) {
-                            var entryId = jQuery(data).find('id').text();
-                            deferred.resolve(entryId);
-                            console.log('content added to: '+entryId);
-                        }).
-                        error(function(data, status, headers, config) {
-                            console.log('error: ' + data);
-                            deferred.reject();
-                        });
-                }
-            );
+                    error(function(data, status, headers, config) {
+                        console.log('error: ' + data);
+                        deferred.reject();
+                    });
+            }
+        );
 
         return deferred.promise;
     };
+
+    /**
+     * Parses XML to Kaltura object
+     * @param data
+     */
+    kalturaService.parseResult = function(data) {
+        var children = jQuery(data).find('result').children();
+        var entry = {};
+        var xmlNode;
+        jQuery.each(children, function(index, value) {
+            xmlNode = jQuery(value);
+            entry[xmlNode.prop("tagName").toLowerCase()] = xmlNode.text();
+        });
+        return entry;
+    }
 
     /**
      * Delete an entry.
@@ -281,7 +294,7 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
     kalturaService.baseEntryDelete = function(fileInfo) {
         var deferred = $q.defer();
 
-        $q.when(fileInfo['entryId']).then(function(entryId) {
+        $q.when(fileInfo.entryId).then(function(entryId) {
 
             var data = {
                 'entryId': entryId
@@ -300,9 +313,10 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                 data: data,
                 cache: false,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                transform: "transformRequest"
+                transform: transformRequest
             }).
                 success(function(data, status, headers, config) {
+                    var entry = kalturaService.parseResult(data);
                     deferred.resolve(data);
                 }).
                 error(function(data, status, headers, config) {
@@ -315,7 +329,65 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
         return deferred.promise;
     };
 
+    /**
+    * Gets an entry.
+    * @param entryId
+    * @returns promise which resolves to entry.
+     */
+     kalturaService.baseEntryGet = function(entryId) {
+        var deferred = $q.defer();
 
+        $q.when(entryId).then(
+            function(resolvedEntryId) {
+
+                var data = {
+                    'entryId': resolvedEntryId
+                };
+
+                var params = {
+                    'service': 'baseEntry',
+                    'action': 'get',
+                    'ks': kalturaService.config.ks
+                };
+
+                $http({
+                    method: 'POST',
+                    url: kalturaService.config.apiUrl,
+                    params: params,
+                    data: data,
+                    cache: false,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    transformRequest: transformRequest
+
+                }).
+                    success(function(data, status, headers, config) {
+                        var entry = kalturaService.parseResult(data);
+                        deferred.resolve(entry);
+                    }).
+                    error(function(data, status, headers, config) {
+                        console.log('error: ' + data)
+                        deferred.reject(data);
+                    })
+            }
+        );
+
+        return deferred.promise;
+    };
+
+    /**
+     * Serialize an array of form elements or a set of
+     * key/values into a query string
+     * @param data object.
+     * @returns query string.
+     */
+    var transformRequest = function(data){
+        if (data === undefined) {
+            return data;
+        }
+
+        return jQuery.param(data);
+    };
+    
     return kalturaService;
 
 }]);

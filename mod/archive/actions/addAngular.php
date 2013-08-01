@@ -17,37 +17,49 @@ $access_id = (int) get_input("accessId");
 $license = get_input("license");
 $tags = get_input("tags");
 $mime_type = get_input("fileType");
-
+$entryId = get_input("entryId");
 //If the entity doesn't exsits then entityId will be null and will be created later.
 $guid = get_input("guid", null);
+$entryId = get_input("entryId", null);
 
-$container_guid = elgg_get_logged_in_user_guid(); //TODO: Not sure if needed, Mark Please tell me.
+$thumbSec = get_input("thumbSecond", 0);
+$entity = get_entity($guid);
+
+$container_guid = elgg_get_logged_in_user_guid();
 $user_guid = elgg_get_logged_in_user_guid();
 
 elgg_make_sticky_form('generic-upload');
-if ($entityId)
-{
-    if($license == 'not-selected')
-    {
-        register_error(elgg_echo('minds:license:not-selected'));
-        echo "not-selected";
-        exit;
-    }
-}
+
+//if ($guid) //TODO: add check for licence in UI
+//{
+//    if($license == 'not-selected')
+//    {
+//        register_error(elgg_echo('minds:license:not-selected'));
+//        echo "not-selected";
+//        exit;
+//    }
+//}
 
 //Setting Kaltura object
 $mediaEntry = new KalturaMediaEntry();
 $mediaEntry->name = strip_tags($title);
 $mediaEntry->description = $desc;
-$mediaEntry->tags = $tags;
-$mediaEntry->id = $guid; //TODO: get the entry ID istead
+//$mediaEntry->tags = $tags;
+
+if($guid && $entryId) //Only if elgg entity exists and we have an entryId
+    $mediaEntry->id = $entryId;
+
 if ($mime_type != null)
     $mediaEntry->mediaType = $mime_type;
 
 // If Video/Audio then upload to Kaltura and create entity in Elgg
 if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_type) == 'audio' || $mediaEntry->mediaType == 'video')
 {
-    $ob = kaltura_update_object($mediaEntry,null,$access_id,$user_guid,$container_guid, true, array('title' => $title, 'uploaded_id' => $mediaEntry->id, 'license' => $license));
+    $ob = kaltura_update_object($mediaEntry, null, $access_id, $user_guid, $container_guid, true,
+        array('title' => $title,
+              'uploaded_id' => $mediaEntry->id,
+              'license' => $license,
+              'thumbnail_sec' => $thumbSec));
     if($ob)
     {
         elgg_clear_sticky_form('file');
@@ -57,8 +69,7 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
     {
         register_error(str_replace("%ID%",$video_id,elgg_echo("kalturavideo:action:updatedko"))."\n$error");
     }
-}
-// If Image then create an album. Don't upload to Kaltura.
+}// If Image then create an album. Don't upload to Kaltura.
 elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType == 'image'){
     //find the users uploads album
     $albums = elgg_get_entities_from_metadata(array(

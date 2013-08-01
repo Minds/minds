@@ -10,30 +10,46 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function UploadCtrl($scope, Kaltura, Elgg, $q) {
+function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 
     $scope.fileInfo = [];
     $scope.queue = [];
     $scope.uploaderElement = '#fileupload';
     $scope.saveEnabled = false;
-
-/*TODO use setSession from kaltura services in order to generate dynamic session with Kaltura*/
+    $scope.albums = albums;
 
     var config = {
         ks: ks,
         serviceUrl: serviceUrl
     };
 
+    $scope.isSelected = function(album){
+        if(album['title'].toLowerCase() == "uploads")
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     $scope.thumbConfig = {
         serviceUrl: serviceUrl,
         pid: partnerId
     };
 
+    /**
+     * Gets the uploaded file thumbnail
+     * @param entryId
+     * @returns {string}
+     */
+    $scope.getFileThumbnail = function(entry, thumbSecond) {
+            if(entry){
+                var thumbnailUrl = 'url('+ serviceUrl + '/p/' + partnerId + '/thumbnail/entry_id/' + entry.id + '/width/400/vid_sec/' + thumbSecond +')';
+                // return empty string if entryID not set, otherwise return thumbnail URL
+                return thumbnailUrl;
+            }
 
-    $scope.getFileThumbnail = function(entryId) {
-        var thumbnailUrl = 'url('+serviceUrl + '/p/' + partnerId + '/thumbnail/entry_id/' + entryId + '/width/400/)';
-        // return empty string if entryID not set, otherwise return thumbnail URL
-        return entryId ? thumbnailUrl : "";
+            return "";
     }
 
     /**
@@ -56,12 +72,17 @@ function UploadCtrl($scope, Kaltura, Elgg, $q) {
         fileInfoRow['license'] = "not-selected";
         fileInfoRow['accessId'] = "0";
         fileInfoRow['album'] = "";
+        fileInfoRow['thumbSecond'] = 0;
+        fileInfoRow['tags'] = "";
+
         $scope.fileInfo.push(fileInfoRow);
+
         data.fileIndex = $scope.fileInfo.length - 1;
 
         // If file is Video/Audio then add entry to Kaltura and create entity in Elgg
         if ($scope.fileInfo[data.fileIndex]['fileType'] == 'video' || $scope.fileInfo[data.fileIndex]['fileType'] == 'audio' ) {
             console.log('Uploading to Kaltura');
+
             // Add upload token
             var token = Kaltura.uploadTokenAdd(file);
 
@@ -71,35 +92,20 @@ function UploadCtrl($scope, Kaltura, Elgg, $q) {
             // Add entry
             $scope.fileInfo[data.fileIndex]['entryId'] = Kaltura.baseEntryAdd($scope.fileInfo[data.fileIndex], uploadComplete);
 
-            // Once the entry is added to Kaltura and Elgg, we enable the save and delete button to allow updates.
-            $scope.fileInfo[data.fileIndex]['entryId'].then(
-                function() {
-                    $scope.fileInfo[data.fileIndex]['guid'].then(
-                        function() {
-                            $scope.fileInfo[data.fileIndex]['updateResult'] = true;
-                        })
-                }
-            );
-
             // Add content to entry in Kaltura
-            $scope.fileInfo[data.fileIndex]['thumbEntryId'] = Kaltura.baseEntryAddContent($scope.fileInfo[data.fileIndex]['entryId'], token, $scope);
+            $scope.fileInfo[data.fileIndex]['entry'] = Kaltura.baseEntryAddContent($scope.fileInfo[data.fileIndex]['entryId'], token);
+
+            $scope.fileInfo[data.fileIndex]['entryRefresh'] = $scope.getEntry($scope.fileInfo[data.fileIndex]['entryId']);
 
             //Create an Elgg entity
             $scope.fileInfo[data.fileIndex]['guid'] = Elgg.addElggEntity($scope.fileInfo[data.fileIndex]);
+
+            console.log('Guid is: ', $scope.fileInfo[data.fileIndex]['guid']);
         }
         else {
+            console.log("In file upload");
             $scope.fileInfo[data.fileIndex]['guid'] = Elgg.uploadElggFile($scope.fileInfo[data.fileIndex], jQuery(elm), data, $scope);
-            $scope.fileInfo[data.fileIndex]['guid'].then(
-                function() {
-                    //TODO finish album Selector - Currently we are returning Album array - I can't translate it.
-                    var albums = Elgg.albumSelector($scope.fileInfo[data.fileIndex]);
-                    albums.then(function(){
-                        console.log(albums);
-                    })
-                    $scope.fileInfo[data.fileIndex]['updateResult'] = true;
-                })
         };
-
     };
 
     /**
@@ -111,23 +117,22 @@ function UploadCtrl($scope, Kaltura, Elgg, $q) {
         return type.substring(0, type.indexOf('/'));
     };
 
+    $scope.saveAll = function(){
+        console.log($scope.fileInfo);
+        for(var index in $scope.fileInfo) //Saves each file
+        {
+            console.log(index);
+            $scope.updateEntry(index);
+        }
+    }
+
     /**
      * Update an entry using its file info.
      * @param index the index of the entry in the file info object.
      */
     $scope.updateEntry = function(index) {
-        var updateResult = Kaltura.baseEntryUpdate($scope.fileInfo[index]);
-        var elggUpdateResult = Elgg.updateElggEntity($scope.fileInfo[index]);
-        // Disable the button.
-        $scope.fileInfo[index]['updateResult'] = false;
-
-        // Re-enable the button after a successful update.
-        elggUpdateResult.then (function(){
-            updateResult.then(function(){
-                    $scope.fileInfo[index]['updateResult'] = true;
-                }
-            )}
-        );
+        console.log($scope.fileInfo[index]);
+        Elgg.updateElggEntity($scope.fileInfo[index]);
     }
 
     /**
@@ -136,36 +141,28 @@ function UploadCtrl($scope, Kaltura, Elgg, $q) {
      */
     $scope.deleteEntry = function(index) {
         console.log("In delete Entry");
-        var updateResult = Kaltura.baseEntryDelete($scope.fileInfo[index]);
-        var elggUpdateResult = Elgg.deleteElggEntity($scope.fileInfo[index]);
+        console.log("Index", index);
+        console.log("fileInfo", $scope.fileInfo[index]);
 
-        // Disable the button.
-        $scope.fileInfo[index]['updateResult'] = false;
-
-        // Re-enable the button after a successful update.
-        elggUpdateResult.then (function(){
-                updateResult.then(function(){
-                        $scope.fileInfo[index]['updateResult'] = true;
-                    }
-                )}
-        );
-
-        //Entry was created in kaltura, remove it
-        $q.when($scope.fileInfo[index]['entryId']).then( function(){
-                Kaltura.baseEntryDelete($scope.fileInfo[index]['entryId']);
-            }
-        )
-
-        //Abort XHR requests
-        if($scope.fileInfo[index]['xhr'])
+        //Abort XHR requests from upload only and not other requests (like add / update)
+        if($scope.fileInfo[index] && !$scope.fileInfo[index]['xhr'].isResolved())
+        {
             $scope.fileInfo[index]['xhr'].abort();
 
-        //Entry was created in Elgg, remove it
+            console.log("In abort XHR and remove object");
+        }
 
-        //Removes the thumbnail from the screen and cancels the upload
-        //TODO: check if upload is canceled and item removed from Elgg / Kaltura.
+        //Entry was created in elgg / Kaltura, remove it
+        if($scope.fileInfo[index] && $scope.fileInfo[index]['guid'])
+        {
+            //TODO: maybe implement a cancelable queue
 
+//            Elgg.deleteElggEntity($scope.fileInfo[index]['guid']);
+        }
+
+        //Removes item from the list
         if ( ~index ) $scope.fileInfo.splice(index, 1);
+
     }
 
     /**
@@ -210,8 +207,15 @@ function UploadCtrl($scope, Kaltura, Elgg, $q) {
         jQuery(elm).bind('fileuploadprogress', function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
 
-            $scope.fileInfo[data.fileIndex]['progress'] = progress;
-            $scope.$apply();
+            if($scope.fileInfo[data.fileIndex]) //Only if element is found
+            {
+                $scope.fileInfo[data.fileIndex]['progress'] = progress;
+
+                $scope.$apply();
+            }
+            else{
+                console.log("Element wasnt found need to delete and cancel request");
+            }
         });
 
         jQuery(elm).bind('fileuploaddone', function(e, data) {
@@ -225,4 +229,46 @@ function UploadCtrl($scope, Kaltura, Elgg, $q) {
 
     // Set the Kaltura service ks.
     Kaltura.setConfig(config);
+
+    $scope.isImage = function(fileItem){
+        if(fileItem['fileType'] == 'image')
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    $scope.rotateImage = function(entryRefresh, rotateLeft, index){
+        if(entryRefresh && entryRefresh.duration){
+            if(rotateLeft){ //Rotate left (reduce video time)
+
+                $scope.fileInfo[index].thumbSecond = Math.abs(($scope.fileInfo[index].thumbSecond - entryRefresh.duration * 0.2) % entryRefresh.duration);
+
+            }else //Rotate right (increase on video seconds)
+            {
+                $scope.fileInfo[index].thumbSecond = Math.abs(($scope.fileInfo[index].thumbSecond + entryRefresh.duration * 0.2) % entryRefresh.duration);
+            }
+        }
+    }
+
+
+    $scope.isShowThumbArrows = function(entry, index){
+        if(entry && entry.id){
+            if(entry.duration && entry.duration > 0){
+                return true;
+           }
+            else{
+                $scope.fileInfo[index].entryRefresh = $timeout(function() {
+                            return $scope.getEntry(entry.id);
+                        }, 20 * 1000);
+                }
+            }
+
+        return false;
+    }
+
+    $scope.getEntry = function(entryId) {
+        return Kaltura.baseEntryGet(entryId);
+    };
 }
