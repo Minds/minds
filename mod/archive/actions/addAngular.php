@@ -46,7 +46,7 @@ $mediaEntry->name = strip_tags($title);
 $mediaEntry->description = $desc;
 //$mediaEntry->tags = $tags;
 
-if($guid && $entryId) //Only if elgg entity exists and we have an entryId
+if($entryId) //Only if we have an entryId
     $mediaEntry->id = $entryId;
 
 if ($mime_type != null)
@@ -63,11 +63,11 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
     if($ob)
     {
         elgg_clear_sticky_form('file');
-        system_message(str_replace("%ID%",$video_id,elgg_echo("kalturavideo:action:updatedok")));
+        system_message(str_replace("%ID%",$entryId,elgg_echo("kalturavideo:action:updatedok")));
     }
     else
     {
-        register_error(str_replace("%ID%",$video_id,elgg_echo("kalturavideo:action:updatedko"))."\n$error");
+        register_error(str_replace("%ID%",$entryId,elgg_echo("kalturavideo:action:updatedko"))."\n$error");
     }
 }// If Image then create an album. Don't upload to Kaltura.
 elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType == 'image'){
@@ -76,13 +76,10 @@ elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType ==
         'type'=> 'object',
         'subtype' => 'album',
         'owner_guid' => elgg_get_logged_in_user_guid()
-//        'metadata_name_value_pairs' => array('name'=>'uploads', 'value'=>true)
-
     ));
 
-    /*TODO foreach album un albums and check the guid and then use this album*/
-
     $album = $albums[1];
+
     //if the album cant be found then lets create one
     if (!$album) {
         $album = new TidypicsAlbum();
@@ -97,7 +94,6 @@ elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType ==
             forward(REFERER);
         }
     }
-
 
     if ($entityId)
     {
@@ -118,7 +114,7 @@ elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType ==
     $image->category = $category;
 
     $result = $image->save($_FILES['fileData']);
-    //error_log('Save: ' . $image->getGUID());
+
     if ($result) {
         //array_push($uploaded_images, $image->getGUID());
         $album->prependImageList(array($image->getGUID()));
@@ -127,7 +123,6 @@ elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType ==
 
         add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
         exit;
-//        forward($image->getURL());
     }
 }
 //anything else should be forwarded to files. Elgg File entity.

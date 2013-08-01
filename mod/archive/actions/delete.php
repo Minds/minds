@@ -6,6 +6,7 @@ $entity = get_entity($guid);
 
 if(!$entity) //Elgg entity doesn't exists we return
 {
+    system_message(elgg_echo('minds:archive:delete:success'));
     forward('archive/all');
 }
 

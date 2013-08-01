@@ -162,7 +162,7 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 			//will create the new object if not exists
 			//echo "Creating new: $user_guid:$container_guid\n";
 
-			$ob = new ElggObject();
+            $ob = new ElggObject();
 			$ob->subtype = 'kaltura_video';
 			$ob->title = $params['title'] ? $params['title'] : $entry->name;
 			$ob->description = $entry->description;
