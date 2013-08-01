@@ -28,4 +28,7 @@ add_entity_relationship($guid, 'remind', elgg_get_logged_in_user_guid());
 
 system_message(elgg_echo("minds:remind:success"));
 
+//Chris set use settings
+elgg_set_plugin_user_setting('reminded', true);
+
 forward(REFERRER);

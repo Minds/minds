@@ -39,7 +39,6 @@ $post->owner_guid = $from_guid;
 $post->access_id = $access_id;
 $post->message = $message;
 $post->method = $method;
-
 $post->facebook = $facebook;
 $post->twitter = $twitter;
 
