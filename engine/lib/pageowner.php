@@ -44,10 +44,10 @@ function elgg_get_page_owner_guid($guid = 0) {
  * @since 1.8.0
  */
 function elgg_get_page_owner_entity() {
-	$guid = elgg_get_page_owner_guid();
-	if ($guid > 0) {
+	$guid = elgg_get_page_owner_guid(); 
+	if ($guid) {
 		$ia = elgg_set_ignore_access(true);
-		$owner = get_entity($guid);
+		$owner = get_entity($guid, 'user');
 		elgg_set_ignore_access($ia);
 
 		return $owner;

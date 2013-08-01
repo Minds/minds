@@ -491,72 +491,41 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
 /**
  * Create a new entry in the entities table.
  *
- * Saves the base information in the entities table for the entity.  Saving
- * the type information is handled in the calling class method.
  *
  * @warning Plugin authors should never call this directly.  Always use entity objects.
  *
- * @warning Entities must have an entry in both the entities table and their type table
- * or they will throw an exception when loaded.
- *
- * @param string $type           The type of the entity (site, user, object, group).
- * @param string $subtype        The subtype of the entity.
- * @param int    $owner_guid     The GUID of the object's owner.
- * @param int    $access_id      The access control group to create the entity with.
- * @param int    $site_guid      The site to add this entity to. 0 for current.
- * @param int    $container_guid The container GUID
+ * @param object $entity 	An entity to save
  *
  * @return int|false The new entity's GUID, or false on failure
  * @throws InvalidParameterException
  * @link http://docs.elgg.org/DataModel/Entities
  * @access private
  */
-function create_entity($type, $subtype, $owner_guid, $access_id, $site_guid = 0,
-$container_guid = 0) {
+function create_entity($object = NULL) {
+	global $CONFIG;
 
-	global $CONFIG, $DB;
-
-	$type = $type;
-	$subtype_id = add_subtype($type, $subtype);
-	$owner_guid = (int)$owner_guid;
-	$access_id = (int)$access_id;
-	$time = time();
-	if ($site_guid == 0) {
-		$site_guid = $CONFIG->site_guid;
-	}
-	$site_guid = (int) $site_guid;
-	if ($container_guid == 0) {
-		$container_guid = $owner_guid;
-	}
-
-/*	$user_guid = elgg_get_logged_in_user_guid();
-	if (!can_write_to_container($user_guid, $owner_guid, $type, $subtype)) {
-		return false;
-	}
-	if ($owner_guid != $container_guid) {
-		if (!can_write_to_container($user_guid, $container_guid, $type, $subtype)) {
-			return false;
+	//convert object to array of attributes
+	$attributes = array();
+	foreach($object as $k => $v){
+		if($v){
+			$attributes[$k] = $v;
 		}
-	}*/
-	if ($type == "") {
-		throw new InvalidParameterException(elgg_echo('InvalidParameterException:EntityTypeNotSet'));
 	}
 
-	//in cassandra, GUID is applied before indexing
-	$guid = phpcassa\UUID::uuid1()->string;
-	var_dump($type);
-	try{	
-	$insert =  $DB->cfs[$type]->insert($guid, array(	'type' => $type,
-						'subtype' => $subtype,
-						'owner_guid' => $owner_guid,
-						'container_guid' => $container_guid,
-						'access_id' => $access_id,
-						'site_guid' => $site_guid,
-						'time_created' => time()
-			));
-	} catch (Exception $e){
-		var_dump($e);
-	}	
+        $result = db_insert($object->guid, $attributes);
+
+        return $result;
+
+        if ($result !== false) {
+                $entity = get_entity($result, 'user');
+                //if (elgg_trigger_event('create', $entity->type, $entity)) {
+                        return $guid;
+                //} else {
+                //      $entity->delete();
+                //}
+        }
+
+        return false;
 }
 
 /**
@@ -632,7 +601,7 @@ function entity_row_to_elggstar($row, $type) {
 	if ((!isset($row->guid))) {
 		return $row;
 	}
-	
+
 	$new_entity = false;
 	
 	// Create a memcache cache if we can
@@ -663,7 +632,6 @@ function entity_row_to_elggstar($row, $type) {
 			}
 		}
 	}
-
 	if (!$new_entity) {
 		//@todo Make this into a function
 		switch ($type) {
@@ -913,7 +881,7 @@ function elgg_get_entities(array $options = array()) {
 		if($type == 'object' && !$rows){
 
 			//2a. If owner_guids have been specified then grab from user_object column family
-var_dump($options);
+//var_dump($options);
 			//2b. If not then just return all 
 			$index_exps[] = new IndexExpression('subtype', 'blog');
 			$index_clause = new IndexClause($index_exps, $options['offset'], $options['limit']);
@@ -922,7 +890,7 @@ var_dump($options);
 		} elseif($type == 'user') {
 
 			$rows = $DB->cfs[$type]->get_range($options['offset'],"", $options['limit']);
-
+		
 		} elseif($type == 'plugin'){
 			
 	//		$rows = $DB->cfs[$type]->get_indexed_slices();
@@ -930,9 +898,15 @@ var_dump($options);
 		}
 
 		if($rows){
-			foreach($rows as $row){
-
-				$entities[] = entity_row_to_elggstar($row, $type);
+			foreach($rows as $guid=>$row){
+				//convert array to std class
+				$newrow = new stdClass;
+				$newrow->guid = $guid;	
+				foreach($row as $k=>$v){
+					$newrow->$k = $v;
+				}
+				
+				$entities[] = entity_row_to_elggstar($newrow, $type);
 
 			}
 		}	
@@ -1287,7 +1261,7 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 	$autofeed = true;
 
 	$defaults = array(
-		'offset' => (int) max(get_input('offset', 0), 0),
+		'offset' => "",
 		'limit' => (int) max(get_input('limit', 10), 0),
 		'full_view' => TRUE,
 		'list_type_toggle' => FALSE,
@@ -1308,7 +1282,7 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 	$entities = $getter($options);
 
 	$options['count'] = $count;
-
+	
 	return $viewer($entities, $options);
 }
 
@@ -1438,7 +1412,7 @@ $order_by = 'time_created') {
  */
 function disable_entity($guid, $reason = "", $recursive = true) {
 	global $CONFIG;
-
+return;
 	$guid = (int)$guid;
 	$reason = sanitise_string($reason);
 
@@ -1881,7 +1855,7 @@ function import_entity_plugin_hook($hook, $entity_type, $returnvalue, $params) {
  */
 function can_edit_entity($entity_guid, $user_guid = 0) {
 	$user_guid = (int)$user_guid;
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, 'user');
 	if (!$user) {
 		$user = elgg_get_logged_in_user_entity();
 	}

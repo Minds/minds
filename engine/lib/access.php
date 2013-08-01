@@ -456,7 +456,7 @@ function get_write_access_array($user_id = 0, $site_id = 0, $flush = false) {
 			ACCESS_PUBLIC => elgg_echo("PUBLIC")
 		);
 		
-		$query = "SELECT ag.* FROM {$CONFIG->dbprefix}access_collections ag ";
+/*		$query = "SELECT ag.* FROM {$CONFIG->dbprefix}access_collections ag ";
 		$query .= " WHERE (ag.site_guid = $site_id OR ag.site_guid = 0)";
 		$query .= " AND (ag.owner_guid = $user_id)";
 
@@ -466,7 +466,7 @@ function get_write_access_array($user_id = 0, $site_id = 0, $flush = false) {
 				$access_array[$collection->id] = $collection->name;
 			}
 		}
-
+*/
 		if ($init_finished) {
 			$cache[$hash] = $access_array;
 		}

@@ -94,32 +94,11 @@ function elgg_is_admin_user($user_guid) {
 	$version = (int) datalist_get('version');
 
 	if ($version < 2010040201) {
-		$admin = get_metastring_id('admin');
-		$yes = get_metastring_id('yes');
-		$one = get_metastring_id('1');
-
-		$query = "SELECT * FROM {$CONFIG->dbprefix}users_entity as e,
-			{$CONFIG->dbprefix}metadata as md
-			WHERE (
-				md.name_id = '$admin'
-				AND md.value_id IN ('$yes', '$one')
-				AND e.guid = md.entity_guid
-				AND e.guid = {$user_guid}
-				AND e.banned = 'no'
-			)";
-	} else {
-		$query = "SELECT * FROM {$CONFIG->dbprefix}users_entity as e
-			WHERE (
-				e.guid = {$user_guid}
-				AND e.admin = 'yes'
-			)";
-	}
-
-	// normalizing the results from get_data()
-	// See #1242
-	$info = get_data($query);
-	if (!((is_array($info) && count($info) < 1) || $info === FALSE)) {
-		return TRUE;
+		
+		$user = get_entity($user_guid, 'user');	
+		if($user->isAdmin()){
+			return true;
+		}
 	}
 	return FALSE;
 }
@@ -414,7 +393,7 @@ function _elgg_session_boot($force = false) {
 			if (!isset($SESSION['__elgg_session'])) {
 				$SESSION['__elgg_session'] = md5(microtime() . rand());
 			}
-		
+			
 			// test whether we have a user session
 			if (empty($SESSION['guid'])) {
 		

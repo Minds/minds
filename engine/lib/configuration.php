@@ -239,6 +239,13 @@ function datalist_get($name) {
 		return $DATALIST_CACHE[$name];
 	}
 
+	//check if this is set in settings.php	
+	foreach($CONFIG as $k=>$v){
+		if($k == $name){
+			return $v;
+		};
+	}
+
 	// If memcache enabled then cache value in memcache
 	$value = null;
 	static $datalist_memcache;

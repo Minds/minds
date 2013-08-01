@@ -47,24 +47,24 @@ function db_init() {
 /**
  * Insert to cassandra
  */
-function db_insert($guid = 0, array $options = array()){
+function db_insert($guid = NULL, array $options = array()){
 	global $DB;
 
-	if($guid == 0){
-	//	$guid = UUID::uuid1()->string;
+	if(!$guid){
+		$guid = UUID::uuid1()->string;
 	}
-	
+var_dump($options);	
 	$type = $options['type'] ? $options['type'] : 'object'; // assume its an object if no type is specified
 	
 	//unset guid
 	unset($options['guid']);	
-
 try{	
 	$DB->cfs[$type]->insert($guid, $options);
 } catch(Exception $e){
 echo '<pre>';
 var_dump($e);
 echo '</pre>';
+exit;
 }
 	return $guid;
 }
@@ -108,9 +108,9 @@ function db_get(array $options = array()){
                 $rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
 
         } elseif($type == 'user') {
-
+		
 		foreach($options['attrs'] as $k => $v){
-                       $index_exps[] = new IndexExpression($k, $v);
+		       $index_exps[] = new IndexExpression($k, $v);
                 }
 
 		$index_clause = new IndexClause($index_exps);

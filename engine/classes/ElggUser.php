@@ -28,7 +28,6 @@ class ElggUser extends ElggEntity
 	 * @return void
 	 */
 	protected function initializeAttributes() {
-		parent::initializeAttributes();
 
 		$this->attributes['type'] = "user";
 		$this->attributes['name'] = NULL;
@@ -40,7 +39,7 @@ class ElggUser extends ElggEntity
 		$this->attributes['code'] = NULL;
 		$this->attributes['banned'] = "no";
 		$this->attributes['admin'] = 'yes';
-		$this->attributes['tables_split'] = 2;
+		$this->attributes['time_created'] = time();
 	}
 
 	/**
@@ -133,16 +132,7 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	public function save() {
-		// Save generic stuff
-//		if (!parent::save()) {
-//			return false;
-//		}
-		
-		// Now save specific stuff
-		echo '<hr/>';
-	var_dump($this->attributes);	
-	echo '<hr/>';
-		return create_user_entity($this->attributes);
+		return create_entity($this);
 	}
 
 	/**

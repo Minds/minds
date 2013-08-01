@@ -24,7 +24,7 @@ if (empty($body)) {
 	forward(REFERER);
 }
 
-$to = get_entity($to_guid);
+$to = get_entity($to_guid, 'user');
 if($to instanceof ElggGroup){
 	$access_id = $to->group_acl;
 	$container_guid = $to_guid;
@@ -53,7 +53,7 @@ if (!$guid) {
 $news_id = add_to_river('river/object/wall/create', 'create', $from_guid, $guid);
 
 if($ref == 'wall'){
-	$post = get_entity($guid);
+	$post = get_entity($guid,'object');
 
 	$id = "elgg-{$post->getType()}-{$post->guid}";
 	$time = $post->time_created;
@@ -77,7 +77,7 @@ if($ref == 'wall'){
 
 echo $output;
 
-notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
+//notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
 
 system_message(elgg_echo("wall:posted"));
 

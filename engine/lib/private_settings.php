@@ -278,7 +278,6 @@ $pairs = NULL, $pair_operator = 'AND', $name_prefix = '') {
 function get_private_setting($entity_guid, $name) {
 	global $CONFIG;
 	$entity_guid = (int) $entity_guid;
-	$name = sanitise_string($name);
 
 	$entity = get_entity($entity_guid);
 	if (!$entity instanceof ElggEntity) {

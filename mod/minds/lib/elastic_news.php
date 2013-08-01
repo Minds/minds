@@ -15,10 +15,10 @@ function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_
 	if (!elgg_view_exists($view, 'default')) {
 		return false;
 	}
-		if (!($subject = get_entity($subject_guid))) {
+		if (!($subject = get_entity($subject_guid, 'user'))) {
 		return false;
 	}
-	if (!($object = get_entity($object_guid))) {
+	if (!($object = get_entity($object_guid, 'object'))) {
 		return false;
 	}
 	if (empty($action_type)) {
@@ -36,13 +36,13 @@ function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_
 	$es = new elasticsearch();
 	$es->index = $CONFIG->elasticsearch_prefix . 'news';
 	
-	$view = sanitise_string($view);
-	$action_type = sanitise_string($action_type);
-	$subject_guid = sanitise_int($subject_guid);
-	$object_guid = sanitise_int($object_guid);
-	$access_id = sanitise_int($access_id);
-	$posted = sanitise_int($posted);
-	$annotation_id = sanitise_int($annotation_id);
+	$view = $view;
+	$action_type = $action_type;
+	$subject_guid = $subject_guid;
+	$object_guid = $object_guid;
+	$access_id = $access_id;
+	$posted = $posted;
+	$annotation_id = $annotation_id;
 	
 	$id = md5($subject_guid . time()); //id is an md5 hash of subject id + time
 	
@@ -56,7 +56,7 @@ function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_
 	$data->access_id = $access_id; //@MH - I think that this should be defined from the object or subject, but lets leave for now.
 	
 	$save = $es->add($action_type, $id, json_encode($data)); 
-
+	
 	if($save['ok']){
 		return $id;
 	} else{

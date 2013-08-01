@@ -60,7 +60,6 @@ class ElggPlugin extends ElggEntity {
 			$this->pluginID = $this->attributes['guid'];	
 			$this->title = $this->pluginID;
 		        $this->path = elgg_get_plugins_path() . $this->getID();
-		
 		} else {
 			$plugin_path = elgg_get_plugins_path();
 
@@ -582,17 +581,9 @@ class ElggPlugin extends ElggEntity {
 			return false;
 		}
 
-		if ($site_guid) {
-			$site = get_entity($site_guid);
-		} else {
-			$site = get_config('site');
-		}
-
-		if (!($site instanceof ElggSite)) {
-			return false;
-		}
-
-		return check_entity_relationship($this->guid, 'active_plugin', $site->guid);
+		$active = $this->active == 1 ? true : false;
+		
+		return $active;
 	}
 
 	/**
@@ -610,7 +601,6 @@ class ElggPlugin extends ElggEntity {
 			if (!$result) {
 				$this->errorMsg = $this->getPackage()->getError();
 			}
-
 			return $result;
 		}
 
@@ -630,11 +620,11 @@ class ElggPlugin extends ElggEntity {
 		if ($this->isActive($site_guid)) {
 			return false;
 		}
-
+		
 		if (!$this->canActivate()) {
 			return false;
 		}
-
+		
 		// set in the db, now perform tasks and emit events
 		if ($this->setStatus(true, $site_guid)) {
 			// emit an event. returning false will make this not be activated.
@@ -659,7 +649,6 @@ class ElggPlugin extends ElggEntity {
 					$return = $this->includeFile('activate.php');
 				}
 			}
-
 			if ($return === false) {
 				$this->deactivate($site_guid);
 			}
@@ -702,6 +691,14 @@ class ElggPlugin extends ElggEntity {
 			return $this->setStatus(false, $site_guid);
 		}
 	}
+	
+	/**
+	 * Is the plugin enabled, this is different to active and should be set to true here
+	 */
+	public function isEnabled(){
+		return true;
+	}
+
 
 	/**
 	 * Start the plugin.
@@ -734,7 +731,6 @@ class ElggPlugin extends ElggEntity {
 		if ($flags & ELGG_PLUGIN_REGISTER_LANGUAGES) {
 			$this->registerLanguages();
 		}
-
 		return true;
 	}
 
@@ -942,7 +938,7 @@ class ElggPlugin extends ElggEntity {
 		}
 
 		if ($site_guid) {
-			$site = get_entity($site_guid);
+			$site = get_entity($site_guid, 'site');
 
 			if (!($site instanceof ElggSite)) {
 				return false;
@@ -952,10 +948,11 @@ class ElggPlugin extends ElggEntity {
 		}
 
 		if ($active) {
-			return add_entity_relationship($this->guid, 'active_plugin', $site->guid);
+			db_insert($this->guid, array('type'=>'plugin','active'=>1));
 		} else {
-			return remove_entity_relationship($this->guid, 'active_plugin', $site->guid);
+			db_insert($this->guid, array('type'=>'plugin', 'active'=>0));
 		}
+		return true;
 	}
 
 	/**

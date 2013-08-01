@@ -354,7 +354,10 @@ function user_remove_friend($user_guid, $friend_guid) {
  * @return bool
  */
 function user_is_friend($user_guid, $friend_guid) {
-	return check_entity_relationship($user_guid, "friend", $friend_guid) !== false;
+	
+	//do a row slice
+
+	return false;
 }
 
 /**
@@ -368,16 +371,13 @@ function user_is_friend($user_guid, $friend_guid) {
  * @return ElggUser[]|false Either an array of ElggUsers or false, depending on success
  */
 function get_user_friends($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
-$offset = 0) {
+$offset = "") {
 
-	return elgg_get_entities_from_relationship(array(
-		'relationship' => 'friend',
-		'relationship_guid' => $user_guid,
-		'type' => 'user',
-		'subtype' => $subtype,
-		'limit' => $limit,
-		'offset' => $offset
-	));
+	return db_get( array(	'type'=> 'friends',
+					'limit' => $limit,
+					'offset' => $offset
+				));
+
 }
 
 /**
@@ -393,15 +393,11 @@ $offset = 0) {
 function get_user_friends_of($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
 $offset = 0) {
 
-	return elgg_get_entities_from_relationship(array(
-		'relationship' => 'friend',
-		'relationship_guid' => $user_guid,
-		'inverse_relationship' => TRUE,
-		'type' => 'user',
-		'subtype' => $subtype,
-		'limit' => $limit,
-		'offset' => $offset
-	));
+	return db_get( array(     'type'=> 'friendsof',
+                                        'limit' => $limit,
+                                        'offset' => $offset
+                                ));
+
 }
 
 /**
@@ -541,6 +537,10 @@ function get_user($guid) {
  */
 function get_user_by_username($username) {
 	global $CONFIG, $USERNAME_TO_GUID_MAP_CACHE;
+
+	if(!$username){
+		return false;
+	}
 
 	$entities = db_get(	array(	'type'=>'user', 
 					'attrs' => array('username'=>$username )

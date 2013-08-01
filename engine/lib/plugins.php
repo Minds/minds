@@ -96,9 +96,9 @@ function elgg_generate_plugin_entities() {
 
 	$dir = elgg_get_plugins_path();
 
-	$known_plugins = elgg_get_entities(array('type'=>'plugin', 'limit'=>0));
+	$known_plugins = elgg_get_plugins('any');
 	/* @var ElggPlugin[] $known_plugins */
-
+	
 	if (!$known_plugins) {
 		$known_plugins = array();
 	}
@@ -253,7 +253,7 @@ function elgg_get_max_plugin_priority() {
  */
 function elgg_is_active_plugin($plugin_id, $site_guid = null) {
 	if ($site_guid) {
-		$site = get_entity($site_guid);
+		$site = get_entity($site_guid, 'site');
 	} else {
 		$site = elgg_get_site_entity();
 	}
@@ -263,7 +263,7 @@ function elgg_is_active_plugin($plugin_id, $site_guid = null) {
 	}
 
 	$plugin = elgg_get_plugin_from_id($plugin_id);
-
+	
 	if (!$plugin) {
 		return false;
 	}

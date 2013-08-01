@@ -339,7 +339,7 @@ function generate_action_token($timestamp) {
 	// Session token
 	global $SESSION;
 	$st = $SESSION['__elgg_session'];
-
+	
 	if (($site_secret) && ($session_id)) {
 		return md5($site_secret . $timestamp . $session_id . $st);
 	}
@@ -379,7 +379,6 @@ function get_site_secret() {
 	if (!$secret) {
 		$secret = init_site_secret();
 	}
-
 	return $secret;
 }
 

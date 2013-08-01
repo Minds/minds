@@ -114,6 +114,8 @@ function add_entity_relationship($guid_one, $relationship, $guid_two) {
 function check_entity_relationship($guid_one, $relationship, $guid_two) {
 	global $CONFIG;
 
+	return;//check entity relationship deprecated
+
 	$guid_one = (int)$guid_one;
 	$relationship = sanitise_string($relationship);
 	$guid_two = (int)$guid_two;

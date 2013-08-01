@@ -70,7 +70,7 @@ function get_entity_statistics($owner_guid = 0) {
  */
 function get_number_users($show_deactivated = false) {
 	global $CONFIG;
-
+return 100;
 	$access = "";
 
 	if (!$show_deactivated) {

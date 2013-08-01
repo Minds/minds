@@ -24,15 +24,15 @@ $sys = new SystemManager($CONFIG->cassandra->servers[0]);
 $sys->create_keyspace($CONFIG->cassandra->keyspace);
 
 //column name => ARRAY(	'INDEX' );
-$cfs = array(	'site' => array(	'site_id' => 'UUIDType'	),
+$cfs = array(	'site' => array(	'site_id' => 'UTF8Type'	),
 		'plugin' => array(	'active' => 'IntegerType'	),
 		'config' => array(),
-		'object' => array(	'guid' => 'UUIDType', 'owner_guid'=>'UUIDType', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UUIDType'),
-		'user' => array(	'guid' => 'UUIDType', 'username' => 'UTF8Type', 'email' => 'UTF8Type'	),
-		'group' => array(	'guid' => 'UUIDType', 'container_guid' => 'UUIDType'	),
+		'object' => array(	'owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type'),
+		'user' => array(	'username' => 'UTF8Type', 'email' => 'UTF8Type'	),
+		'group' => array(	'container_guid' => 'UTF8Type'	),
 
-		'subscribers' => array( 	),
-		'subscriptions' => array(	)
+		'friends' => array( 	),
+		'friendsof' => array(	)
 	);
 
 foreach($cfs as $cf => $indexes){

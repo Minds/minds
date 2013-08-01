@@ -2,7 +2,7 @@
 /**
  * Button area for showing the add widgets panel
  */
- $user = elgg_get_page_owner_entity();
+$user = elgg_get_page_owner_entity();
 
 //this needs to be loaded before the widget is added. 
 elgg_load_js('elgg.wall');

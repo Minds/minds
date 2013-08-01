@@ -1050,12 +1050,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return string The entity subtype
 	 */
 	public function getSubtype() {
-		// If this object hasn't been saved, then return the subtype string.
-		if (!((int) $this->guid > 0)) {
-			return $this->get('subtype');
-		}
-
-		return get_subtype_from_id($this->get('subtype'));
+		return $this->subtype;	
 	}
 
 	/**
