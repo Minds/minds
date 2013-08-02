@@ -172,7 +172,6 @@ function minds_elastic_get_news(array $options = array()) {
 
 	$singulars = array('id', 'subject_guid', 'object_guid', 'annotation_id', 'action_type', 'type', 'subtype');
 	$options = elgg_normalise_plural_options_array($options, $singulars);
-
 	//get by view
 	foreach($options['views'] as $view){
 		$q .= "view:$view AND ";
@@ -221,7 +220,7 @@ function minds_elastic_get_news(array $options = array()) {
 		$data['sort'] = array('posted'=>'desc');
 		
 		$query = $es->terms($options['action_types'], json_encode($data));
-	
+		
 		if (!$options['count']) {
 			return minds_elastic_parse_news($query); 
 		} else {
@@ -263,7 +262,7 @@ function minds_elastic_parse_news($data) {
 		$object->action_type = $item['_type'];
 		$post[] = new MindsNewsItem($object);
 	}
-
+	
 	return $post;
 }
 

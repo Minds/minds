@@ -375,7 +375,7 @@ class ElggPlugin extends ElggEntity {
 		$user_guid = (int)$user_guid;
 
 		if ($user_guid) {
-			$user = get_entity($user_guid);
+			$user = get_entity($user_guid, 'user');
 		} else {
 			$user = elgg_get_logged_in_user_entity();
 		}

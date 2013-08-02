@@ -222,7 +222,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	public function set($name, $value) {
-		if (array_key_exists($name, $this->attributes)) {
+		//if (array_key_exists($name, $this->attributes)) {
 			// Certain properties should not be manually changed!
 			switch ($name) {
 				case 'guid':
@@ -234,9 +234,9 @@ abstract class ElggEntity extends ElggData implements
 					$this->attributes[$name] = $value;
 					break;
 			}
-		} else {
-			return $this->setMetaData($name, $value);
-		}
+		//} else {
+		//	return $this->setMetaData($name, $value);
+		//}
 
 		return TRUE;
 	}

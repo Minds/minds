@@ -98,7 +98,7 @@ class ElggObject extends ElggEntity {
 	 * @throws InvalidClassException
 	 */
 	protected function load($guid) {
-
+		
 		foreach($guid as $k => $v){
                         $this->attributes[$k] = $v;
                 }		
@@ -116,6 +116,7 @@ class ElggObject extends ElggEntity {
 	 * @return bool
 	 */
 	public function save() { 
+		//var_dump($this);exit;
 		return create_entity($this);
 	}
 

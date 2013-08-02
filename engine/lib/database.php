@@ -53,7 +53,7 @@ function db_insert($guid = NULL, array $options = array()){
 	if(!$guid){
 		$guid = UUID::uuid1()->string;
 	}
-var_dump($options);	
+	
 	$type = $options['type'] ? $options['type'] : 'object'; // assume its an object if no type is specified
 	
 	//unset guid
@@ -101,7 +101,7 @@ function db_get(array $options = array()){
         if($type == 'object' && !$rows){
 
         	//2a. If owner_guids have been specified then grab from user_object column family
-		var_dump($options);
+		//var_dump($options);
                 //2b. If not then just return all 
                 $index_exps[] = new IndexExpression('subtype', 'blog');
                 $index_clause = new IndexClause($index_exps, $options['offset'], $options['limit']);
