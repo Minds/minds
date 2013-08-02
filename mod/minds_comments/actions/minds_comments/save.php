@@ -35,7 +35,7 @@ if($create['ok'] == true){
 	$data['_source']['time_created'] = time();
 	//header('Content-Type: application/json');
 	$output = minds_comments_view_comment($data);
-	minds_comments_notification($type, $pid, $comment);
+//	minds_comments_notification($type, $pid, $comment);
 	if(get_input('redirect_url')){
 		forward(get_input('redirect_url'));
 		return true;

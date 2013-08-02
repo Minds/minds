@@ -5,7 +5,6 @@
 
 $object = $vars['item']->getObjectEntity();
 $excerpt = minds_filter($object->message);
-var_dump($object);
 $to = get_entity($object->to_guid, 'user');
 //var_dump($to);
 $subject = $vars['item']->getSubjectEntity();
