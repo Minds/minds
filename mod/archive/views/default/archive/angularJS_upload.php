@@ -4,7 +4,6 @@
  *
  */
 
-
 $kmodel = KalturaModel::getInstance();
 
 $ks = $kmodel->getClientSideSession();
@@ -14,6 +13,7 @@ $serverUrl = elgg_get_site_url();
 $albums = $object = elgg_get_entities(array(
     'type' => 'object',
     'subtype' => 'album',
+    'owner_guid' => elgg_get_logged_in_user_guid(),
     'limit' => 0,
 ));
 
@@ -28,10 +28,11 @@ foreach($albums as $album)
 
 <script>
     var ks = "<?php echo $ks?>";
-    var serviceUrl = "<?php echo $serviceUrl?>";
-    var partnerId = "<?php echo $partnerId?>";
-    var serverUrl = "<?php echo $serverUrl?>";
-    var albums = <?php echo json_encode($albumRes)?>;
+    var serviceUrl = "<?php echo $serviceUrl ?>";
+    var partnerId = "<?php echo $partnerId ?>";
+    var serverUrl = "<?php echo $serverUrl ?>";
+    var albums = <?php echo json_encode($albumRes) ?>;
+    var cdnUrl = "<?php echo $serverUrl ?>";
 </script>
 
 <div ng-app="mindsUploader">

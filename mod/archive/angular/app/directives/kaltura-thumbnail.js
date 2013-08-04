@@ -25,10 +25,8 @@ angular.module('mindsApp.directives', []).directive('kalturaThumbnail', function
                 /* set the width of the img prior to entryid being received */
 
                 var unwatch = $scope.$watch('entryid', function(entryId) {
-                    console.log(entryId);
                     if (entryId)
                     {
-                        console.log(entryId);
                         var imgElement = jQuery(element).find('img');
 
                         // Set global configuration.

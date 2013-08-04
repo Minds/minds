@@ -23,10 +23,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
     elggService.addElggEntity = function(fileInfo){
         var deferred = $q.defer();
 
-        console.log("In addElggEntity: ", fileInfo.entryId)
-
         $q.when(fileInfo.entryId).then(function(resolvedEntryId) {
-            console.log("In addElggEntity when: ", resolvedEntryId)
             var data = {
             'entryId': resolvedEntryId,
             'title': fileInfo['name'],
@@ -49,11 +46,9 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 transform: "transformRequest"
             }).
                 success(function(guid, status, headers, config) {
-                    console.log('Add Elgg Entity:' + guid);
                     deferred.resolve(guid);
                 }).
                 error(function(guid, status, headers, config) {
-                    console.log('error: ' + guid)
                     deferred.reject(guid);
                 })
         })
@@ -82,6 +77,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
             'license': fileInfo['license'],
             'fileType': fileInfo['fileType'],
             'tags': fileInfo['tags'],
+            'albumId': fileInfo['albumId'],
             '__elgg_token': elgg.security.token.__elgg_token,
             '__elgg_ts': elgg.security.token.__elgg_ts
         };
@@ -90,7 +86,6 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
         });
 
         data.submit().done(function(guid) {
-            console.log('success:' + guid);
             deferred.resolve(guid);
             $scope.$apply();
         });
@@ -109,7 +104,6 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
         var deferred  = $q.defer();
 
         $q.all([fileInfo['guid'], fileInfo['entryId']]).then(function(resolvedValues) {
-            console.log("In update Elgg when: ", resolvedValues);
             var data = {
                 'entryId': resolvedValues[1],
                 'guid': resolvedValues[0],
@@ -120,6 +114,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 'fileType': fileInfo['fileType'],
                 'tags': fileInfo['tags'],
                 'thumbSecond': fileInfo['thumbSecond'],
+                'albumId': fileInfo['albumId'],
                 '__elgg_token': elgg.security.token.__elgg_token,
                 '__elgg_ts': elgg.security.token.__elgg_ts
             };
@@ -133,11 +128,9 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 transform: "transformRequest"
             }).
                 success(function(guid, status, headers, config) {
-                    console.log('update Elgg entity: ' + guid)
                     deferred.resolve(guid);
                 }).
                 error(function(guid, status, headers, config) {
-                    console.log('error: ' + guid)
                     deferred.reject(guid);
                 })
         })
@@ -170,11 +163,9 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 transform: "transformRequest"
             }).
                 success(function(guid, status, headers, config) {
-                    console.log('success: ' + guid)
                     deferred.resolve(guid);
                 }).
                 error(function(guid, status, headers, config) {
-                    console.log('error: ' + guid)
                     deferred.reject(guid);
                 })
         })

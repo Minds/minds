@@ -39,11 +39,9 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
             transform: transformRequest
         }).
             success(function(guid, status, headers, config) {
-                console.log(guid);
                 deferred.resolve(guid);
             }).
             error(function(guid, status, headers, config) {
-                console.log('error: ' + guid)
                 deferred.reject(guid);
             })
 
@@ -84,7 +82,6 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                 deferred.resolve(token);
             }).
             error(function(data, status, headers, config) {
-                console.log('error: ' + data);
                 deferred.reject();
             });
 
@@ -165,7 +162,6 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                         deferred.resolve(entryId);
                     }).
                     error(function(data, status, headers, config) {
-                        console.log('error: ' + data)
                         deferred.reject(data);
                     })
             }
@@ -211,7 +207,6 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                     deferred.resolve(data);
                 }).
                 error(function(data, status, headers, config) {
-                    console.log('error: ' + data)
                     deferred.reject(data);
                 }
             );
@@ -260,7 +255,6 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                         deferred.resolve(entry);
                     }).
                     error(function(data, status, headers, config) {
-                        console.log('error: ' + data);
                         deferred.reject();
                     });
             }
@@ -320,7 +314,6 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                     deferred.resolve(data);
                 }).
                 error(function(data, status, headers, config) {
-                    console.log('error: ' + data)
                     deferred.reject(data);
                 }
             );
@@ -365,7 +358,6 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                         deferred.resolve(entry);
                     }).
                     error(function(data, status, headers, config) {
-                        console.log('error: ' + data)
                         deferred.reject(data);
                     })
             }

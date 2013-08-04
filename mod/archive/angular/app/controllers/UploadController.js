@@ -42,10 +42,14 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
      * @param entryId
      * @returns {string}
      */
-    $scope.getFileThumbnail = function(entry, thumbSecond) {
-            if(entry){
+    $scope.getFileThumbnail = function(entry, thumbSecond, guid) {
+            if(entry){ //Only applies to video
                 var thumbnailUrl = 'url('+ serviceUrl + '/p/' + partnerId + '/thumbnail/entry_id/' + entry.id + '/width/400/vid_sec/' + thumbSecond +')';
                 // return empty string if entryID not set, otherwise return thumbnail URL
+                return thumbnailUrl;
+            }else if(guid)
+            {
+                var thumbnailUrl = 'url(' + cdnUrl + '/photos/thumbnail/' + guid +'/large)';
                 return thumbnailUrl;
             }
 
@@ -69,9 +73,21 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         fileInfoRow['fileType'] = $scope.detectMediaType(file.type);
         fileInfoRow['name'] = file.name;
         fileInfoRow['updateResult'] = false;
-        fileInfoRow['license'] = "not-selected";
-        fileInfoRow['accessId'] = "0";
-        fileInfoRow['album'] = "";
+        fileInfoRow['license'] = 'not-selected';
+        fileInfoRow['accessId'] = "2";
+
+        if(fileInfoRow['fileType'] == 'video' || fileInfoRow['fileType'] == 'audio') {
+            fileInfoRow['albumId'] = ""; //if video we set the album to "" else we set to the album
+        }else {
+            for(var albumIndex in $scope.albums)
+            {
+                if($scope.isSelected($scope.albums[albumIndex]))
+                {
+                    fileInfoRow['albumId'] = $scope.albums[albumIndex].id; //if video we set the album to "" else we set to the album
+                }
+            }
+        }
+
         fileInfoRow['thumbSecond'] = 0;
         fileInfoRow['tags'] = "";
 
@@ -81,7 +97,6 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 
         // If file is Video/Audio then add entry to Kaltura and create entity in Elgg
         if ($scope.fileInfo[data.fileIndex]['fileType'] == 'video' || $scope.fileInfo[data.fileIndex]['fileType'] == 'audio' ) {
-            console.log('Uploading to Kaltura');
 
             // Add upload token
             var token = Kaltura.uploadTokenAdd(file);
@@ -99,11 +114,8 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 
             //Create an Elgg entity
             $scope.fileInfo[data.fileIndex]['guid'] = Elgg.addElggEntity($scope.fileInfo[data.fileIndex]);
-
-            console.log('Guid is: ', $scope.fileInfo[data.fileIndex]['guid']);
         }
-        else {
-            console.log("In file upload");
+        else { //Image / file upload
             $scope.fileInfo[data.fileIndex]['guid'] = Elgg.uploadElggFile($scope.fileInfo[data.fileIndex], jQuery(elm), data, $scope);
         };
     };
@@ -118,10 +130,8 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
     };
 
     $scope.saveAll = function(){
-        console.log($scope.fileInfo);
         for(var index in $scope.fileInfo) //Saves each file
         {
-            console.log(index);
             $scope.updateEntry(index);
         }
     }
@@ -131,7 +141,6 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
      * @param index the index of the entry in the file info object.
      */
     $scope.updateEntry = function(index) {
-        console.log($scope.fileInfo[index]);
         Elgg.updateElggEntity($scope.fileInfo[index]);
     }
 
@@ -140,16 +149,10 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
      * @param index the index of the entry in the file info object.
      */
     $scope.deleteEntry = function(index) {
-        console.log("In delete Entry");
-        console.log("Index", index);
-        console.log("fileInfo", $scope.fileInfo[index]);
-
         //Abort XHR requests from upload only and not other requests (like add / update)
         if($scope.fileInfo[index] && !$scope.fileInfo[index]['xhr'].isResolved())
         {
             $scope.fileInfo[index]['xhr'].abort();
-
-            console.log("In abort XHR and remove object");
         }
 
         //Entry was created in elgg / Kaltura, remove it
@@ -214,7 +217,6 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
                 $scope.$apply();
             }
             else{
-                console.log("Element wasnt found need to delete and cancel request");
             }
         });
 
@@ -252,18 +254,20 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         }
     }
 
-
     $scope.isShowThumbArrows = function(entry, index){
-        if(entry && entry.id){
-            if(entry.duration && entry.duration > 0){
-                return true;
-           }
-            else{
-                $scope.fileInfo[index].entryRefresh = $timeout(function() {
-                            return $scope.getEntry(entry.id);
-                        }, 20 * 1000);
+        if($scope.fileInfo[index].fileType == 'video' || $scope.fileInfo[index].fileType == 'audio')
+        {
+            if(entry && entry.id){
+                if(entry.duration && entry.duration > 0){
+                    return true;
+               }
+                else{
+                    $scope.fileInfo[index].entryRefresh = $timeout(function() {
+                                return $scope.getEntry(entry.id);
+                            }, 20 * 1000);
+                    }
                 }
-            }
+        }
 
         return false;
     }

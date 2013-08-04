@@ -21,6 +21,10 @@ $entryId = get_input("entryId");
 //If the entity doesn't exsits then entityId will be null and will be created later.
 $guid = get_input("guid", null);
 $entryId = get_input("entryId", null);
+$albumId = get_input('albumId');
+
+if($albumId)
+    $album = get_entity($albumId);
 
 $thumbSec = get_input("thumbSecond", 0);
 $entity = get_entity($guid);
@@ -44,7 +48,6 @@ elgg_make_sticky_form('generic-upload');
 $mediaEntry = new KalturaMediaEntry();
 $mediaEntry->name = strip_tags($title);
 $mediaEntry->description = $desc;
-//$mediaEntry->tags = $tags;
 
 if($entryId) //Only if we have an entryId
     $mediaEntry->id = $entryId;
@@ -71,35 +74,12 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
     }
 }// If Image then create an album. Don't upload to Kaltura.
 elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType == 'image'){
-    //find the users uploads album
-    $albums = elgg_get_entities_from_metadata(array(
-        'type'=> 'object',
-        'subtype' => 'album',
-        'owner_guid' => elgg_get_logged_in_user_guid()
-    ));
 
-    $album = $albums[1];
-
-    //if the album cant be found then lets create one
-    if (!$album) {
-        $album = new TidypicsAlbum();
-        $album->owner_guid = elgg_get_logged_in_user_guid();
-        $album->title = 'Uploads';
-        $album->access_id = 2;
-        $album->uploads = true;
-
-
-        if (!$album->save()) {
-            register_error(elgg_echo("album:error"));
-            forward(REFERER);
-        }
-    }
-
-    if ($entityId)
+    if ($guid) //Update image
     {
-        $image = get_entity($entityId);
+        $image = get_entity($guid);
     }
-    else
+    else //Create new image
     {
         $image = new TidypicsImage();
     }
@@ -111,15 +91,14 @@ elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType ==
     $image->tags = $tags;
     $image->access_id = $access_id;
     $image->license = $license;
-    $image->category = $category;
+//    $image->category = $category; //No category
 
     $result = $image->save($_FILES['fileData']);
 
     if ($result) {
-        //array_push($uploaded_images, $image->getGUID());
         $album->prependImageList(array($image->getGUID()));
         $image->guid = $image->getGUID();
-        echo $image->getGUID() . " ";
+        echo $image->getGUID();
 
         add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
         exit;
