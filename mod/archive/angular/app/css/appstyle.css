@@ -105,64 +105,63 @@ input.uploadInput{
     display: block;
 }
 
-.uploadlist > form > li.elgg-item > .itemControls {
+/*.uploadlist > form > li.elgg-item > .itemControls {*/
+    /*height: 60px;*/
+    /*overflow: hidden;*/
+    /*transition: height 0.3s;*/
+    /*-webkit-transition: height 0.3s*/
+/*}*/
+
+/*.uploadlist > form > li.elgg-item > .itemControls:hover {*/
+    /*height: 130px;*/
+/*}*/
+
+/*.uploadlist > form > .elgg-image-block {*/
+    /*background-color: rgba(255,255,255, 0.9);*/
+/*}*/
+
+/*.uploadlist > form > li.elgg-item {*/
+    /*background-color: #FFF;*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: 100% 100%;*/
+    /*padding:0;*/
+    /*margin-left: 0px;*/
+/*}*/
+
+/*.uploadlist > form div.bar{*/
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*height: 5;*/
+    /*background-color: #4690D6;*/
+/*}*/
+
+/*.uploadlist > form div.progress{*/
+    /*color: transparent;*/
+    /*height: 0;*/
+/*}*/
+
+.uploadlist > li.elgg-item > .itemControls {
     height: 60px;
     overflow: hidden;
     transition: height 0.3s;
     -webkit-transition: height 0.3s
 }
 
-.uploadlist > form > li.elgg-item > .itemControls:hover {
+.uploadlist > li.elgg-item > .itemControls:hover {
     height: 130px;
 }
 
-.uploadlist > form > .elgg-image-block {
-    background-color: rgba(255,255,255, 0.9);
-}
-
-.uploadlist > form > li.elgg-item {
-    background-color: #FFF;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    padding:0;
-    margin-left: 0px;
-}
-
-.uploadlist > form div.bar{
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 5;
-    background-color: #4690D6;
-}
-
-.uploadlist > form div.progress{
-    color: transparent;
-    height: 0;
-}
-
-.uploadlist > li.elgg-item > .itemControls {
-    height: 50px;
-    overflow: hidden;
-    transition: height 0.3s;
-    -webkit-transition: height 0.3s
-}
-
-.uploadlist > li.elgg-item > .itemControls:hover {
-    height: 120px;
-}
-
 .uploadlist .elgg-image-block {
-
     background-color: rgba(255,255,255, 0.9);
 }
+
 .uploadlist > li.elgg-item {
     background-color: #FFF;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     padding:0;
     margin-left: 0px;
-
 }
 
 .uploadlist div.bar{
@@ -181,7 +180,6 @@ input.uploadInput{
 .uploadSpan{
     margin-left: 8px;
 }
-
 
 .upload-page-buttons {
     margin-top: 15px;
@@ -222,4 +220,9 @@ form .ng-valid{
 
 .uploadbox-description{
     margin-top:5px;
+}
+
+.disabled{
+    background-color: #c5c5c5;
+    cursor: not-allowed;
 }

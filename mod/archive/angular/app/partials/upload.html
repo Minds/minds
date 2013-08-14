@@ -17,8 +17,9 @@
             Drag and drop files here or <input id="fileupload" type="file" name="fileData" multiple/> <a> click here </a> to select files
         </div>
         <div class="elgg-layout elgg-layout-one-column clearfix" ng-cloak>
-            <ul class="uploadlist">
-                <form name="itemsForm" class="elgg-list elgg-list-entity">
+            <form novalidate name="itemsForm" class="">
+            <ul class="uploadlist elgg-list elgg-list-entity">
+
                 <li class="elgg-item" data-ng-repeat="fileItem in fileInfo" ng-style="{backgroundImage: getFileThumbnail(fileItem.entry, fileItem.thumbSecond, fileItem.guid)}">
 
                     <!--&#59235; other arrow-->
@@ -78,10 +79,11 @@
                         </div>
                     </div>
                 </li>
-                </form>
-            </ul>
-            <br/>
-            <a id="saveButton" class="elgg-button elgg-button-action" ng-click="saveAll()" ng-show="saveEnabled">Save all</a>
+
+                </ul>
+                <br/>
+                <a id="saveButton" ng-class="{disabled: itemsForm.$invalid}" ng-show="itemsForm.$dirty" class="elgg-button elgg-button-action" ng-click="saveAll()">Save all</a>
+            </form>
         </div>
     </div>
 </div>

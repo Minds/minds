@@ -189,15 +189,6 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
      * @param index the index of the entry in the file info object.
      * @returns true if update currently possible.
      */
-    $scope.canSaveMetadata = function(index) {
-        return $scope.saveEnabled;
-    };
-
-    /**
-     * Returns true if metadata can be currently saved.
-     * @param index the index of the entry in the file info object.
-     * @returns true if update currently possible.
-     */
     $scope.canDeleteMetadata = function(index) {
         return $scope.fileInfo[index]['updateResult'];
     };
