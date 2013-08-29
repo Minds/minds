@@ -18,8 +18,8 @@ function blog_get_page_content_read($guid = NULL) {
 
 	$return = array();
 
-	$blog = get_entity($guid);
-
+	$blog = get_entity($guid, 'object');
+var_dump($blog->featured);
 	// no header or tabs for viewing an individual blog
 	$return['filter'] = '';
 
@@ -41,9 +41,8 @@ function blog_get_page_content_read($guid = NULL) {
 			$title$menu
 		</div>
 HTML;
-	
 	$return['title'] = $blog->title;
-
+	
 	$container = $blog->getContainerEntity();
 	$crumbs_title = $container->name;
 	if (elgg_instanceof($container, 'group')) {
@@ -65,7 +64,7 @@ HTML;
 	
 	$excerpt = $blog->excerpt ? $blog->excerpt : substr(strip_tags($blog->description), 0, 140);
 	
-	minds_set_metatags('description', $excerpt);
+/*	minds_set_metatags('description', $excerpt);
 	minds_set_metatags('keywords', $blog->tags);
 	
 	//set up for facebook
@@ -80,7 +79,7 @@ HTML;
 	minds_set_metatags('twitter:title', $blog->title);
 	minds_set_metatags('twitter:image', minds_fetch_image($blog->description, $blog->owner_guid));
 	minds_set_metatags('twitter:description', $excerpt);
-
+*/	
 	return $return;
 }
 
@@ -100,7 +99,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		'type' => 'object',
 		'subtype' => 'blog',
 		'full_view' => false,
-		'limit' =>12
+		'limit' =>12,
 	);
 
 	$current_user = elgg_get_logged_in_user_entity();
@@ -149,14 +148,13 @@ function blog_get_page_content_list($container_guid = NULL) {
 			array('name' => 'status', 'value' => 'published'),
 		);
 	}
-
-	$list = elgg_list_entities_from_metadata($options);
+	
+	$list = elgg_list_entities($options);
 	if (!$list) {
 		$return['content'] = elgg_echo('blog:none');
 	} else {
 		$return['content'] = $list;
 	}
-
 	return $return;
 }
 
@@ -324,7 +322,7 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 
 	$sidebar = '';
 	if ($page == 'edit') {
-		$blog = get_entity((int)$guid);
+		$blog = get_entity($guid, 'object');
 
 		$title = elgg_echo('blog:edit');
 
@@ -393,7 +391,7 @@ function blog_prepare_form_vars($post = NULL, $revision = NULL) {
 		'container_guid' => NULL,
 		'guid' => NULL,
 		'draft_warning' => '',
-		'license' => '',
+		'license' => ''
 	);
 
 	if ($post) {
@@ -402,7 +400,7 @@ function blog_prepare_form_vars($post = NULL, $revision = NULL) {
 				$values[$field] = $post->$field;
 			}
 		}
-
+		
 		if ($post->status == 'draft') {
 			$values['access_id'] = $post->future_access;
 		}
@@ -421,24 +419,7 @@ function blog_prepare_form_vars($post = NULL, $revision = NULL) {
 		return $values;
 	}
 
-	// load the revision annotation if requested
-	if ($revision instanceof ElggAnnotation && $revision->entity_guid == $post->getGUID()) {
-		$values['revision'] = $revision;
-		$values['description'] = $revision->value;
-	}
-
-	// display a notice if there's an autosaved annotation
-	// and we're not editing it.
-	if ($auto_save_annotations = $post->getAnnotations('blog_auto_save', 1)) {
-		$auto_save = $auto_save_annotations[0];
-	} else {
-		$auto_save = false;
-	}
-
-	if ($auto_save && $auto_save->id != $revision->id) {
-		$values['draft_warning'] = elgg_echo('blog:messages:warning:draft');
-	}
-
+	
 	return $values;
 }
 

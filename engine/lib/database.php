@@ -41,6 +41,7 @@ function db_init() {
 
 	$cfs = array('site','plugin', 'config','object', 'user', 'group');
 
+	
 	register_cfs($cfs);
 }
 
@@ -58,14 +59,15 @@ function db_insert($guid = NULL, array $options = array()){
 	
 	//unset guid
 	unset($options['guid']);	
-try{	
-	$DB->cfs[$type]->insert($guid, $options);
-} catch(Exception $e){
-echo '<pre>';
-var_dump($e);
-echo '</pre>';
-exit;
-}
+
+	try{	
+		$DB->cfs[$type]->insert($guid, $options);
+	} catch(Exception $e){
+		echo '<pre>';
+		var_dump($e);
+		echo '</pre>';
+		exit;
+	}
 	return $guid;
 }
 
@@ -74,7 +76,7 @@ exit;
  */
 function db_get(array $options = array()){
 	global $DB;
-
+	
 	$defaults = array(	'type' => "object",
 				'subtype' => "",
 
@@ -89,33 +91,17 @@ function db_get(array $options = array()){
 	}
 
 	$type = $options['type'];
+	if(!$type){
+		return;
+	}
 
 	//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
-        if($options['guids']){
-
-                $rows = $DB->cfs[$type]->multiget($options['guids']);
-
-        }
-
-        //2. If it's an object, but rows have not been filled (ie. no guids specified, do this
-        if($type == 'object' && !$rows){
-
-        	//2a. If owner_guids have been specified then grab from user_object column family
-		//var_dump($options);
-                //2b. If not then just return all 
-                $index_exps[] = new IndexExpression('subtype', 'blog');
-                $index_clause = new IndexClause($index_exps, $options['offset'], $options['limit']);
-                $rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
-
-        } elseif($type == 'user') {
-		
-		foreach($options['attrs'] as $k => $v){
-		       $index_exps[] = new IndexExpression($k, $v);
-                }
-
-		$index_clause = new IndexClause($index_exps);
-                $rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
-
+        if($guids = $options['guids']){
+		if(is_array($guids)){
+                	$rows = $DB->cfs[$type]->multiget($options['guids']);
+		}else{
+			$rows[] = $DB->cfs[$type]->get($guids[0]);
+		}
         } elseif($type == 'plugin'){
 	
 		//do we even have any attrs?
@@ -129,6 +115,15 @@ function db_get(array $options = array()){
         	} else {
 			$rows = $DB->cfs[$type]->get_range("", "");
 		}
+	} elseif($type == 'user') {
+	       
+		foreach($options['attrs'] as $k => $v){
+                       $index_exps[] = new IndexExpression($k, $v);
+                }
+
+                $index_clause = new IndexClause($index_exps);
+                $rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
+
 	}
         
 	foreach($rows as $k => $row){
@@ -140,8 +135,9 @@ function db_get(array $options = array()){
 		foreach($row as $k=>$v){
 			$new_row->$k = $v;
                 }
-		$entities[] = entity_row_to_elggstar($new_row, $options['type']);
-        
+
+		$entities[] = entity_row_to_elggstar($new_row, $type);
+ 
 	}
 	return $entities;
 }
@@ -190,13 +186,13 @@ function register_cfs($name){
  * "BytesType", "LongType", "IntegerType", "Int32Type", "FloatType", "DoubleType", "AsciiType", "UTF8Type"
  * "TimeUUIDType", "LexicalUUIDType", "UUIDType", "DateType"
  */
-function db_validate_column($cf, $options){
+//db_alter_column('plugin', array('featured' => "IntegerType"));
+function db_alter_column($cf, $options){
 	global $CONFIG,$DB;
-var_dump($CONFIG->cassandra->servers[0]);
 	$sys = new SystemManager($CONFIG->cassandra->servers[0]);
 
 //	$sys->truncate_column_family($CONFIG->cassandra->keyspace, $cf);
-	
+//	return;	
 	foreach($options as $column => $data_type){
 //		var_dump($column, $data_type, $CONFIG->cassandra->keyspace, $cf); exit;
 		try{

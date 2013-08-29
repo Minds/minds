@@ -26,9 +26,10 @@ class ElggPlugin extends ElggEntity {
 
 		$this->attributes['type'] = "plugin";
 		$this->attributes['title'] = NULL;
+		$this->attributes['active'] = 0;
 
 		// plugins must be public.
-		$this->access_id = ACCESS_PUBLIC;
+		$this->attributes['access_id'] = ACCESS_PUBLIC;
 	}
 
 	/**
@@ -50,9 +51,8 @@ class ElggPlugin extends ElggEntity {
 
 		// ElggEntity can be instantiated with a guid or an object.
 		// @todo plugins w/id 12345
-		if (is_numeric($plugin) || is_object($plugin)) {
+		if (is_object($plugin)) {
 			//parent::__construct($plugin);
-			
 			foreach($plugin as $k => $v){
 				$this->attributes[$k] = $v;
 			}		
@@ -83,9 +83,6 @@ class ElggPlugin extends ElggEntity {
 			if ($existing_plugin) {
 				$existing_guid = $existing_plugin->guid;
 			}
-
-			// load the rest of the plugin
-			//	parent::__construct($existing_guid);
 		}
 
 		_elgg_cache_plugin_by_id($this);
@@ -99,16 +96,23 @@ class ElggPlugin extends ElggEntity {
 	 */
 	public function save() {
 		// own by the current site so users can be deleted without affecting plugins
-		$site = get_config('site');
+		/*$site = get_config('site');
 		$this->attributes['site_guid'] = $site->guid;
 		$this->attributes['owner_guid'] = $site->guid;
 		$this->attributes['container_guid'] = $site->guid;
 		$this->attributes['title'] = $this->pluginID;
-
-		$options = array();
-		$options['type'] = 'plugin';
-		$options['active'] = 0;
+		*/
 		
+		$options = array();
+		foreach($this as $k=>$v){
+			$options[$k] = $v;
+		}
+		$options['type'] = 'plugin';
+		
+		if(!$this->pluginID)	{
+			//throw error here
+			return false;
+		}
 		return db_insert($this->pluginID, $options);
 
 	}
@@ -252,11 +256,11 @@ class ElggPlugin extends ElggEntity {
 				
 	
 			// set this priority
-			if ($this->set($name, $priority)) {
-				return true;
-			} else {
-				return false;
-			}
+		//	if ($this->set($name, $priority)) {
+		//		return true;
+		//	} else {
+		//		return false;
+		//	}
 		}
 
 		return false;
@@ -327,8 +331,10 @@ class ElggPlugin extends ElggEntity {
 		if (!$this->guid) {
 			return false;
 		}
+		
+		$this->$name = $value;
 
-		return $this->set($name, $value);
+		return $this->save();
 	}
 
 	/**
@@ -339,7 +345,8 @@ class ElggPlugin extends ElggEntity {
 	 * @return bool
 	 */
 	public function unsetSetting($name) {
-		return remove_private_setting($this->guid, $name);
+		$this->$name = '';
+		$this->save();
 	}
 
 	/**
@@ -624,9 +631,9 @@ class ElggPlugin extends ElggEntity {
 		if (!$this->canActivate()) {
 			return false;
 		}
-		
+
 		// set in the db, now perform tasks and emit events
-		if ($this->setStatus(true, $site_guid)) {
+		if ($this->setSetting('active', 1)) {
 			// emit an event. returning false will make this not be activated.
 			// we need to do this after it's been fully activated
 			// or the deactivate will be confused.
@@ -634,7 +641,6 @@ class ElggPlugin extends ElggEntity {
 				'plugin_id' => $this->pluginID,
 				'plugin_entity' => $this
 			);
-
 			$return = elgg_trigger_event('activate', 'plugin', $params);
 
 			// if there are any on_enable functions, start the plugin now and run them
@@ -652,7 +658,6 @@ class ElggPlugin extends ElggEntity {
 			if ($return === false) {
 				$this->deactivate($site_guid);
 			}
-
 			return $return;
 		}
 
@@ -688,7 +693,7 @@ class ElggPlugin extends ElggEntity {
 		if ($return === false) {
 			return false;
 		} else {
-			return $this->setStatus(false, $site_guid);
+			$this->setSetting('active', 0);
 		}
 	}
 	
@@ -878,17 +883,7 @@ class ElggPlugin extends ElggEntity {
 		if (array_key_exists($name, $this->attributes)) {
 			return $this->attributes[$name];
 		}
-
-		// No, so see if its in the private data store.
-		// get_private_setting() returns false if it doesn't exist
-		$meta = $this->getPrivateSetting($name);
-
-		if ($meta === false) {
-			// Can't find it, so return null
-			return NULL;
-		}
-
-		return $meta;
+		return NULL;
 	}
 
 	/**
@@ -912,15 +907,8 @@ class ElggPlugin extends ElggEntity {
 
 			return true;
 		} else {
-			// Hook to validate setting
-			$value = elgg_trigger_plugin_hook('setting', 'plugin', array(
-				'plugin_id' => $this->pluginID,
-				'plugin' => $this,
-				'name' => $name,
-				'value' => $value
-			), $value);
-
-			return $this->setPrivateSetting($name, $value);
+			$this->attributes[$name] = $value;
+			return	$this->save();
 		}
 	}
 
@@ -946,12 +934,7 @@ class ElggPlugin extends ElggEntity {
 		} else {
 			$site = get_config('site');
 		}
-
-		if ($active) {
-			db_insert($this->guid, array('type'=>'plugin','active'=>1));
-		} else {
-			db_insert($this->guid, array('type'=>'plugin', 'active'=>0));
-		}
+		
 		return true;
 	}
 

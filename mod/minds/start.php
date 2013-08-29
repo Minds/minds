@@ -603,26 +603,9 @@ function minds_fetch_image($description, $owner_guid) {
 
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = 0){
 	global $CONFIG;
-	if (class_exists(elasticsearch)) {
-		$es = new elasticsearch();
-		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
-		$data = $es->query($type,null, 'time_stamp:desc', $limit, $offset, array('age'=>0));
-		foreach($data['hits']['hits'] as $item){
-			$guids[] = intval($item['_id']);
-		}
-		//$guids = array_reverse($guids);
-		$guidsString = implode(',', $guids);
-		if(count($guids) > 0){
-			if($output == 'entities'){
-				return elgg_get_entities(array(	'wheres' => array("e.guid IN ($guidsString)"),
-								'order_by' => "FIELD(e.guid, $guidsString)", 
-								'limit'=>$limit));
-			} elseif($output == 'guids'){
-				return $guids;
-			}
-		}
-	}
-	return false;
+	return elgg_get_entities(array( 'type' => 'object',
+					'attrs' => array('featured' => 1),
+					'limit'=>$limit));
 }
 
  /* Extend / override htmlawed */ 

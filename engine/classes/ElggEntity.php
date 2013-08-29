@@ -602,12 +602,8 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	function setPrivateSetting($name, $value) {
-	//	if ((int) $this->guid > 0) {
-	//		return set_private_setting($this->getGUID(), $name, $value);
-	//	} else {
-	//		$this->temp_private_settings[$name] = $value;
-	//		return true;
-	//	}
+		//$this->$name = $value;
+		//$this->save();
 	}
 
 	/**
@@ -618,14 +614,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return mixed
 	 */
 	function getPrivateSetting($name) {
-	//	if ((int) ($this->guid) > 0) {
-	//		return get_private_setting($this->getGUID(), $name);
-	//	} else {
-	//		if (isset($this->temp_private_settings[$name])) {
-	//			return $this->temp_private_settings[$name];
-	//		}
-	//	}
-	//	return null;
+		//return $this->$name;
 	}
 
 	/**
@@ -1079,7 +1068,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return ElggEntity The owning entity
 	 */
 	public function getOwnerEntity() {
-		return get_entity($this->owner_guid);
+		return get_entity($this->owner_guid, 'user');
 	}
 
 	/**
@@ -1132,12 +1121,13 @@ abstract class ElggEntity extends ElggData implements
 
 	/**
 	 * Get the container entity for this object.
+	 * Assume contrainer entity is a user, unless another class overrides this...
 	 *
 	 * @return ElggEntity
 	 * @since 1.8.0
 	 */
 	public function getContainerEntity() {
-		return get_entity($this->getContainerGUID());
+		return get_entity($this->getContainerGUID(),'user');
 	}
 
 	/**
@@ -1264,62 +1254,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @throws IOException
 	 */
 	public function save() {
-		$guid = $this->getGUID();
-		if ($guid > 0) {
-			cache_entity($this);
-
-			return update_entity(
-				$guid,
-				$this->get('owner_guid'),
-				$this->get('access_id'),
-				$this->get('container_guid'),
-				$this->get('time_created')
-			);
-		} else {
-			// Create a new entity (nb: using attribute array directly
-			// 'cos set function does something special!)
-			$this->attributes['guid'] = create_entity($this->attributes['type'],
-				$this->attributes['subtype'], $this->attributes['owner_guid'],
-				$this->attributes['access_id'], $this->attributes['site_guid'],
-				$this->attributes['container_guid']);
-
-			if (!$this->attributes['guid']) {
-				throw new IOException(elgg_echo('IOException:BaseEntitySaveFailed'));
-			}
-
-			// Save any unsaved metadata
-			// @todo How to capture extra information (access id etc)
-			if (sizeof($this->temp_metadata) > 0) {
-				foreach ($this->temp_metadata as $name => $value) {
-					$this->$name = $value;
-					unset($this->temp_metadata[$name]);
-				}
-			}
-
-			// Save any unsaved annotations.
-			if (sizeof($this->temp_annotations) > 0) {
-				foreach ($this->temp_annotations as $name => $value) {
-					$this->annotate($name, $value);
-					unset($this->temp_annotations[$name]);
-				}
-			}
-
-			// Save any unsaved private settings.
-			if (sizeof($this->temp_private_settings) > 0) {
-				foreach ($this->temp_private_settings as $name => $value) {
-					$this->setPrivateSetting($name, $value);
-					unset($this->temp_private_settings[$name]);
-				}
-			}
-
-			// set the subtype to id now rather than a string
-			$this->attributes['subtype'] = get_subtype_id($this->attributes['type'],
-				$this->attributes['subtype']);
-
-			cache_entity($this);
-
-			return $this->attributes['guid'];
-		}
+		return create_entity($this);
 	}
 
 	/**

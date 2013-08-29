@@ -11,20 +11,19 @@ if ($page_owner === false || is_null($page_owner)) {
 }
 
 // Get the post, if it exists
-$guid = (int) get_input('guid');
+$guid =  get_input('guid');
 $entryid = get_input('entryid');
 
-if (!($entity = get_entity($guid))) {
-	$entity = kaltura_get_entity($entryid);
+$entity = get_entity($guid, 'object');
+
+if ($entity && !$entity->canEdit()) {
+	forward(REFERRER);
+	register_error('Sorry, you don\'t have permission');
 }
 
-if ($entity && $entity->canEdit()) {
-
-		$title = elgg_view_title(elgg_echo('kalturavideo:label:adminvideos').": ".elgg_echo('kalturavideo:label:editdetails'));
-		$form = elgg_view_form('archive/save', array('enctype' => 'multipart/form-data'), array('entity' => $entity));
-		$body = elgg_view_layout("edit_layout", array('title'=>$title, 'content'=>$form));
-
-}
+	$title = elgg_view_title(elgg_echo('kalturavideo:label:adminvideos').": ".elgg_echo('kalturavideo:label:editdetails'));
+	$form = elgg_view_form('archive/save', array('enctype' => 'multipart/form-data'), array('entity' => $entity));
+	$body = elgg_view_layout("edit_layout", array('title'=>$title, 'content'=>$form));
 
 // Display page
 echo elgg_view_page(sprintf(elgg_echo('kalturavideo:label:adminvideos').": ".elgg_echo('kalturavideo:label:editdetails'),$post->title),$body);

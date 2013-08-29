@@ -908,8 +908,10 @@ function elgg_get_plugin_setting($name, $plugin_id = null) {
 	if (!$plugin) {
 		return false;
 	}
-
-	return $plugin->getSetting($name);
+	
+	if($plugin instanceof ElggPlugin){
+		return $plugin->getSetting($name);
+	}
 }
 
 /**

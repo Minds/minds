@@ -10,22 +10,34 @@ $page_owner = get_user_by_username($username);
 elgg_set_page_owner_guid($page_owner->getGUID());
 
 if($filter == 'media')
-$subtypes = 'kaltura_video';
+$subtypes = array('kaltura_video');
 elseif ($filter == 'images')
-$subtypes = 'album';
+$subtypes = array('album');
 elseif ($filter == 'files')
-$subtypes = 'file';
+$subtypes = array('file');
 else
 $subtypes = array('kaltura_video', 'album', 'file');
 
-$content = elgg_list_entities(	array(	'types' => 'object', 
-										'subtypes' => $subtypes, 
-										'limit' => $limit, 
-										'offset' => $offset, 
-										'owner_guid' => $user->guid,
-										'full_view' => FALSE,
-										'archive_view'=>TRUE
-									));
+foreach($subtypes as $subtype){
+        $options = array(      'types' => array('object'),
+                                                        'subtype' => $subtype,
+                                                        'limit' => $limit,
+                                                        'offset' => $offset,
+						'owner_guid' => $user->getGUID()
+                                                );
+        $entities_arr[] = elgg_get_entities($options);
+}
+
+foreach($entities_arr as $e){
+        foreach($e as $entity){
+                $entities[] = $entity;
+        }
+}
+$entities = array_merge($entities);
+
+$content = elgg_view_entity_list($entities,$vars, $offset, $limit, false, false, true) . elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000));
+
+
 $sidebar = elgg_view('archive/sidebar');
 /*
 		// Get categories, if they're installed

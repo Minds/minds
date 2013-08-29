@@ -10,6 +10,17 @@ global $SKIP_KALTURA_REWRITE;
 $SKIP_KALTURA_REWRITE = true;
 
 $entity = elgg_extract('entity', $vars);
+if(!$entity){
+	$entity = new ElggObject();	
+	$entity->subtype = 'kaltura_video';
+	$entity->kaltura_video_id = get_input('entryid');
+
+	$kmodel = KalturaModel::getInstance();
+
+	$entry = $kmodel->getEntry($entity->kaltura_video_id );
+
+	$entity->title = $entry->name;
+}
 $title = $entity->title;
 $body = $entity->description;
 $license = $entity->license;
@@ -43,10 +54,12 @@ $guid = elgg_view('input/hidden', array('name' => 'guid', 'value' => $entity->gu
 	
 if($entity->getSubtype() == 'kaltura_video'){
 	
-	$thumbnail_input = elgg_view('input/thumbnail_picker', array('entry_id'=>$vars['entity']->kaltura_video_id, 'default'=>$vars['entity']->thumbnail_sec));
-	$thumb = '<img style="width:200px;" src="' . $metadata->kaltura_video_thumbnail . '" alt="" title="' . htmlspecialchars($vars['entity']->title) . '" />';
+	$thumbnail_input = elgg_view('input/thumbnail_picker', array('entry_id'=>$entity->kaltura_video_id, 'default'=>$entity->thumbnail_sec));
+	$thumb = '<img style="width:200px;" src="' . $entity->kaltura_video_thumbnail . '" alt="" title="' . htmlspecialchars($entity->title) . '" />';
 	
-	
+	$video_id_input = elgg_view('input/hidden', array('name'=>'video_id', 'value'=>$entity->kaltura_video_id));
+
+
 	$form_body = <<<EOT
 			<p>
 				<label>$title_label</label><br />
@@ -77,6 +90,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 			<p>
 				$guid
 				$submit_input
+				$video_id_input
 			</p>
 		<div class="clearfloat"></div>
 EOT;

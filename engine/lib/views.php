@@ -991,10 +991,6 @@ function elgg_view_annotation(ElggAnnotation $annotation, array $vars = array(),
 function elgg_view_entity_list($entities, $vars = array(), $offset = 0, $limit = 10, $full_view = true,
 $list_type_toggle = true, $pagination = true) {
 
-	if (!is_int($offset)) {
-		$offset = (int)get_input('offset', 0);
-	}
-
 	// list type can be passed as request parameter
 	$list_type = get_input('list_type', 'list');
 	if (get_input('listtype')) {
@@ -1012,6 +1008,7 @@ $list_type_toggle = true, $pagination = true) {
 			'list_type' => $list_type,
 			'list_type_toggle' => false,
 			'offset' => $offset,
+			'count' => 1000 //default
 		);
 
 		$vars = array_merge($defaults, $vars);

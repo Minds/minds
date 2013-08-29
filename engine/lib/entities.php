@@ -442,7 +442,7 @@ function update_entity($guid, $owner_guid, $access_id, $container_guid = null, $
  */
 function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'all', $subtype = 'all') {
 	$user_guid = (int)$user_guid;
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, 'user');
 	if (!$user) {
 		$user = elgg_get_logged_in_user_entity();
 	}
@@ -503,29 +503,18 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
  */
 function create_entity($object = NULL) {
 	global $CONFIG;
-
 	//convert object to array of attributes
 	$attributes = array();
 	foreach($object as $k => $v){
-		if($v){
+		if(isset($v)){
 			$attributes[$k] = $v;
 		}
 	}
+	
+	$result = db_insert($object->guid, $attributes);
+       
+	return $result;
 
-        $result = db_insert($object->guid, $attributes);
-
-        return $result;
-
-        if ($result !== false) {
-                $entity = get_entity($result, 'user');
-                //if (elgg_trigger_event('create', $entity->type, $entity)) {
-                        return $guid;
-                //} else {
-                //      $entity->delete();
-                //}
-        }
-
-        return false;
 }
 
 /**
@@ -546,34 +535,7 @@ function create_entity($object = NULL) {
 
 function get_entity_as_row($guid, $type) {
 	global $CONFIG, $DB;
-if(!$type){
-	return false;
-}	
-	if (!$guid) {
-		return false;
-	}
-
-	$guid = $guid;
-	//$access = get_access_sql_suffix();
-
-	
-	$object = new stdClass;
-	$cfs = $DB->cfs[$type];
-	
-	if($cfs){
-		try{
-			$data = $DB->cfs[$type]->get($guid);
-		} catch (Exception $e){
-			return false;	
-		}
-	}
-
-	foreach($data as $k => $v){
-		$object->$k = $v;
-	}
-
-	$object->guid = $guid;	
-	return $object;
+var_dump('CALLED ENTITY AS ROW!!!');	
 }
 
 /**
@@ -615,9 +577,8 @@ function entity_row_to_elggstar($row, $type) {
 	if ($new_entity) {
 		return $new_entity;
 	}
-	
 	// load class for entity if one is registered
-	if(isset($row->subtype)){
+/*	if(isset($row->subtype)){
 		$classname = get_subtype_class_from_id($row->subtype);
 		if ($classname != "") {
 			if (class_exists($classname)) {
@@ -632,6 +593,7 @@ function entity_row_to_elggstar($row, $type) {
 			}
 		}
 	}
+*/
 	if (!$new_entity) {
 		//@todo Make this into a function
 		switch ($type) {
@@ -677,8 +639,11 @@ function get_entity($guid, $type) {
 	// different instance outside this function.
 	// @todo We need a single Memcache instance with a shared pool of namespace wrappers. This function would pull an instance from the pool.
 	static $shared_cache;
-
 	global $DB;
+
+	if(!$guid){
+		return;
+	}
 	
 	// Check local cache first
 	$new_entity = retrieve_cached_entity($guid);
@@ -696,10 +661,7 @@ function get_entity($guid, $type) {
 	}
 
 	// until ACLs in memcache, DB query is required to determine access
-	$entity_row = get_entity_as_row($guid, $type);
-	if (!$entity_row) {
-		return false;
-	}
+	$new_entity = db_get(array('type'=>$type, 'guids'=>array($guid)));
 
 	if ($shared_cache) {
 		$cached_entity = $shared_cache->load($guid);
@@ -709,17 +671,13 @@ function get_entity($guid, $type) {
 			return $cached_entity;
 		}
 	}
-	
-	// don't let incomplete entities cause fatal exceptions
-	try {
-		$new_entity = entity_row_to_elggstar($entity_row, $type);
-	} catch (IncompleteEntityException $e) {
-		var_dump($e);
-		return false;
+
+	if(is_array($new_entity)){
+		$new_entity = $new_entity[0];
 	}
 	
 	if ($new_entity) {
-		//cache_entity($new_entity);
+		cache_entity($new_entity);
 	}
 	return $new_entity;
 }
@@ -866,55 +824,66 @@ function elgg_get_entities(array $options = array()) {
 	$singulars = array('type', 'subtype', 'guid', 'owner_guid', 'container_guid', 'site_guid');
 	$options = elgg_normalise_plural_options_array($options, $singulars);
 
+	$attrs = $options['attrs'];
+	if($subtypes = $options['subtypes']){
+		$attrs['subtype'] = $subtypes[0];
+	}
+
+	if($owner_guid = $options['owner_guids']){
+		$attrs['owner_guid'] = $owner_guid[0];
+	}
+
+	if($container_guid = $options['container_guids']){
+		$attrs['container_guid'] = $container_guid[0];
+	}
 	if (!$options['count']) {
-
-		$type = $options['types'] ? $options['types'][0] : "object";
-		
-		//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
-		if($options['guids']){
-
-			$rows = $DB->cfs[$type]->multiget($options['guids']);
-
-		}
-
-		//2. If it's an object, but rows have not been filled (ie. no guids specified, do this
-		if($type == 'object' && !$rows){
-
-			//2a. If owner_guids have been specified then grab from user_object column family
-//var_dump($options);
-			//2b. If not then just return all 
-			$index_exps[] = new IndexExpression('subtype', 'blog');
-			$index_clause = new IndexClause($index_exps, $options['offset'], $options['limit']);
-			$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
-
-		} elseif($type == 'user') {
-
-			$rows = $DB->cfs[$type]->get_range($options['offset'],"", $options['limit']);
-		
-		} elseif($type == 'plugin'){
+		try{
+			$type = $options['types'] ? $options['types'][0] : "object";
 			
-	//		$rows = $DB->cfs[$type]->get_indexed_slices();
-		
-		}
+			//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
+			if($options['guids']){
 
-		if($rows){
-			foreach($rows as $guid=>$row){
-				//convert array to std class
-				$newrow = new stdClass;
-				$newrow->guid = $guid;	
-				foreach($row as $k=>$v){
-					$newrow->$k = $v;
+				$rows = $DB->cfs[$type]->multiget($options['guids']);
+			
+			} elseif($type == 'object'){
+				if($attrs){
+					foreach($attrs as $column => $value){
+						$index_exps[] = new IndexExpression($column, $value);
+					}	
+					$index_clause = new IndexClause($index_exps, $options['offset'], $options['limit']);
+					$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
+				} else {
+
 				}
+			} elseif($type == 'user') {
+
+				$rows = $DB->cfs[$type]->get_range($options['offset'],"", $options['limit']);
+			
+			} elseif($type == 'plugin'){
 				
-				$entities[] = entity_row_to_elggstar($newrow, $type);
-
+		//		$rows = $DB->cfs[$type]->get_indexed_slices();
+			
 			}
-		}	
+			if($rows){
+				foreach($rows as $guid=>$row){
+					//convert array to std class
+					$newrow = new stdClass;
+					$newrow->guid = $guid;	
+					foreach($row as $k=>$v){
+						$newrow->$k = $v;
+					}
+				
+					$entities[] = entity_row_to_elggstar($newrow, $type);
 
+				}
+			}	
+		} catch(Exception $e){
+                        return false;
+                }
 		return $entities;
 
 	} else {
-		//counts don't play nice with cassandra
+		return 10000;
 	}
 }
 
@@ -1861,7 +1830,7 @@ function can_edit_entity($entity_guid, $user_guid = 0) {
 	}
 
 	$return = false;
-	if ($entity = get_entity($entity_guid)) {
+	if ($entity = get_entity($entity_guid, 'object')) {
 
 		// Test user if possible - should default to false unless a plugin hook says otherwise
 		if ($user) {

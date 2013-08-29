@@ -139,7 +139,7 @@ function kaltura_get_entity($video_id) {
 		"kaltura_video_id" => $video_id
 		), 'types' => 'object', 'subtypes' => 'kaltura_video'));
 	if($objs) {
-		return get_entity($objs[0]->guid);
+		return get_entity($objs[0]->guid, 'object');
 	}
 	return false;
 }

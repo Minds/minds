@@ -4,7 +4,12 @@
 elgg_load_library('archive:kaltura');
 
 $guid = get_input('guid');
-$entity = get_entity($guid);
+$entity = get_entity($guid, 'object');
+if(!$entity && get_input('video_id')){
+	$entity = new ElggObject();
+	$entity->subtype = 'kaltura_video';
+	$entity->kaltura_video_id = get_input('video_id');
+}
 
 $entity->title = get_input('title');
 $entity->description = get_input('description');
@@ -119,13 +124,6 @@ if($video_id) {
 
 		$entry = $kmodel->getEntry($video_id);
 	
-		$ob = kaltura_get_entity($video_id);
-
-		//check if belongs to this user (or is admin)
-		if(!($ob->canEdit())) {
-			$error = elgg_echo('kalturavideo:edit:notallowed');
-		}
-		$user_ID = $entry->userId;
 	}
 	catch(Exception $e) {
 		$error = $e->getMessage();
@@ -156,17 +154,7 @@ if($video_id) {
 		}
 
 		if(empty($error)) {
-			//now update the object!
-			$entry->comments_on = $comments_on; //whether the users wants to allow comments or not on the blog post
-			$entry->rating_on = $rating_on; //whether the users wants to allow comments or not on the blog post
-			if(!($ob = kaltura_update_object($entry,null,$access,$ob->owner_guid,null,true, array('license'=> $license, 'thumbnail_sec'=>$thumbnail_sec)))) {
-				$error = "Error update Elgg object";
-			}
-			else {
-				$ob->kaltura_video_collaborative = ($collaborative=='on');
-				$ob->save();
-				$url = $ob->getURL();
-			}
+			$entity->save();
 		}
 	}
 	if($error) {

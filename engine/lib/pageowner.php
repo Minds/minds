@@ -157,7 +157,7 @@ function default_page_owner_handler($hook, $entity_type, $returnvalue, $params) 
 					break;
 				case 'add':
 				case 'group':
-					$entity = get_entity($segments[2]);
+					$entity = get_entity($segments[2], 'group');
 					if ($entity) {
 						elgg_set_ignore_access($ia);
 						return $entity->getGUID();
