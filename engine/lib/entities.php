@@ -874,7 +874,6 @@ function elgg_get_entities(array $options = array()) {
 					}
 				
 					$entities[] = entity_row_to_elggstar($newrow, $type);
-
 				}
 			}	
 		} catch(Exception $e){

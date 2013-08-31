@@ -601,11 +601,13 @@ function minds_fetch_image($description, $owner_guid) {
   return $image;
 }
 
-function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = 0){
+function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
 	global $CONFIG;
 	return elgg_get_entities(array( 'type' => 'object',
-					'attrs' => array('featured' => 1),
-					'limit'=>$limit));
+					//'subtype' => 'blog',
+					'attrs' => array('featured' => true),
+					'limit'=>$limit
+					));
 }
 
  /* Extend / override htmlawed */ 

@@ -170,14 +170,14 @@ function db_remove($guid = "", $type = "object", array $options = array()){
 
 }
 
-	/**
-	 * Creates a column family. This should be run automatically
-	 * for each new subtype that is created.
-	 */
-	function create_cfs($name, array $indexes = array(), array $attrs = array(), $plugin_id){
-		global $CONFIG, $DB;
+/**
+ * Creates a column family. This should be run automatically
+ * for each new subtype that is created.
+ */
+function create_cfs($name, array $indexes = array(), array $attrs = array(), $plugin_id){
+	global $CONFIG, $DB;
 
-		$sys = new SystemManager($CONFIG->cassandra->servers);
+	$sys = new SystemManager($CONFIG->cassandra->servers);
 
 	$attr = array("comparator_type" => UTF8Type);
 
@@ -233,4 +233,21 @@ function db_alter_column($cf, $options){
 	}
 }
 
+/** 
+ * Create a indexed column for a column family
+ */
+function db_create_index($cf, array $options = array()){
+	global $CONFIG,$DB;
+        $sys = new SystemManager($CONFIG->cassandra->servers[0]);
+
+	foreach($options as $column => $data_type){
+		try{
+			$sys->create_index($CONFIG->cassandra->keyspace, $cf, $column, $data_type);
+		} catch(Exception $e){
+                        echo "<pre>";
+                        var_dump($e);
+                        echo "</pre>";
+                }
+	}	
+}
 //elgg_register_event_handler('init', 'system', 'db_init');

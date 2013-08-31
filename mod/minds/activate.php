@@ -4,4 +4,4 @@
  */
 
 //for features
-db_alter_column('object', array('featured'=>BooleanType));
+db_create_index('object', array('featured'=>BooleanType));
