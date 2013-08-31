@@ -15,32 +15,19 @@ $groups = get_input('groups', 10);
 $num_members = get_number_users();
 
 $limit = get_input('limit', 20);
+$offset = get_input('offset', '');
 
 $title = elgg_echo('channels');
 
 $options = array('type' => 'user', 'full_view' => false, 'limit'=>$limit);
 switch ($vars['page']) {
 	case 'subscribers':
-		$options = array(
-			'limit' => $limit,
-			'relationship' => 'friend',
-			'relationship_guid' => $page_owner->getGUID(),
-			'inverse_relationship' => TRUE,
-			'type' => 'user',
-			'full_view' => FALSE
-		);
-		$content = elgg_list_entities_from_relationship($options);
+		$subscribers = get_user_friends_of($page_owner->guid, '', $limit, $offset);
+		$content = elgg_view_entity_list($subscribers,$vars, $offset, $limit, false, false, true) . elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000));
 		break;
 	case 'subscriptions':
-		$options = array(
-			'limit' => $limit,
-			'relationship' => 'friend',
-			'relationship_guid' => $page_owner->getGUID(),
-			'inverse_relationship' => FALSE,
-			'type' => 'user',
-			'full_view' => FALSE
-		);
-		$content = elgg_list_entities_from_relationship($options);
+		$subscriptions = get_user_friends($page_owner->guid, '', $limit, $offset);
+                $content = elgg_view_entity_list($subscriptions,$vars, $offset, $limit, false, false, true) . elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000));
 		break;
 	case 'popular':
 		$options['limit'] = $limit;

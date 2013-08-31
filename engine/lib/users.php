@@ -300,10 +300,10 @@ function user_add_friend($user_guid, $friend_guid) {
 	if ($user_guid == $friend_guid) {
 		return false;
 	}
-	if (!$friend = get_entity($friend_guid)) {
+	if (!$friend = get_entity($friend_guid, 'user')) {
 		return false;
 	}
-	if (!$user = get_entity($user_guid)) {
+	if (!$user = get_entity($user_guid, 'user')) {
 		return false;
 	}
 	if ((!($user instanceof ElggUser)) || (!($friend instanceof ElggUser))) {
@@ -311,12 +311,12 @@ function user_add_friend($user_guid, $friend_guid) {
 	}
 	
 	//add this this users list of subscriptions
-	db_insert($user_guid, array(	'type' => 'subscriptions',
-					$friend_guid
+	db_insert($user_guid, array(	'type' => 'friends',
+					$friend_guid => time()
 				));
 	//add user to friends list of subscriptions
-	db_insert($friend_guid, array(	'type' => 'subscribers',
-					$user_guid
+	db_insert($friend_guid, array(	'type' => 'friendsof',
+					$user_guid => time()
 				));
 
 	return true;
@@ -331,18 +331,22 @@ function user_add_friend($user_guid, $friend_guid) {
  * @return bool Depending on success
  */
 function user_remove_friend($user_guid, $friend_guid) {
-	$user_guid = (int) $user_guid;
-	$friend_guid = (int) $friend_guid;
+	$user_guid = $user_guid;
+	$friend_guid = $friend_guid;
 
 	// perform cleanup for access lists.
-	$collections = get_user_access_collections($user_guid);
+	/*$collections = get_user_access_collections($user_guid);
 	if ($collections) {
 		foreach ($collections as $collection) {
 			remove_user_from_access_collection($friend_guid, $collection->id);
 		}
-	}
+	}*/
 
-	return remove_entity_relationship($user_guid, "friend", $friend_guid);
+	db_remove($user_guid, 'friends', array($friend_guid));
+	db_remove($friend_guid, 'friendsof', array($user_guid));	
+
+	return true;
+
 }
 
 /**
@@ -354,9 +358,14 @@ function user_remove_friend($user_guid, $friend_guid) {
  * @return bool
  */
 function user_is_friend($user_guid, $friend_guid) {
-	
 	//do a row slice
-
+	$friends = get_user_friends($user_guid, '', $limit = 10000);
+	foreach($friends as $friend){
+		//var_dump($friend);
+		if($friend->guid == $friend_guid){
+			return true;
+		} 
+	}
 	return false;
 }
 
@@ -373,11 +382,12 @@ function user_is_friend($user_guid, $friend_guid) {
 function get_user_friends($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
 $offset = "") {
 
-	return db_get( array(	'type'=> 'friends',
-					'limit' => $limit,
-					'offset' => $offset
+	$row = db_get( array(	'type'=> 'friends',
+				'owner_guid' => $user_guid,	
+				'limit' => $limit,
+				'offset' => $offset
 				));
-
+	return $row;
 }
 
 /**
@@ -391,9 +401,10 @@ $offset = "") {
  * @return ElggUser[]|false Either an array of ElggUsers or false, depending on success
  */
 function get_user_friends_of($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
-$offset = 0) {
+$offset = "") {
 
 	return db_get( array(     'type'=> 'friendsof',
+				  'owner_guid' => $user_guid, 
                                         'limit' => $limit,
                                         'offset' => $offset
                                 ));

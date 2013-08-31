@@ -39,7 +39,7 @@ function db_init() {
 	
 	$DB->pool = $pool;
 
-	$cfs = array('site','plugin', 'config','object', 'user', 'group');
+	$cfs = array('site','plugin', 'config','object', 'user', 'group', 'friends', 'friendsof');
 
 	
 	register_cfs($cfs);
@@ -59,7 +59,9 @@ function db_insert($guid = NULL, array $options = array()){
 	
 	//unset guid
 	unset($options['guid']);	
-
+	//unset type
+	unset($options['type']);
+	
 	try{	
 		$DB->cfs[$type]->insert($guid, $options);
 	} catch(Exception $e){
@@ -95,37 +97,52 @@ function db_get(array $options = array()){
 		return;
 	}
 
-	//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
-        if($guids = $options['guids']){
-		if(is_array($guids)){
-                	$rows = $DB->cfs[$type]->multiget($options['guids']);
-		}else{
-			$rows[] = $DB->cfs[$type]->get($guids[0]);
-		}
-        } elseif($type == 'plugin'){
-	
-		//do we even have any attrs?
-		if($attr = $options['attrs']){
+	try{
+
+		//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
+		if($guids = $options['guids']){
+			if(is_array($guids)){
+				$rows = $DB->cfs[$type]->multiget($options['guids']);
+			}else{
+				$rows[] = $DB->cfs[$type]->get($guids[0]);
+			}
+		} elseif($type == 'plugin'){
+		
+			//do we even have any attrs?
+			if($attr = $options['attrs']){
+				foreach($options['attrs'] as $k => $v){
+				       $index_exps[] = new IndexExpression($k, $v);
+				}		               
+
+				$index_clause = new IndexClause($index_exps);
+				$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
+			} else {
+				$rows = $DB->cfs[$type]->get_range("", "");
+			}
+		} elseif($type == 'user') {
+		       
 			foreach($options['attrs'] as $k => $v){
-	        	       $index_exps[] = new IndexExpression($k, $v);
-			}		               
+			       $index_exps[] = new IndexExpression($k, $v);
+			}
 
 			$index_clause = new IndexClause($index_exps);
-        		$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
-        	} else {
-			$rows = $DB->cfs[$type]->get_range("", "");
+			$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
+
+		} elseif($type == 'friends' || $type == 'friendsof'){
+			$row = $DB->cfs[$type]->get($options['owner_guid']);
+			$users_guids = array();
+			foreach($row as $k => $v){
+				if($k != 'type' || $k != 0){
+					$user_guids[] = $k;
+				}
+			}
+			$type = 'user';
+			return db_get(array('type'=>'user', 'guids'=>$user_guids));
 		}
-	} elseif($type == 'user') {
-	       
-		foreach($options['attrs'] as $k => $v){
-                       $index_exps[] = new IndexExpression($k, $v);
-                }
+	} catch (Exception $e){
+		return false;
+	}        
 
-                $index_clause = new IndexClause($index_exps);
-                $rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
-
-	}
-        
 	foreach($rows as $k => $row){
 		
 		$row['guid'] = $k;
@@ -140,6 +157,17 @@ function db_get(array $options = array()){
  
 	}
 	return $entities;
+}
+
+/**
+ * Performance a remove on the database. Either a column or row
+ */
+function db_remove($guid = "", $type = "object", array $options = array()){
+	
+	global $DB;
+
+	return $DB->cfs[$type]->remove($guid, $options); 
+
 }
 
 	/**
