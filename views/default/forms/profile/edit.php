@@ -16,7 +16,7 @@
 $profile_fields = elgg_get_config('profile_fields');
 if (is_array($profile_fields) && count($profile_fields) > 0) {
 	foreach ($profile_fields as $shortname => $valtype) {
-		$metadata = elgg_get_metadata(array(
+/*		$metadata = elgg_get_metadata(array(
 			'guid' => $vars['entity']->guid,
 			'metadata_name' => $shortname,
 			'limit' => false
@@ -39,7 +39,8 @@ if (is_array($profile_fields) && count($profile_fields) > 0) {
 			$value = '';
 			$access_id = ACCESS_DEFAULT;
 		}
-
+*/
+		$value = $vars['entity']->$shortname;
 ?>
 <div>
 	<label><?php echo elgg_echo("profile:{$shortname}") ?></label>
@@ -53,7 +54,7 @@ if (is_array($profile_fields) && count($profile_fields) > 0) {
 			'name' => "accesslevel[$shortname]",
 			'value' => $access_id,
 		);
-		echo elgg_view('input/access', $params);
+//		echo elgg_view('input/access', $params);
 	?>
 </div>
 <?php
