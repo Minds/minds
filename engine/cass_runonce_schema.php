@@ -30,6 +30,7 @@ $cfs = array(	'site' => array(	'site_id' => 'UTF8Type'	),
 		'object' => array(	'owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type'),
 		'user' => array(	'username' => 'UTF8Type', 'email' => 'UTF8Type'	),
 		'group' => array(	'container_guid' => 'UTF8Type'	),
+		'widget' => array(	'owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' ),
 
 		'friends' => array( 	),
 		'friendsof' => array(	)

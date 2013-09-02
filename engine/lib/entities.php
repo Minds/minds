@@ -612,6 +612,9 @@ function entity_row_to_elggstar($row, $type) {
 			case 'plugin' :
 				$new_entity = new ElggPlugin($row);
 				break;
+			case 'widget' : 
+				$new_entity = new ElggWidget($row);
+		                break;
 			default:
 				$msg = elgg_echo('InstallationException:TypeNotSupported', array($type));
 				throw new InstallationException($msg);
@@ -836,6 +839,11 @@ function elgg_get_entities(array $options = array()) {
 	if($container_guid = $options['container_guids']){
 		$attrs['container_guid'] = $container_guid[0];
 	}
+
+	if($options['limit'] == false || $options['limit'] == 0){
+		unset($options['limit']);
+	}
+
 	if (!$options['count']) {
 		try{
 			$type = $options['types'] ? $options['types'][0] : "object";
@@ -845,7 +853,7 @@ function elgg_get_entities(array $options = array()) {
 
 				$rows = $DB->cfs[$type]->multiget($options['guids']);
 			
-			} elseif($type == 'object'){
+			} elseif($type == 'object' || $type == 'widget'){
 				if($attrs){
 					foreach($attrs as $column => $value){
 						$index_exps[] = new IndexExpression($column, $value);
@@ -853,7 +861,7 @@ function elgg_get_entities(array $options = array()) {
 					$index_clause = new IndexClause($index_exps, $options['offset'], $options['limit']);
 					$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
 				} else {
-
+					 $rows = $DB->cfs[$type]->get_range($options['offset'],"", $options['limit']);
 				}
 			} elseif($type == 'user') {
 
@@ -872,10 +880,9 @@ function elgg_get_entities(array $options = array()) {
 					foreach($row as $k=>$v){
 						$newrow->$k = $v;
 					}
-				
 					$entities[] = entity_row_to_elggstar($newrow, $type);
 				}
-			}	
+			}
 		} catch(Exception $e){
                         return false;
                 }
@@ -1842,7 +1849,7 @@ function can_edit_entity($entity_guid, $user_guid = 0) {
 			if ($entity->type == "user" && $entity->getGUID() == $user->getGUID()) {
 				$return = true;
 			}
-			if ($container_entity = get_entity($entity->container_guid)) {
+			if ($container_entity = get_entity($entity->container_guid, 'user')) {
 				if ($container_entity->canEdit($user->getGUID())) {
 					$return = true;
 				}

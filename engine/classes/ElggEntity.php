@@ -602,8 +602,13 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	function setPrivateSetting($name, $value) {
-		//$this->$name = $value;
-		//$this->save();
+		if($this->guid){
+			$this->$name = $value;
+			return	$this->save();
+		} else {
+			$this->temp_private_settings[$name] = $value;
+			return true;
+		}
 	}
 
 	/**

@@ -816,7 +816,7 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 	if (!$entity || !($entity instanceof ElggEntity)) {
 		return false;
 	}
-
+	
 	global $autofeed;
 	$autofeed = true;
 
@@ -835,13 +835,12 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 
 	$vars['entity'] = $entity;
 
-
 	// if this entity has a view defined, use it
 	$view = $entity->view;
 	if (is_string($view)) {
 		return elgg_view($view, $vars, $bypass, $debug);
 	}
-
+	
 	$entity_type = $entity->getType();
 	$subtype = $entity->getSubtype();
 	if (empty($subtype)) {
@@ -863,7 +862,7 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 		if ($annotations) {
 			$contents .= $annotations;
 		}
-	}
+	} 
 	return $contents;
 }
 

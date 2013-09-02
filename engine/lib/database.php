@@ -39,7 +39,7 @@ function db_init() {
 	
 	$DB->pool = $pool;
 
-	$cfs = array('site','plugin', 'config','object', 'user', 'group', 'friends', 'friendsof');
+	$cfs = array('site','plugin', 'config','object', 'user', 'widget','group', 'friends', 'friendsof');
 
 	
 	register_cfs($cfs);
@@ -98,13 +98,12 @@ function db_get(array $options = array()){
 	}
 
 	try{
-
 		//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 		if($guids = $options['guids']){
 			if(is_array($guids)){
 				$rows = $DB->cfs[$type]->multiget($options['guids']);
 			}else{
-				$rows[] = $DB->cfs[$type]->get($guids[0]);
+				$rows[] = $DB->cfs[$type]->get($guids);
 			}
 		} elseif($type == 'plugin'){
 		
@@ -177,14 +176,26 @@ function db_remove($guid = "", $type = "object", array $options = array()){
 function create_cfs($name, array $indexes = array(), array $attrs = array(), $plugin_id){
 	global $CONFIG, $DB;
 
-	$sys = new SystemManager($CONFIG->cassandra->servers);
+	$sys = new SystemManager($CONFIG->cassandra->servers[0]);
 
-	$attr = array("comparator_type" => UTF8Type);
+	//column name => ARRAY( 'INDEX' );
+	$cfs = array(	'widget' => array(      'owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' )
+			);
 
-        $sys->create_column_family($CONFIG->cassandra->keyspace, $name, $attr);
-	foreach($indexes as $index){
-	       $sys->create_index($CONFIG->cassandra->keyspace, $name, $index, UTF8Type);
+	foreach($cfs as $cf => $indexes){
+
+		$attr = array("comparator_type" => "UTF8Type");
+
+		$sys->create_column_family($CONFIG->cassandra->keyspace, $cf, $attr);
+
+		foreach($indexes as $index => $data_type){
+
+			$sys->create_index($CONFIG->cassandra->keyspace, $cf, $index, $data_type);
+
+		}
 	}
+
+
 }
 
 /**
