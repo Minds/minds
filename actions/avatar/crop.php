@@ -5,7 +5,7 @@
  */
 
 $guid = get_input('guid');
-$owner = get_entity($guid);
+$owner = get_entity($guid, 'user');
 
 if (!$owner || !($owner instanceof ElggUser) || !$owner->canEdit()) {
 	register_error(elgg_echo('avatar:crop:fail'));
@@ -64,6 +64,8 @@ $owner->x1 = $x1;
 $owner->x2 = $x2;
 $owner->y1 = $y1;
 $owner->y2 = $y2;
+
+$owner->save();
 
 system_message(elgg_echo('avatar:crop:success'));
 $view = 'river/user/default/profileiconupdate';

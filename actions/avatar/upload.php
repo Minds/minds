@@ -4,7 +4,7 @@
  */
 
 $guid = get_input('guid');
-$owner = get_entity($guid);
+$owner = get_entity($guid, 'user');
 
 if (!$owner || !($owner instanceof ElggUser) || !$owner->canEdit()) {
 	register_error(elgg_echo('avatar:upload:fail'));
@@ -51,6 +51,7 @@ $owner->y1 = 0;
 $owner->y2 = 0;
 
 $owner->icontime = time();
+$owner->save();
 if (elgg_trigger_event('profileiconupdate', $owner->type, $owner)) {
 	system_message(elgg_echo("avatar:upload:success"));
 
