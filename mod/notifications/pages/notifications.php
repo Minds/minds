@@ -9,16 +9,14 @@ if(get_input('full')){
 	
 	$title = elgg_echo('notifications');
 	
-	$options = array(	'types'=>'object',
-					'subtypes'=>'notification',
-					'metadata_name_value_pairs' => array(array('name'=>'to_guid', 'value'=>$user->getGUID(), 'operand' => '='))
-				);
+	$options = array(	'type'=> 'notification',
+				'attrs' => array('to_guid'=>elgg_get_logged_in_user_guid())
+			);
 	
-	$notifications = elgg_get_entities_from_metadata($options);
+//	$notifications = elgg_get_entities_from_metadata($options);
 	
 
-	$content = elgg_list_entities_from_metadata($options);
-	
+	$content = elgg_list_entities($options);
 	$params = array(
 		'content' => $content,
 		'title' => $title,
@@ -40,22 +38,17 @@ $user = elgg_get_logged_in_user_entity();
 
 if($user){
 
+	 $options = array(       'type'=> 'notification',
+                		'limit' => 10,
+		                'attrs' => array('to_guid'=>elgg_get_logged_in_user_guid())
+                        );
 
-	$options = array(	'types'=>'object',
-						'subtypes'=>'notification',
-						//'owner_guid' => $user->getGUID(),
-						'limit' => 5,
-						'metadata_name_value_pairs' => array(array('name'=>'to_guid', 'value'=>$user->getGUID(), 'operand' => '='))
-					);
+        $content = elgg_list_entities($options);
 	
-	$notifications = elgg_get_entities_from_metadata($options);
-	
-	$list = elgg_view_entity_list($notifications);
-	
-	$list .= elgg_view('output/url', array('href'=>'notifications/view', 'text'=>'See more'));
+	$content .= elgg_view('output/url', array('href'=>'notifications/view', 'text'=>'See more'));
 	
 	
-	echo $list;
+	echo $content;
 } else {
 	
 	echo elgg_echo('notifications:not_logged_in');

@@ -300,17 +300,16 @@ function notifications_count_unread(){
 	$user = elgg_get_logged_in_user_entity();
 
 	if($user){
-		$options = array(	'types'=>'object',
-							'subtypes'=>'notification',
-							'limit' => 10,
-							'metadata_name_value_pairs' => array(array('name'=>'read', 'value' => 1, 'operand'=>'!='), array('name'=>'to_guid', 'value'=>$user->guid)),
-							'metadata_name_value_pairs_operator' => 'AND'
-						);
 		
-		$notifications = elgg_get_entities_from_metadata($options);
-		
+		$options = array(       'type'=> 'notification',
+					'limit'  => 100000,
+                                'attrs' => array('to_guid'=>elgg_get_logged_in_user_guid(), 'read'=>0)
+                        );
+		$notification = elgg_get_entities($options);
+	
 		return count($notifications);
 	} else {
 		return NULL;
 	}
 }
+

@@ -55,15 +55,17 @@ $options = array(
         ),
         'limit' => 0,
     );
-$items = elgg_get_entities_from_metadata($options);
-foreach($items as $item){
+*/
+$entity = get_entity($pid, 'object');
+//$owner = get_entity($entity->ower_guid);
+//$items = elgg_get_entities_from_metadata($options);
+/*foreach($items as $item){
 	
 	$to_guids[] = $item->owner_guid;
 	
 }
 	$to_guids[] = $subject_guid;
 	$to = array_unique($to_guids);
-
-notification_create($to, elgg_get_logged_in_user_guid(), $parent_guid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
 */
+notification_create(array($entity->owner_guid), elgg_get_logged_in_user_guid(), $pid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
 exit;

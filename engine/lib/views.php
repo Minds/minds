@@ -811,7 +811,7 @@ function elgg_view_menu($menu_name, array $vars = array()) {
  * @todo The annotation hook might be better as a generic plugin hook to append content.
  */
 function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $debug = false) {
-
+	
 	// No point continuing if entity is null
 	if (!$entity || !($entity instanceof ElggEntity)) {
 		return false;
@@ -989,7 +989,6 @@ function elgg_view_annotation(ElggAnnotation $annotation, array $vars = array(),
  */
 function elgg_view_entity_list($entities, $vars = array(), $offset = 0, $limit = 10, $full_view = true,
 $list_type_toggle = true, $pagination = true) {
-
 	// list type can be passed as request parameter
 	$list_type = get_input('list_type', 'list');
 	if (get_input('listtype')) {
@@ -1312,8 +1311,9 @@ function elgg_view_form($action, $form_vars = array(), $body_vars = array()) {
  */
 function elgg_view_list_item($item, array $vars = array()) {
 	global $CONFIG;
-
+	
 	$type = $item->getType();
+	
 	if (in_array($type, $CONFIG->entity_types)) {
 		return elgg_view_entity($item, $vars);
 	} else if ($type == 'annotation') {

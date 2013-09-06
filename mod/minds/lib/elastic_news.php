@@ -186,7 +186,7 @@ function minds_elastic_get_news(array $options = array()) {
 	}
 	
 	if($options['subject_guids']){
-			$bool['must']['terms']['subject_guid'] = $options['subject_guids'];
+			$bool['must']['terms']['subject_guid'] = '"' . $options['subject_guids'][0] . '"';
 			$bool['must']['terms']['minimum_match'] = 1;
 	}
 	if($options['object_guids']){
@@ -220,7 +220,7 @@ function minds_elastic_get_news(array $options = array()) {
 		$data['sort'] = array('posted'=>'desc');
 		
 		$query = $es->terms($options['action_types'], json_encode($data));
-		
+	var_dump(json_encode($data));	
 		if (!$options['count']) {
 			return minds_elastic_parse_news($query); 
 		} else {
@@ -240,7 +240,7 @@ function minds_elastic_list_news(array $options = array()) {
 		'pagination' => TRUE,
 		'list_class' => 'elgg-list-river elgg-river', // @todo remove elgg-river in Elgg 1.9
 	);
-
+var_dump($options);
 	$options = array_merge($defaults, $options);
 
 	$options['count'] = TRUE;

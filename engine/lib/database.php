@@ -39,7 +39,7 @@ function db_init() {
 	
 	$DB->pool = $pool;
 
-	$cfs = array('site','plugin', 'config','object', 'user', 'widget','group', 'friends', 'friendsof');
+	$cfs = array('site','plugin', 'config','object', 'user', 'widget', 'notification', 'group', 'friends', 'friendsof');
 
 	
 	register_cfs($cfs);
@@ -178,23 +178,15 @@ function create_cfs($name, array $indexes = array(), array $attrs = array(), $pl
 
 	$sys = new SystemManager($CONFIG->cassandra->servers[0]);
 
-	//column name => ARRAY( 'INDEX' );
-	$cfs = array(	'widget' => array(      'owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' )
-			);
+	$attr = array("comparator_type" => "UTF8Type");
 
-	foreach($cfs as $cf => $indexes){
+	$sys->create_column_family($CONFIG->cassandra->keyspace, $name, $attr);
 
-		$attr = array("comparator_type" => "UTF8Type");
+	foreach($indexes as $index => $data_type){
 
-		$sys->create_column_family($CONFIG->cassandra->keyspace, $cf, $attr);
+		$sys->create_index($CONFIG->cassandra->keyspace, $name, $index, $data_type);
 
-		foreach($indexes as $index => $data_type){
-
-			$sys->create_index($CONFIG->cassandra->keyspace, $cf, $index, $data_type);
-
-		}
 	}
-
 
 }
 
@@ -243,7 +235,7 @@ function db_alter_column($cf, $options){
 		}
 	}
 }
-
+//db_create_index('notification' , array('to_guid' => 'UTF8Type'));
 /** 
  * Create a indexed column for a column family
  */

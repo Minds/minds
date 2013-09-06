@@ -615,6 +615,9 @@ function entity_row_to_elggstar($row, $type) {
 			case 'widget' : 
 				$new_entity = new ElggWidget($row);
 		                break;
+			case 'notification' : 
+				$new_entity = new ElggNotification($row);
+				break;
 			default:
 				$msg = elgg_echo('InstallationException:TypeNotSupported', array($type));
 				throw new InstallationException($msg);
@@ -853,7 +856,7 @@ function elgg_get_entities(array $options = array()) {
 
 				$rows = $DB->cfs[$type]->multiget($options['guids']);
 			
-			} elseif($type == 'object' || $type == 'widget'){
+			} else{
 				if($attrs){
 					foreach($attrs as $column => $value){
 						$index_exps[] = new IndexExpression($column, $value);
@@ -863,14 +866,6 @@ function elgg_get_entities(array $options = array()) {
 				} else {
 					 $rows = $DB->cfs[$type]->get_range($options['offset'],"", $options['limit']);
 				}
-			} elseif($type == 'user') {
-
-				$rows = $DB->cfs[$type]->get_range($options['offset'],"", $options['limit']);
-			
-			} elseif($type == 'plugin'){
-				
-		//		$rows = $DB->cfs[$type]->get_indexed_slices();
-			
 			}
 			if($rows){
 				foreach($rows as $guid=>$row){
