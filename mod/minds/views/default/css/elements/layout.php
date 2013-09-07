@@ -144,6 +144,7 @@
 	/*-moz-box-shadow: 0 0 3px #888;
 	-webkit-box-shadow: 0 0 3px#888;
 	box-shadow: 0 0 3px #888;*/
+	margin-bottom:10px;
 }
 .elgg-main > .elgg-breadcrumbs{
 	margin:10px;

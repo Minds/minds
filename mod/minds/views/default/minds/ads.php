@@ -112,5 +112,13 @@ elseif($type == 'search-ad'){
 			<script type="text/javascript"
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			</script>';
+} elseif($type == 'adblade'){
+	echo '<div class="adblade"><script type="text/javascript"><!--
+	  adblade_cid="3144-3659842753";
+	  adblade_ad_width="600";
+	  adblade_ad_height="450";
+	  adblade_ad_host="web.adblade.com";
+	//--></script>
+	<script type="text/javascript" src="http://web.adblade.com/js/ads/show.js"></script></div>';
 }
 

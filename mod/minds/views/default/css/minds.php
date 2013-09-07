@@ -1191,3 +1191,15 @@ div.register-popup {
     margin-left: 30px;
     margin-right: auto;
 }
+
+/**
+ * Ad specific
+ */
+.adblade{
+	width:100%;
+	height:400px;
+}
+.adblade iframe{
+	margin: 10px auto;
+	display:block;
+}
