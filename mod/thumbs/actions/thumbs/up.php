@@ -8,14 +8,14 @@
  *
  */
 
-$entity_guid = (int) get_input('guid');
+$entity_guid = get_input('guid');
 $id = get_input('id');
 $type = get_input('type', 'entity');
 
 if ($type == 'entity') {
 
 	// Let's see if we can get an entity with the specified GUID
-	$entity = get_entity($entity_guid);
+	$entity = get_entity($entity_guid, 'object');
 	if (!$entity) {
 		register_error(elgg_echo("thumbs:notfound"));
 		//forward(REFERER);

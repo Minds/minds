@@ -79,7 +79,7 @@ foreach($json as $item) {
 					$items[] = new ElggGroup($item);
 					break;
 				case 'object':
-					switch(get_subtype_from_id($item->subtype)){
+					switch($item->subtype){
 						case 'album':
 							$items[] = new TidypicsAlbum($item);
 							break;

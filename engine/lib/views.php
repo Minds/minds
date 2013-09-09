@@ -995,7 +995,7 @@ $list_type_toggle = true, $pagination = true) {
 		elgg_deprecated_notice("'listtype' has been deprecated by 'list_type' for lists", 1.8);
 		$list_type = get_input('listtype');
 	}
-
+	
 	if (is_array($vars)) {
 		// new function
 		$defaults = array(

@@ -4,6 +4,8 @@
  * Private settings provide metadata like storage of settings for plugins
  * and users.
  *
+ * Soon the be deprecated and replaced by an attribute style. 
+ *
  * @package Elgg.Core
  * @subpackage PrivateSettings
  */
@@ -275,25 +277,17 @@ $pairs = NULL, $pair_operator = 'AND', $name_prefix = '') {
  * @see remove_all_private_settings()
  * @link http://docs.elgg.org/DataModel/Entities/PrivateSettings
  */
-function get_private_setting($entity_guid, $name) {
+function get_private_setting($entity_guid, $entity_type, $name) {
 	global $CONFIG;
-	$entity_guid = (int) $entity_guid;
+	$entity_guid = $entity_guid;
 
-	$entity = get_entity($entity_guid);
+	$entity = get_entity($entity_guid, $entity_type);
 	if (!$entity instanceof ElggEntity) {
 		return false;
 	}
 
-	$query = "SELECT value from {$CONFIG->dbprefix}private_settings
-		where name = '{$name}' and entity_guid = {$entity_guid}";
-	$setting = get_data_row($query);
-
-	if ($setting) {
-		return $setting->value;
-	}
-	return false;
+	return $entity->$name;
 }
-
 /**
  * Return an array of all private settings.
  *
@@ -306,29 +300,22 @@ function get_private_setting($entity_guid, $name) {
  * @see remove_all_private_settings()
  * @link http://docs.elgg.org/DataModel/Entities/PrivateSettings
  */
-function get_all_private_settings($entity_guid) {
+function get_all_private_settings($entity_guid, $entity_type) {
 	global $CONFIG;
 
-	$entity_guid = (int) $entity_guid;
-	$entity = get_entity($entity_guid);
+	$entity_guid = $entity_guid;
+	$entity = get_entity($entity_guid, $entity_type);
 	if (!$entity instanceof ElggEntity) {
 		return false;
 	}
 
-	$query = "SELECT * from {$CONFIG->dbprefix}private_settings where entity_guid = {$entity_guid}";
-	$result = get_data($query);
-	if ($result) {
-		$return = array();
-		foreach ($result as $r) {
-			$return[$r->name] = $r->value;
-		}
-
-		return $return;
+	$return = array();
+	foreach ($entity as $name => $value) {
+		$return[$name] = $value;
 	}
 
-	return false;
+	return $return;
 }
-
 /**
  * Sets a private setting for an entity.
  *
@@ -343,17 +330,12 @@ function get_all_private_settings($entity_guid) {
  * @see remove_all_private_settings()
  * @link http://docs.elgg.org/DataModel/Entities/PrivateSettings
  */
-function set_private_setting($entity_guid, $name, $value) {
+function set_private_setting($entity_guid, $entity_type, $name, $value) {
 	global $CONFIG;
-
-	$entity_guid = (int) $entity_guid;
-	$name = sanitise_string($name);
-	$value = sanitise_string($value);
 	
-	$retult = insert_data("INSERT into {$CONFIG->dbprefix}private_settings
-		(entity_guid, name, value) VALUES 
-		($entity_guid, '$name', '$value') 
-		ON DUPLICATE KEY UPDATE value='$value'");   
+	$result = db_insert($entity_guid, array(	'type' => $entity_type,
+							$name => $value
+				));
 	
 	return $result !== false;
 }

@@ -593,8 +593,9 @@ abstract class ElggEntity extends ElggData implements
 	/**
 	 * Adds a private setting to this entity.
 	 *
-	 * Private settings are similar to metadata but will not
-	 * be searched and there are fewer helper functions for them.
+	 * Since the move to cassandra, attributes have been merged. 
+	 * Therefore, this funciton will be soon deprecated and replaced with
+	 * a single set function. 
 	 *
 	 * @param string $name  Name of private setting
 	 * @param mixed  $value Value of private setting
@@ -619,7 +620,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return mixed
 	 */
 	function getPrivateSetting($name) {
-		//return $this->$name;
+		return $this->$name;
 	}
 
 	/**

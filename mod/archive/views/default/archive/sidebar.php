@@ -6,7 +6,7 @@ elgg_push_context('sidebar');
  */
 $guid = elgg_extract('guid', $vars);
 if($guid){
-	$video = get_entity($guid);
+	$video = get_entity($guid, 'object');
 	$owners_videos = elgg_get_entities(array('type'=>'object', 'subtypes'=>array('kaltura_video'), 'owner_guid'=>$video->owner_guid, 'limit'=>2));
 	if (($key = array_search($video, $owners_videos)) !== false) {
 	    unset($owners_videos[$key]);

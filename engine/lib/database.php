@@ -39,7 +39,7 @@ function db_init() {
 	
 	$DB->pool = $pool;
 
-	$cfs = array('site','plugin', 'config','object', 'user', 'widget', 'notification', 'group', 'friends', 'friendsof');
+	$cfs = array('site','plugin', 'config','object', 'user', 'widget', 'notification', 'annotation', 'group', 'friends', 'friendsof');
 
 	
 	register_cfs($cfs);
@@ -137,13 +137,28 @@ function db_get(array $options = array()){
 			}
 			$type = 'user';
 			return db_get(array('type'=>'user', 'guids'=>$user_guids));
+		} elseif($type == 'annotation'){
+			//remove all annotation_ from strings
+			unset($options['limit']);
+			unset($options['offset']);
+			unset($options['type']);
+			unset($options['subtype']);
+			foreach($options as $k => $v){
+				$name = str_replace('annotation_', '', $k);
+				$options[$name] = $v;
+				$index_exps[] = new IndexExpression($name, $v);
+			}
+			$index_clause = new IndexClause($index_exps);
+                        $rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
+			foreach($rows as $row){
+				return true;
+			}
 		}
 	} catch (Exception $e){
 		return false;
 	}        
 
 	foreach($rows as $k => $row){
-		
 		$row['guid'] = $k;
 		
 		$new_row = new StdClass;
@@ -168,7 +183,7 @@ function db_remove($guid = "", $type = "object", array $options = array()){
 	return $DB->cfs[$type]->remove($guid, $options); 
 
 }
-
+//create_cfs('object', array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type', 'featured'=>'BooleanType'));
 /**
  * Creates a column family. This should be run automatically
  * for each new subtype that is created.
@@ -178,7 +193,11 @@ function create_cfs($name, array $indexes = array(), array $attrs = array(), $pl
 
 	$sys = new SystemManager($CONFIG->cassandra->servers[0]);
 
-	$attr = array("comparator_type" => "UTF8Type");
+	$attr = array(	"comparator_type" => "UTF8Type(reversed=true)",
+			"key_validation_class" => 'UTF8Type',
+			"default_validation_class" => 'UTF8Type'
+			);
+
 
 	$sys->create_column_family($CONFIG->cassandra->keyspace, $name, $attr);
 
@@ -235,7 +254,7 @@ function db_alter_column($cf, $options){
 		}
 	}
 }
-//db_create_index('notification' , array('to_guid' => 'UTF8Type'));
+//db_create_index('annotation' , array('guid' => 'UTF8Type', 'name'=>'UTF8Type', 'value'=>'UTF8Type','owner_guid'=>'UTF8Type'));
 /** 
  * Create a indexed column for a column family
  */
@@ -253,4 +272,5 @@ function db_create_index($cf, array $options = array()){
                 }
 	}	
 }
+
 //elgg_register_event_handler('init', 'system', 'db_init');

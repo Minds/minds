@@ -27,7 +27,7 @@ class ElggBlog extends ElggObject {
 	 * @since 1.8.0
 	 */
 	public function canComment($user_guid = 0) {
-		$result = parent::canComment($user_guid);
+/*		$result = parent::canComment($user_guid);
 		if ($result == false) {
 			return $result;
 		}
@@ -36,7 +36,7 @@ class ElggBlog extends ElggObject {
 			return false;
 		}
 		
-		return true;
+		return true;*/
 	}
 
 }

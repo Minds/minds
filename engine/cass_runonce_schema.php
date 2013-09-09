@@ -38,7 +38,7 @@ $cfs = array(	'site' => array(	'site_id' => 'UTF8Type'	),
 
 foreach($cfs as $cf => $indexes){
 
-	$attr = array("comparator_type" => "UTF8Type");
+	$attr = array("comparator_type" => "CompositeType(UTF8Type(reversed=True), UTF8Type)");
 
 	$sys->create_column_family($CONFIG->cassandra->keyspace, $cf, $attr);
 

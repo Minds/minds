@@ -29,6 +29,11 @@ $list_class = 'elgg-list';
 $list_id = elgg_extract('list_id', $vars, null);
 $data_options = elgg_extract('data-options', $vars, false);
 
+$last_item = end($items);
+if($last_item){
+	$last_guid = $last_item->guid;
+}
+
 if ($data_options) {
     $list_class = "$list_class hj-syncable";
 }
@@ -56,9 +61,10 @@ if ($pagination && $count) {
         'count' => $count,
         'limit' => $limit,
         'offset_key' => $offset_key,
-		'ajaxify' => $ajaxify,
-		'list_id' => $list_id
-            ));
+	'ajaxify' => $ajaxify,
+	'list_id' => $list_id,
+        'last_guid' => $last_guid
+	));
 }
 
 $before = elgg_view('page/components/list/prepend', $vars);

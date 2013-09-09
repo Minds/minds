@@ -186,7 +186,7 @@
 				items_type: $list.find('.elgg-list').hasClass('elgg-list-entity') ? 'entity' :
 							$list.find('.elgg-list').hasClass('elgg-list-river') ? 'river' :
 							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
-				offset: $list.find('.elgg-list').children().length + (parseInt($params.offset) || 0)
+				offset: $('.load-more').attr('last_guid')
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
 //			console.log(url);

@@ -860,7 +860,7 @@ function elgg_get_entities(array $options = array()) {
 				if($attrs){
 					foreach($attrs as $column => $value){
 						$index_exps[] = new IndexExpression($column, $value);
-					}	
+					}
 					$index_clause = new IndexClause($index_exps, $options['offset'], $options['limit']);
 					$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
 				} else {
@@ -1231,7 +1231,7 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 	$autofeed = true;
 
 	$defaults = array(
-		'offset' => "",
+		'offset' => get_input('offset', ""),
 		'limit' => (int) max(get_input('limit', 10), 0),
 		'full_view' => TRUE,
 		'list_type_toggle' => FALSE,

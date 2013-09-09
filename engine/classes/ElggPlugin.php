@@ -379,7 +379,6 @@ class ElggPlugin extends ElggEntity {
 	 * @return mixed The setting string value or false
 	 */
 	public function getUserSetting($name, $user_guid = null) {
-		$user_guid = (int)$user_guid;
 
 		if ($user_guid) {
 			$user = get_entity($user_guid, 'user');
@@ -392,7 +391,7 @@ class ElggPlugin extends ElggEntity {
 		}
 
 		$name = elgg_namespace_plugin_private_setting('user_setting', $name, $this->getID());
-		return get_private_setting($user->guid, $name);
+		return get_private_setting($user->guid,'user', $name);
 	}
 
 	/**
@@ -454,14 +453,13 @@ class ElggPlugin extends ElggEntity {
 	 * @return mixed The new setting ID or false
 	 */
 	public function setUserSetting($name, $value, $user_guid = null) {
-		$user_guid = (int)$user_guid;
 
 		if ($user_guid) {
-			$user = get_entity($user_guid);
+			$user = get_entity($user_guid, 'user');
 		} else {
 			$user = elgg_get_logged_in_user_entity();
 		}
-
+		
 		if (!($user instanceof ElggUser)) {
 			return false;
 		}
@@ -479,7 +477,7 @@ class ElggPlugin extends ElggEntity {
 		// set the namespaced name.
 		$name = elgg_namespace_plugin_private_setting('user_setting', $name, $this->getID());
 
-		return set_private_setting($user->guid, $name, $value);
+		return set_private_setting($user->guid, 'user',$name, $value);
 	}
 
 

@@ -14,6 +14,7 @@ if($type=='entity'){
 	$guid = $vars['entity']->getGUID();
 	$url = elgg_get_site_url() . "action/thumbs/down?guid={$guid}";
 	$already = elgg_annotation_exists($guid, 'thumbs:down');
+	//$already = false;
 }elseif($type=='comment'){
 	$id = $vars['id'];
 	$comment_type = $vars['comment_type'];
