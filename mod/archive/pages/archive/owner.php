@@ -6,6 +6,7 @@ $username = get_input("username", elgg_get_logged_in_user_entity()->username);
 $user = get_user_by_username($username);
 $filter = get_input("filter", "all");
 
+die(print_r($username,true));
 $page_owner = get_user_by_username($username);
 elgg_set_page_owner_guid($page_owner->getGUID());
 

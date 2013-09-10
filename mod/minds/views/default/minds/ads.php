@@ -29,13 +29,38 @@ if($type == 'content-side'){
 		<script type="text/javascript"
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 		</script>';
+} elseif ($type == 'content-side-single'){
+  echo '<script type="text/javascript"><!--
+                google_ad_client = "ca-pub-9303771378013875";
+                /* Minds large block */
+                google_ad_slot = "5788264423";
+                google_ad_width = 336;
+                google_ad_height = 280;
+                //-->
+                </script>
+                <script type="text/javascript"
+                        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+                </script>';
+
 } elseif($type == 'content-foot'){
-	echo '<script id="mNCC" language="javascript">  
+/*	echo '<script id="mNCC" language="javascript">  
 			medianet_width="728";  
 			medianet_height= "90";  
 			medianet_crid="451826483";  
 		 </script> 
 		 <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CU21QO2U" language="javascript"></script>';
+*/
+	echo '<script type="text/javascript"><!--
+		google_ad_client = "ca-pub-9303771378013875";
+		/* Content Bottom Banner */
+		google_ad_slot = "9810862421";
+		google_ad_width = 728;
+		google_ad_height = 90;
+		//-->
+		</script>
+		<script type="text/javascript"
+			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+		</script>';
 			
 } elseif($type == 'news'){
  echo '<script type="text/javascript"><!--
@@ -52,16 +77,16 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	
 } elseif($type == 'large-block'){
 	echo '<script type="text/javascript"><!--
-			google_ad_client = "ca-pub-9303771378013875";
-			/* Minds Large Wiki Square */
-			google_ad_slot = "8814173620";
-			google_ad_width = 336;
-			google_ad_height = 280;
-			//-->
-			</script>
-			<script type="text/javascript"
-			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-			</script>';
+google_ad_client = "ca-pub-9303771378013875";
+/* Large ad */
+google_ad_slot = "1083059623";
+google_ad_width = 300;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>';
 } elseif($type == 'small-banner'){
 	echo '<script type="text/javascript"><!--
 			google_ad_client = "ca-pub-9303771378013875";

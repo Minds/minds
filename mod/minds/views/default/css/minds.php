@@ -1096,7 +1096,12 @@ li.elgg-menu-item-rss{
 	display: none;
 }
 
-
+.elgg-widget-more{
+	width: 100%;
+	height: auto;
+	display: block;
+	clear: both;
+}
 
 div.signup-options {
 

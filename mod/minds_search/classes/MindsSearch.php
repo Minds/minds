@@ -17,8 +17,14 @@ class MindsSearch {
 		$query = $es->query(null, 'source:'.$service);
 		return $query['hits']['total'];
 	}
+	
+	function result($id){
+		$es = new elasticsearch();
+                $es->index = 'ext';
+		return $es->query(null,'id:'.$id);
+	}
 
-	function search($q,$type = 'all',$services = array('all'), $license = 'all', $limit=10,$offset=0) {
+	function search($q,$type = 'all',$source = array('all'), $license = 'all', $category = 'all', $limit=10,$offset=0) {
 		
 		$rq = $q;
 		if($type == 'all'){
@@ -28,8 +34,18 @@ class MindsSearch {
 			$rq .= ' AND "'.$license.'"';
 		}
 		
+		if($source == 'all'){
+			$source = null;
+		} else {
+			$rq .= ' AND source:"'.$source.'"';
+		}
+
+		if($category != 'all'){	
+			$rq .= ' AND category:"'.$category.'"';
+		}	
+
 		//I can't get the elasticsearch way to work - so lets do a query string hack!
-		if(!$type)
+		if(!$type && !$source)
 		$rq .= ' AND type:(user^100,video^2,photo^50,article^1) AND source:(minds^10,wikipedia^40,flickr^30,soundcloud^0.8) OR title:('.$q.'^1) OR description:("'.$q.'"^0.5)';
 				
 		$data['query']['query_string']['query'] = $rq;

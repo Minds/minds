@@ -100,7 +100,7 @@ if (elgg_instanceof($owner, 'group')) {
 if($entity->getSubtype() == 'image'){
 	//set the album
 	$album = $entity->getContainerEntity();
-	elgg_push_breadcrumb($entity->title, $entity->getURL());
+	elgg_push_breadcrumb($album->title, $album->getURL());
 }
 
 if($entity->getSubtype() == 'album'){

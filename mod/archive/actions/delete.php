@@ -4,6 +4,12 @@ gatekeeper();
 $guid = get_input('guid');
 $entity = get_entity($guid);
 
+if(!$entity) //Elgg entity doesn't exists we return
+{
+    system_message(elgg_echo('minds:archive:delete:success'));
+    forward('archive/all');
+}
+
 if($entity->getSubtype() == 'kaltura_video'){
 	elgg_load_library('archive:kaltura');
 	try{
@@ -16,7 +22,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	$entity->delete();
 	forward('archive/all');
 } elseif($entity->getSubtype() == 'file') {
-		
+
 	$thumbnails = array($entity->thumbnail, $entity->smallthumb, $entity->largethumb);
 		foreach ($thumbnails as $thumbnail) {
 			if ($thumbnail) {

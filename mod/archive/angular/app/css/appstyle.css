@@ -1,0 +1,228 @@
+/* Plcaeholder change color - all */
+::-webkit-input-placeholder { color:#000000; opacity: 1 !important;}
+::-moz-placeholder { color:#000000; opacity: 1 !important;} /* firefox 19+ */
+:-ms-input-placeholder { color:#000000; opacity: 1 !important;} /* ie */
+input:-moz-placeholder { color:#000000; opacity: 1 !important;}
+
+#dropzone {
+    height: 50px;
+    text-align: left;
+    padding-left: 10px;
+    }
+
+#fileupload{
+    border: none;
+    opacity: 0;
+    float: left;
+    width: 53px;
+    position: absolute;
+    height: 10px;
+    cursor: pointer;
+}
+
+#fileupload1{
+    width: 152px;
+    height: 35px;
+    margin-left: 40px;
+    border: none;
+    opacity: 0;
+    float: left;
+    position: absolute;
+    cursor: pointer;
+}
+
+#delete{
+    float: right;
+    border: none;
+    background: transparent;
+    position: absolute;
+    top: 5;
+    right: 5;
+}
+
+.uploadSelect{
+    -webkit-appearance: none;
+}
+
+#license{
+    width: 150;
+    height: 24;
+    background: transparent;
+    color: #000000;
+}
+
+#boxentry{
+    position: relative;
+    width: 330;
+    height: 250;
+    /*background: url('background.jpg');*/
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+#access_id{
+    width: 80;
+    height: 24;
+    background: transparent;
+    color: #000000;
+}
+
+#album{
+    width: 50;
+    height: 24;
+    background: transparent;
+    color: #000000;
+}
+
+.uploadbox-title{
+    margin-bottom:5px;
+}
+
+input.uploadInput:hover {background-color: #DDD !important;}
+input.uploadInput:focus {background-color: #fff !important;}
+input.uploadInput{
+    margin: 0;
+    background: transparent !important;
+    color: #000000;
+}   /* Plcaeholder change color - tilte */
+
+.uploadInput input::-webkit-input-placeholder {
+    color: #000000;
+    opacity: 1 !important;
+}
+.uploadInput input {
+    color: #000000;
+    opacity: 1 !important;
+}
+.uploadInput input:-ms-input-placeholder {
+    color: #000000;
+    opacity: 1 !important;
+}
+
+#saveButton{
+    clear: both;
+    width: 40px;
+    display: block;
+}
+
+/*.uploadlist > form > li.elgg-item > .itemControls {*/
+    /*height: 60px;*/
+    /*overflow: hidden;*/
+    /*transition: height 0.3s;*/
+    /*-webkit-transition: height 0.3s*/
+/*}*/
+
+/*.uploadlist > form > li.elgg-item > .itemControls:hover {*/
+    /*height: 130px;*/
+/*}*/
+
+/*.uploadlist > form > .elgg-image-block {*/
+    /*background-color: rgba(255,255,255, 0.9);*/
+/*}*/
+
+/*.uploadlist > form > li.elgg-item {*/
+    /*background-color: #FFF;*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: 100% 100%;*/
+    /*padding:0;*/
+    /*margin-left: 0px;*/
+/*}*/
+
+/*.uploadlist > form div.bar{*/
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*height: 5;*/
+    /*background-color: #4690D6;*/
+/*}*/
+
+/*.uploadlist > form div.progress{*/
+    /*color: transparent;*/
+    /*height: 0;*/
+/*}*/
+
+.uploadlist > li.elgg-item > .itemControls {
+    height: 60px;
+    overflow: hidden;
+    transition: height 0.3s;
+    -webkit-transition: height 0.3s
+}
+
+.uploadlist > li.elgg-item > .itemControls:hover {
+    height: 130px;
+}
+
+.uploadlist .elgg-image-block {
+    background-color: rgba(255,255,255, 0.9);
+}
+
+.uploadlist > li.elgg-item {
+    background-color: #FFF;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding:0;
+    margin-left: 0px;
+}
+
+.uploadlist div.bar{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 5;
+    background-color: #4690D6;
+}
+
+.uploadlist div.progress{
+    color: transparent;
+    height: 0;
+}
+
+.uploadSpan{
+    margin-left: 8px;
+}
+
+.upload-page-buttons {
+    margin-top: 15px;
+    float: right;
+}
+
+.upload-elgg-head {
+    float: left;
+}
+
+.upload-page-buttons > .elgg-button {
+    margin-left: 40px;
+}
+
+.uploadLeftArrow{
+    position: absolute;
+    left: 5;
+    top:110;
+    font-size: 30px !important;
+    cursor: pointer;
+}
+
+.uploadRightArrow{
+    position: absolute;
+    right: 5;
+    top:110;
+    font-size: 30px !important;
+    cursor: pointer ;
+}
+
+form .ng-invalid{
+    border: #FA787E 1px solid;
+}
+
+form .ng-valid{
+    border: none;
+}
+
+.uploadbox-description{
+    margin-top:5px;
+}
+
+.disabled{
+    background-color: #c5c5c5;
+    cursor: not-allowed;
+}

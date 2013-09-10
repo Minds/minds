@@ -48,7 +48,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 		if (file_exists($filename)) {
 			unlink($filename);
 		}
-	
+
 		// use same filename on the disk - ensures thumbnails are overwritten
 		$filestorename = $entity->getFilename();
 		$filestorename = elgg_substr($filestorename, elgg_strlen($prefix));

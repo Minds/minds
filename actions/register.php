@@ -9,11 +9,11 @@
 elgg_make_sticky_form('register');
 
 // Get variables
-$username = get_input('username');
-$password = get_input('password', null, false);
-$password2 = get_input('password2', null, false);
-$email = get_input('email');
-$name = get_input('name');
+$username = get_input('u');
+$password = get_input('p', null, false);
+$password2 = get_input('p2', null, false);
+$email = get_input('e');
+$name = get_input('n');
 $friend_guid = (int) get_input('friend_guid', 0);
 $invitecode = get_input('invitecode');
 

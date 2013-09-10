@@ -25,7 +25,7 @@ if (elgg_is_sticky_form('register')) {
 		<label><?php echo elgg_echo('name'); ?></label><br />
 		<?php
 		echo elgg_view('input/text', array(
-			'name' => 'name',
+			'name' => 'n',
 			'value' => $name,
 			'class' => 'elgg-autofocus',
 		));
@@ -35,7 +35,7 @@ if (elgg_is_sticky_form('register')) {
 		<label><?php echo elgg_echo('email'); ?></label><br />
 		<?php
 			echo elgg_view('input/text', array(
-				'name' => 'email',
+				'name' => 'e',
 				'value' => $email,
 			));
 		?>
@@ -44,7 +44,7 @@ if (elgg_is_sticky_form('register')) {
 		<label><?php echo elgg_echo('username'); ?></label><br />
 		<?php
 			echo elgg_view('input/text', array(
-				'name' => 'username',
+				'name' => 'u',
 				'value' => $username,
 			));
 		?>
@@ -53,7 +53,7 @@ if (elgg_is_sticky_form('register')) {
 		<label><?php echo elgg_echo('password'); ?></label><br />
 		<?php
 			echo elgg_view('input/password', array(
-				'name' => 'password',
+				'name' => 'p',
 				'value' => $password,
 			));
 		?>
@@ -62,7 +62,7 @@ if (elgg_is_sticky_form('register')) {
 		<label><?php echo elgg_echo('passwordagain'); ?></label><br />
 		<?php
 			echo elgg_view('input/password', array(
-				'name' => 'password2',
+				'name' => 'p2',
 				'value' => $password2,
 			));
 		?>

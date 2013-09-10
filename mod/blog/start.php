@@ -410,9 +410,9 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				if(strpos($item->get_permalink(), 'youtube.com/')){
 					$url = parse_url($item->get_permalink());
 					parse_str($url['query']);
-					$w = 730;
+					$w = '100%';
 					$h = 411;
-					$embed = '<iframe width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0"></iframe>';
+					$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0"></iframe>';
 					$icon = '<img src="http://img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
 					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
 					$blog->description = $embed . $icon . $disclaimer;
