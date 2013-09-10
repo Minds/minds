@@ -24,8 +24,8 @@ function elgg_get_widgets($user_guid, $context) {
 	
 	$options = array(
 		'type' => 'widget',
-		//'owner_guid' => $user_guid,
-		//'attrs' => array( 'context' => $context ),
+		'owner_guid' => $user_guid,
+		'attrs' => array( 'context' => $context ),
 		'limit' => 10000
 	);
 	$widgets = elgg_get_entities($options);
