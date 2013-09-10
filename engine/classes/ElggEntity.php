@@ -1250,7 +1250,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	public function isFullyLoaded() {
-		return ! ($this->attributes['tables_loaded'] < $this->attributes['tables_split']);
+		return true;
 	}
 
 	/**

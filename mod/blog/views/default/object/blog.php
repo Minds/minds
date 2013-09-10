@@ -11,7 +11,6 @@ $blog = elgg_extract('entity', $vars, FALSE);
 if (!$blog) {
 	return TRUE;
 }
-
 $owner = $blog->getOwnerEntity();
 $container = $blog->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
@@ -35,7 +34,6 @@ $metadata = elgg_view_menu('entity', array(
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
 ));
-
 $subtitle = "$author_text $date $comments_link $categories";
 
 // do not show the metadata and controls in widget view

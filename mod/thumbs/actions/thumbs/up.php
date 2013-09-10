@@ -11,6 +11,7 @@
 $entity_guid = get_input('guid');
 $id = get_input('id');
 $type = get_input('type', 'entity');
+$user_guid = elgg_get_logged_in_user_guid();
 
 if ($type == 'entity') {
 
@@ -20,14 +21,20 @@ if ($type == 'entity') {
 		register_error(elgg_echo("thumbs:notfound"));
 		//forward(REFERER);
 	}
+	
+	$thumbs_up = json_decode($entity->{'thumbs:up'});
+	if(!is_array($thumbs_up)){ $thumbs_up = array(); }
+
 	//check to see if the user has already liked the item
-	if (elgg_annotation_exists($entity_guid, 'thumbs:up')) {
+	if (in_array($user_guid, $thumbs_up)) {
 		$options = array('annotation_names' => array('thumbs:up'), 'annotation_owner_guids' => array(elgg_get_logged_in_user_guid()));
 		$delete = elgg_delete_annotations($options);
 		///if($delete){
 		echo 'not selected';
 		//}
 		$entity -> thumbcount--;
+		unset($thumbs_up[elgg_get_logged_in_user_guid]);
+		$entity->{'thumbs:up'} = json_encode($thumbs_up);
 	} else {
 
 		if (elgg_annotation_exists($entity_guid, 'thumbs:down')) {
@@ -43,7 +50,11 @@ if ($type == 'entity') {
 		}
 
 		$entity -> thumbcount++;
+	
+                array_push($thumbs_up, elgg_get_logged_in_user_guid());
+		$entity->{'thumbs:up'} = json_encode($thumbs_up);
 
+		//lets still create an annotation, be we are denormalising for speed
 		$annotation = create_annotation($entity -> guid, 'thumbs:up', 1, "", elgg_get_logged_in_user_guid(), $entity -> access_id);
 		$entity -> save();
 		// tell user annotation didn't work if that is the case

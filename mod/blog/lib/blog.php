@@ -19,7 +19,7 @@ function blog_get_page_content_read($guid = NULL) {
 	$return = array();
 
 	$blog = get_entity($guid, 'object');
-var_dump($blog->featured);
+	
 	// no header or tabs for viewing an individual blog
 	$return['filter'] = '';
 
@@ -109,7 +109,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		group_gatekeeper();
 
 		$options['container_guid'] = $container_guid;
-		$container = get_entity($container_guid);
+		$container = get_entity($container_guid, 'user');
 		if (!$container) {
 
 		}

@@ -535,7 +535,6 @@ function create_entity($object = NULL) {
 
 function get_entity_as_row($guid, $type) {
 	global $CONFIG, $DB;
-var_dump('CALLED ENTITY AS ROW!!!');	
 }
 
 /**
@@ -653,7 +652,7 @@ function get_entity($guid, $type) {
 	
 	// Check local cache first
 	$new_entity = retrieve_cached_entity($guid);
-	if ($new_entity) {
+	if ($new_entity) { 
 		return $new_entity;
 	}
 
@@ -668,7 +667,7 @@ function get_entity($guid, $type) {
 
 	// until ACLs in memcache, DB query is required to determine access
 	$new_entity = db_get(array('type'=>$type, 'guids'=>array($guid)));
-
+	
 	if ($shared_cache) {
 		$cached_entity = $shared_cache->load($guid);
 		// @todo store ACLs in memcache http://trac.elgg.org/ticket/3018#comment:3
@@ -1824,7 +1823,6 @@ function import_entity_plugin_hook($hook, $entity_type, $returnvalue, $params) {
  * @link http://docs.elgg.org/Entities/AccessControl
  */
 function can_edit_entity($entity_guid, $user_guid = 0) {
-	$user_guid = (int)$user_guid;
 	$user = get_entity($user_guid, 'user');
 	if (!$user) {
 		$user = elgg_get_logged_in_user_entity();

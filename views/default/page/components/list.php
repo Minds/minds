@@ -24,6 +24,7 @@ $base_url = elgg_extract('base_url', $vars, '');
 $pagination = elgg_extract('pagination', $vars, true);
 $offset_key = elgg_extract('offset_key', $vars, 'offset');
 $position = elgg_extract('position', $vars, 'after');
+$last_guid = end($items)->guid;
 
 $list_class = 'elgg-list';
 if (isset($vars['list_class'])) {
@@ -37,7 +38,7 @@ if (isset($vars['item_class'])) {
 
 $html = "";
 $nav = "";
-
+var_dump($last_guid);
 if ($pagination && $count) {
 	$nav .= elgg_view('navigation/pagination', array(
 		'base_url' => $base_url,
