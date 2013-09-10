@@ -222,23 +222,13 @@ function elgg_plugin_exists($id) {
  * @access private
  */
 function elgg_get_max_plugin_priority() {
-	$db_prefix = get_config('dbprefix');
 	$priority = elgg_namespace_plugin_private_setting('internal', 'priority');
-	$plugin_subtype = get_subtype_id('object', 'plugin');
 
-/*	$q = "SELECT MAX(CAST(ps.value AS unsigned)) as max
-		FROM {$db_prefix}entities e, {$db_prefix}private_settings ps
-		WHERE ps.name = '$priority'
-		AND ps.entity_guid = e.guid
-		AND e.type = 'object' and e.subtype = $plugin_subtype";
+	//count how many plugins there are
+	$plugins = db_get(array('type'=>'plugin'));
 
-	$data = get_data($q);
-	if ($data) {
-		$max = $data[0]->max;
-	} else {
-		$max = 1;
-	}
-
+	$max = count($plugins);	
+	
 	// can't have a priority of 0.*/
 	return ($max) ? $max : 1;
 }
@@ -360,12 +350,11 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 			));
 
 	if($plugins){	
-	//now order them since cassandra does not do this
-	$ordered_plugins = usort($plugins, function($a, $b) {
-//  						  return $a['priority'] - $b['priority'];
-
+		//now order them since cassandra does not do this
+		usort($plugins, function($a, $b) {
+					return	  $a->{'elgg:internal:priority'} > $b->{'elgg:internal:priority'};
 					});
-	}
+	} 
 	return $plugins;
 }
 

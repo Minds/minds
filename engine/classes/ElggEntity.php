@@ -237,7 +237,9 @@ abstract class ElggEntity extends ElggData implements
 		//} else {
 		//	return $this->setMetaData($name, $value);
 		//}
-
+		if($this->guid){
+			$this->save();
+		}
 		return TRUE;
 	}
 

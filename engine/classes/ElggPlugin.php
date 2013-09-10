@@ -190,7 +190,7 @@ class ElggPlugin extends ElggEntity {
 	 */
 	public function getPriority() {
 		$name = elgg_namespace_plugin_private_setting('internal', 'priority');
-		return $this->$name;
+		return (int) $this->$name;
 	}
 
 	/**
@@ -210,6 +210,7 @@ class ElggPlugin extends ElggEntity {
 			return false;
 		}
 
+		$name = elgg_namespace_plugin_private_setting('internal', 'priority');
 		// if no priority assume a priority of 1
 		$old_priority = (int) $this->getPriority();
 		$old_priority = (!$old_priority) ? 1 : $old_priority;
@@ -232,7 +233,7 @@ class ElggPlugin extends ElggEntity {
 			if (!is_numeric($priority)) {
 				return false;
 			}
-
+			
 			// there's nothing above the max.
 			if ($priority > $max_priority) {
 				$priority = $max_priority;
@@ -252,15 +253,27 @@ class ElggPlugin extends ElggEntity {
 			}
 
 			$plugin_list = elgg_get_plugins();
-
-				
-	
+			$reorder = array();
+			
+			foreach($plugin_list as $plugin){
+				if($plugin->getPriority() ==  $old_priority-1 && $op=='-'){
+					$plugin->$name =  $old_priority;
+					$plugin->save();
+					continue;
+				}
+				if($plugin->getPriority() ==  $old_priority+1 && $op == '+'){
+					$plugin->$name =  $old_priority;
+                                        $plugin->save();
+					continue;
+				}
+			}
 			// set this priority
-		//	if ($this->set($name, $priority)) {
-		//		return true;
-		//	} else {
-		//		return false;
-		//	}
+			$this->$name = $priority;
+			if ($this->save()) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		return false;
