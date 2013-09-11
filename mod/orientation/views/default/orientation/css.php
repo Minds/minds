@@ -110,9 +110,15 @@
  */
 
 .elgg-sidebar{
-	
+
 }
 
+.orientation.sidebar{
+	margin-top: 10%;
+}
+.orientation.sidebar h3{
+	padding-bottom: 15%;
+}
 .orientation.sidebar .entypo{
 	font-size: 600%;
 	text-align: center;
