@@ -45,24 +45,8 @@ if($create['ok'] == true){
 	 register_error(elgg_echo('minds_comments:save:error'));
 }
 //user setting for orientation
-elgg_set_plugin_user_setting('commented',
-							true,
-							elgg_get_logged_in_user_guid(),
-							'minds_comments'	 
-);
-/*if ($plugin_id) {
-         $plugin = elgg_get_plugin_from_id($plugin_id);
-     } else {
-        $plugin = elgg_get_calling_plugin_entity();
-    }
- 
-     if (!$plugin) {
-         return false;
-     }
- 
-     return $plugin->setUserSetting($name, $value, $user_guid);
- }
-*/
+elgg_set_plugin_user_setting('commented', true, elgg_get_logged_in_user_guid(), 'minds_comments');
+
 /*//get a list of all the users who have previously commented
 $options = array(
         'type' => 'object',

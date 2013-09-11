@@ -158,8 +158,7 @@ orientation_register_step(	array(	'name'=> 'search',
 								'icon' => '&#128269',
 								'href'=> elgg_get_site_url() . 'search',
 								'priority' => 8,
-								//'completed' => orientation_has_searched($user);
-								'required' => true,
+								'required' => false,
 							));
 orientation_register_step(	array(	'name'=> 'comment',
 								'title'=> elgg_echo('orientation:step:comment:title'),
@@ -167,24 +166,24 @@ orientation_register_step(	array(	'name'=> 'comment',
 								'icon' => '&#59160',
 								'href'=> elgg_get_site_url() . 'news/trending',
 								'priority' => 9,
-								'completed' => elgg_get_plugin_setting('commented','minds_comments') ? true:false,
+								'completed' => elgg_get_plugin_user_setting('commented', 'minds_comments'),
 								'required' => true,
 							));
 							
 function orientation_has_thumbed($user){
 	$return = false;
 	
-	$options = array( 'types'=>'object', 'subtypes'=>array('thumbs:up','thumbs:down'), 'owner_guid'=>$user->getGUID());
-	$posts = elgg_get_entities($options);
-	if($posts){
-		$return = true;
-	}
+	$options = array ( 'annotation_owner_guid' => $user->guid,
+						'annotation_names' => array('thumbs:up'),
+				);
+	
+	$return = elgg_get_annotations($options);
 	return $return;
 }
 orientation_register_step(	array(	'name'=> 'thumbs',
 								'title'=> elgg_echo('orientation:step:thumbs:title'),
 								'content'=> elgg_echo('orientation:step:thumbs:content'),
-								'icon' => '&#128077    '  .  '    &#128078 ',
+								'icon' => '&#128077' . '&#128078 ',
 								'href'=> elgg_get_site_url() . 'news/trending',
 								'priority' => 10,
 								'completed' => orientation_has_thumbed($user),
@@ -196,6 +195,6 @@ orientation_register_step(	array(	'name'=> 'remind',
 								'icon' => '&#59159',
 								'href'=> elgg_get_site_url() . 'news/trending',
 								'priority' => 11,
-								'completed' => elgg_get_plugin_setting('reminded'),
+								'completed' => elgg_get_plugin_user_setting('reminded', 'minds'),
 								'required' => true,
 							));							
