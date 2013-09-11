@@ -15,7 +15,8 @@ $params = array(
 	'content' => $content,
 	'sidebar' => elgg_view('orientation/sidebar'),
 	'title' => $title,
-	'class' => 'orientation'
+	'class' => 'orientation',
+	'filter' => ''
 );
 
 $body = elgg_view_layout('tiles', $params);
