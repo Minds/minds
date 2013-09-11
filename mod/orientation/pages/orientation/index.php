@@ -5,6 +5,8 @@
  */
 elgg_load_library('orientation');
 
+gatekeeper();
+
 $title = elgg_echo('orientation:title');
 
 $content = elgg_view('orientation/index');
@@ -16,6 +18,6 @@ $params = array(
 	'class' => 'orientation'
 );
 
-$body = elgg_view_layout('one_column', $params);
+$body = elgg_view_layout('tiles', $params);
 
 echo elgg_view_page($title, $body);

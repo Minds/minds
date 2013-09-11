@@ -7,7 +7,6 @@
 }
 
 .orientation .title{
-	font-size: 80px;
 	position: relative;
 }
 .orientation .blurb{
@@ -19,17 +18,23 @@
  	//visibility: hidden;
  	float:right;
  	text-align:right;
+ 	font-size:18px;
  	postion: absolute;
- 	top: 100px;
+ 	padding-right: 30px;
 }	
 .orientation .progress h3{
+	//visibility: hidden;
  	font-size:80px;
  	font-weight:bold;
   	color:#4690D6;
  	margin-top:100px;
 }
 .orientation .progress p{
+	//visibility: hidden;
 	margin-top:20px;
+	font-weight:bold;
+	padding-right: 10px;
+	padding-top: 10px
 }
  
 
@@ -37,25 +42,29 @@
 	
 }
 .orientation li{
-	border: outset;
-	text decoration: none;
 }
 
 .orientation .step{
 	display: block;
-	position:left;
-	clear:left;
+	position:relative;
 	margin:0px 0px;
-	padding:70px;
+	padding:80px 35px 0px 35px;
 }
 .orientation a .step{
 	color:#333;
 }
+.orientation .entypo{
+	font-size: 125px;
+	text-align: center;
+	text-decoration:none;
+	padding-right: 0px;
+}
 
-.orientation a:hover .step{
+.orientation a:hover, .orientation a:hover .step{
 	text-decoration: none;
 	color: #4690D6;
 }
+
 .orientation a:hover .elgg-item{
 	text-decoration: none;
 	color: #4690D6;
@@ -63,11 +72,13 @@
 
 .orientation .inner{
 	text-align: center;
-	font-size: 25px;
-	padding: 20px 0px 0px 0px;
+	font-size: 18px;
+	margin: 0px 0px;
+	padding: 30px 0px 0px 0px;
+	line-height: 100%;
 }
 .orientation .content{
-	visibility: hidden;
+ 	visibility: hidden;
 }
 
 .orientation .step > .number{
@@ -88,27 +99,18 @@
 .orientation .step.completed > .number{
 	color:#2C6700;
 }
-.orientation .entypo{
-	font-size: 125px;
-	text-align: left;
-	text-decoration:none;
+.orientation .step.completed{
+	color:#4690D6;
 }
-
 /**
  * Sidebar specifics
  */
-.orientation.sidebar .step{
-	padding:10px;
-}
-.orientation.sidebar .step > .number{
-	height:45px;
-	padding:0;
-	width:100%;
-	font-size:64px;
-	text-align:center;
-}
-.orientation.sidebar .step .entypo{
-	font-size:70px;
-}
 
+.elgg-sidebar{
+	color: #ff0000;
+}
+.orientation.sidebar .step {
+	color: #ff0000;
+	
+}
 

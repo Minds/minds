@@ -9,7 +9,6 @@
 /*
  * Bootcamp renamed orientation- index view
  */
-echo '<div class="title"><p>' . elgg_echo('orientation:title') . '</p></div>';
 echo '<div class="progress"><h3>' . orientation_calculate_progress() . '%</h3><p>'.elgg_echo('orientation:progress:blurb') . '</p></div>';
 echo '<div class="blurb"><p>' . elgg_echo('orientation:blurb') . '</p></div>';
 
