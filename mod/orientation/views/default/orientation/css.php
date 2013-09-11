@@ -10,6 +10,7 @@
 	position: relative;
 }
 .orientation .blurb{
+	visibility: hidden;
 	font-size: 20px;
 	padding: 100px 10px;
 }
@@ -20,7 +21,8 @@
  	text-align:right;
  	font-size:18px;
  	postion: absolute;
- 	padding-right: 30px;
+ 	padding-right: 10%;
+ 	margin: -6%;
 }	
 .orientation .progress h3{
 	//visibility: hidden;
@@ -39,7 +41,7 @@
  
 
 .orientation .elgg-list{
-	
+	margin-top: -8%;
 }
 .orientation li{
 }
@@ -48,7 +50,7 @@
 	display: block;
 	position:relative;
 	margin:0px 0px;
-	padding:80px 35px 0px 35px;
+	padding:14% 20% 0% 25%;
 }
 .orientation a .step{
 	color:#333;
@@ -57,8 +59,9 @@
 	font-size: 125px;
 	text-align: center;
 	text-decoration:none;
-	padding-right: 0px;
+	padding-left: 20%;
 }
+
 
 .orientation a:hover, .orientation a:hover .step{
 	text-decoration: none;
@@ -107,10 +110,14 @@
  */
 
 .elgg-sidebar{
-	color: #ff0000;
-}
-.orientation.sidebar .step {
-	color: #ff0000;
 	
 }
 
+.orientation.sidebar .entypo{
+	font-size: 600%;
+	text-align: center;
+	text-decoration:none;
+	padding-left: 10%;
+	padding-right: 20%;
+	
+}
