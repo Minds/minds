@@ -296,7 +296,7 @@ function minds_archive_page_handler($page) {
 		case 'api_upload':
 			include('pages/archive/api_upload.php');
 			break;
-		case 'upload':			
+/*		case 'upload':			
 			switch($page[1]) {
 				case 'videoaudio':
 					include('pages/archive/kaltura_upload.php');
@@ -316,14 +316,11 @@ function minds_archive_page_handler($page) {
 					set_input('guid',$page[2]);
 					include(elgg_get_plugins_path().'tidypics/pages/photos/batch/edit.php');
 					break;
-                case 'angularJS':
-                    include('pages/archive/angularJS_upload.php');
-                    break;
-				default:
-					include('pages/archive/upload.php');
-			}
-			return true;
-			break;
+*/  
+              	case 'upload':
+                	//@todo: rename this file upload...
+			include('pages/archive/angularJS_upload.php');
+                	break;
 		case 'kaltura':
 			switch($page[1]){
 				case 'ajax-update':

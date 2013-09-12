@@ -85,14 +85,6 @@ function channel_init() {
 			elgg_echo('channel:widget:info:title'),
 			elgg_echo('channel:widget:info:desc')
 	);
-	//setup the profile icon widget
-	$username = get_input('handler');
-	$user = get_user_by_username($username);
-	elgg_register_widget_type(
-			'channel_avatar',
-			elgg_echo('channel:widget:avatar:title', array($user->name)),
-			elgg_echo('channel:widget:avatar:desc')
-	);
 	
 	//set a new file size
 	elgg_set_config('icon_sizes', array(	
@@ -139,6 +131,12 @@ function channel_page_handler($page) {
 	if (isset($page[0])) {
 		$username = $page[0];
 		$user = get_user_by_username($username);
+		//setup the profile icon widget
+		elgg_register_widget_type(
+				'channel_avatar',
+				elgg_echo('channel:widget:avatar:title', array($user->name)),
+				elgg_echo('channel:widget:avatar:desc')
+		);
 		if($user){
 			elgg_set_page_owner_guid($user->guid);
 		} else {

@@ -464,6 +464,10 @@ function blog_url_forwarder($page) {
 	if (empty($page[0])) {
 		return;
 	}
+	
+	if($page[0] == 'all'){
+		return ;
+	}
 
 	// user usernames
 	$user = get_user_by_username($page[0]);

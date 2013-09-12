@@ -19,15 +19,15 @@ $tags = get_input("tags");
 $mime_type = get_input("fileType");
 $entryId = get_input("entryId");
 //If the entity doesn't exsits then entityId will be null and will be created later.
-$guid = get_input("guid", null);
-$entryId = get_input("entryId", null);
-$albumId = get_input('albumId');
+$guid = get_input("guid");
+$entryId = get_input("entryId");
+$album_guid = get_input('albumId');
 
-if($albumId)
-    $album = get_entity($albumId);
+if($album_guid)
+    $album = get_entity($album_guid, 'object');
 
 $thumbSec = get_input("thumbSecond", 0);
-$entity = get_entity($guid);
+$entity = get_entity($guid, 'object');
 
 $container_guid = elgg_get_logged_in_user_guid();
 $user_guid = elgg_get_logged_in_user_guid();

@@ -10,6 +10,7 @@
 //we don't want to have to declare each time!
 use phpcassa\Index\IndexExpression;
 use phpcassa\Index\IndexClause;
+use phpcassa\UUID;
 
 /**
  * Cache entities in memory once loaded.
@@ -65,9 +66,9 @@ function cache_entity(ElggEntity $entity) {
 
 	// Don't cache non-plugin entities while access control is off, otherwise they could be
 	// exposed to users who shouldn't see them when control is re-enabled.
-	if (!($entity instanceof ElggPlugin) && elgg_get_ignore_access()) {
-		return;
-	}
+//	if (!($entity instanceof ElggPlugin) && elgg_get_ignore_access()) {
+//		return;
+//	}
 
 	// Don't store too many or we'll have memory problems
 	// TODO(evan): Pick a less arbitrary limit
@@ -627,7 +628,7 @@ function entity_row_to_elggstar($row, $type) {
 	if (($newentity_cache) && ($new_entity)) {
 		$newentity_cache->save($new_entity->guid, $new_entity);
 	}
-	
+	cache_entity($new_entity);
 	return $new_entity;
 }
 

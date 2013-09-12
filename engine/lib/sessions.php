@@ -22,7 +22,7 @@ global $SESSION;
  */
 function elgg_get_logged_in_user_entity() {
 	global $SESSION;
-
+	
 	if (isset($SESSION)) {
 		return $SESSION['user'];
 	}
@@ -339,7 +339,7 @@ function logout() {
 	$old_msg = $SESSION['msg'];
 
 	session_destroy();
-	setcookie("Elgg", '', (time() - (86400 * 30)), "/");
+	setcookie("Minds", '', (time() - (86400 * 30)), "/");
 
 	// starting a default session to store any post-logout messages.
 	_elgg_session_boot(NULL, NULL, NULL);
@@ -363,11 +363,9 @@ function logout() {
  * @access private
  */
 function _elgg_session_boot($force = false) {
-	global $DB_PREFIX, $CONFIG;
+	global $new_db, $CONFIG, $DB;
 
-	// Use database for sessions
-	// HACK to allow access to prefix after object destruction
-	$DB_PREFIX = $CONFIG->dbprefix;
+	$new_db = serialize($DB);	
 	if ((!isset($CONFIG->use_file_sessions))) {
 		session_set_save_handler("_elgg_session_open",
 			"_elgg_session_close",
@@ -379,15 +377,15 @@ function _elgg_session_boot($force = false) {
 
 	global $SESSION;
 	
-	if (isset($_COOKIE['Elgg']) || $force) {
-		session_name('Elgg');
+	if (isset($_COOKIE['Minds']) || $force) {
+		session_name('Minds');
 		session_start();
 		
 		// Initialise the magic session
 		$SESSION = new ElggSession();
 		
 		if (!$force && !elgg_is_logged_in()) {
-			setcookie("Elgg", "", (time() - (86400 * 30)), "/");
+			setcookie("Minds", "", (time() - (86400 * 30)), "/");
 		} else {
 			// Generate a simple token (private from potentially public session id)
 			if (!isset($SESSION['__elgg_session'])) {
@@ -419,7 +417,7 @@ function _elgg_session_boot($force = false) {
 			} else {
 				// we have a session and we have already checked the fingerprint
 				// reload the user object from database in case it has changed during the session
-				if ($user = get_user($SESSION['guid'])) {
+			/*	if ($user = get_user($SESSION['guid'],'user')) {
 					$SESSION['user'] = $user;
 					$SESSION['id'] = $user->getGUID();
 					$SESSION['guid'] = $SESSION['id'];
@@ -430,18 +428,20 @@ function _elgg_session_boot($force = false) {
 					unset($SESSION['guid']);
 					unset($SESSION['code']);
 					setcookie("Elgg", "", (time() - (86400 * 30)), "/");
-				}
+				}*/
 			}
 		
 			if (isset($SESSION['guid'])) {
 				set_last_action($SESSION['guid']);
 			}
-		
+	
+			//make sure user entity is cached
+			cache_entity($SESSION['user']);	
 				
 			// Finally we ensure that a user who has been banned with an open session is kicked.
 			if ((isset($SESSION['user'])) && ($SESSION['user']->isBanned())) {
 				session_destroy();
-				setcookie("Elgg", "", (time() - (86400 * 30)), "/");
+				setcookie("Minds", "", (time() - (86400 * 30)), "/");
 				return false;
 			}
 		}
@@ -529,16 +529,16 @@ function _elgg_session_close() {
  * @access private
  */
 function _elgg_session_read($id) {
-	global $DB_PREFIX;
-
-//	try {
-//		$result = get_data_row("SELECT * from {$DB_PREFIX}users_sessions where session='$id'");
-
-//		if ($result) {
-//			return (string)$result->data;
-//		}
-
-//	} catch (DatabaseException $e) {
+	global $new_db;
+	
+	try {
+		$result = db_get(array('type'=>'session', 'id'=>$id));
+		
+		if($result){ 
+			//load serialized owner entity & add to cache
+			return $result['data'];
+		}
+	} catch (Exception $e) {
 
 		// Fall back to file store in this case, since this likely means
 		// that the database hasn't been upgraded
@@ -546,7 +546,7 @@ function _elgg_session_read($id) {
 		
 		$sess_file = "$sess_save_path/sess_$id";
 		return (string) @file_get_contents($sess_file);
-//	}
+	}
 
 	return '';
 }
@@ -561,21 +561,24 @@ function _elgg_session_read($id) {
  * @access private
  */
 function _elgg_session_write($id, $sess_data) {
-	global $DB_PREFIX;
-
+	global $new_db;
+	//HACK (nasty one) due to object destruction
+	$DB =  unserialize($new_db);	
+	
 	$time = time();
 
-//	try {
-//		$sess_data_sanitised = sanitise_string($sess_data);
-//
-//		$q = "REPLACE INTO {$DB_PREFIX}users_sessions
-//			(session, ts, data) VALUES
-//			('$id', '$time', '$sess_data_sanitised')";
-//
-//		if (insert_data($q) !== false) {
-//			return true;
-//		}
-//	} catch (DatabaseException $e) {
+	/*if(isset($_COOKIE['Minds'])){	
+		return; //this is to improve page times. write on each page seems excessive
+	}*/
+
+	try {
+		$result = $DB->cfs['session']->insert($id, array('ts'=>$time,'data'=>$sess_data));
+
+		if($result !== false){
+			return true;
+		}
+
+	} catch (DatabaseException $e) {
 		// Fall back to file store in this case, since this likely means
 		// that the database hasn't been upgraded
 		global $sess_save_path;
@@ -586,7 +589,7 @@ function _elgg_session_write($id, $sess_data) {
 			fclose($fp);
 			return $return;
 		}
-//	}
+	}
 
 	return false;
 }
@@ -601,17 +604,17 @@ function _elgg_session_write($id, $sess_data) {
  */
 function _elgg_session_destroy($id) {
 	global $DB_PREFIX;
-
-//	try {
-//		return (bool)delete_data("DELETE from {$DB_PREFIX}users_sessions where session='$id'");
-//	} catch (DatabaseException $e) {
+	
+	try {
+		return (bool)db_remove($id, 'session');
+	} catch (Exception $e) {
 		// Fall back to file store in this case, since this likely means that
 		// the database hasn't been upgraded
 		global $sess_save_path;
 
 		$sess_file = "$sess_save_path/sess_$id";
 		return @unlink($sess_file);
-//	}
+	}
 }
 
 /**
@@ -624,7 +627,7 @@ function _elgg_session_destroy($id) {
  */
 function _elgg_session_gc($maxlifetime) {
 	global $DB_PREFIX;
-
+return;
 	$life = time() - $maxlifetime;
 
 	try {

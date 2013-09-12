@@ -39,10 +39,10 @@ function db_init() {
 	
 	$DB->pool = $pool;
 
-	$cfs = array('site','plugin', 'config','object', 'user', 'widget', 'notification', 'annotation', 'group', 'friends', 'friendsof');
-
+	$cfs = array('site','session','plugin', 'config','object', 'user', 'widget', 'notification', 'annotation', 'group', 'friends', 'friendsof');
 	
 	register_cfs($cfs);
+
 }
 
 /**
@@ -50,7 +50,8 @@ function db_init() {
  */
 function db_insert($guid = NULL, array $options = array()){
 	global $DB;
-
+//	var_dump($DB);	
+//		var_dump(debug_backtrace());
 	if(!$guid){
 		$guid = UUID::uuid1()->string;
 	}
@@ -153,6 +154,8 @@ function db_get(array $options = array()){
 			foreach($rows as $row){
 				return true;
 			}
+		} elseif($type == 'session'){
+			return $DB->cfs[$type]->get($options['id']);
 		}
 	} catch (Exception $e){
 		return false;
@@ -180,10 +183,13 @@ function db_remove($guid = "", $type = "object", array $options = array()){
 	
 	global $DB;
 
-	return $DB->cfs[$type]->remove($guid, $options); 
-
+	if(empty($options)){
+		return $DB->cfs[$type]->remove($guid); 
+	} else {
+		return $DB->cfs[$type]->remove($guid, $options);
+	}
 }
-//create_cfs('object', array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type', 'featured'=>'BooleanType'));
+//create_cfs('session');
 /**
  * Creates a column family. This should be run automatically
  * for each new subtype that is created.
@@ -193,7 +199,7 @@ function create_cfs($name, array $indexes = array(), array $attrs = array(), $pl
 
 	$sys = new SystemManager($CONFIG->cassandra->servers[0]);
 
-	$attr = array(	"comparator_type" => "UTF8Type(reversed=true)",
+	$attr = array(	"comparator_type" => "UTF8Type",
 			"key_validation_class" => 'UTF8Type',
 			"default_validation_class" => 'UTF8Type'
 			);
@@ -216,7 +222,7 @@ function create_cfs($name, array $indexes = array(), array $attrs = array(), $pl
 function register_cfs($name){
 	
 	global $DB;
-
+	
 	if(is_array($name)){
 		
 		foreach($name as $n){
