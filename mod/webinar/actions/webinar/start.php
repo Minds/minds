@@ -2,8 +2,8 @@
 gatekeeper();
 
 $webinar_guid = get_input('webinar_guid');
-
-if ( ($webinar = get_entity($webinar_guid)) && $webinar instanceof ElggWebinar){
+var_dump(get_entity($webinar_guid,'object')); exit;
+if ( ($webinar = get_entity($webinar_guid, 'object')) && $webinar instanceof ElggWebinar){
 	
 	if ($webinar->isUpcoming()){
 		$webinar->status = 'running';

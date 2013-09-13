@@ -45,11 +45,11 @@ if (sizeof($input) > 0) {
 		elgg_clear_sticky_form('webinar');
 	
 		system_message(elgg_echo('webinar:saved'));
-		
+	
 		if ($new_webinar) {
 			$webinar->logout_url = $webinar->getURL();
 			$webinar->save();
-			
+		
 			add_to_river('river/object/webinar/create', 'create', elgg_get_logged_in_user_guid(), $webinar->getGUID());
 		}
 		

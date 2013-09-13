@@ -14,6 +14,8 @@
 	 * Initialize the webinar plugin.
 	 */
 	function webinar_init(){
+
+		add_subtype("object", "webinar", "ElggWebinar");
 		
 		// register a library for new object class webinar
 		elgg_register_library('elgg:webinar', elgg_get_plugins_path() . 'webinar/lib/webinar.php');
@@ -121,8 +123,9 @@
 				$params = webinar_get_page_content_list($page);
 				break;
 			case "view":
-				if (isset($page[1]) && is_numeric($page[1])) {
-					$params = webinar_get_page_content_view($page[1]);
+				if (isset($page[1])) {
+					$url = elgg_add_action_tokens_to_url('action/webinar/join?webinar_guid='.$page[1]);
+					forward($url); 	
 				}else{
 					return false;
 				}
@@ -130,7 +133,7 @@
 			case "add":
 			case "edit":
 				gatekeeper();
-				if (isset($page[1]) && is_numeric($page[1])) {
+				if (isset($page[1])) {
 					$params = webinar_get_page_content_edit($page_type, $page[1]);
 				}else{
 					return false;
@@ -149,11 +152,11 @@
 	    		break;
 		}
 		
-		if (isset($params['sidebar'])) {
+		/*if (isset($params['sidebar'])) {
 			$params['sidebar'] .= elgg_view('webinar/sidebar', array('page' => $page_type));
 		} else {
 			$params['sidebar'] = elgg_view('webinar/sidebar', array('page' => $page_type));
-		}
+		}*/
 		
 		$body = elgg_view_layout('gallery', $params);
 		
