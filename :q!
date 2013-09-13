@@ -12,6 +12,15 @@
 global $SESSION;
 
 /**
+ * Gets Elgg's session object
+ * 
+ * @return ElggSession
+ */
+function elgg_get_session() {
+  return new ElggSession(); 
+}
+
+/**
  * Return the current logged in user, or NULL if no user is logged in.
  *
  * If no user can be found in the current session, a plugin
@@ -363,21 +372,21 @@ function logout() {
  * @access private
  */
 function _elgg_session_boot($force = false) {
-	global $new_db, $CONFIG, $DB, $SESSION;
+	global $new_db, $CONFIG, $DB;
 
 	$new_db = serialize($DB);	
+	if ((!isset($CONFIG->use_file_sessions))) {
+		session_set_save_handler("_elgg_session_open",
+			"_elgg_session_close",
+			"_elgg_session_read",
+			"_elgg_session_write",
+			"_elgg_session_destroy",
+			"_elgg_session_gc");
+	}
 
+	global $SESSION;
 	
 	if (isset($_COOKIE['Minds']) || $force) {
-		if ((!isset($CONFIG->use_file_sessions))) {
-                	session_set_save_handler("_elgg_session_open",
-				"_elgg_session_close",
-				"_elgg_session_read",
-				"_elgg_session_write",
-				"_elgg_session_destroy",
-				"_elgg_session_gc");
-        	}
-
 		session_name('Minds');
 		session_start();
 		
@@ -531,7 +540,7 @@ function _elgg_session_close() {
 function _elgg_session_read($id) {
 	global $new_db;
 	
-/*	try {
+	try {
 		$result = db_get(array('type'=>'session', 'id'=>$id));
 		
 		if($result){ 
@@ -539,14 +548,14 @@ function _elgg_session_read($id) {
 			return $result['data'];
 		}
 	} catch (Exception $e) {
-*/
+
 		// Fall back to file store in this case, since this likely means
 		// that the database hasn't been upgraded
 		global $sess_save_path;
 		
 		$sess_file = "$sess_save_path/sess_$id";
 		return (string) @file_get_contents($sess_file);
-//	}
+	}
 
 	return '';
 }
@@ -566,19 +575,19 @@ function _elgg_session_write($id, $sess_data) {
 	$DB =  unserialize($new_db);	
 	
 	$time = time();
-	
+
 	/*if(isset($_COOKIE['Minds'])){	
 		return; //this is to improve page times. write on each page seems excessive
 	}*/
 
-/*	try {
+	try {
 		$result = $DB->cfs['session']->insert($id, array('ts'=>$time,'data'=>$sess_data));
 
 		if($result !== false){
 			return true;
 		}
 
-	} catch (Exception $e) {*/
+	} catch (DatabaseException $e) {
 		// Fall back to file store in this case, since this likely means
 		// that the database hasn't been upgraded
 		global $sess_save_path;
@@ -589,7 +598,7 @@ function _elgg_session_write($id, $sess_data) {
 			fclose($fp);
 			return $return;
 		}
-//	}
+	}
 
 	return false;
 }
@@ -605,16 +614,16 @@ function _elgg_session_write($id, $sess_data) {
 function _elgg_session_destroy($id) {
 	global $DB_PREFIX;
 	
-//	try {
-//		return (bool)db_remove($id, 'session');
-//	} catch (Exception $e) {
+	try {
+		return (bool)db_remove($id, 'session');
+	} catch (Exception $e) {
 		// Fall back to file store in this case, since this likely means that
 		// the database hasn't been upgraded
 		global $sess_save_path;
 
 		$sess_file = "$sess_save_path/sess_$id";
 		return @unlink($sess_file);
-//	}
+	}
 }
 
 /**

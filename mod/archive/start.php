@@ -11,6 +11,10 @@ function minds_archive_init() {
 
 	global $CONFIG;
 
+	//register subtypes for classes
+	add_subtype('object', 'image', 'TidypicsImage');
+	add_subtype('object', 'album', 'TidypicsAlbum');
+
 	elgg_extend_view('page/elements/head', 'archive/meta');
 	
 	//list featured in sidebar
@@ -29,8 +33,8 @@ function minds_archive_init() {
     $angularSettings = array(
         'templates_path' => $templatesPath
     );
-
-    elgg_register_js(array('angular' => $angularSettings), 'setting');
+	//what the heck is this???
+    //elgg_register_js(array('angular' => $angularSettings), 'setting');
 
     // include library
     elgg_register_js('angular.min.js' , $angularRoot . 'lib/angular.min.js');
@@ -319,8 +323,15 @@ function minds_archive_page_handler($page) {
 */  
               	case 'upload':
                 	//@todo: rename this file upload...
-			include('pages/archive/angularJS_upload.php');
-                	break;
+                	switch($page[1]){
+                                case 'album':
+                                	include('pages/archive/add_album.php');
+                                        return true;
+				        break;
+                                default:
+                        		include('pages/archive/angularJS_upload.php');
+			}
+			break;
 		case 'kaltura':
 			switch($page[1]){
 				case 'ajax-update':
@@ -331,9 +342,6 @@ function minds_archive_page_handler($page) {
 					return false;
 			}
 			break;
-        case 'angular':
-            return;
-            break;
 		case 'show':
 		case 'view':
 			set_input('guid',$page[1]);

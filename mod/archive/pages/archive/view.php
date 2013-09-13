@@ -105,7 +105,7 @@ if($entity->getSubtype() == 'image'){
 
 if($entity->getSubtype() == 'album'){
 	
-	if ($entity->getContainerEntity()->canWriteToContainer()) {
+	if ($entity->canEdit()) {
 		elgg_register_menu_item('title', array(
 			'name' => 'upload',
 			'href' => 'archive/upload/album/' . $entity->getGUID(),

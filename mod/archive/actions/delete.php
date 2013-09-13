@@ -2,7 +2,7 @@
 gatekeeper();
 
 $guid = get_input('guid');
-$entity = get_entity($guid);
+$entity = get_entity($guid, 'object');
 
 if(!$entity) //Elgg entity doesn't exists we return
 {

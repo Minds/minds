@@ -1375,7 +1375,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	public function delete($recursive = true) {
-		return delete_entity($this->get('guid'), $recursive);
+		return delete_entity($this->get('guid'), $this->type, $recursive);
 	}
 
 	/*

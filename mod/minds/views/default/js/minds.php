@@ -180,13 +180,17 @@
 				loc = location.href + 'news/featured';
 			}
 */
+			var offset = $('.load-more').attr('last_guid');
+			if(!offset){
+				return false;
+			}
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {
 				path : loc,
 				items_type: $list.find('.elgg-list').hasClass('elgg-list-entity') ? 'entity' :
 							$list.find('.elgg-list').hasClass('elgg-list-river') ? 'river' :
 							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
-				offset: $('.load-more').attr('last_guid')
+				offset:offset 
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
 //			console.log(url);

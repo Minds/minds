@@ -292,7 +292,7 @@ function elgg_register_external_file($type, $name, $url, $location, $priority = 
 	$url = elgg_normalize_url($url);
 	
 	elgg_bootstrap_externals_data_structure($type);
-
+	
 	$name = trim(strtolower($name));
 
 	// normalize bogus priorities, but allow empty, null, and false to be defaults.

@@ -28,7 +28,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
             'entryId': resolvedEntryId,
             'title': fileInfo['name'],
             'description': fileInfo['description'],
-            'accessId': fileInfo['accessId'],
+            'access_id': fileInfo['access_id'],
             'license': fileInfo['license'],
             'fileType': fileInfo['fileType'],
             'tags': fileInfo['tags'],
@@ -36,8 +36,8 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
             '__elgg_token': elgg.security.token.__elgg_token,
             '__elgg_ts': elgg.security.token.__elgg_ts
             };
-
-            $http({
+            
+	$http({
                 method: 'POST',
                 url: actionUrl + 'addElggVideo',
                 data: data,
@@ -46,10 +46,10 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 transform: "transformRequest"
             }).
                 success(function(guid, status, headers, config) {
-                    deferred.resolve(guid);
+                    deferred.resolve(guid.output);
                 }).
                 error(function(guid, status, headers, config) {
-                    deferred.reject(guid);
+                    deferred.reject(guid.output);
                 })
         })
 
@@ -73,7 +73,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
         data.formData = {
             'title': fileInfo['name'],
             'description': fileInfo['description'],
-            'accessId': fileInfo['accessId'],
+            'access_id': fileInfo['access_id'],
             'license': fileInfo['license'],
             'fileType': fileInfo['fileType'],
             'tags': fileInfo['tags'],
@@ -109,7 +109,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 'guid': resolvedValues[0],
                 'title': fileInfo['name'],
                 'description': fileInfo['description'],
-                'accessId': fileInfo['accessId'],
+                'access_id': fileInfo['access_id'],
                 'license': fileInfo['license'],
                 'fileType': fileInfo['fileType'],
                 'tags': fileInfo['tags'],
@@ -118,8 +118,8 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 '__elgg_token': elgg.security.token.__elgg_token,
                 '__elgg_ts': elgg.security.token.__elgg_ts
             };
-
-            $http({
+            
+		$http({
                 method: 'POST',
                 url: actionUrl + 'addElggVideo',
                 data: data,

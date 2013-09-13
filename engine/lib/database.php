@@ -50,8 +50,7 @@ function db_init() {
  */
 function db_insert($guid = NULL, array $options = array()){
 	global $DB;
-//	var_dump($DB);	
-//		var_dump(debug_backtrace());
+	
 	if(!$guid){
 		$guid = UUID::uuid1()->string;
 	}

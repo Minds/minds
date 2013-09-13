@@ -1,18 +1,5 @@
 <div class="minds-body-header">
     <div class="inner">
-        <div class="upload-elgg-head clearfix">
-            <h2>Upload</h2>
-        </div>
-        <div class="upload-page-buttons" >
-            <!--<input id="fileupload1" type="file" name="fileData" multiple=""/>-->
-            <!--<a class="elgg-button elgg-button-action" rel="nofollow">Add files</a>-->
-
-            <a ng-click="saveAll()" class="elgg-button elgg-button-action" rel="nofollow">Save all</a>
-        </div>
-    </div>
-</div>
-<div class="minds-body-header">
-    <div class="inner">
         <div id="dropzone" class="span8 well well-large">
             Drag and drop files here or <input id="fileupload" type="file" name="fileData" multiple/> <a> click here </a> to select files
         </div>
@@ -34,7 +21,7 @@
                         </div>
 
                         <span class="uploadSpan">License:
-                            <select required name="license" id="license" class="elgg-input-dropdown uploadSelect" ng-model="fileItem['licence']">
+                            <select required name="license" id="license" class="elgg-input-dropdown uploadSelect" ng-model="fileItem['license']">
                                 <option value="attribution-cc">Attribution CC BY</option>
                                 <option value="attribution-sharealike-cc">Attribution-ShareAlike BY-SA</option>
                                 <option value="attribution-noderivs-cc">Attribution-NoDerivs CC BY-ND</option>

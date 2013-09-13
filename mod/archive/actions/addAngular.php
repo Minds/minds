@@ -13,7 +13,7 @@ elgg_load_library('tidypics:upload');
 // Get variables
 $title = get_input("title");
 $desc = get_input("description");
-$access_id = (int) get_input("accessId");
+$access_id = (int) get_input("access_id");
 $license = get_input("license");
 $tags = get_input("tags");
 $mime_type = get_input("fileType");
@@ -56,28 +56,32 @@ if ($mime_type != null)
     $mediaEntry->mediaType = $mime_type;
 
 // If Video/Audio then upload to Kaltura and create entity in Elgg
-if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_type) == 'audio' || $mediaEntry->mediaType == 'video')
-{
-    $ob = kaltura_update_object($mediaEntry, null, $access_id, $user_guid, $container_guid, true,
-        array('title' => $title,
-              'uploaded_id' => $mediaEntry->id,
-              'license' => $license,
-              'thumbnail_sec' => $thumbSec));
-    if($ob)
-    {
-        elgg_clear_sticky_form('file');
-        system_message(str_replace("%ID%",$entryId,elgg_echo("kalturavideo:action:updatedok")));
-    }
-    else
-    {
-        register_error(str_replace("%ID%",$entryId,elgg_echo("kalturavideo:action:updatedko"))."\n$error");
-    }
-}// If Image then create an album. Don't upload to Kaltura.
-elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType == 'image'){
-
+if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_type) == 'audio' || $mediaEntry->mediaType == 'video' || $mediaEntry->mediaType == 'audio'){
+	if(!$entity){
+		$entity = new ElggObject();
+		$entity->subtype = 'kaltura_video';
+	}
+	
+	$entity->title = $title;
+	$entity->description = $desc;
+	$entity->owner_guid = elgg_get_logged_in_user_guid();
+	$entity->license = $license;
+	$entity->thumbnail_sec = $thumbSec;
+	$entity->kaltura_video_id = $mediaEntry->id;
+	$entity->access_id = $access_id;
+	
+	if($guid = $entity->save()){
+		system_message(str_replace("%ID%",$entryId,elgg_echo("kalturavideo:action:updatedok")));
+    		echo $guid;
+		return true;
+	} else {
+		system_message(elgg_echo('archive:upload:failed'));
+	}
+} elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType == 'image'){
+// If Image then create an album. Don't upload to Kaltura.
     if ($guid) //Update image
     {
-        $image = get_entity($guid);
+        $image = get_entity($guidi, 'object');
     }
     else //Create new image
     {
@@ -103,12 +107,11 @@ elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType ==
         add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
         exit;
     }
-}
-//anything else should be forwarded to files. Elgg File entity.
-else{
-    if ($entityId)
+}else{
+//anything else should be forwarded to files. Elgg File entity. 
+   if ($guid)
     {
-        $file = get_entity($entityId);
+        $file = get_entity($guid, 'object');
     }
     else
     {

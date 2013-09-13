@@ -40,19 +40,6 @@ $file_icon = elgg_view_entity_icon($file, 'small');
 $tags = elgg_view('output/tags', array('tags' => $file->tags));
 $date = elgg_view_friendly_time($file->time_created);
 
-$comments_count = $file->countComments();
-//only display if there are commments
-if ($comments_count != 0) {
-	$text = elgg_echo("comments") . " ($comments_count)";
-	$comments_link = elgg_view('output/url', array(
-		'href' => $file->getURL() . '#file-comments',
-		'text' => $text,
-		'is_trusted' => true,
-	));
-} else {
-	$comments_link = '';
-}
-
 $subtitle = "$author_text $date $comments_link $categories";
 
 // do not show the metadata and controls in widget view

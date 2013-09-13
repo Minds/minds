@@ -284,7 +284,7 @@ function get_subtype_class($type, $subtype) {
  */
 function get_subtype_class_from_id($subtype_id) {
 	global $SUBTYPE_CACHE;
-
+	
 	if (!$subtype_id) {
 		return null;
 	}
@@ -323,6 +323,18 @@ function get_subtype_class_from_id($subtype_id) {
  * @see get_entity()
  */
 function add_subtype($type, $subtype, $class = "") {
+	global $SUBTYPE_CACHE;	
+	$cache_obj = (object) array(
+			'type' => $type,
+			'subtype' => $subtype,
+			'class' => $class,
+		);
+
+	if(class_exists($class)){
+		$cache_obj->id = $subtype;
+		$SUBTYPE_CACHE[$subtype] = $cache_obj;
+		return $cache_obj;
+	}
 	return;
 }
 
@@ -459,7 +471,7 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
 		$return = true;
 	}
 
-	$container = get_entity($container_guid);
+	$container = get_entity($container_guid, 'user');
 
 	if ($container) {
 		// If the user can edit the container, they can also write to it
@@ -578,7 +590,7 @@ function entity_row_to_elggstar($row, $type) {
 		return $new_entity;
 	}
 	// load class for entity if one is registered
-/*	if(isset($row->subtype)){
+	if(isset($row->subtype)){
 		$classname = get_subtype_class_from_id($row->subtype);
 		if ($classname != "") {
 			if (class_exists($classname)) {
@@ -593,7 +605,7 @@ function entity_row_to_elggstar($row, $type) {
 			}
 		}
 	}
-*/
+
 	if (!$new_entity) {
 		//@todo Make this into a function
 		switch ($type) {
@@ -818,7 +830,7 @@ function elgg_get_entities(array $options = array()) {
 
 	// can't use helper function with type_subtype_pair because
 	// it's already an array...just need to merge it
-	if (isset($options['type_subtype_pair'])) {
+/*	if (isset($options['type_subtype_pair'])) {
 		if (isset($options['type_subtype_pairs'])) {
 			$options['type_subtype_pairs'] = array_merge($options['type_subtype_pairs'],
 				$options['type_subtype_pair']);
@@ -826,7 +838,7 @@ function elgg_get_entities(array $options = array()) {
 			$options['type_subtype_pairs'] = $options['type_subtype_pair'];
 		}
 	}
-
+*/
 	$singulars = array('type', 'subtype', 'guid', 'owner_guid', 'container_guid', 'site_guid');
 	$options = elgg_normalise_plural_options_array($options, $singulars);
 
@@ -846,10 +858,10 @@ function elgg_get_entities(array $options = array()) {
 	if($options['limit'] == false || $options['limit'] == 0){
 		unset($options['limit']);
 	}
-
+	 $type = $options['types'] ? $options['types'][0] : "object";
+	
 	if (!$options['count']) {
 		try{
-			$type = $options['types'] ? $options['types'][0] : "object";
 			
 			//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 			if($options['guids']){
@@ -1505,11 +1517,10 @@ function enable_entity($guid, $recursive = true) {
  * @return bool
  * @access private
  */
-function delete_entity($guid, $recursive = true) {
+function delete_entity($guid, $type = 'object',$recursive = true) {
 	global $CONFIG, $ENTITY_CACHE;
 
-	$guid = (int)$guid;
-	if ($entity = get_entity($guid)) {
+	if ($entity = get_entity($guid, $type)) {
 		if (elgg_trigger_event('delete', $entity->type, $entity)) {
 			if ($entity->canEdit()) {
 
@@ -1543,11 +1554,8 @@ function delete_entity($guid, $recursive = true) {
 					// entities with owner or container guids of themselves.
 					// this should probably be prevented in ElggEntity instead of checked for here
 					$options = array(
-						'wheres' => array(
-							"((container_guid = $guid OR owner_guid = $guid OR site_guid = $guid)"
-							. " AND guid != $guid)"
-							),
-						'limit' => 0
+						'attrs' => array( 'owner_guid' => $guid ),
+						'limit' => 100000
 					);
 
 					$batch = new ElggBatch('elgg_get_entities', $options);
@@ -1563,41 +1571,7 @@ function delete_entity($guid, $recursive = true) {
 				}
 
 				// Now delete the entity itself
-				$entity->deleteMetadata();
-				$entity->deleteOwnedMetadata();
-				$entity->deleteAnnotations();
-				$entity->deleteOwnedAnnotations();
-				$entity->deleteRelationships();
-
-				elgg_delete_river(array('subject_guid' => $guid));
-				elgg_delete_river(array('object_guid' => $guid));
-				remove_all_private_settings($guid);
-
-				$res = delete_data("DELETE from {$CONFIG->dbprefix}entities where guid={$guid}");
-				if ($res) {
-					$sub_table = "";
-
-					// Where appropriate delete the sub table
-					switch ($entity->type) {
-						case 'object' :
-							$sub_table = $CONFIG->dbprefix . 'objects_entity';
-							break;
-						case 'user' :
-							$sub_table = $CONFIG->dbprefix . 'users_entity';
-							break;
-						case 'group' :
-							$sub_table = $CONFIG->dbprefix . 'groups_entity';
-							break;
-						case 'site' :
-							$sub_table = $CONFIG->dbprefix . 'sites_entity';
-							break;
-					}
-
-					if ($sub_table) {
-						delete_data("DELETE from $sub_table where guid={$guid}");
-					}
-				}
-
+				$res = db_remove($guid, 'object');
 				return (bool)$res;
 			}
 		}

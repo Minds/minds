@@ -1002,7 +1002,7 @@ $list_type_toggle = true, $pagination = true) {
 			'items' => $entities,
 			'list_class' => 'elgg-list-entity',
 			'full_view' => true,
-			'pagination' => true,
+			'pagination' => $pagination,
 			'list_type' => $list_type,
 			'list_type_toggle' => false,
 			'offset' => $offset,

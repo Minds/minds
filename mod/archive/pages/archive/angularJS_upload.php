@@ -9,9 +9,6 @@ elgg_load_library('archive:kaltura');
 elgg_load_library('archive:kaltura:editor');
 
 // Loading js's
-// Load libraries
-//    elgg_load_js('kaltura.js');
-//    elgg_load_js(array('angular' => $angularSettings), 'setting');
 elgg_load_js('angular.min.js');
 elgg_load_js('jquery.ui.widget.js');
 elgg_load_js('jquery.fileupload.js');
@@ -46,13 +43,16 @@ $angularSettings = array(
     'templates_path' => $templatesPath
 );
 
+//create album
+elgg_register_menu_item('title', array('name'=>'upload', 'text'=>elgg_echo('minds:archive:album:create'), 'href'=>'archive/upload/album/create','class'=>'elgg-button elgg-button-action'));
+
 $content = elgg_view('archive/angularJS_upload');
-$body = elgg_view_layout("one_column", array(
-    'content' => $content,
-    'sidebar' => false,
-    'filter_override' => elgg_view('page/layouts/content/archive_filter', $vars),
-    'title' => elgg_echo('angularUpload')
-));
+$body = elgg_view_layout("tiles", array(
+    		'content' => $content,
+   		 'sidebar' => false,
+   		 'title' => elgg_echo('upload'),
+		'filter'=>''
+	));
 
 // Display page
-echo elgg_view_page(elgg_echo('angularUpload'),$body);
+echo elgg_view_page(elgg_echo('archive:upload'),$body);
