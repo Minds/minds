@@ -1571,7 +1571,7 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 				}
 
 				// Now delete the entity itself
-				$res = db_remove($guid, 'object');
+				$res = db_remove($guid, $type);
 				return (bool)$res;
 			}
 		}

@@ -140,6 +140,7 @@ if (!$error) {
 // only try to save base entity if no errors
 if (!$error) {
 	if ($guid = $blog->save()) {
+		
 		// remove sticky form entries
 		elgg_clear_sticky_form('blog');
 
@@ -152,10 +153,10 @@ if (!$error) {
 		if (($new_post || $old_status == 'draft') && $status == 'published') {
 			add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid);
 
-			if ($guid) {
-				$blog->time_created = time();
-				$blog->save();
-			}
+//			if ($guid) {
+//				$blog->time_created = time();
+//				$blog->save();
+//			}
 		} elseif ($old_status == 'published' && $status == 'draft') {
 			elgg_delete_river(array(
 				'object_guid' => $blog->guid,

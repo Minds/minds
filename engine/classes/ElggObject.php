@@ -108,18 +108,6 @@ class ElggObject extends ElggEntity {
 	}
 
 	/**
-	 * Saves object-specific attributes.
-	 *
-	 * @internal Object attributes are saved in the objects_entity table.
-	 *
-	 * @return bool
-	 */
-	public function save() { 
-//		var_dump($this);exit;
-		return create_entity($this);
-	}
-
-	/**
 	 * Return sites that this object is a member of
 	 *
 	 * Site membership is determined by relationships and not site_guid.d
