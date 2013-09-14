@@ -25,9 +25,9 @@ class ElggPlugin extends ElggEntity {
 		//parent::initializeAttributes();
 
 		$this->attributes['type'] = "plugin";
-		$this->attributes['title'] = NULL;
+		$this->attributes['title'] = "";
 		$this->attributes['active'] = 0;
-
+		
 		// plugins must be public.
 		$this->attributes['access_id'] = ACCESS_PUBLIC;
 	}
@@ -113,6 +113,7 @@ class ElggPlugin extends ElggEntity {
 			//throw error here
 			return false;
 		}
+		
 		return db_insert($this->pluginID, $options);
 
 	}

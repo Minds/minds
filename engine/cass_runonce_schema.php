@@ -32,13 +32,20 @@ $cfs = array(	'site' => array(	'site_id' => 'UTF8Type'	),
 		'group' => array(	'container_guid' => 'UTF8Type'	),
 		'widget' => array(	'owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' ),
 
+		'notification' => array(	'to_guid' => 'UTF8Type'	),
+		'session' => array(),
+
+		'annotation' => array(),	
+
 		'friends' => array( 	),
-		'friendsof' => array(	)
+		'friendsof' => array(	),
+		'newsfeed' => array(	),
+		'timeline' => array(	),
 	);
 
 foreach($cfs as $cf => $indexes){
 
-	$attr = array("comparator_type" => "CompositeType(UTF8Type(reversed=True), UTF8Type)");
+	$attr = array("comparator_type" => "UTF8Type");
 
 	$sys->create_column_family($CONFIG->cassandra->keyspace, $cf, $attr);
 

@@ -40,7 +40,7 @@ if (sizeof($input) > 0) {
 		$webinar->$field = $value;
 	}
 	
-	if ($webinar->save()) {
+	if ($guid = $webinar->save()) {
 	
 		elgg_clear_sticky_form('webinar');
 	
@@ -50,7 +50,7 @@ if (sizeof($input) > 0) {
 			$webinar->logout_url = $webinar->getURL();
 			$webinar->save();
 		
-			add_to_river('river/object/webinar/create', 'create', elgg_get_logged_in_user_guid(), $webinar->getGUID());
+			add_to_river('river/object/webinar/create', 'create', elgg_get_logged_in_user_guid(), $guid);
 		}
 		
 		if($webinar->enterprise == 'on'){

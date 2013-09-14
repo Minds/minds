@@ -7,6 +7,9 @@
  * @uses $vars['entity']    The page object
  * @uses $vars['full_view'] Whether to display the full view
  */
+
+elgg_load_library('elgg:webinar');
+
 $full = elgg_extract('full_view', $vars, FALSE);
 $webinar = elgg_extract('entity', $vars, FALSE);
 

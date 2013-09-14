@@ -39,7 +39,7 @@ function db_init() {
 	
 	$DB->pool = $pool;
 
-	$cfs = array('site','session','plugin', 'config','object', 'user', 'widget', 'notification', 'annotation', 'group', 'friends', 'friendsof');
+	$cfs = array('site','session','plugin', 'config','object', 'user', 'widget', 'notification', 'annotation', 'group', 'friends', 'friendsof', 'timeline','newsfeed');
 	
 	register_cfs($cfs);
 
@@ -52,7 +52,8 @@ function db_insert($guid = NULL, array $options = array()){
 	global $DB;
 	
 	if(!$guid){
-		$guid = UUID::uuid1()->string;
+		$guid = new GUID();
+		$guid = $guid->generate();
 	}
 	
 	$type = $options['type'] ? $options['type'] : 'object'; // assume its an object if no type is specified
@@ -136,7 +137,11 @@ function db_get(array $options = array()){
 				}
 			}
 			$type = 'user';
-			return db_get(array('type'=>'user', 'guids'=>$user_guids));
+			if($options['output'] == 'guid'){ 
+				return $user_guids;
+			} else {
+				return db_get(array('type'=>'user', 'guids'=>$user_guids));
+			}
 		} elseif($type == 'annotation'){
 			//remove all annotation_ from strings
 			unset($options['limit']);
@@ -155,7 +160,33 @@ function db_get(array $options = array()){
 			}
 		} elseif($type == 'session'){
 			return $DB->cfs[$type]->get($options['id']);
+		} elseif($type == 'newsfeed'){
+			if($ids = $options['ids']){
+				$rows = $DB->cfs[$type]->multiget($ids);
+			} else  {
+				if(!$options){
+					return; //no options
+				}
+				foreach($options as $k => $v){
+                	               $index_exps[] = new IndexExpression($k, $v);
+                       		}
+
+                        	$index_clause = new IndexClause($index_exps);
+                        	$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);		
+			}
+			return $rows;
+		} elseif($type == 'timeline'){
+			$slice = new ColumnSlice($options['offset'], "", $options['limit'], true);//set to reversed
+			$row = $DB->cfs[$type]->get($options['owner_guid'],$slice);
+                        foreach($row as $k => $v){
+                                if($k != 'type' || $k != 0){
+                                        $item_ids[] = $v;
+                                }
+                        }
+			
+			return $item_ids;
 		}
+
 	} catch (Exception $e){
 		return false;
 	}        
@@ -188,7 +219,7 @@ function db_remove($guid = "", $type = "object", array $options = array()){
 		return $DB->cfs[$type]->remove($guid, $options);
 	}
 }
-//create_cfs('session');
+//create_cfs('object', array(      'owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type'));
 /**
  * Creates a column family. This should be run automatically
  * for each new subtype that is created.
@@ -198,7 +229,7 @@ function create_cfs($name, array $indexes = array(), array $attrs = array(), $pl
 
 	$sys = new SystemManager($CONFIG->cassandra->servers[0]);
 
-	$attr = array(	"comparator_type" => "UTF8Type",
+	$attr = array(	"comparator_type" => "UTF8Type(reversed=True)",
 			"key_validation_class" => 'UTF8Type',
 			"default_validation_class" => 'UTF8Type'
 			);

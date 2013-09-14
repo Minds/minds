@@ -70,7 +70,7 @@ if($ref == 'wall'){
 	$data->view = 'river/object/wall/create';
 	$data->posted = time();
 	
-	$item = new MindsNewsItem($data);
+	$item = new ElggRiverItem($data);
 
 	$output = '<li class="elgg-item">' . elgg_view_list_item($item, array('list_class'=>'elgg-list elgg-list-river elgg-river', 'class'=>'elgg-item elgg-river-item')) . '</li>';
 }

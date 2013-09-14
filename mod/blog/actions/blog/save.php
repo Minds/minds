@@ -139,7 +139,7 @@ if (!$error) {
 }
 // only try to save base entity if no errors
 if (!$error) {
-	if ($blog->save()) {
+	if ($guid = $blog->save()) {
 		// remove sticky form entries
 		elgg_clear_sticky_form('blog');
 
@@ -150,7 +150,7 @@ if (!$error) {
 		// add to river if changing status or published, regardless of new post
 		// because we remove it for drafts.
 		if (($new_post || $old_status == 'draft') && $status == 'published') {
-			add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID());
+			add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid);
 
 			if ($guid) {
 				$blog->time_created = time();

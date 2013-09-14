@@ -23,11 +23,7 @@ if (elgg_trigger_plugin_hook('index', 'system', null, FALSE) != FALSE) {
 if (elgg_is_logged_in()) {
 	forward('activity');
 }
-
-var_dump($SESSION);
-$SESSION['testing'] = 'testing';
-
-
+//register_user('mark', 'password', 'mark', 'mark@minds.com', false, $friend_guid, $invitecode);
 $content = elgg_view_title(elgg_echo('content:latest'));
 
 $login_box = elgg_view('core/account/login_box');

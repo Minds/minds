@@ -39,7 +39,7 @@ class ElggRiverItem {
 		}
 
 		// the casting is to support typed serialization like json
-		$int_types = array('id', 'subject_guid', 'object_guid', 'annotation_id', 'access_id', 'posted');
+		$int_types = array('access_id', 'posted');
 		foreach ($object as $key => $value) {
 			if (in_array($key, $int_types)) {
 				$this->$key = (int)$value;
@@ -55,7 +55,7 @@ class ElggRiverItem {
 	 * @return ElggEntity
 	 */
 	public function getSubjectEntity() {
-		return get_entity($this->subject_guid);
+		return get_entity($this->subject_guid, 'user');
 	}
 
 	/**
@@ -64,7 +64,7 @@ class ElggRiverItem {
 	 * @return ElggEntity
 	 */
 	public function getObjectEntity() {
-		return get_entity($this->object_guid);
+		return get_entity($this->object_guid,'object');
 	}
 
 	/**
@@ -73,7 +73,7 @@ class ElggRiverItem {
 	 * @return ElggAnnotation
 	 */
 	public function getAnnotation() {
-		return elgg_get_annotation_from_id($this->annotation_id);
+		//return elgg_get_annotation_from_id($this->annotation_id);
 	}
 
 	/**

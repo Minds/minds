@@ -74,8 +74,8 @@ function tidypics_init() {
 	elgg_extend_view('groups/tool_latest', 'photos/group_module');
 
 	// Register widgets
-	elgg_register_widget_type('album_view', elgg_echo("tidypics:widget:albums"), elgg_echo("tidypics:widget:album_descr"), 'channel');
-	elgg_register_widget_type('latest_photos', elgg_echo("tidypics:widget:latest"), elgg_echo("tidypics:widget:latest_descr"), 'channel');
+//	elgg_register_widget_type('album_view', elgg_echo("tidypics:widget:albums"), elgg_echo("tidypics:widget:album_descr"), 'channel');
+//	elgg_register_widget_type('latest_photos', elgg_echo("tidypics:widget:latest"), elgg_echo("tidypics:widget:latest_descr"), 'channel');
 
 	// RSS extensions for embedded media
 	elgg_extend_view('extensions/xmlns', 'extensions/photos/xmlns');
