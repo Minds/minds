@@ -21,7 +21,7 @@ if ($type != 'all') {
 	}
 }
 
-$options['limit'] = get_input('limit',5);
+$options['limit'] = get_input('limit',12);
 
 switch ($page_type) {
 	case 'all':

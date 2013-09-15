@@ -61,7 +61,7 @@ $posted = 0, $annotation_id = 0) {
 	array_push($followers, 'site');//add to public timeline
 	array_push($followers, $subject_guid);//add to their own timeline
 	foreach($followers as $follower){
-		db_insert($follower, array('type'=>'timeline', time() => $id));
+		db_insert($follower, array('type'=>'timeline', $id => time()));
 	}
 
 	// update the entities which had the action carried out on it
@@ -158,7 +158,7 @@ function elgg_get_river(array $options = array()) {
 	$defaults = array(
 
 		'limit'	=> 10,
-		'offset' 	=> "",
+		'offset' 	=> 0,
 		
 		'owner_guid'	=> 'site',
 
@@ -196,7 +196,8 @@ function elgg_get_river(array $options = array()) {
 		return;
 	}
 
-	foreach($rows as $row){
+	foreach($rows as $id => $row){
+		$row['id'] = $id;
 		$items[] = new ElggRiverItem($row);
 	}
 
@@ -270,7 +271,7 @@ function elgg_list_river(array $options = array()) {
 
 	$options = array_merge($defaults, $options);
 
-	$count = 10;
+	$count = $options['limit'] +1;
 
 	$items = elgg_get_river($options);
 	

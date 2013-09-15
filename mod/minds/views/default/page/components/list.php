@@ -82,10 +82,10 @@ $html .= $before;
 if (is_array($items) && count($items) > 0) {
     foreach ($items as $item) {
         if (elgg_instanceof($item)) {
-            $id = "elgg-{$item->getType()}-{$item->getGUID()}";
+            $id = $item->getGUID();
             $time = $item->time_created;
         } else {
-            $id = "item-{$item->getType()}-{$item->id}";
+	    $id = $item->id;
             $time = $item->posted;
         }
         $html .= "<li id=\"$id\" class=\"$item_class\" data-timestamp=\"$time\">";

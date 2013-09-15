@@ -606,9 +606,10 @@ function minds_fetch_image($description, $owner_guid) {
 
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
 	global $CONFIG;
+	$namespace = 'object:featured';
 	return elgg_get_entities(array( 'type' => 'object',
 					//'subtype' => 'blog',
-					'attrs' => array('featured' => true),
+					'attrs' => array('namespace'=>$namespace),
 					'limit'=>$limit
 					));
 }

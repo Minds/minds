@@ -8,6 +8,7 @@
  */
 
 //we don't want to have to declare each time!
+use phpcassa\ColumnSlice;
 use phpcassa\Index\IndexExpression;
 use phpcassa\Index\IndexClause;
 use phpcassa\UUID;
@@ -514,7 +515,7 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
  * @link http://docs.elgg.org/DataModel/Entities
  * @access private
  */
-function create_entity($object = NULL) {
+function create_entity($object = NULL, $timebase = true) {
 	global $CONFIG;
 	//convert object to array of attributes
 	$attributes = array();
@@ -525,9 +526,36 @@ function create_entity($object = NULL) {
 	}
 	
 	$result = db_insert($object->guid, $attributes);
-       
-	return $result;
+	
+	if($timebased){
+		$namespace = $object->type;
+		if($object->subtype){ 
+			$namespace .= ':'.$object->subtype; 
+		}
+		
+		$data =  array('type'=>'entities_by_time', $result => time());
 
+		db_insert($namespace, $data);
+
+		if($object->type != 'user'){
+			$owner = get_entity($object->owner_guid, 'user');
+		} else {
+			$owner = get_entity($result, 'user');
+		}
+
+		//add to the the users subscribers      
+		$followers = $owner->getFriendsOf(null, 10000, "", 'guid');
+		if(!$followers) { 
+			$followers = array(); 
+		}
+		
+		array_push($followers, $owner->guid);//add to their own timeline
+		foreach($followers as $follower){
+			db_insert($namespace . ':network:'. $follower, $data);
+		}
+		db_insert($namespace . ':user:'. $owner->guid, $data);
+ 	}
+	return $result;
 }
 
 /**
@@ -799,8 +827,9 @@ function elgg_get_entities(array $options = array()) {
 	$defaults = array(
 		'types'					=>	ELGG_ENTITIES_ANY_VALUE,
 		'subtypes'				=>	ELGG_ENTITIES_ANY_VALUE,
-		'type_subtype_pairs'	=>	ELGG_ENTITIES_ANY_VALUE,
-
+		
+		'timebased'	=> true,
+	
 		'guids'					=>	ELGG_ENTITIES_ANY_VALUE,
 		'owner_guids'			=>	ELGG_ENTITIES_ANY_VALUE,
 		'container_guids'		=>	ELGG_ENTITIES_ANY_VALUE,
@@ -869,14 +898,29 @@ function elgg_get_entities(array $options = array()) {
 				$rows = $DB->cfs[$type]->multiget($options['guids']);
 			
 			} else{
-				if($attrs){
-					foreach($attrs as $column => $value){
-						$index_exps[] = new IndexExpression($column, $value);
+				if($options['timebased']){
+					if(!$namespace = $attrs['namespace']){
+						$namespace = $type;
+						if($subtypes){
+							$namespace .= ':'. $subtypes[0]; //change to subtype
+						}
+						if($owner_guid = $attrs['owner_guid']){
+							$namespace .= ':'. $owner_guid;
+						}
 					}
-					$index_clause = new IndexClause($index_exps, $options['offset'], $options['limit']);
-					$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
+					$slice = new ColumnSlice($options['offset'], "", $options['limit'], true);//set to reversed
+					$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+					$rows = $DB->cfs[$type]->multiget(array_keys($guids));
 				} else {
-					 $rows = $DB->cfs[$type]->get_range($options['offset'],"", $options['limit']);
+					if($attrs){
+						foreach($attrs as $column => $value){
+							$index_exps[] = new IndexExpression($column, $value);
+						}
+						$index_clause = new IndexClause($index_exps, $options['offset'], $options['limit']);
+						$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
+					} else {
+						 $rows = $DB->cfs[$type]->get_range($options['offset'],"", $options['limit']);
+					}
 				}
 			}
 			if($rows){
@@ -891,7 +935,7 @@ function elgg_get_entities(array $options = array()) {
 				}
 			}
 		} catch(Exception $e){
-                        return false;
+		 	return false;
                 }
 		return $entities;
 

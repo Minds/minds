@@ -180,7 +180,7 @@
 				loc = location.href + 'news/featured';
 			}
 */
-			var offset = $('.load-more').attr('last_guid');
+			var offset = $list.find('li.elgg-item:last').attr('id'); 
 			if(!offset){
 				return false;
 			}

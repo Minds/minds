@@ -304,7 +304,7 @@ class ElggWidget extends ElggEntity {
 	 * @return bool
 	 */
 	public function save() { 
-		return create_entity($this);
+		return create_entity($this, false);
 	}
 
 }

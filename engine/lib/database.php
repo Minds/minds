@@ -39,7 +39,21 @@ function db_init() {
 	
 	$DB->pool = $pool;
 
-	$cfs = array('site','session','plugin', 'config','object', 'user', 'widget', 'notification', 'annotation', 'group', 'friends', 'friendsof', 'timeline','newsfeed');
+	$cfs = array(	'site', 
+			'session',
+			'plugin', 
+			'config',
+			'object', 
+			'user', 
+			'widget', 
+			'entities_by_time',
+			'notification', 
+			'annotation', 
+			'group', 
+			'friends', 
+			'friendsof', 
+			'timeline',
+			'newsfeed');
 	
 	register_cfs($cfs);
 
@@ -180,7 +194,7 @@ function db_get(array $options = array()){
 			$row = $DB->cfs[$type]->get($options['owner_guid'],$slice);
                         foreach($row as $k => $v){
                                 if($k != 'type' || $k != 0){
-                                        $item_ids[] = $v;
+                                        $item_ids[] = $k;
                                 }
                         }
 			
@@ -220,6 +234,7 @@ function db_remove($guid = "", $type = "object", array $options = array()){
 	}
 }
 //create_cfs('object', array(      'owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type'));
+//create_cfs('entities_by_time');
 /**
  * Creates a column family. This should be run automatically
  * for each new subtype that is created.
@@ -229,7 +244,7 @@ function create_cfs($name, array $indexes = array(), array $attrs = array(), $pl
 
 	$sys = new SystemManager($CONFIG->cassandra->servers[0]);
 
-	$attr = array(	"comparator_type" => "UTF8Type(reversed=True)",
+	$attr = array(	"comparator_type" => "UTF8Type",
 			"key_validation_class" => 'UTF8Type',
 			"default_validation_class" => 'UTF8Type'
 			);
