@@ -533,7 +533,7 @@ function sanitise_filepath($path, $append_slash = TRUE) {
  */
 function system_messages($message = null, $register = "success", $count = false) {
 	global $SESSION;
-	if(!isset($_COOKIE['Elgg'])){
+/*	if(!isset($_COOKIE['Minds'])){
 		if(!is_null($message)){
 			if($register == 'error'){
 				$SESSION['err_msg'] = $message;
@@ -542,7 +542,7 @@ function system_messages($message = null, $register = "success", $count = false)
 			}
 		}
 		return true;
-	}
+	}*/
 	if (!isset($SESSION['msg'])) {
 		$SESSION['msg'] = array();
 	}

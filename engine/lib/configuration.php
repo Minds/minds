@@ -405,20 +405,22 @@ function set_config($name, $value, $site_guid = 0) {
 		return false;
 	}
 
-	// Unset existing
-	unset_config($name, $site_guid);
-
+	$namespace = 'config:';
+	$name = $namespace.$name;
 	$site_guid = (int) $site_guid;
-	if ($site_guid == 0) {
-		$site_guid = (int) $CONFIG->site_id;
-	}
+//	if ($site_guid == 0) {
+//		$site_guid = (int) $CONFIG->site_id;
+//	}
 	$CONFIG->$name = $value;
-	$value = sanitise_string(serialize($value));
+	
+	$site = get_entity($site_guid, 'site');
+	$site->$name = $value;
+	
+	if($site->save()){
+		return true;
+	}
 
-	$query = "insert into {$CONFIG->dbprefix}config"
-		. " set name = '{$name}', value = '{$value}', site_guid = {$site_guid}";
-	$result = insert_data($query);
-	return $result !== false;
+	return false;
 }
 
 /**

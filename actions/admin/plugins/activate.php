@@ -20,7 +20,7 @@ if (!is_array($plugin_guids)) {
 $activated_guids = array();
 foreach ($plugin_guids as $guid) {
 	$plugin = get_entity($guid, 'plugin');
-
+	
 	if (!($plugin instanceof ElggPlugin)) {
 		register_error(elgg_echo('admin:plugins:activate:no', array($guid)));
 		continue;

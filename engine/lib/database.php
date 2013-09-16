@@ -8,8 +8,6 @@
  * @subpackage Database
  */
 
-require(dirname(dirname(dirname(__FILE__))) . '/vendors/phpcassa/lib/autoload.php');
-
 use phpcassa\ColumnFamily;
 use phpcassa\ColumnSlice;
 use phpcassa\Connection\ConnectionPool;
@@ -32,6 +30,8 @@ $DB = new stdClass(); //make a database class for caching etc
  */
 function db_init() {
 	global $CONFIG, $DB;
+
+	require_once(dirname(dirname(dirname(__FILE__))) . '/vendors/phpcassa/lib/autoload.php');
 
 	$servers = $CONFIG->cassandra->servers;
 	

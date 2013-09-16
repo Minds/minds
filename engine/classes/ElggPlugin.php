@@ -643,7 +643,7 @@ class ElggPlugin extends ElggEntity {
 		if (!$this->canActivate()) {
 			return false;
 		}
-
+		
 		// set in the db, now perform tasks and emit events
 		if ($this->setSetting('active', 1)) {
 			// emit an event. returning false will make this not be activated.
@@ -666,8 +666,8 @@ class ElggPlugin extends ElggEntity {
 
 					$return = $this->includeFile('activate.php');
 				}
-			}
-			if ($return === false) {
+			} 
+			if ($return === false) { 
 				$this->deactivate($site_guid);
 			}
 			return $return;

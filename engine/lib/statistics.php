@@ -19,7 +19,7 @@
  */
 function get_entity_statistics($owner_guid = 0) {
 	global $CONFIG;
-
+return;
 	$entity_stats = array();
 	$owner_guid = (int)$owner_guid;
 
