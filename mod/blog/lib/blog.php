@@ -59,7 +59,7 @@ HTML;
 	if ($blog->comments_on != 'Off') {
 		$return['content'] .= elgg_view_comments($blog);
 	}
-	$return['content'] .= elgg_view('minds/ads', array('type'=>'adblade'));
+	$return['content'] .= elgg_view('minds/ads', array('type'=>'content.ad'));
 	
 	//add the sidebar
 	$return['sidebar'] = blog_sidebar($blog);

@@ -112,8 +112,8 @@ elseif($type == 'search-ad'){
 			<script type="text/javascript"
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			</script>';
-} elseif($type == 'adblade'){
-/*	        echo '<div class="adblade"><div id="contentad9733"></div>
+} elseif($type == 'content.ad'){
+	        echo '<div class="contentad"><div id="contentad9733"></div>
 <script type="text/javascript">
     (function() {
         var params =
@@ -133,6 +133,6 @@ elseif($type == 'search-ad'){
         s.async = true;
         document.getElementById("contentad9733").appendChild(s);
     })();</script> </div>';
-*/
+
 }
 

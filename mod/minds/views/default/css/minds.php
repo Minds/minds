@@ -1195,9 +1195,9 @@ div.register-popup {
 /**
  * Ad specific
  */
-.adblade{
+.contentad{
 	width:100%;
-	height:400px;
+	height:620px;
 }
 .adblade iframe{
 	margin: 10px auto;
