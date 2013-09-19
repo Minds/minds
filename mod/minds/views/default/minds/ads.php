@@ -113,12 +113,26 @@ elseif($type == 'search-ad'){
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			</script>';
 } elseif($type == 'adblade'){
-	echo '<div class="adblade"><script type="text/javascript"><!--
-	  adblade_cid="3144-3659842753";
-	  adblade_ad_width="600";
-	  adblade_ad_height="450";
-	  adblade_ad_host="web.adblade.com";
-	//--></script>
-	<script type="text/javascript" src="http://web.adblade.com/js/ads/show.js"></script></div>';
+/*	        echo '<div class="adblade"><div id="contentad9733"></div>
+<script type="text/javascript">
+    (function() {
+        var params =
+        {
+            id: "67c8c761-6755-4867-92be-6317f1ea173a",
+            d:  "bWluZHMuY29t",
+            wid: "9733",
+            cb: (new Date()).getTime()
+        };
+
+        var qs="";
+        for(var key in params){qs+=key+"="+params[key]+"&"}
+        qs=qs.substring(0,qs.length-1);
+        var s = document.createElement("script");
+        s.type= "text/javascript";
+        s.src = "http://api.content.ad/Scripts/widget.aspx?" + qs;
+        s.async = true;
+        document.getElementById("contentad9733").appendChild(s);
+    })();</script> </div>';
+*/
 }
 

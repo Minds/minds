@@ -25,7 +25,7 @@ $siteURL = elgg_get_site_url();
 
 //if(in_array('channel', $split)){
 //echo elgg_get_context();
-if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news' || elgg_get_context() == 'blog' || elgg_get_context() == 'archive'){
+if((elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news' || elgg_get_context() == 'blog' || elgg_get_context() == 'archive') && elgg_get_viewtype() == 'default'){
 	echo '<style>';
 
 	if($owner->background || $owner->text_colour || $owner->link_colour){

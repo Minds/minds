@@ -3,6 +3,7 @@
 if(!elgg_plugin_exists('analytics')){
 	forward(REFERRER);
 }
+
 // Get the current page's owner
 $page_owner = elgg_get_logged_in_user_guid();
 elgg_set_page_owner_guid($page_owner);

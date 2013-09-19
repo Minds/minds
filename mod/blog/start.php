@@ -149,7 +149,6 @@ function blog_page_handler($page) {
 			return true;
 			break;
 		case 'trending':
-			
 			$params = blog_get_trending_page_content_list();
 			$body = elgg_view_layout('gallery', $params);
 
@@ -165,8 +164,8 @@ function blog_page_handler($page) {
 			$params = blog_get_page_content_read($page[1]);
 			$body = elgg_view_layout('content', $params);
 	
-			//$params = blog_get_trending_page_content_list();
-                        $params = blog_get_page_content_list();
+			$params = blog_get_trending_page_content_list();
+                        //$params = blog_get_page_content_list();
 			$params['header'] = elgg_view_title('More...');
 			$params['filter'] = "";
 			$body .= elgg_view_layout('gallery', $params);
