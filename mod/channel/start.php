@@ -47,7 +47,8 @@ function channel_init() {
 		'text' => '&#59254;',
 		'href' => 'channels',
 		'class' => 'entypo',
-		'title' => elgg_echo('channels')
+		'title' => elgg_echo('channels'),
+		'priority' => 2
 	));
 
 	elgg_register_simplecache_view('icon/user/default/tiny');

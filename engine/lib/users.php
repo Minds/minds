@@ -540,6 +540,20 @@ function get_user($guid) {
 	return false;
 }
 
+/** 
+ * GET INDEX TO GUID
+ */
+function get_user_index_to_guid($index){
+	global $DB;
+
+	$row = $DB->cfs['user_index_to_guid']->get($index);
+	
+	foreach($row as $k=>$v){
+		return $k;
+	}
+	return false;
+}
+
 /**
  * Get user by username
  *
@@ -548,18 +562,16 @@ function get_user($guid) {
  * @return ElggUser|false Depending on success
  */
 function get_user_by_username($username) {
-	global $CONFIG, $USERNAME_TO_GUID_MAP_CACHE;
+	global $CONFIG, $USERNAME_TO_GUID_MAP_CACHE, $DB;
 
 	if(!$username){
 		return false;
 	}
+	
+	$guid = get_user_index_to_guid($username);
+	
+	$entity = get_entity($guid, 'user');
 
-	$entities = db_get(	array(	'type'=>'user', 
-					'attrs' => array('username'=>$username )
-			));
-	
-	$entity = $entities[0];	
-	
 	if ($entity) {
 		$USERNAME_TO_GUID_MAP_CACHE[$username] = $entity->guid;
 	} else {

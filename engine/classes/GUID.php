@@ -183,4 +183,18 @@ class GUID{
         }
         return $dec;
     }
+
+/** 
+ * Convert an old style Minds GUID to the new structure (make it a minimum 18 characters)
+ */
+public function migrate($old_guid){
+	$count = strlen($old_guid);
+	if($count >= 18){ return (int) $old_guid; }
+
+	$base_int = "111111111111111111";
+	
+	$prepend = (int) substr($base_int, 0, 18-$count);
+	
+	return $prepend . $old_guid;
+}
 }

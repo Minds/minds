@@ -34,7 +34,8 @@
 							'href'=>'gatherings/all',
 							'text' => '&#58277;',
                         				'class' => 'entypo', 	
-						));
+							'priority' => 15	
+					));
 		}
 		// Register a page handler, so we can have nice URLs -- FALLBACK
 		elgg_register_page_handler('webinar','webinar_page_handler');

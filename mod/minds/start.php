@@ -269,8 +269,9 @@ function minds_pagesetup(){
 						'href' => 'news',
 						'text' => '&#59194;',
 						'title' => elgg_echo('news'),
-						'class' => 'entypo'
-					));
+						'class' => 'entypo',
+						'priority' => 1	
+				));
 	
 	if($user){		
 		elgg_register_menu_item('site', array(
@@ -278,6 +279,8 @@ function minds_pagesetup(){
 						'href' => 'archive/upload',
 						'text' => '&#128228;',
 						'title' => elgg_echo('minds:upload'),
+						'class' => 'entypo',
+						'priority' => 4
 						'class' => 'entypo'
 					));
 	}

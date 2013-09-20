@@ -515,7 +515,7 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
  * @link http://docs.elgg.org/DataModel/Entities
  * @access private
  */
-function create_entity($object = NULL, $timebase = true) {
+function create_entity($object = NULL, $timebased = true) {
 	global $CONFIG;
 	//convert object to array of attributes
 	$attributes = array();
@@ -542,19 +542,22 @@ function create_entity($object = NULL, $timebase = true) {
 		} else {
 			$owner = get_entity($result, 'user');
 		}
-
-		//add to the the users subscribers      
-		$followers = $owner->getFriendsOf(null, 10000, "", 'guid');
-		if(!$followers) { 
-			$followers = array(); 
-		}
 		
-		array_push($followers, $owner->guid);//add to their own timeline
-		foreach($followers as $follower){
-			db_insert($namespace . ':network:'. $follower, $data);
-		}
-		db_insert($namespace . ':user:'. $owner->guid, $data);
- 	}
+		if($owner instanceof ElggUser){
+
+			//add to the the users subscribers      
+			$followers = $owner->getFriendsOf(null, 10000, "", 'guid');
+			if(!$followers) { 
+				$followers = array(); 
+			}
+		
+			array_push($followers, $owner->guid);//add to their own timeline
+			foreach($followers as $follower){
+				db_insert($namespace . ':network:'. $follower, $data);
+			}
+			db_insert($namespace . ':user:'. $owner->guid, $data);
+ 		}
+	}
 	return $result;
 }
 
@@ -905,7 +908,7 @@ function elgg_get_entities(array $options = array()) {
 							$namespace .= ':'. $subtypes[0]; //change to subtype
 						}
 						if($owner_guid = $attrs['owner_guid']){
-							$namespace .= ':'. $owner_guid;
+							$namespace .= ':user:'. $owner_guid;
 						}
 					}
 					$slice = new ColumnSlice($options['offset'], "", $options['limit'], true);//set to reversed

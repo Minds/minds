@@ -19,6 +19,8 @@ elgg_register_event_handler('init', 'system', 'blog_init');
  */
 function blog_init() {
 
+	add_subtype('object', 'blog', 'ElggBlog');
+
 	elgg_register_library('elgg:blog', elgg_get_plugins_path() . 'blog/lib/blog.php');
 	
 	// menus
@@ -27,7 +29,8 @@ function blog_init() {
 		'text' => '&#59396;',
 		'href' => 'blog/all',
 		'class' => 'entypo',
-		'title' => elgg_echo('blog:blogs')
+		'title' => elgg_echo('blog:blogs'),
+		'priority' => 3
 	));
 	
 
@@ -117,7 +120,7 @@ function blog_page_handler($page) {
 	elgg_load_library('elgg:blog');
 
 	// forward to correct URL for blog pages pre-1.8
-	blog_url_forwarder($page);
+	//blog_url_forwarder($page);
 
 	// push all blogs breadcrumb
 	elgg_push_breadcrumb(elgg_echo('blog:blogs'), "blog/all");

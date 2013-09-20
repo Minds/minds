@@ -43,20 +43,20 @@ function blog_get_page_content_read($guid = NULL) {
 HTML;
 	$return['title'] = $blog->title;
 	
-	$container = $blog->getContainerEntity();
+/*	$container = $blog->getContainerEntity();
 	$crumbs_title = $container->name;
 	if (elgg_instanceof($container, 'group')) {
 		elgg_push_breadcrumb($crumbs_title, "blog/group/$container->guid/all");
 	} else {
 		elgg_push_breadcrumb($crumbs_title, "blog/owner/$container->username");
 	}
-
+*/
 	elgg_push_breadcrumb($blog->title);
 	$return['content'] = elgg_view_entity($blog, array('full_view' => true));
 	$return['content'] .= elgg_view('minds/ads', array('type'=>'content-foot'));
 	//check to see if comment are on
 	if ($blog->comments_on != 'Off') {
-		$return['content'] .= elgg_view_comments($blog);
+	//	$return['content'] .= elgg_view_comments($blog);
 	}
 	
 	//add the sidebar
@@ -108,7 +108,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		// access check for closed groups
 		group_gatekeeper();
 
-		$options['container_guid'] = $container_guid;
+		$options['owner_guid'] = $container_guid;
 		$container = get_entity($container_guid, 'user');
 		if (!$container) {
 
@@ -142,11 +142,6 @@ function blog_get_page_content_list($container_guid = NULL) {
 		if (($current_user->guid == $container_guid) || $current_user->isAdmin()) {
 			$show_only_published = false;
 		}
-	}
-	if ($show_only_published) {
-		$options['metadata_name_value_pairs'] = array(
-			array('name' => 'status', 'value' => 'published'),
-		);
 	}
 	
 	$list = elgg_list_entities($options);
@@ -470,7 +465,7 @@ function blog_url_forwarder($page) {
 	}
 	
 	// user usernames
-	$user = get_user_by_username($page[0]);
+	$user = get_user_by_username($page[1]);
 	if (!$user) {
 		return;
 	}
@@ -505,7 +500,7 @@ function blog_url_forwarder($page) {
  * 
  */
 function blog_get_featured($limit=6){
-	global $CONFIG;
+/*	global $CONFIG;
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
 		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
@@ -518,7 +513,7 @@ function blog_get_featured($limit=6){
 		if(count($guids) > 0){
 			return $featured_blogs = elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
 		}
-	}
+	}*/
 	return false;
 }
 /**
@@ -539,7 +534,7 @@ function blog_sidebar($blog){
 		$return .= elgg_view('minds/ads', array('type'=>'content-side-single'));
 	}
 	//show featured blogs
-	$featured_blogs = blog_get_featured(6);
+	$featured_blogs = minds_get_featured(6);
 	if($featured_blogs){
 		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar'));
 		$return .= elgg_view_module('aside', elgg_echo('blog:featured'), $featured_blogs, array('class'=>'blog-sidebar'));	

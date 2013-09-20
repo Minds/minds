@@ -17,6 +17,7 @@ $subtypes = array('file');
 else
 $subtypes = array('kaltura_video', 'album', 'file');
 
+//we will use secondary subtypes
 foreach($subtypes as $subtype){
 	$options = array(      'types' => array('object'),
                                                         'subtype' => $subtype,

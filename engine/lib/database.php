@@ -45,6 +45,7 @@ function db_init() {
 			'config',
 			'object', 
 			'user', 
+			'user_index_to_guid',
 			'widget', 
 			'entities_by_time',
 			'notification', 
@@ -111,7 +112,6 @@ function db_get(array $options = array()){
 	if(!$type){
 		return;
 	}
-
 	try{
 		//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 		if($guids = $options['guids']){
@@ -200,7 +200,6 @@ function db_get(array $options = array()){
 			
 			return $item_ids;
 		}
-
 	} catch (Exception $e){
 		return false;
 	}        

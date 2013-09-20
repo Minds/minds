@@ -38,7 +38,7 @@ class ElggUser extends ElggEntity
 		$this->attributes['language'] = NULL;
 		$this->attributes['code'] = NULL;
 		$this->attributes['banned'] = "no";
-		$this->attributes['admin'] = 'yes';
+		$this->attributes['admin'] = 'no';
 		$this->attributes['time_created'] = time();
 	}
 
@@ -132,7 +132,12 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	public function save() {
-		return create_entity($this);
+		$guid =  create_entity($this);
+		//now place email and username in index
+		$data = array('type'=>'user_index_to_guid', $guid => time());
+		db_insert($this->username, $data);
+		db_insert($this->email, $data);
+		return $guid;
 	}
 
 	/**

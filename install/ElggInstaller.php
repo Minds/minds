@@ -1255,7 +1255,8 @@ class ElggInstaller {
 					'config' => array(),
 					'entities_by_time' => array(),
 					'object' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type'),
-					'user' => array('username' => 'UTF8Type', 'email' => 'UTF8Type'	),
+					'user' => array(),
+					'user_index_to_guid' => array(),
 					'group' => array('container_guid' => 'UTF8Type'	),
 					'widget' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' ),
 
@@ -1273,7 +1274,10 @@ class ElggInstaller {
 			//create the cfs
 			foreach($cfs as $cf => $indexes){
 
-				$attr = array("comparator_type" => "UTF8Type");
+				$attr = array(	"comparator_type" => "UTF8Type",
+						"default_validation_class" => "UTF8Type",
+						"key_validation_class" => "UTF8Type"
+						);
 
 				$sys->create_column_family($CONFIG->cassandra->keyspace, $cf, $attr);
 

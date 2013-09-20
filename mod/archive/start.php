@@ -70,6 +70,7 @@ function minds_archive_init() {
 			'text' => '&#59392;',
 			'class' => 'entypo',
 			'title' =>  elgg_echo('minds:archive'),
+			'priority' => 4
 	));
 		
 	elgg_extend_view('css','archive/css');
