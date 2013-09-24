@@ -452,7 +452,6 @@ function get_write_access_array($user_id = 0, $site_id = 0, $flush = false) {
 		$access_array = array(
 			ACCESS_PRIVATE => elgg_echo("PRIVATE"),
 			ACCESS_FRIENDS => elgg_echo("access:friends:label"),
-			ACCESS_LOGGED_IN => elgg_echo("LOGGED_IN"),
 			ACCESS_PUBLIC => elgg_echo("PUBLIC")
 		);
 		
