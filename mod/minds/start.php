@@ -281,7 +281,6 @@ function minds_pagesetup(){
 						'title' => elgg_echo('minds:upload'),
 						'class' => 'entypo',
 						'priority' => 4
-						'class' => 'entypo'
 					));
 	}
 
