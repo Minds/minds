@@ -25,7 +25,7 @@ $options['limit'] = get_input('limit',12);
 
 switch ($page_type) {
 	case 'all':
-		$title = elgg_echo('river:friends');
+		$title = elgg_echo('news');
 		$page_filter = 'all';
 		$options['type'] = 'timeline';
 		break;
@@ -81,6 +81,7 @@ if (!$activity) {
 //$sidebar .= elgg_view('core/river/sidebar');
 $sidebar .= elgg_view('minds/ads', array('large-block'));
 
+$vars['filter_context'] = $page_filter;
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 $filter = elgg_view('page/layouts/content/river_filter', $vars);
 $wall_add = elgg_view_form('wall/add',  array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
