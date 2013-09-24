@@ -178,12 +178,13 @@ class ElggWidget extends ElggEntity {
 	public function move($column, $rank) {
 		$options = array(
 			'type' => 'widget',
-			'owner_guid' => $this->container_guid,
+			'owner_guid' => $this->owner_guid,
 			'limit' => 1000,
 			'attrs' => array(
 				'context' => $this->getContext(),
 				'column' => $column
-			)
+			),
+			'timebased' =>false
 		);
 		$widgets = elgg_get_entities($options);
 		if (!$widgets) {
@@ -191,7 +192,7 @@ class ElggWidget extends ElggEntity {
 			$this->order = 0; 
 			return;
 		}
-
+		
 		usort($widgets, create_function('$a,$b','return (int)$a->order > (int)$b->order;'));
 
 		// remove widgets from inactive plugins

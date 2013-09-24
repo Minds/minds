@@ -29,7 +29,7 @@ if (elgg_is_logged_in() && $context) {
 			'selected' => ($filter_context == 'friends' || !$filter_context),
 			'priority' => 400,
 		),
-		'thumbsup' => array(
+		/*'thumbsup' => array(
 			'text' => '&#128077;',
 			'href' => $context."/thumbsup",
 			'selected' => ($filter_context == 'thumbsup'),
@@ -42,7 +42,7 @@ if (elgg_is_logged_in() && $context) {
 			'selected' => ($filter_context == 'thumbsdown'),
 			'class'=>'entypo',
 			'priority' => 600,
-		),
+		),*/
 
 	);
 	if(elgg_is_admin_logged_in()){

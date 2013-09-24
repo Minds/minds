@@ -152,55 +152,7 @@ function minds_archive_page_setup() {
 			'priority' => 400,
 			'section' => 'menu-a'
 		));
-			
-		elgg_register_menu_item('page', array(
-			'name' => elgg_echo('minds:archive:top'),
-			'href' => elgg_get_site_url() . "archive/top",
-			'text' =>  elgg_echo('minds:archive:top'),
-			'priority' => 500,
-			'section' => 'menu-a'
-		));
-		
-		elgg_register_menu_item('page', array(
-			'name' => elgg_echo('minds:archive:featured'),
-			'href' => elgg_get_site_url() . "archive/featured",
-			'text' =>  elgg_echo('minds:archive:featured'),
-			'priority' => 600,
-			'section' => 'menu-a'
-		));
-			
-		if (($page_owner == $user || !$page_owner) && elgg_is_logged_in()) {
-
-			elgg_register_menu_item('page', array(
-				'name' => elgg_echo('minds:archive:mine'),
-				'href' =>  elgg_get_site_url() ."archive/" . $user->username,
-				'text' =>  elgg_echo('minds:archive:mine'),
-			));
-
-			elgg_register_menu_item('page', array(
-				'name' => elgg_echo('minds:archive:network'),
-				'href' => elgg_get_site_url() ."archive/network/" . $user->username,
-				'text' =>  elgg_echo('minds:archive:network'),
-			));
-
-		} elseif ($page_owner) {
-			
-			elgg_register_menu_item('page', array(
-				'name' => elgg_echo('minds:archive:owner', array($page_owner->name)),
-				'href' => elgg_get_site_url() . "archive/" . $page_owner->username,
-				'text' => elgg_echo('minds:archive:owner', array($page_owner->name)),
-			));
-		
-			if ($page_owner instanceof ElggUser) { // Sorry groups, this isn't for you.
-				elgg_register_menu_item('page', array(
-					'name' => elgg_echo('minds:archive:owner:network', array($page_owner->name)),
-					'href' => elgg_get_site_url() ."archive/" . $page_owner->username ."/network/",
-					'text' => elgg_echo('minds:archive:owner:network', array($page_owner->name)),
-				));
-			}
-			
-		} 
-		
+				
 	}
 	
 	// Group submenu option

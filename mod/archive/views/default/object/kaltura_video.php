@@ -47,11 +47,11 @@ if($full){
 				'class'=> 'elgg-button elgg-button-action archive-button archive-button-right'
 			));
 											
-		echo elgg_view('output/url', array(	'href'=>'/action/archive/monetize?guid='.$entity->guid,
+	/*	echo elgg_view('output/url', array(	'href'=>'/action/archive/monetize?guid='.$entity->guid,
 			'text'=> $entity->monetized == true ? elgg_echo('archive:monetized:un-action') : elgg_echo('archive:monetized:action'),
 			'is_action' => true,
 			'class'=> 'elgg-button elgg-button-action archive-button archive-button-right'
-		));
+		));*/
 	}
 	
 	if($entity->access_id == 2){

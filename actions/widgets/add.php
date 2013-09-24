@@ -21,9 +21,11 @@ elgg_push_context('widgets');
 
 if (!empty($owner_guid)) {
 	$owner = get_entity($owner_guid, 'user');
+	if(!$owner){
+		$owner = elgg_get_logged_in_user_entity();
+	}
 	if ($owner && $owner->canEdit()) {
 		$guid = elgg_create_widget($owner->getGUID(), $handler, $context);
-		
 		if ($guid) {
 			$widget = get_entity($guid, 'widget');
 			

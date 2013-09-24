@@ -35,7 +35,7 @@ switch ($vars['page']) {
 		$options['inverse_relationship'] = false;
 		$content = elgg_list_entities_from_relationship_count($options);
 		break;
-	case 'suggested':
+	/*case 'suggested':
 		$people = suggested_friends_get_people($page_owner->guid, $friends, $groups);
 		$entities = array();
 		foreach($people as $person){
@@ -49,7 +49,7 @@ switch ($vars['page']) {
 	case 'collections':
 		elgg_register_title_button('collections', 'add');
 		$content = elgg_view_access_collections(elgg_get_logged_in_user_guid());
-		break;
+		break;*/
 	case 'newest':
 	default:
 		$content = elgg_list_entities($options);

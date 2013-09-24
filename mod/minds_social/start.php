@@ -245,6 +245,6 @@ function minds_get_fbimage($description) {
   return $fbimage;
 }
 
-elgg_register_event_handler('init','system','minds_social_init');		
+//elgg_register_event_handler('init','system','minds_social_init');		
 
 ?>
