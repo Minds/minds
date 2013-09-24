@@ -277,6 +277,8 @@ function login(ElggUser $user, $persistent = false) {
 	$SESSION['id'] = $SESSION['guid'];
 	$SESSION['username'] = $user->username;
 	$SESSION['name'] = $user->name;
+	$SESSION['friends'] = $user->getFriends();
+	$SESSION['friendsof'] = $user->getFriendsOf();
 
 	// if remember me checked, set cookie with token and store token on user
 	if (($persistent)) {

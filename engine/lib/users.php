@@ -358,8 +358,7 @@ function user_remove_friend($user_guid, $friend_guid) {
  * @return bool
  */
 function user_is_friend($user_guid, $friend_guid) {
-	//do a row slice
-	$friends = get_user_friends($user_guid, '', $limit = 10000);
+	$friends = get_user_friends($user_guid, '', $limit = 10000, '');
 	foreach($friends as $friend){
 		//var_dump($friend);
 		if($friend->guid == $friend_guid){
@@ -380,13 +379,21 @@ function user_is_friend($user_guid, $friend_guid) {
  * @return ElggUser[]|false Either an array of ElggUsers or false, depending on success
  */
 function get_user_friends($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
-$offset = "") {
-
-	$row = db_get( array(	'type'=> 'friends',
+$offset = "", $output = 'entities') {
+	global $SESSION;
+	if($user_guid == elgg_get_logged_in_user_guid() && isset($SESSION['friends'])){
+		foreach($SESSION['friends'] as $friend){
+       			$row[] = $friend;
+		}
+	} else {
+		
+		$row = db_get( array(	'type'=> 'friends',
 				'owner_guid' => $user_guid,	
 				'limit' => $limit,
-				'offset' => $offset
+				'offset' => $offset,
+				'output' => $output
 				));
+	}
 	return $row;
 }
 
@@ -402,13 +409,21 @@ $offset = "") {
  */
 function get_user_friends_of($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
 $offset = "", $output = 'entities') {
+	global $SESSION;
+        if($user_guid == elgg_get_logged_in_user_guid() && isset($SESSION['friendsof'])){
+                foreach($SESSION['friendsof'] as $friend){
+                        $row[] = $friend;
+                }
+        } else {
 
-	return db_get( array(     'type'=> 'friendsof',
-				  'owner_guid' => $user_guid, 
-                                  'output' => $output, 
-				     'limit' => $limit,
-                                        'offset' => $offset
+		$row = db_get( array(     'type'=> 'friendsof',
+					'owner_guid' => $user_guid, 
+                	                'output' => $output, 
+				        'limit' => $limit,
+                               	        'offset' => $offset
                                 ));
+	} 
+	return $row;
 
 }
 
