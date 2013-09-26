@@ -537,6 +537,11 @@ function create_entity($object = NULL, $timebased = true) {
 
 		db_insert($namespace, $data);
 
+		if($object->super_subtype){
+                        $super_subtype_namespace = $object->type . ':' . $object->super_subtype;
+                        db_insert($super_subtype_namespace, $data);
+                }
+
 		if($object->type != 'user'){
 			$owner = get_entity($object->owner_guid, 'user');
 		} else {
@@ -554,14 +559,16 @@ function create_entity($object = NULL, $timebased = true) {
 			array_push($followers, $owner->guid);//add to their own timeline
 			foreach($followers as $follower){
 				db_insert($namespace . ':network:'. $follower, $data);
+				if($object->super_subtype){ 
+					db_insert($super_subtype_namespace . ':network:'. $follower, $data);
+				}
 			}
 			db_insert($namespace . ':user:'. $owner->guid, $data);
+			if($object->super_subtype){
+				db_insert($super_subtype_namespace . ':user:'.$owner->guid, $data);
+			}
  		}
 
-		if($object->super_subtype){
-			$namespace = $object->type . ':' . $object->super_subtype;
-			db_insert($namespace, $data);
-		}
 	}
 
 	return $result;
@@ -700,6 +707,12 @@ function get_entity($guid, $type) {
 
 	if(!$guid){
 		return;
+	}
+
+	//legacy style guid?
+	if(strlen($guid) < 18){
+		$newguid = new GUID();
+		$guid = $newguid->migrate($guid);
 	}
 	
 	// Check local cache first
@@ -917,9 +930,12 @@ function elgg_get_entities(array $options = array()) {
 						if($subtypes){
 							$namespace .= ':'. $subtypes[0]; //change to subtype
 						}
-						if($owner_guid = $attrs['owner_guid']){
+						if($owner_guid = $options['owner_guids'][0]){
 							$namespace .= ':user:'. $owner_guid;
 						}
+						if($network = $options['network']){
+							$namespace .= ':network:'.$network;
+						}echo $namespace;
 					}
 					$slice = new ColumnSlice($options['offset'], "", $options['limit'], true);//set to reversed
 					$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
@@ -1317,7 +1333,7 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 	unset($options['count']);
 	$entities = $getter($options);
 
-	$count = count($entities); //this needs to be run by daily house keeping
+	$count = count($entities)*2; //this needs to be run by daily house keeping
 	$options['count'] = $count;
 	
 	return $viewer($entities, $options);

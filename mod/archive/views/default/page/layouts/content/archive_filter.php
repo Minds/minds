@@ -29,7 +29,7 @@ if ($context) {
 
 		'friends' => array(
                         'text' => elgg_echo('friends'),
-                        'href' => "$context/network?filter=$type_context",
+                        'href' => "$context/network/$username?filter=$type_context",
                         'selected' => ($filter_context == 'network'),
                         'priority' => 0,
                         'section'=>'filter'

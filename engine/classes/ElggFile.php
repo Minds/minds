@@ -357,11 +357,12 @@ class ElggFile extends ElggObject {
 	 * @throws ClassNotFoundException
 	 */
 	protected function getFilestore() {
+
 		// Short circuit if already set.
 		if ($this->filestore) {
 			return $this->filestore;
 		}
-
+/*
 		// ask for entity specific filestore
 		// saved as filestore::className in metadata.
 		// need to get all filestore::* metadata because the rest are "parameters" that
@@ -397,7 +398,7 @@ class ElggFile extends ElggObject {
 			$this->filestore->setParameters($parameters);
 			// @todo explain why $parameters will always be set here (PhpStorm complains)
 		}
-
+*/
 		// this means the entity hasn't been saved so fallback to default
 		if (!$this->filestore) {
 			$this->filestore = get_default_filestore();

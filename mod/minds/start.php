@@ -612,7 +612,8 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 	return elgg_get_entities(array( 'type' => 'object',
 					//'subtype' => 'blog',
 					'attrs' => array('namespace'=>$namespace),
-					'limit'=>$limit
+					'limit'=>$limit,
+					'offset'=>$offset
 					));
 }
 
