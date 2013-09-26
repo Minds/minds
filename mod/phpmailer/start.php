@@ -15,10 +15,8 @@ elgg_register_event_handler('init', 'system', 'phpmailer_init');
  * initialize the phpmailer plugin
  */
 function phpmailer_init() {
-	if (elgg_get_plugin_setting('phpmailer_override', 'phpmailer') != 'disabled') {
-		register_notification_handler('email', 'phpmailer_notify_handler');
-		elgg_register_plugin_hook_handler('email', 'system', 'phpmailer_mail_override');
-	}
+	register_notification_handler('email', 'phpmailer_notify_handler');
+	elgg_register_plugin_hook_handler('email', 'system', 'phpmailer_mail_override');
 	$site = elgg_get_site_entity();
 }
 

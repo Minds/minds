@@ -242,6 +242,7 @@ function elgg_get_max_plugin_priority() {
  * @return bool
  */
 function elgg_is_active_plugin($plugin_id, $site_guid = null) {
+	global $CONFIG;
 	if ($site_guid) {
 		$site = get_entity($site_guid, 'site');
 	} else {
@@ -251,6 +252,11 @@ function elgg_is_active_plugin($plugin_id, $site_guid = null) {
 	if (!($site instanceof ElggSite)) {
 		return false;
 	}
+
+	//first of all, check if its in the settings array, then we don't need to load...
+	if(in_array($plugin_id,$CONFIG->plugins)){
+		return true;
+	}	
 
 	$plugin = elgg_get_plugin_from_id($plugin_id);
 	
@@ -331,11 +337,26 @@ function elgg_load_plugins() {
  */
 function elgg_get_plugins($status = 'active', $site_guid = null) {
 	
-	global $DB;
+	global $CONFIG,$DB;
 
 	if (!$site_guid) {
 		$site = get_config('site');
 		$site_guid = $site->guid;
+	}
+
+	//Check if plugins are predfined in settings. Improves performance
+	if($plugins = $CONFIG->plugins){
+		$return = array();
+		foreach($plugins as $priority => $plugin){
+			$row = new stdClass();
+			$row->guid = $plugin;
+			$row->title = $plugin;
+			$row->type = 'plugin';
+			$row->active = 1;
+			$row->priority = $priority;
+			$return[] = new ElggPlugin($row);
+		}
+		return $return;
 	}
 
 	//convert status to something the db understands

@@ -72,7 +72,7 @@ HTML;
 } else {
 	// brief view
 	$content = elgg_get_excerpt($webinar->description);
-	echo $metadata;	
+//	echo $metadata;	
 	$params = array(
 			'entity' => $webinar,
 			'subtitle' => $subtitle,

@@ -112,6 +112,8 @@ function db_get(array $options = array()){
 	if(!$type){
 		return;
 	}
+//	if($type == 'user'){var_dump(debug_backtrace());exit;}
+//	echo "Called $type"; var_dump($options);
 	try{
 		//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 		if($guids = $options['guids']){
@@ -120,17 +122,30 @@ function db_get(array $options = array()){
 			}else{
 				$rows[] = $DB->cfs[$type]->get($guids);
 			}
-		} elseif($type == 'plugin'){
-		
+		} elseif($type == 'plugin'){	
 			//do we even have any attrs?
 			if($attr = $options['attrs']){
 				foreach($options['attrs'] as $k => $v){
 				       $index_exps[] = new IndexExpression($k, $v);
 				}		               
-
-				$index_clause = new IndexClause($index_exps);
-				$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
-			} else {
+				$index_clause = new IndexClause($index_exps);				
+		
+				//check the apc cache ... clean this up... getting a bit messy
+				if(is_apc_enabled()){
+					$shared_cache = new ElggApcCache('db_get_cache');
+					//APC REALLY POOR PERFORMANCE..
+					$key = 'plugin:active:'.$attr['active'];
+					$cached = $shared_cache->load($key);
+					if($cached){
+                                                $rows = $cached;
+                                        } else {
+						$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
+					}
+					$shared_cache->save($key, $rows);
+				} else {			
+					$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
+				}
+			} else {	
 				$rows = $DB->cfs[$type]->get_range("", "");
 			}
 		} elseif($type == 'user') {

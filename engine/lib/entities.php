@@ -613,6 +613,8 @@ function entity_row_to_elggstar($row, $type) {
 	static $newentity_cache;
 	if ((!$newentity_cache) && (is_memcache_available())) {
 		$newentity_cache = new ElggMemcache('new_entity_cache');
+	} elseif(is_apc_enabled()){
+		$newentity_cache = new ElggApcCache('new_entity_cache');
 	}
 	if ($newentity_cache) {
 		$new_entity = $newentity_cache->load($row->guid);
@@ -704,14 +706,14 @@ function get_entity($guid, $type) {
 	if (null === $shared_cache) {
 		if (is_memcache_available()) {
 			$shared_cache = new ElggMemcache('new_entity_cache');
+		} elseif(is_apc_enabled()) {
+			$shared_cache = new ElggApcCache('new_entity_cache');
 		} else {
 			$shared_cache = false;
 		}
 	}
-
-	// until ACLs in memcache, DB query is required to determine access
-	$new_entity = db_get(array('type'=>$type, 'guids'=>array($guid)));
-	
+	//var_dump($guid, $type);
+	//var_dump(debug_backtrace());
 	if ($shared_cache) {
 		$cached_entity = $shared_cache->load($guid);
 		// @todo store ACLs in memcache http://trac.elgg.org/ticket/3018#comment:3
@@ -720,6 +722,8 @@ function get_entity($guid, $type) {
 			return $cached_entity;
 		}
 	}
+
+	$new_entity = db_get(array('type'=>$type, 'guids'=>array($guid)));
 
 	if(is_array($new_entity)){
 		$new_entity = $new_entity[0];
@@ -826,7 +830,7 @@ function elgg_entity_exists($guid) {
  */
 function elgg_get_entities(array $options = array()) {
 	global $CONFIG, $DB;
-
+	
 	$defaults = array(
 		'types'					=>	ELGG_ENTITIES_ANY_VALUE,
 		'subtypes'				=>	ELGG_ENTITIES_ANY_VALUE,
@@ -1864,9 +1868,13 @@ function can_edit_entity($entity_guid, $user_guid = 0) {
 			if ($entity->type == "user" && $entity->getGUID() == $user->getGUID()) {
 				$return = true;
 			}
-			if ($container_entity = get_entity($entity->container_guid, 'user')) {
-				if ($container_entity->canEdit($user->getGUID())) {
-					$return = true;
+			//@todo fix issue with container id's being set wrongly. Also don't call the database if we don't need to!
+			$container_guid = $entity->container_guid == 111111111111111110 ? 0 : $entity->container_guid;
+			if(!$return){
+				if ($container_entity = get_entity($container_guid, 'user')) {
+					if ($container_entity->canEdit($user->getGUID())) {
+						$return = true;
+					}
 				}
 			}
 		}

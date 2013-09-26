@@ -186,4 +186,31 @@ class ElggObject extends ElggEntity {
 		// no checks on read access since a user cannot see entities outside his access
 		return true;
 	}
+
+	/**
+         * Gets the ElggEntity that owns this entity.
+         *
+         * @return ElggEntity The owning entity
+         */
+        public function getOwnerEntity($brief = false) {
+		if($brief){
+			if($this->owner){
+				//return json_decode($this->owner);
+			}
+		} 
+                return get_entity($this->owner_guid, 'user');
+	}
+
+	/**
+         * Save an object.
+         *
+         * @return bool|int
+         * @throws IOException
+         */
+        public function save() {
+                //cache owner_guid for brief
+                $this->owner = json_encode($this->getOwnerEntity());
+                $guid = create_entity($this);
+                return $guid;
+        }
 }

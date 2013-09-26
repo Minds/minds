@@ -20,10 +20,16 @@ function elgg_get_site_entity($site_guid = 0) {
 
 	$result = false;
 	
-	if ($site_guid == 0) {
-		$site = $CONFIG->site;
+	//check if defined in settings.php
+	if($CONFIG->site_name){
+		$site = new ElggSite();
+		$site->name = $CONFIG->site_name;
+		$site->email = $CONFIG->site_email;
+		$site->url = $CONFIG->site_url;
 	} else {
+
 		$site = get_entity($site_guid);
+	
 	}
 	
 	if ($site instanceof ElggSite) {

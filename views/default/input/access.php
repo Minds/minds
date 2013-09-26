@@ -26,11 +26,14 @@ if (isset($vars['entity'])) {
 	$defaults['value'] = $vars['entity']->access_id;
 	unset($vars['entity']);
 }
-
 $vars = array_merge($defaults, $vars);
 
 if ($vars['value'] == ACCESS_DEFAULT) {
 	$vars['value'] = get_default_access();
+}
+
+if(!is_int($vars['value'])){
+	$vars['value'] = (int) $vars['value'];
 }
 
 if (is_array($vars['options_values']) && sizeof($vars['options_values']) > 0) {

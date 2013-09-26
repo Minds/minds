@@ -270,6 +270,10 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 	$user_guid = $user->getGUID();
 	$icon_time = $user->icontime;
 
+	if($user->legacy_guid){
+		$user_guid = $user->legacy_guid;
+	}
+
 	if (!$icon_time) {
 		return "_graphics/icons/user/default{$size}.gif";
 	}

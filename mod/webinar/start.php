@@ -125,8 +125,7 @@
 				break;
 			case "view":
 				if (isset($page[1])) {
-					$url = elgg_add_action_tokens_to_url('action/webinar/join?webinar_guid='.$page[1]);
-					forward($url); 	
+					$params = webinar_get_page_content_view($page[1]);
 				}else{
 					return false;
 				}
@@ -189,7 +188,7 @@
 		if (elgg_in_context('widgets')) {
 			return $return;
 		}
-	
+		
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
 		if ($handler != 'webinar') {

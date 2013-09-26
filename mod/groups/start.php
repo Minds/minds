@@ -28,14 +28,14 @@ function groups_init() {
 			'title' => elgg_echo('groups'),
 			'class' => 'entypo',
 		));
-
+	
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('groups', 'groups_page_handler');
 
 	// Register URL handlers for groups
 	elgg_register_entity_url_handler('group', 'all', 'groups_url');
 	elgg_register_plugin_hook_handler('entity:icon:url', 'group', 'groups_icon_url_override');
-
+	
 	// Register an icon handler for groups
 	elgg_register_page_handler('groupicon', 'groups_icon_handler');
 
@@ -56,7 +56,7 @@ function groups_init() {
 
 	// Add some widgets
 	elgg_register_widget_type('a_users_groups', elgg_echo('groups:widget:membership'), elgg_echo('groups:widgets:description'));
-
+	
 	// add group activity tool option
 	add_group_tool_option('activity', elgg_echo('groups:enableactivity'), true);
 	elgg_extend_view('groups/tool_latest', 'groups/profile/activity_module');
@@ -76,11 +76,11 @@ function groups_init() {
 	//extend some views
 	elgg_extend_view('css/elgg', 'groups/css');
 	elgg_extend_view('js/elgg', 'groups/js');
-
+	
 	// Access permissions
-	elgg_register_plugin_hook_handler('access:collections:write', 'all', 'groups_write_acl_plugin_hook');
+	//elgg_register_plugin_hook_handler('access:collections:write', 'all', 'groups_write_acl_plugin_hook');
 	//elgg_register_plugin_hook_handler('access:collections:read', 'all', 'groups_read_acl_plugin_hook');
-
+	
 	// Register profile menu hook
 	//elgg_register_plugin_hook_handler('profile_menu', 'profile', 'forum_profile_menu');
 	//elgg_register_plugin_hook_handler('profile_menu', 'profile', 'activity_profile_menu');
@@ -88,7 +88,7 @@ function groups_init() {
 	// allow ecml in discussion and profiles
 	elgg_register_plugin_hook_handler('get_views', 'ecml', 'groups_ecml_views_hook');
 	elgg_register_plugin_hook_handler('get_views', 'ecml', 'groupprofile_ecml_views_hook');
-
+	
 	// Register a handler for create groups
 	elgg_register_event_handler('create', 'group', 'groups_create_event_listener');
 
@@ -560,7 +560,7 @@ function groups_read_acl_plugin_hook($hook, $entity_type, $returnvalue, $params)
 function groups_write_acl_plugin_hook($hook, $entity_type, $returnvalue, $params) {
 	$page_owner = elgg_get_page_owner_entity();
 	$user_guid = $params['user_id'];
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, 'user');
 	if (!$user) {
 		return $returnvalue;
 	}

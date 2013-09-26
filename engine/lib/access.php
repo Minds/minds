@@ -194,19 +194,19 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
  */
 function get_default_access(ElggUser $user = null) {
 	global $CONFIG;
-
+	
 	if (!$CONFIG->allow_user_default_access) {
-		return $CONFIG->default_access;
+		return (int) $CONFIG->default_access;
 	}
 
 	if (!($user) && (!$user = elgg_get_logged_in_user_entity())) {
-		return $CONFIG->default_access;
+		return (int) $CONFIG->default_access;
 	}
 
 	if (false !== ($default_access = $user->getPrivateSetting('elgg_default_access'))) {
 		return $default_access;
 	} else {
-		return $CONFIG->default_access;
+		return (int) $CONFIG->default_access;
 	}
 }
 

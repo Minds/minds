@@ -343,21 +343,6 @@ class ElggGroup extends ElggEntity
 		return true;
 	}
 
-	/**
-	 * Override the save function.
-	 *
-	 * @return bool
-	 */
-	public function save() {
-		// Save generic stuff
-		if (!parent::save()) {
-			return false;
-		}
-
-		// Now save specific stuff
-		return create_group_entity($this->get('guid'), $this->get('name'), $this->get('description'));
-	}
-
 	// EXPORTABLE INTERFACE ////////////////////////////////////////////////////////////
 
 	/**

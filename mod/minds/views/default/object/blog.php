@@ -14,7 +14,7 @@ if (!$blog) {
 }
 
 $owner = $blog->getOwnerEntity();
-$container = $blog->getContainerEntity();
+//$container = $blog->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
 $excerpt = strip_tags($blog->excerpt);
 if (!$excerpt) {

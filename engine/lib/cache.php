@@ -7,6 +7,21 @@
  * @subpackage Cache
  */
 
+/** 
+ * Check if APC is available
+ */
+function is_apc_enabled(){
+	return false;
+	try {
+		$tmp = new ElggApcCache();
+		// No exception thrown so we have memcache available
+		return true;	
+	} catch (Exception $e) {
+		return false;
+	}
+
+}
+
 /* Filepath Cache */
 
 /**

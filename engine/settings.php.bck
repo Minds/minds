@@ -19,13 +19,29 @@ if (!isset($CONFIG)) {
 	$CONFIG = new stdClass;
 }
 
-/**
- * Cassandra setup
+/*
+ * Cassandra configuration
+ *
+ * You will use the same database connection for reads and writes.
+ * This is the easiest configuration, and will suit 99.99% of setups. However, if you're
+ * running a really popular site, you'll probably want to spread out your database connections
+ * and implement database replication.  That's beyond the scope of this configuration file
+ * to explain, but if you know you need it, skip past this section.
  */
 $CONFIG->cassandra = new stdClass;
 $CONFIG->cassandra->keyspace = 'minds';
-$CONFIG->cassandra->servers = array('192.168.200.18');
+$CONFIG->cassandra->servers = array('10.0.8.105');
 
+
+/** 
+ * Other Elgg Settings
+ */
+$CONFIG->installed = '1379960196';
+$CONFIG->path = '/var/www/elgg/';
+$CONFIG->dataroot = '/gluster/data/elgg/';
+$CONFIG->default_site = '1';
+$CONFIG->site_id = '1';
+$CONFIG->__site_secret__ = '1nfkvkcbwocceufisnc931e'; 
 /**
  * Overrides default system cache path from inside data root to custom location.
  *
@@ -35,20 +51,12 @@ $CONFIG->cassandra->servers = array('192.168.200.18');
 $CONFIG->system_cache_path = '/tmp/elgg_system_cache/';
 
 /**
- * These values need to be moved back to cassandra soon
- */
-$CONFIG->dataroot = '/data/';
-$CONFIG->path = '/var/www/elgg/';
-$CONFIG->pluginspath = $CONFIG->path . 'mod/';
-$CONFIG->allow_registration = true;
-$CONFIG->__site_secret__ = 'abc1234hjdjdls';
-/**
  * Elasticsearch Settings
  */
 //server for elasticsearch
-$CONFIG->elasticsearch_server = 'http://192.168.200.13:9200/';
+$CONFIG->elasticsearch_server = 'http://10.0.5.10:9200/';
 //namespace
-$CONFIG->elasticsearch_prefix = 'io_c_';
+$CONFIG->elasticsearch_prefix = 'cass_test_';
 
 /**
  * Memcache setup (optional)

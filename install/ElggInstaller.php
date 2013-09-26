@@ -1160,8 +1160,9 @@ class ElggInstaller {
 	protected function checkDatabaseSettings($server, $keyspace) {
 
 		try{
-			$sys = new SystemManager($server);	
-                        $sys->create_keyspace($keyspace);
+			$sys = new SystemManager($server);
+			$attrs = array(	  "strategy_options" => array("replication_factor" => "2"));	
+                        $sys->create_keyspace($keyspace, $attrs);
 			return true;
 		} catch (Exception $e){
 			register_error(elgg_echo('install:error:databasesettings'));

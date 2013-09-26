@@ -62,7 +62,7 @@ function webinar_get_page_content_edit($action_type, $guid = 0){
 	if ($action_type == 'edit') {
 		$title = elgg_echo("webinar:edit");
 		
-		$webinar = get_entity($guid);
+		$webinar = get_entity($guid, 'object');
 		if (elgg_instanceof($webinar, 'object', 'webinar') && $webinar->canEdit()) {
 			
 			$container = $webinar->getContainerEntity();

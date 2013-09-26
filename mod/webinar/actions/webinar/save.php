@@ -25,7 +25,7 @@ if (!$input['title']) {
 if (sizeof($input) > 0) {
 	
 	if(isset($input[guid]) && !empty($input[guid])){
-		$webinar = get_entity($input[guid]);
+		$webinar = get_entity($input[guid], 'object');
 		if (!$webinar || !$webinar->canEdit()) {
 			register_error(elgg_echo('webinar:error:no_save'));
 			forward(REFERER);

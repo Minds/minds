@@ -38,7 +38,7 @@ switch ($page_type) {
 	case 'featured':
 		$title = elgg_echo('river:featured');
 		$page_filter = 'featured';
-		$options['action_types'] = 'feature';
+		$options['owner_guid'] = 'feature'; //this should be renamed to owner...
 		break;
 	case 'single':
 		$id = get_input('id');
