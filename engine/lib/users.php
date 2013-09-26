@@ -415,9 +415,11 @@ $offset = "", $output = 'entities') {
                 foreach($SESSION['friendsof'] as $friend){
                         $row[] = $friend;
                 }
-		if($row){
+		if($row && $output == 'entities'){
                         $row = db_get(array('type'=>'user', 'guids'=>$row));
-                }
+                } else {
+			return $row;
+		}
         } else {
 
 		$row = db_get( array(     'type'=> 'friendsof',

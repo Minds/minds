@@ -384,7 +384,7 @@ class ElggFile extends ElggObject {
 				$parameters[$name] = $md->value;
 			}
 		}
-
+*/
 		// need to check if filestore is set because this entity is loaded in save()
 		// before the filestore metadata is saved.
 		if (isset($filestore)) {
@@ -398,12 +398,11 @@ class ElggFile extends ElggObject {
 			$this->filestore->setParameters($parameters);
 			// @todo explain why $parameters will always be set here (PhpStorm complains)
 		}
-*/
-		// this means the entity hasn't been saved so fallback to default
-		if (!$this->filestore) {
-			$this->filestore = get_default_filestore();
-		}
 
+		if(!$this->filestore){
+			$this->filestore = get_default_filestore();
+		} 
+		
 		return $this->filestore;
 	}
 

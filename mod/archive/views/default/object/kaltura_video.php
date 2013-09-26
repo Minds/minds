@@ -59,21 +59,7 @@ if($full){
 	}
 	
 		
-} elseif(elgg_get_context() == 'archive-tiles'){
-	$icon = elgg_view('output/img', array(
-			'src' => kaltura_get_thumnail($entity->kaltura_video_id, 120, 68, 100, $entity->thumbnail_sec),
-			'class' => 'elgg-photo',
-			'title' => $entity->title,
-			'alt' => $entity->title,
-			'width'=>'120px',
-			'height' => '68px'
-	));
-	$icon = elgg_view('output/url', array(
-			'text' => $icon,
-			'href' => $entity->getURL()
-		));
-	echo $icon;
-} elseif(elgg_get_context()=='sidebar') {
+}  elseif(elgg_get_context()=='sidebar') {
 	?>
 	<div class="kalturavideoitem" id="kaltura_video_<?php echo $entity->kaltura_video_id; ?>">
 
@@ -100,7 +86,7 @@ if($full){
 		'class' => 'elgg-menu-hz',
 	));
 	
-	$owner = get_entity($entity->owner_guid);
+	$owner = $entity->getOwnerEntity(); 
 	$owner_link = elgg_view('output/url', array(
 		'text' => $owner->name,
 		'href' => $owner->getURL()
@@ -132,13 +118,13 @@ if($full){
 	$params = $params + $vars;
 	$summary = elgg_view('object/elements/summary', $params);
 	
-	$image = elgg_view('output/img', array('src'=>kaltura_get_thumnail($entity->kaltura_video_id, 120, 68, 100, $entity->thumbnail_sec), 'class'=>'rich-image'));
 	$image = elgg_view('output/url', array(
 			'href' => $entity->getURL(),
 			'class' => 'uiVideoInline archive entity',
 			'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($entity->kaltura_video_id, 515, 290, 100, $entity->thumbnail_sec) . '\'/>',
 			'title' => $entity->title,
 		));
+	
 	$title = elgg_view('output/url', array('href'=>$entity->getURL(), 'text'=>elgg_view_title($entity->title)));
 
 	$extras = '<span class="extras"> <p class="time">'. $date . '</p>' . $menu .'</span>';

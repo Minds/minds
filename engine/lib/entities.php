@@ -551,7 +551,7 @@ function create_entity($object = NULL, $timebased = true) {
 		if($owner instanceof ElggUser){
 
 			//add to the the users subscribers      
-			$followers = $owner->getFriendsOf(null, 10000, "", 'guid');
+			$followers = $owner->getFriendsOf(null, 10000, "", 'guids');
 			if(!$followers) { 
 				$followers = array(); 
 			}
@@ -935,7 +935,7 @@ function elgg_get_entities(array $options = array()) {
 						}
 						if($network = $options['network']){
 							$namespace .= ':network:'.$network;
-						}echo $namespace;
+						}
 					}
 					$slice = new ColumnSlice($options['offset'], "", $options['limit'], true);//set to reversed
 					$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
@@ -963,9 +963,10 @@ function elgg_get_entities(array $options = array()) {
 					$entities[] = entity_row_to_elggstar($newrow, $type);
 				}
 			}
-		} catch(Exception $e){
-		 	return false;
-                }
+		} catch(Exception $e){		
+                	//remove the last entity out
+			array_pop($entities);
+		}
 		return $entities;
 
 	} else {
@@ -1311,7 +1312,7 @@ $time_created_lower = NULL, $time_updated_upper = NULL, $time_updated_lower = NU
  */
 function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entities',
 	$viewer = 'elgg_view_entity_list') {
-
+	
 	global $autofeed;
 	$autofeed = true;
 
@@ -1332,7 +1333,7 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 
 	unset($options['count']);
 	$entities = $getter($options);
-
+	
 	$count = count($entities)*2; //this needs to be run by daily house keeping
 	$options['count'] = $count;
 	

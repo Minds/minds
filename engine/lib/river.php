@@ -56,7 +56,7 @@ $posted = 0, $annotation_id = 0) {
 			));
 
 	//get the followers of the subject guid
-        $followers = $subject->getFriendsOf(null, 10000, "", 'guid');
+        $followers = $subject->getFriendsOf(null, 10000, "", 'guids');
 	if(!$followers) { $followers = array(); }
 	array_push($followers, 'site');//add to public timeline
 	array_push($followers, $action_type);//timelines for actions too

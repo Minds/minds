@@ -14,6 +14,7 @@ function minds_archive_init() {
 	//register subtypes for classes
 	add_subtype('object', 'image', 'TidypicsImage');
 	add_subtype('object', 'album', 'TidypicsAlbum');
+	add_subtype('object', 'kaltura_video', 'KalturaMedia');
 
 	elgg_extend_view('page/elements/head', 'archive/meta');
 	

@@ -323,7 +323,7 @@ function tidypics_entity_menu_setup($hook, $type, $return, $params) {
 			$return[] = ElggMenuItem::factory($options);
 		}
 
-		if (elgg_get_plugin_setting('view_count', 'tidypics')) {
+	/*	if (elgg_get_plugin_setting('view_count', 'tidypics')) {
 			$view_info = $entity->getViewInfo();
 			$text = elgg_echo('tidypics:views', array((int)$view_info['total']));
 			$options = array(
@@ -334,7 +334,7 @@ function tidypics_entity_menu_setup($hook, $type, $return, $params) {
 			);
 			$return[] = ElggMenuItem::factory($options);
 		}
-
+	*/
 		if (elgg_get_plugin_setting('tagging', 'tidypics')) {
 			$options = array(
 				'name' => 'tagging',

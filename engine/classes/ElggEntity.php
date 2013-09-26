@@ -1132,8 +1132,8 @@ abstract class ElggEntity extends ElggData implements
 	 * @return ElggEntity
 	 * @since 1.8.0
 	 */
-	public function getContainerEntity() {
-		return get_entity($this->getContainerGUID(),'user');
+	public function getContainerEntity($type = 'user') {
+		return get_entity($this->getContainerGUID(), $type);
 	}
 
 	/**
@@ -1511,7 +1511,8 @@ abstract class ElggEntity extends ElggData implements
 			'time_updated',
 			'container_guid',
 			'owner_guid',
-			'site_guid'
+			'site_guid',
+			'access_id'
 		);
 	}
 
