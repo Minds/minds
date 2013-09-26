@@ -8,7 +8,7 @@
  * 
  * Free & Open Source Social Media
  */
-
+global $CONFIG;
 $limit = get_input('limit', 12);
 $offset = get_input('offset', 0);
 
@@ -66,5 +66,4 @@ $params = array(	'content'=> elgg_view_entity_list($entities,$vars, $offset, $li
 $body = elgg_view_layout('one_column', $params);
 
 echo elgg_view_page('', $body, 'default', array('class'=>'index'));
-
 ?>

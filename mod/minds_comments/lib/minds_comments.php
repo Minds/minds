@@ -5,6 +5,9 @@ function minds_comments_view_list($type, $pid) {
 
 	$mc = new MindsComments();
 	$call = $mc -> output($type, $pid, 3, 0);
+	if($call['error']){
+		return false;
+	}
 	$count = $call['hits']['total'];
 	$comments = array_reverse($call['hits']['hits']);
 

@@ -61,6 +61,7 @@ $posted = 0, $annotation_id = 0) {
 	array_push($followers, 'site');//add to public timeline
 	array_push($followers, $action_type);//timelines for actions too
 	array_push($followers, $subject_guid);//add to their own timeline
+	array_push($followers, $object->container_guid); //add to containers timeline
 	foreach($followers as $follower){
 		db_insert($follower, array('type'=>'timeline', $id => time()));
 	}

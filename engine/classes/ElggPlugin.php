@@ -290,6 +290,13 @@ class ElggPlugin extends ElggEntity {
 	 * @return mixed
 	 */
 	public function getSetting($name) {
+		//Are we storing settings in Conf?
+		global $CONFIG;
+		$id = $this->getID();
+		if($setting = $CONFIG->pluginSettings->{$id}[$name]){
+			return $setting;
+	
+		}
 		return $this->$name;
 	}
 

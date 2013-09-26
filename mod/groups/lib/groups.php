@@ -47,6 +47,8 @@ function groups_handle_all_page() {
 			$content = elgg_list_entities(array(
 				'type' => 'group',
 				'full_view' => false,
+				'limit' => get_input('limit', 10),
+				'offset' => get_input('offset', ''),
 			));
 			if (!$content) {
 				$content = elgg_echo('groups:none');
@@ -248,7 +250,7 @@ function groups_handle_invitations_page() {
  */
 function groups_handle_profile_page($guid) {
 	elgg_set_page_owner_guid($guid);
-
+	
 	// turn this into a core function
 	global $autofeed;
 	$autofeed = true;
@@ -274,7 +276,7 @@ function groups_handle_profile_page($guid) {
 	$sidebar = '';
 
 	if (group_gatekeeper(false)) {	
-		if (elgg_is_active_plugin('search')) {
+		/*if (elgg_is_active_plugin('search')) {
 			$sidebar .= elgg_view('groups/sidebar/search', array('entity' => $group));
 		}
 		$sidebar .= elgg_view('groups/sidebar/members', array('entity' => $group));
@@ -297,7 +299,7 @@ function groups_handle_profile_page($guid) {
 		$sidebar .= elgg_view('groups/sidebar/my_status', array(
 			'entity' => $group,
 			'subscribed' => $subscribed
-		));
+		));*/
 	}
 
 	$params = array(

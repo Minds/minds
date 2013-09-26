@@ -150,7 +150,7 @@ function groups_setup_sidebar_menus() {
 		if (elgg_is_logged_in() && $page_owner->canEdit() && !$page_owner->isPublicMembership()) {
 			$url = elgg_get_site_url() . "groups/requests/{$page_owner->getGUID()}";
 
-			$count = elgg_get_entities_from_relationship(array(
+		/*	$count = elgg_get_entities_from_relationship(array(
 				'type' => 'user',
 				'relationship' => 'membership_request',
 				'relationship_guid' => $page_owner->getGUID(),
@@ -168,7 +168,7 @@ function groups_setup_sidebar_menus() {
 				'name' => 'membership_requests',
 				'text' => $text,
 				'href' => $url,
-			));
+			));*/
 		}
 	}
 	if (elgg_get_context() == 'groups' && !elgg_instanceof($page_owner, 'group')) {
@@ -226,7 +226,7 @@ function groups_page_handler($page) {
 
 	// forward old profile urls
 	if (is_numeric($page[0])) {
-		$group = get_entity($page[0]);
+		$group = get_entity($page[0], 'group');
 		if (elgg_instanceof($group, 'group', '', 'ElggGroup')) {
 			system_message(elgg_echo('changebookmark'));
 			forward($group->getURL());
@@ -377,11 +377,11 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 		return $return;
 	}
 
-	foreach ($return as $index => $item) {
+	/*foreach ($return as $index => $item) {
 		if (in_array($item->getName(), array('access', 'likes', 'edit', 'delete'))) {
 			unset($return[$index]);
 		}
-	}
+	}*/
 
 	// membership type
 	$membership = $entity->membership;
@@ -599,7 +599,7 @@ function groups_write_acl_plugin_hook($hook, $entity_type, $returnvalue, $params
  * Groups deleted, so remove access lists.
  */
 function groups_delete_event_listener($event, $object_type, $object) {
-	delete_access_collection($object->group_acl);
+///	delete_access_collection($object->group_acl);
 
 	return true;
 }
@@ -695,8 +695,8 @@ function groups_join_group($group, $user) {
 		get_access_list($user->guid, 0, true);
 
 		// Remove any invite or join request flags
-		remove_entity_relationship($group->guid, 'invited', $user->guid);
-		remove_entity_relationship($user->guid, 'membership_request', $group->guid);
+	//	remove_entity_relationship($group->guid, 'invited', $user->guid);
+	//	remove_entity_relationship($user->guid, 'membership_request', $group->guid);
 
 		add_to_river('river/relationship/member/create', 'join', $user->guid, $group->guid);
 

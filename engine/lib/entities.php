@@ -557,7 +557,13 @@ function create_entity($object = NULL, $timebased = true) {
 			}
 			db_insert($namespace . ':user:'. $owner->guid, $data);
  		}
+
+		if($object->super_subtype){
+			$namespace = $object->type . ':' . $object->super_subtype;
+			db_insert($namespace, $data);
+		}
 	}
+
 	return $result;
 }
 
@@ -1308,12 +1314,10 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 		$options['list_type_toggle'] = $options['view_type_toggle'];
 	}
 
-	$options['count'] = TRUE;
-	$count = $getter($options);
-
-	$options['count'] = FALSE;
+	unset($options['count']);
 	$entities = $getter($options);
 
+	$count = count($entities); //this needs to be run by daily house keeping
 	$options['count'] = $count;
 	
 	return $viewer($entities, $options);

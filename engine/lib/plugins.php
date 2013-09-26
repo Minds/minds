@@ -7,6 +7,9 @@
  * @subpackage Plugins
  */
 
+//Define the plugin cache
+global $PLUGINS_CACHE;
+
 /**
  * Tells ElggPlugin::start() to include the start.php file.
  */
@@ -186,7 +189,10 @@ function _elgg_cache_plugin_by_id(ElggPlugin $plugin) {
  */
 function elgg_get_plugin_from_id($plugin_id) {
 
-	$plugin_id = $plugin_id;
+	global $PLUGINS_CACHE;
+	if(isset($PLUGINS_CACHE[$plugin_id])){
+		return $PLUGINS_CACHE[$plugin_id];
+	}	
 
 	$plugin = get_entity($plugin_id, 'plugin');
 
@@ -337,7 +343,7 @@ function elgg_load_plugins() {
  */
 function elgg_get_plugins($status = 'active', $site_guid = null) {
 	
-	global $CONFIG,$DB;
+	global $CONFIG,$DB, $PLUGINS_CACHE;
 
 	if (!$site_guid) {
 		$site = get_config('site');
@@ -354,7 +360,9 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 			$row->type = 'plugin';
 			$row->active = 1;
 			$row->priority = $priority;
-			$return[] = new ElggPlugin($row);
+			$plugin = new ElggPlugin($row);
+			$PLUGINS_CACHE[$plugin->guid] = $plugin;
+			$return[] = $plugin;	
 		}
 		return $return;
 	}

@@ -358,12 +358,9 @@ function user_remove_friend($user_guid, $friend_guid) {
  * @return bool
  */
 function user_is_friend($user_guid, $friend_guid) {
-	$friends = get_user_friends($user_guid, '', $limit = 10000, '');
-	foreach($friends as $friend){
-		//var_dump($friend);
-		if($friend->guid == $friend_guid){
-			return true;
-		} 
+	$friends = get_user_friends($user_guid, '', $limit = 10000, '', 'guids');
+	if(in_array($friend_guid, $friends)){
+		return true;
 	}
 	return false;
 }
@@ -385,8 +382,12 @@ $offset = "", $output = 'entities') {
 		foreach($SESSION['friends'] as $friend){
        			$row[] = $friend;
 		}
+		if($row && $output == 'entities'){
+			$row = db_get(array('type'=>'user', 'guids'=>$row));
+		} else {
+			return $row;
+		}
 	} else {
-		
 		$row = db_get( array(	'type'=> 'friends',
 				'owner_guid' => $user_guid,	
 				'limit' => $limit,
@@ -413,6 +414,9 @@ $offset = "", $output = 'entities') {
         if($user_guid == elgg_get_logged_in_user_guid() && isset($SESSION['friendsof'])){
                 foreach($SESSION['friendsof'] as $friend){
                         $row[] = $friend;
+                }
+		if($row){
+                        $row = db_get(array('type'=>'user', 'guids'=>$row));
                 }
         } else {
 
@@ -560,7 +564,7 @@ function get_user($guid) {
  */
 function get_user_index_to_guid($index){
 	global $DB;
-
+	
 	$row = $DB->cfs['user_index_to_guid']->get($index);
 	
 	foreach($row as $k=>$v){
@@ -578,12 +582,16 @@ function get_user_index_to_guid($index){
  */
 function get_user_by_username($username) {
 	global $CONFIG, $USERNAME_TO_GUID_MAP_CACHE, $DB;
-
+	
 	if(!$username){
 		return false;
 	}
 	
-	$guid = get_user_index_to_guid($username);
+	$guid = $USERNAME_TO_GUID_MAP_CACHE[$username];	
+
+	if(!$guid){
+		$guid = get_user_index_to_guid($username);	
+	}
 	
 	$entity = get_entity($guid, 'user');
 

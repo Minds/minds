@@ -21,9 +21,11 @@ global $SESSION;
  * @return ElggUser
  */
 function elgg_get_logged_in_user_entity() {
-	global $SESSION;
+	global $SESSION, $USERNAME_TO_GUID_MAP_CACHE;
 	
 	if (isset($SESSION)) {
+		//cache username
+		$USERNAME_TO_GUID_MAP_CACHE[$SESSION['username']] = $SESSION['guid'];
 		return $SESSION['user'];
 	}
 
@@ -277,8 +279,8 @@ function login(ElggUser $user, $persistent = false) {
 	$SESSION['id'] = $SESSION['guid'];
 	$SESSION['username'] = $user->username;
 	$SESSION['name'] = $user->name;
-	$SESSION['friends'] = $user->getFriends();
-	$SESSION['friendsof'] = $user->getFriendsOf();
+	$SESSION['friends'] = $user->getFriends(null, 200, 0, 'guids');
+	$SESSION['friendsof'] = $user->getFriendsOf(null, 200, 0, 'guids');
 
 	// if remember me checked, set cookie with token and store token on user
 	if (($persistent)) {

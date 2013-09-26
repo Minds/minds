@@ -424,4 +424,9 @@ class ElggSite extends ElggEntity {
 		// non-public page
 		return FALSE;
 	}
+	
+	public function set($name, $value) {
+        	$this->attributes[$name] = $value;
+                return TRUE;
+        }
 }

@@ -8,7 +8,7 @@ ini_set('memory_limit', '8G');
 set_time_limit ( 0 );
 error_reporting(E_ERROR);
 
-$tables = array('objects_entity', 'users_entity', 'entities', 'entity_subtypes', 'entity_relationships', 'metadata', 'metastrings', 'private_settings');
+$tables = array('objects_entity', 'groups_entity', 'users_entity', 'entities', 'entity_subtypes', 'entity_relationships', 'metadata', 'metastrings', 'private_settings');
 
 //@todo make this recieve variab;es
 $mysql = mysqli_connect("10.0.4.89","minds","Cosmic#revo2012","elgg") or die("Error " . mysqli_error($link));
@@ -43,6 +43,11 @@ foreach($data->entities as $guid => $entity){
 
 	//fix subtype issue
 	$entity->subtype = $data->entity_subtypes[$entity->subtype]->subtype;
+	
+	//if subtype is from archive, give a super subtype
+	if(in_array($entity->subtype, array('kaltura_video','album','image','file'))){
+		$entity->super_subtype = 'archive';
+	}
 
 	//make widgets into type
         if($entity->subtype == 'widget'){

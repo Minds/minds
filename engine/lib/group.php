@@ -203,10 +203,16 @@ function is_group_member($group_guid, $user_guid) {
  * @return bool
  */
 function join_group($group_guid, $user_guid) {
-	$result = add_entity_relationship($user_guid, 'member', $group_guid);
+
+	$group = get_entity($group_guid, 'group');
+
+	$current_member_guids = $group->member_guids ? json_decode($group->member_guids) : array();
+	array_push($current_member_guids, $user_guid);
+
+	$result = true;
 
 	if ($result) {
-		$params = array('group' => get_entity($group_guid), 'user' => get_entity($user_guid));
+		$params = array('group' => $group, 'user' => get_entity($user_guid,'user'));
 		elgg_trigger_event('join', 'group', $params);
 	}
 

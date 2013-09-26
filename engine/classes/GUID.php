@@ -191,7 +191,7 @@ public function migrate($old_guid){
 	$count = strlen($old_guid);
 	if($count >= 18){ return (int) $old_guid; }
 
-	$base_int = "111111111111111111";
+	$base_int = "100000000000000000";
 	
 	$prepend = (int) substr($base_int, 0, 18-$count);
 	

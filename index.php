@@ -11,6 +11,8 @@
  */
 require_once(dirname(__FILE__) . "/engine/start.php");
 
+global $CONFIG;
+
 elgg_set_context('main');
 
 //elgg_generate_plugin_entities();

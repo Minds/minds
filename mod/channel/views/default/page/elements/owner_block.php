@@ -18,7 +18,7 @@ if ($owner instanceof ElggGroup){
 	
 	$header = elgg_view_entity_icon($owner, 'large', array('link_class'=>'groups'));
 	
-	$body = elgg_view_menu('owner_block', array('entity' => $owner));
+//	$body = elgg_view_menu('owner_block', array('entity' => $owner));
 	
 	echo elgg_view('page/components/module', array(
 		'header' => $header,

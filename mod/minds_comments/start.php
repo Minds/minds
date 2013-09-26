@@ -85,8 +85,8 @@ function minds_comments_menu($hook, $type, $return, $params) {
 function minds_comments_replacement($hook, $entity_type, $returnvalue, $params) {
 	$type = 'entity';
 	$pid = $params['entity']->guid;
-	
-    $comments =  elgg_view('minds_comments/bar', array(
+    	
+	$comments =  elgg_view('minds_comments/bar', array(
 	    'type' => $type,
 	    'pid' => $pid
 	));
@@ -95,6 +95,7 @@ function minds_comments_replacement($hook, $entity_type, $returnvalue, $params) 
 	    'type'=>$type,
 	    'pid'=>$pid
 	));
+
 	
 	return $comments;
 }

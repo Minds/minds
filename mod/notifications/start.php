@@ -297,8 +297,8 @@ function notification_create($to, $from, $object, $params){
  *
  */
 function notifications_count_unread(){
+	return;
 	$user = elgg_get_logged_in_user_entity();
-
 	if($user){
 		
 		$options = array(       'type'=> 'notification',

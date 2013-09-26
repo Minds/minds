@@ -9,32 +9,22 @@ $offset = get_input("offset", "");
 $filter = get_input("filter", "all");
 
 if($filter == 'media')
-$subtypes = array('kaltura_video');
+$subtype = 'kaltura_video';
 elseif ($filter == 'images')
-$subtypes = array('album');
+$subtype = 'album';
 elseif ($filter == 'files')
-$subtypes = array('file');
+$subtype = 'file';
 else
-$subtypes = array('kaltura_video', 'album', 'file');
+$subtype = 'archive';
 
-//we will use secondary subtypes
-foreach($subtypes as $subtype){
-	$options = array(      'types' => array('object'),
-                                                        'subtype' => $subtype,
-                                                        'limit' => $limit,
-                                                        'offset' => $offset,
-                                                );
-	$entities_arr[] = elgg_get_entities($options);
-}
+$options = array(       'types' => array('object'),
+                        'subtype' => $subtype,
+                        'limit' => $limit,
+                        'offset' => $offset,
+			'full_view' =>false	       
+          );
 
-foreach($entities_arr as $e){
-	foreach($e as $entity){
-		$entities[] = $entity;
-	}
-}
-$entities = array_merge($entities);
-
-$content = elgg_view_entity_list($entities,$vars, $offset, $limit, false, false, true) . elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000));
+$content = elgg_list_entities($options);
 
 $sidebar = elgg_view('archive/sidebar');
 

@@ -32,24 +32,24 @@ function db_init() {
 	global $CONFIG, $DB;
 
 	require_once(dirname(dirname(dirname(__FILE__))) . '/vendors/phpcassa/lib/autoload.php');
-
 	$servers = $CONFIG->cassandra->servers;
 	
-	$pool = new ConnectionPool($CONFIG->cassandra->keyspace, $servers);
+	$pool = new ConnectionPool($CONFIG->cassandra->keyspace, $servers, null, 1);
 	
 	$DB->pool = $pool;
 
-	$cfs = array(	'site', 
-			'session',
-			'plugin', 
-			'config',
+	$cfs = array(	
+//			'site', 
+//			'session',
+//			'plugin', 
+//			'config',
 			'object', 
 			'user', 
 			'user_index_to_guid',
 			'widget', 
 			'entities_by_time',
 			'notification', 
-			'annotation', 
+//			'annotation', 
 			'group', 
 			'friends', 
 			'friendsof', 
@@ -57,7 +57,6 @@ function db_init() {
 			'newsfeed');
 	
 	register_cfs($cfs);
-
 }
 
 /**
@@ -112,8 +111,8 @@ function db_get(array $options = array()){
 	if(!$type){
 		return;
 	}
-//	if($type == 'user'){var_dump(debug_backtrace());exit;}
-//	echo "Called $type"; var_dump($options);
+	//if($type == 'plugin'){ echo '<pre>';var_dump(debug_backtrace());echo '</pre>';exit;}
+	//echo "Called $type"; var_dump($options);
 	try{
 		//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 		if($guids = $options['guids']){
@@ -166,7 +165,7 @@ function db_get(array $options = array()){
 				}
 			}
 			$type = 'user';
-			if($options['output'] == 'guid'){ 
+			if($options['output'] == 'guids'){ 
 				return $user_guids;
 			} else {
 				return db_get(array('type'=>'user', 'guids'=>$user_guids));

@@ -24,9 +24,9 @@ if (empty($body)) {
 	forward(REFERER);
 }
 
-$to = get_entity($to_guid, 'user');
-if($to instanceof ElggGroup){
-	$access_id = $to->group_acl;
+$group = get_entity($to_guid, 'group');
+if($group instanceof ElggGroup){
+	$access_id = $group->group_acl;
 	$container_guid = $to_guid;
 }
 
