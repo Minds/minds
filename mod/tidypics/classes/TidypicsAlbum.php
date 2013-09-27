@@ -16,6 +16,7 @@ class TidypicsAlbum extends ElggObject {
 		parent::initializeAttributes();
 
 		$this->attributes['subtype'] = "album";
+		$this->attributes['title'] = $this->getTitle();
 	}
 
 	/**
@@ -24,7 +25,6 @@ class TidypicsAlbum extends ElggObject {
 	 */
 	public function __construct($guid = null) {
 		parent::__construct($guid);
-		$this->title = $this->getTitle();
 	}
 
 	/**
@@ -136,7 +136,7 @@ class TidypicsAlbum extends ElggObject {
 	 * @return TidypicsImage
 	 */
 	public function getCoverImage() {
-		return get_entity($this->getCoverImageGuid());
+		return get_entity($this->getCoverImageGuid(), 'object');
 	}
 
 	/**

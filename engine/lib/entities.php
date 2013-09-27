@@ -861,20 +861,9 @@ function elgg_get_entities(array $options = array()) {
 		'container_guids'		=>	ELGG_ENTITIES_ANY_VALUE,
 		'site_guids'			=>	$CONFIG->site_guid,
 
-		'modified_time_lower'	=>	ELGG_ENTITIES_ANY_VALUE,
-		'modified_time_upper'	=>	ELGG_ENTITIES_ANY_VALUE,
-		'created_time_lower'	=>	ELGG_ENTITIES_ANY_VALUE,
-		'created_time_upper'	=>	ELGG_ENTITIES_ANY_VALUE,
-
-		'reverse_order_by'		=>	false,
-		'order_by' 				=>	'e.time_created desc',
-		'group_by'				=>	ELGG_ENTITIES_ANY_VALUE,
 		'limit'					=>	10,
 		'offset'				=> "", 
 		'count'					=>	FALSE,
-		'selects'				=>	array(),
-		'wheres'				=>	array(),
-		'joins'					=>	array(),
 
 		'attrs' 			=> array(),
 
@@ -883,17 +872,6 @@ function elgg_get_entities(array $options = array()) {
 
 	$options = array_merge($defaults, $options);
 
-	// can't use helper function with type_subtype_pair because
-	// it's already an array...just need to merge it
-/*	if (isset($options['type_subtype_pair'])) {
-		if (isset($options['type_subtype_pairs'])) {
-			$options['type_subtype_pairs'] = array_merge($options['type_subtype_pairs'],
-				$options['type_subtype_pair']);
-		} else {
-			$options['type_subtype_pairs'] = $options['type_subtype_pair'];
-		}
-	}
-*/
 	$singulars = array('type', 'subtype', 'guid', 'owner_guid', 'container_guid', 'site_guid');
 	$options = elgg_normalise_plural_options_array($options, $singulars);
 
@@ -964,8 +942,7 @@ function elgg_get_entities(array $options = array()) {
 				}
 			}
 		} catch(Exception $e){		
-                	//remove the last entity out
-			array_pop($entities);
+			//@todo report error to admin	
 		}
 		return $entities;
 

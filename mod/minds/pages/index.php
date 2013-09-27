@@ -58,7 +58,7 @@ $header = <<<HTML
 </div>
 HTML;
 
-$params = array(	'content'=> elgg_view_entity_list($entities,$vars, $offset, $limit, false, false, true) . elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000)), 
+$params = array(	'content'=> elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true), 
 					'header'=> $header,
 					'filter' => false
 					);

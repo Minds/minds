@@ -847,7 +847,7 @@ function elgg_unset_plugin_user_setting($name, $user_guid = null, $plugin_id = n
 	} else {
 		$plugin = elgg_get_calling_plugin_entity();
 	}
-
+	
 	if (!$plugin) {
 		return false;
 	}

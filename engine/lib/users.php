@@ -567,12 +567,15 @@ function get_user($guid) {
 function get_user_index_to_guid($index){
 	global $DB;
 	
-	$row = $DB->cfs['user_index_to_guid']->get($index);
+	try{
+		$row = $DB->cfs['user_index_to_guid']->get($index);
 	
-	foreach($row as $k=>$v){
-		return $k;
+		foreach($row as $k=>$v){
+			return $k;
+		}
+	}catch(Exception $e){
+		return false;
 	}
-	return false;
 }
 
 /**
@@ -639,13 +642,17 @@ function get_user_by_code($code) {
 function get_user_by_email($email) {
 	global $CONFIG;
 
-	$entities = db_get(     array(  'type'=>'user',
-                                        'attrs' => array('email'=>$email )
-                        ));
+        $guids = get_user_index_to_guid($email);
 
-        $entity = $entities[0];
-	
-	return $entity;
+	if(is_array($guids)){
+		foreach($guids as $guid){
+      			$entities[] = get_entity($guid, 'user');
+		}
+	} else {
+		$entities[] = get_entity($guids, 'user');
+	}
+
+	return $entities;
 
 }
 

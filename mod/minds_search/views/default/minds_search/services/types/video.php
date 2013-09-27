@@ -11,7 +11,7 @@ $img = elgg_view('output/img', array('src'=>$video['iconURL']));
 $source = $video['source'];
 
 if($source == 'minds'){
-	$entity = get_entity($video['guid']);
+	$entity = get_entity($video['guid'], 'object');
 	$iconURL = kaltura_get_thumnail($entity->kaltura_video_id, 160, 100, 100, 5);
 	$img = "<img src='".$iconURL."'/>";
 } else {

@@ -29,10 +29,6 @@ $list_class = 'elgg-list';
 $list_id = elgg_extract('list_id', $vars, null);
 $data_options = elgg_extract('data-options', $vars, false);
 
-$last_item = end($items);
-if($last_item){
-	$last_guid = $last_item->guid;
-}
 
 if ($data_options) {
     $list_class = "$list_class hj-syncable";

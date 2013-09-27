@@ -353,21 +353,16 @@ function set_private_setting($entity_guid, $entity_type, $name, $value) {
  * @see remove_all_private_settings()
  * @link http://docs.elgg.org/DataModel/Entities/PrivateSettings
  */
-function remove_private_setting($entity_guid, $name) {
+function remove_private_setting($entity_guid, $entity_type, $name) {
 	global $CONFIG;
 
-	$entity_guid = (int) $entity_guid;
-
-	$entity = get_entity($entity_guid);
-	if (!$entity instanceof ElggEntity) {
+	if(!$name){
 		return false;
 	}
 
-	$name = sanitise_string($name);
+	$result = db_remove($entity_guid, $entity_type, array($name));
 
-	return delete_data("DELETE from {$CONFIG->dbprefix}private_settings
-		WHERE name = '{$name}'
-		AND entity_guid = {$entity_guid}");
+	return true;
 }
 
 /**

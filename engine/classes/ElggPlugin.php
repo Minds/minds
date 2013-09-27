@@ -510,10 +510,11 @@ class ElggPlugin extends ElggEntity {
 	 * @return bool
 	 */
 	public function unsetUserSetting($name, $user_guid = null) {
-		$user_guid = (int)$user_guid;
+
+		global $SESSION;
 
 		if ($user_guid) {
-			$user = get_entity($user_guid);
+			$user = get_entity($user_guid,'user');
 		} else {
 			$user = elgg_get_logged_in_user_entity();
 		}
@@ -525,7 +526,10 @@ class ElggPlugin extends ElggEntity {
 		// set the namespaced name.
 		$name = elgg_namespace_plugin_private_setting('user_setting', $name, $this->getID());
 
-		return remove_private_setting($user->guid, $name);
+		unset($user->$name);
+		$SESSION['user'] = $user;	
+	
+		return remove_private_setting($user->guid, 'user', $name);
 	}
 
 	/**
