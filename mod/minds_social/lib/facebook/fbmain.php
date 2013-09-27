@@ -76,21 +76,18 @@ function minds_social_facebook_login(){
 	}
 	// attempt to find user and log them in.
 	// else, create a new user.
-	$options = array(
-		'type' => 'user',
-		'plugin_user_setting_name_value_pairs' => array(
-			'minds_social_facebook_uid' => is_array($session['_fb']) ? $session['_fb']['uid'] : $session['_fb'],
-		),
-		'plugin_user_setting_name_value_pairs_operator' => 'OR',
-		'limit' => 0
-	);
-
-	$users = elgg_get_entities_from_plugin_user_settings($options);	
 	
-	if ($users){
-		if (count($users) == 1 && login($users[0])){
+	$fb_uid = is_array($session['_fb']) ? $session['_fb']['uid'] : $session['_fb'];
+	//check if there is a guid relating to the users fb_id
+	$guid = user_index_to_guid('fb:'.$fb_uid);
+	
+	if($guid){
+		$user = get_entity($guid, 'user');
+	}
+
+	if ($user){
+		if(login($user)){
 			system_message(elgg_echo('facebook_connect:login:success'));
-			//elgg_set_plugin_user_setting('access_token', $session['_fb']['access_token'], $users[0]->guid);
 			
 			if(empty($users[0]->email)) {
 				$data = $facebook->api('/me');
@@ -113,7 +110,7 @@ function minds_social_facebook_login(){
 		$data = $facebook->api('/me');     
 		$email= $data['email'];
 		
-		$users= get_user_by_email($email);
+		$users = get_user_by_email($email);
 	
 		if(!$users){
 			//try and get the facebook username, if not - use their name
@@ -170,7 +167,7 @@ function minds_social_facebook_login(){
 			try {
 				if(login($users[0])){
 					$access_token = $facebook->getAccessToken();                        
-               	 	elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+               	 			elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
 					
 				/*	if($_SESSION['fb_referrer']){
                         		//forward($_SESSION['fb_referrer']);
