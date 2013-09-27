@@ -108,7 +108,7 @@ function db_get(array $options = array()){
 	}
 
 	$type = $options['type'];
-	if(!$type){
+	if(!$type || !array_key_exists($type, $DB->cfs)){
 		return;
 	}
 	//if($type == 'plugin'){ echo '<pre>';var_dump(debug_backtrace());echo '</pre>';exit;}

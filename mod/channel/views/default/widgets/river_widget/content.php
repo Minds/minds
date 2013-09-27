@@ -10,14 +10,7 @@ $options = array(
 	'pagination' => true,
 );
 
-if (elgg_in_context('dashboard')) {
-	if ($vars['entity']->content_type == 'friends') {
-		$options['relationship_guid'] = elgg_get_page_owner_guid();
-		$options['relationship'] = 'friend';
-	}
-} else {
-	$options['owner_guid'] = elgg_get_page_owner_guid();
-}
+$options['owner_guid'] = 'personal:'.elgg_get_page_owner_guid();
 
 elgg_load_js('elgg.wall');
 			

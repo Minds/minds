@@ -1223,7 +1223,7 @@ function elgg_view_river_item($item, array $vars = array()) {
 	if (!$view || !elgg_view_exists($view, 'default')) {
 		return '';
 	}
-
+	
 	$subject = $item->getSubjectEntity();
 	$object = $item->getObjectEntity();
 	if (!$subject || !$object) {

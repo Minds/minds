@@ -54,7 +54,13 @@ class ElggRiverItem {
 	 * 
 	 * @return ElggEntity
 	 */
-	public function getSubjectEntity() {
+	public function getSubjectEntity($brief = true) {
+		if($brief){
+			if($subject = unserialize($this->subject)){
+				cache_entity($subject);
+				return $subject;
+			}
+		}
 		return get_entity($this->subject_guid, 'user');
 	}
 
@@ -63,7 +69,13 @@ class ElggRiverItem {
 	 *
 	 * @return ElggEntity
 	 */
-	public function getObjectEntity() {
+	public function getObjectEntity($brief = true) {
+		if($brief){
+			if($object = unserialize($this->object)){
+				cache_entity($object);
+				return $object;
+			}
+		}
 		return get_entity($this->object_guid,'object');
 	}
 

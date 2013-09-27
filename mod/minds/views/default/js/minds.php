@@ -170,7 +170,6 @@
 	 };
 
 	 minds.loadMore = function() {
-						
 			$list = $(this).parent().find('.elgg-list:first').parent();
 			$('.load-more').html('...');
 			$('.load-more').addClass('loading');

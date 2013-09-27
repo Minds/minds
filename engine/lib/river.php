@@ -45,6 +45,9 @@ $posted = 0, $annotation_id = 0) {
 		$access_id = $object->access_id;
 	}
 
+	$serialized_subject = serialize($subject);
+	$serialized_object = serialize($object);
+
 	// Attempt to save river item; return success status
 	$id = db_insert(0, array(	'type'=>'newsfeed',
 					'subject_guid'=>$subject_guid,
@@ -52,7 +55,9 @@ $posted = 0, $annotation_id = 0) {
 					'access_id'=>$access_id,
 					'view'=>$view,
 					'posted'=>$posted,
-					'action_type'=>$action_type
+					'action_type'=>$action_type,
+					'subject' => $serialized_subject,
+					'object' => $serialized_object
 			));
 
 	//get the followers of the subject guid
@@ -66,8 +71,9 @@ $posted = 0, $annotation_id = 0) {
 		db_insert($follower, array('type'=>'timeline', $id => time()));
 	}
 
-	// update the entities which had the action carried out on it
-	// @todo shouldn't this be down elsewhere? Like when an annotation is saved?
+	//place on users own personal line
+	db_insert('personal:'.$subject_guid, array('type'=>'timeline', $id => time()));
+
 	if ($id) {
 //		update_entity_last_action($object_guid, $posted);
 //		

@@ -71,7 +71,7 @@ if($ref == 'wall'){
 	$data->posted = time();
 	
 	$item = new ElggRiverItem($data);
-
+	
 	$output = '<li class="elgg-item">' . elgg_view_list_item($item, array('list_class'=>'elgg-list elgg-list-river elgg-river', 'class'=>'elgg-item elgg-river-item')) . '</li>';
 }
 
