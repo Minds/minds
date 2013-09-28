@@ -38,7 +38,9 @@ $user = elgg_get_logged_in_user_entity();
 $group_guid = (int)get_input('group_guid');
 $is_new_group = $group_guid == 0;
 
-if ($is_new_group && !$user->isAdmin()) {
+if ($is_new_group
+		&& (elgg_get_plugin_setting('limited_groups', 'groups') == 'yes')
+		&& !$user->isAdmin()) {
 	register_error(elgg_echo("groups:cantcreate"));
 	forward(REFERER);
 }
@@ -99,7 +101,7 @@ if (!$is_new_group && $new_owner_guid && $new_owner_guid != $old_owner_guid) {
 
 $must_move_icons = ($owner_has_changed && $old_icontime);
 
-$group->save();
+$guid = $group->save();
 
 // Invisible group support
 // @todo this requires save to be called to create the acl for the group. This
@@ -125,10 +127,10 @@ elgg_clear_sticky_form('groups');
 if ($is_new_group) {
 
 	// @todo this should not be necessary...
-	elgg_set_page_owner_guid($group->guid);
+	elgg_set_page_owner_guid($group);
 
 	$group->join($user);
-	add_to_river('river/group/create', 'create', $user->guid, $group->guid, $group->access_id);
+	add_to_river('river/group/create', 'create', $user->guid, $guid, $group->access_id);
 }
 
 $has_uploaded_icon = (!empty($_FILES['icon']['type']) && substr_count($_FILES['icon']['type'], 'image/'));
@@ -137,7 +139,7 @@ if ($has_uploaded_icon) {
 
 	$icon_sizes = elgg_get_config('icon_sizes');
 
-	$prefix = "groups/" . $group->guid;
+	$prefix = "groups/" . $guid;
 
 	$filehandler = new ElggFile();
 	$filehandler->owner_guid = $group->owner_guid;

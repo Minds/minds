@@ -6,7 +6,7 @@
 $object = $vars['item']->getObjectEntity();
 $excerpt = minds_filter($object->message);
 
-$owner = get_entity($object->owner_guid);
+$owner = get_entity($object->owner_guid, 'user');
 
 $subject = $vars['item']->getSubjectEntity();
 $subject_link = elgg_view('output/url', array(

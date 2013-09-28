@@ -49,7 +49,7 @@ function db_init() {
 			'widget', 
 			'entities_by_time',
 			'notification', 
-//			'annotation', 
+			'annotation', 
 			'group', 
 			'friends', 
 			'friendsof', 

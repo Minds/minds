@@ -17,9 +17,13 @@ $y1 = (int) get_input('y1', 0);
 $x2 = (int) get_input('x2', 0);
 $y2 = (int) get_input('y2', 0);
 
+if($owner->legacy_guid){
+	$guid = $owner->legacy_guid;
+}
+
 $filehandler = new ElggFile();
 $filehandler->owner_guid = $owner->getGUID();
-$filehandler->setFilename("profile/" . $owner->guid . "master" . ".jpg");
+$filehandler->setFilename("profile/" . $guid . "master" . ".jpg");
 $filename = $filehandler->getFilenameOnFilestore();
 
 // ensuring the avatar image exists in the first place
@@ -41,7 +45,7 @@ foreach ($icon_sizes as $name => $size_info) {
 	if ($resized) {
 		//@todo Make these actual entities.  See exts #348.
 		$file = new ElggFile();
-		$file->owner_guid = $guid;
+		$file->owner_guid = $owner->guid;
 		$file->setFilename("profile/{$guid}{$name}.jpg");
 		$file->open('write');
 		$file->write($resized);

@@ -25,10 +25,12 @@ if($entity->featured != true){
 	echo 'featured';
 	
 }else{
+
+	db_remove('object:featured', 'entities_by_time', array($entity->getGuid()));
+	db_remove('object:'.$entity->subtype.':featured','entities_by_time', array($entity->getGuid())); 
+
 	$entity->featured = 0;
 	
-	//minds_elastic_delete_news(array('action_types'=>'feature', 'object_guids'=>array($entity->getGuid())));
-
 	system_message(elgg_echo("Un-featured..."));
 	
 	echo 'un-featured';

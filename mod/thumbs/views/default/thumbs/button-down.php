@@ -13,7 +13,7 @@ if($type=='entity'){
 	}
 	$guid = $vars['entity']->getGUID();
 	$url = elgg_get_site_url() . "action/thumbs/down?guid={$guid}";
-	$thumbs_down = json_decode($vars['entity']->{'thumbs:down'});
+	$thumbs_down = unserialize($vars['entity']->{'thumbs:down'});
         $already = is_array($thumbs_down) ? in_array(elgg_get_logged_in_user_guid(), $thumbs_down) : false;
 }elseif($type=='comment'){
 	$id = $vars['id'];

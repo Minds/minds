@@ -28,7 +28,7 @@ function elgg_get_site_entity($site_guid = 0) {
 		$site->url = $CONFIG->site_url;
 	} else {
 
-		$site = get_entity($site_guid);
+		$site = get_entity($site_guid,'site');
 	
 	}
 	
@@ -36,6 +36,8 @@ function elgg_get_site_entity($site_guid = 0) {
 		$result = $site;
 	}
 
+	cache_entity($site);
+	
 	return $result;
 }
 

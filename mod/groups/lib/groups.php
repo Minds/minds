@@ -58,7 +58,7 @@ function groups_handle_all_page() {
 	
 	$filter = elgg_view('groups/group_sort_menu', array('selected' => $selected_tab));
 	
-	$sidebar = elgg_view('groups/sidebar/find');
+//	$sidebar = elgg_view('groups/sidebar/find');
 //	$sidebar .= elgg_view('groups/sidebar/featured');
 
 	$params = array(
@@ -90,8 +90,8 @@ function groups_search_page() {
 		$content = elgg_echo('groups:search:none');
 	}
 
-	$sidebar = elgg_view('groups/sidebar/find');
-	$sidebar .= elgg_view('groups/sidebar/featured');
+	//$sidebar = elgg_view('groups/sidebar/find');
+	//$sidebar .= elgg_view('groups/sidebar/featured');
 
 	$params = array(
 		'content' => $content,
@@ -276,30 +276,12 @@ function groups_handle_profile_page($guid) {
 	$sidebar = '';
 
 	if (group_gatekeeper(false)) {	
-		/*if (elgg_is_active_plugin('search')) {
-			$sidebar .= elgg_view('groups/sidebar/search', array('entity' => $group));
-		}
 		$sidebar .= elgg_view('groups/sidebar/members', array('entity' => $group));
 
-		$subscribed = false;
-		if (elgg_is_active_plugin('notifications')) {
-			global $NOTIFICATION_HANDLERS;
-			
-			foreach ($NOTIFICATION_HANDLERS as $method => $foo) {
-				$relationship = check_entity_relationship(elgg_get_logged_in_user_guid(),
-						'notify' . $method, $guid);
-				
-				if ($relationship) {
-					$subscribed = true;
-					break;
-				}
-			}
-		}
-		
 		$sidebar .= elgg_view('groups/sidebar/my_status', array(
 			'entity' => $group,
 			'subscribed' => $subscribed
-		));*/
+		));
 	}
 
 	$params = array(

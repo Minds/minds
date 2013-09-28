@@ -31,9 +31,9 @@ function phpmailer_init() {
  * @return bool
  */
 function phpmailer_notify_handler(ElggEntity $from, ElggUser $to, $subject, $message, array $params = NULL) {
-
+	
 	if (!$from) {
-		throw new NotificationException(sprintf(elgg_echo('NotificationException:MissingParameter'), 'from'));
+		$from = elgg_get_site_entity();
 	}
 
 	if (!$to) {
@@ -117,7 +117,7 @@ function phpmailer_extract_from_email($from) {
  */
 function phpmailer_send($from, $from_name, $to, $to_name, $subject, $body, array $bcc = NULL, $html = false, array $files = NULL, array $params = NULL) {
 	static $phpmailer;
-
+	
 	// Ensure phpmailer object exists
 	if (!is_object($phpmailer) || !is_a($phpmailer, 'PHPMailer')) {
 		require_once elgg_get_plugins_path() . '/phpmailer/vendors/class.phpmailer.php';
@@ -222,7 +222,7 @@ function phpmailer_send($from, $from_name, $to, $to_name, $subject, $body, array
 		// use php's mail
 		$phpmailer->IsMail();
 	}
-
+	
 	$return = $phpmailer->Send();
 	if (!$return ) {
 		elgg_log('PHPMailer error: ' . $phpmailer->ErrorInfo, 'WARNING');

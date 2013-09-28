@@ -178,6 +178,9 @@ function blog_page_handler($page) {
 			}
 			break;
 		case 'scrapers':
+			if(!elgg_is_logged_in()){
+				forward(REFERRER);
+			}
 			switch($page[1]){
 				case 'create':
 					set_input('guid', $page[2]);
@@ -376,7 +379,7 @@ function blog_pagesetup(){
 function minds_blog_scraper($hook, $entity_type, $return_value, $params){ 
 	elgg_set_ignore_access(true);
 	elgg_set_context('scraper');
-	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
+	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>1000, 'timebased'=>false));
 	elgg_load_library('simplepie');
 	$i = 0;
 	foreach($scrapers as $scraper){

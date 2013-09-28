@@ -6,7 +6,6 @@
 $object = $vars['item']->getObjectEntity();
 $excerpt = minds_filter($object->message);
 
-$owner = get_entity($object->owner_guid);
 
 $subject = $vars['item']->getSubjectEntity();
 $subject_link = elgg_view('output/url', array(
@@ -16,12 +15,6 @@ $subject_link = elgg_view('output/url', array(
 	'is_trusted' => true,
 ));
 
-$owner_link = elgg_view('output/url', array(
-	'href' => $owner->getURL(),
-	'text' => $owner->name,
-	'class' => 'elgg-river-object',
-	'is_trusted' => true,
-));
 
 	elgg_load_js('uiVideoInline');
 	$image = elgg_view('output/url', array(

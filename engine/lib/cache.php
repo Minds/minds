@@ -235,7 +235,7 @@ function elgg_get_simplecache_url($type, $view) {
 		$elements = array("view" => $viewtype);
 		$url = elgg_http_add_url_query_elements($url, $elements);
 	}
-	
+	//var_dump($lastcache);	
 	return $url;
 }
 
@@ -445,7 +445,7 @@ function _elgg_cache_init() {
 	// Regenerate the simple cache if expired.
 	// Don't do it on upgrade because upgrade does it itself.
 	// @todo - move into function and perhaps run off init system event
-	if (!defined('UPGRADING')) {
+/*	if (!defined('UPGRADING')) {
 		$lastupdate = datalist_get("simplecache_lastupdate_$viewtype");
 		$lastcached = datalist_get("simplecache_lastcached_$viewtype");
 		if ($lastupdate == 0 || $lastcached < $lastupdate) {
@@ -453,7 +453,7 @@ function _elgg_cache_init() {
 			$lastcached = datalist_get("simplecache_lastcached_$viewtype");
 		}
 		$CONFIG->lastcache = $lastcached;
-	}
+	}*/
 
 	// cache system data if enabled and not loaded
 	if ($CONFIG->system_cache_enabled && !$CONFIG->system_cache_loaded) {

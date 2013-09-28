@@ -211,6 +211,7 @@ class ElggObject extends ElggEntity {
                 //cache owner_guid for brief
                 $this->owner = json_encode($this->getOwnerEntity());
                 $guid = create_entity($this);
-                return $guid;
+                $this->attributes['guid'] = $guid;
+		return $guid;
         }
 }

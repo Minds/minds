@@ -19,12 +19,12 @@ $tabs = array(
 		'url' => "channels/newest",
 		'selected' => $vars['selected'] == 'newest',
 	),
-	'popular' => array(
+/*	'popular' => array(
 		'title' => elgg_echo('channels:label:popular'),
 		'url' => "channels/popular",
 		'selected' => $vars['selected'] == 'popular',
 	),
-/*	'suggested' => array(
+	'suggested' => array(
 		'title' => elgg_echo('channels:label:suggested'),
 		'url' => "channels/suggested",
 		'selected' => $vars['selected'] == 'suggested',

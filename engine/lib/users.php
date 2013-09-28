@@ -68,6 +68,8 @@ function create_user_entity(array $options = array()) {
 	$options = array_merge($defaults, $options);
 
 	$options = array_filter($options, 'strlen');//remove null values
+
+	$options['username'] = strtolower($options['username']);
 	
 	$result = db_insert($options['guid'], $options);
 	
@@ -319,6 +321,11 @@ function user_add_friend($user_guid, $friend_guid) {
 					$user_guid => time()
 				));
 
+	//hack - update session!
+        global $SESSION;
+        unset($SESSION['friends']);
+        $SESSION['friends'] = elgg_get_logged_in_user_entity()->getFriends(null, 200, 0, 'guids');
+
 	return true;
 }
 
@@ -345,6 +352,10 @@ function user_remove_friend($user_guid, $friend_guid) {
 	db_remove($user_guid, 'friends', array($friend_guid));
 	db_remove($friend_guid, 'friendsof', array($user_guid));	
 
+	//hack - update session!
+	global $SESSION;
+	unset($SESSION['friends']);
+	$SESSION['friends'] = elgg_get_logged_in_user_entity()->getFriends(null, 200, 0, 'guids');
 	return true;
 
 }
@@ -699,9 +710,10 @@ function find_active_users($seconds = 600, $limit = 10, $offset = 0, $count = fa
  * @return bool
  */
 function send_new_password_request($user_guid) {
-	$user_guid = (int)$user_guid;
 
-	$user = get_entity($user_guid);
+	global $CONFIG;
+
+	$user = get_entity($user_guid,'user');
 	if ($user instanceof ElggUser) {
 		// generate code
 		$code = generate_random_cleartext_password();
@@ -713,7 +725,7 @@ function send_new_password_request($user_guid) {
 		// generate email
 		$email = elgg_echo('email:resetreq:body', array($user->name, $_SERVER['REMOTE_ADDR'], $link));
 
-		return notify_user($user->guid, elgg_get_site_entity()->guid,
+		return notify_user($user->guid, elgg_get_site_entity()->guid, 
 			elgg_echo('email:resetreq:subject'), $email, array(), 'email');
 	}
 
@@ -731,7 +743,7 @@ function send_new_password_request($user_guid) {
  * @return bool
  */
 function force_user_password_reset($user_guid, $password) {
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid,'user');
 	if ($user instanceof ElggUser) {
 		$ia = elgg_set_ignore_access();
 
@@ -760,8 +772,8 @@ function execute_new_password_request($user_guid, $conf_code) {
 	global $CONFIG;
 
 	$user_guid = (int)$user_guid;
-	$user = get_entity($user_guid);
-
+	$user = get_entity($user_guid,'user');
+	
 	if ($user instanceof ElggUser) {
 		$saved_code = $user->getPrivateSetting('passwd_conf_code');
 
@@ -774,7 +786,7 @@ function execute_new_password_request($user_guid, $conf_code) {
 				reset_login_failure_count($user_guid);
 				
 				$email = elgg_echo('email:resetpassword:body', array($user->name, $password));
-
+				
 				return notify_user($user->guid, $CONFIG->site->guid,
 					elgg_echo('email:resetpassword:subject'), $email, array(), 'email');
 			}

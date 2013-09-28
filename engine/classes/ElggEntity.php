@@ -1261,6 +1261,7 @@ abstract class ElggEntity extends ElggData implements
 	 */
 	public function save() {
 		$guid = create_entity($this);
+		$this->attributes['guid'] = $guid;
 		return $guid;
 	}
 

@@ -9,9 +9,6 @@ foreach (array_keys($variables) as $field) {
 	if ($field == 'title') {
 		$input[$field] = strip_tags($input[$field]);
 	}
-	if ($field == 'tags') {
-		$input[$field] = string_to_tag_array($input[$field]);
-	}
 }
 
 elgg_make_sticky_form('webinar');

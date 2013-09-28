@@ -13,7 +13,7 @@ if (elgg_is_logged_in()) {
 $user_guid = get_input('u');
 $code = get_input('c');
 
-$user = get_entity($user_guid);
+$user = get_entity($user_guid,'user');
 
 // don't check code here to avoid automated attacks
 if (!$user instanceof ElggUser) {

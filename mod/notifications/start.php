@@ -19,7 +19,7 @@ function notifications_plugin_init() {
 
 	// Unset the default notification settings
 	elgg_unregister_plugin_hook_handler('usersettings:save', 'user', 'notification_user_settings_save');
-	elgg_unextend_view('forms/account/settings', 'core/settings/account/notifications');
+	//elgg_unextend_view('forms/account/settings', 'core/settings/account/notifications');
 
 	// update notifications based on relationships changing
 	elgg_register_event_handler('delete', 'member', 'notifications_relationship_remove');
@@ -93,7 +93,7 @@ function notifications_page_handler($page) {
  */
 function notifications_plugin_pagesetup() {
 	
-	if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
+/*	if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
 
 		$user = elgg_get_page_owner_entity();
 		if (!$user) {
@@ -116,7 +116,7 @@ function notifications_plugin_pagesetup() {
 			elgg_register_menu_item('page', $params);
 		}
 	}
-
+*/
 }
 
 /**

@@ -21,7 +21,7 @@ if ($type == 'entity') {
 		forward(REFERER);
 	}
 
-	$thumbs_down = json_decode($entity->{'thumbs:down'});
+	$thumbs_down = unserialize($entity->{'thumbs:down'});
 	if(!is_array( $thumbs_down)){ $thumbs_down = array(); } 
 
 	//check to see if the user has already liked the item
@@ -32,8 +32,10 @@ if ($type == 'entity') {
 		echo 'not-selected';
 		//}
 		$entity -> thumbcount++;
-                unset($thumbs_down[elgg_get_logged_in_user_guid]);
-                $entity->{'thumbs:down'} = json_encode($thumbs_down);
+                if(($key = array_search($user_guid, $thumbs_down)) !== false) {
+                        unset($thumbs_down[$key]);
+                }
+		$entity->{'thumbs:down'} = serialize($thumbs_down);
 	} else {
 
 		if (elgg_annotation_exists($entity_guid, 'thumbs:up')) {
@@ -51,7 +53,7 @@ if ($type == 'entity') {
 		$entity -> thumbcount--;
 
 		array_push($thumbs_down, $user_guid);
-		$entity->{'thumbs:down'} = json_encode($thumbs_down);
+		$entity->{'thumbs:down'} = serialize($thumbs_down);
 
 		$annotation = create_annotation($entity -> guid, 'thumbs:down', 1, "", elgg_get_logged_in_user_guid(), $entity -> access_id);
 		$entity -> save();

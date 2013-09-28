@@ -11,6 +11,10 @@ if (!$owner || !($owner instanceof ElggUser) || !$owner->canEdit()) {
 	forward(REFERER);
 }
 
+if($owner->legacy_guid){
+	$guid = $owner->legacy_guid;
+}
+
 if ($_FILES['avatar']['error'] != 0) {
 	register_error(elgg_echo('avatar:upload:fail'));
 	forward(REFERER);
@@ -27,7 +31,7 @@ foreach ($icon_sizes as $name => $size_info) {
 	if ($resized) {
 		//@todo Make these actual entities.  See exts #348.
 		$file = new ElggFile();
-		$file->owner_guid = $guid;
+		$file->owner_guid = $owner->guid;
 		$file->setFilename("profile/{$guid}{$name}.jpg");
 		$file->open('write');
 		$file->write($resized);

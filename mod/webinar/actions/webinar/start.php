@@ -2,7 +2,7 @@
 gatekeeper();
 
 $webinar_guid = get_input('webinar_guid');
-var_dump(get_entity($webinar_guid,'object')); exit;
+
 if ( ($webinar = get_entity($webinar_guid, 'object')) && $webinar instanceof ElggWebinar){
 	
 	if ($webinar->isUpcoming()){

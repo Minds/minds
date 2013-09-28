@@ -409,7 +409,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 		if ($subject->canEdit() || $object->canEdit()) {
 			$options = array(
 				'name' => 'delete',
-				'href' => "action/minds/river/delete?id=$item->id",
+				'href' => "action/river/delete?id=$item->id",
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
 				'class' => 'entypo',

@@ -7,7 +7,7 @@ class elasticsearch {
 
   function __construct(){
   	global $CONFIG;
-    $this->server = $CONFIG->elasticsearch_server;
+	    $this->server = $CONFIG->elasticsearch_server;
 	$this->port = $CONFIG->elasticsearch_port ? $CONFIG->elasticsearch_port : 9200;
 	$this->cache_path = '/tmp/es/';
   }

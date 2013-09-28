@@ -279,8 +279,8 @@ function login(ElggUser $user, $persistent = false) {
 	$SESSION['id'] = $SESSION['guid'];
 	$SESSION['username'] = $user->username;
 	$SESSION['name'] = $user->name;
-	$SESSION['friends'] = $user->getFriends(null, 200, 0, 'guids');
-	$SESSION['friendsof'] = $user->getFriendsOf(null, 200, 0, 'guids');
+	//$SESSION['friends'] = $user->getFriends(null, 200, 0, 'guids');
+	//$SESSION['friendsof'] = $user->getFriendsOf(null, 200, 0, 'guids');
 
 	// if remember me checked, set cookie with token and store token on user
 	if (($persistent)) {
@@ -565,11 +565,6 @@ function _elgg_session_read($id) {
  * @access private
  */
 function _elgg_session_write($id, $sess_data) {
-	global $new_db;
-	//HACK (nasty one) due to object destruction
-	$DB =  unserialize($new_db);	
-	
-	$time = time();
 	
 	/*if(isset($_COOKIE['Minds'])){	
 		return; //this is to improve page times. write on each page seems excessive

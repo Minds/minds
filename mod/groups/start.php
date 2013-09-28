@@ -614,7 +614,7 @@ function groups_user_join_event_listener($event, $object_type, $object) {
 	$user = $object['user'];
 	$acl = $group->group_acl;
 
-	add_user_to_access_collection($user->guid, $acl);
+	//add_user_to_access_collection($user->guid, $acl);
 
 	return true;
 }

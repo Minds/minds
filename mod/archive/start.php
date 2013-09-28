@@ -95,7 +95,7 @@ function minds_archive_init() {
 	elgg_register_plugin_hook_handler('notify:entity:message', 'object', 'kaltura_notify_message');
 
 	// Add profile widget
-    //elgg_register_widget_type('kaltura_video',elgg_echo('kalturavideo:label:latest'),elgg_echo('kalturavideo:text:widgetdesc'));
+    	elgg_register_widget_type('kaltura_video',elgg_echo('kalturavideo:label:latest'),elgg_echo('kalturavideo:text:widgetdesc'));
 
 	// Register entity type @todo check if this is needed
 	//elgg_register_entity_type('object','kaltura_video');

@@ -112,42 +112,46 @@ $posted = 0, $annotation_id = 0) {
  * @since 1.8.0
  */
 function elgg_delete_river(array $options = array()) {
-	global $CONFIG;
+	global $CONFIG, $DB;
 
-	$defaults = array(
-		'ids'                  => ELGG_ENTITIES_ANY_VALUE,
-
-		'subject_guids'	       => ELGG_ENTITIES_ANY_VALUE,
-		'object_guids'         => ELGG_ENTITIES_ANY_VALUE,
-		'annotation_ids'       => ELGG_ENTITIES_ANY_VALUE,
-
-		'views'                => ELGG_ENTITIES_ANY_VALUE,
-		'action_types'         => ELGG_ENTITIES_ANY_VALUE,
-
-		'types'	               => ELGG_ENTITIES_ANY_VALUE,
-		'subtypes'             => ELGG_ENTITIES_ANY_VALUE,
-		'type_subtype_pairs'   => ELGG_ENTITIES_ANY_VALUE,
-
-		'posted_time_lower'	   => ELGG_ENTITIES_ANY_VALUE,
-		'posted_time_upper'	   => ELGG_ENTITIES_ANY_VALUE,
-
-		'wheres'               => array(),
-		'attrs'			=> array()
-	);
-
+	$defaults = array( 'ids' => ELGG_ENTITIES_ANY_VALUE);
 	$options = array_merge($defaults, $options);
 
-	$singulars = array('id', 'subject_guid', 'object_guid', 'annotation_id', 'action_type', 'view', 'type', 'subtype');
+	$singulars = array('id');
 	$options = elgg_normalise_plural_options_array($options, $singulars);
 
-	$attrs = $options['attrs'];
+	$ids = $options['ids'];
+	$items = elgg_get_river(array('type'=>'newsfeed', 'ids'=>$ids));
 
-	//get the items
+	foreach($items as $item){
 
+		//get the subjects friends
+		$owner = $item->getSubjectEntity();
+		$object = $item->getObjectEntity();
+		$followers = $owner->getFriendsOf();
+		if(!is_array($followers)){ $followers = array(); }
 
-	//foreach items, delete
+		//remove from personal line
+		array_push($followers, 'personal:'.$owner->guid);
+		//remove from public line
+		array_push($followers, 'site');
+		//action types
+		array_push($followers, $item->action_type);
+		//own
+		array_push($followers, $owner->guid);
+		//container_guid
+		array_push($followers, $object->container_guid);
 
-	//delete the item id from the userline?... is this possible easily?
+		foreach($followers as $follower){
+			db_remove($follower,'timeline', array($item->id));
+		}
+
+		//remove from the main newsfeed now
+		db_remove($item->id, 'newsfeed');
+
+	}
+
+	return true;
 }
 /**
  * Get river items

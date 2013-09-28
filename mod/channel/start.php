@@ -359,48 +359,6 @@ function channel_elements_menu_setup($hook, $type, $return, $params) {
 	$item->setPriority(2);
 	$return[] = $item;
 	
-	//bookmarks
-	$url = "bookmarks/owner/$user->username/";
-	$item = new ElggMenuItem('bookmark', elgg_echo('bookmarks'), $url);
-	$item->setPriority(3);
-	$return[] = $item;
-	
-	//events
-	$url = "event_calendar/owner/$user->username/";
-	$item = new ElggMenuItem('events', elgg_echo('events'), $url);
-	$item->setPriority(4);
-	$return[] = $item;
-	
-	//files
-	$url = "file/owner/$user->username/";
-	$item = new ElggMenuItem('file', elgg_echo('file'), $url);
-	$item->setPriority(5);
-	$return[] = $item;
-	
-	//groups
-	$url = "groups/owner/$user->username/";
-	$item = new ElggMenuItem('group', elgg_echo('groups'), $url);
-	$item->setPriority(6);
-	$return[] = $item;
-	
-	//images
-	$url = "photos/owner/$user->username/";
-	$item = new ElggMenuItem('images', elgg_echo('photos'), $url);
-	$item->setPriority(7);
-	$return[] = $item;
-	
-	//market
-	$url = "market/owner/$user->username/";
-	$item = new ElggMenuItem('market', elgg_echo('market'), $url);
-	$item->setPriority(8);
-	$return[] = $item;
-	
-	//pages
-	$url = "pages/owner/$user->username/";
-	$item = new ElggMenuItem('pages', elgg_echo('pages'), $url);
-	$item->setPriority(9);
-	$return[] = $item;
-	
 	//voting
 	$url = "voting/owner/$user->username/";
 	$item = new ElggMenuItem('voting', elgg_echo('poll'), $url);

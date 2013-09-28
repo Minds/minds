@@ -101,6 +101,8 @@ foreach($json as $item) {
 	}
 }
 header('Content-type: text/plain');
+//hack to remove the first entity
+array_shift($items);
 if(get_input('items_type') == 'river')
 echo elgg_view('page/components/list', array("items" => $items, "list_class"=>'elgg-list-river elgg-river'));
 else

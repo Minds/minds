@@ -248,7 +248,7 @@ function elgg_get_view_location($view, $viewtype = '') {
 	if (empty($viewtype)) {
 		$viewtype = elgg_get_viewtype();
 	}
-
+	
 	if (!isset($CONFIG->views->locations[$viewtype][$view])) {
 		if (!isset($CONFIG->viewpath)) {
 			return dirname(dirname(dirname(__FILE__))) . "/views/";
