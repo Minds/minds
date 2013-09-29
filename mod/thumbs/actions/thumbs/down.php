@@ -8,26 +8,34 @@
  *
  */
 
-$entity_guid = (int) get_input('guid');
+$entity_guid = get_input('guid');
 $id = get_input('id');
 $type = get_input('type', 'entity');
+$user_guid = elgg_get_logged_in_user_guid();
 
 if ($type == 'entity') {
 	// Let's see if we can get an entity with the specified GUID
-	$entity = get_entity($entity_guid);
+	$entity = get_entity($entity_guid,'object');
 	if (!$entity) {
 		register_error(elgg_echo("thumbs:notfound"));
 		forward(REFERER);
 	}
 
+	$thumbs_down = unserialize($entity->{'thumbs:down'});
+	if(!is_array( $thumbs_down)){ $thumbs_down = array(); } 
+
 	//check to see if the user has already liked the item
-	if (elgg_annotation_exists($entity_guid, 'thumbs:down')) {
+	if (in_array($user_guid, $thumbs_down)) {
 		$options = array('annotation_names' => array('thumbs:down'), 'annotation_owner_guids' => array(elgg_get_logged_in_user_guid()));
 		$delete = elgg_delete_annotations($options);
 		//if($delete){
 		echo 'not-selected';
 		//}
 		$entity -> thumbcount++;
+                if(($key = array_search($user_guid, $thumbs_down)) !== false) {
+                        unset($thumbs_down[$key]);
+                }
+		$entity->{'thumbs:down'} = serialize($thumbs_down);
 	} else {
 
 		if (elgg_annotation_exists($entity_guid, 'thumbs:up')) {
@@ -43,6 +51,9 @@ if ($type == 'entity') {
 		}
 
 		$entity -> thumbcount--;
+
+		array_push($thumbs_down, $user_guid);
+		$entity->{'thumbs:down'} = serialize($thumbs_down);
 
 		$annotation = create_annotation($entity -> guid, 'thumbs:down', 1, "", elgg_get_logged_in_user_guid(), $entity -> access_id);
 		$entity -> save();

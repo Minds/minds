@@ -135,7 +135,7 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
 			$access_array[] = ACCESS_LOGGED_IN;
 
 			// Get ACL memberships
-			$query = "SELECT am.access_collection_id"
+			/*$query = "SELECT am.access_collection_id"
 				. " FROM {$CONFIG->dbprefix}access_collection_membership am"
 				. " LEFT JOIN {$CONFIG->dbprefix}access_collections ag ON ag.id = am.access_collection_id"
 				. " WHERE am.user_guid = $user_id AND (ag.site_guid = $site_id OR ag.site_guid = 0)";
@@ -166,7 +166,7 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
 
 			if ($ignore_access == true) {
 				$access_array[] = ACCESS_PRIVATE;
-			}
+			}*/
 		}
 
 		if ($init_finished) {
@@ -194,19 +194,19 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
  */
 function get_default_access(ElggUser $user = null) {
 	global $CONFIG;
-
+	
 	if (!$CONFIG->allow_user_default_access) {
-		return $CONFIG->default_access;
+		return (int) $CONFIG->default_access;
 	}
 
 	if (!($user) && (!$user = elgg_get_logged_in_user_entity())) {
-		return $CONFIG->default_access;
+		return (int) $CONFIG->default_access;
 	}
 
 	if (false !== ($default_access = $user->getPrivateSetting('elgg_default_access'))) {
 		return $default_access;
 	} else {
-		return $CONFIG->default_access;
+		return (int) $CONFIG->default_access;
 	}
 }
 
@@ -263,7 +263,7 @@ function get_access_sql_suffix($table_prefix = '', $owner = null) {
 	$enemies_bit = "";
 
 	if ($table_prefix) {
-		$table_prefix = sanitise_string($table_prefix) . ".";
+		$table_prefix = $table_prefix . ".";
 	}
 
 	if (!isset($owner)) {
@@ -452,11 +452,10 @@ function get_write_access_array($user_id = 0, $site_id = 0, $flush = false) {
 		$access_array = array(
 			ACCESS_PRIVATE => elgg_echo("PRIVATE"),
 			ACCESS_FRIENDS => elgg_echo("access:friends:label"),
-			ACCESS_LOGGED_IN => elgg_echo("LOGGED_IN"),
 			ACCESS_PUBLIC => elgg_echo("PUBLIC")
 		);
 		
-		$query = "SELECT ag.* FROM {$CONFIG->dbprefix}access_collections ag ";
+/*		$query = "SELECT ag.* FROM {$CONFIG->dbprefix}access_collections ag ";
 		$query .= " WHERE (ag.site_guid = $site_id OR ag.site_guid = 0)";
 		$query .= " AND (ag.owner_guid = $user_id)";
 
@@ -466,7 +465,7 @@ function get_write_access_array($user_id = 0, $site_id = 0, $flush = false) {
 				$access_array[$collection->id] = $collection->name;
 			}
 		}
-
+*/
 		if ($init_finished) {
 			$cache[$hash] = $access_array;
 		}

@@ -4,7 +4,7 @@
  */
 
 $guid = get_input('guid');
-$user = get_entity($guid);
+$user = get_entity($guid,'user');
 if ($user) {
 	// Delete all icons from diskspace
 	$icon_sizes = elgg_get_config('icon_sizes');
@@ -26,6 +26,7 @@ if ($user) {
 	
 	// Remove icon
 	unset($user->icontime);
+	$user->save();
 	system_message(elgg_echo('avatar:remove:success'));
 } else {
 	register_error(elgg_echo('avatar:remove:fail'));

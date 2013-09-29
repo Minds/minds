@@ -20,16 +20,24 @@ function elgg_get_site_entity($site_guid = 0) {
 
 	$result = false;
 	
-	if ($site_guid == 0) {
-		$site = $CONFIG->site;
+	//check if defined in settings.php
+	if($CONFIG->site_name){
+		$site = new ElggSite();
+		$site->name = $CONFIG->site_name;
+		$site->email = $CONFIG->site_email;
+		$site->url = $CONFIG->site_url;
 	} else {
-		$site = get_entity($site_guid);
+
+		$site = get_entity($site_guid,'site');
+	
 	}
 	
 	if ($site instanceof ElggSite) {
 		$result = $site;
 	}
 
+	cache_entity($site);
+	
 	return $result;
 }
 
@@ -205,13 +213,13 @@ function get_site_objects($site_guid, $subtype = "", $limit = 10, $offset = 0) {
 function get_site_by_url($url) {
 	global $CONFIG;
 
-	$url = sanitise_string($url);
+	//$url = sanitise_string($url);
 
-	$row = get_data_row("SELECT * from {$CONFIG->dbprefix}sites_entity where url='$url'");
+	///$row = get_data_row("SELECT * from {$CONFIG->dbprefix}sites_entity where url='$url'");
 
-	if ($row) {
-		return get_entity($row->guid);
-	}
+	//if ($row) {
+	//	return get_entity(1, 'site');
+	//}
 
 	return false;
 }

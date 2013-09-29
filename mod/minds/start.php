@@ -29,8 +29,8 @@ function minds_init(){
 	elgg_extend_view('register/extend', 'minds/register_extend', 500);
 	
 	//Register the minds elastic news library (to override the default elgg river)
-	elgg_register_library('elastic_news', elgg_get_plugins_path().'minds/lib/elastic_news.php');
-	elgg_load_library('elastic_news');
+	//elgg_register_library('elastic_news', elgg_get_plugins_path().'minds/lib/elastic_news.php');
+	//elgg_load_library('elastic_news');
 	
 	//put the quota in account statistics
 	elgg_extend_view('core/settings/statistics', 'minds/quota/statistics', 500);
@@ -305,8 +305,9 @@ function minds_pagesetup(){
 						'href' => 'news',
 						'text' => '&#59194;',
 						'title' => elgg_echo('news'),
-						'class' => 'entypo'
-					));
+						'class' => 'entypo',
+						'priority' => 1	
+				));
 	
 	if($user){		
 		elgg_register_menu_item('site', array(
@@ -314,10 +315,11 @@ function minds_pagesetup(){
 						'href' => 'archive/upload',
 						'text' => '&#128228;',
 						'title' => elgg_echo('minds:upload'),
-						'class' => 'entypo'
+						'class' => 'entypo',
+						'priority' => 4
 					));
 	}
-		
+
 	
 	//RIGHT MENU	
 	//profile
@@ -443,7 +445,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 		if ($subject->canEdit() || $object->canEdit()) {
 			$options = array(
 				'name' => 'delete',
-				'href' => "action/minds/river/delete?id=$item->id",
+				'href' => "action/river/delete?id=$item->id",
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
 				'class' => 'entypo',
@@ -632,8 +634,9 @@ function minds_fetch_image($description, $owner_guid) {
   if(empty($image)) {
     //$image = elgg_get_site_url() . 'mod/minds/graphics/minds_logo.png';
     if($owner_guid){
-   	 	$owner = get_entity($owner_guid);
-    	$image = $owner->getIconURL('large');
+   	 	$owner = get_entity($owner_guid, 'user');
+    		if($owner)
+			$image = $owner->getIconURL('large');
 	}
   }*/
 	$dom = new DOMDocument();
@@ -651,28 +654,15 @@ function minds_fetch_image($description, $owner_guid) {
 	return $image;
 }
 
-function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = 0){
+function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
 	global $CONFIG;
-	if (class_exists(elasticsearch)) {
-		$es = new elasticsearch();
-		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
-		$data = $es->query($type,null, 'time_stamp:desc', $limit, $offset, array('age'=>0));
-		foreach($data['hits']['hits'] as $item){
-			$guids[] = intval($item['_id']);
-		}
-		//$guids = array_reverse($guids);
-		$guidsString = implode(',', $guids);
-		if(count($guids) > 0){
-			if($output == 'entities'){
-				return elgg_get_entities(array(	'wheres' => array("e.guid IN ($guidsString)"),
-								'order_by' => "FIELD(e.guid, $guidsString)", 
-								'limit'=>$limit));
-			} elseif($output == 'guids'){
-				return $guids;
-			}
-		}
-	}
-	return false;
+	$namespace = 'object:featured';
+	return elgg_get_entities(array( 'type' => 'object',
+					//'subtype' => 'blog',
+					'attrs' => array('namespace'=>$namespace),
+					'limit'=>$limit,
+					'offset'=>$offset
+					));
 }
 
  /* Extend / override htmlawed */ 

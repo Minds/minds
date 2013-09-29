@@ -28,14 +28,14 @@ function groups_init() {
 			'title' => elgg_echo('groups'),
 			'class' => 'entypo',
 		));
-
+	
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('groups', 'groups_page_handler');
 
 	// Register URL handlers for groups
 	elgg_register_entity_url_handler('group', 'all', 'groups_url');
 	elgg_register_plugin_hook_handler('entity:icon:url', 'group', 'groups_icon_url_override');
-
+	
 	// Register an icon handler for groups
 	elgg_register_page_handler('groupicon', 'groups_icon_handler');
 
@@ -56,7 +56,7 @@ function groups_init() {
 
 	// Add some widgets
 	elgg_register_widget_type('a_users_groups', elgg_echo('groups:widget:membership'), elgg_echo('groups:widgets:description'));
-
+	
 	// add group activity tool option
 	add_group_tool_option('activity', elgg_echo('groups:enableactivity'), true);
 	elgg_extend_view('groups/tool_latest', 'groups/profile/activity_module');
@@ -76,11 +76,11 @@ function groups_init() {
 	//extend some views
 	elgg_extend_view('css/elgg', 'groups/css');
 	elgg_extend_view('js/elgg', 'groups/js');
-
+	
 	// Access permissions
-	elgg_register_plugin_hook_handler('access:collections:write', 'all', 'groups_write_acl_plugin_hook');
+	//elgg_register_plugin_hook_handler('access:collections:write', 'all', 'groups_write_acl_plugin_hook');
 	//elgg_register_plugin_hook_handler('access:collections:read', 'all', 'groups_read_acl_plugin_hook');
-
+	
 	// Register profile menu hook
 	//elgg_register_plugin_hook_handler('profile_menu', 'profile', 'forum_profile_menu');
 	//elgg_register_plugin_hook_handler('profile_menu', 'profile', 'activity_profile_menu');
@@ -88,7 +88,7 @@ function groups_init() {
 	// allow ecml in discussion and profiles
 	elgg_register_plugin_hook_handler('get_views', 'ecml', 'groups_ecml_views_hook');
 	elgg_register_plugin_hook_handler('get_views', 'ecml', 'groupprofile_ecml_views_hook');
-
+	
 	// Register a handler for create groups
 	elgg_register_event_handler('create', 'group', 'groups_create_event_listener');
 
@@ -150,7 +150,7 @@ function groups_setup_sidebar_menus() {
 		if (elgg_is_logged_in() && $page_owner->canEdit() && !$page_owner->isPublicMembership()) {
 			$url = elgg_get_site_url() . "groups/requests/{$page_owner->getGUID()}";
 
-			$count = elgg_get_entities_from_relationship(array(
+		/*	$count = elgg_get_entities_from_relationship(array(
 				'type' => 'user',
 				'relationship' => 'membership_request',
 				'relationship_guid' => $page_owner->getGUID(),
@@ -168,7 +168,7 @@ function groups_setup_sidebar_menus() {
 				'name' => 'membership_requests',
 				'text' => $text,
 				'href' => $url,
-			));
+			));*/
 		}
 	}
 	if (elgg_get_context() == 'groups' && !elgg_instanceof($page_owner, 'group')) {
@@ -226,7 +226,7 @@ function groups_page_handler($page) {
 
 	// forward old profile urls
 	if (is_numeric($page[0])) {
-		$group = get_entity($page[0]);
+		$group = get_entity($page[0], 'group');
 		if (elgg_instanceof($group, 'group', '', 'ElggGroup')) {
 			system_message(elgg_echo('changebookmark'));
 			forward($group->getURL());
@@ -377,11 +377,11 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 		return $return;
 	}
 
-	foreach ($return as $index => $item) {
+	/*foreach ($return as $index => $item) {
 		if (in_array($item->getName(), array('access', 'likes', 'edit', 'delete'))) {
 			unset($return[$index]);
 		}
-	}
+	}*/
 
 	// membership type
 	$membership = $entity->membership;
@@ -560,7 +560,7 @@ function groups_read_acl_plugin_hook($hook, $entity_type, $returnvalue, $params)
 function groups_write_acl_plugin_hook($hook, $entity_type, $returnvalue, $params) {
 	$page_owner = elgg_get_page_owner_entity();
 	$user_guid = $params['user_id'];
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, 'user');
 	if (!$user) {
 		return $returnvalue;
 	}
@@ -599,7 +599,7 @@ function groups_write_acl_plugin_hook($hook, $entity_type, $returnvalue, $params
  * Groups deleted, so remove access lists.
  */
 function groups_delete_event_listener($event, $object_type, $object) {
-	delete_access_collection($object->group_acl);
+///	delete_access_collection($object->group_acl);
 
 	return true;
 }
@@ -614,7 +614,7 @@ function groups_user_join_event_listener($event, $object_type, $object) {
 	$user = $object['user'];
 	$acl = $group->group_acl;
 
-	add_user_to_access_collection($user->guid, $acl);
+	//add_user_to_access_collection($user->guid, $acl);
 
 	return true;
 }
@@ -695,8 +695,8 @@ function groups_join_group($group, $user) {
 		get_access_list($user->guid, 0, true);
 
 		// Remove any invite or join request flags
-		remove_entity_relationship($group->guid, 'invited', $user->guid);
-		remove_entity_relationship($user->guid, 'membership_request', $group->guid);
+	//	remove_entity_relationship($group->guid, 'invited', $user->guid);
+	//	remove_entity_relationship($user->guid, 'membership_request', $group->guid);
 
 		add_to_river('river/relationship/member/create', 'join', $user->guid, $group->guid);
 

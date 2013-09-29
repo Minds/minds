@@ -38,7 +38,7 @@ class MindsNewsItem extends ElggRiverItem {
 	 * @return ElggEntity
 	 */
 	public function getSubjectEntity() {
-		return get_entity($this->subject_guid);
+		return get_entity($this->subject_guid, 'user');
 	}
 
 	/**
@@ -47,7 +47,7 @@ class MindsNewsItem extends ElggRiverItem {
 	 * @return ElggEntity
 	 */
 	public function getObjectEntity() {
-		return get_entity($this->object_guid);
+		return get_entity($this->object_guid, 'object');
 	}
 
 	/**

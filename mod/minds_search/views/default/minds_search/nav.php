@@ -3,6 +3,9 @@ $types = array(0 => 'all', 1 => 'photo', 2 => 'video', 3 => 'sound', 4 => 'artic
 $licenses = array('attribution-cc', 'attribution-sharealike-cc', 'attribution-noderivs-cc', 'attribution-noncommerical-cc', 'attribution-noncommercial-sharealike-cc', 'attribution-noncommercial-noderivs-cc', 'publicdomaincco');
 $sources = array('minds', 'wikipedia', 'flickr', 'soundcloud');
 $categories = elgg_get_site_entity()->categories;
+if(!$categories){
+	$categories = array();
+}
 
 $query = get_input('q');
 $t = get_input('type', 'all');

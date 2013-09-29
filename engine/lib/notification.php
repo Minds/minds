@@ -101,7 +101,7 @@ function notify_user($to, $from, $subject, $message, array $params = NULL, $meth
 	}
 
 	$result = array();
-
+	
 	foreach ($to as $guid) {
 		// Results for a user are...
 		$result[$guid] = array();
@@ -119,7 +119,7 @@ function notify_user($to, $from, $subject, $message, array $params = NULL, $meth
 					}
 				}
 			}
-
+			
 			if ($methods) {
 				// Deliver
 				foreach ($methods as $method) {
@@ -132,18 +132,18 @@ function notify_user($to, $from, $subject, $message, array $params = NULL, $meth
 					$details = $NOTIFICATION_HANDLERS[$method];
 					$handler = $details->handler;
 					/* @var callable $handler */
-
+					
 					if ((!$NOTIFICATION_HANDLERS[$method]) || (!$handler) || (!is_callable($handler))) {
 						error_log(elgg_echo('NotificationException:NoHandlerFound', array($method)));
 					}
 
 					elgg_log("Sending message to $guid using $method");
-
+				var_dump($from);	
 					// Trigger handler and retrieve result.
 					try {
 						$result[$guid][$method] = call_user_func($handler,
-							$from ? get_entity($from) : NULL, 	// From entity
-							get_entity($guid), 					// To entity
+							$from ? get_entity($from,'object') : elgg_get_site_entity(), 	// From entity
+							get_entity($guid, 'user'), 					// To entity
 							$subject,							// The subject
 							$message, 			// Message
 							$params								// Params
@@ -210,9 +210,9 @@ function get_user_notification_settings($user_guid = 0) {
  */
 function set_user_notification_setting($user_guid, $method, $value) {
 	$user_guid = (int)$user_guid;
-	$method = sanitise_string($method);
+	$method = $method;
 
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, 'user');
 	if (!$user) {
 		$user = elgg_get_logged_in_user_entity();
 	}

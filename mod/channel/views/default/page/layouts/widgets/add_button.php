@@ -2,7 +2,7 @@
 /**
  * Button area for showing the add widgets panel
  */
- $user = elgg_get_page_owner_entity();
+$user = elgg_get_page_owner_entity();
 
 //this needs to be loaded before the widget is added. 
 elgg_load_js('elgg.wall');
@@ -35,12 +35,12 @@ if($user instanceof ElggUser){
 	
 	if (elgg_is_logged_in()) {
 		if (elgg_get_logged_in_user_guid() != $user->guid) {
-				echo elgg_view('output/url', array(
+				/*echo elgg_view('output/url', array(
 										'text' => elgg_echo('chat:message'),
 										'href' => "chat/add/?members=".$user->getGUID(),
 										'class' => 'elgg-button elgg-button-action channel',
 										'is_action' => true
-									));
+									));*/
 			if ($user->isFriend()) {
 				echo elgg_view('output/url', array(
 										'text' => elgg_echo('friend:remove'),

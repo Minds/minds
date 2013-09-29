@@ -6,12 +6,18 @@
  */
 
 $photo = $vars['entity'];
+if($photo->legacy_guid){
+	$photo_guid = $photo->legacy_guid;
+} else {
+	$photo_guid = $photo->getGUID();
+}
 
-$album = $photo->getContainerEntity();
-$previous_photo = $album->getPreviousImage($photo->getGUID());
-$next_photo = $album->getNextImage($photo->getGUID());
+$album = $photo->getContainerEntity('object');
+$previous_photo = $album->getPreviousImage($photo_guid);
+$next_photo = $album->getNextImage($photo_guid);
 $size = $album->getSize();
-$index = $album->getIndex($photo->getGUID());
+$index = $album->getIndex($photo_guid);
+
 
 echo '<ul class="elgg-menu elgg-menu-hz tidypics-album-nav">';
 echo '<li>';

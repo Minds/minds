@@ -18,11 +18,13 @@ function blog_get_page_content_read($guid = NULL) {
 
 	$return = array();
 
-	$blog = get_entity($guid);
-
+	$blog = get_entity($guid, 'object');
+	
+	elgg_set_page_owner_guid($blog->owner_guid);
+	
 	// no header or tabs for viewing an individual blog
 	$return['filter'] = '';
-
+	
 	if (!elgg_instanceof($blog, 'object', 'blog')) {
 		register_error(elgg_echo('noaccess'));
 		$_SESSION['last_forward_from'] = current_page_url();
@@ -41,17 +43,16 @@ function blog_get_page_content_read($guid = NULL) {
 			$title$menu
 		</div>
 HTML;
-	
 	$return['title'] = $blog->title;
-
-	$container = $blog->getContainerEntity();
+	
+/*	$container = $blog->getContainerEntity();
 	$crumbs_title = $container->name;
 	if (elgg_instanceof($container, 'group')) {
 		elgg_push_breadcrumb($crumbs_title, "blog/group/$container->guid/all");
 	} else {
 		elgg_push_breadcrumb($crumbs_title, "blog/owner/$container->username");
 	}
-
+*/
 	elgg_push_breadcrumb($blog->title);
 	$return['content'] = elgg_view_entity($blog, array('full_view' => true));
 	$return['content'] .= elgg_view('minds/ads', array('type'=>'content-foot'));
@@ -80,7 +81,7 @@ HTML;
 	minds_set_metatags('twitter:title', $blog->title);
 	minds_set_metatags('twitter:image', minds_fetch_image($blog->description, $blog->owner_guid));
 	minds_set_metatags('twitter:description', $excerpt);
-
+	
 	return $return;
 }
 
@@ -100,7 +101,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		'type' => 'object',
 		'subtype' => 'blog',
 		'full_view' => false,
-		'limit' =>12
+		'limit' =>12,
 	);
 
 	$current_user = elgg_get_logged_in_user_entity();
@@ -109,8 +110,8 @@ function blog_get_page_content_list($container_guid = NULL) {
 		// access check for closed groups
 		group_gatekeeper();
 
-		$options['container_guid'] = $container_guid;
-		$container = get_entity($container_guid);
+		$options['owner_guid'] = $container_guid;
+		$container = get_entity($container_guid, 'user');
 		if (!$container) {
 
 		}
@@ -144,20 +145,15 @@ function blog_get_page_content_list($container_guid = NULL) {
 			$show_only_published = false;
 		}
 	}
-	if ($show_only_published) {
-		$options['metadata_name_value_pairs'] = array(
-			array('name' => 'status', 'value' => 'published'),
-		);
-	}
-
-	$list = elgg_list_entities_from_metadata($options);
+	
+	$list = elgg_list_entities($options);
 	if (!$list) {
 		$return['content'] = elgg_echo('blog:none');
 	} else {
 		$return['content'] = $list;
 	}
 
-	$return['filter'] = elgg_view('page/layouts/content/trending_filter', $return);
+//	$return['filter'] = elgg_view('page/layouts/content/trending_filter', $return);
 	return $return;
 }
 
@@ -208,6 +204,8 @@ function blog_get_page_content_friends($user_guid) {
 		forward('blog/all');
 	}
 
+	$limit = get_input('limit', 12);
+	$offset = get_input('offset','');
 	$return = array();
 
 	$return['filter_context'] = 'friends';
@@ -219,41 +217,18 @@ function blog_get_page_content_friends($user_guid) {
 
 	elgg_register_title_button();
 
-	if (!$friends = get_user_friends($user_guid, ELGG_ENTITIES_ANY_VALUE, 0)) {
-		$return['content'] .= elgg_echo('friends:none:you');
-		return $return;
-	} else {
-		$options = array(
-			'type' => 'object',
-			'subtype' => 'blog',
-			'full_view' => FALSE,
-		);
-
-		foreach ($friends as $friend) {
-			$options['container_guids'][] = $friend->getGUID();
-		}
-
-		// admin / owners can see any posts
-		// everyone else can only see published posts
-		$show_only_published = true;
-		$current_user = elgg_get_logged_in_user_entity();
-		if ($current_user) {
-			if (($user_guid == $current_user->guid) || $current_user->isAdmin()) {
-				$show_only_published = false;
-			}
-		}
-		if ($show_only_published) {
-			$options['metadata_name_value_pairs'][] = array(
-				array('name' => 'status', 'value' => 'published')
+	$options = array( 	'type' => 'object',
+				'subtype' => 'blog',
+				'network' => $user_guid,
+				'limit' => $limit,
+				'offset' => $offset,
+				'full_view' => false
 			);
-		}
-
-		$list = elgg_list_entities_from_metadata($options);
-		if (!$list) {
-			$return['content'] = elgg_echo('blog:none');
-		} else {
-			$return['content'] = $list;
-		}
+	$list = elgg_list_entities($options);
+	if (!$list) {
+		$return['content'] = elgg_echo('blog:none');
+	} else {
+		$return['content'] = $list;
 	}
 
 	return $return;
@@ -359,7 +334,7 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 
 	$sidebar = '';
 	if ($page == 'edit') {
-		$blog = get_entity((int)$guid);
+		$blog = get_entity($guid, 'object');
 
 		$title = elgg_echo('blog:edit');
 
@@ -428,7 +403,7 @@ function blog_prepare_form_vars($post = NULL, $revision = NULL) {
 		'container_guid' => NULL,
 		'guid' => NULL,
 		'draft_warning' => '',
-		'license' => '',
+		'license' => ''
 	);
 
 	if ($post) {
@@ -437,7 +412,7 @@ function blog_prepare_form_vars($post = NULL, $revision = NULL) {
 				$values[$field] = $post->$field;
 			}
 		}
-
+		
 		if ($post->status == 'draft') {
 			$values['access_id'] = $post->future_access;
 		}
@@ -456,24 +431,7 @@ function blog_prepare_form_vars($post = NULL, $revision = NULL) {
 		return $values;
 	}
 
-	// load the revision annotation if requested
-	if ($revision instanceof ElggAnnotation && $revision->entity_guid == $post->getGUID()) {
-		$values['revision'] = $revision;
-		$values['description'] = $revision->value;
-	}
-
-	// display a notice if there's an autosaved annotation
-	// and we're not editing it.
-	if ($auto_save_annotations = $post->getAnnotations('blog_auto_save', 1)) {
-		$auto_save = $auto_save_annotations[0];
-	} else {
-		$auto_save = false;
-	}
-
-	if ($auto_save && $auto_save->id != $revision->id) {
-		$values['draft_warning'] = elgg_echo('blog:messages:warning:draft');
-	}
-
+	
 	return $values;
 }
 
@@ -518,9 +476,13 @@ function blog_url_forwarder($page) {
 	if (empty($page[0])) {
 		return;
 	}
-
+	
+	if($page[0] == 'all'){
+		return ;
+	}
+	
 	// user usernames
-	$user = get_user_by_username($page[0]);
+	$user = get_user_by_username($page[1]);
 	if (!$user) {
 		return;
 	}
@@ -555,7 +517,7 @@ function blog_url_forwarder($page) {
  * 
  */
 function blog_get_featured($limit=6){
-	global $CONFIG;
+/*	global $CONFIG;
 	if (class_exists(elasticsearch)) {
 		$es = new elasticsearch();
 		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
@@ -568,7 +530,7 @@ function blog_get_featured($limit=6){
 		if(count($guids) > 0){
 			return $featured_blogs = elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit));
 		}
-	}
+	}*/
 	return false;
 }
 /**
@@ -579,21 +541,21 @@ function blog_sidebar($blog){
 	if($blog){	
 		$return .= elgg_view('minds/ads', array('type'=>'content-side-single'));
 		//show more posts from this user
-		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>6));
+		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>3));
 		if (($key = array_search($blog, $owners_blogs)) !== false) {
 		    unset($owners_blogs[$key]);
 		}
-		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar'));
+		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar', 'pagination'=>false));
 		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs, array('class'=>'blog-sidebar'));
 		
 		$return .= elgg_view('minds/ads', array('type'=>'content-side-single'));
 	}
 	//show featured blogs
-	$featured_blogs = blog_get_featured(6);
+/*	$featured_blogs = minds_get_featured(6);
 	if($featured_blogs){
-		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar'));
+		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar', 'pagination'=>false));
 		$return .= elgg_view_module('aside', elgg_echo('blog:featured'), $featured_blogs, array('class'=>'blog-sidebar'));	
 	}
-	
+*/	
 	return $return;
 }

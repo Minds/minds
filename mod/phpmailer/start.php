@@ -15,10 +15,8 @@ elgg_register_event_handler('init', 'system', 'phpmailer_init');
  * initialize the phpmailer plugin
  */
 function phpmailer_init() {
-	if (elgg_get_plugin_setting('phpmailer_override', 'phpmailer') != 'disabled') {
-		register_notification_handler('email', 'phpmailer_notify_handler');
-		elgg_register_plugin_hook_handler('email', 'system', 'phpmailer_mail_override');
-	}
+	register_notification_handler('email', 'phpmailer_notify_handler');
+	elgg_register_plugin_hook_handler('email', 'system', 'phpmailer_mail_override');
 	$site = elgg_get_site_entity();
 }
 
@@ -33,9 +31,9 @@ function phpmailer_init() {
  * @return bool
  */
 function phpmailer_notify_handler(ElggEntity $from, ElggUser $to, $subject, $message, array $params = NULL) {
-
+	
 	if (!$from) {
-		throw new NotificationException(sprintf(elgg_echo('NotificationException:MissingParameter'), 'from'));
+		$from = elgg_get_site_entity();
 	}
 
 	if (!$to) {
@@ -119,7 +117,7 @@ function phpmailer_extract_from_email($from) {
  */
 function phpmailer_send($from, $from_name, $to, $to_name, $subject, $body, array $bcc = NULL, $html = false, array $files = NULL, array $params = NULL) {
 	static $phpmailer;
-
+	
 	// Ensure phpmailer object exists
 	if (!is_object($phpmailer) || !is_a($phpmailer, 'PHPMailer')) {
 		require_once elgg_get_plugins_path() . '/phpmailer/vendors/class.phpmailer.php';
@@ -224,7 +222,7 @@ function phpmailer_send($from, $from_name, $to, $to_name, $subject, $body, array
 		// use php's mail
 		$phpmailer->IsMail();
 	}
-
+	
 	$return = $phpmailer->Send();
 	if (!$return ) {
 		elgg_log('PHPMailer error: ' . $phpmailer->ErrorInfo, 'WARNING');

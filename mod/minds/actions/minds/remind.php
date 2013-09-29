@@ -9,7 +9,7 @@
 gatekeeper();
 
 $guid = get_input('guid');
-$entity = get_entity($guid);
+$entity = get_entity($guid,'object');
 
 if($entity instanceof ElggEntity){
 
@@ -24,7 +24,7 @@ if($subtype == 'wallpost'){
 }
 
 add_to_river('river/object/' . $subtype . '/remind', 'remind', elgg_get_logged_in_user_guid(), $guid);
-add_entity_relationship($guid, 'remind', elgg_get_logged_in_user_guid()); 
+//add_entity_relationship($guid, 'remind', elgg_get_logged_in_user_guid()); 
 
 system_message(elgg_echo("minds:remind:success"));
 

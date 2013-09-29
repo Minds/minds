@@ -240,6 +240,9 @@ function delete_orphaned_metastrings() {
  * @access private
  */
 function elgg_get_metastring_based_objects($options) {
+
+	return;
+
 	$options = elgg_normalize_metastrings_options($options);
 
 	switch ($options['metastring_type']) {

@@ -24,9 +24,9 @@ if (empty($body)) {
 	forward(REFERER);
 }
 
-$to = get_entity($to_guid);
-if($to instanceof ElggGroup){
-	$access_id = $to->group_acl;
+$group = get_entity($to_guid, 'group');
+if($group instanceof ElggGroup){
+	$access_id = $group->group_acl;
 	$container_guid = $to_guid;
 }
 
@@ -53,7 +53,7 @@ if (!$guid) {
 $news_id = add_to_river('river/object/wall/create', 'create', $from_guid, $guid);
 
 if($ref == 'wall'){
-	$post = get_entity($guid);
+	$post = get_entity($guid,'object');
 
 	$id = "elgg-{$post->getType()}-{$post->guid}";
 	$time = $post->time_created;
@@ -70,8 +70,8 @@ if($ref == 'wall'){
 	$data->view = 'river/object/wall/create';
 	$data->posted = time();
 	
-	$item = new MindsNewsItem($data);
-
+	$item = new ElggRiverItem($data);
+	
 	$output = '<li class="elgg-item">' . elgg_view_list_item($item, array('list_class'=>'elgg-list elgg-list-river elgg-river', 'class'=>'elgg-item elgg-river-item')) . '</li>';
 }
 
@@ -91,7 +91,6 @@ foreach($matches as $value){
 		}
 	}
 }
-
 
 system_message(elgg_echo("wall:posted"));
 

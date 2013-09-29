@@ -92,7 +92,7 @@ elgg.wall.groups.submit = function(e) {
 							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
 				offset: 0,
 				limit: 1,
-				subject_guids: <?php echo elgg_get_logged_in_user_guid(); ?>
+				subject_guids: "<?php echo elgg_get_logged_in_user_guid(); ?>"
 			});
 			
 			location.reload();

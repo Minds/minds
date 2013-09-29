@@ -21,13 +21,13 @@ if ($type != 'all') {
 	}
 }
 
-$options['limit'] = get_input('limit',5);
-$options['offset'] = get_input('offset',0);
+$options['limit'] = get_input('limit',12);
 
 switch ($page_type) {
 	case 'all':
-		$title = elgg_echo('river:friends');
+		$title = elgg_echo('news');
 		$page_filter = 'all';
+		$options['type'] = 'timeline';
 		break;
 	case 'trending':
 		$title = elgg_echo('river:trending');
@@ -44,7 +44,7 @@ switch ($page_type) {
 	case 'featured':
 		$title = elgg_echo('river:featured');
 		$page_filter = 'featured';
-		$options['action_types'] = 'feature';
+		$options['owner_guid'] = 'feature'; //this should be renamed to owner...
 		break;
 	case 'single':
 		$id = get_input('id');
@@ -72,18 +72,12 @@ switch ($page_type) {
 	default:
 		$title = elgg_echo('news');
 		$page_filter = 'friends';
-		//$options['relationship_guid'] = elgg_get_logged_in_user_guid();
-		//$options['relationship'] = 'friend';
-		$friends = get_user_friends(elgg_get_logged_in_user_guid(), $subtype = ELGG_ENTITIES_ANY_VALUE, 0, 0);
-		foreach($friends as $friend){
-			$friend_guids[] = $friend->guid;
-		}
-		$page_filter = 'friends';
-		$options['subject_guids'] = array_merge(array(elgg_get_logged_in_user_guid()), $friend_guids);
+		$options['type'] = 'timeline';
+		$options['owner_guid'] = elgg_get_logged_in_user_guid();
 		break;
 }
 
-$activity = minds_elastic_list_news($options);
+$activity = elgg_list_river($options);
 if (!$activity) {
 	$activity = elgg_echo('river:none');
 }

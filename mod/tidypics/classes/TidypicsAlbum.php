@@ -16,6 +16,7 @@ class TidypicsAlbum extends ElggObject {
 		parent::initializeAttributes();
 
 		$this->attributes['subtype'] = "album";
+		$this->attributes['title'] = $this->getTitle();
 	}
 
 	/**
@@ -24,7 +25,6 @@ class TidypicsAlbum extends ElggObject {
 	 */
 	public function __construct($guid = null) {
 		parent::__construct($guid);
-		$this->title = $this->getTitle();
 	}
 
 	/**
@@ -136,7 +136,7 @@ class TidypicsAlbum extends ElggObject {
 	 * @return TidypicsImage
 	 */
 	public function getCoverImage() {
-		return get_entity($this->getCoverImageGuid());
+		return get_entity($this->getCoverImageGuid(), 'object');
 	}
 
 	/**
@@ -194,22 +194,9 @@ class TidypicsAlbum extends ElggObject {
 		if (!$listString) {
 			return array();
 		}
+		
 		$list = unserialize($listString);
 		
-		// check access levels
-		$guidsString = implode(',', $list);
-		if($guidsString == ""){
-			return null;
-		}
-		$options = array(
-			'wheres' => array("e.guid IN ($guidsString)"),
-			'order_by' => "FIELD (e.guid, $guidsString)",
-			'callback' => 'tp_guid_callback',
-			'limit' => ELGG_ENTITIES_NO_VALUE
-   	 	);
-    
-		$list = elgg_get_entities($options);
-	
 		return $list;
 	}
 
@@ -258,9 +245,9 @@ class TidypicsAlbum extends ElggObject {
 		}
 		$key--;
 		if ($key < 0) {
-			return get_entity(end($imageList));
+			return get_entity(end($imageList), 'object');
 		}
-		return get_entity($imageList[$key]);
+		return get_entity($imageList[$key], 'object');
 	}
 
 	/**
@@ -277,9 +264,9 @@ class TidypicsAlbum extends ElggObject {
 		}
 		$key++;
 		if ($key >= count($imageList)) {
-			return get_entity($imageList[0]);
+			return get_entity($imageList[0],'object');
 		}
-		return get_entity($imageList[$key]);
+		return get_entity($imageList[$key],'object');
 	}
 
 	/**

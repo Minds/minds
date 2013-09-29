@@ -1,0 +1,166 @@
+#dropzone {
+	height: 120px;
+	width: 90%;
+	display: block;
+	position: relative;
+	margin: 0 5%;
+	box-shadow: 0 0 2px #EEE;
+	background: #EEE;
+	padding: 16px 0;
+}
+
+.elgg-button-upload{
+	width:120px;
+	height:20px;
+	display:block;
+	margin:auto;
+	position:relative;
+	padding:14px;
+}
+.elgg-button-upload input{
+	position: absolute;
+	opacity: 0;
+	top: 0;
+	left: 0;
+	height: 100%;
+}
+
+.more-info{
+	text-align:center;
+	width:120px;
+        height:20px;
+        display:block;
+        margin: 24px auto 0;
+        position:relative;
+}
+
+#fileupload1{
+    width: 152px;
+    height: 35px;
+    margin-left: 40px;
+    border: none;
+    opacity: 0;
+    float: left;
+    position: absolute;
+    cursor: pointer;
+}
+
+#delete{
+	position:absolute;
+	border: none;
+	  
+  background: transparent;
+    position: absolute;
+    top: 5px;
+    right: 20px;
+}
+
+.uploadSelect{
+    -webkit-appearance: none;
+}
+
+#license{
+}
+
+.itemControls input{
+	font-weight: bold;
+	color: #333;
+	font-size: 110%;
+}
+.itemControls input:focus{
+	background:transparent;
+	border:0;
+}
+
+#saveButton{
+    clear: both;
+    width: 40px;
+    display: block;
+}
+
+.uploadlist > li.elgg-item > .itemControls {
+    height: 60px;
+    overflow: hidden;
+    transition: height 0.3s;
+    -webkit-transition: height 0.3s
+}
+
+.uploadlist .elgg-image-block {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	padding: 8px 8px 16px;
+	background-color: #FFF; 
+}
+
+.uploadlist > li.elgg-item {
+    background-color: #FFF;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding:0;
+    margin-left: 0px;
+}
+
+.uploadlist div.bar{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 5;
+    background-color: #4690D6;
+}
+
+.uploadlist div.progress{
+    color: transparent;
+    height: 0;
+}
+
+.uploadSpan{
+    margin-left: 8px;
+}
+
+.upload-page-buttons {
+    margin-top: 15px;
+    float: right;
+}
+
+.upload-elgg-head {
+    float: left;
+}
+
+.upload-page-buttons > .elgg-button {
+    margin-left: 40px;
+}
+
+.uploadLeftArrow{
+    position: absolute;
+    left: 5;
+    top:110;
+    font-size: 30px !important;
+    cursor: pointer;
+}
+
+.uploadRightArrow{
+    position: absolute;
+    right: 5;
+    top:110;
+    font-size: 30px !important;
+    cursor: pointer ;
+}
+
+form .ng-invalid{
+    border: #FA787E 1px solid;
+}
+
+form .ng-valid{
+    border: none;
+}
+
+.uploadbox-description{
+    margin-top:5px;
+}
+
+.disabled{
+    background-color: #c5c5c5;
+    cursor: not-allowed;
+}

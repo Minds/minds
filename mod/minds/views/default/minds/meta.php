@@ -1,10 +1,11 @@
 <?php
+global $CONFIG;
 	/* MINDS META
 	 *
 	 * SEO ENHANCE
 	*/
-	$description = get_input('description');
-	$keywords = get_input('keywords');
+	$description = get_input('description', $CONFIG->site_description);
+	$keywords = get_input('keywords', $CONFIG->site_keywords);
 	//are we a blog, wire post, event??
 	
 	if($description){

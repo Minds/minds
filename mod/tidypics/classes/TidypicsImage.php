@@ -29,20 +29,21 @@ class TidypicsImage extends ElggFile {
 	 * @return bool
 	 */
 	public function save($data = null) {
-
+		
 		if (!parent::save()) {
 			return false;
 		}
 
 		if ($data) {
 			// new image
+			$this->super_subtype = "archive";
 			$this->simpletype = "image";
 			$this->saveImageFile($data);
 			$this->saveThumbnails();
 			$this->extractExifData();
 		}
-
-		return true;
+		
+		return $this->guid;
 	}
 
 	/**
@@ -347,7 +348,7 @@ class TidypicsImage extends ElggFile {
 	 */
 	public function getPhotoTags() {
 
-		$tags = array();
+	/*	$tags = array();
 		$annotations = elgg_get_annotations(array(
 			'guid' => $this->getGUID(),
 			'annotation_name' => 'phototag',
@@ -358,7 +359,7 @@ class TidypicsImage extends ElggFile {
 			$tags[] = $tag;
 		}
 
-		return $tags;
+		return $tags;*/
 	}
 
 	/**
@@ -393,5 +394,15 @@ class TidypicsImage extends ElggFile {
 			$delfile->setFilename($largethumb);
 			$delfile->delete();
 		}
+	}
+
+	/**
+	 * Get the container entity for this object.
+	 * Assume contrainer entity is a user, unless another class overrides this...
+	 *
+	 * @return TidypicsAlbum
+	 */
+	public function getContainerEntity($type = 'object') {
+		return get_entity($this->getContainerGUID(),$type);
 	}
 }

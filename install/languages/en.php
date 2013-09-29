@@ -58,14 +58,11 @@ If you are ready to proceed, click the Next button.",
 	'install:check:rewrite:success' => 'The test of the rewrite rules was successful.',
 	'install:check:database' => 'The database requirements are checked when Elgg loads its database.',
 
-	'install:database:instructions' => "If you haven't already created a database for Elgg, do that now. Then fill in the values below to initialize the Elgg database.",
+	'install:database:instructions' => "Enter the IP address for your Cassandra server and enter the keyspace you wish to use.",
 	'install:database:error' => 'There was an error creating the Elgg database and installation cannot continue. Review the message above and correct any problems. If you need more help, visit the Install troubleshooting link below or post to the Elgg community forums.',
 
-	'install:database:label:dbuser' =>  'Database Username',
-	'install:database:label:dbpassword' => 'Database Password',
-	'install:database:label:dbname' => 'Database Name',
-	'install:database:label:dbhost' => 'Database Host',
-	'install:database:label:dbprefix' => 'Database Table Prefix',
+	'install:database:label:server' => 'Cassandra Server IP',
+	'install:database:label:keyspace' => 'Cassandra Keyspace',
 
 	'install:database:help:dbuser' => 'User that has full privileges to the MySQL database that you created for Elgg',
 	'install:database:help:dbpassword' => 'Password for the above database user account',

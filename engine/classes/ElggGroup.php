@@ -23,7 +23,6 @@ class ElggGroup extends ElggEntity
 		$this->attributes['type'] = "group";
 		$this->attributes['name'] = NULL;
 		$this->attributes['description'] = NULL;
-		$this->attributes['tables_split'] = 2;
 	}
 
 	/**
@@ -63,6 +62,7 @@ class ElggGroup extends ElggEntity
 
 			// Is it a GUID
 			} else if (is_numeric($guid)) {
+				$guid = get_entity($guid,'group'); 
 				if (!$this->load($guid)) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
@@ -327,36 +327,16 @@ class ElggGroup extends ElggEntity
 	 * @return bool
 	 */
 	protected function load($guid) {
-		$attr_loader = new ElggAttributeLoader(get_class(), 'group', $this->attributes);
-		$attr_loader->requires_access_control = !($this instanceof ElggPlugin);
-		$attr_loader->secondary_loader = 'get_group_entity_as_row';
+		
+		foreach($guid as $k => $v){
+                        $this->attributes[$k] = $v;
+                }
 
-		$attrs = $attr_loader->getRequiredAttributes($guid);
-		if (!$attrs) {
-			return false;
-		}
-
-		$this->attributes = $attrs;
-		$this->attributes['tables_loaded'] = 2;
-		cache_entity($this);
+                cache_entity($this);
 
 		return true;
 	}
 
-	/**
-	 * Override the save function.
-	 *
-	 * @return bool
-	 */
-	public function save() {
-		// Save generic stuff
-		if (!parent::save()) {
-			return false;
-		}
-
-		// Now save specific stuff
-		return create_group_entity($this->get('guid'), $this->get('name'), $this->get('description'));
-	}
 
 	// EXPORTABLE INTERFACE ////////////////////////////////////////////////////////////
 

@@ -19,6 +19,8 @@ elgg_register_event_handler('init', 'system', 'blog_init');
  */
 function blog_init() {
 
+	add_subtype('object', 'blog', 'ElggBlog');
+
 	elgg_register_library('elgg:blog', elgg_get_plugins_path() . 'blog/lib/blog.php');
 	
 	// menus
@@ -27,7 +29,8 @@ function blog_init() {
 		'text' => '&#59396;',
 		'href' => 'blog/trending',
 		'class' => 'entypo',
-		'title' => elgg_echo('blog:blogs')
+		'title' => elgg_echo('blog:blogs'),
+		'priority' => 3
 	));
 	
 
@@ -117,7 +120,7 @@ function blog_page_handler($page) {
 	elgg_load_library('elgg:blog');
 
 	// forward to correct URL for blog pages pre-1.8
-	blog_url_forwarder($page);
+	//blog_url_forwarder($page);
 
 	// push all blogs breadcrumb
 	elgg_push_breadcrumb(elgg_echo('blog:blogs'), "blog/all");
@@ -184,6 +187,9 @@ function blog_page_handler($page) {
 			}
 			break;
 		case 'scrapers':
+			if(!elgg_is_logged_in()){
+				forward(REFERRER);
+			}
 			switch($page[1]){
 				case 'create':
 					set_input('guid', $page[2]);
@@ -382,7 +388,7 @@ function blog_pagesetup(){
 function minds_blog_scraper($hook, $entity_type, $return_value, $params){ 
 	elgg_set_ignore_access(true);
 	elgg_set_context('scraper');
-	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
+	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>1000, 'timebased'=>false));
 	elgg_load_library('simplepie');
 	$i = 0;
 	foreach($scrapers as $scraper){

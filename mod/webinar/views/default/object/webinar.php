@@ -7,6 +7,9 @@
  * @uses $vars['entity']    The page object
  * @uses $vars['full_view'] Whether to display the full view
  */
+
+elgg_load_library('elgg:webinar');
+
 $full = elgg_extract('full_view', $vars, FALSE);
 $webinar = elgg_extract('entity', $vars, FALSE);
 
@@ -29,29 +32,8 @@ $author_text = elgg_echo('byline', array($owner_link));
 $tags = elgg_view('output/tags', array('tags' => $webinar->tags));
 $date = elgg_view_friendly_time($webinar->time_created);
 
-$members = elgg_list_entities_from_relationship(array(
-                'relationship' => $relationship,
-                'relationship_guid' => $webinar->guid,
-                'inverse_relationship' => true,
-                'types' => 'user',
-                'limit' => $limit,
-                'list_type' => 'gallery',
-                'gallery_class' => 'elgg-gallery-users gathering',
-));
-
-
-$comments_count = $webinar->countComments();
-//only display if there are commments
-if ($comments_count != 0) {
-	$text = elgg_echo("comments") . " ($comments_count)";
-	$comments_link = elgg_view('output/url', array(
-			'href' => $webinar->getURL() . '#comments',
-			'text' => $text,
-			'is_trusted' => true,
-	));
-} else {
-	$comments_link = '';
-}
+$members = elgg_view_entity_list(webinar_get_members($webinar->guid),array('list_type' => 'gallery',
+                'gallery_class' => 'elgg-gallery-users gathering'), "", 10, false, false, false);
 
 $metadata = elgg_view_menu('entity', array(
 		'entity' => $vars['entity'],
@@ -79,7 +61,7 @@ if ($full && !elgg_in_context('gallery')) {
 	$params = $params + $vars;
 	$summary = elgg_view('object/elements/summary', $params);
 
-	echo $members;
+	echo $summary;
 } elseif (elgg_in_context('gallery')) {
 	echo <<<HTML
 <div class="webinar-gallery-item">
@@ -90,17 +72,16 @@ HTML;
 } else {
 	// brief view
 	$content = elgg_get_excerpt($webinar->description);
-	
+//	echo $metadata;	
 	$params = array(
 			'entity' => $webinar,
 			'subtitle' => $subtitle,
 			'tags' => $tags,
 			'content' => $content,
-	);
+		);
 	$params = $params + $vars;
 	$body = elgg_view('object/elements/summary', $params);
 
 	echo elgg_view_image_block($owner_icon, $body);
 	echo $members;
 }
-

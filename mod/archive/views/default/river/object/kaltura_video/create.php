@@ -1,13 +1,17 @@
 <?php
-	include_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__))))))."/kaltura/api_client/includes.php");
 
-	$performed_by = get_entity($vars['item']->subject_guid); // $statement->getSubject();
-	$object = get_entity($vars['item']->object_guid);
-	$url = $object->getURL();
+include_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__))))))."/kaltura/api_client/includes.php");
 
-	$url = "<a href=\"{$performed_by->getURL()}\">{$performed_by->name}</a>";
-	$string = sprintf(elgg_echo("kalturavideo:river:updated"),$url) . " ";
-    $string .= elgg_echo("kalturavideo:river:update") . " <a href=\"" . $object->getURL() . "\">" . $object->title . "</a>";
+$item = $vars['item'];
+
+$performed_by = $item->getSubjectEntity(); 
+$object = $item->getObjectEntity();
+
+$url = $object->getURL();
+
+$url = "<a href=\"{$performed_by->getURL()}\">{$performed_by->name}</a>";
+$string = sprintf(elgg_echo("kalturavideo:river:updated"),$url) . " ";
+$string .= elgg_echo("kalturavideo:river:update") . " <a href=\"" . $object->getURL() . "\">" . $object->title . "</a>";
 
 	$widgetUi = elgg_get_plugin_setting('custom_kdp', 'kaltura_video');
 	$viewData["swfUrl"]	= KalturaHelpers::getSwfUrlForBaseWidget($widgetUi);
@@ -34,7 +38,6 @@
 
 
 <?php 
-$object = $vars['item']->getObjectEntity();
 
 $excerpt = strip_tags($object->excerpt);
 $excerpt = elgg_get_excerpt($excerpt);

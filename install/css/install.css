@@ -74,9 +74,10 @@ ul {
         margin-bottom: 30px;
 }
 .elgg-page-body {
-	border: 1px solid #666666;
+	border: 1px solid #EEE;
+	box-shadow:0 0 3px #EEE;
+        background:#F8F8F8;
 	padding: 0 40px 5px;
-	background: white;
         padding-top: 40px;
 }
 
@@ -245,8 +246,9 @@ select {
 }
 
 .elgg-system-messages li {
-	padding: 3px 10px 3px 10px;
+	padding: 15px 15px 0!important;
 	margin-bottom: 20px;
+	border-radius: 3px;
 }
 
 .elgg-state-success {

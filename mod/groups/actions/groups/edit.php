@@ -54,18 +54,6 @@ if ($group_guid && !$group->canEdit()) {
 // Assume we can edit or this is a new group
 if (sizeof($input) > 0) {
 	foreach($input as $shortname => $value) {
-		// update access collection name ig group name changes
-		if (!$is_new_group && $shortname == 'name' && $value != $group->name) {
-			$ac_name = elgg_echo('groups:group') . ": " . $group->name;
-			$acl = get_access_collection($group->group_acl);
-			if ($acl) {
-				// @todo Elgg api does not support updating access collection name
-				$db_prefix = elgg_get_config('dbprefix');
-				$query = "UPDATE {$db_prefix}access_collections SET name = '$ac_name'";
-				update_data($query);
-			}
-		}
-
 		$group->$shortname = $value;
 	}
 }
@@ -113,7 +101,7 @@ if (!$is_new_group && $new_owner_guid && $new_owner_guid != $old_owner_guid) {
 
 $must_move_icons = ($owner_has_changed && $old_icontime);
 
-$group->save();
+$guid = $group->save();
 
 // Invisible group support
 // @todo this requires save to be called to create the acl for the group. This
@@ -139,10 +127,10 @@ elgg_clear_sticky_form('groups');
 if ($is_new_group) {
 
 	// @todo this should not be necessary...
-	elgg_set_page_owner_guid($group->guid);
+	elgg_set_page_owner_guid($group);
 
 	$group->join($user);
-	add_to_river('river/group/create', 'create', $user->guid, $group->guid, $group->access_id);
+	add_to_river('river/group/create', 'create', $user->guid, $guid, $group->access_id);
 }
 
 $has_uploaded_icon = (!empty($_FILES['icon']['type']) && substr_count($_FILES['icon']['type'], 'image/'));
@@ -151,7 +139,7 @@ if ($has_uploaded_icon) {
 
 	$icon_sizes = elgg_get_config('icon_sizes');
 
-	$prefix = "groups/" . $group->guid;
+	$prefix = "groups/" . $guid;
 
 	$filehandler = new ElggFile();
 	$filehandler->owner_guid = $group->owner_guid;

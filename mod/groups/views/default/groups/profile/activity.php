@@ -25,23 +25,9 @@ $all_link = elgg_view('output/url', array(
 
 elgg_load_js('elgg.wall');
 			
-$content .= elgg_view_form('wall/add', array('name'=>'elgg-wall-news-groups'), array('to_guid'=> $group->guid));
+$content .= elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> $group->guid, 'ref'=>'news'));
 
-/*$db_prefix = elgg_get_config('dbprefix');
-$content .= elgg_list_river(array(
-	'limit' => 25,
-	'pagination' => true,
-	'joins' => array("JOIN {$db_prefix}entities e1 ON e1.guid = rv.object_guid"),
-	'wheres' => array("(e1.container_guid = $group->guid)"),
-));*/
-$entities = elgg_get_entities(array('container_guid'=>$group->guid, 'limit'=>0));
-foreach($entities as $entity){
-	$entity_guids[] = $entity->getGUID();
-}
-if(count($entity_guids) > 0){
-	$content .= minds_elastic_list_news(array('object_guids'=>$entity_guids, 'limit' => 25,
-	'pagination' => true));
-}
+$content  .= elgg_list_river(array('owner_guid'=>$group->guid));
 
 //echo elgg_view_module('wall', null, $content);
 

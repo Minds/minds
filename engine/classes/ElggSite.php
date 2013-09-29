@@ -37,13 +37,11 @@ class ElggSite extends ElggEntity {
 	 * @return void
 	 */
 	protected function initializeAttributes() {
-		parent::initializeAttributes();
-
+		$this->attributes['guid'] = 1;
 		$this->attributes['type'] = "site";
 		$this->attributes['name'] = NULL;
 		$this->attributes['description'] = NULL;
 		$this->attributes['url'] = NULL;
-		$this->attributes['tables_split'] = 2;
 	}
 
 	/**
@@ -117,47 +115,19 @@ class ElggSite extends ElggEntity {
 	 * @throws InvalidClassException
 	 */
 	protected function load($guid) {
-		$attr_loader = new ElggAttributeLoader(get_class(), 'site', $this->attributes);
-		$attr_loader->requires_access_control = !($this instanceof ElggPlugin);
-		$attr_loader->secondary_loader = 'get_site_entity_as_row';
-
-		$attrs = $attr_loader->getRequiredAttributes($guid);
-		if (!$attrs) {
-			return false;
+		
+		foreach($guid as $k => $v){
+			$this->attributes[$k] = $v;
 		}
 
-		$this->attributes = $attrs;
-		$this->attributes['tables_loaded'] = 2;
 		cache_entity($this);
 
 		return true;
 	}
 
-	/**
-	 * Saves site-specific attributes.
-	 *
-	 * @internal Site attributes are saved in the sites_entity table.
-	 *
-	 * @return bool
-	 */
-	public function save() {
-		global $CONFIG;
-
-		// Save generic stuff
-		if (!parent::save()) {
-			return false;
-		}
-
-		// make sure the site guid is set (if not, set to self)
-		if (!$this->get('site_guid')) {
-			$guid = $this->get('guid');
-			update_data("UPDATE {$CONFIG->dbprefix}entities SET site_guid=$guid
-				WHERE guid=$guid");
-		}
-
-		// Now save specific stuff
-		return create_site_entity($this->get('guid'), $this->get('name'),
-			$this->get('description'), $this->get('url'));
+	public function save(){
+		$this->guid = 1;
+		return create_entity($this,false); 
 	}
 
 	/**
@@ -454,4 +424,9 @@ class ElggSite extends ElggEntity {
 		// non-public page
 		return FALSE;
 	}
+	
+	public function set($name, $value) {
+        	$this->attributes[$name] = $value;
+                return TRUE;
+        }
 }

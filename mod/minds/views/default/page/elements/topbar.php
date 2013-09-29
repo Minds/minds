@@ -27,4 +27,4 @@
 	<?php } ?>
 </div>
 
-<?php echo elgg_view_menu('site'); ?>
+<?php echo elgg_view_menu('site',array('sort_by'=>'priority')); ?>

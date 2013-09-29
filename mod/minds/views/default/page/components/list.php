@@ -29,6 +29,7 @@ $list_class = 'elgg-list';
 $list_id = elgg_extract('list_id', $vars, null);
 $data_options = elgg_extract('data-options', $vars, false);
 
+
 if ($data_options) {
     $list_class = "$list_class hj-syncable";
 }
@@ -56,9 +57,10 @@ if ($pagination && $count) {
         'count' => $count,
         'limit' => $limit,
         'offset_key' => $offset_key,
-		'ajaxify' => $ajaxify,
-		'list_id' => $list_id
-            ));
+	'ajaxify' => $ajaxify,
+	'list_id' => $list_id,
+        'last_guid' => $last_guid
+	));
 }
 
 $before = elgg_view('page/components/list/prepend', $vars);
@@ -76,10 +78,10 @@ $html .= $before;
 if (is_array($items) && count($items) > 0) {
     foreach ($items as $item) {
         if (elgg_instanceof($item)) {
-            $id = "elgg-{$item->getType()}-{$item->getGUID()}";
+            $id = $item->getGUID();
             $time = $item->time_created;
         } else {
-            $id = "item-{$item->getType()}-{$item->id}";
+	    $id = $item->id;
             $time = $item->posted;
         }
         $html .= "<li id=\"$id\" class=\"$item_class\" data-timestamp=\"$time\">";

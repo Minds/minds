@@ -15,7 +15,7 @@ $icon = elgg_view_entity_icon($entity, $size, $vars);
 $rel = '';
 if (elgg_get_logged_in_user_guid() == $entity->guid) {
 	$rel = 'rel="me"';
-} elseif (check_entity_relationship(elgg_get_logged_in_user_guid(), 'friend', $entity->guid)) {
+} elseif (user_is_friend(elgg_get_logged_in_user_guid(), $entity->guid)) {
 	$rel = 'rel="friend"';
 }
 

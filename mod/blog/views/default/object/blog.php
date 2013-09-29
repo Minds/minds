@@ -11,7 +11,6 @@ $blog = elgg_extract('entity', $vars, FALSE);
 if (!$blog) {
 	return TRUE;
 }
-
 $owner = $blog->getOwnerEntity();
 $container = $blog->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
@@ -29,31 +28,12 @@ $owner_link = elgg_view('output/url', array(
 $author_text = elgg_echo('byline', array($owner_link));
 $date = elgg_view_friendly_time($blog->time_created);
 
-// The "on" status changes for comments, so best to check for !Off
-if ($blog->comments_on != 'Off') {
-	$comments_count = $blog->countComments();
-	//only display if there are commments
-	if ($comments_count != 0) {
-		$text = elgg_echo("comments") . " ($comments_count)";
-		$comments_link = elgg_view('output/url', array(
-			'href' => $blog->getURL() . '#blog-comments',
-			'text' => $text,
-			'is_trusted' => true,
-		));
-	} else {
-		$comments_link = '';
-	}
-} else {
-	$comments_link = '';
-}
-
 $metadata = elgg_view_menu('entity', array(
 	'entity' => $vars['entity'],
 	'handler' => 'blog',
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
 ));
-
 $subtitle = "$author_text $date $comments_link $categories";
 
 // do not show the metadata and controls in widget view
