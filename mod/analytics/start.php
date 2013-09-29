@@ -40,21 +40,23 @@ function analytics_page_handler($page) {
 function analytics_register_client(){
 	$client = new Google_Client();
 	$client->setApplicationName('Minds analytics reporter');
-	$client->setAccessType('offline');
-	$client->setClientId('81109256529-40nvse91toa46vad51glec1fkpu35ikq.apps.googleusercontent.com');
-	$client->setClientSecret('T5cA-u3vZbhIgXq-t3r7ubN5');
-	$client->setRedirectUri(elgg_get_site_url() . 'analytics/callback');
-	//$client->setDeveloperKey('insert_your_developer_key');
+	
+	// set assertion credentials
+	$client->setAssertionCredentials(
+  		new Google_AssertionCredentials(
+
+			'81109256529-7204tgap3gkaf3gmeuji4k9r408m76m8@developer.gserviceaccount.com', // email you added to GA
+
+			array('https://www.googleapis.com/auth/analytics.readonly'),
+
+   	 		file_get_contents('/key.p12')  // keyfile you downloaded
+
+	));
+	
+	$client->setClientId('81109256529-7204tgap3gkaf3gmeuji4k9r408m76m8.apps.googleusercontent.com');
 	$client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
-	
-	//already authenticated
-	if($token = elgg_get_plugin_setting('token', 'analytics')){
-		//var_dump($token); exit;
-		//$access_token = $client->refreshToken($token['refresh_token']);
-		//var_dump($access_token); exit;
-		$client->setAccessToken($token);
-	}
-	
+	$client->setAccessType('offline_access');
+
 	
 	$client->setUseObjects(true);
 	
@@ -96,7 +98,7 @@ function analytics_retrieve(array $options = array()){
 	
 	$today = date('o-m-d', time());
 	$yesterday = date('o-m-d', time() - 60 * 60 * 24);
-
+	
 	if($options['filter'] == 'trending'){
 		try{
 			//try from cache. all trending caches are valid for 1 hour

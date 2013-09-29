@@ -22,12 +22,12 @@ if (elgg_is_logged_in() && $context) {
 			'selected' => ($filter_context == 'featured'),
 			'priority' => 200,
 		),
-		'trending' => array(
+/*		'trending' => array(
                         'text' => elgg_echo('trending'),
                         'href' => $context."/trending",
                         'selected' => ($filter_context == 'trending'),
                         'priority' => 300,
-                ),
+                ),*/
 		'friend' => array(
 			'text' => elgg_echo('friends'),
 			'href' => $context."/channels/$username",
