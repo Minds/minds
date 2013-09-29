@@ -1168,14 +1168,38 @@ div.tiers {
 }
 div.tiers div.tier {
 
-    border: 1px solid #000;
+    background-color: #4690D6;
+    border: 1px solid #4690D6;
     width: 250px;
-    height: 300px;
+    height: 150px;
     float: left;
     margin: 10px;
     margin-bottom:30px;
 }
 
+div.tier_details div.default-description,
 div.tier div.default-description {
     padding: 10px;
+}
+
+div.tier_details {
+border: 1px solid #000;
+}
+
+div.register-popup {
+    width:700px;
+    margin-left: 30px;
+    margin-right: auto;
+}
+
+/**
+ * Ad specific
+ */
+.contentad{
+	width:100%;
+	height:620px;
+}
+.adblade iframe{
+	margin: 10px auto;
+	display:block;
 }

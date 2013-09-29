@@ -1,13 +1,13 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    $user = elgg_get_logged_in_user_entity();
+
+    $domain_link = "http://". $vars['domain'] . "/install.php?username=".urlencode($user->username) . "&name=".urlencode($user->name) . "&email=".urlencode($user->email);
+
 ?>
 
 <div id="pingtest-results">
-    <p>Testing <a href="http://<?php echo $vars['domain']; ?>/install.php"><?php echo $vars['domain']; ?></a>, one moment please...</p>
+    <p>Testing <a href="<?php echo $domain_link; ?>"><?php echo $vars['domain']; ?></a>, one moment please...</p>
 </div>
 <div id="pingtest-fail" style=display:none;>
     <h1>Problem...</h1>
@@ -37,7 +37,7 @@
         "q=select%20*%20from%20html%20where%20url%3D%22"+
         encodeURIComponent("http://<?php echo $vars['domain']; ?>/install.php")+"%22&format=json'&callback=?", function(data){
           if(data.results[0]){
-              window.location = "http://<?php echo $vars['domain']; ?>/install.php";
+              window.location = "<?php echo $domain_link; ?>";
           } else {
               
               $('#pingtest-results').fadeOut();

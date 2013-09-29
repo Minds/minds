@@ -128,8 +128,8 @@ function minds_init(){
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
         elgg_register_action("registernode","$actionspath/minds/registernode.php");
-        elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php", 'public');
-        elgg_register_action("select_tier","$actionspath/minds/select_tier.php", 'public');
+        elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php");
+        elgg_register_action("select_free_tier","$actionspath/minds/select_free_tier.php");
 	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
@@ -147,11 +147,37 @@ function minds_init(){
             return array_merge($pages, $return);
         });
         
+        // Override registration action to support tier signup
+        elgg_unregister_action('register');
+        elgg_register_action('register', dirname(__FILE__) . '/actions/minds/register.php', 'public');
+        
+        // Set validation true if this is a tier signup
+        elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
+
+            global $SESSION;
+            
+            $object = $params['user'];
+
+            if ($object && elgg_instanceof($object, 'user')) {
+//                if ($SESSION['_from_tier'] == 'y') { 
+                if (get_input('returntoreferer') == 'y') // Hack, but sessions seem not to be available here. TODO: Secure this.
+                    elgg_set_user_validation_status($object->guid, true, 'tier_signup');      
+                }
+//            } 
+        }, 1);
+        
         // Endpoint
         elgg_register_page_handler('tierlogin', function($pages) {
             
+            global $SESSION;
+            $SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
+            $SESSION['__tier_selected'] = get_input('tier');
+            $SESSION['_from_tier'] = 'y';
+            
+            $_SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
             $_SESSION['__tier_selected'] = get_input('tier');
-            $content = elgg_view_form('login', null, array('returntoreferer' => true));
+            $_SESSION['_from_tier'] = 'y';
+            $content = "<div class=\"register-popup\">".elgg_view_form('register', null, array('returntoreferer' => true))."</div>";
             
             // If we've returned to the window after a successful login, then refresh back to parent
             if (elgg_is_logged_in()) {
@@ -170,9 +196,42 @@ function minds_init(){
                 'sidebar' => ''
             );
             
-            echo elgg_view_page('Login', elgg_view_layout('default', $params));
+            echo elgg_view_page('Login', elgg_view_layout('default', $params),'default_popup');
             return true;
         });
+        
+        
+        // Override the return url on tier orders
+        elgg_register_plugin_hook_handler('urls', 'pay', function($hook, $type, $return, $params) {
+            
+            if ($order = $params['order']) {
+            
+                $items = unserialize($order->items);
+                if ($items) {
+                    // Assume that if the first one is a tier then everything is
+                    $ia = elgg_set_ignore_access();
+                    
+                    $tier = get_entity($items[0]->object_guid);
+                    if (elgg_instanceof($tier, 'object', 'minds_tier'))
+                            $return['return'] = elgg_get_site_url() . 'register/node/';
+                            
+                    elgg_set_ignore_access($ia);
+             
+                    return $return;
+                }
+                
+            }
+            
+        });
+        
+        // Remove elgg specific admin menu items
+        elgg_register_event_handler('pagesetup', 'system', function() {    
+            elgg_unregister_menu_item('admin_footer', 'faq');
+            elgg_unregister_menu_item('admin_footer', 'manual');
+            elgg_unregister_menu_item('admin_footer', 'community_forums');
+            elgg_unregister_menu_item('admin_footer', 'blog');
+        }, 1001);
+        
 }
 
 function minds_index($hook, $type, $return, $params) {

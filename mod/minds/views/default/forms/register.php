@@ -75,9 +75,11 @@ if (elgg_is_sticky_form('register')) {
 		// Add captcha hook
 		echo elgg_view('input/captcha', $vars);
 
-		echo '<div class="elgg-foot">';
-		echo elgg_view('input/hidden', array('name' => 'friend_guid', 'value' => $vars['friend_guid']));
-		echo elgg_view('input/hidden', array('name' => 'invitecode', 'value' => $vars['invitecode']));
-	echo elgg_view('input/submit', array('name' => 'submit', 'value' => elgg_echo('register')));
-?>
-</div>
+echo '<div class="elgg-foot">';
+echo elgg_view('input/hidden', array('name' => 'friend_guid', 'value' => $vars['friend_guid']));
+echo elgg_view('input/hidden', array('name' => 'invitecode', 'value' => $vars['invitecode']));
+if(isset($vars['returntoreferer']))
+    echo elgg_view('input/hidden', array('name' => 'returntoreferer', 'value' => 'y'));
+echo elgg_view('input/submit', array('name' => 'submit', 'value' => elgg_echo('register')));
+echo '</div>';
+

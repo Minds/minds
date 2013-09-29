@@ -6,7 +6,7 @@
     if (elgg_is_logged_in() && $_SESSION['__tier_selected'])
     {
         $tier = get_entity($_SESSION['__tier_selected']);
-        $url = elgg_get_site_url(). "action/pay/basket/add?type_guid={$tier->guid}&title={$tier->title}&description={$tier->description}&price={$tier->price}&quantity=1";
+        $url = elgg_get_site_url(). "action/pay/basket/add?type_guid={$tier->guid}&title={$tier->title}&description={$tier->description}&price={$tier->price}&quantity=1&recurring=y";
         $url = elgg_add_action_tokens_to_url($url);
 
         unset ($_SESSION['__tier_selected']);
@@ -24,7 +24,7 @@
         
 
 ?>
-<div class="tiers">
+<div id="tiers-selection" class="tiers">
   
     <p><?php echo elgg_echo('minds:tier:blurb');?></p>
     
@@ -45,6 +45,21 @@
     ?>
     <br class="clearfix" />
 </div>
+
+<?php 
+// Returning from an order, so we need to poll while Paypal processes the payment and pings our IPN
+if (get_input('auth')) { 
+?>
+<script>
+
+    $('#tiers-selection').html("<p>Processing payment, please wait...</p>");
+    setTimeout("location.reload(true);", 5000);
+    
+</script>
+
+
+<?php } ?>
+
 <?php
 
     }

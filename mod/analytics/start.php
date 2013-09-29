@@ -100,7 +100,7 @@ function analytics_retrieve(array $options = array()){
 	if($options['filter'] == 'trending'){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
-			$CACHE = new ElggFileCache('/tmp/analytics/trending_'.$options['context'].'/', 360);
+			$CACHE = new ElggFileCache('/tmp/analytics/trending_'.$options['context'].'/', 3600);//cache for 1 hour
 			if($guids = $CACHE->load('trending_'.$options['offset'])){
 				return json_decode($guids, true);
 			} else {

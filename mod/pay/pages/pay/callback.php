@@ -25,4 +25,5 @@ if($user_auth_result){
 	//pay_call_payment_handler_callback('paypal', $order_guid);
 } else {
 	echo 'Callback could not be authenticated';
+        error_log('PAYPAL: DEBUG Callback could not be authenticated');
 }

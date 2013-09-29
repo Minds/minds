@@ -14,6 +14,7 @@ function pay_init() {
 
 	// register a library of helper functions
 	elgg_register_library('elgg:pay', elgg_get_plugins_path() . 'pay/lib/pay.php');
+        elgg_load_library('elgg:pay');
 
 	// Extend CSS
 	elgg_extend_view('css/elgg', 'pay/css');
@@ -21,6 +22,9 @@ function pay_init() {
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('pay', 'pay_page_handler');
 
+        // Register a generic Paypal IPN endpoint to handle recurring payments
+        elgg_register_page_handler('paypalgenericipn', 'paypal_generic_ipn_handler');
+        
 	// Register URL handlers
 	elgg_register_entity_url_handler('object', 'pay', 'pay_url_override');
 
@@ -54,6 +58,12 @@ function pay_init() {
 	elgg_register_action("pay/admin/accept", "$action_path/admin/accept.php");
 	elgg_register_action("pay/admin/decline", "$action_path/admin/decline.php");
 	elgg_register_action("pay/admin/delete", "$action_path/admin/delete.php");
+        
+         // Extend public pages
+        elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
+            $pages = array('paypalgenericipn');
+            return array_merge($pages, $return);
+        });
 }
 
 /**
