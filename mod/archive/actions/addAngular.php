@@ -23,9 +23,6 @@ $guid = get_input("guid");
 $entryId = get_input("entryId");
 $album_guid = get_input('albumId');
 
-if($album_guid)
-    $album = get_entity($album_guid, 'object');
-
 $thumbSec = get_input("thumbSecond", 0);
 $entity = get_entity($guid, 'object');
 
@@ -71,39 +68,49 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
 	$entity->access_id = $access_id;
 	
 	if($guid = $entity->save()){
-		system_message(str_replace("%ID%",$entryId,elgg_echo("kalturavideo:action:updatedok")));
-    		echo $guid;
-		return true;
+    		echo strval($guid);
+	//	system_message(elgg_echo('archive:upload:success'));
+		exit;
 	} else {
 		system_message(elgg_echo('archive:upload:failed'));
 	}
 } elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType == 'image'){
-// If Image then create an album. Don't upload to Kaltura.
-    if ($guid) //Update image
-    {
-        $image = get_entity($guidi, 'object');
-    }
-    else //Create new image
-    {
-        $image = new TidypicsImage();
-    }
+	
+	// If Image then create an album. Don't upload to Kaltura.
+ 	if ($guid){
+       		$image = get_entity($guid, 'object');
+	} else {
+        	$image = new TidypicsImage();
+    	}
+
+	if($album_guid){
+		$album = get_entity($album_guid, 'object');
+	} else {
+		$album = $image->getContainerEntity();
+	}
+
+	if(!$album){
+		$albums = elgg_get_entities(array( 	'type'=> 'object',
+							'subtypes' => array('album'),
+							'owner_guid' => elgg_get_logged_in_user_guid(),
+							));
+		$album = $albums[0];
+	}
 
     $image->title = $title;
     $image->description = $desc;
     $image->container_guid = $album->getGUID();
-    $image->setMimeType($mime_type);
+    //$image->setMimeType($mime_type);
     $image->tags = $tags;
     $image->access_id = $access_id;
     $image->license = $license;
 //    $image->category = $category; //No category
 
-    $result = $image->save($_FILES['fileData']);
-
-    if ($result) {
-        $album->prependImageList(array($image->getGUID()));
-        $image->guid = $image->getGUID();
-        echo $image->getGUID();
-
+    $guid = $image->save($_FILES['fileData']);
+    
+    if ($guid) {
+        $album->prependImageList(array($guid));
+	echo $guid;
         add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
         exit;
     }

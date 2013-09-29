@@ -46,10 +46,10 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 transform: "transformRequest"
             }).
                 success(function(guid, status, headers, config) {
-                    deferred.resolve(guid.output);
+                    deferred.resolve(guid);
                 }).
                 error(function(guid, status, headers, config) {
-                    deferred.reject(guid.output);
+                    deferred.reject(guid);
                 })
         })
 

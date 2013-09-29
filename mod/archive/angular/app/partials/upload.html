@@ -2,7 +2,12 @@
 	<ul class="elgg-list elgg-list-entity">
 
 		<div id="dropzone" class="span8 well well-large">
-    			 Drag and drop files here or <input id="fileupload" type="file" name="fileData" multiple/> <a> click here </a> to select files
+
+			<span class="elgg-button elgg-button-action elgg-button-upload">
+				<span>Add files...</span>
+				<input id="fileupload" type="file" name="fileData"  multiple=""/> 
+                	</span>
+			<span class="more-info"> - or drag files here - </span>
 		</div>
 		
 		<li class="elgg-item" data-ng-repeat="fileItem in fileInfo" ng-style="{backgroundImage: getFileThumbnail(fileItem.entry, fileItem.thumbSecond, fileItem.guid)}">
@@ -15,10 +20,11 @@
 				<button id="delete" ng-click="deleteEntry($index)" class="entypo">&#10005;</button>
 
 				<div class="uploadbox-title">
-				    <input required type="text" name='name' class="uploadInput" ng-model="fileItem['name']" placeholder="Enter title…"/>
+				    <input required type="text" name='name' class="elgg-input-text" ng-model="fileItem['name']" placeholder="Enter title…"/>
 				</div>
 
-				<span class="uploadSpan">License:
+				<span class="uploadSpan">
+					<label>License:</label>
 				    <select required name="license" id="license" class="elgg-input-dropdown uploadSelect" ng-model="fileItem['license']">
 					<option value="attribution-cc">Attribution CC BY</option>
 					<option value="attribution-sharealike-cc">Attribution-ShareAlike BY-SA</option>
@@ -40,11 +46,11 @@
 				</span>
 
 				<div class="uploadbox-description">
-				    <input type="text" name="description" class="uploadInput" ng-model="fileItem['description']" placeholder="Enter description…"/>
+				    <input type="text" name="description" class="uploadInput elgg-input-text" ng-model="fileItem['description']" placeholder="Enter description…"/>
 				</div>
 				<!--</br>-->
 
-				<span class="uploadSpan">Privacy:
+			<span class="uploadSpan"><label>Privacy:</label>
 				    <select name="access_id" id="access_id" ng-model="fileItem['access_id']" class="elgg-input-dropdown elgg-input-access uploadSelect">
 					<option value="0">Private</option>
 					<option value="-2">Channels</option>
@@ -53,9 +59,9 @@
 				    </select>
 				</span>
 
-				<span ng-show="isImage(fileItem)" class="uploadSpan">Albums:
+				<span ng-show="isImage(fileItem)" class="uploadSpan"><label>Albums:</label>
 				<select name="albumId" id="album" ng-model="fileItem['albumId']" class="elgg-input-dropdown elgg-input-access uploadSelect">
-				    <option data-ng-repeat="album in albums" value="{{album['id']}}" ng-selected="isSelected(album)"> {{album['title']}} </option>
+    <option ng-repeat="album in albums" value="{{album['id']}}" ng-selected="isSelected(album)"> {{$index}} {{album['title']}} </option>
 				</select>
 				</span>
 

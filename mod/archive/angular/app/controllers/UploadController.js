@@ -17,7 +17,7 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
     $scope.uploaderElement = '#fileupload';
     $scope.saveEnabled = false;
     $scope.albums = albums;
-
+    
     var config = {
         ks: ks,
         serviceUrl: serviceUrl
@@ -47,8 +47,7 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
                 var thumbnailUrl = 'url('+ serviceUrl + '/p/' + partnerId + '/thumbnail/entry_id/' + entry.id + '/width/400/vid_sec/' + thumbSecond +')';
                 // return empty string if entryID not set, otherwise return thumbnail URL
                 return thumbnailUrl;
-            }else if(guid)
-            {
+            }else if(guid){
                 var thumbnailUrl = 'url(' + cdnUrl + '/photos/thumbnail/' + guid +'/large)';
                 return thumbnailUrl;
             }
@@ -75,21 +74,17 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         fileInfoRow['updateResult'] = false;
         fileInfoRow['license'] = 'not-selected';
         fileInfoRow['accessId'] = "2";
-
-        if(fileInfoRow['fileType'] == 'video' || fileInfoRow['fileType'] == 'audio') {
-            fileInfoRow['albumId'] = ""; //if video we set the album to "" else we set to the album
-        }else {
-            for(var albumIndex in $scope.albums)
-            {
-                if($scope.isSelected($scope.albums[albumIndex]))
-                {
-                    fileInfoRow['albumId'] = $scope.albums[albumIndex].id; //if video we set the album to "" else we set to the album
-                }
+	fileInfoRow['tags'] = "";
+	
+	if(fileInfoRow['fileType'] == 'image') {
+            for(albumIndex in $scope.albums){
+   		if($scope.isSelected($scope.albums[albumIndex])){
+               		     fileInfoRow['albumId'] = albumIndex; //if video we set the album to "" else we set to the album
+               	}
             }
-        }
-
-        fileInfoRow['thumbSecond'] = 0;
-        fileInfoRow['tags'] = "";
+        } else if(fileInfoRow['fileType'] == 'video' || fileInfoRow['fileType'] == 'audio'){
+		fileInfoRow['thumbSecond'] = 0;
+	}
 
         $scope.fileInfo.push(fileInfoRow);
 
@@ -114,10 +109,12 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 
             //Create an Elgg entity
             $scope.fileInfo[data.fileIndex]['guid'] = Elgg.addElggEntity($scope.fileInfo[data.fileIndex]);
-        }
-        else { //Image / file upload
-            $scope.fileInfo[data.fileIndex]['guid'] = Elgg.uploadElggFile($scope.fileInfo[data.fileIndex], jQuery(elm), data, $scope);
-        };
+    
+	} else if($scope.fileInfo[data.fileIndex]['fileType'] == 'image') {
+		$scope.fileInfo[data.fileIndex]['guid'] = Elgg.uploadElggFile($scope.fileInfo[data.fileIndex], jQuery(elm), data, $scope);
+        } else {
+		$scope.fileInfo[data.fileIndex]['guid'] = Elgg.uploadElggFile($scope.fileInfo[data.fileIndex], jQuery(elm), data, $scope);
+	}
     };
 
     /**
@@ -134,6 +131,7 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         {
             $scope.updateEntry(index);
         }
+	elgg.system_message('Success!');
     }
 
     /**

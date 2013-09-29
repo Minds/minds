@@ -1627,6 +1627,23 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 
 				// Now delete the entity itself
 				$res = db_remove($guid, $type);
+
+				//remove from the various lines
+				$namespace = array(  $type . ':' . $entity->subtype,
+						     $type . ':' . $entity->subtype . ':network:'.$entity->owner_guid,
+						     $type . ':' . $entity->subtype . ':user:'.$entity->owner_guid
+						);
+
+				if($entity->super_subtype){
+					array_push($namespace, $type . ':' . $entity->super_subtype);
+					array_push($namespace, $type . ':' . $entity->super_subtype . ':network:'.$entity->owner_guid);
+					array_push($namespace, $type . ':' . $entity->super_subtype . ':user:'.$entity->owner_guid);
+				}
+
+				foreach($namespace as $rowkey){
+					db_remove($rowkey, 'entities_by_time', array($entity->guid));
+				}
+
 				return (bool)$res;
 			}
 		}

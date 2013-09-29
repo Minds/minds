@@ -29,12 +29,6 @@ elgg_load_js('app.js');
 elgg_load_css('appstyle.css');
 
 $user_guid = elgg_get_logged_in_user_guid();
-$container_guid = $user_guid;
-if($page_owner = elgg_get_page_owner_entity()) {
-    if($page_owner instanceof ElggGroup) {
-        $container_guid = $page_owner->getGUID();
-    }
-}
 
 $angularRoot = elgg_get_site_url() . 'mod/archive/angular/app';
 $templatesPath = $angularRoot . '/partials';

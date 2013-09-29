@@ -6,7 +6,7 @@ $GUID = new GUID();
 
 ini_set('memory_limit', '8G');
 set_time_limit ( 0 );
-error_reporting(E_ERROR);
+error_reporting(E_ALL);
 
 $tables = array('objects_entity', 'groups_entity', 'users_entity', 'entities', 'entity_subtypes', 'entity_relationships', 'metadata', 'metastrings', 'private_settings');
 

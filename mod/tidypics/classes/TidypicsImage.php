@@ -29,20 +29,21 @@ class TidypicsImage extends ElggFile {
 	 * @return bool
 	 */
 	public function save($data = null) {
-		return;
+		
 		if (!parent::save()) {
 			return false;
 		}
 
 		if ($data) {
 			// new image
+			$this->super_subtype = "archive";
 			$this->simpletype = "image";
 			$this->saveImageFile($data);
 			$this->saveThumbnails();
 			$this->extractExifData();
 		}
-
-		return true;
+		
+		return $this->guid;
 	}
 
 	/**

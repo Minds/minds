@@ -1,23 +1,37 @@
-/* Plcaeholder change color - all */
-::-webkit-input-placeholder { color:#000000; opacity: 1 !important;}
-::-moz-placeholder { color:#000000; opacity: 1 !important;} /* firefox 19+ */
-:-ms-input-placeholder { color:#000000; opacity: 1 !important;} /* ie */
-input:-moz-placeholder { color:#000000; opacity: 1 !important;}
-
 #dropzone {
-    height: 50px;
-    text-align: left;
-    padding-left: 10px;
-    }
+	height: 120px;
+	width: 90%;
+	display: block;
+	position: relative;
+	margin: 0 5%;
+	box-shadow: 0 0 2px #EEE;
+	background: #EEE;
+	padding: 16px 0;
+}
 
-#fileupload{
-    border: none;
-    opacity: 0;
-    float: left;
-    width: 53px;
-    position: absolute;
-    height: 10px;
-    cursor: pointer;
+.elgg-button-upload{
+	width:120px;
+	height:20px;
+	display:block;
+	margin:auto;
+	position:relative;
+	padding:14px;
+}
+.elgg-button-upload input{
+	position: absolute;
+	opacity: 0;
+	top: 0;
+	left: 0;
+	height: 100%;
+}
+
+.more-info{
+	text-align:center;
+	width:120px;
+        height:20px;
+        display:block;
+        margin: 24px auto 0;
+        position:relative;
 }
 
 #fileupload1{
@@ -32,12 +46,13 @@ input:-moz-placeholder { color:#000000; opacity: 1 !important;}
 }
 
 #delete{
-    float: right;
-    border: none;
-    background: transparent;
+	position:absolute;
+	border: none;
+	  
+  background: transparent;
     position: absolute;
-    top: 5;
-    right: 5;
+    top: 5px;
+    right: 20px;
 }
 
 .uploadSelect{
@@ -45,58 +60,16 @@ input:-moz-placeholder { color:#000000; opacity: 1 !important;}
 }
 
 #license{
-    width: 150;
-    height: 24;
-    background: transparent;
-    color: #000000;
 }
 
-#boxentry{
-    position: relative;
-    width: 330;
-    height: 250;
-    /*background: url('background.jpg');*/
-    background-repeat: no-repeat;
-    background-size: 100%;
+.itemControls input{
+	font-weight: bold;
+	color: #333;
+	font-size: 110%;
 }
-
-#access_id{
-    width: 80;
-    height: 24;
-    background: transparent;
-    color: #000000;
-}
-
-#album{
-    width: 50;
-    height: 24;
-    background: transparent;
-    color: #000000;
-}
-
-.uploadbox-title{
-    margin-bottom:5px;
-}
-
-input.uploadInput:hover {background-color: #DDD !important;}
-input.uploadInput:focus {background-color: #fff !important;}
-input.uploadInput{
-    margin: 0;
-    background: transparent !important;
-    color: #000000;
-}   /* Plcaeholder change color - tilte */
-
-.uploadInput input::-webkit-input-placeholder {
-    color: #000000;
-    opacity: 1 !important;
-}
-.uploadInput input {
-    color: #000000;
-    opacity: 1 !important;
-}
-.uploadInput input:-ms-input-placeholder {
-    color: #000000;
-    opacity: 1 !important;
+.itemControls input:focus{
+	background:transparent;
+	border:0;
 }
 
 #saveButton{
@@ -105,42 +78,6 @@ input.uploadInput{
     display: block;
 }
 
-/*.uploadlist > form > li.elgg-item > .itemControls {*/
-    /*height: 60px;*/
-    /*overflow: hidden;*/
-    /*transition: height 0.3s;*/
-    /*-webkit-transition: height 0.3s*/
-/*}*/
-
-/*.uploadlist > form > li.elgg-item > .itemControls:hover {*/
-    /*height: 130px;*/
-/*}*/
-
-/*.uploadlist > form > .elgg-image-block {*/
-    /*background-color: rgba(255,255,255, 0.9);*/
-/*}*/
-
-/*.uploadlist > form > li.elgg-item {*/
-    /*background-color: #FFF;*/
-    /*background-repeat: no-repeat;*/
-    /*background-size: 100% 100%;*/
-    /*padding:0;*/
-    /*margin-left: 0px;*/
-/*}*/
-
-/*.uploadlist > form div.bar{*/
-    /*position: absolute;*/
-    /*left: 0;*/
-    /*bottom: 0;*/
-    /*height: 5;*/
-    /*background-color: #4690D6;*/
-/*}*/
-
-/*.uploadlist > form div.progress{*/
-    /*color: transparent;*/
-    /*height: 0;*/
-/*}*/
-
 .uploadlist > li.elgg-item > .itemControls {
     height: 60px;
     overflow: hidden;
@@ -148,12 +85,13 @@ input.uploadInput{
     -webkit-transition: height 0.3s
 }
 
-.uploadlist > li.elgg-item > .itemControls:hover {
-    height: 130px;
-}
-
 .uploadlist .elgg-image-block {
-    background-color: rgba(255,255,255, 0.9);
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	padding: 8px 8px 16px;
+	background-color: #FFF; 
 }
 
 .uploadlist > li.elgg-item {
