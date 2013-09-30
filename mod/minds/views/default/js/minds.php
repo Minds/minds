@@ -181,7 +181,7 @@
 */
 			var offset = 0;
 
-			if(loc.indexOf('trending') || loc.indexOf('view')){
+			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1){
 				offset = $list.find('.elgg-list').children().length;
 			} else {
 				offset = $list.find('li.elgg-item:last').attr('id'); 
