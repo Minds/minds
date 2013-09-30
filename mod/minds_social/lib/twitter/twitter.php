@@ -45,21 +45,17 @@ function minds_social_twitter_login() {
         $api->host = "https://api.twitter.com/1.1/";
         $twitter = $api->get('account/verify_credentials');
 	
-	// attempt to find user and log them in.
-	// else, create a new user.
-	$options = array(
-		'type' => 'user',
-		'plugin_user_setting_name_value_pairs' => array(
-			'twitter_name' => $twitter->screen_name,
-			'twitter_id' => $twitter->id,
-		),
-		'plugin_user_setting_name_value_pairs_operator' => 'OR',
-		'limit' => 0
-	);
+	$guid = get_user_index_to_guid('twitter:name:'.$twitter->screen_name);	
 	
-	$users = elgg_get_entities_from_plugin_user_settings($options);	
+	if(!$guid){
+		$guid = get_user_index_to_guid('twitter:id:'.$twitter->id);
+	}
 	
-	if ($user = $users[0]) {
+	if($guid){
+		$user = get_entity($guid, 'user');
+	}
+	
+	if ($user) {
 		login($user);
 		system_message(elgg_echo('twitter_api:login:success'));			
 		forward('news');
@@ -102,14 +98,10 @@ function minds_social_twitter_login() {
 					'invitecode' => $invitecode
 				);
 	
-				// @todo should registration be allowed no matter what the plugins return?
-				/*if (!elgg_trigger_plugin_hook('register', 'user', $params, TRUE)) {
-					$new_user->delete();
-					// @todo this is a generic messages. We could have plugins
-					// throw a RegistrationException, but that is very odd
-					// for the plugin hooks system.
-					throw new RegistrationException(elgg_echo('registerbad'));
-				}*/
+				$data = array('type'=>'user_index_to_guid', $guid => time());
+		                db_insert('twitter:id:'.$twitter->id, $data);//move this into the user class
+				db_insert('twitter:name'.$twitter->name, $data);
+	
 				//Automatically subscribe user to the Minds Channel
 				minds_subscribe_default(null,null,null, array('user'=>$new_user));
 				login($new_user);			

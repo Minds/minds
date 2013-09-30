@@ -179,7 +179,14 @@
 				loc = location.href + 'news/featured';
 			}
 */
-			var offset = $list.find('li.elgg-item:last').attr('id'); 
+			var offset = 0;
+
+			if(loc.indexOf('trending') || loc.indexOf('view')){
+				offset = $list.find('.elgg-list').children().length;
+			} else {
+				offset = $list.find('li.elgg-item:last').attr('id'); 
+			}
+			
 			if(!offset){
 				return false;
 			}
