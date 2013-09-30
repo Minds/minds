@@ -855,6 +855,8 @@ function elgg_get_entities(array $options = array()) {
 		'subtypes'				=>	ELGG_ENTITIES_ANY_VALUE,
 		
 		'timebased'	=> true,
+
+		'newest_first'	=> true,
 	
 		'guids'					=>	ELGG_ENTITIES_ANY_VALUE,
 		'owner_guids'			=>	ELGG_ENTITIES_ANY_VALUE,
@@ -921,7 +923,7 @@ function elgg_get_entities(array $options = array()) {
 							$namespace .= ':network:'.$network;
 						}
 					}
-					$slice = new ColumnSlice($options['offset'], "", $options['limit'], true);//set to reversed
+					$slice = new ColumnSlice($options['offset'], "", $options['limit'], $options['newest_first']);//set to reversed
 					$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
 					$rows = $DB->cfs[$type]->multiget(array_keys($guids));
 				} else {

@@ -31,9 +31,8 @@ switch ($vars['page']) {
 		break;
 	case 'popular':
 		$options['limit'] = $limit;
-		$options['relationship'] = 'friend';
-		$options['inverse_relationship'] = false;
-		$content = elgg_list_entities_from_relationship_count($options);
+		$options['newest_first'] = false;
+		$content = elgg_list_entities($options);
 		break;
 	/*case 'suggested':
 		$people = suggested_friends_get_people($page_owner->guid, $friends, $groups);
@@ -52,6 +51,7 @@ switch ($vars['page']) {
 		break;*/
 	case 'newest':
 	default:
+		$options['newest_first'] = true;
 		$content = elgg_list_entities($options);
 		break;
 }
