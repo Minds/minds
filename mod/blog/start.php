@@ -250,9 +250,14 @@ function blog_url_handler($entity) {
 		return FALSE;
 	}
 
+	$guid = $entity->guid;
+	if($entity->legacy_guid){
+		$guid = $entity->legacy_guid;
+	}
+
 	$friendly_title = elgg_get_friendly_title($entity->title);
 
-	return "blog/view/{$entity->guid}/$friendly_title";
+	return "blog/view/$guid/$friendly_title";
 }
 
 /**

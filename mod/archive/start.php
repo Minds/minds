@@ -125,7 +125,13 @@ function minds_archive_entity_url($entity) {
 		global $CONFIG;
 		$title = str_replace(" ", "-", $entity->title);
 		$title = preg_replace('/\.[^.]*$/', '', $title);
-		return elgg_get_site_url() . "archive/view/" . $entity->getGUID() . "/" . $title;
+
+		$guid = $entity->getGUID();
+		if($entity->legacy_guid){
+			$guid = $entity->legacy_guid;
+		}
+
+		return elgg_get_site_url() . "archive/view/" . $guid . "/" . $title;
 }
 
 

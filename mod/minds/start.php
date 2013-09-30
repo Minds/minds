@@ -142,7 +142,7 @@ function minds_init(){
         // Handle some tier pages
         
         // Extend public pages
-        elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
+        /*elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
             $pages = array('tierlogin'); 
             return array_merge($pages, $return);
         });
@@ -231,7 +231,7 @@ function minds_init(){
             elgg_unregister_menu_item('admin_footer', 'community_forums');
             elgg_unregister_menu_item('admin_footer', 'blog');
         }, 1001);
-        
+        */
 }
 
 function minds_index($hook, $type, $return, $params) {
