@@ -1896,7 +1896,7 @@ function elgg_cacheable_view_page_handler($page, $type) {
 		preg_match($regex, $page, $matches);
 		$view = $matches[1];
 		$return = elgg_view("$type/$view");
-
+		
 		header("Content-type: $content_type");
 
 		// @todo should js be cached when simple cache turned off

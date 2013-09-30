@@ -179,13 +179,12 @@ function blog_get_trending_page_content_list() {
       	$guids = analytics_retrieve(array('context'=>'blog', 'limit'=>$limit, 'offset'=>$offset));
 	
 	$guidsString = implode(',', $guids);	
-	$list = elgg_list_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>'', 'full_view'=>false));
+	$list = elgg_list_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>0, 'full_view'=>false, 'pagination_legacy' => true));
         if (!$list) {
                 $return['content'] = elgg_echo('blog:none');
         } else {
                 $return['content'] = $list;
         }
-	$return['content'] .= elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000));
 
         $return['filter'] = elgg_view('page/layouts/content/trending_filter', $return);
 
@@ -343,19 +342,7 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 
 			$title .= ": \"$blog->title\"";
 
-			if ($revision) {
-				$revision = elgg_get_annotation_from_id((int)$revision);
-				$vars['revision'] = $revision;
-				$title .= ' ' . elgg_echo('blog:edit_revision_notice');
-
-				if (!$revision || !($revision->entity_guid == $guid)) {
-					$content = elgg_echo('blog:error:revision_not_found');
-					$return['content'] = $content;
-					$return['title'] = $title;
-					return $return;
-				}
-			}
-
+	
 			$body_vars = blog_prepare_form_vars($blog, $revision);
 
 			elgg_push_breadcrumb($blog->title, $blog->getURL());
@@ -364,7 +351,6 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 			elgg_load_js('elgg.blog');
 
 			$content = elgg_view_form('blog/save', $vars, $body_vars);
-			$sidebar = elgg_view('blog/sidebar/revisions', $vars);
 		} else {
 			$content = elgg_echo('blog:error:cannot_edit_post');
 		}

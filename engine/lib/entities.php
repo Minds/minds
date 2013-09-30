@@ -1962,6 +1962,10 @@ function get_entity_url($entity_guid, $type) {
 	if ($entity = get_entity($entity_guid, $type)) {
 		$url = "";
 
+		if($entity->legacy_guid){
+			$entity_guid = $entity->legacy_guid;
+		}
+
 		if (isset($CONFIG->entity_url_handler[$entity->getType()][$entity->getSubType()])) {
 			$function = $CONFIG->entity_url_handler[$entity->getType()][$entity->getSubType()];
 			if (is_callable($function)) {

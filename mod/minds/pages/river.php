@@ -23,6 +23,11 @@ if ($type != 'all') {
 
 $options['limit'] = get_input('limit',12);
 
+$user = elgg_get_logged_in_user_entity();
+if(count($user->getFriends()) == 0){
+	$page_filter == 'featured';
+}
+
 switch ($page_type) {
 	case 'all':
 		$title = elgg_echo('news');

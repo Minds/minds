@@ -10,7 +10,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 $group_guid = get_input('group_guid');
 
 /* @var ElggGroup $group */
-$group = get_entity($group_guid);
+$group = get_entity($group_guid, 'group');
 if (!($group instanceof ElggGroup)) {
 	header("HTTP/1.1 404 Not Found");
 	exit;

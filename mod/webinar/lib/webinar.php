@@ -209,6 +209,14 @@ function webinar_get_page_content_list($page = array()){
 			'full_view' => FALSE,
 			'limit' => 12
 	);
+
+	if($guid_type == 'owner'){
+		$options['owner_guid'] = $guid;
+	}
+
+	if($guid_type == 'friends'){
+		$options['network'] = $guid;
+	}
 	
 	$filters = array('all','upcoming','running','done');
 	
