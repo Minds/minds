@@ -87,6 +87,21 @@ class TidypicsImage extends ElggFile {
 		return parent::delete();
 	}
 
+	public function set($name, $value) {
+                        switch ($name) {
+                                case 'guid':
+                                case 'time_updated':
+                                case 'last_action':
+                                        return FALSE;
+                                        break;
+                                default:
+                                        $this->attributes[$name] = $value;
+                                        break;
+                        }
+                return TRUE;
+        }
+
+
 	/**
 	 * Get the title of the image
 	 *
@@ -120,6 +135,7 @@ class TidypicsImage extends ElggFile {
 	 * @return array with number of views, number of unique viewers, and number of views for this viewer
 	 */
 	public function getViewInfo($viewer_guid = 0) {
+		return;
 		if ($viewer_guid == 0) {
 			$viewer_guid = elgg_get_logged_in_user_guid();
 		}

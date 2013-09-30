@@ -32,7 +32,7 @@ if (elgg_get_config('allow_registration')) {
 		if ($guid) {
 			elgg_clear_sticky_form('register');
 
-			$new_user = get_entity($guid);
+			$new_user = get_entity($guid,'user');
 
 			// allow plugins to respond to self registration
 			// note: To catch all new users, even those created by an admin,

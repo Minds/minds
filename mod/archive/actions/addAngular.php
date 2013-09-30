@@ -61,6 +61,7 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
 	
 	$entity->title = $title;
 	$entity->description = $desc;
+	$entity->super_subtype = 'archive';
 	$entity->owner_guid = elgg_get_logged_in_user_guid();
 	$entity->license = $license;
 	$entity->thumbnail_sec = $thumbSec;
@@ -99,6 +100,7 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
 
     $image->title = $title;
     $image->description = $desc;
+	$image->super_sybtype = 'archive';
     $image->container_guid = $album->getGUID();
     //$image->setMimeType($mime_type);
     $image->tags = $tags;
@@ -126,6 +128,7 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
     }
 
     $file->subtype = "file";
+	$file->super_subtype = 'archive';
 
     // if no title on new upload, grab filename
     if (empty($title)) {

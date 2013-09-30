@@ -135,8 +135,9 @@ class ElggUser extends ElggEntity
 		$guid =  create_entity($this);
 		//now place email and username in index
 		$data = array('type'=>'user_index_to_guid', $guid => time());
-		db_insert($this->username, $data);
-		db_insert($this->email, $data);
+		
+		db_insert(strtolower($this->username), $data);
+		db_insert(strtolower($this->email), $data);
 		return $guid;
 	}
 

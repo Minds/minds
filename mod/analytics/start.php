@@ -83,6 +83,7 @@ function anayltics_authenticate_google(){
  * Retrieve analytic information, based on a query
  */
 function analytics_retrieve(array $options = array()){
+	$g = new GUID();
 	$client = analytics_register_client();
 	$analytics = new Google_AnalyticsService($client);	
 	
@@ -124,10 +125,10 @@ function analytics_retrieve(array $options = array()){
 				foreach ($results->getRows() as $row) {
 					$url = $row[0];
 					$guid = analytics_get_guid_from_url($url);
-					$entity = get_entity($guid);
+				//	$entity = get_entity($guid,'object');
 					$views = $row[2];
 					//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
-					$guids[] = $guid;
+					$guids[] = $g->migrate($guid);
 				}
 				//save to cache for 1 hour
 				$CACHE->save('trending_'.$options['offset'], json_encode($guids));			

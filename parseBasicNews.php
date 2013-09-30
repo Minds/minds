@@ -3,7 +3,7 @@
 require('engine/start.php');
 $GUID = new GUID();
 
-$es_server = '192.168.200.13:9200';
+$es_server = '10.0.5.10:9200';
 /** 
  * Grab the featured ID's from elasticsearch
  */

@@ -599,6 +599,8 @@ function get_user_index_to_guid($index){
  */
 function get_user_by_username($username) {
 	global $CONFIG, $USERNAME_TO_GUID_MAP_CACHE, $DB;
+
+	$username = strtolower($username);
 	
 	if(!$username){
 		return false;
@@ -662,6 +664,10 @@ function get_user_by_email($email) {
 		}
 	} else {
 		$entities[] = get_entity($guids, 'user');
+	}
+
+	if($entities[0] == null){
+		return false;
 	}
 
 	return $entities;
@@ -978,7 +984,7 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	if ($user = get_user_by_username($username)) {
 		throw new RegistrationException(elgg_echo('registration:userexists'));
 	}
-
+	
 	if ((!$allow_multiple_emails) && (get_user_by_email($email))) {
 		throw new RegistrationException(elgg_echo('registration:dupeemail'));
 	}

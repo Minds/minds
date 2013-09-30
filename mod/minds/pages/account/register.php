@@ -13,10 +13,10 @@
  */
 
 // check new registration allowed
-if (elgg_get_config('allow_registration') == false) {
+/*if (elgg_get_config('allow_registration') == false) {
 	register_error(elgg_echo('registerdisabled'));
 	forward();
-}
+}*/
 
 $friend_guid = (int) get_input('friend_guid', 0);
 $invitecode = get_input('invitecode');
@@ -27,7 +27,6 @@ if (elgg_is_logged_in()) {
 }
 
 $title = elgg_echo("register");
-
 
 // create the registration url - including switching to https if configured
 $register_url = elgg_get_site_url() . 'action/register';
