@@ -626,12 +626,11 @@ function _elgg_session_destroy($id) {
  */
 function _elgg_session_gc($maxlifetime) {
 	global $DB_PREFIX;
-return;
 	$life = time() - $maxlifetime;
 
-	try {
-		return (bool)delete_data("DELETE from {$DB_PREFIX}users_sessions where ts<'$life'");
-	} catch (DatabaseException $e) {
+	//try {
+	//	return (bool)delete_data("DELETE from {$DB_PREFIX}users_sessions where ts<'$life'");
+	//} catch (DatabaseException $e) {
 		// Fall back to file store in this case, since this likely means that the database
 		// hasn't been upgraded
 		global $sess_save_path;
@@ -641,7 +640,7 @@ return;
 				@unlink($filename);
 			}
 		}
-	}
+	//}
 
 	return true;
 }

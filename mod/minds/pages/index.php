@@ -46,7 +46,7 @@ $titles_array = array(	'Freeing The World\'s Information',
 			'You Are A Genius.  Spread Your Ideas.',
 			'The Organic Web'
 			);
-//$title = elgg_view_title($titles_array[rand(0,count($titles_array)-1)]);
+$title = elgg_view_title($titles_array[rand(0,count($titles_array)-1)]);
 
 $launch_ts = 1411300800;//this could be GMT??
 $ts = time();
@@ -55,12 +55,12 @@ $countdown_minutes = round($countdown_seconds / 60);
 $countdown_hours = round($countdown_minutes / 60);
 $countdown_days = round($countdown_hours / 24);
 
-$title = elgg_view_title(round($countdown_days,0) . ' days to go.');
+$subtitle = round($countdown_days,0) . ' days to go.';
 
 $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title
-	<h3>Minds is a universal network to search, create and share free information. We're going to be releasing our code, Free & Open Source, in <b>$countdown_days</b> days. That's <b>$countdown_hours</b> hours or <b>$countdown_minutes</b> minutes.</h3>
+	<h3>We're releasing our code, Free & Open Source, in <b>$countdown_days</b> days. That's <b>$countdown_hours</b> hours or <b>$countdown_minutes</b> minutes.</h3>
 	<div class="front-page-buttons">
 		$buttons
 	</div>

@@ -366,20 +366,13 @@ class ElggUser extends ElggEntity
 	 */
 	function listFriends($subtype = "", $limit = 10, array $vars = array()) {
 		$defaults = array(
-			'type' => 'user',
-			'relationship' => 'friend',
-			'relationship_guid' => $this->guid,
-			'limit' => $limit,
 			'full_view' => false,
 		);
-
 		$options = array_merge($defaults, $vars);
 
-		if ($subtype) {
-			$options['subtype'] = $subtype;
-		}
+		$friends = $this->getFriends($subtype, $limit);
+		return elgg_view_entity_list($friends, $options);	
 
-		return elgg_list_entities_from_relationship($options);
 	}
 
 	/**
