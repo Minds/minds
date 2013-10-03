@@ -93,4 +93,5 @@ class ElggSession extends ArrayObject {
 	function del($key) {
 		$this->offsetUnset($key);
 	}
+
 }

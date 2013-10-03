@@ -41,7 +41,7 @@ function db_init() {
 
 	$cfs = array(	
 //			'site', 
-//			'session',
+			'session',
 //			'plugin', 
 //			'config',
 			'object', 
