@@ -24,6 +24,7 @@ if(!elgg_is_logged_in()){
 }
 
 $titles_array = array(	'Freeing The World\'s Information', 
+			'Meet Interesting People',
 			'Gathering Of The Minds Worldwide',
 			'Evolve The Network',
 			'The Internet of the People',

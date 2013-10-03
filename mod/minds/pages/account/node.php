@@ -9,10 +9,10 @@ $content = elgg_view_title($title);
 
 // Display original form for logged in users
 //if (elgg_is_admin_logged_in()) {
-if (false) {
+if (true) {
     
     // create the registration url - including switching to https if configured
-    $register_url = elgg_get_site_url() . 'action/registernode';
+    /*$register_url = elgg_get_site_url() . 'action/registernode';
     $form_params = array(
             'action' => $register_url,
             'class' => 'elgg-form-account',
@@ -22,6 +22,9 @@ if (false) {
             'minds_user_guid' => $user->guid,
     );
     $content .= elgg_view_form('node_loggedin', $form_params, $body_params);
+	*/
+
+	$content = '<b>This service is currently unavailable</b>. We will soon be accepting beta testers.';
 } else {
     
     $payment_recieved = false; // TODO: Test to see if we've returned from a successful billing workflow
