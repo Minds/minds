@@ -484,6 +484,9 @@ li .excerpt a{
 .elgg-menu-right-filter li a{
 	color:#666;
 }
+.elgg-menu-right-filter li.elgg-state-selected a{
+	color:#4690D6;
+}
 .front-page-buttons a{
 	margin-right:20px;
 }
