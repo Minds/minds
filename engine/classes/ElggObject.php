@@ -149,6 +149,8 @@ class ElggObject extends ElggEntity {
 		return array_merge(parent::getExportableValues(), array(
 			'title',
 			'description',
+			'featured',
+			'featured_id'
 		));
 	}
 
