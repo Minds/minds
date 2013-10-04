@@ -77,7 +77,7 @@ function tp_create_gd_thumbnails($file, $prefix, $filestorename) {
 	}
 	$file->largethumb = $prefix."largethumb".$filestorename;
 
-
+	$file->save(); // wasn't saving!
 	unset($thumb);
 
 	return TRUE;

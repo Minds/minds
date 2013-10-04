@@ -16,7 +16,7 @@ $owner = $image['owner'];
 if($source == 'minds'){
 	try{
 		
-		$entity = get_entity($image['guid']);
+		$entity = get_entity($image['guid'],'object');
 		if($entity instanceof TidypicsImage || $entity instanceof TidypicsAlbum){
 			$title = $entity->getTitle();
 			$iconURL = $entity->getIconURL('small');
@@ -28,9 +28,11 @@ if($source == 'minds'){
 				if (count($images)) {
 					$img = '<ul class="tidypics-album-block">';
 					foreach($images as $icon) {
+						if($icon instanceof TidypicsImage){
 						$img .= '<li class="tidypics-photo-item">';
 						$img .= elgg_view('output/img', array('src'=>$icon->getIconURL('small')));
 						$img.= '</li>';
+						}
 					}
 					$img .= '</ul>';
 				}
