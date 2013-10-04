@@ -256,6 +256,7 @@ function channel_url($user) {
 function channel_override_avatar_url($hook, $entity_type, $return_value, $params) {
 	global $CONFIG;
 	// if someone already set this, quit
+	//var_dump($return_value);
 	if ($return_value) {
 		return null;
 	}
