@@ -32,7 +32,7 @@ if($entity->featured != true){
 }else{
 
 	db_remove('object:featured', 'entities_by_time', array($entity->featured_id));
-	db_remove('object:'.$entity->subtype.':featured','entities_by_time', array($entity->featured_id())); 
+	db_remove('object:'.$entity->subtype.':featured','entities_by_time', array($entity->featured_id)); 
 
 	$entity->featured = 0;
 	
