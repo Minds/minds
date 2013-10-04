@@ -522,6 +522,8 @@ class ElggUser extends ElggEntity
 			'name',
 			'username',
 			'language',
+			'icontime',
+			'legacy_guid'
 		));
 	}
 

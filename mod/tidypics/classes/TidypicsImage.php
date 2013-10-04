@@ -304,6 +304,14 @@ class TidypicsImage extends ElggFile {
 	 * @return string
 	 */
 	public function getThumbnail($size) {
+		if(!isset($this->thumbnail)){
+			$prefix = "image/" . $this->container_guid . "/";
+                	$filename = $this->getFilename().'.jpg';
+             		$filename = substr($filename, strrpos($filename, '/') + 1);
+             		$this->thumbnail = $prefix . 'thumb' . $filename;
+			$this->smallthumb = $prefix . 'smallthumb' . $filename;
+			$this->largethumb = $prefix . 'largethumb' . $filename;
+		}
 		switch ($size) {
 			case 'thumb':
 				$thumb = $this->thumbnail;
@@ -318,11 +326,10 @@ class TidypicsImage extends ElggFile {
 				return '';
 				break;
 		}
-
+		
 		if (!$thumb) {
 			return '';
 		}
-
 		$file = new ElggFile();
 		$file->owner_guid = $this->getOwnerGUID();
 		$file->setFilename($thumb);
