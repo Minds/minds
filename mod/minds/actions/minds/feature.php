@@ -10,7 +10,7 @@ global $CONFIG;
 $guid = get_input('guid');
 $entity = get_entity($guid, 'object'); //always an object, unless we decide to feature channels...
 
-if(!$entity->featured_id){
+if(!$entity->featured_id && $entity->featured == 0){
 	$g = new GUID();
 	$entity->featured_id = $g->generate();
 }
