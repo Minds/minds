@@ -479,6 +479,10 @@ li .excerpt a{
 }
 .elgg-menu-right-filter li{
 	font-size:14px;
+	margin:0 10px;
+}
+.elgg-menu-right-filter li a{
+	color:#666;
 }
 .front-page-buttons a{
 	margin-right:20px;
