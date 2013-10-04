@@ -706,7 +706,7 @@ function minds_fetch_image($description, $owner_guid) {
 	}
 	if(!$image){
 		if($owner_guid){
-                	$owner = get_entity($owner_guid);
+                	$owner = get_entity($owner_guid,'user');
      			$image = $owner->getIconURL('large');
         	}
   	}
