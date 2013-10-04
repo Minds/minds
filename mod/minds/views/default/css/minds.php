@@ -473,11 +473,11 @@ li .excerpt a{
 	margin:30px 0 0;
 	float:left;
 }
-.elgg-menu-filter{
+.elgg-menu-right-filter{
 	float:right;
 	margin:36px 0 0 0;
 }
-.elgg-menu-filter li{
+.elgg-menu-right-filter li{
 	font-size:14px;
 }
 .front-page-buttons a{

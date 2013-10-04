@@ -13,6 +13,10 @@ $limit = get_input('limit', 12);
 $offset = get_input('offset', 0);
 $filter = get_input('filter', 'featured');
 
+if($offset > 0 && $filter == 'featured'){
+	$limit++;
+}
+
 if($filter == 'featured'){
 	$entities = minds_get_featured('', $limit, 'entities',$offset); 
 } else {
@@ -74,7 +78,7 @@ $header = <<<HTML
 	<div class="front-page-buttons">
 		$buttons
 	</div>
-	<ul class="elgg-menu elgg-menu-filter elgg-menu-hz">
+	<ul class="elgg-menu elgg-menu-right-filter elgg-menu-hz">
 		<li class="elgg-menu-item-featured $featured_item_class">
 			<a href="?filter=featured">Featured</a>
 		</li>
