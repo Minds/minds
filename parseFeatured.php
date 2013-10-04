@@ -24,10 +24,20 @@ $data = $data['hits']['hits'];
 foreach($data as $row){
 
 	$guid = $GUID->migrate($row['_id']);
+	$entity = get_entity($guid, 'object');
+	if(!elgg_instanceof($entity, 'object')){
+		continue;
+	}
 	$featured_id = $GUID->generate();
 	$subtype =  $row['_type'];
 	db_insert('object:featured', array('type'=>'entities_by_time', $featured_id => $guid));
-        db_insert('object:'.$subtype.':featured', array('type'=>'entities_by_time',$featured => $guid));
+        db_insert('object:'.$subtype.':featured', array('type'=>'entities_by_time',$featured_id => $guid));
+	
+	try{
+	$entity->featured_id = $featured_id;
+	$entity->save();
+	} catch (Exception $e){
 
+	}
 	echo "Featured: $subtype:$guid\n";
 }

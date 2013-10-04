@@ -181,16 +181,20 @@
 */
 			var offset = 0;
 
-			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1){
+			$params = elgg.parse_str(elgg.parse_url(location.href).query);
+
+			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending'){
 				offset = $list.find('.elgg-list').children().length +1;
 			} else {
-				offset = $list.find('li.elgg-item:last').attr('id'); 
+				offset = $list.find('li.elgg-item:last').attr('featured_id');
+				if(!offset){
+					offset = $list.find('li.elgg-item:last').attr('id'); 
+				}
 			}
 			
 			if(!offset){
 				return false;
 			}
-			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			$params = $.extend($params, {
 				path : loc,
 				items_type: $list.find('.elgg-list').hasClass('elgg-list-entity') ? 'entity' :

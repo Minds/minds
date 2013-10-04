@@ -11,7 +11,7 @@
 global $CONFIG;
 $limit = get_input('limit', 12);
 $offset = get_input('offset', 0);
-$filter = get_input('filter', 'trending');
+$filter = get_input('filter', 'featured');
 
 if($filter == 'featured'){
 	$entities = minds_get_featured('', $limit, 'entities',$offset); 

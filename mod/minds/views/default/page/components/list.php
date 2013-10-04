@@ -84,7 +84,8 @@ if (is_array($items) && count($items) > 0) {
 	    $id = $item->id;
             $time = $item->posted;
         }
-        $html .= "<li id=\"$id\" class=\"$item_class\" data-timestamp=\"$time\">";
+	$featured = $item->featured_id ? "featured_id=$item->featured_id" : null;
+        $html .= "<li id=\"$id\" class=\"$item_class\" data-timestamp=\"$time\" $featured>";
         $html .= elgg_view_list_item($item, $vars);
         $html .= '</li>';
     }
