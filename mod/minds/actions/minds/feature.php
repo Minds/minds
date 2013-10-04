@@ -10,13 +10,10 @@ global $CONFIG;
 $guid = get_input('guid');
 $entity = get_entity($guid, 'object'); //always an object, unless we decide to feature channels...
 
-if(!$entity->featured_id && $entity->featured == 0){
-	$g = new GUID();
-	$entity->featured_id = $g->generate();
-}
-
 if($entity->featured != true){
 
+	$g = new GUID(); 
+	$entity->featured_id = $g->generate();
 	
 	db_insert('object:featured', array('type'=>'entities_by_time',$entity->featured_id => $entity->getGUID()));
 	db_insert('object:'.$entity->subtype.':featured', array('type'=>'entities_by_time',$entity->featured_id => $entity->getGUID()));
