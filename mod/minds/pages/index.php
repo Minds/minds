@@ -11,8 +11,15 @@
 global $CONFIG;
 $limit = get_input('limit', 12);
 $offset = get_input('offset', 0);
+$filter = get_input('filter', 'trending');
 
-$entities = minds_get_featured('', $limit, 'entities',$offset); 
+if($filter == 'featured'){
+	$entities = minds_get_featured('', $limit, 'entities',$offset); 
+} else {
+	//trending
+	$guids = analytics_retrieve(array('context'=>'blog', 'limit'=>$limit, 'offset'=>$offset));
+	$entities = elgg_get_entities(array('guids'=>$guids));
+}
 
 if(!elgg_is_logged_in()){
 	$buttons = elgg_view('output/url', array('href'=>elgg_get_site_url().'register', 'text'=>elgg_echo('register'), 'class'=>'elgg-button elgg-button-action'));
@@ -57,6 +64,9 @@ $countdown_days = floor($countdown_seconds / 86400);
  
 $subtitle = round($countdown_days,0) . ' days to go.';
 
+$featured_item_class = $filter == 'featured' ? 'elgg-state-selected' : null;
+$trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
+
 $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title
@@ -64,10 +74,20 @@ $header = <<<HTML
 	<div class="front-page-buttons">
 		$buttons
 	</div>
+	<ul class="elgg-menu elgg-menu-filter elgg-menu-hz">
+		<li class="elgg-menu-item-featured $featured_item_class">
+			<a href="?filter=featured">Featured</a>
+		</li>
+		<li class="elgg-menu-item-trending $trending_item_class">
+                        <a href="?filter=trending">Trending</a>
+                </li>
+	</ul>
 </div>
 HTML;
 
-$params = array(	'content'=> elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true), 
+$content = elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true);
+
+$params = array(	'content'=> $content, 
 					'header'=> $header,
 					'filter' => false
 					);

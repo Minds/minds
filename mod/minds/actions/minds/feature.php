@@ -10,14 +10,19 @@ global $CONFIG;
 $guid = get_input('guid');
 $entity = get_entity($guid, 'object'); //always an object, unless we decide to feature channels...
 
+if(!$entity->featured_id){
+	$g = new GUID();
+	$entity->featured_id = $g->generate();
+}
+
 if($entity->featured != true){
 
 	
-	db_insert('object:featured', array('type'=>'entities_by_time',$entity->getGuid() => time()));
-	db_insert('object:'.$entity->subtype.':featured', array('type'=>'entities_by_time',$entity->getGuid() => time()));
+	db_insert('object:featured', array('type'=>'entities_by_time',$entity->featured_id => $entity->getGUID()));
+	db_insert('object:'.$entity->subtype.':featured', array('type'=>'entities_by_time',$entity->featured_id => $entity->getGUID()));
 	
-	$entity->featured = 1;
-	
+	$entity->featured = 1;	
+
 	add_to_river('river/object/'.$entity->getSubtype().'/feature', 'feature', $entity->getOwnerGUID(), $entity->getGuid());
 
 	system_message(elgg_echo("Featured..."));
@@ -26,8 +31,8 @@ if($entity->featured != true){
 	
 }else{
 
-	db_remove('object:featured', 'entities_by_time', array($entity->getGuid()));
-	db_remove('object:'.$entity->subtype.':featured','entities_by_time', array($entity->getGuid())); 
+	db_remove('object:featured', 'entities_by_time', array($entity->featured_id));
+	db_remove('object:'.$entity->subtype.':featured','entities_by_time', array($entity->featured_id())); 
 
 	$entity->featured = 0;
 	

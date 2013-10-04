@@ -713,15 +713,19 @@ function minds_fetch_image($description, $owner_guid) {
 	return $image;
 }
 
+use phpcassa\ColumnSlice;
+
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
-	global $CONFIG;
+	global $CONFIG, $DB;
+
 	$namespace = 'object:featured';
-	return elgg_get_entities(array( 'type' => 'object',
-					//'subtype' => 'blog',
-					'attrs' => array('namespace'=>$namespace),
-					'limit'=>$limit,
-					'offset'=>$offset
-					));
+
+        $slice = new ColumnSlice($offset, "", $limit, true);//set to reversed
+        $guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+
+        return elgg_get_entities(array( 'type' => 'object',
+                                        'guids' =>$guids
+                                        ));
 }
 
  /* Extend / override htmlawed */ 

@@ -185,6 +185,11 @@ body.news{
 }
 
 /**
+ * Homepage specific
+ */
+
+
+/**
  * Register
  */
 input[name=terms]{
@@ -466,6 +471,14 @@ li .excerpt a{
  **************/
 .front-page-buttons{
 	margin:30px 0 0;
+	float:left;
+}
+.elgg-menu-filter{
+	float:right;
+	margin:36px 0 0 0;
+}
+.elgg-menu-filter li{
+	font-size:14px;
 }
 .front-page-buttons a{
 	margin-right:20px;

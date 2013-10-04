@@ -24,9 +24,10 @@ $data = $data['hits']['hits'];
 foreach($data as $row){
 
 	$guid = $GUID->migrate($row['_id']);
+	$featured_id = $GUID->generate();
 	$subtype =  $row['_type'];
-	db_insert('object:featured', array('type'=>'entities_by_time',$guid => time()));
-        db_insert('object:'.$subtype.':featured', array('type'=>'entities_by_time',$guid => time()));
+	db_insert('object:featured', array('type'=>'entities_by_time', $featured_id => $guid));
+        db_insert('object:'.$subtype.':featured', array('type'=>'entities_by_time',$featured => $guid));
 
 	echo "Featured: $subtype:$guid\n";
 }
