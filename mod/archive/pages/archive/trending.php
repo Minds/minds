@@ -12,6 +12,10 @@ $limit = get_input("limit", 12);
 $offset = get_input("offset", 0);
 $filter = get_input("filter", "all");
 
+if($offset > 0){
+//	$limit++;
+}
+
 if($filter == 'media')
 $subtypes = 'kaltura_video';
 elseif ($filter == 'images')
@@ -30,11 +34,7 @@ $content = elgg_list_entities(	array(	'guids' => $guids,
 					'full_view' => FALSE,
 					'archive_view' => TRUE,
 					'limit'=>$limit,
-					'offset'=>0,
-					'wheres' => array("e.guid IN ($guidsString)"),
-					'order_by' => "FIELD(e.guid, $guidsString)"
 				));
-$content .= elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000));
 
 $context = elgg_extract('context', $vars, elgg_get_context());
 

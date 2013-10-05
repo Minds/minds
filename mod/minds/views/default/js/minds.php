@@ -184,7 +184,7 @@
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 
 			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending'){
-				offset = $list.find('.elgg-list').children().length +1;
+				offset = $list.find('.elgg-list').children().length;
 			} else {
 				offset = $list.find('li.elgg-item:last').attr('featured_id');
 				if(!offset){

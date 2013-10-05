@@ -195,6 +195,8 @@ public function migrate($old_guid){
 	
 	$prepend = (int) substr($base_int, 0, 18-$count);
 	
-	return $prepend . $old_guid;
+	$new_guid = $prepend . $old_guid; 
+
+	return (int) $new_guid;
 }
 }

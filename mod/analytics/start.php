@@ -111,7 +111,7 @@ function analytics_retrieve(array $options = array()){
 				$optParams = array(
 					'dimensions' => 'ga:pagePath',
 					'sort' => '-ga:pageviews',
-					'filters' => 'ga:pagePath=~' . $options['context'] . '/view/*',
+					'filters' => 'ga:pagePath=~' . $options['context'] . '/view/.*/.*',
 					'max-results' => $options['limit'],
 					'start-index' => $options['offset'] +1
 				);

@@ -174,7 +174,11 @@ function blog_get_trending_page_content_list() {
       	$return['filter_context'] = 'trending';
 	
 	$limit = get_input('limit', 12);
-	$offset = get_input('offset', '');
+	$offset = get_input('offset', 0);
+
+	if($offset > 0){
+//		$limit++;
+	}
 
       	$guids = analytics_retrieve(array('context'=>'blog', 'limit'=>$limit, 'offset'=>$offset));
 	
