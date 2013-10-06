@@ -285,7 +285,10 @@ function minds_archive_page_handler($page) {
 					break;
 */  
               	case 'upload':
-                	//@todo: rename this file upload...
+        		if(!elgg_is_logged_in()){
+				forward();
+			}
+	        	//@todo: rename this file upload...
                 	switch($page[1]){
                                 case 'album':
                                 	include('pages/archive/add_album.php');

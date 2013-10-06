@@ -8,16 +8,16 @@ ini_set('memory_limit', '8G');
 set_time_limit ( 0 );
 error_reporting(E_ALL);
 
-$tables = array('groups_entity', 'entities', 'entity_subtypes', 'entity_relationships', 'metadata', 'metastrings', 'private_settings');
+$tables = array('groups_entity', 'entities', 'entity_subtypes', 'entity_relationships', 'private_settings');
 
 //@todo make this recieve variab;es
-$mysql = mysqli_connect("192.168.200.16","minds","","") or die("Error " . mysqli_error($link));
+$mysql = mysqli_connect("10.0.4.89","minds","Cosmic#revo2012","elgg") or die("Error " . mysqli_error($link));
 
 $data = new StdClass();
 
 foreach($tables as $table){
 	echo "Gathering table: $table... this may take a few minutes \n";
-	$query = $mysql->query('SELECT * FROM minds.elgg_'.$table);
+	$query = $mysql->query('SELECT * FROM elgg.elgg_'.$table);
 	//var_dump($data->$tables);
 	while($row = mysqli_fetch_object($query)) {
 		//guid or id?
@@ -45,7 +45,7 @@ foreach($data->entities as $guid => $entity){
 	$data->entities[$guid] = $entity;
 }
 
-/*echo "Beginning metadata merge... \n";
+echo "Beginning metadata merge... \n";
 
 //merge metadata and metastrings
 foreach($data->metadata as $id => $metadata){
@@ -84,7 +84,7 @@ foreach($data->entities as $row){
         } catch(Exception $e){
                 $errors[] = $e->getMessage();
         }
-}*/
+}
 
 echo "\n\n Beginning subscriptions transfer \n";
 foreach($data->entity_relationships as $relationship){

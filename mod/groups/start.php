@@ -342,7 +342,7 @@ function groups_icon_url_override($hook, $type, $returnvalue, $params) {
 	// handle missing metadata (pre 1.7 installations)
 	if (null === $icontime) {
 		$file = new ElggFile();
-		$file->owner_guid = $group_guid;
+		$file->owner_guid = $group->owner_guid;
 		$file->setFilename("groups/" . $group_guid . "large.jpg");
 		$icontime = $file->exists() ? time() : 0;
 	}
