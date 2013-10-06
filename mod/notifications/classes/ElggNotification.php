@@ -84,7 +84,11 @@ class ElggNotification extends ElggEntity{
 	public function save(){
 		//some special logic as this is not an enitiy... or should it be?
 //		var_dump($this);
-		return create_entity($this);
+		$guid =  create_entity($this,'false');
+		
+		db_insert('notifications:'.$this->to_guid, array('type'=>'entities_by_time', $guid => $guid));
+
+		return $guid;
 	}
 
 }

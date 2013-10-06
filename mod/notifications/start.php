@@ -73,6 +73,7 @@ function notifications_page_handler($page) {
 	switch ($page[0]) {
 		case 'view':
 			set_input('full', true);
+			set_input('user_guid', $user->guid);
 			require "$base/pages/notifications.php";
 			break;
 		case 'group':
@@ -282,6 +283,7 @@ function notification_create($to, $from, $object, $params){
 			$notification->read = 0;
 			$notification->access_id = 2;
 			$notification->params = serialize($params);
+			$notification->time_created = time();
 		
 			$notification->save();
 		}
@@ -291,7 +293,14 @@ function notification_create($to, $from, $object, $params){
 	return true;
 	
 }
+//get a list of notifications
+function get_notifications($user_guid, $limit = 12, $offset = 0){
+	global $DB;
 
+	$notifications = elgg_list_entities(array('attrs'=>array('namespace'=>'notifications:'.$to_guid), 'limit'=>$limit,'offset'=>$offset ));
+
+	return $notifications;
+}
 /**
  * Mark notifications as read
  *

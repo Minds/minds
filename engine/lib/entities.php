@@ -930,6 +930,7 @@ function elgg_get_entities(array $options = array()) {
 						return	$DB->cfs['entities_by_time']->get_count($namespace);
 					}
 				} else {
+					var_dump($attrs);
 					if($attrs){
 						foreach($attrs as $column => $value){
 							$index_exps[] = new IndexExpression($column, $value);

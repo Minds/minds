@@ -2,18 +2,18 @@
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/engine/start.php');
 
+$options = array(
+		'type' => 'notification',
+		'attrs' => array('namespace' => 'notifications:'.get_input('user_guid')),
+		'limit' => get_input('limit', 12),
+		'offset' => get_input('offset','')
+	);
 
 if(get_input('full')){
 	
 	gatekeeper();
 	
 	$title = elgg_echo('notifications');
-	
-	$options = array(	'type'=> 'notification',
-				'attrs' => array('to_guid'=>elgg_get_logged_in_user_guid())
-			);
-	
-//	$notifications = elgg_get_entities_from_metadata($options);
 	
 
 	$content = elgg_list_entities($options);
@@ -38,10 +38,6 @@ $user = elgg_get_logged_in_user_entity();
 
 if($user){
 
-	 $options = array(       'type'=> 'notification',
-                		'limit' => 10,
-		                'attrs' => array('to_guid'=>elgg_get_logged_in_user_guid())
-                        );
 
         $content = elgg_list_entities($options);
 	
