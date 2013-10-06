@@ -11,13 +11,13 @@ error_reporting(E_ALL);
 $tables = array('users_entity', 'entities', 'entity_subtypes', 'entity_relationships', 'metadata', 'metastrings', 'private_settings');
 
 //@todo make this recieve variab;es
-$mysql = mysqli_connect("10.0.4.89","minds","Cosmic#revo2012","elgg") or die("Error " . mysqli_error($link));
+$mysql = mysqli_connect("192.168.200.16","minds","","minds") or die("Error " . mysqli_error($link));
 
 $data = new StdClass();
 
 foreach($tables as $table){
 	echo "Gathering table: $table... this may take a few minutes \n";
-	$query = $mysql->query('SELECT * FROM elgg.elgg_'.$table);
+	$query = $mysql->query('SELECT * FROM minds.elgg_'.$table);
 	//var_dump($data->$tables);
 	while($row = mysqli_fetch_object($query)) {
 		//guid or id?
