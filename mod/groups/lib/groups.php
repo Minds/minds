@@ -133,6 +133,7 @@ function groups_handle_owned_page() {
 		'content' => $content,
 		'title' => $title,
 		'filter' => '',
+		'class' => 'groups'
 	);
 	$body = elgg_view_layout('content', $params);
 
@@ -145,6 +146,12 @@ function groups_handle_owned_page() {
 function groups_handle_mine_page() {
 
 	$page_owner = elgg_get_page_owner_entity();
+	if(!$page_owner){ 
+		$username = get_input('username');
+		$user = get_user_by_username($username);
+		elgg_set_page_owner_guid($user->guid);
+		$page_owner = $user;
+	}
 
 	if ($page_owner->guid == elgg_get_logged_in_user_guid()) {
 		$title = elgg_echo('groups:yours');
@@ -155,12 +162,14 @@ function groups_handle_mine_page() {
 
 	elgg_register_title_button();
 
-	$content = elgg_list_entities_from_relationship(array(
+
+	//we should really move to a function, but until we revamp groups, it will do!
+	$users_group_guids = $page_owner->group_guids ? unserialize($page_owner->group_guids) : array();
+
+	$content = elgg_list_entities(array(
 		'type' => 'group',
-		'relationship' => 'member',
-		'relationship_guid' => elgg_get_page_owner_guid(),
-		'inverse_relationship' => false,
 		'full_view' => false,
+		'guids' => $users_group_guids
 	));
 	if (!$content) {
 		$content = elgg_echo('groups:none');
@@ -170,6 +179,7 @@ function groups_handle_mine_page() {
 		'content' => $content,
 		'title' => $title,
 		'filter' => '',
+		'class' => 'groups'
 	);
 	$body = elgg_view_layout('content', $params);
 
@@ -223,6 +233,9 @@ function groups_handle_edit_page($page, $guid = 0) {
  */
 function groups_handle_invitations_page() {
 	gatekeeper();
+
+	register_error('It is not possible to invite users to groups at this time. This feature will be available soon');
+	forward(REFERRER);
 
 	$user = elgg_get_page_owner_entity();
 
@@ -362,13 +375,9 @@ function groups_handle_members_page($guid) {
 	elgg_push_breadcrumb($group->name, $group->getURL());
 	elgg_push_breadcrumb(elgg_echo('groups:members'));
 
-	$content = elgg_list_entities_from_relationship(array(
-		'relationship' => 'member',
-		'relationship_guid' => $group->guid,
-		'inverse_relationship' => true,
-		'type' => 'user',
-		'limit' => 20,
-	));
+	$members = $group->getMembers(100,'');
+
+	$content =elgg_view_entity_list($members, array('full_view'=>false));	
 
 	$params = array(
 		'content' => $content,

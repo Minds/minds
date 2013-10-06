@@ -277,7 +277,9 @@ function groups_page_handler($page) {
 			groups_handle_members_page($page[1]);
 			break;
 		case 'invite':
-			groups_handle_invite_page($page[1]);
+			register_error('Sorry! Inviting people is currently not supported');
+			forward(REFERRER);
+	//		groups_handle_invite_page($page[1]);
 			break;
 		case 'requests':
 			groups_handle_requests_page($page[1]);
@@ -331,14 +333,18 @@ function groups_icon_url_override($hook, $type, $returnvalue, $params) {
 	$group = $params['entity'];
 	$size = $params['size'];
 
+	$group_guid = $group->guid;
+	if($group->legacy_guid){
+		$group_guid = $group->legacy_guid;
+	}
+
 	$icontime = $group->icontime;
 	// handle missing metadata (pre 1.7 installations)
 	if (null === $icontime) {
 		$file = new ElggFile();
-		$file->owner_guid = $group->owner_guid;
-		$file->setFilename("groups/" . $group->guid . "large.jpg");
+		$file->owner_guid = $group_guid;
+		$file->setFilename("groups/" . $group_guid . "large.jpg");
 		$icontime = $file->exists() ? time() : 0;
-		create_metadata($group->guid, 'icontime', $icontime, 'integer', $group->owner_guid, ACCESS_PUBLIC);
 	}
 	if ($icontime) {
 		// return thumbnail

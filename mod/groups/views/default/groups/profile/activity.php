@@ -22,6 +22,12 @@ $all_link = elgg_view('output/url', array(
 	'is_trusted' => true,
 ));
 
+$is_member = $group->isMember(elgg_get_logged_in_user_entity());
+if(!$is_member){
+	echo '<h3> Please join this group to post </h3>';
+	return true;
+}
+
 
 elgg_load_js('elgg.wall');
 			

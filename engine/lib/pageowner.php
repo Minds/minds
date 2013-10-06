@@ -106,7 +106,7 @@ function default_page_owner_handler($hook, $entity_type, $returnvalue, $params) 
 		if (substr_count($username, 'group:')) {
 			preg_match('/group\:([0-9]+)/i', $username, $matches);
 			$guid = $matches[1];
-			if ($entity = get_entity($guid)) {
+			if ($entity = get_entity($guid,'group')) {
 				elgg_set_ignore_access($ia);
 				return $entity->getGUID();
 			}
@@ -117,7 +117,7 @@ function default_page_owner_handler($hook, $entity_type, $returnvalue, $params) 
 			return $user->getGUID();
 		}
 	}
-
+	
 	$owner = get_input("owner_guid");
 	if ($owner) {
 		if ($user = get_entity($owner, 'user')) {

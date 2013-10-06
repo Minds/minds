@@ -16,6 +16,10 @@ if (!($group instanceof ElggGroup)) {
 	exit;
 }
 
+if($group->legacy_guid){
+	$group_guid = $group->legacy_guid;
+}
+
 // If is the same ETag, content didn't changed.
 $etag = $group->icontime . $group_guid;
 if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) == "\"$etag\"") {
@@ -31,7 +35,7 @@ $success = false;
 
 $filehandler = new ElggFile();
 $filehandler->owner_guid = $group->owner_guid;
-$filehandler->setFilename("groups/" . $group->guid . $size . ".jpg");
+$filehandler->setFilename("groups/" . $group_guid . $size . ".jpg");
 
 $success = false;
 if ($filehandler->open("read")) {
