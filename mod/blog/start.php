@@ -422,7 +422,6 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 		
 		//we load an array of previously collected rss ids
 		$item_ids = unserialize($scraper->item_ids) == false ? array() : unserialize($scraper->item_ids);
-		//var_dump($item_ids);
 		$n = 0;
 		foreach($feed->get_items() as $item){
 			//if the blog is newer than the scrapers last scrape - but ignore if the timestamp is greater than the time
@@ -448,7 +447,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
 					$blog->description = $embed . $icon . $disclaimer;
 				} else {
-					$blog->excerpt = substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200);
+					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200));
 					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();				
 					if($enclosure){
 						$thumb_url = $enclosure->get_thumbnail();

@@ -28,6 +28,9 @@ if($entity->license == 'not-selected'){
 
 if($entity->getSubtype() == 'kaltura_video'){
 	$video_id = $entity->kaltura_video_id;
+	$entity->save();
+	forward($entity->getURL());
+	return true;
 } elseif($entity->getSubtype() == 'image'){
 	$entity->save();
         forward($entity->getURL());

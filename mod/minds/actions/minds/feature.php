@@ -10,7 +10,7 @@ global $CONFIG;
 $guid = get_input('guid');
 $entity = get_entity($guid, 'object'); //always an object, unless we decide to feature channels...
 
-if($entity->featured != true){
+if(!$entity->featured || $entity->featured == 0){
 
 	$g = new GUID(); 
 	$entity->featured_id = $g->generate();
@@ -28,8 +28,11 @@ if($entity->featured != true){
 	
 }else{
 
-	db_remove('object:featured', 'entities_by_time', array($entity->featured_id));
-	db_remove('object:'.$entity->subtype.':featured','entities_by_time', array($entity->featured_id)); 
+	if($entity->featured_id){
+		//supports legacy imports
+		db_remove('object:featured', 'entities_by_time', array($entity->featured_id));
+		db_remove('object:'.$entity->subtype.':featured','entities_by_time', array($entity->featured_id)); 
+	}
 
 	$entity->featured = 0;
 	

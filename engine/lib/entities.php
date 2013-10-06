@@ -901,7 +901,6 @@ function elgg_get_entities(array $options = array()) {
 
 	$type = $options['types'] ? $options['types'][0] : "object";
 	
-	if (!$options['count']) {
 		try{
 			
 			//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
@@ -923,9 +922,13 @@ function elgg_get_entities(array $options = array()) {
 							$namespace .= ':network:'.$network;
 						}
 					}
-					$slice = new ColumnSlice($options['offset'], "", $options['limit'], $options['newest_first']);//set to reversed
-					$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
-					$rows = $DB->cfs[$type]->multiget(array_keys($guids));
+					if(!$options['count']){
+						$slice = new ColumnSlice($options['offset'], "", $options['limit'], $options['newest_first']);//set to reversed
+						$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+						$rows = $DB->cfs[$type]->multiget(array_keys($guids));
+					} else {
+						return	$DB->cfs['entities_by_time']->get_count($namespace);
+					}
 				} else {
 					if($attrs){
 						foreach($attrs as $column => $value){
@@ -954,9 +957,6 @@ function elgg_get_entities(array $options = array()) {
 		}
 		return $entities;
 
-	} else {
-		return 10000;
-	}
 }
 
 /**
@@ -1302,7 +1302,7 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 	$autofeed = true;
 
 	$defaults = array(
-		'offset' => get_input('offset', ""),
+		'offset' => get_input('offset', 0),
 		'limit' => (int) max(get_input('limit', 10), 0),
 		'full_view' => TRUE,
 		'list_type_toggle' => FALSE,
@@ -1316,12 +1316,14 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 		$options['list_type_toggle'] = $options['view_type_toggle'];
 	}
 
-	unset($options['count']);
+	$options['count'] = TRUE;
+	$count = $getter($options);
+
+	$options['count'] = FALSE;
 	$entities = $getter($options);
-	
-	$count = count($entities)*2; //this needs to be run by daily house keeping
+
 	$options['count'] = $count;
-	
+
 	return $viewer($entities, $options);
 }
 
@@ -1631,22 +1633,33 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 				$res = db_remove($guid, $type);
 
 				//remove from the various lines
-				$namespace = array(  $type . ':' . $entity->subtype,
-						     $type . ':' . $entity->subtype . ':network:'.$entity->owner_guid,
-						     $type . ':' . $entity->subtype . ':user:'.$entity->owner_guid
-						);
+				$namespace = array(  $type . ':' . $entity->subtype);
 
 				if($entity->super_subtype){
 					array_push($namespace, $type . ':' . $entity->super_subtype);
-					array_push($namespace, $type . ':' . $entity->super_subtype . ':network:'.$entity->owner_guid);
-					array_push($namespace, $type . ':' . $entity->super_subtype . ':user:'.$entity->owner_guid);
+				}
+			
+				$owner = $entity->getOwnerEntity();	
+				$followers = $owner->getFriendsOf(null, 10000, "", 'guids');
+				if(!$followers) { 
+					$followers = array(); 
+				}
+				array_push($followers, $entity->owner_guid);
+			
+				foreach($followers as $follower){
+					if($entity->super_subtype){
+						array_push($namespace, $type . ':' . $entity->super_subtype . ':network:'.$follower);
+                        	                array_push($namespace, $type . ':' . $entity->super_subtype . ':user:'.$follower);
+					}
+					array_push($namespace, $type . ':' . $entity->subtype . ':network:'.$follower);
+                                        array_push($namespace, $type . ':' . $entity->subtype . ':user:'.$follower);
 				}
 
 				foreach($namespace as $rowkey){
 					db_remove($rowkey, 'entities_by_time', array($entity->guid));
 				}
 
-				return (bool)$res;
+				return true;
 			}
 		}
 	}

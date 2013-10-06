@@ -102,7 +102,8 @@ function blog_get_page_content_list($container_guid = NULL) {
 		'type' => 'object',
 		'subtype' => 'blog',
 		'full_view' => false,
-		'limit' =>12,
+		'limit' => get_input('limit', 12),
+		'offset' => get_input('offset', 0)
 	);
 
 	$current_user = elgg_get_logged_in_user_entity();
@@ -233,6 +234,8 @@ function blog_get_page_content_friends($user_guid) {
 	} else {
 		$return['content'] = $list;
 	}
+
+	$return['filter'] = elgg_view('page/layouts/content/trending_filter', $return);
 
 	return $return;
 }
@@ -538,7 +541,7 @@ function blog_sidebar($blog){
 		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar', 'pagination'=>false));
 		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs, array('class'=>'blog-sidebar'));
 		
-		$return .= elgg_view('minds/ads', array('type'=>'content-side-single'));
+		$return .= elgg_view('minds/ads', array('type'=>'content-side-single-user'));
 	}
 	//show featured blogs
 /*	$featured_blogs = minds_get_featured(6);

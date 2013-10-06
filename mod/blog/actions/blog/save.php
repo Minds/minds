@@ -84,14 +84,6 @@ foreach ($values as $name => $default) {
 	}
 
 	switch ($name) {
-		case 'tags':
-			if ($value) {
-				$values[$name] = string_to_tag_array($value);
-			} else {
-				unset ($values[$name]);
-			}
-			break;
-
 		case 'excerpt':
 			if ($value) {
 				$values[$name] = elgg_get_excerpt($value);

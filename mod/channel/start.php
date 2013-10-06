@@ -361,11 +361,11 @@ function channel_elements_menu_setup($hook, $type, $return, $params) {
 	$return[] = $item;
 	
 	//voting
-	$url = "voting/owner/$user->username/";
+/*	$url = "voting/owner/$user->username/";
 	$item = new ElggMenuItem('voting', elgg_echo('poll'), $url);
 	$item->setPriority(10);
 	$return[] = $item;
-
+*/
 	return $return;
 }
 

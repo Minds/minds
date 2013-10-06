@@ -43,20 +43,7 @@ if($user){
 		                'attrs' => array('to_guid'=>elgg_get_logged_in_user_guid())
                         );
 
-<<<<<<< HEAD
-	$options = array(	'types'=>'object',
-						'subtypes'=>'notification',
-						//'owner_guid' => $user->getGUID(),
-						'limit' => 10,
-						'metadata_name_value_pairs' => array(array('name'=>'to_guid', 'value'=>$user->getGUID(), 'operand' => '='))
-					);
-	
-	$notifications = elgg_get_entities_from_metadata($options);
-	
-	$list = elgg_view_entity_list($notifications);
-=======
         $content = elgg_list_entities($options);
->>>>>>> cassandra
 	
 	$content .= elgg_view('output/url', array('href'=>'notifications/view', 'text'=>'See more'));
 	

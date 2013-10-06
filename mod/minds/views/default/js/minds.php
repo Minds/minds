@@ -186,8 +186,9 @@
 			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending'){
 				offset = $list.find('.elgg-list').children().length;
 			} else {
-				offset = $list.find('li.elgg-item:last').attr('featured_id');
-				if(!offset){
+				if(loc == elgg.get_site_url()){
+					offset = $list.find('li.elgg-item:last').attr('featured_id');
+				} else {
 					offset = $list.find('li.elgg-item:last').attr('id'); 
 				}
 			}

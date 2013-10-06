@@ -61,6 +61,10 @@ function minds_social_facebook_login(){
 	header("X-No-Client-Cache: 0", true);
 	$facebook = minds_social_facebook_init();
 
+	if(elgg_is_logged_in()){
+		forward();
+	}
+
 	if (!$session['_fb'] = $facebook->getUser()){		
 		$return_url = elgg_get_site_url() . 'social/fb/login';
 		forward($facebook->getLoginURL(array(
@@ -101,7 +105,9 @@ function minds_social_facebook_login(){
 			//get our access token
        			 $access_token = $facebook->getAccessToken();
         		elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
-			
+
+			forward();	
+		
 		} else {
 			system_message(elgg_echo('facebook_connect:login:error'));
 		}

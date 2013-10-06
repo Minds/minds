@@ -8,7 +8,8 @@
 
 $id = get_input('id', false);
 
-$items = minds_elastic_get_news(array('ids'=>array($id)));
+$items = elgg_get_river(array('type'=>'newsfeed', 'ids'=>$id));
+
 $item = $items[0];
 $object = $item->getObjectEntity();
 $subject = $item->getSubjectEntity();
