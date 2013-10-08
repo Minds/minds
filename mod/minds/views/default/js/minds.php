@@ -44,7 +44,7 @@
 		}
 		$(document).on('click', '.elgg-menu-item-feature a', minds.feature);
 
-		$(document).on('click', 'li .elgg-menu-item-delete a', minds.delete); 
+		$(document).on('click', 'li .elgg-menu-item-delete a', minds.remove); 
 		$(document).on('click', '.elgg-menu-item-remind a', minds.remind);
 
 		$(document).on('keydown', '.minds-search .elgg-input-text', minds.search);
@@ -118,7 +118,7 @@
                 });
 	}
 
-	minds.delete = function(e){
+	minds.remove = function(e){
 		e.preventDefault();
                var button = $(this);
 		var item = button.parents('.elgg-item');

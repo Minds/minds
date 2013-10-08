@@ -36,7 +36,7 @@
 	padding-bottom:55%;
 	height:0;
 }
-.archive-large-widget{
+.archive-video-wrapper .archive-large-widget{
 	clear:both;
 	width:100%;
 	margin: 0;

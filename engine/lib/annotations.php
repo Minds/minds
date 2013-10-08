@@ -84,7 +84,7 @@ $owner_guid = 0, $access_id = ACCESS_PRIVATE) {
 		return false;
 	}
 
-	$entity = get_entity($entity_guid);
+	$entity = get_entity($entity_guid, 'object');
 
 	if (elgg_trigger_event('annotate', $entity->type, $entity)) {
 

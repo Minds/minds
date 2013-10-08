@@ -4,7 +4,7 @@
  * 
  */
  
-$user= get_entity($vars['user']['guid']);
+$user= get_entity($vars['user']['guid'],'user');
 if($user instanceof ElggUser){
 
 } else {

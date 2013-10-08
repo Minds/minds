@@ -318,7 +318,7 @@ function minds_login_page_handler($page) {
 }
 
 function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
-	if (!elgg_is_logged_in()) {
+	if (!elgg_is_logged_in() && $returnvalue) {
 		$handler = elgg_extract('handler', $returnvalue);
 // 		$page = elgg_extract('segments', $returnvalue);
 // 		header('Expires: ' . date('r', time() + 300), true);//cache for 5min
@@ -685,24 +685,17 @@ function minds_subscribe_bulk($username = 'minds'){
 
 function minds_fetch_image($description, $owner_guid) {
   
-  global $post, $posts;
- /* $fbimage = '';
-  $output = preg_match_all('/<(img).+src=[\'"]([^\'"]+)[\'"].*>/i',$description, $matches);
-  $image = $matches [1] [0];
- 
-  if(empty($image)) {
-    //$image = elgg_get_site_url() . 'mod/minds/graphics/minds_logo.png';
-    if($owner_guid){
-   	 	$owner = get_entity($owner_guid, 'user');
-    		if($owner)
-			$image = $owner->getIconURL('large');
-	}
-  }*/
-	$dom = new DOMDocument();
-	$dom->loadHTML($description);
-	$nodes = $dom->getElementsByTagName('img');
-	foreach ($nodes as $img) {
-		$image = $img->getAttribute('src');
+	global $post, $posts;
+	
+	if($description){
+		libxml_use_internal_errors(true);
+		$dom = new DOMDocument();
+		$dom->strictErrorChecking = FALSE;
+		$dom->loadHTML($description);
+		$nodes = $dom->getElementsByTagName('img');
+		foreach ($nodes as $img) {
+			$image = $img->getAttribute('src');
+		}
 	}
 	if(!$image){
 		if($owner_guid){
@@ -722,6 +715,10 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 
         $slice = new ColumnSlice($offset, "", $limit, true);//set to reversed
         $guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+
+	if($output == 'guids'){
+		return $guids;
+	}
 
         return elgg_get_entities(array( 'type' => 'object',
                                         'guids' =>$guids

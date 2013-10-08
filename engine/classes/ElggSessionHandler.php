@@ -19,7 +19,6 @@ class ElggSessionHandler{
         }
 	
 	function read($id){
-		error_log('reading ' . $id);				
 
 		try {
                         $result = $this->db->get($id);
@@ -44,7 +43,6 @@ class ElggSessionHandler{
 
         function write($id, $sess_data){
 
-		error_log('writing' . $id);
 		$time = time();
 
 		try {

@@ -27,6 +27,9 @@ ob_end_clean();
 }
 
 $json = json_decode($out);
+if(!$json){
+	return;
+}
 switch(get_input('items_type')){
 	case 'entity':
 		$new_json = array();

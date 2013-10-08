@@ -36,8 +36,8 @@ $content = elgg_list_entities(	array(	'guids' => $guids,
 					'limit'=>$limit,
 				));
 
-$context = elgg_extract('context', $vars, elgg_get_context());
-
+$context = 'archive';
+ 
 elgg_register_menu_item('title', array('name'=>'upload', 'text'=>elgg_echo('upload'), 'href'=>'archive/upload','class'=>'elgg-button elgg-button-action'));
 
 $vars['filter_context'] = 'trending';

@@ -157,7 +157,7 @@ if (!$error) {
 		}
 
 		if ($blog->status == 'published' || $save == false) {
-			forward('blog/view/'.$guid);
+			forward($blog->getURL());
 		} else {
 			forward("blog/edit/$blog->guid");
 		}

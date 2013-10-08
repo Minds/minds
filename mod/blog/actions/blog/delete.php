@@ -9,7 +9,7 @@ $blog_guid = get_input('guid');
 $blog = get_entity($blog_guid,'object');
 
 if (elgg_instanceof($blog, 'object', 'blog') && $blog->canEdit()) {
-	$container = get_entity($blog->container_guid);
+	$container = get_entity($blog->container_guid,'group');
 	if ($blog->delete()) {
 		system_message(elgg_echo('blog:message:deleted_post'));
 		if (elgg_instanceof($container, 'group')) {

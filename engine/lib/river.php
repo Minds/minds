@@ -208,6 +208,10 @@ function elgg_get_river(array $options = array()) {
 		return;
 	}
 
+	if(!$rows){
+		return false; 
+	}
+
 	foreach($rows as $id => $row){
 		$row['id'] = $id;
 		$items[] = new ElggRiverItem($row);

@@ -459,7 +459,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 							//check for native embed now, if thats not got any content
 							if($embed = $enclosure->native_embed()){
 								if(strlen($embed) <= 24){
-									$player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0"></iframe>';             	
+									$player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0" allowfullscreen="true"></iframe>';             	
 								} else {
 									$player = $embed;
 								}

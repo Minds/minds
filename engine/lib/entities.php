@@ -524,7 +524,7 @@ function create_entity($object = NULL, $timebased = true) {
 			$attributes[$k] = $v;
 		}
 	}
-	
+
 	$result = db_insert($object->guid, $attributes);
 	
 	if($timebased){
@@ -1316,13 +1316,16 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 		$options['list_type_toggle'] = $options['view_type_toggle'];
 	}
 
-	$options['count'] = TRUE;
-	$count = $getter($options);
+	if(is_bool($options['count'])){
+		$options['count'] = TRUE;
+		$count = $getter($options);
 
-	$options['count'] = FALSE;
-	$entities = $getter($options);
-
-	$options['count'] = $count;
+		$options['count'] = FALSE;
+		$entities = $getter($options);
+		$options['count'] = $count;
+	} else {
+		$entities = $getter($options);
+	}
 
 	return $viewer($entities, $options);
 }

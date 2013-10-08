@@ -28,9 +28,6 @@ if($entity->license == 'not-selected'){
 
 if($entity->getSubtype() == 'kaltura_video'){
 	$video_id = $entity->kaltura_video_id;
-	$entity->save();
-	forward($entity->getURL());
-	return true;
 } elseif($entity->getSubtype() == 'image'){
 	$entity->save();
         forward($entity->getURL());
@@ -106,17 +103,15 @@ if($entity->getSubtype() == 'kaltura_video'){
 $title = get_input('title');
 $desc = get_input('description');
 $license = get_input('license');
-$tags = get_input('tags');
-$thumbnail_sec = get_input('thumbnail_selector');
-$access = get_input('access_id');
-
+$entity->tags = get_input('tags');
+$entity->thumbnail_sec = get_input('thumbnail_selector');
+$entity->access = get_input('access_id');
 
 if($license == 'not-selected'){
 	register_error(elgg_echo('minds:license:not-selected'));
 	forward(REFERER);
 }
 
-$url = '';
 if($video_id) {
 
 	$error = '';
@@ -158,6 +153,9 @@ if($video_id) {
 
 		if(empty($error)) {
 			$entity->save();
+			forward($entity->getURL());
+		}else {
+			register_error($error);
 		}
 	}
 	if($error) {
@@ -169,11 +167,3 @@ if($video_id) {
 		system_message(str_replace("%ID%",$video_id,elgg_echo("kalturavideo:action:updatedok")));
 	}
 }
-else register_error("Fatal error, empty video id.");
-
-if($simpleVideoCreatorModal) $url = $CONFIG->url.'mod/kaltura_video/kaltura/editor/closemodal.php';
-if(empty($url)) $url = $_SERVER['HTTP_REFERER'];
-//if(strpos($url,'/kaltura_video/edit.php') === false) $url = $CONFIG->url.'mod/kaltura_video/show.php';
-forward($url);
-
-?>

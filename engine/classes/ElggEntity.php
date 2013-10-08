@@ -995,7 +995,7 @@ abstract class ElggEntity extends ElggData implements
 		if ($user_guid == 0) {
 			$user_guid = elgg_get_logged_in_user_guid();
 		}
-		$user = get_entity($user_guid);
+		$user = get_entity($user_guid,'user');
 
 		$return = true;
 		if (!$user) {

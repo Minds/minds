@@ -23,11 +23,11 @@ $options = array('type' => 'user', 'full_view' => false, 'limit'=>$limit);
 switch ($vars['page']) {
 	case 'subscribers':
 		$subscribers = get_user_friends_of($page_owner->guid, '', $limit, $offset);
-		$content = elgg_view_entity_list($subscribers,$vars, $offset, $limit, false, false, true) . elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000));
+		$content = elgg_view_entity_list($subscribers,$vars, $offset, $limit, false, false,false);
 		break;
 	case 'subscriptions':
 		$subscriptions = get_user_friends($page_owner->guid, '', $limit, $offset);
-                $content = elgg_view_entity_list($subscriptions,$vars, $offset, $limit, false, false, true) . elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000));
+                $content = elgg_view_entity_list($subscriptions,$vars, $offset, $limit, false, false,false);
 		break;
 	case 'popular':
 		$options['limit'] = $limit;

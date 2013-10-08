@@ -103,7 +103,8 @@ function analytics_retrieve(array $options = array()){
 	if($options['filter'] == 'trending'){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
-			$CACHE = new ElggFileCache('/tmp/analytics/trending_'.$options['context'].'/', 3600);//cache for 1 hour
+			$context = $options['context'] != '' ? $options['context'] : 'all';
+			$CACHE = new ElggFileCache('/tmp/analytics/trending_'.$context.'/', 7200);//cache for 2 hour
 			if($guids = $CACHE->load('trending_'.$options['offset'])){
 				return json_decode($guids, true);
 			} else {
@@ -135,8 +136,10 @@ function analytics_retrieve(array $options = array()){
 				return $guids;
 			}
 		} catch(Exception $e){
-			register_error($e);
-			var_dump($e);
+			//register_error($e->getMessage());
+			//show featured instead...
+			//return minds_get_featured($options['context'], $offset['limit'], 'guids');	
+			return minds_get_featured('',12,'guids');
 		}
 	} else {
 		return "this type is not supported at the this time";

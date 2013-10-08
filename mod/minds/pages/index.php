@@ -21,7 +21,7 @@ if($filter == 'featured'){
 	$entities = minds_get_featured('', $limit, 'entities',$offset); 
 } else {
 	//trending
-	$guids = analytics_retrieve(array('context'=>'blog', 'limit'=>$limit, 'offset'=>$offset));
+	$guids = analytics_retrieve(array('context'=>'', 'limit'=>$limit, 'offset'=>$offset));
 	$entities = elgg_get_entities(array('guids'=>$guids));
 }
 
