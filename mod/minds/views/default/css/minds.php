@@ -251,7 +251,7 @@ input[name=terms]{
 	margin:0;
 	width:100%;
 }
-.minds-body-header .elgg-form-wall-add:hover textarea{
+.minds-body-header .elgg-form-wall-add:hover textarea, .minds-body-header .elgg-form-wall-add textarea:focus{
 	width:82%
 }
 .minds-body-header .elgg-form-wall-add .elgg-button-submit{
