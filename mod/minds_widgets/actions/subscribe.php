@@ -1,7 +1,7 @@
 <?php
 
 $channel_guid = get_input('channel_guid');
-$user = get_entity($channel_guid);
+$user = get_entity($channel_guid,'user');
 
 try {
     if (!$user) {
