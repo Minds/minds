@@ -21,6 +21,7 @@ function analytics_init() {
 	
 	//page handler to listen for auth callbacks
 	elgg_register_page_handler('analytics','analytics_page_handler');
+//	analytics_fetch();
 }
 
 /*
@@ -80,9 +81,10 @@ function anayltics_authenticate_google(){
 	}
 }
 /**
- * Retrieve analytic information, based on a query
+ * Retrieve analytic information, based on a info
  */
 function analytics_retrieve(array $options = array()){
+	global $DB;
 	$g = new GUID();
 	$client = analytics_register_client();
 	$analytics = new Google_AnalyticsService($client);	
@@ -92,7 +94,7 @@ function analytics_retrieve(array $options = array()){
 		'filter' => 'trending',
 		'timeframe' => 'day',
 		'limit' => 12,
-		'offset' => 0,
+		'offset' => '',
 		'cache' => true
 	);
 	$options = array_merge($defaults, $options);
@@ -104,37 +106,10 @@ function analytics_retrieve(array $options = array()){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
 			$context = $options['context'] != '' ? $options['context'] : 'all';
-			$CACHE = new ElggFileCache('/tmp/analytics/trending_'.$context.'/', 7200);//cache for 2 hour
-			if($guids = $CACHE->load('trending_'.$options['offset'])){
-				return json_decode($guids, true);
-			} else {
-				$profile_id = 'ga:' . elgg_get_plugin_setting('profile_id', 'analytics');
-				$optParams = array(
-					'dimensions' => 'ga:pagePath',
-					'sort' => '-ga:pageviews',
-					'filters' => 'ga:pagePath=~' . $options['context'] . '/view/.*/.*',
-					'max-results' => $options['limit'],
-					'start-index' => $options['offset'] +1
-				);
-				$results = $analytics->data_ga->get(
-      					$profile_id,
-      					$yesterday,
-      					$today,
-      					'ga:pageviews',
-					$optParams);
-				$guids = array();
-				foreach ($results->getRows() as $row) {
-					$url = $row[0];
-					$guid = analytics_get_guid_from_url($url);
-				//	$entity = get_entity($guid,'object');
-					$views = $row[2];
-					//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
-					$guids[] = $g->migrate($guid);
-				}
-				//save to cache for 1 hour
-				$CACHE->save('trending_'.$options['offset'], json_encode($guids));			
-				return $guids;
-			}
+			
+
+			
+			return $guids;
 		} catch(Exception $e){
 			//register_error($e->getMessage());
 			//show featured instead...
@@ -146,13 +121,78 @@ function analytics_retrieve(array $options = array()){
 	}
 }
 
+//Gather the analytics data and store in a row
+function analytics_fetch(){
+	
+	$client = analytics_register_client();
+	$analytics = new Google_AnalyticsService($client);	
+
+	$today = date('o-m-d', time());
+	$yesterday = date('o-m-d', time() - 60 * 60 * 24);
+
+	$profile_id = 'ga:' . elgg_get_plugin_setting('profile_id', 'analytics');
+	try{
+	$optParams = array(
+		'dimensions' => 'ga:pagePath',
+		'sort' => '-ga:pageviews',
+		'filters' => 'ga:pagePath=~/view/',
+		'max-results' => 10000
+	);
+	$results = $analytics->data_ga->get(
+		$profile_id,
+		$yesterday,
+		$today,
+		'ga:pageviews',
+		$optParams);
+	$guids = array();
+	foreach ($results->getRows() as $row) {
+		$url = $row[0];
+		$guid = analytics_get_guid_from_url($url);
+	        $entity = get_entity($guid,'object');
+		$views = $row[2];
+		//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
+		//$guids[] = $guid;
+		$objects['all'][$guid] = time();
+		$objects[$entity->subtype][$guid] = time();
+		if(in_array($entity->subtype, array('image','album','kaltura_video'))){
+                	 $objects['archive'][$guid] = time();
+		}
+	}	
+	} catch(Exception $e) {
+		//get the feature list if something went wrong with analytics...
+		$featured = minds_get_featured('',250);
+		foreach($featured as $entity){
+			$guid = $entity->guid;
+			$objects['all'][$guid] = time();
+	                $objects[$entity->subtype][$guid] = time();
+        	        if(in_array($entity->subtype, array('image','album','kaltura_video'))){
+                	         $objects['archive'][$guid] = time();
+                	}
+		}
+	}
+	
+	//add an all row
+	foreach($objects as $subtype => $guids){
+		$data = $guids;
+		
+		if($data){
+			$data['type'] = 'entities_by_time';
+			//we want to start removing old ones soon...
+			db_remove('trending:'.$subtype,$data['type']);
+			db_insert('trending:'.$subtype, $data);
+		}
+	}
+
+	return;
+}
 /** 
  * Naming conventions for subtypes
  */
 function analytics_get_guid_from_url($url){
+	$g = new GUID();
 	$segments = explode( '/', $url);
 	if($guid = intval($segments[3])){
-		return $guid;
+		return $g->migrate($guid);
 	} else {
 		return 0;
 	}

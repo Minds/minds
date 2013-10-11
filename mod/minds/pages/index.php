@@ -21,8 +21,7 @@ if($filter == 'featured'){
 	$entities = minds_get_featured('', $limit, 'entities',$offset); 
 } else {
 	//trending
-	$guids = analytics_retrieve(array('context'=>'', 'limit'=>$limit, 'offset'=>$offset));
-	$entities = elgg_get_entities(array('guids'=>$guids));
+	$entities = elgg_get_entities(array('attrs'=>array('namespace'=>'trending:all'), 'limit'=>$limit,'offset'=>$offset));
 }
 
 if(!elgg_is_logged_in()){

@@ -185,15 +185,15 @@
 
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
 
-			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending'){
+		/*	if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending'){
 				offset = $list.find('.elgg-list').children().length;
-			} else {
-				if(loc == elgg.get_site_url()){
+			} else {*/
+				if(loc == elgg.get_site_url() && $params.filter != 'trending'){
 					offset = $list.find('li.elgg-item:last').attr('featured_id');
 				} else {
 					offset = $list.find('li.elgg-item:last').attr('id'); 
 				}
-			}
+		//	}
 			
 			if(!offset){
 				return false;
