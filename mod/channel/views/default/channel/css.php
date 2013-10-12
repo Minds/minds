@@ -5,6 +5,11 @@
  * @package Profile
  */
 ?>
+
+.elgg-layout.channels{
+	max-width: 1600px;
+	margin: auto;
+}
 /* ***************************************
 	Channel Profile
 *************************************** */

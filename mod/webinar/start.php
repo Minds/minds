@@ -135,6 +135,7 @@
 				gatekeeper();
 				if (isset($page[1])) {
 					$params = webinar_get_page_content_edit($page_type, $page[1]);
+					$body = elgg_view_layout('content', $params);
 				}else{
 					return false;
 				}
@@ -157,7 +158,7 @@
 		} else {
 			$params['sidebar'] = elgg_view('webinar/sidebar', array('page' => $page_type));
 		}*/
-		
+		if(!$body)	
 		$body = elgg_view_layout('gallery', $params);
 		
 		echo elgg_view_page($params['title'], $body);

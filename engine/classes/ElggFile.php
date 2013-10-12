@@ -275,9 +275,9 @@ class ElggFile extends ElggObject {
 	 */
 	public function delete() {
 		$fs = $this->getFilestore();
-		if ($fs->delete($this)) {
+		//if ($fs->delete($this)) {
 			return parent::delete();
-		}
+		//}
 	}
 
 	/**

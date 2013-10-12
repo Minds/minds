@@ -326,6 +326,26 @@ function channel_default_widgets_hook($hook, $type, $return) {
 		'entity_subtype' => ELGG_ENTITIES_ANY_VALUE,
 	);
 
+	$return[] = array(
+                'name' => 'channel_info',
+                'widget_context' => 'channel',
+                'widget_columns' => 2,
+
+                'event' => 'create',
+                'entity_type' => 'user',
+                'entity_subtype' => ELGG_ENTITIES_ANY_VALUE,
+        );
+
+	 $return[] = array(
+                'name' => 'channel_avatar',
+                'widget_context' => 'channel',
+                'widget_columns' => 1,
+
+                'event' => 'create',
+                'entity_type' => 'user',
+                'entity_subtype' => ELGG_ENTITIES_ANY_VALUE,
+        ); 
+
 	return $return;
 }
 

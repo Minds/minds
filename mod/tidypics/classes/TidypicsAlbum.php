@@ -92,7 +92,10 @@ class TidypicsAlbum extends ElggObject {
 		
 		$images = array();
 		foreach ($imageList as $guid) {
-			$images[] = get_entity($guid,'object');
+			$image = get_entity($guid,'object');
+			if($image){
+				$images[] = $image;
+			}
 		}
 		return $images;
 	}

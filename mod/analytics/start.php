@@ -95,8 +95,7 @@ function analytics_retrieve(array $options = array()){
 		'filter' => 'trending',
 		'timeframe' => 'day',
 		'limit' => 12,
-		'offset' => '',
-		'cache' => true
+		'offset' => ''
 	);
 	$options = array_merge($defaults, $options);
 	
@@ -104,14 +103,20 @@ function analytics_retrieve(array $options = array()){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
 			$context = $options['context'] != '' ? $options['context'] : 'all';
+			$count = $DB->cfs['entities_by_time']->get_count('trending:'.$context);		
+		
+			if((int) $options['offset'] > $count){
+				return false;
+			} elseif($options['offset'] > 0){
+				$options['limit']++;
+			}
 			
-			$slice = new phpcassa\ColumnSlice($options['offset'], "", $options['limit'], true);
-			
+			$slice = new phpcassa\ColumnSlice($options['offset'], "", $options['limit'], false);
 			$guids = $DB->cfs['entities_by_time']->get('trending:'.$context, $slice);			
 
 			return $guids;
 		} catch(Exception $e){
-			//register_error($e->getMessage());
+		//	register_error($e->getMessage());
 			//show featured instead...
 			//return minds_get_featured($options['context'], $offset['limit'], 'guids');	
 			return minds_get_featured('',12,'guids');
@@ -134,9 +139,9 @@ function analytics_fetch(){
 	try{
 	$optParams = array(
 		'dimensions' => 'ga:pagePath',
-		'sort' => '+ga:pageviews',
+		'sort' => '-ga:pageviews',
 		'filters' => 'ga:pagePath=~/view/',
-		'max-results' => 10000
+		'max-results' => 100000
 	);
 	$results = $analytics->data_ga->get(
 		$profile_id,
@@ -151,16 +156,23 @@ function analytics_fetch(){
 	        $entity = get_entity($guid,'object');
 		$views = $row[2];
 		//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
-		//$guids[] = $guid;
+		array_push($guids, $guid);
+		if(in_array($guid, $guids) && !elgg_instanceof($entity,'object')){
+			//duplicate
+			echo "GUID $guid failed, probably because it doesn't exists \n";
+			continue;
+		} elseif(!in_array($entity->subtype,array('blog', 'kaltura_video'))){
+			continue;
+		}
 		$objects['all'][] = $guid;
 		$objects[$entity->subtype][] = $guid;
-		if(in_array($entity->subtype, array('image','album','kaltura_video'))){
+		if(in_array($entity->subtype, array('image','file','kaltura_video'))){
                 	 $objects['archive'][] = $guid;
 		}
 	}	
 	} catch(Exception $e) {
 		//get the feature list if something went wrong with analytics...
-		$featured = minds_get_featured('',250);
+	/*	$featured = minds_get_featured('',250);
 		foreach($featured as $entity){
 			$guid = $entity->guid;
 			$objects['all'][] = $guid;
@@ -168,7 +180,7 @@ function analytics_fetch(){
         	        if(in_array($entity->subtype, array('image','album','kaltura_video'))){
                 	         $objects['archive'][] = $guid;
                 	}
-		}
+		}*/
 	}
 	
 	//add an all row
@@ -180,6 +192,8 @@ function analytics_fetch(){
 			//we want to start removing old ones soon...
 			db_remove('trending:'.$subtype,$data['type']);
 			db_insert('trending:'.$subtype, $data);
+			var_dump($data);
+			echo "Successfuly imported '$subtype' to trending \n";
 		}
 	}
 

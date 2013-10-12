@@ -9,15 +9,15 @@ global $CONFIG;
 	//are we a blog, wire post, event??
 	
 	if($description){
-		echo "\t<meta name=\"description\" content=\"$description\" /> \n";
+		echo "\t<meta name=\"description\" content=\"$description\"> \n";
 	} else {
-		echo "\t<meta name=\"description\" content=\"" . elgg_get_plugin_setting('default_description', 'minds') . "\" /> \n";
+		echo "\t<meta name=\"description\" content=\"" . elgg_get_plugin_setting('default_description', 'minds') . "\"> \n";
 	}
 	
 	if($keywords){ 
-		echo "\t<meta name=\"keywords\" content=\"$keywords>\"/> \n";
+		echo "\t<meta name=\"keywords\" content=\"$keywords\"> \n";
 	} else {
-		echo "\t<meta name=\"keywords\" content=\"" . elgg_get_plugin_setting('default_keywords', 'minds') . "\" /> \n";
+		echo "\t<meta name=\"keywords\" content=\"" . elgg_get_plugin_setting('default_keywords', 'minds') . "\"> \n";
 	}
 
 $request = $_SERVER['REQUEST_URI'];

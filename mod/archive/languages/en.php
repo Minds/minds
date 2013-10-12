@@ -194,7 +194,7 @@ Objects not created by the Kaltura Elgg Plugin will not be touched.",
 	'ingroup' => "in group",
 
 	//new from 10-12-2009
-	'item:object:kaltura_video' => "Collaborative media",
+	'item:object:kaltura_video' => "Kaltura Videos",
 	'kalturavideo:thumbnail' => "Thumbnail",
 	'kalturavideo:comments:allow' => "Allow comments",
 	'kalturavideo:rating:allow' => "Allow rating",

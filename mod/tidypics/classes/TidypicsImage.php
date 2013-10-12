@@ -53,27 +53,7 @@ class TidypicsImage extends ElggFile {
 	 */
 	public function delete() {
 
-		// check if batch should be deleted
-		$batch = elgg_get_entities_from_relationship(array(
-			'relationship' => 'belongs_to_batch',
-			'relationship_guid' => $this->guid,
-			'inverse_relationship' => false,
-		));
-		if ($batch) {
-			$batch = $batch[0];
-			$count = elgg_get_entities_from_relationship(array(
-				'relationship' => 'belongs_to_batch',
-				'relationship_guid' => $batch->guid,
-				'inverse_relationship' => true,
-				'count' => true,
-			));
-			if ($count == 1) {
-				// last image so delete batch
-				$batch->delete();
-			}
-		}
-
-		$album = get_entity($this->container_guid);
+		$album = get_entity($this->container_guid, 'album');
 		if ($album) {
 			$album->removeImage($this->guid);
 		}

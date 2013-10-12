@@ -2,7 +2,7 @@
 
 $guid = get_input('guid');
 
-$entity = get_entity($guid);
+$entity = get_entity($guid,'object');
 
 if($entity->getSubtype() == 'kaltura_video'){
 	elgg_load_library('archive:kaltura');

@@ -24,7 +24,7 @@ function minds_init(){
 	
 	elgg_register_page_handler('news', 'minds_news_page_handler');
 		
- 	elgg_extend_view('page/elements/head','minds/meta');
+ 	//elgg_extend_view('page/elements/head','minds/meta',1);
 		
 	elgg_extend_view('register/extend', 'minds/register_extend', 500);
 	
