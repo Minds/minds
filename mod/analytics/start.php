@@ -21,7 +21,8 @@ function analytics_init() {
 	
 	//page handler to listen for auth callbacks
 	elgg_register_page_handler('analytics','analytics_page_handler');
-//	analytics_fetch();
+
+	elgg_register_plugin_hook_handler('cron', 'minute', 'analytics_fetch');
 }
 
 /*
@@ -99,16 +100,15 @@ function analytics_retrieve(array $options = array()){
 	);
 	$options = array_merge($defaults, $options);
 	
-	$today = date('o-m-d', time());
-	$yesterday = date('o-m-d', time() - 60 * 60 * 24);
-	
 	if($options['filter'] == 'trending'){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
 			$context = $options['context'] != '' ? $options['context'] : 'all';
 			
-
+			$slice = new phpcassa\ColumnSlice($options['offset'], "", $options['limit'], true);
 			
+			$guids = $DB->cfs['entities_by_time']->get('trending:'.$context, $slice);			
+
 			return $guids;
 		} catch(Exception $e){
 			//register_error($e->getMessage());
@@ -134,7 +134,7 @@ function analytics_fetch(){
 	try{
 	$optParams = array(
 		'dimensions' => 'ga:pagePath',
-		'sort' => '-ga:pageviews',
+		'sort' => '+ga:pageviews',
 		'filters' => 'ga:pagePath=~/view/',
 		'max-results' => 10000
 	);
@@ -152,10 +152,10 @@ function analytics_fetch(){
 		$views = $row[2];
 		//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
 		//$guids[] = $guid;
-		$objects['all'][$guid] = time();
-		$objects[$entity->subtype][$guid] = time();
+		$objects['all'][] = $guid;
+		$objects[$entity->subtype][] = $guid;
 		if(in_array($entity->subtype, array('image','album','kaltura_video'))){
-                	 $objects['archive'][$guid] = time();
+                	 $objects['archive'][] = $guid;
 		}
 	}	
 	} catch(Exception $e) {
@@ -163,10 +163,10 @@ function analytics_fetch(){
 		$featured = minds_get_featured('',250);
 		foreach($featured as $entity){
 			$guid = $entity->guid;
-			$objects['all'][$guid] = time();
-	                $objects[$entity->subtype][$guid] = time();
+			$objects['all'][] = $guid;
+	                $objects[$entity->subtype][] = $guid;
         	        if(in_array($entity->subtype, array('image','album','kaltura_video'))){
-                	         $objects['archive'][$guid] = time();
+                	         $objects['archive'][] = $guid;
                 	}
 		}
 	}

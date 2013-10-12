@@ -21,8 +21,10 @@ elseif ($filter == 'files')
 $subtype = 'file';
 else
 $subtype = 'archive';
+
+$guids = analytics_retrieve(array('context'=>'archive','limit'=> $limit, 'offset'=>$offset));
  
-$content = elgg_list_entities(	array(	'attrs'=>array('namespace'=>'trending:'.$subtype),
+$content = elgg_list_entities(	array(	'guids' => $guids,
 					'full_view' => FALSE,
 					'archive_view' => TRUE,
 					'limit'=>$limit,

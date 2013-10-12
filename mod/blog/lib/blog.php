@@ -177,7 +177,9 @@ function blog_get_trending_page_content_list() {
 	$limit = get_input('limit', 12);
 	$offset = get_input('offset', '');
 
-	$list = elgg_list_entities(array('attrs'=>array('namespace'=>'trending:blog'), 'limit'=>$limit, 'offset'=>$offset, 'full_view'=>false, 'pagination_legacy' => true));
+	$guids = analytics_retrieve(array('context'=>'blog','limit'=> $limit, 'offset'=>$offset));
+
+	$list = elgg_list_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>$offset, 'full_view'=>false, 'pagination_legacy' => true));
         if (!$list) {
                 $return['content'] = elgg_echo('blog:none');
         } else {
