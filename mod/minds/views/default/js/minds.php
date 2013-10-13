@@ -61,13 +61,13 @@
 		if($(this).val().indexOf('/') == 0 && e.which == 13){
 			e.preventDefault();
 			var data = {};
-			data.to_guid = elgg.get_logged_in_user_guid();
+			//data.to_guid = elgg.get_logged_in_user_guid();
 			data.body = $(this).val();
 			data.ref = 'news';
 			
 			data.body = data.body.replace('/', '');
 
-			elgg.action('wall/add?to_guid=' + data.to_guid + '&body=' + data.body  +'&ref=' + data.ref, {
+			elgg.action('wall/add?body=' + data.body  +'&ref=' + data.ref, {
 				success: function(data) {
 					    $('.elgg-input-text').val("");;
 						$('.elgg-list.elgg-list-river.elgg-river').first('.elgg-list.elgg-list-river.elgg-river').prepend(data.output);
