@@ -58,10 +58,7 @@
 	minds.wallPost = false;
 	
 	minds.search = function(e){
-		if(e.which == 191){
-			minds.wallPost = true;
-		}
-		if(minds.wallPost == true && e.which == 13){
+		if($(this).val().indexOf('/') == 0 && e.which == 13){
 			e.preventDefault();
 			var data = {};
 			data.to_guid = elgg.get_logged_in_user_guid();
