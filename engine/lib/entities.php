@@ -518,10 +518,13 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
 function create_entity($object = NULL, $timebased = true) {
 	global $CONFIG;
 
+	$g = new GUID();
+
 	if($object->guid){
                 elgg_trigger_event('update', $object->type, $object);
         } else {
-                elgg_trigger_event('create', $object->type, $object);
+		$object->guid = $g->generate();
+	        elgg_trigger_event('create', $object->type, $object);
         }
 
 	//convert object to array of attributes
@@ -533,7 +536,7 @@ function create_entity($object = NULL, $timebased = true) {
 	}
 
 	$result = db_insert($object->guid, $attributes);
-	
+
 	if($timebased){
 		$namespace = $object->type;
 		if($object->subtype){ 

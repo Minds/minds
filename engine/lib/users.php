@@ -1238,7 +1238,7 @@ function set_last_login($user_guid) {
  * @access private
  */
 function user_create_hook_add_site_relationship($event, $object_type, $object) {
-	add_entity_relationship($object->getGUID(), 'member_of_site', elgg_get_site_entity()->guid);
+//	add_entity_relationship($object->getGUID(), 'member_of_site', elgg_get_site_entity()->guid);
 }
 
 /**

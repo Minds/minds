@@ -48,24 +48,12 @@ function get_entity_statistics($owner_guid = 0) {
  * @return int
  */
 function get_number_users($show_deactivated = false) {
-	global $CONFIG;
-return 100;
-	$access = "";
+	global $CONFIG,$DB;
 
-	if (!$show_deactivated) {
-		$access = "and " . get_access_sql_suffix();
-	}
+	$count = $DB->cfs['entities_by_time']->get_count('user');
+	
+	return $count;
 
-	$query = "SELECT count(*) as count
-		from {$CONFIG->dbprefix}entities where type='user' $access";
-
-	$result = get_data_row($query);
-
-	if ($result) {
-		return $result->count;
-	}
-
-	return false;
 }
 
 /**

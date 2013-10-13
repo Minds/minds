@@ -38,7 +38,8 @@ if (empty($vars['tags']) && isset($vars['entity'])) {
 
 if (!empty($vars['tags'])) {
 	if (!is_array($vars['tags'])) {
-		$vars['tags'] = array($vars['tags']);
+		$vars['tags'] = explode(',', $vars['tags']);
+	//	$vars['tags'] = array($vars['tags']);
 	}
 
 	$list_class = "elgg-tags";

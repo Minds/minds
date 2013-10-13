@@ -51,7 +51,6 @@ function categories_save($event, $object_type, $object) {
 			}
 
 			$object->universal_categories = $categories;
-			$object->save();
 		}
 	}
 	return TRUE;

@@ -3,7 +3,7 @@
  * Create scraper form
  */
 
-$scraper = get_entity(get_input('guid'));
+$scraper = get_entity(get_input('guid'),'object');
 
 
 $name_label = elgg_echo('blog:minds:scraper:name');

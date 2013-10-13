@@ -225,7 +225,7 @@ abstract class ElggEntity extends ElggData implements
 	//	if (array_key_exists($name, $this->attributes)) {
 			// Certain properties should not be manually changed!
 			switch ($name) {
-				case 'guid':
+				//case 'guid':
 				case 'time_updated':
 				case 'last_action':
 					return FALSE;

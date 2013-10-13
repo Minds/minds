@@ -46,7 +46,7 @@ function minds_comments_init() {
 	 $commentCOOKIE = $_COOKIE['minds_comment'];
 	 if(elgg_is_logged_in() && $commentCOOKIE && $commentCOOKIE != 'done'){
 	 	$data = json_decode($commentCOOKIE, true);
-	 	setcookie('minds_comment', 'done', time()-3600, '/');
+	 	setcookie('minds_comment', 'done', 360, '/');//cookie valid for 10 mins
 		$comment = urlencode($data['comment']);
 	 	forward(elgg_add_action_tokens_to_url('action/comment/save?comment='. $comment .'&pid='.$data['pid'] .'&type='.$data['type'].'&redirect_url='.urlencode($data['redirect_url'])));
 		//forward($data->redirect_url);

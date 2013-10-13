@@ -25,7 +25,7 @@ $path = elgg_get_site_url() . 'search/?q=' . $query;
 			} else {
 				$text = elgg_echo('minds_search:type:' . $type);
 			}
-			echo "<a href=\"$path&type=$type&license=$l\"><li>";
+			echo "<a href=\"$path&type=$type&license=$l&source=$s\"><li>";
 			echo $text;
 			echo "</li></a>";
 			}
