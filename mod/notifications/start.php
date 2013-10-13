@@ -306,19 +306,31 @@ function get_notifications($user_guid, $limit = 12, $offset = 0){
  *
  */
 function notifications_count_unread(){
-	return;
 	$user = elgg_get_logged_in_user_entity();
-	if($user){
-		
-		$options = array(       'type'=> 'notification',
-					'limit'  => 100000,
-                                'attrs' => array('to_guid'=>elgg_get_logged_in_user_guid(), 'read'=>0)
-                        );
-		$notification = elgg_get_entities($options);
-	
-		return count($notifications);
-	} else {
-		return NULL;
+	return $user->notifications_count;	
+}
+
+/** 
+ * Increase a users notifications counter
+ */
+function notifications_increase_counter($user_guid){
+	elgg_set_ignore_access(true);
+	$user = get_entity($user_guid, 'user');
+	$user->notifications_count++;
+	$user->save();
+	elgg_set_ignore_access(false);
+}
+/** 
+ * Reset a user notifications counter
+ */
+function notifications_reset_counter($user_guid = NULL){
+	if(!$user_guid){
+		$user_guid = elgg_get_logged_in_user_guid();
 	}
+	elgg_set_ignore_access(true);
+	$user = get_entity($user_guid, 'user');
+	$user->notifications_count = 0;
+	$user->save();
+	elgg_set_ignore_access(false);
 }
 

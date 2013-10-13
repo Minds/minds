@@ -46,17 +46,17 @@ elgg.notify.getUnreadNotifications = function() {
  * Get notifications via AJAX.
  * 
  */
-elgg.notify.getNotifications = function() {
+elgg.notify.getNotifications = function(e) {
    
- 	var url = elgg.normalize_url("mod/notifications/pages/notifications.php");
+     var url = elgg.normalize_url("mod/notifications/pages/notifications.php");
     	
-  	 $.get(url, function(data) {
+     $.get(url, function(data) {
       		$('#notification').html(data);
             //$('#notification').append(data);
      });
-     
+
      //reset the counter to 0
-     $(".notification-new").remove();
+     $(".notification-new").hide();
 
 }
 

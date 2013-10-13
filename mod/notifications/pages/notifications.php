@@ -50,6 +50,9 @@ if($user){
 	echo elgg_echo('notifications:not_logged_in');
 	
 }
+
+notifications_reset_counter($user->guid);
+
 /*$result = new stdClass();
 //$result->count = $message_count;
 $result->ajax_view = $list;

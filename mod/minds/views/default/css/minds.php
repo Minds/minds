@@ -54,6 +54,8 @@ body.news{
 }
 .minds-header-right .notifications li a{
 	color:#333;
+	width:26px;
+	height:26px;
 }
 .minds-header-right span.text{
 	float:left;
