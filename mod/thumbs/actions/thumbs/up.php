@@ -13,6 +13,9 @@ $id = get_input('id');
 $type = get_input('type', 'entity');
 $user_guid = elgg_get_logged_in_user_guid();
 
+//user setting for orientation
+elgg_set_plugin_user_setting('thumbs', true, elgg_get_logged_in_user_guid(), 'thumbs');
+
 if ($type == 'entity') {
 
 	// Let's see if we can get an entity with the specified GUID

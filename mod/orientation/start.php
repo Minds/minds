@@ -1,38 +1,38 @@
 <?php
 /**
- * Bootcamp
+ * Bootcamp Renamed to Orientation 
  * A plugin that teaches users how to use Minds.com
  * 
  * @author Mark Harding (mark@minds.com)
  */
 
-elgg_register_event_handler('init', 'system', 'bootcamp_init');
+elgg_register_event_handler('init', 'system', 'orientation_init');
 
-function bootcamp_init() {
+function orientation_init() {
 		
-	elgg_extend_view('css/elgg','bootcamp/css');
+	elgg_extend_view('css/elgg','orientation/css');
 	
 	if(elgg_is_logged_in() && elgg_get_context() == 'news'){
-		elgg_extend_view('page/elements/sidebar','bootcamp/sidebar', 1);
+		elgg_extend_view('page/elements/sidebar','orientation/sidebar', 1);
 	}
 	
-	elgg_register_page_handler('bootcamp', 'bootcamp_page_handler');
+	elgg_register_page_handler('orientation', 'orientation_page_handler');
 	
-	elgg_register_library('bootcamp', elgg_get_plugins_path() . 'bootcamp/lib/bootcamp.php');
+	elgg_register_library('orientation', elgg_get_plugins_path() . 'orientation/lib/orientation.php');
 	
 	//On first login, promt user for bootcamp
 	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted') && !$_SESSION['fb_referrer'] && elgg_get_viewtype() != 'mobile' && strpos(current_page_url(), 'tierlogin') === false){
 		elgg_set_plugin_user_setting('prompted', 'yes');
-		forward('bootcamp');
+		forward('orientation');
 	}
 }
 
 /**
  * @param array $page
  */
-function bootcamp_page_handler($page)
+function orientation_page_handler($page)
 {
-	$base = elgg_get_plugins_path() . 'bootcamp/pages/bootcamp';
+	$base = elgg_get_plugins_path() . 'orientation/pages/orientation';
 	
 	switch ($page[0]) {
 			case 'networks':

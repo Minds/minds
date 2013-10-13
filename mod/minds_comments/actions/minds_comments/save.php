@@ -44,6 +44,9 @@ if($create['ok'] == true){
 } else {
 	 register_error(elgg_echo('minds_comments:save:error'));
 }
+//user setting for orientation
+elgg_set_plugin_user_setting('commented', true, elgg_get_logged_in_user_guid(), 'minds_comments');
+
 /*//get a list of all the users who have previously commented
 $options = array(
         'type' => 'object',
