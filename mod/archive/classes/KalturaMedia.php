@@ -30,7 +30,8 @@ class KalturaMedia extends ElggObject {
 	 */
 	public function getExportableValues() {
 		return array_merge(parent::getExportableValues(), array(
-			'kaltura_video_id'
+			'kaltura_video_id',
+			'thumbnail_sec'
 		));
 	}
 

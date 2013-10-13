@@ -3,7 +3,7 @@ $notification = elgg_extract('entity', $vars);
 $params = unserialize($notification->params);
 $type = $params['type'] ? $params['type'] : 'entity';
 
-$actor = get_entity($notification->from_guid);
+$actor = get_entity($notification->from_guid,'user');
 
 $description = $notification->description;
 	if (strlen($description) > 60){

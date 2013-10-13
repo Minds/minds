@@ -26,7 +26,7 @@ $owner_link = elgg_view('output/url', array(
 	'is_trusted' => true,
 ));
 
-if($object->owner_guid == $object->to_guid || $to instanceof ElggGroup){
+if($object->owner_guid == $object->to_guid || $to instanceof ElggGroup || !$to){
 	$summary = elgg_echo("river:create:object:wall", array($subject_link));
 } else {
 	$summary = elgg_echo("river:create:object:wall", array($subject_link, $owner_link));

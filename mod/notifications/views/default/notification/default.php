@@ -5,7 +5,7 @@
 
 $entity = elgg_extract('entity', $vars);
 
-$owner = $entity->getOwnerEntity();
+$owner = get_entity($entity->from_guid, 'user');
 $owner_name = $owner->name;
 $date = elgg_view_friendly_time($entity->time_created);
 
@@ -37,7 +37,7 @@ if ($read != 1) {
 	$entity->read = 1;
 	$entity->save();
 }
-$object = get_entity($entity->object_guid);
+$object = get_entity($entity->object_guid,'object');
 
 try{
 	echo elgg_view_image_block($owner_icon, $body, $vars);

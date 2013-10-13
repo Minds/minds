@@ -4,7 +4,7 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/engine/start.php')
 
 $options = array(
 		'type' => 'notification',
-		'attrs' => array('namespace' => 'notifications:'.get_input('user_guid')),
+		'attrs' => array('namespace' => 'notifications:'.get_input('user_guid',elgg_get_logged_in_user_guid())),
 		'limit' => get_input('limit', 12),
 		'offset' => get_input('offset','')
 	);
@@ -41,7 +41,7 @@ if($user){
 
         $content = elgg_list_entities($options);
 	
-	$content .= elgg_view('output/url', array('href'=>'notifications/view', 'text'=>'See more'));
+//	$content .= elgg_view('output/url', array('href'=>'notifications/view', 'text'=>'See more'));
 	
 	
 	echo $content;

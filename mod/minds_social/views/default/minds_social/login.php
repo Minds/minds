@@ -23,7 +23,7 @@ echo $persona;
  */
 elgg_load_library('minds:facebook');
 
-$facebook = minds_social_facebook_init();
+/*$facebook = minds_social_facebook_init();
 
 $return_url = elgg_get_site_url() . 'social/fb/login';
 
@@ -34,7 +34,8 @@ $login_url = $facebook->getLoginUrl(array(
 				'ext_perm' =>  'offline_access',
 				'display' => 'popup',
 			));
-			
+*/
+$login_url = elgg_get_site_url() . 'social/fb/login';			
 echo '<div class="social_login facebook"><a href="' . $login_url . '" target="_self"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/fbx32.png"/><p>Login with Facebook</p></a></div>';
 
 /**

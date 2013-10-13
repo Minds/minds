@@ -239,6 +239,8 @@ function minds_index($hook, $type, $return, $params) {
 		// another hook has already replaced the front page
 		return $return;
 	}
+
+	header("X-No-Client-Cache: 1", true);
 	
 	if(!include_once(dirname(__FILE__) . '/pages/index.php')){
 		return false;

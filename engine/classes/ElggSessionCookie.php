@@ -35,10 +35,11 @@ class ElggSessionCookie extends ElggSession {
 		setcookie(ElggSessionCookie::COOKIE_PREFIX.$key, null, (time() - (86400 * 30)), "/");
 	}
 	
-// 	function getCookie() {
+ 	function getCookie($key) {
 // 		global $SCT;
 // 		return $SCT;
-// 	}
+		return $_COOKIE[ElggSessionCookie::COOKIE_PREFIX.$key];
+ 	}
 
 	static function filterCookiePrefixes($val) {
 		if (is_array($val)) {
@@ -97,12 +98,12 @@ class ElggSessionCookie extends ElggSession {
 	/**
 	 * @see ArrayObject::offsetGet()
 	 */
-	/*public function &offsetGet($index) {
+	public function offsetGet($index) {
 		if (array_key_exists($index, $this->localstore)) {
 			return $this->localstore[$index];
 		}
 		return null;
-	}*/
+	}
 	
 	/**
 	 * @see ArrayObject::offsetUnset()
