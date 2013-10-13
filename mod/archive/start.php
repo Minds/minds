@@ -403,7 +403,6 @@ function kaltura_setup_init(){
 			}
 	}
 }
-
 /**
   * KALTURA CONVERT CRON SCRIPT
   *

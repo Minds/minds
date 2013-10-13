@@ -42,4 +42,4 @@
 		 	
 	}
 	
-	echo $url;
+	echo '<div class="license">'.$url.'</div>';
