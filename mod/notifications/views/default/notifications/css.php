@@ -108,7 +108,6 @@
 }
 
 .notification.notifier{
-	
 }  
 .notification.notifier:hover, .notification.notifier.new{
 	color:#4690D6;
