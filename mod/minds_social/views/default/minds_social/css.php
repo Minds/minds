@@ -54,7 +54,21 @@
 
 #fb-share{
 	float:left;
-	margin:0 25px;
+	margin:0 25px 0 0;
+}
+#fb-share img{
+	float:left;
+}
+#fb-share .count{
+	float: right;
+	margin: 0 5px;
+	border: 1px solid #AAA;
+	padding: 1px 6px 0;
+	color: #666;
+	font-size: 11px;
+	font-weight: bold;
+	border-radius: 3px;
+	background: #FFF;
 }
 .reddit-share{
 	margin-left:20px;
