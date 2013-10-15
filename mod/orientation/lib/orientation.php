@@ -95,7 +95,7 @@ orientation_register_step(	array(	'name'=> 'subscribe',
 function orientation_has_uploaded_media($user){
 	$return = false;
 	
-	$options = array( 'types'=>'object', 'subtypes'=>array('kaltura_video', 'image', 'album', 'file'), 'owner_guid'=>$user->getGUID());
+	$options = array( 'type'=>'object', 'subtype'=>'archive', 'owner_guid'=>$user->getGUID());
 	$media = elgg_get_entities($options);
 	if($media){
 		$return = true;
@@ -114,7 +114,7 @@ orientation_register_step(	array(	'name'=> 'upload',
 function orientation_has_wallpost($user){
 	$return = false;
 	
-	$options = array( 'types'=>'object', 'subtypes'=>array('wallpost'), 'owner_guid'=>$user->getGUID());
+	$options = array( 'type'=>'object', 'subtypes'=>array('wallpost'), 'owner_guid'=>$user->getGUID());
 	$posts = elgg_get_entities($options);
 	if($posts){
 		$return = true;
@@ -157,6 +157,7 @@ orientation_register_step(	array(	'name'=> 'search',
 								'content'=> elgg_echo('orientation:step:search:content'),
 								'icon' => '&#128269',
 								'href'=> elgg_get_site_url() . 'search',
+								'completed' => elgg_get_plugin_user_setting('search', elgg_get_logged_in_user_guid(), 'minds_search'),
 								'priority' => 8,
 								'required' => false,
 							));
