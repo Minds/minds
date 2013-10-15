@@ -25,9 +25,9 @@ $options['limit'] = get_input('limit',12);
 
 $user = elgg_get_logged_in_user_entity();
 if(!$user){
-	 $page_filter == 'featured';
-} elseif(count($user->getFriends()) == 0){
-	$page_filter == 'featured';
+	 $page_type = 'featured';
+} elseif(count($user->getFriends()) == 0 || $user->getFriends() == false || !$user->getFriends()){
+	$page_type = 'featured';
 }
 
 switch ($page_type) {
