@@ -63,7 +63,7 @@
 /***** PAGE MESSAGES ******/
 .elgg-system-messages {
 	position: fixed;
-	top: 24px;
+	top: 48px;
 	right: 20px;
 	max-width: 500px;
 	z-index: 20000;
@@ -144,6 +144,7 @@
 	/*-moz-box-shadow: 0 0 3px #888;
 	-webkit-box-shadow: 0 0 3px#888;
 	box-shadow: 0 0 3px #888;*/
+	margin-bottom:10px;
 }
 .elgg-main > .elgg-breadcrumbs{
 	margin:10px;

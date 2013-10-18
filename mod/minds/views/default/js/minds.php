@@ -10,7 +10,9 @@
 		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
 		$('.progress_indicator').tipsy({gravity: 'e'});		
 		$('.elgg-input-text').tipsy({gravity: 'w'});
-		
+
+		$('.elgg-form-wall-add textarea').focus( function(e){ $(this).parent().find('.elgg-button-submit').css('display','block');});
+
 		$('.thumbnail-tile').hover(
 			function(){
 		   		$(this).children('.hover').fadeIn('fast');
@@ -44,7 +46,7 @@
 		}
 		$(document).on('click', '.elgg-menu-item-feature a', minds.feature);
 
-		$(document).on('click', 'li .elgg-menu-item-delete a', minds.delete); 
+		$(document).on('click', 'li .elgg-menu-item-delete a', minds.remove); 
 		$(document).on('click', '.elgg-menu-item-remind a', minds.remind);
 
 		$(document).on('keydown', '.minds-search .elgg-input-text', minds.search);
@@ -56,19 +58,16 @@
 	minds.wallPost = false;
 	
 	minds.search = function(e){
-		if(e.which == 191){
-			minds.wallPost = true;
-		}
-		if(minds.wallPost == true && e.which == 13){
+		if($(this).val().indexOf('/') == 0 && e.which == 13){
 			e.preventDefault();
 			var data = {};
-			data.to_guid = elgg.get_logged_in_user_guid();
+			//data.to_guid = elgg.get_logged_in_user_guid();
 			data.body = $(this).val();
 			data.ref = 'news';
 			
 			data.body = data.body.replace('/', '');
 
-			elgg.action('wall/add?to_guid=' + data.to_guid + '&body=' + data.body  +'&ref=' + data.ref, {
+			elgg.action('wall/add?body=' + data.body  +'&ref=' + data.ref, {
 				success: function(data) {
 					    $('.elgg-input-text').val("");;
 						$('.elgg-list.elgg-list-river.elgg-river').first('.elgg-list.elgg-list-river.elgg-river').prepend(data.output);
@@ -118,7 +117,7 @@
                 });
 	}
 
-	minds.delete = function(e){
+	minds.remove = function(e){
 		e.preventDefault();
                var button = $(this);
 		var item = button.parents('.elgg-item');
@@ -170,7 +169,6 @@
 	 };
 
 	 minds.loadMore = function() {
-						
 			$list = $(this).parent().find('.elgg-list:first').parent();
 			$('.load-more').html('...');
 			$('.load-more').addClass('loading');
@@ -180,13 +178,29 @@
 				loc = location.href + 'news/featured';
 			}
 */
+			var offset = 0;
+
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
+
+			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending'){
+				offset = $list.find('.elgg-list').children().length;
+			} else {
+				if(loc == elgg.get_site_url()){
+					offset = $list.find('li.elgg-item:last').attr('featured_id');
+				} else {
+					offset = $list.find('li.elgg-item:last').attr('id'); 
+				}
+			}
+			
+			if(!offset){
+				return false;
+			}
 			$params = $.extend($params, {
 				path : loc,
 				items_type: $list.find('.elgg-list').hasClass('elgg-list-entity') ? 'entity' :
 							$list.find('.elgg-list').hasClass('elgg-list-river') ? 'river' :
 							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
-				offset: $list.find('.elgg-list').children().length + (parseInt($params.offset) || 0)
+				offset:offset 
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
 //			console.log(url);

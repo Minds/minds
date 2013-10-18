@@ -1,0 +1,4 @@
+name = Angular
+description = Angularjs demo
+package = Panda
+core = 7.x

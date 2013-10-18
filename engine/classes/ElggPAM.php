@@ -50,7 +50,7 @@ class ElggPAM {
 		}
 
 		$authenticated = false;
-
+		
 		foreach ($_PAM_HANDLERS[$this->policy] as $k => $v) {
 			$handler = $v->handler;
 			if (!is_callable($handler)) {

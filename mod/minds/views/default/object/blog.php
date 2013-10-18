@@ -14,7 +14,7 @@ if (!$blog) {
 }
 
 $owner = $blog->getOwnerEntity();
-$container = $blog->getContainerEntity();
+//$container = $blog->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
 $excerpt = strip_tags($blog->excerpt);
 if (!$excerpt) {
@@ -29,24 +29,6 @@ $owner_link = elgg_view('output/url', array(
 ));
 $author_text = elgg_echo('byline', array($owner_link));
 $date = elgg_view_friendly_time($blog->time_created);
-
-// The "on" status changes for comments, so best to check for !Off
-if ($blog->comments_on != 'Off') {
-	$comments_count = $blog->countComments();
-	//only display if there are commments
-	if ($comments_count != 0) {
-		$text = elgg_echo("comments") . " ($comments_count)";
-		$comments_link = elgg_view('output/url', array(
-			'href' => $blog->getURL() . '#blog-comments',
-			'text' => $text,
-			'is_trusted' => true,
-		));
-	} else {
-		$comments_link = '';
-	}
-} else {
-	$comments_link = '';
-}
 
 $metadata = elgg_view_menu('entity', array(
 	'entity' => $vars['entity'],
@@ -70,7 +52,13 @@ if ($full) {
 		'class' => 'blog-post',
 	));
 	
+	//assume a youtube, vimeo, liveleak scraper
+//	if($blog->rss_item_id && $blog->license == 'attribution-noncommercial-noderivs-cc'){
+//	}	
+
 	$body .= elgg_view('minds/license', array('license'=>$blog->license));
+
+	 $body .= ' <i>This blog is free & open source, however embeds may not be. </i><br/>';
 	
 	//if blog is public, show social links
 	if($blog->access_id == 2){

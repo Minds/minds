@@ -41,7 +41,7 @@ function elgg_set_user_password() {
 	if (!$user_guid) {
 		$user = elgg_get_logged_in_user_entity();
 	} else {
-		$user = get_entity($user_guid);
+		$user = get_entity($user_guid,'user');
 	}
 
 	if ($user && $password) {
@@ -105,7 +105,7 @@ function elgg_set_user_name() {
 	if (!$user_id) {
 		$user = elgg_get_logged_in_user_entity();
 	} else {
-		$user = get_entity($user_id);
+		$user = get_entity($user_id,'user');
 	}
 
 	if (elgg_strlen($name) > 50) {
@@ -146,7 +146,7 @@ function elgg_set_user_language() {
 	if (!$user_id) {
 		$user = elgg_get_logged_in_user_entity();
 	} else {
-		$user = get_entity($user_id);
+		$user = get_entity($user_id,'user');
 	}
 
 	if (($user) && ($language)) {
@@ -182,7 +182,7 @@ function elgg_set_user_email() {
 	if (!$user_id) {
 		$user = elgg_get_logged_in_user_entity();
 	} else {
-		$user = get_entity($user_id);
+		$user = get_entity($user_id,'user');
 	}
 
 	if (!is_email_address($email)) {
@@ -235,7 +235,7 @@ function elgg_set_user_default_access() {
 	if (!$user_id) {
 		$user = elgg_get_logged_in_user_entity();
 	} else {
-		$user = get_entity($user_id);
+		$user = get_entity($user_id,'user');
 	}
 
 	if ($user) {

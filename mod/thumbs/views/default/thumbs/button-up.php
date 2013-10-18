@@ -13,7 +13,9 @@ if($type=='entity'){
 	}
 	$guid = $vars['entity']->getGUID();
 	$url = elgg_get_site_url() . "action/thumbs/up?guid={$guid}";
-	$already = elgg_annotation_exists($guid, 'thumbs:up');
+        $thumbs_up = unserialize($vars['entity']->{'thumbs:up'});
+        $already = is_array($thumbs_up) ? in_array(elgg_get_logged_in_user_guid(), $thumbs_up) : false;
+//	$already = false;
 } elseif($type=='comment'){
 	$id = $vars['id'];
 	$comment_type = $vars['comment_type'];

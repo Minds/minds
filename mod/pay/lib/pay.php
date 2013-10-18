@@ -70,12 +70,15 @@ function pay_urls($order_guid){
 	$user = elgg_get_logged_in_user_entity();
 	$order = get_entity($order_guid);
 	
-	$action_token = create_user_token($user->username, 60);
+	$action_token = create_user_token($user->username, 527040); // Make tokens last a year and a day (since Paypal seems to be pinging the notify URL rather than the generic payment endpoint, contrary to documented behaviou)
 	$urls = array('return' => elgg_get_site_url() . 'pay/',
 				  'cancel' => elgg_get_site_url() . 'pay/cancel',
 				  'callback' => elgg_get_site_url() . 'pay/callback/' . $order_guid . '/' .$action_token,
 				  );
-	return $urls;
+
+        // Passing order urls through a hook so we can override the return url as necessary (bit of a hack)
+        return trigger_plugin_hook('urls', 'pay', array('order' => $order), $urls);
+
 }
 		
 /********************
@@ -134,11 +137,13 @@ function pay_get_basket(){
  * Plugins can add items to the basket by using pay_basket_add_button(...); on any pay or view
  * @todo: make this a form rather than a link
  */
-function pay_basket_add_button($type_guid, $title, $description, $price, $quantity){
+function pay_basket_add_button($type_guid, $title, $description, $price, $quantity, $recurring = false){
 	 $currecy = pay_get_currency();	 
 	 
+         $query = 'action/pay/basket/add?type_guid=' . $type_guid .'&title=' . $title . '&description=' . $description  . '&price=' . $price . '&quantity=' . $quantity;
+         if ($recurring) $query .= "&recurring=y";
 	 $link =  elgg_view('output/confirmlink', array('is_action' => true,
-	 									  'href' => 'action/pay/basket/add?type_guid=' . $type_guid .'&title=' . $title . '&description=' . $description  . '&price=' . $price . '&quantity=' . $quantity,
+	 									  'href' => $query,
 										  'text' => $currecy['symbol'] . $price . ' - Buy Now',
 										  'confirm' => 'Are you sure you wish to purchase this item?',
 										  'class' => 'pay buynow'
@@ -299,7 +304,42 @@ function paypal_handler($params){
 					'email' => $user->email
 				);
 	
+        /**
+         * Support for recurring payments.
+         * See https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/subscribe_buttons/
+         */
+        if ($params['recurring'])
+        {
+            // Set the correct command
+            $variables['cmd'] = '_xclick-subscriptions';
+            
+            // Get rid of amount, since this is handled by the subscription
+            unset($variables['amount']);
+            
+            // Set recurring payment info
+            $variables['a3'] = $amount;
+            $variables['p3'] = 1;
+            
+            // Set recurring period based on expiry (default 1 year)
+            $ia = elgg_set_ignore_access($ia);
+            $item = get_entity($order->object_guid);
+            $expires = $item->expires;
+            if (!$expires) $expires = MINDS_EXPIRES_YEAR;
+            $ia = elgg_set_ignore_access($ia);
+            
+            switch ($expires) {
+                case MINDS_EXPIRES_DAY: $variables['t3'] = 'D'; break;
+                case MINDS_EXPIRES_WEEK: $variables['t3'] = 'W'; break;
+                case MINDS_EXPIRES_MONTH: $variables['t3'] = 'M'; break;
+                case MINDS_EXPIRES_YEAR:
+                default: $variables['t3'] = 'Y';
+            }
+            
+            // Now, continue until cancelled
+            $variables['src'] = 1;
+        }
 	
+
 	//update to process
 	pay_update_order_status($order->guid, 'awaitingpayment');
 	
@@ -309,14 +349,232 @@ function paypal_handler($params){
 	return;
 }
 
+
+
+/**
+ * This must be configured in your seller account -> profile -> ipn settings and set to http://yoursite/paypalgenericipn.
+ * This handles generic notifications from paypal, most pertinantly, subscriptions
+ * @param type $page
+ */
+function paypal_generic_ipn_handler($page) {
+    
+    global $CONFIG;
+    
+    $ia = elgg_set_ignore_access();
+    
+    elgg_log('PAYPAL: ********* Paypal GENERIC IPN triggered **********');
+    
+    // Try and get order we're referring to
+    if ($orders = elgg_get_entities_from_metadata(array(
+        'type' => 'object',
+        'subtype' => 'pay',
+        'limit' => 1,
+        'metadata_name' => 'subscr_id',
+        'metadata_value' => $_POST['subscr_id'],
+    )))
+            $order = $orders[0];
+    
+    
+    // TODO: Other methods of pulling order out
+    
+    
+    // If we have an order
+    if (($_POST['subscr_id']) && ($order)) {
+        
+        $order_guid = $order->guid;
+    
+        // Validate the request
+        // Read the post from PayPal and add 'cmd' 
+        $req = 'cmd=_notify-validate';
+
+        foreach ($_POST as $key => $value) {
+        // Handle escape characters, which depends on setting of magic quotes 
+            $value = urlencode($value);
+            $req .= "&$key=$value";
+        }
+
+        // Post back to PayPal to validate 
+        elgg_log("PAYPAL: Request received, posting to paypal");
+
+        $connect = $CONFIG->debug ? 'https://www.sandbox.paypal.com' : 'https://www.paypal.com';
+        $ch = curl_init($connect . '/cgi-bin/webscr');
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+
+        // In wamp like environments that do not come bundled with root authority certificates,
+        // please download 'cacert.pem' from "http://curl.haxx.se/docs/caextract.html" and set the directory path 
+        // of the certificate as shown below.
+        // curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
+        if (!($res = curl_exec($ch))) {
+            elgg_log("PAYPAL: Got " . curl_error($ch) . " when processing IPN data");
+            curl_close($ch);
+            exit;
+        }
+        curl_close($ch);
+        
+        
+        // Handle request 
+        elgg_log("PAYPAL: Response: $res");
+
+        if (strcmp($res, "VERIFIED") == 0) {
+
+            elgg_log("PAYPAL: POST data is " . print_r($_POST, true));
+            
+            // Attach a payment history to the order.
+            $order->annotate('order_details', serialize($_POST));
+
+            elgg_log("PAYPAL: Transaction type is {$_POST['txn_type']}");
+//mail('marcus@marcus-povey.co.uk', 'IPN GENERIC hit', print_r($_POST,true));
+            
+            switch ($_POST['txn_type']) {
+                
+                case 'subscr_signup': // Not handled here
+                    break;
+                case 'subscr_cancel': // Cancel the subscription
+//mail('marcus@marcus-povey.co.uk', 'IPN GENERIC CANCELLED', print_r($_POST,true));
+                    pay_update_order_status($order_guid, 'Cancelled');
+                    break;
+                case 'subscr_payment': // Subscription regular payment.
+    
+//mail('marcus@marcus-povey.co.uk', 'IPN GENERIC Payment', print_r($_POST, true));
+                        $payment_status = $_REQUEST['payment_status'];
+                        //We can now assume that the response is legit so we can update the payment status
+                        pay_update_order_status($order_guid, $payment_status);
+                    
+                    
+                    break;
+                default:
+                    elgg_log('PAYPAL: Unsupported transaction type hit generic IPN');
+            }
+            
+            return true;
+            
+        } else if (strcmp($res, "INVALID") == 0) {
+            elgg_log("PAYPAL: IPN Query is invalid");
+            foreach ($_POST as $key => $value) {
+                $debugtxt .= $key . " = " . $value . "\n\n";
+            }
+            throw new Exception("PAYPAL: Invalid IPN query! " . $CONFIG->debug ? $debugtxt : '');
+        }
+        
+    }
+    
+    return true;
+}
+
+
 /* PayPal callback handler 
  * 
  * @returns true if successful
  */
-function paypal_handler_callback($order_guid){
-	
-	$order = get_entity($order_guid);
-	/*
+
+function paypal_handler_callback($order_guid) {
+
+    global $CONFIG;
+
+    $order = get_entity($order_guid);
+
+    // We need to actually do some validation in an IPN... MP 
+
+
+    elgg_log('PAYPAL: ********* Paypal IPN triggered **********');
+
+
+    // Read the post from PayPal and add 'cmd' 
+    $req = 'cmd=_notify-validate';
+
+    foreach ($_POST as $key => $value) {
+    // Handle escape characters, which depends on setting of magic quotes 
+        $value = urlencode($value);
+        $req .= "&$key=$value";
+    }
+
+    // Post back to PayPal to validate 
+    elgg_log("PAYPAL: Request received, posting to paypal");
+
+    $connect = $CONFIG->debug ? 'https://www.sandbox.paypal.com' : 'https://www.paypal.com';
+    $ch = curl_init($connect . '/cgi-bin/webscr');
+    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+
+    // In wamp like environments that do not come bundled with root authority certificates,
+    // please download 'cacert.pem' from "http://curl.haxx.se/docs/caextract.html" and set the directory path 
+    // of the certificate as shown below.
+    // curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
+    if (!($res = curl_exec($ch))) {
+        elgg_log("PAYPAL: Got " . curl_error($ch) . " when processing IPN data");
+        curl_close($ch);
+        exit;
+    }
+    curl_close($ch);
+
+
+
+    elgg_log("PAYPAL: Response: $res");
+
+    if (strcmp($res, "VERIFIED") == 0) {
+
+        elgg_log("PAYPAL: POST data is " . print_r($_POST, true));
+
+        switch ($_POST['payment_status']) {
+            case 'Completed' :
+                elgg_echo('PAYPAL: Payment status: completed');
+
+
+                // Attach a payment history to the order.
+                $order->annotate('order_details', serialize($_POST));
+                
+                
+                //TODO: More validation - e.g. check currency and gross etc...
+
+
+                
+                // If this is a recurring payment, then we need to link the order to a subscription profile so we can manage the order from its generic IPN
+                if (isset($_POST['subscr_id']))
+                    $order->subscr_id = $_POST['subscr_id'];
+
+//mail('marcus@marcus-povey.co.uk', 'IPN Payment', print_r($_POST,true));
+
+                if ($_POST['txn_type'] == 'subscr_cancel') // Quickly handle subscription cancellations.
+                    pay_update_order_status($order_guid, 'Cancelled');
+                else {
+                    $payment_status = $_REQUEST['payment_status'];
+                    //We can now assume that the response is legit so we can update the payment status
+                    pay_update_order_status($order_guid, $payment_status);
+                }
+
+                return true;
+
+
+
+                break;
+
+            default: elgg_log("PAYPAL: Payment status unknown : {$_POST['payment_status']}");
+        }
+    } else if (strcmp($res, "INVALID") == 0) {
+        elgg_log("PAYPAL: IPN Query is invalid");
+        foreach ($_POST as $key => $value) {
+            $debugtxt .= $key . " = " . $value . "\n\n";
+        }
+        throw new Exception("PAYPAL: Invalid IPN query! " . $CONFIG->debug ? $debugtxt : '');
+    }
+
+
+
+
+    /*
 	
 	$reciever_address = get_input('receiver_email');
 		if($reciever_address != elgg_get_plugin_setting('paypal_business', 'pay')){
@@ -333,12 +591,12 @@ function paypal_handler_callback($order_guid){
 			return false;
 		}
 		*/
-		
+		/*
 	$payment_status = $_REQUEST['payment_status'];
 	//We can now assume that the response is legit so we can update the payment status
 	pay_update_order_status($order_guid, $payment_status);
 	
-	return true;	
+	return true;	*/
 }
 
 //register paypal

@@ -6,6 +6,11 @@
  */
 ?>
 
+#notification{
+	height:300px;
+	overflow-x:hidden;
+	overflow-y:scroll;
+}
 #notification li{
 	width:auto;
 	height:auto;
@@ -103,7 +108,6 @@
 }
 
 .notification.notifier{
-	
 }  
 .notification.notifier:hover, .notification.notifier.new{
 	color:#4690D6;

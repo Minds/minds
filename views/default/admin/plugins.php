@@ -15,7 +15,6 @@ elgg_generate_plugin_entities();
 $installed_plugins = elgg_get_plugins('any');
 $show_category = get_input('category', 'all');
 $sort = get_input('sort', 'priority');
-
 // Get a list of the all categories
 // and trim down the plugin list if we're not viewing all categories.
 // @todo this could be cached somewhere after have the manifest loaded
@@ -33,7 +32,7 @@ foreach ($installed_plugins as $id => $plugin) {
 	}
 
 	$plugin_categories = $plugin->getManifest()->getCategories();
-
+	
 	// handle plugins that don't declare categories
 	// unset them here because this is the list we foreach
 	switch ($show_category) {
@@ -191,7 +190,9 @@ $options = array(
 if ($show_category == 'all' && $sort == 'priority') {
 	$options['display_reordering'] = true;
 }
-echo elgg_view_entity_list($plugin_list, $options);
+//echo elgg_view_entity_list($plugin_list, $options);
+foreach ($plugin_list as $plugin)
+    echo elgg_view('plugin/plugin', array('entity' => $plugin));
 
 ?>
 </div>

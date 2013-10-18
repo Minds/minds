@@ -5,7 +5,7 @@
  */
 
 $guid = get_input('guid');
-$owner = get_entity($guid);
+$owner = get_entity($guid, 'user');
 
 if (!$owner || !($owner instanceof ElggUser) || !$owner->canEdit()) {
 	register_error(elgg_echo('profile:edit:fail'));
@@ -49,7 +49,7 @@ foreach ($profile_fields as $shortname => $valuetype) {
 	}
 
 	if ($valuetype == 'tags') {
-		$value = string_to_tag_array($value);
+//		$value = string_to_tag_array($value);
 	}
 	
 	$input[$shortname] = $value;
@@ -65,11 +65,10 @@ if ($name) {
 		$owner->save();
 	}
 }
-
 // go through custom fields
 if (sizeof($input) > 0) {
 	foreach ($input as $shortname => $value) {
-		$options = array(
+		/*$options = array(
 			'guid' => $owner->guid,
 			'metadata_name' => $shortname,
 			'limit' => false
@@ -95,7 +94,8 @@ if (sizeof($input) > 0) {
 			} else {
 				create_metadata($owner->getGUID(), $shortname, $value, 'text', $owner->getGUID(), $access_id);
 			}
-		}
+		}*/
+		$owner->$shortname = $value; 
 	}
 
 	$owner->save();

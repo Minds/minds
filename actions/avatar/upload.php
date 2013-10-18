@@ -4,11 +4,15 @@
  */
 
 $guid = get_input('guid');
-$owner = get_entity($guid);
+$owner = get_entity($guid, 'user');
 
 if (!$owner || !($owner instanceof ElggUser) || !$owner->canEdit()) {
 	register_error(elgg_echo('avatar:upload:fail'));
 	forward(REFERER);
+}
+
+if($owner->legacy_guid){
+	$guid = $owner->legacy_guid;
 }
 
 if ($_FILES['avatar']['error'] != 0) {
@@ -27,7 +31,7 @@ foreach ($icon_sizes as $name => $size_info) {
 	if ($resized) {
 		//@todo Make these actual entities.  See exts #348.
 		$file = new ElggFile();
-		$file->owner_guid = $guid;
+		$file->owner_guid = $owner->guid;
 		$file->setFilename("profile/{$guid}{$name}.jpg");
 		$file->open('write');
 		$file->write($resized);
@@ -51,12 +55,14 @@ $owner->y1 = 0;
 $owner->y2 = 0;
 
 $owner->icontime = time();
-if (elgg_trigger_event('profileiconupdate', $owner->type, $owner)) {
+$owner->save();
+
+/*if (elgg_trigger_event('profileiconupdate', $owner->type, $owner)) {
 	system_message(elgg_echo("avatar:upload:success"));
 
 	$view = 'river/user/default/profileiconupdate';
 	elgg_delete_river(array('subject_guid' => $owner->guid, 'view' => $view));
 	add_to_river($view, 'update', $owner->guid, $owner->guid);
-}
+}*/
 
 forward(REFERER);

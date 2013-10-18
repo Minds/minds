@@ -68,7 +68,7 @@ function elgg_delete_metadata_by_id($id) {
  */
 function create_metadata($entity_guid, $name, $value, $value_type = '', $owner_guid = 0,
 	$access_id = ACCESS_PRIVATE, $allow_multiple = false) {
-
+	return;
 	global $CONFIG;
 
 	$entity_guid = (int)$entity_guid;
@@ -936,9 +936,6 @@ function elgg_invalidate_metadata_cache($action, array $options) {
 
 /** Register the hook */
 elgg_register_plugin_hook_handler("export", "all", "export_metadata_plugin_hook", 2);
-
-/** Call a function whenever an entity is updated **/
-elgg_register_event_handler('update', 'all', 'metadata_update');
 
 // unit testing
 elgg_register_plugin_hook_handler('unit_test', 'system', 'metadata_test');

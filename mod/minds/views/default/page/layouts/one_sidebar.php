@@ -25,9 +25,9 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 <div class="minds-body-header">
 	<div class="inner">
 		<?php
-//			echo $vars['header'];
+			echo $vars['header'];
 			echo $nav;
-			echo $vars['header'];	
+//			echo $vars['header'];	
 	?>
 		
 	</div>	

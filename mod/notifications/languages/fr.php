@@ -21,6 +21,12 @@ $french = array(
 
 	'notifications:subscriptions:success' => "Vos paramètres de notifications ont bien été enregistrés.",
 
+	'notification' => 'Notifications',
+	'notifications' => 'Notifications',
+	
+	'notifications:not_logged_in' => "Votre session a expiré. S'il vous plaît Connectez arrière po",
+	
+	'notifications:unread' => '%s nouveau',
 );
 
 add_translation("fr", $french);

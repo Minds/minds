@@ -53,7 +53,7 @@ if ($photo->description) {
 	));
 }
 if(!$image->license){
-	$album = get_entity($image->container_guid);
+	$album = get_entity($image->container_guid, 'object', 'object', 'object', 'object', 'object', 'object', 'object', 'object', 'object');
 	$license = $album->license;
 } else {
 	$license = $image->license;

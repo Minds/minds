@@ -14,7 +14,7 @@ $file_guid = (int) get_input('file_guid', 0);
 // Get file thumbnail size
 $size = get_input('size', 'small');
 
-$file = get_entity($file_guid);
+$file = get_entity($file_guid,'object');
 if (!$file || $file->getSubtype() != "file") {
 	exit;
 }

@@ -1,3 +1,6 @@
+body{
+	background:#FFF !important;
+}
 input[type="text"], input[type="password"]{
         width:100%;
         height:50px !important;

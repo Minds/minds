@@ -8,7 +8,7 @@
 $body = get_input('body', '', false);
 
 $method = 'site';
-$to_guid = get_input('to_guid');
+$to_guid = get_input('to_guid', elgg_get_logged_in_user_guid());
 $from_guid = elgg_get_logged_in_user_guid();
 $access_id = get_default_access(); //hard coded as we seem to be getting errors with ACCESS_DEFAULT
 $message = get_input('body');
@@ -24,9 +24,9 @@ if (empty($body)) {
 	forward(REFERER);
 }
 
-$to = get_entity($to_guid);
-if($to instanceof ElggGroup){
-	$access_id = $to->group_acl;
+$group = get_entity($to_guid, 'group');
+if($group instanceof ElggGroup){
+	$access_id = $group->group_acl;
 	$container_guid = $to_guid;
 }
 
@@ -39,7 +39,6 @@ $post->owner_guid = $from_guid;
 $post->access_id = $access_id;
 $post->message = $message;
 $post->method = $method;
-
 $post->facebook = $facebook;
 $post->twitter = $twitter;
 
@@ -53,7 +52,7 @@ if (!$guid) {
 $news_id = add_to_river('river/object/wall/create', 'create', $from_guid, $guid);
 
 if($ref == 'wall'){
-	$post = get_entity($guid);
+	$post = get_entity($guid,'object');
 
 	$id = "elgg-{$post->getType()}-{$post->guid}";
 	$time = $post->time_created;
@@ -70,14 +69,27 @@ if($ref == 'wall'){
 	$data->view = 'river/object/wall/create';
 	$data->posted = time();
 	
-	$item = new MindsNewsItem($data);
-
+	$item = new ElggRiverItem($data);
+	
 	$output = '<li class="elgg-item">' . elgg_view_list_item($item, array('list_class'=>'elgg-list elgg-list-river elgg-river', 'class'=>'elgg-item elgg-river-item')) . '</li>';
 }
 
+notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
+
 echo $output;
 
-notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
+//detect @ command and if present check username
+preg_match_all("/@[a-zA-Z0-9_]+/", $message, $matches);
+
+foreach($matches as $value){
+	foreach($value as $value){
+		$username = str_replace('@', '', $value);
+		$mentioned = get_user_by_username($username);
+		if($mentioned){
+			notification_create(array($mentioned->guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'mention'));
+		}
+	}
+}
 
 system_message(elgg_echo("wall:posted"));
 

@@ -5,25 +5,27 @@ $page_owner = elgg_get_logged_in_user_guid();
 elgg_set_page_owner_guid($page_owner);
 
 $limit = get_input("limit", 12);
-$offset = get_input("offset", 0);
+$offset = get_input("offset", "");
 $filter = get_input("filter", "all");
 
 if($filter == 'media')
-$subtypes = 'kaltura_video';
+$subtype = 'kaltura_video';
 elseif ($filter == 'images')
-$subtypes = 'album';
+$subtype = 'image';
 elseif ($filter == 'files')
-$subtypes = 'file';
+$subtype = 'file';
 else
-$subtypes = array('kaltura_video', 'album', 'file');
+$subtype = 'archive';
 
-$content = elgg_list_entities(	array(	'types' => 'object', 
-										'subtypes' => $subtypes, 
-										'limit' => $limit, 
-										'offset' => $offset, 
-										'full_view' => FALSE,
-										'archive_view' => TRUE
-									));
+$options = array(       'types' => array('object'),
+                        'subtype' => $subtype,
+                        'limit' => $limit,
+                        'offset' => $offset,
+			'full_view' =>false	       
+          );
+
+$content = elgg_list_entities($options);
+
 $sidebar = elgg_view('archive/sidebar');
 
 $context = elgg_extract('context', $vars, elgg_get_context());

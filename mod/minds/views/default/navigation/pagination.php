@@ -17,7 +17,7 @@ if (elgg_in_context('widget')) {
 	return true;
 }
 
-$offset = abs((int) elgg_extract('offset', $vars, 0));
+$offset = elgg_extract('offset', $vars, 0);
 // because you can say $vars['limit'] = 0
 if (!$limit = (int) elgg_extract('limit', $vars, 10)) {
 	$limit = 10;
@@ -132,7 +132,7 @@ if(elgg_get_context() == 'search' || elgg_get_context() == 'admin' || elgg_get_c
 	echo '</ul>';
 } else {
 
-echo '<div class="news-show-more load-more" limit="'.$limit.'" context="'.elgg_get_context().'">more</div>';
+echo '<div class="news-show-more load-more" limit="'.$limit.'" last_guid="'. $vars['last_guid'] . '" context="'.elgg_get_context().'">more</div>';
 
 }
 

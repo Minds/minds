@@ -5,7 +5,7 @@
  * @package Blog
  */
 
-$blog = get_entity($vars['guid']);
+$blog = get_entity($vars['guid'], 'object');
 $vars['entity'] = $blog;
 
 $draft_warning = $vars['draft_warning'];
@@ -83,7 +83,7 @@ $status_input = elgg_view('input/dropdown', array(
 ));
 
 $license_label = elgg_echo('minds:license:label');
-$license_input = elgg_view('input/licenses', array('name'=>'license', 'value'=>$entity->license));
+$license_input = elgg_view('input/licenses', array('name'=>'license', 'value'=>$vars['license']));
 
 $comments_label = elgg_echo('comments');
 $comments_input = elgg_view('input/dropdown', array(

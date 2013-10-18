@@ -16,7 +16,8 @@ $basket = elgg_get_entities(array(
 								));
 								
 $amount = pay_basket_total();
-											
+$recurring = false;				
+
 //We create a new order object								
 $order = new ElggObject();
 $order->subtype = 'pay';
@@ -34,6 +35,8 @@ foreach($basket as $item){
 	$a->quantity = $item->quantity;
 	$a->object_guid = $item->object_guid;
 	$a->seller_guid = $item->seller_guid;
+        if ($item->recurring == 'y') // TODO: Currently we have to set whole basket to recurring if one item repeats. Not idea.
+            $recurring = true;
 	$items[] = $a;
 	$item->delete();
 }
@@ -41,6 +44,10 @@ $order->items = serialize($items);
 
 $order->amount = $amount;
 $order->status = 'created';
+
+// Flag as recurring
+if ($recurring)
+    $order->recurring = true;
 
 $order->access_id = 1;
 
@@ -50,9 +57,10 @@ if($order->save()){
 	notification_create(array($order->seller_guid, $order->getOwnerGUID()), 0, $order->getGuid(), array('notification_view'=>'pay_order'));
 	
 	return pay_call_payment_handler($order->payment_method, array( 'order_guid' => $order->getGuid(),
-																   'user_guid' => $user_guid,
-																   'amount' => $amount,
-																   ));
+            'user_guid' => $user_guid,
+            'amount' => $amount,
+            'recurring' => $recurring
+        ));
 } else {
 	register_error(elgg_echo("pay:checkout:failed"));
 }

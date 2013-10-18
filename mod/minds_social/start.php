@@ -7,6 +7,8 @@
  *
  */
 
+elgg_register_event_handler('init','system','minds_social_init');  
+
 function minds_social_init(){
 										
 	elgg_extend_view('css/elgg','minds_social/css');
@@ -244,7 +246,5 @@ function minds_get_fbimage($description) {
   }
   return $fbimage;
 }
-
-elgg_register_event_handler('init','system','minds_social_init');		
 
 ?>

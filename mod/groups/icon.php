@@ -10,10 +10,14 @@ require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 $group_guid = get_input('group_guid');
 
 /* @var ElggGroup $group */
-$group = get_entity($group_guid);
+$group = get_entity($group_guid, 'group');
 if (!($group instanceof ElggGroup)) {
 	header("HTTP/1.1 404 Not Found");
 	exit;
+}
+
+if($group->legacy_guid){
+	$group_guid = $group->legacy_guid;
 }
 
 // If is the same ETag, content didn't changed.
@@ -31,7 +35,7 @@ $success = false;
 
 $filehandler = new ElggFile();
 $filehandler->owner_guid = $group->owner_guid;
-$filehandler->setFilename("groups/" . $group->guid . $size . ".jpg");
+$filehandler->setFilename("groups/" . $group_guid . $size . ".jpg");
 
 $success = false;
 if ($filehandler->open("read")) {

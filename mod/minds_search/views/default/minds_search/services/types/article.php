@@ -12,8 +12,8 @@ $source = $article['source'];
 $description = strip_tags($article['description']);
 
 if($source == 'minds'){
-	$entity = get_entity($article['guid']);
-	$iconURL = minds_fetch_image($entity->description);
+	$entity = get_entity($article['guid'], 'object');
+	$iconURL = minds_fetch_image($entity->description, $entity->owner_guid);
 	$icon = "<img src='".$iconURL."'/>";
 }
 

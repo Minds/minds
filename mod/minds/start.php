@@ -24,15 +24,13 @@ function minds_init(){
 	
 	elgg_register_page_handler('news', 'minds_news_page_handler');
 		
- 	elgg_extend_view('page/elements/head','minds/meta');
-	
-	elgg_extend_view('page/elements/head','minds/analytics', 90000); //such a large number so it is always at the bottom
-	
+ 	//elgg_extend_view('page/elements/head','minds/meta',1);
+		
 	elgg_extend_view('register/extend', 'minds/register_extend', 500);
 	
 	//Register the minds elastic news library (to override the default elgg river)
-	elgg_register_library('elastic_news', elgg_get_plugins_path().'minds/lib/elastic_news.php');
-	elgg_load_library('elastic_news');
+	//elgg_register_library('elastic_news', elgg_get_plugins_path().'minds/lib/elastic_news.php');
+	//elgg_load_library('elastic_news');
 	
 	//put the quota in account statistics
 	elgg_extend_view('core/settings/statistics', 'minds/quota/statistics', 500);
@@ -130,8 +128,8 @@ function minds_init(){
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
         elgg_register_action("registernode","$actionspath/minds/registernode.php");
-        elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php", 'public');
-        elgg_register_action("select_tier","$actionspath/minds/select_tier.php", 'public');
+        elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php");
+        elgg_register_action("select_free_tier","$actionspath/minds/select_free_tier.php");
 	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
@@ -144,16 +142,42 @@ function minds_init(){
         // Handle some tier pages
         
         // Extend public pages
-        elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
+        /*elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
             $pages = array('tierlogin'); 
             return array_merge($pages, $return);
         });
         
+        // Override registration action to support tier signup
+        elgg_unregister_action('register');
+        elgg_register_action('register', dirname(__FILE__) . '/actions/minds/register.php', 'public');
+        
+        // Set validation true if this is a tier signup
+        elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
+
+            global $SESSION;
+            
+            $object = $params['user'];
+
+            if ($object && elgg_instanceof($object, 'user')) {
+//                if ($SESSION['_from_tier'] == 'y') { 
+                if (get_input('returntoreferer') == 'y') // Hack, but sessions seem not to be available here. TODO: Secure this.
+                    elgg_set_user_validation_status($object->guid, true, 'tier_signup');      
+                }
+//            } 
+        }, 1);
+        
         // Endpoint
         elgg_register_page_handler('tierlogin', function($pages) {
             
+            global $SESSION;
+            $SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
+            $SESSION['__tier_selected'] = get_input('tier');
+            $SESSION['_from_tier'] = 'y';
+            
+            $_SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
             $_SESSION['__tier_selected'] = get_input('tier');
-            $content = elgg_view_form('login', null, array('returntoreferer' => true));
+            $_SESSION['_from_tier'] = 'y';
+            $content = "<div class=\"register-popup\">".elgg_view_form('register', null, array('returntoreferer' => true))."</div>";
             
             // If we've returned to the window after a successful login, then refresh back to parent
             if (elgg_is_logged_in()) {
@@ -172,7 +196,7 @@ function minds_init(){
                 'sidebar' => ''
             );
             
-            echo elgg_view_page('Login', elgg_view_layout('default', $params));
+            echo elgg_view_page('Login', elgg_view_layout('default', $params),'default_popup');
             return true;
         });
         
@@ -207,7 +231,7 @@ function minds_init(){
             elgg_unregister_menu_item('admin_footer', 'community_forums');
             elgg_unregister_menu_item('admin_footer', 'blog');
         }, 1001);
-        
+        */
 }
 
 function minds_index($hook, $type, $return, $params) {
@@ -215,6 +239,8 @@ function minds_index($hook, $type, $return, $params) {
 		// another hook has already replaced the front page
 		return $return;
 	}
+
+	header("X-No-Client-Cache: 1", true);
 	
 	if(!include_once(dirname(__FILE__) . '/pages/index.php')){
 		return false;
@@ -294,7 +320,7 @@ function minds_login_page_handler($page) {
 }
 
 function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
-	if (!elgg_is_logged_in()) {
+	if (!elgg_is_logged_in() && $returnvalue) {
 		$handler = elgg_extract('handler', $returnvalue);
 // 		$page = elgg_extract('segments', $returnvalue);
 // 		header('Expires: ' . date('r', time() + 300), true);//cache for 5min
@@ -308,12 +334,15 @@ function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
 
 function minds_register_hook()
 {
-	if (get_input('tac',false) != 'true') {
+	if (get_input('name', false) == true){
+		return false;
+	}
+	if (get_input('tcs',false) != 'true') {
 		register_error(elgg_echo('minds:register:terms:failed'));
 		forward(REFERER);
 	}
 	//a honey pot
-	if (get_input('terms',false) == 'true') {
+	if (get_input('terms',false) == 'true' || get_input('tac',false) == 'true') {
 		register_error(elgg_echo('minds:register:terms:failed'));
 		forward(REFERER);
 	}
@@ -337,8 +366,9 @@ function minds_pagesetup(){
 						'href' => 'news',
 						'text' => '&#59194;',
 						'title' => elgg_echo('news'),
-						'class' => 'entypo'
-					));
+						'class' => 'entypo',
+						'priority' => 1	
+				));
 	
 	if($user){		
 		elgg_register_menu_item('site', array(
@@ -346,10 +376,11 @@ function minds_pagesetup(){
 						'href' => 'archive/upload',
 						'text' => '&#128228;',
 						'title' => elgg_echo('minds:upload'),
-						'class' => 'entypo'
+						'class' => 'entypo',
+						'priority' => 4
 					));
 	}
-		
+
 	
 	//RIGHT MENU	
 	//profile
@@ -475,7 +506,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 		if ($subject->canEdit() || $object->canEdit()) {
 			$options = array(
 				'name' => 'delete',
-				'href' => "action/minds/river/delete?id=$item->id",
+				'href' => "action/river/delete?id=$item->id",
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
 				'class' => 'entypo',
@@ -656,44 +687,47 @@ function minds_subscribe_bulk($username = 'minds'){
 
 function minds_fetch_image($description, $owner_guid) {
   
-  global $post, $posts;
-  $fbimage = '';
-  $output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i',$description, $matches);
-  $image = $matches [1] [0];
- 
-  if(empty($image)) {
-    //$image = elgg_get_site_url() . 'mod/minds/graphics/minds_logo.png';
-    if($owner_guid){
-   	 	$owner = get_entity($owner_guid);
-    	$image = $owner->getIconURL('large');
+	global $post, $posts;
+	
+	if($description){
+		libxml_use_internal_errors(true);
+		$dom = new DOMDocument();
+		$dom->strictErrorChecking = FALSE;
+		$dom->loadHTML($description);
+		$nodes = $dom->getElementsByTagName('img');
+		foreach ($nodes as $img) {
+			$image = $img->getAttribute('src');
+		}
 	}
-  }
-  
-  return $image;
+	if(!$image){
+		if($owner_guid){
+                	$owner = get_entity($owner_guid,'user');
+     			$image = $owner->getIconURL('large');
+        	}
+  	}
+	return $image;
 }
 
-function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = 0){
-	global $CONFIG;
-	if (class_exists(elasticsearch)) {
-		$es = new elasticsearch();
-		$es->index = $CONFIG->elasticsearch_prefix . 'featured';
-		$data = $es->query($type,null, 'time_stamp:desc', $limit, $offset, array('age'=>0));
-		foreach($data['hits']['hits'] as $item){
-			$guids[] = intval($item['_id']);
-		}
-		//$guids = array_reverse($guids);
-		$guidsString = implode(',', $guids);
-		if(count($guids) > 0){
-			if($output == 'entities'){
-				return elgg_get_entities(array(	'wheres' => array("e.guid IN ($guidsString)"),
-								'order_by' => "FIELD(e.guid, $guidsString)", 
-								'limit'=>$limit));
-			} elseif($output == 'guids'){
-				return $guids;
-			}
-		}
+use phpcassa\ColumnSlice;
+
+function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
+	global $CONFIG, $DB;
+
+        try {
+	$namespace = 'object:featured';
+
+        $slice = new ColumnSlice($offset, "", $limit, true);//set to reversed
+        $guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+
+	if($output == 'guids'){
+		return $guids;
 	}
-	return false;
+
+        return elgg_get_entities(array( 'type' => 'object',
+                                        'guids' =>$guids
+                                        ));
+        }catch (\Exception $e) {}
+        return false;
 }
 
  /* Extend / override htmlawed */ 

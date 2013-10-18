@@ -74,7 +74,7 @@
 	BREADCRUMBS
 *************************************** */
 .elgg-breadcrumbs {
-	margin:0 0 10px;
+	margin:0;
 	font-size: 80%;
 	font-weight: bold;
 	line-height: 1.2em;

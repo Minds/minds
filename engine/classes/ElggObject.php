@@ -33,7 +33,8 @@ class ElggObject extends ElggEntity {
 		$this->attributes['type'] = "object";
 		$this->attributes['title'] = NULL;
 		$this->attributes['description'] = NULL;
-		$this->attributes['tables_split'] = 2;
+		$this->attributes['time_created'] = time();
+		$this->attributes['time_updated'] = time();
 	}
 
 	/**
@@ -80,12 +81,10 @@ class ElggObject extends ElggEntity {
 				throw new InvalidParameterException(elgg_echo('InvalidParameterException:NonElggObject'));
 
 			// Is it a GUID
-			} else if (is_numeric($guid)) {
+			} else {
 				if (!$this->load($guid)) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
-			} else {
-				throw new InvalidParameterException(elgg_echo('InvalidParameterException:UnrecognisedValue'));
 			}
 		}
 	}
@@ -99,38 +98,13 @@ class ElggObject extends ElggEntity {
 	 * @throws InvalidClassException
 	 */
 	protected function load($guid) {
-		$attr_loader = new ElggAttributeLoader(get_class(), 'object', $this->attributes);
-		$attr_loader->requires_access_control = !($this instanceof ElggPlugin);
-		$attr_loader->secondary_loader = 'get_object_entity_as_row';
+		foreach($guid as $k => $v){
+                        $this->attributes[$k] = $v;
+                }		
 
-		$attrs = $attr_loader->getRequiredAttributes($guid);
-		if (!$attrs) {
-			return false;
-		}
-
-		$this->attributes = $attrs;
-		$this->attributes['tables_loaded'] = 2;
 		cache_entity($this);
-
+		
 		return true;
-	}
-
-	/**
-	 * Saves object-specific attributes.
-	 *
-	 * @internal Object attributes are saved in the objects_entity table.
-	 *
-	 * @return bool
-	 */
-	public function save() {
-		// Save ElggEntity attributes
-		if (!parent::save()) {
-			return false;
-		}
-
-		// Save ElggObject-specific attributes
-		return create_object_entity($this->get('guid'), $this->get('title'),
-			$this->get('description'));
 	}
 
 	/**
@@ -175,6 +149,8 @@ class ElggObject extends ElggEntity {
 		return array_merge(parent::getExportableValues(), array(
 			'title',
 			'description',
+			'featured',
+			'featured_id'
 		));
 	}
 
@@ -212,4 +188,32 @@ class ElggObject extends ElggEntity {
 		// no checks on read access since a user cannot see entities outside his access
 		return true;
 	}
+
+	/**
+         * Gets the ElggEntity that owns this entity.
+         *
+         * @return ElggEntity The owning entity
+         */
+        public function getOwnerEntity($brief = false) {
+		if($brief){
+			if($this->owner){
+				//return json_decode($this->owner);
+			}
+		} 
+                return get_entity($this->owner_guid, 'user');
+	}
+
+	/**
+         * Save an object.
+         *
+         * @return bool|int
+         * @throws IOException
+         */
+        public function save() {
+                //cache owner_guid for brief
+                $this->owner = json_encode($this->getOwnerEntity());
+                $guid = create_entity($this);
+                $this->attributes['guid'] = $guid;
+		return $guid;
+        }
 }

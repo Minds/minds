@@ -51,7 +51,7 @@
 		'webinar:menu:page:upcoming' => "Upcoming gatherings",
 		'webinar:menu:site' => "Gatherings",
 		'webinar:menu:view' => "See all group's gatherings",
-		'webinar:new:user' => 'New personnal gathering',
+		'webinar:new:user' => 'New Gathering',
 		'webinar:new:group' => "Create a gathering for the group %s",
 		'webinar:new:river' => 'New gathering in the group %s',
 		'webinar:none' => 'Actually there is no gathering for this group',

@@ -54,6 +54,8 @@ body.news{
 }
 .minds-header-right .notifications li a{
 	color:#333;
+	width:26px;
+	height:26px;
 }
 .minds-header-right span.text{
 	float:left;
@@ -185,6 +187,11 @@ body.news{
 }
 
 /**
+ * Homepage specific
+ */
+
+
+/**
  * Register
  */
 input[name=terms]{
@@ -246,7 +253,7 @@ input[name=terms]{
 	margin:0;
 	width:100%;
 }
-.minds-body-header .elgg-form-wall-add:hover textarea{
+.minds-body-header .elgg-form-wall-add:hover textarea, .minds-body-header .elgg-form-wall-add textarea:focus{
 	width:82%
 }
 .minds-body-header .elgg-form-wall-add .elgg-button-submit{
@@ -466,6 +473,21 @@ li .excerpt a{
  **************/
 .front-page-buttons{
 	margin:30px 0 0;
+	float:left;
+}
+.elgg-menu-right-filter{
+	float:right;
+	margin:36px 0 0 0;
+}
+.elgg-menu-right-filter li{
+	font-size:14px;
+	margin:0 10px;
+}
+.elgg-menu-right-filter li a{
+	color:#666;
+}
+.elgg-menu-right-filter li.elgg-state-selected a{
+	color:#4690D6;
 }
 .front-page-buttons a{
 	margin-right:20px;
@@ -1093,7 +1115,12 @@ li.elgg-menu-item-rss{
 	display: none;
 }
 
-
+.elgg-widget-more{
+	width: 100%;
+	height: auto;
+	display: block;
+	clear: both;
+}
 
 div.signup-options {
 
@@ -1163,14 +1190,38 @@ div.tiers {
 }
 div.tiers div.tier {
 
-    border: 1px solid #000;
+    background-color: #4690D6;
+    border: 1px solid #4690D6;
     width: 250px;
-    height: 300px;
+    height: 150px;
     float: left;
     margin: 10px;
     margin-bottom:30px;
 }
 
+div.tier_details div.default-description,
 div.tier div.default-description {
     padding: 10px;
+}
+
+div.tier_details {
+border: 1px solid #000;
+}
+
+div.register-popup {
+    width:700px;
+    margin-left: 30px;
+    margin-right: auto;
+}
+
+/**
+ * Ad specific
+ */
+.contentad{
+	width:100%;
+	height:620px;
+}
+.adblade iframe{
+	margin: 10px auto;
+	display:block;
 }

@@ -20,6 +20,13 @@ $excerpt = elgg_get_excerpt($file->description);
 $mime = $file->mimetype;
 $base_type = substr($mime, 0, strpos($mime,'/'));
 
+$menu = elgg_view_menu('entity', array(
+                'entity' => $file,
+                'handler' => 'archive',
+                'sort_by' => 'priority',
+                'class' => 'elgg-menu-hz',
+        ));
+
 $owner_link = elgg_view('output/url', array(
 	'href' => $owner->getURL(),
 	'href' => "file/owner/$owner->username",
@@ -32,19 +39,6 @@ $file_icon = elgg_view_entity_icon($file, 'small');
 
 $tags = elgg_view('output/tags', array('tags' => $file->tags));
 $date = elgg_view_friendly_time($file->time_created);
-
-$comments_count = $file->countComments();
-//only display if there are commments
-if ($comments_count != 0) {
-	$text = elgg_echo("comments") . " ($comments_count)";
-	$comments_link = elgg_view('output/url', array(
-		'href' => $file->getURL() . '#file-comments',
-		'text' => $text,
-		'is_trusted' => true,
-	));
-} else {
-	$comments_link = '';
-}
 
 $subtitle = "$author_text $date $comments_link $categories";
 
@@ -103,7 +97,7 @@ if ($full) {
 	$body = '<span class="info">' . $title . $extras . '<span>';
 	
 	$content = $image . $body;
-	echo $metadata;
+	echo $menu;
 	$header = elgg_view_image_block(elgg_view_entity_icon($file->getOwnerEntity(), 'small'), $title . $subtitle);
         echo $header;
         echo elgg_view('output/url', array('href'=>$file->getURL(), 'text'=>$image));

@@ -13,7 +13,7 @@ $guids = get_input('guids');
 $guids = explode(',', $guids);
 
 foreach ($guids as $guid) {
-	$plugin = get_entity($guid);
+	$plugin = get_entity($guid, 'plugin');
 	if (elggmulti_is_plugin_available($plugin->getID())) {
 	    if (!$plugin->isActive()) {
 		    if ($plugin->activate()) {

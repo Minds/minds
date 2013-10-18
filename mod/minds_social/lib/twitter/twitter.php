@@ -1,7 +1,9 @@
 <?php
 
 function minds_social_twitter_init(){
-	
+
+	session_start();
+
 	$consumer['key'] = "ZKiXcclET9CpKly7OX6gA";
 	$consumer['secret'] = "17ZLddnGgOywRKUGKf6mWFZ5XKyECWcZPoGgZ5q10Zw";
 	
@@ -26,7 +28,7 @@ function minds_social_twitter_forward($type = 'login') {
  */
 function minds_social_twitter_login() {
 	header("X-No-Client-Cache: 0", true);	
-	$token = minds_social_twitter_access_token();
+	$token = minds_social_twitter_access_token(get_input('oauth_verifier'));
 	
 	if (!isset($token['oauth_token']) || !isset($token['oauth_token_secret'])) {
 		register_error(elgg_echo('twitter_api:authorize:error'));
@@ -37,41 +39,30 @@ function minds_social_twitter_login() {
 		minds_social_twitter_auth($token);
 		return true;
 	}
-	
-	// attempt to find user and log them in.
-	// else, create a new user.
-	$options = array(
-		'type' => 'user',
-		'plugin_user_setting_name_value_pairs' => array(
-			'twitter_name' => $token['screen_name'],
-			'twitter_id' => $token['user_id'],
-			'minds_social_twitter_access_key' => $token['oauth_token'],
-			'minds_social_twitter_access_secret' => $token['oauth_token_secret'],
-		),
-		'plugin_user_setting_name_value_pairs_operator' => 'OR',
-		'limit' => 0
-	);
 
-	$users = elgg_get_entities_from_plugin_user_settings($options);
+	$consumer = minds_social_twitter_init();
+        $api = new TwitterOAuth($consumer['key'], $consumer['secret'], $token['oauth_token'], $token['oauth_token_secret']);
+        $api->host = "https://api.twitter.com/1.1/";
+        $twitter = $api->get('account/verify_credentials');
 	
-	if ($users) {
-		if (count($users) == 1 && login($users[0])) {
-			system_message(elgg_echo('twitter_api:login:success'));			
-			forward('news');
-		} else {
-			register_error(elgg_echo('twitter_api:login:error'));
-			forward('login');
-		}
-		
+	$guid = get_user_index_to_guid('twitter:name:'.$twitter->screen_name);	
+	
+	if(!$guid){
+		$guid = get_user_index_to_guid('twitter:id:'.$twitter->id);
+	}
+	
+	if($guid){
+		$user = get_entity($guid, 'user');
+	}
+	
+	if ($user) {
+		login($user);
+		system_message(elgg_echo('twitter_api:login:success'));			
 		forward('news');
 	} else {
 		
-		$consumer = minds_social_twitter_init();
-		$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $token['oauth_token'], $token['oauth_token_secret']);
-		$twitter = $api->get('account/verify_credentials');
-		
 		$username = $twitter->screen_name;
-			
+		
 		if(!$username){
 			$username = str_replace(' ', '', strtolower($twitter->name));
 		}
@@ -91,8 +82,8 @@ function minds_social_twitter_login() {
 				$new_user = get_entity($guid);
 	
 				// set twitter services tokens
-				elgg_set_plugin_user_setting('twitter_name', $token['screen_name'], $guid);
-				elgg_set_plugin_user_setting('twitter_name', $token['user_id'], $guid);
+				elgg_set_plugin_user_setting('twitter_name', $twitter->screen_name, $guid);
+				elgg_set_plugin_user_setting('twitter_id', $twitter->id, $guid);
 				elgg_set_plugin_user_setting('minds_social_twitter_access_key', $token['oauth_token'], $guid);
 				elgg_set_plugin_user_setting('minds_social_twitter_access_secret', $token['oauth_token_secret'], $guid);
 			
@@ -107,14 +98,10 @@ function minds_social_twitter_login() {
 					'invitecode' => $invitecode
 				);
 	
-				// @todo should registration be allowed no matter what the plugins return?
-				/*if (!elgg_trigger_plugin_hook('register', 'user', $params, TRUE)) {
-					$new_user->delete();
-					// @todo this is a generic messages. We could have plugins
-					// throw a RegistrationException, but that is very odd
-					// for the plugin hooks system.
-					throw new RegistrationException(elgg_echo('registerbad'));
-				}*/
+				$data = array('type'=>'user_index_to_guid', $guid => time());
+		                db_insert('twitter:id:'.$twitter->id, $data);//move this into the user class
+				db_insert('twitter:name'.$twitter->name, $data);
+	
 				//Automatically subscribe user to the Minds Channel
 				minds_subscribe_default(null,null,null, array('user'=>$new_user));
 				login($new_user);			
@@ -132,7 +119,7 @@ function minds_social_twitter_login() {
  * to establish session request tokens.
  */
 function minds_social_twitter_auth($display = 'normal') {
-	$token = minds_social_twitter_access_token();
+	$token = minds_social_twitter_access_token(get_input('oauth_verifier'));
 
 	$user = elgg_get_logged_in_user_entity();	
 	if (!isset($token['oauth_token']) || !isset($token['oauth_token_secret'])) {
@@ -148,7 +135,7 @@ function minds_social_twitter_auth($display = 'normal') {
 
 	// register user's access tokens
 	elgg_set_plugin_user_setting('twitter_name', $token['screen_name']);
-	elgg_set_plugin_user_setting('twitter_id', $token['user_id']);
+	elgg_set_plugin_user_setting('twitter_id', $token['id']);
 	elgg_set_plugin_user_setting('minds_social_twitter_access_key', $token['oauth_token']);
 	elgg_set_plugin_user_setting('minds_social_twitter_access_secret', $token['oauth_token_secret']);
 	
@@ -206,7 +193,7 @@ function minds_social_twitter_update_user_avatar($user, $file_location) {
  * @param string $callback The callback URL
  */
 function minds_social_twitter_authorize_url($callback = NULL, $login = true) {
-	global $SESSION;
+//	global $SESSION;
 
 	$consumer = minds_social_twitter_init();
 
@@ -215,7 +202,7 @@ function minds_social_twitter_authorize_url($callback = NULL, $login = true) {
 	$token = $twitter->getRequestToken($callback);
 
 	// save token in session for use after authorization
-	$SESSION['twitter_api'] = array(
+	$_SESSION['twitter_api'] = array(
 		'oauth_token' => $token['oauth_token'],
 		'oauth_token_secret' => $token['oauth_token_secret'],
 	);
@@ -229,15 +216,14 @@ function minds_social_twitter_authorize_url($callback = NULL, $login = true) {
  * @param unknown_type $oauth_verifier
  */
 function minds_social_twitter_access_token($oauth_verifier = FALSE) {
-	global $SESSION;
 	
 	$consumer = minds_social_twitter_init();
 
 	// retrieve stored tokens
-	$oauth_token = $SESSION['twitter_api']['oauth_token'];
-	$oauth_token_secret = $SESSION['twitter_api']['oauth_token_secret'];
-	$SESSION->offsetUnset('twitter_api');
-
+	$oauth_token = $_SESSION['twitter_api']['oauth_token'];
+	$oauth_token_secret = $_SESSION['twitter_api']['oauth_token_secret'];
+	//$SESSION->offsetUnset('twitter_api');
+	
 	// fetch an access token
 	$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $oauth_token, $oauth_token_secret);
 	return $api->getAccessToken($oauth_verifier);

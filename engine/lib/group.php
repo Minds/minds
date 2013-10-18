@@ -159,22 +159,17 @@ function remove_object_from_group($group_guid, $object_guid) {
  * @return mixed
  */
 function get_group_members($group_guid, $limit = 10, $offset = 0, $site_guid = 0, $count = false) {
+	
+	$group = get_entity($group_guid, 'group');
 
-	// in 1.7 0 means "not set."  rewrite to make sense.
-	if (!$site_guid) {
-		$site_guid = ELGG_ENTITIES_ANY_VALUE;
+	$member_guids = $group->member_guids ? unserialize($group->member_guids) : array();
+	array_push($member_guids,  $group->owner_guid);
+	
+	if(is_array($member_guids) && !empty($member_guids)){
+		return db_get(array('type'=>'user', 'guids'=>$member_guids));
 	}
 
-	return elgg_get_entities_from_relationship(array(
-		'relationship' => 'member',
-		'relationship_guid' => $group_guid,
-		'inverse_relationship' => TRUE,
-		'types' => 'user',
-		'limit' => $limit,
-		'offset' => $offset,
-		'count' => $count,
-		'site_guid' => $site_guid
-	));
+	return false;
 }
 
 /**
@@ -186,12 +181,22 @@ function get_group_members($group_guid, $limit = 10, $offset = 0, $site_guid = 0
  * @return bool
  */
 function is_group_member($group_guid, $user_guid) {
-	$object = check_entity_relationship($user_guid, 'member', $group_guid);
-	if ($object) {
+
+	$user = get_entity($user_guid, 'user');
+	$group = get_entity($group_guid, 'group');
+
+	if($group->owner_guid == $user->guid){
 		return true;
-	} else {
-		return false;
 	}
+
+	$current_member_guids = $group->member_guids ? unserialize($group->member_guids) : array();
+
+	if(in_array($user_guid, $current_member_guids)){
+		return true;
+	} 
+
+	return false;
+
 }
 
 /**
@@ -203,10 +208,25 @@ function is_group_member($group_guid, $user_guid) {
  * @return bool
  */
 function join_group($group_guid, $user_guid) {
-	$result = add_entity_relationship($user_guid, 'member', $group_guid);
+	global $SESSION;
+
+	$user = get_entity($user_guid, 'user');
+	$group = get_entity($group_guid, 'group');
+
+	$current_member_guids = $group->member_guids ? unserialize($group->member_guids) : array();
+	array_push($current_member_guids, $user_guid);
+	$group->member_guids = serialize($current_member_guids);
+
+	$result = $group->save();
+
+	//append to the users object too
+	$users_group_guids = $user->group_guids ? unserialize($user->group_guids) : array();
+	array_push($users_group_guids, $user_guid);
+	$user->group_guids = serialize($users_group_guids);
+	$SESSION['user'] = $user;//update the session
 
 	if ($result) {
-		$params = array('group' => get_entity($group_guid), 'user' => get_entity($user_guid));
+		$params = array('group' => $group, 'user' => get_entity($user_guid,'user'));
 		elgg_trigger_event('join', 'group', $params);
 	}
 

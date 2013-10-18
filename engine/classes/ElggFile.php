@@ -275,9 +275,9 @@ class ElggFile extends ElggObject {
 	 */
 	public function delete() {
 		$fs = $this->getFilestore();
-		if ($fs->delete($this)) {
+		//if ($fs->delete($this)) {
 			return parent::delete();
-		}
+		//}
 	}
 
 	/**
@@ -357,11 +357,12 @@ class ElggFile extends ElggObject {
 	 * @throws ClassNotFoundException
 	 */
 	protected function getFilestore() {
+
 		// Short circuit if already set.
 		if ($this->filestore) {
 			return $this->filestore;
 		}
-
+/*
 		// ask for entity specific filestore
 		// saved as filestore::className in metadata.
 		// need to get all filestore::* metadata because the rest are "parameters" that
@@ -383,7 +384,7 @@ class ElggFile extends ElggObject {
 				$parameters[$name] = $md->value;
 			}
 		}
-
+*/
 		// need to check if filestore is set because this entity is loaded in save()
 		// before the filestore metadata is saved.
 		if (isset($filestore)) {
@@ -398,11 +399,10 @@ class ElggFile extends ElggObject {
 			// @todo explain why $parameters will always be set here (PhpStorm complains)
 		}
 
-		// this means the entity hasn't been saved so fallback to default
-		if (!$this->filestore) {
+		if(!$this->filestore){
 			$this->filestore = get_default_filestore();
-		}
-
+		} 
+		
 		return $this->filestore;
 	}
 

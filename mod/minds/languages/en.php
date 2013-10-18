@@ -197,7 +197,9 @@ If you requested this, click on the link below. Otherwise ignore this email.
     
         'register:node' => 'Launch a social network',
         "register:node:testping" => 'Multisite node DNS Test',
-        'minds:tier:blurb' => 'Thank you for chosing Minds, please select one of the following payment plans...'
+        'minds:tier:blurb' => 'Thank you for chosing Minds, please select one of the following payment plans...',
+	
+	'trending' => 'Trending',
 
 );
 		

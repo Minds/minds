@@ -52,7 +52,7 @@ elgg.embed.insert = function(event) {
 	/*
 	 * Make videos play.
  	 */
-	if($(this).find('.minds-archive-video')){
+	if($(this).find('.minds-archive-video').length >= 1){
 		$.ajax({ url:   $(this).find('.minds-archive-video').attr('source'),
 				async: false,
 				success: function(data) {

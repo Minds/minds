@@ -9,20 +9,11 @@ $content = elgg_view_title($title);
 
 // Display original form for logged in users
 //if (elgg_is_admin_logged_in()) {
-if (false) {
-    
-    // create the registration url - including switching to https if configured
-    $register_url = elgg_get_site_url() . 'action/registernode';
-    $form_params = array(
-            'action' => $register_url,
-            'class' => 'elgg-form-account',
-    );
-
-    $body_params = array(
-            'minds_user_guid' => $user->guid,
-    );
-    $content .= elgg_view_form('node_loggedin', $form_params, $body_params);
-} else {
+/*if (true) {
+*/
+	$content = '<h3>Launching a social network will be available shortly.</h3> Please check back soon for more information';    
+  
+/*} else {
     
     $payment_recieved = false; // TODO: Test to see if we've returned from a successful billing workflow
     
@@ -31,35 +22,9 @@ if (false) {
     
     // Check to see if there is a paid for tier product
     if ($user) {
-        $tiers_guid = array();
-        $ia = elgg_set_ignore_access();
-    
-        // Get tiers
-        if ($tiers = elgg_get_entities(array(
-           'type' => 'object',
-            'subtype' => 'minds_tier'
-        )))
-        {
-            foreach ($tiers as $tier)
-                $tiers_guid[] = $tier->guid;
-        }
-       
-        elgg_set_ignore_access($ia);
         
-        
-        $order = elgg_get_entities_from_metadata(array(
-            'type' => 'object',
-            'subtype' => 'pay',
-            'owner_guid' => $user->guid,
-             'metadata_name_value_pairs' => array(
-                array('name' => 'status', 'value' => 'Completed'), // Interested in completed payments
-                array('name' => 'object_guid', 'value' => $tiers_guid) // Which are valid tiers
-                 
-                 
-                 // Note, tier is considered valid until its status is set to something other than Completed, e.g. 'Cancelled'
-                 
-                ),
-        ));
+        if (is_callable('minds_tiers_get_current_valid_tier'))
+            $order = minds_tiers_get_current_valid_tier($user);
         
         if ($order)
             $payment_received = true; 
@@ -67,7 +32,7 @@ if (false) {
     
     
     // If paid for then allow registration
-    if ($payment_recieved) {
+    if ($payment_received) {
 
         $register_url = elgg_get_site_url() . 'action/registernewnode';
         $form_params = array(
@@ -76,6 +41,7 @@ if (false) {
         );
 
         $body_params = array(
+            'order' => $order
         );
         $content .= elgg_view_form('node', $form_params, $body_params);
     }
@@ -93,7 +59,7 @@ if (false) {
     }
     
 }
-
+*/
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 $header = <<<HTML
 <div class="elgg-head clearfix">

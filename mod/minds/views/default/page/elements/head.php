@@ -9,7 +9,7 @@
 if (empty($vars['title'])) {
 	$title = elgg_get_config('sitename');
 } else {
-	$title = elgg_get_config('sitename') . " | " . $vars['title'];
+	$title = $vars['title'] . " | " . elgg_get_config('sitename');
 }
 
 global $autofeed;
@@ -41,6 +41,8 @@ $release = get_version(true);
 ?>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title><?php echo $title; ?></title>
+	<?php echo elgg_view('minds/meta');?>
+
 	<?php echo elgg_view('page/elements/shortcut_icon', $vars); ?>
 
 <?php foreach ($css as $link) { ?>

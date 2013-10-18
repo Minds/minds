@@ -30,15 +30,15 @@ function minds_social_facebook_auth($display = 'normal'){
 	}
 	
 	
-	elgg_unset_plugin_user_setting('minds_social_facebook_uid', $user->getGUID());
-	elgg_unset_plugin_user_setting('minds_social_facebook_access_token', $user->getGUID());
+//	elgg_unset_plugin_user_setting('minds_social_facebook_uid', $user->getGUID());
+//	elgg_unset_plugin_user_setting('minds_social_facebook_access_token', $user->getGUID());
 	
-
-	//the info for that user doesnt match our facebook info so we update or create the info
-	$data = $facebook->api('/me');
 	
 	//get our access token 
 	$access_token = $facebook->getAccessToken();
+
+	$data = array('type'=>'user_index_to_guid', $user->getGUID() => time());
+        db_insert('fb:'.$session['_fb'], $data);
 
 	// register user's access tokens
 	elgg_set_plugin_user_setting('minds_social_facebook_uid', $session['_fb']);
@@ -58,10 +58,15 @@ function minds_social_facebook_auth($display = 'normal'){
  * Begin the signin process for facebook
  */
 function minds_social_facebook_login(){
+	global $SESSION;
 	header("X-No-Client-Cache: 0", true);
 	$facebook = minds_social_facebook_init();
 
-	if (!$session['_fb'] = $facebook->getUser()){		
+	if(elgg_is_logged_in()){
+		forward();
+	}
+	
+	if (!$session['_fb'] = $facebook->getUser()){
 		$return_url = elgg_get_site_url() . 'social/fb/login';
 		forward($facebook->getLoginURL(array(
 				'redirect_uri' => $return_url,
@@ -76,26 +81,22 @@ function minds_social_facebook_login(){
 	}
 	// attempt to find user and log them in.
 	// else, create a new user.
-	$options = array(
-		'type' => 'user',
-		'plugin_user_setting_name_value_pairs' => array(
-			'minds_social_facebook_uid' => is_array($session['_fb']) ? $session['_fb']['uid'] : $session['_fb'],
-		),
-		'plugin_user_setting_name_value_pairs_operator' => 'OR',
-		'limit' => 0
-	);
-
-	$users = elgg_get_entities_from_plugin_user_settings($options);	
+	$fb_uid = is_array($session['_fb']) ? $session['_fb']['uid'] : $session['_fb'];
+	//check if there is a guid relating to the users fb_id
+	$guid = get_user_index_to_guid('fb:'.$fb_uid);
 	
-	if ($users){
-		if (count($users) == 1 && login($users[0])){
+	if($guid){
+		$user = get_entity($guid, 'user');
+	}
+
+	if ($user){
+		if(login($user)){
 			system_message(elgg_echo('facebook_connect:login:success'));
-			//elgg_set_plugin_user_setting('access_token', $session['_fb']['access_token'], $users[0]->guid);
 			
-			if(empty($users[0]->email)) {
+			if(empty($user->email)) {
 				$data = $facebook->api('/me');
 				$email= $data['email'];
-				$user = get_entity($users[0]->guid);
+				$user = get_entity($users->guid);
 				$user->email = $email;
 				$user->save();
 			}
@@ -104,7 +105,9 @@ function minds_social_facebook_login(){
 			//get our access token
        			 $access_token = $facebook->getAccessToken();
         		elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
-			
+
+			forward();	
+		
 		} else {
 			system_message(elgg_echo('facebook_connect:login:error'));
 		}
@@ -113,7 +116,7 @@ function minds_social_facebook_login(){
 		$data = $facebook->api('/me');     
 		$email= $data['email'];
 		
-		$users= get_user_by_email($email);
+		$users = get_user_by_email($email);
 	
 		if(!$users){
 			//try and get the facebook username, if not - use their name
@@ -150,15 +153,10 @@ function minds_social_facebook_login(){
 					'friend_guid' => $friend_guid,
 					'invitecode' => $invitecode
 				);
-				
-				// @todo should registration be allowed no matter what the plugins return?
-				/*if (!elgg_trigger_plugin_hook('register', 'user', $params, TRUE)) {
-					$new_user->delete();
-					// @todo this is a generic messages. We could have plugins
-					// throw a RegistrationException, but that is very odd
-					// for the plugin hooks system.
-					throw new RegistrationException(elgg_echo('registerbad'));
-				}*/
+			
+				$data = array('type'=>'user_index_to_guid', $guid => time());
+		                db_insert('fb:'.$fb_uid, $data);//move this into the user class
+	
 				//Automatically subscribe user to the Minds Channel
 				minds_subscribe_default(null,null,null, array('user'=>$new_user));
 				login($new_user);
@@ -170,8 +168,9 @@ function minds_social_facebook_login(){
 			try {
 				if(login($users[0])){
 					$access_token = $facebook->getAccessToken();                        
-               	 	elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
-					
+               	 			elgg_set_plugin_user_setting('minds_social_facebook_access_token', $access_token);
+					forward('news');			
+	
 				/*	if($_SESSION['fb_referrer']){
                         		//forward($_SESSION['fb_referrer']);
                 			} else {
@@ -194,6 +193,6 @@ function minds_social_facebook_remove(){
 	$user = elgg_get_logged_in_user_entity();
 	elgg_unset_plugin_user_setting('minds_social_facebook_uid', $user->getGUID());
 	elgg_unset_plugin_user_setting('minds_social_facebook_access_token', $user->getGUID());
-	forward('settings/plugins');
+	forward('settings/plugins/'.$user->username);
 	return true;
 }

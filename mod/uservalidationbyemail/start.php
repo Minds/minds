@@ -166,6 +166,9 @@ function uservalidationbyemail_check_auth_attempt($credentials) {
 function uservalidationbyemail_page_handler($page) {
 
 	if (isset($page[0]) && $page[0] == 'confirm') {
+		//do not cache this page
+		header("X-No-Client-Cache: 0", true);
+		
 		$code = sanitise_string(get_input('c', FALSE));
 		$user_guid = get_input('u', FALSE);
 

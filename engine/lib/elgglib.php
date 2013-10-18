@@ -292,7 +292,7 @@ function elgg_register_external_file($type, $name, $url, $location, $priority = 
 	$url = elgg_normalize_url($url);
 	
 	elgg_bootstrap_externals_data_structure($type);
-
+	
 	$name = trim(strtolower($name));
 
 	// normalize bogus priorities, but allow empty, null, and false to be defaults.
@@ -533,7 +533,7 @@ function sanitise_filepath($path, $append_slash = TRUE) {
  */
 function system_messages($message = null, $register = "success", $count = false) {
 	global $SESSION;
-	if(!isset($_COOKIE['Elgg'])){
+	if(!isset($_COOKIE['Minds']) && !isset($_COOKIE['Elgg_Install'])){
 		if(!is_null($message)){
 			if($register == 'error'){
 				$SESSION['err_msg'] = $message;
@@ -1896,7 +1896,7 @@ function elgg_cacheable_view_page_handler($page, $type) {
 		preg_match($regex, $page, $matches);
 		$view = $matches[1];
 		$return = elgg_view("$type/$view");
-
+		
 		header("Content-type: $content_type");
 
 		// @todo should js be cached when simple cache turned off
@@ -2152,7 +2152,7 @@ function _elgg_engine_boot() {
 	set_error_handler('_elgg_php_error_handler');
 	set_exception_handler('_elgg_php_exception_handler');
 
-	setup_db_connections();
+	db_init();
 
 	verify_installation();
 

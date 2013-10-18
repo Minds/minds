@@ -16,6 +16,8 @@ $offset = get_input("offset");
 $services = get_input("services", array('all'));
 $type = get_input("type",'all');
 $license = get_input("license", 'all');
+$source = get_input("source", 'all');
+$category = get_input("category", 'all');
 
 /**
  * Minds Search. Local
@@ -45,7 +47,7 @@ if (count($items) > 0) {
 $params['sidebar'] = elgg_view('minds_search/stats', array('stats' => $call));*/
 
 $serviceSearch = new MindsSearch();
-$call = $serviceSearch->search($query,$type, $services, $license,  $limit,$offset);
+$call = $serviceSearch->search($query,$type, $source, $license, $category,  $limit,$offset);
 $hits = $call['hits'];
 $items = $hits['hits'];
 if (count($items) > 0) {

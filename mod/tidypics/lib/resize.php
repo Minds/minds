@@ -26,7 +26,7 @@ function tp_create_gd_thumbnails($file, $prefix, $filestorename) {
 		forward(REFERER);
 		return FALSE;
 	}
-	$image_sizes = unserialize($image_sizes);
+	$image_sizes = is_array($image_sizes) ?  $image_sizes :  unserialize($image_sizes);
 
 	$thumb = new ElggFile();
 	$thumb->owner_guid = $file->owner_guid;
@@ -77,7 +77,7 @@ function tp_create_gd_thumbnails($file, $prefix, $filestorename) {
 	}
 	$file->largethumb = $prefix."largethumb".$filestorename;
 
-
+	$file->save(); // wasn't saving!
 	unset($thumb);
 
 	return TRUE;

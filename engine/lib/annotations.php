@@ -34,7 +34,8 @@ function row_to_elggannotation($row) {
  * @return ElggAnnotation|false
  */
 function elgg_get_annotation_from_id($id) {
-	return elgg_get_metastring_based_object_from_id($id, 'annotations');
+	$row = db_get($id);
+	return row_to_elggannotation($row);
 }
 
 /**
@@ -69,37 +70,32 @@ $owner_guid = 0, $access_id = ACCESS_PRIVATE) {
 
 	$result = false;
 
-	$entity_guid = (int)$entity_guid;
 	//$name = sanitise_string(trim($name));
 	//$value = sanitise_string(trim($value));
-	$value_type = detect_extender_valuetype($value, sanitise_string(trim($value_type)));
+	$value_type = detect_extender_valuetype($value, trim($value_type));
 
-	$owner_guid = (int)$owner_guid;
 	if ($owner_guid == 0) {
 		$owner_guid = elgg_get_logged_in_user_guid();
 	}
 
-	$access_id = (int)$access_id;
 	$time = time();
 
-	// Add the metastring
-	$value = add_metastring($value);
-	if (!$value) {
+	if (!$value || !$name) {
 		return false;
 	}
 
-	$name = add_metastring($name);
-	if (!$name) {
-		return false;
-	}
-
-	$entity = get_entity($entity_guid);
+	$entity = get_entity($entity_guid, 'object');
 
 	if (elgg_trigger_event('annotate', $entity->type, $entity)) {
-		// If ok then add it
-		$result = insert_data("INSERT into {$CONFIG->dbprefix}annotations
-			(entity_guid, name_id, value_id, value_type, owner_guid, time_created, access_id) VALUES
-			($entity_guid,'$name',$value,'$value_type', $owner_guid, $time, $access_id)");
+
+		$result = db_insert(0, array(	'entity_guid' => $entity_guid,
+						'type' => 'annotation',
+						'name' => $name,
+						'value' => $value,
+						'owner_guid' => $owner_guid,
+						'time_created' => $time,
+						'access_id' => $access_id
+					));
 
 		if ($result !== false) {
 			$obj = elgg_get_annotation_from_id($result);
@@ -131,35 +127,23 @@ $owner_guid = 0, $access_id = ACCESS_PRIVATE) {
 function update_annotation($annotation_id, $name, $value, $value_type, $owner_guid, $access_id) {
 	global $CONFIG;
 
-	$annotation_id = (int)$annotation_id;
-	$name = (trim($name));
-	$value = (trim($value));
-	$value_type = detect_extender_valuetype($value, sanitise_string(trim($value_type)));
+	$value_type = detect_extender_valuetype($value, trim($value_type));
 
-	$owner_guid = (int)$owner_guid;
 	if ($owner_guid == 0) {
 		$owner_guid = elgg_get_logged_in_user_guid();
 	}
 
-	$access_id = (int)$access_id;
-
-	$access = get_access_sql_suffix();
-
 	// Add the metastring
-	$value = add_metastring($value);
-	if (!$value) {
-		return false;
-	}
-
-	$name = add_metastring($name);
-	if (!$name) {
+	if (!$value || !$name) {
 		return false;
 	}
 
 	// If ok then add it
-	$result = update_data("UPDATE {$CONFIG->dbprefix}annotations
-		set name_id='$name', value_id='$value', value_type='$value_type', access_id=$access_id, owner_guid=$owner_guid
-		where id=$annotation_id and $access");
+	$result = db_insert($annotation_id, array(	'name' =>$name,
+							'value' => $value,
+							'access_id'=>$access_id,
+							'owner_guid'=>$owner_guid
+			));
 
 	if ($result !== false) {
 		// @todo add plugin hook that sends old and new annotation information before db access
@@ -200,8 +184,9 @@ function update_annotation($annotation_id, $name, $value, $value_type, $owner_gu
  * @since 1.8.0
  */
 function elgg_get_annotations(array $options = array()) {
-	$options['metastring_type'] = 'annotations';
-	return elgg_get_metastring_based_objects($options);
+	$options['type'] = 'annotation';
+	$rows = db_get(	$options );	
+	var_dump($options,$rows);
 }
 
 /**
@@ -511,20 +496,18 @@ function get_annotation_url($id) {
  */
 function elgg_annotation_exists($entity_guid, $annotation_type, $owner_guid = NULL) {
 	global $CONFIG;
-
+	
 	if (!$owner_guid && !($owner_guid = elgg_get_logged_in_user_guid())) {
 		return FALSE;
 	}
 
-	$entity_guid = (int)$entity_guid;
-	$annotation_type = sanitise_string($annotation_type);
-
-	$sql = "select a.id" .
-			" FROM {$CONFIG->dbprefix}annotations a, {$CONFIG->dbprefix}metastrings m " .
-			" WHERE a.owner_guid={$owner_guid} AND a.entity_guid={$entity_guid} " .
-			" AND a.name_id=m.id AND m.string='{$annotation_type}'";
-
-	if ($check_annotation = get_data_row($sql)) {
+	$check_annotation = db_get( array(	'type' => 'annotation',
+						'name' => $annotation_type,
+						'entity_guid' => $entity_guid,
+						'owner_guid' => $owner_guid
+				));
+	
+	if ($check_annotation) {
 		return TRUE;
 	}
 

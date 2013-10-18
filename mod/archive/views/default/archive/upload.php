@@ -27,4 +27,11 @@
 		</a>
 	</div>
 
+     <div class="column">
+         <a href="<?php echo elgg_get_site_url();?>archive/upload/angularJS">
+             <img src="<?php echo elgg_get_site_url();?>mod/minds/graphics/icons/others.png"/>
+             <h3><?php echo elgg_echo('minds:archive:angularUploader');?></h3>
+         </a>
+     </div>
+
 </div>

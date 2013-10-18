@@ -19,7 +19,7 @@ if (!is_array($plugin_guids)) {
 
 $activated_guids = array();
 foreach ($plugin_guids as $guid) {
-	$plugin = get_entity($guid);
+	$plugin = get_entity($guid, 'plugin');
 
 	if (elggmulti_is_plugin_available($plugin->getID())) {
 	    if (!($plugin instanceof ElggPlugin)) {
@@ -48,7 +48,7 @@ if (count($activated_guids) === 1) {
 	if ($query) {
 		$url .= "?$query";
 	}
-	$plugin = get_entity($plugin_guids[0]);
+	$plugin = get_entity($plugin_guids[0], 'plugin');
 	forward("$url#{$plugin->getID()}");
 } else {
 	// forward to top of page with a failure so remove any #foo

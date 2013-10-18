@@ -19,7 +19,7 @@ function notifications_plugin_init() {
 
 	// Unset the default notification settings
 	elgg_unregister_plugin_hook_handler('usersettings:save', 'user', 'notification_user_settings_save');
-	elgg_unextend_view('forms/account/settings', 'core/settings/account/notifications');
+	//elgg_unextend_view('forms/account/settings', 'core/settings/account/notifications');
 
 	// update notifications based on relationships changing
 	elgg_register_event_handler('delete', 'member', 'notifications_relationship_remove');
@@ -73,6 +73,7 @@ function notifications_page_handler($page) {
 	switch ($page[0]) {
 		case 'view':
 			set_input('full', true);
+			set_input('user_guid', $user->guid);
 			require "$base/pages/notifications.php";
 			break;
 		case 'group':
@@ -93,7 +94,7 @@ function notifications_page_handler($page) {
  */
 function notifications_plugin_pagesetup() {
 	
-	if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
+/*	if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
 
 		$user = elgg_get_page_owner_entity();
 		if (!$user) {
@@ -116,7 +117,7 @@ function notifications_plugin_pagesetup() {
 			elgg_register_menu_item('page', $params);
 		}
 	}
-
+*/
 }
 
 /**
@@ -282,6 +283,7 @@ function notification_create($to, $from, $object, $params){
 			$notification->read = 0;
 			$notification->access_id = 2;
 			$notification->params = serialize($params);
+			$notification->time_created = time();
 		
 			$notification->save();
 		}
@@ -291,26 +293,44 @@ function notification_create($to, $from, $object, $params){
 	return true;
 	
 }
+//get a list of notifications
+function get_notifications($user_guid, $limit = 12, $offset = 0){
+	global $DB;
 
+	$notifications = elgg_list_entities(array('attrs'=>array('namespace'=>'notifications:'.$to_guid), 'limit'=>$limit,'offset'=>$offset ));
+
+	return $notifications;
+}
 /**
  * Mark notifications as read
  *
  */
 function notifications_count_unread(){
 	$user = elgg_get_logged_in_user_entity();
-
-	if($user){
-		$options = array(	'types'=>'object',
-							'subtypes'=>'notification',
-							'limit' => 10,
-							'metadata_name_value_pairs' => array(array('name'=>'read', 'value' => 1, 'operand'=>'!='), array('name'=>'to_guid', 'value'=>$user->guid)),
-							'metadata_name_value_pairs_operator' => 'AND'
-						);
-		
-		$notifications = elgg_get_entities_from_metadata($options);
-		
-		return count($notifications);
-	} else {
-		return NULL;
-	}
+	return $user->notifications_count;	
 }
+
+/** 
+ * Increase a users notifications counter
+ */
+function notifications_increase_counter($user_guid){
+	elgg_set_ignore_access(true);
+	$user = get_entity($user_guid, 'user');
+	$user->notifications_count++;
+	$user->save();
+	elgg_set_ignore_access(false);
+}
+/** 
+ * Reset a user notifications counter
+ */
+function notifications_reset_counter($user_guid = NULL){
+	if(!$user_guid){
+		$user_guid = elgg_get_logged_in_user_guid();
+	}
+	elgg_set_ignore_access(true);
+	$user = get_entity($user_guid, 'user');
+	$user->notifications_count = 0;
+	$user->save();
+	elgg_set_ignore_access(false);
+}
+

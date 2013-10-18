@@ -9,9 +9,6 @@ foreach (array_keys($variables) as $field) {
 	if ($field == 'title') {
 		$input[$field] = strip_tags($input[$field]);
 	}
-	if ($field == 'tags') {
-		$input[$field] = string_to_tag_array($input[$field]);
-	}
 }
 
 elgg_make_sticky_form('webinar');
@@ -25,7 +22,7 @@ if (!$input['title']) {
 if (sizeof($input) > 0) {
 	
 	if(isset($input[guid]) && !empty($input[guid])){
-		$webinar = get_entity($input[guid]);
+		$webinar = get_entity($input[guid], 'object');
 		if (!$webinar || !$webinar->canEdit()) {
 			register_error(elgg_echo('webinar:error:no_save'));
 			forward(REFERER);
@@ -40,17 +37,17 @@ if (sizeof($input) > 0) {
 		$webinar->$field = $value;
 	}
 	
-	if ($webinar->save()) {
+	if ($guid = $webinar->save()) {
 	
 		elgg_clear_sticky_form('webinar');
 	
 		system_message(elgg_echo('webinar:saved'));
-		
+	
 		if ($new_webinar) {
-			$webinar->logout_url = $webinar->getURL();
-			$webinar->save();
-			
-			add_to_river('river/object/webinar/create', 'create', elgg_get_logged_in_user_guid(), $webinar->getGUID());
+//			$webinar->logout_url = $webinar->getURL();
+//			$webinar->save();
+		
+			add_to_river('river/object/webinar/create', 'create', elgg_get_logged_in_user_guid(), $guid);
 		}
 		
 		if($webinar->enterprise == 'on'){

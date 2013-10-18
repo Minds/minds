@@ -133,13 +133,14 @@ function kaltura_get_metadata($entity) {
 
 //gets a kaltura object with all metadata from a kaltura id
 function kaltura_get_entity($video_id) {
+
 	if(empty($video_id)) return false;
 
 	$objs = elgg_get_entities_from_metadata(array('metadata_name_value_pairs' => array(
 		"kaltura_video_id" => $video_id
 		), 'types' => 'object', 'subtypes' => 'kaltura_video'));
 	if($objs) {
-		return get_entity($objs[0]->guid);
+		return get_entity($objs[0]->guid, 'object');
 	}
 	return false;
 }
@@ -150,9 +151,8 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 	global $CONFIG,$KALTURA_GLOBAL_UICONF;
 
 	$ob = kaltura_get_entity($entry->id);
-	//print_r($ob);echo "[$user_guid $container_guid] ";die;
+
 	if($user_guid){
-		
 		if($ob instanceof ElggEntity) {
 			$ob->owner_guid = $user_guid;
 			$ob->container_guid = ($container_guid ? $container_guid : $user_guid);
@@ -161,7 +161,8 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 		else {
 			//will create the new object if not exists
 			//echo "Creating new: $user_guid:$container_guid\n";
-			$ob = new ElggObject();
+
+            $ob = new ElggObject();
 			$ob->subtype = 'kaltura_video';
 			$ob->title = $params['title'] ? $params['title'] : $entry->name;
 			$ob->description = $entry->description;
@@ -169,18 +170,19 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 			$ob->owner_guid = $user_guid;
 			$ob->container_guid = ($container_guid ? $container_guid : $user_guid);
 			$ob->access_id = $access;
-			$guid = $ob->save(); //save here to get the guid
-			
-			add_to_river('river/object/kaltura_video/create','create',$user_guid,$guid);
+            $guid = $ob->save(); //save here to get the guid
 
+			add_to_river('river/object/kaltura_video/create','create',$user_guid,$guid);
 		}
 	}
-	if(!($ob instanceof ElggEntity)) {
+
+    if(!($ob instanceof ElggEntity)) {
 		//echo " no entity\n";
 		return false;
 	}
 
 	$ob->kaltura_video_id = $entry->id;
+
 	//keep the current metada if exists (if not forced)...
 	if($force || (empty($ob->title) && isset($entry->name))) $ob->title = $entry->name;
 	if($force || (empty($ob->description) && isset($entry->description))) $ob->description = $entry->description;
@@ -237,6 +239,7 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 
 		$metadata = kaltura_get_metadata($ob);
 		$widget = null;
+
 		//get the current widget if exists
 		/*
 		if($metadata->kaltura_video_widget_id) {
@@ -247,7 +250,8 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 			}
 		}
 		* */
-		if(!$widget) {
+
+        if(!$widget) {
 			//search for existing widgets for this entryId
 			$widgets = $kmodel->listWidgets(1,0,$widgetUi,$entry->id);
 			if($widgets->totalCount>0){
@@ -284,19 +288,29 @@ function kaltura_update_object($entry,$kmodel=null,$access=ACCESS_DEFAULT,$user_
 			register_error("ID ".$entry->id.": ".$e->getMessage());
 		}
 	}
-	if($params['uploaded_id']){
-		$ob->uploaded_id = $params['uploaded_id'];
-	}
-	//setup the license 
-	if($params['license']){
-		$ob->license = $params['license'];
-	}
-	//setup the setup thumbnail time
-	if($params['thumbnail_sec']){
-		$ob->thumbnail_sec = $params['thumbnail_sec'];
-	}
+
+    $ob = handleParams($ob, $params);
+
 	$ob->save();
 	return $ob;
+}
+
+function handleParams($ob, $params){
+    if($params['uploaded_id']){
+        $ob->uploaded_id = $params['uploaded_id'];
+    }
+
+    //setup the license
+    if($params['license']){
+        $ob->license = $params['license'];
+    }
+
+    //setup the setup thumbnail time
+    if($params['thumbnail_sec']){
+        $ob->thumbnail_sec = $params['thumbnail_sec'];
+    }
+
+    return $ob;
 }
 
 //

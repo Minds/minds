@@ -7,7 +7,7 @@ class elasticsearch {
 
   function __construct(){
   	global $CONFIG;
-    $this->server = $CONFIG->elasticsearch_server;
+	    $this->server = $CONFIG->elasticsearch_server;
 	$this->port = $CONFIG->elasticsearch_port ? $CONFIG->elasticsearch_port : 9200;
 	$this->cache_path = '/tmp/es/';
   }
@@ -85,7 +85,7 @@ class elasticsearch {
 
   //curl -X PUT http://localhost:9200/{INDEX}/{TYPE}/{ID} -d ...
   function add($type, $id, $data){
-    return $this->call($type . '/' . $id, array('method' => 'PUT', 'content' => $data));
+    return $this->call($type . '/'. $id, array('method' => 'PUT', 'content' => $data));
   }
   
   //curl -X DELETE http://localhost:9200/{INDEX}/{TYPE}/{ID}

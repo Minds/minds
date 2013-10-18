@@ -16,17 +16,10 @@ $all_link = elgg_view('output/url', array(
 	'is_trusted' => true,
 ));
 
-$body = elgg_list_entities_from_relationship(array(
-	'relationship' => 'member',
-	'relationship_guid' => $vars['entity']->guid,
-	'inverse_relationship' => true,
-	'type' => 'user',
-	'limit' => $limit,
-	'list_type' => 'gallery',
-	'gallery_class' => 'elgg-gallery-users',
-	'pagination' => false
-));
+$members = $vars['entity']->getMembers(100,'');
 
+$body = elgg_view_entity_list($members, array('full_view'=>false,'class'=>'groups'));
+ 
 $body .= "<div class='center mts'>$all_link</div>";
 
 echo elgg_view_module('aside', elgg_echo('groups:members'), $body);

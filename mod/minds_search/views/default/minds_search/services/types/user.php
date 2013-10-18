@@ -4,7 +4,12 @@
  * 
  */
  
-$user= get_entity($vars['user']['guid']);
+$user= get_entity($vars['user']['guid'],'user');
+if($user instanceof ElggUser){
+
+} else {
+	return false;
+}
 ?>
 <a href='<?php echo $user->getURL();?>'>
 	<div class='minds-search minds-search-item'>

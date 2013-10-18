@@ -44,10 +44,10 @@ function elgg_get_page_owner_guid($guid = 0) {
  * @since 1.8.0
  */
 function elgg_get_page_owner_entity() {
-	$guid = elgg_get_page_owner_guid();
-	if ($guid > 0) {
+	$guid = elgg_get_page_owner_guid(); 
+	if ($guid) {
 		$ia = elgg_set_ignore_access(true);
-		$owner = get_entity($guid);
+		$owner = get_entity($guid, 'user');
 		elgg_set_ignore_access($ia);
 
 		return $owner;
@@ -106,7 +106,7 @@ function default_page_owner_handler($hook, $entity_type, $returnvalue, $params) 
 		if (substr_count($username, 'group:')) {
 			preg_match('/group\:([0-9]+)/i', $username, $matches);
 			$guid = $matches[1];
-			if ($entity = get_entity($guid)) {
+			if ($entity = get_entity($guid,'group')) {
 				elgg_set_ignore_access($ia);
 				return $entity->getGUID();
 			}
@@ -117,10 +117,10 @@ function default_page_owner_handler($hook, $entity_type, $returnvalue, $params) 
 			return $user->getGUID();
 		}
 	}
-
+	
 	$owner = get_input("owner_guid");
 	if ($owner) {
-		if ($user = get_entity($owner)) {
+		if ($user = get_entity($owner, 'user')) {
 			elgg_set_ignore_access($ia);
 			return $user->getGUID();
 		}
@@ -149,7 +149,7 @@ function default_page_owner_handler($hook, $entity_type, $returnvalue, $params) 
 					break;
 				case 'view':
 				case 'edit':
-					$entity = get_entity($segments[2]);
+					$entity = get_entity($segments[2], 'user');
 					if ($entity) {
 						elgg_set_ignore_access($ia);
 						return $entity->getContainerGUID();
@@ -157,7 +157,7 @@ function default_page_owner_handler($hook, $entity_type, $returnvalue, $params) 
 					break;
 				case 'add':
 				case 'group':
-					$entity = get_entity($segments[2]);
+					$entity = get_entity($segments[2], 'group');
 					if ($entity) {
 						elgg_set_ignore_access($ia);
 						return $entity->getGUID();

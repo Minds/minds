@@ -1,8 +1,8 @@
 <?php
 
-$guid = (int) get_input('guid');
+$guid = get_input('guid');
 
-$entity = get_entity($guid);
+$entity = get_entity($guid, 'object');
 
 if(!$entity){
 	return false;
@@ -99,13 +99,13 @@ if (elgg_instanceof($owner, 'group')) {
 
 if($entity->getSubtype() == 'image'){
 	//set the album
-	$album = $entity->getContainerEntity();
-	elgg_push_breadcrumb($entity->title, $entity->getURL());
+	$album = $entity->getContainerEntity('object');
+	elgg_push_breadcrumb($album->title, $album->getURL());
 }
 
 if($entity->getSubtype() == 'album'){
 	
-	if ($entity->getContainerEntity()->canWriteToContainer()) {
+	if ($entity->canEdit()) {
 		elgg_register_menu_item('title', array(
 			'name' => 'upload',
 			'href' => 'archive/upload/album/' . $entity->getGUID(),
@@ -119,7 +119,7 @@ if($entity->getSubtype() == 'album'){
 elgg_push_breadcrumb($title);
 
 $content = elgg_view_entity($entity, array('full_view' => true));
-$content .= elgg_view('minds/ads', array('type'=>'content-foot'));
+$content .= elgg_view('minds/ads', array('type'=>'content-foot')); 
 $content .= elgg_view_comments($entity);
 
 $sidebar = elgg_view('archive/sidebar', array('guid'=>$guid));

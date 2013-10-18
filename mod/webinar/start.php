@@ -14,6 +14,8 @@
 	 * Initialize the webinar plugin.
 	 */
 	function webinar_init(){
+
+		add_subtype("object", "webinar", "ElggWebinar");
 		
 		// register a library for new object class webinar
 		elgg_register_library('elgg:webinar', elgg_get_plugins_path() . 'webinar/lib/webinar.php');
@@ -32,7 +34,8 @@
 							'href'=>'gatherings/all',
 							'text' => '&#58277;',
                         				'class' => 'entypo', 	
-						));
+							'priority' => 15	
+					));
 		}
 		// Register a page handler, so we can have nice URLs -- FALLBACK
 		elgg_register_page_handler('webinar','webinar_page_handler');
@@ -121,7 +124,7 @@
 				$params = webinar_get_page_content_list($page);
 				break;
 			case "view":
-				if (isset($page[1]) && is_numeric($page[1])) {
+				if (isset($page[1])) {
 					$params = webinar_get_page_content_view($page[1]);
 				}else{
 					return false;
@@ -130,8 +133,9 @@
 			case "add":
 			case "edit":
 				gatekeeper();
-				if (isset($page[1]) && is_numeric($page[1])) {
+				if (isset($page[1])) {
 					$params = webinar_get_page_content_edit($page_type, $page[1]);
+					$body = elgg_view_layout('content', $params);
 				}else{
 					return false;
 				}
@@ -149,12 +153,12 @@
 	    		break;
 		}
 		
-		if (isset($params['sidebar'])) {
+		/*if (isset($params['sidebar'])) {
 			$params['sidebar'] .= elgg_view('webinar/sidebar', array('page' => $page_type));
 		} else {
 			$params['sidebar'] = elgg_view('webinar/sidebar', array('page' => $page_type));
-		}
-		
+		}*/
+		if(!$body)	
 		$body = elgg_view_layout('gallery', $params);
 		
 		echo elgg_view_page($params['title'], $body);
@@ -185,7 +189,7 @@
 		if (elgg_in_context('widgets')) {
 			return $return;
 		}
-	
+		
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
 		if ($handler != 'webinar') {

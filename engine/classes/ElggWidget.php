@@ -13,7 +13,7 @@
  * @property-read string $order internal, do not use
  * @property-read string $context internal, do not use
  */
-class ElggWidget extends ElggObject {
+class ElggWidget extends ElggEntity {
 
 	/**
 	 * Set subtype to widget.
@@ -23,7 +23,65 @@ class ElggWidget extends ElggObject {
 	protected function initializeAttributes() {
 		parent::initializeAttributes();
 
-		$this->attributes['subtype'] = "widget";
+		$this->attributes['type'] = "widget";
+	}
+
+	/**
+	 * Load or create a new ElggWiget.
+	 *
+	 * If no arguments are passed, create a new entity.
+	 *
+	 * @param mixed $guid If an int, load that GUID.  If a db row, then will attempt to
+	 * load the rest of the data.
+	 *
+	 * @throws IOException If passed an incorrect guid
+	 * @throws InvalidParameterException If passed an Elgg* Entity that isn't an ElggObject
+	 */
+	function __construct($guid = null) {
+		$this->initializeAttributes();
+
+		// compatibility for 1.7 api.
+		$this->initialise_attributes(false);
+
+		if (!empty($guid)) {
+			// Is $guid is a DB row from the entity table
+			if ($guid instanceof stdClass) {
+				// Load the rest
+				if (!$this->load($guid)) {
+					$msg = elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid->guid));
+					throw new IOException($msg);
+				}
+
+			// Is $guid is an ElggObject? Use a copy constructor
+			} else if ($guid instanceof ElggWidget) {
+				elgg_deprecated_notice('This type of usage of the ElggObject constructor was deprecated. Please use the clone method.', 1.7);
+
+				foreach ($guid->attributes as $key => $value) {
+					$this->attributes[$key] = $value;
+				}
+
+			// Is this is an ElggEntity but not an ElggObject = ERROR!
+			} else if ($guid instanceof ElggEntity) {
+				throw new InvalidParameterException(elgg_echo('InvalidParameterException:NonElggObject'));
+
+			// Is it a GUID
+			} else {
+				if (!$this->load($guid)) {
+					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
+				}
+			}
+		}
+	}
+
+	protected function load($guid) {
+		
+		foreach($guid as $k => $v){
+                        $this->attributes[$k] = $v;
+                }		
+
+		cache_entity($this);
+
+		return true;
 	}
 
 	/**
@@ -58,17 +116,18 @@ class ElggWidget extends ElggObject {
 	 * @return bool
 	 */
 	public function set($name, $value) {
-		if (array_key_exists($name, $this->attributes)) {
-			// Check that we're not trying to change the guid!
-			if ((array_key_exists('guid', $this->attributes)) && ($name == 'guid')) {
-				return false;
-			}
-
-			$this->attributes[$name] = $value;
-		} else {
-			return $this->setPrivateSetting($name, $value);
+		
+		// Check that we're not trying to change the guid!
+		if ((array_key_exists('guid', $this->attributes)) && ($name == 'guid')) {
+			return false;
 		}
 
+		$this->attributes[$name] = $value;
+		
+		if($this->guid){
+                     $this->save();
+                }
+		
 		return true;
 	}
 
@@ -80,7 +139,7 @@ class ElggWidget extends ElggObject {
 	 * @since 1.8.0
 	 */
 	public function setContext($context) {
-		return $this->setPrivateSetting('context', $context);
+		return $this->set('context', $context);
 	}
 
 	/**
@@ -90,7 +149,7 @@ class ElggWidget extends ElggObject {
 	 * @since 1.8.0
 	 */
 	public function getContext() {
-		return $this->getPrivateSetting('context');
+		return $this->get('context');
 	}
 
 	/**
@@ -118,22 +177,22 @@ class ElggWidget extends ElggObject {
 	 */
 	public function move($column, $rank) {
 		$options = array(
-			'type' => 'object',
-			'subtype' => 'widget',
-			'container_guid' => $this->container_guid,
-			'limit' => false,
-			'private_setting_name_value_pairs' => array(
-				array('name' => 'context', 'value' => $this->getContext()),
-				array('name' => 'column', 'value' => $column)
-			)
+			'type' => 'widget',
+			'owner_guid' => $this->owner_guid,
+			'limit' => 1000,
+			'attrs' => array(
+				'context' => $this->getContext(),
+				'column' => $column
+			),
+			'timebased' =>false
 		);
-		$widgets = elgg_get_entities_from_private_settings($options);
+		$widgets = elgg_get_entities($options);
 		if (!$widgets) {
 			$this->column = (int)$column;
-			$this->order = 0;
+			$this->order = 0; 
 			return;
 		}
-
+		
 		usort($widgets, create_function('$a,$b','return (int)$a->order > (int)$b->order;'));
 
 		// remove widgets from inactive plugins
@@ -237,4 +296,16 @@ class ElggWidget extends ElggObject {
 
 		return true;
 	}
+	
+	/**
+	 * Saves specific attributes.
+	 *
+	 * @internal Object attributes are saved in the objects_entity table.
+	 *
+	 * @return bool
+	 */
+	public function save() { 
+		return create_entity($this, false);
+	}
+
 }

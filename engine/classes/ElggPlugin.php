@@ -8,7 +8,7 @@
  * @package    Elgg.Core
  * @subpackage Plugins.Settings
  */
-class ElggPlugin extends ElggObject {
+class ElggPlugin extends ElggEntity {
 	private $package;
 	private $manifest;
 
@@ -22,12 +22,14 @@ class ElggPlugin extends ElggObject {
 	 * @return void
 	 */
 	protected function initializeAttributes() {
-		parent::initializeAttributes();
+		//parent::initializeAttributes();
 
-		$this->attributes['subtype'] = "plugin";
-
+		$this->attributes['type'] = "plugin";
+		$this->attributes['title'] = "";
+		$this->attributes['active'] = 0;
+		
 		// plugins must be public.
-		$this->access_id = ACCESS_PUBLIC;
+		$this->attributes['access_id'] = ACCESS_PUBLIC;
 	}
 
 	/**
@@ -44,12 +46,20 @@ class ElggPlugin extends ElggObject {
 		if (!$plugin) {
 			throw new PluginException(elgg_echo('PluginException:NullInstantiated'));
 		}
+	
+		$this->initializeAttributes();		
 
 		// ElggEntity can be instantiated with a guid or an object.
 		// @todo plugins w/id 12345
-		if (is_numeric($plugin) || is_object($plugin)) {
-			parent::__construct($plugin);
-			$this->path = elgg_get_plugins_path() . $this->getID();
+		if (is_object($plugin)) {
+			//parent::__construct($plugin);
+			foreach($plugin as $k => $v){
+				$this->attributes[$k] = $v;
+			}		
+		
+			$this->pluginID = $this->attributes['guid'];	
+			$this->title = $this->pluginID;
+		        $this->path = elgg_get_plugins_path() . $this->getID();
 		} else {
 			$plugin_path = elgg_get_plugins_path();
 
@@ -73,9 +83,6 @@ class ElggPlugin extends ElggObject {
 			if ($existing_plugin) {
 				$existing_guid = $existing_plugin->guid;
 			}
-
-			// load the rest of the plugin
-			parent::__construct($existing_guid);
 		}
 
 		_elgg_cache_plugin_by_id($this);
@@ -89,21 +96,26 @@ class ElggPlugin extends ElggObject {
 	 */
 	public function save() {
 		// own by the current site so users can be deleted without affecting plugins
-		$site = get_config('site');
+		/*$site = get_config('site');
 		$this->attributes['site_guid'] = $site->guid;
 		$this->attributes['owner_guid'] = $site->guid;
 		$this->attributes['container_guid'] = $site->guid;
 		$this->attributes['title'] = $this->pluginID;
-
-		if (parent::save()) {
-			// make sure we have a priority
-			$priority = $this->getPriority();
-			if ($priority === FALSE || $priority === NULL) {
-				return $this->setPriority('last');
-			}
-		} else {
+		*/
+		
+		$options = array();
+		foreach($this as $k=>$v){
+			$options[$k] = $v;
+		}
+		$options['type'] = 'plugin';
+		
+		if(!$this->pluginID)	{
+			//throw error here
 			return false;
 		}
+		
+		return db_insert($this->pluginID, $options);
+
 	}
 
 
@@ -179,7 +191,7 @@ class ElggPlugin extends ElggObject {
 	 */
 	public function getPriority() {
 		$name = elgg_namespace_plugin_private_setting('internal', 'priority');
-		return $this->$name;
+		return (int) $this->$name;
 	}
 
 	/**
@@ -192,11 +204,13 @@ class ElggPlugin extends ElggObject {
 	 * @return bool
 	 */
 	public function setPriority($priority, $site_guid = null) {
+	
+		global $DB;		
+
 		if (!$this->guid) {
 			return false;
 		}
 
-		$db_prefix = get_config('dbprefix');
 		$name = elgg_namespace_plugin_private_setting('internal', 'priority');
 		// if no priority assume a priority of 1
 		$old_priority = (int) $this->getPriority();
@@ -220,7 +234,7 @@ class ElggPlugin extends ElggObject {
 			if (!is_numeric($priority)) {
 				return false;
 			}
-
+			
 			// there's nothing above the max.
 			if ($priority > $max_priority) {
 				$priority = $max_priority;
@@ -239,19 +253,24 @@ class ElggPlugin extends ElggObject {
 				$where = "CAST(value as unsigned) BETWEEN $priority AND $old_priority";
 			}
 
-			// displace the ones affected by this change
-			$q = "UPDATE {$db_prefix}private_settings
-				SET value = CAST(value as unsigned) $op 1
-				WHERE entity_guid != $this->guid
-				AND name = '$name'
-				AND $where";
-
-			if (!update_data($q)) {
-				return false;
+			$plugin_list = elgg_get_plugins();
+			$reorder = array();
+			
+			foreach($plugin_list as $plugin){
+				if($plugin->getPriority() ==  $old_priority-1 && $op=='-'){
+					$plugin->$name =  $old_priority;
+					$plugin->save();
+					continue;
+				}
+				if($plugin->getPriority() ==  $old_priority+1 && $op == '+'){
+					$plugin->$name =  $old_priority;
+                                        $plugin->save();
+					continue;
+				}
 			}
-
 			// set this priority
-			if ($this->set($name, $priority)) {
+			$this->$name = $priority;
+			if ($this->save()) {
 				return true;
 			} else {
 				return false;
@@ -271,6 +290,13 @@ class ElggPlugin extends ElggObject {
 	 * @return mixed
 	 */
 	public function getSetting($name) {
+		//Are we storing settings in Conf?
+		global $CONFIG;
+		$id = $this->getID();
+		if($setting = $CONFIG->pluginSettings->{$id}[$name]){
+			return $setting;
+	
+		}
 		return $this->$name;
 	}
 
@@ -326,8 +352,10 @@ class ElggPlugin extends ElggObject {
 		if (!$this->guid) {
 			return false;
 		}
+		
+		$this->$name = $value;
 
-		return $this->set($name, $value);
+		return $this->save();
 	}
 
 	/**
@@ -338,7 +366,8 @@ class ElggPlugin extends ElggObject {
 	 * @return bool
 	 */
 	public function unsetSetting($name) {
-		return remove_private_setting($this->guid, $name);
+		$this->$name = '';
+		$this->save();
 	}
 
 	/**
@@ -371,10 +400,9 @@ class ElggPlugin extends ElggObject {
 	 * @return mixed The setting string value or false
 	 */
 	public function getUserSetting($name, $user_guid = null) {
-		$user_guid = (int)$user_guid;
 
 		if ($user_guid) {
-			$user = get_entity($user_guid);
+			$user = get_entity($user_guid, 'user');
 		} else {
 			$user = elgg_get_logged_in_user_entity();
 		}
@@ -384,7 +412,7 @@ class ElggPlugin extends ElggObject {
 		}
 
 		$name = elgg_namespace_plugin_private_setting('user_setting', $name, $this->getID());
-		return get_private_setting($user->guid, $name);
+		return get_private_setting($user->guid,'user', $name);
 	}
 
 	/**
@@ -446,14 +474,13 @@ class ElggPlugin extends ElggObject {
 	 * @return mixed The new setting ID or false
 	 */
 	public function setUserSetting($name, $value, $user_guid = null) {
-		$user_guid = (int)$user_guid;
 
 		if ($user_guid) {
-			$user = get_entity($user_guid);
+			$user = get_entity($user_guid, 'user');
 		} else {
 			$user = elgg_get_logged_in_user_entity();
 		}
-
+		
 		if (!($user instanceof ElggUser)) {
 			return false;
 		}
@@ -471,7 +498,7 @@ class ElggPlugin extends ElggObject {
 		// set the namespaced name.
 		$name = elgg_namespace_plugin_private_setting('user_setting', $name, $this->getID());
 
-		return set_private_setting($user->guid, $name, $value);
+		return set_private_setting($user->guid, 'user',$name, $value);
 	}
 
 
@@ -483,10 +510,11 @@ class ElggPlugin extends ElggObject {
 	 * @return bool
 	 */
 	public function unsetUserSetting($name, $user_guid = null) {
-		$user_guid = (int)$user_guid;
+
+		global $SESSION;
 
 		if ($user_guid) {
-			$user = get_entity($user_guid);
+			$user = get_entity($user_guid,'user');
 		} else {
 			$user = elgg_get_logged_in_user_entity();
 		}
@@ -498,7 +526,10 @@ class ElggPlugin extends ElggObject {
 		// set the namespaced name.
 		$name = elgg_namespace_plugin_private_setting('user_setting', $name, $this->getID());
 
-		return remove_private_setting($user->guid, $name);
+		unset($user->$name);
+		$SESSION['user'] = $user;	
+	
+		return remove_private_setting($user->guid, 'user', $name);
 	}
 
 	/**
@@ -555,17 +586,17 @@ class ElggPlugin extends ElggObject {
 			$this->errorMsg = elgg_echo('ElggPlugin:NoId', array($this->guid));
 			return false;
 		}
-
+		
 		if (!$this->getPackage() instanceof ElggPluginPackage) {
 			$this->errorMsg = elgg_echo('ElggPlugin:NoPluginPackagePackage', array($this->getID(), $this->guid));
 			return false;
 		}
-
+		
 		if (!$this->getPackage()->isValid()) {
 			$this->errorMsg = $this->getPackage()->getError();
 			return false;
 		}
-
+		
 		return true;
 	}
 
@@ -580,17 +611,9 @@ class ElggPlugin extends ElggObject {
 			return false;
 		}
 
-		if ($site_guid) {
-			$site = get_entity($site_guid);
-		} else {
-			$site = get_config('site');
-		}
-
-		if (!($site instanceof ElggSite)) {
-			return false;
-		}
-
-		return check_entity_relationship($this->guid, 'active_plugin', $site->guid);
+		$active = $this->active == 1 ? true : false;
+		
+		return $active;
 	}
 
 	/**
@@ -608,7 +631,6 @@ class ElggPlugin extends ElggObject {
 			if (!$result) {
 				$this->errorMsg = $this->getPackage()->getError();
 			}
-
 			return $result;
 		}
 
@@ -628,13 +650,13 @@ class ElggPlugin extends ElggObject {
 		if ($this->isActive($site_guid)) {
 			return false;
 		}
-
-		if (!$this->canActivate()) {
+		
+		if (!$this->canActivate()) {die('cant activate ' . $this->errorMsg);
 			return false;
 		}
-
+		
 		// set in the db, now perform tasks and emit events
-		if ($this->setStatus(true, $site_guid)) {
+		if ($this->setSetting('active', 1)) {
 			// emit an event. returning false will make this not be activated.
 			// we need to do this after it's been fully activated
 			// or the deactivate will be confused.
@@ -642,7 +664,6 @@ class ElggPlugin extends ElggObject {
 				'plugin_id' => $this->pluginID,
 				'plugin_entity' => $this
 			);
-
 			$return = elgg_trigger_event('activate', 'plugin', $params);
 
 			// if there are any on_enable functions, start the plugin now and run them
@@ -656,12 +677,10 @@ class ElggPlugin extends ElggObject {
 
 					$return = $this->includeFile('activate.php');
 				}
-			}
-
-			if ($return === false) {
+			} 
+			if ($return === false) { 
 				$this->deactivate($site_guid);
 			}
-
 			return $return;
 		}
 
@@ -697,9 +716,17 @@ class ElggPlugin extends ElggObject {
 		if ($return === false) {
 			return false;
 		} else {
-			return $this->setStatus(false, $site_guid);
+			$this->setSetting('active', 0);
 		}
 	}
+	
+	/**
+	 * Is the plugin enabled, this is different to active and should be set to true here
+	 */
+	public function isEnabled(){
+		return true;
+	}
+
 
 	/**
 	 * Start the plugin.
@@ -732,7 +759,6 @@ class ElggPlugin extends ElggObject {
 		if ($flags & ELGG_PLUGIN_REGISTER_LANGUAGES) {
 			$this->registerLanguages();
 		}
-
 		return true;
 	}
 
@@ -880,17 +906,7 @@ class ElggPlugin extends ElggObject {
 		if (array_key_exists($name, $this->attributes)) {
 			return $this->attributes[$name];
 		}
-
-		// No, so see if its in the private data store.
-		// get_private_setting() returns false if it doesn't exist
-		$meta = $this->getPrivateSetting($name);
-
-		if ($meta === false) {
-			// Can't find it, so return null
-			return NULL;
-		}
-
-		return $meta;
+		return NULL;
 	}
 
 	/**
@@ -914,15 +930,8 @@ class ElggPlugin extends ElggObject {
 
 			return true;
 		} else {
-			// Hook to validate setting
-			$value = elgg_trigger_plugin_hook('setting', 'plugin', array(
-				'plugin_id' => $this->pluginID,
-				'plugin' => $this,
-				'name' => $name,
-				'value' => $value
-			), $value);
-
-			return $this->setPrivateSetting($name, $value);
+			$this->attributes[$name] = $value;
+			return	$this->save();
 		}
 	}
 
@@ -940,7 +949,7 @@ class ElggPlugin extends ElggObject {
 		}
 
 		if ($site_guid) {
-			$site = get_entity($site_guid);
+			$site = get_entity($site_guid, 'site');
 
 			if (!($site instanceof ElggSite)) {
 				return false;
@@ -948,12 +957,8 @@ class ElggPlugin extends ElggObject {
 		} else {
 			$site = get_config('site');
 		}
-
-		if ($active) {
-			return add_entity_relationship($this->guid, 'active_plugin', $site->guid);
-		} else {
-			return remove_entity_relationship($this->guid, 'active_plugin', $site->guid);
-		}
+		
+		return true;
 	}
 
 	/**

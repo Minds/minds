@@ -1,0 +1,1 @@
+SELECT col as somealias FROM table ORDER BY somealias ASC LIMIT 1

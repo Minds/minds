@@ -4,7 +4,7 @@
  *
  * @package Blog
  */
-
+return true;
 $guid = get_input('guid');
 $user = elgg_get_logged_in_user_entity();
 $title = htmlspecialchars(get_input('title', '', false), ENT_QUOTES, 'UTF-8');
@@ -22,7 +22,7 @@ $error = FALSE;
 if ($title && $description) {
 
 	if ($guid) {
-		$entity = get_entity($guid);
+		$entity = get_entity($guid,'object');
 		if (elgg_instanceof($entity, 'object', 'blog') && $entity->canEdit()) {
 			$blog = $entity;
 		} else {

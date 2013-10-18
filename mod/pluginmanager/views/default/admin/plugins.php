@@ -197,6 +197,8 @@ $options = array(
 if ($show_category == 'all' && $sort == 'priority') {
 	$options['display_reordering'] = true;
 }
-echo elgg_view_entity_list($plugin_list, $options);
+foreach ($plugin_list as $plugin)
+    echo elgg_view('object/plugin', array('entity' => $plugin));
+//echo elgg_view_entity_list($plugin_list, $options);
 ?>
 </div>

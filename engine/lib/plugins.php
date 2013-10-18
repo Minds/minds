@@ -7,6 +7,9 @@
  * @subpackage Plugins
  */
 
+//Define the plugin cache
+global $PLUGINS_CACHE;
+
 /**
  * Tells ElggPlugin::start() to include the start.php file.
  */
@@ -61,7 +64,7 @@ function elgg_get_plugin_ids_in_dir($dir = null) {
 	if (!$dir) {
 		$dir = elgg_get_plugins_path();
 	}
-
+	
 	$plugin_ids = array();
 	$handle = opendir($dir);
 
@@ -95,26 +98,14 @@ function elgg_generate_plugin_entities() {
 	$site = get_config('site');
 
 	$dir = elgg_get_plugins_path();
-	$db_prefix = elgg_get_config('dbprefix');
 
-	$options = array(
-		'type' => 'object',
-		'subtype' => 'plugin',
-		'selects' => array('plugin_oe.*'),
-		'joins' => array("JOIN {$db_prefix}objects_entity plugin_oe on plugin_oe.guid = e.guid"),
-		'limit' => ELGG_ENTITIES_NO_VALUE
-	);
-
-	$old_ia = elgg_set_ignore_access(true);
-	$old_access = access_get_show_hidden_status();
-	access_show_hidden_entities(true);
-	$known_plugins = elgg_get_entities_from_relationship($options);
+	$known_plugins = elgg_get_plugins('any');
 	/* @var ElggPlugin[] $known_plugins */
-
+	
 	if (!$known_plugins) {
 		$known_plugins = array();
 	}
-
+	
 	// map paths to indexes
 	$id_map = array();
 	foreach ($known_plugins as $i => $plugin) {
@@ -129,6 +120,7 @@ function elgg_generate_plugin_entities() {
 	}
 
 	$physical_plugins = elgg_get_plugin_ids_in_dir($dir);
+	
 
 	if (!$physical_plugins) {
 		return false;
@@ -156,7 +148,7 @@ function elgg_generate_plugin_entities() {
 			$plugin->save();
 		}
 	}
-
+	
 	// everything remaining in $known_plugins needs to be disabled
 	// because they are entities, but their dirs were removed.
 	// don't delete the entities because they hold settings.
@@ -169,9 +161,6 @@ function elgg_generate_plugin_entities() {
 		remove_private_setting($plugin->guid, $name);
 		$plugin->disable();
 	}
-
-	access_show_hidden_entities($old_access);
-	elgg_set_ignore_access($old_ia);
 
 	elgg_reindex_plugin_priorities();
 
@@ -199,27 +188,16 @@ function _elgg_cache_plugin_by_id(ElggPlugin $plugin) {
  * @since 1.8.0
  */
 function elgg_get_plugin_from_id($plugin_id) {
-	$map = (array) elgg_get_config('plugins_by_id_map');
-	if (isset($map[$plugin_id])) {
-		return $map[$plugin_id];
-	}
 
-	$plugin_id = sanitize_string($plugin_id);
-	$db_prefix = get_config('dbprefix');
+	global $PLUGINS_CACHE;
+	if(isset($PLUGINS_CACHE[$plugin_id])){
+		return $PLUGINS_CACHE[$plugin_id];
+	}	
 
-	$options = array(
-		'type' => 'object',
-		'subtype' => 'plugin',
-		'joins' => array("JOIN {$db_prefix}objects_entity oe on oe.guid = e.guid"),
-		'selects' => array("oe.title", "oe.description"),
-		'wheres' => array("oe.title = '$plugin_id'"),
-		'limit' => 1
-	);
+	$plugin = get_entity($plugin_id, 'plugin');
 
-	$plugins = elgg_get_entities($options);
-
-	if ($plugins) {
-		return $plugins[0];
+	if($plugin){
+		return $plugin;
 	}
 
 	return false;
@@ -250,24 +228,14 @@ function elgg_plugin_exists($id) {
  * @access private
  */
 function elgg_get_max_plugin_priority() {
-	$db_prefix = get_config('dbprefix');
 	$priority = elgg_namespace_plugin_private_setting('internal', 'priority');
-	$plugin_subtype = get_subtype_id('object', 'plugin');
 
-	$q = "SELECT MAX(CAST(ps.value AS unsigned)) as max
-		FROM {$db_prefix}entities e, {$db_prefix}private_settings ps
-		WHERE ps.name = '$priority'
-		AND ps.entity_guid = e.guid
-		AND e.type = 'object' and e.subtype = $plugin_subtype";
+	//count how many plugins there are
+	$plugins = db_get(array('type'=>'plugin'));
 
-	$data = get_data($q);
-	if ($data) {
-		$max = $data[0]->max;
-	} else {
-		$max = 1;
-	}
-
-	// can't have a priority of 0.
+	$max = count($plugins);	
+	
+	// can't have a priority of 0.*/
 	return ($max) ? $max : 1;
 }
 
@@ -280,8 +248,9 @@ function elgg_get_max_plugin_priority() {
  * @return bool
  */
 function elgg_is_active_plugin($plugin_id, $site_guid = null) {
+	global $CONFIG;
 	if ($site_guid) {
-		$site = get_entity($site_guid);
+		$site = get_entity($site_guid, 'site');
 	} else {
 		$site = elgg_get_site_entity();
 	}
@@ -290,8 +259,13 @@ function elgg_is_active_plugin($plugin_id, $site_guid = null) {
 		return false;
 	}
 
-	$plugin = elgg_get_plugin_from_id($plugin_id);
+	//first of all, check if its in the settings array, then we don't need to load...
+	if(in_array($plugin_id,$CONFIG->plugins)){
+		return true;
+	}	
 
+	$plugin = elgg_get_plugin_from_id($plugin_id);
+	
 	if (!$plugin) {
 		return false;
 	}
@@ -368,52 +342,48 @@ function elgg_load_plugins() {
  * @access private
  */
 function elgg_get_plugins($status = 'active', $site_guid = null) {
-	$db_prefix = get_config('dbprefix');
-	$priority = elgg_namespace_plugin_private_setting('internal', 'priority');
+	
+	global $CONFIG,$DB, $PLUGINS_CACHE;
 
 	if (!$site_guid) {
 		$site = get_config('site');
 		$site_guid = $site->guid;
 	}
 
-	// grab plugins
-	$options = array(
-		'type' => 'object',
-		'subtype' => 'plugin',
-		'limit' => ELGG_ENTITIES_NO_VALUE,
-		'selects' => array('plugin_oe.*'),
-		'joins' => array(
-			"JOIN {$db_prefix}private_settings ps on ps.entity_guid = e.guid",
-			"JOIN {$db_prefix}objects_entity plugin_oe on plugin_oe.guid = e.guid"
-			),
-		'wheres' => array("ps.name = '$priority'"),
-		'order_by' => "CAST(ps.value as unsigned), e.guid"
-	);
-
-	switch ($status) {
-		case 'active':
-			$options['relationship'] = 'active_plugin';
-			$options['relationship_guid'] = $site_guid;
-			$options['inverse_relationship'] = true;
-			break;
-
-		case 'inactive':
-			$options['wheres'][] = "NOT EXISTS (
-					SELECT 1 FROM {$db_prefix}entity_relationships active_er
-					WHERE active_er.guid_one = e.guid
-						AND active_er.relationship = 'active_plugin'
-						AND active_er.guid_two = $site_guid)";
-			break;
-
-		case 'all':
-		default:
-			break;
+	//Check if plugins are predfined in settings. Improves performance
+	if($plugins = $CONFIG->plugins){
+		$return = array();
+		foreach($plugins as $priority => $plugin){
+			$row = new stdClass();
+			$row->guid = $plugin;
+			$row->title = $plugin;
+			$row->type = 'plugin';
+			$row->active = 1;
+			$row->priority = $priority;
+			$plugin = new ElggPlugin($row);
+			$PLUGINS_CACHE[$plugin->guid] = $plugin;
+			$return[] = $plugin;	
+		}
+		return $return;
 	}
 
-	$old_ia = elgg_set_ignore_access(true);
-	$plugins = elgg_get_entities_from_relationship($options);
-	elgg_set_ignore_access($old_ia);
+	//convert status to something the db understands
+	if($status == 'active'){
+		$attrs['active'] = 1;
+	} else {
+	}
+	// grab plugins
+	$plugins = db_get(	array(	'type' => 'plugin',
+					'limit' => 10000,
+					'attrs' => $attrs
+			));
 
+	if($plugins){	
+		//now order them since cassandra does not do this
+		usort($plugins, function($a, $b) {
+					return	  $a->{'elgg:internal:priority'} > $b->{'elgg:internal:priority'};
+					});
+	} 
 	return $plugins;
 }
 
@@ -877,7 +847,7 @@ function elgg_unset_plugin_user_setting($name, $user_guid = null, $plugin_id = n
 	} else {
 		$plugin = elgg_get_calling_plugin_entity();
 	}
-
+	
 	if (!$plugin) {
 		return false;
 	}
@@ -956,8 +926,10 @@ function elgg_get_plugin_setting($name, $plugin_id = null) {
 	if (!$plugin) {
 		return false;
 	}
-
-	return $plugin->getSetting($name);
+	
+	if($plugin instanceof ElggPlugin){
+		return $plugin->getSetting($name);
+	}
 }
 
 /**
@@ -1077,9 +1049,10 @@ function elgg_get_entities_from_plugin_user_settings(array $options = array()) {
 	return elgg_get_entities_from_private_settings($options);
 }
 
+
 /**
  * Register object, plugin entities as ElggPlugin classes
- *
+ *	
  * @return void
  * @access private
  */

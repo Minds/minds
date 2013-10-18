@@ -4,11 +4,11 @@ $notification = elgg_extract('entity', $vars);
 $params = unserialize($notification->params);
 $type = $params['type'] ? $params['type'] : 'entity';
 
-$actor = get_entity($notification->from_guid);
+$actor = get_entity($notification->from_guid, 'user');
 
 try{
 	if($type == 'entity'){
-		$object = get_entity($notification->object_guid);
+		$object = get_entity($notification->object_guid, 'object');
 		if($object instanceof ElggEntity){
 			$subtype = $object->getSubtype();
 			if($subtype == 'thewire'){

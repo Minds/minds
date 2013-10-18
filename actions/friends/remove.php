@@ -8,7 +8,7 @@
 
 // Get the GUID of the user to friend
 $friend_guid = get_input('friend');
-$friend = get_entity($friend_guid);
+$friend = get_entity($friend_guid, 'user');
 $errors = false;
 
 // Get the user

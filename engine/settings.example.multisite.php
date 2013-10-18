@@ -21,11 +21,10 @@
 	 * Configure multisite support here, see
 	 * ELGGMULTI.txt for details.
 	 */
-	$CONFIG->multisite->dbuser = 'your username';
-	$CONFIG->multisite->dbpass = 'password';
-	$CONFIG->multisite->dbhost = 'host';
+	$CONFIG->multisite->keyspace = 'elggmultisite';
+	$CONFIG->multisite->servers = array('127.0.0.1');
 	
-	$CONFIG->multisite->dbname = 'elggmultisite';
+
 	
 	/**
 	 * Detect the current domain and configure database accordingly.
@@ -35,19 +34,18 @@
 	$db_settings = elggmulti_get_db_settings();
 	$CONFIG->elgg_multisite_settings = $db_settings; // Make multisite settings available to peeps.
 	
-	$CONFIG->wwwroot = $db_settings->wwwroot;
-	$CONFIG->dataroot = $db_settings->dataroot;
-	$CONFIG->dbuser = $db_settings->dbuser;
-	$CONFIG->dbpass = $db_settings->dbpass;
-	$CONFIG->dbname = $db_settings->dbname;
-	$CONFIG->dbhost = $db_settings->dbhost;
-	$CONFIG->dbprefix = $db_settings->dbprefix;
-	
+	$CONFIG->cassandra = new stdClass;
+	$CONFIG->cassandra->keyspace = $db_settings->keyspace;
+	$CONFIG->cassandra->servers = $db_settings->servers;
+        
+        // Other defaults
+        $CONFIG->wwwroot = $db_settings->wwwroot;
+        $CONFIG->dataroot = $db_settings->dataroot;
+
         // Force hardcoded paths
         $CONFIG->path = dirname(dirname(__FILE__)) . '/';
         $CONFIG->pluginspath = dirname(dirname(__FILE__)) . '/mod/';
         
-	
 	// URL
 	$CONFIG->url = "";
         

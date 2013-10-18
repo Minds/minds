@@ -19,7 +19,7 @@ $tabs = array(
 		'url' => "channels/newest",
 		'selected' => $vars['selected'] == 'newest',
 	),
-	'popular' => array(
+/*	'popular' => array(
 		'title' => elgg_echo('channels:label:popular'),
 		'url' => "channels/popular",
 		'selected' => $vars['selected'] == 'popular',
@@ -38,7 +38,7 @@ $tabs = array(
 		'title' => elgg_echo('friends:collections'),
 		'url' => "channels/collections",
 		'selected' => $vars['selected'] == 'collections',
-	),
+	),*/
 );
 
 echo elgg_view('navigation/tabs', array('tabs' => $tabs));

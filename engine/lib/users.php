@@ -26,8 +26,8 @@ $CODE_TO_GUID_MAP_CACHE = array();
 function get_user_entity_as_row($guid) {
 	global $CONFIG;
 
-	$guid = (int)$guid;
-	return get_data_row("SELECT * from {$CONFIG->dbprefix}users_entity where guid=$guid");
+	//$guid = (int)$guid;
+	//return get_data_row("SELECT * from {$CONFIG->dbprefix}users_entity where guid=$guid");
 }
 
 /**
@@ -46,54 +46,42 @@ function get_user_entity_as_row($guid) {
  * @return bool
  * @access private
  */
-function create_user_entity($guid, $name, $username, $password, $salt, $email, $language, $code) {
+function create_user_entity(array $options = array()) {
 	global $CONFIG;
 
-	$guid = (int)$guid;
-	$name = sanitise_string($name);
-	$username = sanitise_string($username);
-	$password = sanitise_string($password);
-	$salt = sanitise_string($salt);
-	$email = sanitise_string($email);
-	$language = sanitise_string($language);
-	$code = sanitise_string($code);
 
-	$row = get_entity_as_row($guid);
-	if ($row) {
-		// Exists and you have access to it
-		$query = "SELECT guid from {$CONFIG->dbprefix}users_entity where guid = {$guid}";
-		if ($exists = get_data_row($query)) {
-			$query = "UPDATE {$CONFIG->dbprefix}users_entity
-				SET name='$name', username='$username', password='$password', salt='$salt',
-				email='$email', language='$language', code='$code'
-				WHERE guid = $guid";
+	$defaults = array(	'type' => 'user',
+				
+				'guid' => 0,
 
-			$result = update_data($query);
-			if ($result != false) {
-				// Update succeeded, continue
-				$entity = get_entity($guid);
-				if (elgg_trigger_event('update', $entity->type, $entity)) {
-					return $guid;
-				} else {
-					$entity->delete();
-				}
-			}
-		} else {
-			// Exists query failed, attempt an insert.
-			$query = "INSERT into {$CONFIG->dbprefix}users_entity
-				(guid, name, username, password, salt, email, language, code)
-				values ($guid, '$name', '$username', '$password', '$salt', '$email', '$language', '$code')";
+				'name' => '',
+				'username' => '',
+				'password' => '',
+				'salt' => '',
+				'email' => '', 
+				'language' => '',
+				'code' => '',
+				
+				'time_created' => time()
+			);
+	
+	$options = array_merge($defaults, $options);
 
-			$result = insert_data($query);
-			if ($result !== false) {
-				$entity = get_entity($guid);
-				if (elgg_trigger_event('create', $entity->type, $entity)) {
-					return $guid;
-				} else {
-					$entity->delete();
-				}
-			}
-		}
+	$options = array_filter($options, 'strlen');//remove null values
+
+	$options['username'] = strtolower($options['username']);
+	
+	$result = db_insert($options['guid'], $options);
+	
+	return $result;	
+	
+	if ($result !== false) {
+		$entity = get_entity($result, 'user');
+		//if (elgg_trigger_event('create', $entity->type, $entity)) {
+			return $guid;
+		//} else {
+		//	$entity->delete();
+		//}
 	}
 
 	return false;
@@ -136,19 +124,20 @@ function disable_user_entities($owner_guid) {
 function ban_user($user_guid, $reason = "") {
 	global $CONFIG;
 
-	$user_guid = (int)$user_guid;
-
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, 'user');
 
 	if (($user) && ($user->canEdit()) && ($user instanceof ElggUser)) {
 		if (elgg_trigger_event('ban', 'user', $user)) {
+			
 			// Add reason
-			if ($reason) {
-				create_metadata($user_guid, 'ban_reason', $reason, '', 0, ACCESS_PUBLIC);
-			}
+			$user->ban_reason = $reason;
+			
+			//set ban flag
+			$user->banned = 'yes';
 
 			// clear "remember me" cookie code so user cannot login in using it
 			$user->code = "";
+			
 			$user->save();
 
 			// invalidate memcache for this user
@@ -161,9 +150,8 @@ function ban_user($user_guid, $reason = "") {
 				$newentity_cache->delete($user_guid);
 			}
 
-			// Set ban flag
-			$query = "UPDATE {$CONFIG->dbprefix}users_entity set banned='yes' where guid=$user_guid";
-			return update_data($query);
+			return true;
+
 		}
 
 		return FALSE;
@@ -182,13 +170,16 @@ function ban_user($user_guid, $reason = "") {
 function unban_user($user_guid) {
 	global $CONFIG;
 
-	$user_guid = (int)$user_guid;
-
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, 'user');
 
 	if (($user) && ($user->canEdit()) && ($user instanceof ElggUser)) {
 		if (elgg_trigger_event('unban', 'user', $user)) {
 			create_metadata($user_guid, 'ban_reason', '', '', 0, ACCESS_PUBLIC);
+
+			$user->ban_reason = '';
+			$user->banned = 'no';
+
+			$user->save();
 
 			// invalidate memcache for this user
 			static $newentity_cache;
@@ -199,10 +190,7 @@ function unban_user($user_guid) {
 			if ($newentity_cache) {
 				$newentity_cache->delete($user_guid);
 			}
-
-
-			$query = "UPDATE {$CONFIG->dbprefix}users_entity set banned='no' where guid=$user_guid";
-			return update_data($query);
+			return true;
 		}
 
 		return FALSE;
@@ -221,7 +209,7 @@ function unban_user($user_guid) {
 function make_user_admin($user_guid) {
 	global $CONFIG;
 
-	$user = get_entity((int)$user_guid);
+	$user = get_entity($user_guid, 'user');
 
 	if (($user) && ($user instanceof ElggUser) && ($user->canEdit())) {
 		if (elgg_trigger_event('make_admin', 'user', $user)) {
@@ -236,9 +224,11 @@ function make_user_admin($user_guid) {
 				$newentity_cache->delete($user_guid);
 			}
 
-			$r = update_data("UPDATE {$CONFIG->dbprefix}users_entity set admin='yes' where guid=$user_guid");
+			$user->admin = 'yes';
+			$user->save();
+
 			invalidate_cache_for_entity($user_guid);
-			return $r;
+			return true;
 		}
 
 		return FALSE;
@@ -257,7 +247,7 @@ function make_user_admin($user_guid) {
 function remove_user_admin($user_guid) {
 	global $CONFIG;
 
-	$user = get_entity((int)$user_guid);
+	$user = get_entity($user_guid, 'user');
 
 	if (($user) && ($user instanceof ElggUser) && ($user->canEdit())) {
 		if (elgg_trigger_event('remove_admin', 'user', $user)) {
@@ -272,9 +262,10 @@ function remove_user_admin($user_guid) {
 				$newentity_cache->delete($user_guid);
 			}
 
-			$r = update_data("UPDATE {$CONFIG->dbprefix}users_entity set admin='no' where guid=$user_guid");
+			$user->admin = 'no';
+			$user->savei();
 			invalidate_cache_for_entity($user_guid);
-			return $r;
+			return true;
 		}
 
 		return FALSE;
@@ -293,23 +284,12 @@ function remove_user_admin($user_guid) {
  * @return ElggSite[]|false On success, an array of ElggSites
  */
 function get_user_sites($user_guid, $limit = 10, $offset = 0) {
-	$user_guid = (int)$user_guid;
-	$limit = (int)$limit;
-	$offset = (int)$offset;
-
-	return elgg_get_entities_from_relationship(array(
-		'site_guids' => ELGG_ENTITIES_ANY_VALUE,
-		'relationship' => 'member_of_site',
-		'relationship_guid' => $user_guid,
-		'inverse_relationship' => FALSE,
-		'type' => 'site',
-		'limit' => $limit,
-		'offset' => $offset,
-	));
+	//deprecated since cassandra rewrite
+	return;
 }
 
 /**
- * Adds a user to another user's friends list.
+ * Adds a user to another user's friend/subscription list.
  *
  * @param int $user_guid   The GUID of the friending user
  * @param int $friend_guid The GUID of the user to friend
@@ -317,21 +297,37 @@ function get_user_sites($user_guid, $limit = 10, $offset = 0) {
  * @return bool Depending on success
  */
 function user_add_friend($user_guid, $friend_guid) {
-	$user_guid = (int) $user_guid;
-	$friend_guid = (int) $friend_guid;
+	$user_guid = $user_guid;
+	$friend_guid = $friend_guid;
 	if ($user_guid == $friend_guid) {
 		return false;
 	}
-	if (!$friend = get_entity($friend_guid)) {
+	if (!$friend = get_entity($friend_guid, 'user')) {
 		return false;
 	}
-	if (!$user = get_entity($user_guid)) {
+	if (!$user = get_entity($user_guid, 'user')) {
 		return false;
 	}
 	if ((!($user instanceof ElggUser)) || (!($friend instanceof ElggUser))) {
 		return false;
 	}
-	return add_entity_relationship($user_guid, "friend", $friend_guid);
+	
+	//add this this users list of subscriptions
+	db_insert($user_guid, array(	'type' => 'friends',
+					$friend_guid => time()
+				));
+	//add user to friends list of subscriptions
+	db_insert($friend_guid, array(	'type' => 'friendsof',
+					$user_guid => time()
+				));
+
+	//hack - update session!
+        global $SESSION;
+        if(elgg_is_logged_in()){
+		unset($SESSION['friends']);
+       		$SESSION['friends'] = elgg_get_logged_in_user_entity()->getFriends(null, 200, 0, 'guids');
+	}
+	return true;
 }
 
 /**
@@ -343,18 +339,26 @@ function user_add_friend($user_guid, $friend_guid) {
  * @return bool Depending on success
  */
 function user_remove_friend($user_guid, $friend_guid) {
-	$user_guid = (int) $user_guid;
-	$friend_guid = (int) $friend_guid;
+	$user_guid = $user_guid;
+	$friend_guid = $friend_guid;
 
 	// perform cleanup for access lists.
-	$collections = get_user_access_collections($user_guid);
+	/*$collections = get_user_access_collections($user_guid);
 	if ($collections) {
 		foreach ($collections as $collection) {
 			remove_user_from_access_collection($friend_guid, $collection->id);
 		}
-	}
+	}*/
 
-	return remove_entity_relationship($user_guid, "friend", $friend_guid);
+	db_remove($user_guid, 'friends', array($friend_guid));
+	db_remove($friend_guid, 'friendsof', array($user_guid));	
+
+	//hack - update session!
+	global $SESSION;
+	unset($SESSION['friends']);
+	$SESSION['friends'] = elgg_get_logged_in_user_entity()->getFriends(null, 200, 0, 'guids');
+	return true;
+
 }
 
 /**
@@ -366,7 +370,11 @@ function user_remove_friend($user_guid, $friend_guid) {
  * @return bool
  */
 function user_is_friend($user_guid, $friend_guid) {
-	return check_entity_relationship($user_guid, "friend", $friend_guid) !== false;
+	$friends = get_user_friends($user_guid, '', $limit = 10000, '', 'guids');
+	if(in_array($friend_guid, $friends)){
+		return true;
+	}
+	return false;
 }
 
 /**
@@ -380,16 +388,26 @@ function user_is_friend($user_guid, $friend_guid) {
  * @return ElggUser[]|false Either an array of ElggUsers or false, depending on success
  */
 function get_user_friends($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
-$offset = 0) {
-
-	return elgg_get_entities_from_relationship(array(
-		'relationship' => 'friend',
-		'relationship_guid' => $user_guid,
-		'type' => 'user',
-		'subtype' => $subtype,
-		'limit' => $limit,
-		'offset' => $offset
-	));
+$offset = "", $output = 'entities') {
+	global $SESSION;
+	if($user_guid == elgg_get_logged_in_user_guid() && isset($SESSION['friends'])){
+		foreach($SESSION['friends'] as $friend){
+       			$row[] = $friend;
+		}
+		if($row && $output == 'entities'){
+			$row = db_get(array('type'=>'user', 'guids'=>$row));
+		} else {
+			return $row;
+		}
+	} else {
+		$row = db_get( array(	'type'=> 'friends',
+				'owner_guid' => $user_guid,	
+				'limit' => $limit,
+				'offset' => $offset,
+				'output' => $output
+				));
+	}
+	return $row;
 }
 
 /**
@@ -403,17 +421,28 @@ $offset = 0) {
  * @return ElggUser[]|false Either an array of ElggUsers or false, depending on success
  */
 function get_user_friends_of($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
-$offset = 0) {
+$offset = "", $output = 'entities') {
+	global $SESSION;
+        if($user_guid == elgg_get_logged_in_user_guid() && isset($SESSION['friendsof'])){
+                foreach($SESSION['friendsof'] as $friend){
+                        $row[] = $friend;
+                }
+		if($row && $output == 'entities'){
+                        $row = db_get(array('type'=>'user', 'guids'=>$row));
+                } else {
+			return $row;
+		}
+        } else {
 
-	return elgg_get_entities_from_relationship(array(
-		'relationship' => 'friend',
-		'relationship_guid' => $user_guid,
-		'inverse_relationship' => TRUE,
-		'type' => 'user',
-		'subtype' => $subtype,
-		'limit' => $limit,
-		'offset' => $offset
-	));
+		$row = db_get( array(     'type'=> 'friendsof',
+					'owner_guid' => $user_guid, 
+                	                'output' => $output, 
+				        'limit' => $limit,
+                               	        'offset' => $offset
+                                ));
+	} 
+	return $row;
+
 }
 
 /**
@@ -530,7 +559,7 @@ $listtypetoggle = true, $pagination = true, $timelower = 0, $timeupper = 0) {
 function get_user($guid) {
 	// Fixes "Exception thrown without stack frame" when db_select fails
 	if (!empty($guid)) {
-		$result = get_entity($guid);
+		$result = get_entity($guid, 'user');
 	}
 
 	if ((!empty($result)) && (!($result instanceof ElggUser))) {
@@ -544,6 +573,23 @@ function get_user($guid) {
 	return false;
 }
 
+/** 
+ * GET INDEX TO GUID
+ */
+function get_user_index_to_guid($index){
+	global $DB;
+	
+	try{
+		$row = $DB->cfs['user_index_to_guid']->get($index);
+	
+		foreach($row as $k=>$v){
+			return $k;
+		}
+	}catch(Exception $e){
+		return false;
+	}
+}
+
 /**
  * Get user by username
  *
@@ -552,22 +598,22 @@ function get_user($guid) {
  * @return ElggUser|false Depending on success
  */
 function get_user_by_username($username) {
-	global $CONFIG, $USERNAME_TO_GUID_MAP_CACHE;
+	global $CONFIG, $USERNAME_TO_GUID_MAP_CACHE, $DB;
 
-	$username = sanitise_string($username);
-	$access = get_access_sql_suffix('e');
-
-	// Caching
-	if ((isset($USERNAME_TO_GUID_MAP_CACHE[$username]))
-			&& (retrieve_cached_entity($USERNAME_TO_GUID_MAP_CACHE[$username]))) {
-		return retrieve_cached_entity($USERNAME_TO_GUID_MAP_CACHE[$username]);
+	$username = strtolower($username);
+	
+	if(!$username){
+		return false;
 	}
+	
+	$guid = $USERNAME_TO_GUID_MAP_CACHE[$username];	
 
-	$query = "SELECT e.* from {$CONFIG->dbprefix}users_entity u
-		join {$CONFIG->dbprefix}entities e on e.guid=u.guid
-		where u.username='$username' and $access ";
+	if(!$guid){
+		$guid = get_user_index_to_guid($username);	
+	}
+	
+	$entity = get_entity($guid, 'user');
 
-	$entity = get_data_row($query, 'entity_row_to_elggstar');
 	if ($entity) {
 		$USERNAME_TO_GUID_MAP_CACHE[$username] = $entity->guid;
 	} else {
@@ -587,22 +633,12 @@ function get_user_by_username($username) {
 function get_user_by_code($code) {
 	global $CONFIG, $CODE_TO_GUID_MAP_CACHE;
 
-	$code = sanitise_string($code);
+	$entities = db_get(     array(  'type'=>'user',
+                                        'attrs' => array('code'=>$code )
+                        ));
 
-	$access = get_access_sql_suffix('e');
+        $entity = $entities[0];
 
-	// Caching
-	if ((isset($CODE_TO_GUID_MAP_CACHE[$code]))
-	&& (retrieve_cached_entity($CODE_TO_GUID_MAP_CACHE[$code]))) {
-
-		return retrieve_cached_entity($CODE_TO_GUID_MAP_CACHE[$code]);
-	}
-
-	$query = "SELECT e.* from {$CONFIG->dbprefix}users_entity u
-		join {$CONFIG->dbprefix}entities e on e.guid=u.guid
-		where u.code='$code' and $access";
-
-	$entity = get_data_row($query, 'entity_row_to_elggstar');
 	if ($entity) {
 		$CODE_TO_GUID_MAP_CACHE[$code] = $entity->guid;
 	}
@@ -620,15 +656,22 @@ function get_user_by_code($code) {
 function get_user_by_email($email) {
 	global $CONFIG;
 
-	$email = sanitise_string($email);
+        $guids = get_user_index_to_guid($email);
 
-	$access = get_access_sql_suffix('e');
+	if(is_array($guids)){
+		foreach($guids as $guid){
+      			$entities[] = get_entity($guid, 'user');
+		}
+	} else {
+		$entities[] = get_entity($guids, 'user');
+	}
 
-	$query = "SELECT e.* from {$CONFIG->dbprefix}entities e
-		join {$CONFIG->dbprefix}users_entity u on e.guid=u.guid
-		where email='$email' and $access";
+	if($entities[0] == null){
+		return false;
+	}
 
-	return get_data($query, 'entity_row_to_elggstar');
+	return $entities;
+
 }
 
 /**
@@ -674,9 +717,10 @@ function find_active_users($seconds = 600, $limit = 10, $offset = 0, $count = fa
  * @return bool
  */
 function send_new_password_request($user_guid) {
-	$user_guid = (int)$user_guid;
 
-	$user = get_entity($user_guid);
+	global $CONFIG;
+
+	$user = get_entity($user_guid,'user');
 	if ($user instanceof ElggUser) {
 		// generate code
 		$code = generate_random_cleartext_password();
@@ -688,7 +732,7 @@ function send_new_password_request($user_guid) {
 		// generate email
 		$email = elgg_echo('email:resetreq:body', array($user->name, $_SERVER['REMOTE_ADDR'], $link));
 
-		return notify_user($user->guid, elgg_get_site_entity()->guid,
+		return notify_user($user->guid, elgg_get_site_entity()->guid, 
 			elgg_echo('email:resetreq:subject'), $email, array(), 'email');
 	}
 
@@ -706,7 +750,7 @@ function send_new_password_request($user_guid) {
  * @return bool
  */
 function force_user_password_reset($user_guid, $password) {
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid,'user');
 	if ($user instanceof ElggUser) {
 		$ia = elgg_set_ignore_access();
 
@@ -735,8 +779,8 @@ function execute_new_password_request($user_guid, $conf_code) {
 	global $CONFIG;
 
 	$user_guid = (int)$user_guid;
-	$user = get_entity($user_guid);
-
+	$user = get_entity($user_guid,'user');
+	
 	if ($user instanceof ElggUser) {
 		$saved_code = $user->getPrivateSetting('passwd_conf_code');
 
@@ -749,7 +793,7 @@ function execute_new_password_request($user_guid, $conf_code) {
 				reset_login_failure_count($user_guid);
 				
 				$email = elgg_echo('email:resetpassword:body', array($user->name, $password));
-
+				
 				return notify_user($user->guid, $CONFIG->site->guid,
 					elgg_echo('email:resetpassword:subject'), $email, array(), 'email');
 			}
@@ -940,7 +984,7 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	if ($user = get_user_by_username($username)) {
 		throw new RegistrationException(elgg_echo('registration:userexists'));
 	}
-
+	
 	if ((!$allow_multiple_emails) && (get_user_by_email($email))) {
 		throw new RegistrationException(elgg_echo('registration:dupeemail'));
 	}
@@ -958,9 +1002,9 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	$user->owner_guid = 0; // Users aren't owned by anyone, even if they are admin created.
 	$user->container_guid = 0; // Users aren't contained by anyone, even if they are admin created.
 	$user->language = get_current_language();
-	$user->save();
+	$guid = $user->save();
 
-	// If $friend_guid has been set, make mutual friends
+	/*// If $friend_guid has been set, make mutual friends
 	if ($friend_guid) {
 		if ($friend_user = get_user($friend_guid)) {
 			if ($invitecode == generate_invite_code($friend_user->username)) {
@@ -972,12 +1016,12 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 				add_to_river('river/relationship/friend/create', 'friend', $friend_guid, $user->getGUID());
 			}
 		}
-	}
+	}*/
 
 	// Turn on email notifications by default
-	set_user_notification_setting($user->getGUID(), 'email', true);
+	//set_user_notification_setting($user->getGUID(), 'email', true);
 
-	return $user->getGUID();
+	return $guid;
 }
 
 /**
@@ -1162,7 +1206,7 @@ function set_last_action($user_guid) {
 		set prev_last_action = last_action,
 		last_action = {$time} where guid = {$user_guid}";
 
-	execute_delayed_write_query($query);
+	//execute_delayed_write_query($query);
 }
 
 /**
@@ -1180,7 +1224,7 @@ function set_last_login($user_guid) {
 	$query = "UPDATE {$CONFIG->dbprefix}users_entity
 		set prev_last_login = last_login, last_login = {$time} where guid = {$user_guid}";
 
-	execute_delayed_write_query($query);
+	//execute_delayed_write_query($query);
 }
 
 /**
@@ -1194,7 +1238,7 @@ function set_last_login($user_guid) {
  * @access private
  */
 function user_create_hook_add_site_relationship($event, $object_type, $object) {
-	add_entity_relationship($object->getGUID(), 'member_of_site', elgg_get_site_entity()->guid);
+//	add_entity_relationship($object->getGUID(), 'member_of_site', elgg_get_site_entity()->guid);
 }
 
 /**

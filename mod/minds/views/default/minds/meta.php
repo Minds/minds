@@ -1,31 +1,33 @@
 <?php
+global $CONFIG;
 	/* MINDS META
 	 *
 	 * SEO ENHANCE
 	*/
-	$description = get_input('description');
-	$keywords = get_input('keywords');
+	$description = get_input('description', $CONFIG->site_description);
+	$keywords = get_input('keywords', $CONFIG->site_keywords);
 	//are we a blog, wire post, event??
 	
 	if($description){
-		echo "\t<meta name=\"description\" content=\"$description\" /> \n";
+		echo "\t<meta name=\"description\" content=\"$description\"> \n";
 	} else {
-		echo "\t<meta name=\"description\" content=\"" . elgg_get_plugin_setting('default_description', 'minds') . "\" /> \n";
+		echo "\t<meta name=\"description\" content=\"" . elgg_get_plugin_setting('default_description', 'minds') . "\"> \n";
 	}
 	
 	if($keywords){ 
-		echo "\t<meta name=\"keywords\" content=\"$keywords>\"/> \n";
+		echo "\t<meta name=\"keywords\" content=\"$keywords\"> \n";
 	} else {
-		echo "\t<meta name=\"keywords\" content=\"" . elgg_get_plugin_setting('default_keywords', 'minds') . "\" /> \n";
+		echo "\t<meta name=\"keywords\" content=\"" . elgg_get_plugin_setting('default_keywords', 'minds') . "\"> \n";
 	}
 
 $request = $_SERVER['REQUEST_URI'];
 $split = explode('/', $request);
 $siteURL = elgg_get_site_url();
 
+$owner = elgg_get_page_owner_entity();
 //if(in_array('channel', $split)){
 //echo elgg_get_context();
-if(elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news' || elgg_get_context() == 'blog' || elgg_get_context() == 'archive'){
+if((elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news' || elgg_get_context() == 'blog' || elgg_get_context() == 'archive') && elgg_get_viewtype() == 'default'){
 	echo '<style>';
 
 	if($owner->background || $owner->text_colour || $owner->link_colour){

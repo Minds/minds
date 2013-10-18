@@ -15,7 +15,6 @@ $context = elgg_extract('context', $vars, elgg_get_context());
 if (elgg_is_logged_in() && $context) {
 	$username = elgg_get_logged_in_user_entity()->username;
 	$filter_context = elgg_extract('filter_context', $vars);
-
 	$tabs = array(
 		'featured' => array(
 			'text' => elgg_echo('river:featured'),
@@ -23,13 +22,19 @@ if (elgg_is_logged_in() && $context) {
 			'selected' => ($filter_context == 'featured'),
 			'priority' => 200,
 		),
+/*		'trending' => array(
+                        'text' => elgg_echo('trending'),
+                        'href' => $context."/trending",
+                        'selected' => ($filter_context == 'trending'),
+                        'priority' => 300,
+                ),*/
 		'friend' => array(
 			'text' => elgg_echo('friends'),
 			'href' => $context."/channels/$username",
 			'selected' => ($filter_context == 'friends' || !$filter_context),
 			'priority' => 400,
 		),
-		'thumbsup' => array(
+		/*'thumbsup' => array(
 			'text' => '&#128077;',
 			'href' => $context."/thumbsup",
 			'selected' => ($filter_context == 'thumbsup'),
@@ -42,7 +47,7 @@ if (elgg_is_logged_in() && $context) {
 			'selected' => ($filter_context == 'thumbsdown'),
 			'class'=>'entypo',
 			'priority' => 600,
-		),
+		),*/
 
 	);
 	if(elgg_is_admin_logged_in()){

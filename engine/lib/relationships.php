@@ -114,6 +114,8 @@ function add_entity_relationship($guid_one, $relationship, $guid_two) {
 function check_entity_relationship($guid_one, $relationship, $guid_two) {
 	global $CONFIG;
 
+	return;//check entity relationship deprecated
+
 	$guid_one = (int)$guid_one;
 	$relationship = sanitise_string($relationship);
 	$guid_two = (int)$guid_two;
@@ -340,9 +342,6 @@ $relationship_guid = NULL, $inverse_relationship = FALSE) {
 		$joins[] = "JOIN {$CONFIG->dbprefix}entity_relationships r on r.guid_two = $column";
 	}
 
-	if ($relationship) {
-		$wheres[] = "r.relationship = '" . sanitise_string($relationship) . "'";
-	}
 
 	if ($relationship_guid) {
 		if ($inverse_relationship) {

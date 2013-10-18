@@ -18,46 +18,25 @@
  * @return array
  */
 function get_entity_statistics($owner_guid = 0) {
-	global $CONFIG;
-
+	global $CONFIG, $SUBTYPE_CACHE, $DB;
 	$entity_stats = array();
 	$owner_guid = (int)$owner_guid;
 
-	$query = "SELECT distinct e.type,s.subtype,e.subtype as subtype_id
-		from {$CONFIG->dbprefix}entities e left
-		join {$CONFIG->dbprefix}entity_subtypes s on e.subtype=s.id";
+	$types = array('object','user', 'group', 'notification','widget');
 
-	$owner_query = "";
-	if ($owner_guid) {
-		$query .= " where owner_guid=$owner_guid";
-		$owner_query = "and owner_guid=$owner_guid ";
-	}
+	$subtypes =$SUBTYPE_CACHE;
 
-	// Get a list of major types
-
-	$types = get_data($query);
 	foreach ($types as $type) {
-		// assume there are subtypes for now
-		if (!is_array($entity_stats[$type->type])) {
-			$entity_stats[$type->type] = array();
-		}
-
-		$query = "SELECT count(*) as count
-			from {$CONFIG->dbprefix}entities where type='{$type->type}' $owner_query";
-
-		if ($type->subtype) {
-			$query .= " and subtype={$type->subtype_id}";
-		}
-
-		$subtype_cnt = get_data_row($query);
-
-		if ($type->subtype) {
-			$entity_stats[$type->type][$type->subtype] = $subtype_cnt->count;
-		} else {
-			$entity_stats[$type->type]['__base__'] = $subtype_cnt->count;
-		}
+		$count = $DB->cfs['entities_by_time']->get_count($type);
+		$entity_stats[$type]['__base__'] = $count;
 	}
 
+	foreach($subtypes as $subtype){
+		$type = $subtype->type;
+		$subtype = $subtype->subtype;
+		$count = $DB->cfs['entities_by_time']->get_count($type . ':' . $subtype);
+		$entity_stats[$type][$subtype] = $count;
+	}
 	return $entity_stats;
 }
 
@@ -69,24 +48,12 @@ function get_entity_statistics($owner_guid = 0) {
  * @return int
  */
 function get_number_users($show_deactivated = false) {
-	global $CONFIG;
+	global $CONFIG,$DB;
 
-	$access = "";
+	$count = $DB->cfs['entities_by_time']->get_count('user');
+	
+	return $count;
 
-	if (!$show_deactivated) {
-		$access = "and " . get_access_sql_suffix();
-	}
-
-	$query = "SELECT count(*) as count
-		from {$CONFIG->dbprefix}entities where type='user' $access";
-
-	$result = get_data_row($query);
-
-	if ($result) {
-		return $result->count;
-	}
-
-	return false;
 }
 
 /**

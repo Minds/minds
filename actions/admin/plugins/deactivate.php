@@ -18,7 +18,7 @@ if (!is_array($plugin_guids)) {
 }
 
 foreach ($plugin_guids as $guid) {
-	$plugin = get_entity($guid);
+	$plugin = get_entity($guid,'plugin');
 
 	if (!($plugin instanceof ElggPlugin)) {
 		register_error(elgg_echo('admin:plugins:deactivate:no', array($guid)));
@@ -45,7 +45,7 @@ if (count($plugin_guids) == 1) {
 	if ($query) {
 		$url .= "?$query";
 	}
-	$plugin = get_entity($plugin_guids[0]);
+	$plugin = get_entity($plugin_guids[0], 'plugin');
 	$id = preg_replace('/[^a-z0-9-]/i', '-', $plugin->getID());
 	forward("$url#$id");
 } else {

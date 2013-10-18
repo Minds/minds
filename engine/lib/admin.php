@@ -642,7 +642,7 @@ function elgg_add_admin_widgets($event, $type, $user) {
 		foreach ($handlers as $position => $handler) {
 			$guid = elgg_create_widget($user->getGUID(), $handler, 'admin');
 			if ($guid) {
-				$widget = get_entity($guid);
+				$widget = get_entity($guid, 'widget');
 				/* @var ElggWidget $widget */
 				$widget->move($column, $position);
 			}

@@ -16,11 +16,10 @@ function webinar_get_page_content_view($guid){
 	$return = array();
 	
 	$return = array(
-			'filter' => '',
+			'filter' => ''
 	);
 	
-	$webinar = get_entity($guid);
-	
+	$webinar = get_entity($guid,'object');
 	if (!elgg_instanceof($webinar, 'object', 'webinar')) {
 		register_error(elgg_echo('webinar:error:not_found'));
 		forward(REFERER);
@@ -42,11 +41,7 @@ function webinar_get_page_content_view($guid){
 	
 	$return['content'] .= elgg_view_entity($webinar, array('full_view' => true));
 	
-	if ($webinar->comments_on != 'Off') {
-		$return['content'] .= elgg_view_comments($webinar);
-	}
-	
-	$return['sidebar'] = $webinar->getSidebar();
+	$return['content'] .= elgg_view_comments($webinar);
 	
 	return $return;
 }
@@ -67,7 +62,7 @@ function webinar_get_page_content_edit($action_type, $guid = 0){
 	if ($action_type == 'edit') {
 		$title = elgg_echo("webinar:edit");
 		
-		$webinar = get_entity($guid);
+		$webinar = get_entity($guid, 'object');
 		if (elgg_instanceof($webinar, 'object', 'webinar') && $webinar->canEdit()) {
 			
 			$container = $webinar->getContainerEntity();
@@ -210,9 +205,18 @@ function webinar_get_page_content_list($page = array()){
 	
 	$options = array(
 			'type' => 'object',
-			'subtype' => 'webinar',
+			'subtypes' => array('webinar'),
 			'full_view' => FALSE,
+			'limit' => 12
 	);
+
+	if($guid_type == 'owner'){
+		$options['owner_guid'] = $guid;
+	}
+
+	if($guid_type == 'friends'){
+		$options['network'] = $guid;
+	}
 	
 	$filters = array('all','upcoming','running','done');
 	
@@ -306,8 +310,7 @@ function webinar_get_page_content_list($page = array()){
 		}
 		
 	}
-
-	$list = elgg_list_entities_from_metadata($options);
+	$list = elgg_list_entities($options);
 	if (!$list) {
 		$return['content'] = elgg_echo('webinar:error:not_found');
 	} else {
@@ -319,7 +322,7 @@ function webinar_get_page_content_list($page = array()){
 }
 
 function webinar_get_page_content_relationships($relationship, $guid){
-	
+return;	
 	$return = array();
 	
 	$return = array(
@@ -417,10 +420,14 @@ function webinar_unsubscribe($webinar_guid, $user_guid) {
 	}
 }
 function webinar_join($webinar_guid, $user_guid){
-	$result = elgg_trigger_plugin_hook('webinar:join', 'webinar', array('webinar' => get_entity($webinar_guid), 'user' => get_entity($user_guid)),true);
+	$result = elgg_trigger_plugin_hook('webinar:join', 'webinar', array('webinar' => get_entity($webinar_guid,'object'), 'user' => get_entity($user_guid,'user')),true);
 	if($result){
-		remove_entity_relationship($user_guid, 'registered', $webinar_guid);
-		return add_entity_relationship($user_guid, 'attendee', $webinar_guid);
+		$webinar = get_entity($webinar_guid,'object');
+		$members = unserialize($webinar->members);
+		if(!is_array($members)){ $members = array(); }
+		array_push($members, $user_guid);
+		$webinar->members = serialize($members);
+		$webinar->save();
 	}else{
 		return false;
 	}
@@ -440,6 +447,18 @@ function webinar_is_attendee($webinar_guid, $user_guid) {
 	} else {
 		return false;
 	}
+}
+/** 
+ * Get members
+ */
+function webinar_get_members($webinar_guid){
+	$webinar = get_entity($webinar_guid,'object');
+	$members = unserialize($webinar->members);
+	$return = array();
+	foreach ($members as $member_guid){
+		$return[] = get_entity($member_guid, 'user');
+	}
+	return $return;
 }
 /**
  * Register menu title for webinar view
@@ -514,7 +533,7 @@ function webinar_has_paid($user_guid, $webinar_guid){
 	/*elgg_get_entities_from_relationship(	array(	'relationship_guid'	=> $user_guid,
 													'relationship' => 
 									));*/
-	$results = elgg_get_entities_from_metadata( array('type' => 'object',
+/*	$results = elgg_get_entities( array('type' => 'object',
 													'subtype' => 'pay',
 													'owner_guid' => $user_guid,
 													'metadata_name_value_pairs' => array(	array(	'name'=> 'object_guid',
@@ -528,7 +547,8 @@ function webinar_has_paid($user_guid, $webinar_guid){
 		return true;
 	} else {
 		return false;
-	}
+	}*/
+	return false;
 }
 /*
  function get_webinar_relationship($relationship, $webinar_guid, $limit = 10, $offset = 0, $site_guid = 0, $count = false) {

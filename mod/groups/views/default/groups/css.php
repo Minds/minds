@@ -6,6 +6,10 @@
  */
 
 ?>
+.groups .elgg-image .elgg-avatar{
+	width:60px;
+}
+
 .groups .elgg-list{
 	width:auto;
 }

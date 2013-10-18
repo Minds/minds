@@ -9,7 +9,7 @@ if (!$guid) {
 	elgg_deprecated_notice("Use 'guid' for group delete action", 1.8);
 	$guid = (int)get_input('group_guid');
 }
-$entity = get_entity($guid);
+$entity = get_entity($guid, 'group');
 
 if (!$entity->canEdit()) {
 	register_error(elgg_echo('group:notdeleted'));

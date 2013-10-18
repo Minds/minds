@@ -8,11 +8,22 @@
  * 
  * Free & Open Source Social Media
  */
-
+global $CONFIG;
 $limit = get_input('limit', 12);
 $offset = get_input('offset', 0);
+$filter = get_input('filter', 'featured');
 
-$entities = minds_get_featured('', $limit, 'entities',$offset); 
+if($offset > 0 && $filter == 'featured'){
+	$limit++;
+}
+
+if($filter == 'featured'){
+	$entities = minds_get_featured('', $limit, 'entities',$offset); 
+} else {
+	//trending
+	$guids = analytics_retrieve(array('limit'=> $limit, 'offset'=>$offset));
+	$entities = elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit,'offset'=>$offset));
+}
 
 if(!elgg_is_logged_in()){
 	$buttons = elgg_view('output/url', array('href'=>elgg_get_site_url().'register', 'text'=>elgg_echo('register'), 'class'=>'elgg-button elgg-button-action'));
@@ -48,17 +59,39 @@ $titles_array = array(	'Freeing The World\'s Information',
 			);
 $title = elgg_view_title($titles_array[rand(0,count($titles_array)-1)]);
 
+$launch_ts = 1411300800;//this could be GMT??
+$ts = time();
+$countdown_seconds = $launch_ts - $ts;
+$countdown_minutes = floor(($countdown_seconds % 3600) / 60); 
+$countdown_hours = floor(($countdown_seconds % 86400) / 3600); 
+$countdown_days = floor($countdown_seconds / 86400);
+ 
+$subtitle = round($countdown_days,0) . ' days to go.';
+
+$featured_item_class = $filter == 'featured' ? 'elgg-state-selected' : null;
+$trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
+
 $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title
-	<h3>Minds is a universal network to search, create and share free information.</h3>
+	<h3>We're releasing our code, Free & Open Source, in <b>$countdown_days</b> days, $countdown_hours hours & $countdown_minutes minutes.</h3>
 	<div class="front-page-buttons">
 		$buttons
 	</div>
+	<ul class="elgg-menu elgg-menu-right-filter elgg-menu-hz">
+		<li class="elgg-menu-item-featured $featured_item_class">
+			<a href="?filter=featured">Featured</a>
+		</li>
+		<li class="elgg-menu-item-trending $trending_item_class">
+                        <a href="?filter=trending">Trending</a>
+                </li>
+	</ul>
 </div>
 HTML;
 
-$params = array(	'content'=> elgg_view_entity_list($entities,$vars, $offset, $limit, false, false, true) . elgg_view('navigation/pagination', array('limit'=>$limit, 'offset'=>$offset,'count'=>1000)), 
+$content = elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true);
+
+$params = array(	'content'=> $content, 
 					'header'=> $header,
 					'filter' => false
 					);
@@ -66,5 +99,4 @@ $params = array(	'content'=> elgg_view_entity_list($entities,$vars, $offset, $li
 $body = elgg_view_layout('one_column', $params);
 
 echo elgg_view_page('', $body, 'default', array('class'=>'index'));
-
 ?>

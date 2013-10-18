@@ -26,10 +26,15 @@ $name = $tier_id;
     <div class="tier_selection">
         <?php 
         if (elgg_is_logged_in()) 
-            echo pay_basket_add_button($tier->guid, $tier->title, $tier->description, $tier->price, 1); 
+            if ($tier->price == 0) {
+                $currecy = pay_get_currency();	
+                echo elgg_view('output/url', array('is_action' => true, 'id' => $tier->product_id, 'href' => elgg_get_site_url() . 'action/select_free_tier?tier_id='. $tier->guid, 'text' => $currecy['symbol'] . $tier->price . ' - Sign Up Now', 'class' => 'pay buynow login'));
+            }
+            else
+                echo pay_basket_add_button($tier->guid, $tier->title, $tier->description, $tier->price, 1, true); 
         else {
              $currecy = pay_get_currency();	
-             echo elgg_view('output/url', array('id' => $tier->product_id, 'href' => '#', 'text' => $currecy['symbol'] . $tier->price . ' - Buy Now', 'class' => 'pay buynow login'));
+             echo elgg_view('output/url', array('id' => $tier->product_id, 'href' => '#', 'text' => $currecy['symbol'] . $tier->price . ' - Buy Now', 'class' => 'pay buynow free'));
         }
 ?>
     </div>
@@ -42,7 +47,7 @@ if (!elgg_is_logged_in()) {
         
         $('a#<?php echo $tier->product_id; ?>').click(function(){
            
-           window.open("<?php echo elgg_get_site_url(); ?>tierlogin/?tier=<?php echo $tier->guid; ?>", "Please Log In", "width=800,height=600");
+           window.open("<?php echo elgg_get_site_url(); ?>tierlogin/?tier=<?php echo $tier->guid; ?>", "Please Log In", "width=800,height=650");
         });
         
     });

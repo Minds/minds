@@ -20,89 +20,73 @@
  *
  * @return int/bool River ID or false on failure
  */
-/*function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_id = "",
+function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_id = "",
 $posted = 0, $annotation_id = 0) {
 
 	global $CONFIG;
-
+	
 	// use default viewtype for when called from web services api
 	if (!elgg_view_exists($view, 'default')) {
 		return false;
 	}
-	if (!($subject = get_entity($subject_guid))) {
+	if (!($subject = get_entity($subject_guid,'user'))) {
 		return false;
 	}
-	if (!($object = get_entity($object_guid))) {
-		return false;
+	if (!($object = get_entity($object_guid,'object'))) {
+	//	return false;
 	}
 	if (empty($action_type)) {
 		return false;
 	}
-	if ($posted == 0) {
+	if ($posted == 0 || !$posted) {
 		$posted = time();
 	}
 	if ($access_id === "") {
 		$access_id = $object->access_id;
 	}
-	$type = $object->getType();
-	$subtype = $object->getSubtype();
 
-	$view = sanitise_string($view);
-	$action_type = sanitise_string($action_type);
-	$subject_guid = sanitise_int($subject_guid);
-	$object_guid = sanitise_int($object_guid);
-	$access_id = sanitise_int($access_id);
-	$posted = sanitise_int($posted);
-	$annotation_id = sanitise_int($annotation_id);
-
-	$values = array(
-		'type' => $type,
-		'subtype' => $subtype,
-		'action_type' => $action_type,
-		'access_id' => $access_id,
-		'view' => $view,
-		'subject_guid' => $subject_guid,
-		'object_guid' => $object_guid,
-		'annotation_id' => $annotation_id,
-		'posted' => $posted,
-	);
-
-	// return false to stop insert
-	$values = elgg_trigger_plugin_hook('creating', 'river', null, $values);
-	if ($values == false) {
-		// inserting did not fail - it was just prevented
-		return true;
-	}
-
-	extract($values);
+	$serialized_subject = serialize($subject);
+	$serialized_object = serialize($object);
 
 	// Attempt to save river item; return success status
-	$id = insert_data("insert into {$CONFIG->dbprefix}river " .
-		" set type = '$type', " .
-		" subtype = '$subtype', " .
-		" action_type = '$action_type', " .
-		" access_id = $access_id, " .
-		" view = '$view', " .
-		" subject_guid = $subject_guid, " .
-		" object_guid = $object_guid, " .
-		" annotation_id = $annotation_id, " .
-		" posted = $posted");
+	$id = db_insert(0, array(	'type'=>'newsfeed',
+					'subject_guid'=>$subject_guid,
+					'object_guid'=>$object_guid,
+					'access_id'=>$access_id,
+					'view'=>$view,
+					'posted'=>$posted,
+					'action_type'=>$action_type,
+					'subject' => $serialized_subject,
+					'object' => $serialized_object
+			));
 
-	// update the entities which had the action carried out on it
-	// @todo shouldn't this be down elsewhere? Like when an annotation is saved?
+	//get the followers of the subject guid
+        $followers = $subject->getFriendsOf(null, 10000, "", 'guids');
+	if(!$followers) { $followers = array(); }
+	array_push($followers, 'site');//add to public timeline
+	array_push($followers, $action_type);//timelines for actions too
+	array_push($followers, $subject_guid);//add to their own timeline
+	array_push($followers, $object->container_guid); //add to containers timeline
+	foreach($followers as $follower){
+		db_insert($follower, array('type'=>'timeline', $id => time()));
+	}
+
+	//place on users own personal line
+	db_insert('personal:'.$subject_guid, array('type'=>'timeline', $id => time()));
+
 	if ($id) {
-		update_entity_last_action($object_guid, $posted);
-		
-		$river_items = elgg_get_river(array('id' => $id));
-		if ($river_items) {
-			elgg_trigger_event('created', 'river', $river_items[0]);
-		}
+//		update_entity_last_action($object_guid, $posted);
+//		
+//		$river_items = elgg_get_river(array('id' => $id));
+//		if ($river_items) {
+//			elgg_trigger_event('created', 'river', $river_items[0]);
+//		}
 		return $id;
 	} else {
 		return false;
 	}
 }
-*/
+
 /**
  * Delete river items
  *
@@ -127,88 +111,48 @@ $posted = 0, $annotation_id = 0) {
  * @return bool
  * @since 1.8.0
  */
-/*function elgg_delete_river(array $options = array()) {
-	global $CONFIG;
+function elgg_delete_river(array $options = array()) {
+	global $CONFIG, $DB;
 
-	$defaults = array(
-		'ids'                  => ELGG_ENTITIES_ANY_VALUE,
-
-		'subject_guids'	       => ELGG_ENTITIES_ANY_VALUE,
-		'object_guids'         => ELGG_ENTITIES_ANY_VALUE,
-		'annotation_ids'       => ELGG_ENTITIES_ANY_VALUE,
-
-		'views'                => ELGG_ENTITIES_ANY_VALUE,
-		'action_types'         => ELGG_ENTITIES_ANY_VALUE,
-
-		'types'	               => ELGG_ENTITIES_ANY_VALUE,
-		'subtypes'             => ELGG_ENTITIES_ANY_VALUE,
-		'type_subtype_pairs'   => ELGG_ENTITIES_ANY_VALUE,
-
-		'posted_time_lower'	   => ELGG_ENTITIES_ANY_VALUE,
-		'posted_time_upper'	   => ELGG_ENTITIES_ANY_VALUE,
-
-		'wheres'               => array(),
-		'joins'                => array(),
-
-	);
-
+	$defaults = array( 'ids' => ELGG_ENTITIES_ANY_VALUE);
 	$options = array_merge($defaults, $options);
 
-	$singulars = array('id', 'subject_guid', 'object_guid', 'annotation_id', 'action_type', 'view', 'type', 'subtype');
+	$singulars = array('id');
 	$options = elgg_normalise_plural_options_array($options, $singulars);
 
-	$wheres = $options['wheres'];
+	$ids = $options['ids'];
+	$items = elgg_get_river(array('type'=>'newsfeed', 'ids'=>$ids));
 
-	$wheres[] = elgg_get_guid_based_where_sql('rv.id', $options['ids']);
-	$wheres[] = elgg_get_guid_based_where_sql('rv.subject_guid', $options['subject_guids']);
-	$wheres[] = elgg_get_guid_based_where_sql('rv.object_guid', $options['object_guids']);
-	$wheres[] = elgg_get_guid_based_where_sql('rv.annotation_id', $options['annotation_ids']);
-	$wheres[] = elgg_river_get_action_where_sql($options['action_types']);
-	$wheres[] = elgg_river_get_view_where_sql($options['views']);
-	$wheres[] = elgg_get_river_type_subtype_where_sql('rv', $options['types'],
-		$options['subtypes'], $options['type_subtype_pairs']);
+	foreach($items as $item){
 
-	if ($options['posted_time_lower'] && is_int($options['posted_time_lower'])) {
-		$wheres[] = "rv.posted >= {$options['posted_time_lower']}";
-	}
+		//get the subjects friends
+		$owner = $item->getSubjectEntity();
+		$object = $item->getObjectEntity();
+		$followers = $owner->getFriendsOf();
+		if(!is_array($followers)){ $followers = array(); }
 
-	if ($options['posted_time_upper'] && is_int($options['posted_time_upper'])) {
-		$wheres[] = "rv.posted <= {$options['posted_time_upper']}";
-	}
+		//remove from personal line
+		array_push($followers, 'personal:'.$owner->guid);
+		//remove from public line
+		array_push($followers, 'site');
+		//action types
+		array_push($followers, $item->action_type);
+		//own
+		array_push($followers, $owner->guid);
+		//container_guid
+		array_push($followers, $object->container_guid);
 
-	// see if any functions failed
-	// remove empty strings on successful functions
-	foreach ($wheres as $i => $where) {
-		if ($where === FALSE) {
-			return FALSE;
-		} elseif (empty($where)) {
-			unset($wheres[$i]);
+		foreach($followers as $follower){
+			db_remove($follower,'timeline', array($item->id));
 		}
+
+		//remove from the main newsfeed now
+		db_remove($item->id, 'newsfeed');
+
 	}
 
-	// remove identical where clauses
-	$wheres = array_unique($wheres);
-
-	$query = "DELETE rv.* FROM {$CONFIG->dbprefix}river rv ";
-
-	// remove identical join clauses
-	$joins = array_unique($options['joins']);
-	
-	// add joins
-	foreach ($joins as $j) {
-		$query .= " $j ";
-	}
-
-	// add wheres
-	$query .= ' WHERE ';
-
-	foreach ($wheres as $w) {
-		$query .= " $w AND ";
-	}
-	$query .= "1=1";
-
-	return delete_data($query);
-}*/
+	return true;
+}
 /**
  * Get river items
  *
@@ -216,27 +160,6 @@ $posted = 0, $annotation_id = 0) {
  *
  * @param array $options Parameters:
  *   ids                  => INT|ARR River item id(s)
- *   subject_guids        => INT|ARR Subject guid(s)
- *   object_guids         => INT|ARR Object guid(s)
- *   annotation_ids       => INT|ARR The identifier of the annotation(s)
- *   action_types         => STR|ARR The river action type(s) identifier
- *   posted_time_lower    => INT     The lower bound on the time posted
- *   posted_time_upper    => INT     The upper bound on the time posted
- *
- *   types                => STR|ARR Entity type string(s)
- *   subtypes             => STR|ARR Entity subtype string(s)
- *   type_subtype_pairs   => ARR     Array of type => subtype pairs where subtype
- *                                   can be an array of subtype strings
- *
- *   relationship         => STR     Relationship identifier
- *   relationship_guid    => INT|ARR Entity guid(s)
- *   inverse_relationship => BOOL    Subject or object of the relationship (false)
- *
- * 	 limit                => INT     Number to show per page (20)
- *   offset               => INT     Offset in list (0)
- *   count                => BOOL    Count the river items? (false)
- *   order_by             => STR     Order by clause (rv.posted desc)
- *   group_by             => STR     Group by clause
  *
  * @return array|int
  * @since 1.8.0
@@ -245,128 +168,56 @@ function elgg_get_river(array $options = array()) {
 	global $CONFIG;
 
 	$defaults = array(
-		'ids'                  => ELGG_ENTITIES_ANY_VALUE,
 
-		'subject_guids'	       => ELGG_ENTITIES_ANY_VALUE,
-		'object_guids'         => ELGG_ENTITIES_ANY_VALUE,
-		'annotation_ids'       => ELGG_ENTITIES_ANY_VALUE,
-		'action_types'         => ELGG_ENTITIES_ANY_VALUE,
+		'limit'	=> 10,
+		'offset' 	=> 0,
+		
+		'owner_guid'	=> 'site',
 
-		'relationship'         => NULL,
-		'relationship_guid'    => NULL,
-		'inverse_relationship' => FALSE,
-
-		'types'	               => ELGG_ENTITIES_ANY_VALUE,
-		'subtypes'             => ELGG_ENTITIES_ANY_VALUE,
-		'type_subtype_pairs'   => ELGG_ENTITIES_ANY_VALUE,
-
-		'posted_time_lower'	   => ELGG_ENTITIES_ANY_VALUE,
-		'posted_time_upper'	   => ELGG_ENTITIES_ANY_VALUE,
-
-		'limit'                => 20,
-		'offset'               => 0,
-		'count'                => FALSE,
-
-		'order_by'             => 'rv.posted desc',
-		'group_by'             => ELGG_ENTITIES_ANY_VALUE,
-
-		'wheres'               => array(),
-		'joins'                => array(),
+		'type'	=> 'timeline'
 	);
 
 	$options = array_merge($defaults, $options);
-
-	$singulars = array('id', 'subject_guid', 'object_guid', 'annotation_id', 'action_type', 'type', 'subtype');
+	
+	$singulars = array('id');
 	$options = elgg_normalise_plural_options_array($options, $singulars);
+	
+	//no params, then get the public line
+	if($options['type'] == 'timeline'){
+		
+		$ids = db_get($options);
 
-	$wheres = $options['wheres'];
-
-	$wheres[] = elgg_get_guid_based_where_sql('rv.id', $options['ids']);
-	$wheres[] = elgg_get_guid_based_where_sql('rv.subject_guid', $options['subject_guids']);
-	$wheres[] = elgg_get_guid_based_where_sql('rv.object_guid', $options['object_guids']);
-	$wheres[] = elgg_get_guid_based_where_sql('rv.annotation_id', $options['annotation_ids']);
-	$wheres[] = elgg_river_get_action_where_sql($options['action_types']);
-	$wheres[] = elgg_get_river_type_subtype_where_sql('rv', $options['types'],
-		$options['subtypes'], $options['type_subtype_pairs']);
-
-	if ($options['posted_time_lower'] && is_int($options['posted_time_lower'])) {
-		$wheres[] = "rv.posted >= {$options['posted_time_lower']}";
-	}
-
-	if ($options['posted_time_upper'] && is_int($options['posted_time_upper'])) {
-		$wheres[] = "rv.posted <= {$options['posted_time_upper']}";
-	}
-
-	$joins = $options['joins'];
-
-	if ($options['relationship_guid']) {
-		$clauses = elgg_get_entity_relationship_where_sql(
-				'rv.subject_guid',
-				$options['relationship'],
-				$options['relationship_guid'],
-				$options['inverse_relationship']);
-		if ($clauses) {
-			$wheres = array_merge($wheres, $clauses['wheres']);
-			$joins = array_merge($joins, $clauses['joins']);
+		if($ids){
+			$rows = db_get(array('type'=>'newsfeed', 'ids'=>$ids));
 		}
-	}
 
-	// see if any functions failed
-	// remove empty strings on successful functions
-	foreach ($wheres as $i => $where) {
-		if ($where === FALSE) {
-			return FALSE;
-		} elseif (empty($where)) {
-			unset($wheres[$i]);
+	} elseif($options['type'] == 'newsfeed'){
+		
+		if($ids = $options['ids']){
+		
+			$rows = db_get(array('type'=>'newsfeed', 'ids'=>$ids));
+		
+		} else {
+
+			$rows = db_get($options);
+	
 		}
-	}
 
-	// remove identical where clauses
-	$wheres = array_unique($wheres);
-
-	if (!$options['count']) {
-		$query = "SELECT DISTINCT rv.* FROM {$CONFIG->dbprefix}river rv ";
 	} else {
-		$query = "SELECT count(DISTINCT rv.id) as total FROM {$CONFIG->dbprefix}river rv ";
+		//not supported
+		return;
 	}
 
-	// add joins
-	foreach ($joins as $j) {
-		$query .= " $j ";
+	if(!$rows){
+		return false; 
 	}
 
-	// add wheres
-	$query .= ' WHERE ';
-
-	foreach ($wheres as $w) {
-		$query .= " $w AND ";
+	foreach($rows as $id => $row){
+		$row['id'] = $id;
+		$items[] = new ElggRiverItem($row);
 	}
 
-	$query .= elgg_river_get_access_sql();
-
-	if (!$options['count']) {
-		$options['group_by'] = sanitise_string($options['group_by']);
-		if ($options['group_by']) {
-			$query .= " GROUP BY {$options['group_by']}";
-		}
-
-		$options['order_by'] = sanitise_string($options['order_by']);
-		$query .= " ORDER BY {$options['order_by']}";
-
-		if ($options['limit']) {
-			$limit = sanitise_int($options['limit']);
-			$offset = sanitise_int($options['offset'], false);
-			$query .= " LIMIT $offset, $limit";
-		}
-
-		$river_items = get_data($query, 'elgg_row_to_elgg_river_item');
-		_elgg_prefetch_river_entities($river_items);
-
-		return $river_items;
-	} else {
-		$total = get_data_row($query);
-		return (int)$total->total;
-	}
+	return $items;
 }
 
 /**
@@ -436,12 +287,10 @@ function elgg_list_river(array $options = array()) {
 
 	$options = array_merge($defaults, $options);
 
-	$options['count'] = TRUE;
-	$count = elgg_get_river($options);
+	$count = $options['limit'] +1;
 
-	$options['count'] = FALSE;
 	$items = elgg_get_river($options);
-
+	
 	$options['count'] = $count;
 	$options['items'] = $items;
 	return elgg_view('page/components/list', $options);
@@ -688,7 +537,7 @@ function elgg_river_init() {
 	
 	elgg_register_widget_type('river_widget', elgg_echo('river:widget:title'), elgg_echo('river:widget:description'));
 
-	elgg_register_action('river/delete', '', 'admin');
+	elgg_register_action('river/delete', '');
 
 	elgg_register_plugin_hook_handler('unit_test', 'system', 'elgg_river_test');
 }

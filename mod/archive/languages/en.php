@@ -14,7 +14,8 @@ $translations = array(
 	/**
 	 * Navigation
 	 */
-	'minds:archive:upload' => 'Upload',
+    'minds:archive:upload' => 'Upload',
+    'minds:archive:angularUploader' => 'New angularUploader',
 	'minds:archive:all' => 'All content',
 	'minds:archive:featured' => 'Featured content',
 	'minds:archive:top' => 'Top content',
@@ -35,6 +36,7 @@ $translations = array(
 
 	'minds:archive:delete:success' => 'The file has been removed from your archive',
 	'minds:archive:delete:error' => 'There was a problem. We can not delete this file at the moment',
+    'minds:archive:delete:notexists' => 'The file already been deleted or not exists',
 
 	'kaltura_video' => 'Video/Audio',
 	'kalturavideo:label:partner_id' => "Partner ID",
@@ -192,7 +194,7 @@ Objects not created by the Kaltura Elgg Plugin will not be touched.",
 	'ingroup' => "in group",
 
 	//new from 10-12-2009
-	'item:object:kaltura_video' => "Collaborative media",
+	'item:object:kaltura_video' => "Kaltura Videos",
 	'kalturavideo:thumbnail' => "Thumbnail",
 	'kalturavideo:comments:allow' => "Allow comments",
 	'kalturavideo:rating:allow' => "Allow rating",

@@ -15,40 +15,26 @@ $groups = get_input('groups', 10);
 $num_members = get_number_users();
 
 $limit = get_input('limit', 20);
+$offset = get_input('offset', '');
 
 $title = elgg_echo('channels');
 
 $options = array('type' => 'user', 'full_view' => false, 'limit'=>$limit);
 switch ($vars['page']) {
 	case 'subscribers':
-		$options = array(
-			'limit' => $limit,
-			'relationship' => 'friend',
-			'relationship_guid' => $page_owner->getGUID(),
-			'inverse_relationship' => TRUE,
-			'type' => 'user',
-			'full_view' => FALSE
-		);
-		$content = elgg_list_entities_from_relationship($options);
+		$subscribers = get_user_friends_of($page_owner->guid, '', $limit, $offset);
+		$content = elgg_view_entity_list($subscribers,$vars, $offset, $limit, false, false,false);
 		break;
 	case 'subscriptions':
-		$options = array(
-			'limit' => $limit,
-			'relationship' => 'friend',
-			'relationship_guid' => $page_owner->getGUID(),
-			'inverse_relationship' => FALSE,
-			'type' => 'user',
-			'full_view' => FALSE
-		);
-		$content = elgg_list_entities_from_relationship($options);
+		$subscriptions = get_user_friends($page_owner->guid, '', $limit, $offset);
+                $content = elgg_view_entity_list($subscriptions,$vars, $offset, $limit, false, false,false);
 		break;
 	case 'popular':
 		$options['limit'] = $limit;
-		$options['relationship'] = 'friend';
-		$options['inverse_relationship'] = false;
-		$content = elgg_list_entities_from_relationship_count($options);
+		$options['newest_first'] = false;
+		$content = elgg_list_entities($options);
 		break;
-	case 'suggested':
+	/*case 'suggested':
 		$people = suggested_friends_get_people($page_owner->guid, $friends, $groups);
 		$entities = array();
 		foreach($people as $person){
@@ -62,9 +48,10 @@ switch ($vars['page']) {
 	case 'collections':
 		elgg_register_title_button('collections', 'add');
 		$content = elgg_view_access_collections(elgg_get_logged_in_user_guid());
-		break;
+		break;*/
 	case 'newest':
 	default:
+		$options['newest_first'] = true;
 		$content = elgg_list_entities($options);
 		break;
 }

@@ -16,7 +16,7 @@
 $plugin_guid = get_input('plugin_guid');
 $priority = get_input('priority');
 
-$plugin = get_entity($plugin_guid);
+$plugin = get_entity($plugin_guid, 'plugin');
 
 if (!($plugin instanceof ElggPlugin)) {
 	register_error(elgg_echo('admin:plugins:set_priority:no', array($plugin_guid)));
@@ -24,7 +24,7 @@ if (!($plugin instanceof ElggPlugin)) {
 }
 
 if ($plugin->setPriority($priority)) {
-	//system_message(elgg_echo('admin:plugins:set_priority:yes', array($plugin->getManifest()->getName())));
+	system_message(elgg_echo('admin:plugins:set_priority:yes', array($plugin->getManifest()->getName())));
 } else {
 	$msg = $plugin->getError();
 	$string = ($msg) ? 'admin:plugins:set_priority:no_with_msg' : 'admin:plugins:set_priority:no';

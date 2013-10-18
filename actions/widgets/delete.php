@@ -9,10 +9,10 @@
 $widget_guid = get_input('widget_guid');
 $owner_guid = get_input('owner_guid', elgg_get_logged_in_user_guid());
 
-$widget = get_entity($widget_guid);
-$owner = get_entity($owner_guid);
+$widget = get_entity($widget_guid,'widget');
+$owner = get_entity($owner_guid,'user');
 
-if ($widget && $owner->canEdit() && $widget->delete()) {
+if ($widget && $widget->canEdit() && $widget->delete()) {
 	forward(REFERER);
 }
 

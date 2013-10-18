@@ -13,15 +13,9 @@ function embed_extender_parser($input, $view, $context)
 		return $input;
 	}
 	
-	if($view == 'annotation/default' && elgg_get_plugin_setting('messageboard_show', 'embed_extender') == 'no'){
-		return $input;
-	}
 	
 	if ($context == 'widgets' || $context == 'profile'){
-		$width = elgg_get_plugin_setting('widget_width', 'embed_extender');
-		if (!isset($width) || !is_numeric($width) || $width < 0) {
-			$width = 240; //Size for widgets and messageboard
-		}
+		$width = 240; //Size for widgets and messageboard
 	}
 	else{
 		$width = elgg_get_viewtype() == 'mobile' ? 200 : 515;			
@@ -39,11 +33,6 @@ function embed_extender_parser($input, $view, $context)
 						,'/(http:\/\/)(www\.)?(minds\.com\/archive\/show\/)([0-9]+)/'
 						,'/(http:\/\/)(www\.)?(minds\.io\/archive\/show\/)([0-9]+)/');
 	
-	$custom_provider = elgg_get_plugin_setting('custom_provider', 'embed_extender');		
-
-	if($custom_provider == 'yes'){
-		$customPatterns = return_custom_patterns();
-	}
 
 	//Parses only hyperlinks
 	$regexp = "<a\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";

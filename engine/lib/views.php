@@ -248,7 +248,7 @@ function elgg_get_view_location($view, $viewtype = '') {
 	if (empty($viewtype)) {
 		$viewtype = elgg_get_viewtype();
 	}
-
+	
 	if (!isset($CONFIG->views->locations[$viewtype][$view])) {
 		if (!isset($CONFIG->viewpath)) {
 			return dirname(dirname(dirname(__FILE__))) . "/views/";
@@ -486,7 +486,7 @@ function elgg_view($view, $vars = array(), $bypass = false, $ignored = false, $v
 
 		$view_location = elgg_get_view_location($view, $viewtype);
 		$view_file = "$view_location$viewtype/$view.php";
-
+		
 		// try to include view
 		if (!file_exists($view_file) || !include($view_file)) {
 			// requested view does not exist
@@ -811,12 +811,12 @@ function elgg_view_menu($menu_name, array $vars = array()) {
  * @todo The annotation hook might be better as a generic plugin hook to append content.
  */
 function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $debug = false) {
-
+	
 	// No point continuing if entity is null
 	if (!$entity || !($entity instanceof ElggEntity)) {
 		return false;
 	}
-
+	
 	global $autofeed;
 	$autofeed = true;
 
@@ -835,20 +835,18 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 
 	$vars['entity'] = $entity;
 
-
 	// if this entity has a view defined, use it
 	$view = $entity->view;
 	if (is_string($view)) {
 		return elgg_view($view, $vars, $bypass, $debug);
 	}
-
+	
 	$entity_type = $entity->getType();
-
 	$subtype = $entity->getSubtype();
 	if (empty($subtype)) {
 		$subtype = 'default';
 	}
-
+	
 	$contents = '';
 	if (elgg_view_exists("$entity_type/$subtype")) {
 		$contents = elgg_view("$entity_type/$subtype", $vars, $bypass, $debug);
@@ -856,7 +854,7 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 	if (empty($contents)) {
 		$contents = elgg_view("$entity_type/default", $vars, $bypass, $debug);
 	}
-
+	
 	// Marcus Povey 20090616 : Speculative and low impact approach for fixing #964
 	if ($vars['full_view']) {
 		$annotations = elgg_view_entity_annotations($entity, $vars['full_view']);
@@ -864,7 +862,7 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 		if ($annotations) {
 			$contents .= $annotations;
 		}
-	}
+	} 
 	return $contents;
 }
 
@@ -991,28 +989,24 @@ function elgg_view_annotation(ElggAnnotation $annotation, array $vars = array(),
  */
 function elgg_view_entity_list($entities, $vars = array(), $offset = 0, $limit = 10, $full_view = true,
 $list_type_toggle = true, $pagination = true) {
-
-	if (!is_int($offset)) {
-		$offset = (int)get_input('offset', 0);
-	}
-
 	// list type can be passed as request parameter
 	$list_type = get_input('list_type', 'list');
 	if (get_input('listtype')) {
 		elgg_deprecated_notice("'listtype' has been deprecated by 'list_type' for lists", 1.8);
 		$list_type = get_input('listtype');
 	}
-
+	
 	if (is_array($vars)) {
 		// new function
 		$defaults = array(
 			'items' => $entities,
 			'list_class' => 'elgg-list-entity',
 			'full_view' => true,
-			'pagination' => true,
+			'pagination' => $pagination,
 			'list_type' => $list_type,
 			'list_type_toggle' => false,
 			'offset' => $offset,
+			'count' => 1000 //default
 		);
 
 		$vars = array_merge($defaults, $vars);
@@ -1229,7 +1223,7 @@ function elgg_view_river_item($item, array $vars = array()) {
 	if (!$view || !elgg_view_exists($view, 'default')) {
 		return '';
 	}
-
+	
 	$subject = $item->getSubjectEntity();
 	$object = $item->getObjectEntity();
 	if (!$subject || !$object) {
@@ -1317,8 +1311,9 @@ function elgg_view_form($action, $form_vars = array(), $body_vars = array()) {
  */
 function elgg_view_list_item($item, array $vars = array()) {
 	global $CONFIG;
-
+	
 	$type = $item->getType();
+	
 	if (in_array($type, $CONFIG->entity_types)) {
 		return elgg_view_entity($item, $vars);
 	} else if ($type == 'annotation') {

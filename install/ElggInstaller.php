@@ -27,6 +27,17 @@
  * @package    Elgg.Core
  * @subpackage Installer
  */
+
+use phpcassa\ColumnFamily;
+use phpcassa\ColumnSlice;
+use phpcassa\Connection\ConnectionPool;
+use phpcassa\SystemManager;
+use phpcassa\Schema\StrategyClass;
+use phpcassa\Index\IndexClause;
+use phpcassa\Index\IndexExpression;
+use phpcassa\Schema\DataType\LongType;
+use phpcassa\UUID;
+
 class ElggInstaller {
 
 	protected $steps = array(
@@ -55,7 +66,7 @@ class ElggInstaller {
 	public function __construct() {
 		// load ElggRewriteTester as we depend on it
 		require_once(dirname(__FILE__) . "/ElggRewriteTester.php");
-
+		require_once(dirname(dirname(__FILE__)) . '/vendors/phpcassa/lib/autoload.php');	
 		$this->isAction = $_SERVER['REQUEST_METHOD'] === 'POST';
 
 		$this->bootstrapConfig();
@@ -137,18 +148,16 @@ class ElggInstaller {
 		restore_exception_handler();
 
 		$defaults = array(
-			'dbhost' => 'localhost',
-			'dbprefix' => 'elgg_',
-			'path' => $CONFIG->path,
+			'server' => '127.0.0.1',
+			'path' => '',
 			'language' => 'en',
 			'siteaccess' => ACCESS_PUBLIC,
 		);
 		$params = array_merge($defaults, $params);
 
 		$requiredParams = array(
-			'dbuser',
-			'dbpassword',
-			'dbname',
+			'server',
+			'keyspace',
 			'sitename',
 			'wwwroot',
 			'dataroot',
@@ -169,7 +178,7 @@ class ElggInstaller {
 
 		if ($createHtaccess) {
 			$rewriteTester = new ElggRewriteTester();
-			if (!$rewriteTester->createHtaccess($CONFIG->path)) {
+			if (!$rewriteTester->createHtaccess()) {
 				throw new InstallationException(elgg_echo('install:error:htaccess'));
 			}
 		}
@@ -302,33 +311,18 @@ class ElggInstaller {
 	 * @return void
 	 */
 	protected function database($submissionVars) {
-
+		
 		$formVars = array(
-			'dbuser' => array(
+			'server' => array(
 				'type' => 'text',
 				'value' => '',
 				'required' => TRUE,
 				),
-			'dbpassword' => array(
-				'type' => 'password',
+			'keyspace' => array(
+				'type' => 'text',
 				'value' => '',
 				'required' => FALSE,
-				),
-			'dbname' => array(
-				'type' => 'text',
-				'value' => '',
-				'required' => TRUE,
-				),
-			'dbhost' => array(
-				'type' => 'text',
-				'value' => 'localhost',
-				'required' => TRUE,
-				),
-			'dbprefix' => array(
-				'type' => 'text',
-				'value' => 'elgg_',
-				'required' => TRUE,
-				),
+				)
 		);
 
 		if ($this->checkSettingsFile()) {
@@ -344,12 +338,12 @@ class ElggInstaller {
 						// error so we break out of action and serve same page
 						break;
 					}
-
+					
 					if (!$this->createSettingsFile($submissionVars)) {
 						break;
 					}
 				}
-
+				
 				// check db version and connect
 				if (!$this->connectToDatabase()) {
 					break;
@@ -364,7 +358,7 @@ class ElggInstaller {
 				$this->continueToNextStep('database');
 			} while (FALSE);  // PHP doesn't support breaking out of if statements
 		}
-
+		
 		$formVars = $this->makeFormSticky($formVars, $submissionVars);
 
 		$params = array('variables' => $formVars,);
@@ -388,11 +382,11 @@ class ElggInstaller {
 	 */
 	protected function settings($submissionVars) {
 		global $CONFIG;
-
+		db_init(); //load the db
 		$formVars = array(
 			'sitename' => array(
 				'type' => 'text',
-				'value' => 'My New Community',
+				'value' => 'My New Node',
 				'required' => TRUE,
 				),
 			'siteemail' => array(
@@ -407,7 +401,7 @@ class ElggInstaller {
 				),
 			'path' => array(
 				'type' => 'text',
-				'value' => $CONFIG->path,
+				'value' => $CONFIG->default_path,
 				'required' => TRUE,
 				),
 			'dataroot' => array(
@@ -601,7 +595,7 @@ class ElggInstaller {
 	protected function setInstallStatus() {
 		global $CONFIG;
 
-		if (!is_readable("{$CONFIG->path}engine/settings.php")) {
+		if (!is_readable("{$CONFIG->default_path}engine/settings.php")) {
 			return;
 		}
 
@@ -611,16 +605,14 @@ class ElggInstaller {
 
 		// must be able to connect to database to jump install steps
 		$dbSettingsPass = $this->checkDatabaseSettings(
-				$CONFIG->dbuser,
-				$CONFIG->dbpass,
-				$CONFIG->dbname,
-				$CONFIG->dbhost
+				$CONFIG->server,
+				$CONFIG->keyspace
 				);
 		if ($dbSettingsPass == FALSE) {
 			return;
 		}
 
-		if (!include_once("{$CONFIG->path}engine/lib/database.php")) {
+		if (!include_once("{$CONFIG->default_path}engine/lib/database.php")) {
 			$msg = elgg_echo('InstallationException:MissingLibrary', array('database.php'));
 			throw new InstallationException($msg);
 		}
@@ -724,7 +716,7 @@ class ElggInstaller {
 	protected function bootstrapEngine() {
 		global $CONFIG;
 
-		$lib_dir = $CONFIG->path . 'engine/lib/';
+		$lib_dir = "{$CONFIG->default_path}engine/lib/";
 
 		// bootstrapping with required files in a required order
 		$required_files = array(
@@ -772,7 +764,7 @@ class ElggInstaller {
 		if ($stepIndex > $dbIndex) {
 			// once the database has been created, load rest of engine
 			global $CONFIG;
-			$lib_dir = $CONFIG->path . 'engine/lib/';
+			$lib_dir = "{$CONFIG->default_path}engine/lib/";
 
 			$this->loadSettingsFile();
 
@@ -803,7 +795,7 @@ class ElggInstaller {
 				}
 			}
 
-			setup_db_connections();
+			//setup_db_connections();
 			register_translations(dirname(dirname(__FILE__)) . "/languages/");
 
 			if ($stepIndex > $settingsIndex) {
@@ -831,9 +823,9 @@ class ElggInstaller {
 
 		$CONFIG->wwwroot = $this->getBaseUrl();
 		$CONFIG->url = $CONFIG->wwwroot;
-		$CONFIG->path = dirname(dirname(__FILE__)) . '/';
-		$CONFIG->viewpath =	$CONFIG->path . 'views/';
-		$CONFIG->pluginspath = $CONFIG->path . 'mod/';
+		$CONFIG->default_path = dirname(dirname(__FILE__)) . '/';
+		$CONFIG->viewpath =	$CONFIG->default_path . 'views/';
+		$CONFIG->pluginspath = $CONFIG->default_path . 'mod/';
 		$CONFIG->context = array();
 		$CONFIG->entity_types = array('group', 'object', 'site', 'user');
 	}
@@ -871,8 +863,8 @@ class ElggInstaller {
 	 */
 	protected function loadSettingsFile() {
 		global $CONFIG;
-
-		if (!include_once("{$CONFIG->path}engine/settings.php")) {
+		
+		if (!include_once("{$CONFIG->default_path}engine/settings.php")) {
 			$msg = elgg_echo('InstallationException:CannotLoadSettings');
 			throw new InstallationException($msg);
 		}
@@ -928,7 +920,7 @@ class ElggInstaller {
 	protected function checkEngineDir(&$report) {
 		global $CONFIG;
 
-		$writable = is_writable("{$CONFIG->path}engine");
+		$writable = is_writable("{$CONFIG->default_path}engine");
 		if (!$writable) {
 			$report['settings'] = array(
 				array(
@@ -952,11 +944,11 @@ class ElggInstaller {
 	protected function checkSettingsFile(&$report = array()) {
 		global $CONFIG;
 
-		if (!file_exists("{$CONFIG->path}engine/settings.php")) {
+		if (!file_exists("{$CONFIG->default_path}engine/settings.php")) {
 			return FALSE;
 		}
 
-		if (!is_readable("{$CONFIG->path}engine/settings.php")) {
+		if (!is_readable("{$CONFIG->default_path}engine/settings.php")) {
 			$report['settings'] = array(
 				array(
 					'severity' => 'failure',
@@ -1095,7 +1087,7 @@ class ElggInstaller {
 
 		$tester = new ElggRewriteTester();
 		$url = elgg_get_site_url() . "rewrite.php";
-		$report['rewrite'] = array($tester->run($url, $CONFIG->path));
+		$report['rewrite'] = array($tester->run($url, $CONFIG->default_path));
 	}
 
 	/**
@@ -1154,50 +1146,29 @@ class ElggInstaller {
 				return FALSE;
 			}
 		}
-
-		return $this->checkDatabaseSettings(
-					$submissionVars['dbuser'],
-					$submissionVars['dbpassword'],
-					$submissionVars['dbname'],
-					$submissionVars['dbhost']
-				);
+	
+		return $this->checkDatabaseSettings($submissionVars['server'], $submissionVars['keyspace']);
 	}
 
 	/**
 	 * Confirm the settings for the database
 	 *
-	 * @param string $user     Username
-	 * @param string $password Password
-	 * @param string $dbname   Database name
-	 * @param string $host     Host
+	 * @param string $server	Cassandra IP Address
 	 *
 	 * @return bool
 	 */
-	protected function checkDatabaseSettings($user, $password, $dbname, $host) {
-		$mysql_dblink = mysql_connect($host, $user, $password, true);
-		if ($mysql_dblink == FALSE) {
+	protected function checkDatabaseSettings($server, $keyspace) {
+
+		try{
+			$sys = new SystemManager($server);
+			$attrs = array(	  "strategy_options" => array("replication_factor" => "2"));	
+                        $sys->create_keyspace($keyspace, $attrs);
+			return true;
+		} catch (Exception $e){
 			register_error(elgg_echo('install:error:databasesettings'));
-			return $FALSE;
+			register_error($e->why);
+			return false;
 		}
-
-		$result = mysql_select_db($dbname, $mysql_dblink);
-
-		// check MySQL version - must be 5.0 or >
-		$required_version = 5.0;
-		$version = mysql_get_server_info();
-		$points = explode('.', $version);
-		if ($points[0] < $required_version) {
-			register_error(elgg_echo('install:error:oldmysql', array($version)));
-			return FALSE;
-		}
-
-		mysql_close($mysql_dblink);
-
-		if (!$result) {
-			register_error(elgg_echo('install:error:nodatabase', array($dbname)));
-		}
-
-		return $result;
 	}
 
 	/**
@@ -1210,18 +1181,26 @@ class ElggInstaller {
 	protected function createSettingsFile($params) {
 		global $CONFIG;
 
-		$templateFile = "{$CONFIG->path}engine/settings.example.php";
-		$template = file_get_contents($templateFile);
-		if (!$template) {
-			register_error(elgg_echo('install:error:readsettingsphp'));
-			return FALSE;
+		//Check if we already have settings.php so we can ammend
+		$settingsFilename = "{$CONFIG->default_path}engine/settings.php";
+		if(!file_exists($settingsFilename)){
+
+			$templateFile = "{$CONFIG->default_path}engine/settings.example.php";
+			$template = file_get_contents($templateFile);
+			if (!$template) {
+				register_error(elgg_echo('install:error:readsettingsphp'));
+				return FALSE;
+			}
+
+		} else {
+			$template = file_get_contents($settingsFilename);
 		}
 
 		foreach ($params as $k => $v) {
 			$template = str_replace("{{" . $k . "}}", $v, $template);
 		}
 
-		$settingsFilename = "{$CONFIG->path}engine/settings.php";
+		$settingsFilename = "{$CONFIG->default_path}engine/settings.php";
 		$result = file_put_contents($settingsFilename, $template);
 		if (!$result) {
 			register_error(elgg_echo('install:error:writesettingphp'));
@@ -1239,19 +1218,19 @@ class ElggInstaller {
 	protected function connectToDatabase() {
 		global $CONFIG;
 
-		if (!include_once("{$CONFIG->path}engine/settings.php")) {
+		if (!include_once("{$CONFIG->default_path}engine/settings.php")) {
 			register_error(elgg_echo('InstallationException:CannotLoadSettings'));
 			return FALSE;
 		}
 
-		if (!include_once("{$CONFIG->path}engine/lib/database.php")) {
+		if (!include_once("{$CONFIG->default_path}engine/lib/database.php")) {
 			$msg = elgg_echo('InstallationException:MissingLibrary', array('database.php'));
 			register_error($msg);
 			return FALSE;
 		}
 
 		try  {
-			setup_db_connections();
+			$this->cassandra = new SystemManager($CONFIG->cassandra->servers[0]);	
 		} catch (Exception $e) {
 			register_error($e->getMessage());
 			return FALSE;
@@ -1268,18 +1247,54 @@ class ElggInstaller {
 	protected function installDatabase() {
 		global $CONFIG;
 
-		try {
-			run_sql_script("{$CONFIG->path}engine/schema/mysql.sql");
-		} catch (Exception $e) {
-			$msg = $e->getMessage();
-			if (strpos($msg, 'already exists')) {
-				$msg = elgg_echo('install:error:tables_exist');
-			}
-			register_error($msg);
-			return FALSE;
-		}
+		$sys = $this->cassandra;
 
-		return TRUE;
+		try{
+			//the required column families
+			$cfs = array(	'site' => array('site_id' => 'UTF8Type'),
+					'plugin' => array('active' => 'IntegerType'),
+					'config' => array(),
+					'entities_by_time' => array(),
+					'object' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type'),
+					'user' => array(),
+					'user_index_to_guid' => array(),
+					'group' => array('container_guid' => 'UTF8Type'	),
+					'widget' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' ),
+
+					'notification' => array('to_guid' => 'UTF8Type'	),
+					'session' => array(),
+
+					'annotation' => array(),	
+
+					'friends' => array(),
+					'friendsof' => array(),
+					'newsfeed' => array(),
+					'timeline' => array(),
+				);
+			
+			//create the cfs
+			foreach($cfs as $cf => $indexes){
+
+				$attr = array(	"comparator_type" => "UTF8Type",
+						"default_validation_class" => "UTF8Type",
+						"key_validation_class" => "UTF8Type"
+						);
+
+				$sys->create_column_family($CONFIG->cassandra->keyspace, $cf, $attr);
+
+				foreach($indexes as $index => $data_type){
+
+					$sys->create_index($CONFIG->cassandra->keyspace, $cf, $index, $data_type);
+			
+				}
+			}	
+
+		} catch (Exception $e){
+			register_error($e->why);
+			return false;
+		}
+	
+		return true;
 	}
 
 	/**
@@ -1421,24 +1436,28 @@ class ElggInstaller {
 		$CONFIG->site_guid = $guid;
 		$CONFIG->site = $site;
 
-		datalist_set('installed', time());
-		datalist_set('path', $submissionVars['path']);
-		datalist_set('dataroot', $submissionVars['dataroot']);
-		datalist_set('default_site', $site->getGUID());
-		datalist_set('version', get_version());
+		//settings previsouly in datalist will now reside in setting.php
+
 		datalist_set('simplecache_enabled', 1);
 		datalist_set('system_cache_enabled', 1);
 
-		// new installations have run all the upgrades
-		$upgrades = elgg_get_upgrade_files($submissionVars['path'] . 'engine/lib/upgrades/');
-		datalist_set('processed_upgrades', serialize($upgrades));
+		$settings = array( 	'installed' => time(),
+					'path' => $submissionVars['path'],
+					'dataroot' => $submissionVars['dataroot'],
+					'default_site' => $site->getGUID(),
+					'site_secret' => md5(rand() . microtime())
+				);
 
-		set_config('view', 'default', $site->getGUID());
-		set_config('language', 'en', $site->getGUID());
-		set_config('default_access', $submissionVars['siteaccess'], $site->getGUID());
-		set_config('allow_registration', TRUE, $site->getGUID());
-		set_config('walled_garden', FALSE, $site->getGUID());
-		set_config('allow_user_default_access', '', $site->getGUID());
+		$this->createSettingsFile($settings);
+
+		set_config('view', 'default', $guid);
+		set_config('language', 'en', $guid);
+		set_config('default_access', $submissionVars['siteaccess'], $guid);
+		set_config('allow_registration', TRUE, $guid);
+		set_config('walled_garden', FALSE, $guid);
+		set_config('allow_user_default_access', '', $guid);
+		set_config('simplecache_enabled', 0, $guid);
+		set_config('system_cache_enabled', 0, $guid);
 
 		$this->enablePlugins();
 
@@ -1562,7 +1581,7 @@ class ElggInstaller {
 	 */
 	protected function createAdminAccount($submissionVars, $login = FALSE) {
 		global $CONFIG;
-
+		db_init();
 		try {
 			$guid = register_user(
 					$submissionVars['username'],
@@ -1580,7 +1599,7 @@ class ElggInstaller {
 			return false;
 		}
 
-		$user = get_entity($guid);
+		$user = get_entity($guid,'user');
 		if (!$user) {
 			register_error(elgg_echo('install:error:loadadmin'));
 			return false;
@@ -1594,9 +1613,9 @@ class ElggInstaller {
 		}
 		elgg_set_ignore_access(false);
 
-		// add validation data to satisfy user validation plugins
-		create_metadata($guid, 'validated', TRUE, '', 0, ACCESS_PUBLIC);
-		create_metadata($guid, 'validated_method', 'admin_user', '', 0, ACCESS_PUBLIC);
+		$user->validated = true;
+		$user->validated_method = 'admin_user';
+		$user->save();
 
 		if ($login) {
 			if (login($user) == FALSE) {
@@ -1608,3 +1627,4 @@ class ElggInstaller {
 	}
         
 }
+

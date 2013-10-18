@@ -21,23 +21,37 @@ if ($type != 'all') {
 	}
 }
 
-$options['limit'] = get_input('limit',5);
+$options['limit'] = get_input('limit',12);
+
+$user = elgg_get_logged_in_user_entity();
+if(!$user){
+	 $page_filter == 'featured';
+} elseif(count($user->getFriends()) == 0){
+	$page_filter == 'featured';
+}
 
 switch ($page_type) {
 	case 'all':
-		$title = elgg_echo('river:friends');
+		$title = elgg_echo('news');
 		$page_filter = 'all';
+		$options['type'] = 'timeline';
 		break;
 	case 'trending':
 		$title = elgg_echo('river:trending');
 		$page_filter = 'trending';
 		//GET THE TRENDING FEATURES
-		$options['object_guids'] = thumbs_trending('guids');
+		if(elgg_plugin_exists('analytics')){
+			$options['object_guids'] = analytics_retrieve(array('limit'=>$options['limit']+3, 'offset'=>$options['offset']));
+			$options['action_types'] = 'create';
+			$options['offset'] = 0;
+		} else {
+			forward(REFERRER);
+		}
 		break;
 	case 'featured':
 		$title = elgg_echo('river:featured');
 		$page_filter = 'featured';
-		$options['action_types'] = 'feature';
+		$options['owner_guid'] = 'feature'; //this should be renamed to owner...
 		break;
 	case 'single':
 		$id = get_input('id');
@@ -65,18 +79,12 @@ switch ($page_type) {
 	default:
 		$title = elgg_echo('news');
 		$page_filter = 'friends';
-		//$options['relationship_guid'] = elgg_get_logged_in_user_guid();
-		//$options['relationship'] = 'friend';
-		$friends = get_user_friends(elgg_get_logged_in_user_guid(), $subtype = ELGG_ENTITIES_ANY_VALUE, 0, 0);
-		foreach($friends as $friend){
-			$friend_guids[] = $friend->guid;
-		}
-		$page_filter = 'friends';
-		$options['subject_guids'] = array_merge(array(elgg_get_logged_in_user_guid()), $friend_guids);
+		$options['type'] = 'timeline';
+		$options['owner_guid'] = elgg_get_logged_in_user_guid();
 		break;
 }
 
-$activity = minds_elastic_list_news($options);
+$activity = elgg_list_river($options);
 if (!$activity) {
 	$activity = elgg_echo('river:none');
 }
@@ -84,8 +92,9 @@ if (!$activity) {
 //$content = elgg_view('core/river/filter', array('selector' => $selector));
 //$sidebar = elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
 //$sidebar .= elgg_view('core/river/sidebar');
-$sidebar .= elgg_view('minds/ads', array('news'));
+$sidebar .= elgg_view('minds/ads', array('large-block'));
 
+$vars['filter_context'] = $page_filter;
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 $filter = elgg_view('page/layouts/content/river_filter', $vars);
 $wall_add = elgg_view_form('wall/add',  array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));

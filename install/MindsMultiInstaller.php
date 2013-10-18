@@ -153,6 +153,15 @@ class MindsMultiInstaller extends ElggInstaller {
 
            $this->render('admin', array('variables' => $formVars));
    }
+   
+   /**
+    * We never want to create a settings file...
+    * @param type $params
+    * @return boolean
+    */
+   protected function createSettingsFile($params) {
+       return true;
+   }
 
     /**
      * Site settings controller
@@ -165,7 +174,7 @@ class MindsMultiInstaller extends ElggInstaller {
      */
     protected function settings($submissionVars) {
         global $CONFIG;
-
+        db_init();
         $formVars = array(
             'sitename' => array(
                 'type' => 'text',
@@ -208,7 +217,6 @@ class MindsMultiInstaller extends ElggInstaller {
 
         if ($this->isAction) {
             do {
-
                 //if (!$this->createDataDirectory($submissionVars, $formVars)) {
                 //	break;
                 //}
@@ -288,8 +296,9 @@ class MindsMultiInstaller extends ElggInstaller {
         }
 
         if (!$this->status['database']) {
-            if (!$this->installDatabase())
-                break;
+            if (!$this->installDatabase()) {
+             
+            }
         }
     }
 

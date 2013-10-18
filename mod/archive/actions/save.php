@@ -4,7 +4,12 @@
 elgg_load_library('archive:kaltura');
 
 $guid = get_input('guid');
-$entity = get_entity($guid);
+$entity = get_entity($guid, 'object');
+if(!$entity && get_input('video_id')){
+	$entity = new ElggObject();
+	$entity->subtype = 'kaltura_video';
+	$entity->kaltura_video_id = get_input('video_id');
+}
 
 $entity->title = get_input('title');
 $entity->description = get_input('description');
@@ -43,7 +48,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 		if (file_exists($filename)) {
 			unlink($filename);
 		}
-	
+
 		// use same filename on the disk - ensures thumbnails are overwritten
 		$filestorename = $entity->getFilename();
 		$filestorename = elgg_substr($filestorename, elgg_strlen($prefix));
@@ -98,17 +103,15 @@ if($entity->getSubtype() == 'kaltura_video'){
 $title = get_input('title');
 $desc = get_input('description');
 $license = get_input('license');
-$tags = get_input('tags');
-$thumbnail_sec = get_input('thumbnail_selector');
-$access = get_input('access_id');
-
+$entity->tags = get_input('tags');
+$entity->thumbnail_sec = get_input('thumbnail_selector');
+$entity->access = get_input('access_id');
 
 if($license == 'not-selected'){
 	register_error(elgg_echo('minds:license:not-selected'));
 	forward(REFERER);
 }
 
-$url = '';
 if($video_id) {
 
 	$error = '';
@@ -119,13 +122,6 @@ if($video_id) {
 
 		$entry = $kmodel->getEntry($video_id);
 	
-		$ob = kaltura_get_entity($video_id);
-
-		//check if belongs to this user (or is admin)
-		if(!($ob->canEdit())) {
-			$error = elgg_echo('kalturavideo:edit:notallowed');
-		}
-		$user_ID = $entry->userId;
 	}
 	catch(Exception $e) {
 		$error = $e->getMessage();
@@ -156,17 +152,10 @@ if($video_id) {
 		}
 
 		if(empty($error)) {
-			//now update the object!
-			$entry->comments_on = $comments_on; //whether the users wants to allow comments or not on the blog post
-			$entry->rating_on = $rating_on; //whether the users wants to allow comments or not on the blog post
-			if(!($ob = kaltura_update_object($entry,null,$access,$ob->owner_guid,null,true, array('license'=> $license, 'thumbnail_sec'=>$thumbnail_sec)))) {
-				$error = "Error update Elgg object";
-			}
-			else {
-				$ob->kaltura_video_collaborative = ($collaborative=='on');
-				$ob->save();
-				$url = $ob->getURL();
-			}
+			$entity->save();
+			forward($entity->getURL());
+		}else {
+			register_error($error);
 		}
 	}
 	if($error) {
@@ -178,11 +167,3 @@ if($video_id) {
 		system_message(str_replace("%ID%",$video_id,elgg_echo("kalturavideo:action:updatedok")));
 	}
 }
-else register_error("Fatal error, empty video id.");
-
-if($simpleVideoCreatorModal) $url = $CONFIG->url.'mod/kaltura_video/kaltura/editor/closemodal.php';
-if(empty($url)) $url = $_SERVER['HTTP_REFERER'];
-//if(strpos($url,'/kaltura_video/edit.php') === false) $url = $CONFIG->url.'mod/kaltura_video/show.php';
-forward($url);
-
-?>

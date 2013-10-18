@@ -20,6 +20,7 @@ if($item->action_type == 'create' || $item->action_type == 'feature'){
 	$type = 'entity';
 	$pid = $item->object_guid;
 }
+
 echo elgg_view('minds_comments/bar', array(
 		'type' => $type,
 	    'pid' => $pid,

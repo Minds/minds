@@ -31,7 +31,7 @@ if(get_input('license') == 'not-selected'){
 $guid = get_input('guid');
 
 if ($guid) {
-	$entity = get_entity($guid);
+	$entity = get_entity($guid, 'object');
 	if (elgg_instanceof($entity, 'object', 'blog') && $entity->canEdit()) {
 		$blog = $entity;
 	} else {
@@ -84,14 +84,6 @@ foreach ($values as $name => $default) {
 	}
 
 	switch ($name) {
-		case 'tags':
-			if ($value) {
-				$values[$name] = string_to_tag_array($value);
-			} else {
-				unset ($values[$name]);
-			}
-			break;
-
 		case 'excerpt':
 			if ($value) {
 				$values[$name] = elgg_get_excerpt($value);
@@ -129,7 +121,7 @@ if ($values['status'] == 'draft') {
 }
 
 // assign values to the entity, stopping on error.
-if (!$error) {
+if (!$error) { 
 	foreach ($values as $name => $value) {
 		if (FALSE === ($blog->$name = $value)) {
 			$error = elgg_echo('blog:error:cannot_save' . "$name=$value");
@@ -137,23 +129,12 @@ if (!$error) {
 		}
 	}
 }
-
 // only try to save base entity if no errors
 if (!$error) {
-	if ($blog->save()) {
+	if ($guid = $blog->save()) {
+		
 		// remove sticky form entries
 		elgg_clear_sticky_form('blog');
-
-		// remove autosave draft if exists
-		$blog->deleteAnnotations('blog_auto_save');
-
-		// no longer a brand new post.
-		$blog->deleteMetadata('new_post');
-
-		// if this was an edit, create a revision annotation
-		if (!$new_post && $revision_text) {
-			$blog->annotate('blog_revision', $revision_text);
-		}
 
 		system_message(elgg_echo('blog:message:saved'));
 
@@ -162,12 +143,12 @@ if (!$error) {
 		// add to river if changing status or published, regardless of new post
 		// because we remove it for drafts.
 		if (($new_post || $old_status == 'draft') && $status == 'published') {
-			add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID());
+			add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid);
 
-			if ($guid) {
-				$blog->time_created = time();
-				$blog->save();
-			}
+//			if ($guid) {
+//				$blog->time_created = time();
+//				$blog->save();
+//			}
 		} elseif ($old_status == 'published' && $status == 'draft') {
 			elgg_delete_river(array(
 				'object_guid' => $blog->guid,

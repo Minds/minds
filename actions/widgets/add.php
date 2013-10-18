@@ -20,19 +20,22 @@ if ($default_widgets) {
 elgg_push_context('widgets');
 
 if (!empty($owner_guid)) {
-	$owner = get_entity($owner_guid);
+	$owner = get_entity($owner_guid, 'user');
+	if(!$owner){
+		$owner = elgg_get_logged_in_user_entity();
+	}
 	if ($owner && $owner->canEdit()) {
 		$guid = elgg_create_widget($owner->getGUID(), $handler, $context);
 		if ($guid) {
-			$widget = get_entity($guid);
-
+			$widget = get_entity($guid, 'widget');
+			
 			// position the widget
 			$widget->move($column, 0);
-
+			
 			// send widget html for insertion
 			echo elgg_view_entity($widget, array('show_access' => $show_access));
 
-			//system_message(elgg_echo('widgets:add:success'));
+			system_message(elgg_echo('widgets:add:success'));
 			forward(REFERER);
 		}
 	}

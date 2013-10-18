@@ -46,7 +46,7 @@ function minds_comments_init() {
 	 $commentCOOKIE = $_COOKIE['minds_comment'];
 	 if(elgg_is_logged_in() && $commentCOOKIE && $commentCOOKIE != 'done'){
 	 	$data = json_decode($commentCOOKIE, true);
-	 	setcookie('minds_comment', 'done', time()-3600, '/');
+	 	setcookie('minds_comment', 'done', 360, '/');//cookie valid for 10 mins
 		$comment = urlencode($data['comment']);
 	 	forward(elgg_add_action_tokens_to_url('action/comment/save?comment='. $comment .'&pid='.$data['pid'] .'&type='.$data['type'].'&redirect_url='.urlencode($data['redirect_url'])));
 		//forward($data->redirect_url);
@@ -85,8 +85,8 @@ function minds_comments_menu($hook, $type, $return, $params) {
 function minds_comments_replacement($hook, $entity_type, $returnvalue, $params) {
 	$type = 'entity';
 	$pid = $params['entity']->guid;
-	
-    $comments =  elgg_view('minds_comments/bar', array(
+    	
+	$comments =  elgg_view('minds_comments/bar', array(
 	    'type' => $type,
 	    'pid' => $pid
 	));
@@ -95,6 +95,7 @@ function minds_comments_replacement($hook, $entity_type, $returnvalue, $params) 
 	    'type'=>$type,
 	    'pid'=>$pid
 	));
+
 	
 	return $comments;
 }

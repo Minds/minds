@@ -35,7 +35,7 @@ if($create['ok'] == true){
 	$data['_source']['time_created'] = time();
 	//header('Content-Type: application/json');
 	$output = minds_comments_view_comment($data);
-	minds_comments_notification($type, $pid, $comment);
+//	minds_comments_notification($type, $pid, $comment);
 	if(get_input('redirect_url')){
 		forward(get_input('redirect_url'));
 		return true;
@@ -44,6 +44,9 @@ if($create['ok'] == true){
 } else {
 	 register_error(elgg_echo('minds_comments:save:error'));
 }
+//user setting for orientation
+elgg_set_plugin_user_setting('commented', true, elgg_get_logged_in_user_guid(), 'minds_comments');
+
 /*//get a list of all the users who have previously commented
 $options = array(
         'type' => 'object',
@@ -55,15 +58,17 @@ $options = array(
         ),
         'limit' => 0,
     );
-$items = elgg_get_entities_from_metadata($options);
-foreach($items as $item){
+*/
+$entity = get_entity($pid, 'object');
+//$owner = get_entity($entity->ower_guid);
+//$items = elgg_get_entities_from_metadata($options);
+/*foreach($items as $item){
 	
 	$to_guids[] = $item->owner_guid;
 	
 }
 	$to_guids[] = $subject_guid;
 	$to = array_unique($to_guids);
-
-notification_create($to, elgg_get_logged_in_user_guid(), $parent_guid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
 */
+notification_create(array($entity->owner_guid), elgg_get_logged_in_user_guid(), $pid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
 exit;

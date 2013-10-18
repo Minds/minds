@@ -192,10 +192,10 @@ abstract class ElggEntity extends ElggData implements
 		}
 
 		// No, so see if its in the meta data for this entity
-		$meta = $this->getMetaData($name);
+	//	$meta = $this->getMetaData($name);
 
 		// getMetaData returns NULL if $name is not found
-		return $meta;
+	//	return $meta;
 	}
 
 	/**
@@ -222,10 +222,10 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	public function set($name, $value) {
-		if (array_key_exists($name, $this->attributes)) {
+	//	if (array_key_exists($name, $this->attributes)) {
 			// Certain properties should not be manually changed!
 			switch ($name) {
-				case 'guid':
+				//case 'guid':
 				case 'time_updated':
 				case 'last_action':
 					return FALSE;
@@ -234,10 +234,10 @@ abstract class ElggEntity extends ElggData implements
 					$this->attributes[$name] = $value;
 					break;
 			}
-		} else {
-			return $this->setMetaData($name, $value);
+	//	}
+		if($this->guid){
+			$this->save();
 		}
-
 		return TRUE;
 	}
 
@@ -593,8 +593,9 @@ abstract class ElggEntity extends ElggData implements
 	/**
 	 * Adds a private setting to this entity.
 	 *
-	 * Private settings are similar to metadata but will not
-	 * be searched and there are fewer helper functions for them.
+	 * Since the move to cassandra, attributes have been merged. 
+	 * Therefore, this funciton will be soon deprecated and replaced with
+	 * a single set function. 
 	 *
 	 * @param string $name  Name of private setting
 	 * @param mixed  $value Value of private setting
@@ -602,8 +603,9 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	function setPrivateSetting($name, $value) {
-		if ((int) $this->guid > 0) {
-			return set_private_setting($this->getGUID(), $name, $value);
+		if($this->guid){
+			$this->$name = $value;
+			return	$this->save();
 		} else {
 			$this->temp_private_settings[$name] = $value;
 			return true;
@@ -618,14 +620,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return mixed
 	 */
 	function getPrivateSetting($name) {
-		if ((int) ($this->guid) > 0) {
-			return get_private_setting($this->getGUID(), $name);
-		} else {
-			if (isset($this->temp_private_settings[$name])) {
-				return $this->temp_private_settings[$name];
-			}
-		}
-		return null;
+		return $this->$name;
 	}
 
 	/**
@@ -1000,7 +995,7 @@ abstract class ElggEntity extends ElggData implements
 		if ($user_guid == 0) {
 			$user_guid = elgg_get_logged_in_user_guid();
 		}
-		$user = get_entity($user_guid);
+		$user = get_entity($user_guid,'user');
 
 		$return = true;
 		if (!$user) {
@@ -1050,12 +1045,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return string The entity subtype
 	 */
 	public function getSubtype() {
-		// If this object hasn't been saved, then return the subtype string.
-		if (!((int) $this->guid > 0)) {
-			return $this->get('subtype');
-		}
-
-		return get_subtype_from_id($this->get('subtype'));
+		return $this->subtype;	
 	}
 
 	/**
@@ -1084,7 +1074,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return ElggEntity The owning entity
 	 */
 	public function getOwnerEntity() {
-		return get_entity($this->owner_guid);
+		return get_entity($this->owner_guid, 'user');
 	}
 
 	/**
@@ -1137,12 +1127,13 @@ abstract class ElggEntity extends ElggData implements
 
 	/**
 	 * Get the container entity for this object.
+	 * Assume contrainer entity is a user, unless another class overrides this...
 	 *
 	 * @return ElggEntity
 	 * @since 1.8.0
 	 */
-	public function getContainerEntity() {
-		return get_entity($this->getContainerGUID());
+	public function getContainerEntity($type = 'user') {
+		return get_entity($this->getContainerGUID(), $type);
 	}
 
 	/**
@@ -1165,7 +1156,7 @@ abstract class ElggEntity extends ElggData implements
 		if (!empty($this->url_override)) {
 			return $this->url_override;
 		}
-		return get_entity_url($this->getGUID());
+		return get_entity_url($this->getGUID(), $this->type);
 	}
 
 	/**
@@ -1259,7 +1250,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	public function isFullyLoaded() {
-		return ! ($this->attributes['tables_loaded'] < $this->attributes['tables_split']);
+		return true;
 	}
 
 	/**
@@ -1269,62 +1260,9 @@ abstract class ElggEntity extends ElggData implements
 	 * @throws IOException
 	 */
 	public function save() {
-		$guid = $this->getGUID();
-		if ($guid > 0) {
-			cache_entity($this);
-
-			return update_entity(
-				$guid,
-				$this->get('owner_guid'),
-				$this->get('access_id'),
-				$this->get('container_guid'),
-				$this->get('time_created')
-			);
-		} else {
-			// Create a new entity (nb: using attribute array directly
-			// 'cos set function does something special!)
-			$this->attributes['guid'] = create_entity($this->attributes['type'],
-				$this->attributes['subtype'], $this->attributes['owner_guid'],
-				$this->attributes['access_id'], $this->attributes['site_guid'],
-				$this->attributes['container_guid']);
-
-			if (!$this->attributes['guid']) {
-				throw new IOException(elgg_echo('IOException:BaseEntitySaveFailed'));
-			}
-
-			// Save any unsaved metadata
-			// @todo How to capture extra information (access id etc)
-			if (sizeof($this->temp_metadata) > 0) {
-				foreach ($this->temp_metadata as $name => $value) {
-					$this->$name = $value;
-					unset($this->temp_metadata[$name]);
-				}
-			}
-
-			// Save any unsaved annotations.
-			if (sizeof($this->temp_annotations) > 0) {
-				foreach ($this->temp_annotations as $name => $value) {
-					$this->annotate($name, $value);
-					unset($this->temp_annotations[$name]);
-				}
-			}
-
-			// Save any unsaved private settings.
-			if (sizeof($this->temp_private_settings) > 0) {
-				foreach ($this->temp_private_settings as $name => $value) {
-					$this->setPrivateSetting($name, $value);
-					unset($this->temp_private_settings[$name]);
-				}
-			}
-
-			// set the subtype to id now rather than a string
-			$this->attributes['subtype'] = get_subtype_id($this->attributes['type'],
-				$this->attributes['subtype']);
-
-			cache_entity($this);
-
-			return $this->attributes['guid'];
-		}
+		$guid = create_entity($this);
+		$this->attributes['guid'] = $guid;
+		return $guid;
 	}
 
 	/**
@@ -1437,7 +1375,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	public function delete($recursive = true) {
-		return delete_entity($this->get('guid'), $recursive);
+		return delete_entity($this->get('guid'), $this->type, $recursive);
 	}
 
 	/*
@@ -1574,7 +1512,8 @@ abstract class ElggEntity extends ElggData implements
 			'time_updated',
 			'container_guid',
 			'owner_guid',
-			'site_guid'
+			'site_guid',
+			'access_id'
 		);
 	}
 

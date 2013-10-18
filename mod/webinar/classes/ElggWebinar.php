@@ -157,17 +157,7 @@ class ElggWebinar extends ElggObject {
 		return $server->elgg_endWebinar();
 	}
 	public function getEvent(){
-		return elgg_get_entities_from_relationship(array(	'relationship' => 'webinar',
-															'relationship_guid' => $this->guid,
-															'inverse_relationship' => TRUE,
-															'type' => 'object',
-															'subtype' => 'event_calendar',
-															'limit' => 0,
-															'offset' => 0,
-															'count' => false,
-															'full_view' => FALSE,
-															'pagination' => FALSE
-													));
+		return;
 	}
 
 }

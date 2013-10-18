@@ -1,12 +1,14 @@
 <?php
 elgg_push_context('sidebar');
 
+echo elgg_view('minds/ads', array('type'=>'content-side-single'));
+
 /**
  * Other videos module
  */
 $guid = elgg_extract('guid', $vars);
 if($guid){
-	$video = get_entity($guid);
+	$video = get_entity($guid, 'object');
 	$owners_videos = elgg_get_entities(array('type'=>'object', 'subtypes'=>array('kaltura_video'), 'owner_guid'=>$video->owner_guid, 'limit'=>2));
 	if (($key = array_search($video, $owners_videos)) !== false) {
 	    unset($owners_videos[$key]);
@@ -16,7 +18,7 @@ if($guid){
 		echo elgg_view_module('aside', elgg_echo('archive:morefromuser:title', array($video->getOwnerEntity()->name)), $owners_videos, array('class'=>'sidebar'));
 	}
 	
-	echo elgg_view('minds/ads', array('type'=>'content-side'));
+	echo elgg_view('minds/ads', array('type'=>'content-side-single'));
 }
 /** 
  * Featured videos

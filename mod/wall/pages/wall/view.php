@@ -3,7 +3,7 @@
  * View individual wall post
  */
 
-$post = get_entity(get_input('guid'));
+$post = get_entity(get_input('guid'), 'object');
 if (!$post) {
 	register_error(elgg_echo('noaccess'));
 	$_SESSION['last_forward_from'] = current_page_url();
@@ -13,7 +13,7 @@ $owner = $post->getOwnerEntity();
 if (!$owner) {
 	forward();
 }
-$to = get_entity($post->to_guid);
+$to = get_entity($post->to_guid, 'user');
 
 $title = elgg_echo('wall:singleview', array($owner->name, $to->name));
 

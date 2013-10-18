@@ -2,6 +2,7 @@
 /**
  * Load CSS and JS libraries
  */
+
 elgg_load_css('minds_comments');
 elgg_load_js('minds_comments');
 

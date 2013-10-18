@@ -10,8 +10,9 @@ $input_text = elgg_view('input/plaintext', array(
     'placeholder' => 'Enter your comment here...'
         ));
 		
-$icon = elgg_view_entity_icon(elgg_get_logged_in_user_entity(), 'tiny');
-if(!elgg_is_logged_in()){
+if(elgg_is_logged_in()){
+	$icon = elgg_view_entity_icon(elgg_get_logged_in_user_entity(), 'tiny');
+} else {
 	$icon = elgg_view_entity_icon(get_user_by_username('minds'), 'tiny');
 }
 

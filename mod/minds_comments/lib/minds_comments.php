@@ -5,6 +5,9 @@ function minds_comments_view_list($type, $pid) {
 
 	$mc = new MindsComments();
 	$call = $mc -> output($type, $pid, 3, 0);
+	if($call['error']){
+		return false;
+	}
 	$count = $call['hits']['total'];
 	$comments = array_reverse($call['hits']['hits']);
 
@@ -25,7 +28,7 @@ function minds_comments_view_list($type, $pid) {
 }
 
 function minds_comments_view_comment($comment) {
-	$owner = get_entity($comment['_source']['owner_guid']);
+	$owner = get_entity($comment['_source']['owner_guid'], 'user');
 	if(!$owner){
 		return false;
 	}
@@ -70,7 +73,7 @@ function minds_comments_notification($type, $pid, $description){
 	
 	}
 	if($type=='entity'){
-		$entity = get_entity($pid);
+		$entity = get_entity($pid, 'object');
 		$owner_guid = $entity->getOwnerGUID();
 	}elseif($type=='river'){
 		$post = elgg_get_river(array('ids'=>array($pid)));

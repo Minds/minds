@@ -20,7 +20,7 @@ if (!isset($CONFIG)) {
 }
 
 /*
- * Standard configuration
+ * Cassandra configuration
  *
  * You will use the same database connection for reads and writes.
  * This is the easiest configuration, and will suit 99.99% of setups. However, if you're
@@ -28,49 +28,20 @@ if (!isset($CONFIG)) {
  * and implement database replication.  That's beyond the scope of this configuration file
  * to explain, but if you know you need it, skip past this section.
  */
+$CONFIG->cassandra = new stdClass;
+$CONFIG->cassandra->keyspace = '{{keyspace}}';
+$CONFIG->cassandra->servers = array('{{server}}');
 
-/**
- * The database username
- *
- * @global string $CONFIG->dbuser
- * @name $CONFIG->dbuser
+
+/** 
+ * Other Elgg Settings
  */
-$CONFIG->dbuser = '{{dbuser}}';
-
-/**
- * The database password
- *
- * @global string $CONFIG->dbpass
- */
-$CONFIG->dbpass = '{{dbpassword}}';
-
-/**
- * The database name
- *
- * @global string $CONFIG->dbname
- */
-$CONFIG->dbname = '{{dbname}}';
-
-/**
- * The database host.
- *
- * For most installations, this is 'localhost'
- *
- * @global string $CONFIG->dbhost
- */
-$CONFIG->dbhost = '{{dbhost}}';
-
-/**
- * The database prefix
- *
- * This prefix will be appended to all Elgg tables.  If you're sharing
- * a database with other applications, use a database prefix to namespace tables
- * in order to avoid table name collisions.
- *
- * @global string $CONFIG->dbprefix
- */
-$CONFIG->dbprefix = '{{dbprefix}}';
-
+$CONFIG->installed = '{{installed}}';
+$CONFIG->path = '{{path}}';
+$CONFIG->dataroot = '{{dataroot}}';
+$CONFIG->default_site = '{{default_site}}';
+$CONFIG->site_id = '{{default_site}}';
+$CONFIG->__site_secret__ = md5(rand() . microtime());
 /**
  * Overrides default system cache path from inside data root to custom location.
  *

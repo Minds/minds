@@ -10,7 +10,7 @@ elgg_set_ignore_access(true);
 
 $guid = (int) get_input('guid');
 $size = get_input('size');
-$image = get_entity($guid);
+$image = get_entity($guid,'object');
 
 if (!$image) {
 	// @todo

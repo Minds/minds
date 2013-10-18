@@ -29,20 +29,21 @@ class TidypicsImage extends ElggFile {
 	 * @return bool
 	 */
 	public function save($data = null) {
-
+		
 		if (!parent::save()) {
 			return false;
 		}
 
 		if ($data) {
 			// new image
+			$this->super_subtype = "archive";
 			$this->simpletype = "image";
 			$this->saveImageFile($data);
 			$this->saveThumbnails();
 			$this->extractExifData();
 		}
-
-		return true;
+		
+		return $this->guid;
 	}
 
 	/**
@@ -52,27 +53,7 @@ class TidypicsImage extends ElggFile {
 	 */
 	public function delete() {
 
-		// check if batch should be deleted
-		$batch = elgg_get_entities_from_relationship(array(
-			'relationship' => 'belongs_to_batch',
-			'relationship_guid' => $this->guid,
-			'inverse_relationship' => false,
-		));
-		if ($batch) {
-			$batch = $batch[0];
-			$count = elgg_get_entities_from_relationship(array(
-				'relationship' => 'belongs_to_batch',
-				'relationship_guid' => $batch->guid,
-				'inverse_relationship' => true,
-				'count' => true,
-			));
-			if ($count == 1) {
-				// last image so delete batch
-				$batch->delete();
-			}
-		}
-
-		$album = get_entity($this->container_guid);
+		$album = get_entity($this->container_guid, 'album');
 		if ($album) {
 			$album->removeImage($this->guid);
 		}
@@ -85,6 +66,21 @@ class TidypicsImage extends ElggFile {
 
 		return parent::delete();
 	}
+
+	public function set($name, $value) {
+                        switch ($name) {
+                                case 'guid':
+                                case 'time_updated':
+                                case 'last_action':
+                                        return FALSE;
+                                        break;
+                                default:
+                                        $this->attributes[$name] = $value;
+                                        break;
+                        }
+                return TRUE;
+        }
+
 
 	/**
 	 * Get the title of the image
@@ -119,6 +115,7 @@ class TidypicsImage extends ElggFile {
 	 * @return array with number of views, number of unique viewers, and number of views for this viewer
 	 */
 	public function getViewInfo($viewer_guid = 0) {
+		return;
 		if ($viewer_guid == 0) {
 			$viewer_guid = elgg_get_logged_in_user_guid();
 		}
@@ -287,6 +284,14 @@ class TidypicsImage extends ElggFile {
 	 * @return string
 	 */
 	public function getThumbnail($size) {
+		if(!isset($this->thumbnail)){
+			$prefix = "image/" . $this->container_guid . "/";
+                	$filename = $this->getFilename().'.jpg';
+             		$filename = substr($filename, strrpos($filename, '/') + 1);
+             		$this->thumbnail = $prefix . 'thumb' . $filename;
+			$this->smallthumb = $prefix . 'smallthumb' . $filename;
+			$this->largethumb = $prefix . 'largethumb' . $filename;
+		}
 		switch ($size) {
 			case 'thumb':
 				$thumb = $this->thumbnail;
@@ -301,11 +306,10 @@ class TidypicsImage extends ElggFile {
 				return '';
 				break;
 		}
-
+		
 		if (!$thumb) {
 			return '';
 		}
-
 		$file = new ElggFile();
 		$file->owner_guid = $this->getOwnerGUID();
 		$file->setFilename($thumb);
@@ -347,7 +351,7 @@ class TidypicsImage extends ElggFile {
 	 */
 	public function getPhotoTags() {
 
-		$tags = array();
+	/*	$tags = array();
 		$annotations = elgg_get_annotations(array(
 			'guid' => $this->getGUID(),
 			'annotation_name' => 'phototag',
@@ -358,7 +362,7 @@ class TidypicsImage extends ElggFile {
 			$tags[] = $tag;
 		}
 
-		return $tags;
+		return $tags;*/
 	}
 
 	/**
@@ -393,5 +397,15 @@ class TidypicsImage extends ElggFile {
 			$delfile->setFilename($largethumb);
 			$delfile->delete();
 		}
+	}
+
+	/**
+	 * Get the container entity for this object.
+	 * Assume contrainer entity is a user, unless another class overrides this...
+	 *
+	 * @return TidypicsAlbum
+	 */
+	public function getContainerEntity($type = 'object') {
+		return get_entity($this->getContainerGUID(),$type);
 	}
 }

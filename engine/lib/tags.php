@@ -120,7 +120,7 @@ function generate_tag_cloud(array $tags, $buckets = 6) {
  */
 function elgg_get_tags(array $options = array()) {
 	global $CONFIG;
-
+return;
 	$defaults = array(
 		'threshold'				=>	1,
 		'tag_names'				=>	array(),

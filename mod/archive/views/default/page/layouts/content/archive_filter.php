@@ -26,10 +26,18 @@ if ($context) {
                         'priority' => 0,
                         'section'=>'filter'
 		),		
+		
+		'trending' =>  array(
+                        'text' => elgg_echo('trending'),
+                        'href' => "$context/trending?filter=$type_context",
+                        'selected' => ($filter_context == 'trending'),
+                        'priority' => 0,
+                        'section'=>'filter'
+                ),
 
 		'friends' => array(
                         'text' => elgg_echo('friends'),
-                        'href' => "$context/network?filter=$type_context",
+                        'href' => "$context/network/$username?filter=$type_context",
                         'selected' => ($filter_context == 'network'),
                         'priority' => 0,
                         'section'=>'filter'

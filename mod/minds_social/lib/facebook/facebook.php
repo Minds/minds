@@ -33,9 +33,9 @@ class Facebook extends BaseFacebook
    * @see BaseFacebook::__construct in facebook.php
    */
   public function __construct($config) {
-    if (!session_id()) {
-      session_start();
-    }
+//    if (!session_id()) {
+  //    session_start();
+   // }
     parent::__construct($config);
   }
 
@@ -53,9 +53,9 @@ class Facebook extends BaseFacebook
       self::errorLog('Unsupported key passed to setPersistentData.');
       return;
     }
-
+    global $SESSION;
     $session_var_name = $this->constructSessionVariableName($key);
-    $_SESSION[$session_var_name] = $value;
+    $SESSION[$session_var_name] = $value;
   }
 
   protected function getPersistentData($key, $default = false) {
@@ -63,10 +63,10 @@ class Facebook extends BaseFacebook
       self::errorLog('Unsupported key passed to getPersistentData.');
       return $default;
     }
-
+    global $SESSION;
     $session_var_name = $this->constructSessionVariableName($key);
-    return isset($_SESSION[$session_var_name]) ?
-      $_SESSION[$session_var_name] : $default;
+   return isset($SESSION[$session_var_name]) ?
+      $SESSION[$session_var_name] : $default;
   }
 
   protected function clearPersistentData($key) {
@@ -74,9 +74,9 @@ class Facebook extends BaseFacebook
       self::errorLog('Unsupported key passed to clearPersistentData.');
       return;
     }
-
+    global $SESSION;
     $session_var_name = $this->constructSessionVariableName($key);
-    unset($_SESSION[$session_var_name]);
+    unset($SESSION[$session_var_name]);
   }
 
   protected function clearAllPersistentData() {

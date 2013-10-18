@@ -341,15 +341,23 @@ class ElggDiskFilestore extends ElggFilestore {
 	 * @return string The path where the entity's data will be stored.
 	 */
 	protected function makeFileMatrix($guid) {
-		$entity = get_entity($guid);
+		$entity = get_entity($guid,'user');
 
 		if (!($entity instanceof ElggEntity) || !$entity->time_created) {
 			return false;
 		}
 
+		//legacy user, store files in their old location
+
+		if($entity->legacy_guid){
+			$guid = $entity->legacy_guid;
+		} else {
+			$guid = $entity->guid;
+		}
+
 		$time_created = date('Y/m/d', $entity->time_created);
 
-		return "$time_created/$entity->guid/";
+		return "$time_created/$guid/";
 	}
 
 	/**

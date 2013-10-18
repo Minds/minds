@@ -5,7 +5,7 @@
  */
 
 $guid = get_input('guid');
-$owner = get_entity($guid);
+$owner = get_entity($guid, 'user');
 
 if (!$owner || !($owner instanceof ElggUser) || !$owner->canEdit()) {
 	register_error(elgg_echo('avatar:crop:fail'));
@@ -17,9 +17,13 @@ $y1 = (int) get_input('y1', 0);
 $x2 = (int) get_input('x2', 0);
 $y2 = (int) get_input('y2', 0);
 
+if($owner->legacy_guid){
+	$guid = $owner->legacy_guid;
+}
+
 $filehandler = new ElggFile();
 $filehandler->owner_guid = $owner->getGUID();
-$filehandler->setFilename("profile/" . $owner->guid . "master" . ".jpg");
+$filehandler->setFilename("profile/" . $guid . "master" . ".jpg");
 $filename = $filehandler->getFilenameOnFilestore();
 
 // ensuring the avatar image exists in the first place
@@ -41,7 +45,7 @@ foreach ($icon_sizes as $name => $size_info) {
 	if ($resized) {
 		//@todo Make these actual entities.  See exts #348.
 		$file = new ElggFile();
-		$file->owner_guid = $guid;
+		$file->owner_guid = $owner->guid;
 		$file->setFilename("profile/{$guid}{$name}.jpg");
 		$file->open('write');
 		$file->write($resized);
@@ -65,9 +69,11 @@ $owner->x2 = $x2;
 $owner->y1 = $y1;
 $owner->y2 = $y2;
 
+$owner->save();
+
 system_message(elgg_echo('avatar:crop:success'));
 $view = 'river/user/default/profileiconupdate';
-elgg_delete_river(array('subject_guid' => $owner->guid, 'view' => $view));
-add_to_river($view, 'update', $owner->guid, $owner->guid);
+//elgg_delete_river(array('subject_guid' => $owner->guid, 'view' => $view));
+//add_to_river($view, 'update', $owner->guid, $owner->guid);
 
 forward(REFERER);
