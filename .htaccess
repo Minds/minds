@@ -30,9 +30,9 @@ DirectoryIndex index.php
 	# register_globals is deprecated as of PHP 5.3.0 - disable it for security reasons.
 	php_value register_globals 0
 	# post_max_size is the maximum size of ALL the data that is POST'ed to php at a time (8 MB)
-	php_value post_max_size 838860800000
+	php_value post_max_size 8388608
 	# upload_max_filesize is the maximum size of a single uploaded file (5 MB)
-	php_value upload_max_filesize 5242880000
+	php_value upload_max_filesize 5242880
 	# on development servers, set to 1 to display errors. Set to 0 on production servers.
 	php_value display_errors 0
 </IfModule>
@@ -131,15 +131,5 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([A-Za-z0-9\_\-]+)\/(.*)$ engine/handlers/page_handler.php?handler=$1&page=$2 [QSA]
 
-## SUBDOMAINS TO CHANNELS ##
-RewriteCond %{HTTP_HOST} !^www\.minds\.com$
-RewriteCond %{HTTP_HOST} (.+)\.minds\.com$ 
-RewriteRule ^(.*)$ http://www.minds.com/%1 [R=301,L] 
-
-##Keeps sessions on all domains
-#php_value session.cookie_domain .minds.io
 
 </IfModule>
-
-#hide git
-RedirectMatch 404 "(?:.*)/(?:\.git|file_or_dir)(?:/.*)?$"
