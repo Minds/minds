@@ -119,23 +119,18 @@ if($entity->getSubtype() == 'album'){
 elgg_push_breadcrumb($title);
 
 $content = elgg_view_entity($entity, array('full_view' => true));
-$content .= elgg_view('minds/ads', array('type'=>'content-foot')); 
+$content .= elgg_view('minds/ads', array('type'=>'content-foot-user-1')); 
 $content .= elgg_view_comments($entity);
 
 $sidebar = elgg_view('archive/sidebar', array('guid'=>$guid));
 
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
-$header = <<<HTML
-<div class="elgg-head clearfix">
-	$title_block$menu
-</div>
-HTML;
 
 $body = elgg_view_layout("content", array(	
 					'filter'=> '', 
 					'title' => $title,
-					'header' => $header,
 					'content'=> $content,
+					'menu' => $menu,
 					'sidebar' => $sidebar 
 				));
 

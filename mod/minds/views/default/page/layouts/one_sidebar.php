@@ -35,13 +35,11 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 	
 <div class="elgg-inner">
 	<div class="<?php echo $class; ?>">
-		
 		<div class="elgg-sidebar">
-			<?php
-				echo elgg_view('page/elements/sidebar', $vars);
-			?>
-		</div>
-	
+        	<?php
+                	echo elgg_view('page/elements/sidebar', $vars);
+        	?>
+		</div>		
 		<div class="elgg-main elgg-body">
 			<?php
 		

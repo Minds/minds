@@ -165,9 +165,17 @@
 	Owner Block
 *************************************** */
 .elgg-owner-block {
-	margin-bottom: 20px;
+	width:336px;
+	float:right;
+	margin-bottom:0;
 }
-
+.elgg-owner-block .elgg-body > a > h2{
+	font-size:20px;
+	font-weight:normal;
+}
+.elgg-owner-block .elgg-image img{
+	width:75px;
+}
 /* ***************************************
 	Messages
 *************************************** */

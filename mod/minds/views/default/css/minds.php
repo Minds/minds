@@ -234,6 +234,9 @@ input[name=terms]{
 	width:90%;
 	margin:0 auto;
 }
+.minds-body-header > .inner > .elgg-head{
+	min-width:998px;
+}
 .minds-body-header h2{
 	font-size:52px;
 	font-weight:lighter;
@@ -244,6 +247,7 @@ input[name=terms]{
 }
 .minds-body-header .elgg-menu-entity, .minds-body-header .elgg-menu-title{
 	margin:10px;
+	clear:right;
 }
 .minds-body-header .elgg-form-wall-add{
 	float:right;
@@ -612,7 +616,7 @@ li .excerpt a{
 .elgg-sidebar .elgg-owner-block .elgg-image-block .elgg-body{
 	padding:5px;
 }
-.elgg-sidebar li a{
+.elgg-sidebar .elgg-menu-page li a{
         padding:8px;
 }
 .elgg-sidebar li.elgg-item{

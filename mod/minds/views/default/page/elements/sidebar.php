@@ -10,9 +10,15 @@
 	'class' => 'elgg-menu-hz',
 ));*/
 
-echo elgg_view('page/elements/owner_block', $vars);
+//echo elgg_view('page/elements/owner_block', $vars);
+
+echo elgg_view('minds_social/site_social_links');
 
 echo elgg_view_menu('page', array('sort_by' => 'name'));
+
+if (isset($vars['menu'])){
+	echo $vars['menu'];
+}
 
 // optional 'sidebar' parameter
 if (isset($vars['sidebar'])) {

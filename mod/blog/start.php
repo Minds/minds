@@ -166,15 +166,16 @@ function blog_page_handler($page) {
 		case 'view':
 			$params = blog_get_page_content_read($page[1]);
 			$body = elgg_view_layout('content', $params);
-	
+			
 			$params = blog_get_trending_page_content_list();
                         //$params = blog_get_page_content_list();
 			$params['header'] = elgg_view_title('More...');
 			$params['filter'] = "";
 			$body .= elgg_view_layout('gallery', $params);
-
-                        echo elgg_view_page($params['title'], $body);
-			return;	
+			
+			echo elgg_view_page($params['title'], $body);
+			
+			return true;	
 			break;
 		case 'read': // Elgg 1.7 compatibility
 			register_error(elgg_echo("changebookmark"));

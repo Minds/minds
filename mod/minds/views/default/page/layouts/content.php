@@ -47,6 +47,7 @@ $params = array(
 	'header' => $header . $filter,
 	'content' => $body,
 	'sidebar' => $sidebar,
+	'menu' => $vars['menu']
 );
 if (isset($vars['class'])) {
 	$params['class'] = $vars['class'];

@@ -215,6 +215,9 @@
 .elgg-owner-block .subscribe{
 	margin:5px 0;
 	background:#333;
+	clear:both;
+	min-width:0;
+	float:right;	
 }
 .elgg-list .subscribe{
 	margin:0 -5px;
