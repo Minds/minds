@@ -11,7 +11,8 @@
 
 // YYYYMMDD = Elgg Date
 // XX = Interim incrementer
-$version = 20130931;
+$version = 2011123101;
 
 // Human-friendly version name
-$release = 'Minds-1.0';
+$release = '1.8.13';
+

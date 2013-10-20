@@ -40,9 +40,9 @@ function db_init() {
 	$DB->pool = $pool;
 
 	$cfs = array(	
-//			'site', 
+			'site', 
 			'session',
-//			'plugin', 
+			'plugin', 
 //			'config',
 			'object', 
 			'user', 
