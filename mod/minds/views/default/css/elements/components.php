@@ -62,6 +62,12 @@
 		height:210px;
 	}
 }
+
+.elgg-footer .elgg-list > li{
+	width: 42%;
+	margin: 16px 2%;
+}
+
 .elgg-list > li .elgg-avatar-medium{
 	margin:10px 8px 0 5px;
 }

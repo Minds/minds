@@ -1225,6 +1225,12 @@ div.register-popup {
 	width:100%;
 	height:620px;
 }
+#contentad11261{
+	width: 300px;
+	height: 600px;
+	margin: 18px;
+	background: #AAA;
+}
 .adblade iframe{
 	margin: 10px auto;
 	display:block;

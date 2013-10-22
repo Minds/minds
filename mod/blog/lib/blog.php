@@ -546,11 +546,13 @@ function blog_sidebar($blog){
 		$return .= elgg_view('minds/ads', array('type'=>'content-side-single-user-2'));
 	}
 	//show featured blogs
-/*	$featured_blogs = minds_get_featured(6);
+	$featured_blogs = minds_get_featured(6);
 	if($featured_blogs){
 		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar', 'pagination'=>false));
 		$return .= elgg_view_module('aside', elgg_echo('blog:featured'), $featured_blogs, array('class'=>'blog-sidebar'));	
 	}
-*/	
+
+//	$return .= elgg_view('minds/ads', array('type'=>'content.ad-side'));
+	
 	return $return;
 }

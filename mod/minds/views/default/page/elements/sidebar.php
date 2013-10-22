@@ -37,3 +37,4 @@ if (isset($vars['area3'])) {
 	echo $vars['area3'];
 }
 
+echo elgg_view('minds/ads', array('type'=>'content.ad-side'));

@@ -165,14 +165,15 @@ function blog_page_handler($page) {
 			break;
 		case 'view':
 			$params = blog_get_page_content_read($page[1]);
-			$body = elgg_view_layout('content', $params);
 			
-			$params = blog_get_trending_page_content_list();
+			$trending = blog_get_trending_page_content_list();
                         //$params = blog_get_page_content_list();
-			$params['header'] = elgg_view_title('More...');
-			$params['filter'] = "";
-			$body .= elgg_view_layout('gallery', $params);
-			
+			//$body .= elgg_view_layout('gallery', $params);
+		
+			$params['footer'] .= $trending['content'];
+		
+			$body = elgg_view_layout('content', $params);
+	
 			echo elgg_view_page($params['title'], $body);
 			
 			return true;	

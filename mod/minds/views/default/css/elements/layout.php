@@ -162,6 +162,14 @@
 	background:#F8F8F8;
 }
 
+.elgg-footer{
+	margin-right:350px;
+}
+.elgg-footer > .elgg-list{
+	clear:none;
+	padding:0;
+}
+
 /***** PAGE FOOTER ******/
 .elgg-page-footer {
 	min-width:998px;

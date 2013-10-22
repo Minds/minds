@@ -181,5 +181,27 @@ elseif($type == 'search-ad'){
         document.getElementById("contentad9733").appendChild(s);
     })();</script> </div>';
 
+} elseif($type == 'content.ad-side'){
+	echo '<div id="contentad11261"></div>
+<script type="text/javascript">
+    (function() {
+        var params =
+        {
+            id: "6577b456-0103-46fc-b54d-aeea66a87fec",
+            d:  "bWluZHMuY29t",
+            wid: "11261",
+            cb: (new Date()).getTime()
+        };
+
+        var qs="";
+        for(var key in params){qs+=key+"="+params[key]+"&"}
+        qs=qs.substring(0,qs.length-1);
+        var s = document.createElement("script");
+        s.type= "text/javascript";
+        s.src = "http://api.content.ad/Scripts/widget.aspx?" + qs;
+        s.async = true;
+        document.getElementById("contentad11261").appendChild(s);
+    })();
+</script>';
 }
 
