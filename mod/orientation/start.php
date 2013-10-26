@@ -48,6 +48,9 @@ function orientation_page_handler($page)
 						</script>';
 				break;
 			default:
+				if(!elgg_is_logged_in()){
+					forward();
+				}
 				require_once "$base/index.php";
 				break;
 		}

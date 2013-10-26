@@ -108,6 +108,17 @@ if($type == 'content-side'){
 		<script type="text/javascript"
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 		</script>';
+
+} elseif($type == 'linkad-box'){
+	echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- linkad-box -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:200px;height:90px"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="7254333223"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>';
 			
 } elseif($type == 'news'){
  echo '<script type="text/javascript"><!--
@@ -182,7 +193,7 @@ elseif($type == 'search-ad'){
     })();</script> </div>';
 
 } elseif($type == 'content.ad-side'){
-	echo '<div id="contentad11261"></div>
+	echo '<div class="contentad-side"><div id="contentad11261"></div>
 <script type="text/javascript">
     (function() {
         var params =
@@ -202,6 +213,6 @@ elseif($type == 'search-ad'){
         s.async = true;
         document.getElementById("contentad11261").appendChild(s);
     })();
-</script>';
+</script></div>';
 }
 

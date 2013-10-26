@@ -98,9 +98,9 @@ function minds_init(){
 	//setup the licenses pages
 	elgg_register_page_handler('licenses', 'minds_license_page_handler');
 	
-	//add cache headers to pages for logged out users
-	elgg_register_plugin_hook_handler('route', 'all', 'minds_route_page_handler_cache', 100);
-	elgg_register_plugin_hook_handler('index', 'system', 'minds_route_page_handler_cache', 100);
+	//add cache headers to pages for logged out users and deliver other pages
+	elgg_register_plugin_hook_handler('route', 'all', 'minds_route_page_handler', 100);
+	elgg_register_plugin_hook_handler('index', 'system', 'minds_route_page_handler', 100);
 	
 	//setup the tracking of user quota - on a file upload, increment, on delete, decrement
 	elgg_register_event_handler('create', 'object', 'minds_quota_increment');
@@ -319,7 +319,7 @@ function minds_login_page_handler($page) {
         return true;
 }
 
-function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
+function minds_route_page_handler($hook, $type, $returnvalue, $params) {
 	if (!elgg_is_logged_in() && $returnvalue) {
 		$handler = elgg_extract('handler', $returnvalue);
 // 		$page = elgg_extract('segments', $returnvalue);
@@ -329,6 +329,16 @@ function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
 		if (!in_array($handler, array('js', 'css', 'photos'))) {
 			header("X-No-Client-Cache: 1", true);
 		}
+	}
+
+	//add a age if view exists
+	$handler = elgg_extract('handler', $returnvalue);
+	$pages = elgg_extract('segments', $returnvalue, array());
+	array_unshift($pages, $handler);
+	if(elgg_view_exists('minds/pages/'.$handler)){
+		$content = elgg_view('minds/pages/'.$handler);
+		$body = elgg_view_layout('one_sidebar', array('content' => $content));
+		echo elgg_view_page(elgg_echo($handler), $body);
 	}
 }
 

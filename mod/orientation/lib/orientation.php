@@ -1,4 +1,7 @@
 <?php
+if(!elgg_is_logged_in()){
+	return false; 
+}
 
 /**
  * Register a step that will show on the orientation page
