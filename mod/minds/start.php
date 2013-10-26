@@ -721,7 +721,7 @@ function minds_fetch_image($description, $owner_guid) {
 use phpcassa\ColumnSlice;
 
 function featured_sort($a, $b){
-            return strcmp($a->featured_id, $b->featured_id);
+            return strcmp($b->featured_id, $a->featured_id);
         }
 
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
