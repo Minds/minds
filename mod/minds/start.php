@@ -710,6 +710,10 @@ function minds_fetch_image($description, $owner_guid) {
 
 use phpcassa\ColumnSlice;
 
+function featured_sort($a, $b){
+            return strcmp($a->featured_id, $b->featured_id);
+        }
+
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
 	global $CONFIG, $DB;
 
@@ -722,9 +726,13 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 		return $guids;
 	}
 
-        return elgg_get_entities(array( 'type' => 'object',
+        $entities = elgg_get_entities(array( 'type' => 'object',
                                         'guids' =>$guids
                                         ));
+
+	usort($entities, 'featured_sort');
+
+	return $entities;
 }
 
  /* Extend / override htmlawed */ 
