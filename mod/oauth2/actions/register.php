@@ -9,7 +9,7 @@ $secret      = get_input('secret');
 
 if ($guid) {
 
-    $entity = get_entity($guid);
+    $entity = get_entity($guid,'object');
 
     if (!elgg_instanceof($entity, 'object', 'oauth2_client') || !$entity->canEdit()) {
         register_error(elgg_echo('oauth2:register:app_not_found'));
@@ -33,7 +33,7 @@ if (!$entity->save()) {
 }
 
 if (!$guid) {
-    $entity->client_id     = uniqid($entity->guid);
+    $entity->client_id     = $entity->guid;
     $entity->client_secret = oauth2_generate_client_secret();
 }
 

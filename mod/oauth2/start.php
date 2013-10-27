@@ -162,7 +162,6 @@ function oauth2_expire_tokens() {
     $options = array(
         'type' => 'object',
         'subtype' => 'oauth2_access_token',
-        'wheres'  => array('e.time_created < now() + 3600'),
         'limit'   => 9999
     );
 
@@ -170,7 +169,9 @@ function oauth2_expire_tokens() {
 
     if (!empty($entities)) {
         foreach ($entities as $e) {
-            $e->delete();
+        	if($entity->time_create < time() + 3600){
+            	$e->delete();
+			}
         }
     }
 
