@@ -52,9 +52,30 @@
 	font-size: 125px;
 	text-align: center;
 	text-decoration:none;
-	padding-left: 20%;
+}
+.orientation h3{
+	padding-top:24px;
 }
 
+/**
+ * Sidebar Specifc
+ */
+.orientation.sidebar{
+	position:relative;
+	width:100%;
+	height:auto;
+	clear:both;
+	padding:0 8px;
+}
+.orientation.sidebar .step {
+	padding:0;
+}
+.orientation.sidebar .entypo{
+		font-size:48px;
+}
+.orientation.sidebar h3{
+	color:#333;
+}
 
 .orientation a:hover, .orientation a:hover .step{
 	text-decoration: none;
@@ -103,27 +124,4 @@
 	color:#2C6700;
 }
 .orientation .step.completed{
-}
-
-/**
- * Sidebar specifics
- */
-
-.elgg-sidebar{
-
-}
-
-.orientation.sidebar{
-	margin-top: 10%;
-}
-.orientation.sidebar h3{
-	padding-bottom: 15%;
-}
-.orientation.sidebar .entypo{
-	font-size: 600%;
-	text-align: center;
-	text-decoration:none;
-	padding-left: 10%;
-	padding-right: 20%;
-	
 }
