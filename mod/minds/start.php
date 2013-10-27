@@ -727,10 +727,18 @@ function featured_sort($a, $b){
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
 	global $CONFIG, $DB;
 
-	$namespace = 'object:featured';
+	try{
+		$namespace = 'object:featured';
 
-        $slice = new ColumnSlice($offset, "", $limit, true);//set to reversed
-        $guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+       		 $slice = new ColumnSlice($offset, "", $limit, true);//set to reversed
+    	    	$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+	
+		if(!$guids){
+			return false;
+		}
+	}catch(Exception $e){
+		return false;
+	}
 
 	if($output == 'guids'){
 		return $guids;
