@@ -708,7 +708,7 @@ function entity_row_to_elggstar($row, $type) {
  * @return ElggEntity The correct Elgg or custom object based upon entity type and subtype
  * @link http://docs.elgg.org/DataModel/Entities
  */
-function get_entity($guid, $type) {
+function get_entity($guid, $type = 'object') {
 	// This should not be a static local var. Notice that cache writing occurs in a completely
 	// different instance outside this function.
 	// @todo We need a single Memcache instance with a shared pool of namespace wrappers. This function would pull an instance from the pool.
