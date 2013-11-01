@@ -713,6 +713,7 @@ use phpcassa\ColumnSlice;
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
 	global $CONFIG, $DB;
 
+        try {
 	$namespace = 'object:featured';
 
         $slice = new ColumnSlice($offset, "", $limit, true);//set to reversed
@@ -725,6 +726,9 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
         return elgg_get_entities(array( 'type' => 'object',
                                         'guids' =>$guids
                                         ));
+        }catch(\Exception $e) {} 
+        
+        return false;
 }
 
  /* Extend / override htmlawed */ 
