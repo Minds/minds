@@ -720,7 +720,7 @@ function get_entity($guid, $type) {
 	}
 
 	//legacy style guid?
-	if(strlen($guid) < 18){
+	if((strlen($guid) < 18) && ($type!='site') && ($type!='plugin')){
 		$newguid = new GUID();
 		$guid = $newguid->migrate($guid);
 	}

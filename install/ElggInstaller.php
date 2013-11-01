@@ -522,7 +522,6 @@ class ElggInstaller {
 	 * @return void
 	 */
 	protected function complete() {
-
 		$params = array();
 		if ($this->autoLogin) {
 			$params['destination'] = 'admin';
@@ -798,10 +797,11 @@ class ElggInstaller {
 			//setup_db_connections();
 			register_translations(dirname(dirname(__FILE__)) . "/languages/");
 
+                        db_init(); // DB needs to be initialised before session start.
 			if ($stepIndex > $settingsIndex) {
 				$CONFIG->site_guid = (int) datalist_get('default_site');
 				$CONFIG->site_id = $CONFIG->site_guid;
-				$CONFIG->site = get_entity($CONFIG->site_guid);
+				$CONFIG->site = get_entity($CONFIG->site_guid, 'site');
 				$CONFIG->dataroot = datalist_get('dataroot');
 				_elgg_session_boot(NULL, NULL, NULL);
 			}

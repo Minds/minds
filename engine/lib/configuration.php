@@ -272,7 +272,15 @@ function datalist_get($name) {
 function datalist_set($name, $value) {
 	global $CONFIG, $DATALIST_CACHE;
 
-	return;
+        $site = elgg_get_site_entity(); 
+        if ($site) {
+		$name = "config:$name";
+                $site->$name = $value;
+        if ($name == '__site_secret__') die(print_r($site));
+                return $site->save();
+	} 
+        
+	return true;
 }
 
 /**
