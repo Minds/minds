@@ -24,7 +24,7 @@ if (!empty($entities)) {
 
     foreach ($entities as $e) {
 
-        $app = get_entity($e->container_guid);
+        $app = get_entity($e->container_guid,'object');
 
         if (elgg_instanceof($app, 'object', 'oauth2_client')) {
 
