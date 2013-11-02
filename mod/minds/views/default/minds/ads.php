@@ -214,5 +214,15 @@ elseif($type == 'search-ad'){
         document.getElementById("contentad11261").appendChild(s);
     })();
 </script></div>';
-}
+} elseif($type == 'toobla-side'){
+	echo "<div class='toobla-side'><div id='taboola-right-rail'></div>
+<script type='text/javascript'>
 
+window._taboola = window._taboola || [];
+
+_taboola.push({mode:'thumbs-4r', container:'taboola-right-rail',
+placement:'right-rail'});
+
+</script></div>";
+
+}

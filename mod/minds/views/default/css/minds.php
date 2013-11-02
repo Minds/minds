@@ -1231,6 +1231,9 @@ div.register-popup {
 	margin: 18px;
 	background: #AAA;
 }
+.toobla-side{
+        margin: 18px;
+}
 .adblade iframe{
 	margin: 10px auto;
 	display:block;
