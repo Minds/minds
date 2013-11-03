@@ -4,7 +4,7 @@
  */
 
 $scraper_guid = get_input('guid');
-$scraper = get_entity($scraper_guid);
+$scraper = get_entity($scraper_guid,'object');
 
 if (elgg_instanceof($scraper, 'object', 'scraper') && $scraper->canEdit()) {
 	$scraper->delete();
