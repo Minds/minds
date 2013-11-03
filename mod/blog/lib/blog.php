@@ -70,7 +70,7 @@ function blog_get_page_content_read($guid = NULL) {
 	
 	//set up for facebook
 	minds_set_metatags('og:type', 'article');
-	minds_set_metatags('og:url',$blog->getURL());
+	minds_set_metatags('og:url',$blog->getPermaURL());
 	minds_set_metatags('og:title',$blog->title);
 	minds_set_metatags('og:description', $excerpt);
 	minds_set_metatags('og:image', minds_fetch_image($blog->description, $blog->owner_guid));

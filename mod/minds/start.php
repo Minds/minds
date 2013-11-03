@@ -725,7 +725,7 @@ function featured_sort($a, $b){
 	if ($a->featured_id == $b->featured_id) { //imposisble
           return 0;
         }
-	return ($a->featured_id > $b->featured_id) ? -1 : 1;
+   	 return ($a->featured_id < $b->featured_id) ? 1 : -1;
 }
 
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
@@ -753,7 +753,7 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
                                         ));
 
 	usort($entities, 'featured_sort');
-
+	
 	return $entities;
 }
 

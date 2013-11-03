@@ -19,22 +19,22 @@ function chat_init() {
 	elgg_register_action("chat/message/save", "$actionspath/message/save.php");
 	elgg_register_action("chat/message/delete", "$actionspath/message/delete.php");
 
-	$libpath = elgg_get_plugins_path() . 'chat/lib/chat.php';
-	elgg_register_library('chat', $libpath);
+//	$libpath = elgg_get_plugins_path() . 'chat/lib/chat.php';
+//	elgg_register_library('chat', $libpath);
 
 	// Register the chat's JavaScript
-	$chat_js = elgg_get_simplecache_url('js', 'chat/chat');
-	elgg_register_simplecache_view('js/chat/chat');
-	elgg_register_js('elgg.chat', $chat_js);
-	elgg_load_js('elgg.chat');
+//	$chat_js = elgg_get_simplecache_url('js', 'chat/chat');
+//	elgg_register_simplecache_view('js/chat/chat');
+//	elgg_register_js('elgg.chat', $chat_js);
+//	elgg_load_js('elgg.chat');
 
 	// Register the chat's messaging JavaScript
-	$chat_messaging_js = elgg_get_simplecache_url('js', 'chat/messaging');
-	elgg_register_simplecache_view('js/chat/messaging');
-	elgg_register_js('elgg.chat_messaging', $chat_messaging_js);
+//	$chat_messaging_js = elgg_get_simplecache_url('js', 'chat/messaging');
+//	elgg_register_simplecache_view('js/chat/messaging');
+//	elgg_register_js('elgg.chat_messaging', $chat_messaging_js);
 
 
-/*	elgg_register_js('portal', elgg_get_site_url() . 'mod/chat/vendors/portal.js');
+	elgg_register_js('portal', elgg_get_site_url() . 'mod/chat/vendors/portal.js');
 	elgg_load_js('portal');
 	elgg_register_js('atmosphere', elgg_get_site_url() . 'mod/chat/vendors/atmosphere.js');
 	elgg_load_js('atmosphere');
@@ -46,18 +46,18 @@ function chat_init() {
 	if(elgg_is_logged_in() && elgg_get_context() != 'admin'){
 		elgg_extend_view('page/elements/foot', 'chat/bar');
 	}
-*/
+
 	// Add custom CSS
 	elgg_extend_view('css', 'chat/css');
 
 	// Hook to customize user hover menu
-	elgg_register_plugin_hook_handler('register', 'menu:user_hover', 'chat_user_hover_menu');
-	elgg_register_plugin_hook_handler('register', 'menu:entity', 'chat_entity_menu_setup');
-	elgg_register_plugin_hook_handler('register', 'menu:entity', 'chat_message_menu_setup');
-	elgg_register_plugin_hook_handler('permissions_check', 'object', 'chat_permissions_override');
+//	elgg_register_plugin_hook_handler('register', 'menu:user_hover', 'chat_user_hover_menu');
+//	elgg_register_plugin_hook_handler('register', 'menu:entity', 'chat_entity_menu_setup');
+//	elgg_register_plugin_hook_handler('register', 'menu:entity', 'chat_message_menu_setup');
+//	elgg_register_plugin_hook_handler('permissions_check', 'object', 'chat_permissions_override');
 
-	elgg_register_event_handler('pagesetup', 'system', 'chat_page_setup');
-	elgg_register_event_handler('pagesetup', 'system', 'chat_notifier');
+////	elgg_register_event_handler('pagesetup', 'system', 'chat_page_setup');
+//	elgg_register_event_handler('pagesetup', 'system', 'chat_notifier');
 	
 	elgg_register_page_handler('chat', 'chat_page_handler');
 	
@@ -72,7 +72,7 @@ function chat_init() {
  * @return bool
  */
 function chat_page_handler ($page) {
-	elgg_load_library('chat');
+//	elgg_load_library('chat');
 	
 	if (!isset($page[0])) {
 		elgg_push_breadcrumb(elgg_echo('chat'));
@@ -107,6 +107,16 @@ function chat_page_handler ($page) {
 			break;
 		case 'box':
 			echo elgg_view('chat/box', array('user_guid'=>get_input('user_guid')));
+			return true;
+			break;
+		case 'return_userlist':
+			$guids = get_input('guids'); 
+			$users = elgg_get_entities(array('type'=>'user','guids'=>$guids));
+                        foreach($users as $user){
+                        	if($user->guid != elgg_get_logged_in_user_guid()){
+                                      echo "<li class='user' id='$user->guid'> <h3>$user->name</h3></li>";
+                                }
+                        }
 			return true;
 			break;
 		case 'all':
