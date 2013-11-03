@@ -170,6 +170,50 @@ elseif($type == 'search-ad'){
 			<script type="text/javascript"
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			</script>';
+//bellow content rotator
+} elseif($type == 'content-block-rotator'){
+	$providers = array(	'contentad' => '<div class="contentad"><div id="contentad9733"></div>
+<script type="text/javascript">
+    (function() {
+        var params =
+        {
+            id: "67c8c761-6755-4867-92be-6317f1ea173a",
+            d:  "bWluZHMuY29t",
+            wid: "9733",
+            cb: (new Date()).getTime()
+        };
+
+        var qs="";
+        for(var key in params){qs+=key+"="+params[key]+"&"}
+        qs=qs.substring(0,qs.length-1);
+        var s = document.createElement("script");
+        s.type= "text/javascript";
+        s.src = "http://api.content.ad/Scripts/widget.aspx?" + qs;
+        s.async = true;
+        document.getElementById("contentad9733").appendChild(s);
+    })();</script> </div>',
+				'toobla' => "<div id='taboola-below-main-column'></div>
+<script type='text/javascript'>
+
+window._taboola = window._taboola || [];
+
+_taboola.push({mode:'thumbs-2r',
+container:'taboola-below-main-column',
+placement:'below-main-column'});
+
+</script>
+
+<div id='taboola-text-2-columns-mix'></div>
+<script type='text/javascript'>
+
+	window._taboola = window._taboola || [];
+
+	_taboola.push({mode:'text-links-2c', container:'taboola-text-2-columns-mix', placement:'text-2-columns', target_type:'mix'}); </script>"
+
+);
+	//$rand = array_rand($providers);
+	$rand = get_input('show_ad', 'contentad');
+	echo '<div class="content-block-ratator">' .$providers[$rand] . '</div>';
 } elseif($type == 'content.ad'){
 	        echo '<div class="contentad"><div id="contentad9733"></div>
 <script type="text/javascript">
