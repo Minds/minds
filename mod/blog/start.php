@@ -257,7 +257,7 @@ function blog_url_handler($entity) {
 		$guid = $entity->legacy_guid;
 	}
 
-	$friendly_title = elgg_get_friendly_title($entity->title);
+	$friendly_title = elgg_get_friendly_title($entity->title); //this is to preserve list of shares on older 
 
 	return "blog/view/$guid/$friendly_title";
 }

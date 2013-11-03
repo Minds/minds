@@ -37,7 +37,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	$thumbnail = kaltura_get_thumnail($entity->kaltura_video_id, 640, 360, 100);	
 	
 	minds_set_metatags('og:type', 'video.other');
-	//minds_set_metatags('og:url',trim($videopost->getURL()));
+	minds_set_metatags('og:url', $entity->getPermaURL());
 	minds_set_metatags('og:image', $thumbnail);
 	minds_set_metatags('og:title', $title);
 	minds_set_metatags('og:description', $description);
@@ -59,7 +59,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 } elseif($entity->getSubtype() == 'file'){
 	
 	minds_set_metatags('og:type', 'article');
-	minds_set_metatags('og:url', $entity->getURL());
+	minds_set_metatags('og:url', $entity->getPermaURL());
 	minds_set_metatags('og:image', $entity->getIconURL('large'));
 	minds_set_metatags('og:title', $title);
 	minds_set_metatags('og:description', $description);
@@ -78,7 +78,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	minds_set_metatags('og:description', $entity->description ? $photo->description : $entity->getUrl());
 	minds_set_metatags('og:image',$entity->getIconURL('large'));
 	minds_set_metatags('mindscom:photo',$entity->getIconURL('large'));
-	minds_set_metatags('og:url',$entity->getUrl());
+	minds_set_metatags('og:url',$entity->getPermaUrl());
 	 
 	minds_set_metatags('twitter:card', 'photo');
 	minds_set_metatags('twitter:url', $entity->getURL());

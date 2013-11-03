@@ -503,6 +503,14 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
 }
 
 /**
+ * Add a perma link to the entity
+ */
+function create_entity_event_hook($event, $object_type, $object) {
+	$url = $object->getURL();
+	$object->perma_url = $url;
+}
+elgg_register_event_handler('create', 'object', 'create_entity_event_hook');
+/**
  * Create a new entry in the entities table.
  *
  *
@@ -534,7 +542,7 @@ function create_entity($object = NULL, $timebased = true) {
 			$attributes[$k] = $v;
 		}
 	}
-
+	
 	$result = db_insert($object->guid, $attributes);
 
 	if($timebased){
