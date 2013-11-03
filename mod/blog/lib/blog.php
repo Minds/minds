@@ -57,7 +57,7 @@ function blog_get_page_content_read($guid = NULL) {
 	if ($blog->comments_on != 'Off') {
 		$return['content'] .= elgg_view_comments($blog);
 	}
-	$return['content'] .= elgg_view('minds/ads', array('type'=>'content.ad'));
+	$return['content'] .= elgg_view('minds/ads', array('type'=>'content-block-rotator'));
 	
 	$return['menu'] = $menu;
 	//add the sidebar
