@@ -21,6 +21,9 @@ $menu = elgg_view_menu('entity', array(
 $title = $entity->title;
 $description = strip_tags($entity->description);
 
+set_input('description', $description);
+set_input('keywords', $entity->tags);
+
 if($entity->getSubtype() == 'kaltura_video'){
 		
 	elgg_load_library('archive:kaltura');
