@@ -1,5 +1,15 @@
 <?php
 
+use phpcassa\ColumnFamily;
+use phpcassa\ColumnSlice;
+use phpcassa\Connection\ConnectionPool;
+use phpcassa\SystemManager;
+use phpcassa\Schema\StrategyClass;
+use phpcassa\Index\IndexClause;
+use phpcassa\Index\IndexExpression;
+use phpcassa\Schema\DataType\LongType;
+use phpcassa\UUID;
+
 /**
  * Minds Tiers
  * Define products and allow users to buy them
@@ -46,6 +56,8 @@ function minds_tiers_get_product($product_id) {
  * @param type $user
  */
 function minds_tiers_get_current_valid_tier($user) {
+    global $DB;
+    
     if (!$user) $user = elgg_get_logged_in_user_entity ();
     if (!$user) return false;
     
@@ -62,6 +74,44 @@ function minds_tiers_get_current_valid_tier($user) {
             $tiers_guid[] = $tier->guid;
     }
 
+    $namespace = 'object:pay';
+
+    //$slice = new ColumnSlice(0, "", 1, true);//set to reversed
+    //$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+    $results = $DB->cfs['object']->get_indexed_slices(new IndexClause(
+            array(
+                new IndexExpression('subtype', 'pay'),
+                new IndexExpression('status', 'Completed'),
+                new IndexExpression('object_guid', $tiers_guid),
+                new IndexExpression('owner_guid', $user->guid),
+            )
+    ));
+    
+    $order = array();
+    if ($results) {
+        
+        foreach ($results as $k => $r) {
+            $r['guid'] = $k;
+            $new_row = new StdClass;
+
+            foreach($r as $rk=>$rv){
+                    $new_row->$rk = $rv;
+            }
+            
+            $order[] = entity_row_to_elggstar($new_row, 'object');
+        }
+    
+        // Sort our orders
+        usort($order, function($a, $b)
+        {
+            if ($a->time_updated == $b->time_updated) {
+                return 0;
+            }
+            return ($a->time_updated > $b->time_updated) ? -1 : 1;
+        });
+    }
+    
+    /*        
     $order = elgg_get_entities_from_metadata(array(
         'type' => 'object',
         'subtype' => 'pay',
@@ -75,10 +125,10 @@ function minds_tiers_get_current_valid_tier($user) {
 
             ),
     ));
-
+*/
    
     
-   if ($order) {
+   if (count($order)) {
        
        foreach ($order as $o)
        {
@@ -102,7 +152,6 @@ function minds_tiers_get_current_valid_tier($user) {
 
    }
 
-   
    elgg_set_ignore_access($ia);
    return false;
 }
