@@ -65,8 +65,8 @@ function blog_get_page_content_read($guid = NULL) {
 	
 	$excerpt = $blog->excerpt ? $blog->excerpt : substr(strip_tags($blog->description), 0, 140);
 	
-	minds_set_metatags('description', $excerpt);
-	minds_set_metatags('keywords', $blog->tags);
+	set_input('description', $excerpt);
+	set_input('keywords', $blog->tags);
 	
 	//set up for facebook
 	minds_set_metatags('og:type', 'article');

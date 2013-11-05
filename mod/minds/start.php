@@ -722,9 +722,9 @@ use phpcassa\ColumnSlice;
 
 function featured_sort($a, $b){
             //return strcmp($b->featured_id, $a->featured_id);
-	if ($a->feautred_id == $b->featured_id) { //imposisble
-      	  return 0;
-    	}
+	if ($a->featured_id == $b->featured_id) { //imposisble
+          return 0;
+        }
    	 return ($a->featured_id < $b->featured_id) ? 1 : -1;
 }
 
