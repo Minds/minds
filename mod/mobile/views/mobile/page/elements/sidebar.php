@@ -4,6 +4,7 @@
  *
  * @uses $vars['sidebar'] Optional content that is displayed at the bottom of sidebar
  */
+return;
  if(elgg_get_context()=='oauth2'){
  	return true;//dont show sidebar for mobile apps
  }

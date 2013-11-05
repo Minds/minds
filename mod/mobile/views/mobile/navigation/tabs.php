@@ -18,7 +18,7 @@ $options = elgg_clean_vars($vars);
 
 $type = elgg_extract('type', $vars, 'horizontal');
 
-$options['class'] = "btn-group btn dropdown-toggle";
+//$options['class'] = "btn-group btn dropdown-toggle";
 
 if (isset($vars['class'])) {
 	$options['class'] = "{$options['class']} {$vars['class']}";

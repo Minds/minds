@@ -35,8 +35,8 @@ function mobile_init(){
 		elgg_register_simplecache_view('mobile');
 	
 		elgg_register_js('bootstrap', elgg_get_site_url() .'mod/mobile/vendors/bootstrap/js/bootstrap.min.js', 'footer');
-		elgg_register_css('bootstrap',elgg_get_site_url() .'mod/mobile/vendors/bootstrap/css/bootstrap.min.css');
-		elgg_register_css('bootstrap-responsive',elgg_get_site_url().'mod/mobile/vendors/bootstrap/css/bootstrap-responsive.min.css');
+		elgg_register_css('bootstrap',elgg_get_site_url() .'mod/mobile/vendors/bootstrap/css/bootstrap.min.css',1);
+		elgg_register_css('bootstrap-responsive',elgg_get_site_url().'mod/mobile/vendors/bootstrap/css/bootstrap-responsive.min.css',2);
 	}
 }
 	
