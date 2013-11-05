@@ -15,7 +15,7 @@ if (isset($vars['class'])) {
 }
 ?>
 <div class="span12">
-	<?php echo $vars['content']; ?>
+	<?php echo $vars['header']; echo $vars['content']; ?>
 	<?php
 		// @deprecated 1.8
 		echo $vars['area1'];

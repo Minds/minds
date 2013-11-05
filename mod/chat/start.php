@@ -10,6 +10,10 @@
  */
 function chat_init() {
 	global $CONFIG;
+
+	if(elgg_get_viewtype() != 'default'){
+		return;
+	}
 	
 	$actionspath = $CONFIG->pluginspath . "chat/actions/chat";
 	elgg_register_action("chat/save", "$actionspath/save.php");

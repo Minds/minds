@@ -15,11 +15,6 @@
  * @uses $vars['class']          Additional class to apply to layout
  */
 
-// give plugins an opportunity to add to content sidebars
-$sidebar_content = elgg_extract('sidebar', $vars, '');
-$params = $vars;
-$params['content'] = $sidebar_content;
-$sidebar = elgg_view('page/layouts/content/sidebar', $params);
 
 // allow page handlers to override the default header
 if (isset($vars['header'])) {
@@ -42,11 +37,12 @@ $params = $vars;
 $params['content'] = $footer_content;
 $footer = elgg_view('page/layouts/content/footer', $params);
 
-$body = $header . $filter . $content . $footer;
+$body = $content;
 
 $params = array(
+	'header' => $header . $filter,
 	'content' => $body,
-	'sidebar' => $sidebar,
+//	'sidebar' => $sidebar,
 );
 if (isset($vars['class'])) {
 	$params['class'] = $vars['class'];
