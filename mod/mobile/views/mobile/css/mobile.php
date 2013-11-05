@@ -35,6 +35,9 @@ input[type="text"], input[type="password"]{
 	display:block;
 	height:150px;
 }
+.elgg-item .blog-rich-image-holder img{
+	width: 100%;
+}
 .elgg-item .excerpt{
 	display:none;
 }
