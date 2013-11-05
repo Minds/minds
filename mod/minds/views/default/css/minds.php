@@ -1222,7 +1222,7 @@ div.register-popup {
  * Ad specific
  */
 .content-block-ratator{
-	height:620px;
+	height:720px;
 	margin:18px;
 	width:825px;
 }

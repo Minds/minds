@@ -722,10 +722,10 @@ use phpcassa\ColumnSlice;
 
 function featured_sort($a, $b){
             //return strcmp($b->featured_id, $a->featured_id);
-	if ($a->featured_id == $b->featured_id) { //imposisble
+	if ((int)$a->featured_id == (int) $b->featured_id) { //imposisble
           return 0;
         }
-   	 return ($a->featured_id < $b->featured_id) ? 1 : -1;
+	return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
 }
 
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
@@ -734,7 +734,7 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 	try{
 		$namespace = 'object:featured';
 
-       		 $slice = new ColumnSlice($offset, "", $limit, true);//set to reversed
+       		$slice = new ColumnSlice($offset, "", $limit, true);//set to reversed
     	    	$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
 	
 		if(!$guids){
@@ -753,7 +753,14 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
                                         ));
 
 	usort($entities, 'featured_sort');
-	
+
+	/*$new_list = array();
+	foreach($entities as $entity){
+		$featured_id = (int) $entity->featured_id;
+		$new_list[$featured_id] = $entity;
+	}
+
+	return $new_list;*/
 	return $entities;
 }
 

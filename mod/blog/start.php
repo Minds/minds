@@ -20,6 +20,7 @@ elgg_register_event_handler('init', 'system', 'blog_init');
 function blog_init() {
 
 	add_subtype('object', 'blog', 'ElggBlog');
+	add_subtype('object', 'scraper');
 
 	elgg_register_library('elgg:blog', elgg_get_plugins_path() . 'blog/lib/blog.php');
 	
