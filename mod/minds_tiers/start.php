@@ -16,7 +16,10 @@ function minds_tiers_init() {
 
     // Register an admin menu
     elgg_register_admin_menu_item('minds', 'products');
-    elgg_register_admin_menu_item('minds', 'manage', 'products');
+    elgg_register_admin_menu_item('minds', 'manage', 'products');   
+   
+   // set up tier indexes
+   run_function_once('minds_tier_runone_2013110501');
 }
 
 
@@ -104,6 +107,15 @@ function minds_tiers_get_current_valid_tier($user) {
    return false;
 }
 
+
+function minds_tier_runone_2013110501() {
+    global $CONFIG;
+   
+    $sys = new phpcassa\SystemManager($CONFIG->cassandra->servers[0]);
+
+    $sys->create_index($CONFIG->cassandra->keyspace, 'object', 'status', 'UTF8Type');
+    $sys->create_index($CONFIG->cassandra->keyspace, 'object', 'object_guid', 'IntegerType');
+}
 
 elgg_register_event_handler('init', 'system', 'minds_tiers_init');
 
