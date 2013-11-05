@@ -41,6 +41,8 @@ $cfs = array(	'site' => array(	'site_id' => 'UTF8Type'	),
 		'friendsof' => array(	),
 		'newsfeed' => array(	),
 		'timeline' => array(	),
+    
+                'token' => array('owner_guid'=>'UTF8Type')
 	);
 
 foreach($cfs as $cf => $indexes){
