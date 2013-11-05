@@ -4,7 +4,7 @@
  * and setup column family names.
  */
 
-require_once('settings.php');
+require_once('settings.php'); global $CONFIG;
 
 require(dirname(dirname(__FILE__)) . '/vendors/phpcassa/lib/autoload.php');
 
