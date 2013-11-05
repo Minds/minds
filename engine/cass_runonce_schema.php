@@ -42,7 +42,7 @@ $cfs = array(	'site' => array(	'site_id' => 'UTF8Type'	),
 		'newsfeed' => array(	),
 		'timeline' => array(	),
     
-                'token' => array('owner_guid'=>'UTF8Type')
+                'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
 	);
 
 foreach($cfs as $cf => $indexes){
