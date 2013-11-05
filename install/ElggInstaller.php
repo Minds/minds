@@ -1270,6 +1270,8 @@ class ElggInstaller {
 					'friendsof' => array(),
 					'newsfeed' => array(),
 					'timeline' => array(),
+                                        
+                                        'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
 				);
 			
 			//create the cfs
