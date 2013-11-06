@@ -9,7 +9,7 @@ elgg_load_library('elgg:pay');
 $full = elgg_extract('full_view', $vars, FALSE);
 $order = elgg_extract('entity', $vars, FALSE);
 
-$user = get_entity($order->owner_guid);
+$user = get_entity($order->owner_guid, 'user');
 
 if (!$order) {
 	return TRUE;

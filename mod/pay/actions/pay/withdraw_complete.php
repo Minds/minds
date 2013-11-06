@@ -9,7 +9,7 @@ elgg_load_library('elgg:pay');
 admin_gatekeeper();
 
 $withdraw_guid = get_input('guid');
-$withdraw = get_entity($withdraw_guid);
+$withdraw = get_entity($withdraw_guid, 'object');
 
 //do a check to make sure that we are not giving the user money than they are suppose to have!
 if($withdraw->amount > pay_get_user_balance($withdraw->seller_guid)){

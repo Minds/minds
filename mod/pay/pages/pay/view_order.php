@@ -9,7 +9,7 @@ elgg_load_library('elgg:pay');
 
 pay_breadcrumb();
 
-$order = get_entity(get_input('guid'));
+$order = get_entity(get_input('guid'), 'object');
 
 
 elgg_push_breadcrumb(elgg_echo('pay:account'), 'pay/account');

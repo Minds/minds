@@ -11,7 +11,7 @@ elgg_set_context('pay_callback');
 
 global $CONFIG;
 $order_guid = $CONFIG->input['guid'];
-$order = get_entity($order_guid);
+$order = get_entity($order_guid, 'object');
 
 register_pam_handler('pam_auth_usertoken');
 
