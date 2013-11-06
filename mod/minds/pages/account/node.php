@@ -10,15 +10,12 @@ $content = elgg_view_title($title);
 // Display original form for logged in users
 //if (elgg_is_admin_logged_in()) {
 /*if (true) {
-*/
+
 	$content = '<h3>Launching a social network will be available shortly.</h3> Please check back soon for more information';    
   
 /*} else {
-    
-    $payment_recieved = false; // TODO: Test to see if we've returned from a successful billing workflow
-    
-    // TODO: Payment hook here
-    
+  */  
+    $payment_recieved = false; 
     
     // Check to see if there is a paid for tier product
     if ($user) {
@@ -58,8 +55,8 @@ $content = elgg_view_title($title);
         $content .= elgg_view_form('select_tier', $form_params, $body_params);
     }
     
-}
-*/
+//}
+
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 $header = <<<HTML
 <div class="elgg-head clearfix">
