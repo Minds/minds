@@ -142,7 +142,7 @@ function minds_init(){
         // Handle some tier pages
         
         // Extend public pages
-        /*elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
+        elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
             $pages = array('tierlogin'); 
             return array_merge($pages, $return);
         });
@@ -211,7 +211,7 @@ function minds_init(){
                     // Assume that if the first one is a tier then everything is
                     $ia = elgg_set_ignore_access();
                     
-                    $tier = get_entity($items[0]->object_guid);
+                    $tier = get_entity($items[0]->object_guid, 'object');
                     if (elgg_instanceof($tier, 'object', 'minds_tier'))
                             $return['return'] = elgg_get_site_url() . 'register/node/';
                             
@@ -223,7 +223,7 @@ function minds_init(){
             }
             
         });
-        
+        /*
         // Remove elgg specific admin menu items
         elgg_register_event_handler('pagesetup', 'system', function() {    
             elgg_unregister_menu_item('admin_footer', 'faq');
