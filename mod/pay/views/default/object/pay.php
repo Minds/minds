@@ -43,7 +43,7 @@ if($full){
 	$currency = pay_get_currency();
 	
 	foreach($items as $item){
-		$object = get_entity($item->object_guid);
+		$object = get_entity($item->object_guid, 'object');
 		echo '<div>';
 			echo '<b>' . elgg_view('output/url', array('text'=> $item->title, 'href'=>$object->getURL())) . '</b> ';
 			echo '<i>x' . $item->quantity . '</i> ';
