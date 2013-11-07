@@ -43,6 +43,7 @@ $params = array(
 	'header' => $header . $filter,
 	'content' => $body,
 //	'sidebar' => $sidebar,
+	'footer' => $footer
 );
 if (isset($vars['class'])) {
 	$params['class'] = $vars['class'];

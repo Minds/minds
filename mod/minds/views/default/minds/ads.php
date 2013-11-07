@@ -211,8 +211,8 @@ placement:'below-main-column'});
 	_taboola.push({mode:'text-links-2c', container:'taboola-text-2-columns-mix', placement:'text-2-columns', target_type:'mix'}); </script>"
 
 );
-	//$rand = array_rand($providers);
-	$rand = get_input('show_ad', 'contentad');
+	$rand = array_rand($providers);
+	//$rand = get_input('show_ad', 'contentad');
 	echo '<div class="content-block-ratator">' .$providers[$rand] . '</div>';
 } elseif($type == 'content.ad'){
 	        echo '<div class="contentad"><div id="contentad9733"></div>

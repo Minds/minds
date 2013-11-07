@@ -242,6 +242,7 @@ function tp_create_imagick_thumbnails($file, $prefix, $filestorename) {
 		return FALSE;
 	}
 	$file->largethumb = $prefix."largethumb".$filestorename;
+	$file->save(); // wasn't saving!
 
 	tp_imagick_watermark($thumbname);
 
@@ -373,6 +374,7 @@ function tp_create_im_cmdline_thumbnails($file, $prefix, $filestorename) {
 
 	tp_im_cmdline_watermark($thumbname);
 
+	$file->save(); // wasn't saving!
 	unset($thumb);
 
 	return TRUE;

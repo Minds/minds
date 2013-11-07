@@ -916,7 +916,7 @@ function elgg_get_entities(array $options = array()) {
 	
 	//hack to make ajax lists not show duplicates
 	if(elgg_get_viewtype() == 'json' && $options['offset'] > 0){
-//		$options['limit']++;
+		$options['limit']++;
 	}
 
 	$type = $options['types'] ? $options['types'][0] : "object";

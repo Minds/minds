@@ -16,11 +16,14 @@ elgg_register_event_handler('init','system','mobile_init');
 function mobile_init(){
 
 	//if the site isn't using varnish then detect normally	
-	if(!isset($_SERVER['HTTP_X_UA_DEVICE'])){
+//	if(!isset($_SERVER['HTTP_X_UA_DEVICE'])){
 		mobile_detect();
-	} elseif($_SERVER['HTTP_X_UA_DEVICE'] == 'mobile') {
-		elgg_set_viewtype('mobile');
-	}
+//	} elseif($_SERVER['HTTP_X_UA_DEVICE'] == 'mobile') {
+//		elgg_set_viewtype('mobile');
+//		if(get_input('view') != 'mobile' && strpos(current_page_url(), 'action') != TRUE){
+//			forward('?view=mobile');
+//		}
+//	}
 						
 	elgg_extend_view('css/elgg','mobile/css');
 	
@@ -68,6 +71,9 @@ function mobile_detect(){
 			elgg_extend_view('page/elements/head','mobile/desktop');
 		} else {
 			elgg_set_viewtype('mobile');
+                	if(get_input('view') != 'mobile'  && !strpos(current_page_url(), 'action')){
+                        	forward('?view=mobile');
+                	}
 		}
 	}
 }

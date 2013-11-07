@@ -27,6 +27,9 @@ input[type="text"], input[type="password"]{
 .elgg-item .elgg-body{
 	clear:none !important;
 }
+.elgg-river .elgg-item .elgg-body{
+	float:left;
+}
 .elgg-item h2{
 	line-height:20px;
 	margin:0;
@@ -40,6 +43,10 @@ input[type="text"], input[type="password"]{
 }
 .elgg-item .excerpt{
 	display:none;
+}
+/* CONTENT SPECIFIC*/
+.elgg-content iframe, .elgg-content embed{
+	width: 100%;
 }
 .social_login{
 	margin:5px;

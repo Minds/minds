@@ -186,20 +186,7 @@
 				offset = $list.find('.elgg-list').children().length;
 			} else {
 				if(loc == elgg.get_site_url()){
-					var ul = $list.find('.elgg-list:last');
-					function minMaxId(selector) {
-							  var min=null, max=null;
-							  $(selector).each(function() {
-								console.log(selector);
-							    var id = selector.attr('featured_id');
-								console.log(id);
-							    if ((min===null) || (id < min)) { min = id; }
-							    if ((max===null) || (id > max)) { max = id; }
-							  });
-							  return {min:min, max:max};
-							}	
-					console.log(minMaxId(ul));		
-				//offset = $list.find('li.elgg-item:last').attr('featured_id');
+					offset = $list.find('li.elgg-item:last').attr('featured_id');
 				} else {
 					offset = $list.find('li.elgg-item:last').attr('id'); 
 				}

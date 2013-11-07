@@ -36,6 +36,9 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 			if (isset($vars['content'])) {
 				echo $vars['content'];
 			}
+			if (isset($vars['footer'])) {
+                                echo $vars['footer'];
+                        }
 		?>
 </div>
 
