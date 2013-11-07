@@ -320,6 +320,10 @@ function minds_login_page_handler($page) {
 }
 
 function minds_route_page_handler($hook, $type, $returnvalue, $params) {
+	if(!$returnvalue){
+		$returnvalue = array();
+	}
+
 	if (!elgg_is_logged_in() && $returnvalue) {
 		$handler = elgg_extract('handler', $returnvalue);
 // 		$page = elgg_extract('segments', $returnvalue);

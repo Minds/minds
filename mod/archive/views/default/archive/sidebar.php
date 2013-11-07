@@ -9,7 +9,7 @@ echo elgg_view('minds/ads', array('type'=>'content-side-single'));
 $guid = elgg_extract('guid', $vars);
 if($guid){
 	$video = get_entity($guid, 'object');
-	$owners_videos = elgg_get_entities(array('type'=>'object', 'subtypes'=>array('kaltura_video'), 'owner_guid'=>$video->owner_guid, 'limit'=>4));
+	$owners_videos = elgg_get_entities(array('type'=>'object', 'subtypes'=>array('kaltura_video'), 'owner_guid'=>$video->owner_guid, 'limit'=>4)) ?: array();
 	if (($key = array_search($video, $owners_videos)) !== false) {
 	    unset($owners_videos[$key]);
 	}

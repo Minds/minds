@@ -129,7 +129,7 @@ $sidebar = elgg_view('archive/sidebar', array('guid'=>$guid));
 
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 
-$trending_guids = analytics_retrieve(array('context'=>'archive','limit'=> $limit, 'offset'=>$offset));
+$trending_guids = analytics_retrieve(array('context'=>'archive','limit'=> 6, 'offset'=>get_input('offset', '')));
 
 $trending = elgg_list_entities(  array(  'guids' => $trending_guids,
                                         'full_view' => FALSE,

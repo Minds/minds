@@ -42,6 +42,8 @@ class TidypicsImage extends ElggFile {
 			$this->saveThumbnails();
 			$this->extractExifData();
 		}
+
+		create_entity($this);
 		
 		return $this->guid;
 	}
@@ -310,6 +312,7 @@ class TidypicsImage extends ElggFile {
 		if (!$thumb) {
 			return '';
 		}
+		//var_dump($thumb);exit;
 		$file = new ElggFile();
 		$file->owner_guid = $this->getOwnerGUID();
 		$file->setFilename($thumb);

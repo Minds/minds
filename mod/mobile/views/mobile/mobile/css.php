@@ -48,6 +48,10 @@ li.elgg-item .elgg-menu{
 	display:none;
 }
 
+li.elgg-item:hover .elgg-menu{
+        display:none;
+}
+
 .sidebar-nav li a:hover, .sidebar-nav li.active a{
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
