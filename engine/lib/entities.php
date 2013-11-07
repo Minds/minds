@@ -507,7 +507,9 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
  */
 function create_entity_event_hook($event, $object_type, $object) {
 	$url = $object->getURL();
-	$object->perma_url = $url;
+	if($url){
+		$object->perma_url = $url;
+	}
 }
 elgg_register_event_handler('create', 'object', 'create_entity_event_hook');
 /**
@@ -529,7 +531,7 @@ function create_entity($object = NULL, $timebased = true) {
 	$g = new GUID();
 
 	if($object->guid){
-                elgg_trigger_event('update', $object->type, $object);
+	       elgg_trigger_event('update', $object->type, $object);
         } else {
 		$object->guid = $g->generate();
 	        elgg_trigger_event('create', $object->type, $object);
