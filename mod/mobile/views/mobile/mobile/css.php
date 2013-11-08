@@ -83,6 +83,10 @@ li.elgg-item:hover .elgg-menu{
 }
 .mobile-ad{
  margin-left: -20px;
+	width:320px;
+	overflow-x:hidden;
+	height:auto;
+	display:block;
 }
 .notification.notifier {
 background-position: 0 -486px;

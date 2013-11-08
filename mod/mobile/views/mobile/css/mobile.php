@@ -1,3 +1,7 @@
+html
+{
+    overflow-x:hidden;
+}
 body{
 	background:#FFF !important;
 }

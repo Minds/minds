@@ -156,7 +156,7 @@ function analytics_fetch(){
 		$views = $row[2];
 		//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
 		array_push($guids, $guid);
-		if(in_array($guid, $guids) && !elgg_instanceof($entity,'object')){
+		if(in_array($guid, $guids) || !elgg_instanceof($entity,'object')){
 			//duplicate
 			echo "GUID $guid failed, probably because it doesn't exists \n";
 			continue;
