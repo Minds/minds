@@ -20,6 +20,14 @@ $source = get_input("source", 'all');
 $category = get_input("category", 'all');
 
 /**
+ * Update orientation
+ * @todo make this a trigger...
+ */
+if(!elgg_get_plugin_user_setting('search', elgg_get_logged_in_user_guid(), 'minds_search')){
+	elgg_set_plugin_user_setting('search', true);
+}
+
+/**
  * Minds Search. Local
  */
 /*$sort = array('name:desc', 'title:desc');

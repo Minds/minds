@@ -40,18 +40,8 @@ if (!elgg_get_logged_in_user_guid()) {
 }
 
 // Get the client record
-$options = array(
-    'type'    => 'object',
-    'subtype' => 'oauth2_client',
-    'metadata_name_value_pairs' => array(
-        'name'    => 'client_id',
-        'value'   => $client_id,
-        'operand' => '='
-    ),
-    'limit' => 1,
-);
 
-$client = elgg_get_entities_from_metadata($options);
+$client = get_entity($client_id, 'object');
 
 if (empty($client)) {
     forward(REFERER);
@@ -64,7 +54,7 @@ $options = array(
     'type'    => 'object',
     'subtype' => 'oauth2_refresh_token',
     'owner_guid' => elgg_get_logged_in_user_guid(),
-    'container_guid' => $client[0]->guid,
+    'container_guid' => $client->guid,
     'limit' => 1,
 );
 
@@ -84,21 +74,21 @@ elgg_set_ignore_access($access);
 // authorized this app. 
     
 $content = elgg_view('oauth2/authorize', array(
-    'entity'        => $client[0],
+    'entity'        => $client,
     'client_id'     => $client_id,
     'response_type' => $response_type,
     'redirect_uri'  => $redirect_uri
 ));
 
 $params = array(
-    'title'   => $client[0]->title, 
+    'title'   => $client->title, 
     'content' => $content,
     'filter'  => ''
 );
 
 $body = elgg_view_layout('content', $params);
 
-echo elgg_view_page($client[0]->title, $body);
+echo elgg_view_page($client->title, $body);
 
 
 

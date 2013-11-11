@@ -234,6 +234,9 @@ input[name=terms]{
 	width:90%;
 	margin:0 auto;
 }
+.minds-body-header > .inner > .elgg-head{
+	min-width:998px;
+}
 .minds-body-header h2{
 	font-size:52px;
 	font-weight:lighter;
@@ -244,6 +247,7 @@ input[name=terms]{
 }
 .minds-body-header .elgg-menu-entity, .minds-body-header .elgg-menu-title{
 	margin:10px;
+	clear:right;
 }
 .minds-body-header .elgg-form-wall-add{
 	float:right;
@@ -612,14 +616,14 @@ li .excerpt a{
 .elgg-sidebar .elgg-owner-block .elgg-image-block .elgg-body{
 	padding:5px;
 }
-.elgg-sidebar li a{
+.elgg-sidebar .elgg-menu-page li a{
         padding:8px;
 }
 .elgg-sidebar li.elgg-item{
 	margin:5px;
 	width:148px;
 	padding:0;
-	height:125px;;
+	height:125px;
 }
 .elgg-sidebar li.elgg-item img{
 	width:100%;
@@ -1217,9 +1221,19 @@ div.register-popup {
 /**
  * Ad specific
  */
-.contentad{
+.content-block-ratator{
 	width:100%;
 	height:620px;
+	margin:18px;
+}
+.contentad-side{
+	width: 300px;
+	height: 600px;
+	margin: 18px;
+	background: #AAA;
+}
+.toobla-side{
+        margin: 18px;
 }
 .adblade iframe{
 	margin: 10px auto;

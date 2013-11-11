@@ -165,16 +165,18 @@ function blog_page_handler($page) {
 			break;
 		case 'view':
 			$params = blog_get_page_content_read($page[1]);
+			
+			$trending = blog_get_trending_page_content_list();
+                        //$params = blog_get_page_content_list();
+			//$body .= elgg_view_layout('gallery', $params);
+		
+			$params['footer'] .= $trending['content'];
+		
 			$body = elgg_view_layout('content', $params);
 	
-			$params = blog_get_trending_page_content_list();
-                        //$params = blog_get_page_content_list();
-			$params['header'] = elgg_view_title('More...');
-			$params['filter'] = "";
-			$body .= elgg_view_layout('gallery', $params);
-
-                        echo elgg_view_page($params['title'], $body);
-			return;	
+			echo elgg_view_page($params['title'], $body);
+			
+			return true;	
 			break;
 		case 'read': // Elgg 1.7 compatibility
 			register_error(elgg_echo("changebookmark"));
@@ -255,7 +257,7 @@ function blog_url_handler($entity) {
 		$guid = $entity->legacy_guid;
 	}
 
-	$friendly_title = elgg_get_friendly_title($entity->title);
+	$friendly_title = elgg_get_friendly_title($entity->title); //this is to preserve list of shares on older 
 
 	return "blog/view/$guid/$friendly_title";
 }

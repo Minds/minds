@@ -42,7 +42,7 @@ function minds_comments_view_comment($comment) {
 			'id'=>$comment['_id'],
 			'thumbs:up'=>$comment['_source']['thumbs']['up'],
 			'thumbs:down'=>$comment['_source']['thumbs']['down'],
-			'owner_guid'=>$comment['_source']['guid'],
+			'owner_guid'=>$comment['_source']['owner_guid'],
 		    'handler' => $handler,
 		    'class' => 'elgg-menu-hz',
 		    'sort_by' => 'priority',

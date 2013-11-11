@@ -38,11 +38,8 @@ function blog_get_page_content_read($guid = NULL) {
                 'class' => 'elgg-menu-hz',
         ));
 	$title = elgg_view_title($blog->title, array('class' => 'elgg-heading-main'));
-	$return['header'] = <<<HTML
-		<div class="elgg-head clearfix">
-			$title$menu
-		</div>
-HTML;
+
+	$return['buttons'] = ' ';	
 	$return['title'] = $blog->title;
 	
 /*	$container = $blog->getContainerEntity();
@@ -55,13 +52,14 @@ HTML;
 */
 	elgg_push_breadcrumb($blog->title);
 	$return['content'] = elgg_view_entity($blog, array('full_view' => true));
-	$return['content'] .= elgg_view('minds/ads', array('type'=>'content-foot'));
+	$return['content'] .= elgg_view('minds/ads', array('type'=>'content-foot-user-1'));
 	//check to see if comment are on
 	if ($blog->comments_on != 'Off') {
 		$return['content'] .= elgg_view_comments($blog);
 	}
-	$return['content'] .= elgg_view('minds/ads', array('type'=>'content.ad'));
+	$return['content'] .= elgg_view('minds/ads', array('type'=>'content-block-rotator'));
 	
+	$return['menu'] = $menu;
 	//add the sidebar
 	$return['sidebar'] = blog_sidebar($blog);
 	
@@ -72,7 +70,7 @@ HTML;
 	
 	//set up for facebook
 	minds_set_metatags('og:type', 'article');
-	minds_set_metatags('og:url',$blog->getURL());
+	minds_set_metatags('og:url',$blog->getPermaURL());
 	minds_set_metatags('og:title',$blog->title);
 	minds_set_metatags('og:description', $excerpt);
 	minds_set_metatags('og:image', minds_fetch_image($blog->description, $blog->owner_guid));
@@ -178,9 +176,12 @@ function blog_get_trending_page_content_list() {
 	$offset = get_input('offset', '');
 
 	$guids = analytics_retrieve(array('context'=>'blog','limit'=> $limit, 'offset'=>$offset));
-
-	$list = elgg_list_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>0, 'full_view'=>false, 'pagination_legacy' => true));
-        if (!$list) {
+	
+	if($guids)	{
+		$list = elgg_list_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>0, 'full_view'=>false, 'pagination_legacy' => true));
+	}        
+	
+	if (!$list) {
                 $return['content'] = elgg_echo('blog:none');
         } else {
                 $return['content'] = $list;
@@ -526,24 +527,32 @@ function blog_get_featured($limit=6){
  * @param guid (int)
  */
 function blog_sidebar($blog){
+	
+	//@todo fix bug where json will pick this out...
+	if(elgg_get_viewtype() == 'json'){
+		return;
+	}
+
 	if($blog){	
 		$return .= elgg_view('minds/ads', array('type'=>'content-side-single'));
 		//show more posts from this user
-		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>2));
+		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>4));
 		if (($key = array_search($blog, $owners_blogs)) !== false) {
 		    unset($owners_blogs[$key]);
 		}
 		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar', 'pagination'=>false));
 		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs, array('class'=>'blog-sidebar'));
 		
-		$return .= elgg_view('minds/ads', array('type'=>'content-side-single-user'));
+		$return .= elgg_view('minds/ads', array('type'=>'content-side-single-user-2'));
 	}
 	//show featured blogs
-/*	$featured_blogs = minds_get_featured(6);
+	$featured_blogs = minds_get_featured(null, 8);
 	if($featured_blogs){
 		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar', 'pagination'=>false));
 		$return .= elgg_view_module('aside', elgg_echo('blog:featured'), $featured_blogs, array('class'=>'blog-sidebar'));	
 	}
-*/	
+
+//	$return .= elgg_view('minds/ads', array('type'=>'content.ad-side'));
+	
 	return $return;
 }

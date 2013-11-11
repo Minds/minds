@@ -15,6 +15,7 @@ class ElggBlog extends ElggObject {
 		parent::initializeAttributes();
 
 		$this->attributes['subtype'] = "blog";
+
 	}
 
 	/**

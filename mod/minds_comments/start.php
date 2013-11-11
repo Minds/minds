@@ -57,6 +57,7 @@ function minds_comments_menu($hook, $type, $return, $params) {
 	$type = elgg_extract('type', $params, false);
 	$pid = elgg_extract('pid', $params, false);
 	$id = elgg_extract('id', $params, false);
+	
 	$owner_guid = elgg_extract('owner_guid', $params, false);
 	unset($return);
 	

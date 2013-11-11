@@ -6,7 +6,7 @@
  */
 
 $guid = get_input('guid');
-$entity = get_entity($guid);
+$entity = get_entity($guid,'object');
 
 if (elgg_instanceof($entity, 'object', 'oauth2_client') && $entity->canEdit()) {
 

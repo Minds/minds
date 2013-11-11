@@ -37,7 +37,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	$thumbnail = kaltura_get_thumnail($entity->kaltura_video_id, 640, 360, 100);	
 	
 	minds_set_metatags('og:type', 'video.other');
-	//minds_set_metatags('og:url',trim($videopost->getURL()));
+	minds_set_metatags('og:url', $entity->getPermaURL());
 	minds_set_metatags('og:image', $thumbnail);
 	minds_set_metatags('og:title', $title);
 	minds_set_metatags('og:description', $description);
@@ -59,7 +59,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 } elseif($entity->getSubtype() == 'file'){
 	
 	minds_set_metatags('og:type', 'article');
-	minds_set_metatags('og:url', $entity->getURL());
+	minds_set_metatags('og:url', $entity->getPermaURL());
 	minds_set_metatags('og:image', $entity->getIconURL('large'));
 	minds_set_metatags('og:title', $title);
 	minds_set_metatags('og:description', $description);
@@ -78,7 +78,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	minds_set_metatags('og:description', $entity->description ? $photo->description : $entity->getUrl());
 	minds_set_metatags('og:image',$entity->getIconURL('large'));
 	minds_set_metatags('mindscom:photo',$entity->getIconURL('large'));
-	minds_set_metatags('og:url',$entity->getUrl());
+	minds_set_metatags('og:url',$entity->getPermaUrl());
 	 
 	minds_set_metatags('twitter:card', 'photo');
 	minds_set_metatags('twitter:url', $entity->getURL());
@@ -119,24 +119,31 @@ if($entity->getSubtype() == 'album'){
 elgg_push_breadcrumb($title);
 
 $content = elgg_view_entity($entity, array('full_view' => true));
-$content .= elgg_view('minds/ads', array('type'=>'content-foot')); 
+$content .= elgg_view('minds/ads', array('type'=>'content-foot-user-1')); 
 $content .= elgg_view_comments($entity);
 
 $sidebar = elgg_view('archive/sidebar', array('guid'=>$guid));
 
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
-$header = <<<HTML
-<div class="elgg-head clearfix">
-	$title_block$menu
-</div>
-HTML;
+
+$trending_guids = analytics_retrieve(array('context'=>'archive','limit'=> $limit, 'offset'=>$offset));
+
+$trending = elgg_list_entities(  array(  'guids' => $trending_guids,
+                                        'full_view' => FALSE,
+                                        'archive_view' => TRUE,
+                                        'limit'=>$limit,
+                                        'offset' => $offset
+                                ));
+
+
 
 $body = elgg_view_layout("content", array(	
 					'filter'=> '', 
 					'title' => $title,
-					'header' => $header,
 					'content'=> $content,
-					'sidebar' => $sidebar 
+					'menu' => $menu,
+					'sidebar' => $sidebar,
+					'footer' => $trending
 				));
 
 echo elgg_view_page($title,$body);
