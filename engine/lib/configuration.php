@@ -276,7 +276,7 @@ function datalist_set($name, $value) {
         if ($site) {
 		$name = "config:$name";
                 $site->$name = $value;
-        if ($name == '__site_secret__') die(print_r($site));
+        
                 return $site->save();
 	} 
         
