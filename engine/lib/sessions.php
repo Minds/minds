@@ -281,7 +281,7 @@ function login(ElggUser $user, $persistent = false) {
 	$SESSION['name'] = $user->name;
 	//$SESSION['friends'] = $user->getFriends(null, 200, 0, 'guids');
 	//$SESSION['friendsof'] = $user->getFriendsOf(null, 200, 0, 'guids');
-
+	
 	// if remember me checked, set cookie with token and store token on user
 	if (($persistent)) {
 		$code = (md5($user->name . $user->username . time() . rand()));
@@ -289,7 +289,7 @@ function login(ElggUser $user, $persistent = false) {
 		$user->code = md5($code);
 		setcookie("elggperm", $code, (time() + (86400 * 30)), "/");
 	}
-	
+
 	if (!$user->save() || !elgg_trigger_event('login', 'user', $user)) {
 		unset($SESSION['username']);
 		unset($SESSION['name']);
@@ -389,9 +389,12 @@ function _elgg_session_boot($force = false) {
 
 		session_name('Minds');
 		session_start();	
+		
+		$storage = new ElggSessionStorage($handler);
 	
 		// Initialise the magic session
-		$SESSION = new ElggSession();
+		$SESSION = new ElggSession($storage);
+		
 	
 		if (!$force && !elgg_is_logged_in()) {
 			setcookie("Minds", "", (time() - (86400 * 30)), "/");
@@ -400,7 +403,7 @@ function _elgg_session_boot($force = false) {
 			if (!isset($SESSION['__elgg_session'])) {
 				$SESSION['__elgg_session'] = md5(microtime() . rand());
 			}
-			
+
 			// test whether we have a user session
 			if (empty($SESSION['guid'])) {
 		
