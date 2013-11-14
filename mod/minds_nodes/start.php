@@ -28,8 +28,7 @@ function minds_nodes_init() {
 	elgg_register_action('minds/products/delete', dirname(__FILE__) . '/actions/delete.php', 'admin');
 	elgg_register_action("registernode", dirname(__FILE__) . "/actions/registernode.php");
         elgg_register_action("registernewnode", dirname(__FILE__) . "/actions/registernewnode.php");
-        elgg_register_action("select_free_tier", dirname(__FILE__) . "/actions/select_free_tier.php");
-	elgg_register_action("select_paid_tier", dirname(__FILE__) . "/actions/select_paid_tier.php");
+	elgg_register_action("select_tier", dirname(__FILE__) . "/actions/select_tier.php");
 
 	elgg_extend_view('css/elgg', 'minds_nodes/css');
 
@@ -169,13 +168,14 @@ function minds_nodes_page_handler($pages){
 			'text' => elgg_echo('minds_node:launch'),
 			'link_class' => 'elgg-button elgg-button-action',
 		));
-
-	elgg_register_menu_item('title', array(
+	if(elgg_is_logged_in()){
+		elgg_register_menu_item('title', array(
                         'name' => 'manage',
                         'href' => 'nodes/manage',
                         'text' => elgg_echo('minds_node:manage'),
                         'link_class' => 'elgg-button elgg-button-action',
                 ));
+	}
 	
 	if(!$pages[0]){
 		//does the user have any nodes setup? If so send them to the manage page

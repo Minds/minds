@@ -11,13 +11,14 @@ class MindsNode extends ElggObject{
 
 		$this->attributes['subtype'] = "node";
 		$this->attributes['launched'] = false;
+		$this->attributes['expires'] = $this->expires();
 	}
 
 	/**
 	 * Is this node allowed it's own domain
 	 */
-	public function allowedDomain(){
-		//return $this->getTier()->allowedDomain();
+	public function allowedDomain(){ 
+		return $this->getTier()->allowedDomain();
 	}
 
 	/**
@@ -32,6 +33,17 @@ class MindsNode extends ElggObject{
 		if($this->launched){
 			return 'http://'. $this->domain;
 		}
+	}
+
+	/**
+	 * Check when the node expires
+	 */
+	public function expires(){
+		//get the expiration for the current tier
+		$expires = $this->getTier()->expires;
+		if (!$expires) $expires = MINDS_EXPIRES_YEAR; // Default to year
+		
+		return $expires / (60 * 60 *24);
 	}
 
 	/** 

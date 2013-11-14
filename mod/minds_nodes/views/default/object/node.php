@@ -6,6 +6,14 @@ if(!elgg_instanceof($node,'object', 'node')){
 return false;
 }
 
+$tier = $node->getTier()->title;
+$own_domain = $node->allowedDomain() ? 'yes' : 'no';
+$expire = $node->expires();
+$stats= "<div class='stats'><p><b>Tier: </b>$tier</p>
+                <p><b>Domain?: </b> $own_domain</p>
+                <p><b>Expires: </b> $expire days</p>
+";
+
 if($node->paid()){
 	if($node->launched){
 		//display stats
@@ -24,18 +32,12 @@ if($node->paid()){
 	$content = "We are still awaiting payment from you. Please $order_link for more.";
 }
 
-$tier = $node->getTier()->title;
-$own_domain = $node->allowedDomain();
-$content .= "<div class='stats'><p><b>Tier: </b>$tier</p>
-		<p><b>Domain?: </b> $owner_domain</p>
-</div>";
-
 $params = array(
 	'entity' => $node,
 	'title' => $node->launched ? elgg_view('output/url', array('text'=>$node->domain,'href'=>$node->getURL())) : 'New node',
 	'metadata' => $metadata,
 	'subtitle' => $subtitle,
-	'content' => $content,
+	'content' => $stats . $content,
 );
 
 $params = $params + $vars;

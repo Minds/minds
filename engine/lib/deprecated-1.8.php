@@ -3053,7 +3053,6 @@ function get_entity_icon_url(ElggEntity $entity, $size = 'medium') {
 	elgg_deprecated_notice("get_entity_icon_url() deprecated for getIconURL()", 1.8);
 	global $CONFIG;
 
-	$size = sanitise_string($size);
 	switch (strtolower($size)) {
 		case 'master':
 			$size = 'master';

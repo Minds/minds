@@ -818,9 +818,9 @@ function pam_auth_usertoken() {
 	}
 
 	$validated_userid = validate_user_token($token, $CONFIG->site_id);
-
+	
 	if ($validated_userid) {
-		$u = get_entity($validated_userid);
+		$u = get_entity($validated_userid,'user');
 
 		// Could we get the user?
 		if (!$u) {
@@ -882,7 +882,8 @@ function create_user_token($username, $expire = 60) {
 	}
 
         if (db_insert($token, array(
-            'owner_guid' => $user->guid,
+            'type' => 'token',
+	    'owner_guid' => $user->guid,
             'site_guid' => $site_guid,
             'expires' => $time
         ))) {
@@ -961,9 +962,13 @@ function validate_user_token($token, $site_guid) {
 	}
 
 	$time = time();
-        $user = $DB->cfs['token']->get($token);
-        
-        if ($user)
+        try{
+	$user = $DB->cfs['token']->get($token);
+        } catch(Exception $e){
+		var_dump($e); 
+//		exit;
+	}
+	if ($user)
             return $user['owner_guid'];
 /*
 	$user = get_data_row("SELECT * from {$CONFIG->dbprefix}users_apisessions

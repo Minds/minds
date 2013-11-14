@@ -21,9 +21,9 @@ $name = $tier_id;
  
         if (elgg_is_logged_in()){ 
        		if ($tier->price == 0) {
-               		$title = elgg_view('output/url', array('is_action' => true, 'id' => $tier->product_id, 'href' => elgg_get_site_url() . 'action/select_free_tier?tier_id='. $tier->guid, 'text' =>  'Free', 'class' => 'pay buynow login'));
+               		$title = elgg_view('output/url', array('is_action' => true, 'id' => $tier->product_id, 'href' => elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid, 'text' =>  'Free', 'class' => 'pay buynow login'));
            	 } else {
-        		$title = elgg_view('output/url', array('is_action' => true, 'id' => $tier->product_id, 'href' => elgg_get_site_url() . 'action/select_paid_tier?tier_id='. $tier->guid, 'text' =>  $currency['symbol'] . $tier->price, 'class' => 'pay buynow login'));
+        		$title = elgg_view('output/url', array('is_action' => true, 'id' => $tier->product_id, 'href' => elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid, 'text' =>  $currency['symbol'] . $tier->price, 'class' => 'pay buynow login'));
 
 		}
 	} else {

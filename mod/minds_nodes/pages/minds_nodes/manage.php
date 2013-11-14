@@ -1,5 +1,11 @@
 <?php
 
+if(!elgg_is_logged_in()){
+
+	forward();
+
+}
+
 $title_block = elgg_view_title(elgg_echo('Manage nodes'), array('class' => 'elgg-heading-main'));
 $buttons = elgg_view_menu('title', array(
 		'sort_by' => 'priority',

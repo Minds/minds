@@ -6,8 +6,8 @@
     if (elgg_is_logged_in() && $_SESSION['__tier_selected'])
     {
         $tier = get_entity($_SESSION['__tier_selected']);
-        $url = elgg_get_site_url(). "action/pay/basket/add?type_guid={$tier->guid}&title={$tier->title}&description={$tier->description}&price={$tier->price}&quantity=1&recurring=y";
-        $url = elgg_add_action_tokens_to_url($url);
+        $url = elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid;
+	$url = elgg_add_action_tokens_to_url($url);
 
         unset ($_SESSION['__tier_selected']);
 

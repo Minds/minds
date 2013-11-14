@@ -1,5 +1,9 @@
 <?php
 
+if(!elgg_is_logged_in()){
+	forward();
+}
+
 $node_guid = get_input('node_guid');
 $node = get_entity($node_guid, 'object');
 
