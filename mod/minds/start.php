@@ -216,6 +216,8 @@ function minds_init(){
                             $return['return'] = elgg_get_site_url() . 'register/node/';
                             
                     elgg_set_ignore_access($ia);
+                    
+                    error_log('PAYPAL: Return url sent to ' . $return['return']);
              
                     return $return;
                 }
