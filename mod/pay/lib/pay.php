@@ -303,6 +303,8 @@ function paypal_handler($params){
 					'email' => $user->email
 				);
 	
+        error_log('PAYPAL Variables: ' . print_r($variables, true));
+        
         /**
          * Support for recurring payments.
          * See https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/subscribe_buttons/
