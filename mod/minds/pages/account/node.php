@@ -40,11 +40,10 @@ $content = elgg_view_title($title);
         $body_params = array(
             'order' => $order
         );
-        $content .= elgg_view_form('node', $form_params, $body_params);
-    }
-    else
-    {
-        $register_url = elgg_get_site_url() . 'action/select_tier';
+        $content = elgg_view_form('node', $form_params, $body_params);
+    } else {
+        //allow multiple nodes per account
+	$register_url = elgg_get_site_url() . 'action/select_tier';
         $form_params = array(
                 'action' => $register_url,
                 'class' => 'elgg-form-account',
@@ -52,9 +51,8 @@ $content = elgg_view_title($title);
 
         $body_params = array(
         );
-        $content .= elgg_view_form('select_tier', $form_params, $body_params);
+        $content = elgg_view_form('select_tier', $form_params, $body_params);
     }
-    
 //}
 
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
@@ -65,6 +63,8 @@ $header = <<<HTML
 HTML;
 
     
-$body = elgg_view_layout("one_column", array('content' => '<div class="elgg-inner">'. $content . ' <br/> '.  $buttons .'</div>', 'header'=>$header));
+$body = elgg_view_layout("one_column", array(	'content' => '<div class="elgg-inner">'. $content . ' <br/> '.  $buttons .'</div>', 
+						'header'=>$header,
+					));
 
 echo elgg_view_page($title, $body);

@@ -960,9 +960,6 @@ function validate_user_token($token, $site_guid) {
 		$site_guid = $CONFIG->site_id;
 	}
 
-	$site_guid = (int)$site_guid;
-	$token = sanitise_string($token);
-
 	$time = time();
         $user = $DB->cfs['token']->get($token);
         

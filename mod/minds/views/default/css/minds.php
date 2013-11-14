@@ -1165,59 +1165,6 @@ div.signup-options .right {
     float: right;
 }
 
-div.node-signup {
-    margin-top: 30px;
-    
-}
-
-div.node-signup div.email, 
-div.node-signup div.full-domain,
-div.node-signup div.node {
-    margin-top: 25px;
-    margin-bottom: 25px;
-}
-
-div.node-signup div.blurb-or {
-    font-weight: bold;
-    text-align: center;
-    font-size: 1.2em;
-}
-
-div.node-signup div.node input {
-    width: 85%;
-}
-
-
-/** Tier selection */ 
-div.tiers {
-    width: 900px;
-}
-div.tiers div.tier {
-
-    background-color: #4690D6;
-    border: 1px solid #4690D6;
-    width: 250px;
-    height: 150px;
-    float: left;
-    margin: 10px;
-    margin-bottom:30px;
-}
-
-div.tier_details div.default-description,
-div.tier div.default-description {
-    padding: 10px;
-}
-
-div.tier_details {
-border: 1px solid #000;
-}
-
-div.register-popup {
-    width:700px;
-    margin-left: 30px;
-    margin-right: auto;
-}
-
 /**
  * Ad specific
  */

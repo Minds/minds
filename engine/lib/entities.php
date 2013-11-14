@@ -534,16 +534,8 @@ function create_entity($object = NULL, $timebased = true) {
 		$object->guid = $g->generate();
 	        elgg_trigger_event('create', $object->type, $object);
         }
-
-	//convert object to array of attributes
-	$attributes = array();
-	foreach($object as $k => $v){
-		if(isset($v)){
-			$attributes[$k] = $v;
-		}
-	}
 	
-	$result = db_insert($object->guid, $attributes);
+	$result = db_insert($object->guid, $object->toArray());
 
 	if($timebased){
 		$namespace = $object->type;

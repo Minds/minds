@@ -21,7 +21,7 @@ $user_pam = new ElggPAM('user');
 $user_auth_result = $user_pam->authenticate(array());
 
 $handler = $order->payment_method ? $order->payment_method : $CONFIG->input['payment_handler'];
-
+var_dump($user_pam);
 if($user_auth_result){
 	pay_call_payment_handler_callback($handler, $order_guid);
 	//pay_call_payment_handler_callback('paypal', $order_guid);
