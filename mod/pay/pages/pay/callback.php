@@ -9,6 +9,8 @@ elgg_load_library('elgg:pay');
 
 elgg_set_context('pay_callback');
 
+error_log('PAYPAL: DEBUG Callback fired');
+
 global $CONFIG;
 $order_guid = $CONFIG->input['guid'];
 $order = get_entity($order_guid, 'object');
