@@ -205,7 +205,10 @@
                             foreach ($attrs as $k => $v) {
                                 $attrs[$k] = serialize ($v);
                             }
+                            
                             $MULTI_DB->cfs['domain']->insert($url, $attrs); 
+                            
+                            return $this->getID();
                         } catch (\Exception $e) {
                             return false;
                         }
