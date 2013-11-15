@@ -29,7 +29,7 @@ if (isset($vars['filter'])) {
 $filter = elgg_view('page/layouts/content/filter', $vars);
 
 // the all important content
-$content = elgg_extract('content', $vars, '');
+$content = elgg_extract('content', $vars, '') . elgg_view('minds/ads', array('type'=>'taboola'));
 
 // optional footer for main content area
 $footer_content = elgg_extract('footer', $vars, '');

@@ -37,6 +37,20 @@ function blog_get_page_content_read($guid = NULL) {
                 'sort_by' => 'priority',
                 'class' => 'elgg-menu-hz',
         ));
+	
+	        //set up for facebook
+        minds_set_metatags('og:type', 'article');
+        minds_set_metatags('og:url',$blog->getPermaURL());
+        minds_set_metatags('og:title',$blog->title);
+        minds_set_metatags('og:description', $excerpt);
+        minds_set_metatags('og:image', minds_fetch_image($blog->description, $blog->owner_guid));
+        //setup for twitter
+        minds_set_metatags('twitter:card', 'summary');
+        minds_set_metatags('twitter:url', $blog->getURL());
+        minds_set_metatags('twitter:title', $blog->title);
+        minds_set_metatags('twitter:image', minds_fetch_image($blog->description, $blog->owner_guid));
+        minds_set_metatags('twitter:description', $excerpt);
+
 	$title = elgg_view_title($blog->title, array('class' => 'elgg-heading-main'));
 
 	$return['buttons'] = ' ';	
@@ -63,23 +77,10 @@ function blog_get_page_content_read($guid = NULL) {
 	//add the sidebar
 	$return['sidebar'] = blog_sidebar($blog);
 	
-	$excerpt = $blog->excerpt ? $blog->excerpt : substr(strip_tags($blog->description), 0, 140);
+	$excerpt = $blog->excerpt ? strip_tags($blog->excerpt) : substr(strip_tags($blog->description), 0, 140);
 	
 	set_input('description', $excerpt);
 	set_input('keywords', $blog->tags);
-	
-	//set up for facebook
-	minds_set_metatags('og:type', 'article');
-	minds_set_metatags('og:url',$blog->getPermaURL());
-	minds_set_metatags('og:title',$blog->title);
-	minds_set_metatags('og:description', $excerpt);
-	minds_set_metatags('og:image', minds_fetch_image($blog->description, $blog->owner_guid));
-	//setup for twitter
-	minds_set_metatags('twitter:card', 'summary');
-	minds_set_metatags('twitter:url', $blog->getURL());
-	minds_set_metatags('twitter:title', $blog->title);
-	minds_set_metatags('twitter:image', minds_fetch_image($blog->description, $blog->owner_guid));
-	minds_set_metatags('twitter:description', $excerpt);
 	
 	return $return;
 }

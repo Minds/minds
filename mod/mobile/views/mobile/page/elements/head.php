@@ -29,7 +29,7 @@ $release = get_version(true);
 	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<link rel="SHORTCUT ICON" href="<?php echo elgg_get_site_url(); ?>mod/minds/graphics/favicon.ico" />
-	   	
+<?php echo elgg_view('minds/meta');?>	   	
    	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>

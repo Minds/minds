@@ -1224,7 +1224,7 @@ div.register-popup {
 .content-block-ratator{
 	height:720px;
 	margin:18px;
-	width:825px;
+	width:95%;
 }
 .contentad-side{
 	width: 300px;
