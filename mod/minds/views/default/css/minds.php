@@ -1226,6 +1226,17 @@ div.register-popup {
 	margin:18px;
 	width:95%;
 }
+.ad-top-block{
+	width: 750px;
+	height: auto;
+	margin: 16px auto 0;
+	position: relative;
+}
+.ad-top-block .inner{
+	width:auto;
+	height:auto;
+	margin:auto;
+}
 .contentad-side{
 	width: 300px;
 	height: 600px;

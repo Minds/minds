@@ -73,6 +73,26 @@ if($type == 'content-side'){
                         src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                 </script>';
         }
+} elseif( $type == 'content-head-user'){
+
+	echo '<div class="ad-top-block"><div class="inner">';
+        if(elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds')){
+                echo elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds');
+        } else {
+                echo '<script type="text/javascript"><!--
+                google_ad_client = "ca-pub-9303771378013875";
+                /* Content Bottom Banner */
+                google_ad_slot = "9810862421";
+                google_ad_width = 728;
+                google_ad_height = 90;
+                //-->
+                </script>
+                <script type="text/javascript"
+                        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+                </script>';
+        }
+	echo '</div></div>';
+
 } elseif($type == 'content-foot-user-1'){
 	if(elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds')){
                 echo elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds');
