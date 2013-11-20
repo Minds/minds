@@ -1227,10 +1227,10 @@ div.register-popup {
 	width:95%;
 }
 .ad-top-block{
-	width: 750px;
 	height: auto;
-	margin: 16px auto 0;
-	position: relative;
+    margin: 0 auto 16px;
+    position: relative;
+    width: 730px;
 }
 .ad-top-block .inner{
 	width:auto;
