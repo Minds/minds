@@ -421,6 +421,10 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 		}
 		$feed = new SimplePie($scraper->feed_url);
 		//swamp the orderring so we do the latest, last
+		if(!$feed){
+			echo "$scraper->title coult not find any content";
+			continue;
+		}
 		array_reverse($feed);
 		
 		//we load an array of previously collected rss ids
@@ -448,6 +452,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0"></iframe>';
 					$icon = '<img src="http://img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
 					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
+					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200));
 					$blog->description = $embed . $icon . $disclaimer;
 				} else {
 					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200));

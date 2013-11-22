@@ -82,7 +82,7 @@ li.elgg-item:hover .elgg-menu{
 	height:auto;
 }
 .mobile-ad{
- margin-left: -20px;
+ margin: -20px 0 0 -20px;
 	width:320px;
 	overflow-x:hidden;
 	height:auto;

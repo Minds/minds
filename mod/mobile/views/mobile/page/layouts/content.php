@@ -30,6 +30,7 @@ $filter = elgg_view('page/layouts/content/filter', $vars);
 
 // the all important content
 $content = elgg_extract('content', $vars, '') . elgg_view('minds/ads', array('type'=>'taboola'));
+$content .=  elgg_view('minds/ads');
 
 // optional footer for main content area
 $footer_content = elgg_extract('footer', $vars, '');
@@ -39,8 +40,9 @@ $footer = elgg_view('page/layouts/content/footer', $params);
 
 $body = $content;
 
+$top_ad = elgg_view('minds/ads', array('type'=>'mobile'));
 $params = array(
-	'header' => $header . $filter,
+	'header' => $top_ad . $header . $filter,
 	'content' => $body,
 //	'sidebar' => $sidebar,
 	'footer' => $footer

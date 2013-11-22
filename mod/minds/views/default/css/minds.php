@@ -238,7 +238,7 @@ input[name=terms]{
 	min-width:998px;
 }
 .minds-body-header h2{
-	font-size:52px;
+	font-size:36px;
 	font-weight:lighter;
 }
 .minds-body-header h3{
