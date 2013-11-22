@@ -4,7 +4,7 @@
  * and setup column family names.
  */
 
-require_once('settings.php');
+require_once('settings.php'); global $CONFIG;
 
 require(dirname(dirname(__FILE__)) . '/vendors/phpcassa/lib/autoload.php');
 
@@ -41,6 +41,8 @@ $cfs = array(	'site' => array(	'site_id' => 'UTF8Type'	),
 		'friendsof' => array(	),
 		'newsfeed' => array(	),
 		'timeline' => array(	),
+    
+                'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
 	);
 
 foreach($cfs as $cf => $indexes){

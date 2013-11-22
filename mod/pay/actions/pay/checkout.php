@@ -7,7 +7,7 @@
 elgg_load_library('elgg:pay');
 
 $user_guid = elgg_get_logged_in_user_guid();
-$user = get_entity($user_guid);
+$user = get_entity($user_guid, 'user');
 
 $basket = elgg_get_entities(array(
 								'type' => 'object',

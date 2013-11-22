@@ -7,6 +7,19 @@
  * @subpackage WebServicesAPI
  */
 
+
+
+use phpcassa\ColumnFamily;
+use phpcassa\ColumnSlice;
+use phpcassa\Connection\ConnectionPool;
+use phpcassa\SystemManager;
+use phpcassa\Schema\StrategyClass;
+use phpcassa\Index\IndexClause;
+use phpcassa\Index\IndexExpression;
+use phpcassa\Schema\DataType\LongType;
+use phpcassa\UUID;
+
+
 // Primary Services API Server functions
 
 /**
@@ -805,9 +818,9 @@ function pam_auth_usertoken() {
 	}
 
 	$validated_userid = validate_user_token($token, $CONFIG->site_id);
-
+	
 	if ($validated_userid) {
-		$u = get_entity($validated_userid);
+		$u = get_entity($validated_userid,'user');
 
 		// Could we get the user?
 		if (!$u) {
@@ -856,7 +869,7 @@ function pam_auth_session() {
  * @return bool
  */
 function create_user_token($username, $expire = 60) {
-	global $CONFIG;
+	global $CONFIG, $DB;
 
 	$site_guid = $CONFIG->site_id;
 	$user = get_user_by_username($username);
@@ -868,12 +881,20 @@ function create_user_token($username, $expire = 60) {
 		return false;
 	}
 
-	if (insert_data("INSERT into {$CONFIG->dbprefix}users_apisessions
+        if (db_insert($token, array(
+            'type' => 'token',
+	    'owner_guid' => $user->guid,
+            'site_guid' => $site_guid,
+            'expires' => $time
+        ))) {
+            return $token;
+        }
+	/*if (insert_data("INSERT into {$CONFIG->dbprefix}users_apisessions
 				(user_guid, site_guid, token, expires) values
 				({$user->guid}, $site_guid, '$token', '$time')
 				on duplicate key update token='$token', expires='$time'")) {
 		return $token;
-	}
+	}*/
 
 	return false;
 }
@@ -898,10 +919,28 @@ function get_user_tokens($user_guid, $site_guid) {
 	$site_guid = (int)$site_guid;
 	$user_guid = (int)$user_guid;
 
-	$tokens = get_data("SELECT * from {$CONFIG->dbprefix}users_apisessions
-		where user_guid=$user_guid and site_guid=$site_guid");
+        if ($result = $DB->cfs['token']->get_indexed_slices(new IndexClause(
+                array(
+                    new IndexExpression('owner_guid', $user_guid),
+                )
+        ))) {
+            $tokens = array();
+            foreach ($result as $token => $r)
+            {
+                $r['token'] = $token;
+                $new = new stdClass();
+                foreach ($r as $k => $v)
+                    $new->$k = $v;
+                $tokens[] = $new;
+            }
 
-	return $tokens;
+            /*$tokens = get_data("SELECT * from {$CONFIG->dbprefix}users_apisessions
+                    where user_guid=$user_guid and site_guid=$site_guid");*/
+
+            return $tokens;
+        }
+        
+        return false;
 }
 
 /**
@@ -916,23 +955,28 @@ function get_user_tokens($user_guid, $site_guid) {
  * @return mixed The user id attached to the token if not expired or false.
  */
 function validate_user_token($token, $site_guid) {
-	global $CONFIG;
+	global $CONFIG, $DB;
 
 	if (!isset($site_guid)) {
 		$site_guid = $CONFIG->site_id;
 	}
 
-	$site_guid = (int)$site_guid;
-	$token = sanitise_string($token);
-
 	$time = time();
-
+        try{
+	$user = $DB->cfs['token']->get($token);
+        } catch(Exception $e){
+		var_dump($e); 
+//		exit;
+	}
+	if ($user)
+            return $user['owner_guid'];
+/*
 	$user = get_data_row("SELECT * from {$CONFIG->dbprefix}users_apisessions
 		where token='$token' and site_guid=$site_guid and $time < expires");
 
 	if ($user) {
 		return $user->user_guid;
-	}
+	}*/
 
 	return false;
 }
@@ -956,8 +1000,9 @@ function remove_user_token($token, $site_guid) {
 	$site_guid = (int)$site_guid;
 	$token = sanitise_string($token);
 
-	return delete_data("DELETE from {$CONFIG->dbprefix}users_apisessions
-		where site_guid=$site_guid and token='$token'");
+	/*return delete_data("DELETE from {$CONFIG->dbprefix}users_apisessions
+		where site_guid=$site_guid and token='$token'");*/
+        return db_remove($token);
 }
 
 /**
@@ -973,8 +1018,16 @@ function remove_expired_user_tokens() {
 
 	$time = time();
 
-	return delete_data("DELETE from {$CONFIG->dbprefix}users_apisessions
-		where site_guid=$site_guid and expires < $time");
+        if ($result = $DB->cfs['token']->get_indexed_slices(new IndexClause(
+                array(
+                    new IndexExpression('expires', time(), 'LT'),
+                )
+        ))) {
+            foreach ($result as $guid => $obj)
+                db_remove($guid);
+        }
+	/*return delete_data("DELETE from {$CONFIG->dbprefix}users_apisessions
+		where site_guid=$site_guid and expires < $time");*/
 }
 
 // Client api functions

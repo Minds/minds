@@ -5,7 +5,6 @@ if (!get_input('guid')) {
        'types'  => array('object'),
         'subtypes' => array('minds_tier'),
         'full_view' => false,
-        'limit' => 0
     ));
 }
 
