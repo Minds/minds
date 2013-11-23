@@ -77,6 +77,7 @@ switch($type){
                         src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                 </script>';
         	}
+	break;
 	case 'content-below-banner':
 		echo '<div class="banner-ad"><div class="inner">';
         	if(elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds')){
