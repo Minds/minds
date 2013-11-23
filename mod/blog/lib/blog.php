@@ -66,6 +66,7 @@ function blog_get_page_content_read($guid = NULL) {
 */
 	elgg_push_breadcrumb($blog->title);
 	$return['content'] = elgg_view_entity($blog, array('full_view' => true));
+	 $return['content'] .= elgg_view('minds/ads', array('type'=>'content-below-banner'));
 	//check to see if comment are on
 	if ($blog->comments_on != 'Off') {
 		$return['content'] .= elgg_view_comments($blog);

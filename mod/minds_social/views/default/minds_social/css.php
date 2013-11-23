@@ -27,7 +27,6 @@
 
 .minds-site-social{
 	margin:12px;
-	height:50px;
 }
 .minds-site-social h3{
 	margin:5px;

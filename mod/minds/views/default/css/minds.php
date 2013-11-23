@@ -1173,13 +1173,13 @@ div.signup-options .right {
 	margin:18px;
 	width:95%;
 }
-.ad-top-block{
+.banner-ad{
 	height: auto;
-    margin: 0 auto 16px;
+    margin: 16px auto;
     position: relative;
     width: 730px;
 }
-.ad-top-block .inner{
+.banner-ad .inner{
 	width:auto;
 	height:auto;
 	margin:auto;
