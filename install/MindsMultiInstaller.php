@@ -485,8 +485,10 @@ class MindsMultiInstaller extends ElggInstaller {
             ))));
             $client_id = $result->result->client_id;
             $client_secret = $result->result->client_secret;
-
-
+		if(!$client_id || !$client_secret){
+			return false;
+		}
+		
             return elgg_set_plugin_setting('client_id', $client_id, 'minds_connect') &&
                     elgg_set_plugin_setting('client_secret', $client_secret, 'minds_connect') &&
                     elgg_set_plugin_setting('minds_url', isset($CONFIG->minds_url) ? $CONFIG->minds_url : 'https://www.minds.com', 'minds_connect');
