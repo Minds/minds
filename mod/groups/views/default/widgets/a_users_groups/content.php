@@ -8,15 +8,9 @@
 
 $num = $vars['entity']->num_display;
 
-$options = array(
-	'type' => 'group',
-	'relationship' => 'member',
-	'relationship_guid' => $vars['entity']->owner_guid,
-	'limit' => $num,
-	'full_view' => FALSE,
-	'pagination' => FALSE,
-);
-$content = elgg_list_entities_from_relationship($options);
+$user = elgg_get_page_owner_entity();
+$users_group_guids = $user->group_guids ? unserialize($user->group_guids) : array();;
+$content = elgg_list_entities(array('guids'=>$users_group_guids));
 
 echo $content;
 

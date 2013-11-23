@@ -13,6 +13,9 @@ if($photo->legacy_guid){
 }
 
 $album = $photo->getContainerEntity('object');
+if(!elgg_instanceof($album, 'object','album')){
+	return;
+}
 $previous_photo = $album->getPreviousImage($photo_guid);
 $next_photo = $album->getNextImage($photo_guid);
 $size = $album->getSize();

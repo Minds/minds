@@ -7,8 +7,8 @@
 * @copyright Ivan Vergés 2010
 * @link http://microstudi.net/elgg/
 **/
-
-	include_once($CONFIG->pluginspath."kaltura_video/kaltura/api_client/includes.php");
+return;
+	//include_once($CONFIG->pluginspath."kaltura_video/kaltura/api_client/includes.php");
 
 	//for the RSS
 	$uob = get_user($vars['entity']->owner_guid);

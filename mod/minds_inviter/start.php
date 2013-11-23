@@ -19,7 +19,7 @@ function minds_inviter_init(){
 	//register gmail
 	minds_inviter_register_service('gmail');
 	minds_inviter_register_service('facebook');
-	minds_inviter_register_service('yahoo');
+	//minds_inviter_register_service('yahoo');
 	//minds_inviter_register_service('windows');
 	minds_inviter_register_service('email');
 	

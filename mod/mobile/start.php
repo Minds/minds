@@ -10,22 +10,29 @@
  *
  */
 
-elgg_register_viewtype_fallback('mobile');
 elgg_register_event_handler('init','system','mobile_init');	
-	
+
 function mobile_init(){
 
 	//if the site isn't using varnish then detect normally	
 	if(!isset($_SERVER['HTTP_X_UA_DEVICE'])){
 		mobile_detect();
+
 	} elseif($_SERVER['HTTP_X_UA_DEVICE'] == 'mobile') {
 		elgg_set_viewtype('mobile');
+//		if(get_input('view') != 'mobile' && strpos(current_page_url(), 'action') != TRUE){
+//			forward('?view=mobile');
+//		}
 	}
 						
 	elgg_extend_view('css/elgg','mobile/css');
 	
 	//set our default index page
 	if(elgg_get_viewtype() == 'mobile'){
+		//we need to remove and re-add the css
+		elgg_unregister_external_file('css','elgg');
+                elgg_register_css('elgg', elgg_get_simplecache_url('css', 'elgg'));
+                elgg_load_css('elgg');
 		
 		$url = elgg_get_simplecache_url('css', 'mobile');
        		 elgg_register_css('minds.mobile', $url); 
@@ -35,9 +42,10 @@ function mobile_init(){
 		elgg_register_simplecache_view('mobile');
 	
 		elgg_register_js('bootstrap', elgg_get_site_url() .'mod/mobile/vendors/bootstrap/js/bootstrap.min.js', 'footer');
-		elgg_register_css('bootstrap',elgg_get_site_url() .'mod/mobile/vendors/bootstrap/css/bootstrap.min.css');
-		elgg_register_css('bootstrap-responsive',elgg_get_site_url().'mod/mobile/vendors/bootstrap/css/bootstrap-responsive.min.css');
+		elgg_register_css('bootstrap',elgg_get_site_url() .'mod/mobile/vendors/bootstrap/css/bootstrap.min.css',1);
+		elgg_register_css('bootstrap-responsive',elgg_get_site_url().'mod/mobile/vendors/bootstrap/css/bootstrap-responsive.min.css',2);
 	}
+	elgg_register_viewtype_fallback('mobile');
 }
 	
 function mobile_main_handler($hook, $type, $return, $params) {
@@ -68,6 +76,9 @@ function mobile_detect(){
 			elgg_extend_view('page/elements/head','mobile/desktop');
 		} else {
 			elgg_set_viewtype('mobile');
+                	if(get_input('view') != 'mobile'  && !strpos(current_page_url(), 'action')){
+                //        	forward('?view=mobile');
+                	}
 		}
 	}
 }

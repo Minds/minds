@@ -26,7 +26,6 @@ if ($pending_requests == 0){
 	//Envío de correo electrónico al usuario
 	//From
 	$site = elgg_get_site_entity();
-	$site = get_entity($site->guid);
 	if ($site && $site->email) {
 		$from = $site->email;
 	} else {

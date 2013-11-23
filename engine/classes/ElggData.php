@@ -180,6 +180,19 @@ abstract class ElggData implements
 	 */
 	protected $valid = FALSE;
 
+	/** 
+	 * Return in array for the object..
+	 */
+	public function toArray(){
+		$attrs = array();
+		foreach($this->attributes as $k => $v){
+			if(!is_null($v)){
+				$attrs[$k] = $v;
+			}
+		}
+		return $attrs;
+	}
+
 	/**
 	 * Iterator interface
 	 *

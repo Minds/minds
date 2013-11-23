@@ -1,11 +1,20 @@
 <?php 
 	$og_url = get_input('og:url');
+	global $SOCIAL_META_TAGS;
+	$og_url = $SOCIAL_META_TAGS['og:url']['content'];
 ?>
 <div class="minds-social">
-	<div class="fb-like" data-href="<?php echo $og_url;?>" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="arial"></div>
+<!--	<div class="fb-like" data-href="<?php echo $og_url;?>" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="arial"></div> -->
 	
-	<a id="fb-share" style='text-decoration:none;' type="icon_link" onClick="window.open('http://www.facebook.com/sharer.php?u=' + encodeURIComponent(window.location),'sharer','toolbar=0,status=0,width=580,height=325');" href="javascript: void(0)">
-	    <img src="<?php echo elgg_get_site_url();?>mod/minds_social/graphics/facebook_share.png" width="62" height="18" alt="Share"/>
+	<a id="fb-share" style='text-decoration:none;' type="icon_link" onClick="window.open('http://www.facebook.com/sharer.php?u=<?php echo $og_url;?>','sharer','toolbar=0,status=0,width=580,height=325');" href="javascript: void(0)">
+	    <img src="<?php echo elgg_get_site_url();?>mod/minds_social/graphics/facebook_share.png" width="62" height="18" alt="Share"/> <span class="count">0</span>
+	<script type="text/javascript">
+		(function() {
+			var addr = '<?php echo $og_url;?>';
+			var url = 'https://graph.facebook.com/?id=' + addr;
+			$.get( url, function(data) { var shares = data.shares; if($.isNumeric(shares)){ $('#fb-share .count').html(shares); } } );
+		})();
+	</script>
 	</a>
 		
 	<a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>

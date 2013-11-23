@@ -104,8 +104,7 @@ function analytics_retrieve(array $options = array()){
 			//try from cache. all trending caches are valid for 1 hour
 			$context = $options['context'] != '' ? $options['context'] : 'all';
 			$count = $DB->cfs['entities_by_time']->get_count('trending:'.$context);		
-		
-			if((int) $options['offset'] > $count){
+			if((int) $options['offset'] >= $count){
 				return false;
 			} elseif($options['offset'] > 0){
 				$options['limit']++;

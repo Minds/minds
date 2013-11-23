@@ -55,7 +55,8 @@ function db_init() {
 			'friends', 
 			'friendsof', 
 			'timeline',
-			'newsfeed');
+			'newsfeed',
+                        'token');
 	
 	register_cfs($cfs);
 }
@@ -79,7 +80,7 @@ function db_insert($guid = NULL, array $options = array()){
 	unset($options['type']);
 	
 	try{	
-		$DB->cfs[$type]->insert($guid, $options); 
+		$DB->cfs[$type]->insert($guid, $options);
 	} catch(Exception $e){
 		echo '<pre>';
 		var_dump($e);

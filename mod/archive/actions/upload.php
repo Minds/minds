@@ -61,58 +61,60 @@ if (!$_FILES['upload']['name']) {
 		  }
 	
 	} elseif (file_get_simple_type($mime_type) == 'image'){
-		//find the users uploads album
-		$albums = elgg_get_entities_from_metadata(array(
-													'type'=> 'object',
-													'subtype' => 'album',
-													'owner_guid' => elgg_get_logged_in_user_guid(),
-													'metadata_name_value_pairs' => array('name'=>'uploads', 'value'=>true)
-													
-										));
+// If Image then create an album. Don't upload to Kaltura.
+ 	if ($guid){
+       		$image = get_entity($guid, 'object');
+	} else {
+        	$image = new TidypicsImage();
+    	}
+
+	if($album_guid){
+		$album = get_entity($album_guid, 'object');
+	} else {
+		$album = $image->getContainerEntity();
+	}
+	
+	if(!$album || 	!elgg_instanceof($album,'object','album')){
+		$albums = elgg_get_entities(array( 	'type'=> 'object',
+							'subtypes' => array('album'),
+							'owner_guid' => elgg_get_logged_in_user_guid(),
+							));
 		$album = $albums[0];
-		//if the album cant be found then lets create one
-		if (!$album) {
-			$album = new TidypicsAlbum();
-			$album->owner_guid = elgg_get_logged_in_user_guid();
-			$album->title = 'Uploads';
-			$album->access_id = 2;
-			$album->uploads = true;
+	}
+
+	//still no album... @todo make this into the core album functionality
+
+	if (!$album) {
+		$album = new TidypicsAlbum();
+		$album->owner_guid = elgg_get_logged_in_user_guid();
+		$album->title = 'Uploads';
+		$album->access_id = 2;
+		$album->uploads = true;
 			
-			if (!$album->save()) {
-				register_error(elgg_echo("album:error"));
-				forward(REFERER);
-			}
-		}
-		
-		// post limit exceeded
-		if (count($_FILES) == 0) {
-			trigger_error('Tidypics warning: user exceeded post limit on image upload', E_USER_WARNING);
-			register_error(elgg_echo('tidypics:exceedpostlimit'));
+		if (!$album->save()) {
+			register_error(elgg_echo("album:error"));
 			forward(REFERER);
 		}
-		
-		$mime = $_FILES['upload']['type'];
-		$image = new TidypicsImage();
-		$image->title = $title;
-		$image->description = $desc;
-		$image->container_guid = $album->getGUID();
-		$image->setMimeType($mime);
-		$image->tags = $tags;
-		$image->access_id = $access_id;
-		$image->license = $license;
-		$image->category = $category;
-	
-		$result = $image->save($_FILES['upload']);
-		//error_log('Save: ' . $image->getGUID());
-		if ($result) {
-			//array_push($uploaded_images, $image->getGUID());
-			$album->prependImageList(array($image->getGUID()));
-		
-			add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
-			
-			forward($image->getURL());
-		}
-										
+	}
+
+    $image->title = $title;
+    $image->description = $desc;
+	$image->super_sybtype = 'archive';
+    $image->container_guid = $album->getGUID();
+    //$image->setMimeType($mime_type);
+    $image->tags = $tags;
+    $image->access_id = $access_id;
+    $image->license = $license;
+//    $image->category = $category; //No category
+
+    $guid = $image->save($_FILES['upload']);
+    
+    if ($guid) {
+        $album->prependImageList(array($guid));
+	echo $guid;
+        add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
+    		return true;
+	}								
 	} else {
 		//anything else should be forwarded to files
 		$file = new ElggFile();

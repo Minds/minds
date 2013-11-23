@@ -8,7 +8,7 @@
 
 // Get variables
 $item_guid = get_input('guid');
-$item = get_entity($item_guid);
+$item = get_entity($item_guid, 'object');
 
 
 if($item->delete()){

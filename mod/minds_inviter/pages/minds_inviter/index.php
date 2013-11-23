@@ -12,8 +12,9 @@ $params = array(
 	'content' => $content,
 	'sidebar' => elgg_view('minds_inviter/sidebar'),
 	'title' => $title,
+	'filter' => ''
 );
 
-$body = elgg_view_layout('one_column', $params);
+$body = elgg_view_layout('content', $params);
 
 echo elgg_view_page($title, $body);

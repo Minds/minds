@@ -7,70 +7,69 @@ class ElggSessionHandler{
 	}
 
 	function open(){
-                global $sess_save_path;
-                $sess_save_path = $save_path;
+		global $sess_save_path;
+		$sess_save_path = $save_path;
 
-                return true;
+		return true;
 
-        }
+	}
 
-        function close(){
-                return true;
-        }
+    function close(){
+ 		return true;
+    }
 	
 	function read($id){
 
 		try {
-                        $result = $this->db->get($id);
+			$result = $this->db->get($id);
 
-                        if($result){
-                                //load serialized owner entity & add to cache
-                                return $result['data'];
-                        }
-                } catch (Exception $e) {
+			if($result){
+				//load serialized owner entity & add to cache
+				return $result['data'];
+		    }
+		} catch (Exception $e) {
+ 		
+			// Fall back to file store in this case, since this likely means
+		    // that the database hasn't been upgraded
+		    global $sess_save_path;
+			$sess_file = "$sess_save_path/sess_$id";
+			return (string) @file_get_contents($sess_file);
+		}
+		
+		return '';
 
-                        // Fall back to file store in this case, since this likely means
-                        // that the database hasn't been upgraded
-                        global $sess_save_path;
+	}
 
-                        $sess_file = "$sess_save_path/sess_$id";
-                        return (string) @file_get_contents($sess_file);
-                }
-
-                return '';
-
-        }
-
-        function write($id, $sess_data){
+    function write($id, $sess_data){
 
 		$time = time();
 
 		try {
-		        $result = $this->db->insert($id, array('ts'=>$time,'data'=>$sess_data));
-			
+	        $result = $this->db->insert($id, array('ts'=>$time,'data'=>$sess_data));
+		
 			if($result !== false){
-                                return true;
-                        }
+				return true;
+			}
 
-                } catch (Exception $e) {
+		} catch (Exception $e) {
 			// Fall back to file store in this case, since this likely means
-                        // that the database hasn't been upgraded
-                        global $sess_save_path;
+            // that the database hasn't been upgraded
+			global $sess_save_path;
 
-                        $sess_file = "$sess_save_path/sess_$id";
-                        if ($fp = @fopen($sess_file, "w")) {
-                                $return = fwrite($fp, $sess_data);
-                                fclose($fp);
-                                return $return;
-                        }
-                }
+			$sess_file = "$sess_save_path/sess_$id";
+			if ($fp = @fopen($sess_file, "w")) {
+				$return = fwrite($fp, $sess_data);
+				fclose($fp);
+				return $return;
+			}
+		}
 
-                return false;
-        }
+		return false;
+	}
 
 	function destroy($id) {
 		global $DB_PREFIX;
-		
+	
 		try {
 			return (bool)$this->db->remove($id);
 		} catch (Exception $e) {
@@ -84,8 +83,8 @@ class ElggSessionHandler{
 	}
 
 	function gc($maxlifetime) {
-       		 global $DB_PREFIX;
-     		   $life = time() - $maxlifetime;
+		global $DB_PREFIX;
+		$life = time() - $maxlifetime;
 		return true;
 	}
 }

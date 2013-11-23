@@ -51,7 +51,7 @@ function oauth2_get_user_by_access_token() {
     elgg_set_ignore_access($access);
 
     // get the user associated with this token
-    $user = get_entity($token['user_id']);
+    $user = get_entity($token['user_id'],'user');
     
     echo json_encode(array(
         'guid'     => $user->guid,

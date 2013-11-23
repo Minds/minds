@@ -20,7 +20,21 @@
 .archive-wall-title{
 	margin:0 10px;
 }
-
+.archive-footer{
+	width: 100%;
+	height: 26px;
+	margin: 10px;
+	display: block;
+}
+.archive-footer .license{
+	float:left;
+}
+.archive-plays{
+	float: left;
+	padding: 8px 24px;
+	color: #333;
+	font-weight: bold;
+}
 .archive-description{
 	background: #F8F8F8;
 	padding: 10px;

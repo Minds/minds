@@ -20,6 +20,7 @@ elgg_register_event_handler('init', 'system', 'blog_init');
 function blog_init() {
 
 	add_subtype('object', 'blog', 'ElggBlog');
+	add_subtype('object', 'scraper');
 
 	elgg_register_library('elgg:blog', elgg_get_plugins_path() . 'blog/lib/blog.php');
 	
@@ -165,16 +166,18 @@ function blog_page_handler($page) {
 			break;
 		case 'view':
 			$params = blog_get_page_content_read($page[1]);
+			
+			$trending = blog_get_trending_page_content_list();
+                        //$params = blog_get_page_content_list();
+			//$body .= elgg_view_layout('gallery', $params);
+		
+			$params['footer'] .= $trending['content'];
+		
 			$body = elgg_view_layout('content', $params);
 	
-			$params = blog_get_trending_page_content_list();
-                        //$params = blog_get_page_content_list();
-			$params['header'] = elgg_view_title('More...');
-			$params['filter'] = "";
-			$body .= elgg_view_layout('gallery', $params);
-
-                        echo elgg_view_page($params['title'], $body);
-			return;	
+			echo elgg_view_page($params['title'], $body);
+			
+			return true;	
 			break;
 		case 'read': // Elgg 1.7 compatibility
 			register_error(elgg_echo("changebookmark"));
@@ -255,7 +258,7 @@ function blog_url_handler($entity) {
 		$guid = $entity->legacy_guid;
 	}
 
-	$friendly_title = elgg_get_friendly_title($entity->title);
+	$friendly_title = elgg_get_friendly_title($entity->title); //this is to preserve list of shares on older 
 
 	return "blog/view/$guid/$friendly_title";
 }
@@ -418,6 +421,10 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 		}
 		$feed = new SimplePie($scraper->feed_url);
 		//swamp the orderring so we do the latest, last
+		if(!$feed){
+			echo "$scraper->title coult not find any content";
+			continue;
+		}
 		array_reverse($feed);
 		
 		//we load an array of previously collected rss ids
@@ -445,6 +452,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0"></iframe>';
 					$icon = '<img src="http://img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
 					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
+					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200));
 					$blog->description = $embed . $icon . $disclaimer;
 				} else {
 					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200));

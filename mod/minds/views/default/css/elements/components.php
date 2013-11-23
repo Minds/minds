@@ -62,6 +62,12 @@
 		height:210px;
 	}
 }
+
+.elgg-footer .elgg-list > li{
+	width: 42%;
+	margin: 16px 2%;
+}
+
 .elgg-list > li .elgg-avatar-medium{
 	margin:10px 8px 0 5px;
 }
@@ -165,9 +171,17 @@
 	Owner Block
 *************************************** */
 .elgg-owner-block {
-	margin-bottom: 20px;
+	width:336px;
+	float:right;
+	margin-bottom:0;
 }
-
+.elgg-owner-block .elgg-body > a > h2{
+	font-size:20px;
+	font-weight:normal;
+}
+.elgg-owner-block .elgg-image img{
+	width:75px;
+}
 /* ***************************************
 	Messages
 *************************************** */

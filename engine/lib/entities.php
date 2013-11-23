@@ -503,6 +503,16 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
 }
 
 /**
+ * Add a perma link to the entity
+ */
+function create_entity_event_hook($event, $object_type, $object) {
+	$url = $object->getURL();
+	if($url){
+		$object->perma_url = $url;
+	}
+}
+elgg_register_event_handler('create', 'object', 'create_entity_event_hook');
+/**
  * Create a new entry in the entities table.
  *
  *
@@ -521,21 +531,13 @@ function create_entity($object = NULL, $timebased = true) {
 	$g = new GUID();
 
 	if($object->guid){
-                elgg_trigger_event('update', $object->type, $object);
+	       elgg_trigger_event('update', $object->type, $object);
         } else {
 		$object->guid = $g->generate();
 	        elgg_trigger_event('create', $object->type, $object);
         }
-
-	//convert object to array of attributes
-	$attributes = array();
-	foreach($object as $k => $v){
-		if(isset($v)){
-			$attributes[$k] = $v;
-		}
-	}
-
-	$result = db_insert($object->guid, $attributes);
+	
+	$result = db_insert($object->guid, $object->toArray());
 
 	if($timebased){
 		$namespace = $object->type;
@@ -708,7 +710,7 @@ function entity_row_to_elggstar($row, $type) {
  * @return ElggEntity The correct Elgg or custom object based upon entity type and subtype
  * @link http://docs.elgg.org/DataModel/Entities
  */
-function get_entity($guid, $type) {
+function get_entity($guid, $type = 'object') {
 	// This should not be a static local var. Notice that cache writing occurs in a completely
 	// different instance outside this function.
 	// @todo We need a single Memcache instance with a shared pool of namespace wrappers. This function would pull an instance from the pool.

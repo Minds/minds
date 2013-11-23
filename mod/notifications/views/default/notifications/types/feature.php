@@ -8,19 +8,23 @@ $actor = get_entity($notification -> from_guid);
 
 
 	$object = get_entity($notification->object_guid,'object');
-		if($object instanceof ElggEntity){
-			$subtype = $object->getSubtype();
-			}if($subtype == 'tidypics'){
-					$object = $object->getContainerEntity();
-					$object_title = ' Your images in ' . $object->title;
-			}elseif($subtype == 'blog'){
-					$object_title = 'Your blog post' ;
-			}elseif($subtype == 'kaltura_video'){
-					$object_title = 'Your media, ';
-			}else{
-				$object_title = $object->title;
-			}
-				$object_url = $object->getURL();
+	if($object instanceof ElggEntity){
+		$subtype = $object->getSubtype();
+	} else {
+		return false;
+	}
+
+	if($subtype == 'tidypics'){
+			$object = $object->getContainerEntity();
+			$object_title = ' Your images in ' . $object->title;
+		}elseif($subtype == 'blog'){
+				$object_title = 'Your blog post' ;
+		}elseif($subtype == 'kaltura_video'){
+				$object_title = 'Your media, ';
+		}else{
+			$object_title = $object->title;
+		}
+		$object_url = $object->getURL();
 		
 	$body .= elgg_view('output/url', array('href'=>$object_url, 'text'=> $object_title));
 	$body .= ' has been Featured!';
