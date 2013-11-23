@@ -43,10 +43,8 @@ $footer = elgg_view('page/layouts/content/footer', $params);
 
 $body = $content;
 
-$top_ad = elgg_view('minds/ads', array('type'=>'content-head-user'));
-
 $params = array(
-	'header' => $top_ad . $header . $filter,
+	'header' => $header . $filter,
 	'content' => $body,
 	'sidebar' => $sidebar,
 	'menu' => $vars['menu'],
