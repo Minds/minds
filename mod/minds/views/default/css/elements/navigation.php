@@ -127,7 +127,7 @@
 }
 
 .elgg-menu-topbar-alt {
-	float: right;
+	gloat: right;
 }
 
 .elgg-menu-topbar-alt > li > a {
@@ -429,15 +429,15 @@
 *************************************** */
 <?php // height depends on line height/font size ?>
 .elgg-menu-entity, elgg-menu-annotation {
-	float: right;
-	margin-left: 15px;
+	float: left;
+	margin: 12px;
 	font-size: 90%;
 	color: #aaa;
 	line-height: 16px;
-	height: 16px;
+	height: 36px;
 }
 .elgg-menu-entity > li, .elgg-menu-annotation > li {
-	margin-left: 15px;
+	margin-left:8px;
 }
 .elgg-menu-entity > li > a, .elgg-menu-annotation > li > a {
 	color: #aaa;

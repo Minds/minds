@@ -272,11 +272,11 @@ function datalist_get($name) {
 function datalist_set($name, $value) {
 	global $CONFIG, $DATALIST_CACHE;
 
-        $site = elgg_get_site_entity();
+        $site = elgg_get_site_entity(); 
         if ($site) {
 		$name = "config:$name";
                 $site->$name = $value;
-                
+        
                 return $site->save();
 	} 
         

@@ -24,17 +24,43 @@
 	margin:6px 10px;
 	font-weight:bold;
 }
+
+.minds-site-social{
+	margin:12px;
+}
+.minds-site-social h3{
+	margin:5px;
+}
+.minds-site-social a{
+	font-size:36px;
+	margin:8px;
+	float:left;
+	color:#333;
+}
+.minds-site-social a:hover{
+	text-decoration:none;
+	color:#4690D6;
+	cursor:pointer;
+}
+.minds-site-social a.fb:hover{
+	color:#4c66a4;
+}
+.minds-site-social a.gplus:hover{
+	color:#dd4b39;
+}
+.minds-site-social a.linkedin:hover{
+	color:#23639a;
+}
 .twitter{
 	
 }
 .minds-social{
-	margin-top:25px;
+	margin: 10px 0;
 }
 .minds-social div, .minds-social iframe {
     float:left !important;
     display:inline-block !important;
-    margin:0 10px 0 0 !important;
-    width:80px;
+    margin:0px 5px 0 0 !important;
     border:none;
     overflow:hidden;
 }
@@ -54,8 +80,22 @@
 
 #fb-share{
 	float:left;
-	margin:0 25px;
+	margin:0px 10px;
+}
+#fb-share img{
+	float:left;
+}
+#fb-share .count{
+	float: right;
+	margin: 0 5px;
+	border: 1px solid #AAA;
+	padding: 1px 6px 0;
+	color: #666;
+	font-size: 11px;
+	font-weight: bold;
+	border-radius: 3px;
+	background: #FFF;
 }
 .reddit-share{
-	margin-left:20px;
+	margin:2px 5px;
 }

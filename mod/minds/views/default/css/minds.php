@@ -234,8 +234,11 @@ input[name=terms]{
 	width:90%;
 	margin:0 auto;
 }
+.minds-body-header > .inner > .elgg-head{
+	min-width:998px;
+}
 .minds-body-header h2{
-	font-size:52px;
+	font-size:36px;
 	font-weight:lighter;
 }
 .minds-body-header h3{
@@ -244,6 +247,7 @@ input[name=terms]{
 }
 .minds-body-header .elgg-menu-entity, .minds-body-header .elgg-menu-title{
 	margin:10px;
+	clear:right;
 }
 .minds-body-header .elgg-form-wall-add{
 	float:right;
@@ -612,14 +616,14 @@ li .excerpt a{
 .elgg-sidebar .elgg-owner-block .elgg-image-block .elgg-body{
 	padding:5px;
 }
-.elgg-sidebar li a{
+.elgg-sidebar .elgg-menu-page li a{
         padding:8px;
 }
 .elgg-sidebar li.elgg-item{
 	margin:5px;
 	width:148px;
 	padding:0;
-	height:125px;;
+	height:125px;
 }
 .elgg-sidebar li.elgg-item img{
 	width:100%;
@@ -1161,47 +1165,38 @@ div.signup-options .right {
     float: right;
 }
 
-div.node-signup {
-    margin-top: 30px;
-    
+/**
+ * Ad specific
+ */
+.content-block-ratator{
+	height:720px;
+	margin:18px;
+	width:95%;
+}
+.banner-ad{
+	height: auto;
+    margin: 16px auto;
+    position: relative;
+    width: 730px;
+}
+.banner-ad .inner{
+	width:auto;
+	height:auto;
+	margin:auto;
+}
+.contentad-side{
+	width: 300px;
+	height: 600px;
+	margin: 18px;
+	background: #AAA;
 }
 
-div.node-signup div.email, 
-div.node-signup div.full-domain,
-div.node-signup div.node {
-    margin-top: 25px;
-    margin-bottom: 25px;
+.toobla-side{
+        margin: 18px;
 }
-
-div.node-signup div.blurb-or {
-    font-weight: bold;
-    text-align: center;
-    font-size: 1.2em;
-}
-
-div.node-signup div.node input {
-    width: 85%;
-}
-
-
-/** Tier selection */ 
-div.tiers {
-    width: 900px;
-}
-div.tiers div.tier {
-
-    background-color: #4690D6;
-    border: 1px solid #4690D6;
-    width: 250px;
-    height: 150px;
-    float: left;
-    margin: 10px;
-    margin-bottom:30px;
-}
-
-div.tier_details div.default-description,
-div.tier div.default-description {
-    padding: 10px;
+.adblade iframe{
+	margin: 10px auto;
+	display:block;
 }
 
 div.tier_details {

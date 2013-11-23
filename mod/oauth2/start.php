@@ -51,8 +51,8 @@ function oauth2_init() {
     // Admin menu to manage applications
     elgg_register_admin_menu_item('administer', 'oauth2', 'administer_utilities');
 			
-	// Add the subtypes
-	run_function_once('oauth_run_once');
+	//register subtypes
+	oauth2_subtypes();
 }
 
 function oauth2_page_handler($page) {
@@ -153,6 +153,7 @@ function oauth2_pam_handler($credentials = NULL) {
     return true;
 }
 
+//@todo update to casandra way
 function oauth2_expire_tokens() {
 
     $access = elgg_get_ignore_access();
@@ -161,7 +162,6 @@ function oauth2_expire_tokens() {
     $options = array(
         'type' => 'object',
         'subtype' => 'oauth2_access_token',
-        'wheres'  => array('e.time_created < now() + 3600'),
         'limit'   => 9999
     );
 
@@ -169,7 +169,9 @@ function oauth2_expire_tokens() {
 
     if (!empty($entities)) {
         foreach ($entities as $e) {
-            $e->delete();
+        	if($entity->time_create < time() + 3600){
+            	$e->delete();
+			}
         }
     }
 
@@ -180,7 +182,7 @@ function oauth2_expire_tokens() {
  * Run once method to register subtypes
  *
  */
-function oauth2_run_once() {
+function oauth2_subtypes() {
 	add_subtype('object', 'oauth2_client');
 	add_subtype('object', 'oauth2_access_token');
 	add_subtype('object', 'oauth2_refresh_token');

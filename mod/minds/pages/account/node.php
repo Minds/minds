@@ -10,15 +10,12 @@ $content = elgg_view_title($title);
 // Display original form for logged in users
 //if (elgg_is_admin_logged_in()) {
 /*if (true) {
-*/
+
 	$content = '<h3>Launching a social network will be available shortly.</h3> Please check back soon for more information';    
   
 /*} else {
-    
-    $payment_recieved = false; // TODO: Test to see if we've returned from a successful billing workflow
-    
-    // TODO: Payment hook here
-    
+  */  
+    $payment_recieved = false; 
     
     // Check to see if there is a paid for tier product
     if ($user) {
@@ -43,11 +40,10 @@ $content = elgg_view_title($title);
         $body_params = array(
             'order' => $order
         );
-        $content .= elgg_view_form('node', $form_params, $body_params);
-    }
-    else
-    {
-        $register_url = elgg_get_site_url() . 'action/select_tier';
+        $content = elgg_view_form('node', $form_params, $body_params);
+    } else {
+        //allow multiple nodes per account
+	$register_url = elgg_get_site_url() . 'action/select_tier';
         $form_params = array(
                 'action' => $register_url,
                 'class' => 'elgg-form-account',
@@ -55,11 +51,10 @@ $content = elgg_view_title($title);
 
         $body_params = array(
         );
-        $content .= elgg_view_form('select_tier', $form_params, $body_params);
+        $content = elgg_view_form('select_tier', $form_params, $body_params);
     }
-    
-}
-*/
+//}
+
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 $header = <<<HTML
 <div class="elgg-head clearfix">
@@ -68,6 +63,8 @@ $header = <<<HTML
 HTML;
 
     
-$body = elgg_view_layout("one_column", array('content' => '<div class="elgg-inner">'. $content . ' <br/> '.  $buttons .'</div>', 'header'=>$header));
+$body = elgg_view_layout("one_column", array(	'content' => '<div class="elgg-inner">'. $content . ' <br/> '.  $buttons .'</div>', 
+						'header'=>$header,
+					));
 
 echo elgg_view_page($title, $body);

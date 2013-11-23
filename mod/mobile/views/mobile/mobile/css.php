@@ -11,18 +11,14 @@
  */
  ?>
 body{
-	padding-top: 60px;
-}
-.container-fluid{
-	background:#F8F8F8;
-}
-.elgg-item .elgg-body{
-	clear:both;
+//	padding-top: 60px;
+	padding:0 20px;
 }
 .minds-nav-logo{
 	display: block;
 	float: left;
-	padding:2px 20px;
+	width: 50px;
+	padding:8px 20px;
 	margin-left: -20px;
 	font-size: 20px;
 	font-weight: 200;
@@ -36,8 +32,24 @@ body{
 .facebook{
 	margin:10px auto;
 }
+.btn{
+	border-radius:0;
+	-webkit-border-radius:0;
+	-mox-border-radius:0;
+	border:0;
+	
+}
+.btn > span.icon-bar{
+	border:0 !important;
+	height:3px;
+	background-color:#AAA !important;
+}
 li.elgg-item .elgg-menu{
 	display:none;
+}
+
+li.elgg-item:hover .elgg-menu{
+        display:none;
 }
 
 .sidebar-nav li a:hover, .sidebar-nav li.active a{
@@ -69,4 +81,13 @@ li.elgg-item .elgg-menu{
 	width:98%;
 	height:auto;
 }
+.mobile-ad{
+ margin: -20px 0 0 -20px;
+	width:320px;
+	overflow-x:hidden;
+	height:auto;
+	display:block;
+}
+.notification.notifier {
+background-position: 0 -486px;
 }

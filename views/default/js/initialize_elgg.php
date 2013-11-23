@@ -37,7 +37,7 @@ $user = elgg_get_logged_in_user_entity();
 if ($user instanceof ElggUser) {
 	$user_json = array();
 	foreach ($user->getExportableValues() as $v) {
-		$user_json[$v] = $user->$v;
+		$user_json[$v] = (string) $user->$v;
 	}
 	
 	$user_json['subtype'] = $user->getSubtype();

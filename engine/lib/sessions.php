@@ -389,9 +389,12 @@ function _elgg_session_boot($force = false) {
 
 		session_name('Minds');
 		session_start();	
+		
+		$storage = new ElggSessionStorage($handler);
 	
 		// Initialise the magic session
-		$SESSION = new ElggSession();
+		$SESSION = new ElggSession($storage);
+		
 	
 		if (!$force && !elgg_is_logged_in()) {
 			setcookie("Minds", "", (time() - (86400 * 30)), "/");
@@ -400,7 +403,6 @@ function _elgg_session_boot($force = false) {
 			if (!isset($SESSION['__elgg_session'])) {
 				$SESSION['__elgg_session'] = md5(microtime() . rand());
 			}
-			
 			// test whether we have a user session
 			if (empty($SESSION['guid'])) {
 		

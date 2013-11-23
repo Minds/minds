@@ -1159,6 +1159,10 @@ abstract class ElggEntity extends ElggData implements
 		return get_entity_url($this->getGUID(), $this->type);
 	}
 
+	public function getPermaURL(){
+		return $this->perma_url ?: $this->getURL();
+	}
+
 	/**
 	 * Overrides the URL returned by getURL()
 	 *

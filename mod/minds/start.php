@@ -98,9 +98,9 @@ function minds_init(){
 	//setup the licenses pages
 	elgg_register_page_handler('licenses', 'minds_license_page_handler');
 	
-	//add cache headers to pages for logged out users
-	elgg_register_plugin_hook_handler('route', 'all', 'minds_route_page_handler_cache', 100);
-	elgg_register_plugin_hook_handler('index', 'system', 'minds_route_page_handler_cache', 100);
+	//add cache headers to pages for logged out users and deliver other pages
+	elgg_register_plugin_hook_handler('route', 'all', 'minds_route_page_handler', 100);
+	elgg_register_plugin_hook_handler('index', 'system', 'minds_route_page_handler', 100);
 	
 	//setup the tracking of user quota - on a file upload, increment, on delete, decrement
 	elgg_register_event_handler('create', 'object', 'minds_quota_increment');
@@ -319,7 +319,11 @@ function minds_login_page_handler($page) {
         return true;
 }
 
-function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
+function minds_route_page_handler($hook, $type, $returnvalue, $params) {
+	if(!$returnvalue){
+		$returnvalue = array();
+	}
+
 	if (!elgg_is_logged_in() && $returnvalue) {
 		$handler = elgg_extract('handler', $returnvalue);
 // 		$page = elgg_extract('segments', $returnvalue);
@@ -329,6 +333,16 @@ function minds_route_page_handler_cache($hook, $type, $returnvalue, $params) {
 		if (!in_array($handler, array('js', 'css', 'photos'))) {
 			header("X-No-Client-Cache: 1", true);
 		}
+	}
+
+	//add a age if view exists
+	$handler = elgg_extract('handler', $returnvalue);
+	$pages = elgg_extract('segments', $returnvalue, array());
+	array_unshift($pages, $handler);
+	if(elgg_view_exists('minds/pages/'.$handler)){
+		$content = elgg_view('minds/pages/'.$handler);
+		$body = elgg_view_layout('one_sidebar', array('content' => $content));
+		echo elgg_view_page(elgg_echo($handler), $body);
 	}
 }
 
@@ -710,24 +724,48 @@ function minds_fetch_image($description, $owner_guid) {
 
 use phpcassa\ColumnSlice;
 
+function featured_sort($a, $b){
+            //return strcmp($b->featured_id, $a->featured_id);
+	if ((int)$a->featured_id == (int) $b->featured_id) { //imposisble
+          return 0;
+        }
+	return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+}
+
 function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = ""){
 	global $CONFIG, $DB;
 
-        try {
-	$namespace = 'object:featured';
+	try{
+		$namespace = 'object:featured';
 
-        $slice = new ColumnSlice($offset, "", $limit, true);//set to reversed
-        $guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+       		$slice = new ColumnSlice($offset, "", $limit, true);//set to reversed
+    	    	$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+	
+		if(!$guids){
+			return false;
+		}
+	}catch(Exception $e){
+		return false;
+	}
 
 	if($output == 'guids'){
 		return $guids;
 	}
 
-        return elgg_get_entities(array( 'type' => 'object',
+        $entities = elgg_get_entities(array( 'type' => 'object',
                                         'guids' =>$guids
                                         ));
-        }catch (\Exception $e) {}
-        return false;
+
+	usort($entities, 'featured_sort');
+
+	/*$new_list = array();
+	foreach($entities as $entity){
+		$featured_id = (int) $entity->featured_id;
+		$new_list[$featured_id] = $entity;
+	}
+
+	return $new_list;*/
+	return $entities;
 }
 
  /* Extend / override htmlawed */ 
@@ -773,3 +811,4 @@ function minds_htmlawed_filter_tags($hook, $type, $result, $params) {
 elgg_register_event_handler('init','system','minds_init');		
 
 ?>
+

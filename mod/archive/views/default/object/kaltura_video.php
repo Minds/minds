@@ -11,8 +11,7 @@ if($full){
 	/**
 	 * Check if the video is converted or not
 	 */
-	$kmodel = KalturaModel::getInstance();
-	$mediaEntry = $kmodel->getEntry($entity->kaltura_video_id);
+	$mediaEntry = $entity->getEntry(); 
 	if($mediaEntry->status != 2){
 		echo '<div class="notconverted">';
 			
@@ -32,8 +31,14 @@ if($full){
 	echo '<div class="archive-video-wrapper">' . $widget . '</div>'; 
 	
 	echo '<div class="archive-description">' . $entity->description . '</div>';
+
+	echo '<div class="archive-footer">';	
 	
+
 	echo elgg_view('minds/license', array('license'=>$entity->license)); 
+	
+	 echo '<div class="archive-plays">' . $entity->getPlayCount() . ' plays</div>';
+
 	echo elgg_view('output/url', array(	'href'=>'/action/archive/download?guid='.$entity->guid,
 												'text'=> elgg_echo('minds:archive:download'),
 												'is_action' => true,
@@ -54,6 +59,8 @@ if($full){
 		));*/
 	}
 	
+	echo '</div>';
+
 	if($entity->access_id == 2){
 		echo elgg_view('minds_social/social_footer');
 	}

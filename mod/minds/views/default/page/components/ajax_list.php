@@ -38,10 +38,10 @@ switch(get_input('items_type')){
 				$new_json = array_merge($new_json,$grandchild);
 			}
 		}
-		
+		$json = $new_json;
 		// Removing duplicates
 		// This will be unnecessary when #4504 fixed.
-		$buggy = $new_json;
+		/*$buggy = $new_json;
 		$json = array();
 		$guids = array();
 		foreach($buggy as $item) {
@@ -50,7 +50,7 @@ switch(get_input('items_type')){
 		$guids = array_unique($guids);
 		foreach(array_keys($guids) as $i) {
 			$json[$i] = $buggy[$i];
-		}
+		}*/
 		break;
 	case 'annotation': 
 		foreach ($json as $child) {
@@ -68,29 +68,29 @@ switch(get_input('items_type')){
 }
 
 $items = array();
-foreach($json as $item) {
+foreach($json as $key => $item) {
 	switch(get_input('items_type')) {
 		case 'entity':
 			switch($item->type) {
 				case 'site':
-					$items[] = new ElggSite($item);
+					$items[$key] = new ElggSite($item);
 					break;
 				case 'user':
-					$items[] = new ElggUser($item);
+					$items[$key] = new ElggUser($item);
 					break;
 				case 'group':
-					$items[] = new ElggGroup($item);
+					$items[$key] = new ElggGroup($item);
 					break;
 				case 'object':
 					switch($item->subtype){
 						case 'album':
-							$items[] = new TidypicsAlbum($item);
+							$items[$key] = new TidypicsAlbum($item);
 							break;
 						case 'image':
-							$items[] = new TidypicsImage($item);
+							$items[$key] = new TidypicsImage($item);
 							break;
 						default:
-							$items[] = new ElggObject($item);
+							$items[$key] = new ElggObject($item);
 					}
 					break;
 			}
@@ -99,13 +99,19 @@ foreach($json as $item) {
 			$items = $json;
 			break;
 		case 'river':
-			$items[] = new MindsNewsItem($item);
+			$items[$key] = new MindsNewsItem($item);
 			break;
 	}
 }
 header('Content-type: text/plain');
 //hack to remove the first entity
 array_shift($items);
+
+//hack to preserve ordering of featured list... keys won't work
+if($elgg_path == elgg_get_site_url() || $elgg_path == null){
+	usort($items, 'featured_sort');
+}
+
 if(get_input('items_type') == 'river')
 echo elgg_view('page/components/list', array("items" => $items, "list_class"=>'elgg-list-river elgg-river'));
 else

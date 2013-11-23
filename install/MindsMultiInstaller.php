@@ -50,11 +50,9 @@ class MindsMultiInstaller extends ElggInstaller {
      * @return void
      */
     protected function bootstrapConfig() {
-
-	 
+        
         parent::bootstrapConfig(); 
         
-
         global $CONFIG;
         if (!isset($CONFIG)) {
             $CONFIG = new stdClass;

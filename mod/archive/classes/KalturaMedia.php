@@ -35,4 +35,19 @@ class KalturaMedia extends ElggObject {
 		));
 	}
 
+	/**
+	 * Get entry
+	 */
+	public function getEntry(){
+		$kmodel = KalturaModel::getInstance();
+		return $kmodel->getEntry($this->kaltura_video_id);
+	}
+
+	/** 
+	 * Return the play counts
+	 */
+	public function getPlayCount(){
+		return $this->getEntry()->plays;
+	}
+
 }

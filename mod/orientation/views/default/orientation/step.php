@@ -13,11 +13,9 @@ $number = $vars['number'];
 				&#10003;
 			</div>
 			<?php } ?>
-			<div class='number'>
-				<?php echo $step->completed ? '&#x2713' : $number;?> 
-			</div>
-						<span class="entypo"><?php echo $step->icon;?></span>
+
 				<div class='inner'>
+					<span class="entypo"><?php echo $step->icon;?></span>
 					<h3><?php echo $step->title;?></h3>
 				</div>
 					<div class='content'><p><?php echo $step->content;?></p></div>
