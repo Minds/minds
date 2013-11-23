@@ -525,7 +525,7 @@ class ElggInstaller {
 
 		$params = array();
 		if ($this->autoLogin) {
-			$params['destination'] = 'admin';
+			$params['destination'] = 'admin/appearance/themeselection';
 		} else {
 			$params['destination'] = 'index.php';
 		}
@@ -1495,6 +1495,7 @@ class ElggInstaller {
 							'groups',
 							'wall',
 							'tidypics', 
+							'analytics',
 							'archive', 
 							'embed',
 							'embed_extender',

@@ -50,6 +50,11 @@ class MindsMultiInstaller extends ElggInstaller {
      * @return void
      */
     protected function bootstrapConfig() {
+
+	 
+        parent::bootstrapConfig(); 
+        
+
         global $CONFIG;
         if (!isset($CONFIG)) {
             $CONFIG = new stdClass;
@@ -336,7 +341,8 @@ class MindsMultiInstaller extends ElggInstaller {
             'groups',
             'wall',
             //'tidypics', 
-            'archive',
+            'analytics',
+		'archive',
             //'embed',
             //'embed_extender',
             'blog',
@@ -349,7 +355,7 @@ class MindsMultiInstaller extends ElggInstaller {
             'notifications',
             'minds_connect',
                 //'bootcamp',
-                //'mobile',
+            'mobile',
                 //'minds'
             'anypage',
             'Login-As',
