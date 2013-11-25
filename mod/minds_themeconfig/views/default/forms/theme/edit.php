@@ -8,7 +8,7 @@
 
 <p><label>
     <?php echo elgg_echo('minds_themeconfig:frontpagetext');?>:<br />
-        <?php echo elgg_view('input/text', array('name' => 'frontpagetext')); ?>
+        <?php echo elgg_view('input/text', array('name' => 'frontpagetext', 'value' => elgg_get_plugin_setting('frontpagetext', 'minds_themeconfig'))); ?>
 </label></p>
 <p><label>
     <?php echo elgg_echo('minds_themeconfig:logo');?>:<br />
