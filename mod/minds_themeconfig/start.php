@@ -24,6 +24,7 @@ elgg_register_event_handler('init','system',function(){
                 break;
             case 'logo_main' :
             case 'logo_topbar' :
+            case 'logo_favicon' :
                 $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
     
                 $contents = file_get_contents($theme_dir . $pages[0].'.jpg');

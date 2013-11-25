@@ -16,6 +16,12 @@
             'square' => false,
             'upscale' => true
         ),
+        'logo_favicon' => array(
+            'w' => 32,
+            'h' => 32,
+            'square' => true,
+            'upscale' => true
+        )
     ) as $name => $size_info) {
             $resized = get_resized_image_from_uploaded_file('logo', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale']);
 
@@ -49,6 +55,9 @@
     if (isset($_FILES['background']) && ($_FILES['background']['error'] != UPLOAD_ERR_NO_FILE) && ($_FILES['background']['error'] != 0)) {
         register_error(minds_themeconfig_codeToMessage($_FILES['background']['error'])); // Debug uploads
     }
+    
+    // Save frontpage text
+    elgg_set_plugin_setting('frontpagetext', get_input('frontpagetext'), 'minds_themeconfig');
     
     // Save background colour
     elgg_set_plugin_setting('background_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('background_colour')), "minds_themeconfig");

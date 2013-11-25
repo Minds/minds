@@ -10,7 +10,10 @@ $english = array(
         'minds_themeconfig:background' => 'Upload background image',
     
         'minds_themeconfig:advanced' => 'Advanced settings...',
-        'minds_themeconfig:custom_css' => 'Custom CSS'
+        'minds_themeconfig:custom_css' => 'Custom CSS',
+    	
+
+        'minds_themeconfig:frontpagetext' => 'Front page text',
 );
 		
 add_translation("en", $english);
