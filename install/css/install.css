@@ -296,3 +296,12 @@ select {
 	margin: 20px 0px 10px 0px;
 	width: 95%;
 }
+
+#minds-theme input[type=file]{
+	clear: both;
+	width: 90%;
+	padding: 16px;
+	background: #EEE;
+	border: 1px solid #DDD;
+	margin: 8px;
+}

@@ -12,6 +12,8 @@ class MindsMultiInstaller extends ElggInstaller {
         'settings',
         'admin',
         'minds',
+	'theme',
+	'import',
         'complete',
     );
     protected $status = array(
@@ -42,6 +44,7 @@ class MindsMultiInstaller extends ElggInstaller {
                 $_SESSION['m_email'] = $email;
         if ($username = get_input('username'))
                 $_SESSION['m_username'] = $username;
+	
     }
 
     /**
@@ -497,4 +500,167 @@ class MindsMultiInstaller extends ElggInstaller {
         return false;
     }
 
+    /**
+     * Load the theme selector
+     * @param array $vars Not used
+     *
+     * @return void
+     */
+    protected function theme($submissionVars) {
+
+        $formVars = array(
+            'logo' => array(
+                'type' => 'file',
+                'value' => '',
+                'required' => FALSE,
+            ),
+            /*'style' => array(
+                'type' => 'radio',
+                'value' => 'theme1',
+		'options' => array('theme1'=>'theme1', 'theme2'=>'theme2'),
+                'required' => TRUE,
+            ),*/
+	    'page_header' => array(
+		'type' => 'text',
+		'value' => elgg_get_plugin_setting('frontpagetext','minds_themeconfig'),
+		'required' => FALSE
+	    )
+        );
+
+        if ($this->isAction) {
+            do {
+		if (!$this->saveTheme($submissionVars, $_FILES['logo'])) {
+                    register_error(elgg_echo('install:fail:theme'));
+
+                    $this->continueToNextStep('theme');
+                }
+
+                system_message(elgg_echo('install:success:theme'));
+
+                $this->continueToNextStep('import');
+            } while (FALSE);  // PHP doesn't support breaking out of if statements
+        }
+
+        $formVars = $this->makeFormSticky($formVars, $submissionVars);
+
+        $this->render('theme', array('variables' => $formVars));
+    }    
+ 
+    /**
+     * Save theme settings.
+     * @param type $submissionVars
+     */
+    protected function saveTheme($submissionVars){
+
+        global $CONFIG;
+    
+	// Save logo (generate a couple of sizes)
+	$files = array();
+	$sizes = array(
+                'logo_main' => array(
+            'w' => 200,
+            'h' => 90,
+            'square' => false,
+            'upscale' => true
+                ),
+                'logo_topbar' => array(
+            'w' => 78,
+            'h' => 30,
+            'square' => false,
+            'upscale' => true
+                ));
+	foreach ($sizes as $name => $size_info) {
+
+		// If our file exists ...
+	if (isset($submissionVars['logo']) && $submissionVars['logo']['error'] == 0) {
+ 		$resized = get_resized_image_from_existing_file($submissionVars['logo']['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale']);
+	}
+
+		if ($resized) {
+                	global $CONFIG;
+                	$theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
+                	@mkdir($theme_dir);
+
+                	file_put_contents($theme_dir . $name.'.jpg', $resized);
+                
+                	elgg_set_plugin_setting('logo_override', 'true', 'minds_themeconfig');
+            	}
+		if (isset($_FILES['logo']) && ($_FILES['logo']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['logo']['error'] != 0) {
+               		register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
+           	 }
+	}
+	// Save frontpage text
+	elgg_set_plugin_setting('frontpagetext', $submissionVars['page_header'], 'minds_themeconfig');
+    
+    }
+
+    /**
+     * Load the minds content importer (gives the option to import trending blogs from minds.com)
+     * @param array $vars Not used
+     *
+     * @return void
+     */
+    protected function import($submissionVars) {
+
+        $formVars = array(
+            'import' => array(
+                'type' => 'radio',
+                'value' => true,
+                'options' => array('Yes'=>'yes', 'No'=>'no'),
+                'required' => TRUE,
+            ),
+        );
+
+        if ($this->isAction) {
+            do {
+                if ($submissionVars['import'] == 'yes') {
+			$this->doImport($submissionVars);
+		     system_message(elgg_echo('install:success:import'));
+                }
+
+                $this->continueToNextStep('import');
+            } while (FALSE);  // PHP doesn't support breaking out of if statements
+        }
+
+        $formVars = $this->makeFormSticky($formVars, $submissionVars);
+
+        $this->render('import', array('variables' => $formVars));
+    }
+
+    /**
+     * Save theme settings.
+     * @param type $submissionVars
+     */
+    protected function doImport($submissionVars) {
+
+        global $CONFIG;
+	$endpoint = 'http://www.minds.com/blog/trending?view=json';
+	$result = json_decode(file_get_contents($endpoint));
+	$blogs = $result->object->blog;
+	
+	//get the only user registered...
+	$options = array('type' => 'user', 'full_view' => false, 'limit'=>1);
+	$admin = elgg_get_entities($options);
+
+	foreach($blogs as $blog){
+		$g = new GUID(); 
+		$b = new ElggObject();
+		$b->subtype = 'blog';
+		$b->owner_guid = $admin[0]->guid;
+		$b->title = $blog->title;
+		$b->description = $blog->description;
+		$b->minds_import = true;
+		$b->featured_id = $g->generate();
+		$b->featured = 1;
+		$b->save();
+
+		db_insert('object:featured', array('type'=>'entities_by_time',$b->featured_id => $b->getGUID()));
+		db_insert('object:'.$b->subtype.':featured', array('type'=>'entities_by_time',$b->featured_id => $b->getGUID()));
+	
+		add_to_river('river/object/'.$b->getSubtype().'/feature', 'feature', $b->getOwnerGUID(), $b->getGuid());
+
+
+	}
+        return true;
+    }
 }

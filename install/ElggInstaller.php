@@ -79,7 +79,6 @@ class ElggInstaller {
 		set_exception_handler('_elgg_php_exception_handler');
 
 		register_translations(dirname(__FILE__) . '/languages/', TRUE);
-                
 	}
 
 	/**
@@ -886,6 +885,10 @@ class ElggInstaller {
 	protected function getPostVariables() {
 		$vars = array();
 		foreach ($_POST as $k => $v) {
+			$vars[$k] = $v;
+		}
+		//do files too...
+		foreach($_FILES as $k => $v){
 			$vars[$k] = $v;
 		}
 		return $vars;

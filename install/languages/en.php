@@ -7,12 +7,14 @@
  */
 
 $english = array(
-	'install:title' => 'Elgg Install',
+	'install:title' => 'Minds Node Launcher',
 	'install:welcome' => 'Welcome',
 	'install:requirements' => 'Requirements check',
 	'install:database' => 'Database installation',
 	'install:settings' => 'Configure site',
 	'install:admin' => 'Create admin account',
+	'install:theme' => 'Theme setup',
+	'install:import' => 'Import data',
 	'install:complete' => 'Finished',
 
 	'install:next' => 'Next',
@@ -108,6 +110,16 @@ If you are ready to proceed, click the Next button.",
 	'install:admin:password:empty' => 'Password cannot be empty.',
 	'install:admin:password:tooshort' => 'Your password was too short',
 	'install:admin:cannot_create' => 'Unable to create an admin account.',
+
+	'install:theme:label:logo' => 'Logo',
+	'install:theme:help:logo' => 'Your site logo',
+	'install:theme:label:style' => 'Style',
+	'install:theme:help:style' => 'Select a style for your node',
+	'install:theme:label:page_header' => 'Site header',
+	'install:theme:help:page_header' => 'Enter text you want for the front page header',
+
+	'install:import:label:import' => 'Do you want to import trending blogs from minds.com?',
+	'install:import:help:import' => 'If you are new to Minds then we recommend you have some content on your node to help you get started',	
 
 	'install:complete:instructions' => 'Your Elgg site is now ready to be used. Click the button below to be taken to your site.',
 	'install:complete:gotosite' => 'Go to site',
