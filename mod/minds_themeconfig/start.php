@@ -48,6 +48,7 @@ function themeicons_page_handler($pages) {
                 break;
             case 'logo_main' :
             case 'logo_topbar' :
+            case 'logo_favicon' :
                 $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
                
                 $contents = file_get_contents($theme_dir . $pages[0].'.jpg');

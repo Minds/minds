@@ -1,5 +1,9 @@
 <a href="<?php echo elgg_get_site_url();?>" class="logo">
-	<img src="<?php echo elgg_get_site_url();?>/mod/minds/graphics/alpha-logo-topbar.png"/>
+	<?php if (elgg_get_plugin_setting('logo_override', 'minds_themeconfig')) { ?>
+            <img src="<?php echo elgg_get_site_url();?>themeicons/logo_topbar"/>
+        <?php } else { ?>
+            <img src="<?php echo elgg_get_site_url();?>/mod/minds/graphics/alpha-logo-topbar.png"/>
+        <?php } ?>
 </a>
 <?php echo elgg_view('search/search_box'); ?>
 <?php $user = elgg_get_logged_in_user_entity();?>
