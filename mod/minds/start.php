@@ -8,6 +8,7 @@
  */
 
 function minds_init(){
+
 // 	$i = 10000;
 // 	$mt = microtime(true);
 // 	while($i-->0) {
@@ -809,6 +810,3 @@ function minds_htmlawed_filter_tags($hook, $type, $result, $params) {
 }
 
 elgg_register_event_handler('init','system','minds_init');		
-
-?>
-

@@ -33,8 +33,8 @@ function themeconfig_init(){
 function themeicons_page_handler($pages) {
 
         global $CONFIG;
-
-        switch($pages[0]) {
+        
+	switch($pages[0]) {
             case 'background':
                  $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
 
