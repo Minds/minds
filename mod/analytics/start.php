@@ -152,7 +152,10 @@ function analytics_fetch(){
 	foreach ($results->getRows() as $row) {
 		$url = $row[0];
 		$guid = analytics_get_guid_from_url($url);
-	        $entity = get_entity($guid,'object');
+	    $entity = get_entity($guid,'object');
+		if($entity->access_id != 0){
+			continue;
+		}
 		$views = $row[2];
 		//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
 		array_push($guids, $guid);
