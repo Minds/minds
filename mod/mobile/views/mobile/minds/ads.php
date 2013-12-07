@@ -13,8 +13,28 @@ google_ad_height = 50;
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script></div>';*/
 switch($type){
+	case 'mobile':
+/*              echo '<div class="mobile-ad"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Mobile Ad -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:320px;height:50px"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="8589966821"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>';*/
+        echo '<div class="mobile-ad"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 2nd Mobile Ad -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:320px;height:100px"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="6656427224"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>';
+        break;
 	case 'taboola':
-
+	case 'content-below-banner':
 	echo "<div id='taboola-below-main-column'></div>
 <script type='text/javascript'>
 
@@ -33,27 +53,6 @@ placement:'below-main-column'});
 
         _taboola.push({mode:'text-links-2c', container:'taboola-text-2-columns-mix', placement:'text-2-columns', target_type:'mix'}); </script>";
 
-	break;
-	case 'mobile':
-/*		echo '<div class="mobile-ad"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- Mobile Ad -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:320px;height:50px"
-     data-ad-client="ca-pub-9303771378013875"
-     data-ad-slot="8589966821"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script></div>';*/
-	echo '<div class="mobile-ad"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- 2nd Mobile Ad -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:320px;height:100px"
-     data-ad-client="ca-pub-9303771378013875"
-     data-ad-slot="6656427224"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script></div>';
-	break;
 	case 'large':
 	default:
 echo '<div class="mobile-ad"><script type="text/javascript"><!--

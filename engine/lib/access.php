@@ -39,10 +39,14 @@ function _elgg_get_access_cache() {
  * 
  * @return bool
  */
-function elgg_check_access($enitity, $user = null){
+function elgg_check_access($entity, $user = null){
 	
 	if(!$user){
 		$user = elgg_get_logged_in_user_entity();
+	}
+
+	if($entity instanceof ElggUser){
+//		return true;
 	}
 	
 	//first of all check if the user owns the entity

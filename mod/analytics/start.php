@@ -153,7 +153,7 @@ function analytics_fetch(){
 		$url = $row[0];
 		$guid = analytics_get_guid_from_url($url);
 	    $entity = get_entity($guid,'object');
-		if($entity->access_id != 0){
+		if($entity->access_id != ACCESS_PUBLIC || !$entity){
 			continue;
 		}
 		$views = $row[2];
