@@ -40,6 +40,14 @@ function _elgg_get_access_cache() {
  * @return bool
  */
 function elgg_check_access($entity, $user = null){
+
+	if(!elgg_is_logged_in()){
+		if($entity->access_id == ACCESS_PUBLIC){
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	if(!$user){
 		$user = elgg_get_logged_in_user_entity();
@@ -202,11 +210,11 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
 			}
 		}
 		
-		if(elgg_is_admin_user($user_id)){
+	/*	if(elgg_is_admin_user($user_id)){
 			if ($ignore_access == true) {
 				$access_array[] = ACCESS_PRIVATE;
 			}
-		}
+		}*/
 
 		if ($init_finished) {
 			$cache[$hash] = $access_array;
