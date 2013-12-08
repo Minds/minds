@@ -760,6 +760,11 @@ function get_entity($guid, $type = 'object') {
 		$new_entity = $new_entity[0];
 	}
 	
+	//check access permissions
+	if(!elgg_check_access($new_entity)){
+		return false; //@todo return error too
+	}
+	
 	if ($new_entity) {
 		cache_entity($new_entity);
 	}

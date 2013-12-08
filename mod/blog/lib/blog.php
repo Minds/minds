@@ -37,8 +37,13 @@ function blog_get_page_content_read($guid = NULL) {
                 'sort_by' => 'priority',
                 'class' => 'elgg-menu-hz',
         ));
-	
-	        //set up for facebook
+
+	$excerpt = $blog->excerpt ? strip_tags($blog->excerpt) : substr(strip_tags($blog->description), 0, 140);
+
+        set_input('description', $excerpt);
+        set_input('keywords', $blog->tags);
+
+        //set up for facebook
         minds_set_metatags('og:type', 'article');
         minds_set_metatags('og:url',$blog->getPermaURL());
         minds_set_metatags('og:title',$blog->title);
@@ -76,11 +81,6 @@ function blog_get_page_content_read($guid = NULL) {
 	$return['menu'] = $menu;
 	//add the sidebar
 	$return['sidebar'] = blog_sidebar($blog);
-	
-	$excerpt = $blog->excerpt ? strip_tags($blog->excerpt) : substr(strip_tags($blog->description), 0, 140);
-	
-	set_input('description', $excerpt);
-	set_input('keywords', $blog->tags);
 	
 	return $return;
 }

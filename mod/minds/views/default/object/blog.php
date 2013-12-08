@@ -16,7 +16,7 @@ if (!$blog) {
 $owner = $blog->getOwnerEntity();
 //$container = $blog->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
-$excerpt = strip_tags($blog->excerpt);
+$excerpt = elgg_get_excerpt($blog->excerpt, 200);
 if (!$excerpt) {
 	$excerpt = elgg_get_excerpt($blog->description);
 }
@@ -94,7 +94,7 @@ if ($full) {
 	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
 	$title = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_view_title($blog->title)));
 	$extras = '<p class="excerpt">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$excerpt)) . '</p>';
-
+	if(!$owner){ return false; }
 	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));
 
         $subtitle = '<i>'.
