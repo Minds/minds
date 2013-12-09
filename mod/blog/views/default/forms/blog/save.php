@@ -155,11 +155,6 @@ $categories_input
 	$access_input
 </div>
 
-<div>
-	<label for="blog_status">$status_label</label>
-	$status_input
-</div>
-
 <div class="elgg-foot">
 	<div class="elgg-subtext mbm">
 	$save_status <span class="blog-save-status-time">$saved</span>
