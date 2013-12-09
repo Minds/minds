@@ -7,7 +7,7 @@ gatekeeper();
 
 $ia = elgg_set_ignore_access();
 
-if ($tier = get_entity(get_input('tier_id'))) {
+if ($tier = get_entity(get_input('tier_id','object'))) {
     $order = new ElggObject();
     $order->subtype = 'pay';
 
@@ -42,6 +42,18 @@ $order->items = serialize($items); */
     
     $order->recurring = true;
     
-    $order->save();
-    
+    $order_guid = $order->save();
+
+
+	//now create a blank MindsNode ... don't launch yet though...
+	$node = new MindsNode();
+	$node->owner_guid = elgg_get_logged_in_user_guid();
+	$node->launched = false;
+	$node->tier_guid = $tier->guid;
+	$node->order_guid = $order_guid;	
+	$node->foo = bar;    
+	$node->save();
+
+	//forward to the manage page
+	forward('nodes/manage');
 }

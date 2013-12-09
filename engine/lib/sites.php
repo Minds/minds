@@ -19,25 +19,30 @@ function elgg_get_site_entity($site_guid = 0) {
 	global $CONFIG;
 
 	$result = false;
-	
+        
+        if (!empty($CONFIG->site_id) && ($site_guid == 0))
+            $site_guid = $CONFIG->site_id;
+        if (empty($CONFIG->site_id) && ($site_guid == 0))
+            $site_guid = 1;
+        
 	//check if defined in settings.php
-	if($CONFIG->site_name){
-		$site = new ElggSite();
-		$site->name = $CONFIG->site_name;
-		$site->email = $CONFIG->site_email;
-		$site->url = $CONFIG->site_url;
-		$site->categories = $CONFIG->categories;
-	} else {
+        if($CONFIG->site_name){
+                $site = new ElggSite();
+                $site->name = $CONFIG->site_name;
+                $site->email = $CONFIG->site_email;
+                $site->url = $CONFIG->site_url;
+                $site->categories = $CONFIG->categories;
+        } else {
 
-		$site = get_entity($site_guid,'site');
-	
-	}
+                $site = get_entity($site_guid,'site');
+        }
+
 	
 	if ($site instanceof ElggSite) {
-		$result = $site;
-	}
+            $result = $site;
 
-	cache_entity($site);
+            cache_entity($site);
+	}
 	
 	return $result;
 }

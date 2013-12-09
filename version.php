@@ -15,4 +15,4 @@ $version = 2011123101;
 
 // Human-friendly version name
 $release = '1.8.13';
-
+$minds_release = 'Minds-1.0';

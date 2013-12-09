@@ -8,7 +8,7 @@ elgg_load_library('elgg:pay');
 
 //variables
 $user_guid = get_input('user_guid');
-$user = get_entity($user_guid);
+$user = get_entity($user_guid, 'user');
 $amount = get_input('amount');
 $paypal_address = get_input('paypal_address');
 

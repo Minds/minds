@@ -6,8 +6,8 @@
     if (elgg_is_logged_in() && $_SESSION['__tier_selected'])
     {
         $tier = get_entity($_SESSION['__tier_selected']);
-        $url = elgg_get_site_url(). "action/pay/basket/add?type_guid={$tier->guid}&title={$tier->title}&description={$tier->description}&price={$tier->price}&quantity=1&recurring=y";
-        $url = elgg_add_action_tokens_to_url($url);
+        $url = elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid;
+	$url = elgg_add_action_tokens_to_url($url);
 
         unset ($_SESSION['__tier_selected']);
 
@@ -24,25 +24,16 @@
         
 
 ?>
-<div id="tiers-selection" class="tiers">
+<ul id="tiers-selection" class="elgg-list">
   
-    <p><?php echo elgg_echo('minds:tier:blurb');?></p>
+    <?php foreach ($tiers as $tier) { ?>
     
-    <?php
-        foreach ($tiers as $tier) {
-    
-            ?>
-    
-    <div class="tier tier-<?php echo $tier->product_id; ?>">
+    <li class="elgg-item tier tier-<?php echo $tier->product_id; ?>">
         <?php echo  elgg_view('input/tier', array('tier' => $tier)); ?>
         
-    </div>
+    </li>
     
-    
-            <?php
-            
-        }
-    ?>
+    <?php } ?>
     <br class="clearfix" />
 </div>
 

@@ -1,7 +1,8 @@
 <?php
 
-    if ($guid = get_input('guid')) 
-            $obj = get_entity($guid);
+if ($guid = get_input('guid')) {
+	$obj = get_entity($guid);
+}
     
 ?>
 <?php if ($obj) { 
@@ -41,6 +42,13 @@
             MINDS_EXPIRES_YEAR => 'Year (365 days)',
         ), 'value' => $obj->expires));?>
     </label></p>    
+
+<p><label>Allowed a domain?
+        <?php echo elgg_view('input/dropdown', array('name' => 'allowed_domain', 'options_values' => array(
+            'yes' => 'Yes',
+		'no' => 'No'
+        ), 'value' => $obj->allowed_domain));?>
+    </label></p>
     
     <?php echo elgg_view('forms/minds/tiers/extension', $vars + array('obj' => $obj)); ?>
     <p>

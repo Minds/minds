@@ -41,7 +41,7 @@ $CONFIG->path = '{{path}}';
 $CONFIG->dataroot = '{{dataroot}}';
 $CONFIG->default_site = '{{default_site}}';
 $CONFIG->site_id = '{{default_site}}';
-$CONFIG->__site_secret__ = md5(rand() . microtime());
+//$CONFIG->__site_secret__ = md5(rand() . microtime());
 /**
  * Overrides default system cache path from inside data root to custom location.
  *

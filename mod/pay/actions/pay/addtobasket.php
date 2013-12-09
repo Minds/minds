@@ -8,7 +8,7 @@
 
 // Get variables
 $type_guid = get_input("type_guid");
-$type = get_entity($type_guid);
+$type = get_entity($type_guid, 'object');
 
 $title = get_input("title", $type->title ? $type->title : $type->name);
 $desc = get_input("description", $type->description);

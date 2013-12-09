@@ -4,7 +4,6 @@
  *
  * @package Pay
  */
-
 /* Puts the referring page to the breadcrumb 
  */
 function pay_breadcrumb(){
@@ -68,7 +67,7 @@ function pay_get_currency(){
 function pay_urls($order_guid){
 	//creates an action token open for an hour
 	$user = elgg_get_logged_in_user_entity();
-	$order = get_entity($order_guid);
+	$order = get_entity($order_guid, 'object');
 	
 	$action_token = create_user_token($user->username, 527040); // Make tokens last a year and a day (since Paypal seems to be pinging the notify URL rather than the generic payment endpoint, contrary to documented behaviou)
 	$urls = array('return' => elgg_get_site_url() . 'pay/',
@@ -158,7 +157,7 @@ function pay_basket_add_button($type_guid, $title, $description, $price, $quanti
 /* Updates an orders status 
  */
 function pay_update_order_status($order_guid, $status){
-	$order = get_entity($order_guid);
+	$order = get_entity($order_guid, 'object');
 	
 	$order->status = $status;
 	
@@ -243,7 +242,7 @@ function pay_call_payment_handler_callback($handler, $order_guid){
 	if($callback == true){
 		//send messages
 		//update order
-		$order = get_entity($order_guid);
+		$order = get_entity($order_guid, 'object');
 		//This gives 98% to the seller.
 		$order->seller_amount = ($order->amount * 0.98);
 		$order->save();
@@ -273,8 +272,8 @@ function paypal_handler($params){
     
         global $CONFIG;
     
-	$order = get_entity($params['order_guid']);
-	$user = get_entity($params['user_guid']);
+	$order = get_entity($params['order_guid'], 'object');
+	$user = get_entity($params['user_guid'], 'user');
 	$amount = $params['amount'];
 	$description = $params['description'];
 	
@@ -304,6 +303,8 @@ function paypal_handler($params){
 					'email' => $user->email
 				);
 	
+        error_log('PAYPAL Variables: ' . print_r($variables, true));
+        
         /**
          * Support for recurring payments.
          * See https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/subscribe_buttons/
@@ -322,7 +323,7 @@ function paypal_handler($params){
             
             // Set recurring period based on expiry (default 1 year)
             $ia = elgg_set_ignore_access($ia);
-            $item = get_entity($order->object_guid);
+            $item = get_entity($order->object_guid, 'object');
             $expires = $item->expires;
             if (!$expires) $expires = MINDS_EXPIRES_YEAR;
             $ia = elgg_set_ignore_access($ia);
@@ -430,19 +431,19 @@ function paypal_generic_ipn_handler($page) {
             $order->annotate('order_details', serialize($_POST));
 
             elgg_log("PAYPAL: Transaction type is {$_POST['txn_type']}");
-//mail('marcus@marcus-povey.co.uk', 'IPN GENERIC hit', print_r($_POST,true));
+
             
             switch ($_POST['txn_type']) {
                 
                 case 'subscr_signup': // Not handled here
                     break;
                 case 'subscr_cancel': // Cancel the subscription
-//mail('marcus@marcus-povey.co.uk', 'IPN GENERIC CANCELLED', print_r($_POST,true));
+
                     pay_update_order_status($order_guid, 'Cancelled');
                     break;
                 case 'subscr_payment': // Subscription regular payment.
     
-//mail('marcus@marcus-povey.co.uk', 'IPN GENERIC Payment', print_r($_POST, true));
+
                         $payment_status = $_REQUEST['payment_status'];
                         //We can now assume that the response is legit so we can update the payment status
                         pay_update_order_status($order_guid, $payment_status);
@@ -478,7 +479,7 @@ function paypal_handler_callback($order_guid) {
 
     global $CONFIG;
 
-    $order = get_entity($order_guid);
+    $order = get_entity($order_guid, 'object');
 
     // We need to actually do some validation in an IPN... MP 
 
@@ -545,7 +546,7 @@ function paypal_handler_callback($order_guid) {
                 if (isset($_POST['subscr_id']))
                     $order->subscr_id = $_POST['subscr_id'];
 
-//mail('marcus@marcus-povey.co.uk', 'IPN Payment', print_r($_POST,true));
+
 
                 if ($_POST['txn_type'] == 'subscr_cancel') // Quickly handle subscription cancellations.
                     pay_update_order_status($order_guid, 'Cancelled');

@@ -21,7 +21,14 @@ elgg_push_breadcrumb(elgg_echo('pay:account'), 'pay/account');
 $limit = get_input("limit", 10);
 
 $title = elgg_echo('pay:account');
-
+$content = elgg_list_entities(array(
+	'type' => 'object',
+	'subtype' => 'pay',
+	'limit' => $limit,
+	'full_view' => FALSE,
+	'owner_guid' => elgg_get_page_owner_guid(),
+)); 
+/*
 $content = elgg_list_entities_from_metadata(array(
 	'types' => 'object',
 	'subtypes' => 'pay',
@@ -29,7 +36,7 @@ $content = elgg_list_entities_from_metadata(array(
 	'full_view' => FALSE,
 	'owner_guid' => elgg_get_page_owner_guid(),
 	'metadata_name_value_pairs' => array('name' => 'order', 'value' => true),
-));
+));*/
 
 if (!$content) {
 	$content = elgg_echo('pay:account:none');

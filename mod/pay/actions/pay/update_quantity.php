@@ -7,7 +7,7 @@
 
 // Get variables
 $item_guid = get_input('item_guid');
-$item = get_entity($item_guid);
+$item = get_entity($item_guid, 'object');
 
 $quantity = round(get_input('quantity'));
 
