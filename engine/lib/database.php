@@ -56,7 +56,8 @@ function db_init() {
 			'friendsof', 
 			'timeline',
 			'newsfeed',
-                        'token');
+                	 'token'
+		);
 	
 	register_cfs($cfs);
 }
