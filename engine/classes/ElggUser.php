@@ -138,6 +138,10 @@ class ElggUser extends ElggEntity
 		
 		db_insert(strtolower($this->username), $data);
 		db_insert(strtolower($this->email), $data);
+
+		global $SESSION;
+		$SESSION['user'] = $this;
+
 		return $guid;
 	}
 
