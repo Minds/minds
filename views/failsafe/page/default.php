@@ -13,9 +13,6 @@
 
 // we won't trust server configuration but specify utf-8
 header('Content-type: text/html; charset=utf-8');
-
-$body = nl2br(htmlentities(print_r($vars['object'], true), ENT_QUOTES, 'UTF-8'));
-elgg_send_email('bug@minds.com', 'mark@minds.com', 'Exception ' . get_class($vars['object']), nl2br(htmlentities(print_r($vars['object'], true), ENT_QUOTES, 'UTF-8')));
 ?>
 <html>
 	<head>

@@ -15,8 +15,10 @@ if (isset($vars['entity']) && $vars['entity'] instanceof ElggEntity) {
 if (isset($vars['universal_categories_list'])) {
 	$selected_categories = $vars['universal_categories_list'];
 }
-
+global $CONFIG;
 $categories = elgg_get_site_entity()->categories;
+$categories = $CONFIG->site_categories;
+
 if (empty($categories)) {
 	$categories = array();
 }

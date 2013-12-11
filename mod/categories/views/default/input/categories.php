@@ -17,6 +17,7 @@ if (isset($vars['universal_categories_list'])) {
 }
 
 $categories = elgg_get_site_entity()->categories;
+var_dump($categories);
 if (empty($categories)) {
 	$categories = array();
 }
