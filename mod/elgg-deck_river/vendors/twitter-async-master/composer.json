@@ -1,7 +1,0 @@
-{
-	"name": "jmathai/twitter-async", 
-	"description": "Twitter-async is a high performance wrapper for Twitter's OAuth API which provides parallel/asynchronous calls.", 
-	"homepage": "http://www.jaisenmathai.com/articles/twitter-async-documentation.html",
-	"author": "Jaisen Mathai",
-	"license": "BSD"
-}
