@@ -2178,7 +2178,7 @@ function _elgg_engine_boot() {
  */
 function elgg_init() {
 	global $CONFIG;
-
+	
 	elgg_register_action('comments/add');
 	elgg_register_action('comments/delete');
 

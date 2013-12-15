@@ -908,7 +908,8 @@ function elgg_get_entities(array $options = array()) {
 	}
 
 	if($options['limit'] == false || $options['limit'] == 0){
-		unset($options['limit']);
+		//unset($options['limit']);
+		$options['limit'] = 999999;
 	}
 	
 	//hack to make ajax lists not show duplicates
