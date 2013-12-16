@@ -10,6 +10,7 @@
 		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
 		$('.progress_indicator').tipsy({gravity: 'e'});		
 		$('.elgg-input-text').tipsy({gravity: 'w'});
+		$('.tooltip.s').tipsy({gravity: 's'});
 
 		$('.elgg-form-wall-add textarea').focus( function(e){ $(this).parent().find('.elgg-button-submit').css('display','block');});
 
