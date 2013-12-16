@@ -1377,7 +1377,6 @@ $order_by = 'time_created') {
 	$where = array();
 
 	if ($type != "") {
-		$type = sanitise_string($type);
 		$where[] = "type='$type'";
 	}
 

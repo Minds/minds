@@ -427,9 +427,6 @@ function serialise_parameters($method, $parameters) {
 				$array = "array(";
 
 				foreach ($parameters[$key] as $k => $v) {
-					$k = sanitise_string($k);
-					$v = sanitise_string($v);
-
 					$array .= "'$k'=>'$v',";
 				}
 
@@ -631,7 +628,7 @@ function get_and_validate_api_headers() {
  * @access private
  */
 function map_api_hash($algo) {
-	$algo = strtolower(sanitise_string($algo));
+	$algo = strtolower($algo);
 	$supported_algos = array(
 		"md5" => "md5",	// @todo Consider phasing this out
 		"sha" => "sha1", // alias for sha1
@@ -769,7 +766,6 @@ function create_api_user($site_guid) {
 function get_api_user($site_guid, $api_key) {
 	global $CONFIG;
 
-	$api_key = sanitise_string($api_key);
 	$site_guid = (int)$site_guid;
 
 	$query = "SELECT * from {$CONFIG->dbprefix}api_users"
@@ -998,7 +994,6 @@ function remove_user_token($token, $site_guid) {
 	}
 
 	$site_guid = (int)$site_guid;
-	$token = sanitise_string($token);
 
 	/*return delete_data("DELETE from {$CONFIG->dbprefix}users_apisessions
 		where site_guid=$site_guid and token='$token'");*/

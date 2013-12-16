@@ -93,7 +93,6 @@ function notify_user($to, $from, $subject, $message, array $params = NULL, $meth
 		$to = array((int)$to);
 	}
 	$from = (int)$from;
-	//$subject = sanitise_string($subject);
 
 	// Get notification methods
 	if (($methods_override) && (!is_array($methods_override))) {
