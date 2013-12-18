@@ -66,30 +66,10 @@
 /**
  * MASON PROTOTYPE
  */
-.elgg-list.mason {
-	-moz-column-count: 3;
-	-moz-column-gap: 10px;
-	-webkit-column-count: 3;
-	-webkit-column-gap: 12px;
-	column-count: 3;
-	column-gap: 10px;
-	margin: 5px 0;
-	clear: both;
-	width: 100%;
-}
+
 .elgg-list.mason > li{
 	height: auto;
-	width:auto;
-	float:none;
-	margin: 5px;
-	display: inline-block;
-}
-@media screen and (min-width: 1400px) {
-	.elgg-list.mason {
-      		-moz-column-count: 4;
-        	-webkit-column-count: 4;
-		column-count: 4;
-	}	
+	display:block;
 }
 .elgg-footer .elgg-list > li{
 	width: 42%;

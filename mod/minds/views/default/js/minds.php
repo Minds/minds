@@ -7,6 +7,11 @@
 	 
 	 minds.init = function() {	 
 
+		$('.elgg-list.mason').masonry({
+       itemSelector: '.elgg-item',
+			transitionDuration: 0
+		});
+
 		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
 		$('.progress_indicator').tipsy({gravity: 'e'});		
 		$('.elgg-input-text').tipsy({gravity: 'w'});
@@ -217,6 +222,10 @@
 					
 					$list.find('.elgg-list:first').append(data);
                                         $list.find('.elgg-list:first > ul:last').contents().unwrap();
+					$('.elgg-list.mason').masonry().masonry('reloadItems').masonry()
+						.imagesLoaded( function() {
+  							$('.elgg-list.mason').masonry().masonry('reloadItems').masonry();
+						});
 	
 					$list.append('<div class="news-show-more load-more">more</div>');
 					
