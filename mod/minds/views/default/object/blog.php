@@ -13,7 +13,7 @@ if (!$blog) {
 	return TRUE;
 }
 
-$owner = $blog->getOwnerEntity();
+$owner = $blog->getOwnerEntity(true);
 //$container = $blog->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
 $excerpt = elgg_get_excerpt($blog->excerpt, 200);

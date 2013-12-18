@@ -215,7 +215,8 @@
 
 					$('.load-more').remove();
 					
-					$list.append(data);							
+					$list.find('.elgg-list:first').append(data);
+                                        $list.find('.elgg-list:first > ul:last').contents().unwrap();
 	
 					$list.append('<div class="news-show-more load-more">more</div>');
 					
