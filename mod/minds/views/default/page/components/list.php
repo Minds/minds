@@ -37,6 +37,9 @@ if ($data_options) {
 if (isset($vars['list_class'])) {
     $list_class = "$list_class {$vars['list_class']}";
 }
+if(get_input('mason')){
+        $list_class .= ' mason';
+}
 
 $item_class = 'elgg-item';
 if (isset($vars['item_class'])) {

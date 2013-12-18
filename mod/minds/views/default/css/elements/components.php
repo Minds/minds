@@ -63,6 +63,35 @@
 	}
 }
 
+/**
+ * MASON PROTOTYPE
+ */
+.elgg-list.mason {
+	-moz-column-count: 3;
+	-moz-column-gap: 10px;
+	-webkit-column-count: 3;
+	-webkit-column-gap: 12px;
+	column-count: 3;
+	column-gap: 10px;
+	border-top: 1px dotted #CCCCCC;
+	margin: 5px 0;
+	clear: both;
+	width: 100%;
+}
+.elgg-list.mason > li{
+	height: auto;
+	width:auto;
+	float:none;
+	margin: 5px;
+	display: inline-block;
+}
+@media screen and (min-width: 1400px) {
+	.elgg-list.mason {
+      		-moz-column-count: 3;
+        	-webkit-column-count: 3;
+		column-count: 3;
+	}	
+}
 .elgg-footer .elgg-list > li{
 	width: 42%;
 	margin: 16px 2%;
