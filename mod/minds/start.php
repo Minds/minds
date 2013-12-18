@@ -65,6 +65,8 @@ function minds_init(){
 	elgg_unregister_js('jquery');
 	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
 	elgg_load_js('jquery');
+
+	elgg_register_js('jquery-masonary', elgg_get_site_url() . 'mod/minds/vendors/masonary/masonary.min.js');
 	
 	//register jquery.form
 	elgg_register_js('jquery.form', elgg_get_site_url() . 'mod/minds/vendors/jquery/jquery.form.js');

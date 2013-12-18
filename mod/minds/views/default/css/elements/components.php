@@ -73,7 +73,6 @@
 	-webkit-column-gap: 12px;
 	column-count: 3;
 	column-gap: 10px;
-	border-top: 1px dotted #CCCCCC;
 	margin: 5px 0;
 	clear: both;
 	width: 100%;
@@ -87,9 +86,9 @@
 }
 @media screen and (min-width: 1400px) {
 	.elgg-list.mason {
-      		-moz-column-count: 3;
-        	-webkit-column-count: 3;
-		column-count: 3;
+      		-moz-column-count: 4;
+        	-webkit-column-count: 4;
+		column-count: 4;
 	}	
 }
 .elgg-footer .elgg-list > li{
