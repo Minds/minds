@@ -620,19 +620,9 @@ function elgg_unextend_view($view, $view_extension) {
  * @since  1.8
  */
 function elgg_view_page($title, $body, $page_shell = 'default', $vars = array()) {
-
-	$messages = null;
-	if (count_messages()) {
-		// get messages - try for errors first
-		$messages = system_messages(NULL, "error");
-		if (count($messages["error"]) == 0) {
-			// no errors so grab rest of messages
-			$messages = system_messages(null, "");
-		} else {
-			// we have errors - clear out remaining messages
-			system_messages(null, "");
-		}
-	}
+	
+	$messages['error'] = system_messages(NULL, "error");
+	$messages['success'] = system_messages(NULL, "success");
 
 	$vars['title'] = $title;
 	$vars['body'] = $body;

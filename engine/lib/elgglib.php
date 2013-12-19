@@ -543,42 +543,26 @@ function system_messages($message = null, $register = "success", $count = false)
 		}
 		return true;
 	}
-	if (!isset($SESSION['msg'])) {
-		$SESSION['msg'] = array();
-	}
-	if (!isset($SESSION['msg'][$register]) && !empty($register)) {
-		$SESSION['msg'][$register] = array();
+	$default = $SESSION->get('msg_'.$register, array());
+	if (!$default) {
+		$SESSION->set('msg_'.$register, array());
+		$default = $SESSION->get('msg_'.$register);
 	}
 	if (!$count) {
 		if (!empty($message) && is_array($message)) {
-			$SESSION['msg'][$register] = array_merge($SESSION['msg'][$register], $message);
+			$SESSION->set('msg_'.$register, array_merge($default, $message));
 			return true;
 		} else if (!empty($message) && is_string($message)) {
-			$SESSION['msg'][$register][] = $message;
+			array_push($default, $message);
+			$SESSION->set('msg_'.$register, $default);
 			return true;
 		} else if (is_null($message)) {
-			if ($register != "") {
-				$returnarray = array();
-				$returnarray[$register] = $SESSION['msg'][$register];
-				$SESSION['msg'][$register] = array();
-			} else {
-				$returnarray = $SESSION['msg'];
-				$SESSION['msg'] = array();
-			}
-			return $returnarray;
+			$SESSION->set('msg_'.$register, array());//cleanup
+			return $default;
 		}
 	} else {
-		if (!empty($register)) {
-			return count($SESSION['msg'][$register]);
-		} else {
-			$count = 0;
-			foreach ($SESSION['msg'] as $register => $submessages) {
-				$count += count((array)$submessages);
-			}
-			return $count;
-		}
+		return count($default);
 	}
-	return false;
 }
 
 /**
@@ -1051,7 +1035,8 @@ function _elgg_php_exception_handler($exception) {
 					'Mark Harding',
 					'Automatic Report',
 					$body,
-					array('bill@minds.com', 'john@minds.com','mark@kramnorth.com'),
+					null,
+					//array('bill@minds.com', 'john@minds.com','mark@kramnorth.com'),
 					true //html
 		);
 
