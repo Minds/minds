@@ -222,7 +222,7 @@
 					
 					$list.find('.elgg-list:first').append(data);
                                         $list.find('.elgg-list:first > ul:last').contents().unwrap();
-					$('.elgg-list.mason').masonry().masonry('reloadItems').masonry()
+					$('.elgg-list.mason').masonry()
 						.imagesLoaded( function() {
   							$('.elgg-list.mason').masonry().masonry('reloadItems').masonry();
 						});

@@ -358,9 +358,13 @@ li .blog-rich-image-holder .rich-image{
 }
 /*MASON OVERRIDE*/
 .mason .blog-rich-image-holder .rich-image{
+	width:100%;
 	position:relative;
 	top:0;
-	margin-bottom: -5px;
+	margin-bottom:-5px;
+}
+.mason .blog-rich-image-holder .rich-image.youtube{
+	margin:-45px 0;
 }
 li .excerpt{
 	background: rgb(0, 0, 0); /* The Fallback */

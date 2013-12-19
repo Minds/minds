@@ -90,8 +90,13 @@ if ($full) {
 	echo $title;
 } else {
 	// brief view
+	$src = minds_fetch_image($blog->description, $blog->owner_guid);
+	$class = 'rich-image';
+	if (strpos($src,'youtube') !== false) {
+		$class .= ' youtube';
+	}
 
-	$image = elgg_view('output/img', array('src'=>minds_fetch_image($blog->description, $blog->owner_guid), 'class'=>'rich-image'));
+	$image = elgg_view('output/img', array('src'=>$src, 'class'=>$class));
 	$title = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_view_title($blog->title)));
 	$extras = '<p class="excerpt">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$excerpt)) . '</p>';
 	if(!$owner){ return false; }
