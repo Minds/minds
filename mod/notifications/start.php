@@ -34,7 +34,7 @@ function notifications_plugin_init() {
 	elgg_register_event_handler('create', 'annotation', 'notifications_notify');
 	
 	$notification_js = elgg_get_simplecache_url('js', 'notifications/notify');
-	elgg_register_js('elgg.notifications', $notification_js);
+	elgg_register_js('elgg.notifications', $notification_js, 'footer');
 	elgg_load_js('elgg.notifications');
 	
 

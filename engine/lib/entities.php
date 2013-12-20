@@ -908,7 +908,8 @@ function elgg_get_entities(array $options = array()) {
 	}
 
 	if($options['limit'] == false || $options['limit'] == 0){
-		unset($options['limit']);
+		//unset($options['limit']);
+		$options['limit'] = 999999;
 	}
 	
 	//hack to make ajax lists not show duplicates
@@ -1376,7 +1377,6 @@ $order_by = 'time_created') {
 	$where = array();
 
 	if ($type != "") {
-		$type = sanitise_string($type);
 		$where[] = "type='$type'";
 	}
 

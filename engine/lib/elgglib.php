@@ -169,13 +169,13 @@ function forward($location = "", $reason = 'system') {
  *
  * @param string $name     An identifier for the JavaScript library
  * @param string $url      URL of the JavaScript file
- * @param string $location Page location: head or footer. (default: head)
+ * @param string $location Page location: head or footer. (default: footer)
  * @param int    $priority Priority of the JS file (lower numbers load earlier)
  *
  * @return bool
  * @since 1.8.0
  */
-function elgg_register_js($name, $url, $location = 'head', $priority = null) {
+function elgg_register_js($name, $url, $location = 'footer', $priority = null) {
 	return elgg_register_external_file('js', $name, $url, $location, $priority);
 }
 
@@ -543,42 +543,26 @@ function system_messages($message = null, $register = "success", $count = false)
 		}
 		return true;
 	}
-	if (!isset($SESSION['msg'])) {
-		$SESSION['msg'] = array();
-	}
-	if (!isset($SESSION['msg'][$register]) && !empty($register)) {
-		$SESSION['msg'][$register] = array();
+	$default = $SESSION->get('msg_'.$register, array());
+	if (!$default) {
+		$SESSION->set('msg_'.$register, array());
+		$default = $SESSION->get('msg_'.$register);
 	}
 	if (!$count) {
 		if (!empty($message) && is_array($message)) {
-			$SESSION['msg'][$register] = array_merge($SESSION['msg'][$register], $message);
+			$SESSION->set('msg_'.$register, array_merge($default, $message));
 			return true;
 		} else if (!empty($message) && is_string($message)) {
-			$SESSION['msg'][$register][] = $message;
+			array_push($default, $message);
+			$SESSION->set('msg_'.$register, $default);
 			return true;
 		} else if (is_null($message)) {
-			if ($register != "") {
-				$returnarray = array();
-				$returnarray[$register] = $SESSION['msg'][$register];
-				$SESSION['msg'][$register] = array();
-			} else {
-				$returnarray = $SESSION['msg'];
-				$SESSION['msg'] = array();
-			}
-			return $returnarray;
+			$SESSION->set('msg_'.$register, array());//cleanup
+			return $default;
 		}
 	} else {
-		if (!empty($register)) {
-			return count($SESSION['msg'][$register]);
-		} else {
-			$count = 0;
-			foreach ($SESSION['msg'] as $register => $submessages) {
-				$count += count((array)$submessages);
-			}
-			return $count;
-		}
+		return count($default);
 	}
-	return false;
 }
 
 /**
@@ -1051,7 +1035,8 @@ function _elgg_php_exception_handler($exception) {
 					'Mark Harding',
 					'Automatic Report',
 					$body,
-					array('bill@minds.com', 'john@minds.com','mark@kramnorth.com'),
+					null,
+					//array('bill@minds.com', 'john@minds.com','mark@kramnorth.com'),
 					true //html
 		);
 
@@ -2204,7 +2189,7 @@ function _elgg_engine_boot() {
  */
 function elgg_init() {
 	global $CONFIG;
-
+	
 	elgg_register_action('comments/add');
 	elgg_register_action('comments/delete');
 
@@ -2212,14 +2197,14 @@ function elgg_init() {
 	elgg_register_page_handler('css', 'elgg_css_page_handler');
 	elgg_register_page_handler('ajax', 'elgg_ajax_page_handler');
 
-	elgg_register_js('elgg.autocomplete', 'js/lib/ui.autocomplete.js');
-	elgg_register_js('jquery.ui.autocomplete.html', 'vendors/jquery/jquery.ui.autocomplete.html.js');
-	elgg_register_js('elgg.userpicker', 'js/lib/ui.userpicker.js');
-	elgg_register_js('elgg.friendspicker', 'js/lib/ui.friends_picker.js');
+	elgg_register_js('elgg.autocomplete', 'js/lib/ui.autocomplete.js','footer');
+	elgg_register_js('jquery.ui.autocomplete.html', 'vendors/jquery/jquery.ui.autocomplete.html.js','footer');
+	elgg_register_js('elgg.userpicker', 'js/lib/ui.userpicker.js','footer');
+	elgg_register_js('elgg.friendspicker', 'js/lib/ui.friends_picker.js','footer');
 	elgg_register_js('jquery.easing', 'vendors/jquery/jquery.easing.1.3.packed.js');
-	elgg_register_js('elgg.avatar_cropper', 'js/lib/ui.avatar_cropper.js');
-	elgg_register_js('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect-0.9.8/scripts/jquery.imgareaselect.min.js');
-	elgg_register_js('elgg.ui.river', 'js/lib/ui.river.js');
+	elgg_register_js('elgg.avatar_cropper', 'js/lib/ui.avatar_cropper.js', 'footer');
+	elgg_register_js('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect-0.9.8/scripts/jquery.imgareaselect.min.js','footer');
+	elgg_register_js('elgg.ui.river', 'js/lib/ui.river.js','footer');
 
 	elgg_register_css('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect-0.9.8/css/imgareaselect-deprecated.css');
 	
