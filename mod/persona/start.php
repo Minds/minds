@@ -22,7 +22,7 @@
 
 	    if (persona_is_enabled()) {
 		//elgg_extend_view('login/extend', 'persona/login');
-		elgg_extend_view('metatags', 'persona/metatags');
+		elgg_extend_view('page/elements/foot', 'persona/metatags');
 	    }
 
 	// Registering page handlers for authentication APIs and 

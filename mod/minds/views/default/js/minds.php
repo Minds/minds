@@ -204,7 +204,7 @@
 				offset:offset 
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-//			console.log(url);
+			
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				
