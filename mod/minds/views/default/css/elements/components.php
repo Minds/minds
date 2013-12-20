@@ -29,7 +29,7 @@
 *************************************** */
 .elgg-list {
 	/*border-top: 1px dotted #CCCCCC;*/
-	margin:5px 0;
+	margin:5px 0.5%;
 	clear: both;
 	width:100%;
 }
@@ -46,13 +46,14 @@
         display: block;
 	position:relative;
 
-	box-shadow: 0 0 1px #888;
-	-webkit-box-shadow: 0 0 1px #888;
-	-moz-box-shadow: 0 0 1px #888;
+	box-shadow: 0 0 1px #DDD;
+	-webkit-box-shadow: 0 0 1px #DDD;
+	-moz-box-shadow: 0 0 1px #DDD;
+	border: 1px solid #DDD;
 }
 @media screen and (max-width: 1100px) {
         .elgg-list > li{
-                width:29%;
+                width:28%;
                 height:210px;
         }
 }
@@ -62,7 +63,12 @@
 		height:210px;
 	}
 }
-
+@media screen and (min-width: 1800px) {
+	 .elgg-list > li{
+                width:16%;
+                height:210px;
+        }
+}
 /**
  * MASON PROTOTYPE
  */

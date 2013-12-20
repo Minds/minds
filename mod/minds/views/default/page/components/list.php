@@ -62,7 +62,8 @@ if ($pagination && $count) {
         'offset_key' => $offset_key,
 	'ajaxify' => $ajaxify,
 	'list_id' => $list_id,
-        'last_guid' => $last_guid
+        'last_guid' => $last_guid,
+	'load-next' => elgg_get_context() == 'main' ? end($items)->featured_id : end($items)->guid
 	));
 }
 
