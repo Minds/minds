@@ -5,8 +5,10 @@
 $page_owner = elgg_get_logged_in_user_entity();
 
 $scrapers = elgg_get_entities(array(	'type'=>'object', 
-										'subtypes'=>array('scraper'),
-										'owner_guid'=>$page_owner->guid
+					'subtypes'=>array('scraper'),
+					'owner_guid'=>$page_owner->guid,
+					'limit'=>get_input('limit', 10),
+					'offset' => get_input('offset', '')
 										));
 							
 $title = elgg_echo('blog:minds:scraper');
