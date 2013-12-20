@@ -37,8 +37,6 @@ function create_object_entity($guid, $title, $description) {
 	global $CONFIG;
 
 	$guid = (int)$guid;
-	$title = sanitise_string($title);
-	$description = sanitise_string($description);
 
 	$row = get_entity_as_row($guid);
 

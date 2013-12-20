@@ -1237,9 +1237,6 @@ abstract class ElggEntity extends ElggData implements
 	public function setIcon($url, $size = 'medium') {
 		elgg_deprecated_notice("icon_override on an individual entity is deprecated", 1.8);
 
-		$url = sanitise_string($url);
-		$size = sanitise_string($size);
-
 		if (!$this->icon_override) {
 			$this->icon_override = array();
 		}

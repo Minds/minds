@@ -78,9 +78,6 @@ function create_site_entity($guid, $name, $description, $url) {
 	global $CONFIG;
 
 	$guid = (int)$guid;
-	$name = sanitise_string($name);
-	$description = sanitise_string($description);
-	$url = sanitise_string($url);
 
 	$row = get_entity_as_row($guid);
 
@@ -218,8 +215,6 @@ function get_site_objects($site_guid, $subtype = "", $limit = 10, $offset = 0) {
  */
 function get_site_by_url($url) {
 	global $CONFIG;
-
-	//$url = sanitise_string($url);
 
 	///$row = get_data_row("SELECT * from {$CONFIG->dbprefix}sites_entity where url='$url'");
 

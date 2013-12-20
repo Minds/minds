@@ -45,25 +45,25 @@ function minds_init(){
 	
 	//register our own js files
 	$minds_js = elgg_get_simplecache_url('js', 'minds');
-	elgg_register_js('minds.js', $minds_js);
+	elgg_register_js('minds.js', $minds_js, 'footer');
 	
 	//plugin for cookie manipulation via JS
-	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js');
+	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js', 'footer');
 	elgg_load_js('jquery-cookie');
 	
 	//register inline js player
 	$uiVideoInline = elgg_get_simplecache_url('js', 'uiVideoInline');
-	elgg_register_js('uiVideoInline', $uiVideoInline);
+	elgg_register_js('uiVideoInline', $uiVideoInline, 'footer');
 	elgg_load_js('uiVideoInline');
 	
 	//register textarea expander
-	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js');
+	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js', 'footer');
 	
 	//register carousel js
-	elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js');
+	elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js', 'footer');
 	
 	elgg_unregister_js('jquery');
-	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
+	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'footer');
 	elgg_load_js('jquery');
 
 	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js');
@@ -72,13 +72,13 @@ function minds_init(){
 	elgg_load_js('jquery-imagesLoaded');
 
 	//register jquery.form
-	elgg_register_js('jquery.form', elgg_get_site_url() . 'mod/minds/vendors/jquery/jquery.form.js');
+	elgg_register_js('jquery.form', elgg_get_site_url() . 'mod/minds/vendors/jquery/jquery.form.js', 'footer');
 	elgg_load_js('jquery.form');
 	
 	//registers tipsy
-	elgg_register_js('jquery.tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/javascripts/jquery.tipsy.js');
+	elgg_register_js('jquery.tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/javascripts/jquery.tipsy.js', 'footer');
 	elgg_load_js('jquery.tipsy');
-	elgg_register_css('tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/stylesheets/tipsy.css');
+	elgg_register_css('tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/stylesheets/tipsy.css', 'footer');
 	elgg_load_css('tipsy');
 		
 	//set the custom index

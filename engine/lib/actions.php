@@ -456,15 +456,12 @@ function ajax_forward_hook($hook, $type, $reason, $params) {
 			$params['output'] = $output;
 		}
 
-		//Grab any system messages so we can inject them via ajax too
-		$system_messages = system_messages(NULL, "");
-
-		if (isset($system_messages['success'])) {
-			$params['system_messages']['success'] = $system_messages['success'];
+		if ($success_messages = system_messages(null,'success')) {
+			$params['system_messages']['success'] = $success_messages;
 		}
 
-		if (isset($system_messages['error'])) {
-			$params['system_messages']['error'] = $system_messages['error'];
+		if ($error_messages = system_messages(null,'error')) {
+			$params['system_messages']['error'] = $error_messages;
 			$params['status'] = -1;
 		}
 

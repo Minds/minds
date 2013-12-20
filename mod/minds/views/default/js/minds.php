@@ -14,6 +14,7 @@
 		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
 		$('.progress_indicator').tipsy({gravity: 'e'});		
 		$('.elgg-input-text').tipsy({gravity: 'w'});
+		$('.tooltip.s').tipsy({gravity: 's'});
 
 		$('.elgg-form-wall-add textarea').focus( function(e){ $(this).parent().find('.elgg-button-submit').css('display','block');});
 
@@ -207,7 +208,7 @@
 				offset:offset 
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-//			console.log(url);
+			
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				
