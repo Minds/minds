@@ -541,7 +541,7 @@ function system_messages($message = null, $register = "success", $count = false)
 				$SESSION['ss_msg'] = $message;
 			}
 		}
-		return true;
+		return $message;
 	}
 	$default = $SESSION->get('msg_'.$register, array());
 	if (!$default) {
