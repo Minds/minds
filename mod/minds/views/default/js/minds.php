@@ -7,6 +7,12 @@
 	 
 	 minds.init = function() {	 
 
+		if($('#fb-share').length){
+			var addr = $('meta[property="og:url"]').attr('content');
+			var url = 'https://graph.facebook.com/?id=' + addr;
+			$.get( url, function(data) { var shares = data.shares; if($.isNumeric(shares)){ $('#fb-share .count').html(shares); } } );
+		} 
+
 		$('.elgg-list.mason').imagesLoaded(function(){
                 	$('.elgg-list.mason').masonry({
                   	      itemSelector: '.elgg-item'

@@ -9,3 +9,6 @@ foreach ($js as $script) { ?>
 }
 
 ?>
+	<script type="text/javascript">
+		<?php echo elgg_view('js/initialize_elgg'); ?>
+	</script>

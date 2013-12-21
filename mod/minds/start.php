@@ -201,6 +201,11 @@ function minds_init(){
             echo elgg_view_page('Login', elgg_view_layout('default', $params),'default_popup');
             return true;
         });
+
+	elgg_register_page_handler('thumbProxy', function($pages){
+		include('thumbnailProxy.php');
+		return true;
+	});
 }        
 function minds_index($hook, $type, $return, $params) {
 	if ($return == true) {
@@ -667,9 +672,9 @@ function minds_subscribe_bulk($username = 'minds'){
 	}
 }
 
-function minds_fetch_image($description, $owner_guid) {
+function minds_fetch_image($description, $owner_guid=null, $width=null) {
   
-	global $post, $posts;
+	global $CONFIG, $post, $posts;
 	
 	if($description){
 		libxml_use_internal_errors(true);
@@ -687,6 +692,8 @@ function minds_fetch_image($description, $owner_guid) {
      			$image = $owner->getIconURL('large');
         	}
   	}
+	$image = 'http://'.$CONFIG->cdn_url . 'thumbProxy?src='. urlencode($image) . '&c=3';
+	if($width){ $image .= '&width=' . $width; } 
 	return $image;
 }
 

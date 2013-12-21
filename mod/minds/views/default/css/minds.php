@@ -631,9 +631,9 @@ li .excerpt a{
 }
 .elgg-sidebar li.elgg-item{
 	margin:5px;
-	width:148px;
+	width:140px;
 	padding:0;
-	height:125px;
+	height:200px;
 }
 .elgg-sidebar li.elgg-item img{
 	width:100%;
@@ -647,19 +647,17 @@ li .excerpt a{
 }
 .blog-sidebar li a.title{
 	font-weight:bold;
-	position:absolute;
 	top: 0;
 	left: 0;
 	background: rgba(0,0,0,0.75);
 	z-index: 999;
-	color: #FFF;
-	padding: 5px;
+	color: #333;
 }
 .blog-sidebar li img.rich-image{
 	margin:0;
 }
 .elgg-sidebar li a h3{
-	color:#FFF;
+	color:#333;
 }
 .elgg-sidebar .elgg-module-aside{
 	background:#FFF;

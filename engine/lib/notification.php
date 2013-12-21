@@ -458,6 +458,7 @@ function remove_notification_interest($user_guid, $author_guid) {
  * @access private
  */
 function object_notifications($event, $object_type, $object) {
+	return;
 	// We only want to trigger notification events for ElggEntities
 	if ($object instanceof ElggEntity) {
 		/* @var ElggEntity $object */
@@ -486,6 +487,7 @@ function object_notifications($event, $object_type, $object) {
 		}
 
 		if (isset($CONFIG->register_objects[$object_type][$object_subtype])) {
+			return;
 			$subject = $CONFIG->register_objects[$object_type][$object_subtype];
 			$string = $subject . ": " . $object->getURL();
 

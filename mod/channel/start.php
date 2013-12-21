@@ -63,6 +63,7 @@ function channel_init() {
 	elgg_register_page_handler('channel', 'channel_page_handler');
 	//register a page handler for channels search and suggestions
 	elgg_register_page_handler('channels', 'channels_page_handler');
+	elgg_register_page_handler('icon', 'channel_icon_handler');
 	
 	elgg_register_event_handler('create','object','channels_widget_added_action');
 
@@ -289,7 +290,8 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 */
 
 	$join_date = $user->getTimeCreated();
-	return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
+	//return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
+	return  $CONFIG->cdn_url . "icon/$user_guid/$size/$join_date/$icon_time";
 }
 
 /**
@@ -420,3 +422,12 @@ function channels_widget_added_action($event, $object_type, $object){
 	}
 }
 
+//userid/size/joindate/lastcache
+function channel_icon_handler($pages){
+	$_GET['guid'] = $pages[0];
+	$_GET['size'] = $pages[1];
+	$_GET['joindate'] = $pages[2];
+	$_GET['lastcache'] =  $page[3];
+	include('icondirect.php');
+	return true;
+}
