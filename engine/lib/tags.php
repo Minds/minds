@@ -174,7 +174,7 @@ return;
 
 	$sanitised_tags = array();
 	foreach ($options['tag_names'] as $tag) {
-		$sanitised_tags[] = '"' . sanitise_string($tag) . '"';
+		$sanitised_tags[] = '"' . $tag . '"';
 	}
 	$tags_in = implode(',', $sanitised_tags);
 	$wheres[] = "(msn.string IN ($tags_in))";

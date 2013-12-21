@@ -406,6 +406,10 @@ $offset = "", $output = 'entities') {
 				'offset' => $offset,
 				'output' => $output
 				));
+		//hacky cache mechanism
+		if($user_guid == elgg_get_logged_in_user_guid() && $output == 'guids'){
+			$SESSION['friends'] = $row;
+		}
 	}
 	return $row;
 }

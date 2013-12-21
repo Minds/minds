@@ -63,6 +63,14 @@
 	}
 }
 
+/**
+ * MASON PROTOTYPE
+ */
+
+.elgg-list.mason > li{
+	height: auto;
+	display:block;
+}
 .elgg-footer .elgg-list > li{
 	width: 42%;
 	margin: 16px 2%;

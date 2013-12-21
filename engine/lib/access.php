@@ -599,7 +599,6 @@ function create_access_collection($name, $owner_guid = 0, $site_guid = 0) {
 	if (($site_guid == 0) && (isset($CONFIG->site_guid))) {
 		$site_guid = $CONFIG->site_guid;
 	}
-	$name = sanitise_string($name);
 
 	$q = "INSERT INTO {$CONFIG->dbprefix}access_collections
 		SET name = '{$name}',

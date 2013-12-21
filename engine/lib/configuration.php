@@ -596,6 +596,9 @@ function _elgg_load_application_config() {
 	} else {
 		$CONFIG->system_cache_enabled = 1;
 	}
+		
+	//say we are using cassandra!
+	$CONFIG->cassandra = true;
 
 	// initialize context here so it is set before the get_input call
 	$CONFIG->context = array();

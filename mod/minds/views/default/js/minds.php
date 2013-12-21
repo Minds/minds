@@ -7,9 +7,14 @@
 	 
 	 minds.init = function() {	 
 
+		$('.elgg-list.mason').masonry({
+       			itemSelector: '.elgg-item'
+		});
+
 		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
 		$('.progress_indicator').tipsy({gravity: 'e'});		
 		$('.elgg-input-text').tipsy({gravity: 'w'});
+		$('.tooltip.s').tipsy({gravity: 's'});
 
 		$('.elgg-form-wall-add textarea').focus( function(e){ $(this).parent().find('.elgg-button-submit').css('display','block');});
 
@@ -203,7 +208,7 @@
 				offset:offset 
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
-//			console.log(url);
+			
 			elgg.get(url, function(data) {
 				//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				
@@ -214,9 +219,19 @@
 				} else {
 
 					$('.load-more').remove();
-					
-					$list.append(data);							
-	
+				
+					var el = $(data).contents().unwrap();
+					el.imagesLoaded(function(){
+						$('.elgg-list.mason').append(el).masonry('appended', el);
+					});
+	/*		
+$list.find('.elgg-list:first').append(data);
+                                        $list.find('.elgg-list:first > ul:last').contents().unwrap();
+					$('.elgg-list.mason').masonry()
+						.imagesLoaded( function() {
+  							$('.elgg-list.mason').masonry().masonry('reloadItems').masonry();
+						});
+					*/
 					$list.append('<div class="news-show-more load-more">more</div>');
 					
 				}

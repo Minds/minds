@@ -534,6 +534,14 @@ class ElggUser extends ElggEntity
 		));
 	}
 
+	public function export(){
+                $export = array();
+                foreach($this->getExportableValues() as $v){
+                        $export[$v] = $this->$v;
+                }
+                return $export;
+        }
+
 	/**
 	 * Need to catch attempts to make a user an admin.  Remove for 1.9
 	 *
