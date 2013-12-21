@@ -1518,90 +1518,14 @@ abstract class ElggEntity extends ElggData implements
 		);
 	}
 
-	/**
-	 * Export this class into an array of ODD Elements containing all necessary fields.
-	 * Override if you wish to return more information than can be found in
-	 * $this->attributes (shouldn't happen)
-	 *
-	 * @return array
-	 */
-	public function export() {
-		$tmp = array();
-
-		// Generate uuid
-		$uuid = guid_to_uuid($this->getGUID());
-
-		// Create entity
-		$odd = new ODDEntity(
-			$uuid,
-			$this->attributes['type'],
-			get_subtype_from_id($this->attributes['subtype'])
-		);
-
-		$tmp[] = $odd;
-
-		$exportable_values = $this->getExportableValues();
-
-		// Now add its attributes
-		foreach ($this->attributes as $k => $v) {
-			$meta = NULL;
-
-			if (in_array($k, $exportable_values)) {
-				switch ($k) {
-					case 'guid':			// Dont use guid in OpenDD
-					case 'type':			// Type and subtype already taken care of
-					case 'subtype':
-						break;
-
-					case 'time_created':	// Created = published
-						$odd->setAttribute('published', date("r", $v));
-						break;
-
-					case 'site_guid':	// Container
-						$k = 'site_uuid';
-						$v = guid_to_uuid($v);
-						$meta = new ODDMetaData($uuid . "attr/$k/", $uuid, $k, $v);
-						break;
-
-					case 'container_guid':	// Container
-						$k = 'container_uuid';
-						$v = guid_to_uuid($v);
-						$meta = new ODDMetaData($uuid . "attr/$k/", $uuid, $k, $v);
-						break;
-
-					case 'owner_guid':			// Convert owner guid to uuid, this will be stored in metadata
-						$k = 'owner_uuid';
-						$v = guid_to_uuid($v);
-						$meta = new ODDMetaData($uuid . "attr/$k/", $uuid, $k, $v);
-						break;
-
-					default:
-						$meta = new ODDMetaData($uuid . "attr/$k/", $uuid, $k, $v);
-				}
-
-				// set the time of any metadata created
-				if ($meta) {
-					$meta->setAttribute('published', date("r", $this->time_created));
-					$tmp[] = $meta;
-				}
-			}
+	public function export(){
+		$export = array();
+		foreach($this->getExportableValues() as $v){
+			$export[$v] = $this->$v;
 		}
-
-		// Now we do something a bit special.
-		/*
-		 * This provides a rendered view of the entity to foreign sites.
-		 */
-
-		elgg_set_viewtype('default');
-		$view = elgg_view_entity($this, array('full_view' => true));
-		elgg_set_viewtype();
-
-		$tmp[] = new ODDMetaData($uuid . "volatile/renderedentity/", $uuid,
-			'renderedentity', $view, 'volatile');
-
-		return $tmp;
+		return $export;
 	}
-
+	
 	/*
 	 * IMPORTABLE INTERFACE
 	 */
