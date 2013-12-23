@@ -24,7 +24,6 @@ $trending = null;
 
 
 <!-- FEATURED -->
-<table>
 	<tr>  
 		<td> 
 			<h2>Featured</h2>
@@ -42,5 +41,4 @@ $trending = null;
 			</td>
 		</tr>
 	<?php endforeach; ?>
-</table>
 <!-- END FEATURED -->
