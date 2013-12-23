@@ -6,20 +6,19 @@
  * @package ElggProfile
  */
 
-// Get DB settings
-require_once(dirname(dirname(dirname(__FILE__))). '/engine/settings.php');
-
 global $CONFIG;
 
 // won't be able to serve anything if no joindate or guid
-if (!isset($_GET['joindate']) || !isset($_GET['guid'])) {
+if (!isset($_GET['guid'])) {
 	header("HTTP/1.1 404 Not Found");
 	exit;
 }
 
-$join_date = (int)$_GET['joindate'];
-$last_cache = (int)$_GET['lastcache']; // icontime
 $guid = $_GET['guid'];
+$user = new ElggUser($guid);
+
+$join_date = $user->time_created;
+$last_cache = (int)$_GET['lastcache']; // icontime
 
 // If is the same ETag, content didn't changed.
 $etag = $last_cache . $guid;

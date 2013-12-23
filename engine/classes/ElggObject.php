@@ -82,7 +82,7 @@ class ElggObject extends ElggEntity {
 
 			// Is it a GUID
 			} else {
-				if (!$this->load($guid)) {
+				if (!get_entity($guid,'object')) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
 			}
