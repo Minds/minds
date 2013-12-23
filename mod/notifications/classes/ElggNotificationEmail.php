@@ -81,7 +81,7 @@ class ElggNotificationEmail extends ElggNotification {
 		return elgg_view_entity($this, $vars);
 	}
 	
-	public function send($limit = 100){
+	public function send($limit = 10){
 		
 		set_time_limit(0);
 
@@ -99,8 +99,9 @@ class ElggNotificationEmail extends ElggNotification {
 		
 		foreach($recipients as $recipient){
 			$template = $this->getTemplate(array('recipient'=>$recipient));
-			phpmailer_send('mark@minds.com', 'Marks Node', $recipient->email, $recipient->name, $this->subject, $template, null, true);
-		}
+			$send = phpmailer_send(elgg_get_site_entity()->email,elgg_get_site_entity()->email, $recipient->email, $recipient->name, $this->subject, $template, null, true);
+			var_dump($send);	
+	}
 		
 		$this->last_sent = end($recipients)->guid;
 		
