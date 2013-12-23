@@ -119,14 +119,14 @@ if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
 		);
 		elgg_register_menu_item('page', $params);
 		
-		if (elgg_is_active_plugin('groups')) {
+		/*if (elgg_is_active_plugin('groups')) {
 			$params = array(
 				'name' => '2_group_notify',
 				'text' => elgg_echo('notifications:subscriptions:changesettings:groups'),
 				'href' => "notifications/group/{$user->username}",
 			);
 			elgg_register_menu_item('page', $params);
-		}
+		}*/
 	}
 
 }
@@ -351,11 +351,11 @@ function notifications_cron_handler($hook, $type, $params, $return){
 	$queue = elgg_get_entities(array('type'=>'notification', 'subtype'=>'email', 'limit'=>0));
 	
 	foreach($queue as $q){
-		if($q->send()){
-			echo 'sent';
-		}
+//		if($q->send()){
+	//		echo 'sent';
+//		}
 	}
-
+	
 	$mail = new ElggNotificationEmail();
 	switch($type){
 		case 'daily':
