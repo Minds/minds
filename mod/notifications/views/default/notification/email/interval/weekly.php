@@ -4,6 +4,7 @@
  */
 
 $entity = elgg_extract('entity', $vars);
+$recipient = elgg_extract('recipient', $vars);
 
 $notifications = null;
 $featured = minds_get_featured(null, 6);
@@ -13,7 +14,7 @@ $trending = null;
 <tr>
 	<td>
 		<h1>
-			Hey Mark!
+			Hey <?php echo $recipient->name; ?>
 		</h1>
 		<p>
 			Here is your Minds weekly digest.
