@@ -82,6 +82,8 @@ class ElggNotificationEmail extends ElggNotification {
 	}
 	
 	public function send($limit = 100){
+		
+		set_time_limit(0);
 
 		if($this->state == 'running' && $this->state == 'complete'){
 			return false;	

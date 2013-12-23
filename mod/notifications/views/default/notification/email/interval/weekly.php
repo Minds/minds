@@ -1,6 +1,6 @@
 <?php
 /**
- * Daily Template
+ * Weekly Template
  */
 
 $entity = elgg_extract('entity', $vars);
@@ -16,7 +16,7 @@ $trending = null;
 			Hey Mark!
 		</h1>
 		<p>
-			Here is your Minds daily digest.
+			Here is your Minds weekly digest.
 		</p>
 	</td>
 </tr>
