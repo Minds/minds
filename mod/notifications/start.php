@@ -8,6 +8,17 @@
 elgg_register_event_handler('init', 'system', 'notifications_plugin_init');
 
 function notifications_plugin_init() {
+	
+	/*$mail = new ElggNotificationEmail();
+	$mail->subject = 'Your ' . $subscription . ' digest';
+	$mail->subscription = $subscription;
+	$mail->save();*/
+	//$mail->send();
+	
+	elgg_register_plugin_hook_handler('cron', 'minute', 'notifications_cron_handler');
+	elgg_register_plugin_hook_handler('cron', 'daily', 'notifications_cron_handler');
+	elgg_register_plugin_hook_handler('cron', 'weekly', 'notifications_cron_handler');
+	add_subtype('notificaiton', 'email', 'ElggNotificationEmail');
 
 	elgg_extend_view('css/elgg','notifications/css');
 
@@ -94,7 +105,7 @@ function notifications_page_handler($page) {
  */
 function notifications_plugin_pagesetup() {
 	
-/*	if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
+if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
 
 		$user = elgg_get_page_owner_entity();
 		if (!$user) {
@@ -117,7 +128,7 @@ function notifications_plugin_pagesetup() {
 			elgg_register_menu_item('page', $params);
 		}
 	}
-*/
+
 }
 
 /**
@@ -332,5 +343,34 @@ function notifications_reset_counter($user_guid = NULL){
 	$user->notifications_count = 0;
 	$user->save();
 	elgg_set_ignore_access(false);
+}
+
+
+function notifications_cron_handler($hook, $type, $params, $return){
+	
+	$queue = elgg_get_entities(array('type'=>'notification', 'subtype'=>'email', 'limit'=>0));
+	
+	foreach($queue as $q){
+		if($q->send()){
+			echo 'sent';
+		}
+	}
+
+	$mail = new ElggNotificationEmail();
+	switch($type){
+		case 'daily':
+			$mail = new ElggNotificationEmail();
+			$mail->subject = 'Your ' . $subscription . ' digest';
+			$mail->subscription = $type;
+			$mail->send();
+			break;
+		case 'weekly':
+			$mail = new ElggNotificationEmail();
+			$mail->subject = 'Your ' . $subscription . ' digest';
+			$mail->subscription = $type;
+			$mail->send();
+			break;
+	}
+	
 }
 

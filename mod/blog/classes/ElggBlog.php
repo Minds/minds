@@ -28,6 +28,13 @@ class ElggBlog extends ElggObject {
 			'excerpt'
 		));
 	}
+	
+	/**
+	 * Icon URL
+	 */
+	public function getIconURL($size){
+		return minds_fetch_image($this->description, $this->owner_guid);
+	}
 
 	/**
 	 * Can a user comment on this blog?

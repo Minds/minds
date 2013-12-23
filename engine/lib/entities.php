@@ -925,7 +925,7 @@ function elgg_get_entities(array $options = array()) {
 			if($options['guids']){
 
 				$rows = $DB->cfs[$type]->multiget($options['guids']);
-			
+
 			} else{
 				if($options['timebased']){
 					if(!$namespace = $attrs['namespace']){

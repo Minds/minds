@@ -9,34 +9,23 @@
 $current_user = elgg_get_logged_in_user_entity();
 
 $guid = (int) get_input('guid', 0);
-if (!$guid || !($user = get_entity($guid))) {
+if (!$guid || !($user = get_entity($guid,'user'))) {
 	forward();
 }
 if (($user->guid != $current_user->guid) && !$current_user->isAdmin()) {
 	forward();
 }
 
-global $NOTIFICATION_HANDLERS;
-$subscriptions = array();
-foreach($NOTIFICATION_HANDLERS as $method => $foo) {
-	$subscriptions[$method] = get_input($method.'subscriptions');
-	$personal[$method] = get_input($method.'personal');
-	$collections[$method] = get_input($method.'collections');
+$namespace = 'notification:subscriptions:';
+$subscription = get_input('subscription', 'weekly');
 
-	$metaname = 'collections_notifications_preferences_' . $method;
-	$user->$metaname = $collections[$method];
-	set_user_notification_setting($user->guid, $method, ($personal[$method] == '1') ? true : false);
-	remove_entity_relationships($user->guid, 'notify' . $method, false, 'user');
+if($current_subscription = $current_user->notification_subscription){
+	db_remove($namespace . $current_subscription, 'entities_by_time', array($current_user->guid));
 }
-
-// Add new ones
-foreach($subscriptions as $key => $subscription) {
-	if (is_array($subscription) && !empty($subscription)) {
-		foreach($subscription as $subscriptionperson) {
-			add_entity_relationship($user->guid, 'notify' . $key, $subscriptionperson);
-		}
-	}
-}
+	
+$current_user->notification_subscription = $subscription;
+$current_user->save();	
+db_insert("$namespace$subscription", array('type'=>'entities_by_time', $current_user->guid => $current_user->guid));
 
 system_message(elgg_echo('notifications:subscriptions:success'));
 
