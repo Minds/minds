@@ -347,26 +347,37 @@ function notifications_reset_counter($user_guid = NULL){
 
 
 function notifications_cron_handler($hook, $type, $params, $return){
+	/**
+	 * FOR SECURITY ONLY ALLOW THIS TO BE CALLED FROM LOCALHOST!
+	 */
+	if($_SERVER['HTTP_HOST'] != 'localhost'){
+		return false;
+	}
 	
 	$queue = elgg_get_entities(array('type'=>'notification', 'subtype'=>'email', 'limit'=>0));
 	
 	foreach($queue as $q){
-//		if($q->send()){
-	//		echo 'sent';
-//		}
+		if($q->send()){
+			echo 'sent';
+		} else {
+			if($q->state == 'completed' && $q->time_created <= time()-3600){
+				$q->delete();
+			}
+			echo $q->state;
+		}
 	}
 	
 	$mail = new ElggNotificationEmail();
 	switch($type){
 		case 'daily':
 			$mail = new ElggNotificationEmail();
-			$mail->subject = 'Your ' . $subscription . ' digest';
+			$mail->subject = 'Your Minds Headlines';
 			$mail->subscription = $type;
 			$mail->send();
 			break;
 		case 'weekly':
 			$mail = new ElggNotificationEmail();
-			$mail->subject = 'Your ' . $subscription . ' digest';
+			$mail->subject = 'Your Minds Headlines';
 			$mail->subscription = $type;
 			$mail->send();
 			break;

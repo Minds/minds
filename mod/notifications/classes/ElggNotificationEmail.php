@@ -51,13 +51,18 @@ class ElggNotificationEmail extends ElggNotification {
 		return $guid;
 	}
 	
-	public function getRecipients($limit = 100, $offset= ""){
+	public function getRecipients($limit = 10, $offset= ""){
 		global $DB;
-		//return elgg_get_entities(array('type'=>'user', 'limit'=>$limit));
-		//GET THE GUIDS OF ALL SUBSCRIBED
+		
+		/*$return = array();		
+		for ($i = 1; $i <= 1; $i++) {
+			$return[] = get_user_by_username('mark');
+			$return[] = get_user_by_username('markna');
+		}
+		return $return;*/
 		try{
 			
-			$slice = new phpcassa\ColumnSlice($this->last_sent ?: $offset, "", $limit, false);
+			$slice = new phpcassa\ColumnSlice($this->last_sent ?: $offset, "", $limit, true);
 			$guids = $DB->cfs['entities_by_time']->get('notification:subscriptions:'.$this->subscription, $slice);	
 			unset($guids[$this->last_sent]);
 
@@ -81,11 +86,11 @@ class ElggNotificationEmail extends ElggNotification {
 		return elgg_view_entity($this, $vars);
 	}
 	
-	public function send($limit = 10){
+	public function send($limit = 20){
 		
 		set_time_limit(0);
 
-		if($this->state == 'running' && $this->state == 'complete'){
+		if($this->state == 'running' || $this->state == 'complete'){
 			return false;	
 		}
 		
@@ -97,11 +102,12 @@ class ElggNotificationEmail extends ElggNotification {
 			return;
 		}
 		
-		foreach($recipients as $recipient){
+		foreach($recipients as $k => $recipient){
 			$template = $this->getTemplate(array('recipient'=>$recipient));
-			$send = phpmailer_send(elgg_get_site_entity()->email,elgg_get_site_entity()->email, $recipient->email, $recipient->name, $this->subject, $template, null, true);
-			var_dump($send);	
-	}
+			$send = phpmailer_send(elgg_get_site_entity()->email,elgg_get_site_entity()->name, $recipient->email, $recipient->name, $this->subject, $template, null, true);
+//			var_dump($send);	
+			echo " $recipient->guid:$recipient->username:$recipient->email \n";
+		}
 		
 		$this->last_sent = end($recipients)->guid;
 		

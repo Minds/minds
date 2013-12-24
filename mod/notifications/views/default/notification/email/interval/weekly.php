@@ -24,7 +24,6 @@ $trending = null;
 
 
 <!-- FEATURED -->
-<table>
 	<tr>  
 		<td> 
 			<h2>Featured</h2>
@@ -33,7 +32,7 @@ $trending = null;
 	<?php foreach($featured as $entity): ?>
 		<tr>
 			<td>
-				<img src="<?php echo $entity->getIconURL();?>" width="200px" alt="<?php echo $entity->title;?>" style="margin:6px;"/>
+				<img src="<?php echo $entity->getIconURL();?>" width="200px" alt="<?php echo $entity->title;?>" style="margin:6px;border-radius:3px;"/>
 			</td>
 			<td>
 				<h1 style="color:#333; font-size:18px; padding:0; margin:0;"><?php echo $entity->title; ?></h1>
@@ -42,5 +41,4 @@ $trending = null;
 			</td>
 		</tr>
 	<?php endforeach; ?>
-</table>
 <!-- END FEATURED -->
