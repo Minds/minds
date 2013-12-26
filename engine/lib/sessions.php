@@ -285,19 +285,20 @@ function login(ElggUser $user, $persistent = false) {
 	// if remember me checked, set cookie with token and store token on user
 	if (($persistent)) {
 		$code = (md5($user->name . $user->username . time() . rand()));
-		$SESSION['code'] = $code;
-		$user->code = md5($code);
-		setcookie("elggperm", $code, (time() + (86400 * 30)), "/");
+		$expires = (time() + (86400 * 30));
+		$user->{'cookie:'.md5($code)} = $expires; //cookie_id => expires
+		setcookie("mindsperm", $code, $expires, "/");
+		//add to the user index cf
+		db_insert('cookie:'. md5($code), array('type'=>'user_index_to_guid', $user->getGUID() => $expires));
 	}
 
 	if (!$user->save() || !elgg_trigger_event('login', 'user', $user)) {
 		unset($SESSION['username']);
 		unset($SESSION['name']);
-		unset($SESSION['code']);
 		unset($SESSION['guid']);
 		unset($SESSION['id']);
 		unset($SESSION['user']);
-		setcookie("elggperm", "", (time() - (86400 * 30)), "/");
+		setcookie("mindsperm", "", (time() - (86400 * 30)), "/");
 		_elgg_session_boot();
 		setcookie("Elgg", "", (time() - (86400 * 30)), "/");
 		throw new LoginException(elgg_echo('LoginException:Unknown'));
@@ -337,7 +338,7 @@ function logout() {
 	unset($SESSION['id']);
 	unset($SESSION['user']);
 
-	setcookie("elggperm", "", (time() - (86400 * 30)), "/");
+	setcookie("mindsperm", "", (time() - (86400 * 30)), "/");
 
 	// pass along any messages
 	$old_msg = $SESSION['msg'];
@@ -358,7 +359,7 @@ function logout() {
  * This function looks for:
  *
  * 1. $_SESSION['id'] - if not present, we're logged out, and this is set to 0
- * 2. The cookie 'elggperm' - if present, checks it for an authentication
+ * 2. The cookie 'mindsperm' - if present, checks it for an authentication
  * token, validates it, and potentially logs the user in
  *
  * @uses $_SESSION
@@ -372,7 +373,7 @@ function _elgg_session_boot($force = false) {
 	$new_db = serialize($DB);	
 
 	
-	if (isset($_COOKIE['Minds']) || $force) {
+	if (isset($_COOKIE['Minds']) || isset($_COOKIE['mindsperm']) || $force) {
 
 		$handler = new ElggSessionHandler();
 		session_set_save_handler(
@@ -394,14 +395,25 @@ function _elgg_session_boot($force = false) {
 	
 		// Initialise the magic session
 		$SESSION = new ElggSession($storage);
-		
 	
-		if (!$force && !elgg_is_logged_in()) {
+		if (!$force && !elgg_is_logged_in() && !isset($_COOKIE['mindsperm'])) {
 			setcookie("Minds", "", (time() - (86400 * 30)), "/");
 		} else {
 			// Generate a simple token (private from potentially public session id)
 			if (!isset($SESSION['__elgg_session'])) {
 				$SESSION['__elgg_session'] = md5(microtime() . rand());
+			}
+			
+			// is there a remember me cookie
+			if (isset($_COOKIE['mindsperm'])) { 
+				// we have a cookie, so try to log the user in
+				$cookie = md5($_COOKIE['mindsperm']);
+				if ($user = get_user_by_cookie($cookie)) {
+					// we have a user, log him in
+					$SESSION['user'] = $user;
+					$SESSION['id'] = $user->getGUID();
+					$SESSION['guid'] = $SESSION['id'];
+				}
 			}
 
 			// test whether we have a user session
@@ -413,22 +425,11 @@ function _elgg_session_boot($force = false) {
 				unset($SESSION['guid']);
 				unset($SESSION['code']);
 		
-				// is there a remember me cookie
-				if (isset($_COOKIE['elggperm'])) {
-					// we have a cookie, so try to log the user in
-					$code = $_COOKIE['elggperm'];
-					$code = md5($code);
-					if ($user = get_user_by_code($code)) {
-						// we have a user, log him in
-						$SESSION['user'] = $user;
-						$SESSION['id'] = $user->getGUID();
-						$SESSION['guid'] = $SESSION['id'];
-						$SESSION['code'] = $_COOKIE['elggperm'];
-					}
-				}
 			} else {
 				// we have a session and we have already checked the fingerprint
 				// reload the user object from database in case it has changed during the session
+				
+				//WE DON'T WANT TO RELOAD THE USER OBJECT EACH PAGE LOAD! (@mark)
 			/*	if ($user = get_user($SESSION['guid'],'user')) {
 					$SESSION['user'] = $user;
 					$SESSION['id'] = $user->getGUID();
@@ -459,7 +460,8 @@ function _elgg_session_boot($force = false) {
 				return false;
 			}
 		}
-	}
+	} 
+	
 	if (!($SESSION instanceof ElggSession)) {
 		// Initialise the magic session
 		$SESSION = new ElggSessionCookie(ElggSessionCookie::filterCookiePrefixes($_COOKIE));

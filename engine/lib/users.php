@@ -650,6 +650,28 @@ function get_user_by_code($code) {
 	return $entity;
 }
 
+function get_user_by_cookie($cookie){
+	global $DB;
+	try{
+		$results = $DB->cfs['user_index_to_guid']->get("cookie:$cookie");
+	} catch(Exception $e){
+		return false;
+	}
+	
+	$user_guid = array_keys($results);
+	$expires = $results[$user_guid[0]];
+	
+	if($expires >= time()){
+		$user = new ElggUser($user_guid[0]);
+		//check if the cookie has been tampered with, and it matches the users
+		if($user->{"cookie:$cookie"} == $expires){
+			return $user;
+		}
+	}
+	
+	return false;
+}
+
 /**
  * Get an array of users from an email address
  *
