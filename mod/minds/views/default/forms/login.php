@@ -25,11 +25,18 @@
 	}
 	?>
 
-	<ul class="elgg-menu elgg-menu-general mtm">
+	<ul class="elgg-menu elgg-menu-general login-box mtm">
+		
 	<?php
 			echo '<li><a class="registration_link" href="' . elgg_get_site_url() . 'register">' . elgg_echo('register') . '</a></li>';
 			echo '<li><a class="registration_link" href="' . elgg_get_site_url() . 'register/node">' . elgg_echo('register:node') . '</a></li>';
 	?>
+	</ul>
+	<ul class="elgg-menu elgg-menu-general login-box mtm">
+		<li>
+				<input type="checkbox" name="persistent" value="true" checked="checked"/>
+				<?php echo elgg_echo('user:persistent'); ?>
+		</li>
 		<li><a class="forgot_link" href="<?php echo elgg_get_site_url(); ?>forgotpassword">
 			<?php echo elgg_echo('user:password:lost'); ?>
 		</a></li>

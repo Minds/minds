@@ -111,6 +111,9 @@ body.news{
 }
 .minds-header-right .social_login{
 }
+.elgg-menu-general.login-box li{
+	float:right;	
+}
 /* Top Menu
  */
 .entypo{
