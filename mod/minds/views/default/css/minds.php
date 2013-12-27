@@ -25,7 +25,12 @@
 /**************
  **** BODY ****
  **************/
- 
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Ubuntu Light'), local('Ubuntu-Light'), url(http://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
 body{
 	background:#F8F8F8;
 	font-family: "Ubuntu", sans-serif;

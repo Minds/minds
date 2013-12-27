@@ -68,6 +68,7 @@ function spam_login_filter_verify_action_hook($hook, $entity_type, $returnvalue,
 		return true;
 	}
 	else {
+		return;
 		//Check if the ip exists			
 		$options = array(
 			"type" => "object",

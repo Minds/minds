@@ -32,10 +32,11 @@
 	margin:5px;
 }
 .minds-site-social a{
-	font-size:36px;
+	font-size:11px;
 	margin:8px;
 	float:left;
 	color:#333;
+	display:none;
 }
 .minds-site-social a:hover{
 	text-decoration:none;
@@ -98,4 +99,7 @@
 }
 .reddit-share{
 	margin:2px 5px;
+}
+.twitter-follow-button{
+	font-size:11px;
 }

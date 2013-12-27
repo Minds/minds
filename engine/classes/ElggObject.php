@@ -202,7 +202,7 @@ class ElggObject extends ElggEntity {
 				     return new ElggUser($owner);
                                 } else {
 					if($this->canEdit()){
-						$this->save();
+	//					$this->save();
 					}
 				}
                         }

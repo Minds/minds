@@ -50,5 +50,5 @@ imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width
 
 header('Content-type: image/jpeg');
 // Output
-imagejpeg($image_p, null, 100);
+imagejpeg($image_p, null, 75);
 exit;

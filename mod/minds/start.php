@@ -36,8 +36,8 @@ function minds_init(){
 	elgg_extend_view('core/settings/statistics', 'minds/quota/statistics', 500);
 	
 	//register the ubuntu font
-	elgg_register_css('ubuntu.font', 'http://fonts.googleapis.com/css?family=Ubuntu:300');
-	elgg_load_css('ubuntu.font');
+//	elgg_register_css('ubuntu.font', 'http://fonts.googleapis.com/css?family=Ubuntu:300');
+//	elgg_load_css('ubuntu.font');
 
 	//register our own css files
 	$url = elgg_get_simplecache_url('css', 'minds');
@@ -68,15 +68,15 @@ function minds_init(){
 
 	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js');
 	elgg_load_js('jquery-masonry');
-	elgg_register_js('jquery-imagesLoaded', elgg_get_site_url() . 'mod/minds/vendors/masonry/imagesLoaded.js');	
+	elgg_register_js('jquery-imagesLoaded', elgg_get_site_url() . 'mod/minds/vendors/masonry/imagesLoaded.min.js');	
 	elgg_load_js('jquery-imagesLoaded');
 
 	//register jquery.form
-	elgg_register_js('jquery.form', elgg_get_site_url() . 'mod/minds/vendors/jquery/jquery.form.js', 'footer');
+	elgg_register_js('jquery.form', elgg_get_site_url() . 'mod/minds/vendors/jquery/jquery.form.min.js', 'footer');
 	elgg_load_js('jquery.form');
 	
 	//registers tipsy
-	elgg_register_js('jquery.tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/javascripts/jquery.tipsy.js', 'footer');
+	elgg_register_js('jquery.tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/javascripts/jquery.tipsy.min.js', 'footer');
 	elgg_load_js('jquery.tipsy');
 	elgg_register_css('tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/stylesheets/tipsy.css', 'footer');
 	elgg_load_css('tipsy');

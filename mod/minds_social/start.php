@@ -32,6 +32,7 @@ function minds_social_init(){
 	elgg_extend_view('forms/login', 'minds_social/login');
 		
  	elgg_extend_view('page/elements/head','minds_social/meta');
+	elgg_extend_view('page/elements/foot', 'minds_social/foot');
 	
 	//elgg_extend_view('object/elements/full', 'minds_social/social_footer');
 	
