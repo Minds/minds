@@ -169,21 +169,21 @@ function uservalidationbyemail_page_handler($page) {
 		//do not cache this page
 		header("X-No-Client-Cache: 0", true);
 		
-		$code = sanitise_string(get_input('c', FALSE));
+		$code = get_input('c', FALSE);
 		$user_guid = get_input('u', FALSE);
 
 		// new users are not enabled by default.
 		$access_status = access_get_show_hidden_status();
 		access_show_hidden_entities(true);
 
-		$user = get_entity($user_guid);
+		$user = get_entity($user_guid, 'user');
 
 		if ($code && $user) {
 			if (uservalidationbyemail_validate_email($user_guid, $code)) {
 
 				elgg_push_context('uservalidationbyemail_validate_user');
 				system_message(elgg_echo('email:confirm:success'));
-				$user = get_entity($user_guid);
+				$user = get_entity($user_guid, 'user');
 				$user->enable();
 				elgg_pop_context();
 
