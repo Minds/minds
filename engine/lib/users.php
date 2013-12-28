@@ -1072,13 +1072,14 @@ function generate_invite_code($username) {
  * @since 1.8.0
  */
 function elgg_set_user_validation_status($user_guid, $status, $method = '') {
-	$result1 = create_metadata($user_guid, 'validated', $status, '', 0, ACCESS_PUBLIC, false);
-	$result2 = create_metadata($user_guid, 'validated_method', $method, '', 0, ACCESS_PUBLIC, false);
-	if ($result1 && $result2) {
+	$user = get_entity($user_guid, 'user');
+	if($user){
+		$user->validated = $status;
+		$user->validated_method = $method;
+		$user->save();
 		return true;
-	} else {
-		return false;
 	}
+	return false;
 }
 
 /**
@@ -1089,18 +1090,10 @@ function elgg_set_user_validation_status($user_guid, $status, $method = '') {
  * @since 1.8.0
  */
 function elgg_get_user_validation_status($user_guid) {
-	$md = elgg_get_metadata(array(
-		'guid' => $user_guid,
-		'metadata_name' => 'validated'
-	));
-	if ($md == false) {
-		return null;
-	}
-
-	if ($md[0]->value) {
+	$user = get_entity($user_guid, 'user');
+	if($user && $user->validated){
 		return true;
-	}
-
+	} 
 	return false;
 }
 

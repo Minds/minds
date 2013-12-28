@@ -133,7 +133,8 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	public function save() {
-		$guid =  create_entity($this);
+		$timebased = $this->isEnabled();
+		$guid =  create_entity($this, $timebased);
 		//now place email and username in index
 		$data = array('type'=>'user_index_to_guid', $guid => time());
 		
@@ -148,7 +149,64 @@ class ElggUser extends ElggEntity
 
 		return $guid;
 	}
+	
+	/**
+	 * Enable a user
+	 *
+	 * @return bool
+	 */
+	public function enable() {
+		
+		//enable all the users objects
+		if($recursive == true){
+			//@todo disable the users objects 
+			$objects = elgg_get_entities(array('type'=>'object', 'owner_guid'=>$this->guid));
+			foreach($objects as $object){
+				//$object->enable();
+			}
+		}
+		
+		//Remove from the list of unvalidated user
+		db_remove('user:unvalidated', 'entities_by_time', array($this->guid));
+		//add to the list of unvalidated user
+		db_insert('user', array('type'=>'entities_by_time', $this->guid => $this->guid));
+		
+		//Set enabled attribute to 'no'
+		$this->enabled = 'yes';
+		return (bool) $this->save();
 
+	}
+
+	/**
+	 * Disable a user
+	 *
+	 * @param string $reason    Optional reason
+	 * @param bool   $recursive Recursively disable all contained entities?
+	 *
+	 * @return bool
+	 */
+	public function disable($reason = "", $recursive = true){
+		if($recursive == true){
+			//@todo disable the users objects 
+			$objects = elgg_get_entities(array('type'=>'object', 'owner_guid'=>$this->guid));
+			foreach($objects as $object){
+				//$object->disable();
+			}
+		}
+		
+		//Remove from the list of users
+		db_remove('user', 'entities_by_time', array($this->guid)); 
+		//add to the list of unvalidated user
+		db_insert('user:unvalidated', array('type'=>'entities_by_time', $this->guid => $this->guid));
+		
+		//Set enabled attribute to 'no'
+		$this->enabled = 'no';
+		
+		//clear the cache for this
+		$this->purgeCache();
+		
+		return (bool) $this->save();
+	}
 	/**
 	 * User specific override of the entity delete method.
 	 *
@@ -599,5 +657,9 @@ class ElggUser extends ElggEntity
 			return $result;
 		}
 		return false;
+	}
+	
+	public function purgeCache(){
+		invalidate_cache_for_entity($this->guid);
 	}
 }

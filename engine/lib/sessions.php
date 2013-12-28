@@ -272,6 +272,11 @@ function login(ElggUser $user, $persistent = false) {
 		throw new LoginException(elgg_echo('LoginException:BannedUser'));
 	}
 
+	//is the user disabled?
+	if(!$user->isEnabled()){
+		throw new LoginException(elgg_echo('LoginException:DisabledUser'));
+	}
+
 	_elgg_session_boot(true);
 	global $SESSION;
 	$SESSION['user'] = $user;

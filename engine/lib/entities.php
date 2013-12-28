@@ -532,10 +532,10 @@ function create_entity($object = NULL, $timebased = true) {
 
 	if($object->guid){
 	       elgg_trigger_event('update', $object->type, $object);
-        } else {
+	} else {
 		$object->guid = $g->generate();
-	        elgg_trigger_event('create', $object->type, $object);
-        }
+		elgg_trigger_event('create', $object->type, $object);
+	}
 	
 	$result = db_insert($object->guid, $object->toArray());
 
