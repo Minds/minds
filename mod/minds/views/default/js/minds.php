@@ -18,6 +18,11 @@
                   	      itemSelector: '.elgg-item'
                 	});                        
 		});
+		
+		$('.elgg-form').submit(function(e){
+ 			var c = confirm("Please confirm you understand the selected license, and that you either own or have permission under the terms of the license.");
+			return c;
+		});
 
 		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
 		$('.progress_indicator').tipsy({gravity: 'e'});		

@@ -940,12 +940,22 @@ function elgg_get_entities(array $options = array()) {
 							$namespace .= ':network:'.$network;
 						}
 					}
+					$cache = new ElggXCache();
 					if(!$options['count']){
-						$slice = new ColumnSlice($options['offset'], "", $options['limit'], $options['newest_first']);//set to reversed
-						$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
-						$rows = $DB->cfs[$type]->multiget(array_keys($guids));
+						if(!$rows = $cache->load("list:$namespace:".$options['limit'].":".$options['offset'].":".$options['newest_first'])){
+							$slice = new ColumnSlice($options['offset'], "", $options['limit'], $options['newest_first']);//set to reversed
+							$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
+							$rows = $DB->cfs[$type]->multiget(array_keys($guids));
+							$cache->save("list:$namespace:".$options['limit'].":".$options['offset'].":".$options['newest_first'], $rows, 60);
+						}
 					} else {
-						return	$DB->cfs['entities_by_time']->get_count($namespace);
+						if($count = $cache->load("count:$namespace")){
+							return $count;
+						} else {
+							$count = $DB->cfs['entities_by_time']->get_count($namespace);
+							$cache->save("count:$namespace", $count, 60);
+							return $count;
+						}
 					}
 				} else {
 					if($attrs){
