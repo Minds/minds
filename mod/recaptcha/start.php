@@ -53,24 +53,19 @@ function recaptcha_check_form($hook, $type, $returnvalue, $params) {
     // retain entered form values and re-populate form fields if validation error
     elgg_make_sticky_form('register');
 
-    /*-- check if the 'Use Recaptcha for user registration' Plugin setting is enabled --*/
-
-    //fetch the plugin settings
-    $plugin_entity = elgg_get_plugin_from_id('recaptcha');
-    $plugin_settings = $plugin_entity->getAllSettings();
 
     if(array_key_exists('recaptcha_verified', $SESSION) && $SESSION['recaptcha_verified'] == 1) {
         ; //do nothing
     }
     else {
-        if($plugin_settings['require_recaptcha'] == 'on') { //if the setting is enabled
+        if(elgg_get_plugin_setting('require_recaptcha') == 'on') { //if the setting is enabled
 
             // include the recaptcha lib
             require_once('lib/recaptchalib.php');
 
             // check the recaptcha
             $resp = recaptcha_check_answer (
-                $plugin_settings['recaptcha_private_key'],
+                elgg_get_plugin_setting('recaptcha_private_key'),
                 $_SERVER["REMOTE_ADDR"],
                 $_POST["recaptcha_challenge_field"],
                 $_POST["recaptcha_response_field"]
