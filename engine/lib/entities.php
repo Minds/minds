@@ -1660,19 +1660,21 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 				}
 			
 				$owner = $entity->getOwnerEntity();	
-				$followers = $owner->getFriendsOf(null, 10000, "", 'guids');
-				if(!$followers) { 
-					$followers = array(); 
-				}
-				array_push($followers, $entity->owner_guid);
-			
-				foreach($followers as $follower){
-					if($entity->super_subtype){
-						array_push($namespace, $type . ':' . $entity->super_subtype . ':network:'.$follower);
-                        	                array_push($namespace, $type . ':' . $entity->super_subtype . ':user:'.$follower);
+				if($owner instanceof ElggUser){
+					$followers = $owner->getFriendsOf(null, 10000, "", 'guids');
+					if(!$followers) { 
+						$followers = array(); 
 					}
-					array_push($namespace, $type . ':' . $entity->subtype . ':network:'.$follower);
-                                        array_push($namespace, $type . ':' . $entity->subtype . ':user:'.$follower);
+					array_push($followers, $entity->owner_guid);
+			
+					foreach($followers as $follower){
+						if($entity->super_subtype){
+							array_push($namespace, $type . ':' . $entity->super_subtype . ':network:'.$follower);
+                	       	 	                array_push($namespace, $type . ':' . $entity->super_subtype . ':user:'.$follower);
+						}
+						array_push($namespace, $type . ':' . $entity->subtype . ':network:'.$follower);
+        	               	                 array_push($namespace, $type . ':' . $entity->subtype . ':user:'.$follower);
+					}
 				}
 
 				foreach($namespace as $rowkey){

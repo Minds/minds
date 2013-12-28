@@ -21,8 +21,8 @@ if (!$count) {
 
 $options['count']  = FALSE;
 
-$users = elgg_get_entities(array('type'=>'user','guids'=>$guids));
-
+$users = elgg_get_entities(array('guids'=>$guids));
+var_dump($users);
 // setup pagination
 $pagination = elgg_view('navigation/pagination',array(
 	'base_url' => 'admin/users/unvalidated',

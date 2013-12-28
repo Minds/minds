@@ -41,6 +41,7 @@ class ElggUser extends ElggEntity
 		$this->attributes['admin'] = 'no';
 		$this->attributes['ip'] = $_SERVER['REMOTE_ADDR'];
 		$this->attributes['time_created'] = time();
+		$this->attributes['enabled'] = 'yes';
 	}
 
 	/**
