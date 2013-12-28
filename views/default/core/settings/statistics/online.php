@@ -36,6 +36,10 @@ $content = <<<__HTML
 		<td class="column-one">$label_last_login</td>
 		<td>$last_login</td>
 	</tr>
+	<tr class="odd">
+		<td class="column-one">$label_last_ip</td>
+		<td>$user->ip</td>
+	</tr>
 </table>
 __HTML;
 

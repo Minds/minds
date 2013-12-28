@@ -197,7 +197,7 @@ function log_login_failure($user_guid) {
  */
 function reset_login_failure_count($user_guid) {
 	$user_guid = (int)$user_guid;
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, 'user');
 
 	if (($user_guid) && ($user) && ($user instanceof ElggUser)) {
 		$fails = (int)$user->getPrivateSetting("login_failures");
@@ -308,8 +308,8 @@ function login(ElggUser $user, $persistent = false) {
 	session_regenerate_id();
 
 	// Update statistics
-//	set_last_login($SESSION['guid']);
-//	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
+	set_last_login($SESSION['guid']);
+	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
 
 	return true;
 }

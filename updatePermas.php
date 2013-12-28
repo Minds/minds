@@ -2,17 +2,13 @@
 
 require('engine/start.php');
 
-$blog = get_entity(35498);
-$blog->perma_url = "http://www.minds.com/blog/view/35498/salt-water-fuel";
-$blog->save();
-exit;
+$slice = new phpcassa\ColumnSlice("", "", 100, true);
+$guids = $DB->cfs['entities_by_time']->get('user', $slice);		
 
-$blogs = elgg_get_entities(array('subtype'=>'blog', 'limit'=>1000000));
-echo "now running save loop";
-foreach($blogs as $blog){
-
-	$perma = $blog->getURL();
-	$blog->perma_url = $perma;
-	echo "updated " . $blog->save();
-	
+foreach($guids as $guid => $ts){
+	$user = get_entity($guid, 'user');
+	if(!$user){
+		echo "User $guid does not exits";
+		db_remove('user', 'entities_by_time', array($guid));
+	}
 }

@@ -1247,9 +1247,10 @@ function set_last_login($user_guid) {
 	global $CONFIG;
 	$time = time();
 
-	$query = "UPDATE {$CONFIG->dbprefix}users_entity
-		set prev_last_login = last_login, last_login = {$time} where guid = {$user_guid}";
-
+	$user = new ElggUser($user_guid);
+	$user->last_login = $time;
+	$user->ip = $_SERVER['REMOTE_ADDR'];
+	$user->save();
 	//execute_delayed_write_query($query);
 }
 

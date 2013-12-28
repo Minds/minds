@@ -39,6 +39,7 @@ class ElggUser extends ElggEntity
 		$this->attributes['code'] = NULL;
 		$this->attributes['banned'] = "no";
 		$this->attributes['admin'] = 'no';
+		$this->attributes['ip'] = $_SERVER['REMOTE_ADDR'];
 		$this->attributes['time_created'] = time();
 	}
 
@@ -162,6 +163,10 @@ class ElggUser extends ElggEntity
 		}
 		if (isset($CODE_TO_GUID_MAP_CACHE[$this->code])) {
 			unset($CODE_TO_GUID_MAP_CACHE[$this->code]);
+		}
+
+		if(is_int($this->guid)){
+			db_remove('user', 'entities_by_time', array($this->guid));
 		}
 
 		clear_user_files($this);
