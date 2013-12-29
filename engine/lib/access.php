@@ -41,6 +41,10 @@ function _elgg_get_access_cache() {
  */
 function elgg_check_access($entity, $user = null){
 
+	if(elgg_get_ignore_access()){
+		return true;
+	}
+
 	if(!elgg_is_logged_in()){
 		if($entity->access_id == ACCESS_PUBLIC){
 			return true;

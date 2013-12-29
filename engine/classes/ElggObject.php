@@ -207,13 +207,13 @@ class ElggObject extends ElggEntity {
 				}
                         }
 		}*/
-		$cache = new ElggXCache();
-		if($owner = $cache->load("user:$this->owner_guid")){
-			return new ElggUser(json_decode($owner));
-		} else {
+	//	$cache = new ElggXCache();
+	//	if($owner = $cache->load("user:$this->owner_guid")){
+	//		return new ElggUser(json_decode($owner));
+	//	} else {
 			$owner = get_entity($this->owner_guid, 'user');
-			$cache->save("user:$this->owner_guid", json_encode($owner->toArray()), 3600);
-		}
+	//		$cache->save("user:$this->owner_guid", json_encode($owner->toArray()), 3600);
+	//	}
                 return $owner;
 	}
 

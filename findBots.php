@@ -2,7 +2,7 @@
 
 require('engine/start.php');
 
-$slice = new phpcassa\ColumnSlice("", "", 1000, true);
+$slice = new phpcassa\ColumnSlice("", "", 50, true);
 $guids = $DB->cfs['entities_by_time']->get('user', $slice);		
 
 foreach($guids as $guid => $ts){
@@ -35,6 +35,6 @@ foreach($guids as $guid => $ts){
 	echo "USER $user->username has $bot points \n";
 
 	if($bot >= 3){
-		$user->delete();
+//		$user->delete();
 	}
 }

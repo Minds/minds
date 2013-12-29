@@ -532,6 +532,12 @@ function create_entity($object = NULL, $timebased = true) {
 
 	if($object->guid){
 	       elgg_trigger_event('update', $object->type, $object);
+		if (function_exists('xcache_get')) {
+                                $newentity_cache = new ElggXCache('new_entity_cache');
+		}
+                if ($newentity_cache) {
+                                $newentity_cache->delete($object->guid);
+               	}
 	} else {
 		$object->guid = $g->generate();
 		elgg_trigger_event('create', $object->type, $object);
@@ -640,7 +646,10 @@ function entity_row_to_elggstar($row, $type) {
 		$newentity_cache = new ElggMemcache('new_entity_cache');
 	} elseif(is_apc_enabled()){
 		$newentity_cache = new ElggApcCache('new_entity_cache');
+	} elseif(function_exists('xcache_get')){
+		$newentity_cache = new ElggXCache('new_entity_cache');
 	}
+
 	if ($newentity_cache) {
 		$new_entity = $newentity_cache->load($row->guid);
 	}
@@ -739,7 +748,9 @@ function get_entity($guid, $type = 'object') {
 			$shared_cache = new ElggMemcache('new_entity_cache');
 		} elseif(is_apc_enabled()) {
 			$shared_cache = new ElggApcCache('new_entity_cache');
-		} else {
+		} elseif(function_exists('xcache_get')){
+			$shared_cache = new ElggXCache('new_entity_cache');
+		}else {
 			$shared_cache = false;
 		}
 	}
@@ -940,20 +951,21 @@ function elgg_get_entities(array $options = array()) {
 							$namespace .= ':network:'.$network;
 						}
 					}
-					$cache = new ElggXCache();
 					if(!$options['count']){
-						if(!$rows = $cache->load("list:$namespace:".$options['limit'].":".$options['offset'].":".$options['newest_first'])){
+						$cache = new ElggXCache("list_guids:$namespace:".$options['newest_first']);
+						if(!$guids = $cache->load($options['limit'].":".$options['offset'])){
 							$slice = new ColumnSlice($options['offset'], "", $options['limit'], $options['newest_first']);//set to reversed
 							$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
-							$rows = $DB->cfs[$type]->multiget(array_keys($guids));
-							$cache->save("list:$namespace:".$options['limit'].":".$options['offset'].":".$options['newest_first'], $rows, 60);
+							$cache->save($options['limit'].":".$options['offset'], $guids, 30);	
 						}
+						$rows = $DB->cfs[$type]->multiget(array_keys($guids));
 					} else {
-						if($count = $cache->load("count:$namespace")){
+						$cache = new ElggXCache("count");
+						if($count = $cache->load("$namespace")){
 							return $count;
 						} else {
 							$count = $DB->cfs['entities_by_time']->get_count($namespace);
-							$cache->save("count:$namespace", $count, 60);
+							$cache->save("$namespace", $count, 60);
 							return $count;
 						}
 					}

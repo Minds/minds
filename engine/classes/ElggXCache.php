@@ -31,6 +31,23 @@ class ElggXCache extends ElggSharedMemoryCache {
 	}
 
 	/**
+	 * Combine a key with the namespace.
+	 *
+	 * @param string $key The key
+	 *
+	 * @return string The new key.
+	 */
+	private function makeKey($key) {
+		$prefix = $this->getNamespace() . ":";
+
+		if (strlen($prefix . $key) > 250) {
+			$key = md5($key);
+		}
+
+		return $prefix . $key;
+	}
+
+	/**
 	 * Saves a name and value to the cache
 	 *
 	 * @param string  $key     Name
@@ -40,12 +57,14 @@ class ElggXCache extends ElggSharedMemoryCache {
 	 * @return bool
 	 */
 	public function save($key, $data, $expires = null) {
-		
+
+		$key = $this->makeKey($key);	
+	
 		if ($expires === null) {
 			$expires = $this->expires;
 		}
 
-		$result = xcache_set($key, $data, $expires);
+		$result = xcache_set($key, serialize($data), $expires);
 
 		if (!$result) {
 			elgg_log("XCACHE: FAILED TO SAVE $key", 'ERROR');
@@ -65,13 +84,15 @@ class ElggXCache extends ElggSharedMemoryCache {
 	 */
 	public function load($key, $offset = 0, $limit = null) {
 		
+		$key = $this->makeKey($key);
+
 		$result = xcache_get($key);
 
 		if (!$result) {
 			elgg_log("XCACHE: FAILED TO LOAD $key", 'ERROR');
 		}
 
-		return $result;
+		return unserialize($result);
 	}
 
 	/**
@@ -82,7 +103,8 @@ class ElggXCache extends ElggSharedMemoryCache {
 	 * @return bool
 	 */
 	public function delete($key) {
-	
+		$key = $this->makeKey($key);
+
 		return xcache_unset($key);
 	}
 

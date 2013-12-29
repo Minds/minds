@@ -126,6 +126,10 @@ class ElggSite extends ElggEntity {
 	}
 
 	public function save(){
+		global $CONFIG;
+		if(isset($CONFIG->site_name)){
+			return; //the site is not an entitiy, it is static from settings
+		}
 		$this->guid = 1;
 		return create_entity($this,false); 
 	}

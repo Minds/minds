@@ -5,7 +5,7 @@ elgg_load_library('archive:kaltura');
 $full = elgg_extract('full_view', $vars, FALSE);
 $entity = elgg_extract('entity', $vars);
 
-$owner = $entity->getOwnerEntity();
+$owner = $entity->getOwnerEntity(true);
 
 if($full){
 	/**
@@ -93,7 +93,7 @@ if($full){
 		'class' => 'elgg-menu-hz',
 	));
 	
-	$owner = $entity->getOwnerEntity(); 
+	$owner = $entity->getOwnerEntity(true); 
 	$owner_link = elgg_view('output/url', array(
 		'text' => $owner->name,
 		'href' => $owner->getURL()

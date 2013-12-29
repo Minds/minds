@@ -14,12 +14,12 @@ if(array_key_exists('recaptcha_verified', $SESSION) && $SESSION['recaptcha_verif
    $output = "<label>".elgg_echo('recaptcha:label:human_verification')."</label><b>".elgg_echo('recaptcha:verified')."</b><br><br>";
 }
 else {
-    if(elgg_get_plugin_setting('require_recaptcha') == 'on') {
+    if(elgg_get_plugin_setting('require_recaptcha','recaptcha') == 'on') {
 
         // include the recaptcha lib
         require_once(elgg_get_plugins_path() . 'recaptcha/lib/recaptchalib.php');
 
-        $publickey = elgg_get_plugin_setting('recaptcha_public_key');
+        $publickey = elgg_get_plugin_setting('recaptcha_public_key','recaptcha');
         $output = "<label>".elgg_echo('recaptcha:label:human_verification')."</label><br>";
         $output .= recaptcha_get_html($publickey);
         $output .= '<br>';
