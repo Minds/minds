@@ -279,6 +279,10 @@
 	border-radius: 5px 5px 0 0;
 }
 
+.elgg-river-responses{
+	margin-bottom:6px;
+}
+
 <?php //@todo components.php ?>
 .elgg-river-comments {
 	margin: 0;

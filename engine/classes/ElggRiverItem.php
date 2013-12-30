@@ -57,7 +57,7 @@ class ElggRiverItem {
 	public function getSubjectEntity($brief = true) {
 		if($brief){
 			if($subject = unserialize($this->subject)){
-				cache_entity($subject);
+				//cache_entity($subject);
 				return $subject;
 			}
 		}

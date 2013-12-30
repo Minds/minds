@@ -4,7 +4,7 @@
  */
 
 $guid = get_input('guid');
-$user = get_entity($guid);
+$user = get_entity($guid, 'user');
 
 $background_colour = get_input('background_colour');
 $background_repeat = get_input('background_repeat');

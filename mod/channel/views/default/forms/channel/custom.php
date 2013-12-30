@@ -12,22 +12,17 @@ $bg_header_label = elgg_echo('channel:custom:bg');
 $text_header_label = elgg_echo('channel:custom:text');
 $widget_header_label = elgg_echo('channel:custom:widget');
 
+$upload_label = elgg_echo('channel:custom:upload');
+$upload_input = elgg_view('input/file', array(
+	'name' => 'background',
+));
 if($user->background){
-	$upload_label = elgg_echo('channel:custom:reupload');
-	$upload_input .= elgg_view('input/file', array(
-		'name' => 'background',
-	));
 	$upload_input .= elgg_view('output/url', array(
 		'href' => 'action/channel/custom?remove_bg=yes&guid='.$user->guid,
 		'text' => elgg_echo('channel:custom:background:remove'),
 		'is_action' =>true
 		));
-} else {
-	$upload_label = elgg_echo('channel:custom:upload');
-	$upload_input = elgg_view('input/file', array(
-		'name' => 'background',
-	));
-}
+} 
 
 $bg_repeat_label = elgg_echo('channel:custom:background:repeat');
 $bg_repeat_input = elgg_view('input/dropdown', array(
@@ -120,62 +115,102 @@ $reset_input = elgg_view('output/url', array(
 									));
 
 $form = <<<FORM
-	<div>
-		<h3> $bg_header_label </h3>
-	</div>
-	
-	<div>
-		<label>$upload_label</label>
-		$upload_input
-	</div>
-	
-	<div>
-		<label>$bg_repeat_label</label>
-		$bg_repeat_input
-	</div>
-	
-	<div>
-		<label>$bg_attachment_label</label>
-		$bg_attachment_input
-	</div>
-	
-	<div>
-		<label>$bg_colour_label</label>
-		$bg_colour_input
-	</div>
-	
-	<div>
-		<h3> $text_header_label </h3>
-	</div>
-	
-	<div>
-		<label>$text_colour_label</label>
-		$text_colour_input
-	</div>
-	
-	<div>
-		<label>$link_colour_label</label>
-		$link_colour_input
-	</div>
-	
-	<div>
-		<h3> $widget_header_label </h3>
-	</div>
-	
-	<div>
-		<label>$widget_bg_label</label>
-		$widget_bg_input
-	</div>
-	
-	<div>
-		<label>$widget_head_title_color_label</label>
-		$widget_head_title_color_input
-	</div>
-	
-	<div>
-		<label>$widget_body_text_label</label>
-		$widget_body_text_input
-	</div>
+				
+		<table>
+			<tr>
+				<td>
+					<h3>$bg_header_label </h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">
+					$upload_label
+				</td>
+				<td>
+					$upload_input
+				</td>
+			</tr>
+			<tr>
+				<td class="label">
+					$bg_repeat_label
+				</td>
+				<td>
+					$bg_repeat_input
+				</td>
+			</tr>
+			<tr>
+				<td class="label">
+					$bg_attachment_label
+				</td>
+				<td>
+					$bg_attachment_input
+				</td>
+			</tr>
+			<tr>
+				<td class="label">
+					$bg_colour_label
+				</td>
+				<td>
+					$bg_colour_input
+				</td>
+			</tr>
+		</table>
+			
+	<table>
+		<tr>
+			<td>
+				<h3> $text_header_label </h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				$text_colour_label
+			</td>
+			<td>
+				$text_colour_input
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				$link_colour_label
+			</td>
+			<td>
+				$link_colour_input
+			</td>
+		</tr>
+	</table>
+			
+	<table>
+		<tr>
+			<td>
+				<h3> $widget_header_label </h3>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				$widget_bg_label
+			</td>
+			<td>
+				$widget_bg_input
+			</td>
+		</tr>
+		<tr>
+			<td>
+				$widget_head_title_color_label
+			</td>
+			<td>
+				$widget_head_title_color_input
+			</td>
+		</tr>
+		<tr>
+			<td>
+				$widget_body_text_label
+			</td>
+			<td>
+				$widget_body_text_input
+			</td>
+		</tr>
+	</table>
 		
 	<div class="elgg-foot">
 		$container_guid_input
@@ -190,8 +225,3 @@ FORM;
 echo $form;
 
 ?>
-<script> 
-	$(".colorpicker").miniColors({
-					letterCase: 'uppercase',				
-				});		
-</script>

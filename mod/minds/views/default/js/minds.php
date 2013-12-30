@@ -19,7 +19,7 @@
                 	});                        
 		});
 		
-		$('.elgg-form').submit(function(e){
+		$('.elgg-form-blog-save, .elgg-form-archive-save').submit(function(e){
  			var c = confirm("Please confirm you understand the selected license, and that you either own or have permission under the terms of the license.");
 			return c;
 		});
@@ -28,6 +28,9 @@
 		$('.progress_indicator').tipsy({gravity: 'e'});		
 		$('.elgg-input-text').tipsy({gravity: 'w'});
 		$('.tooltip.s').tipsy({gravity: 's'});
+		$('.tooltip.n').tipsy({gravity: 'n'});
+		$('.tooltip.w').tipsy({gravity: 'w'});
+		$('.tooltip.e').tipsy({gravity: 'e'});
 
 		$('.elgg-form-wall-add textarea').focus( function(e){ $(this).parent().find('.elgg-button-submit').css('display','block');});
 

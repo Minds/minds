@@ -10,6 +10,93 @@
 	max-width: 1600px;
 	margin: auto;
 }
+
+.channel-header .avatar{
+	float:left;
+	height:200px;
+}
+.channel-header .avatar img{
+	height:100%;
+	width:auto;
+	display:block;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	box-shadow: 0 0 3px #888;
+	-moz-box-shadow: 0 0 3px #888px;
+	-webkit-box-shadow: 0 0 3px #888px;
+}
+.channel-header .owner-block{
+	float:left;
+	margin:0 0 0 64px;
+	
+}
+.channel-header .owner-block h1{
+	font-size:64px;
+	font-weight:lighter;
+	line-height:64px;
+}
+
+.channel-header .actions{
+	float:left;
+	margin:16px 60px;
+}
+.channel-header .actions > div{
+	margin:2px 0;
+}
+
+.channel-filter-menu{
+	clear: both;
+	width: 100%;
+	height: 30px;
+	padding: 8px 16px;
+	background: rgba(255,255,255,0.5);
+	position: relative;
+}
+.channel-filter-menu li{
+	float:left;
+	padding:8px;
+	font-size: 16px;
+	margin-right:12px;
+}
+.channel-filter-menu li.selected a{
+	color:#333;
+}
+.channel-filter-menu li a{
+	
+}
+/**
+ * Subscribe button
+ */
+.subscribe-button{
+	border: 0;
+	overflow: hidden;
+	background:#4690D6;
+	position:relative;
+	font-weight:lighter;
+	cursor:pointer;
+	width:182px;
+}
+.subscribe-button > a{
+	padding: 8px 16px;
+	float:left;
+}
+.subscribe-button span{
+	color:#FFF;
+}
+.subscribe-button a:hover{
+	text-decoration:none;
+}
+.subscribers-count{
+	position: absolute;
+	right: 0;
+	top: 0;
+	background: #333;
+	height: 100%;
+	padding: 8px 12px 0;
+	color:#FFF;
+}
+
 /* ***************************************
 	Channel Profile
 *************************************** */
@@ -193,6 +280,32 @@
  * Custom Channels
  *
  */
+.elgg-form-channel-custom table{
+	float:left;
+	margin:0 10px;
+}
+.elgg-form-channel-custom .elgg-input-file{
+	width:100px;
+}
+.elgg-form-channel-custom .elgg-foot{
+	clear:both;
+}
+.elgg-form-channel-custom{
+	background:#FAFAFA;
+	background:rgba(255,255,255, 0.9);
+	width:90%;
+	margin:0 5%;
+	padding:16px;
+}
+.elgg-form-channel-custom table tr td{
+	padding:4px;
+	vertical-align:middle;
+}
+.elgg-form-channel-custom table tr td.label{
+	font-weight:bold;
+	text-align:right;
+}
+
 .elgg-input-text.colorpicker{
 	width:150px;
 }

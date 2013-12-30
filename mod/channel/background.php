@@ -2,16 +2,17 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
-header('Content-Type: image/jpeg');
-header('Expires: ' . date('r', time() + 864000));
-header("Pragma: public");
-header("Cache-Control: public");
-
 $owner_guid = get_input('guid');
+$owner = get_entity($owner_guid, 'user');
 $thumb = get_input('thumb');
 
 
-if($owner_guid){
+if($owner->background){
+	
+	header('Content-Type: image/jpeg');
+	header('Expires: ' . date('r', time() + 864000));
+	header("Pragma: public");
+	header("Cache-Control: public");
 		
 	$file = new ElggFile;
 	$file->owner_guid = $owner_guid;

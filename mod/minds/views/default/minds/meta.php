@@ -27,6 +27,7 @@ $siteURL = elgg_get_site_url();
 $owner = elgg_get_page_owner_entity();
 //if(in_array('channel', $split)){
 //echo elgg_get_context();
+//var_dump(elgg_get_page_owner_entity(), elgg_get_logged_in_user_entity(), get_user_by_username('mark')); exit;
 if((elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news' || elgg_get_context() == 'blog' || elgg_get_context() == 'archive') && elgg_get_viewtype() == 'default'){
 	echo '<style>';
 
@@ -34,15 +35,14 @@ if((elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_g
 	echo <<<BODY
 	
 	body{
+			background-color: $owner->background_colour;
 			
-			background-image:url({$siteURL}mod/channel/background.php?guid=$owner->guid&t=$owner->background_timestamp) !important;
+			background-image:  url({$siteURL}mod/channel/background.php?guid=$owner->guid&t=$owner->background_timestamp) !important;
 			
 			background-repeat:$owner->background_repeat;
 			
 			background-position:$owner->background_pos;
-			
-			background-color:$owner->background_colour;
-			
+									
 			background-attachment:$owner->background_attachment;
 			
 		}
