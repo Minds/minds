@@ -14,10 +14,13 @@
 								case 'background_colour': 
 									$('body').css('background', $(this).val());
 									break;
-								case 'text_colour':
-									$('h1,h2,h3,h4,h5').css('color', $(this).val());
-									console.log($(this).value);
+								case 'h1_colour':
+									$('.channel-header h1').css('color', $(this).val());
 									break;
+								case 'h3_colour':
+									$('.channel-header h3').css('color', $(this).val());
+								case 'menu_link_colour':
+									 $('.channel-filter-menu a').css('color', $(this).val());
 							}
 					}	
 				});

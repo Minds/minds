@@ -7,10 +7,11 @@
  */
 
 $subject = $vars['item']->getSubjectEntity();
-if($subject instanceof TidypicsImage){
+/*if($subject instanceof TidypicsImage){
 }else{
+var_dump($subject);
 return false;
-}
+}*/
 $subject_link = elgg_view('output/url', array(
 	'href' => $subject->getURL(),
 	'text' => $subject->name,
@@ -19,7 +20,7 @@ $subject_link = elgg_view('output/url', array(
 ));
 
 $image = $vars['item']->getObjectEntity();
-$attachments = elgg_view_entity_icon($image, 'large',array('img_class'=>'large'));
+$attachments = elgg_view_entity_icon($image, 'small',array('img_class'=>'large'));
 
 $image_link = elgg_view('output/url', array(
 	'href' => $image->getURL(),

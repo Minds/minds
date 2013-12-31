@@ -16,6 +16,9 @@ $upload_label = elgg_echo('channel:custom:upload');
 $upload_input = elgg_view('input/file', array(
 	'name' => 'background',
 ));
+
+$form_vars = channel_custom_vars($user);
+
 if($user->background){
 	$upload_input .= elgg_view('output/url', array(
 		'href' => 'action/channel/custom?remove_bg=yes&guid='.$user->guid,
@@ -32,7 +35,7 @@ $bg_repeat_input = elgg_view('input/dropdown', array(
 									'repeat-x' => elgg_echo('channel:custom:background:repeat:repeat-x'),
 									'repeat-y' => elgg_echo('channel:custom:background:repeat:repeat-y')
 								),
-		'value' => $user->background_repeat
+		'value' => $form_vars['background_repeat']
 	));
 	
 $bg_attachment_label = elgg_echo('channel:custom:background:attachment');
@@ -41,56 +44,62 @@ $bg_attachment_input = elgg_view('input/dropdown', array(
 		'options_values' => array(	'fixed' => elgg_echo('channel:custom:background:attachment:fixed'),
 									'scoll' => elgg_echo('channel:custom:background:attachment:scroll'),
 								),
-		'value' => $user->background_attachment
+		'value' => $form_vars['background_attachment']
 	));
 	
 $bg_colour_label = elgg_echo('channel:custom:color:background');
 $bg_colour_input = elgg_view('input/text', array(
 		'name' => 'background_colour',
-		'value' => $user->background_colour ? $user->background_colour : '#FEFEFE',
+		'value' => $form_vars['background_colour'], 
 		'class' => 'colorpicker',
 		'size' => 1
 	));
 
-$text_colour_label = elgg_echo('channel:custom:color:text');
-$text_colour_input = elgg_view('input/text', array(
-		'name' => 'text_colour',
-		'value' => $user->text_colour ? $user->text_colour : '#000',
+$h1_colour_label = elgg_echo('channel:custom:color:h1');
+$h1_colour_input = elgg_view('input/text', array(
+		'name' => 'h1_colour',
+		'value' => $form_vars['h1_colour'],
 		'class' => 'colorpicker',
 		'size' => 1
 	));
 	
-$link_colour_label = elgg_echo('channel:custom:color:link');
-$link_colour_input = elgg_view('input/text', array(
-		'name' => 'link_colour',
-		'value' => $user->link_colour ? $user->link_colour : '#4690D6',
+$h3_colour_label = elgg_echo('channel:custom:color:h3');
+$h3_colour_input = elgg_view('input/text', array(
+		'name' => 'h3_colour',
+		'value' => $form_vars['h3_colour'],
 		'class' => 'colorpicker',
 		'size' => 1
 	));
 
-$widget_bg_label = elgg_echo('channel:custom:widget:bg');
-$widget_bg_input = elgg_view('input/text', array(
-		'name' => 'widget_bg',
-		'value' => $user->widget_bg ? $user->widget_bg : '#F2F2F2',
-		'class' => 'colorpicker',
-		'size' => 1
-	));
+$menu_link_colour_label = elgg_echo('channel:custom:color:menu_link');
+$menu_link_colour_input = elgg_view('input/text', array(
+                'name' => 'menu_link_colour',
+                'value' => $form_vars['menu_link_colour'],
+                'class' => 'colorpicker',
+                'size' => 1
+        ));
 
-$widget_head_title_color_label = elgg_echo('channel:custom:widget:head:title:color');
-$widget_head_title_color_input = elgg_view('input/text', array(
-		'name' => 'widget_head_title_color',
-		'value' => $user->widget_head_title_color ? $user->widget_head_title_color : '#666666',
-		'class' => 'colorpicker',
-		'size' => 1
-	));
-	
-$widget_body_text_label = elgg_echo('channel:custom:widget:body_text');
-$widget_body_text_input = elgg_view('input/text', array(
-		'name' => 'widget_body_text',
-		'value' => $user->widget_body_text ? $user->widget_body_text : '#000000',
-		'class' => 'colorpicker',
-		'size' => 1
-	));
+$channel_brief_description_label = elgg_echo('channel:edit:brief:label');
+$channel_brief_description_input = elgg_view('input/text', array(
+		'name' => 'briefdescription',
+		'value' => $form_vars['briefdescription']
+));
+$channel_location_label = elgg_echo('channel:edit:location:label');
+$channel_location_input = elgg_view('input/text', array(
+		'name' => 'location',
+		'value' =>  $form_vars['location']
+));
+$channel_email_label = elgg_echo('channel:edit:email:label');
+$channel_email_input = elgg_view('input/text', array(
+                'name' => 'contactemail',
+                'value' =>  $form_vars['contactemail']
+));
+$channel_description_label = elgg_echo('channel:edit:description:label');
+$channel_description_input = elgg_view('input/plaintext', array(
+                'name' => 'description',
+                'value' =>  $form_vars['description']
+));
+
 
 $guid_input = elgg_view('input/hidden', array(
 	'name' => 'guid',
@@ -164,50 +173,66 @@ $form = <<<FORM
 		</tr>
 		<tr>
 			<td class="label">
-				$text_colour_label
+				$h1_colour_label
 			</td>
 			<td>
-				$text_colour_input
+				$h1_colour_input
 			</td>
 		</tr>
 		<tr>
 			<td class="label">
-				$link_colour_label
+				$h3_colour_label
 			</td>
 			<td>
-				$link_colour_input
+				$h3_colour_input
 			</td>
 		</tr>
+		<tr>
+                        <td class="label">
+                                $menu_link_colour_label
+                        </td>
+                        <td>
+                                $menu_link_colour_input
+                        </td>
+                </tr>
 	</table>
 			
 	<table>
 		<tr>
 			<td>
-				<h3> $widget_header_label </h3>
+				<h3> $channel_info_label </h3>
 			</td>
 		</tr>
 		<tr>
-			<td>
-				$widget_bg_label
+			<td class="label">
+				$channel_brief_description_label
 			</td>
 			<td>
-				$widget_bg_input
-			</td>
-		</tr>
-		<tr>
-			<td>
-				$widget_head_title_color_label
-			</td>
-			<td>
-				$widget_head_title_color_input
+				$channel_brief_description_input
 			</td>
 		</tr>
 		<tr>
-			<td>
-				$widget_body_text_label
+			<td class="label">
+				$channel_location_label
 			</td>
 			<td>
-				$widget_body_text_input
+				$channel_location_input
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				$channel_email_label
+			</td>
+			<td>
+				$channel_email_input
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				$channel_description_label
+			</td>
+			<td>
+				$channel_description_input
 			</td>
 		</tr>
 	</table>

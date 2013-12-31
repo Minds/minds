@@ -175,6 +175,18 @@ function channel_page_handler($page) {
 		case 'custom':
 			$content = elgg_view_form('channel/custom', array('enctype' => 'multipart/form-data'), array('entity' => $user));
 			break;
+		case 'avatar':
+			$content = '<div class="avatar-page">';
+			$content .= elgg_view('core/avatar/upload', array('entity' => $user));
+			// only offer the crop view if an avatar has been uploaded
+			if (isset($user->icontime)) {
+				$content .= elgg_view('core/avatar/crop', array('entity' => $user));
+			}
+			$content .= '</div>';
+			break;
+		case 'about':
+			$content = elgg_view('channel/about', array('user'=>$user));
+			break;
 		case 'blog':
 		case 'blogs':
 			$content = elgg_list_entities(array(	
@@ -182,7 +194,8 @@ function channel_page_handler($page) {
 											'subtype'=>'blog', 
 											'owner_guid'=>$user->guid, 
 											'limit'=>8, 
-											'offset'=>get_input('offset','')
+											'offset'=>get_input('offset',''),
+											'full_view'=>false
 											));			
 			break;
 		case 'archive':
@@ -209,11 +222,11 @@ function channel_page_handler($page) {
 		case 'news':
 		case 'timeline':
 		default:
-			$content = elgg_list_river(array('owner_guid'=>$user->guid, 'list_class'=>''));
+			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>''));
 	}
 
 
-	$body = elgg_view_layout('one_column', array('content' => $content, 'header'=>$header));
+	$body = elgg_view_layout('one_column', array('content' => $header.$content, 'header'=>false));
 	echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel'));
 	return true;
 }
@@ -444,4 +457,35 @@ function channel_icon_handler($pages){
 	$_GET['lastcache'] =  $page[3];
 	include('icondirect.php');
 	return true;
+}
+
+function channel_custom_vars($user = null) {
+	// input names => defaults
+	$values = array(
+		'background' => null,
+		'background_colour' => '#FAFAFA',
+		'background_repeat' => 'repeat',
+		'background_attachment' => 'fixed',
+		
+		'h1_colour' => '#333',
+		'h3_colour' => '#333',
+
+		'menu_link_colour' => '#333',
+
+
+		'briefdescription' => '',
+		'description' => '',
+		'contactemail' => '',
+		'location' => ''
+	);
+
+	if($user){
+		foreach (array_keys($values) as $field) {
+			if (isset($user->$field)) {
+				$values[$field] = $user->$field;
+			}
+		}
+	}
+
+	return $values;
 }

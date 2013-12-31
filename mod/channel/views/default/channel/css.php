@@ -10,10 +10,30 @@
 	max-width: 1600px;
 	margin: auto;
 }
+.channel-header{
+	position: relative;
+	margin: 0 5% 12px;
+	clear: both;
+	height: 200px;
+}
 
 .channel-header .avatar{
 	float:left;
 	height:200px;
+	position:relative;
+}
+.channel-header .avatar .avatar-edit{
+	display:none;
+}
+.channel-header .avatar:hover .avatar-edit{
+	display:block;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background: #FAFAFA;
+	padding: 8px 32px 8px 14px;
+	margin: 8px 0;
+	box-shadow: 0 0 3px #888;
 }
 .channel-header .avatar img{
 	height:100%;
@@ -29,14 +49,23 @@
 .channel-header .owner-block{
 	float:left;
 	margin:0 0 0 64px;
-	
+	position:relative;
+	height:200px;
 }
 .channel-header .owner-block h1{
 	font-size:64px;
 	font-weight:lighter;
 	line-height:64px;
 }
-
+.channel-header .elgg-form-wall-add{
+	margin:25px 0 0;
+}
+.channel-header .elgg-form-wall-add textarea{
+	font-size:12px;
+}
+.channel-header .elgg-form-wall-add input[type=submit]{
+	display:none;
+}
 .channel-header .actions{
 	float:left;
 	margin:16px 60px;
@@ -45,25 +74,30 @@
 	margin:2px 0;
 }
 
+.channel .minds-body-header{
+	margin-bottom:0;
+	padding-bottom:0;
+}
+
 .channel-filter-menu{
-	clear: both;
-	width: 100%;
-	height: 30px;
-	padding: 8px 16px;
-	background: rgba(255,255,255,0.5);
-	position: relative;
+	position: absolute;
+	top:0;
+	right:0;
 }
 .channel-filter-menu li{
-	float:left;
+	text-align:right;
 	padding:8px;
 	font-size: 16px;
 	margin-right:12px;
 }
-.channel-filter-menu li.selected a{
-	color:#333;
+.channel-filter-menu li a.selected{
+	color:#4690D6;
+	text-decoration:underline;
+	font-weight:bold;
 }
 .channel-filter-menu li a{
-	
+	color:#333;
+	font-weight:normal;
 }
 /**
  * Subscribe button
@@ -291,11 +325,15 @@
 	clear:both;
 }
 .elgg-form-channel-custom{
+	clear:both;
 	background:#FAFAFA;
 	background:rgba(255,255,255, 0.9);
 	width:90%;
 	margin:0 5%;
 	padding:16px;
+}
+.elgg-form-channel-custom textarea{
+	width:225px;
 }
 .elgg-form-channel-custom table tr td{
 	padding:4px;
@@ -426,4 +464,16 @@
 }
 .channel .elgg-widget-content .elgg-list-entity .elgg-item{
 	width:42% !important;
+}
+
+.channel .avatar-page{
+	background: rgba(255,255,255,0.9);
+	margin: 16px;
+	padding: 16px;
+}
+
+.channel #profile-details{
+	background: #FAFAFA;
+	padding: 15px;
+	margin:0 5%;
 }
