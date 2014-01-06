@@ -16,12 +16,12 @@
 *************************************** */
 /***** DEFAULT LAYOUT ******/
 <?php // the width is on the page rather than topbar to handle small viewports ?>
-.elgg-page-default {
+.hero, .elgg-page-default {
 	min-width: 998px;
 	height:auto;
 	min-height:100%;
 }
-.elgg-page-default .elgg-page-header > .elgg-inner {
+.hero .header > .inner, .elgg-page-default .elgg-page-header > .elgg-inner {
 	width: 90%;
 	margin: 0 auto;
 	height: 90px;
@@ -37,27 +37,87 @@
 }
 
 /***** TOPBAR ******/
-.elgg-page-topbar {
+.hero > .topbar {
 	background: #F8F8F8;
 	opacity:0.95;
 	position: fixed;
     top:0;
     min-width:998px;
     width:100%;
-	height: 100px;
+	height: auto;
 	z-index: 9000;
-	/*box-shadow: 0 0 5px #888;
-	-moz-box-shadow: 0 0 5px #888;
-	-webkit-box-shadow: 0 0 5px #888;*/
+	box-shadow: 0 0 5px #DDD;
+	-moz-box-shadow: 0 0 5px #DDD;
+	-webkit-box-shadow: 0 0 5px #DDD;
 }
-.elgg-page-topbar > .elgg-inner {
-	padding: 15px 10px;
+.hero > .topbar > .inner{
+	padding: 8px;
     margin:auto;
     width:90%;
 }
-.elgg-page-topbar > .elgg-inner > .logo{
-	padding: 0 8px;
+.hero > .topbar > .inner > div{
 	float:left;
+	position:relative;
+}
+.hero > .topbar > .inner > .left{
+	width:25%;
+}
+.hero > .topbar > .inner > .center{
+	width:50%;
+}
+.hero > .topbar > .inner > .right{
+	width:25%;
+}
+.hero > .topbar > .inner .global-menu{
+	margin-top: 40px;
+}
+.hero > .topbar .logo{
+	margin:auto;
+	padding: 0 8px;
+	display:block;
+	position:relative;
+	width:128px;
+	height:auto;
+}
+.hero > .topbar .logo > img{
+	width:100%;
+}
+.hero > .topbar .search{
+	margin: 8px auto;
+	float:none;
+	width:60%;
+}
+.hero > .topbar .search input{
+	margin:0;
+}
+.hero > .topbar .owner_block{
+	margin-top:20px;
+	float:right;
+}
+.hero > .topbar .owner_block > a > img{
+	padding:8px;
+}
+.hero > .topbar .owner_block > a > .text{
+	padding:8px;
+	float:left;
+	text-align:right;
+	text-decoration:none;
+}
+.hero > .topbar .actions{
+	margin-top:40px;
+	float:right;
+}
+.hero > .topbar .more{
+	clear:both;
+	display:none;
+	float:right;
+}
+.hero > .topbar .right:hover .more{
+	display:block;
+}
+.hero > .topbar .more a{
+	color:#333;
+	font-size:11px;
 }
 
 /***** PAGE MESSAGES ******/
@@ -85,12 +145,12 @@
 }
 
 /***** PAGE BODY ******/
-.elgg-page-body{
+.hero > .body, .elgg-page-body{
 	position:relative;
 	width:100%;
 	height:auto;
 	min-height:100%;
-	margin-top:100px;
+	margin-top:116px;
 }
 
 /***** PAGE BODY LAYOUT ******/

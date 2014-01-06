@@ -1,77 +1,77 @@
 <form novalidate name="itemsForm" class="uploadList">
-	<ul class="elgg-list elgg-list-entity">
-
-		<div id="dropzone" class="span8 well well-large">
-
-			<span class="elgg-button elgg-button-action elgg-button-upload">
-				<span>Add files...</span>
-				<input id="fileupload" type="file" name="fileData"  multiple=""/> 
-                	</span>
+	
+	<div id="dropzone" class="span8 well well-large">
+			<span class="elgg-button elgg-button-action elgg-button-upload"> <span>Add files...</span>
+				<input id="fileupload" type="file" name="fileData"  multiple=""/>
+			</span>
+			
+			<div class="default_values">
+				<div class="default-license">
+					<label>Default license:</label>
+					<select class="elgg-input-dropdown default-license-input" ng-options="license.value as license.text for license in licenses" ng-model="default_license">
+					</select>
+				</div>
+			</div>
+			
 			<span class="more-info"> - or drag files here - </span>
-		</div>
+	</div>
 		
-		<li class="elgg-item" data-ng-repeat="fileItem in fileInfo" ng-style="{backgroundImage: getFileThumbnail(fileItem.entry, fileItem.thumbSecond, fileItem.guid)}">
+	<ul class="elgg-list elgg-list-entity mason">
 
-			<!--&#59235; other arrow-->
-			<a ng-show="isShowThumbArrows(fileItem.entryRefresh, $index)" ng-click="rotateImage(fileItem.entryRefresh, 1, $index)" class="uploadLeftArrow entypo">&#59229;</a>
-			<a ng-show="isShowThumbArrows(fileItem.entryRefresh, $index)" ng-click="rotateImage(fileItem.entryRefresh, 0, $index)" class="uploadRightArrow entypo">&#59230;</a>
+		<li class="elgg-item" data-ng-repeat="fileItem in fileInfo | reverse" ng-show="reAlign()">
 
-			<div class="itemControls elgg-image-block">
-				<button id="delete" ng-click="deleteEntry($index)" class="entypo">&#10005;</button>
+			<div class="elgg-image-block">
+				<button id="delete" ng-click="deleteEntry($index)" class="entypo">
+					&#10005;
+				</button>
 
-				<div class="uploadbox-title">
-				    <input required type="text" name='name' class="elgg-input-text" ng-model="fileItem['name']" placeholder="Enter title…"/>
-				</div>
-
-				<span class="uploadSpan">
-					<label>License:</label>
-				    <select required name="license" id="license" class="elgg-input-dropdown uploadSelect" ng-model="fileItem['license']">
-					<option value="attribution-cc">Attribution CC BY</option>
-					<option value="attribution-sharealike-cc">Attribution-ShareAlike BY-SA</option>
-					<option value="attribution-noderivs-cc">Attribution-NoDerivs CC BY-ND</option>
-					<option value="attribution-noncommercial-cc">Attribution-NonCommerical CC BY-NC</option>
-					<option value="attribution-noncommercial-sharealike-cc">Attribution-NonCommerical-ShareAlike CC BY-NC-SA</option>
-					<option value="attribution-noncommercial-noderivs-cc">Attribution-NonCommerical-NoDerivs CC BY-NC-ND</option>
-					<option value="publicdomaincco">Public Domain CCO "No Rights Reserved"</option>
-					<option value="gnuv3">GNU v3 General Public License</option>
-					<option value="gnuv1.3">GNU v1.3 Free Documentation License</option>
-					<option value="gnu-lgpl">GNU Lesser General Public License</option>
-					<option value="gnu-affero">GNU Affero General Public License</option>
-					<option value="apache-v1">Apache License, Version 1.0</option>
-					<option value="apache-v1.1">Apache License, Version 1.1</option>
-					<option value="apache-v2">Apache License, Version 2.0</option>
-					<option value="mozillapublic">Mozilla Public License</option>
-					<option value="bsd">BSD License</option>
-				    </select>
-				</span>
-
-				<div class="uploadbox-description">
-				    <input type="text" name="description" class="uploadInput elgg-input-text" ng-model="fileItem['description']" placeholder="Enter description…"/>
-				</div>
-				<!--</br>-->
-
-			<span class="uploadSpan"><label>Privacy:</label>
-				    <select name="access_id" id="access_id" ng-model="fileItem['access_id']" class="elgg-input-dropdown elgg-input-access uploadSelect">
-					<option value="0">Private</option>
-					<option value="-2">Channels</option>
-					<option value="1">Logged in users</option>
-					<option value="2" ng-selected="true">Public</option>
-				    </select>
-				</span>
-
-				<span ng-show="isImage(fileItem)" class="uploadSpan"><label>Albums:</label>
-				<select name="albumId" id="album" ng-model="fileItem['albumId']" class="elgg-input-dropdown elgg-input-access uploadSelect">
-    <option ng-repeat="album in albums" value="{{album['id']}}" ng-selected="isSelected(album)"> {{$index}} {{album['title']}} </option>
-				</select>
-				</span>
+				<table>
+					<tr>
+						<td>Title:</td>
+						<td>
+							<input required type="text" name='name' class="elgg-input-text" ng-model="fileItem['name']" placeholder="Enter title…"/>
+						</td>
+					</tr>
+					<tr>
+						<td>License:</td>
+						<td>
+							<select required name="license" id="license" class="elgg-input-dropdown uploadSelect" ng-options="license.value as license.text for license in licenses" ng-model="fileItem['license']">
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Privacy:</td>
+						<td>
+							<select name="access_id" id="access_id" ng-model="fileItem['access_id']" class="elgg-input-dropdown elgg-input-access uploadSelect">
+								<option value="0">Private</option>
+								<option value="-2">Channels</option>
+								<option value="2" ng-selected="true">Public</option>
+							</select>
+						</td>
+					</tr>
+					<tr ng-show="isImage(fileItem)">
+						<td>Album:</td>
+						<td>
+							<select name="albumId" id="album" ng-model="fileItem['albumId']" class="elgg-input-dropdown elgg-input-access uploadSelect">
+								<option ng-repeat="album in albums" value="{{album['id']}}" ng-selected="isSelected(album)"> {{$index}} {{album['title']}} </option>
+							</select>
+						</td>
+					</tr>
+				</table>
+				
+				<img class="preview" ng-show="getFileThumbnail(fileItem.entry, fileItem.thumbSecond, fileItem.guid)" ng-src="{{getFileThumbnail(fileItem.entry, fileItem.thumbSecond, fileItem.guid)}}"/>
+					<!--&#59235; other arrow-->
+				<a ng-show="isShowThumbArrows(fileItem.entryRefresh, $index)" ng-click="rotateImage(fileItem.entryRefresh, 1, $index)" class="uploadLeftArrow entypo">&#59229;</a>
+				<a ng-show="isShowThumbArrows(fileItem.entryRefresh, $index)" ng-click="rotateImage(fileItem.entryRefresh, 0, $index)" class="uploadRightArrow entypo">&#59230;</a>
+	
 
 				<div class="progress">
-				    <div class="bar" ng-style="{width: fileItem['progress'] + '%'}"></div>
+					<div class="bar" ng-style="{width: fileItem['progress'] + '%'}"></div>
 				</div>
-			    </div>
-			</li>
+			</div>
+		</li>
 
-</ul>
-<br/>
-<a id="saveButton" ng-class="{disabled: itemsForm.$invalid}" ng-show="itemsForm.$dirty" class="elgg-button elgg-button-action" ng-click="saveAll()">Save all</a>
+	</ul>
+	<br/>
+	<a id="saveButton" ng-class="{disabled: itemsForm.$invalid}" ng-show="itemsForm.$dirty" class="elgg-button elgg-button-action" ng-click="saveAll()">Save all</a>
 </form>

@@ -18,26 +18,26 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
      * This function being used when uploading Video or Audio so we just need to create entity without uploading the files.
      * @param fileInfo an object with fields name, description, tags, fileType and entryId. The entryId field may be a
      * promise to wait on (until the entry is created within Kaltura).
-     * @returns a promise which resolves the guid entity.
+     * @returns a promise which resolves the guid.
      */
     elggService.addElggEntity = function(fileInfo){
         var deferred = $q.defer();
 
         $q.when(fileInfo.entryId).then(function(resolvedEntryId) {
             var data = {
-            'entryId': resolvedEntryId,
-            'title': fileInfo['name'],
-            'description': fileInfo['description'],
-            'access_id': fileInfo['access_id'],
-            'license': fileInfo['license'],
-            'fileType': fileInfo['fileType'],
-            'tags': fileInfo['tags'],
-            'thumbSecond': fileInfo['thumbSecond'],
-            '__elgg_token': elgg.security.token.__elgg_token,
-            '__elgg_ts': elgg.security.token.__elgg_ts
+	            'entryId': resolvedEntryId,
+	            'title': fileInfo['name'],
+	            'description': fileInfo['description'],
+	            'access_id': fileInfo['access_id'],
+	            'license': fileInfo['license'],
+	            'fileType': fileInfo['fileType'],
+	            'tags': fileInfo['tags'],
+	            'thumbSecond': fileInfo['thumbSecond'],
+	            '__elgg_token': elgg.security.token.__elgg_token,
+	            '__elgg_ts': elgg.security.token.__elgg_ts
             };
             
-	$http({
+			$http({
                 method: 'POST',
                 url: actionUrl + 'addElggVideo',
                 data: data,
@@ -50,12 +50,12 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 }).
                 error(function(guid, status, headers, config) {
                     deferred.reject(guid);
-                })
-        })
+                });
+        });
 
         return deferred.promise;
 
-    }
+   };
 
     /**
      * Create new Elgg entity and uploading the files to Elgg.
@@ -92,7 +92,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
 
         return deferred.promise;
 
-     }
+     };
 
     /**
      * Updates an entry.
@@ -118,7 +118,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 '__elgg_token': elgg.security.token.__elgg_token,
                 '__elgg_ts': elgg.security.token.__elgg_ts
             };
-            
+       
 		$http({
                 method: 'POST',
                 url: actionUrl + 'addElggVideo',
@@ -132,11 +132,11 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 }).
                 error(function(guid, status, headers, config) {
                     deferred.reject(guid);
-                })
-        })
+                });
+        });
         return deferred.promise;
 
-    }
+   };
 
     /**
      * Deletes an entry.
@@ -167,11 +167,12 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
                 }).
                 error(function(guid, status, headers, config) {
                     deferred.reject(guid);
-                })
-        })
+                });
+        });
+       
         return deferred.promise;
 
-    }
+    };
 
     return elggService;
 

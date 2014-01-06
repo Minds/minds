@@ -29,7 +29,7 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
         var data = {
             '__elgg_token': elgg.security.token.__elgg_token,
             '__elgg_ts': elgg.security.token.__elgg_ts
-        }
+        };
         $http({
             method: 'POST',
             url: actionUrl + 'getKSession',
@@ -43,17 +43,17 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
             }).
             error(function(guid, status, headers, config) {
                 deferred.reject(guid);
-            })
+            });
 
         return deferred.promise;
-    }
+    };
     /**
      * Set configuration for the Kaltura service.
      * @param config an object with fields ks and serviceUrl.
      */
     kalturaService.setConfig = function(config) {
         kalturaService.config = config,
-        kalturaService.config.apiUrl = kalturaService.config.serviceUrl + apiUrl
+        kalturaService.config.apiUrl = kalturaService.config.serviceUrl + apiUrl;
     };
 
     /**
@@ -109,7 +109,7 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
                     url: url
                 });
 
-                $scope.fileInfo[data.fileIndex]['xhr'] = data.submit().done(function() {
+                $scope.fileInfo[data.index]['xhr'] = data.submit().done(function() {
                     deferred.resolve(resolvedToken);
                     $scope.$apply();
                 });

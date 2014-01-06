@@ -96,7 +96,7 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
 							'owner_guid' => elgg_get_logged_in_user_guid(),
 							));
 		$album = $albums[0];
-	}
+	} 
 
     $image->title = $title;
     $image->description = $desc;

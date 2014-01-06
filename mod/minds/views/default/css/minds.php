@@ -33,7 +33,7 @@
 }
 body{
 	background:#F8F8F8;
-	font-family: "Ubuntu", sans-serif;
+	font-family: Arial, sans-serif;
  }
 h1,h2,h3,h4,h5{
 	font-family:"Ubuntu";
@@ -129,16 +129,6 @@ body.news{
 	padding-top:2px;
 	font-size:20px;
 }
-.elgg-page-topbar .elgg-menu-item-minds-logo{
-	margin-top:-6px;
- }
-.elgg-menu-topbar .elgg-menu-item-minds-logo > a{
-	padding:0; 
-	margin:0 15px 0 0;
-}
-.elgg-page-topbar .elgg-menu-item-profile{
-	margin:0px 5px 0 0;
- }
 .elgg-menu-item-register  a{
 	color:#4690D6 !important;
 	padding:0 10px;
