@@ -45,72 +45,51 @@ body.news{
 /***************
  *** TOP BAR ***
  **************/
-.minds-header-right{
-	margin:12px 0;
-	float:right;
-	height:60px;
+.topbar .right .elgg-form{
+	margin-top:20px;
 }
-.minds-header-right .notifications{
-	float:right;
-	margin:0;
-}
-.minds-header-right .notifications li{
-	margin:2px 5px;
-}
-.minds-header-right .notifications li a{
-	color:#333;
-	width:26px;
-	height:26px;
-}
-.minds-header-right span.text{
+.topbar .right .elgg-form input[type=text], .topbar .right .elgg-form input[type=password]{
 	float:left;
-	margin-right:5px;
-}
-.minds-header-right:hover .more{
-	display:block;
-}
-.minds-header-right .more{
-	display:none;
-	clear:both;
-	height:25px;
-}
-.minds-header-right .more a{
-	color:#333;
-	font-size:11px;
-}
-.minds-header-right img{
-}
-
-.minds-header-right .elgg-form input[type=text], .minds-header-right .elgg-form input[type=password]{
-	float:left;
-	width:125px;
+	width:104px;
 	height:28px;
 	margin-right:8px;
 	font-size:11px;
 	padding:0 8px;
 }
-.minds-header-right .elgg-form .elgg-button-submit{
+.topbar .right .elgg-form .elgg-button-submit{
 	padding: 4px;
 	min-width: 0;
 	background:#4690D6;
 	border:1px solid #4690D6;
 }
-.minds-header-right .elgg-menu.mtm{
+.topbar .right .elgg-menu.mtm{
 	margin:0;
 	font-size:11px;
 	width:100%;
 	clear:both;
 }
 
-.minds-header-right .elgg-menu.mtm li{
+.topbar .right .elgg-menu.mtm li{
 	border:0;
 	padding:0 16px 0 2px;
 }
-.minds-header-right .elgg-menu.mtm li a{
+.topbar .right.elgg-menu.mtm li a{
 	border:0;
 }
-.minds-header-right .social_login{
+
+.topbar .right .social-login{
+	display:none;
+	position: absolute;
+	background: #EEE;
+	width: auto;
+	border-radius: 3px;
+	top: 89px;
+	right: 0;
 }
+.topbar .right .social-login > .social_login{
+	margin:5px;
+}
+
 .elgg-menu-general.login-box li{
 	float:right;	
 }

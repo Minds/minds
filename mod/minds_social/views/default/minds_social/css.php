@@ -9,7 +9,7 @@
 	height:35px;
 	width:100%;
 }
-.minds-header-right .elgg-form .social_login{
+.topbar > .right .elgg-form .social_login{
 	display:none;
 }
 .elgg-form-login:hover .social_login{
