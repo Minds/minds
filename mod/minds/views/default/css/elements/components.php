@@ -185,7 +185,7 @@
 	Owner Block
 *************************************** */
 .elgg-owner-block {
-	width:336px;
+	margin:8px;
 	float:right;
 	margin-bottom:0;
 }

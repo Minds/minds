@@ -44,8 +44,8 @@ $footer = elgg_view('page/layouts/content/footer', $params);
 $body = $content;
 
 $params = array(
-	'header' => $header . $filter,
-	'content' => $body,
+	'header' => false,
+	'content' => $header . $body,
 	'sidebar' => $sidebar,
 	'menu' => $vars['menu'],
 	'footer'=> $footer

@@ -99,9 +99,12 @@ h3 a{ color:#333; }
 	text-decoration: none;
 }
 
-.elgg-heading-main {
+.heading-main, .elgg-heading-main {
 	float: left;
 	max-width: 65%;
+	padding:8px;
+	font-size:32px;
+	font-weight:lighter;
 }
 .elgg-heading-basic {
 	color: #333;
@@ -109,7 +112,9 @@ h3 a{ color:#333; }
 	font-weight: bold;
 }
 
-.elgg-subtext {
+.subtext, .elgg-subtext {
+	clear:both;
+	padding: 0 8px 8px;
 	color: #666666;
 	font-size: 85%;
 	line-height: 1.2em;
@@ -134,7 +139,7 @@ h3 a{ color:#333; }
 	USER INPUT DISPLAY RESET
 *************************************** */
 .elgg-output {
-	margin-top: 10px;
+	margin: 10px 0;
 }
 
 .elgg-output dt { font-weight: bold }

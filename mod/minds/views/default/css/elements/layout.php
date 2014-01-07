@@ -26,9 +26,10 @@
 	margin: 0 auto;
 	height: 90px;
 }
-.elgg-page-default .elgg-page-body > .elgg-inner {
+.hero > .body > .inner, .elgg-page-default .elgg-page-body > .elgg-inner {
 	width: 90%;
 	margin: 0 auto;
+	padding: 16px 0;
 }
 .elgg-page-default .elgg-page-footer > .elgg-inner {
 	width: 90%;
@@ -69,7 +70,7 @@
 	width:25%;
 }
 .hero > .topbar > .inner .global-menu{
-	margin-top: 40px;
+	margin-top: 35px;
 }
 .hero > .topbar .logo{
 	margin:auto;
@@ -91,7 +92,7 @@
 	margin:0;
 }
 .hero > .topbar .owner_block{
-	margin-top:20px;
+	margin-top:15px;
 	float:right;
 }
 .hero > .topbar .owner_block > a > img{
@@ -104,7 +105,7 @@
 	text-decoration:none;
 }
 .hero > .topbar .actions{
-	margin-top:40px;
+	margin-top:35px;
 	float:right;
 }
 .hero > .topbar .more{
@@ -214,11 +215,11 @@
 .elgg-main > .elgg-head {
 	padding-bottom: 3px;
 	border-bottom: 1px solid #CCCCCC;
-	margin: 10px;
+	margin: 20px;
 }
 .elgg-main > .elgg-list,.elgg-main > .elgg-content{
 	margin:0;
-	padding:1px 16px;
+	padding:1px 30px;
 	background:#F8F8F8;
 }
 

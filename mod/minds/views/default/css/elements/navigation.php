@@ -277,7 +277,7 @@
 .elgg-menu-filter {
 	display: table;
 	width: auto;
-	margin-right:16px;
+	margin:16px;
 	float:left;
 }
 .elgg-menu-filter > li {
@@ -429,12 +429,11 @@
 *************************************** */
 <?php // height depends on line height/font size ?>
 .elgg-menu-entity, elgg-menu-annotation {
-	float: left;
+	float: right;
 	margin: 12px;
 	font-size: 90%;
 	color: #aaa;
 	line-height: 16px;
-	height: 36px;
 }
 .elgg-menu-entity > li, .elgg-menu-annotation > li {
 	margin-left:8px;

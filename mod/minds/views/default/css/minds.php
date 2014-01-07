@@ -226,30 +226,30 @@ input[name=terms]{
 	margin:10px;
 	clear:right;
 }
-.minds-body-header .elgg-form-wall-add{
+.elgg-form-wall-add{
 	float:right;
-	width:35%;
+	width:50%;
 }
-.minds-body-header .elgg-form-wall-add textarea{
+.elgg-form-wall-add textarea{
 	margin:0;
 	width:100%;
 }
-.minds-body-header .elgg-form-wall-add:hover textarea, .minds-body-header .elgg-form-wall-add textarea:focus{
+.elgg-form-wall-add:hover textarea, .minds-body-header .elgg-form-wall-add textarea:focus{
 	width:82%
 }
-.minds-body-header .elgg-form-wall-add .elgg-button-submit{
+.elgg-form-wall-add .elgg-button-submit{
 	float:right;
 	display:none;
 	min-width:15%;
 	text-align:right;
 }
-.minds-body-header .elgg-form-wall-add:hover .elgg-button-submit{
+.elgg-form-wall-add:hover .elgg-button-submit{
 	display:block;
 }
-.minds-body-header .elgg-form-wall-add .elgg-foot{
+.elgg-form-wall-add .elgg-foot{
 	display:none;
 }
-.minds-body-header .elgg-form-wall-add:hover .elgg-foot{
+.elgg-form-wall-add:hover .elgg-foot{
 	display:block;
 }
 /**
