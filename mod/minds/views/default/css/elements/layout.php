@@ -76,7 +76,7 @@
 	padding: 0 8px;
 	display:block;
 	position:relative;
-	width:128px;
+	width:106px;
 	height:auto;
 }
 .hero > .topbar .logo > img{
@@ -150,7 +150,7 @@
 	width:100%;
 	height:auto;
 	min-height:100%;
-	margin-top:116px;
+	margin-top:106px;
 }
 
 /***** PAGE BODY LAYOUT ******/
@@ -218,7 +218,7 @@
 }
 .elgg-main > .elgg-list,.elgg-main > .elgg-content{
 	margin:0;
-	padding:1px 10px;
+	padding:1px 16px;
 	background:#F8F8F8;
 }
 

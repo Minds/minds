@@ -110,9 +110,9 @@
 	font-weight:lighter;
 	cursor:pointer;
 	width:182px;
-	border-radius: 3px;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
+	border-radius: 2px;
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;
 }
 .subscribe-button > a{
 	padding: 8px 16px;

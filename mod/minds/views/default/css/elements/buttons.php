@@ -16,9 +16,9 @@
 	font-weight: bold;
 	text-align: left;
 	
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius:2px;
+	border-radius:2px;
 
 	min-width:125px;
 	width: auto;
