@@ -33,7 +33,7 @@
 }
 body{
 	background:#F8F8F8;
-	font-family: "Ubuntu", sans-serif;
+	font-family: Arial, sans-serif;
  }
 h1,h2,h3,h4,h5{
 	font-family:"Ubuntu";

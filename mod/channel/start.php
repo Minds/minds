@@ -150,7 +150,7 @@ function channel_page_handler($page) {
 	}else{
 		return false;
 	}
-
+	
 	// short circuit if invalid or banned username
 	if (!$user || ($user->isBanned() && !elgg_is_admin_logged_in())) {
 		register_error(elgg_echo('channel:notfound'));

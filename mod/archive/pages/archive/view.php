@@ -38,7 +38,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	$video_location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $entity->kaltura_video_id;
 	$video_location_secure = str_replace('http://', 'https://', $video_location);	
 	
-	$thumbnail = kaltura_get_thumnail($entity->kaltura_video_id, 640, 360, 100);	
+	$thumbnail = kaltura_get_thumnail($entity->kaltura_video_id, 400,400, 100);	
 	
 	minds_set_metatags('og:type', 'video.other');
 	minds_set_metatags('og:url', $entity->getPermaURL());

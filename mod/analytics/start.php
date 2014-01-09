@@ -158,14 +158,14 @@ function analytics_fetch(){
 		}
 		$views = $row[2];
 		//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
-		array_push($guids, $guid);
-		if(in_array($guid, $guids) && !elgg_instanceof($entity,'object')){
+		if(in_array($guid, $guids) || !elgg_instanceof($entity,'object')){
 			//duplicate
 			echo "GUID $guid failed, probably because it doesn't exists \n";
 			continue;
 		} elseif(!in_array($entity->subtype,array('blog', 'kaltura_video'))){
 			continue;
 		}
+		array_push($guids, $guid);//now add to the list
 		$objects['all'][] = $guid;
 		$objects[$entity->subtype][] = $guid;
 		if(in_array($entity->subtype, array('image','file','kaltura_video'))){
@@ -192,7 +192,7 @@ function analytics_fetch(){
 		if($data){
 			$data['type'] = 'entities_by_time';
 			//we want to start removing old ones soon...
-			db_remove('trending:'.$subtype,$data['type']);
+			var_dump(db_remove('trending:'.$subtype, 'entities_by_time'));
 			db_insert('trending:'.$subtype, $data);
 			var_dump($data);
 			echo "Successfuly imported '$subtype' to trending \n";

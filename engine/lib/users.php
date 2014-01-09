@@ -263,7 +263,7 @@ function remove_user_admin($user_guid) {
 			}
 
 			$user->admin = 'no';
-			$user->savei();
+			$user->save();
 			invalidate_cache_for_entity($user_guid);
 			return true;
 		}
@@ -901,7 +901,7 @@ function validate_username($username) {
 
 	// Belts and braces
 	// @todo Tidy into main unicode
-	$blacklist2 = '\'/\\"*& ?#%^(){}[]~?<>;|¬`@-+=';
+	$blacklist2 = '\'/\\"*& ?#%^(){}[]~?<>;|¬`+=';
 
 	for ($n = 0; $n < strlen($blacklist2); $n++) {
 		if (strpos($username, $blacklist2[$n]) !== false) {

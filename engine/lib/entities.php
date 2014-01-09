@@ -42,9 +42,15 @@ $SUBTYPE_CACHE = null;
 function invalidate_cache_for_entity($guid) {
 	global $ENTITY_CACHE;
 
-	$guid = (int)$guid;
-
 	unset($ENTITY_CACHE[$guid]);
+
+	//remove from XCache
+	//@todo remove from all caching apps
+	try{
+		$cache = new ElggXCache('new_entity_cache');
+		$cache->delete($guid);
+	} catch(Exception $e){
+	}
 
 	elgg_get_metadata_cache()->clear($guid);
 }

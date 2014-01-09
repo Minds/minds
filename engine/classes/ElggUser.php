@@ -273,7 +273,8 @@ class ElggUser extends ElggEntity
 		// for backward compatibility we need to pull this directly
 		// from the attributes instead of using the magic methods.
 		// this can be removed in 1.9
-		// return $this->admin == 'yes';
+		//var_dump($this->admin);
+		//return $this->admin == 'yes';
 		return $this->attributes['admin'] == 'yes';
 	}
 
@@ -301,14 +302,12 @@ class ElggUser extends ElggEntity
 	 */
 	public function removeAdmin() {
 		// If already saved, use the standard function.
-		if ($this->guid && !remove_user_admin($this->guid)) {
-			return FALSE;
-		}
-
-		// need to manually set attributes since they've already been loaded.
-		$this->attributes['admin'] = 'no';
-
-		return TRUE;
+		if($this->guid){
+			$this->admin = 'no';
+			$this->attributes['admin'] = 'no';
+			return $this->save();
+		}	
+		return false;
 	}
 
 	/**

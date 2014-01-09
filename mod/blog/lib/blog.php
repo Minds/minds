@@ -38,9 +38,9 @@ function blog_get_page_content_read($guid = NULL) {
                 'class' => 'elgg-menu-hz',
         ));
 
-	$excerpt = $blog->excerpt ? strip_tags($blog->excerpt) : substr(strip_tags($blog->description), 0, 140);
-
-        set_input('description', $excerpt);
+	global $CONFIG;
+	$excerpt = $blog->excerpt ? strip_tags($blog->excerpt) : elgg_get_excerpt($blog->description) ?:  $CONFIG->site_description; 
+	set_input('description', $excerpt);
         set_input('keywords', $blog->tags);
 
         //set up for facebook

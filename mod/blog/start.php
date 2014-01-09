@@ -452,10 +452,10 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0"></iframe>';
 					$icon = '<img src="http://img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
 					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
-					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 600));
+					$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content()); 
 					$blog->description = $embed . $icon . $disclaimer;
 				} else {
-					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 600));
+					$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content());
 					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();				
 					if($enclosure){
 						$thumb_url = $enclosure->get_thumbnail();
@@ -486,6 +486,9 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				$blog->access_id = 2;
 				$blog->status = 'published';
 				$blog->rss_item_id = $item->get_id(true);
+				if(!$scraper->getOwnerEntity()){
+					continue;
+				}
 				$blog->save();
 				echo 'Saved a blog titled: ' . $blog->title;
 				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));

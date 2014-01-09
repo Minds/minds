@@ -19,7 +19,7 @@
                 	});                        
 		});
 		
-		$('.elgg-form').submit(function(e){
+		$('.elgg-form-blog-save, .elgg-form-archive-save').submit(function(e){
  			var c = confirm("Please confirm you understand the selected license, and that you either own or have permission under the terms of the license.");
 			return c;
 		});
