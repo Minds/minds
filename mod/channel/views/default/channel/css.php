@@ -12,11 +12,13 @@
 }
 .channel-header{
 	position: relative;
-	margin: 0 5% 12px;
+	margin: 64px 5% 100px;
 	clear: both;
 	height: 200px;
 }
-
+.landing-page > .channel-header{
+	margin-bottom:50%;
+}
 .channel-header .avatar{
 	float:left;
 	height:200px;
@@ -59,12 +61,10 @@
 }
 .channel-header .elgg-form-wall-add{
 	margin:25px 0 0;
+	width:100%;
 }
 .channel-header .elgg-form-wall-add textarea{
 	font-size:12px;
-}
-.channel-header .elgg-form-wall-add input[type=submit]{
-	display:none;
 }
 .channel-header .actions{
 	float:left;
@@ -80,7 +80,7 @@
 }
 
 .channel-filter-menu{
-	position: absolute;
+	position:absolute;
 	top:0;
 	right:0;
 }

@@ -1,6 +1,6 @@
 <?php
 $user = $vars['user'];
-$selected = $vars['selected'] ?: 'news';
+$selected = $vars['selected'];
 
 $items = array(	
 				'about' => array(	

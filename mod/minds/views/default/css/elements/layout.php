@@ -40,7 +40,7 @@
 /***** TOPBAR ******/
 .hero > .topbar {
 	background: #F8F8F8;
-	opacity:0.95;
+	 background: rgba(255,255,255, 0.9);
 	position: fixed;
     top:0;
     min-width:998px;

@@ -221,12 +221,15 @@ function channel_page_handler($page) {
 			break;
 		case 'news':
 		case 'timeline':
+			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>''));
+			break;
 		default:
 			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>''));
+			$class = 'landing-page';
 	}
 
 
-	$body = elgg_view_layout('one_column', array('content' => $header.$content, 'header'=>false));
+	$body = elgg_view_layout('one_column', array('content' => $header.$content, 'header'=>false, 'class'=>$class));
 	echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel'));
 	return true;
 }

@@ -3,12 +3,11 @@ $user = $vars['user'];
 ?>
 
 <div class="channel-header">
-	<?php echo elgg_view('channel/filter', array('user'=>$user, 'selected'=>$vars['selected'])); ?>
 
 	<div class="avatar">
 		<?php echo elgg_view('output/img', array('src'=>$user->getIconURL('large'))); ?>
 		<?php if(elgg_get_logged_in_user_guid() == $user->guid){ ?>
-			<a class="avatar-edit" href="channel/<?php echo $user->username;?>/avatar">
+			<a class="avatar-edit" href="<?php echo elgg_get_site_url();?>channel/<?php echo $user->username;?>/avatar">
 				Edit
 			</a>
 		<?php } ?>
@@ -26,5 +25,5 @@ $user = $vars['user'];
 				</div>
 		<?php } ?>
 	</div>
+	 <?php echo elgg_view('channel/filter', array('user'=>$user, 'selected'=>$vars['selected'])); ?>
 </div>
-

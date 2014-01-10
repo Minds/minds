@@ -27,6 +27,9 @@ a.selected { <?php //@todo remove .selected ?>
 }
 
 p {
+	font-size:13px;
+	line-height:18px;
+	text-rendering: auto;
 	margin-bottom: 15px;
 }
 
