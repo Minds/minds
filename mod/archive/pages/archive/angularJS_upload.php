@@ -41,11 +41,13 @@ $angularSettings = array(
 elgg_register_menu_item('title', array('name'=>'upload', 'text'=>elgg_echo('minds:archive:album:create'), 'href'=>'archive/upload/album/create','class'=>'elgg-button elgg-button-action'));
 
 $content = elgg_view('archive/angularJS_upload');
-$body = elgg_view_layout("gallery", array(	'content' => $content,
-   						'sidebar' => false,
-   		 				'title' => elgg_echo('upload'),
-						'filter'=>'',
-					));
+$body = elgg_view_layout("gallery", array(	
+					'content' => $content,
+   					'sidebar' => false,
+   		 			'title' => false,
+   		 			'header' => false,
+					'filter'=>'',
+				));
 
 // Display page
 echo elgg_view_page(elgg_echo('archive:upload'),$body);

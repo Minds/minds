@@ -14,7 +14,7 @@ if (array_key_exists('value', $vars)) {
 	$value = elgg_echo('search');
 }
 
-$class = "minds-search";
+$class = "search minds-search";
 if (isset($vars['class'])) {
 	$class = "$class {$vars['class']}";
 }

@@ -10,6 +10,130 @@
 	max-width: 1600px;
 	margin: auto;
 }
+.channel-header{
+	position: relative;
+	margin: 64px 5% 100px;
+	clear: both;
+	height: 200px;
+}
+.landing-page > .channel-header{
+	margin-bottom:50%;
+}
+.channel-header .avatar{
+	float:left;
+	height:200px;
+	position:relative;
+}
+.channel-header .avatar .avatar-edit{
+	display:none;
+}
+.channel-header .avatar:hover .avatar-edit{
+	display:block;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background: #FAFAFA;
+	padding: 8px 32px 8px 14px;
+	margin: 8px 0;
+	box-shadow: 0 0 3px #888;
+}
+.channel-header .avatar img{
+	height:100%;
+	width:auto;
+	display:block;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	box-shadow: 0 0 3px #888;
+	-moz-box-shadow: 0 0 3px #888px;
+	-webkit-box-shadow: 0 0 3px #888px;
+}
+.channel-header .owner-block{
+	float:left;
+	margin:0 0 0 64px;
+	position:relative;
+	height:200px;
+}
+.channel-header .owner-block h1{
+	font-size:64px;
+	font-weight:lighter;
+	line-height:64px;
+}
+.channel-header .elgg-form-wall-add{
+	margin:25px 0 0;
+	width:100%;
+}
+.channel-header .elgg-form-wall-add textarea{
+	font-size:12px;
+}
+.channel-header .actions{
+	float:left;
+	margin:16px 60px;
+}
+.channel-header .actions > div{
+	margin:2px 0;
+}
+
+.channel .minds-body-header{
+	margin-bottom:0;
+	padding-bottom:0;
+}
+
+.channel-filter-menu{
+	position:absolute;
+	top:0;
+	right:0;
+}
+.channel-filter-menu li{
+	text-align:right;
+	padding:8px;
+	font-size: 16px;
+	margin-right:12px;
+}
+.channel-filter-menu li a.selected{
+	color:#4690D6;
+	text-decoration:underline;
+	font-weight:bold;
+}
+.channel-filter-menu li a{
+	color:#333;
+	font-weight:normal;
+}
+/**
+ * Subscribe button
+ */
+.subscribe-button{
+	border: 0;
+	overflow: hidden;
+	background:#4690D6;
+	position:relative;
+	font-weight:lighter;
+	cursor:pointer;
+	width:182px;
+	border-radius: 2px;
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;
+}
+.subscribe-button > a{
+	padding: 8px 16px;
+	float:left;
+}
+.subscribe-button span{
+	color:#FFF;
+}
+.subscribe-button a:hover{
+	text-decoration:none;
+}
+.subscribers-count{
+	position: absolute;
+	right: 0;
+	top: 0;
+	background: #333;
+	height: 100%;
+	padding: 8px 12px 0;
+	color:#FFF;
+}
+
 /* ***************************************
 	Channel Profile
 *************************************** */
@@ -193,6 +317,36 @@
  * Custom Channels
  *
  */
+.elgg-form-channel-custom table{
+	float:left;
+	margin:0 10px;
+}
+.elgg-form-channel-custom .elgg-input-file{
+	width:100px;
+}
+.elgg-form-channel-custom .elgg-foot{
+	clear:both;
+}
+.elgg-form-channel-custom{
+	clear:both;
+	background:#FAFAFA;
+	background:rgba(255,255,255, 0.9);
+	width:90%;
+	margin:0 5%;
+	padding:16px;
+}
+.elgg-form-channel-custom textarea{
+	width:225px;
+}
+.elgg-form-channel-custom table tr td{
+	padding:4px;
+	vertical-align:middle;
+}
+.elgg-form-channel-custom table tr td.label{
+	font-weight:bold;
+	text-align:right;
+}
+
 .elgg-input-text.colorpicker{
 	width:150px;
 }
@@ -313,4 +467,16 @@
 }
 .channel .elgg-widget-content .elgg-list-entity .elgg-item{
 	width:42% !important;
+}
+
+.channel .avatar-page{
+	background: rgba(255,255,255,0.9);
+	margin: 16px;
+	padding: 16px;
+}
+
+.channel #profile-details{
+	background: #FAFAFA;
+	padding: 15px;
+	margin:0 5%;
 }

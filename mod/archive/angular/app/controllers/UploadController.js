@@ -30,12 +30,36 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         }
 
         return false;
-    }
+    };
 
     $scope.thumbConfig = {
         serviceUrl: serviceUrl,
         pid: partnerId
     };
+    
+    /**
+     * License options (for dropdown)
+     */
+   	$scope.licenses = [
+   		{value:'not-selected', text:'-- select a license--'},
+		{value:'attribution-cc', text:'Attribution CC BY'},
+		{value:'attribution-sharealike-cc', text:'Attribution-ShareAlike BY-SA'},
+		{value:'attribution-noderivs-cc', text:'Attribution-NoDerivs CC BY-ND'},
+		{value:'attribution-noncommercial-cc', text:'Attribution-NonCommerical CC BY-NC'},
+		{value:'attribution-noncommercial-sharealike-cc', text:'Attribution-NonCommerical-ShareAlike CC BY-NC-SA'},
+		{value:'attribution-noncommercial-noderivs-cc', text:'Attribution-NonCommerical-NoDerivs CC BY-NC-ND'},
+		{value:'publicdomaincco', text:'Public Domain CCO "No Rights Reserved'},
+		{value:'gnuv3', text:'GNU v3 General Public License'},
+		{value:'gnuv1.3', text:'GNU v1.3 Free Documentation License'},
+		{value:'gnu-lgpl', text:'GNU Lesser General Public License'},
+		{value:'gnu-affero', text: 'GNU Affero General Public License'},
+		{value:'apache-v1', text:'Apache License, Version 1.0'},
+		{value:'apache-v1.1', text:'Apache License, Version 1.1'},
+		{value:'apache-v2', text:'Apache License, Version 2.0'},
+		{value:'mozillapublic', text:'Mozilla Public License'},
+		{value:'bsd', text:'BSD License'}
+	];
+	$scope.default_license = 'not-selected';
 
     /**
      * Gets the uploaded file thumbnail
@@ -44,16 +68,24 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
      */
     $scope.getFileThumbnail = function(entry, thumbSecond, guid) {
             if(entry){ //Only applies to video
-                var thumbnailUrl = 'url('+ serviceUrl + '/p/' + partnerId + '/thumbnail/entry_id/' + entry.id + '/width/400/vid_sec/' + thumbSecond +')';
+                var thumbnailUrl = serviceUrl + '/p/' + partnerId + '/thumbnail/entry_id/' + entry.id + '/width/400/vid_sec/' + thumbSecond;
                 // return empty string if entryID not set, otherwise return thumbnail URL
                 return thumbnailUrl;
             }else if(guid){
-                var thumbnailUrl = 'url(' + cdnUrl + '/photos/thumbnail/' + guid +'/large)';
+                var thumbnailUrl = cdnUrl + '/photos/thumbnail/' + guid +'/large';
                 return thumbnailUrl;
             }
 
             return "";
-    }
+    };
+    
+    /**
+     * Perform reAlignment of upload items
+     */
+    $scope.reAlign = function(e){
+    	$('.elgg-list.mason').masonry('reloadItems').masonry();
+		return true;
+    };
 
     /**
      * Callback for the uploader add method. Creates a token, uploads a file, creates an entry and adds the uploaded
@@ -62,37 +94,48 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
      * @param elm the uploader element id (with #).
      */
     $scope.uploadFiles = function(data, elm) {
+    	
         var file = data.files[0];
+        var index = $scope.fileInfo.length;
+        data.index = index;
+        
+        if(index == 0){
+        	if(!confirm('I confirm that I have the rights and permission to use this content')){
+        		$scope.fileInfo.pop(index);
+        		return false;
+        	}
+        }
+        
         $scope.queue.push(file);
 
         $scope.saveEnabled = true;
+		      
+        $scope.fileInfo[index] = {};
+        $scope.fileInfo[index]['fileObj'] = file;
+        $scope.fileInfo[index]['fileType'] = $scope.detectMediaType(file.type);
+        $scope.fileInfo[index]['name'] = file.name;
+        $scope.fileInfo[index]['updateResult'] = false;
+        $scope.fileInfo[index]['license'] = $scope.default_license;
+        $scope.fileInfo[index]['accessId'] = "2";
+		$scope.fileInfo[index]['tags'] = "";
+		
+        /**
+         * File type specifics
+         * 
+         * VIDEO/AUDIO: - Appends thumbSecond param
+         * 				- Begin kaltura upload
+         * 
+         * IMAGES: 		- Set albumId (change to album_guid)
+         * 				- Begin upload
+         * 				- Set GUID
+         * 
+         * OTHER: 		- Begin upload
+         * 				- Set GUID
+         */
+        if ($scope.fileInfo[index]['fileType'] == 'video' || $scope.fileInfo[index]['fileType'] == 'audio' ) {
 
-        var fileInfoRow = {};
-        fileInfoRow['fileObj'] = file;
-        fileInfoRow['fileType'] = $scope.detectMediaType(file.type);
-        fileInfoRow['name'] = file.name;
-        fileInfoRow['updateResult'] = false;
-        fileInfoRow['license'] = 'not-selected';
-        fileInfoRow['accessId'] = "2";
-	fileInfoRow['tags'] = "";
-	
-	if(fileInfoRow['fileType'] == 'image') {
-            for(albumIndex in $scope.albums){
-   		if($scope.isSelected($scope.albums[albumIndex])){
-               		     fileInfoRow['albumId'] = albumIndex; //if video we set the album to "" else we set to the album
-               	}
-            }
-        } else if(fileInfoRow['fileType'] == 'video' || fileInfoRow['fileType'] == 'audio'){
-		fileInfoRow['thumbSecond'] = 0;
-	}
-
-        $scope.fileInfo.push(fileInfoRow);
-
-        data.fileIndex = $scope.fileInfo.length - 1;
-
-        // If file is Video/Audio then add entry to Kaltura and create entity in Elgg
-        if ($scope.fileInfo[data.fileIndex]['fileType'] == 'video' || $scope.fileInfo[data.fileIndex]['fileType'] == 'audio' ) {
-
+			$scope.fileInfo[index]['thumbSecond'] = 0;
+			
             // Add upload token
             var token = Kaltura.uploadTokenAdd(file);
 
@@ -100,21 +143,36 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
             var uploadComplete = Kaltura.uploadTokenUpload(token, jQuery(elm), data, $scope);
 
             // Add entry
-            $scope.fileInfo[data.fileIndex]['entryId'] = Kaltura.baseEntryAdd($scope.fileInfo[data.fileIndex], uploadComplete);
+            $scope.fileInfo[index]['entryId'] = Kaltura.baseEntryAdd($scope.fileInfo[index], uploadComplete);
 
             // Add content to entry in Kaltura
-            $scope.fileInfo[data.fileIndex]['entry'] = Kaltura.baseEntryAddContent($scope.fileInfo[data.fileIndex]['entryId'], token);
+            $scope.fileInfo[index]['entry'] = Kaltura.baseEntryAddContent($scope.fileInfo[index]['entryId'], token);
 
-            $scope.fileInfo[data.fileIndex]['entryRefresh'] = $scope.getEntry($scope.fileInfo[data.fileIndex]['entryId']);
+            $scope.fileInfo[index]['entryRefresh'] = $scope.getEntry($scope.fileInfo[index]['entryId']);
 
             //Create an Elgg entity
-            $scope.fileInfo[data.fileIndex]['guid'] = Elgg.addElggEntity($scope.fileInfo[data.fileIndex]);
+            $scope.fileInfo[index]['guid'] = Elgg.addElggEntity($scope.fileInfo[index]);
     
-	} else if($scope.fileInfo[data.fileIndex]['fileType'] == 'image') {
-		$scope.fileInfo[data.fileIndex]['guid'] = Elgg.uploadElggFile($scope.fileInfo[data.fileIndex], jQuery(elm), data, $scope);
-        } else {
-		$scope.fileInfo[data.fileIndex]['guid'] = Elgg.uploadElggFile($scope.fileInfo[data.fileIndex], jQuery(elm), data, $scope);
-	}
+		} else if($scope.fileInfo[index]['fileType'] == 'image') {
+			
+			for(albumIndex in $scope.albums){
+				
+		   		if($scope.isSelected($scope.albums[albumIndex])){
+		   			
+		     		$scope.fileInfo[index]['albumId'] = albumIndex; //if video we set the album to "" else we set to the album
+				
+				}
+				
+			}
+			
+			$scope.fileInfo[index]['guid'] = Elgg.uploadElggFile($scope.fileInfo[index], jQuery(elm), data, $scope);
+	   
+	    } else {
+	    	
+			$scope.fileInfo[index]['guid'] = Elgg.uploadElggFile($scope.fileInfo[index], jQuery(elm), data, $scope);
+		
+		}
+			
     };
 
     /**
@@ -126,13 +184,14 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         return type.substring(0, type.indexOf('/'));
     };
 
+	
     $scope.saveAll = function(){
         for(var index in $scope.fileInfo) //Saves each file
         {
             $scope.updateEntry(index);
         }
-	elgg.system_message('Success!');
-    }
+		elgg.system_message('Success!');
+    };
 
     /**
      * Update an entry using its file info.
@@ -140,7 +199,7 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
      */
     $scope.updateEntry = function(index) {
         Elgg.updateElggEntity($scope.fileInfo[index]);
-    }
+    };
 
     /**
      * Update an entry using its file info.
@@ -164,7 +223,7 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         //Removes item from the list
         if ( ~index ) $scope.fileInfo.splice(index, 1);
 
-    }
+    };
 
     /**
      * Initialize the jQuery uploader.
@@ -198,10 +257,10 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
     $scope.bindUploaderEvents = function(elm) {
         jQuery(elm).bind('fileuploadprogress', function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-
-            if($scope.fileInfo[data.fileIndex]) //Only if element is found
+	
+            if($scope.fileInfo[data.index]) //Only if element is found
             {
-                $scope.fileInfo[data.fileIndex]['progress'] = progress;
+                $scope.fileInfo[data.index]['progress'] = progress;
 
                 $scope.$apply();
             }
@@ -210,7 +269,10 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         });
 
         jQuery(elm).bind('fileuploaddone', function(e, data) {
-
+	
+			$('.elgg-list.mason').imagesLoaded(function(){
+					$('.elgg-list.mason').masonry('reloadItems').masonry();
+			});
 
         });
     };
@@ -228,7 +290,7 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         }
 
         return false;
-    }
+    };
 
     $scope.rotateImage = function(entryRefresh, rotateLeft, index){
         if(entryRefresh && entryRefresh.duration){
@@ -241,7 +303,7 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
                 $scope.fileInfo[index].thumbSecond = Math.abs(($scope.fileInfo[index].thumbSecond + entryRefresh.duration * 0.2) % entryRefresh.duration);
             }
         }
-    }
+    };
 
     $scope.isShowThumbArrows = function(entry, index){
         if($scope.fileInfo[index].fileType == 'video' || $scope.fileInfo[index].fileType == 'audio')
@@ -259,7 +321,7 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         }
 
         return false;
-    }
+    };
 
     $scope.getEntry = function(entryId) {
         return Kaltura.baseEntryGet(entryId);

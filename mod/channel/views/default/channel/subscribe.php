@@ -1,30 +1,32 @@
 <?php
 
 $user = $vars['entity'];
- 
+
+$tooltip = 'subscribe';
 if (elgg_is_logged_in()) {
 		if (elgg_get_logged_in_user_guid() != $user->guid) {
 			if ($user->isFriend()) {
-				echo elgg_view('output/url', array(
-										'text' => elgg_echo('friend:remove'),
-										'href' => "action/friends/remove?friend={$user->guid}",
-										'class' => 'elgg-button elgg-button-action subscribe subscribed',
-										'is_action' => true
-									));
+				$text = elgg_echo('friend:remove');
+				$tooltip = 'unsubscribe';
+				$href = elgg_add_action_tokens_to_url("action/friends/remove?friend={$user->guid}");
 			} else {
-				echo elgg_view('output/url', array(	
-										'text' => elgg_echo('friend:add'),
-										'href' => "action/friends/add?friend={$user->guid}",
-										'class' => 'elgg-button elgg-button-action subscribe',
-										'is_action' => true
-									));
+				$href = elgg_add_action_tokens_to_url("action/friends/add?friend={$user->guid}");
+				$text = elgg_echo('friend:add');
 			}
 		}
 } else {
-	echo elgg_view('output/url', array(	
-										'text' => elgg_echo('friend:add'),
-										'href' => "action/friends/add?friend={$user->guid}",
-										'class' => 'elgg-button elgg-button-action subscribe',
-										'is_action' => true
-									));
+	$href = elgg_add_action_tokens_to_url("action/friends/add?friend={$user->guid}");
+	$text = elgg_echo('friend:add');
 }
+
+?>
+<div class="subscribe-button tooltip n" title="click to <?php echo $tooltip;?>">
+	<a href="<?php echo $href;?>">
+		<span class="text">
+			<?php echo $text;?>
+		</span>
+		<span class="subscribers-count">
+			<?php echo $user->getSubscribersCount();?>
+		</span>
+	</a>
+</div>

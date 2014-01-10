@@ -37,7 +37,7 @@ class ElggRiverItem {
 		if (!($object instanceof stdClass)) {
 			// throw exception
 		}
-
+		
 		// the casting is to support typed serialization like json
 		$int_types = array('access_id', 'posted');
 		foreach ($object as $key => $value) {

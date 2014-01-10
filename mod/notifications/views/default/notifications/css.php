@@ -150,5 +150,9 @@
 	margin:5px 0;
 }
 
-
-
+.notification_subscriptions h3{
+	font-weight:bold;
+}
+.notification_subscriptions > div{
+	margin-bottom:24px;
+}

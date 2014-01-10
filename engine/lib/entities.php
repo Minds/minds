@@ -548,7 +548,7 @@ function create_entity($object = NULL, $timebased = true) {
 		$object->guid = $g->generate();
 		elgg_trigger_event('create', $object->type, $object);
 	}
-	
+
 	$result = db_insert($object->guid, $object->toArray());
 
 	if($timebased){
@@ -942,7 +942,7 @@ function elgg_get_entities(array $options = array()) {
 			if($options['guids']){
 
 				$rows = $DB->cfs[$type]->multiget($options['guids']);
-			
+
 			} else{
 				if($options['timebased']){
 					if(!$namespace = $attrs['namespace']){
@@ -958,22 +958,12 @@ function elgg_get_entities(array $options = array()) {
 						}
 					}
 					if(!$options['count']){
-						$cache = new ElggXCache("list_guids:$namespace:".$options['newest_first']);
-						if(!$guids = $cache->load($options['limit'].":".$options['offset'])){
-							$slice = new ColumnSlice($options['offset'], "", $options['limit'], $options['newest_first']);//set to reversed
-							$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
-							$cache->save($options['limit'].":".$options['offset'], $guids, 30);	
-						}
+						$slice = new ColumnSlice($options['offset'], "", $options['limit'], $options['newest_first']);//set to reversed
+						$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
 						$rows = $DB->cfs[$type]->multiget(array_keys($guids));
 					} else {
-						$cache = new ElggXCache("count");
-						if($count = $cache->load("$namespace")){
-							return $count;
-						} else {
-							$count = $DB->cfs['entities_by_time']->get_count($namespace);
-							$cache->save("$namespace", $count, 60);
-							return $count;
-						}
+						$count = $DB->cfs['entities_by_time']->get_count($namespace);
+						return $count;
 					}
 				} else {
 					if($attrs){
@@ -998,7 +988,7 @@ function elgg_get_entities(array $options = array()) {
 					$entities[] = entity_row_to_elggstar($newrow, $type);
 				}
 			}
-		} catch(Exception $e){		
+		} catch(Exception $e){
 			//@todo report error to admin	
 		}
 		return $entities;
