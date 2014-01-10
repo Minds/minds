@@ -27,7 +27,7 @@ echo elgg_view('input/submit', array(
 		<span>1000</span> <?php echo elgg_echo('wall:charleft'); ?>
 	</div>-->
 	<div class="social-post-icons">
-		<?php echo elgg_view('minds_social/wall_social_buttons'); ?>
+		<?php if($vars['to_guid'] == elgg_get_logged_in_user_guid() || !isset($vars['to_guid']) && elgg_get_context() != 'channel') echo elgg_view('minds_social/wall_social_buttons'); ?>
 	</div>
 <?php
 

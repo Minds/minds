@@ -40,13 +40,13 @@ header("Content-type: text/html; charset=UTF-8");
 <?php echo elgg_view('page/elements/head', $vars); ?>
 </head>
 <body class="<?php echo $class;?>">
-<div class="elgg-page elgg-page-default <?php echo $class;?>">
-	<div class="elgg-page-messages">
+<div class="hero elgg-page elgg-page-default <?php echo $class;?>">
+	<div class="messages elgg-page-messages">
 		<?php echo $messages; ?>
 	</div>
 	
 
-	<div class="elgg-page-body" style="margin-top: 20px;">
+	<div class="topbar elgg-page-body" style="margin-top: 20px;">
 			<?php echo $body; ?>
 	</div>
 	

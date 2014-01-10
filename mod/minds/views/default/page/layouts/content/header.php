@@ -27,6 +27,8 @@ if (!$title) {
 }
 $title = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 
+$subtitle = $vars['subtitle'];
+
 if (isset($vars['buttons']) && $vars['buttons']) {
 	$buttons = $vars['buttons'];
 } else {
@@ -36,12 +38,11 @@ if (isset($vars['buttons']) && $vars['buttons']) {
 	));
 }
 
-if(elgg_get_page_owner_guid() != elgg_get_logged_in_user_guid()){
-	$owner_block = elgg_view('page/elements/owner_block', $vars);
-}
+$menu = $vars['menu'];
 
 echo <<<HTML
 <div class="elgg-head clearfix">
-	$title$owner_block$buttons
+	$title$menu$buttons
+	<p class="subtext">$subtitle</p>
 </div>
 HTML;

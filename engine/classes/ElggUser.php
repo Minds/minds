@@ -144,8 +144,8 @@ class ElggUser extends ElggEntity
 
 		//update our session, if it is us logged in
 		if($this->guid == elgg_get_logged_in_user_entity()){
-			global $SESSION;
-			$SESSION['user'] = $this;
+			//global $SESSION;
+			//$SESSION['user'] = $this;
 		}
 
 		return $guid;
@@ -422,6 +422,16 @@ class ElggUser extends ElggEntity
 	 */
 	function getFriendsOf($subtype = null, $limit = 10, $offset = "", $output = 'entities') {
 		return get_user_friends_of($this->getGUID(), $subtype, $limit, $offset, $output);
+	}
+	
+	/**
+	 * Return a count of the users subscriber
+	 * 
+	 * @return 
+	 */
+	function getSubscribersCount(){
+		global $DB;
+		return (int) $DB->cfs['friendsof']->get_count($this->guid);
 	}
 
 	/**

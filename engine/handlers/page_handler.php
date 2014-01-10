@@ -45,7 +45,7 @@ $page = get_input('page');
 
 if (!page_handler($handler, $page)) {
 	//try a profile then
-	if(!page_handler('channel', $handler)){
+	if(!page_handler('channel', "$handler/$page")){
 		//forward('', '404');
 		header("HTTP/1.0 404 Not Found");
 		$buttons = elgg_view('output/url', array('onclick'=>'window.history.back()', 'text'=>'Go back...', 'class'=>'elgg-button elgg-button-action'));

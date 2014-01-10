@@ -134,6 +134,8 @@
                 .val('')
                 .parents('div.hj-comments-input:first')
                 .toggle();
+                
+              	$('.elgg-list.mason').masonry('reloadItems').masonry();
             }
         });
  		e.preventDefault();

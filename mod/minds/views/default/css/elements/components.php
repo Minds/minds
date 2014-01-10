@@ -185,7 +185,7 @@
 	Owner Block
 *************************************** */
 .elgg-owner-block {
-	width:336px;
+	margin:8px;
 	float:right;
 	margin-bottom:0;
 }
@@ -277,6 +277,10 @@
 	-webkit-border-radius: 5px 5px 0 0;
 	-moz-border-radius: 5px 5px 0 0;
 	border-radius: 5px 5px 0 0;
+}
+
+.elgg-river-responses{
+	margin-bottom:6px;
 }
 
 <?php //@todo components.php ?>

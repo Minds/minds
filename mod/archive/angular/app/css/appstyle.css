@@ -7,6 +7,13 @@
 	box-shadow: 0 0 2px #EEE;
 	background: #EEE;
 	padding: 16px 0;
+	clear:both;
+}
+
+.default_values{
+	width: 450px;
+	margin: 10px auto;
+	vertical-align: middle;
 }
 
 .elgg-button-upload{
@@ -85,34 +92,66 @@
     -webkit-transition: height 0.3s
 }
 
-.uploadlist .elgg-image-block {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	padding: 8px 8px 16px;
-	background-color: #FFF; 
-}
-
 .uploadlist > li.elgg-item {
     background-color: #FFF;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     padding:0;
+    padding-bottom:12px;
     margin-left: 0px;
 }
 
+.uploadlist table{
+	width:100%;
+}
+.uploadlist table tr > td{
+	padding: 8px 0;
+	vertical-align: middle;
+}
+
+.uploadlist table tr > td:first-child, .uploadlist table tr > td.label {
+	font-weight:bold;
+	padding-right:8px;
+}
+
+.uploadlist table tr > td input, .uploadlist table tr > td select, .default_values select{
+	height: 30px;
+	width: 95%;
+	padding: 8px;
+	color: #555;
+	background: #EEE;
+	color: #333;
+	border:0;
+	border-radius:0;
+	box-sizing: border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing: border-box;
+}
+.uploadlist table tr > td input:focus{
+	border:inherit;
+	border-radius:inherit;
+}
+
+.uploadlist .preview{
+	width: 100%;
+	margin: 16px 0;
+}
+
 .uploadlist div.bar{
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 5;
-    background-color: #4690D6;
+   position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	background-color: #4690D6;
 }
 
 .uploadlist div.progress{
     color: transparent;
-    height: 0;
+	height: 10px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
 }
 
 .uploadSpan{
@@ -134,16 +173,16 @@
 
 .uploadLeftArrow{
     position: absolute;
-    left: 5;
-    top:110;
+    left: 1;
+	bottom: 135;
     font-size: 30px !important;
     cursor: pointer;
 }
 
 .uploadRightArrow{
     position: absolute;
-    right: 5;
-    top:110;
+    right: 1;
+    bottom:135;
     font-size: 30px !important;
     cursor: pointer ;
 }

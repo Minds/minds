@@ -56,10 +56,11 @@ function blog_get_page_content_read($guid = NULL) {
         minds_set_metatags('twitter:image', minds_fetch_image($blog->description, $blog->owner_guid));
         minds_set_metatags('twitter:description', $excerpt);
 
-	$title = elgg_view_title($blog->title, array('class' => 'elgg-heading-main'));
+	$title = elgg_view_title($blog->title, array('class' => 'heading-main elgg-heading-main'));
 
 	$return['buttons'] = ' ';	
 	$return['title'] = $blog->title;
+	$return['subtitle'] = elgg_get_friendly_time($blog->time_created); 
 	
 /*	$container = $blog->getContainerEntity();
 	$crumbs_title = $container->name;
