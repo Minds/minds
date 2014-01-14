@@ -85,7 +85,9 @@ function anayltics_authenticate_google(){
  * Retrieve analytic information, based on a info
  */
 function analytics_retrieve(array $options = array()){
-	global $DB;
+
+	$db = new DatabaseCall('entities_by_time');
+	
 	$g = new GUID();
 	$client = analytics_register_client();
 	$analytics = new Google_AnalyticsService($client);	
@@ -103,15 +105,14 @@ function analytics_retrieve(array $options = array()){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
 			$context = $options['context'] != '' ? $options['context'] : 'all';
-			$count = $DB->cfs['entities_by_time']->get_count('trending:'.$context);		
+			$count = $db->countRow('trending:'.$context);		
 			if((int) $options['offset'] >= $count){
 				return false;
 			} elseif($options['offset'] > 0){
 				$options['limit']++;
 			}
 			
-			$slice = new phpcassa\ColumnSlice($options['offset'], "", $options['limit'], false);
-			$guids = $DB->cfs['entities_by_time']->get('trending:'.$context, $slice);			
+			$guids = $db->getRow('trending:'.$context, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=>false));			
 
 			return $guids;
 		} catch(Exception $e){
@@ -190,10 +191,10 @@ function analytics_fetch(){
 		$data = $guids;
 		
 		if($data){
-			$data['type'] = 'entities_by_time';
 			//we want to start removing old ones soon...
-			var_dump(db_remove('trending:'.$subtype, 'entities_by_time'));
-			db_insert('trending:'.$subtype, $data);
+			$db = new DatabaseCall('entities_by_time');
+			$db->removeRow('trending:'.$subtype);
+			$db->insert('trending:'.$subtype, $data);
 			var_dump($data);
 			echo "Successfuly imported '$subtype' to trending \n";
 		}

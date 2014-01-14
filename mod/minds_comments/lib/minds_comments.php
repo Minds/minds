@@ -8,6 +8,9 @@ function minds_comments_view_list($type, $pid) {
 	if($call['error']){
 		return false;
 	}
+	if(!is_array($call)){
+		return null;
+	}
 	$count = $call['hits']['total'];
 	$comments = array_reverse($call['hits']['hits']);
 

@@ -7,12 +7,6 @@
  * @link http://docs.elgg.org/DataModel/Entities
  */
 
-//we don't want to have to declare each time!
-use phpcassa\ColumnSlice;
-use phpcassa\Index\IndexExpression;
-use phpcassa\Index\IndexClause;
-use phpcassa\UUID;
-
 /**
  * Cache entities in memory once loaded.
  *
@@ -549,7 +543,8 @@ function create_entity($object = NULL, $timebased = true) {
 		elgg_trigger_event('create', $object->type, $object);
 	}
 
-	$result = db_insert($object->guid, $object->toArray());
+	$db = new DatabaseCall($object->type);
+	$result = $db->insert($object->guid, $object->toArray());
 
 	if($timebased){
 		$namespace = $object->type;
@@ -557,13 +552,14 @@ function create_entity($object = NULL, $timebased = true) {
 			$namespace .= ':'.$object->subtype; 
 		}
 		
-		$data =  array('type'=>'entities_by_time', $result => time());
+		$db = new DatabaseCall('entities_by_time');
+		$data =  array($result => time());
 
-		db_insert($namespace, $data);
+		$db->insert($namespace, $data);
 
 		if($object->super_subtype){
                         $super_subtype_namespace = $object->type . ':' . $object->super_subtype;
-                        db_insert($super_subtype_namespace, $data);
+                        $db->insert($super_subtype_namespace, $data);
                 }
 
 		if($object->type != 'user'){
@@ -582,14 +578,14 @@ function create_entity($object = NULL, $timebased = true) {
 		
 			array_push($followers, $owner->guid);//add to their own timeline
 			foreach($followers as $follower){
-				db_insert($namespace . ':network:'. $follower, $data);
+				$db->insert($namespace . ':network:'. $follower, $data);
 				if($object->super_subtype){ 
-					db_insert($super_subtype_namespace . ':network:'. $follower, $data);
+					$db->insert($super_subtype_namespace . ':network:'. $follower, $data);
 				}
 			}
-			db_insert($namespace . ':user:'. $owner->guid, $data);
+			$db->insert($namespace . ':user:'. $owner->guid, $data);
 			if($object->super_subtype){
-				db_insert($super_subtype_namespace . ':user:'.$owner->guid, $data);
+				$db->insert($super_subtype_namespace . ':user:'.$owner->guid, $data);
 			}
  		}
 
@@ -634,7 +630,7 @@ function get_entity_as_row($guid, $type) {
  *
  * @throws ClassException|InstallationException
  */
-function entity_row_to_elggstar($row, $type) {
+function entity_row_to_elggstar($row) {
 	
 	if (!($row instanceof stdClass)) {
 		return $row;
@@ -681,7 +677,7 @@ function entity_row_to_elggstar($row, $type) {
 
 	if (!$new_entity) {
 		//@todo Make this into a function
-		switch ($type) {
+		switch ($row->type) {
 			case 'object' :
 				$new_entity = new ElggObject($row);
 				break;
@@ -704,7 +700,7 @@ function entity_row_to_elggstar($row, $type) {
 				$new_entity = new ElggNotification($row);
 				break;
 			default:
-				$msg = elgg_echo('InstallationException:TypeNotSupported', array($type));
+				$msg = elgg_echo('InstallationException:TypeNotSupported', array($row->type));
 				throw new InstallationException($msg);
 		}
 	}
@@ -730,7 +726,6 @@ function get_entity($guid, $type = 'object') {
 	// different instance outside this function.
 	// @todo We need a single Memcache instance with a shared pool of namespace wrappers. This function would pull an instance from the pool.
 	static $shared_cache;
-	global $DB;
 
 	if(!$guid){
 		return;
@@ -771,12 +766,17 @@ function get_entity($guid, $type = 'object') {
 		}
 	}
 
-	$new_entity = db_get(array('type'=>$type, 'guids'=>array($guid)));
-
-	if(is_array($new_entity)){
-		$new_entity = $new_entity[0];
+	$db = new DatabaseCall($type);
+	$row = $db->getRow($guid);
+	if(!$row){
+		return false;
 	}
-	
+	$row['guid'] = $guid;
+	$row['type'] = $type;
+	$new_entity = entity_row_to_elggstar($db->createObject($row));
+	//if($type == 'object'){
+//var_dump($row, $type, $new_entity);
+	//}
 	//check access permissions
 	if(!elgg_check_access($new_entity)){
 		return false; //@todo return error too
@@ -882,7 +882,7 @@ function elgg_entity_exists($guid) {
  * @link http://docs.elgg.org/DataModel/Entities/Getters
  */
 function elgg_get_entities(array $options = array()) {
-	global $CONFIG, $DB;
+	global $CONFIG;
 	
 	$defaults = array(
 		'types'					=>	ELGG_ENTITIES_ANY_VALUE,
@@ -940,8 +940,9 @@ function elgg_get_entities(array $options = array()) {
 			
 			//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 			if($options['guids']){
-
-				$rows = $DB->cfs[$type]->multiget($options['guids']);
+			
+				$db = new DatabaseCall($type);
+				$rows = $db->getRows($options['guids']);
 
 			} else{
 				if($options['timebased']){
@@ -958,22 +959,22 @@ function elgg_get_entities(array $options = array()) {
 						}
 					}
 					if(!$options['count']){
-						$slice = new ColumnSlice($options['offset'], "", $options['limit'], $options['newest_first']);//set to reversed
-						$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
-						$rows = $DB->cfs[$type]->multiget(array_keys($guids));
+						$db = new DatabaseCall('entities_by_time');
+						$guids = $db->getRow($namespace, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=> $options['newest_first']));
+						$db = new DatabaseCall($type);
+						$rows = $db->getRows(array_keys($guids));
 					} else {
-						$count = $DB->cfs['entities_by_time']->get_count($namespace);
+						$db = new DatabaseCall('entities_by_time');
+						$count = $db->countRows($namespace);
 						return $count;
 					}
 				} else {
 					if($attrs){
-						foreach($attrs as $column => $value){
-							$index_exps[] = new IndexExpression($column, $value);
-						}
-						$index_clause = new IndexClause($index_exps, $options['offset'], $options['limit']);
-						$rows = $DB->cfs[$type]->get_indexed_slices($index_clause);
+						$db = new DatabaseCall($type);
+						$rows = $db->getByIndex($attrs, $options['offset'], $options['limit']);
 					} else {
-						 $rows = $DB->cfs[$type]->get_range($options['offset'],"", $options['limit']);
+						$db = new DatabaseCall($type);
+						$rows = $db->get($offset,"", $limit);
 					}
 				}
 			}
@@ -1668,7 +1669,8 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 				}
 
 				// Now delete the entity itself
-				$res = db_remove($guid, $type);
+				$db = new DatabaseCall($type);
+				$res = $db->removeRow($guid);
 
 				//remove from the various lines
 				$namespace = array(  $type . ':' . $entity->subtype);
@@ -1694,9 +1696,10 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
         	               	                 array_push($namespace, $type . ':' . $entity->subtype . ':user:'.$follower);
 					}
 				}
-
+		
+				$db = new DatabaseCall('entities_by_time');
 				foreach($namespace as $rowkey){
-					db_remove($rowkey, 'entities_by_time', array($entity->guid));
+					$db->removeAttributes($rowkey, array($entity->guid));
 				}
 
 				return true;

@@ -18,7 +18,10 @@
  * @return array
  */
 function get_entity_statistics($owner_guid = 0) {
-	global $CONFIG, $SUBTYPE_CACHE, $DB;
+	global $CONFIG, $SUBTYPE_CACHE;
+	
+	$db = new DatabaseCall('entities_by_time');
+	
 	$entity_stats = array();
 	$owner_guid = (int)$owner_guid;
 
@@ -31,14 +34,14 @@ function get_entity_statistics($owner_guid = 0) {
 	$subtypes =$SUBTYPE_CACHE;
 
 	foreach ($types as $type) {
-		$count = $DB->cfs['entities_by_time']->get_count($type . $prepend);
+		$count = $db->countRow($type . $prepend);
 		$entity_stats[$type]['__base__'] = $count;
 	}
 
 	foreach($subtypes as $subtype){
 		$type = $subtype->type;
 		$subtype = $subtype->subtype;
-		$count = $DB->cfs['entities_by_time']->get_count($type . ':' . $subtype . $prepend);
+		$count = $db->countRow($type . ':' . $subtype . $prepend);
 		$entity_stats[$type][$subtype] = $count;
 	}
 	return $entity_stats;
@@ -52,9 +55,10 @@ function get_entity_statistics($owner_guid = 0) {
  * @return int
  */
 function get_number_users($show_deactivated = false) {
-	global $CONFIG,$DB;
+	global $CONFIG;
 
-	$count = $DB->cfs['entities_by_time']->get_count('user');
+	$db = new DatabaseCall('entities_by_time');
+	$count = $db->countRow('user');
 	
 	return $count;
 
