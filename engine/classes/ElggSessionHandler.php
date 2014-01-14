@@ -28,12 +28,7 @@ class ElggSessionHandler{
 				return $result['data'];
 		    }
 		} catch (Exception $e) {
- 		
-			// Fall back to file store in this case, since this likely means
-		    // that the database hasn't been upgraded
-		    global $sess_save_path;
-			$sess_file = "$sess_save_path/sess_$id";
-			return (string) @file_get_contents($sess_file);
+ 			return false;
 		}
 		
 		return '';
@@ -53,16 +48,6 @@ class ElggSessionHandler{
 			}
 
 		} catch (Exception $e) {
-			// Fall back to file store in this case, since this likely means
-            // that the database hasn't been upgraded
-			global $sess_save_path;
-
-			$sess_file = "$sess_save_path/sess_$id";
-			if ($fp = @fopen($sess_file, "w")) {
-				$return = fwrite($fp, $sess_data);
-				fclose($fp);
-				return $return;
-			}
 		}
 
 		return false;
@@ -75,12 +60,7 @@ class ElggSessionHandler{
 			$db = new DatabaseCall('session');
 			return (bool)$db->removeRow($id);
 		} catch (Exception $e) {
-			// Fall back to file store in this case, since this likely means that
-			// the database hasn't been upgraded
-			global $sess_save_path;
-
-			$sess_file = "$sess_save_path/sess_$id";
-			return @unlink($sess_file);
+			return false;
 		}
 	}
 

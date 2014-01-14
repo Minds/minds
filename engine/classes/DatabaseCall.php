@@ -57,7 +57,6 @@ class DatabaseCall{
 		try{
 			$this->cf->insert($guid, $data);
 		} catch(Exception $e){
-			register_error($e);
 			return false;
 		}
 		return $guid;
@@ -113,7 +112,6 @@ class DatabaseCall{
 				return $this->cf->get($key, $slice);
 			}
 		}catch(Exception $e){
-			register_error($e);
 			return false;
 		}
 	 }
