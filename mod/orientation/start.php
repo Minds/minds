@@ -20,9 +20,12 @@ function orientation_init() {
 	
 	elgg_register_library('orientation', elgg_get_plugins_path() . 'orientation/lib/orientation.php');
 	
+	global $SESSION;
 	//On first login, promt user for bootcamp
-	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted') && !$_SESSION['fb_referrer'] && elgg_get_viewtype() != 'mobile' && strpos(current_page_url(), 'tierlogin') === false){
+
+	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted') && !elgg_get_plugin_user_setting('prompted',null,'bootcamp') && !$_SESSION['fb_referrer'] && elgg_get_viewtype() != 'mobile' && ! $SESSION['orientated']){
 		elgg_set_plugin_user_setting('prompted', 'yes');
+		$SESSION['orientated'] = 'yes';
 		forward('orientation');
 	}
 }

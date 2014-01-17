@@ -17,30 +17,10 @@
 
 // Get dataroot
 require_once(dirname(dirname(__FILE__)) . '/settings.php');
-$mysql_dblink = mysql_connect($CONFIG->dbhost, $CONFIG->dbuser, $CONFIG->dbpass, true);
-if (!$mysql_dblink) {
-	echo 'Cache error: unable to connect to database server';
-	exit;
-}
 
-if (!mysql_select_db($CONFIG->dbname, $mysql_dblink)) {
-	echo 'Cache error: unable to connect to Elgg database';
-	exit;
-}
-
-$query = "select name, value from {$CONFIG->dbprefix}datalists
-		where name in ('dataroot', 'simplecache_enabled')";
-
-$result = mysql_query($query, $mysql_dblink);
-if (!$result) {
-	echo 'Cache error: unable to get the data root';
-	exit;
-}
-while ($row = mysql_fetch_object($result)) {
-	${$row->name} = $row->value;
-}
-mysql_free_result($result);
-
+global $CONFIG;
+$dataroot = $CONFIG->dataroot;
+$simplecache_enabled = $CONFIG->simplecache_enabled;
 
 $dirty_request = $_GET['request'];
 // only alphanumeric characters plus /, ., and _ and no '..'
@@ -86,9 +66,8 @@ if (file_exists($filename)) {
 	$contents = file_get_contents($filename);
 } else {
 	// someone trying to access a non-cached file or a race condition with cache flushing
-	mysql_close($mysql_dblink);
 	require_once(dirname(dirname(__FILE__)) . "/start.php");
-
+	
 	global $CONFIG;
 	if (!isset($CONFIG->views->simplecache[$view])) {
 		header("HTTP/1.1 404 Not Found");

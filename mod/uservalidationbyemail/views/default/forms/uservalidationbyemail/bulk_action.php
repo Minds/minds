@@ -7,36 +7,21 @@
  */
 
 $limit = get_input('limit', 10);
-$offset = get_input('offset', 0);
+$offset = get_input('offset', "");
 
-// can't use elgg_list_entities() and friends because we don't use the default view for users.
-$ia = elgg_set_ignore_access(TRUE);
-$hidden_entities = access_get_show_hidden_status();
-access_show_hidden_entities(TRUE);
-
-$options = array(
-	'type' => 'user',
-	'wheres' => uservalidationbyemail_get_unvalidated_users_sql_where(),
-	'limit' => $limit,
-	'offset' => $offset,
-	'count' => TRUE,
-);
-$count = elgg_get_entities($options);
+global $DB;
+$slice = new phpcassa\ColumnSlice($offset, "", $limit, true);
+$guids = $DB->cfs['entities_by_time']->get('user:unvalidated', $slice);		
+$count =  $DB->cfs['entities_by_time']->get_count('user:unvalidated');
 
 if (!$count) {
-	access_show_hidden_entities($hidden_entities);
-	elgg_set_ignore_access($ia);
-
 	echo elgg_autop(elgg_echo('uservalidationbyemail:admin:no_unvalidated_users'));
 	return TRUE;
 }
 
 $options['count']  = FALSE;
 
-$users = elgg_get_entities($options);
-
-access_show_hidden_entities($hidden_entities);
-elgg_set_ignore_access($ia);
+$users = elgg_get_entities(array('type'=>'user','guids'=>$guids));
 
 // setup pagination
 $pagination = elgg_view('navigation/pagination',array(

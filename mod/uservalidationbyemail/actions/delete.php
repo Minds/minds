@@ -18,7 +18,7 @@ $access = access_get_show_hidden_status();
 access_show_hidden_entities(TRUE);
 
 foreach ($user_guids as $guid) {
-	$user = get_entity($guid);
+	$user = get_entity($guid, 'user');
 	if (!$user instanceof ElggUser) {
 		$error = TRUE;
 		continue;

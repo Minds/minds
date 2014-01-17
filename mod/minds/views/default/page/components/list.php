@@ -37,6 +37,9 @@ if ($data_options) {
 if (isset($vars['list_class'])) {
     $list_class = "$list_class {$vars['list_class']}";
 }
+if($vars['masonry'] !== false){
+        $list_class .= ' mason';
+}
 
 $item_class = 'elgg-item';
 if (isset($vars['item_class'])) {
@@ -59,7 +62,8 @@ if ($pagination && $count) {
         'offset_key' => $offset_key,
 	'ajaxify' => $ajaxify,
 	'list_id' => $list_id,
-        'last_guid' => $last_guid
+        'last_guid' => $last_guid,
+	'load-next' => elgg_get_context() == 'main' ? end($items)->featured_id : end($items)->guid
 	));
 }
 

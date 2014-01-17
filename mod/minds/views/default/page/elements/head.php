@@ -68,10 +68,6 @@ $release = get_version(true);
 	<script type="text/javascript" src="<?php echo $script; ?>"></script>
 <?php } ?>
 
-	<script type="text/javascript">
-		<?php echo elgg_view('js/initialize_elgg'); ?>
-	</script>
-
 <?php
 echo $feedref;
 
@@ -80,3 +76,23 @@ if ($metatags) {
 	elgg_deprecated_notice("The metatags view has been deprecated. Extend page/elements/head instead", 1.8);
 	echo $metatags;
 }
+?>
+<script type="text/javascript">
+
+window._taboola = window._taboola || [];
+
+_taboola.push({article:'auto'});
+
+!function (e, f, u) {
+
+e.async = 1;
+
+e.src = u;
+
+f.parentNode.insertBefore(e, f);
+
+}(document.createElement('script'),
+document.getElementsByTagName('script')[0], 'http://cdn.taboola.com/libtrc/minds/loader.js');
+
+</script>
+

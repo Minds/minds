@@ -11,7 +11,7 @@
 
 // Get the user
 $guid = get_input('guid');
-$user = get_entity($guid);
+$user = new ElggUser($guid);
 
 if ($guid == elgg_get_logged_in_user_guid()) {
 	register_error(elgg_echo('admin:user:self:delete:no'));

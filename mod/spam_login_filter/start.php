@@ -68,6 +68,8 @@ function spam_login_filter_verify_action_hook($hook, $entity_type, $returnvalue,
 		return true;
 	}
 	else {
+		forward();
+		return false;
 		//Check if the ip exists			
 		$options = array(
 			"type" => "object",
@@ -102,7 +104,7 @@ function spam_login_filter_notify_admin($blockedEmail, $blockedIp, $reason) {
 	if (elgg_get_plugin_setting("notify_by_mail") == "yes") {
 		//Notify spam tentative to administrator
 		global $CONFIG;
-		$site = get_entity($CONFIG->site_guid);
+		$site = elgg_get_site_entity();
 		if (($site) && (isset($site->email))) {
 			$from = $site->email;
 		} else {

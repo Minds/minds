@@ -166,7 +166,7 @@ function blog_page_handler($page) {
 			break;
 		case 'view':
 			$params = blog_get_page_content_read($page[1]);
-			
+			set_input('limit',4);	
 			$trending = blog_get_trending_page_content_list();
                         //$params = blog_get_page_content_list();
 			//$body .= elgg_view_layout('gallery', $params);
@@ -452,10 +452,10 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0"></iframe>';
 					$icon = '<img src="http://img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
 					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
-					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200));
+					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 600));
 					$blog->description = $embed . $icon . $disclaimer;
 				} else {
-					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 200));
+					$blog->excerpt = utf8_encode(substr(strip_tags($item->get_description(true), '<a><p><b><i>'), 0, 600));
 					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();				
 					if($enclosure){
 						$thumb_url = $enclosure->get_thumbnail();

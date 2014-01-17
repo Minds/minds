@@ -12,7 +12,7 @@
  * @uses $vars['nav']     HTML of the page nav (override) (default: breadcrumbs)
  */
 
-$class = 'elgg-layout elgg-layout-one-sidebar clearfix';
+$class = 'layout layout-one-sidebar elgg-layout elgg-layout-one-sidebar clearfix';
 if (isset($vars['class'])) {
 	$class = "$class {$vars['class']}";
 }
@@ -20,6 +20,7 @@ if (isset($vars['class'])) {
 // navigation defaults to breadcrumbs
 $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 
+if($vars['header']){
 ?>
 
 <div class="minds-body-header">
@@ -32,15 +33,16 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 		
 	</div>	
 </div>
+<?php } //END IF HEADER ?>
 	
-<div class="elgg-inner">
+<div class="inner elgg-inner">
 	<div class="<?php echo $class; ?>">
-		<div class="elgg-sidebar">
+		<div class="sidebar elgg-sidebar">
         	<?php
                 	echo elgg_view('page/elements/sidebar', $vars);
         	?>
 		</div>		
-		<div class="elgg-main elgg-body">
+		<div class="main body elgg-main elgg-body">
 			<?php
 		
 				// @todo deprecated so remove in Elgg 2.0
@@ -52,7 +54,7 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 				}
 			?>
 		</div>
-		<div class="elgg-footer">
+		<div class="footer elgg-footer">
 			<?php 
 				if(isset($vars['footer'])){
 					echo $vars['footer'];

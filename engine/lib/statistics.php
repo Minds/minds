@@ -22,19 +22,23 @@ function get_entity_statistics($owner_guid = 0) {
 	$entity_stats = array();
 	$owner_guid = (int)$owner_guid;
 
+	if($owner_guid != 0){
+		$prepend = ':user:'.$owner_guid;
+	}
+
 	$types = array('object','user', 'group', 'notification','widget');
 
 	$subtypes =$SUBTYPE_CACHE;
 
 	foreach ($types as $type) {
-		$count = $DB->cfs['entities_by_time']->get_count($type);
+		$count = $DB->cfs['entities_by_time']->get_count($type . $prepend);
 		$entity_stats[$type]['__base__'] = $count;
 	}
 
 	foreach($subtypes as $subtype){
 		$type = $subtype->type;
 		$subtype = $subtype->subtype;
-		$count = $DB->cfs['entities_by_time']->get_count($type . ':' . $subtype);
+		$count = $DB->cfs['entities_by_time']->get_count($type . ':' . $subtype . $prepend);
 		$entity_stats[$type][$subtype] = $count;
 	}
 	return $entity_stats;

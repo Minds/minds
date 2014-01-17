@@ -17,6 +17,24 @@ class ElggBlog extends ElggObject {
 		$this->attributes['subtype'] = "blog";
 
 	}
+	
+	/**
+	 * Return an array of fields which can be exported.
+	 *
+	 * @return array
+	 */
+	public function getExportableValues() {
+		return array_merge(parent::getExportableValues(), array(
+			'excerpt'
+		));
+	}
+	
+	/**
+	 * Icon URL
+	 */
+	public function getIconURL($size){
+		return minds_fetch_image($this->description, $this->owner_guid);
+	}
 
 	/**
 	 * Can a user comment on this blog?

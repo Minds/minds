@@ -39,7 +39,9 @@ class ElggUser extends ElggEntity
 		$this->attributes['code'] = NULL;
 		$this->attributes['banned'] = "no";
 		$this->attributes['admin'] = 'no';
+		$this->attributes['ip'] = $_SERVER['REMOTE_ADDR'];
 		$this->attributes['time_created'] = time();
+		$this->attributes['enabled'] = 'yes';
 	}
 
 	/**
@@ -132,15 +134,80 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	public function save() {
-		$guid =  create_entity($this);
+		$timebased = $this->isEnabled();
+		$guid =  create_entity($this, $timebased);
 		//now place email and username in index
 		$data = array('type'=>'user_index_to_guid', $guid => time());
 		
 		db_insert(strtolower($this->username), $data);
 		db_insert(strtolower($this->email), $data);
+
+		//update our session, if it is us logged in
+		if($this->guid == elgg_get_logged_in_user_entity()){
+			//global $SESSION;
+			//$SESSION['user'] = $this;
+		}
+
 		return $guid;
 	}
+	
+	/**
+	 * Enable a user
+	 *
+	 * @return bool
+	 */
+	public function enable() {
+		
+		//enable all the users objects
+		if($recursive == true){
+			//@todo disable the users objects 
+			$objects = elgg_get_entities(array('type'=>'object', 'owner_guid'=>$this->guid));
+			foreach($objects as $object){
+				//$object->enable();
+			}
+		}
+		
+		//Remove from the list of unvalidated user
+		db_remove('user:unvalidated', 'entities_by_time', array($this->guid));
+		//add to the list of unvalidated user
+		db_insert('user', array('type'=>'entities_by_time', $this->guid => $this->guid));
+		
+		//Set enabled attribute to 'no'
+		$this->enabled = 'yes';
+		return (bool) $this->save();
 
+	}
+
+	/**
+	 * Disable a user
+	 *
+	 * @param string $reason    Optional reason
+	 * @param bool   $recursive Recursively disable all contained entities?
+	 *
+	 * @return bool
+	 */
+	public function disable($reason = "", $recursive = true){
+		if($recursive == true){
+			//@todo disable the users objects 
+			$objects = elgg_get_entities(array('type'=>'object', 'owner_guid'=>$this->guid));
+			foreach($objects as $object){
+				//$object->disable();
+			}
+		}
+		
+		//Remove from the list of users
+		db_remove('user', 'entities_by_time', array($this->guid)); 
+		//add to the list of unvalidated user
+		db_insert('user:unvalidated', array('type'=>'entities_by_time', $this->guid => $this->guid));
+		
+		//Set enabled attribute to 'no'
+		$this->enabled = 'no';
+		
+		//clear the cache for this
+		$this->purgeCache();
+		
+		return (bool) $this->save();
+	}
 	/**
 	 * User specific override of the entity delete method.
 	 *
@@ -155,6 +222,10 @@ class ElggUser extends ElggEntity
 		}
 		if (isset($CODE_TO_GUID_MAP_CACHE[$this->code])) {
 			unset($CODE_TO_GUID_MAP_CACHE[$this->code]);
+		}
+
+		if(is_int($this->guid)){
+			db_remove('user', 'entities_by_time', array($this->guid));
 		}
 
 		clear_user_files($this);
@@ -353,6 +424,16 @@ class ElggUser extends ElggEntity
 	function getFriendsOf($subtype = null, $limit = 10, $offset = "", $output = 'entities') {
 		return get_user_friends_of($this->getGUID(), $subtype, $limit, $offset, $output);
 	}
+	
+	/**
+	 * Return a count of the users subscriber
+	 * 
+	 * @return 
+	 */
+	function getSubscribersCount(){
+		global $DB;
+		return (int) $DB->cfs['friendsof']->get_count($this->guid);
+	}
 
 	/**
 	 * Lists the user's friends
@@ -527,6 +608,14 @@ class ElggUser extends ElggEntity
 		));
 	}
 
+	public function export(){
+                $export = array();
+                foreach($this->getExportableValues() as $v){
+                        $export[$v] = $this->$v;
+                }
+                return $export;
+        }
+
 	/**
 	 * Need to catch attempts to make a user an admin.  Remove for 1.9
 	 *
@@ -579,5 +668,9 @@ class ElggUser extends ElggEntity
 			return $result;
 		}
 		return false;
+	}
+	
+	public function purgeCache(){
+		invalidate_cache_for_entity($this->guid);
 	}
 }

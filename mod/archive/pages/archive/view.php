@@ -5,6 +5,7 @@ $guid = get_input('guid');
 $entity = get_entity($guid, 'object');
 
 if(!$entity){
+	forward();
 	return false;
 }
 

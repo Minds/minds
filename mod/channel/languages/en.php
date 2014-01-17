@@ -7,7 +7,9 @@ $english = array(
 	'channel' => 'Channel',
 	'channel:notfound' => 'Sorry. We could not find the requested channel.',
  	'channel:return' => 'Return to channel',
- 	
+ 
+	'about' => 'About',
+	
 	//channel elements menu title
 	'channel:elements' => 'Elements',
 	
@@ -18,26 +20,28 @@ $english = array(
 	'channel:widget:avatar:title' => 'Avatar',
 	'channel:widget:avatar:desc' => 'The avatar for your channel',
 	
+	'channel:customise' => 'edit',
 	'channel:custom' => 'Customise your profile',
 	'channel:custom:upload' => 'Upload a background',
-	'channel:custom:reupload' => 'Upload a new background',
+	'channel:custom:reupload' => 'Image',
 	'chanel:custom:saved' => 'Saved!',
 	'channel:custom:reset' => 'Reset',
-	'channel:custom:background:remove' => 'Remove background',
-	'channel:custom:background:repeat' => 'Repeat background?',
-	'channel:custom:background:attachment' => 'Background attachment',
+	'channel:custom:background:remove' => 'Remove',
+	'channel:custom:background:repeat' => 'Repeat',
+	'channel:custom:background:attachment' => 'Attachment',
 	'channel:custom:background:attachment:fixed' => 'Fixed',
 	'channel:custom:background:attachment:scroll' => 'Scroll',
-	'channel:custom:background:position' => 'Background position',
+	'channel:custom:background:position' => 'Position',
 	'channel:custom:background:repeat:no-repeat' => 'No Repeat',
 	'channel:custom:background:repeat:repeat' => 'Repeat',
 	'channel:custom:background:repeat:repeat-x' => 'Repeat horizontally',
 	'channel:custom:background:repeat:repeat-y' => 'Repeat vertically',
 	
-	'channel:custom:color:background' => 'Background color',
-	'channel:custom:color:text' => 'Text color',
-	'channel:custom:color:link' => 'Link color',
-	
+	'channel:custom:color:background' => 'Color',
+	'channel:custom:color:h1' => 'Header',
+	'channel:custom:color:h3' => 'Sub-header',
+	'channel:custom:color:menu_link' => 'Navigation',
+
 	'channel:custom:widget:bg' => 'Background color',
 	'channel:custom:widget:head:title:color' => 'Title color',
 	'channel:custom:widget:body_text' => 'Text color',
@@ -83,6 +87,11 @@ $english = array(
 	'suggested_friends:shared:groups' => '%s shared groups: %s',
 
 	'suggested_friends:people:not:found' => 'There are no channels to suggest',
+
+	'channel:edit:brief:label' => 'Tagline',
+	'channel:edit:location:label' => 'Place',
+	'channel:edit:email:label' => 'Email',
+	'channel:edit:description:label' => 'About',
 
 );
 

@@ -406,6 +406,10 @@ $offset = "", $output = 'entities') {
 				'offset' => $offset,
 				'output' => $output
 				));
+		//hacky cache mechanism
+		if($user_guid == elgg_get_logged_in_user_guid() && $output == 'guids'){
+			$SESSION['friends'] = $row;
+		}
 	}
 	return $row;
 }
@@ -644,6 +648,28 @@ function get_user_by_code($code) {
 	}
 
 	return $entity;
+}
+
+function get_user_by_cookie($cookie){
+	global $DB;
+	try{
+		$results = $DB->cfs['user_index_to_guid']->get("cookie:$cookie");
+	} catch(Exception $e){
+		return false;
+	}
+	
+	$user_guid = array_keys($results);
+	$expires = $results[$user_guid[0]];
+	
+	if($expires >= time()){
+		$user = new ElggUser($user_guid[0]);
+		//check if the cookie has been tampered with, and it matches the users
+		if($user->{"cookie:$cookie"} == $expires){
+			return $user;
+		}
+	}
+	
+	return false;
 }
 
 /**
@@ -1046,13 +1072,14 @@ function generate_invite_code($username) {
  * @since 1.8.0
  */
 function elgg_set_user_validation_status($user_guid, $status, $method = '') {
-	$result1 = create_metadata($user_guid, 'validated', $status, '', 0, ACCESS_PUBLIC, false);
-	$result2 = create_metadata($user_guid, 'validated_method', $method, '', 0, ACCESS_PUBLIC, false);
-	if ($result1 && $result2) {
+	$user = get_entity($user_guid, 'user');
+	if($user){
+		$user->validated = $status;
+		$user->validated_method = $method;
+		$user->save();
 		return true;
-	} else {
-		return false;
 	}
+	return false;
 }
 
 /**
@@ -1063,18 +1090,10 @@ function elgg_set_user_validation_status($user_guid, $status, $method = '') {
  * @since 1.8.0
  */
 function elgg_get_user_validation_status($user_guid) {
-	$md = elgg_get_metadata(array(
-		'guid' => $user_guid,
-		'metadata_name' => 'validated'
-	));
-	if ($md == false) {
-		return null;
-	}
-
-	if ($md[0]->value) {
+	$user = get_entity($user_guid, 'user');
+	if($user && $user->validated){
 		return true;
-	}
-
+	} 
 	return false;
 }
 
@@ -1221,9 +1240,10 @@ function set_last_login($user_guid) {
 	global $CONFIG;
 	$time = time();
 
-	$query = "UPDATE {$CONFIG->dbprefix}users_entity
-		set prev_last_login = last_login, last_login = {$time} where guid = {$user_guid}";
-
+	$user = new ElggUser($user_guid);
+	$user->last_login = $time;
+	$user->ip = $_SERVER['REMOTE_ADDR'];
+	$user->save();
 	//execute_delayed_write_query($query);
 }
 

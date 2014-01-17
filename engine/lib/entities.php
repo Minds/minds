@@ -532,11 +532,17 @@ function create_entity($object = NULL, $timebased = true) {
 
 	if($object->guid){
 	       elgg_trigger_event('update', $object->type, $object);
-        } else {
+		if (function_exists('xcache_get')) {
+                                $newentity_cache = new ElggXCache('new_entity_cache');
+		}
+                if ($newentity_cache) {
+                                $newentity_cache->delete($object->guid);
+               	}
+	} else {
 		$object->guid = $g->generate();
-	        elgg_trigger_event('create', $object->type, $object);
-        }
-	
+		elgg_trigger_event('create', $object->type, $object);
+	}
+
 	$result = db_insert($object->guid, $object->toArray());
 
 	if($timebased){
@@ -640,7 +646,10 @@ function entity_row_to_elggstar($row, $type) {
 		$newentity_cache = new ElggMemcache('new_entity_cache');
 	} elseif(is_apc_enabled()){
 		$newentity_cache = new ElggApcCache('new_entity_cache');
+	} elseif(function_exists('xcache_get')){
+		$newentity_cache = new ElggXCache('new_entity_cache');
 	}
+
 	if ($newentity_cache) {
 		$new_entity = $newentity_cache->load($row->guid);
 	}
@@ -739,7 +748,9 @@ function get_entity($guid, $type = 'object') {
 			$shared_cache = new ElggMemcache('new_entity_cache');
 		} elseif(is_apc_enabled()) {
 			$shared_cache = new ElggApcCache('new_entity_cache');
-		} else {
+		} elseif(function_exists('xcache_get')){
+			$shared_cache = new ElggXCache('new_entity_cache');
+		}else {
 			$shared_cache = false;
 		}
 	}
@@ -758,6 +769,11 @@ function get_entity($guid, $type = 'object') {
 
 	if(is_array($new_entity)){
 		$new_entity = $new_entity[0];
+	}
+	
+	//check access permissions
+	if(!elgg_check_access($new_entity)){
+		return false; //@todo return error too
 	}
 	
 	if ($new_entity) {
@@ -903,7 +919,8 @@ function elgg_get_entities(array $options = array()) {
 	}
 
 	if($options['limit'] == false || $options['limit'] == 0){
-		unset($options['limit']);
+		//unset($options['limit']);
+		$options['limit'] = 999999;
 	}
 	
 	//hack to make ajax lists not show duplicates
@@ -919,7 +936,7 @@ function elgg_get_entities(array $options = array()) {
 			if($options['guids']){
 
 				$rows = $DB->cfs[$type]->multiget($options['guids']);
-			
+
 			} else{
 				if($options['timebased']){
 					if(!$namespace = $attrs['namespace']){
@@ -939,7 +956,8 @@ function elgg_get_entities(array $options = array()) {
 						$guids = $DB->cfs['entities_by_time']->get($namespace, $slice);
 						$rows = $DB->cfs[$type]->multiget(array_keys($guids));
 					} else {
-						return	$DB->cfs['entities_by_time']->get_count($namespace);
+						$count = $DB->cfs['entities_by_time']->get_count($namespace);
+						return $count;
 					}
 				} else {
 					if($attrs){
@@ -964,7 +982,7 @@ function elgg_get_entities(array $options = array()) {
 					$entities[] = entity_row_to_elggstar($newrow, $type);
 				}
 			}
-		} catch(Exception $e){		
+		} catch(Exception $e){
 			//@todo report error to admin	
 		}
 		return $entities;
@@ -1371,7 +1389,6 @@ $order_by = 'time_created') {
 	$where = array();
 
 	if ($type != "") {
-		$type = sanitise_string($type);
 		$where[] = "type='$type'";
 	}
 
@@ -1655,19 +1672,21 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 				}
 			
 				$owner = $entity->getOwnerEntity();	
-				$followers = $owner->getFriendsOf(null, 10000, "", 'guids');
-				if(!$followers) { 
-					$followers = array(); 
-				}
-				array_push($followers, $entity->owner_guid);
-			
-				foreach($followers as $follower){
-					if($entity->super_subtype){
-						array_push($namespace, $type . ':' . $entity->super_subtype . ':network:'.$follower);
-                        	                array_push($namespace, $type . ':' . $entity->super_subtype . ':user:'.$follower);
+				if($owner instanceof ElggUser){
+					$followers = $owner->getFriendsOf(null, 10000, "", 'guids');
+					if(!$followers) { 
+						$followers = array(); 
 					}
-					array_push($namespace, $type . ':' . $entity->subtype . ':network:'.$follower);
-                                        array_push($namespace, $type . ':' . $entity->subtype . ':user:'.$follower);
+					array_push($followers, $entity->owner_guid);
+			
+					foreach($followers as $follower){
+						if($entity->super_subtype){
+							array_push($namespace, $type . ':' . $entity->super_subtype . ':network:'.$follower);
+                	       	 	                array_push($namespace, $type . ':' . $entity->super_subtype . ':user:'.$follower);
+						}
+						array_push($namespace, $type . ':' . $entity->subtype . ':network:'.$follower);
+        	               	                 array_push($namespace, $type . ':' . $entity->subtype . ':user:'.$follower);
+					}
 				}
 
 				foreach($namespace as $rowkey){

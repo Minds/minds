@@ -9,7 +9,7 @@
 $default_items = elgg_extract('default', $vars['menu'], array());
 $more_items = elgg_extract('more', $vars['menu'], array());
 
-echo '<ul class="elgg-menu elgg-menu-site elgg-menu-site-default clearfix">';
+echo '<ul class="menu global-menu elgg-menu elgg-menu-site elgg-menu-site-default clearfix">';
 foreach ($default_items as $menu_item) {
 	echo elgg_view('navigation/menu/elements/item', array('item' => $menu_item));
 }

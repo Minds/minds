@@ -8,6 +8,17 @@
 elgg_register_event_handler('init', 'system', 'notifications_plugin_init');
 
 function notifications_plugin_init() {
+	
+	/*$mail = new ElggNotificationEmail();
+	$mail->subject = 'Your ' . $subscription . ' digest';
+	$mail->subscription = $subscription;
+	$mail->save();*/
+	//$mail->send();
+	
+	elgg_register_plugin_hook_handler('cron', 'minute', 'notifications_cron_handler');
+	elgg_register_plugin_hook_handler('cron', 'daily', 'notifications_cron_handler');
+	elgg_register_plugin_hook_handler('cron', 'weekly', 'notifications_cron_handler');
+	add_subtype('notificaiton', 'email', 'ElggNotificationEmail');
 
 	elgg_extend_view('css/elgg','notifications/css');
 
@@ -34,7 +45,7 @@ function notifications_plugin_init() {
 	elgg_register_event_handler('create', 'annotation', 'notifications_notify');
 	
 	$notification_js = elgg_get_simplecache_url('js', 'notifications/notify');
-	elgg_register_js('elgg.notifications', $notification_js);
+	elgg_register_js('elgg.notifications', $notification_js, 'footer');
 	elgg_load_js('elgg.notifications');
 	
 
@@ -94,7 +105,7 @@ function notifications_page_handler($page) {
  */
 function notifications_plugin_pagesetup() {
 	
-/*	if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
+if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
 
 		$user = elgg_get_page_owner_entity();
 		if (!$user) {
@@ -108,16 +119,16 @@ function notifications_plugin_pagesetup() {
 		);
 		elgg_register_menu_item('page', $params);
 		
-		if (elgg_is_active_plugin('groups')) {
+		/*if (elgg_is_active_plugin('groups')) {
 			$params = array(
 				'name' => '2_group_notify',
 				'text' => elgg_echo('notifications:subscriptions:changesettings:groups'),
 				'href' => "notifications/group/{$user->username}",
 			);
 			elgg_register_menu_item('page', $params);
-		}
+		}*/
 	}
-*/
+
 }
 
 /**
@@ -332,5 +343,45 @@ function notifications_reset_counter($user_guid = NULL){
 	$user->notifications_count = 0;
 	$user->save();
 	elgg_set_ignore_access(false);
+}
+
+
+function notifications_cron_handler($hook, $type, $params, $return){
+	/**
+	 * FOR SECURITY ONLY ALLOW THIS TO BE CALLED FROM LOCALHOST!
+	 */
+	if($_SERVER['HTTP_HOST'] != 'localhost'){
+		return false;
+	}
+	
+	$queue = elgg_get_entities(array('type'=>'notification', 'subtype'=>'email', 'limit'=>0));
+	
+	foreach($queue as $q){
+		if($q->send()){
+			echo 'sent';
+		} else {
+			if($q->state == 'completed' && $q->time_created <= time()-3600){
+				$q->delete();
+			}
+			echo $q->state;
+		}
+	}
+	
+	$mail = new ElggNotificationEmail();
+	switch($type){
+		case 'daily':
+			$mail = new ElggNotificationEmail();
+			$mail->subject = 'Your Minds Headlines';
+			$mail->subscription = $type;
+			$mail->send();
+			break;
+		case 'weekly':
+			$mail = new ElggNotificationEmail();
+			$mail->subject = 'Your Minds Headlines';
+			$mail->subscription = $type;
+			$mail->send();
+			break;
+	}
+	
 }
 

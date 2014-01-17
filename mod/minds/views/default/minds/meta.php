@@ -27,47 +27,44 @@ $siteURL = elgg_get_site_url();
 $owner = elgg_get_page_owner_entity();
 //if(in_array('channel', $split)){
 //echo elgg_get_context();
+//var_dump(elgg_get_page_owner_entity(), elgg_get_logged_in_user_entity(), get_user_by_username('mark')); exit;
 if((elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news' || elgg_get_context() == 'blog' || elgg_get_context() == 'archive') && elgg_get_viewtype() == 'default'){
 	echo '<style>';
 
 	if($owner->background || $owner->text_colour || $owner->link_colour){
+
 	echo <<<BODY
 	
 	body{
+			background-color: $owner->background_colour;
 			
-			background-image:url({$siteURL}mod/channel/background.php?guid=$owner->guid&t=$owner->background_timestamp) !important;
+			background-image:  url({$siteURL}mod/channel/background.php?guid=$owner->guid&t=$owner->background_timestamp) !important;
 			
 			background-repeat:$owner->background_repeat;
 			
 			background-position:$owner->background_pos;
-			
-			background-color:$owner->background_colour;
-			
+									
 			background-attachment:$owner->background_attachment;
 			
 		}
-		
-	h1,h2,h3,h4,h5, .elgg-module-widget{
+	
+	/** HEADER (h1) **/	
+	.channel-header h1{
+		color:$owner->h1_colour;
+	}
+	/** HEADER (h3) **/
+	.channel-header h3{
+		color:$owner->h3_colour;
+	}
+	/** MENU LINK COLOURS **/
+	.channel-filter-menu> ul > li > a{
 			
-		color:$owner->text_colour;
+		color:$owner->menu_link_colour;
 	}
-	
-	a{
-		color:$owner->link_colour;
-	}
-	
-	.elgg-module-widget, .elgg-module-widget:hover{
-		background:$owner->widget_bg;
-	}
-	.elgg-module-widget, .elgg-module-widget p{
-		color:$owner->widget_body_text;
-	}
-	.elgg-module-widget > .elgg-head h3 {
-		color:$owner->widget_head_title_color;
-	}
-	.elgg-module-widget:hover h3, .elgg-module-widget:hover{
-				background:$owner->widget_bg;
-	}
+
+	/**
+	 * BLOG/CONTENT VIEWS
+	 */	
 	.elgg-main{
 		-moz-box-shadow: 0 0 3px #888;
 		-webkit-box-shadow: 0 0 3px#888;
@@ -85,21 +82,4 @@ BODY;
 	echo '</style>';
 }
 ?>
-<script type="text/javascript">
 
-window._taboola = window._taboola || [];
-
-_taboola.push({article:'auto'});
-
-!function (e, f, u) {
-
-e.async = 1;
-
-e.src = u;
-
-f.parentNode.insertBefore(e, f);
-
-}(document.createElement('script'),
-document.getElementsByTagName('script')[0], 'http://cdn.taboola.com/libtrc/minds/loader.js');
-
-</script>

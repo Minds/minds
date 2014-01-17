@@ -32,6 +32,51 @@ function _elgg_get_access_cache() {
 }
 
 /**
+ * Check the access permissions
+ * 
+ * @param object $entity
+ * @param object $user
+ * 
+ * @return bool
+ */
+function elgg_check_access($entity, $user = null){
+
+	if(elgg_get_ignore_access()){
+		return true;
+	}
+
+	if(!elgg_is_logged_in()){
+		if($entity->access_id == ACCESS_PUBLIC){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	if(!$user){
+		$user = elgg_get_logged_in_user_entity();
+	}
+
+	if($entity instanceof ElggUser){
+//		return true;
+	}
+	
+	//first of all check if the user owns the entity
+	if($entity->owner_guid == $user->guid || $entity->container_guid == $user->guid){
+		return true;
+	}
+	
+	$access_array = get_access_array($user->guid, 0);
+	
+	if(in_array($entity->access_id, $access_array)){
+		return true;
+	}
+	
+	return false;
+
+}
+
+/**
  * Return a string of access_ids for $user_id appropriate for inserting into an SQL IN clause.
  *
  * @uses get_access_array
@@ -129,7 +174,7 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
 		$access_array = $cache[$hash];
 	} else {
 		$access_array = array(ACCESS_PUBLIC);
-
+		
 		// The following can only return sensible data if the user is logged in.
 		if (elgg_is_logged_in()) {
 			$access_array[] = ACCESS_LOGGED_IN;
@@ -161,13 +206,19 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
 					}
 				}
 			}
-
+			*/
 			$ignore_access = elgg_check_access_overrides($user_id);
 
 			if ($ignore_access == true) {
 				$access_array[] = ACCESS_PRIVATE;
-			}*/
+			}
 		}
+		
+	/*	if(elgg_is_admin_user($user_id)){
+			if ($ignore_access == true) {
+				$access_array[] = ACCESS_PRIVATE;
+			}
+		}*/
 
 		if ($init_finished) {
 			$cache[$hash] = $access_array;
@@ -381,6 +432,8 @@ END;
  */
 function has_access_to_entity($entity, $user = null) {
 	global $CONFIG;
+	
+	
 
 	if (!isset($user)) {
 		$access_bit = get_access_sql_suffix("e");
@@ -550,7 +603,6 @@ function create_access_collection($name, $owner_guid = 0, $site_guid = 0) {
 	if (($site_guid == 0) && (isset($CONFIG->site_guid))) {
 		$site_guid = $CONFIG->site_guid;
 	}
-	$name = sanitise_string($name);
 
 	$q = "INSERT INTO {$CONFIG->dbprefix}access_collections
 		SET name = '{$name}',

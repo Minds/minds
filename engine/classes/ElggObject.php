@@ -82,7 +82,7 @@ class ElggObject extends ElggEntity {
 
 			// Is it a GUID
 			} else {
-				if (!$this->load($guid)) {
+				if (!get_entity($guid,'object')) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
 			}
@@ -195,12 +195,26 @@ class ElggObject extends ElggEntity {
          * @return ElggEntity The owning entity
          */
         public function getOwnerEntity($brief = false) {
-		if($brief){
+		/*if($brief){
 			if($this->owner){
-				//return json_decode($this->owner);
-			}
-		} 
-                return get_entity($this->owner_guid, 'user');
+                 	       $owner = json_decode($this->owner);
+                                if($owner->name){
+				     return new ElggUser($owner);
+                                } else {
+					if($this->canEdit()){
+	//					$this->save();
+					}
+				}
+                        }
+		}*/
+	//	$cache = new ElggXCache();
+	//	if($owner = $cache->load("user:$this->owner_guid")){
+	//		return new ElggUser(json_decode($owner));
+	//	} else {
+			$owner = get_entity($this->owner_guid, 'user');
+	//		$cache->save("user:$this->owner_guid", json_encode($owner->toArray()), 3600);
+	//	}
+                return $owner;
 	}
 
 	/**
@@ -211,8 +225,8 @@ class ElggObject extends ElggEntity {
          */
         public function save() {
                 //cache owner_guid for brief
-                $this->owner = json_encode($this->getOwnerEntity());
-                $guid = create_entity($this);
+                $this->owner = json_encode($this->getOwnerEntity()->export());
+		$guid = create_entity($this);
                 $this->attributes['guid'] = $guid;
 		return $guid;
         }

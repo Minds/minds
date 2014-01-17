@@ -37,7 +37,7 @@ class ElggRiverItem {
 		if (!($object instanceof stdClass)) {
 			// throw exception
 		}
-
+		
 		// the casting is to support typed serialization like json
 		$int_types = array('access_id', 'posted');
 		foreach ($object as $key => $value) {
@@ -57,7 +57,7 @@ class ElggRiverItem {
 	public function getSubjectEntity($brief = true) {
 		if($brief){
 			if($subject = unserialize($this->subject)){
-				cache_entity($subject);
+				//cache_entity($subject);
 				return $subject;
 			}
 		}

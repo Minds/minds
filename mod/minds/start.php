@@ -37,8 +37,8 @@ function minds_init(){
 	elgg_extend_view('core/settings/statistics', 'minds/quota/statistics', 500);
 	
 	//register the ubuntu font
-	elgg_register_css('ubuntu.font', 'http://fonts.googleapis.com/css?family=Ubuntu:300');
-	elgg_load_css('ubuntu.font');
+//	elgg_register_css('ubuntu.font', 'http://fonts.googleapis.com/css?family=Ubuntu:300');
+//	elgg_load_css('ubuntu.font');
 
 	//register our own css files
 	$url = elgg_get_simplecache_url('css', 'minds');
@@ -46,35 +46,40 @@ function minds_init(){
 	
 	//register our own js files
 	$minds_js = elgg_get_simplecache_url('js', 'minds');
-	elgg_register_js('minds.js', $minds_js);
+	elgg_register_js('minds.js', $minds_js, 'footer');
 	
 	//plugin for cookie manipulation via JS
-	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js');
+	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js', 'footer');
 	elgg_load_js('jquery-cookie');
 	
 	//register inline js player
 	$uiVideoInline = elgg_get_simplecache_url('js', 'uiVideoInline');
-	elgg_register_js('uiVideoInline', $uiVideoInline);
+	elgg_register_js('uiVideoInline', $uiVideoInline, 'footer');
 	elgg_load_js('uiVideoInline');
 	
 	//register textarea expander
-	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js');
+	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js', 'footer');
 	
 	//register carousel js
-	elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js');
+	elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js', 'footer');
 	
 	elgg_unregister_js('jquery');
-	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
+	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'footer');
 	elgg_load_js('jquery');
-	
+
+	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js');
+	elgg_load_js('jquery-masonry');
+	elgg_register_js('jquery-imagesLoaded', elgg_get_site_url() . 'mod/minds/vendors/masonry/imagesLoaded.min.js');	
+	elgg_load_js('jquery-imagesLoaded');
+
 	//register jquery.form
-	elgg_register_js('jquery.form', elgg_get_site_url() . 'mod/minds/vendors/jquery/jquery.form.js');
+	elgg_register_js('jquery.form', elgg_get_site_url() . 'mod/minds/vendors/jquery/jquery.form.min.js', 'footer');
 	elgg_load_js('jquery.form');
 	
 	//registers tipsy
-	elgg_register_js('jquery.tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/javascripts/jquery.tipsy.js');
+	elgg_register_js('jquery.tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/javascripts/jquery.tipsy.min.js', 'footer');
 	elgg_load_js('jquery.tipsy');
-	elgg_register_css('tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/stylesheets/tipsy.css');
+	elgg_register_css('tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/stylesheets/tipsy.css', 'footer');
 	elgg_load_css('tipsy');
 		
 	//set the custom index
@@ -146,7 +151,7 @@ function minds_init(){
         /*elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
             $pages = array('tierlogin'); 
             return array_merge($pages, $return);
-        });
+        });*/
         
         // Override registration action to support tier signup
         elgg_unregister_action('register');
@@ -200,40 +205,13 @@ function minds_init(){
             echo elgg_view_page('Login', elgg_view_layout('default', $params),'default_popup');
             return true;
         });
-        
-        
-        // Override the return url on tier orders
-        elgg_register_plugin_hook_handler('urls', 'pay', function($hook, $type, $return, $params) {
-            
-            if ($order = $params['order']) {
-            
-                $items = unserialize($order->items);
-                if ($items) {
-                    // Assume that if the first one is a tier then everything is
-                    $ia = elgg_set_ignore_access();
-                    
-                    $tier = get_entity($items[0]->object_guid);
-                    if (elgg_instanceof($tier, 'object', 'minds_tier'))
-                            $return['return'] = elgg_get_site_url() . 'register/node/';
-                            
-                    elgg_set_ignore_access($ia);
-             
-                    return $return;
-                }
-                
-            }
-            
-        });
-        
-        // Remove elgg specific admin menu items
-        elgg_register_event_handler('pagesetup', 'system', function() {    
-            elgg_unregister_menu_item('admin_footer', 'faq');
-            elgg_unregister_menu_item('admin_footer', 'manual');
-            elgg_unregister_menu_item('admin_footer', 'community_forums');
-            elgg_unregister_menu_item('admin_footer', 'blog');
-        }, 1001);
-        */
-}
+
+
+	elgg_register_page_handler('thumbProxy', function($pages){
+		include('thumbnailProxy.php');
+		return true;
+	});
+}        
 
 function minds_index($hook, $type, $return, $params) {
 	if ($return == true) {
@@ -700,9 +678,9 @@ function minds_subscribe_bulk($username = 'minds'){
 	}
 }
 
-function minds_fetch_image($description, $owner_guid) {
+function minds_fetch_image($description, $owner_guid=null, $width=null) {
   
-	global $post, $posts;
+	global $CONFIG, $post, $posts;
 	
 	if($description){
 		libxml_use_internal_errors(true);
@@ -720,6 +698,9 @@ function minds_fetch_image($description, $owner_guid) {
      			$image = $owner->getIconURL('large');
         	}
   	}
+	$base_url = $CONFIG->cnd_url ? 'http://'. $CONFIG->cdn_url : elgg_get_site_url();
+	$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=3';
+	if($width){ $image .= '&width=' . $width; } 
 	return $image;
 }
 

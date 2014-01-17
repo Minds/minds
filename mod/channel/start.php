@@ -63,15 +63,15 @@ function channel_init() {
 	elgg_register_page_handler('channel', 'channel_page_handler');
 	//register a page handler for channels search and suggestions
 	elgg_register_page_handler('channels', 'channels_page_handler');
+	elgg_register_page_handler('icon', 'channel_icon_handler');
 	
 	elgg_register_event_handler('create','object','channels_widget_added_action');
 
 	elgg_extend_view('page/elements/head', 'channel/metatags');
 	elgg_extend_view('css/elgg', 'channel/css');
 	elgg_extend_view('js/elgg', 'channel/js');
-	//elgg_extend_view('page/layouts/widgets/add_button', 'channel/top', 1);//add to the top of the widget
 	
-	elgg_register_js('minicolors', elgg_get_site_url() . 'mod/channel/vendors/miniColors/jquery.miniColors.min.js');
+	elgg_register_js('minicolors', elgg_get_site_url() . 'mod/channel/vendors/miniColors/jquery.miniColors.min.js','footer');
 	elgg_register_css('minicolors', elgg_get_site_url() . 'mod/channel/vendors/miniColors/jquery.miniColors.css');
 
 	// allow ECML in parts of the profile
@@ -168,37 +168,68 @@ function channel_page_handler($page) {
 		return true;
 	}
 		
-	if ($action == 'custom') {
-		// use the core profile edit page
-		$base_dir = elgg_get_root_path();
-		require "{$base_dir}mod/channel/pages/custom.php";
-		return true;
+
+	$header = elgg_view('channel/header', array('user'=>$user, 'selected'=>$page[1]));
+
+	switch($page[1]){
+		case 'custom':
+			$content = elgg_view_form('channel/custom', array('enctype' => 'multipart/form-data'), array('entity' => $user));
+			break;
+		case 'avatar':
+			$content = '<div class="avatar-page">';
+			$content .= elgg_view('core/avatar/upload', array('entity' => $user));
+			// only offer the crop view if an avatar has been uploaded
+			if (isset($user->icontime)) {
+				$content .= elgg_view('core/avatar/crop', array('entity' => $user));
+			}
+			$content .= '</div>';
+			break;
+		case 'about':
+			$content = elgg_view('channel/about', array('user'=>$user));
+			break;
+		case 'blog':
+		case 'blogs':
+			$content = elgg_list_entities(array(	
+											'type'=>'object', 
+											'subtype'=>'blog', 
+											'owner_guid'=>$user->guid, 
+											'limit'=>8, 
+											'offset'=>get_input('offset',''),
+											'full_view'=>false
+											));			
+			break;
+		case 'archive':
+			$content = elgg_list_entities(array(	
+											'type'=>'object', 
+											'subtype'=>'archive', 
+											'owner_guid'=>$user->guid, 
+											'limit'=>8, 
+											'offset'=>get_input('offset','')
+											));	
+			break;
+		case 'widgets':			
+			// main profile page
+	        $params = array(
+	                'num_columns' => 2,
+	                'widgets' => elgg_get_widgets($user->guid, $context),
+                	'context' => 'channel',
+            		'exact_match' => $exact_match,
+	        );
+	        $content .= elgg_view('page/layouts/widgets/add_button', $params);
+			$content .= elgg_view('page/layouts/widgets/add_panel', $params);
+	        $content .= elgg_view_layout('widgets', $params);
+			break;
+		case 'news':
+		case 'timeline':
+			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>''));
+			break;
+		default:
+			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>''));
+			$class = 'landing-page';
 	}
-		
-
-	// main profile page
-	$params = array(
-		//'content' => elgg_view('channel/wrapper'),
-		'num_columns' => 2,
-	);
-	$content = elgg_view_layout('widgets', $params);
-	
-	$context = 'channel';
-
-	$widgets = elgg_get_widgets($user->guid, $context);
-
-	$params = array(
-        	'widgets' => $widgets,
-        	'context' => $context,
-        	'exact_match' => $exact_match,
-	);
-
-	//$header = elgg_view_title($user->name);
-	$header .= elgg_view('page/layouts/widgets/add_button');
-	$header .= elgg_view('page/layouts/widgets/add_panel', $params);
 
 
-	$body = elgg_view_layout('one_column', array('content' => $content, 'header'=>$header));
+	$body = elgg_view_layout('one_column', array('content' => $header.$content, 'header'=>false, 'class'=>$class));
 	echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel'));
 	return true;
 }
@@ -289,7 +320,8 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 */
 
 	$join_date = $user->getTimeCreated();
-	return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
+	//return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
+	return  $CONFIG->cdn_url . "icon/$user_guid/$size/$join_date/$icon_time";
 }
 
 /**
@@ -420,3 +452,43 @@ function channels_widget_added_action($event, $object_type, $object){
 	}
 }
 
+//userid/size/joindate/lastcache
+function channel_icon_handler($pages){
+	$_GET['guid'] = $pages[0];
+	$_GET['size'] = $pages[1];
+	$_GET['joindate'] = $pages[2];
+	$_GET['lastcache'] =  $page[3];
+	include('icondirect.php');
+	return true;
+}
+
+function channel_custom_vars($user = null) {
+	// input names => defaults
+	$values = array(
+		'background' => null,
+		'background_colour' => '#FAFAFA',
+		'background_repeat' => 'repeat',
+		'background_attachment' => 'fixed',
+		
+		'h1_colour' => '#333',
+		'h3_colour' => '#333',
+
+		'menu_link_colour' => '#333',
+
+
+		'briefdescription' => '',
+		'description' => '',
+		'contactemail' => '',
+		'location' => ''
+	);
+
+	if($user){
+		foreach (array_keys($values) as $field) {
+			if (isset($user->$field)) {
+				$values[$field] = $user->$field;
+			}
+		}
+	}
+
+	return $values;
+}

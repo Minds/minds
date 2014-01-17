@@ -13,11 +13,12 @@
 /* Base */
 .elgg-button {
 	font-size: 12px;
-	font-weight: lighter;
+	font-weight: bold;
+	text-align: left;
 	
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border-radius: 0;
+	-webkit-border-radius: 2px;
+	-moz-border-radius:2px;
+	border-radius:2px;
 
 	min-width:125px;
 	width: auto;
@@ -37,15 +38,13 @@ a.elgg-button {
 .elgg-button-submit {
 	color: white;
 	text-decoration: none;
-	border: 1px solid #333;
 	background: #333;
 }
 
 .elgg-button-submit:hover {
-	border-color: #666;
 	text-decoration: none;
 	color: white;
-	background: #666;
+	background: #111;
 }
 
 .elgg-button-submit.elgg-state-disabled {
@@ -56,14 +55,12 @@ a.elgg-button {
 
 /* Cancel: This button should convey a negative but easily reversible action (e.g., turning off a plugin) */
 .elgg-button-cancel {
-	color: #333;
-	background: #ddd;
-	border: 1px solid #999;
+	color: #FFF;
+	background: #FF0A0A;
 }
 .elgg-button-cancel:hover {
-	color: #444;
-	background-color: #999;
-	background-position: left 10px;
+	color:#FFF;
+	background-color: #E00A0A;
 	text-decoration: none;
 }
 
@@ -73,26 +70,17 @@ a.elgg-button {
 	border:1px solid #4690D6;
 	color: #FFF;
 	padding: 2px 15px;
-	text-align: left;
-	font-weight: lighter;
 	text-decoration: none;
 	text-shadow: 0;
 	cursor: pointer;
-	
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border-radius: 0;
-	
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
 }
 
 .elgg-button-action:hover,
 .elgg-button-action:focus {
 	color: #FFF;
 	text-decoration: none;
-	box-shadow: inset 0 0 10px #888;
+	background:#4690C3;
+	border:1px solid #4690C3;
 }
 
 /* Delete: This button should convey "be careful before you click me" */

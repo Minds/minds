@@ -13,7 +13,7 @@ if (!$user_guids) {
 }
 
 foreach ($user_guids as $guid) {
-	$user = get_entity($guid);
+	$user = get_entity($guid, 'user');
 	if (!$user instanceof ElggUser) {
 		$error = TRUE;
 		continue;
@@ -22,7 +22,6 @@ foreach ($user_guids as $guid) {
 	//Preparar envío de correo electrónico al usuario
 	//From
 	$site = elgg_get_site_entity();
-	$site = get_entity($site->guid);
 	$siteurl = elgg_get_site_url();
 	if ($site && $site->email) {
 		$from = $site->email;

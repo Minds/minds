@@ -57,7 +57,7 @@ function wall_post($message, $access = ACCESS_PUBLIC, $wall_method = "api",	$to,
 		
 		$return['guid'] = $post->guid;
 		
-		$owner = get_entity($post->owner_guid);
+		$owner = get_entity($post->owner_guid, 'user');
 		$return['owner']['guid'] = $owner->guid;
 		$return['owner']['name'] = $owner->name;
 		$return['owner']['avatar_url'] = get_entity_icon_url($owner,'small');

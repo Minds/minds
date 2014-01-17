@@ -93,7 +93,6 @@ function notify_user($to, $from, $subject, $message, array $params = NULL, $meth
 		$to = array((int)$to);
 	}
 	$from = (int)$from;
-	//$subject = sanitise_string($subject);
 
 	// Get notification methods
 	if (($methods_override) && (!is_array($methods_override))) {
@@ -459,6 +458,7 @@ function remove_notification_interest($user_guid, $author_guid) {
  * @access private
  */
 function object_notifications($event, $object_type, $object) {
+	return;
 	// We only want to trigger notification events for ElggEntities
 	if ($object instanceof ElggEntity) {
 		/* @var ElggEntity $object */
@@ -487,6 +487,7 @@ function object_notifications($event, $object_type, $object) {
 		}
 
 		if (isset($CONFIG->register_objects[$object_type][$object_subtype])) {
+			return;
 			$subject = $CONFIG->register_objects[$object_type][$object_subtype];
 			$string = $subject . ": " . $object->getURL();
 

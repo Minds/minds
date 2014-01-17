@@ -1,7 +1,6 @@
 <div class="minds-site-social">
 		<div class="fb-like" data-href="http://facebook.com/mindsdotcom" data-width="75px" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
 		<a href="https://twitter.com/mindsdotcom" class="twitter-follow-button" data-align="right" data-show-screen-name="false">Follow</a>
-		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </div>
 
 <?php return; ?>

@@ -369,8 +369,10 @@ function elgg_create_default_widgets($event, $type, $entity) {
 				$guid = elgg_create_widget($entity->guid, $info['name'], $info['widget_context']);
 				
 				if ($guid) {
-				//	var_dump($guid);exit;
 					$widget = get_entity($guid, 'widget');
+					if(!$widget){
+						continue;
+					}
 					$widget->column = $info['widget_columns'];
 
 					/**

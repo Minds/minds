@@ -46,7 +46,7 @@ function minds_nodes_init() {
         elgg_register_plugin_hook_handler('urls', 'pay', 'minds_tier_pay_override');
    	
 	// set up tier indexes
-	run_function_once('minds_tier_runone_2013110501');
+	///run_function_once('minds_tier_runone_2013110501');
 }
 
 function minds_tiers_get_product($product_id) {

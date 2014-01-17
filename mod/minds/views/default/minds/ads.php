@@ -7,75 +7,65 @@ switch($type){
 		if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
 			echo elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds');
 		} else {
-			echo '<script type="text/javascript"><!--
-                google_ad_client = "ca-pub-9303771378013875";
-                /* Minds large block */
-                google_ad_slot = "5788264423";
-                google_ad_width = 336;
-                google_ad_height = 280;
-                //-->
-                </script>
-                <script type="text/javascript"
-                        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-                </script>';
+			echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Minds large block -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="5788264423"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>';
 		}
-			echo '<script type="text/javascript"><!--
-		google_ad_client = "ca-pub-9303771378013875";
-		/* Minds large block */
-		google_ad_slot = "5788264423";
-		google_ad_width = 336;
-		google_ad_height = 280;
-		//-->
-		</script>
-		<script type="text/javascript"
-			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-		</script>';
+			echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Minds large block -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="5788264423"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>';
 	break;
 	case 'content-side-single':
-		echo '<script type="text/javascript"><!--
-                google_ad_client = "ca-pub-9303771378013875";
-                /* Minds large block */
-                google_ad_slot = "5788264423";
-                google_ad_width = 336;
-                google_ad_height = 280;
-                //-->
-                </script>
-                <script type="text/javascript"
-                        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-                </script>';
+		echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Minds large block -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="5788264423"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>';
 	break;
 	case 'content-side-single-user':
 		if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
                		echo elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds');
        		} else {
-		echo '<script type="text/javascript"><!--
-                google_ad_client = "ca-pub-9303771378013875";
-                /* Minds large block */
-                google_ad_slot = "5788264423";
-                google_ad_width = 336;
-                google_ad_height = 280;
-                //-->
-                </script>
-                <script type="text/javascript"
-                        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-                </script>';
+		echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Minds large block -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="5788264423"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>';
         	}
 	break;
 	case 'content-side-single-user-2':
 		if(elgg_get_plugin_user_setting('adblock2', elgg_get_page_owner_guid(), 'minds')){
                 	echo elgg_get_plugin_user_setting('adblock2', elgg_get_page_owner_guid(), 'minds');
         	} else {
-        	echo '<script type="text/javascript"><!--
-                google_ad_client = "ca-pub-9303771378013875";
-                /* Minds large block */
-                google_ad_slot = "5788264423";
-                google_ad_width = 336;
-                google_ad_height = 280;
-                //-->
-                </script>
-                <script type="text/javascript"
-                        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-                </script>';
+        	echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Minds large block -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="5788264423"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>';
         	}
 	break;
 	case 'content-below-banner':
@@ -83,17 +73,15 @@ switch($type){
         	if(elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds')){
                 	echo elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds');
         	} else {
-                	echo '<script type="text/javascript"><!--
-                google_ad_client = "ca-pub-9303771378013875";
-                /* Content Bottom Banner */
-                google_ad_slot = "9810862421";
-                google_ad_width = 728;
-                google_ad_height = 90;
-                //-->
-                </script>
-                <script type="text/javascript"
-                        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-                </script>';
+                	echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Page Top Banner -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="9810862421"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>';
         	}
 		echo '</div></div>';
 	break;
@@ -231,8 +219,8 @@ placement:'below-main-column'});
 	_taboola.push({mode:'text-links-2c', container:'taboola-text-2-columns-mix', placement:'text-2-columns', target_type:'mix'}); </script>"
 
 );
-	$rand = array_rand($providers);
-	//$rand = get_input('show_ad', 'contentad');
+	//$rand = array_rand($providers);
+	$rand = get_input('show_ad', 'toobla');
 	echo '<div class="content-block-ratator">' .$providers[$rand] . '</div>';
 	break;	
 	case 'content.ad':

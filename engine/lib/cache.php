@@ -423,13 +423,13 @@ function _elgg_load_cache() {
 	if (!is_string($data)) {
 		return;
 	}
-	$CONFIG->views->locations = unserialize($data);
+	$CONFIG->views->locations = json_decode($data,true);
 	
 	$data = elgg_load_system_cache('view_types');
 	if (!is_string($data)) {
 		return;
 	}
-	$CONFIG->view_types = unserialize($data);
+	$CONFIG->view_types = json_decode($data,true);
 
 	$CONFIG->system_cache_loaded = true;
 }
@@ -457,8 +457,8 @@ function _elgg_cache_init() {
 
 	// cache system data if enabled and not loaded
 	if ($CONFIG->system_cache_enabled && !$CONFIG->system_cache_loaded) {
-		elgg_save_system_cache('view_locations', serialize($CONFIG->views->locations));
-		elgg_save_system_cache('view_types', serialize($CONFIG->view_types));
+		elgg_save_system_cache('view_locations', json_encode($CONFIG->views->locations));
+		elgg_save_system_cache('view_types', json_encode($CONFIG->view_types));
 	}
 
 	if ($CONFIG->system_cache_enabled && !$CONFIG->i18n_loaded_from_cache) {

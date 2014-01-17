@@ -29,7 +29,7 @@
 *************************************** */
 .elgg-list {
 	/*border-top: 1px dotted #CCCCCC;*/
-	margin:5px 0;
+	margin:5px 0.5%;
 	clear: both;
 	width:100%;
 }
@@ -46,13 +46,14 @@
         display: block;
 	position:relative;
 
-	box-shadow: 0 0 1px #888;
-	-webkit-box-shadow: 0 0 1px #888;
-	-moz-box-shadow: 0 0 1px #888;
+	box-shadow: 0 0 1px #DDD;
+	-webkit-box-shadow: 0 0 1px #DDD;
+	-moz-box-shadow: 0 0 1px #DDD;
+	border: 1px solid #DDD;
 }
 @media screen and (max-width: 1100px) {
         .elgg-list > li{
-                width:29%;
+                width:28%;
                 height:210px;
         }
 }
@@ -62,7 +63,20 @@
 		height:210px;
 	}
 }
+@media screen and (min-width: 1800px) {
+	 .elgg-list > li{
+                width:16%;
+                height:210px;
+        }
+}
+/**
+ * MASON PROTOTYPE
+ */
 
+.elgg-list.mason > li{
+	height: auto;
+	display:block;
+}
 .elgg-footer .elgg-list > li{
 	width: 42%;
 	margin: 16px 2%;
@@ -171,7 +185,7 @@
 	Owner Block
 *************************************** */
 .elgg-owner-block {
-	width:336px;
+	margin:8px;
 	float:right;
 	margin-bottom:0;
 }
@@ -263,6 +277,10 @@
 	-webkit-border-radius: 5px 5px 0 0;
 	-moz-border-radius: 5px 5px 0 0;
 	border-radius: 5px 5px 0 0;
+}
+
+.elgg-river-responses{
+	margin-bottom:6px;
 }
 
 <?php //@todo components.php ?>

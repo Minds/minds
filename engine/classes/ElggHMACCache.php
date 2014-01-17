@@ -27,7 +27,6 @@ class ElggHMACCache extends ElggCache {
 	public function save($key, $data) {
 		global $CONFIG;
 
-		$key = sanitise_string($key);
 		$time = time();
 
 		$query = "INSERT into {$CONFIG->dbprefix}hmac_cache (hmac, ts) VALUES ('$key', '$time')";
@@ -46,7 +45,6 @@ class ElggHMACCache extends ElggCache {
 	public function load($key, $offset = 0, $limit = null) {
 		global $CONFIG;
 
-		$key = sanitise_string($key);
 
 		$row = get_data_row("SELECT * from {$CONFIG->dbprefix}hmac_cache where hmac='$key'");
 		if ($row) {
@@ -65,8 +63,6 @@ class ElggHMACCache extends ElggCache {
 	 */
 	public function delete($key) {
 		global $CONFIG;
-
-		$key = sanitise_string($key);
 
 		return delete_data("DELETE from {$CONFIG->dbprefix}hmac_cache where hmac='$key'");
 	}

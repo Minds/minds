@@ -2,11 +2,14 @@
 elgg.provide('elgg.wall');
 elgg.provide('elgg.wall.news');
 elgg.provide('elgg.wall.groups');
+elgg.provide('elgg.wall.channel');
 
 elgg.wall.init = function() {
 	
 	var news = $('form[name=elgg-wall-news]');
 	news.on('click', 'input[type=submit]', elgg.wall.news.submit);
+
+	$('form[name=elgg-wall-channel]').on('click', 'input[type=submit]', elgg.wall.channel.submit);
 	
 	var news = $('form[name=elgg-wall-news-groups]');
 	news.on('click', 'input[type=submit]', elgg.wall.groups.submit);
@@ -72,6 +75,24 @@ elgg.wall.news.submit = function(e) {
 		}});
 
 	e.preventDefault();
+};
+
+
+elgg.wall.channel.submit = function(e) {
+        var form = $(this).parents('form');
+        var data = form.serialize();
+
+        elgg.action('wall/add', {
+                data: data,
+                success: function(json) {
+		        if($('.news').length){        
+				var el = $(json.output);
+			        $('.elgg-list.mason').prepend(el).masonry('prepended', el);
+				$(document).find('textarea').val('');
+            		}
+		    }});
+
+        e.preventDefault();
 };
 
 elgg.wall.groups.submit = function(e) {

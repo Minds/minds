@@ -1,0 +1,32 @@
+#summary Instructions for installing webgrind
+#labels Featured,install
+
+= Requirements =
+To run webgrind you need a webserver with PHP 5 installed. Webgrind uses `json_encode` that is available from PHP 5.2 or as a PECL extension before that. 
+
+Xdebug does the actual profiling so that should be installed first (http://www.xdebug.org/docs/install). Then add the following to your php.ini file:
+
+Always profile scripts with xdebug:
+{{{
+xdebug.profiler_enable = 1 
+}}}
+
+Alternatively, enable profiling with GET/POST parameter XDEBUG_PROFILE, e.g. http://localhost/samplepage.php?XDEBUG_PROFILE:
+{{{
+xdebug.profiler_enable_trigger = 1
+}}}
+
+Please refer to the Xdebug manual for further configuration settings: http://www.xdebug.org/docs/all_settings
+
+= Installation =
+  # Download webgrind.
+  # Extract webgrind to a folder accessible to the webserver.
+  # Start using webgrind with your browser of choice by navigating to the URL of your webgrind install, e.g. http://localhost/webgrind.
+
+= Configuration =
+Webgrind can be configured by editing the config.php file in the webgrind directory, but should work with default settings provided Xdebug is installed and configured correctly.
+
+  * {{{$storageDir}}} - path to a writeable directory where webgrind will store processed cachegrind files
+  * {{{$profilerDir}}} - If Xdebug is not installed, this variable defines a directory searched for cachegrind files. If Xdebug is installed, webgrind will look for cachegrind files defined by the xdebug.profiler_output_dir setting. The default is /tmp.
+
+Further configuration options are described in the config.php file itself.

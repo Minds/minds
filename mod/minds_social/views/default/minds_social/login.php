@@ -15,7 +15,6 @@ $persona = <<<__HTML
 </div>
 __HTML;
 
-echo $persona;
 
 
 /*
@@ -36,7 +35,7 @@ $login_url = $facebook->getLoginUrl(array(
 			));
 */
 $login_url = elgg_get_site_url() . 'social/fb/login';			
-echo '<div class="social_login facebook"><a href="' . $login_url . '" target="_self"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/fbx32.png"/><p>Login with Facebook</p></a></div>';
+$facebook =  '<div class="social_login facebook"><a href="' . $login_url . '" target="_self"><img src="' . elgg_get_site_url() .'mod/minds_social/graphics/fbx32.png"/><p>Login with Facebook</p></a></div>';
 
 /**
  * Twitter Button
@@ -53,5 +52,8 @@ $twitter = <<<__HTML
 </div>
 __HTML;
 
-echo $twitter;
+?>
 
+<div class="social-login">
+	<?php echo $persona; echo $twitter; echo $facebook; ?>
+</div>
