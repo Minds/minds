@@ -209,6 +209,7 @@ container:'taboola-below-main-column',
 placement:'below-main-column'});
 
 </script>
+>>>>>>> master
 
 <div id='taboola-text-2-columns-mix'></div>
 <script type='text/javascript'>

@@ -498,9 +498,9 @@ class ElggPlugin extends ElggEntity {
 		// set the namespaced name.
 		$name = elgg_namespace_plugin_private_setting('user_setting', $name, $this->getID());
 
-		       //update session... @todo, make this work better. Probably put through User class
-    		       global $SESSION;
-   		       $SESSION['user']->$name = $value;
+	       //update session... @todo, make this work better. Probably put through User class
+    	       global $SESSION;
+  	       $SESSION['user']->$name = $value;
 
 		return set_private_setting($user->guid, 'user',$name, $value);
 	}

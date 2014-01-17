@@ -1175,8 +1175,31 @@ div.signup-options .right {
 	margin: 18px;
 	background: #AAA;
 }
+
 .toobla-side{
         margin: 18px;
+}
+.adblade iframe{
+	margin: 10px auto;
+	display:block;
+}
+
+div.tier_details {
+border: 1px solid #000;
+}
+
+div.register-popup {
+    width:700px;
+    margin-left: 30px;
+    margin-right: auto;
+}
+
+/**
+ * Ad specific
+ */
+.contentad{
+	width:100%;
+	height:620px;
 }
 .adblade iframe{
 	margin: 10px auto;

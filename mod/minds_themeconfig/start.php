@@ -1,50 +1,13 @@
 <?php
+elgg_register_event_handler('init','system', 'themeconfig_init');
 
-elgg_register_event_handler('init','system',function(){
+function themeconfig_init(){
   
     elgg_register_admin_menu_item('configure', 'theme', 'appearance');
     
     elgg_register_action('theme/edit', dirname(__FILE__) . '/actions/edit.php', 'admin');
     
-    elgg_register_page_handler('themeicons', function($pages) {
-        
-        global $CONFIG;
-        
-        switch($pages[0]) {
-            case 'background':
-                 $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
-    
-                $contents = file_get_contents($theme_dir . 'background');
-                header("Content-type: " . elgg_get_plugin_setting('background_override_mime', 'minds_themeconfig'));
-                header('Expires: ' . date('r', strtotime("+6 months")), true);
-                header("Pragma: public");
-                header("Cache-Control: public");
-                header("Content-Length: " . strlen($contents));
-                
-                break;
-            case 'logo_main' :
-            case 'logo_topbar' :
-                $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
-    
-                $contents = file_get_contents($theme_dir . $pages[0].'.jpg');
-                header("Content-type: image/jpeg");
-                header('Expires: ' . date('r', strtotime("+6 months")), true);
-                header("Pragma: public");
-                header("Cache-Control: public");
-                header("Content-Length: " . strlen($contents));
-                
-                break;
-        }
-        
-        if ($contents) {
-            
-                $split_string = str_split($contents, 1024);
-                foreach ($split_string as $chunk) {
-                        echo $chunk;
-                }
-                exit;
-        }
-    });
+    elgg_register_page_handler('themeicons', 'themeicons_page_handler');
     
     elgg_register_event_handler('pagesetup', 'system', function() {
         
@@ -65,7 +28,48 @@ elgg_register_event_handler('init','system',function(){
         // Extend the css
         elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
     }, 999);
-});	
+}
+
+function themeicons_page_handler($pages) {
+
+        global $CONFIG;
+        
+	switch($pages[0]) {
+            case 'background':
+                 $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
+
+                $contents = file_get_contents($theme_dir . 'background');
+                header("Content-type: " . elgg_get_plugin_setting('background_override_mime', 'minds_themeconfig'));
+                header('Expires: ' . date('r', strtotime("+6 months")), true);
+                header("Pragma: public");
+                header("Cache-Control: public");
+                header("Content-Length: " . strlen($contents));
+
+                break;
+            case 'logo_main' :
+            case 'logo_topbar' :
+            case 'logo_favicon' :
+                $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
+               
+                $contents = file_get_contents($theme_dir . $pages[0].'.jpg');
+                header_remove();
+                header("Content-Type: image/jpeg");
+               header('Expires: ' . date('r', strtotime("+6 months")), true);
+               header("Pragma: public");
+               header("Cache-Control: public");
+               header("Content-Length: " . strlen($contents));
+                break;
+        }
+        
+        if ($contents) {
+            
+                $split_string = str_split($contents, 1024);
+                foreach ($split_string as $chunk) {
+                        echo $chunk;
+                }
+                exit;
+        }
+    }	
 
  function minds_themeconfig_codeToMessage($code) 
     { 

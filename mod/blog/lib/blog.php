@@ -545,8 +545,8 @@ function blog_sidebar($blog){
 		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar', 'pagination'=>false, 'masonry'=>false));
 		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs, array('class'=>'blog-sidebar'));
 		
-		$return .= elgg_view('minds/ads', array('type'=>'content-side-single-user-2'));
 	}
+
 	//show featured blogs
 	$featured_blogs = minds_get_featured(null, 8);
 	if($featured_blogs){

@@ -8,6 +8,7 @@
  */
 
 function minds_init(){
+
 // 	$i = 10000;
 // 	$mt = microtime(true);
 // 	while($i-->0) {
@@ -132,6 +133,9 @@ function minds_init(){
 	elgg_register_action("minds/remind/external", "$actionspath/minds/remind_external.php");
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
+        elgg_register_action("registernode","$actionspath/minds/registernode.php");
+        elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php");
+        elgg_register_action("select_free_tier","$actionspath/minds/select_free_tier.php");
 	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
@@ -144,10 +148,10 @@ function minds_init(){
         // Handle some tier pages
         
         // Extend public pages
-        elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
+        /*elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
             $pages = array('tierlogin'); 
             return array_merge($pages, $return);
-        });
+        });*/
         
         // Override registration action to support tier signup
         elgg_unregister_action('register');
@@ -202,11 +206,13 @@ function minds_init(){
             return true;
         });
 
+
 	elgg_register_page_handler('thumbProxy', function($pages){
 		include('thumbnailProxy.php');
 		return true;
 	});
 }        
+
 function minds_index($hook, $type, $return, $params) {
 	if ($return == true) {
 		// another hook has already replaced the front page
@@ -692,8 +698,11 @@ function minds_fetch_image($description, $owner_guid=null, $width=null) {
      			$image = $owner->getIconURL('large');
         	}
   	}
-	$image = 'http://'.$CONFIG->cdn_url . 'thumbProxy?src='. urlencode($image) . '&c=3';
-	if($width){ $image .= '&width=' . $width; } 
+	if($CONFIG->cnd_url){
+		$base_url = $CONFIG->cnd_url ? 'http://'. $CONFIG->cdn_url : elgg_get_site_url();
+		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=3';
+		if($width){ $image .= '&width=' . $width; } 
+	} 
 	return $image;
 }
 
@@ -784,5 +793,3 @@ function minds_htmlawed_filter_tags($hook, $type, $result, $params) {
 }
 
 elgg_register_event_handler('init','system','minds_init');		
-
-?>
