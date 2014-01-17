@@ -533,6 +533,9 @@ function sanitise_filepath($path, $append_slash = TRUE) {
  */
 function system_messages($message = null, $register = "success", $count = false) {
 	global $SESSION;
+	if(!$SESSION){
+		return false;
+	}
 	if(!isset($_COOKIE['Minds']) && !isset($_COOKIE['Elgg_Install'])){
 		if(!is_null($message)){
 			if($register == 'error'){

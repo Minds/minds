@@ -698,9 +698,11 @@ function minds_fetch_image($description, $owner_guid=null, $width=null) {
      			$image = $owner->getIconURL('large');
         	}
   	}
-	$base_url = $CONFIG->cnd_url ? 'http://'. $CONFIG->cdn_url : elgg_get_site_url();
-	$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=3';
-	if($width){ $image .= '&width=' . $width; } 
+	if($CONFIG->cnd_url){
+		$base_url = $CONFIG->cnd_url ? 'http://'. $CONFIG->cdn_url : elgg_get_site_url();
+		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=3';
+		if($width){ $image .= '&width=' . $width; } 
+	} 
 	return $image;
 }
 
