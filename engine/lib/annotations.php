@@ -34,7 +34,8 @@ function row_to_elggannotation($row) {
  * @return ElggAnnotation|false
  */
 function elgg_get_annotation_from_id($id) {
-	$row = db_get($id);
+	$db = new DatabaseCall('annotations');
+	$row = $db->getRow($id);
 	return row_to_elggannotation($row);
 }
 
@@ -87,9 +88,8 @@ $owner_guid = 0, $access_id = ACCESS_PRIVATE) {
 	$entity = get_entity($entity_guid, 'object');
 
 	if (elgg_trigger_event('annotate', $entity->type, $entity)) {
-
-		$result = db_insert(0, array(	'entity_guid' => $entity_guid,
-						'type' => 'annotation',
+		$db = new DatabaseCall('annotation');
+		$result = $db->insert(0, array(	'entity_guid' => $entity_guid,
 						'name' => $name,
 						'value' => $value,
 						'owner_guid' => $owner_guid,
@@ -139,7 +139,8 @@ function update_annotation($annotation_id, $name, $value, $value_type, $owner_gu
 	}
 
 	// If ok then add it
-	$result = db_insert($annotation_id, array(	'name' =>$name,
+	$db = new DatabaseCall('annotation');
+	$result = $db->insert($annotation_id, array(	'name' =>$name,
 							'value' => $value,
 							'access_id'=>$access_id,
 							'owner_guid'=>$owner_guid

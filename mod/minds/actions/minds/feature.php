@@ -10,13 +10,16 @@ global $CONFIG;
 $guid = get_input('guid');
 $entity = get_entity($guid, 'object'); //always an object, unless we decide to feature channels...
 
+$db = new DatabaseCall('entities_by_time');
+
 if(!$entity->featured || $entity->featured == 0){
 
 	$g = new GUID(); 
 	$entity->featured_id = $g->generate();
 	
-	db_insert('object:featured', array('type'=>'entities_by_time',$entity->featured_id => $entity->getGUID()));
-	db_insert('object:'.$entity->subtype.':featured', array('type'=>'entities_by_time',$entity->featured_id => $entity->getGUID()));
+	
+	$db->insert('object:featured', array($entity->featured_id => $entity->getGUID()));
+	$db->insert('object:'.$entity->subtype.':featured', array($entity->featured_id => $entity->getGUID()));
 	
 	$entity->featured = 1;	
 
@@ -37,8 +40,8 @@ if(!$entity->featured || $entity->featured == 0){
 
 	if($entity->featured_id){
 		//supports legacy imports
-		db_remove('object:featured', 'entities_by_time', array($entity->featured_id));
-		db_remove('object:'.$entity->subtype.':featured','entities_by_time', array($entity->featured_id)); 
+		$db->removeRow('object:featured', array($entity->featured_id));
+		$db->removeRow('object:'.$entity->subtype.':featured', array($entity->featured_id)); 
 	}
 
 	$entity->featured = 0;

@@ -149,6 +149,7 @@ function pam_auth_userpass(array $credentials = array()) {
 	}
 
 	$user = get_user_by_username($credentials['username']);
+
 	if (!$user) {
 		throw new LoginException(elgg_echo('LoginException:UsernameFailure'));
 	}
@@ -294,7 +295,8 @@ function login(ElggUser $user, $persistent = false) {
 		$user->{'cookie:'.md5($code)} = $expires; //cookie_id => expires
 		setcookie("mindsperm", $code, $expires, "/");
 		//add to the user index cf
-		db_insert('cookie:'. md5($code), array('type'=>'user_index_to_guid', $user->getGUID() => $expires));
+		$db = new DatabaseCall('user_index_to_guid');
+		$db->insert('cookie:'. md5($code), array($user->getGUID() => $expires));
 	}
 	
 	if (!$user->save() || !elgg_trigger_event('login', 'user', $user)) {

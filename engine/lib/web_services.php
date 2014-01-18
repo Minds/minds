@@ -877,14 +877,10 @@ function create_user_token($username, $expire = 60) {
 		return false;
 	}
 
-        if (db_insert($token, array(
-            'type' => 'token',
-	    'owner_guid' => $user->guid,
-            'site_guid' => $site_guid,
-            'expires' => $time
-        ))) {
-            return $token;
-        }
+	$db = new DatabaseCall('token');
+	if ($db->insert($token, array( 'owner_guid' => $user->guid, 'site_guid' => $site_guid, 'expires' => $time))) {
+		return $token;
+	}
 	/*if (insert_data("INSERT into {$CONFIG->dbprefix}users_apisessions
 				(user_guid, site_guid, token, expires) values
 				({$user->guid}, $site_guid, '$token', '$time')
@@ -951,16 +947,17 @@ function get_user_tokens($user_guid, $site_guid) {
  * @return mixed The user id attached to the token if not expired or false.
  */
 function validate_user_token($token, $site_guid) {
-	global $CONFIG, $DB;
+	global $CONFIG;
 
 	if (!isset($site_guid)) {
 		$site_guid = $CONFIG->site_id;
 	}
 
 	$time = time();
-        try{
-	$user = $DB->cfs['token']->get($token);
-        } catch(Exception $e){
+	try{
+		$db = new DatabaseCall('token');
+		$user = $db->getRow($token);
+	} catch(Exception $e){
 		var_dump($e); 
 //		exit;
 	}
@@ -997,7 +994,8 @@ function remove_user_token($token, $site_guid) {
 
 	/*return delete_data("DELETE from {$CONFIG->dbprefix}users_apisessions
 		where site_guid=$site_guid and token='$token'");*/
-        return db_remove($token);
+	$db = new DatabaseCall('token');
+	return $db->removeRow($token);
 }
 
 /**
@@ -1013,13 +1011,16 @@ function remove_expired_user_tokens() {
 
 	$time = time();
 
-        if ($result = $DB->cfs['token']->get_indexed_slices(new IndexClause(
+	if ($result = $DB->cfs['token']->get_indexed_slices(new IndexClause(
                 array(
                     new IndexExpression('expires', time(), 'LT'),
                 )
         ))) {
-            foreach ($result as $guid => $obj)
-                db_remove($guid);
+            foreach ($result as $guid => $obj){
+            	$db = new DatabaseCall('token');
+           		$db->removeRow($guid);
+            }
+                
         }
 	/*return delete_data("DELETE from {$CONFIG->dbprefix}users_apisessions
 		where site_guid=$site_guid and expires < $time");*/

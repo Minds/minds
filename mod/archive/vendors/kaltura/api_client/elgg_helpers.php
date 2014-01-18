@@ -455,6 +455,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $monetized 
 	global $KALTURA_GLOBAL_UICONF;
 	
 	$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'archive');
+	$kaltura_api_cdn = elgg_get_plugin_setting('kaltura_api_cdn', 'archive') ?: $kaltura_server;
 	$partnerId = elgg_get_plugin_setting('partner_id', 'archive');
 
 	if(empty($entryId)) return "Error entryId: $entryId";
@@ -514,9 +515,9 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $monetized 
 
 //	$flashVars .= '&watermark.watermarkPath=' . elgg_get_site_url() . '/archive/view/' . $entryForPlayer;
 	
-	$video_location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $entryForPlayer;
+	$video_location = $kaltura_api_cdn . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $entryForPlayer;
 	
-	$widget .= '<script type="text/javascript" src="' . $kaltura_server . '/p/'.$partnerId.'/sp/'.$partnerId.'00/embedIframeJs/uiconf_id/'.$widgetUi.'/partner_id/' . $partnerId * 100 . '"></script>';
+	$widget .= '<script type="text/javascript" src="' . $kaltura_api_cdn . '/p/'.$partnerId.'/sp/'.$partnerId.'00/embedIframeJs/uiconf_id/'.$widgetUi.'/partner_id/' . $partnerId * 100 . '"></script>';
 	 
 	//$showAds = 'customAd.path=' . ($monetized ? elgg_get_plugin_setting('adPluginID', 'archive'):'false');
 
@@ -524,7 +525,7 @@ function kaltura_create_generic_widget_html ( $entryId , $size='l' , $monetized 
 	 xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" 
 	allowFullScreen="true" allowScriptAccess="always" allowNetworking="all" height="' . $height . '" width="' . $width . '"  resource="' . $video_location . '" data="'. $video_location . '" rel="media:video" wmode="transparent"'.
            
-        '<a rel="media:thumbnail" href="' . $kaltura_server . '/p/'.$partnerId.'/sp/' . $partnerId * 100 . '/thumbnail/entry_id/0_l47o3qy5/width/120/height/90/bgcolor/000000/type/2"></a>' .
+        '<a rel="media:thumbnail" href="' . $kaltura_api_cdn . '/p/'.$partnerId.'/sp/' . $partnerId * 100 . '/thumbnail/entry_id/0_l47o3qy5/width/120/height/90/bgcolor/000000/type/2"></a>' .
 		'<param name="allowScriptAccess" value="always" />'.
 		'<param name="allowNetworking" value="all" />'.
 		'<param name="allowFullScreen" value="true" />'.
@@ -564,11 +565,8 @@ function kaltura_get_thumnail($entry_id, $width=100, $height=100, $quality=100, 
 	if($vid_sec == 0){
 		$vid_sec = 3;
 	}
-	if(elgg_get_site_url() == 'http://www.minds.com/'){
-		$kaltura_server = 'http://dladfude8tdj2.cloudfront.net';
-	} else {
-		$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'archive');
-	}
+	$kaltura_server = elgg_get_plugin_setting('kaltura_api_cdn', 'archive') ?: elgg_get_plugin_setting('kaltura_server_url',  'archive');
+//	$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'archive');
 	$partnerId = elgg_get_plugin_setting('partner_id', 'archive');
 	$thumbnail_url = "$kaltura_server/p/$partnerId/thumbnail/entry_id/$entry_id/width/$width/height/$height/quality/$quality/type/3/vid_sec/$vid_sec/";
 	return $thumbnail_url;

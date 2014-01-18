@@ -49,7 +49,8 @@ $posted = 0, $annotation_id = 0) {
 	$serialized_object = serialize($object);
 
 	// Attempt to save river item; return success status
-	$id = db_insert(0, array(	'type'=>'newsfeed',
+	$db = new DatabaseCall('newsfeed');
+	$id = $db->insert(0, array(
 					'subject_guid'=>$subject_guid,
 					'object_guid'=>$object_guid,
 					'access_id'=>$access_id,
@@ -68,11 +69,13 @@ $posted = 0, $annotation_id = 0) {
 	array_push($followers, $subject_guid);//add to their own timeline
 	array_push($followers, $object->container_guid); //add to containers timeline
 	foreach($followers as $follower){
-		db_insert($follower, array('type'=>'timeline', $id => time()));
+		$db = new DatabaseCall('timeline');
+		$db->insert($follower, array($id => time()));
 	}
 
 	//place on users own personal line
-	db_insert('personal:'.$subject_guid, array('type'=>'timeline', $id => time()));
+	$db = new DatabaseCall('timeline');
+	$db->insert('personal:'.$subject_guid, array($id => time()));
 
 	if ($id) {
 //		update_entity_last_action($object_guid, $posted);
@@ -142,12 +145,14 @@ function elgg_delete_river(array $options = array()) {
 		//container_guid
 		array_push($followers, $object->container_guid);
 
+		$db = new DatabaseCall('timeline');
 		foreach($followers as $follower){
-			db_remove($follower,'timeline', array($item->id));
+			$db->removeAttributes($follower, array($item->id));
 		}
 
 		//remove from the main newsfeed now
-		db_remove($item->id, 'newsfeed');
+		$db = new DatabaseCall('newsfeed');
+		$db->removeRow($item->id);
 
 	}
 
@@ -185,21 +190,30 @@ function elgg_get_river(array $options = array()) {
 	//no params, then get the public line
 	if($options['type'] == 'timeline'){
 		
-		$ids = db_get($options);
+		$timeline = new DatabaseCall('timeline');
+		$row = $timeline->getRow($options['owner_guid'], array('offset'=>$options['offset'], 'limit'=>$options['limit']));
+		foreach($row as $k => $v){
+        	if($k != 'type' || $k != 0){
+            	$ids[] = $k;
+            }
+        }
 
 		if($ids){
-			$rows = db_get(array('type'=>'newsfeed', 'ids'=>$ids));
+			$newsfeed = new DatabaseCall('newsfeed');
+			$rows = $newsfeed->getRows($ids);
 		}
 
 	} elseif($options['type'] == 'newsfeed'){
 		
-		if($ids = $options['ids']){
+		$db = new DatabaseCall('newsfeed');
 		
-			$rows = db_get(array('type'=>'newsfeed', 'ids'=>$ids));
+		if($ids = $options['ids']){
+
+			$rows = $db->getRows($ids);
 		
 		} else {
 
-			$rows = db_get($options);
+			$rows = $db->getRow($options['guid'], array('offset'=>$options['offset'], 'limit'=>$options['limit']));
 	
 		}
 

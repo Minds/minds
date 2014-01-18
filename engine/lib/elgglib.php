@@ -2173,8 +2173,6 @@ function _elgg_engine_boot() {
 	set_error_handler('_elgg_php_error_handler');
 	set_exception_handler('_elgg_php_exception_handler');
 
-	db_init();
-
 	verify_installation();
 
 	_elgg_load_application_config();

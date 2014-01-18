@@ -82,9 +82,12 @@ class ElggObject extends ElggEntity {
 
 			// Is it a GUID
 			} else {
-				if (!get_entity($guid,'object')) {
+				if (!$new = get_entity($guid,'object')) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
+				 foreach ($new->attributes as $key => $value) {
+                                        $this->attributes[$key] = $value;
+                                }
 			}
 		}
 	}

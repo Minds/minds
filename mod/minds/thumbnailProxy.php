@@ -18,6 +18,10 @@ if($width <= 1 || $height <= 1){
 	$new_height = 1;
 }
 
+if(get_input('height')){
+	$new_height = get_input('height');
+}
+
 // Resample
 $image_p = imagecreatetruecolor($new_width, $new_height);
 

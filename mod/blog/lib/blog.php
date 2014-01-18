@@ -38,9 +38,10 @@ function blog_get_page_content_read($guid = NULL) {
                 'class' => 'elgg-menu-hz',
         ));
 
-	$excerpt = $blog->excerpt ? strip_tags($blog->excerpt) : substr(strip_tags($blog->description), 0, 140);
-
-        set_input('description', $excerpt);
+	global $CONFIG;
+	$excerpt = $blog->excerpt ? strip_tags($blog->excerpt) : elgg_get_excerpt($blog->description) ?:  $CONFIG->site_description; 
+	$excerpt = str_replace('"', "'", $excerpt);
+	set_input('description', $excerpt);
         set_input('keywords', $blog->tags);
 
         //set up for facebook
@@ -48,7 +49,7 @@ function blog_get_page_content_read($guid = NULL) {
         minds_set_metatags('og:url',$blog->getPermaURL());
         minds_set_metatags('og:title',$blog->title);
         minds_set_metatags('og:description', $excerpt);
-        minds_set_metatags('og:image', minds_fetch_image($blog->description, $blog->owner_guid));
+        minds_set_metatags('og:image', minds_fetch_image($blog->description, $blog->owner_guid, 800));
         //setup for twitter
         minds_set_metatags('twitter:card', 'summary');
         minds_set_metatags('twitter:url', $blog->getURL());
@@ -102,7 +103,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		'type' => 'object',
 		'subtype' => 'blog',
 		'full_view' => false,
-		'limit' => get_input('limit', 12),
+		'limit' => get_input('limit', 8),
 		'offset' => get_input('offset', 0)
 	);
 
@@ -174,7 +175,7 @@ function blog_get_trending_page_content_list() {
 	
       	$return['filter_context'] = 'trending';
 	
-	$limit = get_input('limit', 12);
+	$limit = get_input('limit', 8);
 	$offset = get_input('offset', '');
 
 	$guids = analytics_retrieve(array('context'=>'blog','limit'=> $limit, 'offset'=>$offset));
@@ -206,7 +207,7 @@ function blog_get_page_content_friends($user_guid) {
 		forward('blog/all');
 	}
 
-	$limit = get_input('limit', 12);
+	$limit = get_input('limit', 8);
 	$offset = get_input('offset','');
 	$return = array();
 
@@ -537,8 +538,9 @@ function blog_sidebar($blog){
 
 	if($blog){	
 		$return .= elgg_view('minds/ads', array('type'=>'content-side-single'));
+		  $return .= elgg_view('minds/ads', array('type'=>'content-side-single-user-2'));
 		//show more posts from this user
-		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>4));
+		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>2));
 		if (($key = array_search($blog, $owners_blogs)) !== false) {
 		    unset($owners_blogs[$key]);
 		}
@@ -548,7 +550,7 @@ function blog_sidebar($blog){
 	}
 
 	//show featured blogs
-	$featured_blogs = minds_get_featured(null, 8);
+	$featured_blogs = minds_get_featured(null, 4);
 	if($featured_blogs){
 		$featured_blogs = elgg_view_entity_list($featured_blogs,  array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar', 'pagination'=>false, 'masonry'=>false));
 		$return .= elgg_view_module('aside', elgg_echo('blog:featured'), $featured_blogs, array('class'=>'blog-sidebar'));	

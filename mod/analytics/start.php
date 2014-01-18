@@ -85,7 +85,9 @@ function anayltics_authenticate_google(){
  * Retrieve analytic information, based on a info
  */
 function analytics_retrieve(array $options = array()){
-	global $DB;
+
+	$db = new DatabaseCall('entities_by_time');
+	
 	$g = new GUID();
 	$client = analytics_register_client();
 	$analytics = new Google_AnalyticsService($client);	
@@ -103,15 +105,14 @@ function analytics_retrieve(array $options = array()){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
 			$context = $options['context'] != '' ? $options['context'] : 'all';
-			$count = $DB->cfs['entities_by_time']->get_count('trending:'.$context);		
+			$count = $db->countRow('trending:'.$context);		
 			if((int) $options['offset'] >= $count){
 				return false;
 			} elseif($options['offset'] > 0){
 				$options['limit']++;
 			}
 			
-			$slice = new phpcassa\ColumnSlice($options['offset'], "", $options['limit'], false);
-			$guids = $DB->cfs['entities_by_time']->get('trending:'.$context, $slice);			
+			$guids = $db->getRow('trending:'.$context, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=>false));			
 
 			return $guids;
 		} catch(Exception $e){
@@ -158,14 +159,14 @@ function analytics_fetch(){
 		}
 		$views = $row[2];
 		//echo $entity->title . ' GUID:' . $guid . ' - Views: ' . $views . '<br/>';
-		array_push($guids, $guid);
-		if(in_array($guid, $guids) && !elgg_instanceof($entity,'object')){
+		if(in_array($guid, $guids) || !elgg_instanceof($entity,'object')){
 			//duplicate
 			echo "GUID $guid failed, probably because it doesn't exists \n";
 			continue;
 		} elseif(!in_array($entity->subtype,array('blog', 'kaltura_video'))){
 			continue;
 		}
+		array_push($guids, $guid);//now add to the list
 		$objects['all'][] = $guid;
 		$objects[$entity->subtype][] = $guid;
 		if(in_array($entity->subtype, array('image','file','kaltura_video'))){
@@ -190,10 +191,10 @@ function analytics_fetch(){
 		$data = $guids;
 		
 		if($data){
-			$data['type'] = 'entities_by_time';
 			//we want to start removing old ones soon...
-			db_remove('trending:'.$subtype,$data['type']);
-			db_insert('trending:'.$subtype, $data);
+			$db = new DatabaseCall('entities_by_time');
+			$db->removeRow('trending:'.$subtype);
+			$db->insert('trending:'.$subtype, $data);
 			var_dump($data);
 			echo "Successfuly imported '$subtype' to trending \n";
 		}
