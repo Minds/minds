@@ -103,18 +103,18 @@ class ElggPlugin extends ElggEntity {
 		$this->attributes['title'] = $this->pluginID;
 		*/
 		
-		$options = array();
+		$attributes = array();
 		foreach($this as $k=>$v){
-			$options[$k] = $v;
+			$attributes[$k] = $v;
 		}
-		$options['type'] = 'plugin';
 		
 		if(!$this->pluginID)	{
 			//throw error here
 			return false;
 		}
 		
-		return db_insert($this->pluginID, $options);
+		$db = new DatabaseCall('plugin');
+		return $db->insert($this->pluginID, $attributes);
 
 	}
 

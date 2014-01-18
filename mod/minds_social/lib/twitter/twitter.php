@@ -98,9 +98,9 @@ function minds_social_twitter_login() {
 					'invitecode' => $invitecode
 				);
 	
-				$data = array('type'=>'user_index_to_guid', $guid => time());
-		                db_insert('twitter:id:'.$twitter->id, $data);//move this into the user class
-				db_insert('twitter:name'.$twitter->name, $data);
+				$db = new DatabaseCall('user_index_to_guid');
+		        $db->insert('twitter:id:'.$twitter->id,  array($guid => time()));//move this into the user class
+				$db->insert('twitter:name'.$twitter->name,  array($guid => time()));
 	
 				//Automatically subscribe user to the Minds Channel
 				minds_subscribe_default(null,null,null, array('user'=>$new_user));

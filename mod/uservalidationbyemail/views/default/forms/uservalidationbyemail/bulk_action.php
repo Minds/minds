@@ -9,10 +9,9 @@
 $limit = get_input('limit', 10);
 $offset = get_input('offset', "");
 
-global $DB;
-$slice = new phpcassa\ColumnSlice($offset, "", $limit, true);
-$guids = $DB->cfs['entities_by_time']->get('user:unvalidated', $slice);		
-$count =  $DB->cfs['entities_by_time']->get_count('user:unvalidated');
+$db = new DatabaseCall('entities_by_time');
+$guids = $db->getRow('user:unvalidated', array('offset'=>$offset, 'limit'=>$limit));		
+$count =  $db->countRow('user:unvalidated');
 
 if (!$count) {
 	echo elgg_autop(elgg_echo('uservalidationbyemail:admin:no_unvalidated_users'));

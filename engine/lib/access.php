@@ -40,7 +40,8 @@ function _elgg_get_access_cache() {
  * @return bool
  */
 function elgg_check_access($entity, $user = null){
-
+	
+//var_dump($entity);
 	if(elgg_get_ignore_access()){
 		return true;
 	}
@@ -58,7 +59,7 @@ function elgg_check_access($entity, $user = null){
 	}
 
 	if($entity instanceof ElggUser){
-//		return true;
+	//	return true;
 	}
 	
 	//first of all check if the user owns the entity

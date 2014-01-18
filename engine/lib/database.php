@@ -27,6 +27,8 @@ $DB = new stdClass(); //make a database class for caching etc
  *
  * @return void
  * @access private
+ * 
+ * @deprecated for DatabaseCall
  */
 
 function db_init() {
@@ -64,6 +66,8 @@ function db_init() {
 
 /**
  * Insert to cassandra
+ * 
+ *@deprecated for DatabaseCall::insert
  */
 function db_insert($guid = NULL, array $options = array()){
 	global $DB;
@@ -93,6 +97,8 @@ function db_insert($guid = NULL, array $options = array()){
 
 /**
  * Get from cassandra
+ * 
+ * @deprecated for DatabaseCall::get
  */
 function db_get(array $options = array()){
 	global $DB;
@@ -239,6 +245,8 @@ function db_get(array $options = array()){
 
 /**
  * Performance a remove on the database. Either a column or row
+ * 
+ *@deprecated for DatabaseCall::removeRow or DatabaseCall::removeAttributes
  */
 function db_remove($guid = "", $type = "object", array $options = array()){
 	
@@ -255,6 +263,8 @@ function db_remove($guid = "", $type = "object", array $options = array()){
 /**
  * Creates a column family. This should be run automatically
  * for each new subtype that is created.
+ * 
+ * @deprecated for DatabaseCall::createCF
  */
 function create_cfs($name, array $indexes = array(), array $attrs = array(), $plugin_id){
 	global $CONFIG, $DB;
@@ -280,6 +290,8 @@ function create_cfs($name, array $indexes = array(), array $attrs = array(), $pl
 /**
  * Register a cfs thats has already been installed by the schema. 
  * These are sent via the plugins start.php files.
+ * 
+ *@deprecated for DatabaseCall();
  */
 function register_cfs($name){
 	

@@ -86,7 +86,8 @@ class ElggNotification extends ElggEntity{
 //		var_dump($this);
 		$guid =  create_entity($this,'false');
 		
-		db_insert('notifications:'.$this->to_guid, array('type'=>'entities_by_time', $guid => $guid));
+		$db = new DatabaseCall('entities_by_time');
+		$db->insert('notifications:'.$this->to_guid, array($guid => $guid));
 
 		notifications_increase_counter($this->to_guid);
 

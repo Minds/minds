@@ -222,8 +222,10 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $entity->expires      = $expires;        
         $entity->scope        = $scope;
 		
-		//add into the indexes
-		db_insert('oauth2_access_token:'.$token, array('type'=>'entities_by_time', $entity->guid => $entity->guid));
+		//add into the indexes 
+		//@todo make this user_index_to_guid...
+		$db = new DatabaseCall('entities_by_time');
+		$db->insert('oauth2_access_token:'.$token, array('type'=>'entities_by_time', $entity->guid => $entity->guid));
 
         return $this->getAccessToken($token);
     }
@@ -313,7 +315,8 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $entity->expires            = $expires;
         $entity->scope              = $scope;
 		
-		db_insert('oauth2_auth_code:'.$code, array('type'=>'entities_by_time', $entity->guid => $entity->guid));
+		$db = new DatabaseCall('entities_by_time');
+		$db->insert('oauth2_auth_code:'.$code, array($entity->guid => $entity->guid));
 
         return $this->getAuthorizationCode($code);
     }
@@ -337,7 +340,8 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $results = elgg_get_entities($this->getAuthCodeOptions($token));
 
         if (!empty($results)) {
-        	db_remove('oauth2_auth_code:'.$code, 'entities_by_time');
+        	$db = new DatabaseCall('entities_by_time');
+        	$db->removeRow('oauth2_auth_code:'.$code);
             return $results[0]->delete();
         }
 
@@ -448,7 +452,8 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $token->expires       = $expires;
         $token->scope         = $scope;
 
-		db_insert('oauth2_refresh_token:'.$refresh_token, array('type'=>'entities_by_time', $token->guid => $token->guid));
+		$db = new DatabaseCall('entities_by_time');
+		$db->insert('oauth2_refresh_token:'.$refresh_token, array($token->guid => $token->guid));
 
         return array(
             'refresh_token' => $token->refresh_token,
@@ -464,7 +469,8 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $results = $this->getRefreshToken($refresh_token);
 
         if (!empty($results)) {
-        	db_remove('oauth_refresh_token:'.$refresh_token,'entities_by_time');
+        	$db = new DatabaseCall('entities_by_time');
+        	$db->removeRow('oauth_refresh_token:'.$refresh_token);
             return $results[0]->delete();
         }
 
