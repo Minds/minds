@@ -5,14 +5,14 @@
     $files = array();
     foreach (array(
         'logo_main' => array(
-            'w' => 200,
-            'h' => 90,
+            'w' => 400,
+            //'h' => 90,
             'square' => false,
             'upscale' => true
         ),
         'logo_topbar' => array(
-            'w' => 78,
-            'h' => 30,
+            'w' => 400,
+//            'h' => 30,
             'square' => false,
             'upscale' => true
         ),

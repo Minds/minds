@@ -684,15 +684,18 @@ function elggmulti_get_activated_plugins($domain_id = false) {
 
 	$site = new \MultisiteDomain($domain_id);
 	
-
-	//$result = elggmulti_getdata("SELECT * from domains_activated_plugins where domain_id=$domain_id");
 	$resultarray = $site -> enabled_plugins;
 	if (($resultarray) && (!is_array($resultarray)))
 		$resultarray = array($resultarray);
 	
-	$defaults = elggmulti_hidden_plugins();
+	$defaults = elggmulti_get_default_plugins();
+	$resultarray = array_merge($defaults, $resultarray);
 
 	return $resultarray;
+}
+
+function elggmulti_get_default_plugins(){
+	return array('tinymce');
 }
 
 /**

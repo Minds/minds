@@ -33,7 +33,7 @@ if(!elgg_is_logged_in()){
 
 }
 
-$buttons .= elgg_view('output/url', array('href'=>elgg_get_site_url().'nodes/launch', 'text'=>elgg_echo('register:node'), 'class'=>'elgg-button elgg-button-action'));
+//$buttons .= elgg_view('output/url', array('href'=>elgg_get_site_url().'nodes/launch', 'text'=>elgg_echo('register:node'), 'class'=>'elgg-button elgg-button-action'));
 
 $titles_array = array(	'Freeing The World\'s Information', 
 			'Gathering Of The Minds Worldwide',
