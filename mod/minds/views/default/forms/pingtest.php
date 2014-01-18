@@ -55,15 +55,15 @@
     setTimeout(function() {
           $('#pingtest-results').html('<p>Sorry, the test timed out trying to reach <?php echo $vars['domain'];?>. You could try <a href="http://<?php echo $vars['domain']; ?>/install.php">going there anyway...</a></p>');
     }, 1000000);
-
-    $(document).ready(function(){
-	$.get("?domain=<?php echo $vars['domain'];?>&ping=true",
-	 function(data) { if(data == 1){ 
-				 window.location = "<?php echo $domain_link; ?>";
-			} else {
-				$('#pingtest-results').fadeOut();
-				$('#pingtest-fail').fadeIn();
-			}		 
-			});
-    });
+	var xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function()  {
+		if (xmlhttp.responseText == 1){
+   	 		window.location = "<?php echo $domain_link; ?>";
+		} else {
+			$('#pingtest-results').fadeOut();
+                               $('#pingtest-fail').fadeIn();
+		}
+  	}
+	xmlhttp.open("GET","?domain=<?php echo $vars['domain'];?>&ping=true",true);
+	xmlhttp.send();
 </script>

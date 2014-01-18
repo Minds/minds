@@ -7,7 +7,7 @@
  
 //show the sidebar
 if($vars['page'] != 'view'){
-	echo blog_sidebar();
+	echo blog_sidebar(null);
 }
 
 // fetch & display latest comments

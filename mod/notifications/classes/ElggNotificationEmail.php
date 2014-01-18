@@ -52,7 +52,6 @@ class ElggNotificationEmail extends ElggNotification {
 	}
 	
 	public function getRecipients($limit = 10, $offset= ""){
-		global $DB;
 		
 		/*$return = array();		
 		for ($i = 1; $i <= 1; $i++) {
@@ -62,8 +61,8 @@ class ElggNotificationEmail extends ElggNotification {
 		return $return;*/
 		try{
 			
-			$slice = new phpcassa\ColumnSlice($this->last_sent ?: $offset, "", $limit, true);
-			$guids = $DB->cfs['entities_by_time']->get('notification:subscriptions:'.$this->subscription, $slice);	
+			$db = new DatabaseCall('entities_by_time');
+			$guids = $db->getRow('notification:subscriptions:'.$this->subscription, array('offset'=>$this->last_sent ?: $offset, 'limit'=>$limit));	
 			unset($guids[$this->last_sent]);
 
 			if(count($guids) > 0){
@@ -117,6 +116,7 @@ class ElggNotificationEmail extends ElggNotification {
 	}
 
 	public function delete(){
-		return db_remove($this->guid, $this->type);
+		$db = new DatabaseCall($this->type);
+		return $db->removeRow($this->guid);
 	}
 }

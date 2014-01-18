@@ -166,7 +166,8 @@ function get_group_members($group_guid, $limit = 10, $offset = 0, $site_guid = 0
 	array_push($member_guids,  $group->owner_guid);
 	
 	if(is_array($member_guids) && !empty($member_guids)){
-		return db_get(array('type'=>'user', 'guids'=>$member_guids));
+		$db = new DatabaseCall('user');
+		return $db->getRows($member_guids);
 	}
 
 	return false;

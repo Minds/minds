@@ -71,7 +71,8 @@ function create_user_entity(array $options = array()) {
 
 	$options['username'] = strtolower($options['username']);
 	
-	$result = db_insert($options['guid'], $options);
+	$db = new DatabaseCall('user');
+	$result = $db->insert($options['guid'], $options);
 	
 	return $result;	
 	
@@ -263,7 +264,7 @@ function remove_user_admin($user_guid) {
 			}
 
 			$user->admin = 'no';
-			$user->savei();
+			$user->save();
 			invalidate_cache_for_entity($user_guid);
 			return true;
 		}
@@ -313,13 +314,11 @@ function user_add_friend($user_guid, $friend_guid) {
 	}
 	
 	//add this this users list of subscriptions
-	db_insert($user_guid, array(	'type' => 'friends',
-					$friend_guid => time()
-				));
+	$friends = new DatabaseCall('friends');
+	$friends->insert($user_guid, array($friend_guid => time()));
 	//add user to friends list of subscriptions
-	db_insert($friend_guid, array(	'type' => 'friendsof',
-					$user_guid => time()
-				));
+	$friendsof = new DatabaseCall('friendsof');
+	$friendsof->insert($friend_guid, array($user_guid => time()));
 
 	//hack - update session!
         global $SESSION;
@@ -350,8 +349,10 @@ function user_remove_friend($user_guid, $friend_guid) {
 		}
 	}*/
 
-	db_remove($user_guid, 'friends', array($friend_guid));
-	db_remove($friend_guid, 'friendsof', array($user_guid));	
+	$friends = new DatabaseCall('friends');
+	$friends->removeAttributes($user_guid, array($friend_guid));
+	$friendsof = new DatabaseCall('friendsof');
+	$friendsof->removeAttributes($friend_guid, array($user_guid));	
 
 	//hack - update session!
 	global $SESSION;
@@ -395,17 +396,19 @@ $offset = "", $output = 'entities') {
        			$row[] = $friend;
 		}
 		if($row && $output == 'entities'){
-			$row = db_get(array('type'=>'user', 'guids'=>$row));
+			$db = new DatabaseCall('user');
+			$row = $db->getRows($row);
 		} else {
 			return $row;
 		}
 	} else {
-		$row = db_get( array(	'type'=> 'friends',
-				'owner_guid' => $user_guid,	
-				'limit' => $limit,
-				'offset' => $offset,
-				'output' => $output
-				));
+		$db = new DatabaseCall('friends');
+		$row = $db->getRow($user_guid, array('limit' => $limit, 'offset' => $offset));
+		
+		if($output == 'entities'){
+			$db = new DatabaseCall('user');
+			$row = $db->getRows($row);
+		}
 		//hacky cache mechanism
 		if($user_guid == elgg_get_logged_in_user_guid() && $output == 'guids'){
 			$SESSION['friends'] = $row;
@@ -431,19 +434,21 @@ $offset = "", $output = 'entities') {
                 foreach($SESSION['friendsof'] as $friend){
                         $row[] = $friend;
                 }
-		if($row && $output == 'entities'){
-                        $row = db_get(array('type'=>'user', 'guids'=>$row));
-                } else {
-			return $row;
-		}
+			if($row && $output == 'entities'){
+				$db = new DatabaseCall('user');
+				$row = $db->getRows($row);
+	      	} else {
+				return $row;
+			}
         } else {
 
-		$row = db_get( array(     'type'=> 'friendsof',
-					'owner_guid' => $user_guid, 
-                	                'output' => $output, 
-				        'limit' => $limit,
-                               	        'offset' => $offset
-                                ));
+		$db = new DatabaseCall('friendsof');
+		$row = $db->getRow($user_guid, array( 'limit' => $limit, 'offset' => $offset));
+
+		if($row && $output == 'entities'){
+			$db = new DatabaseCall('user');
+			$row = $db->getRows($row);
+		}
 	} 
 	return $row;
 
@@ -581,10 +586,9 @@ function get_user($guid) {
  * GET INDEX TO GUID
  */
 function get_user_index_to_guid($index){
-	global $DB;
-	
 	try{
-		$row = $DB->cfs['user_index_to_guid']->get($index);
+		$db = new DatabaseCall('user_index_to_guid');
+		$row = $db->getRow($index);
 	
 		foreach($row as $k=>$v){
 			return $k;
@@ -637,11 +641,10 @@ function get_user_by_username($username) {
 function get_user_by_code($code) {
 	global $CONFIG, $CODE_TO_GUID_MAP_CACHE;
 
-	$entities = db_get(     array(  'type'=>'user',
-                                        'attrs' => array('code'=>$code )
-                        ));
+	$index = new DatabaseCall('user_index_to_guid');
+	$guid = $index->getRow('code:'.$code);	
 
-        $entity = $entities[0];
+    $entity = get_entity($guid, 'user');
 
 	if ($entity) {
 		$CODE_TO_GUID_MAP_CACHE[$code] = $entity->guid;
@@ -651,9 +654,10 @@ function get_user_by_code($code) {
 }
 
 function get_user_by_cookie($cookie){
-	global $DB;
+
 	try{
-		$results = $DB->cfs['user_index_to_guid']->get("cookie:$cookie");
+		$db = new DatabaseCall('user_index_to_guid');
+		$results = $db->getRow("cookie:$cookie");
 	} catch(Exception $e){
 		return false;
 	}
@@ -901,7 +905,7 @@ function validate_username($username) {
 
 	// Belts and braces
 	// @todo Tidy into main unicode
-	$blacklist2 = '\'/\\"*& ?#%^(){}[]~?<>;|¬`@-+=';
+	$blacklist2 = '\'/\\"*& ?#%^(){}[]~?<>;|¬`+=';
 
 	for ($n = 0; $n < strlen($blacklist2); $n++) {
 		if (strpos($username, $blacklist2[$n]) !== false) {

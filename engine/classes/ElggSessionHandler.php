@@ -3,7 +3,6 @@ class ElggSessionHandler{
 
 	function __construct(){
 		global $DB;
-		$this->db = $DB->cfs['session']; 
 	}
 
 	function open(){
@@ -21,19 +20,15 @@ class ElggSessionHandler{
 	function read($id){
 
 		try {
-			$result = $this->db->get($id);
+			$db = new DatabaseCall('session');
+			$result = $db->getRow($id);
 
 			if($result){
 				//load serialized owner entity & add to cache
 				return $result['data'];
 		    }
 		} catch (Exception $e) {
- 		
-			// Fall back to file store in this case, since this likely means
-		    // that the database hasn't been upgraded
-		    global $sess_save_path;
-			$sess_file = "$sess_save_path/sess_$id";
-			return (string) @file_get_contents($sess_file);
+ 			return false;
 		}
 		
 		return '';
@@ -45,23 +40,14 @@ class ElggSessionHandler{
 		$time = time();
 
 		try {
-	        $result = $this->db->insert($id, array('ts'=>$time,'data'=>$sess_data));
+			$db = new DatabaseCall('session');
+	        $result = $db->insert($id, array('ts'=>$time,'data'=>$sess_data));
 		
 			if($result !== false){
 				return true;
 			}
 
 		} catch (Exception $e) {
-			// Fall back to file store in this case, since this likely means
-            // that the database hasn't been upgraded
-			global $sess_save_path;
-
-			$sess_file = "$sess_save_path/sess_$id";
-			if ($fp = @fopen($sess_file, "w")) {
-				$return = fwrite($fp, $sess_data);
-				fclose($fp);
-				return $return;
-			}
 		}
 
 		return false;
@@ -71,14 +57,10 @@ class ElggSessionHandler{
 		global $DB_PREFIX;
 	
 		try {
-			return (bool)$this->db->remove($id);
+			$db = new DatabaseCall('session');
+			return (bool)$db->removeRow($id);
 		} catch (Exception $e) {
-			// Fall back to file store in this case, since this likely means that
-			// the database hasn't been upgraded
-			global $sess_save_path;
-
-			$sess_file = "$sess_save_path/sess_$id";
-			return @unlink($sess_file);
+			return false;
 		}
 	}
 

@@ -178,7 +178,7 @@
 	 	//go off the loadmore button being available
 	 	if($loadMoreDiv){
 	 		$list = $loadMoreDiv.parent();
-	 		if($(window).scrollTop() + $(window).height() > $(document).height() * 0.40){
+	 		if($(window).scrollTop() + $(window).height() > $(document).height() * 0.25){
 	 			if(!$loadMoreDiv.hasClass('loading')){
 	 				$loadMoreDiv.trigger('click');
 	 			}
@@ -249,7 +249,7 @@
                                 	}
 					
 					el.imagesLoaded(function(){
-						$('.elgg-list.mason').append(el).masonry('appended', el);
+						 $list.find('.elgg-list').append(el).masonry('appended', el);
 					});
 	/*		
 $list.find('.elgg-list:first').append(data);

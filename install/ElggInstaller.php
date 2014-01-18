@@ -1274,7 +1274,7 @@ class ElggInstaller {
 					'newsfeed' => array(),
 					'timeline' => array(),
                                         
-                                        'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
+                    'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
 				);
 			
 			//create the cfs

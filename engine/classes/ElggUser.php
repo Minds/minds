@@ -134,13 +134,16 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	public function save() {
+		
+		$db = new DatabaseCall('user');
+		
 		$timebased = $this->isEnabled();
 		$guid =  create_entity($this, $timebased);
 		//now place email and username in index
-		$data = array('type'=>'user_index_to_guid', $guid => time());
+		$data = array($guid => time());
 		
-		db_insert(strtolower($this->username), $data);
-		db_insert(strtolower($this->email), $data);
+		$db->insert(strtolower($this->username), $data);
+		$db->insert(strtolower($this->email), $data);
 
 		//update our session, if it is us logged in
 		if($this->guid == elgg_get_logged_in_user_entity()){
@@ -167,10 +170,11 @@ class ElggUser extends ElggEntity
 			}
 		}
 		
+		$db = new DatabaseCall('entities_by_time');
 		//Remove from the list of unvalidated user
-		db_remove('user:unvalidated', 'entities_by_time', array($this->guid));
+		$db->removeAttributes('user:unvalidated', array($this->guid));
 		//add to the list of unvalidated user
-		db_insert('user', array('type'=>'entities_by_time', $this->guid => $this->guid));
+		$db->insert('user', array($this->guid => $this->guid));
 		
 		//Set enabled attribute to 'no'
 		$this->enabled = 'yes';
@@ -195,10 +199,12 @@ class ElggUser extends ElggEntity
 			}
 		}
 		
+		$db = new DatabaseCall('entities_by_time');
+		
 		//Remove from the list of users
-		db_remove('user', 'entities_by_time', array($this->guid)); 
+		$db->removeAttributes('user', array($this->guid)); 
 		//add to the list of unvalidated user
-		db_insert('user:unvalidated', array('type'=>'entities_by_time', $this->guid => $this->guid));
+		$db->insert('user:unvalidated', array($this->guid => $this->guid));
 		
 		//Set enabled attribute to 'no'
 		$this->enabled = 'no';
@@ -225,7 +231,8 @@ class ElggUser extends ElggEntity
 		}
 
 		if(is_int($this->guid)){
-			db_remove('user', 'entities_by_time', array($this->guid));
+			$db = new DatabaseCall('entities_by_time');
+			$db->removeAttributes('user', array($this->guid));
 		}
 
 		clear_user_files($this);
@@ -273,7 +280,8 @@ class ElggUser extends ElggEntity
 		// for backward compatibility we need to pull this directly
 		// from the attributes instead of using the magic methods.
 		// this can be removed in 1.9
-		// return $this->admin == 'yes';
+		//var_dump($this->admin);
+		//return $this->admin == 'yes';
 		return $this->attributes['admin'] == 'yes';
 	}
 
@@ -301,14 +309,12 @@ class ElggUser extends ElggEntity
 	 */
 	public function removeAdmin() {
 		// If already saved, use the standard function.
-		if ($this->guid && !remove_user_admin($this->guid)) {
-			return FALSE;
-		}
-
-		// need to manually set attributes since they've already been loaded.
-		$this->attributes['admin'] = 'no';
-
-		return TRUE;
+		if($this->guid){
+			$this->admin = 'no';
+			$this->attributes['admin'] = 'no';
+			return $this->save();
+		}	
+		return false;
 	}
 
 	/**
@@ -431,8 +437,8 @@ class ElggUser extends ElggEntity
 	 * @return 
 	 */
 	function getSubscribersCount(){
-		global $DB;
-		return (int) $DB->cfs['friendsof']->get_count($this->guid);
+		$db = new DatabaseCall('friendsof');
+		return (int) $db->countRow($this->guid);
 	}
 
 	/**

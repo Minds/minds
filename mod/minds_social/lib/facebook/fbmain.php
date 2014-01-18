@@ -37,8 +37,8 @@ function minds_social_facebook_auth($display = 'normal'){
 	//get our access token 
 	$access_token = $facebook->getAccessToken();
 
-	$data = array('type'=>'user_index_to_guid', $user->getGUID() => time());
-        db_insert('fb:'.$session['_fb'], $data);
+	$db = new DatabaseCall('user_index_to_guid');
+	$db->insert('fb:'.$session['_fb'], array( $user->getGUID() => time()));
 
 	// register user's access tokens
 	elgg_set_plugin_user_setting('minds_social_facebook_uid', $session['_fb']);
@@ -154,8 +154,8 @@ function minds_social_facebook_login(){
 					'invitecode' => $invitecode
 				);
 			
-				$data = array('type'=>'user_index_to_guid', $guid => time());
-		                db_insert('fb:'.$fb_uid, $data);//move this into the user class
+				$db = new DatabaseCall('user_index_to_guid');
+				$db->insert('fb:'.$fb_uid, array($guid => time()));//move this into the user class
 	
 				//Automatically subscribe user to the Minds Channel
 				minds_subscribe_default(null,null,null, array('user'=>$new_user));

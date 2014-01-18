@@ -359,7 +359,8 @@ function remove_private_setting($entity_guid, $entity_type, $name) {
 		return false;
 	}
 
-	$result = db_remove($entity_guid, $entity_type, array($name));
+	$db = new DatabaseCall($entity_type);
+	$result = $db->removeAttributes($entity_guid, array($name));
 
 	return true;
 }
