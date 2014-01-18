@@ -119,10 +119,11 @@ function db_get(array $options = array()){
 	try{
 		//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 		if($guids = $options['guids']){
+			$slice = new phpcassa\ColumnSlice("", "", 200);
 			if(is_array($guids)){
-				$rows = $DB->cfs[$type]->multiget($options['guids']);
+				$rows = $DB->cfs[$type]->multiget($options['guids'], $slice);
 			}else{
-				$rows[] = $DB->cfs[$type]->get($guids);
+				$rows[] = $DB->cfs[$type]->get($guids, $slice);
 			}
 		} elseif($type == 'plugin'){	
 			//do we even have any attrs?

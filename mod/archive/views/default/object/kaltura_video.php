@@ -73,7 +73,7 @@ if($full){
 	<div class="left">
 		<?php 
 			elgg_pop_context(); if(elgg_get_context()=='news'){ $width=140;$height=79;} else {$width=215;$height=121;} elgg_push_context('sidebar');?>
-		<p><a href="<?php echo $vars['entity']->getURL(); ?>" class="play"><img src="<?php echo kaltura_get_thumnail($entity->kaltura_video_id, $width, $height, 100, $entity->thumbnail_sec); ?>" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
+		<p><a href="<?php echo $vars['entity']->getURL(); ?>" class="play"><img src="<?php echo kaltura_get_thumnail($entity->kaltura_video_id, $width, $height, 60, $entity->thumbnail_sec); ?>" alt="<?php echo htmlspecialchars($vars['entity']->title); ?>" title="<?php echo htmlspecialchars($vars['entity']->title); ?>" /></a></p>
 	</div>
 
 	<h3><a href="<?php echo $vars['entity']->getURL(); ?>"><?php echo $vars['entity']->title; ?></a></h3>
@@ -128,7 +128,7 @@ if($full){
 	$image = elgg_view('output/url', array(
 			'href' => $entity->getURL(),
 			'class' => 'uiVideoInline archive entity',
-			'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($entity->kaltura_video_id, 515, 290, 100, $entity->thumbnail_sec) . '\'/>',
+			'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($entity->kaltura_video_id, 515, 290, 60, $entity->thumbnail_sec) . '\'/>',
 			'title' => $entity->title,
 		));
 	

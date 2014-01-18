@@ -9,7 +9,7 @@
  * Free & Open Source Social Media
  */
 global $CONFIG;
-$limit = get_input('limit', 12);
+$limit = get_input('limit', 8);
 $offset = get_input('offset', 0);
 $filter = get_input('filter', 'featured');
 
@@ -22,7 +22,7 @@ if($filter == 'featured'){
 } else {
 	//trending
 	$guids = analytics_retrieve(array('limit'=> $limit, 'offset'=>$offset));
-	$entities = elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit,'offset'=>$offset));
+	$entities = elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit,'offset'=>0));
 }
 
 if(!elgg_is_logged_in()){
@@ -33,7 +33,7 @@ if(!elgg_is_logged_in()){
 
 }
 
-$buttons .= elgg_view('output/url', array('href'=>elgg_get_site_url().'nodes/launch', 'text'=>elgg_echo('register:node'), 'class'=>'elgg-button elgg-button-action'));
+//$buttons .= elgg_view('output/url', array('href'=>elgg_get_site_url().'nodes/launch', 'text'=>elgg_echo('register:node'), 'class'=>'elgg-button elgg-button-action'));
 
 $titles_array = array(	'Freeing The World\'s Information', 
 			'Gathering Of The Minds Worldwide',

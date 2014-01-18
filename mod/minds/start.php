@@ -672,7 +672,7 @@ function minds_subscribe_bulk($username = 'minds'){
 	}
 }
 
-function minds_fetch_image($description, $owner_guid=null, $width=null) {
+function minds_fetch_image($description, $owner_guid=null, $width=null, $height=null) {
   
 	global $CONFIG, $post, $posts;
 	
@@ -694,6 +694,7 @@ function minds_fetch_image($description, $owner_guid=null, $width=null) {
   	}
 	$image = 'http://'.$CONFIG->cdn_url . 'thumbProxy?src='. urlencode($image) . '&c=3';
 	if($width){ $image .= '&width=' . $width; } 
+	if($height){ $image .= '&height=' . $height; }
 	return $image;
 }
 

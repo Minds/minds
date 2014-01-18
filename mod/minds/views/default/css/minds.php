@@ -215,10 +215,12 @@ input[name=terms]{
 	min-width:998px;
 }
 .minds-body-header h2{
-	font-size:36px;
+	text-align:center;
+	font-size:56px;
 	font-weight:lighter;
 }
 .minds-body-header h3{
+	text-align:center;
 	font-size:16px;
 	font-weight:lighter;
 }
