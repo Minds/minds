@@ -1,6 +1,6 @@
 <?php
 
-$limit = get_input("limit", 12);
+$limit = get_input("limit", 8);
 $offset = get_input("offset", '');
 $username = get_input("username", elgg_get_logged_in_user_entity()->username);
 $user = get_user_by_username($username);

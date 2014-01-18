@@ -20,6 +20,8 @@ global $CONFIG;
 		echo "\t<meta name=\"keywords\" content=\"" . elgg_get_plugin_setting('default_keywords', 'minds') . "\"> \n";
 	}
 
+//echo '<meta property="og:image" content="http://www.minds.com/_graphics/placeholder.png"/>';
+
 $request = $_SERVER['REQUEST_URI'];
 $split = explode('/', $request);
 $siteURL = elgg_get_site_url();
@@ -66,14 +68,14 @@ if((elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_g
 	 * BLOG/CONTENT VIEWS
 	 */	
 	.elgg-main{
-		-moz-box-shadow: 0 0 3px #888;
+		/*-moz-box-shadow: 0 0 3px #888;
 		-webkit-box-shadow: 0 0 3px#888;
-		box-shadow: 0 0 3px #888;	
+		box-shadow: 0 0 3px #888;*/	
 	}
 	.elgg-sidebar{
-		-moz-box-shadow: 0 0 3px #888;
+		/*-moz-box-shadow: 0 0 3px #888;
 		-webkit-box-shadow: 0 0 3px#888;
-		box-shadow: 0 0 3px #888;
+		box-shadow: 0 0 3px #888;*/
 	}
 BODY;
 

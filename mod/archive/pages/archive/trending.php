@@ -8,8 +8,8 @@ if(!elgg_plugin_exists('analytics')){
 $page_owner = elgg_get_logged_in_user_guid();
 elgg_set_page_owner_guid($page_owner);
 
-$limit = get_input("limit", 12);
-$offset = get_input("offset", '');
+$limit = get_input("limit", 8);
+$offset = get_input("offset", 0);
 $filter = get_input("filter", "all");
 
 
@@ -28,8 +28,9 @@ $content = elgg_list_entities(	array(	'guids' => $guids,
 					'full_view' => FALSE,
 					'archive_view' => TRUE,
 					'limit'=>$limit,
-					'offset' => $offset
-				));
+					'offset' => 0,
+					'pagination_legacy' => true
+		));
 
 $context = 'archive';
  

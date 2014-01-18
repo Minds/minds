@@ -4,7 +4,7 @@
 $page_owner = elgg_get_logged_in_user_guid();
 elgg_set_page_owner_guid($page_owner);
 
-$limit = get_input("limit", 12);
+$limit = get_input("limit", 8);
 $offset = get_input("offset", "");
 $filter = get_input("filter", "all");
 

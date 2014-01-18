@@ -224,7 +224,7 @@ function channel_page_handler($page) {
 			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>''));
 			break;
 		default:
-			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>''));
+			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'','limit'=>4));
 			$class = 'landing-page';
 	}
 
@@ -272,6 +272,9 @@ function channel_url($user) {
 	$newurl = str_replace('www.', '', $url);
 	$split = explode('://', $newurl);
 	//return $split[0] . '://' . $user->username . '.' . $split[1];
+	if(elgg_is_admin_logged_in()){
+		//var_dump($user->username, $user->guid);
+	}
 	return elgg_get_site_url() . $user->username;
 }
 

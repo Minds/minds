@@ -38,7 +38,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	$video_location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $entity->kaltura_video_id;
 	$video_location_secure = str_replace('http://', 'https://', $video_location);	
 	
-	$thumbnail = kaltura_get_thumnail($entity->kaltura_video_id, 400,400, 100);	
+	$thumbnail = kaltura_get_thumnail($entity->kaltura_video_id, 1280, 720, 60, $entity->thumbnail_sec);	
 	
 	minds_set_metatags('og:type', 'video.other');
 	minds_set_metatags('og:url', $entity->getPermaURL());
@@ -49,7 +49,7 @@ if($entity->getSubtype() == 'kaltura_video'){
 	minds_set_metatags('og:video:secure_url',  $video_location_secure); 
 	minds_set_metatags('og:video:width', '1280');
 	minds_set_metatags('og:video:height', '720');
-	minds_set_metatags('og:other', $video_location);
+//	minds_set_metatags('og:other', $video_location);
 	 
 	minds_set_metatags('twitter:card', 'player');
 	minds_set_metatags('twitter:url', $entity->getURL());
