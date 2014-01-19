@@ -23,18 +23,19 @@
             'upscale' => true
         )
     ) as $name => $size_info) {
-            $resized = get_resized_image_from_uploaded_file('logo', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale']);
+
+		 $resized = get_resized_image_from_uploaded_file('logo', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
 
             if ($resized) {
                 global $CONFIG;
                 $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
                 @mkdir($theme_dir);
-
-                file_put_contents($theme_dir . $name.'.jpg', $resized);
+                
+		file_put_contents($theme_dir . $name.'.png', $resized);
                 
                 elgg_set_plugin_setting('logo_override', 'true', 'minds_themeconfig');
             }
-    
+
             if (isset($_FILES['logo']) && ($_FILES['logo']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['logo']['error'] != 0) {
                 register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
             }

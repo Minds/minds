@@ -257,16 +257,29 @@ input[name=terms]{
 /**
  * Footer
  */
-.minds-static-footer{
+.static-footer{
 	position:fixed;
 	bottom:0;
 	right:0;
-	width:30px;
-	background:#333;
-	height:40px;
+	background:#FAFAFA;
+	padding:8px;
+	border-radius: 3px 0 0 0;
 }
-.minds-static-footer:hover{
+.static-footer:hover{
 	width:auto;
+}
+.static-footer .footer-social-links{
+	float:left;
+}
+.static-footer .footer-social-links > a{
+	font-size:26px;
+	color:#888;
+	padding:0 4px;
+}
+.static-footer .copyright{
+	float: right;
+	color: #888;
+	padding: 0 8px;
 }
 .elgg-menu-footer-default{
 	margin:0;

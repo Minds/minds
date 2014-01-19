@@ -3,7 +3,7 @@
 elgg_register_event_handler('init','system',function(){
     
     global $CONFIG;
-    
+return;    
     // Define "Blessed" themes
     if (!isset($CONFIG->available_themes))
         $CONFIG->available_themes = array(

@@ -190,7 +190,8 @@ class AnyPage extends ElggObject {
 	 * @return array guid => path_name
 	 */
 	static function getRegisteredPagePaths() {
-		$entities = elgg_get_entities_from_metadata(array(
+		
+		$entities = elgg_get_entities(array(
 			'type' => 'object',
 			'subtype' => 'anypage',
 			'limit' => 0
@@ -212,19 +213,20 @@ class AnyPage extends ElggObject {
 	 */
 	public static function getAnyPageEntityFromPath($path) {
 		$path = AnyPage::normalizePath($path);
-		$entities = elgg_get_entities_from_metadata(array(
+
+		$entities = elgg_get_entities(array(
 			'type' => 'object',
 			'subtype' => 'anypage',
-			'metadata_name' => 'page_path',
-			'metadata_value' => $path,
-			'limit' => 1
+			'limit' => 0
 		));
 
-		if (!$entities) {
-			return false;
+		foreach($entities as $entity){
+			if($entity->page_path == $path){
+				return $entity;
+			}
 		}
 
-		return $entities[0];
+		return false;
 	}
 
 	/**

@@ -228,7 +228,7 @@ class ElggObject extends ElggEntity {
          */
         public function save() {
                 //cache owner_guid for brief
-                $this->owner = json_encode($this->getOwnerEntity()->export());
+                //$this->owner = json_encode($this->getOwnerEntity()->export());
 		$guid = create_entity($this);
                 $this->attributes['guid'] = $guid;
 		return $guid;
