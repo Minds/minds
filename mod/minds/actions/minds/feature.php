@@ -40,7 +40,7 @@ if(!$entity->featured || $entity->featured == 0){
 
 	if($entity->featured_id){
 		//supports legacy imports
-		$db->removeRowAttributes('object:featured', array($entity->featured_id));
+		$db->removeAttributes('object:featured', array($entity->featured_id));
 		$db->removeAttributes('object:'.$entity->subtype.':featured', array($entity->featured_id)); 
 	}
 

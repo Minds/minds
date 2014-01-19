@@ -89,6 +89,19 @@ class MindsNode extends ElggObject{
 	}
 
 	/**
+	 * Rename a node
+	 */
+	public function renameNode($new_domain){
+		global $CONFIG;
+		$results = json_decode(file_get_contents($CONFIG->multisite_endpoint . 'webservices/rename_domain.php?domain=' . $this->domain . '&minds_user_id=' . $this->owner_guid . '&new_domain='.$new_domain ));
+                if (!$results){
+                    throw new Exception("Minds multisite could not be reached while registering your domain, please try again later");
+                }	
+		$this->domain= $new_domain;
+		$this->save();
+	}
+
+	/**
 	 * Has payment been made?
 	 */
 	public function paid(){

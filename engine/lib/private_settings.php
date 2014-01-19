@@ -333,7 +333,8 @@ function get_all_private_settings($entity_guid, $entity_type) {
 function set_private_setting($entity_guid, $entity_type, $name, $value) {
 	global $CONFIG;
 
-	$result = db_insert($entity_guid, array(	'type' => $entity_type,
+	$db = new DatabaseCall($entity_type);
+	$result = $db->insert($entity_guid, array(
 							$name => $value
 				));
 	
