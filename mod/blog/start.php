@@ -166,7 +166,7 @@ function blog_page_handler($page) {
 			break;
 		case 'view':
 			$params = blog_get_page_content_read($page[1]);
-			set_input('limit',4);	
+			set_input('limit',2);	
 			$trending = blog_get_trending_page_content_list();
                         //$params = blog_get_page_content_list();
 			//$body .= elgg_view_layout('gallery', $params);
