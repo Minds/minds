@@ -29,6 +29,7 @@ function minds_nodes_init() {
 	elgg_register_action("registernode", dirname(__FILE__) . "/actions/registernode.php");
         elgg_register_action("registernewnode", dirname(__FILE__) . "/actions/registernewnode.php");
 	elgg_register_action("select_tier", dirname(__FILE__) . "/actions/select_tier.php");
+	elgg_register_action("renamenode", dirname(__FILE__) . "/actions/renamenode.php");
 
 	elgg_extend_view('css/elgg', 'minds_nodes/css');
 
@@ -192,6 +193,9 @@ function minds_nodes_page_handler($pages){
 			include('pages/minds_nodes/launch.php');
 			break;
 		case 'manage':
+		      if(isset($pages[1])){
+                	     set_input('username', $pages[1]);
+                	 }
 			include('pages/minds_nodes/manage.php');
 			break;
 		case 'node':
