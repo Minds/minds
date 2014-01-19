@@ -721,14 +721,15 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 			return false;
 		}
 	}catch(Exception $e){
-		return false;
+		var_dump($e);
+		//return false;
 	}
 
 	if($output == 'guids'){
 		return $guids;
 	}
-
-        $entities = elgg_get_entities(array( 'type' => 'object',
+        
+	$entities = elgg_get_entities(array( 'type' => 'object',
                                         'guids' =>$guids
                                         ));
 
