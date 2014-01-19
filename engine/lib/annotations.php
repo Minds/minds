@@ -34,7 +34,7 @@ function row_to_elggannotation($row) {
  * @return ElggAnnotation|false
  */
 function elgg_get_annotation_from_id($id) {
-	$db = new DatabaseCall('annotations');
+	$db = new DatabaseCall('annotation');
 	$row = $db->getRow($id);
 	return row_to_elggannotation($row);
 }

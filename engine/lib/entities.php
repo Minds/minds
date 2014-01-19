@@ -965,7 +965,7 @@ function elgg_get_entities(array $options = array()) {
 						$rows = $db->getRows(array_keys($guids));
 					} else {
 						$db = new DatabaseCall('entities_by_time');
-						$count = $db->countRows($namespace);
+						$count = $db->countRow($namespace);
 						return $count;
 					}
 				} else {
@@ -983,6 +983,7 @@ function elgg_get_entities(array $options = array()) {
 					//convert array to std class
 					$newrow = new stdClass;
 					$newrow->guid = $guid;	
+					$newrow->type = $type;
 					foreach($row as $k=>$v){
 						$newrow->$k = $v;
 					}
