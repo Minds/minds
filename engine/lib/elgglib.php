@@ -1031,6 +1031,7 @@ function _elgg_php_exception_handler($exception) {
 		$body .= nl2br(htmlentities(print_r($exception, true), ENT_QUOTES, 'UTF-8'));
 	
 		//elgg_send_email('minds@minds.com', 'mark@minds.com', 'Exception ' . get_class($vars['object']), nl2br(htmlentities(print_r($vars['object'], true), ENT_QUOTES, 'UTF-8')));
+		if(function_exists('phpmailer_send')){
 		phpmailer_send(
 					'minds@minds.com',
 					'Minds Bugs',
@@ -1041,7 +1042,7 @@ function _elgg_php_exception_handler($exception) {
 					null,
 					//array('bill@minds.com', 'john@minds.com','mark@kramnorth.com'),
 					true //html
-		);
+		);}
 
 		elgg_set_viewtype('failsafe');
 		if (elgg_is_admin_logged_in()) {

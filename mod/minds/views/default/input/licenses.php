@@ -19,6 +19,7 @@
 																	'apache-v2' => elgg_echo('minds:license:apache-v2'),
 																	'mozillapublic' => elgg_echo('minds:license:mozillapublic'),
 																	'bsd' => elgg_echo('minds:license:bsd'),
+																	'allrightsreserved' => elgg_echo('minds:license:allrightsreserved')
 																	), 'value' => $vars['value'],
 																
 																));?>

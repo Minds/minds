@@ -64,12 +64,12 @@ function get_uploaded_file($input_name) {
  * @return false|mixed The contents of the resized image, or false on failure
  */
 function get_resized_image_from_uploaded_file($input_name, $maxwidth, $maxheight,
-$square = false, $upscale = false) {
+$square = false, $upscale = false, $output = "jpeg") {
 
 	// If our file exists ...
 	if (isset($_FILES[$input_name]) && $_FILES[$input_name]['error'] == 0) {
 		return get_resized_image_from_existing_file($_FILES[$input_name]['tmp_name'], $maxwidth,
-			$maxheight, $square, 0, 0, 0, 0, $upscale);
+			$maxheight, $square, 0, 0, 0, 0, $upscale, $output);
 	}
 
 	return false;
@@ -96,7 +96,7 @@ $square = false, $upscale = false) {
  * @return false|mixed The contents of the resized image, or false on failure
  */
 function get_resized_image_from_existing_file($input_name, $maxwidth, $maxheight, $square = FALSE,
-$x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE) {
+$x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE, $output = 'jpeg') {
 
 	// Get the size information from the image
 	$imgsizearray = getimagesize($input_name);
@@ -150,10 +150,19 @@ $x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE) {
 	}
 
 	// color transparencies white (default is black)
-	imagefilledrectangle(
-		$new_image, 0, 0, $params['newwidth'], $params['newheight'],
-		imagecolorallocate($new_image, 255, 255, 255)
-	);
+	if($output == 'jpeg'){
+		imagefilledrectangle(
+			$new_image, 0, 0, $params['newwidth'], $params['newheight'],
+			imagecolorallocate($new_image, 255, 255, 255)
+		);
+	} else {
+		imagealphablending($new_image, false);
+		imagesavealpha($new_image,true);
+		imagefilledrectangle(
+			  $new_image, 0, 0, $params['newwidth'], $params['newheight'],
+                        imagecolorallocatealpha($new_image, 255,255,255, 127)
+                );
+	}
 
 	$rtn_code = imagecopyresampled(	$new_image,
 									$original_image,
@@ -171,13 +180,17 @@ $x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE) {
 
 	// grab a compressed jpeg version of the image
 	ob_start();
-	imagejpeg($new_image, NULL, 90);
-	$jpeg = ob_get_clean();
+	if($output == 'png'){
+		imagepng($new_image);	
+	} else {
+		imagejpeg($new_image, NULL, 90);
+	} 
+	$img = ob_get_clean();
 
 	imagedestroy($new_image);
 	imagedestroy($original_image);
-
-	return $jpeg;
+	
+	return $img;
 }
 
 /**

@@ -185,6 +185,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	'minds:license:apache-v2' => 'Apache License, Version 2.0',
 	'minds:license:mozillapublic' => 'Mozilla Public License',
 	'minds:license:bsd' => 'BSD License',
+	'minds:license:allrightsreserved' => 'All Rights Reserved',
 	
 	'categories' => 'Category',
 	

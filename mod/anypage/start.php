@@ -9,6 +9,8 @@ elgg_register_event_handler('init', 'system', 'anypage_init');
  * Anypage init
  */
 function anypage_init() {
+	add_subtype('object', 'anypage', 'AnyPage');
+
 	elgg_register_admin_menu_item('configure', 'anypage', 'appearance');
 	// fix for selecting the right section in admin area
 	elgg_register_plugin_hook_handler('prepare', 'menu:page', 'anypage_init_fix_admin_menu');
@@ -33,7 +35,7 @@ function anypage_init() {
  */
 function anypage_setup_footer_menu() {
 	
-	$pages = elgg_get_entities(array('types'=>'object', 'subtypes'=>'anypage', 'limit'=>0)); 
+	$pages = elgg_get_entities(array('type'=>'object', 'subtype'=>'anypage', 'limit'=>0)); 
 	foreach ($pages as $page) {
 		elgg_register_menu_item('footer', array(
 			'name' => $page->title,
@@ -106,7 +108,7 @@ function anypage_router($hook, $type, $value, $params) {
 	} else {
 		// display entity
 		$content = elgg_view_entity($page);
-		$body = elgg_view_layout('one_column', array('content' => $content));
+		$body = elgg_view_layout('content', array('title'=>$page->title, 'content' => $content, 'sidebar'=>''));
 		echo elgg_view_page($page->title, $body);
 		exit;
 	}

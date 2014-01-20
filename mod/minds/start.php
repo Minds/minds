@@ -268,7 +268,7 @@ function minds_register_page_handler($page) {
             switch ($page[0])
             {
                 case 'node':
-                    $base_dir = elgg_get_plugins_path().'minds/pages/account';
+	            $base_dir = elgg_get_plugins_path().'minds/pages/account';
                     require_once("$base_dir/node.php");
                     break;
                 case 'testping':
@@ -318,7 +318,7 @@ function minds_route_page_handler($hook, $type, $returnvalue, $params) {
 	$handler = elgg_extract('handler', $returnvalue);
 	$pages = elgg_extract('segments', $returnvalue, array());
 	array_unshift($pages, $handler);
-	if(elgg_view_exists('minds/pages/'.$handler)){
+	if(elgg_view_exists('minds/pages/'.$handler) && !elgg_is_active_plugin('anypage')){
 		$content = elgg_view('minds/pages/'.$handler);
 		$body = elgg_view_layout('one_sidebar', array('content' => $content));
 		echo elgg_view_page(elgg_echo($handler), $body);
@@ -729,14 +729,15 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 			return false;
 		}
 	}catch(Exception $e){
-		return false;
+		var_dump($e);
+		//return false;
 	}
 
 	if($output == 'guids'){
 		return $guids;
 	}
-
-        $entities = elgg_get_entities(array( 'type' => 'object',
+        
+	$entities = elgg_get_entities(array( 'type' => 'object',
                                         'guids' =>$guids
                                         ));
 
