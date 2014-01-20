@@ -592,7 +592,7 @@ function can_edit_access_collection($collection_id, $user_guid = null) {
  */
 function create_access_collection($name, $owner_guid = 0, $site_guid = 0) {
 	global $CONFIG;
-
+return;
 	$name = trim($name);
 	if (empty($name)) {
 		return false;

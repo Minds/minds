@@ -85,6 +85,10 @@ class elasticsearch {
 
   //curl -X PUT http://localhost:9200/{INDEX}/{TYPE}/{ID} -d ...
   function add($type, $id, $data){
+	global $CONFIG;
+	if($CONFIG->elgg_multisite_settings && $this->index == 'ext'){
+		$this->index = $CONFIG->elasticsearch_prefix;
+	}
     return $this->call($type . '/'. $id, array('method' => 'PUT', 'content' => $data));
   }
   

@@ -77,11 +77,11 @@
 	padding: 0 8px;
 	display:block;
 	position:relative;
-	width:106px;
-	height:auto;
+	width:auto;
+	height:48px;
 }
 .hero > .topbar .logo > img{
-	width:100%;
+	height:100%;
 }
 .hero > .topbar .search{
 	margin: 8px auto;

@@ -2,7 +2,11 @@
 
 
 $english = array(
-	'admin:appearance:theme' => 'Edit theme elements',
+	'admin:appearance:theme' => 'General',
+	'admin:appearance:footer' => 'Footer',
+
+	'minds_themeconfig:copyright' => 'Copyright',
+	'minds_themeconfig:networks' => 'Social links',
     
         'minds_themeconfig:logo' => 'Upload your own logo (optimum size 200x90)',
         'minds_themeconfig:backgroundcolour' => 'Page background colour',
@@ -14,6 +18,7 @@ $english = array(
     	
 
         'minds_themeconfig:frontpagetext' => 'Front page text',
+	'minds_themeconfig:font:header' => 'Header font',
 );
 		
 add_translation("en", $english);

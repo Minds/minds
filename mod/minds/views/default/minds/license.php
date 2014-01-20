@@ -27,7 +27,8 @@
 							'apache-v1.0' => 'http://www.apache.org/licenses/LICENSE-1.0',
 							'mozillapublic' => 'http://www.mozilla.org/MPL/',
 							'bsd' =>'http://opensource.org/licenses/BSD-2-Clause',
- 						);
+ 				'allrightsreserved' => elgg_get_site_url(). 'licenses',			
+			);
 						
 	if($license == 'bsd' || $license == 'mozillapublic'){
  		 

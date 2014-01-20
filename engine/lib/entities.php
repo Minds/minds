@@ -962,6 +962,9 @@ function elgg_get_entities(array $options = array()) {
 						$db = new DatabaseCall('entities_by_time');
 						$guids = $db->getRow($namespace, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=> $options['newest_first']));
 						$db = new DatabaseCall($type);
+						if(!is_array($guids)){
+							return null;
+						}
 						$rows = $db->getRows(array_keys($guids));
 					} else {
 						$db = new DatabaseCall('entities_by_time');

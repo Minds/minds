@@ -4,11 +4,14 @@
  *
  */
 
+try{
 $kmodel = KalturaModel::getInstance();
 
 $ks = $kmodel->getClientSideSession();
 $serviceUrl = elgg_get_plugin_setting('kaltura_server_url', 'archive');
 $partnerId = elgg_get_plugin_setting('partner_id', 'archive');
+}catch(Exception $e){
+}
 $serverUrl = elgg_get_site_url();
 
 $albums = elgg_get_entities(array(

@@ -260,7 +260,7 @@ function elgg_is_active_plugin($plugin_id, $site_guid = null) {
 	}
 
 	//first of all, check if its in the settings array, then we don't need to load...
-	if(in_array($plugin_id,$CONFIG->plugins)){
+	if(isset($CONFIG->plugins) && in_array($plugin_id,$CONFIG->plugins)){
 		return true;
 	}	
 
@@ -369,15 +369,26 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 
 	//convert status to something the db understands
 	if($status == 'active'){
-		$attrs['active'] = 1;
+		$db = new DatabaseCall('plugin');
+        	$rows = $db->getByIndex(array('active'=>1), "", 1000);
 	} else {
+		$db = new DatabaseCall('plugin');
+        	$rows = $db->get("", 10000);
 	}
-	// grab plugins
-	$plugins = db_get(	array(	'type' => 'plugin',
-					'limit' => 10000,
-					'attrs' => $attrs
-			));
+	
+	foreach($rows as $k => $row){
+		$row['guid'] = $k;
+		$row['type'] = 'plugin';
+		$new_row = new StdClass;
+	
+		foreach($row as $k=>$v){
+			$new_row->$k = $v;
+                }
 
+		$plugins[] = entity_row_to_elggstar($new_row);
+ 
+	}
+	
 	if($plugins){	
 		//now order them since cassandra does not do this
 		usort($plugins, function($a, $b) {

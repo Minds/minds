@@ -1,6 +1,7 @@
+<?php if(elgg_get_site_url() != 'http://www.minds.com'){ return false; }?>
 <div class="minds-site-social">
-		<div class="fb-like" data-href="http://facebook.com/mindsdotcom" data-width="75px" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
-		<a href="https://twitter.com/mindsdotcom" class="twitter-follow-button" data-align="right" data-show-screen-name="false">Follow</a>
+	<div class="fb-like" data-href="http://facebook.com/mindsdotcom" data-width="75px" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+	<a href="https://twitter.com/mindsdotcom" class="twitter-follow-button" data-align="right" data-show-screen-name="false">Follow</a>
 </div>
 
 <?php return; ?>
