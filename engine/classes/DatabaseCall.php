@@ -69,7 +69,7 @@ class DatabaseCall{
 	 * @return array - raw data
 	 */
 	public function get($offset = "", $limit=10){
-		return $db->cf->get_range($offset,"", $limit);
+		return $this->cf->get_range($offset,"", $limit);
 	}
 	
 	/**
@@ -86,7 +86,7 @@ class DatabaseCall{
 			$index_exps[] = new IndexExpression($column, $value);
 		}
 		$index_clause = new IndexClause($index_exps, $offset, $limit);
-		return $db->cf->get_indexed_slices($index_clause);
+		return $this->cf->get_indexed_slices($index_clause);
 	}
 	
 	/**

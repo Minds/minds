@@ -135,7 +135,7 @@ class ElggUser extends ElggEntity
 	 */
 	public function save() {
 		
-		$db = new DatabaseCall('user');
+		$db = new DatabaseCall('user_index_to_guid');
 		
 		$timebased = $this->isEnabled();
 		$guid =  create_entity($this, $timebased);

@@ -268,7 +268,7 @@ function minds_register_page_handler($page) {
             switch ($page[0])
             {
                 case 'node':
-                    $base_dir = elgg_get_plugins_path().'minds/pages/account';
+	            $base_dir = elgg_get_plugins_path().'minds/pages/account';
                     require_once("$base_dir/node.php");
                     break;
                 case 'testping':
@@ -729,14 +729,15 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 			return false;
 		}
 	}catch(Exception $e){
-		return false;
+		var_dump($e);
+		//return false;
 	}
 
 	if($output == 'guids'){
 		return $guids;
 	}
-
-        $entities = elgg_get_entities(array( 'type' => 'object',
+        
+	$entities = elgg_get_entities(array( 'type' => 'object',
                                         'guids' =>$guids
                                         ));
 
