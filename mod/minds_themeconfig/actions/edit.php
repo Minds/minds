@@ -59,6 +59,9 @@
     
     // Save frontpage text
     elgg_set_plugin_setting('frontpagetext', get_input('frontpagetext'), 'minds_themeconfig');
+    // Save the font for the front header
+	$font = get_input('font');
+    elgg_set_plugin_setting('h2_font', $font['h2'], 'minds_themeconfig');
     
     // Save background colour
     elgg_set_plugin_setting('background_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('background_colour')), "minds_themeconfig");

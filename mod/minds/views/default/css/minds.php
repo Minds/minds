@@ -258,11 +258,12 @@ input[name=terms]{
  * Footer
  */
 .static-footer{
+	z-index:9999;
 	position:fixed;
 	bottom:0;
 	right:0;
 	background:#FAFAFA;
-	padding:8px;
+	padding:4px;
 	border-radius: 3px 0 0 0;
 }
 .static-footer:hover{
@@ -280,16 +281,16 @@ input[name=terms]{
 	float: right;
 	color: #888;
 	padding: 0 8px;
+	font-size:10px;
 }
 .elgg-menu-footer-default{
 	margin:0;
-	display:none;
 }
 .minds-static-footer:hover .elgg-menu-footer-default{
 	display:block;
 }
 .elgg-menu-footer-default li{
-	padding:10px 10px;
+	padding:0 4px 8px;
 }
 .elgg-menu-footer-default li:after{
 	content:none;

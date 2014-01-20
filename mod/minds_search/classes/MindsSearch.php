@@ -25,7 +25,7 @@ class MindsSearch {
 	}
 
 	function search($q,$type = 'all',$source = array('all'), $license = 'all', $category = 'all', $limit=10,$offset=0) {
-		
+		global $CONFIG;	
 		$rq = $q;
 		if($type == 'all'){
 			$type = null;
@@ -54,7 +54,10 @@ class MindsSearch {
 		$data['query']['from'] = $offset;
 		
 		$es = new elasticsearch();
-		$es->index = 'ext';
+		$es->index = 'ext';	
+		if($CONFIG->elgg_multisite_settings){
+			$es->index = $CONFIG->elasticsearch_prefix;
+		}
 
 		return $es->query_data($type, json_encode($data));
 	}

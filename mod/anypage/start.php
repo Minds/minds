@@ -108,7 +108,7 @@ function anypage_router($hook, $type, $value, $params) {
 	} else {
 		// display entity
 		$content = elgg_view_entity($page);
-		$body = elgg_view_layout('one_column', array('content' => $content));
+		$body = elgg_view_layout('content', array('title'=>$page->title, 'content' => $content, 'sidebar'=>''));
 		echo elgg_view_page($page->title, $body);
 		exit;
 	}
