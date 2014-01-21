@@ -84,10 +84,10 @@ class GUID{
      * 
      */
     public function __construct(){
-	global $CONFIG;
-        $this->machine = $CONFIG->machine_id;
+		global $CONFIG;
+        $this->machine = isset($CONFIG->machine_id) ? $CONFIG->machine_id : 1;
         if (!is_int($this->machine) || $this->machine < 0 || $this->machine > 1023){
-		$this->machine = 1;
+			$this->machine = 1;
         }
     }
     

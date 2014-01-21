@@ -16,24 +16,55 @@ use phpcassa\UUID;
 
 class DatabaseCall{
 	
-	static $pool;
-	static $servers;
-	static $keyspace;
-	static $cfs;
-
-	public function __construct($cf){
+	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL){
 		
 		global $CONFIG;
 		require_once(dirname(dirname(dirname(__FILE__))) . '/vendors/phpcassa/lib/autoload.php');
 		
-		$this->servers = $CONFIG->cassandra->servers;
-		$this->keyspace = $CONFIG->cassandra->keyspace;
+		$this->servers = $servers ?: $CONFIG->cassandra->servers;
+		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
+		
+		try{
+			$pool = new ConnectionPool($this->keyspace, $this->servers, null, 1);
+		
+			$this->pool = $pool;
+		
+			if(isset($cf)){
+				$this->cf_name = $cf;
+				$this->cf = $this->getCf($cf);
+			}
+		}catch(Exception $e){
+			
+		}
+	}
 	
-		$pool = new ConnectionPool($this->keyspace, $this->servers, null, 1);
-		
-		$this->pool = $pool;
-		
-		$this->cf = $this->getCf($cf);
+	/**
+	 * Install the schema
+	 * 
+	 * @return void
+	 */
+	public function installSchema(){
+		$cfs = array(	'site' => array('site_id' => 'UTF8Type'),
+						'plugin' => array('active' => 'IntegerType'),
+						'config' => array(),
+						'entities_by_time' => array(),
+						'object' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type'),
+						'user' => array(),
+						'user_index_to_guid' => array(),
+						'group' => array('container_guid' => 'UTF8Type'	),
+						'widget' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' ),
+						'notification' => array('to_guid' => 'UTF8Type'	),
+						'session' => array(),
+						'annotation' => array(),	
+						'friends' => array(),
+						'friendsof' => array(),
+						'newsfeed' => array(),
+						'timeline' => array(),
+						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
+				);
+		foreach($cfs as $cf => $indexes){
+			$this->createCF($cf, $indexes);
+		}
 	}
 	
 	/**
@@ -186,7 +217,7 @@ class DatabaseCall{
 				);
 		$attrs = array_merge($defaults, $attrs);
 	
-		$sys->create_column_family($this->keyspace, $name, $attr);
+		$sys->create_column_family($this->keyspace, $name, $attrs);
 	
 		foreach($indexes as $index => $data_type){
 	
@@ -194,7 +225,72 @@ class DatabaseCall{
 	
 		}
 	}
+	
+	/**
+	 * Remove a CF
+	 * 
+	 * !DANGEROUS!
+	 */
+	public function removeCF(){
+		$sys = new SystemManager($this->servers[0]);
+		return (bool) $sys->drop_column_family($this->keyspace, $this->cf_name);
+	}
+	
+	/**
+	 * Does the keyspace exits
+	 * 
+	 * @return bool
+	 */
+	public function keyspaceExists(){
+		$sys = new SystemManager($this->servers[0]);
+		
+		$exists = false;
+		
+		$ksdefs = $sys->describe_keyspaces();
+		foreach ($ksdefs as $ksdef)
+        	$exists = $exists || $ksdef->name == $this->keyspace;
 
+        if ($exists){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Create a keyspace
+	 * 
+	 * @return bool
+	 */
+	public function createKeyspace(array $attrs = array()){
+		$sys = new SystemManager($this->servers[0]);
+		$keyspace = $sys->create_keyspace($this->keyspace, array());
+		
+		self::__construct(null, $this->keyspace, $this->servers);
+		
+		return (bool) $keyspace;
+	}
+	
+	/**
+	 * Drop keyspace
+	 * 
+	 * !DANGEROUS... extremely...!
+	 * @param bool $confirm - set to true to double check...
+	 * 
+	 * @return void
+	 */
+	public function dropKeyspace($confirm = false){
+		if(!$confirm){
+			return;
+		}
+		try{
+			$sys = new SystemManager($this->servers[0]);
+			$sys->drop_keyspace($this->keyspace);
+		}catch(Exception $e){
+			//var_dump($e); exit;
+			return;
+		}
+	}
 	/**
 	 * Create and index for a column family
 	 * 

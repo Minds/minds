@@ -238,6 +238,7 @@ function elgg_get_context() {
 function elgg_push_context($context) {
 	global $CONFIG;
 
+	$CONFIG->context = isset($CONFIG->context) && is_array($CONFIG->context) ? $CONFIG->context : array(); 
 	array_push($CONFIG->context, $context);
 }
 

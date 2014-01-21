@@ -1624,4 +1624,45 @@ abstract class ElggEntity extends ElggData implements
 
 		return $entity_tags;
 	}
+	
+	/**
+	 * Feature
+	 * 
+	 * @return int $guid
+	 */
+	 public function feature(){
+	 	$db = new DatabaseCall('entities_by_time');
+		
+	 	$g = new GUID(); 
+		$this->featured_id = $g->generate();
+	
+		$db->insert('object:featured', array($this->featured_id => $this->getGUID()));
+		$db->insert('object:'.$this->subtype.':featured', array($this->featured_id => $this->getGUID()));
+		
+		$this->featured = 1;	
+		$this->save();
+		
+		return $this->featured_id;
+	 }
+	 
+	/** 
+	 * Unfeature
+	 * 
+	 * @return bool
+	 */
+	public function unFeature(){
+		
+		$db = new DatabaseCall('entities_by_time');
+		
+		if($this->featured_id){
+			//supports legacy imports
+			$db->removeAttributes('object:featured', array($this->featured_id));
+			$db->removeAttributes('object:'.$this->subtype.':featured', array($this->featured_id)); 
+		}
+	
+		$this->featured = 0;
+		$this->save();
+		
+		return true;
+	}
 }

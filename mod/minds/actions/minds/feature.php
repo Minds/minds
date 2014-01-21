@@ -10,18 +10,9 @@ global $CONFIG;
 $guid = get_input('guid');
 $entity = get_entity($guid, 'object'); //always an object, unless we decide to feature channels...
 
-$db = new DatabaseCall('entities_by_time');
-
 if(!$entity->featured || $entity->featured == 0){
 
-	$g = new GUID(); 
-	$entity->featured_id = $g->generate();
-	
-	
-	$db->insert('object:featured', array($entity->featured_id => $entity->getGUID()));
-	$db->insert('object:'.$entity->subtype.':featured', array($entity->featured_id => $entity->getGUID()));
-	
-	$entity->featured = 1;	
+	$entity->feature();
 
 	add_to_river('river/object/'.$entity->getSubtype().'/feature', 'feature', $entity->getOwnerGUID(), $entity->getGuid());
 
@@ -38,13 +29,7 @@ if(!$entity->featured || $entity->featured == 0){
 	
 }else{
 
-	if($entity->featured_id){
-		//supports legacy imports
-		$db->removeAttributes('object:featured', array($entity->featured_id));
-		$db->removeAttributes('object:'.$entity->subtype.':featured', array($entity->featured_id)); 
-	}
-
-	$entity->featured = 0;
+	$entity->unFeature();
 	
 	system_message(elgg_echo("Un-featured..."));
 	
