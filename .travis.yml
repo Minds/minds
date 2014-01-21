@@ -2,7 +2,7 @@ language: php
 
 php:
   - 5.3
-  - 5.4
+#  - 5.4
   #- 5.5
   #- hhvm
 
@@ -11,7 +11,7 @@ services:
   - elasticsearch
 
 env:
-  - THRIFT_EXT=no
+ # - THRIFT_EXT=no
   - THRIFT_EXT=yes
 
 ##USE THRIFT WITH CASSANDRA
