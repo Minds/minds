@@ -13,21 +13,22 @@ if (version_compare(PHP_VERSION, '5.0.0', '<')) {
 }
 
 
-$type = $_GET['type'];
+// Quick and dirty test to see if this is a standalone install or living inside a multisite wrapper
+if (!file_exists(dirname(dirname(__FILE__)) . "/minds/start.php")) 
+{
+    require_once(dirname(__FILE__) . "/install/ElggInstaller.php");
+    
+    $installer = new ElggInstaller();
+}
+else
+{
+    require_once(dirname(dirname(__FILE__)) . "/minds/start.php");
+    require_once(dirname(__FILE__) . "/install/ElggInstaller.php");
+    require_once(dirname(__FILE__) . "/install/MindsMultiInstaller.php");
 
-if($type == 'multisite'){
-	require_once(dirname(dirname(__FILE__)) . "/minds/start.php");
-	require_once(dirname(__FILE__) . "/install/ElggInstaller.php");
-	require_once(dirname(__FILE__) . "/install/MindsMultiInstaller.php");
-	
-	
-	$installer = new MindsMultiInstaller();
-	
-	$installer->setupMulti();
-} else {
-	require_once(dirname(__FILE__) . "/install/ElggInstaller.php");
-	
-	$installer = new ElggInstaller();
+    $installer = new MindsMultiInstaller();
+
+    $installer->setupMulti();
 }
 
 $step = get_input('step', 'welcome'); 
