@@ -1661,8 +1661,8 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 					// entities with owner or container guids of themselves.
 					// this should probably be prevented in ElggEntity instead of checked for here
 					$options = array(
-						'attrs' => array( 'owner_guid' => $guid ),
-						'limit' => 100000
+						'owner_guid' => $guid,
+						'limit' => 0
 					);
 
 					$batch = new ElggBatch('elgg_get_entities', $options);
