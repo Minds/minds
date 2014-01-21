@@ -10,14 +10,8 @@ services:
   - cassandra
   - elasticsearch
 
-env:
- # - THRIFT_EXT=no
-  - THRIFT_EXT=yes
-
 ##USE THRIFT WITH CASSANDRA
 before_script:
-  - if [ "$THRIFT_EXT" == "yes" ]; then sh -c "cd ext/thrift_protocol && phpize && ./configure --enable-thrift_protocol && make && sudo make install"; fi
-  - if [ "$THRIFT_EXT" == "yes" ]; then echo "extension=thrift_protocol.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`; fi
   # give some more time for Cassandra to finish startup and actually test it
   - sleep 10
   - sudo service cassandra status
@@ -25,7 +19,6 @@ before_script:
 #matrix:
 #  exclude:
   #  - php: hhvm
-   #   env: THRIFT_EXT=yes
   #allow_failures:
    # - php: hhvm
 
