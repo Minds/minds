@@ -372,7 +372,7 @@ function user_remove_friend($user_guid, $friend_guid) {
  */
 function user_is_friend($user_guid, $friend_guid) {
 	$friends = get_user_friends($user_guid, '', $limit = 10000, '', 'guids');
-	if(in_array($friend_guid, $friends)){
+	if(is_array($friends) && in_array($friend_guid, $friends)){
 		return true;
 	}
 	return false;
@@ -391,7 +391,7 @@ function user_is_friend($user_guid, $friend_guid) {
 function get_user_friends($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
 $offset = "", $output = 'entities') {
 	global $SESSION;
-	if($user_guid == elgg_get_logged_in_user_guid() && isset($SESSION['friends'])){
+	if($user_guid == elgg_get_logged_in_user_guid() && isset($SESSION['friends']) && is_array($SESSION['friends'])){
 		foreach($SESSION['friends'] as $friend){
        			$row[] = $friend;
 		}
@@ -614,7 +614,7 @@ function get_user_by_username($username) {
 		return false;
 	}
 	
-	$guid = $USERNAME_TO_GUID_MAP_CACHE[$username];	
+	$guid = isset($USERNAME_TO_GUID_MAP_CACHE[$username]) ? $USERNAME_TO_GUID_MAP_CACHE[$username] : null;	
 
 	if(!$guid){
 		$guid = get_user_index_to_guid($username);	

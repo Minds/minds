@@ -38,7 +38,7 @@ function chat_init() {
 //	elgg_register_js('elgg.chat_messaging', $chat_messaging_js);
 
 
-	elgg_register_js('portal', elgg_get_site_url() . 'mod/chat/vendors/portal.js');
+/*	elgg_register_js('portal', elgg_get_site_url() . 'mod/chat/vendors/portal.js');
 	elgg_load_js('portal');
 	elgg_register_js('atmosphere', elgg_get_site_url() . 'mod/chat/vendors/atmosphere.js');
 	elgg_load_js('atmosphere');
@@ -50,7 +50,7 @@ function chat_init() {
 	if(elgg_is_logged_in() && elgg_get_context() != 'admin'){
 		elgg_extend_view('page/elements/foot', 'chat/bar');
 	}
-
+*/
 	// Add custom CSS
 	elgg_extend_view('css', 'chat/css');
 

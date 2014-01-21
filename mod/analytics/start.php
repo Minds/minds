@@ -89,8 +89,6 @@ function analytics_retrieve(array $options = array()){
 	$db = new DatabaseCall('entities_by_time');
 	
 	$g = new GUID();
-	$client = analytics_register_client();
-	$analytics = new Google_AnalyticsService($client);	
 	
 	$defaults = array(
 		'context'=> '',
@@ -105,7 +103,7 @@ function analytics_retrieve(array $options = array()){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
 			$context = $options['context'] != '' ? $options['context'] : 'all';
-			$count = $db->countRow('trending:'.$context);		
+			$count = $db->countRow('trending:'.$context);
 			if((int) $options['offset'] >= $count){
 				return false;
 			} elseif($options['offset'] > 0){

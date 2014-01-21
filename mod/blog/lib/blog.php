@@ -548,6 +548,7 @@ function blog_sidebar($blog){
 		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs, array('class'=>'blog-sidebar'));
 		
 	}
+
 	//show featured blogs
 	$featured_blogs = minds_get_featured(null, 4);
 	if($featured_blogs){

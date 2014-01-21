@@ -531,13 +531,13 @@ function create_entity($object = NULL, $timebased = true) {
 	$g = new GUID();
 
 	if($object->guid){
-	       elgg_trigger_event('update', $object->type, $object);
+		elgg_trigger_event('update', $object->type, $object);
 		if (function_exists('xcache_get')) {
-                                $newentity_cache = new ElggXCache('new_entity_cache');
+			$newentity_cache = new ElggXCache('new_entity_cache');
 		}
-                if ($newentity_cache) {
-                                $newentity_cache->delete($object->guid);
-               	}
+      	if (isset($newentity_cache)) {
+			$newentity_cache->delete($object->guid);
+		}
 	} else {
 		$object->guid = $g->generate();
 		elgg_trigger_event('create', $object->type, $object);
@@ -547,20 +547,21 @@ function create_entity($object = NULL, $timebased = true) {
 	$result = $db->insert($object->guid, $object->toArray());
 
 	if($timebased){
-		$namespace = $object->type;
-		if($object->subtype){ 
-			$namespace .= ':'.$object->subtype; 
-		}
-		
 		$db = new DatabaseCall('entities_by_time');
 		$data =  array($result => time());
-
+		
+		$namespace = $object->type;
 		$db->insert($namespace, $data);
+		
+		if($object->subtype){ 
+			$namespace .= ':'.$object->subtype; 
+			$db->insert($namespace, $data);
+		}
 
 		if($object->super_subtype){
-                        $super_subtype_namespace = $object->type . ':' . $object->super_subtype;
-                        $db->insert($super_subtype_namespace, $data);
-                }
+			$super_subtype_namespace = $object->type . ':' . $object->super_subtype;
+			$db->insert($super_subtype_namespace, $data);
+		}
 
 		if($object->type != 'user'){
 			$owner = get_entity($object->owner_guid, 'user');
@@ -884,6 +885,8 @@ function elgg_entity_exists($guid) {
 function elgg_get_entities(array $options = array()) {
 	global $CONFIG;
 	
+	$entities = null;
+	
 	$defaults = array(
 		'types'					=>	ELGG_ENTITIES_ANY_VALUE,
 		'subtypes'				=>	ELGG_ENTITIES_ANY_VALUE,
@@ -894,6 +897,7 @@ function elgg_get_entities(array $options = array()) {
 	
 		'guids'					=>	ELGG_ENTITIES_ANY_VALUE,
 		'owner_guids'			=>	ELGG_ENTITIES_ANY_VALUE,
+		'network'				=> NULL,
 		'container_guids'		=>	ELGG_ENTITIES_ANY_VALUE,
 		'site_guids'			=>	$CONFIG->site_guid,
 
@@ -937,16 +941,16 @@ function elgg_get_entities(array $options = array()) {
 	$type = $options['types'] ? $options['types'][0] : "object";
 	
 		try{
-			
 			//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 			if($options['guids']){
 			
 				$db = new DatabaseCall($type);
 				$rows = $db->getRows($options['guids']);
 
-			} else{
+			} else{ 
 				if($options['timebased']){
-					if(!$namespace = $attrs['namespace']){
+					$namespace = isset($attrs['namespace']) ? $attrs['namespace'] : null;
+					if(!$namespace){
 						$namespace = $type;
 						if($subtypes){
 							$namespace .= ':'. $subtypes[0]; //change to subtype
@@ -962,6 +966,9 @@ function elgg_get_entities(array $options = array()) {
 						$db = new DatabaseCall('entities_by_time');
 						$guids = $db->getRow($namespace, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=> $options['newest_first']));
 						$db = new DatabaseCall($type);
+						if(!is_array($guids)){
+							return null;
+						}
 						$rows = $db->getRows(array_keys($guids));
 					} else {
 						$db = new DatabaseCall('entities_by_time');
@@ -991,6 +998,7 @@ function elgg_get_entities(array $options = array()) {
 				}
 			}
 		} catch(Exception $e){
+			var_dump($e);
 			//@todo report error to admin	
 		}
 		return $entities;

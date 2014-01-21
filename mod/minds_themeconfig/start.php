@@ -1,38 +1,53 @@
 <?php
+elgg_register_event_handler('init','system', 'themeconfig_init');
 
-elgg_register_event_handler('init','system',function(){
+function themeconfig_init(){
   
-    elgg_register_admin_menu_item('configure', 'theme', 'appearance');
+	elgg_register_admin_menu_item('configure', 'theme', 'appearance');
+	elgg_register_admin_menu_item('configure', 'footer', 'appearance');
     
     elgg_register_action('theme/edit', dirname(__FILE__) . '/actions/edit.php', 'admin');
+	elgg_register_action('footer/edit', dirname(__FILE__) . '/actions/footer/edit.php', 'admin');
+   
+
+	elgg_extend_view('page/elements/footer', 'minds_themeconfig/footer');
+ 
+    elgg_register_page_handler('themeicons', 'themeicons_page_handler');
     
-    elgg_register_page_handler('themeicons', function($pages) {
-        
+    elgg_register_event_handler('pagesetup', 'system', function() {
+        // Extend the css
+        elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
+    }, 999);
+}
+
+function themeicons_page_handler($pages) {
+
         global $CONFIG;
         
-        switch($pages[0]) {
+	switch($pages[0]) {
             case 'background':
                  $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
-    
+
                 $contents = file_get_contents($theme_dir . 'background');
                 header("Content-type: " . elgg_get_plugin_setting('background_override_mime', 'minds_themeconfig'));
                 header('Expires: ' . date('r', strtotime("+6 months")), true);
                 header("Pragma: public");
                 header("Cache-Control: public");
                 header("Content-Length: " . strlen($contents));
-                
+
                 break;
             case 'logo_main' :
             case 'logo_topbar' :
+            case 'logo_favicon' :
                 $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
-    
-                $contents = file_get_contents($theme_dir . $pages[0].'.jpg');
-                header("Content-type: image/jpeg");
-                header('Expires: ' . date('r', strtotime("+6 months")), true);
-                header("Pragma: public");
-                header("Cache-Control: public");
-                header("Content-Length: " . strlen($contents));
-                
+               
+                $contents = file_get_contents($theme_dir . $pages[0].'.png');
+                header_remove();
+                header("Content-Type: image/png");
+               header('Expires: ' . date('r', strtotime("+6 months")), true);
+               header("Pragma: public");
+               header("Cache-Control: public");
+               header("Content-Length: " . strlen($contents));
                 break;
         }
         
@@ -44,28 +59,7 @@ elgg_register_event_handler('init','system',function(){
                 }
                 exit;
         }
-    });
-    
-    elgg_register_event_handler('pagesetup', 'system', function() {
-        
-        // Override topbar
-        if (elgg_get_plugin_setting('logo_override', 'minds_themeconfig')) {
-            if(elgg_get_context()!='main')	{
-
-                    elgg_unregister_menu_item('topbar', 'minds_logo');
-                    elgg_register_menu_item('topbar', array(
-                            'name' => 'minds_logo',
-                            'href' => elgg_get_site_url(),
-                            'text' => '<img src=\''. elgg_get_site_url() . 'themeicons/logo_topbar\' class=\'minds_logo\'>',
-                            'priority' => 0
-                    ));
-            }
-        }
-        
-        // Extend the css
-        elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
-    }, 999);
-});	
+    }	
 
  function minds_themeconfig_codeToMessage($code) 
     { 
@@ -97,4 +91,11 @@ elgg_register_event_handler('init','system',function(){
                 break; 
         } 
         return $message; 
-    } 
+    }
+
+function minds_config_social_links(){
+	return array(	'facebook' => array('url'=>elgg_get_plugin_setting('facebook:url', 'minds_themeconfig'), 'icon'=>'&#62221;'),
+			'twitter' => array('url'=>elgg_get_plugin_setting('twitter:url', 'minds_themeconfig'), 'icon'=>'&#62218;'),
+ 			'gplus' => array('url'=>elgg_get_plugin_setting('gplus:url', 'minds_themeconfig'), 'icon'=>'&#62224;')
+		);
+}

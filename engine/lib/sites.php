@@ -26,7 +26,7 @@ function elgg_get_site_entity($site_guid = 0) {
             $site_guid = 1;
         
 	//check if defined in settings.php
-        if($CONFIG->site_name){
+        if(isset($CONFIG->site_name)){
                 $site = new ElggSite();
                 $site->name = $CONFIG->site_name;
                 $site->email = $CONFIG->site_email;

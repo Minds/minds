@@ -287,7 +287,7 @@ function login(ElggUser $user, $persistent = false) {
 	$SESSION['name'] = $user->name;
 	//$SESSION['friends'] = $user->getFriends(null, 200, 0, 'guids');
 	//$SESSION['friendsof'] = $user->getFriendsOf(null, 200, 0, 'guids');
-	
+
 	// if remember me checked, set cookie with token and store token on user
 	if (($persistent)) {
 		$code = (md5($user->name . $user->username . time() . rand()));
@@ -298,7 +298,7 @@ function login(ElggUser $user, $persistent = false) {
 		$db = new DatabaseCall('user_index_to_guid');
 		$db->insert('cookie:'. md5($code), array($user->getGUID() => $expires));
 	}
-
+	
 	if (!$user->save() || !elgg_trigger_event('login', 'user', $user)) {
 		unset($SESSION['username']);
 		unset($SESSION['name']);
@@ -351,7 +351,8 @@ function logout() {
 	$old_msg = $SESSION['msg'];
 
 	session_destroy();
-	setcookie("Minds", '', (time() - (86400 * 30)), "/");
+//	setcookie("Minds", '', (time() - (86400 * 30)), "/");
+//	unset($SESSION);
 
 	// starting a default session to store any post-logout messages.
 	_elgg_session_boot(NULL, NULL, NULL);

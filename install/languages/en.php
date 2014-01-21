@@ -2,25 +2,26 @@
 /**
  * Installer English Language
  *
- * @package ElggLanguage
+ * @package MindsLanguage
  * @subpackage Installer
  */
 
 $english = array(
-	'install:title' => 'Elgg Install',
+	'install:title' => 'Minds Node Launcher',
 	'install:welcome' => 'Welcome',
 	'install:requirements' => 'Requirements check',
 	'install:database' => 'Database installation',
 	'install:settings' => 'Configure site',
 	'install:admin' => 'Create admin account',
+	'install:theme' => 'Theme setup',
+	'install:import' => 'Import data',
 	'install:complete' => 'Finished',
 
 	'install:next' => 'Next',
 	'install:refresh' => 'Refresh',
 
-	'install:welcome:instructions' => "Installing Elgg has 6 simple steps and reading this welcome is the first one!
+	'install:welcome:instructions' => "Installing a node  has 6 simple steps and reading this welcome is the first one!
 
-If you haven't already, read through the installation instructions included with Elgg (or click the instructions link at the bottom of the page).
 
 If you are ready to proceed, click the Next button.",
 	'install:requirements:instructions:success' => "Your server passed the requirement checks.",
@@ -32,20 +33,20 @@ If you are ready to proceed, click the Next button.",
 	'install:require:settings' => 'Settings file',
 	'install:require:database' => 'Database',
 
-	'install:check:root' => 'Your web server does not have permission to create an .htaccess file in the root directory of Elgg. You have two choices:
+	'install:check:root' => 'Your web server does not have permission to create an .htaccess file in the root directory of your node. You have two choices:
 
 		1. Change the permissions on the root directory
 
 		2. Copy the file htaccess_dist to .htaccess',
 
-	'install:check:php:version' => 'Elgg requires PHP %s or above. This server is using version %s.',
-	'install:check:php:extension' => 'Elgg requires the PHP extension %s.',
+	'install:check:php:version' => 'Minds requires PHP %s or above. This server is using version %s.',
+	'install:check:php:extension' => 'Minds requires the PHP extension %s.',
 	'install:check:php:extension:recommend' => 'It is recommended that the PHP extension %s is installed.',
-	'install:check:php:open_basedir' => 'The open_basedir PHP directive may prevent Elgg from saving files to its data directory.',
-	'install:check:php:safe_mode' => 'Running PHP in safe mode is not recommened and may cause problems with Elgg.',
-	'install:check:php:arg_separator' => 'arg_separator.output must be & for Elgg to work and your server\'s value is %s',
+	'install:check:php:open_basedir' => 'The open_basedir PHP directive may prevent Minds from saving files to its data directory.',
+	'install:check:php:safe_mode' => 'Running PHP in safe mode is not recommened and may cause problems with Minds.',
+	'install:check:php:arg_separator' => 'arg_separator.output must be & for Minds to work and your server\'s value is %s',
 	'install:check:php:register_globals' => 'Register globals must be turned off.',
-	'install:check:php:session.auto_start' => "session.auto_start must be off for Elgg to work. Either change the configuration of your server or add this directive to Elgg's .htaccess file.",
+	'install:check:php:session.auto_start' => "session.auto_start must be off for Minds to work. Either change the configuration of your server or add this directive to Minds' .htaccess file.",
 
 	'install:check:enginedir' => 'Your web server does not have permission to create the settings.php file in the engine directory. You have two choices:
 
@@ -54,39 +55,39 @@ If you are ready to proceed, click the Next button.",
 		2. Copy the file settings.example.php to settings.php and follow the instructions in it for setting your database parameters.',
 	'install:check:readsettings' => 'A settings file exists in the engine directory, but the web server cannot read it. You can delete the file or change the read permissions on it.',
 
-	'install:check:php:success' => "Your server's PHP satisfies all of Elgg's requirements.",
+	'install:check:php:success' => "Your server's PHP satisfies all of Minds' requirements.",
 	'install:check:rewrite:success' => 'The test of the rewrite rules was successful.',
-	'install:check:database' => 'The database requirements are checked when Elgg loads its database.',
+	'install:check:database' => 'The database requirements are checked when Minds loads its database.',
 
 	'install:database:instructions' => "Enter the IP address for your Cassandra server and enter the keyspace you wish to use.",
-	'install:database:error' => 'There was an error creating the Elgg database and installation cannot continue. Review the message above and correct any problems. If you need more help, visit the Install troubleshooting link below or post to the Elgg community forums.',
+	'install:database:error' => 'There was an error creating the Minds database and installation cannot continue. Review the message above and correct any problems. If you need more help, visit the Install troubleshooting link below or post to the Minds community forums.',
 
 	'install:database:label:server' => 'Cassandra Server IP',
 	'install:database:label:keyspace' => 'Cassandra Keyspace',
 
-	'install:database:help:dbuser' => 'User that has full privileges to the MySQL database that you created for Elgg',
+	'install:database:help:dbuser' => 'User that has full privileges to the MySQL database that you created for Minds',
 	'install:database:help:dbpassword' => 'Password for the above database user account',
-	'install:database:help:dbname' => 'Name of the Elgg database',
+	'install:database:help:dbname' => 'Name of the Minds database',
 	'install:database:help:dbhost' => 'Hostname of the MySQL server (usually localhost)',
-	'install:database:help:dbprefix' => "The prefix given to all of Elgg's tables (usually elgg_)",
+	'install:database:help:dbprefix' => "The prefix given to all of Minds' tables (usually elgg_)",
 
-	'install:settings:instructions' => 'We need some information about the site as we configure Elgg. If you haven\'t <a href="http://docs.elgg.org/wiki/Data_directory" target="_blank">created a data directory</a> for Elgg, you need to do so now.',
+	'install:settings:instructions' => 'We need some information about the site as we configure Minds. If you haven\'t <a href="http://docs.elgg.org/wiki/Data_directory" target="_blank">created a data directory</a> for Minds, you need to do so now.',
 
 	'install:settings:label:sitename' => 'Site Name',
 	'install:settings:label:siteemail' => 'Site Email Address',
 	'install:settings:label:wwwroot' => 'Site URL',
-	'install:settings:label:path' => 'Elgg Install Directory',
+	'install:settings:label:path' => 'Minds Install Directory',
 	'install:settings:label:dataroot' => 'Data Directory',
 	'install:settings:label:language' => 'Site Language',
 	'install:settings:label:siteaccess' => 'Default Site Access',
-	'install:label:combo:dataroot' => 'Elgg creates data directory',
+	'install:label:combo:dataroot' => 'Minds creates data directory',
 
-	'install:settings:help:sitename' => 'The name of your new Elgg site',
-	'install:settings:help:siteemail' => 'Email address used by Elgg for communication with users',
-	'install:settings:help:wwwroot' => 'The address of the site (Elgg usually guesses this correctly)',
-	'install:settings:help:path' => 'The directory where you put the Elgg code (Elgg usually guesses this correctly)',
-	'install:settings:help:dataroot' => 'The directory that you created for Elgg to save files (the permissions on this directory are checked when you click Next). It must be an absolute path.',
-	'install:settings:help:dataroot:apache' => 'You have the option of Elgg creating the data directory or entering the directory that you already created for storing user files (the permissions on this directory are checked when you click Next)',
+	'install:settings:help:sitename' => 'The name of your new Minds site',
+	'install:settings:help:siteemail' => 'Email address used by Minds for communication with users',
+	'install:settings:help:wwwroot' => 'The address of the site (Minds usually guesses this correctly)',
+	'install:settings:help:path' => 'The directory where you put the Minds code (Minds usually guesses this correctly)',
+	'install:settings:help:dataroot' => 'The directory that you created for Minds to save files (the permissions on this directory are checked when you click Next). It must be an absolute path.',
+	'install:settings:help:dataroot:apache' => 'You have the option of Minds creating the data directory or entering the directory that you already created for storing user files (the permissions on this directory are checked when you click Next)',
 	'install:settings:help:language' => 'The default language for the site',
 	'install:settings:help:siteaccess' => 'The default access level for new user created content',
 
@@ -109,7 +110,17 @@ If you are ready to proceed, click the Next button.",
 	'install:admin:password:tooshort' => 'Your password was too short',
 	'install:admin:cannot_create' => 'Unable to create an admin account.',
 
-	'install:complete:instructions' => 'Your Elgg site is now ready to be used. Click the button below to be taken to your site.',
+	'install:theme:label:logo' => 'Logo',
+	'install:theme:help:logo' => 'Your site logo',
+	'install:theme:label:style' => 'Style',
+	'install:theme:help:style' => 'Select a style for your node',
+	'install:theme:label:page_header' => 'Site header',
+	'install:theme:help:page_header' => 'Enter text you want for the front page header',
+
+	'install:import:label:import' => 'Do you want to import trending blogs from minds.com?',
+	'install:import:help:import' => 'If you are new to Minds then we recommend you have some content on your node to help you get started',	
+
+	'install:complete:instructions' => 'Your Minds site is now ready to be used. Click the button below to be taken to your site.',
 	'install:complete:gotosite' => 'Go to site',
 
 	'InstallationException:UnknownStep' => '%s is an unknown installation step.',
@@ -124,7 +135,7 @@ If you are ready to proceed, click the Next button.",
 	'install:error:oldmysql' => 'MySQL must be version 5.0 or above. Your server is using %s.',
 	'install:error:nodatabase' => 'Unable to use database %s. It may not exist.',
 	'install:error:cannotloadtables' => 'Cannot load the database tables',
-	'install:error:tables_exist' => 'There are already Elgg tables in the database. You need to either drop those tables or restart the installer and we will attempt to use them. To restart the installer, remove \'?step=database\' from the URL in your browser\'s address bar and press Enter.',
+	'install:error:tables_exist' => 'There are already Minds tables in the database. You need to either drop those tables or restart the installer and we will attempt to use them. To restart the installer, remove \'?step=database\' from the URL in your browser\'s address bar and press Enter.',
 	'install:error:readsettingsphp' => 'Unable to read engine/settings.example.php',
 	'install:error:writesettingphp' => 'Unable to write engine/settings.php',
 	'install:error:requiredfield' => '%s is required',
@@ -142,14 +153,14 @@ If you are ready to proceed, click the Next button.",
 	'install:error:rewrite:nginx' => 'We think your server is running the Nginx web server.',
 	'install:error:rewrite:lighttpd' => 'We think your server is running the Lighttpd web server.',
 	'install:error:rewrite:iis' => 'We think your server is running the IIS web server.',
-	'install:error:rewrite:allowoverride' => "The rewrite test failed and the most likely cause is that AllowOverride is not set to All for Elgg's directory. This prevents Apache from processing the .htaccess file which contains the rewrite rules.
-				\n\nA less likely cause is Apache is configured with an alias for your Elgg directory and you need to set the RewriteBase in your .htaccess. There are further instructions in the .htaccess file in your Elgg directory.",
-	'install:error:rewrite:htaccess:write_permission' => 'Your web server does not have permission to create the .htaccess file in Elgg\'s directory. You need to manually copy htaccess_dist to .htaccess or change the permissions on the directory.',
-	'install:error:rewrite:htaccess:read_permission' => 'There is an .htaccess file in Elgg\'s directory, but your web server does not have permission to read it.',
-	'install:error:rewrite:htaccess:non_elgg_htaccess' => 'There is an .htaccess file in Elgg\'s directory that was not not created by Elgg. Please remove it.',
-	'install:error:rewrite:htaccess:old_elgg_htaccess' => 'There appears to be an old Elgg .htaccess file in Elgg\'s directory. It does not contain the rewrite rule for testing the web server.',
-	'install:error:rewrite:htaccess:cannot_copy' => 'A unknown error occurred while creating the .htaccess file. You need to manually copy htaccess_dist to .htaccess in Elgg\'s directory.',
-	'install:error:rewrite:altserver' => 'The rewrite rules test failed. You need to configure your web server with Elgg\'s rewrite rules and try again.',
+	'install:error:rewrite:allowoverride' => "The rewrite test failed and the most likely cause is that AllowOverride is not set to All for Minds' directory. This prevents Apache from processing the .htaccess file which contains the rewrite rules.
+				\n\nA less likely cause is Apache is configured with an alias for your Minds directory and you need to set the RewriteBase in your .htaccess. There are further instructions in the .htaccess file in your Minds directory.",
+	'install:error:rewrite:htaccess:write_permission' => 'Your web server does not have permission to create the .htaccess file in Minds\'s directory. You need to manually copy htaccess_dist to .htaccess or change the permissions on the directory.',
+	'install:error:rewrite:htaccess:read_permission' => 'There is an .htaccess file in Minds\'s directory, but your web server does not have permission to read it.',
+	'install:error:rewrite:htaccess:non_elgg_htaccess' => 'There is an .htaccess file in Minds\'s directory that was not not created by Minds. Please remove it.',
+	'install:error:rewrite:htaccess:old_elgg_htaccess' => 'There appears to be an old Minds .htaccess file in Minds\'s directory. It does not contain the rewrite rule for testing the web server.',
+	'install:error:rewrite:htaccess:cannot_copy' => 'A unknown error occurred while creating the .htaccess file. You need to manually copy htaccess_dist to .htaccess in Minds\'s directory.',
+	'install:error:rewrite:altserver' => 'The rewrite rules test failed. You need to configure your web server with Minds\'s rewrite rules and try again.',
 	'install:error:rewrite:unknown' => 'Oof. We couldn\'t figure out what kind of web server is running on your server and it failed the rewrite rules. We cannot offer any specific advice. Please check the troubleshooting link.',
 	'install:warning:rewrite:unknown' => 'Your server does not support automatic testing of the rewrite rules and your browser does not support checking via JavaScript. You can continue the installation, but you may experience problems with your site. You can manually test the rewrite rules by clicking this link: <a href="%s" target="_blank">test</a>. You will see the word success if the rules are working.',
 );

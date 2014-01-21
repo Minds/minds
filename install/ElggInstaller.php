@@ -79,7 +79,6 @@ class ElggInstaller {
 		set_exception_handler('_elgg_php_exception_handler');
 
 		register_translations(dirname(__FILE__) . '/languages/', TRUE);
-                
 	}
 
 	/**
@@ -524,7 +523,7 @@ class ElggInstaller {
 	protected function complete() {
 		$params = array();
 		if ($this->autoLogin) {
-			$params['destination'] = 'admin';
+			$params['destination'] = 'admin/appearance/themeselection';
 		} else {
 			$params['destination'] = 'index.php';
 		}
@@ -611,10 +610,10 @@ class ElggInstaller {
 			return;
 		}
 
-		if (!include_once("{$CONFIG->default_path}engine/lib/database.php")) {
+		/*if (!include_once("{$CONFIG->default_path}engine/lib/database.php")) {
 			$msg = elgg_echo('InstallationException:MissingLibrary', array('database.php'));
 			throw new InstallationException($msg);
-		}
+		}*/
 
 		// check that the config table has been created
 		$query = "show tables";
@@ -726,7 +725,7 @@ class ElggInstaller {
 
 		foreach ($required_files as $file) {
 			$path = $lib_dir . $file;
-			if (!include($path)) {
+			if (!include_once($path)) {
 				echo "Could not load file '$path'. "
 					. 'Please check your Elgg installation for all required files.';
 				exit;
@@ -797,7 +796,7 @@ class ElggInstaller {
 			//setup_db_connections();
 			register_translations(dirname(dirname(__FILE__)) . "/languages/");
 
-                        db_init(); // DB needs to be initialised before session start.
+            //db_init(); // DB needs to be initialised before session start.
 			if ($stepIndex > $settingsIndex) {
 				$CONFIG->site_guid = (int) datalist_get('default_site');
 				$CONFIG->site_id = $CONFIG->site_guid;
@@ -886,6 +885,10 @@ class ElggInstaller {
 	protected function getPostVariables() {
 		$vars = array();
 		foreach ($_POST as $k => $v) {
+			$vars[$k] = $v;
+		}
+		//do files too...
+		foreach($_FILES as $k => $v){
 			$vars[$k] = $v;
 		}
 		return $vars;
@@ -1247,50 +1250,9 @@ class ElggInstaller {
 	protected function installDatabase() {
 		global $CONFIG;
 
-		$sys = $this->cassandra;
-
 		try{
-			//the required column families
-			$cfs = array(	'site' => array('site_id' => 'UTF8Type'),
-					'plugin' => array('active' => 'IntegerType'),
-					'config' => array(),
-					'entities_by_time' => array(),
-					'object' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type'),
-					'user' => array(),
-					'user_index_to_guid' => array(),
-					'group' => array('container_guid' => 'UTF8Type'	),
-					'widget' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' ),
-
-					'notification' => array('to_guid' => 'UTF8Type'	),
-					'session' => array(),
-
-					'annotation' => array(),	
-
-					'friends' => array(),
-					'friendsof' => array(),
-					'newsfeed' => array(),
-					'timeline' => array(),
-                                        
-                    'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
-				);
-			
-			//create the cfs
-			foreach($cfs as $cf => $indexes){
-
-				$attr = array(	"comparator_type" => "UTF8Type",
-						"default_validation_class" => "UTF8Type",
-						"key_validation_class" => "UTF8Type"
-						);
-
-				$sys->create_column_family($CONFIG->cassandra->keyspace, $cf, $attr);
-
-				foreach($indexes as $index => $data_type){
-
-					$sys->create_index($CONFIG->cassandra->keyspace, $cf, $index, $data_type);
-			
-				}
-			}	
-
+			$db = new DatabaseCall(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
+			$db->installSchema();
 		} catch (Exception $e){
 			register_error($e->why);
 			return false;
@@ -1497,6 +1459,7 @@ class ElggInstaller {
 							'groups',
 							'wall',
 							'tidypics', 
+							'analytics',
 							'archive', 
 							'embed',
 							'embed_extender',

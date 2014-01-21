@@ -5,7 +5,7 @@
  * @todo Pull these out into an elgg_oauth lib and use elgg_register_library().
  * @package oauth_api
  */
-
+return;
 // require all vendor libraries
 $plugin_path = dirname(__FILE__) . '/vendors/oauth/library';
 require_once "$plugin_path/OAuthDiscovery.php";

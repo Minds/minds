@@ -15,16 +15,16 @@ if (isset($vars['name'])) {
 }
 
 $body = $vars['body'];
+unset($vars['body']);
 $action = $vars['action'];
-if (isset($vars['method'])) {
-	$method = $vars['method'];
-} else {
-	$method = 'POST';
+if (!isset($vars['method'])) {
+	$vars['method'] = 'POST';
 }
 
 $method = strtolower($method);
 
+$attributes = elgg_format_attributes($vars);
 ?>
-<form <?php echo $name; ?> action="<?php echo $action; ?>" method="<?php echo $method; ?>">
+<form <?php echo $attributes;?>>
 <?php echo $body; ?>
 </form>

@@ -1,5 +1,11 @@
 <style type="text/css">
     
+    <?php if ($h2_font = elgg_get_plugin_setting('h2_font', 'minds_themeconfig')){ ?>
+	.minds-body-header h2{
+		font-family:<?php echo $h2_font;?>;
+	}
+    <?php } ?>
+
     <?php if ($background_colour = elgg_get_plugin_setting('background_colour', 'minds_themeconfig')) { ?>
     body {
         background-color: #<?php echo $background_colour;?>;

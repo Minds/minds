@@ -210,6 +210,7 @@ placement:'below-main-column'});
 
 </script>
 
+
 <div id='taboola-text-2-columns-mix'></div>
 <script type='text/javascript'>
 

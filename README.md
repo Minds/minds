@@ -3,6 +3,10 @@ Minds (Core)
 
 Copyright (c) Copyleft 2008-2014
 
+#####Build status
+Master: [![Build Status](https://magnum.travis-ci.com/Minds/Minds-Elgg.png?token=vHzWaxguqXbJqkudCFTn&branch=master)](https://magnum.travis-ci.com/Minds/Minds-Elgg)
+Production: [![Build Status](https://magnum.travis-ci.com/Minds/Minds-Elgg.png?token=vHzWaxguqXbJqkudCFTn&branch=production)](https://magnum.travis-ci.com/Minds/Minds-Elgg)
+
 
 ###Minds
 

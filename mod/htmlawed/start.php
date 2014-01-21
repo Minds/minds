@@ -38,16 +38,22 @@ function htmlawed_init() {
  * @return mixed
  */
 function htmlawed_filter_tags($hook, $type, $result, $params) {
+	if(strpos($_SERVER['REQUEST_URI'], 'action/plugins/usersettings/save') !== FALSE){
+		$extraALLOW = 'script';
+	}
+	
 	$var = $result;
 
 	elgg_load_library('htmlawed');
 
 	$htmlawed_config = array(
 		// seems to handle about everything we need.
-		'safe' => true,
-		'deny_attribute' => 'class, on*',
+		'safe' => 0,
+		'deny_attribute' => 'on*',
+		'comments'=>0,
+		'cdata'=>0,
 		'hook_tag' => 'htmlawed_tag_post_processor',
-
+		'elements'=>'*-applet-script,'.$extraALLOW, // object, embed allowed
 		'schemes' => '*:http,https,ftp,news,mailto,rtsp,teamspeak,gopher,mms,callto',
 		// apparent this doesn't work.
 		// 'style:color,cursor,text-align,font-size,font-weight,font-style,border,margin,padding,float'

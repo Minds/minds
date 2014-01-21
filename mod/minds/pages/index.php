@@ -58,7 +58,11 @@ $titles_array = array(	'Freeing The World\'s Information',
 			'You Are A Genius.  Spread Your Ideas.',
 			'The Organic Web'
 			);
+
 $title = elgg_view_title($titles_array[rand(0,count($titles_array)-1)]);
+if ($t = elgg_get_plugin_setting('frontpagetext', 'minds_themeconfig')) 
+        $title = elgg_view_title($t);
+
 
 $launch_ts = 1411300800;//this could be GMT??
 $ts = time();
@@ -72,6 +76,24 @@ $subtitle = round($countdown_days,0) . ' days to go.';
 $featured_item_class = $filter == 'featured' ? 'elgg-state-selected' : null;
 $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
 
+if ($t)
+    $header = <<<HTML
+<div class="elgg-head clearfix">
+	$title
+	<div class="front-page-buttons">
+		$buttons
+	</div>
+	<ul class="elgg-menu elgg-menu-right-filter elgg-menu-hz">
+		<li class="elgg-menu-item-featured $featured_item_class">
+			<a href="?filter=featured">Featured</a>
+		</li>
+		<li class="elgg-menu-item-trending $trending_item_class">
+                        <a href="?filter=trending">Trending</a>
+                </li>
+	</ul>
+</div>
+HTML;
+else
 $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title

@@ -2,13 +2,9 @@
 class ElggSessionHandler{
 
 	function __construct(){
-		global $DB;
 	}
 
 	function open(){
-		global $sess_save_path;
-		$sess_save_path = $save_path;
-
 		return true;
 
 	}
