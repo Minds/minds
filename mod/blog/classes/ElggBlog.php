@@ -32,7 +32,7 @@ class ElggBlog extends ElggObject {
 	/**
 	 * Icon URL
 	 */
-	public function getIconURL($size){
+	public function getIconURL($size = 'medium'){
 		return minds_fetch_image($this->description, $this->owner_guid);
 	}
 

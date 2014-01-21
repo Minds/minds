@@ -614,7 +614,7 @@ function get_user_by_username($username) {
 		return false;
 	}
 	
-	$guid = $USERNAME_TO_GUID_MAP_CACHE[$username];	
+	$guid = isset($USERNAME_TO_GUID_MAP_CACHE[$username]) ? $USERNAME_TO_GUID_MAP_CACHE[$username] : null;	
 
 	if(!$guid){
 		$guid = get_user_index_to_guid($username);	

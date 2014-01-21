@@ -1,7 +1,10 @@
 <phpunit bootstrap="./engine/tests/phpunit/bootstrap.php">
     <testsuites>
-		<testsuite name="All Tests">
+		<testsuite name="Core Tests">
     			<directory>./engine/tests/phpunit/</directory>
 		</testsuite>
+		<testsuite name="Plugins">
+      	  <directory suffix="Test.php">./mod/*/tests/</directory>
+    	</testsuite>
 	</testsuites>
 </phpunit>

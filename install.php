@@ -12,12 +12,22 @@ if (version_compare(PHP_VERSION, '5.0.0', '<')) {
 	exit;
 }
 
-require_once(dirname(dirname(__FILE__)) . "/minds/start.php");
-require_once(dirname(__FILE__) . "/install/ElggInstaller.php");
-require_once(dirname(__FILE__) . "/install/MindsMultiInstaller.php");
+$type = $_GET['type'];
 
-$installer = new MindsMultiInstaller();
+if($type == 'multisite'){
+	require_once(dirname(dirname(__FILE__)) . "/minds/start.php");
+	require_once(dirname(__FILE__) . "/install/ElggInstaller.php");
+	require_once(dirname(__FILE__) . "/install/MindsMultiInstaller.php");
+	
+	
+	$installer = new MindsMultiInstaller();
+	
+	$installer->setupMulti();
+} else {
+	require_once(dirname(__FILE__) . "/install/ElggInstaller.php");
+	
+	$installer = new ElggInstaller();
+}
 
-$installer->setupMulti();
 $step = get_input('step', 'welcome'); 
 $installer->run($step);

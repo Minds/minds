@@ -39,7 +39,7 @@ class ElggUser extends ElggEntity
 		$this->attributes['code'] = NULL;
 		$this->attributes['banned'] = "no";
 		$this->attributes['admin'] = 'no';
-		$this->attributes['ip'] = $_SERVER['REMOTE_ADDR'];
+		$this->attributes['ip'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 		$this->attributes['time_created'] = time();
 		$this->attributes['enabled'] = 'yes';
 	}
@@ -230,9 +230,12 @@ class ElggUser extends ElggEntity
 			unset($CODE_TO_GUID_MAP_CACHE[$this->code]);
 		}
 
-		if(is_int($this->guid)){
+		if($this->guid){
 			$db = new DatabaseCall('entities_by_time');
 			$db->removeAttributes('user', array($this->guid));
+			$db = new DatabaseCall('user_index_to_guid');
+			$db->removeRow($this->username);
+			$db->removeRow($this->email); //@todo we should keep a record of indexes
 		}
 
 		clear_user_files($this);
