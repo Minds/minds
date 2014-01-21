@@ -361,6 +361,7 @@ class MindsMultiInstaller extends ElggInstaller {
             'anypage',
             'Login-As',
             'minds_widgets',
+            'minds_wordpress',
         );
         foreach ($user_editable_plugins as $plugin_id) {
             elggmulti_toggle_plugin($domain->getID(), $plugin_id);
