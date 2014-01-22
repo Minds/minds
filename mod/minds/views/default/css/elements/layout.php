@@ -78,7 +78,7 @@
 	display:block;
 	position:relative;
 	width:auto;
-	height:48px;
+	height:50px;
 }
 .hero > .topbar .logo > img{
 	height:100%;
