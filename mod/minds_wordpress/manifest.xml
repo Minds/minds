@@ -12,5 +12,9 @@
 		<type>elgg_version</type>
 		<version>2010030101</version>
 	</requires>
+        <requires>
+            <type>plugin</type>
+            <name>oauth2</name>
+        </requires>
 	<activate_on_install>true</activate_on_install>
 </plugin_manifest>
