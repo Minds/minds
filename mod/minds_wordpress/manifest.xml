@@ -16,5 +16,4 @@
             <type>plugin</type>
             <name>oauth2</name>
         </requires>
-	<activate_on_install>true</activate_on_install>
 </plugin_manifest>
