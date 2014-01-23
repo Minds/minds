@@ -457,8 +457,8 @@ li .excerpt a{
 }
 .elgg-form-account .social-login > .social_login{
 	float:left;
-	margin:0;
-	width:200px;
+	margin:0 10px 0 0;
+	width:auto;
 	clear:none;
 }
 .elgg-form-account .social .facebook{
