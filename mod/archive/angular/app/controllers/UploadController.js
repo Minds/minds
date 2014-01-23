@@ -2,12 +2,6 @@
  * Upload controller.
  *
  * Initializes the jQuery uploader and the Kaltura service.
- *
- *
- * User: ron
- * Date: 7/4/13
- * Time: 3:05 PM
- * To change this template use File | Settings | File Templates.
  */
 
 function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
@@ -60,6 +54,15 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 		{value:'bsd', text:'BSD License'}
 	];
 	$scope.default_license = 'not-selected';
+
+    /**
+     * Access options (for dropdown)
+     */
+	$scope.access = [
+		{value:0, text:'Private'},
+		{value:2, text:'Public'}
+	];
+	$scope.default_access = 2;
 
     /**
      * Gets the uploaded file thumbnail
@@ -116,8 +119,8 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         $scope.fileInfo[index]['name'] = file.name;
         $scope.fileInfo[index]['updateResult'] = false;
         $scope.fileInfo[index]['license'] = $scope.default_license;
-        $scope.fileInfo[index]['accessId'] = "2";
-		$scope.fileInfo[index]['tags'] = "";
+        $scope.fileInfo[index]['access_id'] = $scope.default_access;
+	$scope.fileInfo[index]['tags'] = "";
 		
         /**
          * File type specifics
