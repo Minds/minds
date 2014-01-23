@@ -44,9 +44,9 @@ $body_params = array(
 );
 $content .= elgg_view_form('register', $form_params, $body_params);
 
-$content .= elgg_view('minds/register_side');
+//$content .= elgg_view('minds/register_side');
 
-$title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
+$title_block = elgg_view_title($title);
 $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title_block

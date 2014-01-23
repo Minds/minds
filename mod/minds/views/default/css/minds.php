@@ -446,30 +446,20 @@ li .excerpt a{
 /**
  * Register page
  */
-.elgg-form-account{
-	float:left;
-	max-width:55%;
-	width:55%;
-}
-.elgg-form-account-side{
-	float:right;
-	width:400px;
-}
 .elgg-form-account .social{
+}
+
+.elgg-form-account .social-login{
 	margin:5px;
 	width:100%;
-	height:45px;
+	height:50px;
 	clear:both;
 }
-.elgg-form-account .social > div{
+.elgg-form-account .social-login > .social_login{
 	float:left;
-	margin-right:10px;
-}
-.elgg-form-account .social_login{
-	margin:5px;
-	width:175px;
+	margin:0;
+	width:200px;
 	clear:none;
-	float:left;
 }
 .elgg-form-account .social .facebook{
 	padding-top:1px;

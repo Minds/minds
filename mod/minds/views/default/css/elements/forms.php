@@ -81,8 +81,19 @@ input[type="radio"] {
 	padding-right: 10px;
 }
 
-.elgg-form-login, .elgg-form-account {
-	max-width: 450px;
+.elgg-form-login{
+}
+
+.elgg-form-account {
+	margin:auto;
+	padding:32px;
+	border:1px solid #EEE;
+	border-radius:2px;
+	box-shadow:0 0 1px #AAA;
+	-moz-box-shadow:0 0 1px #AAA;
+	-webkit-box-shadow:0 0 1px #AAA;
+	background:#FFF;
+	width:50%;
 }
 
 /* ***************************************
