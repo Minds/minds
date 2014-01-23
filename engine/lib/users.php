@@ -423,7 +423,7 @@ $offset = "", $output = 'entities') {
 function get_user_friends_of($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
 $offset = "", $output = 'entities') {
 
-	static $cahce;
+	static $cache;
 	if(!$cache){
 		$cache = new ElggStaticVariableCache('friendsof');
 	}
