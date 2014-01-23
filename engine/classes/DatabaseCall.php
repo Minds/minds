@@ -60,7 +60,8 @@ class DatabaseCall{
 						'friendsof' => array(),
 						'newsfeed' => array(),
 						'timeline' => array(),
-						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
+						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ),
+                                                'api_users' => array('secret'=>'UTF8Type'),
 				);
 		foreach($cfs as $cf => $indexes){
 			$this->createCF($cf, $indexes);
