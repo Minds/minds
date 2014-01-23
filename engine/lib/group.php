@@ -166,8 +166,7 @@ function get_group_members($group_guid, $limit = 10, $offset = 0, $site_guid = 0
 	array_push($member_guids,  $group->owner_guid);
 	
 	if(is_array($member_guids) && !empty($member_guids)){
-		$db = new DatabaseCall('user');
-		return $db->getRows($member_guids);
+		return elgg_get_entities(array('type'=>'user', 'guids'=>$member_guids));
 	}
 
 	return false;
@@ -190,7 +189,7 @@ function is_group_member($group_guid, $user_guid) {
 		return true;
 	}
 
-	$current_member_guids = $group->member_guids ? unserialize($group->member_guids) : array();
+	$current_member_guids = isset($group->member_guids) ? unserialize($group->member_guids) : array();
 
 	if(in_array($user_guid, $current_member_guids)){
 		return true;
@@ -214,8 +213,12 @@ function join_group($group_guid, $user_guid) {
 	$user = get_entity($user_guid, 'user');
 	$group = get_entity($group_guid, 'group');
 
-	$current_member_guids = $group->member_guids ? unserialize($group->member_guids) : array();
-	array_push($current_member_guids, $user_guid);
+	if(!$group || !$user){
+		return false;
+	}
+
+	$current_member_guids = isset($group->member_guids) ? unserialize($group->member_guids) : array();
+	array_push($current_member_guids, $user_guid); 
 	$group->member_guids = serialize($current_member_guids);
 
 	$result = $group->save();
@@ -224,6 +227,7 @@ function join_group($group_guid, $user_guid) {
 	$users_group_guids = $user->group_guids ? unserialize($user->group_guids) : array();
 	array_push($users_group_guids, $user_guid);
 	$user->group_guids = serialize($users_group_guids);
+	$user->save();
 	$SESSION['user'] = $user;//update the session
 
 	if ($result) {
@@ -231,7 +235,7 @@ function join_group($group_guid, $user_guid) {
 		elgg_trigger_event('join', 'group', $params);
 	}
 
-	return $result;
+	return (bool) $result;
 }
 
 /**
@@ -243,12 +247,37 @@ function join_group($group_guid, $user_guid) {
  * @return bool
  */
 function leave_group($group_guid, $user_guid) {
-	// event needs to be triggered while user is still member of group to have access to group acl
-	$params = array('group' => get_entity($group_guid), 'user' => get_entity($user_guid));
+	
+	$user = get_entity($user_guid, 'user');
+	$group = get_entity($group_guid, 'group');
 
-	elgg_trigger_event('leave', 'group', $params);
-	$result = remove_entity_relationship($user_guid, 'member', $group_guid);
-	return $result;
+	if(!$group || !$user){
+		return false;
+	}
+
+	$current_member_guids = isset($group->member_guids) ? unserialize($group->member_guids) : array();
+	if(empty($current_member_guids) || !in_array($user_guid, $current_member_guids)){
+		return false; //the user isn't even in the group
+	}
+	if(($key = array_search($user_guid, $current_member_guids)) !== false) {
+	    unset($current_member_guids[$key]);
+	}
+	$group->member_guids = serialize($current_member_guids);
+	
+	$result = $group->save();
+	
+	//append to the users object too
+	$users_group_guids = isset($user->group_guids) ? unserialize($user->group_guids) : array();
+	if(($key = array_search($group_guid, $users_group_guids)) !== false) {
+	    unset($users_group_guids[$key]);
+	}
+	$user->group_guids = serialize($users_group_guids);
+	$user->save();
+	$SESSION['user'] = $user;//update the session
+	
+	elgg_trigger_event('leave', 'group', array('group'=>$group, 'user'=>$user));
+	
+	return (bool) $result;
 }
 
 /**
