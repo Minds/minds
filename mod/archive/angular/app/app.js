@@ -1,5 +1,16 @@
 $ = jQuery.noConflict();
 
+window.onbeforeunload = function (event) {
+  var message = 'Any uploads or unsaved changes will be lost by leaving this page. Are you sure you want to leave?';
+  if (typeof event == 'undefined') {
+    event = window.event;
+  }
+  if (event) {
+    event.returnValue = message;
+  }
+  return message;
+}
+
 angular.module('mindsUploader', ['services.Elgg', 'services.Kaltura', 'mindsApp.directives'], function($routeProvider) {
 
 	var templatesPath = serverUrl + "mod/archive/angular/app/partials";

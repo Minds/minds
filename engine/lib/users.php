@@ -22,6 +22,7 @@ $CODE_TO_GUID_MAP_CACHE = array();
  *
  * @return mixed
  * @access private
+ * @deprecated - using standard entitiy to row now
  */
 function get_user_entity_as_row($guid) {
 	global $CONFIG;
@@ -390,29 +391,21 @@ function user_is_friend($user_guid, $friend_guid) {
  */
 function get_user_friends($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
 $offset = "", $output = 'entities') {
-	global $SESSION;
-	if($user_guid == elgg_get_logged_in_user_guid() && isset($SESSION['friends']) && is_array($SESSION['friends'])){
-		foreach($SESSION['friends'] as $friend){
-       			$row[] = $friend;
-		}
-		if($row && $output == 'entities'){
-			$db = new DatabaseCall('user');
-			$row = $db->getRows($row);
-		} else {
-			return $row;
-		}
-	} else {
+	static $cache; 
+	if(!$cache){
+		$cache = new ElggStaticVariableCache('friends');
+	}
+
+	if(!$row = $cache->load($user_guid)){
 		$db = new DatabaseCall('friends');
 		$row = $db->getRow($user_guid, array('limit' => $limit, 'offset' => $offset));
-		
-		if($output == 'entities'){
-			$db = new DatabaseCall('user');
-			$row = $db->getRows($row);
-		}
-		//hacky cache mechanism
-		if($user_guid == elgg_get_logged_in_user_guid() && $output == 'guids'){
-			$SESSION['friends'] = $row;
-		}
+		$cache->save($user_guid,$row);
+	}
+
+	if($output == 'entities'){
+	//	$db = new DatabaseCall('user');
+	//	$guids = $db->getRows($row);
+		$row = elgg_get_entities(array('type'=>'user', 'guids'=>array_keys($row)));
 	}
 	return $row;
 }
@@ -429,29 +422,22 @@ $offset = "", $output = 'entities') {
  */
 function get_user_friends_of($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
 $offset = "", $output = 'entities') {
-	global $SESSION;
-        if($user_guid == elgg_get_logged_in_user_guid() && isset($SESSION['friendsof'])){
-                foreach($SESSION['friendsof'] as $friend){
-                        $row[] = $friend;
-                }
-			if($row && $output == 'entities'){
-				$db = new DatabaseCall('user');
-				$row = $db->getRows($row);
-	      	} else {
-				return $row;
-			}
-        } else {
 
+	static $cahce;
+	if(!$cache){
+		$cache = new ElggStaticVariableCache('friendsof');
+	}
+
+        if(!$row = $cache->load($user_guid)){
 		$db = new DatabaseCall('friendsof');
 		$row = $db->getRow($user_guid, array( 'limit' => $limit, 'offset' => $offset));
+		$cache->save($user_guid, $row);
+	}
 
-		if($row && $output == 'entities'){
-			$db = new DatabaseCall('user');
-			$row = $db->getRows($row);
-		}
+	if($row && $output == 'entities'){
+		$row = elgg_get_entities(array('type'=>'user', 'guids'=>array_keys($row)));
 	} 
 	return $row;
-
 }
 
 /**

@@ -994,7 +994,7 @@ function elgg_get_entities(array $options = array()) {
 					foreach($row as $k=>$v){
 						$newrow->$k = $v;
 					}
-					$entities[] = entity_row_to_elggstar($newrow, $type);
+					$entities[] = entity_row_to_elggstar($newrow);
 				}
 			}
 		} catch(Exception $e){
