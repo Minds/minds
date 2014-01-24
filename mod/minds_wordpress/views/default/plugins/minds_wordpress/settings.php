@@ -8,6 +8,7 @@ if ($clients = elgg_get_entities(
         array(
             'type' => 'object',
             'subtype' => 'oauth2_client',
+            'owner_guid' => elgg_get_logged_in_user_guid(),
             'limit' => 9999
             //'metadata_name_value_pairs' => array('attached_plugin' => 'minds_wordpress')
         )
@@ -38,21 +39,24 @@ if (!$client) {
 $key = $client->client_id;
 $secret = $client->client_secret;
 
-if (!$key || !$secret) {
+/*
+$key = elgg_get_plugin_setting('api_key', 'minds_wordpress');
+$secret = elgg_get_plugin_setting('api_secret', 'minds_wordpress');
 
-    // Create an OAuth2 application, since one doesn't exist
-    
-    /*$api_key = create_api_user($CONFIG->site_id);
+if (!$api_user = get_api_user($CONFIG->site_id, $key))
+        $key = $secret = "";
+
+
+if (!$key || !$secret) {
+    $api_key = create_api_user($CONFIG->site_id);
     
     elgg_set_plugin_setting('api_key', $api_key->api_key, 'minds_wordpress');
     elgg_set_plugin_setting('api_secret', $api_key->secret, 'minds_wordpress');
 
     
-    
-    
     $key = elgg_get_plugin_setting('api_key', 'minds_wordpress');
-    $secret = elgg_get_plugin_setting('api_secret', 'minds_wordpress'); */
-}
+    $secret = elgg_get_plugin_setting('api_secret', 'minds_wordpress');
+}*/
 
 ?>
 <p>Download and install the minds wordpress plugin in your Wordpress installation, then enter the following API settings.</p>
