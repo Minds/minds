@@ -277,9 +277,9 @@ function groups_page_handler($page) {
 			groups_handle_members_page($page[1]);
 			break;
 		case 'invite':
-			register_error('Sorry! Inviting people is currently not supported');
-			forward(REFERRER);
-	//		groups_handle_invite_page($page[1]);
+			//register_error('Sorry! Inviting people is currently not supported');
+			//forward(REFERRER);
+			groups_handle_invite_page($page[1]);
 			break;
 		case 'requests':
 			groups_handle_requests_page($page[1]);

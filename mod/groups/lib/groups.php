@@ -234,9 +234,6 @@ function groups_handle_edit_page($page, $guid = 0) {
 function groups_handle_invitations_page() {
 	gatekeeper();
 
-	register_error('It is not possible to invite users to groups at this time. This feature will be available soon');
-	forward(REFERRER);
-
 	$user = elgg_get_page_owner_entity();
 
 	$title = elgg_echo('groups:invitations');

@@ -2208,7 +2208,7 @@ function elgg_init() {
 	elgg_register_js('elgg.autocomplete', 'js/lib/ui.autocomplete.js','footer');
 	elgg_register_js('jquery.ui.autocomplete.html', 'vendors/jquery/jquery.ui.autocomplete.html.js','footer');
 	elgg_register_js('elgg.userpicker', 'js/lib/ui.userpicker.js','footer');
-	elgg_register_js('elgg.friendspicker', 'js/lib/ui.friends_picker.js','footer');
+	elgg_register_js('elgg.friendspicker', 'js/lib/ui.friends_picker.js','head');//because of inline code
 	elgg_register_js('jquery.easing', 'vendors/jquery/jquery.easing.1.3.packed.js');
 	elgg_register_js('elgg.avatar_cropper', 'js/lib/ui.avatar_cropper.js', 'footer');
 	elgg_register_js('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect-0.9.8/scripts/jquery.imgareaselect.min.js','footer');

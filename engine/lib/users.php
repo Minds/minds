@@ -372,8 +372,8 @@ function user_remove_friend($user_guid, $friend_guid) {
  * @return bool
  */
 function user_is_friend($user_guid, $friend_guid) {
-	$friends = get_user_friends($user_guid, '', $limit = 10000, '', 'guids');
-	if(is_array($friends) && in_array($friend_guid, $friends)){
+	$friends = get_user_friends($user_guid, '', $limit = 10000, '', 'guids');  
+	if(is_array($friends) && isset($friends[$friend_guid])){
 		return true;
 	}
 	return false;

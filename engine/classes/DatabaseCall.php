@@ -56,8 +56,9 @@ class DatabaseCall{
 						'notification' => array('to_guid' => 'UTF8Type'	),
 						'session' => array(),
 						'annotation' => array(),	
-						'friends' => array(),
-						'friendsof' => array(),
+						'friends' => array(), //@replace with relationships soon
+						'friendsof' => array(), //@replace with relationships soon
+						'relationships' => array(), //this is a new index for relationships (friends will be merged into here soon)
 						'newsfeed' => array(),
 						'timeline' => array(),
 						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
@@ -196,7 +197,13 @@ class DatabaseCall{
 		if(empty($attributes)){
 			return false; // don't allow as this will delete the row!
 		}
-		return $this->cf->remove($key, $attributes);
+		$count = $this->countRow($key);
+		$this->cf->remove($key, $attributes);
+		//the remove function doens't return a value, so we need to check.. far from ideal..
+		if($this->countRow($key) == $count-count($attributes)){
+			return true;
+		}
+		return false;
 	}
 
 	/**

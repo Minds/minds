@@ -888,7 +888,7 @@ function elgg_get_entities(array $options = array()) {
 	$entities = null;
 	
 	$defaults = array(
-		'types'					=>	ELGG_ENTITIES_ANY_VALUE,
+		'types'					=>	array('object'),
 		'subtypes'				=>	ELGG_ENTITIES_ANY_VALUE,
 		
 		'timebased'	=> true,
