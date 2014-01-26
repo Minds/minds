@@ -214,12 +214,12 @@ function elgg_get_entities_from_relationship($options) {
 		'limit' => 12
 	);
 	
+	$options = array_merge($defaults, $options);
+	
 	if($options['limit'] == 0){
 		$options['limit'] = 9999999;
 	}
-
-	$options = array_merge($defaults, $options);
-
+	
 	$id = $options['relationship_guid'] . ':' . $options['relationship'];
 	//construct the relationship id from the options..
 	if($options['inverse_relationship']){

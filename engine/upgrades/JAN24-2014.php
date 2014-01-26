@@ -26,6 +26,7 @@ $site = elgg_get_site_entity();
 $entities->insert($site->guid, $site->toArray());
 
 foreach(array('object', 'user', 'group', 'notification') as $type){
+	$offset = '';
 	//copy over objects first
 	while(1){
 		$objects = elgg_get_entities(array('type'=>$type, 'limit'=>100, 'offset'=>isset($offset)?$offset:''));
@@ -33,7 +34,7 @@ foreach(array('object', 'user', 'group', 'notification') as $type){
 			$entities->insert($object->guid, $object->toArray());
 			echo "$type:$object->guid migrated \n";
 		}
-		if(count($objects)<100){
+		if(count($objects)<10){
 			break;
 		}
 		$offset = end($objects)->guid;

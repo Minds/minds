@@ -1636,7 +1636,7 @@ function enable_entity($guid, $recursive = true) {
 function delete_entity($guid, $type = 'object',$recursive = true) {
 	global $CONFIG, $ENTITY_CACHE;
 
-	if ($entity = get_entity($guid, $type)) {
+	if ($entity = get_entity($guid)) {
 		if (elgg_trigger_event('delete', $entity->type, $entity)) {
 			if ($entity->canEdit()) {
 
@@ -1687,7 +1687,7 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 				}
 
 				// Now delete the entity itself
-				$db = new DatabaseCall($type);
+				$db = new DatabaseCall('entities');
 				$res = $db->removeRow($guid);
 
 				//remove from the various lines
