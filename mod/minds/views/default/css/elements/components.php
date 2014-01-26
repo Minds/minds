@@ -186,7 +186,6 @@
 *************************************** */
 .elgg-owner-block {
 	margin:8px;
-	float:right;
 	margin-bottom:0;
 }
 .elgg-owner-block .elgg-body > a > h2{

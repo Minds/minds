@@ -383,8 +383,9 @@ function tp_get_tag_list($viewer) {
 	$is_group = tp_is_group_page();
 	if ($is_group) {
 		$group_guid = page_owner();
+		$group = get_entity($group_guid,'group');
 		$viewer_guid = $viewer->guid;
-		$members = get_group_members($group_guid, 999);
+		$members = $group->getMembers(999);
 		if (is_array($members)) {
 			foreach ($members as $member) {
 				if ($viewer_guid != $member->guid) {

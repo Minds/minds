@@ -30,22 +30,23 @@ if (($user instanceof ElggUser) && ($group instanceof ElggGroup)) {
 		// anyone can join public groups and admins can join any group
 		$join = true;
 	} else {
-		//if (check_entity_relationship($group->guid, 'invited', $user->guid)) {
-		//	// user has invite to closed group
-		//	$join = true;
-		//}
-		register_error(elgg_echo("Sorry, private groups are currently not supported."));
+		if (check_entity_relationship($group->guid, 'invited', $user->guid)) {
+			// user has invite to closed group
+			$join = true;
+			//remove the invitation
+			remove_entity_relationship($group->guid, 'invited',$user->guid);
+		}
 	}
 
 	if ($join) {
-		if (groups_join_group($group, $user)) {
+		if ($group->join($user)) {
 			system_message(elgg_echo("groups:joined"));
 			forward($group->getURL());
 		} else {
 			register_error(elgg_echo("groups:cantjoin"));
 		}
 	} else {
-		/*
+		
 		add_entity_relationship($user->guid, 'membership_request', $group->guid);
 
 		// Notify group owner
@@ -65,7 +66,7 @@ if (($user instanceof ElggUser) && ($group instanceof ElggGroup)) {
 			system_message(elgg_echo("groups:joinrequestmade"));
 		} else {
 			register_error(elgg_echo("groups:joinrequestnotmade"));
-		}*/
+		}
 	}
 } else {
 	register_error(elgg_echo("groups:cantjoin"));

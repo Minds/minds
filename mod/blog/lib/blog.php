@@ -116,7 +116,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		$options['owner_guid'] = $container_guid;
 		$container = get_entity($container_guid, 'user');
 		if (!$container) {
-
+			$container = get_entity($container_guid, 'group');
 		}
 		$return['title'] = elgg_echo('blog:title:user_blogs', array($container->name));
 

@@ -473,6 +473,9 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
 	}
 
 	$container = get_entity($container_guid, 'user');
+	if(!$container){
+		$container = get_entity($container_guid, 'group');
+	}
 
 	if ($container) {
 		// If the user can edit the container, they can also write to it
@@ -543,7 +546,7 @@ function create_entity($object = NULL, $timebased = true) {
 		elgg_trigger_event('create', $object->type, $object);
 	}
 
-	$db = new DatabaseCall($object->type);
+	$db = new DatabaseCall('entities');
 	$result = $db->insert($object->guid, $object->toArray());
 
 	if($timebased){
@@ -567,6 +570,11 @@ function create_entity($object = NULL, $timebased = true) {
 			$owner = get_entity($object->owner_guid, 'user');
 		} else {
 			$owner = get_entity($result, 'user');
+		}
+		
+		//get the container
+		if($object->container_guid != $object->owner_guid){
+			//$container = get_entity($object->container_guid,)
 		}
 		
 		if($owner instanceof ElggUser){
@@ -767,17 +775,18 @@ function get_entity($guid, $type = 'object') {
 		}
 	}
 
-	$db = new DatabaseCall($type);
+	$db = new DatabaseCall('entities');
 	$row = $db->getRow($guid);
 	if(!$row){
-		return false;
+		$db = new DatabaseCall($type);
+		$row = $db->getRow($guid);
+		if(!$row){
+			return false;
+		}		
 	}
 	$row['guid'] = $guid;
-	$row['type'] = $type;
 	$new_entity = entity_row_to_elggstar($db->createObject($row));
-	//if($type == 'object'){
-//var_dump($row, $type, $new_entity);
-	//}
+	
 	//check access permissions
 	if(!elgg_check_access($new_entity)){
 		return false; //@todo return error too
@@ -944,7 +953,7 @@ function elgg_get_entities(array $options = array()) {
 			//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 			if($options['guids']){
 			
-				$db = new DatabaseCall($type);
+				$db = new DatabaseCall('entities');
 				$rows = $db->getRows($options['guids']);
 
 			} else{ 
@@ -965,10 +974,10 @@ function elgg_get_entities(array $options = array()) {
 					if(!$options['count']){
 						$db = new DatabaseCall('entities_by_time');
 						$guids = $db->getRow($namespace, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=> $options['newest_first']));
-						$db = new DatabaseCall($type);
 						if(!is_array($guids)){
 							return null;
 						}
+						$db = new DatabaseCall('entities');
 						$rows = $db->getRows(array_keys($guids));
 					} else {
 						$db = new DatabaseCall('entities_by_time');
@@ -977,10 +986,10 @@ function elgg_get_entities(array $options = array()) {
 					}
 				} else {
 					if($attrs){
-						$db = new DatabaseCall($type);
+						$db = new DatabaseCall('entities');
 						$rows = $db->getByIndex($attrs, $options['offset'], $options['limit']);
 					} else {
-						$db = new DatabaseCall($type);
+						$db = new DatabaseCall('entities');
 						$rows = $db->get($offset,"", $limit);
 					}
 				}
@@ -1397,7 +1406,7 @@ function get_entity_dates($type = '', $subtype = '', $container_guid = 0, $site_
 $order_by = 'time_created') {
 
 	global $CONFIG;
-
+return;
 	$site_guid = (int) $site_guid;
 	if ($site_guid == 0) {
 		$site_guid = $CONFIG->site_guid;

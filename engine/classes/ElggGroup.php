@@ -264,7 +264,16 @@ class ElggGroup extends ElggEntity
 	 * @return mixed
 	 */
 	public function getMembers($limit = 10, $offset = 0, $count = false) {
-		return get_group_members($this->getGUID(), $limit, $offset, 0, $count);
+		$options = array(   'relationship' => 'member',
+							'relationship_guid' => $this->getGUID(),
+							'inverse_relationship' => true,
+							'type' => 'user',
+							'limit' => $limit,
+							'offset' => $offset,
+							'count' => $count,
+							'type' => 'user'
+                        );
+		return elgg_get_entities_from_relationship($options);
 	}
 
 	/**
@@ -288,37 +297,49 @@ class ElggGroup extends ElggEntity
 	 * @return bool
 	 */
 	public function isMember($user = null) {
-		if (!($user instanceof ElggUser)) {
+		if ($user == null) {
 			$user = elgg_get_logged_in_user_entity();
 		}
-		if (!($user instanceof ElggUser)) {
+		if (!$user) {
 			return false;
 		}
-		return is_group_member($this->getGUID(), $user->getGUID());
+				
+		return check_entity_relationship($user->guid, 'member', $this->getGUID());
 	}
 
-	/**
-	 * Join an elgg user to this group.
-	 *
-	 * @param ElggUser $user User
-	 *
-	 * @return bool
-	 */
+	 /**
+      * Join a user to this group.
+      *
+      * @param ElggUser $user User joining the group.
+      *
+      * @return bool Whether joining was successful.
+      */
 	public function join(ElggUser $user) {
-		return join_group($this->getGUID(), $user->getGUID());
+		$result = add_entity_relationship($user->guid, 'member', $this->guid);
+        
+		if ($result) {
+			$params = array('group' => $this, 'user' => $user);
+			elgg_trigger_event('join', 'group', $params);
+		}
+        
+		return $result;
 	}
 
 	/**
 	 * Remove a user from the group.
 	 *
-	 * @param ElggUser $user User
+	 * @param ElggUser $user User to remove from the group.
 	 *
-	 * @return bool
+	 * @return bool Whether the user was removed from the group.
 	 */
 	public function leave(ElggUser $user) {
-		return leave_group($this->getGUID(), $user->getGUID());
-	}
+		// event needs to be triggered while user is still member of group to have access to group acl
+		$params = array('group' => $this, 'user' => $user);
+		elgg_trigger_event('leave', 'group', $params);
 
+		return remove_entity_relationship($user->guid, 'member', $this->guid);
+	}
+		
 	/**
 	 * Load the ElggGroup data from the database
 	 *

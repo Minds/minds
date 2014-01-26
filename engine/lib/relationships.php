@@ -209,8 +209,14 @@ function elgg_get_entities_from_relationship($options) {
 		'relationship' => NULL,
 		'relationship_guid' => NULL,
 		'inverse_relationship' => FALSE,
-		'count' => FALSE
+		'count' => FALSE,
+		'offset' => '',
+		'limit' => 12
 	);
+	
+	if($options['limit'] == 0){
+		$options['limit'] = 9999999;
+	}
 
 	$options = array_merge($defaults, $options);
 
@@ -222,7 +228,7 @@ function elgg_get_entities_from_relationship($options) {
 	
 	$db = new DatabaseCall('relationships');
 	if(!$options['count']){
-		$guids = $db->getRow($id);
+		$guids = $db->getRow($id, array('offset'=>$options['offset'], 'limit'=>$options['limit']));
 	} else {
 		return $db->countRow($id);
 	}

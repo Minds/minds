@@ -19,7 +19,7 @@ if (sizeof($user_guid)) {
 
 		if ($user && $group && $group->canEdit()) {
 			if (!$group->isMember($user)) {
-				if (groups_join_group($group, $user)) {
+				if ($group->join($user)) {
 
 					// send welcome email to user
 					notify_user($user->getGUID(), $group->owner_guid,

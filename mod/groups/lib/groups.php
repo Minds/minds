@@ -58,6 +58,7 @@ function groups_handle_all_page() {
 	
 	$filter = elgg_view('groups/group_sort_menu', array('selected' => $selected_tab));
 	
+	
 //	$sidebar = elgg_view('groups/sidebar/find');
 //	$sidebar .= elgg_view('groups/sidebar/featured');
 
@@ -166,10 +167,12 @@ function groups_handle_mine_page() {
 	//we should really move to a function, but until we revamp groups, it will do!
 	$users_group_guids = $page_owner->group_guids ? unserialize($page_owner->group_guids) : array();
 
-	$content = elgg_list_entities(array(
+	$content = elgg_get_entities_from_relationship(array(
 		'type' => 'group',
 		'full_view' => false,
-		'guids' => $users_group_guids
+		'relationship_guid' => $user_guid,
+		'relationship' => 'member',
+		'type' => 'group'
 	));
 	if (!$content) {
 		$content = elgg_echo('groups:none');
@@ -284,7 +287,7 @@ function groups_handle_profile_page($guid) {
 
 	$content = elgg_view('groups/profile/layout', array('entity' => $group));
 	$sidebar = '';
-
+	
 	if (group_gatekeeper(false)) {	
 		$sidebar .= elgg_view('groups/sidebar/members', array('entity' => $group));
 

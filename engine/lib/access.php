@@ -715,6 +715,7 @@ function delete_access_collection($collection_id) {
  */
 function get_access_collection($collection_id) {
 	global $CONFIG;
+	return;
 	$collection_id = (int) $collection_id;
 
 	$query = "SELECT * FROM {$CONFIG->dbprefix}access_collections WHERE id = {$collection_id}";
