@@ -10,22 +10,27 @@
 	width:60px;
 }
 
-.groups .elgg-list{
-	width:auto;
-}
-.groups .elgg-item{
-	float:none;
-	width:auto;
-	height:auto;
-	margin:15px 0;
-}
 .groups-profile > .elgg-image {
 	margin-right: 10px;
 }
-.groups img{
-	width:200px;
-	height:200px;
+.sidebar .groups img{
+	width:100%;
+	height:auto;
 	clear:both;
+	display:block;
+}
+
+.group-profile .elgg-sidebar li.elgg-item img{
+	width:auto;
+}
+
+.group-profile .elgg-form-wall-add{
+	width:96%;
+}
+.group-profile .elgg-form-wall-add textarea{
+	width: 82%;
+}
+.group-profile .elgg-form-wall-add .elgg-button-submit{
 	display:block;
 }
 

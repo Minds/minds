@@ -68,11 +68,10 @@ function elgg_check_access($entity, $user = null){
 	}
 	
 	$access_array = get_access_array($user->guid, 0);
-	
-	if(in_array($entity->access_id, $access_array)){
+	if(in_array($entity->access_id, $access_array) || in_array($entity->container_guid, $access_array)){
 		return true;
 	}
-	
+	exit;
 	return false;
 
 }

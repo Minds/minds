@@ -309,7 +309,6 @@ class ElggWidget extends ElggEntity {
 			$this->guid = $g->generate();
 		}
 		return $db->insert($this->guid, $this->toArray());
-
 	}
 
 }

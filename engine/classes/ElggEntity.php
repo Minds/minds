@@ -1132,8 +1132,8 @@ abstract class ElggEntity extends ElggData implements
 	 * @return ElggEntity
 	 * @since 1.8.0
 	 */
-	public function getContainerEntity($type = 'user') {
-		return get_entity($this->getContainerGUID(), $type);
+	public function getContainerEntity() {
+		return get_entity($this->getContainerGUID());
 	}
 
 	/**

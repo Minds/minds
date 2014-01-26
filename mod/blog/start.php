@@ -195,6 +195,11 @@ function blog_page_handler($page) {
 			} else {
 				$params = blog_get_page_content_archive($page[1], $page[3], $page[4]);
 			}
+			
+			$body = elgg_view_layout('gallery', $params);
+
+           	echo elgg_view_page($params['title'], $body);
+			return true;
 			break;
 		case 'scrapers':
 			if(!elgg_is_logged_in()){

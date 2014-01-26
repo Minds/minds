@@ -11,6 +11,8 @@ function groups_handle_all_page() {
 	// all groups doesn't get link to self
 	elgg_pop_breadcrumb();
 	elgg_push_breadcrumb(elgg_echo('groups'));
+	
+	elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
 
 	if (elgg_get_plugin_setting('limited_groups', 'groups') != 'yes' || elgg_is_admin_logged_in()) {
 		elgg_register_title_button();
@@ -62,15 +64,18 @@ function groups_handle_all_page() {
 //	$sidebar = elgg_view('groups/sidebar/find');
 //	$sidebar .= elgg_view('groups/sidebar/featured');
 
+	$title = elgg_echo('groups:all');
+	$nav = elgg_view('groups/filter', array('selected'=>'all'));
+
 	$params = array(
+		'header' => elgg_view_title($title) . $nav,
 		'content' => $content,
 		'sidebar' => $sidebar,
-		'filter' => $filter,
 		'class' => 'groups'
 	);
-	$body = elgg_view_layout('content', $params);
+	$body = elgg_view_layout('one_column', $params);
 
-	echo elgg_view_page(elgg_echo('groups:all'), $body);
+	echo elgg_view_page($title, $body);
 }
 
 function groups_search_page() {
@@ -130,13 +135,15 @@ function groups_handle_owned_page() {
 		$content = elgg_echo('groups:none');
 	}
 
+	$nav = elgg_view('groups/filter', array('selected'=>'owner'));
+
 	$params = array(
+		'header' => elgg_view_title($title) . $nav,
 		'content' => $content,
 		'title' => $title,
-		'filter' => '',
 		'class' => 'groups'
 	);
-	$body = elgg_view_layout('content', $params);
+	$body = elgg_view_layout('one_column', $params);
 
 	echo elgg_view_page($title, $body);
 }
@@ -163,28 +170,26 @@ function groups_handle_mine_page() {
 
 	elgg_register_title_button();
 
-
-	//we should really move to a function, but until we revamp groups, it will do!
-	$users_group_guids = $page_owner->group_guids ? unserialize($page_owner->group_guids) : array();
-
-	$content = elgg_get_entities_from_relationship(array(
-		'type' => 'group',
+	$content = elgg_list_entities_from_relationship(array(
 		'full_view' => false,
-		'relationship_guid' => $user_guid,
+		'relationship_guid' => $page_owner->guid,
 		'relationship' => 'member',
-		'type' => 'group'
+		//'inverse_relationship' => true
 	));
+	
 	if (!$content) {
 		$content = elgg_echo('groups:none');
 	}
 
+	$nav = elgg_view('groups/filter', array('selected'=>'mine'));
+
 	$params = array(
+		'header' => elgg_view_title($title) . $nav,
 		'content' => $content,
 		'title' => $title,
-		'filter' => '',
 		'class' => 'groups'
 	);
-	$body = elgg_view_layout('content', $params);
+	$body = elgg_view_layout('one_column', $params);
 
 	echo elgg_view_page($title, $body);
 }
@@ -246,12 +251,14 @@ function groups_handle_invitations_page() {
 	$invitations = groups_get_invited_groups(elgg_get_logged_in_user_guid());
 	$content = elgg_view('groups/invitationrequests', array('invitations' => $invitations));
 
+	$nav = elgg_view('groups/filter', array('selected'=>'invitiations'));
+
 	$params = array(
+		'header' => elgg_view_title($title) . $nav,
 		'content' => $content,
 		'title' => $title,
-		'filter' => '',
 	);
-	$body = elgg_view_layout('content', $params);
+	$body = elgg_view_layout('one_sidebar', $params);
 
 	echo elgg_view_page($title, $body);
 }
@@ -270,7 +277,7 @@ function groups_handle_profile_page($guid) {
 
 	elgg_push_context('group_profile');
 
-	$group = get_entity($guid,'group');
+	$group = get_entity($guid);
 	if (!$group) {
 		forward('groups/all');
 	}
@@ -302,6 +309,7 @@ function groups_handle_profile_page($guid) {
 		'sidebar' => $sidebar,
 		'title' => $group->name,
 		'filter' => '',
+		'class' => 'group-profile'
 	);
 	$body = elgg_view_layout('content', $params);
 

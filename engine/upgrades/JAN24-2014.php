@@ -41,6 +41,10 @@ foreach(array('object', 'user', 'group', 'notification') as $type){
 	while(1){
 		$objects = elgg_get_entities(array('type'=>$type, 'limit'=>100, 'offset'=>isset($offset)?$offset:''));
 		foreach($objects as $object){
+			$data =  $object->toArray();
+			if(!isset($data['type'])){
+				$data['type'] = $type;
+			}
 			$entities->insert($object->guid, $object->toArray());
 			echo "$type:$object->guid migrated \n";
 		}
