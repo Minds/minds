@@ -113,11 +113,8 @@ function blog_get_page_content_list($container_guid = NULL) {
 		// access check for closed groups
 		group_gatekeeper();
 
-		$options['owner_guid'] = $container_guid;
-		$container = get_entity($container_guid, 'user');
-		if (!$container) {
-			$container = get_entity($container_guid, 'group');
-		}
+		$options['container_guid'] = $container_guid;
+		$container = get_entity($container_guid);
 		$return['title'] = elgg_echo('blog:title:user_blogs', array($container->name));
 
 		$crumbs_title = $container->name;

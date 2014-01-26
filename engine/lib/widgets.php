@@ -22,14 +22,13 @@
  */
 function elgg_get_widgets($user_guid, $context) {
 	
-	$options = array(
-		'type' => 'widget',
-		'owner_guid' => $user_guid,
-		'attrs' => array( 'context' => $context ),
-		'limit' => 10000,
-		'timebased' => false//specify because most things are
-	);
-	$widgets = elgg_get_entities($options);
+	
+	$db = new DatabaseCall('widget');
+	$raw = $db->getByIndex(array('context'=>$context));
+	foreach($raw as $w){
+		$widgets[] = new ElggWidget($w);
+	}
+	
 	if (!$widgets) {
 		return array();
 	}

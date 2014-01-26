@@ -81,7 +81,7 @@ function groups_init() {
 	
 	// Access permissions
 	//elgg_register_plugin_hook_handler('access:collections:write', 'all', 'groups_write_acl_plugin_hook');
-	//elgg_register_plugin_hook_handler('access:collections:read', 'all', 'groups_read_acl_plugin_hook');
+	elgg_register_plugin_hook_handler('access:collections:read', 'all', 'groups_read_acl_plugin_hook');
 	
 	// Register profile menu hook
 	//elgg_register_plugin_hook_handler('profile_menu', 'profile', 'forum_profile_menu');
@@ -170,6 +170,12 @@ function groups_setup_sidebar_menus() {
 				'name' => 'membership_requests',
 				'text' => $text,
 				'href' => $url,
+			));
+			
+			elgg_register_menu_item('page', array(
+				'name' => 'blog',
+				'text' => elgg_echo('blog'),
+				'href' => elgg_get_site_url() . 'blog/group/'.$page_owner->getGUID().'/all',
 			));
 		}
 	}
@@ -543,21 +549,18 @@ function groups_create_event_listener($event, $object_type, $object) {
  */
 function groups_read_acl_plugin_hook($hook, $entity_type, $returnvalue, $params) {
 	//error_log("READ: " . var_export($returnvalue));
-	var_dump($entity_type, $returnvalue, $params); exit;
-	$user = elgg_get_logged_in_user_entity();
+
+	$user = get_entity($params['user_id']);
 	if ($user) {
 		// Not using this because of recursion.
 		// Joining a group automatically add user to ACL,
 		// So just see if they're a member of the ACL.
-		//$membership = get_users_membership($user->guid);
-
-		$members = get_members_of_access_collection($group->group_acl);
-		print_r($members);
-		exit;
-
+		$membership = get_users_membership($user->guid);
+			
 		if ($membership) {
-			foreach ($membership as $group)
-				$returnvalue[$user->guid][$group->group_acl] = elgg_echo('groups:group') . ": " . $group->name;
+			foreach ($membership as $group){
+				$returnvalue[] = $group->guid;
+			}
 			return $returnvalue;
 		}
 	}

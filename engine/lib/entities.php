@@ -574,7 +574,11 @@ function create_entity($object = NULL, $timebased = true) {
 		
 		//get the container
 		if($object->container_guid != $object->owner_guid){
-			//$container = get_entity($object->container_guid,)
+			$container_namespace = $object->type . ':container:' . $object->container_guid;
+			$db->insert($container_namespace, $data);
+			$container_namespace = $object->type . ':' . $object->subtype . ':container:' . $object->container_guid;
+			$db->insert($container_namespace, $data);
+			$db->insert($super_subtype_namespace.':container:'. $object->container_guid, $data);
 		}
 		
 		if($owner instanceof ElggUser){
@@ -967,9 +971,12 @@ function elgg_get_entities(array $options = array()) {
 						if($owner_guid = $options['owner_guids'][0]){
 							$namespace .= ':user:'. $owner_guid;
 						}
+						if($container_guid = $options['container_guids'][0]){
+							$namespace .= ':container:'. $container_guid;
+						}
 						if($network = $options['network']){
 							$namespace .= ':network:'.$network;
-						}
+						} 
 					}
 					if(!$options['count']){
 						$db = new DatabaseCall('entities_by_time');

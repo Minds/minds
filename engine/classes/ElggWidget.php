@@ -305,7 +305,13 @@ class ElggWidget extends ElggEntity {
 	 * @return bool
 	 */
 	public function save() { 
-		return create_entity($this, false);
+		$db = new DatabaseCall('widget');
+		
+		if(!isset($this->guid)){
+			$g = new GUID();
+			$this->guid = $g->generate();
+		}
+		return $db->insert($this->guid, $this->toArray());
 	}
 
 }

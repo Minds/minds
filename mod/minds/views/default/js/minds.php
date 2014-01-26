@@ -14,9 +14,10 @@
 		} 
 
 		$('.elgg-list.mason').imagesLoaded(function(){
-                	$('.elgg-list.mason').masonry({
-                  	      itemSelector: '.elgg-item'
-                	});                        
+				var $list = $('.elgg-list.mason');
+				$($list.get().reverse()).masonry({
+                	//itemSelector: '.elgg-item'
+                });                        
 		});
 		
 		$('.hero > .topbar').on('mouseenter', '.right', function(e){ $('.topbar .right .social-login').show(); });
