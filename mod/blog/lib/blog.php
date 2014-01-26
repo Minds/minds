@@ -93,7 +93,7 @@ function blog_get_page_content_read($guid = NULL) {
  * @param int $container_guid The GUID of the page owner or NULL for all blogs
  * @return array
  */
-function blog_get_page_content_list($container_guid = NULL) {
+function blog_get_page_content_list($user_guid, $container_guid = NULL) {
 
 	$return = array();
 
@@ -128,6 +128,18 @@ function blog_get_page_content_list($container_guid = NULL) {
 			// do not show button or select a tab when viewing someone else's posts
 			$return['filter_context'] = 'none';
 		}
+	} elseif($user_guid) {
+		$options['owner_guid'] = $user_guid;
+		$user = get_entity($user_guid);
+		$return['title'] = elgg_echo('blog:title:user_blogs', array($user->name));
+		if ($current_user && ($container_guid == $current_user->guid)) {
+                        $return['filter_context'] = 'mine';
+                } else if (elgg_instanceof($container, 'group')) {
+                        $return['filter'] = false;
+                } else {
+                        // do not show button or select a tab when viewing someone else's posts
+                        $return['filter_context'] = 'none';
+                }
 	} else {
 		$return['filter_context'] = 'all';
 		$return['title'] = elgg_echo('blog');

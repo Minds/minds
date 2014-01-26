@@ -191,7 +191,7 @@ function blog_page_handler($page) {
 			break;
 		case 'group':
 			if ($page[2] == 'all') {
-				$params = blog_get_page_content_list($page[1]);
+				$params = blog_get_page_content_list(null, $page[1]);
 			} else {
 				$params = blog_get_page_content_archive($page[1], $page[3], $page[4]);
 			}
