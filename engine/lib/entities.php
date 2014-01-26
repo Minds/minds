@@ -785,6 +785,9 @@ function get_entity($guid, $type = 'object') {
 		}		
 	}
 	$row['guid'] = $guid;
+	if(!isset($row['type'])){
+		$row['type'] = $type;
+	}
 	$new_entity = entity_row_to_elggstar($db->createObject($row));
 	
 	//check access permissions
@@ -999,7 +1002,9 @@ function elgg_get_entities(array $options = array()) {
 					//convert array to std class
 					$newrow = new stdClass;
 					$newrow->guid = $guid;	
+					if(!isset($row->type)){
 					$newrow->type = $type;
+					}
 					foreach($row as $k=>$v){
 						$newrow->$k = $v;
 					}

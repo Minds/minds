@@ -25,6 +25,16 @@ $entities = new DatabaseCall('entities');
 $site = elgg_get_site_entity();
 $entities->insert($site->guid, $site->toArray());
 
+$groups = elgg_get_entities(array('type'=>'group', 'limit'=>0));
+foreach($groups as $group){
+	$member_guids = $group->member_guids ? unserialize($group->member_guids) : array();
+        array_push($member_guids, $group->owner_guid);
+	
+	foreach($member_guids as $user_guid){ echo $user_guid;
+		add_entity_relationship($user_guid, 'member', $group->guid);
+	}
+}
+exit;
 foreach(array('object', 'user', 'group', 'notification') as $type){
 	$offset = '';
 	//copy over objects first

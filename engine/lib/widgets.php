@@ -20,16 +20,26 @@
  * @return array An 2D array of ElggWidget objects
  * @since 1.8.0
  */
-function elgg_get_widgets($user_guid, $context) {
+function elgg_get_widgets($options, $context){
 	
-	$options = array(
-		'type' => 'widget',
-		'owner_guid' => $user_guid,
-		'attrs' => array( 'context' => $context ),
-		'limit' => 10000,
-		'timebased' => false//specify because most things are
-	);
-	$widgets = elgg_get_entities($options);
+	if(!is_array($options)){
+		$user_guid = $options;
+		$options = array();
+		$options['owner_guid'] = $user_guid;
+		if(isset($context)){
+                	$attrs['context'] = $context;
+       		 }	
+	}	
+	$db = new DatabaseCall('widget');
+	$raw = $db->getByIndex($options);
+	foreach($raw as $k=>$w){
+		$obj = new stdClass();
+		$obj->guid = $k;
+		foreach($w as $k=>$v){
+			$obj->$k = $v;
+		}
+		$widgets[] = new ElggWidget($obj);
+	}
 	if (!$widgets) {
 		return array();
 	}

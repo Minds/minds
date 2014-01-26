@@ -5,7 +5,8 @@
 
 $scrapers = elgg_list_entities(array(	'type'=>'object', 
 										'subtypes'=>array('scraper'),
-										));
+				'limit'=>get_input('limit', 20)							
+			));
 							
 $title = elgg_echo('blog:minds:scraper');
 

@@ -166,13 +166,11 @@ function blog_page_handler($page) {
 			break;
 		case 'view':
 			$params = blog_get_page_content_read($page[1]);
-			set_input('limit',2);	
+			if(!get_input('offset')){
+				set_input('limit',1);
+			}
 			$trending = blog_get_trending_page_content_list();
-                        //$params = blog_get_page_content_list();
-			//$body .= elgg_view_layout('gallery', $params);
-		
-			$params['footer'] .= $trending['content'];
-		
+				$params['footer'] .= $trending['content'];
 			$body = elgg_view_layout('content', $params);
 	
 			echo elgg_view_page($params['title'], $body);
@@ -405,7 +403,7 @@ function blog_pagesetup(){
 function minds_blog_scraper($hook, $entity_type, $return_value, $params){ 
 	elgg_set_ignore_access(true);
 	elgg_set_context('scraper');
-	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>1000, 'timebased'=>false));
+	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
 	$i = 0;
 	foreach($scrapers as $scraper){
