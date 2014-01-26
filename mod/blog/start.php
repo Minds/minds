@@ -412,6 +412,9 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	elgg_load_library('simplepie');
 	$i = 0;
 	foreach($scrapers as $scraper){
+		if(!$scraper->getOwnerEntity()){
+			continue;
+		}
 		//if the site was scraped in the last 15 mins then skip
 		echo "loading $scraper->title \n";
 		//why would it be an array sometimes?? it is though

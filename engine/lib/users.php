@@ -72,7 +72,7 @@ function create_user_entity(array $options = array()) {
 
 	$options['username'] = strtolower($options['username']);
 	
-	$db = new DatabaseCall('user');
+	$db = new DatabaseCall('entities');
 	$result = $db->insert($options['guid'], $options);
 	
 	return $result;	
