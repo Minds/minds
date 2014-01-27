@@ -4,10 +4,12 @@ elgg_register_event_handler('init','system', 'themeconfig_init');
 function themeconfig_init(){
   
 	elgg_register_admin_menu_item('configure', 'theme', 'appearance');
+	elgg_register_admin_menu_item('configure', 'themesets', 'appearance');
 	elgg_register_admin_menu_item('configure', 'footer', 'appearance');
     
     elgg_register_action('theme/edit', dirname(__FILE__) . '/actions/edit.php', 'admin');
 	elgg_register_action('footer/edit', dirname(__FILE__) . '/actions/footer/edit.php', 'admin');
+	elgg_register_action('themesets/edit', dirname(__FILE__) . '/actions/themesets/edit.php', 'admin');
    
 
 	elgg_extend_view('page/elements/footer', 'minds_themeconfig/footer');
@@ -19,10 +21,7 @@ function themeconfig_init(){
         elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
     }, 999);
 	
-	minds_themeconfig_register_themeset('minds-default');
-	minds_themeconfig_register_themeset('minds-left');
-	
-	minds_themeconfig_setup();
+	elgg_register_event_handler('pagesetup', 'system', 'minds_themeconfig_setup');
 }
 
 function themeicons_page_handler($pages) {
@@ -105,8 +104,13 @@ function minds_config_social_links(){
 		);
 }
 
+/**
+ * Load the themesets
+ * 
+ * @return void
+ */
 function minds_themeconfig_setup(){
-	$themeset = 'minds-left';
+	$themeset = elgg_get_plugin_setting('themeset', 'minds_themeconfig') ?: 'minds-default';
 	$themeset_dir =  elgg_get_plugins_path(). "minds_themeconfig/themesets/$themeset/";
 	$views = elgg_get_views("$themeset_dir/default",''); 	
 
@@ -117,12 +121,27 @@ function minds_themeconfig_setup(){
 		}
 	}
 }
-function minds_themeconfig_register_themeset($id){
-	global $CONFIG;
-	
-	if(!isset($CONFIG->themesets)){
-		$CONFIG->themesets = array();
+
+/**
+ * Return themesets
+ * @return array
+ */
+function minds_themeconfig_get_themesets(){
+	$dir = elgg_get_plugins_path(). "minds_themeconfig/themesets/";
+	$themesets = array();
+	if($handle = opendir($dir)) {
+		while (false !== ($entry = readdir($handle))) {
+	        if ($entry != "." && $entry != "..") {
+	        	$themesets[] = $entry;
+			}
+	    }
 	}
-	
-	$CONFIG->themesets[] = $id;
+	closedir($handle);
+	return $themesets;
+}
+/**
+ * Return themeset icon
+ */
+function minds_themeconfig_get_themeset_icon($themeset){
+	return elgg_get_site_url() . "mod/minds_themeconfig/themesets/$themeset/screenshot.png";
 }

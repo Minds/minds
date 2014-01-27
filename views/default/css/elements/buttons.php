@@ -69,7 +69,6 @@ a.elgg-button {
 	background: #4690D6;
 	border:1px solid #4690D6;
 	color: #FFF;
-	padding: 2px 15px;
 	text-decoration: none;
 	text-shadow: 0;
 	cursor: pointer;

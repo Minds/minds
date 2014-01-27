@@ -225,6 +225,7 @@ function elgg_register_simplecache_view($viewname) {
  */
 function elgg_get_simplecache_url($type, $view) {
 	global $CONFIG;
+
 	$lastcache = (int)$CONFIG->lastcache;
 	$viewtype = elgg_get_viewtype();
 	elgg_register_simplecache_view("$type/$view");
@@ -235,7 +236,7 @@ function elgg_get_simplecache_url($type, $view) {
 		$elements = array("view" => $viewtype);
 		$url = elgg_http_add_url_query_elements($url, $elements);
 	}
-	//var_dump($lastcache);	
+
 	return $url;
 }
 

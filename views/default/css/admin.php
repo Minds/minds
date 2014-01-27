@@ -64,3 +64,49 @@
 	padding-bottom: 15px;
 }
 
+/**
+ * Plugin list
+ */
+#elgg-plugin-list .elgg-plugin{
+	border: 1px solid #DDD;
+	padding: 16px;
+	margin:2px 0;
+}
+
+/**
+ * Themeset selector
+ */
+.elgg-input-radios.themesets {
+	width:100%;
+	height:auto;
+	display:block;
+	float:left;
+}
+.elgg-input-radios.themesets > li{
+	float:left;
+	margin:4px 16px;
+	width:45%;
+}
+@media all and (max-width: 1200px){
+	.elgg-input-radios.themesets > li{
+		width:100%;
+		margin:4px 0;
+	}
+}
+.elgg-input-radios.themesets > li input{
+	display:none;
+}
+.elgg-input-radios.themesets > li img{
+	border:2px solid #EEE;
+	border-radius:2px;
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;
+	width:100%;
+}
+.elgg-input-radios.themesets > li input[type="radio"]:checked + img{
+	border:2px solid #4690D6;
+}
+.elgg-form-themesets-edit .elgg-button{
+	margin-right:40px;
+	float:right;
+}

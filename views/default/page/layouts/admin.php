@@ -10,7 +10,6 @@
  * @uses $vars['title']   Title string
  */
 
-$params['title'] = $vars['tiel'];
+$params['title'] = $vars['title'];
 $params['content'] = $vars['content'];
-$params['sidebar'] = elgg_view('admin/sidebar', $vars);
 echo elgg_view_layout('one_sidebar', $params);
