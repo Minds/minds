@@ -21,8 +21,8 @@ function themeconfig_init(){
 }
 
 function themeicons_page_handler($pages) {
-
-        global $CONFIG;
+        
+	global $CONFIG;
         
 	switch($pages[0]) {
             case 'background':
@@ -42,7 +42,7 @@ function themeicons_page_handler($pages) {
                 $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
                
                 $contents = file_get_contents($theme_dir . $pages[0].'.png');
-                header_remove();
+               // header_remove();
                 header("Content-Type: image/png");
                header('Expires: ' . date('r', strtotime("+6 months")), true);
                header("Pragma: public");
