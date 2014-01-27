@@ -145,17 +145,10 @@ function elgg_save_config($name, $value, $site_guid = 0) {
 
 	elgg_set_config($name, $value);
 
-	if ($site_guid === NULL) {
-		if (is_array($value) || is_object($value)) {
-			return false;
-		}
-		return datalist_set($name, $value);
-	} else {
-		if ($site_guid == 0) {
-			$site_guid = (int) $CONFIG->site_id;
-		}
-		return set_config($name, $value, $site_guid);
+	if (is_object($value)) {
+		return false;
 	}
+	return datalist_set($name, $value);
 }
 
 /**
@@ -252,7 +245,7 @@ function datalist_get($name) {
 			return $value;
 		} else {
 			$name = "config:$name";
-			return $site->$name;
+			return json_decode($site->$name, true);
 		}
 	}
 	
@@ -274,7 +267,7 @@ function datalist_set($name, $value) {
         $site = elgg_get_site_entity(); 
         if ($site) {
 			$name = "config:$name";
-            $site->$name = $value;
+            $site->$name = json_encode($value);
         	return $site->save();
 	} 
         
@@ -398,7 +391,7 @@ function set_config($name, $value, $site_guid = 0) {
 	$CONFIG->$name = $value;
 	
 	$site = get_entity($site_guid, 'site');
-	$site->$name = $value;
+	$site->$name = json_encode($value);
 	
 	if($site->save()){
 		return true;

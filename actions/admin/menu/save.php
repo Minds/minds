@@ -14,6 +14,8 @@ if (in_array(' ', $featured_names)) {
 }
 elgg_save_config('site_featured_menu_names', $featured_names);
 
+elgg_save_config('site_featured_menu_use_icons',  get_input('icon', 'yes'));
+
 // custom menu items
 $custom_menu_titles = get_input('custom_menu_titles', array());
 $custom_menu_urls = get_input('custom_menu_urls', array());

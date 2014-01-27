@@ -11,7 +11,6 @@ function polls_init() {
 			'href' => 'voting/top',
 			'text' => '&#128077;',
 			'title' => elgg_echo('polls'),
-			'class' => 'entypo',
 		));
 
 	// Extend system CSS with our own styles, which are defined in the polls/css view

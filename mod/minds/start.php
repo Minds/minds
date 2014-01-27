@@ -346,10 +346,7 @@ function minds_register_hook()
 
 function minds_pagesetup(){
 	$user = elgg_get_logged_in_user_entity();
-	//Top Bar Menu
-	elgg_unregister_menu_item('topbar', 'elgg_logo');
-	elgg_unregister_menu_item('topbar', 'administration');
-	elgg_unregister_menu_item('topbar', 'friends');
+
 	elgg_unregister_menu_item('site', 'activity');
 	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
@@ -359,7 +356,6 @@ function minds_pagesetup(){
 						'href' => 'news',
 						'text' => '&#59194;',
 						'title' => elgg_echo('news'),
-						'class' => 'entypo',
 						'priority' => 1	
 				));
 	
@@ -369,7 +365,6 @@ function minds_pagesetup(){
 						'href' => 'archive/upload',
 						'text' => '&#128228;',
 						'title' => elgg_echo('minds:upload'),
-						'class' => 'entypo',
 						'priority' => 4
 					));
 	}
@@ -395,7 +390,6 @@ function minds_pagesetup(){
 			'href' => '/settings/user/' . $user->username,
 			'text' => '&#9881;',
 			'title' => elgg_echo('settings'),
-			'class' => 'entypo',
 			'priority' => 800,
 			'section' => 'alt',
 		));
@@ -421,7 +415,6 @@ function minds_pagesetup(){
 			'href' => 'action/logout',
 			'text' => '&#59399;',
 			'title' => elgg_echo('logout'),
-			'class' => 'entypo',
 			'priority' => 1000,
 			'section' => 'alt',
 		));
@@ -502,7 +495,6 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 				'href' => "action/river/delete?id=$item->id",
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
-				'class' => 'entypo',
 				//'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
 				'priority' => 200,
@@ -518,7 +510,6 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 					'href' => "action/minds/remind?guid=$object->guid",
 					'text' => '&#59159;',
 					'title' => elgg_echo('minds:remind'),
-					'class' => 'entypo',
 					'is_action' => true,
 					'priority' => 1,
 				);
@@ -547,7 +538,6 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 						'href' => "action/minds/remind?guid=$entity->guid",
 						'text' => '&#59159;',
 						'title' => elgg_echo('minds:remind'),
-						'class' => 'entypo',
 						'is_action' => true,
 						'priority' => 1,
 					);
@@ -564,7 +554,6 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 				'href' => "action/$handler/delete?guid={$entity->getGUID()}",
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
-				'class' => 'entypo',
 				//'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
 				'priority' => 200,

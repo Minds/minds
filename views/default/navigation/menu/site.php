@@ -14,7 +14,7 @@ foreach ($default_items as $menu_item) {
 	echo elgg_view('navigation/menu/elements/item', array('item' => $menu_item));
 }
 foreach ($more_items as $menu_item) {
-	echo elgg_view('navigation/menu/elements/item', array('item' => $menu_item));
+//	echo elgg_view('navigation/menu/elements/item', array('item' => $menu_item));
 }
 /*
 if ($more_items) {

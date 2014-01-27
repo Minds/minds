@@ -29,7 +29,6 @@ function blog_init() {
 		'name' => 'blog',
 		'text' => '&#59396;',
 		'href' => 'blog/trending',
-		'class' => 'entypo',
 		'title' => elgg_echo('blog:blogs'),
 		'priority' => 3
 	));

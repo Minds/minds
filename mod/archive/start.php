@@ -84,7 +84,6 @@ function minds_archive_init() {
 			'name' => elgg_echo('minds:archive'),
 			'href' => 'archive/trending',
 			'text' => '&#59392;',
-			'class' => 'entypo',
 			'title' =>  elgg_echo('minds:archive'),
 			'priority' => 4
 	));
