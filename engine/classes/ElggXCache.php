@@ -10,6 +10,7 @@ class ElggXCache extends ElggSharedMemoryCache {
 	 * Expiry of saved items (default timeout after a day to prevent anything getting too stale)
 	 */
 	private $expires = 86400;
+	private $enabled = false;
 
 	/**
 	 * Establish XCACHE VARIALE CACHE 
@@ -24,11 +25,10 @@ class ElggXCache extends ElggSharedMemoryCache {
 
 		$this->setNamespace($namespace);
 
-		$this->enabled = false;
 		// Do we have xcache?
-		if (function_exists('xcache_get') || intval(ini_get('xcache.var_size')) != 0) {	
+		if (function_exists('xcache_get') || intval(ini_get('xcache.var_size')) > 0) {	
 			$this->enabled = true;
-		}
+		}	
 	}
 
 	/**

@@ -34,9 +34,9 @@ if (isset($vars['item_class']) && $vars['item_class']) {
 	$item_class .= ' ' . $vars['item_class'];
 }
 
-if(isset($featured_menu_icons) && $featured_menu_icons != 'yes'){
+if(isset($featured_menu_icons) && $featured_menu_icons != 'yes' && $vars['menu_type'] == 'site'){
 	$vars['use_text'] = true;
-} else {
+} elseif($vars['menu_type'] == 'site') {
 	$item_class .= ' entypo';
 }
 echo "<li class=\"$item_class\">";

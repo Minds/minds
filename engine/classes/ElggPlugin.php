@@ -112,7 +112,8 @@ class ElggPlugin extends ElggEntity {
 			//throw error here
 			return false;
 		}
-		
+		$cache = new ElggXCache('new_entity_cache');
+		$cache->delete($this->pluginID);
 		$db = new DatabaseCall('plugin');
 		return $db->insert($this->pluginID, $attributes);
 

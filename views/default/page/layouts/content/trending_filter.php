@@ -47,6 +47,10 @@ if (elgg_is_logged_in() && $context) {
 			'priority' => 400,
 		),
 	);
+
+	if(!elgg_is_active_plugin('analytics')){
+		unset($tabs['trending']);
+	}
 	
 	foreach ($tabs as $name => $tab) {
 		$tab['name'] = $name;

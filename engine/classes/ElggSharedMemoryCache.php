@@ -26,6 +26,11 @@ abstract class ElggSharedMemoryCache extends ElggCache {
 	 * @return void
 	 */
 	public function setNamespace($namespace = "default") {
+		global $CONFIG;
+		//apply keyspace to cache..
+		if(isset($CONFIG->cassandra)){
+			$namespace .= ":".$CONFIG->cassandra->keyspace;
+		}
 		$this->namespace = $namespace;
 	}
 

@@ -465,6 +465,9 @@
 }
 .elgg-list .elgg-menu-entity li{
 }
+.elgg-menu-entity li.entypo {
+	font-size: 12px;
+}
 /* ***************************************
 	OWNER BLOCK
 *************************************** */

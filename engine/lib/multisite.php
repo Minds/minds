@@ -451,15 +451,19 @@ function elggmulti_getdata($options, $callback = '') {
 	//if($type == 'plugin'){ echo '<pre>';var_dump(debug_backtrace());echo '</pre>';exit;}
 	//echo "Called $type"; var_dump($options);
 	try {
-		$cache = new ElggXCache('ms_domains');
 		// 1. We're retrieving a domain by its url
 		if ($domain = $options['domain']) {
 			if (is_array($domain)) {
 				$rows = $MULTI_DB -> cfs[$type] -> multiget($domain);
 			} else {
-				if(!$rows[0] = $cache->load($domain)){
+				if(class_exists('ElggXCache')){
+                  			$cache = new ElggXCache('ms_domains');
+              				if(!$rows[0] = $cache->load($domain)){
+						 $rows[0] = $MULTI_DB -> cfs[$type] -> get($domain);
+						 $cache->save($domain, $rows[0]);
+					}	
+				 } else {
 					$rows[0] = $MULTI_DB -> cfs[$type] -> get($domain);
-					$cache->save($domain, $rows[0]);	
 				}
 			}
 		}
@@ -635,11 +639,16 @@ function elggmulti_get_db_settings($url = '') {
 	if (!$url)
 		$url = $_SERVER['SERVER_NAME'];
 
-	$cache = new ElggXCache('ms_settings');
-	if(!$result = $cache->load($url)){	
-		$result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
-		$cache->save($url, $result);
+	if(class_exists('ElggXCache')){
+		$cache = new ElggXCache('ms_settings');
+		if(!$result = $cache->load($url)){	
+			$result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
+			$cache->save($url, $result);
+		} else {
+			 $result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
+		}
 	}
+
 
 	if ($result) {
 

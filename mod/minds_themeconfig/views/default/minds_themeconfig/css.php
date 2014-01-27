@@ -24,6 +24,6 @@
     }
     <?php } ?>
     
-    <?php echo elgg_get_plugin_setting('custom_css', 'minds_themeconfig'); ?>
+    <?php echo htmlspecialchars_decode(elgg_get_plugin_setting('custom_css', 'minds_themeconfig')); ?>
 </style>
 				
