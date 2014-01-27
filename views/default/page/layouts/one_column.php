@@ -18,21 +18,23 @@ if (isset($vars['class'])) {
 $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 
 ?>
+
+<div class="minds-body-header">
+	<div class="inner">
+		<?php
+			echo $vars['header'];
+		?>
+	</div>	
+</div>
+
 <div class="<?php echo $class; ?>">
-	<div class="elgg-body elgg-main">
 	<?php
-		echo $nav;
-
-		if (isset($vars['title'])) {
-			echo elgg_view_title($vars['title']);
-		}
-
+	
 		echo $vars['content'];
-		
+			
 		// @deprecated 1.8
 		if (isset($vars['area1'])) {
 			echo $vars['area1'];
 		}
 	?>
-	</div>
 </div>

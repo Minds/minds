@@ -456,7 +456,15 @@ function elggmulti_getdata($options, $callback = '') {
 			if (is_array($domain)) {
 				$rows = $MULTI_DB -> cfs[$type] -> multiget($domain);
 			} else {
-				$rows[] = $MULTI_DB -> cfs[$type] -> get($domain);
+				if(class_exists('ElggXCache')){
+                  			$cache = new ElggXCache('ms_domains');
+              				if(!$rows[0] = $cache->load($domain)){
+						 $rows[0] = $MULTI_DB -> cfs[$type] -> get($domain);
+						 $cache->save($domain, $rows[0]);
+					}	
+				 } else {
+					$rows[0] = $MULTI_DB -> cfs[$type] -> get($domain);
+				}
 			}
 		}
 
@@ -631,7 +639,16 @@ function elggmulti_get_db_settings($url = '') {
 	if (!$url)
 		$url = $_SERVER['SERVER_NAME'];
 
-	$result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
+	if(class_exists('ElggXCache')){
+		$cache = new ElggXCache('ms_settings');
+		if(!$result = $cache->load($url)){	
+			$result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
+			$cache->save($url, $result);
+		} else {
+			 $result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
+		}
+	}
+
 
 	if ($result) {
 

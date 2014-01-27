@@ -352,7 +352,8 @@ function logout() {
 
 	session_destroy();
 	setcookie("Minds", '', (time() - (86400 * 30)), "/");
-//	unset($SESSION);
+	unset($SESSION);
+	$SESSION = NULL;
 
 	// starting a default session to store any post-logout messages.
 	_elgg_session_boot(NULL, NULL, NULL);

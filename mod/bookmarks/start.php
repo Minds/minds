@@ -26,7 +26,6 @@ function bookmarks_init() {
 		'name' => 'bookmarks',
 		'text' => '&#59159;',
 		'href' => 'bookmarks/all',
-		'class' => 'entypo',
 		'title' => elgg_echo('bookmarks')
 	));
 */

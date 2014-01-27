@@ -407,8 +407,7 @@ function admin_pagesetup() {
 		$url = elgg_get_simplecache_url('css', 'admin');
 		elgg_register_css('elgg.admin', $url);
 		elgg_load_css('elgg.admin');
-		elgg_unregister_css('elgg');
-
+		
 		// setup footer menu
 		elgg_register_menu_item('admin_footer', array(
 			'name' => 'faq',
@@ -450,8 +449,6 @@ function admin_page_handler($page) {
 	elgg_admin_add_plugin_settings_menu();
 	elgg_set_context('admin');
 
-	elgg_unregister_css('elgg');
-	elgg_load_js('elgg.admin');
 	elgg_load_js('jquery.jeditable');
 
 	// default to dashboard
@@ -491,7 +488,7 @@ function admin_page_handler($page) {
 	}
 
 	$body = elgg_view_layout('admin', array('content' => $content, 'title' => $title));
-	echo elgg_view_page($title, $body, 'admin');
+	echo elgg_view_page($title, $body, 'default');
 	return true;
 }
 
@@ -562,8 +559,6 @@ function admin_markdown_page_handler($pages) {
 	admin_gatekeeper();
 
 	elgg_set_context('admin');
-
-	elgg_unregister_css('elgg');
 	elgg_load_js('elgg.admin');
 	elgg_load_js('jquery.jeditable');
 	elgg_load_library('elgg:markdown');

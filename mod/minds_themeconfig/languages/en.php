@@ -4,6 +4,7 @@
 $english = array(
 	'admin:appearance:theme' => 'General',
 	'admin:appearance:footer' => 'Footer',
+	'admin:appearance:themesets' => 'Themesets',
 
 	'minds_themeconfig:copyright' => 'Copyright',
 	'minds_themeconfig:networks' => 'Social links',

@@ -46,7 +46,6 @@ function channel_init() {
 		'name' => 'channels',
 		'text' => '&#59254;',
 		'href' => 'channels',
-		'class' => 'entypo',
 		'title' => elgg_echo('channels'),
 		'priority' => 2
 	));

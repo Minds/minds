@@ -33,7 +33,6 @@ function elgg_get_site_entity($site_guid = 0) {
                 $site->url = $CONFIG->site_url;
                 $site->categories = $CONFIG->categories;
         } else {
-
                 $site = get_entity($site_guid,'site');
         }
 

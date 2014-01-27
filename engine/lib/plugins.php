@@ -367,10 +367,15 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 		return $return;
 	}
 
+	$cache = new ElggXCache('plugins');
+
 	//convert status to something the db understands
-	if($status == 'active'){
-		$db = new DatabaseCall('plugin');
-        	$rows = $db->getByIndex(array('active'=>1), "", 1000);
+	if($status == 'active'){ 
+		if(!$rows = $cache->load('active')){
+			$db = new DatabaseCall('plugin');
+	       	 	$rows = $db->getByIndex(array('active'=>1), "", 1000);
+			$cache->save('active', $rows);
+		}
 	} else {
 		$db = new DatabaseCall('plugin');
         	$rows = $db->get("", 10000);

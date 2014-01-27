@@ -33,7 +33,6 @@
 							'title'=>elgg_echo('webinar:menu:site'),
 							'href'=>'gatherings/all',
 							'text' => '&#58277;',
-                        				'class' => 'entypo', 	
 							'priority' => 15	
 					));
 		}

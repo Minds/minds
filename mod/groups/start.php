@@ -27,7 +27,6 @@ function groups_init() {
 			'href' => 'groups/all',
 			'text' => '&#59397;',
 			'title' => elgg_echo('groups'),
-			'class' => 'entypo',
 		));
 	}
 	

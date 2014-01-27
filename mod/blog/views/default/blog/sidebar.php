@@ -4,6 +4,11 @@
  *
  * @package Blog
  */
+ 
+//show the sidebar
+if($vars['page'] != 'view'){
+	echo blog_sidebar(null);
+}
 
 // fetch & display latest comments
 if ($vars['page'] == 'all') {
@@ -21,4 +26,5 @@ if ($vars['page'] == 'all') {
 if ($vars['page'] == 'owner' || $vars['page'] == 'group') {
 	echo elgg_view('blog/sidebar/archives', $vars);
 }
+
 

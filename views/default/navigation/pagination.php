@@ -17,7 +17,7 @@ if (elgg_in_context('widget')) {
 	return true;
 }
 
-$offset = abs((int) elgg_extract('offset', $vars, 0));
+$offset = elgg_extract('offset', $vars, 0);
 // because you can say $vars['limit'] = 0
 if (!$limit = (int) elgg_extract('limit', $vars, 10)) {
 	$limit = 10;
@@ -97,36 +97,42 @@ if ($current_page < $total_pages) {
 	$pages->items = array_merge($pages->items, range($current_page + 1, $last_page));
 }
 
+if(elgg_get_context() == 'search' || elgg_get_context() == 'admin' || elgg_get_context() == 'gallery'){
+	echo '<ul class="elgg-pagination">';
 
-echo '<ul class="elgg-pagination">';
-
-if ($pages->prev['href']) {
-	$link = elgg_view('output/url', $pages->prev);
-	echo "<li>$link</li>";
-} else {
-	echo "<li class=\"elgg-state-disabled\"><span>{$pages->prev['text']}</span></li>";
-}
-
-foreach ($pages->items as $page) {
-	if ($page == $current_page) {
-		echo "<li class=\"elgg-state-selected\"><span>$page</span></li>";
+	if ($pages->prev['href']) {
+       		 $link = elgg_view('output/url', $pages->prev);
+        	echo "<li>$link</li>";
 	} else {
-		$page_offset = (($page - 1) * $limit);
-		$url = elgg_http_add_url_query_elements($base_url, array($offset_key => $page_offset));
-		$link = elgg_view('output/url', array(
-			'href' => $url,
-			'text' => $page,
-			'is_trusted' => true,
-		));
-		echo "<li>$link</li>";
+        	echo "<li class=\"elgg-state-disabled\"><span>{$pages->prev['text']}</span></li>";
 	}
-}
 
-if ($pages->next['href']) {
-	$link = elgg_view('output/url', $pages->next);
-	echo "<li>$link</li>";
+	foreach ($pages->items as $page) {
+       	 if ($page == $current_page) {
+                echo "<li class=\"elgg-state-selected\"><span>$page</span></li>";
+      	  } else {
+               	 $page_offset = (($page - 1) * $limit);
+               	 $url = elgg_http_add_url_query_elements($base_url, array($offset_key => $page_offset));
+               	 $link = elgg_view('output/url', array(
+                        'href' => $url,
+                        'text' => $page,
+                        'is_trusted' => true,
+             	   ));
+                	echo "<li>$link</li>";
+        	}
+	}
+
+	if ($pages->next['href']) {
+      	  $link = elgg_view('output/url', $pages->next);
+        	echo "<li>$link</li>";
+	} else {
+        	echo "<li class=\"elgg-state-disabled\"><span>{$pages->next['text']}</span></li>";
+	}
+
+	echo '</ul>';
 } else {
-	echo "<li class=\"elgg-state-disabled\"><span>{$pages->next['text']}</span></li>";
+
+echo '<div class="news-show-more load-more" limit="'.$limit.'" last_guid="'. $vars['last_guid'] . '" data-load-next="'. $vars['load-next'] . '" context="'.elgg_get_context().'">more</div>';
+
 }
 
-echo '</ul>';

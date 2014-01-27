@@ -11,7 +11,6 @@ function stream_init() {
 			'href' =>  elgg_get_site_url() . "stream/",
 			'title' =>  elgg_echo('stream:title'),
 			'text' => '&#58277;',
-			'class' => 'entypo',
 		));
 		
 	// Register a page handler, so we can have nice URLs

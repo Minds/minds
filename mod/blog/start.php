@@ -28,8 +28,7 @@ function blog_init() {
 	elgg_register_menu_item('site', array(
 		'name' => 'blog',
 		'text' => '&#59396;',
-		'href' => 'blog/trending',
-		'class' => 'entypo',
+		'href' => elgg_is_active_plugin('analytics') ? 'blog/trending' : 'blog/all',
 		'title' => elgg_echo('blog:blogs'),
 		'priority' => 3
 	));
@@ -169,8 +168,10 @@ function blog_page_handler($page) {
 			if(!get_input('offset')){
 				set_input('limit',1);
 			}
-			$trending = blog_get_trending_page_content_list();
+			if(elgg_is_active_plugin('analytics')){
+				$trending = blog_get_trending_page_content_list();
 				$params['footer'] .= $trending['content'];
+			}
 			$body = elgg_view_layout('content', $params);
 	
 			echo elgg_view_page($params['title'], $body);

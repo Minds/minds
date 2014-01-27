@@ -4,7 +4,7 @@
  */
 
 // @todo Could probably make this number configurable
-$num_featured_items = 6;
+$num_featured_items = 8;
 
 // get site menu items
 $menu = elgg_get_config('menus');
@@ -14,10 +14,11 @@ $menu = $builder->getMenu('name');
 $menu_items = $menu['default'];
 
 $featured_menu_names = elgg_get_config('site_featured_menu_names');
+$featured_menu_use_icon = elgg_get_config('site_featured_menu_use_icons');
 
 $dropdown_values = array();
 foreach ($menu_items as $item) {
-	$dropdown_values[$item->getName()] = $item->getText();
+	$dropdown_values[$item->getName()] = elgg_echo($item->getName());
 }
 $dropdown_values[' '] = elgg_echo('none');
 
@@ -45,6 +46,14 @@ for ($i=0; $i<$num_featured_items; $i++) {
 		'value' => $current_value
 	));
 }
+echo "<br/><br/><p><b>Use icons?</b>";
+echo elgg_view('input/checkbox', array(
+			'value' =>'yes',
+			'default'=>'no', 
+			'name'=>"icon", 
+			'checked'=> !isset($featured_menu_use_icon) || $featured_menu_use_icon != 'no' ? 'checked' : false 	
+		));
+echo "</p>";
 ?>
 	</div>
 </div>

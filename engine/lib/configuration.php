@@ -145,17 +145,10 @@ function elgg_save_config($name, $value, $site_guid = 0) {
 
 	elgg_set_config($name, $value);
 
-	if ($site_guid === NULL) {
-		if (is_array($value) || is_object($value)) {
-			return false;
-		}
-		return datalist_set($name, $value);
-	} else {
-		if ($site_guid == 0) {
-			$site_guid = (int) $CONFIG->site_id;
-		}
-		return set_config($name, $value, $site_guid);
+	if (is_object($value)) {
+		return false;
 	}
+	return datalist_set($name, $value);
 }
 
 /**
@@ -251,9 +244,8 @@ function datalist_get($name) {
 		if($value = $site->$name){
 			return $value;
 		} else {
-
 			$name = "config:$name";
-			return $site->$name;
+			return json_decode($site->$name, true);
 		}
 	}
 	
@@ -274,10 +266,9 @@ function datalist_set($name, $value) {
 
         $site = elgg_get_site_entity(); 
         if ($site) {
-		$name = "config:$name";
-                $site->$name = $value;
-        
-                return $site->save();
+			$name = "config:$name";
+            $site->$name = json_encode($value);
+        	return $site->save();
 	} 
         
 	return true;
@@ -400,7 +391,7 @@ function set_config($name, $value, $site_guid = 0) {
 	$CONFIG->$name = $value;
 	
 	$site = get_entity($site_guid, 'site');
-	$site->$name = $value;
+	$site->$name = json_encode($value);
 	
 	if($site->save()){
 		return true;
@@ -606,12 +597,12 @@ function _elgg_load_application_config() {
 	// needs to be set before system, init for links in html head
 	$viewtype = get_input('view', 'default');
 	
-	if($CONFIG->elgg_multisite_settings){
+	//if($CONFIG->elgg_multisite_settings){
 		$lastcached = datalist_get("simplecache_lastcached_$viewtype");
 		$CONFIG->lastcache = $lastcached;
-	}
+	//}
 
-	$CONFIG->i18n_loaded_from_cache = false;
+		$CONFIG->i18n_loaded_from_cache = false;
 
 	// this must be synced with the enum for the entities table
 	$CONFIG->entity_types = array('group', 'object', 'site', 'user', 'plugin', 'notification');
