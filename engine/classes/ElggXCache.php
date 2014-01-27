@@ -24,9 +24,10 @@ class ElggXCache extends ElggSharedMemoryCache {
 
 		$this->setNamespace($namespace);
 
+		$this->enabled = false;
 		// Do we have xcache?
-		if (!function_exists('xcache_get') || intval(ini_get('xcache.var_size')) == 0) {	
-			throw new ConfigurationException('PHP xcache not installed, you must install xcache');
+		if (function_exists('xcache_get') || intval(ini_get('xcache.var_size')) != 0) {	
+			$this->enabled = true;
 		}
 	}
 
@@ -58,6 +59,10 @@ class ElggXCache extends ElggSharedMemoryCache {
 	 */
 	public function save($key, $data, $expires = null) {
 
+		if(!$this->enabled){
+			return false;
+		}
+
 		$key = $this->makeKey($key);	
 	
 		if ($expires === null) {
@@ -84,6 +89,10 @@ class ElggXCache extends ElggSharedMemoryCache {
 	 */
 	public function load($key, $offset = 0, $limit = null) {
 		
+		if(!$this->enabled){
+			return false;
+		}
+		
 		$key = $this->makeKey($key);
 
 		$result = xcache_get($key);
@@ -103,6 +112,11 @@ class ElggXCache extends ElggSharedMemoryCache {
 	 * @return bool
 	 */
 	public function delete($key) {
+		
+		if(!$this->enabled){
+			return false;
+		}
+		
 		$key = $this->makeKey($key);
 
 		return xcache_unset($key);
@@ -116,6 +130,11 @@ class ElggXCache extends ElggSharedMemoryCache {
 	 * @return true
 	 */
 	public function clear() {
+		
+		if(!$this->enabled){
+			return false;
+		}
+		
 		// DISABLE clearing for now - you must use delete on a specific key.
 		return true;
 	}
