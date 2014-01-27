@@ -1,8 +1,4 @@
 <div class="left">
-	<?php echo elgg_view_menu('site',array('sort_by'=>'priority')); ?>
-</div>
-
-<div class="center">
 	<a href="<?php echo elgg_get_site_url();?>" class="logo">
 		  <?php if (elgg_get_plugin_setting('logo_override', 'minds_themeconfig')) { ?>
  		          <img src="<?php echo elgg_get_site_url();?>themeicons/logo_topbar"/>
@@ -12,6 +8,7 @@
 		<?php } ?>
 	</a>
 	<?php echo elgg_view('search/search_box'); ?>
+	<?php echo elgg_view_menu('site',array('sort_by'=>'priority')); ?>
 </div>
 
 <?php $user = elgg_get_logged_in_user_entity();?>

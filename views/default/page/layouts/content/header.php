@@ -11,7 +11,7 @@
 
 if (isset($vars['buttons'])) {
 	// it was a bad idea to implement buttons with a pass through
-	elgg_deprecated_notice("Use elgg_register_menu_item() to register for the title menu", 1.0);
+//	elgg_deprecated_notice("Use elgg_register_menu_item() to register for the title menu", 1.0);
 }
 
 if (isset($vars['header_override'])) {
@@ -27,6 +27,8 @@ if (!$title) {
 }
 $title = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 
+$subtitle = $vars['subtitle'];
+
 if (isset($vars['buttons']) && $vars['buttons']) {
 	$buttons = $vars['buttons'];
 } else {
@@ -36,8 +38,11 @@ if (isset($vars['buttons']) && $vars['buttons']) {
 	));
 }
 
+$menu = $vars['menu'];
+
 echo <<<HTML
 <div class="elgg-head clearfix">
-	$title$buttons
+	$title$menu$buttons
+	<p class="subtext">$subtitle</p>
 </div>
 HTML;

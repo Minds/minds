@@ -5,12 +5,19 @@
  * @uses $vars['sidebar'] Optional content that is displayed at the bottom of sidebar
  */
 
-echo elgg_view_menu('extras', array(
+/*echo elgg_view_menu('extras', array(
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
-));
+));*/
 
-echo elgg_view('page/elements/owner_block', $vars);
+//echo elgg_view('page/elements/owner_block', $vars);
+
+
+if(elgg_get_page_owner_guid() != elgg_get_logged_in_user_guid()){
+	echo elgg_view('page/elements/owner_block', $vars);
+}
+
+echo elgg_view('minds_social/site_social_links');
 
 echo elgg_view_menu('page', array('sort_by' => 'name'));
 
@@ -30,3 +37,7 @@ if (isset($vars['area2'])) {
 if (isset($vars['area3'])) {
 	echo $vars['area3'];
 }
+
+//echo elgg_view('minds/ads', array('type'=>'content.ad-side'));
+//echo elgg_view('minds/ads', array('type'=>'linkad-box'));
+echo elgg_view('minds/ads', array('type'=>'toobla-side'));

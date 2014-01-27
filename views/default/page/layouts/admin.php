@@ -10,31 +10,7 @@
  * @uses $vars['title']   Title string
  */
 
-?>
-
-<div class="elgg-layout elgg-layout-one-sidebar">
-	<div class="elgg-sidebar clearfix">
-		<?php
-			echo elgg_view('admin/sidebar', $vars);
-		?>
-	</div>
-	<div class="elgg-main elgg-body">
-		<div class="elgg-head">
-		<?php
-			echo elgg_view_menu('title', array(
-				'sort_by' => 'priority',
-				'class' => 'elgg-menu-hz',
-			));
-
-			if (isset($vars['title'])) {
-				echo elgg_view_title($vars['title']);
-			}
-		?>
-		</div>
-		<?php
-			if (isset($vars['content'])) {
-				echo $vars['content'];
-			}
-		?>
-	</div>
-</div>
+$params['title'] = $vars['tiel'];
+$params['content'] = $vars['content'];
+$params['sidebar'] = elgg_view('admin/sidebar', $vars);
+echo elgg_view_layout('one_sidebar', $params);

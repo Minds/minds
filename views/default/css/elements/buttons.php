@@ -12,40 +12,39 @@
 
 /* Base */
 .elgg-button {
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: bold;
+	text-align: left;
 	
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius:2px;
+	border-radius:2px;
 
+	min-width:125px;
 	width: auto;
-	padding: 2px 4px;
+	padding: 8px 12px;
 	cursor: pointer;
 	outline: none;
 	
-	-webkit-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.40);
-	-moz-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.40);
-	box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.40);
+	-webkit-box-shadow:0;
+	-moz-box-shadow: 0;
+	box-shadow: 0;
 }
 a.elgg-button {
-	padding: 3px 6px;
+	padding: 8px 12px;
 }
 
 /* Submit: This button should convey, "you're about to take some definitive action" */
 .elgg-button-submit {
 	color: white;
-	text-shadow: 1px 1px 0px black;
 	text-decoration: none;
-	border: 1px solid #4690d6;
-	background: #4690d6 url(<?php echo elgg_get_site_url(); ?>_graphics/button_graduation.png) repeat-x left 10px;
+	background: #333;
 }
 
 .elgg-button-submit:hover {
-	border-color: #0054a7;
 	text-decoration: none;
 	color: white;
-	background: #0054a7 url(<?php echo elgg_get_site_url(); ?>_graphics/button_graduation.png) repeat-x left 10px;
+	background: #111;
 }
 
 .elgg-button-submit.elgg-state-disabled {
@@ -56,44 +55,32 @@ a.elgg-button {
 
 /* Cancel: This button should convey a negative but easily reversible action (e.g., turning off a plugin) */
 .elgg-button-cancel {
-	color: #333;
-	background: #ddd url(<?php echo elgg_get_site_url(); ?>_graphics/button_graduation.png) repeat-x left 10px;
-	border: 1px solid #999;
+	color: #FFF;
+	background: #FF0A0A;
 }
 .elgg-button-cancel:hover {
-	color: #444;
-	background-color: #999;
-	background-position: left 10px;
+	color:#FFF;
+	background-color: #E00A0A;
 	text-decoration: none;
 }
 
 /* Action: This button should convey a normal, inconsequential action, such as clicking a link */
 .elgg-button-action {
-	background: #ccc url(<?php echo elgg_get_site_url(); ?>_graphics/button_background.gif) repeat-x 0 0;
-	border:1px solid #999;
-	color: #333;
+	background: #4690D6;
+	border:1px solid #4690D6;
+	color: #FFF;
 	padding: 2px 15px;
-	text-align: center;
-	font-weight: bold;
 	text-decoration: none;
-	text-shadow: 0 1px 0 white;
+	text-shadow: 0;
 	cursor: pointer;
-	
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
 }
 
 .elgg-button-action:hover,
 .elgg-button-action:focus {
-	background: #ccc url(<?php echo elgg_get_site_url(); ?>_graphics/button_background.gif) repeat-x 0 -15px;
-	color: #111;
+	color: #FFF;
 	text-decoration: none;
-	border: 1px solid #999;
+	background:#4690C3;
+	border:1px solid #4690C3;
 }
 
 /* Delete: This button should convey "be careful before you click me" */
@@ -140,7 +127,7 @@ a.elgg-button {
 }
 
 .elgg-button-dropdown:hover {
-	background-color:#71B9F7;
+	background-color:#EEE;
 	text-decoration:none;
 }
 

@@ -18,6 +18,11 @@ function themeconfig_init(){
         // Extend the css
         elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
     }, 999);
+	
+	minds_themeconfig_register_themeset('minds-default');
+	minds_themeconfig_register_themeset('minds-left');
+	
+	minds_themeconfig_setup();
 }
 
 function themeicons_page_handler($pages) {
@@ -98,4 +103,26 @@ function minds_config_social_links(){
 			'twitter' => array('url'=>elgg_get_plugin_setting('twitter:url', 'minds_themeconfig'), 'icon'=>'&#62218;'),
  			'gplus' => array('url'=>elgg_get_plugin_setting('gplus:url', 'minds_themeconfig'), 'icon'=>'&#62224;')
 		);
+}
+
+function minds_themeconfig_setup(){
+	$themeset = 'minds-left';
+	$themeset_dir =  elgg_get_plugins_path(). "minds_themeconfig/themesets/$themeset/";
+	$views = elgg_get_views("$themeset_dir/default",''); 	
+
+	foreach($views as $view){
+		 $view = substr($view, 1);
+		if(file_exists("$themeset_dir/default/$view.php")){ 
+			elgg_set_view_location($view,$themeset_dir); 
+		}
+	}
+}
+function minds_themeconfig_register_themeset($id){
+	global $CONFIG;
+	
+	if(!isset($CONFIG->themesets)){
+		$CONFIG->themesets = array();
+	}
+	
+	$CONFIG->themesets[] = $id;
 }

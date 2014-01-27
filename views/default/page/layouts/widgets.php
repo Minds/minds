@@ -23,18 +23,16 @@ elgg_push_context('widgets');
 
 $widgets = elgg_get_widgets($owner->guid, $context);
 
-if (elgg_can_edit_widget_layout($context)) {
-	if ($show_add_widgets) {
-		echo elgg_view('page/layouts/widgets/add_button');
-	}
-	$params = array(
-		'widgets' => $widgets,
-		'context' => $context,
-		'exact_match' => $exact_match,
-		'show_access' => $show_access,
-	);
-	echo elgg_view('page/layouts/widgets/add_panel', $params);
-}
+$params = array(
+        'widgets' => $widgets,
+        'context' => $context,
+        'exact_match' => $exact_match,
+);      
+
+?>
+
+<div class="elgg-inner">
+<?php
 
 echo $vars['content'];
 
@@ -60,3 +58,5 @@ for ($column_index = 1; $column_index <= $num_columns; $column_index++) {
 elgg_pop_context();
 
 echo elgg_view('graphics/ajax_loader', array('id' => 'elgg-widget-loader'));
+?>
+</div>

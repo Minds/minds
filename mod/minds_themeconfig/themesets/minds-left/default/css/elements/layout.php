@@ -61,20 +61,19 @@
 	position:relative;
 }
 .hero > .topbar > .inner > .left{
-	width:25%;
+	width:75%;
 }
-.hero > .topbar > .inner > .center{
-	width:50%;
-}
+
 .hero > .topbar > .inner > .right{
 	width:25%;
 }
 .hero > .topbar > .inner .global-menu{
-	margin-top: 35px;
+	margin-bottom: 8px;
+	float:left;
 }
 .hero > .topbar .logo{
-	margin:auto;
-	padding: 0 8px;
+	float:left;
+	padding: 8px 8px;
 	display:block;
 	position:relative;
 	width:auto;
@@ -84,9 +83,9 @@
 	height:100%;
 }
 .hero > .topbar .search{
-	margin: 8px auto;
-	float:none;
-	width:60%;
+	margin:16px;
+	float:left;
+	width:50%;
 }
 .hero > .topbar .search input{
 	margin:0;
