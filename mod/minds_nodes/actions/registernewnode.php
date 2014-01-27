@@ -11,7 +11,7 @@ $my_domain = get_input('my_domain');
 $email = get_input('email');
 
 $node_guid = get_input('node_guid');
-$node = get_entity($node_guid, 'object');
+$node = get_entity($node_guid);
 
 try {
     

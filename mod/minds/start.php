@@ -133,9 +133,6 @@ function minds_init(){
 	elgg_register_action("minds/remind/external", "$actionspath/minds/remind_external.php");
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
-        elgg_register_action("registernode","$actionspath/minds/registernode.php");
-        elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php");
-        elgg_register_action("select_free_tier","$actionspath/minds/select_free_tier.php");
 	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
