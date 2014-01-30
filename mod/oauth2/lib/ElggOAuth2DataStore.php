@@ -253,7 +253,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
      */
     public function getAuthorizationCode($code)
     {
-        $results = elgg_get_entities($this->getAuthCodeOptions($token));
+        $results = elgg_get_entities($this->getAuthCodeOptions($code));
 
         if (!empty($results)) {
             return array(
