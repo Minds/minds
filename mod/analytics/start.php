@@ -148,6 +148,7 @@ function analytics_fetch(){
 		'ga:pageviews',
 		$optParams);
 	$guids = array();
+	$user_guids = array();
 	foreach ($results->getRows() as $row) {
 		$url = $row[0];
 		$guid = analytics_get_guid_from_url($url);
@@ -170,6 +171,8 @@ function analytics_fetch(){
 		if(in_array($entity->subtype, array('image','file','kaltura_video'))){
                 	 $objects['archive'][] = $guid;
 		}
+		
+		$user_guids[] = $entity->owner_guid;
 	}	
 	} catch(Exception $e) {
 		//get the feature list if something went wrong with analytics...
@@ -197,7 +200,14 @@ function analytics_fetch(){
 			echo "Successfuly imported '$subtype' to trending \n";
 		}
 	}
+	
+	$user_occurances = array_count_values($user_guids);
+	arsort($user_occurances);
+	$user_guids = array_keys($user_occurances);
 
+	$db = new DatabaseCall('entities_by_time');
+	$db->removeRow('trending:users', $user_guids);
+			
 	return;
 }
 /** 
