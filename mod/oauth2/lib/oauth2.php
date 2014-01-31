@@ -40,7 +40,6 @@ function oauth2_get_user_by_access_token() {
 
     // Validate the request
     if (!$server->verifyAccessRequest(OAuth2_Request::createFromGlobals())) {
-        error_log($server->getResponse());
         elgg_set_ignore_access($access);
         return false;
     }
