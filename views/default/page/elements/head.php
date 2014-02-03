@@ -92,7 +92,7 @@ e.src = u;
 f.parentNode.insertBefore(e, f);
 
 }(document.createElement('script'),
-document.getElementsByTagName('script')[0], 'http://cdn.taboola.com/libtrc/minds/loader.js');
+document.getElementsByTagName('script')[0], 'https://cdn.taboola.com/libtrc/minds/loader.js');
 
 </script>
 

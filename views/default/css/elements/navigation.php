@@ -49,10 +49,12 @@
 *************************************** */
 .elgg-tabs {
 	width: auto;
+	margin:auto;
+	text-align:center;
 }
 .elgg-tabs li {
-	float: left;
 	font-size:16px;	
+	display: inline-block;
 }
 .elgg-tabs a {
 	text-decoration: none;
@@ -318,7 +320,8 @@
 	-moz-border-radius: 2px;
 	border-radius: 2px;
 	
-	background-color: white;
+	font-weight:bold;
+	background-color: #F3F3F3;
 	margin: 0 0 3px;
 	padding: 2px 4px 2px 8px;
 }
@@ -327,7 +330,8 @@
 	text-decoration: none;
 }
 .elgg-menu-page li.elgg-state-selected > a {
-	background-color: #EEE;
+	background-color: #FAFAFA;
+	color:#888;
 }
 .elgg-menu-page .elgg-child-menu {
 	display: none;

@@ -1,16 +1,18 @@
 <?php
 /**
- * Embed a youtube video via the embed interface
+ * Youtube embed form
  */
 
-$form_vars = array(
-	'class' => 'elgg-form-embed-youtube',
-);
-$body_vars = array('container_guid' => elgg_get_page_owner_guid());
-echo elgg_view_form('embed/youtube', $form_vars, $body_vars);
+?>
+	<label><?php echo elgg_echo('Youtube Video Url'); ?></label><br />
+	<?php
+	echo elgg_view('input/text', array(
+		'name' => 'url',
+		'placeholder' => 'Paste or enter the url to a Youtube video here eg. http://www.youtube.com/watch?feature=player_embedded&v=9bZkp7q19f0',
+		'class' => 'elgg-autofocus',
+	));
 
-// the tab we want to be forwarded to after upload is complete
-echo elgg_view('input/hidden', array(
-	'name' => 'embed_forward',
-	'value' => 'all',
-));
+echo '<div class="elgg-foot"><br/>';
+echo elgg_view('input/submit', array('name' => 'submit', 'value' => elgg_echo('Insert')));
+echo '</div>';
+

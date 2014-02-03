@@ -206,7 +206,8 @@ function analytics_fetch(){
 	$user_guids = array_keys($user_occurances);
 
 	$db = new DatabaseCall('entities_by_time');
-	$db->removeRow('trending:users', $user_guids);
+	$db->removeRow('trending:users');
+	$db->insert('trending:users', $user_guids);
 			
 	return;
 }

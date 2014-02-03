@@ -4,6 +4,11 @@
  */
 
 $tabs = array(
+	'trending' => array(
+		'title' => elgg_echo('channels:label:trending'),
+                'url' => "channels/trending",
+                'selected' => $vars['selected'] == 'trending',
+        ),
 	'subscribers' => array(
 		'title' => elgg_echo('channels:label:subscribers'),
 		'url' => "channels/subscribers",

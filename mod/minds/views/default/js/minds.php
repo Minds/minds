@@ -67,7 +67,7 @@
 		 */
 		$(window).on('scroll', minds.onScroll);
 		if(elgg.is_logged_in()){
-			$(document).on('click', '.elgg-button-action.subscribe', minds.subscribe);
+			$(document).on('click', '.subscribe-button a', minds.subscribe);
 		}
 		$(document).on('click', '.elgg-menu-item-feature a', minds.feature);
 
@@ -112,11 +112,11 @@
 			success: function(data) {
 				if(data.output == 'subscribed'){
 					button.addClass('subscribed');
-					button.html('Subscribed');
+					button.html('<span class="text">Subscribed</span>');
 					button.attr('href', button.attr('href').replace('add', 'remove'));
 				} else {
 					button.removeClass('subscribed');
-                                        button.html('Subscribe');
+                                        button.html('<span class="text">Subscribe</span>');
 					button.attr('href', button.attr('href').replace('remove','add'));
 				}
 			},

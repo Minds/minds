@@ -34,29 +34,14 @@ switch ($vars['page']) {
 		$options['newest_first'] = false;
 		$content = elgg_list_entities($options);
 		break;
-	case 'trending':
-		$guids = analytics_retrieve(array('context'=>'users'));
-		$options['guids'] = $guids;
-		$content = elgg_list_entities($options);
-		break;
-	/*case 'suggested':
-		$people = suggested_friends_get_people($page_owner->guid, $friends, $groups);
-		$entities = array();
-		foreach($people as $person){
-			$entities[] = $person['entity'];
-		}
-		$content = elgg_view_entity_list($entities);
-		break;
-	case 'online':
-		$content = get_online_users($limit);
-		break;
-	case 'collections':
-		elgg_register_title_button('collections', 'add');
-		$content = elgg_view_access_collections(elgg_get_logged_in_user_guid());
-		break;*/
 	case 'newest':
+                $options['newest_first'] = true;
+                $content = elgg_list_entities($options);
+		break;
+	case 'trending':
 	default:
-		$options['newest_first'] = true;
+		$guids = analytics_retrieve(array('context'=>'users', 'offset'=>$offset, 'limit'=>$limit));
+		$options['guids'] = $guids;
 		$content = elgg_list_entities($options);
 		break;
 }

@@ -29,7 +29,7 @@
   font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 300;
-  src: local('Ubuntu Light'), local('Ubuntu-Light'), url(http://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+  src: local('Ubuntu Light'), local('Ubuntu-Light'), url(https://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
 }
 body{
 	background:#F8F8F8;
@@ -41,6 +41,10 @@ h1,h2,h3,h4,h5{
 }
 body.news{
 	background:#D2D9DF;
+}
+.main.body ul{
+	list-style:disc outside none; margin-left:40px;
+	line-height:3em;
 }
 /***************
  *** TOP BAR ***
