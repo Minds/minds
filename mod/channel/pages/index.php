@@ -34,6 +34,11 @@ switch ($vars['page']) {
 		$options['newest_first'] = false;
 		$content = elgg_list_entities($options);
 		break;
+	case 'trending':
+		$guids = analytics_retrieve(array('context'=>'users'));
+		$options['guids'] = $guids;
+		$content = elgg_list_entities($options);
+		break;
 	/*case 'suggested':
 		$people = suggested_friends_get_people($page_owner->guid, $friends, $groups);
 		$entities = array();
