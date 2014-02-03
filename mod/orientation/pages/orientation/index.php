@@ -7,7 +7,7 @@ elgg_load_library('orientation');
 
 gatekeeper();
 
-$title = elgg_echo('orientation:title');
+$title = elgg_echo('orientation:title', array(elgg_get_site_entity()->name));
 
 $content = elgg_view('orientation/index');
 

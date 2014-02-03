@@ -654,7 +654,7 @@ function elggmulti_get_db_settings($url = '') {
 	if(!$result){
 		$result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
         }
-	
+var_dump($result);
 	if ($result) {
 
 		if (!$result -> isSiteAccessible())
@@ -703,7 +703,7 @@ function elggmulti_get_activated_plugins($domain_id = false) {
 
 		$domain_id = $result -> getID();
 	}
-	
+
 	$site = new \MultisiteDomain($domain_id);
 	
 	$resultarray = $site -> enabled_plugins;
@@ -717,22 +717,7 @@ function elggmulti_get_activated_plugins($domain_id = false) {
 }
 
 function elggmulti_get_default_plugins(){
-	return array( 'tinymce', 
-			'channel',
-            		'groups',
-            		'wall',
-			 'analytics',
-			'archive',
-			'blog',
-			 'persona',
-	            'notifications',
-        	    'minds_connect',
-			'mobile',
-			'anypage',
-            		'Login-As',
-        	    	'minds_widgets',
-			'minds_connect'
-		);
+	return array('tinymce');
 }
 
 /**

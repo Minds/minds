@@ -180,8 +180,8 @@ class MindsMultiInstaller extends ElggInstaller {
      */
     protected function settings($submissionVars) {
         global $CONFIG;
-        db_init();
-        $formVars = array(
+        
+	$formVars = array(
             'sitename' => array(
                 'type' => 'text',
                 'value' => 'My New Community',

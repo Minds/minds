@@ -442,6 +442,9 @@ $english = array(
 	'river:delete:success' => 'River item has been deleted',
 	'river:delete:fail' => 'River item could not be deleted',
 
+	'river:create::default' => '%s created %s',
+	'river:join::default' => '%s joined %s',
+
 	'river:widget:title' => "Activity",
 	'river:widget:description' => "Display latest activity",
 	'river:widget:type' => "Type of activity",
