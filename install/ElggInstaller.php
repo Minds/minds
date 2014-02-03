@@ -381,7 +381,7 @@ class ElggInstaller {
 	 */
 	protected function settings($submissionVars) {
 		global $CONFIG;
-		db_init(); //load the db
+		
 		$formVars = array(
 			'sitename' => array(
 				'type' => 'text',
@@ -1231,7 +1231,7 @@ class ElggInstaller {
 			register_error($msg);
 			return FALSE;
 		}
-
+		
 		try  {
 			$this->cassandra = new SystemManager($CONFIG->cassandra->servers[0]);	
 		} catch (Exception $e) {
@@ -1459,7 +1459,7 @@ class ElggInstaller {
 							'groups',
 							'wall',
 							'tidypics', 
-							'analytics',
+							//'analytics',
 							'archive', 
 							'embed',
 							'embed_extender',
@@ -1474,7 +1474,7 @@ class ElggInstaller {
                                                         //'anypage',
 							'persona',
 							'notifications',
-							'minds_connect',
+							//'minds_connect',
 							'bootcamp',
 							'mobile',
 							'minds'
@@ -1546,7 +1546,7 @@ class ElggInstaller {
 	 */
 	protected function createAdminAccount($submissionVars, $login = FALSE) {
 		global $CONFIG;
-		db_init();
+		
 		try {
 			$guid = register_user(
 					$submissionVars['username'],

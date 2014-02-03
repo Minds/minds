@@ -25,10 +25,14 @@ else
     require_once(dirname(dirname(__FILE__)) . "/minds/start.php");
     require_once(dirname(__FILE__) . "/install/ElggInstaller.php");
     require_once(dirname(__FILE__) . "/install/MindsMultiInstaller.php");
-
+    
+	try{
     $installer = new MindsMultiInstaller();
 
     $installer->setupMulti();
+	} catch(Exception $e){
+		var_dump($e);
+	}
 }
 
 $step = get_input('step', 'welcome'); 

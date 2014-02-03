@@ -5,7 +5,7 @@
 
 $english = array(
 	'orientation' => 'Orientation',
-	'orientation:title' => 'Welcome to Minds...',
+	'orientation:title' => 'Welcome to %s...',
 	'orientation:sidebar:title' => 'Getting started',
 	'orientation:blurb' => 'Lets get started!',
 	'orientation:progress:blurb'=> 'complete',

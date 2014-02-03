@@ -6,11 +6,12 @@ function themeconfig_init(){
 	elgg_register_admin_menu_item('configure', 'theme', 'appearance');
 	elgg_register_admin_menu_item('configure', 'themesets', 'appearance');
 	elgg_register_admin_menu_item('configure', 'footer', 'appearance');
+	elgg_register_admin_menu_item('configure', 'ads', 'monitization');
     
     elgg_register_action('theme/edit', dirname(__FILE__) . '/actions/edit.php', 'admin');
 	elgg_register_action('footer/edit', dirname(__FILE__) . '/actions/footer/edit.php', 'admin');
 	elgg_register_action('themesets/edit', dirname(__FILE__) . '/actions/themesets/edit.php', 'admin');
-   
+	elgg_register_action('ads/edit', dirname(__FILE__) . '/actions/ads/edit.php', 'admin');   
 
 	elgg_extend_view('page/elements/footer', 'minds_themeconfig/footer');
  
@@ -100,7 +101,12 @@ function themeicons_page_handler($pages) {
 function minds_config_social_links(){
 	return array(	'facebook' => array('url'=>elgg_get_plugin_setting('facebook:url', 'minds_themeconfig'), 'icon'=>'&#62221;'),
 			'twitter' => array('url'=>elgg_get_plugin_setting('twitter:url', 'minds_themeconfig'), 'icon'=>'&#62218;'),
- 			'gplus' => array('url'=>elgg_get_plugin_setting('gplus:url', 'minds_themeconfig'), 'icon'=>'&#62224;')
+ 			'gplus' => array('url'=>elgg_get_plugin_setting('gplus:url', 'minds_themeconfig'), 'icon'=>'&#62224;'),
+			'linkedin' => array('url'=>elgg_get_plugin_setting('linkedin:url', 'minds_themeconfig'), 'icon'=>'&#62233;'),
+			'tumblr' => array('url'=>elgg_get_plugin_setting('tumlr:url', 'minds_themeconfig'), 'icon'=>'&#62230;'),
+			'pinterest' => array('url'=>elgg_get_plugin_setting('pinterest:url', 'minds_themeconfig'), 'icon'=>'&#62227;'),
+			'vimeo' => array('url'=>elgg_get_plugin_setting('vimeo:url', 'minds_themeconfig'), 'icon'=>'&#62215;'),
+			'github' => array('url'=>elgg_get_plugin_setting('github:url', 'minds_themeconfig'), 'icon'=>'&#62208;')
 		);
 }
 
