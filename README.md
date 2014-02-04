@@ -12,21 +12,19 @@ Production: [![Build Status](https://magnum.travis-ci.com/Minds/Minds-Elgg.png?t
 
 http://minds.com, http://minds.org
 
-*Minds.org, Inc.* is a free and open source network operated and evolved 
-by the planet largely through voluntary contributions and voting.  It 
-aims to provide universal access to information and liberate knowledge globally.
+*Minds.org, Inc.* is a free and open source social network.
 
 Co-Creators 
+Mark Harding (mark@minds.com)
 Bill Ottman (bill@minds.com)
 John Ottman (john@minds.com)
-Mark Harding (mark@minds.com)
-Christopher Gross (chris@minds.com)
 Ian Crossland (ian@minds.com)
-Bryce Coster (bryce@minds.com)
-and many more
+Marcus Povey (marcus@minds.com)
 
 
-Minds/Elgg is released under the GNU General Public License (GPL) Version 2 and the
+
+
+Minds is released under the GNU General Public License (GPL) Version 2 and the
 Massachusetts Institute of Technology (MIT) License. See LICENSE.txt 
 in the root of the package you downloaded.
 
