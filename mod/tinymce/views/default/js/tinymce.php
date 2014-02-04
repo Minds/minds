@@ -35,39 +35,26 @@ elgg.tinymce.init = function() {
 	});
 
 	tinyMCE.init({
-		mode : "specific_textareas",
-		editor_selector : "elgg-input-longtext",
-		theme : "advanced",
-		language : "<?php echo tinymce_get_site_language(); ?>",
-		plugins : "lists,spellchecker,autosave,fullscreen,paste",
-		relative_urls : false,
-		remove_script_host : false,
-		document_base_url : elgg.config.wwwroot,
-		theme_advanced_buttons1 : "bold,italic,underline, strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,|, styleselect,formatselect,fontselect,fontsizeselect",
-		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,bullist,numlist,|,outdent,indent,blockquote,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,emotions,iespell,media,advhr,|, undo,redo,link,unlink,image,blockquote,code,more,fullscreen",
-		theme_advanced_buttons3 : "",
-		theme_advanced_toolbar_location : "top",
-		theme_advanced_toolbar_align : "left",
-		theme_advanced_statusbar_location : "bottom",
-		theme_advanced_resizing : true,
-		theme_advanced_path : true,
-		width : "100%",
-		extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|style],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style],iframe[width|height|src|frameborder|allowfullscreen]",
-		setup : function(ed) {
-			//show the number of words
-			ed.onLoadContent.add(function(ed, o) {
-				var strip = (tinyMCE.activeEditor.getContent()).replace(/(&lt;([^&gt;]+)&gt;)/ig,"");
-				var text = elgg.echo('tinymce:word_count') + strip.split(' ').length + ' ';
-				tinymce.DOM.setHTML(tinymce.DOM.get(tinyMCE.activeEditor.id + '_path_row'), text);
-			});
-
-			ed.onKeyUp.add(function(ed, e) {
-				var strip = (tinyMCE.activeEditor.getContent()).replace(/(&lt;([^&gt;]+)&gt;)/ig,"");
-				var text = elgg.echo('tinymce:word_count') + strip.split(' ').length + ' ';
-				tinymce.DOM.setHTML(tinymce.DOM.get(tinyMCE.activeEditor.id + '_path_row'), text);
-			});
-		},
-		content_css: elgg.config.wwwroot + 'mod/tinymce/css/elgg_tinymce.css'
+		selector: "textarea",
+	    theme: "modern",
+	    width: "100%",
+	    height: 400,
+	    plugins: [
+	         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+	         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+	         "save table contextmenu directionality emoticons template paste textcolor"
+	   ],
+	   content_css: "css/content.css",
+	   toolbar: "insertfile undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons", 
+	   /*style_formats: [
+	        {title: 'Bold text', inline: 'b'},
+	        {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+	        {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+	        {title: 'Example 1', inline: 'span', classes: 'example1'},
+	        {title: 'Example 2', inline: 'span', classes: 'example2'},
+	        {title: 'Table styles'},
+	        {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+	    ]*/
 	});
 
 	// work around for IE/TinyMCE bug where TinyMCE loses insert carot
