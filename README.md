@@ -1,11 +1,13 @@
 Minds (Core)
 ==========
 
-Copyright (c) Copyleft 2008-2014
+__Copyright (c) Copyleft 2008-2014__
 
-#####Build status
-Master: [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=production)](https://magnum.travis-ci.com/Minds/Minds)
-Production: [![Build Status](https://magnum.travis-ci.com/Minds/Minds-Elgg.png?token=vHzWaxguqXbJqkudCFTn&branch=production)](https://magnum.travis-ci.com/Minds/Minds)
+Branch  | Status | |
+------------- | ------------- | ----------
+Master | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=master)](https://magnum.travis-ci.com/Minds/Minds)  | main working branch |
+Production | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=production)](https://magnum.travis-ci.com/Minds/Minds) | safe for use on production servers
+Objectional Refactoring | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=objectional-refactoring)](https://magnum.travis-ci.com/Minds/Minds) | a prototype of an objectional codebase, with legacy fallback for Elgg.
 
 
 ##Minds
