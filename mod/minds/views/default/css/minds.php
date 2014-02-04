@@ -208,7 +208,7 @@ input[name=terms]{
 	background: #F8F8F8;
 	padding: 25px 0;
 	margin-bottom: 10px;
-	opacity: .90;
+	/*opacity: .90;*/
 	display:inline-block;
 }
 .minds-body-header > .inner{

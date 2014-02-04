@@ -23,6 +23,15 @@ function analytics_init() {
 	elgg_register_page_handler('analytics','analytics_page_handler');
 
 	elgg_register_plugin_hook_handler('cron', 'minute', 'analytics_cron');
+	
+	$trending_menu = array('day', 'week', 'month', 'year', 'entire');
+	foreach($trending_menu as $trending){
+		elgg_register_menu_item('trending', array(	
+				'name'=>$trending,
+				'text'=> elgg_echo('trending:'.$trending),
+				'href'=> "?timespan=$trending",
+			));
+	}
 }
 
 function analytics_cron(){

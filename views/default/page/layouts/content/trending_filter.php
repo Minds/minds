@@ -29,10 +29,11 @@ if (elgg_is_logged_in() && $context) {
 			'priority' => 100,
 		),
 		'trending' => array(
-                        'text' => elgg_echo('trending'),
+                        'text' => elgg_echo('trending').elgg_view_menu('trending'),
                         'href' => (isset($vars['trending_link'])) ? $vars['trending_link'] : "$context/trending",
                         'selected' => ($filter_context == 'trending'),
                         'priority' => 200,
+                        'item_class'=>'elgg-menu-item-hover-over'
                 ),
 		'mine' => array(
 			'text' => elgg_echo('mine'),
