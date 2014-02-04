@@ -64,14 +64,18 @@ if ($t = elgg_get_plugin_setting('frontpagetext', 'minds_themeconfig'))
         $title = elgg_view_title($t);
 
 
-$launch_ts = 1411300800;//this could be GMT??
+/*$launch_ts = 1411300800;//this could be GMT??
 $ts = time();
 $countdown_seconds = $launch_ts - $ts;
 $countdown_minutes = floor(($countdown_seconds % 3600) / 60); 
 $countdown_hours = floor(($countdown_seconds % 86400) / 3600); 
 $countdown_days = floor($countdown_seconds / 86400);
  
-$subtitle = round($countdown_days,0) . ' days to go.';
+$subtitle = round($countdown_days,0) . ' days to go.';*/
+$user_count = elgg_get_entities(array('type'=>'user', 'count'=>true));
+$max = 1000000;
+$countdown = $max - $user_count;
+$subtitle = "$countdown more human sign-ups activates automatic global <a href='release'><b>code release</b></a>.";
 
 $featured_item_class = $filter == 'featured' ? 'elgg-state-selected' : null;
 $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
@@ -97,7 +101,7 @@ else
 $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title
-	<h3>We're releasing our code, Free & Open Source, in <b>$countdown_days</b> days, $countdown_hours hours & $countdown_minutes minutes.</h3>
+	<h3>$subtitle</h3>
 	<div class="front-page-buttons">
 		$buttons
 	</div>

@@ -1,8 +1,0 @@
-.tabs {padding:0px 0; margin:14px 15px 0 15px;}
-.tabs ul{ background:#f2f2f2; border-radius:4px; border-top:#cbcbcb 1px solid; border-left:#cbcbcb 1px solid; list-style:none; width:auto; overflow:hidden; padding:4px 4px 5px 4px;}
-.tabs li {display:inline-block; float:left; background:url(../images/transp.png) 0 0 repeat; border-radius:4px; margin-right:5px;}
-.tabs li a {font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:18px; color:#1e1e1e; padding:11px 18px 11px 17px; display:block;}
-.tabs li.selected{ position:relative; line-height:23px; background:#1e1e1e;}  
-.tabs li.selected a, .tabs li:hover a { color:#fff;}
-.tabs li:hover { background:#1e1e1e; }
-.tab-content {padding:22px 0 0 5px ; background:#fff;}
