@@ -194,7 +194,13 @@
 	 };
 
 	 minds.loadMore = function() {
-			$list = $(this).parent().find('.elgg-list:first').parent();
+		if(window.lock_autoscroll){
+			return false;
+		}
+		
+		window.lock_autoscroll = true;
+		
+		$list = $(this).parent().find('.elgg-list:first').parent();
 			$('.load-more').html('...');
 			$('.load-more').addClass('loading');
 			
@@ -251,6 +257,7 @@
 					
 					el.imagesLoaded(function(){
 						 $list.find('.elgg-list').append(el).masonry('appended', el);
+						window.lock_autoscroll = false;
 					});
 	/*		
 $list.find('.elgg-list:first').append(data);

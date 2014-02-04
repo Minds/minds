@@ -15,7 +15,7 @@ class MindsTrending{
 		
 		$defaults = array(
 			'timespan' => 'day',	
-			'limit' => 100000
+			'limit' => 500
 		);
 		
 		$options = array_merge($defaults, $options);
@@ -76,11 +76,16 @@ class MindsTrending{
 			'subtype' => null,
 			'limit' => 12,
 			'offset' => 0,
-			'count' => false
-		);
-		
+			'count' => false,
+			'reversed' => false
+		);	
+	
 		$options = array_merge($defaults, $options);
+
+		$g = new GUID();
+		$options['offset'] = $g->migrate($options['offset']);
 		
+
 		$timespan = $this->options['timespan'];
 		$type = $options['type'];
 		$subtype = $options['subtype'];
@@ -93,15 +98,14 @@ class MindsTrending{
 			$namespace = "trending:$timespan:$type";
 		}
 
-		$count = $db->countRow($namespace);
-		if((int) $options['offset'] >= $count){
+		$count = $g->migrate($db->countRow($namespace)); // cassandra does strange things if the digit count is not the same, so we need 18 0s
+		if((int) $options['offset'] + $options['limit']>= $count){
 			return false;
-		} elseif($options['offset'] > 0){
-			$options['limit']++;
 		}
 
 		$guids = $db->getRow($namespace, $options);		
-
+		ksort($guids);
+//var_dump($guids);
 		return $guids;
 	}
 	
@@ -120,24 +124,34 @@ class MindsTrending{
 		foreach($lists as $type => $subtypes){
 			if(isset($subtypes)){
 				foreach($subtypes as $subtype){
-					$db->removeRow("trending:$timespan:$type:$subtype");
+					//$db->removeRow("trending:$timespan:$type:$subtype");
 				}
 			} else {
-				$db->removeRow("trending:$timespan:$type");
+				//$db->removeRow("trending:$timespan:$type");
 			}
 		}
-		
+	
+		$index_variables = array();
 		//a lower score is higher in the list
-		foreach(self::$data as $score => $guid){
+		foreach(self::$data as $score => $guid){	
 			
 			$entity = get_entity($guid);
-			
-			if(isset($entity->subtype)){
-				$db->insert("trending:$timespan:$entity->type:$entity->subtype", array($score=>$guid));
-			}
-			$db->insert("trending:$timespan:$entity->type", array($score=>$guid));
+			$g = new GUID();	
 		
-			echo "Successfuly imported $guid with score $score to $timespan:$entity->type:$entity->subtype \n";
+			if(!in_array($guid, $index_variables[$entity->type])){
+				$i = $g->migrate(count($index_variables[$entity->type]));
+	                        $index_variables[$entity->type][] = $guid;
+				$db->insert("trending:$timespan:$entity->type", array($i=>$guid));
+			}	
+			if(isset($entity->subtype)){
+				if(!in_array($guid, $index_variables[$entity->type][$entity->subtype])){
+					$i = $g->migrate(count($index_variables[$entity->type][$entity->subtype]));
+                               		$index_variables[$entity->type][$entity->subtype][] = $guid;
+					$db->insert("trending:$timespan:$entity->type:$entity->subtype", array($i=>$guid));
+				}
+                        }
+	
+			echo "Successfuly imported $guid with score $score and index $i to $timespan:$entity->type:$entity->subtype \n";
 		}
 	
 	}

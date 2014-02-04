@@ -38,7 +38,9 @@ switch ($vars['page']) {
 		$trending = new MindsTrending();
 		$guids = $trending->getList(array('type'=>'user', 'limit'=>$limit, 'offset'=>(int) $offset));
 		$options['guids'] = $guids;
-		$content = elgg_list_entities($options);
+		if($guids){
+			$content = elgg_list_entities($options);
+		}
 		break;
 	/*case 'suggested':
 		$people = suggested_friends_get_people($page_owner->guid, $friends, $groups);
@@ -55,7 +57,6 @@ switch ($vars['page']) {
 		elgg_register_title_button('collections', 'add');
 		$content = elgg_view_access_collections(elgg_get_logged_in_user_guid());
 		break;*/
->>>>>>> master
 	case 'newest':
                 $options['newest_first'] = true;
                 $content = elgg_list_entities($options);
