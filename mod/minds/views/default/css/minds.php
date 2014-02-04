@@ -42,10 +42,6 @@ h1,h2,h3,h4,h5{
 body.news{
 	background:#D2D9DF;
 }
-.main.body ul{
-	list-style:disc outside none; margin-left:40px;
-	line-height:3em;
-}
 /***************
  *** TOP BAR ***
  **************/
@@ -645,6 +641,7 @@ li .excerpt a{
 }
 .elgg-sidebar li a h3{
 	color:#333;
+	font-size:16px;
 }
 .elgg-sidebar .elgg-module-aside{
 	background:#FFF;

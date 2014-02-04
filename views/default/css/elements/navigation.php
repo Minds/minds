@@ -585,6 +585,6 @@
 	color:#666;
 	text-decoration:none;
 }
-.elgg-menu-item-hover-over > ul > li:hover > a{
+.elgg-menu-item-hover-over > ul > li:hover > a, .elgg-menu-item-hover-over > ul > li.elgg-state-selected > a{
 	color:#4690D6;
 }

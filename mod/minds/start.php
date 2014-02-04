@@ -344,6 +344,7 @@ function minds_register_hook()
 function minds_pagesetup(){
 	$user = elgg_get_logged_in_user_entity();
 
+	elgg_unregister_menu_item('footer', 'Code Release');
 	elgg_unregister_menu_item('site', 'activity');
 	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');

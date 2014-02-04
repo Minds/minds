@@ -30,6 +30,7 @@ function analytics_init() {
 				'name'=>$trending,
 				'text'=> elgg_echo('trending:'.$trending),
 				'href'=> "?timespan=$trending",
+				'selected'=> $trending == get_input('timespan','day')
 			));
 	}
 }

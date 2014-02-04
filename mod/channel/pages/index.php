@@ -35,7 +35,11 @@ switch ($vars['page']) {
 		$content = elgg_list_entities($options);
 		break;
 	case 'trending':
-		$trending = new MindsTrending();
+		//trending
+       		$options = array(
+                	'timespan' => get_input('timespan', 'day')
+       	 	);
+	        $trending = new MindsTrending(null, $options);
 		$guids = $trending->getList(array('type'=>'user', 'limit'=>$limit, 'offset'=>(int) $offset));
 		$options['guids'] = $guids;
 		if($guids){

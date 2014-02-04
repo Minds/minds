@@ -17,7 +17,7 @@ if($offset > 0 && $filter == 'featured'){
 	$limit++;
 }
 
-if($filter == 'featured'){
+if($filter == 'featured' && !get_input('timespan')){
 	$entities = minds_get_featured('', $limit, 'entities',$offset); 
 } else {
 	//trending
@@ -81,7 +81,7 @@ $subtitle = round($countdown_days,0) . ' days to go.';*/
 $user_count = elgg_get_entities(array('type'=>'user', 'count'=>true));
 $max = 1000000;
 $countdown = $max - $user_count;
-$subtitle = "$countdown more human sign-ups activates automatic global <a href='release'><b>code release</b></a>.";
+$subtitle = "$countdown more human sign-ups until automatic global <a href='release'><b>code release</b></a>.";
 
 $featured_item_class = $filter == 'featured' ? 'elgg-state-selected' : null;
 $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
