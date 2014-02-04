@@ -8,18 +8,18 @@ Master: [![Build Status](https://magnum.travis-ci.com/Minds/Minds-Elgg.png?token
 Production: [![Build Status](https://magnum.travis-ci.com/Minds/Minds-Elgg.png?token=vHzWaxguqXbJqkudCFTn&branch=production)](https://magnum.travis-ci.com/Minds/Minds-Elgg)
 
 
-###Minds
+##Minds
 
 http://minds.com, http://minds.org
 
 *Minds.org, Inc.* is a free and open source social network.
 
-Co-Creators 
-Mark Harding (mark@minds.com)
-Bill Ottman (bill@minds.com)
-John Ottman (john@minds.com)
-Ian Crossland (ian@minds.com)
-Marcus Povey (marcus@minds.com)
+####Co-Creators 
+- Mark Harding (mark@minds.com)
+- Bill Ottman (bill@minds.com)
+- John Ottman (john@minds.com)
+- Ian Crossland (ian@minds.com)
+- Marcus Povey (marcus@minds.com)
 
 
 
@@ -34,7 +34,7 @@ For upgrade instructions, see UPGRADE.txt.
 
 
 
-###Elgg
+##Elgg
 
 Copyright (c) 2008-2012 See COPYRIGHT.txt
 
