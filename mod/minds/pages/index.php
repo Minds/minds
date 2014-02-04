@@ -21,8 +21,14 @@ if($filter == 'featured'){
 	$entities = minds_get_featured('', $limit, 'entities',$offset); 
 } else {
 	//trending
-	$guids = analytics_retrieve(array('limit'=> $limit, 'offset'=>$offset));
-	$entities = elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit,'offset'=>0));
+	$options = array(
+		'timespan' => get_input('timespan', 'day')
+	);
+	$trending = new MindsTrending(null, $options);
+	$guids = $trending->getList(array('limit'=> $limit, 'offset'=>$offset));
+	if($guids){
+		$entities = elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit,'offset'=>0));
+	} 
 }
 
 if(!elgg_is_logged_in()){

@@ -3,7 +3,6 @@
  * Analytics settings
  * 
  */
-$client = analytics_register_client();
 ?>
 <!--- Authentication SETUP --->
 <div class="elgg-module elgg-module-info">
@@ -14,14 +13,8 @@ $client = analytics_register_client();
 	<div class="elgg-body">
 	    <div>
 	    	<?php 
-	    		if(!$client->getAccessToken()){
-	    			//not authenticated, so show authentication button
-				$authUrl = $client->createAuthUrl(); 
-				echo "<a class='login' href='$authUrl'>Authenticate</a>";
-			} else {
-				//authenticated, so show revoke button
-				echo elgg_view('input/text', array('name'=>'params[profile_id]', 'value'=>elgg_get_plugin_setting('profile_id', 'analytics')));
-			}
+	   		//authenticated, so show revoke button
+			echo elgg_view('input/text', array('name'=>'params[profile_id]', 'value'=>elgg_get_plugin_setting('profile_id', 'analytics')));
 	    	?>
 	    </div>
 	</div>

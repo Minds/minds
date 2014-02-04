@@ -22,7 +22,8 @@ $subtype = 'file';
 else
 $subtype = 'archive';
 
-$guids = analytics_retrieve(array('context'=>'archive','limit'=> $limit, 'offset'=>$offset));
+$trending = new MindsTrending();
+$guids = $trending->getList(array('type'=>'object', 'subtype'=>'kaltura_video', 'limit'=>$limit, 'offset'=>$offset));//no super subtype support atm
  
 $content = elgg_list_entities(	array(	'guids' => $guids,
 					'full_view' => FALSE,
