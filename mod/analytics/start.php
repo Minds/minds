@@ -22,7 +22,13 @@ function analytics_init() {
 	//page handler to listen for auth callbacks
 	elgg_register_page_handler('analytics','analytics_page_handler');
 
-	elgg_register_plugin_hook_handler('cron', 'minute', 'analytics_fetch');
+	elgg_register_plugin_hook_handler('cron', 'minute', 'analytics_cron');
+}
+
+function analytics_cron(){
+	//FOR TESTING ATM
+	$analytics = new MindsAnalytics('Google');
+	var_dump($analytics->fetch());
 }
 
 /*
@@ -36,51 +42,6 @@ function analytics_page_handler($page) {
 	return false; 
 }
 
-/*
- * Register analytics google client
- */
-function analytics_register_client(){
-	$client = new Google_Client();
-	$client->setApplicationName('Minds analytics reporter');
-	
-	// set assertion credentials
-	$client->setAssertionCredentials(
-  		new Google_AssertionCredentials(
-
-			'81109256529-7204tgap3gkaf3gmeuji4k9r408m76m8@developer.gserviceaccount.com', // email you added to GA
-
-			array('https://www.googleapis.com/auth/analytics.readonly'),
-
-   	 		file_get_contents('/key.p12')  // keyfile you downloaded
-
-	));
-	
-	$client->setClientId('81109256529-7204tgap3gkaf3gmeuji4k9r408m76m8.apps.googleusercontent.com');
-	$client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
-	$client->setAccessType('offline_access');
-
-	
-	$client->setUseObjects(true);
-	
-	return $client;
-}
-
-/**
- * Authenticate the google analytics account
- */
-function anayltics_authenticate_google(){
-	$client = analytics_register_client();
-	
-	if (isset($_GET['code'])) {
-		$client->authenticate();
-		$token = $client->getAccessToken();
-		elgg_set_plugin_setting('token', $token, 'analytics');
-		$redirect = elgg_get_site_url() . 'admin/plugin_settings/anayltics';
-  		forward($redirect);
-	} elseif(elgg_get_plugin_setting('token', 'analytics')){
-		$client->authenticate();
-	}
-}
 /**
  * Retrieve analytic information, based on a info
  */

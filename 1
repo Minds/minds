@@ -133,10 +133,6 @@ class DatabaseCall{
 							);
 		$options = array_merge($defaults, $options);
 		$slice = new ColumnSlice($options['offset'], $options['finish'], $options['limit'], $options['reversed']);
-	
-		if(!$this->cf){
-			return false;
-		}
 
 		try{
 			if($options['multi']){

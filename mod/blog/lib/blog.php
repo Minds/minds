@@ -185,9 +185,10 @@ function blog_get_trending_page_content_list() {
       	$return['filter_context'] = 'trending';
 	
 	$limit = get_input('limit', 8);
-	$offset = get_input('offset', '');
+	$offset = get_input('offset', 0);
 
-	$guids = analytics_retrieve(array('context'=>'blog','limit'=> $limit, 'offset'=>$offset));
+	$trending = new MindsTrending();
+	$guids = $trending->getList(array('type'=>'object', 'subtype'=>'blog', 'limit'=>$limit, 'offset'=>$offset));
 	
 	if($guids)	{
 		$list = elgg_list_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>0, 'full_view'=>false, 'pagination_legacy' => true));

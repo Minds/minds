@@ -17,8 +17,9 @@ class MindsAnalytics{
 	 * @param string $service - the service name
 	 */
 	public function getService($service){
-		$class = "MindsAnaylticsService$service";
-		return $class();
+		$service = ucfirst($service);
+		$class = "MindsAnalyticsService$service";
+		return new $class();
 	}
 	
 	/**

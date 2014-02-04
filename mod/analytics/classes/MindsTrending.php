@@ -8,6 +8,9 @@ class MindsTrending{
 	 * @param array $sources - eg. analytics, thumbs
 	 */
 	public function __construct(array $sources = array('google'), array $options = array()){
+
+		self::$data = array();
+
 		$this->sources = $sources;
 		
 		$defaults = array(
@@ -30,7 +33,7 @@ class MindsTrending{
 		foreach($this->sources as $source){
 			$analytics = new MindsAnalytics($source);
 			$guids = $analytics->fetch($this->options); //guids sorted highest 
-			self::$data = array_merge(self::$data, $result);
+			self::$data = array_merge(self::$data, $guids);
 		}
 		
 		$this->pullOwners();
@@ -43,11 +46,11 @@ class MindsTrending{
 	 * 
 	 * @param array data
 	 */
-	public function pullOwners(array $data){
+	public function pullOwners(){
 		
 		$user_guids = array();
 		
-		foreach($data as $score => $guid){
+		foreach(self::$data as $score => $guid){
 			$entity = get_entity($guid);
 			array_push($user_guids,$entity->owner_guid);
 		}
@@ -70,7 +73,10 @@ class MindsTrending{
 		
 		$defaults = array(
 			'type' => 'object',
-			'subtype' => null
+			'subtype' => null,
+			'limit' => 12,
+			'offset' => 0,
+			'count' => false
 		);
 		
 		$options = array_merge($defaults, $options);
@@ -80,12 +86,22 @@ class MindsTrending{
 		$subtype = $options['subtype'];
 		
 		$db = new DatabaseCall('entities_by_time');
+
 		if($subtype){
-			$guids = $db->getRow("trending:$timespan:$type:$subtype");
+			$namespace = "trending:$timespan:$type:$subtype";
 		} else {
-			$guids = $db->getRow("trending:$timespan:$type");
+			$namespace = "trending:$timespan:$type";
 		}
-		
+
+		$count = $db->countRow($namespace);
+		if((int) $options['offset'] >= $count){
+			return false;
+		} elseif($options['offset'] > 0){
+			$options['limit']++;
+		}
+
+		$guids = $db->getRow($namespace, $options);		
+
 		return $guids;
 	}
 	
@@ -117,11 +133,11 @@ class MindsTrending{
 			$entity = get_entity($guid);
 			
 			if(isset($entity->subtype)){
-				$db->insert("trending:$timespan:$type:$subtype", array($score=>$guid));
+				$db->insert("trending:$timespan:$entity->type:$entity->subtype", array($score=>$guid));
 			}
-			$db->insert("trending:$timespan:$type", array($score=>$guid));
+			$db->insert("trending:$timespan:$entity->type", array($score=>$guid));
 		
-			echo "Successfuly imported $guid with score $score to $timespan:$type:$subtype \n";
+			echo "Successfuly imported $guid with score $score to $timespan:$entity->type:$entity->subtype \n";
 		}
 	
 	}
@@ -131,8 +147,8 @@ class MindsTrending{
 			'hour' => 60 * 60,
 			'day' => (60 * 60) * 24,
 			'week' => ((60 * 60) * 24) * 7,
-			'month' => (((60 * 60) * 24) * 7) * 30, //an average month
-			'year' => ((((60 * 60) * 24) * 7) * 30) * 12 // an average year
+			'month' => (((60 * 60) * 24) * 7) * 4, //an average month
+			'year' => ((((60 * 60) * 24) * 7) * 4) * 12 // an average year
 		);
 		
 		switch($timespan){
@@ -186,7 +202,7 @@ class MindsTrending{
 				break;
 			case 'entire':
 				return array(
-					'from' => date('o-m-d', time() - ($helpers['year']*20)), //the earliest possible date (20 years??)
+					'from' => date('o-m-d', time() - ($helpers['year']*5)), //the earliest possible date (5 years??)
 					'to' => date('o-m-d', time()) //today 
 				);
 		}

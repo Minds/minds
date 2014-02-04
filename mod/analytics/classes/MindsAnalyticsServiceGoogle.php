@@ -4,10 +4,35 @@ class MindsAnalyticsServiceGoogle extends MindsAnalyticsService{
 	
 	
 	public function connect(){
-		
-		$this->client = null;
+		$this->client = $this->setUpGoogleClient();
 		$this->analytics = new Google_AnalyticsService($this->client);
 		$this->profile_id = 'ga:' . elgg_get_plugin_setting('profile_id', 'analytics');
+	}
+
+	public function setUpGoogleClient(){
+		$client = new Google_Client();
+		$client->setApplicationName('Minds analytics reporter');
+
+		// set assertion credentials
+		$client->setAssertionCredentials(
+			new Google_AssertionCredentials(
+
+				'81109256529-7204tgap3gkaf3gmeuji4k9r408m76m8@developer.gserviceaccount.com', // email you added to GA
+
+				array('https://www.googleapis.com/auth/analytics.readonly'),
+
+				file_get_contents('/key.p12')  // keyfile you downloaded
+
+		));
+
+		$client->setClientId('81109256529-7204tgap3gkaf3gmeuji4k9r408m76m8.apps.googleusercontent.com');
+		$client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
+		$client->setAccessType('offline_access');
+
+
+		$client->setUseObjects(true);
+
+		return $client;
 	}
 	
 	/**
@@ -21,7 +46,7 @@ class MindsAnalyticsServiceGoogle extends MindsAnalyticsService{
 		$defaults = array(
 			'from'=>  date('o-m-d', time() - 60 * 60 * 24), //yesterday
 			'to'=>date('o-m-d', time()),//today
-			'limit'=>100000
+			'limit'=>10
 		);
 		
 		$options = array_merge($defaults, $options);
@@ -34,7 +59,7 @@ class MindsAnalyticsServiceGoogle extends MindsAnalyticsService{
 				'max-results' => $options['limit']
 			);
 			
-			$results = $analytics->data_ga->get(
+			$results = $this->analytics->data_ga->get(
 				$this->profile_id,
 				$options['from'],
 				$options['to'],
@@ -44,24 +69,24 @@ class MindsAnalyticsServiceGoogle extends MindsAnalyticsService{
 		} catch (Exception $e){
 			return;
 		}
-			
+		
 		return $this->render($results);
 	}
 		
 	/**
 	 * Render the results so they follow a standard format that services can share..
 	 * 
-	 * @param array $results
+	 * @param array/object $results
 	 * @return array of guids
 	 */
-	public function render(array $results){
+	public function render($results){
 			
 		$guids = array();
 		
 		foreach ($results->getRows() as $row) {
-			try{			
+			try{		
 				$url = $row[0];			   
-			    $entity = get_entity($this->getGuidFromURL($url));
+				$entity = get_entity($this->getGuidFromURL($url));
 					
 				//check if the entity extists
 				if(!$entity){
@@ -69,7 +94,7 @@ class MindsAnalyticsServiceGoogle extends MindsAnalyticsService{
 				} 
 					
 				//check if the entity is public
-				if(!$entity->access_id != ACCESS_PUBLIC){
+				if($entity->access_id != ACCESS_PUBLIC){
 					throw new Exception("The entity is not public");
 				}
 					
@@ -85,10 +110,12 @@ class MindsAnalyticsServiceGoogle extends MindsAnalyticsService{
 				}
 
 			} catch( Exception $e){
+				//echo "$entity->type $entity->guid failed because" . $e->getMessage() . "\n";
 				continue; //we just want to skup
 			}
 				
 			array_push($guids, $entity->guid); //now add to the list
+			//echo "rendered $entity->guid";
 		}	
 		
 		return $guids; 	

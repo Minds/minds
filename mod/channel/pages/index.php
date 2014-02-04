@@ -35,7 +35,8 @@ switch ($vars['page']) {
 		$content = elgg_list_entities($options);
 		break;
 	case 'trending':
-		$guids = analytics_retrieve(array('context'=>'users'));
+		$trending = new MindsTrending();
+		$guids = $trending->getList(array('type'=>'user', 'limit'=>$limit, 'offset'=>(int) $offset));
 		$options['guids'] = $guids;
 		$content = elgg_list_entities($options);
 		break;

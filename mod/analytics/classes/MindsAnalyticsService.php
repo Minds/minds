@@ -10,7 +10,7 @@ abstract class MindsAnalyticsService{
 	
 	abstract public function fetch(array $options = array());
 	
-	abstract public function render($data);
+	abstract public function render($results);
 	
 	/**
 	 * Return the guid of from a url
