@@ -86,7 +86,7 @@ $subtitle = "$countdown more human sign-ups activates automatic global <a href='
 $featured_item_class = $filter == 'featured' ? 'elgg-state-selected' : null;
 $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
 
-if ($t)
+if ($t){
     $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title
@@ -103,7 +103,8 @@ if ($t)
 	</ul>
 </div>
 HTML;
-else
+}else{
+$trending_menu = elgg_view_menu('trending');
 $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title
@@ -115,13 +116,14 @@ $header = <<<HTML
 		<li class="elgg-menu-item-featured $featured_item_class">
 			<a href="?filter=featured">Featured</a>
 		</li>
-		<li class="elgg-menu-item-trending $trending_item_class">
+		<li class="elgg-menu-item-trending $trending_item_class elgg-menu-item-hover-over">
                         <a href="?filter=trending">Trending</a>
+			$trending_menu
                 </li>
 	</ul>
 </div>
 HTML;
-
+}
 $content = elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true);
 
 $params = array(	'content'=> $content, 
