@@ -99,7 +99,7 @@ if (!$_FILES['upload']['name']) {
 
     $image->title = $title;
     $image->description = $desc;
-	$image->super_sybtype = 'archive';
+	$image->super_subtype = 'archive';
     $image->container_guid = $album->getGUID();
     //$image->setMimeType($mime_type);
     $image->tags = $tags;
