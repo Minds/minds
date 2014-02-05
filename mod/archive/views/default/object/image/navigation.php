@@ -21,8 +21,9 @@ $next_photo = $album->getNextImage($photo_guid);
 $size = $album->getSize();
 $index = $album->getIndex($photo_guid);
 
-if($previous_photo){
 echo '<ul class="elgg-menu elgg-menu-hz tidypics-album-nav">';
+
+if($previous_photo){
 echo '<li>';
 echo elgg_view('output/url', array(
 	'text' => elgg_view_icon('arrow-left'),
