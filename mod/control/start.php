@@ -19,7 +19,7 @@ elgg_register_event_handler('init', 'system', 'control_init');
 function control_init() {
 	
 	elgg_register_library('control:tickets', dirname(__FILE__).'/lib/tickets.php');
-	elgg_load_library('control:tickets');
+	elgg_register_library('asana', dirname(__FILE__).'/vendors/asana/asana.php');
 	
 	elgg_register_page_handler('control', 'control_page_handler');
 	
@@ -38,44 +38,11 @@ function control_init() {
 function control_page_handler($page){
 	switch($page[0]){
 		case 'tickets':
-			if(!isset($page[1])){
-				$page[1] = 'mine';
-			}
-			switch($page[1]){
-				case 'owner':
-					if(!isset($page[2])){
-						$page[2] = elgg_get_logged_in_user_guid();
-					}
-					$params = array(
-						'content' => control_get_page_tickets_list($page[2]),
-					);
-					break;
-				case 'all':
-					$params = array(
-						'content' => control_get_page_tickets_list()
-					);
-					break;
-				case 'add':
-					$params = array(
-						'content' => control_get_page_tickets_add()
-					);
-					break;
-				case 'edit':
-					$content = control_get_page_tickets_edit();
-					break;
-			}
+			elgg_load_library('control:tickets');
+			return control_tickets_page_handler($page);
 			break;
 		default:
 			$content = 'Page not found';
 	}
-	
-	$defaults = array(
-		'content'=>$content,
-	);
-	$params = array_merge($default, $params);
-	
-	$body = elgg_view_layout('content', $params);
-	echo elgg_view_page($params['title'], $body);
-	
-	return true;
+	return false;
 }
