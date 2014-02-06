@@ -67,7 +67,7 @@
 		 */
 		$(window).on('scroll', minds.onScroll);
 		if(elgg.is_logged_in()){
-			$(document).on('click', '.elgg-button-action.subscribe', minds.subscribe);
+			$(document).on('click', '.subscribe-button a', minds.subscribe);
 		}
 		$(document).on('click', '.elgg-menu-item-feature a', minds.feature);
 
@@ -112,11 +112,11 @@
 			success: function(data) {
 				if(data.output == 'subscribed'){
 					button.addClass('subscribed');
-					button.html('Subscribed');
+					button.html('<span class="text">Subscribed</span>');
 					button.attr('href', button.attr('href').replace('add', 'remove'));
 				} else {
 					button.removeClass('subscribed');
-                                        button.html('Subscribe');
+                                        button.html('<span class="text">Subscribe</span>');
 					button.attr('href', button.attr('href').replace('remove','add'));
 				}
 			},
@@ -194,7 +194,13 @@
 	 };
 
 	 minds.loadMore = function() {
-			$list = $(this).parent().find('.elgg-list:first').parent();
+		if(window.lock_autoscroll){
+			return false;
+		}
+		
+		window.lock_autoscroll = true;
+		
+		$list = $(this).parent().find('.elgg-list:first').parent();
 			$('.load-more').html('...');
 			$('.load-more').addClass('loading');
 			
@@ -206,8 +212,8 @@
 			var offset = 0;
 
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
-
-			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending'){
+console.log(loc); 
+			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending' || loc.indexOf('search')){
 				offset = $list.find('.elgg-list').children().length;
 			} else {
 				offset = $('.load-more').attr('data-load-next');
@@ -225,7 +231,8 @@
 				path : loc,
 				items_type: $list.find('.elgg-list').hasClass('elgg-list-entity') ? 'entity' :
 							$list.find('.elgg-list').hasClass('elgg-list-river') ? 'river' :
-							$list.hasClass('elgg-list-annotation') ? 'annotation' : 'river',
+							$list.hasClass('elgg-list-annotation') ? 'annotation' : 
+							$list.find('.elgg-list').hasClass('minds-search-list') ? 'search' : 'river',
 				offset:offset 
 			});
 			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
@@ -251,6 +258,7 @@
 					
 					el.imagesLoaded(function(){
 						 $list.find('.elgg-list').append(el).masonry('appended', el);
+						window.lock_autoscroll = false;
 					});
 	/*		
 $list.find('.elgg-list:first').append(data);

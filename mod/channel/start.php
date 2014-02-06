@@ -45,7 +45,7 @@ function channel_init() {
 	elgg_register_menu_item('site', array(
 		'name' => 'channels',
 		'text' => '&#59254;',
-		'href' => 'channels',
+		'href' => 'channels/trending',
 		'title' => elgg_echo('channels'),
 		'priority' => 2
 	));
@@ -206,7 +206,8 @@ function channel_page_handler($page) {
 											'subtype'=>'archive', 
 											'owner_guid'=>$user->guid, 
 											'limit'=>8, 
-											'offset'=>get_input('offset','')
+											'offset'=>get_input('offset',''),
+											'full_view'=>false
 											));	
 			break;
 		case 'widgets':			
@@ -246,8 +247,8 @@ function channel_page_handler($page) {
 function channels_page_handler($page) {
 	$base = elgg_get_plugins_path() . 'channel/pages';
 
-	if (!isset($page[0])) {
-		$page[0] = 'popular';
+	if(!isset($page[0])){
+		$page[0] = 'trending';
 	}
 
 	$vars = array();

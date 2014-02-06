@@ -65,9 +65,6 @@ function minds_search_page_handler($page) {
 	$page_type = $page[0];
 	switch ($page_type) {
 
-		case 'all' :
-			include "$file_dir/search.php";
-			break;
 		case 'live' :
 			elasticsearch_live();
 			break;
@@ -83,8 +80,9 @@ function minds_search_page_handler($page) {
 			if (elgg_is_admin_logged_in())
 				elasticsearch_index_once();
 			break;
-
+		case 'all' :
 		default :
+		include "$file_dir/search.php";
 			return false;
 	}
 	return true;

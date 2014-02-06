@@ -15,3 +15,4 @@
 echo '<div class="elgg-foot"><br/>';
 echo elgg_view('input/submit', array('name' => 'submit', 'value' => elgg_echo('Insert')));
 echo '</div>';
+

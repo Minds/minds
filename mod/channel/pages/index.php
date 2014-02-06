@@ -35,10 +35,16 @@ switch ($vars['page']) {
 		$content = elgg_list_entities($options);
 		break;
 	case 'trending':
-		$trending = new MindsTrending();
+		//trending
+       		$options = array(
+                	'timespan' => get_input('timespan', 'day')
+       	 	);
+	        $trending = new MindsTrending(null, $options);
 		$guids = $trending->getList(array('type'=>'user', 'limit'=>$limit, 'offset'=>(int) $offset));
 		$options['guids'] = $guids;
-		$content = elgg_list_entities($options);
+		if($guids){
+			$content = elgg_list_entities($options);
+		}
 		break;
 	/*case 'suggested':
 		$people = suggested_friends_get_people($page_owner->guid, $friends, $groups);
@@ -56,8 +62,13 @@ switch ($vars['page']) {
 		$content = elgg_view_access_collections(elgg_get_logged_in_user_guid());
 		break;*/
 	case 'newest':
+                $options['newest_first'] = true;
+                $content = elgg_list_entities($options);
+		break;
+	case 'trending':
 	default:
-		$options['newest_first'] = true;
+		$guids = analytics_retrieve(array('context'=>'users', 'offset'=>$offset, 'limit'=>$limit));
+		$options['guids'] = $guids;
 		$content = elgg_list_entities($options);
 		break;
 }

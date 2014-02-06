@@ -84,8 +84,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 { font-size: 1.8em; }
-h2 { font-size: 1.5em; line-height: 1.1em; padding-bottom:5px}
-h3 { font-size: 1.2em; }
+h2 { font-size: 42px; line-height: 1.1em; padding-bottom:5px}
+h3 { font-size: 28px; line-height: 28px;}
 h4 { font-size: 1.0em; }
 h5 { font-size: 0.9em; }
 h6 { font-size: 0.8em; }
@@ -167,4 +167,9 @@ h3 a{ color:#333; }
 }
 .elgg-output img {
 	max-width: 100%;
+}
+
+.elgg-image-block .elgg-body h3{
+	font-size: 20px;
+	line-height: 20px;
 }

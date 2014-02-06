@@ -22,7 +22,11 @@ $subtype = 'file';
 else
 $subtype = 'archive';
 
-$trending = new MindsTrending();
+//trending
+$options = array(
+	'timespan' => get_input('timespan', 'day')
+);
+$trending = new MindsTrending(null, $options);
 $guids = $trending->getList(array('type'=>'object', 'subtype'=>'kaltura_video', 'limit'=>$limit, 'offset'=>$offset));//no super subtype support atm
  
 $content = elgg_list_entities(	array(	'guids' => $guids,

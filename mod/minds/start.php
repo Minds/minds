@@ -64,7 +64,7 @@ function minds_init(){
 	elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js', 'footer');
 	
 	elgg_unregister_js('jquery');
-	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
+	elgg_register_js('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
 	elgg_load_js('jquery');
 
 	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js');
@@ -134,9 +134,6 @@ function minds_init(){
 	elgg_register_action("minds/remind/external", "$actionspath/minds/remind_external.php");
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
-        elgg_register_action("registernode","$actionspath/minds/registernode.php");
-        elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php");
-        elgg_register_action("select_free_tier","$actionspath/minds/select_free_tier.php");
 	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
@@ -316,14 +313,14 @@ function minds_route_page_handler($hook, $type, $returnvalue, $params) {
 	}
 
 	//add a age if view exists
-	$handler = elgg_extract('handler', $returnvalue);
+	/*$handler = elgg_extract('handler', $returnvalue);
 	$pages = elgg_extract('segments', $returnvalue, array());
 	array_unshift($pages, $handler);
 	if(elgg_view_exists('minds/pages/'.$handler) && !elgg_is_active_plugin('anypage')){
 		$content = elgg_view('minds/pages/'.$handler);
 		$body = elgg_view_layout('one_sidebar', array('content' => $content));
 		echo elgg_view_page(elgg_echo($handler), $body);
-	}
+	}*/
 }
 
 function minds_register_hook()
@@ -348,6 +345,7 @@ function minds_register_hook()
 function minds_pagesetup(){
 	$user = elgg_get_logged_in_user_entity();
 
+	elgg_unregister_menu_item('footer', 'Code Release');
 	elgg_unregister_menu_item('site', 'activity');
 	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
@@ -688,9 +686,9 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
      			$image = $owner->getIconURL('large');
         	}
   	}
-	if($CONFIG->cnd_url){
-		$base_url = $CONFIG->cnd_url ? 'http://'. $CONFIG->cdn_url : elgg_get_site_url();
-		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=3';
+	if($CONFIG->cdn_url){
+		$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
+		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=4';
 		if($width){ $image .= '&width=' . $width; } 
 	} 
 	return $image;

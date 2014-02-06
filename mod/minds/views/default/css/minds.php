@@ -29,7 +29,7 @@
   font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 300;
-  src: local('Ubuntu Light'), local('Ubuntu-Light'), url(http://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+  src: local('Ubuntu Light'), local('Ubuntu-Light'), url(https://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
 }
 body{
 	background:#F8F8F8;
@@ -204,7 +204,7 @@ input[name=terms]{
 	background: #F8F8F8;
 	padding: 25px 0;
 	margin-bottom: 10px;
-	opacity: .90;
+	/*opacity: .90;*/
 	display:inline-block;
 }
 .minds-body-header > .inner{
@@ -641,6 +641,7 @@ li .excerpt a{
 }
 .elgg-sidebar li a h3{
 	color:#333;
+	font-size:16px;
 }
 .elgg-sidebar .elgg-module-aside{
 	background:#FFF;

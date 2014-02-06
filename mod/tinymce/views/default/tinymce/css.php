@@ -10,6 +10,9 @@
  */
 ?>
 /* TinyMCE */
+.mce-tinymce {
+	clear:both;
+}
 .elgg-page .mceEditor table.mceLayout {
 	border: 1px solid #CCC;
 	

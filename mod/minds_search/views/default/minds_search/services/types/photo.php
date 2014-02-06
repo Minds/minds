@@ -2,18 +2,19 @@
 /**
  * Minds Search CC Image View
  */
- 
-$image = $vars['photo'];
+
+$image = $vars['source'];
 $full_view = $vars['full_view'];
 
-$title = strlen($image['title'])>25 ? substr($image['title'], 0, 25) . '...' : $image['title'];
+$title = $image['title'];
 $imageURL = $image['iconURL'];
 $img = elgg_view('output/img', array('src'=>$imageURL));
 $url = elgg_get_site_url().'search/result/'.$image['id'];
-$source = $image['source'];
+
+$provider = $image['source'];
 $owner = $image['owner'];
 
-if($source == 'minds'){
+if($provider == 'minds'){
 	try{
 		
 		$entity = get_entity($image['guid'],'object');
@@ -48,13 +49,11 @@ if(!$full_view){
 	
 ?>
 <a href='<?php echo $url;?>'>
-	<div class='minds-search minds-search-item'>
-		<?php echo $img;?>
-		<h3><?php echo $title;?></h3>
-		<p><b><?php echo $source;?></b> <br/>
-		   <?php //echo $owner;?></p>
-	</div>
+	<?php echo $img;?>
+	<h3><?php echo $title;?></h3>
+	<p><b><?php echo $provider;?></b></p>
 </a>
+<p class="license"><?php echo elgg_echo('minds:license:'.$image['license']);?></p> 
 <?php 
 }else {
 	minds_set_metatags('og:title', $image['title']);

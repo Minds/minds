@@ -13,7 +13,9 @@
 	margin-bottom: 5px;
 	padding-bottom: 5px;
 }
-
+.elgg-head h3{
+	font-size:16px;
+}
 /* Info */
 .elgg-module-info > .elgg-head {
 	background: #e4e4e4;

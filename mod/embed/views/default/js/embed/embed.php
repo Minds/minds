@@ -148,13 +148,12 @@ elgg.embed.submityt = function(event) {
 					var textAreaId = elgg.embed.textAreaId;
 					var textArea = $('#' + textAreaId);
 					
-					tinyMCE.execCommand('mceRemoveControl', false, textAreaId);
+					//tinyMCE.execCommand('mceRemoveControl', false, textAreaId);
 			
+					tinyMCE.activeEditor.setContent(textArea.val() + response.output);
 					textArea.val(textArea.val() + response.output);
 					textArea.focus();
-					
-					tinyMCE.execCommand('mceAddControl', false, textAreaId);
-
+				
 														
 					$.fancybox.close();
 					

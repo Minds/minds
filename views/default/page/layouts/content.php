@@ -48,7 +48,8 @@ $params = array(
 	'content' => $header . $body,
 	'sidebar' => $sidebar,
 	'menu' => $vars['menu'],
-	'footer'=> $footer
+	'footer'=> $footer,
+	'hide_ads'=> $vars['hide_ads']
 );
 if (isset($vars['class'])) {
 	$params['class'] = $vars['class'];

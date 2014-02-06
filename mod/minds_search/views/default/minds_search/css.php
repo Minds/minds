@@ -40,8 +40,15 @@ form.minds-search{
 .minds-search-item img{	
 	width:100%;
 }
+.minds-search-item .license{
+	color:#888;
+	font-size:11px;
+}
 .minds-search img.full{
 	width:100%;
+}
+.minds-search-item a{
+	color:#666;
 }
 .minds-search-item h3{
 	font-size:12px;

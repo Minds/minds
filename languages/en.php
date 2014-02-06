@@ -1218,6 +1218,16 @@ You cannot reply to this email.",
 	'js:security:token_refreshed' => 'Connection to %s restored!',
 
 /**
+ * Trending
+ */
+ 
+	'trending:day' => 'Day',
+	'trending:week' => 'Week',
+	'trending:month' => 'Month',
+	'trending:year' => 'Year',
+	'trending:entire' => 'All time',
+  
+/**
  * Languages according to ISO 639-1
  */
 	"aa" => "Afar",

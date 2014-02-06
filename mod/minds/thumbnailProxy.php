@@ -53,6 +53,7 @@ if(!$image){
 imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
 
 header('Content-type: image/jpeg');
+header('Access-Control-Allow-Origin: *');
 // Output
 imagejpeg($image_p, null, 75);
 exit;

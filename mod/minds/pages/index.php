@@ -9,7 +9,7 @@
  * Free & Open Source Social Media
  */
 global $CONFIG;
-$limit = get_input('limit', 8);
+$limit = get_input('limit', 12);
 $offset = get_input('offset', 0);
 $filter = get_input('filter', 'featured');
 
@@ -17,7 +17,7 @@ if($offset > 0 && $filter == 'featured'){
 	$limit++;
 }
 
-if($filter == 'featured'){
+if($filter == 'featured' && !get_input('timespan')){
 	$entities = minds_get_featured('', $limit, 'entities',$offset); 
 } else {
 	//trending
@@ -81,12 +81,12 @@ $subtitle = round($countdown_days,0) . ' days to go.';*/
 $user_count = elgg_get_entities(array('type'=>'user', 'count'=>true));
 $max = 1000000;
 $countdown = $max - $user_count;
-$subtitle = "$countdown more human sign-ups activates automatic global <a href='release'><b>code release</b></a>.";
+$subtitle = "$countdown more human sign-ups until automatic global <a href='release'><b>code release</b></a>.";
 
 $featured_item_class = $filter == 'featured' ? 'elgg-state-selected' : null;
 $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
 
-if ($t)
+if ($t){
     $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title
@@ -103,7 +103,8 @@ if ($t)
 	</ul>
 </div>
 HTML;
-else
+}else{
+$trending_menu = elgg_view_menu('trending');
 $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title
@@ -115,8 +116,9 @@ $header = <<<HTML
 		<li class="elgg-menu-item-featured $featured_item_class">
 			<a href="?filter=featured">Featured</a>
 		</li>
-		<li class="elgg-menu-item-trending $trending_item_class">
+		<li class="elgg-menu-item-trending $trending_item_class elgg-menu-item-hover-over">
                         <a href="?filter=trending">Trending</a>
+			$trending_menu
                 </li>
 	</ul>
 </div>

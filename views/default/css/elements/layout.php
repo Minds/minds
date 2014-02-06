@@ -95,6 +95,9 @@
 	margin-top:15px;
 	float:right;
 }
+.hero > .topbar .owner_block h3{
+	font-size:16px;
+}
 .hero > .topbar .owner_block > a > img{
 	padding:8px;
 }

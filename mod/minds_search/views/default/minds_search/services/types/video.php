@@ -3,30 +3,28 @@
  * Minds Search CC Image View
  */
 
-$video = $vars['video'];
+$video = $vars['source'];
 $full_view = $vars['full_view'];
 
 $title = strlen($video['title'])>60 ? substr($video['title'], 0, 60) . '...' : $video['title'];
 $img = elgg_view('output/img', array('src'=>$video['iconURL']));
-$source = $video['source'];
+$provider = $video['provider'];
 
-if($source == 'minds'){
+if($provider == 'minds'){
 	$entity = get_entity($video['guid'], 'object');
 	$iconURL = kaltura_get_thumnail($entity->kaltura_video_id, 160, 100, 100, 5);
 	$img = "<img src='".$iconURL."'/>";
 } else {
-	$source = "Source: " . $video['source'] . "<br/> Type: Video";
+	$provider = "Source: " . $provider . "<br/> Type: Video";
 }
 
 if(!$full_view){
 ?>
 <a href='<?php echo elgg_get_site_url().'search/result/'.$video['id'];?>'>
-	<div class='minds-search minds-search-item minds-search-item-video'>
 		<span></span>
 		<?php echo $img;?>
 		<h3><?php echo $title;?></h3>
-		<p><b><?php echo $source; ?></b></p>
-	</div>
+		<p><b><?php echo $provider; ?></b></p>
 </a>
 <?php 
 }else {

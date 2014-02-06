@@ -187,7 +187,11 @@ function blog_get_trending_page_content_list() {
 	$limit = get_input('limit', 8);
 	$offset = get_input('offset', 0);
 
-	$trending = new MindsTrending();
+	//trending
+        $options = array(
+                'timespan' => get_input('timespan', 'day')
+        );
+        $trending = new MindsTrending(null, $options);
 	$guids = $trending->getList(array('type'=>'object', 'subtype'=>'blog', 'limit'=>$limit, 'offset'=>$offset));
 	
 	if($guids)	{

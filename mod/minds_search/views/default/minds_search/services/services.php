@@ -13,28 +13,25 @@ $ad[1] = rand(0,3);
 $ad[2] = rand(8,12);
 $ad[3] = rand(18,29);
 
-if($type == 'all'){
+echo '<ul class="elgg-list minds-search-list mason x4">';
+//if($type == 'all'){
 	$i = 0;
 	foreach($data as $item){
-		if($item['_type'] == 'photo')
-			echo elgg_view('minds_search/services/types/image', array('photo'=>$item['_source']));
-		if($item['_type'] == 'video')
-			echo elgg_view('minds_search/services/types/video', array('video'=>$item['_source']));
-		if($item['_type'] == 'sound')
-			echo elgg_view('minds_search/services/types/sound', array('sound'=>$item['_source']));
-		if($item['_type'] == 'article') 
-			echo elgg_view('minds_search/services/types/article', array('article'=>$item['_source']));
-		if($item['_type'] == 'user') 
-			echo elgg_view('minds_search/services/types/user', array('user'=>$item['_source']));
-		if($item['_type'] == 'group') 
-			echo elgg_view('minds_search/services/types/group', array('group'=>$item['_source']));
+		$type = $item['_type'];
+		echo "<li class='elgg-item item minds-search-item '>";
+			if(elgg_view_exists("minds_search/services/types/$type")){ 
+				echo elgg_view("minds_search/services/types/$type", array('source'=>$item['_source']));
+			} else { 
+				echo elgg_view("minds_search/services/types/default", array('source'=>$item['_source']));
+			}
+		echo "</li>";
 		
 		if($i==$ad[1] || $i==$ad[2] || $i == $ad[3]){
-			echo elgg_view('minds_search/services/types/ad');
+		//	echo elgg_view('minds_search/services/types/ad');
 		}
 		$i++;
 	}
-} elseif($type=='photo') {
+/*} elseif($type=='photo') {
 	echo '<div class="minds-search minds-search-section minds-search-section-image">';
 	echo '<h3> '. elgg_echo('minds_search:type:'.$type) . ' </h3>';
 	
@@ -78,4 +75,5 @@ if($type == 'all'){
 		echo elgg_view('minds_search/services/types/group', array('group'=>$item['_source']));
 	}
 	echo '</div>';
-}
+}*/
+echo '</ul>';

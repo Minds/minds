@@ -23,6 +23,16 @@ function analytics_init() {
 	elgg_register_page_handler('analytics','analytics_page_handler');
 
 	elgg_register_plugin_hook_handler('cron', 'minute', 'analytics_cron');
+	
+	$trending_menu = array('day', 'week', 'month', 'year', 'entire');
+	foreach($trending_menu as $trending){
+		elgg_register_menu_item('trending', array(	
+				'name'=>$trending,
+				'text'=> elgg_echo('trending:'.$trending),
+				'href'=> "?timespan=$trending",
+				'selected'=> $trending == get_input('timespan','day')
+			));
+	}
 }
 
 function analytics_cron(){
@@ -167,7 +177,8 @@ function analytics_fetch(){
 	$user_guids = array_keys($user_occurances);
 
 	$db = new DatabaseCall('entities_by_time');
-	$db->removeRow('trending:users', $user_guids);
+	$db->removeRow('trending:users');
+	$db->insert('trending:users', $user_guids);
 			
 	return;
 }
