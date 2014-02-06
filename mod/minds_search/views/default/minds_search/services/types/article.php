@@ -37,7 +37,7 @@ if(!$full_view){
 	minds_set_metatags('mindscom:photo', $imageURL);
 	minds_set_metatags('og:description', 'License: ' . elgg_echo('minds:license:'.$article['license']));
 	
-	if($source=='wikipedia'){
+	if($provider=='wikipedia'){
 		elgg_load_css('wiki');
 		$url = 'http://en.wikipedia.org/w/api.php?action=parse&page=' . urlencode($article['title']) .'&format=json&rvprop=content';
 		$ch = curl_init($url);
@@ -63,7 +63,7 @@ if(!$full_view){
 		echo $content;
 		echo elgg_view('minds/ads', array('type'=>'content-foot'));
 		echo "</div>";
-	}elseif($source=='minds'){
+	}elseif($provider=='minds'){
 		forward($entity->getURL());
 	}
 }?>

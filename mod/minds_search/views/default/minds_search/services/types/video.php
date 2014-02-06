@@ -6,7 +6,7 @@
 $video = $vars['source'];
 $full_view = $vars['full_view'];
 
-$title = strlen($video['title'])>60 ? substr($video['title'], 0, 60) . '...' : $video['title'];
+$title = $video['title'];
 $img = elgg_view('output/img', array('src'=>$video['iconURL']));
 $provider = $video['provider'];
 
@@ -33,9 +33,9 @@ if(!$full_view){
 	minds_set_metatags('og:url', $url);
 	minds_set_metatags('og:image', $video['iconURL']);
 	minds_set_metatags('og:description', 'License: ' . elgg_echo('minds:license:'.$video['license']));
-	if($source=='archive.org'){
+	if($provider=='archive.org'){
 		forward($video['href']);
-	}elseif($source=='youtube'){
+	}elseif($provider=='youtube'){
 		$yt_id = str_replace('youtube_', '', $video['id']);
 		echo '<iframe src="http://youtube.com/embed/'.$yt_id.'" width="975px" height="500px"></iframe>';
 		minds_set_metatags('og:video', 'http://youtube.com/v/'.$yt_id);
@@ -43,7 +43,7 @@ if(!$full_view){
 		minds_set_metatags('og:video:type', 'application/x-shockwave-flash');
 		minds_set_metatags('og:video:width', 1280);
 		minds_set_metatags('og:video:height', 720);
-	} elseif($source=='minds'){
+	} elseif($provider=='minds'){
 		forward($entity->getURL());
 	}
 }

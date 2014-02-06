@@ -123,7 +123,7 @@ $header = <<<HTML
 	</ul>
 </div>
 HTML;
-
+}
 if($entities){
 	$content = elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true);
 } else {
@@ -138,4 +138,3 @@ $params = array(	'content'=> $content,
 $body = elgg_view_layout('one_column', $params);
 
 echo elgg_view_page('', $body, 'default', array('class'=>'index'));
-?>

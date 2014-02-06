@@ -164,7 +164,7 @@ class ElggSession extends ArrayObject {
 	 * Nests array parameters in ArrayObject instances to allow unset to work on multidimensional arrays
 	 * @see ArrayAccess::offsetSet()
 	 */
-	public function offsetSet($index, $newval) {var_dump($index, $newval);
+	public function offsetSet($index, $newval) {
 		$_SESSION[$key] = $newval;
 		$this->set($index, $newval);
 	}

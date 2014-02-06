@@ -63,13 +63,13 @@ if(!$full_view){
 	minds_set_metatags('mindscom:photo', $imageURL);
 	minds_set_metatags('og:description', 'License: ' . elgg_echo('minds:license:'.$image['license']));
 	
-	if($source=='archive.org'||$source=='pixabay'){
+	if($provider=='archive.org'||$provider=='pixabay'){
 		forward($image['href']);
-	}elseif($source=='flickr'){
+	}elseif($provider=='flickr'){
 		//do some modification to the imageURL to get a large image
 		$imageURL = str_replace('_q', '_b', $imageURL);
 		echo elgg_view('output/img', array('src'=>$imageURL));
-	} elseif($source =='minds'){
+	} elseif($provider =='minds'){
 		forward($entity->getURL());
 	}
 }?>
