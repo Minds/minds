@@ -513,7 +513,7 @@ function _elgg_load_site_config() {
 	$CONFIG->site_id = $CONFIG->site_guid;
 		
 	//can we load from settings.php? (this code is duplicated!)
-	if($CONFIG->site_name){
+	if(isset($CONFIG->site_name)){
 		$site = new ElggSite();
 		$site->guid = $CONFIG->site_guid;
 		$site->name = $CONFIG->site_name;

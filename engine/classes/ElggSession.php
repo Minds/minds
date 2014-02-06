@@ -164,14 +164,14 @@ class ElggSession extends ArrayObject {
 	 * Nests array parameters in ArrayObject instances to allow unset to work on multidimensional arrays
 	 * @see ArrayAccess::offsetSet()
 	 */
-	public function offsetSet($index, $newval) {
-		$_SESSION[$key] = $value;
+	public function offsetSet($index, $newval) {var_dump($index, $newval);
+		$_SESSION[$key] = $newval;
 		$this->set($index, $newval);
 	}
 	
 	public function offsetGet($key){
 		if (in_array($key, array('user', 'id', 'name', 'username'))) {
-                        elgg_deprecated_notice("Only 'guid' is stored in session for user now", 1.9);
+                       // elgg_deprecated_notice("Only 'guid' is stored in session for user now", 1.9);
                         if ($this->loggedInUser) {
                                 switch ($key) {
                                         case 'user':
@@ -189,6 +189,10 @@ class ElggSession extends ArrayObject {
                                // return null;
                         }
                 }
+
+		if($this->get($key)){
+			return $this->get($key);
+		}
 
                 if (isset($_SESSION[$key])) {
                         return $_SESSION[$key];

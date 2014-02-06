@@ -24,7 +24,7 @@ if($filter == 'featured'){
 	$options = array(
 		'timespan' => get_input('timespan', 'day')
 	);
-	$trending = new MindsTrending(null, $options);
+	$trending = new MindsTrending(array(), $options);
 	$guids = $trending->getList(array('limit'=> $limit, 'offset'=>$offset));
 	if($guids){
 		$entities = elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit,'offset'=>0));
@@ -122,7 +122,11 @@ $header = <<<HTML
 </div>
 HTML;
 
-$content = elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true);
+if($entities){
+	$content = elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true);
+} else {
+	$content = 'No content';
+}
 
 $params = array(	'content'=> $content, 
 					'header'=> $header,

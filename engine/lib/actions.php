@@ -233,17 +233,17 @@ function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL)
 	}
 
 	$session_id = session_id();
-
-    if (($token) && ($ts) && ($session_id)) {
+    
+	if (($token) && ($ts) && ($session_id)) {
 		// generate token, check with input and forward if invalid
 		$generated_token = generate_action_token($ts);
-
+		
 		// Validate token
 		if ($token == $generated_token) {
 			$hour = 60 * 60;
 			$timeout = $timeout * $hour;
 			$now = time();
-
+			
 			// Validate time to ensure its not crazy
 			if ($timeout == 0 || ($ts > $now - $timeout) && ($ts < $now + $timeout)) {
 				// We have already got this far, so unless anything

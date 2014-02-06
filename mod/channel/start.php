@@ -87,14 +87,17 @@ function channel_init() {
 	);
 
 	//setup the profile icon widget
-	elgg_register_widget_type(
+	$user = elgg_get_page_owner_entity();
+	if($user){
+		elgg_register_widget_type(
 			'channel_avatar',
 			elgg_echo('channel:widget:avatar:title', array($user->name)),
 			elgg_echo('channel:widget:avatar:desc'),
 			'channel',
 			true
-	);
-	
+		);
+	}
+
 	//set a new file size
 	elgg_set_config('icon_sizes', array(	
 											'topbar' => array('w'=>16, 'h'=>16, 'square'=>TRUE, 'upscale'=>TRUE),

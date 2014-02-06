@@ -123,6 +123,7 @@ function minds_init(){
 	
 	//needs to be loaded after htmlawed
 	//this is for allow html <object> tags
+	global $CONFIG;
 	$CONFIG->htmlawed_config['safe'] = false;
 	
 	$actionspath = elgg_get_plugins_path() . "minds/actions";
@@ -523,13 +524,13 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
  * Edit the river menu defaults
  */
 function minds_entity_menu_setup($hook, $type, $return, $params) {
-	if (elgg_is_logged_in()) {
 
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
 		$context = elgg_get_context();
 		$full = elgg_extract('full_view', $params, true);
-		
+
+	if (elgg_is_logged_in()) {		
 		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
 		if(in_array($entity->getSubtype(), $allowedReminds)){
@@ -744,6 +745,7 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 
  /* Extend / override htmlawed */ 
 function minds_htmlawed_filter_tags($hook, $type, $result, $params) {
+	$extraALLOW = '';
 	if(strpos($_SERVER['REQUEST_URI'], 'action/plugins/usersettings/save') !== FALSE){
 		$extraALLOW = 'script';
 	}

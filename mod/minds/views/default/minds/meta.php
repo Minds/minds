@@ -33,7 +33,7 @@ $owner = elgg_get_page_owner_entity();
 if((elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_get_context() == 'news' || elgg_get_context() == 'blog' || elgg_get_context() == 'archive') && elgg_get_viewtype() == 'default'){
 	echo '<style>';
 
-	if($owner->background || $owner->text_colour || $owner->link_colour){
+	if($owner && ($owner->background || $owner->text_colour || $owner->link_colour)){
 
 	echo <<<BODY
 	

@@ -1397,6 +1397,10 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 	} else {
 		$entities = $getter($options);
 	}
+	
+	if(!$entities){
+		$entities = array();
+	}
 
 	return $viewer($entities, $options);
 }
