@@ -51,6 +51,9 @@
 	-moz-box-shadow: 0 0 1px #DDD;
 	border: 1px solid #DDD;
 }
+.elgg-list.x4 > li {
+	width:21%;
+}
 @media screen and (max-width: 1100px) {
         .elgg-list > li{
                 width:28%;
@@ -61,6 +64,9 @@
 	.elgg-list > li{
 		width:21%;
 		height:210px;
+	}
+	.elgg-list.x4 > li {
+		width:12.5%;
 	}
 }
 @media screen and (min-width: 1800px) {

@@ -212,8 +212,8 @@
 			var offset = 0;
 
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
-
-			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending'){
+console.log(loc); 
+			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending' || loc.indexOf('search')){
 				offset = $list.find('.elgg-list').children().length;
 			} else {
 				offset = $('.load-more').attr('data-load-next');
