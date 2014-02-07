@@ -22,6 +22,8 @@ class MindsControlTicket extends ElggObject{
 	public function initializeAttributes(){
 		parent::initializeAttributes();
 		$this->attributes['subtype'] = "control_ticket";
+		$this->attributes['access_id'] = 2;
+		$this->attributes['status'] = "opened";
 	}
 	
 	public function setupAsana(){

@@ -20,6 +20,9 @@ $en = array(
 	'control:tickets:menu:owner' => 'My tickets',
 	'control:tickets:menu:owner:x' => '%s submitted tickets',
 	
+	'control:tickets:status:opened' => 'Status: opened',
+	'control:tickets:status:closed' => 'Status: closed',
+	
 	
 );
 add_translation('en', $en);

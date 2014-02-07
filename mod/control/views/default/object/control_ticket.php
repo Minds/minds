@@ -71,12 +71,10 @@ if ($full) {
 
     $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
 	
-	$body = elgg_view('output/longtext', array(
-		'value' => $ticket->description,
-	));
+	
+	$status = elgg_view('control/tickets/');
 	
 	echo $metadata;
     echo $header;
 	
-	echo $body;
 }

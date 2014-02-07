@@ -47,28 +47,10 @@ if($create['ok'] == true){
 //user setting for orientation
 elgg_set_plugin_user_setting('commented', true, elgg_get_logged_in_user_guid(), 'minds_comments');
 
-/*//get a list of all the users who have previously commented
-$options = array(
-        'type' => 'object',
-        'subtype' => 'hjannotation',
-        //'owner_guid' => $user->guid,
-        //'container_guid' => $container_guid,
-		'metadata_name_value_pairs' => array(
-            array('name' => 'parent_guid', 'value' => $parent_guid)
-        ),
-        'limit' => 0,
-    );
-*/
 $entity = get_entity($pid, 'object');
-//$owner = get_entity($entity->ower_guid);
-//$items = elgg_get_entities_from_metadata($options);
-/*foreach($items as $item){
-	
-	$to_guids[] = $item->owner_guid;
-	
-}
-	$to_guids[] = $subject_guid;
-	$to = array_unique($to_guids);
-*/
+
 notification_create(array($entity->owner_guid), elgg_get_logged_in_user_guid(), $pid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
+
+elgg_trigger_event('comment:create', 'comment', $data);
+
 exit;

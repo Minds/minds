@@ -19,6 +19,9 @@ elgg_register_event_handler('init', 'system', 'control_init');
 function control_init() {
 	
 	elgg_register_library('control:tickets', dirname(__FILE__).'/lib/tickets.php');
+	elgg_load_library('control:tickets');
+	control_tickets_init();
+	
 	elgg_register_library('asana', dirname(__FILE__).'/vendors/asana/asana.php');
 	
 	elgg_register_page_handler('control', 'control_page_handler');

@@ -54,6 +54,16 @@
 .elgg-list.x4 > li {
 	width:21%;
 }
+.elgg-list.x1{
+	padding:0!important; 
+	margin:0;
+}
+.elgg-list.x1 > li{
+	width:auto;
+	height:auto;
+	float:none;
+	margin:8px 0;
+}
 @media screen and (max-width: 1100px) {
         .elgg-list > li{
                 width:28%;
