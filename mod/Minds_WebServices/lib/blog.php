@@ -154,6 +154,13 @@ expose_function('blog.save_post',
 						'tags' => array ('type' => 'string', 'required' => false, 'default' => "blog"),
 						'access' => array ('type' => 'string', 'required' => false, 'default'=>ACCESS_PUBLIC),
 						'container_guid' => array ('type' => 'int', 'required' => false, 'default' => 0),
+                                    
+                                                // The following fields allow for posts written elsewhere, but posted via one minds user, to be displayed with the correct information
+                                                // this is primarily used by the minds wordpress plugin and bridge
+                                                'author' => array ('type' => 'string', 'required' => false),
+                                                'email' => array ('type' => 'string', 'required' => false),
+                                                'profile_url' => array ('type' => 'string', 'required' => false),
+                                                'permalink' => array ('type' => 'string', 'required' => false),
 					),
 				"Post a blog post",
 				'POST',
