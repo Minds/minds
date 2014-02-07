@@ -116,7 +116,7 @@ expose_function('blog.get_posts',
  *
  * @return bool
  */
-function blog_save($title, $text, $excerpt, $tags , $access, $container_guid) {
+function blog_save($title, $text, $excerpt, $tags , $access, $container_guid, $author, $email, $profile_url, $permalink) {
 	$user = get_loggedin_user();
 	if (!$user) {
 		throw new InvalidParameterException('registration:usernamenotvalid');
@@ -134,6 +134,13 @@ function blog_save($title, $text, $excerpt, $tags , $access, $container_guid) {
 	$obj->comments_on = 'On';
 	$obj->excerpt = strip_tags($excerpt);
 	$obj->tags = strip_tags($tags);
+        
+        // Save extra stuff
+        $obj->ex_author = $author;
+        $obj->ex_email = $email;
+        $obj->ex_profile_url = $profile_url;
+        $obj->ex_permalink = $permalink;
+        
 	$guid = $obj->save();
 	add_to_river('river/object/blog/create',
 	'create',
