@@ -148,7 +148,7 @@ function oauth2_pam_handler($credentials = NULL) {
     }
 
     // save the fact that we've validated this request already
-
+    
     // tell the PAM system that it worked
     return true;
 }
