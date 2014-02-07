@@ -82,6 +82,10 @@ function action($action, $forwarder = "") {
                 // We need to have this here to disable tokens for node registration. This modification to actions is required until fixed in upstream Elgg.
                 'registernewnode',
 	);
+	
+	if($CONFIG->actions[$action]['access']){
+		array_push($exceptions, $action);
+	}
 
 	if (!in_array($action, $exceptions)) {
 		// All actions require a token.
