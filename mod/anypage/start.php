@@ -22,7 +22,6 @@ function anypage_init() {
 
 	elgg_extend_view('js/elgg', 'anypage/js');
 	elgg_extend_view('css/admin', 'anypage/admin_css');
-	elgg_extend_view('css/elgg', 'anypage/css');
 
 	elgg_register_plugin_hook_handler('route', 'all', 'anypage_router');
 	elgg_register_plugin_hook_handler('public_pages', 'walled_garden', 'anypage_walled_garden_public_pages');
@@ -36,12 +35,7 @@ function anypage_init() {
  */
 function anypage_setup_footer_menu() {
 	
-	$cache = new ElggXCache('page');
-
-	if(!$pages = $cache->load('footer-menu')){
-		$pages = elgg_get_entities(array('type'=>'object', 'subtype'=>'anypage', 'limit'=>0)); 
-		$cache->save('footer-menu', $pages, 360);		
-	}
+	$pages = elgg_get_entities(array('type'=>'object', 'subtype'=>'anypage', 'limit'=>0)); 
 	foreach ($pages as $page) {
 		elgg_register_menu_item('footer', array(
 			'name' => $page->title,
@@ -51,7 +45,7 @@ function anypage_setup_footer_menu() {
 		));
 	}
 	
-	
+	elgg_get_site_ur
 }
 
 /**
@@ -112,16 +106,9 @@ function anypage_router($hook, $type, $value, $params) {
 		echo elgg_view($page->getView());
 		exit;
 	} else {
-		$filter = elgg_view('anypage/filter', array('selected'=>$page->title));
 		// display entity
 		$content = elgg_view_entity($page);
-		$body = elgg_view_layout('one_column', array(
-			'header'=>$filter,
-			'content' => $content, 
-			'hide_ads'=>true,
-			'sidebar'=>elgg_view('anypage/menu'),
-			'class'=>'pages',
-		));
+		$body = elgg_view_layout('content', array('title'=>$page->title, 'content' => $content, 'sidebar'=>''));
 		echo elgg_view_page($page->title, $body);
 		exit;
 	}

@@ -977,40 +977,24 @@ li.elgg-menu-item-rss{
  * rich content
  */
 .rich-content{
-	overflow:hidden;
-	width:100%;
-	clear:both;
+
 }
-.rich-content h3{
-	font-size:30px;
-	line-height:30px;
+.rich-content .elgg-image {
+	float:none;
 }
-.rich-content h3 a:hover{
-	color:#4690D6;
-	text-decoration:none;
-}
+
 .rich-content .readmore{
 	font-weight:bold;
 }
 .rich-content .rich-image-container{
-	float:left;
-	margin:0 15px 0 0;
-	width:325px;
-	height:175px;
-	display:block;
-	overflow:hidden;
-	position:relative;
-	box-shadow:0 0 2px #888;
+	
 }
 .elgg-widget-content .rich-content .rich-image-container{
 	width:200px;
 	height:85px;
 }
 .rich-content .rich-image{
-	position:absolute;
-	top:0;
-	left:0;
-	width:100%;
+
 }
 .rich-content.sidebar h3{
 	font-size:14px;

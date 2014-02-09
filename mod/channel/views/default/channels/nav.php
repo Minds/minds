@@ -25,27 +25,12 @@ $tabs = array(
 		'href' => "channels/newest",
 		'selected' => $vars['selected'] == 'newest',
 	),
-/*	'popular' => array(
-		'text' => elgg_echo('channels:label:popular'),
-		'href' => "channels/popular",
-		'selected' => $vars['selected'] == 'popular',
-	),
-	'suggested' => array(
-		'text' => elgg_echo('channels:label:suggested'),
-		'href' => "channels/suggested",
-		'selected' => $vars['selected'] == 'suggested',
-	),
-	'online' => array(
-		'text' => elgg_echo('channels:label:online'),
-		'href' => "channels/online",
-		'selected' => $vars['selected'] == 'online',
-	),
-	'online' => array(
-		'text' => elgg_echo('friends:collections'),
-		'href' => "channels/collections",
-		'selected' => $vars['selected'] == 'collections',
-	),*/
 );
+
+if(!elgg_is_logged_in()){
+	unset($tabs['subscribers']);
+	unset($tabs['subscriptions']);
+}
 
 //echo elgg_view('navigation/tabs', array('tabs' => $tabs));
 foreach ($tabs as $name => $tab) {

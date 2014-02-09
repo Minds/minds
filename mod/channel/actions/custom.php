@@ -74,4 +74,4 @@ if ($guid) {
 
 }
 system_message(elgg_echo('channel:custom:saved'));
-forward(REFERRER);
+forward($user->getURL());
