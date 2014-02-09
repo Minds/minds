@@ -105,14 +105,6 @@
 .elgg-list-river{
 	width:auto;
 }
-.elgg-list-river > li{
-	width:auto;
-	height:auto;
-	margin:0;
-	box-shadow:none;
-	-webkit-box-shadow:none;
-	-moz-box-shadow:none;
-}
 
 .elgg-item h2{
 	font-size:16px;
