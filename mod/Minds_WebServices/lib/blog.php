@@ -135,12 +135,14 @@ function blog_save($title, $text, $excerpt, $tags , $access, $container_guid, $a
 	$obj->excerpt = strip_tags($excerpt);
 	$obj->tags = strip_tags($tags);
         
-        // Save extra stuff
-        $obj->ex_author = $author;
-        $obj->ex_email = $email;
-        $obj->ex_profile_url = $profile_url;
-        $obj->ex_permalink = $permalink;
+        // Save extra stuff (note, using $_REQUEST, because the function variables aren't being correctly populated, and I don't have time to debug it at the moment..)
+        $obj->ex_author = $_REQUEST['author'];//$author;
+        $obj->ex_email = $_REQUEST['email'];//$email;
+        $obj->ex_profile_url = $_REQUEST['profile_url'];//$profile_url;
+        $obj->ex_permalink = $_REQUEST['permalink'];//$permalink;
         
+        error_log('OAUTH API : ' . print_r($obj, true) . print_r($_REQUEST, true));
+
 	$guid = $obj->save();
 	add_to_river('river/object/blog/create',
 	'create',
@@ -164,10 +166,10 @@ expose_function('blog.save_post',
                                     
                                                 // The following fields allow for posts written elsewhere, but posted via one minds user, to be displayed with the correct information
                                                 // this is primarily used by the minds wordpress plugin and bridge
-                                                'author' => array ('type' => 'string', 'required' => false),
-                                                'email' => array ('type' => 'string', 'required' => false),
-                                                'profile_url' => array ('type' => 'string', 'required' => false),
-                                                'permalink' => array ('type' => 'string', 'required' => false),
+                                                'author' => array ('type' => 'string', 'required' => false, 'default' => ''),
+                                                'email' => array ('type' => 'string', 'required' => false, 'default' => ''),
+                                                'profile_url' => array ('type' => 'string', 'required' => false, 'default' => ''),
+                                                'permalink' => array ('type' => 'string', 'required' => false, 'default' => ''),
 					),
 				"Post a blog post",
 				'POST',
