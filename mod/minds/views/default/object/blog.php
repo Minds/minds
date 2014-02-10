@@ -21,13 +21,22 @@ if (!$excerpt) {
 	$excerpt = elgg_get_excerpt($blog->description);
 }
 
+/*
+ * obj->ex_author = $author;
+        $obj->ex_email = $email;
+        $obj->ex_profile_url = $profile_url;
+        $obj->ex_permalink = $permalink;
+        
+ */
+
 $owner_icon = elgg_view_entity_icon($owner, 'small');
 $owner_link = elgg_view('output/url', array(
-	'href' => "blog/owner/$owner->username",
-	'text' => $owner->name,
-	'is_trusted' => true,
+        'href' => $blog->ex_profile_url ? $blog->ex_profile_url : "blog/owner/$owner->username",
+        'text' => $blog->ex_author ? $blog->ex_author : $owner->name,
+        'is_trusted' => true,
 ));
 $author_text = elgg_echo('byline', array($owner_link));
+
 $date = elgg_view_friendly_time($blog->time_created);
 
 $metadata = elgg_view_menu('entity', array(
@@ -100,7 +109,10 @@ if ($full) {
 	$title = elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>elgg_view_title($blog->title)));
 	$extras = '<p class="excerpt">' . elgg_view('output/url', array('href'=>$blog->getURL(), 'text'=>$excerpt)) . '</p>';
 	if(!$owner){ return false; }
-	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));
+	$owner_link  = elgg_view('output/url', array(
+            'href'=> $blog->ex_profile_url ? $blog->ex_profile_url : $owner->getURL(), 
+            'text'=> $blog->ex_author ? $blog->ex_author : $owner->name
+        ));
 
         $subtitle = '<i>'.
                 elgg_echo('by') . ' ' . $owner_link . ' ' .
