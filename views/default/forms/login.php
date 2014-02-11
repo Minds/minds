@@ -7,26 +7,15 @@
  */
 ?>
 
-<div>
-	<label><?php echo elgg_echo('loginusername'); ?></label>
 	<?php echo elgg_view('input/text', array(
 		'name' => 'username',
 		'class' => 'elgg-autofocus',
+		'placeholder' => 'username'
 		));
 	?>
-</div>
-<div>
-	<label><?php echo elgg_echo('password'); ?></label>
-	<?php echo elgg_view('input/password', array('name' => 'password')); ?>
-</div>
+	<?php echo elgg_view('input/password', array('name' => 'password', 'placeholder' => 'password')); ?>
 
 <?php echo elgg_view('login/extend', $vars); ?>
-
-<div class="elgg-foot">
-	<label class="mtm float-alt">
-		<input type="checkbox" name="persistent" value="true" />
-		<?php echo elgg_echo('user:persistent'); ?>
-	</label>
 	
 	<?php echo elgg_view('input/submit', array('value' => elgg_echo('login'))); ?>
 	
@@ -36,14 +25,19 @@
 	}
 	?>
 
-	<ul class="elgg-menu elgg-menu-general mtm">
+	<ul class="elgg-menu elgg-menu-general login-box mtm">
+		
 	<?php
-		if (elgg_get_config('allow_registration')) {
 			echo '<li><a class="registration_link" href="' . elgg_get_site_url() . 'register">' . elgg_echo('register') . '</a></li>';
-		}
+			echo '<li><a class="registration_link" href="' . elgg_get_site_url() . 'register/node">' . elgg_echo('register:node') . '</a></li>';
 	?>
+	</ul>
+	<ul class="elgg-menu elgg-menu-general login-box mtm">
+		<li>
+				<input type="checkbox" name="persistent" value="true" checked="checked"/>
+				<?php echo elgg_echo('user:persistent'); ?>
+		</li>
 		<li><a class="forgot_link" href="<?php echo elgg_get_site_url(); ?>forgotpassword">
 			<?php echo elgg_echo('user:password:lost'); ?>
 		</a></li>
 	</ul>
-</div>

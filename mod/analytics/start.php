@@ -22,7 +22,23 @@ function analytics_init() {
 	//page handler to listen for auth callbacks
 	elgg_register_page_handler('analytics','analytics_page_handler');
 
-	elgg_register_plugin_hook_handler('cron', 'minute', 'analytics_fetch');
+	elgg_register_plugin_hook_handler('cron', 'minute', 'analytics_cron');
+	
+	$trending_menu = array('day', 'week', 'month', 'year', 'entire');
+	foreach($trending_menu as $trending){
+		elgg_register_menu_item('trending', array(	
+				'name'=>$trending,
+				'text'=> elgg_echo('trending:'.$trending),
+				'href'=> "?timespan=$trending",
+				'selected'=> $trending == get_input('timespan','day')
+			));
+	}
+}
+
+function analytics_cron(){
+	//FOR TESTING ATM
+	$analytics = new MindsAnalytics('Google');
+	var_dump($analytics->fetch());
 }
 
 /*
@@ -36,51 +52,6 @@ function analytics_page_handler($page) {
 	return false; 
 }
 
-/*
- * Register analytics google client
- */
-function analytics_register_client(){
-	$client = new Google_Client();
-	$client->setApplicationName('Minds analytics reporter');
-	
-	// set assertion credentials
-	$client->setAssertionCredentials(
-  		new Google_AssertionCredentials(
-
-			'81109256529-7204tgap3gkaf3gmeuji4k9r408m76m8@developer.gserviceaccount.com', // email you added to GA
-
-			array('https://www.googleapis.com/auth/analytics.readonly'),
-
-   	 		file_get_contents('/key.p12')  // keyfile you downloaded
-
-	));
-	
-	$client->setClientId('81109256529-7204tgap3gkaf3gmeuji4k9r408m76m8.apps.googleusercontent.com');
-	$client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
-	$client->setAccessType('offline_access');
-
-	
-	$client->setUseObjects(true);
-	
-	return $client;
-}
-
-/**
- * Authenticate the google analytics account
- */
-function anayltics_authenticate_google(){
-	$client = analytics_register_client();
-	
-	if (isset($_GET['code'])) {
-		$client->authenticate();
-		$token = $client->getAccessToken();
-		elgg_set_plugin_setting('token', $token, 'analytics');
-		$redirect = elgg_get_site_url() . 'admin/plugin_settings/anayltics';
-  		forward($redirect);
-	} elseif(elgg_get_plugin_setting('token', 'analytics')){
-		$client->authenticate();
-	}
-}
 /**
  * Retrieve analytic information, based on a info
  */
@@ -148,6 +119,7 @@ function analytics_fetch(){
 		'ga:pageviews',
 		$optParams);
 	$guids = array();
+	$user_guids = array();
 	foreach ($results->getRows() as $row) {
 		$url = $row[0];
 		$guid = analytics_get_guid_from_url($url);
@@ -170,6 +142,8 @@ function analytics_fetch(){
 		if(in_array($entity->subtype, array('image','file','kaltura_video'))){
                 	 $objects['archive'][] = $guid;
 		}
+		
+		$user_guids[] = $entity->owner_guid;
 	}	
 	} catch(Exception $e) {
 		//get the feature list if something went wrong with analytics...
@@ -197,7 +171,15 @@ function analytics_fetch(){
 			echo "Successfuly imported '$subtype' to trending \n";
 		}
 	}
+	
+	$user_occurances = array_count_values($user_guids);
+	arsort($user_occurances);
+	$user_guids = array_keys($user_occurances);
 
+	$db = new DatabaseCall('entities_by_time');
+	$db->removeRow('trending:users');
+	$db->insert('trending:users', $user_guids);
+			
 	return;
 }
 /** 

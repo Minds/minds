@@ -6,7 +6,11 @@
 $entity = elgg_extract('entity', $vars);
 
 $owner = get_entity($entity->from_guid, 'user');
-$owner_name = $owner->name;
+if($owner){
+	$owner_name = $owner->name;
+} else {
+	$owner_name = "";
+}
 $date = elgg_view_friendly_time($entity->time_created);
 
 $user = elgg_get_logged_in_user_entity();

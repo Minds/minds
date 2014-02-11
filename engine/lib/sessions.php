@@ -351,11 +351,12 @@ function logout() {
 	$old_msg = $SESSION['msg'];
 
 	session_destroy();
-//	setcookie("Minds", '', (time() - (86400 * 30)), "/");
-//	unset($SESSION);
+	setcookie("Minds", '', (time() - (86400 * 30)), "/");
+	unset($SESSION);
+	$SESSION = NULL;
 
 	// starting a default session to store any post-logout messages.
-	_elgg_session_boot(NULL, NULL, NULL);
+	_elgg_session_boot();
 	$SESSION['msg'] = $old_msg;
 
 	return TRUE;
@@ -397,7 +398,7 @@ function _elgg_session_boot($force = false) {
 		register_shutdown_function('session_write_close');
 
 		session_name('Minds');
-		session_start();	
+		//session_start();	
 		
 		$storage = new ElggSessionStorage($handler);
 	

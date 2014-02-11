@@ -32,6 +32,6 @@
                     elgg_unregister_menu_item('admin_footer', 'community_forums');
                     
                     // Remove archive page settings
-                    elgg_unregister_menu_item('page', 'archive'); 
+                   // elgg_unregister_menu_item('page', 'archive'); 
                 }, 1001);
 	},999);

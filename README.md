@@ -1,28 +1,32 @@
 Minds (Core)
 ==========
 
-Copyright (c) Copyleft 2008-2014
+__Copyright (c) Copyleft 2008-2014__
+
+Branch  | Status | |
+------------- | ------------- | ----------
+Master | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=master)](https://magnum.travis-ci.com/Minds/Minds)  | main working branch |
+Production | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=production)](https://magnum.travis-ci.com/Minds/Minds) | safe for use on production servers
+Objectional Refactoring | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=objectional-refactoring)](https://magnum.travis-ci.com/Minds/Minds) | a prototype of an objectional codebase, with legacy fallback for Elgg.
 
 
-###Minds
+##Minds
 
 http://minds.com, http://minds.org
 
-*Minds.org, Inc.* is a free and open source network operated and evolved 
-by the planet largely through voluntary contributions and voting.  It 
-aims to provide universal access to information and liberate knowledge globally.
+*Minds.org, Inc.* is a free and open source social network.
 
-Co-Creators 
-Bill Ottman (bill@minds.com)
-John Ottman (john@minds.com)
-Mark Harding (mark@minds.com)
-Christopher Gross (chris@minds.com)
-Ian Crossland (ian@minds.com)
-Bryce Coster (bryce@minds.com)
-and many more
+####Co-Creators 
+- Mark Harding (mark@minds.com)
+- Bill Ottman (bill@minds.com)
+- John Ottman (john@minds.com)
+- Ian Crossland (ian@minds.com)
+- Marcus Povey (marcus@minds.com)
 
 
-Minds/Elgg is released under the GNU General Public License (GPL) Version 2 and the
+
+
+Minds is released under the GNU General Public License (GPL) Version 2 and the
 Massachusetts Institute of Technology (MIT) License. See LICENSE.txt 
 in the root of the package you downloaded.
 
@@ -32,7 +36,7 @@ For upgrade instructions, see UPGRADE.txt.
 
 
 
-###Elgg
+##Elgg
 
 Copyright (c) 2008-2012 See COPYRIGHT.txt
 

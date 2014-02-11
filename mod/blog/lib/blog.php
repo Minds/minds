@@ -93,7 +93,7 @@ function blog_get_page_content_read($guid = NULL) {
  * @param int $container_guid The GUID of the page owner or NULL for all blogs
  * @return array
  */
-function blog_get_page_content_list($container_guid = NULL) {
+function blog_get_page_content_list($user_guid, $container_guid = NULL) {
 
 	$return = array();
 
@@ -104,7 +104,7 @@ function blog_get_page_content_list($container_guid = NULL) {
 		'subtype' => 'blog',
 		'full_view' => false,
 		'limit' => get_input('limit', 8),
-		'offset' => get_input('offset', 0)
+		'offset' => get_input('offset', '')
 	);
 
 	$current_user = elgg_get_logged_in_user_entity();
@@ -113,11 +113,8 @@ function blog_get_page_content_list($container_guid = NULL) {
 		// access check for closed groups
 		group_gatekeeper();
 
-		$options['owner_guid'] = $container_guid;
-		$container = get_entity($container_guid, 'user');
-		if (!$container) {
-
-		}
+		$options['container_guid'] = $container_guid;
+		$container = get_entity($container_guid);
 		$return['title'] = elgg_echo('blog:title:user_blogs', array($container->name));
 
 		$crumbs_title = $container->name;
@@ -131,6 +128,18 @@ function blog_get_page_content_list($container_guid = NULL) {
 			// do not show button or select a tab when viewing someone else's posts
 			$return['filter_context'] = 'none';
 		}
+	} elseif($user_guid) {
+		$options['owner_guid'] = $user_guid;
+		$user = get_entity($user_guid);
+		$return['title'] = elgg_echo('blog:title:user_blogs', array($user->name));
+		if ($current_user && ($container_guid == $current_user->guid)) {
+                        $return['filter_context'] = 'mine';
+                } else if (elgg_instanceof($container, 'group')) {
+                        $return['filter'] = false;
+                } else {
+                        // do not show button or select a tab when viewing someone else's posts
+                        $return['filter_context'] = 'none';
+                }
 	} else {
 		$return['filter_context'] = 'all';
 		$return['title'] = elgg_echo('blog');
@@ -176,9 +185,14 @@ function blog_get_trending_page_content_list() {
       	$return['filter_context'] = 'trending';
 	
 	$limit = get_input('limit', 8);
-	$offset = get_input('offset', '');
+	$offset = get_input('offset', 0);
 
-	$guids = analytics_retrieve(array('context'=>'blog','limit'=> $limit, 'offset'=>$offset));
+	//trending
+        $options = array(
+                'timespan' => get_input('timespan', 'day')
+        );
+        $trending = new MindsTrending(null, $options);
+	$guids = $trending->getList(array('type'=>'object', 'subtype'=>'blog', 'limit'=>$limit, 'offset'=>$offset));
 	
 	if($guids)	{
 		$list = elgg_list_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>0, 'full_view'=>false, 'pagination_legacy' => true));

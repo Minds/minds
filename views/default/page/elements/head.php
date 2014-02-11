@@ -9,7 +9,7 @@
 if (empty($vars['title'])) {
 	$title = elgg_get_config('sitename');
 } else {
-	$title = elgg_get_config('sitename') . ": " . $vars['title'];
+	$title = $vars['title'] . " | " . elgg_get_config('sitename');
 }
 
 global $autofeed;
@@ -30,6 +30,9 @@ END;
 	$feedref = "";
 }
 
+elgg_load_css('minds.default');
+elgg_load_js('minds.js');
+
 $js = elgg_get_loaded_js('head');
 $css = elgg_get_loaded_css();
 
@@ -37,9 +40,9 @@ $version = get_version();
 $release = get_version(true);
 ?>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="ElggRelease" content="<?php echo $release; ?>" />
-	<meta name="ElggVersion" content="<?php echo $version; ?>" />
 	<title><?php echo $title; ?></title>
+	<?php echo elgg_view('minds/meta');?>
+
 	<?php echo elgg_view('page/elements/shortcut_icon', $vars); ?>
 
 <?php foreach ($css as $link) { ?>
@@ -65,12 +68,6 @@ $release = get_version(true);
 	<script type="text/javascript" src="<?php echo $script; ?>"></script>
 <?php } ?>
 
-<script type="text/javascript">
-// <![CDATA[
-	<?php echo elgg_view('js/initialize_elgg'); ?>
-// ]]>
-</script>
-
 <?php
 echo $feedref;
 
@@ -79,3 +76,23 @@ if ($metatags) {
 	elgg_deprecated_notice("The metatags view has been deprecated. Extend page/elements/head instead", 1.8);
 	echo $metatags;
 }
+?>
+<script type="text/javascript">
+
+window._taboola = window._taboola || [];
+
+_taboola.push({article:'auto'});
+
+!function (e, f, u) {
+
+e.async = 1;
+
+e.src = u;
+
+f.parentNode.insertBefore(e, f);
+
+}(document.createElement('script'),
+document.getElementsByTagName('script')[0], 'https://cdn.taboola.com/libtrc/minds/loader.js');
+
+</script>
+

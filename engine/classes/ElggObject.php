@@ -219,18 +219,18 @@ class ElggObject extends ElggEntity {
 	//	}
                 return $owner;
 	}
-
 	/**
-         * Save an object.
-         *
-         * @return bool|int
-         * @throws IOException
-         */
-        public function save() {
-                //cache owner_guid for brief
-                //$this->owner = json_encode($this->getOwnerEntity()->export());
+ 	 * Save an object.
+	 *
+	 * @return bool|int
+	 * @throws IOException
+	 */
+	public function save() {
+		//cache owner_guid for brief
+		//$this->owner = json_encode($this->getOwnerEntity()->export());
 		$guid = create_entity($this);
-                $this->attributes['guid'] = $guid;
+		$this->attributes['guid'] = $guid;
 		return $guid;
-        }
+	}
 }
+	

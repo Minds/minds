@@ -13,11 +13,11 @@
 	Image Block
 *************************************** */
 .elgg-image-block {
-	padding: 3px 0;
+	padding: 3px;
 }
 .elgg-image-block .elgg-image {
 	float: left;
-	margin-right: 5px;
+	margin-right:10px;	
 }
 .elgg-image-block .elgg-image-alt {
 	float: right;
@@ -28,12 +28,99 @@
 	List
 *************************************** */
 .elgg-list {
-	border-top: 1px dotted #CCCCCC;
-	margin: 5px 0;
+	/*border-top: 1px dotted #CCCCCC;*/
+	margin:5px 0.5%;
 	clear: both;
+	width:100%;
 }
 .elgg-list > li {
-	border-bottom: 1px dotted #CCCCCC;
+	float: left;
+        margin: 1.1%;
+        border: 0;
+	background:#F8F8F8;
+	padding:10px 10px 0 10px;
+        width: 29%;
+        /*width:28%;*/
+	overflow: hidden;
+	height:240px;
+        display: block;
+	position:relative;
+
+	box-shadow: 0 0 1px #DDD;
+	-webkit-box-shadow: 0 0 1px #DDD;
+	-moz-box-shadow: 0 0 1px #DDD;
+	border: 1px solid #DDD;
+}
+.elgg-list.x4 > li {
+	width:21%;
+}
+.elgg-list.x1{
+	padding:0!important; 
+	margin:0;
+}
+.elgg-list.x1 > li{
+	width:auto;
+	height:auto;
+	float:none;
+	margin:8px 0;
+}
+@media screen and (max-width: 1100px) {
+        .elgg-list > li{
+                width:28%;
+                height:210px;
+        }
+}
+@media screen and (min-width: 1400px) {
+	.elgg-list > li{
+		width:21%;
+		height:210px;
+	}
+	.elgg-list.x4 > li {
+		width:12.5%;
+	}
+}
+@media screen and (min-width: 1800px) {
+	 .elgg-list > li{
+                width:16%;
+                height:210px;
+        }
+}
+/**
+ * MASON PROTOTYPE
+ */
+
+.elgg-list.mason > li{
+	height: auto;
+	display:block;
+}
+.elgg-footer .elgg-list > li{
+	width: 42%;
+	margin: 16px 2%;
+}
+
+.elgg-list > li .elgg-avatar-medium{
+	margin:10px 8px 0 5px;
+}
+
+.elgg-list-river{
+	width:auto;
+}
+.elgg-list-river > li{
+	width:auto;
+	height:auto;
+	margin:0;
+	box-shadow:none;
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+}
+
+.elgg-item h2{
+	font-size:16px;
+}
+
+.elgg-item i{
+	color:#999;
+	font-size:11px;
 }
 
 .elgg-item .elgg-subtext {
@@ -43,6 +130,16 @@
 	margin: 10px 5px;
 }
 
+.hz-list .elgg-list{
+	width:auto;
+	margin:0;
+}
+.hz-list .elgg-list .elgg-item{
+	width:auto;
+	height:auto;
+	margin:10px 0;
+	float:none;
+}
 /* ***************************************
 	Gallery
 *************************************** */
@@ -104,9 +201,16 @@
 	Owner Block
 *************************************** */
 .elgg-owner-block {
-	margin-bottom: 20px;
+	margin:8px;
+	margin-bottom:0;
 }
-
+.elgg-owner-block .elgg-body > a > h2{
+	font-size:20px;
+	font-weight:normal;
+}
+.elgg-owner-block .elgg-image img{
+	width:75px;
+}
 /* ***************************************
 	Messages
 *************************************** */
@@ -143,7 +247,6 @@
 	border-top: 1px solid #CCC;
 }
 .elgg-list-river > li {
-	border-bottom: 1px solid #CCC;
 }
 .elgg-river-item {
 	padding: 7px 0;
@@ -162,7 +265,7 @@
 .elgg-river-message,
 .elgg-river-content {
 	border-left: 1px solid #CCC;
-	font-size: 85%;
+	font-size: 100%;
 	line-height: 1.5em;
 	margin: 8px 0 5px 0;
 	padding-left: 5px;
@@ -189,6 +292,10 @@
 	-webkit-border-radius: 5px 5px 0 0;
 	-moz-border-radius: 5px 5px 0 0;
 	border-radius: 5px 5px 0 0;
+}
+
+.elgg-river-responses{
+	margin-bottom:6px;
 }
 
 <?php //@todo components.php ?>

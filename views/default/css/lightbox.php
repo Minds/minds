@@ -56,7 +56,7 @@ $jquery_path = elgg_get_site_url() . 'vendors/jquery/';
 	top: 0;
 	left: 0;
 	width: 100%;
-	z-index: 1100;
+	z-index: 999998;
 	display: none;
 }
 
@@ -73,7 +73,7 @@ $jquery_path = elgg_get_site_url() . 'vendors/jquery/';
 	top: 0;
 	left: 0;
 	padding: 20px;
-	z-index: 1101;
+	z-index: 999999;
 	outline: none;
 	display: none;
 }

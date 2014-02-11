@@ -45,7 +45,7 @@ function anypage_setup_footer_menu() {
 		));
 	}
 	
-	
+	elgg_get_site_ur
 }
 
 /**

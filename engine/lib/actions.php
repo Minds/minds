@@ -82,6 +82,10 @@ function action($action, $forwarder = "") {
                 // We need to have this here to disable tokens for node registration. This modification to actions is required until fixed in upstream Elgg.
                 'registernewnode',
 	);
+	
+	if($CONFIG->actions[$action]['access']){
+		array_push($exceptions, $action);
+	}
 
 	if (!in_array($action, $exceptions)) {
 		// All actions require a token.
@@ -233,17 +237,17 @@ function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL)
 	}
 
 	$session_id = session_id();
-
-    if (($token) && ($ts) && ($session_id)) {
+    
+	if (($token) && ($ts) && ($session_id)) {
 		// generate token, check with input and forward if invalid
 		$generated_token = generate_action_token($ts);
-
+		
 		// Validate token
 		if ($token == $generated_token) {
 			$hour = 60 * 60;
 			$timeout = $timeout * $hour;
 			$now = time();
-
+			
 			// Validate time to ensure its not crazy
 			if ($timeout == 0 || ($ts > $now - $timeout) && ($ts < $now + $timeout)) {
 				// We have already got this far, so unless anything

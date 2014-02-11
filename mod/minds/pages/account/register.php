@@ -44,14 +44,7 @@ $body_params = array(
 );
 $content .= elgg_view_form('register', $form_params, $body_params);
 
-$content .= elgg_view('minds/register_side');
-
-$title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
-$header = <<<HTML
-<div class="elgg-head clearfix">
-	$title_block
-</div>
-HTML;
+//$content .= elgg_view('minds/register_side');
 
 $body = elgg_view_layout("one_column", array('content' => '<div class="elgg-inner">' . $content . '</div>', 'header'=>$header));
 

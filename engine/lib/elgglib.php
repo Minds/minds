@@ -1091,7 +1091,7 @@ function _elgg_php_exception_handler($exception) {
  */
 function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
 	$error = date("Y-m-d H:i:s (T)") . ": \"$errmsg\" in file $filename (line $linenum)";
-
+	
 	switch ($errno) {
 		case E_USER_ERROR:
 			error_log("PHP ERROR: $error");
@@ -1142,7 +1142,7 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
  */
 function elgg_log($message, $level = 'NOTICE') {
 	global $CONFIG;
-
+	
 	// only log when debugging is enabled
 	if (isset($CONFIG->debug)) {
 		// debug to screen or log?
@@ -1193,7 +1193,7 @@ function elgg_log($message, $level = 'NOTICE') {
  */
 function elgg_dump($value, $to_screen = TRUE, $level = 'NOTICE') {
 	global $CONFIG;
-
+	
 	// plugin can return false to stop the default logging method
 	$params = array(
 		'level' => $level,
@@ -1210,7 +1210,7 @@ function elgg_dump($value, $to_screen = TRUE, $level = 'NOTICE') {
 	if (!isset($CONFIG->pagesetupdone)) {
 		$to_screen = FALSE;
 	}
-
+	
 	if ($to_screen == TRUE) {
 		echo '<pre>';
 		print_r($value);
@@ -1253,11 +1253,11 @@ function elgg_deprecated_notice($msg, $dep_version, $backtrace_level = 1) {
 	// if it's a 1 minor release behind, visual and logged
 	// if it's for current minor release, logged.
 	// bugfixes don't matter because we are not deprecating between them
-
+	
 	if (!$dep_version) {
 		return false;
 	}
-
+	
 	$elgg_version = get_version(true);
 	$elgg_version_arr = explode('.', $elgg_version);
 	$elgg_major_version = (int)$elgg_version_arr[0];
@@ -1284,11 +1284,11 @@ function elgg_deprecated_notice($msg, $dep_version, $backtrace_level = 1) {
 	// function itself.
 	$msg .= " Called from ";
 	$stack = array();
-	$backtrace = debug_backtrace();
+	$backtrace = debug_backtrace(false, 3); 
 	// never show this call.
 	array_shift($backtrace);
 	$i = count($backtrace);
-
+	
 	foreach ($backtrace as $trace) {
 		$stack[] = "[#$i] {$trace['file']}:{$trace['line']}";
 		$i--;
@@ -1300,11 +1300,11 @@ function elgg_deprecated_notice($msg, $dep_version, $backtrace_level = 1) {
 			$backtrace_level--;
 		}
 	}
-
+	
 	$msg .= implode("<br /> -> ", $stack);
-
+	
 	elgg_log($msg, 'WARNING');
-
+	
 	return true;
 }
 
@@ -2208,7 +2208,7 @@ function elgg_init() {
 	elgg_register_js('elgg.autocomplete', 'js/lib/ui.autocomplete.js','footer');
 	elgg_register_js('jquery.ui.autocomplete.html', 'vendors/jquery/jquery.ui.autocomplete.html.js','footer');
 	elgg_register_js('elgg.userpicker', 'js/lib/ui.userpicker.js','footer');
-	elgg_register_js('elgg.friendspicker', 'js/lib/ui.friends_picker.js','footer');
+	elgg_register_js('elgg.friendspicker', 'js/lib/ui.friends_picker.js','head');//because of inline code
 	elgg_register_js('jquery.easing', 'vendors/jquery/jquery.easing.1.3.packed.js');
 	elgg_register_js('elgg.avatar_cropper', 'js/lib/ui.avatar_cropper.js', 'footer');
 	elgg_register_js('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect-0.9.8/scripts/jquery.imgareaselect.min.js','footer');

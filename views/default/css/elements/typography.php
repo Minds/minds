@@ -13,7 +13,7 @@
 body {
 	font-size: 80%;
 	line-height: 1.4em;
-	font-family: "Lucida Grande", Arial, Tahoma, Verdana, sans-serif;
+	font-family: Arial, Tahoma, Verdana, sans-serif;
 }
 
 a {
@@ -22,11 +22,14 @@ a {
 
 a:hover,
 a.selected { <?php //@todo remove .selected ?>
-	color: #555555;
+	color: #555;
 	text-decoration: underline;
 }
 
 p {
+	font-size:13px;
+	line-height:18px;
+	text-rendering: auto;
 	margin-bottom: 15px;
 }
 
@@ -77,15 +80,17 @@ blockquote {
 
 h1, h2, h3, h4, h5, h6 {
 	font-weight: bold;
-	color: #0054A7;
+	color: #333;
 }
 
 h1 { font-size: 1.8em; }
-h2 { font-size: 1.5em; line-height: 1.1em; padding-bottom:5px}
-h3 { font-size: 1.2em; }
+h2 { font-size: 42px; line-height: 1.1em; padding-bottom:5px}
+h3 { font-size: 28px; line-height: 28px;}
 h4 { font-size: 1.0em; }
 h5 { font-size: 0.9em; }
 h6 { font-size: 0.8em; }
+
+h3 a{ color:#333; }
 
 .elgg-heading-site, .elgg-heading-site:hover {
 	font-size: 2em;
@@ -97,18 +102,22 @@ h6 { font-size: 0.8em; }
 	text-decoration: none;
 }
 
-.elgg-heading-main {
+.heading-main, .elgg-heading-main {
 	float: left;
-	max-width: 530px;
-	margin-right: 10px;
+	max-width: 65%;
+	padding:8px;
+	font-size:32px;
+	font-weight:lighter;
 }
 .elgg-heading-basic {
-	color: #0054A7;
+	color: #333;
 	font-size: 1.2em;
 	font-weight: bold;
 }
 
-.elgg-subtext {
+.subtext, .elgg-subtext {
+	clear:both;
+	padding: 0 8px 8px;
 	color: #666666;
 	font-size: 85%;
 	line-height: 1.2em;
@@ -126,14 +135,14 @@ h6 { font-size: 0.8em; }
 }
 
 .elgg-loud {
-	color: #0054A7;
+	color: #333;
 }
 
 /* ***************************************
 	USER INPUT DISPLAY RESET
 *************************************** */
 .elgg-output {
-	margin-top: 10px;
+	margin: 10px 0;
 }
 
 .elgg-output dt { font-weight: bold }
@@ -158,5 +167,9 @@ h6 { font-size: 0.8em; }
 }
 .elgg-output img {
 	max-width: 100%;
-	height: auto;
+}
+
+.elgg-image-block .elgg-body h3{
+	font-size: 20px;
+	line-height: 20px;
 }

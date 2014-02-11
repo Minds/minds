@@ -442,6 +442,9 @@ $english = array(
 	'river:delete:success' => 'River item has been deleted',
 	'river:delete:fail' => 'River item could not be deleted',
 
+	'river:create::default' => '%s created %s',
+	'river:join::default' => '%s joined %s',
+
 	'river:widget:title' => "Activity",
 	'river:widget:description' => "Display latest activity",
 	'river:widget:type' => "Type of activity",
@@ -1214,6 +1217,16 @@ You cannot reply to this email.",
 	'js:security:token_refresh_failed' => 'Failed to contact %s. You may experience problems saving content. Please refresh this page.',
 	'js:security:token_refreshed' => 'Connection to %s restored!',
 
+/**
+ * Trending
+ */
+ 
+	'trending:day' => 'Day',
+	'trending:week' => 'Week',
+	'trending:month' => 'Month',
+	'trending:year' => 'Year',
+	'trending:entire' => 'All time',
+  
 /**
  * Languages according to ISO 639-1
  */

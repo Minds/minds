@@ -12,10 +12,10 @@ $user = NULL;
 if (!$user_guid) {
 	$user = elgg_get_logged_in_user_entity();
 } else {
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid,'user');
 }
 
-$group = get_entity($group_guid);
+$group = get_entity($group_guid,'group');
 
 elgg_set_page_owner_guid($group->guid);
 

@@ -473,6 +473,9 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
 	}
 
 	$container = get_entity($container_guid, 'user');
+	if(!$container){
+		$container = get_entity($container_guid, 'group');
+	}
 
 	if ($container) {
 		// If the user can edit the container, they can also write to it
@@ -543,7 +546,7 @@ function create_entity($object = NULL, $timebased = true) {
 		elgg_trigger_event('create', $object->type, $object);
 	}
 
-	$db = new DatabaseCall($object->type);
+	$db = new DatabaseCall('entities');
 	$result = $db->insert($object->guid, $object->toArray());
 
 	if($timebased){
@@ -567,6 +570,15 @@ function create_entity($object = NULL, $timebased = true) {
 			$owner = get_entity($object->owner_guid, 'user');
 		} else {
 			$owner = get_entity($result, 'user');
+		}
+		
+		//get the container
+		if($object->container_guid != $object->owner_guid){
+			$container_namespace = $object->type . ':container:' . $object->container_guid;
+			$db->insert($container_namespace, $data);
+			$container_namespace = $object->type . ':' . $object->subtype . ':container:' . $object->container_guid;
+			$db->insert($container_namespace, $data);
+			$db->insert($super_subtype_namespace.':container:'. $object->container_guid, $data);
 		}
 		
 		if($owner instanceof ElggUser){
@@ -767,17 +779,21 @@ function get_entity($guid, $type = 'object') {
 		}
 	}
 
-	$db = new DatabaseCall($type);
+	$db = new DatabaseCall('entities');
 	$row = $db->getRow($guid);
 	if(!$row){
-		return false;
+		$db = new DatabaseCall($type);
+		$row = $db->getRow($guid);
+		if(!$row){
+			return false;
+		}		
 	}
 	$row['guid'] = $guid;
-	$row['type'] = $type;
+	if(!isset($row['type'])){
+		$row['type'] = $type;
+	}
 	$new_entity = entity_row_to_elggstar($db->createObject($row));
-	//if($type == 'object'){
-//var_dump($row, $type, $new_entity);
-	//}
+	
 	//check access permissions
 	if(!elgg_check_access($new_entity)){
 		return false; //@todo return error too
@@ -888,7 +904,7 @@ function elgg_get_entities(array $options = array()) {
 	$entities = null;
 	
 	$defaults = array(
-		'types'					=>	ELGG_ENTITIES_ANY_VALUE,
+		'types'					=>	array('object'),
 		'subtypes'				=>	ELGG_ENTITIES_ANY_VALUE,
 		
 		'timebased'	=> true,
@@ -944,7 +960,7 @@ function elgg_get_entities(array $options = array()) {
 			//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 			if($options['guids']){
 			
-				$db = new DatabaseCall($type);
+				$db = new DatabaseCall('entities');
 				$rows = $db->getRows($options['guids']);
 
 			} else{ 
@@ -958,18 +974,25 @@ function elgg_get_entities(array $options = array()) {
 						if($owner_guid = $options['owner_guids'][0]){
 							$namespace .= ':user:'. $owner_guid;
 						}
+						if($container_guid = $options['container_guids'][0]){
+							$namespace .= ':container:'. $container_guid;
+						}
 						if($network = $options['network']){
 							$namespace .= ':network:'.$network;
-						}
+						} 
 					}
 					if(!$options['count']){
 						$db = new DatabaseCall('entities_by_time');
 						$guids = $db->getRow($namespace, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=> $options['newest_first']));
-						$db = new DatabaseCall($type);
 						if(!is_array($guids)){
 							return null;
 						}
+						$db = new DatabaseCall('entities');
 						$rows = $db->getRows(array_keys($guids));
+						if(!count($rows)){
+							$db = new DatabaseCall($type);
+							$rows = $db->getRows(array_keys($guids));
+						}
 					} else {
 						$db = new DatabaseCall('entities_by_time');
 						$count = $db->countRow($namespace);
@@ -977,10 +1000,10 @@ function elgg_get_entities(array $options = array()) {
 					}
 				} else {
 					if($attrs){
-						$db = new DatabaseCall($type);
+						$db = new DatabaseCall('entities');
 						$rows = $db->getByIndex($attrs, $options['offset'], $options['limit']);
 					} else {
-						$db = new DatabaseCall($type);
+						$db = new DatabaseCall('entities');
 						$rows = $db->get($offset,"", $limit);
 					}
 				}
@@ -989,12 +1012,14 @@ function elgg_get_entities(array $options = array()) {
 				foreach($rows as $guid=>$row){
 					//convert array to std class
 					$newrow = new stdClass;
-					$newrow->guid = $guid;	
-					$newrow->type = $type;
+					$newrow->guid = $guid;
+					if(!isset($row->type) || !$row->type){
+						$newrow->type = $type;
+					}  
 					foreach($row as $k=>$v){
 						$newrow->$k = $v;
 					}
-					$entities[] = entity_row_to_elggstar($newrow, $type);
+					$entities[] = entity_row_to_elggstar($newrow);
 				}
 			}
 		} catch(Exception $e){
@@ -1372,6 +1397,10 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 	} else {
 		$entities = $getter($options);
 	}
+	
+	if(!$entities){
+		$entities = array();
+	}
 
 	return $viewer($entities, $options);
 }
@@ -1397,7 +1426,7 @@ function get_entity_dates($type = '', $subtype = '', $container_guid = 0, $site_
 $order_by = 'time_created') {
 
 	global $CONFIG;
-
+return;
 	$site_guid = (int) $site_guid;
 	if ($site_guid == 0) {
 		$site_guid = $CONFIG->site_guid;
@@ -1627,7 +1656,7 @@ function enable_entity($guid, $recursive = true) {
 function delete_entity($guid, $type = 'object',$recursive = true) {
 	global $CONFIG, $ENTITY_CACHE;
 
-	if ($entity = get_entity($guid, $type)) {
+	if ($entity = get_entity($guid)) {
 		if (elgg_trigger_event('delete', $entity->type, $entity)) {
 			if ($entity->canEdit()) {
 
@@ -1661,8 +1690,8 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 					// entities with owner or container guids of themselves.
 					// this should probably be prevented in ElggEntity instead of checked for here
 					$options = array(
-						'attrs' => array( 'owner_guid' => $guid ),
-						'limit' => 100000
+						'owner_guid' => $guid,
+						'limit' => 0
 					);
 
 					$batch = new ElggBatch('elgg_get_entities', $options);
@@ -1678,7 +1707,7 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 				}
 
 				// Now delete the entity itself
-				$db = new DatabaseCall($type);
+				$db = new DatabaseCall('entities');
 				$res = $db->removeRow($guid);
 
 				//remove from the various lines

@@ -68,11 +68,10 @@ function elgg_check_access($entity, $user = null){
 	}
 	
 	$access_array = get_access_array($user->guid, 0);
-	
-	if(in_array($entity->access_id, $access_array)){
+	if(in_array($entity->access_id, $access_array) || in_array($entity->container_guid, $access_array)){
 		return true;
 	}
-	
+	exit;
 	return false;
 
 }
@@ -715,6 +714,7 @@ function delete_access_collection($collection_id) {
  */
 function get_access_collection($collection_id) {
 	global $CONFIG;
+	return;
 	$collection_id = (int) $collection_id;
 
 	$query = "SELECT * FROM {$CONFIG->dbprefix}access_collections WHERE id = {$collection_id}";

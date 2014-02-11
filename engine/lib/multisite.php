@@ -456,7 +456,15 @@ function elggmulti_getdata($options, $callback = '') {
 			if (is_array($domain)) {
 				$rows = $MULTI_DB -> cfs[$type] -> multiget($domain);
 			} else {
-				$rows[] = $MULTI_DB -> cfs[$type] -> get($domain);
+				if(class_exists('ElggXCache')){
+                  			$cache = new ElggXCache('ms_domains');
+              				if(!$rows[0] = $cache->load($domain)){
+						 $rows[0] = $MULTI_DB -> cfs[$type] -> get($domain);
+						 $cache->save($domain, $rows[0]);
+					}	
+				 } else {
+					$rows[0] = $MULTI_DB -> cfs[$type] -> get($domain);
+				}
 			}
 		}
 
@@ -630,9 +638,23 @@ function elggmulti_get_db_settings($url = '') {
 		$url = $_SERVER['HTTP_HOST'];
 	if (!$url)
 		$url = $_SERVER['SERVER_NAME'];
+	
+	if(class_exists('ElggXCache')){
+		$cache = new ElggXCache('ms_settings');
+		if(!$result = $cache->load($url)){	
+			$result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
+			if($result){
+				$cache->save($url, $result);
+			} else {
+				$cache->remove($url);
+			}
+		} 
+	}
 
-	$result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
-
+	if(!$result){
+		$result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
+        }
+	
 	if ($result) {
 
 		if (!$result -> isSiteAccessible())
@@ -681,7 +703,7 @@ function elggmulti_get_activated_plugins($domain_id = false) {
 
 		$domain_id = $result -> getID();
 	}
-
+	
 	$site = new \MultisiteDomain($domain_id);
 	
 	$resultarray = $site -> enabled_plugins;
@@ -695,7 +717,22 @@ function elggmulti_get_activated_plugins($domain_id = false) {
 }
 
 function elggmulti_get_default_plugins(){
-	return array('tinymce');
+	return array( 'tinymce', 
+			'channel',
+            		'groups',
+            		'wall',
+			 'analytics',
+			'archive',
+			'blog',
+			 'persona',
+	            'notifications',
+        	    'minds_connect',
+			'mobile',
+			'anypage',
+            		'Login-As',
+        	    	'minds_widgets',
+			'minds_connect'
+		);
 }
 
 /**

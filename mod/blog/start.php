@@ -28,8 +28,7 @@ function blog_init() {
 	elgg_register_menu_item('site', array(
 		'name' => 'blog',
 		'text' => '&#59396;',
-		'href' => 'blog/trending',
-		'class' => 'entypo',
+		'href' => elgg_is_active_plugin('analytics') ? 'blog/trending' : 'blog/all',
 		'title' => elgg_echo('blog:blogs'),
 		'priority' => 3
 	));
@@ -166,13 +165,13 @@ function blog_page_handler($page) {
 			break;
 		case 'view':
 			$params = blog_get_page_content_read($page[1]);
-			set_input('limit',2);	
-			$trending = blog_get_trending_page_content_list();
-                        //$params = blog_get_page_content_list();
-			//$body .= elgg_view_layout('gallery', $params);
-		
-			$params['footer'] .= $trending['content'];
-		
+			if(!get_input('offset')){
+				set_input('limit',1);
+			}
+			if(elgg_is_active_plugin('analytics')){
+				$trending = blog_get_trending_page_content_list();
+				$params['footer'] .= $trending['content'];
+			}
 			$body = elgg_view_layout('content', $params);
 	
 			echo elgg_view_page($params['title'], $body);
@@ -193,10 +192,15 @@ function blog_page_handler($page) {
 			break;
 		case 'group':
 			if ($page[2] == 'all') {
-				$params = blog_get_page_content_list($page[1]);
+				$params = blog_get_page_content_list(null, $page[1]);
 			} else {
 				$params = blog_get_page_content_archive($page[1], $page[3], $page[4]);
 			}
+			
+			$body = elgg_view_layout('gallery', $params);
+
+           	echo elgg_view_page($params['title'], $body);
+			return true;
 			break;
 		case 'scrapers':
 			if(!elgg_is_logged_in()){
@@ -405,10 +409,13 @@ function blog_pagesetup(){
 function minds_blog_scraper($hook, $entity_type, $return_value, $params){ 
 	elgg_set_ignore_access(true);
 	elgg_set_context('scraper');
-	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>1000, 'timebased'=>false));
+	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
 	$i = 0;
 	foreach($scrapers as $scraper){
+		if(!$scraper->getOwnerEntity()){
+			continue;
+		}
 		//if the site was scraped in the last 15 mins then skip
 		echo "loading $scraper->title \n";
 		//why would it be an array sometimes?? it is though
@@ -449,8 +456,8 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 					parse_str($url['query']);
 					$w = '100%';
 					$h = 411;
-					$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="http://youtube.com/embed/'.$v.'" frameborder="0" allowfullscreen></iframe>';
-					$icon = '<img src="http://img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
+					$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="//youtube.com/embed/'.$v.'" frameborder="0" allowfullscreen></iframe>';
+					$icon = '<img src="//img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
 					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
 					$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content()); 
 					$blog->description = $embed . $icon . $disclaimer;

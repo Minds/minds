@@ -43,7 +43,7 @@ function minds_comments_init() {
 	/**
 	 * forward users if cookie set
 	 */
-	 $commentCOOKIE = $_COOKIE['minds_comment'];
+	 $commentCOOKIE = isset($_COOKIE['minds_comment']) ? $_COOKIE['minds_comment'] : null;
 	 if(elgg_is_logged_in() && $commentCOOKIE && $commentCOOKIE != 'done'){
 	 	$data = json_decode($commentCOOKIE, true);
 	 	setcookie('minds_comment', 'done', 360, '/');//cookie valid for 10 mins

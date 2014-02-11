@@ -37,7 +37,6 @@ function event_calendar_init() {
 			'href' => 'event_calendar/list',
 			'text' => '&#59393;',
 			'title' => elgg_echo('item:object:event_calendar'),
-			'class' => 'entypo',
 		));
 */
 	}

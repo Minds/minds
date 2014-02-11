@@ -42,11 +42,7 @@
 					<tr>
 						<td>Privacy:</td>
 						<td>
-							<select name="access_id" id="access_id" ng-model="fileItem['access_id']" class="elgg-input-dropdown elgg-input-access uploadSelect">
-								<option value="0">Private</option>
-								<option value="-2">Channels</option>
-								<option value="2" ng-selected="true">Public</option>
-							</select>
+							<select required name="access_id" id="access_id" class="elgg-input-dropdown elgg-input-access uploadSelect" ng-options="a.value as a.text for a in access" ng-model="fileItem['access_id']"></select>
 						</td>
 					</tr>
 					<tr ng-show="isImage(fileItem)">

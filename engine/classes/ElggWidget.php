@@ -177,16 +177,13 @@ class ElggWidget extends ElggEntity {
 	 */
 	public function move($column, $rank) {
 		$options = array(
-			'type' => 'widget',
 			'owner_guid' => $this->owner_guid,
-			'limit' => 1000,
 			'attrs' => array(
 				'context' => $this->getContext(),
 				'column' => $column
 			),
-			'timebased' =>false
 		);
-		$widgets = elgg_get_entities($options);
+		$widgets = elgg_get_widgets($options); 
 		if (!$widgets) {
 			$this->column = (int)$column;
 			$this->order = 0; 
@@ -305,7 +302,13 @@ class ElggWidget extends ElggEntity {
 	 * @return bool
 	 */
 	public function save() { 
-		return create_entity($this, false);
+		$db = new DatabaseCall('widget');
+		
+		if(!isset($this->guid)){
+			$g = new GUID();
+			$this->guid = $g->generate();
+		}
+		return $db->insert($this->guid, $this->toArray());
 	}
 
 }

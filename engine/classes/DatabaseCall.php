@@ -47,17 +47,15 @@ class DatabaseCall{
 		$cfs = array(	'site' => array('site_id' => 'UTF8Type'),
 						'plugin' => array('active' => 'IntegerType'),
 						'config' => array(),
+						'entities'=> array('type'=>'UTF8Type'),
 						'entities_by_time' => array(),
-						'object' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType', 'subtype'=>'UTF8Type', 'container_guid'=>'UTF8Type'),
-						'user' => array(),
 						'user_index_to_guid' => array(),
-						'group' => array('container_guid' => 'UTF8Type'	),
 						'widget' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' ),
-						'notification' => array('to_guid' => 'UTF8Type'	),
 						'session' => array(),
 						'annotation' => array(),	
-						'friends' => array(),
-						'friendsof' => array(),
+						'friends' => array(), //@replace with relationships soon
+						'friendsof' => array(), //@replace with relationships soon
+						'relationships' => array(), //this is a new index for relationships (friends will be merged into here soon)
 						'newsfeed' => array(),
 						'timeline' => array(),
 						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ),
@@ -136,6 +134,10 @@ class DatabaseCall{
 							);
 		$options = array_merge($defaults, $options);
 		$slice = new ColumnSlice($options['offset'], $options['finish'], $options['limit'], $options['reversed']);
+	
+		if(!$this->cf){
+			return false;
+		}
 
 		try{
 			if($options['multi']){
@@ -197,7 +199,13 @@ class DatabaseCall{
 		if(empty($attributes)){
 			return false; // don't allow as this will delete the row!
 		}
-		return $this->cf->remove($key, $attributes);
+		$count = $this->countRow($key);
+		$this->cf->remove($key, $attributes);
+		//the remove function doens't return a value, so we need to check.. far from ideal..
+		if($this->countRow($key) == $count-count($attributes)){
+			return true;
+		}
+		return false;
 	}
 
 	/**

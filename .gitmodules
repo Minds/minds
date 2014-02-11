@@ -6,4 +6,4 @@
 	url = https://github.com/thobbs/phpcassa.git
 [submodule "mod/elgg-deck_river"]
 	path = mod/elgg-deck_river
-	url = https://github.com/Minds/deck.git
+	url = https://"minds-travis:Avitas%4014"@github.com/Minds/deck.git

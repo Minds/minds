@@ -29,7 +29,7 @@
   font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 300;
-  src: local('Ubuntu Light'), local('Ubuntu-Light'), url(http://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+  src: local('Ubuntu Light'), local('Ubuntu-Light'), url(https://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
 }
 body{
 	background:#F8F8F8;
@@ -204,7 +204,7 @@ input[name=terms]{
 	background: #F8F8F8;
 	padding: 25px 0;
 	margin-bottom: 10px;
-	opacity: .90;
+	/*opacity: .90;*/
 	display:inline-block;
 }
 .minds-body-header > .inner{
@@ -446,30 +446,20 @@ li .excerpt a{
 /**
  * Register page
  */
-.elgg-form-account{
-	float:left;
-	max-width:55%;
-	width:55%;
-}
-.elgg-form-account-side{
-	float:right;
-	width:400px;
-}
 .elgg-form-account .social{
+}
+
+.elgg-form-account .social-login{
 	margin:5px;
 	width:100%;
-	height:45px;
+	height:50px;
 	clear:both;
 }
-.elgg-form-account .social > div{
+.elgg-form-account .social-login > .social_login{
 	float:left;
-	margin-right:10px;
-}
-.elgg-form-account .social_login{
-	margin:5px;
-	width:175px;
+	margin:0 10px 0 0;
+	width:auto;
 	clear:none;
-	float:left;
 }
 .elgg-form-account .social .facebook{
 	padding-top:1px;
@@ -651,6 +641,7 @@ li .excerpt a{
 }
 .elgg-sidebar li a h3{
 	color:#333;
+	font-size:16px;
 }
 .elgg-sidebar .elgg-module-aside{
 	background:#FFF;
@@ -986,40 +977,24 @@ li.elgg-menu-item-rss{
  * rich content
  */
 .rich-content{
-	overflow:hidden;
-	width:100%;
-	clear:both;
+
 }
-.rich-content h3{
-	font-size:30px;
-	line-height:30px;
+.rich-content .elgg-image {
+	float:none;
 }
-.rich-content h3 a:hover{
-	color:#4690D6;
-	text-decoration:none;
-}
+
 .rich-content .readmore{
 	font-weight:bold;
 }
 .rich-content .rich-image-container{
-	float:left;
-	margin:0 15px 0 0;
-	width:325px;
-	height:175px;
-	display:block;
-	overflow:hidden;
-	position:relative;
-	box-shadow:0 0 2px #888;
+	
 }
 .elgg-widget-content .rich-content .rich-image-container{
 	width:200px;
 	height:85px;
 }
 .rich-content .rich-image{
-	position:absolute;
-	top:0;
-	left:0;
-	width:100%;
+
 }
 .rich-content.sidebar h3{
 	font-size:14px;

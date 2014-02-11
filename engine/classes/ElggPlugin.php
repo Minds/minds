@@ -112,7 +112,8 @@ class ElggPlugin extends ElggEntity {
 			//throw error here
 			return false;
 		}
-		
+		$cache = new ElggXCache('new_entity_cache');
+		$cache->delete($this->pluginID);
 		$db = new DatabaseCall('plugin');
 		return $db->insert($this->pluginID, $attributes);
 
@@ -293,7 +294,7 @@ class ElggPlugin extends ElggEntity {
 		//Are we storing settings in Conf?
 		global $CONFIG;
 		$id = $this->getID();
-		if($setting = $CONFIG->pluginSettings->{$id}[$name]){
+		if(isset($CONFIG->pluginSettings) && $setting = $CONFIG->pluginSettings->{$id}[$name]){
 			return $setting;
 	
 		}

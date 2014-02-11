@@ -27,7 +27,6 @@ function groups_init() {
 			'href' => 'groups/all',
 			'text' => '&#59397;',
 			'title' => elgg_echo('groups'),
-			'class' => 'entypo',
 		));
 	}
 	
@@ -81,7 +80,7 @@ function groups_init() {
 	
 	// Access permissions
 	//elgg_register_plugin_hook_handler('access:collections:write', 'all', 'groups_write_acl_plugin_hook');
-	//elgg_register_plugin_hook_handler('access:collections:read', 'all', 'groups_read_acl_plugin_hook');
+	elgg_register_plugin_hook_handler('access:collections:read', 'all', 'groups_read_acl_plugin_hook');
 	
 	// Register profile menu hook
 	//elgg_register_plugin_hook_handler('profile_menu', 'profile', 'forum_profile_menu');
@@ -152,7 +151,7 @@ function groups_setup_sidebar_menus() {
 		if (elgg_is_logged_in() && $page_owner->canEdit() && !$page_owner->isPublicMembership()) {
 			$url = elgg_get_site_url() . "groups/requests/{$page_owner->getGUID()}";
 
-		/*	$count = elgg_get_entities_from_relationship(array(
+			$count = elgg_get_entities_from_relationship(array(
 				'type' => 'user',
 				'relationship' => 'membership_request',
 				'relationship_guid' => $page_owner->getGUID(),
@@ -170,7 +169,13 @@ function groups_setup_sidebar_menus() {
 				'name' => 'membership_requests',
 				'text' => $text,
 				'href' => $url,
-			));*/
+			));
+			
+			elgg_register_menu_item('page', array(
+				'name' => 'blog',
+				'text' => elgg_echo('blog'),
+				'href' => elgg_get_site_url() . 'blog/group/'.$page_owner->getGUID().'/all',
+			));
 		}
 	}
 	if (elgg_get_context() == 'groups' && !elgg_instanceof($page_owner, 'group')) {
@@ -277,9 +282,9 @@ function groups_page_handler($page) {
 			groups_handle_members_page($page[1]);
 			break;
 		case 'invite':
-			register_error('Sorry! Inviting people is currently not supported');
-			forward(REFERRER);
-	//		groups_handle_invite_page($page[1]);
+			//register_error('Sorry! Inviting people is currently not supported');
+			//forward(REFERRER);
+			groups_handle_invite_page($page[1]);
 			break;
 		case 'requests':
 			groups_handle_requests_page($page[1]);
@@ -385,11 +390,11 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 		return $return;
 	}
 
-	/*foreach ($return as $index => $item) {
+	foreach ($return as $index => $item) {
 		if (in_array($item->getName(), array('access', 'likes', 'edit', 'delete'))) {
 			unset($return[$index]);
 		}
-	}*/
+	}
 
 	// membership type
 	$membership = $entity->membership;
@@ -407,7 +412,7 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 	$return[] = ElggMenuItem::factory($options);
 
 	// number of members
-	$num_members = get_group_members($entity->guid, 10, 0, 0, true);
+	$num_members = $entity->getMembers(10, 0, 0, true);
 	$members_string = elgg_echo('groups:member');
 	$options = array(
 		'name' => 'members',
@@ -543,20 +548,18 @@ function groups_create_event_listener($event, $object_type, $object) {
  */
 function groups_read_acl_plugin_hook($hook, $entity_type, $returnvalue, $params) {
 	//error_log("READ: " . var_export($returnvalue));
-	$user = elgg_get_logged_in_user_entity();
+
+	$user = get_entity($params['user_id']);
 	if ($user) {
 		// Not using this because of recursion.
 		// Joining a group automatically add user to ACL,
 		// So just see if they're a member of the ACL.
-		//$membership = get_users_membership($user->guid);
-
-		$members = get_members_of_access_collection($group->group_acl);
-		print_r($members);
-		exit;
-
+		$membership = get_users_membership($user->guid);
+			
 		if ($membership) {
-			foreach ($membership as $group)
-				$returnvalue[$user->guid][$group->group_acl] = elgg_echo('groups:group') . ": " . $group->name;
+			foreach ($membership as $group){
+				$returnvalue[] = $group->guid;
+			}
 			return $returnvalue;
 		}
 	}
@@ -569,6 +572,7 @@ function groups_write_acl_plugin_hook($hook, $entity_type, $returnvalue, $params
 	$page_owner = elgg_get_page_owner_entity();
 	$user_guid = $params['user_id'];
 	$user = get_entity($user_guid, 'user');
+	var_dump($entity_type, $returnvalue, $params); exit;
 	if (!$user) {
 		return $returnvalue;
 	}
@@ -648,7 +652,7 @@ function groups_user_leave_event_listener($event, $object_type, $object) {
 	$user = $object['user'];
 	$acl = $group->group_acl;
 
-	remove_user_from_access_collection($user->guid, $acl);
+	//remove_user_from_access_collection($user->guid, $acl);
 
 	return true;
 }
@@ -669,7 +673,8 @@ function groups_get_invited_groups($user_guid, $return_guids = FALSE) {
 		'relationship_guid' => $user_guid,
 		'inverse_relationship' => TRUE,
 		'limit' => 0,
-	));
+		'type' => 'group'
+	)); 
 	elgg_set_ignore_access($ia);
 
 	if ($return_guids) {

@@ -148,110 +148,6 @@ function remove_object_from_group($group_guid, $object_guid) {
 }
 
 /**
- * Return a list of this group's members.
- *
- * @param int  $group_guid The ID of the container/group.
- * @param int  $limit      The limit
- * @param int  $offset     The offset
- * @param int  $site_guid  The site
- * @param bool $count      Return the users (false) or the count of them (true)
- *
- * @return mixed
- */
-function get_group_members($group_guid, $limit = 10, $offset = 0, $site_guid = 0, $count = false) {
-	
-	$group = get_entity($group_guid, 'group');
-
-	$member_guids = $group->member_guids ? unserialize($group->member_guids) : array();
-	array_push($member_guids,  $group->owner_guid);
-	
-	if(is_array($member_guids) && !empty($member_guids)){
-		$db = new DatabaseCall('user');
-		return $db->getRows($member_guids);
-	}
-
-	return false;
-}
-
-/**
- * Return whether a given user is a member of the group or not.
- *
- * @param int $group_guid The group ID
- * @param int $user_guid  The user guid
- *
- * @return bool
- */
-function is_group_member($group_guid, $user_guid) {
-
-	$user = get_entity($user_guid, 'user');
-	$group = get_entity($group_guid, 'group');
-
-	if($group->owner_guid == $user->guid){
-		return true;
-	}
-
-	$current_member_guids = $group->member_guids ? unserialize($group->member_guids) : array();
-
-	if(in_array($user_guid, $current_member_guids)){
-		return true;
-	} 
-
-	return false;
-
-}
-
-/**
- * Join a user to a group.
- *
- * @param int $group_guid The group GUID.
- * @param int $user_guid  The user GUID.
- *
- * @return bool
- */
-function join_group($group_guid, $user_guid) {
-	global $SESSION;
-
-	$user = get_entity($user_guid, 'user');
-	$group = get_entity($group_guid, 'group');
-
-	$current_member_guids = $group->member_guids ? unserialize($group->member_guids) : array();
-	array_push($current_member_guids, $user_guid);
-	$group->member_guids = serialize($current_member_guids);
-
-	$result = $group->save();
-
-	//append to the users object too
-	$users_group_guids = $user->group_guids ? unserialize($user->group_guids) : array();
-	array_push($users_group_guids, $user_guid);
-	$user->group_guids = serialize($users_group_guids);
-	$SESSION['user'] = $user;//update the session
-
-	if ($result) {
-		$params = array('group' => $group, 'user' => get_entity($user_guid,'user'));
-		elgg_trigger_event('join', 'group', $params);
-	}
-
-	return $result;
-}
-
-/**
- * Remove a user from a group.
- *
- * @param int $group_guid The group.
- * @param int $user_guid  The user.
- *
- * @return bool
- */
-function leave_group($group_guid, $user_guid) {
-	// event needs to be triggered while user is still member of group to have access to group acl
-	$params = array('group' => get_entity($group_guid), 'user' => get_entity($user_guid));
-
-	elgg_trigger_event('leave', 'group', $params);
-	$result = remove_entity_relationship($user_guid, 'member', $group_guid);
-	return $result;
-}
-
-/**
  * Return all groups a user is a member of.
  *
  * @param int $user_guid GUID of user
@@ -262,7 +158,8 @@ function get_users_membership($user_guid) {
 	$options = array(
 		'relationship' => 'member',
 		'relationship_guid' => $user_guid,
-		'inverse_relationship' => FALSE
+		'inverse_relationship' => FALSE,
+		'type'=>'group'
 	);
 	return elgg_get_entities_from_relationship($options);
 }

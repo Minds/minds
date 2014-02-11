@@ -11,7 +11,7 @@ if (!is_array($user_guid)) {
 	$user_guid = array($user_guid);
 }
 $group_guid = get_input('group_guid');
-$group = get_entity($group_guid);
+$group = get_entity($group_guid, 'group');
 
 if (sizeof($user_guid)) {
 	foreach ($user_guid as $u_id) {
@@ -19,7 +19,7 @@ if (sizeof($user_guid)) {
 
 		if ($user && $group && $group->canEdit()) {
 			if (!$group->isMember($user)) {
-				if (groups_join_group($group, $user)) {
+				if ($group->join($user)) {
 
 					// send welcome email to user
 					notify_user($user->getGUID(), $group->owner_guid,

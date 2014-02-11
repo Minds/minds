@@ -64,7 +64,7 @@ function minds_init(){
 	elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js', 'footer');
 	
 	elgg_unregister_js('jquery');
-	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'footer');
+	elgg_register_js('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
 	elgg_load_js('jquery');
 
 	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js');
@@ -123,6 +123,7 @@ function minds_init(){
 	
 	//needs to be loaded after htmlawed
 	//this is for allow html <object> tags
+	global $CONFIG;
 	$CONFIG->htmlawed_config['safe'] = false;
 	
 	$actionspath = elgg_get_plugins_path() . "minds/actions";
@@ -133,9 +134,6 @@ function minds_init(){
 	elgg_register_action("minds/remind/external", "$actionspath/minds/remind_external.php");
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
-        elgg_register_action("registernode","$actionspath/minds/registernode.php");
-        elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php");
-        elgg_register_action("select_free_tier","$actionspath/minds/select_free_tier.php");
 	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
@@ -335,14 +333,14 @@ function minds_route_page_handler($hook, $type, $returnvalue, $params) {
 	}
 
 	//add a age if view exists
-	$handler = elgg_extract('handler', $returnvalue);
+	/*$handler = elgg_extract('handler', $returnvalue);
 	$pages = elgg_extract('segments', $returnvalue, array());
 	array_unshift($pages, $handler);
 	if(elgg_view_exists('minds/pages/'.$handler) && !elgg_is_active_plugin('anypage')){
 		$content = elgg_view('minds/pages/'.$handler);
 		$body = elgg_view_layout('one_sidebar', array('content' => $content));
 		echo elgg_view_page(elgg_echo($handler), $body);
-	}
+	}*/
 }
 
 function minds_register_hook()
@@ -366,10 +364,8 @@ function minds_register_hook()
 
 function minds_pagesetup(){
 	$user = elgg_get_logged_in_user_entity();
-	//Top Bar Menu
-	elgg_unregister_menu_item('topbar', 'elgg_logo');
-	elgg_unregister_menu_item('topbar', 'administration');
-	elgg_unregister_menu_item('topbar', 'friends');
+
+	elgg_unregister_menu_item('footer', 'Code Release');
 	elgg_unregister_menu_item('site', 'activity');
 	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
@@ -379,7 +375,6 @@ function minds_pagesetup(){
 						'href' => 'news',
 						'text' => '&#59194;',
 						'title' => elgg_echo('news'),
-						'class' => 'entypo',
 						'priority' => 1	
 				));
 	
@@ -389,7 +384,6 @@ function minds_pagesetup(){
 						'href' => 'archive/upload',
 						'text' => '&#128228;',
 						'title' => elgg_echo('minds:upload'),
-						'class' => 'entypo',
 						'priority' => 4
 					));
 	}
@@ -415,7 +409,6 @@ function minds_pagesetup(){
 			'href' => '/settings/user/' . $user->username,
 			'text' => '&#9881;',
 			'title' => elgg_echo('settings'),
-			'class' => 'entypo',
 			'priority' => 800,
 			'section' => 'alt',
 		));
@@ -441,7 +434,6 @@ function minds_pagesetup(){
 			'href' => 'action/logout',
 			'text' => '&#59399;',
 			'title' => elgg_echo('logout'),
-			'class' => 'entypo',
 			'priority' => 1000,
 			'section' => 'alt',
 		));
@@ -521,8 +513,8 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 				'name' => 'delete',
 				'href' => "action/river/delete?id=$item->id",
 				'text' => '&#10062;',
-				'title' => elgg_echo('delete'),
 				'class' => 'entypo',
+				'title' => elgg_echo('delete'),
 				//'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
 				'priority' => 200,
@@ -537,8 +529,8 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 					'name' => 'remind',
 					'href' => "action/minds/remind?guid=$object->guid",
 					'text' => '&#59159;',
-					'title' => elgg_echo('minds:remind'),
 					'class' => 'entypo',
+					'title' => elgg_echo('minds:remind'),
 					'is_action' => true,
 					'priority' => 1,
 				);
@@ -552,13 +544,13 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
  * Edit the river menu defaults
  */
 function minds_entity_menu_setup($hook, $type, $return, $params) {
-	if (elgg_is_logged_in()) {
 
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
 		$context = elgg_get_context();
 		$full = elgg_extract('full_view', $params, true);
-		
+
+	if (elgg_is_logged_in()) {		
 		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
 		if(in_array($entity->getSubtype(), $allowedReminds)){
@@ -567,7 +559,6 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 						'href' => "action/minds/remind?guid=$entity->guid",
 						'text' => '&#59159;',
 						'title' => elgg_echo('minds:remind'),
-						'class' => 'entypo',
 						'is_action' => true,
 						'priority' => 1,
 					);
@@ -584,7 +575,6 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 				'href' => "action/$handler/delete?guid={$entity->getGUID()}",
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
-				'class' => 'entypo',
 				//'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
 				'priority' => 200,
@@ -718,9 +708,9 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
      			$image = $owner->getIconURL('large');
         	}
   	}
-	if($CONFIG->cnd_url){
-		$base_url = $CONFIG->cnd_url ? 'http://'. $CONFIG->cdn_url : elgg_get_site_url();
-		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=3';
+	if($CONFIG->cdn_url){
+		$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
+		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=4';
 		if($width){ $image .= '&width=' . $width; } 
 	} 
 	return $image;
@@ -775,6 +765,7 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 
  /* Extend / override htmlawed */ 
 function minds_htmlawed_filter_tags($hook, $type, $result, $params) {
+	$extraALLOW = '';
 	if(strpos($_SERVER['REQUEST_URI'], 'action/plugins/usersettings/save') !== FALSE){
 		$extraALLOW = 'script';
 	}
