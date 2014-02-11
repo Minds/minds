@@ -155,26 +155,6 @@ function minds_init(){
         elgg_unregister_action('register');
         elgg_register_action('register', dirname(__FILE__) . '/actions/minds/register.php', 'public');
 
-            // Override blog url to handle API permalink override
-        elgg_register_entity_url_handler('object', 'blog', function ($entity) {
-
-            if ($entity->ex_permalink)
-                return $entity->ex_permalink;
-            if (!$entity->getOwnerEntity()) {
-                // default to a standard view if no owner.
-                return FALSE;
-            }
-
-            $guid = $entity->guid;
-            if ($entity->legacy_guid) {
-                $guid = $entity->legacy_guid;
-            }
-
-            $friendly_title = elgg_get_friendly_title($entity->title); //this is to preserve list of shares on older 
-
-            return "blog/view/$guid/$friendly_title";
-        });
-
         // Set validation true if this is a tier signup
         elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
 

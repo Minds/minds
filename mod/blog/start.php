@@ -252,19 +252,24 @@ function blog_page_handler($page) {
  * @return string URL of blog.
  */
 function blog_url_handler($entity) {
-	if (!$entity->getOwnerEntity()) {
-		// default to a standard view if no owner.
-		return FALSE;
-	}
 
-	$guid = $entity->guid;
-	if($entity->legacy_guid){
-		$guid = $entity->legacy_guid;
-	}
+    // Override blog url to handle API permalink override
 
-	$friendly_title = elgg_get_friendly_title($entity->title); //this is to preserve list of shares on older 
+    if ($entity->ex_permalink)
+        return $entity->ex_permalink;
+    if (!$entity->getOwnerEntity()) {
+        // default to a standard view if no owner.
+        return FALSE;
+    }
 
-	return "blog/view/$guid/$friendly_title";
+    $guid = $entity->guid;
+    if ($entity->legacy_guid) {
+        $guid = $entity->legacy_guid;
+    }
+
+    $friendly_title = elgg_get_friendly_title($entity->title); //this is to preserve list of shares on older 
+
+    return "blog/view/$guid/$friendly_title";
 }
 
 /**
