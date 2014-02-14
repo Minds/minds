@@ -212,8 +212,8 @@
 			var offset = 0;
 
 			$params = elgg.parse_str(elgg.parse_url(location.href).query);
-console.log(loc); 
-			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending' || loc.indexOf('search')){
+			
+			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending' || loc.indexOf('search') > -1){
 				offset = $list.find('.elgg-list').children().length;
 			} else {
 				offset = $('.load-more').attr('data-load-next');
@@ -223,7 +223,7 @@ console.log(loc);
                                         offset = $list.find('li.elgg-item:last').attr('id'); 
                                 }*/
 			}
-			
+			console.log(offset);
 			if(!offset){
 				return false;
 			}
