@@ -285,7 +285,7 @@ function get_subtype_class($type, $subtype) {
  */
 function get_subtype_class_from_id($subtype_id) {
 	global $SUBTYPE_CACHE;
-	
+
 	if (!$subtype_id) {
 		return null;
 	}
