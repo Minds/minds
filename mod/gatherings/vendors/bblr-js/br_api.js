@@ -1014,6 +1014,7 @@ function () {
                 },
                 videoAction: function (subkey, value) {
                     var cmd = "-" + subkey;
+                    console.log();
                     if (typeof value !== "undefined") cmd += ":" + value;
                     BRCommands.put("video", {
                         connection_id: BRDashboard.connection_id,

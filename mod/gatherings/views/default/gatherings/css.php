@@ -4,26 +4,67 @@
  */
 ?>
 /**
+ * Gatherings
+ */
+/**
+ * Gathering view page
+ */
+.gathering{
+	width:100%;
+	margin:5%;
+}
+
+.gathering > .chat{
+	width:25%;
+	height:200px;
+	position:absolute;
+}
+
+.gathering > .chat > .messages{	
+	width:100%;
+	height:200px;
+	display:block;
+	overflow: scroll;
+	padding:8px;
+	border:1px solid #eee;
+}
+
+.gathering > .chat > .message{
+	padding:8px 0;
+	width:100%;
+	height:auto;
+	display:block;
+	clear:both;
+	color:#333;
+}
+
+.gathering > .video{
+	float:right;
+	width:50%;
+	height:200px;
+}
+
+/**
  * Live chat
  */
 .minds-live-chat{
 	position:fixed;
-	bottom:-175px;
+	bottom:-200px;
 	left:0;
 	z-index:900;
 }
 .minds-live-chat ul li{
 	position:absolute;
 	width:225px;
-	height:200px;
+	height:245px;
 	
 	bottom:0;
 	
 	color: #FFF;
-	background: rgba(255,255,255,0.9);
+	background:#EEE;
+	border:1px solid #DDD;
 	cursor:pointer;
 	z-index:999;
-	padding:5px;
 	margin:0 5px;
 }
 .minds-live-chat ul li.active{
@@ -33,11 +74,17 @@
 	background: rgba(255,255,255,0.9);
 	color:#4690D6;
 }
+.minds-live-chat ul li .avatar{
+	float:left;
+	width:25px;
+	margin:8px;
+}
 .minds-live-chat ul li h3{
-	padding:5px 0;
 	width:100%;
+	margin:8px;
 	height:auto;
 	display:block;
+	font-size:14px;
 }
 .minds-live-chat ul li .del{
 	position: absolute;
@@ -47,9 +94,10 @@
 	color:#888;
 }
 .minds-live-chat ul li .messages{
-	height:125px;
+	height:146px;
 	width:auto;
-	padding:5px;
+	background:#F8F8F8;
+	padding:8px;
 	overflow:scroll;
 }
 .minds-live-chat ul li .message{
@@ -58,6 +106,10 @@
 	display:block;
 	clear:both;
 	color:#333;
+	padding:4px 0;
+}
+.minds-live-chat ul li .message .user_name{
+	font-weight:bold;
 }
 .minds-live-chat ul li input{
 	border:1px solid #CCC;
@@ -70,11 +122,9 @@
 	display:none;
 }
 .minds-live-chat ul li.toggled{
-	bottom:170px;
-	overflow:scroll;
+	bottom:200px;
 }
 .minds-live-chat ul li.userlist{
-	height:200px;
 	width:200px;
 }
 .minds-live-chat ul li.userlist.toggled{

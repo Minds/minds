@@ -8,11 +8,19 @@ $bblr = new bblr\api();
 
 $gathering = $vars['gathering'];
 
-
-//echo "<script type=\"text/javascript\" src=\"https://api.babelroom.com/cdn/v1/br_api.full.min.js\" ></script>";
 ?>
-
-<script type="text/javascript">
-
-</script>
+<div class="gathering" data-guid="<?php echo $gathering->guid;?>">
+	
+	<div class="chat">
+		<div class="messages">
+		</div>
+		<div class="input">
+			<input type="text" name="message"/>
+		</div>
+	</div>
+	<div class="video">
+			<!--<video id="testLOCAL" autoplay="autoplay" style="position: absolute;"></video>
+			<video id="testREMOTE" autoplay="autoplay" style="position: absolute;"></video>-->
+	</div>
+</div>
      

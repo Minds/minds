@@ -28,8 +28,13 @@ function gatherings_init(){
 	
 	elgg_register_js('gatherings', elgg_get_simplecache_url('js', 'gatherings/live'), 'footer', 601);
 	elgg_load_js('gatherings');
-	//elgg_register_js('bblr', elgg_get_site_url() . 'mod/gatherings/vendors/bblr-js/br_api.js', 'footer',600);
-	elgg_register_js('bblr', 'https://api.babelroom.com/cdn/v1/br_api.full.min.js', 'footer',600);
+	elgg_register_js('portal', elgg_get_site_url() . 'mod/gatherings/vendors/portal.js');
+	elgg_load_js('portal');
+	
+	elgg_register_js('swfobject', elgg_get_site_url() . 'mod/gatherings/vendors/bblr-js/swfobject.js', 'footer',599);
+	elgg_load_js('swfobject');
+	elgg_register_js('bblr', elgg_get_site_url() . 'mod/gatherings/vendors/bblr-js/br_api.js', 'footer',600);
+	//elgg_register_js('bblr', 'https://api.babelroom.com/cdn/v1/br_api.full.min.js', 'footer',600);
 	elgg_load_js('bblr');
 		
 	//add a tab in site menu
@@ -114,6 +119,21 @@ function gatherings_page_handler($page){
 			break;
 		case "join":
 			$gathering = get_entity($page[1]);
+			if($gathering instanceof ElggUser){
+				$user = $gathering;
+				$gathering = new MindsGathering();
+				if(isset($user->bblr_id)){
+					//join an existing, because you are probably not the user
+					$gathering->bblr_id = $user->bblr_id;
+					
+				} elseif($user->guid == elgg_get_logged_in_user_guid()){
+					//create new for yourself, because you have probably just logged in.
+					$gathering->title = $user->name;
+					$gahtering->description = 'User gathering';
+					$user->bblr_id = $gathering->create();
+					$user->save();
+				}
+			}
 			$return = array();
 			$return['token'] = $gathering->join(elgg_get_logged_in_user_entity());
 			$return['cid'] = (int) $gathering->bblr_id;

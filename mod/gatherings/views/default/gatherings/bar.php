@@ -19,11 +19,11 @@ $users = find_active_users(600, 0);
 			<li class="userlist"> <h3> <span class="entypo"> &#59160; </span> Chat <h3/>
 				<ul>
 				<?php 
-					foreach($users as $user){
+					/*foreach($users as $user){
 						if($user->guid != elgg_get_logged_in_user_guid()){
 							 echo "<li class='user' id='$user->guid'> <h3>$user->name</h3></li>";
 						}
-					}
+					}*/
 				?>
 				</ul>
 			</li>
