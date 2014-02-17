@@ -254,9 +254,10 @@ function blog_page_handler($page) {
 function blog_url_handler($entity) {
 
     // Override blog url to handle API permalink override
-
-    if ($entity->ex_permalink)
-        return $entity->ex_permalink;
+    if (get_input('blog_fullview') == true) { // If we're viewing the full page (bit of a hack)
+        if ($entity->ex_permalink)
+            return $entity->ex_permalink;
+    }
     if (!$entity->getOwnerEntity()) {
         // default to a standard view if no owner.
         return FALSE;
