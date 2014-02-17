@@ -22,7 +22,9 @@ if (!$excerpt) {
 }
 
 $owner_icon_url_small = $owner_icon_url_large = null;
-if ($blog->ex_email) {
+if ($blog->ex_email)
+    $owner_icon_url_small = minds_fetch_gravatar_url($blog->ex_email, 'small', $owner->getIconURL('small'));
+/*if ($blog->ex_email) {
     // Email present, try a gravatar override
 
     $icon_sizes = elgg_get_config('icon_sizes');
@@ -35,7 +37,7 @@ if ($blog->ex_email) {
     $owner_icon_url_small = "https://secure.gravatar.com/avatar/$hash.jpg?s=$size&d=" . urlencode($owner->getIconURL('small'));
     $owner_icon_url_large = "https://secure.gravatar.com/avatar/$hash.jpg?s=140&d=" . urlencode($owner->getIconURL('large'));
     
-} 
+} */
 
 $owner_icon = elgg_view_entity_icon($owner, 'small');
 
@@ -106,14 +108,14 @@ if ($full) {
     echo $title;
 } else {
     // brief view
-    $src = minds_fetch_image($blog->description, $blog->owner_guid);
+    $src = minds_fetch_image($blog, $blog->owner_guid);
     
     $class = 'rich-image';
     if (strpos($src, 'youtube') !== false) {
         $class .= ' youtube';
     }
 
-    $image = elgg_view('output/img', array('src' => $owner_icon_url_small ? $owner_icon_url_small : $src, 'class' => $class));
+    $image = elgg_view('output/img', array('src' => $src, 'class' => $class));
     $title = elgg_view('output/url', array('href' => $blog->getURL(), 'text' => elgg_view_title($blog->title)));
     $extras = '<p class="excerpt">' . elgg_view('output/url', array('href' => $blog->getURL(), 'text' => $excerpt)) . '</p>';
     if (!$owner) {
