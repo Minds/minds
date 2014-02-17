@@ -43,7 +43,7 @@ minds.live.init = function() {
 		/**
 		 * The connection to the socket server
 		 */
-		portal.open("http://localhost:8080/", { sharing:true }).on({
+		portal.open("http://107.21.42.113:8080/", { sharing:true }).on({
 			open: function() {
 				//subscribe the user to the site chat
 				portal.find().send("connect", { guid: user.guid, name: user.name, username: user.username});
