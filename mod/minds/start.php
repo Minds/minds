@@ -672,6 +672,17 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
   
 	global $CONFIG, $post, $posts;
 	
+        // If description is being passed the actual object, then do something special
+        $obj = null;
+        $ex_email = null;
+        if ($description instanceof ElggObject) {
+            $obj = $description;
+            if (elgg_instanceof($description, 'object', 'blog')) {
+                $description = $obj->description;
+                $ex_email = $obj->ex_email;
+            }
+        }
+        
 	if($description){
 		libxml_use_internal_errors(true);
 		$dom = new DOMDocument();
@@ -685,7 +696,10 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
 	if(!$image){
 		if($owner_guid){
                 	$owner = get_entity($owner_guid,'user');
-     			$image = $owner->getIconURL('large');
+                        
+                        if ($ex_email) { // If we've been passed an email address in the metadata, and we can't find an image in the posting, then try and grab a gravatar, or fallback to poster icon
+                            $image = minds_fetch_gravatar_url($ex_email, 'large', $owner->getIconURL('large'));
+                        }
         	}
   	}
 	if($CONFIG->cdn_url){
@@ -694,6 +708,27 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
 		if($width){ $image .= '&width=' . $width; } 
 	} 
 	return $image;
+}
+
+/**
+ * Retrieve a gravatar url
+ * @param type $email
+ * @param type $size
+ */
+function minds_fetch_gravatar_url($email, $size = 'large', $default = null) {
+    
+    $icon_sizes = elgg_get_config('icon_sizes');
+    
+    // avatars must be square
+    if (is_string($size))
+        $size = $icon_sizes[$size]['w']; // If string, then we convert size into pixels
+
+    $hash = md5($email);
+    $gravatar = "https://secure.gravatar.com/avatar/$hash.jpg?s=$size";
+    if ($default)
+        $gravatar .= "&d=" . urlencode($default);
+    
+    return $gravatar;
 }
 
 use phpcassa\ColumnSlice;
