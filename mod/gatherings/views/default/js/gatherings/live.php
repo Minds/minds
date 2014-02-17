@@ -16,7 +16,6 @@ minds.live.init = function() {
 		var activeChats = JSON.parse(ls.getItem('activeChats'));
 		if(activeChats){
 			$.each(activeChats, function(){
-				console.log(this);		
 				minds.live.openChatWindow(this.id, this.name, '', true);
 			});
 		}
@@ -33,6 +32,10 @@ minds.live.init = function() {
 		$(document).on('keydown', '.minds-live-chat-userlist li input', function(e){ 
 			input = $(this);
 			parent = input.parents('li');
+			//tell the user that we are typing..
+			portal.find().send("typing", { 
+				to_guid: parent.attr('id') 
+			}); 
 			if(e.which == 13){
 				portal.find().send("message", { to_guid: parent.attr('id'), message: $(this).val(), from_name:user.name }); 
 				$(this).val('');
@@ -81,8 +84,23 @@ minds.live.init = function() {
 						'<span class="message"><span class="user_name">'+from+'</span>' + data.message + '</span>'
 					)
 					.animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
+					
+				// return to the sender that we have recieved the message
+				if(data.from_guid != elgg.get_logged_in_user_guid())
+					portal.find().send("recieved", { to_guid: data.from_guid });
 
-				//cache in a cookie so new page loads see it
+			},
+			typing: function(data){
+				$('.minds-live-chat-userlist').find('li.box#' + data.from_guid).find('.rt-stats')
+					.html('typing...')
+					.delay(1000)
+					.queue(function(n){ $(this).html(''); n(); });
+			},
+			recieved: function (data){
+				$('.minds-live-chat-userlist').find('li.box#' + data.from_guid).find('.rt-stats')
+					.html('recieved')
+					.delay(2000)
+					.queue(function(n){ $(this).html(''); n(); });
 			},
 			error: function(error){
 				console.log(error);
@@ -327,9 +345,13 @@ minds.live.openChatWindow = function(id,name,message, minimised){
 		       			 	//'</a>' + 
 		       			 	'<span class="del entypo">&#10062;</span>' +
 		       			 '<div class="messages">' + message +  '</div>' + 
+		       			 '<div class="rt-stats"></div>' +
 		        		 '<div> <input type="text" class="elgg-input" /> </div>' +
 				'</li>';	
 			$('.minds-live-chat-userlist > ul').append(box).find('input').focus();
+			
+			$('#'+id + ' .messages').animate({ scrollTop: $('#'+id).find('.messages')[0].scrollHeight},1000);
+			
 			minds.live.adjustOffset();
 		}
 	})
