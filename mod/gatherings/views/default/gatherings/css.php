@@ -94,11 +94,12 @@
 	color:#888;
 }
 .minds-live-chat ul li .messages{
-	height:146px;
+	height:152px;
 	width:auto;
 	background:#F8F8F8;
 	padding:8px;
-	overflow:scroll;
+	overflow:hidden;
+	overflow-y:scroll;
 }
 .minds-live-chat ul li .message{
 	width:100%;
@@ -110,6 +111,17 @@
 }
 .minds-live-chat ul li .message .user_name{
 	font-weight:bold;
+}
+.minds-live-chat ul li .rt-stats{
+	background: #F8F8F8;
+	color: #888;
+	font-weight: lighter;
+	padding: 0 8px;
+	font-size: 11px;
+	text-align: right;
+	position: absolute;
+	right: 0;
+	bottom: 35px;
 }
 .minds-live-chat ul li input{
 	border:1px solid #CCC;
