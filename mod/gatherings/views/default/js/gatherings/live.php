@@ -316,14 +316,15 @@ minds.live.openChatWindow = function(id,name,message, minimised){
 			name = data.result.core.name;
 			username = data.result.core.username;
 			avatar_url = data.result.avatar_url;
-			
+		
+			 var newmsg = '';	
 			var cache = minds.live.getCacheChat(id);
 			if(cache){
 				var length = cache.length;
-				var newmsg = '';
-				for (var i = 0; i < length; i++) {
-					newmsg	+= '<span class="message">' + cache[i] + '</span>';
-				}
+					var newmsg = '';
+					for (var i = 0; i < length; i++) {
+						newmsg	+= '<span class="message">' + cache[i] + '</span>';
+					}
 			}
 					
 			if(message){
@@ -347,11 +348,12 @@ minds.live.openChatWindow = function(id,name,message, minimised){
 		       			 '<div class="messages">' + message +  '</div>' + 
 		       			 '<div class="rt-stats"></div>' +
 		        		 '<div> <input type="text" class="elgg-input" /> </div>' +
-				'</li>';	
-			$('.minds-live-chat-userlist > ul').append(box).find('input').focus();
-			
-			$('#'+id + ' .messages').animate({ scrollTop: $('#'+id).find('.messages')[0].scrollHeight},1000);
-			
+				'</li>';
+			 $('.minds-live-chat-userlist > ul').append(box);	
+		//	$('.minds-live-chat-userlist > ul').append(box).animate({ scrollTop: $('.box#'+id).find('.messages')[0].scrollHeight},1000);
+			if($('li.box#'+id).length > 0){
+				$('li.box#'+id).animate({ scrollTop: $('li.box#'+id).find('.messages')[0].scrollHeight},1000);	
+			}
 			minds.live.adjustOffset();
 		}
 	})
@@ -390,7 +392,7 @@ minds.live.saveCacheChat = function(id, message, name){
  * Remove a chat
  */
 minds.live.removeChat = function(id){
-	$(document).find('#'+id).remove();
+	$(document).find('.box#'+id).remove();
 	minds.live.removeCacheChat(id);
 	minds.live.adjustOffset();	
 }
@@ -403,16 +405,12 @@ minds.live.removeCacheChat = function(id){
 	//remove from the active chat list
 	ls = window.localStorage;
 	var activeChats = JSON.parse(ls.getItem('activeChats'));
-	if(!activeChats){
-		activeChats = {};
-	}
-	chat = { 
-		id: id,
-		 name: name	
-	};
-	
-	activeChats[id] = chat;
-
+	$.each(activeChats, function(i, val) {
+		console.log(id);
+		if(i == id){
+			delete activeChats[i];
+		}
+	});
 	ls.setItem('activeChats', JSON.stringify(activeChats));
 }
 
