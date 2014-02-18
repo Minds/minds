@@ -51,7 +51,7 @@ elgg_register_event_handler('init','system',function(){
 
                 //execute post
                 $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                $result = curl_exec($ch); 
+                $result = curl_exec($ch);
                 if ($CONFIG->debug)
                     error_log("Result from pinging $permalink: $http_status");
                 
