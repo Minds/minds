@@ -51,6 +51,6 @@ $entity = get_entity($pid, 'object');
 
 notification_create(array($entity->owner_guid), elgg_get_logged_in_user_guid(), $pid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
 
-elgg_trigger_event('comment:create', 'comment', $data);
+elgg_trigger_event('comment:create', 'comment', $data); 
 
 exit;
