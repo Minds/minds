@@ -21,13 +21,12 @@ elgg_register_event_handler('init','system',function(){
         
         // Ping our comment at our linked server permalink, the server then uses the API to verify the comment before posting
         if (($data['_source']['pid']) && ($post = get_entity($data['_source']['pid'], 'object'))) {
-            
+                    
             // Ok we've got a post, does it have a remote permalink?
             if ($permalink = $post->ex_permalink) {
                 
                 // Ping data to the minds wordpress plugin
 
-                $ch = curl_init();
                 
                 $query = http_build_query($data);
 
@@ -36,20 +35,25 @@ elgg_register_event_handler('init','system',function(){
                 else
                     $permalink .= '&minds-connect=comment-on';
                 
+                
+                
+                $ch = curl_init();
+                
                 curl_setopt($ch,CURLOPT_URL, $permalink);
                 curl_setopt($ch,CURLOPT_POST, 1);
                 curl_setopt($ch,CURLOPT_POSTFIELDS, $query);
                 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_USERAGENT, "Minds Site at " . current_page_url());
+                curl_setopt($ch, CURLOPT_USERAGENT, "Minds Site at " . elgg_get_site_url());
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
                 //execute post
-                $result = curl_exec($ch);
+                $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $result = curl_exec($ch); 
                 if ($CONFIG->debug)
-                    error_log("Result from ping: $result");
+                    error_log("Result from pinging $permalink: $http_status");
                 
                 curl_close($ch);
             }
