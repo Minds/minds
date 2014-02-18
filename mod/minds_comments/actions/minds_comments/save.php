@@ -45,7 +45,7 @@ if($create['ok'] == true){
 	 register_error(elgg_echo('minds_comments:save:error'));
 }
 //user setting for orientation
-elgg_set_plugin_user_setting('commented', true, elgg_get_logged_in_user_guid(), 'minds_comments');
+//elgg_set_plugin_user_setting('commented', true, elgg_get_logged_in_user_guid(), 'minds_comments'); // Do we actually need this still?
 
 $entity = get_entity($pid, 'object');
 
