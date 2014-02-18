@@ -25,9 +25,19 @@ elgg_register_event_handler('init','system',function(){
             // Ok we've got a post, does it have a remote permalink?
             if ($permalink = $post->ex_permalink) {
                 
-                // Ping data to the minds wordpress plugin
-
+                // Save the target as a lookup, we'll verify this at the other end (this makes things simpler, since wordpress doesn't have a current_page equiv)
+                $data['target'] = $permalink;
                 
+                // Now, let's save some author information
+                $user = elgg_get_logged_in_user_entity();
+                $data['author'] = array(
+                    'author' => $user->name,
+                    'author_email' => $user->email,
+                    'minds_author_icon' => $user->getIcon('small'),
+                    'author_url' => $user->getUrl()
+                );
+                
+                // Ping data to the minds wordpress plugin
                 $query = http_build_query($data);
 
                 if (strpos($permalink, '?') === false) // Tell the wordpress blog that we're pinging with a comment action
