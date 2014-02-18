@@ -31,10 +31,10 @@ elgg_register_event_handler('init','system',function(){
                 // Now, let's save some author information
                 $user = elgg_get_logged_in_user_entity();
                 $data['author'] = array(
-                    'author' => $user->name,
-                    'author_email' => $user->email,
+                    'name' => $user->name,
+                    'email' => $user->email,
                     'minds_author_icon' => $user->getIcon('small'),
-                    'author_url' => $user->getUrl()
+                    'profile' => $user->getUrl()
                 );
                 
                 // Ping data to the minds wordpress plugin
