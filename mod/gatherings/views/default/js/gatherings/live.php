@@ -43,10 +43,23 @@ minds.live.init = function() {
 			//	minds.live.sendChat();
 		});
 		
+		$(document).on('click', '.video', function(e){
+			//set up the one-one call. we need a conference. 
+		//	var ctrl = minds.live.startP2PGathering(elgg.get_logged_in_user_guid());
+			parent = $(this).parents('li');
+			portal.find().send("video", { 
+				to_guid: parent.attr('id'),
+				status: 'call',
+				caller_salt: minds.live.streamSalt(),
+				reciever_salt: minds.live.streamSalt() //set both salts now and just expect the user to arrive..
+			}); 
+		});
+	
+		
 		/**
 		 * The connection to the socket server
 		 */
-		portal.open("http://107.21.42.113:8080/", { sharing:true }).on({
+		portal.open("http://localhost:8080/", { sharing:true }).on({
 			open: function() {
 				//subscribe the user to the site chat
 				portal.find().send("connect", { guid: user.guid, name: user.name, username: user.username});
@@ -59,7 +72,7 @@ minds.live.init = function() {
 				console.log('you are connected. hurrah!');
 			},
 			message: function(data) {
-				
+				console.log(data);
 				data.message = minds.live.linkify(data.message);
 				
 				// The user is sending the message
@@ -102,6 +115,89 @@ minds.live.init = function() {
 					.delay(2000)
 					.queue(function(n){ $(this).html(''); n(); });
 			},
+			video: function(data){
+				
+				var status = data.status;
+				var isCaller = elgg.get_logged_in_user_guid() == data.from_guid;
+
+				
+				if(elgg.get_logged_in_user_guid() == data.from_guid){ 
+					var box = $('.minds-live-chat-userlist').find('li.box#' + data.to_guid);
+				} else {
+					var box = $('.minds-live-chat-userlist').find('li.box#' + data.from_guid);
+				}
+				
+				$(document).on('click', '#hangup', function(){
+					portal.find().send("video", { 
+						to_guid: data.from_guid,
+						status: 'hangup'
+					});
+					portal.find().send("video", { 
+						to_guid: data.to_guid,
+						status: 'hangup'
+					});
+				});
+				
+				$(document).on('click', '#answer', function(){
+					portal.find().send("video", { 
+						to_guid: data.from_guid, //tell the caller we have answered
+						status: 'answer',
+						caller_salt: data.caller_salt, //send back the users salt
+						reciever_salt: data.reciever_salt //send our salt
+					});
+				});
+				
+				switch(status){
+					
+					case 'call' : 
+						console.log('calling', data);
+						if(isCaller){ //user is the caller
+							box.find('.call').prepend('<button id="hangup">Hangup</button>');
+							
+							//start the webcam stream for the caller. 
+							minds.live.videoController.p2pVideo(data.caller_salt, data.reciever_salt, 'flash-p2p-'+ data.to_guid);
+							box.css('bottom', '375px');
+						} else {
+							
+							box.find('.call').prepend('<button id="answer">Answer</button><button id="hangup">Reject</button>');
+						}
+						
+						callerSalt = data.salt;
+	
+					break;
+					case 'answer' :
+					
+						isCaller =  elgg.get_logged_in_user_guid() == data.to_guid; //in this case the reciever is the sender
+					
+						console.log('answered');
+						box.find('.call button').remove();
+						box.find('.call').prepend('<button id="hangup">Hangup</button>');
+						
+						if(!isCaller){
+							//load the callers cam and send your own
+							minds.live.videoController.p2pVideo(data.reciever_salt, data.caller_salt, 'flash-p2p-'+ data.to_guid);
+							box.css('bottom', '375px');
+						}
+						
+					break;
+					case 'hangup':
+				
+						box.find('.call').html(''); //wipe.
+						
+						box.find('.call').append('<div id="flash-p2p-'+ data.to_guid + '"></div><div id="flash-p2p-'+ data.from_guid + '"></div>');
+						
+						box.css('bottom', '200px');
+					break;
+				}
+
+				//var box = $('.minds-live-chat-userlist').find('li.box#' + data.from_guid);
+				
+		//		box.find('.call').prepend('Incoming call - <button id="answer">Answer</button><button id="reject">Reject</button>');
+				
+				//connect to babelroom, and then accept.
+			//	minds.live.startP2PGathering(data.from_guid);
+
+			},
 			error: function(error){
 				console.log(error);
 				if(error.code == 1){
@@ -125,6 +221,7 @@ minds.live.init = function() {
 				var user_list = $('.minds-live-chat-userlist .userlist ul');
 				user_list.html('');
 				for(var i=0; i < guids.length; i++){
+					console.log(guids);
 					var guid = guids[i];
 					if(guid != elgg.get_logged_in_user_guid()){
 						var user = users[guid];
@@ -179,6 +276,30 @@ minds.live.startChat = function(guid){
 	minds.live.openChatWindow(guid, 'a test chat', '');
 }
 
+minds.live.videoController = {
+	
+	sendVideo: function(salt, id){
+		this.flash(true, salt, id);
+	},
+	recieveVideo: function(salt, id){
+		this.flash(false, salt, id);
+	},
+	
+	p2pVideo: function(upstream_salt, downstream_salt, id){
+		this.flash(upstream_salt, downstream_salt, id);
+	},
+	flash: function(upstream_salt, downstream_salt, id){
+		var flashvars = {
+			//csMediaServerURI: encodeURIComponent("rtmp://video.babelroom.com:1936/oflaDemo"),
+			upstream_salt: upstream_salt,
+			downstream_salt: downstream_salt
+		};
+		var params = {};
+		var attributes = {styleclass: 'flash_obj'};
+		swfobject.embedSWF(elgg.get_site_url() + "mod/gatherings/resources/flash/p2p.swf", id, "100%", "100%", "8.0.0", "expressInstall.swf", flashvars, params, attributes);
+	}
+}
+
 /**
  * Retrieve the gathering info. Creds, ids etc
  */
@@ -207,7 +328,7 @@ minds.live.apiInstance = function(guid, controllers) {
 
 		/* api instance not yet created for this conference */
 		a = BR.v1.api.create({
-			hosts: "https://api.babelroom.com", //@todo make this configurable
+			hosts: "http://api.babelroom.com", //@todo make this configurable
 			authentication: {token: g.token},
 			conference_id: g.cid,
 			controllers: controllers
@@ -228,7 +349,10 @@ minds.live.apiInstance = function(guid, controllers) {
  * Start a gathering (bblr)
  */
 minds.live.startGathering = function(guid){
-	minds.live.apiInstance(guid, [minds.live.gatheringController]);
+	return minds.live.apiInstance(guid, [minds.live.gatheringController]);
+}
+minds.live.startP2PGathering = function(guid){
+	return minds.live.apiInstance(guid, [minds.live.p2pGathering]);
 }
 
 /**
@@ -284,6 +408,7 @@ minds.live.gatheringController = {
 	},
 	onClear: function(){ console.log('clearing'); },
 }
+
 
 /**
  * Adjust the offset so we can have multiple chats open
@@ -345,6 +470,16 @@ minds.live.openChatWindow = function(id,name,message, minimised){
 		       			 		'</h3>' + 
 		       			 	//'</a>' + 
 		       			 	'<span class="del entypo">&#10062;</span>' +
+		       			 	'<span class="video entypo">&#58277;</span>' +
+		       			 	
+		       			 	
+		       			 	
+		       			 	'<div class="call">' +
+		       			 		'<div id="flash-p2p-'+ id + '" style="display:none; height:100px;"></div>' + 
+		       			 		//'<div id="flash-local-'+ id + '" style="display:none; height:100px;"></div>' + 
+		       			 	//	'<div id="flash" style="display:none;"> </div>'+ 
+		       			 	'</div>' + 
+		       			 	
 		       			 '<div class="messages">' + message +  '</div>' + 
 		       			 '<div class="rt-stats"></div>' +
 		        		 '<div> <input type="text" class="elgg-input" /> </div>' +
@@ -433,6 +568,10 @@ minds.live.linkify = function (inputText) {
     replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
 
     return replacedText;
+}
+
+minds.live.streamSalt = function(){
+	return Math.random().toString(36).substring(2);
 }
 
 elgg.register_hook_handler('init', 'system', minds.live.init);

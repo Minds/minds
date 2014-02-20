@@ -86,12 +86,19 @@
 	display:block;
 	font-size:14px;
 }
-.minds-live-chat ul li .del{
+.minds-live-chat ul li .del.entypo{
 	position: absolute;
-	top: 0;
+	top: 5px;
 	right: 0;
 	padding: 10px;
 	color:#888;
+}
+.minds-live-chat ul li .video.entypo{
+	position: absolute;
+	top: 5px;	
+	right: 33px;
+	padding: 10px;
+	color: #888;
 }
 .minds-live-chat ul li .messages{
 	height:152px;
@@ -123,6 +130,11 @@
 	right: 0;
 	bottom: 35px;
 }
+
+.minds-live-chat .call .flash_obj{
+	width:100%;
+	height:150px;
+}
 .minds-live-chat ul li input{
 	border:1px solid #CCC;
 	border-radius:0;
@@ -135,6 +147,9 @@
 }
 .minds-live-chat ul li.toggled{
 	bottom:200px;
+}
+.minds-live-chat ul li.toggled .onCall{
+	bottom:400px;	
 }
 .minds-live-chat ul li.userlist{
 	width:200px;

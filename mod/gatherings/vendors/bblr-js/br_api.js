@@ -2138,7 +2138,7 @@ function () {
                     }
                 })
             },
-            control: function (key, value) {
+            control: function (key, value) { 
                 if (!this._peer || !this._peer.stream) return;
                 switch (key) {
                 case "hangup":
@@ -2147,7 +2147,7 @@ function () {
                 case "mute":
                 case "unmute":
                 case "video_off":
-                case "video_on":
+                case "video_on": 
                     wrapRTC.mediaChannelAction(this._peer.stream, key);
                     this._sendAction(JSON.stringify({
                         type: "metadata",
