@@ -277,3 +277,25 @@ font-family: 'Ubuntu Light','Ubuntu','Ubuntu Beta',UbuntuBeta,Ubuntu,'Bitstream 
     float: left;
     position: relative;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+div.minds-buttons div.minds-button {
+    float: right;
+    margin: 10px;
+}
