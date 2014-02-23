@@ -160,10 +160,11 @@ function gatherings_prepare_form_vars($webinar = null) {
  * @return array
  */
 function gatherings_get_page_content_list($page = array()){
-	
+
 	//compilcated input analysing
 	$guid_type = $page[0];
-	$href = "webinar/$guid_type";
+	$href = "gatherings/$guid_type";
+	
 	if(isset($page[1])){
 		if($guid_type == 'all'){
 			$guid = 0;
@@ -199,7 +200,7 @@ function gatherings_get_page_content_list($page = array()){
 	
 	$options = array(
 			'type' => 'object',
-			'subtypes' => array('webinar'),
+			'subtype' => 'gathering',
 			'full_view' => FALSE,
 			'limit' => 12
 	);

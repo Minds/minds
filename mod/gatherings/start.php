@@ -33,9 +33,14 @@ function gatherings_init(){
 	
 	elgg_register_js('swfobject', elgg_get_site_url() . 'mod/gatherings/vendors/bblr-js/swfobject.js', 'footer',599);
 	elgg_load_js('swfobject');
-	elgg_register_js('bblr', elgg_get_site_url() . 'mod/gatherings/vendors/bblr-js/br_api.js', 'footer',600);
+	//elgg_register_js('bblr', elgg_get_site_url() . 'mod/gatherings/vendors/bblr-js/br_api.js', 'footer',600);
 	//elgg_register_js('bblr', 'https://api.babelroom.com/cdn/v1/br_api.full.min.js', 'footer',600);
-	elgg_load_js('bblr');
+	//elgg_load_js('bblr');
+	//elgg_register_js('webRTC', elgg_get_site_url() . 'mod/gatherings/vendors/webRTC/webRTC.js');
+	//elgg_load_js('webRTC');
+	
+	elgg_register_js('wraprtc', elgg_get_site_url() . 'mod/gatherings/vendors/bblr-js/wraprtc.js', 'footer', 700);
+	elgg_load_js('wraprtc');
 		
 	//add a tab in site menu
 	//$item = new ElggMenuItem('webinar', elgg_echo('gatherings:menu:site'), 'gatherings/all');

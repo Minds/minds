@@ -14,6 +14,14 @@ $users = find_active_users(600, 0);
 	<source src="<?php echo elgg_get_site_url();?>mod/chat/sounds/chatter.wav" type="audio/wav"/> 
 	<source src="<?php echo elgg_get_site_url();?>mod/chat/sounds/blup.mp3" type="audio/mp3"/>
 	</audio>
+	<audio id="tone" loop>
+		<source src="http://freesound.org/data/previews/39/39061_402511-lq.ogg" type="audio/ogg"/> 
+		<source src="http://freesound.org/data/previews/39/39061_402511-lq.mp3" type="audio/mp3"/>
+	</audio>
+	<audio id="ringer" loop>
+		<source src="http://freesound.org/data/previews/77/77723_91595-lq.ogg" type="audio/wav"/> 
+		<source src="http://freesound.org/data/previews/77/77723_91595-lq.mp3" type="audio/mp3"/>
+	</audio>
 	<div class="minds-live-chat-userlist">
 		<ul>
 			<li class="userlist"> <h3> <span class="entypo"> &#59160; </span> Chat <h3/>

@@ -7,10 +7,6 @@ minds.live.init = function() {
 
 	if(user){
 		
-		if($(document).find('gathering') > -1){
-			//minds.live.startGathering($(document).find('gathering').attr('data-guid'));
-		}
-
 		//load active chats on page loads
 		ls = window.localStorage;
 		var activeChats = JSON.parse(ls.getItem('activeChats'));
@@ -50,8 +46,8 @@ minds.live.init = function() {
 			portal.find().send("video", { 
 				to_guid: parent.attr('id'),
 				status: 'call',
-				caller_salt: minds.live.streamSalt(),
-				reciever_salt: minds.live.streamSalt() //set both salts now and just expect the user to arrive..
+			//	caller_salt: minds.live.streamSalt(),
+				//reciever_salt: minds.live.streamSalt() //set both salts now and just expect the user to arrive..
 			}); 
 		});
 	
@@ -70,6 +66,63 @@ minds.live.init = function() {
 			},
 			connect: function(){
 				console.log('you are connected. hurrah!');
+				
+				//are we on a gathering page?
+				if($(document).find('.gathering').length > 0){
+					//minds.live.startGathering($(document).find('gathering').attr('data-guid'));
+					
+					//DONT JOIN THE GATHERING UNLESS YOUR CAMERA IS SHOWING
+					$(document).find('.gathering').append('<video id="cam-'+ elgg.get_logged_in_user_guid()+'" autoplay muted></video>');
+					
+					id = 'cam-'+elgg.get_logged_in_user_guid();
+					wrapRTC.openWebcam({
+						element: document.getElementById(id),
+						onSupportFailure: function (msg) {
+							console.log('err',msg);
+						},
+						onError: function (code) {
+							console.log('code',code);
+							switch (code) {
+								case 1:
+						      //  _this._error(call_key);
+						        break;
+						    default:
+						    }
+						},
+						setStream: function (stream) {
+							minds.live.rtcLocalStream = stream;	
+							console.log('trying to join');
+							portal.find().send('gathering', {
+								guid: $(document).find('.gathering').attr('data-guid'),
+								status: 'join'
+							});
+						},
+						audioMonitor: function(db){
+							//minds.live.audioMonitor(id, db);
+							percent = 100 + ( db * 2.083 );
+							
+							if(percent > 25){
+								if(!minds.live.speaking){
+									minds.live.speaking = true;
+									portal.find().send('gathering', {
+										guid: $(document).find('.gathering').attr('data-guid'),
+										status: 'talking',
+										volume: percent
+									});
+								}
+							} else {
+								if(minds.live.speaking){
+									minds.live.speaking = false;
+									portal.find().send('gathering', {
+										guid: $(document).find('.gathering').attr('data-guid'),
+										status: 'not-talking'
+									});
+								}
+							}
+						}
+					});
+										
+				}
 			},
 			message: function(data) {
 				console.log(data);
@@ -138,24 +191,17 @@ minds.live.init = function() {
 					});
 				});
 				
-				$(document).on('click', '#answer', function(){
-					portal.find().send("video", { 
-						to_guid: data.from_guid, //tell the caller we have answered
-						status: 'answer',
-						caller_salt: data.caller_salt, //send back the users salt
-						reciever_salt: data.reciever_salt //send our salt
-					});
-				});
-				
 				switch(status){
 					
-					case 'call' : 
+					/*case 'call' : 
 						console.log('calling', data);
 						if(isCaller){ //user is the caller
 							box.find('.call').prepend('<button id="hangup">Hangup</button>');
 							
 							//start the webcam stream for the caller. 
-							minds.live.videoController.p2pVideo(data.caller_salt, data.reciever_salt, 'flash-p2p-'+ data.to_guid);
+							//minds.live.videoController.p2pVideo(data.caller_salt, data.reciever_salt, 'flash-p2p-'+ data.to_guid);
+							
+							
 							box.css('bottom', '375px');
 						} else {
 							
@@ -164,9 +210,10 @@ minds.live.init = function() {
 						
 						callerSalt = data.salt;
 	
-					break;
-					case 'answer' :
+					break;*/
+					/*case 'answer' :
 					
+						
 						isCaller =  elgg.get_logged_in_user_guid() == data.to_guid; //in this case the reciever is the sender
 					
 						console.log('answered');
@@ -175,28 +222,317 @@ minds.live.init = function() {
 						
 						if(!isCaller){
 							//load the callers cam and send your own
-							minds.live.videoController.p2pVideo(data.reciever_salt, data.caller_salt, 'flash-p2p-'+ data.to_guid);
+							//minds.live.videoController.p2pVideo(data.reciever_salt, data.caller_salt, 'flash-p2p-'+ data.to_guid);
+							
 							box.css('bottom', '375px');
 						}
 						
-					break;
+					break;*/
+					case 'call':
+					
+						if(data.from_guid != elgg.get_logged_in_user_guid()) return;
+
+						tone = document.getElementById("tone");
+						tone.play();
+						
+						box.find('.call').prepend('<button id="hangup">Hangup</button>');
+						box.find('video').css('display','block');
+						
+						wrapRTC.openWebcam({
+							element: document.getElementById('local'),
+							onSupportFailure: function (msg) {
+								console.log('err',msg);
+							},
+							onError: function (code) {
+								console.log('code',code);
+								switch (code) {
+									case 1:
+							      //  _this._error(call_key);
+							        break;
+							    default:
+							    }
+							},
+							setStream: function (stream) {
+								console.log(stream); 
+								wrapRTC.callPeer(stream, {
+									element: document.getElementById('remote'),
+									onError: function (error) {
+										console.log('error', error);
+										//_this._error(call_key, error)
+									},
+									setPC: function (pc) {
+										minds.live.pc = pc;
+									},
+						            signalOut: function (obj) {
+						            	if(!obj) return;
+						            	console.log(obj);
+						            	switch(obj.type){
+						            		//an offerer msg has been created. Send to our recipients
+						            		//@todo send this to multiples
+						            		case 'offer':
+						            			portal.find().send('video', { 
+						            				to_guid: data.to_guid, 
+						            				msg: obj, 
+						            				status: 'offer'
+						            			});
+						            			break;
+						            		case 'candidate':
+						            			portal.find().send('video', { 
+						            				to_guid: data.to_guid, 
+						            				msg: obj, 
+						            				status: 'signal'
+						            			});
+						            			break;
+						            	}
+						            	
+						            },
+						            connected: function () {
+						            	console.log('connected');
+						               // _this.onCallStatusUpdate("connected")
+						            },
+						            disconnected: function () {
+						            	console.log('disconnected');
+						                //_this._stop(false)
+						            }
+								})
+							}
+						});
+					
+   					break;
 					case 'hangup':
-				
-						box.find('.call').html(''); //wipe.
+
+						wrapRTC.stopConnection(minds.live.pc);
+						
+						//wrapRTC.stop(document.getElementById('local'), )
+						box.find('video').css('display','none');
+						box.find('button').remove();
 						
 						box.find('.call').append('<div id="flash-p2p-'+ data.to_guid + '"></div><div id="flash-p2p-'+ data.from_guid + '"></div>');
 						
 						box.css('bottom', '200px');
 					break;
+					
+					/**
+					 * Used in webrtc setup. A reciever, aka peer, will recieve this and then output an answer callback to the caller, aka offerer
+					 */
+					case 'offer':
+					
+						if(elgg.get_logged_in_user_guid() == data.from_guid) return; //dont send offers to yourself
+						
+						ringer = document.getElementById("ringer");
+						ringer.play();
+						
+						/**
+						 * Put the answer reject button to the user
+						 */
+						box.find('.call').prepend('<button id="answer">Answer</button><button id="hangup">Reject</button>');
+						
+					
+						/**
+						 * Event listener for when the user accepts the offer, aka answers the call
+						 */
+						$(document).on('click', '#answer', function(){
+														
+							isCaller =  elgg.get_logged_in_user_guid() == data.to_guid; //in this case the reciever is the sender
+							box.find('video').css('display','block');
+							
+							console.log('answered');
+							box.find('.call button').remove();
+							box.find('.call').prepend('<button id="hangup">Hangup</button>');
+							
+							document.getElementById("ringer").pause();
+							
+							//if(!isCaller){
+								//load the callers cam and send your own
+								//minds.live.videoController.p2pVideo(data.reciever_salt, data.caller_salt, 'flash-p2p-'+ data.to_guid);
+								
+								
+							//}
+							
+							wrapRTC.openWebcam({
+								element: document.getElementById('local'),
+								//constraints: {"video": {"mandatory": { chromeMediaSource: "screen"}}},
+								onSupportFailure: function (msg) {
+								console.log('err',msg);
+								},
+								onError: function (code) {
+									console.log('code',code);
+									switch (code) {
+										case 1:
+								      //  _this._error(call_key);
+								        break;
+								    default:
+								    }
+								},
+								setStream: function (stream) {
+						
+									wrapRTC.answer( data.msg, stream, {
+										element: document.getElementById('remote'),
+										setPC: function(pc){
+											minds.live.pc = pc;
+										},				
+										onError: function (e){
+											console.log('error',e);	
+										},	
+										signalOut: function (obj) {
+											if(!obj) return;
+											portal.find().send('video', {
+												to_guid:data.from_guid, 
+												msg:obj, 
+												status:'signal'
+											});
+									            	
+									   },
+									   connected: function () {
+											console.log('connected');
+			                           },
+			                            disconnected: function () {
+											console.log('disconnected');
+			                            }
+										
+									});
+								}
+							});	
+						});
+					
+						break;
+						
+					/**
+					 * Web rtc callbacks or signals are picked up here. These could be candidate requests or answers
+					 */
+					case 'signal':
+						var msg = data.msg;
+						console.log('signaled', msg);
+						switch(msg.type){
+							
+							case 'candidate':
+									wrapRTC.candidate(minds.live.pc, msg);
+								
+								//wrapRTC.candidate(self.apc, msg);
+								break;
+							case 'answer':
+								//wrapRTC.setRemoteDescription(self.apc, msg);
+								if(minds.live.pc)
+									wrapRTC.setRemoteDescription(minds.live.pc, msg);
+									
+								box.find('.local').addClass('active');
+								document.getElementById("ringer").pause();
+								document.getElementById("tone").pause();
+								
+								box.css('bottom', '375px');
+								break;
+						}
+			
+						break;
+				
 				}
 
-				//var box = $('.minds-live-chat-userlist').find('li.box#' + data.from_guid);
+			},
+			gathering: function(data){
 				
-		//		box.find('.call').prepend('Incoming call - <button id="answer">Answer</button><button id="reject">Reject</button>');
+				if(!minds.live.peer_connections)
+					minds.live.peer_connections = [];
 				
-				//connect to babelroom, and then accept.
-			//	minds.live.startP2PGathering(data.from_guid);
+				/**
+				 * A gathering is a chat of more than one person
+				 */
+				switch(data.status){
+					case "join":
+						/**
+						 * The other users in the gathering recieve this and then send out their streams
+						 */
+						if(minds.live.rtcLocalStream){
+						
+							//some has joined. create a new peer connection and send your stream.
+							var id = "cam-"+data.from_guid;
+							if(!document.getElementById(id)){
+								$('.gathering').prepend('<video autoplay id="'+ id + '"></video>'); //an ugly mash of jquery and core? why?
+							}
+							
+							wrapRTC.callPeer(minds.live.rtcLocalStream, {
+								element: document.getElementById(id),
+								onError: function (error) {
+									console.log('error', error);
+									//_this._error(call_key, error)
+								},
+								setPC: function (pc) {
+									minds.live.peer_connections.push(pc);
+								},
+								signalOut: function (obj) {
+									if(!obj) return;
+									portal.find().send('gathering', {
+										guid: data.guid,
+										status: 'signal',
+										msg: obj
+									});
+								},
+								setStream: function(stream){
+									console.log(stream);
+								}
+							});
+						}
 
+						break;
+					case "signal":
+						/**
+						 * Webrtc needs to send messages to each to users in order to connect
+						 */
+						if(!data.msg) return;
+						switch(data.msg.type){
+							case "candidate":
+								for (var i=0; i<minds.live.peer_connections.length; i++){
+									wrapRTC.candidate(minds.live.peer_connections[i], data.msg);
+								}
+								break;
+							case "answer":
+								if(elgg.get_logged_in_user_guid() == data.from_guid) return;
+								console.log('you answered', minds.live.peer_connections);
+								for (var i=0; i<minds.live.peer_connections.length; i++){
+									wrapRTC.setRemoteDescription(minds.live.peer_connections[i], data.msg);
+								}
+								break;
+							case "offer":
+							
+								if(elgg.get_logged_in_user_guid() == data.from_guid) return;
+								
+								var id = "cam-"+data.from_guid;
+								if(!document.getElementById(id)){
+									$('.gathering').prepend('<video id="'+ id +'" autoplay></video>'); 
+								}
+								
+								//answer the offer..
+								wrapRTC.answer(data.msg, null,{
+									element: document.getElementById(id),
+									onError: function (error) {
+										console.log('error', error);
+										//_this._error(call_key, error)
+									},
+									setPC: function (pc) {
+										minds.live.peer_connections.push(pc);
+									},
+									signalOut: function (obj) {
+										portal.find().send('gathering', {
+											guid: data.guid,
+											status: 'signal',
+											msg: obj
+										});
+									},
+									setStream: function(stream){
+										console.log(stream);
+									}
+								})
+								
+							break;
+						}
+						break;
+					
+					case 'talking':
+						$('#cam-'+data.from_guid).css({ 'box-shadow': '0 0 16px #4690D6', 'border':'1px solid #4690D6'});
+						break;
+					case 'not-talking':
+						$('#cam-'+data.from_guid).css({ 'box-shadow': '0 0 16px #888', 'border':'1px solid #888'});
+						break;
+				}
 			},
 			error: function(error){
 				console.log(error);
@@ -265,12 +601,14 @@ minds.live.init = function() {
 
 		$(document).on('click', '.minds-live-chat-userlist li .del', function (e) {
 			minds.live.removeChat($(this).parent().attr('id'));
-		})
+		});
+
 
 		//foreach chat window we have, give it an offset 
 		minds.live.adjustOffset();		
 	}
 }
+
 
 minds.live.startChat = function(guid){
 	minds.live.openChatWindow(guid, 'a test chat', '');
@@ -476,7 +814,9 @@ minds.live.openChatWindow = function(id,name,message, minimised){
 		       			 	
 		       			 	'<div class="call">' +
 		       			 		'<div id="flash-p2p-'+ id + '" style="display:none; height:100px;"></div>' + 
-		       			 		//'<div id="flash-local-'+ id + '" style="display:none; height:100px;"></div>' + 
+		       			 		
+		       			 		'<video id="local" class="local" autoplay muted></video>' + 
+		       			 		'<video id="remote" class="remote" autoplay></video>' + 
 		       			 	//	'<div id="flash" style="display:none;"> </div>'+ 
 		       			 	'</div>' + 
 		       			 	

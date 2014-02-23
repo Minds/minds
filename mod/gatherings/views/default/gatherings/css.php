@@ -11,10 +11,10 @@
  */
 .gathering{
 	width:100%;
-	margin:5%;
+	margin:0 5%;
 }
 
-.gathering > .chat{
+/*.gathering > .chat{
 	width:25%;
 	height:200px;
 	position:absolute;
@@ -42,6 +42,17 @@
 	float:right;
 	width:50%;
 	height:200px;
+}*/
+.gathering video{
+	float:left;
+	width:300px;
+	border-radius:2px;
+	box-shadow:0 0 16px #888;
+	border:1px solid #888;
+	margin:8px;
+}
+.gathering video.talking{
+	box-shadow:0 0 3px #4690D6;
 }
 
 /**
@@ -130,10 +141,27 @@
 	right: 0;
 	bottom: 35px;
 }
-
+.minds-live-chat .call{
+	position:relative;
+}
+.minds-live-chat .call video{
+	display:none;
+}
 .minds-live-chat .call .flash_obj{
 	width:100%;
 	height:150px;
+}
+.minds-live-chat .call .local.active{
+	position: absolute;
+	bottom: 8px;
+	height: 40px;
+	right: 8px;
+	margin: 0;
+	padding: 0;
+	border:1px solid #EEE;
+}
+.minds-live-chat .call .remote, .minds-live-chat .call .local{
+	height:168px;
 }
 .minds-live-chat ul li input{
 	border:1px solid #CCC;
