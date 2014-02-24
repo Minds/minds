@@ -287,11 +287,38 @@ font-family: 'Ubuntu Light','Ubuntu','Ubuntu Beta',UbuntuBeta,Ubuntu,'Bitstream 
 
 
 
+div.hero div.left {
+    width: 250px;
+    float: left;
+}
 
+div.hero div.right {
+    float: right;
+    width: 310px;
+}
 
+div.hero div.center {
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
+div.hero div.left ul {
+    margin-top: 35px;
+}
 
+div.hero ul {
+    list-style: none outside none;
+}
 
+div.hero ul a {
+    text-decoration: none;
+}
+
+div.hero div.left ul li {
+    display: inline;
+    margin-right: 15px;
+}
 
 
 
