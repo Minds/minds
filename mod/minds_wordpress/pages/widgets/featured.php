@@ -1,5 +1,10 @@
 <?php
-
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+    header('Cache-Control: no-cache, must-revalidate');
+    header("Pragma: no-cache");
+    header('Content-type: application/x-javascript; charset=UTF-8');
+    
 $featured = minds_get_featured('',get_input('limit', 5));
 $result = array();
 $list = array();
@@ -9,7 +14,7 @@ foreach ($featured as $entity) {
     // Construct entity
     $e = new stdClass();
     $e->title = $entity->title ? $entity->title : $entity->name;
-    $e->description -> $entity->description;
+    $e->description = strip_tags($entity->description);
     $e->url = $entity->getUrl();
     
     // Construct user
