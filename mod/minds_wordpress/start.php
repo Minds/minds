@@ -14,6 +14,19 @@ elgg_register_event_handler('init','system',function(){
         
     });
     
+    // Widget endpoints
+    elgg_register_page_handler('minds_wp', function ($pages) {
+       
+        switch ($pages[0]) {
+            
+            case 'featured' : 
+                require_once(dirname(__FILE__) . '/pages/widgets/featured.php'); return true;
+                break;
+        }
+        
+        return false;
+    });
+    
     // Listen for new comments
     elgg_register_event_handler('comment:create', 'comment', function($event, $object_type, $data) {
         
