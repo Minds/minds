@@ -321,9 +321,20 @@ div.hero div.left ul li {
 }
 
 
+#Minds-Toolbar iframe.topbar {
+    height: 110px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
 
 div.minds-buttons div.minds-button {
     float: right;
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+
+
+

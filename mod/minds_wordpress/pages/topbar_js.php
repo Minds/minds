@@ -37,4 +37,11 @@ function mindsGetToolbar() {
 
 }
 
-div.innerHTML= mindsGetToolbarCSS() + mindsGetToolbar();
+//div.innerHTML= mindsGetToolbarCSS() + mindsGetToolbar();
+div.innerHTML = mindsGetToolbarCSS() + "\n<iframe class=\"topbar\" frameborder=\"0\" seamless=\"true\" scrolling=\"no\" src=\"<?php 
+
+$noschema = str_replace('http:', '', elgg_get_site_url());
+$noschema = str_replace('https:', '', $noschema);
+echo $noschema;
+
+?>minds_wp/topbar\"></iframe>";

@@ -22,6 +22,9 @@ elgg_register_event_handler('init','system',function(){
             case 'featured' : 
                 require_once(dirname(__FILE__) . '/pages/widgets/featured.php'); return true;
                 break;
+            case 'topbar' :
+                require_once(dirname(__FILE__) . '/pages/widgets/topbar.php'); return true;
+                break;
         }
         
         return false;
