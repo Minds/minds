@@ -5,4 +5,4 @@
     style.textContent = '@import "' + '<?php echo elgg_get_site_url(); ?>widgets/<?php echo $vars['tab']; ?>/css' + '"';
     document.getElementsByTagName("body")[0].appendChild(style);
 </script> */ ?>
-<iframe  height="16" width="50" frameborder="0" seamless="true" scrolling="no"src="<?php echo elgg_get_site_url(); ?>widgets/<?php echo $vars['tab']; ?>/service/?url=<?php echo urlencode(get_input('url')); ?>&embed=yes"></iframe>
+<iframe  height="16" width="50" frameborder="0" seamless="true" scrolling="no"src="<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>widgets/<?php echo $vars['tab']; ?>/service/?url=<?php echo urlencode(get_input('url')); ?>&embed=yes"></iframe>

@@ -742,11 +742,15 @@ function create_api_user($site_guid) {
 
 	$public = sha1(rand() . $site_guid . microtime());
 	$secret = sha1(rand() . $site_guid . microtime() . $public);
-
+/*
 	$insert = insert_data("INSERT into {$CONFIG->dbprefix}api_users
 		(site_guid, api_key, secret) values
 		($site_guid, '$public', '$secret')");
 
+*/
+        $db = new DatabaseCall('api_users');
+        $insert = $db->insert($public, array('secret' => $secret));
+        
 	if ($insert) {
 		return get_api_user($site_guid, $public);
 	}
@@ -767,11 +771,25 @@ function get_api_user($site_guid, $api_key) {
 	global $CONFIG;
 
 	$site_guid = (int)$site_guid;
-
+        
+        $db = new DatabaseCall('api_users');
+        
+        if ($api_user = $db->getRow($api_key))
+        {
+            $key = new stdClass();
+            $key->api_key = $api_key;
+            $key->secret = $api_user['secret'];
+            
+            return $key;
+        }
+        
+/*
 	$query = "SELECT * from {$CONFIG->dbprefix}api_users"
 	. " where api_key='$api_key' and site_guid=$site_guid and active=1";
 
-	return get_data_row($query);
+	return get_data_row($query);*/
+        
+        return false;
 }
 
 /**

@@ -170,7 +170,14 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
      */
     public function getAccessToken($token)
     {
-        $results = elgg_get_entities($this->getAccessTokenOptions($token));
+        //$results = elgg_get_entities($this->getAccessTokenOptions($token));
+        $db = new DatabaseCall('entities_by_time');
+        $guids = $db->getRow('oauth2_access_token:'.$token);
+        
+        $results = elgg_get_entities(array(
+            'types' => array('object'),
+            'guids' => $guids
+        ));
 
         if (!empty($results)) {
             return array(
@@ -253,7 +260,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
      */
     public function getAuthorizationCode($code)
     {
-        $results = elgg_get_entities($this->getAuthCodeOptions($token));
+        $results = elgg_get_entities($this->getAuthCodeOptions($code));
 
         if (!empty($results)) {
             return array(

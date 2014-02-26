@@ -45,12 +45,12 @@ if($create['ok'] == true){
 	 register_error(elgg_echo('minds_comments:save:error'));
 }
 //user setting for orientation
-elgg_set_plugin_user_setting('commented', true, elgg_get_logged_in_user_guid(), 'minds_comments');
+//elgg_set_plugin_user_setting('commented', true, elgg_get_logged_in_user_guid(), 'minds_comments'); // Do we actually need this still?
 
 $entity = get_entity($pid, 'object');
 
 notification_create(array($entity->owner_guid), elgg_get_logged_in_user_guid(), $pid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
 
-elgg_trigger_event('comment:create', 'comment', $data);
+elgg_trigger_event('comment:create', 'comment', $data); 
 
 exit;
