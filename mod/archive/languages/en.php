@@ -339,6 +339,14 @@ Custom players are defined in "Application Studio" sub menu in KMC',
 	'archive:monetized:un-action' => 'Un-monetize',
 	
 	'archive:owner_tag' => 'By ',
+
+	/*
+	 * Other strings
+	 */
+	'archive:close' => 'Close',
+	'archive:invalid_image' => 'Invalid Image',
+	'archive:no_description' => 'No Description',
+	'archive:no_tags' => 'No Tags',
 );
 
 add_translation("en", $translations);

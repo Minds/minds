@@ -42,17 +42,20 @@ $params = array(
 );
 //echo elgg_view_module('tidypics-image', $header, $body, $params);
 
-	$img = elgg_view('output/img', array('src'=>$image->getIconURL('large'), 'class'=>'rich-image'));
-	$title = elgg_view('output/url', array('href'=>$image->getURL(), 'text'=>elgg_view_title($image->title)));
-	
-	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));	
-	
-	$subtitle = '<i>'.
-                elgg_echo('by') . ' ' . $owner_link . ' ' .
-                elgg_view_friendly_time($image->time_created) . '</i>';
-	
-	$content = $img . $body;
-	echo $menu;
-	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
-        echo $header;
-        echo elgg_view('output/url', array('href'=>$image->getURL(), 'text'=>$img));;
+$img = elgg_view('output/img', array('src'=>$image->getIconURL('large'), 'class'=>'rich-image'));
+$title = elgg_view('output/url', array('href'=>$image->getURL(), 'text'=>elgg_view_title($image->title)));
+
+$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));	
+
+$subtitle = '<i>' . elgg_echo('by') . ' ' . $owner_link . ' ' . elgg_view_friendly_time($image->time_created) . '</i>';
+
+$content = $img . $body;
+echo $menu;
+$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+echo $header;
+
+echo elgg_view('output/url', array(
+	'href'=> elgg_normalize_url("archive/image/{$image->guid}"), 
+	'text'=>$img,
+	'class' => 'tidypics-lightbox'
+));
