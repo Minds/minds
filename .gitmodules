@@ -4,6 +4,6 @@
 [submodule "vendors/phpcassa"]
 	path = vendors/phpcassa
 	url = https://github.com/thobbs/phpcassa.git
-[submodule "mod/elgg-deck_river"]
-	path = mod/elgg-deck_river
-	url = https://"minds-travis:Avitas%4014"@github.com/Minds/deck.git
+[submodule "mod/deck"]
+	path = mod/deck
+	url = https://minds-travis:Avitas%4014@github.com/Minds/deck.git

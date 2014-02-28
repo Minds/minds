@@ -239,7 +239,7 @@ minds.live.init = function() {
 						box.find('video').css('display','block');
 						
 						wrapRTC.openWebcam({
-							element: document.getElementById('local'),
+							element: document.getElementById('local-'+data.from_guid),
 							onSupportFailure: function (msg) {
 								console.log('err',msg);
 							},
@@ -255,7 +255,7 @@ minds.live.init = function() {
 							setStream: function (stream) {
 								console.log(stream); 
 								wrapRTC.callPeer(stream, {
-									element: document.getElementById('remote'),
+									element: document.getElementById('remote'+data.from_guid),
 									onError: function (error) {
 										console.log('error', error);
 										//_this._error(call_key, error)

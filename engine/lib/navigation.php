@@ -301,7 +301,7 @@ function elgg_site_menu_setup($hook, $type, $return, $params) {
 		}
 	} else {
 		// no featured menu items set
-		$max_display_items = 5;
+		$max_display_items = 10;
 
 		// the first n are shown, rest added to more list
 		// if only one item on more menu, stick it with the rest
