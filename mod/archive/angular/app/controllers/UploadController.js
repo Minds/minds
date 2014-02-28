@@ -120,7 +120,8 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         $scope.fileInfo[index]['updateResult'] = false;
         $scope.fileInfo[index]['license'] = $scope.default_license;
         $scope.fileInfo[index]['access_id'] = $scope.default_access;
-	$scope.fileInfo[index]['tags'] = "";
+        $scope.fileInfo[index]['tags'] = "";
+        $scope.fileInfo[index]['description'] = "";
 		
         /**
          * File type specifics

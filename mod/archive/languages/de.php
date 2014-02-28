@@ -65,6 +65,11 @@ $translations = array(
 	'archive:monetized:un-action' => 'Un-Geld verdienen',
 	
 	'archive:owner_tag' => 'Von ',
+
+	/*
+	 * Other strings
+	 */
+	'archive:close' => 'Schließen',
 );
 
 add_translation("de", $translations);

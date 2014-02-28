@@ -11,17 +11,21 @@ $token = generate_action_token($ts);
 $tokens = "__elgg_token=$token&__elgg_ts=$ts";
 
 $url = get_input('url');
+ 
 
 elgg_set_ignore_access();
-$entity = elgg_get_entities_from_metadata(array(
+$entities = elgg_get_entities(array( // TODO Do this in an efficient cassandra way
     'type' => 'object',
     'subtype' => 'mind_widget_voting_stub',
-    'limit' => 1,
-    'metadata_name' => 'url',
-    'metadata_value' => $url,
+    'limit' => 999999,
 ));
-if ($entity){
-    $entity = $entity[0];
+$entity = null;
+if ($entities){
+    foreach ($entities as $e)
+        if ($e->url == $url) {
+            $entity = $e;
+            break;
+        }
 }
 
 ?>

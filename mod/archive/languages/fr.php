@@ -65,6 +65,11 @@ $translations = array(
 	'archive:monetized:un-action' => 'Un-monétiser',
 	
 	'archive:owner_tag' => 'par ',
+
+	/*
+	 * Other strings
+	 */
+	'archive:close' => 'Fermer',
 );
 
 add_translation("es", $translations);

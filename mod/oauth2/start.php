@@ -121,7 +121,7 @@ function oauth2_pam_handler($credentials = NULL) {
     elgg_set_ignore_access(true);
 
     // Validate the request
-    if (!$server->verifyAccessRequest(OAuth2_Request::createFromGlobals())) {
+    if (!$server->verifyAccessRequest(OAuth2_Request::createFromGlobals())) { 
         error_log('oauth2_pam_handler() - ' . $server->getResponse());
         elgg_set_ignore_access($access);
         return false;
@@ -131,7 +131,7 @@ function oauth2_pam_handler($credentials = NULL) {
     $token = $storage->getAccessToken(get_input('access_token'));
 
     // get the user associated with this token
-    $user = get_entity($token['user_id']);
+    $user = get_entity($token['user_id'], 'user');
 
     elgg_set_ignore_access($access);
 
@@ -142,13 +142,13 @@ function oauth2_pam_handler($credentials = NULL) {
     }
 
     // try logging in the user object here
-    if (!login($user)) {
+    if (!login($user)) { 
         error_log('oauth2_pam_handler() - Failed to login user');
         return false;
     }
 
     // save the fact that we've validated this request already
-
+    
     // tell the PAM system that it worked
     return true;
 }

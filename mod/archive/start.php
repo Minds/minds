@@ -90,6 +90,42 @@ function minds_archive_init() {
 		
 	elgg_extend_view('css','archive/css');
 
+	// Photo related JS/CSS
+	$js = elgg_get_simplecache_url('js', 'photos/tidypics');
+	elgg_register_simplecache_view('js/photos/tidypics');
+	elgg_register_js('tidypics', $js, 'footer');
+
+	// $js = elgg_get_simplecache_url('js', 'photos/tagging');
+	// elgg_register_simplecache_view('js/photos/tagging');
+	// elgg_register_js('tidypics:tagging', $js, 'footer');
+
+	$js = elgg_get_simplecache_url('js', 'photos/lightbox');
+	elgg_register_simplecache_view('js/photos/lightbox');
+	elgg_register_js('tidypics:lightbox', $js, 'footer');
+
+	elgg_extend_view('css/elgg', 'css/photos/css');
+
+	// Register jquery-fancybox2 js lib
+	$js = elgg_get_simplecache_url('js', 'fancybox2');
+	elgg_register_simplecache_view('js/fancybox2');
+	elgg_register_js('jquery-fancybox2', $js);
+
+	// Register jquery-fancybox2 css
+	$css = elgg_get_simplecache_url('css', 'fancybox2');
+	elgg_register_simplecache_view('css/fancybox2');
+	elgg_register_css('jquery-fancybox2', $css);
+
+	// Extend Elgg JS (extra elgg config variables)
+	elgg_extend_view('js/elgg', 'js/photos/config');
+
+	// Load all photo related JS/CSS
+	elgg_load_js('tidypics');
+	//elgg_load_js('tidypics:tagging');
+	elgg_load_js('tidypics:lightbox');
+	elgg_load_js('jquery-fancybox2');
+	elgg_load_css('jquery-fancybox2');
+
+
 	// Register a page handler, so we can have nice URLs (fallback in case some links go to old kaltura_video)
 	elgg_register_page_handler('kaltura_video','minds_archive_page_handler');
 	elgg_register_page_handler('archive','minds_archive_page_handler');
@@ -129,6 +165,7 @@ function minds_archive_init() {
     elgg_register_action("archive/deleteElggVideo" , $action_path . "deleteAngular.php");
     elgg_register_action("archive/selectAlbum" , $action_path . "tidypics/album.php");
     elgg_register_action("archive/getKSession" , $action_path . "generateKalturaSession.php");
+    elgg_register_action("archive/image/update", $action_path . "tidypics/update_image.php");
 
 	//Setup kaltura
 	
@@ -255,6 +292,11 @@ function minds_archive_page_handler($page) {
 		include(dirname(__FILE__) . "/missconfigured.php");
 		return true;
 	}*/
+
+	// Need to have comments js/css available for image lightbox
+	elgg_load_css('minds_comments');
+	elgg_load_js('minds_comments');
+	elgg_load_js('hj.framework.ajax');
 	
 	switch($page[0]) {
 		case 'all':
@@ -349,6 +391,14 @@ function minds_archive_page_handler($page) {
 			break;	
 		case 'unavailable':
 			include(dirname(__FILE__) . "/pages/archive/unavailable.php");
+			break;
+		// Image lightbox
+		case 'image':
+			if (!elgg_is_xhr()) {
+				return false;
+			}
+			set_input('guid', $page[1]);
+			include(dirname(__FILE__) . "/pages/archive/image_lightbox.php");
 			break;
 		default:
 			set_input('username',$page[0]);
