@@ -55,7 +55,7 @@ minds.live.init = function() {
 		/**
 		 * The connection to the socket server
 		 */
-		portal.open("http://localhost:8080/", { sharing:true }).on({
+		portal.open("http://107.21.42.113:8080/", { sharing:true }).on({
 			open: function() {
 				//subscribe the user to the site chat
 				portal.find().send("connect", { guid: user.guid, name: user.name, username: user.username});
@@ -181,14 +181,16 @@ minds.live.init = function() {
 				}
 				
 				$(document).on('click', '#hangup', function(){
+
+					var guid = $(this).parents('li.box').attr('id');
 					portal.find().send("video", { 
-						to_guid: data.from_guid,
+						to_guid: guid,
 						status: 'hangup'
 					});
-					portal.find().send("video", { 
-						to_guid: data.to_guid,
-						status: 'hangup'
-					});
+					//portal.find().send("video", { 
+					//	to_guid: elgg.get_logged_in_user_guid(),
+				//		status: 'hangup'
+					//});
 				});
 				
 				switch(status){
@@ -239,7 +241,7 @@ minds.live.init = function() {
 						box.find('video').css('display','block');
 						
 						wrapRTC.openWebcam({
-							element: document.getElementById('local'),
+							element: document.getElementById('local-'+data.to_guid),
 							onSupportFailure: function (msg) {
 								console.log('err',msg);
 							},
@@ -255,7 +257,7 @@ minds.live.init = function() {
 							setStream: function (stream) {
 								console.log(stream); 
 								wrapRTC.callPeer(stream, {
-									element: document.getElementById('remote'),
+									element: document.getElementById('remote-'+data.to_guid),
 									onError: function (error) {
 										console.log('error', error);
 										//_this._error(call_key, error)
@@ -300,16 +302,21 @@ minds.live.init = function() {
 					
    					break;
 					case 'hangup':
-
-						wrapRTC.stopConnection(minds.live.pc);
 						
+						document.getElementById("ringer").pause();
+						document.getElementById("tone").pause();
 						//wrapRTC.stop(document.getElementById('local'), )
 						box.find('video').css('display','none');
 						box.find('button').remove();
-						
-						box.find('.call').append('<div id="flash-p2p-'+ data.to_guid + '"></div><div id="flash-p2p-'+ data.from_guid + '"></div>');
+					
+						minds.live.pc = null;
+
+						webRTC._stopUserMedia(document.getElementByClass('local'));
+						webRTC._stopUserMedia(document.getElementByClass('remote'));
+						//box.find('.call').append('<div id="flash-p2p-'+ data.to_guid + '"></div><div id="flash-p2p-'+ data.from_guid + '"></div>');
 						
 						box.css('bottom', '200px');
+						wrapRTC.stopConnection(minds.live.pc);
 					break;
 					
 					/**
@@ -327,7 +334,7 @@ minds.live.init = function() {
 						 */
 						box.find('.call').prepend('<button id="answer">Answer</button><button id="hangup">Reject</button>');
 						
-					
+							
 						/**
 						 * Event listener for when the user accepts the offer, aka answers the call
 						 */
@@ -339,7 +346,8 @@ minds.live.init = function() {
 							console.log('answered');
 							box.find('.call button').remove();
 							box.find('.call').prepend('<button id="hangup">Hangup</button>');
-							
+							box.find('.local').addClass('active');
+							box.css('bottom', '300px');	
 							document.getElementById("ringer").pause();
 							
 							//if(!isCaller){
@@ -350,7 +358,7 @@ minds.live.init = function() {
 							//}
 							
 							wrapRTC.openWebcam({
-								element: document.getElementById('local'),
+								element: document.getElementById('local-'+data.from_guid),
 								//constraints: {"video": {"mandatory": { chromeMediaSource: "screen"}}},
 								onSupportFailure: function (msg) {
 								console.log('err',msg);
@@ -367,7 +375,7 @@ minds.live.init = function() {
 								setStream: function (stream) {
 						
 									wrapRTC.answer( data.msg, stream, {
-										element: document.getElementById('remote'),
+										element: document.getElementById('remote-'+data.from_guid),
 										setPC: function(pc){
 											minds.live.pc = pc;
 										},				
@@ -402,11 +410,10 @@ minds.live.init = function() {
 					 */
 					case 'signal':
 						var msg = data.msg;
-						console.log('signaled', msg);
+						if(!minds.live.pc) return;
 						switch(msg.type){
-							
 							case 'candidate':
-									wrapRTC.candidate(minds.live.pc, msg);
+								wrapRTC.candidate(minds.live.pc, msg);
 								
 								//wrapRTC.candidate(self.apc, msg);
 								break;
@@ -815,8 +822,8 @@ minds.live.openChatWindow = function(id,name,message, minimised){
 		       			 	'<div class="call">' +
 		       			 		'<div id="flash-p2p-'+ id + '" style="display:none; height:100px;"></div>' + 
 		       			 		
-		       			 		'<video id="local" class="local" autoplay muted></video>' + 
-		       			 		'<video id="remote" class="remote" autoplay></video>' + 
+		       			 		'<video id="local-'+id+'" class="local" autoplay muted></video>' + 
+		       			 		'<video id="remote-'+id+'" class="remote" autoplay></video>' + 
 		       			 	//	'<div id="flash" style="display:none;"> </div>'+ 
 		       			 	'</div>' + 
 		       			 	

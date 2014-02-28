@@ -8,7 +8,7 @@
  * 
  */
 
-elgg_register_event_handler('init','system','gatherings_init', 1);
+elgg_register_event_handler('init','system','gatherings_init');
 	
 /**
  * Initialize the gathering plugin.
@@ -45,11 +45,12 @@ function gatherings_init(){
 	//add a tab in site menu
 	//$item = new ElggMenuItem('webinar', elgg_echo('gatherings:menu:site'), 'gatherings/all');
 	if(elgg_is_logged_in()){
-		elgg_register_menu_item('site', array(	'name'=>'gatherings',
+
+		elgg_register_menu_item('site', array(	'name'=>'gathering',
 							'title'=>elgg_echo('gatherings:menu:site'),
 							'href'=>'gatherings/all',
 							'text' => '&#58277;',
-							'priority' => 15	
+							'priority' => 150	
 					));
 	}
 	
@@ -65,31 +66,28 @@ function gatherings_init(){
 	// Extend the main css view
 	elgg_extend_view('css','webinar/css');
 		
-	// Register entity type for search
-	elgg_register_entity_type('object','webinar');
-		
 	//register_elgg_event_handler('pagesetup','system','gatherings_pagesetup');
 	// Register for notifications
-	register_notification_object('object', 'webinar', elgg_echo('gatherings:notify:new'));
+	//register_notification_object('object', 'webinar', elgg_echo('gatherings:notify:new'));
 		
 	// add checkbox on group edit page to activate webinar
-	add_group_tool_option('webinar',elgg_echo('gatherings:enable'),false);
-	elgg_extend_view('groups/tool_latest', 'webinar/group_module');
+	//add_group_tool_option('webinar',elgg_echo('gatherings:enable'),false);
+	//elgg_extend_view('groups/tool_latest', 'webinar/group_module');
 	// owner_block menu
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'gatherings_handler_menu_owner_block');
 	// entity menu
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'gatherings_handler_menu_entity');
 		
 	// Listen to notification events and supply a more useful message
-	elgg_register_plugin_hook_handler('notify:entity:message', 'object', 'gatherings_handler_notify_message');
+//	elgg_register_plugin_hook_handler('notify:entity:message', 'object', 'gatherings_handler_notify_message');
 		
 	elgg_register_plugin_hook_handler('permissions_check', 'object', 'gatherings_handler_permissions_check');
 		
 	//intercept event_calendar notification because event that type is webinar are create by webinar object
-	elgg_register_plugin_hook_handler('object:notifications','object','gatherings_handler_notifications_intercept');
+//	elgg_register_plugin_hook_handler('object:notifications','object','gatherings_handler_notifications_intercept');
 		
 	//on event create attendee relation ship, call add_river
-	elgg_register_event_handler('create','attendee','gatherings_handler_relationship_river');
+//	elgg_register_event_handler('create','attendee','gatherings_handler_relationship_river');
 
 }
 
