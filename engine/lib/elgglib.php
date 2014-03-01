@@ -1913,7 +1913,7 @@ function elgg_cacheable_view_page_handler($page, $type) {
 		$return = elgg_view("$type/$view");
 	
 		if($type == 'js'){
-			$return = JSMin::minify($return);
+		//	$return = JSMin::minify($return);
 		} elseif($type == 'css'){
 			$return = CssMin::minify($return);
 		}
