@@ -4,7 +4,7 @@
  */
 
 $url = get_input('url');
-$size = get_input('size', 'large');
+$size = get_input('size', 'adaptive');
 
 if($size == 'small'){
 	$w = 320; 
@@ -15,6 +15,9 @@ if($size == 'small'){
 } elseif($size == 'large'){
 	$w = 730;
 	$h = 411;
+} elseif($size == 'adaptive'){
+	$w = '100%';
+	$h = 420;
 } else {
 	return false;
 }
