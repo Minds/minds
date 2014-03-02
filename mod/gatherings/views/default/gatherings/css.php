@@ -112,7 +112,7 @@
 	color: #888;
 }
 .minds-live-chat ul li .messages{
-	height:152px;
+	height:150px;
 	width:auto;
 	background:#F8F8F8;
 	padding:8px;

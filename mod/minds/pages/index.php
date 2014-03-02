@@ -65,10 +65,17 @@ $titles_array = array(	'Freeing The World\'s Information',
 			'The Organic Web'
 			);
 
-$title = elgg_view_title($titles_array[rand(0,count($titles_array)-1)]);
-if ($t = elgg_get_plugin_setting('frontpagetext', 'minds_themeconfig')) 
-        $title = elgg_view_title($t);
+$titles = array();
+foreach($titles_array as $t){
+	
+	$title = elgg_view_title($t);
+	if ($t = elgg_get_plugin_setting('frontpagetext', 'minds_themeconfig')) 
+        	$title = elgg_view_title($t);
+	
+	$titles[] = $title;
+}
 
+$title = elgg_view('output/carousel', array('divs'=>$titles));
 
 /*$launch_ts = 1411300800;//this could be GMT??
 $ts = time();

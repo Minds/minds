@@ -25,7 +25,7 @@ minds.live.init = function() {
 		/*
 		 * Send a message
 		 */
-		$(document).on('keydown', '.minds-live-chat-userlist li input', function(e){ 
+		$(document).on('keydown', '.minds-live-chat-userlist li textarea', function(e){ 
 			input = $(this);
 			parent = input.parents('li');
 			//tell the user that we are typing..
@@ -33,6 +33,7 @@ minds.live.init = function() {
 				to_guid: parent.attr('id') 
 			}); 
 			if(e.which == 13){
+			 e.preventDefault();
 				portal.find().send("message", { to_guid: parent.attr('id'), message: $(this).val(), from_name:user.name }); 
 				$(this).val('');
 			}
@@ -164,7 +165,7 @@ minds.live.init = function() {
 			},
 			recieved: function (data){
 				$('.minds-live-chat-userlist').find('li.box#' + data.from_guid).find('.rt-stats')
-					.html('recieved')
+					.html('received')
 					.delay(2000)
 					.queue(function(n){ $(this).html(''); n(); });
 			},
@@ -809,7 +810,7 @@ minds.live.openChatWindow = function(id,name,message, minimised){
 			}
 			var box = '<li class="box '+ liclass + '" id="' + id + '">' +
 		       			 	//'<a href="/' + username + '">'+ 
-		       			 		'<img src="' + avatar_url + '" class="avatar"/>'+
+		       			 		'<a href="' + elgg.get_site_url() + username + '"><img src="' + avatar_url + '" class="avatar"/></a>'+
 		       			 		'<h3>'+
 		       			 			name + 
 		       			 		'</h3>' + 
@@ -829,7 +830,7 @@ minds.live.openChatWindow = function(id,name,message, minimised){
 		       			 	
 		       			 '<div class="messages">' + message +  '</div>' + 
 		       			 '<div class="rt-stats"></div>' +
-		        		 '<div> <input type="text" class="elgg-input" /> </div>' +
+		        		 '<div> <textarea class="elgg-input" ></textarea> </div>' +
 				'</li>';
 			 $('.minds-live-chat-userlist > ul').append(box);	
 		//	$('.minds-live-chat-userlist > ul').append(box).animate({ scrollTop: $('.box#'+id).find('.messages')[0].scrollHeight},1000);
@@ -874,7 +875,7 @@ minds.live.saveCacheChat = function(id, message, name){
  * Remove a chat
  */
 minds.live.removeChat = function(id){
-	$(document).find('.box#'+id).remove();
+	$('.box#'+id).remove();
 	minds.live.removeCacheChat(id);
 	minds.live.adjustOffset();	
 }

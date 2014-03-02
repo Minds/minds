@@ -19,7 +19,10 @@ if($elgg_path == elgg_get_site_url() || $elgg_path == null){
 
 ob_start();
 elgg_set_viewtype('json');
-page_handler(array_shift($path), implode('/', $path));
+$handler = array_shift($path);
+if(!page_handler($handler, implode('/', $path))){
+	page_handler('channel', "$handler/".implode('/', $path));
+}
 elgg_set_viewtype('default');
 $out = ob_get_contents();
 ob_end_clean();
