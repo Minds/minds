@@ -5,9 +5,15 @@ if (!get_input('comment')) {
     return true;
 }
 
+$ia = elgg_set_ignore_access();
+
 if (!elgg_is_logged_in()){
-	register_error(elgg_echo('minds_comment:mustbeloggedin'));
-	return true;
+	//relies on the minds user account being created @todo fix this?
+	$owner = get_user_by_username('minds');
+	$owner = new stdClass();
+	$owner->guid = 0;
+}else {
+	$owner = elgg_get_logged_in_user_entity();
 }
 
 $type = get_input('type', null);
@@ -27,10 +33,10 @@ if($create['ok'] == true){
 	
 	system_message(elgg_echo('minds_comments:save:success'));
 	
-	$data['_id'] = time().elgg_get_logged_in_user_guid();
+	$data['_id'] = time().$owner->guid;
 	$data['_type'] = $type;
 	$data['_source']['pid'] = $pid;
-	$data['_source']['owner_guid'] = elgg_get_logged_in_user_guid();
+	$data['_source']['owner_guid'] = $owner->guid;
 	$data['_source']['description'] = $comment;
 	$data['_source']['time_created'] = time();
 	//header('Content-Type: application/json');
@@ -49,8 +55,9 @@ if($create['ok'] == true){
 
 $entity = get_entity($pid, 'object');
 
-notification_create(array($entity->owner_guid), elgg_get_logged_in_user_guid(), $pid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
+notification_create(array($entity->owner_guid), $owner->guid, $pid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
 
 elgg_trigger_event('comment:create', 'comment', $data); 
 
+elgg_set_ignore_access($ia);
 exit;
