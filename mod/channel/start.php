@@ -313,7 +313,8 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 	}
 
 	if (!$icon_time) {
-		return "_graphics/icons/user/default{$size}.gif";
+		return minds_fetch_gravatar_url($user->email, $size, 'identicon');
+		//return "_graphics/icons/user/default{$size}.gif";
 	}
 
 	if ($user->isBanned()) {
