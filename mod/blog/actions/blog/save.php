@@ -13,6 +13,7 @@
 
 // start a new sticky form session in case of failure
 elgg_make_sticky_form('blog');
+global $SESSION;
 
 // save or preview
 $save = (bool)get_input('save');
@@ -24,7 +25,7 @@ $user = elgg_get_logged_in_user_entity();
 
 if(get_input('license') == 'not-selected'){
 	register_error(elgg_echo('minds:license:not-selected'));
-	forward(REFERER);
+	return	forward(REFERER);
 }
 
 // edit or create a new entity

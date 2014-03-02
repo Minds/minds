@@ -357,7 +357,7 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 
 	$sidebar = '';
 	if ($page == 'edit') {
-		$blog = get_entity($guid, 'object');
+		$blog = get_entity($guid);
 
 		$title = elgg_echo('blog:edit');
 
