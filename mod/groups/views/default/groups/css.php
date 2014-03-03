@@ -6,8 +6,17 @@
  */
 
 ?>
-.groups .elgg-image .elgg-avatar{
-	width:60px;
+.group-action-button{
+	position:absolute;
+	right:20px;
+	top:40px;
+}
+
+.elgg-list .group-avatar{
+
+	margin: 0 -5%;
+	width: 110%;
+	height: auto;
 }
 
 .groups-profile > .elgg-image {

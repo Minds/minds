@@ -1,7 +1,5 @@
 <?php
-/**
- * Members navigation
- */
+echo elgg_view_menu('title', array('class'=>'group-action-button'));
 $page_owner=elgg_get_page_owner_entity();
 if($page_owner){
 	$invitaions_count = groups_get_invited_groups($page_owner->getGUID());

@@ -40,7 +40,7 @@ foreach($sources as $source){
 	elgg_register_menu_item('search:sources', array(
 		'name'=>$source, 
 		'text' => elgg_echo($source),
-		'href' => "$path&type=$t&license=$l&$source=$source&category=$c",
+		'href' => "$path&type=$t&license=$l&source=$source&category=$c",
 		'selected' => $s == $source
 	));
 }
