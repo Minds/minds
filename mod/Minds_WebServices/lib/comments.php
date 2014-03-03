@@ -59,6 +59,24 @@ expose_function('comments.get',
 				true,
 				true);
 				
+function minds_comments_ws_getbyid($id, $type) {
+    
+	$mc = new MindsComments();
+        
+        return $comment = $mc->single($type, $id);
+}
+
+expose_function('comments.get.byid',
+				"minds_comments_ws_getbyid",
+				array(
+						'id' => array ('type' => 'string', 'required' => true),
+                                                'type' => array ('type' => 'string', 'required' => false, 'default'=>'entity'),
+					),
+				"Get a comment by it's id",
+				'GET',
+				true,
+				true);
+
 /**
  * Posts a comment
  */

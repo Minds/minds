@@ -30,22 +30,24 @@ function elgg_get_widgets($options, $context){
                 	$attrs['context'] = $context;
        		 }	
 	}	
-	$db = new DatabaseCall('widget');
-	$raw = $db->getByIndex($options);
-	foreach($raw as $k=>$w){
-		$obj = new stdClass();
-		$obj->guid = $k;
-		foreach($w as $k=>$v){
-			$obj->$k = $v;
-		}
-		$widgets[] = new ElggWidget($obj);
-	}
+
+	$widgets = elgg_get_entities(
+		array(
+			'type'=>'widget', 
+			'owner_guid'=> $options['owner_guid'],
+			'limit'=>0
+		)
+	);
+	
 	if (!$widgets) {
 		return array();
 	}
 	
 	$sorted_widgets = array();
 	foreach ($widgets as $widget) {
+		if($widget->context != $context){
+			continue;
+		}
 		if (!isset($sorted_widgets[(int)$widget->column])) {
 			$sorted_widgets[(int)$widget->column] = array();
 		}

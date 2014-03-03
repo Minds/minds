@@ -259,15 +259,7 @@ if (elgg_view_exists($settings_view_old) || elgg_view_exists($settings_view_new)
                                 }
                         }
                         ?>
-        
-                        <div><?php echo $description; ?></div>
-                        <p><?php echo $author . ' - ' . $website; ?></p>
-                        
-                        <?php
-                                echo $resources_html;
-                                echo $docs;
-                        ?>
-        
+
                         <div class="pts">
                         <?php 
                                 echo elgg_view('output/url', array(
@@ -281,7 +273,12 @@ if (elgg_view_exists($settings_view_old) || elgg_view_exists($settings_view_new)
         </div>
         <div class="elgg-plugin-more hidden" id="elgg-plugin-manifest-<?php echo $css_id; ?>">
 
-                <?php
+                 <div><?php echo $description; ?></div>
+                        <p><?php echo $author . ' - ' . $website; ?></p>
+                        
+				<?php
+				echo $resources_html;
+               	echo $docs;
                 if ($screenshots_html) {
                         ?>
                         <div><ul><?php echo $screenshots_html; ?></ul></div>

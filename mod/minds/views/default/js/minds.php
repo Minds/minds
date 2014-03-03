@@ -269,7 +269,9 @@ $list.find('.elgg-list:first').append(data);
 						});
 					*/
 					$list.append('<div class="news-show-more load-more" data-load-next="'+offset+'">more</div>');
-					
+
+					// Trigger a hook for extra tasks after content is loaded
+					elgg.trigger_hook('loadMore', 'minds');
 				}
 			});
 		 

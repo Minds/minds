@@ -60,5 +60,6 @@ if (isset($data_root)) {
 
 // something went wrong so load engine and try to forward to default icon
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
-elgg_log("Profile icon direct failed.", "WARNING");
-forward("_graphics/icons/user/default{$size}.gif");
+//elgg_log("Profile icon direct failed.", "WARNING");
+forward(minds_fetch_gravatar_url($user->email, $size, 'identicon')); 
+//forward("_graphics/icons/user/default{$size}.gif");

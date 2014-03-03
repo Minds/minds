@@ -58,7 +58,8 @@ class DatabaseCall{
 						'relationships' => array(), //this is a new index for relationships (friends will be merged into here soon)
 						'newsfeed' => array(),
 						'timeline' => array(),
-						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
+						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ),
+                                                'api_users' => array('secret'=>'UTF8Type'),
 				);
 		foreach($cfs as $cf => $indexes){
 			$this->createCF($cf, $indexes);

@@ -42,7 +42,7 @@ class OAuth2_GrantType_AuthorizationCode implements OAuth2_GrantTypeInterface, O
          * @uri - http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.3
          */
         if (isset($tokenData['redirect_uri']) && $tokenData['redirect_uri']) {
-            if (!$request->request('redirect_uri') || urldecode($request->request('redirect_uri')) != $tokenData['redirect_uri']) {
+            if (!$request->request('redirect_uri') || (urldecode($request->request('redirect_uri')) != $tokenData['redirect_uri'])) {
                 $this->response = new OAuth2_Response_Error(400, 'redirect_uri_mismatch', "The redirect URI is missing or do not match", "#section-4.1.3");
                 return false;
             }

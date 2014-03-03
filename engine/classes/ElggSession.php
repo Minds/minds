@@ -146,8 +146,15 @@ class ElggSession extends ArrayObject {
     public function set($name, $value) {
             $this->storage->set($name, $value);
     }
+
+    /**
+     * Check if an attribute is set
+     */
+    public function has($name){
+		return $this->storage->has($name);
+    }
 	
-	/**
+    /**
      * Test if property is set either as an attribute or metadata.
      *
      * @param string $key The name of the attribute or metadata.

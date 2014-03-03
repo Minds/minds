@@ -79,10 +79,12 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
 	
 	// If Image then create an album. Don't upload to Kaltura.
  	if ($guid){
-       		$image = get_entity($guid, 'object');
+       	$image = get_entity($guid, 'object');
+        $new_image = false;
 	} else {
-        	$image = new TidypicsImage();
-    	}
+        $image = new TidypicsImage();
+        $new_image = true;
+    }
 
 	if($album_guid){
 		$album = get_entity($album_guid, 'object');
@@ -111,9 +113,13 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
     $guid = $image->save($_FILES['fileData']);
     
     if ($guid) {
-        $album->prependImageList(array($guid));
-	echo $guid;
-        add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
+	    echo $guid;
+
+        // Only post to river/update album's image list if we're creating a new image entity
+        if ($new_image) {
+            add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
+            $album->prependImageList(array($guid));
+        }
         exit;
     }
 }else{

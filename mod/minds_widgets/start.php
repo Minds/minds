@@ -110,3 +110,10 @@ function minds_widgets_pagesetup() {
 
         }
 }	
+
+
+function minds_widgets_remove_url_schema($url) {
+    $noschema = substr($url, 0);
+    $noschema = str_replace('http:', '', $noschema);
+    return str_replace('https:', '', $noschema);
+}

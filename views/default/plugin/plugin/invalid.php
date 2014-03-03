@@ -22,8 +22,7 @@ $css_id = preg_replace('/[^a-z0-9-]/i', '-', $plugin->getID());
 <div class="elgg-state-draggable elgg-plugin elgg-state-inactive elgg-state-error" id="elgg-plugin-<?php echo $plugin->guid; ?>">
 	<div class="elgg-head"><h3><?php echo $id; ?></h3></div>
 	<div class="elgg-body">
-		<p class="elgg-state-error"><?php echo $message; ?></p>
-		<p><?php echo elgg_echo('admin:plugins:warning:invalid:check_docs'); ?></p>
+		<!--<p class="elgg-state-error"><?php echo $message; ?></p>-->
 		
 		<div class="pts">
 			<?php

@@ -41,6 +41,8 @@ function minds_search_init() {
 	
 	$wikiCSS = elgg_get_simplecache_url('css', 'wiki');
 	elgg_register_css('wiki', $wikiCSS);
+
+	elgg_extend_view('js/elgg', 'minds_search/js');
 	
 	elgg_register_plugin_hook_handler('register', 'menu:search_result', 'minds_search_result_menu_setup');
 

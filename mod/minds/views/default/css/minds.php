@@ -1026,13 +1026,17 @@ li.elgg-menu-item-rss{
 #hz_carousel{
 	clear:both;
 	width:100%;
-	height:auto;
+	height:72px;
+	margin:auto;
 	position:relative;
+	overflow:hidden;
 }
-#hz_carousel .thumbnail-tile{
-	width:250px;
-	height:160px;
-	margin:10px 0;
+.caroufredsel_wrapper > div{
+	width:100% !important;
+}
+
+#hz_carousel > div > div > div{
+	width:100%;
 	padding:0;
 }
 #hz_carousel .thumbnail-tile .hover {

@@ -1471,6 +1471,7 @@ class ElggInstaller {
 							'minds_webservices',
                                                         'minds_themeconfig',
                                                         'minds_theme_selector',
+                                                        'minds_wordpress',
                                                         //'anypage',
 							'persona',
 							'notifications',
