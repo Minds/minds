@@ -46,7 +46,7 @@ function invalidate_cache_for_entity($guid) {
 	} catch(Exception $e){
 	}
 
-	elgg_get_metadata_cache()->clear($guid);
+	//elgg_get_metadata_cache()->clear($guid);
 }
 
 /**
