@@ -21,6 +21,18 @@ minds.live.init = function() {
 
 		var guid = new String(user.guid);
 		
+		$(document).on('dblclick', 'video.remote', function(e){
+			elem = this;
+			if (elem.requestFullscreen) {
+			  elem.requestFullscreen();
+			} else if (elem.msRequestFullscreen) {
+			  elem.msRequestFullscreen();
+			} else if (elem.mozRequestFullScreen) {
+			  elem.mozRequestFullScreen();
+			} else if (elem.webkitRequestFullscreen) {
+			  elem.webkitRequestFullscreen();
+			}
+		});
 	
 		/*
 		 * Send a message
@@ -56,7 +68,7 @@ minds.live.init = function() {
 		/**
 		 * The connection to the socket server
 		 */
-		portal.open("http://107.21.42.113:8080/", { sharing:true }).on({
+		portal.open("http://<?php echo elgg_get_plugin_setting('server_url', 'gatherings'); ?>:8080/", { sharing:true }).on({
 			open: function() {
 				//subscribe the user to the site chat
 				portal.find().send("connect", { guid: user.guid, name: user.name, username: user.username});
@@ -256,7 +268,7 @@ minds.live.init = function() {
 							    }
 							},
 							setStream: function (stream) {
-								console.log(stream); 
+								minds.live.myCamStream = stream;
 								wrapRTC.callPeer(stream, {
 									element: document.getElementById('remote-'+data.to_guid),
 									onError: function (error) {
@@ -309,15 +321,17 @@ minds.live.init = function() {
 						//wrapRTC.stop(document.getElementById('local'), )
 						box.find('video').css('display','none');
 						box.find('button').remove();
+						box.css('bottom', '');
 					
-						minds.live.pc = null;
-
-						webRTC._stopUserMedia(document.getElementByClass('local'));
-						webRTC._stopUserMedia(document.getElementByClass('remote'));
-						//box.find('.call').append('<div id="flash-p2p-'+ data.to_guid + '"></div><div id="flash-p2p-'+ data.from_guid + '"></div>');
 						
-						box.css('bottom', '200px');
+						minds.live.myCamStream.stop();
+						//wrapRTC.stop(document.getElementsByClassName('local')[0], minds.live.myCamStream);
+						//wrapRTC.stop(document.getElementsByClassName('remote')[0]);
+						
+						//box.find('.call').append('<div id="flash-p2p-'+ data.to_guid + '"></div><div id="flash-p2p-'+ data.from_guid + '"></div>');
+					
 						wrapRTC.stopConnection(minds.live.pc);
+						minds.live.pc = null;
 					break;
 					
 					/**
@@ -374,7 +388,7 @@ minds.live.init = function() {
 								    }
 								},
 								setStream: function (stream) {
-						
+									minds.live.myCamStream = stream;
 									wrapRTC.answer( data.msg, stream, {
 										element: document.getElementById('remote-'+data.from_guid),
 										setPC: function(pc){

@@ -65,7 +65,7 @@
 		'gatherings:river:registered:create' => "%s has subscribe to the gathering",
 		'gatherings:river:start' => "The gathering %s is running !!",
 		'gatherings:server_salt' => 'BigBlueButton security salt (tip : run on server side the command line, bbb-conf --salt)',
-		'gatherings:server_url' => "BigBlueButton server's url",
+		'gatherings:server_url' => "Socket Server Address",
 		'gatherings:settings' => "Error: ask the admin to check the settings of the plugin",
 		'gatherings:slot' => " If so, choose a free slot : ",
 		'gatherings:slot:default' => "Add an event in the agenda ?",
