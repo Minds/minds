@@ -782,11 +782,11 @@ function get_entity($guid, $type = 'object') {
 	$db = new DatabaseCall('entities');
 	$row = $db->getRow($guid);
 	if(!$row){
-		$db = new DatabaseCall($type);
+		/*$db = new DatabaseCall($type);
 		$row = $db->getRow($guid);
-		if(!$row){
+		if(!$row){*/
 			return false;
-		}		
+		//	}		
 	}
 	$row['guid'] = $guid;
 	if(!isset($row['type'])){
@@ -990,8 +990,8 @@ function elgg_get_entities(array $options = array()) {
 						$db = new DatabaseCall('entities');
 						$rows = $db->getRows(array_keys($guids));
 						if(!count($rows)){
-							$db = new DatabaseCall($type);
-							$rows = $db->getRows(array_keys($guids));
+						//	$db = new DatabaseCall($type);
+						//	$rows = $db->getRows(array_keys($guids));
 						}
 					} else {
 						$db = new DatabaseCall('entities_by_time');

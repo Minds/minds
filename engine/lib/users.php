@@ -606,7 +606,7 @@ function get_user_by_username($username) {
 		$guid = get_user_index_to_guid($username);	
 	}
 	
-	$entity = get_entity($guid, 'user');
+	$entity = get_entity($guid);
 
 	if ($entity) {
 		$USERNAME_TO_GUID_MAP_CACHE[$username] = $entity->guid;
@@ -676,10 +676,10 @@ function get_user_by_email($email) {
 
 	if(is_array($guids)){
 		foreach($guids as $guid){
-      			$entities[] = get_entity($guid, 'user');
+      			$entities[] = get_entity($guid);
 		}
 	} else {
-		$entities[] = get_entity($guids, 'user');
+		$entities[] = get_entity($guids);
 	}
 
 	if($entities[0] == null){
@@ -736,7 +736,7 @@ function send_new_password_request($user_guid) {
 
 	global $CONFIG;
 
-	$user = get_entity($user_guid,'user');
+	$user = get_entity($user_guid);
 	if ($user instanceof ElggUser) {
 		// generate code
 		$code = generate_random_cleartext_password();
@@ -766,7 +766,7 @@ function send_new_password_request($user_guid) {
  * @return bool
  */
 function force_user_password_reset($user_guid, $password) {
-	$user = get_entity($user_guid,'user');
+	$user = get_entity($user_guid);
 	if ($user instanceof ElggUser) {
 		$ia = elgg_set_ignore_access();
 

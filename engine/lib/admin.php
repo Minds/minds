@@ -638,8 +638,8 @@ function elgg_add_admin_widgets($event, $type, $user) {
 			$guid = elgg_create_widget($user->getGUID(), $handler, 'admin');
 			if ($guid) {
 				$widget = get_entity($guid, 'widget');
-				/* @var ElggWidget $widget */
-				$widget->move($column, $position);
+				if($widget)
+					$widget->move($column, $position);
 			}
 		}
 	}
