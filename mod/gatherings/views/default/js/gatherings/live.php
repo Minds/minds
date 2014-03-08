@@ -353,8 +353,8 @@ minds.live.init = function() {
 						/**
 						 * Event listener for when the user accepts the offer, aka answers the call
 						 */
-						$(document).on('click', '#answer', function(){
-														
+						box.on('click', '#answer', function(){
+						box.off('click', '#answer');								
 							isCaller =  elgg.get_logged_in_user_guid() == data.to_guid; //in this case the reciever is the sender
 							box.find('video').css('display','block');
 							

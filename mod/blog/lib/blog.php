@@ -195,7 +195,7 @@ function blog_get_trending_page_content_list() {
         $options = array(
                 'timespan' => get_input('timespan', 'day')
         );
-        $trending = new MindsTrending(null, $options);
+        $trending = new MindsTrending(array(), $options);
 	$guids = $trending->getList(array('type'=>'object', 'subtype'=>'blog', 'limit'=>$limit, 'offset'=>$offset));
 	
 	if($guids)	{

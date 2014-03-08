@@ -354,15 +354,26 @@ function set_private_setting($entity_guid, $entity_type, $name, $value) {
  * @see remove_all_private_settings()
  * @link http://docs.elgg.org/DataModel/Entities/PrivateSettings
  */
-function remove_private_setting($entity_guid, $entity_type, $name) {
+function remove_private_setting($entity_guid, $name) {
 	global $CONFIG;
 
 	if(!$name){
 		return false;
 	}
 
-	$db = new DatabaseCall($entity_type);
+	$db = new DatabaseCall('entities');
 	$result = $db->removeAttributes($entity_guid, array($name));
+
+
+	/**
+	 * maybe we should cache on a higher level?
+	 */
+	if (function_exists('xcache_get')) {
+		$newentity_cache = new ElggXCache('new_entity_cache');
+	}
+      	if (isset($newentity_cache)) {	
+		$newentity_cache->delete($entity_guid);
+	}
 
 	return true;
 }

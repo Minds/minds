@@ -502,9 +502,9 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				if(!$scraper->getOwnerEntity()){
 					continue;
 				}
-				$blog->save();
+				$guid = $blog->save();
 				echo 'Saved a blog titled: ' . $blog->title;
-				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $blog->getGUID(),2, $item->get_date('U'));
+				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid,2, $item->get_date('U'));
 				
 				//make timestamp of last blog so we don't have timezone issues...
 				//$scraper->timestamp = $item->get_date('U');

@@ -7,7 +7,7 @@ if(!elgg_is_logged_in()){
 	return true;
 }
 //get online users
-$users = find_active_users(600, 0);
+//$users = find_active_users(600, 0);
 ?>
 <div class="minds-live-chat">
 	<audio id="sound">

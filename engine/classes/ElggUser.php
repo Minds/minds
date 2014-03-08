@@ -295,6 +295,14 @@ class ElggUser extends ElggEntity
 	 */
 	public function makeAdmin() {
 		// If already saved, use the standard function.
+		
+		if($this->guid){
+			$this->admin = 'yes';
+                        $this->save();
+		}	
+
+		return true;
+
 		if ($this->guid && !make_user_admin($this->guid)) {
 			return FALSE;
 		}

@@ -129,7 +129,7 @@ class DatabaseCall{
 		$defaults = array(  'multi' => false,
 							'offset' => "",
 							'finish' => "",
-							'limit' => 200,
+							'limit' => 500,
 							'reversed' => true
 							);
 		$options = array_merge($defaults, $options);
