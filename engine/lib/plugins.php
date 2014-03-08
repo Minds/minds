@@ -391,7 +391,7 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 			continue;
 
 		$row['guid'] = $k;
-		
+		$row['type'] = 'plugin'; //legacy	
 		$new_row = new StdClass;
 	
 		foreach($row as $k=>$v){
