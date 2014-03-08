@@ -4,14 +4,16 @@ require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access();
 
-//$blog = get_entity(268112608572215296);
-//var_dump($blog->getOwnerEntity());
-//$user = get_user_by_username('john');
-//$user->username = 'john';
-//$user->save();
-//var_dump($user->getUrl());
-global $DB;
+$john = get_user_by_username('john');
 
+var_dump($john);
+//reset_login_failure_count($john->guid);
+//var_dump(force_user_password_reset($john->guid, 'temp123'));
+
+//login($john);
+
+
+exit;
 $user = get_entity(281927423002415104);
 
 var_dump($user);

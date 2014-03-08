@@ -64,11 +64,12 @@ $posted = 0, $annotation_id = 0) {
 	//get the followers of the subject guid
         $followers = $subject->getFriendsOf(null, 10000, "", 'guids');
 	if(!$followers) { $followers = array(); }
+	$followers = array_keys($followers);
 	array_push($followers, 'site');//add to public timeline
 	array_push($followers, $action_type);//timelines for actions too
 	array_push($followers, $subject_guid);//add to their own timeline
 	array_push($followers, $object->container_guid); //add to containers timeline
-	foreach($followers as $follower_guid => $ts){
+	foreach($followers as $follower_guid){
 		$db = new DatabaseCall('timeline');
 		$db->insert($follower_guid, array($id => time()));
 	}
@@ -133,6 +134,7 @@ function elgg_delete_river(array $options = array()) {
 		$object = $item->getObjectEntity();
 		$followers = $owner->getFriendsOf();
 		if(!is_array($followers)){ $followers = array(); }
+		$followers = array_keys($followers);
 
 		//remove from personal line
 		array_push($followers, 'personal:'.$owner->guid);

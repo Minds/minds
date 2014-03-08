@@ -46,12 +46,12 @@ function gatherings_init(){
 	//$item = new ElggMenuItem('webinar', elgg_echo('gatherings:menu:site'), 'gatherings/all');
 	if(elgg_is_logged_in()){
 
-		elgg_register_menu_item('site', array(	'name'=>'gathering',
+	/*	elgg_register_menu_item('site', array(	'name'=>'gathering',
 							'title'=>elgg_echo('gatherings:menu:site'),
 							'href'=>'gatherings/all',
 							'text' => '&#58277;',
 							'priority' => 150	
-					));
+					));*/
 	}
 	
 	// Register a page handler, so we can have nice URLs

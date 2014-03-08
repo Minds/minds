@@ -7,18 +7,24 @@ if (!get_input('comment')) {
 
 $ia = elgg_set_ignore_access();
 
+$type = get_input('type', null);
+$pid = get_input('pid', null);
+$comment = urldecode(get_input('comment', null));
+
 if (!elgg_is_logged_in()){
+	
 	//relies on the minds user account being created @todo fix this?
 	$owner = get_user_by_username('minds');
 	$owner = new stdClass();
 	$owner->guid = 0;
+
+	if (false !== strpos($comment, 'http')){
+		exit; //most probably spam
+	}
+
 }else {
 	$owner = elgg_get_logged_in_user_entity();
 }
-
-$type = get_input('type', null);
-$pid = get_input('pid', null);
-$comment = urldecode(get_input('comment', null));
 
 $mc = new MindsComments();
 $create = $mc->create($type, $pid, $comment);

@@ -82,7 +82,7 @@ function cache_entity(ElggEntity $entity) {
 		// have caused a bunch of unnecessary purges at every shutdown. Doing it this way we have no way
 		// to know that the expunged entity will be GCed (might be another reference living), but that's
 		// OK; the metadata will reload if necessary.
-		elgg_get_metadata_cache()->clear($random_guid);
+		//elgg_get_metadata_cache()->clear($random_guid);
 	}
 
 	$ENTITY_CACHE[$entity->guid] = $entity;
@@ -588,7 +588,8 @@ function create_entity($object = NULL, $timebased = true) {
 			if(!$followers) { 
 				$followers = array(); 
 			}
-		
+			$followers = array_keys($followers);
+
 			array_push($followers, $owner->guid);//add to their own timeline
 			foreach($followers as $follower){
 				$db->insert($namespace . ':network:'. $follower, $data);
@@ -1723,6 +1724,7 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 					if(!$followers) { 
 						$followers = array(); 
 					}
+					$followers = array_keys($followers);
 					array_push($followers, $entity->owner_guid);
 			
 					foreach($followers as $follower){

@@ -188,6 +188,12 @@
 .minds-live-chat ul li.userlist span{
 	color:#333;
 }
+.minds-live-chat ul li.userlist ul {
+overflow: scroll;
+position: relative;
+height: 170px;
+margin: 0 -14px;
+}
 .minds-live-chat ul li.userlist ul li{
 	width:100%;
 	height:auto;

@@ -199,13 +199,13 @@ function log_login_failure($user_guid) {
 function reset_login_failure_count($user_guid) {
 	$user_guid = (int)$user_guid;
 	$user = get_entity($user_guid, 'user');
-
+	
 	if (($user_guid) && ($user) && ($user instanceof ElggUser)) {
 		$fails = (int)$user->getPrivateSetting("login_failures");
-
+		
 		if ($fails) {
 			for ($n = 1; $n <= $fails; $n++) {
-				$user->removePrivateSetting("login_failure_$n");
+				$user->removePrivateSetting("login_failure_" . $n);
 			}
 
 			$user->removePrivateSetting("login_failures");
@@ -329,6 +329,16 @@ function login(ElggUser $user, $persistent = false) {
 function logout() {
 	global $CONFIG;
 
+	/** 
+	 * Cookie cleanup
+	 */
+	$user = elgg_get_logged_in_user_entity();
+	foreach($user as $k=>$v){
+		if(strpos($k, 'cookie:') !== FALSE){
+			$user->removePrivateSetting($k);
+		}
+	}
+	
 	global $SESSION;
 	if (isset($SESSION['user'])) {
 		if (!elgg_trigger_event('logout', 'user', $SESSION['user'])) {
