@@ -29,6 +29,10 @@ $footer = elgg_view('page/elements/footer', $vars);
 // Set the content type
 header("Content-type: text/html; charset=UTF-8");
 
+if(get_input('async')){
+	echo $body;
+	exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -235,13 +235,21 @@
 /* ***************************************
 	River
 *************************************** */
-.elgg-list-river {
-	border-top: 1px solid #CCC;
+.minds-list-river, .elgg-list-river {
 }
-.elgg-list-river > li {
+.minds-list-river > li, .elgg-list-river > li {
+	padding:0;
 }
-.elgg-river-item {
-	padding: 7px 0;
+.minds-list-river > li > .minds-river-header, .elgg-list-river > li > .minds-river-header {
+	padding:12px;
+}
+.minds-list-river > li > .minds-menu, .elgg-list-river > li > .elgg-menu {
+	padding:12px;
+	display:none;
+	background:#FAFAFA;
+}
+.minds-list-river > li:hover > .minds-menu, .elgg-list-river > li:hover > .elgg-menu {
+	display:block;
 }
 .elgg-river-item .elgg-pict {
 	margin-right: 20px;
@@ -253,14 +261,16 @@
 	line-height: 1.2em;
 }
 
-.elgg-river-attachments,
-.elgg-river-message,
-.elgg-river-content {
-	border-left: 1px solid #CCC;
-	font-size: 100%;
+.minds-river-attachments,
+.minds-river-message,
+.minds-river-content {
 	line-height: 1.5em;
-	margin: 8px 0 5px 0;
-	padding-left: 5px;
+	padding:0;
+}
+.minds-river-attachments > p,
+.minds-river-message > p,
+.minds-river-content > p {
+	padding:0 12px 12px 12px;
 }
 .elgg-river-attachments .elgg-avatar,
 .elgg-river-attachments .elgg-icon {

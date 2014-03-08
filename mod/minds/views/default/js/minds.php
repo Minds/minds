@@ -6,6 +6,39 @@
 	 elgg.provide('minds');
 	 
 	 minds.init = function() {	 
+	 	
+	 /*	$('a').on('click', function(e){
+	 		e.preventDefault();
+	 		
+	 		window.history.pushState("string", "Title", $(this).attr('href'));
+
+	 		$.ajax({
+				//type: 'GET',
+				url: $(this).attr('href'),
+				
+	 			data:'async=true',
+	 			xhr: function(){
+					// get the native XmlHttpRequest object
+					var xhr = $.ajaxSettings.xhr() ;
+					// set the onprogress event handler
+					xhr.addEventListener('progress', function(evt){
+						console.log('progress', evt.loaded/evt.total*100)
+					});
+					
+					// set the onload event handler
+					// return the customized object
+					return xhr ;
+				},
+	 			success: function(data){
+	 				$('.body').html(data);
+	 			}
+	 		})
+	 		
+	 		 
+
+	 	});
+	 	*/
+	 	
 
 		if($('#fb-share').length){
 			var addr = $('meta[property="og:url"]').attr('content');

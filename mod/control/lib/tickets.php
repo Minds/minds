@@ -234,5 +234,6 @@ function control_get_page_tickets_edit(){
  */
 function control_tickets_comment_event_hook($event, $type, $data){
 	$ticket = get_entity($data['_source']['pid']);
-	$ticket->comment($data['_source']['description'], $data['_source']['owner_guid']);
+	if($ticket && $ticket->subtype == 'control_ticket')
+		$ticket->comment($data['_source']['description'], $data['_source']['owner_guid']);
 }

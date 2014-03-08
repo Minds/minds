@@ -34,6 +34,6 @@ if($object->owner_guid == $object->to_guid || $to instanceof ElggGroup || !$to){
 
 echo elgg_view('river/elements/layout', array(
 	'item' => $vars['item'],
-	'message' => $excerpt,
+	'message' => '<p>' . $excerpt . '</p>',
 	'summary' => $summary,
 ));
