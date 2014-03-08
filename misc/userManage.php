@@ -12,7 +12,11 @@ elgg_set_ignore_access();
 //var_dump($user->getUrl());
 global $DB;
 
-$user = get_entity(100000000000000134,'user');
+$user = get_entity(281927423002415104);
+
+var_dump($user);
+$user->save();
+exit;
 foreach($user as $k => $v){
 	if(strpos($k, 'login_failure') !== false){
 		unset($k);

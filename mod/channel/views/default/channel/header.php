@@ -14,7 +14,7 @@ $user = $vars['user'];
 	</div>
 	<div class="owner-block">
 		<h1><?php echo $user->name;?></h1>
-		<h3><?php echo $user->briefdescription;?></h3>
+		<h3><?php echo minds_filter($user->briefdescription);?></h3>
 		<?php echo elgg_view_form('wall/add', array('name'=>'elgg-wall-channel', 'class'=>'news'), array('to_guid'=>$user->guid,'ref'=>'news')); ?>
 	</div>
 	<div class="actions">

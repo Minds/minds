@@ -3,22 +3,19 @@
  * Minds Search CC Image View
  */
  
-$sound = $vars['sound'];
+$sound = $vars['source'];
 $full_view = $vars['full_view'];
 
 $title = strlen($sound['title'])>25 ? substr($sound['title'], 0, 25) . '...' : $sound['title'];
 $img = elgg_view('output/img', array('src'=>$sound['iconURL']));
-$source = $sound['source'];
+$provider = $sound['provider'];
 
 if(!$full_view){
 ?>
 <a href='<?php echo elgg_get_site_url().'search/result/'.$sound['id'];?>'>
-	<div class='minds-search minds-search-item'>
 		<?php echo $img;?>
 		<h3><?php echo $title;?></h3>
-		<p>Source: <?php echo $sound['source'];?><br/>
-			Type: Sound</p>
-	</div>
+		<p>Source: <?php echo $provider;?><br/></p>
 </a>
 <?php 
 } else {

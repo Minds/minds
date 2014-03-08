@@ -64,7 +64,7 @@ function minds_init(){
 	elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js', 'footer');
 	
 	elgg_unregister_js('jquery');
-	elgg_register_js('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
+	elgg_register_js('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
 	elgg_load_js('jquery');
 
 	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js');
@@ -123,6 +123,7 @@ function minds_init(){
 	
 	//needs to be loaded after htmlawed
 	//this is for allow html <object> tags
+	global $CONFIG;
 	$CONFIG->htmlawed_config['safe'] = false;
 	
 	$actionspath = elgg_get_plugins_path() . "minds/actions";
@@ -133,9 +134,6 @@ function minds_init(){
 	elgg_register_action("minds/remind/external", "$actionspath/minds/remind_external.php");
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
-        elgg_register_action("registernode","$actionspath/minds/registernode.php");
-        elgg_register_action("registernewnode","$actionspath/minds/registernewnode.php");
-        elgg_register_action("select_free_tier","$actionspath/minds/select_free_tier.php");
 	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
@@ -156,7 +154,7 @@ function minds_init(){
         // Override registration action to support tier signup
         elgg_unregister_action('register');
         elgg_register_action('register', dirname(__FILE__) . '/actions/minds/register.php', 'public');
-        
+
         // Set validation true if this is a tier signup
         elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
 
@@ -315,14 +313,14 @@ function minds_route_page_handler($hook, $type, $returnvalue, $params) {
 	}
 
 	//add a age if view exists
-	$handler = elgg_extract('handler', $returnvalue);
+	/*$handler = elgg_extract('handler', $returnvalue);
 	$pages = elgg_extract('segments', $returnvalue, array());
 	array_unshift($pages, $handler);
 	if(elgg_view_exists('minds/pages/'.$handler) && !elgg_is_active_plugin('anypage')){
 		$content = elgg_view('minds/pages/'.$handler);
 		$body = elgg_view_layout('one_sidebar', array('content' => $content));
 		echo elgg_view_page(elgg_echo($handler), $body);
-	}
+	}*/
 }
 
 function minds_register_hook()
@@ -347,6 +345,7 @@ function minds_register_hook()
 function minds_pagesetup(){
 	$user = elgg_get_logged_in_user_entity();
 
+	elgg_unregister_menu_item('footer', 'Code Release');
 	elgg_unregister_menu_item('site', 'activity');
 	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
@@ -494,6 +493,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 				'name' => 'delete',
 				'href' => "action/river/delete?id=$item->id",
 				'text' => '&#10062;',
+				'class' => 'entypo',
 				'title' => elgg_echo('delete'),
 				//'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
@@ -509,6 +509,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 					'name' => 'remind',
 					'href' => "action/minds/remind?guid=$object->guid",
 					'text' => '&#59159;',
+					'class' => 'entypo',
 					'title' => elgg_echo('minds:remind'),
 					'is_action' => true,
 					'priority' => 1,
@@ -523,13 +524,13 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
  * Edit the river menu defaults
  */
 function minds_entity_menu_setup($hook, $type, $return, $params) {
-	if (elgg_is_logged_in()) {
 
 		$entity = $params['entity'];
 		$handler = elgg_extract('handler', $params, false);
 		$context = elgg_get_context();
 		$full = elgg_extract('full_view', $params, true);
-		
+
+	if (elgg_is_logged_in()) {		
 		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
 		if(in_array($entity->getSubtype(), $allowedReminds)){
@@ -671,6 +672,17 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
   
 	global $CONFIG, $post, $posts;
 	
+        // If description is being passed the actual object, then do something special
+        $obj = null;
+        $ex_email = null;
+        if ($description instanceof ElggObject) {
+            $obj = $description;
+            if (elgg_instanceof($description, 'object', 'blog')) {
+                $description = $obj->description;
+                $ex_email = $obj->ex_email;
+            }
+        }
+        
 	if($description){
 		libxml_use_internal_errors(true);
 		$dom = new DOMDocument();
@@ -684,15 +696,39 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
 	if(!$image){
 		if($owner_guid){
                 	$owner = get_entity($owner_guid,'user');
-     			$image = $owner->getIconURL('large');
+                        $image = $owner->getIconURL('large');
+                        if (!$image && $ex_email) { // If we've been passed an email address in the metadata, and we can't find an image in the posting, then try and grab a gravatar, or fallback to poster icon
+                            $image = minds_fetch_gravatar_url($ex_email, 'large', $owner->getIconURL('large'));
+                        }
         	}
   	}
-	if($CONFIG->cnd_url){
-		$base_url = $CONFIG->cnd_url ? 'http://'. $CONFIG->cdn_url : elgg_get_site_url();
-		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=3';
+	if($CONFIG->cdn_url){
+		$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
+		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=4';
 		if($width){ $image .= '&width=' . $width; } 
 	} 
 	return $image;
+}
+
+/**
+ * Retrieve a gravatar url
+ * @param type $email
+ * @param type $size
+ */
+function minds_fetch_gravatar_url($email, $size = 'large', $default = null) {
+    
+    $icon_sizes = elgg_get_config('icon_sizes');
+    
+    // avatars must be square
+    if (is_string($size))
+        $size = $icon_sizes[$size]['w']; // If string, then we convert size into pixels
+
+    $hash = md5($email);
+    $gravatar = "https://secure.gravatar.com/avatar/$hash.jpg?s=$size";
+    if ($default)
+        $gravatar .= "&d=" . urlencode($default);
+    
+    return $gravatar;
 }
 
 use phpcassa\ColumnSlice;
@@ -744,6 +780,7 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 
  /* Extend / override htmlawed */ 
 function minds_htmlawed_filter_tags($hook, $type, $result, $params) {
+	$extraALLOW = '';
 	if(strpos($_SERVER['REQUEST_URI'], 'action/plugins/usersettings/save') !== FALSE){
 		$extraALLOW = 'script';
 	}

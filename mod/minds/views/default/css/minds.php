@@ -29,7 +29,7 @@
   font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 300;
-  src: local('Ubuntu Light'), local('Ubuntu-Light'), url(http://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+  src: local('Ubuntu Light'), local('Ubuntu-Light'), url(https://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
 }
 body{
 	background:#F8F8F8;
@@ -204,7 +204,7 @@ input[name=terms]{
 	background: #F8F8F8;
 	padding: 25px 0;
 	margin-bottom: 10px;
-	opacity: .90;
+	/*opacity: .90;*/
 	display:inline-block;
 }
 .minds-body-header > .inner{
@@ -641,6 +641,7 @@ li .excerpt a{
 }
 .elgg-sidebar li a h3{
 	color:#333;
+	font-size:16px;
 }
 .elgg-sidebar .elgg-module-aside{
 	background:#FFF;
@@ -976,40 +977,24 @@ li.elgg-menu-item-rss{
  * rich content
  */
 .rich-content{
-	overflow:hidden;
-	width:100%;
-	clear:both;
+
 }
-.rich-content h3{
-	font-size:30px;
-	line-height:30px;
+.rich-content .elgg-image {
+	float:none;
 }
-.rich-content h3 a:hover{
-	color:#4690D6;
-	text-decoration:none;
-}
+
 .rich-content .readmore{
 	font-weight:bold;
 }
 .rich-content .rich-image-container{
-	float:left;
-	margin:0 15px 0 0;
-	width:325px;
-	height:175px;
-	display:block;
-	overflow:hidden;
-	position:relative;
-	box-shadow:0 0 2px #888;
+	
 }
 .elgg-widget-content .rich-content .rich-image-container{
 	width:200px;
 	height:85px;
 }
 .rich-content .rich-image{
-	position:absolute;
-	top:0;
-	left:0;
-	width:100%;
+
 }
 .rich-content.sidebar h3{
 	font-size:14px;
@@ -1041,13 +1026,17 @@ li.elgg-menu-item-rss{
 #hz_carousel{
 	clear:both;
 	width:100%;
-	height:auto;
+	height:72px;
+	margin:auto;
 	position:relative;
+	overflow:hidden;
 }
-#hz_carousel .thumbnail-tile{
-	width:250px;
-	height:160px;
-	margin:10px 0;
+.caroufredsel_wrapper > div{
+	width:100% !important;
+}
+
+#hz_carousel > div > div > div{
+	width:100%;
 	padding:0;
 }
 #hz_carousel .thumbnail-tile .hover {

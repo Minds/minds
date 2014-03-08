@@ -51,6 +51,19 @@
 	-moz-box-shadow: 0 0 1px #DDD;
 	border: 1px solid #DDD;
 }
+.elgg-list.x4 > li {
+	width:21%;
+}
+.elgg-list.x1{
+	padding:0!important; 
+	margin:0;
+}
+.elgg-list.x1 > li{
+	width:auto;
+	height:auto;
+	float:none;
+	margin:8px 0;
+}
 @media screen and (max-width: 1100px) {
         .elgg-list > li{
                 width:28%;
@@ -61,6 +74,9 @@
 	.elgg-list > li{
 		width:21%;
 		height:210px;
+	}
+	.elgg-list.x4 > li {
+		width:12.5%;
 	}
 }
 @media screen and (min-width: 1800px) {
@@ -88,14 +104,6 @@
 
 .elgg-list-river{
 	width:auto;
-}
-.elgg-list-river > li{
-	width:auto;
-	height:auto;
-	margin:0;
-	box-shadow:none;
-	-webkit-box-shadow:none;
-	-moz-box-shadow:none;
 }
 
 .elgg-item h2{

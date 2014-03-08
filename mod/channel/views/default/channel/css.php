@@ -17,7 +17,7 @@
 	height: 200px;
 }
 .landing-page > .channel-header{
-	margin-bottom:50%;
+	/*margin-bottom:50%;*/
 }
 .channel-header .avatar{
 	float:left;

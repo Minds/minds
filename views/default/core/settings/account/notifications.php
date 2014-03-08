@@ -16,7 +16,7 @@ $rows = '';
 // Loop through options
 foreach ($NOTIFICATION_HANDLERS as $k => $v) {
 
-	if ($notification_settings->$k) {
+	if (isset($notification_settings->$k) && $notification_settings->$k) {
 		$val = "yes";
 	} else {
 		$val = "no";

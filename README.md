@@ -1,25 +1,27 @@
 Minds (Core)
 ==========
 
-Copyright (c) Copyleft 2008-2014
+__Copyright (c) Copyleft 2008-2014__
 
-#####Build status
-Master: [![Build Status](https://magnum.travis-ci.com/Minds/Minds-Elgg.png?token=vHzWaxguqXbJqkudCFTn&branch=master)](https://magnum.travis-ci.com/Minds/Minds-Elgg)
-Production: [![Build Status](https://magnum.travis-ci.com/Minds/Minds-Elgg.png?token=vHzWaxguqXbJqkudCFTn&branch=production)](https://magnum.travis-ci.com/Minds/Minds-Elgg)
+Branch  | Status | |
+------------- | ------------- | ----------
+Master | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=master)](https://magnum.travis-ci.com/Minds/Minds)  | main working branch |
+Production | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=production)](https://magnum.travis-ci.com/Minds/Minds) | safe for use on production servers
+Objectional Refactoring | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=objectional-refactoring)](https://magnum.travis-ci.com/Minds/Minds) | a prototype of an objectional codebase, with legacy fallback for Elgg.
 
 
-###Minds
+##Minds
 
 http://minds.com, http://minds.org
 
 *Minds.org, Inc.* is a free and open source social network.
 
-Co-Creators 
-Mark Harding (mark@minds.com)
-Bill Ottman (bill@minds.com)
-John Ottman (john@minds.com)
-Ian Crossland (ian@minds.com)
-Marcus Povey (marcus@minds.com)
+####Co-Creators 
+- Mark Harding (mark@minds.com)
+- Bill Ottman (bill@minds.com)
+- John Ottman (john@minds.com)
+- Ian Crossland (ian@minds.com)
+- Marcus Povey (marcus@minds.com)
 
 
 
@@ -34,7 +36,7 @@ For upgrade instructions, see UPGRADE.txt.
 
 
 
-###Elgg
+##Elgg
 
 Copyright (c) 2008-2012 See COPYRIGHT.txt
 

@@ -104,7 +104,7 @@
         /*
          * If the user is not logged in the send them to the login page
          */
-        if(!elgg.is_logged_in()){
+   /*     if(!elgg.is_logged_in()){
        		//create a cookie with the comment info
        		var url = window.location.href;
        		//if homepage then we redirect to news (we will presume the user is not already on news for the time being as we dont have a site link)
@@ -119,7 +119,7 @@
        		elgg.register_error('You must login or create and account before your comments can be saved');
        		setTimeout("elgg.forward('login')", 1000)
        		return true;
-        }
+        }*/
 
         elgg.action(action + '?' + values, {
 	    contentType : 'application/json',

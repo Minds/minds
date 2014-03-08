@@ -575,7 +575,9 @@ function get_user_index_to_guid($index){
 	try{
 		$db = new DatabaseCall('user_index_to_guid');
 		$row = $db->getRow($index);
-	
+		if(!$row || !is_array($row)){
+			return false;
+		}	
 		foreach($row as $k=>$v){
 			return $k;
 		}
@@ -648,6 +650,10 @@ function get_user_by_cookie($cookie){
 		return false;
 	}
 	
+	if(!$results || !is_array($results)){
+		return false;
+	}
+
 	$user_guid = array_keys($results);
 	$expires = $results[$user_guid[0]];
 	

@@ -14,7 +14,7 @@ if (empty($vars['title'])) {
 
 global $autofeed;
 if (isset($autofeed) && $autofeed == true) {
-	$url = full_url();
+	$url = current_page_url();
 	if (substr_count($url,'?')) {
 		$url .= "&view=rss";
 	} else {
@@ -92,7 +92,7 @@ e.src = u;
 f.parentNode.insertBefore(e, f);
 
 }(document.createElement('script'),
-document.getElementsByTagName('script')[0], 'http://cdn.taboola.com/libtrc/minds/loader.js');
+document.getElementsByTagName('script')[0], 'https://cdn.taboola.com/libtrc/minds/loader.js');
 
 </script>
 

@@ -19,6 +19,10 @@ function blog_get_page_content_read($guid = NULL) {
 	$return = array();
 
 	$blog = get_entity($guid, 'object');
+        set_input('blog_fullview', true); // Set a flag, so that $blog->getUrl returns a true permalink where appropriate.
+        
+        // Set the canonical link for the page, incase this is posted from elsewhere
+        header('Link: <'.$blog->getUrl().'>; rel="canonical"');
 	
 	elgg_set_page_owner_guid($blog->owner_guid);
 	
@@ -185,9 +189,14 @@ function blog_get_trending_page_content_list() {
       	$return['filter_context'] = 'trending';
 	
 	$limit = get_input('limit', 8);
-	$offset = get_input('offset', '');
+	$offset = get_input('offset', 0);
 
-	$guids = analytics_retrieve(array('context'=>'blog','limit'=> $limit, 'offset'=>$offset));
+	//trending
+        $options = array(
+                'timespan' => get_input('timespan', 'day')
+        );
+        $trending = new MindsTrending(null, $options);
+	$guids = $trending->getList(array('type'=>'object', 'subtype'=>'blog', 'limit'=>$limit, 'offset'=>$offset));
 	
 	if($guids)	{
 		$list = elgg_list_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>0, 'full_view'=>false, 'pagination_legacy' => true));
@@ -348,7 +357,7 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 
 	$sidebar = '';
 	if ($page == 'edit') {
-		$blog = get_entity($guid, 'object');
+		$blog = get_entity($guid);
 
 		$title = elgg_echo('blog:edit');
 

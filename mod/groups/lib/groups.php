@@ -14,9 +14,9 @@ function groups_handle_all_page() {
 	
 	elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
 
-	if (elgg_get_plugin_setting('limited_groups', 'groups') != 'yes' || elgg_is_admin_logged_in()) {
+//	if (elgg_get_plugin_setting('limited_groups', 'groups') != 'yes' || elgg_is_admin_logged_in()) {
 		elgg_register_title_button();
-	}
+//	}
 
 	$selected_tab = get_input('filter', 'newest');
 

@@ -5,21 +5,24 @@ $path = explode('/', $elgg_path);
 
 if($elgg_path == elgg_get_site_url() || $elgg_path == null){
 
-elgg_set_viewtype('json');
-
-if(!include_once(elgg_get_plugins_path() . 'minds/pages/index.php')){
-		return false;
-}
-
-elgg_set_viewtype('default');
-$out = ob_get_contents();
-ob_end_clean();
+	elgg_set_viewtype('json');
+	
+	if(!include_once(elgg_get_plugins_path() . 'minds/pages/index.php')){
+			return false;
+	}
+	
+	elgg_set_viewtype('default');
+	$out = ob_get_contents();
+	ob_end_clean();
 
 } else {
 
 ob_start();
 elgg_set_viewtype('json');
-page_handler(array_shift($path), implode('/', $path));
+$handler = array_shift($path);
+if(!page_handler($handler, implode('/', $path))){
+	page_handler('channel', "$handler/".implode('/', $path));
+}
 elgg_set_viewtype('default');
 $out = ob_get_contents();
 ob_end_clean();
@@ -34,23 +37,14 @@ switch(get_input('items_type')){
 	case 'entity':
 		$new_json = array();
 		foreach ($json as $child){
-			 foreach ($child as $grandchild){
+			 foreach ($child as  $grandchild){
 				$new_json = array_merge($new_json,$grandchild);
 			}
 		}
 		$json = $new_json;
-		// Removing duplicates
-		// This will be unnecessary when #4504 fixed.
-		/*$buggy = $new_json;
-		$json = array();
-		$guids = array();
-		foreach($buggy as $item) {
-			$guids[] = $item->guid;
-		}
-		$guids = array_unique($guids);
-		foreach(array_keys($guids) as $i) {
-			$json[$i] = $buggy[$i];
-		}*/
+		break;
+	case 'search':
+		$json = (array) $json->result;
 		break;
 	case 'annotation': 
 		foreach ($json as $child) {
@@ -101,6 +95,11 @@ foreach($json as $key => $item) {
 		case 'river':
 			$items[$key] = new MindsNewsItem($item);
 			break;
+		case 'search':
+			$new_item = array();
+			$new_item['_source'] = (array) $item->_source;
+			$new_item['_type'] = $item->_type;
+			$items[$key] = $new_item;
 	}
 }
 header('Content-type: text/plain');
@@ -112,8 +111,11 @@ if($elgg_path == elgg_get_site_url() || $elgg_path == null){
 	usort($items, 'featured_sort');
 }
 
-if(get_input('items_type') == 'river')
-echo elgg_view('page/components/list', array("items" => $items, "list_class"=>'elgg-list-river elgg-river'));
-else
-echo elgg_view('page/components/list', array("items" => $items));
+if(get_input('items_type') == 'river'){
+	echo elgg_view('page/components/list', array("items" => $items, "list_class"=>'elgg-list-river elgg-river'));
+}elseif(get_input('items_type') == 'search'){
+	echo elgg_view('minds_search/services/services', array('data'=>$items));
+} else {
+	echo elgg_view('page/components/list', array("items" => $items));
+}
 

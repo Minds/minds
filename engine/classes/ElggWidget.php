@@ -73,17 +73,6 @@ class ElggWidget extends ElggEntity {
 		}
 	}
 
-	protected function load($guid) {
-		
-		foreach($guid as $k => $v){
-                        $this->attributes[$k] = $v;
-                }		
-
-		cache_entity($this);
-
-		return true;
-	}
-
 	/**
 	 * Override entity get and sets in order to save data to private data store.
 	 *
@@ -301,7 +290,7 @@ class ElggWidget extends ElggEntity {
 	 *
 	 * @return bool
 	 */
-	public function save() { 
+	/*(public function save() { 
 		$db = new DatabaseCall('widget');
 		
 		if(!isset($this->guid)){
@@ -309,6 +298,6 @@ class ElggWidget extends ElggEntity {
 			$this->guid = $g->generate();
 		}
 		return $db->insert($this->guid, $this->toArray());
-	}
+	}*/
 
 }

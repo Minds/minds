@@ -117,7 +117,7 @@ class ElggSessionStorage{
      */
     public function save() {
             session_write_close();
-
+echo 123;
             $this->closed = true;
     }
 

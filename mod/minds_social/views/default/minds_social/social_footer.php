@@ -1,5 +1,13 @@
+
+<span class='st_facebook_hcount' displayText='Facebook'></span>
+<span class='st_reddit_hcount' displayText='Reddit'></span>
+<span class='st_googleplus_hcount' displayText='Google +'></span>
+<span class='st_twitter_hcount' displayText='Tweet'></span>
+<span class='st_linkedin_hcount' displayText='LinkedIn'></span>
+<span class='st_pinterest_hcount' displayText='Pinterest'></span>
+<span class='st_email_hcount' displayText='Email'></span>
 <?php 
-	$og_url = get_input('og:url');
+	return;
 	global $SOCIAL_META_TAGS;
 	$og_url = $SOCIAL_META_TAGS['og:url']['content'];
 ?>

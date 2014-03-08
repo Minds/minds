@@ -38,6 +38,6 @@ if (isset($vars['area3'])) {
 	echo $vars['area3'];
 }
 
-//echo elgg_view('minds/ads', array('type'=>'content.ad-side'));
-//echo elgg_view('minds/ads', array('type'=>'linkad-box'));
+if(!isset($vars['hide_ads'])){
 echo elgg_view('minds/ads', array('type'=>'toobla-side'));
+}

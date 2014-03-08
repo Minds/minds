@@ -30,6 +30,7 @@ function minds_nodes_init() {
         elgg_register_action("registernewnode", dirname(__FILE__) . "/actions/registernewnode.php");
 	elgg_register_action("select_tier", dirname(__FILE__) . "/actions/select_tier.php");
 	elgg_register_action("renamenode", dirname(__FILE__) . "/actions/renamenode.php");
+	 elgg_register_action("select_free_tier", dirname(__FILE__) . "/actions/select_free_tier.php");
 
 	elgg_extend_view('css/elgg', 'minds_nodes/css');
 

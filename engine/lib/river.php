@@ -68,9 +68,9 @@ $posted = 0, $annotation_id = 0) {
 	array_push($followers, $action_type);//timelines for actions too
 	array_push($followers, $subject_guid);//add to their own timeline
 	array_push($followers, $object->container_guid); //add to containers timeline
-	foreach($followers as $follower){
+	foreach($followers as $follower_guid => $ts){
 		$db = new DatabaseCall('timeline');
-		$db->insert($follower, array($id => time()));
+		$db->insert($follower_guid, array($id => time()));
 	}
 
 	//place on users own personal line

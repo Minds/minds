@@ -39,6 +39,6 @@ if (elgg_is_logged_in()) {
 			'is_trusted' => true,
 		);
 		$up_button = elgg_view('output/url', $params);
-}
 
-echo $up_button;
+		echo $up_button;
+}

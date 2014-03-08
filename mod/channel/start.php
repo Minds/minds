@@ -45,7 +45,7 @@ function channel_init() {
 	elgg_register_menu_item('site', array(
 		'name' => 'channels',
 		'text' => '&#59254;',
-		'href' => 'channels',
+		'href' => 'channels/trending',
 		'title' => elgg_echo('channels'),
 		'priority' => 2
 	));
@@ -87,14 +87,17 @@ function channel_init() {
 	);
 
 	//setup the profile icon widget
-	elgg_register_widget_type(
+	$user = elgg_get_page_owner_entity();
+	if($user){
+		elgg_register_widget_type(
 			'channel_avatar',
 			elgg_echo('channel:widget:avatar:title', array($user->name)),
 			elgg_echo('channel:widget:avatar:desc'),
 			'channel',
 			true
-	);
-	
+		);
+	}
+
 	//set a new file size
 	elgg_set_config('icon_sizes', array(	
 											'topbar' => array('w'=>16, 'h'=>16, 'square'=>TRUE, 'upscale'=>TRUE),
@@ -203,7 +206,8 @@ function channel_page_handler($page) {
 											'subtype'=>'archive', 
 											'owner_guid'=>$user->guid, 
 											'limit'=>8, 
-											'offset'=>get_input('offset','')
+											'offset'=>get_input('offset',''),
+											'full_view'=>false
 											));	
 			break;
 		case 'widgets':			
@@ -243,8 +247,8 @@ function channel_page_handler($page) {
 function channels_page_handler($page) {
 	$base = elgg_get_plugins_path() . 'channel/pages';
 
-	if (!isset($page[0])) {
-		$page[0] = 'popular';
+	if(!isset($page[0])){
+		$page[0] = 'trending';
 	}
 
 	$vars = array();
@@ -309,7 +313,8 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 	}
 
 	if (!$icon_time) {
-		return "_graphics/icons/user/default{$size}.gif";
+		return minds_fetch_gravatar_url($user->email, $size, 'identicon');
+		//return "_graphics/icons/user/default{$size}.gif";
 	}
 
 	if ($user->isBanned()) {

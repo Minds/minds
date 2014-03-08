@@ -97,7 +97,7 @@ if ($current_page < $total_pages) {
 	$pages->items = array_merge($pages->items, range($current_page + 1, $last_page));
 }
 
-if(elgg_get_context() == 'search' || elgg_get_context() == 'admin' || elgg_get_context() == 'gallery'){
+if(elgg_get_context() == 'admin' || elgg_get_context() == 'gallery'){
 	echo '<ul class="elgg-pagination">';
 
 	if ($pages->prev['href']) {

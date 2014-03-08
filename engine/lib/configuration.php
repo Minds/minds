@@ -513,7 +513,7 @@ function _elgg_load_site_config() {
 	$CONFIG->site_id = $CONFIG->site_guid;
 		
 	//can we load from settings.php? (this code is duplicated!)
-	if($CONFIG->site_name){
+	if(isset($CONFIG->site_name)){
 		$site = new ElggSite();
 		$site->guid = $CONFIG->site_guid;
 		$site->name = $CONFIG->site_name;
@@ -597,10 +597,10 @@ function _elgg_load_application_config() {
 	// needs to be set before system, init for links in html head
 	$viewtype = get_input('view', 'default');
 	
-	//if($CONFIG->elgg_multisite_settings){
+	if(!isset($CONFIG->lastcache)){
 		$lastcached = datalist_get("simplecache_lastcached_$viewtype");
 		$CONFIG->lastcache = $lastcached;
-	//}
+	}
 
 		$CONFIG->i18n_loaded_from_cache = false;
 

@@ -146,8 +146,15 @@ class ElggSession extends ArrayObject {
     public function set($name, $value) {
             $this->storage->set($name, $value);
     }
+
+    /**
+     * Check if an attribute is set
+     */
+    public function has($name){
+		return $this->storage->has($name);
+    }
 	
-	/**
+    /**
      * Test if property is set either as an attribute or metadata.
      *
      * @param string $key The name of the attribute or metadata.
@@ -165,13 +172,13 @@ class ElggSession extends ArrayObject {
 	 * @see ArrayAccess::offsetSet()
 	 */
 	public function offsetSet($index, $newval) {
-		$_SESSION[$key] = $value;
+		$_SESSION[$key] = $newval;
 		$this->set($index, $newval);
 	}
 	
 	public function offsetGet($key){
 		if (in_array($key, array('user', 'id', 'name', 'username'))) {
-                        elgg_deprecated_notice("Only 'guid' is stored in session for user now", 1.9);
+                       // elgg_deprecated_notice("Only 'guid' is stored in session for user now", 1.9);
                         if ($this->loggedInUser) {
                                 switch ($key) {
                                         case 'user':
@@ -189,6 +196,10 @@ class ElggSession extends ArrayObject {
                                // return null;
                         }
                 }
+
+		if($this->get($key)){
+			return $this->get($key);
+		}
 
                 if (isset($_SESSION[$key])) {
                         return $_SESSION[$key];

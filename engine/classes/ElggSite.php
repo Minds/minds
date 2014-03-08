@@ -340,7 +340,7 @@ class ElggSite extends ElggEntity {
 		if (PHP_SAPI === 'cli') {
 			return;
 		}
-		if ($CONFIG->walled_garden) {
+		if (isset($CONFIG->walled_garden) && $CONFIG->walled_garden) {
 			if ($CONFIG->default_access == ACCESS_PUBLIC) {
 				$CONFIG->default_access = ACCESS_LOGGED_IN;
 			}

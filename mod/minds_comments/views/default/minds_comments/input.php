@@ -11,9 +11,13 @@ $input_text = elgg_view('input/plaintext', array(
         ));
 		
 if(elgg_is_logged_in()){
-	$icon = elgg_view_entity_icon(elgg_get_logged_in_user_entity(), 'tiny');
+	$user = elgg_get_logged_in_user_entity();
 } else {
-	$icon = elgg_view_entity_icon(get_user_by_username('minds'), 'tiny');
+	$user = get_user_by_username('minds');
+}
+
+if($user){
+	$icon = elgg_view_entity_icon($user, 'tiny');
 }
 
 $form_body .= elgg_view_image_block($icon, $input_text);

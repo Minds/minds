@@ -345,13 +345,12 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 	
 	global $CONFIG,$DB, $PLUGINS_CACHE;
 
-	if (!$site_guid) {
-		$site = get_config('site');
-		$site_guid = $site->guid;
+	if(isset($PLUGINS_CACHE[$status])){
+		return $PLUGINS_CACHE[$status];
 	}
-
+	
 	//Check if plugins are predfined in settings. Improves performance
-	if($plugins = $CONFIG->plugins){
+	if(isset($CONFIG->plugins) && $plugins = $CONFIG->plugins){
 		$return = array();
 		foreach($plugins as $priority => $plugin){
 			$row = new stdClass();
@@ -366,8 +365,13 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 		}
 		return $return;
 	}
+	
+	$plugin_ids = elgg_get_plugin_ids_in_dir();
+	
+	$db = new DatabaseCall('plugin');
+	$rows = $db->getRows($plugin_ids);
 
-	$cache = new ElggXCache('plugins');
+	/*$cache = new ElggXCache('plugins');
 
 	//convert status to something the db understands
 	if($status == 'active'){ 
@@ -378,27 +382,32 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 		}
 	} else {
 		$db = new DatabaseCall('plugin');
-        	$rows = $db->get("", 10000);
-	}
+   		$rows = $db->get("", 10000);
+	}*/
 	
 	foreach($rows as $k => $row){
+
+		if($status == 'active' && $row['active'] != 1)
+			continue;
+
 		$row['guid'] = $k;
-		$row['type'] = 'plugin';
+		
 		$new_row = new StdClass;
 	
 		foreach($row as $k=>$v){
 			$new_row->$k = $v;
-                }
+		}
 
-		$plugins[] = entity_row_to_elggstar($new_row);
- 
+		$plugin = entity_row_to_elggstar($new_row);
+ 		$PLUGINS_CACHE[$status][$plugin->guid] = $plugin;
+		$plugins[] = $plugin;
 	}
-	
+
 	if($plugins){	
 		//now order them since cassandra does not do this
 		usort($plugins, function($a, $b) {
-					return	  $a->{'elgg:internal:priority'} > $b->{'elgg:internal:priority'};
-					});
+			return	 $a->{'elgg:internal:priority'} > $b->{'elgg:internal:priority'};
+		});
 	} 
 	return $plugins;
 }

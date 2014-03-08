@@ -58,7 +58,8 @@ class DatabaseCall{
 						'relationships' => array(), //this is a new index for relationships (friends will be merged into here soon)
 						'newsfeed' => array(),
 						'timeline' => array(),
-						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' )
+						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ),
+                                                'api_users' => array('secret'=>'UTF8Type'),
 				);
 		foreach($cfs as $cf => $indexes){
 			$this->createCF($cf, $indexes);
@@ -133,6 +134,10 @@ class DatabaseCall{
 							);
 		$options = array_merge($defaults, $options);
 		$slice = new ColumnSlice($options['offset'], $options['finish'], $options['limit'], $options['reversed']);
+	
+		if(!$this->cf){
+			return false;
+		}
 
 		try{
 			if($options['multi']){

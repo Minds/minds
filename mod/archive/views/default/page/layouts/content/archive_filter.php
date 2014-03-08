@@ -28,11 +28,12 @@ if ($context) {
 		),		
 		
 		'trending' =>  array(
-                        'text' => elgg_echo('trending'),
+                        'text' => elgg_echo('trending') . elgg_view_menu('trending'),
                         'href' => "$context/trending?filter=$type_context",
                         'selected' => ($filter_context == 'trending'),
                         'priority' => 0,
-                        'section'=>'filter'
+                        'section'=>'filter',
+                        'item_class'=>'elgg-menu-item-hover-over'
                 ),
 
 		'friends' => array(

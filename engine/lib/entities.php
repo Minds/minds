@@ -46,7 +46,7 @@ function invalidate_cache_for_entity($guid) {
 	} catch(Exception $e){
 	}
 
-	elgg_get_metadata_cache()->clear($guid);
+	//elgg_get_metadata_cache()->clear($guid);
 }
 
 /**
@@ -285,7 +285,7 @@ function get_subtype_class($type, $subtype) {
  */
 function get_subtype_class_from_id($subtype_id) {
 	global $SUBTYPE_CACHE;
-	
+
 	if (!$subtype_id) {
 		return null;
 	}
@@ -745,7 +745,7 @@ function get_entity($guid, $type = 'object') {
 	}
 
 	//legacy style guid?
-	if((strlen($guid) < 18) && ($type!='site') && ($type!='plugin')){
+	if((strlen($guid) < 18) && ($type!='site') && ($type!='plugin') && ($type!='api_user')){
 		$newguid = new GUID();
 		$guid = $newguid->migrate($guid);
 	}
@@ -1396,6 +1396,10 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 		$options['count'] = $count;
 	} else {
 		$entities = $getter($options);
+	}
+	
+	if(!$entities){
+		$entities = array();
 	}
 
 	return $viewer($entities, $options);

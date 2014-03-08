@@ -42,6 +42,9 @@ function user_get_profile($username) {
 		$user = get_loggedin_user();
 	} else {
 		$user = get_user_by_username($username);
+		if(!$user){
+			$user = get_entity($username);
+		}
 	}
 	
 	if (!$user) {

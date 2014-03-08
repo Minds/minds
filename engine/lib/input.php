@@ -119,15 +119,15 @@ function elgg_make_sticky_form($form_name) {
 	elgg_clear_sticky_form($form_name);
 
 	global $SESSION;
-	if (!isset($SESSION['sticky_forms'])) {
-		$SESSION['sticky_forms'] = array();
-	}
-	$SESSION['sticky_forms'][$form_name] = array();
+
+	$sticky = $SESSION->get('sticky_forms', array());
+	$sticky[$form_name] = array();
 
 	foreach ($_REQUEST as $key => $var) {
 		// will go through XSS filtering on the get function
-		$SESSION['sticky_forms'][$form_name][$key] = $var;
+		$sticky[$form_name][$key] = $var;
 	}
+	$SESSION->set('sticky_forms', $sticky);
 }
 
 /**
@@ -145,7 +145,11 @@ function elgg_make_sticky_form($form_name) {
  */
 function elgg_clear_sticky_form($form_name) {
 	global $SESSION;
-	unset($SESSION['sticky_forms'][$form_name]);
+	
+	$sticky = $SESSION->get('sticky_forms', array());
+
+	unset($sticky[$form_name]);
+	$SESSION->set('sticky_forms', $sticky);
 }
 
 /**
@@ -159,7 +163,10 @@ function elgg_clear_sticky_form($form_name) {
  */
 function elgg_is_sticky_form($form_name) {
 	global $SESSION;
-	return isset($SESSION['sticky_forms'][$form_name]);
+
+	$sticky = $SESSION->get('sticky_forms', array());
+
+	return isset($sticky[$form_name]);
 }
 
 /**
@@ -178,8 +185,11 @@ function elgg_is_sticky_form($form_name) {
  */
 function elgg_get_sticky_value($form_name, $variable = '', $default = NULL, $filter_result = true) {
 	global $SESSION;
-	if (isset($SESSION['sticky_forms'][$form_name][$variable])) {
-		$value = $SESSION['sticky_forms'][$form_name][$variable];
+
+	$sticky = $SESSION->get('sticky_forms', array());
+
+	if (isset($sticky[$form_name][$variable])) {
+		$value = $sticky[$form_name][$variable];
 		if ($filter_result) {
 			// XSS filter result
 			$value = filter_tags($value);
@@ -200,11 +210,14 @@ function elgg_get_sticky_value($form_name, $variable = '', $default = NULL, $fil
  */
 function elgg_get_sticky_values($form_name, $filter_result = true) {
 	global $SESSION;
-	if (!isset($SESSION['sticky_forms'][$form_name])) {
-		return array();
+
+	$sticky = $SESSION->get('sticky_forms', array());
+
+	if(!isset($sticky[$form_name])){
+		return false;
 	}
 
-	$values = $SESSION['sticky_forms'][$form_name];
+	$values = $sticky[$form_name]; 
 	if ($filter_result) {
 		foreach ($values as $key => $value) {
 			// XSS filter result
