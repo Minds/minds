@@ -407,7 +407,7 @@ class ElggPluginPackage {
 
 				// unless we're doing a full report, break as soon as we fail.
 				if (!$full_report && !$result['status']) {
-                                    print_r($this);
+                                    //print_r($this);
                                         $this->errorMsg = "Missing dependencies ({$dep['type']} {$dep['name']} {$dep['value']}).";
 					return $result['status'];
 				} else {

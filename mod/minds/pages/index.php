@@ -86,6 +86,8 @@ $countdown = $max - $user_count;
 $subtitle = "$countdown more human sign-ups until automatic global <a href='release'><b>code release</b></a>.";
 
 $title = elgg_view('output/carousel', array('divs'=>$titles_array, 'subtitle'=> $subtitle));
+if ($t = elgg_get_plugin_setting('frontpagetext', 'minds_themeconfig')) 
+	$title = elgg_view_title($t);
 
 /*$launch_ts = 1411300800;//this could be GMT??
 $ts = time();

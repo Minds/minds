@@ -317,17 +317,13 @@ class MindsMultiInstaller extends ElggInstaller {
         global $CONFIG;
 
         // Ensure plugin manager is activated
-        $plugin = elgg_get_plugin_from_id('pluginmanager');
-        if ($plugin instanceof ElggPlugin) {
-            $plugin->setPriority('last');
-            $plugin->activate();
-        }
+        $plugin = new ElggPlugin('pluginmanager');
+	$plugin->setPriority('last');
+        $plugin->activate();
 
-        $plugin = elgg_get_plugin_from_id('mindsmulti_pluginmanager');
-        if ($plugin instanceof ElggPlugin) {
-            $plugin->setPriority('last');
-            $plugin->activate();
-        }
+        $plugin = new ElggPlugin('mindsmulti_pluginmanager');
+	$plugin->setPriority('last');
+        $plugin->activate();
 
         // Now, specify what plugins are visible for any given domain
         $domain = $CONFIG->elgg_multisite_settings;
@@ -364,7 +360,8 @@ class MindsMultiInstaller extends ElggInstaller {
             'minds_wordpress',
         );
         foreach ($user_editable_plugins as $plugin_id) {
-            elggmulti_toggle_plugin($domain->getID(), $plugin_id);
+        	$plugin = new ElggPlugin($plugin_id);
+		$plugin->activate();
         }
         
         // Now configure some plugins

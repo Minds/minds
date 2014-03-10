@@ -292,28 +292,6 @@ ArrayAccess// Override for array access
 			$this -> $k = unserialize($v);
 
 		return true;
-		/*$this->domain = $row->domain;
-		 $this->id = $row->id;
-
-		 $meta = elggmulti_getdata("SELECT * from domains_metadata where domain_id = {$row->id}");
-		 if ($meta)
-		 {
-		 foreach ($meta as $md)
-		 {
-		 $name = $md->name;
-		 $value = $md->value;
-
-		 // If already set, turn existing value into array
-		 if ($this->$name)
-		 {
-		 $tmp = array($this->$name);
-		 $tmp[] = $value;
-		 $this->$name = $tmp;
-		 }
-		 else
-		 $this->$name = $value;
-		 }
-		 }*/
 	}
 
 	/**
@@ -333,9 +311,8 @@ ArrayAccess// Override for array access
 function __elggmulti_db_row($row) {
 	// Sanity check
 	if ((!($row instanceof stdClass)) ||
-		//(!$row->id) ||
 		(!$row -> class))
-		throw new Exception('Invalid handling class');
+			throw new Exception('Invalid handling class');
 
 	$class = $row -> class;
 	unset($row -> class);
@@ -377,9 +354,6 @@ function elggmulti_db_connect() {
 			$MULTI_DB -> cfs[$n] = new ColumnFamily($MULTI_DB -> pool, $n);
 		}
 
-		/*	$CONFIG->elggmulti_link = mysql_connect($CONFIG->multisite->dbhost, $CONFIG->multisite->dbuser, $CONFIG->multisite->dbpass, true);
-		 mysql_select_db($CONFIG->multisite->dbname, $CONFIG->elggmulti_link);
-		 */
 
 	}
 
@@ -390,50 +364,12 @@ function elggmulti_db_connect() {
 }
 
 /**
- * Execute a raw query.
- *
- * @param string $query
- * @return dbresult|false
- */
-/*function elggmulti_execute_query($query)
- {
- global $CONFIG;
-
- $dblink = elggmulti_db_connect();
- $result = mysql_query($query, $dblink);
-
- if ($result)
- return $result;
-
- return false;
- }*/
-
-/**
  * Get data from a database.
  *
  * @param string $query
  * @param string $callback
  */
 function elggmulti_getdata($options, $callback = '') {
-	global $MULTI_DB;
-
-	/* $resultarray = array();
-
-	 $dblink = elggmulti_db_connect();
-
-	 if ($result = elggmulti_execute_query($query))
-	 {
-	 while ($row = mysql_fetch_object($result)) {
-	 if (!empty($callback) && is_callable($callback)) {
-	 $row = $callback($row);
-	 }
-	 if ($row)
-	 $resultarray[] = $row;
-	 }
-	 }
-
-	 return $resultarray; */
-
 	global $MULTI_DB;
 
 	$defaults = array('type' => 'domain', 'limit' => 12, 'offset' => "", );
@@ -503,122 +439,6 @@ function elggmulti_getdata_row($query, $callback = '') {
 }
 
 /**
- * User login.
- *
- * @param string $username Username to retrieve
- * @param string $password Password
- * @return bool
- */
-/*function elggmulti_login($username, $password)
- {
- $username = mysql_real_escape_string($username);
- $user = elggmulti_getdata_row("SELECT * FROM users WHERE username='$username' LIMIT 1");
-
- if ($user)
- {
- if (strcmp($user->password, md5($password.$user->salt)) == 0) {
-
- $_SESSION['user'] = $user;
-
- session_regenerate_id();
-
- return true;
- }
- }
-
- return false;
- }*/
-
-/**
- * Log the current user out.
- *
- */
-/*function elggmulti_logout()
- {
- unset ($_SESSION['user']);
-
- session_destroy();
-
- return true;
- }*/
-
-/**
- * Create a new user item.
- *
- * @param string $username
- * @param string $password
- * @param string $password2
- */
-/*function elggmulti_create_user($username, $password, $password2)
- {
- if (strcmp($password, $password2)!=0)
- return false;
-
- if (strlen($password) < 5)
- return false;
-
- if (strlen($username) < 5)
- return false;
-
- $dblink = elggmulti_db_connect();
-
- $salt = substr(md5(rand()), 0, 8);
- $username = mysql_real_escape_string(strtolower($username));
- $password = md5(mysql_real_escape_string($password) . $salt);
-
- $result = elggmulti_execute_query("INSERT into users (username,password,salt) VALUES ('$username', '$password', '$salt')");
- $userid = mysql_insert_id($dblink);
-
- return $userid;
- }*/
-
-/**
- * Set user password.
- *
- * @param string $username
- * @param string $password
- * @param string $password2
- * @return bool
- */
-/*function elggmulti_set_user_password($username, $password, $password2)
- {
- if (strcmp($password, $password2)!=0)
- return false;
-
- if (strlen($password) < 5)
- return false;
-
- $dblink = elggmulti_db_connect();
-
- $salt = substr(md5(rand()), 0, 8);
- $username = mysql_real_escape_string(strtolower($username));
- $password = md5(mysql_real_escape_string($password) . $salt);
-
- return elggmulti_execute_query("UPDATE users SET password='$password', salt='$salt' WHERE username='$username'");
- }*/
-
-/**
- * Count number of users.
- *
- */
-/*function elggmulti_countusers()
- {
- $row = elggmulti_getdata_row('SELECT count(*) as count FROM users');
-
- return $row->count;
- }*/
-
-/**
- * Get users
- *
- * @return unknown
- */
-/*function elggmulti_getusers()
- {
- return elggmulti_getdata("SELECT * from users");
- }*/
-
-/**
  * Retrieve db settings.
  *
  * Retrieve a database setting based on the current multisite domain
@@ -631,7 +451,6 @@ function elggmulti_get_db_settings($url = '') {
 	global $CONFIG;
 
 	$dblink = elggmulti_db_connect();
-	//$url = mysql_real_escape_string($url);
 
 	// If no url then use the server referrer
 	if (!$url)
@@ -684,7 +503,7 @@ function elggmulti_get_db_by_id($id) {
  */
 function elggmulti_is_plugin_available($plugin) {
 	static $activated;
-
+return true;
 	if (!$activated)
 		$activated = elggmulti_get_activated_plugins();
 
@@ -703,7 +522,7 @@ function elggmulti_get_activated_plugins($domain_id = false) {
 
 		$domain_id = $result -> getID();
 	}
-	
+exit;	
 	$site = new \MultisiteDomain($domain_id);
 	
 	$resultarray = $site -> enabled_plugins;
