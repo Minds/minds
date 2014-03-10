@@ -12,8 +12,8 @@ $english = array(
 	'minds_search:type:photo' => 'Photos / Images',
 	'minds_search:type:video' => 'Videos',
 	'minds_search:type:sound' => 'Sounds',
-	'minds_search:type:user' => 'Minds Channels',
-	'minds_search:type:group' => 'Minds Groups',
+	'minds_search:type:user' => 'Channels',
+	'minds_search:type:group' => 'Groups',
 
 	'minds:licenses' => 'Licenses',
 
