@@ -19,7 +19,7 @@ if (get_subtype_id('object', 'image')) {
 }
 
 // set default settings
-$plugin = elgg_get_plugin_from_id('tidypics');
+$plugin = new ElggPlugin('tidypics');
 
 $image_sizes = array();
 $image_sizes['large_image_width'] = $image_sizes['large_image_height'] = 600;

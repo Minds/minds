@@ -75,19 +75,21 @@ class ElggPlugin extends ElggEntity {
 			$path_parts = explode('/', rtrim($plugin, '/'));
 			$plugin_id = array_pop($path_parts);
 			$this->pluginID = $plugin_id;
+			$this->guid = $plugin_id;
 
 			// check if we're loading an existing plugin
-			$existing_plugin = elgg_get_plugin_from_id($this->pluginID);
-			$existing_guid = null;
-
-			if ($existing_plugin) {
-				$existing_guid = $existing_plugin->guid;
+			$db = new DatabaseCall('plugin');
+			$existing_plugin = $db->getRow($this->guid);
+			if($existing_plugin){	
+				foreach($existing_plugin as $k => $v){
+					$this->$k = $v;
+				}
 			}
 		}
 
-		_elgg_cache_plugin_by_id($this);
+		//_elgg_cache_plugin_by_id($this);
 	}
-
+	
 	/**
 	 * Save the plugin object.  Make sure required values exist.
 	 *
@@ -95,27 +97,20 @@ class ElggPlugin extends ElggEntity {
 	 * @return bool
 	 */
 	public function save() {
-		// own by the current site so users can be deleted without affecting plugins
-		/*$site = get_config('site');
-		$this->attributes['site_guid'] = $site->guid;
-		$this->attributes['owner_guid'] = $site->guid;
-		$this->attributes['container_guid'] = $site->guid;
-		$this->attributes['title'] = $this->pluginID;
-		*/
-		
+	
+		global $PLUGINS_CACHE;
+		$PLUGINS_CACHE = null;
+	
 		$attributes = array();
 		foreach($this as $k=>$v){
 			$attributes[$k] = $v;
 		}
 		
-		if(!$this->pluginID)	{
-			//throw error here
-			return false;
-		}
 		$cache = new ElggXCache('new_entity_cache');
-		$cache->delete($this->pluginID);
+		$cache->delete($this->guid);
+
 		$db = new DatabaseCall('plugin');
-		return $db->insert($this->pluginID, $attributes);
+		return $db->insert($this->guid, $attributes);
 
 	}
 
@@ -206,8 +201,6 @@ class ElggPlugin extends ElggEntity {
 	 */
 	public function setPriority($priority, $site_guid = null) {
 	
-		global $DB;		
-
 		if (!$this->guid) {
 			return false;
 		}
@@ -355,7 +348,7 @@ class ElggPlugin extends ElggEntity {
 		}
 		
 		$this->$name = $value;
-
+		
 		return $this->save();
 	}
 
@@ -682,7 +675,7 @@ class ElggPlugin extends ElggEntity {
 
 					$return = $this->includeFile('activate.php');
 				}
-			} 
+			}
 			if ($return === false) { 
 				$this->deactivate($site_guid);
 			}
@@ -925,19 +918,8 @@ class ElggPlugin extends ElggEntity {
 	 * @return bool
 	 */
 	public function set($name, $value) {
-		if (array_key_exists($name, $this->attributes)) {
-			// Check that we're not trying to change the guid!
-			if ((array_key_exists('guid', $this->attributes)) && ($name == 'guid')) {
-				return false;
-			}
-
-			$this->attributes[$name] = $value;
-
-			return true;
-		} else {
-			$this->attributes[$name] = $value;
-			return	$this->save();
-		}
+		$this->attributes[$name] = $value;
+		return true;
 	}
 
 	/**

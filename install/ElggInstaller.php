@@ -1443,8 +1443,8 @@ class ElggInstaller {
 				}
 			}
 		}*/
-		elgg_generate_plugin_entities();
-		$installed_plugins = elgg_get_plugins('any');
+//		elgg_generate_plugin_entities();
+//		$installed_plugins = elgg_get_plugins('any');
 
 		/**
 		 * Default plugins to install, ordering included
@@ -1481,11 +1481,9 @@ class ElggInstaller {
 							'minds'
 						);
 		foreach($defaults as $plugin_id){
-			$plugin = elgg_get_plugin_from_id($plugin_id);
-			if($plugin instanceof ElggPlugin){
-				$plugin->setPriority('last');
-				$plugin->activate();
-			}
+			$plugin = new ElggPlugin($plugin_id);
+			$plugin->setPriority('last');
+			$plugin->activate();
 		}
 	}
 

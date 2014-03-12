@@ -6,5 +6,5 @@ elgg_set_plugin_setting('copyright', get_input('copyright', ''), 'minds_themecon
 $networks = get_input('networks');
  
 foreach($networks as $network => $url){
-    elgg_set_plugin_setting($network.':url', $url, "minds_themeconfig");
+	elgg_set_plugin_setting($network.':url', (string) $url, "minds_themeconfig");
 }

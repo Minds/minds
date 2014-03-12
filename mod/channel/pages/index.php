@@ -61,15 +61,10 @@ switch ($vars['page']) {
 		elgg_register_title_button('collections', 'add');
 		$content = elgg_view_access_collections(elgg_get_logged_in_user_guid());
 		break;*/
+	default:
 	case 'newest':
                 $options['newest_first'] = true;
                 $content = elgg_list_entities($options);
-		break;
-	case 'trending':
-	default:
-		$guids = analytics_retrieve(array('context'=>'users', 'offset'=>$offset, 'limit'=>$limit));
-		$options['guids'] = $guids;
-		$content = elgg_list_entities($options);
 		break;
 }
 

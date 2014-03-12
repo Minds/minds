@@ -45,7 +45,7 @@ function channel_init() {
 	elgg_register_menu_item('site', array(
 		'name' => 'channels',
 		'text' => '&#59254;',
-		'href' => 'channels/trending',
+		'href' => elgg_is_active_plugin('analytics') ? 'channels/trending' : 'channels/newest',
 		'title' => elgg_echo('channels'),
 		'priority' => 2
 	));
@@ -247,7 +247,7 @@ function channels_page_handler($page) {
 	$base = elgg_get_plugins_path() . 'channel/pages';
 
 	if(!isset($page[0])){
-		$page[0] = 'trending';
+		$page[0] = elgg_is_active_plugin('analytics') ? 'trending' : 'newest';
 	}
 
 	$vars = array();

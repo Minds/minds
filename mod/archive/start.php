@@ -21,8 +21,7 @@ function minds_archive_init() {
 		$ia = elgg_set_ignore_access();
 	
 		try{	
-			$plugin = get_entity('tidypics', 'plugin');
-//var_dump($plugin);
+			$plugin = new ElggPlugin('tidypics');//var_dump($plugin);
 			$plugin->activate();
 		}catch(Exception $e){
 			var_dump($e);

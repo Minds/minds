@@ -231,7 +231,8 @@ function elgg_get_max_plugin_priority() {
 	$priority = elgg_namespace_plugin_private_setting('internal', 'priority');
 
 	//count how many plugins there are
-	$plugins = db_get(array('type'=>'plugin'));
+	//$plugins = db_get(array('type'=>'plugin'));
+	$plugins = elgg_get_plugin_ids_in_dir();
 
 	$max = count($plugins);	
 	
@@ -918,7 +919,7 @@ function elgg_get_plugin_user_setting($name, $user_guid = null, $plugin_id = nul
  */
 function elgg_set_plugin_setting($name, $value, $plugin_id = null) {
 	if ($plugin_id) {
-		$plugin = elgg_get_plugin_from_id($plugin_id);
+		$plugin = new ElggPlugin($plugin_id);
 	} else {
 		$plugin = elgg_get_calling_plugin_entity();
 	}
@@ -926,6 +927,15 @@ function elgg_set_plugin_setting($name, $value, $plugin_id = null) {
 	if (!$plugin) {
 		return false;
 	}
+
+	/**
+	 * Temporary whilst plugins are being re-done
+	 */	
+	if (function_exists('xcache_get')) {
+		$newentity_cache = new ElggXCache('new_entity_cache');
+	}
+	if($newentity_cache)
+	$newentity_cache->delete($plugin->guid);
 
 	return $plugin->setSetting($name, $value);
 }

@@ -337,6 +337,11 @@ function set_private_setting($entity_guid, $entity_type, $name, $value) {
 	$result = $db->insert($entity_guid, array(
 							$name => $value
 				));
+
+	if (function_exists('xcache_get')) {
+                $newentity_cache = new ElggXCache('new_entity_cache');
+        	$newentity_cache->delete($entity_guid);
+	}
 	
 	return $result !== false;
 }

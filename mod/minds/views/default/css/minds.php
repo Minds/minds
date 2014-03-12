@@ -1020,85 +1020,46 @@ li.elgg-menu-item-rss{
 	height:100%;
 }
 
+.homepage{
+	padding-top:160px;
+}
 /**
  * Carousel
  */
-#hz_carousel{
-	clear:both;
-	width:100%;
-	height:72px;
-	margin:auto;
-	position:relative;
-	overflow:hidden;
-}
-.caroufredsel_wrapper > div{
-	width:100% !important;
-}
-
-#hz_carousel > div > div > div{
-	width:100%;
-	padding:0;
-}
-#hz_carousel .thumbnail-tile .hover {
+#carousel_wrapper{
+	background-color: #222;
 	width: 100%;
-	height: 40%;
-	background-color: #EEE;
+	height: 280px;
+	overflow: hidden;
 	position: absolute;
-	margin:0;
-	bottom: 0;
+	top: 0;
+	left: 0;
 }
-#hz_carousel a.prev, #hz_carousel a.next {
-	background: url(<?php echo elgg_get_site_url();?>mod/minds/vendors/carouFredSel/miscellaneous_sprite.png) no-repeat transparent;
-	width: 45px;
-	height: 50px;
-	display: block;
-	position: absolute;
-	top: 85px;
+#carousel > div{
+	float:left;
+	display:block;
+	
+	width:1800px;
+	height:280px;
+	padding:0;
+	
+	background-color:#222;
+	filter: alpha(opacity=0);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover !important;
+	background-position: center !important;
 }
-#hz_carousel a.prev {			
-	left: -50px;
-	background-position: 0 0; 
+#carousel > div > h2{
+	width:50%;
+	color:#FFF;
+	font-weight:lighter;
+	margin:68px auto 0;
 }
-#hz_carousel a.prev:hover {		
-	background-position: 0 -50px; 
+#carousel > div > h3{
+	color:#F8F8F8;
 }
-#hz_carousel a.prev.disabled {	
-	background-position: 0 -100px !important;  
-}
-#hz_carousel a.next {			
-	right: -50px;
-	background-position: -50px 0; 
-}
-#hz_carousel a.next:hover {		
-	background-position: -50px -50px; 
-}
-#hz_carousel a.next.disabled {	
-	background-position: -50px -100px !important;  
-}
-#hz_carousel a.prev.disabled, a.next.disabled {
-	cursor: default;
-}
-#hz_carousel a.prev span, #hz_carousel a.next span {
-	display: none;
-}
-#hz_carousel .pagination {
-	text-align: center;
-}
-#hz_carousel .pagination a {
-	background: url(<?php echo elgg_get_site_url();?>mod/minds/vendors/carouFredSel/miscellaneous_sprite.png) 0 -300px no-repeat transparent;
-	width: 15px;
-	height: 15px;
-	margin: 0 5px 0 0;
-	display: inline-block;
-}
-#hz_carousel .pagination a.selected {
-	background-position: -25px -300px;
-	cursor: default;
-}
-#hz_carousel .pagination a span {
-	display: none;
-}
-
 .elgg-widget-more{
 	width: 100%;
 	height: auto;
