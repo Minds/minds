@@ -14,7 +14,7 @@
     
     <?php if (elgg_get_plugin_setting('background_override', 'minds_themeconfig') == 'true') { ?>
     body {
-        background-image:url('<?php echo elgg_get_site_url(); ?>themeicons/background');
+        background-image:url('<?php echo elgg_get_site_url(); ?>themeicons/background/<?php echo elgg_get_plugin_setting('background_override_ts', 'minds_themeconfig'); ?>.png');
     }
     <?php } ?>
     
