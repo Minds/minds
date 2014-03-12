@@ -18,14 +18,16 @@
     <?php echo elgg_echo('minds_themeconfig:logo');?>:<br />
         <?php echo elgg_view('input/file', array('name' => 'logo')); ?>
 </label></p>
-
-
-<?php /*
+<p><label>
+    <?php echo elgg_echo('minds_themeconfig:favicon');?>:<br />
+        <?php echo elgg_view('input/file', array('name' => 'favicon')); ?>
+</label></p>
 <p><label>
     <?php echo elgg_echo('minds_themeconfig:background');?>:<br />
         <?php echo elgg_view('input/file', array('name' => 'background')); ?>
 </label></p>
 
+<?php /*
 <p><label>
     <?php echo elgg_echo('minds_themeconfig:backgroundcolour');?>:<br />
         <?php echo elgg_view('input/colourpicker', array('name' => 'background_colour', 'placeholder' => 'e.g. ffffff', 'value' => elgg_get_plugin_setting('background_colour', 'minds_themeconfig'))); ?>
