@@ -4,6 +4,8 @@ $notification = elgg_extract('entity', $vars);
 $params = unserialize($notification->params);
 $type = $params['type'] ? $params['type'] : 'entity';
 $actor = get_entity($notification -> from_guid, 'user');
+if(!$actor)
+	return false;
 
 if ($type == 'entity') {
 	$object = get_entity($notification -> object_guid, 'object');

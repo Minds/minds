@@ -216,6 +216,10 @@ function blog_page_handler($page) {
 					include('pages/scraper/mine.php');
 					return true;
 					break;
+				case 'owner':
+					set_input('username', $page[2]);
+					include('pages/scraper/owner.php');
+					break;
 				default:
 					include('pages/scraper/all.php');
 					return true;

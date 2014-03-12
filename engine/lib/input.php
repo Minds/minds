@@ -163,9 +163,9 @@ function elgg_clear_sticky_form($form_name) {
  */
 function elgg_is_sticky_form($form_name) {
 	global $SESSION;
-
+	
 	$sticky = $SESSION->get('sticky_forms', array());
-
+	
 	return isset($sticky[$form_name]);
 }
 

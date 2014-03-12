@@ -133,7 +133,8 @@ class ElggSession extends ArrayObject {
      * @return mixed
      */
     public function get($name, $default = null) {
-            return $this->storage->get($name, $default);
+        if($this->storage)   
+	 return $this->storage->get($name, $default);
     }
 
     /**
@@ -144,13 +145,15 @@ class ElggSession extends ArrayObject {
      * @return void
      */
     public function set($name, $value) {
-            $this->storage->set($name, $value);
+    	if($this->storage)
+        $this->storage->set($name, $value);
     }
 
     /**
      * Check if an attribute is set
      */
     public function has($name){
+	if($this->storage)
 		return $this->storage->has($name);
     }
 	

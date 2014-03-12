@@ -200,13 +200,11 @@ function minds_social_twitter_authorize_url($callback = NULL, $login = true) {
 	// request tokens from Twitter
 	$twitter = new TwitterOAuth($consumer['key'], $consumer['secret']);
 	$token = $twitter->getRequestToken($callback);
-
+	
 	// save token in session for use after authorization
-	$_SESSION['twitter_api'] = array(
-		'oauth_token' => $token['oauth_token'],
-		'oauth_token_secret' => $token['oauth_token_secret'],
-	);
-
+	$_SESSION['twitter_oauth_token'] = $token['oauth_token'];
+	$_SESSION['twitter_oauth_token_secret'] =  $token['oauth_token_secret'];
+	
 	return $twitter->getAuthorizeURL($token['oauth_token'], $login);
 }
 
@@ -216,14 +214,16 @@ function minds_social_twitter_authorize_url($callback = NULL, $login = true) {
  * @param unknown_type $oauth_verifier
  */
 function minds_social_twitter_access_token($oauth_verifier = FALSE) {
-	
+//	global $SESSION;
 	$consumer = minds_social_twitter_init();
+//	var_dump($SESSION['twitter_oauth_token_secret']); exit;
 
-	// retrieve stored tokens
-	$oauth_token = $_SESSION['twitter_api']['oauth_token'];
-	$oauth_token_secret = $_SESSION['twitter_api']['oauth_token_secret'];
+
+// retrieve stored tokens
+	$oauth_token = $_SESSION['twitter_oauth_token'];
+	$oauth_token_secret = $_SESSION['twitter_oauth_token_secret'];
 	//$SESSION->offsetUnset('twitter_api');
-	
+	//session_destroy();	
 	// fetch an access token
 	$api = new TwitterOAuth($consumer['key'], $consumer['secret'], $oauth_token, $oauth_token_secret);
 	return $api->getAccessToken($oauth_verifier);
