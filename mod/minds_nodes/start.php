@@ -199,6 +199,10 @@ function minds_nodes_page_handler($pages){
                 	 }
 			include('pages/minds_nodes/manage.php');
 			break;
+                case 'upgrade' :
+                    set_input('node_guid', $pages[1]);
+                    include('pages/minds_nodes/upgrade.php');
+                    break;
 		case 'node':
 			set_input('node_guid', $pages[1]);
 			include('pages/minds_nodes/node.php');
