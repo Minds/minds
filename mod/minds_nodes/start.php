@@ -29,6 +29,7 @@ function minds_nodes_init() {
 	elgg_register_action("registernode", dirname(__FILE__) . "/actions/registernode.php");
         elgg_register_action("registernewnode", dirname(__FILE__) . "/actions/registernewnode.php");
 	elgg_register_action("select_tier", dirname(__FILE__) . "/actions/select_tier.php");
+        elgg_register_action("upgrade_to", dirname(__FILE__) . "/actions/upgrade_to.php");
 	elgg_register_action("renamenode", dirname(__FILE__) . "/actions/renamenode.php");
 	 elgg_register_action("select_free_tier", dirname(__FILE__) . "/actions/select_free_tier.php");
 
@@ -201,7 +202,7 @@ function minds_nodes_page_handler($pages){
 			break;
                 case 'upgrade' :
                     set_input('node_guid', $pages[1]);
-                    include('pages/minds_nodes/upgrade.php');
+                    include('pages/minds_nodes/upgrade_to.php');
                     break;
 		case 'node':
 			set_input('node_guid', $pages[1]);

@@ -255,6 +255,28 @@ function pay_call_payment_handler_callback($handler, $order_guid){
 	}
 }
 
+/**
+ * Call a handler to cancel a recurring payment.
+ * This permits you to then create a new order with an upgrade
+ * @param type $handler
+ * @param type $order_guid
+ */
+function pay_call_cancel_recurring_payment($handler, $order_guid) {
+    global $CONFIG;
+	
+	$info = $CONFIG->pay['payment_handlers'][$handler];
+	
+	$callback = call_user_func($info->callback.'_cancel_recurring_payment',$order_guid);
+	
+	if($callback == true){
+		
+		$order = get_entity($order_guid, 'object');
+		
+	} else {
+		return false;
+	}
+}
+
 /* PayPal payment handler
  *
  * Examples of params:
@@ -598,6 +620,23 @@ function paypal_handler_callback($order_guid) {
 	pay_update_order_status($order_guid, $payment_status);
 	
 	return true;	*/
+}
+
+/**
+ * Cancel a recurring payment.
+ * @param type $order_guid
+ */
+function paypal_handler_cancel_recurring_payment($order_guid) {
+    global $CONFIG;
+    
+    $paypal_url = 'https://api-3t.paypal.com/nvp';
+    if ($CONFIG->debug)
+        $paypal_url = "https://api-3t.sandbox.paypal.com/nvp"; // If we're in debug mode, then use the debug sandbox endpoint.
+    
+    
+    
+    // ... TODO, send cancel request to cancel old order
+	
 }
 
 //register paypal
