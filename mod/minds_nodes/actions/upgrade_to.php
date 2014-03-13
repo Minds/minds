@@ -26,7 +26,10 @@ if ($tier_id && $node_guid) {
         }
         
         // Buy new order
-        action('select_tier');
+        if ($tier->price == 0)
+            action('select_free_tier');
+        else
+            action('select_tier');
     }
     else
         register_error("No tier or node");
