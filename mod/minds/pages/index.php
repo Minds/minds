@@ -48,7 +48,7 @@ $titles_array = array(
 			'The Organic Web'=> array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/4.jpg'),
 			'Evolve The Network' => array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/5.jpg'),
 			
-			/*'Gathering Of The Minds Worldwide' => array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/1%20-%20The%20free%20and%20open%20source%20social%20network'),
+			'Gathering Of The Minds Worldwide' => array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/1%20-%20The%20free%20and%20open%20source%20social%20network'),
 			
 			'The Internet of the People'=> array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/1%20-%20The%20free%20and%20open%20source%20social%20network'),
 			'Information Wants To Be Free' => array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/1%20-%20The%20free%20and%20open%20source%20social%20network'),
@@ -68,7 +68,7 @@ $titles_array = array(
 			'Imagine The Next Internet Evolution'=> array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/1%20-%20The%20free%20and%20open%20source%20social%20network'),
 			'The World\'s Free Information Is Here'=> array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/1%20-%20The%20free%20and%20open%20source%20social%20network'),
 			'You Are A Genius.  Spread Your Ideas.'=> array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/1%20-%20The%20free%20and%20open%20source%20social%20network'),
-			'The Organic Web'=> array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/1%20-%20The%20free%20and%20open%20source%20social%20network'),*/
+			'The Organic Web'=> array('bg_url'=> elgg_get_site_url() . '_graphics/carousel/1%20-%20The%20free%20and%20open%20source%20social%20network'),
 			);
 
 /*$titles = array();

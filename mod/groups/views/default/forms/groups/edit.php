@@ -50,6 +50,7 @@ if ($group_profile_fields > 0) {
 			'name' => 'membership',
 			'value' => $membership,
 			'options_values' => array(
+			    ACCESS_SECRET => '',
 				ACCESS_PRIVATE => elgg_echo('groups:access:private'),
 				ACCESS_PUBLIC => elgg_echo('groups:access:public')
 			)

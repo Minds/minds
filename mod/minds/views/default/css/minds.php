@@ -1027,7 +1027,7 @@ li.elgg-menu-item-rss{
  * Carousel
  */
 #carousel_wrapper{
-	background-color: #222;
+	/*background-color: #222;*/
 	width: 100%;
 	height: 280px;
 	overflow: hidden;
@@ -1043,22 +1043,24 @@ li.elgg-menu-item-rss{
 	height:280px;
 	padding:0;
 	
-	background-color:#222;
+	/*background-color:#222;
 	filter: alpha(opacity=0);
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover !important;
-	background-position: center !important;
+	background-position: center !important;*/
 }
 #carousel > div > h2{
 	width:50%;
-	color:#FFF;
+	/*color:#FFF;*/
+	color:#222;
 	font-weight:lighter;
 	margin:68px auto 0;
 }
 #carousel > div > h3{
-	color:#F8F8F8;
+	/*color:#F8F8F8;*/
+	color:#222;
 }
 .elgg-widget-more{
 	width: 100%;

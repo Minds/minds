@@ -23,8 +23,8 @@ $(document).ready(function() {
 		},
 		scroll: {
 			items: 1,
-			duration: 1000,
-			timeoutDuration: 3000
+			duration: 1500,
+			timeoutDuration: 3500
 		},
 		direction			: "left",
 		swipe				: true,
@@ -47,7 +47,8 @@ $(document).ready(function() {
 	<div id="<?php echo $id;?>">
 	<?php 
 		foreach($divs as $title => $params){
-			echo '<div style="background: url(' . $params['bg_url'] . ');">';
+		//	echo '<div style="background: url(' . $params['bg_url'] . ');">';
+			echo '<div>';
 			echo '<h2>' . $title . '</h2>';
 			echo '<h3>' . $subtitle . '</h3>';
 			echo '</div>';
