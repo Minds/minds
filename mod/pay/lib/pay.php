@@ -271,6 +271,8 @@ function pay_call_cancel_recurring_payment($handler, $order_guid) {
 	if($callback == true){
 		
 		$order = get_entity($order_guid, 'object');
+                
+                return true;
 		
 	} else {
 		return false;
