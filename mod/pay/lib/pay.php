@@ -390,7 +390,7 @@ function paypal_generic_ipn_handler($page) {
     elgg_log('PAYPAL: ********* Paypal GENERIC IPN triggered **********');
     
     // Try and get order we're referring to
-    if ($orders = elgg_get_entities_from_metadata(array(
+    /*if ($orders = elgg_get_entities_from_metadata(array(
         'type' => 'object',
         'subtype' => 'pay',
         'limit' => 1,
@@ -398,6 +398,22 @@ function paypal_generic_ipn_handler($page) {
         'metadata_value' => $_POST['subscr_id'],
     )))
             $order = $orders[0];
+    */
+    
+    // Cassandraising 
+    $order = null;
+    if ($orders = elgg_get_entities(array(
+        'type' => 'object',
+        'subtype' => 'pay',
+        'limit' => 999999
+    ))) {
+        foreach ($orders as $o)
+            if ($o->subscr_id == $_POST['subscr_id'])
+            {
+                $order = $o; break;
+            }
+    }
+    
     
     
     // TODO: Other methods of pulling order out
