@@ -582,7 +582,7 @@ function paypal_handler_callback($order_guid) {
 
 
                 
-                // If this is a recurring payment, then we need to link the order to a subscription profile so we can manage the order from its generic IPN
+                // If this is a recurring payment, then we need to link the order to a subscription profile so we can manage the order from its generic IPN, or cancel it from the minds interface
                 if (isset($_POST['subscr_id']))
                     $order->subscr_id = $_POST['subscr_id'];
 
@@ -646,15 +646,105 @@ function paypal_handler_callback($order_guid) {
  */
 function paypal_handler_cancel_recurring_payment($order_guid) {
     global $CONFIG;
-    
+
     $paypal_url = 'https://api-3t.paypal.com/nvp';
     if ($CONFIG->debug)
         $paypal_url = "https://api-3t.sandbox.paypal.com/nvp"; // If we're in debug mode, then use the debug sandbox endpoint.
-    
-    
-    
-    // ... TODO, send cancel request to cancel old order
-	
+
+
+    if ($order = get_entity($order_guid, 'object')) {
+
+        error_log("PAYPAL : Got order $order_guid");
+
+        if (!$order->subscr_id) {
+            register_error("Order doesn't have a subscription ID, either this is a brand new unprocessed order or it's not a recurring payment.");
+            return false;
+        }
+
+        error_log("PAYPAL : Got order subscription {$order->subscr_id}");
+
+        $api_user = elgg_get_plugin_setting('paypal_api_user', 'pay');
+        $api_password = elgg_get_plugin_setting('paypal_api_password', 'pay');
+        $api_signature = elgg_get_plugin_setting('paypal_api_signature', 'pay');
+        
+        if (!$api_user) {
+            register_error("No API User defined.");
+            return false;
+        }
+        
+        if (!$api_password) {
+            register_error("No API Password defined.");
+            return false;
+        }
+        
+        if (!$api_signature) {
+            register_error("No API Signature defined.");
+            return false;
+        }
+        
+        // Construct API request
+        $api_request = 'USER=' . urlencode($api_user)
+                . '&PWD=' . urlencode($api_password)
+                . '&SIGNATURE=' . urlencode($api_signature)
+                . '&VERSION=76.0'
+                . '&METHOD=ManageRecurringPaymentsProfileStatus'
+                . '&PROFILEID=' . urlencode($order->subscr_id)
+                . '&ACTION=Cancel'
+                . '&NOTE=' . urlencode('Recurring payment cancelled by Minds.');
+
+        $ch = curl_init();
+        curl_setopt( $ch, CURLOPT_URL, $paypal_url );
+        curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
+
+                // Uncomment these to turn off server and peer verification
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt( $ch, CURLOPT_POST, 1 );
+ 
+        // Set the API parameters for this transaction
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $api_request );
+ 
+        // Request response from PayPal
+        $response = curl_exec( $ch );
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        
+        if ($CONFIG->debug) {
+            error_log("PAYPAL: Called cancel, response (status: $code): $response");
+        }
+        
+        if ($error = curl_error($curl_handle))
+        {
+            error_log("PAYPAL ERROR: $error");
+            register_error($error);
+            return false;
+        }
+
+        // Got here, no error, lets look at the array
+        parse_str( $response, $parsed_response );
+        
+        // Lets save the array against the order for an audit trail
+        $order->annotate('cancel_request_response', serialize($parsed_response));
+        
+        // Parse response
+        if (strtolower($parsed_response['ACK']) == 'failure') {
+            // Fail
+            error_log("PAYPAL: Error code {$parsed_response['L_ERRORCODE0']} - {$parsed_response['L_LONGMESSAGE0']}");
+            register_error($parsed_response['L_LONGMESSAGE0']);
+            
+            return false;
+        }
+        else if (strtolower($parsed_response['ACK']) == 'success') {
+            // Ok, we got here without , lets assume everything was ok
+            return true;
+        }
+        
+        register_error("Unknown response code from paypal server.");
+        error_log("PAYPAL: Unknown response code from paypal server.");
+        
+        return false;
+    } else {
+        register_error("Could not find order $order_guid");
+        return false;
+    }
 }
 
 //register paypal
