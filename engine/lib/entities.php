@@ -554,15 +554,19 @@ function create_entity($object = NULL, $timebased = true) {
 		$data =  array($result => time());
 		
 		$namespace = $object->type;
-		$db->insert($namespace, $data);
+		
+		if($object->access_id == 2)
+			$db->insert($namespace, $data);
 		
 		if($object->subtype){ 
 			$namespace .= ':'.$object->subtype; 
-			$db->insert($namespace, $data);
+			if($object->access_id == 2)
+				$db->insert($namespace, $data);
 		}
 
-		if($object->super_subtype){
+		if(isset($object->super_subtype)){
 			$super_subtype_namespace = $object->type . ':' . $object->super_subtype;
+			if($object->access_id == 2)
 			$db->insert($super_subtype_namespace, $data);
 		}
 
@@ -584,7 +588,7 @@ function create_entity($object = NULL, $timebased = true) {
 		if($owner instanceof ElggUser){
 
 			//add to the the users subscribers      
-			$followers = $owner->getFriendsOf(null, 10000, "", 'guids');
+			$followers = in_array($object->access_id, array(2, -2, 1)) ? $owner->getFriendsOf(null, 10000, "", 'guids') : array();
 			if(!$followers) { 
 				$followers = array(); 
 			}
@@ -1020,7 +1024,10 @@ function elgg_get_entities(array $options = array()) {
 					foreach($row as $k=>$v){
 						$newrow->$k = $v;
 					}
-					$entities[] = entity_row_to_elggstar($newrow);
+			
+					$entity = entity_row_to_elggstar($newrow);
+					if(elgg_check_access($entity))
+					$entities[] = $entity;
 				}
 			}
 		} catch(Exception $e){

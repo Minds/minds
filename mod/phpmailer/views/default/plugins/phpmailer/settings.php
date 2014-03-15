@@ -17,7 +17,7 @@ echo ' ' . elgg_echo('phpmailer:override') . '</div>';
 // SMTP Settings
 echo '<fieldset class="elgg-border-plain mbm pas">';
 echo '<div>';
-$checked = $vars['entity']->phpmailer_smtp ? 'checked' : false;
+$checked = elgg_get_plugin_setting('phpmailer_smtp', 'phpmailer') ? 'checked' : false;
 echo elgg_view('input/checkbox', array(
 	'name' => 'params[phpmailer_smtp]',
 	'value' => 1,
@@ -30,12 +30,12 @@ echo ' ' . elgg_echo('phpmailer:smtp') . '<br/>';
 echo elgg_echo('phpmailer:host') . ': ';
 echo elgg_view('input/text', array(
 	'name' => 'params[phpmailer_host]',
-	'value' => $vars['entity']->phpmailer_host,
+	'value' => elgg_get_plugin_setting('phpmailer_host', 'phpmailer'),
 	'class' => 'phpmailer-smtp elgg-input-natural',
 ));
 
 echo '<br /><br />';
-$checked = $vars['entity']->phpmailer_smtp_auth ? 'checked' : false;
+$checked = elgg_get_plugin_setting('phpmailer_smtp_auth', 'phpmailer') ? 'checked' : false;
 echo elgg_view('input/checkbox', array(
 	'name' => 'params[phpmailer_smtp_auth]',
 	'value' => 1,
@@ -49,7 +49,7 @@ echo ' ' . elgg_echo('phpmailer:smtp_auth') . '<br/>';
 echo elgg_echo('phpmailer:username') . ': ';
 echo elgg_view('input/text', array(
 	'name' => 'params[phpmailer_username]',
-	'value' => $vars['entity']->phpmailer_username,
+	'value' => elgg_get_plugin_setting('phpmailer_username', 'phpmailer'),
 	'class' => 'phpmailer-smtp phpmailer-smtp-auth elgg-input-natural',
 ));
 
@@ -57,14 +57,14 @@ echo '<br />';
 echo elgg_echo('phpmailer:password') . ':';
 echo elgg_view('input/password', array(
 	'name' => 'params[phpmailer_password]',
-	'value' => $vars['entity']->phpmailer_password,
+	'value' => elgg_get_plugin_setting('phpmailer_password', 'phpmailer'),
 	'class' => 'phpmailer-smtp phpmailer-smtp-auth elgg-input-natural mts',
 ));
 echo '</div>';
 
  // ssl connection for smtp (with port info)
 echo '<div>';
-$checked = $vars['entity']->ep_phpmailer_ssl ? 'checked' : false;
+$checked = elgg_get_plugin_setting('ep_phpmailer_ssl', 'phpmailer') ? 'checked' : false;
 echo elgg_view('input/checkbox', array(
 	'name' => 'params[ep_phpmailer_ssl]',
 	'value' => 1,
@@ -78,7 +78,7 @@ echo ' ' . elgg_echo('phpmailer:ssl') . '<br/>';
 echo elgg_echo('phpmailer:port') . ':';
 echo elgg_view('input/text', array(
 	'name' => 'params[ep_phpmailer_port]',
-	'value' => $vars['entity']->ep_phpmailer_port,
+	'value' => elgg_get_plugin_setting('ep_phpmailer_port', 'phpmailer'),
 	'class' => 'phpmailer-smtp phpmailer-ssl elgg-input-natural',
 ));
 echo '</div>';
@@ -86,7 +86,7 @@ echo '</fieldset>';
 
 // Non-standard MTA setting
 echo '<div>';
-$checked = $vars['entity']->nonstd_mta ? 'checked' : false;
+$checked = elgg_get_plugin_setting('nonstd_mta', 'phpmailer') ? 'checked' : false;
 echo elgg_view('input/checkbox', array(
 	'name' => 'params[nonstd_mta]',
 	'value' => 1,

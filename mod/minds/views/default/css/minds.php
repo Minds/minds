@@ -47,6 +47,7 @@ body.news{
  **************/
 .topbar .right .elgg-form{
 	margin-top:20px;
+	float:right;
 }
 .topbar .right .elgg-form input[type=text], .topbar .right .elgg-form input[type=password]{
 	float:left;

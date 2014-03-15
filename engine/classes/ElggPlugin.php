@@ -286,12 +286,17 @@ class ElggPlugin extends ElggEntity {
 	public function getSetting($name) {
 		//Are we storing settings in Conf?
 		global $CONFIG;
+	
 		$id = $this->getID();
 		if(isset($CONFIG->pluginSettings) && $setting = $CONFIG->pluginSettings->{$id}[$name]){
 			return $setting;
 	
 		}
-		return $this->$name;
+		if(isset($this->$name))
+			return $this->$name;
+
+		if(isset($CONFIG->multisite) && isset($CONFIG->multisite->plugin_default_settings[$this->guid]) && isset($CONFIG->multisite->plugin_default_settings[$this->guid][$name]))
+	return $CONFIG->multisite->plugin_default_settings[$this->guid][$name];
 	}
 
 	/**
