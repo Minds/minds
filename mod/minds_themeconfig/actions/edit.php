@@ -16,12 +16,12 @@
             'square' => false,
             'upscale' => true
         ),
-        'logo_favicon' => array(
+ /*       'logo_favicon' => array(
             'w' => 32,
             'h' => 32,
             'square' => true,
             'upscale' => true
-        )
+        )*/
     ) as $name => $size_info) {
 
 		 $resized = get_resized_image_from_uploaded_file('logo', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
@@ -34,11 +34,40 @@
 		file_put_contents($theme_dir . $name.'.png', $resized);
                 
                 elgg_set_plugin_setting('logo_override', 'true', 'minds_themeconfig');
+                elgg_set_plugin_setting('logo_override_ts', time(), 'minds_themeconfig');
             }
 
             if (isset($_FILES['logo']) && ($_FILES['logo']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['logo']['error'] != 0) {
                 register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
             }
+    }
+    
+    // Favicon
+    foreach (array(
+        'logo_favicon' => array(
+            'w' => 32,
+            'h' => 32,
+            'square' => true,
+            'upscale' => true
+        )
+    ) as $name => $size_info) { 
+        $resized = get_resized_image_from_uploaded_file('favicon', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
+
+        if ($resized) {
+            global $CONFIG;
+            $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
+            @mkdir($theme_dir);
+
+            file_put_contents($theme_dir . $name.'.png', $resized);
+
+            elgg_set_plugin_setting('logo_favicon', 'true', 'minds_themeconfig');
+            elgg_set_plugin_setting('logo_favicon_ts', time(), 'minds_themeconfig');
+            
+        }
+
+        if (isset($_FILES['favicon']) && ($_FILES['favicon']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['favicon']['error'] != 0) {
+            register_error(minds_themeconfig_codeToMessage($_FILES['favicon']['error'])); // Debug uploads
+        }
     }
     
     // Background image
@@ -51,6 +80,7 @@
         {
             elgg_set_plugin_setting('background_override', 'true', 'minds_themeconfig');
             elgg_set_plugin_setting('background_override_mime', $_FILES['background']['type'], 'minds_themeconfig');
+            elgg_set_plugin_setting('background_override_ts', time(), 'minds_themeconfig');
         }
     }
     if (isset($_FILES['background']) && ($_FILES['background']['error'] != UPLOAD_ERR_NO_FILE) && ($_FILES['background']['error'] != 0)) {

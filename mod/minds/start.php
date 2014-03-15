@@ -568,7 +568,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 			$options = array(
 						'name' => 'feature',
 						'href' => "action/minds/feature?guid=$entity->guid",
-						'text' => $entity->featured ? elgg_echo('un-feature') : elgg_echo('feature'),
+						'text' => $entity->featured_id ? elgg_echo('un-feature') : elgg_echo('feature'),
 						'title' => elgg_echo('feature'),
 						'is_action' => true,
 						'priority' => 2,

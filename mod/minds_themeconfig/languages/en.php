@@ -15,6 +15,7 @@ $english = array(
         'minds_themeconfig:backgroundcolour' => 'Page background colour',
         'minds_themeconfig:textcolour' => 'Text colour',
         'minds_themeconfig:background' => 'Upload background image',
+     'minds_themeconfig:favicon' => 'Upload an icon for your site',
     
         'minds_themeconfig:advanced' => 'Advanced settings...',
         'minds_themeconfig:custom_css' => 'Custom CSS',
