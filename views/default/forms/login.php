@@ -29,7 +29,7 @@
 		
 	<?php
 			echo '<li><a class="registration_link" href="' . elgg_get_site_url() . 'register">' . elgg_echo('register') . '</a></li>';
-			echo '<li><a class="registration_link" href="' . elgg_get_site_url() . 'register/node">' . elgg_echo('register:node') . '</a></li>';
+			//echo '<li><a class="registration_link" href="' . elgg_get_site_url() . 'register/node">' . elgg_echo('register:node') . '</a></li>';
 	?>
 	</ul>
 	<ul class="elgg-menu elgg-menu-general login-box mtm">
