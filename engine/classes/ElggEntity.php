@@ -1658,11 +1658,15 @@ abstract class ElggEntity extends ElggData implements
 			//supports legacy imports
 			$db->removeAttributes('object:featured', array($this->featured_id));
 			$db->removeAttributes('object:'.$this->subtype.':featured', array($this->featured_id)); 
+			$this->featured_id = null;
 		}
 	
 		$this->featured = 0;
 		$this->save();
-		
+	
+		$db = new DatabaseCall('entities');
+		$result = $db->removeAttributes($this->guid, array('featured_id'));
+	
 		return true;
 	}
 }

@@ -234,44 +234,45 @@
 		window.lock_autoscroll = true;
 		
 		$list = $(this).parent().find('.elgg-list:first').parent();
-			$('.load-more').html('...');
-			$('.load-more').addClass('loading');
+		$('.load-more').html('...');
+		$('.load-more').addClass('loading');
 			
-			var loc =  elgg.normalize_url(elgg.parse_url(location.href).path);
-/*			if(loc == elgg.get_site_url()){
-				loc = location.href + 'news/featured';
-			}
+		var loc =  elgg.normalize_url(elgg.parse_url(location.href).path);
+/*		if(loc == elgg.get_site_url()){
+			loc = location.href + 'news/featured';
+		}
 */
-			var offset = 0;
+		var offset = 0;
 
-			$params = elgg.parse_str(elgg.parse_url(location.href).query);
+		$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			
-			if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending' || loc.indexOf('search') > -1){
-				offset = $list.find('.elgg-list').children().length;
-			} else {
-				offset = $('.load-more').attr('data-load-next');
+		if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending' || loc.indexOf('search') > -1){
+			offset = $list.find('.elgg-list').children().length;
+		} else {
+			offset = $('.load-more').attr('data-load-next');
 			/*	 if(loc == elgg.get_site_url()){
                                         offset = $list.find('li.elgg-item:last').attr('featured_id');
                                 } else {
                                         offset = $list.find('li.elgg-item:last').attr('id'); 
                                 }*/
-			}
-			console.log(offset);
-			if(!offset){
-				return false;
-			}
-			$params = $.extend($params, {
-				path : loc,
-				items_type: $list.find('.elgg-list').hasClass('elgg-list-entity') ? 'entity' :
-							$list.find('.elgg-list').hasClass('elgg-list-river') ? 'river' :
-							$list.hasClass('elgg-list-annotation') ? 'annotation' : 
-							$list.find('.elgg-list').hasClass('minds-search-list') ? 'search' : 'river',
+		}
+		console.log(offset);
+		if(!offset){
+			window.lock_autoscroll = false;
+			return false;
+		}
+		$params = $.extend($params, {
+			path : loc,
+			items_type: $list.find('.elgg-list').hasClass('elgg-list-entity') ? 'entity' :
+				$list.find('.elgg-list').hasClass('elgg-list-river') ? 'river' :
+				$list.hasClass('elgg-list-annotation') ? 'annotation' : 
+				$list.find('.elgg-list').hasClass('minds-search-list') ? 'search' : 'river',
 				offset:offset 
-			});
-			url = "/ajax/view/page/components/ajax_list?" + $.param($params);
+		});
+		url = "/ajax/view/page/components/ajax_list?" + $.param($params);
 			
-			elgg.get(url, function(data) {
-				//$list.toggleClass('infinite-scroll-ajax-loading', false);
+		elgg.get(url, function(data) {
+			//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				
 				if($(data).contents().length == 0){
 					
