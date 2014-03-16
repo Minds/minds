@@ -16,14 +16,14 @@
 	{
 		$base = elgg_get_plugins_path();
 		
-		elgg_register_action('admin/plugins/activate', $base . 'pluginmanager/actions/enable.php'); // Enable
+		/*elgg_register_action('admin/plugins/activate', $base . 'pluginmanager/actions/enable.php'); // Enable
 		elgg_register_action('admin/plugins/deactivate', $base . 'pluginmanager/actions/disable.php'); // Disable
 		elgg_register_action('admin/plugins/activate_all', $base . 'pluginmanager/actions/enableall.php'); // Enable all
 		elgg_register_action('admin/plugins/deactiveate_all', $base . 'pluginmanager/actions/disableall.php'); // Disable all
 	
 		elgg_register_action('admin/site/update_advanced', $base . 'pluginmanager/actions/update_advanced.php'); // Disable all
 		//register_action('admin/plugins/set_priority', false, $CONFIG->pluginspath . 'pluginmanager/actions/reorder.php', true); // Reorder
-		
+	*/	
 	}
 	
 	/**

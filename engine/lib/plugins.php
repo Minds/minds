@@ -789,7 +789,7 @@ function elgg_get_calling_plugin_entity() {
 	$plugin_id = elgg_get_calling_plugin_id();
 
 	if ($plugin_id) {
-		return elgg_get_plugin_from_id($plugin_id);
+		return new ElggPlugin($plugin_id);
 	}
 
 	return false;
@@ -953,7 +953,7 @@ function elgg_set_plugin_setting($name, $value, $plugin_id = null) {
  */
 function elgg_get_plugin_setting($name, $plugin_id = null) {
 	if ($plugin_id) {
-		$plugin = elgg_get_plugin_from_id($plugin_id);
+		$plugin = new ElggPlugin($plugin_id);
 	} else {
 		$plugin = elgg_get_calling_plugin_entity();
 	}

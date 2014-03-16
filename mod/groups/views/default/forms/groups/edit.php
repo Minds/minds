@@ -50,7 +50,7 @@ if ($group_profile_fields > 0) {
 			'name' => 'membership',
 			'value' => $membership,
 			'options_values' => array(
-			    ACCESS_SECRET => '',
+			//	ACCESS_SECRET => elgg_echo('groups:access:secret'),
 				ACCESS_PRIVATE => elgg_echo('groups:access:private'),
 				ACCESS_PUBLIC => elgg_echo('groups:access:public')
 			)
@@ -64,7 +64,7 @@ if ($group_profile_fields > 0) {
 if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {
 	$access_options = array(
 		ACCESS_PRIVATE => elgg_echo('groups:access:group'),
-		ACCESS_LOGGED_IN => elgg_echo("LOGGED_IN"),
+//		ACCESS_LOGGED_IN => elgg_echo("LOGGED_IN"),
 		ACCESS_PUBLIC => elgg_echo("PUBLIC")
 	);
 ?>

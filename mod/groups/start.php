@@ -548,21 +548,32 @@ function groups_create_event_listener($event, $object_type, $object) {
  */
 function groups_read_acl_plugin_hook($hook, $entity_type, $returnvalue, $params) {
 	//error_log("READ: " . var_export($returnvalue));
+	//if($entity_type == 'group')
+	global $MEMBERSHIP_CACHE;
 
+	$user_guid = $params['user_id'];
+	if(isset($MEMBERSHIP_CACHE[$user_guid]))
+		return $MEMBERSHIP_CACHE[$user_guid];
+
+	//avoid recursion
+	$ia = elgg_set_ignore_access();//feels odd, we should decentralize	
+
+	$MEMBERSHIP_CACHE = array();
 	$user = get_entity($params['user_id']);
 	if ($user) {
 		// Not using this because of recursion.
 		// Joining a group automatically add user to ACL,
 		// So just see if they're a member of the ACL.
 		$membership = get_users_membership($user->guid);
-			
 		if ($membership) {
 			foreach ($membership as $group){
 				$returnvalue[] = $group->guid;
 			}
-			return $returnvalue;
+			$MEMBERSHIP_CACHE[$user_guid] =  $returnvalue;
 		}
 	}
+	elgg_set_ignore_access($ia);
+	return $returnvalue;
 }
 
 /**

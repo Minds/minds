@@ -40,7 +40,7 @@ function _elgg_get_access_cache() {
  * @return bool
  */
 function elgg_check_access($entity, $user = null){
-	
+
 //var_dump($entity);
 	if(elgg_get_ignore_access()){
 		return true;
@@ -68,10 +68,10 @@ function elgg_check_access($entity, $user = null){
 	}
 	
 	$access_array = get_access_array($user->guid, 0);
-	if(in_array($entity->access_id, $access_array) || in_array($entity->container_guid, $access_array)){
+	if(in_array($entity->access_id, $access_array) || in_array($entity->container_guid, $access_array) || in_array($entity->guid, $access_array)){
 		return true;
 	}
-	exit;
+	
 	return false;
 
 }
@@ -179,34 +179,6 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
 		if (elgg_is_logged_in()) {
 			$access_array[] = ACCESS_LOGGED_IN;
 
-			// Get ACL memberships
-			/*$query = "SELECT am.access_collection_id"
-				. " FROM {$CONFIG->dbprefix}access_collection_membership am"
-				. " LEFT JOIN {$CONFIG->dbprefix}access_collections ag ON ag.id = am.access_collection_id"
-				. " WHERE am.user_guid = $user_id AND (ag.site_guid = $site_id OR ag.site_guid = 0)";
-
-			$collections = get_data($query);
-			if ($collections) {
-				foreach ($collections as $collection) {
-					if (!empty($collection->access_collection_id)) {
-						$access_array[] = (int)$collection->access_collection_id;
-					}
-				}
-			}
-
-			// Get ACLs owned.
-			$query = "SELECT ag.id FROM {$CONFIG->dbprefix}access_collections ag ";
-			$query .= "WHERE ag.owner_guid = $user_id AND (ag.site_guid = $site_id OR ag.site_guid = 0)";
-
-			$collections = get_data($query);
-			if ($collections) {
-				foreach ($collections as $collection) {
-					if (!empty($collection->id)) {
-						$access_array[] = (int)$collection->id;
-					}
-				}
-			}
-			*/
 			$ignore_access = elgg_check_access_overrides($user_id);
 
 			if ($ignore_access == true) {

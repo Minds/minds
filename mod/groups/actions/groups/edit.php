@@ -79,9 +79,7 @@ if ($tool_options) {
 $is_public_membership = (get_input('membership') == ACCESS_PUBLIC);
 $group->membership = $is_public_membership ? ACCESS_PUBLIC : ACCESS_PRIVATE;
 
-if ($is_new_group) {
-	$group->access_id = ACCESS_PUBLIC;
-}
+$group->access_id = ACCESS_PUBLIC;
 
 $old_owner_guid = $is_new_group ? 0 : $group->owner_guid;
 $new_owner_guid = (int) get_input('owner_guid');
@@ -101,24 +99,17 @@ if (!$is_new_group && $new_owner_guid && $new_owner_guid != $old_owner_guid) {
 
 $must_move_icons = ($owner_has_changed && $old_icontime);
 
-$guid = $group->save();
 
 // Invisible group support
-// @todo this requires save to be called to create the acl for the group. This
-// is an odd requirement and should be removed. Either the acl creation happens
-// in the action or the visibility moves to a plugin hook
 if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {
 	$visibility = (int)get_input('vis', '', false);
-	if ($visibility != ACCESS_PUBLIC && $visibility != ACCESS_LOGGED_IN) {
-		$visibility = $group->group_acl;
-	}
 
 	if ($group->access_id != $visibility) {
 		$group->access_id = $visibility;
 	}
 }
 
-$group->save();
+$guid = $group->save();
 
 // group saved so clear sticky form
 elgg_clear_sticky_form('groups');

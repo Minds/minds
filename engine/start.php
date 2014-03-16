@@ -25,6 +25,13 @@ if (!file_exists(dirname(__FILE__) . '/settings.php')) {
 }
 
 /**
+ * Check for global settings used by multisites
+ */
+if(file_exists(dirname(__FILE__) . '/multi.settings.php')) {
+	require_once(dirname(__FILE__) . '/multi.settings.php');
+}
+
+/**
  * The time with microseconds when the Elgg engine was started.
  *
  * @global float

@@ -2268,6 +2268,7 @@ function elgg_api_test($hook, $type, $value, $params) {
  * @var int
  */
 define('ACCESS_DEFAULT', -1);
+define('ACCESS_SECRET', -3);
 define('ACCESS_PRIVATE', 0);
 define('ACCESS_LOGGED_IN', 1);
 define('ACCESS_PUBLIC', 2);
