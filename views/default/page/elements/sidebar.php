@@ -39,5 +39,5 @@ if (isset($vars['area3'])) {
 }
 
 if(!isset($vars['hide_ads'])){
-echo elgg_view('minds/ads', array('type'=>'toobla-side'));
+echo elgg_view('page/elements/ads', array('type'=>'toobla-side'));
 }

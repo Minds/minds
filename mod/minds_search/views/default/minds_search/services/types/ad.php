@@ -5,7 +5,7 @@
 		<?php echo $icon;?>
 		<h3>Sponsored ad</h3>
 		<div class="ad">
-			<?php echo elgg_view('minds/ads', array('type'=>'search-ad')); ?>
+			<?php echo elgg_view('page/elements/ads', array('type'=>'search-ad')); ?>
 		</div>
 	</p>
 	</div>

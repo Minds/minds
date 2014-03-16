@@ -32,14 +32,14 @@ $filter = elgg_view('page/layouts/content/filter', $vars);
 $content = elgg_extract('content', $vars, '');
 
 // optional footer for main content area
-$footer_content = elgg_extract('footer', $vars, '') . elgg_view('minds/ads', array('type'=>'large'));
+$footer_content = elgg_extract('footer', $vars, '') . elgg_view('page/elements/ads', array('type'=>'large'));
 $params = $vars;
 $params['content'] = $footer_content;
 $footer = elgg_view('page/layouts/content/footer', $params);
 
 $body = $content;
 
-$top_ad = elgg_view('minds/ads', array('type'=>'mobile'));
+$top_ad = elgg_view('page/elements/ads', array('type'=>'mobile'));
 $params = array(
 	'header' => $top_ad . $header . $filter,
 	'content' => $body,

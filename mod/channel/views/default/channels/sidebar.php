@@ -24,4 +24,4 @@ $body = elgg_view_form('members/name_search', $params);
 
 echo elgg_view_module('aside', elgg_echo('channels:searchname'), $body);
 
-echo elgg_view('minds/ads', array('type'=>'content-side'));
+echo elgg_view('page/elements/ads', array('type'=>'content-side'));
