@@ -101,7 +101,10 @@ h3 a{ color:#333; }
 	text-shadow: 1px 2px 4px #333333;
 	text-decoration: none;
 }
-
+.owner_block .text h3{
+	font-size:18px;
+}
+	
 .heading-main, .elgg-heading-main {
 	float: left;
 	max-width: 65%;

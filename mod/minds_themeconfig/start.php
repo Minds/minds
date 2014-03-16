@@ -1,6 +1,6 @@
 <?php
 
-elgg_register_event_handler('init', 'system', 'themeconfig_init');
+elgg_register_event_handler('init', 'system', 'themeconfig_init',99999);
 
 function themeconfig_init() {
 
@@ -21,6 +21,8 @@ function themeconfig_init() {
     elgg_register_event_handler('pagesetup', 'system', function() {
         // Extend the css
         elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
+	elgg_extend_view('page/elements/ads', 'minds_themeconfig/ads');
+	elgg_unextend_view('page/elements/ads', 'minds/ads'); //remove the default ads
     }, 999);
 
     elgg_register_event_handler('pagesetup', 'system', 'minds_themeconfig_setup');

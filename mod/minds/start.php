@@ -36,6 +36,11 @@ function minds_init(){
 	//put the quota in account statistics
 	elgg_extend_view('core/settings/statistics', 'minds/quota/statistics', 500);
 	
+
+	/**
+]	 * Ads
+	*/
+	elgg_extend_view('page/elements/ads', 'minds/ads');
 	//register the ubuntu font
 //	elgg_register_css('ubuntu.font', 'http://fonts.googleapis.com/css?family=Ubuntu:300');
 //	elgg_load_css('ubuntu.font');

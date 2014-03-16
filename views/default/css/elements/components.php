@@ -38,7 +38,7 @@
         margin: 1.1%;
         border: 0;
 	background:#F8F8F8;
-	padding:10px 10px 0 10px;
+	padding:10px 10px 0 11px;
         width: 29%;
         /*width:28%;*/
 	overflow: hidden;
@@ -238,10 +238,10 @@
 .minds-list-river, .elgg-list-river {
 }
 .minds-list-river > li, .elgg-list-river > li {
-	padding:0;
+/*	padding:0;*/
 }
 .minds-list-river > li > .minds-river-header, .elgg-list-river > li > .minds-river-header {
-	padding:12px;
+	/*padding:12px;*/
 }
 .minds-list-river > li > .minds-menu, .elgg-list-river > li > .elgg-menu {
 	padding:12px;

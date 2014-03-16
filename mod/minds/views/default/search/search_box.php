@@ -39,6 +39,7 @@ if(elgg_is_logged_in()){
 } else {
 	$placeholder = elgg_echo('search');
 }
+ $placeholder = '';
 ?>
 
 <form class="<?php echo $class; ?>" action="<?php echo elgg_get_site_url(); ?>search" method="get">

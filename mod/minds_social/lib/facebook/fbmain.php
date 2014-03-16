@@ -6,8 +6,8 @@ elgg_load_library('facebook');
  */
 function minds_social_facebook_init(){
 	$facebook = new Facebook(array(
-	  'appId'  => '184865748231073',
-	  'secret' => '26d5c6cd2ae8945e19b4b1bce2d9df9d',
+	  'appId'  => elgg_get_plugin_setting('facebook_appId', 'minds_social') ?: '184865748231073',
+	  'secret' => elgg_get_plugin_setting('facebook_secret', 'minds_social') ?: '26d5c6cd2ae8945e19b4b1bce2d9df9d',
 	));
 	
 	return $facebook;

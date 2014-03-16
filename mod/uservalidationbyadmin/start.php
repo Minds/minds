@@ -146,7 +146,8 @@ function uservalidationbyadmin_check_auth_attempt($credentials) {
 	access_show_hidden_entities(TRUE);
 
 	$user = get_user_by_username($username);
-	if ($user && isset($user->validated) && !$user->validated) {
+	if ($user && isset($user->validated) && $user->validated != 1) {
+//	var_dump($user); exit;
 		// show an error and resend validation email
 		uservalidationbyadmin_request_validation($user->guid);
 		access_show_hidden_entities($access_status);

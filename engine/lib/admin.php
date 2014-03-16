@@ -486,8 +486,11 @@ function admin_page_handler($page) {
 		$title = elgg_echo('admin:unknown_section');
 		$content = elgg_echo('admin:unknown_section');
 	}
-
-	$body = elgg_view_layout('admin', array('content' => $content, 'title' => $title));
+	$buttons = elgg_view_menu('title', array(
+		'sort_by' => 'priority',
+		'class' => 'elgg-menu-hz',
+	));
+	$body = elgg_view_layout('admin', array('content' => $buttons . $content, 'title' => $title));
 	echo elgg_view_page($title, $body, 'default');
 	return true;
 }

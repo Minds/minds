@@ -35,7 +35,7 @@
 		<?php //if user is admin
 		if(elgg_is_admin_logged_in()){
 		?>
-		<a href="<?php echo elgg_get_site_url();?>admin">admin panel</a> |
+		<a href="<?php echo elgg_get_site_url();?>admin">Admin</a> |
 		<?php } ?>
 		<a href="<?php echo elgg_get_site_url();?>settings/user/<?php echo $user->username;?>">Settings</a> | <a href="<?php echo elgg_get_site_url();?>action/logout">Exit</a>
 	</span>	

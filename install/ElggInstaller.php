@@ -250,7 +250,9 @@ class ElggInstaller {
 	 * @return void
 	 */
 	protected function welcome($vars) {
-		$this->render('welcome');
+	//	$this->render('welcome');
+		//$this->continueToNextStep('welcome');
+		forward('?step=settings');
 	}
 
 	/**

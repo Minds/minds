@@ -1087,7 +1087,7 @@ function elgg_set_user_validation_status($user_guid, $status, $method = '') {
  */
 function elgg_get_user_validation_status($user_guid) {
 	$user = get_entity($user_guid, 'user');
-	if($user && $user->validated){
+	if($user && $user->validated == 1){
 		return true;
 	} 
 	return false;
