@@ -158,7 +158,9 @@ function pay_basket_add_button($type_guid, $title, $description, $price, $quanti
  */
 function pay_update_order_status($order_guid, $status){
 	$order = get_entity($order_guid, 'object');
-	
+
+        if ($order->status)
+            $order->last_status = $order->status;
 	$order->status = $status;
         
         // Lets add a hook here
