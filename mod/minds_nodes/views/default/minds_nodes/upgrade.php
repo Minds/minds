@@ -20,7 +20,7 @@
 <ul id="tiers-selection" class="elgg-list">
   
     <?php foreach ($tiers as $tier) { 
-        if ($tier->guid!=$vars['object']->tier_guid) {
+        if (($tier->guid!=$vars['object']->tier_guid) && ($vars['object']->price < $tier->price)) {
         ?>
     
     <li class="elgg-item tier tier-<?php echo $tier->product_id; ?>">
