@@ -46,12 +46,17 @@ if ($tier = get_entity(get_input('tier_id'),'object')) {
 
 
 	//now create a blank MindsNode ... don't launch yet though...
-	$node = new MindsNode();
-	$node->owner_guid = elgg_get_logged_in_user_guid();
-	$node->launched = false;
+        if (($node_guid = get_input('node_guid')) && ($node = get_entity($node_guid))) {
+            // If we're upgrading an existing node, then we use that instead
+            error_log("Looks like we're upgrading an existing node with a new order.");
+        }
+        else {
+            $node = new MindsNode();
+            $node->owner_guid = elgg_get_logged_in_user_guid();
+            $node->launched = false;
+        }
 	$node->tier_guid = $tier->guid;
 	$node->order_guid = $order_guid;	
-	$node->foo = bar;    
 	$node->save();
 
 	if($order->amount == 0){
