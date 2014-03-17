@@ -160,6 +160,9 @@ function pay_update_order_status($order_guid, $status){
 	$order = get_entity($order_guid, 'object');
 	
 	$order->status = $status;
+        
+        // Lets add a hook here
+        elgg_trigger_event('order_status_change', 'pay', $order);
 	
 	if($order->save()){
 		return true;
