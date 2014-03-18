@@ -61,9 +61,9 @@ function themeicons_page_handler($pages) {
         case 'logo_favicon' :
             $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
 
-            $contents = file_get_contents($theme_dir . $pages[0] . '.png');
+            $contents = file_get_contents($theme_dir . $pages[0] . '.jpg');
             // header_remove();
-            header("Content-Type: image/png");
+            header("Content-Type: image/jpeg");
             //header('Expires: ' . date('r', strtotime("+6 months")), true);
             header("Last-Modified: " . date('r', elgg_get_plugin_setting('logo_override_ts', 'minds_themeconfig')));
             header("Pragma: public");
