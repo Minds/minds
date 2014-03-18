@@ -493,7 +493,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 		$subject = $item->getSubjectEntity();
 		//Delete button
 		elgg_unregister_menu_item('river', 'delete'); 
-		if ($subject->canEdit() || $object->canEdit()) {
+		if ($subject->canEdit() || ( $object && $object->canEdit())) {
 			$options = array(
 				'name' => 'delete',
 				'href' => "action/river/delete?id=$item->id",
@@ -509,7 +509,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 		
 		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
-		if(in_array($object->getSubtype(), $allowedReminds)){
+		if($object && in_array($object->getSubtype(), $allowedReminds)){
 			$options = array(
 					'name' => 'remind',
 					'href' => "action/minds/remind?guid=$object->guid",

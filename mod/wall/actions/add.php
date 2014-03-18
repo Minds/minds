@@ -49,32 +49,50 @@ if (!$guid) {
 } else {
 
 //add the message
-$news_id = add_to_river('river/object/wall/create', 'create', $from_guid, $guid);
+//$news_id = add_to_river('river/object/wall/create', 'create', $from_guid, $guid);
 
-if($ref == 'wall'){
-	$post = get_entity($guid,'object');
+/**
+ * attachement
+ */
+$attachment = new ElggFile();
 
-	$id = "elgg-{$post->getType()}-{$post->guid}";
-	$time = $post->time_created;
-	$output = "<li id=\"$id\" class=\"elgg-item\" data-timestamp=\"$time\">";
-	$output .= elgg_view_list_item($post);
-	$output .= '</li>';
-} elseif($ref=='news'){
-
-	$data = new stdClass();
-	$data->id = $news_id;
-	$data->action_type = 'create';
-	$data->subject_guid = $from_guid;
-	$data->object_guid = $guid;
-	$data->view = 'river/object/wall/create';
-	$data->posted = time();
-	
-	$item = new ElggRiverItem($data);
-	
-	$output = '<li class="elgg-item">' . elgg_view_list_item($item, array('list_class'=>'elgg-list elgg-list-river elgg-river', 'class'=>'elgg-item elgg-river-item')) . '</li>';
+if (isset($_FILES['attachment']['name']) && !empty($_FILES['attachment']['name'])) {
+		
+	$prefix = "attachments/";
+	$filestorename = elgg_strtolower(time().$_FILES['attachment']['name']);
+			
+	$mime_type = $attachment->detectMimeType($_FILES['attachment']['tmp_name'], $_FILES['attachment']['type']);
+	$attachment->setFilename($prefix . $filestorename);
+	$attachment->setMimeType($mime_type);
+	$attachment->originalfilename = $_FILES['attachment']['name'];
+	$attachment->simpletype = file_get_simple_type($mime_type);
+			
+	//save the space so we can add it to our quota. 
+	$attachment->size = $_FILES['attachment']['size'];
+		
+	// Open the file to guarantee the directory exists
+	$attachment->open("write");
+	$attachment->close();
+	move_uploaded_file($_FILES['upload']['tmp_name'], $attachment->getFilenameOnFilestore());
+		
+	$attachment->save();
 }
 
-notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
+$river = new ElggRiverItem(array(
+	'to_guid' => $to_guid,
+	'subject_guid' => elgg_get_logged_in_user_guid(),
+	'body' => $message,
+	'view' => 'river/object/wall/create',
+	'object_guid' => $post->guid,
+	'attachment_guid' => $attachment->guid
+	));
+
+$river->save();
+
+$output = '<li class="elgg-item">' . elgg_view_list_item($river, array('list_class'=>'elgg-list elgg-list-river elgg-river', 'class'=>'elgg-item elgg-river-item')) . '</li>';
+
+
+//notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'wall'));
 
 echo $output;
 
@@ -92,5 +110,4 @@ foreach($matches as $value){
 }
 
 system_message(elgg_echo("wall:posted"));
-
 }

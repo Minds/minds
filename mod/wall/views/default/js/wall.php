@@ -40,11 +40,16 @@ elgg.wall.init = function() {
 };
 
 elgg.wall.submit = function(e) {
-	var form = $(this).parents('form');
-	var data = form.serialize();
 
-	elgg.action('wall/add', {
+	var form = $(this).parents('form');	
+	var data = new FormData(form[0]);    
+	
+
+	$.ajax(elgg.security.addToken(elgg.get_site_url() + 'action/wall/add'), {
 		data: data,
+		processData: false,
+		contentType: false,
+		type: 'POST',
 		success: function(json) {
 			console.log(json);
 			// the action always returns the full ul and li wrapped annotation.
@@ -63,11 +68,15 @@ elgg.wall.submit = function(e) {
 };
 
 elgg.wall.news.submit = function(e) {
-	var form = $(this).parents('form');
-	var data = form.serialize();
+	var form = $(this).parents('form');	
+	var data = new FormData(form[0]);    
+	
 
-	elgg.action('wall/add', {
+	$.ajax(elgg.security.addToken(elgg.get_site_url() + 'action/wall/add'), {
 		data: data,
+		processData: false,
+		contentType: false,
+		type: 'POST',
 		success: function(json) {
 		//	console.log(json);	
 			$('.elgg-list.elgg-list-river.elgg-river').first('.elgg-list.elgg-list-river.elgg-river').prepend(json.output);

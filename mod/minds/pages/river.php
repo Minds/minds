@@ -97,7 +97,7 @@ $sidebar .= elgg_view('page/elements/ads', array('large-block'));
 $vars['filter_context'] = $page_filter;
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 $filter = elgg_view('page/layouts/content/river_filter', $vars);
-$wall_add = elgg_view_form('wall/add',  array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
+$wall_add = elgg_view_form('wall/add',  array('name'=>'elgg-wall-news', 'enctype' => 'multipart/form-data'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
 $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title_block$wall_add

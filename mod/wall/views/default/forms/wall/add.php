@@ -16,6 +16,10 @@ echo elgg_view('input/plaintext', array(
 	'id' => 'wall-textarea',
 	'placeholder' => 'Write a new post to the news...'
 ));
+echo elgg_view('input/file', array(
+	'name'=> 'attachment',
+	'id'=>'attachment'
+));
 
 echo elgg_view('input/submit', array(
         'value' => elgg_echo('post'),

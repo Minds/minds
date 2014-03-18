@@ -2,16 +2,18 @@
 /**
  * Wall river views
  */
+$item = $vars['item'];
 
-$object = $vars['item']->getObjectEntity();
-$excerpt = minds_filter($object->message);
-$to = get_entity($object->to_guid, 'user');
-//bad way of doing this, but if not a user, try a group
-if(!$to){
-	$to = get_entity($object->to_guid, 'group');
+if($item->body){
+	$excerpt = minds_filter($item->body);
+}else{
+	$object = $item->getObjectEntity();
+	$excerpt = minds_filter($object->message);
 }
-//var_dump($to);
-$subject = $vars['item']->getSubjectEntity();
+
+$to = get_entity($object->to_guid);
+
+$subject = $item->getSubjectEntity();
 $subject_link = elgg_view('output/url', array(
 	'href' => $subject->getURL(),
 	'text' => $subject->name,
@@ -32,8 +34,13 @@ if($object->owner_guid == $object->to_guid || $to instanceof ElggGroup || !$to){
 	$summary = elgg_echo("river:create:object:wall", array($subject_link, $owner_link));
 }
 
+if($item->attachment_guid){
+	$attachment = 'hello';
+}
+
 echo elgg_view('river/elements/layout', array(
-	'item' => $vars['item'],
+	'item' => $item,
 	'message' => '<p>' . $excerpt . '</p>',
 	'summary' => $summary,
+	'attachments' => $attachment
 ));
