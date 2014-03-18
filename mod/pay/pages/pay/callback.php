@@ -26,8 +26,10 @@ error_log("PAYPAL: Handler expected is $handler");
 //var_dump($user_pam);
 if($user_auth_result){
     error_log("PAYPAL: user authenticated, calling handler");
-	pay_call_payment_handler_callback($handler, $order_guid);
+	if (pay_call_payment_handler_callback($handler, $order_guid))
+		echo "OK";
 	//pay_call_payment_handler_callback('paypal', $order_guid);
+	
 } else {
 	echo 'Callback could not be authenticated';
         error_log('PAYPAL: DEBUG Callback could not be authenticated');

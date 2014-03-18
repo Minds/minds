@@ -166,6 +166,8 @@ function pay_update_order_status($order_guid, $status){
         // Lets add a hook here
         elgg_trigger_event('order_status_change', 'pay', $order);
 	
+	error_log("PAYPAL: Order status for {$order_guid} changed to $status");
+	
 	if($order->save()){
 		return true;
 	} else {
@@ -607,7 +609,19 @@ function paypal_handler_callback($order_guid) {
 
                 break;
 
-            default: elgg_log("PAYPAL: Payment status unknown : {$_POST['payment_status']}");
+            default: 
+		elgg_log("PAYPAL: Payment status unknown : {$_POST['payment_status']}");
+		
+		// Handling non-generic IPN callback for cancel
+		switch ($_POST['txn_type']) {
+
+		    case 'subscr_signup': // Not handled here
+			break;
+		    case 'subscr_cancel': // Cancel the subscription
+
+			pay_update_order_status($order_guid, 'Cancelled');
+			break;
+		}
         }
     } else if (strcmp($res, "INVALID") == 0) {
         elgg_log("PAYPAL: IPN Query is invalid");
