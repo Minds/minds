@@ -620,6 +620,8 @@ function paypal_handler_callback($order_guid) {
 		    case 'subscr_cancel': // Cancel the subscription
 
 			pay_update_order_status($order_guid, 'Cancelled');
+			
+			return true;
 			break;
 		}
         }
