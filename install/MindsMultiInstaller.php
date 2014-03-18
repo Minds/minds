@@ -137,7 +137,7 @@ class MindsMultiInstaller extends ElggInstaller {
                                    break;
                            }
 
-                           if (!$this->createAdminAccount($submissionVars, $this->autoLogin)) {
+                           if (!$this->createAdminAccount($submissionVars, true)) {
                                    break;
                            }
 
@@ -317,14 +317,14 @@ class MindsMultiInstaller extends ElggInstaller {
         global $CONFIG;
 
         // Ensure plugin manager is activated
-        $plugin = new ElggPlugin('pluginmanager');
+        /*$plugin = new ElggPlugin('pluginmanager');
 	$plugin->setPriority('last');
         $plugin->activate();
 
         $plugin = new ElggPlugin('mindsmulti_pluginmanager');
 	$plugin->setPriority('last');
         $plugin->activate();
-
+*/
         // Now, specify what plugins are visible for any given domain
         $domain = $CONFIG->elgg_multisite_settings;
         $user_editable_plugins = array(
@@ -354,7 +354,8 @@ class MindsMultiInstaller extends ElggInstaller {
                 //'bootcamp',
             'mobile',
                 //'minds'
-            'anypage',
+            'minds_themeconfig',
+		'anypage',
             'Login-As',
             'minds_widgets',
             'minds_wordpress',
@@ -512,6 +513,11 @@ class MindsMultiInstaller extends ElggInstaller {
                 'value' => '',
                 'required' => FALSE,
             ),
+	    'favicon' => array(
+		'type' => 'file',
+		'value' => '',
+		'required' => FALSE
+	    ),
             /*'style' => array(
                 'type' => 'radio',
                 'value' => 'theme1',
@@ -552,7 +558,9 @@ class MindsMultiInstaller extends ElggInstaller {
 
         global $CONFIG;
     
-	// Save logo (generate a couple of sizes)
+	/**
+	 * MAIN LOGO
+	 */
 	$files = array();
 	$sizes = array(
                 'logo_main' => array(
@@ -571,7 +579,7 @@ class MindsMultiInstaller extends ElggInstaller {
 
 		// If our file exists ...
 	if (isset($submissionVars['logo']) && $submissionVars['logo']['error'] == 0) {
- 		$resized = get_resized_image_from_existing_file($submissionVars['logo']['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale']);
+ 		$resized = get_resized_image_from_existing_file($submissionVars['logo']['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale'], 'png');
 	}
 
 		if ($resized) {
@@ -579,17 +587,52 @@ class MindsMultiInstaller extends ElggInstaller {
                 	$theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
                 	@mkdir($theme_dir);
 
-                	file_put_contents($theme_dir . $name.'.jpg', $resized);
-                
+                	file_put_contents($theme_dir . $name.'.png', $resized);
+                	
                 	elgg_set_plugin_setting('logo_override', 'true', 'minds_themeconfig');
-            	}
+	        	 elgg_set_plugin_setting('logo_override_ts', time(), 'minds_themeconfig');    
+		}
 		if (isset($_FILES['logo']) && ($_FILES['logo']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['logo']['error'] != 0) {
-               		register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
+               	//	register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
            	 }
 	}
+	/**
+	 * FAVICON UPLOADER 
+	 */
+	// Favicon
+	foreach (array(
+        	'logo_favicon' => array(
+          	 	'w' => 32,
+            		'h' => 32,
+           		'square' => true,
+         		'upscale' => true
+       		)
+  		) as $name => $size_info) { 
+      		$resized = get_resized_image_from_existing_file($submissionVars['favicon']['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
+
+       		 if ($resized) {
+            		global $CONFIG;
+            		$theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
+           	 	@mkdir($theme_dir);
+
+            		file_put_contents($theme_dir . $name.'.png', $resized);
+
+            		elgg_set_plugin_setting('logo_favicon', 'true', 'minds_themeconfig');
+            		elgg_set_plugin_setting('logo_favicon_ts', time(), 'minds_themeconfig');
+            
+        	}
+
+        	if (isset($_FILES['favicon']) && ($_FILES['favicon']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['favicon']['error'] != 0) {
+            	//	register_error(minds_themeconfig_codeToMessage($_FILES['favicon']['error'])); // Debug uploads
+        	}
+	}
+
 	// Save frontpage text
 	elgg_set_plugin_setting('frontpagetext', $submissionVars['page_header'], 'minds_themeconfig');
-    
+   
+	elgg_set_plugin_setting('themeset', 'minds-left', 'minds_themeconfig');
+	datalist_set('site_featured_menu_use_icons', 'no');
+ 
     }
 
     /**
@@ -651,9 +694,7 @@ class MindsMultiInstaller extends ElggInstaller {
 		$b->featured_id = $g->generate();
 		$b->featured = 1;
 		$b->save();
-
-		db_insert('object:featured', array('type'=>'entities_by_time',$b->featured_id => $b->getGUID()));
-		db_insert('object:'.$b->subtype.':featured', array('type'=>'entities_by_time',$b->featured_id => $b->getGUID()));
+		$b->feature();
 	
 		add_to_river('river/object/'.$b->getSubtype().'/feature', 'feature', $b->getOwnerGUID(), $b->getGuid());
 

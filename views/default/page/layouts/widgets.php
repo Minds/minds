@@ -21,7 +21,8 @@ $widget_types = elgg_get_widget_types();
 $context = elgg_get_context();
 elgg_push_context('widgets');
 
-$widgets = elgg_get_widgets($owner->guid, $context);
+
+$widgets =  elgg_extract('widgets', $vars, elgg_get_widgets($owner->guid, $context));
 
 $params = array(
         'widgets' => $widgets,

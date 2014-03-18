@@ -121,7 +121,8 @@ if ($is_new_group) {
 	elgg_set_page_owner_guid($group);
 
 	$group->join($user);
-	add_to_river('river/group/create', 'create', $user->guid, $guid, $group->access_id);
+	if($group->access_id != 0)
+		add_to_river('river/group/create', 'create', $user->guid, $guid, $group->access_id);
 }
 
 $has_uploaded_icon = (!empty($_FILES['icon']['type']) && substr_count($_FILES['icon']['type'], 'image/'));

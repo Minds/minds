@@ -202,7 +202,7 @@ input[name=terms]{
 .minds-body-header{
 	width: 100%;
 	height:auto;
-	background: #F8F8F8;
+	background: rgba(255,255,255, 0.9);
 	padding: 25px 0;
 	margin-bottom: 10px;
 	/*opacity: .90;*/
@@ -1023,6 +1023,9 @@ li.elgg-menu-item-rss{
 
 .homepage{
 	padding-top:160px;
+}
+.homepage > h2{
+	padding-top:-160px;
 }
 /**
  * Carousel

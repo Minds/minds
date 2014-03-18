@@ -73,6 +73,11 @@ ul {
         text-align: center;
         margin-bottom: 30px;
 }
+.experiment{
+	color: #888;
+font-size: 11px;
+font-family: monospace;
+}
 .elgg-page-body {
 	border: 1px solid #EEE;
 	box-shadow:0 0 3px #EEE;

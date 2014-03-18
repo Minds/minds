@@ -301,16 +301,9 @@ class ElggUser extends ElggEntity
                         $this->save();
 		}	
 
+		elgg_trigger_event('make_admin', 'user', $this);
+
 		return true;
-
-		if ($this->guid && !make_user_admin($this->guid)) {
-			return FALSE;
-		}
-
-		// need to manually set attributes since they've already been loaded.
-		$this->attributes['admin'] = 'yes';
-
-		return TRUE;
 	}
 
 	/**

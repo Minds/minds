@@ -207,7 +207,7 @@ class ElggInstaller {
 			throw new InstallationException(elgg_echo('install:error:savesitesettings'));
 		}
 
-		if (!$this->createAdminAccount($params)) {
+		if (!$this->createAdminAccount($params, true)) {
 			throw new InstallationException(elgg_echo('install:admin:cannot_create'));
 		}
 	}
@@ -494,7 +494,7 @@ class ElggInstaller {
 					break;
 				}
 
-				if (!$this->createAdminAccount($submissionVars, $this->autoLogin)) {
+				if (!$this->createAdminAccount($submissionVars, true)) {
 					break;
 				}
 
@@ -1471,14 +1471,13 @@ class ElggInstaller {
 							'minds_comments',
 							'minds_social',
 							'minds_webservices',
-                                                        'minds_themeconfig',
-                                                        'minds_theme_selector',
+                                                        //'minds_themeconfig',
                                                         'minds_wordpress',
                                                         //'anypage',
 							'persona',
 							'notifications',
 							//'minds_connect',
-							'bootcamp',
+							'orientation',
 							'mobile',
 							'minds'
 						);
@@ -1487,6 +1486,7 @@ class ElggInstaller {
 			$plugin->setPriority('last');
 			$plugin->activate();
 		}
+
 	}
 
 	/**
@@ -1577,7 +1577,6 @@ class ElggInstaller {
 		} else {
 			datalist_set('admin_registered', 1);
 		}
-		elgg_set_ignore_access(false);
 
 		$user->validated = true;
 		$user->validated_method = 'admin_user';
@@ -1588,7 +1587,7 @@ class ElggInstaller {
 				register_error(elgg_echo('install:error:adminlogin'));
 			}
 		}
-
+		elgg_set_ignore_access(false);
 		return TRUE;
 	}
         

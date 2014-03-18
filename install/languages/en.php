@@ -112,6 +112,8 @@ If you are ready to proceed, click the Next button.",
 
 	'install:theme:label:logo' => 'Logo',
 	'install:theme:help:logo' => 'Your site logo',
+	'install:theme:label:favicon' => 'Favicon',
+	'install:theme:help:favicon' => 'The small icon that displays in address bar or on tabs',
 	'install:theme:label:style' => 'Style',
 	'install:theme:help:style' => 'Select a style for your node',
 	'install:theme:label:page_header' => 'Site header',
