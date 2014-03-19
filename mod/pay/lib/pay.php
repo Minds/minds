@@ -397,19 +397,11 @@ function paypal_generic_ipn_handler($page) {
     elgg_log('PAYPAL: ********* Paypal GENERIC IPN triggered **********');
     
     // Try and get order we're referring to
-    /*if ($orders = elgg_get_entities_from_metadata(array(
-        'type' => 'object',
-        'subtype' => 'pay',
-        'limit' => 1,
-        'metadata_name' => 'subscr_id',
-        'metadata_value' => $_POST['subscr_id'],
-    )))
-            $order = $orders[0];
-    */
+    
     
     // Cassandraising 
     $order = null;
-    if ($orders = elgg_get_entities(array(
+    /*if ($orders = elgg_get_entities(array(
         'type' => 'object',
         'subtype' => 'pay',
         'limit' => 999999
@@ -419,8 +411,27 @@ function paypal_generic_ipn_handler($page) {
             {
                 $order = $o; break;
             }
+    }*/
+    $db = new DatabaseCall('entities_by_time');
+    if ($guids = $db->getRow('object:pay:subscrid', array('offset'=> $_POST['subscr_id'], 'limit'=>1)))
+	    $order = get_entity($guids[0], 'object');
+	
+    if (!$order){
+	// Belts and braces with what has worked in the past, for pay objects that have not been tagged
+	error_log("PAYPAL: Warning, order does not have a subscription ID in the time to guid lookup.");
+	
+	if ($orders = elgg_get_entities(array(
+	    'type' => 'object',
+	    'subtype' => 'pay',
+	    'limit' => 999999
+	))) {
+	    foreach ($orders as $o)
+		if ($o->subscr_id == $_POST['subscr_id'])
+		{
+		    $order = $o; break;
+		}
+	}
     }
-    
     
     
     // TODO: Other methods of pulling order out
@@ -590,8 +601,13 @@ function paypal_handler_callback($order_guid) {
 
                 
                 // If this is a recurring payment, then we need to link the order to a subscription profile so we can manage the order from its generic IPN, or cancel it from the minds interface
-                if (isset($_POST['subscr_id']))
+                if (isset($_POST['subscr_id'])) {
                     $order->subscr_id = $_POST['subscr_id'];
+		    
+		    // Save an index against this so we can call it up more efficiently 
+		    $db = new DatabaseCall('entities_by_time');
+		    $db->insert('object:pay:subscrid', array($order->subscr_id => $order->guid));
+		}
 
 
 
