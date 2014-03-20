@@ -23,12 +23,12 @@
             'upscale' => true
         )*/
     ) as $name => $size_info) {
-
-		 $resized = get_resized_image_from_uploaded_file('logo', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
+	    global $CONFIG;
+	    $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
+	    
+	    $resized = get_resized_image_from_uploaded_file('logo', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
 
             if ($resized) {
-                global $CONFIG;
-                $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
                 @mkdir($theme_dir);
                 
 		file_put_contents($theme_dir . $name.'.png', $resized);
@@ -40,6 +40,11 @@
             if (isset($_FILES['logo']) && ($_FILES['logo']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['logo']['error'] != 0) {
                 register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
             }
+	    
+	    if (get_input('logo_remove') == 'y') {
+		elgg_set_plugin_setting('logo_override', '', 'minds_themeconfig');
+                elgg_set_plugin_setting('logo_override_ts', '', 'minds_themeconfig');
+	    }
     }
     
     // Favicon
@@ -68,6 +73,12 @@
         if (isset($_FILES['favicon']) && ($_FILES['favicon']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['favicon']['error'] != 0) {
             register_error(minds_themeconfig_codeToMessage($_FILES['favicon']['error'])); // Debug uploads
         }
+	
+	
+	if (get_input('favicon_remove') == 'y') {
+	    elgg_set_plugin_setting('logo_favicon', '', 'minds_themeconfig');
+	    elgg_set_plugin_setting('logo_favicon_ts', '', 'minds_themeconfig');
+	}
     }
     
     // Background image
@@ -85,6 +96,12 @@
     }
     if (isset($_FILES['background']) && ($_FILES['background']['error'] != UPLOAD_ERR_NO_FILE) && ($_FILES['background']['error'] != 0)) {
         register_error(minds_themeconfig_codeToMessage($_FILES['background']['error'])); // Debug uploads
+    }
+    
+    if (get_input('background_remove') == 'y') {
+	elgg_set_plugin_setting('background_override', '', 'minds_themeconfig');
+	elgg_set_plugin_setting('background_override_ts', '', 'minds_themeconfig');
+	elgg_set_plugin_setting('background_override_mime', '', 'minds_themeconfig');
     }
     
     // Save frontpage text

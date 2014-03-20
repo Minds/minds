@@ -17,26 +17,15 @@
 <p><label>
     <?php echo elgg_echo('minds_themeconfig:logo');?>:<br />
         <?php echo elgg_view('input/file', array('name' => 'logo')); ?>
-</label></p>
+    </label> <br /><label><input type="checkbox" name="logo_remove" value="y" /> <?php echo elgg_echo('remove'); ?></label></p>
 <p><label>
     <?php echo elgg_echo('minds_themeconfig:favicon');?>:<br />
         <?php echo elgg_view('input/file', array('name' => 'favicon')); ?>
-</label></p>
+</label> <br /><label><input type="checkbox" name="favicon_remove" value="y" /> <?php echo elgg_echo('remove'); ?></label></p>
 <p><label>
     <?php echo elgg_echo('minds_themeconfig:background');?>:<br />
         <?php echo elgg_view('input/file', array('name' => 'background')); ?>
-</label></p>
-
-<?php /*
-<p><label>
-    <?php echo elgg_echo('minds_themeconfig:backgroundcolour');?>:<br />
-        <?php echo elgg_view('input/colourpicker', array('name' => 'background_colour', 'placeholder' => 'e.g. ffffff', 'value' => elgg_get_plugin_setting('background_colour', 'minds_themeconfig'))); ?>
-</label></p>
-
-<p><label>
-    <?php echo elgg_echo('minds_themeconfig:textcolour');?>:<br />
-        <?php echo elgg_view('input/colourpicker', array('name' => 'text_colour', 'placeholder' => 'e.g. ffffff', 'value' => elgg_get_plugin_setting('text_colour', 'minds_themeconfig'))); ?>
-</label></p> */?>
+</label> <br /><label><input type="checkbox" name="background_remove" value="y" /> <?php echo elgg_echo('remove'); ?></label></p>
 
 <p><label>
     <?php echo elgg_echo('minds_themeconfig:custom_css');?>:<br />
