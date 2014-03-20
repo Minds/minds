@@ -1025,7 +1025,7 @@ li.elgg-menu-item-rss{
 	padding-top:160px;
 }
 .homepage > h2{
-	padding-top:-160px;
+	margin-top:-160px;
 }
 /**
  * Carousel

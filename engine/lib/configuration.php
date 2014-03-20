@@ -598,7 +598,7 @@ function _elgg_load_application_config() {
 	$viewtype = get_input('view', 'default');
 	
 	if(!isset($CONFIG->lastcache)){
-		$lastcached = datalist_get("simplecache_lastcached_$viewtype");
+		$lastcached = datalist_get("simplecache_lastcached_$viewtype") ?: datalist_get("lastcache");
 		$CONFIG->lastcache = $lastcached;
 	}
 

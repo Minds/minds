@@ -51,6 +51,8 @@ function elgg_get_widgets($options, $context){
 		if (!isset($sorted_widgets[(int)$widget->column])) {
 			$sorted_widgets[(int)$widget->column] = array();
 		}
+		if(isset($sorted_widgets[(int)$widget->column][$widget->order]))
+			$widget->order++;
 		$sorted_widgets[(int)$widget->column][$widget->order] = $widget;
 	}
 	foreach ($sorted_widgets as $col => $widgets) {
