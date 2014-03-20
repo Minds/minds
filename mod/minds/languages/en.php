@@ -202,6 +202,8 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	
 	'trending' => 'Trending',
 
+    
+    'item:object:__base__' => 'Base objects',
 );
 		
 add_translation("en", $english);
