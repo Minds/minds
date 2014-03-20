@@ -20,12 +20,21 @@ $name = $tier_id;
 	$currency = pay_get_currency();   
  
         if (elgg_is_logged_in()){ 
+            if ($upgrade_node = get_entity($vars['upgrade_node'], 'object')) {
+                if ($tier->price == 0) {
+               		$title = elgg_view('output/url', array('is_action' => true, 'id' => $tier->product_id, 'href' => elgg_get_site_url() . 'action/upgrade_to?tier_id='. $tier->guid."&node_guid={$upgrade_node->guid}", 'text' =>  'Free', 'class' => 'pay buynow login'));
+           	 } else {
+        		$title = elgg_view('output/url', array('is_action' => true, 'id' => $tier->product_id, 'href' => elgg_get_site_url() . 'action/upgrade_to?tier_id='. $tier->guid."&node_guid={$upgrade_node->guid}", 'text' =>  $currency['symbol'] . $tier->price, 'class' => 'pay buynow login'));
+
+		}
+            } else {
        		if ($tier->price == 0) {
                		$title = elgg_view('output/url', array('is_action' => true, 'id' => $tier->product_id, 'href' => elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid, 'text' =>  'Free', 'class' => 'pay buynow login'));
            	 } else {
         		$title = elgg_view('output/url', array('is_action' => true, 'id' => $tier->product_id, 'href' => elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid, 'text' =>  $currency['symbol'] . $tier->price, 'class' => 'pay buynow login'));
 
 		}
+            }
 	} else {
              $currecy = pay_get_currency();	
              $title = elgg_view('output/url', array('id' => $tier->product_id, 'href' => '#', 'text' => $currecy['symbol'] . $tier->price, 'class' => 'pay buynow free'));

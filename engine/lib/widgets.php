@@ -38,7 +38,7 @@ function elgg_get_widgets($options, $context){
 			'limit'=>0
 		)
 	);
-	
+
 	if (!$widgets) {
 		return array();
 	}
@@ -51,12 +51,15 @@ function elgg_get_widgets($options, $context){
 		if (!isset($sorted_widgets[(int)$widget->column])) {
 			$sorted_widgets[(int)$widget->column] = array();
 		}
-		$sorted_widgets[(int)$widget->column][$widget->order] = $widget;
+                
+                if (!isset($sorted_widgets[(int)$widget->column][$widget->order]))
+                    $sorted_widgets[(int)$widget->column][$widget->order] = $widget;
+                else
+                    $sorted_widgets[(int)$widget->column][] = $widget;
 	}
 	foreach ($sorted_widgets as $col => $widgets) {
 		ksort($sorted_widgets[$col]);
 	}
-	
 	return $sorted_widgets;
 }
 
