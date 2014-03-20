@@ -46,6 +46,8 @@ $english = array(
 	'anypage:test_page_view' => 'This is an example of a page rendered by AnyPage using a view!',
 
 	'anypage:activate:admin_notice' => 'AnyPage has added example pages. Use the <a href="%s">admin interface</a> to add more pages.',
+    
+	'item:object:anypage' => 'Anypage',
 );
 
 add_translation('en', $english);
