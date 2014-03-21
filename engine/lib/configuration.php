@@ -31,8 +31,9 @@ function elgg_get_site_url($site_guid = 0) {
 		return $CONFIG->wwwroot;
 	}
 
-	$site = get_entity($site_guid);
-
+//	$site = get_entity($site_guid, 'site_id');
+	$site = elgg_get_site_entity(); // We only have one site, so pull it out by another method
+	
 	if (!$site instanceof ElggSite) {
 		return false;
 	}
