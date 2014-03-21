@@ -45,6 +45,9 @@ class MindsMultiInstaller extends ElggInstaller {
         if ($username = get_input('username'))
                 $_SESSION['m_username'] = $username;
 	
+	// Always log admin in
+	$this->setAutoLogin(true);
+	
     }
 
     /**
