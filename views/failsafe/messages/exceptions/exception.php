@@ -9,12 +9,11 @@
  * @uses $vars['object'] An exception
  */
 
-?>
+$view = 'messages/exceptions/' . str_replace('\\','/', strtolower(get_class($vars['object'])));
 
-<p class="elgg-messages-exception">
-	<span title="Unrecoverable Error">
-		<?php echo elgg_echo('exception:contact_admin'); ?>
-		<br /><br />
-		Exception #<?php echo $vars['ts']; ?>.
-	</span>
-</p>
+if (elgg_view_exists($view)) {
+    echo elgg_view($view, $vars);
+} else { ?>
+    <h1>Sorry.... we're doing some work</h1>
+    <p>Please check back later</p>
+<?php } ?>
