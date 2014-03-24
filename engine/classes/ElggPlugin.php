@@ -288,7 +288,7 @@ class ElggPlugin extends ElggEntity {
 		global $CONFIG;
 	
 		$id = $this->getID();
-		if(isset($CONFIG->pluginSettings) && $setting = $CONFIG->pluginSettings->{$id}[$name]){
+		if(isset($CONFIG->pluginSettings) && $setting = $CONFIG->pluginSettings->{$this->guid}[$name]){
 			return $setting;
 	
 		}

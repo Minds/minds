@@ -6,8 +6,11 @@
 $tiers = array();
 
 foreach($_REQUEST as $k=>$v){
+
+	$features = minds_tiers_get_features();
+	array_push($features, 'price');
 	
-	foreach(minds_tiers_get_features() as $feature){
+	foreach($features as $feature){
 	
 		if(strpos($k, ":$feature") !== FALSE){
 			$tier_guid = str_replace(":$feature", '', $k);
