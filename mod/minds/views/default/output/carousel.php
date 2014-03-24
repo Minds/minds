@@ -46,10 +46,14 @@ $(document).ready(function() {
 <div id="carousel_wrapper">
 	<div id="<?php echo $id;?>">
 	<?php 
-		foreach($divs as $title => $params){
-		//	echo '<div style="background: url(' . $params['bg_url'] . ');">';
-			echo '<div>';
-			echo '<h2>' . $title . '</h2>';
+		$items = elgg_get_entities(array(
+			'type'=>'object',
+			'subtype'=>'carousel_item'
+		));
+		foreach($items as $item){
+			echo '<div style="background: url(' . elgg_get_site_url() . "/carousel/background/$item->guid" . ');">';
+			//echo '<div>';
+			echo '<h2>' . $item->title . '</h2>';
 			echo '<h3>' . $subtitle . '</h3>';
 			echo '</div>';
 		}	
