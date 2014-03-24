@@ -43,7 +43,7 @@
    			 <br />
     
     
-  			  <p>If you believe this to be a mistake, you could try <a href="http://<?php echo $vars['domain']; ?>/install.php">going there anyway...</a></p>
+  			  <p>If you believe this to be a mistake, you could try <a href="<?php echo $domain_link; ?>">going there anyway...</a></p>
 		</div>
 	<div>
 </div>
@@ -53,7 +53,7 @@
 
     // Change message after a period of time
     setTimeout(function() {
-          $('#pingtest-results').html('<p>Sorry, the test timed out trying to reach <?php echo $vars['domain'];?>. You could try <a href="http://<?php echo $vars['domain']; ?>/install.php">going there anyway...</a></p>');
+          $('#pingtest-results').html('<p>Sorry, the test timed out trying to reach <?php echo $vars['domain'];?>. You could try <a href="<?php echo $domain_link; ?>">going there anyway...</a></p>');
     }, 1000000);
 	var xmlhttp=new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function()  {

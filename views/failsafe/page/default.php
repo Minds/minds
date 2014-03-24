@@ -60,10 +60,9 @@ header('Content-type: text/html; charset=utf-8');
 	<body>
         
             <div id="minds-logo"><img src="<?php echo elgg_get_site_url(); ?>mod/minds/graphics/minds_logo.png" /></div>
-	<div id="elgg-wrapper">
-            
-		<h1>Sorry.... we're doing some work</h1>
-		Please check back later
-	</div>
+	    <div id="elgg-wrapper">
+
+		    <?php echo $vars['body']; ?>
+	    </div>
 	</body>
 </html>
