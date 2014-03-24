@@ -11,6 +11,11 @@ $english = array(
     'item:object:minds_tier' => 'Minds Payment Tiers',
     'item:object:node' => 'Multisite subscriptions',
     
+	'minds_tiers:feature:users' => 'Users',
+	'minds_tiers:feature:bandwidth' => 'Bandwidth',
+	'minds_tiers:feature:own_domain' => 'Own Domain?',
+	'minds_tiers:feature:support' => 'Support',
+    
 );
 
 add_translation("en", $english);

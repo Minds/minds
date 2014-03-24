@@ -202,7 +202,7 @@ input[name=terms]{
 .minds-body-header{
 	width: 100%;
 	height:auto;
-	background: rgba(255,255,255, 0.9);
+	background: rgba(248, 248, 248, 0.9);
 	padding: 25px 0;
 	margin-bottom: 10px;
 	/*opacity: .90;*/
@@ -1022,7 +1022,7 @@ li.elgg-menu-item-rss{
 }
 
 .homepage{
-	padding-top:160px;
+	padding-top:260px;
 }
 .homepage > h2{
 	margin-top:-160px;
@@ -1030,10 +1030,45 @@ li.elgg-menu-item-rss{
 /**
  * Carousel
  */
+.carousel-admin-wrapper{
+	width:100%;
+	height:250px;
+	display:block;
+	position:relative;
+	background-color:#222;
+	filter: alpha(opacity=0);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover !important;
+	background-position: center !important;
+}
+.carousel-admin-wrapper .bg-input{
+	padding: 8px;
+	background: #FFF;
+	width: 200px;
+	height: 40px;
+	margin: 8px auto;
+	display: block;
+	position: absolute;
+	bottom: 0;
+	right: 8px;	
+}
+.carousel-admin-wrapper > textarea{
+	display:block;
+	padding:32px;
+	background: transparent;
+	border: 0;
+	font-size: 60px;
+	color: #FFF;
+	font-weight: lighter;
+	text-align: center;
+}
+
 #carousel_wrapper{
-	/*background-color: #222;*/
+	background-color: #222;
 	width: 100%;
-	height: 280px;
+	height: 380px;
 	overflow: hidden;
 	position: absolute;
 	top: 0;
@@ -1044,28 +1079,29 @@ li.elgg-menu-item-rss{
 	display:block;
 	
 	width:1800px;
-	height:280px;
+	height:380px;
 	padding:0;
 	
-	/*background-color:#222;
+	background-color:#222;
 	filter: alpha(opacity=0);
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover !important;
-	background-position: center !important;*/
+	background-position: center !important;
 }
 #carousel > div > h2{
 	width:50%;
-	/*color:#FFF;*/
-	color:#222;
+	color:#FFF;
+	/*color:#222;*/
 	font-weight:lighter;
-	margin:68px auto 0;
+	margin:128px auto 0;
 }
-#carousel > div > h3{
-	/*color:#F8F8F8;*/
-	color:#222;
+#carousel > div > h3, #carousel > div > h3 a{
+	color:#F8F8F8;
+	/*color:#222;*/
 }
+
 .elgg-widget-more{
 	width: 100%;
 	height: auto;
@@ -1075,7 +1111,7 @@ li.elgg-menu-item-rss{
 
 div.signup-options {
 
-    margin-top: 20px;
+    margin-top: 120px;
 }
 
 div.signup-options div.signup-button-row {
@@ -1084,7 +1120,7 @@ div.signup-options div.signup-button-row {
 }
 
 div.signup-options div.signup-button  {
-    margin: 10px;
+    margin: 110px;
     padding: 15px;
     margin-left: auto;
     margin-right: auto;
