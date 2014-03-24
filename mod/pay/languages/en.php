@@ -36,6 +36,9 @@ $english = array(
 	'pay:payment:paypal' => 'Pay with PayPal', 
 	
 	'pay:paypal:business' => 'PayPal business email address', 
+        'pay:paypal:api_user' => 'API User',
+        'pay:paypal:api_password' => 'API Password',
+        'pay:paypal:api_signature' => 'API Signature',
 	
 	'pay:withdraw' => 'Withdraw',
 	'pay:withdraw:balance' => 'Balance: $%s',

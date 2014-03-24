@@ -14,22 +14,25 @@ $stats= "<div class='stats'><p><b>Tier: </b>$tier</p>
                 <p><b>Expires: </b> $expire days</p>
 ";
 
-if($node->paid()){
-	if($node->launched){
-		//display stats
-		$link =  elgg_view('output/url', array('text'=>'Go to my node', 'href'=>$node->getURL(), 'class'=>'elgg-button elgg-button-action'));
-                $content = $link;
-	} else {
-		//link to setup the node
-		$setup_link =  elgg_view('output/url', array('text'=>'Setup', 'href'=>'nodes/node/'.$node->guid, 'class'=>'elgg-button elgg-button-action'));
-		$content = $setup_link;
-	}
-} else {
-	//promt for payment
-	$order = $node->getOrder();
-	if(!$order){ return false; }
-	$order_link = elgg_view('output/url', array('text'=>'click here', 'href'=>$order->getURL()));
-	$content = "We are still awaiting payment from you. Please $order_link for more.";
+if (!$vars['hide_buttons']) {
+    if($node->paid()){
+            if($node->launched){
+                    //display stats
+                    $link =  elgg_view('output/url', array('text'=>'Go to my node', 'href'=>$node->getURL(), 'class'=>'elgg-button elgg-button-action'));
+                    $link .= " ". elgg_view('output/url', array('text'=>'Upgrade Tier', 'href'=>'nodes/upgrade/'.$node->guid, 'class'=>'elgg-button elgg-button-action'));
+                    $content = $link;
+            } else {
+                    //link to setup the node
+                    $setup_link =  elgg_view('output/url', array('text'=>'Setup', 'href'=>'nodes/node/'.$node->guid, 'class'=>'elgg-button elgg-button-action'));
+                    $content = $setup_link;
+            }
+    } else {
+            //promt for payment
+            $order = $node->getOrder();
+            if(!$order){ return false; }
+            $order_link = elgg_view('output/url', array('text'=>'click here', 'href'=>$order->getURL()));
+            $content = "We are still awaiting payment from you. Please $order_link for more.";
+    }
 }
 
 $params = array(

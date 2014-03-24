@@ -158,8 +158,15 @@ function pay_basket_add_button($type_guid, $title, $description, $price, $quanti
  */
 function pay_update_order_status($order_guid, $status){
 	$order = get_entity($order_guid, 'object');
-	
+
+        if ($order->status)
+            $order->last_status = $order->status;
 	$order->status = $status;
+        
+        // Lets add a hook here
+        elgg_trigger_event('order_status_change', 'pay', $order);
+	
+	error_log("PAYPAL: Order status for {$order_guid} changed to $status");
 	
 	if($order->save()){
 		return true;
@@ -250,6 +257,30 @@ function pay_call_payment_handler_callback($handler, $order_guid){
 			//notification to go here
 			notification_create(array($order->seller_guid, $order->getOwnerGUID()), 0, $order->guid, array('notification_view'=>'pay_order_paid'));
 		}
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Call a handler to cancel a recurring payment.
+ * This permits you to then create a new order with an upgrade
+ * @param type $handler
+ * @param type $order_guid
+ */
+function pay_call_cancel_recurring_payment($handler, $order_guid) {
+    global $CONFIG;
+	
+	$info = $CONFIG->pay['payment_handlers'][$handler];
+	
+	$callback = call_user_func($info->callback.'_cancel_recurring_payment',$order_guid);
+	
+	if($callback == true){
+		
+		$order = get_entity($order_guid, 'object');
+                
+                return true;
+		
 	} else {
 		return false;
 	}
@@ -366,14 +397,41 @@ function paypal_generic_ipn_handler($page) {
     elgg_log('PAYPAL: ********* Paypal GENERIC IPN triggered **********');
     
     // Try and get order we're referring to
-    if ($orders = elgg_get_entities_from_metadata(array(
+    
+    
+    // Cassandraising 
+    $order = null;
+    /*if ($orders = elgg_get_entities(array(
         'type' => 'object',
         'subtype' => 'pay',
-        'limit' => 1,
-        'metadata_name' => 'subscr_id',
-        'metadata_value' => $_POST['subscr_id'],
-    )))
-            $order = $orders[0];
+        'limit' => 999999
+    ))) {
+        foreach ($orders as $o)
+            if ($o->subscr_id == $_POST['subscr_id'])
+            {
+                $order = $o; break;
+            }
+    }*/
+    $db = new DatabaseCall('entities_by_time');
+    if ($guids = $db->getRow('object:pay:subscrid', array('offset'=> $_POST['subscr_id'], 'limit'=>1)))
+	    $order = get_entity($guids[0], 'object');
+	
+    if (!$order){
+	// Belts and braces with what has worked in the past, for pay objects that have not been tagged
+	error_log("PAYPAL: Warning, order does not have a subscription ID in the time to guid lookup.");
+	
+	if ($orders = elgg_get_entities(array(
+	    'type' => 'object',
+	    'subtype' => 'pay',
+	    'limit' => 999999
+	))) {
+	    foreach ($orders as $o)
+		if ($o->subscr_id == $_POST['subscr_id'])
+		{
+		    $order = $o; break;
+		}
+	}
+    }
     
     
     // TODO: Other methods of pulling order out
@@ -542,9 +600,14 @@ function paypal_handler_callback($order_guid) {
 
 
                 
-                // If this is a recurring payment, then we need to link the order to a subscription profile so we can manage the order from its generic IPN
-                if (isset($_POST['subscr_id']))
+                // If this is a recurring payment, then we need to link the order to a subscription profile so we can manage the order from its generic IPN, or cancel it from the minds interface
+                if (isset($_POST['subscr_id'])) {
                     $order->subscr_id = $_POST['subscr_id'];
+		    
+		    // Save an index against this so we can call it up more efficiently 
+		    $db = new DatabaseCall('entities_by_time');
+		    $db->insert('object:pay:subscrid', array($order->subscr_id => $order->guid));
+		}
 
 
 
@@ -562,7 +625,21 @@ function paypal_handler_callback($order_guid) {
 
                 break;
 
-            default: elgg_log("PAYPAL: Payment status unknown : {$_POST['payment_status']}");
+            default: 
+		elgg_log("PAYPAL: Payment status unknown : {$_POST['payment_status']}");
+		
+		// Handling non-generic IPN callback for cancel
+		switch ($_POST['txn_type']) {
+
+		    case 'subscr_signup': // Not handled here
+			break;
+		    case 'subscr_cancel': // Cancel the subscription
+
+			pay_update_order_status($order_guid, 'Cancelled');
+			
+			return true;
+			break;
+		}
         }
     } else if (strcmp($res, "INVALID") == 0) {
         elgg_log("PAYPAL: IPN Query is invalid");
@@ -598,6 +675,113 @@ function paypal_handler_callback($order_guid) {
 	pay_update_order_status($order_guid, $payment_status);
 	
 	return true;	*/
+}
+
+/**
+ * Cancel a recurring payment.
+ * @param type $order_guid
+ */
+function paypal_handler_cancel_recurring_payment($order_guid) {
+    global $CONFIG;
+
+    $paypal_url = 'https://api-3t.paypal.com/nvp';
+    if ($CONFIG->debug)
+        $paypal_url = "https://api-3t.sandbox.paypal.com/nvp"; // If we're in debug mode, then use the debug sandbox endpoint.
+
+
+    if ($order = get_entity($order_guid, 'object')) {
+
+        error_log("PAYPAL : Got order $order_guid");
+
+        if (!$order->subscr_id) {
+            register_error("Order doesn't have a subscription ID, either this is a brand new unprocessed order or it's not a recurring payment.");
+            return false;
+        }
+
+        error_log("PAYPAL : Got order subscription {$order->subscr_id}");
+
+        $api_user = elgg_get_plugin_setting('paypal_api_user', 'pay');
+        $api_password = elgg_get_plugin_setting('paypal_api_password', 'pay');
+        $api_signature = elgg_get_plugin_setting('paypal_api_signature', 'pay');
+        
+        if (!$api_user) {
+            register_error("No API User defined.");
+            return false;
+        }
+        
+        if (!$api_password) {
+            register_error("No API Password defined.");
+            return false;
+        }
+        
+        if (!$api_signature) {
+            register_error("No API Signature defined.");
+            return false;
+        }
+        
+        // Construct API request
+        $api_request = 'USER=' . urlencode($api_user)
+                . '&PWD=' . urlencode($api_password)
+                . '&SIGNATURE=' . urlencode($api_signature)
+                . '&VERSION=76.0'
+                . '&METHOD=ManageRecurringPaymentsProfileStatus'
+                . '&PROFILEID=' . urlencode($order->subscr_id)
+                . '&ACTION=Cancel'
+                . '&NOTE=' . urlencode('Recurring payment cancelled by Minds.');
+
+        $ch = curl_init();
+        curl_setopt( $ch, CURLOPT_URL, $paypal_url );
+        curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
+
+                // Uncomment these to turn off server and peer verification
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt( $ch, CURLOPT_POST, 1 );
+ 
+        // Set the API parameters for this transaction
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $api_request );
+ 
+        // Request response from PayPal
+        $response = curl_exec( $ch );
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        
+        if ($CONFIG->debug) {
+            error_log("PAYPAL: Called cancel, response (status: $code): $response");
+        }
+        
+        if ($error = curl_error($curl_handle))
+        {
+            error_log("PAYPAL ERROR: $error");
+            register_error($error);
+            return false;
+        }
+
+        // Got here, no error, lets look at the array
+        parse_str( $response, $parsed_response );
+        
+        // Lets save the array against the order for an audit trail
+        $order->annotate('cancel_request_response', serialize($parsed_response));
+        
+        // Parse response
+        if (strtolower($parsed_response['ACK']) == 'failure') {
+            // Fail
+            error_log("PAYPAL: Error code {$parsed_response['L_ERRORCODE0']} - {$parsed_response['L_LONGMESSAGE0']}");
+            register_error($parsed_response['L_LONGMESSAGE0']);
+            
+            return false;
+        }
+        else if (strtolower($parsed_response['ACK']) == 'success') {
+            // Ok, we got here without , lets assume everything was ok
+            return true;
+        }
+        
+        register_error("Unknown response code from paypal server.");
+        error_log("PAYPAL: Unknown response code from paypal server.");
+        
+        return false;
+    } else {
+        register_error("Could not find order $order_guid");
+        return false;
+    }
 }
 
 //register paypal

@@ -21,10 +21,15 @@ $user_pam = new ElggPAM('user');
 $user_auth_result = $user_pam->authenticate(array());
 
 $handler = $order->payment_method ? $order->payment_method : $CONFIG->input['payment_handler'];
-var_dump($user_pam);
+
+error_log("PAYPAL: Handler expected is $handler");
+//var_dump($user_pam);
 if($user_auth_result){
-	pay_call_payment_handler_callback($handler, $order_guid);
+    error_log("PAYPAL: user authenticated, calling handler");
+	if (pay_call_payment_handler_callback($handler, $order_guid))
+		echo "OK";
 	//pay_call_payment_handler_callback('paypal', $order_guid);
+	
 } else {
 	echo 'Callback could not be authenticated';
         error_log('PAYPAL: DEBUG Callback could not be authenticated');

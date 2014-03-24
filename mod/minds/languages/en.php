@@ -202,6 +202,10 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	
 	'trending' => 'Trending',
 
+    
+    'item:object:__base__' => 'Base objects',
+    'item:object:deck_post' => 'Deck Post',
+    'item:object:deck_column' => 'Deck Column',
 );
 		
 add_translation("en", $english);
