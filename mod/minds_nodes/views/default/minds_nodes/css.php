@@ -22,19 +22,79 @@ div.node-signup div.node input {
     width: 85%;
 }
 
-
+.minds-tiers-buttons{
+	margin:0 5% 12px; 
+}
 /** Tier selection */
+#tiers{
+	border:1px solid #eee;
+	background:#FFF;
+	width: 990px;
+	display: table;
+	margin: auto;
+}
+#tiers.admin{
+	width:100%;
+}
+#tiers .row{
+	display: table-row;
+}
+#tiers .row.thead, #tiers .row.tfoot{
+	display: table-header-group;
+	background: #f9f9f9;
+}
+#tiers .row.thead .cell{
+	font-weight:bold;
+	color:#4690D6;
+}
+#tiers .cell{
+	float: none;
+	width: 25%;
+	display: table-cell;
+	vertical-align: middle;
+	position: relative;
+	padding: 15px 20px;
+	font-size: 15px;
+	color: #555;
+	text-align: center;
+	border-bottom: 1px solid #eeeeee;
+}
+#tiers .cell.feature{
+	text-align: left;
+	color:#4690D6;
+}
+
 .elgg-form-select-tier,.tiers, .elgg-form-node {
     width: 100%!important;
     max-width: 100% !important;
 }
 .elgg-item.tier {
-	padding:16px;
+	background:#FFF;
+	height:auto;
+	padding:32px 11px;
+}
+
+.elgg-item.tier .elgg-button{
+	display:block;
+	margin:auto;
+	min-width:0;
+	width:100px;
+	padding:8px;
+	text-align:center;
 }
 
 .elgg-item.tier h2{
-	padding-bottom:24px;
+	font-size:42px;
+	text-align:center;
 }
+.elgg-item.tier .tier-description{
+	margin:24px 0;
+	padding:0 24px;
+}
+.elgg-item.tier .tier-description p{
+	font-size:14px;
+}
+
 
 .elgg-item.tier .pay.buynow {
 	font-size:42px;

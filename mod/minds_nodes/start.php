@@ -24,32 +24,38 @@ function minds_nodes_init() {
 	add_subtype('object', 'minds_tier', 'MindsTier');
 
 	// Register action
-	elgg_register_action('minds/products/new', dirname(__FILE__) . '/actions/new.php', 'admin');
-	elgg_register_action('minds/products/delete', dirname(__FILE__) . '/actions/delete.php', 'admin');
+	elgg_register_action('minds/minds_tiers/new', dirname(__FILE__) . '/actions/minds_tiers/new.php', 'admin');
+	elgg_register_action('minds/minds_tiers/batch', dirname(__FILE__) . '/actions/minds_tiers/batch.php', 'admin');
+	elgg_register_action('minds/minds_tiers/delete', dirname(__FILE__) . '/actions/minds_tiers/delete.php', 'admin');
+	
 	elgg_register_action("registernode", dirname(__FILE__) . "/actions/registernode.php");
-        elgg_register_action("registernewnode", dirname(__FILE__) . "/actions/registernewnode.php");
+	elgg_register_action("registernewnode", dirname(__FILE__) . "/actions/registernewnode.php");
 	elgg_register_action("select_tier", dirname(__FILE__) . "/actions/select_tier.php");
-        elgg_register_action("upgrade_to", dirname(__FILE__) . "/actions/upgrade_to.php");
+	elgg_register_action("upgrade_to", dirname(__FILE__) . "/actions/upgrade_to.php");
 	elgg_register_action("renamenode", dirname(__FILE__) . "/actions/renamenode.php");
-	 elgg_register_action("select_free_tier", dirname(__FILE__) . "/actions/select_free_tier.php");
+	elgg_register_action("select_free_tier", dirname(__FILE__) . "/actions/select_free_tier.php");
 
 	elgg_extend_view('css/elgg', 'minds_nodes/css');
 
 	elgg_register_event_handler('pagesetup', 'system', 'minds_nodes_page_setup');
 
 	// Register an admin menu
-	elgg_register_admin_menu_item('minds', 'products');	
-	elgg_register_admin_menu_item('minds', 'manage', 'products');   
+	elgg_register_admin_menu_item('minds', 'minds_tiers');	
+	elgg_register_admin_menu_item('minds', 'manage', 'minds_tiers');   
 
 	// Endpoint
-        elgg_register_page_handler('tierlogin', 'tierlogin_page_handler');
+	elgg_register_page_handler('tierlogin', 'tierlogin_page_handler');
 	elgg_register_page_handler('nodes', 'minds_nodes_page_handler');
 
-        // Override the return url on tier orders
-        elgg_register_plugin_hook_handler('urls', 'pay', 'minds_tier_pay_override');
+	// Override the return url on tier orders
+	elgg_register_plugin_hook_handler('urls', 'pay', 'minds_tier_pay_override');
    	
 	// set up tier indexes
 	///run_function_once('minds_tier_runone_2013110501');
+}
+
+function minds_tiers_get_features(){
+	return array('users', 'bandwidth', 'own_domain', 'support');
 }
 
 function minds_tiers_get_product($product_id) {
@@ -87,7 +93,7 @@ function minds_tiers_get_current_valid_tier($user) {
     if ($tiers = elgg_get_entities(array('type' => 'object', 'subtype' => 'minds_tier'))){
         foreach ($tiers as $tier){
             $tiers_guid[] = $tier->guid;
-	}
+		}
     }
 
     $orders = elgg_get_entities(array('type' => 'object', 'subtype' => 'pay', 'owner_guid'=>$user->guid, 'limit'=>100000));

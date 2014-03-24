@@ -4,24 +4,28 @@ if ($guid = get_input('guid')) {
 	$obj = get_entity($guid);
 }
     
-?>
-<?php if ($obj) { 
+if ($obj) { 
     echo elgg_view('input/hidden', array('name' => 'guid', 'value' => $obj->guid));
-    ?><h2>Edit product...</h2>
-<?php } else { ?><h2>Create new product...</h2><?php } ?>
-<p><label>Tier Title
-        <?php echo elgg_view('input/text', array('name' => 'title', 'required' => 'required', 'value' => $obj->title));?>
-    </label></p>
+    ?>
+<h2>Edit product...</h2>
+<?php } else { ?>
+	<h2>Create new product...</h2>
+<?php } ?>
+<p>
+	<label>Tier Title <?php echo elgg_view('input/text', array('name' => 'title', 'required' => 'required', 'value' => $obj->title));?>
+    </label>
+</p>
     
-    <p><label>Tier ID
-        <?php echo elgg_view('input/text', array('name' => 'product_id', 'required' => 'required', 'value' => $obj->product_id));?>
-    </label></p>
-    
-    
-<p><label>Description
-        <?php echo elgg_view('input/longtext', array('name' => 'description', 'value' => $obj->description));?>
-    </label></p>
-    
+<p>
+	<label>Tier ID <?php echo elgg_view('input/text', array('name' => 'product_id', 'required' => 'required', 'value' => $obj->product_id));?>
+</label>
+</p>
+     
+<p><label>Features</label></p>
+<?php foreach(minds_tiers_get_features() as $feature){
+	echo "<p><label>$feature</label>" . elgg_view('input/text', array('name'=>$feature, 'value'=>$obj->$feature)) . "</p>";
+}?>
+   
 <p><label>Currency
         <?php echo elgg_view('input/dropdown', array('name' => 'currency', 'options_values' => array(
             'GBP' => 'Pound Sterling',

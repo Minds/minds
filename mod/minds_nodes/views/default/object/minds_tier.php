@@ -22,7 +22,7 @@ $expires_lookup = array(
         <?php if ($entity->canEdit()) { ?>
         <p><small><?php echo elgg_view('output/url', array('text' => 'Edit', 'href' => current_page_url() . '?guid=' . $entity->guid)); ?> : <?php echo elgg_view('output/confirmlink', array(
                 'text' => 'Delete',
-                'href' =>  elgg_add_action_tokens_to_url('action/minds/products/delete') . "&id={$entity->guid}"
+                'href' =>  elgg_add_action_tokens_to_url('action/minds/minds_tiers/delete') . "&id={$entity->guid}"
             )); ?></small></p>
         <?php } ?>
     </div>

@@ -202,7 +202,7 @@ input[name=terms]{
 .minds-body-header{
 	width: 100%;
 	height:auto;
-	background: rgba(255,255,255, 0.9);
+	background: rgba(248, 248, 248, 0.9);
 	padding: 25px 0;
 	margin-bottom: 10px;
 	/*opacity: .90;*/
