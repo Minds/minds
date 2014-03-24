@@ -266,25 +266,8 @@ function minds_news_page_handler($page) {
  * @access private
  */
 function minds_register_page_handler($page) {
-        if (isset($page[0]))
-        {
-            switch ($page[0])
-            {
-                case 'node':
-	            $base_dir = elgg_get_plugins_path().'minds/pages/account';
-                    require_once("$base_dir/node.php");
-                    break;
-                case 'testping':
-                    $base_dir = elgg_get_plugins_path().'minds/pages/account';
-                    require_once("$base_dir/testping.php");
-                    break;
-            }
-        }
-        else
-        {
-            $base_dir = elgg_get_plugins_path().'minds/pages/account';
-            require_once("$base_dir/register.php");
-        }
+	$base_dir = elgg_get_plugins_path().'minds/pages/account';
+	require_once("$base_dir/register.php");
 	return true;
 }
 
