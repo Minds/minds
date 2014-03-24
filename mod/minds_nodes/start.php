@@ -214,6 +214,18 @@ function minds_nodes_page_handler($pages){
 			set_input('node_guid', $pages[1]);
 			include('pages/minds_nodes/node.php');
 			break;
+		case 'ping':
+			$title = elgg_echo("register:node:testping");
+
+			$content = elgg_view_title($title);
+			
+			$content = elgg_view('forms/pingtest', array('domain' => get_input('domain')));
+			    
+			$body = elgg_view_layout("one_column", array('content' => $content));
+			
+			echo elgg_view_page($title, $body);
+			return;
+			break;
 		case 'index':
 		default:
 			include('pages/minds_nodes/index.php');

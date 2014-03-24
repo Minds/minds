@@ -40,7 +40,7 @@ try {
     		$order->payment_used = time();
 
     	 	system_message("New minds network $domain successfully created!");
-        	forward(elgg_get_site_url() . "register/testping?domain=$domain");
+        	forward(elgg_get_site_url() . "nodes/ping?domain=$domain");
 	} 
  
     } else {

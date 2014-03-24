@@ -7,8 +7,12 @@ $tiers = elgg_get_entities(array(
 	'limit' => 3
 ));
 if(count($tiers) != 3){
-	$tiers[] = new MindsTier();
-	$tiers->save();
+	$tier = new MindsTier();
+	$tier->owner_guid = elgg_get_logged_in_user_guid();
+    $tier->container_guid = elgg_get_logged_in_user_guid();
+    $tier->access_id = ACCESS_PUBLIC;
+	$tier->save();
+	$tiers[] = $tier;
 }
 
 //sort the tiers by price

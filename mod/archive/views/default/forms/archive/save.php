@@ -15,10 +15,12 @@ if(!$entity){
 	$entity->subtype = 'kaltura_video';
 	$entity->kaltura_video_id = get_input('entryid');
 
+	try{
 	$kmodel = KalturaModel::getInstance();
 
 	$entry = $kmodel->getEntry($entity->kaltura_video_id );
-
+	} catch ( Exception $e){
+	}
 	$entity->title = $entry->name;
 }
 $title = $entity->title;

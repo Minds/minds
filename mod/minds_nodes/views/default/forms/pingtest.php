@@ -1,19 +1,19 @@
 <?php
 
-	$user = elgg_get_logged_in_user_entity();
+$user = elgg_get_logged_in_user_entity();
 
-	$domain_link = "http://". $vars['domain'] . "/install.php?username=".urlencode($user->username) . "&name=".urlencode($user->name) . "&email=".urlencode($user->email);
+$domain_link = "http://". $vars['domain'] . "/install.php?username=".urlencode($user->username) . "&name=".urlencode($user->name) . "&email=".urlencode($user->email);
 
-	$ping = get_input('ping', false);
-	if($ping){
-		elgg_set_viewtype('json');
-		if($result = file_get_contents($domain_link)){
-			echo true;
-		} else {
-			echo false;
-		}
-		exit;
+$ping = get_input('ping', false);
+if($ping){
+	elgg_set_viewtype('json');
+	if($result = file_get_contents($domain_link)){
+		echo true;
+	} else {
+		echo false;
 	}
+	exit;
+}
 
 ?>
 
@@ -53,15 +53,18 @@
 
     // Change message after a period of time
     setTimeout(function() {
-          $('#pingtest-results').html('<p>Sorry, the test timed out trying to reach <?php echo $vars['domain'];?>. You could try <a href="<?php echo $domain_link; ?>">going there anyway...</a></p>');
+        //  $('#pingtest-results').html('<p>Sorry, the test timed out trying to reach <?php echo $vars['domain'];?>. You could try <a href="<?php echo $domain_link; ?>">going there anyway...</a></p>');
+   		$('#pingtest-results').fadeOut();
+        $('#pingtest-fail').fadeIn();
     }, 1000000);
+    
 	var xmlhttp=new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function()  {
 		if (xmlhttp.responseText == 1){
    	 		window.location = "<?php echo $domain_link; ?>";
 		} else {
-			$('#pingtest-results').fadeOut();
-                               $('#pingtest-fail').fadeIn();
+			//$('#pingtest-results').fadeOut();
+                            //   $('#pingtest-fail').fadeIn();
 		}
   	}
 	xmlhttp.open("GET","?domain=<?php echo $vars['domain'];?>&ping=true",true);
