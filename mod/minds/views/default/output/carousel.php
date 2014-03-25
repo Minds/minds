@@ -10,6 +10,11 @@ $divs = elgg_extract('divs', $vars);
 //$id =  elgg_extract('id',$vars, rand());
 $id = 'carousel'; //debug override;
 $subtitle = elgg_extract('subtitle', $vars);
+
+$items = elgg_get_entities(array(
+			'type'=>'object',
+			'subtype'=>'carousel_item'
+		));
 ?>
 <script>
 $(document).ready(function() {
@@ -18,8 +23,8 @@ $(document).ready(function() {
 	$("#<?php echo $id;?>").carouFredSel({
 		width: '100%',
 		items: {
-			visible: 3,
-			start: -1
+			visible: <?php echo count($items) > 3 ? 3 : 1 ?>,
+			start: <?php echo count($items) > 3 ? -1 : 1 ?>
 		},
 		scroll: {
 			items: 1,
@@ -46,10 +51,7 @@ $(document).ready(function() {
 <div id="carousel_wrapper">
 	<div id="<?php echo $id;?>">
 	<?php 
-		$items = elgg_get_entities(array(
-			'type'=>'object',
-			'subtype'=>'carousel_item'
-		));
+		
 		foreach($items as $item){
 			echo '<div style="background: url(' . elgg_get_site_url() . "/carousel/background/$item->guid" . ');">';
 			//echo '<div>';

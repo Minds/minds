@@ -14,7 +14,14 @@ $items = elgg_get_entities(array(
 	'subtype' => 'carousel_item'
 ));
 
-foreach($items as $item){
+foreach($items as $k=>$item){
+	
+	if(get_input("delete:$item->guid")){
+			$item->delete();
+			unset($items[$k]);
+			continue;
+	}
+	
 	$item->title = str_replace("$item->guid:", '', get_input("$item->guid:title"));
 	
 	//Upload and compress

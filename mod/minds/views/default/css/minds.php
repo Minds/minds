@@ -1043,6 +1043,12 @@ li.elgg-menu-item-rss{
 	background-size: cover !important;
 	background-position: center !important;
 }
+.carousel-admin-wrapper .remove{
+	float: right;
+	margin: 8px;
+	width: 34px;
+	min-width: 0;
+}
 .carousel-admin-wrapper .bg-input{
 	padding: 8px;
 	background: #FFF;
