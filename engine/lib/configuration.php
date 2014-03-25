@@ -28,7 +28,8 @@
 function elgg_get_site_url($site_guid = 0) {
 	if ($site_guid == 0) {
 		global $CONFIG;
-		return $CONFIG->wwwroot;
+		if(isset($CONFIG->wwwroot))
+			return $CONFIG->wwwroot;
 	}
 
 //	$site = get_entity($site_guid);

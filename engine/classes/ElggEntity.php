@@ -94,7 +94,7 @@ abstract class ElggEntity extends ElggData implements
 		$this->attributes['container_guid'] = elgg_get_logged_in_user_guid();
 
 		$this->attributes['site_guid'] = NULL;
-		$this->attributes['access_id'] = ACCESS_PRIVATE;
+		$this->attributes['access_id'] = get_default_access();
 		$this->attributes['time_created'] = NULL;
 		$this->attributes['time_updated'] = NULL;
 		$this->attributes['last_action'] = NULL;
@@ -230,6 +230,9 @@ abstract class ElggEntity extends ElggData implements
 				case 'last_action':
 					return FALSE;
 					break;
+				case 'access_id': // a hack to fix listings.
+					if($value == ACCESS_DEFAULT)
+						$value = get_default_access($this->getOwnerEntity());
 				default:
 					$this->attributes[$name] = $value;
 					break;
