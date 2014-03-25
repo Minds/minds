@@ -218,7 +218,7 @@ function get_access_array($user_id = 0, $site_id = 0, $flush = false) {
 function get_default_access(ElggUser $user = null) {
 	global $CONFIG;
 	
-	if (!$CONFIG->allow_user_default_access) {
+	if (!isset($CONFIG->allow_user_default_access) || !$CONFIG->allow_user_default_access) {
 		return (int) $CONFIG->default_access;
 	}
 
