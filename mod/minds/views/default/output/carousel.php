@@ -53,7 +53,7 @@ $(document).ready(function() {
 	<?php 
 		
 		foreach($items as $item){
-			echo '<div style="background: url(' . elgg_get_site_url() . "/carousel/background/$item->guid" . ');">';
+			echo '<div style="background: url(' . elgg_get_site_url() . "/carousel/background/$item->guid/$item->last_updated" . ');">';
 			//echo '<div>';
 			echo '<h2>' . $item->title . '</h2>';
 			echo '<h3>' . $subtitle . '</h3>';

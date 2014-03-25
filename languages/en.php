@@ -290,6 +290,9 @@ $english = array(
 
 	'widgets' => "Widgets",
 	'widget' => "Widget",
+	'item:object:__base__' => 'Objects',
+	'item:object' => 'Objects',
+	'item:widget' => 'Widgets',
 	'item:object:widget' => "Widgets",
 	'widgets:save:success' => "The widget was successfully saved.",
 	'widgets:save:failure' => "We could not save your widget.",

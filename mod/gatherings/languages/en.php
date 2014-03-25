@@ -7,7 +7,7 @@
 
 	$english = array(
 
-		'item:object:webinar' => "Gathering",
+		'item:object:gathering' => "Gatherings",
 		'gatherings:access_id' => 'Access',
 		'gatherings:add' => "Create a gathering",
 		'gatherings:add' => "Create a gathering",
