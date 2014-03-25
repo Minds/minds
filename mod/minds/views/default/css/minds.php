@@ -1084,7 +1084,7 @@ li.elgg-menu-item-rss{
 	float:left;
 	display:block;
 	
-	width:1800px;
+	width:2800px;
 	height:380px;
 	padding:0;
 	

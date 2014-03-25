@@ -14,7 +14,7 @@ $items = elgg_get_entities(array(
 ));
 
 foreach($items as $item){
-	echo '<div class="carousel-admin-wrapper" style="background:#888 url('. elgg_get_site_url() . 'carousel/background/'.$item->guid.')">';
+	echo '<div class="carousel-admin-wrapper" style="background:#888 url('. elgg_get_site_url() . 'carousel/background/'.$item->guid.'/'.$item->last_updated .')">';
 		echo elgg_view('input/submit', array('name'=>'delete:'.$item->guid,'class'=>'elgg-button elgg-button-action remove', 'value'=>'x'));
 		echo elgg_view('input/file', array('name'=>"$item->guid:background", 'class'=>'bg-input'));
 		echo elgg_view('input/plaintext', array('name'=>"$item->guid:title", 'value'=>$item->title, 'placeholder'=>'Type here..'));
