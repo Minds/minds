@@ -472,10 +472,12 @@ li .excerpt a{
 .front-page-buttons{
 	margin:30px 0 0;
 	float:left;
+	z-index:1;
 }
 .elgg-menu-right-filter{
 	float:right;
 	margin:36px 0 0 0;
+	z-index:1;
 }
 .elgg-menu-right-filter li{
 	font-size:14px;
@@ -1072,6 +1074,7 @@ li.elgg-menu-item-rss{
 }
 
 #carousel_wrapper{
+	z-index:0;
 	background-color: #222;
 	width: 100%;
 	height: 380px;

@@ -15,6 +15,12 @@ $items = elgg_get_entities(array(
 			'type'=>'object',
 			'subtype'=>'carousel_item'
 		));
+
+//sort the tiers by price
+usort($items, function($a, $b){
+	return $a->order - $b->order;
+});
+
 ?>
 <script>
 $(document).ready(function() {
@@ -29,7 +35,8 @@ $(document).ready(function() {
 		scroll: {
 			items: 1,
 			duration: 1500,
-			timeoutDuration: 3500
+			timeoutDuration: 3500,
+			fx: "crossfade"
 		},
 		direction			: "left",
 		swipe				: true,
