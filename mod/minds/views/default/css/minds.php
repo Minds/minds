@@ -1063,6 +1063,15 @@ li.elgg-menu-item-rss{
 	bottom: 0;
 	right: 8px;	
 }
+.carousel-admin-wrapper .carousel-colorpicker{
+	position: absolute;
+	padding: 8px;
+	margin: 8px auto;
+	right:216px;
+	bottom:0;
+	width: 100px;
+	height: 40px;
+}
 .carousel-admin-wrapper > textarea{
 	display:block;
 	padding:32px;

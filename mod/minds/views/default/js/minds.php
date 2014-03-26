@@ -62,6 +62,15 @@
 
 								}
 		});
+		
+		if($(".carousel-colorpicker").length){
+			$(".carousel-colorpicker").miniColors({
+					letterCase: 'uppercase',	
+					change: function(){ 
+							$(this).parent().find('textarea').css('color', $(this).val());
+					}	
+				});
+		}
 	 	
 
 		if($('#fb-share').length){
