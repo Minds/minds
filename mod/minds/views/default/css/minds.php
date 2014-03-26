@@ -1036,6 +1036,7 @@ li.elgg-menu-item-rss{
 	width:100%;
 	height:250px;
 	display:block;
+	margin:8px 0;
 	position:relative;
 	background-color:#222;
 	filter: alpha(opacity=0);

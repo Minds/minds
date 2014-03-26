@@ -13,7 +13,8 @@ $subtitle = elgg_extract('subtitle', $vars);
 
 $items = elgg_get_entities(array(
 			'type'=>'object',
-			'subtype'=>'carousel_item'
+			'subtype'=>'carousel_item',
+			'limit' => 0
 		));
 
 //sort the tiers by price
@@ -29,8 +30,8 @@ $(document).ready(function() {
 	$("#<?php echo $id;?>").carouFredSel({
 		width: '100%',
 		items: {
-			visible: <?php echo count($items) > 3 ? 3 : 1 ?>,
-			start: <?php echo count($items) > 3 ? -1 : 1 ?>
+			visible: 1,
+			start: 1
 		},
 		scroll: {
 			items: 1,
