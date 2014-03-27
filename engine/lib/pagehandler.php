@@ -23,6 +23,13 @@ function page_handler($handler, $page) {
 	global $CONFIG;
 
 	elgg_set_context($handler);
+	
+	if (!isSSL()) {
+        header('Status-Code: 301');
+        header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+	} else {
+        header('Strict-Transport-Security: max-age=500');
+	}
 
 	$page = explode('/', $page);
 	// remove empty array element when page url ends in a / (see #1480)
