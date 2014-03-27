@@ -472,10 +472,12 @@ li .excerpt a{
 .front-page-buttons{
 	margin:30px 0 0;
 	float:left;
+	z-index:1;
 }
 .elgg-menu-right-filter{
 	float:right;
 	margin:36px 0 0 0;
+	z-index:1;
 }
 .elgg-menu-right-filter li{
 	font-size:14px;
@@ -1034,6 +1036,7 @@ li.elgg-menu-item-rss{
 	width:100%;
 	height:250px;
 	display:block;
+	margin:8px 0;
 	position:relative;
 	background-color:#222;
 	filter: alpha(opacity=0);
@@ -1060,6 +1063,15 @@ li.elgg-menu-item-rss{
 	bottom: 0;
 	right: 8px;	
 }
+.carousel-admin-wrapper .carousel-colorpicker{
+	position: absolute;
+	padding: 8px;
+	margin: 8px auto;
+	right:216px;
+	bottom:0;
+	width: 100px;
+	height: 40px;
+}
 .carousel-admin-wrapper > textarea{
 	display:block;
 	padding:32px;
@@ -1072,6 +1084,7 @@ li.elgg-menu-item-rss{
 }
 
 #carousel_wrapper{
+	z-index:0;
 	background-color: #222;
 	width: 100%;
 	height: 380px;

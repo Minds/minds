@@ -116,6 +116,13 @@ function elgg_load_library($name) {
 }
 
 /**
+ * Is the request using SSL?
+ */
+function isSSL(){
+	return $_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https';
+}
+
+/**
  * Forward to $location.
  *
  * Sends a 'Location: $location' header and exists.  If headers have

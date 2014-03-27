@@ -171,6 +171,16 @@ class ElggSite extends ElggEntity {
 
 		return parent::disable($reason, $recursive);
 	}
+	
+	/**
+	 * Get the site url. Detect https..
+	 */
+	public function getURL(){
+		if(isSSL()){
+			$this->url = str_replace("http://", 'https://', $this->url);
+		}
+		return $this->url;
+	}
 
 	/**
 	 * Gets an array of ElggUser entities who are members of the site.
