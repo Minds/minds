@@ -39,6 +39,39 @@
 	 	});
 	 	*/
 	 	
+	 	$(".carousel-admin-items").sortable({
+			items:                'div',
+			connectWith:          '.carousel-admin-items',
+			helper: 			  'clone',
+			//handle:               '.carousel-admin-wrapper',
+			forcePlaceholderSize: true,
+			//placeholder:          'elgg-widget-placeholder',
+			opacity:              0.8,
+			//revert:               500,
+			distance: 				0,
+			stop:                 function(e, ui){ 
+									console.log('you just moved me to '+ ui.item.index()); 
+									//ui.item.find('#order').val(ui.item.index());
+									
+									$('.carousel-admin-items > div').each(function(i,j){
+										console.log($(this));
+										$(this).find('#order').val($(this).index());
+									});
+									
+									
+
+								}
+		});
+		
+		if($(".carousel-colorpicker").length){
+			$(".carousel-colorpicker").miniColors({
+					letterCase: 'uppercase',	
+					change: function(){ 
+							$(this).parent().find('textarea').css('color', $(this).val());
+					}	
+				});
+		}
+	 	
 
 		if($('#fb-share').length){
 			var addr = $('meta[property="og:url"]').attr('content');

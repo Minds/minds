@@ -554,8 +554,9 @@ function create_entity($object = NULL, $timebased = true) {
 		$data =  array($result => time());
 		
 		$namespace = $object->type;
+	
 		
-		if($object->access_id == 2)
+		if($object->access_id == ACCESS_PUBLIC)
 			$db->insert($namespace, $data);
 		
 		if($object->subtype){ 

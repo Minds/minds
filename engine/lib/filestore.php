@@ -92,11 +92,13 @@ $square = false, $upscale = false, $output = "jpeg") {
  * @param int    $x2         x coordinate for bottom, right corner
  * @param int    $y2         y coordinate for bottom, right corner
  * @param bool   $upscale    Resize images smaller than $maxwidth x $maxheight?
+ * @param string	$output		The format of the file
+ * @param int	$quality	The quality of the image
  *
  * @return false|mixed The contents of the resized image, or false on failure
  */
 function get_resized_image_from_existing_file($input_name, $maxwidth, $maxheight, $square = FALSE,
-$x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE, $output = 'jpeg') {
+$x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE, $output = 'jpeg', $quality=90) {
 
 	// Get the size information from the image
 	$imgsizearray = getimagesize($input_name);
@@ -181,9 +183,9 @@ $x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE, $output = 'jpeg') {
 	// grab a compressed jpeg version of the image
 	ob_start();
 	if($output == 'png'){
-		imagepng($new_image);	
+		imagepng($new_image, NULL, $quality);	
 	} else {
-		imagejpeg($new_image, NULL, 90);
+		imagejpeg($new_image, NULL, $quality);
 	} 
 	$img = ob_get_clean();
 

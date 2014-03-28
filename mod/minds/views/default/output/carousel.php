@@ -10,6 +10,18 @@ $divs = elgg_extract('divs', $vars);
 //$id =  elgg_extract('id',$vars, rand());
 $id = 'carousel'; //debug override;
 $subtitle = elgg_extract('subtitle', $vars);
+
+$items = elgg_get_entities(array(
+			'type'=>'object',
+			'subtype'=>'carousel_item',
+			'limit' => 0
+		));
+
+//sort the tiers by price
+usort($items, function($a, $b){
+	return $a->order - $b->order;
+});
+
 ?>
 <script>
 $(document).ready(function() {
@@ -18,13 +30,14 @@ $(document).ready(function() {
 	$("#<?php echo $id;?>").carouFredSel({
 		width: '100%',
 		items: {
-			visible: 3,
-			start: -1
+			visible: 1,
+			start: 1
 		},
 		scroll: {
 			items: 1,
 			duration: 1500,
-			timeoutDuration: 3500
+			timeoutDuration: 3500,
+			fx: "crossfade"
 		},
 		direction			: "left",
 		swipe				: true,
@@ -46,10 +59,11 @@ $(document).ready(function() {
 <div id="carousel_wrapper">
 	<div id="<?php echo $id;?>">
 	<?php 
-		foreach($divs as $title => $params){
-		//	echo '<div style="background: url(' . $params['bg_url'] . ');">';
-			echo '<div>';
-			echo '<h2>' . $title . '</h2>';
+		
+		foreach($items as $item){
+			echo '<div style="background: url(' . elgg_get_site_url() . "/carousel/background/$item->guid/$item->last_updated" . ');">';
+			//echo '<div>';
+			echo '<h2 style="color:'. $item->color . '">' . $item->title . '</h2>';
 			echo '<h3>' . $subtitle . '</h3>';
 			echo '</div>';
 		}	

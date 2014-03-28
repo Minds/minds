@@ -49,6 +49,7 @@ try{
 	
 	//bootstrap the cassandra config
 	$CONFIG->cassandra = (object) array( 'servers'=> array('localhost'), 'keyspace'=>'minds_test_phpcassa');
+	$CONFIG->default_access = 2; //public access
 
 	$site = new ElggSite();
 	$site->name = 'Minds';

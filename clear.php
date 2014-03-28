@@ -12,6 +12,7 @@ require_once(dirname(__FILE__) . "/engine/start.php");
 	set_time_limit(0);
 	elgg_invalidate_simplecache();
 	elgg_reset_system_cache();
+	datalist_set('lastcache', time());
 
 	if(function_exists('apc_clear_cache')){
 		apc_clear_cache();

@@ -4,6 +4,9 @@ $english = array(
 
 	'friends:all' => 'All friends',
 
+	'item:notification' => 'Notifications',
+	'item:notificaiton:email' => 'Mass emails',
+
 	'notifications:subscriptions:personal:description' => 'Receive notifications when actions are performed on your content',
 	'notifications:subscriptions:personal:title' => 'Personal notifications',
 

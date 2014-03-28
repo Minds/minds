@@ -422,6 +422,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
 	$i = 0;
+	
 	foreach($scrapers as $scraper){
 		if(!$scraper->getOwnerEntity()){
 			continue;

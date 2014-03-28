@@ -472,10 +472,12 @@ li .excerpt a{
 .front-page-buttons{
 	margin:30px 0 0;
 	float:left;
+	z-index:1;
 }
 .elgg-menu-right-filter{
 	float:right;
 	margin:36px 0 0 0;
+	z-index:1;
 }
 .elgg-menu-right-filter li{
 	font-size:14px;
@@ -1022,18 +1024,70 @@ li.elgg-menu-item-rss{
 }
 
 .homepage{
-	padding-top:160px;
+	padding-top:260px;
 }
 .homepage > h2{
-	padding-top:-160px;
+	margin-top:-160px;
 }
 /**
  * Carousel
  */
+.carousel-admin-wrapper{
+	width:100%;
+	height:250px;
+	display:block;
+	margin:8px 0;
+	position:relative;
+	background-color:#222;
+	filter: alpha(opacity=0);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover !important;
+	background-position: center !important;
+}
+.carousel-admin-wrapper .remove{
+	float: right;
+	margin: 8px;
+	width: 34px;
+	min-width: 0;
+}
+.carousel-admin-wrapper .bg-input{
+	padding: 8px;
+	background: #FFF;
+	width: 200px;
+	height: 40px;
+	margin: 8px auto;
+	display: block;
+	position: absolute;
+	bottom: 0;
+	right: 8px;	
+}
+.carousel-admin-wrapper .carousel-colorpicker{
+	position: absolute;
+	padding: 8px;
+	margin: 8px auto;
+	right:216px;
+	bottom:0;
+	width: 100px;
+	height: 40px;
+}
+.carousel-admin-wrapper > textarea{
+	display:block;
+	padding:32px;
+	background: transparent;
+	border: 0;
+	font-size: 60px;
+	color: #FFF;
+	font-weight: lighter;
+	text-align: center;
+}
+
 #carousel_wrapper{
-	/*background-color: #222;*/
+	z-index:0;
+	background-color: #222;
 	width: 100%;
-	height: 280px;
+	height: 380px;
 	overflow: hidden;
 	position: absolute;
 	top: 0;
@@ -1043,29 +1097,30 @@ li.elgg-menu-item-rss{
 	float:left;
 	display:block;
 	
-	width:1800px;
-	height:280px;
+	width:2800px;
+	height:380px;
 	padding:0;
 	
-	/*background-color:#222;
+	background-color:#222;
 	filter: alpha(opacity=0);
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover !important;
-	background-position: center !important;*/
+	background-position: center !important;
 }
 #carousel > div > h2{
-	width:50%;
-	/*color:#FFF;*/
-	color:#222;
+	width:990px;
+	color:#FFF;
+	/*color:#222;*/
 	font-weight:lighter;
-	margin:68px auto 0;
+	margin:128px auto 0;
 }
-#carousel > div > h3{
-	/*color:#F8F8F8;*/
-	color:#222;
+#carousel > div > h3, #carousel > div > h3 a{
+	color:#F8F8F8;
+	/*color:#222;*/
 }
+
 .elgg-widget-more{
 	width: 100%;
 	height: auto;
@@ -1075,7 +1130,7 @@ li.elgg-menu-item-rss{
 
 div.signup-options {
 
-    margin-top: 20px;
+    margin-top: 120px;
 }
 
 div.signup-options div.signup-button-row {
@@ -1084,7 +1139,7 @@ div.signup-options div.signup-button-row {
 }
 
 div.signup-options div.signup-button  {
-    margin: 10px;
+    margin: 110px;
     padding: 15px;
     margin-left: auto;
     margin-right: auto;

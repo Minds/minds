@@ -8,16 +8,6 @@
  */
 
 function minds_init(){
-
-// 	$i = 10000;
-// 	$mt = microtime(true);
-// 	while($i-->0) {
-// 		$sql = 'SHOW MASTER STATUS';
-// 		global $DB_QUERY_CACHE;
-// 		$DB_QUERY_CACHE = array();
-// 		$data = get_data($sql);
-// 	}
-// 	var_dump(microtime(true) - $mt, $data);
 	
 	elgg_register_simplecache_view('minds');	
 	
@@ -29,17 +19,13 @@ function minds_init(){
 		
 	elgg_extend_view('register/extend', 'minds/register_extend', 500);
 	
-	//Register the minds elastic news library (to override the default elgg river)
-	//elgg_register_library('elastic_news', elgg_get_plugins_path().'minds/lib/elastic_news.php');
-	//elgg_load_library('elastic_news');
-	
 	//put the quota in account statistics
 	elgg_extend_view('core/settings/statistics', 'minds/quota/statistics', 500);
 	
 
 	/**
-]	 * Ads
-	*/
+	 * Ads
+	 */
 	elgg_extend_view('page/elements/ads', 'minds/ads');
 	//register the ubuntu font
 //	elgg_register_css('ubuntu.font', 'http://fonts.googleapis.com/css?family=Ubuntu:300');
@@ -140,14 +126,35 @@ function minds_init(){
 	elgg_register_action("friends/add", "$actionspath/friends/add.php", "public");
 	elgg_register_action("embed/youtube", "$actionspath/embed/youtube.php");
 	
+	elgg_register_action("carousel/add", "$actionspath/carousel/add.php", "admin");
+	elgg_register_action("carousel/delete", "$actionspath/carousel/delete.php", "admin");
+	elgg_register_action("carousel/batch", "$actionspath/carousel/batch.php", "admin");
+	
+	elgg_register_admin_menu_item('configure', 'carousel', 'appearance');
+	
+	elgg_register_page_handler('carousel', function($page){
+		global $CONFIG;
+		switch($page[0]){
+		
+			case 'background':
+			default:
+				$item = get_entity($page[1]);
+				header('Content-Type: image/jpeg');
+				header('Expires: ' . date('r', time() + 864000));
+				header("Pragma: public");
+				header("Cache-Control: public");
+					
+				echo file_get_contents($CONFIG->dataroot . 'carousel/' . $page[1] . '.jpg');
+				
+				exit;
+		}
+	});
+	
 	if(elgg_get_context() == 'oauth2'){
 		pam_auth_usertoken();//auto login users if they are using oauth step1
 	}
 	//make sure all users are subscribed to minds, only run once.
-	//run_function_once('minds_subscribe_bulk');
-        
-        
-        
+	
         // Handle some tier pages
         
         // Extend public pages
@@ -692,7 +699,7 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
   	}
 	if($CONFIG->cdn_url){
 		$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
-		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=5';
+		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2703';
 		if($width){ $image .= '&width=' . $width; } 
 	} 
 	return $image;

@@ -202,6 +202,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	
 	'trending' => 'Trending',
 
+	'admin:appearance:carousel' => 'Carousel',
     
     'item:object:__base__' => 'Base objects',
     'item:object:deck_post' => 'Deck Post',

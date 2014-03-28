@@ -28,7 +28,8 @@
 function elgg_get_site_url($site_guid = 0) {
 	if ($site_guid == 0) {
 		global $CONFIG;
-		return $CONFIG->wwwroot;
+		if(isset($CONFIG->wwwroot))
+			return $CONFIG->wwwroot;
 	}
 
 //	$site = get_entity($site_guid);
@@ -599,7 +600,7 @@ function _elgg_load_application_config() {
 	$viewtype = get_input('view', 'default');
 	
 	if(!isset($CONFIG->lastcache)){
-		$lastcached = datalist_get("simplecache_lastcached_$viewtype");
+		$lastcached = datalist_get("simplecache_lastcached_$viewtype") ?: datalist_get("lastcache");
 		$CONFIG->lastcache = $lastcached;
 	}
 
