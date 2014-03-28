@@ -1013,6 +1013,7 @@ function _elgg_php_exception_handler($exception) {
 	// Wipe any existing output buffer
 	ob_end_clean();
 
+	header('Something is wrong', true, 500);
 	// make sure the error isn't cached
 	header("Cache-Control: no-cache, must-revalidate", true);
 	header('Expires: Fri, 05 Feb 1982 00:00:00 -0500', true);
@@ -1029,41 +1030,33 @@ function _elgg_php_exception_handler($exception) {
 		$time = date("F j, Y, g:i a");
 		$path = $_SERVER["REQUEST_URI"];
 		$class = get_class($exception);
+		$username = elgg_is_logged_in() ? elgg_get_logged_in_user_entity()->name : 'logged out';
 
 		$body = "<h1>Minds | Automatic bug report</h1>\n";
 		$body .= "<p><b>Path:</b> $path </p>";
 		$body .= "<p><b>Server:</b> $server </p>";
 		$body .= "<p><b>Time:</b> $time</p>";
+		$body .= "<p><b>User:</b> $username</p>";
 		$body .= "<p><b>Stack:</b></p>";
 		$body .= nl2br(htmlentities(print_r($exception, true), ENT_QUOTES, 'UTF-8'));
 	
 		//elgg_send_email('minds@minds.com', 'mark@minds.com', 'Exception ' . get_class($vars['object']), nl2br(htmlentities(print_r($vars['object'], true), ENT_QUOTES, 'UTF-8')));
 		if(function_exists('phpmailer_send')){
-		phpmailer_send(
-					'minds@minds.com',
-					'Minds Bugs',
-					'mark@minds.com',
-					'Mark Harding',
-					'Automatic Report',
-					$body,
-					null,
-					//array('bill@minds.com', 'john@minds.com','mark@kramnorth.com'),
-					true //html
-		);}
-
-		elgg_set_viewtype('failsafe');
-		if (elgg_is_admin_logged_in()) {
-			$body = elgg_view("messages/exceptions/admin_exception", array(
-				'object' => $exception,
-				'ts' => $timestamp
-			));
-		} else {
-			$body = elgg_view("messages/exceptions/exception", array(
-				'object' => $exception,
-				'ts' => $timestamp
-			));
+			phpmailer_send(
+						'minds@minds.com',
+						'Minds Bugs',
+						'mark@minds.com',
+						'Mark Harding',
+						'Automatic Report',
+						$body,
+						null,
+						//array('bill@minds.com', 'john@minds.com','mark@kramnorth.com'),
+						true //html
+			);
 		}
-		echo elgg_view_page(elgg_echo('exception:title'), $body);
+
+		echo file_get_contents(dirname(dirname(dirname(__FILE__))) . '/errors/500.html');
+		
 	} catch (Exception $e) {
 		$timestamp = time();
 		$message = $e->getMessage();
@@ -1126,6 +1119,22 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
 	}
 
 	return true;
+}
+
+/**
+ * Catch fatal errors
+ */
+register_shutdown_function('fatalErrorShutdownHandler');
+
+function fatalErrorShutdownHandler(){
+	$last_error = error_get_last();
+	
+	if($last_error['type'] == E_ERROR){
+		_elgg_php_error_handler($last_error['type'], $last_error['message'], $last_error['file'], $last_error['line']);
+		header('Fatal error', true, 500);	
+
+		echo file_get_contents(dirname(dirname(dirname(__FILE__))) . '/errors/500.html');
+	}
 }
 
 /**
