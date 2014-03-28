@@ -7,6 +7,8 @@ ini_set('display_errors', 1);
 
 require_once(dirname(__FILE__) . "/engine/start.php");
 
+	xcache_coredump();
+
 	set_time_limit(0);
 	elgg_invalidate_simplecache();
 	elgg_reset_system_cache();

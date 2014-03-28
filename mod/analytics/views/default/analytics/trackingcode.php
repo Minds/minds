@@ -19,7 +19,7 @@ if(!$tracking_id){
           })();
 
         </script>
-
+<?php return; ?>
 <!-- Piwik -->
 <script type="text/javascript">
   var _paq = _paq || [];

@@ -24,12 +24,14 @@ function page_handler($handler, $page) {
 
 	elgg_set_context($handler);
 	
-	if (!isSSL()) {
-        header('Status-Code: 301');
-        header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+/*	if (!isSSL() && $CONFIG->force_ssl) {
+	        header('Status-Code: 301');
+       	 header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+	} elseif(!$CONFIG->force_ssl) {
+		header('Strict-Transport-Security: max-age=0');
 	} else {
-        header('Strict-Transport-Security: max-age=500');
-	}
+      		header('Strict-Transport-Security: max-age=0');
+	}*/
 
 	$page = explode('/', $page);
 	// remove empty array element when page url ends in a / (see #1480)
