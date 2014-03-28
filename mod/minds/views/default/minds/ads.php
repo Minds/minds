@@ -195,7 +195,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
         qs=qs.substring(0,qs.length-1);
         var s = document.createElement("script");
         s.type= "text/javascript";
-        s.src = "http://api.content.ad/Scripts/widget.aspx?" + qs;
+        s.src = "//api.content.ad/Scripts/widget.aspx?" + qs;
         s.async = true;
         document.getElementById("contentad9733").appendChild(s);
     })();</script> </div>',
@@ -240,7 +240,7 @@ placement:'below-main-column'});
         qs=qs.substring(0,qs.length-1);
         var s = document.createElement("script");
         s.type= "text/javascript";
-        s.src = "http://api.content.ad/Scripts/widget.aspx?" + qs;
+        s.src = "//api.content.ad/Scripts/widget.aspx?" + qs;
         s.async = true;
         document.getElementById("contentad9733").appendChild(s);
     })();</script> </div>';
@@ -262,7 +262,7 @@ placement:'below-main-column'});
         qs=qs.substring(0,qs.length-1);
         var s = document.createElement("script");
         s.type= "text/javascript";
-        s.src = "http://api.content.ad/Scripts/widget.aspx?" + qs;
+        s.src = "//api.content.ad/Scripts/widget.aspx?" + qs;
         s.async = true;
         document.getElementById("contentad11261").appendChild(s);
     })();

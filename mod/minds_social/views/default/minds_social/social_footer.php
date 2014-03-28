@@ -27,8 +27,8 @@
 	<script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
 	<script type="IN/Share" data-counter="right"></script>
 	
-	<a href="http://www.reddit.com/submit" class='reddit-share' onclick="window.location = 'http://www.reddit.com/submit?url=' + encodeURIComponent(window.location); return false"> 
-		<img src="http://www.reddit.com/static/spreddit7.gif" alt="submit to reddit" border="0" /> 
+	<a href="https://secure.reddit.com/submit" class='reddit-share' onclick="window.location = 'https://secure.reddit.com/submit?url=' + encodeURIComponent(window.location); return false"> 
+		<img src="https://secure.reddit.com/static/spreddit7.gif" alt="submit to reddit" border="0" /> 
 	</a>
 	
 </div>

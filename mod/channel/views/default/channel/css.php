@@ -387,7 +387,7 @@
 .elgg-button-channel-elements{
 	margin-left:10px;
 	color:#FFF;
-	background: #333 url(http://www.minds.com/_graphics/button_graduation.png) repeat-x left 10px;
+	background: #333 url(https://www.minds.com/_graphics/button_graduation.png) repeat-x left 10px;
 }
 
 .elgg-button-channel-elements:before {
