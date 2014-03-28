@@ -15,12 +15,12 @@ if(!elgg_is_logged_in()){
 	<source src="<?php echo elgg_get_site_url();?>mod/chat/sounds/blup.mp3" type="audio/mp3"/>
 	</audio>
 	<audio id="tone" loop>
-		<source src="http://freesound.org/data/previews/39/39061_402511-lq.ogg" type="audio/ogg"/> 
-		<source src="http://freesound.org/data/previews/39/39061_402511-lq.mp3" type="audio/mp3"/>
+		<source src="https://freesound.org/data/previews/39/39061_402511-lq.ogg" type="audio/ogg"/> 
+		<source src="https://freesound.org/data/previews/39/39061_402511-lq.mp3" type="audio/mp3"/>
 	</audio>
 	<audio id="ringer" loop>
-		<source src="http://freesound.org/data/previews/77/77723_91595-lq.ogg" type="audio/wav"/> 
-		<source src="http://freesound.org/data/previews/77/77723_91595-lq.mp3" type="audio/mp3"/>
+		<source src="https://freesound.org/data/previews/77/77723_91595-lq.ogg" type="audio/wav"/> 
+		<source src="https://freesound.org/data/previews/77/77723_91595-lq.mp3" type="audio/mp3"/>
 	</audio>
 	<div class="minds-live-chat-userlist">
 		<ul>

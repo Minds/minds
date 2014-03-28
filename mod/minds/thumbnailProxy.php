@@ -1,8 +1,13 @@
 <?php
 
 $src = urldecode(get_input('src'));
+//$src = "https:$src";      
 
-                        header('Expires: ' . date('r',  strtotime("today+6 months")), true);
+if(strpos($src, 'http') === FALSE){
+	$src = "https:$src";
+}
+
+header('Expires: ' . date('r',  strtotime("today+6 months")), true);
                         header("Pragma: public");
 header("Cache-Control: public");
 header("X-No-Client-Cache:0");

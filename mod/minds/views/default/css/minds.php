@@ -1110,7 +1110,7 @@ li.elgg-menu-item-rss{
 	background-position: center !important;
 }
 #carousel > div > h2{
-	width:50%;
+	width:990px;
 	color:#FFF;
 	/*color:#222;*/
 	font-weight:lighter;

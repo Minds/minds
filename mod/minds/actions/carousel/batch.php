@@ -49,7 +49,7 @@ foreach($items as $k=>$item){
 			$x2 = 2000;
 			$y1 = $h/3;
 			$y2 = ($h/3)+400;
-			$resized = get_resized_image_from_existing_file($_FILES["$item->guid:background"]['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], $x1, $y1, $x2, $y2, $size_info['upscale'], 'jpeg', 60);
+			$resized = get_resized_image_from_existing_file($_FILES["$item->guid:background"]['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], $x1, $y1, $x2, $y2, $size_info['upscale'], 'jpeg', 75);
 			if ($resized) {
 				@mkdir($theme_dir);
 	                
