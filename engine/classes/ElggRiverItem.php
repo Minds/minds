@@ -176,6 +176,9 @@ class ElggRiverItem {
 		array_push($followers, $this->subject->guid);//add to their own timeline
 		array_push($followers, $this->object->container_guid); //add to containers timeline
 		
+		if($this->subject->guid == elgg_get_logged_in_user_guid())
+			array_push($followers, "personal" . $this->subject->guid);//add to their personal feed
+		
 		if(isset($this->to_guid))
 			array_push($followers, $this->to_guid); 
 		
@@ -194,6 +197,9 @@ class ElggRiverItem {
 		array_push($followers, $this->action_type);//timelines for actions too
 		array_push($followers, $this->subject->guid);//add to their own timeline
 		array_push($followers, $this->object->container_guid); //add to containers timeline
+		
+		if($this->subject->guid == elgg_get_logged_in_user_guid())
+			array_push($followers, "personal" . $this->subject->guid);//add to their personal feed
 		
 		if(isset($this->to_guid))
 			array_push($followers, $this->to_guid); 
