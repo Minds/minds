@@ -251,10 +251,14 @@
 .minds-list-river > li:hover > .minds-menu, .elgg-list-river > li:hover > .elgg-menu {
 	display:block;
 }
+.minds-list-river > li .river-subject{
+	font-weight:bold;
+	font-size:13px;
+}
 .elgg-river-item .elgg-pict {
 	margin-right: 20px;
 }
-.elgg-river-timestamp {
+.river-timestamp {
 	color: #666;
 	font-size: 85%;
 	font-style: italic;
@@ -270,7 +274,16 @@
 .minds-river-attachments > p,
 .minds-river-message > p,
 .minds-river-content > p {
-	padding:0 12px 12px 12px;
+	padding:8px 0;
+}
+.minds-river-attachments {
+	margin:0 -11px;
+}
+.minds-river-attachments > img{
+	width:100%;
+}
+.minds-river-responses{
+	margin:0 -11px;
 }
 .elgg-river-attachments .elgg-avatar,
 .elgg-river-attachments .elgg-icon {

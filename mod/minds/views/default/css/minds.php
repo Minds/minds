@@ -669,6 +669,9 @@ li .excerpt a{
 	-webkit-box-shadow: 0 0 3px#888;
 	box-shadow: 0 0 3px #888;
 }
+.news .elgg-form-deck-river-post{
+	float:right;
+}
 .news .content {
 	float: right;
 	width:740px !important;

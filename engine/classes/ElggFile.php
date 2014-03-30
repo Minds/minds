@@ -406,30 +406,4 @@ class ElggFile extends ElggObject {
 		return $this->filestore;
 	}
 
-	/**
-	 * Save the file
-	 *
-	 * Write the file's data to the filestore and save
-	 * the corresponding entity.
-	 *
-	 * @see ElggObject::save()
-	 *
-	 * @return bool
-	 */
-	public function save() {
-		if (!parent::save()) {
-			return false;
-		}
-
-		// Save datastore metadata
-		$params = $this->filestore->getParameters();
-		foreach ($params as $k => $v) {
-			$this->setMetaData("filestore::$k", $v);
-		}
-
-		// Now make a note of the filestore class
-		$this->setMetaData("filestore::filestore", get_class($this->filestore));
-
-		return true;
-	}
 }

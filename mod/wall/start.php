@@ -73,7 +73,29 @@ function wall_page_handler($page) {
 			set_input('guid', $guid);
 			include "$pages/view.php";
 			break;
+		case 'attachment':
+			$owner = new ElggUser($page[1]);
+			$guid = $page[2];
+			$size = isset($page[3]) ? $page[3] : 'large';
+			$attachment = new ElggFile();
+			$attachment->owner_guid = $owner->guid;
+			
+			global $CONFIG; 
+			$data_root = $CONFIG->dataroot;
+		
+			$user_path = date('Y/m/d/', $owner->time_created) . $owner->guid;
+			$filename = "$data_root$user_path/attachments/{$guid}/{$size}.jpg";
 
+			//echo $filename; exit;
+			header('Content-Type: image/jpeg');
+			header('Expires: ' . date('r', time() + 864000));
+			header("Pragma: public");
+			header("Cache-Control: public");
+			
+			echo @file_get_contents($filename);
+			
+			return true;
+			break;
 		default:
 			$username = elgg_extract(0, $page);
 			$owner = get_user_by_username($username);
