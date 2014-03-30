@@ -132,6 +132,10 @@ class GUID{
             return $this->mintId64($t, $this->machine, $this->sequence);
         }
     }
+
+	public function __toString(){
+		return $this->generate();
+	}
 	
     public function getUnixTimestamp(){
         return floor(microtime(TRUE) * 1000);

@@ -262,7 +262,7 @@ function minds_news_page_handler($page) {
 	$entity_type = '';
 	$entity_subtype = '';
 
-	require_once("pages/river.php");
+	require_once(dirname(__FILE__) . "/pages/river.php");
 	return true;
 }
 /**

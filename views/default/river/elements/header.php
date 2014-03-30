@@ -16,7 +16,7 @@ if ($summary === false) {
 	$summary = elgg_view('output/url', array(
 		'href' => $subject->getURL(),
 		'text' => $subject->name,
-		'class' => 'elgg-river-subject',
+		'class' => 'river-subject',
 		'is_trusted' => true,
 	));
 }
@@ -41,11 +41,11 @@ echo elgg_view_menu('river', array(
 ));
 
 $body = <<<BODY
-<div class="elgg-river-summary">
+<div class="river-summary">
 	$summary $group_string 
-	<span class="elgg-river-timestamp">
+	<p class="river-timestamp">
 		$timestamp
-	</span>
+	</>
 </div>
 BODY;
 
