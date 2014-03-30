@@ -74,6 +74,7 @@ class MindsControlTicket extends ElggObject{
 	
 	function comment($message = "", $user_guid){
 		$user = get_entity($user_guid); 
+		if(self::$asana)
 		self::$asana->commentOnTask($this->asanaTaskId, "$message via $user->username");
 	}
 	

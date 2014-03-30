@@ -3,6 +3,7 @@
  * View for carousels
  * 
  */
+global $CONFIG;
 elgg_load_js('carouFredSel');
 
 //$entities = elgg_extract('entities', $vars);
@@ -61,7 +62,7 @@ $(document).ready(function() {
 	<?php 
 		
 		foreach($items as $item){
-			echo '<div style="background: url(' . elgg_get_site_url() . "/carousel/background/$item->guid/$item->last_updated" . ');">';
+			echo '<div style="background: url(' . elgg_get_site_url() . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache" . ');">';
 			//echo '<div>';
 			echo '<h2 style="color:'. $item->color . '">' . $item->title . '</h2>';
 			echo '<h3>' . $subtitle . '</h3>';

@@ -83,8 +83,8 @@ foreach($titles_array as $t){
 $user_count = elgg_get_entities(array('type'=>'user', 'count'=>true));
 $max = 1000000;
 $countdown = $max - $user_count;
-if(strpos(elgg_get_site_url(), 'www.minds.com/') !== FALSE)
-	$subtitle = "$countdown more human sign-ups until automatic global <a href='release'><b>code release</b></a>.";
+//if(strpos(elgg_get_site_url(), 'www.minds.com/') !== FALSE)
+//	$subtitle = "$countdown more human sign-ups until automatic global <a href='release'><b>code release</b></a>.";
 
 $title = elgg_view('output/carousel', array('divs'=>$titles_array, 'subtitle'=> $subtitle));
 //if ($t = elgg_get_plugin_setting('frontpagetext', 'minds_themeconfig')) 

@@ -91,7 +91,8 @@ class ElggRiverItem {
 	 */
 	public function setSubject($subject_guid){
 		$this->subject = get_entity($subject_guid);
-		$this->subjectObj = json_encode($this->subject->export());
+		if($this->subject)
+			$this->subjectObj = json_encode($this->subject->export());
 	}
 	
 	/**

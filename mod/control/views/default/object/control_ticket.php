@@ -10,7 +10,7 @@ if (!$ticket) {
 	return TRUE;
 }
 
-$owner = $ticket->getOwnerEntity();
+$owner = $ticket->getOwnerEntity() ?: get_user_by_username('minds');
 
 $owner_icon = elgg_view_entity_icon($owner, 'small');
 $owner_link = elgg_view('output/url', array(
@@ -23,7 +23,7 @@ $date = elgg_view_friendly_time($ticket->time_created);
 
 $metadata = elgg_view_menu('entity', array(
 	'entity' => $vars['entity'],
-	'handler' => 'control:tickets',
+	'handler' => 'control/tickets',
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
 	'full_view' => $full

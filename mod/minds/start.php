@@ -347,7 +347,7 @@ function minds_pagesetup(){
 	if($user)
 	elgg_register_menu_item('site', array(
 						'name' => 'news',
-						'href' => 'news',
+						'href' => 'news/featured',
 						'text' => '&#59194;',
 						'title' => elgg_echo('news'),
 						'priority' => 1	

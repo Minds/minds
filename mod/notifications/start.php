@@ -327,8 +327,10 @@ function notifications_count_unread(){
 function notifications_increase_counter($user_guid){
 	elgg_set_ignore_access(true);
 	$user = get_entity($user_guid, 'user');
-	$user->notifications_count++;
-	$user->save();
+	if($user){
+		$user->notifications_count++;
+		$user->save();
+	}
 	elgg_set_ignore_access(false);
 }
 /** 

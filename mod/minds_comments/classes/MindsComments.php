@@ -37,7 +37,7 @@ class MindsComments {
 		return $comment;
 	}
 
-	function create($type, $pid, $comment, $owner_guid) {
+	function create($type, $pid, $comment, $owner_guid = NULL) {
 		$es = new elasticsearch();
 		$es->index = $this->index;
 		$data = new stdClass();
