@@ -75,6 +75,7 @@ function wall_page_handler($page) {
 			break;
 		case 'attachment':
 			$owner = new ElggUser($page[1]);
+			$owner_guid = isset($owner->legacy_guid) ? $owner->legacy_guid : $owner->guid;
 			$guid = $page[2];
 			$size = isset($page[3]) ? $page[3] : 'large';
 			$attachment = new ElggFile();
@@ -83,9 +84,8 @@ function wall_page_handler($page) {
 			global $CONFIG; 
 			$data_root = $CONFIG->dataroot;
 		
-			$user_path = date('Y/m/d/', $owner->time_created) . $owner->guid;
+			$user_path = date('Y/m/d/', $owner->time_created) . $owner_guid;
 			$filename = "$data_root$user_path/attachments/{$guid}/{$size}.jpg";
-
 			//echo $filename; exit;
 			header('Content-Type: image/jpeg');
 			header('Expires: ' . date('r', time() + 864000));
