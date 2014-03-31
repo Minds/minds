@@ -59,9 +59,8 @@
 	font-weight:lighter;
 	line-height:64px;
 }
-.channel-header .elgg-form-wall-add{
-	margin:25px 0 0;
-	width:100%;
+.channel-header .elgg-form-deck-river-post{
+	width:400px
 }
 .channel-header .elgg-form-wall-add textarea{
 	font-size:12px;

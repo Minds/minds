@@ -170,18 +170,30 @@ class ElggRiverItem {
 		$followers = $this->subject->getFriendsOf(null, 10000, "", 'guids');
 		if(!$followers) 
 			$followers = array();
+		
+		if($this->access_id == ACCESS_PRIVATE){
+			$followers = array(); //don't add to followers timelines if this is private.	
+		}
 		$followers = array_keys($followers);
-		array_push($followers, 'site');//add to public timeline
-		array_push($followers, $this->action_type);//timelines for actions too
-		array_push($followers, $this->subject->guid);//add to their own timeline
-		array_push($followers, $this->object->container_guid); //add to containers timeline
+		if($this->access_id != ACCESS_PRIVATE){
+			array_push($followers, 'site');//add to public timeline
+			array_push($followers, $this->action_type);//timelines for actions too
+			array_push($followers, $this->subject->guid);//add to their own timeline
+			array_push($followers, $this->object->container_guid); //add to containers timeline
+		}
 		
 		if($this->subject->guid == elgg_get_logged_in_user_guid())
-			array_push($followers, "personal" . $this->subject->guid);//add to their personal feed
+			array_push($followers, "personal:" . $this->subject->guid);//add to their personal feed
 		
 		if(isset($this->to_guid))
 			array_push($followers, $this->to_guid); 
 		
+		if(isset($this->cc) && is_array($this->cc))
+			$followers = array_merge($followers, $this->cc);
+		
+		if(isset($this->timeline_override) && is_array($this->timeline_override))
+			$followers = $this->timeline_override; 
+				
 		foreach($followers as $follower_guid){
 			$db = new DatabaseCall('timeline');
 			$db->insert($follower_guid, array($this->id => time()));

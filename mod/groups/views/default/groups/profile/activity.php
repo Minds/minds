@@ -29,9 +29,18 @@ if(!$is_member){
 }
 
 
-elgg_load_js('elgg.wall');
+//elgg_load_js('elgg.wall');
 			
-$content .= elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> $group->guid, 'ref'=>'news'));
+$content .= elgg_view_form('deck_river/post',  
+	array(	'action'=>'action/deck_river/post/add', 
+			'name'=>'elgg-wall-news', 
+			'enctype' => 'multipart/form-data'
+	),
+	array(	'to_guid'=> $group->guid, 
+	 		'access_id'=> ACCESS_PRIVATE, 
+	 		'hide_accounts'=>true
+	)
+);
 
 $content  .= elgg_list_river(array('owner_guid'=>$group->guid));
 
