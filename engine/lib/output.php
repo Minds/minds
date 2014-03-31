@@ -66,6 +66,18 @@ function elgg_autop($string) {
 }
 
 /**
+ * Parse src variables to '//' instead of 'http(s)://'
+ * 
+ * @param string $string The string
+ * 
+ * @return string
+ */
+function minds_autosrc($string){
+	$output = str_replace( "src=\"http://", "src=\"//", $string );
+	return $output;
+}
+
+/**
  * Returns an excerpt.
  * Will return up to n chars stopping at the nearest space.
  * If no spaces are found (like in Japanese) will crop off at the
