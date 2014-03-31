@@ -485,7 +485,12 @@ function channel_custom_vars($user = null) {
 		'briefdescription' => '',
 		'description' => '',
 		'contactemail' => '',
-		'location' => ''
+		'location' => '',
+		
+		'social_fb' => '',
+		'social_gplus' => '',
+		'social_twitter' => '',
+		'social_linkedin' => ''		
 	);
 
 	if($user){

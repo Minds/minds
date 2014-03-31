@@ -33,10 +33,13 @@ if ($owner instanceof ElggGroup){
 	$img_lnk = elgg_view('output/url', array('href'=>$owner->getUrl(), 'text'=>$avatar));
 	
 	$body = elgg_view('output/url', array('href'=>$owner->getUrl(), 'text'=>elgg_view_title($owner->name)));
-	$body .= elgg_view('output/url', array('href'=>$owner->getUrl(), 'text'=>"<i>" . $owner->username . "</i>"));
+	//$body .= elgg_view('output/url', array('href'=>$owner->getUrl(), 'text'=>"<i>" . $owner->username . "</i>"));
 	$body .= elgg_view_menu('channel_elements', array('class'=>'owner_block'));
 
-	$body .= elgg_view('page/elements/owner_block/extend', $vars);
+	//$body .= elgg_view('page/elements/owner_block/extend', $vars);
+	
+	
+	$body .= elgg_view('channel/social_icons', array('user'=>$owner));
 	$body .= elgg_view('channel/subscribe', array('entity'=>$owner));
 
 	echo elgg_view('page/components/module', array(

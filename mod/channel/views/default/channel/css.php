@@ -73,6 +73,16 @@
 	margin:2px 0;
 }
 
+.channel-social-icons{
+	padding:8px 0;
+}
+.channel-social-icons > a.entypo{
+	font-size: 26px;
+	color: #888;
+	font-weight: bolder;
+	padding:0 4px;
+}
+
 .channel .minds-body-header{
 	margin-bottom:0;
 	padding-bottom:0;
@@ -344,6 +354,9 @@
 .elgg-form-channel-custom table tr td.label{
 	font-weight:bold;
 	text-align:right;
+}
+.elgg-form-channel-custom table tr td.label > .entypo{
+	font-size: 30px;
 }
 
 .elgg-input-text.colorpicker{

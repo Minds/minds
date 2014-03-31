@@ -122,6 +122,12 @@ $reset_input = elgg_view('output/url', array(
 										'class' => 'elgg-button elgg-button-cancel channel',
 										'is_action' => true
 									));
+									
+$social_fb_input = elgg_view('input/text', array('name'=>'social_fb', 'value'=>$user->social_fb));
+$social_twitter_input = elgg_view('input/text', array('name'=>'social_twitter', 'value'=>$user->social_twitter));
+$social_gplus_input = elgg_view('input/text', array('name'=>'social_gplus', 'value'=>$user->social_gplus));
+$social_tumblr_input = elgg_view('input/text', array('name'=>'social_tumblr', 'value'=>$user->social_tumblr));
+$social_linkedin_input = elgg_view('input/text', array('name'=>'social_linkedin', 'value'=>$user->social_linkedin));
 
 $form = <<<FORM
 				
@@ -188,13 +194,56 @@ $form = <<<FORM
 			</td>
 		</tr>
 		<tr>
-                        <td class="label">
-                                $menu_link_colour_label
-                        </td>
-                        <td>
-                                $menu_link_colour_input
-                        </td>
-                </tr>
+			<td class="label">
+				$menu_link_colour_label
+			</td>
+			<td>
+				$menu_link_colour_input
+			</td>
+		</tr>
+		
+		<!-- SOCIAL LINKS -->
+		<tr>
+			<td class="label">
+				<!--FB--><span class="entypo">&#62221;</span>
+			</td>
+			<td>
+				$social_fb_input
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				<!--TWITTER--><span class="entypo">&#62218;</span>
+			</td>
+			<td>
+				$social_twitter_input
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				<!--GPLUS--><span class="entypo">&#62224;</span>
+			</td>
+			<td>
+				$social_gplus_input
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				<!--TUMBLR--><span class="entypo">&#62230;</span>
+			</td>
+			<td>
+				$social_tumblr_input
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				<!--LINKEDIN--><span class="entypo">&#62233;</span>
+			</td>
+			<td>
+				$social_linkedin_input
+			</td>
+		</tr>
+		
 	</table>
 			
 	<table>

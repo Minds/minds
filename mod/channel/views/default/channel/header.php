@@ -14,6 +14,7 @@ $user = $vars['user'];
 	</div>
 	<div class="owner-block">
 		<h1><?php echo $user->name;?></h1>
+		<?php echo elgg_view('channel/social_icons', array('user'=>$user)); ?>
 		<h3><?php echo minds_filter($user->briefdescription);?></h3>
 		<?php echo  elgg_view_form('deck_river/post',  
 						array(	'action'=>'action/deck_river/post/add', 

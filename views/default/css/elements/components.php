@@ -201,7 +201,7 @@
 	font-weight:normal;
 }
 .elgg-owner-block .elgg-image img{
-	width:75px;
+	width:100px;
 }
 /* ***************************************
 	Messages
