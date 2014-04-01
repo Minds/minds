@@ -10,10 +10,10 @@ $site_url = elgg_get_site_url();
 ?>
 <ul>
 	<?php foreach($steps as $step){
+		$class = "$step";
 		if($step == $current)
-			$class = "active";
-		else
-			$class ="";
-		echo "<li class=\"$class\"><a href=\"{$site_url}register/orientation/$step\" >$step</a></li>";
+			$class .= " active";
+		
+		echo "<li class=\"$class\"><a href=\"{$site_url}register/orientation/$step\" >". elgg_echo('orientation:'.$step) . "</a></li>";
 	}?>
 </ul>

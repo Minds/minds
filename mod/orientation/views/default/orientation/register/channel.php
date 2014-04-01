@@ -2,7 +2,14 @@
 $user = elgg_get_logged_in_user_entity();
 ?>
 
+<div class="blurb">
+	Tell the network more about you. 
+</div>
 <div class="orientation-block channel-info">
+	<span style="clear:both;">
+		<label>Name</label>
+		<?php echo elgg_view('input/text', array('name'=>'name', 'value'=>$user->name, 'placeholder'=> 'eg. Your name...')); ?>
+	</span>
 	<span style="clear:both;">
 		<label>Website</label>
 		<?php echo elgg_view('input/text', array('name'=>'website', 'value'=>$user->website, 'placeholder'=> 'eg. www.minds.com')); ?>

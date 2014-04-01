@@ -10,7 +10,11 @@ class MindsOrientation{
 		'channel', 
 		'group',
 		'deck',
+		
+		'import',
 		'multisite',
+		'subscribe',
+		'complete',
 	);
 	
 	public function __construct(){
@@ -139,7 +143,21 @@ class MindsOrientation{
 	/**
 	 * Setup groups
 	 */
-	public function group(){
+	public function group($postVars){
+		
+		if (isset($postVars)) {
+			if(isset($postVars['skip']))
+				$this->nextStep('group');
+			
+			$group = new ElggGroup();
+			$group->name = $postVars['name'];
+			$group->description = $postVars['description'];
+			$group->access_id = $postVars['vis'];
+			$group->membership = $postVars['membership'];
+			$group->save();
+			
+			$this->nextStep('group');
+		}
 		$vars = array();
 		$this->render('group', $vars);
 	}
@@ -147,17 +165,63 @@ class MindsOrientation{
 	/**
 	 * Setup deck
 	 */
-	public function deck(){
+	public function deck($postVars){
+		
+		if (isset($postVars)) {
+			if(isset($postVars['skip']))
+				$this->nextStep('deck');
+			
+			$this->nextStep('deck');
+		}
 		$vars = array();
 		$this->render('deck', $vars);
 	}
 	
 	/**
+	 * Setup rss imports
+	 */
+	public function import($postVars){
+		if (isset($postVars)) {
+			if(isset($postVars['skip']))
+				$this->nextStep('import');
+			
+			$scraper = new MindsScraper();
+			$scraper->title = $postVars['name'];
+			$scraper->feed_url = $postVars['url'];
+			$scraper->save();
+			
+			$this->nextStep('import');
+		}
+		
+		$vars = array();
+		$this->render('import', $vars);
+	}
+	/**
 	 * Setup nodes
 	 */
-	public function multisite(){
+	public function multisite($postVars){
+		if (isset($postVars)) {
+				$this->nextStep('multisite');
+		}
 		$vars = array();
-		$this->render('mulitiste', $vars);
+		$this->render('multisite', $vars);
 	}
 	
+	/**
+	 * Setup subscribe
+	 */
+	public function subscribe($postVars){
+		if (isset($postVars)) {
+			$this->nextStep('subscribe');
+		}
+		$vars = array();
+		$this->render('subscribe', $vars);
+	}
+
+	/**
+	 * Comepleted
+	 */
+	public function complete(){
+		forward();
+	}
 }

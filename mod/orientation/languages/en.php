@@ -32,6 +32,16 @@ $english = array(
 	'orientation:step:thumbs:content'=>'Use the thumb icons to vote up or vote down',
 	'orientation:step:remind:title'=> 'Remind',
 	'orientation:step:remind:content'=>'Remind other users of a post',
+	
+	'orientation:avatar' => 'Avatar',
+	'orientation:channel' => 'Channel',
+	'orientation:group' => 'Groups',
+	'orientation:deck' => 'Social',
+	'orientation:import' => 'Import',
+	'orientation:multisite' => 'Nodes',
+	'orientation:subscribe' => 'Subscribe',
+	'orientation:complete' => 'Done',
 );
+
 
 add_translation('en', $english);

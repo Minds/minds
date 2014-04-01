@@ -11,6 +11,7 @@ elgg_register_event_handler('init', 'system', 'orientation_init');
 function orientation_init() {
 		
 	elgg_extend_view('css/elgg','orientation/css');
+	elgg_extend_view('js/elgg','orientation/js');
 	
 	if(elgg_is_logged_in() && elgg_get_context() == 'news'){
 		elgg_extend_view('page/elements/sidebar','orientation/sidebar', 1);

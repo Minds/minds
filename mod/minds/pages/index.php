@@ -103,25 +103,19 @@ $subtitle = round($countdown_days,0) . ' days to go.';*/
 $featured_item_class = $filter == 'featured' ? 'elgg-state-selected' : null;
 $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
 
-if ($t){
-    $header = <<<HTML
-<div class="elgg-head homepage clearfix">
-	$title
-	<div class="front-page-buttons">
-		$buttons
-	</div>
-	<ul class="elgg-menu elgg-menu-right-filter elgg-menu-hz">
-		<li class="elgg-menu-item-featured $featured_item_class">
-			<a href="?filter=featured">Featured</a>
-		</li>
-		<li class="elgg-menu-item-trending $trending_item_class">
-                        <a href="?filter=trending">Trending</a>
-                </li>
-	</ul>
-</div>
-HTML;
-}else{
 $trending_menu = elgg_view_menu('trending');
+
+$signup_form = elgg_is_logged_in() ? '' : <<<HTML
+<div class="frontpage-signup">
+		<form action="action/register">
+			<input type="text" name="u" placeholder="username" autocomplete="off"/>
+			<input type="text" name="e" placeholder="email" autocomplete="off"/>
+			<input type="password" name="p" placeholder="password" autocomplete="off"/>
+			<input type="hidden" name="tcs" value="true"/>
+			<input type="submit" value="Sign up" class="elgg-button elgg-button-submit"/>
+		</form>
+	</div>
+HTML;
 $header = <<<HTML
 <div class="elgg-head homepage clearfix">
 	$title
@@ -137,9 +131,10 @@ $header = <<<HTML
 			$trending_menu
                 </li>
 	</ul>
+	$signup_form
 </div>
 HTML;
-}
+
 if($entities){
 	$content = elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true);
 } else {

@@ -160,10 +160,6 @@ function minds_init(){
             return array_merge($pages, $return);
         });*/
         
-        // Override registration action to support tier signup
-        elgg_unregister_action('register');
-        elgg_register_action('register', dirname(__FILE__) . '/actions/minds/register.php', 'public');
-
         // Set validation true if this is a tier signup
         elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
 
