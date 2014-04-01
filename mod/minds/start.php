@@ -87,10 +87,7 @@ function minds_init(){
 	
 	//setup the generic upload endpoint
 	elgg_register_page_handler('upload', 'minds_upload');
-	
-	//unregister the register page and register this new one
-	elgg_register_page_handler('register', 'minds_register_page_handler');
-	elgg_register_page_handler('login', 'minds_login_page_handler');
+
 	
 	//setup the licenses pages
 	elgg_register_page_handler('licenses', 'minds_license_page_handler');
@@ -265,31 +262,7 @@ function minds_news_page_handler($page) {
 	require_once(dirname(__FILE__) . "/pages/river.php");
 	return true;
 }
-/**
- * Page handler for register page
- *
- * @param array $page
- * @return bool
- * @access private
- */
-function minds_register_page_handler($page) {
-	$base_dir = elgg_get_plugins_path().'minds/pages/account';
-	require_once("$base_dir/register.php");
-	return true;
-}
 
-/**
- * Page handler for login  page
- *
- * @param array $page
- * @return bool
- * @access private
- */
-function minds_login_page_handler($page) {
-            $base_dir = elgg_get_plugins_path().'minds/pages/account';
-            require_once("$base_dir/login.php");
-        return true;
-}
 
 function minds_route_page_handler($hook, $type, $returnvalue, $params) {
 	if(!$returnvalue){

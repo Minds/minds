@@ -66,7 +66,10 @@ if (elgg_get_config('allow_registration')) {
 			}
 
 			// Forward on success, assume everything else is an error...
-			forward();
+			if(elgg_is_active_plugin('orientation'))
+				forward('/register/orientation');
+			else 
+				forward();
 		} else {
 			register_error(elgg_echo("registerbad"));
 		}

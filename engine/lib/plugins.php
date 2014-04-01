@@ -962,7 +962,7 @@ function elgg_get_plugin_setting($name, $plugin_id = null) {
 		return false;
 	}
 	
-	if($plugin instanceof ElggPlugin){
+	if($plugin instanceof ElggPlugin && $plugin->isActive()){
 		return $plugin->getSetting($name);
 	}
 }

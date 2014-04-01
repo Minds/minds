@@ -125,3 +125,76 @@
 }
 .orientation .step.completed{
 }
+
+/**
+ * Register pages
+ */
+.orientation-register-wrapper{
+	width: 800px;
+	margin: auto;
+	height: auto;
+	border: 1px solid #EEE;
+	border-radius: 3px;
+	padding: 16px;
+	background: #FFF;
+	position: relative;
+	display:table;
+}
+.orientation-register-wrapper > .orientation-menu{
+	display:table-cell;
+	width: 100px;
+	border-right: 1px solid #EEE;
+	position: relative;
+}
+.orientation-register-wrapper > .orientation-menu > ul{
+}
+.orientation-register-wrapper > .orientation-menu > ul > li{
+	text-align:right;
+	padding: 8px 25px 8px 0;
+}
+.orientation-register-wrapper > .orientation-menu > ul > li.active a{
+	color:#888;
+}
+.orientation-register-wrapper > .orientation-menu > ul > li > a{
+	font-weight:bold;
+}
+.orientation-register-wrapper > .orientation-content{
+	display:table-cell;
+	width: 680px;
+	height: 100%;
+	position: relative;
+	padding: 16px;
+}
+.orientation-register-wrapper > .orientation-content .orientation-action-buttons-wrapper{
+	float:right;
+}
+
+.orientation-block{
+	margin:16px 8px;
+}
+.orientation-block label{
+	/*font-weight:normal;*/
+}
+.orientation-block.channel-info span{
+	width:100%;
+	display:block;
+	margin:16px 0;
+}
+.orientation-block.channel-info input{
+	width:150px;
+	margin-right:12px;
+}
+.orientation-block.channel-info select{
+	-webkit-appearance: none;
+	padding: 8px;
+	border: 1px solid #DDD;
+	background: #FAFAFA;
+	margin-right:12px;
+}
+
+.orientation-content #user-avatar-cropper{
+	width:400px;
+}
+.orientation-content .elgg-foot .elgg-button-submit{
+	display:none;
+}

@@ -1595,6 +1595,31 @@ function users_pagesetup() {
 	}
 }
 
+
+/**
+ * Page handler for register page
+ *
+ * @param array $page
+ * @return bool
+ * @access private
+ */
+function minds_register_page_handler($page) {
+	global $CONFIG;
+	
+	switch($page[0]){
+		case "orientation":
+			if(isset($page[1]))
+				set_input('step', $page[1]);
+			include(elgg_get_plugins_path().'orientation/pages/orientation/register.php');
+			break;
+		default:
+			$base_dir = "{$CONFIG->path}pages/account";
+			require_once("$base_dir/register.php");
+		}
+
+	return true;
+}
+
 /**
  * Users initialisation function, which establishes the page handler
  *
@@ -1605,7 +1630,7 @@ function users_init() {
 
 	elgg_register_page_handler('friends', 'friends_page_handler');
 	elgg_register_page_handler('friendsof', 'friends_page_handler');
-	elgg_register_page_handler('register', 'elgg_user_account_page_handler');
+	elgg_register_page_handler('register', 'minds_register_page_handler');
 	elgg_register_page_handler('forgotpassword', 'elgg_user_account_page_handler');
 	elgg_register_page_handler('resetpassword', 'elgg_user_account_page_handler');
 	elgg_register_page_handler('login', 'elgg_user_account_page_handler');

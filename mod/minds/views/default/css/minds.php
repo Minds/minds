@@ -91,9 +91,6 @@ body.news{
 	margin:5px;
 }
 
-.elgg-menu-general.login-box li{
-	float:right;	
-}
 /* Top Menu
  */
 .entypo{
@@ -120,25 +117,7 @@ body.news{
 	-webkit-box-shadow:none !important;
 	-moz-box-shadow:none !important;
 }
-.login{
-	width:300px !important;
-	margin:auto;
-}
-.login .social_login{
-	margin:10px 0;
-}
-.login .elgg-button-submit {
-	float:right;
-}
-.login li{
-	width:100%;
-}
-.elgg-menu-river li{
-	padding:0 3px;
-}
-.elgg-menu-item-delete a:hover{
-	color:red;
-}
+
 
 .elgg-menu-comments li{
 	padding:0 3px;
@@ -450,19 +429,19 @@ li .excerpt a{
 .elgg-form-account .social{
 }
 
-.elgg-form-account .social-login{
-	margin:5px;
+.social-login{
+	margin:16px 6px 0;
 	width:100%;
 	height:50px;
 	clear:both;
 }
-.elgg-form-account .social-login > .social_login{
+.social-login > .social_login{
 	float:left;
 	margin:0 10px 0 0;
 	width:auto;
 	clear:none;
 }
-.elgg-form-account .social .facebook{
+.social .facebook{
 	padding-top:1px;
 }
 	
