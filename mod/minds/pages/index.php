@@ -105,12 +105,13 @@ $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
 
 $trending_menu = elgg_view_menu('trending');
 
+extract(elgg_get_sticky_values('register'));
 $signup_form = elgg_is_logged_in() ? '' : <<<HTML
 <div class="frontpage-signup">
 		<form action="action/register">
-			<input type="text" name="u" placeholder="username" autocomplete="off"/>
-			<input type="text" name="e" placeholder="email" autocomplete="off"/>
-			<input type="password" name="p" placeholder="password" autocomplete="off"/>
+			<input type="text" name="u" placeholder="username" value="$u" autocomplete="off"/>
+			<input type="text" name="e" placeholder="email" value="$e" autocomplete="off"/>
+			<input type="password" name="p" value="$p" placeholder="password" autocomplete="off"/>
 			<input type="hidden" name="tcs" value="true"/>
 			<input type="submit" value="Sign up" class="elgg-button elgg-button-submit"/>
 		</form>

@@ -37,8 +37,10 @@ $english = array(
 	'orientation:channel' => 'Channel',
 	'orientation:group' => 'Groups',
 	'orientation:deck' => 'Social',
+	'orientation:post' => 'Post',
 	'orientation:import' => 'Import',
-	'orientation:multisite' => 'Nodes',
+	'orientation:multisite' => 'Social networks',
+	'orientation:revenue' => 'Revenue',
 	'orientation:subscribe' => 'Subscribe',
 	'orientation:complete' => 'Done',
 );

@@ -18,7 +18,7 @@ $steps = $vars['steps'];
 			<?php echo elgg_view('orientation/register/'.$step, $vars['vars']); ?>
 			<div class="orientation-action-buttons-wrapper">
 				<input type="submit" name="skip" value="Skip" class="elgg-button elgg-button-action"/>
-				<input type="submit" value="Done" class="elgg-button elgg-button-submit"/>
+				<input type="submit" value="Next" class="elgg-button elgg-button-submit"/>
 			</div>
 		</form>
 	</div>

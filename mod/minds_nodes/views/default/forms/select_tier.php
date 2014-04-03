@@ -49,13 +49,14 @@ usort($tiers, function($a, $b){
 		<div class="cell feature">See the terms and conditions</div>
 		<?php 
 			foreach($tiers as $tier){
+				$class = $tier->price > 0 ? ' disabled' :'';
 				$button =  elgg_view('output/url', array(
 					'is_action' => true, 
 					'id' => 'tier-select-button', 
 					'data-guid' => $tier->guid,
-					'href' => elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid, 
-					'text' =>  'Select', 
-					'class' => 'elgg-button elgg-button-action'
+					'href' => $tier->price > 0 ? '#' : elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid, 
+					'text' => $tier->price > 0 ? 'Coming soon' : 'Select', 
+					'class' => 'elgg-button elgg-button-action'.$class,
 				));
 				echo '<div class="cell">'. $button . '</div>';
 			}

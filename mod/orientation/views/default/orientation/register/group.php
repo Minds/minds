@@ -17,6 +17,14 @@ $user = elgg_get_logged_in_user_entity();
 	</div>
 	<div class="orientation-table-row">
 		<div class="orientation-table-cell label">
+			Avatar
+		</div>
+		<div class="orientation-table-cell">
+			<?php echo elgg_view('input/file', array('name'=>'avatar',  'placeholder'=> 'Something cool!')); ?>
+		</div>
+	</div>
+	<div class="orientation-table-row">
+		<div class="orientation-table-cell label">
 			Description
 		</div>
 		<div class="orientation-table-cell">

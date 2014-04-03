@@ -152,14 +152,20 @@
 	text-align:right;
 	padding: 8px 20px 8px 0;
 }
+.orientation-register-wrapper > .orientation-menu > ul > li a{
+	display:table-cell;
+	width:80%;
+}
 .orientation-register-wrapper > .orientation-menu > ul > li.active a{
 	color:#333;
 }
 .orientation-register-wrapper > .orientation-menu > ul > li:after{
 	font-family:"fontello";
-
+	width:15px;
 	font-size:14px;
-	margin:0 0 0 8px;
+	padding:0 0 0 8px;
+	display:table-cell;
+	vertical-align:middle;
 }
 .orientation-menu > ul > li.avatar:after{
 	content: '\e806';
@@ -176,11 +182,17 @@
 .orientation-menu > ul > li.import:after{
 	content: '\e804';
 }
+.orientation-menu > ul > li.revenue:after{
+	content: '\e73d';
+}
 .orientation-menu > ul > li.multisite:after{
 	content: '\e776';
 }
 .orientation-menu > ul > li.subscribe:after{
 	content: '\1f4f6';
+}
+.orientation-menu > ul > li.post:after{
+	content: '\e718';
 }
 .orientation-menu > ul > li.complete:after{
 	content: '\1f44d';
@@ -207,22 +219,20 @@
 .orientation-register-wrapper #tiers{
 	width:680px;
 }
-.orientation-block{
-	margin:16px 8px;
+.disabled{
+	background:#EEE;
+	border:1px solid #DDD;
+	color:#333;
+	
+	cursor: not-allowed;
+	/*pointer-events: none;*/
 }
-.orientation-block label{
-	/*font-weight:normal;*/
-}
-.orientation-block.channel-info span{
+
+.orientation-channel input{
 	width:100%;
-	display:block;
-	margin:16px 0;
-}
-.orientation-block.channel-info input{
-	width:150px;
 	margin-right:12px;
 }
-.orientation-block.channel-info select{
+.orientation-channel select{
 	-webkit-appearance: none;
 	padding: 8px;
 	border: 1px solid #DDD;
@@ -233,7 +243,7 @@
 .orientation-content #user-avatar-cropper{
 	width:400px;
 }
-.orientation-content .elgg-foot .elgg-button-submit{
+.orientation-content .elgg-foot .elgg-button-submit, .orientation-content .deck-river-accounts .elgg-button-submits{
 	display:none;
 }
 
@@ -271,4 +281,10 @@ box-shadow: 0 0 0;
 .orientation-content .elgg-item .elgg-avatar-medium > a > img{
 	width:75px;
 	height:75px;
+}
+
+
+.orientation-subscribe-list{
+	height:400px !important;
+	overflow:scroll;
 }
