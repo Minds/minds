@@ -117,17 +117,19 @@ function is_email_address($address) {
 function elgg_make_sticky_form($form_name) {
 
 	elgg_clear_sticky_form($form_name);
+	
+	$cookie_id = 'mindsStickyForm';
+	$sticky = isset($_COOKIE[$cookie_id]) ? json_decode($_COOKIE[$cookie_id], true) : array();
 
-	global $SESSION;
-
-	$sticky = $SESSION->get('sticky_forms', array());
 	$sticky[$form_name] = array();
 
 	foreach ($_REQUEST as $key => $var) {
 		// will go through XSS filtering on the get function
 		$sticky[$form_name][$key] = $var;
 	}
-	$SESSION->set('sticky_forms', $sticky);
+
+	//keep for one minute
+	setCookie($cookie_id, json_encode($sticky), time()+60, '/');
 }
 
 /**
@@ -144,12 +146,13 @@ function elgg_make_sticky_form($form_name) {
  * @since 1.8.0
  */
 function elgg_clear_sticky_form($form_name) {
-	global $SESSION;
 	
-	$sticky = $SESSION->get('sticky_forms', array());
+	$cookie_id = 'mindsStickyForm';
+	$sticky = isset($_COOKIE[$cookie_id]) ? json_decode($_COOKIE[$cookie_id], true) : array();
 
 	unset($sticky[$form_name]);
-	$SESSION->set('sticky_forms', $sticky);
+	//keep for 1 minute
+	setCookie($cookie_id, json_encode($sticky), time()+60, '/');
 }
 
 /**
@@ -162,9 +165,8 @@ function elgg_clear_sticky_form($form_name) {
  * @since 1.8.0
  */
 function elgg_is_sticky_form($form_name) {
-	global $SESSION;
-	
-	$sticky = $SESSION->get('sticky_forms', array());
+	$cookie_id = 'mindsStickyForm';
+	$sticky = isset($_COOKIE[$cookie_id]) ? json_decode($_COOKIE[$cookie_id], true) : array();
 	
 	return isset($sticky[$form_name]);
 }
@@ -184,10 +186,9 @@ function elgg_is_sticky_form($form_name) {
  * @since 1.8.0
  */
 function elgg_get_sticky_value($form_name, $variable = '', $default = NULL, $filter_result = true) {
-	global $SESSION;
-
-	$sticky = $SESSION->get('sticky_forms', array());
-
+	$cookie_id = 'mindsStickyForm';
+	$sticky = isset($_COOKIE[$cookie_id]) ? json_decode($_COOKIE[$cookie_id], true) : array();
+	
 	if (isset($sticky[$form_name][$variable])) {
 		$value = $sticky[$form_name][$variable];
 		if ($filter_result) {
@@ -211,7 +212,8 @@ function elgg_get_sticky_value($form_name, $variable = '', $default = NULL, $fil
 function elgg_get_sticky_values($form_name, $filter_result = true) {
 	global $SESSION;
 
-	$sticky = $SESSION->get('sticky_forms', array());
+	$cookie_id = 'mindsStickyForm';
+	$sticky = isset($_COOKIE[$cookie_id]) ? json_decode($_COOKIE[$cookie_id], true) : array();
 
 	if(!isset($sticky[$form_name])){
 		return false;
@@ -238,8 +240,11 @@ function elgg_get_sticky_values($form_name, $filter_result = true) {
  * @since 1.8.0
  */
 function elgg_clear_sticky_value($form_name, $variable) {
-	global $SESSION;
-	unset($SESSION['sticky_forms'][$form_name][$variable]);
+	$cookie_id = 'mindsStickyForm';
+	$sticky = isset($_COOKIE[$cookie_id]) ? json_decode($_COOKIE[$cookie_id], true) : array();
+	
+	unset($sticky[$form_name][$variable]);
+	setCookie($cookie_id, json_encode($sticky), time() - 3600, '/');
 }
 
 /**

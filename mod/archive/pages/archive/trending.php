@@ -1,8 +1,9 @@
 <?php
 
-if(!elgg_plugin_exists('analytics')){
-	forward(REFERRER);
-}
+ if(!class_exists('MindsTrending')){
+                forward(REFERRER);
+        }
+
 
 // Get the current page's owner
 $page_owner = elgg_get_logged_in_user_guid();

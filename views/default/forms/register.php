@@ -21,7 +21,11 @@ if (elgg_is_sticky_form('register')) {
 		<?php echo elgg_view('minds_social/login');?>
 	</div>
 	- OR - 
-	<div class="mtm">
+	
+	<div class="blob" style="margin: 16px 0; font-style: italic; color: #888;">
+		Anonymous accounts are fine with us. We encourage people to use of TOR for encrypted and secure browsing.
+	</div>
+	<!--<div class="mtm">
 		<label><?php echo elgg_echo('name'); ?></label><br />
 		<?php
 		echo elgg_view('input/text', array(
@@ -30,13 +34,14 @@ if (elgg_is_sticky_form('register')) {
 			'class' => 'elgg-autofocus',
 		));
 		?>
-	</div>
+	</div>-->
 	<div>
 		<label><?php echo elgg_echo('email'); ?></label><br />
 		<?php
 			echo elgg_view('input/text', array(
 				'name' => 'e',
-				'value' => $email,
+				'value' => $e,
+				'autocomplete' => 'off'
 			));
 		?>
 	</div>
@@ -45,7 +50,8 @@ if (elgg_is_sticky_form('register')) {
 		<?php
 			echo elgg_view('input/text', array(
 				'name' => 'u',
-				'value' => $username,
+				'value' => $u,
+				'autocomplete' => 'off'
 			));
 		?>
 	</div>
@@ -54,11 +60,12 @@ if (elgg_is_sticky_form('register')) {
 		<?php
 			echo elgg_view('input/password', array(
 				'name' => 'p',
-				'value' => $password,
+				'value' => $p,
+				'autocomplete' => 'off'
 			));
 		?>
 	</div>
-	<div>
+	<!--<div>
 		<label><?php echo elgg_echo('passwordagain'); ?></label><br />
 		<?php
 			echo elgg_view('input/password', array(
@@ -66,7 +73,7 @@ if (elgg_is_sticky_form('register')) {
 				'value' => $password2,
 			));
 		?>
-	</div>
+	</div>-->
 
 	<?php
 		// view to extend to add more fields to the registration form

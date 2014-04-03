@@ -82,6 +82,25 @@ input[type="radio"] {
 }
 
 .elgg-form-login{
+	width:400px;
+	padding:32px;
+	margin:auto;
+	background:#FFF;
+	border:1px solid #EEE;
+	border-radius:6px;
+}
+.elgg-form-login .elgg-input-text, .elgg-form-login .elgg-input-password{
+	margin:8px 0 ;
+	padding:16px;
+	font-size:12px;
+	border:1px solid #DDD;
+}
+.elgg-form-login .elgg-menu-general{
+	float:right;
+	margin-top:4px;
+} 
+.elgg-form-login .elgg-menu-general li{
+	margin: 8px
 }
 
 .elgg-form-account {

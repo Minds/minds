@@ -87,10 +87,7 @@ function minds_init(){
 	
 	//setup the generic upload endpoint
 	elgg_register_page_handler('upload', 'minds_upload');
-	
-	//unregister the register page and register this new one
-	elgg_register_page_handler('register', 'minds_register_page_handler');
-	elgg_register_page_handler('login', 'minds_login_page_handler');
+
 	
 	//setup the licenses pages
 	elgg_register_page_handler('licenses', 'minds_license_page_handler');
@@ -163,10 +160,6 @@ function minds_init(){
             return array_merge($pages, $return);
         });*/
         
-        // Override registration action to support tier signup
-        elgg_unregister_action('register');
-        elgg_register_action('register', dirname(__FILE__) . '/actions/minds/register.php', 'public');
-
         // Set validation true if this is a tier signup
         elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
 
@@ -265,31 +258,7 @@ function minds_news_page_handler($page) {
 	require_once(dirname(__FILE__) . "/pages/river.php");
 	return true;
 }
-/**
- * Page handler for register page
- *
- * @param array $page
- * @return bool
- * @access private
- */
-function minds_register_page_handler($page) {
-	$base_dir = elgg_get_plugins_path().'minds/pages/account';
-	require_once("$base_dir/register.php");
-	return true;
-}
 
-/**
- * Page handler for login  page
- *
- * @param array $page
- * @return bool
- * @access private
- */
-function minds_login_page_handler($page) {
-            $base_dir = elgg_get_plugins_path().'minds/pages/account';
-            require_once("$base_dir/login.php");
-        return true;
-}
 
 function minds_route_page_handler($hook, $type, $returnvalue, $params) {
 	if(!$returnvalue){
@@ -318,19 +287,18 @@ function minds_route_page_handler($hook, $type, $returnvalue, $params) {
 	}*/
 }
 
-function minds_register_hook()
-{
+function minds_register_hook(){
 	if (get_input('name', false) == true){
 		return false;
 	}
 	if (get_input('tcs',false) != 'true') {
 		register_error(elgg_echo('minds:register:terms:failed'));
-		forward(REFERER);
+		//forward(REFERER);
 	}
 	//a honey pot
 	if (get_input('terms',false) == 'true' || get_input('tac',false) == 'true') {
 		register_error(elgg_echo('minds:register:terms:failed'));
-		forward(REFERER);
+	//	forward(REFERER);
 	}
 	
 	return true;

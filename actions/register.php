@@ -11,9 +11,9 @@ elgg_make_sticky_form('register');
 // Get variables
 $username = get_input('u');
 $password = get_input('p', null, false);
-$password2 = get_input('p2', null, false);
+$password2 = get_input('p2', $password, false);
 $email = get_input('e');
-$name = get_input('n');
+$name = get_input('n', $username);
 $friend_guid = (int) get_input('friend_guid', 0);
 $invitecode = get_input('invitecode');
 
@@ -26,14 +26,14 @@ if (elgg_get_config('allow_registration')) {
 		if (strcmp($password, $password2) != 0) {
 			throw new RegistrationException(elgg_echo('RegistrationException:PasswordMismatch'));
 		}
-		
+
 		$guid = register_user($username, $password, $name, $email, false, $friend_guid, $invitecode);
-		
+
 		if ($guid) {
 			elgg_clear_sticky_form('register');
 
-			$new_user = get_entity($guid, 'user');
-			
+			$new_user = get_entity($guid,'user');
+
 			// allow plugins to respond to self registration
 			// note: To catch all new users, even those created by an admin,
 			// register for the create, user event instead.
@@ -47,7 +47,6 @@ if (elgg_get_config('allow_registration')) {
 
 			// @todo should registration be allowed no matter what the plugins return?
 			if (!elgg_trigger_plugin_hook('register', 'user', $params, TRUE)) {
-				exit;
 				$new_user->delete();
 				// @todo this is a generic messages. We could have plugins
 				// throw a RegistrationException, but that is very odd
@@ -65,8 +64,11 @@ if (elgg_get_config('allow_registration')) {
 				// do nothing
 			}
 
+                        if (get_input('returntoreferer'))
+                            forward(REFERER);
+                        
 			// Forward on success, assume everything else is an error...
-			forward();
+			forward('register/orientation');
 		} else {
 			register_error(elgg_echo("registerbad"));
 		}

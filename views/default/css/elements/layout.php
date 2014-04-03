@@ -68,6 +68,7 @@
 }
 .hero > .topbar > .inner > .right{
 	width:25%;
+    text-align: right;
 }
 .hero > .topbar > .inner .global-menu{
 	margin-top: 35px;
@@ -122,6 +123,10 @@
 .hero > .topbar .more a{
 	color:#333;
 	font-size:11px;
+}
+
+.hero > .topbar .right .elgg-button{
+	margin:28px 8px;
 }
 
 /***** PAGE MESSAGES ******/

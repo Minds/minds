@@ -36,15 +36,19 @@ a.elgg-button {
 
 /* Submit: This button should convey, "you're about to take some definitive action" */
 .elgg-button-submit {
-	color: white;
+	min-width:0;
+	background: #EEE;
+	background:linear-gradient(#FCFCFC, #EEEEEE);
+	border:1px solid #CCC;
+	color: #333;
 	text-decoration: none;
-	background: #333;
+	text-shadow: 0;
+	cursor: pointer;
 }
 
 .elgg-button-submit:hover {
 	text-decoration: none;
-	color: white;
-	background: #111;
+	background: #EEE;
 }
 
 .elgg-button-submit.elgg-state-disabled {
@@ -139,4 +143,42 @@ a.elgg-button {
 	-webkit-border-radius:4px 4px 0 0;
 	-moz-border-radius:4px 4px 0 0;
 	border-radius:4px 4px 0 0;
+}
+
+/**
+ * Minds
+ */
+.minds-button-register {
+	min-width:0;
+	background: #4690D6;
+	background:linear-gradient(#489BEC, #4690C3);
+	border:1px solid #4690D6;
+	color: #FFF;
+	text-decoration: none;
+	text-shadow: 0;
+	cursor: pointer;
+}
+
+.minds-button-register:hover{
+	color: #FFF;
+	text-decoration: none;
+	background:#4690C3;
+	
+	border:1px solid #4690C3;
+}
+
+.minds-button-login {
+	min-width:0;
+	background: #EEE;
+	background:linear-gradient(#FCFCFC, #EEEEEE);
+	border:1px solid #CCC;
+	color: #333;
+	text-decoration: none;
+	text-shadow: 0;
+	cursor: pointer;
+}
+
+.minds-button-login:hover {
+	text-decoration: none;
+	background: #EEE;
 }

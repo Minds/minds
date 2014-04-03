@@ -163,6 +163,7 @@ function minds_social_facebook_login(){
 				/*if($_SESSION['fb_referrer']){
 					forward($_SESSION['fb_referrer']);
 				}*/
+				forward('register/orientation');
 			}	
 		}else{
 			try {

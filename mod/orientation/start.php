@@ -11,6 +11,7 @@ elgg_register_event_handler('init', 'system', 'orientation_init');
 function orientation_init() {
 		
 	elgg_extend_view('css/elgg','orientation/css');
+	elgg_extend_view('js/elgg','orientation/js');
 	
 	if(elgg_is_logged_in() && elgg_get_context() == 'news'){
 		elgg_extend_view('page/elements/sidebar','orientation/sidebar', 1);
@@ -24,9 +25,9 @@ function orientation_init() {
 	//On first login, promt user for bootcamp
 
 	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted') && !elgg_get_plugin_user_setting('prompted',null,'bootcamp') && !$_SESSION['fb_referrer'] && elgg_get_viewtype() != 'mobile' && ! $SESSION['orientated']){
-		elgg_set_plugin_user_setting('prompted', 'yes');
-		$SESSION['orientated'] = 'yes';
-		forward('orientation');
+//		elgg_set_plugin_user_setting('prompted', 'yes');
+//		$SESSION['orientated'] = 'yes';
+//		forward('orientation');
 	}
 }
 
