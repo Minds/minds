@@ -325,7 +325,7 @@ function user_add_friend($user_guid, $friend_guid) {
         global $SESSION;
         if(elgg_is_logged_in()){
 		unset($SESSION['friends']);
-       		$SESSION['friends'] = elgg_get_logged_in_user_entity()->getFriends(null, 200, 0, 'guids');
+       	//	$SESSION['friends'] = elgg_get_logged_in_user_entity()->getFriends(null, 200, 0, 'guids');
 	}
 	return true;
 }

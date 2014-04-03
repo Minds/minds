@@ -178,7 +178,7 @@ function blog_get_page_content_list($user_guid, $container_guid = NULL) {
  */
 function blog_get_trending_page_content_list() {
 	
-	if(!elgg_plugin_exists('analytics')){
+	if(!class_exists('MindsTrending')){
 		forward(REFERRER);
 	}
 	

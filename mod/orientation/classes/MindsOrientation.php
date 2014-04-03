@@ -65,6 +65,7 @@ class MindsOrientation{
 			if($_FILES['avatar']['tmp_name']){
 				$icon_sizes = elgg_get_config('icon_sizes');
 				$owner = elgg_get_logged_in_user_entity();
+				$guid = $owner->guid;
 				// get the images and save their file handlers into an array
 				// so we can do clean up if one fails.
 				$files = array();

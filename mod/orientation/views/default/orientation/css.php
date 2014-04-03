@@ -258,3 +258,17 @@
 	vertical-align: middle;
 	padding-right:4px;
 }
+
+.orientation-content .elgg-item{
+	width: 310px;
+margin: 8px !important;
+padding: 0;
+background: #FFF;
+border: 0;
+box-shadow: 0 0 0;
+}
+
+.orientation-content .elgg-item .elgg-avatar-medium > a > img{
+	width:75px;
+	height:75px;
+}
