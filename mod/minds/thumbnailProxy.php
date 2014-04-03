@@ -1,5 +1,8 @@
 <?php
 
+set_time_limit (3); //don't spend longer than 3 seconds
+ini_set('max_execution_time', 3); 
+
 $src = urldecode(get_input('src'));
 //$src = "https:$src";      
 
@@ -7,13 +10,34 @@ if(strpos($src, 'http') === FALSE){
 	$src = "https:$src";
 }
 
+
+//get the original file
+
+$ch = curl_init($src);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 3);
+curl_setopt($ch,CURLOPT_TIMEOUT,3);
+$image = curl_exec($ch);
+$errorno = curl_errno($ch);
+curl_close($ch);
+
+if($error_no){
+	var_dump($error_no);
+	die();
+}
+
+
 header('Expires: ' . date('r',  strtotime("today+6 months")), true);
                         header("Pragma: public");
 header("Cache-Control: public");
 header("X-No-Client-Cache:0");
 
+$info = getimagesize($src);
 // Get new dimensions
-list($width, $height) = getimagesize($src);
+list($width, $height) = $info;
 $new_width = get_input('width', 400);
 $ratio = $width / $height;
 $new_height = $new_width / $ratio;

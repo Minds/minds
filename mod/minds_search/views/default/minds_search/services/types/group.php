@@ -4,6 +4,10 @@
  */
  
 $group= get_entity($vars['group']['guid']);
+if(!$group){
+return false;
+}
+
 ?>
 <a href='<?php echo $group->getURL();?>'>
 		<?php echo elgg_view('output/img', array('src'=>$group->getIconURL('large')));?>

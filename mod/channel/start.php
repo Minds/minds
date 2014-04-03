@@ -487,10 +487,11 @@ function channel_custom_vars($user = null) {
 		'contactemail' => '',
 		'location' => '',
 		
-		'social_fb' => '',
-		'social_gplus' => '',
-		'social_twitter' => '',
-		'social_linkedin' => ''		
+		'social_link_fb' => '',
+		'social_link_gplus' => '',
+		'social_link_twitter' => '',
+		'social_link_tumblr' => '',
+		'social_link_linkedin' => ''		
 	);
 
 	if($user){

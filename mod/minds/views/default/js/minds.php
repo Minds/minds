@@ -220,7 +220,7 @@
                         error: function(data){
                         }
                 });
-        }
+	}
 
         minds.remind = function(e){
                 e.preventDefault();
@@ -323,7 +323,7 @@
                                         	offset = $(data).find('li.elgg-item:last').attr('id'); 
                                 	}
 					
-					el.imagesLoaded(function(){
+					el.imagesLoaded().always(function(){
 						 $list.find('.elgg-list').append(el).masonry('appended', el);
 						window.lock_autoscroll = false;
 					});

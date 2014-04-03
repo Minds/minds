@@ -691,7 +691,9 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
 	if(!$image){
 		if($owner_guid){
                 	$owner = get_entity($owner_guid,'user');
-                        $image = $owner->getIconURL('large');
+                        if(!$owner)
+				return false; //the user doesn't exist
+			$image = $owner->getIconURL('large');
                         if (!$image && $ex_email) { // If we've been passed an email address in the metadata, and we can't find an image in the posting, then try and grab a gravatar, or fallback to poster icon
                             $image = minds_fetch_gravatar_url($ex_email, 'large', $owner->getIconURL('large'));
                         }

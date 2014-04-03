@@ -25,7 +25,7 @@ class DatabaseCall{
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
 		
 		try{
-			$pool = new ConnectionPool($this->keyspace, $this->servers, null, 1);
+			$pool = new ConnectionPool($this->keyspace, $this->servers, null, 2);
 		
 			$this->pool = $pool;
 		
@@ -193,18 +193,24 @@ class DatabaseCall{
 	 * Removes attributes (columns) from a row
 	 * @param int/string $key - the key
 	 * @param array $attributes - the attributes to remove (columns)
+	 * @param bool $verify - return a count of true or false? (disable if doing batches as this can slow down)
 	 * @return mixed
 	 */
-	public function removeAttributes($key, array $attributes = array()){
+	public function removeAttributes($key, array $attributes = array(), $verify= true){
 		if(empty($attributes)){
 			return false; // don't allow as this will delete the row!
 		}
-		$count = $this->countRow($key);
+		if($verify)
+			$count = $this->countRow($key);
 		$this->cf->remove($key, $attributes);
 		//the remove function doens't return a value, so we need to check.. far from ideal..
-		if($this->countRow($key) == $count-count($attributes)){
+		if($verify && $this->countRow($key) == $count-count($attributes)){
 			return true;
 		}
+
+		if(!$verify)
+			return;		
+
 		return false;
 	}
 

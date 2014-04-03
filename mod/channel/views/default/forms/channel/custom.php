@@ -123,11 +123,11 @@ $reset_input = elgg_view('output/url', array(
 										'is_action' => true
 									));
 									
-$social_fb_input = elgg_view('input/text', array('name'=>'social_fb', 'value'=>$user->social_fb));
-$social_twitter_input = elgg_view('input/text', array('name'=>'social_twitter', 'value'=>$user->social_twitter));
-$social_gplus_input = elgg_view('input/text', array('name'=>'social_gplus', 'value'=>$user->social_gplus));
-$social_tumblr_input = elgg_view('input/text', array('name'=>'social_tumblr', 'value'=>$user->social_tumblr));
-$social_linkedin_input = elgg_view('input/text', array('name'=>'social_linkedin', 'value'=>$user->social_linkedin));
+$social_fb_input = elgg_view('input/text', array('name'=>'social_link_fb', 'value'=>$user->social_link_fb));
+$social_twitter_input = elgg_view('input/text', array('name'=>'social_link_twitter', 'value'=>$user->social_link_twitter));
+$social_gplus_input = elgg_view('input/text', array('name'=>'social_link_gplus', 'value'=>$user->social_link_gplus));
+$social_tumblr_input = elgg_view('input/text', array('name'=>'social_link_tumblr', 'value'=>$user->social_link_tumblr));
+$social_linkedin_input = elgg_view('input/text', array('name'=>'social_link_linkedin', 'value'=>$user->social_link_linkedin));
 
 $form = <<<FORM
 				

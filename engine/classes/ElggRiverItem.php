@@ -32,7 +32,7 @@ class ElggRiverItem {
 	 * Load a news post
 	 */
 	public function load($attrs){
-		if(is_int($attrs)){
+		if(is_int($attrs) || is_string($attrs)){
 			$db = new DatabaseCall('newsfeed');
 			$data = $db->getRow($attrs);
 		}
@@ -211,14 +211,15 @@ class ElggRiverItem {
 		array_push($followers, $this->object->container_guid); //add to containers timeline
 		
 		if($this->subject->guid == elgg_get_logged_in_user_guid())
-			array_push($followers, "personal" . $this->subject->guid);//add to their personal feed
+			array_push($followers, "personal:" . $this->subject->guid);//add to their personal feed
 		
 		if(isset($this->to_guid))
 			array_push($followers, $this->to_guid); 
-		
+
+			
+		$db = new DatabaseCall('timeline');	
 		foreach($followers as $follower_guid){
-			$db = new DatabaseCall('timeline');
-			$db->removeAttributes($follower_guid, array($this->id));
+			$db->removeAttributes($follower_guid, array($this->id), false);
 		}
 	}
 	
@@ -240,10 +241,11 @@ class ElggRiverItem {
 	 * Delete a river post
 	 */
 	function delete(){
+		 $this->removeFromTimelines();
 		$db = new DatabaseCall('newsfeed');
-		$db->remove($this->id);
+		$db->removeRow($this->id);
 		
-		$this->removeFromTimelines();
+	//	$this->removeFromTimelines();
 	}
 	
 	/**
