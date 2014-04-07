@@ -6,6 +6,14 @@
  */
 
 ?>
+.minds-group-list{
+	padding:0 !important;
+}
+.minds-group-list > li{
+	width:44%;
+	margin:8px 1%;
+	height:auto;
+}
 .group-action-button{
 	position:absolute;
 	right:20px;

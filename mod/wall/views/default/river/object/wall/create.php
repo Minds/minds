@@ -36,7 +36,7 @@ if($object->owner_guid == $object->to_guid || $to instanceof ElggGroup || !$to){
 
 if($item->attachment_guid){
 	$attachment = elgg_view('output/img', array( 
-		'src' => elgg_get_site_url() . "wall/attachment/$item->subject_guid/$item->attachment_guid",
+		'src' => elgg_get_site_url() . "photos/thumbnail/$item->attachment_guid/large",
 		'class' => 'river-img-attachment'
 	)); //we are just going to assume they are images... change soon
 }
