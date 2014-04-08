@@ -16,6 +16,8 @@ class TidypicsImage extends ElggFile {
 	}
 
 	public function __construct($guid = null) {
+		elgg_load_library('tidypics:upload');
+		
 		parent::__construct($guid);
 		$this->title = $this->getTitle();
 	}
@@ -288,9 +290,9 @@ class TidypicsImage extends ElggFile {
 	public function getThumbnail($size) {
 		if(!isset($this->thumbnail)){
 			$prefix = "image/" . $this->container_guid . "/";
-                	$filename = $this->getFilename().'.jpg';
-             		$filename = substr($filename, strrpos($filename, '/') + 1);
-             		$this->thumbnail = $prefix . 'thumb' . $filename;
+            $filename = $this->getFilename().'.jpg';
+            $filename = substr($filename, strrpos($filename, '/') + 1);
+            $this->thumbnail = $prefix . 'thumb' . $filename;
 			$this->smallthumb = $prefix . 'smallthumb' . $filename;
 			$this->largethumb = $prefix . 'largethumb' . $filename;
 		}

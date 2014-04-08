@@ -54,28 +54,15 @@ if (!$guid) {
 /**
  * attachement
  */
-$attachment = new ElggFile();
+$attachment = new PostAttachment();
 
 if (isset($_FILES['attachment']['name']) && !empty($_FILES['attachment']['name'])) {
-		
-	$prefix = "attachments/";
-	$filestorename = elgg_strtolower(time().$_FILES['attachment']['name']);
 			
 	$mime_type = $attachment->detectMimeType($_FILES['attachment']['tmp_name'], $_FILES['attachment']['type']);
-	$attachment->setFilename($prefix . $filestorename);
 	$attachment->setMimeType($mime_type);
-	$attachment->originalfilename = $_FILES['attachment']['name'];
 	$attachment->simpletype = file_get_simple_type($mime_type);
-			
-	//save the space so we can add it to our quota. 
-	$attachment->size = $_FILES['attachment']['size'];
 		
-	// Open the file to guarantee the directory exists
-	$attachment->open("write");
-	$attachment->close();
-	move_uploaded_file($_FILES['upload']['tmp_name'], $attachment->getFilenameOnFilestore());
-		
-	$attachment->save();
+	$attachment->save($_FILES);
 }
 
 $river = new ElggRiverItem(array(

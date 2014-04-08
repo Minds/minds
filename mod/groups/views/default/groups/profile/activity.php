@@ -42,7 +42,7 @@ $content .= elgg_view_form('deck_river/post',
 	)
 );
 
-$content  .= elgg_list_river(array('owner_guid'=>$group->guid));
+$content  .= elgg_list_river(array('owner_guid'=>$group->guid, 'masonry'=>true, 'list_class'=>'minds-group-list'));
 
 //echo elgg_view_module('wall', null, $content);
 
