@@ -39,6 +39,13 @@ if($item->attachment_guid){
 		'src' => elgg_get_site_url() . "photos/thumbnail/$item->attachment_guid/large",
 		'class' => 'river-img-attachment'
 	)); //we are just going to assume they are images... change soon
+} elseif($item->meta_title){
+	$attachment = elgg_view('output/preview', array(
+		'title' => $item->meta_title,
+		'description' => $item->meta_description,
+		'icon' => $item->meta_icon,
+		'url' => $item->meta_url
+	));
 }
 
 echo elgg_view('river/elements/layout', array(
