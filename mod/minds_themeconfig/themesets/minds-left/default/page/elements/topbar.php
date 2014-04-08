@@ -39,8 +39,9 @@
 		<?php } ?>
 		<a href="<?php echo elgg_get_site_url();?>settings/user/<?php echo $user->username;?>">Settings</a> | <a href="<?php echo elgg_get_site_url();?>action/logout">Exit</a>
 	</span>	
-	<?php } else { ?>
-		<?php echo elgg_view_form('login'); ?>
-		
-	<?php } ?>
+	<?php } else { 
+		echo elgg_view('output/url', array('text'=>'Sign up', 'href'=>elgg_get_site_url() .'register', 'class'=> 'elgg-button minds-button-register'));
+		echo elgg_view('output/url', array('text'=>'Login', 'href'=>elgg_get_site_url() .'login', 'class'=> 'elgg-button minds-button-login'));
+	
+ } ?>
 </div>

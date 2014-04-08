@@ -9,7 +9,10 @@
 elgg_register_event_handler('init', 'system', 'orientation_init');
 
 function orientation_init() {
-		
+
+	  elgg_register_library('orientation', elgg_get_plugins_path() . 'orientation/lib/orientation.php');
+	
+	
 	elgg_extend_view('css/elgg','orientation/css');
 	elgg_extend_view('js/elgg','orientation/js');
 	
@@ -18,8 +21,6 @@ function orientation_init() {
 	}
 	
 	elgg_register_page_handler('orientation', 'orientation_page_handler');
-	
-	elgg_register_library('orientation', elgg_get_plugins_path() . 'orientation/lib/orientation.php');
 	
 	global $SESSION;
 	//On first login, promt user for bootcamp
