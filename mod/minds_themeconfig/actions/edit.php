@@ -31,11 +31,15 @@
             if ($resized) {
                 @mkdir($theme_dir);
                 
-		file_put_contents($theme_dir . $name.'.png', $resized);
+		if (!file_put_contents($theme_dir . $name.'.png', $resized)) {
+		    register_error("The file was resized, but there was a problem saving it.");
+		}
                 
                 elgg_set_plugin_setting('logo_override', 'true', 'minds_themeconfig');
                 elgg_set_plugin_setting('logo_override_ts', time(), 'minds_themeconfig');
             }
+	    else
+		register_error("There was a problem generating your image.");
 
             if (isset($_FILES['logo']) && ($_FILES['logo']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['logo']['error'] != 0) {
                 register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
@@ -63,12 +67,16 @@
             $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
             @mkdir($theme_dir);
 
-            file_put_contents($theme_dir . $name.'.jpg', $resized);
+            if (!file_put_contents($theme_dir . $name.'.jpg', $resized)) {
+		register_error("The file was resized, but there was a problem saving it.");
+	    }
 
             elgg_set_plugin_setting('logo_favicon', 'true', 'minds_themeconfig');
             elgg_set_plugin_setting('logo_favicon_ts', time(), 'minds_themeconfig');
             
         }
+	else
+	    register_error("There was a problem generating your image.");
 
         if (isset($_FILES['favicon']) && ($_FILES['favicon']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['favicon']['error'] != 0) {
             register_error(minds_themeconfig_codeToMessage($_FILES['favicon']['error'])); // Debug uploads

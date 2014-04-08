@@ -1,5 +1,6 @@
 <?php
 if(!elgg_is_logged_in()){
+	exit;
 	return false; 
 }
 
