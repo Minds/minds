@@ -16,7 +16,7 @@ class TidypicsImage extends ElggFile {
 	}
 
 	public function __construct($guid = null) {
-		elgg_load_library('tidypics:upload');
+//		elgg_load_library('tidypics:upload');
 		
 		parent::__construct($guid);
 		$this->title = $this->getTitle();

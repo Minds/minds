@@ -23,7 +23,7 @@ if (elgg_is_sticky_form('register')) {
 	- OR - 
 	
 	<div class="blob" style="margin: 16px 0; font-style: italic; color: #888;">
-		Anonymous accounts are fine with us. We encourage people to use of TOR for encrypted and secure browsing.
+		Anonymous accounts are fine with us.
 	</div>
 	<!--<div class="mtm">
 		<label><?php echo elgg_echo('name'); ?></label><br />

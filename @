@@ -27,14 +27,7 @@ if($error_no){
 	var_dump($error_no);
 	die();
 }
-
-if(!$image){
-return false;
-}else{
-$filename = '/tmp/'.time();
-file_put_contents($filename, $image);
-$image = imagecreatefromstring($image);
-}
+var_dump($image);
 /*
 header('Expires: ' . date('r',  strtotime("today+6 months")), true);
                         header("Pragma: public");
@@ -44,6 +37,7 @@ header("X-No-Client-Cache:0");
 // Get new dimensions
 $width = imagesx($image);
 $height = imagesy($image);
+var_dump($width, $height); exit;
 $new_width = get_input('width', 400);
 $ratio = $width / $height;
 $new_height = $new_width / $ratio;
@@ -60,7 +54,7 @@ if(get_input('height')){
 // Resample
 $image_p = imagecreatetruecolor($new_width, $new_height);
 
-$mime = getimagesize($filename);
+$mime = getimagesize($src);
 $mime = $mime['mime'];
 switch($mime){
 	case 'image/gif':
@@ -72,12 +66,12 @@ switch($mime){
 	return;
 	break;
 	case 'image/png':
-	$image = imagecreatefrompng($filename);
+	$image = imagecreatefrompng($src);
 	break;
 	case 'image/bmp':
 	case 'image/jpeg':
 	default:
-	$image = imagecreatefromjpeg($filename);
+	$image = imagecreatefromjpeg($src);
 }
 if(!$image){
 	//we couldn't get the images, just output directly
@@ -91,5 +85,4 @@ header('Content-type: image/jpeg');
 header('Access-Control-Allow-Origin: *');
 // Output
 imagejpeg($image_p, null, 75);
-unlink($filename);
 exit;

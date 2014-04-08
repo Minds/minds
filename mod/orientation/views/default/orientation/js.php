@@ -3,5 +3,5 @@
 $('.orientation-content .connect-network').on('click', function(e){
 	e.preventDefault();
 	
-	window.open($(this).attr('href'), "Authorize", "width=800,height=400");
+	window.open($(this).attr('href'), "Authorize", "width=1200,height=500");
 });
