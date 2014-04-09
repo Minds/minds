@@ -22,7 +22,7 @@ function _elgg_session_boot($force = false) {
 
         $handler = new ElggSessionHandler();
         session_set_save_handler($handler);
-		ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // Persistent cookies
+	ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // Persistent cookies
         session_name('minds');
         
         session_start();
@@ -51,6 +51,13 @@ function _elgg_session_boot($force = false) {
 	if (!isset($_SESSION['__elgg_session'])) {
 		$_SESSION['__elgg_session'] = md5(microtime() . rand());
 	}
+
+	if(isset($_SESSION['user']))
+		setcookie('loggedin', 1, time() + 3600, '/'); 
+	else 
+		setcookie('loggedin', 0, time() + 3600, '/');
+
+	header('X-Powered-By: Minds', true);
 }
 
 register_shutdown_function('_elgg_session_shutdown');
@@ -67,9 +74,9 @@ function _elgg_session_shutdown(){
 	        $params["path"], $params["domain"],
 	        $params["secure"], $params["httponly"]
 	    );
+		$_SESSION = array();
 		unset($_COOKIE[session_name()]);
 		session_destroy();
-		echo 'our cookie should be.. gone';
 	}
 }
 
@@ -375,6 +382,8 @@ function login(ElggUser $user, $persistent = false) {
 	// Update statistics
 	set_last_login($_SESSION['guid']);
 	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
+
+	 setcookie('loggedin', 1, time() + 3600, '/');
 
 	return true;
 }
