@@ -14,7 +14,13 @@ if (isset($vars['class'])) {
 	$class = "elgg-input-text";
 }
 
+if (isset($vars['placeholder'])) {
+	$placeholder = "placeholder=\"{$vars['placeholder']}\"";
+} else {
+	$placeholder = "";
+}
+
 $value = htmlentities($vars['value'], ENT_QUOTES, 'UTF-8');
 
 ?>
-<input type="text" name="<?php echo $vars['name']; ?>" value="<?php echo $value; ?>" <?php echo $class; ?> />
+<input type="text" name="<?php echo $vars['name']; ?>" value="<?php echo $value; ?>" <?php echo $class; echo $placeholder; ?> />

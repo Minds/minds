@@ -251,8 +251,9 @@ class ElggInstaller {
 	 */
 	protected function welcome($vars) {
 	//	$this->render('welcome');
-		//$this->continueToNextStep('welcome');
-		forward('?step=settings');
+		$this->continueToNextStep('welcome');
+		
+	//	forward('?step=settings');
 	}
 
 	/**
@@ -525,12 +526,12 @@ class ElggInstaller {
 	protected function complete() {
 		$params = array();
 		if ($this->autoLogin) {
-			$params['destination'] = 'admin/appearance/themeselection';
+			$params['destination'] = 'register/orientation';
 		} else {
 			$params['destination'] = 'index.php';
 		}
-
-		$this->render('complete', $params);
+		forward( 'register/orientation');
+	//	$this->render('complete', $params);
 	}
 
 	/**
@@ -751,17 +752,7 @@ class ElggInstaller {
 		$completeIndex = array_search('complete', $this->getSteps());
 		$stepIndex = array_search($step, $this->getSteps());
 
-		// To log in the user, we need to use the Elgg core session handling.
-		// Otherwise, use default php session handling
-		$useElggSession = ($stepIndex == $adminIndex && $this->isAction) ||
-				$stepIndex == $completeIndex;
-		if (!$useElggSession) {
-			session_name('Elgg_install');
-			session_start();
-			elgg_unregister_event_handler('boot', 'system', 'session_init');
-		}
-
-		if ($stepIndex > $dbIndex) {
+		//if ($stepIndex > $dbIndex) {
 			// once the database has been created, load rest of engine
 			global $CONFIG;
 			$lib_dir = "{$CONFIG->default_path}engine/lib/";
@@ -798,17 +789,17 @@ class ElggInstaller {
 			//setup_db_connections();
 			register_translations(dirname(dirname(__FILE__)) . "/languages/");
 
-            //db_init(); // DB needs to be initialised before session start.
 			if ($stepIndex > $settingsIndex) {
 				$CONFIG->site_guid = (int) datalist_get('default_site');
 				$CONFIG->site_id = $CONFIG->site_guid;
 				$CONFIG->site = get_entity($CONFIG->site_guid, 'site');
 				$CONFIG->dataroot = datalist_get('dataroot');
-				_elgg_session_boot(NULL, NULL, NULL);
 			}
-
+			
+			elgg_load_plugins(); 
 			elgg_trigger_event('init', 'system');
-		}
+			  _elgg_session_boot(true);//boot the session
+	//	}
 	}
 
 	/**
@@ -1436,51 +1427,35 @@ class ElggInstaller {
 	 * @return void
 	 */
 	protected function enablePlugins() {
-		/*elgg_generate_plugin_entities();
-		$plugins = elgg_get_plugins('any');
-		foreach ($plugins as $plugin) {
-			if ($plugin->getManifest()) {
-				if ($plugin->getManifest()->getActivateOnInstall()) {
-					$plugin->activate();
-				}
-			}
-		}*/
-//		elgg_generate_plugin_entities();
-//		$installed_plugins = elgg_get_plugins('any');
-
 		/**
 		 * Default plugins to install, ordering included
 		 */
-		$defaults = array(	'uservalidationbyemail', 
-							'htmlawed',
-							'logbrowser',
-							'logrotate',
-							'oauth2', 
-							'oauth_api', 
-							'channel', 
-							'groups',
-							'wall',
-							'tidypics', 
-							//'analytics',
-							'archive', 
-							'embed',
-							'embed_extender',
-							'blog',
-							'thumbs',
-							'minds_search', 
-							'minds_comments',
-							'minds_social',
-							'minds_webservices',
-                                                        //'minds_themeconfig',
-                                                        'minds_wordpress',
-                                                        //'anypage',
-							'persona',
-							'notifications',
-							//'minds_connect',
-							'orientation',
-							'mobile',
-							'minds'
-						);
+		$defaults = array(
+			'htmlawed',
+			'logbrowser',
+			'logrotate',
+			'oauth2', 
+			'oauth_api', 
+			'channel', 
+			'groups',
+			'wall',
+			'tidypics', 
+			'archive', 
+			'embed',
+			'embed_extender',
+			'blog',
+			'thumbs',
+			'minds_search', 
+			'minds_comments',
+			'minds_social',
+			'minds_webservices',
+			'minds_wordpress',
+			'persona',
+			'notifications',
+			'orientation',
+			'mobile',
+			'minds'
+		);
 		foreach($defaults as $plugin_id){
 			$plugin = new ElggPlugin($plugin_id);
 			$plugin->setPriority('last');

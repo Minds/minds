@@ -6,13 +6,13 @@
     foreach (array(
         'logo_main' => array(
             'w' => 400,
-            //'h' => 90,
+            'h' => 90,
             'square' => false,
             'upscale' => true
         ),
         'logo_topbar' => array(
             'w' => 400,
-//            'h' => 30,
+	    'h' => 30,
             'square' => false,
             'upscale' => true
         ),
@@ -26,9 +26,10 @@
 	    global $CONFIG;
 	    $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
 	    
-	    $resized = get_resized_image_from_uploaded_file('logo', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
-
-            if ($resized) {
+	   // $resized = get_resized_image_from_uploaded_file('logo', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
+	$resized = get_resized_image_from_existing_file($_FILES['logo']['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale'], 'png');
+            
+	if ($resized) {
                 @mkdir($theme_dir);
                 
 		if (!file_put_contents($theme_dir . $name.'.png', $resized)) {

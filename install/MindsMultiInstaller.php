@@ -11,9 +11,11 @@ class MindsMultiInstaller extends ElggInstaller {
         //       'database',
         'settings',
         'admin',
-        'minds',
+       // 'minds',
 	'theme',
+	'carousel',
 	'import',
+	'email',
         'complete',
     );
     protected $status = array(
@@ -36,18 +38,10 @@ class MindsMultiInstaller extends ElggInstaller {
         global $CONFIG;
         if (isset($CONFIG->web_services_url))
             $this->web_services_url = $CONFIG->web_services_url;
-        
-        // Now, see if we're passed any setup options - if so, save them to session
-        if ($name = get_input('name'))
-                $_SESSION['m_name'] = $name;
-        if ($email = get_input('email'))
-                $_SESSION['m_email'] = $email;
-        if ($username = get_input('username'))
-                $_SESSION['m_username'] = $username;
 	
 	// Always log admin in
 	$this->setAutoLogin(true);
-	
+
     }
 
     /**
@@ -73,6 +67,18 @@ class MindsMultiInstaller extends ElggInstaller {
         $CONFIG->entity_types = array('group', 'object', 'site', 'user');
     }
 
+    protected function finishBootstraping($step){
+	parent::finishBootstraping($step);
+	
+	if ($name = get_input('name'))
+                $_SESSION['m_name'] = $name;
+        if ($email = get_input('email'))
+                $_SESSION['m_email'] = $email;
+        if ($username = get_input('username'))
+                $_SESSION['m_username'] = $username;
+    
+    }
+
     /**
      * Renders the data passed by a controller
      *
@@ -82,8 +88,8 @@ class MindsMultiInstaller extends ElggInstaller {
      * @return void
      */
     protected function render($step, $vars = array()) {
-
-        $vars['next_step'] = $this->getNextStep($step);
+        
+	$vars['next_step'] = $this->getNextStep($step);
 
         $title = elgg_echo("install:$step");
         $body = elgg_view("install/mindspages/$step", $vars);
@@ -319,48 +325,19 @@ class MindsMultiInstaller extends ElggInstaller {
 
         global $CONFIG;
 
-        // Ensure plugin manager is activated
-        /*$plugin = new ElggPlugin('pluginmanager');
-	$plugin->setPriority('last');
-        $plugin->activate();
-
-        $plugin = new ElggPlugin('mindsmulti_pluginmanager');
-	$plugin->setPriority('last');
-        $plugin->activate();
-*/
         // Now, specify what plugins are visible for any given domain
         $domain = $CONFIG->elgg_multisite_settings;
         $user_editable_plugins = array(
-            //'uservalidationbyemail', 
-            //'htmlawed',
-            //'logbrowser',
-            //'logrotate',
-            //'oauth2', 
-            //'oauth_api', 
-            'channel',
             'groups',
-            'wall',
-            //'tidypics', 
-            'analytics',
-		'archive',
-            //'embed',
-            //'embed_extender',
+	    'archive',
             'blog',
-            //'thumbs',
-            //'minds_search', 
-            //'minds_comments',
-            //'minds_social',
-            //'minds_webservices',
+    
             'persona',
             'notifications',
-            'minds_connect',
-                //'bootcamp',
+            //'minds_connect',
             'mobile',
-                //'minds'
             'minds_themeconfig',
 		'anypage',
-            'Login-As',
-            'minds_widgets',
             'minds_wordpress',
         );
         foreach ($user_editable_plugins as $plugin_id) {
@@ -510,6 +487,17 @@ class MindsMultiInstaller extends ElggInstaller {
      */
     protected function theme($submissionVars) {
 
+	//Themeset options
+	$themesets = minds_themeconfig_get_themesets();
+
+	$themeset_options = array();
+	foreach($themesets as $themeset){
+		$icon = "<img src='". minds_themeconfig_get_themeset_icon($themeset) . "'/>";
+		$content = "$icon <h3>$themeset</h3>";
+		$themeset_options[$content] = $themeset;
+	}
+
+
         $formVars = array(
             'logo' => array(
                 'type' => 'file',
@@ -521,17 +509,18 @@ class MindsMultiInstaller extends ElggInstaller {
 		'value' => '',
 		'required' => FALSE
 	    ),
-            /*'style' => array(
+            'themeset' => array(
                 'type' => 'radio',
-                'value' => 'theme1',
-		'options' => array('theme1'=>'theme1', 'theme2'=>'theme2'),
+                'value' => 'minds-left',
+		'options' => $themeset_options,
                 'required' => TRUE,
-            ),*/
-	    'page_header' => array(
+     		'class'=> 'themesets'
+	       ),
+	    /*'page_header' => array(
 		'type' => 'text',
 		'value' => elgg_get_plugin_setting('frontpagetext','minds_themeconfig'),
 		'required' => FALSE
-	    )
+	    )*/
         );
 
         if ($this->isAction) {
@@ -544,7 +533,7 @@ class MindsMultiInstaller extends ElggInstaller {
 
                 system_message(elgg_echo('install:success:theme'));
 
-                $this->continueToNextStep('import');
+                $this->continueToNextStep('theme');
             } while (FALSE);  // PHP doesn't support breaking out of if statements
         }
 
@@ -631,11 +620,16 @@ class MindsMultiInstaller extends ElggInstaller {
 	}
 
 	// Save frontpage text
-	elgg_set_plugin_setting('frontpagetext', $submissionVars['page_header'], 'minds_themeconfig');
-   
-	elgg_set_plugin_setting('themeset', 'minds-left', 'minds_themeconfig');
+	//elgg_set_plugin_setting('frontpagetext', $submissionVars['page_header'], 'minds_themeconfig');
+  
+	elgg_set_plugin_setting('themeset', $submissionVars['themeset'], 'minds_themeconfig');
 	datalist_set('site_featured_menu_use_icons', 'no');
- 
+	
+	return true; 
+    }
+
+    public function carousel($submissionVars){
+	 $this->continueToNextStep('carousel');
     }
 
     /**
@@ -649,18 +643,21 @@ class MindsMultiInstaller extends ElggInstaller {
         $formVars = array(
             'import' => array(
                 'type' => 'radio',
-                'value' => true,
+                'value' => 'no',
                 'options' => array('Yes'=>'yes', 'No'=>'no'),
-                'required' => TRUE,
+                'required' => FALSE,
             ),
+	    'scraper' => array(
+		'type'=>'text',
+		'placeholder'=> 'eg. http://mysite.com/feed.rss',
+		'requied'=> false
+	    )
         );
 
         if ($this->isAction) {
             do {
-                if ($submissionVars['import'] == 'yes') {
 			$this->doImport($submissionVars);
 		     system_message(elgg_echo('install:success:import'));
-                }
 
                 $this->continueToNextStep('import');
             } while (FALSE);  // PHP doesn't support breaking out of if statements
@@ -678,31 +675,78 @@ class MindsMultiInstaller extends ElggInstaller {
     protected function doImport($submissionVars) {
 
         global $CONFIG;
-	$endpoint = 'http://www.minds.com/blog/trending?view=json';
-	$result = json_decode(file_get_contents($endpoint));
-	$blogs = $result->object->blog;
-	
-	//get the only user registered...
-	$options = array('type' => 'user', 'full_view' => false, 'limit'=>1);
-	$admin = elgg_get_entities($options);
 
-	foreach($blogs as $blog){
-		$g = new GUID(); 
-		$b = new ElggObject();
-		$b->subtype = 'blog';
-		$b->owner_guid = $admin[0]->guid;
-		$b->title = $blog->title;
-		$b->description = $blog->description;
-		$b->minds_import = true;
-		$b->featured_id = $g->generate();
-		$b->featured = 1;
-		$b->save();
-		$b->feature();
-	
-		add_to_river('river/object/'.$b->getSubtype().'/feature', 'feature', $b->getOwnerGUID(), $b->getGuid());
+	if ($submissionVars['import'] == 'yes') {
+		$endpoint = 'http://www.minds.com/blog/trending?view=json';
+		$result = json_decode(file_get_contents($endpoint));
+		$blogs = $result->object->blog;
+		
+		//get the only user registered...
+		$options = array('type' => 'user', 'full_view' => false, 'limit'=>1);
+		$admin = elgg_get_entities($options);
 
-
+		foreach($blogs as $blog){
+			$g = new GUID(); 
+			$b = new ElggBlog();
+			$b->owner_guid = $admin[0]->guid;
+			$b->title = $blog->title;
+			$b->description = $blog->description;
+			$b->minds_import = true;
+			$b->featured_id = $g->generate();
+			$b->featured = 1;
+			$b->save();
+			$b->feature();
+		
+			add_to_river('river/object/'.$b->getSubtype().'/feature', 'feature', $b->getOwnerGUID(), $b->getGuid());
+		}
 	}
-        return true;
+        
+	if($submissionVars['scraper']){
+		$scraper = new MindsScraper();
+		$scraper->feed_url = $submissionVars['scraper'];
+		$scraper->save();
+	}
+	return true;
     }
+	
+     /**
+     * Configure the sites smtp settings
+     * @param array $vars Not used
+     *
+     * @return void
+     */
+    protected function email($submissionVars) {
+
+	$this->continueToNextStep('email');
+	return true;	
+
+        $formVars = array(
+            'default' => array(
+                'type' => 'radio',
+                'value' => 'yes',
+                'options' => array('Yes'=>'yes', 'No'=>'no'),
+                'required' => True,
+            ),
+            'scraper' => array(
+                'type'=>'text',
+                'placeholder'=> 'eg. http://mysite.com/feed.rss',
+                'requied'=> false
+            )
+        );
+
+        if ($this->isAction) {
+            do {
+                        $this->doImport($submissionVars);
+                     system_message(elgg_echo('install:success:import'));
+
+                $this->continueToNextStep('import');
+            } while (FALSE);  // PHP doesn't support breaking out of if statements
+        }
+
+        $formVars = $this->makeFormSticky($formVars, $submissionVars);
+
+        $this->render('import', array('variables' => $formVars));
+    }
+
+
 }

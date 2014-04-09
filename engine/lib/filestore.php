@@ -183,7 +183,7 @@ $x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE, $output = 'jpeg', $quality
 	// grab a compressed jpeg version of the image
 	ob_start();
 	if($output == 'png'){
-		imagepng($new_image, NULL, $quality);	
+		imagepng($new_image);	
 	} else {
 		imagejpeg($new_image, NULL, $quality);
 	} 
@@ -270,7 +270,7 @@ function get_image_resize_parameters($width, $height, $options) {
 		// non-square new image
 		$new_width = $maxwidth;
 		$new_height = $maxheight;
-
+		
 		// maintain aspect ratio of original image/crop
 		if (($selection_height / (float)$new_height) > ($selection_width / (float)$new_width)) {
 			$new_width = floor($new_height * $selection_width / (float)$selection_height);

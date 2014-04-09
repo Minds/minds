@@ -8,8 +8,64 @@
  * @subpackage Session
  */
 
-/** Elgg magic session */
+/** 
+ * Elgg magic session 
+ * 
+ * There is nothing magic about this. @deprecated
+ */
 global $SESSION;
+
+/**
+ * @return void
+ */
+function _elgg_session_boot($force = false) {
+
+        $handler = new ElggSessionHandler();
+        session_set_save_handler($handler);
+                
+        session_name('minds');
+        
+        session_start();
+        session_cache_limiter('public');
+
+        elgg_register_action('login', '', 'public');
+        elgg_register_action('logout');
+        
+	// Register a default PAM handler
+        register_pam_handler('pam_auth_userpass');
+
+	//there are occassions where we may want a session for loggedout users. 
+	if($force)
+		$_SESSION['force'] = true;
+
+	// is there a remember me cookie
+	if (isset($_COOKIE['mindsperm'])) { 
+		// we have a cookie, so try to log the user in
+		$cookie = md5($_COOKIE['mindsperm']);
+		if ($user = get_user_by_cookie($cookie)) {
+			login($user);
+		}
+	}
+
+	// Generate a simple token (private from potentially public session id)
+	if (!isset($_SESSION['__elgg_session'])) {
+		$_SESSION['__elgg_session'] = md5(microtime() . rand());
+	}
+}
+
+register_shutdown_function('_elgg_session_shutdown');
+
+/**
+ * Session shutdown function. Erase the session if we are not loggedin
+ */
+function _elgg_session_shutdown(){
+	 
+	if ( isset( $_COOKIE[session_name()] ) && ( !elgg_is_logged_in() || !isset($_SESSION['user'])) && !isset($_SESSION['force'])){
+		//clear session from disk
+		session_destroy();
+		setcookie( session_name(), '', time()-3600, "/" );
+	}
+}
 
 /**
  * Return the current logged in user, or NULL if no user is logged in.
@@ -21,12 +77,12 @@ global $SESSION;
  * @return ElggUser
  */
 function elgg_get_logged_in_user_entity() {
-	global $SESSION, $USERNAME_TO_GUID_MAP_CACHE;
+	global $USERNAME_TO_GUID_MAP_CACHE;
 	
-	if (isset($SESSION)) {
+	if (isset($_SESSION['user'])) {
 		//cache username
-		$USERNAME_TO_GUID_MAP_CACHE[$SESSION['username']] = $SESSION['guid'];
-		return $SESSION['user'];
+		$USERNAME_TO_GUID_MAP_CACHE[$_SESSION['username']] = $_SESSION['guid'];
+		return $_SESSION['user'];
 	}
 
 	return NULL;
@@ -278,13 +334,11 @@ function login(ElggUser $user, $persistent = false) {
 		throw new LoginException(elgg_echo('LoginException:DisabledUser'));
 	}
 
-	_elgg_session_boot(true);
-	global $SESSION;
-	$SESSION['user'] = $user;
-	$SESSION['guid'] = $user->getGUID();
-	$SESSION['id'] = $SESSION['guid'];
-	$SESSION['username'] = $user->username;
-	$SESSION['name'] = $user->name;
+	$_SESSION['user'] = $user;
+	$_SESSION['guid'] = $user->getGUID();
+	$_SESSION['id'] = $_SESSION['guid'];
+	$_SESSION['username'] = $user->username;
+	$_SESSION['name'] = $user->name;
 	//$SESSION['friends'] = $user->getFriends(null, 200, 0, 'guids');
 	//$SESSION['friendsof'] = $user->getFriendsOf(null, 200, 0, 'guids');
 
@@ -300,14 +354,12 @@ function login(ElggUser $user, $persistent = false) {
 	}
 	
 	if (!$user->save() || !elgg_trigger_event('login', 'user', $user)) {
-		unset($SESSION['username']);
-		unset($SESSION['name']);
-		unset($SESSION['guid']);
-		unset($SESSION['id']);
-		unset($SESSION['user']);
+		unset($_SESSION['username']);
+		unset($_SESSION['name']);
+		unset($_SESSION['guid']);
+		unset($_SESSION['id']);
+		unset($_SESSION['user']);
 		setcookie("mindsperm", "", (time() - (86400 * 30)), "/");
-		_elgg_session_boot();
-		setcookie("Elgg", "", (time() - (86400 * 30)), "/");
 		throw new LoginException(elgg_echo('LoginException:Unknown'));
 	}
 
@@ -315,7 +367,7 @@ function login(ElggUser $user, $persistent = false) {
 	session_regenerate_id();
 
 	// Update statistics
-	set_last_login($SESSION['guid']);
+	set_last_login($_SESSION['guid']);
 	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
 
 	return true;
@@ -339,21 +391,20 @@ function logout() {
 		}
 	}
 	
-	global $SESSION;
-	if (isset($SESSION['user'])) {
-		if (!elgg_trigger_event('logout', 'user', $SESSION['user'])) {
+	if (isset($_SESSION['user'])) {
+		if (!elgg_trigger_event('logout', 'user', $_SESSION['user'])) {
 			return false;
 		}
-		$SESSION['user']->code = "";
-		$SESSION['user']->save();
+		$_SESSION['user']->code = "";
+		$_SESSION['user']->save();
 	}
 
-	unset($SESSION['username']);
-	unset($SESSION['name']);
-	unset($SESSION['code']);
-	unset($SESSION['guid']);
-	unset($SESSION['id']);
-	unset($SESSION['user']);
+	unset($_SESSION['username']);
+	unset($_SESSION['name']);
+	unset($_SESSION['code']);
+	unset($_SESSION['guid']);
+	unset($_SESSION['id']);
+	unset($_SESSION['user']);
 
 	setcookie("mindsperm", "", (time() - (86400 * 30)), "/");
 
@@ -362,137 +413,8 @@ function logout() {
 
 	session_destroy();
 	setcookie("Minds", '', (time() - (86400 * 30)), "/");
-	unset($SESSION);
-	$SESSION = NULL;
-
-	// starting a default session to store any post-logout messages.
-	_elgg_session_boot();
-	$SESSION['msg'] = $old_msg;
-
+	
 	return TRUE;
-}
-
-/**
- * Initialises the system session and potentially logs the user in
- *
- * This function looks for:
- *
- * 1. $_SESSION['id'] - if not present, we're logged out, and this is set to 0
- * 2. The cookie 'mindsperm' - if present, checks it for an authentication
- * token, validates it, and potentially logs the user in
- *
- * @uses $_SESSION
- *
- * @return bool
- * @access private
- */
-function _elgg_session_boot($force = false) {
-	global $new_db, $CONFIG, $DB, $SESSION;
-
-	$new_db = serialize($DB);	
-
-	
-	if (isset($_COOKIE['Minds']) || isset($_COOKIE['mindsperm']) || $force) {
-
-		$handler = new ElggSessionHandler();
-		session_set_save_handler(
-                        array($handler, 'open'),
-                        array($handler, 'close'),
-                        array($handler, 'read'),
-                        array($handler, 'write'),
-                        array($handler, 'destroy'),
-                        array($handler, 'gc')
-                );	
-	
-		// the following prevents unexpected effects when using objects as save handlers
-		register_shutdown_function('session_write_close');
-
-		session_name('Minds');
-		//session_start();	
-		
-		$storage = new ElggSessionStorage($handler);
-	
-		// Initialise the magic session
-		$SESSION = new ElggSession($storage);
-	
-		if (!$force && !elgg_is_logged_in() && !isset($_COOKIE['mindsperm'])) {
-			setcookie("Minds", "", (time() - (86400 * 30)), "/");
-		} else {
-			// Generate a simple token (private from potentially public session id)
-			if (!isset($SESSION['__elgg_session'])) {
-				$SESSION['__elgg_session'] = md5(microtime() . rand());
-			}
-			
-			// is there a remember me cookie
-			if (isset($_COOKIE['mindsperm'])) { 
-				// we have a cookie, so try to log the user in
-				$cookie = md5($_COOKIE['mindsperm']);
-				if ($user = get_user_by_cookie($cookie)) {
-					// we have a user, log him in
-					$SESSION['user'] = $user;
-					$SESSION['id'] = $user->getGUID();
-					$SESSION['guid'] = $SESSION['id'];
-				}
-			}
-
-			// test whether we have a user session
-			if (empty($SESSION['guid'])) {
-		
-				// clear session variables before checking cookie
-				unset($SESSION['user']);
-				unset($SESSION['id']);
-				unset($SESSION['guid']);
-				unset($SESSION['code']);
-		
-			} else {
-				// we have a session and we have already checked the fingerprint
-				// reload the user object from database in case it has changed during the session
-				
-				//WE DON'T WANT TO RELOAD THE USER OBJECT EACH PAGE LOAD! (@mark)
-			/*	if ($user = get_user($SESSION['guid'],'user')) {
-					$SESSION['user'] = $user;
-					$SESSION['id'] = $user->getGUID();
-					$SESSION['guid'] = $SESSION['id'];
-				} else {
-					// user must have been deleted with a session active
-					unset($SESSION['user']);
-					unset($SESSION['id']);
-					unset($SESSION['guid']);
-					unset($SESSION['code']);
-					setcookie("Elgg", "", (time() - (86400 * 30)), "/");
-				}*/
-			}
-		
-			if (isset($SESSION['guid'])) {
-				set_last_action($SESSION['guid']);
-			}
-	
-			if(isset($SESSION['user'])){
-				//make sure user entity is cached
-				cache_entity($SESSION['user']);	
-			}
-	
-			// Finally we ensure that a user who has been banned with an open session is kicked.
-			if ((isset($SESSION['user'])) && ($SESSION['user']->isBanned())) {
-				session_destroy();
-				setcookie("Minds", "", (time() - (86400 * 30)), "/");
-				return false;
-			}
-		}
-	} 
-	
-	if (!($SESSION instanceof ElggSession)) {
-		// Initialise the magic session
-		$SESSION = new ElggSessionCookie(ElggSessionCookie::filterCookiePrefixes($_COOKIE));
-	}
-
-	elgg_register_action('login', '', 'public');
-	elgg_register_action('logout');
-	
-	// Register a default PAM handler
-	register_pam_handler('pam_auth_userpass');
-	
-	return true;
 }
 
 /**
@@ -502,8 +424,7 @@ function _elgg_session_boot($force = false) {
  */
 function gatekeeper() {
 	if (!elgg_is_logged_in()) {
-		global $SESSION;
-		$SESSION['last_forward_from'] = current_page_url();
+		$_SESSION['last_forward_from'] = current_page_url();
 		register_error(elgg_echo('loggedinrequired'));
 		forward('', 'login');
 	}
@@ -518,164 +439,8 @@ function admin_gatekeeper() {
 	gatekeeper();
 
 	if (!elgg_is_admin_logged_in()) {
-		global $SESSION;
-		$SESSION['last_forward_from'] = current_page_url();
+		$_SESSION['last_forward_from'] = current_page_url();
 		register_error(elgg_echo('adminrequired'));
 		forward('', 'admin');
 	}
-}
-
-/**
- * Handles opening a session in the DB
- *
- * @param string $save_path    The path to save the sessions
- * @param string $session_name The name of the session
- *
- * @return true
- * @todo Document
- * @access private
- */
-function _elgg_session_open($save_path, $session_name) {
-	global $sess_save_path;
-	$sess_save_path = $save_path;
-
-	return true;
-}
-
-/**
- * Closes a session
- *
- * @todo implement
- * @todo document
- *
- * @return true
- * @access private
- */
-function _elgg_session_close() {
-	return true;
-}
-
-/**
- * Read the session data from DB failing back to file.
- *
- * @param string $id The session ID
- *
- * @return string
- * @access private
- */
-function _elgg_session_read($id) {
-	global $new_db;
-	
-	try {
-		$result = db_get(array('type'=>'session', 'id'=>$id));
-	var_dump($result);	
-		if($result){ 
-			//load serialized owner entity & add to cache
-			return $result['data'];
-		}
-	} catch (Exception $e) {
-		
-		// Fall back to file store in this case, since this likely means
-		// that the database hasn't been upgraded
-		global $sess_save_path;
-		
-		$sess_file = "$sess_save_path/sess_$id";
-		return (string) @file_get_contents($sess_file);
-	}
-
-	return '';
-}
-
-/**
- * Write session data to the DB falling back to file.
- *
- * @param string $id        The session ID
- * @param mixed  $sess_data Session data
- *
- * @return bool
- * @access private
- */
-function _elgg_session_write($id, $sess_data) {
-
-	global $new_db;
-	//HACK (nasty one) due to object destruction
-	$DB =  unserialize($new_db);
-	
-	/*if(isset($_COOKIE['Minds'])){	
-		return; //this is to improve page times. write on each page seems excessive
-	}*/
-	
-	try {
-		$result = $DB->cfs['session']->insert($id, array('ts'=>$time,'data'=>$sess_data));
-		
-		if($result !== false){
-			return true;
-		}
-	
-	} catch (Exception $e) {
-		// Fall back to file store in this case, since this likely means
-		// that the database hasn't been upgraded
-		global $sess_save_path;
-
-		$sess_file = "$sess_save_path/sess_$id";
-		if ($fp = @fopen($sess_file, "w")) {
-			$return = fwrite($fp, $sess_data);
-			fclose($fp);
-			return $return;
-		}
-	}
-
-	return false;
-}
-
-/**
- * Destroy a DB session, falling back to file.
- *
- * @param string $id Session ID
- *
- * @return bool
- * @access private
- */
-function _elgg_session_destroy($id) {
-	global $DB_PREFIX;
-	
-	try {
-		return (bool)db_remove($id, 'session');
-	} catch (Exception $e) {
-		// Fall back to file store in this case, since this likely means that
-		// the database hasn't been upgraded
-		global $sess_save_path;
-
-		$sess_file = "$sess_save_path/sess_$id";
-		return @unlink($sess_file);
-	}
-}
-
-/**
- * Perform garbage collection on session table / files
- *
- * @param int $maxlifetime Max age of a session
- *
- * @return bool
- * @access private
- */
-function _elgg_session_gc($maxlifetime) {
-	global $DB_PREFIX;
-	$life = time() - $maxlifetime;
-return true;
-	//try {
-	//	return (bool)delete_data("DELETE from {$DB_PREFIX}users_sessions where ts<'$life'");
-	//} catch (DatabaseException $e) {
-		// Fall back to file store in this case, since this likely means that the database
-		// hasn't been upgraded
-		global $sess_save_path;
-
-		foreach (glob("$sess_save_path/sess_*") as $filename) {
-			if (filemtime($filename) < $life) {
-				@unlink($filename);
-			}
-		}
-	//}
-
-	return true;
 }
