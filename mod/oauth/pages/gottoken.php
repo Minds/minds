@@ -3,15 +3,15 @@
   // must be logged in
 gatekeeper();
 
-global $CONFIG, $SESSION;
+global $CONFIG;
 
 $verifier = get_input('oauth_verifier', NULL);
 $return_token_key = get_input('oauth_token', NULL);
 
 // get our saved request token
-$saved_token_guid = $SESSION['oauth_token'];
-$return_to = $SESSION['oauth_return_to'];
-$access_url = $SESSION['oauth_access_url'];
+$saved_token_guid = $_SESSION['oauth_token'];
+$return_to = $_SESSION['oauth_return_to'];
+$access_url = $_SESSION['oauth_access_url'];
 
 $tokEnt = get_entity($saved_token_guid);
 
@@ -44,8 +44,8 @@ if ($tokEnt
 }
 
 // clean up the SESSION
-unset($SESSION['oauth_token']);
-unset($SESSION['oauth_return_to']);
-unset($SESSION['oauth_access_url']);
+unset($_SESSION['oauth_token']);
+unset($_SESSION['oauth_return_to']);
+unset($_SESSION['oauth_access_url']);
 
 forward($return_to);

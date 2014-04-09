@@ -22,7 +22,7 @@ function _elgg_session_boot($force = false) {
 
         $handler = new ElggSessionHandler();
         session_set_save_handler($handler);
-                
+		ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // Persistent cookies
         session_name('minds');
         
         session_start();
@@ -59,11 +59,17 @@ register_shutdown_function('_elgg_session_shutdown');
  * Session shutdown function. Erase the session if we are not loggedin
  */
 function _elgg_session_shutdown(){
-	 
-	if ( isset( $_COOKIE[session_name()] ) && ( !elgg_is_logged_in() || !isset($_SESSION['user'])) && !isset($_SESSION['force'])){
+
+	if ( isset( $_COOKIE[session_name()] ) && !isset($_SESSION['user']) && !isset($_SESSION['force'])){
 		//clear session from disk
+		$params = session_get_cookie_params();
+		setcookie(session_name(), '', time()-60*60*24*30*12,
+	        $params["path"], $params["domain"],
+	        $params["secure"], $params["httponly"]
+	    );
+		unset($_COOKIE[session_name()]);
 		session_destroy();
-		setcookie( session_name(), '', time()-3600, "/" );
+		echo 'our cookie should be.. gone';
 	}
 }
 
@@ -408,11 +414,8 @@ function logout() {
 
 	setcookie("mindsperm", "", (time() - (86400 * 30)), "/");
 
-	// pass along any messages
-	$old_msg = $SESSION['msg'];
-
 	session_destroy();
-	setcookie("Minds", '', (time() - (86400 * 30)), "/");
+	setcookie(session_name(), '', (time() - (86400 * 30)), "/");
 	
 	return TRUE;
 }

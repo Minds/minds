@@ -132,12 +132,7 @@ function minds_tiers_get_current_valid_tier($user) {
 }
 
 function tierlogin_page_handler($pages) {
-
-    global $SESSION;
-    $SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
-    $SESSION['__tier_selected'] = get_input('tier');
-    $SESSION['_from_tier'] = 'y';
-
+	
     $_SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
     $_SESSION['__tier_selected'] = get_input('tier');
     $_SESSION['_from_tier'] = 'y';

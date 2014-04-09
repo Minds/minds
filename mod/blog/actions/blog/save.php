@@ -13,7 +13,6 @@
 
 // start a new sticky form session in case of failure
 elgg_make_sticky_form('blog');
-global $SESSION;
 
 // save or preview
 $save = (bool)get_input('save');

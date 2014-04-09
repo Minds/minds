@@ -539,39 +539,25 @@ function sanitise_filepath($path, $append_slash = TRUE) {
  * @todo Clean up. Separate registering messages and retrieving them.
  */
 function system_messages($message = null, $register = "success", $count = false) {
-	global $SESSION;
-	if(!$SESSION){
-		return false;
-	}
-	if(!isset($_COOKIE['Minds']) && !isset($_COOKIE['Elgg_Install'])){
-		if(!is_null($message)){
-			if($register == 'error'){
-				$SESSION['err_msg'] = $message;
-			}  else {
-				$SESSION['ss_msg'] = $message;
-			}
+
+	$cookie_id = 'mindsMessages';
+	$messages = isset($_COOKIE[$cookie_id]) ? json_decode($_COOKIE[$cookie_id], true) : array('error'=>array(), 'success'=>array());
+	
+	
+	if(!is_null($message)){
+		if($register == 'error'){
+			$messages['error'][] = $message;
+		}  else {
+			$messages['success'][] = $message;
 		}
 		return $message;
 	}
-	$default = $SESSION->get('msg_'.$register, array());
-	if (!$default) {
-		$SESSION->set('msg_'.$register, array());
-		$default = $SESSION->get('msg_'.$register);
-	}
+	
+	
 	if (!$count) {
-		if (!empty($message) && is_array($message)) {
-			$SESSION->set('msg_'.$register, array_merge($default, $message));
-			return true;
-		} else if (!empty($message) && is_string($message)) {
-			array_push($default, $message);
-			$SESSION->set('msg_'.$register, $default);
-			return true;
-		} else if (is_null($message)) {
-			$SESSION->set('msg_'.$register, array());//cleanup
-			return $default;
-		}
+		return $messages[$register];
 	} else {
-		return count($default);
+		return count($messages[$register]);
 	}
 }
 

@@ -29,7 +29,6 @@ function twitter_api_allow_sign_on_with_twitter() {
  * This includes the login URL as the callback
  */
 function twitter_api_forward() {
-	global $SESSION;
 
 	// sanity check
 	if (!twitter_api_allow_sign_on_with_twitter()) {
@@ -44,14 +43,14 @@ function twitter_api_forward() {
 		'persistent' => (bool) get_input("persistent"),
 	);
 	// capture referrer if in site, but not the twitter_api
-	if (!empty($SESSION['last_forward_from'])) {
-		$login_metadata['forward'] = $SESSION['last_forward_from'];
+	if (!empty($_SESSION['last_forward_from'])) {
+		$login_metadata['forward'] = $_SESSION['last_forward_from'];
 	} elseif (!empty($_SERVER['HTTP_REFERER'])
 			&& 0 === strpos($_SERVER['HTTP_REFERER'], elgg_get_site_url())
 			&& 0 !== strpos($_SERVER['HTTP_REFERER'], elgg_get_site_url() . 'twitter_api/')) {
 		$login_metadata['forward'] = $_SERVER['HTTP_REFERER'];
 	}
-	$SESSION['twitter_api_login_metadata'] = $login_metadata;
+	$_SESSION['twitter_api_login_metadata'] = $login_metadata;
 
 	forward($request_link, 'twitter_api');
 }
@@ -71,8 +70,6 @@ function twitter_api_forward() {
  * the Twitter OAuth data.
  */
 function twitter_api_login() {
-	/* @var ElggSession $SESSION */
-	global $SESSION;
 
 	// sanity check
 	if (!twitter_api_allow_sign_on_with_twitter()) {
@@ -85,8 +82,8 @@ function twitter_api_login() {
 	$forward = '';
 
 	// fetch login metadata from session
-	$login_metadata = $SESSION['twitter_api_login_metadata'];
-	unset($SESSION['twitter_api_login_metadata']);
+	$login_metadata = $_SESSION['twitter_api_login_metadata'];
+	unset($_SESSION['twitter_api_login_metadata']);
 	if (!empty($login_metadata['persistent'])) {
 		$persistent = true;
 	}
@@ -312,7 +309,6 @@ function twitter_api_revoke() {
  * @param string $callback The callback URL
  */
 function twitter_api_get_authorize_url($callback = NULL, $login = true) {
-	global $SESSION;
 
 	$consumer_key = elgg_get_plugin_setting('consumer_key', 'twitter_api');
 	$consumer_secret = elgg_get_plugin_setting('consumer_secret', 'twitter_api');
@@ -322,7 +318,7 @@ function twitter_api_get_authorize_url($callback = NULL, $login = true) {
 	$token = $twitter->getRequestToken($callback);
 
 	// save token in session for use after authorization
-	$SESSION['twitter_api'] = array(
+	$_SESSION['twitter_api'] = array(
 		'oauth_token' => $token['oauth_token'],
 		'oauth_token_secret' => $token['oauth_token_secret'],
 	);
@@ -337,16 +333,14 @@ function twitter_api_get_authorize_url($callback = NULL, $login = true) {
  * @return array
  */
 function twitter_api_get_access_token($oauth_verifier = FALSE) {
-	/* @var ElggSession $SESSION */
-	global $SESSION;
 
 	$consumer_key = elgg_get_plugin_setting('consumer_key', 'twitter_api');
 	$consumer_secret = elgg_get_plugin_setting('consumer_secret', 'twitter_api');
 
 	// retrieve stored tokens
-	$oauth_token = $SESSION['twitter_api']['oauth_token'];
-	$oauth_token_secret = $SESSION['twitter_api']['oauth_token_secret'];
-	unset($SESSION['twitter_api']);
+	$oauth_token = $_SESSION['twitter_api']['oauth_token'];
+	$oauth_token_secret = $_SESSION['twitter_api']['oauth_token_secret'];
+	unset($_SESSION['twitter_api']);
 
 	// fetch an access token
 	$api = new TwitterOAuth($consumer_key, $consumer_secret, $oauth_token, $oauth_token_secret);

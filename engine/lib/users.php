@@ -322,10 +322,9 @@ function user_add_friend($user_guid, $friend_guid) {
 	$friendsof->insert($friend_guid, array($user_guid => time()));
 
 	//hack - update session!
-        global $SESSION;
-        if(elgg_is_logged_in()){
-		unset($SESSION['friends']);
-       	//	$SESSION['friends'] = elgg_get_logged_in_user_entity()->getFriends(null, 200, 0, 'guids');
+	if(elgg_is_logged_in()){
+		unset($_SESSION['friends']);
+       	//$_SESSION['friends'] = elgg_get_logged_in_user_entity()->getFriends(null, 200, 0, 'guids');
 	}
 	return true;
 }
@@ -356,9 +355,8 @@ function user_remove_friend($user_guid, $friend_guid) {
 	$friendsof->removeAttributes($friend_guid, array($user_guid));	
 
 	//hack - update session!
-	global $SESSION;
-	unset($SESSION['friends']);
-	$SESSION['friends'] = elgg_get_logged_in_user_entity()->getFriends(null, 200, 0, 'guids');
+	unset($_SESSION['friends']);
+	//$SESSION['friends'] = elgg_get_logged_in_user_entity()->getFriends(null, 200, 0, 'guids');
 	return true;
 
 }

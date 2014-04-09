@@ -23,9 +23,8 @@
 	 * @param unknown_type $params
 	 */
 	function image_captcha_verify_action_hook($hook, $entity_type, $returnvalue, $params) {
-		global $SESSION;
 		$token = get_input('image_captcha');
-		if (($token) && ($token == $SESSION["image_captcha"])){
+		if (($token) && ($token == $_SESSION["image_captcha"])){
 			return true;
 		} else {
 			register_error(elgg_echo('image_captcha:verify:fail'));

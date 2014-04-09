@@ -41,7 +41,7 @@
 	// Finally, if we've just logged in with Persona but we don't have an account ...
 	// (This is a terrible, terrible fudge for now)
 	    
-	    if (empty($SESSION['last_forward_from']) && !empty($SESSION['msg']) && elgg_is_logged_in() && in_array(elgg_echo('persona:welcome'),$SESSION['msg']['success'])) {
+	    if (empty($_SESSION['last_forward_from']) && !empty($_SESSION['msg']) && elgg_is_logged_in() && in_array(elgg_echo('persona:welcome'),$_SESSION['msg']['success'])) {
 		if (!substr_count(current_page_url(),'persona'))
 			forward('persona/register');
 	    }

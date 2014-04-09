@@ -23,10 +23,10 @@ class GroupsTest extends Minds_PHPUnit_Framework_TestCase {
 			self::$group_obj = $group;
 			
 			self::$user_obj = new ElggUser(register_user('testuser', 'test123', 'Test User', 'test@minds.com'));
-			global $SESSION;
-			$SESSION['guid'] = self::$user_obj->getGUID();
-			$SESSION['user'] = self::$user_obj;
-			$SESSION['username'] = 'testuser';
+
+			$_SESSION['guid'] = self::$user_obj->getGUID();
+			$_SESSION['user'] = self::$user_obj;
+			$_SESSION['username'] = 'testuser';
         }
 		
 		protected function tearDown(){

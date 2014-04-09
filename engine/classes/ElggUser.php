@@ -146,9 +146,8 @@ class ElggUser extends ElggEntity
 		$db->insert(strtolower($this->email), $data);
 
 		//update our session, if it is us logged in
-		if($this->guid == elgg_get_logged_in_user_entity()){
-			//global $SESSION;
-			//$SESSION['user'] = $this;
+		if($this->guid == elgg_get_logged_in_user_guid()){
+			$_SESSION['user'] = $this;
 		}
 
 		return $guid;

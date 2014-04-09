@@ -6,9 +6,8 @@
  * called in /views/default/forms/register.php [ echo elgg_view('input/captcha') ]
  *
  */
-global $SESSION;
 
-if(array_key_exists('recaptcha_verified', $SESSION) && $SESSION['recaptcha_verified'] == 1) {
+if(array_key_exists('recaptcha_verified', $_SESSION) && $_SESSION['recaptcha_verified'] == 1) {
 
     // no need for recaptcha again - user has already entered the correct value previously
    $output = "<label>".elgg_echo('recaptcha:label:human_verification')."</label><b>".elgg_echo('recaptcha:verified')."</b><br><br>";

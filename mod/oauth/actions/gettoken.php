@@ -3,7 +3,7 @@
   // must be logged in
 gatekeeper();
 
-global $CONFIG, $SESSION;
+global $CONFIG;
 
 // Get the logged in user
 $user = get_loggedin_user();
@@ -34,9 +34,9 @@ if ($token != null) {
     }
 
 // save our information to the session and send the user off to get the token validated
-    $SESSION['oauth_return_to'] = $return_to;
-    $SESSION['oauth_token'] = $tokEnt->getGUID();
-    $SESSION['oauth_access_url'] = $access_url;
+    $_SESSION['oauth_return_to'] = $return_to;
+    $_SESSION['oauth_token'] = $tokEnt->getGUID();
+    $_SESSION['oauth_access_url'] = $access_url;
 
 //print_r($tokEnt);
     if ($consumEnt->revA) {

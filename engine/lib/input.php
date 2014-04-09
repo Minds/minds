@@ -210,7 +210,6 @@ function elgg_get_sticky_value($form_name, $variable = '', $default = NULL, $fil
  * @since 1.8.0
  */
 function elgg_get_sticky_values($form_name, $filter_result = true) {
-	global $SESSION;
 
 	$cookie_id = 'mindsStickyForm';
 	$sticky = isset($_COOKIE[$cookie_id]) ? json_decode($_COOKIE[$cookie_id], true) : array();

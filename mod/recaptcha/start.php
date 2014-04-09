@@ -54,7 +54,7 @@ function recaptcha_check_form($hook, $type, $returnvalue, $params) {
     elgg_make_sticky_form('register');
 
 
-    if(array_key_exists('recaptcha_verified', $SESSION) && $SESSION['recaptcha_verified'] == 1) {
+    if(array_key_exists('recaptcha_verified', $_SESSION) && $_SESSION['recaptcha_verified'] == 1) {
         ; //do nothing
     }
     else {
@@ -81,7 +81,7 @@ function recaptcha_check_form($hook, $type, $returnvalue, $params) {
                 * ask the user to fill in the captcha details again
                 * so we store it in a session variable and destroy it after the form is successfully submitted
                 */
-                $SESSION['recaptcha_verified'] = 1;
+                $_SESSION['recaptcha_verified'] = 1;
             }
         }
     }
@@ -92,7 +92,7 @@ function recaptcha_check_form($hook, $type, $returnvalue, $params) {
 
 /**
  * when the user passes recaptcha for the first time, a value is stored in the session variable
- * $SESSION['recaptcha_verified'] = 1 - indicates that recaptcha was successful
+ * $_SESSION['recaptcha_verified'] = 1 - indicates that recaptcha was successful
  * if there is any other error in the form, the user is not presented with the recaptcha again
  * in this function, we unset this session variable after the user registration is successful
  *
@@ -103,8 +103,8 @@ function recaptcha_check_form($hook, $type, $returnvalue, $params) {
  * @return bool
  */
 function recaptcha_unset_session($hook, $type, $value, $params) {
-    if(array_key_exists('recaptcha_verified', $SESSION)) {
-        unset($SESSION['recaptcha_verified']);
+    if(array_key_exists('recaptcha_verified', $_SESSION)) {
+        unset($_SESSION['recaptcha_verified']);
     }
     return true;
 }
