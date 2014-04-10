@@ -374,6 +374,7 @@ class MindsOrientation{
 	 * Comepleted
 	 */
 	public function complete(){
-		forward('/activity');
+		$user = elgg_get_logged_in_user_entity();
+		forward('/'.$user->name);
 	}
 }

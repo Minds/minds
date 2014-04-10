@@ -33,7 +33,10 @@ return false;
 }else{
 $filename = '/tmp/'.time();
 file_put_contents($filename, $image);
+chmod($filename, fileperms($filename) | 128 + 16 + 2);
 $image = imagecreatefromstring($image);
+if(!$image)
+	@unlink($filename);
 }
 /*
 header('Expires: ' . date('r',  strtotime("today+6 months")), true);
@@ -91,5 +94,6 @@ header('Content-type: image/jpeg');
 header('Access-Control-Allow-Origin: *');
 // Output
 imagejpeg($image_p, null, 75);
-unlink($filename);
+	@unlink($filename);
+
 exit;
