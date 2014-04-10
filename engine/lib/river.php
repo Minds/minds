@@ -194,11 +194,14 @@ function elgg_get_river(array $options = array()) {
 		
 		$timeline = new DatabaseCall('timeline');
 		$row = $timeline->getRow($options['owner_guid'], array('offset'=>$options['offset'], 'limit'=>$options['limit']));
+		if(!$row)
+			return false;
+
 		foreach($row as $k => $v){
-        	if($k != 'type' || $k != 0){
-            	$ids[] = $k;
-            }
-        }
+        		if($k != 'type' || $k != 0){
+        	    	$ids[] = $k;
+        	    }
+        	}
 
 		if($ids){
 			$newsfeed = new DatabaseCall('newsfeed');
