@@ -2,12 +2,20 @@
 
 $user = elgg_get_logged_in_user_entity();
 
-$domain_link = "http://". $vars['domain'] . "/install.php?username=".urlencode($user->username) . "&name=".urlencode($user->name) . "&email=".urlencode($user->email);
+$domain_link = "http://". $vars['domain'] . "/install.php?username=".urlencode($user->username) . "&name=".urlencode($user->name) . "&email=".urlencode($user->email) . "&ts=".time(); 
 
 $ping = get_input('ping', false);
 if($ping){
 	elgg_set_viewtype('json');
-	if($result = file_get_contents($domain_link)){
+	
+	$ch = curl_init($domain_link);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch,CURLOPT_TIMEOUT_MS,1500);
+	curl_exec($ch);
+	$errorno = curl_errno($ch);
+	curl_close($ch);
+	
+	if(!$errono){
 		echo true;
 	} else {
 		echo false;

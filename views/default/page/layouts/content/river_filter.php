@@ -49,6 +49,12 @@ if (elgg_is_logged_in() && $context) {
 			'priority' => 600,
 		),*/
 
+		'deck' => array(
+                        'text' => elgg_echo('My Social Network Feeds'),
+                        'href' => '/activity',
+                        'selected' => ($filter_context == 'friends' || !$filter_context),
+                        'priority' => 500,
+                ),
 	);
 	if(elgg_is_admin_logged_in()){
 	$tabs['all'] = array(
