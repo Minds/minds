@@ -1119,7 +1119,7 @@ li.elgg-menu-item-rss{
 	float: none;
 }
 .frontpage-signup input{
-	width: 138px;
+	width: 136px;
 	margin: 4px;
 	box-shadow: 0 0 6px #FFF;
 }

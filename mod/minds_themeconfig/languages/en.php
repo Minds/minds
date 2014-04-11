@@ -11,11 +11,11 @@ $english = array(
 	'minds_themeconfig:copyright' => 'Copyright',
 	'minds_themeconfig:networks' => 'Social links',
     
-        'minds_themeconfig:logo' => 'Upload your own logo (optimum size 200x90)',
+        'minds_themeconfig:logo' => 'Upload your own logo (optimum size 800x400 png)',
         'minds_themeconfig:backgroundcolour' => 'Page background colour',
         'minds_themeconfig:textcolour' => 'Text colour',
         'minds_themeconfig:background' => 'Upload background image',
-     'minds_themeconfig:favicon' => 'Upload an icon for your site',
+     'minds_themeconfig:favicon' => 'Upload an icon for your site (a png file 100x100)',
     
         'minds_themeconfig:advanced' => 'Advanced settings...',
         'minds_themeconfig:custom_css' => 'Custom CSS',

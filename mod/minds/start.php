@@ -135,15 +135,22 @@ function minds_init(){
 		
 			case 'background':
 			default:
-				$item = get_entity($page[1]);
-				header('Content-Type: image/jpeg');
-				header('Expires: ' . date('r', time() + 864000));
-				header("Pragma: public");
-				header("Cache-Control: public");
-					
-				echo file_get_contents($CONFIG->dataroot . 'carousel/' . $page[1] . '.jpg');
-				
-				exit;
+				   $item = get_entity($page[1]);
+                                $filename = $CONFIG->dataroot . 'carousel/' . $page[1];
+				if(!file_exists($filename))
+					$filename = $CONFIG->dataroot . 'carousel/' . $page[1] . '.jpg';
+
+                                $finfo    = finfo_open(FILEINFO_MIME);
+                                $mimetype = finfo_file($finfo, $filename);
+                                finfo_close($finfo);
+                                header('Content-Type: '.$mimetype);
+                                header('Expires: ' . date('r', time() + 864000));
+                                header("Pragma: public");
+                                header("Cache-Control: public");
+
+                                echo file_get_contents($filename);
+
+                                exit;				
 		}
 	});
 	

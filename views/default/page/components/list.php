@@ -37,7 +37,7 @@ if ($data_options) {
 if (isset($vars['list_class'])) {
     $list_class = "$list_class {$vars['list_class']}";
 }
-if($vars['masonry'] !== false){
+if($vars['masonry'] !== false && get_input('masonry') != 'off'){
         $list_class .= ' mason';
 }
 

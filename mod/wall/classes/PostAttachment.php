@@ -13,7 +13,7 @@ class PostAttachment {
 		
 		if(elgg_is_active_plugin('archive')){
 			//is there wallpost album setup? If so, set the container guid to it
-			
+			  elgg_load_library('tidypics:upload');		
 			$this->useArchive = true;
 			
 			$this->subtype = 'image';
