@@ -1,9 +1,12 @@
 <?php 
-class ElggSessionHandler{
+if (version_compare(phpversion(), '5.4.0', '<')) {
+	require_once(dirname(__FILE__) . '/stub/SessionHandlerInterface');	
+}
+class ElggSessionHandler implements SessionHandlerInterface{
 
 	private $db;
 
-	public function open(){
+	public function open($save_path , $name){
 		$this->db = new DatabaseCall('session');
 	}
 
@@ -11,10 +14,10 @@ class ElggSessionHandler{
  		return true;
 	}
 	
-	public function read($id){
+	public function read($session_id ){
 
 		try {
-			$result = $this->db->getRow($id);
+			$result = $this->db->getRow($session_id);
 
 			if($result){
 				//load serialized owner entity & add to cache
@@ -28,12 +31,12 @@ class ElggSessionHandler{
 
 	}
 
-   	public function write($id, $sess_data){
+   	public function write( $session_id , $session_data ){
 
 		$time = time();
 
 		try {
-	        	$result = $this->db->insert($id, array('ts'=>$time,'data'=>$sess_data));
+	        	$result = $this->db->insert($session_id, array('ts'=>$time,'data'=>$session_data));
 		
 			if($result !== false){
 				return true;
@@ -45,15 +48,15 @@ class ElggSessionHandler{
 		return false;
 	}
 	
-	public function destroy($id) {
+	public function destroy($session_id ) {
 		try {
-			return (bool)$this->db->removeRow($id);
+			return (bool)$this->db->removeRow($session_id);
 		} catch (Exception $e) {
 			return false;
 		}
 	}
 
-	public function gc($maxlifetime) {
+	public function gc( $maxlifetime) {
 		$life = time() - $maxlifetime;
 		return true;
 	}

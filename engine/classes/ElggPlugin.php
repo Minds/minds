@@ -614,7 +614,7 @@ class ElggPlugin extends ElggEntity {
 		$active = $this->active == 1 ? true : false;
 	
 		global $CONFIG;
-		if(!$active)
+		if(!$active && isset($CONFIG->plugins))
 			$active = in_array($this->guid, $CONFIG->plugins);
 		
 		return $active;

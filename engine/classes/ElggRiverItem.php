@@ -249,6 +249,20 @@ class ElggRiverItem {
 	}
 	
 	/**
+	 * Export an array
+	 */
+	function export(){
+		$export = $this->attributes;
+		$export['subjectObj'] = json_decode($export['subjectObj'], true);
+		$export['subjectObj']['avatar_url'] = get_entity($export['subjectObj']['guid'])->getIconURL('small');
+		$export['objectObj'] = json_decode($export['objectObj'], true);
+		$export['friendly_time'] = elgg_get_friendly_time($export['posted']);
+		if(isset($export['attachment_guid']))
+			$export['attachment_url'] = elgg_get_site_url() . 'photos/thumbnail/'.$export['attachment_guid'].'/large';
+		return $export;
+	}
+	
+	/**
 	 * Magic set
 	 * 
 	 * @param string $key 
