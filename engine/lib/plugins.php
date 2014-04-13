@@ -354,13 +354,7 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 	if(isset($CONFIG->plugins) && $plugins = $CONFIG->plugins){
 		$return = array();
 		foreach($plugins as $priority => $plugin){
-			$row = new stdClass();
-			$row->guid = $plugin;
-			$row->title = $plugin;
-			$row->type = 'plugin';
-			$row->active = 1;
-			$row->priority = $priority;
-			$plugin = new ElggPlugin($row);
+			$plugin = new ElggPlugin($plugin);
 			$PLUGINS_CACHE[$plugin->guid] = $plugin;
 			$return[] = $plugin;	
 		}

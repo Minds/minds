@@ -74,15 +74,31 @@ class ElggPlugin extends ElggEntity {
 			$this->path = $plugin;
 			$path_parts = explode('/', rtrim($plugin, '/'));
 			$plugin_id = array_pop($path_parts);
-			$this->pluginID = $plugin_id;
-			$this->guid = $plugin_id;
+			$this->pluginID = $plugin;
+			$this->guid = $plugin;
+
+			//@todo load from cache
+			global $CONFIG;
+			//is this plugin
+			if(isset($CONFIG->plugins) && $plugins = $CONFIG->plugins){
+				$this->title = $plugin;
+				$this->type = 'plugin';
+				$this->active = 1;
+				$this->priority = array_search('plugin', $plugins) ;
+		
+				//now load our preset settings
+				foreach($CONFIG->pluginSettings->{$plugin} as $k => $v)
+					$this->$k = $v;
+		
+			} else {
 
 			// check if we're loading an existing plugin
-			$db = new DatabaseCall('plugin');
-			$existing_plugin = $db->getRow($this->guid);
-			if($existing_plugin){	
-				foreach($existing_plugin as $k => $v){
-					$this->$k = $v;
+				$db = new DatabaseCall('plugin');
+				$existing_plugin = $db->getRow($this->guid);
+				if($existing_plugin){	
+					foreach($existing_plugin as $k => $v){
+						$this->$k = $v;
+					}
 				}
 			}
 		}
@@ -286,12 +302,7 @@ class ElggPlugin extends ElggEntity {
 	public function getSetting($name) {
 		//Are we storing settings in Conf?
 		global $CONFIG;
-	
-		$id = $this->getID();
-		if(isset($CONFIG->pluginSettings) && $setting = $CONFIG->pluginSettings->{$this->guid}[$name]){
-			return $setting;
-	
-		}
+
 		if(isset($this->$name))
 			return $this->$name;
 

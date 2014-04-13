@@ -24,11 +24,11 @@ function orientation_init() {
 	
 	//On first login, promt user for bootcamp
 
-	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted') && !elgg_get_plugin_user_setting('prompted',null,'bootcamp') && !$_SESSION['fb_referrer'] && elgg_get_viewtype() != 'mobile' && ! $_SESSION['orientated']){
+//	if(elgg_is_logged_in() && !elgg_get_plugin_user_setting('prompted') && !elgg_get_plugin_user_setting('prompted',null,'bootcamp') && !$_SESSION['fb_referrer'] && elgg_get_viewtype() != 'mobile' && ! $_SESSION['orientated']){
 //		elgg_set_plugin_user_setting('prompted', 'yes');
 //		$SESSION['orientated'] = 'yes';
 //		forward('orientation');
-	}
+//	}
 }
 
 /**
