@@ -190,12 +190,17 @@ class AnyPage extends ElggObject {
 	 * @return array guid => path_name
 	 */
 	static function getRegisteredPagePaths() {
-		
-		$entities = elgg_get_entities(array(
-			'type' => 'object',
-			'subtype' => 'anypage',
-			'limit' => 0
-		));
+		global $ANYPAGE_CACHE;	
+		if(!$ANYPAGE_CACHE){
+			$entities = elgg_get_entities(array(
+				'type' => 'object',
+				'subtype' => 'anypage',
+				'limit' => 0
+			));
+			$ANYPAGE_CACHE = $entities;
+		} else {
+			$entities = $ANYPAGE_CACHE;
+		}
 
 		$paths = array();
 		foreach ($entities as $entity) {
@@ -213,12 +218,17 @@ class AnyPage extends ElggObject {
 	 */
 	public static function getAnyPageEntityFromPath($path) {
 		$path = AnyPage::normalizePath($path);
-
+		global $ANYPAGE_CACHE;
+		if(!$ANYPAGE_CACHE){
 		$entities = elgg_get_entities(array(
 			'type' => 'object',
 			'subtype' => 'anypage',
 			'limit' => 0
 		));
+		$ANYPAGE_CACHE = $entities;
+		} else {
+			$entities = $ANYPAGE_CACHE;
+		}
 
 		foreach($entities as $entity){
 			if($entity->page_path == $path){

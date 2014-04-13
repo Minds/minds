@@ -59,10 +59,13 @@ function _elgg_session_boot($force = false) {
 		$_SESSION['__elgg_session'] = md5(microtime() . rand());
 	}
 
-	if(isset($_SESSION['user']))
+	if(isset($_SESSION['user'])){
 		setcookie('loggedin', 1, time() + 3600, '/'); 
-	else 
+		cache_entity($_SESSION['user']);
+	} else { 
 		setcookie('loggedin', 0, time() + 3600, '/');
+	}
+
 
 	header('X-Powered-By: Minds', true);
 }

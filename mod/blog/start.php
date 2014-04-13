@@ -422,7 +422,12 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
 	$i = 0;
-	
+	$offset = "";
+	while(true){	
+		$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>12, 'offset'=>$offset));
+		$offset = end($scrapers)->guid;
+		if(count($scrapers) < 10)
+			break;
 	foreach($scrapers as $scraper){
 		if(!$scraper->getOwnerEntity()){
 			continue;
@@ -524,6 +529,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			$scraper->item_ids = serialize($item_ids);
 			$scraper->save();
 		}	
+	}
 	}
 	elgg_set_ignore_access(false);
 	return $return_value;	

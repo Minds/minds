@@ -1106,6 +1106,19 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
 
 	return true;
 }
+/**
+ * Record read stats
+ */
+register_shutdown_function('recordStats');
+function recordStats(){
+	if($_REQUEST['debug']){
+	$db = new DatabaseCall();
+        $keys = implode("|",$db::$keys);
+	$stats = "{$db::$reads} Reads. {$db::$writes} Writes. {$db::$counts} Counts at {$_SERVER['REQUEST_URI']} with $keys called\n";
+	$filename = '/tmp/minds.stats';
+	file_put_contents ($filename, $stats, FILE_APPEND );
+	}
+}
 
 /**
  * Catch fatal errors
@@ -1113,8 +1126,6 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
 register_shutdown_function('fatalErrorShutdownHandler');
 
 function fatalErrorShutdownHandler(){
-	$db = new DatabaseCall();
-	//var_dump("READS: ". $db::$reads, 	"WRITES: ". $db::$writes, "DELETES: ". $db::$deletes, "COUNTS: ". $db::$counts);
 	
 	$last_error = error_get_last();
 	

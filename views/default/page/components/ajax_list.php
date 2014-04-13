@@ -3,6 +3,7 @@
 $elgg_path = str_replace(elgg_get_site_url(), '', $vars['path']);
 $path = explode('/', $elgg_path);
 
+set_input('ajax', true);
 if($elgg_path == elgg_get_site_url() || $elgg_path == null){
 
 	elgg_set_viewtype('json');

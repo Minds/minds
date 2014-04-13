@@ -312,6 +312,11 @@ class ElggPlugin extends ElggEntity {
 		if(isset($this->$name))
 			return $this->$name;
 
+		if(isset($CONFIG->pluginSettings) && $setting = $CONFIG->pluginSettings->{$this->guid}[$name]){
+			return $setting;
+
+		}
+
 		if(isset($CONFIG->multisite) && isset($CONFIG->multisite->plugin_default_settings[$this->guid]) && isset($CONFIG->multisite->plugin_default_settings[$this->guid][$name]))
 	return $CONFIG->multisite->plugin_default_settings[$this->guid][$name];
 	}

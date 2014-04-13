@@ -47,7 +47,7 @@ function elgg_check_access($entity, $user = null){
 	}
 
 	if(!elgg_is_logged_in()){
-		if($entity->access_id == ACCESS_PUBLIC){
+		if((int) $entity->access_id == ACCESS_PUBLIC){
 			return true;
 		} else {
 			return false;
@@ -64,6 +64,11 @@ function elgg_check_access($entity, $user = null){
 	
 	//first of all check if the user owns the entity
 	if($entity->owner_guid == $user->guid || $entity->container_guid == $user->guid){
+		return true;
+	}
+
+	//secondly see if the entity is viewable for loggedin/public
+	if(in_array($entity->access_id, array(ACCESS_LOGGED_IN, ACCESS_PUBLIC))){
 		return true;
 	}
 	

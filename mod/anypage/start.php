@@ -35,15 +35,15 @@ function anypage_init() {
  * Setup the links to site pages
  */
 function anypage_setup_footer_menu() {
+	if(get_input('ajax'))
+		return false;
 
-	$cache = new ElggXCache('page');
-
-	if(!$pages = $cache->load('footer-menu')){
-		$pages = elgg_get_entities(array('type'=>'object', 'subtype'=>'anypage', 'limit'=>0)); 
-		$cache->save('footer-menu', $pages, 360);		
+	global $ANYPAGE_CACHE;
+	if(!$ANYPAGE_CACHE){
+		$ANYPAGE_CACHE = elgg_get_entities(array('type'=>'object', 'subtype'=>'anypage', 'limit'=>0)); 
 	}
 	
-	foreach ($pages as $page) {
+	foreach ($ANYPAGE_CACHE as $page) {
 		elgg_register_menu_item('footer', array(
 			'name' => $page->title,
 			'href' => $page->getURL(),
@@ -94,6 +94,12 @@ function anypage_init_fix_admin_menu($hook, $type, $value, $params) {
 function anypage_router($hook, $type, $value, $params) {
 	$handler = elgg_extract('handler', $value);
 	$pages = elgg_extract('segments', $value, array());
+
+	global $CONFIG;
+	if(isset($CONFIG->pagehandler[$handler]) && is_callable($CONFIG->pagehandler[$handler])){
+		return;
+	}
+
 	array_unshift($pages, $handler);
 	$path = AnyPage::normalizePath(implode('/', $pages));
 

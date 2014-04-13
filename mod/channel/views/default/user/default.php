@@ -12,12 +12,12 @@ $size = elgg_extract('size', $vars, 'medium');
 $icon = elgg_view_entity_icon($entity, $size, $vars);
 
 // Simple XFN
-$rel = '';
+/*$rel = '';
 if (elgg_get_logged_in_user_guid() == $entity->guid) {
 	$rel = 'rel="me"';
 } elseif (check_entity_relationship(elgg_get_logged_in_user_guid(), 'friend', $entity->guid)) {
 	$rel = 'rel="friend"';
-}
+}*/
 
 $title = "<a href=\"" . $entity->getUrl() . "\" $rel>" . $entity->name . "</a>";
 

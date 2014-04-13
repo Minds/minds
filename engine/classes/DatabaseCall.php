@@ -15,7 +15,8 @@ use phpcassa\Schema\DataType\LongType;
 use phpcassa\UUID;
 
 class DatabaseCall{
-	
+
+	static $keys = array();	
 	static $reads = 0;
 	static $writes = 0;
 	static $deletes = 0;
@@ -134,6 +135,12 @@ class DatabaseCall{
 	 */
 	 public function getRow($key, array $options = array()){
 	 	self::$reads++;
+		array_push(self::$keys, $key);
+
+		if(get_input('debug')){
+			if($key == '100000000000000063:member')
+				var_dump(debug_backtrace(false));
+		}
 
 		$defaults = array(  'multi' => false,
 							'offset' => "",

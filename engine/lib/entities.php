@@ -766,6 +766,10 @@ function get_entity($guid, $type = 'object') {
 	}
 	
 	if ($new_entity) {
+		 if (is_memcache_available()) {
+          //     		 $memcache = new ElggMemcache('new_entity_cache');
+        //     	 	$memcache->save($guid, $new_entity);
+        	}
 		cache_entity($new_entity);
 	}
 	return $new_entity;

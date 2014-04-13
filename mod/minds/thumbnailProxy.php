@@ -10,7 +10,6 @@ if(strpos($src, 'http') === FALSE){
 	$src = "https:$src";
 }
 
-
 //get the original file
 
 $ch = curl_init($src);

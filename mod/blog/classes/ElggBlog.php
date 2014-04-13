@@ -25,7 +25,8 @@ class ElggBlog extends ElggObject {
 	 */
 	public function getExportableValues() {
 		return array_merge(parent::getExportableValues(), array(
-			'excerpt'
+			'excerpt',
+			'ownerObj',
 		));
 	}
 	
