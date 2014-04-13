@@ -194,7 +194,7 @@ function elgg_get_plugin_from_id($plugin_id) {
 		return $PLUGINS_CACHE[$plugin_id];
 	}	
 
-	$plugin = get_entity($plugin_id, 'plugin');
+	$plugin = new ElggPlugin($plugin_id);
 
 	if($plugin){
 		return $plugin;
@@ -265,7 +265,7 @@ function elgg_is_active_plugin($plugin_id, $site_guid = null) {
 		return true;
 	}	
 
-	$plugin = elgg_get_plugin_from_id($plugin_id);
+	$plugin = new ElggPlugin($plugin_id);
 	
 	if (!$plugin) {
 		return false;
@@ -344,10 +344,12 @@ function elgg_load_plugins() {
  */
 function elgg_get_plugins($status = 'active', $site_guid = null) {
 	
-	global $CONFIG,$DB, $PLUGINS_CACHE;
+	global $CONFIG,$DB, $PLUGINS_LIST_CACHE;
 
-	if(isset($PLUGINS_CACHE[$status])){
-		return $PLUGINS_CACHE[$status];
+	if(isset($PLUGINS_LIST_CACHE[$status])){
+		return $PLUGINS_LIST_CACHE[$status];
+	} else {
+		$PLUGINS_LIST_CACHE = array($status => array());
 	}
 	
 	//Check if plugins are predfined in settings. Improves performance
@@ -366,19 +368,6 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 	$db = new DatabaseCall('plugin');
 	$rows = $db->getRows($plugin_ids);
 
-	/*$cache = new ElggXCache('plugins');
-
-	//convert status to something the db understands
-	if($status == 'active'){ 
-		if(!$rows = $cache->load('active')){
-			$db = new DatabaseCall('plugin');
-	       	 	$rows = $db->getByIndex(array('active'=>1), "", 1000);
-			$cache->save('active', $rows);
-		}
-	} else {
-		$db = new DatabaseCall('plugin');
-   		$rows = $db->get("", 10000);
-	}*/
 	
 	foreach($rows as $k => $row){
 
@@ -393,8 +382,8 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 			$new_row->$k = $v;
 		}
 
-		$plugin = entity_row_to_elggstar($new_row);
- 		$PLUGINS_CACHE[$status][$plugin->guid] = $plugin;
+		$plugin = new ElggPlugin($new_row);
+		array_push($PLUGINS_LIST_CACHE[$status], $plugin);
 		$plugins[] = $plugin;
 	}
 

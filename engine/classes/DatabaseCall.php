@@ -16,6 +16,11 @@ use phpcassa\UUID;
 
 class DatabaseCall{
 	
+	static $reads = 0;
+	static $writes = 0;
+	static $deletes = 0;
+	static $counts = 0;
+	
 	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL){
 		
 		global $CONFIG;
@@ -82,6 +87,7 @@ class DatabaseCall{
 			$guid = new GUID();
 			$guid = $guid->generate();
 		}
+		self::$writes++;
 		//unset guid, we don't want it twice
 		unset($data['guid']);
 		try{
@@ -99,6 +105,7 @@ class DatabaseCall{
 	 * @return array - raw data
 	 */
 	public function get($offset = "", $limit=10){
+		self::$reads++;
 		return $this->cf->get_range($offset,"", $limit);
 	}
 	
@@ -126,6 +133,8 @@ class DatabaseCall{
 	 * @param array $options - by default contains offset and limit for the row
 	 */
 	 public function getRow($key, array $options = array()){
+	 	self::$reads++;
+
 		$defaults = array(  'multi' => false,
 							'offset' => "",
 							'finish' => "",
@@ -165,6 +174,7 @@ class DatabaseCall{
 	 * Count the columns of a row
 	 */
 	public function countRow($key){
+		self::$counts++;
 		return $this->cf->get_count($key);
 	}
 	
@@ -174,6 +184,7 @@ class DatabaseCall{
 	 * @return mixed
 	 */
 	public function removeRow($key){
+		self::$deletes++;
 		return $this->cf->remove($key);
 	}
 	
@@ -197,6 +208,7 @@ class DatabaseCall{
 	 * @return mixed
 	 */
 	public function removeAttributes($key, array $attributes = array(), $verify= true){
+		self::$deletes++;
 		if(empty($attributes)){
 			return false; // don't allow as this will delete the row!
 		}

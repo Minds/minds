@@ -43,6 +43,9 @@ class ElggPlugin extends ElggEntity {
 	 * @throws PluginException
 	 */
 	public function __construct($plugin) {
+		
+		global $CONFIG, $PLUGINS_CACHE;
+	
 		if (!$plugin) {
 			throw new PluginException(elgg_echo('PluginException:NullInstantiated'));
 		}
@@ -59,26 +62,28 @@ class ElggPlugin extends ElggEntity {
 		
 			$this->pluginID = $this->attributes['guid'];	
 			$this->title = $this->pluginID;
-		        $this->path = elgg_get_plugins_path() . $this->getID();
+		    $this->path = elgg_get_plugins_path() . $this->getID();
+			$PLUGINS_CACHE[$this->guid] = $this;
 		} else {
 			$plugin_path = elgg_get_plugins_path();
 
 			// not a full path, so assume an id
 			// use the default path
 			if (strpos($plugin, $plugin_path) !== 0) {
-				$plugin = $plugin_path . $plugin;
+				$this->path =  sanitise_filepath($plugin_path . $plugin);
 			}
-
-			// path checking is done in the package
-			$plugin = sanitise_filepath($plugin);
-			$this->path = $plugin;
-			$path_parts = explode('/', rtrim($plugin, '/'));
-			$plugin_id = array_pop($path_parts);
+			
+			$plugin_id = $plugin;
 			$this->pluginID = $plugin;
 			$this->guid = $plugin;
 
-			//@todo load from cache
-			global $CONFIG;
+			if(isset($PLUGINS_CACHE[$plugin])){
+				foreach($PLUGINS_CACHE[$plugin] as $k => $v){
+					$this->$k = $v;
+				}
+				return true;
+			}
+			
 			//is this plugin
 			if(isset($CONFIG->plugins) && $plugins = $CONFIG->plugins){
 				$this->title = $plugin;
@@ -101,6 +106,7 @@ class ElggPlugin extends ElggEntity {
 					}
 				}
 			}
+			$PLUGINS_CACHE[$plugin] = $this;
 		}
 
 		//_elgg_cache_plugin_by_id($this);

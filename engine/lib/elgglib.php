@@ -1113,6 +1113,9 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
 register_shutdown_function('fatalErrorShutdownHandler');
 
 function fatalErrorShutdownHandler(){
+	$db = new DatabaseCall();
+	//var_dump("READS: ". $db::$reads, 	"WRITES: ". $db::$writes, "DELETES: ". $db::$deletes, "COUNTS: ". $db::$counts);
+	
 	$last_error = error_get_last();
 	
 	if($last_error['type'] == E_ERROR){
