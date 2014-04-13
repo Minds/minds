@@ -325,6 +325,8 @@ function pay_page_setup() {
 	
 	//TOPBAR
 	if (elgg_is_logged_in()) {
+
+		$user_guid = elgg_get_logged_in_user_guid();
 		$class = "elgg-icon elgg-icon-shop-cart";
 		$text = "<span class='$class'></span>";
 		$tooltip = elgg_echo("pay:basket");

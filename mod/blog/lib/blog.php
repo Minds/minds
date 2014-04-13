@@ -101,7 +101,7 @@ function blog_get_page_content_read($guid = NULL) {
  * @param int $container_guid The GUID of the page owner or NULL for all blogs
  * @return array
  */
-function blog_get_page_content_list($user_guid, $container_guid = NULL) {
+function blog_get_page_content_list($user_guid = NULL, $container_guid = NULL) {
 
 	$return = array();
 

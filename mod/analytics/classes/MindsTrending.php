@@ -10,7 +10,9 @@ class MindsTrending{
 	public function __construct(array $sources = array('google'), array $options = array()){
 
 		self::$data = array();
-
+		
+		if(!$sources)
+			$sources = array('google');
 		$this->sources = $sources;
 		
 		$defaults = array(

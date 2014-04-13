@@ -41,7 +41,7 @@ function invalidate_cache_for_entity($guid) {
 	//remove from XCache
 	//@todo remove from all caching apps
 	try{
-		$cache = new ElggXCache('new_entity_cache');
+		$cache = new ElggMemcache('new_entity_cache');
 		$cache->delete($guid);
 	} catch(Exception $e){
 	}
@@ -65,24 +65,12 @@ function invalidate_cache_for_entity($guid) {
 function cache_entity(ElggEntity $entity) {
 	global $ENTITY_CACHE;
 
-	// Don't cache non-plugin entities while access control is off, otherwise they could be
-	// exposed to users who shouldn't see them when control is re-enabled.
-//	if (!($entity instanceof ElggPlugin) && elgg_get_ignore_access()) {
-//		return;
-//	}
-
 	// Don't store too many or we'll have memory problems
 	// TODO(evan): Pick a less arbitrary limit
 	if (count($ENTITY_CACHE) > 256) {
 		$random_guid = array_rand($ENTITY_CACHE);
 
 		unset($ENTITY_CACHE[$random_guid]);
-
-		// Purge separate metadata cache. Original idea was to do in entity destructor, but that would
-		// have caused a bunch of unnecessary purges at every shutdown. Doing it this way we have no way
-		// to know that the expunged entity will be GCed (might be another reference living), but that's
-		// OK; the metadata will reload if necessary.
-		//elgg_get_metadata_cache()->clear($random_guid);
 	}
 
 	$ENTITY_CACHE[$entity->guid] = $entity;
@@ -419,12 +407,9 @@ function update_entity($guid, $owner_guid, $access_id, $container_guid = null, $
 			}
 
 			// If memcache is available then delete this entry from the cache
-			static $newentity_cache;
-			if ((!$newentity_cache) && (is_memcache_available())) {
-				$newentity_cache = new ElggMemcache('new_entity_cache');
-			}
-			if ($newentity_cache) {
-				$newentity_cache->delete($guid);
+			if (is_memcache_available()) {
+				$memcache = new ElggMemcache('new_entity_cache');
+				$memcache->delete($guid);
 			}
 
 			// Handle cases where there was no error BUT no rows were updated!
@@ -535,11 +520,10 @@ function create_entity($object = NULL, $timebased = true) {
 
 	if($object->guid){
 		elgg_trigger_event('update', $object->type, $object);
-		if (function_exists('xcache_get')) {
-			$newentity_cache = new ElggXCache('new_entity_cache');
-		}
-      	if (isset($newentity_cache)) {
-			$newentity_cache->delete($object->guid);
+		if (is_memcache_available()) {
+			$memcache = new ElggMemcache('new_entity_cache');
+			$memcache->delete($object->guid);
+		
 		}
 	} else {
 		$object->guid = $g->generate();
@@ -662,18 +646,11 @@ function entity_row_to_elggstar($row) {
 	$new_entity = false;
 	
 	// Create a memcache cache if we can
-	static $newentity_cache;
-	if ((!$newentity_cache) && (is_memcache_available())) {
-		$newentity_cache = new ElggMemcache('new_entity_cache');
-	} elseif(is_apc_enabled()){
-		$newentity_cache = new ElggApcCache('new_entity_cache');
-	} elseif(function_exists('xcache_get')){
-		$newentity_cache = new ElggXCache('new_entity_cache');
+	if (is_memcache_available()) {
+		$memcache = new ElggMemcache('new_entity_cache');
+		//$new_entity = $memcache->load($row->guid);
 	}
 
-	if ($newentity_cache) {
-		$new_entity = $newentity_cache->load($row->guid);
-	}
 	if ($new_entity) {
 		return $new_entity;
 	}
@@ -725,8 +702,8 @@ function entity_row_to_elggstar($row) {
 	}
 	
 	// Cache entity if we have a cache available
-	if (($newentity_cache) && ($new_entity)) {
-		$newentity_cache->save($new_entity->guid, $new_entity);
+	if (($memcache) && ($new_entity)) {
+		$memcache->save($new_entity->guid, $new_entity);
 	}
 	cache_entity($new_entity);
 	return $new_entity;
@@ -741,10 +718,6 @@ function entity_row_to_elggstar($row) {
  * @link http://docs.elgg.org/DataModel/Entities
  */
 function get_entity($guid, $type = 'object') {
-	// This should not be a static local var. Notice that cache writing occurs in a completely
-	// different instance outside this function.
-	// @todo We need a single Memcache instance with a shared pool of namespace wrappers. This function would pull an instance from the pool.
-	static $shared_cache;
 
 	if(!$guid){
 		return;
@@ -762,27 +735,14 @@ function get_entity($guid, $type = 'object') {
 		return $new_entity;
 	}
 
-	// Check shared memory cache, if available
-	if (null === $shared_cache) {
-		if (is_memcache_available()) {
-			$shared_cache = new ElggMemcache('new_entity_cache');
-		} elseif(is_apc_enabled()) {
-			$shared_cache = new ElggApcCache('new_entity_cache');
-		} elseif(function_exists('xcache_get')){
-			$shared_cache = new ElggXCache('new_entity_cache');
-		}else {
-			$shared_cache = false;
-		}
+	if (is_memcache_available()) {
+		$memcache = new ElggMemcache('new_entity_cache');
+		$cached_entity = $memcache->load($guid);
 	}
-	//var_dump($guid, $type);
-	//var_dump(debug_backtrace());
-	if ($shared_cache) {
-		$cached_entity = $shared_cache->load($guid);
-		// @todo store ACLs in memcache http://trac.elgg.org/ticket/3018#comment:3
-		if ($cached_entity) {
-			// @todo use ACL and cached entity access_id to determine if user can see it
-			return $cached_entity;
-		}
+	
+	if ($cached_entity) {
+		// @todo use ACL and cached entity access_id to determine if user can see it
+		return $cached_entity;
 	}
 
 	$db = new DatabaseCall('entities');
@@ -1675,12 +1635,9 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 				}
 				
 				// If memcache is available then delete this entry from the cache
-				static $newentity_cache;
-				if ((!$newentity_cache) && (is_memcache_available())) {
-					$newentity_cache = new ElggMemcache('new_entity_cache');
-				}
-				if ($newentity_cache) {
-					$newentity_cache->delete($guid);
+				if (is_memcache_available()) {
+					$memcache = new ElggMemcache('new_entity_cache');
+					$memcache->delete($guid);
 				}
 
 				// Delete contained owned and otherwise releated objects (depth first)
@@ -2487,4 +2444,3 @@ elgg_register_plugin_hook_handler('volatile', 'metadata', 'volatile_data_export_
 
 /** Register init system event **/
 elgg_register_event_handler('init', 'system', 'entities_init');
-

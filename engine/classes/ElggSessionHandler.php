@@ -1,6 +1,6 @@
 <?php 
 if (version_compare(phpversion(), '5.4.0', '<')) {
-	require_once(dirname(__FILE__) . '/stub/SessionHandlerInterface');	
+	require_once(dirname(__FILE__) . '/stub/SessionHandlerInterface.php');	
 }
 class ElggSessionHandler implements SessionHandlerInterface{
 

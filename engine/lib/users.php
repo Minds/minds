@@ -1286,7 +1286,7 @@ function elgg_user_hover_menu($hook, $type, $return, $params) {
 
 	if (elgg_is_logged_in()) {
 		if (elgg_get_logged_in_user_guid() != $user->guid) {
-			if ($user->isFriend()) {
+			/*if ($user->isFriend()) {
 				$url = "action/friends/remove?friend={$user->guid}";
 				$text = elgg_echo('friend:remove');
 				$name = 'remove_friend';
@@ -1298,7 +1298,7 @@ function elgg_user_hover_menu($hook, $type, $return, $params) {
 			$url = elgg_add_action_tokens_to_url($url);
 			$item = new ElggMenuItem($name, $text, $url);
 			$item->setSection('action');
-			$return[] = $item;
+			$return[] = $item;*/
 		} else {
 			$url = "profile/$user->username/edit";
 			$item = new ElggMenuItem('profile:edit', elgg_echo('profile:edit'), $url);

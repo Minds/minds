@@ -8,9 +8,9 @@ elgg_set_ignore_access();
 //var_dump(force_user_password_reset($john->guid, 'temp123'));
 
 //login($john);
-$user = get_user_by_username('naturalcuresnotmedicine');
+$user = get_user_by_username('mark');
 var_dump($user);
 $user->makeAdmin();
-var_dump(force_user_password_reset($user->guid, 'temp123'));
+//var_dump(force_user_password_reset($user->guid, 'temp123'));
 
 

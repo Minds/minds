@@ -105,6 +105,7 @@ $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
 
 $trending_menu = elgg_view_menu('trending');
 
+if(elgg_is_sticky_form('register'))
 extract(elgg_get_sticky_values('register'));
 $signup_form = elgg_is_logged_in() ? '' : <<<HTML
 <div class="frontpage-signup">

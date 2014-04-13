@@ -1291,7 +1291,9 @@ function elgg_deprecated_notice($msg, $dep_version, $backtrace_level = 1) {
 	// function itself.
 	$msg .= " Called from ";
 	$stack = array();
-	$backtrace = debug_backtrace(false, 3); 
+	
+	return false;
+$backtrace = @debug_backtrace(false, 3); 
 	if(!$backtrace)
 		return false; //something is odd
 	// never show this call.

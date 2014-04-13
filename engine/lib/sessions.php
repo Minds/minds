@@ -21,7 +21,14 @@ global $SESSION;
 function _elgg_session_boot($force = false) {
 
         $handler = new ElggSessionHandler();
-        session_set_save_handler($handler);
+        session_set_save_handler(
+		array($handler, "open"),
+            array($handler, "close"),
+            array($handler, "read"),
+            array($handler, "write"),
+            array($handler, "destroy"),
+            array($handler, "gc")
+	);
 	ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // Persistent cookies
         session_name('minds');
         
@@ -39,7 +46,7 @@ function _elgg_session_boot($force = false) {
 		$_SESSION['force'] = true;
 
 	// is there a remember me cookie
-	if (isset($_COOKIE['mindsperm'])) { 
+	if (isset($_COOKIE['mindsperm']) && !isset($_SESSION['user'])) { 
 		// we have a cookie, so try to log the user in
 		$cookie = md5($_COOKIE['mindsperm']);
 		if ($user = get_user_by_cookie($cookie)) {
@@ -70,10 +77,10 @@ function _elgg_session_shutdown(){
 	if ( isset( $_COOKIE[session_name()] ) && !isset($_SESSION['user']) && !isset($_SESSION['force'])){
 		//clear session from disk
 		$params = session_get_cookie_params();
-		setcookie(session_name(), '', time()-60*60*24*30*12,
+	/*	setcookie(session_name(), '', time()-60*60*24*30*12,
 	        $params["path"], $params["domain"],
 	        $params["secure"], $params["httponly"]
-	    );
+	    );*/
 		$_SESSION = array();
 		unset($_COOKIE[session_name()]);
 		session_destroy();

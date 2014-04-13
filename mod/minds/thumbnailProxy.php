@@ -31,23 +31,33 @@ if($error_no){
 if(!$image){
 return false;
 }else{
-$filename = '/tmp/'.time();
+$filename = '/tmp/'.time().rand();
 file_put_contents($filename, $image);
-chmod($filename, fileperms($filename) | 128 + 16 + 2);
-$image = imagecreatefromstring($image);
-if(!$image)
-	@unlink($filename);
+//chmod($filename, fileperms($filename) | 128 + 16 + 2);
+$image = @imagecreatefromstring($image);
 }
-/*
+
+if(!$image){
+	@unlink($filename);
+	forward($src);
+	return false;
+}
+
 header('Expires: ' . date('r',  strtotime("today+6 months")), true);
                         header("Pragma: public");
 header("Cache-Control: public");
 header("X-No-Client-Cache:0");
-*/
+
 // Get new dimensions
 $width = imagesx($image);
 $height = imagesy($image);
 $new_width = get_input('width', 400);
+if($width == 0 || $height == 0){
+	@unlink($filename);
+	forward($src);
+	return;
+}
+
 $ratio = $width / $height;
 $new_height = $new_width / $ratio;
 
@@ -63,7 +73,7 @@ if(get_input('height')){
 // Resample
 $image_p = imagecreatetruecolor($new_width, $new_height);
 
-$mime = getimagesize($filename);
+$mime = @getimagesize($filename);
 $mime = $mime['mime'];
 switch($mime){
 	case 'image/gif':
@@ -71,16 +81,17 @@ switch($mime){
 	//WE WANT TO HAVE COOL GIFS!
 //	header('Content-type: image/gif');
 //	readfile($src);
-	forward($src);
+		@unlink($filename);
+		forward($src);
 	return;
 	break;
 	case 'image/png':
-	$image = imagecreatefrompng($filename);
+		$image = @imagecreatefrompng($filename);
 	break;
 	case 'image/bmp':
 	case 'image/jpeg':
 	default:
-	$image = imagecreatefromjpeg($filename);
+		$image = @imagecreatefromjpeg($filename);
 }
 if(!$image){
 	//we couldn't get the images, just output directly

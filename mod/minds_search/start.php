@@ -26,10 +26,10 @@ function minds_search_init() {
 	elgg_register_event_handler('create', 'object', 'elasticsearch_add');
 
 	//update handlers
-	elgg_register_event_handler('update', 'user', 'elasticsearch_update');
+/*	elgg_register_event_handler('update', 'user', 'elasticsearch_update');
 	elgg_register_event_handler('update', 'group', 'elasticsearch_update');
 	elgg_register_event_handler('update', 'object', 'elasticsearch_update');
-
+*/
 	//delete handler
 	elgg_register_event_handler('delete', 'user', 'elasticsearch_remove');
 	elgg_register_event_handler('delete', 'group', 'elasticsearch_remove');

@@ -86,7 +86,7 @@ class ElggMemcache extends ElggSharedMemoryCache {
 
 		// Get version
 		$this->version = $this->memcache->getVersion();
-		if (version_compare($this->version, ElggMemcache::$MINSERVERVERSION, '<')) {
+		/*if (version_compare($this->version, ElggMemcache::$MINSERVERVERSION, '<')) {
 			$msg = vsprintf('Memcache needs at least version %s to run, you are running %s',
 				array(ElggMemcache::$MINSERVERVERSION,
 				$this->version
@@ -94,7 +94,7 @@ class ElggMemcache extends ElggSharedMemoryCache {
 
 			throw new ConfigurationException($msg);
 		}
-
+*/
 		// Set some defaults
 		if (isset($CONFIG->memcache_expires)) {
 			$this->expires = $CONFIG->memcache_expires;
