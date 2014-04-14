@@ -37,13 +37,15 @@ elgg.security.setToken = function(json) {
  * @private
  */
 elgg.security.refreshToken = function() {
-	elgg.action('security/refreshtoken', function(data) {
+	//this was causing ddos liek effects..
+	
+	/*elgg.action('security/refreshtoken', function(data) {
 		if (data && data.output.__elgg_ts && data.output.__elgg_token) {
 			elgg.security.setToken(data.output);
 		} else {
 			clearInterval(elgg.security.tokenRefreshTimer);
 		}
-	});
+	});*/
 };
 
 
