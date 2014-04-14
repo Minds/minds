@@ -52,7 +52,9 @@ function minds_init(){
 	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js', 'footer');
 	
 	//register carousel js
-	elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js', 'footer');
+	//elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js', 'footer');
+	elgg_register_js('carousel',  elgg_get_site_url() . 'mod/minds/vendors/bootstrap-carousel/carousel.min.js');
+	elgg_register_css('carousel',  elgg_get_site_url() . 'mod/minds/vendors/bootstrap-carousel/carousel.css');
 	
 	elgg_unregister_js('jquery');
 	elgg_register_js('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');

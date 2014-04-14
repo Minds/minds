@@ -1103,6 +1103,47 @@ li.elgg-menu-item-rss{
 	/*color:#222;*/
 }
 
+
+.carousel{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height:380px;
+	overlflow:hidden;
+}
+.carousel .item{
+	height: 380px;
+	display: none;
+	position: relative;
+	-webkit-transition: .6s ease-in-out left;
+	transition: .6s ease-in-out left;
+}
+.carousel .item.active{
+	display:block;
+}
+.carousel-inner > .item > img {
+	position: absolute;
+	top: 0;
+	left: -25%;
+	min-width: 100%;
+	height: 380px;
+}
+.carousel-inner > .item > .carousel-caption{
+	position: absolute;
+	top: 120px;
+	left: 10px;
+	width:100%;
+	height: auto;
+	font-weight:lighter;
+	z-index:2;
+}
+.carousel-inner > .item > .carousel-caption h3{
+	color:#FFF;
+	line-height:64px;
+	font-size:64px;
+	text-shadow:0 0 3px #222;
+}
 .elgg-widget-more{
 	width: 100%;
 	height: auto;
