@@ -28,7 +28,7 @@ switch($type){
 </script>';
 	break;
 	case 'content-side-single':
-		echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+/*		echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Minds large block -->
 <ins class="adsbygoogle"
      style="display:inline-block;width:336px;height:280px"
@@ -36,7 +36,21 @@ switch($type){
      data-ad-slot="5788264423"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
-</script>';
+</script>';*/
+/*		echo "<div id='taboola-right-rail-thumbs-2nd-mix'></div>
+<script type=\"text/javascript\">
+
+    window._taboola = window._taboola || [];
+    _taboola.push({mode:'hybrid-thumbs-2r-rr', container:'taboola-right-rail-thumbs-2nd-mix', placement:'right-rail-thumbs-2nd', target_type:'mix'});
+
+</script>"; */
+	echo "<div id='taboola-right-rail-thumbs-3rd-mix'></div>
+<script type=\"text/javascript\">
+
+    window._taboola = window._taboola || [];
+    _taboola.push({mode:'thybrid-thumbs-2r-rr', container:'taboola-right-rail-thumbs-3rd-mix', placement:'right-rail-thumbs-3rd', target_type:'mix'});
+
+</script>";
 	break;
 	case 'content-side-single-user':
 		if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
@@ -219,8 +233,8 @@ placement:'below-main-column'});
 	_taboola.push({mode:'text-links-2c', container:'taboola-text-2-columns-mix', placement:'text-2-columns', target_type:'mix'}); </script>"
 
 );
-	$rand = array_rand($providers);
-	//$rand = get_input('show_ad', 'toobla');
+	//$rand = array_rand($providers);
+	$rand = get_input('show_ad', 'toobla');
 	echo '<div class="content-block-ratator">' .$providers[$rand] . '</div>';
 	break;	
 	case 'content.ad':
