@@ -95,6 +95,7 @@ switch($mime){
 if(!$image){
 	//we couldn't get the images, just output directly
 	//header('Content-type: image/jpeg');
+	 @unlink($filename);
 	forward($src); 
 	return;
 }
