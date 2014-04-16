@@ -6,6 +6,14 @@
 */
 ?>
 
+@media screen and (min-width: 1300px) {
+
+	#yt_video{
+		height: 720px;
+	}
+
+}
+
 .blog-sidebar li{
 	width:125px;
 	height:75px;

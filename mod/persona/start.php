@@ -17,7 +17,9 @@
 // Initialization functions
 
     function persona_init() {
-
+	if(elgg_is_logged_in()){
+		return;
+	}
 	// If the administrator has enabled login via Persona, extend the login form with it
 
 	    if (persona_is_enabled()) {

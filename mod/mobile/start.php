@@ -14,11 +14,7 @@ elgg_register_event_handler('init','system','mobile_init');
 
 function mobile_init(){
 
-	//if the site isn't using varnish then detect normally	
-	if(!isset($_SERVER['HTTP_X_UA_DEVICE'])){
-		mobile_detect();
-
-	} elseif($_SERVER['HTTP_X_UA_DEVICE'] == 'mobile') {
+	if($_SERVER['HTTP_X_UA_DEVICE'] == 'mobile' || $_SERVER['VIEWTYPE'] == 'mobile') {
 		elgg_set_viewtype('mobile');
 //		if(get_input('view') != 'mobile' && strpos(current_page_url(), 'action') != TRUE){
 //			forward('?view=mobile');

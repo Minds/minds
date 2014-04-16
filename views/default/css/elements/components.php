@@ -35,8 +35,8 @@
 }
 .elgg-list > li {
 	float: left;
-        margin: 1.1%;
-        border: 0;
+	margin: 1.1%;
+    border: 0;
 	background:#F8F8F8;
 	padding:10px 10px 0 11px;
         width: 29%;
@@ -53,17 +53,18 @@
 }
 .elgg-list.x4 > li {
 	width:21%;
+	margin:1%;
 }
 .elgg-list.x1{
-	padding:0!important; 
-	margin:0;
-}
-.elgg-list.x1 > li{
-	width:auto;
-	height:auto;
+	width:600px;
+	margin:auto;
+} 
+.elgg-list.x1 > li {
 	float:none;
-	margin:8px 0;
+	width:100% !important;
+	height:auto;
 }
+
 @media screen and (max-width: 1100px) {
         .elgg-list > li{
                 width:28%;

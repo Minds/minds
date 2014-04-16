@@ -42,6 +42,9 @@ function anypage_setup_footer_menu() {
 	if(!$ANYPAGE_CACHE){
 		$ANYPAGE_CACHE = elgg_get_entities(array('type'=>'object', 'subtype'=>'anypage', 'limit'=>0)); 
 	}
+
+	if(!is_array($ANYPAGE_CACHE))
+		return false;
 	
 	foreach ($ANYPAGE_CACHE as $page) {
 		elgg_register_menu_item('footer', array(

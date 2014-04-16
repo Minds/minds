@@ -110,6 +110,9 @@ body.news{
 	color:#4690D6 !important;
 	padding:0 10px;
 }
+.elgg-menu-item-toggle > a{
+	font-size:26px;
+}
 .index .elgg-main{
 	overflow: visible !important;
 	border:0;
@@ -1102,8 +1105,6 @@ li.elgg-menu-item-rss{
 	color:#F8F8F8;
 	/*color:#222;*/
 }
-
-
 .carousel{
 	position: absolute;
 	top: 0;
@@ -1131,11 +1132,10 @@ li.elgg-menu-item-rss{
 }
 .carousel-inner > .item > img {
 	position: absolute;
-	top: -200px;
+	top: 0;
 	left: 0;
-	min-width: 100%;
-	max-width: 100%;
-	height: auto;
+	min-width:100%;
+	/*height: 100%;*/
 }
 .carousel-inner > .item > .carousel-caption{
 	position: absolute;
@@ -1152,6 +1152,7 @@ li.elgg-menu-item-rss{
 	font-size:64px;
 	text-shadow:0 0 2px #BBB;
 }
+
 .elgg-widget-more{
 	width: 100%;
 	height: auto;

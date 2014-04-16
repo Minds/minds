@@ -226,7 +226,7 @@ function channel_page_handler($page) {
 		case 'timeline':
 		default:
 			//$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river'));
-			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river','limit'=>4));
+			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river','limit'=>12));
 			$class = 'landing-page';
 	}
 
