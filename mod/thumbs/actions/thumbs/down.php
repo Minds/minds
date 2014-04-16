@@ -26,8 +26,6 @@ if ($type == 'entity') {
 
 	//check to see if the user has already liked the item
 	if (in_array($user_guid, $thumbs_down)) {
-		$options = array('annotation_names' => array('thumbs:down'), 'annotation_owner_guids' => array(elgg_get_logged_in_user_guid()));
-		$delete = elgg_delete_annotations($options);
 		//if($delete){
 		echo 'not-selected';
 		//}
@@ -38,30 +36,13 @@ if ($type == 'entity') {
 		$entity->{'thumbs:down'} = serialize($thumbs_down);
 	} else {
 
-		if (elgg_annotation_exists($entity_guid, 'thumbs:up')) {
-			$options = array('annotation_names' => array('thumbs:up'), 'annotation_owner_guids' => array(elgg_get_logged_in_user_guid()));
-			elgg_delete_annotations($options);
-
-		}
-
-		// limit likes through a plugin hook (to prevent liking your own content for example)
-		if (!$entity -> canAnnotate(0, 'thumbs:up')) {
-			// plugins should register the error message to explain why liking isn't allowed
-			forward(REFERER);
-		}
-
 		$entity -> thumbcount--;
 
 		array_push($thumbs_down, $user_guid);
 		$entity->{'thumbs:down'} = serialize($thumbs_down);
 
-		$annotation = create_annotation($entity -> guid, 'thumbs:down', 1, "", elgg_get_logged_in_user_guid(), $entity -> access_id);
 		$entity -> save();
 		// tell user annotation didn't work if that is the case
-		if (!$annotation) {
-			register_error(elgg_echo("thumbs:failure"));
-			forward(REFERER);
-		}
 
 		echo 'selected';
 

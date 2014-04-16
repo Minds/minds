@@ -53,6 +53,7 @@
 }
 .elgg-list.x4 > li {
 	width:21%;
+	margin:1%;
 }
 .elgg-list.x1{
 	padding:0!important; 

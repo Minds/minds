@@ -28,7 +28,7 @@ switch($type){
 </script>';
 	break;
 	case 'content-side-single':
-/*		echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Minds large block -->
 <ins class="adsbygoogle"
      style="display:inline-block;width:336px;height:280px"
@@ -36,7 +36,7 @@ switch($type){
      data-ad-slot="5788264423"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
-</script>';*/
+</script>';
 /*		echo "<div id='taboola-right-rail-thumbs-2nd-mix'></div>
 <script type=\"text/javascript\">
 

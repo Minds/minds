@@ -15,7 +15,7 @@ $description = strip_tags($article['description']);
 if($provider == 'minds'){
 	$entity = get_entity($article['guid'], 'object');
 	$iconURL = minds_fetch_image($entity->description, $entity->owner_guid);
-	$icon = "<img src='".$iconURL."'/>";
+	$icon = "<img src='".$iconURL."' class=\"rich-image\"/>";
 }
 
 if(!$full_view){
