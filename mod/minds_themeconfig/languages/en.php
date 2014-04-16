@@ -2,7 +2,8 @@
 
 
 $english = array(
-	'admin:appearance:theme' => 'General',
+	'admin:appearance:theme' => 'Configure theme',
+	'admin:appearance:css' => 'Edit CSS directly (Advanced)',
 	'admin:appearance:footer' => 'Footer',
 	'admin:appearance:themesets' => 'Themesets',
 	'admin:monitization' => 'Monitization',

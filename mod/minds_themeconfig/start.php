@@ -5,11 +5,13 @@ elgg_register_event_handler('init', 'system', 'themeconfig_init',99999);
 function themeconfig_init() {
 
     elgg_register_admin_menu_item('configure', 'theme', 'appearance');
+    elgg_register_admin_menu_item('configure', 'css', 'appearance');
     elgg_register_admin_menu_item('configure', 'themesets', 'appearance');
     elgg_register_admin_menu_item('configure', 'footer', 'appearance');
     elgg_register_admin_menu_item('configure', 'ads', 'monitization');
 
     elgg_register_action('theme/edit', dirname(__FILE__) . '/actions/edit.php', 'admin');
+    elgg_register_action('theme/advanced_css', dirname(__FILE__) . '/actions/advanced_css.php', 'admin');
     elgg_register_action('footer/edit', dirname(__FILE__) . '/actions/footer/edit.php', 'admin');
     elgg_register_action('themesets/edit', dirname(__FILE__) . '/actions/themesets/edit.php', 'admin');
     elgg_register_action('ads/edit', dirname(__FILE__) . '/actions/ads/edit.php', 'admin');

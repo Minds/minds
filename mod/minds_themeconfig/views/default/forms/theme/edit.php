@@ -27,8 +27,4 @@
         <?php echo elgg_view('input/file', array('name' => 'background')); ?>
 </label> <br /><label><input type="checkbox" name="background_remove" value="y" /> <?php echo elgg_echo('remove'); ?></label></p>
 
-<p><label>
-    <?php echo elgg_echo('minds_themeconfig:custom_css');?>:<br />
-    <textarea name="custom_css"><?php echo elgg_get_plugin_setting('custom_css', 'minds_themeconfig'); ?></textarea>
-</label></p>
 <?php echo elgg_view('input/submit', array('value' => elgg_echo('save'))); ?>
