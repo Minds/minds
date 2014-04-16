@@ -41,6 +41,10 @@ if($vars['masonry'] !== false && get_input('masonry') != 'off'){
         $list_class .= ' mason';
 }
 
+if($vars['linear'] || get_input('linear', 'off') == 'on'){
+	$list_class .= ' x1';
+}
+
 $item_class = 'elgg-item';
 if (isset($vars['item_class'])) {
     $item_class = "$item_class {$vars['item_class']}";

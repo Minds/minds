@@ -4,7 +4,7 @@
  * 
  */
 global $CONFIG;
-elgg_load_js('carouFredSel');
+//elgg_load_js('carousel');
 
 //$entities = elgg_extract('entities', $vars);
 $divs = elgg_extract('divs', $vars);
@@ -28,47 +28,27 @@ usort($items, function($a, $b){
 $(document).ready(function() {
 	
 	// Using custom configuration
-	$("#<?php echo $id;?>").carouFredSel({
-		width: '100%',
-		items: {
-			visible: 1,
-			start: 1
-		},
-		scroll: {
-			items: 1,
-			duration: 1500,
-			timeoutDuration: 3500,
-			fx: "crossfade"
-		},
-		direction			: "left",
-		swipe				: true,
-		infinite			: true,
-		circular			: true,
-	//	pagination			: "#<?php echo $id;?>_pag",
-		prev	: { 
-			button  : "#<?php echo $id;?>_prev",
-			key		: "left",
-		},
-		next	: { 
-			button  : "#<?php echo $id;?>_next",
-			key		: "right",
-		}			
-	});	
+	$('.carousel').carousel();
+	
 });
 </script>
 
-<div id="carousel_wrapper">
-	<div id="<?php echo $id;?>">
+<div class="carousel fade">
+	<div class="carousel-inner">
 	<?php 
-		
+		$i = 0;
 		foreach($items as $item){
-			echo '<div style="background: url(' . elgg_get_site_url() . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache" . ');">';
+			$class = $i==0 ?'active' : '';
+ 			echo "<div class=\"item $class\">";
 			//echo '<div>';
-			echo '<h2 style="color:'. $item->color . '">' . $item->title . '</h2>';
-			echo '<h3>' . $subtitle . '</h3>';
+			//echo '<h3>' . $subtitle . '</h3>';
+			$bg =  elgg_get_site_url() . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache";
+			echo "<img src=\"$bg\" />";
+			echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><h3>$item->title</h3></div>";
+			
 			echo '</div>';
+			$i++;
 		}	
 	?>
 	</div>
-	<div class="pagination" id="<?php echo $id;?>_pag"></div>
 </div>
