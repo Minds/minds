@@ -52,9 +52,19 @@ if (elgg_is_logged_in() && $context) {
 		'deck' => array(
                         'text' => elgg_echo('My Social Network Feeds'),
                         'href' => '/activity',
-                        'selected' => ($filter_context == 'friends' || !$filter_context),
+                        'selected' => false,
                         'priority' => 500,
                 ),
+        'toggle' => array(
+ 			'text' => get_input('linear') == 'on' ? "&#59404;" :  "&#59405;",
+ 			'link_class'=>'entypo tooltip w',
+			'href' => get_input('linear') == 'on' ? '?linear=off' : '?linear=on',
+			'selected' => false,
+			'title'=>'Toggle the layout',
+    		'priority' => 1,
+    		'section'=>'right'
+                ),
+               
 	);
 	if(elgg_is_admin_logged_in()){
 	$tabs['all'] = array(

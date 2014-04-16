@@ -2,6 +2,9 @@
   "name": "",
   "css_prefix_text": "icon-",
   "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
   "glyphs": [
     {
       "uid": "0f99ab40ab0b4d64a74f2d0deeb03e42",
@@ -31,6 +34,18 @@
       "uid": "85017ab6ca074831a8de771b40e9640c",
       "css": "camera",
       "code": 128247,
+      "src": "entypo"
+    },
+    {
+      "uid": "5e9f01871d44e56b45ecbfd00f4dbc3a",
+      "css": "layout",
+      "code": 59404,
+      "src": "entypo"
+    },
+    {
+      "uid": "2cfb3f2b46b34a1790aec0aa846297b6",
+      "css": "menu",
+      "code": 59405,
       "src": "entypo"
     },
     {

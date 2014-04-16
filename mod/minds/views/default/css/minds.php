@@ -110,6 +110,9 @@ body.news{
 	color:#4690D6 !important;
 	padding:0 10px;
 }
+.elgg-menu-item-toggle > a{
+	font-size:26px;
+}
 .index .elgg-main{
 	overflow: visible !important;
 	border:0;
