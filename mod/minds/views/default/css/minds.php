@@ -1105,8 +1105,6 @@ li.elgg-menu-item-rss{
 	color:#F8F8F8;
 	/*color:#222;*/
 }
-
-
 .carousel{
 	position: absolute;
 	top: 0;
@@ -1116,21 +1114,27 @@ li.elgg-menu-item-rss{
 	overlflow:hidden;
 }
 .carousel .item{
+	top:0; 
+	left:0;
+	width:100%;
 	height: 380px;
-	display: none;
-	position: relative;
-	-webkit-transition: .6s ease-in-out left;
-	transition: .6s ease-in-out left;
+	opacity:0;
+	overflow:hidden;
+	-moz-transition: opacity ease-in-out .7s;
+        -o-transition: opacity ease-in-out .7s;
+        -webkit-transition: opacity ease-in-out .7s;
+        transition: opacity ease-in-out .7s;
+	position: absolute;
+	display:block;
 }
 .carousel .item.active{
-	display:block;
+	opacity: 1;
 }
 .carousel-inner > .item > img {
 	position: absolute;
 	top: 0;
-	left: -25%;
-	min-width: 100%;
-	height: 380px;
+	left: 0;
+	height: 100%;
 }
 .carousel-inner > .item > .carousel-caption{
 	position: absolute;
@@ -1145,8 +1149,9 @@ li.elgg-menu-item-rss{
 	color:#FFF;
 	line-height:64px;
 	font-size:64px;
-	text-shadow:0 0 3px #222;
+	text-shadow:0 0 2px #BBB;
 }
+
 .elgg-widget-more{
 	width: 100%;
 	height: auto;

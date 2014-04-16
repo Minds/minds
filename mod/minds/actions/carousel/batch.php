@@ -44,13 +44,14 @@ foreach($items as $k=>$item){
 			$dimensions = getimagesize($_FILES["$item->guid:background"]['tmp_name']);
 			$h = $dimensions[1]; 
 		
-		  //  $resized = get_resized_image_from_uploaded_file("$item->guid:background", $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
+		    $resized = get_resized_image_from_uploaded_file("$item->guid:background", $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
 		  	$x1 = 0;
 			$x2 = 2000;
 			$y1 = $h/3;
 			$y2 = ($h/3)+400;
 			$resized = get_resized_image_from_existing_file($_FILES["$item->guid:background"]['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], $x1, $y1, $x2, $y2, $size_info['upscale'], 'jpeg', 60);
-			if ($resized) {
+		
+		if ($resized) {
 				@mkdir($theme_dir);
 	                
 				file_put_contents($theme_dir . $item->guid, $resized);
@@ -62,7 +63,7 @@ foreach($items as $k=>$item){
 			if (isset($_FILES["$item->guid:background"]) && ($_FILES["$item->guid:background"]['error'] != UPLOAD_ERR_NO_FILE) && $_FILES["$item->guid:title"]['error'] != 0) {
 			//	register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
 			}
-		    
+		   	$item->last_updated = time(); 
 			$item->background  = true;
 	    }
 		$item->save();

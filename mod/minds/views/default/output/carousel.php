@@ -4,7 +4,7 @@
  * 
  */
 global $CONFIG;
-//elgg_load_js('carousel');
+elgg_load_js('carousel');
 
 //$entities = elgg_extract('entities', $vars);
 $divs = elgg_extract('divs', $vars);
@@ -28,7 +28,12 @@ usort($items, function($a, $b){
 $(document).ready(function() {
 	
 	// Using custom configuration
-	$('.carousel').carousel();
+	$('.carousel').carousel(
+		{
+			interval: 4000,
+			 pause: "false"
+		}
+	);
 	
 });
 </script>
