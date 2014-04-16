@@ -14,16 +14,17 @@ if(strpos($src, 'http') === FALSE){
 
 $ch = curl_init($src);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 1);
-curl_setopt($ch,CURLOPT_TIMEOUT_MS,500);
+curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 2);
+curl_setopt($ch,CURLOPT_TIMEOUT_MS,1000);
 $image = curl_exec($ch);
 $errorno = curl_errno($ch);
 curl_close($ch);
 
-if($error_no){
-	var_dump($error_no);
+if($errorno){
+	var_dump($errorno);
 	die();
 }
 

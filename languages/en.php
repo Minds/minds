@@ -617,7 +617,7 @@ $english = array(
 	'admin:widget:admin_welcome' => 'Welcome',
 	'admin:widget:admin_welcome:help' => "A short introduction to Elgg's admin area",
 	'admin:widget:admin_welcome:intro' =>
-'Welcome to Elgg! Right now you are looking at the administration dashboard. It\'s useful for tracking what\'s happening on the site.',
+'Welcome to Minds! Right now you are looking at the administration dashboard. It\'s useful for tracking what\'s happening on the site.',
 
 	'admin:widget:admin_welcome:admin_overview' =>
 "Navigation for the administration area is provided by the menu to the right. It is organized into"
@@ -630,7 +630,7 @@ $english = array(
 	",
 
 	// argh, this is ugly
-	'admin:widget:admin_welcome:outro' => '<br />Be sure to check out the resources available through the footer links and thank you for using Elgg!',
+	'admin:widget:admin_welcome:outro' => '',
 
 	'admin:widget:control_panel' => 'Control panel',
 	'admin:widget:control_panel:help' => "Provides easy access to common controls",

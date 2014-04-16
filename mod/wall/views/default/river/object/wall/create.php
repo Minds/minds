@@ -35,10 +35,34 @@ if($object->owner_guid == $object->to_guid || $to instanceof ElggGroup || !$to){
 }
 
 if($item->attachment_guid){
+
+	 elgg_load_js('lightbox');
+        elgg_load_css('lightbox');
+	?>
+<script>
+$(document).ready(function(){ 
+	$('.attachment-lightbox').fancybox({
+		'type': 'image',
+		'width': '90%'
+	}); 
+});
+</script>
+<?php
+
+	$src = elgg_get_site_url() . "photos/thumbnail/$item->attachment_guid/large";
+
 	$attachment = elgg_view('output/img', array( 
-		'src' => elgg_get_site_url() . "photos/thumbnail/$item->attachment_guid/large",
+		'src' => $src,
 		'class' => 'river-img-attachment'
 	)); //we are just going to assume they are images... change soon
+	 
+	$attachment =  elgg_view('output/url', array(
+		'text'=>$attachment,
+		'href'=>$src,
+		'class'=>'attachment-lightbox'
+	));
+
+
 } elseif($item->meta_title){
 	$attachment = elgg_view('output/preview', array(
 		'title' => $item->meta_title,

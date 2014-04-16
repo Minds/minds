@@ -123,7 +123,7 @@ class ElggUser extends ElggEntity
                         $this->attributes[$k] = $v;
                 }
 
-                cache_entity($this);
+               // cache_entity($this);
 
 		return true;
 	}

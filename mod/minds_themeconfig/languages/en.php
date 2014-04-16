@@ -5,7 +5,7 @@ $english = array(
 	'admin:appearance:theme' => 'General',
 	'admin:appearance:footer' => 'Footer',
 	'admin:appearance:themesets' => 'Themesets',
-	'admin:monitization' => 'Monitization',
+	'admin:monitization' => 'Monetization',
 	'admin:monitization:ads' => 'Ads',
 
 	'minds_themeconfig:copyright' => 'Copyright',

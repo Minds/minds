@@ -705,7 +705,7 @@ function entity_row_to_elggstar($row) {
 	if (($memcache) && ($new_entity)) {
 		$memcache->save($new_entity->guid, $new_entity);
 	}
-	cache_entity($new_entity);
+	//cache_entity($new_entity);
 	return $new_entity;
 }
 
