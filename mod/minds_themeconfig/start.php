@@ -37,8 +37,8 @@ function themeconfig_init() {
     
     // Configure font elements that we can set
     $CONFIG->theme_fonts = array(
-	'header' => 'h2'
-	
+	'header' => 'h2',
+	'paragraph' => 'p',
     );
     
     $url = elgg_get_simplecache_url('css', 'minds_themeconfig');
