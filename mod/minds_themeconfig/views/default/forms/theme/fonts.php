@@ -6,7 +6,14 @@ foreach ($CONFIG->theme_fonts as $element => $code) {
     <div class="font-selection font-selection-<?php echo $element; ?>">
         <h2 style="text-transform:capitalize;"><?php echo $element; ?></h2>
         <div id="sample_<?php echo $code; ?>" class="font-sample">
-    	<<?php echo $code; ?> class="sample">Pack my box with five dozen liquor jugs.</<?php echo $code; ?>>
+    	<<?php echo $code; ?> style="<?php 
+	    $f = elgg_get_plugin_setting('font::' . $code, 'minds_themeconfig');
+	    $s = elgg_get_plugin_setting('font_size::' . $code, 'minds_themeconfig');
+	
+	    if ($f) echo "font-family: $f; " ;
+	    if ($s) echo "font-size: {$s}pt;";
+	    
+	?>" class="sample">Pack my box with five dozen liquor jugs.</<?php echo $code; ?>>
         </div>
 
         <p><label>

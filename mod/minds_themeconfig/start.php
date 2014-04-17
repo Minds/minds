@@ -24,8 +24,11 @@ function themeconfig_init() {
     elgg_register_page_handler('themeicons', 'themeicons_page_handler');
 
     elgg_register_event_handler('pagesetup', 'system', function() {
-        // Extend the css
-        elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
+        // Extend the css (only if it's not the admin page)
+        if (elgg_get_context() != 'admin')
+	    elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
+	
+	
 	elgg_extend_view('page/elements/ads', 'minds_themeconfig/ads');
 	elgg_unextend_view('page/elements/ads', 'minds/ads'); //remove the default ads
     }, 999);
