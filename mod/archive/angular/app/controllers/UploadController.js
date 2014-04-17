@@ -17,14 +17,27 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
         serviceUrl: serviceUrl
     };
 
-    $scope.isSelected = function(album){
-        if(album['title'].toLowerCase() == "uploads")
-        {
-            return true;
-        }
-
-        return false;
-    };
+	$scope.newAlbum = function(index){
+		console.log(index);
+		$scope.newAlbumFromIndex = index; //a tad hacky!
+		$.fancybox("#album-create-wrapper");
+	};
+	
+	$scope.createAlbum = function(){
+		$.fancybox.close();
+		index = $scope.newAlbumFromIndex;
+		Elgg.createAlbum({title:$scope.albumName}).then(function(guid){ 
+	   		$scope.fileInfo[index]['albumId'] = guid;
+	   	
+			//we now now add this album to the json array of albums.
+			$scope.albums.push({title: $scope.albumName, id: guid});
+			//update our list
+			$scope.fileInfo[index]['albumId'] == guid;
+			$scope.albumName = '';
+		});
+		
+	};
+	
 
     $scope.thumbConfig = {
         serviceUrl: serviceUrl,
@@ -63,6 +76,16 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 		{value:2, text:'Public'}
 	];
 	$scope.default_access = 2;
+	
+	var saveTimeout;
+	$scope.changed = function() {
+		if (saveTimeout) $timeout.cancel(saveTimeout);
+		
+		saveTimeout = $timeout(function(){
+			console.log('considering saving...');
+		},1000);
+		
+	};
 
     /**
      * Gets the uploaded file thumbnail
@@ -155,25 +178,23 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
             $scope.fileInfo[index]['entryRefresh'] = $scope.getEntry($scope.fileInfo[index]['entryId']);
 
             //Create an Elgg entity
-            $scope.fileInfo[index]['guid'] = Elgg.addElggEntity($scope.fileInfo[index]);
+            Elgg.addElggEntity($scope.fileInfo[index]).then(function(guid){ 
+	   			$scope.fileInfo[index]['guid'] = guid;
+	   		});
     
 		} else if($scope.fileInfo[index]['fileType'] == 'image') {
 			
-			for(albumIndex in $scope.albums){
-				
-		   		if($scope.isSelected($scope.albums[albumIndex])){
-		   			
-		     		$scope.fileInfo[index]['albumId'] = albumIndex; //if video we set the album to "" else we set to the album
-				
-				}
-				
-			}
+			$scope.fileInfo[index]['albumId'] = $scope.albums[0].id;
 			
-			$scope.fileInfo[index]['guid'] = Elgg.uploadElggFile($scope.fileInfo[index], jQuery(elm), data, $scope);
-	   
+			Elgg.uploadElggFile($scope.fileInfo[index], jQuery(elm), data, $scope).then(function(guid){ 
+	   			$scope.fileInfo[index]['guid'] = guid;
+	   		});
+
 	    } else {
 	    	
-			$scope.fileInfo[index]['guid'] = Elgg.uploadElggFile($scope.fileInfo[index], jQuery(elm), data, $scope);
+			Elgg.uploadElggFile($scope.fileInfo[index], jQuery(elm), data, $scope).then(function(guid){ 
+	   			$scope.fileInfo[index]['guid'] = guid;
+	   		});
 		
 		}
 			

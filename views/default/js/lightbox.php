@@ -32,5 +32,5 @@ elgg.register_hook_handler('init', 'system', elgg.ui.lightbox_init);
 <?php
 
 $js_path = elgg_get_config('path');
-$js_path = "{$js_path}vendors/jquery/fancybox/jquery.fancybox-1.3.4.pack.js";
+$js_path = "{$js_path}vendors/jquery/fancybox/source/jquery.fancybox.pack.js";
 include $js_path;

@@ -48,6 +48,7 @@ if (!$album->save()) {
 	forward(REFERER);
 }
 
+echo $album->guid;
 elgg_clear_sticky_form('tidypics');
 
 system_message(elgg_echo("album:created"));

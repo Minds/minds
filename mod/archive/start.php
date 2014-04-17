@@ -52,9 +52,11 @@ function minds_archive_init() {
     //elgg_register_js(array('angular' => $angularSettings), 'setting');
 
     // include library
-    elgg_register_js('angular.min.js' , $angularRoot . 'lib/angular.min.js');
-    elgg_register_js('bootstrap.min.js' , $angularRoot . 'lib/bootstrap/js/bootstrap.min.js');
-    elgg_register_js('jquery.ui.widget.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/vendor/jquery.ui.widget.js');
+    elgg_register_js('angular.min.js' , $angularRoot . 'lib/angular.min.js', 'footer', 200);
+	elgg_register_js('angular-route.min.js' , $angularRoot . 'lib/angular-route.min.js','footer', 201);
+	   
+	//not liking all these scripts...
+	elgg_register_js('jquery.ui.widget.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/vendor/jquery.ui.widget.js');
     elgg_register_js('jquery.fileupload.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/jquery.fileupload.js');
     elgg_register_js('jquery.iframe-transport.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/jquery.iframe-transport.js');
 //    elgg_register_js('http://player.kaltura.com/mwEmbedLoader.php', 'external');
@@ -64,15 +66,14 @@ function minds_archive_init() {
     elgg_register_js('kaltura-upload.js' , $angularRoot . 'directives/kaltura-upload.js');
     elgg_register_js('kaltura-thumbnail.js' , $angularRoot . 'directives/kaltura-thumbnail.js');
 
-    // include controllers
-    elgg_register_js('UploadController.js' , $angularRoot . 'controllers/UploadController.js');
-    elgg_register_js('GalleryController.js' , $angularRoot . 'controllers/GalleryController.js');
 
+	elgg_register_js('UploadController.js' , $angularRoot . 'controllers/UploadController.js');
+	
     // include services
     elgg_register_js('KalturaService.js' , $angularRoot . 'services/KalturaService.js');
     elgg_register_js('ElggService.js' , $angularRoot . 'services/ElggService.js');
 
-    elgg_register_js('app.js' , $angularRoot . 'app.js');
+    elgg_register_js('app.js' , $angularRoot . 'app.js', 'footer', 700);
 
     // include css
     elgg_register_css('appstyle.css' , $angularRoot .'css/appstyle.css');
@@ -159,8 +160,7 @@ function minds_archive_init() {
 	elgg_register_action("archive/feature", $action_path . "feature.php");
 	elgg_register_action("archive/save", $action_path . "save.php");
 	elgg_register_action("archive/add_album", $action_path . "tidypics/add_album.php");
-	elgg_register_action("archive/upload", $action_path . "upload.php");
-    elgg_register_action("archive/addElggVideo", $action_path . "addAngular.php");
+    elgg_register_action("archive/upload", $action_path . "upload.php");
     elgg_register_action("archive/deleteElggVideo" , $action_path . "deleteAngular.php");
     elgg_register_action("archive/selectAlbum" , $action_path . "tidypics/album.php");
     elgg_register_action("archive/getKSession" , $action_path . "generateKalturaSession.php");
@@ -310,47 +310,21 @@ function minds_archive_page_handler($page) {
 		case 'trending':
 			include('pages/archive/trending.php');
 			break;
-		case 'wall':
-			$tab = $page[1] ? $page[1] : 'featured';
-			set_input('tab', $tab);
-			include('pages/archive/wall.php');
-			break;
 		case 'api_upload':
 			include('pages/archive/api_upload.php');
 			break;
-/*		case 'upload':			
-			switch($page[1]) {
-				case 'videoaudio':
-					include('pages/archive/kaltura_upload.php');
-					break;
-				case 'others':
-					include('pages/archive/others_upload.php');
-					break;
-				case 'album':
-					if($page[2] == 'create'){
-						include('pages/archive/add_album.php');
-						return true;
-					}
-					set_input('guid',$page[2]);
-					include(elgg_get_plugins_path().'tidypics/pages/photos/image/upload.php');
-					break;
-				case 'batch':
-					set_input('guid',$page[2]);
-					include(elgg_get_plugins_path().'tidypics/pages/photos/batch/edit.php');
-					break;
-*/  
-              	case 'upload':
-        		if(!elgg_is_logged_in()){
+         case 'upload':
+			if(!elgg_is_logged_in()){
 				forward();
 			}
 	        	//@todo: rename this file upload...
-                	switch($page[1]){
-                                case 'album':
-                                	include('pages/archive/add_album.php');
-                                        return true;
-				        break;
-                                default:
-                        		include('pages/archive/angularJS_upload.php');
+			switch($page[1]){
+				case 'album':
+					include('pages/archive/add_album.php');
+					return true;
+					break;
+				default:
+				include('pages/archive/upload.php');
 			}
 			break;
 		case 'kaltura':
@@ -388,9 +362,6 @@ function minds_archive_page_handler($page) {
 			set_input('username', $page[1]);
 			include(dirname(__FILE__) . "/pages/archive/network.php");
 			break;	
-		case 'unavailable':
-			include(dirname(__FILE__) . "/pages/archive/unavailable.php");
-			break;
 		// Image lightbox
 		case 'image':
 			if (!elgg_is_xhr()) {

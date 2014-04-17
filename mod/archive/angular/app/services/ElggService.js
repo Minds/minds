@@ -1,9 +1,5 @@
 /**
- * Created by Roy Cohen.
- * User: root
- * Date: 7/17/13
- * Time: 11:35 AM
- * To change this template use File | Settings | File Templates.
+ * Services. Communicates with the backend. 
  */
 
 angular.module('services.Elgg', []);
@@ -39,7 +35,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
             
 			$http({
                 method: 'POST',
-                url: actionUrl + 'addElggVideo',
+                url: actionUrl + 'upload',
                 data: data,
                 cache: false,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -56,6 +52,36 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
         return deferred.promise;
 
    };
+   
+	elggService.createAlbum = function(fileInfo){
+   		console.log('request submited');
+   		var deferred = $q.defer();
+		
+		var data = {
+            'title': fileInfo['title'],
+            'license': 'default',
+            '__elgg_token': elgg.security.token.__elgg_token,
+            '__elgg_ts': elgg.security.token.__elgg_ts
+        };
+            
+		$http({
+            method: 'POST',
+            url: actionUrl + 'add_album',
+            data: data,
+            cache: false,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            transform: "transformRequest"
+        }).
+            success(function(output, status, headers, config) {
+                deferred.resolve(output.output);
+            }).
+            error(function(output, status, headers, config) {
+                deferred.reject(output.output);
+            });
+
+        return deferred.promise;
+
+	};
 
     /**
      * Create new Elgg entity and uploading the files to Elgg.
@@ -69,7 +95,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
      elggService.uploadElggFile = function(fileInfo, fileUploader, data, $scope){
         var deferred = $q.defer();
 
-        var url = actionUrl + 'addElggVideo';
+        var url = actionUrl + 'upload';
         data.formData = {
             'title': fileInfo['name'],
             'description': fileInfo['description'],
@@ -121,7 +147,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
        
 		$http({
                 method: 'POST',
-                url: actionUrl + 'addElggVideo',
+                url: actionUrl + 'upload',
                 data: data,
                 cache: false,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},

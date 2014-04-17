@@ -128,6 +128,20 @@
     -moz-box-sizing: border-box;
 	font-size:12px;
 }
+.uploadlist .add-new-album{
+	color: #fff;
+	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+	background-color: #60b044;
+	background-image: -moz-linear-gradient(#8add6d, #60b044);
+	background-image: -webkit-linear-gradient(#8add6d, #60b044);
+	background-image: linear-gradient(#8add6d, #60b044);
+	background-repeat: repeat-x;
+	border-color: #5ca941;
+	padding: 8px 16px;
+	right: 0;
+	position: absolute;
+	margin: 5px 28px;
+}
 .uploadlist table tr > td input:focus{
 	border:inherit;
 	border-radius:inherit;
@@ -144,6 +158,9 @@
 	top: 0;
 	height: 100%;
 	background-color: #4690D6;
+}
+.uploadlist .progress > .bar.p100{
+	background:#5ca941;
 }
 
 .uploadlist div.progress{
