@@ -3,9 +3,11 @@
 elgg_register_event_handler('init', 'system', 'themeconfig_init',99999);
 
 function themeconfig_init() {
+    global $CONFIG;
 
     elgg_register_admin_menu_item('configure', 'theme', 'appearance');
     elgg_register_admin_menu_item('configure', 'css', 'appearance');
+    elgg_register_admin_menu_item('configure', 'fonts', 'appearance');
     elgg_register_admin_menu_item('configure', 'themesets', 'appearance');
     elgg_register_admin_menu_item('configure', 'footer', 'appearance');
     elgg_register_admin_menu_item('configure', 'ads', 'monitization');
@@ -28,6 +30,16 @@ function themeconfig_init() {
     }, 999);
 
     elgg_register_event_handler('pagesetup', 'system', 'minds_themeconfig_setup');
+    
+    // Configure font elements that we can set
+    $CONFIG->theme_fonts = array(
+	'header' => 'h2'
+	
+    );
+    
+    $url = elgg_get_simplecache_url('css', 'minds_themeconfig');
+    elgg_register_css('minds.themeconfig', $url);
+    elgg_load_css('minds.themeconfig');
 }
 
 function themeicons_page_handler($pages) {

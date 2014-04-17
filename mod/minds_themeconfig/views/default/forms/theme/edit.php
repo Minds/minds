@@ -10,10 +10,7 @@
     <?php echo elgg_echo('minds_themeconfig:frontpagetext');?>:<br />
         <?php echo elgg_view('input/text', array('name' => 'frontpagetext', 'value' => elgg_get_plugin_setting('frontpagetext', 'minds_themeconfig'))); ?>
 </label></p>
-<p><label>
-    <?php echo elgg_echo('minds_themeconfig:font:header');?>:<br />
-        <?php echo elgg_view('input/text', array('name' => 'font[h2]', 'value' => elgg_get_plugin_setting('h2_font', 'minds_themeconfig'))); ?>
-</label></p>
+
 <p><label>
     <?php echo elgg_echo('minds_themeconfig:logo');?>:<br />
         <?php echo elgg_view('input/file', array('name' => 'logo')); ?>
