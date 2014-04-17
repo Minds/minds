@@ -11,6 +11,7 @@ try{
 	$serviceUrl = elgg_get_plugin_setting('kaltura_server_url', 'archive');
 	$partnerId = elgg_get_plugin_setting('partner_id', 'archive');
 }catch(Exception $e){
+	var_dump($e); exit;
 }
 $serverUrl = elgg_get_site_url();
 

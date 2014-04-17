@@ -164,24 +164,28 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 			$scope.fileInfo[index]['thumbSecond'] = 0;
 			
             // Add upload token
-            var token = Kaltura.uploadTokenAdd(file);
+            Kaltura.uploadTokenAdd(file).then(function(token){
+            	//set the upload token
+            	Kaltura.uploadTokenUpload(token, jQuery(elm), data, $scope).then(function(complete){
+            		//add the entry
+            		Kaltura.baseEntryAdd($scope.fileInfo[index]).then(function(entryId){
+						$scope.fileInfo[index]['entryId'] = entryId;
+						//add the file to the entry
+            			Kaltura.baseEntryAddContent(entryId, token).then(function(entry){
+            				$scope.fileInfo[index]['entry'] = entry;
+            				//refresh the entry(this might be a useless feature...)
+            				$scope.fileInfo[index]['entryRefresh'] = $scope.getEntry($scope.fileInfo[index]['entryId']);
+            				
+            				//add into elgg
+            				 //Create an Elgg entity
+				            Elgg.addElggEntity($scope.fileInfo[index]).then(function(guid){ 
+					   			$scope.fileInfo[index]['guid'] = guid;
+					   		});
+            			});
+            		});
+            	});
+            });
 
-            // Upload file to token
-            var uploadComplete = Kaltura.uploadTokenUpload(token, jQuery(elm), data, $scope);
-
-            // Add entry
-            $scope.fileInfo[index]['entryId'] = Kaltura.baseEntryAdd($scope.fileInfo[index], uploadComplete);
-
-            // Add content to entry in Kaltura
-            $scope.fileInfo[index]['entry'] = Kaltura.baseEntryAddContent($scope.fileInfo[index]['entryId'], token);
-
-            $scope.fileInfo[index]['entryRefresh'] = $scope.getEntry($scope.fileInfo[index]['entryId']);
-
-            //Create an Elgg entity
-            Elgg.addElggEntity($scope.fileInfo[index]).then(function(guid){ 
-	   			$scope.fileInfo[index]['guid'] = guid;
-	   		});
-    
 		} else if($scope.fileInfo[index]['fileType'] == 'image') {
 			
 			$scope.fileInfo[index]['albumId'] = $scope.albums[0].id;
