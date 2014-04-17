@@ -1,4 +1,34 @@
+<?php global $CONFIG; ?>
 <style type="text/css">
+
+    <?php
+    
+	// Overrides fonts 
+	foreach ($CONFIG->theme_fonts as $element => $code) {
+
+	    $f = elgg_get_plugin_setting('font::' . $code, 'minds_themeconfig');
+	    $s = elgg_get_plugin_setting('font_size::' . $code, 'minds_themeconfig');
+	    
+	    if ($f) {
+		?>
+<?php echo $code; ?> {
+    font-family: <?php echo $f; ?>;
+}
+		<?php
+	    } 
+	    
+	    if ($s) {		
+		?>
+<?php echo $code; ?> {
+    font-size: <?php echo $s; ?>pt;
+}
+		<?php
+	    }
+	    
+	}
+	
+    
+    ?>
     
     <?php if ($h2_font = elgg_get_plugin_setting('h2_font', 'minds_themeconfig')){ ?>
 	.minds-body-header h2{

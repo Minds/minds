@@ -11,12 +11,12 @@ foreach ($CONFIG->theme_fonts as $element => $code) {
 
         <p><label>
 		<?php echo elgg_echo('minds_themeconfig:font:' . $element); ?>:<br />
-		<?php echo elgg_view('input/fontpicker', array('data-sample' => "sample_$code", 'id' => "font_$code", 'class' => 'font-picker', 'name' => 'font[' . $code . ']', 'value' => elgg_get_plugin_setting('font::' . $code, 'minds_themeconfig'))); ?>
+		<?php echo elgg_view('input/fontpicker', array('data-sample' => "sample_$code", 'id' => "font_$code", 'name' => "font_$code", 'class' => 'font-picker',  'value' => elgg_get_plugin_setting('font::' . $code, 'minds_themeconfig'))); ?>
     	</label></p>
 
         <p><label>
 		<?php echo elgg_echo('minds_themeconfig:font_size:' . $element); ?> (pt):<br />
-		<?php echo elgg_view('input/fontsize', array('data-sample' => "sample_$code", 'id' => "font_size_$code", 'class' => 'font-size', 'name' => 'font_size[' . $code . ']', 'value' => elgg_get_plugin_setting('font_size::' . $code, 'minds_themeconfig'))); ?>
+		<?php echo elgg_view('input/fontsize', array('data-sample' => "sample_$code", 'id' => "font_size_$code",  'name' => "font_size_$code", 'class' => 'font-size', 'value' => elgg_get_plugin_setting('font_size::' . $code, 'minds_themeconfig'))); ?>
     	</label></p>
     </div>
 
