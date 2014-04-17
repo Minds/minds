@@ -19,6 +19,9 @@
 	
 	'"Courier New", Courier, monospace' => '"Courier New", Courier, monospace',
 	'"Lucida Console", Monaco, monospace' => '"Lucida Console", Monaco, monospace',
+	
+	'cursive' => 'cursive',
+	'fantasy' => 'fantasy'
     ) as $label => $value) {
 	?>
     <option value='<?php echo $value; ?>' <?php if ($vars['value'] == $value) echo 'selected'; ?>><?php echo $label; ?></option>
