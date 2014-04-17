@@ -3,10 +3,25 @@
     <?php 
     foreach (array(
 	'Theme default' => '',
-	"'Helvetica Neue',arial,Sans-Serif" => "'Helvetica Neue',arial,Sans-Serif"
+	'Ubuntu' => 'Ubuntu',
+	
+	'Georgia, serif' => 'Georgia, serif',
+	'"Palatino Linotype", "Book Antiqua", Palatino, serif' => '"Palatino Linotype", "Book Antiqua", Palatino, serif',
+	
+	'Arial, Helvetica, sans-serif' => 'Arial, Helvetica, sans-serif',
+	'"Arial Black", Gadget, sans-serif' => '"Arial Black", Gadget, sans-serif',
+	'"Comic Sans MS", cursive, sans-serif' => '"Comic Sans MS", cursive, sans-serif',
+	'Impact, Charcoal, sans-serif' => 'Impact, Charcoal, sans-serif',
+	'"Lucida Sans Unicode", "Lucida Grande", sans-serif' => '"Lucida Sans Unicode", "Lucida Grande", sans-serif',
+	'Tahoma, Geneva, sans-serif' => 'Tahoma, Geneva, sans-serif',
+	'"Trebuchet MS", Helvetica, sans-serif' => '"Trebuchet MS", Helvetica, sans-serif',
+	'Verdana, Geneva, sans-serif' => 'Verdana, Geneva, sans-serif',
+	
+	'"Courier New", Courier, monospace' => '"Courier New", Courier, monospace',
+	'"Lucida Console", Monaco, monospace' => '"Lucida Console", Monaco, monospace',
     ) as $label => $value) {
 	?>
-    <option value="<?php echo $value; ?>" <?php if ($vars['value'] == $value) echo 'selected'; ?>><?php echo $label; ?></option>
+    <option value='<?php echo $value; ?>' <?php if ($vars['value'] == $value) echo 'selected'; ?>><?php echo $label; ?></option>
 	<?php
     }?>
 </select>
