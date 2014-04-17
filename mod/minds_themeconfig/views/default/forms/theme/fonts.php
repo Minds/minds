@@ -25,6 +25,8 @@ foreach ($CONFIG->theme_fonts as $element => $code) {
 }
 ?>
 
+<?php echo elgg_view('input/submit', array('value' => elgg_echo('save'))); ?>
+
 <script>
     $(document).ready(function() {
 	$('.font-picker').change(function() {
