@@ -129,43 +129,38 @@ angular.module('services.Kaltura').factory('Kaltura', ['$http', '$q', function($
     kalturaService.baseEntryAdd = function(fileInfo, uploadComplete) {
         var deferred = $q.defer();
 
-        $q.when(uploadComplete).then(
-            function() {
+        var data = {
+            'entry:objectType': 'KalturaMediaEntry',
+            'entry:type': "-1",
+            'entry:name': fileInfo['name'],
+            'entry:description': fileInfo['description'],
+            'entry:tags': fileInfo['tags'],
+            'entry:mediaType': kalturaService.mediaTypesEnum[fileInfo['fileType']]
+        };
 
-                var data = {
-                    'entry:objectType': 'KalturaMediaEntry',
-                    'entry:type': "-1",
-                    'entry:name': fileInfo['name'],
-                    'entry:description': fileInfo['description'],
-                    'entry:tags': fileInfo['tags'],
-                    'entry:mediaType': kalturaService.mediaTypesEnum[fileInfo['fileType']]
-                };
+        var params = {
+            'service': 'baseEntry',
+            'action': 'add',
+            'ks': kalturaService.config.ks
+        };
 
-                var params = {
-                    'service': 'baseEntry',
-                    'action': 'add',
-                    'ks': kalturaService.config.ks
-                };
+        $http({
+            method: 'POST',
+            url: kalturaService.config.apiUrl,
+            params: params,
+            data: data,
+            cache: false,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            transform: transformRequest
 
-                $http({
-                    method: 'POST',
-                    url: kalturaService.config.apiUrl,
-                    params: params,
-                    data: data,
-                    cache: false,
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    transform: transformRequest
-
-                }).
-                    success(function(data, status, headers, config) {
-                        var entryId = jQuery(data).find('id').text();
-                        deferred.resolve(entryId);
-                    }).
-                    error(function(data, status, headers, config) {
-                        deferred.reject(data);
-                    })
-            }
-        );
+        }).
+            success(function(data, status, headers, config) {
+                var entryId = jQuery(data).find('id').text();
+                deferred.resolve(entryId);
+            }).
+            error(function(data, status, headers, config) {
+                deferred.reject(data);
+            });
 
         return deferred.promise;
     };
