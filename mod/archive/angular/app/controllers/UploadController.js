@@ -82,7 +82,10 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 		if (saveTimeout) $timeout.cancel(saveTimeout);
 		
 		saveTimeout = $timeout(function(){
-			console.log('considering saving...');
+			 for(var index in $scope.fileInfo) //Saves each file
+     			   {
+       			     $scope.updateEntry(index);
+       }
 		},1000);
 		
 	};
