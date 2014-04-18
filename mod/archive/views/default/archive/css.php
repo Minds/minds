@@ -118,3 +118,9 @@
 	padding: 16px;
 	margin: auto;
 }
+
+.minds-river-attachments .elgg-photo.large{
+	border:0;
+	padding:0;
+	width:100%;
+}

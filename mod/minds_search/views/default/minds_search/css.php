@@ -4,20 +4,7 @@
  * 
  */
 ?>
-/**
- * Minds Search
- */
-.minds-search{}
-form.minds-search{
-	float:left;
-	width:50%;
-}
-.minds-search input[type=text]{
-	margin:10px;
-}
-.minds-search .submit{
-	display:none;
-}
+
 .minds-search-section{
 	clear:both;
 	display:block;

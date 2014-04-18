@@ -64,6 +64,14 @@
 	width:100% !important;
 	height:auto;
 }
+.elgg-list.x2{ 
+	width:auto;
+	margin:auto;
+}
+.elgg-list.x2 > li{
+	float:left;
+	width:40%;
+}
 
 @media screen and (max-width: 1100px) {
         .elgg-list > li{

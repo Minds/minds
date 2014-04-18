@@ -402,3 +402,21 @@ input[type="radio"] {
     color: #0054A7;
 	background: #E4ECF5;
 }
+
+/**
+ * Search 
+ */
+/**
+ * Minds Search
+ */
+.minds-search{}
+form.minds-search{
+	float:left;
+	width:50%;
+}
+.minds-search input[type=text]{
+	margin:10px;
+}
+.minds-search .submit{
+	display:none;
+}

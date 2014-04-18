@@ -169,6 +169,34 @@ function channel_page_handler($page) {
 		require "{$base_dir}mod/channel/pages/edit.php";
 		return true;
 	}
+	
+		
+	elgg_register_menu_item('channel', array(
+		'name' => 'channel:news',
+		'text' => 'News',
+		'href' => $user->username . '/news',
+		'priority' => 100
+	));
+	elgg_register_menu_item('channel', array(
+		'name' => 'channel:blog',
+		'text' => 'Blogs',
+		'href' => $user->username . '/blogs',
+		'priority' => 101
+	));
+	elgg_register_menu_item('channel', array(
+		'name' => 'channel:archive',
+		'text' => 'Archive',
+		'href' => $user->username . '/archive',
+		'priority' => 102
+	));
+	if($user->canEdit()){
+		elgg_register_menu_item('channel', array(
+			'name' => 'channel:custom',
+			'text' => 'Custom',
+			'href' => $user->username . '/custom',
+			'priority' => 103
+		));
+	}
 		
 
 	$header = elgg_view('channel/header', array('user'=>$user, 'selected'=>$page[1]));
@@ -197,7 +225,8 @@ function channel_page_handler($page) {
 											'owner_guid'=>$user->guid, 
 											'limit'=>8, 
 											'offset'=>get_input('offset',''),
-											'full_view'=>false
+											'full_view'=>false,
+											'list_class' => 'x2'
 											));			
 			break;
 		case 'archive':
@@ -207,7 +236,8 @@ function channel_page_handler($page) {
 											'owner_guid'=>$user->guid, 
 											'limit'=>8, 
 											'offset'=>get_input('offset',''),
-											'full_view'=>false
+											'full_view'=>false,
+											'list_class' => 'x2'
 											));	
 			break;
 		case 'widgets':			
@@ -226,12 +256,34 @@ function channel_page_handler($page) {
 		case 'timeline':
 		default:
 			//$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river'));
-			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river','limit'=>12));
+			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river x2','limit'=>12));
 			$class = 'landing-page';
 	}
 
-
-	$body = elgg_view_layout('one_column', array('content' => $header.$content, 'header'=>false, 'class'=>$class));
+	$sidebar =  $user->guid != elgg_get_logged_in_user_guid() ? elgg_view('channel/subscribe', array('entity'=>$user)) : '';
+	
+	$sidebar .= elgg_view('channel/social_icons', array('user'=>$user));
+	$sidebar .= elgg_view_menu('channel', array('sort_by'=>'priority'));
+	$sidebar .= elgg_view('channel/about', array('user'=>$user));
+	
+	$avatar = elgg_view('output/img', array(
+									'title'=>$user->name, 
+									'src'=>$user->getIconURL('large'), 
+									'class'=>'minds-channel-avatar'
+					));
+	if($user->canEdit()){
+		$url = elgg_get_site_url() . "channel/$user->username/avatar";
+		$avatar .=  "<a class=\"avatar-edit\" href=\"$url\">Edit</a>";
+	}
+	
+	$body = elgg_view_layout('channel', array(
+		'name' => $user->name,
+		'subtitle' => null,
+		'avatar' => $avatar,
+		'content' => $content, 
+		'header'=>false, 
+		'sidebar'=> $sidebar,
+	));
 	echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel'));
 	return true;
 }

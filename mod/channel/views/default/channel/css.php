@@ -5,10 +5,68 @@
  * @package Profile
  */
 ?>
-
-.elgg-layout.channels{
-	max-width: 1600px;
-	margin: auto;
+.hero > .body > .inner.channel-inner{
+	width:100%;
+}
+.hero > .body > .inner.channel-inner .main, .hero > .body > .inner.channel-inner .main > .elgg-list{
+	background:transparent;
+}
+.minds-channel-layout{
+	width:1200px;
+	margin: 8px auto;
+}
+.minds-channel-header-block{
+	width: 100%;
+	height: auto;
+	padding:0;
+	margin-bottom:42px;
+	clear:both;
+}
+.minds-channel-header-block > h1{
+	font-size:64px;
+	line-height:64px;
+	text-align:center;
+	text-shadow:0 0 3px #FFF;
+}
+.minds-channel-sidebar-left{
+	float:left;
+	width:200px;
+	height:100%;
+	padding:8px;
+	box-shadow:0 0 3px #888;
+	background:#FFF;
+}
+.minds-channel-sidebar-left .minds-channel-avatar{
+	width:100%;
+}
+.minds-channel-sidebar-left .channel-social-icons{
+	padding:0;
+	margin:16px 0;
+}
+.minds-channel-sidebar-left .channel-social-icons > a.entypo{
+	font-size:33px;
+}
+.minds-channel-content{
+	float:left;	
+	width:960px;
+	margin-left:16px;
+	clear:right;
+}
+.minds-channel-content .main{
+	padding:0;
+}
+.minds-channel-content .elgg-list.x2 {
+	padding:0;
+}
+.minds-channel-content .elgg-list.x2 > li{
+	margin:0 0 8px 16px;
+	width:436px;
+}
+.elgg-menu-channel li > a{
+	padding:8px;
+	color:#222;
+	border-bottom:1px solid #EEE;
+	font-weight:bold;
 }
 .channel-header{
 	position: relative;
@@ -24,18 +82,14 @@
 	height:200px;
 	position:relative;
 }
-.channel-header .avatar .avatar-edit{
-	display:none;
-}
-.channel-header .avatar:hover .avatar-edit{
+.avatar-edit{
 	display:block;
-	position: absolute;
-	bottom: 0;
-	right: 0;
 	background: #FAFAFA;
 	padding: 8px 32px 8px 14px;
-	margin: 8px 0;
+	margin: -45px 0 32px;
 	box-shadow: 0 0 3px #888;
+	clear:both;
+	position:absolute;
 }
 .channel-header .avatar img{
 	height:100%;
@@ -159,7 +213,7 @@ padding: 0 4px;
 	border-radius: 8px;
 }
 #profile-details {
-	padding: 15px;
+	padding: 15px 0;
 }
 /*** ownerblock ***/
 #profile-owner-block {
@@ -227,22 +281,10 @@ padding: 0 4px;
 }
 /*** profile details ***/
 #profile-details .odd {
-	background-color: #f4f4f4;
-	
-	-webkit-border-radius: 4px; 
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	
 	margin: 0 0 7px;
 	padding: 2px 4px;
 }
 #profile-details .even {
-	background-color:#f4f4f4;
-	
-	-webkit-border-radius: 4px; 
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	
 	margin: 0 0 7px;
 	padding: 2px 4px;
 }
@@ -327,8 +369,8 @@ padding: 0 4px;
  *
  */
 .elgg-form-channel-custom table{
-	float:left;
 	margin:0 10px;
+	width:100%;
 }
 .elgg-form-channel-custom .elgg-input-file{
 	width:100px;
@@ -344,17 +386,22 @@ padding: 0 4px;
 	margin:0 5%;
 	padding:16px;
 }
-.elgg-form-channel-custom textarea{
-	width:225px;
+.elgg-form-channel-custom textarea, .elgg-form-channel-custom input[type=text]{
+	width:400px;
 }
 .elgg-form-channel-custom table tr td{
 	padding:4px;
 	vertical-align:middle;
 }
+.elgg-form-channel-custom table tr td h3{
+	font-size:16px;
+	font-weight:bold;
+}
 .elgg-form-channel-custom table tr td.label{
 	font-weight:bold;
-	text-align:right;
+	width:100px;
 }
+
 .elgg-form-channel-custom table tr td.label > .entypo{
 	font-size: 30px;
 }
@@ -485,10 +532,4 @@ padding: 0 4px;
 	background: rgba(255,255,255,0.9);
 	margin: 16px;
 	padding: 16px;
-}
-
-.channel #profile-details{
-	background: #FAFAFA;
-	padding: 15px;
-	margin:0 5%;
 }
