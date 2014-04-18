@@ -62,11 +62,24 @@
 	margin:0 0 8px 16px;
 	width:436px;
 }
+.minds-channel-content .elgg-list .minds-channel-post-box > form{
+	width:auto;
+	padding:0;
+	padding-bottom:8px;
+}
 .elgg-menu-channel li > a{
 	padding:8px;
 	color:#222;
 	border-bottom:1px solid #EEE;
 	font-weight:bold;
+	vertical-align:middle;
+}
+.elgg-menu-channel li > a span{
+	padding-right:8px;
+}
+.elgg-menu-channel li > a:hover{
+	text-decoration:none;
+	background:#EEE;
 }
 .channel-header{
 	position: relative;
