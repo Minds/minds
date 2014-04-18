@@ -1,18 +1,21 @@
 <form novalidate name="itemsForm" class="uploadList">
 	
 	<div id="dropzone" class="span8 well well-large">
-			<span class="elgg-button elgg-button-action elgg-button-upload"> <span>Add files...</span>
-				<input id="fileupload" type="file" name="fileData"  multiple=""/>
-			</span>
+			<span class="entypo">&#128228;</span>
 			
-			<div class="default_values">
-				<div class="default-license">
-					<label>Default license:</label>
-					<select class="elgg-input-dropdown default-license-input" ng-options="license.value as license.text for license in licenses" ng-model="default_license">
-					</select>
+			<div class="form-span">
+				<span class="elgg-button elgg-button-action elgg-button-upload"> <span>Add files...</span>
+					<input id="fileupload" type="file" name="fileData"  multiple=""/>
+				</span>
+				
+				<div class="default_values">
+					<div class="default-license">
+						<label>Default license:</label>
+						<select class="elgg-input-dropdown default-license-input" ng-options="license.value as license.text for license in licenses" ng-model="default_license">
+						</select>
+					</div>
 				</div>
 			</div>
-			
 			<span class="more-info"> - or drag files here - </span>
 	</div>
 		

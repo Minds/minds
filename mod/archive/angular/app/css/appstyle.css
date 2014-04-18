@@ -1,5 +1,4 @@
 #dropzone {
-	height: 120px;
 	width: 90%;
 	display: block;
 	position: relative;
@@ -10,17 +9,38 @@
 	clear:both;
 }
 
+#dropzone .entypo{
+	text-align: center;
+	margin: auto;
+	width: auto;
+	height: auto;
+	display: block;
+	font-size: 140px;
+	line-height: 140px;
+}
+.form-span{
+	width:400px;
+	height:50px;
+	margin:16px auto;
+	display:block;
+	clear:both;
+}
+.default-license-input{
+	width:240px;
+	padding:16px;
+	height:30px;
+}
 .default_values{
-	width: 450px;
-	margin: 10px auto;
+	float:left;
+	width: 200px;
+	margin: 0 16px;
 	vertical-align: middle;
 }
 
 .elgg-button-upload{
 	width:120px;
 	height:20px;
-	display:block;
-	margin:auto;
+	float:left;
 	position:relative;
 	padding:14px;
 }
@@ -114,7 +134,7 @@
 	padding-right:8px;
 }
 
-.uploadlist table tr > td input, .uploadlist table tr > td select, .default_values select{
+.uploadlist table tr > td input, .uploadlist table tr > td select{
 	height: 30px;
 	width: 95%;
 	padding: 8px;
