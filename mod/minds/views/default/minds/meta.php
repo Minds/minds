@@ -51,8 +51,9 @@ if((elgg_get_context() == 'channel' || elgg_get_context() == 'profile' || elgg_g
 		}
 	
 	/** HEADER (h1) **/	
-	.channel-header h1{
+	.minds-channel-header-block > h1{	
 		color:$owner->h1_colour;
+		text-shadow:0 0 3px #888 !important;
 	}
 	/** HEADER (h3) **/
 	.channel-header h3{

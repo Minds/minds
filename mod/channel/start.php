@@ -559,7 +559,9 @@ function channel_custom_vars($user = null) {
 		'social_link_gplus' => '',
 		'social_link_twitter' => '',
 		'social_link_tumblr' => '',
-		'social_link_linkedin' => ''		
+		'social_link_linkedin' => '',		
+		'social_link_github' => '',
+		'social_link_pinterest' => ''
 	);
 
 	if($user){

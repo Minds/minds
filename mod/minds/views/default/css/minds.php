@@ -1135,7 +1135,8 @@ li.elgg-menu-item-rss{
 	top: 0;
 	left: 0;
 	min-width:100%;
-	/*height: 100%;*/
+	height: 100%;
+
 }
 .carousel-inner > .item > .carousel-caption{
 	position: absolute;

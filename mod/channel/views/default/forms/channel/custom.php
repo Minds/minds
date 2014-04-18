@@ -128,6 +128,8 @@ $social_twitter_input = elgg_view('input/text', array('name'=>'social_link_twitt
 $social_gplus_input = elgg_view('input/text', array('name'=>'social_link_gplus', 'value'=>$user->social_link_gplus));
 $social_tumblr_input = elgg_view('input/text', array('name'=>'social_link_tumblr', 'value'=>$user->social_link_tumblr));
 $social_linkedin_input = elgg_view('input/text', array('name'=>'social_link_linkedin', 'value'=>$user->social_link_linkedin));
+$social_github_input =elgg_view('input/text', array('name'=>'social_link_github', 'value'=>$user->social_link_github));
+$social_pinterest_input = elgg_view('input/text', array('name'=>'social_link_pinterest', 'value'=>$user->social_link_pinterest));
 
 $form = <<<FORM
 				
@@ -243,7 +245,23 @@ $form = <<<FORM
 				$social_linkedin_input
 			</td>
 		</tr>
-		
+		 <tr>
+                        <td class="label">
+                                <!--GITHUB--><span class="entypo">&#62208;</span>
+                        </td>
+                        <td>
+                                $social_github_input
+                        </td>
+                </tr>
+		 <tr>
+                        <td class="label">
+                                <!--PINTEREST--><span class="entypo">&#62226;</span>
+                        </td>
+                        <td>
+                                $social_pinterest_input
+                        </td>
+                </tr>
+				
 	</table>
 			
 	<table>
