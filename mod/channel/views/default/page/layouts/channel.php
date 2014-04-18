@@ -22,11 +22,10 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 ?>
 <div class="inner channel-inner">
 	<div class="minds-channel-layout">
-		<div class="minds-channel-header-block">
-			<h1><?= $vars['name']?></h1>
-		</div>
 		<div class="minds-channel-sidebar-left">
 			<?= $vars['avatar'] ?>
+			<h1><?= $vars['name']?></h1>
+			<?= $vars['subtitle']?>
 			<?= $vars['sidebar'] ?>
 		</div>
 		<div class="minds-channel-content">		

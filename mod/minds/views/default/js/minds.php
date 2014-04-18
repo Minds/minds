@@ -80,8 +80,10 @@
 			$.get( url, function(data) { var shares = data.shares; if($.isNumeric(shares)){ $('#fb-share .count').html(shares); } } );
 		} 
 
+		var $list = $('.elgg-list.mason');
+		$list.masonry();   
 		$('.elgg-list.mason').imagesLoaded(function(){
-			var $list = $('.elgg-list.mason');
+			
 			$list.find('.rich-image').each(function(){ 
 				var image = $(this); 
 				if(image.context.naturalWidth < 2 ||
@@ -94,9 +96,7 @@
 				} 
 		 	});
 
-				$($list.get().reverse()).masonry({
-                			//itemSelector: '.elgg-item'
-		                });                        
+			$list.masonry('reloadItems');                        
 		});
 		
 		$('.hero > .topbar').on('mouseenter', '.right', function(e){ $('.topbar .right .social-login').show(); });

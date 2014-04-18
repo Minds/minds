@@ -173,19 +173,19 @@ function channel_page_handler($page) {
 		
 	elgg_register_menu_item('channel', array(
 		'name' => 'channel:news',
-		'text' => 'News',
+		'text' => '<span class="entypo">&#59194;</span> News',
 		'href' => $user->username . '/news',
 		'priority' => 100
 	));
 	elgg_register_menu_item('channel', array(
 		'name' => 'channel:blog',
-		'text' => 'Blogs',
+		'text' => '<span class="entypo">&#59396;</span> Blogs',
 		'href' => $user->username . '/blogs',
 		'priority' => 101
 	));
 	elgg_register_menu_item('channel', array(
 		'name' => 'channel:archive',
-		'text' => 'Archive',
+		'text' => '<span class="entypo">&#128193;</span>Archive',
 		'href' => $user->username . '/archive',
 		'priority' => 102
 	));
@@ -199,7 +199,17 @@ function channel_page_handler($page) {
 	}
 		
 
-	$header = elgg_view('channel/header', array('user'=>$user, 'selected'=>$page[1]));
+	$post = "<li class=\"elgg-item minds-channel-post-box\">".elgg_view_form('deck_river/post',  
+						array(	'action'=>'action/deck_river/post/add', 
+								'name'=>'post',
+								'class'=>'minds-channel-post-box', 
+								'enctype' => 'multipart/form-data'
+						),
+						array(	'to_guid'=> $user->guid, 
+						 	//	'access_id'=> ACCESS_PRIVATE, 
+						 		'hide_accounts'=>true
+						)
+					) . "</li>";
 
 	switch($page[1]){
 		case 'custom':
@@ -256,7 +266,13 @@ function channel_page_handler($page) {
 		case 'timeline':
 		default:
 			//$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river'));
-			$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river x2','limit'=>12));
+			$content = elgg_list_river(array(
+				'type'=>'timeline',
+				'owner_guid'=>'personal:'.$user->guid,
+				'list_class'=>'minds-list-river x2',
+				'limit'=>12,
+				'prepend' => $post
+			));
 			$class = 'landing-page';
 	}
 
@@ -278,7 +294,7 @@ function channel_page_handler($page) {
 	
 	$body = elgg_view_layout('channel', array(
 		'name' => $user->name,
-		'subtitle' => null,
+		'subtitle' => $user->website ? elgg_view('output/url', array('text'=>$user->website, 'href'=>$user->website)) : false,
 		'avatar' => $avatar,
 		'content' => $content, 
 		'header'=>false, 
