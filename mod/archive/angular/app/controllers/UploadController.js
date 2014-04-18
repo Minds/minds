@@ -78,14 +78,11 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 	$scope.default_access = 2;
 	
 	var saveTimeout;
-	$scope.changed = function() {
+	$scope.changed = function(guid) {
 		if (saveTimeout) $timeout.cancel(saveTimeout);
 		
 		saveTimeout = $timeout(function(){
-			 for(var index in $scope.fileInfo) //Saves each file
-     			   {
-       			     $scope.updateEntry(index);
-       }
+			$scope.updateEntry(guid);
 		},1000);
 		
 	};
@@ -218,6 +215,7 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 
 	
     $scope.saveAll = function(){
+    	return;
         for(var index in $scope.fileInfo) //Saves each file
         {
             $scope.updateEntry(index);
@@ -227,10 +225,14 @@ function UploadCtrl($scope, Kaltura, Elgg, $q, $timeout) {
 
     /**
      * Update an entry using its file info.
-     * @param index the index of the entry in the file info object.
+     * @param guid, the guid of entity
      */
-    $scope.updateEntry = function(index) {
-        Elgg.updateElggEntity($scope.fileInfo[index]);
+    $scope.updateEntry = function(guid) {
+    	for($index in $scope.fileInfo){
+    		if($scope.fileInfo[$index]['guid']==guid && typeof guid != 'undefined'){
+    			Elgg.updateElggEntity($scope.fileInfo[$index]);
+    		}
+    	}
     };
 
     /**
