@@ -310,9 +310,9 @@
 		$params = $.extend($params, {
 			path : loc,
 			items_type: $list.find('.elgg-list').hasClass('elgg-list-entity') ? 'entity' :
-				$list.find('.elgg-list').hasClass('elgg-list-river') ? 'river' :
+				$list.find('.elgg-list').hasClass('minds-list-river') ? 'river' :
 				$list.hasClass('elgg-list-annotation') ? 'annotation' : 
-				$list.find('.elgg-list').hasClass('minds-search-list') ? 'search' : 'river',
+				$list.find('.elgg-list').hasClass('minds-search-list') ? 'search' : 'entity',
 				offset:offset 
 		});
 		url = "/ajax/view/page/components/ajax_list?" + $.param($params);
