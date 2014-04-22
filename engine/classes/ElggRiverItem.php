@@ -185,8 +185,10 @@ class ElggRiverItem {
 		if($this->subject->guid == elgg_get_logged_in_user_guid())
 			array_push($followers, "personal:" . $this->subject->guid);//add to their personal feed
 		
-		if(isset($this->to_guid))
+		if(isset($this->to_guid)){
 			array_push($followers, $this->to_guid); 
+			array_push($followers, "personal:$this->to_guid"); 
+		}
 		
 		if(isset($this->cc) && is_array($this->cc))
 			$followers = array_merge($followers, $this->cc);
