@@ -8,6 +8,7 @@
 
 	    $f = elgg_get_plugin_setting('font::' . $code, 'minds_themeconfig');
 	    $s = elgg_get_plugin_setting('font_size::' . $code, 'minds_themeconfig');
+	    $c = elgg_get_plugin_setting('font_colour::' . $code, 'minds_themeconfig');
 	    
 	    if ($f) {
 		?>
@@ -21,6 +22,14 @@
 		?>
 <?php echo $code; ?> {
     font-size: <?php echo $s; ?>pt;
+}
+		<?php
+	    }
+	    
+	    if ($c) {		
+		?>
+<?php echo $code; ?> {
+    color: #<?php echo $c; ?>;
 }
 		<?php
 	    }

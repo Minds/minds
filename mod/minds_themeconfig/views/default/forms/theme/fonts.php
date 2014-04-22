@@ -9,9 +9,11 @@ foreach ($CONFIG->theme_fonts as $element => $code) {
     	<<?php echo $code; ?> style="<?php 
 	    $f = elgg_get_plugin_setting('font::' . $code, 'minds_themeconfig');
 	    $s = elgg_get_plugin_setting('font_size::' . $code, 'minds_themeconfig');
+	    $c = elgg_get_plugin_setting('font_colour::' . $code, 'minds_themeconfig');
 	
 	    if ($f) echo "font-family: $f; " ;
 	    if ($s) echo "font-size: {$s}pt;";
+	    if ($c) echo "color: #{$c};";
 	    
 	?>" class="sample">Pack my box with five dozen liquor jugs.</<?php echo $code; ?>>
         </div>
@@ -66,8 +68,15 @@ foreach ($CONFIG->theme_fonts as $element => $code) {
 	
 	$('.font-colour').ColorPicker({
 	    onSubmit: function(hsb, hex, rgb, el) {
+		
+		var sample = $(el).attr('data-sample');
+		
+		$('#'+sample + " .sample").css("color", "#" + hex);
+	
 		$(el).val(hex);
 		$(el).ColorPickerHide();
+		
+		
 	    },
 	    onBeforeShow: function () {
 		$(this).ColorPickerSetColor(this.value);
