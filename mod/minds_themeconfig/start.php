@@ -28,6 +28,11 @@ function themeconfig_init() {
         if (elgg_get_context() != 'admin')
 	    elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
 	
+	// Add colour picker
+	if (elgg_get_context() == 'admin')
+	    elgg_extend_view('page/elements/head', 'minds_themeconfig/colourpicker');
+	
+	
 	
 	elgg_extend_view('page/elements/ads', 'minds_themeconfig/ads');
 	elgg_unextend_view('page/elements/ads', 'minds/ads'); //remove the default ads

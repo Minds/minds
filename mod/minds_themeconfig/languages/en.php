@@ -26,9 +26,12 @@ $english = array(
 
         'minds_themeconfig:frontpagetext' => 'Front page text',
 	'minds_themeconfig:font:header' => 'Header font',
+    'minds_themeconfig:font_colour:header' => 'Header colour',
     
 	'minds_themeconfig:font:paragraph' => 'Paragraph text',
 	'minds_themeconfig:font_size:paragraph' => 'Parargraph text size',
+    'minds_themeconfig:font_colour:paragraph' => 'Paragraph colour'
+	
 );
 		
 add_translation("en", $english);

@@ -25,6 +25,11 @@ foreach ($CONFIG->theme_fonts as $element => $code) {
 		<?php echo elgg_echo('minds_themeconfig:font_size:' . $element); ?> (pt):<br />
 		<?php echo elgg_view('input/fontsize', array('data-sample' => "sample_$code", 'id' => "font_size_$code",  'name' => "font_size_$code", 'class' => 'font-size', 'value' => elgg_get_plugin_setting('font_size::' . $code, 'minds_themeconfig'))); ?>
     	</label></p>
+	
+	<p><label>
+		<?php echo elgg_echo('minds_themeconfig:font_colour:' . $element); ?>:<br />
+		<?php echo elgg_view('input/colourpicker', array('data-sample' => "sample_$code", 'id' => "font_colour_$code",  'name' => "font_colour_$code", 'class' => 'font-colour', 'value' => elgg_get_plugin_setting('font_colour::' . $code, 'minds_themeconfig'))); ?>
+    	</label></p>
     </div>
 
 
@@ -56,6 +61,16 @@ foreach ($CONFIG->theme_fonts as $element => $code) {
 		$('#'+sample + " .sample").css("font-size", value+"pt");
 	    } else {
 		$('#'+sample + " .sample").css("font-size", "");
+	    }
+	});
+	
+	$('.font-colour').ColorPicker({
+	    onSubmit: function(hsb, hex, rgb, el) {
+		$(el).val(hex);
+		$(el).ColorPickerHide();
+	    },
+	    onBeforeShow: function () {
+		$(this).ColorPickerSetColor(this.value);
 	    }
 	});
     });
