@@ -17,6 +17,10 @@
  * @todo add support for passing options: $('#myplugin-lightbox').elgg.ui.lightbox(options);
  */
 
+$js_path = elgg_get_config('path');
+$js_path = "{$js_path}vendors/jquery/fancybox/source/jquery.fancybox.pack.js";
+include $js_path;
+
 if (0) { ?><script><?php }
 ?>
 
@@ -24,13 +28,12 @@ if (0) { ?><script><?php }
  * Lightbox initialization
  */
 elgg.ui.lightbox_init = function() {
-	$(".elgg-lightbox").fancybox();
+//	$(document).on('click','.elgg-lightbox', function(e){
+//		e.preventDefault();
+//		$.fancybox({type:'ajax',href: $(this).attr('href')});
+//	});
+	$(".elgg-lightbox").fancybox({type:'ajax'});
 }
 
 elgg.register_hook_handler('init', 'system', elgg.ui.lightbox_init);
 
-<?php
-
-$js_path = elgg_get_config('path');
-$js_path = "{$js_path}vendors/jquery/fancybox/source/jquery.fancybox.pack.js";
-include $js_path;
