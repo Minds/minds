@@ -61,7 +61,7 @@
             'upscale' => true
         )
     ) as $name => $size_info) { 
-        $resized = get_resized_image_from_uploaded_file('favicon', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'jpeg');
+        $resized = get_resized_image_from_uploaded_file('favicon', $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale'], 'jpeg');
 
         if ($resized) {
             global $CONFIG;
