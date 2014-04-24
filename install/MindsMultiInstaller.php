@@ -13,6 +13,7 @@ class MindsMultiInstaller extends ElggInstaller {
         'admin',
        // 'minds',
 	'theme',
+	'footer',
 	'carousel',
 	'import',
 	'email',
@@ -479,6 +480,52 @@ class MindsMultiInstaller extends ElggInstaller {
         return false;
     }
 
+    /**
+     * Footer configuration
+     * @param type $submissionVars
+     */
+    protected function footer($submissionVars) {
+	
+	$networks = minds_config_social_links();
+	
+	$formVars = array(
+            'copyright' => array(
+                'type' => 'text',
+                'value' => '',
+                'required' => FALSE,
+            ),
+        );
+	
+	foreach($networks as $network => $n) {
+	    $formVars["networks_$network"] = array(
+		'type' => 'text',
+                'value' => '',
+		
+                'required' => FALSE,
+	    );
+	}
+
+        if ($this->isAction) {
+            do {
+		elgg_set_plugin_setting('copyright',  $submissionVars['copyright'], 'minds_themeconfig');
+		
+		foreach($networks as $network => $n) {
+		    
+		    elgg_set_plugin_setting($network.':url', $submissionVars["networks_$network"], "minds_themeconfig");
+		    
+		}
+
+                system_message(elgg_echo('install:success:footer'));
+
+                $this->continueToNextStep('footer');
+            } while (FALSE);  // PHP doesn't support breaking out of if statements
+        }
+
+        $formVars = $this->makeFormSticky($formVars, $submissionVars);
+
+        $this->render('footer', array('variables' => $formVars));
+    }
+    
     /**
      * Load the theme selector
      * @param array $vars Not used
