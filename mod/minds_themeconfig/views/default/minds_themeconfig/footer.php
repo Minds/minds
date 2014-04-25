@@ -1,4 +1,5 @@
-<div class="copyright">
+<div class="static-footer">
+    <div class="copyright">
 	<?php echo elgg_get_plugin_setting('copyright', 'minds_themeconfig'); ?>
 </div>
 
@@ -14,4 +15,5 @@ foreach($networks as $network => $n){
 	}
 }	
 ?>
+</div>
 </div>
