@@ -7,3 +7,11 @@
     font-weight: normal;
     font-style: normal;
 }
+
+
+.entypo{
+	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
+	font-size:18px;
+	font-weight:normal;
+	text-decoration:none;
+}
