@@ -42,6 +42,36 @@ header('Expires: Fri, 05 Feb 1982 00:00:00 -0500', TRUE);
 		<link rel="stylesheet" href="<?php echo elgg_get_site_url(); ?>install/css/install.css" type="text/css" />
 		<script type="text/javascript" src="<?php echo elgg_get_site_url(); ?>vendors/jquery/jquery-1.6.4.min.js"></script>
 		<script type="text/javascript" src="<?php echo elgg_get_site_url(); ?>install/js/install.js"></script>
+		<style>
+		    
+		    @font-face {
+			font-family: 'entypo';
+			src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.eot?') format('eot'),
+			     url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.woff') format('woff'),
+			     url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.ttf') format('truetype'),
+			     url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.svg') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		    }
+		    @font-face {
+		      font-family: 'fontello';
+		      src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246');
+		      src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246#iefix') format('embedded-opentype'),
+			   url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?96059246') format('woff'),
+			   url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?96059246') format('truetype'),
+			   url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?96059246#fontello') format('svg');
+		      font-weight: normal;
+		      font-style: normal;
+		    }
+
+
+		    .entypo{
+			    font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
+			    font-size:18px;
+			    font-weight:normal;
+			    text-decoration:none;
+		    }
+		</style>
 	</head>
 	<body>
 		<div class="elgg-page">
