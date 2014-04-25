@@ -34,6 +34,8 @@ function minds_init(){
 	//register our own css files
 	$url = elgg_get_simplecache_url('css', 'minds');
 	elgg_register_css('minds.default', $url);	
+	if (elgg_get_context()=='installation')
+	    elgg_load_css ('minds.default');
 	
 	//register our own js files
 	$minds_js = elgg_get_simplecache_url('js', 'minds');
