@@ -39,9 +39,6 @@ header('Expires: Fri, 05 Feb 1982 00:00:00 -0500', TRUE);
 		<?php
 		}
 		?>
-		<link rel="stylesheet" href="<?php echo elgg_get_site_url(); ?>install/css/install.css" type="text/css" />
-		<script type="text/javascript" src="<?php echo elgg_get_site_url(); ?>vendors/jquery/jquery-1.6.4.min.js"></script>
-		<script type="text/javascript" src="<?php echo elgg_get_site_url(); ?>install/js/install.js"></script>
 		<style>
 		    
 		    @font-face {
@@ -63,15 +60,10 @@ header('Expires: Fri, 05 Feb 1982 00:00:00 -0500', TRUE);
 		      font-weight: normal;
 		      font-style: normal;
 		    }
-
-
-		    .entypo{
-			    font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
-			    font-size:18px;
-			    font-weight:normal;
-			    text-decoration:none;
-		    }
 		</style>
+		<link rel="stylesheet" href="<?php echo elgg_get_site_url(); ?>install/css/install.css" type="text/css" />
+		<script type="text/javascript" src="<?php echo elgg_get_site_url(); ?>vendors/jquery/jquery-1.6.4.min.js"></script>
+		<script type="text/javascript" src="<?php echo elgg_get_site_url(); ?>install/js/install.js"></script>
 	</head>
 	<body>
 		<div class="elgg-page">
