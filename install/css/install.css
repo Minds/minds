@@ -339,6 +339,12 @@ select {
 }
 
 
+.static-footer .copyright{
+	float: right;
+	color: #888;
+	padding: 0 8px;
+	font-size:10px;
+}
 .static-footer .footer-social-links{
 	float:left;
 }
