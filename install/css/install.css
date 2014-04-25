@@ -337,3 +337,19 @@ select {
 .themesets > li input[type="radio"]:checked + img{
 	border:2px solid #4690D6;
 }
+
+
+.static-footer .footer-social-links{
+	float:left;
+}
+.static-footer .footer-social-links > a{
+	font-size:26px;
+	color:#888;
+	padding:0 4px;
+}
+.entypo{
+	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
+	font-size:18px;
+	font-weight:normal;
+	text-decoration:none;
+}
