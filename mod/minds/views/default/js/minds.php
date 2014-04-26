@@ -291,15 +291,10 @@
 
 		$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			
-		if(loc.indexOf('trending') > -1 || loc.indexOf('view') > -1 || $params.filter == 'trending' || loc.indexOf('search') > -1){
+		if(loc.indexOf('trending') > -1 <?php if(elgg_is_active_plugin('analytics')){ echo "|| loc.indexOf('view') > -1"; }?> || $params.filter == 'trending' || loc.indexOf('search') > -1){
 			offset = $list.find('.elgg-list').children().length;
 		} else {
 			offset = $('.load-more').attr('data-load-next');
-			/*	 if(loc == elgg.get_site_url()){
-                                        offset = $list.find('li.elgg-item:last').attr('featured_id');
-                                } else {
-                                        offset = $list.find('li.elgg-item:last').attr('id'); 
-                                }*/
 		}
 		console.log(offset);
 		if(!offset){
@@ -330,10 +325,10 @@
 					var el = $(data).contents().unwrap();
 					
 					if(loc == elgg.get_site_url()){
-                                   		offset = $(data).find('li.elgg-item:last').attr('featured_id');
-                               		} else {
-                                        	offset = $(data).find('li.elgg-item:last').attr('id'); 
-                                	}
+						offset = $(data).find('li.elgg-item:last').attr('featured_id');
+   					} else {
+						offset = $(data).find('li.elgg-item:last').attr('id'); 
+                   	}
 					
 					el.imagesLoaded().always(function(){
 						el.find('.rich-image').each(function(){ 

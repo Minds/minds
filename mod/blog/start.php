@@ -171,6 +171,9 @@ function blog_page_handler($page) {
 			if(elgg_is_active_plugin('analytics')){
 				$trending = blog_get_trending_page_content_list();
 				$params['footer'] .= $trending['content'];
+			} else {
+				$featured = minds_get_featured('', get_input('limit'), 'entities',get_input('offset')); 
+				$params['footer'] .= elgg_view_entity_list($featured, array('full_view'=>false), get_input('offset'), get_input('limit'), false, false, true);
 			}
 			$body = elgg_view_layout('content', $params);
 	

@@ -43,15 +43,20 @@ $(document).ready(function() {
 	<?php 
 		$i = 0;
 		foreach($items as $item){
+			$link_extras = "";
+			if($item->href){
+				$link_extras = "href=\"{$item->href}\" target=\"_blank\"";
+			}
+
 			$class = $i==0 ?'active' : '';
- 			echo "<div class=\"item $class\">";
+ 			echo "<a class=\"item $class\" $link_extras>";
 			//echo '<div>';
 			//echo '<h3>' . $subtitle . '</h3>';
 			$bg =  elgg_get_site_url() . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache";
 			echo "<img src=\"$bg\" />";
 			echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><h3>$item->title</h3></div>";
 			
-			echo '</div>';
+			echo '</a>';
 			$i++;
 		}	
 	?>
