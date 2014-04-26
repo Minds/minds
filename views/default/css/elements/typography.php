@@ -27,10 +27,11 @@ a.selected { <?php //@todo remove .selected ?>
 }
 
 p {
-	font-size:13px;
-	line-height:18px;
 	text-rendering: auto;
 	margin-bottom: 15px;
+	font-size: 14px;
+	line-height: 28px;
+	font-weight: lighter;
 }
 
 p:last-child {
