@@ -25,6 +25,7 @@ foreach($items as $k=>$item){
 	$item->title = str_replace("$item->guid:", '', get_input("$item->guid:title"));
 	$item->order = str_replace("$item->guid:", '', get_input("$item->guid:order"));
 	$item->color = str_replace("$item->guid:", '', get_input("$item->guid:color"));
+	$item->href = str_replace("$item->guid:", '', get_input("$item->guid:href"));
 	
 	//Upload and compress
 	//if(isset($file["$item->guid:title"]['tmp_name'])){

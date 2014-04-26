@@ -1059,6 +1059,13 @@ li.elgg-menu-item-rss{
 	width: 100px;
 	height: 40px;
 }
+.carousel-admin-wrapper .carousel-href{
+	position: absolute;
+	bottom: 6px;
+	width: 200px;
+	padding: 12px;
+	right: 332px;
+}
 .carousel-admin-wrapper > textarea{
 	display:block;
 	padding:32px;
