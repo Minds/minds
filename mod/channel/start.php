@@ -169,40 +169,13 @@ function channel_page_handler($page) {
 		require "{$base_dir}mod/channel/pages/edit.php";
 		return true;
 	}
-	
-		
-	elgg_register_menu_item('channel', array(
-		'name' => 'channel:news',
-		'text' => '<span class="entypo">&#59194;</span> News',
-		'href' => $user->username . '/news',
-		'priority' => 100
-	));
-	elgg_register_menu_item('channel', array(
-		'name' => 'channel:blog',
-		'text' => '<span class="entypo">&#59396;</span> Blogs',
-		'href' => $user->username . '/blogs',
-		'priority' => 101
-	));
-	elgg_register_menu_item('channel', array(
-		'name' => 'channel:archive',
-		'text' => '<span class="entypo">&#128193;</span>Archive',
-		'href' => $user->username . '/archive',
-		'priority' => 102
-	));
-	if($user->canEdit()){
-		elgg_register_menu_item('channel', array(
-			'name' => 'channel:custom',
-			'text' => 'Custom',
-			'href' => $user->username . '/custom',
-			'priority' => 103
-		));
-	}
+
 		
 
-	$post = "<li class=\"elgg-item minds-channel-post-box\">".elgg_view_form('deck_river/post',  
+	$post = "<li class=\"elgg-item minds-fixed-post-box\">".elgg_view_form('deck_river/post',  
 						array(	'action'=>'action/deck_river/post/add', 
 								'name'=>'post',
-								'class'=>'minds-channel-post-box', 
+								'class'=>'minds-fixed-post-box', 
 								'enctype' => 'multipart/form-data'
 						),
 						array(	'to_guid'=> $user->guid, 
@@ -262,6 +235,14 @@ function channel_page_handler($page) {
 			$content .= elgg_view('page/layouts/widgets/add_panel', $params);
 	        $content .= elgg_view_layout('widgets', $params);
 			break;
+		case 'subscribers':
+			$subscribers = get_user_friends_of($user->guid, '', $limit, $offset);
+			$content = elgg_view_entity_list($subscribers,$vars, $offset, $limit, false, false,false);
+			break;
+		case 'subscriptions':
+			$subscriptions = get_user_friends($user->guid, '', $limit, $offset);
+			$content = elgg_view_entity_list($subscriptions,$vars, $offset, $limit, false, false,false);
+			break;
 		case 'news':
 		case 'timeline':
 		default:
@@ -275,12 +256,6 @@ function channel_page_handler($page) {
 			));
 			$class = 'landing-page';
 	}
-
-	$sidebar =  $user->guid != elgg_get_logged_in_user_guid() ? elgg_view('channel/subscribe', array('entity'=>$user)) : '';
-	
-	$sidebar .= elgg_view('channel/social_icons', array('user'=>$user));
-	$sidebar .= elgg_view_menu('channel', array('sort_by'=>'priority'));
-	$sidebar .= elgg_view('channel/about', array('user'=>$user));
 	
 	$avatar = elgg_view('output/img', array(
 									'title'=>$user->name, 
@@ -292,13 +267,10 @@ function channel_page_handler($page) {
 		$avatar .=  "<a class=\"avatar-edit\" href=\"$url\">Edit</a>";
 	}
 	
-	$body = elgg_view_layout('channel', array(
-		'name' => $user->name,
-		'subtitle' => $user->website ? elgg_view('output/url', array('text'=>$user->website, 'href'=>$user->website)) : false,
-		'avatar' => $avatar,
+	$body = elgg_view_layout('fixed', array(
 		'content' => $content, 
 		'header'=>false, 
-		'sidebar'=> $sidebar,
+		'sidebar'=> elgg_view('channel/sidebar', array('user'=>$user)),
 	));
 	echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel'));
 	return true;

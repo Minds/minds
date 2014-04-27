@@ -536,6 +536,13 @@ function elgg_river_page_handler($page) {
 }
 
 /**
+ * This function is triggered when an object is deleted
+ */
+function river_delete_object_hook($event, $object_type, $object){
+	
+}
+
+/**
  * Register river unit tests
  * @access private
  */
@@ -557,6 +564,8 @@ function elgg_river_init() {
 	elgg_register_widget_type('river_widget', elgg_echo('river:widget:title'), elgg_echo('river:widget:description'));
 
 	elgg_register_action('river/delete', '');
+	
+	elgg_register_event_handler('delete', 'object', 'river_delete_object_hook');
 
 	elgg_register_plugin_hook_handler('unit_test', 'system', 'elgg_river_test');
 }

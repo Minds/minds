@@ -22,10 +22,7 @@ $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 ?>
 <div class="inner fixed-inner">
 	<div class="minds-fixed-layout">
-		<div class="minds-layout-sidebar-left">
-			<?= $vars['avatar'] ?>
-			<h1><?= $vars['name']?></h1>
-			<?= $vars['subtitle']?>
+		<div class="minds-fixed-sidebar-left">
 			<?= $vars['sidebar'] ?>
 		</div>
 		<div class="minds-fixed-content">		
