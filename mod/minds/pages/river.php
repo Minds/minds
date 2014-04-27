@@ -88,6 +88,7 @@ switch ($page_type) {
 		break;
 }
 $options['list_class'] = 'x2';
+$vars['filter_context'] = $page_filter;
 $options['prepend'] = "<li class=\"elgg-item minds-fixed-post-box\">".elgg_view_form('deck_river/post',  
 						array(	'action'=>'action/deck_river/post/add', 
 								'name'=>'post',
@@ -106,20 +107,6 @@ $activity = elgg_list_river($options);
 if (!$activity) {
 	$activity = elgg_echo('river:none');
 }
-
-//$content = elgg_view('core/river/filter', array('selector' => $selector));
-//$sidebar = elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
-//$sidebar .= elgg_view('core/river/sidebar');
-
-$vars['filter_context'] = $page_filter;
-$title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
-$filter = elgg_view('page/layouts/content/river_filter', $vars);
- $header = <<<HTML
-<div class="elgg-head clearfix">
-	$title_block$wall_add
-</div>
-$filter
-HTML;
 
 $sidebar .= elgg_view('channel/sidebar', array(
 	'user' => $user
