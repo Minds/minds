@@ -5,68 +5,7 @@
  * @package Profile
  */
 ?>
-.hero > .body > .inner.channel-inner{
-	width:100%;
-}
-.hero > .body > .inner.channel-inner .main, .hero > .body > .inner.channel-inner .main > .elgg-list{
-	background:transparent;
-}
-.minds-channel-layout{
-	width:1200px;
-	margin: 8px auto;
-}
-.minds-channel-header-block{
-	width: 100%;
-	height: auto;
-	padding:0;
-	margin-bottom:42px;
-	clear:both;
-}
-.minds-channel-header-block > h1{
-	font-size:64px;
-	line-height:64px;
-	text-align:center;
-	text-shadow:0 0 3px #FFF;
-}
-.minds-channel-sidebar-left{
-	float:left;
-	width:200px;
-	height:100%;
-	padding:8px;
-	box-shadow:0 0 3px #888;
-	background:#FFF;
-}
-.minds-channel-sidebar-left .minds-channel-avatar{
-	width:100%;
-}
-.minds-channel-sidebar-left .channel-social-icons{
-	padding:0;
-	margin:16px 0;
-}
-.minds-channel-sidebar-left .channel-social-icons > a.entypo{
-	font-size:33px;
-}
-.minds-channel-content{
-	float:left;	
-	width:960px;
-	margin-left:16px;
-	clear:right;
-}
-.minds-channel-content .main{
-	padding:0;
-}
-.minds-channel-content .elgg-list.x2 {
-	padding:0;
-}
-.minds-channel-content .elgg-list.x2 > li{
-	margin:0 0 8px 16px;
-	width:436px;
-}
-.minds-channel-content .elgg-list .minds-channel-post-box > form{
-	width:auto;
-	padding:0;
-	padding-bottom:8px;
-}
+
 .elgg-menu-channel li > a{
 	padding:8px;
 	color:#222;

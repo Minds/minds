@@ -3,9 +3,9 @@
  * Main activity stream list page
  */
 
-if(!get_input('linear')){
-	set_input('linear', 'on');
-}
+//if(!get_input('linear')){
+//	set_input('linear', 'on');
+//}
 
 $options = array();
 
@@ -87,6 +87,20 @@ switch ($page_type) {
 		$options['owner_guid'] = elgg_get_logged_in_user_guid();
 		break;
 }
+$options['list_class'] = 'x2';
+$options['prepend'] = "<li class=\"elgg-item minds-fixed-post-box\">".elgg_view_form('deck_river/post',  
+						array(	'action'=>'action/deck_river/post/add', 
+								'name'=>'post',
+								'class'=>'minds-fixed-post-box', 
+								'enctype' => 'multipart/form-data'
+						),
+						array(	'to_guid'=> $user->guid, 
+						 	//	'access_id'=> ACCESS_PRIVATE, 
+						 		'hide_accounts'=>true
+						)
+					) . "</li>".
+					"<li class=\"elgg-item minds-news-filter-box\">".elgg_view('page/layouts/content/river_filter', $vars). 
+					"</li>";
 
 $activity = elgg_list_river($options);
 if (!$activity) {
@@ -96,21 +110,24 @@ if (!$activity) {
 //$content = elgg_view('core/river/filter', array('selector' => $selector));
 //$sidebar = elgg_view_form('wall/add', array('name'=>'elgg-wall-news'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
 //$sidebar .= elgg_view('core/river/sidebar');
-$sidebar .= elgg_view('page/elements/ads', array('large-block'));
 
 $vars['filter_context'] = $page_filter;
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 $filter = elgg_view('page/layouts/content/river_filter', $vars);
-$wall_add = elgg_view_form('deck_river/post',  array('action'=>'action/deck_river/post/add', 'name'=>'elgg-wall-news', 'enctype' => 'multipart/form-data'), array('to_guid'=> elgg_get_logged_in_user_guid(), 'ref'=>'news'));
-$header = <<<HTML
+ $header = <<<HTML
 <div class="elgg-head clearfix">
 	$title_block$wall_add
 </div>
 $filter
 HTML;
 
+$sidebar .= elgg_view('channel/sidebar', array(
+	'user' => $user
+));
+
 $params = array(
 	'content' =>  $content . $activity,
+	'avatar' => $avatar,
 	'sidebar' => $sidebar,
 	'filter_context' => $page_filter,
 	'filter' => false,
@@ -118,6 +135,6 @@ $params = array(
 	'class' => 'elgg-river-layout',
 );
 
-$body = elgg_view_layout('one_column', $params);
+$body = elgg_view_layout('fixed', $params);
 
 echo elgg_view_page($title, $body, 'default', array('class'=>'news'));
