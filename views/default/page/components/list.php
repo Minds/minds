@@ -92,10 +92,13 @@ if (is_array($items) && count($items) > 0) {
 	    $id = $item->id;
             $time = $item->posted;
         }
-	$featured = $item->featured_id ? "featured_id=$item->featured_id" : null;
-        $html .= "<li id=\"$id\" class=\"$item_class\" data-timestamp=\"$time\" $featured>";
-        $html .= elgg_view_list_item($item, $vars);
-        $html .= '</li>';
+		$contents = elgg_view_list_item($item, $vars);
+		if($contents){
+			$featured = $item->featured_id ? "featured_id=$item->featured_id" : null;
+	        $html .= "<li id=\"$id\" class=\"$item_class\" data-timestamp=\"$time\" $featured>";
+	        $html .= $contents;
+	        $html .= '</li>';
+		}
     }
 }
 
