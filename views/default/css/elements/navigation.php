@@ -588,3 +588,13 @@
 .elgg-menu-item-hover-over > ul > li:hover > a, .elgg-menu-item-hover-over > ul > li.elgg-state-selected > a{
 	color:#4690D6;
 }
+
+/**
+ * News filter
+ */
+.minds-news-filter-box .elgg-menu-filter{
+	margin:4px 4px 16px;
+}
+.minds-news-filter-box .elgg-menu-filter > li{
+	font-size:12px;
+}

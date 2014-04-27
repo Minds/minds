@@ -443,7 +443,17 @@ class ElggUser extends ElggEntity
 		$db = new DatabaseCall('friendsof');
 		return (int) $db->countRow($this->guid);
 	}
-
+	
+	/**
+	 * Return a count of the users subscriptions
+	 * 
+	 * @return 
+	 */
+	function getSubscriptionsCount(){
+		$db = new DatabaseCall('friends');
+		return (int) $db->countRow($this->guid);
+	}
+	
 	/**
 	 * Lists the user's friends
 	 *
