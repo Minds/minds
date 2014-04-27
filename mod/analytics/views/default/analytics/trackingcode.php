@@ -10,6 +10,7 @@ if(!$tracking_id){
 
           var _gaq = _gaq || [];
           _gaq.push(['_setAccount', '<?php echo $tracking_id; ?>']);
+	 _gaq.push(['_setDomain', 'minds.com']);
           _gaq.push(['_trackPageview']);
 
           (function() {

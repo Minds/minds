@@ -42,8 +42,12 @@ if($item->attachment_guid){
 <script>
 $(document).ready(function(){ 
 	$('.attachment-lightbox').fancybox({
-		'type': 'image',
-		'width': '90%'
+		type: 'image',
+		href: "<?= elgg_get_site_url() . "photos/thumbnail/$item->attachment_guid/master";?>",
+		autoDimension: true,
+		autoScale: true,
+		padding: '0',
+		//margin: '200 20'
 	}); 
 });
 </script>

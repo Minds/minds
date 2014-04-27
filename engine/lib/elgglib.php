@@ -550,11 +550,14 @@ function system_messages($message = null, $register = "success", $count = false)
 		}  else {
 			$messages['success'][] = $message;
 		}
-		return $message;
+	//	return $message;
+		setcookie($cookie_id, json_encode($messages), time()+360, '/');
+		return;
 	}
 	
 	
 	if (!$count) {
+		 setcookie($cookie_id, '', time()-36000, '/');
 		return $messages[$register];
 	} else {
 		return count($messages[$register]);

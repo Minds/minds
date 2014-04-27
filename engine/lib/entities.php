@@ -728,7 +728,12 @@ function get_entity($guid, $type = 'object') {
 		$newguid = new GUID();
 		$guid = $newguid->migrate($guid);
 	}
-	
+/*if($guid == '305741238252867584'){
+echo "<pre>";
+var_dump(debug_backtrace());
+echo "</pre>";
+exit;
+}*/	
 	// Check local cache first
 	$new_entity = retrieve_cached_entity($guid);
 	if ($new_entity) { 
@@ -748,11 +753,7 @@ function get_entity($guid, $type = 'object') {
 	$db = new DatabaseCall('entities');
 	$row = $db->getRow($guid);
 	if(!$row){
-		/*$db = new DatabaseCall($type);
-		$row = $db->getRow($guid);
-		if(!$row){*/
-			return false;
-		//	}		
+		return false;
 	}
 	$row['guid'] = $guid;
 	if(!isset($row['type'])){

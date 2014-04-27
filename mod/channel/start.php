@@ -87,7 +87,7 @@ function channel_init() {
 	);
 
 	//setup the profile icon widget
-	$user = elgg_get_page_owner_entity();
+	/*$user = elgg_get_page_owner_entity();
 	if($user){
 		elgg_register_widget_type(
 			'channel_avatar',
@@ -96,7 +96,7 @@ function channel_init() {
 			'channel',
 			true
 		);
-	}
+	}*/
 
 	//set a new file size
 	elgg_set_config('icon_sizes', array(	

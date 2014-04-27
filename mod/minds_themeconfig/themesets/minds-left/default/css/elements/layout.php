@@ -46,7 +46,7 @@
     min-width:998px;
     width:100%;
 	height: auto;
-	z-index: 9000;
+	z-index: 8000;
 	box-shadow: 0 0 5px #DDD;
 	-moz-box-shadow: 0 0 5px #DDD;
 	-webkit-box-shadow: 0 0 5px #DDD;
