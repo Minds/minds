@@ -40,8 +40,9 @@ function minds_nodes_init() {
 	elgg_register_event_handler('pagesetup', 'system', 'minds_nodes_page_setup');
 
 	// Register an admin menu
-	elgg_register_admin_menu_item('minds', 'minds_tiers');	
-	elgg_register_admin_menu_item('minds', 'manage', 'minds_tiers');   
+	//elgg_register_admin_menu_item('minds', 'minds_tiers');	
+	//elgg_register_admin_menu_item('minds', 'manage', 'minds_tiers');   
+	elgg_register_admin_menu_item('configure', 'tiers', 'monitization');
 
 	// Endpoint
 	elgg_register_page_handler('tierlogin', 'tierlogin_page_handler');
