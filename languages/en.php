@@ -685,6 +685,7 @@ $english = array(
 	'plugins:usersettings:save:fail' => "There was a problem saving  user settings for the %s plugin.",
 	'item:object:plugin' => 'Plugins',
 
+	'admin:pluginsettings' => 'Configure Active Plugins',
 	'admin:plugins' => "Enable/Disable Plugins",
 	'admin:plugins:activate_all' => 'Activate All',
 	'admin:plugins:deactivate_all' => 'Deactivate All',
