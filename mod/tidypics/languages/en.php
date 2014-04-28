@@ -13,7 +13,7 @@ $english = array(
 			'albums' => "Albums",
 			'tidypics:disabled' => 'Disabled',
 			'tidypics:enabled' => 'Enabled',
-			'admin:settings:photos' => 'Tidypics',
+			'admin:pluginsettings:photos' => 'Tidypics',
 
 			'photos:add' => "Create album",
 			'images:upload' => "Upload photos",
