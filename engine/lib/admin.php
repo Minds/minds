@@ -288,6 +288,7 @@ function admin_init() {
 	// settings
 	elgg_register_admin_menu_item('configure', 'appearance', null, 50);
 	elgg_register_admin_menu_item('configure', 'settings', null, 100);
+	elgg_register_admin_menu_item('configure', 'pluginsettings', null, 100);
 	elgg_register_admin_menu_item('configure', 'basic', 'settings', 10);
 	elgg_register_admin_menu_item('configure', 'advanced', 'settings', 20);
 	elgg_register_admin_menu_item('configure', 'menu_items', 'appearance', 30);
@@ -359,7 +360,7 @@ function elgg_admin_add_plugin_settings_menu() {
 				'name' => $plugin_id,
 				'href' => "admin/plugin_settings/$plugin_id",
 				'text' => $plugin->getManifest()->getName(),
-				'parent_name' => 'settings',
+				'parent_name' => 'pluginsettings',
 				'context' => 'admin',
 				'section' => 'configure',
 			));
