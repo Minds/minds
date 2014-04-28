@@ -49,7 +49,7 @@ function oauth2_init() {
     elgg_register_plugin_hook_handler('cron', 'hourly', 'oauth2_expire_tokens');
 
     // Admin menu to manage applications
-    elgg_register_admin_menu_item('administer', 'oauth2', 'administer_utilities');
+    elgg_register_admin_menu_item('configure', 'oauth2', 'settings');
 			
 	//register subtypes
 	oauth2_subtypes();

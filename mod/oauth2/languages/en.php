@@ -13,7 +13,7 @@ $english = array(
 	'item:object:oauth2_refresh_token' => 'OAuth2 Refresh Tokens',
 	'item:object:oauth2_auth_code'     => 'OAuth2 Authoriation Codes',
 
-    'admin:administer_utilities:oauth2' => 'OAuth2 Applications',
+    'admin:settings:oauth2' => 'Connected Applications',
 	'oauth2:register:title'            => 'Register Application',
     'oauth2:applications:admin_title'  => 'Registered Applications',
     'oauth2:applications:title'        => 'Your Registered Applications',
