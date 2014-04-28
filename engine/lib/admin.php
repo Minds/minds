@@ -280,8 +280,9 @@ function admin_init() {
 		'href' => 'admin/plugins',
 		'text' => elgg_echo('admin:plugins'),
 		'context' => 'admin',
-		'priority' => 75,
-		'section' => 'configure'
+		'priority' => 1,
+		'section' => 'configure',
+		'parent_name' => 'settings',
 	));
 
 	// settings
