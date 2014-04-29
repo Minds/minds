@@ -28,6 +28,12 @@
     <?php echo elgg_echo('minds_themeconfig:background');?>:<br />
         <?php echo elgg_view('input/file', array('name' => 'background')); ?>
 </label> <br /><label><input type="checkbox" name="background_remove" value="y" /> <?php echo elgg_echo('remove'); ?></label></p>
+
+<p><label>
+    <?php echo elgg_echo('minds_themeconfig:topbar:colour');?>:<br />
+        <?php echo elgg_view('input/colourpicker', array('name' => 'topbar_colour', 'class' => 'pick-colour', 'style' => "background-color:#" .elgg_get_plugin_setting('topbar_colour', 'minds_themeconfig') . ";", 'value' => elgg_get_plugin_setting('topbar_colour', 'minds_themeconfig'))); ?>
+</label> </p>
+
 <p><label>
     <?php echo elgg_echo('minds_themeconfig:background:colour');?>:<br />
         <?php echo elgg_view('input/colourpicker', array('name' => 'background_colour', 'class' => 'pick-colour', 'style' => "background-color:#" .elgg_get_plugin_setting('background_colour', 'minds_themeconfig') . ";", 'value' => elgg_get_plugin_setting('background_colour', 'minds_themeconfig'))); ?>

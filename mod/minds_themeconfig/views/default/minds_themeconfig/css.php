@@ -51,6 +51,12 @@
     }
     <?php } ?>
     
+    <?php if ($topbar_colour = elgg_get_plugin_setting('topbar_colour', 'minds_themeconfig')) { ?>
+    .hero > .topbar {
+        background-color: #<?php echo $topbar_colour;?>;
+    }
+    <?php } ?>
+    
     <?php if ($sidebar_colour = elgg_get_plugin_setting('sidebar_colour', 'minds_themeconfig')) { ?>
     .elgg-sidebar {
         background-color: #<?php echo $sidebar_colour;?>;
