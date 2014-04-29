@@ -161,7 +161,8 @@ class ElggRiverItem {
 	public function toArray(){
 		$array = array();
 		foreach($this->attributes as $k => $v){
-			$array[$k] = $v;	
+			if($v) //don't allow null
+				$array[$k] = $v;	
 		}
 		return $array;
 	}
@@ -235,8 +236,7 @@ class ElggRiverItem {
 			$this->id = $g->generate();
 			$this->addToTimeLines();
 		}
-		$db->insert($this->id, $this->toArray());
-		
+		return $db->insert($this->id, $this->toArray());
 	}
 	
 	/**
