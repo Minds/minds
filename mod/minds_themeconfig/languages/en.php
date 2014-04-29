@@ -27,6 +27,8 @@ $english = array(
     'minds_themeconfig:sidebar:colour' => 'Sidebar colour',
     'minds_themeconfig:main:colour' => 'Main panel colour',
     'minds_themeconfig:topbar:colour' => 'Minds topbar colour',
+    'minds_themeconfig:button:colour' => 'Button colour',
+    'minds_themeconfig:carousel:colour' => 'Carousel colour',
 
         'minds_themeconfig:frontpagetext' => 'Front page text',
 	'minds_themeconfig:font:header' => 'Header font',

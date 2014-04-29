@@ -57,6 +57,12 @@
     }
     <?php } ?>
     
+    <?php if ($carousel_colour = elgg_get_plugin_setting('carousel_colour', 'minds_themeconfig')) { ?>
+    .carousel {
+        background-color: #<?php echo $carousel_colour;?>;
+    }
+    <?php } ?>
+    
     <?php if ($sidebar_colour = elgg_get_plugin_setting('sidebar_colour', 'minds_themeconfig')) { ?>
     .elgg-sidebar {
         background-color: #<?php echo $sidebar_colour;?>;
@@ -73,6 +79,12 @@
     
     .elgg-main > .minds-comments-form {
         background-color: #<?php echo $main_colour;?>;
+    }
+    <?php } ?>
+    
+    <?php if ($button_colour = elgg_get_plugin_setting('button_colour', 'minds_themeconfig')) { ?>
+    .elgg-button, .subscribe-button {
+        background-color: #<?php echo $button_colour;?>;
     }
     <?php } ?>
     

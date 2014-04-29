@@ -131,6 +131,12 @@
     // Minds topbar colour
     elgg_set_plugin_setting('topbar_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('topbar_colour')), "minds_themeconfig");
     
+    // Button colour
+    elgg_set_plugin_setting('button_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('button_colour')), "minds_themeconfig");
+    
+    // carousel colour
+    elgg_set_plugin_setting('carousel_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('carousel_colour')), "minds_themeconfig");
+    
     // Save text colour
     elgg_set_plugin_setting('text_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('text_colour')), "minds_themeconfig");
     
