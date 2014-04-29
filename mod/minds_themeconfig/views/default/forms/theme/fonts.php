@@ -11,7 +11,7 @@ foreach ($CONFIG->theme_fonts as $element => $code) {
 	    $s = elgg_get_plugin_setting('font_size::' . $code, 'minds_themeconfig');
 	    $c = elgg_get_plugin_setting('font_colour::' . $code, 'minds_themeconfig');
 	
-	    if ($f) echo "font-family: $f; " ;
+	    if ($f) echo "font-family: " . addslashes ($f) ."; " ;
 	    if ($s) echo "font-size: {$s}pt;";
 	    if ($c) echo "color: #{$c};";
 	    
