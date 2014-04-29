@@ -125,5 +125,3 @@
     // Save text colour
     elgg_set_plugin_setting('text_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('text_colour')), "minds_themeconfig");
     
-    // Save custom CSS
-    elgg_set_plugin_setting('custom_css', get_input('custom_css'), "minds_themeconfig");

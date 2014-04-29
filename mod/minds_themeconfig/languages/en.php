@@ -2,7 +2,10 @@
 
 
 $english = array(
-	'admin:appearance:theme' => 'General',
+	'admin:appearance:theme' => 'Configure theme',
+	'admin:appearance:fonts' => 'Configure fonts',
+	'minds_themeconfig:font_size:header' => 'Header size',
+	'admin:appearance:css' => 'Edit CSS directly (Advanced)',
 	'admin:appearance:footer' => 'Footer',
 	'admin:appearance:themesets' => 'Themesets',
 	'admin:monitization' => 'Monetization',
@@ -23,6 +26,12 @@ $english = array(
 
         'minds_themeconfig:frontpagetext' => 'Front page text',
 	'minds_themeconfig:font:header' => 'Header font',
+    'minds_themeconfig:font_colour:header' => 'Header colour',
+    
+	'minds_themeconfig:font:paragraph' => 'Paragraph text',
+	'minds_themeconfig:font_size:paragraph' => 'Parargraph text size',
+    'minds_themeconfig:font_colour:paragraph' => 'Paragraph colour'
+	
 );
 		
 add_translation("en", $english);
