@@ -122,6 +122,12 @@
     // Save background colour
     elgg_set_plugin_setting('background_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('background_colour')), "minds_themeconfig");
     
+    // Sidebar colour
+    elgg_set_plugin_setting('sidebar_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('sidebar_colour')), "minds_themeconfig");
+    
+    // Main bar colour
+    elgg_set_plugin_setting('main_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('main_colour')), "minds_themeconfig");
+    
     // Save text colour
     elgg_set_plugin_setting('text_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('text_colour')), "minds_themeconfig");
     

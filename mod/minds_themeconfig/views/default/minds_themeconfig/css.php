@@ -51,6 +51,25 @@
     }
     <?php } ?>
     
+    <?php if ($sidebar_colour = elgg_get_plugin_setting('sidebar_colour', 'minds_themeconfig')) { ?>
+    .elgg-sidebar {
+        background-color: #<?php echo $sidebar_colour;?>;
+    }
+    <?php } ?>
+    
+    <?php if ($main_colour = elgg_get_plugin_setting('main_colour', 'minds_themeconfig')) { ?>
+    .elgg-main {
+        background-color: #<?php echo $main_colour;?>;
+    }
+    .elgg-main > .elgg-content {
+        background-color: #<?php echo $main_colour;?>;
+    }
+    
+    .elgg-main > .minds-comments-form {
+        background-color: #<?php echo $main_colour;?>;
+    }
+    <?php } ?>
+    
     <?php if (elgg_get_plugin_setting('background_override', 'minds_themeconfig') == 'true') { ?>
     body {
         background-image:url('<?php echo elgg_get_site_url(); ?>themeicons/background/<?php echo elgg_get_plugin_setting('background_override_ts', 'minds_themeconfig'); ?>.png');

@@ -22,11 +22,18 @@ $english = array(
     
         'minds_themeconfig:advanced' => 'Advanced settings...',
         'minds_themeconfig:custom_css' => 'Custom CSS',
-    	
+    
+    'minds_themeconfig:background:colour' => 'Background colour',
+    'minds_themeconfig:sidebar:colour' => 'Sidebar colour',
+    'minds_themeconfig:main:colour' => 'Main panel colour',
 
         'minds_themeconfig:frontpagetext' => 'Front page text',
 	'minds_themeconfig:font:header' => 'Header font',
     'minds_themeconfig:font_colour:header' => 'Header colour',
+    
+     'minds_themeconfig:font:subheading' => 'Subheading font',
+    'minds_themeconfig:font_size:subheading' => 'Subheading size',
+    'minds_themeconfig:font_colour:subheading' => 'Subheading colour',
     
 	'minds_themeconfig:font:paragraph' => 'Paragraph text',
 	'minds_themeconfig:font_size:paragraph' => 'Parargraph text size',

@@ -43,6 +43,7 @@ function themeconfig_init() {
     // Configure font elements that we can set
     $CONFIG->theme_fonts = array(
 	'header' => 'h2',
+	'subheading' => 'h3',
 	'paragraph' => 'p',
     );
     
