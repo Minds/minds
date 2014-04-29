@@ -68,6 +68,10 @@ function oauth2_page_handler($page) {
     $pages = $base . '/pages/oauth2';
 
     switch ($page[0]) {
+    	
+		case 'token': 
+			require $pages . "/token.php";
+            break;
 
         case 'authorize':
             require $pages . "/authorize.php";
@@ -117,13 +121,13 @@ function oauth2_pam_handler($credentials = NULL) {
     // Create a server instance
     $server = new OAuth2_Server($storage);
 
-    $access = elgg_get_ignore_access();
+    $ia = elgg_get_ignore_access();
     elgg_set_ignore_access(true);
 
     // Validate the request
     if (!$server->verifyAccessRequest(OAuth2_Request::createFromGlobals())) { 
-        error_log('oauth2_pam_handler() - ' . $server->getResponse());
-        elgg_set_ignore_access($access);
+       // error_log('oauth2_pam_handler() - ' . $server->getResponse());
+        elgg_set_ignore_access($ia);
         return false;
     }
 

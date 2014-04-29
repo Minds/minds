@@ -171,24 +171,22 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
     public function getAccessToken($token)
     {
         //$results = elgg_get_entities($this->getAccessTokenOptions($token));
-        $db = new DatabaseCall('entities_by_time');
-        $guids = $db->getRow('oauth2_access_token:'.$token);
-        
-        $results = elgg_get_entities(array(
-            'types' => array('object'),
-            'guids' => $guids
-        ));
+        $db = new DatabaseCall('user_index_to_guid');
+        $guids = $db->getRow('oauth2_access_token', array('offset'=>$token, 'limit'=>1));
 
-        if (!empty($results)) {
-            return array(
-                'access_token' => $results[0]->access_token,
-                'client_id'    => $results[0]->client_id,
-                'user_id'      => $results[0]->owner_guid,
-                'expires'      => $results[0]->expires,
-                'scope'        => $results[0]->scope,
-                'entity'       => $results[0],
-            );
-        }
+	  	if(!isset($guids[$token]))
+			return false;
+		
+		$entity = get_entity($guids[$token]);
+
+ 		return array(
+            'access_token' => $entity->access_token,
+            'client_id'    => $entity->client_id,
+            'user_id'      => $entity->owner_guid,
+            'expires'      => $entity->expires,
+            'scope'        => $entity->scope,
+            'entity'       => $entity,
+        );
 
         return false;
     }
@@ -208,7 +206,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
      * @ingroup oauth2_section_4
      */
     public function setAccessToken($token, $client_id, $user_id, $expires, $scope = null)
-    {
+    { 
         if (!$access_token = $this->getAccessToken($token)) {
 
             // Create the token entity
@@ -229,10 +227,9 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $entity->expires      = $expires;        
         $entity->scope        = $scope;
 		
-		//add into the indexes 
-		//@todo make this user_index_to_guid...
-		$db = new DatabaseCall('entities_by_time');
-		$db->insert('oauth2_access_token:'.$token, array('type'=>'entities_by_time', $entity->guid => $entity->guid));
+		//add into the user indexes (we need a lookup table but user_indexes should be renamed to lookup)
+		$db = new DatabaseCall('user_index_to_guid');
+		$db->insert('oauth2_access_token', array($token => $entity->guid));
 
         return $this->getAccessToken($token);
     }

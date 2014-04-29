@@ -18,7 +18,7 @@
  *
  * @return bool true/false
  */
-function minds_service_remind($url, $title, $description, $username) {	
+function minds_service_remind($url, $message, $username) {	
 	if(!$username) {
 		$user = get_loggedin_user();
 	} else {
@@ -28,29 +28,51 @@ function minds_service_remind($url, $title, $description, $username) {
 		}
 	}
 
-	$remind = new ElggObject();
-	$remind->subtype = 'remind';
-	$remind->owner_guid = elgg_get_logged_in_user_guid();
-	$remind->access_id = get_default_access();
-	$remind->method = 'API';
-	//$remind->site = $site; @MH - is there are way to grab the site the user is on??
-	$remind->title = $title;
-	$remind->description = $description;
-	$remind->href = $url;
+	$wallpost = new WallPost();
+	$wallpost->to_guid = $user->guid;
+	$wallpost->owner_guid = $user->guid;
+	$wallpost->message = $message;
+	$wallpost->access_id = 2;
 	
-	$guid = $remind->save();
-	add_to_river('river/remind/api', 'remind', elgg_get_logged_in_user_guid(), $guid);
-	//add_entity_relationship($guid, 'remind', elgg_get_logged_in_user_guid()); 
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, "https://iframely.com/iframely?uri=".urldecode($url)); 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+	$output = curl_exec($ch); 
+	curl_close($ch);   
+	$meta = json_decode($output);
 
-	return $guid;
+	$wallpost->meta_title = $meta->meta->title;
+	$wallpost->meta_description = $meta->meta->description;
+	$wallpost->meta_icon = $meta->links[0]->href;
+	$wallpost->meta_url = $url;
+	$guid = $wallpost->save(); 
+	
+	$options = array(
+		'cc' => array($wallpost->to_guid),
+		'subject_guid' => $wallpost->owner_guid,
+		'body' => $wallpost->message . 'test',
+		'view' => 'river/object/wall/create',
+		'object_guid' => $wallpost->guid, //needed until we do some changes to the thumbs and comments plugins
+		'attachment_guid' => $post_obj->attachment,
+		'access_id' => $wallpost->access_id,
+		
+		'meta_title' => $wallpost->meta_title,
+		'meta_description' => $wallpost->meta_description,
+		'meta_icon' => $wallpost->meta_icon,
+		'meta_url' => $wallpost->meta_url,
+		);
+	if($wallpost->access_id == ACCESS_PRIVATE)
+		$options['timeline_override'] = array($wallpost->to_guid); //only post to the to_guid timeline..
+		
+	$river = new ElggRiverItem($options);
+	return $river->save();
 }
 
 expose_function('remind',
 				"minds_service_remind",
 				array(
 						'url' => array ('type' => 'string', 'required' => true),
-						'title' => array ('type' => 'string', 'required' => true),//soon to be optional once we implement scraping of some sort
-						'description' => array ('type' => 'string', 'required' => true),//soon to be optional once we implement scraping of some sort
+						'message' =>array ('type' => 'string', 'default'=>'', 'required' => false),
 					  	'username' => array ('type' => 'string', 'required' => false),
 					),
 				"Perform a remind action from another site",
