@@ -432,6 +432,7 @@ function logout() {
 	unset($_SESSION['user']);
 
 	setcookie("mindsperm", "", (time() - (86400 * 30)), "/");
+	setcookie("mindsSSO", "", (time() - (86400 * 30)), "/");
 
 	session_destroy();
 	setcookie(session_name(), '', (time() - (86400 * 30)), "/");

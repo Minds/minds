@@ -53,6 +53,9 @@ function oauth2_init() {
 			
 	//register subtypes
 	oauth2_subtypes();
+	
+	//check for Single Sign On
+	oauth2_SSO();
 }
 
 function oauth2_page_handler($page) {
@@ -105,6 +108,30 @@ function oauth2_page_handler($page) {
     return true;
 }
 
+/**
+ * Auto login if a cookie is found
+ */
+function oauth2_SSO(){
+	if(isset($_COOKIE['mindsSSO']) && !elgg_is_logged_in()){
+		
+		$data = explode(':', base64_decode($_COOKIE['mindsSSO']));
+	 
+	 	// Load our oauth2 library
+  		elgg_load_library('oauth2');
+		$storage = new ElggOAuth2DataStore();
+		$ia = elgg_set_ignore_access();
+		$token = $storage->getAccessToken($data[1]);
+		elgg_set_ignore_access($ia);
+		if(!$token['user_id']){
+			return false;
+		}
+	    $user = get_entity($token['user_id']);
+		if(!$user)
+			return false;
+			
+		login($user);
+	}
+}
 /**
  * PAM: Confirm that the call includes an access token
  *

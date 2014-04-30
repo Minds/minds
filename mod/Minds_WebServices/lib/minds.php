@@ -221,3 +221,17 @@ expose_function('minds.social.fb.login',
 				'POST',
 				false, 
 				false);
+				
+function minds_get_site_menu(){
+	global $CONFIG;
+	$menu = elgg_view_menu('site',array('sort_by'=>'priority'));
+	global $jsonexport;
+	return $jsonexport;
+}
+expose_function('get.siteMenu',
+				"minds_get_site_menu",
+				array(),
+				'Retrieve the site menu',
+				'GET',
+				true,
+				true);
