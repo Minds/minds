@@ -492,8 +492,12 @@ function admin_page_handler($page) {
 		'sort_by' => 'priority',
 		'class' => 'elgg-menu-hz',
 	));
-	$body = elgg_view_layout('admin', array('content' => $buttons . $content, 'title' => $title));
-	echo elgg_view_page($title, $body, 'default');
+	if (elgg_is_xhr()) {
+	    echo $content;
+	} else {
+	    $body = elgg_view_layout('admin', array('content' => $buttons . elgg_view('admin/ajax_panel')/* $content */, 'title' => $title));
+	    echo elgg_view_page($title, $body, 'default');
+	}
 	return true;
 }
 
