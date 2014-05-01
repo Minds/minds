@@ -1,6 +1,9 @@
 <?php global $CONFIG; ?>
 <style type="text/css">
 
+    <?php echo htmlspecialchars_decode(elgg_get_plugin_setting('custom_css', 'minds_themeconfig')); ?>
+    <?php if (get_input('preview') == 'true') echo htmlspecialchars_decode(elgg_get_plugin_setting('custom_css_preview', 'minds_themeconfig')); ?>
+    
     <?php
     
 	// Overrides fonts 
@@ -100,6 +103,5 @@
     }
     <?php } ?>
     
-    <?php echo htmlspecialchars_decode(elgg_get_plugin_setting('custom_css', 'minds_themeconfig')); ?>
 </style>
 				
