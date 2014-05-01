@@ -119,15 +119,16 @@ function oauth2_SSO(){
 	$token = $storage->getAccessToken(get_input('access_token'));
 	elgg_set_ignore_access($ia);
 	if(!$token['user_id']){
-		return false;
+		header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
+
 	}
-    $user = get_entity($token['user_id']);
+    	$user = get_entity($token['user_id']);
 	if(!$user)
-		return false;
-		
+		header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
+
 	login($user);
-	
-	header('Location: ' . $_SERVER['HTTP_REFERER']);
+	header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
+
 }
 /**
  * PAM: Confirm that the call includes an access token
