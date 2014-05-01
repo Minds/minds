@@ -33,7 +33,7 @@ elgg.userpicker.init = function() {
 		})
 	});
 
-	$('.elgg-userpicker-remove').live('click', elgg.userpicker.removeUser);
+	$(document).on('click', '.elgg-userpicker-remove', elgg.userpicker.removeUser);
 };
 
 /**

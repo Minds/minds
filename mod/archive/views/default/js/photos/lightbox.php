@@ -32,7 +32,7 @@ elgg.tidypics.lightbox.init = function() {
 // Init fancybox2 lightbox on images
 elgg.tidypics.lightbox.initImages = function() {
 	if ($(".tidypics-lightbox").length) {
-		$(".tidypics-lightbox").attr('rel', 'tidypics-lightbox').fancybox2(elgg.tidypics.lightbox.getFancyboxInit(null));
+		$(".tidypics-lightbox").attr('rel', 'tidypics-lightbox').fancybox(elgg.tidypics.lightbox.getFancyboxInit(null));
 	}
 }
 
@@ -260,7 +260,7 @@ elgg.tidypics.lightbox.initEvents = function() {
 
 	// Bind lightbox close
 	$(document).delegate('a.tidypics-lightbox-close', 'click', function(event) {
-		$.fancybox2.close();
+		$.fancybox.close();
 		event.preventDefault();
 	});
 }
