@@ -10,7 +10,11 @@
 	    
 	    var href = $(this).attr('href');
 	    
-	    $('#ajax-admin-panel').load(href);
+	    $('#ajax-admin-panel').fadeOut(400, function() {
+		$('#ajax-admin-panel').load(href, function() {
+		    $('#ajax-admin-panel').fadeIn();
+		});
+	    });
 	    
 	    return false;
 	});
