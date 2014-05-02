@@ -257,16 +257,6 @@ function channel_page_handler($page) {
 			$class = 'landing-page';
 	}
 	
-	$avatar = elgg_view('output/img', array(
-									'title'=>$user->name, 
-									'src'=>$user->getIconURL('large'), 
-									'class'=>'minds-channel-avatar'
-					));
-	if($user->canEdit()){
-		$url = elgg_get_site_url() . "channel/$user->username/avatar";
-		$avatar .=  "<a class=\"avatar-edit\" href=\"$url\">Edit</a>";
-	}
-	
 	$body = elgg_view_layout('fixed', array(
 		'content' => $content, 
 		'header'=>false, 
