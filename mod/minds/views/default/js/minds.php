@@ -81,7 +81,7 @@
 		} 
 
 		var $list = $('.elgg-list.mason');
-		$list.masonry();   
+		//$list.masonry();   
 		$('.elgg-list.mason').imagesLoaded(function(){
 			
 			$list.find('.rich-image').each(function(){ 
@@ -95,8 +95,10 @@
 					$(this).remove();
 				} 
 		 	});
-
-			$list.masonry('reloadItems');                        
+			$('.minds-content-loading').remove();
+			$list.show();
+			$('.load-more').show();
+			$list.masonry();                        
 		});
 		
 		$('.hero > .topbar').on('mouseenter', '.right', function(e){ $('.topbar .right .social-login').show(); });

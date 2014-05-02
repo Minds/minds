@@ -2269,6 +2269,18 @@ function elgg_init() {
 }
 
 /**
+ * Check if this is a multisite
+ * 
+ * @return bool
+ */
+function minds_is_multisite(){
+	if(isset($CONFIG->multisite))
+		return true;
+	
+	return false;
+}
+
+/**
  * Adds unit tests for the general API.
  *
  * @param string $hook   unit_test

@@ -64,10 +64,11 @@ if ($pagination && $count) {
         'count' => $count,
         'limit' => $limit,
         'offset_key' => $offset_key,
-	'ajaxify' => $ajaxify,
-	'list_id' => $list_id,
+		'ajaxify' => $ajaxify,
+		'list_id' => $list_id,
         'last_guid' => $last_guid,
-	'load-next' => elgg_get_context() == 'main' ? end($items)->featured_id : end($items)->guid ?: end($items)->id
+        'style' => 'display:none',
+		'load-next' => elgg_get_context() == 'main' ? end($items)->featured_id : end($items)->guid ?: end($items)->id
 	));
 }
 
@@ -104,7 +105,9 @@ if (is_array($items) && count($items) > 0) {
 
 $html .= $after;
 
-$html = "<ul id=\"$list_id\" class=\"$list_class\" data-options=\"$data_options\">$html</ul>";
+$html = "<ul id=\"$list_id\" class=\"$list_class\" style=\"display:none;\" data-options=\"$data_options\">$html</ul>";
+if(!elgg_is_xhr())
+	$html .= "<div class=\"minds-content-loading\"><span class=\"loader-sprite\">&#127758;</span><p> Loading... </p></div>";
 
 if ($position == 'before' || $position == 'both' && !$ajaxify) {
     $html = $nav . $html;

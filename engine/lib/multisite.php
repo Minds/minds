@@ -638,17 +638,6 @@ function elggmulti_toggle_plugin($domain_id, $plugin, $activate = true) {
 	$domain -> save();
 }
 
-/**
- * Check if this is a multisite
- * 
- * @return bool
- */
-function minds_is_multisite(){
-	if(isset($CONFIG->multisite))
-		return true;
-	
-	return false;
-}
 
 /*	function elggmulti_get_messages()
  {
