@@ -106,24 +106,10 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	protected function load($guid) {
-		/*$attr_loader = new ElggAttributeLoader(get_class(), 'user', $this->attributes);
-		$attr_loader->secondary_loader = 'get_user_entity_as_row';
-
-		$attrs = $attr_loader->getRequiredAttributes($guid);
-		if (!$attrs) {
-			return false;
-		}
-
-		$this->attributes = $attrs;
-		$this->attributes['tables_loaded'] = 2;
-		cache_entity($this);
-		*/
 
 		foreach($guid as $k => $v){
-                        $this->attributes[$k] = $v;
-                }
-
-               // cache_entity($this);
+			$this->attributes[$k] = $v;
+		}
 
 		return true;
 	}
@@ -134,14 +120,14 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	public function save() {
+	
+		$timebased = $this->isEnabled();
+		parent::save($timebased);
+		
+		//now place email and username in index
+		$data = array($this->guid => time());
 		
 		$db = new DatabaseCall('user_index_to_guid');
-		
-		$timebased = $this->isEnabled();
-		$guid =  create_entity($this, $timebased);
-		//now place email and username in index
-		$data = array($guid => time());
-		
 		$db->insert(strtolower($this->username), $data);
 		$db->insert(strtolower($this->email), $data);
 
@@ -150,7 +136,7 @@ class ElggUser extends ElggEntity
 			$_SESSION['user'] = $this;
 		}
 
-		return $guid;
+		return $this->guid;
 	}
 	
 	/**
