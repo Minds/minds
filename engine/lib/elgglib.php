@@ -7,27 +7,6 @@
  * purposes and subsystems.  Many of them should be moved to more relevant files.
  */
 
-// prep core classes to be autoloadable
-spl_autoload_register('_elgg_autoload');
-elgg_register_classes(dirname(dirname(__FILE__)) . '/classes');
-
-/**
- * Autoload classes
- *
- * @param string $class The name of the class
- *
- * @return void
- * @throws Exception
- * @access private
- */
-function _elgg_autoload($class) {
-	global $CONFIG;
-
-	if (!isset($CONFIG->classes[$class]) || !include($CONFIG->classes[$class])) {
-		return false;
-	}
-}
-
 /**
  * Register all files found in $dir as classes
  * Need to be named MyClass.php

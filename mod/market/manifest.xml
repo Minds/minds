@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin_manifest xmlns="http://www.elgg.org/plugin_manifest/1.8">
 	<name>Market</name>
-	<author>slyhne</author>
-	<version>1.8f</version>
+	<author>Mark Harding</author>
+	<version>1.0</version>
 	<category>content</category>
-	<blurb>Market plugin</blurb>
-	<description>Make a market place where your users can create classifieds.</description>
-	<website>http://zurf.dk/elgg</website>
-	<copyright>zurf.dk</copyright>
+	<blurb>Market and ecommerce plugin</blurb>
+	<description>Provides ecommerce functionality to Minds</description>
+	<website>http://www.minds.com/</website>
+	<copyright>Minds.org, Inc.</copyright>
 	<license>GNU Public License version 2</license>
 	<requires>
 		<type>elgg_version</type>
-		<version>2010030101</version>
+		<version>0</version>
 	</requires>
-	<admin_interface>basic</admin_interface>
-	<activate_on_install>false</activate_on_install>
 </plugin_manifest>
 
