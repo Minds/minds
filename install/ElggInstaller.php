@@ -1244,7 +1244,7 @@ class ElggInstaller {
 		global $CONFIG;
 
 		try{
-			$db = new DatabaseCall(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
+			$db = new minds\core\data\call(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
 			$db->installSchema();
 		} catch (Exception $e){
 			register_error($e->why);

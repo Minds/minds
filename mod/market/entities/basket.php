@@ -9,4 +9,18 @@ use minds\entities;
 
 class basket extends entities\object{
 	
+	public function addItem($guid, $quantity = 1){
+		
+	}
+	
+	public function removeItem($guid, $quantity = 1){
+		
+	}
+	
+	public function checkout(){
+		// \minds\plugin\market\checkout
+		
+		//create an order
+	}
+	
 }

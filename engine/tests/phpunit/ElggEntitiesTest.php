@@ -53,7 +53,7 @@ class ElggEntitiesTest extends Minds_PHPUnit_Framework_TestCase {
 		$entity = self::$entities[0];
 		$featured_id = $entity->feature();
 		
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		$guids = $db->getRow('object:featured', array('limit'=>1));
 		$this->assertArrayHasKey($featured_id, $guids);
 	}
@@ -71,7 +71,7 @@ class ElggEntitiesTest extends Minds_PHPUnit_Framework_TestCase {
 		
 		self::$entities[0]->unfeature();
 		
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		$guids = $db->getRow('object:featured', array('limit'=>10));
 		$this->assertCount(2, $guids);
 		$this->assertEquals(0, self::$entities[0]->featured);

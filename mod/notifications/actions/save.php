@@ -7,7 +7,7 @@
  */
 
 $current_user = elgg_get_logged_in_user_entity();
-$db = new DatabaseCall('entities_by_time');
+$db = new minds\core\data\call('entities_by_time');
 
 $guid = (int) get_input('guid', 0);
 if (!$guid || !($user = get_entity($guid,'user'))) {

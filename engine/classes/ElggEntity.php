@@ -1291,11 +1291,11 @@ abstract class ElggEntity extends ElggData implements
 			elgg_trigger_event('create', $this->type, $this);
 		}	
 
-		$db = new DatabaseCall('entities');
+		$db = new minds\core\data\call('entities');
 		$result = $db->insert($this->guid, $this->toArray());
 
 		if($result && $timebased){
-			$db = new DatabaseCall('entities_by_time');
+			$db = new minds\core\data\call('entities_by_time');
 			$data =  array($result => $result);
 		
 			foreach($this->getIndexKeys() as $index){
@@ -1470,11 +1470,11 @@ abstract class ElggEntity extends ElggData implements
 			}
 	
 			// Now delete the entity itself
-			$db = new DatabaseCall('entities');
+			$db = new minds\core\data\call('entities');
 			$res = $db->removeRow($this->guid);
 	
 			
-			$db = new DatabaseCall('entities_by_time');
+			$db = new minds\core\data\call('entities_by_time');
 			foreach($this->getIndexKeys() as $rowkey)
 				$db->removeAttributes($rowkey, array($this->guid));
 				
@@ -1781,7 +1781,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return int $guid
 	 */
 	 public function feature(){
-	 	$db = new DatabaseCall('entities_by_time');
+	 	$db = new minds\core\data\call('entities_by_time');
 		
 	 	$g = new GUID(); 
 		$this->featured_id = $g->generate();
@@ -1802,7 +1802,7 @@ abstract class ElggEntity extends ElggData implements
 	 */
 	public function unFeature(){
 		
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		
 		if($this->featured_id){
 			//supports legacy imports
@@ -1814,7 +1814,7 @@ abstract class ElggEntity extends ElggData implements
 		$this->featured = 0;
 		$this->save();
 	
-		$db = new DatabaseCall('entities');
+		$db = new minds\core\data\call('entities');
 		$result = $db->removeAttributes($this->guid, array('featured_id'));
 	
 		return true;

@@ -57,7 +57,7 @@ function analytics_page_handler($page) {
  */
 function analytics_retrieve(array $options = array()){
 
-	$db = new DatabaseCall('entities_by_time');
+	$db = new minds\core\data\call('entities_by_time');
 	
 	$g = new GUID();
 	
@@ -164,7 +164,7 @@ function analytics_fetch(){
 		
 		if($data){
 			//we want to start removing old ones soon...
-			$db = new DatabaseCall('entities_by_time');
+			$db = new minds\core\data\call('entities_by_time');
 			$db->removeRow('trending:'.$subtype);
 			$db->insert('trending:'.$subtype, $data);
 			var_dump($data);
@@ -176,7 +176,7 @@ function analytics_fetch(){
 	arsort($user_occurances);
 	$user_guids = array_keys($user_occurances);
 
-	$db = new DatabaseCall('entities_by_time');
+	$db = new minds\core\data\call('entities_by_time');
 	$db->removeRow('trending:users');
 	$db->insert('trending:users', $user_guids);
 			

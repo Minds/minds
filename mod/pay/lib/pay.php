@@ -412,7 +412,7 @@ function paypal_generic_ipn_handler($page) {
                 $order = $o; break;
             }
     }*/
-    $db = new DatabaseCall('entities_by_time');
+    $db = new minds\core\data\call('entities_by_time');
     if ($guids = $db->getRow('object:pay:subscrid', array('offset'=> $_POST['subscr_id'], 'limit'=>1)))
 	    $order = get_entity($guids[0], 'object');
 	
@@ -605,7 +605,7 @@ function paypal_handler_callback($order_guid) {
                     $order->subscr_id = $_POST['subscr_id'];
 		    
 		    // Save an index against this so we can call it up more efficiently 
-		    $db = new DatabaseCall('entities_by_time');
+		    $db = new minds\core\data\call('entities_by_time');
 		    $db->insert('object:pay:subscrid', array($order->subscr_id => $order->guid));
 		}
 

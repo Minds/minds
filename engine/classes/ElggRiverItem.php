@@ -33,7 +33,7 @@ class ElggRiverItem {
 	 */
 	public function load($attrs){
 		if(is_int($attrs) || is_string($attrs)){
-			$db = new DatabaseCall('newsfeed');
+			$db = new minds\core\data\call('newsfeed');
 			$data = $db->getRow($attrs);
 		}
 		
@@ -198,7 +198,7 @@ class ElggRiverItem {
 			$followers = $this->timeline_override; 
 				
 		foreach($followers as $follower_guid){
-			$db = new DatabaseCall('timeline');
+			$db = new minds\core\data\call('timeline');
 			$db->insert($follower_guid, array($this->id => time()));
 		}
 	}
@@ -220,7 +220,7 @@ class ElggRiverItem {
 			array_push($followers, $this->to_guid); 
 
 			
-		$db = new DatabaseCall('timeline');	
+		$db = new minds\core\data\call('timeline');	
 		foreach($followers as $follower_guid){
 			$db->removeAttributes($follower_guid, array($this->id), false);
 		}
@@ -230,7 +230,7 @@ class ElggRiverItem {
 	 * Save a river post
 	 */
 	function save(){
-		$db = new DatabaseCall('newsfeed');
+		$db = new minds\core\data\call('newsfeed');
 		if(!$this->id){
 			$g = new GUID();
 			$this->id = $g->generate();
@@ -244,7 +244,7 @@ class ElggRiverItem {
 	 */
 	function delete(){
 		 $this->removeFromTimelines();
-		$db = new DatabaseCall('newsfeed');
+		$db = new minds\core\data\call('newsfeed');
 		$db->removeRow($this->id);
 		
 	//	$this->removeFromTimelines();

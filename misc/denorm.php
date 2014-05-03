@@ -4,7 +4,7 @@ require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access();
 
-$db = new DatabaseCall('entities_by_time');
+$db = new minds\core\data\call('entities_by_time');
 
 $options = array(
 		'timespan' => get_input('timespan', 'day')

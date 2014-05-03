@@ -127,7 +127,7 @@ class ElggUser extends ElggEntity
 		//now place email and username in index
 		$data = array($this->guid => time());
 		
-		$db = new DatabaseCall('user_index_to_guid');
+		$db = new minds\core\data\call('user_index_to_guid');
 		$db->insert(strtolower($this->username), $data);
 		$db->insert(strtolower($this->email), $data);
 
@@ -155,7 +155,7 @@ class ElggUser extends ElggEntity
 			}
 		}
 		
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		//Remove from the list of unvalidated user
 		$db->removeAttributes('user:unvalidated', array($this->guid));
 		//add to the list of unvalidated user
@@ -184,7 +184,7 @@ class ElggUser extends ElggEntity
 			}
 		}
 		
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		
 		//Remove from the list of users
 		$db->removeAttributes('user', array($this->guid)); 
@@ -216,9 +216,9 @@ class ElggUser extends ElggEntity
 		}
 
 		if($this->guid){
-			$db = new DatabaseCall('entities_by_time');
+			$db = new minds\core\data\call('entities_by_time');
 			$db->removeAttributes('user', array($this->guid));
-			$db = new DatabaseCall('user_index_to_guid');
+			$db = new minds\core\data\call('user_index_to_guid');
 			$db->removeRow($this->username);
 			$db->removeRow($this->email); //@todo we should keep a record of indexes
 		}
@@ -426,7 +426,7 @@ class ElggUser extends ElggEntity
 	 * @return 
 	 */
 	function getSubscribersCount(){
-		$db = new DatabaseCall('friendsof');
+		$db = new minds\core\data\call('friendsof');
 		return (int) $db->countRow($this->guid);
 	}
 	
@@ -436,7 +436,7 @@ class ElggUser extends ElggEntity
 	 * @return 
 	 */
 	function getSubscriptionsCount(){
-		$db = new DatabaseCall('friends');
+		$db = new minds\core\data\call('friends');
 		return (int) $db->countRow($this->guid);
 	}
 	

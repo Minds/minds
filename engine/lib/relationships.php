@@ -78,7 +78,7 @@ function add_entity_relationship($guid_one, $relationship, $guid_two) {
 		return false;
 	}
 
-	$db = new DatabaseCall('relationships');
+	$db = new minds\core\data\call('relationships');
 	if( $db->insert($guid_one . ':' . $relationship, array($guid_two=>$time)) 
 		&&  
 		$db->insert($guid_two . ':' . $relationship . ':inverted', array($guid_one=>$time)))
@@ -102,7 +102,7 @@ function add_entity_relationship($guid_one, $relationship, $guid_two) {
 function check_entity_relationship($guid_one, $relationship, $guid_two) {
 	global $CONFIG;
 
-	$db = new DatabaseCall('relationships');
+	$db = new minds\core\data\call('relationships');
 	$result = $db->getRow($guid_one . ':' . $relationship); 
 	if(isset($result[$guid_two])){
 		return true;
@@ -128,7 +128,7 @@ function remove_entity_relationship($guid_one, $relationship, $guid_two) {
 		return false;
 	}
 
-	$db = new DatabaseCall('relationships');
+	$db = new minds\core\data\call('relationships');
 	if( $db->removeAttributes($guid_one . ':' . $relationship, array($guid_two))
 		&&
 		$db->removeAttributes($guid_two . ':' . $relationship . ':inverted', array($guid_one)))
@@ -151,7 +151,7 @@ function remove_entity_relationship($guid_one, $relationship, $guid_two) {
 function remove_entity_relationships($guid_one, $relationship = "", $inverse = false, $type = '') {
 	global $CONFIG;
 
-	$db = new DatabaseCall('relationships');
+	$db = new minds\core\data\call('relationships');
 	$ofs = $db->getRow($guid_one . ':'. $relationship);
 	
 	//remove the ofs first
@@ -226,7 +226,7 @@ function elgg_get_entities_from_relationship($options) {
 		$id .= ':inverted'; //ie. friends inverted is friends:inverted. invitiations inverted is invitations:inverted
 	}
 	
-	$db = new DatabaseCall('relationships');
+	$db = new minds\core\data\call('relationships');
 	if(!$options['count']){
 		$guids = $db->getRow($id, array('offset'=>$options['offset'], 'limit'=>$options['limit']));
 	} else {

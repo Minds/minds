@@ -7,7 +7,7 @@ $offset ="";
 while(1) {
 $featured = elgg_get_entities(array('type'=>'object', 'subtype'=>'image','offset'=>$offset, 'limit'=>200));
 
-$db = new DatabaseCall('entities_by_time');
+$db = new minds\core\data\call('entities_by_time');
 foreach($featured as $entity){
 	elgg_set_ignore_access();
 	if($entity->featured == 1){

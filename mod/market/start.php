@@ -10,9 +10,7 @@
  */
 
 
-elgg_register_event_handler('init','system', function(){
-	//require_once(dirname(__FILE__).'/market.php');
-	
+elgg_register_event_handler('init','system', function(){	
 	$market = new minds\plugin\market\market();
 	$market->init();
 });

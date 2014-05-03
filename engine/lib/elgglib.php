@@ -1094,7 +1094,7 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
 register_shutdown_function('recordStats');
 function recordStats(){
 	if(isset($_REQUEST['debug'])){
-		$db = new DatabaseCall();
+		$db = new minds\core\data\call();
         $keys = implode("|",$db::$keys);
 		$stats = "{$db::$reads} Reads. {$db::$writes} Writes. {$db::$counts} Counts at {$_SERVER['REQUEST_URI']} with $keys called\n";
 		$filename = '/tmp/minds.stats';

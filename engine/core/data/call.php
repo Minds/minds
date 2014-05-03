@@ -3,7 +3,9 @@
  * Class used to communicate with the cassandra database
  *
  */
- 
+
+namespace minds\core\data;
+
 use phpcassa\ColumnFamily;
 use phpcassa\ColumnSlice;
 use phpcassa\Connection\ConnectionPool;
@@ -14,7 +16,9 @@ use phpcassa\Index\IndexExpression;
 use phpcassa\Schema\DataType\LongType;
 use phpcassa\UUID;
 
-class DatabaseCall{
+use minds\core;
+
+class call extends core\base{
 
 	static $keys = array();	
 	static $reads = 0;
@@ -25,7 +29,7 @@ class DatabaseCall{
 	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL){
 		
 		global $CONFIG;
-		require_once(dirname(dirname(dirname(__FILE__))) . '/vendors/phpcassa/lib/autoload.php');
+		require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/vendors/phpcassa/lib/autoload.php');
 		
 		$this->servers = $servers ?: $CONFIG->cassandra->servers;
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
@@ -39,7 +43,7 @@ class DatabaseCall{
 				$this->cf_name = $cf;
 				$this->cf = $this->getCf($cf);
 			}
-		}catch(Exception $e){
+		}catch(\Exception $e){
 			
 		}
 	}
@@ -93,7 +97,7 @@ class DatabaseCall{
 		unset($data['guid']);
 		try{
 			$this->cf->insert($guid, $data);
-		} catch(Exception $e){
+		} catch(\Exception $e){
 			return false;
 		}
 		return $guid;
@@ -137,7 +141,7 @@ class DatabaseCall{
 	 	self::$reads++;
 		array_push(self::$keys, $key);
 
-		if(get_input('debug')){
+		if(\get_input('debug')){
 			if($key == '100000000000000063:member')
 				var_dump(debug_backtrace(false));
 		}
@@ -161,7 +165,7 @@ class DatabaseCall{
 			} else {
 				return $this->cf->get($key, $slice);
 			}
-		}catch(Exception $e){
+		}catch(\Exception $e){
 			return false;
 		}
 	 }
@@ -320,7 +324,7 @@ class DatabaseCall{
 		try{
 			$sys = new SystemManager($this->servers[0]);
 			$sys->drop_keyspace($this->keyspace);
-		}catch(Exception $e){
+		}catch(\Exception $e){
 			//var_dump($e); exit;
 			return;
 		}
@@ -341,7 +345,7 @@ class DatabaseCall{
 	 * @todo Make a DB specific object rather than stdClass.
 	 */
 	public function createObject(array $array = array()){
-		$obj = new stdClass;
+		$obj = new \stdClass;
 
 		foreach($array as $k=>$v){
 			$obj->$k = $v;

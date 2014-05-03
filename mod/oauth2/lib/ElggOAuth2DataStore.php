@@ -171,7 +171,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
     public function getAccessToken($token)
     {
         //$results = elgg_get_entities($this->getAccessTokenOptions($token));
-        $db = new DatabaseCall('user_index_to_guid');
+        $db = new minds\core\data\call('user_index_to_guid');
         $guids = $db->getRow('oauth2_access_token', array('offset'=>$token, 'limit'=>1));
 
 	  	if(!isset($guids[$token]))
@@ -228,7 +228,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $entity->scope        = $scope;
 		
 		//add into the user indexes (we need a lookup table but user_indexes should be renamed to lookup)
-		$db = new DatabaseCall('user_index_to_guid');
+		$db = new minds\core\data\call('user_index_to_guid');
 		$db->insert('oauth2_access_token', array($token => $entity->guid));
 
         return $this->getAccessToken($token);
@@ -319,7 +319,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $entity->expires            = $expires;
         $entity->scope              = $scope;
 		
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		$db->insert('oauth2_auth_code:'.$code, array($entity->guid => $entity->guid));
 
         return $this->getAuthorizationCode($code);
@@ -344,7 +344,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $results = elgg_get_entities($this->getAuthCodeOptions($token));
 
         if (!empty($results)) {
-        	$db = new DatabaseCall('entities_by_time');
+        	$db = new minds\core\data\call('entities_by_time');
         	$db->removeRow('oauth2_auth_code:'.$code);
             return $results[0]->delete();
         }
@@ -456,7 +456,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $token->expires       = $expires;
         $token->scope         = $scope;
 
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		$db->insert('oauth2_refresh_token:'.$refresh_token, array($token->guid => $token->guid));
 
         return array(
@@ -473,7 +473,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $results = $this->getRefreshToken($refresh_token);
 
         if (!empty($results)) {
-        	$db = new DatabaseCall('entities_by_time');
+        	$db = new minds\core\data\call('entities_by_time');
         	$db->removeRow('oauth_refresh_token:'.$refresh_token);
             return $results[0]->delete();
         }

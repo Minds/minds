@@ -713,7 +713,7 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 	try{
 		$namespace = 'object:featured';
 
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		$guids = $db->getRow($namespace, array('offset'=>$offset, 'limit'=>$limit));
 	
 		if(!$guids){
