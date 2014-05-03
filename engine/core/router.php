@@ -21,11 +21,11 @@ class router{
 		
 		$loop = count($segments);
 		while($loop){
-			-
 			$route = rtrim($route, $segments[$loop].'/');
 			if(isset(self::$routes[$route])){
 				$handler = new self::$routes[$route]();
-				return $handler->$method($segments);
+				$pages = array_splice($segments, $loop) ?: array();
+				return $handler->$method($pages);
 			} 
 			--$loop;
 		}

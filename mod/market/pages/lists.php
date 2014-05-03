@@ -6,6 +6,8 @@ namespace minds\plugin\market\pages;
 
 use minds\core;
 use minds\interfaces;
+use minds\plugin\market;
+use minds\entities;
 
 class lists extends core\page implements interfaces\page{
 	
@@ -14,9 +16,23 @@ class lists extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 		
-		switch($pages){
+		$db = new core\data\call('entities_by_time');
+		$limit = isset($_REQUEST['limit']) ? $_REQUEST['limit'] : 12;
+		$offset = isset($_REQUEST['offset']) ? $_REQUEST['offset'] : "";
+		
+		switch($pages[0]){
 			case 'owner':
+				$owner = new entities\user($pages[0]);
+				if(!$owner){
+					echo "The user could not be found \n";
+					return false;
+				}
+				$guids = $db->getRow("object:market:user:$owner->guid", array('limit'=>$limit, 'offset'=>$offset));
+				var_dump($guids); 
 				$content = 'This is the owner';
+			case 'category':
+				//join up the slugs to create the category filter
+				break;
 			case 'all':
 			default:
 				$content = 'This is the all page';

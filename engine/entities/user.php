@@ -6,6 +6,6 @@
 
 namespace minds\entities;
 
-class entity extends \ElggUser{
+class user extends \ElggUser{
 	
 }

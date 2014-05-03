@@ -6,6 +6,6 @@
 
 namespace minds\entities;
 
-class entity extends \ElggObject{
+class object extends \ElggObject{
 	
 }
