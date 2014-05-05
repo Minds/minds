@@ -638,6 +638,7 @@ function elggmulti_toggle_plugin($domain_id, $plugin, $activate = true) {
 	$domain -> save();
 }
 
+
 /*	function elggmulti_get_messages()
  {
  if ((isset($_SESSION['_EM_MESSAGES'])) && (is_array($_SESSION['_EM_MESSAGES'])))

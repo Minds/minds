@@ -47,7 +47,10 @@ echo elgg_view('output/img', array(
 		'src'=>$user->getIconURL('large'), 
 		'class'=>'minds-fixed-avatar'
 	));
-
+if($user->canEdit() ){
+		$url = elgg_get_site_url() . "channel/$user->username/avatar";
+		echo "<a class=\"avatar-edit\" href=\"$url\">Edit</a>";
+	}
 ?>
 <h1><?= $user->name ?></h1>
 <?= $user->website ? elgg_view('output/url', array('text'=>$user->website, 'href'=>$user->website)) : false ?>

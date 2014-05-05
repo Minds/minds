@@ -46,7 +46,7 @@
     min-width:998px;
     width:100%;
 	height: auto;
-	z-index: 9000;
+	z-index: 8000;
 	box-shadow: 0 0 5px #DDD;
 	-moz-box-shadow: 0 0 5px #DDD;
 	-webkit-box-shadow: 0 0 5px #DDD;
@@ -226,6 +226,69 @@
 	margin:0;
 	padding:1px 30px;
 	background:#F8F8F8;
+}
+
+.hero > .body > .inner.fixed-inner{
+	width:100%;
+}
+.hero > .body > .inner.fixed-inner .main, .hero > .body > .inner.fixed-inner .main > .elgg-list{
+	background:transparent;
+}
+.minds-fixed-layout{
+	width:1200px;
+	margin: 8px auto;
+}
+.minds-fixed-header-block{
+	width: 100%;
+	height: auto;
+	padding:0;
+	margin-bottom:42px;
+	clear:both;
+}
+.minds-fixed-header-block > h1{
+	font-size:64px;
+	line-height:64px;
+	text-align:center;
+	text-shadow:0 0 3px #FFF;
+}
+.minds-fixed-sidebar-left{
+	float:left;
+	width:200px;
+	height:100%;
+	padding:8px;
+	box-shadow:0 0 3px #888;
+	background:#FFF;
+}
+.minds-fixed-sidebar-left .minds-fixed-avatar{
+	width:100%;
+}
+.minds-fixed-sidebar-left .channel-social-icons{
+	padding:0;
+	margin:16px 0;
+}
+.minds-fixed-sidebar-left .channel-social-icons > a.entypo{
+	font-size:33px;
+}
+.minds-fixed-content{
+	float:left;	
+	width:960px;
+	margin-left:16px;
+	clear:right;
+}
+.minds-fixed-content .main{
+	padding:0;
+}
+.minds-fixed-content .elgg-list.x2 {
+	padding:0;
+}
+.minds-fixed-content .elgg-list.x2 > li{
+	margin:0 0 8px 16px;
+	width:436px;
+}
+.minds-fixed-content .elgg-list .minds-fixed-post-box > form{
+	width:auto;
+	padding:0;
+	padding-bottom:8px;
 }
 
 .elgg-footer{

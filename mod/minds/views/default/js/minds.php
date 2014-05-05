@@ -81,7 +81,7 @@
 		} 
 
 		var $list = $('.elgg-list.mason');
-		$list.masonry();   
+		//$list.masonry();   
 		$('.elgg-list.mason').imagesLoaded(function(){
 			
 			$list.find('.rich-image').each(function(){ 
@@ -95,8 +95,10 @@
 					$(this).remove();
 				} 
 		 	});
-
-			$list.masonry('reloadItems');                        
+			$('.minds-content-loading').remove();
+			$list.show();
+			$('.load-more').show();
+			$list.masonry();                        
 		});
 		
 		$('.hero > .topbar').on('mouseenter', '.right', function(e){ $('.topbar .right .social-login').show(); });
@@ -126,20 +128,19 @@
 		}); 
 
 		//handle cookie session messages
-		var msg = $.cookie('_elgg_ss_msg');
-		var err_msg = $.cookie('_elgg_err_msg');
-		if (typeof err_msg == 'string' || typeof msg == 'string' ) {
-		
-				if (err_msg != null) {
-					elgg.register_error(err_msg);
-					$.removeCookie('_elgg_err_msg',{path:'/'});
-				}
-				if (msg != null) {
-					elgg.system_message(msg);
-					$.removeCookie('_elgg_ss_msg', {path:'/'});
-				}
+		var msgs = $.cookie('mindsMessages');
+		if(msgs && !elgg.is_logged_in()){
+			var msgs = JSON.parse(msgs);
+			if(msgs.error)
+				elgg.register_error(msgs.error);
+
+			if(msgs.success)
+				elgg.system_message(msgs.success);
+
+			$.removeCookie('mindsMessages', { path: '/' });
 		}
-		
+		//elgg.system_message(msg);
+	
 		$(document).on('click', '.load-more', minds.loadMore);
 		/**
 		 * Now make this autoscroll!

@@ -7,27 +7,6 @@
  * purposes and subsystems.  Many of them should be moved to more relevant files.
  */
 
-// prep core classes to be autoloadable
-spl_autoload_register('_elgg_autoload');
-elgg_register_classes(dirname(dirname(__FILE__)) . '/classes');
-
-/**
- * Autoload classes
- *
- * @param string $class The name of the class
- *
- * @return void
- * @throws Exception
- * @access private
- */
-function _elgg_autoload($class) {
-	global $CONFIG;
-
-	if (!isset($CONFIG->classes[$class]) || !include($CONFIG->classes[$class])) {
-		return false;
-	}
-}
-
 /**
  * Register all files found in $dir as classes
  * Need to be named MyClass.php
@@ -550,11 +529,14 @@ function system_messages($message = null, $register = "success", $count = false)
 		}  else {
 			$messages['success'][] = $message;
 		}
-		return $message;
+	//	return $message;
+		setcookie($cookie_id, json_encode($messages), time()+360, '/');
+		return;
 	}
 	
 	
 	if (!$count) {
+		 setcookie($cookie_id, '', time()-36000, '/');
 		return $messages[$register];
 	} else {
 		return count($messages[$register]);
@@ -1111,12 +1093,12 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
  */
 register_shutdown_function('recordStats');
 function recordStats(){
-	if($_REQUEST['debug']){
-	$db = new DatabaseCall();
+	if(isset($_REQUEST['debug'])){
+		$db = new minds\core\data\call();
         $keys = implode("|",$db::$keys);
-	$stats = "{$db::$reads} Reads. {$db::$writes} Writes. {$db::$counts} Counts at {$_SERVER['REQUEST_URI']} with $keys called\n";
-	$filename = '/tmp/minds.stats';
-	file_put_contents ($filename, $stats, FILE_APPEND );
+		$stats = "{$db::$reads} Reads. {$db::$writes} Writes. {$db::$counts} Counts at {$_SERVER['REQUEST_URI']} with $keys called\n";
+		$filename = '/tmp/minds.stats';
+		file_put_contents ($filename, $stats, FILE_APPEND );
 	}
 }
 
@@ -2263,6 +2245,18 @@ function elgg_init() {
 			$CONFIG->wordblacklist[] = trim($l);
 		}
 	}
+}
+
+/**
+ * Check if this is a multisite
+ * 
+ * @return bool
+ */
+function minds_is_multisite(){
+	if(isset($CONFIG->multisite))
+		return true;
+	
+	return false;
 }
 
 /**

@@ -336,6 +336,7 @@ class MindsMultiInstaller extends ElggInstaller {
             'notifications',
             //'minds_connect',
             'mobile',
+	    'minds_social',
             'minds_themeconfig',
 		'anypage',
             'minds_wordpress',

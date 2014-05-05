@@ -67,6 +67,11 @@ if (!include_once($path)) {
 	exit;
 }
 
+/**
+ * Autoloader
+ */
+require_once(dirname(__FILE__) . '/autoload.php');
+
 // Load the system settings
 if (!include_once(dirname(__FILE__) . "/settings.php")) {
 	$msg = 'Elgg could not load the settings file. It does not exist or there is a file permissions issue.';

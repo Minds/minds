@@ -105,15 +105,7 @@ function minds_archive_init() {
 
 	elgg_extend_view('css/elgg', 'css/photos/css');
 
-	// Register jquery-fancybox2 js lib
-	$js = elgg_get_simplecache_url('js', 'fancybox2');
-	elgg_register_simplecache_view('js/fancybox2');
-	elgg_register_js('jquery-fancybox2', $js);
-
-	// Register jquery-fancybox2 css
-	$css = elgg_get_simplecache_url('css', 'fancybox2');
-	elgg_register_simplecache_view('css/fancybox2');
-	elgg_register_css('jquery-fancybox2', $css);
+	
 
 	// Extend Elgg JS (extra elgg config variables)
 	elgg_extend_view('js/elgg', 'js/photos/config');
@@ -122,8 +114,8 @@ function minds_archive_init() {
 	elgg_load_js('tidypics');
 	//elgg_load_js('tidypics:tagging');
 	elgg_load_js('tidypics:lightbox');
-	elgg_load_js('jquery-fancybox2');
-	elgg_load_css('jquery-fancybox2');
+	//elgg_load_js('jquery-fancybox2');
+	//elgg_load_css('jquery-fancybox2');
 
 
 	// Register a page handler, so we can have nice URLs (fallback in case some links go to old kaltura_video)

@@ -132,7 +132,7 @@ if(elgg_get_context() == 'admin' || elgg_get_context() == 'gallery'){
 	echo '</ul>';
 } else {
 
-echo '<div class="news-show-more load-more" limit="'.$limit.'" last_guid="'. $vars['last_guid'] . '" data-load-next="'. $vars['load-next'] . '" context="'.elgg_get_context().'">more</div>';
+echo '<div class="news-show-more load-more" limit="'.$limit.'" last_guid="'. $vars['last_guid'] . '" data-load-next="'. $vars['load-next'] . '" style="'.$vars['style'] .'" context="'.elgg_get_context().'">more</div>';
 
 }
 

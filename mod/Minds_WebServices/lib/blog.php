@@ -116,7 +116,7 @@ expose_function('blog.get_posts',
  *
  * @return bool
  */
-function blog_save($title, $text, $excerpt, $tags , $access, $container_guid, $author, $email, $profile_url, $permalink) {
+function blog_save($title, $text, $excerpt, $tags , $access, $container_guid, $permalink) {
 	$user = get_loggedin_user();
 	if (!$user) {
 		throw new InvalidParameterException('registration:usernamenotvalid');
@@ -134,20 +134,14 @@ function blog_save($title, $text, $excerpt, $tags , $access, $container_guid, $a
 	$obj->comments_on = 'On';
 	$obj->excerpt = strip_tags($excerpt);
 	$obj->tags = strip_tags($tags);
+	$obj->api_perma = $permalink;
         
-        // Save extra stuff (note, using $_REQUEST, because the function variables aren't being correctly populated, and I don't have time to debug it at the moment..)
-        $obj->ex_author = $_REQUEST['author'];//$author;
-        $obj->ex_email = $_REQUEST['email'];//$email;
-        $obj->ex_profile_url = $_REQUEST['profile_url'];//$profile_url;
-        $obj->ex_permalink = $_REQUEST['permalink'];//$permalink;
-        
-        error_log('OAUTH API : ' . print_r($obj, true) . print_r($_REQUEST, true));
 
 	$guid = $obj->save();
 	add_to_river('river/object/blog/create',
-	'create',
-	$user->guid,
-	$obj->guid
+		'create',
+		$user->guid,
+		$obj->guid
 	);
 	$return['success'] = true;
 	$return['message'] = elgg_echo('blog:message:saved');
@@ -163,18 +157,12 @@ expose_function('blog.save_post',
 						'tags' => array ('type' => 'string', 'required' => false, 'default' => "blog"),
 						'access' => array ('type' => 'string', 'required' => false, 'default'=>ACCESS_PUBLIC),
 						'container_guid' => array ('type' => 'int', 'required' => false, 'default' => 0),
-                                    
-                                                // The following fields allow for posts written elsewhere, but posted via one minds user, to be displayed with the correct information
-                                                // this is primarily used by the minds wordpress plugin and bridge
-                                                'author' => array ('type' => 'string', 'required' => false, 'default' => ''),
-                                                'email' => array ('type' => 'string', 'required' => false, 'default' => ''),
-                                                'profile_url' => array ('type' => 'string', 'required' => false, 'default' => ''),
-                                                'permalink' => array ('type' => 'string', 'required' => false, 'default' => ''),
-					),
+						'permalink' => array ('type' => 'int', 'required' => false),
+				),
 				"Post a blog post",
 				'POST',
 				true,
-				false);
+				true);
 /**
  * Web service for delete a blog post
  *

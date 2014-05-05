@@ -6,7 +6,16 @@ elgg.provide('elgg.wall.channel');
 
 elgg.wall.init = function() {
 	
-	var news = $('form[name=elgg-wall-news]');
+	$('.attachment-lightbox').fancybox({
+		type: 'image',
+		href: $(this).attr('href'),
+		autoDimension: true,
+		autoScale: true,
+		padding: '0',
+		//margin: '200 20'
+	}); 
+	
+	/*var news = $('form[name=elgg-wall-news]');
 	news.on('click', 'input[type=submit]', elgg.wall.news.submit);
 
 	$('form[name=elgg-wall-channel]').on('click', 'input[type=submit]', elgg.wall.channel.submit);
@@ -19,12 +28,7 @@ elgg.wall.init = function() {
 
 	// remove the default binding for confirmation since we're doing extra stuff.
 	// @todo remove if we add a hook to the requires confirmation callback
-	/*form.parent().find('a.elgg-requires-confirmation')
-		.click(elgg.wall.deletePost)
 
-		// double whammy for in case the load order changes.
-		.unbind('click', elgg.ui.requiresConfirmation)
-		.removeClass('elgg-requires-confirmation');*/
 		
 	$("#wall-textarea").live('keydown', function() {
 		elgg.wall.textCounter(this, $("#wall-characters-remaining span"), 1000);
@@ -37,6 +41,7 @@ elgg.wall.init = function() {
 	$('body').on('focus', '#wall-textarea',function(e){ $(this).autosize(); }); 
 	
 	console.log('loaded');
+	*/
 };
 
 elgg.wall.submit = function(e) {

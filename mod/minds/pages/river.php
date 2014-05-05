@@ -87,8 +87,8 @@ switch ($page_type) {
 		$options['owner_guid'] = elgg_get_logged_in_user_guid();
 		break;
 }
-$options['list_class'] = 'x2';
-$vars['filter_context'] = $page_filter;
+$options['list_class'] = 'x2 minds-list-river';
+
 $options['prepend'] = "<li class=\"elgg-item minds-fixed-post-box\">".elgg_view_form('deck_river/post',  
 						array(	'action'=>'action/deck_river/post/add', 
 								'name'=>'post',

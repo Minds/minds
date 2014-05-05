@@ -66,9 +66,11 @@ function user_get_profile($username) {
 		}
 	}
 	
-	
+	$core['guid'] = $user->guid;
 	$core['name'] = $user->name;
 	$core['username'] = $user->username;
+	if($user->canEdit())
+		$core['email'] = $user->email;
 	
 	$profile_info['core'] = $core;
 	$profile_info['profile_fields'] = $profile_fields;

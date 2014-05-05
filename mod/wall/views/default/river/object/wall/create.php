@@ -38,27 +38,25 @@ if($item->attachment_guid){
 
 	 elgg_load_js('lightbox');
         elgg_load_css('lightbox');
+		elgg_load_js('elgg.wall');
 	?>
 <script>
 $(document).ready(function(){ 
-	$('.attachment-lightbox').fancybox({
-		'type': 'image',
-		'width': '90%'
-	}); 
+	
 });
 </script>
 <?php
 
-	$src = elgg_get_site_url() . "photos/thumbnail/$item->attachment_guid/large";
+	$src = elgg_get_site_url() . "photos/thumbnail/$item->attachment_guid";
 
 	$attachment = elgg_view('output/img', array( 
-		'src' => $src,
+		'src' => "$src/large",
 		'class' => 'river-img-attachment'
 	)); //we are just going to assume they are images... change soon
 	 
 	$attachment =  elgg_view('output/url', array(
 		'text'=>$attachment,
-		'href'=>$src,
+		'href' => "$src/master",
 		'class'=>'attachment-lightbox'
 	));
 

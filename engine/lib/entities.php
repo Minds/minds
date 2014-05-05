@@ -500,121 +500,20 @@ function create_entity_event_hook($event, $object_type, $object) {
 	}
 }
 elgg_register_event_handler('create', 'object', 'create_entity_event_hook');
+
 /**
- * Create a new entry in the entities table.
- *
- *
- * @warning Plugin authors should never call this directly.  Always use entity objects.
- *
- * @param object $entity 	An entity to save
- *
- * @return int|false The new entity's GUID, or false on failure
- * @throws InvalidParameterException
- * @link http://docs.elgg.org/DataModel/Entities
- * @access private
+ * @deprecated
  */
 function create_entity($object = NULL, $timebased = true) {
-	global $CONFIG;
-
-	$g = new GUID();
-
-	if($object->guid){
-		elgg_trigger_event('update', $object->type, $object);
-		if (is_memcache_available()) {
-			$memcache = new ElggMemcache('new_entity_cache');
-			$memcache->delete($object->guid);
-		
-		}
-	} else {
-		$object->guid = $g->generate();
-		elgg_trigger_event('create', $object->type, $object);
-	}
-
-	$db = new DatabaseCall('entities');
-	$result = $db->insert($object->guid, $object->toArray());
-
-	if($timebased){
-		$db = new DatabaseCall('entities_by_time');
-		$data =  array($result => time());
-		
-		$namespace = $object->type;
-	
-		
-		if($object->access_id == ACCESS_PUBLIC)
-			$db->insert($namespace, $data);
-		
-		if($object->subtype){ 
-			$namespace .= ':'.$object->subtype; 
-			if($object->access_id == 2)
-				$db->insert($namespace, $data);
-		}
-
-		if(isset($object->super_subtype)){
-			$super_subtype_namespace = $object->type . ':' . $object->super_subtype;
-			if($object->access_id == 2)
-			$db->insert($super_subtype_namespace, $data);
-		}
-
-		if($object->type != 'user'){
-			$owner = get_entity($object->owner_guid, 'user');
-		} else {
-			$owner = get_entity($result, 'user');
-		}
-		
-		//get the container
-		if($object->container_guid != $object->owner_guid){
-			$container_namespace = $object->type . ':container:' . $object->container_guid;
-			$db->insert($container_namespace, $data);
-			$container_namespace = $object->type . ':' . $object->subtype . ':container:' . $object->container_guid;
-			$db->insert($container_namespace, $data);
-			$db->insert($super_subtype_namespace.':container:'. $object->container_guid, $data);
-		}
-		
-		if($owner instanceof ElggUser){
-
-			//add to the the users subscribers      
-			$followers = in_array($object->access_id, array(2, -2, 1)) ? $owner->getFriendsOf(null, 10000, "", 'guids') : array();
-			if(!$followers) { 
-				$followers = array(); 
-			}
-			$followers = array_keys($followers);
-
-			array_push($followers, $owner->guid);//add to their own timeline
-			foreach($followers as $follower){
-				$db->insert($namespace . ':network:'. $follower, $data);
-				if($object->super_subtype){ 
-					$db->insert($super_subtype_namespace . ':network:'. $follower, $data);
-				}
-			}
-			$db->insert($namespace . ':user:'. $owner->guid, $data);
-			if($object->super_subtype){
-				$db->insert($super_subtype_namespace . ':user:'.$owner->guid, $data);
-			}
- 		}
-
-	}
-
-	return $result;
+	return false;
 }
 
 /**
- * Returns a database row from the entities table.
- *
- * @tip Use get_entity() to return the fully loaded entity.
- *
- * @warning This will only return results if a) it exists, b) you have access to it.
- * see {@link get_access_sql_suffix()}.
- *
- * @param int $guid The GUID of the object to extract
- *
- * @return stdClass|false
- * @link http://docs.elgg.org/DataModel/Entities
- * @see entity_row_to_elggstar()
- * @access private
+ * @deprecated
  */
 
 function get_entity_as_row($guid, $type) {
-	global $CONFIG, $DB;
+	return false;
 }
 
 /**
@@ -645,6 +544,7 @@ function entity_row_to_elggstar($row) {
 
 	$new_entity = false;
 	
+	$memcache = false;
 	// Create a memcache cache if we can
 	if (is_memcache_available()) {
 		$memcache = new ElggMemcache('new_entity_cache');
@@ -728,13 +628,13 @@ function get_entity($guid, $type = 'object') {
 		$newguid = new GUID();
 		$guid = $newguid->migrate($guid);
 	}
-	
+
 	// Check local cache first
 	$new_entity = retrieve_cached_entity($guid);
-	if ($new_entity) { 
+	if ($new_entity)
 		return $new_entity;
-	}
 
+	$cached_entity = null;
 	if (is_memcache_available()) {
 		$memcache = new ElggMemcache('new_entity_cache');
 		$cached_entity = $memcache->load($guid);
@@ -745,14 +645,10 @@ function get_entity($guid, $type = 'object') {
 		return $cached_entity;
 	}
 
-	$db = new DatabaseCall('entities');
+	$db = new minds\core\data\call('entities');
 	$row = $db->getRow($guid);
 	if(!$row){
-		/*$db = new DatabaseCall($type);
-		$row = $db->getRow($guid);
-		if(!$row){*/
-			return false;
-		//	}		
+		return false;
 	}
 	$row['guid'] = $guid;
 	if(!isset($row['type'])){
@@ -776,30 +672,10 @@ function get_entity($guid, $type = 'object') {
 }
 
 /**
- * Does an entity exist?
- *
- * This function checks for the existence of an entity independent of access
- * permissions. It is useful for situations when a user cannot access an entity
- * and it must be determined whether entity has been deleted or the access level
- * has changed.
- *
- * @param int $guid The GUID of the entity
- *
- * @return bool
- * @since 1.8.0
+ * @deprecated; 
  */
 function elgg_entity_exists($guid) {
-	global $CONFIG;
-
-	$guid = sanitize_int($guid);
-
-	$query = "SELECT count(*) as total FROM {$CONFIG->dbprefix}entities WHERE guid = $guid";
-	$result = get_data_row($query);
-	if ($result->total == 0) {
-		return false;
-	} else {
-		return true;
-	}
+	return true;
 }
 
 /**
@@ -930,7 +806,7 @@ function elgg_get_entities(array $options = array()) {
 			//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 			if($options['guids']){
 			
-				$db = new DatabaseCall('entities');
+				$db = new minds\core\data\call('entities');
 				$rows = $db->getRows($options['guids']);
 
 			} else{ 
@@ -952,28 +828,28 @@ function elgg_get_entities(array $options = array()) {
 						} 
 					}
 					if(!$options['count']){
-						$db = new DatabaseCall('entities_by_time');
+						$db = new minds\core\data\call('entities_by_time');
 						$guids = $db->getRow($namespace, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=> $options['newest_first']));
 						if(!is_array($guids)){
 							return null;
 						}
-						$db = new DatabaseCall('entities');
+						$db = new minds\core\data\call('entities');
 						$rows = $db->getRows(array_keys($guids));
 						if(!count($rows)){
-						//	$db = new DatabaseCall($type);
+						//	$db = new minds\core\data\call($type);
 						//	$rows = $db->getRows(array_keys($guids));
 						}
 					} else {
-						$db = new DatabaseCall('entities_by_time');
+						$db = new minds\core\data\call('entities_by_time');
 						$count = $db->countRow($namespace);
 						return $count;
 					}
 				} else {
 					if($attrs){
-						$db = new DatabaseCall('entities');
+						$db = new minds\core\data\call('entities');
 						$rows = $db->getByIndex($attrs, $options['offset'], $options['limit']);
 					} else {
-						$db = new DatabaseCall('entities');
+						$db = new minds\core\data\call('entities');
 						$rows = $db->get($offset,"", $limit);
 					}
 				}
@@ -1004,314 +880,33 @@ function elgg_get_entities(array $options = array()) {
 }
 
 /**
- * Return entities from an SQL query generated by elgg_get_entities.
- *
- * @param string $sql
- * @return ElggEntity[]
- *
- * @access private
- * @throws LogicException
+ * @deprecated
  */
 function _elgg_fetch_entities_from_sql($sql) {
-	static $plugin_subtype;
-	if (null === $plugin_subtype) {
-		$plugin_subtype = get_subtype_id('object', 'plugin');
-	}
-
-	// Keys are types, values are columns that, if present, suggest that the secondary
-	// table is already JOINed
-	$types_to_optimize = array(
-		'object' => 'title',
-		'user' => 'password',
-		'group' => 'name',
-	);
-
-	$rows = get_data($sql);
-
-	// guids to look up in each type
-	$lookup_types = array();
-	// maps GUIDs to the $rows key
-	$guid_to_key = array();
-
-	if (isset($rows[0]->type, $rows[0]->subtype)
-			&& $rows[0]->type === 'object'
-			&& $rows[0]->subtype == $plugin_subtype) {
-		// Likely the entire resultset is plugins, which have already been optimized
-		// to JOIN the secondary table. In this case we allow retrieving from cache,
-		// but abandon the extra queries.
-		$types_to_optimize = array();
-	}
-
-	// First pass: use cache where possible, gather GUIDs that we're optimizing
-	foreach ($rows as $i => $row) {
-		if (empty($row->guid) || empty($row->type)) {
-			throw new LogicException('Entity row missing guid or type');
-		}
-		if ($entity = retrieve_cached_entity($row->guid)) {
-			$rows[$i] = $entity;
-			continue;
-		}
-		if (isset($types_to_optimize[$row->type])) {
-			// check if row already looks JOINed.
-			if (isset($row->{$types_to_optimize[$row->type]})) {
-				// Row probably already contains JOINed secondary table. Don't make another query just
-				// to pull data that's already there
-				continue;
-			}
-			$lookup_types[$row->type][] = $row->guid;
-			$guid_to_key[$row->guid] = $i;
-		}
-	}
-	// Do secondary queries and merge rows
-	if ($lookup_types) {
-		$dbprefix = elgg_get_config('dbprefix');
-
-		foreach ($lookup_types as $type => $guids) {
-			$set = "(" . implode(',', $guids) . ")";
-			$sql = "SELECT * FROM {$dbprefix}{$type}s_entity WHERE guid IN $set";
-			$secondary_rows = get_data($sql);
-			if ($secondary_rows) {
-				foreach ($secondary_rows as $secondary_row) {
-					$key = $guid_to_key[$secondary_row->guid];
-					// cast to arrays to merge then cast back
-					$rows[$key] = (object)array_merge((array)$rows[$key], (array)$secondary_row);
-				}
-			}
-		}
-	}
-	// Second pass to finish conversion
-	foreach ($rows as $i => $row) {
-		if ($row instanceof ElggEntity) {
-			continue;
-		} else {
-			try {
-				$rows[$i] = entity_row_to_elggstar($row);
-			} catch (IncompleteEntityException $e) {
-				// don't let incomplete entities throw fatal errors
-				unset($rows[$i]);
-			}
-		}
-	}
-	return $rows;
+	return false;
 }
 
 /**
- * Returns SQL where clause for type and subtype on main entity table
- *
- * @param string     $table    Entity table prefix as defined in SELECT...FROM entities $table
- * @param NULL|array $types    Array of types or NULL if none.
- * @param NULL|array $subtypes Array of subtypes or NULL if none
- * @param NULL|array $pairs    Array of pairs of types and subtypes
- *
- * @return FALSE|string
- * @since 1.7.0
- * @access private
+ * @deprecated
  */
 function elgg_get_entity_type_subtype_where_sql($table, $types, $subtypes, $pairs) {
-	// subtype depends upon type.
-	if ($subtypes && !$types) {
-		elgg_log("Cannot set subtypes without type.", 'WARNING');
-		return FALSE;
-	}
-
-	// short circuit if nothing is requested
-	if (!$types && !$subtypes && !$pairs) {
-		return '';
-	}
-
-	// these are the only valid types for entities in elgg
-	$valid_types = elgg_get_config('entity_types');
-
-	// pairs override
-	$wheres = array();
-	if (!is_array($pairs)) {
-		if (!is_array($types)) {
-			$types = array($types);
-		}
-
-		if ($subtypes && !is_array($subtypes)) {
-			$subtypes = array($subtypes);
-		}
-
-		// decrementer for valid types.  Return FALSE if no valid types
-		$valid_types_count = count($types);
-		$valid_subtypes_count = 0;
-		// remove invalid types to get an accurate count of
-		// valid types for the invalid subtype detection to use
-		// below.
-		// also grab the count of ALL subtypes on valid types to decrement later on
-		// and check against.
-		//
-		// yes this is duplicating a foreach on $types.
-		foreach ($types as $type) {
-			if (!in_array($type, $valid_types)) {
-				$valid_types_count--;
-				unset($types[array_search($type, $types)]);
-			} else {
-				// do the checking (and decrementing) in the subtype section.
-				$valid_subtypes_count += count($subtypes);
-			}
-		}
-
-		// return false if nothing is valid.
-		if (!$valid_types_count) {
-			return FALSE;
-		}
-
-		// subtypes are based upon types, so we need to look at each
-		// type individually to get the right subtype id.
-		foreach ($types as $type) {
-			$subtype_ids = array();
-			if ($subtypes) {
-				foreach ($subtypes as $subtype) {
-					// check that the subtype is valid (with ELGG_ENTITIES_NO_VALUE being a valid subtype)
-					// @todo simplify this logic
-					if (ELGG_ENTITIES_NO_VALUE === $subtype || $subtype_id = get_subtype_id($type, $subtype)) {
-						$subtype_ids[] = (ELGG_ENTITIES_NO_VALUE === $subtype) ? ELGG_ENTITIES_NO_VALUE : $subtype_id;
-					} else {
-						$valid_subtypes_count--;
-						elgg_log("Type-subtype '$type:$subtype' does not exist!", 'NOTICE');
-						continue;
-					}
-				}
-
-				// return false if we're all invalid subtypes in the only valid type
-				if ($valid_subtypes_count <= 0) {
-					return FALSE;
-				}
-			}
-
-			if (is_array($subtype_ids) && count($subtype_ids)) {
-				$subtype_ids_str = implode(',', $subtype_ids);
-				$wheres[] = "({$table}.type = '$type' AND {$table}.subtype IN ($subtype_ids_str))";
-			} else {
-				$wheres[] = "({$table}.type = '$type')";
-			}
-		}
-	} else {
-		// using type/subtype pairs
-		$valid_pairs_count = count($pairs);
-		$valid_pairs_subtypes_count = 0;
-
-		// same deal as above--we need to know how many valid types
-		// and subtypes we have before hitting the subtype section.
-		// also normalize the subtypes into arrays here.
-		foreach ($pairs as $paired_type => $paired_subtypes) {
-			if (!in_array($paired_type, $valid_types)) {
-				$valid_pairs_count--;
-				unset($pairs[array_search($paired_type, $pairs)]);
-			} else {
-				if ($paired_subtypes && !is_array($paired_subtypes)) {
-					$pairs[$paired_type] = array($paired_subtypes);
-				}
-				$valid_pairs_subtypes_count += count($paired_subtypes);
-			}
-		}
-
-		if ($valid_pairs_count <= 0) {
-			return FALSE;
-		}
-		foreach ($pairs as $paired_type => $paired_subtypes) {
-			// this will always be an array because of line 2027, right?
-			// no...some overly clever person can say pair => array('object' => null)
-			if (is_array($paired_subtypes)) {
-				$paired_subtype_ids = array();
-				foreach ($paired_subtypes as $paired_subtype) {
-					if (ELGG_ENTITIES_NO_VALUE === $paired_subtype
-					|| ($paired_subtype_id = get_subtype_id($paired_type, $paired_subtype))) {
-
-						$paired_subtype_ids[] = (ELGG_ENTITIES_NO_VALUE === $paired_subtype) ?
-							ELGG_ENTITIES_NO_VALUE : $paired_subtype_id;
-					} else {
-						$valid_pairs_subtypes_count--;
-						elgg_log("Type-subtype '$paired_type:$paired_subtype' does not exist!", 'NOTICE');
-						// return false if we're all invalid subtypes in the only valid type
-						continue;
-					}
-				}
-
-				// return false if there are no valid subtypes.
-				if ($valid_pairs_subtypes_count <= 0) {
-					return FALSE;
-				}
-
-
-				if ($paired_subtype_ids_str = implode(',', $paired_subtype_ids)) {
-					$wheres[] = "({$table}.type = '$paired_type'"
-						. " AND {$table}.subtype IN ($paired_subtype_ids_str))";
-				}
-			} else {
-				$wheres[] = "({$table}.type = '$paired_type')";
-			}
-		}
-	}
-
-	// pairs override the above.  return false if they don't exist.
-	if (is_array($wheres) && count($wheres)) {
-		$where = implode(' OR ', $wheres);
-		return "($where)";
-	}
-
-	return '';
+	return false;
 }
 
 /**
- * Returns SQL where clause for owner and containers.
- *
- * @param string     $column Column name the guids should be checked against. Usually
- *                           best to provide in table.column format.
- * @param NULL|array $guids  Array of GUIDs.
- *
- * @return false|string
- * @since 1.8.0
- * @access private
+ * @deprecated
  */
 function elgg_get_guid_based_where_sql($column, $guids) {
-	return;
+	return false;
 }
 
 /**
- * Returns SQL where clause for entity time limits.
- *
- * @param string   $table              Entity table prefix as defined in
- *                                     SELECT...FROM entities $table
- * @param NULL|int $time_created_upper Time created upper limit
- * @param NULL|int $time_created_lower Time created lower limit
- * @param NULL|int $time_updated_upper Time updated upper limit
- * @param NULL|int $time_updated_lower Time updated lower limit
- *
- * @return FALSE|string FALSE on fail, string on success.
- * @since 1.7.0
- * @access private
+ * @deprecated
  */
 function elgg_get_entity_time_where_sql($table, $time_created_upper = NULL,
 $time_created_lower = NULL, $time_updated_upper = NULL, $time_updated_lower = NULL) {
 
-	$wheres = array();
-
-	// exploit PHP's loose typing (quack) to check that they are INTs and not str cast to 0
-	if ($time_created_upper && $time_created_upper == sanitise_int($time_created_upper)) {
-		$wheres[] = "{$table}.time_created <= $time_created_upper";
-	}
-
-	if ($time_created_lower && $time_created_lower == sanitise_int($time_created_lower)) {
-		$wheres[] = "{$table}.time_created >= $time_created_lower";
-	}
-
-	if ($time_updated_upper && $time_updated_upper == sanitise_int($time_updated_upper)) {
-		$wheres[] = "{$table}.time_updated <= $time_updated_upper";
-	}
-
-	if ($time_updated_lower && $time_updated_lower == sanitise_int($time_updated_lower)) {
-		$wheres[] = "{$table}.time_updated >= $time_updated_lower";
-	}
-
-	if (is_array($wheres) && count($wheres) > 0) {
-		$where_str = implode(' AND ', $wheres);
-		return "($where_str)";
-	}
-
-	return '';
+	return false;
 }
 
 /**
@@ -1379,344 +974,33 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 }
 
 /**
- * Returns a list of months in which entities were updated or created.
- *
- * @tip Use this to generate a list of archives by month for when entities were added or updated.
- *
- * @todo document how to pass in array for $subtype
- *
- * @warning Months are returned in the form YYYYMM.
- *
- * @param string $type           The type of entity
- * @param string $subtype        The subtype of entity
- * @param int    $container_guid The container GUID that the entities belong to
- * @param int    $site_guid      The site GUID
- * @param string $order_by       Order_by SQL order by clause
- *
- * @return array|false Either an array months as YYYYMM, or false on failure
+ * @deprecated
  */
 function get_entity_dates($type = '', $subtype = '', $container_guid = 0, $site_guid = 0,
 $order_by = 'time_created') {
-
-	global $CONFIG;
-return;
-	$site_guid = (int) $site_guid;
-	if ($site_guid == 0) {
-		$site_guid = $CONFIG->site_guid;
-	}
-	$where = array();
-
-	if ($type != "") {
-		$where[] = "type='$type'";
-	}
-
-	if (is_array($subtype)) {
-		$tempwhere = "";
-		if (sizeof($subtype)) {
-			foreach ($subtype as $typekey => $subtypearray) {
-				foreach ($subtypearray as $subtypeval) {
-					$typekey = sanitise_string($typekey);
-					if (!empty($subtypeval)) {
-						if (!$subtypeval = (int) get_subtype_id($typekey, $subtypeval)) {
-							return false;
-						}
-					} else {
-						$subtypeval = 0;
-					}
-					if (!empty($tempwhere)) {
-						$tempwhere .= " or ";
-					}
-					$tempwhere .= "(type = '{$typekey}' and subtype = {$subtypeval})";
-				}
-			}
-		}
-		if (!empty($tempwhere)) {
-			$where[] = "({$tempwhere})";
-		}
-	} else {
-		if ($subtype) {
-			if (!$subtype_id = get_subtype_id($type, $subtype)) {
-				return FALSE;
-			} else {
-				$where[] = "subtype=$subtype_id";
-			}
-		}
-	}
-
-	if ($container_guid !== 0) {
-		if (is_array($container_guid)) {
-			foreach ($container_guid as $key => $val) {
-				$container_guid[$key] = (int) $val;
-			}
-			$where[] = "container_guid in (" . implode(",", $container_guid) . ")";
-		} else {
-			$container_guid = (int) $container_guid;
-			$where[] = "container_guid = {$container_guid}";
-		}
-	}
-
-	if ($site_guid > 0) {
-		$where[] = "site_guid = {$site_guid}";
-	}
-
-	$where[] = get_access_sql_suffix();
-
-	$sql = "SELECT DISTINCT EXTRACT(YEAR_MONTH FROM FROM_UNIXTIME(time_created)) AS yearmonth
-		FROM {$CONFIG->dbprefix}entities where ";
-
-	foreach ($where as $w) {
-		$sql .= " $w and ";
-	}
-
-	$sql .= "1=1 ORDER BY $order_by";
-	if ($result = get_data($sql)) {
-		$endresult = array();
-		foreach ($result as $res) {
-			$endresult[] = $res->yearmonth;
-		}
-		return $endresult;
-	}
 	return false;
 }
 
 /**
- * Disable an entity.
- *
- * Disabled entities do not show up in list or elgg_get_entity()
- * calls, but still exist in the database.
- *
- * Entities are disabled by setting disabled = yes in the
- * entities table.
- *
- * You can ignore the disabled field by using {@link access_show_hidden_entities()}.
- *
- * @note Use ElggEntity::disable() instead.
- *
- * @param int    $guid      The guid
- * @param string $reason    Optional reason
- * @param bool   $recursive Recursively disable all entities owned or contained by $guid?
- *
- * @return bool
- * @see access_show_hidden_entities()
- * @link http://docs.elgg.org/Entities
- * @access private
+ * @deprecated
  */
 function disable_entity($guid, $reason = "", $recursive = true) {
-	global $CONFIG;
-return;
-	$guid = (int)$guid;
-	$reason = sanitise_string($reason);
-
-	if ($entity = get_entity($guid)) {
-		if (elgg_trigger_event('disable', $entity->type, $entity)) {
-			if ($entity->canEdit()) {
-				if ($reason) {
-					create_metadata($guid, 'disable_reason', $reason, '', 0, ACCESS_PUBLIC);
-				}
-
-				if ($recursive) {
-					$hidden = access_get_show_hidden_status();
-					access_show_hidden_entities(true);
-					$ia = elgg_set_ignore_access(true);
-					
-					$sub_entities = get_data("SELECT * FROM {$CONFIG->dbprefix}entities
-						WHERE (
-						container_guid = $guid
-						OR owner_guid = $guid
-						OR site_guid = $guid
-						) AND enabled='yes'", 'entity_row_to_elggstar');
-
-					if ($sub_entities) {
-						foreach ($sub_entities as $e) {
-							add_entity_relationship($e->guid, 'disabled_with', $entity->guid);
-							$e->disable($reason);
-						}
-					}
-					access_show_hidden_entities($hidden);
-					elgg_set_ignore_access($ia);
-				}
-
-				$entity->disableMetadata();
-				$entity->disableAnnotations();
-				invalidate_cache_for_entity($guid);
-
-				$res = update_data("UPDATE {$CONFIG->dbprefix}entities
-					SET enabled = 'no'
-					WHERE guid = $guid");
-
-				return $res;
-			}
-		}
-	}
 	return false;
 }
 
 /**
- * Enable an entity.
- *
- * @warning In order to enable an entity using ElggEntity::enable(),
- * you must first use {@link access_show_hidden_entities()}.
- *
- * @param int  $guid      GUID of entity to enable
- * @param bool $recursive Recursively enable all entities disabled with the entity?
- *
- * @return bool
+ * @deprecated
  */
 function enable_entity($guid, $recursive = true) {
-	global $CONFIG;
-
-	$guid = (int)$guid;
-
-	// Override access only visible entities
-	$old_access_status = access_get_show_hidden_status();
-	access_show_hidden_entities(true);
-
-	$result = false;
-	if ($entity = get_entity($guid)) {
-		if (elgg_trigger_event('enable', $entity->type, $entity)) {
-			if ($entity->canEdit()) {
-
-				$result = update_data("UPDATE {$CONFIG->dbprefix}entities
-					SET enabled = 'yes'
-					WHERE guid = $guid");
-
-				$entity->deleteMetadata('disable_reason');
-				$entity->enableMetadata();
-				$entity->enableAnnotations();
-
-				if ($recursive) {
-					$disabled_with_it = elgg_get_entities_from_relationship(array(
-						'relationship' => 'disabled_with',
-						'relationship_guid' => $entity->guid,
-						'inverse_relationship' => true,
-						'limit' => 0,
-					));
-
-					foreach ($disabled_with_it as $e) {
-						$e->enable();
-						remove_entity_relationship($e->guid, 'disabled_with', $entity->guid);
-					}
-				}
-			}
-		}
-	}
-
-	access_show_hidden_entities($old_access_status);
-	return $result;
+	return false;
 }
 
 /**
  * Delete an entity.
- *
- * Removes an entity and its metadata, annotations, relationships, river entries,
- * and private data.
- *
- * Optionally can remove entities contained and owned by $guid.
- *
- * @tip Use ElggEntity::delete() instead.
- *
- * @warning If deleting recursively, this bypasses ownership of items contained by
- * the entity.  That means that if the container_guid = $guid, the item will be deleted
- * regardless of who owns it.
- *
- * @param int  $guid      The guid of the entity to delete
- * @param bool $recursive If true (default) then all entities which are
- *                        owned or contained by $guid will also be deleted.
- *
- * @return bool
- * @access private
+ * @deprecated
  */
 function delete_entity($guid, $type = 'object',$recursive = true) {
-	global $CONFIG, $ENTITY_CACHE;
-
-	if ($entity = get_entity($guid)) {
-		if (elgg_trigger_event('delete', $entity->type, $entity)) {
-			if ($entity->canEdit()) {
-
-				// delete cache
-				if (isset($ENTITY_CACHE[$guid])) {
-					invalidate_cache_for_entity($guid);
-				}
-				
-				// If memcache is available then delete this entry from the cache
-				if (is_memcache_available()) {
-					$memcache = new ElggMemcache('new_entity_cache');
-					$memcache->delete($guid);
-				}
-
-				// Delete contained owned and otherwise releated objects (depth first)
-				if ($recursive) {
-					// Temporary token overriding access controls
-					// @todo Do this better.
-					static $__RECURSIVE_DELETE_TOKEN;
-					// Make it slightly harder to guess
-					$__RECURSIVE_DELETE_TOKEN = md5(elgg_get_logged_in_user_guid());
-
-					$entity_disable_override = access_get_show_hidden_status();
-					access_show_hidden_entities(true);
-					$ia = elgg_set_ignore_access(true);
-
-					// @todo there was logic in the original code that ignored
-					// entities with owner or container guids of themselves.
-					// this should probably be prevented in ElggEntity instead of checked for here
-					$options = array(
-						'owner_guid' => $guid,
-						'limit' => 0
-					);
-
-					$batch = new ElggBatch('elgg_get_entities', $options);
-					$batch->setIncrementOffset(false);
-
-					foreach ($batch as $e) {
-						$e->delete(true);
-					}
-
-					access_show_hidden_entities($entity_disable_override);
-					$__RECURSIVE_DELETE_TOKEN = null;
-					elgg_set_ignore_access($ia);
-				}
-
-				// Now delete the entity itself
-				$db = new DatabaseCall('entities');
-				$res = $db->removeRow($guid);
-
-				//remove from the various lines
-				$namespace = array(  $type . ':' . $entity->subtype);
-
-				if($entity->super_subtype){
-					array_push($namespace, $type . ':' . $entity->super_subtype);
-				}
-			
-				$owner = $entity->getOwnerEntity();	
-				if($owner instanceof ElggUser){
-					$followers = $owner->getFriendsOf(null, 10000, "", 'guids');
-					if(!$followers) { 
-						$followers = array(); 
-					}
-					$followers = array_keys($followers);
-					array_push($followers, $entity->owner_guid);
-			
-					foreach($followers as $follower){
-						if($entity->super_subtype){
-							array_push($namespace, $type . ':' . $entity->super_subtype . ':network:'.$follower);
-                	       	 	                array_push($namespace, $type . ':' . $entity->super_subtype . ':user:'.$follower);
-						}
-						array_push($namespace, $type . ':' . $entity->subtype . ':network:'.$follower);
-        	               	                 array_push($namespace, $type . ':' . $entity->subtype . ':user:'.$follower);
-					}
-				}
-		
-				$db = new DatabaseCall('entities_by_time');
-				foreach($namespace as $rowkey){
-					$db->removeAttributes($rowkey, array($entity->guid));
-				}
-
-				return true;
-			}
-		}
-	}
 	return false;
-
 }
 
 /**

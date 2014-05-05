@@ -14,7 +14,7 @@ elgg.admin.init = function () {
 	// system messages do not fade in admin area, instead slide up when clicked
 	$('.elgg-system-messages li').stop(true);
 	$('.elgg-system-messages li').die('click');
-	$('.elgg-system-messages li').live('click', function() {
+	$('.elgg-system-messages li').on('click', function() {
 		$(this).stop().slideUp('medium');
 	});
 

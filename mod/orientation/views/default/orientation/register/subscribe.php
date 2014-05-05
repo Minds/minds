@@ -15,7 +15,7 @@ $user = elgg_get_logged_in_user_entity();
 		$trending = new MindsTrending(null, $options);
 		$guids = $trending->getList(array('type'=>'user', 'limit'=>$limit, 'offset'=>(int) $offset, 'full_view'=>false));
 	} else {
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		$guids = $db->getRow('users', array('limit'=>12, 'offset'=> $offset));
 	}
 	

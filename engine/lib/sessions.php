@@ -372,7 +372,7 @@ function login(ElggUser $user, $persistent = false) {
 		$user->{'cookie:'.md5($code)} = $expires; //cookie_id => expires
 		setcookie("mindsperm", $code, $expires, "/");
 		//add to the user index cf
-		$db = new DatabaseCall('user_index_to_guid');
+		$db = new minds\core\data\call('user_index_to_guid');
 		$db->insert('cookie:'. md5($code), array($user->getGUID() => $expires));
 	}
 	
@@ -432,6 +432,7 @@ function logout() {
 	unset($_SESSION['user']);
 
 	setcookie("mindsperm", "", (time() - (86400 * 30)), "/");
+	setcookie("mindsSSO", "", (time() - (86400 * 30)), "/");
 
 	session_destroy();
 	setcookie(session_name(), '', (time() - (86400 * 30)), "/");

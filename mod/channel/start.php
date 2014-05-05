@@ -87,7 +87,7 @@ function channel_init() {
 	);
 
 	//setup the profile icon widget
-	$user = elgg_get_page_owner_entity();
+	/*$user = elgg_get_page_owner_entity();
 	if($user){
 		elgg_register_widget_type(
 			'channel_avatar',
@@ -96,7 +96,7 @@ function channel_init() {
 			'channel',
 			true
 		);
-	}
+	}*/
 
 	//set a new file size
 	elgg_set_config('icon_sizes', array(	
@@ -255,16 +255,6 @@ function channel_page_handler($page) {
 				'prepend' => $post
 			));
 			$class = 'landing-page';
-	}
-	
-	$avatar = elgg_view('output/img', array(
-									'title'=>$user->name, 
-									'src'=>$user->getIconURL('large'), 
-									'class'=>'minds-channel-avatar'
-					));
-	if($user->canEdit()){
-		$url = elgg_get_site_url() . "channel/$user->username/avatar";
-		$avatar .=  "<a class=\"avatar-edit\" href=\"$url\">Edit</a>";
 	}
 	
 	$body = elgg_view_layout('fixed', array(

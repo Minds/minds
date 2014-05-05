@@ -106,24 +106,10 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	protected function load($guid) {
-		/*$attr_loader = new ElggAttributeLoader(get_class(), 'user', $this->attributes);
-		$attr_loader->secondary_loader = 'get_user_entity_as_row';
-
-		$attrs = $attr_loader->getRequiredAttributes($guid);
-		if (!$attrs) {
-			return false;
-		}
-
-		$this->attributes = $attrs;
-		$this->attributes['tables_loaded'] = 2;
-		cache_entity($this);
-		*/
 
 		foreach($guid as $k => $v){
-                        $this->attributes[$k] = $v;
-                }
-
-               // cache_entity($this);
+			$this->attributes[$k] = $v;
+		}
 
 		return true;
 	}
@@ -134,14 +120,14 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	public function save() {
-		
-		$db = new DatabaseCall('user_index_to_guid');
-		
+	
 		$timebased = $this->isEnabled();
-		$guid =  create_entity($this, $timebased);
-		//now place email and username in index
-		$data = array($guid => time());
+		parent::save($timebased);
 		
+		//now place email and username in index
+		$data = array($this->guid => time());
+		
+		$db = new minds\core\data\call('user_index_to_guid');
 		$db->insert(strtolower($this->username), $data);
 		$db->insert(strtolower($this->email), $data);
 
@@ -150,7 +136,7 @@ class ElggUser extends ElggEntity
 			$_SESSION['user'] = $this;
 		}
 
-		return $guid;
+		return $this->guid;
 	}
 	
 	/**
@@ -169,7 +155,7 @@ class ElggUser extends ElggEntity
 			}
 		}
 		
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		//Remove from the list of unvalidated user
 		$db->removeAttributes('user:unvalidated', array($this->guid));
 		//add to the list of unvalidated user
@@ -198,7 +184,7 @@ class ElggUser extends ElggEntity
 			}
 		}
 		
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		
 		//Remove from the list of users
 		$db->removeAttributes('user', array($this->guid)); 
@@ -230,9 +216,9 @@ class ElggUser extends ElggEntity
 		}
 
 		if($this->guid){
-			$db = new DatabaseCall('entities_by_time');
+			$db = new minds\core\data\call('entities_by_time');
 			$db->removeAttributes('user', array($this->guid));
-			$db = new DatabaseCall('user_index_to_guid');
+			$db = new minds\core\data\call('user_index_to_guid');
 			$db->removeRow($this->username);
 			$db->removeRow($this->email); //@todo we should keep a record of indexes
 		}
@@ -440,7 +426,7 @@ class ElggUser extends ElggEntity
 	 * @return 
 	 */
 	function getSubscribersCount(){
-		$db = new DatabaseCall('friendsof');
+		$db = new minds\core\data\call('friendsof');
 		return (int) $db->countRow($this->guid);
 	}
 	
@@ -450,7 +436,7 @@ class ElggUser extends ElggEntity
 	 * @return 
 	 */
 	function getSubscriptionsCount(){
-		$db = new DatabaseCall('friends');
+		$db = new minds\core\data\call('friends');
 		return (int) $db->countRow($this->guid);
 	}
 	

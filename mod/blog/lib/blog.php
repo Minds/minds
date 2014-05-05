@@ -81,12 +81,12 @@ function blog_get_page_content_read($guid = NULL) {
 */
 	elgg_push_breadcrumb($blog->title);
 	$return['content'] = elgg_view_entity($blog, array('full_view' => true));
-	$return['content'] .= elgg_view('minds/ads', array('type'=>'content-below-banner'));
+	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'content-below-banner'));
 	//check to see if comment are on
 	if ($blog->comments_on != 'Off') {
 		$return['content'] .= elgg_view_comments($blog);
 	}
-	$return['content'] .= elgg_view('minds/ads', array('type'=>'content-block-rotator'));
+	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'content-block-rotator'));
 	
 	$return['menu'] = $menu;
 	//add the sidebar
@@ -559,8 +559,8 @@ function blog_sidebar($blog){
 	}
 
 	if($blog){	
-		$return .= elgg_view('minds/ads', array('type'=>'content-side-single'));
-		  $return .= elgg_view('minds/ads', array('type'=>'content-side-single-user-2'));
+		$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single'));
+		  $return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
 		//show more posts from this user
 		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>2));
 		if (($key = array_search($blog, $owners_blogs)) !== false) {

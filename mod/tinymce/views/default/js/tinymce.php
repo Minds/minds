@@ -28,7 +28,7 @@ elgg.tinymce.toggleEditor = function(event) {
  */
 elgg.tinymce.init = function() {
 
-	$('.tinymce-toggle-editor').live('click', elgg.tinymce.toggleEditor);
+	$('.tinymce-toggle-editor').on('click', elgg.tinymce.toggleEditor);
 
 	$('.elgg-input-longtext').parents('form').submit(function() {
 		tinyMCE.triggerSave();
@@ -59,7 +59,7 @@ elgg.tinymce.init = function() {
 
 	// work around for IE/TinyMCE bug where TinyMCE loses insert carot
 	if ($.browser.msie) {
-		$(".embed-control").live('hover', function() {
+		$(".embed-control").on('hover', function() {
 			var classes = $(this).attr('class');
 			var embedClass = classes.split(/[, ]+/).pop();
 			var textAreaId = embedClass.substr(embedClass.indexOf('embed-control-') + "embed-control-".length);

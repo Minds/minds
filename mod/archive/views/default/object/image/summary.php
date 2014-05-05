@@ -55,7 +55,7 @@ $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title .
 echo $header;
 
 echo elgg_view('output/url', array(
-	'href'=> elgg_normalize_url("archive/image/{$image->guid}"), 
+	'href'=> $image->getURL(), 
 	'text'=>$img,
 	'class' => 'tidypics-lightbox'
 ));
