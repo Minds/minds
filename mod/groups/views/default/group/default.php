@@ -39,5 +39,6 @@ if ($vars['full_view']) {
   //              'gallery_class' => 'elgg-gallery-users', 'pagination'=>false));
 
 	echo elgg_view_image_block(null, $title, $vars);
+	echo $metadata;
 	echo $icon;
 }

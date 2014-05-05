@@ -26,8 +26,10 @@ if ($type != 'all') {
 }
 
 $options['limit'] = get_input('limit',12);
+$options['offset'] = get_input('offset',"");
 
 $user = elgg_get_logged_in_user_entity();
+
 if(!$user){
 	 $page_type = 'featured';
 } /*elseif(count($user->getFriends()) == 0 || $user->getFriends() == false || !$user->getFriends()){
@@ -87,7 +89,6 @@ switch ($page_type) {
 		$options['owner_guid'] = elgg_get_logged_in_user_guid();
 		break;
 }
-$options['list_class'] = 'x2';
 $vars['filter_context'] = $page_filter;
 $options['prepend'] = "<li class=\"elgg-item minds-fixed-post-box\">".elgg_view_form('deck_river/post',  
 						array(	'action'=>'action/deck_river/post/add', 
@@ -103,6 +104,7 @@ $options['prepend'] = "<li class=\"elgg-item minds-fixed-post-box\">".elgg_view_
 					"<li class=\"elgg-item minds-news-filter-box\">".elgg_view('page/layouts/content/river_filter', $vars). 
 					"</li>";
 
+$options['list_class'] = 'elgg-list minds-list-river x2 mason';
 $activity = elgg_list_river($options);
 if (!$activity) {
 	$activity = elgg_echo('river:none');

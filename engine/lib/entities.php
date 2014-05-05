@@ -1681,7 +1681,7 @@ function delete_entity($guid, $type = 'object',$recursive = true) {
 				$res = $db->removeRow($guid);
 
 				//remove from the various lines
-				$namespace = array(  $type . ':' . $entity->subtype);
+				$namespace = array( $type,  $type . ':' . $entity->subtype);
 
 				if($entity->super_subtype){
 					array_push($namespace, $type . ':' . $entity->super_subtype);

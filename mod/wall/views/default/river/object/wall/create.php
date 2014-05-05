@@ -43,7 +43,8 @@ if($item->attachment_guid){
 $(document).ready(function(){ 
 	$('.attachment-lightbox').fancybox({
 		'type': 'image',
-		'width': '90%'
+		'width': '90%',
+		'autoScale' : false
 	}); 
 });
 </script>
