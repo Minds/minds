@@ -102,8 +102,8 @@ class ElggObject extends ElggEntity {
 	 */
 	protected function load($guid) {
 		foreach($guid as $k => $v){
-                        $this->attributes[$k] = $v;
-                }		
+			$this->attributes[$k] = $v;
+		}		
 
 		cache_entity($this);
 		

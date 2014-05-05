@@ -362,29 +362,7 @@ class ElggFile extends ElggObject {
 		if ($this->filestore) {
 			return $this->filestore;
 		}
-/*
-		// ask for entity specific filestore
-		// saved as filestore::className in metadata.
-		// need to get all filestore::* metadata because the rest are "parameters" that
-		// get passed to filestore::setParameters()
-		if ($this->guid) {
-			$options = array(
-				'guid' => $this->guid,
-				'where' => array("n.string LIKE 'filestore::%'"),
-			);
 
-			$mds = elgg_get_metadata($options);
-
-			$parameters = array();
-			foreach ($mds as $md) {
-				list($foo, $name) = explode("::", $md->name);
-				if ($name == 'filestore') {
-					$filestore = $md->value;
-				}
-				$parameters[$name] = $md->value;
-			}
-		}
-*/
 		// need to check if filestore is set because this entity is loaded in save()
 		// before the filestore metadata is saved.
 		if (isset($filestore)) {

@@ -2,25 +2,6 @@
 /**
  * The parent class for all Elgg Entities.
  *
- * An ElggEntity is one of the basic data models in Elgg.  It is the primary
- * means of storing and retrieving data from the database.  An ElggEntity
- * represents one row of the entities table.
- *
- * The ElggEntity class handles CRUD operations for the entities table.
- * ElggEntity should always be extended by another class to handle CRUD
- * operations on the type-specific table.
- *
- * ElggEntity uses magic methods for get and set, so any property that isn't
- * declared will be assumed to be metadata and written to the database
- * as metadata on the object.  All children classes must declare which
- * properties are columns of the type table or they will be assumed
- * to be metadata.  See ElggObject::initialise_entities() for examples.
- *
- * Core supports 4 types of entities: ElggObject, ElggUser, ElggGroup, and
- * ElggSite.
- *
- * @tip Most plugin authors will want to extend the ElggObject class
- * instead of this class.
  *
  * @package    Elgg.Core
  * @subpackage DataModel.Entities
@@ -83,23 +64,6 @@ abstract class ElggEntity extends ElggData implements
 		$this->attributes['last_action'] = NULL;
 		$this->attributes['enabled'] = "yes";
 
-		// There now follows a bit of a hack
-		/* Problem: To speed things up, some objects are split over several tables,
-		 * this means that it requires n number of database reads to fully populate
-		 * an entity. This causes problems for caching and create events
-		 * since it is not possible to tell whether a subclassed entity is complete.
-		 *
-		 * Solution: We have two counters, one 'tables_split' which tells whatever is
-		 * interested how many tables are going to need to be searched in order to fully
-		 * populate this object, and 'tables_loaded' which is how many have been
-		 * loaded thus far.
-		 *
-		 * If the two are the same then this object is complete.
-		 *
-		 * Use: isFullyLoaded() to check
-		 */
-		$this->attributes['tables_split'] = 1;
-		$this->attributes['tables_loaded'] = 0;
 	}
 
 	/**
@@ -152,52 +116,23 @@ abstract class ElggEntity extends ElggData implements
 	/**
 	 * Return the value of a property.
 	 *
-	 * If $name is defined in $this->attributes that value is returned, otherwise it will
-	 * pull from the entity's metadata.
-	 *
-	 * Q: Why are we not using __get overload here?
-	 * A: Because overload operators cause problems during subclassing, so we put the code here and
-	 * create overloads in subclasses.
-	 *
-	 * @todo What problems are these?
-	 *
-	 * @warning Subtype is returned as an id rather than the subtype string. Use getSubtype()
-	 * to get the subtype string.
-	 *
 	 * @param string $name Name
 	 *
 	 * @return mixed Returns the value of a given value, or null.
 	 */
 	public function get($name) {
 		// See if its in our base attributes
-		if (array_key_exists($name, $this->attributes)) {
+		if (array_key_exists($name, $this->attributes))
 			return $this->attributes[$name];
-		}
 
-		// No, so see if its in the meta data for this entity
-	//	$meta = $this->getMetaData($name);
-
-		// getMetaData returns NULL if $name is not found
-	//	return $meta;
+		return false;
 	}
 
+	function __set($name, $value){
+		return $this->set($name, $value);
+	}
 	/**
 	 * Sets the value of a property.
-	 *
-	 * If $name is defined in $this->attributes that value is set, otherwise it is
-	 * saved as metadata.
-	 *
-	 * @warning Metadata set this way will inherit the entity's owner and access ID. If you want
-	 * to set metadata with a different owner, use create_metadata().
-	 *
-	 * @warning It is important that your class populates $this->attributes with keys
-	 * for all base attributes, anything not in their gets set as METADATA.
-	 *
-	 * Q: Why are we not using __set overload here?
-	 * A: Because overload operators cause problems during subclassing, so we put the code here and
-	 * create overloads in subclasses.
-	 *
-	 * @todo What problems?
 	 *
 	 * @param string $name  Name
 	 * @param mixed  $value Value
@@ -205,22 +140,15 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	public function set($name, $value) {
-	//	if (array_key_exists($name, $this->attributes)) {
-			// Certain properties should not be manually changed!
-			switch ($name) {
-				//case 'guid':
-				case 'time_updated':
-				case 'last_action':
-					return FALSE;
-					break;
-				case 'access_id': // a hack to fix listings.
-					if($value == ACCESS_DEFAULT)
-						$value = get_default_access($this->getOwnerEntity());
-				default:
-					$this->attributes[$name] = $value;
-					break;
-			}
-	//	}
+
+		switch ($name) {
+			case 'access_id': // a hack to fix listings.
+				if($value == ACCESS_DEFAULT)
+					$value = get_default_access($this->getOwnerEntity());
+			default:
+				$this->attributes[$name] = $value;
+				break;
+		}
 		if($this->guid){
 			$this->save();
 		}
@@ -228,60 +156,10 @@ abstract class ElggEntity extends ElggData implements
 	}
 
 	/**
-	 * Return the value of a piece of metadata.
-	 *
-	 * @param string $name Name
-	 *
-	 * @return mixed The value, or NULL if not found.
+	 * @deprecated
 	 */
 	public function getMetaData($name) {
-		$guid = $this->getGUID();
-
-		if (! $guid) {
-			if (isset($this->temp_metadata[$name])) {
-				// md is returned as an array only if more than 1 entry
-				if (count($this->temp_metadata[$name]) == 1) {
-					return $this->temp_metadata[$name][0];
-				} else {
-					return $this->temp_metadata[$name];
-				}
-			} else {
-				return null;
-			}
-		}
-
-		// upon first cache miss, just load/cache all the metadata and retry.
-		// if this works, the rest of this function may not be needed!
-		$cache = elgg_get_metadata_cache();
-		if ($cache->isKnown($guid, $name)) {
-			return $cache->load($guid, $name);
-		} else {
-			$cache->populateFromEntities(array($guid));
-			// in case ignore_access was on, we have to check again...
-			if ($cache->isKnown($guid, $name)) {
-				return $cache->load($guid, $name);
-			}
-		}
-
-		$md = elgg_get_metadata(array(
-			'guid' => $guid,
-			'metadata_name' => $name,
-			'limit' => 0,
-		));
-
-		$value = null;
-
-		if ($md && !is_array($md)) {
-			$value = $md->value;
-		} elseif (count($md) == 1) {
-			$value = $md[0]->value;
-		} else if ($md && is_array($md)) {
-			$value = metadata_array_to_values($md);
-		}
-
-		$cache->save($guid, $name, $value);
-
-		return $value;
+		return false;
 	}
 
 	/**
@@ -296,192 +174,49 @@ abstract class ElggEntity extends ElggData implements
 	function __unset($name) {
 		if (array_key_exists($name, $this->attributes)) {
 			$this->attributes[$name] = "";
-		} else {
-			$this->deleteMetadata($name);
 		}
 	}
 
 	/**
-	 * Set a piece of metadata.
-	 *
-	 * Plugin authors should use the magic methods or create_metadata().
-	 *
-	 * @warning The metadata will inherit the parent entity's owner and access ID.
-	 * If you want to write metadata with a different owner, use create_metadata().
-	 *
-	 * @access private
-	 *
-	 * @param string $name       Name of the metadata
-	 * @param mixed  $value      Value of the metadata (doesn't support assoc arrays)
-	 * @param string $value_type Types supported: integer and string. Will auto-identify if not set
-	 * @param bool   $multiple   Allow multiple values for a single name (doesn't support assoc arrays)
-	 *
-	 * @return bool
+	 * @deprecated
 	 */
 	public function setMetaData($name, $value, $value_type = null, $multiple = false) {
-
-		// normalize value to an array that we will loop over
-		// remove indexes if value already an array.
-		if (is_array($value)) {
-			$value = array_values($value);
-		} else {
-			$value = array($value);
-		}
-
-		// saved entity. persist md to db.
-		if ($this->guid) {
-			// if overwriting, delete first.
-			if (!$multiple) {
-				$options = array(
-					'guid' => $this->getGUID(),
-					'metadata_name' => $name,
-					'limit' => 0
-				);
-				// @todo in 1.9 make this return false if can't add metadata
-				// http://trac.elgg.org/ticket/4520
-				// 
-				// need to remove access restrictions right now to delete
-				// because this is the expected behavior
-				$ia = elgg_set_ignore_access(true);
-				if (false === elgg_delete_metadata($options)) {
-					return false;
-				}
-				elgg_set_ignore_access($ia);
-			}
-
-			// add new md
-			$result = true;
-			foreach ($value as $value_tmp) {
-				// at this point $value should be appended because it was cleared above if needed.
-				$md_id = create_metadata($this->getGUID(), $name, $value_tmp, $value_type,
-						$this->getOwnerGUID(), $this->getAccessId(), true);
-				if (!$md_id) {
-					return false;
-				}
-			}
-
-			return $result;
-		}
-
-		// unsaved entity. store in temp array
-		// returning single entries instead of an array of 1 element is decided in
-		// getMetaData(), just like pulling from the db.
-		else {
-			// if overwrite, delete first
-			if (!$multiple || !isset($this->temp_metadata[$name])) {
-				$this->temp_metadata[$name] = array();
-			}
-
-			// add new md
-			$this->temp_metadata[$name] = array_merge($this->temp_metadata[$name], $value);
-			return true;
-		}
+		return false;
 	}
 
 	/**
-	 * Deletes all metadata on this object (metadata.entity_guid = $this->guid).
-	 * If you pass a name, only metadata matching that name will be deleted.
-	 *
-	 * @warning Calling this with no $name will clear all metadata on the entity.
-	 *
-	 * @param null|string $name The name of the metadata to remove.
-	 * @return bool
-	 * @since 1.8
+	 * @deprecated
 	 */
 	public function deleteMetadata($name = null) {
-
-		if (!$this->guid) {
-			return false;
-		}
-
-		$options = array(
-			'guid' => $this->guid,
-			'limit' => 0
-		);
-		if ($name) {
-			$options['metadata_name'] = $name;
-		}
-
-		return elgg_delete_metadata($options);
+		return false;
 	}
 
 	/**
-	 * Deletes all metadata owned by this object (metadata.owner_guid = $this->guid).
-	 * If you pass a name, only metadata matching that name will be deleted.
-	 *
-	 * @param null|string $name The name of metadata to delete.
-	 * @return bool
-	 * @since 1.8
+	 * @deprecated
 	 */
 	public function deleteOwnedMetadata($name = null) {
-		// access is turned off for this because they might
-		// no longer have access to an entity they created metadata on.
-		$ia = elgg_set_ignore_access(true);
-		$options = array(
-			'metadata_owner_guid' => $this->guid,
-			'limit' => 0
-		);
-		if ($name) {
-			$options['metadata_name'] = $name;
-		}
-
-		$r = elgg_delete_metadata($options);
-		elgg_set_ignore_access($ia);
-		return $r;
+		return false;
 	}
 
 	/**
-	 * Remove metadata
-	 *
-	 * @warning Calling this with no or empty arguments will clear all metadata on the entity.
-	 *
-	 * @param string $name The name of the metadata to clear
-	 * @return mixed bool
-	 * @deprecated 1.8 Use deleteMetadata()
+	 * @deprecated
 	 */
 	public function clearMetaData($name = '') {
-		elgg_deprecated_notice('ElggEntity->clearMetadata() is deprecated by ->deleteMetadata()', 1.8);
-		return $this->deleteMetadata($name);
+		return false;
 	}
 
 	/**
-	 * Disables metadata for this entity, optionally based on name.
-	 *
-	 * @param string $name An options name of metadata to disable.
-	 * @return bool
-	 * @since 1.8
+	 * @deprecated
 	 */
 	public function disableMetadata($name = '') {
-		$options = array(
-			'guid' => $this->guid,
-			'limit' => 0
-		);
-		if ($name) {
-			$options['metadata_name'] = $name;
-		}
-
-		return elgg_disable_metadata($options);
+		return false;
 	}
 
 	/**
-	 * Enables metadata for this entity, optionally based on name.
-	 *
-	 * @warning Before calling this, you must use {@link access_show_hidden_entities()}
-	 *
-	 * @param string $name An options name of metadata to enable.
-	 * @return bool
-	 * @since 1.8
+	 * @deprecated
 	 */
 	public function enableMetadata($name = '') {
-		$options = array(
-			'guid' => $this->guid,
-			'limit' => 0
-		);
-		if ($name) {
-			$options['metadata_name'] = $name;
-		}
-
-		return elgg_enable_metadata($options);
+		return false;
 	}
 
 	/**
@@ -1291,7 +1026,6 @@ abstract class ElggEntity extends ElggData implements
 					$db->removeAttributes($index, array($this->guid));
 			}
 		}
-	
 		return $this->guid;
 	}
 

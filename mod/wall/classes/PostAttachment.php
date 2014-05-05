@@ -48,7 +48,6 @@ class PostAttachment {
 		$image->setMimeType($mime);
 		$guid = $image->save($file);
 		$this->container->prependImageList(array($guid));
-		
 		return $guid;
 	}
 	

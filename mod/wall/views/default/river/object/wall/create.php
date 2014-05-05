@@ -37,23 +37,8 @@ if($object->owner_guid == $object->to_guid || $to instanceof ElggGroup || !$to){
 if($item->attachment_guid){
 
 	 elgg_load_js('lightbox');
-        elgg_load_css('lightbox');
-		elgg_load_js('elgg.wall');
-	?>
-<script>
-$(document).ready(function(){ 
-<<<<<<< HEAD
-	$('.attachment-lightbox').fancybox({
-		'type': 'image',
-		'width': '90%',
-		'autoScale' : false
-	}); 
-=======
-	
->>>>>>> abd5a29d40cd63e044a759941a043d62992c29e4
-});
-</script>
-<?php
+     elgg_load_css('lightbox');
+	elgg_load_js('elgg.wall');
 
 	$src = elgg_get_site_url() . "photos/thumbnail/$item->attachment_guid";
 

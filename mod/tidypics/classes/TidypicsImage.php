@@ -33,6 +33,7 @@ class TidypicsImage extends ElggFile {
 	public function save($data = null) {
 		
 		if (!parent::save()) {
+			echo 'failed';
 			return false;
 		}
 
@@ -45,7 +46,7 @@ class TidypicsImage extends ElggFile {
 			$this->extractExifData();
 		}
 
-		create_entity($this);
+		parent::save();
 		
 		return $this->guid;
 	}
@@ -70,20 +71,6 @@ class TidypicsImage extends ElggFile {
 
 		return parent::delete();
 	}
-
-	public function set($name, $value) {
-                        switch ($name) {
-                                case 'guid':
-                                case 'time_updated':
-                                case 'last_action':
-                                        return FALSE;
-                                        break;
-                                default:
-                                        $this->attributes[$name] = $value;
-                                        break;
-                        }
-                return TRUE;
-        }
 
 
 	/**
