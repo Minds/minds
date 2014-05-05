@@ -65,21 +65,38 @@
 	height:auto;
 }
 .elgg-list.x2{ 
-	width:auto;
+	/*width:auto;
 	margin:auto;
+	-moz-column-count: 2 !important;
+	-moz-column-gap: 10px;
+	-webkit-column-count: 2 !important;
+	-webkit-column-gap: 10px;*/
 }
 .elgg-list.x2 > li{
+
 	float:left;
 	width:40%;
+	
+	-webkit-transition-property: left,right,top;
+    -moz-transition-property: left,right,top;
+    -ms-transition-property: left,right,top;
+    -o-transition-property: left,right,top;
+    transition-property: left,right,top;
+    -webkit-transition-duration: 0.6s;
+    -moz-transition-duration: 0.6s;
+    -ms-transition-duration: 0.6s;
+    -o-transition-duration: 0.6s;
+    transition-duration: 0.6s;
 }
 
 @media screen and (max-width: 1100px) {
-        .elgg-list > li{
-                width:28%;
-                height:210px;
-        }
+    .elgg-list > li{
+            width:28%;
+            height:210px;
+    }
 }
 @media screen and (min-width: 1400px) {
+	
 	.elgg-list > li{
 		width:21%;
 		height:210px;
@@ -89,6 +106,7 @@
 	}
 }
 @media screen and (min-width: 1800px) {
+
 	 .elgg-list > li{
                 width:16%;
                 height:210px;
@@ -97,10 +115,12 @@
 /**
  * MASON PROTOTYPE
  */
+.elgg-list.mason{
 
+}
 .elgg-list.mason > li{
 	height: auto;
-	display:block;
+	display:inline-block;
 }
 .elgg-footer .elgg-list > li{
 	width: 42%;

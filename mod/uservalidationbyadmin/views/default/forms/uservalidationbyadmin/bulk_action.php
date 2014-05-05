@@ -9,7 +9,7 @@
 $limit = get_input('limit', 10);
 $offset = get_input('offset', "");
 
-$db = new DatabaseCall('entities_by_time');
+$db = new minds\core\data\call('entities_by_time');
 $guids = $db->getRow('user:unvalidated', array('offset'=>$offset, 'limit'=>$limit));		
 $count =  $db->countRow('user:unvalidated');
 

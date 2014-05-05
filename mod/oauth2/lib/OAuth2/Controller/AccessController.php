@@ -47,6 +47,7 @@ class OAuth2_Controller_AccessController implements OAuth2_Controller_AccessCont
 
         // Get the stored token data (from the implementing subclass)
         $token = $this->tokenStorage->getAccessToken($token_param);
+
         if ($token === null) {
             $this->response = new OAuth2_Response_AuthenticationError(401, 'invalid_grant', 'The access token provided is invalid', $this->tokenType->getTokenType(), $this->config['www_realm'], $scope);
             return null;

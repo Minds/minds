@@ -37,7 +37,7 @@ function minds_init(){
 	
 	//register our own js files
 	$minds_js = elgg_get_simplecache_url('js', 'minds');
-	elgg_register_js('minds.js', $minds_js, 'footer');
+	elgg_register_js('minds.js', $minds_js, 'footer');//masonry needs to load first...
 	
 	//plugin for cookie manipulation via JS
 	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js', 'footer');
@@ -57,12 +57,13 @@ function minds_init(){
 	elgg_register_css('carousel',  elgg_get_site_url() . 'mod/minds/vendors/bootstrap-carousel/carousel.css');
 	
 	elgg_unregister_js('jquery');
-	elgg_register_js('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
+	//elgg_register_js('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
+	elgg_register_js('jquery', elgg_get_site_url() . 'vendors/jquery/jquery-1.11.0.js', 'head');
 	elgg_load_js('jquery');
 
-	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js');
+	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js','head');
 	elgg_load_js('jquery-masonry');
-	elgg_register_js('jquery-imagesLoaded', elgg_get_site_url() . 'mod/minds/vendors/masonry/imagesLoaded.min.js');	
+	elgg_register_js('jquery-imagesLoaded', elgg_get_site_url() . 'mod/minds/vendors/masonry/imagesLoaded.min.js','head');	
 	elgg_load_js('jquery-imagesLoaded');
 
 	//register jquery.form
@@ -712,7 +713,7 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 	try{
 		$namespace = 'object:featured';
 
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		$guids = $db->getRow($namespace, array('offset'=>$offset, 'limit'=>$limit));
 	
 		if(!$guids){

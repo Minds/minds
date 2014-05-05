@@ -131,7 +131,7 @@ class ElggSite extends ElggEntity {
 			return; //the site is not an entitiy, it is static from settings
 		}
 		$this->guid = 1;
-		return create_entity($this,false); 
+		return parent::save();
 	}
 
 	/**

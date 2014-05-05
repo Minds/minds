@@ -291,7 +291,7 @@ function create_cfs($name, array $indexes = array(), array $attrs = array(), $pl
  * Register a cfs thats has already been installed by the schema. 
  * These are sent via the plugins start.php files.
  * 
- *@deprecated for DatabaseCall();
+ *@deprecated for minds\core\data\call();
  */
 function register_cfs($name){
 	

@@ -98,7 +98,7 @@ function minds_social_twitter_login() {
 					'invitecode' => $invitecode
 				);
 	
-				$db = new DatabaseCall('user_index_to_guid');
+				$db = new minds\core\data\call('user_index_to_guid');
 		        $db->insert('twitter:id:'.$twitter->id,  array($guid => time()));//move this into the user class
 				$db->insert('twitter:name'.$twitter->name,  array($guid => time()));
 	

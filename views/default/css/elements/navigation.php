@@ -6,6 +6,68 @@
  * @subpackage UI
  */
 ?>
+@-webkit-keyframes loader-sprite {
+  0% {
+   	font-size:16px;
+  }
+  50% {
+    font-size:22px;
+  }
+  100%{
+  	font-size:16px;
+  }
+}
+@-moz-keyframes loader-sprite {
+  0% {
+   	font-size:16px;
+  }
+  50% {
+    font-size:22px;
+  }
+  100%{
+  	font-size:16px;
+  }
+}
+@keyframes loader-sprite {
+  0% {
+   	font-size:16px;
+  }
+  50% {
+    font-size:22px;
+  }
+  100%{
+  	font-size:16px;
+  }
+}
+.minds-content-loading{
+	margin:auto;
+	display:block
+	width:90%;
+	height:auto;
+	padding:68px 32px;
+	text-align:center;
+	vertical-align:middle;
+	font-weight:bold;
+	
+}
+.minds-content-loading p{
+	font-weight:bold;
+}
+.minds-content-loading .loader-sprite{
+	font-family:'fontello';
+	display:inline-block;
+	margin:8px;
+	width:22px;
+	height:22px;
+	-moz-animation: loader-sprite 5s infinite;
+ 	-webkit-animation: loader-sprite 5s infinite;
+ 	animation: loader-sprite 5s infinite;
+ 	-o-transition:.5s;
+    -ms-transition:.5s;
+    -moz-transition:.5s;
+    -webkit-transition:.5s;
+    transition:.5s;
+}
 
 /* ***************************************
 	PAGINATION

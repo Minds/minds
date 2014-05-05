@@ -605,6 +605,12 @@ li .excerpt a{
 	padding:0;
 	height:200px;
 }
+.elgg-gallery-users li.elgg-item{
+	margin:2px;
+	width:auto;
+	padding:0;
+	height:auto;
+}
 .elgg-sidebar li.elgg-item img{
 	width:100%;
 }

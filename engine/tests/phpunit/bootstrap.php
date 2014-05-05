@@ -40,7 +40,7 @@ error_reporting(E_ALL | E_STRICT);
  */
 try{
 	require_once(dirname($engine) . '/install/ElggInstaller.php');
-	$db = new DatabaseCall(null, 'minds_test_phpcassa', array('localhost'));
+	$db = new minds\core\data\call(null, 'minds_test_phpcassa', array('localhost'));
 	if($db->keyspaceExists()){
 		$db->dropKeyspace(true);
 	}

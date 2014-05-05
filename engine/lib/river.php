@@ -49,7 +49,7 @@ $posted = 0, $annotation_id = 0) {
 	$serialized_object = serialize($object);
 
 	// Attempt to save river item; return success status
-	$db = new DatabaseCall('newsfeed');
+	$db = new minds\core\data\call('newsfeed');
 	$id = $db->insert(0, array(
 					'subject_guid'=>$subject_guid,
 					'object_guid'=>$object_guid,
@@ -70,12 +70,12 @@ $posted = 0, $annotation_id = 0) {
 	array_push($followers, $subject_guid);//add to their own timeline
 	array_push($followers, $object->container_guid); //add to containers timeline
 	foreach($followers as $follower_guid){
-		$db = new DatabaseCall('timeline');
+		$db = new minds\core\data\call('timeline');
 		$db->insert($follower_guid, array($id => time()));
 	}
 
 	//place on users own personal line
-	$db = new DatabaseCall('timeline');
+	$db = new minds\core\data\call('timeline');
 	$db->insert('personal:'.$subject_guid, array($id => time()));
 
 	if ($id) {
@@ -147,13 +147,13 @@ function elgg_delete_river(array $options = array()) {
 		//container_guid
 		array_push($followers, $object->container_guid);
 
-		$db = new DatabaseCall('timeline');
+		$db = new minds\core\data\call('timeline');
 		foreach($followers as $follower){
 			$db->removeAttributes($follower, array($item->id));
 		}
 
 		//remove from the main newsfeed now
-		$db = new DatabaseCall('newsfeed');
+		$db = new minds\core\data\call('newsfeed');
 		$db->removeRow($item->id);
 
 	}
@@ -192,7 +192,7 @@ function elgg_get_river(array $options = array()) {
 	//no params, then get the public line
 	if($options['type'] == 'timeline'){
 		
-		$timeline = new DatabaseCall('timeline');
+		$timeline = new minds\core\data\call('timeline');
 		$row = $timeline->getRow($options['owner_guid'], array('offset'=>$options['offset'], 'limit'=>$options['limit']));
 		if(!$row)
 			return false;
@@ -204,13 +204,13 @@ function elgg_get_river(array $options = array()) {
         	}
 
 		if($ids){
-			$newsfeed = new DatabaseCall('newsfeed');
+			$newsfeed = new minds\core\data\call('newsfeed');
 			$rows = $newsfeed->getRows($ids);
 		}
 
 	} elseif($options['type'] == 'newsfeed'){
 		
-		$db = new DatabaseCall('newsfeed');
+		$db = new minds\core\data\call('newsfeed');
 		
 		if($ids = $options['ids']){
 

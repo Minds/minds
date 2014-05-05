@@ -291,7 +291,7 @@ class ElggWidget extends ElggEntity {
 	 * @return bool
 	 */
 	/*(public function save() { 
-		$db = new DatabaseCall('widget');
+		$db = new minds\core\data\call('widget');
 		
 		if(!isset($this->guid)){
 			$g = new GUID();

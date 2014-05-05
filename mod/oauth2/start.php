@@ -68,6 +68,10 @@ function oauth2_page_handler($page) {
     $pages = $base . '/pages/oauth2';
 
     switch ($page[0]) {
+    	
+		case 'token': 
+			require $pages . "/token.php";
+            break;
 
         case 'authorize':
             require $pages . "/authorize.php";
@@ -90,6 +94,9 @@ function oauth2_page_handler($page) {
         case 'register':
             require $pages . "/register.php";
             break;
+		case 'sso':
+			oauth2_SSO();
+			break;
 
         case 'applications':
         default:
@@ -101,6 +108,28 @@ function oauth2_page_handler($page) {
     return true;
 }
 
+/**
+ * Auto login if a cookie is found
+ */
+function oauth2_SSO(){
+ 	// Load our oauth2 library
+	elgg_load_library('oauth2');
+	$storage = new ElggOAuth2DataStore();
+	$ia = elgg_set_ignore_access();
+	$token = $storage->getAccessToken(get_input('access_token'));
+	elgg_set_ignore_access($ia);
+	if(!$token['user_id']){
+		header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
+
+	}
+    	$user = get_entity($token['user_id']);
+	if(!$user)
+		header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
+
+	login($user);
+	header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
+
+}
 /**
  * PAM: Confirm that the call includes an access token
  *
@@ -117,13 +146,13 @@ function oauth2_pam_handler($credentials = NULL) {
     // Create a server instance
     $server = new OAuth2_Server($storage);
 
-    $access = elgg_get_ignore_access();
+    $ia = elgg_get_ignore_access();
     elgg_set_ignore_access(true);
 
     // Validate the request
     if (!$server->verifyAccessRequest(OAuth2_Request::createFromGlobals())) { 
-        error_log('oauth2_pam_handler() - ' . $server->getResponse());
-        elgg_set_ignore_access($access);
+       // error_log('oauth2_pam_handler() - ' . $server->getResponse());
+        elgg_set_ignore_access($ia);
         return false;
     }
 

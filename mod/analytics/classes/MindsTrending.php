@@ -92,7 +92,7 @@ class MindsTrending{
 		$type = $options['type'];
 		$subtype = $options['subtype'];
 		
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 
 		if($subtype){
 			$namespace = "trending:$timespan:$type:$subtype";
@@ -122,7 +122,7 @@ class MindsTrending{
 		//remove the current list
 		$lists = array('user'=>null, 'object'=>array('blog','kaltura_video'));
 		
-		$db = new DatabaseCall('entities_by_time');
+		$db = new minds\core\data\call('entities_by_time');
 		foreach($lists as $type => $subtypes){
 			if(isset($subtypes)){
 				foreach($subtypes as $subtype){

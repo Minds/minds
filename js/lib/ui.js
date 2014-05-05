@@ -5,20 +5,20 @@ elgg.ui.init = function () {
 	elgg.ui.initHoverMenu();
 
 	//if the user clicks a system message, make it disappear
-	$('.elgg-system-messages li').live('click', function() {
+	$(document).on('click', '.elgg-system-messages li', function() {
 		$(this).stop().fadeOut('fast');
 	});
 
 	$('.elgg-system-messages li').animate({opacity: 0.9}, 6000);
 	$('.elgg-system-messages li.elgg-state-success').fadeOut('slow');
 
-	$('[rel=toggle]').live('click', elgg.ui.toggles);
+	$(document).on('click', '[rel=toggle]', elgg.ui.toggles);
 
-	$('[rel=popup]').live('click', elgg.ui.popupOpen);
+	$(document).on('click', '[rel=popup]', elgg.ui.popupOpen);
 
-	$('.elgg-menu-page .elgg-menu-parent').live('click', elgg.ui.toggleMenu);
+	$(document).on('click', '.elgg-menu-page .elgg-menu-parent', elgg.ui.toggleMenu);
 
-	$('.elgg-requires-confirmation').live('click', elgg.ui.requiresConfirmation);
+	$(document).on('click', '.elgg-requires-confirmation', elgg.ui.requiresConfirmation);
 
 	$('.elgg-autofocus').focus();
 };
@@ -100,7 +100,7 @@ elgg.ui.popupOpen = function(event) {
 
 	$('body')
 		.die('click', elgg.ui.popupClose)
-		.live('click', elgg.ui.popupClose);
+		.on('click', elgg.ui.popupClose);
 };
 
 /**
@@ -165,16 +165,16 @@ elgg.ui.initHoverMenu = function(parent) {
 	}
 
 	// avatar image menu link
-	$(parent).find(".elgg-avatar").live('mouseover', function() {
+	$(parent).find(".elgg-avatar").on('mouseover', function() {
 		$(this).children(".elgg-icon-hover-menu").show();
 	})
-	.live('mouseout', function() {
+	.on('mouseout', function() {
 		$(this).children(".elgg-icon-hover-menu").hide();
 	});
 
 
 	// avatar contextual menu
-	$(".elgg-avatar > .elgg-icon-hover-menu").live('click', function(e) {
+	$(".elgg-avatar > .elgg-icon-hover-menu").on('click', function(e) {
 		// check if we've attached the menu to this element already
 		var $hovermenu = $(this).data('hovermenu') || null;
 

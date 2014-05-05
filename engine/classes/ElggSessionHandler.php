@@ -7,7 +7,7 @@ class ElggSessionHandler implements SessionHandlerInterface{
 	private $db;
 
 	public function open($save_path , $name){
-		$this->db = new DatabaseCall('session');
+		$this->db = new minds\core\data\call('session');
 	}
 
 	public function close(){

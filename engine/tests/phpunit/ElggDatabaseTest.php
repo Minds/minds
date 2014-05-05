@@ -12,9 +12,9 @@ class ElggDatabaseTest extends Minds_PHPUnit_Framework_TestCase {
 		 * @return void
 		 */
         public static function setUpBeforeClass() {
-			self::$db = new DatabaseCall();
+			self::$db = new minds\core\data\call();
 			self::$db->createCF('test', array('index'=> 'UTF8Type'));
-			self::$db = new DatabaseCall('test'); 
+			self::$db = new minds\core\data\call('test'); 
         }
 		
 		/**
