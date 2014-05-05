@@ -89,7 +89,7 @@ class call extends core\base{
 	
 	public function insert($guid = NULL, array $data = array()){
 		if(!$guid){
-			$guid = new GUID();
+			$guid = new \GUID();
 			$guid = $guid->generate();
 		}
 		self::$writes++;

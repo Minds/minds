@@ -4,7 +4,7 @@ $elgg_path = str_replace(elgg_get_site_url(), '', $vars['path']);
 $path = explode('/', $elgg_path);
 
 set_input('ajax', true);
-if($elgg_path == elgg_get_site_url() || $elgg_path == null){
+if($elgg_path == elgg_get_site_url() || $elgg_path == null || $elgg_path == ""){
 
 	elgg_set_viewtype('json');
 	
@@ -29,7 +29,6 @@ $out = ob_get_contents();
 ob_end_clean();
 
 }
-
 $json = json_decode($out);
 if(!$json){
 	return;
@@ -39,6 +38,7 @@ switch(get_input('items_type')){
 		$new_json = array();
 		foreach ($json as $child){
 			 foreach ($child as  $grandchild){
+				if(is_array($grandchild))
 				$new_json = array_merge($new_json,$grandchild);
 			}
 		}

@@ -106,7 +106,7 @@ if (is_array($items) && count($items) > 0) {
 $html .= $after;
 
 $html = "<ul id=\"$list_id\" class=\"$list_class\" style=\"display:none;\" data-options=\"$data_options\">$html</ul>";
-if(!elgg_is_xhr())
+if(!elgg_is_xhr() || !get_input('ajax') || !elgg_get_viewtype() == 'json')
 	$html .= "<div class=\"minds-content-loading\"><span class=\"loader-sprite\">&#127758;</span><p> Loading... </p></div>";
 
 if ($position == 'before' || $position == 'both' && !$ajaxify) {
