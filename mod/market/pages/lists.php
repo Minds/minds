@@ -28,14 +28,15 @@ class lists extends core\page implements interfaces\page{
 					return false;
 				}
 				$guids = $db->getRow("object:market:user:$owner->guid", array('limit'=>$limit, 'offset'=>$offset));
-				var_dump($guids); 
+				var_dump($guids); exit;
 				$content = 'This is the owner';
 			case 'category':
 				//join up the slugs to create the category filter
 				break;
 			case 'all':
 			default:
-				$content = 'This is the all page';
+				$guids = $db->getRow("object:market", array('limit'=>$limit, 'offset'=>$offset));
+				$content = \elgg_list_entities(array('guids'=>$guids));
 		}
 		
 		$body = \elgg_view_layout('one_column', array('content'=>$content));

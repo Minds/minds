@@ -9,18 +9,28 @@ use minds\interfaces;
 use minds\plugin\market;
 use minds\plugin\market\entities;
 
-class view extends core\page implements interfaces\page{
+class edit extends core\page implements interfaces\page{
 	
 	/**
 	 * Display the edit page for the item
 	 */
 	public function get($pages){
 		
+		$form_data = array();
+		
 		if(isset($pages[0])){
 			$item = entities\item($pages[0]);
+			$form_data = array(
+				'title' => $item->title,
+				'description'=> $item->description,
+				'price'=> $item->price,
+				'category' => $item->category
+			);
 		}
 		
-		$body = \elgg_view_layout('content', array());
+		$form = \elgg_view_form('market/edit', array('method'=>'POST', 'action'=>$_SERVER['REQUEST_URI']), $form_data);
+		
+		$body = \elgg_view_layout('content', array('content'=>$form));
 		
 		echo $this->render(array('body'=>$body));
 	}

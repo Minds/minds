@@ -52,24 +52,7 @@ abstract class ElggEntity extends ElggData implements
 	 */
 	protected $icon_override;
 
-	/**
-	 * Holds metadata until entity is saved.  Once the entity is saved,
-	 * metadata are written immediately to the database.
-	 */
-	protected $temp_metadata = array();
-
-	/**
-	 * Holds annotations until entity is saved.  Once the entity is saved,
-	 * annotations are written immediately to the database.
-	 */
-	protected $temp_annotations = array();
-
-	/**
-	 * Holds private settings until entity is saved. Once the entity is saved,
-	 * private settings are written immediately to the database.
-	 */
-	protected $temp_private_settings = array();
-
+	
 	/**
 	 * Volatile data structure for this object, allows for storage of data
 	 * in-memory that isn't sync'd back to the metadata table.

@@ -31,7 +31,7 @@ class market extends \ElggPlugin{
 		return array(
 			'/market' => "$path\\pages\\lists",
 			'/market/item' => "$path\\pages\\view",
-			'/market/item/{{ID}}/edit' => "$path\\pages\\edit"
+			'/market/item/edit' => "$path\\pages\\edit"
 		);
 	}
 	
@@ -41,7 +41,7 @@ class market extends \ElggPlugin{
 	 * Categories are seperated by a ":" colon. 
 	 * @return array
 	 */
-	public function getCategories(){
+	static public function getCategories(){
 		return array(
 			'uncategorised',
 			'food',
