@@ -26,7 +26,7 @@ function _minds_autoload($class) {
 		}
 	}
 
-	$file = dirname(dirname(__FILE__)) . '/'. str_replace('minds', 'engine', str_replace('\\', '/', $class)) . '.php'; 
+	$file = dirname(dirname(__FILE__)) . '/'. preg_replace('/minds/', 'engine', str_replace('\\', '/', $class),1) . '.php'; 
 	//echo $file; 
 	if(file_exists($file)){
     	require_once $file;
@@ -39,4 +39,5 @@ function _minds_autoload($class) {
 		require_once $file;
 		return true;
 	}
+
 }

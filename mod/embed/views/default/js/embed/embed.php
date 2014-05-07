@@ -3,10 +3,10 @@ elgg.provide('elgg.embed');
 elgg.embed.init = function() {
 
 	// inserts the embed content into the textarea
-	$(".embed-item").on('click', elgg.embed.insert);
+	$(document).on('click', ".embed-item", elgg.embed.insert);
 
 	// caches the current textarea id
-	$(".embed-control").on('click', function() {
+	$(document).on('click', ".embed-control", function() {
 		var classes = $(this).attr('class');
 		var embedClass = classes.split(/[, ]+/).pop();
 		var textAreaId = embedClass.substr(embedClass.indexOf('embed-control-') + "embed-control-".length);
@@ -14,12 +14,12 @@ elgg.embed.init = function() {
 	});
 
 	// special pagination helper for lightbox
-	$('.embed-wrapper .elgg-pagination a').on('click', elgg.embed.forward);
+	$(document).on('click', '.embed-wrapper .elgg-pagination a', elgg.embed.forward);
 
-	$('.embed-section').on('click', elgg.embed.forward);
+	$(document).on('click', '.embed-section', elgg.embed.forward);
 
-	$('.elgg-form-embed').on('submit', elgg.embed.submit);
-	$('.elgg-form-embed-youtube').on('submit', elgg.embed.submityt);
+	$(document).on('submit', '.elgg-form-embed', elgg.embed.submit);
+	$(document).on('submit', '.elgg-form-embed-youtube', elgg.embed.submityt);
 };
 
 /**
