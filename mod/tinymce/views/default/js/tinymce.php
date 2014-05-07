@@ -57,21 +57,6 @@ elgg.tinymce.init = function() {
 	    ]*/
 	});
 
-	// work around for IE/TinyMCE bug where TinyMCE loses insert carot
-	if ($.browser.msie) {
-		$(".embed-control").on('hover', function() {
-			var classes = $(this).attr('class');
-			var embedClass = classes.split(/[, ]+/).pop();
-			var textAreaId = embedClass.substr(embedClass.indexOf('embed-control-') + "embed-control-".length);
-
-			if (window.tinyMCE) {
-				var editor = window.tinyMCE.get(textAreaId);
-				if (elgg.tinymce.bookmark == null) {
-					elgg.tinymce.bookmark = editor.selection.getBookmark(2);
-				}
-			}
-		});
-	}
 }
 
 elgg.register_hook_handler('init', 'system', elgg.tinymce.init);
