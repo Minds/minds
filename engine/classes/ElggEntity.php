@@ -150,7 +150,7 @@ abstract class ElggEntity extends ElggData implements
 				break;
 		}
 		if($this->guid){
-			$this->save();
+	//		$this->save();
 		}
 		return TRUE;
 	}
