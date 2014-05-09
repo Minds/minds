@@ -331,7 +331,7 @@ class MindsMultiInstaller extends ElggInstaller {
             'groups',
 	    'archive',
             'blog',
-    
+   		'deck', 
             'persona',
             'notifications',
             //'minds_connect',
@@ -557,8 +557,8 @@ class MindsMultiInstaller extends ElggInstaller {
 	$files = array();
 	$sizes = array(
                 'logo_main' => array(
-            'w' => 200,
-            'h' => 90,
+            //'w' => 400,
+            'h' => 200,
             'square' => false,
             'upscale' => true
                 ),

@@ -17,6 +17,9 @@ elgg.tidypics.lightbox.enable_pushstate = false;
 
 // General init
 elgg.tidypics.lightbox.init = function() {
+	//cancel for now
+	return;
+
 	// Init lightboxes
 	elgg.tidypics.lightbox.initImages();
 
