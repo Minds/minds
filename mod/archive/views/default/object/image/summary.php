@@ -7,7 +7,8 @@
  * @author Cash Costello
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2
  */
-
+elgg_load_js('lightbox');
+elgg_load_css('lightbox');
 $image = elgg_extract('entity', $vars);
 
 $owner = $image->getOwnerEntity();
