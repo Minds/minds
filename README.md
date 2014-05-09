@@ -40,18 +40,22 @@ Minds implements Cassandra as its database. Cassandra is a NoSQL datastore, and 
 
 You should generally store your indexes on **write** and retrieve later with a lookup query.
 
-##### List of entities
+##### Example of indexes
 ```
-$db = new \minds\core\data\call('entities_by_time');
+$index = new \minds\core\data\indexes();
 
-$guids = $db->getRow('object:blog', array('limit'=>12, 'offset'=>''));
+$guids = $index->get('object:blog', array('limit'=>12, 'offset'=>''));
+
+//adding and index, or to the index
+$index->set('index:key:separated:by:colon', array('key'=>'value'));
+
 ```
 ##### Example user lookup
 ``` 
 $email = 'mark@minds.com'
-$db = new \minds\core\data\call('user_index_to_guid');
+$lookup = new \minds\core\data\lookup();
 
-$guid = $db->getRow($email, array('limit'=>1));
+$guid = $lookup->get($email, array('limit'=>1));
 $user = new \minds\entities\user($guid);
 
 ```
