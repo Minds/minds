@@ -171,22 +171,20 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
     public function getAccessToken($token)
     {
         //$results = elgg_get_entities($this->getAccessTokenOptions($token));
-        $db = new minds\core\data\call('user_index_to_guid');
-        $guids = $db->getRow('oauth2_access_token', array('offset'=>$token, 'limit'=>1));
+        $lookup = new minds\core\data\lookup('oauth2:token');
+        $guids = $lookup->get($token);
+		$entity = get_entity($guids[0]);
 
-	  	if(!isset($guids[$token]))
-			return false;
-		
-		$entity = get_entity($guids[$token]);
-
- 		return array(
-            'access_token' => $entity->access_token,
-            'client_id'    => $entity->client_id,
-            'user_id'      => $entity->owner_guid,
-            'expires'      => $entity->expires,
-            'scope'        => $entity->scope,
-            'entity'       => $entity,
-        );
+		if($entity){
+	 		return array(
+	            'access_token' => $entity->access_token,
+	            'client_id'    => $entity->client_id,
+	            'user_id'      => $entity->owner_guid,
+	            'expires'      => $entity->expires,
+	            'scope'        => $entity->scope,
+	            'entity'       => $entity,
+	        );
+		}
 
         return false;
     }
@@ -216,8 +214,6 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
             $entity->container_guid  = $this->getClientDetails($client_id)->guid;
             $entity->access_id       = ACCESS_PRIVATE;
 
-            $entity->save();
-			
         } else {
             $entity = $access_token['entity'];
         }
@@ -227,9 +223,10 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $entity->expires      = $expires;        
         $entity->scope        = $scope;
 		
-		//add into the user indexes (we need a lookup table but user_indexes should be renamed to lookup)
-		$db = new minds\core\data\call('user_index_to_guid');
-		$db->insert('oauth2_access_token', array($token => $entity->guid));
+		$entity->save();
+		
+		$lookup = new minds\core\data\lookup('oauth2:token');
+		$lookup->set($token, $entity->guid);
 
         return $this->getAccessToken($token);
     }
@@ -255,19 +252,21 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
      *
      * @ingroup oauth2_section_4
      */
-    public function getAuthorizationCode($code)
-    {
-        $results = elgg_get_entities($this->getAuthCodeOptions($code));
-
-        if (!empty($results)) {
+    public function getAuthorizationCode($code){
+    		
+    	$lookup = new minds\core\data\lookup('oauth2:code');
+		$guid = $lookup->get($code);
+		$entity = get_entity($guid[0]);
+		
+		if($entity){
             return array(
-                'authorization_code' => $results[0]->authorization_code,
-                'client_id'          => $results[0]->client_id,
-                'user_id'            => $results[0]->owner_guid,
-                'redirect_uri'       => $results[0]->redirect_uri,
-                'expires'            => $results[0]->expires,
-                'scope'              => $results[0]->scope,
-                'entity'             => $results[0],
+                'authorization_code' => $entity->authorization_code,
+                'client_id'          => $entity->client_id,
+                'user_id'            => $entity->owner_guid,
+                'redirect_uri'       => $entity->redirect_uri,
+                'expires'            => $entity->expires,
+                'scope'              => $entity->scope,
+                'entity'             => $entity,
             );
         }
 
@@ -301,26 +300,26 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         if (!$auth_code = $this->getAuthorizationCode($code)) {
 
             // Create the token entity
-            $entity                  = new ElggObject();
-            $entity->subtype         = 'oauth2_auth_code';
-            $entity->owner_guid      = $user_id;
+            $entity = new ElggObject();
+            $entity->subtype = 'oauth2_auth_code';
+            $entity->owner_guid = $user_id;
             $entity->container_guid  = $this->getClientDetails($client_id)->guid;
-            $entity->access_id       = ACCESS_PRIVATE;
-
-            $entity->save();
+            $entity->access_id = ACCESS_PRIVATE;
 
         } else {
             $entity = $auth_code['entity'];
         }
 
         $entity->authorization_code = $code;
-        $entity->client_id          = $client_id;
-        $entity->redirect_uri       = $redirect_uri;
-        $entity->expires            = $expires;
-        $entity->scope              = $scope;
+        $entity->client_id 	= $client_id;
+        $entity->redirect_uri  = $redirect_uri;
+        $entity->expires  = $expires;
+        $entity->scope = $scope;
 		
-		$db = new minds\core\data\call('entities_by_time');
-		$db->insert('oauth2_auth_code:'.$code, array($entity->guid => $entity->guid));
+		$entity->save();
+		
+		$lookup = new minds\core\data\lookup('oauth2:code');
+		$lookup->set($code, $entity->guid);
 
         return $this->getAuthorizationCode($code);
     }
@@ -344,8 +343,8 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $results = elgg_get_entities($this->getAuthCodeOptions($token));
 
         if (!empty($results)) {
-        	$db = new minds\core\data\call('entities_by_time');
-        	$db->removeRow('oauth2_auth_code:'.$code);
+        	$lookup = new minds\core\data\lookup('oauth2:code');
+        	$db->remove($code);
             return $results[0]->delete();
         }
 

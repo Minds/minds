@@ -356,6 +356,10 @@ function login(ElggUser $user, $persistent = false) {
 	if(!$user->isEnabled()){
 		throw new LoginException(elgg_echo('LoginException:DisabledUser'));
 	}
+	
+	if(!elgg_trigger_event('login', 'user', $user)){
+		return false;
+	}
 
 	$_SESSION['user'] = $user;
 	$_SESSION['guid'] = $user->getGUID();
@@ -394,6 +398,10 @@ function login(ElggUser $user, $persistent = false) {
 	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
 
 	 setcookie('loggedin', 1, time() + 3600, '/');
+	 
+	if(!elgg_trigger_event('loggedin', 'user', $user)){
+		return false;
+	}
 
 	return true;
 }

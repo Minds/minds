@@ -19,10 +19,18 @@ class lookup extends call{
 			$this->setNamespace($namespace);
 	}
 	
-
+	public function setNamespace($namespace){
+		$this->namespace = $namespace . ':';
+	}
 	
 	public function set($key, $values){
-		$this->insert($this->namespace.$name, $data);
+		if(!is_array($values))
+			$values = array($values);
+		return $this->insert($this->namespace.$key, $values);
+	}
+	
+	public function remove($key){
+		return $this->removeRow($this->namespace.$key);
 	}
 	
 	public function get($name){

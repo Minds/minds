@@ -233,5 +233,4 @@ expose_function('get.siteMenu',
 				array(),
 				'Retrieve the site menu',
 				'GET',
-				true,
-				true);
+				false);
