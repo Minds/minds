@@ -72,6 +72,7 @@ class ElggInstaller {
 		$this->bootstrapConfig();
 
 		$this->bootstrapEngine();
+		require_once(dirname(dirname(__FILE__)) . '/engine/autoload.php');
 
 		elgg_set_viewtype('installation');
 

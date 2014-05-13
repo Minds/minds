@@ -49,7 +49,7 @@ if (isset($_SESSION['last_forward_from'])) {
 	$forward_url = REFERER;
 } else {
 	// forward to main index page
-	$forward_url =  elgg_get_viewtype() == 'mobile' ? 'news' : 'news';
+	$forward_url = $user->getURL();
 }
 
 

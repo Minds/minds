@@ -36,10 +36,10 @@ expose_function('user.get_profile_fields',
  *
  * @return string $profile_info Array containin 'core', 'profile_fields' and 'avatar_url'
  */
-function user_get_profile($username) {
+function user_get_profile($username = null) {
 	//if $username is not provided then try and get the loggedin user
 	if(!$username){
-		$user = get_loggedin_user();
+		$user = elgg_get_logged_in_user_entity();
 	} else {
 		$user = get_user_by_username($username);
 		if(!$user){

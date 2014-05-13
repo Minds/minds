@@ -102,6 +102,13 @@ function _elgg_session_shutdown(){
 function elgg_get_logged_in_user_entity() {
 	global $USERNAME_TO_GUID_MAP_CACHE;
 	
+	/**
+	 * The OAuth plugin, for example, might use this. 
+	 */
+	if($user = elgg_trigger_plugin_hook('logged_in_user', 'user')){
+		return $user;
+	}
+	
 	if (isset($_SESSION['user'])) {
 		//cache username
 		$USERNAME_TO_GUID_MAP_CACHE[$_SESSION['username']] = $_SESSION['guid'];
@@ -356,6 +363,10 @@ function login(ElggUser $user, $persistent = false) {
 	if(!$user->isEnabled()){
 		throw new LoginException(elgg_echo('LoginException:DisabledUser'));
 	}
+	
+	if(!elgg_trigger_event('login', 'user', $user)){
+		return false;
+	}
 
 	$_SESSION['user'] = $user;
 	$_SESSION['guid'] = $user->getGUID();
@@ -394,6 +405,10 @@ function login(ElggUser $user, $persistent = false) {
 	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
 
 	 setcookie('loggedin', 1, time() + 3600, '/');
+	 
+	if(!elgg_trigger_event('loggedin', 'user', $user)){
+		return false;
+	}
 
 	return true;
 }
@@ -437,6 +452,8 @@ function logout() {
 	session_destroy();
 	setcookie(session_name(), '', (time() - (86400 * 30)), "/");
 	
+	elgg_trigger_event('loggedout', 'user', $user);
+		
 	return TRUE;
 }
 
