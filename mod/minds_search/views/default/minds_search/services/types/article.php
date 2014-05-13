@@ -38,6 +38,8 @@ if(!$full_view){
 	minds_set_metatags('og:description', 'License: ' . elgg_echo('minds:license:'.$article['license']));
 	
 	if($provider=='wikipedia'){
+		forward('http://en.wikipedia.org/wiki/'.$article['title']);
+		exit;
 		elgg_load_css('wiki');
 		$url = 'http://en.wikipedia.org/w/api.php?action=parse&page=' . urlencode($article['title']) .'&format=json&rvprop=content';
 		$ch = curl_init($url);

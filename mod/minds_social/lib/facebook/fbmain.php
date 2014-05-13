@@ -58,15 +58,13 @@ function minds_social_facebook_auth($display = 'normal'){
  * Begin the signin process for facebook
  */
 function minds_social_facebook_login(){
-	global $SESSION;
 	header("X-No-Client-Cache: 0", true);
+	_elgg_session_boot(true);
 	$facebook = minds_social_facebook_init();
-
-	if(elgg_is_logged_in()){
-		forward();
-	}
-	
-	if (!$session['_fb'] = $facebook->getUser()){
+//	if(elgg_is_logged_in()){
+//		forward();
+////	}
+	if (!$fbuser = $facebook->getUser()){
 		$return_url = elgg_get_site_url() . 'social/fb/login';
 		forward($facebook->getLoginURL(array(
 				'redirect_uri' => $return_url,
@@ -81,7 +79,7 @@ function minds_social_facebook_login(){
 	}
 	// attempt to find user and log them in.
 	// else, create a new user.
-	$fb_uid = is_array($session['_fb']) ? $session['_fb']['uid'] : $session['_fb'];
+	$fb_uid = is_array($fbuser) ? $fbuser['uid'] : $fbuser;
 	//check if there is a guid relating to the users fb_id
 	$guid = get_user_index_to_guid('fb:'.$fb_uid);
 	
