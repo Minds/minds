@@ -40,6 +40,8 @@ function oauth2_init() {
     register_pam_handler('oauth2_pam_handler', 'sufficient', 'user');
     register_pam_handler('oauth2_pam_handler', 'sufficient', 'api');
 
+	elgg_register_plugin_hook_handler('logged_in_user', 'user', 'oauth2_logged_in_user_entity');
+
     // register javascript
     $js = elgg_get_simplecache_url('js', 'oauth2/oauth2');
     elgg_register_simplecache_view('js/oauth2/oauth2');
@@ -146,8 +148,7 @@ function oauth2_pam_handler($credentials = NULL) {
     // Create a server instance
     $server = new OAuth2_Server($storage);
 
-    $ia = elgg_get_ignore_access();
-    elgg_set_ignore_access(true);
+    $ia = elgg_get_ignore_access(true);
 
     // Validate the request
     if (!$server->verifyAccessRequest(OAuth2_Request::createFromGlobals())) { 
@@ -162,7 +163,7 @@ function oauth2_pam_handler($credentials = NULL) {
     // get the user associated with this token
     $user = get_entity($token['user_id'], 'user');
 
-    elgg_set_ignore_access($access);
+    elgg_set_ignore_access($ia);
 
     // couldn't get the user
     if (!$user || !($user instanceof ElggUser)) {
@@ -180,6 +181,28 @@ function oauth2_pam_handler($credentials = NULL) {
     
     // tell the PAM system that it worked
     return true;
+}
+
+function oauth2_logged_in_user_entity(){
+
+	if(get_input('access_token')){
+		static $OAUTH2_LOGGED_IN;
+		if($OAUTH2_LOGGED_IN){
+			return $OAUTH2_LOGGED_IN;
+		}
+	
+		elgg_load_library('oauth2');
+		$storage = new ElggOAuth2DataStore();
+		// Create a server instance
+		$server = new OAuth2_Server($storage);
+		// Get the token data
+		$token = $storage->getAccessToken(get_input('access_token'));
+    	$user =	new ElggUser($token['user_id']);
+		$OAUTH2_LOGGED_IN = $user;
+		return $user;
+	}
+	
+	return false;
 }
 
 //@todo update to casandra way

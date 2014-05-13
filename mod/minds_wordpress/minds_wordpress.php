@@ -24,6 +24,7 @@ class minds_wordpress extends \ElggPlugin{
 		//sync comment with wordpress
 		\elgg_register_event_handler('comment:create', 'comment', array($this, 'commentHook'));
 		\elgg_register_event_handler('loggedin', 'user', array($this, 'loggedinHook'));
+		\elgg_register_event_handler('loggedout', 'user', array($this, 'loggedoutHook'));
 		
 		\elgg_extend_view('login/extend', 'minds_wordpress/login');
 		
@@ -41,9 +42,7 @@ class minds_wordpress extends \ElggPlugin{
 	public function registerRoutes(){
 		$path = "minds\\plugin\\minds_wordpress";
 		return array(
-			'/minds_wp' => "$path\\pages\\lists",
-			'/market/item' => "$path\\pages\\view",
-			'/market/item/edit' => "$path\\pages\\edit"
+			'/wp' => "$path\\pages\\wp"
 		);
 	}
 	
@@ -71,6 +70,15 @@ class minds_wordpress extends \ElggPlugin{
 			$this->auth();
 		}
 		
+		return true;
+	}
+	
+	/**
+	 * Loggedout hook
+	 */
+	public function loggedoutHook($event, $object_type, $user){
+		$forward = $this->getWordpressUrl() . '?minds_deAuth=true&forward='.\get_input('forward', 'true');
+		\forward($forward);
 		return true;
 	}
 	
