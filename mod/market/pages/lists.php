@@ -20,6 +20,11 @@ class lists extends core\page implements interfaces\page{
 		$limit = isset($_REQUEST['limit']) ? $_REQUEST['limit'] : 12;
 		$offset = isset($_REQUEST['offset']) ? $_REQUEST['offset'] : "";
 		
+		$lookup = new core\data\lookup();
+		
+		$index = new core\data\indexes();
+		var_dump($lookup->get('mark@minds.com'), $index->get('object:blog'));exit;
+		
 		switch($pages[0]){
 			case 'owner':
 				$owner = new entities\user($pages[0]);

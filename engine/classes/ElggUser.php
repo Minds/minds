@@ -90,8 +90,7 @@ class ElggUser extends ElggEntity
 
 			// Is it a GUID
 			} else {
-				$guid = get_user($guid);
-				if (!$this->load($guid)) {
+				if (!$this->loadFromGUID($guid)) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
 			}
@@ -112,6 +111,16 @@ class ElggUser extends ElggEntity
 		}
 
 		return true;
+	}
+	
+	protected function loadFromGUID($guid){
+		$db = new minds\core\data\call('entities');
+		$data = $db->getRow($guid, array('limit'=>500));
+		$data['guid'] = $guid;
+		if($data)
+			return $this->load($data);
+		
+		return false;
 	}
 
 	/**

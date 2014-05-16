@@ -62,7 +62,13 @@ if (!$key || !$secret) {
 <p>Download and install the minds wordpress plugin in your Wordpress installation, then enter the following API settings.</p>
 
 <p>
-    <label>Public Key: </label><?php echo $key; ?><br />
+    <label>Public Key: </label><?php echo $key; echo elgg_view('input/hidden', array('name'=>'params[client_id]', 'value'=>$key))?><br />
     <label>Secret Key: </label><?php echo $secret; ?>
+</p>
+
+<p>For single sign on, please enter your wordpress site</p>
+
+<p>
+	<?php echo elgg_view('input/text', array('name'=>'params[url]', 'value'=>$vars['entity']->url, 'placeholder'=> 'eg. http://wp.minds.com/')); ?>
 </p>
 
