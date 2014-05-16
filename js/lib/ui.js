@@ -90,7 +90,7 @@ elgg.ui.popupOpen = function(event) {
 	// hide if already open
 	if ($target.is(':visible')) {
 		$target.fadeOut();
-		$('body').die('click', elgg.ui.popupClose);
+		$('body').off('click', elgg.ui.popupClose);
 		return;
 	}
 
@@ -99,7 +99,7 @@ elgg.ui.popupOpen = function(event) {
 		.position(options);
 
 	$('body')
-		.die('click', elgg.ui.popupClose)
+		.off('click', elgg.ui.popupClose)
 		.on('click', elgg.ui.popupClose);
 };
 
@@ -137,7 +137,7 @@ elgg.ui.popupClose = function(event) {
 			}
 		});
 
-		$('body').die('click', elgg.ui.popClose);
+		$('body').off('click', elgg.ui.popClose);
 	}
 };
 
