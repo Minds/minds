@@ -33,8 +33,8 @@ END;
 elgg_load_css('minds.default');
 elgg_load_js('minds.js');
 
-$js = elgg_get_loaded_js('head');
-$css = elgg_get_loaded_css();
+$js = minds\core\resources::getLoaded('js','header');
+$css = minds\core\resources::getLoaded('css','header');
 
 $version = get_version();
 $release = get_version(true);
@@ -46,8 +46,8 @@ $release = get_version(true);
 
 	<?php echo elgg_view('page/elements/shortcut_icon', $vars); ?>
 
-<?php foreach ($css as $link) { ?>
-	<link rel="stylesheet" href="<?php echo $link; ?>" type="text/css" />
+<?php foreach ($css as $item) {?>
+	<link rel="stylesheet" href="<?php echo $item['src']; ?>" type="text/css" />
 <?php } ?>
 
 <?php
@@ -66,7 +66,7 @@ $release = get_version(true);
 	<![endif]-->
 
 <?php foreach ($js as $script) { ?>
-	<script type="text/javascript" src="<?php echo $script; ?>"></script>
+	<script type="text/javascript" src="<?php echo $script['src']; ?>"></script>
 <?php } ?>
 
 <?php

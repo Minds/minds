@@ -7,7 +7,7 @@ header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
 		$text = "<span class='$class'>&#59141;</span>";
 	
 // get unread messages
-		$num_notifications = (int)notifications_count_unread();
+		$num_notifications = minds\plugin\notifications\notifcations::getCount();
 		if ($num_notifications > 0) {
 			$class = "notification notifier new";
 			$text = "<span class='$class'>&#59141;" .

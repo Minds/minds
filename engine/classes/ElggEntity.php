@@ -59,11 +59,47 @@ abstract class ElggEntity extends ElggData implements
 
 		$this->attributes['site_guid'] = NULL;
 		$this->attributes['access_id'] = get_default_access();
-		$this->attributes['time_created'] = NULL;
-		$this->attributes['time_updated'] = NULL;
+		$this->attributes['time_created'] = time();
+		$this->attributes['time_updated'] = time();
 		$this->attributes['last_action'] = NULL;
 		$this->attributes['enabled'] = "yes";
 
+	}
+	
+	/**
+	 * Entity constructor
+	 */
+	public function __construct($guid = NULL){
+		$this->initializeAttributes();
+		
+		if($guid){
+			if(is_numeric($guid)){ 
+				$this->loadFromGUID($guid);
+			} elseif(is_object($guid)){
+				$this->loadFromObject($guid);
+			} elseif(is_array($guid)){
+				$this->loadFromArray($guid);
+			}
+		}
+	}
+	
+	private function loadFromGUID($guid){
+		$db = new minds\core\data\call('entities');
+		$row = $db->getRow($guid, array('limit'=>400));
+		$row['guid'] = $guid;
+		$this->loadFromArray($row);
+	}
+	
+	private function loadFromObject($object){
+		foreach($object as $k=>$v){
+			$this->$k = $v;
+		}
+	}
+	
+	private function loadFromArray($array){
+		foreach($array as $k=>$v){
+			$this->$k = $v;
+		}
 	}
 
 	/**
@@ -1193,7 +1229,7 @@ abstract class ElggEntity extends ElggData implements
 			
 			$db = new minds\core\data\call('entities_by_time');
 			foreach($this->getIndexKeys() as $rowkey)
-				$db->removeAttributes($rowkey, array($this->guid));
+				$db->removeAttributes($rowkey, array($this->guid), false);
 				
 			return true;
 		}
