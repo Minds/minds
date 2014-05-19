@@ -427,10 +427,10 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	$offset = "";
 	//$user = get_user_by_username('NaturalSociety');
 	while(true){	
-		$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'),'limit'=>100, 'offset'=>$offset,'newest_first'=>true));
-		$offset = end($scrapers)->guid;
-		if(count($scrapers) <= 1)
+		$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'),'limit'=>24, 'offset'=>$offset,'newest_first'=>true));
+		if($offset == end($scrapers)->guid)
 			break;
+		$offset = end($scrapers)->guid;
 	foreach($scrapers as $scraper){
 		if(!$scraper->getOwnerEntity()){
 			echo "There is no owner \n";
@@ -475,63 +475,63 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			}
 			//check if the id is not in the array, if it is then skip
 			if(!in_array($item->get_id(true), $item_ids)){
-			//if(true){	
-			echo "importing {$item->get_title()} \n";
-			try{
-				$blog = new ElggBlog();
-				$blog->title = $item->get_title();
-				$enclosure = $item->get_enclosure();
-				if(strpos($item->get_permalink(), 'youtube.com/')){
-					$url = parse_url($item->get_permalink());
-					parse_str($url['query']);
-					$w = '100%';
-					$h = 411;
-					$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="//youtube.com/embed/'.$v.'" frameborder="0" allowfullscreen></iframe>';
-					$icon = '<img src="//img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
-					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
-					$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content()); 
-					$blog->description = $embed . $icon . $disclaimer;
-				} else {
-					$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content());
-					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();				
-					if($enclosure){
-						$thumb_url = $enclosure->get_thumbnail();
-                                                if(strpos($thumb_url, 'liveleak.com/')){
-                                                      $thumb_url = str_replace('_thumb_', '_sf_', $thumb_url);
-                                          	}
-                                                $thumb = elgg_view('output/img', array('src'=>$thumb_url, 'width'=>0, 'height'=>0));
-                                                if($player = $enclosure->get_player()) {
-							//check for native embed now, if thats not got any content
-							if($embed = $enclosure->native_embed()){
-								if(strlen($embed) <= 24){
-									$player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0" allowfullscreen="true"></iframe>';             	
-								} else {
-									$player = $embed;
-								}
+				//if(true){	
+				echo "importing {$item->get_title()} \n";
+				try{
+					$blog = new ElggBlog();
+					$blog->title = $item->get_title();
+					$enclosure = $item->get_enclosure();
+					if(strpos($item->get_permalink(), 'youtube.com/')){
+						$url = parse_url($item->get_permalink());
+						parse_str($url['query']);
+						$w = '100%';
+						$h = 411;
+						$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="//youtube.com/embed/'.$v.'" frameborder="0" allowfullscreen></iframe>';
+						$icon = '<img src="//img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
+						//$disclaimer = 'This blog is free & open source, however the embed may not be.';
+						$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content()); 
+						$blog->description = $embed . $icon . $disclaimer;
+					} else {
+						$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content());
+						$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();				
+						if($enclosure){
+							$thumb_url = $enclosure->get_thumbnail();
+							if(strpos($thumb_url, 'liveleak.com/')){
+							      $thumb_url = str_replace('_thumb_', '_sf_', $thumb_url);
 							}
-							$excerpt = strip_tags($item->get_description());
-                                                        $blog->description = $thumb . $player;
-                                                } elseif($player = $enclosure->native_embed()) {
-							var_dump($player);
-							//$blog->description = $thumb . $player;
+							$thumb = elgg_view('output/img', array('src'=>$thumb_url, 'width'=>0, 'height'=>0));
+							if($player = $enclosure->get_player()) {
+								//check for native embed now, if thats not got any content
+								if($embed = $enclosure->native_embed()){
+									if(strlen($embed) <= 24){
+										$player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0" allowfullscreen="true"></iframe>';             	
+									} else {
+										$player = $embed;
+									}
+								}
+								$excerpt = strip_tags($item->get_description());
+								$blog->description = $thumb . $player;
+							} elseif($player = $enclosure->native_embed()) {
+								var_dump($player);
+								//$blog->description = $thumb . $player;
+							}
+							$blog->tags = $enclosure->get_keywords();
 						}
-						$blog->tags = $enclosure->get_keywords();
-                                        }
-				}
-				$blog->owner_guid = $scraper->owner_guid;
-				$blog->license = $scraper->license;
-				$blog->access_id = 2;
-				$blog->status = 'published';
-				$blog->rss_item_id = $item->get_id(true);
-				if(!$scraper->getOwnerEntity()){
-					continue;
-				}
-				$guid = $blog->save();
-				echo 'Saved a blog titled: ' . $blog->title;
-				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid,2, $item->get_date('U'));
-				
-				//make timestamp of last blog so we don't have timezone issues...
-				//$scraper->timestamp = $item->get_date('U');
+					}
+					$blog->owner_guid = $scraper->owner_guid;
+					$blog->license = $scraper->license;
+					$blog->access_id = 2;
+					$blog->status = 'published';
+					$blog->rss_item_id = $item->get_id(true);
+					if(!$scraper->getOwnerEntity()){
+						continue;
+					}
+					$guid = $blog->save();
+					echo 'Saved a blog titled: ' . $blog->title . "\n";
+					add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid,2, $item->get_date('U'));
+					
+					//make timestamp of last blog so we don't have timezone issues...
+					//$scraper->timestamp = $item->get_date('U');
 				}catch(Exception $e){
 					echo "Theere was a probelm with {$item->get_id(true)} \n";
 				}
@@ -546,7 +546,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			$scraper->item_ids = serialize($item_ids);
 			$scraper->save();
 		}	
-	}
+		}
 	}
 	elgg_set_ignore_access(false);
 	return $return_value;	

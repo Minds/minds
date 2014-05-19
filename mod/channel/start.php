@@ -357,7 +357,7 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 
 	$join_date = $user->getTimeCreated();
 	//return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
-	return  $CONFIG->cdn_url . "icon/$user_guid/$size/$join_date/$icon_time";
+	return  $CONFIG->cdn_url . "icon/$user_guid/$size/$join_date/$icon_time/".$CONFIG->lastcache;
 }
 
 /**

@@ -1193,7 +1193,7 @@ abstract class ElggEntity extends ElggData implements
 			
 			$db = new minds\core\data\call('entities_by_time');
 			foreach($this->getIndexKeys() as $rowkey)
-				$db->removeAttributes($rowkey, array($this->guid));
+				$db->removeAttributes($rowkey, array($this->guid), false);
 				
 			return true;
 		}

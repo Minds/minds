@@ -66,8 +66,10 @@ class ElggUser extends ElggEntity
 					$msg = elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid->guid));
 					throw new IOException($msg);
 				}
-
-			// See if this is a username
+			} elseif(is_numeric($guid)){
+                                if (!$this->loadFromGUID($guid)) {
+                                        throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
+                                }
 			} else if (is_string($guid)) {
 				$user = get_user_by_username($guid);
 				if ($user) {
@@ -82,17 +84,10 @@ class ElggUser extends ElggEntity
 				foreach ($guid->attributes as $key => $value) {
 					$this->attributes[$key] = $value;
 				}
-
-			// Is this is an ElggEntity but not an ElggUser = ERROR!
 			} else if ($guid instanceof ElggEntity) {
 				throw new InvalidParameterException(elgg_echo('InvalidParameterException:NonElggUser'));
 
-			// Is it a GUID
-			} else {
-				if (!$this->loadFromGUID($guid)) {
-					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
-				}
-			}
+			} 
 		}
 	}
 
@@ -113,6 +108,11 @@ class ElggUser extends ElggEntity
 	}
 	
 	protected function loadFromGUID($guid){
+		if(is_numeric($guid) && strlen($guid) < 18){
+			$g = new GUID();
+       			$guid = $g->migrate($guid);
+		}
+		
 		$db = new minds\core\data\call('entities');
 		$data = $db->getRow($guid, array('limit'=>500));
 		$data['guid'] = $guid;
