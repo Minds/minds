@@ -14,14 +14,16 @@ class router{
 	 * 
 	 */
 	public function route(){
-
-		$route = rtrim($_SERVER['REQUEST_URI'], '/');
+			
+		$uri = strtok($_SERVER["REQUEST_URI"],'?');
+		$route = rtrim($uri, '/');
 		$segments = explode('/', $route);
 		$method = strtolower($_SERVER['REQUEST_METHOD']);
-		
+	
 		$loop = count($segments);
 		while($loop){
 			$route = rtrim($route, $segments[$loop].'/');
+
 			if(isset(self::$routes[$route])){
 				$handler = new self::$routes[$route]();
 				$pages = array_splice($segments, $loop) ?: array();
@@ -29,6 +31,7 @@ class router{
 			} 
 			--$loop;
 		}
+
 		return $this->legacyRoute(\get_input('handler'), \get_input('page'));
 	
 	}

@@ -554,6 +554,10 @@ function entity_row_to_elggstar($row) {
 	if ($new_entity) {
 		return $new_entity;
 	}
+	
+	if($new_entity = elgg_trigger_plugin_hook('entities_class_loader', 'all', $row))
+		return $new_entity;
+	
 	// load class for entity if one is registered
 	if(isset($row->subtype)){
 		$classname = get_subtype_class_from_id($row->subtype);
@@ -593,7 +597,7 @@ function entity_row_to_elggstar($row) {
 				$new_entity = new ElggWidget($row);
 		                break;
 			case 'notification' : 
-				$new_entity = new ElggNotification($row);
+				$new_entity = new minds\plugin\notifications\entities\notification($row);
 				break;
 			default:
 				$msg = elgg_echo('InstallationException:TypeNotSupported', array($row->type));

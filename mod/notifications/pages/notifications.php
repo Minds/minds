@@ -2,12 +2,17 @@
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/engine/start.php');
 
+$db = new \minds\core\data\call('entities_by_time');
+$guids = $db->getRow('notifications:'.elgg_get_logged_in_user_guid(), array('limit'=> get_input('limit', 12)));
+
+if(!$guids){
+	return false;
+}
 $options = array(
-		'type' => 'notification',
-		'attrs' => array('namespace' => 'notifications:'.get_input('user_guid',elgg_get_logged_in_user_guid())),
-		'limit' => get_input('limit', 12),
-		'offset' => get_input('offset','')
-	);
+	'guids'=>$guids,
+	'limit' => get_input('limit', 12),
+	'offset' => get_input('offset','')
+);
 
 if(get_input('full')){
 	
@@ -33,34 +38,23 @@ if(get_input('full')){
 } else {
 	
 	
+		
+	$user = elgg_get_logged_in_user_entity();
 	
-$user = elgg_get_logged_in_user_entity();
-
-if($user){
-
-
-        $content = elgg_list_entities($options);
+	if($user){
+		$content = elgg_list_entities($options);
+		
+		//	$content .= elgg_view('output/url', array('href'=>'notifications/view', 'text'=>'See more'));
+		
+		echo $content;
+	} else {
+		
+		echo elgg_echo('notifications:not_logged_in');
+		
+	}
 	
-//	$content .= elgg_view('output/url', array('href'=>'notifications/view', 'text'=>'See more'));
-	
-	
-	echo $content;
-} else {
-	
-	echo elgg_echo('notifications:not_logged_in');
-	
-}
+	\minds\plugin\notifications\notifications::resetCounter($user->guid);
+	//notifications_reset_counter($user->guid);
 
-notifications_reset_counter($user->guid);
-
-/*$result = new stdClass();
-//$result->count = $message_count;
-$result->ajax_view = $list;
-
-echo json_encode($result);*/
-
-
-//mark all as read.
-//notifications_mark_read($notifications);
 }
 ?>
