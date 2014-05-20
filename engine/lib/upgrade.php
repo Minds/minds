@@ -176,7 +176,7 @@ function get_version($humanreadable = false) {
 
 	if (isset($CONFIG->path)) {
 		if (!isset($version) || !isset($release)) {
-			if (!include($CONFIG->path . "version.php")) {
+			if (!include(__MINDS_ROOT__ . "/version.php")) {
 				return false;
 			}
 		}
