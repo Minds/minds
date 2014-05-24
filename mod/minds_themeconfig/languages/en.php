@@ -2,8 +2,11 @@
 
 
 $english = array(
-	'admin:appearance:theme' => 'General',
-	'admin:appearance:footer' => 'Footer',
+	'admin:appearance:theme' => 'Configure theme',
+	'admin:appearance:fonts' => 'Configure fonts',
+	'minds_themeconfig:font_size:header' => 'Header size',
+	'admin:appearance:css' => 'Edit CSS directly (Advanced)',
+	'admin:appearance:footer' => 'Copyright message and social links',
 	'admin:appearance:themesets' => 'Themesets',
 	'admin:monitization' => 'Monetization',
 	'admin:monitization:ads' => 'Ads',
@@ -19,10 +22,26 @@ $english = array(
     
         'minds_themeconfig:advanced' => 'Advanced settings...',
         'minds_themeconfig:custom_css' => 'Custom CSS',
-    	
+    
+    'minds_themeconfig:background:colour' => 'Background colour',
+    'minds_themeconfig:sidebar:colour' => 'Sidebar colour',
+    'minds_themeconfig:main:colour' => 'Main panel colour',
+    'minds_themeconfig:topbar:colour' => 'Minds topbar colour',
+    'minds_themeconfig:button:colour' => 'Button colour',
+    'minds_themeconfig:carousel:colour' => 'Carousel colour',
 
         'minds_themeconfig:frontpagetext' => 'Front page text',
 	'minds_themeconfig:font:header' => 'Header font',
+    'minds_themeconfig:font_colour:header' => 'Header colour',
+    
+     'minds_themeconfig:font:subheading' => 'Subheading font',
+    'minds_themeconfig:font_size:subheading' => 'Subheading size',
+    'minds_themeconfig:font_colour:subheading' => 'Subheading colour',
+    
+	'minds_themeconfig:font:paragraph' => 'Paragraph text',
+	'minds_themeconfig:font_size:paragraph' => 'Parargraph text size',
+    'minds_themeconfig:font_colour:paragraph' => 'Paragraph colour'
+	
 );
 		
 add_translation("en", $english);

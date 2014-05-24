@@ -61,7 +61,7 @@
             'upscale' => true
         )
     ) as $name => $size_info) { 
-        $resized = get_resized_image_from_uploaded_file('favicon', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'jpeg');
+        $resized = get_resized_image_from_uploaded_file('favicon', $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale'], 'jpeg');
 
         if ($resized) {
             global $CONFIG;
@@ -122,8 +122,21 @@
     // Save background colour
     elgg_set_plugin_setting('background_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('background_colour')), "minds_themeconfig");
     
+    // Sidebar colour
+    elgg_set_plugin_setting('sidebar_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('sidebar_colour')), "minds_themeconfig");
+    
+    // Main bar colour
+    elgg_set_plugin_setting('main_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('main_colour')), "minds_themeconfig");
+    
+    // Minds topbar colour
+    elgg_set_plugin_setting('topbar_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('topbar_colour')), "minds_themeconfig");
+    
+    // Button colour
+    elgg_set_plugin_setting('button_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('button_colour')), "minds_themeconfig");
+    
+    // carousel colour
+    elgg_set_plugin_setting('carousel_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('carousel_colour')), "minds_themeconfig");
+    
     // Save text colour
     elgg_set_plugin_setting('text_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('text_colour')), "minds_themeconfig");
     
-    // Save custom CSS
-    elgg_set_plugin_setting('custom_css', get_input('custom_css'), "minds_themeconfig");

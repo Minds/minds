@@ -3,13 +3,19 @@
 elgg_register_event_handler('init', 'system', 'themeconfig_init',99999);
 
 function themeconfig_init() {
+    global $CONFIG;
 
     elgg_register_admin_menu_item('configure', 'theme', 'appearance');
+    elgg_register_admin_menu_item('configure', 'css', 'appearance');
+    //elgg_register_admin_menu_item('configure', 'fonts', 'appearance');
     elgg_register_admin_menu_item('configure', 'themesets', 'appearance');
     elgg_register_admin_menu_item('configure', 'footer', 'appearance');
     elgg_register_admin_menu_item('configure', 'ads', 'monitization');
 
     elgg_register_action('theme/edit', dirname(__FILE__) . '/actions/edit.php', 'admin');
+    elgg_register_action('theme/fonts', dirname(__FILE__) . '/actions/fonts.php', 'admin');
+    elgg_register_action('theme/advanced_css', dirname(__FILE__) . '/actions/advanced_css.php', 'admin');
+    elgg_register_action('theme/advanced_css_preview', dirname(__FILE__) . '/actions/advanced_css_preview.php', 'admin');
     elgg_register_action('footer/edit', dirname(__FILE__) . '/actions/footer/edit.php', 'admin');
     elgg_register_action('themesets/edit', dirname(__FILE__) . '/actions/themesets/edit.php', 'admin');
     elgg_register_action('ads/edit', dirname(__FILE__) . '/actions/ads/edit.php', 'admin');
@@ -19,13 +25,31 @@ function themeconfig_init() {
     elgg_register_page_handler('themeicons', 'themeicons_page_handler');
 
     elgg_register_event_handler('pagesetup', 'system', function() {
-        // Extend the css
-        elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
+        // Extend the css (only if it's not the admin page)
+        if (elgg_get_context() != 'admin')
+	    elgg_extend_view('page/elements/head', 'minds_themeconfig/css');
+	
+	// Add colour picker
+	if (elgg_get_context() == 'admin')
+	    elgg_extend_view('page/elements/head', 'minds_themeconfig/colourpicker');
+	
+	
 	elgg_unextend_view('page/elements/ads', 'minds/ads'); //remove the default ads
 	elgg_extend_view('page/elements/ads', 'minds_themeconfig/ads');
     }, 999);
 
     elgg_register_event_handler('pagesetup', 'system', 'minds_themeconfig_setup');
+    
+    // Configure font elements that we can set
+    $CONFIG->theme_fonts = array(
+	'header' => 'h2',
+	'subheading' => 'h3',
+	'paragraph' => 'p',
+    );
+    
+    $url = elgg_get_simplecache_url('css', 'minds_themeconfig');
+    elgg_register_css('minds.themeconfig', $url);
+    elgg_load_css('minds.themeconfig');
 }
 
 function themeicons_page_handler($pages) {
