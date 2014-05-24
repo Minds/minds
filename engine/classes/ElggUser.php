@@ -68,14 +68,13 @@ class ElggUser extends ElggEntity
 				}
 
 			// See if this is a username
-/*			} else if (is_string($guid)) {
+			} else if (is_string($guid) && !is_numeric($guid)) {
 				$user = get_user_by_username($guid);
 				if ($user) {
 					foreach ($user->attributes as $key => $value) {
 						$this->attributes[$key] = $value;
 					}
 				}
-*/
 			// Is $guid is an ElggUser? Use a copy constructor
 			} else if ($guid instanceof ElggUser) {
 				elgg_deprecated_notice('This type of usage of the ElggUser constructor was deprecated. Please use the clone method.', 1.7);

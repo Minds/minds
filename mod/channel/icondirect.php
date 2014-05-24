@@ -15,10 +15,19 @@ if (!isset($_GET['guid'])) {
 }
 
 $guid = $_GET['guid'];
+if(is_numeric($guid) && strlen($guid) < 18){
+	$g = new GUID();
+	$guid = $g->migrate($guid);
+}
+
 $user = new ElggUser($guid);
 
 $join_date = $user->time_created;
 $last_cache = (int)$_GET['lastcache']; // icontime
+
+if(isset($user->legacy_guid)){
+	$guid = $user->legacy_guid;
+}
 
 // If is the same ETag, content didn't changed.
 $etag = $last_cache . $guid;

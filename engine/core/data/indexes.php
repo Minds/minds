@@ -23,8 +23,8 @@ class indexes extends call{
 		$this->namespace = $namespace . ':';
 	}
 	
-	public function set($name, array $uuids = array()){
-		$this->insert($this->namespace.$name, $uuids);
+	public function set($name, array $guids = array()){
+		$this->insert($this->namespace.$name, $guids);
 	}
 	
 		/**
@@ -39,6 +39,10 @@ class indexes extends call{
 		} catch (\Exception $e){
 			return false;
 		}
+	}
+	
+	public function remove($key, array $guids = array()){
+		$this->removeAttributes($key, $guids);
 	}
 	
 }

@@ -17,7 +17,7 @@ use phpcassa\Index\IndexClause;
 use phpcassa\Index\IndexExpression;
 use phpcassa\Schema\DataType\LongType;
 use phpcassa\UUID;
-
+require_once('elgglib.php');
 global $MULTI_DB;
 $MULTI_DB = new stdClass();
 //make a database class for caching etc

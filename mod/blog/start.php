@@ -424,19 +424,20 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	elgg_set_context('scraper');
 //	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
-	$i = 0;
 	$offset = "";
+	//$user = get_user_by_username('NaturalSociety');
 	while(true){	
 		$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>12, 'offset'=>$offset));
 		if(!$scrapers || $offset == end($scrapers)->guid)
-			break;
+		break;
 		$offset = end($scrapers)->guid;
 	foreach($scrapers as $scraper){
 		if(!$scraper->getOwnerEntity()){
+			echo "There is no owner \n";
 			continue;
 		}
 		//if the site was scraped in the last 15 mins then skip
-		echo "loading $scraper->title \n";
+		echo "$scraper->guid - loading $scraper->title \n";
 		//why would it be an array sometimes?? it is though
 		if(is_array($scraper->timestamp)){
 			$scraper->timestamp = $scraper->timestamp[0];
@@ -445,13 +446,21 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			echo "canceling... scraped it withing the last 5 mins \n";
 			continue;
 		}
-		$feed = new SimplePie($scraper->feed_url);
-		//swamp the orderring so we do the latest, last
-		if(!$feed){
-			echo "$scraper->title coult not find any content";
+		if(!$scraper->feed_url || $scraper->feed_url == ""){
+			echo "No url found... \n";
+			$scraper->delete();
 			continue;
 		}
-		array_reverse($feed);
+		$feed = new SimplePie();
+		$feed->set_feed_url($scraper->feed_url);
+		$feed->enable_cache(false);
+		$feed->init();
+		//swamp the orderring so we do the latest, last
+		if(!$feed){
+			echo "$scraper->title coult not find any content \n";
+			continue;
+		}
+		@array_reverse($feed);
 		
 		//we load an array of previously collected rss ids
 		$item_ids = unserialize($scraper->item_ids) == false ? array() : unserialize($scraper->item_ids);
@@ -461,11 +470,13 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			// or else we get duplicates!
 			if($item->get_date('U') > $scraper->timestamp && $item->get_date('U') < time()){
 			} else {
-			continue;
+				echo "Skipping because there aren't any new items \n";
+				continue;
 			}
 			//check if the id is not in the array, if it is then skip
 			if(!in_array($item->get_id(true), $item_ids)){
 			//if(true){	
+			echo "importing {$item->get_title()} \n";
 			try{
 				$blog = new ElggBlog();
 				$blog->title = $item->get_title();
@@ -522,9 +533,12 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 				//make timestamp of last blog so we don't have timezone issues...
 				//$scraper->timestamp = $item->get_date('U');
 				}catch(Exception $e){
+					echo "Theere was a probelm with {$item->get_id(true)} \n";
 				}
 				array_push($item_ids, $item->get_id(true));
 				$n++;
+			} else {
+				echo "Already imported... skipping \n";
 			}
 		}
 		//$scraper->timestamp = time();

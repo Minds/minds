@@ -23,7 +23,7 @@ switch($type){
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script></div>';*/
-        echo '<div class="mobile-ad"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+/*        echo '<div class="mobile-ad"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- 2nd Mobile Ad -->
 <ins class="adsbygoogle"
      style="display:inline-block;width:320px;height:100px"
@@ -32,7 +32,9 @@ switch($type){
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script></div>';
-        break;
+*/
+	echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='728';  medianet_height= '90';  medianet_crid='451826483';  </script>  <script id=\"mNSC\" src=\"//contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script> ";  
+      break;
 	case 'taboola':
 	case 'content-below-banner':
 	echo "<div id='taboola-below-main-column'></div>
@@ -55,9 +57,8 @@ placement:'below-main-column'});
 
 	case 'large':
 	default:
-echo '<div class="mobile-ad"><script type="text/javascript"><!--
+/*echo '<div class="mobile-ad"><script type="text/javascript"><!--
                 google_ad_client = "ca-pub-9303771378013875";
-                /* Minds large block */
                 google_ad_slot = "5788264423";
                 google_ad_width = 336;
                 google_ad_height = 280;
@@ -66,5 +67,6 @@ echo '<div class="mobile-ad"><script type="text/javascript"><!--
                 <script type="text/javascript"
                         src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                 </script></div>';
-
+*/
+echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='728';  medianet_height= '90';  medianet_crid='451826483';  </script>  <script id=\"mNSC\" src=\"//contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script> ";
 }

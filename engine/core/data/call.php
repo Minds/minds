@@ -17,6 +17,7 @@ use phpcassa\Schema\DataType\LongType;
 use phpcassa\UUID;
 
 use minds\core;
+use minds\core\config;
 
 class call extends core\base{
 
@@ -27,8 +28,9 @@ class call extends core\base{
 	static $counts = 0;
 	
 	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL){
-		
 		global $CONFIG;
+		
+		
 		require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/vendors/phpcassa/lib/autoload.php');
 		
 		$this->servers = $servers ?: $CONFIG->cassandra->servers;
@@ -69,7 +71,8 @@ class call extends core\base{
 						'newsfeed' => array(),
 						'timeline' => array(),
 						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ),
-                                                'api_users' => array('secret'=>'UTF8Type'),
+                        'api_users' => array('secret'=>'UTF8Type'),
+                        'log' => array(),
 				);
 		foreach($cfs as $cf => $indexes){
 			$this->createCF($cf, $indexes);
@@ -302,7 +305,7 @@ class call extends core\base{
 	 */
 	public function createKeyspace(array $attrs = array()){
 		$sys = new SystemManager($this->servers[0]);
-		$keyspace = $sys->create_keyspace($this->keyspace, array());
+		$keyspace = $sys->create_keyspace($this->keyspace, $attrs);
 		
 		self::__construct(null, $this->keyspace, $this->servers);
 		

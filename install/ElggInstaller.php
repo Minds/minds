@@ -1,42 +1,11 @@
 <?php
 
 /**
- * Elgg Installer.
- * Controller for installing Elgg. Supports both web-based on CLI installation.
- *
- * This controller steps the user through the install process. The method for
- * each step handles both the GET and POST requests. There is no XSS/CSRF protection
- * on the POST processing since the installer is only run once by the administrator.
- *
- * The installation process can be resumed by hitting the first page. The installer
- * will try to figure out where to pick up again.
- *
- * All the logic for the installation process is in this class, but it depends on
- * the core libraries. To do this, we selectively load a subset of the core libraries
- * for the first few steps and then load the entire engine once the database and
- * site settings are configured. In addition, this controller does its own session
- * handling until the database is setup.
- *
- * There is an aborted attempt in the code at creating the data directory for
- * users as a subdirectory of Elgg's root. The idea was to protect this directory
- * through a .htaccess file. The problem is that a malicious user can upload a
- * .htaccess of his own that overrides the protection for his user directory. The
- * best solution is server level configuration that turns off AllowOverride for the
- * data directory. See ticket #3453 for discussion on this.
- *
- * @package    Elgg.Core
- * @subpackage Installer
+ * Installs Minds.
+ * 
+ * @todo Make this a lot cleaner and SMALLER
+ * 
  */
-
-use phpcassa\ColumnFamily;
-use phpcassa\ColumnSlice;
-use phpcassa\Connection\ConnectionPool;
-use phpcassa\SystemManager;
-use phpcassa\Schema\StrategyClass;
-use phpcassa\Index\IndexClause;
-use phpcassa\Index\IndexExpression;
-use phpcassa\Schema\DataType\LongType;
-use phpcassa\UUID;
 
 class ElggInstaller {
 
@@ -47,7 +16,7 @@ class ElggInstaller {
 		'settings',
 		'admin',
 		'complete',
-		);
+	);
 
 	protected $status = array(
 		'config' => FALSE,
@@ -64,18 +33,16 @@ class ElggInstaller {
 	 * Constructor bootstraps the Elgg engine
 	 */
 	public function __construct() {
-		// load ElggRewriteTester as we depend on it
-		require_once(dirname(__FILE__) . "/ElggRewriteTester.php");
-		require_once(dirname(dirname(__FILE__)) . '/vendors/phpcassa/lib/autoload.php');	
+		
+		define('__MINDS_INSTALLING__', true);
+		
+		require_once(__MINDS_ROOT__. '/engine/autoload.php');
+		$minds = new minds\core\minds();
+		$minds->loadLegacy();
+		
 		$this->isAction = $_SERVER['REQUEST_METHOD'] === 'POST';
 		
 		$this->bootstrapConfig();
-
-		$this->bootstrapEngine();
-		require_once(dirname(dirname(__FILE__)) . '/engine/autoload.php');
-
-		setcookie('loggedin', 1, time()+360);
-		$_SESSION['force'] = true;		
 
 		elgg_set_viewtype('installation');
 
@@ -84,6 +51,62 @@ class ElggInstaller {
 
 		register_translations(dirname(__FILE__) . '/languages/', TRUE);
 	}
+	
+	/**
+	 * Bootstraping
+	 */
+	/**
+	 * Set up configuration variables
+	 *
+	 * @return void
+	 */
+	protected function bootstrapConfig() {
+		global $CONFIG;
+		if (!isset($CONFIG)) {
+			$CONFIG = new stdClass;
+		}
+
+		$CONFIG->wwwroot = $this->getBaseUrl();
+		$CONFIG->url = $CONFIG->wwwroot;
+		$CONFIG->default_path = dirname(dirname(__FILE__)) . '/';
+		$CONFIG->viewpath =	$CONFIG->default_path . 'views/';
+		$CONFIG->pluginspath = $CONFIG->default_path . 'mod/';
+		$CONFIG->context = array();
+		$CONFIG->entity_types = array('group', 'object', 'site', 'user');
+	}
+	/**
+	 * Load remaining engine libraries and complete bootstraping (see start.php)
+	 *
+	 * @param string $step Which step to boot strap for. Required because
+	 *                     boot strapping is different until the DB is populated.
+	 *
+	 * @return void
+	 */
+	protected function finishBootstraping($step) {
+
+		$dbIndex = array_search('database', $this->getSteps());
+		$settingsIndex = array_search('settings', $this->getSteps());
+		$adminIndex = array_search('admin', $this->getSteps());
+		$completeIndex = array_search('complete', $this->getSteps());
+		$stepIndex = array_search($step, $this->getSteps());
+
+		if ($stepIndex > $dbIndex) {
+			// once the database has been created, load rest of engine
+			global $CONFIG;
+			$minds = new minds\core\minds();
+			$minds->loadConfigs();
+			//$minds->start();//we can start the engine now
+
+			if ($stepIndex > $settingsIndex) {
+				$CONFIG->site_guid = (int) datalist_get('default_site');
+				$CONFIG->site_id = $CONFIG->site_guid;
+				$CONFIG->site = get_entity($CONFIG->site_guid, 'site');
+				$CONFIG->dataroot = datalist_get('dataroot');
+			}
+			
+		}
+	}
+
 
 	/**
 	 * Dispatches a request to one of the step controllers
@@ -93,9 +116,6 @@ class ElggInstaller {
 	 * @return void
 	 */
 	public function run($step) {
-
-		// check if this is a URL rewrite test coming in
-		$this->processRewriteTest();
 
 		if (!in_array($step, $this->getSteps())) {
 			$msg = elgg_echo('InstallationException:UnknownStep', array($step));
@@ -180,10 +200,10 @@ class ElggInstaller {
 		$params['password1'] = $params['password2'] = $params['password'];
 
 		if ($createHtaccess) {
-			$rewriteTester = new ElggRewriteTester();
+			/*$rewriteTester = new ElggRewriteTester();
 			if (!$rewriteTester->createHtaccess()) {
 				throw new InstallationException(elgg_echo('install:error:htaccess'));
-			}
+			}*/
 		}
 
 		$this->setInstallStatus();
@@ -263,7 +283,7 @@ class ElggInstaller {
 	/**
 	 * Requirements controller
 	 *
-	 * Checks version of php, libraries, permissions, and rewrite rules
+	 * Checks version of php, libraries, permissions
 	 *
 	 * @param array $vars Vars
 	 *
@@ -276,8 +296,6 @@ class ElggInstaller {
 		// check PHP parameters and libraries
 		$this->checkPHP($report);
 
-		// check URL rewriting
-		$this->checkRewriteRules($report);
 
 		// check for existence of settings file
 		if ($this->checkSettingsFile($report) != TRUE) {
@@ -422,12 +440,6 @@ class ElggInstaller {
 				),
 		);
 
-		// if Apache, we give user option of having Elgg create data directory
-		//if (ElggRewriteTester::guessWebServer() == 'apache') {
-		//	$formVars['dataroot']['type'] = 'combo';
-		//	$CONFIG->translations['en']['install:settings:help:dataroot'] =
-		//			$CONFIG->translations['en']['install:settings:help:dataroot:apache'];
-		//}
 
 		if ($this->isAction) {
 			do {
@@ -534,6 +546,9 @@ class ElggInstaller {
 		} else {
 			$params['destination'] = 'index.php';
 		}
+		
+		$this->disableInstallation();
+
 		forward( 'register/orientation');
 	//	$this->render('complete', $params);
 	}
@@ -617,46 +632,6 @@ class ElggInstaller {
 			return;
 		}
 
-		/*if (!include_once("{$CONFIG->default_path}engine/lib/database.php")) {
-			$msg = elgg_echo('InstallationException:MissingLibrary', array('database.php'));
-			throw new InstallationException($msg);
-		}*/
-
-		// check that the config table has been created
-		$query = "show tables";
-		$result = get_data($query);
-		if ($result) {
-			foreach ($result as $table) {
-				$table = (array) $table;
-				if (in_array("{$CONFIG->dbprefix}config", $table)) {
-					$this->status['database'] = TRUE;
-				}
-			}
-			if ($this->status['database'] == FALSE) {
-				return;
-			}
-		} else {
-			// no tables
-			return;
-		}
-
-		// check that the config table has entries
-		$query = "SELECT COUNT(*) AS total FROM {$CONFIG->dbprefix}config";
-		$result = get_data($query);
-		if ($result && $result[0]->total > 0) {
-			$this->status['settings'] = TRUE;
-		} else {
-			return;
-		}
-
-		// check that the users entity table has an entry
-		$query = "SELECT COUNT(*) AS total FROM {$CONFIG->dbprefix}users_entity";
-		$result = get_data($query);
-		if ($result && $result[0]->total > 0) {
-			$this->status['admin'] = TRUE;
-		} else {
-			return;
-		}
                 
 	}
 
@@ -669,12 +644,22 @@ class ElggInstaller {
 	 * @return void
 	 */
 	protected function checkInstallCompletion($step) {
+		global $CONFIG; 
+		if(isset($CONFIG->fully_installed) && $CONFIG->fully_installed){
+			exit;
+		}
 		if ($step != 'complete') {
 			if (!in_array(FALSE, $this->status)) {
 				// install complete but someone is trying to view an install page
 				forward();
 			}
-		}
+		} 
+	}
+	
+	protected function disableInstallation(){
+		$file_data = file_get_contents(__MINDS_ROOT__.'/engine/settings.php');
+		$file_data .= "\n\n \$CONFIG->fully_installed = true; \n\n";
+		file_put_contents(__MINDS_ROOT__.'/engine/settings.php', $file_data);
 	}
 
 	/**
@@ -709,122 +694,7 @@ class ElggInstaller {
 		forward("install.php?step=complete");
 	}
 
-	/**
-	 * Bootstraping
-	 */
-
-	/**
-	 * Load the essential libraries of the engine
-	 *
-	 * @return void
-	 */
-	protected function bootstrapEngine() {
-		global $CONFIG;
-
-		$lib_dir = "{$CONFIG->default_path}engine/lib/";
-
-		// bootstrapping with required files in a required order
-		$required_files = array(
-			'elgglib.php', 'views.php', 'access.php', 'system_log.php', 'export.php', 
-			'configuration.php', 'sessions.php', 'languages.php', 'pageowner.php',
-			'input.php', 'cache.php', 'output.php',
-		);
-
-		foreach ($required_files as $file) {
-			$path = $lib_dir . $file;
-			if (!include_once($path)) {
-				echo "Could not load file '$path'. "
-					. 'Please check your Elgg installation for all required files.';
-				exit;
-			}
-		}
-	}
-
-	/**
-	 * Load remaining engine libraries and complete bootstraping (see start.php)
-	 *
-	 * @param string $step Which step to boot strap for. Required because
-	 *                     boot strapping is different until the DB is populated.
-	 *
-	 * @return void
-	 */
-	protected function finishBootstraping($step) {
-
-		$dbIndex = array_search('database', $this->getSteps());
-		$settingsIndex = array_search('settings', $this->getSteps());
-		$adminIndex = array_search('admin', $this->getSteps());
-		$completeIndex = array_search('complete', $this->getSteps());
-		$stepIndex = array_search($step, $this->getSteps());
-
-		//if ($stepIndex > $dbIndex) {
-			// once the database has been created, load rest of engine
-			global $CONFIG;
-			$lib_dir = "{$CONFIG->default_path}engine/lib/";
-
-			$this->loadSettingsFile();
-
-			$lib_files = array(
-				// these want to be loaded first apparently?
-				'database.php', 'actions.php',
-
-				'admin.php', 'annotations.php',
-				'calendar.php', 'cron.php', 'entities.php',
-				'extender.php', 'filestore.php', 'group.php',
-				'location.php', 'mb_wrapper.php',
-				'memcache.php', 'metadata.php', 'metastrings.php',
-				'navigation.php', 'notification.php',
-				'objects.php', 'opendd.php', 'pagehandler.php',
-				'pam.php', 'plugins.php',
-				'private_settings.php', 'relationships.php', 'river.php',
-				'sites.php', 'statistics.php', 'tags.php', 'user_settings.php',
-				'users.php', 'upgrade.php', 'web_services.php',
-				'widgets.php', 'xml.php', 'xml-rpc.php',
-				'deprecated-1.7.php', 'deprecated-1.8.php',
-			);
-
-			foreach ($lib_files as $file) {
-				$path = $lib_dir . $file;
-				if (!include_once($path)) {
-					$msg = elgg_echo('InstallationException:MissingLibrary', array($file));
-					throw new InstallationException($msg);
-				}
-			}
-
-			//setup_db_connections();
-			register_translations(dirname(dirname(__FILE__)) . "/languages/");
-
-			if ($stepIndex > $settingsIndex) {
-				$CONFIG->site_guid = (int) datalist_get('default_site');
-				$CONFIG->site_id = $CONFIG->site_guid;
-				$CONFIG->site = get_entity($CONFIG->site_guid, 'site');
-				$CONFIG->dataroot = datalist_get('dataroot');
-			}
-			
-			elgg_load_plugins(); 
-			elgg_trigger_event('init', 'system');
-			  _elgg_session_boot(true);//boot the session
-	//	}
-	}
-
-	/**
-	 * Set up configuration variables
-	 *
-	 * @return void
-	 */
-	protected function bootstrapConfig() {
-		global $CONFIG;
-		if (!isset($CONFIG)) {
-			$CONFIG = new stdClass;
-		}
-
-		$CONFIG->wwwroot = $this->getBaseUrl();
-		$CONFIG->url = $CONFIG->wwwroot;
-		$CONFIG->default_path = dirname(dirname(__FILE__)) . '/';
-		$CONFIG->viewpath =	$CONFIG->default_path . 'views/';
-		$CONFIG->pluginspath = $CONFIG->default_path . 'mod/';
-		$CONFIG->context = array();
-		$CONFIG->entity_types = array('group', 'object', 'site', 'user');
-	}
+	
 
 	/**
 	 * Get the best guess at the base URL
@@ -1075,33 +945,7 @@ class ElggInstaller {
 		}
 	}
 
-	/**
-	 * Confirm that the rewrite rules are firing
-	 *
-	 * @param array &$report The requirements report array
-	 *
-	 * @return void
-	 */
-	protected function checkRewriteRules(&$report) {
-		global $CONFIG;
 
-		$tester = new ElggRewriteTester();
-		$url = elgg_get_site_url() . "rewrite.php";
-		$report['rewrite'] = array($tester->run($url, $CONFIG->default_path));
-	}
-
-	/**
-	 * Check if the request is coming from the URL rewrite test on the
-	 * requirements page.
-	 *
-	 * @return void
-	 */
-	protected function processRewriteTest() {
-		if (strpos($_SERVER['REQUEST_URI'], 'rewrite.php') !== FALSE) {
-			echo 'success';
-			exit;
-		}
-	}
 
 	/**
 	 * Count the number of failures in the requirements report
@@ -1160,9 +1004,9 @@ class ElggInstaller {
 	protected function checkDatabaseSettings($server, $keyspace) {
 
 		try{
-			$sys = new SystemManager($server);
+			$db = new minds\core\data\call(NULL, $keyspace, array($server));
 			$attrs = array(	  "strategy_options" => array("replication_factor" => "2"));	
-                        $sys->create_keyspace($keyspace, $attrs);
+			$db->createKeyspace($attrs);
 			return true;
 		} catch (Exception $e){
 			register_error(elgg_echo('install:error:databasesettings'));
@@ -1230,7 +1074,8 @@ class ElggInstaller {
 		}
 		
 		try  {
-			$this->cassandra = new SystemManager($CONFIG->cassandra->servers[0]);	
+			$db = new minds\core\data\call(NULL, NULL,$CONFIG->cassandra->servers);	
+			$db->keyspaceExists();
 		} catch (Exception $e) {
 			register_error($e->getMessage());
 			return FALSE;
@@ -1408,7 +1253,7 @@ class ElggInstaller {
 					'default_site' => $site->getGUID(),
 					'site_secret' => md5(rand() . microtime())
 				);
-
+				
 		$this->createSettingsFile($settings);
 
 		set_config('view', 'default', $guid);
@@ -1461,9 +1306,15 @@ class ElggInstaller {
 			'minds'
 		);
 		foreach($defaults as $plugin_id){
-			$plugin = new ElggPlugin($plugin_id);
-			$plugin->setPriority('last');
-			$plugin->activate();
+			try{
+				$plugin = new ElggPlugin($plugin_id);
+				$plugin->save();
+			//	$plugin->setPriority('last');
+				$plugin->activate();
+			} catch(Exception $e){
+				
+				var_dump($e);
+			}
 		}
 
 	}

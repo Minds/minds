@@ -33,11 +33,12 @@ function minds_init(){
 
 	//register our own css files
 	$url = elgg_get_simplecache_url('css', 'minds');
-	elgg_register_css('minds.default', $url);	
+	elgg_register_css('minds.default', $url, 2);	
+	elgg_load_css('minds');
 	
 	//register our own js files
 	$minds_js = elgg_get_simplecache_url('js', 'minds');
-	elgg_register_js('minds.js', $minds_js, 'footer');//masonry needs to load first...
+	elgg_register_js('minds.js', $minds_js, 'footer', 800);//masonry needs to load first...
 	
 	//plugin for cookie manipulation via JS
 	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js', 'footer');
@@ -61,9 +62,9 @@ function minds_init(){
 	elgg_register_js('jquery', elgg_get_site_url() . 'vendors/jquery/jquery-1.11.0.js', 'head');
 	elgg_load_js('jquery');
 
-	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js','head');
+	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js','header',600);
 	elgg_load_js('jquery-masonry');
-	elgg_register_js('jquery-imagesLoaded', elgg_get_site_url() . 'mod/minds/vendors/masonry/imagesLoaded.min.js','head');	
+	elgg_register_js('jquery-imagesLoaded', elgg_get_site_url() . 'mod/minds/vendors/masonry/imagesLoaded.min.js','header',700);	
 	elgg_load_js('jquery-imagesLoaded');
 
 	//register jquery.form

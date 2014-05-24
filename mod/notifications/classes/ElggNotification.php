@@ -89,7 +89,7 @@ class ElggNotification extends ElggEntity{
 		$db = new minds\core\data\call('entities_by_time');
 		$db->insert('notifications:'.$this->to_guid, array($guid => $guid));
 
-		notifications_increase_counter($this->to_guid);
+		minds\plugin\notifications\notifications::increaseCounter($this->to_guid);
 
 		return $guid;
 	}

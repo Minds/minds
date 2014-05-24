@@ -330,6 +330,8 @@ function elgg_load_plugins() {
 		}
 	}
 
+	elgg_trigger_event('plugins_loaded', 'plugin');
+
 	return $return;
 }
 
@@ -1095,6 +1097,14 @@ function plugins_test($hook, $type, $value, $params) {
 	return $value;
 }
 
+function elgg_plugins_loaded_event_hook($event, $object_type, $params){
+	// This validates the view type - first opportunity to do it is after plugins load.
+	$view_type = elgg_get_viewtype();
+	if (!elgg_is_valid_view_type($view_type)) {
+		elgg_set_viewtype('default');
+	}
+}
+
 /**
  * Initialize the plugin system
  * Listens to system init and registers actions
@@ -1104,6 +1114,8 @@ function plugins_test($hook, $type, $value, $params) {
  */
 function plugin_init() {
 	run_function_once("plugin_run_once");
+	
+	elgg_register_event_handler('plugins_loaded', 'plugin', 'elgg_plugins_loaded_event_hook');
 
 	elgg_register_plugin_hook_handler('unit_test', 'system', 'plugins_test');
 

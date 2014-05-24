@@ -1,7 +1,6 @@
 <?php
 
 $type = elgg_extract('type', $vars, 'content-side');
-
 switch($type){
 	case 'content-side':	
 		if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
@@ -36,8 +35,8 @@ switch($type){
      data-ad-slot="5788264423"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
-</script>';*/
-echo 'ad to go here';
+</script>'*/;
+	echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='336';  medianet_height= '280';  medianet_crid='637466202';  </script>  <script id=\"mNSC\" src=\"//contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script>";
 	echo "<div id='taboola-right-rail-thumbs-3rd-mix'></div>
 <script type=\"text/javascript\">
 
@@ -65,7 +64,7 @@ echo 'ad to go here';
 		if(elgg_get_plugin_user_setting('adblock2', elgg_get_page_owner_guid(), 'minds')){
                 	echo elgg_get_plugin_user_setting('adblock2', elgg_get_page_owner_guid(), 'minds');
         	} else {
-        	echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        /*	echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Minds large block -->
 <ins class="adsbygoogle"
      style="display:inline-block;width:336px;height:280px"
@@ -73,7 +72,8 @@ echo 'ad to go here';
      data-ad-slot="5788264423"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
-</script>';
+</script>';*/
+		echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='336';  medianet_height= '280';  medianet_crid='637466202';  </script>  <script id=\"mNSC\" src=\"//contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script>";
         	}
 	break;
 	case 'content-below-banner':
@@ -81,7 +81,7 @@ echo 'ad to go here';
         	if(elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds')){
                 	echo elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds');
         	} else {
-                	echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+              /*  	echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Page Top Banner -->
 <ins class="adsbygoogle"
      style="display:inline-block;width:728px;height:90px"
@@ -89,7 +89,8 @@ echo 'ad to go here';
      data-ad-slot="9810862421"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
-</script>';
+</script>';*/
+	echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='600';  medianet_height= '250';  medianet_crid='266435425';  </script>  <script id=\"mNSC\" src=\"http://contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script> ";
         	}
 		echo '</div></div>';
 	break;

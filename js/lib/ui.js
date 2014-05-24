@@ -100,7 +100,7 @@ elgg.ui.popupOpen = function(event) {
 
 	$('body')
 		.off('click', elgg.ui.popupClose)
-		.off('click', elgg.ui.popupClose);
+		.on('click', elgg.ui.popupClose);
 };
 
 /**
