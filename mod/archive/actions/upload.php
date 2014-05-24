@@ -16,7 +16,7 @@ $desc = get_input("description");
 $access_id = (int) get_input("access_id");
 $license = get_input("license");
 $tags = get_input("tags");
-$mime_type = get_input("fileType");
+$mime_type = get_input("fileType", tp_upload_get_mimetype($_FILES['fileData']['name']));
 $entryId = get_input("entryId");
 //If the entity doesn't exsits then entityId will be null and will be created later.
 $guid = get_input("guid");
@@ -89,7 +89,8 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
 	if($album_guid){
 		$album = get_entity($album_guid, 'object');
 	} else {
-		$album = $image->getContainerEntity();
+		if($image->getContainerEntity() instanceof TidypicsAlbum)
+			$album = $image->getContainerEntity();
 	}
 
 	if(!$album){

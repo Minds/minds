@@ -18,7 +18,7 @@ if (!$container_guid) {
 ?>
 <div>
 	<label><?php echo elgg_echo('minds:upload:file'); ?></label><br />
-	<?php echo elgg_view('input/file', array('name' => 'upload')); ?>
+	<?php echo elgg_view('input/file', array('name' => 'fileData')); ?>
 </div>
 <div>
 	<label><?php echo elgg_echo('title'); ?></label><br />
