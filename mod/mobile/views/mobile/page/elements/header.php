@@ -24,12 +24,12 @@ elgg_unregister_menu_item('topbar', 'logout');
 $class = "elgg-icon notification notifier";
 $notify = "<span class='$class'></span>";
 $tooltip = elgg_echo("notification");
-$num_notifications = (int)notifications_count_unread();
-if ($num_notifications < 0) {
+//$num_notifications = (int)notifications_count_unread();
+/*if ($num_notifications < 0) {
 	$class = "elgg-icon notification notifier new";
 	$notify = "<span class='$class'>" . "<span class=\"notification-new\">$num_notifications</span>" . "</span>";
 	$tooltip .= " (" . elgg_echo("notifications:unread", array($num_notifications)) . ")";
-}
+}*/
 ?>
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
