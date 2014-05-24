@@ -250,6 +250,7 @@ class call extends core\base{
 	public function createCF($name, array $indexes = array(), array $attrs = array()){
 		global $CONFIG;
 
+		try{
 		$sys = new SystemManager($this->servers[0]);
 	
 		$defaults = array(	"comparator_type" => "UTF8Type",
@@ -264,6 +265,9 @@ class call extends core\base{
 	
 			$sys->create_index($this->keyspace, $name, $index, $data_type);
 	
+		}
+		} catch(\Exception $e){
+			return false;
 		}
 	}
 	

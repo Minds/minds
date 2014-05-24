@@ -56,22 +56,22 @@ function minds_archive_init() {
 	elgg_register_js('angular-route.min.js' , $angularRoot . 'lib/angular-route.min.js','footer', 201);
 	   
 	//not liking all these scripts...
-	elgg_register_js('jquery.ui.widget.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/vendor/jquery.ui.widget.js');
-    elgg_register_js('jquery.fileupload.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/jquery.fileupload.js');
+    elgg_register_js('jquery.ui.widget.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/vendor/jquery.ui.widget.js');
+    elgg_register_js('jquery.fileupload.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/jquery.fileupload.js', 'footer', 201);
     elgg_register_js('jquery.iframe-transport.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/jquery.iframe-transport.js');
 //    elgg_register_js('http://player.kaltura.com/mwEmbedLoader.php', 'external');
 
     // include directives
-    elgg_register_js('kaltura-embed.js' , $angularRoot . 'directives/kaltura-embed.js');
-    elgg_register_js('kaltura-upload.js' , $angularRoot . 'directives/kaltura-upload.js');
-    elgg_register_js('kaltura-thumbnail.js' , $angularRoot . 'directives/kaltura-thumbnail.js');
+    elgg_register_js('kaltura-embed.js' , $angularRoot . 'directives/kaltura-embed.js', 'footer', 600);
+    elgg_register_js('kaltura-upload.js' , $angularRoot . 'directives/kaltura-upload.js', 'footer', 601);
+    elgg_register_js('kaltura-thumbnail.js' , $angularRoot . 'directives/kaltura-thumbnail.js', 'footer', 602);
 
 
-	elgg_register_js('UploadController.js' , $angularRoot . 'controllers/UploadController.js');
+	elgg_register_js('UploadController.js' , $angularRoot . 'controllers/UploadController.js', 'footer', 650);
 	
     // include services
-    elgg_register_js('KalturaService.js' , $angularRoot . 'services/KalturaService.js');
-    elgg_register_js('ElggService.js' , $angularRoot . 'services/ElggService.js');
+    elgg_register_js('KalturaService.js' , $angularRoot . 'services/KalturaService.js', 'footer', 651);
+    elgg_register_js('ElggService.js' , $angularRoot . 'services/ElggService.js', 'footer', 652);
 
     elgg_register_js('app.js' , $angularRoot . 'app.js', 'footer', 700);
 

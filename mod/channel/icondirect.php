@@ -15,19 +15,12 @@ if (!isset($_GET['guid'])) {
 }
 
 $guid = $_GET['guid'];
-if(is_numeric($guid) && strlen($guid) < 18){
-	$g = new GUID();
-	$guid = $g->migrate($guid);
-}
-
 $user = new ElggUser($guid);
+if(isset($user->legacy_guid) && $user->legacy_guid)
+	$guid = $user->legacy_guid;
 
 $join_date = $user->time_created;
 $last_cache = (int)$_GET['lastcache']; // icontime
-
-if(isset($user->legacy_guid)){
-	$guid = $user->legacy_guid;
-}
 
 // If is the same ETag, content didn't changed.
 $etag = $last_cache . $guid;
@@ -45,9 +38,11 @@ $data_root = $CONFIG->dataroot;
 
 if (isset($data_root)) {
 
-		// this depends on ElggDiskFilestore::makeFileMatrix()
 		$user_path = date('Y/m/d/', $join_date) . $guid;
-
+		if(get_input('debug')){
+			var_dump($user_path, $guid);
+			exit;
+		}
 		$filename = "$data_root$user_path/profile/{$guid}{$size}.jpg";
 		$contents = @file_get_contents($filename);
 		if (!empty($contents)) {

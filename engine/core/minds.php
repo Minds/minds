@@ -60,8 +60,8 @@ class minds extends base{
 		}
 		
 		// Load mulit globals if set
-		if(file_exists(dirname(__FILE__) . '/multi.settings.php')) {
-			require_once(dirname(__FILE__) . '/multi.settings.php');
+		if(file_exists(__MINDS_ROOT__ . '/engine/multi.settings.php')) {
+			require_once(__MINDS_ROOT__ . '/engine/multi.settings.php');
 		}
 	}
 	

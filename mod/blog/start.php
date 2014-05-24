@@ -422,131 +422,128 @@ function blog_pagesetup(){
 function minds_blog_scraper($hook, $entity_type, $return_value, $params){ 
 	elgg_set_ignore_access(true);
 	elgg_set_context('scraper');
+
 //	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
 	$offset = "";
 	//$user = get_user_by_username('NaturalSociety');
+
 	while(true){	
-		$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>12, 'offset'=>$offset));
-		if(!$scrapers || $offset == end($scrapers)->guid)
-		break;
+		$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'),'limit'=>30, 'offset'=>$offset,'newest_first'=>true));
+		if($offset == end($scrapers)->guid)
+			break;
 		$offset = end($scrapers)->guid;
-	foreach($scrapers as $scraper){
-		if(!$scraper->getOwnerEntity()){
-			echo "There is no owner \n";
-			continue;
-		}
-		//if the site was scraped in the last 15 mins then skip
-		echo "$scraper->guid - loading $scraper->title \n";
-		//why would it be an array sometimes?? it is though
-		if(is_array($scraper->timestamp)){
-			$scraper->timestamp = $scraper->timestamp[0];
-		}	
-		if(isset($scraper->timestamp) && $scraper->timestamp > time() - 300){
-			echo "canceling... scraped it withing the last 5 mins \n";
-			continue;
-		}
-		if(!$scraper->feed_url || $scraper->feed_url == ""){
-			echo "No url found... \n";
-			$scraper->delete();
-			continue;
-		}
-		$feed = new SimplePie();
-		$feed->set_feed_url($scraper->feed_url);
-		$feed->enable_cache(false);
-		$feed->init();
-		//swamp the orderring so we do the latest, last
-		if(!$feed){
-			echo "$scraper->title coult not find any content \n";
-			continue;
-		}
-		@array_reverse($feed);
-		
-		//we load an array of previously collected rss ids
-		$item_ids = unserialize($scraper->item_ids) == false ? array() : unserialize($scraper->item_ids);
-		$n = 0;
-		foreach($feed->get_items() as $item){
-			//if the blog is newer than the scrapers last scrape - but ignore if the timestamp is greater than the time
-			// or else we get duplicates!
-			if($item->get_date('U') > $scraper->timestamp && $item->get_date('U') < time()){
-			} else {
-				echo "Skipping because there aren't any new items \n";
+		foreach($scrapers as $scraper){
+			if(!$scraper->getOwnerEntity()){
+				echo "There is no owner \n";
 				continue;
 			}
-			//check if the id is not in the array, if it is then skip
-			if(!in_array($item->get_id(true), $item_ids)){
-			//if(true){	
-			echo "importing {$item->get_title()} \n";
-			try{
-				$blog = new ElggBlog();
-				$blog->title = $item->get_title();
-				$enclosure = $item->get_enclosure();
-				if(strpos($item->get_permalink(), 'youtube.com/')){
-					$url = parse_url($item->get_permalink());
-					parse_str($url['query']);
-					$w = '100%';
-					$h = 411;
-					$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="//youtube.com/embed/'.$v.'" frameborder="0" allowfullscreen></iframe>';
-					$icon = '<img src="//img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
-					//$disclaimer = 'This blog is free & open source, however the embed may not be.';
-					$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content()); 
-					$blog->description = $embed . $icon . $disclaimer;
+			//if the site was scraped in the last 15 mins then skip
+			echo "$scraper->guid - loading $scraper->title \n";
+			
+			if(isset($scraper->timestamp) && $scraper->timestamp > time() - 300){
+				echo "canceling... scraped it withing the last 5 mins \n";
+				continue;
+			}
+			if(!$scraper->feed_url || $scraper->feed_url == ""){
+				echo "No url found... \n";
+				$scraper->delete();
+				continue;
+			}
+			
+			$feed = new SimplePie();
+			$feed->set_feed_url($scraper->feed_url);
+			$feed->enable_cache(false);
+			$feed->init();
+			//swamp the orderring so we do the latest, last
+			if(!$feed){
+				echo "$scraper->title coult not find any content \n";
+				continue;
+			}
+			@array_reverse($feed);
+			
+			//we load an array of previously collected rss ids
+			$item_ids = unserialize($scraper->item_ids) ?: array();
+			$n = 0;
+			foreach($feed->get_items() as $item){
+				//if the blog is newer than the scrapers last scrape - but ignore if the timestamp is greater than the time
+				// or else we get duplicates!
+				if($item->get_date('U') > $scraper->timestamp && $item->get_date('U') < time()){
 				} else {
-					$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content());
-					$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();				
-					if($enclosure){
-						$thumb_url = $enclosure->get_thumbnail();
-                                                if(strpos($thumb_url, 'liveleak.com/')){
-                                                      $thumb_url = str_replace('_thumb_', '_sf_', $thumb_url);
-                                          	}
-                                                $thumb = elgg_view('output/img', array('src'=>$thumb_url, 'width'=>0, 'height'=>0));
-                                                if($player = $enclosure->get_player()) {
-							//check for native embed now, if thats not got any content
-							if($embed = $enclosure->native_embed()){
-								if(strlen($embed) <= 24){
-									$player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0" allowfullscreen="true"></iframe>';             	
-								} else {
-									$player = $embed;
-								}
-							}
-							$excerpt = strip_tags($item->get_description());
-                                                        $blog->description = $thumb . $player;
-                                                } elseif($player = $enclosure->native_embed()) {
-							var_dump($player);
-							//$blog->description = $thumb . $player;
-						}
-						$blog->tags = $enclosure->get_keywords();
-                                        }
-				}
-				$blog->owner_guid = $scraper->owner_guid;
-				$blog->license = $scraper->license;
-				$blog->access_id = 2;
-				$blog->status = 'published';
-				$blog->rss_item_id = $item->get_id(true);
-				if(!$scraper->getOwnerEntity()){
+					echo "Skipping because there aren't any new items \n";
 					continue;
 				}
-				$guid = $blog->save();
-				echo 'Saved a blog titled: ' . $blog->title;
-				add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid,2, $item->get_date('U'));
-				
-				//make timestamp of last blog so we don't have timezone issues...
-				//$scraper->timestamp = $item->get_date('U');
-				}catch(Exception $e){
-					echo "Theere was a probelm with {$item->get_id(true)} \n";
+				//check if the id is not in the array, if it is then skip
+				if(!in_array($item->get_id(true), $item_ids)){
+					//if(true){	
+					echo "importing {$item->get_title()} \n";
+					try{
+						$blog = new ElggBlog();
+						$blog->title = $item->get_title();
+						$enclosure = $item->get_enclosure();
+						if(strpos($item->get_permalink(), 'youtube.com/')){
+							$url = parse_url($item->get_permalink());
+							parse_str($url['query']);
+							$w = '100%';
+							$h = 411;
+							$embed = '<iframe id="yt_video" width="'.$w.'" height="'.$h.'" src="//youtube.com/embed/'.$v.'" frameborder="0" allowfullscreen></iframe>';
+							$icon = '<img src="//img.youtube.com/vi/'.$v.'/hqdefault.jpg" width="0" height="0"/>';
+							//$disclaimer = 'This blog is free & open source, however the embed may not be.';
+							$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content()); 
+							$blog->description = $embed . $icon . $disclaimer;
+						} else {
+							$blog->excerpt = $item->get_description(true) ? elgg_get_excerpt($item->get_description(true)) : elgg_get_excerpt($item->get_content());
+							$blog->description = $item->get_content() . '<br/><br/> Original: '. $item->get_permalink();				
+							if($enclosure){
+								$thumb_url = $enclosure->get_thumbnail();
+								if(strpos($thumb_url, 'liveleak.com/')){
+								      $thumb_url = str_replace('_thumb_', '_sf_', $thumb_url);
+								}
+								$thumb = elgg_view('output/img', array('src'=>$thumb_url, 'width'=>0, 'height'=>0));
+								if($player = $enclosure->get_player()) {
+									//check for native embed now, if thats not got any content
+									if($embed = $enclosure->native_embed()){
+										if(strlen($embed) <= 24){
+											$player = '<iframe id="blog_video" width="100%" height="411" src="'.$player.'" frameborder="0" allowfullscreen="true"></iframe>';             	
+										} else {
+											$player = $embed;
+										}
+									}
+									$excerpt = strip_tags($item->get_description());
+									$blog->description = $thumb . $player;
+								} elseif($player = $enclosure->native_embed()) {
+									var_dump($player);
+									//$blog->description = $thumb . $player;
+								}
+								$blog->tags = $enclosure->get_keywords();
+							}
+						}
+						$blog->owner_guid = $scraper->owner_guid;
+						$blog->license = $scraper->license;
+						$blog->access_id = 2;
+						$blog->status = 'published';
+						$blog->rss_item_id = $item->get_id(true);
+						if(!$scraper->getOwnerEntity()){
+							continue;
+						}
+						$guid = $blog->save();
+						echo 'Saved a blog titled: ' . $blog->title . "\n";
+						add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid,2, $item->get_date('U'));
+						
+						//make timestamp of last blog so we don't have timezone issues...
+						//$scraper->timestamp = $item->get_date('U');
+					}catch(Exception $e){
+						echo "Theere was a probelm with {$item->get_id(true)} \n";
+					}
+					array_push($item_ids, $item->get_id(true));
+					$scraper->item_ids = serialize($item_ids);
+                                	$scraper->save();		
+					$n++;
+				} else {
+					echo "Already imported... skipping \n";
 				}
-				array_push($item_ids, $item->get_id(true));
-				$n++;
-			} else {
-				echo "Already imported... skipping \n";
 			}
 		}
-		//$scraper->timestamp = time();
-		if($n != 0){
-			$scraper->item_ids = serialize($item_ids);
-			$scraper->save();
-		}	
-	}
 	}
 	elgg_set_ignore_access(false);
 	return $return_value;	

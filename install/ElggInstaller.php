@@ -39,7 +39,7 @@ class ElggInstaller {
 		require_once(__MINDS_ROOT__. '/engine/autoload.php');
 		$minds = new minds\core\minds();
 		$minds->loadLegacy();
-		
+		_elgg_session_boot(true);		
 		$this->isAction = $_SERVER['REQUEST_METHOD'] === 'POST';
 		
 		$this->bootstrapConfig();
@@ -104,6 +104,9 @@ class ElggInstaller {
 				$CONFIG->dataroot = datalist_get('dataroot');
 			}
 			
+		}
+		if($stepIndex > $adminIndex){
+                        $minds->start();
 		}
 	}
 
@@ -1295,7 +1298,7 @@ class ElggInstaller {
 			'blog',
 			'thumbs',
 			'minds_search', 
-			'minds_comments',
+			'comments',
 			'minds_social',
 			'minds_webservices',
 			'minds_wordpress',

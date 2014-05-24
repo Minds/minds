@@ -31,14 +31,17 @@ class MindsMultiInstaller extends ElggInstaller {
         parent::__construct();
 
 
+	if(get_input('debug')){
+		$db = new \minds\core\data\call('entities');
+		var_dump(elgg_get_plugins('active'));
+		//$db->insert('hello', array('testing'=>'it works'));
+	//	var_dump($db-> getCf('entities'),$db->getRow('hello'));
+		exit;
+	}
+
         // Load minds translations
         register_translations(dirname(__FILE__) . '/languages/minds/', TRUE);
 
-        // Set the web services URL 
-        global $CONFIG;
-        if (isset($CONFIG->web_services_url))
-            $this->web_services_url = $CONFIG->web_services_url;
-	
 	// Always log admin in
 	$this->setAutoLogin(true);
 
@@ -307,7 +310,7 @@ class MindsMultiInstaller extends ElggInstaller {
         }
 
         if (!$this->connectToDatabase()) {
-            throw new InstallationException(elgg_echo('install:error:databasesettings'));
+           // throw new InstallationException(elgg_echo('install:error:databasesettings'));
         }
 
         if (!$this->status['database']) {
@@ -343,6 +346,8 @@ class MindsMultiInstaller extends ElggInstaller {
         );
         foreach ($user_editable_plugins as $plugin_id) {
         	$plugin = new ElggPlugin($plugin_id);
+		$plugin->save();
+		$plugin = new ElggPlugin($plugin_id);
 		$plugin->activate();
         }
         
