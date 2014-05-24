@@ -280,13 +280,15 @@ function admin_init() {
 		'href' => 'admin/plugins',
 		'text' => elgg_echo('admin:plugins'),
 		'context' => 'admin',
-		'priority' => 75,
-		'section' => 'configure'
+		'priority' => 1,
+		'section' => 'configure',
+		'parent_name' => 'settings',
 	));
 
 	// settings
 	elgg_register_admin_menu_item('configure', 'appearance', null, 50);
 	elgg_register_admin_menu_item('configure', 'settings', null, 100);
+	elgg_register_admin_menu_item('configure', 'pluginsettings', null, 100);
 	elgg_register_admin_menu_item('configure', 'basic', 'settings', 10);
 	elgg_register_admin_menu_item('configure', 'advanced', 'settings', 20);
 	elgg_register_admin_menu_item('configure', 'menu_items', 'appearance', 30);
@@ -358,7 +360,7 @@ function elgg_admin_add_plugin_settings_menu() {
 				'name' => $plugin_id,
 				'href' => "admin/plugin_settings/$plugin_id",
 				'text' => $plugin->getManifest()->getName(),
-				'parent_name' => 'settings',
+				'parent_name' => 'pluginsettings',
 				'context' => 'admin',
 				'section' => 'configure',
 			));
@@ -490,8 +492,12 @@ function admin_page_handler($page) {
 		'sort_by' => 'priority',
 		'class' => 'elgg-menu-hz',
 	));
-	$body = elgg_view_layout('admin', array('content' => $buttons . $content, 'title' => $title));
-	echo elgg_view_page($title, $body, 'default');
+	if (elgg_is_xhr()) {
+	    echo $content;
+	} else {
+	    $body = elgg_view_layout('admin', array('content' => $buttons . elgg_view('admin/ajax_panel')/* $content */, 'title' => $title));
+	    echo elgg_view_page($title, $body, 'default');
+	}
 	return true;
 }
 

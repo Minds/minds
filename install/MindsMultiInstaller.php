@@ -13,6 +13,7 @@ class MindsMultiInstaller extends ElggInstaller {
         'admin',
        // 'minds',
 	'theme',
+	'footer',
 	'carousel',
 	'import',
 	'email',
@@ -486,6 +487,52 @@ class MindsMultiInstaller extends ElggInstaller {
     }
 
     /**
+     * Footer configuration
+     * @param type $submissionVars
+     */
+    protected function footer($submissionVars) {
+	
+	$networks = minds_config_social_links();
+	
+	$formVars = array(
+            'copyright' => array(
+                'type' => 'text',
+                'value' => '',
+                'required' => FALSE,
+            ),
+        );
+	
+	foreach($networks as $network => $n) {
+	    $formVars["networks_$network"] = array(
+		'type' => 'text',
+                'value' => '',
+		
+                'required' => FALSE,
+	    );
+	}
+
+        if ($this->isAction) {
+            do {
+		elgg_set_plugin_setting('copyright',  $submissionVars['copyright'], 'minds_themeconfig');
+		
+		foreach($networks as $network => $n) {
+		    
+		    elgg_set_plugin_setting($network.':url', $submissionVars["networks_$network"], "minds_themeconfig");
+		    
+		}
+
+                system_message(elgg_echo('install:success:footer'));
+
+                $this->continueToNextStep('footer');
+            } while (FALSE);  // PHP doesn't support breaking out of if statements
+        }
+
+        $formVars = $this->makeFormSticky($formVars, $submissionVars);
+
+        $this->render('footer', array('variables' => $formVars));
+    }
+    
+    /**
      * Load the theme selector
      * @param array $vars Not used
      *
@@ -606,19 +653,19 @@ class MindsMultiInstaller extends ElggInstaller {
          		'upscale' => true
        		)
   		) as $name => $size_info) { 
-      		$resized = get_resized_image_from_existing_file($submissionVars['favicon']['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
+      		$resized = get_resized_image_from_existing_file($submissionVars['favicon']['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale'], 'jpeg');
 
        		 if ($resized) {
             		global $CONFIG;
             		$theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
            	 	@mkdir($theme_dir);
 
-            		file_put_contents($theme_dir . $name.'.png', $resized);
+            		file_put_contents($theme_dir . $name.'.jpg', $resized);
 
             		elgg_set_plugin_setting('logo_favicon', 'true', 'minds_themeconfig');
             		elgg_set_plugin_setting('logo_favicon_ts', time(), 'minds_themeconfig');
             
-        	}
+        	} 
 
         	if (isset($_FILES['favicon']) && ($_FILES['favicon']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['favicon']['error'] != 0) {
             	//	register_error(minds_themeconfig_codeToMessage($_FILES['favicon']['error'])); // Debug uploads

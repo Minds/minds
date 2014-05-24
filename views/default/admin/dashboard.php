@@ -19,4 +19,4 @@ $widgets = elgg_view('page/layouts/widgets/add_button', $params);
 $widgets .= elgg_view('page/layouts/widgets/add_panel', $params);
 $widgets .= elgg_view_layout('widgets', $params);
 
-echo $widgets;
+echo $widgets; 

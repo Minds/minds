@@ -7,6 +7,7 @@ $english = array(
 	'minds_node:launch' => 'Launch a node',
 	'minds_node:manage' => 'Manage nodes',
     
+    'admin:monitization:tiers' => 'Node payment tiers',
     
     'item:object:minds_tier' => 'Minds Payment Tiers',
     'item:object:node' => 'Multisite subscriptions',

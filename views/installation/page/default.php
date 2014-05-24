@@ -27,7 +27,40 @@ header('Expires: Fri, 05 Feb 1982 00:00:00 -0500', TRUE);
 	<head>
 		<title><?php echo $title; ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="SHORTCUT ICON" href="<?php echo elgg_get_site_url(); ?>_graphics/favicon.ico" />
+		<?php /* <link rel="SHORTCUT ICON" href="<?php echo elgg_get_site_url(); ?>_graphics/favicon.ico" /> */ ?>
+		<?php
+		if ($ts = elgg_get_plugin_setting('logo_favicon_ts','minds_themeconfig')) {
+		?>
+		    <link rel="icon" type="image/jpeg" href="<?php echo elgg_get_site_url(); ?>themeicons/logo_favicon/<?= $ts ?>.jpg" />
+		<?php
+		} else {
+		?>
+		    <link rel="SHORTCUT ICON" href="<?php echo elgg_get_site_url(); ?>mod/minds/graphics/favicon.ico" />
+		<?php
+		}
+		?>
+		<style>
+		    
+		    @font-face {
+			font-family: 'entypo';
+			src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.eot?') format('eot'),
+			     url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.woff') format('woff'),
+			     url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.ttf') format('truetype'),
+			     url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.svg') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		    }
+		    @font-face {
+		      font-family: 'fontello';
+		      src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246');
+		      src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246#iefix') format('embedded-opentype'),
+			   url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?96059246') format('woff'),
+			   url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?96059246') format('truetype'),
+			   url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?96059246#fontello') format('svg');
+		      font-weight: normal;
+		      font-style: normal;
+		    }
+		</style>
 		<link rel="stylesheet" href="<?php echo elgg_get_site_url(); ?>install/css/install.css" type="text/css" />
 		<script type="text/javascript" src="<?php echo elgg_get_site_url(); ?>vendors/jquery/jquery-1.6.4.min.js"></script>
 		<script type="text/javascript" src="<?php echo elgg_get_site_url(); ?>install/js/install.js"></script>
