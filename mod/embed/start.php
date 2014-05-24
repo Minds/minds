@@ -20,7 +20,9 @@ function embed_init() {
 	// Page handler for the modal media embed
 	elgg_register_page_handler('embed', 'embed_page_handler');
 	
-	elgg_register_js('elgg.embed', 'js/embed/embed.js', 'footer');
+	elgg_register_js('elgg.embed', elgg_get_simplecache_url('js', 'embed/embed'), 'footer');
+	
+	//minds\core\resources::registerView('embed.minds', 'js/embed/embed.js', 'js');
 }
 
 /**
