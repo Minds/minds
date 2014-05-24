@@ -21,9 +21,9 @@ function minds_search_init() {
 	elgg_load_library('elasticsearch');
 
 	//create handlers
-	elgg_register_event_handler('create', 'user', 'elasticsearch_add');
-	elgg_register_event_handler('create', 'group', 'elasticsearch_add');
-	elgg_register_event_handler('create', 'object', 'elasticsearch_add');
+//	elgg_register_event_handler('create', 'user', 'elasticsearch_add');
+//	elgg_register_event_handler('create', 'group', 'elasticsearch_add');
+//	elgg_register_event_handler('create', 'object', 'elasticsearch_add');
 
 	//update handlers
 /*	elgg_register_event_handler('update', 'user', 'elasticsearch_update');

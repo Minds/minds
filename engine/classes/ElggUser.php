@@ -129,8 +129,9 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	public function save() {
-	
-		$timebased = $this->isEnabled();
+		
+		//$timebased = $this->isEnabled();
+		$timebased = false;
 		parent::save($timebased);
 		
 		//now place email and username in index
@@ -141,7 +142,7 @@ class ElggUser extends ElggEntity
 		$db->insert(strtolower($this->email), $data);
 
 		//update our session, if it is us logged in
-		if($this->guid == elgg_get_logged_in_user_guid()){
+		if(elgg_is_logged_in() && $this->guid == elgg_get_logged_in_user_guid()){
 			$_SESSION['user'] = $this;
 		}
 

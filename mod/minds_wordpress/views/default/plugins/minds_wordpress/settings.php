@@ -15,8 +15,9 @@ if ($clients = elgg_get_entities(
 )) {
     // Quick and dirty
     foreach ($clients as $c)
-        if ($c->attached_plugin == 'minds_wordpress')
+        if ($c->attached_plugin == 'minds_wordpress'){
             $client = $c;
+	}
 }
 
 // Create client if it doesn't exist
@@ -28,12 +29,11 @@ if (!$client) {
     
     $client->title = "Minds Wordpress Connector";
     $client->description = "Connect your minds site to wordpress";
-    
-    $client->save();
-    
+    $client->save(); 
     $client->attached_plugin = 'minds_wordpress';
     $client->client_id     = $client->guid;
     $client->client_secret = oauth2_generate_client_secret();
+ $client->save();
 }
 
 $key = $client->client_id;

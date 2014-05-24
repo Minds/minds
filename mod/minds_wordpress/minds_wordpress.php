@@ -57,9 +57,13 @@ class minds_wordpress extends \ElggPlugin{
 	 * Blind oauth2 proccess
 	 */
 	public function auth(){
+		if($this->getSetting('client_id') && $this->getWordpressUrl()){
 		//forward the code to the wp site.
 		$forward = elgg_get_site_url() . "action/oauth2/authorize?client_id=".$this->getSetting('client_id')."&response_type=code&redirect_uri=".urlencode($this->getWordpressUrl().'?minds_auth=true&forward='.get_input('forward', true));
 		\forward(\elgg_add_action_tokens_to_url($forward));
+		} else {
+			return false;
+		}
 	}
 	
 	/**

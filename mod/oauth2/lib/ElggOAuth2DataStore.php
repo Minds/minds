@@ -170,6 +170,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
     public function getAccessToken($token){
         try{
         	$token = new minds\plugin\oauth2\entities\accessToken($token);
+		error_log("GETTING TOKEN: $token");
 			return $token->export();
         } catch(\Exception $e){
         	return false;
@@ -214,15 +215,15 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
             $entity->access_id = ACCESS_PRIVATE;
 
         } else {
-			$entity = $this->getAccessToken($token);
+		$entity = $this->getAccessToken($token);
         }
-
+	error_log('SETTING TOKEN: '. $token);
         $entity->access_token = $token;
         $entity->client_id = $client_id;
         $entity->expires = $expires;        
         $entity->scope = $scope;
 		
-		$entity->save();
+	$entity->save();
 
       return $this->getAccessToken($token);
     }
@@ -252,12 +253,12 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
     		
     	try{
         	$code = new minds\plugin\oauth2\entities\code($code);
-			return $code->export();
+		return $code->export();
         } catch(\Exception $e){
         	return false;
         }
 		
-		if($entity){
+	if($entity){
             return array(
                 'authorization_code' => $entity->authorization_code,
                 'client_id'          => $entity->client_id,
@@ -314,7 +315,7 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
         $entity->expires  = $expires;
         $entity->scope = $scope;
 		
-		$entity->save();
+	$entity->save();
 
         return $this->getAuthorizationCode($code);
     }
@@ -333,11 +334,11 @@ class ElggOAuth2DataStore implements OAuth2_Storage_AuthorizationCodeInterface,
      *
      */
     public function expireAuthorizationCode($code) {
-        $entity = $this->getAuthorizationCode($code);
-		if($entity)
-	    	return $entity['entity']->delete();
+        $entity = $this->getAuthorizationCode($code);	
+	if($entity)
+		return $entity['entity']->delete();
 		
-		return false;
+	return false;
     }
 
     /**

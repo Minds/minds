@@ -458,7 +458,7 @@ function elggmulti_get_db_settings($url = '') {
 	if (!$url)
 		$url = $_SERVER['SERVER_NAME'];
 	
-	if(class_exists('ElggXCache')){
+	/*if(class_exists('ElggXCache')){
 		$cache = new ElggXCache('ms_settings');
 		if(!$result = $cache->load($url)){	
 			$result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
@@ -468,11 +468,9 @@ function elggmulti_get_db_settings($url = '') {
 				$cache->remove($url);
 			}
 		} 
-	}
+	}*/
 
-	if(!$result){
 		$result = elggmulti_getdata_row(array('domain' => $url), '__elggmulti_db_row');
-        }
 	
 	if ($result) {
 

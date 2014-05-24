@@ -68,11 +68,14 @@ class ElggInstaller {
 		require_once(dirname(__FILE__) . "/ElggRewriteTester.php");
 		require_once(dirname(dirname(__FILE__)) . '/vendors/phpcassa/lib/autoload.php');	
 		$this->isAction = $_SERVER['REQUEST_METHOD'] === 'POST';
-
+		
 		$this->bootstrapConfig();
 
 		$this->bootstrapEngine();
 		require_once(dirname(dirname(__FILE__)) . '/engine/autoload.php');
+
+		setcookie('loggedin', 1, time()+360);
+		$_SESSION['force'] = true;		
 
 		elgg_set_viewtype('installation');
 
@@ -1540,7 +1543,7 @@ class ElggInstaller {
 			register_error(elgg_echo('install:admin:cannot_create'));
 			return false;
 		}
-
+		
 		$user = get_entity($guid,'user');
 		if (!$user) {
 			register_error(elgg_echo('install:error:loadadmin'));

@@ -12,7 +12,6 @@ if (version_compare(PHP_VERSION, '5.0.0', '<')) {
 	exit;
 }
 
-
 // Quick and dirty test to see if this is a standalone install or living inside a multisite wrapper
 if (!file_exists(dirname(dirname(__FILE__)) . "/minds/start.php")) 
 {

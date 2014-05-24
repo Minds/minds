@@ -519,6 +519,7 @@ function sanitise_filepath($path, $append_slash = TRUE) {
  */
 function system_messages($message = null, $register = "success", $count = false) {
 
+	static $messageSet = false;
 	$cookie_id = 'mindsMessages';
 	$messages = isset($_COOKIE[$cookie_id]) ? json_decode($_COOKIE[$cookie_id], true) : array('error'=>array(), 'success'=>array());
 	
@@ -531,12 +532,14 @@ function system_messages($message = null, $register = "success", $count = false)
 		}
 	//	return $message;
 		setcookie($cookie_id, json_encode($messages), time()+360, '/');
+		$messageSet = false;
 		return;
 	}
 	
 	
 	if (!$count) {
-		 setcookie($cookie_id, '', time()-36000, '/');
+		if(isset($_COOKIE[$cookie_id]) && !$messageSet)
+			setcookie($cookie_id, '', time()-36000, '/');
 		return $messages[$register];
 	} else {
 		return count($messages[$register]);

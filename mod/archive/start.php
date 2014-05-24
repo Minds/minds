@@ -165,8 +165,7 @@ function minds_archive_init() {
 
 function minds_archive_entity_url($entity) {
 		global $CONFIG;
-		$title = str_replace(" ", "-", $entity->title);
-		$title = preg_replace('/\.[^.]*$/', '', $title);
+		$title = urlencode($entity->title);
 
 		$guid = $entity->getGUID();
 		if($entity->legacy_guid){
