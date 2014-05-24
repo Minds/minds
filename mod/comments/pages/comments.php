@@ -47,17 +47,15 @@ class comments extends core\page implements interfaces\page{
 			
 			//relies on the minds user account being created @todo fix this?
 			$owner = new \ElggUser('minds');
-			$owner = new stdClass();
-			$owner->guid = 0;
 		
-			if (false !== strpos($comment, 'http')){
+			if (false !== strpos($desc, 'http')){
 				exit; //most probably spam
 			}
 		
 		}else {
 			$owner = elgg_get_logged_in_user_entity();
 		}
-
+		
 		$comment = new entities\comment();
 		$comment->description = $desc;
 		$comment->parent_guid = $parent_guid;
