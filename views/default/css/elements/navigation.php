@@ -651,6 +651,20 @@
 	color:#4690D6;
 }
 
+.elgg-menu .entypo.elements{
+	font-size:2px;
+}
+.elgg-menu .elgg-menu-item-logout .entypo{
+	padding-top:2px;
+	font-size:20px;
+}
+.elgg-menu-item-register  a{
+	color:#4690D6 !important;
+	padding:0 10px;
+}
+.elgg-menu-item-toggle > a{
+	font-size:26px;
+}
 /**
  * News filter
  */

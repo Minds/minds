@@ -10,10 +10,42 @@
 /* ***************************************
 	Typography
 *************************************** */
+@font-face {
+    font-family: 'entypo';
+    src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.eot?') format('eot'),
+         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.woff') format('woff'),
+         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.ttf') format('truetype'),
+         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+  font-family: 'fontello';
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246');
+  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246#iefix') format('embedded-opentype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?96059246') format('woff'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?96059246') format('truetype'),
+       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?96059246#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Ubuntu Light'), local('Ubuntu-Light'), url(https://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+.entypo{
+	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
+	font-size:18px;
+	font-weight:normal;
+	text-decoration:none;
+}
+
 body {
 	font-size: 80%;
 	line-height: 1.4em;
-	font-family: Arial, Tahoma, Verdana, sans-serif;
+	font-family: Helvetica, arial, clean, sans-serif;
 }
 
 a {
@@ -80,7 +112,8 @@ blockquote {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-weight: bold;
+	font-family:"Ubuntu";
+	font-weight:lighter;
 	color: #333;
 }
 

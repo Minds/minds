@@ -23,7 +23,7 @@ $body = elgg_view('output/url', array(
 	'text' => $img,
 	'href' => $image->getURL(),
 	'encode_text' => false,
-	'is_trusted' => true,
+	'is_trusted' => true
 ));
 
 /*

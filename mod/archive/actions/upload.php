@@ -6,6 +6,8 @@
  * Time: 12:43 PM
  * AddAngular create new entity in elgg and uploading files to Elgg excluding Video and Audio files which are sent to Kaltura Server.
  * AddAngular also updates the elgg entities.
+ * 
+ * THIS FILE IS A MESS!! CLEAN IT UP..
  */
 elgg_load_library('archive:kaltura');
 elgg_load_library('tidypics:upload');
@@ -13,7 +15,7 @@ elgg_load_library('tidypics:upload');
 // Get variables
 $title = get_input("title");
 $desc = get_input("description");
-$access_id = (int) get_input("access_id");
+$access_id = (int) get_input("access_id", 2);
 $license = get_input("license");
 $tags = get_input("tags");
 $mime_type = get_input("fileType", tp_upload_get_mimetype($_FILES['fileData']['name']));
@@ -79,7 +81,7 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
 	
 	// If Image then create an album. Don't upload to Kaltura.
  	if ($guid){
-       	$image = get_entity($guid, 'object');
+       	$image = new TidypicsImage($guid);
         $new_image = false;
 	} else {
         $image = new TidypicsImage();
@@ -87,7 +89,7 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
     }
 
 	if($album_guid){
-		$album = get_entity($album_guid, 'object');
+		$album = new TidypicsAlbum($album_guid);
 	} else {
 		if($image->getContainerEntity() instanceof TidypicsAlbum)
 			$album = $image->getContainerEntity();
@@ -112,7 +114,7 @@ if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_typ
 //    $image->category = $category; //No category
 
     $guid = $image->save($_FILES['fileData']);
-    
+  
     if ($guid) {
 	    echo $guid;
 

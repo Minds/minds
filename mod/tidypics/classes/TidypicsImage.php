@@ -32,10 +32,10 @@ class TidypicsImage extends ElggFile {
 	 */
 	public function save($data = null) {
 		
-		if (!parent::save()) {
+	/*	if (!parent::save()) {
 			echo 'failed';
 			return false;
-		}
+		}*/
 
 		if ($data) {
 			// new image
@@ -398,6 +398,6 @@ class TidypicsImage extends ElggFile {
 	 * @return TidypicsAlbum
 	 */
 	public function getContainerEntity($type = 'object') {
-		return get_entity($this->getContainerGUID(),$type);
+		return new TidypicsAlbum($this->getContainerGUID());
 	}
 }

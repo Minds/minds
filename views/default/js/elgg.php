@@ -70,6 +70,9 @@ $(function() {
 
 <?php
 
+//load minds @todo move this to core
+echo elgg_view('js/minds');
+
 $previous_content = elgg_view('js/initialise_elgg');
 if ($previous_content) {
 	elgg_deprecated_notice("The view 'js/initialise_elgg' has been deprecated for js/elgg", 1.8);
