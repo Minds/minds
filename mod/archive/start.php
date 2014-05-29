@@ -328,6 +328,11 @@ function minds_archive_page_handler($page) {
 					return false;
 			}
 			break;
+		
+		case 'embed':
+			set_input('subtype', $page[1]);
+			include('pages/archive/embed.php');
+			return true;
 		case 'show':
 		case 'view':
 			set_input('guid',$page[1]);

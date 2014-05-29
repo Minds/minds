@@ -44,8 +44,9 @@ elgg.tinymce.init = function() {
 	         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
 	         "save table contextmenu directionality emoticons template paste textcolor"
 	   ],
-	   content_css: "css/content.css",
+	   content_css: elgg.get_site_url()+"css/elgg.0.css",
 	   toolbar: "insertfile undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons", 
+	   file_browser_callback : mindsBrowser
 	   /*style_formats: [
 	        {title: 'Bold text', inline: 'b'},
 	        {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
@@ -57,6 +58,30 @@ elgg.tinymce.init = function() {
 	    ]*/
 	});
 
+	function mindsBrowser (field_name, url, type, win) {
+
+	    // alert("Field_Name: " + field_name + "nURL: " + url + "nType: " + type + "nWin: " + win); // debug/testing
+	
+	    var cmsURL = elgg.get_site_url() + 'archive/embed/' + type;
+	
+	    tinyMCE.activeEditor.windowManager.open({
+	        file : cmsURL,
+	        title : 'Browse ' + type,
+	        width : 800,  // Your dimensions may differ - toy around with them!
+	        height : 400,
+	        resizable : "yes",
+	        inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
+	        close_previous : "no"
+	    }, {
+	        window : win,
+	        input : field_name,
+	        onInsert: function(src){
+	        	win.document.getElementById(field_name).value = src; 
+	        }
+	    });
+	    return false;
+	  }
+	
 }
 
 elgg.register_hook_handler('init', 'system', elgg.tinymce.init);

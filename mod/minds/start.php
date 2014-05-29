@@ -1,15 +1,11 @@
 <?php
 /**
  * Minds
- *
- * @package Minds
- * @author Kramnorth (Mark Harding)
- *
+ * 
+ * THIS PLUGIN IS IN A TERRIBLE STATE AND REQUIRES REFACTORING. MANY THINGS CAN BE MOVED INTO THE CORE..
  */
 
 function minds_init(){
-	
-	elgg_register_simplecache_view('minds');	
 	
 	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
 	
@@ -22,32 +18,21 @@ function minds_init(){
 	//put the quota in account statistics
 	elgg_extend_view('core/settings/statistics', 'minds/quota/statistics', 500);
 	
+	elgg_extend_view('page/elements/body', 'account/register_popup');
 
 	/**
 	 * Ads
 	 */
 	elgg_extend_view('page/elements/ads', 'minds/ads');
-	//register the ubuntu font
-//	elgg_register_css('ubuntu.font', 'http://fonts.googleapis.com/css?family=Ubuntu:300');
-//	elgg_load_css('ubuntu.font');
 
-	//register our own css files
-	$url = elgg_get_simplecache_url('css', 'minds');
-	elgg_register_css('minds.default', $url, 2);	
-	elgg_load_css('minds.default');
-	
-	//register our own js files
-	$minds_js = elgg_get_simplecache_url('js', 'minds');
-	elgg_register_js('minds.js', $minds_js, 'footer', 800);//masonry needs to load first...
-	
 	//plugin for cookie manipulation via JS
 	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js', 'footer');
 	elgg_load_js('jquery-cookie');
 	
 	//register inline js player
-	$uiVideoInline = elgg_get_simplecache_url('js', 'uiVideoInline');
+	/*$uiVideoInline = elgg_get_simplecache_url('js', 'uiVideoInline');
 	elgg_register_js('uiVideoInline', $uiVideoInline, 'footer');
-	elgg_load_js('uiVideoInline');
+	elgg_load_js('uiVideoInline');*/
 	
 	//register textarea expander
 	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js', 'footer');
@@ -57,11 +42,6 @@ function minds_init(){
 	elgg_register_js('carousel',  elgg_get_site_url() . 'mod/minds/vendors/bootstrap-carousel/carousel.min.js');
 	elgg_register_css('carousel',  elgg_get_site_url() . 'mod/minds/vendors/bootstrap-carousel/carousel.css');
 	
-	elgg_unregister_js('jquery');
-	//elgg_register_js('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js', 'head');
-	elgg_register_js('jquery', elgg_get_site_url() . 'vendors/jquery/jquery-1.11.0.js', 'head');
-	elgg_load_js('jquery');
-
 	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js','header',600);
 	elgg_load_js('jquery-masonry');
 	elgg_register_js('jquery-imagesLoaded', elgg_get_site_url() . 'mod/minds/vendors/masonry/imagesLoaded.min.js','header',700);	
@@ -89,16 +69,8 @@ function minds_init(){
 	elgg_register_plugin_hook_handler('register', 'menu:river', 'minds_river_menu_setup');
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'minds_entity_menu_setup');
 	
-	//setup the generic upload endpoint
-	elgg_register_page_handler('upload', 'minds_upload');
-
-	
 	//setup the licenses pages
 	elgg_register_page_handler('licenses', 'minds_license_page_handler');
-	
-	//add cache headers to pages for logged out users and deliver other pages
-	elgg_register_plugin_hook_handler('route', 'all', 'minds_route_page_handler', 100);
-	elgg_register_plugin_hook_handler('index', 'system', 'minds_route_page_handler', 100);
 	
 	//setup the tracking of user quota - on a file upload, increment, on delete, decrement
 	elgg_register_event_handler('create', 'object', 'minds_quota_increment');
@@ -107,16 +79,6 @@ function minds_init(){
 	//subscribe users to the minds channel once they register
 	elgg_register_plugin_hook_handler('register', 'user', 'minds_subscribe_default', 1);
 	
-	if(elgg_is_active_plugin('htmlawed')){
-		//Add to HTMLawed so that we can allow embedding
-		elgg_unregister_plugin_hook_handler('validate', 'input', 'htmlawed_filter_tags');
-		elgg_register_plugin_hook_handler('validate', 'input', 'minds_htmlawed_filter_tags', 1);
-	}
-	
-	//needs to be loaded after htmlawed
-	//this is for allow html <object> tags
-	global $CONFIG;
-	$CONFIG->htmlawed_config['safe'] = false;
 	
 	$actionspath = elgg_get_plugins_path() . "minds/actions";
 	elgg_register_action("minds/feature","$actionspath/minds/feature.php");
@@ -139,48 +101,38 @@ function minds_init(){
 		
 			case 'background':
 			default:
-				   $item = get_entity($page[1]);
-                                $filename = $CONFIG->dataroot . 'carousel/' . $page[1];
+				$item = get_entity($page[1]);
+				$filename = $CONFIG->dataroot . 'carousel/' . $page[1];
 				if(!file_exists($filename))
 					$filename = $CONFIG->dataroot . 'carousel/' . $page[1] . '.jpg';
 
-                                $finfo    = finfo_open(FILEINFO_MIME);
-                                $mimetype = finfo_file($finfo, $filename);
-                                finfo_close($finfo);
-                                header('Content-Type: '.$mimetype);
-                                header('Expires: ' . date('r', time() + 864000));
-                                header("Pragma: public");
-                                header("Cache-Control: public");
+                    $finfo    = finfo_open(FILEINFO_MIME);
+                    $mimetype = finfo_file($finfo, $filename);
+                    finfo_close($finfo);
+                    header('Content-Type: '.$mimetype);
+                    header('Expires: ' . date('r', time() + 864000));
+                    header("Pragma: public");
+                    header("Cache-Control: public");
 
-                                echo file_get_contents($filename);
+                    echo file_get_contents($filename);
 
-                                exit;				
+                    exit;				
 		}
 	});
 	
-	if(elgg_get_context() == 'oauth2'){
-		pam_auth_usertoken();//auto login users if they are using oauth step1
-	}
-	//make sure all users are subscribed to minds, only run once.
-	
-        // Handle some tier pages
-        
-        // Extend public pages
-        /*elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function ($hook, $handler, $return, $params){
-            $pages = array('tierlogin'); 
-            return array_merge($pages, $return);
-        });*/
-        
-        // Set validation true if this is a tier signup
-        elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
-            
-            $object = $params['user'];
 
-            if ($object && elgg_instanceof($object, 'user')) {
-                if (get_input('returntoreferer') == 'y') // Hack, but sessions seem not to be available here. TODO: Secure this.
-                    elgg_set_user_validation_status($object->guid, true, 'tier_signup');      
-                }
-        }, 1);
+	//make sure all users are subscribed to minds, only run once.
+        
+    // Set validation true if this is a tier signup
+    elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $return, $params) {
+        
+        $object = $params['user'];
+
+        if ($object && elgg_instanceof($object, 'user')) {
+            if (get_input('returntoreferer') == 'y') // Hack, but sessions seem not to be available here. TODO: Secure this.
+                elgg_set_user_validation_status($object->guid, true, 'tier_signup');      
+            }
+    }, 1);
         
         // Endpoint
         elgg_register_page_handler('tierlogin', function($pages) {
@@ -223,8 +175,6 @@ function minds_index($hook, $type, $return, $params) {
 		// another hook has already replaced the front page
 		return $return;
 	}
-
-	header("X-No-Client-Cache: 1", true);
 	
 	if(!include_once(dirname(__FILE__) . '/pages/index.php')){
 		return false;
@@ -259,34 +209,6 @@ function minds_news_page_handler($page) {
 
 	require_once(dirname(__FILE__) . "/pages/river.php");
 	return true;
-}
-
-
-function minds_route_page_handler($hook, $type, $returnvalue, $params) {
-	if(!$returnvalue){
-		$returnvalue = array();
-	}
-
-	if (!elgg_is_logged_in() && $returnvalue) {
-		$handler = elgg_extract('handler', $returnvalue);
-// 		$page = elgg_extract('segments', $returnvalue);
-// 		header('Expires: ' . date('r', time() + 300), true);//cache for 5min
-// 		header("Pragma: public", true);
-// 		header("Cache-Control: public", true);
-		if (!in_array($handler, array('js', 'css', 'photos'))) {
-			header("X-No-Client-Cache: 1", true);
-		}
-	}
-
-	//add a age if view exists
-	/*$handler = elgg_extract('handler', $returnvalue);
-	$pages = elgg_extract('segments', $returnvalue, array());
-	array_unshift($pages, $handler);
-	if(elgg_view_exists('minds/pages/'.$handler) && !elgg_is_active_plugin('anypage')){
-		$content = elgg_view('minds/pages/'.$handler);
-		$body = elgg_view_layout('one_sidebar', array('content' => $content));
-		echo elgg_view_page(elgg_echo($handler), $body);
-	}*/
 }
 
 function minds_register_hook(){
@@ -398,11 +320,6 @@ function minds_pagesetup(){
 	//footer
 	
 
-}
-
-function minds_upload($page){
-	include(dirname(__FILE__) . "/pages/inline_upload.php");
-	return true;
 }
 
 /*
@@ -614,24 +531,6 @@ function minds_subscribe_default($hook, $type, $value, $params){
 	
 	return $value;
 }
-/**
- * Bulk user subscribe to channel
- */
-function minds_subscribe_bulk($username = 'minds'){
-	$u = get_user_by_username($username);
-	$users = elgg_get_entities(array('type'=>'user', 'limit'=>0));
-	$i = 0;
-	foreach($users as $user){
-		if(!$user->isFriend()){
-			$user->addFriend($u->guid);
-			$i++;
-			//if 25 users have been done, sleep for 1 second and then carry on - stops db overload
-			if($i % 20 == 0){
-				sleep(1);
-			}
-		}
-	}
-}
 
 function minds_fetch_image($description, $owner_guid=null, $width=null, $height=null) {
   
@@ -743,47 +642,6 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 
 	return $new_list;*/
 	return $entities;
-}
-
- /* Extend / override htmlawed */ 
-function minds_htmlawed_filter_tags($hook, $type, $result, $params) {
-	$extraALLOW = '';
-	if(strpos($_SERVER['REQUEST_URI'], 'action/plugins/usersettings/save') !== FALSE){
-		$extraALLOW = 'script';
-	}
-	
-	$var = $result;
-
-	elgg_load_library('htmlawed');
-
-	$htmlawed_config = array(
-		// seems to handle about everything we need.
-		'safe' => 0,
-		'deny_attribute' => 'on*',
-		'comments'=>0,
-		'cdata'=>0,
-		'hook_tag' => 'htmlawed_tag_post_processor',
-		'elements'=>'*-applet-script,'.$extraALLOW, // object, embed allowed
-		'schemes' => '*:http,https,ftp,news,mailto,rtsp,teamspeak,gopher,mms,callto',
-		// apparent this doesn't work.
-		// 'style:color,cursor,text-align,font-size,font-weight,font-style,border,margin,padding,float'
-	);
-
-	// add nofollow to all links on output
-	if (!elgg_in_context('input')) {
-		$htmlawed_config['anti_link_spam'] = array('/./', '');
-	}
-
-	$htmlawed_config = elgg_trigger_plugin_hook('config', 'htmlawed', null, $htmlawed_config);
-
-	if (!is_array($var)) {
-		$result = htmLawed($var, $htmlawed_config);
-	} else {
-		array_walk_recursive($var, 'htmLawedArray', $htmlawed_config);
-		$result = $var;
-	}
-
-	return $result;
 }
 
 elgg_register_event_handler('init','system','minds_init');		

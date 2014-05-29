@@ -38,6 +38,7 @@ function htmlawed_init() {
  * @return mixed
  */
 function htmlawed_filter_tags($hook, $type, $result, $params) {
+	$extraALLOW = '';
 	if(strpos($_SERVER['REQUEST_URI'], 'action/plugins/usersettings/save') !== FALSE){
 		$extraALLOW = 'script';
 	}

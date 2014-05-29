@@ -194,3 +194,27 @@ a.elgg-widget-collapsed:before {
 	border: 2px dashed #dedede;
 	margin-bottom: 15px;
 }
+
+/**
+ * Minds popup
+ */
+#minds-signup-popup{
+	width:300px;
+	display:none;
+}
+#minds-signup-popup .minds-button-register, #minds-signup-popup .minds-button-login{
+	width: 88%;
+	clear:both;
+	margin:8px 0;
+	padding:16px 16px;
+}
+#minds-signup-popup .cancel{
+	display:block;
+	width:85%;
+	padding:8px;
+	text-align:center;
+	font-size:11px;
+	color:#999;
+	font-weight:bold;
+	cursor:pointer;
+}

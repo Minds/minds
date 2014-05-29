@@ -5,9 +5,15 @@
 	 //Main js that needs to be loaded
 	 elgg.provide('minds');
 	 
-	 minds.init = function() {	 
-		
- 	
+	 minds.init = function() {	
+
+	if(!elgg.is_logged_in() && !$.cookie('promptSignup')){
+		setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
+	}
+	$(document).on('click', "#minds-signup-popup .cancel", function(){
+		$.fancybox.close();
+	});
+	
 	 /*	$('a').on('click', function(e){
 	 		e.preventDefault();
 	 		

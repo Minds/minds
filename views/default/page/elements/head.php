@@ -30,9 +30,6 @@ END;
 	$feedref = "";
 }
 
-elgg_load_css('minds.default');
-elgg_load_js('minds.js');
-
 $js = minds\core\resources::getLoaded('js','header');
 $css = minds\core\resources::getLoaded('css','header');
 
