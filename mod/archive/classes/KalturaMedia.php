@@ -51,9 +51,12 @@ class KalturaMedia extends ElggObject {
 	}
 
 	public function getVideoUrl(){
+		
+		$flavours = explode(',', $this->getEntry()->flavorParamsIds);
+		$flavour = end($flavours);
 		$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'archive');
 		$partnerId = elgg_get_plugin_setting('partner_id', 'archive');	
-		return $kaltura_server . '/p/'.$partnerId.'/sp/0/playManifest/entryId/' . $this->kaltura_video_id . '/format/url/flavorParamId/9/video.mp4'; 
+		return $kaltura_server . '/p/'.$partnerId.'/sp/0/playManifest/entryId/' . $this->kaltura_video_id . '/format/url/flavorParamId/'.$flavour.'/video.mp4'; 
 	}
 
 }
