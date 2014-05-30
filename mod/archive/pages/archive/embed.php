@@ -47,7 +47,7 @@
 			$subtype = get_input('subtype');
 			switch($subtype){
 				case 'media':
-					$subtype = 'kaltura_media';
+					$subtype = 'kaltura_video';
 					break;	
 				case 'link':
 					$subtype = 'file';
@@ -60,7 +60,7 @@
 				
 				switch($item->subtype){
 					case 'kaltura_video':
-						$src = 'hello';
+						$src = $item->getVideoUrl();
 						break;
 					case 'image':
 					default:

@@ -333,10 +333,10 @@ function get_all_private_settings($entity_guid, $entity_type) {
 function set_private_setting($entity_guid, $entity_type, $name, $value) {
 	global $CONFIG;
 
-	$db = new minds\core\data\call($entity_type);
+	$db = new minds\core\data\call('entities');
 	$result = $db->insert($entity_guid, array(
-							$name => $value
-				));
+		$name => $value
+	));
 
 	if (function_exists('xcache_get')) {
                 $newentity_cache = new ElggXCache('new_entity_cache');

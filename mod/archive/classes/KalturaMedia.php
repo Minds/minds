@@ -50,4 +50,10 @@ class KalturaMedia extends ElggObject {
 		return $this->getEntry()->plays;
 	}
 
+	public function getVideoUrl(){
+		$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'archive');
+		$partnerId = elgg_get_plugin_setting('partner_id', 'archive');	
+		return $kaltura_server . '/p/'.$partnerId.'/sp/0/playManifest/entryId/' . $this->kaltura_video_id . '/format/url/flavorParamId/9/video.mp4'; 
+	}
+
 }
