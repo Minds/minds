@@ -148,7 +148,9 @@ class MindsTrending{
 			if(isset($entity->subtype)){
 				if(!in_array($guid, $index_variables[$entity->type][$entity->subtype])){
 					$i = $g->migrate(count($index_variables[$entity->type][$entity->subtype]));
-                               		$index_variables[$entity->type][$entity->subtype][] = $guid;
+                               		if(!is_array($index_variables[$entity->type][$entity->subtype]))
+						$index_variables[$entity->type][$entity->subtype] = array();
+					$index_variables[$entity->type][$entity->subtype][] = $guid;
 					$db->insert("trending:$timespan:$entity->type:$entity->subtype", array($i=>$guid));
 				}
                         }
