@@ -1,4 +1,9 @@
 <?php
+
+if(elgg_get_plugin_setting('disabled', 'minds_themeconfig')){
+	return false;
+}
+
 $domain = elgg_get_site_url();
 switch($vars['type']){
 	case 'content-side':
