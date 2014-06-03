@@ -9,14 +9,33 @@ use minds\core;
 
 abstract class bitcoin extends \ElggPlugin{
 
+    // Create receive address for user
     
-    // send coin
+    
+    // Create receive handler for user
+    
+    
+    
+    
+    
     
     
     // create wallet
+    // Fetch wallet balance
+    // Pay with wallet
     
     
     
     // INIT create core wallet
+    
+    
+    
+    
+    /**
+     * Initialise
+     */
+    public function init() {
+	// TODO: Create per user bitcoin receive handler
+    }
     
 }
