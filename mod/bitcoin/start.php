@@ -11,5 +11,4 @@
 
 elgg_register_event_handler('init','system', function(){	
 	$market = new minds\plugin\bitcoin\blockchain();
-	$market->init();
-});
+}, 999);
