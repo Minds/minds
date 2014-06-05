@@ -4,9 +4,18 @@ namespace minds\plugin\bitcoin;
 
 use minds\core;
 
-class blockchain extends bitcoin {
+class blockchain extends bitcoin 
+    implements \minds\plugin\pay\PaymentHandler
+{
 
-    private $blockchain_base = "https://blockchain.info";
+    private $blockchain_base = "https://blockchain.info/";
+    
+    public function init() {
+	parent::init();
+	
+	// Register payment handler
+	pay_register_payment_handler('bitcoin', '\minds\plugin\bitcoin\blockchain::paymentHandler');
+    }
 
     /**
      * Make an API call.
@@ -75,6 +84,18 @@ class blockchain extends bitcoin {
 	curl_close($curl_handle);
 
 	return ['content' => $buffer, 'response' => $http_status, 'error' => $error];
+    }
+
+    public static function cancelRecurringPaymentCallback($order_guid) {
+	
+    }
+
+    public static function paymentCallback($order_guid) {
+	
+    }
+
+    public static function paymentHandler($params) {
+	
     }
 
 }
