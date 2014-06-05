@@ -10,10 +10,17 @@ class blockchain extends bitcoin
 
     private $blockchain_base = "https://blockchain.info/";
     
+    public function __construct(){
+	    parent::__construct('bitcoin');
+
+	    $this->init();
+    }
+    
     public function init() {
 	parent::init();
 	
 	// Register payment handler
+	elgg_load_library('elgg:pay');
 	pay_register_payment_handler('bitcoin', '\minds\plugin\bitcoin\blockchain::paymentHandler');
     }
 
@@ -63,10 +70,9 @@ class blockchain extends bitcoin
 	curl_setopt($curl_handle, CURLOPT_SSL_VERIFYHOST, 2);
 
 	// Allow plugins and other services to extend headers, allowing for plugable authentication methods on calls
-	$new_headers = \Idno\Core\site()->triggerEvent('webservice:headers', ['headers' => $headers, 'verb' => $verb]);
 	if (!empty($new_headers) && (is_array($new_headers))) {
 	    if (empty($headers))
-		$headers = [];
+		$headers = array();
 	    $headers = array_merge($headers, $new_headers);
 	}
 
@@ -83,7 +89,7 @@ class blockchain extends bitcoin
 
 	curl_close($curl_handle);
 
-	return ['content' => $buffer, 'response' => $http_status, 'error' => $error];
+	return array('content' => $buffer, 'response' => $http_status, 'error' => $error);
     }
 
     public static function cancelRecurringPaymentCallback($order_guid) {
