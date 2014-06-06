@@ -76,11 +76,21 @@ div.node-signup div.node input {
 
 .elgg-item.tier .elgg-button{
 	display:block;
-	margin:auto;
 	min-width:0;
 	width:100px;
 	padding:8px;
 	text-align:center;
+}
+
+.elgg-item.tier .tier-buttons {
+    margin: auto;
+    width: 260px;
+}
+
+
+.elgg-item.tier .tier-buttons .elgg-button {
+    margin: 5px;
+    float: left;
 }
 
 .elgg-item.tier h2{
