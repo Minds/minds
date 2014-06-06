@@ -67,6 +67,7 @@ class MindsAnalyticsServiceGoogle extends MindsAnalyticsService{
 				$optParams
 			);
 		} catch (Exception $e){
+			var_dump($e);
 			return;
 		}
 		

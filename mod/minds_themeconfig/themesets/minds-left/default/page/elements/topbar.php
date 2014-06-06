@@ -8,7 +8,11 @@
 		<?php } ?>
 	</a>
 	<?php echo elgg_view('search/search_box'); ?>
-	<?php echo elgg_view_menu('site',array('sort_by'=>'priority')); ?>
+	<div class="global-nav-container">
+		<div class="inner">
+			<?php echo elgg_view_menu('site',array('sort_by'=>'priority')); ?>
+		</div>
+	</div>
 </div>
 
 <?php $user = elgg_get_logged_in_user_entity();?>

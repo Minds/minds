@@ -36,6 +36,7 @@ elgg.tinymce.init = function() {
 
 	tinyMCE.init({
 		selector: "textarea",
+		 relative_urls: false,
 	    theme: "modern",
 	    width: "100%",
 	    height: 400,

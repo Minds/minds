@@ -101,7 +101,7 @@ class MindsTrending{
 		}
 
 		$count = $g->migrate($db->countRow($namespace)); // cassandra does strange things if the digit count is not the same, so we need 18 0s
-		if((int) $options['offset'] + $options['limit']>= $count){
+		if(((int) $options['offset'] + $options['limit']>= $count) && $options['offset'] > $g->migrate(1)){
 			return false;
 		}
 

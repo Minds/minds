@@ -495,7 +495,7 @@ function admin_page_handler($page) {
 	if (elgg_is_xhr()) {
 	    echo $content;
 	} else {
-	    $body = elgg_view_layout('admin', array('content' => $buttons . elgg_view('admin/ajax_panel')/* $content */, 'title' => $title));
+	    $body = elgg_view_layout('admin', array('content' => $buttons . elgg_view('admin/ajax_panel', array('default'=>$content))/* $content */, 'title' => $title));
 	    echo elgg_view_page($title, $body, 'default');
 	}
 	return true;

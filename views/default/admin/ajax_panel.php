@@ -1,6 +1,6 @@
 <div id="ajax-admin-panel">
     
-   <?php echo elgg_view('admin/statistics/overview');?>
+   <?php echo $vars['default'];?>
    
 </div>
 
