@@ -1,4 +1,9 @@
 <?php
+
+echo "<label>Enabled ads</label>";
+	echo elgg_view('input/radio',array('name'=>"enabled", 'value'=>elgg_get_plugin_setting('enabled', 'minds_themeconfig')?:'on','options'=> array('on'=>'on', 'off'=>'off')));
+
+
 $ads = elgg_get_plugin_setting('ads', 'minds_themeconfig') ?: array();
 
 $blocks = array( 'side-1',
