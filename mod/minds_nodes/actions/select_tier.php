@@ -34,7 +34,7 @@ if ($tier = get_entity(get_input('tier_id'),'object')) {
 
     $order->access_id = 1;
 
-    $order->payment_method = 'paypal';
+    $order->payment_method = get_input('handler', 'paypal');
     
     $order->recurring = true;
 
