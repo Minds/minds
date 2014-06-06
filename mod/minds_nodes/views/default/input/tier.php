@@ -9,7 +9,9 @@ if(elgg_view_exists('minds_nodes/tier/'. $name))
 	echo elgg_view('minds_nodes/tier/'. $name, $vars); 
 
 $currency = pay_get_currency();   
- 
+
+// TODO: If more than one payment method, select method here....
+
 if ($upgrade_node = get_entity($vars['upgrade_node'], 'object')) {
 	if ($tier->price == 0) {
 		$title = elgg_view('output/url', array('is_action' => true, 'id' => $tier->product_id, 'href' => elgg_get_site_url() . 'action/upgrade_to?tier_id='. $tier->guid."&node_guid={$upgrade_node->guid}", 'text' =>  'Free', 'class' => 'elgg-button elgg-button-action'));
@@ -30,7 +32,9 @@ if ($upgrade_node = get_entity($vars['upgrade_node'], 'object')) {
 <div class="tier-description">
 	<?php echo $tier->description; ?>
 </div>
+<div class="tier-buttons">
 <?php 
+    if ($tier->price == 0) {
 	echo elgg_view('output/url', array(
 		'is_action' => true, 
 		'id' => $tier->product_id, 
@@ -38,8 +42,25 @@ if ($upgrade_node = get_entity($vars['upgrade_node'], 'object')) {
 		'text' =>  'Select', 
 		'class' => 'elgg-button elgg-button-action'
 	));
+    } else {
+	echo elgg_view('output/url', array(
+		'is_action' => true, 
+		'id' => $tier->product_id, 
+		'href' => elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid . "&handler=paypal", 
+		'text' =>  'Pay with Paypal', 
+		'class' => 'elgg-button elgg-button-action payment-button'
+	));
+	
+	echo elgg_view('output/url', array(
+		'is_action' => true, 
+		'id' => $tier->product_id, 
+		'href' => elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid . "&handler=bitcoin", 
+		'text' =>  'Pay with Bitcoin', 
+		'class' => 'elgg-button elgg-button-action payment-button'
+	));
+    }
 ?>
-
+</div>
 <?php
 if (!elgg_is_logged_in()) {
 ?>
