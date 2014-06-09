@@ -7,8 +7,18 @@ namespace minds\plugin\bitcoin;
 
 use minds\core;
 
-abstract class bitcoin extends \ElggPlugin{
+abstract class bitcoin extends \ElggPlugin     
+{
+    public static $bitcoin;
+    
+    public function __construct($plugin) {
+	parent::__construct($plugin);
+	
+	bitcoin::$bitcoin = $this;
+    }
 
+    // get wallet for user
+    
     // Create receive address for user
     
     
@@ -38,4 +48,16 @@ abstract class bitcoin extends \ElggPlugin{
 	// TODO: Create per user bitcoin receive handler
     }
     
+    
+    
+    
+}
+
+/**
+ * Helper function to retrieve current bitcoin handler
+ * @return bitcoin
+ */
+function &bitcoin()
+{
+    return \minds\plugin\bitcoin\bitcoin::$bitcoin;
 }

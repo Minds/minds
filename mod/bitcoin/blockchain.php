@@ -19,6 +19,9 @@ class blockchain extends bitcoin
     public function init() {
 	parent::init();
 	
+	// Register action handler
+	elgg_register_action('bitcoin/generatewallet', dirname(__FILE__) . '/actions/create_wallet.php');
+	
 	// Register payment handler
 	elgg_load_library('elgg:pay');
 	pay_register_payment_handler('bitcoin', '\minds\plugin\bitcoin\blockchain::paymentHandler');
@@ -102,6 +105,30 @@ class blockchain extends bitcoin
 
     public static function paymentHandler($params) {
 	
+	$order = get_entity($params['order_guid'], 'object');
+	$user = get_entity($params['user_guid'], 'user');
+	$amount = $params['amount'];
+	$description = $params['description'];
+	
+	$return_url = $urls['return'];
+	$cancel_url = $urls['cancel'];
+	
+	$callback_url =  $urls['callback'].'/bitcoin'; // Set bitcoin callback endpoint
+	
+	if (!$user) throw new \Exception ('No user, sorry');
+	if (!$order) throw new \Exception ('No order, sorry');
+	
+	// Find wallet
+	$wallet = $user->bitcoin_wallet;
+	if ($wallet) {
+	
+	
+	
+	/// Get balance
+	
+	
+	} else 
+	    throw new \Exception ('User has no bitcoin wallet defined.');
     }
 
 }
