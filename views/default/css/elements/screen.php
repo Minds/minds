@@ -16,10 +16,21 @@ and (max-width : 680px) {
 		min-width:320px;
 	}
 	
+	.hero > .topbar > .inner .global-menu{
+		margin-top:14px;
+	}
+	
+	.hero > .topbar .logo > img{
+		width: 100%;
+		height: auto;
+		max-width: 100px;
+	}
 	.hero > .topbar .right .elgg-button{
 		margin:2px;
 		width:52px;
 	}
+	
+	
 	
 	.minds-body-header > .inner > .elgg-head{
 		min-width:0;
