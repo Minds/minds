@@ -1,4 +1,11 @@
 <p>
+    <label>Blockchain API key: <br />
+	<?= elgg_view('input/text',array('name'=>'params[api_code]','value'=> elgg_get_plugin_setting('api_code', 'bitcoin'))); ?>
+    </label>
+</p>
+
+
+<p>
     <label>Minds central bitcoin account: <br />
 	<?= elgg_view('input/text',array('name'=>'params[central_bitcoin_account]','value'=> elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin'))); ?>
     </label>
