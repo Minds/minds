@@ -62,7 +62,7 @@ function spam_login_filter_verify_action_hook($hook, $entity_type, $returnvalue,
 	global $CONFIG;
 	//Check against stopforumspam and domain blacklist
 	
-	$email = get_input('email');
+	$email = get_input('e');
 	
 	if (validateUser($email, $_SERVER['REMOTE_ADDR'])) {		
 		return true;

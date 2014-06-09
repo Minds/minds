@@ -188,8 +188,11 @@ class call extends core\base{
 	 * Count the columns of a row
 	 */
 	public function countRow($key){
-		self::$counts++;
-		return $this->cf->get_count($key);
+		try{self::$counts++;
+			return $this->cf->get_count($key);
+		}catch(Exception $e){
+			return 0;
+		}
 	}
 	
 	/**
@@ -221,7 +224,7 @@ class call extends core\base{
 	 * @param bool $verify - return a count of true or false? (disable if doing batches as this can slow down)
 	 * @return mixed
 	 */
-	public function removeAttributes($key, array $attributes = array(), $verify= true){
+	public function removeAttributes($key, array $attributes = array(), $verify= false){
 		self::$deletes++;
 		if(empty($attributes)){
 			return false; // don't allow as this will delete the row!

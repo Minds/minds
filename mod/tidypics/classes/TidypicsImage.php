@@ -398,6 +398,9 @@ class TidypicsImage extends ElggFile {
 	 * @return TidypicsAlbum
 	 */
 	public function getContainerEntity($type = 'object') {
-		return new TidypicsAlbum($this->getContainerGUID());
+		if($this->getContainerGUID() != $this->getOwnerGUID())
+			return new TidypicsAlbum($this->getContainerGUID());
+
+		return new TidypicsAlbum();
 	}
 }

@@ -12,7 +12,7 @@ elgg_load_css('lightbox');
 $image = elgg_extract('entity', $vars);
 
 $owner = $image->getOwnerEntity();
-
+if(!$owner) return false;
 $img = elgg_view_entity_icon($image, 'small');
 
 $body = elgg_view('output/url', array(

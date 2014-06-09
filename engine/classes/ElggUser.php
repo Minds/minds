@@ -232,6 +232,10 @@ class ElggUser extends ElggEntity
 			$db->removeRow($this->email); //@todo we should keep a record of indexes
 		}
 
+		$entities = elgg_get_entities(array('owner_guid'=>$this->guid, 'limit'=>0));
+		foreach($entities as $entity)
+			$entity->delete();
+
 		clear_user_files($this);
 
 		// Delete entity

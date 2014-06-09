@@ -14,6 +14,7 @@ if (!$file) {
 }
 
 $owner = $file->getOwnerEntity();
+if(!$owner) return false;
 $container = $file->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
 $excerpt = elgg_get_excerpt($file->description);

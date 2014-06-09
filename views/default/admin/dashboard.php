@@ -1,5 +1,5 @@
 <?php
-
+return;
 elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
 
 

@@ -1209,14 +1209,18 @@ abstract class ElggEntity extends ElggData implements
 					'owner_guid' => $this->guid,
 					'limit' => 0
 				);
-	
-				$batch = new ElggBatch('elgg_get_entities', $options);
+					
+				/*$batch = new ElggBatch('elgg_get_entities', $options);
 				$batch->setIncrementOffset(false);
 	
 				foreach ($batch as $e) {
 					$e->delete(true);
+				}*/
+				$entities = elgg_get_entities($options);
+				foreach($entities as $e){
+					$e->delete(false);
 				}
-	
+				
 				access_show_hidden_entities($entity_disable_override);
 				$__RECURSIVE_DELETE_TOKEN = null;
 				elgg_set_ignore_access($ia);

@@ -5,7 +5,7 @@ $params = unserialize($notification->params);
 $type = $params['type'] ? $params['type'] : 'entity';
 $actor = get_entity($notification -> from_guid, 'user');
 if(!$actor)
-	return false;
+	$actor =new ElggUser('minds');
 
 if ($type == 'entity') {
 	$object = get_entity($notification -> object_guid, 'object');
