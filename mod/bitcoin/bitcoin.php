@@ -16,6 +16,24 @@ abstract class bitcoin extends \ElggPlugin
 	
 	bitcoin::$bitcoin = $this;
     }
+    
+    /**
+     * Retrieve a wallet for a user.
+     */
+    abstract public function getWallet(\ElggUser $user);
+    
+    /**
+     * Create a wallet for a user.
+     */
+    abstract public function createWallet(\ElggUser $user);
+    
+    /**
+     * When passed a wallet GUID (as stored in Elgg), will return it's current balance.
+     */
+    abstract public function getWalletBalance($wallet_guid);
+    
+    
+    
 
     // get wallet for user
     
