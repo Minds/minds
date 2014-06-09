@@ -48,7 +48,7 @@ class elasticsearch {
 	curl_setopt($ch, CURLOPT_PORT, $this->port);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http['method']);
-	//curl_setopt($ch,CURLOPT_TIMEOUT_MS, 500);
+	curl_setopt($ch,CURLOPT_TIMEOUT_MS, 1500);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $http['content']);
 	$result = curl_exec($ch);
 	curl_close($ch);

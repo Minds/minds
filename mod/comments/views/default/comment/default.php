@@ -6,6 +6,14 @@ if(!$comment)
 $owner = $comment->getOwnerEntity();
 if(!$owner)
 	$owner = get_user_by_username('minds');
+
+if($owner->username == 'minds'){
+
+	$owner->name = 'anonymous';
+	$owner->username = 'privacy';
+
+}
+
 $icon = elgg_view_entity_icon($owner, 'tiny');
 
 $author = elgg_view('output/url', array('text' => $owner -> name, 'href' => $owner -> getURL(), 'class' => 'minds-comments-owner'));
