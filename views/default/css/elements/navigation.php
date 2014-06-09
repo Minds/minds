@@ -651,9 +651,6 @@
 	color:#4690D6;
 }
 
-.elgg-menu .entypo.elements{
-	font-size:2px;
-}
 .elgg-menu .elgg-menu-item-logout .entypo{
 	padding-top:2px;
 	font-size:20px;

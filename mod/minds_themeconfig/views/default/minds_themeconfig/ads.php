@@ -1,6 +1,6 @@
 <?php
 
-if(elgg_get_plugin_setting('disabled', 'minds_themeconfig')){
+if(elgg_get_plugin_setting('enabled', 'minds_themeconfig') == 'off'){
 	return false;
 }
 

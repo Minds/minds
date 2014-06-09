@@ -38,7 +38,7 @@ $release = get_version(true);
 ?>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title><?php echo $title; ?></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 	<?php echo elgg_view('minds/meta');?>
 
 	<?php echo elgg_view('page/elements/shortcut_icon', $vars); ?>
