@@ -92,7 +92,7 @@ class blockchain extends bitcoin
 
 	curl_close($curl_handle);
 
-	return array('content' => $buffer, 'response' => $http_status, 'error' => $error);
+	return array('content' => json_decode($buffer) ? json_decode($buffer) : $buffer, 'response' => $http_status, 'error' => $error);
     }
 
     public static function cancelRecurringPaymentCallback($order_guid) {
@@ -119,7 +119,7 @@ class blockchain extends bitcoin
 	if (!$order) throw new \Exception ('No order, sorry');
 	
 	// Find wallet
-	$wallet = $user->bitcoin_wallet;
+	$wallet = $this->getWallet($user);
 	if ($wallet) {
 	
 	
@@ -129,6 +129,53 @@ class blockchain extends bitcoin
 	
 	} else 
 	    throw new \Exception ('User has no bitcoin wallet defined.');
+    }
+
+    public function createWallet(\ElggUser $user) {
+	
+	$password = md5($user->salt . microtime(true)); // Create a random password
+	$api_code = elgg_get_plugin_setting('api_code', 'bitcoin');
+	
+	if (!$api_code) throw new \Exception ("An API Code needs to be specified before bitcoin transactions can be made.");
+	
+	$wallet = $this->__make_call('GET', "{$blockchain_base}api/v2/create_wallet", array(
+	    'password' => $password,
+	    'api_code' => $api_code
+	));
+	
+	if ($wallet['code'] == 500)
+	    throw new \Exception($wallet['response']);
+	
+	$new_wallet = new \ElggObject();
+	$new_wallet->subtype = 'bitcoin_wallet';
+	$new_wallet->access_id = ACCESS_PRIVATE;
+	$new_wallet->owner_guid = $user->guid;
+	
+	$new_wallet->wallet_password = $password;
+	$new_wallet->wallet_raw = serialize($wallet);
+	
+	$new_wallet->wallet_guid = $wallet->guid;
+	$new_wallet->wallet_address = $wallet->address;
+	$new_wallet->wallet_link = $wallet->link;
+	
+	return $new_wallet->save();
+	
+    }
+
+    public function getWallet(\ElggUser $user) {
+	if ($wallets = elgg_get_entities(array(
+	    'type' => 'object',
+	    'subtype' => 'bitcoin_wallet',
+	    'owner_guid' => $user->guid
+	))) {
+	    return $wallets[0];
+	}
+	
+	return null;
+    }
+
+    public function getWalletBalance($wallet_guid) {
+	
     }
 
 }
