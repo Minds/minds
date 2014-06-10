@@ -1,0 +1,18 @@
+<script>
+	var ws = new WebSocket("ws://107.21.42.113:8200/");
+    ws.onopen = function() {
+    	alert('123');
+        // Web Socket is connected. You can send data by send() method.
+        ws.send("message to send");
+        console.log('opened');
+    };
+    ws.onmessage = function (evt) { 
+        var received_msg = evt.data;
+        console.log(evt);
+    };
+    ws.onclose = function() { 
+        // websocket is closed. 
+        console.log('closed');
+    };
+	
+</script>

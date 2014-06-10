@@ -38,7 +38,8 @@ define('__MINDS_ROOT__', dirname(dirname(__FILE__)));
 /**
  * Autoloader
  */
-require_once(dirname(__FILE__) . '/autoload.php');
+ require_once(dirname(dirname(__FILE__)) . '/vendor/autoload.php');
+//require_once(dirname(__FILE__) . '/autoload.php');
 
 $minds = new minds\core\minds();
 $minds->start();

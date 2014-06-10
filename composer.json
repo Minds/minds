@@ -1,0 +1,12 @@
+{
+	"name": "minds/minds",
+	"description": "The core minds social engine",
+    "require": {
+		"thobbs/phpcassa": "master",
+		"elasticsearch/elasticsearch": "~1.0"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "files": ["engine/autoload.php"]
+    }
+}

@@ -71,10 +71,12 @@ function categories_save_site_categories($hook, $type, $value, $params) {
 	}
 
 	$categories = get_input('categories');
-	$categories = string_to_tag_array($categories);
+	$categories = $categories;
 
 	$site = elgg_get_site_entity();
-	$site->categories = $categories;
+	$site->categories = explode(',',$categories);
+	$site->save();
+	
 	system_message(elgg_echo("categories:save:success"));
 
 	elgg_delete_admin_notice('categories_admin_notice_no_categories');

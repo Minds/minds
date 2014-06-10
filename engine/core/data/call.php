@@ -30,8 +30,7 @@ class call extends core\base{
 	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL){
 		global $CONFIG;
 		
-		
-		require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/vendors/phpcassa/lib/autoload.php');
+	//	require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/vendors/phpcassa/lib/autoload.php');
 		
 		$this->servers = $servers ?: $CONFIG->cassandra->servers;
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
