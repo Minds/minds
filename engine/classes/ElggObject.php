@@ -154,7 +154,8 @@ class ElggObject extends ElggEntity {
 			'description',
 			'featured',
 			'featured_id',
-			'ownerObj'
+			'ownerObj',
+			'category'
 		));
 	}
 

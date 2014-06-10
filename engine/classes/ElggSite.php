@@ -91,9 +91,7 @@ class ElggSite extends ElggEntity {
 			// See if this is a URL
 			} else if (strpos($guid, "http") !== false) {
 				$guid = get_site_by_url($guid);
-				foreach ($guid->attributes as $key => $value) {
-					$this->attributes[$key] = $value;
-				}
+				$this->loadFromArray($guid);
 
 			// Is it a GUID
 			} else if (is_numeric($guid)) {
@@ -116,9 +114,7 @@ class ElggSite extends ElggEntity {
 	 */
 	protected function load($guid) {
 		
-		foreach($guid as $k => $v){
-			$this->attributes[$k] = $v;
-		}
+		$this->loadFromArray($guid);
 
 		cache_entity($this);
 

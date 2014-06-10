@@ -13,9 +13,10 @@ class router{
 	 * (fallback to elgg page handler if we fail)
 	 * 
 	 */
-	public function route(){
-			
-		$uri = strtok($_SERVER["REQUEST_URI"],'?');
+	public function route($uri = null){
+		
+		if(!$uri)	
+			$uri = strtok($_SERVER["REQUEST_URI"],'?');
 		$route = rtrim($uri, '/');
 		$segments = explode('/', $route);
 		$method = strtolower($_SERVER['REQUEST_METHOD']);

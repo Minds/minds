@@ -186,9 +186,13 @@ abstract class ElggData implements
 	public function toArray(){
 		$attrs = array();
 		foreach($this->attributes as $k => $v){
-			if(!is_null($v)){
-				$attrs[$k] = $v;
-			}
+			if(is_null($v))
+				continue;
+			
+			if(is_array($v))
+				$v = json_encode($v);
+				
+			$attrs[$k] = $v;
 		}
 		return $attrs;
 	}

@@ -83,23 +83,30 @@ abstract class ElggEntity extends ElggData implements
 		}
 	}
 	
-	private function loadFromGUID($guid){
+	protected function loadFromGUID($guid){
 		$db = new minds\core\data\call('entities');
 		$row = $db->getRow($guid, array('limit'=>400));
 		$row['guid'] = $guid;
 		$this->loadFromArray($row);
 	}
 	
-	private function loadFromObject($object){
+	protected function loadFromObject($object){
 		foreach($object as $k=>$v){
 			$this->$k = $v;
 		}
 	}
 	
-	private function loadFromArray($array){
+	protected function loadFromArray($array){
 		foreach($array as $k=>$v){
+			if($this->isJson($v))
+				$v = json_decode($v, true);
 			$this->$k = $v;
 		}
+	}
+	
+	public function isJson($string) {
+		json_decode($string);
+		return (json_last_error() == JSON_ERROR_NONE);
 	}
 
 	/**
