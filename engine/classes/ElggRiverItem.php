@@ -207,6 +207,7 @@ class ElggRiverItem {
 		$followers = $this->subject->getFriendsOf(null, 10000, "", 'guids');
 		if(!$followers) 
 			$followers = array();
+		
 		$followers = array_keys($followers);
 		array_push($followers, 'site');//add to public timeline
 		array_push($followers, $this->action_type);//timelines for actions too
@@ -219,6 +220,11 @@ class ElggRiverItem {
 		if(isset($this->to_guid))
 			array_push($followers, $this->to_guid); 
 
+
+		//for featured items, we only want them to appear on the featured line, no others
+		if($this->action_type == 'feature'){
+			$followers = array($this->action_type);
+		}
 			
 		$db = new minds\core\data\call('timeline');	
 		foreach($followers as $follower_guid){
