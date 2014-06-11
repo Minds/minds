@@ -49,4 +49,5 @@ if(elgg_is_logged_in()){
 		<input type="hidden" name="search_type" value="all" />
 		<input type="submit" value="<?php echo elgg_echo('search:go'); ?>" class="submit" />
 	</fieldset>
+	<div class="search-live-results"></div>
 </form>

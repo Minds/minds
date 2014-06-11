@@ -4,7 +4,7 @@ $graphics_url = $base_url . 'mod/hypeAlive/graphics/';
 ?>
 /** Minds Comments **/
 .minds-comments{
-	margin:0 16px;
+	margin:0;
 	background: #EFEFEF;
 	border: 1px solid #CCC;
 }
@@ -41,7 +41,7 @@ $graphics_url = $base_url . 'mod/hypeAlive/graphics/';
 .minds-comments-form{
 	border:1px solid #CCC;
 	background:#CCC;
-	margin:16px;
+	margin:16px 0 0;
 	margin-top:0;
 	padding:8px;
 }

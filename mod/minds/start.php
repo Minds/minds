@@ -193,6 +193,87 @@ function minds_index($hook, $type, $return, $params) {
 function minds_news_page_handler($page) {
 	global $CONFIG;
 
+	if(is_numeric($page[0])){
+		switch($page[1]){
+			case 'embed':
+				$code = '<div class="minds-post" data-guid="'.$page[0].'"></div><script async src="'.elgg_get_site_url().'js/widgets.0.js"></script>';
+				echo '<p>Copy this post to your website by copying the code below</p>';
+				echo elgg_view('input/text', array('value'=>$code, 'style'=>'width:640px'));
+				
+				echo "<h3>Preview</h3>";
+				echo $code;
+				echo '<script>
+						$("input[type=\'text\']").select();
+						$("input[type=\'text\']").on("click", function () {
+  							 $(this).select();
+						});
+					</script>';
+				return true;
+			case 'share':
+				$url = elgg_get_site_url() . 'news/'.$page[0];
+				echo '<p>Copy the url below to share this post</p>';
+				echo elgg_view('input/text', array('value'=>$url, 'style'=>'width:400px'));
+				
+				echo '<script>
+						$("input[type=\'text\']").select();
+						$("input[type=\'text\']").on("click", function () {
+  							 $(this).select();
+						});
+					</script>';
+				
+				return true;
+				
+		}
+		
+			$post = new ElggRiverItem($page[0]);
+			set_input('show_loading', 'false');
+			$user = elgg_get_logged_in_user_entity();
+			elgg_set_page_owner_guid($user->guid);
+			$sidebar .= elgg_view('channel/sidebar', array(
+				'user' => $user
+			));
+			$options['count'] = $count;
+			$options['items'] = array($post);
+			
+			if(get_input('async')){
+				echo elgg_view('page/elements/head');
+				
+				set_input('masonry', 'off');
+				$options['list_class'] = 'elgg-list minds-list-river x1 no-margin';
+				echo elgg_view('page/components/list', $options);
+				
+				echo $content;
+				
+				$js = minds\core\resources::getLoaded('js', 'footer');
+				foreach ($js as $script) { ?>
+					<script type="text/javascript" src="<?php echo $script['src']; ?>"></script>
+				<?php
+				} ?>
+				<script type="text/javascript">
+					<?php echo elgg_view('js/initialize_elgg'); ?>
+				</script>
+			<?php	
+				exit;
+			} else {
+				$options['list_class'] = 'elgg-list minds-list-river x1 mason';
+				$content = elgg_view('page/components/list', $options);
+			}
+			$params = array(
+				'content' =>  $content,
+				'avatar' => $avatar,
+				'sidebar' => $sidebar,
+				'filter_context' => $page_filter,
+				'filter' => false,
+				'header' => $header,
+				'class' => 'elgg-river-layout',
+			);
+			
+			$body = elgg_view_layout('fixed', $params);
+			
+			echo elgg_view_page($title, $body, 'default', array('class'=>'news'));
+			return true;
+	}
+
 	elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
 
 	// make a URL segment available in page handler script
@@ -374,8 +455,8 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 			$options = array(
 				'name' => 'delete',
 				'href' => "action/river/delete?id=$item->id",
-				'text' => '&#10062;',
-				'class' => 'entypo',
+				'text' => '<span class="entypo">&#10062;</span> Delete',
+				'class' => '',
 				'title' => elgg_echo('delete'),
 				//'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
@@ -390,14 +471,41 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 			$options = array(
 					'name' => 'remind',
 					'href' => "action/minds/remind?guid=$object->guid",
-					'text' => '&#59159;',
-					'class' => 'entypo',
+					'text' => '<span class="entypo">&#59159;</span> Remind',
+					'class' => '',
 					'title' => elgg_echo('minds:remind'),
 					'is_action' => true,
 					'priority' => 1,
 				);
 			$return[] = ElggMenuItem::factory($options);
 		}
+		
+		
+		elgg_load_js('lightbox');
+		elgg_load_css('lightbox');
+		$options = array(
+					'name' => 'embed',
+					'href' => "news/$item->id/embed",
+					'text' => '<span class="entypo">&#59406;</span> Embed',
+					'class' => 'elgg-lightbox',
+					'title' => elgg_echo('minds:embed'),
+					'is_action' => true,
+					'priority' => 1,
+				);
+		$return[] = ElggMenuItem::factory($options);
+		
+		
+		$options = array(
+					'name' => 'share',
+					'href' => "news/$item->id/share",
+					'text' => '<span class="entypo">&#59407;</span> Share',
+					'class' => 'elgg-lightbox',
+					'title' => elgg_echo('minds:share'),
+					'is_action' => true,
+					'priority' => 1,
+				);
+		$return[] = ElggMenuItem::factory($options);
+		//
 	}
 
 	return $return;

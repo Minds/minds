@@ -21,6 +21,10 @@ class start extends \ElggPlugin{
 	
 	public function init(){
 		$routes = core\router::registerRoutes($this->registerRoutes());
+		\elgg_extend_view('css/elgg', 'search/css');
+
+		\elgg_register_js('search', \elgg_get_simplecache_url('js', 'search'));
+		\elgg_load_js('search');
 		
 		//makeshift indexer for testing
 		/*foreach(elgg_get_entities(array('type'=>'user','limit'=>500)) as $entity){
