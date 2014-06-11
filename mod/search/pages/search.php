@@ -15,10 +15,14 @@ class search extends core\page implements interfaces\page{
 	 * Get requests
 	 */
 	public function get($pages){
-		$client = new \Elasticsearch\Client(array('hosts'=>array('localhost')));
+		$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search'))));
 		$params = array();
 		
 		$query = $_GET['q'];
+	
+		if(!$query){
+			exit;
+		}
 		$category = \get_input('category');
 		if($category)
 			$query = "query AND $category";
@@ -36,11 +40,14 @@ class search extends core\page implements interfaces\page{
 			array_push($guids, $raw['_id']);
 		}
 
-		//$entities = \elgg_get_entities(array('guids'=>$guids));
-		//$content = \elgg_view('search/list', array('entities'=>$entities));
-		$content = \elgg_view('search/filter');
-		$content .= \elgg_list_entities(array('guids'=>$guids, 'full_view'=>false, 'list_type'=>'list'));
-		
+		if(empty($guids)){
+			$content = 'Sorry, no results could be found';
+		} else {
+			//$entities = \elgg_get_entities(array('guids'=>$guids));
+			//$content = \elgg_view('search/list', array('entities'=>$entities));
+			$content = \elgg_view('search/filter');
+			$content .= \elgg_list_entities(array('guids'=>$guids, 'full_view'=>false, 'list_type'=>'list'));
+		}
 		$body = \elgg_view_layout('one_column', array('content'=>$content));
 		
 		echo $this->render(array('body'=>$body));

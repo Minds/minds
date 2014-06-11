@@ -16,8 +16,11 @@ class router{
 	public function route($uri = null){
 		
 		if(!$uri)	
-			$uri = strtok($_SERVER["REQUEST_URI"],'?');
-		$route = rtrim($uri, '/');
+			$route = strtok($_SERVER["REQUEST_URI"],'?');
+		else
+			$route = $uri;
+
+		$route = rtrim($route, '/');
 		$segments = explode('/', $route);
 		$method = strtolower($_SERVER['REQUEST_METHOD']);
 	
@@ -33,7 +36,17 @@ class router{
 			--$loop;
 		}
 
-		return $this->legacyRoute(\get_input('handler'), \get_input('page'));
+		if($uri){
+			$path = explode('/', substr($uri,1));
+			$handler = array_shift($path);
+			$page = $path;
+		} else {
+			$handler = \get_input('handler');
+			$page = \get_input('page');
+		}
+
+
+		return $this->legacyRoute($handler, $page);
 	
 	}
 	
