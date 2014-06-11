@@ -64,6 +64,9 @@
 	width:100% !important;
 	height:auto;
 }
+.elgg-list.no-margin, .elgg-list.no-margin > li{
+	margin:0!important;
+}
 .elgg-list.x2{ 
 	/*width:auto;
 	margin:auto;

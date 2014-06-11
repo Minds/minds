@@ -567,27 +567,38 @@
 	RIVER
 *************************************** */
 .elgg-menu-river {
-	float: right;
-	margin-left: 15px;
+	display:block;
+	width:100%;
+	padding:0;
+	margin: 0;
 	font-size: 90%;
 	color: #aaa;
 	line-height: 16px;
-	height: 16px;
+	height: auto;
+	text-align:right;
 }
 .elgg-menu-river > li {
 	display: inline-block;
-	margin-left: 5px;
+	margin: 8px;
+	font-size:11px;
 }
 .elgg-menu-river > li > a {
 	color: #aaa;
 	height: 16px;
+}
+.elgg-menu-river > li > a .entypo{
+	vertical-align: middle;
+	padding:2px;
+}
+.elgg-menu-river > li > a:hover{
+	text-decoration:none;
 }
 <?php // need to override .elgg-menu-hz ?>
 .elgg-menu-river > li > a {
 	display: block;
 }
 .elgg-menu-river > li > span {
-	vertical-align: baseline;
+	vertical-align: middle;
 }
 
 /* ***************************************

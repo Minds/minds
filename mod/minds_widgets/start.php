@@ -25,8 +25,11 @@ function minds_widgets_init(){
     elgg_register_plugin_hook_handler('public_pages', 'walled_garden', 'minds_widgets_public_handler'); 
     
     // Lite embed CSS
-    $url = elgg_get_simplecache_url('css', 'minds_widgets/css');
-    elgg_register_css('minds.themewidgets', $url);
+    $url = elgg_get_simplecache_url('css', 'widgets');
+    elgg_register_css('widgets', $url);
+	
+	$url = elgg_get_simplecache_url('js', 'widgets');
+    elgg_register_css('widgets', $url);
     
     // Endpoint
     elgg_register_page_handler('widgets', 'minds_widgets_page_handler');    

@@ -30,9 +30,9 @@ if (elgg_is_logged_in()) {
 		
 		$params = array(
 			'href' => $url,
-			'text' => '&#128077;',
+			'text' => '<span class="entypo">&#128077;</span> Vote up',
 			'title' => elgg_echo('thumbs:up'),
-			'class'=> $already ? 'entypo thumbs-button-up selected' : 'entypo thumbs-button-up',
+			'class'=> $already ? 'thumbs-button-up selected' : 'thumbs-button-up',
 			'data-role' => 'none',
 			'rel'=>'external',
 			'is_action' => true,
