@@ -4,6 +4,8 @@
 /.htaccess
 .htaccess
 /2
+#ignore composer
+/vendor
 # ignore IDE/hidden/OS cache files
 .*
 *~

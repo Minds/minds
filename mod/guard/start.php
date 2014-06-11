@@ -1,6 +1,9 @@
 <?php
 /**
- * Minds guard plugin. Prevents spam and detects bots. 
+ * A minds security plugin
+ * 
+ * - Prevents spam
+ * - Enabled twofactor authentication
  */
 namespace minds\plugin\guard;
 
@@ -21,8 +24,52 @@ class start extends \ElggPlugin{
 	}
 	
 	public function init(){
+		
+		
+		/*$twofactor = new lib\twofactor();
+		
+		$user = new\ElggUser('mark');
+		$secret = $user->twofactor_secret ?: $twofactor->createSecret();
+		
+		$user->twofactor_secret = $secret;
+		$user->save();
+		
+		echo elgg_view('output/img', array('src'=>$twofactor->getQRCodeGoogleUrl('mark@minds.com', $secret)));
+		
+		//$oneCode = $twofactor->getCode($secret);
+		//echo "Checking Code '$oneCode' and Secret '$secret':\n";
+		$oneCode = $_GET['code'];
+		echo $oneCode;
+		
+		$checkResult = $twofactor->verifyCode($secret, $oneCode, 2);    // 2 = 2*30sec clock tolerance
+		if ($checkResult) {
+		    echo 'OK';
+		} else {
+		    echo 'FAILED';
+		}
+		//echo $twofactor->getCode($secret);
+		
+		exit;*/
 		\elgg_register_event_handler('create', 'object', array($this, 'createHook'));
 		\elgg_register_event_handler('update', 'object', array($this, 'createHook'));
+		
+		
+		\elgg_register_event_handler('pagesetup', 'system', array($this,'twofactorPagesetup'));
+		
+		$routes = core\router::registerRoutes($this->registerRoutes());
+	}
+	
+	/**
+	 * Handler the pages
+	 * 
+	 * @param array $pages - the page slugs
+	 * @return bool
+	 */
+	public function registerRoutes(){
+		$path = "minds\\plugin\\guard";
+		return array(
+			'/settings/twofactor' => "$path\\pages\\twofactor"
+		);
 	}
 	
 	protected function prohbitedDomains(){
@@ -61,5 +108,26 @@ class start extends \ElggPlugin{
 		}
 
 			return true;
+	}
+
+	/**
+	 * Twofactor authentication login hook
+	 */
+	public function twofactorLoginHook(){
+		
+	}
+	
+	/**
+	 * twofactor pagesetup (adds the menus etc)
+	 */
+	public function twofactorPagesetup(){
+		if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
+			$params = array(
+				'name' => 'twofactor',
+				'text' => elgg_echo('guard:twofactor'),
+				'href' => "settings/twofactor",
+			);
+			elgg_register_menu_item('page', $params);
+		}
 	}
 }
