@@ -54,7 +54,10 @@ class start extends \ElggPlugin{
 	 * Create a search document
 	 */
 	public function createDocument($entity){
-		$client = new \Elasticsearch\Client(array('hosts'=>array('localhost')));
+		if(!in_array($entity->subtype, array('blog','image','album','kaltura_video')) || $entity->type != 'user')
+			return false;
+
+		$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search'))));
 		$params = array();
 		$params['body']  = $entity->export();
 		
