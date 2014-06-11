@@ -38,6 +38,7 @@ class router{
 
 		if($uri){
 			$path = explode('/', substr($uri,1));
+			
 			$handler = array_shift($path);
 			$page = $path;
 		} else {

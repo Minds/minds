@@ -24,7 +24,8 @@ function page_handler($handler, $page) {
 
 	elgg_set_context($handler);
 	
-	$page = explode('/', $page);
+	if(!is_array($page))
+		$page = explode('/', $page);
 	// remove empty array element when page url ends in a / (see #1480)
 	if ($page[count($page) - 1] === '') {
 		array_pop($page);
