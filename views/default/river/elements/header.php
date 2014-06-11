@@ -33,13 +33,6 @@ if ($container instanceof ElggGroup && $container->guid != elgg_get_page_owner_g
 	$group_string = elgg_echo('river:ingroup', array($group_link));
 }
 
-
-echo elgg_view_menu('river', array(
-	'item' => $item,
-	'sort_by' => 'priority',
-	'class' => 'minds-menu elgg-menu-hz',
-));
-
 $body = <<<BODY
 <div class="river-summary">
 	$summary $group_string 

@@ -105,7 +105,7 @@ if (is_array($items) && count($items) > 0) {
 
 $html .= $after;
 $style = '';
-if(elgg_is_xhr() || get_input('ajax') || elgg_get_viewtype() == 'json'){
+if(elgg_is_xhr() || get_input('ajax') || elgg_get_viewtype() == 'json' || get_input('show_loading') == 'false'){
 	$show_loading = false;
 }else{
 	$show_loading = true;

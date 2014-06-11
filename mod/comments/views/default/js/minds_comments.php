@@ -4,9 +4,9 @@
     elgg.provide('minds.comments');
 
     minds.comments.init = function() {
-        $('body').on('focus', '.comments-input',function(e){ $(this).autosize();});
+        $(document).on('focus', '.comments-input',function(e){ $(this).autosize();});
         
-        $('body').on('keyup', '.comments-input',function(e){
+        $(document).on('keyup', '.comments-input',function(e){
 			e = e || event;
 			if (e.keyCode === 13 && !e.ctrlKey) {
 				console.log('triggered');
@@ -17,11 +17,11 @@
 			return true;
 		});
         
-		$('body').on('click', '.show-more', minds.comments.more);
+		$(document).on('click', '.show-more', minds.comments.more);
        
-		$('body').on('submit', '.minds-comments-form', minds.comments.saveComment);
+		$(document).on('submit', '.minds-comments-form', minds.comments.saveComment);
        
-		$('body').on('click', '.minds-comment-delete', function(e){
+		$(document).on('click', '.minds-comment-delete', function(e){
 			e.preventDefault();
 			_this = $(this);
 			$.ajax(elgg.get_site_url() + 'comments/'+$(this).attr('data-guid'), {
@@ -93,7 +93,7 @@
     
     minds.comments.saveComment = function(e) {
     	        
-       // $('body').off('submit', '.hj-ajaxed-comment-save');
+       // $(document).off('submit', '.hj-ajaxed-comment-save');
 			_this = $(this);
         var     values = $(this).serialize(),
         action = $(this).attr('action'),

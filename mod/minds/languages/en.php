@@ -157,6 +157,9 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	 */
 	 'minds:thoughts' => 'Thoughts',
 	
+	
+	'minds:embed' => 'Embed',
+	
 	/**
 	 * Minds Universal upload form
 	 */
