@@ -227,7 +227,7 @@ function minds_news_page_handler($page) {
 		
 			$post = new ElggRiverItem($page[0]);
 			set_input('show_loading', 'false');
-			$user = elgg_get_logged_in_user_entity();
+			$user =$post->getSubjectEntity(); 
 			elgg_set_page_owner_guid($user->guid);
 			$sidebar .= elgg_view('channel/sidebar', array(
 				'user' => $user

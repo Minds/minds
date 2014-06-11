@@ -12,7 +12,7 @@ if(!$node){
         forward();
 }
 
-$title = $node->lauched ? $node->domain : 'New node';
+$title = $node->launched ? $node->domain : 'New node';
 
 
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));

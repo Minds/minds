@@ -265,7 +265,7 @@
 	 	//go off the loadmore button being available
 	 	if($loadMoreDiv){
 	 		$list = $loadMoreDiv.parent();
-	 		if($(window).scrollTop() + $(window).height() > $(document).height() * 0.25){
+	 		if($(window).scrollTop() + $(window).height() > $(document).height() * 0.1){
 	 			if(!$loadMoreDiv.hasClass('loading')){
 	 				$loadMoreDiv.trigger('click');
 	 			}
@@ -315,7 +315,8 @@
 				$list.find('.elgg-list').hasClass('minds-list-river') ? 'river' :
 				$list.hasClass('elgg-list-annotation') ? 'annotation' : 
 				$list.find('.elgg-list').hasClass('minds-search-list') ? 'search' : 'entity',
-				offset:offset 
+			offset:offset,
+			limit:6 
 		});
 		url = "/ajax/view/page/components/ajax_list?" + $.param($params);
 			

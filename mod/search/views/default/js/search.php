@@ -1,6 +1,6 @@
 <?php if(0){?><script><?php } ?>
 
-elgg.provide('search');
+/*elgg.provide('search');
 elgg.register_hook_handler('init', 'system', function(){
 
 	$(document).on('keydown','.elgg-input-text', function(e){
@@ -14,4 +14,4 @@ elgg.register_hook_handler('init', 'system', function(){
 		);
 	});
 
-});
+});*/
