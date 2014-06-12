@@ -199,7 +199,7 @@ class ElggObject extends ElggEntity {
      *
      * @return ElggEntity The owning entity
       */
-	public function getOwnerEntity($brief = false) {
+	public function getOwnerEntity($brief = true) {
 		if($brief && isset($this->ownerObj)){
 			if(is_string($this->ownerObj)){
 				$owner = json_decode($this->ownerObj);
@@ -212,7 +212,6 @@ class ElggObject extends ElggEntity {
 				}
 			}
 		}
-	
 		$owner = get_entity($this->owner_guid, 'user');
  		return $owner;
 	}
@@ -224,7 +223,7 @@ class ElggObject extends ElggEntity {
 	 */
 	public function save() {
 		//cache owner_guid for brief
-		if($owner = $this->getOwnerEntity())
+		if($owner = $this->getOwnerEntity(false))
 			$this->ownerObj = json_encode($owner->export());
 		
 		return parent::save();
