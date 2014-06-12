@@ -48,9 +48,22 @@ echo elgg_view('output/img', array(
 		'class'=>'minds-fixed-avatar'
 	));
 if($user->canEdit() ){
-		$url = elgg_get_site_url() . "channel/$user->username/avatar";
-		echo "<a class=\"avatar-edit\" href=\"$url\">Edit</a>";
+	$url = elgg_get_site_url() . "channel/$user->username/avatar";
+	echo "<a class=\"avatar-edit\" href=\"$url\">Edit</a>";
+	
+	$menu = elgg_trigger_plugin_hook('register', "menu:user_hover", array('entity'=>$user), $menu);
+	$builder = new ElggMenuBuilder($menu);
+	$menu = $builder->getMenu($sort_by);
+	// admin
+	if (elgg_is_admin_logged_in() && $menu['admin']) {
+		
+		echo elgg_view('navigation/menu/elements/section', array(
+			'class' => 'elgg-menu channel-admin-menu',
+			'items' => $menu['admin'],
+		));
+		
 	}
+}
 ?>
 <h1><?= $user->name ?></h1>
 <?= $user->website ? elgg_view('output/url', array('text'=>$user->website, 'href'=>$user->website)) : false ?>

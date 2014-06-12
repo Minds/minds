@@ -485,3 +485,10 @@ padding: 0 4px;
 	margin: 16px;
 	padding: 16px;
 }
+.channel-admin-menu{
+	padding:8px;
+}
+.channel-admin-menu li{
+	padding:4px;
+}
+}
