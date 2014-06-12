@@ -29,10 +29,10 @@ class start extends \ElggPlugin{
 		\elgg_register_event_handler('create', 'object', array($this, 'createHook'));
 		\elgg_register_event_handler('update', 'object', array($this, 'createHook'));
 		
-	//	\elgg_register_event_handler('ready', 'system', array($this, 'authCheck'));
-		//\elgg_register_event_handler('loggedin', 'user', array($this,'loginHook'));
+		\elgg_register_event_handler('login', 'user', array($this,'loginHook'));
 		
-		//elgg_register_event_handler('pagesetup', 'system', array($this,'twofactorPagesetup'));
+		\elgg_extend_view('login/extend', 'guard/twofactor/authorise');
+		elgg_register_event_handler('pagesetup', 'system', array($this,'twofactorPagesetup'));
 		
 		$routes = core\router::registerRoutes($this->registerRoutes());
 	}
@@ -90,25 +90,34 @@ class start extends \ElggPlugin{
 	}
 
 	/**
-	 * Coninously check for authorization
-	 */
-	public function authCheck(){
-		$user = \elgg_get_logged_in_user_entity();
-
-		if($user->twofactor && !$_SESSION['authorised'] && $_SERVER['REQUEST_URI'] != '/login/twofactor'){
-			\forward('login/twofactor');
-		}
-	}
-
-	/**
 	 * Twofactor authentication login hook
 	 */
 	public function loginHook($event, $type, $user){
-		if($user->twofactor){
-			$content = 'We just sent you a text message. Please enter the code below';
-			$content .= \elgg_view_form('guard/twofactor/check', array('action'=>\elgg_get_site_url().'settings/twofactor/check'));
+		global $TWOFACTOR_SUCCESS;
+
+		if($TWOFACTOR_SUCCESS == true)
+			return true;
+		
+		if($user->twofactor && !\elgg_is_logged_in()){
+			//send the user a twofactor auth code
+
+			$twofactor = new lib\twofactor();
+			$secret = $twofactor->createSecret(); //we have a new secret for each request
+				
+			$this->sendSMS($user->telno, $twofactor->getCode($secret));
 			
-		}
+			// create a lookup of a random key. The user can then use this key along side their twofactor code
+			// to login. This temporary code should be removed within 2 minutes.
+			$key = md5($user->username . $user->salt. time() . rand(0,63));
+
+			$lookup = new \minds\core\data\lookup('twofactor');
+			$lookup->set($key, array('_guid'=>$user->guid, 'ts'=>time(), 'secret'=>$secret));
+			
+			//forward to the twofactor page
+			\forward('login/twofactor/'.$key);
+			
+			return false;
+		} 
 	}
 	
 	/**
@@ -122,6 +131,24 @@ class start extends \ElggPlugin{
 				'href' => "settings/twofactor",
 			);
 			elgg_register_menu_item('page', $params);
+		}
+	}
+	
+	/**
+	 * Send an sms
+	 */
+	public function sendSMS($number, $message){
+		try{
+			$AccountSid = "AC2e0a25157a4e150f3a87fd6e2f21730c";
+			$AuthToken = "add6d113b8a62e1111c4795e375071de";
+			$client = new \Services_Twilio($AccountSid, $AuthToken);
+			$message = $client->account->messages->create(array( 
+				'To' => $number, 
+				'From' => "+16015640015", 
+				'Body' => $message,   
+			));
+		}catch(\Exception $e){
+			
 		}
 	}
 }

@@ -15,55 +15,49 @@ class authorise extends core\page implements interfaces\page{
 	 * Get requests
 	 */
 	public function get($pages){
-		
-		$twofactor = new lib\twofactor();
-		$user = \elgg_get_logged_in_user_entity();
-		
 		/**
 		 * Send our twofactor code to the user
 		 */
-		try{
-			$AccountSid = "AC8d9ebda852cd20a7fa464f27ac89809d";
-			
-			$AuthToken = "5a75fc7e32f40158c35fd86cc85697ce";
-			$client = new \Services_Twilio($AccountSid, $AuthToken);
-			 
-			$message = $client->account->messages->create(array( 
-				'To' => "+447526916045", 
-				'From' => "+18563935384", 
-				'Body' => $twofactor->getCode($secret),   
-			));
-		}catch(\Exception $e){
-			echo $e->getMessage();
-		}
-		
-		$content = 'Enter your code';
-		$content .= \elgg_view_form('guard/twofactor/authorise', array('action'=>\elgg_get_site_url().'login/twofactor'));		
-		$body = \elgg_view_layout('content', array('content'=>$content));
+		$content .= \elgg_view_form('guard/twofactor/authorise', array('action'=>\elgg_get_site_url().'login/twofactor/'.$pages[0], 'class'=>'elgg-form elgg-form-login'));		
+		$body = \elgg_view_layout('one_column', array('content'=>$content));
 		
 		echo $this->render(array('body'=>$body));
 	}
 	
 	public function post($pages){
 		
-		$user = \elgg_get_logged_in_user_entity();
 		$twofactor = new lib\twofactor();
-		$secret = $user->twofactor_secret;
 		
-		$code = \get_input('code');
-		if($twofactor->verifyCode($secret, $code, 1)){
-			$content = 'Success! You are now setup for two-factor authentication';
-			$_SESSION['authorised'] = true;
-		} else {
-			$content = 'Sorry, that didn\'t work';
-			$_SESSION['authorised'] = false;
-			$this->forward(REFERRER);
+		//get our one user twofactor token
+		$lookup = new \minds\core\data\lookup('twofactor');
+		$return = $lookup->get($pages[0]);
+		$lookup->remove($pages[0]);
+		
+		//we allow for 120 seconds (2 mins) after we send a code
+		if($return['_guid'] && $return['ts'] > time()-120){
+			$user = new \ElggUser($return['_guid']);
+			$secret = $return['secret'];
+		}else {
+			//no user could be found.. maybe because the token expired?
+			\register_error('Your token was invalid');
+			$this->forward('login');
+			return false;
 		}
 		
-
-		$body = \elgg_view_layout('content', array('content'=>$content));
-		echo $this->render(array('body'=>$body));
+		if($twofactor->verifyCode($secret, \get_input('code'), 1)){
 			
+			global $TWOFACTOR_SUCCESS;
+			$TWOFACTOR_SUCCESS = true;
+			\login($user, true);
+			
+			$this->forward($user->getURL());
+		
+		} else {
+			\register_error('Sorry, we could not verify your account');
+			$this->forward('/login');
+		}
+		
+		
 	}
 	
 	public function put($pages){
