@@ -247,7 +247,7 @@ function datalist_get($name) {
 			return $value;
 		} else {
 			$name = "config:$name";
-			return json_decode($site->$name, true);
+			return $site->$name;
 		}
 	}
 	
@@ -269,7 +269,7 @@ function datalist_set($name, $value) {
         $site = elgg_get_site_entity(); 
         if ($site) {
 			$name = "config:$name";
-            $site->$name = json_encode($value);
+            $site->$name = $value;
         	return $site->save();
 	} 
         
