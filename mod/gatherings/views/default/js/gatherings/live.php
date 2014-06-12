@@ -68,7 +68,7 @@ minds.live.init = function() {
 		/**
 		 * The connection to the socket server
 		 */
-		portal.open("//<?php echo elgg_get_plugin_setting('server_url', 'gatherings'); ?>/", { sharing:false }).on({
+		portal.open("https://<?php echo elgg_get_plugin_setting('server_url', 'gatherings'); ?>/", { sharing:false }).on({
 			open: function() {
 				//subscribe the user to the site chat
 				portal.find().send("connect", { guid: user.guid, name: user.name, username: user.username, node: elgg.get_site_url()});
