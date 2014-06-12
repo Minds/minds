@@ -91,9 +91,7 @@ abstract class ElggEntity extends ElggData implements
 	}
 	
 	protected function loadFromObject($object){
-		foreach($object as $k=>$v){
-			$this->$k = $v;
-		}
+		$this->loadFromArray($object);
 	}
 	
 	protected function loadFromArray($array){
@@ -102,6 +100,8 @@ abstract class ElggEntity extends ElggData implements
 				$v = json_decode($v, true);
 			$this->$k = $v;
 		}
+		
+		cache_entity($this);
 	}
 	
 	public function isJson($string) {

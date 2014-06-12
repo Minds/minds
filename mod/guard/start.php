@@ -26,35 +26,13 @@ class start extends \ElggPlugin{
 	public function init(){
 		
 		
-		/*$twofactor = new lib\twofactor();
-		
-		$user = new\ElggUser('mark');
-		$secret = $user->twofactor_secret ?: $twofactor->createSecret();
-		
-		$user->twofactor_secret = $secret;
-		$user->save();
-		
-		echo elgg_view('output/img', array('src'=>$twofactor->getQRCodeGoogleUrl('mark@minds.com', $secret)));
-		
-		//$oneCode = $twofactor->getCode($secret);
-		//echo "Checking Code '$oneCode' and Secret '$secret':\n";
-		$oneCode = $_GET['code'];
-		echo $oneCode;
-		
-		$checkResult = $twofactor->verifyCode($secret, $oneCode, 2);    // 2 = 2*30sec clock tolerance
-		if ($checkResult) {
-		    echo 'OK';
-		} else {
-		    echo 'FAILED';
-		}
-		//echo $twofactor->getCode($secret);
-		
-		exit;*/
 		\elgg_register_event_handler('create', 'object', array($this, 'createHook'));
 		\elgg_register_event_handler('update', 'object', array($this, 'createHook'));
 		
+	//	\elgg_register_event_handler('ready', 'system', array($this, 'authCheck'));
+		//\elgg_register_event_handler('loggedin', 'user', array($this,'loginHook'));
 		
-		\elgg_register_event_handler('pagesetup', 'system', array($this,'twofactorPagesetup'));
+		//elgg_register_event_handler('pagesetup', 'system', array($this,'twofactorPagesetup'));
 		
 		$routes = core\router::registerRoutes($this->registerRoutes());
 	}
@@ -68,7 +46,8 @@ class start extends \ElggPlugin{
 	public function registerRoutes(){
 		$path = "minds\\plugin\\guard";
 		return array(
-			'/settings/twofactor' => "$path\\pages\\twofactor"
+			'/settings/twofactor' => "$path\\pages\\twofactor",
+			'/login/twofactor' => "$path\\pages\\twofactor\authorise"
 		);
 	}
 	
@@ -111,10 +90,25 @@ class start extends \ElggPlugin{
 	}
 
 	/**
+	 * Coninously check for authorization
+	 */
+	public function authCheck(){
+		$user = \elgg_get_logged_in_user_entity();
+
+		if($user->twofactor && !$_SESSION['authorised'] && $_SERVER['REQUEST_URI'] != '/login/twofactor'){
+			\forward('login/twofactor');
+		}
+	}
+
+	/**
 	 * Twofactor authentication login hook
 	 */
-	public function twofactorLoginHook(){
-		
+	public function loginHook($event, $type, $user){
+		if($user->twofactor){
+			$content = 'We just sent you a text message. Please enter the code below';
+			$content .= \elgg_view_form('guard/twofactor/check', array('action'=>\elgg_get_site_url().'settings/twofactor/check'));
+			
+		}
 	}
 	
 	/**

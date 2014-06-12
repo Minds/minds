@@ -58,38 +58,8 @@ class ElggObject extends ElggEntity {
 
 		// compatibility for 1.7 api.
 		$this->initialise_attributes(false);
-		return parent::__construct($guid);
-		if (!empty($guid)) {
-			// Is $guid is a DB row from the entity table
-			if ($guid instanceof stdClass) {
-				// Load the rest
-				if (!$this->load($guid)) {
-					$msg = elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid->guid));
-					throw new IOException($msg);
-				}
-
-			// Is $guid is an ElggObject? Use a copy constructor
-			} else if ($guid instanceof ElggObject) {
-				elgg_deprecated_notice('This type of usage of the ElggObject constructor was deprecated. Please use the clone method.', 1.7);
-
-				foreach ($guid->attributes as $key => $value) {
-					$this->attributes[$key] = $value;
-				}
-
-			// Is this is an ElggEntity but not an ElggObject = ERROR!
-			} else if ($guid instanceof ElggEntity) {
-				throw new InvalidParameterException(elgg_echo('InvalidParameterException:NonElggObject'));
-
-			// Is it a GUID
-			} else {
-				if (!$new = get_entity($guid,'object')) {
-					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
-				}
-				 foreach ($new->attributes as $key => $value) {
-                                        $this->attributes[$key] = $value;
-                                }
-			}
-		}
+		
+		parent::__construct($guid);
 	}
 
 	/**
