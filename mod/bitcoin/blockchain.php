@@ -32,15 +32,29 @@ abstract class blockchain extends bitcoin
 		default:
 		    switch ($pages[1]) {
 			case 'receivingaddress' :
-				if (isset($pages[2]))
-				    set_input('username', $pages[2]);
+				$user = false;
+				if (isset($pages[2])) {
+				    $user = get_user_by_username ($pages[2]);
+				}
 				
-				
-				
-				
-				// TODO: Receive address endpoint code.
-				
-				
+				if (elgg_trigger_plugin_hook('payment-received', 'blockchain', [
+				    'user' => $user,
+				    'get_variables' => $_GET,
+				    
+				    'value' =>  $_GET['value'],
+				    'value_in_btc' => $_GET['value'] / 100000000,
+					
+				    'input_address' => $_GET['input_address'],
+				    'destination_address' => $_GET['destination_address'],
+				    
+				    'confirmations' => $_GET['confirmations'],
+				    
+				    'transaction_hash' => $_GET['transaction_hash'],
+				    'input_transaction_hash' => $_GET['input_transaction_hash'],
+				],true))
+					echo "*ok*";
+				else
+				    echo "ERROR";
 			    break;
 		    }
 	    }
