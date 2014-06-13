@@ -149,12 +149,15 @@ class blockchain extends bitcoin
 	if (!$api_code) throw new \Exception ("Bitcoin: An API Code needs to be specified before bitcoin transactions can be made.");
 	
 	$wallet = $this->__make_call('GET', "api/v2/create_wallet", array(
+	    'api_code' => $api_code,
 	    'password' => $password,
-	    'api_code' => $api_code
+	    'email' => $user->email
 	));
 	
 	if ($wallet['response'] == 500)
 	    throw new \Exception("Bitcoin: "  . $wallet['content']);
+	
+	error_log("Bitcoin: Wallet response is " . var_export($wallet, true));
 	
 	$new_wallet = new \ElggObject();
 	$new_wallet->subtype = 'blockchain_wallet';
@@ -168,7 +171,7 @@ class blockchain extends bitcoin
 	$new_wallet->wallet_address = $wallet->address;
 	$new_wallet->wallet_link = $wallet->link;
 	
-	return $new_wallet->save();
+	//return $new_wallet->save();
 	
     }
 
