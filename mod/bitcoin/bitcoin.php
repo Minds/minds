@@ -39,6 +39,32 @@ abstract class bitcoin extends \ElggPlugin
     
     
     
+    
+    /**
+     * Create receive address for user
+     */
+    abstract public function createReceiveAddressForUser(\ElggUser $user);
+    
+    /**
+     * Get the receive address for user.
+     */
+    abstract public function getReceiveAddressForUser(\ElggUser $user);
+    
+    /**
+     * Create receive address for the system
+     */
+    abstract public function createSystemReceiveAddress();
+    
+    /**
+     * Get the receive address for the system.
+     */
+    abstract public function getSystemReceiveAddress();
+    
+    
+    
+    
+    
+    
 
     // get wallet for user
     
