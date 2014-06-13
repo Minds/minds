@@ -9,8 +9,8 @@
     try {
 	if ($user = elgg_get_logged_in_user_entity()) {
 	
-	   if ($wallet != minds\plugin\bitcoin\bitcoin()->getWallet($user->guid)) 
-	       $wallet = minds\plugin\bitcoin\bitcoin ()->createWallet($user->guid);
+	   if (!$wallet = minds\plugin\bitcoin\bitcoin()->getWallet($user)) 
+	       $wallet = minds\plugin\bitcoin\bitcoin ()->createWallet($user);
 	   
 	    if (!$wallet)
 		throw new Exception ("Wallet could not be created...");

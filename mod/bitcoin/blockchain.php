@@ -7,8 +7,6 @@ use minds\core;
 class blockchain extends bitcoin 
     implements \minds\plugin\pay\PaymentHandler
 {
-
-    private $blockchain_base = "https://blockchain.info/";
     
     public function __construct(){
 	    parent::__construct('bitcoin');
@@ -31,6 +29,10 @@ class blockchain extends bitcoin
      * Make an API call.
      */
     private function __make_call($verb, $endpoint, array $params = null, array $headers = null) {
+	
+	if (!preg_match('/https?:\/\//', $endpoint))
+		$endpoint = $this->getAPIBase () . ltrim($endpoint, '/');
+	
 	$req = "";
 	if ($params) {
 	    $req = http_build_query($params);
@@ -38,6 +40,8 @@ class blockchain extends bitcoin
 
 	$curl_handle = curl_init();
 
+	error_log("Bitcoin: Making a call to $endpoint");
+	
 	switch (strtolower($verb)) {
 	    case 'post':
 		curl_setopt($curl_handle, CURLOPT_POST, 1);
@@ -85,10 +89,14 @@ class blockchain extends bitcoin
 
 	$buffer = curl_exec($curl_handle);
 	$http_status = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
+	
+	error_log("Bitcoin: Call $endpoint returned code $http_status");
+	
+	if (!$http_status)
+	    throw new \Exception("Bitcoin: There was a problem executing the curl call...");
 
-	if ($error = curl_error($curl_handle)) {
-	    error_log($error);
-	}
+	if ($error = curl_error($curl_handle)) 
+	    throw \Exception("Bitcoin: $error");
 
 	curl_close($curl_handle);
 
@@ -133,21 +141,23 @@ class blockchain extends bitcoin
 
     public function createWallet(\ElggUser $user) {
 	
+	error_log("Bitcoin: Attempting to create a wallet for {$user->name}");
+	
 	$password = md5($user->salt . microtime(true)); // Create a random password
 	$api_code = elgg_get_plugin_setting('api_code', 'bitcoin');
 	
-	if (!$api_code) throw new \Exception ("An API Code needs to be specified before bitcoin transactions can be made.");
+	if (!$api_code) throw new \Exception ("Bitcoin: An API Code needs to be specified before bitcoin transactions can be made.");
 	
-	$wallet = $this->__make_call('GET', "{$blockchain_base}api/v2/create_wallet", array(
+	$wallet = $this->__make_call('GET', "api/v2/create_wallet", array(
 	    'password' => $password,
 	    'api_code' => $api_code
 	));
 	
-	if ($wallet['code'] == 500)
-	    throw new \Exception($wallet['response']);
+	if ($wallet['response'] == 500)
+	    throw new \Exception("Bitcoin: "  . $wallet['content']);
 	
 	$new_wallet = new \ElggObject();
-	$new_wallet->subtype = 'bitcoin_wallet';
+	$new_wallet->subtype = 'blockchain_wallet';
 	$new_wallet->access_id = ACCESS_PRIVATE;
 	$new_wallet->owner_guid = $user->guid;
 	
@@ -163,19 +173,28 @@ class blockchain extends bitcoin
     }
 
     public function getWallet(\ElggUser $user) {
+	error_log("Bitcoin: Getting wallet for {$user->name}");
+	
 	if ($wallets = elgg_get_entities(array(
 	    'type' => 'object',
-	    'subtype' => 'bitcoin_wallet',
+	    'subtype' => 'blockchain_wallet',
 	    'owner_guid' => $user->guid
 	))) {
-	    return $wallets[0];
+	    error_log("Bitcoin: Found wallets: " . print_r($wallets, true));
+	    //return $wallets[0];
 	}
+	else
+	    error_log("Bitcoin: No wallet found");
 	
 	return null;
     }
 
     public function getWalletBalance($wallet_guid) {
 	
+    }
+
+    protected function getAPIBase() {
+	return "https://blockchain.info/";
     }
 
 }

@@ -18,6 +18,11 @@ abstract class bitcoin extends \ElggPlugin
     }
     
     /**
+     * Get the base for the API Call
+     */
+    abstract protected function getAPIBase();
+    
+    /**
      * Retrieve a wallet for a user.
      */
     abstract public function getWallet(\ElggUser $user);
