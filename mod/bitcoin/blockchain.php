@@ -51,7 +51,7 @@ abstract class blockchain extends bitcoin
 				    
 				    'transaction_hash' => $_GET['transaction_hash'],
 				    'input_transaction_hash' => $_GET['input_transaction_hash'],
-				],true))
+				],false))
 					echo "*ok*";
 				else
 				    echo "ERROR";
