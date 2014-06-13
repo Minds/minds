@@ -181,7 +181,7 @@ class blockchain extends bitcoin
 	    'owner_guid' => $user->guid
 	))) {
 	    error_log("Bitcoin: Found wallets: " . print_r($wallets, true));
-	    //return $wallets[0];
+	    return $wallets[0];
 	}
 	else
 	    error_log("Bitcoin: No wallet found");
