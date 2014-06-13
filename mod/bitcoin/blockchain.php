@@ -4,7 +4,7 @@ namespace minds\plugin\bitcoin;
 
 use minds\core;
 
-class blockchain extends bitcoin 
+abstract class blockchain extends bitcoin 
     implements \minds\plugin\pay\PaymentHandler
 {
     
@@ -23,6 +23,30 @@ class blockchain extends bitcoin
 	// Register payment handler
 	elgg_load_library('elgg:pay');
 	pay_register_payment_handler('bitcoin', '\minds\plugin\bitcoin\blockchain::paymentHandler');
+	
+	// Endpoints
+	elgg_register_page_handler('blockchain', function($pages){
+	    
+	    switch ($pages[0]) {
+		case 'endpoint':
+		default:
+		    switch ($pages[1]) {
+			case 'receivingaddress' :
+				if (isset($pages[2]))
+				    set_input('username', $pages[2]);
+				
+				
+				
+				
+				// TODO: Receive address endpoint code.
+				
+				
+			    break;
+		    }
+	    }
+	    
+	    return true;
+	});
     }
 
     /**
@@ -157,6 +181,8 @@ class blockchain extends bitcoin
 	if ($wallet['response'] == 500)
 	    throw new \Exception("Bitcoin: "  . $wallet['content']);
 	
+	$wallet = $wallet['content'];
+	
 	error_log("Bitcoin: Wallet response is " . var_export($wallet, true));
 	
 	$new_wallet = new \ElggObject();
@@ -171,7 +197,10 @@ class blockchain extends bitcoin
 	$new_wallet->wallet_address = $wallet->address;
 	$new_wallet->wallet_link = $wallet->link;
 	
-	//return $new_wallet->save();
+	// Save the address to user settings
+	elgg_set_plugin_user_setting('bitcoin_address', $wallet->address, elgg_get_logged_in_user_guid(), 'bitcoin');
+	
+	return $new_wallet->save();
 	
     }
 
@@ -198,6 +227,44 @@ class blockchain extends bitcoin
 
     protected function getAPIBase() {
 	return "https://blockchain.info/";
+    }
+    
+    /**
+     * Low level function for generating a receive address for a given callback.
+     * @param type $callback
+     */
+    protected function blockchainGenerateReceivingAddress($bitcoin_address, $callback = "") {
+	$result = $this->__make_call('get', 'api/receive', [
+	    'method' => 'create',
+	    'address' => $bitcoin_address,
+	    'callback_url' => $callback
+	]);
+	
+	if ($result['response'] == 500)
+	    throw new \Exception("Bitcoin: "  . $result['content']);
+	
+	$result = $result['content'];
+	
+	return $result->input_address;
+    }
+
+    public function createReceiveAddressForUser(\ElggUser $user) {
+	$ra = $this->getReceiveAddress($user);
+	
+	if (!$ra) 
+	    $ra = $this->blockchainGenerateReceivingAddress(
+		    elgg_get_plugin_user_setting('bitcoin_address', $user->guid, 'bitcoin'), 
+		    elgg_get_site_url() . 'blockchain/endpoint/receivingaddress/' . $user->username
+		    );
+	
+	return $ra;
+    }
+
+    public function getReceiveAddressForUser(\ElggUser $user) {
+	if ($user->blockchain_receive_address)
+	    return $user->blockchain_receive_address;
+	
+	return false;
     }
 
 }
