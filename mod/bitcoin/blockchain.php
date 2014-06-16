@@ -278,6 +278,15 @@ abstract class blockchain extends bitcoin
 	
 	return false;
     }
+    
+    public function sendPayment($from_wallet_guid, $to_address, $amount) {
+	
+	
+	// TODO : Writeme
+	
+	
+	
+    }
 
     protected function getAPIBase() {
 	return "https://blockchain.info/";

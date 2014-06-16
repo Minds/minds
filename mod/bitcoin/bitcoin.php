@@ -37,9 +37,14 @@ abstract class bitcoin extends \ElggPlugin
      */
     abstract public function getWalletBalance($wallet_guid);
     
-    
-    
-    
+    /**
+     * Send a payment from a wallet to a bitcoin address.
+     */
+    abstract public function sendPayment($from_wallet_guid, $to_address, $amount);
+
+
+
+
     /**
      * Create receive address for user
      */
@@ -104,7 +109,7 @@ abstract class bitcoin extends \ElggPlugin
 
 /**
  * Helper function to retrieve current bitcoin handler
- * @return bitcoin
+ * @return \minds\plugin\bitcoin\bitcoin
  */
 function &bitcoin()
 {
