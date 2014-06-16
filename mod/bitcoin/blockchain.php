@@ -140,6 +140,28 @@ abstract class blockchain extends bitcoin
 
 	return array('content' => json_decode($buffer) ? json_decode($buffer) : $buffer, 'response' => $http_status, 'error' => $error);
     }
+    
+    /**
+     * Store a password for a wallet.
+     * @param type $wallet
+     * @param type $password
+     */
+    protected function storeWalletPassword($wallet, $password) {
+	
+	// TODO: Find out a better way of storing passwords, perhaps against some sort of central password storage tool
+	
+	$wallet->wallet_password = $password; 
+	
+	return true;
+    }
+    
+    /**
+     * Retrieve password for a wallet.
+     * @param type $wallet
+     */
+    protected function getWalletPassword($wallet) {
+	return $wallet->wallet_password;
+    }
 
     public static function cancelRecurringPaymentCallback($order_guid) {
 	
@@ -202,9 +224,8 @@ abstract class blockchain extends bitcoin
 	$new_wallet = new \ElggObject();
 	$new_wallet->subtype = 'blockchain_wallet';
 	$new_wallet->access_id = ACCESS_PRIVATE;
-	$new_wallet->owner_guid = $user->guid;
-	
-	$new_wallet->wallet_password = $password;
+	$new_wallet->owner_guid = $user->guid;	
+	$this->storeWalletPassword($new_wallet, $password);
 	$new_wallet->wallet_raw = serialize($wallet);
 	
 	$new_wallet->wallet_guid = $wallet->guid;
@@ -237,6 +258,25 @@ abstract class blockchain extends bitcoin
 
     public function getWalletBalance($wallet_guid) {
 	
+	if ($wallet = get_entity($wallet_guid)) {
+	    
+	    if (elgg_instanceof($wallet, 'object', 'blockchain_wallet'))
+	    {
+		$wallet_guid = $wallet->wallet_guid;
+		$result = $this->__make_call('GET', "merchant/$wallet_guid/balance", array(
+		    'password' => $this->getWalletPassword($wallet),
+		));
+		
+		if ($result['response'] == 500)
+		    throw new \Exception("Bitcoin: "  . $result['content']);
+		
+		$result = $result['content'];
+		
+		return $result->balance;
+	    }
+	}
+	
+	return false;
     }
 
     protected function getAPIBase() {
