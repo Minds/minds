@@ -18,7 +18,7 @@ namespace minds\plugin\pay {
 	 * Callback, called by pay with an order ID.
 	 * @param type $order_guid
 	 */
-	static function paymentCallback($order_guid);
+	static function paymentHandler_callback($order_guid);
 	
 	/**
 	 * Called by pay to cancel a recurring payment.
