@@ -4,7 +4,7 @@ namespace minds\plugin\bitcoin;
 
 use minds\core;
 
-abstract class blockchain extends bitcoin 
+class blockchain extends bitcoin 
     implements \minds\plugin\pay\PaymentHandler
 {
     
@@ -39,6 +39,7 @@ abstract class blockchain extends bitcoin
 				
 				if (elgg_trigger_plugin_hook('payment-received', 'blockchain', [
 				    'user' => $user,
+				    'username' => $pages[2],
 				    'get_variables' => $_GET,
 				    
 				    'value' =>  $_GET['value'],
@@ -167,7 +168,7 @@ abstract class blockchain extends bitcoin
 	
     }
 
-    public static function paymentCallback($order_guid) {
+    public static function paymentHandler_callback($order_guid) {
 	
     }
 
@@ -190,9 +191,13 @@ abstract class blockchain extends bitcoin
 	$wallet = $this->getWallet($user);
 	if ($wallet) {
 	
-	
+	    // generate return address, register callback
 	
 	/// Get balance
+	    
+	    // Then use wallet to send payment
+	    
+	    
 	
 	
 	} else 
@@ -222,7 +227,7 @@ abstract class blockchain extends bitcoin
 	error_log("Bitcoin: Wallet response is " . var_export($wallet, true));
 	
 	$new_wallet = new \ElggObject();
-	$new_wallet->subtype = 'blockchain_wallet';
+	$new_wallet->subtype = 'bitcoin_wallet';
 	$new_wallet->access_id = ACCESS_PRIVATE;
 	$new_wallet->owner_guid = $user->guid;	
 	$this->storeWalletPassword($new_wallet, $password);
@@ -231,6 +236,8 @@ abstract class blockchain extends bitcoin
 	$new_wallet->wallet_guid = $wallet->guid;
 	$new_wallet->wallet_address = $wallet->address;
 	$new_wallet->wallet_link = $wallet->link;
+	
+	$new_wallet->wallet_handler = 'blockchain';
 	
 	// Save the address to user settings
 	elgg_set_plugin_user_setting('bitcoin_address', $wallet->address, elgg_get_logged_in_user_guid(), 'bitcoin');
@@ -244,7 +251,7 @@ abstract class blockchain extends bitcoin
 	
 	if ($wallets = elgg_get_entities(array(
 	    'type' => 'object',
-	    'subtype' => 'blockchain_wallet',
+	    'subtype' => 'bitcoin_wallet',
 	    'owner_guid' => $user->guid
 	))) {
 	    error_log("Bitcoin: Found wallets: " . print_r($wallets, true));
@@ -260,7 +267,7 @@ abstract class blockchain extends bitcoin
 	
 	if ($wallet = get_entity($wallet_guid)) {
 	    
-	    if (elgg_instanceof($wallet, 'object', 'blockchain_wallet'))
+	    if (elgg_instanceof($wallet, 'object', 'bitcoin_wallet'))
 	    {
 		$wallet_guid = $wallet->wallet_guid;
 		$result = $this->__make_call('GET', "merchant/$wallet_guid/balance", array(
@@ -311,15 +318,20 @@ abstract class blockchain extends bitcoin
 	return $result->input_address;
     }
 
-    public function createReceiveAddressForUser(\ElggUser $user) {
+    public function createReceiveAddressForUser(\ElggUser $user, array $params = null) {
 	$ra = $this->getReceiveAddress($user);
 	
-	if (!$ra) 
-	    $ra = $this->blockchainGenerateReceivingAddress(
+	if (!$ra) {
+	    
+	    $gets = "";
+	    if ($params)
+		$gets = '?' . http_build_query($params);
+	    
+	    $ra = $user->blockchain_receive_address = $this->blockchainGenerateReceivingAddress(
 		    elgg_get_plugin_user_setting('bitcoin_address', $user->guid, 'bitcoin'), 
-		    elgg_get_site_url() . 'blockchain/endpoint/receivingaddress/' . $user->username
+		    elgg_get_site_url() . 'blockchain/endpoint/receivingaddress/' . $user->username . $gets
 		    );
-	
+	}
 	return $ra;
     }
 
@@ -329,5 +341,36 @@ abstract class blockchain extends bitcoin
 	
 	return false;
     }
+
+    public function createSystemReceiveAddress() {
+	$ra = $this->getSystemReceiveAddress();
+	
+	if (!$ra) 
+	    $ra = $this->blockchainGenerateReceivingAddress(
+		    elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin'), 
+		    elgg_get_site_url() . 'blockchain/endpoint/receivingaddress/'
+		    );
+	
+	return $ra;
+    }
+
+    public function getSystemReceiveAddress() {
+	return elgg_get_plugin_setting('central_bitcoin_receive_address', 'bitcoin');
+    }
+
+    public function getExchangeRate($currency = 'USD') {
+	
+	// TODO: Do this Much Much better
+	
+	$rates = [
+	    'USD' => 0.00165
+	];
+	
+	if (isset($rates[$currency]))
+	    return $rates[$currency];
+	
+	return false;
+    }
+
 
 }
