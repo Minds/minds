@@ -204,6 +204,8 @@ class blockchain extends bitcoin
 		
 		$amount = $amount * $this->getExchangeRate($currency);
 		
+		error_log("BITCOIN: Payment pay being sent for $amount Bitcoins from {$params['amount']}");
+		
 		// Then use wallet to send payment
 		if (!$this->sendPayment($wallet->wallet_address, $minds_address, $amount))
 			throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
