@@ -179,26 +179,39 @@ class blockchain extends bitcoin
 	$amount = $params['amount'];
 	$description = $params['description'];
 	
-	$return_url = $urls['return'];
-	$cancel_url = $urls['cancel'];
-	
-	$callback_url =  $urls['callback'].'/bitcoin'; // Set bitcoin callback endpoint
+	$minds_address = elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin');
 	
 	if (!$user) throw new \Exception ('No user, sorry');
 	if (!$order) throw new \Exception ('No order, sorry');
+	if (!$minds_address) throw new \Exception('Minds bitcoin address not configured, sorry!');
 	
 	// Find wallet
 	$wallet = $this->getWallet($user);
 	if ($wallet) {
 	
-	    // generate return address, register callback
+	    // Generate return address, register callback
+	    $urls = pay_urls($params['order_guid']);
 	
-	/// Get balance
-	    
-	    // Then use wallet to send payment
-	    
-	    
+	    $return_url = $urls['return'];
+	    $cancel_url = $urls['cancel'];
+	    $callback_url =  $urls['callback'].'/bitcoin'; // Set bitcoin callback endpoint
 	
+	    if ($this->blockchainGenerateReceivingAddress($wallet->wallet_address, $callback_url)) {
+	
+		// Convert amount into bitcoins
+		$currency = unserialize($order->currency);
+		if (is_array($currency)) $currency = $currency['code'];
+		
+		$amount = $amount * $this->getExchangeRate($currency);
+		
+		// Then use wallet to send payment
+		if (!$this->sendPayment($wallet->wallet_address, $minds_address, $amount))
+			throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
+		
+		forward($return_url);
+
+	    } else 
+		throw new \Exception('Could not create a bitcoin callback address for ' . $wallet->wallet_address);
 	
 	} else 
 	    throw new \Exception ('User has no bitcoin wallet defined.');
@@ -290,6 +303,13 @@ class blockchain extends bitcoin
 	
 	
 	// TODO : Writeme
+	
+	
+	
+	
+		// Get balance
+
+
 	
 	
 	
