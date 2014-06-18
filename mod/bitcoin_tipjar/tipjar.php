@@ -83,6 +83,14 @@ class tipjar extends \ElggPlugin
      */
     public function init() {
 	
+	// When a new wallet is created for a user, generate a receive address for the user
+	elgg_register_event_handler('create', 'object', function($event, $object_type, $object) {
+	    if (elgg_instanceof($object, 'object', 'bitcoin_wallet')) {
+		$ia = elgg_set_ignore_access();
+		bitcoin\bitcoin()->createReceiveAddressForUser(get_user($object->owner_guid));
+		elgg_set_ignore_access($ia);
+	    }
+	});
     }
 }
 
