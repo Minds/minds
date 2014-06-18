@@ -87,9 +87,30 @@ class tipjar extends \ElggPlugin
 	elgg_register_event_handler('create', 'object', function($event, $object_type, $object) {
 	    if (elgg_instanceof($object, 'object', 'bitcoin_wallet')) {
 		$ia = elgg_set_ignore_access();
-		bitcoin\bitcoin()->createReceiveAddressForUser(get_user($object->owner_guid));
+		bitcoin\bitcoin()->createReceiveAddressForUser(get_user($object->owner_guid), array('istipjar' => 'y'));
 		elgg_set_ignore_access($ia);
 	    }
+	});
+	
+	// Listen to new receive payment
+	elgg_register_plugin_hook_handler('payment-received', 'blockchain', function($hook, $type, $return, $params) {
+	    
+	    if ($params['get_variables']['istipjar'] && ($user = $params['user'])) {
+	
+		if ($params['user']) {
+		    
+		    // See if we have a bitcoin address to pay the user for - transfer will have already been handled by blockchain when this callback is triggered, so we just have to notify the user
+		    if ($address = elgg_get_plugin_user_setting('bitcoin_address', $user->guid, 'bitcoin')) {
+			notify_user($user->guid, elgg_get_site_entity()->guid, "New payment in your tipjar!", "You have received a tip of {$params['value_in_btc']} bitcoins to your bitcoin address ($address).");
+		    } else {
+			notify_user($user->guid, elgg_get_site_entity()->guid, "New payment in your tipjar!", "You have received a tip of {$params['value_in_btc']} bitcoins, but since you don't have a bitcoin account registered we're holding on to it for you. Please contact us to find out more!");
+		    }
+		
+		    return true;
+		} 
+		
+	    }
+	    
 	});
     }
 }
