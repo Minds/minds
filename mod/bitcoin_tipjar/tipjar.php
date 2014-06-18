@@ -13,6 +13,14 @@ use \minds\plugin\bitcoin;
 
 class tipjar extends \ElggPlugin     
 {
+    public static $tipjar;
+    
+    public function __construct(){
+	    parent::__construct('bitcoin_tipjar');
+
+	    $this->init();
+    }
+     
     /**
      * Log a transaction.
      * @param \ElggUser $from User who sent the payment
@@ -70,10 +78,19 @@ class tipjar extends \ElggPlugin
 	return false;
     }
     
-    
-    
-    // get user tips
-    
-    
-    
+    /**
+     * Initialise tipjar
+     */
+    public function init() {
+	
+    }
+}
+
+/**
+ * Helper function to retrieve current bitcoin handler
+ * @return \minds\plugin\bitcoin_tipjar\tipjar
+ */
+function &tipjar()
+{
+    return \minds\plugin\bitcoin_tipjar\tipjar::$tipjar;
 }
