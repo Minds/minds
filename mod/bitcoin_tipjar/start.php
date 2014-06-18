@@ -10,5 +10,5 @@
 
 
 elgg_register_event_handler('init','system', function(){	
-
+    $tipjar = new minds\plugin\bitcoin_tipjar\tipjar();
 });
