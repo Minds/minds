@@ -47,8 +47,11 @@ abstract class bitcoin extends \ElggPlugin
 
     /**
      * Create receive address for user
+     * 
+     * @param $user the user
+     * @param $params Optional parameters added on to an address to identify it (e.g. handlers or labels)
      */
-    abstract public function createReceiveAddressForUser(\ElggUser $user);
+    abstract public function createReceiveAddressForUser(\ElggUser $user, array $params = null);
     
     /**
      * Get the receive address for user.
@@ -65,8 +68,12 @@ abstract class bitcoin extends \ElggPlugin
      */
     abstract public function getSystemReceiveAddress();
     
-    
-    
+    /**
+     * Get the current exchange rate for a given currency (in XBT).
+     * 
+     * TODO: Need to find some way to implement this, might be hard coded for now
+     */
+    abstract public function getExchangeRate($currency = 'USD');
     
     
     
