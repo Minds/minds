@@ -35,6 +35,7 @@ foreach($basket as $item){
 	$a->quantity = $item->quantity;
 	$a->object_guid = $item->object_guid;
 	$a->seller_guid = $item->seller_guid;
+	$a->currency = serialize(pay_get_currency()); // Store the currency (we need this for currency conversions)
         if ($item->recurring == 'y') // TODO: Currently we have to set whole basket to recurring if one item repeats. Not idea.
             $recurring = true;
 	$items[] = $a;
