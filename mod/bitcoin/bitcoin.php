@@ -69,11 +69,9 @@ abstract class bitcoin extends \ElggPlugin
     abstract public function getSystemReceiveAddress();
     
     /**
-     * Get the current exchange rate for a given currency (in XBT).
-     * 
-     * TODO: Need to find some way to implement this, might be hard coded for now
+     * Convert a value into bitcoins
      */
-    abstract public function getExchangeRate($currency = 'USD');
+    abstract public function convertToBTC($amount, $currency = 'USD');
     
     
     

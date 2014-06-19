@@ -23,7 +23,7 @@ class blockchain extends bitcoin
 	// Register payment handler
 	elgg_load_library('elgg:pay');
 	pay_register_payment_handler('bitcoin', '\minds\plugin\bitcoin\blockchain::paymentHandler');
-	
+
 	// Endpoints
 	elgg_register_page_handler('blockchain', function($pages){
 	    
@@ -37,7 +37,7 @@ class blockchain extends bitcoin
 				    $user = get_user_by_username ($pages[2]);
 				}
 				
-				if (elgg_trigger_plugin_hook('payment-received', 'blockchain', [
+				if (elgg_trigger_plugin_hook('payment-received', 'blockchain', array(
 				    'user' => $user,
 				    'username' => $pages[2],
 				    'get_variables' => $_GET,
@@ -52,7 +52,7 @@ class blockchain extends bitcoin
 				    
 				    'transaction_hash' => $_GET['transaction_hash'],
 				    'input_transaction_hash' => $_GET['input_transaction_hash'],
-				],false))
+				),false))
 					echo "*ok*";
 				else
 				    echo "ERROR";
@@ -170,6 +170,28 @@ class blockchain extends bitcoin
 
     public static function paymentHandler_callback($order_guid) {
 	
+	try {
+	    // Get order
+	    $order = get_entity($order_guid, 'object');
+	    if (!$order) throw new \Exception("Sorry, no order could be found.");
+	    
+	    // Verify security markers 
+	    if ($_GET['minds_tid']!=$order->pay_transaction_id)
+		throw new \Exception('Sorry, but the security markers do not match up!');
+	    
+	    // Attach a payment history to the order.
+	    $order->annotate('order_details', serialize($_GET));
+	    
+	    // Update the order status
+	    pay_update_order_status($order_guid, 'Completed');
+	    
+	    
+	} catch (\Exception $e) {
+	    error_log("BITCOIN CALLBACK: " . $e->getMessage());
+	    
+	    echo "ERROR.";
+	}
+	
     }
 
     public static function paymentHandler($params) {
@@ -194,7 +216,7 @@ class blockchain extends bitcoin
 	
 	    $return_url = $urls['return'];
 	    $cancel_url = $urls['cancel'];
-	    $callback_url =  $urls['callback'].'/bitcoin'; // Set bitcoin callback endpoint
+	    $callback_url =  $urls['callback'].'/bitcoin?minds_tid=' . $order->pay_transaction_id; // Set bitcoin callback endpoint
 	
 	    if ($this->blockchainGenerateReceivingAddress($wallet->wallet_address, $callback_url)) {
 	
@@ -202,7 +224,7 @@ class blockchain extends bitcoin
 		$currency = unserialize($order->currency);
 		if (is_array($currency)) $currency = $currency['code'];
 		
-		$amount = $amount * $this->getExchangeRate($currency);
+		$amount = $this->convertToBTC($amount, $currency);
 		
 		error_log("BITCOIN: Payment pay being sent for $amount Bitcoins from {$params['amount']}");
 		
@@ -326,11 +348,11 @@ class blockchain extends bitcoin
      * @param type $callback
      */
     protected function blockchainGenerateReceivingAddress($bitcoin_address, $callback = "") {
-	$result = $this->__make_call('get', 'api/receive', [
+	$result = $this->__make_call('get', 'api/receive', array(
 	    'method' => 'create',
 	    'address' => $bitcoin_address,
 	    'callback_url' => $callback
-	]);
+	));
 	
 	if ($result['response'] == 500)
 	    throw new \Exception("Bitcoin: "  . $result['content']);
@@ -380,16 +402,15 @@ class blockchain extends bitcoin
 	return elgg_get_plugin_setting('central_bitcoin_receive_address', 'bitcoin');
     }
 
-    public function getExchangeRate($currency = 'USD') {
+    public function convertToBTC($amount, $currency = 'USD') {
 	
-	// TODO: Do this Much Much better
+	if ($result = $this->__make_call('get', 'tobtc', array('currency' => $currency, 'value' => $amount))) {
+	    if ($result['response'] == 500)
+		throw new \Exception("Bitcoin: "  . $result['content']);
 	
-	$rates = [
-	    'USD' => 0.00165
-	];
+	    return $result['content'];
 	
-	if (isset($rates[$currency]))
-	    return $rates[$currency];
+	}
 	
 	return false;
     }
