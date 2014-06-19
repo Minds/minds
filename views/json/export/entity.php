@@ -19,7 +19,7 @@ foreach ($exportable_values as $v) {
 $export->url = $entity->getURL();
 
 if(elgg_instanceof($entity,'object')){
-	$export->ownerObj = json_decode($entity->ownerObj);
+	$export->ownerObj = $entity->ownerObj;
 }
 
 global $jsonexport;

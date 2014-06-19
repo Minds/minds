@@ -35,6 +35,11 @@ and (max-width : 680px) {
 	.minds-body-header > .inner > .elgg-head{
 		min-width:0;
 	}
+
+	.hero > .body > .inner, .elgg-page-default .elgg-page-body > .elgg-inner{
+		width:100%;
+	}
+
 	.homepage{
 		padding-top:64px;
 	}

@@ -25,6 +25,8 @@ while(true){
 			continue;
 
 		}
+
+		var_dump($entity->ownerObj); continue;
 		
 		$owner = $entity->getOwnerEntity();
 		if(!$owner){
@@ -35,7 +37,7 @@ while(true){
 		$entity->save();
 
 		if(isset($entity->ownerObj))
-		echo "denormalised $entity->guid \n";
+			echo "denormalised $entity->guid \n";
 		} catch(Exception $e){
 		}
 	}

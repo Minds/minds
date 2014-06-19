@@ -98,6 +98,7 @@ abstract class ElggEntity extends ElggData implements
 		foreach($array as $k=>$v){
 			if($this->isJson($v))
 				$v = json_decode($v, true);
+
 			$this->$k = $v;
 		}
 		
@@ -105,6 +106,9 @@ abstract class ElggEntity extends ElggData implements
 	}
 	
 	public function isJson($string) {
+		if(!is_string($string))
+			return false;
+
 		json_decode($string);
 		return (json_last_error() == JSON_ERROR_NONE);
 	}
@@ -1435,7 +1439,8 @@ abstract class ElggEntity extends ElggData implements
 	public function export(){
 		$export = array();
 		foreach($this->getExportableValues() as $v){
-			$export[$v] = $this->$v;
+			if(!is_null($this->$v))
+				$export[$v] = $this->$v;
 		}
 		return $export;
 	}

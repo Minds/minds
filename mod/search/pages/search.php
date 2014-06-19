@@ -28,7 +28,7 @@ class search extends core\page implements interfaces\page{
 			$query = "query AND $category";
 
 		$body['query']['query_string']['query'] = $query;
-		$body['query']['query_string']['fields'] = array('_all', 'name^5');
+		$body['query']['query_string']['fields'] = array('_all', 'name^5', 'title^8');
 		
 		$params['index'] = 'minds';
 		$params['size'] = \get_input('limit');
