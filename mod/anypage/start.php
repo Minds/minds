@@ -28,32 +28,36 @@ function anypage_init() {
 	elgg_register_plugin_hook_handler('public_pages', 'walled_garden', 'anypage_walled_garden_public_pages');
 	
 	//setup the footer
-	anypage_setup_footer_menu();
+	elgg_register_event_handler('pagesetup', 'system', 'anypage_setup_footer_menu');
 }
 
 /**
  * Setup the links to site pages
  */
 function anypage_setup_footer_menu() {
+	$show = true;
+
 	if(get_input('ajax'))
-		return false;
+		$show = false;
 
 	global $ANYPAGE_CACHE;
-	if(!$ANYPAGE_CACHE){
+	if(!$ANYPAGE_CACHE && $show){
 		$ANYPAGE_CACHE = elgg_get_entities(array('type'=>'object', 'subtype'=>'anypage', 'limit'=>0)); 
 	}
 
 	if(!is_array($ANYPAGE_CACHE))
-		return false;
+		$show = false;
 	
-	foreach ($ANYPAGE_CACHE as $page) {
-		elgg_register_menu_item('footer', array(
-			'name' => $page->title,
-			'href' => $page->getURL(),
-			'text' => $page->title,
-			'priority' => 150
-		));
-	}	
+	if($show){
+		foreach ($ANYPAGE_CACHE as $page) {
+			elgg_register_menu_item('footer', array(
+				'name' => $page->title,
+				'href' => $page->getURL(),
+				'text' => $page->title,
+				'priority' => 150
+			));
+		}	
+	}
 }
 
 /**

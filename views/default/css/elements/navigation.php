@@ -523,7 +523,7 @@
 	background:rgba(248, 248, 248, 0.9);
 	width:auto;
 	margin:0;
-	padding:22px 15px;
+	padding:4px;
 	display:none;
 }
 .elgg-item:hover > .elgg-menu-entity{

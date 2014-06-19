@@ -73,7 +73,31 @@ function elgg_autop($string) {
  * @return string
  */
 function minds_autosrc($string){
-	$output = str_replace( "src=\"http://", "src=\"//", $string );
+	global $CONFIG;
+	$replace = '//';
+	if($CONFIG->cdn_url){
+		$doc = new DOMDocument();
+		@$doc->loadHTML($string);
+
+		$tags = $doc->getElementsByTagName('img');
+		foreach ($tags as $tag) {
+		       $src = $tag->getAttribute('src');
+			if($src){
+				$src = $CONFIG->cdn_url . 'thumbProxy?src='.urlencode($src).'&width=auto';
+				$tag->setAttribute('src', $src);
+			}
+		}
+		$tags = $doc->getElementsByTagName('iframe');
+		 foreach ($tags as $tag) {
+                       $src = $tag->getAttribute('src');
+                        if($src){
+                                $src = str_replace("http://", "//", $src);
+                                $tag->setAttribute('src', $src);
+                        }
+                }
+		return $doc->saveHTML();
+	} 
+	$output = str_replace( "src=\"http://", "src=\"$replace", $string );
 	return $output;
 }
 

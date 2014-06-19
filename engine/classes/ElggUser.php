@@ -67,13 +67,17 @@ class ElggUser extends ElggEntity
 					throw new IOException($msg);
 				}
 			} elseif(is_numeric($guid)){
-            	if (!$this->loadFromGUID($guid)) {
+            			if (!$this->loadFromGUID($guid)) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
 			} else if (is_string($guid)) {
 				$user = get_user_by_username($guid);
 				$this->loadFromObject($user);
-			// Is $guid is an ElggUser? Use a copy constructor
+			
+			} else if(is_array($guid)){
+				$this->loadFromArray($guid);
+			
+				// Is $guid is an ElggUser? Use a copy constructor
 			} else if ($guid instanceof ElggUser) {
 				elgg_deprecated_notice('This type of usage of the ElggUser constructor was deprecated. Please use the clone method.', 1.7);
 
@@ -110,7 +114,12 @@ class ElggUser extends ElggEntity
 			$g = new GUID();
        			$guid = $g->migrate($guid);
 		}
-		
+
+		if($cached = retrieve_cached_entity($guid)){
+			$this->load($cached);
+			return true;	
+		}
+
 		$db = new minds\core\data\call('entities');
 		$data = $db->getRow($guid, array('limit'=>500));
 		$data['guid'] = $guid;

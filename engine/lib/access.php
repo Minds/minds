@@ -829,7 +829,7 @@ function get_user_access_collections($owner_guid, $site_guid = 0) {
 function get_members_of_access_collection($collection, $idonly = FALSE) {
 	global $CONFIG;
 	$collection = (int)$collection;
-
+return false;
 	if (!$idonly) {
 		$query = "SELECT e.* FROM {$CONFIG->dbprefix}access_collection_membership m"
 			. " JOIN {$CONFIG->dbprefix}entities e ON e.guid = m.user_guid"

@@ -5,7 +5,7 @@ ini_set('max_execution_time', 1);
 
 $src = urldecode(get_input('src'));
 //$src = "https:$src";      
-
+//forward($src);return;
 if(strpos($src, 'http') === FALSE){
 	$src = "https:$src";
 }
@@ -44,9 +44,8 @@ if(!$image){
 }
 
 header('Expires: ' . date('r',  strtotime("today+6 months")), true);
-                        header("Pragma: public");
+header("Pragma: public");
 header("Cache-Control: public");
-header("X-No-Client-Cache:0");
 
 // Get new dimensions
 $width = imagesx($image);
@@ -68,6 +67,11 @@ if($width <= 1 || $height <= 1){
 
 if(get_input('height')){
 	$new_height = get_input('height');
+}
+
+if(get_input('width') == 'auto'){
+	$new_width = $width;
+	$new_height = $height;
 }
 
 // Resample

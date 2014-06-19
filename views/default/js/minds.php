@@ -82,8 +82,23 @@
 
 		if($('#fb-share').length){
 			var addr = $('meta[property="og:url"]').attr('content');
+			addr = addr.replace('http:', 'https:');
 			var url = 'https://graph.facebook.com/?id=' + addr;
-			$.get( url, function(data) { var shares = data.shares; if($.isNumeric(shares)){ $('#fb-share .count').html(shares); } } );
+			var total = 0;
+			$.get( url, function(data) { 
+				var shares = data.shares; 
+				if($.isNumeric(shares)){ 
+					total = shares; 
+				}
+		
+				addr = addr.replace('https:', 'http:');
+				url = 'https://graph.facebook.com/?id=' + addr;
+
+				$.get( url, function(data) { 
+					var shares = data.shares; 
+					$('#fb-share .count').html(total+shares); 
+				});
+			});
 		} 
 
 		var $list = $('.elgg-list.mason');

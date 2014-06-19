@@ -183,7 +183,7 @@ function elgg_is_admin_user($user_guid) {
 
 	if ($version < 2010040201) {
 		
-		$user = get_entity($user_guid, 'user');	
+		$user = new ElggUser($user_guid);	
 		if($user->isAdmin()){
 			return true;
 		}
