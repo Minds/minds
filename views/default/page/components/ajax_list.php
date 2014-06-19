@@ -30,6 +30,9 @@ $out = ob_get_contents();
 ob_end_clean();
 
 }
+if(get_input('debug')){
+var_dump($out); exit;
+}
 $json = json_decode($out);
 if(!$json){
 	return;

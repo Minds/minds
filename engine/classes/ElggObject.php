@@ -170,9 +170,10 @@ class ElggObject extends ElggEntity {
      * @return ElggEntity The owning entity
       */
 	public function getOwnerEntity($brief = true) {
-		if($brief && isset($this->ownerObj)){
-			if(is_string($this->ownerObj)){
-				$owner = json_decode($this->ownerObj);
+		if($brief && isset($this->ownerObj) && $owner = $this->ownerObj){
+		//	if(is_string($this->ownerObj)){
+			//	$owner = json_decode($this->ownerObj);
+				
 				if($owner->name){
 					return new ElggUser($owner);
 				}  else {
@@ -180,8 +181,9 @@ class ElggObject extends ElggEntity {
 		//				$this->save();
 					}
 				}
-			}
+		//	}
 		}
+	
 		$owner = get_entity($this->owner_guid, 'user');
  		return $owner;
 	}

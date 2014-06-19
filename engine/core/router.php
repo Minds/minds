@@ -40,7 +40,7 @@ class router{
 			$path = explode('/', substr($uri,1));
 			
 			$handler = array_shift($path);
-			$page = $path;
+			$page = implode('/',$path);
 		} else {
 			$handler = \get_input('handler');
 			$page = \get_input('page');

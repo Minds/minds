@@ -232,11 +232,11 @@ function elgg_get_simplecache_url($type, $view) {
 	if (elgg_is_simplecache_enabled()) {
 		$url = elgg_get_site_url() . "cache/$type/$viewtype/$view.$lastcache.$type";
 	} else {
-		if($_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'){
-			$url = elgg_get_site_url();
-		} else {
+		//if($_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'){
+		//	$url = elgg_get_site_url();
+		//} else {
 			$url = isset($CONFIG->cdn_url) ? $CONFIG->cdn_url : elgg_get_site_url();
-		}
+		//}
 		$url .= "$type/$view.$lastcache.$type";
 		$elements = array("view" => $viewtype);
 		$url = elgg_http_add_url_query_elements($url, $elements);

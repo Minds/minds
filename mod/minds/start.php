@@ -678,7 +678,7 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
   	}
 	if($CONFIG->cdn_url){
 		$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
-		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2705';
+		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2706';
 		if($width){ $image .= '&width=' . $width; } 
 	} 
 	return $image;
