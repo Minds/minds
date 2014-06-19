@@ -317,14 +317,14 @@ function minds_pagesetup(){
 	elgg_unregister_menu_item('site', 'activity');
 	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
-	if($user)
-	elgg_register_menu_item('site', array(
-						'name' => 'news',
-						'href' => 'news/featured',
-						'text' => '&#59194;',
-						'title' => elgg_echo('news'),
-						'priority' => 1	
-				));
+	if(elgg_is_logged_in())
+		elgg_register_menu_item('site', array(
+			'name' => 'news',
+			'href' => 'news/featured',
+			'text' => '&#59194;',
+			'title' => elgg_echo('news'),
+			'priority' => 1	
+		));
 	
 	if($user){		
 		elgg_register_menu_item('site', array(

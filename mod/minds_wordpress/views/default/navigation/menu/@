@@ -57,6 +57,7 @@ class minds_wordpress extends \ElggPlugin{
 	public function pagesetup(){
 		$id = '/tmp/wp-menu-'.base64_encode($this->getWordpressUrl());
 		$cached = file_get_contents($id);
+
 		if(!$cached){
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $this->getWordpressUrl(). '?minds-get-wp-nav=true'); 

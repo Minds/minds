@@ -25,6 +25,9 @@ class minds extends base{
 		$this->loadConfigs();
 		$this->loadLegacy();
 
+		if(multisite)
+			new multisite();	
+
 		//Trigger the boot event hook
 		\elgg_trigger_event('boot', 'system');
 		
@@ -61,9 +64,11 @@ class minds extends base{
 		
 		// Load mulit globals if set
 		if(file_exists(__MINDS_ROOT__ . '/engine/multi.settings.php')) {
+			define('multisite', true);
 			require_once(__MINDS_ROOT__ . '/engine/multi.settings.php');
 		}
 	}
+
 	
 	/**
 	 * Load the legacy files for elgg

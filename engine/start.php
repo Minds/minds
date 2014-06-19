@@ -32,7 +32,6 @@ if (!file_exists(dirname(__FILE__) . '/settings.php') && !defined('__MINDS_INSTA
 global $START_MICROTIME;
 $START_MICROTIME = microtime(true);
 
-
 define('__MINDS_ROOT__', dirname(dirname(__FILE__)));
 
 /**
