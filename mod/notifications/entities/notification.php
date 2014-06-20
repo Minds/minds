@@ -34,7 +34,7 @@ class notification extends entities\entity{
 		parent::delete();
 		
 		$db = new \minds\core\data\call('entities_by_time');
-		$db->remove('notifications:' . $this->to_guid, array($this->guid));
+		$db->removeAttributes('notifications:' . $this->to_guid, array($this->guid));
 		
 	}
 	
