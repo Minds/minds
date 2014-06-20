@@ -80,6 +80,9 @@ foreach($json as $key => $item) {
 				case 'group':
 					$items[$key] = new ElggGroup($item);
 					break;
+				case 'notification':
+					$items[$key] = new minds\plugin\notification\entities\notification($item);
+					break;
 				case 'object':
 					switch($item->subtype){
 						case 'album':
