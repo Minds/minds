@@ -138,8 +138,16 @@ class blockchain extends bitcoin
 	    throw \Exception("Bitcoin: $error");
 
 	curl_close($curl_handle);
+	
+	if (json_decode($buffer))
+	    $buffer = json_decode($buffer, true); 
 
-	return array('content' => json_decode($buffer) ? json_decode($buffer) : $buffer, 'response' => $http_status, 'error' => $error);
+	$return = array();
+	$return['content'] = $buffer;
+	$return['response'] = $http_status;
+	$return['error'] = $error;
+	
+	return $return;
     }
     
     /**
@@ -263,21 +271,27 @@ class blockchain extends bitcoin
 	
 	error_log("Bitcoin: Wallet response is " . var_export($wallet, true));
 	
+	// Belts and braces
+	if (empty($wallet['address'])) throw new \Exception("Bitcoin: Wallet call seemed to work, but no address was found");
+
 	$new_wallet = new \ElggObject();
+
 	$new_wallet->subtype = 'bitcoin_wallet';
 	$new_wallet->access_id = ACCESS_PRIVATE;
 	$new_wallet->owner_guid = $user->guid;	
 	$this->storeWalletPassword($new_wallet, $password);
+
 	$new_wallet->wallet_raw = serialize($wallet);
-	
-	$new_wallet->wallet_guid = $wallet->guid;
-	$new_wallet->wallet_address = $wallet->address;
-	$new_wallet->wallet_link = $wallet->link;
+	$new_wallet->wallet_guid = $wallet['guid'];
+	$new_wallet->wallet_address = $wallet['address'];
+	$new_wallet->wallet_link = $wallet['link'];
 	
 	$new_wallet->wallet_handler = 'blockchain';
-	
+
 	// Save the address to user settings
-	elgg_set_plugin_user_setting('bitcoin_address', $wallet->address, elgg_get_logged_in_user_guid(), 'bitcoin');
+	elgg_set_plugin_user_setting('bitcoin_address', $wallet['address'], $new_wallet->owner_guid, 'bitcoin');
+	
+	error_log("Bitcoin: Wallet created");
 	
 	return $new_wallet->save();
 	
@@ -316,7 +330,7 @@ class blockchain extends bitcoin
 		
 		$result = $result['content'];
 		
-		return $result->balance;
+		return $result['balance'];
 	    }
 	}
 	
@@ -359,7 +373,7 @@ class blockchain extends bitcoin
 	
 	$result = $result['content'];
 	
-	return $result->input_address;
+	return $result['input_address'];
     }
 
     public function createReceiveAddressForUser(\ElggUser $user, array $params = null) {
