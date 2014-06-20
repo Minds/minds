@@ -1,5 +1,5 @@
 <p>
-    <label>Bitcoin wallet: <br />
+    <label>Bitcoin wallet address: <br />
 	<?= elgg_view('input/text', array('id' => 'bitcoin_wallet', 'name' => 'params[bitcoin_address]', 'value' => elgg_get_plugin_user_setting('bitcoin_address', elgg_get_logged_in_user_guid(), 'bitcoin'))); ?>
     </label>
 </p>
@@ -7,7 +7,7 @@
 <p>Or, if you don't have one, you can generate one...</p>
 
 
-<input id="bitcoin_generate_wallet" type="button" value="Generate new wallet..." />
+<input id="bitcoin_generate_wallet" type="button" value="Generate new wallet and bitcoin address..." />
 <script>
     $(document).ready(function() {
 	$('#bitcoin_generate_wallet').click(function() {
