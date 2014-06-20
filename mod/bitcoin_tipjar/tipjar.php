@@ -83,6 +83,9 @@ class tipjar extends \ElggPlugin
      */
     public function init() {
 	
+	// Register the tip action
+	elgg_register_action('tipjar/tip', dirname(__FILE__) . '/actions/send_tip.php');
+	
 	// When a new wallet is created for a user, generate a receive address for the user
 	elgg_register_event_handler('create', 'object', function($event, $object_type, $object) {
 	    if (elgg_instanceof($object, 'object', 'bitcoin_wallet')) {
