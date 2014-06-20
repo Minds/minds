@@ -13,7 +13,7 @@ class router{
 	 * (fallback to elgg page handler if we fail)
 	 * 
 	 */
-	public function route($uri = null){
+	public function route($uri = null, $method = null){
 		
 		if(!$uri)	
 			$route = strtok($_SERVER["REQUEST_URI"],'?');
@@ -22,12 +22,20 @@ class router{
 
 		$route = rtrim($route, '/');
 		$segments = explode('/', $route);
-		$method = strtolower($_SERVER['REQUEST_METHOD']);
+		$method = $method ? $method : strtolower($_SERVER['REQUEST_METHOD']);
 	
 		$loop = count($segments);
-		while($loop){
-			$route = rtrim($route, $segments[$loop].'/');
 
+		while($loop >= 0){
+			
+			$offset = $loop -1;	
+			
+			if($loop < count($segments)){
+				$slug_length = strlen($segments[$offset+1].'/');
+				$route_length = strlen($route);
+				$route = substr($route, 0, $route_length-$slug_length);
+			}
+		
 			if(isset(self::$routes[$route])){
 				$handler = new self::$routes[$route]();
 				$pages = array_splice($segments, $loop) ?: array();

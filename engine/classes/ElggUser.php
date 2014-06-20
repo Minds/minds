@@ -67,12 +67,12 @@ class ElggUser extends ElggEntity
 					throw new IOException($msg);
 				}
 			} elseif(is_numeric($guid)){
-            			if (!$this->loadFromGUID($guid)) {
+            	if (!$this->loadFromGUID($guid)) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
 			} else if (is_string($guid)) {
-				$user = get_user_by_username($guid);
-				$this->loadFromObject($user);
+
+				$this->loadFromLookup($guid);
 			
 			} else if(is_array($guid)){
 				$this->loadFromArray($guid);
@@ -129,6 +129,13 @@ class ElggUser extends ElggEntity
 		return false;
 	}
 
+	protected function loadFromLookup($string){
+		$lookup = new minds\core\data\lookup();
+		$guid = $lookup->get($string);
+
+		return $this->loadFromGUID(key($guid));
+	}
+
 	/**
 	 * Saves this user to the database.
 	 *
@@ -142,7 +149,7 @@ class ElggUser extends ElggEntity
 		
 		//now place email and username in index
 		$data = array($this->guid => time());
-		
+
 		$db = new minds\core\data\call('user_index_to_guid');
 		$db->insert(strtolower($this->username), $data);
 		$db->insert(strtolower($this->email), $data);

@@ -442,7 +442,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			echo "$scraper->guid - loading $scraper->title \n";
 			
 			if(isset($scraper->timestamp) && $scraper->timestamp > time() - 300){
-				echo "canceling... scraped it withing the last 5 mins \n";
+				echo "canceling... scraped it within the last 5 mins \n";
 				continue;
 			}
 			if(!$scraper->feed_url || $scraper->feed_url == ""){

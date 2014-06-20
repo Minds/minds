@@ -50,26 +50,5 @@ class start extends \ElggPlugin{
 		}
 	}
 	
-	/**
-	 * Returns the guids of the channels a user has up voted
-	 */
-	public function ups($user){
-		$db = \minds\core\data\indexes('minder:ups');
-		$guids = $db->get($user->guid);
-	}
 	
-	/**
-	 * Return the guids of the channels a user has down voted
-	 */
-	public function downs($user){
-		$db = \minds\core\data\indexes('minder:downs');
-		$guids = $db->get($user->guid);
-	}
-	
-	/**
-	 * Returns a list of mutuals
-	 */
-	public function mutuals($user){
-		
-	}
 }
