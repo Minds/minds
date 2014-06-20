@@ -56,7 +56,7 @@ if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
  * @return bool - success or failed
  */
 function notification_create($to, $from, $object, $params){
-	return elgg_trigger_plugin_hook('notification', 'all', array('to'=>$to, 'from'=>$from, 'object_guid'=>$object));
+	return elgg_trigger_plugin_hook('notification', 'all', array('to'=>$to, 'from'=>$from, 'object_guid'=>$object, 'params'=>$params));
 
 	//if the user and from are not the same then send!
 	//if($to != $from){

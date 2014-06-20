@@ -26,7 +26,6 @@ $metadata = elgg_view_menu('entity', array(
 	'class' => 'elgg-menu-hz',
 ));
 
-
 $body = elgg_view('notifications/types/' . $entity->notification_view, array('entity'=>$entity));
 
 $owner_icon = elgg_view_entity_icon($owner, 'small');
