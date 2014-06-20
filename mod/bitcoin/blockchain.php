@@ -337,20 +337,32 @@ class blockchain extends bitcoin
 	return false;
     }
     
-    public function sendPayment($from_wallet_guid, $to_address, $amount) {
+    public function sendPayment($from_wallet_guid, $to_address, $amount_in_satoshi) {
 	
+	if ($wallet = get_entity($wallet_guid)) {
+	    
+	    if (elgg_instanceof($wallet, 'object', 'bitcoin_wallet'))
+	    {
+		$wallet_guid = $wallet->wallet_guid;
+		$result = $this->__make_call('GET', "merchant/$wallet_guid/payment", array(
+		    'main_password' => $this->getWalletPassword($wallet),
+		    
+		    'to' => $to_address,
+		    'amount' => $amount_in_satoshi
+		));
+		
+		if ($result['response'] == 500)
+		    throw new \Exception("Bitcoin: "  . $result['content']);
+		
+		$result = $result['content'];
+		
+		system_message($result['message']);
+		
+		return $result['tx_hash'];
+	    }
+	}
 	
-	// TODO : Writeme
-	
-	
-	
-	
-		// Get balance
-
-
-	
-	
-	
+	return false;
     }
 
     protected function getAPIBase() {

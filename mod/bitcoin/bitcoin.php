@@ -41,7 +41,7 @@ abstract class bitcoin extends \ElggPlugin
     /**
      * Send a payment from a wallet to a bitcoin address.
      */
-    abstract public function sendPayment($from_wallet_guid, $to_address, $amount);
+    abstract public function sendPayment($from_wallet_guid, $to_address, $amount_in_satoshi);
 
 
 
