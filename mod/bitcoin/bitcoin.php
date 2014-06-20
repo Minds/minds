@@ -29,6 +29,7 @@ abstract class bitcoin extends \ElggPlugin
     
     /**
      * Create a wallet for a user.
+     * @return guid|false
      */
     abstract public function createWallet(\ElggUser $user);
     
