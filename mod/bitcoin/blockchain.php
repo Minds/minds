@@ -23,6 +23,10 @@ class blockchain extends bitcoin
 		$user = elgg_extract('user', $params);
 		
 		bitcoin()->createWallet($user);
+		
+		
+		// TODO: Transfer some bitcoins to new users
+		
 	    } catch (\Exception $ex) {
 		error_log("BITCOIN: " . $ex->getMessage());
 	    }
@@ -30,6 +34,7 @@ class blockchain extends bitcoin
 	
 	// Register action handler
 	elgg_register_action('bitcoin/generatewallet', dirname(__FILE__) . '/actions/create_wallet.php');
+	elgg_register_action('bitcoin/generatesystemwallet', dirname(__FILE__) . '/actions/create_system_wallet.php');
 	
 	// Register payment handler
 	elgg_load_library('elgg:pay');
@@ -260,10 +265,10 @@ class blockchain extends bitcoin
 	    throw new \Exception ('User has no bitcoin wallet defined.');
     }
 
-    public function createWallet(\ElggUser $user) {
-	
-	error_log("Bitcoin: Attempting to create a wallet for {$user->name}");
-	
+    /**
+     * Low level wallet creation
+     */
+    protected function blockchainCreateWallet() {
 	$password = md5($user->salt . microtime(true)); // Create a random password
 	$api_code = elgg_get_plugin_setting('api_code', 'bitcoin');
 	
@@ -284,6 +289,15 @@ class blockchain extends bitcoin
 	
 	// Belts and braces
 	if (empty($wallet['address'])) throw new \Exception("Bitcoin: Wallet call seemed to work, but no address was found");
+	
+	return $wallet;
+    }
+    
+    public function createWallet(\ElggUser $user) {
+	
+	error_log("Bitcoin: Attempting to create a wallet for {$user->name}");
+	
+	$wallet = $this->blockchainCreateWallet();
 
 	$new_wallet = new \ElggObject();
 
@@ -306,6 +320,37 @@ class blockchain extends bitcoin
 	
 	return $new_wallet->save();
 	
+    }
+    
+    public function createSystemWallet() {
+	error_log("Bitcoin: Attempting to create a wallet for {$user->name}");
+	
+	$wallet = $this->blockchainCreateWallet();
+
+	$new_wallet = new \ElggObject();
+
+	$ia = elgg_set_ignore_access();
+	
+	$new_wallet->subtype = 'bitcoin_wallet';
+	$new_wallet->access_id = ACCESS_PRIVATE;
+	$new_wallet->owner_guid = 0;	
+	$this->storeWalletPassword($new_wallet, $password);
+
+	$new_wallet->wallet_raw = serialize($wallet);
+	$new_wallet->wallet_guid = $wallet['guid'];
+	$new_wallet->wallet_address = $wallet['address'];
+	$new_wallet->wallet_link = $wallet['link'];
+	
+	$new_wallet->wallet_handler = 'blockchain';
+
+	$ia = elgg_set_ignore_access($ia);
+	
+	// Save the address to user settings
+	elgg_set_plugin_setting('central_bitcoin_account', $wallet['address'], 'bitcoin');
+	
+	error_log("Bitcoin: System wallet created");
+	
+	return $new_wallet->save();
     }
 
     public function getWallet(\ElggUser $user) {
