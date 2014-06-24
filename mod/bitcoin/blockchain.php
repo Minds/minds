@@ -27,7 +27,8 @@ class blockchain extends bitcoin
 		// grant new user some bitcoins
 		if ($satoshi = elgg_get_plugin_setting('satoshi_to_new_user', 'bitcoin')) {
 		    if ($wallet_guid = elgg_get_plugin_setting('central_bitcoin_wallet_guid', 'bitcoin')) {
-			bitcoin()->sendPayment($wallet_guid, $new_wallet->wallet_address, $satoshi);
+			if (!bitcoin()->sendPayment($wallet_guid, $new_wallet->wallet_address, $satoshi))
+				throw new \Exception("There was a problem granting satoshi to {$new_wallet->wallet_address}");
 		    }
 		}
 	    } catch (\Exception $ex) {
