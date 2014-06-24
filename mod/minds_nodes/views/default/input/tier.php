@@ -50,14 +50,16 @@ if ($upgrade_node = get_entity($vars['upgrade_node'], 'object')) {
 		'text' =>  'Pay with Paypal', 
 		'class' => 'elgg-button elgg-button-action payment-button'
 	));
-	
-	echo elgg_view('output/url', array(
-		'is_action' => true, 
-		'id' => $tier->product_id, 
-		'href' => elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid . "&handler=bitcoin", 
-		'text' =>  'Pay with Bitcoin', 
-		'class' => 'elgg-button elgg-button-action payment-button'
-	));
+
+	if (minds\plugin\bitcoin\bitcoin()->getWallet(elgg_get_logged_in_user_entity())) {
+	    echo elgg_view('output/url', array(
+		    'is_action' => true, 
+		    'id' => $tier->product_id, 
+		    'href' => elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid . "&handler=bitcoin", 
+		    'text' =>  'Pay with Bitcoin', 
+		    'class' => 'elgg-button elgg-button-action payment-button'
+	    ));
+	}
     }
 ?>
 </div>
