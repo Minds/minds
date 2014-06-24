@@ -1,6 +1,6 @@
 <p>
-    <label>Bitcoin wallet address: <br />
-	<?= elgg_view('input/text', array('id' => 'bitcoin_wallet', 'name' => 'params[bitcoin_address]', 'value' => elgg_get_plugin_user_setting('bitcoin_address', elgg_get_logged_in_user_guid(), 'bitcoin'))); ?>
+    <label>Bitcoin address: <br />
+	<?= elgg_view('input/text', array('placeholder' => 'You haven\'t yet got a bitcoin wallet yet...', 'disabled' => 'true', 'id' => 'bitcoin_wallet', 'name' => 'params[bitcoin_address]', 'value' => elgg_get_plugin_user_setting('bitcoin_address', elgg_get_logged_in_user_guid(), 'bitcoin'))); ?>
     </label>
 </p>
 
