@@ -4,6 +4,12 @@
     </label>
 </p>
 
+<p>
+    <label>Amount of bitcoin to give each new user (in satoshi): <br />
+	<?= elgg_view('input/text',array('name'=>'params[satoshi_to_new_user]','value'=> elgg_get_plugin_setting('satoshi_to_new_user', 'bitcoin'))); ?>
+    </label>
+</p>
+
 
 <p>
     <label>Minds central bitcoin wallet: <br />

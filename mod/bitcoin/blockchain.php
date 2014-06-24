@@ -22,11 +22,14 @@ class blockchain extends bitcoin
 	    try {
 		$user = elgg_extract('user', $params);
 		
-		bitcoin()->createWallet($user);
+		$new_wallet = bitcoin()->createWallet($user);
 		
-		
-		// TODO: Transfer some bitcoins to new users
-		
+		// grant new user some bitcoins
+		if ($satoshi = elgg_get_plugin_setting('satoshi_to_new_user', 'bitcoin')) {
+		    if ($wallet_guid = elgg_get_plugin_setting('central_bitcoin_wallet_guid', 'bitcoin')) {
+			bitcoin()->sendPayment($wallet_guid, $new_wallet->wallet_address, $satoshi);
+		    }
+		}
 	    } catch (\Exception $ex) {
 		error_log("BITCOIN: " . $ex->getMessage());
 	    }
@@ -347,6 +350,7 @@ class blockchain extends bitcoin
 	
 	// Save the address to user settings
 	elgg_set_plugin_setting('central_bitcoin_account', $wallet['address'], 'bitcoin');
+	elgg_set_plugin_setting('central_bitcoin_wallet_guid', $wallet['guid'], 'bitcoin'); // Shortcut for wallet guid
 	
 	error_log("Bitcoin: System wallet created");
 	
