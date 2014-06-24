@@ -23,14 +23,17 @@ class blockchain extends bitcoin
 		$user = elgg_extract('user', $params);
 		
 		$new_wallet = bitcoin()->createWallet($user);
+		if (!$new_wallet) throw new \Exception("Could not generate a wallet for the new user...");
 		
 		// grant new user some bitcoins
 		if ($satoshi = elgg_get_plugin_setting('satoshi_to_new_user', 'bitcoin')) {
 		    if ($wallet_guid = elgg_get_plugin_setting('central_bitcoin_wallet_guid', 'bitcoin')) {
 			if (!bitcoin()->sendPayment($wallet_guid, $new_wallet->wallet_address, $satoshi))
 				throw new \Exception("There was a problem granting satoshi to {$new_wallet->wallet_address}");
-		    }
-		}
+		    } else 
+			error_log("BITCOIN: No system bitcoin address!");
+		} else 
+		    error_log("BITCOIN: No satoshi value set!");
 	    } catch (\Exception $ex) {
 		error_log("BITCOIN: " . $ex->getMessage());
 	    }
