@@ -17,6 +17,17 @@ class blockchain extends bitcoin
     public function init() {
 	parent::init();
 	
+	// Create a wallet for every new user
+	elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
+	    try {
+		$user = elgg_extract('user', $params);
+		
+		bitcoin()->createWallet($user);
+	    } catch (\Exception $ex) {
+		error_log("BITCOIN: " . $ex->getMessage());
+	    }
+	});
+	
 	// Register action handler
 	elgg_register_action('bitcoin/generatewallet', dirname(__FILE__) . '/actions/create_wallet.php');
 	
