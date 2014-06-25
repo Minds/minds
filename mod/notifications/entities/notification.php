@@ -29,4 +29,13 @@ class notification extends entities\entity{
 		return $guid;
 	}
 	
+	public function delete(){
+		
+		parent::delete();
+		
+		$db = new \minds\core\data\call('entities_by_time');
+		$db->removeAttributes('notifications:' . $this->to_guid, array($this->guid));
+		
+	}
+	
 }

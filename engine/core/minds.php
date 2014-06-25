@@ -25,7 +25,7 @@ class minds extends base{
 		$this->loadConfigs();
 		$this->loadLegacy();
 
-		if(multisite)
+		if(defined('multisite') && multisite)
 			new multisite();	
 
 		//Trigger the boot event hook

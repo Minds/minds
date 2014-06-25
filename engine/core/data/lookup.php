@@ -8,12 +8,13 @@ namespace minds\core\data;
 
 use minds\core;
 
-class lookup extends call{
+class lookup{
 
+	private $call;
 	private $namespace = '';
 	
 	public function __construct($namespace = NULL){
-		parent::__construct('user_index_to_guid');
+		$this->call = new call('user_index_to_guid');
 		
 		if($namespace)
 			$this->setNamespace($namespace);
@@ -26,16 +27,16 @@ class lookup extends call{
 	public function set($key, $values){
 		if(!is_array($values))
 			$values = array($values);
-		return $this->insert($this->namespace.$key, $values);
+		return $this->call->insert($this->namespace.$key, $values);
 	}
 	
 	public function remove($key){
-		return $this->removeRow($this->namespace.$key);
+		return $this->call->removeRow($this->namespace.$key);
 	}
 	
 	public function get($name){
 		try{
-			return $this->getRow($this->namespace.$name);
+			return $this->call->getRow($this->namespace.$name);
 		} catch (\Exception $e){
 			return false;
 		}
