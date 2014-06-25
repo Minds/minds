@@ -97,6 +97,8 @@ class blockchain extends bitcoin
 			    // Got here, so payment was successful - schedule for garbage collection and create a receipt
 			    
 			    $processed[] = $r->guid; // we have processed it, so schedule it for garbage collection.
+			    
+			    // Create a receipt for this payment
 			    $receipt = new \ElggObject();
 			    $receipt->subtype = 'blockchain_subscription_receipt';
 			    $receipt->owner_guid = $r->owner_guid;
@@ -107,6 +109,22 @@ class blockchain extends bitcoin
 			    $receipt->currency = $r->currency;
 			    $receipt->processed = time();
 			    $receipt->save();
+			    
+			    // Schedule the next payment
+			    $subscription = new \ElggObject();
+			    $subscription->subtype = 'blockchain_subscription';
+			    $subscription->owner_guid = $r->owner_guid;
+			    $subscription->order_guid = $r->order_guid;
+			    $subscription->renew_period = $r->renew_period;
+			    $subscription->due_ts = $now + $r->renew_period;
+			    $subscription->amount = $r->amount;
+			    $subscription->currency = $r->currency;
+
+			    $guid = $subscription->save();
+			    
+			    // Create a lookup, so we can easily cancel this order in future
+			    $db = new minds\core\data\call('entities_by_time');
+			    $db->insert('object:pay:blockchain:subscription', array($order->guid => $guid));
 			    
 			    notify_user($current_user->guid, elgg_get_site_entity()->guid, 'Minds subscription renewed', "You minds subscription has been renewed for $amount bitcoins ({$r->amount} {$r->currency}}).");
 			    
@@ -284,6 +302,11 @@ class blockchain extends bitcoin
 
     public static function cancelRecurringPaymentCallback($order_guid) {
 	
+	
+	// Look for any future subscriptions and delete
+	
+	
+	
     }
 
     public static function paymentHandler_callback($order_guid) {
@@ -371,10 +394,15 @@ class blockchain extends bitcoin
 		    $subscription->amount = $params['amount'];
 		    $subscription->currency = $currency;
 		    
-		    if (!$subscription->save())
+		    $guid = $subscription->save();
+		    if (!$guid)
 			throw new Exception ("There was a problem creating your subscription, you have not been charged. Please try again, or contact Minds for help.");
-		    
+		
+		    // Create a lookup, so we can easily cancel this order in future
+		    $db = new minds\core\data\call('entities_by_time');
+		    $db->insert('object:pay:blockchain:subscription', array($order->guid => $guid));
 		}
+		
 		
 		// Then use wallet to send payment
 		if (!bitcoin()->sendPayment($wallet->wallet_address, $minds_address, $amount))
