@@ -54,6 +54,7 @@ class blockchain extends bitcoin
 	    $offset = 0;
 	    $limit = 50;
 	    $processed = array();
+	    $new_indexes = array();
 	    $current_user = null;
 	    $minds_address = elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin');
 	    
@@ -69,7 +70,8 @@ class blockchain extends bitcoin
 		foreach ($results as $r) {
 		    if (
 			    ($now > $r->due_ts) && // Due
-			    (!$r->locked) // not locked
+			    (!$r->locked) && // not locked
+			    (!$r->cancelled) // cancelled
 			    ){
 			
 			$r->locked = time(); // Lock it to prevent reprocessing
@@ -123,8 +125,8 @@ class blockchain extends bitcoin
 			    $guid = $subscription->save();
 			    
 			    // Create a lookup, so we can easily cancel this order in future
-			    $db = new minds\core\data\call('entities_by_time');
-			    $db->insert('object:pay:blockchain:subscription', array($order->guid => $guid));
+			    $new_indexes[$order->guid] = $guid;
+			   
 			    
 			    notify_user($current_user->guid, elgg_get_site_entity()->guid, 'Minds subscription renewed', "You minds subscription has been renewed for $amount bitcoins ({$r->amount} {$r->currency}}).");
 			    
@@ -147,6 +149,15 @@ class blockchain extends bitcoin
 	    }
 	    
 	    // Delete all processed 
+	    foreach ($processed as $guid){
+		$e = get_entity($guid);
+		$e->delete();
+	    }
+	    
+	    // Now, update the indexes
+	    $db = new minds\core\data\call('entities_by_time');
+	    foreach ($new_indexes as $order_guid => $guid)
+		$db->insert('object:pay:blockchain:subscription', array($order_guid => $guid));
 	    
 	    $ia = elgg_set_ignore_access($ia);
 	    
@@ -304,7 +315,18 @@ class blockchain extends bitcoin
 	
 	
 	// Look for any future subscriptions and delete
+	$db = new minds\core\data\call('entities_by_time');
+	if ($guids = $db->getRow('object:pay:blockchain:subscription', array('offset'=> $order_guid, 'limit'=>1))) {
+	    $subscription = get_entity($guids[0], 'object');
 	
+	    if (elgg_instanceof($subscription, 'object', 'blockchain_subscription')) // Belts and braces
+	    {
+		$subscription->cancelled = time();
+		pay_update_order_status($order_guid, 'Cancelled');
+	    }
+	    else
+		throw new \Exception("Returned guid is not an order subscription, you shouldn't see this.");
+	}
 	
 	
     }
