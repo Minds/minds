@@ -46,6 +46,93 @@ class blockchain extends bitcoin
 	// Register payment handler
 	elgg_load_library('elgg:pay');
 	pay_register_payment_handler('bitcoin', '\minds\plugin\bitcoin\blockchain::paymentHandler');
+	
+	// Handle recurring payments (DIY, until blockchain support this natively)
+	elgg_register_plugin_hook_handler('cron', 'daily', function(){
+	    
+	    $now = time();
+	    $offset = 0;
+	    $limit = 50;
+	    $processed = array();
+	    $current_user = null;
+	    $minds_address = elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin');
+	    
+	    $ia = elgg_set_ignore_access();
+	    
+	    // Retrieve all recurring payments which are outstanding and not being processed
+	    while ($results = elgg_get_entities(array(
+		'type' => 'object',
+		'subtype' => 'blockchain_subscription',
+		'limit' => $limit,
+		'offset' => $offset
+	    ))) {
+		foreach ($results as $r) {
+		    if (
+			    ($now > $r->due_ts) && // Due
+			    (!$r->locked) // not locked
+			    ){
+			
+			$r->locked = time(); // Lock it to prevent reprocessing
+			
+			// Try and process payment
+			try {
+			    $order = get_entity($r->order_guid);
+			    if (!$order) throw new \Exception("No order was found attached to this subscription!");
+
+			    $current_user = $user = get_user($order->owner_guid); 
+			    if (!$user) throw new \Exception("No user was found attached to this subscription!");
+			
+			    $wallet = $this->getWallet($user);
+			    if (!$wallet) throw new \Exception ('User has no bitcoin wallet defined.');
+			    
+			    $amount = bitcoin()->convertToBTC($amount, $currency);
+			    if (!$amount) throw new \Exception("Problem converting $currency into BTC");
+			    
+			    if (!$minds_address) throw new \Exception("Minds BTC account is not configured, you should not be seeing this!");
+			    
+			    // Attempt to put through the payment
+			    if (!bitcoin()->sendPayment($wallet->wallet_address, $minds_address, $amount))
+				throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
+			    
+			    // Got here, so payment was successful - schedule for garbage collection and create a receipt
+			    
+			    $processed[] = $r->guid; // we have processed it, so schedule it for garbage collection.
+			    $receipt = new \ElggObject();
+			    $receipt->subtype = 'blockchain_subscription_receipt';
+			    $receipt->owner_guid = $r->owner_guid;
+			    $receipt->order_guid = $r->order_guid;
+			    $receipt->renew_period = $r->renew_period;
+			    $receipt->due_ts = $r->due_ts;
+			    $receipt->amount = $r->amount;
+			    $receipt->currency = $r->currency;
+			    $receipt->processed = time();
+			    $receipt->save();
+			    
+			    notify_user($current_user->guid, elgg_get_site_entity()->guid, 'Minds subscription renewed', "You minds subscription has been renewed for $amount bitcoins ({$r->amount} {$r->currency}}).");
+			    
+			    $current_user = null;
+			} catch (\Exception $e) {
+			    error_log("BITCOIN SUBSCRIPTION: " . $e->getMessage());
+			    
+			    // Unlock and try again next time
+			    $r->locked = 0;
+			    $r->failures++;
+			    
+			    // Notify the user that something went wrong
+			    notify_user($current_user->guid, elgg_get_site_entity()->guid, 'Problem with your Minds subscription', 'There was a problem processing your subscription: \n\n' . $e->getMessage());
+			    
+			    // TODO: Deactivate subscribed services (or better, those services should probably know about orders)
+			    $current_user = null;
+			}
+		    }
+		}
+	    }
+	    
+	    // Delete all processed 
+	    
+	    $ia = elgg_set_ignore_access($ia);
+	    
+	});
 
 	// Endpoints
 	elgg_register_page_handler('blockchain', function($pages){
@@ -216,6 +303,7 @@ class blockchain extends bitcoin
 	    // Update the order status
 	    pay_update_order_status($order_guid, 'Completed');
 	    
+	    echo "*ok*";
 	    
 	} catch (\Exception $e) {
 	    error_log("BITCOIN CALLBACK: " . $e->getMessage());
@@ -239,7 +327,7 @@ class blockchain extends bitcoin
 	if (!$minds_address) throw new \Exception('Minds bitcoin address not configured, sorry!');
 	
 	// Find wallet
-	$wallet = $this->getWallet($user);
+	$wallet = bitcoin()->getWallet($user);
 	if ($wallet) {
 	
 	    // Generate return address, register callback
@@ -249,13 +337,13 @@ class blockchain extends bitcoin
 	    $cancel_url = $urls['cancel'];
 	    $callback_url =  $urls['callback'].'/bitcoin?minds_tid=' . $order->pay_transaction_id; // Set bitcoin callback endpoint
 	
-	    if ($this->blockchainGenerateReceivingAddress($wallet->wallet_address, $callback_url)) {
+	    if (bitcoin()->blockchainGenerateReceivingAddress($wallet->wallet_address, $callback_url)) {
 	
 		// Convert amount into bitcoins
 		$currency = unserialize($order->currency);
 		if (is_array($currency)) $currency = $currency['code'];
 		
-		$amount = $this->convertToBTC($amount, $currency);
+		$amount = bitcoin()->convertToBTC($amount, $currency);
 		
 		error_log("BITCOIN: Payment pay being sent for $amount Bitcoins from {$params['amount']}");
 		
@@ -280,6 +368,8 @@ class blockchain extends bitcoin
 		    $subscription->order_guid = $order->guid;
 		    $subscription->renew_period = $expires;
 		    $subscription->due_ts = time() + $expires;
+		    $subscription->amount = $params['amount'];
+		    $subscription->currency = $currency;
 		    
 		    if (!$subscription->save())
 			throw new Exception ("There was a problem creating your subscription, you have not been charged. Please try again, or contact Minds for help.");
@@ -287,7 +377,7 @@ class blockchain extends bitcoin
 		}
 		
 		// Then use wallet to send payment
-		if (!$this->sendPayment($wallet->wallet_address, $minds_address, $amount))
+		if (!bitcoin()->sendPayment($wallet->wallet_address, $minds_address, $amount))
 			throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
 		
 		forward($return_url);
