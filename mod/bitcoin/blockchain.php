@@ -259,6 +259,33 @@ class blockchain extends bitcoin
 		
 		error_log("BITCOIN: Payment pay being sent for $amount Bitcoins from {$params['amount']}");
 		
+		/**
+		 * Handle recurring payments.
+		 * Currently blockchain doesn't do this for us, so we have to fudge it.
+		 */
+		if ($params['recurring'])
+		{
+            
+		    // Set recurring period based on expiry (default 1 year)
+		    $ia = elgg_set_ignore_access($ia);
+		    $item = get_entity($order->object_guid, 'object');
+		    $expires = $item->expires;
+		    if (!$expires) $expires = MINDS_EXPIRES_YEAR;
+		    $ia = elgg_set_ignore_access($ia);
+            
+		    // Create a future dated subscription marker to re-order this subscription after a certain date (picked up by our cron tracker)
+		    $subscription = new \ElggObject();
+		    $subscription->subtype = 'blockchain_subscription';
+		    $subscription->owner_guid = $order->owner_guid;
+		    $subscription->order_guid = $order->guid;
+		    $subscription->renew_period = $expires;
+		    $subscription->due_ts = time() + $expires;
+		    
+		    if (!$subscription->save())
+			throw new Exception ("There was a problem creating your subscription, you have not been charged. Please try again, or contact Minds for help.");
+		    
+		}
+		
 		// Then use wallet to send payment
 		if (!$this->sendPayment($wallet->wallet_address, $minds_address, $amount))
 			throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
