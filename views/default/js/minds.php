@@ -331,7 +331,7 @@
 				$list.hasClass('elgg-list-annotation') ? 'annotation' : 
 				$list.find('.elgg-list').hasClass('minds-search-list') ? 'search' : 'entity',
 			offset:offset,
-			limit:6 
+			limit:12 
 		});
 		url = "/ajax/view/page/components/ajax_list?" + $.param($params);
 			

@@ -57,9 +57,8 @@ class minds extends base{
 			$CONFIG = new config();
 		
 		// Load the system settings
-		if (file_exists(__MINDS_ROOT__ . '/engine/settings.php') && !include_once(__MINDS_ROOT__ . "/engine/settings.php")) {
-			$msg = 'Elgg could not load the settings file. It does not exist or there is a file permissions issue.';
-			throw new \InstallationException($msg);
+		if (file_exists(__MINDS_ROOT__ . '/engine/settings.php')){
+			include_once(__MINDS_ROOT__ . "/engine/settings.php");
 		}
 		
 		// Load mulit globals if set

@@ -36,7 +36,6 @@ class ElggInstaller {
 		
 		define('__MINDS_INSTALLING__', true);
 		
-		require_once(__MINDS_ROOT__. '/engine/autoload.php');
 		$minds = new minds\core\minds();
 		$minds->loadLegacy();
 		_elgg_session_boot(true);		
