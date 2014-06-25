@@ -170,7 +170,7 @@ class ElggObject extends ElggEntity {
      * @return ElggEntity The owning entity
       */
 	public function getOwnerEntity($brief = true) {
-		if($brief && isset($this->ownerObj) && $owner = $this->ownerObj){
+		if($brief && isset($this->ownerObj) && $owner = $this->ownerObj && is_array($this->ownerObj)){
 			if($owner['name']){
 				return new ElggUser($owner);
 			}  else {
