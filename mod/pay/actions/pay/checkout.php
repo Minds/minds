@@ -35,8 +35,6 @@ foreach($basket as $item){
 	$a->quantity = $item->quantity;
 	$a->object_guid = $item->object_guid;
 	$a->seller_guid = $item->seller_guid;
-	$a->pay_transaction_id = md5(rand()); // Create a random transaction identifier. This is used by some payment handlers to validate that that a transaction return isn't a martian.
-	$a->currency = serialize(pay_get_currency()); // Store the currency (we need this for currency conversions)
         if ($item->recurring == 'y') // TODO: Currently we have to set whole basket to recurring if one item repeats. Not idea.
             $recurring = true;
 	$items[] = $a;
@@ -44,7 +42,9 @@ foreach($basket as $item){
 }
 $order->items = serialize($items);
 
+$order->pay_transaction_id = md5(rand()); // Create a random transaction identifier. This is used by some payment handlers to validate that that a transaction return isn't a martian.
 $order->amount = $amount;
+$order->currency = serialize(pay_get_currency()); // Store the currency (we need this for currency conversions)
 $order->status = 'created';
 
 // Flag as recurring
