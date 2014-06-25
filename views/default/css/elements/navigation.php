@@ -495,11 +495,14 @@
 *************************************** */
 <?php // height depends on line height/font size ?>
 .elgg-menu-entity, elgg-menu-annotation {
-	float: right;
-	margin: 12px;
+	position: relative;
+	margin: 0px;
 	font-size: 90%;
 	color: #aaa;
 	line-height: 16px;
+	/* right: 0; */
+	/* top: 58px; */
+	float: right;
 }
 .elgg-menu-entity > li, .elgg-menu-annotation > li {
 	margin-left:8px;

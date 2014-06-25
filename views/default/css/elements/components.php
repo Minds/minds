@@ -35,7 +35,7 @@
 }
 .elgg-list > li {
 	float: left;
-	margin: 1.1%;
+	margin: 1%;
     border: 0;
 	background:#F8F8F8;
 	padding:10px 10px 0 11px;

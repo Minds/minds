@@ -76,7 +76,7 @@
  **************/
 
 body{
-	background:#F8F8F8;
+	background:#FFF;
 }
 body.news{
 	background:#D2D9DF;
@@ -563,10 +563,13 @@ li .excerpt a{
         padding:8px;
 }
 .elgg-sidebar li.elgg-item{
-	margin:5px;
-	width:140px;
-	padding:0;
-	height:200px;
+	margin: 5px;
+	width: auto;
+	padding: 0;
+	height: auto;
+	background: #FFF; 
+	border: 1px solid #888;
+	box-shadow: 0 0 0;
 }
 .elgg-gallery-users li.elgg-item{
 	margin:2px;
@@ -582,15 +585,20 @@ li .excerpt a{
 	font-weight:bold;
 }
 .elgg-sidebar li.elgg-item h3, .elgg-sidebar li .stamp{
-	padding:8px;
+	padding: 8px;
+	color: #000;
+	font-size: 14px;
+	font-weight: 800;
+	line-height: 1.4em;
 }
 .blog-sidebar li a.title{
-	font-weight:bold;
-	top: 0;
-	left: 0;
+	font-weight: bold;
+	/* bottom: 0; */
+	/* left: 0; */
 	background: rgba(0,0,0,0.75);
 	z-index: 999;
-	color: #333;
+	color: #FFF;
+	/* position: absolute; */
 }
 .blog-sidebar li img.rich-image{
 	margin:0;

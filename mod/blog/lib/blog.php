@@ -562,10 +562,13 @@ function blog_sidebar($blog){
 		$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single'));
 		  $return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
 		//show more posts from this user
-		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>2));
+		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>3));
 		if (($key = array_search($blog, $owners_blogs)) !== false) {
 		    unset($owners_blogs[$key]);
 		}
+		//if(get_input('debug'))
+		//	var_dump($owners_blogs);
+		set_input('ajax', true);
 		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar', 'pagination'=>false, 'masonry'=>false));
 		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs, array('class'=>'blog-sidebar'));
 		

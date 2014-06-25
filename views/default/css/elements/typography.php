@@ -141,10 +141,10 @@ h3 a{ color:#333; }
 	
 .heading-main, .elgg-heading-main {
 	float: left;
-	max-width: 65%;
-	padding:8px;
-	font-size:32px;
-	font-weight:lighter;
+	max-width: 100%;
+	padding: 8px;
+	font-size: 32px;
+	font-weight: lighter;
 }
 .elgg-heading-basic {
 	color: #333;
@@ -153,12 +153,13 @@ h3 a{ color:#333; }
 }
 
 .subtext, .elgg-subtext {
-	clear:both;
-	padding: 0 8px 8px;
-	color: #666666;
-	font-size: 85%;
-	line-height: 1.2em;
-	font-style: italic;
+	/* clear: both; */
+padding: 0 8px 8px;
+color: #666666;
+font-size: 85%;
+line-height: 1.2em;
+font-style: italic;
+float: left;
 }
 
 .elgg-text-help {
