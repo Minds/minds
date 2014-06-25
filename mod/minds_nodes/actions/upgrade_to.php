@@ -25,10 +25,15 @@ if ($tier_id && $node_guid) {
 
         // Cancel old order (but only if this isn't a free tier)
         if ($order->amount > 0) {
-            if (!pay_call_cancel_recurring_payment($order->payment_method, $order->guid)) {
-                register_error("Could not cancel existing order, please contact support");
-                forward(REFERRER);
-            }
+	    try {
+		if (!pay_call_cancel_recurring_payment($order->payment_method, $order->guid)) {
+		    register_error("Could not cancel existing order, please contact support");
+		    forward(REFERRER);
+		}
+	    } catch (\Exception $e) {
+		error_log("BITCOIN: " . $e->getMessage());
+		register_error($e->getMessage());
+	    }
         }
         else {
             error_log("Existing node is free, no need to call cancel endpoint, we just let the new purchase tick through.");

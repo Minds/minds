@@ -62,10 +62,15 @@ if ($tier = get_entity(get_input('tier_id'),'object')) {
 	if($order->amount == 0){
 		forward('nodes/manage');
 	} else {
+	    try {
  		pay_call_payment_handler($order->payment_method, array( 'order_guid' => $order_guid,
        		    'user_guid' => elgg_get_logged_in_user_guid(),
         	    'amount' => $order->amount,
        		    'recurring' => true
         	));
+	    } catch (\Exception $e) {
+		error_log("BITCOIN: " . $e->getMessage());
+		register_error($e->getMessage());
+	    }
 	}
 }
