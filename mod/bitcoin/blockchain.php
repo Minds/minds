@@ -93,7 +93,7 @@ class blockchain extends bitcoin
 			    if (!$minds_address) throw new \Exception("Minds BTC account is not configured, you should not be seeing this!");
 			    
 			    // Attempt to put through the payment
-			    if (!bitcoin()->sendPayment($wallet->wallet_address, $minds_address, $amount))
+			    if (!bitcoin()->sendPayment($wallet->guid, $minds_address, $amount))
 				throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
 			    
 			    // Got here, so payment was successful - schedule for garbage collection and create a receipt
@@ -315,7 +315,7 @@ class blockchain extends bitcoin
 	
 	
 	// Look for any future subscriptions and delete
-	$db = new minds\core\data\call('entities_by_time');
+	$db = new \minds\core\data\call('entities_by_time');
 	if ($guids = $db->getRow('object:pay:blockchain:subscription', array('offset'=> $order_guid, 'limit'=>1))) {
 	    $subscription = get_entity($guids[0], 'object');
 	
@@ -360,6 +360,8 @@ class blockchain extends bitcoin
 
     public static function paymentHandler($params) {
 	
+	global $CONFIG;
+	
 	$order = get_entity($params['order_guid'], 'object');
 	$user = get_entity($params['user_guid'], 'user');
 	$amount = $params['amount'];
@@ -386,11 +388,19 @@ class blockchain extends bitcoin
 	
 		// Convert amount into bitcoins
 		$currency = unserialize($order->currency);
+		if (!$currency) $currency = pay_get_currency();
 		if (is_array($currency)) $currency = $currency['code'];
+		
+		error_log("BITCOIN: Converting $amount to " . print_r($currency, true));
 		
 		$amount = bitcoin()->convertToBTC($amount, $currency);
 		
 		error_log("BITCOIN: Payment pay being sent for $amount Bitcoins from {$params['amount']}");
+		
+		if ($CONFIG->debug) {
+		    $amount = 0.0005;
+		    error_log("BITCOIN: We're in debug mode, so we're squishing the result to $amount");
+		}
 		
 		/**
 		 * Handle recurring payments.
@@ -418,16 +428,16 @@ class blockchain extends bitcoin
 		    
 		    $guid = $subscription->save();
 		    if (!$guid)
-			throw new Exception ("There was a problem creating your subscription, you have not been charged. Please try again, or contact Minds for help.");
+			throw new \Exception ("There was a problem creating your subscription, you have not been charged. Please try again, or contact Minds for help.");
 		
 		    // Create a lookup, so we can easily cancel this order in future
-		    $db = new minds\core\data\call('entities_by_time');
+		    $db = new \minds\core\data\call('entities_by_time');
 		    $db->insert('object:pay:blockchain:subscription', array($order->guid => $guid));
 		}
 		
 		
 		// Then use wallet to send payment
-		if (!bitcoin()->sendPayment($wallet->wallet_address, $minds_address, $amount))
+		if (!bitcoin()->sendPayment($wallet->guid, $minds_address, $amount))
 			throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
 		
 		forward($return_url);
@@ -569,11 +579,15 @@ class blockchain extends bitcoin
     }
     
     public function sendPayment($from_wallet_guid, $to_address, $amount_in_satoshi) {
+		
+	error_log("BITCOIN: Sending from $from_wallet_guid");
 	
-	if ($wallet = get_entity($wallet_guid)) {
+	if ($wallet = get_entity($from_wallet_guid)) {
 	    
 	    if (elgg_instanceof($wallet, 'object', 'bitcoin_wallet'))
 	    {
+		error_log("BITCOIN: Got a wallet, making a call.");
+		
 		$wallet_guid = $wallet->wallet_guid;
 		$result = $this->__make_call('GET', "merchant/$wallet_guid/payment", array(
 		    'main_password' => $this->getWalletPassword($wallet),
@@ -588,10 +602,14 @@ class blockchain extends bitcoin
 		$result = $result['content'];
 		
 		system_message($result['message']);
+	
+		error_log("BITCOIN: Transaction hash is {$result['tx_hash']}");
 		
 		return $result['tx_hash'];
 	    }
+	    else error_log("BITCOIN: Wallet $wallet_guid is not a bitcoin_wallet");
 	}
+	else error_log("BITCOIN: Couldn't get wallet");
 	
 	return false;
     }
