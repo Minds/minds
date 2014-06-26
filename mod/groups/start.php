@@ -28,7 +28,6 @@ function groups_init() {
 			'text' => '<span class="entypo">&#59397;</span> Groups',
 			'title' => elgg_echo('groups'),
 		));
-	}*/
 	
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('groups', 'groups_page_handler');
