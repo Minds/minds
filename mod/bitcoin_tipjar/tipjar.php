@@ -86,6 +86,9 @@ class tipjar extends \ElggPlugin
 	// Register the tip action
 	elgg_register_action('tipjar/tip', dirname(__FILE__) . '/actions/send_tip.php');
 	
+	// Register CSS
+	elgg_register_css('tipjar.css', elgg_get_simplecache_url('css', 'tipjar'));
+		
 	// When a new wallet is created for a user, generate a receive address for the user
 	elgg_register_event_handler('create', 'object', function($event, $object_type, $object) {
 	    if (elgg_instanceof($object, 'object', 'bitcoin_wallet')) {
@@ -113,8 +116,40 @@ class tipjar extends \ElggPlugin
 		} 
 		
 	    }
-	    
 	});
+	
+	// Tipjar page handler
+	elgg_register_page_handler('tipjar', function($pages){
+	
+	    elgg_load_css('tipjar.css');
+	    
+	    switch ($pages[0]) {
+		case 'mytips' :
+			set_input('username', elgg_get_logged_in_user_entity()->username);
+			require_once(dirname(__FILE__) . '/pages/mytips.php');
+		    break;
+		case 'tip' :
+		    if ($pages[1]) {
+			set_input('username', $pages[1]);
+			require_once(dirname(__FILE__) . '/pages/tip.php');
+		    }
+		    else forward();
+		    break;
+	    }
+	    
+	    return true;
+	});
+	
+	// Tipjar
+	if (elgg_is_logged_in()) {
+	    elgg_register_menu_item('site', array(
+		    'name' => 'tipjar',
+		    'text' => 'My Tipjar', // TODO: Replace me with a nice graphic
+		    'href' => 'tipjar/mytips',
+		    'title' => elgg_echo('mytipjar'),
+		    'priority' => 10
+	    ));
+	}
     }
 }
 
