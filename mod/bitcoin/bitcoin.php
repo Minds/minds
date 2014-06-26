@@ -81,28 +81,33 @@ abstract class bitcoin extends \ElggPlugin
     
     
     
-
-    // get wallet for user
+    public function logReceived($from_address, $to_user, $amount_satoshi) {
+	
+	$obj = new \ElggObject();
+	$obj->subtype = 'bitcoin_transaction';
+	$obj->owner_guid = $to_user->guid;
+	$obj->access_id = ACCESS_PRIVATE;
+	
+	$obj->from_address = $from_address;
+	$obj->amount_satoshi = $amount_satoshi;
+	$obj->action = 'received';
+	
+	return $obj->save();
+    }
     
-    // Create receive address for user
-    
-    
-    // Create receive handler for user
-    
-    
-    
-    
-    
-    
-    
-    // create wallet
-    // Fetch wallet balance
-    // Pay with wallet
-    
-    
-    
-    // INIT create core wallet
-    
+    public function logSent($from_user, $to_address, $amount_satoshi) {
+	
+	$obj = new \ElggObject();
+	$obj->subtype = 'bitcoin_transaction';
+	$obj->owner_guid = $from_user->guid;
+	$obj->access_id = ACCESS_PRIVATE;
+	
+	$obj->to_address = $to_address;
+	$obj->amount_satoshi = $amount_satoshi;
+	$obj->action = 'sent';
+	
+	return $obj->save();
+    }
     
     
     
@@ -110,7 +115,25 @@ abstract class bitcoin extends \ElggPlugin
      * Initialise
      */
     public function init() {
-	// TODO: Create per user bitcoin receive handler
+	
+	// Register CSS
+	elgg_register_css('bitcoin.css', elgg_get_simplecache_url('css', 'bitcoin'));
+		
+	// Create bitcoin handler
+	elgg_register_page_handler('bitcoin', function($pages){
+	
+	    elgg_load_css('bitcoin.css');
+	    
+	    switch ($pages[0]) {
+		case 'mywallet' :
+			set_input('username', elgg_get_logged_in_user_entity()->username);
+			require_once(dirname(__FILE__) . '/pages/wallet.php');
+		    break;
+	    }
+	    
+	    return true;
+	});
+	
     }
     
     
