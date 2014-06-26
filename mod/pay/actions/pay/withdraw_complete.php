@@ -21,7 +21,11 @@ $withdraw->status = 'Completed';
 
 if($withdraw->save()){
 	system_message(elgg_echo("pay:admin:withdraw:success"));
-	notification_create(array($withdraw->seller_guid), elgg_get_logged_in_user_guid(), $withdraw->guid, array('notification_view'=>'pay_withdraw'));
+	\elgg_trigger_plugin_hook('notification', 'all', array(
+				'to' => array($withdraw->seller_guid),
+				'object_guid'=>$withdraw->guid,
+				'notification_view'=>'pay_withdraw'
+			));
 	
 } else {
 	register_error(elgg_echo("pay:admin:withdraw:failed"));

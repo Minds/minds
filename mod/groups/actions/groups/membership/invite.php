@@ -36,7 +36,14 @@ if (sizeof($user_guid)) {
 							$url,
 						)),
 						NULL);*/
-				$result  = notification_create(array($user->getGUID()), $group->owner_guid, $group_guid, array('invite_url'=> $url,'notification_view'=>'group_invite'));
+				//$result  = notification_create(array($user->getGUID()), $group->owner_guid, $group_guid, array('invite_url'=> $url,'notification_view'=>'group_invite'));
+				\elgg_trigger_plugin_hook('notification', 'all', array(
+					'to' => array($user->getGUID()),
+					'object_guid'=>$group->guid,
+					'invite_url' => $url,
+					'notification_view'=>'group_invite'
+				));
+				
 				if ($result) {
 					system_message(elgg_echo("groups:userinvited"));
 				} else {

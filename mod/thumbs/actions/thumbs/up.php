@@ -49,6 +49,11 @@ if ($type == 'entity') {
 
 		echo 'selected';
 		notification_create(array($entity -> getOwnerGUID()), elgg_get_logged_in_user_guid(), $entity -> guid, array('notification_view' => 'like'));
+		\elgg_trigger_plugin_hook('notification', 'all', array(
+				'to' => array($entity->getOwnerGuid()),
+				'object_guid'=>$entity->guid,
+				'notification_view'=>'like'
+			));
 
 	}
 } elseif ($type == 'comment') {
@@ -72,7 +77,8 @@ if ($type == 'entity') {
 	$update = $mc -> update($comment['_type'], $comment['_id'], $comment['_source']);
 	if ($update['ok'] == true) {
 		echo $icon;
-		notification_create(array($comment['_source']['owner_guid']), elgg_get_logged_in_user_guid(), $comment['_source']['pid'], array('notification_view' => 'like', 'type'=>$type, 'description'=>$comment['_source']['description']));
+		//notification_create(array($comment['_source']['owner_guid']), elgg_get_logged_in_user_guid(), $comment['_source']['pid'], array('notification_view' => 'like', 'type'=>$type, 'description'=>$comment['_source']['description']));
+		
 	}
 }
 

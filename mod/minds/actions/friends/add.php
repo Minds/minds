@@ -46,8 +46,12 @@ if(get_input('ajax')){
 
 $from_guid = elgg_get_logged_in_user_guid();
 
-notification_create(array($friend_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'friends'));
-
+\elgg_trigger_plugin_hook('notification', 'all', array(
+	'to' => array($friend_guid),
+	'object_guid'=>$from_guid,
+	'description'=>$message,
+	'notification_view'=>'friends'
+));
 
 // Forward back to the page you friended the user on
 forward(REFERER);

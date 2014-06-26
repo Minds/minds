@@ -91,7 +91,13 @@ foreach($matches as $value){
 		$username = str_replace('@', '', $value);
 		$mentioned = get_user_by_username($username);
 		if($mentioned){
-			notification_create(array($mentioned->guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'mention'));
+			//notification_create(array($mentioned->guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'mention'));
+			\elgg_trigger_plugin_hook('notification', 'all', array(
+				'to' => array($mentioned->guid),
+				'object_guid'=>$from_guid,
+				'description'=>$message,
+				'notification_view'=>'mention'
+			));
 		}
 	}
 }

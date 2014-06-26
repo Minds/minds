@@ -61,7 +61,13 @@ if($create['ok'] == true){
 
 $entity = get_entity($pid, 'object');
 
-notification_create(array($entity->owner_guid), $owner->guid, $pid, array('description'=>get_input('annotation_value', ''), 'notification_view'=>'comment'));
+\elgg_trigger_plugin_hook('notification', 'all', array(
+	'to' => array($entity->owner_guid),
+	'object_guid'=>$entity->guid,
+	'description'=>$desc,
+	'notification_view'=>'comment'
+));
+
 
 elgg_trigger_event('comment:create', 'comment', $data); 
 

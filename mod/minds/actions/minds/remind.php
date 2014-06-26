@@ -33,7 +33,12 @@ system_message(elgg_echo("minds:remind:success"));
 $to_guid = $entity->getOwnerGuid();
 $from_guid = elgg_get_logged_in_user_guid();
  
-notification_create(array($to_guid), $from_guid, $guid, array('description'=>$message,'notification_view'=>'remind'));
+\elgg_trigger_plugin_hook('notification', 'all', array(
+		'to' => array($to_guid),
+		'object_guid'=>$from_guid,
+		'description'=>$message,
+		'notification_view'=>'remind'
+	));
 
 //Chris set use settings
 elgg_set_plugin_user_setting('reminded', true, elgg_get_logged_in_user_guid(), 'minds');

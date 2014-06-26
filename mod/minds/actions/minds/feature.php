@@ -25,8 +25,12 @@ if(!$entity->featured_id || $entity->featured_id == 0){
 	$to_guid = $entity->getOwnerGuid();
 	$user = get_user_by_username('minds');
 
-	notification_create(array($to_guid), $user, $guid, array('description'=>$message,'notification_view'=>'feature'));
-	
+	\elgg_trigger_plugin_hook('notification', 'all', array(
+				'to' => array($to_guid),
+				'object_guid'=>$guid,
+				'description'=>$message,
+				'notification_view'=>'feature'
+			));
 }else{
 
 	$entity->unFeature();

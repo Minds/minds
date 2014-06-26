@@ -54,7 +54,11 @@ $order->access_id = 1;
 $order->payment_method = 'paypal';
 
 if($order->save()){
-	notification_create(array($order->seller_guid, $order->getOwnerGUID()), 0, $order->getGuid(), array('notification_view'=>'pay_order'));
+	\elgg_trigger_plugin_hook('notification', 'all', array(
+			'to' => array($order->seller_guid, $order->getOwnerGUID()),
+			'object_guid'=>$order->getGUID(),
+			'notification_view'=>'pay_order'
+		));
 	
 	return pay_call_payment_handler($order->payment_method, array( 'order_guid' => $order->getGuid(),
             'user_guid' => $user_guid,
