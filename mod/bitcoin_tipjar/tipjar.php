@@ -142,6 +142,22 @@ class tipjar extends \ElggPlugin
 	
 	// Tipjar
 	if (elgg_is_logged_in()) {
+	    elgg_register_plugin_hook_handler('register', 'menu:user_hover', function($hook, $type, $return, $params) {
+
+		    if (elgg_instanceof($params['entity'], 'user')) {
+
+			    if ($params['entity']->guid == elgg_get_logged_in_user_guid()) 
+				return $return;
+
+			    $url = "tipjar/tip/{$params['entity']->username}";
+			    $item = new \ElggMenuItem('tip', elgg_echo('tip'), $url);
+			    $return[] = $item;
+		    }
+
+		    return $return;
+	    });
+	}
+	/*if (elgg_is_logged_in()) {
 	    elgg_register_menu_item('site', array(
 		    'name' => 'tipjar',
 		    'text' => 'My Tipjar', // TODO: Replace me with a nice graphic
@@ -149,7 +165,7 @@ class tipjar extends \ElggPlugin
 		    'title' => elgg_echo('mytipjar'),
 		    'priority' => 10
 	    ));
-	}
+	}*/
     }
 }
 
