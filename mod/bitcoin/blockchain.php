@@ -176,6 +176,10 @@ class blockchain extends bitcoin
 				    $user = get_user_by_username ($pages[2]);
 				}
 				
+				// Payment received
+				bitcoin()->logReceived($_GET['input_address'], $user, $_GET['value']);
+				
+				// Trigger a hook
 				if (elgg_trigger_plugin_hook('payment-received', 'blockchain', array(
 				    'user' => $user,
 				    'username' => $pages[2],
@@ -615,6 +619,9 @@ class blockchain extends bitcoin
 		system_message($result['message']);
 	
 		error_log("BITCOIN: Transaction hash is {$result['tx_hash']}");
+		
+		// Log the transaction
+		$this->sendPayment(get_user($wallet->owner_guid, $to_address, $amount_in_satoshi));
 		
 		return $result['tx_hash'];
 	    }
