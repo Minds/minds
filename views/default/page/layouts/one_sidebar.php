@@ -35,7 +35,7 @@ if($vars['header']){
 </div>
 <?php } //END IF HEADER ?>
 	
-<div class="inner elgg-inner">
+<div class="inner elgg-inner fixed">
 	<div class="<?php echo $class; ?>">
 		<div class="sidebar elgg-sidebar">
         	<?php

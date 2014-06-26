@@ -25,8 +25,12 @@ class minds_wordpress extends \ElggPlugin{
 		\elgg_register_event_handler('comment:create', 'comment', array($this, 'commentHook'));
 		\elgg_register_event_handler('loggedin', 'user', array($this, 'loggedinHook'));
 		\elgg_register_event_handler('loggedout', 'user', array($this, 'loggedoutHook'));
-		
+
+		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pagesetup'));
+	
 		\elgg_extend_view('login/extend', 'minds_wordpress/login');
+		\elgg_extend_view('page/elements/topbar', 'minds_wordpress/menu');
+		\elgg_extend_view('css/elgg', 'minds_wordpress/css');
 		
 		if(\get_input('wp_auth') && \elgg_is_logged_in()){
 			$this->auth();
@@ -44,6 +48,37 @@ class minds_wordpress extends \ElggPlugin{
 		return array(
 			'/wp' => "$path\\pages\\wp"
 		);
+	}
+
+	/**
+	 * Page setup tasks, for example grabbing the menu from wordpress
+	 * @todo consider caching the wordpress menu
+	 */
+	public function pagesetup(){
+		$id = '/tmp/wp-menu-'.base64_encode($this->getWordpressUrl());
+		$cached = file_get_contents($id);
+		if(!$cached){
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $this->getWordpressUrl(). '?minds-get-wp-nav=true'); 
+	       	 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 5000); 
+       		 	$output = curl_exec($ch); 
+       		 	curl_close($ch);  
+			file_put_contents($id, $output);
+		} else {
+			$output = $cached;
+		}
+
+		$raw = json_decode($output, true);
+
+		foreach($raw as $item){	
+			\elgg_register_menu_item('wp-menu', array(
+				'name' => $item['ID'],
+				'href' => $item['url'],
+				'text' => $item['title'],
+				'priority' => $item['menu_order']
+			));
+		}
 	}
 	
 	/**

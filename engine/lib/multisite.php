@@ -340,7 +340,7 @@ function elggmulti_db_connect() {
 	global $CONFIG, $MULTI_DB;
 
 	if (empty($MULTI_DB -> pool)) {
-		require_once (dirname(dirname(dirname(__FILE__))) . '/vendors/phpcassa/lib/autoload.php');
+	//	require_once (dirname(dirname(dirname(__FILE__))) . '/vendors/phpcassa/lib/autoload.php');
 		$servers = $CONFIG -> multisite -> servers;
 
 		$pool = new ConnectionPool($CONFIG -> multisite -> keyspace, $servers, null, 1);

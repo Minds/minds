@@ -323,6 +323,62 @@
 	padding-top:-5px;
 }
 
+.global-sidebar > .global-menu{
+	margin-bottom:24px;
+}
+.global-sidebar > .elgg-menu > li{
+	float:none;
+	margin:0;
+	padding:8px 16px;
+	border-bottom:1px solid #444;
+}
+.global-sidebar > .elgg-menu > li:hover{
+	background:#444;
+}
+.global-sidebar > .elgg-menu > li > a{
+	color:#FAFAFA;
+}
+.global-sidebar > .elgg-menu > li > a > span{
+	padding-right:12px;
+	float:left;
+	width:20px;
+}
+.global-sidebar > .elgg-menu-page-configure{
+	padding-bottom:24px;
+}
+.global-sidebar > .elgg-menu-page li{
+	padding:4px 16px;
+}
+.global-sidebar > .elgg-menu-page li a{
+	padding:0;
+	background:transparent;
+	color:#FAFAFA;
+	font-size:12px;
+}
+.global-sidebar > .elgg-menu-page li:hover, .global-sidebar .elgg-state-selected{
+	background:#444;
+} 
+.global-sidebar > .elgg-menu-page li:hover a, .global-sidebar .elgg-state-selected a{
+	background:transparent !important;
+}
+.global-sidebar > .elgg-menu-page ul.elgg-child-menu{
+	position: fixed;
+	top: 0px;
+	left: 210px;
+	z-index: 999999;
+	width: 225px;
+	height: 100%;
+	background:#444;
+}
+.global-sidebar > .elgg-menu-page{
+	margin:0;
+}
+.global-sidebar > .elgg-menu-footer{
+	position:fixed;
+	left:0;
+	bottom:0;
+}
+
 /* ***************************************
 	TITLE
 *************************************** */
@@ -495,11 +551,14 @@
 *************************************** */
 <?php // height depends on line height/font size ?>
 .elgg-menu-entity, elgg-menu-annotation {
-	float: right;
-	margin: 12px;
+	position: relative;
+	margin: 0px;
 	font-size: 90%;
 	color: #aaa;
 	line-height: 16px;
+	/* right: 0; */
+	/* top: 58px; */
+	float: right;
 }
 .elgg-menu-entity > li, .elgg-menu-annotation > li {
 	margin-left:8px;

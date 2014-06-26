@@ -8,7 +8,7 @@
     $(document).ready(function(){
 	
 	$('.elgg-child-menu a').click(function(){
-	    
+	   
 	    var href = $(this).attr('href');
 	    
 	    $('#ajax-admin-panel').fadeOut(0, function() {
@@ -17,7 +17,7 @@
 			    $('#ajax-admin-panel').fadeIn(0);
 			});
 	    });
-	    
+	    $('.elgg-menu-page .elgg-menu-parent').siblings().hide();
 	    return false;
 	});
 	

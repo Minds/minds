@@ -224,6 +224,7 @@ expose_function('minds.social.fb.login',
 				
 function minds_get_site_menu(){
 	global $CONFIG;
+	elgg_trigger_event('pagesetup', 'system');
 	$menu = elgg_view_menu('site',array('sort_by'=>'priority'));
 	global $jsonexport;
 	return $jsonexport;

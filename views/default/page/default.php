@@ -23,6 +23,7 @@ $class = $vars['class'];
 $topbar = elgg_view('page/elements/topbar', $vars);
 $messages = elgg_view('page/elements/messages', array('object' => $vars['sysmessages']));
 $header = elgg_view('page/elements/header', $vars);
+$global_sidebar = elgg_view('page/elements/global_sidebar', $vars);
 $body = elgg_view('page/elements/body', $vars);
 $footer = elgg_view('page/elements/footer', $vars);
 
@@ -40,25 +41,27 @@ if(get_input('async')){
 <?php echo elgg_view('page/elements/head', $vars); ?>
 </head>
 <body class="<?php echo $class;?>">
-<div class="hero elgg-page elgg-page-default <?php echo $class;?>">
-	<div class="messages elgg-page-messages">
-		<?php echo $messages; ?>
-	</div>
+	<?php echo $global_sidebar; ?>
+	<div class="hero elgg-page elgg-page-default <?php echo $class;?>">
+		<div class="messages elgg-page-messages">
+			<?php echo $messages; ?>
+		</div>
+		
+		<div class="topbar">
+			<div class="inner">
+				<?php echo $topbar; ?>
+			</div>
+		</div>
 	
-	<div class="topbar">
-		<div class="inner">
-			<?php echo $topbar; ?>
+		<div class="body elgg-page-body">
+			
+			<?php echo $body; ?>
+		</div>
+		
+		<div class="static-footer">
+			<?php echo $footer; ?>	
 		</div>
 	</div>
-
-	<div class="body elgg-page-body">
-			<?php echo $body; ?>
-	</div>
-	
-	<div class="static-footer">
-		<?php echo $footer; ?>	
-	</div>
-</div>
 <?php echo elgg_view('page/elements/foot'); ?>
 </body>
 </html>

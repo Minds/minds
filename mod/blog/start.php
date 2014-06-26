@@ -27,7 +27,7 @@ function blog_init() {
 	// menus
 	elgg_register_menu_item('site', array(
 		'name' => 'blog',
-		'text' => '&#59396;',
+		'text' => '<span class="entypo">&#59396;</span> Blog',
 		'href' => elgg_is_active_plugin('analytics') ? 'blog/trending' : 'blog/all',
 		'title' => elgg_echo('blog:blogs'),
 		'priority' => 3
@@ -444,7 +444,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			echo "$scraper->guid - loading $scraper->title \n";
 			
 			if(isset($scraper->timestamp) && $scraper->timestamp > time() - 300){
-				echo "canceling... scraped it withing the last 5 mins \n";
+				echo "canceling... scraped it within the last 5 mins \n";
 				continue;
 			}
 			if(!$scraper->feed_url || $scraper->feed_url == ""){

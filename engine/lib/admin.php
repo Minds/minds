@@ -190,7 +190,7 @@ function elgg_admin_notice_exists($id) {
 function elgg_register_admin_menu_item($section, $menu_id, $parent_id = NULL, $priority = 100) {
 
 	// make sure parent is registered
-	if ($parent_id && !elgg_is_menu_item_registered('page', $parent_id)) {
+	if ($parent_id && !elgg_is_menu_item_registered('admin', $parent_id)) {
 		elgg_register_admin_menu_item($section, $parent_id);
 	}
 
@@ -206,7 +206,7 @@ function elgg_register_admin_menu_item($section, $menu_id, $parent_id = NULL, $p
 		$name = "$parent_id:$name";
 	}
 
-	return elgg_register_menu_item('page', array(
+	return elgg_register_menu_item('admin', array(
 		'name' => $name,
 		'href' => $href,
 		'text' => elgg_echo("admin:$name"),
@@ -249,18 +249,9 @@ function admin_init() {
 	elgg_register_simplecache_view('js/admin');
 	$url = elgg_get_simplecache_url('js', 'admin');
 	elgg_register_js('elgg.admin', $url);
-	elgg_register_js('jquery.jeditable', 'vendors/jquery/jquery.jeditable.mini.js');
+	elgg_register_js('jquery.jeditable', elgg_get_site_url().'vendors/jquery/jquery.jeditable.mini.js');
 
 	// administer
-	// dashboard
-	elgg_register_menu_item('page', array(
-		'name' => 'dashboard',
-		'href' => 'admin/dashboard',
-		'text' => elgg_echo('admin:dashboard'),
-		'context' => 'admin',
-		'priority' => 10,
-		'section' => 'administer'
-	));
 	// statistics
 	elgg_register_admin_menu_item('administer', 'statistics', null, 20);
 	elgg_register_admin_menu_item('administer', 'overview', 'statistics');
@@ -275,7 +266,7 @@ function admin_init() {
 
 	// configure
 	// plugins
-	elgg_register_menu_item('page', array(
+	elgg_register_menu_item('admin', array(
 		'name' => 'plugins',
 		'href' => 'admin/plugins',
 		'text' => elgg_echo('admin:plugins'),
@@ -493,10 +484,10 @@ function admin_page_handler($page) {
 		'class' => 'elgg-menu-hz',
 	));
 	if (elgg_is_xhr()) {
-	    echo $content;
+	    echo $buttons.$content;
 	} else {
 	    $body = elgg_view_layout('admin', array('content' => $buttons . elgg_view('admin/ajax_panel', array('default'=>$content))/* $content */, 'title' => $title));
-	    echo elgg_view_page($title, $body, 'default');
+	    echo elgg_view_page($title, $body, 'default', array('class'=>'sidebar-active'));
 	}
 	return true;
 }

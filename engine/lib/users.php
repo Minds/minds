@@ -1553,39 +1553,19 @@ function users_pagesetup() {
 
 	// topbar
 	if ($viewer) {
-		elgg_register_menu_item('topbar', array(
-			'name' => 'profile',
-			'href' => $viewer->getURL(),
-			'text' => elgg_view('output/img', array(
-				'src' => $viewer->getIconURL('topbar'),
-				'alt' => $viewer->name,
-				'title' => elgg_echo('profile'),
-				'class' => 'elgg-border-plain elgg-transition',
-			)),
-			'priority' => 100,
-			'link_class' => 'elgg-topbar-avatar',
-		));
 
-		elgg_register_menu_item('topbar', array(
-			'name' => 'friends',
-			'href' => "friends/{$viewer->username}",
-			'text' => elgg_view_icon('users'),
-			'title' => elgg_echo('friends'),
-			'priority' => 300,
-		));
-
-		elgg_register_menu_item('topbar', array(
+		elgg_register_menu_item('actions', array(
 			'name' => 'usersettings',
 			'href' => "settings/user/{$viewer->username}",
-			'text' => elgg_view_icon('settings') . elgg_echo('settings'),
+			'text' => '<span class="entypo">&#9881;</span>'.elgg_echo('settings'),
 			'priority' => 500,
 			'section' => 'alt',
 		));
 
-		elgg_register_menu_item('topbar', array(
+		elgg_register_menu_item('actions', array(
 			'name' => 'logout',
 			'href' => "action/logout",
-			'text' => elgg_echo('logout'),
+			'text' => '<span class="entypo">&#59399;</span>' . elgg_echo('logout'),
 			'is_action' => TRUE,
 			'priority' => 1000,
 			'section' => 'alt',

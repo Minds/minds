@@ -25,6 +25,9 @@ class minds extends base{
 		$this->loadConfigs();
 		$this->loadLegacy();
 
+		if(defined('multisite') && multisite)
+			new multisite();	
+
 		//Trigger the boot event hook
 		\elgg_trigger_event('boot', 'system');
 		
@@ -54,16 +57,17 @@ class minds extends base{
 			$CONFIG = new config();
 		
 		// Load the system settings
-		if (!include_once(__MINDS_ROOT__ . "/engine/settings.php")) {
-			$msg = 'Elgg could not load the settings file. It does not exist or there is a file permissions issue.';
-			throw new \InstallationException($msg);
+		if (file_exists(__MINDS_ROOT__ . '/engine/settings.php')){
+			include_once(__MINDS_ROOT__ . "/engine/settings.php");
 		}
 		
 		// Load mulit globals if set
 		if(file_exists(__MINDS_ROOT__ . '/engine/multi.settings.php')) {
+			define('multisite', true);
 			require_once(__MINDS_ROOT__ . '/engine/multi.settings.php');
 		}
 	}
+
 	
 	/**
 	 * Load the legacy files for elgg

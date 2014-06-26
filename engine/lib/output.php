@@ -368,7 +368,10 @@ function elgg_get_friendly_time($time) {
 		} else {
 			return elgg_echo("friendlytime:minutes:singular", array($diff));
 		}
-	} else if ($diff < $day) {
+	} else {
+		return date("F j, Y, g:i a", $time); 
+	}
+	/*} else if ($diff < $day) {
 		$diff = round($diff / $hour);
 		if ($diff == 0) {
 			$diff = 1;
@@ -390,7 +393,7 @@ function elgg_get_friendly_time($time) {
 		} else {
 			return elgg_echo("friendlytime:days:singular", array($diff));
 		}
-	}
+	}*/
 }
 
 /**
