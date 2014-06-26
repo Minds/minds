@@ -135,7 +135,7 @@
 }
 
 .hero > .topbar .right .elgg-button{
-	margin:28px 8px;
+	margin:12px 8px;
 }
 
 .hero > .topbar .right .carrot{
@@ -179,7 +179,7 @@
 	width:100%;
 	height:auto;
 	min-height:100%;
-	margin-top:106px;
+	margin-top:75px;
 }
 
 /***** PAGE BODY LAYOUT ******/

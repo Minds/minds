@@ -10,10 +10,12 @@ if(elgg_get_context() == 'admin'){
 	
 	<!-- Admin Links -->
 	<?php 
-		$default_context = elgg_get_context();
-		elgg_set_context('admin');
-		echo elgg_view_menu('admin');
-		elgg_set_context($default_context);
+		if(elgg_is_admin_logged_in()){
+			$default_context = elgg_get_context();
+			elgg_set_context('admin');
+			echo elgg_view_menu('admin');
+			elgg_set_context($default_context);
+		}
 	?>
 	
 	<!-- User action links -->
