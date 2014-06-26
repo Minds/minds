@@ -82,7 +82,6 @@ class ElggInstaller {
 	 * @return void
 	 */
 	protected function finishBootstraping($step) {
-
 		$dbIndex = array_search('database', $this->getSteps());
 		$settingsIndex = array_search('settings', $this->getSteps());
 		$adminIndex = array_search('admin', $this->getSteps());
@@ -719,7 +718,7 @@ class ElggInstaller {
 		$cutoff = strpos($uri, 'install.php');
 		$uri = substr($uri, 0, $cutoff);
 
-		$url = "$protocol://{$_SERVER['SERVER_NAME']}$port{$uri}";
+		$url = "$protocol://{$_SERVER['HTTP_HOST']}$port{$uri}";
 		return $url;
 	}
 
@@ -874,7 +873,6 @@ class ElggInstaller {
 	protected function checkPhpExtensions(&$phpReport) {
 		$extensions = get_loaded_extensions();
 		$requiredExtensions = array(
-			'mysql',
 			'json',
 			'xml',
 			'gd',
@@ -1004,7 +1002,6 @@ class ElggInstaller {
 	 * @return bool
 	 */
 	protected function checkDatabaseSettings($server, $keyspace) {
-
 		try{
 			$db = new minds\core\data\call(NULL, $keyspace, array($server));
 			$attrs = array(	  "strategy_options" => array("replication_factor" => "2"));	
