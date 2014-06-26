@@ -497,13 +497,18 @@ class blockchain extends bitcoin
 	
 	$new_wallet->wallet_handler = 'blockchain';
 
-	// Save the address to user settings
-	elgg_set_plugin_user_setting('bitcoin_address', $wallet['address'], $new_wallet->owner_guid, 'bitcoin');
+	if ($guid = $new_wallet->save()) {
+	    // Save the address to user settings
+	    elgg_set_plugin_user_setting('bitcoin_address', $wallet['address'], $new_wallet->owner_guid, 'bitcoin');
+	    elgg_set_plugin_user_setting('bitcoin_wallet', $wallet['guid'], $new_wallet->owner_guid, 'bitcoin');
+	    elgg_set_plugin_user_setting('bitcoin_wallet_object', $guid, $new_wallet->owner_guid, 'bitcoin');
+
+	    error_log("Bitcoin: Wallet created");
 	
-	error_log("Bitcoin: Wallet created");
+	    return $guid;
+	}
 	
-	return $new_wallet->save();
-	
+	return false;
     }
     
     public function createSystemWallet() {
@@ -529,13 +534,19 @@ class blockchain extends bitcoin
 
 	$ia = elgg_set_ignore_access($ia);
 	
-	// Save the address to user settings
-	elgg_set_plugin_setting('central_bitcoin_account', $wallet['address'], 'bitcoin');
-	elgg_set_plugin_setting('central_bitcoin_wallet_guid', $wallet['guid'], 'bitcoin'); // Shortcut for wallet guid
+	if ($guid = $new_wallet->save()) {
 	
-	error_log("Bitcoin: System wallet created");
+	    // Save the address to user settings
+	    elgg_set_plugin_setting('central_bitcoin_account', $wallet['address'], 'bitcoin');
+	    elgg_set_plugin_setting('central_bitcoin_wallet_guid', $wallet['guid'], 'bitcoin'); // Shortcut for wallet guid
+	    elgg_set_plugin_setting('central_bitcoin_wallet_object_guid', $guid, 'bitcoin'); // Shortcut for wallet guid
 	
-	return $new_wallet->save();
+	    error_log("Bitcoin: System wallet created");
+	    
+	    return $guid;
+	} 
+	
+	return false;
     }
 
     public function getWallet(\ElggUser $user) {
