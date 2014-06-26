@@ -135,13 +135,15 @@ abstract class bitcoin extends \ElggPlugin
 	});
 	
 	// Bitcoin wallet menu
-	elgg_register_menu_item('site', array(
-		'name' => 'bitcoin',
-		'text' => 'My Wallet', // TODO: Replace me with a nice graphic
-		'href' => 'bitcoin/mywallet',
-		'title' => elgg_echo('bitcoin'),
-		'priority' => 10
-	));
+	if (elgg_is_logged_in()) {
+	    elgg_register_menu_item('site', array(
+		    'name' => 'bitcoin',
+		    'text' => 'My Wallet', // TODO: Replace me with a nice graphic
+		    'href' => 'bitcoin/mywallet',
+		    'title' => elgg_echo('bitcoin'),
+		    'priority' => 10
+	    ));
+	}
 	
     }
     
