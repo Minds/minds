@@ -96,7 +96,10 @@
 
 				$.get( url, function(data) { 
 					var shares = data.shares; 
-					$('#fb-share .count').html(total+shares); 
+					 if($.isNumeric(shares)){
+						total = total+shares;
+					}
+					$('#fb-share .count').html(total); 
 				});
 			});
 		} 

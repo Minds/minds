@@ -117,6 +117,8 @@ function blog_init() {
  */
 function blog_page_handler($page) {
 
+	header('Access-Control-Allow-Origin: *');
+
 	elgg_load_library('elgg:blog');
 
 	// forward to correct URL for blog pages pre-1.8
