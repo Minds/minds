@@ -148,7 +148,11 @@ elgg.ui.popupClose = function(event) {
  * @return void
  */
 elgg.ui.toggleMenu = function(event) {
-	$(this).siblings().slideToggle('medium');
+	//scan the page for any open menus, close them first
+	if(!$(this).hasClass('elgg-menu-opened'))	
+		$(document).find('.elgg-menu-opened').click();
+	
+	$(this).siblings().toggle();
 	$(this).toggleClass('elgg-menu-closed elgg-menu-opened');
 	event.preventDefault();
 };

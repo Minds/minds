@@ -6,6 +6,18 @@
 	 elgg.provide('minds');
 	 
 	 minds.init = function() {	
+	 	var sidebarOpen = false;
+	 	$(document).on('click', '.menu-toggle', function(){
+	 		if(sidebarOpen){
+	 			$('.global-sidebar').removeClass('show');
+	 			$('.hero').removeClass('sidebar-active');
+	 			sidebarOpen = false;
+	 		} else {
+	 			$('.global-sidebar').addClass('show');
+	 			$('.hero').addClass('sidebar-active');
+	 			sidebarOpen = true
+	 		}
+	 	});
 
 	if(!elgg.is_logged_in() && !$.cookie('promptSignup')){
 		setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
@@ -130,7 +142,7 @@
 			return c;
 		});
 
-		$('.elgg-menu li a').tipsy({gravity: 'n'}); 
+		//$('.elgg-menu li a').tipsy({gravity: 'n'}); 
 		$('.progress_indicator').tipsy({gravity: 'e'});		
 		$('.elgg-input-text').tipsy({gravity: 'w'});
 		$('.tooltip.s').tipsy({gravity: 's'});

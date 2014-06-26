@@ -12,4 +12,4 @@
 
 $params['title'] = $vars['title'];
 $params['content'] = $vars['content'];
-echo elgg_view_layout('one_sidebar', $params);
+echo elgg_view_layout('one_column', $params);

@@ -316,12 +316,20 @@ function minds_pagesetup(){
 	elgg_unregister_menu_item('footer', 'Code Release');
 	elgg_unregister_menu_item('site', 'activity');
 	
+	elgg_register_menu_item('site', array(
+		'name' => 'home',
+		'href' => '/',
+		'text' => '<span class="entypo">&#59404;</span> Homepage',
+		'title' => elgg_echo('home'),
+		'priority' => 1	
+	));
+	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
 	if(elgg_is_logged_in())
 		elgg_register_menu_item('site', array(
 			'name' => 'news',
 			'href' => 'news/featured',
-			'text' => '&#59194;',
+			'text' => '<span class="entypo">&#59194;</span> News',
 			'title' => elgg_echo('news'),
 			'priority' => 1	
 		));
@@ -330,7 +338,7 @@ function minds_pagesetup(){
 		elgg_register_menu_item('site', array(
 						'name' => elgg_echo('minds:upload'),
 						'href' => 'archive/upload',
-						'text' => '&#128228;',
+						'text' => '<span class="entypo">&#128228;</span> Upload',
 						'title' => elgg_echo('minds:upload'),
 						'priority' => 4
 					));

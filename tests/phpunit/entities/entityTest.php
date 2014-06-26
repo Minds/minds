@@ -30,7 +30,7 @@ class entityTest extends Minds_PHPUnit_Framework_TestCase {
 			
 			$entity = new minds\entities\entity($guid);
 			$this->assertEquals('entity 2', $entity->title);
-			$this->assertInternalType('array',$entity->ownerObj);
+			//$this->assertInternalType('array',$entity->ownerObj);
 			$this->assertInstanceOf('ElggUser', $entity->getOwnerEntity());
 		}
 }

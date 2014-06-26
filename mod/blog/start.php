@@ -27,7 +27,7 @@ function blog_init() {
 	// menus
 	elgg_register_menu_item('site', array(
 		'name' => 'blog',
-		'text' => '&#59396;',
+		'text' => '<span class="entypo">&#59396;</span> Blog',
 		'href' => elgg_is_active_plugin('analytics') ? 'blog/trending' : 'blog/all',
 		'title' => elgg_echo('blog:blogs'),
 		'priority' => 3

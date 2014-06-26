@@ -2,7 +2,7 @@
 /**
  * Settings for anypage
  */
-elgg_push_context('anypage');
+//elgg_push_context('anypage');
 
 $page_guid = get_input('guid');
 $page = get_entity($page_guid);

@@ -83,7 +83,7 @@ function minds_archive_init() {
 	elgg_register_menu_item('site', array(
 			'name' => elgg_echo('minds:archive'),
 			'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
-			'text' => '&#59392;',
+			'text' => '<span class="entypo">&#59392;</span> Archive',
 			'title' =>  elgg_echo('minds:archive'),
 			'priority' => 4
 	));

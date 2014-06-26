@@ -21,6 +21,9 @@
 	height:auto;
 	min-height:100%;
 }
+.hero.sidebar-active{
+	margin-left:250px;
+}
 .hero .header > .inner, .elgg-page-default .elgg-page-header > .elgg-inner {
 	width: 90%;
 	margin: 0 auto;
@@ -73,37 +76,40 @@
 	width:25%;
     text-align: right;
 }
-.hero > .topbar > .inner .global-menu{
-	margin-top: 35px;
+.hero > .topbar > .inner .menu-toggle{
+	float:left;
+	margin-top:20px;
+	font-size:32px;
+	font-weight:200;
+	cursor:pointer;
 }
 .hero > .topbar .logo{
 	margin:auto;
-	padding: 0 8px;
+	padding: 0 8px 12px;
 	display:block;
 	position:relative;
 	width:auto;
-	height:50px;
 }
 .hero > .topbar .logo > img{
 	height:100%;
 }
 .hero > .topbar .search{
-	margin: 8px auto;
-	float:none;
-	width:60%;
+	margin: 12px 16px;
+	float:left;
+	width:200px;
 }
 .hero > .topbar .search input{
 	margin:0;
 }
 .hero > .topbar .owner_block{
-	margin-top:15px;
+	margin-top:8px;
 	float:right;
 }
 .hero > .topbar .owner_block h3{
 	font-size:16px;
 }
 .hero > .topbar .owner_block > a > img{
-	padding:8px;
+	padding:0px 8px 8px;
 }
 .hero > .topbar .owner_block > a > .text{
 	padding:8px;
@@ -112,7 +118,7 @@
 	text-decoration:none;
 }
 .hero > .topbar .actions{
-	margin-top:35px;
+	margin:21px 6px;
 	float:right;
 }
 .hero > .topbar .more{
@@ -130,6 +136,17 @@
 
 .hero > .topbar .right .elgg-button{
 	margin:28px 8px;
+}
+
+.hero > .topbar .right .carrot{
+	
+}
+
+.hero > .topbar .right .carrot .contents{
+	display:none;
+}
+.hero > .topbar .right .carrot:hover .contents{
+	display:block;
 }
 
 /***** PAGE MESSAGES ******/
@@ -295,6 +312,25 @@
 	width:auto;
 	padding:0;
 	padding-bottom:8px;
+}
+
+/**
+ * Sidebar
+ */
+.global-sidebar{
+	z-index:99999;
+	top:0;
+	left:0;
+	display:none;
+	position:fixed;
+	height:100%;
+	width:225px;
+	padding:12px;
+	background:#222;
+	box-shadow:0 0 4px #000;
+}
+.global-sidebar.show{
+	display:block;
 }
 
 .elgg-footer{

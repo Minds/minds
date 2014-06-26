@@ -20,12 +20,12 @@ function groups_init() {
 	// register group entities for search
 	elgg_register_entity_type('group', '');
 
-	// Set up the menu
-	if(elgg_is_logged_in()){
-	elgg_register_menu_item('site', array(
+	// Set up the menu... hide for now
+	if(elgg_is_logged_in() && false){
+		elgg_register_menu_item('site', array(
 			'name' => 'groups',
 			'href' => 'groups/all',
-			'text' => '&#59397;',
+			'text' => '<span class="entypo">&#59397;</span> Groups',
 			'title' => elgg_echo('groups'),
 		));
 	}

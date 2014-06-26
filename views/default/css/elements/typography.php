@@ -40,6 +40,7 @@
 	font-size:18px;
 	font-weight:normal;
 	text-decoration:none;
+	vertical-align: middle;
 }
 
 body {
