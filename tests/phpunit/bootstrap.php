@@ -1,4 +1,5 @@
 <?php
+global $CONFIG;
 $root = dirname(dirname(dirname(__FILE__)));
 
 define('__MINDS_ROOT__', $root);

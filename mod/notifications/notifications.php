@@ -173,7 +173,7 @@ class notifications extends \ElggPlugin{
 				$notification->read = 0;
 				$notification->access_id = 2;
 				$notification->owner_guid = \elgg_get_logged_in_user_guid();
-				$notification->params = serialize($params);
+				$notification->params = serialize($params['params']);
 				$notification->time_created = time();
 				$notification->save();
 		//	}
