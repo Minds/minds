@@ -48,7 +48,7 @@ elgg.notify.getUnreadNotifications = function() {
  */
 elgg.notify.getNotifications = function(e) {
    
-     var url = elgg.normalize_url("mod/notifications/pages/notifications.php?ajax=true");
+     var url = elgg.get_site_url() + "notifications";
     	
      $.get(url, function(data) {
       		$('#notification').html(data);
