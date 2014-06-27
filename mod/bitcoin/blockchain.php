@@ -462,6 +462,7 @@ class blockchain extends bitcoin
 	
 	$api_code = elgg_get_plugin_setting('api_code', 'bitcoin');
 	
+	if (!$password) throw new \Exception("Bitcoin: Attempting to create a wallet with a blank password");
 	if (!$api_code) throw new \Exception ("Bitcoin: An API Code needs to be specified before bitcoin transactions can be made.");
 	
 	$wallet = $this->__make_call('GET', "api/v2/create_wallet", array(
