@@ -87,7 +87,7 @@ class session extends base{
 	/**
 	 * Check if the user is logged in
 	 */
-	public function isLoggedin(){
+	static public function isLoggedin(){
 		$user = self::getLoggedinUser();
 
 		if ((isset($user)) && ($user instanceof \ElggUser) && $user->guid) {
@@ -100,7 +100,7 @@ class session extends base{
 	/**
 	 * Get the logged in user entity
 	 */
-	public function getLoggedinUser(){
+	static public function getLoggedinUser(){
 		global $USERNAME_TO_GUID_MAP_CACHE;
 
 		/**
