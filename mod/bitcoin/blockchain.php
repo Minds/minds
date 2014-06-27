@@ -273,7 +273,7 @@ class blockchain extends bitcoin
 	$buffer = curl_exec($curl_handle);
 	$http_status = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
 	
-	error_log("Bitcoin: Call $endpoint returned code $http_status"); die();
+	error_log("Bitcoin: Call $endpoint returned code $http_status"); 
 	
 	if (!$http_status)
 	    throw new \Exception("Bitcoin: There was a problem executing the curl call...");
