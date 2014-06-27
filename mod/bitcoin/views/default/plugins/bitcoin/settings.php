@@ -16,8 +16,19 @@
 	This is the central bitcoin account, used as a bin for bitcoins that are sent or earned by users who don't have a bitcoin account.
 	<?= elgg_view('input/text',array('placeholder' => 'You haven\'t yet got a bitcoin wallet yet...', 'disabled' => 'true', 'id' => 'bitcoin_wallet', 'name'=>'params[central_bitcoin_account]','value'=> elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin'))); ?>
 	
-	<?php if ($wallet_guid = elgg_get_plugin_setting('central_bitcoin_wallet_guid',  'bitcoin')) { ?>
-	<p>Your wallet's ID (should you wish to export it) is <strong><?php echo $wallet_guid; ?></strong></p>
+	<?php 
+	if ($wallet_guid = elgg_get_plugin_setting('central_bitcoin_wallet_guid',  'bitcoin')) {
+	    $wallet = get_entity(elgg_get_plugin_setting('central_bitcoin_wallet_object_guid',  'bitcoin'));
+	?>
+	<p>Your wallet's ID (should you wish to export it) is <strong><a href="<?php echo $wallet->wallet_link; ?>" target="_blank"><?php echo $wallet_guid; ?></a></strong></p>
+	<?php
+	    try {
+		?>
+		<p>The current balance is <strong><?php echo \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid); ?></strong></p>
+	    <?php
+	    } catch (\Exception $e) {
+		echo $e->getMessage();
+	    } ?>
 	<?php } ?>
     </label>
     

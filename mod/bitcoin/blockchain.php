@@ -573,7 +573,7 @@ class blockchain extends bitcoin
     public function getWalletBalance($wallet_guid) {
 	
 	if ($wallet = get_entity($wallet_guid)) {
-	    
+	 
 	    if (elgg_instanceof($wallet, 'object', 'bitcoin_wallet'))
 	    {
 		$wallet_guid = $wallet->wallet_guid;
@@ -583,12 +583,16 @@ class blockchain extends bitcoin
 		
 		if ($result['response'] == 500)
 		    throw new \Exception("Bitcoin: "  . $result['content']);
-		
+		 
 		$result = $result['content'];
 		
-		return $result['balance'];
+		if (isset($result['balance']))
+		    return $result['balance'];
+		else
+		    throw new \Exception("Bitcoin: " . $result['error']);
+		
 	    }
-	}
+	} 
 	
 	return false;
     }

@@ -2,7 +2,11 @@
 
     $user = $vars['user'];
     $wallet = $vars['wallet'];
-    $balance = \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid);
+    try {
+	$balance = \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid);
+    } catch (\Exception $e) {
+	register_error($e->getMessage());
+    }
 
 ?><div class='wallet'>
     
