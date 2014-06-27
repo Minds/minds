@@ -6,6 +6,10 @@
 $entity = elgg_extract('entity', $vars);
 
 $owner = get_entity($entity->from_guid, 'user');
+if(!$entity->notification_view){
+var_dump($entity);
+}
+
 if($owner){
 	$owner_name = $owner->name;
 } else {

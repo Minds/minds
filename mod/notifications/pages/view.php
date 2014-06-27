@@ -13,42 +13,58 @@ class view extends core\page implements interfaces\page{
 	 * Get requests
 	 */
 	public function get($pages){
+		$user_guid = get_input('user_guid', elgg_get_logged_in_user_guid());
 
-		\gatekeeper();
-		$current_user = \elgg_get_logged_in_user_entity();
-	
-		// default to personal notifications
-		if (!isset($page[0])) {
-			$page[0] = 'personal';
+		$db = new \minds\core\data\call('entities_by_time');
+		$guids = $db->getRow('notifications:'.$user_guid, array('limit'=> get_input('limit', 12), 'offset'=>get_input('offset','')));
+		 \minds\plugin\notifications\notifications::resetCounter($user_guid);
+		if(!$guids){
+			echo 'Sorry, you don\'t have any notifications';
+			return false;
 		}
-		if (!isset($page[1])) {
-			\forward("notifications/{$page[0]}/{$current_user->username}");
+		$options = array(
+			'guids'=>$guids,
+			'limit' => get_input('limit', 12),
+			'offset' => get_input('offset','')
+		);
+
+		if(get_input('full') || elgg_get_viewtype() == 'json'){
+			
+			gatekeeper();
+			
+			$title = elgg_echo('notifications');
+
+			$content = elgg_list_entities($options);
+			$params = array(
+				'content' => $content,
+				'title' => $title,
+				'sidebar' => $sidebar,
+				'filter_override' => '',
+				'class' => 'notifications'
+				);
+
+
+			$body = elgg_view_layout('content', $params);
+			
+			echo elgg_view_page($title, $body);
+			
+		} else {
+			
+			
+				
+			$user = elgg_get_logged_in_user_entity();
+			
+			if($user){
+				$content = elgg_list_entities($options);
+				
+				echo $content;
+			} else {
+				
+				echo elgg_echo('notifications:not_logged_in');
+				
+			}
+
 		}
-	
-		$user = \get_user_by_username($page[1]);
-		if (($user->guid != $current_user->guid) && !$current_user->isAdmin()) {
-			\forward();
-		}
-	
-		$base = \elgg_get_plugins_path() . 'notifications';
-	
-		// note: $user passed in
-		switch ($page[0]) {
-			case 'view':
-				set_input('full', true);
-				set_input('user_guid', $user->guid);
-				require "$base/pages/notifications.php";
-				break;
-			case 'group':
-				require "$base/groups.php";
-				break;
-			case 'personal':
-				require "$base/index.php";
-				break;
-			default:
-				return false;
-		}
-		return true;
 	}
 	
 	public function post($pages){}

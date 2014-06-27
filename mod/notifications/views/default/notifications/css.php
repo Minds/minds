@@ -7,7 +7,9 @@
 ?>
 
 #notification{
-	height:300px;
+	height:85%;
+	position:fixed;
+	right:5%;
 	overflow-x:hidden;
 	overflow-y:scroll;
 }

@@ -19,12 +19,12 @@
 	 		}
 	 	});
 
-	if(!elgg.is_logged_in() && !$.cookie('promptSignup')){
-		setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
-	}
-	$(document).on('click', "#minds-signup-popup .cancel", function(){
-		$.fancybox.close();
-	});
+		if(!elgg.is_logged_in() && !$.cookie('promptSignup')){
+			setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
+		}
+		$(document).on('click', "#minds-signup-popup .cancel", function(){
+			$.fancybox.close();
+		});
 	
 	 /*	$('a').on('click', function(e){
 	 		e.preventDefault();
@@ -178,6 +178,7 @@
 		//elgg.system_message(msg);
 	
 		$(document).on('click', '.load-more', minds.loadMore);
+		$(document).on('trigger', '.load-more', minds.loadMore);
 		/**
 		 * Now make this autoscroll!
 		 */
@@ -297,7 +298,7 @@
 	 		$list = $loadMoreDiv.parent();
 	 		if($(window).scrollTop() + $(window).height() > $(document).height() * 0.1){
 	 			if(!$loadMoreDiv.hasClass('loading')){
-	 				$loadMoreDiv.trigger('click');
+	 				$loadMoreDiv.trigger('trigger');
 	 			}
 	 		}
 	 	}
@@ -321,6 +322,10 @@
 		$('.load-more').addClass('loading');
 			
 		var loc =  elgg.normalize_url(elgg.parse_url(location.href).path);
+		if($list.find('.load-more').attr('next-uri'))
+			loc = elgg.normalize_url(elgg.parse_url($list.find('.load-more').attr('next-uri')).path);
+
+
 /*		if(loc == elgg.get_site_url()){
 			loc = location.href + 'news/featured';
 		}
@@ -334,7 +339,7 @@
 		} else {
 			offset = $('.load-more').attr('data-load-next');
 		}
-		console.log(offset);
+		//console.log(offset);
 		if(!offset){
 			window.lock_autoscroll = false;
 			return false;

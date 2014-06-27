@@ -17,7 +17,7 @@ $options = array(
 	'offset' => get_input('offset','')
 );
 
-if(get_input('full') || true){
+if(get_input('full')){
 	
 	gatekeeper();
 	

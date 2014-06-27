@@ -2,7 +2,6 @@
 
 $elgg_path = str_replace(elgg_get_site_url(), '', $vars['path']);
 $path = explode('/', $elgg_path);
-
 set_input('ajax', true);
 if($elgg_path == elgg_get_site_url() || $elgg_path == null || $elgg_path == ""){
 
@@ -24,19 +23,16 @@ elgg_set_viewtype('json');
 
 $router = new minds\core\router();
 $router->route('/'.implode('/',$path));
-
 elgg_set_viewtype('default');
 $out = ob_get_contents();
 ob_end_clean();
 
 }
-if(get_input('debug')){
-var_dump($out); exit;
-}
 $json = json_decode($out);
 if(!$json){
 	return;
 }
+
 switch(get_input('items_type')){
 	case 'entity':
 		$new_json = array();
@@ -81,7 +77,7 @@ foreach($json as $key => $item) {
 					$items[$key] = new ElggGroup($item);
 					break;
 				case 'notification':
-					$items[$key] = new minds\plugin\notification\entities\notification($item);
+					$items[$key] = new minds\plugin\notifications\entities\notification($item);
 					break;
 				case 'object':
 					switch($item->subtype){
