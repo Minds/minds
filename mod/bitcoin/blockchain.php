@@ -221,8 +221,6 @@ class blockchain extends bitcoin
 	}
 
 	$curl_handle = curl_init();
-
-	error_log("Bitcoin: Making a call to $endpoint");
 	
 	switch (strtolower($verb)) {
 	    case 'post':
@@ -248,6 +246,9 @@ class blockchain extends bitcoin
 		break;
 	}
 
+	
+	error_log("Bitcoin: Making a $verb call to $endpoint");
+	
 	curl_setopt($curl_handle, CURLOPT_URL, $endpoint);
 	curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 5);
 	curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, true);
@@ -272,7 +273,7 @@ class blockchain extends bitcoin
 	$buffer = curl_exec($curl_handle);
 	$http_status = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
 	
-	error_log("Bitcoin: Call $endpoint returned code $http_status");
+	error_log("Bitcoin: Call $endpoint returned code $http_status"); die();
 	
 	if (!$http_status)
 	    throw new \Exception("Bitcoin: There was a problem executing the curl call...");
@@ -312,6 +313,7 @@ class blockchain extends bitcoin
      * @param type $wallet
      */
     protected function getWalletPassword($wallet) {
+	error_log("Bitcoin: Wallet {$wallet->guid} password is {$wallet->wallet_password}");
 	return $wallet->wallet_password;
     }
 
@@ -456,8 +458,8 @@ class blockchain extends bitcoin
     /**
      * Low level wallet creation
      */
-    protected function blockchainCreateWallet() {
-	$password = md5($user->salt . microtime(true)); // Create a random password
+    protected function blockchainCreateWallet($password) {
+	
 	$api_code = elgg_get_plugin_setting('api_code', 'bitcoin');
 	
 	if (!$api_code) throw new \Exception ("Bitcoin: An API Code needs to be specified before bitcoin transactions can be made.");
@@ -492,7 +494,7 @@ class blockchain extends bitcoin
 	$new_wallet->subtype = 'bitcoin_wallet';
 	$new_wallet->access_id = ACCESS_PRIVATE;
 	$new_wallet->owner_guid = $user->guid;	
-	$this->storeWalletPassword($new_wallet, $password);
+	$this->storeWalletPassword($new_wallet, md5($user->salt . microtime(true))); // Create a random password);
 
 	$new_wallet->wallet_raw = serialize($wallet);
 	$new_wallet->wallet_guid = $wallet['guid'];
@@ -527,7 +529,7 @@ class blockchain extends bitcoin
 	$new_wallet->subtype = 'bitcoin_wallet';
 	$new_wallet->access_id = ACCESS_PRIVATE;
 	$new_wallet->owner_guid = 0;	
-	$this->storeWalletPassword($new_wallet, $password);
+	$this->storeWalletPassword($new_wallet, md5($user->salt . microtime(true)));
 
 	$new_wallet->wallet_raw = serialize($wallet);
 	$new_wallet->wallet_guid = $wallet['guid'];
