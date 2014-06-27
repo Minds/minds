@@ -26,7 +26,9 @@ class minds extends base{
 		$this->loadLegacy();
 
 		if(defined('multisite') && multisite)
-			new multisite();	
+			new multisite();
+		
+		new session();	
 
 		//Trigger the boot event hook
 		\elgg_trigger_event('boot', 'system');

@@ -16,78 +16,10 @@
 global $SESSION;
 
 /**
- * @return void
+ * @deprecated
  */
 function _elgg_session_boot($force = false) {
-
-        $handler = new ElggSessionHandler();
-        session_set_save_handler(
-		array($handler, "open"),
-            array($handler, "close"),
-            array($handler, "read"),
-            array($handler, "write"),
-            array($handler, "destroy"),
-            array($handler, "gc")
-	);
-	ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // Persistent cookies
-        session_name('minds');
-        
-        session_start();
-        session_cache_limiter('public');
-
-        elgg_register_action('login', '', 'public');
-        elgg_register_action('logout');
-        
-	// Register a default PAM handler
-        register_pam_handler('pam_auth_userpass');
-
-	//there are occassions where we may want a session for loggedout users. 
-	if($force)
-		$_SESSION['force'] = true;
-
-	// is there a remember me cookie
-	if (isset($_COOKIE['mindsperm']) && !isset($_SESSION['user'])) { 
-		// we have a cookie, so try to log the user in
-		$cookie = md5($_COOKIE['mindsperm']);
-		if ($user = get_user_by_cookie($cookie)) {
-			login($user);
-		}
-	}
-
-	// Generate a simple token (private from potentially public session id)
-	if (!isset($_SESSION['__elgg_session'])) {
-		$_SESSION['__elgg_session'] = md5(microtime() . rand());
-	}
-
-	if(isset($_SESSION['user'])){
-		setcookie('loggedin', 1, time() + 3600, '/'); 
-		cache_entity($_SESSION['user']);
-	} else { 
-		setcookie('loggedin', 0, time() + 3600, '/');
-	}
-
-
-	header('X-Powered-By: Minds', true);
-}
-
-register_shutdown_function('_elgg_session_shutdown');
-
-/**
- * Session shutdown function. Erase the session if we are not loggedin
- */
-function _elgg_session_shutdown(){
-
-	if ( isset( $_COOKIE[session_name()] ) && !isset($_SESSION['user']) && !isset($_SESSION['force'])){
-		//clear session from disk
-		$params = session_get_cookie_params();
-	/*	setcookie(session_name(), '', time()-60*60*24*30*12,
-	        $params["path"], $params["domain"],
-	        $params["secure"], $params["httponly"]
-	    );*/
-		$_SESSION = array();
-		unset($_COOKIE[session_name()]);
-		session_destroy();
-	}
+	return new minds\core\session($force);
 }
 
 /**
@@ -100,22 +32,7 @@ function _elgg_session_shutdown(){
  * @return ElggUser
  */
 function elgg_get_logged_in_user_entity() {
-	global $USERNAME_TO_GUID_MAP_CACHE;
-	
-	/**
-	 * The OAuth plugin, for example, might use this. 
-	 */
-	if($user = elgg_trigger_plugin_hook('logged_in_user', 'user')){
-		return $user;
-	}
-	
-	if (isset($_SESSION['user'])) {
-		//cache username
-		$USERNAME_TO_GUID_MAP_CACHE[$_SESSION['username']] = $_SESSION['guid'];
-		return $_SESSION['user'];
-	}
-
-	return NULL;
+	return minds\core\session::getLoggedinUser();
 }
 
 /**
@@ -139,13 +56,7 @@ function elgg_get_logged_in_user_guid() {
  * @return bool
  */
 function elgg_is_logged_in() {
-	$user = elgg_get_logged_in_user_entity();
-
-	if ((isset($user)) && ($user instanceof ElggUser) && $user->guid) {
-		return true;
-	}
-
-	return false;
+	return minds\core\session::isLoggedin();
 }
 
 /**

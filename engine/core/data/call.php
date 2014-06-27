@@ -89,7 +89,7 @@ class call extends core\base{
 		return new ColumnFamily($this->pool, $cf);
 	}
 	
-	public function insert($guid = NULL, array $data = array()){
+	public function insert($guid = NULL, array $data = array(), $ttl = NULL){
 		if(!$guid){
 			$guid = new \GUID();
 			$guid = $guid->generate();
@@ -98,7 +98,7 @@ class call extends core\base{
 		//unset guid, we don't want it twice
 		unset($data['guid']);
 		try{
-			$this->cf->insert($guid, $data);
+			$this->cf->insert($guid, $data, null, $ttl);
 		} catch(\Exception $e){
 			return false;
 		}

@@ -2084,7 +2084,7 @@ function _elgg_engine_boot() {
 
 	_elgg_load_site_config();
 
-	_elgg_session_boot();
+	//_elgg_session_boot();
 
 	_elgg_load_cache();
 
