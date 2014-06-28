@@ -10,7 +10,9 @@
  * Start the Elgg engine
  */
 require_once(dirname(__FILE__) . "/engine/start.php");
-
+$router = new minds\core\router();
+$router->route();
+exit;
 global $CONFIG;
 
 elgg_set_context('main');

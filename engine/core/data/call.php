@@ -29,7 +29,6 @@ class call extends core\base{
 	
 	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL){
 		global $CONFIG;
-		
 	//	require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/vendors/phpcassa/lib/autoload.php');
 		
 		$this->servers = $servers ?: $CONFIG->cassandra->servers;
@@ -142,11 +141,6 @@ class call extends core\base{
 	 public function getRow($key, array $options = array()){
 	 	self::$reads++;
 		array_push(self::$keys, $key);
-
-		if(\get_input('debug')){
-			if($key == '100000000000000063:member')
-				var_dump(debug_backtrace(false));
-		}
 
 		$defaults = array(  'multi' => false,
 							'offset' => "",

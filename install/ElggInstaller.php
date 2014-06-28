@@ -38,7 +38,7 @@ class ElggInstaller {
 		
 		$minds = new minds\core\minds();
 		$minds->loadLegacy();
-		_elgg_session_boot(true);		
+	//	_elgg_session_boot(true);		
 		$this->isAction = $_SERVER['REQUEST_METHOD'] === 'POST';
 		
 		$this->bootstrapConfig();
@@ -99,7 +99,6 @@ class ElggInstaller {
 				$CONFIG->site_guid = (int) datalist_get('default_site');
 				$CONFIG->site_id = $CONFIG->site_guid;
 				$CONFIG->site = get_entity($CONFIG->site_guid, 'site');
-				$CONFIG->dataroot = datalist_get('dataroot');
 			}
 			
 		}
@@ -1176,9 +1175,11 @@ class ElggInstaller {
 
 		// check that data root exists
 		if (!file_exists($submissionVars['dataroot'])) {
-			$msg = elgg_echo('install:error:datadirectoryexists', array($submissionVars['dataroot']));
-			register_error($msg);
-			return FALSE;
+			if(!mkdir($submissionVars['dataroot'], 0700)){
+				$msg = elgg_echo('install:error:datadirectoryexists', array($submissionVars['dataroot']));
+				register_error($msg);
+				return FALSE;
+			}
 		}
 
 		// check that data root is writable

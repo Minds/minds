@@ -16,11 +16,10 @@ class router{
 	public function route($uri = null, $method = null){
 		
 		if(!$uri)	
-			$route = strtok($_SERVER["REQUEST_URI"],'?');
-		else
-			$route = $uri;
-
-		$route = rtrim($route, '/');
+			$uri = strtok($_SERVER["REQUEST_URI"],'?');
+	
+			
+		$route = rtrim($uri, '/');
 		$segments = explode('/', $route);
 		$method = $method ? $method : strtolower($_SERVER['REQUEST_METHOD']);
 	
@@ -35,7 +34,7 @@ class router{
 				$route_length = strlen($route);
 				$route = substr($route, 0, $route_length-$slug_length);
 			}
-		
+			
 			if(isset(self::$routes[$route])){
 				$handler = new self::$routes[$route]();
 				$pages = array_splice($segments, $loop) ?: array();
@@ -44,7 +43,7 @@ class router{
 			--$loop;
 		}
 
-		if($uri){
+		if($uri && !\get_input('handler')){
 			$path = explode('/', substr($uri,1));
 			
 			$handler = array_shift($path);

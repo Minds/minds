@@ -17,7 +17,9 @@ $items = elgg_get_entities(array(
 			'subtype'=>'carousel_item',
 			'limit' => 0
 		));
-
+if(!$items){
+	return false;
+}
 //sort the tiers by price
 usort($items, function($a, $b){
 	return $a->order - $b->order;

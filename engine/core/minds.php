@@ -21,11 +21,13 @@ class minds extends base{
 	 * Start the minds engine
 	 */
 	public function start(){
-		
+	
+		$this->checkInstalled();
+	
 		$this->loadConfigs();
 		$this->loadLegacy();
 
-		if(defined('multisite') && multisite)
+		if($this->detectMultisite())
 			new multisite();
 		
 		new session();	
@@ -101,6 +103,31 @@ class minds extends base{
 			}
 		}
 	}
+
+	public function detectMultisite(){
+		if(file_exists(dirname(dirname(dirname(__MINDS_ROOT__))) ."/config.json"))
+			return true;
+		
+		return false;
+	}
 	
-	
+	public function checkInstalled(){
+		/**
+		 * If we are a multisite, we get the install status from the multisite settings
+		 */
+		if($this->detectMultisite()){
+			$node = new \minds\multisite\models\node($_SERVER['HTTP_HOST']);
+			if($node->installed)
+				return true;
+			else{
+				header("Location: install.php");
+				exit;
+			}
+		} else {	
+			if (!file_exists(dirname(__FILE__) . '/settings.php') && !defined('__MINDS_INSTALLING__')) {
+				header("Location: install.php");
+				exit;
+			}
+		}
+	}	
 }

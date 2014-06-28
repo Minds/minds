@@ -70,7 +70,8 @@ class minds_wordpress extends \ElggPlugin{
 		}
 
 		$raw = json_decode($output, true);
-
+		if(!$raw)
+			return false;
 		foreach($raw as $item){	
 			\elgg_register_menu_item('wp-menu', array(
 				'name' => $item['ID'],

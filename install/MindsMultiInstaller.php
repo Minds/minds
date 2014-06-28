@@ -7,8 +7,6 @@ class MindsMultiInstaller extends ElggInstaller {
 
     protected $steps = array(
         'welcome',
-//        'requirements',
-        //       'database',
         'settings',
         'admin',
        // 'minds',
@@ -19,6 +17,7 @@ class MindsMultiInstaller extends ElggInstaller {
 	'email',
         'complete',
     );
+    
     protected $status = array(
         'config' => FALSE,
         'database' => FALSE,
@@ -26,11 +25,11 @@ class MindsMultiInstaller extends ElggInstaller {
         'admin' => FALSE,
         'minds' => FALSE,
     );
+   
     protected $web_services_url = 'https://www.minds.com/services/api/rest/json/';
 
     public function __construct() {
         parent::__construct();
-
 
 	if(get_input('debug')){
 		$db = new \minds\core\data\call('entities');
@@ -55,14 +54,14 @@ class MindsMultiInstaller extends ElggInstaller {
      */
     protected function bootstrapConfig() {
         
-        parent::bootstrapConfig(); 
+	parent::bootstrapConfig(); 
         
         global $CONFIG;
         if (!isset($CONFIG)) {
             $CONFIG = new stdClass;
         }
 
-        $CONFIG->wwwroot = $CONFIG->elgg_multisite_settings->wwwroot;
+        //$CONFIG->wwwroot =  
         $CONFIG->url = $CONFIG->wwwroot;
         $CONFIG->path = dirname(dirname(__FILE__)) . '/';
         $CONFIG->viewpath = $CONFIG->path . 'views/';
@@ -193,7 +192,7 @@ class MindsMultiInstaller extends ElggInstaller {
      */
     protected function settings($submissionVars) {
         global $CONFIG;
-        
+	
 	$formVars = array(
             'sitename' => array(
                 'type' => 'text',
@@ -302,24 +301,55 @@ class MindsMultiInstaller extends ElggInstaller {
      * @throws InstallationException
      */
     public function setupMulti() {
+	new minds\core\multisite();
         $this->setInstallStatus();
+
+	global $CONFIG;
+        try{
+		$node = new minds\multisite\models\node($_SERVER['HTTP_HOST']);
+		
+		if($node->installed == true){
+			throw new Exception("This site is already installed");
+		}
+	} catch(Exception $e){
+		var_dump($e->getMessage());
+		exit;
+	}
 
         if (!$this->status['config']) {
             if (!$this->createSettingsFile($params)) {
                 throw new InstallationException(elgg_echo('install:error:settings'));
             }
         }
-
-        if (!$this->connectToDatabase()) {
-           // throw new InstallationException(elgg_echo('install:error:databasesettings'));
-        }
-
-        if (!$this->status['database']) {
-            if (!$this->installDatabase()) {
-             
-            }
+        
+	if (!$this->status['database']) {
+        	$this->installDatabase() ;
         }
     }
+
+     /**
+      * Create the database tables
+      *
+      * @return bool
+      */
+	protected function installDatabase() {
+		global $CONFIG;
+		try{
+			$db = new minds\core\data\call(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
+			if(!$db->keyspaceExists($CONFIG->cassandra->keyspace)){
+				$attrs = array(	  "strategy_options" => array("replication_factor" => "2"));	
+				$db->createKeyspace($attrs);
+			}
+			$db->installSchema();
+		} catch (Exception $e){
+			register_error($e->why);
+		var_dump($e);
+			exit;
+			return false;
+		}
+		
+		return true;
+	}
 
     /**
      * Enable plugins, toggle what we can see.
@@ -715,8 +745,8 @@ class MindsMultiInstaller extends ElggInstaller {
                 $this->continueToNextStep('import');
             } while (FALSE);  // PHP doesn't support breaking out of if statements
         }
-
-        $formVars = $this->makeFormSticky($formVars, $submissionVars);
+        
+	$formVars = $this->makeFormSticky($formVars, $submissionVars);
 
         $this->render('import', array('variables' => $formVars));
     }
@@ -801,5 +831,11 @@ class MindsMultiInstaller extends ElggInstaller {
         $this->render('import', array('variables' => $formVars));
     }
 
+    protected function disableInstallation(){
+	global $CONFIG;
+    	$node = new minds\multisite\models\node($_SERVER['HTTP_HOST']);
+	$node->installed = true;
+	$node->save();
+    }
 
 }

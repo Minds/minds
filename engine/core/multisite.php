@@ -11,6 +11,9 @@ class multisite extends base{
 	public function __construct($domain = NULL){
 		global $DOMAIN;
 
+		//load settings, incase we dont have them
+		require_once(__MINDS_ROOT__ . '/engine/multi.settings.php');
+
 		if(!$DOMAIN && isset($_SERVER['HTTP_HOST']))
 			$this->domain = $_SERVER['HTTP_HOST'];
 		elseif($DOMAIN)
@@ -27,10 +30,13 @@ class multisite extends base{
                		$row = $db->getRow($domain);
 			$this->saveCache($domain, $row);
 		}
-
-		$CONFIG->cassandra->keyspace = unserialize($row['keyspace']);
-		$CONFIG->wwwroot = unserialize($row['wwwroot']);
-        	$CONFIG->dataroot = unserialize($row['dataroot']);
+		
+		$keyspace = @unserialize($row['keyspace']) ? unserialize($row['keyspace'])  : $row['keyspace'];
+		$CONFIG->cassandra = new \stdClass();
+		$CONFIG->cassandra->keyspace =$keyspace;
+		$CONFIG->cassandra->servers =  $CONFIG->multisite->servers;
+		$CONFIG->wwwroot = "http://$domain/"; 
+        	$CONFIG->dataroot = "/data/".$keyspace;
 	}
 
 	public function getCache($domain){
