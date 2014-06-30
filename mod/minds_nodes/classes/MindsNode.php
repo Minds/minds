@@ -101,7 +101,7 @@ class MindsNode extends ElggObject{
 	public function launchNode(){
 		global $CONFIG;
 		$this->checkDomain();
-		$request = $this->client('POST', $this->domain, array('tier'=>$this->tier_guid));
+		$request = $this->client('POST', $this->domain, array('tier'=>$this->tier_guid, 'domain'=>$this->domain));
 		if(isset($request['error']))
 		    throw new Exception("Error creating database for the new minds node");
 		$this->launched = true;
