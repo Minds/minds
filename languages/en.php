@@ -401,6 +401,7 @@ $english = array(
 	'profile:field:location' => 'Location',
 	'profile:field:date' => 'Date',
 
+	'admin:monitization' => 'Monetization',
 	'admin:appearance:profile_fields' => 'Edit Profile Fields',
 	'profile:edit:default' => 'Edit profile fields',
 	'profile:label' => "Profile label",
@@ -685,7 +686,7 @@ $english = array(
 	'plugins:usersettings:save:fail' => "There was a problem saving  user settings for the %s plugin.",
 	'item:object:plugin' => 'Plugins',
 
-	'admin:pluginsettings' => 'Configure Active Plugins',
+	'admin:pluginsettings' => 'Configure Plugins',
 	'admin:plugins' => "Enable/Disable Plugins",
 	'admin:plugins:activate_all' => 'Activate All',
 	'admin:plugins:deactivate_all' => 'Deactivate All',

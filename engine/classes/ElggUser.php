@@ -44,6 +44,8 @@ class ElggUser extends ElggEntity
 		$this->attributes['enabled'] = 'yes';
 	}
 
+	protected $cache = true;
+
 	/**
 	 * Construct a new user entity, optionally from a given id value.
 	 *
@@ -52,7 +54,10 @@ class ElggUser extends ElggEntity
 	 *
 	 * @throws Exception if there was a problem creating the user.
 	 */
-	function __construct($guid = null) {
+	function __construct($guid = null, $cache = true) {
+		
+		$this->cache = $cache;
+
 		$this->initializeAttributes();
 
 		// compatibility for 1.7 api.
@@ -103,8 +108,9 @@ class ElggUser extends ElggEntity
 		foreach($guid as $k => $v){
 			$this->attributes[$k] = $v;
 		}
-		
-		cache_entity($this);
+	
+		if($this->cache)	
+			cache_entity($this);
 
 		return true;
 	}

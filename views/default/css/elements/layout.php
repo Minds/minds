@@ -91,7 +91,8 @@
 	width:auto;
 }
 .hero > .topbar .logo > img{
-	height:100%;
+	height:50px;
+	width:auto;
 }
 .hero > .topbar .search{
 	margin: 12px 16px;
