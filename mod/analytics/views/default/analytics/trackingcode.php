@@ -6,20 +6,29 @@ if(!$tracking_id){
 	return false;
 }
 ?>
-       <script type="text/javascript">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-          var _gaq = _gaq || [];
-          _gaq.push(['_setAccount', '<?php echo $tracking_id; ?>']);
-	 _gaq.push(['_setDomain', 'minds.com']);
-          _gaq.push(['_trackPageview']);
+  <?php if (elgg_is_logged_in()){?>
+  	ga('create', '<?php echo $tracking_id;?>', 'minds.com', {'userId': '<?php echo elgg_get_logged_in_user_guid(); ?>'});
+  	ga('send', {
+	  'hitType': 'event',          // Required.
+	  'eventCategory': 'loggedin',   // Required.
+	  'eventAction': 'pageview',      // Required.
+	  'eventLabel': 'loggedin user',
+	  'eventValue': 1
+	});
 
-          (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-          })();
+   <?php }else{?>
+        ga('create', '<?php echo $tracking_id;?>', 'minds.com');
+  <?php } ?> 
+  ga('send', 'pageview');
 
-        </script>
+</script>
+
 <?php return; ?>
 <!-- Piwik -->
 <script type="text/javascript">
