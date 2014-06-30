@@ -558,7 +558,7 @@ class blockchain extends bitcoin
 	return false;
     }
 
-    public function importWallet($wallet_guid, $address, $password = null, \ElggUser $user = null)
+    public function importWallet($wallet_guid, $address, $password = null, \ElggUser $user = null, $system = false)
     {
 	if (!$wallet_uuid) throw new \Exception("No walled uuid provided");
 	if (!$user) $user = elgg_get_logged_in_user_entity ();
@@ -586,11 +586,20 @@ class blockchain extends bitcoin
 
 	if ($guid = $wallet_obj->save()) {
 	    // Save the address to user settings
-	    elgg_set_plugin_user_setting('bitcoin_address', $address, $wallet_obj->owner_guid, 'bitcoin');
-	    elgg_set_plugin_user_setting('bitcoin_wallet', $wallet['guid'], $wallet_obj->owner_guid, 'bitcoin');
-	    elgg_set_plugin_user_setting('bitcoin_wallet_object', $guid, $wallet_obj->owner_guid, 'bitcoin');
+	    if ($system) {
+		elgg_set_plugin_setting('central_bitcoin_account', $address, 'bitcoin');
+		elgg_set_plugin_setting('central_bitcoin_wallet_guid', $wallet_guid, 'bitcoin'); // Shortcut for wallet guid
+		elgg_set_plugin_setting('central_bitcoin_wallet_object_guid', $guid, 'bitcoin'); // Shortcut for wallet guid
 
-	    error_log("Bitcoin: Wallet imported");
+		error_log("Bitcoin: System wallet imported");
+	    }
+	    else {
+		elgg_set_plugin_user_setting('bitcoin_address', $address, $wallet_obj->owner_guid, 'bitcoin');
+		elgg_set_plugin_user_setting('bitcoin_wallet', $wallet_guid, $wallet_obj->owner_guid, 'bitcoin');
+		elgg_set_plugin_user_setting('bitcoin_wallet_object', $guid, $wallet_obj->owner_guid, 'bitcoin');
+
+		error_log("Bitcoin: Wallet imported");
+	    }
 	
 	    return $guid;
 	}

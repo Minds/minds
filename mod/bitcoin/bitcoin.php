@@ -44,7 +44,7 @@ abstract class bitcoin extends \ElggPlugin
      * @param $wallet_uuid The wallet address on the third party system
      * @param $user User who owns the wallet, or currently logged in user if not provided.
      */
-    abstract public function importWallet($wallet_guid, $address, $password = null, \ElggUser $user = null);
+    abstract public function importWallet($wallet_guid, $address, $password = null, \ElggUser $user = null, $system = false);
     
     /**
      * When passed a wallet GUID (as stored in Elgg), will return it's current balance.
@@ -152,6 +152,10 @@ abstract class bitcoin extends \ElggPlugin
 		    'priority' => 10
 	    ));
 	}
+	
+	// Listen to user settings save
+	elgg_register_action('plugins/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
+	elgg_register_action('plugins/usersettings/save', dirname(__FILE__) . '/actions/plugins/usersettings/save.php');
 	
     }
     
