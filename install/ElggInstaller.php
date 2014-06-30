@@ -92,9 +92,9 @@ class ElggInstaller {
 			// once the database has been created, load rest of engine
 			global $CONFIG;
 			$minds = new minds\core\minds();
-			$minds->loadConfigs();
-			//$minds->start();//we can start the engine now
-
+		//	$minds->loadConfigs();
+			$minds->start();//we can start the engine now
+			
 			if ($stepIndex > $settingsIndex) {
 				$CONFIG->site_guid = (int) datalist_get('default_site');
 				$CONFIG->site_id = $CONFIG->site_guid;
@@ -103,7 +103,7 @@ class ElggInstaller {
 			
 		}
 		if($stepIndex > $adminIndex){
-                        $minds->start();
+                        //$minds->start();
 		}
 	}
 
@@ -1412,11 +1412,11 @@ class ElggInstaller {
 		$user->validated_method = 'admin_user';
 		$user->save();
 
-		if ($login) {
+//		if ($login) {
 			if (login($user) == FALSE) {
 				register_error(elgg_echo('install:error:adminlogin'));
 			}
-		}
+	//	}
 		elgg_set_ignore_access(false);
 		return TRUE;
 	}

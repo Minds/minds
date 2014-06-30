@@ -30,8 +30,8 @@ class multisite extends base{
                		$row = $db->getRow($domain);
 			$this->saveCache($domain, $row);
 		}
-
-                if(!$row['installed'] && !defined('__MINDS_INSTALLING__')){
+                
+		if(!$row['installed'] && !defined('__MINDS_INSTALLING__')){
                        header("Location: install.php"); 
                        exit; 
                 }

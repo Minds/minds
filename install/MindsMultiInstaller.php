@@ -321,7 +321,7 @@ class MindsMultiInstaller extends ElggInstaller {
                 throw new InstallationException(elgg_echo('install:error:settings'));
             }
         }
-        
+	
 	if (!$this->status['database']) {
         	$this->installDatabase() ;
         }

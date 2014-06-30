@@ -45,7 +45,7 @@ class sessions implements \SessionHandlerInterface{
 		$params = session_get_cookie_params();
 		try {
 			
-			$result = $this->db->insert($session_id, array('ts'=>$time,'data'=>$session_data), 2);
+			$result = $this->db->insert($session_id, array('ts'=>$time,'data'=>$session_data), $params['lifetime']);
 		
 			if($result !== false)
 				return true;
