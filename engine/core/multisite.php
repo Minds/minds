@@ -30,6 +30,11 @@ class multisite extends base{
                		$row = $db->getRow($domain);
 			$this->saveCache($domain, $row);
 		}
+
+                if(!$row['installed']){
+                       header("Location: install.php"); 
+                       exit; 
+                }
 		
 		$keyspace = @unserialize($row['keyspace']) ? unserialize($row['keyspace'])  : $row['keyspace'];
 		$CONFIG->cassandra = new \stdClass();

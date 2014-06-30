@@ -116,13 +116,7 @@ class minds extends base{
 		 * If we are a multisite, we get the install status from the multisite settings
 		 */
 		if($this->detectMultisite()){
-			$node = new \minds\multisite\models\node($_SERVER['HTTP_HOST']);
-			if($node->installed)
-				return true;
-			else{
-				header("Location: install.php");
-				exit;
-			}
+			//we do this on db load.. not here	
 		} else {	
 			if (!file_exists(__MINDS_ROOT__ . '/engine/settings.php') && !defined('__MINDS_INSTALLING__')) {
 				header("Location: install.php");
