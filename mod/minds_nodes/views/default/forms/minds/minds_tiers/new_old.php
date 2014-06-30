@@ -22,7 +22,7 @@ if ($obj) {
 </p>
      
 <p><label>Features</label></p>
-<?php foreach(minds_tiers_get_features() as $feature){
+<?php foreach(minds\plugin\minds_nodes::tiersGetFeatures() as $feature){
 	echo "<p><label>$feature</label>" . elgg_view('input/text', array('name'=>$feature, 'value'=>$obj->$feature)) . "</p>";
 }?>
    

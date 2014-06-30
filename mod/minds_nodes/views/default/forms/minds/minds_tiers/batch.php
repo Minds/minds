@@ -32,7 +32,7 @@ echo elgg_view('input/submit', array('value' => 'Save'));
 		?>
 	</div>
 	<?php 
-		foreach(minds_tiers_get_features() as $feature){
+		foreach(minds\plugin\minds_nodes::tiersGetFeatures() as $feature){
 			echo '<div class="row">';
 				echo '<div class="cell feature">'.$feature.'</div>';
 				foreach($tiers as $tier)
