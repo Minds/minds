@@ -7,7 +7,7 @@ $tiers = array();
 
 foreach($_REQUEST as $k=>$v){
 
-	$features = minds_tiers_get_features();
+	$features = minds\plugin\minds_nodes::tiersGetFeatures();
 	array_push($features, 'price');
 	
 	foreach($features as $feature){
