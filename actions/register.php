@@ -79,5 +79,14 @@ if (elgg_get_config('allow_registration')) {
 	register_error(elgg_echo('registerdisabled'));
 }
 
+if(elgg_is_xhr()){
+	echo json_encode(
+			array('error'=>	array(
+								"message"=> "Those details are already in use. Please try another username/email"
+					)
+				));
+	exit;
+}
+
 forward(REFERER);
 

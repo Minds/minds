@@ -117,3 +117,14 @@ display:block;
 .elgg-menu-comments li a.hidden {
 display:none;
 }
+
+
+#comments-signup > form{
+	float:left;
+	width:360px;
+	margin-left:12px;
+}
+#comments-signup > form input{
+	padding:12px;
+}
+

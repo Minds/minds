@@ -4,17 +4,70 @@
     elgg.provide('minds.comments');
 
     minds.comments.init = function() {
-        $(document).on('focus', '.comments-input',function(e){ $(this).autosize();});
+    	/**
+    	 * Autosize the comments box..
+    	 */
+        $(document).on('focus', '.comments-input',function(e){ 
+        	$(this).autosize();
+        });
         
+        /**
+         * Ajax comments input
+         */
         $(document).on('keyup', '.comments-input',function(e){
 			e = e || event;
 			if (e.keyCode === 13 && !e.ctrlKey) {
-				console.log('triggered');
 			    // start your submit function
 			    $(this).submit();
 				$(this).height('25px');
 			}
 			return true;
+		});
+		minds.comments.ignoreLoggedOut = false;
+		/**
+		 * Handler the automatic login of users from popup
+		 */
+		$(document).on('submit', '#comments-signup #login', function(e){
+			e.preventDefault();
+			elgg.post('action/login',
+				{
+					data: { 
+						username:$(this).find('input[name=u]').val(),
+						password: $(this).find('input[name=p]').val()
+					},
+					success: function(data){
+						$.fancybox.close();
+						minds.comments.ignoreLoggedOut = true;
+						$('.minds-comments-form').submit();
+						location.reload();
+					}
+				}
+			);
+		});
+		
+		$(document).on('submit', '#comments-signup #signup', function(e){
+			e.preventDefault();
+			elgg.post('action/register',
+				{
+					data: { 
+						u:$(this).find('input[name=u]').val(),
+						e:$(this).find('input[name=e]').val(),
+						p: $(this).find('input[name=p]').val(),
+						tcs: $(this).find('input[name=tcs]').val()
+					},
+					success: function(data){
+						data = $.parseJSON(data);
+						if(!data.error){
+							$.fancybox.close();
+							minds.comments.ignoreLoggedOut = true;
+							$('.minds-comments-form').submit();
+							location.reload();
+						} else {
+							alert(data.error.message);
+						}
+					}
+				}
+			);
 		});
         
 		$(document).on('click', '.show-more', minds.comments.more);
@@ -92,9 +145,14 @@
     }
     
     minds.comments.saveComment = function(e) {
-    	        
+    	
+    	if(!elgg.is_logged_in() && !minds.comments.ignoreLoggedOut){
+    		$.fancybox("#comments-signup");
+    		return;
+    	}
+    	
        // $(document).off('submit', '.hj-ajaxed-comment-save');
-			_this = $(this);
+		_this = $(this);
         var     values = $(this).serialize(),
         action = $(this).attr('action'),
         data = new Object(),
