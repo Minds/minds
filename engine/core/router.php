@@ -6,7 +6,9 @@ namespace minds\core;
 
 class router{
 	
-	static $routes = array();
+	static $routes = array(
+		"/action" => "minds\\pages\\actions"
+	);
 	
 	/**
 	 * Route the pages
@@ -22,13 +24,18 @@ class router{
 		$route = rtrim($uri, '/');
 		$segments = explode('/', $route);
 		$method = $method ? $method : strtolower($_SERVER['REQUEST_METHOD']);
+		
+		//@todo handler the homepage better
+		if(count($segments) == 1 && $segments[0] == ""){
+                        //we load the homepage controller
+                        $handler = new \minds\pages\index();
+                        return $handler->$method(array());
+                }
 	
 		$loop = count($segments);
-
 		while($loop >= 0){
 			
 			$offset = $loop -1;	
-			
 			if($loop < count($segments)){
 				$slug_length = strlen($segments[$offset+1].'/');
 				$route_length = strlen($route);

@@ -1324,6 +1324,8 @@ function elgg_http_build_url(array $parts, $html_encode = TRUE) {
 function elgg_add_action_tokens_to_url($url, $html_encode = FALSE) {
 	$components = parse_url(elgg_normalize_url($url));
 
+	$uri = $components['path'];
+
 	if (isset($components['query'])) {
 		$query = elgg_parse_str($components['query']);
 	} else {
@@ -1336,7 +1338,7 @@ function elgg_add_action_tokens_to_url($url, $html_encode = FALSE) {
 
 	// append action tokens to the existing query
 	$query['__elgg_ts'] = time();
-	$query['__elgg_token'] = generate_action_token($query['__elgg_ts']);
+	$query['__elgg_token'] = minds\core\token::generate($uri, $query['__elgg_ts']);
 	$components['query'] = http_build_query($query);
 
 	// rebuild the full url

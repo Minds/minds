@@ -13,13 +13,13 @@ class session extends base{
 	public function __construct($force = NULL){
 			
 		$handler = new core\data\sessions();
-        session_set_save_handler(
+	        session_set_save_handler(
 			array($handler, "open"),
-            array($handler, "close"),
-            array($handler, "read"),
-            array($handler, "write"),
-            array($handler, "destroy"),
-            array($handler, "gc")
+        		array($handler, "close"),
+            		array($handler, "read"),
+            		array($handler, "write"),
+            		array($handler, "destroy"),
+           		array($handler, "gc")
 		);
 		
 		ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // Persistent cookies - 30 days
@@ -54,14 +54,14 @@ class session extends base{
 		if (!isset($_SESSION['__elgg_session'])) {
 			$_SESSION['__elgg_session'] = md5(microtime() . rand());
 		}
-	
+		
 		if(isset($_SESSION['user'])){
 			setcookie('loggedin', 1, time() + 3600, '/'); 
 			cache_entity($_SESSION['user']);
 		} else { 
 			setcookie('loggedin', 0, time() + 3600, '/');
 		}
-
+		
 		header('X-Powered-By: Minds', true);
 		
 		register_shutdown_function(array($this, 'shutdown'));

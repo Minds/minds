@@ -35,7 +35,7 @@ unset($vars['body']);
 
 // Generate a security header
 if (!$vars['disable_security']) {
-	$body = elgg_view('input/securitytoken') . $body;
+	$body = elgg_view('input/securitytoken', $vars) . $body;
 }
 unset($vars['disable_security']);
 

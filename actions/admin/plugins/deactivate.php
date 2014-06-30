@@ -12,7 +12,6 @@
  */
 
 $plugin_guids = get_input('plugin_guids');
-
 if (!is_array($plugin_guids)) {
 	$plugin_guids = array($plugin_guids);
 }

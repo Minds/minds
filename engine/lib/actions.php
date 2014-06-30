@@ -83,10 +83,10 @@ function action($action, $forwarder = "") {
                 'registernewnode',
 	);
 	
-	if($CONFIG->actions[$action]['access']){
+	if($CONFIG->actions[$action]['access'] == 'public'){
 		array_push($exceptions, $action);
 	}
-
+	
 	if (!in_array($action, $exceptions)) {
 		// All actions require a token.
 		action_gatekeeper();
@@ -220,7 +220,7 @@ function elgg_unregister_action($action) {
  */
 function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL) {
 	global $CONFIG;
-
+	
 	if (!$token) {
 		$token = get_input('__elgg_token');
 	}
@@ -236,14 +236,9 @@ function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL)
 		$timeout = $CONFIG->action_token_timeout;
 	}
 
-	$session_id = session_id();
-    
-	if (($token) && ($ts) && ($session_id)) {
-		// generate token, check with input and forward if invalid
-		$generated_token = generate_action_token($ts);
-		
+	if (($token) && ($ts)) {
 		// Validate token
-		if ($token == $generated_token) {
+		if (minds\core\token::validate(null, $ts, $token)) {
 			$hour = 60 * 60;
 			$timeout = $timeout * $hour;
 			$now = time();
@@ -339,14 +334,15 @@ function action_gatekeeper() {
  * @access private
  */
 function generate_action_token($timestamp) {
+
+	
+
 	$site_secret = get_site_secret();
-	$session_id = session_id();
-	
 	// Session token
-	$st = $_SESSION['__elgg_session'];
-	
-	if (($site_secret) && ($session_id)) {
-		return md5($site_secret . $timestamp . $session_id . $st);
+	$st = $_SESSION['__elgg_session']; 
+
+	if (($site_secret)) {
+		return md5($site_secret . $timestamp);
 	}
 
 	return FALSE;
