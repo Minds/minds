@@ -63,7 +63,7 @@ class ElggRiverItem {
 			}
 		}*/
 		if(isset($this->subjectObj))
-			return entity_row_to_elggstar(json_decode($this->subjectObj));
+			return entity_row_to_elggstar(json_decode($this->subjectObj), false);
 				
 		return get_entity($this->subject_guid);
 	}

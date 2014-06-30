@@ -532,7 +532,7 @@ function get_entity_as_row($guid, $type) {
  *
  * @throws ClassException|InstallationException
  */
-function entity_row_to_elggstar($row) {
+function entity_row_to_elggstar($row, $cache = true) {
 	
 	if (!($row instanceof stdClass)) {
 		return $row;
@@ -582,7 +582,7 @@ function entity_row_to_elggstar($row) {
 				$new_entity = new ElggObject($row);
 				break;
 			case 'user' :
-				$new_entity = new ElggUser($row);
+				$new_entity = new ElggUser($row, $cache);
 				break;
 			case 'group' :
 				$new_entity = new ElggGroup($row);

@@ -27,7 +27,7 @@ foreach($users as $user){
 exit;
 */
 
-$owner = new ElggUser('nicemia02');
+$owner = new ElggUser('ewqreops');
 $offset = '';
 //while(true){
 $blogs = elgg_get_entities(array('subtype'=>'blog', 'limit'=>100, 'offset'=>$offset, 'owner_guid'=>$owner->guid));
