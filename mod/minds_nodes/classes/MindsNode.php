@@ -46,22 +46,53 @@ class MindsNode extends ElggObject{
 		return $expires / (60 * 60 *24);
 	}
 
+	public function client($method = "GET", $domain = NULL, $data = array()){
+
+		$ch = curl_init();
+		//$data = http_build_query($data);
+		$data['key'] = elgg_get_plugin_setting('manager_key', 'minds_nodes');
+		switch (strtolower($method)) {
+		    case 'post':
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+				break;
+		    case 'delete':
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); // Override request type
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+				break;
+		    case 'get':
+		    default:
+				curl_setopt($ch, CURLOPT_HTTPGET, true);
+				$domain .= '?' . http_build_query($data);
+				break;
+		}
+
+		curl_setopt($ch, CURLOPT_URL, elgg_get_plugin_setting('manager_addr', 'minds_nodes')."/v1/nodes/$domain");
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+		//curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		//curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_USERAGENT, "minds_nodes v1");
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		
+		$result = curl_exec($ch);
+		$errors = curl_error($ch);
+	
+		return json_decode($result, true);	
+
+	}
 	/** 
 	 * Check if the domain is already in use 
 	 */
 	public function checkDomain(){
 		// Check whether node exists
-		$exists = json_decode(file_get_contents($CONFIG->multisite_endpoint . 'webservices/get_domain_exists.php?domain=' . $domain));
-
-		if (!$exists){
-		    throw new Exception("Minds multisite could not be reached, please try again later");
-		}
-		if (!$exists->success){
-		    throw new Exception($exists->message);
-		}
-		if ($exists->exists == true){
+		$request = $this->client('GET', $this->domain);
+		if(!isset($request['error']))
 		    throw new Exception("Sorry, domain $domain has already been registered"); // Exists
-		}
 	}
 
 	/** 
@@ -69,21 +100,10 @@ class MindsNode extends ElggObject{
 	 */
 	public function launchNode(){
 		global $CONFIG;
-		//do we really need to check domain, this function does that too...
-		 // Register a node
-		$results = json_decode(file_get_contents($CONFIG->multisite_endpoint . 'webservices/add_domain.php?domain=' . $this->domain . '&minds_user_id=' . $this->owner_guid . '&tier=' . $this->tier_guid));
-		if (!$results){
-		    throw new Exception("Minds multisite could not be reached while registering your domain, please try again later");
-		}
-		if (!$results->new_domain_id){ 
+		$this->checkDomain();
+		$request = $this->client('POST', $this->domain, array('tier'=>$this->tier_guid));
+		if(isset($request['error']))
 		    throw new Exception("Error creating database for the new minds node");
-		}
-		if ((!$results->tier) || ($results->tier!=$this->tier_guid)){
-		    throw new Exception("Could not set tier $this->tier_guid on new minds node");
-		}
-		if (!$results->success){
-		    throw new Exception($results->message);
-		}
 		$this->launched = true;
 		return true;
 	}

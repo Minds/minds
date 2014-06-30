@@ -37,7 +37,7 @@ usort($tiers, function($a, $b){
 		?>
 	</div>
 	<?php 
-		foreach(minds\plugin\minds_nodes::tiersGetFeatures() as $feature){
+		foreach(minds\plugin\minds_nodes\start::tiersGetFeatures() as $feature){
 			echo '<div class="row">';
 				echo '<div class="cell feature">'.elgg_echo("minds_tiers:feature:$feature").'</div>';
 				foreach($tiers as $tier)
