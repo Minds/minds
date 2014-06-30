@@ -128,6 +128,7 @@ padding: 0 4px;
 	border-radius: 2px;
 	-webkit-border-radius:2px;
 	-moz-border-radius:2px;
+	clear:both;
 }
 .subscribe-button > a{
 	padding: 8px 16px;

@@ -373,7 +373,8 @@ class MindsMultiInstaller extends ElggInstaller {
 	    'minds_social',
             'minds_themeconfig',
 		'anypage',
-            'minds_wordpress',
+		'tinymce'
+            //'minds_wordpress',
         );
         foreach ($user_editable_plugins as $plugin_id) {
         	$plugin = new ElggPlugin($plugin_id);
