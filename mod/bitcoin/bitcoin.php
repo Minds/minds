@@ -39,6 +39,14 @@ abstract class bitcoin extends \ElggPlugin
     abstract public function createSystemWallet();
     
     /**
+     * Import a wallet from a third party provider.
+     * 
+     * @param $wallet_uuid The wallet address on the third party system
+     * @param $user User who owns the wallet, or currently logged in user if not provided.
+     */
+    abstract public function importWallet($wallet_guid, $address, $password = null, \ElggUser $user = null);
+    
+    /**
      * When passed a wallet GUID (as stored in Elgg), will return it's current balance.
      */
     abstract public function getWalletBalance($wallet_guid);

@@ -301,6 +301,8 @@ class blockchain extends bitcoin
      */
     protected function storeWalletPassword($wallet, $password) {
 	
+	if (!trim($password)) throw new \Exception("Attempt to set a null password on a wallet.");
+	
 	// TODO: Find out a better way of storing passwords, perhaps against some sort of central password storage tool
 	
 	$wallet->wallet_password = $password; 
@@ -556,6 +558,46 @@ class blockchain extends bitcoin
 	return false;
     }
 
+    public function importWallet($wallet_guid, $address, $password = null, \ElggUser $user = null)
+    {
+	if (!$wallet_uuid) throw new \Exception("No walled uuid provided");
+	if (!$user) $user = elgg_get_logged_in_user_entity ();
+	if (!$user) throw new \Exception("No user provided to import");
+		
+	$wallet_obj = $this->getWallet($user);
+	if (!$wallet_obj) {
+	    // No wallet already set, create new one
+	    $wallet_obj = new \ElggObject();
+	    
+	    $wallet_obj->subtype = 'bitcoin_wallet';
+	    $wallet_obj->access_id = ACCESS_PRIVATE;
+	    $wallet_obj->owner_guid = $user->guid;
+	}
+	
+	if (!$password) $password = $this->getWalletPassword ($wallet_obj);
+	if (!$password) $password = md5($user->salt . microtime(true));
+	$this->storeWalletPassword($new_wallet, $password);
+	
+	$wallet_obj->wallet_guid = $wallet_guid;
+	$wallet_obj->wallet_address = $address;
+	$wallet_obj->wallet_link = "https://blockchain.info/wallet/{$wallet_guid}";
+	
+	$wallet_obj->wallet_handler = 'blockchain';
+
+	if ($guid = $wallet_obj->save()) {
+	    // Save the address to user settings
+	    elgg_set_plugin_user_setting('bitcoin_address', $address, $wallet_obj->owner_guid, 'bitcoin');
+	    elgg_set_plugin_user_setting('bitcoin_wallet', $wallet['guid'], $wallet_obj->owner_guid, 'bitcoin');
+	    elgg_set_plugin_user_setting('bitcoin_wallet_object', $guid, $wallet_obj->owner_guid, 'bitcoin');
+
+	    error_log("Bitcoin: Wallet imported");
+	
+	    return $guid;
+	}
+	
+	return false;
+    }
+    
     public function getWallet(\ElggUser $user) {
 	error_log("Bitcoin: Getting wallet for {$user->name}");
 	
