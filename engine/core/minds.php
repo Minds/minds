@@ -124,7 +124,7 @@ class minds extends base{
 				exit;
 			}
 		} else {	
-			if (!file_exists(dirname(__FILE__) . '/settings.php') && !defined('__MINDS_INSTALLING__')) {
+			if (!file_exists(dirname(dirname(__FILE__)) . '/settings.php') && !defined('__MINDS_INSTALLING__')) {
 				header("Location: install.php");
 				exit;
 			}
