@@ -124,17 +124,18 @@ function anypage_router($hook, $type, $value, $params) {
 		echo elgg_view($page->getView());
 		exit;
 	} else {
-		$filter = elgg_view('anypage/filter', array('selected'=>$page->title));
+		elgg_set_context('anypage');
+		//$filter = elgg_view('anypage/filter', array('selected'=>$page->title));
 		// display entity
 		$content = elgg_view_entity($page);
 		$body = elgg_view_layout('one_column', array(
-			'header'=>$filter,
+			'header'=> "<h1>$page->title</h1>",
 			'content' => $content, 
 			'hide_ads'=>true,
 			'sidebar'=>elgg_view('anypage/menu'),
 			'class'=>'pages',
 		));
-		echo elgg_view_page($page->title, $body);
+		echo elgg_view_page($page->title, $body, 'default', array('class'=>'sidebar-active'));
 		exit;
 	}
 }

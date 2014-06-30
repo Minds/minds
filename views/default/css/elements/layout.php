@@ -323,11 +323,15 @@
 	left:0;
 	display:none;
 	position:fixed;
+	overflow:scroll;
 	height:100%;
 	width:225px;
 	padding:12px;
 	background:#222;
 	box-shadow:0 0 4px #000;
+}
+.global-sidebar::-webkit-scrollbar, .global-sidebar::-moz-scrollbar { 
+    display: none; 
 }
 .global-sidebar.show{
 	display:block;
