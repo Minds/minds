@@ -34,6 +34,11 @@
     
 </p>
 
+<a href="#import" rel="toggle">Import existing wallet...</a>
+<div id="import" style="display: none;">
+    <?= elgg_view('input/import_wallet'); ?>
+</div>
+
 <input id="bitcoin_generate_wallet" type="button" value="Generate new system wallet and bitcoin address..." />
 <script>
     $(document).ready(function() {
