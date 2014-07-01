@@ -98,7 +98,7 @@ class call extends core\base{
 		unset($data['guid']);
 		try{
 			if($ttl)
-				$this->cf->insert($guid, $data, null, 320);
+				$this->cf->insert($guid, $data, null, $ttl);
 			else
 				$this->cf->insert($guid, $data);
 		} catch(\Exception $e){
