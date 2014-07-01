@@ -753,7 +753,7 @@ class blockchain extends bitcoin
     }
 
     public function createReceiveAddressForUser(\ElggUser $user, array $params = null) {
-	$ra = $this->getReceiveAddress($user);
+	$ra = $this->getReceiveAddressForUser($user);
 	
 	if (!$ra) {
 	    
