@@ -2,11 +2,7 @@
 
     $user = $vars['user'];
     $wallet = $vars['wallet'];
-    try {
-	$balance = \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid);
-    } catch (\Exception $e) {
-	register_error($e->getMessage());
-    }
+    
 
 ?><div class='wallet'>
     
@@ -22,7 +18,15 @@
 	    <label>Wallet bitcoin address: </label> <?php echo $wallet->wallet_address; ?>
 	</p>
 	<p class="balance">
-	    <label>Balance: </label> <?php echo $balance ?> BTC
+	    <label>Balance: </label> <?php
+	    try {
+		echo \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid);
+		echo " BTC";
+	    } catch (\Exception $e) {
+		echo $e->getMessage();
+		register_error($e->getMessage());
+	    }
+	    ?>
 	</p>
 	
     </div>
