@@ -47,6 +47,11 @@ abstract class bitcoin extends \ElggPlugin
     abstract public function importWallet($wallet_guid, $address, $password = null, \ElggUser $user = null, $system = false);
     
     /**
+     * Get the addess(s) associated with a wallet
+     */
+    abstract public function getAddressesFromWallet($wallet_guid);
+    
+    /**
      * When passed a wallet GUID (as stored in Elgg), will return it's current balance.
      */
     abstract public function getWalletBalance($wallet_guid);
@@ -55,6 +60,7 @@ abstract class bitcoin extends \ElggPlugin
      * Send a payment from a wallet to a bitcoin address.
      */
     abstract public function sendPayment($from_wallet_guid, $to_address, $amount_in_satoshi);
+    
 
 
 

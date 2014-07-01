@@ -579,7 +579,7 @@ class blockchain extends bitcoin
 	if (!$password) $password = $this->getWalletPassword ($wallet_obj);
 	if (!$password) $password = md5($user->salt . microtime(true));
 	$this->storeWalletPassword($wallet_obj, $password);
-	
+		
 	$wallet_obj->wallet_guid = $wallet_guid;
 	$wallet_obj->wallet_address = $address;
 	$wallet_obj->wallet_link = "https://blockchain.info/wallet/{$wallet_guid}";
@@ -587,6 +587,16 @@ class blockchain extends bitcoin
 	$wallet_obj->wallet_handler = 'blockchain';
 
 	if ($guid = $wallet_obj->save()) {
+	    
+	    // Attempt to retrieve an address, if none specified
+	    if (!$address) {
+		$addresses = $this->getAddressesFromWallet($guid);
+		if ($addresses) {
+		    $address = $addresses[0]->address;
+		    $wallet_obj->wallet_address = $address;
+		}
+	    }
+	    
 	    // Save the address to user settings
 	    if ($system) {
 		elgg_set_plugin_setting('central_bitcoin_account', $address, 'bitcoin');
@@ -644,6 +654,33 @@ class blockchain extends bitcoin
 		
 		if (isset($result['balance']))
 		    return $result['balance'];
+		else
+		    throw new \Exception("Bitcoin: " . $result['error']);
+		
+	    }
+	} 
+	
+	return false;
+    }
+    
+    public function getAddressesFromWallet($wallet_guid)
+    {
+	if ($wallet = get_entity($wallet_guid)) {
+	 
+	    if (elgg_instanceof($wallet, 'object', 'bitcoin_wallet'))
+	    {
+		$wallet_guid = $wallet->wallet_guid;
+		$result = $this->__make_call('GET', "merchant/$wallet_guid/list", array(
+		    'password' => $this->getWalletPassword($wallet),
+		));
+		
+		if ($result['response'] == 500)
+		    throw new \Exception("Bitcoin: "  . $result['content']);
+		 
+		$result = $result['content'];
+		
+		if (isset($result['addresses']))
+		    return $result['addresses'];
 		else
 		    throw new \Exception("Bitcoin: " . $result['error']);
 		
