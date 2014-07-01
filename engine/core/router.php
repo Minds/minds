@@ -7,7 +7,8 @@ namespace minds\core;
 class router{
 	
 	static $routes = array(
-		"/action" => "minds\\pages\\actions"
+		"/action" => "minds\\pages\\actions",
+		"/services" => "minds\\pages\\services"
 	);
 	
 	/**

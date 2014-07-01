@@ -19,6 +19,11 @@ class multisite extends base{
 		elseif($DOMAIN)
 			$this->domain = $DOMAIN;
 
+		if(strpos($this->domain, ':', 0) !== FALSE){
+			$this->domain = explode(':', $this->domain);
+			$this->domain = $this->domain[0];
+		}
+
 		if($this->domain)
 			$this->load($this->domain);
 	}
@@ -30,8 +35,8 @@ class multisite extends base{
                		$row = $db->getRow($domain);
 			$this->saveCache($domain, $row);
 		}
-                
-		if(!$row['installed'] && !defined('__MINDS_INSTALLING__')){
+		
+		if(!($row['installed'] || $row['enabled']) && !defined('__MINDS_INSTALLING__')){
                        header("Location: install.php"); 
                        exit; 
                 }
@@ -41,6 +46,9 @@ class multisite extends base{
 		$CONFIG->cassandra->keyspace =$keyspace;
 		$CONFIG->cassandra->servers =  $CONFIG->multisite->servers;
 		$CONFIG->wwwroot = "http://$domain/"; 
+		if(isset($row['dataroot']))
+			$CONFIG->dataroot = unserialize($row['dataroot']);
+		else
         	$CONFIG->dataroot = "/data/".$keyspace;
 	}
 

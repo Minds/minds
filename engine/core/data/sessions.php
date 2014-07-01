@@ -6,7 +6,7 @@
 namespace minds\core\data;
 
 if (version_compare(phpversion(), '5.4.0', '<')) {
-	require_once(dirname(dirname(__FILE__)) . '/stub/SessionHandlerInterface.php');	
+	require_once(__MINDS_ROOT__ . '/engine/classes/stub/SessionHandlerInterface.php');	
 }
 
 class sessions implements \SessionHandlerInterface{
