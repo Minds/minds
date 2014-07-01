@@ -559,11 +559,13 @@ class blockchain extends bitcoin
     }
 
     public function importWallet($wallet_guid, $address, $password = null, \ElggUser $user = null, $system = false)
-    {
-	if (!$wallet_uuid) throw new \Exception("No walled uuid provided");
+    {		
+	error_log("Bitcoin: Importing $wallet_guid -> $address with password $password");
+	
+	if (!$wallet_guid) throw new \Exception("No wallet uuid provided");
 	if (!$user) $user = elgg_get_logged_in_user_entity ();
 	if (!$user) throw new \Exception("No user provided to import");
-		
+	
 	$wallet_obj = $this->getWallet($user);
 	if (!$wallet_obj) {
 	    // No wallet already set, create new one
@@ -576,7 +578,7 @@ class blockchain extends bitcoin
 	
 	if (!$password) $password = $this->getWalletPassword ($wallet_obj);
 	if (!$password) $password = md5($user->salt . microtime(true));
-	$this->storeWalletPassword($new_wallet, $password);
+	$this->storeWalletPassword($wallet_obj, $password);
 	
 	$wallet_obj->wallet_guid = $wallet_guid;
 	$wallet_obj->wallet_address = $address;
