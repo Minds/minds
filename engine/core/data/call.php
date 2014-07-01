@@ -97,7 +97,10 @@ class call extends core\base{
 		//unset guid, we don't want it twice
 		unset($data['guid']);
 		try{
-			$this->cf->insert($guid, $data, null, $ttl);
+			if($ttl)
+				$this->cf->insert($guid, $data, null, 320);
+			else
+				$this->cf->insert($guid, $data);
 		} catch(\Exception $e){
 			return false;
 		}

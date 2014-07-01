@@ -1338,7 +1338,7 @@ function elgg_add_action_tokens_to_url($url, $html_encode = FALSE) {
 
 	// append action tokens to the existing query
 	$query['__elgg_ts'] = time();
-	$query['__elgg_token'] = minds\core\token::generate($uri, $query['__elgg_ts']);
+	$query['__elgg_token'] = minds\core\token::generate($query['__elgg_ts']);
 	$components['query'] = http_build_query($query);
 
 	// rebuild the full url

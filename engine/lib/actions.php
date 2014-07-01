@@ -238,7 +238,7 @@ function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL)
 
 	if (($token) && ($ts)) {
 		// Validate token
-		if (minds\core\token::validate(null, $ts, $token)) {
+		if (minds\core\token::validate($ts, $token)) {
 			$hour = 60 * 60;
 			$timeout = $timeout * $hour;
 			$now = time();
@@ -334,8 +334,6 @@ function action_gatekeeper() {
  * @access private
  */
 function generate_action_token($timestamp) {
-
-	
 
 	$site_secret = get_site_secret();
 	// Session token

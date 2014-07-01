@@ -9,8 +9,7 @@
  */
 
 $ts = time();
-$uri = substr($vars['action'], strlen(elgg_get_site_url())-1);
-$token = minds\core\token::generate($uri, $ts);
+$token = minds\core\token::generate($ts);
 
 echo elgg_view('input/hidden', array('name' => '__elgg_token', 'value' => $token));
 echo elgg_view('input/hidden', array('name' => '__elgg_ts', 'value' => $ts));

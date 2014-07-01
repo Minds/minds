@@ -26,7 +26,6 @@ class session extends base{
 		session_name('minds');
 		session_start();
 		session_cache_limiter('public');
-		session_regenerate_id(true);
 	
 		//@todo move these to new page model
 		\elgg_register_action('login', '', 'public');

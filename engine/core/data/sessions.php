@@ -43,14 +43,16 @@ class sessions implements \SessionHandlerInterface{
 		
 		$time = time();
 		$params = session_get_cookie_params();
+
 		try {
 			
 			$result = $this->db->insert($session_id, array('ts'=>$time,'data'=>$session_data), $params['lifetime']);
-		
+
 			if($result !== false)
 				return true;
 
 		} catch (Exception $e) {
+			error_log('sessions write error: '.$e->getMessage());
 		}
 
 		return false;
