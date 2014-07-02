@@ -29,19 +29,20 @@ function minds_init(){
 	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js', 'footer');
 	elgg_load_js('jquery-cookie');
 	
-	//register inline js player
-	/*$uiVideoInline = elgg_get_simplecache_url('js', 'uiVideoInline');
-	elgg_register_js('uiVideoInline', $uiVideoInline, 'footer');
-	elgg_load_js('uiVideoInline');*/
-	
 	//register textarea expander
 	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js', 'footer');
 	
-	//register carousel js
-	//elgg_register_js('carouFredSel', elgg_get_site_url() . 'mod/minds/vendors/carouFredSel/jquery.carouFredSel-6.2.0.js', 'footer');
+	/**
+	 * Carousel js libraries
+	 */
 	elgg_register_js('carousel',  elgg_get_site_url() . 'mod/minds/vendors/bootstrap-carousel/carousel.min.js');
 	elgg_register_css('carousel',  elgg_get_site_url() . 'mod/minds/vendors/bootstrap-carousel/carousel.css');
+	elgg_register_js('spectrum', elgg_get_site_url() . 'mod/minds/vendors/spectrum/spectrum.js');
+	elgg_register_css('spectrum', elgg_get_site_url() . 'mod/minds/vendors/spectrum/spectrum.css');
 	
+	/** 
+	 * Masonry libraries
+	 */
 	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js','header',600);
 	elgg_load_js('jquery-masonry');
 	elgg_register_js('jquery-imagesLoaded', elgg_get_site_url() . 'mod/minds/vendors/masonry/imagesLoaded.min.js','header',700);	

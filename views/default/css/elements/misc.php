@@ -892,7 +892,7 @@ li.elgg-menu-item-rss{
 	width:100%;
 	height:250px;
 	display:block;
-	margin:8px 0;
+	margin:8px 0 72px;
 	position:relative;
 	background-color:#222;
 	filter: alpha(opacity=0);
@@ -908,7 +908,17 @@ li.elgg-menu-item-rss{
 	width: 34px;
 	min-width: 0;
 }
-.carousel-admin-wrapper .bg-input{
+.carousel-admin-wrapper .actions{
+	display:table;
+	width:100%;
+	position:absolute;
+	bottom:-72px;
+}
+.carousel-admin-wrapper .actions > div{
+	display:table-cell;
+	padding:8px;
+}
+/*.carousel-admin-wrapper .bg-input{
 	padding: 8px;
 	background: #FFF;
 	width: 200px;
@@ -923,18 +933,22 @@ li.elgg-menu-item-rss{
 	position: absolute;
 	padding: 8px;
 	margin: 8px auto;
-	right:216px;
+	right:206px;
 	bottom:0;
 	width: 100px;
 	height: 40px;
+}
+.carousel-admin-wrapper .shadow-color{
+	right:282px;
 }
 .carousel-admin-wrapper .carousel-href{
 	position: absolute;
 	bottom: 6px;
 	width: 200px;
 	padding: 12px;
-	right: 332px;
+	right: 372px;
 }
+*/
 .carousel-admin-wrapper > textarea{
 	display:block;
 	padding:32px;
@@ -942,8 +956,8 @@ li.elgg-menu-item-rss{
 	border: 0;
 	font-size: 60px;
 	color: #FFF;
-	font-weight: lighter;
-	text-align: center;
+	font-weight: 100;
+	text-align: left;
 }
 
 #carousel_wrapper{
@@ -1024,6 +1038,15 @@ li.elgg-menu-item-rss{
 	height: auto;
 	font-weight:lighter;
 	z-index:2;
+}
+.carousel-inner > .item > .carousel-caption > .inner{
+	/* margin: 0 50px; */
+	width: auto;
+	padding: 10px 13px;
+	/*background: rgba(000,000,000,0.4);*/
+	float: left;
+	position: absolute;
+	left: 4%;	
 }
 .carousel-inner > .item > .carousel-caption h3{
 	color:#FFF;

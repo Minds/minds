@@ -70,9 +70,6 @@ HTML;
 $header = <<<HTML
 <div class="elgg-head homepage clearfix">
 	$title
-	<div class="front-page-buttons">
-		$buttons
-	</div>
 	<ul class="elgg-menu elgg-menu-right-filter elgg-menu-hz">
 		<li class="elgg-menu-item-featured $featured_item_class">
 			<a href="?filter=featured">Featured</a>

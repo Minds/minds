@@ -23,6 +23,7 @@ foreach($items as $k=>$item){
 	}
 	
 	$item->title = str_replace("$item->guid:", '', get_input("$item->guid:title"));
+	$item->shadow = str_replace("$item->guid:", '', get_input("$item->guid:shadow"));
 	$item->order = str_replace("$item->guid:", '', get_input("$item->guid:order"));
 	$item->color = str_replace("$item->guid:", '', get_input("$item->guid:color"));
 	$item->href = str_replace("$item->guid:", '', get_input("$item->guid:href"));

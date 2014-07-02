@@ -7,7 +7,7 @@
 	channels.init = function(){
 		
 		if($(".colorpicker").length){
-			$(".colorpicker").miniColors({
+			$(".colorpicker").minicolors({
 					letterCase: 'uppercase',	
 					change: function(){ 
 							switch ($(this).attr('name')){
