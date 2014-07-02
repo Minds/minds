@@ -59,10 +59,10 @@
 	 	*/
 	 	
 	 	$(".carousel-admin-items").sortable({
-			items:                'div',
+			items:                'div.carousel-admin-wrapper',
 			connectWith:          '.carousel-admin-items',
 			helper: 			  'clone',
-			//handle:               '.carousel-admin-wrapper',
+			handle:               '.drag',
 			forcePlaceholderSize: true,
 			//placeholder:          'elgg-widget-placeholder',
 			opacity:              0.8,
@@ -83,14 +83,38 @@
 		});
 		
 		if($(".carousel-colorpicker").length){
-			$(".carousel-colorpicker").miniColors({
+			/*$(".text-color").minicolors({
 					letterCase: 'uppercase',	
 					change: function(){ 
 							$(this).parent().find('textarea').css('color', $(this).val());
 					}	
-				});
+				});*/
+			$(".text-color").on('keyup', function(){
+				$(this).css('color', $(this).val());
+				$(this).parents('.carousel-admin-wrapper').find('textarea').css('color', $(this).val());
+			});
+			$(".shadow-color").spectrum({
+   				showAlpha: true,
+				move: function(color) {
+					color = color.toRgbString();
+					$(".shadow-color").val(color);
+					$(this).parents('.carousel-admin-wrapper').find('textarea').css('background', color); 
+				},
+				chose: function(color){
+					this.move(color);
+				}
+			});
 		}
-	 	
+	 
+		$('.carousel-admin-wrapper > textarea').on('keyup', function(){
+			var px = $(this).val().length*36 + 20;
+			console.log(px);
+			if(px < 880 && px > 200){
+				$(this).css('width', px);
+			} else if(px < 880)  {
+				$(this).css('height', 200);
+			}
+		});	
 
 		if($('#fb-share').length){
 			var addr = $('meta[property="og:url"]').attr('content');

@@ -70,8 +70,8 @@ function channel_init() {
 	elgg_extend_view('css/elgg', 'channel/css');
 	elgg_extend_view('js/elgg', 'channel/js');
 	
-	elgg_register_js('minicolors', elgg_get_site_url() . 'mod/channel/vendors/miniColors/jquery.miniColors.min.js','footer');
-	elgg_register_css('minicolors', elgg_get_site_url() . 'mod/channel/vendors/miniColors/jquery.miniColors.css');
+	elgg_register_js('minicolors', elgg_get_site_url() . 'vendor/abeautifulsite/jquery-minicolors/jquery.minicolors.min.js','footer');
+	elgg_register_css('minicolors', elgg_get_site_url() . 'vendor/abeautifulsite/jquery-minicolors/jquery.minicolors.css');
 
 	// allow ECML in parts of the profile
 	elgg_register_plugin_hook_handler('get_views', 'ecml', 'channel_ecml_views_hook');
