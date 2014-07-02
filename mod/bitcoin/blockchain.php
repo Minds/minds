@@ -291,6 +291,9 @@ class blockchain extends bitcoin
 	$return['response'] = $http_status;
 	$return['error'] = $error;
 	
+	if ($return['response'] == 500)
+	    error_log("Bitcoin: Returned blockchain error '{$return['content']}'");
+	
 	return $return;
     }
     
@@ -304,6 +307,8 @@ class blockchain extends bitcoin
 	if (!trim($password)) throw new \Exception("Attempt to set a null password on a wallet.");
 	
 	// TODO: Find out a better way of storing passwords, perhaps against some sort of central password storage tool
+	
+	error_log("Bitcoin: Storing password $password");
 	
 	$wallet->wallet_password = $password; 
 	
@@ -566,14 +571,18 @@ class blockchain extends bitcoin
 	if (!$user) $user = elgg_get_logged_in_user_entity ();
 	if (!$user) throw new \Exception("No user provided to import");
 	
-	$wallet_obj = $this->getWallet($user);
+	if (!$system)
+	    $wallet_obj = $this->getWallet($user);
 	if (!$wallet_obj) {
 	    // No wallet already set, create new one
 	    $wallet_obj = new \ElggObject();
 	    
 	    $wallet_obj->subtype = 'bitcoin_wallet';
 	    $wallet_obj->access_id = ACCESS_PRIVATE;
-	    $wallet_obj->owner_guid = $user->guid;
+	    if ($system)
+		$wallet_obj->owner_guid = 0;
+	    else
+		$wallet_obj->owner_guid = $user->guid;
 	}
 	
 	if (!$password) $password = $this->getWalletPassword ($wallet_obj);
