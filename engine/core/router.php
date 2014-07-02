@@ -17,13 +17,9 @@ class router{
 	 * 
 	 */
 	public function route($uri = null, $method = null){
-		
-		if($uri){
-			$user_set = true;
-		} else {	
+	
+		if(!$uri)
 			$uri = strtok($_SERVER["REQUEST_URI"],'?');
-			$user_set = false;
-		}
 			
 		$route = rtrim($uri, '/');
 		$segments = explode('/', $route);
@@ -53,16 +49,13 @@ class router{
 			} 
 			--$loop;
 		}
-
-		if($uri && $user_set){
+		
+		if($uri){
 			$path = explode('/', substr($uri,1));
 			
 			$handler = array_shift($path);
 			$page = implode('/',$path);
-		} else {
-			$handler = \get_input('handler');
-			$page = \get_input('page');
-		}
+		} 
 
 		return $this->legacyRoute($handler, $page);
 	
