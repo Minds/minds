@@ -134,8 +134,9 @@ if ($full) {
         $header = elgg_view_image_block(elgg_view('output/img', array('src' => $owner_icon_url_small)), $title . $subtitle);
     } else
         $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
-    echo $metadata;
-    echo $header;
+  
     echo elgg_view('output/url', array('href' => $blog->getURL(), 'text' => $image, 'class' => 'blog-rich-image-holder'));
     echo $extras;
+    echo $header;
+    echo $metadata;
 }

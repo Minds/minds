@@ -309,7 +309,7 @@ function login(ElggUser $user, $persistent = false) {
 	}
 
 	// Users privilegeohas been elevated, so change the session id (prevents session fixation)
-	session_regenerate_id();
+	session_regenerate_id(true);
 
 	// Update statistics
 	set_last_login($_SESSION['guid']);
@@ -361,6 +361,7 @@ function logout() {
 	setcookie("mindsSSO", "", (time() - (86400 * 30)), "/");
 
 	session_destroy();
+	session_regenerate_id(true);
 	setcookie(session_name(), '', (time() - (86400 * 30)), "/");
 	
 	elgg_trigger_event('loggedout', 'user', $user);

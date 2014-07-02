@@ -13,7 +13,7 @@
 	Image Block
 *************************************** */
 .elgg-image-block {
-	padding: 3px;
+	padding: 12px 4px;
 }
 .elgg-image-block .elgg-image {
 	float: left;
@@ -38,7 +38,7 @@
 	margin: 1%;
     border: 0;
 	background:#F8F8F8;
-	padding:10px 10px 0 11px;
+	padding:0 10px 10px 11px;
         width: 29%;
         /*width:28%;*/
 	overflow: hidden;

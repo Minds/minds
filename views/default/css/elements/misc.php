@@ -280,7 +280,7 @@ position: absolute;
 }
 li .rich-image{
 	width:110%;
-	margin:0 -11px;
+	margin:0 -6px;
 }
 li .blog-rich-image-holder{
 	position: relative;
@@ -311,7 +311,7 @@ li .excerpt{
 	position: absolute;
 	width:auto;
 	height:auto;
-	bottom: 0;
+	top: 0;
 	left: 0;
 	font-size:12px;
 	line-height:14px;

@@ -7,7 +7,8 @@ namespace minds\core;
 class router{
 	
 	static $routes = array(
-		"/action" => "minds\\pages\\actions"
+		"/action" => "minds\\pages\\actions",
+		"/services" => "minds\\pages\\services"
 	);
 	
 	/**
@@ -17,9 +18,12 @@ class router{
 	 */
 	public function route($uri = null, $method = null){
 		
-		if(!$uri)	
+		if($uri){
+			$user_set = true;
+		} else {	
 			$uri = strtok($_SERVER["REQUEST_URI"],'?');
-	
+			$user_set = false;
+		}
 			
 		$route = rtrim($uri, '/');
 		$segments = explode('/', $route);
@@ -50,7 +54,7 @@ class router{
 			--$loop;
 		}
 
-		if($uri && !\get_input('handler')){
+		if($uri && $user_set){
 			$path = explode('/', substr($uri,1));
 			
 			$handler = array_shift($path);
@@ -59,7 +63,6 @@ class router{
 			$handler = \get_input('handler');
 			$page = \get_input('page');
 		}
-
 
 		return $this->legacyRoute($handler, $page);
 	

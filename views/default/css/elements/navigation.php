@@ -580,20 +580,21 @@
 }
 
 .elgg-list .elgg-menu-entity{
-	top:0;
-	right:0;
+	bottom:0;
+	left:0;
 	position:absolute;
 	z-index:12;
 	background:rgba(248, 248, 248, 0.9);
 	width:auto;
 	margin:0;
-	padding:4px;
+	padding:4px 8px;
 	display:none;
 }
 .elgg-item:hover > .elgg-menu-entity{
 	display:block;
 }
 .elgg-list .elgg-menu-entity li{
+	margin-left:12px;
 }
 .elgg-menu-entity li.entypo {
 	font-size: 12px;

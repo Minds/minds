@@ -229,8 +229,9 @@ placement:'below-main-column'});
 
 );
 	//$rand = array_rand($providers);
-	$rand = get_input('show_ad', 'toobla');
-	echo '<div class="content-block-ratator">' .$providers[$rand] . '</div>';
+//	$rand = get_input('show_ad', 'toobla');
+	echo '<div class="content-block-ratator">' .$providers['toobla'] .  '</div>';
+	echo '<div class="content-block-ratator">' .$providers['contentad']. '</div>';
 	break;	
 	case 'content.ad':
 	        echo '<div class="contentad"><div id="contentad9733"></div>

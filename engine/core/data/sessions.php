@@ -6,7 +6,7 @@
 namespace minds\core\data;
 
 if (version_compare(phpversion(), '5.4.0', '<')) {
-	require_once(dirname(dirname(__FILE__)) . '/stub/SessionHandlerInterface.php');	
+	require_once(__MINDS_ROOT__ . '/engine/classes/stub/SessionHandlerInterface.php');	
 }
 
 class sessions implements \SessionHandlerInterface{
@@ -43,14 +43,16 @@ class sessions implements \SessionHandlerInterface{
 		
 		$time = time();
 		$params = session_get_cookie_params();
+
 		try {
 			
 			$result = $this->db->insert($session_id, array('ts'=>$time,'data'=>$session_data), $params['lifetime']);
-		
+
 			if($result !== false)
 				return true;
 
 		} catch (Exception $e) {
+			error_log('sessions write error: '.$e->getMessage());
 		}
 
 		return false;
