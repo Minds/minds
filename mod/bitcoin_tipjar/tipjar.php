@@ -93,7 +93,9 @@ class tipjar extends \ElggPlugin
 	elgg_register_event_handler('create', 'object', function($event, $object_type, $object) {
 	    if (elgg_instanceof($object, 'object', 'bitcoin_wallet')) {
 		$ia = elgg_set_ignore_access();
-		bitcoin\bitcoin()->createReceiveAddressForUser(get_user($object->owner_guid), array('istipjar' => 'y'));
+		if ($object->owner_guid) { // Don't create a tipjar for system users
+		    bitcoin\bitcoin()->createReceiveAddressForUser(get_user($object->owner_guid), array('istipjar' => 'y'));
+		}
 		elgg_set_ignore_access($ia);
 	    }
 	});
