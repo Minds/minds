@@ -95,9 +95,10 @@
 			});
 			$(".shadow-color").spectrum({
    				showAlpha: true,
+				showButtons: false,
 				move: function(color) {
 					color = color.toRgbString();
-					$(".shadow-color").val(color);
+					$(this).val(color);
 					$(this).parents('.carousel-admin-wrapper').find('textarea').css('background', color); 
 				},
 				chose: function(color){
