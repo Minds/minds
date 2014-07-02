@@ -44,7 +44,7 @@ class comments extends core\page implements interfaces\page{
 		$desc = $_POST['comment'];
 		
 		if (!\elgg_is_logged_in()){
-			
+			exit;	
 			//relies on the minds user account being created @todo fix this?
 			$owner = new \ElggUser('minds');
 		

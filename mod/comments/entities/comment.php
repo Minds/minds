@@ -20,12 +20,11 @@ class comment extends entities\entity{
 	
 	public function save(){
 
-		$guid = parent::save(false);
-		
+		parent::save(false);
 		$indexes = new \minds\core\data\indexes('comments');
 		$indexes->set($this->parent_guid, array($this->guid=>$this->guid));
 		
-		return $guid;
+		return $this->guid;
 	}
 	
 	public function delete(){

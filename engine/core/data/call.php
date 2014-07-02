@@ -102,6 +102,7 @@ class call extends core\base{
 			else
 				$this->cf->insert($guid, $data);
 		} catch(\Exception $e){
+			error_log('DB Write failure:'.$e->getMessage());
 			return false;
 		}
 		return $guid;
