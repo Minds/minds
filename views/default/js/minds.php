@@ -96,8 +96,10 @@
 			$(".shadow-color").spectrum({
    				showAlpha: true,
 				showButtons: false,
+				preferredFormat: 'rgb',
 				move: function(color) {
 					color = color.toRgbString();
+					console.log(color);
 					$(this).val(color);
 					$(this).parents('.carousel-admin-wrapper').find('textarea').css('background', color); 
 				},
