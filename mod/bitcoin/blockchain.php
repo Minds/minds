@@ -713,7 +713,7 @@ class blockchain extends bitcoin
 		
 		$result = $result['content'];
 		
-		error_log("BITCOING: " . $result['message']);
+		error_log("BITCOIN: " . $result['message']);
 		
 		system_message($result['message']);
 	
