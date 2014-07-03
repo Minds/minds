@@ -271,7 +271,9 @@ class blockchain extends bitcoin
 	
 	if ($return['response'] == 500)
 	    error_log("Bitcoin: Returned blockchain error '{$return['content']}'");
-	
+	if ($return['content']['error'])
+	    error_log("Bitcoin: Error value present - " . $return['content']['error']);
+	    
 	error_log("BITCOIN: Raw api call result is ". print_r($return, true));
 	    
 	return $return;
