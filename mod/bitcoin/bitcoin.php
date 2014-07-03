@@ -107,6 +107,8 @@ abstract class bitcoin extends \ElggPlugin
     
     public function logReceived($from_address, $to_user, $amount_satoshi) {
 	
+	$ia = elgg_set_ignore_access();
+	
 	$obj = new \ElggObject();
 	$obj->subtype = 'bitcoin_transaction';
 	$obj->owner_guid = $to_user->guid;
@@ -116,10 +118,18 @@ abstract class bitcoin extends \ElggPlugin
 	$obj->amount_satoshi = $amount_satoshi;
 	$obj->action = 'received';
 	
-	return $obj->save();
+	$id = $obj->save();
+	
+	error_log("Bitcoin: Logged an incoming transaction $id: From {$from_address} to {$to_user->guid} of $amount_satoshi");
+	
+	$ia = elgg_set_ignore_access($ia);
+	
+	return $id;
     }
     
     public function logSent($from_user, $to_address, $amount_satoshi) {
+	
+	$ia = elgg_set_ignore_access();
 	
 	$obj = new \ElggObject();
 	$obj->subtype = 'bitcoin_transaction';
@@ -130,7 +140,13 @@ abstract class bitcoin extends \ElggPlugin
 	$obj->amount_satoshi = $amount_satoshi;
 	$obj->action = 'sent';
 	
-	return $obj->save();
+	$id = $obj->save();
+	
+	error_log("Bitcoin: Logged an outgoing transaction $id: From {$from_user->guid} to $to_address of $amount_satoshi");
+	
+	$ia = elgg_set_ignore_access($ia);
+	
+	return $id;
     }
     
     
@@ -176,10 +192,13 @@ abstract class bitcoin extends \ElggPlugin
 	
 	// Create a wallet for every new user
 	elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
+	    $ia = elgg_set_ignore_access(); // We're not logged in yet, so get_entity will fail without this
+	    
 	    try {
 		$user = elgg_extract('user', $params);
 		
 		$new_wallet = bitcoin()->createWallet($user);
+	
 		if ($new_wallet) $new_wallet = get_entity($new_wallet);
 		if (!$new_wallet) throw new \Exception("Could not generate a wallet for the new user...");
 		if (!$new_wallet->wallet_address) throw new \Exception("There was no address linked with wallet {$new_wallet->guid}");
@@ -199,6 +218,8 @@ abstract class bitcoin extends \ElggPlugin
 	    } catch (\Exception $ex) {
 		error_log("BITCOIN: " . $ex->getMessage());
 	    }
+	    
+	    $ia = elgg_set_ignore_access($ia);
 	});
 	
     }
