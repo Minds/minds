@@ -500,7 +500,7 @@ class blockchain extends bitcoin
 	    elgg_set_plugin_user_setting('bitcoin_wallet', $wallet['guid'], $new_wallet->owner_guid, 'bitcoin');
 	    elgg_set_plugin_user_setting('bitcoin_wallet_object', $guid, $new_wallet->owner_guid, 'bitcoin');
 
-	    error_log("Bitcoin: Wallet created");
+	    error_log("Bitcoin: Wallet created with id $guid");
 	
 	    return $guid;
 	}
