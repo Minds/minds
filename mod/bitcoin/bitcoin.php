@@ -52,7 +52,7 @@ abstract class bitcoin extends \ElggPlugin
     abstract public function getAddressesFromWallet($wallet_guid);
     
     /**
-     * When passed a wallet GUID (as stored in Elgg), will return it's current balance.
+     * When passed a wallet GUID (as stored in Elgg), will return it's current balance in BTC.
      */
     abstract public function getWalletBalance($wallet_guid);
     
@@ -93,6 +93,15 @@ abstract class bitcoin extends \ElggPlugin
      */
     abstract public function convertToBTC($amount, $currency = 'USD');
     
+    
+    /**
+     * Convert a bitcoin to satoshi value
+     */
+    public static function toSatoshi($btc) { return $btc * 100000000; }
+    /**
+     * Convert a satoshi value to bitcoin
+     */
+    public static function toBTC($satoshi) { return $satoshi / 100000000; }
     
     
     public function logReceived($from_address, $to_user, $amount_satoshi) {
