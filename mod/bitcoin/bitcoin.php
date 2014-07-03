@@ -187,8 +187,11 @@ abstract class bitcoin extends \ElggPlugin
 		// grant new user some bitcoins
 		if ($satoshi = elgg_get_plugin_setting('satoshi_to_new_user', 'bitcoin')) {
 		    if ($wallet_guid = elgg_get_plugin_setting('central_bitcoin_wallet_object_guid', 'bitcoin')) {
-			if (!bitcoin()->sendPayment($wallet_guid, $new_wallet->wallet_address, $satoshi))
+			$result = bitcoin()->sendPayment($wallet_guid, $new_wallet->wallet_address, $satoshi);
+			if (!$result)
 				throw new \Exception("There was a problem granting satoshi to {$new_wallet->wallet_address}");
+			
+			error_log("Bitcoin: Successfully set starting amount for {$user->guid} to $satoshi");
 		    } else 
 			error_log("BITCOIN: No system bitcoin address!");
 		} else 
