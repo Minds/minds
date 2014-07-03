@@ -20,7 +20,7 @@
 	<p class="balance">
 	    <label>Balance: </label> <?php
 	    try {
-		echo \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid);
+		echo sprintf("%f", \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid));
 		echo " BTC";
 	    } catch (\Exception $e) {
 		echo $e->getMessage();

@@ -24,7 +24,7 @@
 	<?php
 	    try {
 		?>
-		<p>The current balance is <strong><?php echo \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid); ?>BTC</strong></p>
+		<p>The current balance is <strong><?php echo sprintf("%f",\minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid)); ?>BTC</strong></p>
 	    <?php
 	    } catch (\Exception $e) {
 		echo $e->getMessage();
