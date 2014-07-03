@@ -713,6 +713,8 @@ class blockchain extends bitcoin
 		
 		$result = $result['content'];
 		
+		error_log("BITCOING: " . $result['message']);
+		
 		system_message($result['message']);
 	
 		error_log("BITCOIN: Transaction hash is {$result['tx_hash']}");
