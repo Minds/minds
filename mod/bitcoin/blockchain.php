@@ -718,7 +718,7 @@ class blockchain extends bitcoin
 		}
 		
 		// Log the transaction
-		$this->sendPayment(get_user($wallet->owner_guid, $to_address, $amount_in_satoshi));
+		$this->logSent(get_user($wallet->owner_guid, $to_address, $amount_in_satoshi));
 		
 		return $result['tx_hash'];
 	    }
