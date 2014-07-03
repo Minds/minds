@@ -650,7 +650,7 @@ class blockchain extends bitcoin
 		$result = $result['content'];
 		
 		if (isset($result['balance']))
-		    return self::toBTC ($result['balance']);
+		    return /*self::toBTC (*/$result['balance'];//);
 		else
 		    throw new \Exception("Bitcoin: " . $result['error']);
 		
