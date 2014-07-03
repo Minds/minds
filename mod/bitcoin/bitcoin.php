@@ -120,7 +120,7 @@ abstract class bitcoin extends \ElggPlugin
 	
 	$id = $obj->save();
 	
-	error_log("Bitcoin: Logged an incoming transaction $id: From {$from_address} to {$to_user->guid} of $amount_satoshi");
+	error_log("Bitcoin: Logged an incoming transaction $id: From {$from_address} to {$to_user->name} of $amount_satoshi");
 	
 	$ia = elgg_set_ignore_access($ia);
 	
@@ -142,7 +142,7 @@ abstract class bitcoin extends \ElggPlugin
 	
 	$id = $obj->save();
 	
-	error_log("Bitcoin: Logged an outgoing transaction $id: From {$from_user->guid} to $to_address of $amount_satoshi");
+	error_log("Bitcoin: Logged an outgoing transaction $id: From {$from_user->name} to $to_address of $amount_satoshi");
 	
 	$ia = elgg_set_ignore_access($ia);
 	
