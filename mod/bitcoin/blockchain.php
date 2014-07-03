@@ -706,7 +706,7 @@ class blockchain extends bitcoin
 		
 		$wallet_guid = $wallet->wallet_guid;
 		$result = $this->__make_call('GET', "merchant/$wallet_guid/payment", array(
-		    'main_password' => $this->getWalletPassword($wallet),
+		    'password' => $this->getWalletPassword($wallet),
 		    
 		    'to' => $to_address,
 		    'amount' => $amount_in_satoshi
