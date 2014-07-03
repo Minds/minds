@@ -304,7 +304,7 @@ class blockchain extends bitcoin
      */
     protected function storeWalletPassword($wallet, $password) {
 	
-	if (!trim($password)) throw new \Exception("Attempt to set a null password on a wallet.");
+	if (!$password) throw new \Exception("Attempt to set a null password on a wallet.");
 	
 	// TODO: Find out a better way of storing passwords, perhaps against some sort of central password storage tool
 	
@@ -499,14 +499,15 @@ class blockchain extends bitcoin
 	
 	error_log("Bitcoin: Attempting to create a wallet for {$user->name}");
 	
-	$wallet = $this->blockchainCreateWallet();
+	$password = md5($user->salt . microtime(true));
+	$wallet = $this->blockchainCreateWallet($password);
 
 	$new_wallet = new \ElggObject();
 
 	$new_wallet->subtype = 'bitcoin_wallet';
 	$new_wallet->access_id = ACCESS_PRIVATE;
 	$new_wallet->owner_guid = $user->guid;	
-	$this->storeWalletPassword($new_wallet, md5($user->salt . microtime(true))); // Create a random password);
+	$this->storeWalletPassword($new_wallet, $password); // Create a random password);
 
 	$new_wallet->wallet_raw = serialize($wallet);
 	$new_wallet->wallet_guid = $wallet['guid'];
@@ -532,7 +533,8 @@ class blockchain extends bitcoin
     public function createSystemWallet() {
 	error_log("Bitcoin: Attempting to create a wallet for {$user->name}");
 	
-	$wallet = $this->blockchainCreateWallet();
+	$password = md5($user->salt . microtime(true));
+	$wallet = $this->blockchainCreateWallet($password);
 
 	$new_wallet = new \ElggObject();
 
@@ -541,7 +543,7 @@ class blockchain extends bitcoin
 	$new_wallet->subtype = 'bitcoin_wallet';
 	$new_wallet->access_id = ACCESS_PRIVATE;
 	$new_wallet->owner_guid = 0;	
-	$this->storeWalletPassword($new_wallet, md5($user->salt . microtime(true)));
+	$this->storeWalletPassword($new_wallet, $password);
 
 	$new_wallet->wallet_raw = serialize($wallet);
 	$new_wallet->wallet_guid = $wallet['guid'];
