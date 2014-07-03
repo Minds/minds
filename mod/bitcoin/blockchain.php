@@ -695,6 +695,11 @@ class blockchain extends bitcoin
 	    {
 		error_log("BITCOIN: Got a wallet, making a call.");
 		
+		if ($CONFIG->debug && ($amount_in_satoshi > 0.0005)) {
+		    $amount_in_satoshi = 0.0005;
+		    error_log("BITCOIN: We're in debug mode, so we're squishing the result to $amount_in_satoshi");
+		}
+		
 		$wallet_guid = $wallet->wallet_guid;
 		$result = $this->__make_call('GET', "merchant/$wallet_guid/payment", array(
 		    'main_password' => $this->getWalletPassword($wallet),
