@@ -173,6 +173,30 @@ abstract class bitcoin extends \ElggPlugin
 	elgg_register_action('plugins/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
 	elgg_register_action('plugins/usersettings/save', dirname(__FILE__) . '/actions/plugins/usersettings/save.php');
 	
+	
+	// Create a wallet for every new user
+	elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
+	    try {
+		$user = elgg_extract('user', $params);
+		
+		$new_wallet = bitcoin()->createWallet($user);
+		if (!$new_wallet) throw new \Exception("Could not generate a wallet for the new user...");
+		if (!$new_wallet->wallet_address) throw new \Exception("There was no address linked with wallet {$new_wallet->guid}");
+		
+		// grant new user some bitcoins
+		if ($satoshi = elgg_get_plugin_setting('satoshi_to_new_user', 'bitcoin')) {
+		    if ($wallet_guid = elgg_get_plugin_setting('central_bitcoin_wallet_object_guid', 'bitcoin')) {
+			if (!bitcoin()->sendPayment($wallet_guid, $new_wallet->wallet_address, $satoshi))
+				throw new \Exception("There was a problem granting satoshi to {$new_wallet->wallet_address}");
+		    } else 
+			error_log("BITCOIN: No system bitcoin address!");
+		} else 
+		    error_log("BITCOIN: No satoshi value set!");
+	    } catch (\Exception $ex) {
+		error_log("BITCOIN: " . $ex->getMessage());
+	    }
+	});
+	
     }
     
     

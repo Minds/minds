@@ -17,28 +17,6 @@ class blockchain extends bitcoin
     public function init() {
 	parent::init();
 	
-	// Create a wallet for every new user
-	elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
-	    try {
-		$user = elgg_extract('user', $params);
-		
-		$new_wallet = bitcoin()->createWallet($user);
-		if (!$new_wallet) throw new \Exception("Could not generate a wallet for the new user...");
-		
-		// grant new user some bitcoins
-		if ($satoshi = elgg_get_plugin_setting('satoshi_to_new_user', 'bitcoin')) {
-		    if ($wallet_guid = elgg_get_plugin_setting('central_bitcoin_wallet_guid', 'bitcoin')) {
-			if (!bitcoin()->sendPayment($wallet_guid, $new_wallet->wallet_address, $satoshi))
-				throw new \Exception("There was a problem granting satoshi to {$new_wallet->wallet_address}");
-		    } else 
-			error_log("BITCOIN: No system bitcoin address!");
-		} else 
-		    error_log("BITCOIN: No satoshi value set!");
-	    } catch (\Exception $ex) {
-		error_log("BITCOIN: " . $ex->getMessage());
-	    }
-	});
-	
 	// Register action handler
 	elgg_register_action('bitcoin/generatewallet', dirname(__FILE__) . '/actions/create_wallet.php');
 	elgg_register_action('bitcoin/generatesystemwallet', dirname(__FILE__) . '/actions/create_system_wallet.php');
@@ -709,7 +687,7 @@ class blockchain extends bitcoin
 		
 	global $CONFIG;
 	
-	error_log("BITCOIN: Sending from $from_wallet_guid");
+	error_log("BITCOIN: Attempting to send $amount_in_satoshi from $from_wallet_guid to $to_address");
 	
 	if ($wallet = get_entity($from_wallet_guid)) {
 	    
@@ -770,6 +748,8 @@ class blockchain extends bitcoin
 	    throw new \Exception("Bitcoin: "  . $result['content']);
 	
 	$result = $result['content'];
+	
+	error_log("Bitcoin: Created a receive address for $bitcoin_address to callback $callback, and that is {$result['input_address']}");
 	
 	return $result['input_address'];
     }
