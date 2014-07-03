@@ -662,7 +662,7 @@ class blockchain extends bitcoin
 		$result = $result['content'];
 		
 		if (isset($result['balance']))
-		    return $result['balance'];
+		    return $result['balance'] / 100000000;
 		else
 		    throw new \Exception("Bitcoin: " . $result['error']);
 		
