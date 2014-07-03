@@ -70,8 +70,9 @@ abstract class bitcoin extends \ElggPlugin
      * 
      * @param $user the user
      * @param $params Optional parameters added on to an address to identify it (e.g. handlers or labels)
+     * @param $btc_address to use as trigger, if not specified this will be extracted from user settings.
      */
-    abstract public function createReceiveAddressForUser(\ElggUser $user, array $params = null);
+    abstract public function createReceiveAddressForUser(\ElggUser $user, array $params = null, $btc_address = null);
     
     /**
      * Get the receive address for user.
