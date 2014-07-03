@@ -180,6 +180,7 @@ abstract class bitcoin extends \ElggPlugin
 		$user = elgg_extract('user', $params);
 		
 		$new_wallet = bitcoin()->createWallet($user);
+		if ($new_wallet) $new_wallet = get_entity($new_wallet);
 		if (!$new_wallet) throw new \Exception("Could not generate a wallet for the new user...");
 		if (!$new_wallet->wallet_address) throw new \Exception("There was no address linked with wallet {$new_wallet->guid}");
 		
