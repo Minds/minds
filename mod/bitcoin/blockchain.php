@@ -711,14 +711,9 @@ class blockchain extends bitcoin
 		system_message($result['message']);
 	
 		error_log("BITCOIN: Transaction hash is {$result['tx_hash']}");
-		
-		if ($CONFIG->debug) {
-		    $amount_in_satoshi = 0.0005;
-		    error_log("BITCOIN: We're in debug mode, so we're squishing the result to $amount_in_satoshi");
-		}
-		
+				
 		// Log the transaction
-		$this->logSent(get_user($wallet->owner_guid, $to_address, $amount_in_satoshi));
+		$this->logSent(get_user($wallet->owner_guid), $to_address, $amount_in_satoshi);
 		
 		return $result['tx_hash'];
 	    }
