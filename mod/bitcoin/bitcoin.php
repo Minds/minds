@@ -102,7 +102,7 @@ abstract class bitcoin extends \ElggPlugin
     /**
      * Convert a satoshi value to bitcoin
      */
-    public static function toBTC($satoshi) { return $satoshi / 100000000; }
+    public static function toBTC($satoshi) { return (float)($satoshi / 100000000); }
     
     
     public function logReceived($from_address, $to_user, $amount_satoshi) {
