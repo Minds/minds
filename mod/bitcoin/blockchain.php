@@ -600,6 +600,9 @@ class blockchain extends bitcoin
 	$wallet_obj->wallet_link = "https://blockchain.info/wallet/{$wallet_guid}";
 	
 	$wallet_obj->wallet_handler = 'blockchain';
+	
+	// Fudge to prevent chicken and egg on tipjar...
+	if (!$system) elgg_set_plugin_user_setting('tmp_bitcoin_address', $address, $wallet_obj->owner_guid, 'bitcoin');
 
 	if ($guid = $wallet_obj->save()) {
 	    
@@ -784,7 +787,8 @@ class blockchain extends bitcoin
 		$gets = '?' . http_build_query($params);
 	    
 	    $ra = $user->blockchain_receive_address = $this->blockchainGenerateReceivingAddress(
-		    elgg_get_plugin_user_setting('bitcoin_address', $user->guid, 'bitcoin'), 
+		    elgg_get_plugin_user_setting('bitcoin_address', $user->guid, 'bitcoin') ? 
+			elgg_get_plugin_user_setting('bitcoin_address', $user->guid, 'bitcoin') : elgg_get_plugin_user_setting('tmp_bitcoin_address', $user->guid, 'bitcoin'), // Fudge to prevent chicken and egg on tipjar
 		    elgg_get_site_url() . 'blockchain/endpoint/receivingaddress/' . $user->username . $gets
 		    );
 	}
