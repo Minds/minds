@@ -410,6 +410,10 @@ class blockchain extends bitcoin
 		
 		error_log("BITCOIN: Payment pay being sent for $amount Bitcoins from {$params['amount']}");
 		
+		$amount = self::toSatoshi($amount);
+		
+		error_log("BITCOIN: Converted value to $amount satoshi");
+		
 		if ($CONFIG->debug) {
 		    $amount = 0.0005;
 		    error_log("BITCOIN: We're in debug mode, so we're squishing the result to $amount");
@@ -662,7 +666,7 @@ class blockchain extends bitcoin
 		$result = $result['content'];
 		
 		if (isset($result['balance']))
-		    return $result['balance'] / 100000000;
+		    return self::toBTC ($result['balance']);
 		else
 		    throw new \Exception("Bitcoin: " . $result['error']);
 		
@@ -701,6 +705,8 @@ class blockchain extends bitcoin
     
     public function sendPayment($from_wallet_guid, $to_address, $amount_in_satoshi) {
 		
+	global $CONFIG;
+	
 	error_log("BITCOIN: Sending from $from_wallet_guid");
 	
 	if ($wallet = get_entity($from_wallet_guid)) {
@@ -725,6 +731,11 @@ class blockchain extends bitcoin
 		system_message($result['message']);
 	
 		error_log("BITCOIN: Transaction hash is {$result['tx_hash']}");
+		
+		if ($CONFIG->debug) {
+		    $amount_in_satoshi = 0.0005;
+		    error_log("BITCOIN: We're in debug mode, so we're squishing the result to $amount_in_satoshi");
+		}
 		
 		// Log the transaction
 		$this->sendPayment(get_user($wallet->owner_guid, $to_address, $amount_in_satoshi));
