@@ -4,6 +4,10 @@ admin_gatekeeper();
 
 try {
     
+    $params = get_input('params');
+    if ($params['api_code']) elgg_set_plugin_setting('api_code', $params['api_code'], 'bitcoin');
+    if ($params['satoshi_to_new_user']) elgg_set_plugin_setting('satoshi_to_new_user', $params['satoshi_to_new_user'], 'bitcoin');
+    
     if ($wallet_guid = get_input('wallet_guid'))
     {
 	$ia = elgg_set_ignore_access();
