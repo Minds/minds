@@ -400,7 +400,7 @@ class blockchain extends bitcoin
 		
 		if ($CONFIG->debug) {
 		    $amount = self::toSatoshi(0.00001);
-		    error_log("BITCOIN: We're in debug mode, so we're squishing the result to $amount");
+		    error_log("BITCOIN: Pagehandler - We're in debug mode, so we're squishing the result to $amount");
 		}
 		
 		/**
