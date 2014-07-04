@@ -349,7 +349,7 @@ class blockchain extends bitcoin
 	    if (!$order) throw new \Exception("Sorry, no order could be found.");
 	    
 	    // Verify security markers 
-	    if ($_GET['transaction_hash']!=$order->last_transaction_hash)
+	    if (($_GET['transaction_hash']!=$order->last_transaction_hash) && ($_GET['input_transaction_hash']!=$order->last_transaction_hash))
 		throw new \Exception('Sorry, but the transactions do not match up!');
 	    
 	    if ($_GET['minds_tid']!=$order->pay_transaction_id)
@@ -459,7 +459,16 @@ class blockchain extends bitcoin
 		
 		
 		// Then use wallet to send payment
-		$transaction_hash = bitcoin()->sendPayment($wallet->guid, $receive_address, $amount);
+		if (!$CONFIG->debug)
+		    $transaction_hash = bitcoin()->sendPayment($wallet->guid, $receive_address, $amount);
+		else {
+		    $transaction_hash = md5(rand());
+		    
+		    // Debug, so lets skip sending the payment now
+		    error_log("Bitcoin: We're skipping sending payment for now in debug mode. Generating a random tx as $transaction_hash.");
+		    error_log("Bitcoin: You can manually trigger the callback with documented values by hitting the following URL");
+		    error_log("Bitcoin: $callback_url&transaction_hash=$transaction_hash&input_transaction_hash=$transaction_hash");
+		}
 		if (!$transaction_hash)
 			throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
 		
