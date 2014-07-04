@@ -42,7 +42,9 @@ foreach($basket as $item){
 }
 $order->items = serialize($items);
 
+$order->pay_transaction_id = generate_random_cleartext_password(); // Create a random transaction identifier. This is used by some payment handlers to validate that that a transaction return isn't a martian.
 $order->amount = $amount;
+$order->currency = serialize(pay_get_currency()); // Store the currency (we need this for currency conversions)
 $order->status = 'created';
 
 // Flag as recurring
@@ -51,7 +53,7 @@ if ($recurring)
 
 $order->access_id = 1;
 
-$order->payment_method = 'paypal';
+$order->payment_method = get_input('handler', 'paypal');
 
 if($order->save()){
 	\elgg_trigger_plugin_hook('notification', 'all', array(
