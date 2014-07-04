@@ -55,6 +55,9 @@ class blockchain extends bitcoin
 		error_log("Bitcoin: Found blockchain subscriptions..." . print_r($results, true));
 		
 		foreach ($results as $r) {
+		    
+		    error_log("Bitcoin: Processing subscription {$r->guid}, due date " . date('r', $r->due_ts));
+		    
 		    if (
 			    ($now > $r->due_ts) && // Due
 			    (!$r->locked) && // not locked
