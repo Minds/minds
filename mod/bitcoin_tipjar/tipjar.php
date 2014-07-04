@@ -60,9 +60,13 @@ class tipjar extends \ElggPlugin
 	
 	if (!$receive_address)
 	{
+	    error_log("Bitcoin: Using system receive address");
+	    
 	    // Save against minds, but account for it internally
 	    $using_system_address = true;
 	    $receive_address = bitcoin\bitcoin()->getSystemReceiveAddress();    
+	    
+	    error_log("Bitcoin: System receive address is $receive_address");
 	}
 	
 	if (!$receive_address)
