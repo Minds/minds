@@ -902,6 +902,8 @@ class blockchain extends bitcoin
 		    elgg_get_site_url() . 'blockchain/endpoint/receivingaddress/'
 		    );
 	
+	error_log("Bitcoin: System receive address is $ra");
+	
 	$ia = elgg_set_ignore_access($ia);
 	
 	return $ra;
