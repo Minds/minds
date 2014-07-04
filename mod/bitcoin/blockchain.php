@@ -399,7 +399,7 @@ class blockchain extends bitcoin
 		error_log("BITCOIN: Converted value to $amount satoshi");
 		
 		if ($CONFIG->debug) {
-		    $amount = self::toSatoshi(0.00001);
+		    $amount = self::toSatoshi(0.00002);
 		    error_log("BITCOIN: Pagehandler - We're in debug mode, so we're squishing the result to $amount");
 		}
 		
