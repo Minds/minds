@@ -42,8 +42,8 @@ class blockchain extends bitcoin
 	    
 	    // Retrieve all recurring payments which are outstanding and not being processed
 	    while ($results = elgg_get_entities(array(
-		'types' => 'object',
-		'subtypes' => 'blockchain_subscription',
+		'type' => 'object',
+		'subtype' => 'blockchain_subscription',
 		'limit' => $limit,
 		'offset' => $offset
 	    ))) {
@@ -451,19 +451,24 @@ class blockchain extends bitcoin
 		    $item = get_entity($order->object_guid, 'object');
 		    $expires = $item->expires;
 		    if (!$expires) $expires = MINDS_EXPIRES_YEAR;
-		    $ia = elgg_set_ignore_access($ia);
+		    
             
 		    // Create a future dated subscription marker to re-order this subscription after a certain date (picked up by our cron tracker)
 		    $subscription = new \ElggObject();
 		    $subscription->subtype = 'blockchain_subscription';
 		    $subscription->owner_guid = $order->owner_guid;
+		    $subscription->access_id = ACCESS_PRIVATE;
+		    
+		    $guid = $subscription->save();
+		    
 		    $subscription->order_guid = $order->guid;
 		    $subscription->renew_period = $expires;
 		    $subscription->due_ts = time() + $expires;
 		    $subscription->amount = $params['amount'];
 		    $subscription->currency = $currency;
 		    
-		    $guid = $subscription->save();
+		    $ia = elgg_set_ignore_access($ia);
+		    
 		    if (!$guid)
 			throw new \Exception ("There was a problem creating your subscription, you have not been charged. Please try again, or contact Minds for help.");
 		
