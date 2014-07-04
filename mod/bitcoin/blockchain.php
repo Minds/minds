@@ -43,11 +43,10 @@ class blockchain extends bitcoin
 	    // Retrieve all recurring payments which are outstanding and not being processed
 	    while ($results = elgg_get_entities(array(
 		'type' => 'object',
-		'subtype' => 'blockchain_subscription',
+		'subtype' => 'blockchainsubscription',
 		'limit' => $limit,
 		'offset' => $offset
 	    ))) {
-		echo "here";
 		error_log("Bitcoin: Found blockchain subscriptions..." . print_r($results, true));
 		
 		foreach ($results as $r) {
@@ -150,17 +149,23 @@ class blockchain extends bitcoin
 	    }
 	    
 	    // Delete all processed 
-	    error_log("Bitcoin: Removing processed ids: " . print_r($processed, true));
+	    error_log("Bitcoin: Removing processed ids: ");
 	    foreach ($processed as $guid){
 		$e = get_entity($guid);
 		$e->delete();
+		
+		error_log("Bitcoin: $guid deleted");
 	    }
 	    
 	    // Now, update the indexes
 	    error_log("Bitcoin: Updating indexes");
 	    $db = new \minds\core\data\call('entities_by_time');
-	    foreach ($new_indexes as $order_guid => $guid)
+	    foreach ($new_indexes as $order_guid => $guid) {
+		
+		error_log("Bitcoin: Index $order_guid => $guid");
+		
 		$db->insert('object:pay:blockchain:subscription', array($order_guid => $guid));
+	    }
 	    
 	    $ia = elgg_set_ignore_access($ia);
 	    
@@ -457,7 +462,7 @@ class blockchain extends bitcoin
             
 		    // Create a future dated subscription marker to re-order this subscription after a certain date (picked up by our cron tracker)
 		    $subscription = new \ElggObject();
-		    $subscription->subtype = 'blockchain_subscription';
+		    $subscription->subtype = 'blockchainsubscription';
 		    $subscription->owner_guid = $order->owner_guid;
 		    $subscription->access_id = ACCESS_PRIVATE;
 		    
