@@ -43,10 +43,13 @@ class blockchain extends bitcoin
 	    // Retrieve all recurring payments which are outstanding and not being processed
 	    while ($results = elgg_get_entities(array(
 		'type' => 'object',
-		'subtype' => 'blockchainsubscription',
+		'subtype' => 'blockchain_subscription',
 		'limit' => $limit,
-		'offset' => $offset
+		'offset' => $offset,
+		'timebased' => false,
+                'attrs' => array('type' => 'object', 'subtype' => 'blockchain_subscription')
 	    ))) {
+		echo "here";
 		error_log("Bitcoin: Found blockchain subscriptions..." . print_r($results, true));
 		
 		foreach ($results as $r) {
@@ -462,7 +465,7 @@ class blockchain extends bitcoin
             
 		    // Create a future dated subscription marker to re-order this subscription after a certain date (picked up by our cron tracker)
 		    $subscription = new \ElggObject();
-		    $subscription->subtype = 'blockchainsubscription';
+		    $subscription->subtype = 'blockchain_subscription';
 		    $subscription->owner_guid = $order->owner_guid;
 		    $subscription->access_id = ACCESS_PRIVATE;
 		    
