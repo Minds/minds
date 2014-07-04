@@ -47,7 +47,7 @@ class blockchain extends bitcoin
 		'limit' => $limit,
 		'offset' => $offset
 	    ))) {
-		
+		echo "here";
 		error_log("Bitcoin: Found blockchain subscriptions..." . print_r($results, true));
 		
 		foreach ($results as $r) {
