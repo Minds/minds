@@ -53,7 +53,7 @@ if ($recurring)
 
 $order->access_id = 1;
 
-$order->payment_method = 'paypal';
+$order->payment_method = get_input('handler', 'paypal');
 
 if($order->save()){
 	notification_create(array($order->seller_guid, $order->getOwnerGUID()), 0, $order->getGuid(), array('notification_view'=>'pay_order'));
