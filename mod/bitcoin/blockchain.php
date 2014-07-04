@@ -896,12 +896,14 @@ class blockchain extends bitcoin
 	
 	$ra = $this->getSystemReceiveAddress();
 	
-	if (!$ra) 
+	if (!$ra) {
 	    $ra = $this->blockchainGenerateReceivingAddress(
 		    elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin'), 
 		    elgg_get_site_url() . 'blockchain/endpoint/receivingaddress/'
 		    );
-	
+	    elgg_set_plugin_setting('central_bitcoin_receive_address', 'ra', 'bitcoin');
+	}
+	    
 	error_log("Bitcoin: System receive address is $ra");
 	
 	$ia = elgg_set_ignore_access($ia);
