@@ -42,8 +42,8 @@ class blockchain extends bitcoin
 	    
 	    // Retrieve all recurring payments which are outstanding and not being processed
 	    while ($results = elgg_get_entities(array(
-		'type' => 'object',
-		'subtype' => 'blockchain_subscription',
+		'types' => 'object',
+		'subtypes' => 'blockchain_subscription',
 		'limit' => $limit,
 		'offset' => $offset
 	    ))) {
