@@ -42,7 +42,7 @@ foreach($basket as $item){
 }
 $order->items = serialize($items);
 
-$order->pay_transaction_id = md5(rand()); // Create a random transaction identifier. This is used by some payment handlers to validate that that a transaction return isn't a martian.
+$order->pay_transaction_id = generate_random_cleartext_password(); // Create a random transaction identifier. This is used by some payment handlers to validate that that a transaction return isn't a martian.
 $order->amount = $amount;
 $order->currency = serialize(pay_get_currency()); // Store the currency (we need this for currency conversions)
 $order->status = 'created';
