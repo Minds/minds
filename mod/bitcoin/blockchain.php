@@ -68,11 +68,24 @@ class blockchain extends bitcoin
 			    $amount = bitcoin()->convertToBTC($amount, $currency);
 			    if (!$amount) throw new \Exception("Problem converting $currency into BTC");
 			    
+			    $amount = bitcoin()->toSatoshi($amount);
+			    
 			    if (!$minds_address) throw new \Exception("Minds BTC account is not configured, you should not be seeing this!");
+			    $minds_address = $order->minds_receive_address;
+			    if (!$minds_address) throw new \Exception("Order has no transaction address, payment could not be sent");
 			    
 			    // Attempt to put through the payment
-			    if (!bitcoin()->sendPayment($wallet->guid, $minds_address, $amount))
+			    $transaction_hash = bitcoin()->sendPayment($wallet->guid, $minds_address, $amount);
+			    if (!$transaction_hash)
 				throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
+			    
+			    // Store new transaction hash and annotate for history
+			    $order->last_transaction_hash = $transaction_hash;
+			    $order->annotate('order_details', serialize(array(
+				'amount' => $amount,
+				'to' => $minds_address,
+				'transaction_hash' => $transaction_hash
+			    )));
 			    
 			    // Got here, so payment was successful - schedule for garbage collection and create a receipt
 			    
@@ -336,6 +349,9 @@ class blockchain extends bitcoin
 	    if (!$order) throw new \Exception("Sorry, no order could be found.");
 	    
 	    // Verify security markers 
+	    if ($_GET['transaction_hash']!=$order->last_transaction_hash)
+		throw new \Exception('Sorry, but the transactions do not match up!');
+	    
 	    if ($_GET['minds_tid']!=$order->pay_transaction_id)
 		throw new \Exception('Sorry, but the security markers do not match up!');
 	    
@@ -380,9 +396,14 @@ class blockchain extends bitcoin
 	    $return_url = $urls['return'];
 	    $cancel_url = $urls['cancel'];
 	    $callback_url =  $urls['callback'].'/bitcoin?minds_tid=' . $order->pay_transaction_id; // Set bitcoin callback endpoint
+	    
+	    if (!$order->pay_transaction_id) throw new \Exception('Payment order has no transaction ID, you should not be seeing this.');
 	
-	    if (bitcoin()->blockchainGenerateReceivingAddress($wallet->wallet_address, $callback_url)) {
+	    if ($receive_address = bitcoin()->blockchainGenerateReceivingAddress($wallet->wallet_address, $callback_url)) {
 	
+		// Save the receive address for this transaction (so we get pinged)
+		$order->minds_receive_address = $receive_address;
+		
 		// Convert amount into bitcoins
 		$currency = unserialize($order->currency);
 		if (!$currency) $currency = pay_get_currency();
@@ -438,8 +459,18 @@ class blockchain extends bitcoin
 		
 		
 		// Then use wallet to send payment
-		if (!bitcoin()->sendPayment($wallet->guid, $minds_address, $amount))
+		$transaction_hash = bitcoin()->sendPayment($wallet->guid, $receive_address, $amount);
+		if (!$transaction_hash)
 			throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
+		
+		$order->last_transaction_hash = $transaction_hash; // Store transaction handler hash
+		
+		// And annotate for prosterity
+		$order->annotate('order_details', serialize(array(
+		    'amount' => $amount,
+		    'to' => $receive_address,
+		    'transaction_hash' => $transaction_hash
+		)));
 		
 		forward($return_url);
 
