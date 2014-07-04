@@ -323,6 +323,7 @@ class blockchain extends bitcoin
 
     public static function cancelRecurringPaymentCallback($order_guid) {
 	
+	error_log("Bitcoin: Cancelling order $order_guid");
 	
 	// Look for any future subscriptions and delete
 	$db = new \minds\core\data\call('entities_by_time');
