@@ -148,7 +148,7 @@ class blockchain extends bitcoin
 	    }
 	    
 	    // Now, update the indexes
-	    $db = new minds\core\data\call('entities_by_time');
+	    $db = new \minds\core\data\call('entities_by_time');
 	    foreach ($new_indexes as $order_guid => $guid)
 		$db->insert('object:pay:blockchain:subscription', array($order_guid => $guid));
 	    
