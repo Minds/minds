@@ -18,6 +18,8 @@ class tipjar extends \ElggPlugin
     public function __construct(){
 	    parent::__construct('bitcoin_tipjar');
 
+	    tipjar::$tipjar = $this;
+	    
 	    $this->init();
     }
      
