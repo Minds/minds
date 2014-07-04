@@ -69,22 +69,23 @@ class blockchain extends bitcoin
 			
 			$r->locked = time(); // Lock it to prevent reprocessing
 			
+			// Get basic info
+			$currency = $r->currency;
+			$amount = $r->amount;
+			
 			// Try and process payment
 			try {
 			    error_log("Bitcoin: Order GUID is {$r->order_guid}");
 			    $order = get_entity($r->order_guid);
 			    if (!$order) throw new \Exception("No order was found attached to this subscription!");
 			    
-			    $currency = unserialize($order->currency);
-			    if (!$currency) $currency = pay_get_currency();
-			    if (is_array($currency)) $currency = $currency['code'];
-
 			    $current_user = $user = get_user($order->owner_guid); 
 			    if (!$user) throw new \Exception("No user was found attached to this subscription!");
 			
 			    $wallet = $this->getWallet($user);
 			    if (!$wallet) throw new \Exception ('User has no bitcoin wallet defined.');
 			    
+			    error_log("Bitcoin: Converting $amount $currency to BTC");
 			    $amount = bitcoin()->convertToBTC($amount, $currency);
 			    if (!$amount) throw new \Exception("Problem converting $currency into BTC");
 			    
