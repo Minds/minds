@@ -74,6 +74,10 @@ class blockchain extends bitcoin
 			    error_log("Bitcoin: Order GUID is {$r->order_guid}");
 			    $order = get_entity($r->order_guid);
 			    if (!$order) throw new \Exception("No order was found attached to this subscription!");
+			    
+			    $currency = unserialize($order->currency);
+			    if (!$currency) $currency = pay_get_currency();
+			    if (is_array($currency)) $currency = $currency['code'];
 
 			    $current_user = $user = get_user($order->owner_guid); 
 			    if (!$user) throw new \Exception("No user was found attached to this subscription!");
