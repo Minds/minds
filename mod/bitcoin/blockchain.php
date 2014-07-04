@@ -30,6 +30,9 @@ class blockchain extends bitcoin
 	    
 	    error_log("Bitcoin: Daily cron job triggered");
 	    
+	    
+	    $ia = elgg_set_ignore_access();
+	    
 	    $now = time();
 	    $offset = 0;
 	    $limit = 50;
@@ -37,8 +40,6 @@ class blockchain extends bitcoin
 	    $new_indexes = array();
 	    $current_user = null;
 	    $minds_address = elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin');
-	    
-	    $ia = elgg_set_ignore_access();
 	    
 	    // Retrieve all recurring payments which are outstanding and not being processed
 	    while ($results = elgg_get_entities(array(
