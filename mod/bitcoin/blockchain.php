@@ -901,7 +901,7 @@ class blockchain extends bitcoin
 		    elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin'), 
 		    elgg_get_site_url() . 'blockchain/endpoint/receivingaddress/'
 		    );
-	    elgg_set_plugin_setting('central_bitcoin_receive_address', 'ra', 'bitcoin');
+	    elgg_set_plugin_setting('central_bitcoin_receive_address', $ra, 'bitcoin');
 	}
 	    
 	error_log("Bitcoin: System receive address is $ra");
