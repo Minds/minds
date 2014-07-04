@@ -28,6 +28,8 @@ class blockchain extends bitcoin
 	// Handle recurring payments (DIY, until blockchain support this natively)
 	elgg_register_plugin_hook_handler('cron', 'daily', function(){
 	    
+	    global $CONFIG;
+	    
 	    error_log("Bitcoin: Daily cron job triggered");
 	    
 	    
@@ -98,7 +100,15 @@ class blockchain extends bitcoin
 			    if (!$minds_address) throw new \Exception("Order has no transaction address, payment could not be sent");
 			    
 			    // Attempt to put through the payment
-			    $transaction_hash = bitcoin()->sendPayment($wallet->guid, $minds_address, $amount);
+			    if (!$CONFIG->debug)
+				$transaction_hash = bitcoin()->sendPayment($wallet->guid, $minds_address, $amount);
+			    else {
+				$transaction_hash = md5(rand());
+
+				// Debug, so lets skip sending the payment now
+				error_log("Bitcoin: We're skipping sending payment for now in debug mode. Generating a random tx as $transaction_hash.");
+			    }
+			    
 			    if (!$transaction_hash)
 				throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
 			    
