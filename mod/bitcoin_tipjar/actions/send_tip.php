@@ -21,5 +21,5 @@
 
     } catch (\Exception $e) {
 	register_error($e->getMessage());
-	
+	error_log('Bitcoin: ' . $e->getMessage());
     }
