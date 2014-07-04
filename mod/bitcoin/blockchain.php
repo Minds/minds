@@ -432,6 +432,8 @@ class blockchain extends bitcoin
 		if ($params['recurring'])
 		{
             
+		    error_log("Bitcoin: Recurring payment, creating a subscription...");
+		    
 		    // Set recurring period based on expiry (default 1 year)
 		    $ia = elgg_set_ignore_access($ia);
 		    $item = get_entity($order->object_guid, 'object');
@@ -453,6 +455,8 @@ class blockchain extends bitcoin
 		    if (!$guid)
 			throw new \Exception ("There was a problem creating your subscription, you have not been charged. Please try again, or contact Minds for help.");
 		
+		    error_log("Bitcoin: Subscription created, next subscription is $guid");
+		    
 		    // Create a lookup, so we can easily cancel this order in future
 		    $db = new \minds\core\data\call('entities_by_time');
 		    $db->insert('object:pay:blockchain:subscription', array($order->guid => $guid));
