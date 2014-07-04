@@ -701,8 +701,8 @@ class blockchain extends bitcoin
 	    {
 		error_log("BITCOIN: Got a wallet, making a call.");
 		
-		if ($CONFIG->debug && ($amount_in_satoshi > self::toSatoshi(0.00001))) {
-		    $amount_in_satoshi = self::toSatoshi(0.00001);
+		if ($CONFIG->debug && ($amount_in_satoshi > self::toSatoshi(0.00002))) {
+		    $amount_in_satoshi = self::toSatoshi(0.00002);
 		    error_log("BITCOIN: We're in debug mode, so we're squishing the result to $amount_in_satoshi");
 		}
 		
