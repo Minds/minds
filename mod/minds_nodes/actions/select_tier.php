@@ -31,7 +31,7 @@ if ($tier = get_entity(get_input('tier_id'),'object')) {
     $order->items = serialize($items);
 
     $order->amount = $tier->price;
-    $order->pay_transaction_id = md5(rand()); // Create a random transaction identifier. This is used by some payment handlers to validate that that a transaction return isn't a martian.
+    $order->pay_transaction_id = generate_random_cleartext_password(); // Create a random transaction identifier. This is used by some payment handlers to validate that that a transaction return isn't a martian.
 
     $order->access_id = 1;
 
