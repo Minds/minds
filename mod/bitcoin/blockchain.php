@@ -447,8 +447,10 @@ class blockchain extends bitcoin
 		    error_log("Bitcoin: Recurring payment, creating a subscription...");
 		    
 		    // Set recurring period based on expiry (default 1 year)
-		    $ia = elgg_set_ignore_access($ia);
+		    $ia = elgg_set_ignore_access();
 		    $item = get_entity($order->object_guid, 'object');
+		    if (!$item) throw new \Exception("Bitcoin: Couldn't retrieve the order item");
+		    
 		    $expires = $item->expires;
 		    if (!$expires) $expires = MINDS_EXPIRES_YEAR;
 		    
