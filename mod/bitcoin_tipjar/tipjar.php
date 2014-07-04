@@ -76,8 +76,10 @@ class tipjar extends \ElggPlugin
 	$wallet = bitcoin\bitcoin()->getWallet($user);
 	if (!$wallet) throw new \Exception("No wallet found, why not create one?");
 	
+	$amount = bitcoin\bitcoin()->toBTC($amount);
+	
 	// Send an log the payment
-	if (bitcoin\bincoin()->sendPayment($wallet->guid, $receive_address, bitcoin\bitcoin()->toBTC($amount))) {
+	if (bitcoin\bitcoin()->sendPayment($wallet->guid, $receive_address, $amount)) {
 	    $this->logTip($user, $to, $amount, $using_system_address);
 	}
 	
