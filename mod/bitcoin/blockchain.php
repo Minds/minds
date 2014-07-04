@@ -894,7 +894,7 @@ class blockchain extends bitcoin
 	
 	$ia = elgg_set_ignore_access();
 	
-	$ra = $this->getSystemReceiveAddress();
+	//$ra = $this->getSystemReceiveAddress();
 	
 	if (!$ra) {
 	    $ra = $this->blockchainGenerateReceivingAddress(
