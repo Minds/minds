@@ -49,7 +49,9 @@ class blockchain extends bitcoin
 		'timebased' => false,
                 'attrs' => array('type' => 'object', 'subtype' => 'blockchain_subscription')
 	    ))) {
-		echo "here";
+		
+		$offset+= $limit;
+		
 		error_log("Bitcoin: Found blockchain subscriptions..." . print_r($results, true));
 		
 		foreach ($results as $r) {
