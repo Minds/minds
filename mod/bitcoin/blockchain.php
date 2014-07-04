@@ -891,6 +891,9 @@ class blockchain extends bitcoin
     }
 
     public function createSystemReceiveAddress() {
+	
+	$ia = elgg_set_ignore_access();
+	
 	$ra = $this->getSystemReceiveAddress();
 	
 	if (!$ra) 
@@ -898,6 +901,8 @@ class blockchain extends bitcoin
 		    elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin'), 
 		    elgg_get_site_url() . 'blockchain/endpoint/receivingaddress/'
 		    );
+	
+	$ia = elgg_set_ignore_access($ia);
 	
 	return $ra;
     }
