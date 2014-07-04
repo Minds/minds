@@ -463,6 +463,7 @@ class blockchain extends bitcoin
 		    
 		    $guid = $subscription->save();
 		    
+		    $subscription = get_entity($guid);
 		    $subscription->order_guid = $order->guid;
 		    $subscription->renew_period = $expires;
 		    $subscription->due_ts = time() + $expires;
