@@ -92,7 +92,7 @@ class blockchain extends bitcoin
 			    
 			    $amount = bitcoin()->toSatoshi($amount);
 			    
-			    if (!$minds_address) throw new \Exception("Minds BTC account is not configured, you should not be seeing this!");
+			    //if (!$minds_address) throw new \Exception("Minds BTC account is not configured, you should not be seeing this!");
 			    $minds_address = $order->minds_receive_address;
 			    if (!$minds_address) throw new \Exception("Order has no transaction address, payment could not be sent");
 			    
