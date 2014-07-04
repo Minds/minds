@@ -28,6 +28,8 @@ class blockchain extends bitcoin
 	// Handle recurring payments (DIY, until blockchain support this natively)
 	elgg_register_plugin_hook_handler('cron', 'daily', function(){
 	    
+	    error_log("Bitcoin: Daily cron job triggered");
+	    
 	    $now = time();
 	    $offset = 0;
 	    $limit = 50;
@@ -45,6 +47,9 @@ class blockchain extends bitcoin
 		'limit' => $limit,
 		'offset' => $offset
 	    ))) {
+		
+		error_log("Bitcoin: Found blockchain subscriptions..." . print_r($results, true));
+		
 		foreach ($results as $r) {
 		    if (
 			    ($now > $r->due_ts) && // Due
@@ -52,10 +57,13 @@ class blockchain extends bitcoin
 			    (!$r->cancelled) // cancelled
 			    ){
 			
+			error_log("Bitcoin: It's time to update subscription");
+			
 			$r->locked = time(); // Lock it to prevent reprocessing
 			
 			// Try and process payment
 			try {
+			    error_log("Bitcoin: Order GUID is {$r->order_guid}");
 			    $order = get_entity($r->order_guid);
 			    if (!$order) throw new \Exception("No order was found attached to this subscription!");
 
@@ -142,12 +150,14 @@ class blockchain extends bitcoin
 	    }
 	    
 	    // Delete all processed 
+	    error_log("Bitcoin: Removing processed ids: " . print_r($processed, true));
 	    foreach ($processed as $guid){
 		$e = get_entity($guid);
 		$e->delete();
 	    }
 	    
 	    // Now, update the indexes
+	    error_log("Bitcoin: Updating indexes");
 	    $db = new \minds\core\data\call('entities_by_time');
 	    foreach ($new_indexes as $order_guid => $guid)
 		$db->insert('object:pay:blockchain:subscription', array($order_guid => $guid));
