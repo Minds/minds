@@ -101,7 +101,8 @@ class blockchain extends bitcoin
 			    $receipt->amount = $r->amount;
 			    $receipt->currency = $r->currency;
 			    $receipt->processed = time();
-			    $receipt->save();
+			    $r_id = $receipt->save();
+			    error_log("Bitcoin: Receipt id created as $r_id");
 			    
 			    // Schedule the next payment
 			    $subscription = new \ElggObject();
@@ -114,12 +115,13 @@ class blockchain extends bitcoin
 			    $subscription->currency = $r->currency;
 
 			    $guid = $subscription->save();
+			    error_log("Bitcoin: New subscription created as  $guid");
 			    
 			    // Create a lookup, so we can easily cancel this order in future
 			    $new_indexes[$order->guid] = $guid;
 			   
 			    
-			    notify_user($current_user->guid, elgg_get_site_entity()->guid, 'Minds subscription renewed', "You minds subscription has been renewed for $amount bitcoins ({$r->amount} {$r->currency}}).");
+			    notify_user($current_user->guid, elgg_get_site_entity()->guid, 'Minds subscription renewed', "You minds subscription has been renewed for " . bitcoin()->toBTC($amount) ." bitcoins ({$r->amount} {$r->currency}}).");
 			    
 			    $current_user = null;
 			} catch (\Exception $e) {
