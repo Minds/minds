@@ -1,6 +1,6 @@
 <div class="tipjar">
     
-    <input type="hidden" name="to_user" value="<?= $vars['to_user']; ?>" />
+    <input type="hidden" name="to_user" value="<?= $vars['to_user']->guid; ?>" />
     <input type="hidden" name="currency" value="USD" />
     <select name="value">
 	<option value="1" selected>1 USD</option>
