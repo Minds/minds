@@ -69,6 +69,7 @@ class blockchain extends bitcoin
 			error_log("Bitcoin: It's time to update subscription");
 			
 			$r->locked = time(); // Lock it to prevent reprocessing
+			$r->save();
 			
 			// Get basic info
 			$currency = $r->currency;
@@ -152,6 +153,7 @@ class blockchain extends bitcoin
 			    // Unlock and try again next time
 			    $r->locked = 0;
 			    $r->failures++;
+			    $r->save();
 			    
 			    // Notify the user that something went wrong
 			    notify_user($current_user->guid, elgg_get_site_entity()->guid, 'Problem with your Minds subscription', 'There was a problem processing your subscription: \n\n' . $e->getMessage());
