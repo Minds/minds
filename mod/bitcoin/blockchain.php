@@ -481,6 +481,9 @@ class blockchain extends bitcoin
 		    'transaction_hash' => $transaction_hash
 		)));
 		
+		// update to process
+		pay_update_order_status($order->guid, 'awaitingpayment');
+		
 		forward($return_url);
 
 	    } else 
