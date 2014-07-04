@@ -464,11 +464,15 @@ class blockchain extends bitcoin
 		    $guid = $subscription->save();
 		    
 		    $subscription = get_entity($guid);
+		    if (!$subscription) throw new \Exception("Bitcoin: Could't retrieve $guid");
+		    
 		    $subscription->order_guid = $order->guid;
 		    $subscription->renew_period = $expires;
 		    $subscription->due_ts = time() + $expires;
 		    $subscription->amount = $params['amount'];
 		    $subscription->currency = $currency;
+		    
+		    $subscription->save();
 		    
 		    $ia = elgg_set_ignore_access($ia);
 		    
