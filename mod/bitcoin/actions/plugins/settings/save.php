@@ -8,9 +8,6 @@ try {
     elgg_set_plugin_setting('api_code', $params['api_code'], 'bitcoin');
     elgg_set_plugin_setting('satoshi_to_new_user', $params['satoshi_to_new_user'], 'bitcoin');
     
-    // Generate receive address if not already created
-    \minds\plugin\bitcoin\bitcoin()->createSystemReceiveAddress();
-    
     if ($wallet_guid = get_input('wallet_guid'))
     {
 	$ia = elgg_set_ignore_access();
@@ -25,6 +22,11 @@ try {
 	
 	$ia = elgg_set_ignore_access($ia);
     }
+    
+    
+    // Generate receive address if not already created
+    \minds\plugin\bitcoin\bitcoin()->createSystemReceiveAddress();
+    
     
 } catch (Exception $ex) {
     register_error($ex->getMessage());
