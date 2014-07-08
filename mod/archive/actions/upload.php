@@ -9,7 +9,7 @@
  * 
  * THIS FILE IS A MESS!! CLEAN IT UP..
  */
-elgg_load_library('archive:kaltura');
+ 
 elgg_load_library('tidypics:upload');
 
 // Get variables
@@ -31,53 +31,38 @@ $entity = get_entity($guid, 'object');
 $container_guid = elgg_get_logged_in_user_guid();
 $user_guid = elgg_get_logged_in_user_guid();
 
-elgg_make_sticky_form('generic-upload');
-
-//if ($guid) //TODO: add check for licence in UI
-//{
-//    if($license == 'not-selected')
-//    {
-//        register_error(elgg_echo('minds:license:not-selected'));
-//        echo "not-selected";
-//        exit;
-//    }
-//}
-
-//Setting Kaltura object
-$mediaEntry = new KalturaMediaEntry();
-$mediaEntry->name = strip_tags($title);
-$mediaEntry->description = $desc;
-
-if($entryId) //Only if we have an entryId
-    $mediaEntry->id = $entryId;
-
-if ($mime_type != null)
-    $mediaEntry->mediaType = $mime_type;
-
-// If Video/Audio then upload to Kaltura and create entity in Elgg
-if(file_get_simple_type($mime_type) == 'video' || file_get_simple_type($mime_type) == 'audio' || $mediaEntry->mediaType == 'video' || $mediaEntry->mediaType == 'audio'){
-	if(!$entity){
-		$entity = new ElggObject();
-		$entity->subtype = 'kaltura_video';
-	}
+switch($mime_type){
+	case "video":
+	case "audio":
+		$entity = new minds\plugin\archive\entities\video();
+		
+		$entity->title = $title;
+		$entity->description = $desc;
+		$entity->owner_guid = elgg_get_logged_in_user_guid();
+		$entity->license = $license;
+		$entity->upload($_FILES['fileData']['tmp_name']);
 	
-	$entity->title = $title;
-	$entity->description = $desc;
-	$entity->super_subtype = 'archive';
-	$entity->owner_guid = elgg_get_logged_in_user_guid();
-	$entity->license = $license;
-	$entity->thumbnail_sec = $thumbSec;
-	$entity->kaltura_video_id = $mediaEntry->id;
-	$entity->access_id = $access_id;
+		if($guid = $entity->save()){
+			
+	    	echo strval($guid);
+			//	system_message(elgg_echo('archive:upload:success'));
+			exit;
+			
+		} else {
+			system_message(elgg_echo('archive:upload:failed'));
+		}
 	
-	if($guid = $entity->save()){
-    		echo strval($guid);
-	//	system_message(elgg_echo('archive:upload:success'));
-		exit;
-	} else {
-		system_message(elgg_echo('archive:upload:failed'));
-	}
-} elseif (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType == 'image'){
+		break;
+		
+	case "image":
+		
+		break;
+	default:
+		
+	
+}
+
+if (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType == 'image'){
 	
 	// If Image then create an album. Don't upload to Kaltura.
  	if ($guid){

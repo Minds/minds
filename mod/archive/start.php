@@ -152,7 +152,9 @@ function minds_archive_init() {
 	elgg_register_action("archive/feature", $action_path . "feature.php");
 	elgg_register_action("archive/save", $action_path . "save.php");
 	elgg_register_action("archive/add_album", $action_path . "tidypics/add_album.php");
+	
     elgg_register_action("archive/upload", $action_path . "upload.php");
+	
     elgg_register_action("archive/deleteElggVideo" , $action_path . "deleteAngular.php");
     elgg_register_action("archive/selectAlbum" , $action_path . "tidypics/album.php");
     elgg_register_action("archive/getKSession" , $action_path . "generateKalturaSession.php");
@@ -274,19 +276,6 @@ function minds_archive_page_setup() {
 function minds_archive_page_handler($page) {
 		
 	global $CONFIG;
-	
-	elgg_load_library('archive:kaltura');
-
-/*	if(!elgg_get_plugin_setting("kaltura_server_url","archive")){
-		// If the URL is just 'feeds/username', or just 'feeds/', load the standard feeds index
-		include(dirname(__FILE__) . "/missconfigured.php");
-		return true;
-	}*/
-
-	// Need to have comments js/css available for image lightbox
-	elgg_load_css('minds_comments');
-	elgg_load_js('minds_comments');
-	elgg_load_js('hj.framework.ajax');
 	
 	switch($page[0]) {
 		case 'all':

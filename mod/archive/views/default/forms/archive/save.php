@@ -3,7 +3,6 @@
  * Form for editing UPLOADED content
  */
 
-elgg_load_library('archive:kaltura');
 
 global $SKIP_KALTURA_REWRITE;
 //this is to avoid the embed video over the longtext box

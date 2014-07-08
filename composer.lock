@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3b6592fea2fab19ed53f0f82bb632adb",
+    "hash": "f27ac610a4d260ea1563e564ddc2cbe8",
     "packages": [
         {
             "name": "abeautifulsite/jquery-minicolors",
@@ -190,6 +190,33 @@
                 "web service"
             ],
             "time": "2014-05-07 17:04:22"
+        },
+        {
+            "name": "kramnorth/cinemr-php-sdk",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kramnorth/cinemr-php-sdk.git",
+                "reference": "da774563a3957536590f792319b39be46d9d7e3b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kramnorth/cinemr-php-sdk/zipball/da774563a3957536590f792319b39be46d9d7e3b",
+                "reference": "da774563a3957536590f792319b39be46d9d7e3b",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "cinemr.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "A PHP SDK for cinemr integration",
+            "time": "2014-07-08 13:57:00"
         },
         {
             "name": "monolog/monolog",

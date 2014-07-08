@@ -4,15 +4,6 @@
  *
  */
 
-try{
-	$kmodel = KalturaModel::getInstance();
-
-	$ks = $kmodel->getClientSideSession();
-	$serviceUrl = elgg_get_plugin_setting('kaltura_server_url', 'archive');
-	$partnerId = elgg_get_plugin_setting('partner_id', 'archive');
-}catch(Exception $e){
-	var_dump($e); exit;
-}
 $serverUrl = elgg_get_site_url();
 
 $container_guid = get_input('container_guid', elgg_get_logged_in_user_guid());
@@ -50,7 +41,6 @@ foreach($albums as $album){
 ?>
 
 <script>
-    var ks = "<?php echo $ks?>";
     var serviceUrl = "<?php echo $serviceUrl ?>";
     var partnerId = "<?php echo $partnerId ?>";
     var serverUrl = "<?php echo $serverUrl ?>";

@@ -1,7 +1,5 @@
 <?php
 
-//Check if the subtype is a video, image, album or file
-elgg_load_library('archive:kaltura');
 
 $guid = get_input('guid');
 $entity = get_entity($guid, 'object');

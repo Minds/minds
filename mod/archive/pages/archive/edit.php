@@ -1,8 +1,5 @@
 <?php
 
-// Load Elgg engine
-elgg_load_library('archive:kaltura');
-
 // Get the current page's owner
 $page_owner = elgg_get_page_owner_entity();
 if ($page_owner === false || is_null($page_owner)) {

@@ -3,9 +3,10 @@
 	"description": "The core minds social engine",
     "require": {
     	"twilio/sdk" : "master",
-	"thobbs/phpcassa": "master",
-	"elasticsearch/elasticsearch": "~1.0",
-    	"abeautifulsite/jquery-minicolors": "master"
+		"thobbs/phpcassa": "master",
+		"elasticsearch/elasticsearch": "~1.0",
+    	"abeautifulsite/jquery-minicolors": "master",
+    	"kramnorth/cinemr-php-sdk": "master"
     },
     "minimum-stability": "dev",
     "autoload": {

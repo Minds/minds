@@ -3,13 +3,10 @@
  * AngularJS uploader first pgae which load the angularJS.
  */
 
-// Include libraries from kaltura_upload original module.
 elgg_set_context('upload');
-elgg_load_library('archive:kaltura');
-elgg_load_library('archive:kaltura:editor');
+
 
 // Loading js's
-
 elgg_load_js('angular.min.js');
 elgg_load_js('angular-route.min.js');
 elgg_load_js('jquery.ui.widget.js');
@@ -17,11 +14,12 @@ elgg_load_js('jquery.fileupload.js');
 elgg_load_js('jquery.iframe-transport.js');
 
 // Load directives
-elgg_load_js('kaltura-thumbnail.js');
+//elgg_load_js('kaltura-thumbnail.js');
 // Load controllers
 elgg_load_js('UploadController.js');
 // Load services
 elgg_load_js('KalturaService.js');
+
 elgg_load_js('ElggService.js');
 elgg_load_js('app.js');
 // include css
