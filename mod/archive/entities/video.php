@@ -67,6 +67,7 @@ class video extends object{
 				'minds_guid' => $this->guid,
 				'minds_owner' => $this->owner_guid
 			));
+		return $this->guid;
 	}
 	
 	/**

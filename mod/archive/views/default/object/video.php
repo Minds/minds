@@ -6,8 +6,26 @@ $entity = elgg_extract('entity', $vars);
 $owner = $entity->getOwnerEntity(true);
 
 if($full){
+
+	elgg_load_js('player');
+	elgg_load_css('player');
+	$video = elgg_view('output/video', array(
+			'class' => 'archive-player',
+			'width' => '900px',
+			'height' => '480px',
+			'sources' => array(
+				$entity->getSourceUrl('720.webm') => 'video/webm',
+				$entity->getSourceUrl('360.webm') => 'video/webm',
+				$entity->getSourceUrl('360.mp4') => 'video/mp4',
+				$entity->getSourceUrl('720.mp4') => 'video/mp4'
+			)));
 	
-		
+	$body = $video;
+
+	echo elgg_view('object/elements/full', array(
+        	'body' => $body,
+	));
+	
 } else {
 		
 	$menu = elgg_view_menu('entity', array(
@@ -52,7 +70,7 @@ if($full){
 	$image = elgg_view('output/url', array(
 			'href' => $entity->getURL(),
 			'class' => 'uiVideoInline archive entity',
-			'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($entity->kaltura_video_id, 515, 290, 60, $entity->thumbnail_sec) . '\'/>',
+			//'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($entity->kaltura_video_id, 515, 290, 60, $entity->thumbnail_sec) . '\'/>',
 			'title' => $entity->title,
 		));
 	

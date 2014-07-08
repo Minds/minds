@@ -146,13 +146,12 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
         $scope.fileInfo[index]['description'] = "";
 		
         if($scope.fileInfo[index]['fileType'] == 'image') {
-			$scope.fileInfo[index]['albumId'] = $scope.albums[0].id;
-
-	    } 
-	    	
-		Elgg.uploadElggFile($scope.fileInfo[index], jQuery(elm), data, $scope).then(function(guid){ 
-   			$scope.fileInfo[index]['guid'] = guid;
-   		});
+		$scope.fileInfo[index]['albumId'] = $scope.albums[0].id;
+	} 
+	    
+	Elgg.uploadElggFile($scope.fileInfo[index], jQuery(elm), data, $scope).then(function(guid){ 
+   		$scope.fileInfo[index]['guid'] = guid;
+   	});
 
     };
 
@@ -201,7 +200,7 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
     $scope.bindUploaderEvents = function(elm) {
         jQuery(elm).bind('fileuploadprogress', function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-	
+	console.log(progress, data);
             if($scope.fileInfo[data.index]) //Only if element is found
             {
                 $scope.fileInfo[data.index]['progress'] = progress;

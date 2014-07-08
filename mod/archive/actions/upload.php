@@ -41,6 +41,7 @@ switch($mime_type){
 		$entity->owner_guid = elgg_get_logged_in_user_guid();
 		$entity->license = $license;
 		$entity->upload($_FILES['fileData']['tmp_name']);
+		$entity->access_id = 2;
 	
 		if($guid = $entity->save()){
 			
@@ -61,7 +62,7 @@ switch($mime_type){
 		
 	
 }
-
+exit;
 if (file_get_simple_type($mime_type) == 'image' || $mediaEntry->mediaType == 'image'){
 	
 	// If Image then create an album. Don't upload to Kaltura.

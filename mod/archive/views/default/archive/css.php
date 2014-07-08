@@ -29,6 +29,9 @@
 .archive-footer .license{
 	float:left;
 }
+.archive-player{
+	width:100%;
+}
 .archive-plays{
 	float: left;
 	padding: 8px 24px;
