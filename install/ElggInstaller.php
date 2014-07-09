@@ -92,8 +92,8 @@ class ElggInstaller {
 			// once the database has been created, load rest of engine
 			global $CONFIG;
 			$minds = new minds\core\minds();
-		//	$minds->loadConfigs();
-			$minds->start();//we can start the engine now
+			$minds->loadConfigs();
+		//	$minds->start();//we can start the engine now
 			
 			if ($stepIndex > $settingsIndex) {
 				$CONFIG->site_guid = (int) datalist_get('default_site');
@@ -103,7 +103,7 @@ class ElggInstaller {
 			
 		}
 		if($stepIndex > $adminIndex){
-                        //$minds->start();
+                        $minds->start();
 		}
 	}
 
