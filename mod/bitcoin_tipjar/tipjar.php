@@ -80,9 +80,11 @@ class tipjar extends \ElggPlugin
 	
 	// Send an log the payment
 	if (bitcoin\bitcoin()->sendPayment($wallet->guid, $receive_address, $amount)) {
-	    $this->logTip($user, $to, $amount, $using_system_address);
+	    $tip = $this->logTip($user, $to, $amount, $using_system_address);
+	    error_log("Bitcoin: Logged tip to GUID $tip");
+	    error_log("Bitcoin: Tip log entry is " . print_r(get_entity($tip), true));
 	}
-	
+	    
 	return false;
     }
     

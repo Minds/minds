@@ -326,8 +326,10 @@ class blockchain extends bitcoin
 	$return['response'] = $http_status;
 	$return['error'] = $error;
 	
-	if ($return['response'] == 500)
+	if ($return['response'] == 500) {
 	    error_log("Bitcoin: Returned blockchain error '{$return['content']}'");
+	    throw new \Exception($return['content']);
+	}
 	if ($return['content']['error']) {
 	    error_log("Bitcoin: Error value present - " . $return['content']['error']);
 	    throw new \Exception($return['content']['error']);
