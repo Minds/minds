@@ -7,7 +7,6 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
 
     var elggService = {};
     var actionUrl= serverUrl + 'action/archive/';
-//    var webServicesUrl = serverUrl + 'services/api/rest/json'; // Not used for now
 
     /**
      * Create new Elgg entity without uploading the files to Elgg.

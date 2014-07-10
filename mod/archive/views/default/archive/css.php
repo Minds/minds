@@ -29,11 +29,45 @@
 .archive-footer .license{
 	float:left;
 }
+.player-container{
+	width:100%;
+	position:relative;
+}
+/* Position the button */
+.vjs-res-button {
+float: right;
+line-height: 3em;
+}
+
+/* Don't show hover effects on title */
+ul li.vjs-menu-title.vjs-res-menu-title:hover {
+cursor: default;
+background-color: transparent;
+color: #CCC;
+
+-moz-box-shadow: none;
+-webkit-box-shadow: none;
+box-shadow: none;
+}
+
+.player-container .vjs-default-skin .vjs-control-bar { 
+	font-size: 125%; 
+}
+.player-container .vjs-default-skin .vjs-big-play-button{
+	left:45%;
+	top:45%;
+	border-radius:0;
+}
 .archive-plays{
 	float: left;
 	padding: 8px 24px;
 	color: #333;
 	font-weight: bold;
+}
+.archive-note{
+	background: #F3F3F3;
+	padding: 16px 32px;
+	font-weight: bolder;
 }
 .archive-description{
 	background: #F8F8F8;
@@ -57,17 +91,21 @@
 	height:100%;
 	position:absolute;
 }
-.uiVideoInline.archive.entity{
+/*.archive.archive-video{
 	width:110%;
+	height:0;
 	padding-bottom:60%;
 	margin-left:-10px;
-}
-.uiVideoInline.archive.entity span{
+	position:relative;
+	overflow:hidden;
+}*/
+.archive.archive-video span{
 	height:90%;
 	width:95%;
 }
-.uiVideoInline.archive{
-	width:100%;
+.archive-video{
+	width:110%;
+	margin-left:-10px;
 	height:0;
 	display:block;
 	position:relative;
@@ -75,7 +113,7 @@
 	padding-bottom: 56.25%;
 }
 /* If anyone has a better way of getting this centred, please left me know!! /MH */
-.uiVideoInline.archive span {
+.archive.archive-video span {
 	position:absolute;
 	display:inline-block;
 	cursor:pointer;
@@ -85,7 +123,7 @@
 	background: transparent url(<?php echo elgg_get_site_url(); ?>mod/embed_extender/graphics/play_button.png) no-repeat center center;
 	z-index:2;
 }
-.uiVideoInline.archive img{
+.archive-video img{
 	position:absolute;
 	width:100%;
 }

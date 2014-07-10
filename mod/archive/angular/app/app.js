@@ -11,7 +11,7 @@ window.onbeforeunload = function (event) {
   return message;
 }
 
-angular.module('mindsUploader', ['ngRoute', 'services.Elgg', 'services.Kaltura', 'mindsApp.directives'], function($routeProvider) {
+angular.module('mindsUploader', ['ngRoute', 'services.Elgg'], function($routeProvider) {
 
 	var templatesPath = serverUrl + "mod/archive/angular/app/partials";
 
