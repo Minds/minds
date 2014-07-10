@@ -7,24 +7,24 @@ $owner = $entity->getOwnerEntity(true);
 
 if($full){
 
-	elgg_load_js('player');
-	elgg_load_css('player');
+	switch($entity->getStatus()){
+		case 'PROGRESSING':
+			echo '<div class="archive-note"> This video is currently rendering and will be available shortly </div>';
+			break;
+	}
+
 	$video = elgg_view('output/video', array(
-			'class' => 'archive-player',
-			'width' => '900px',
-			'height' => '480px',
+			'class' => 'video-js vjs-default-skin',
 			'sources' => array(
-				$entity->getSourceUrl('720.webm') => 'video/webm',
-				$entity->getSourceUrl('360.webm') => 'video/webm',
-				$entity->getSourceUrl('360.mp4') => 'video/mp4',
-				$entity->getSourceUrl('720.mp4') => 'video/mp4'
-			)));
+				$entity->getSourceUrl('360.mp4') => array('name'=>'360p', 'type'=>'video/mp4'),
+				$entity->getSourceUrl('720.mp4') => array('name'=>'720p', 'type' =>'video/mp4'),
+				$entity->getSourceUrl('720.webm') => array('name'=>'720p', 'type'=>'video/webm'),
+				  $entity->getSourceUrl('360.webm') => array('name'=>'360p', 'type'=>'video/webm')	
+		)));
 	
 	$body = $video;
 
-	echo elgg_view('object/elements/full', array(
-        	'body' => $body,
-	));
+	echo $body;
 	
 } else {
 		
@@ -69,8 +69,8 @@ if($full){
 	
 	$image = elgg_view('output/url', array(
 			'href' => $entity->getURL(),
-			'class' => 'uiVideoInline archive entity',
-			//'text' =>  '<span></span><img src=\'' . kaltura_get_thumnail($entity->kaltura_video_id, 515, 290, 60, $entity->thumbnail_sec) . '\'/>',
+			'class' => 'archive archive-video',
+			'text' =>  '<span></span><img src=\'' . $entity->getIconURL()  . '\'/>',
 			'title' => $entity->title,
 		));
 	
@@ -83,6 +83,7 @@ if($full){
 	$content = $image . $body;
 	echo $menu;
 	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
-	echo $header;
 	echo $image;
+	echo $header;
+
 }

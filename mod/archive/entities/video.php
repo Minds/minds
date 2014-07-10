@@ -32,6 +32,15 @@ class video extends object{
 				'uri' => 'http://cinemr.minds.io'
 			));
 	}
+
+	/**
+	 * Get the status of the video
+	 */
+	public function getStatus(){
+		$cinemr = $this->cinemr();
+                $data = $cinemr::factory('media')->get($this->cinemr_guid);
+		return $data['status'];
+	}
 	
 	/**
 	 * Return the source url of the remote video 
@@ -53,6 +62,16 @@ class video extends object{
 		$data = $cinemr::factory('media')->put(NULL, $filepath);
 		$this->cinemr_guid = $data['guid'];
 	}
+
+	public function getIconUrl(){
+		if($this->thumbnail){
+			return elgg_get_site_url() . 'archive/thumbnail/'.$this->guid.'/'.$this->last_updated;
+		} else {
+			$cinemr = $this->cinemr();
+       	        	return $cinemr::factory('media')->get($this->cinemr_guid.'/thumbnail');
+		}
+	}
+
 	/**
 	 * Extend the default entity save function to update the remote service
 	 * 

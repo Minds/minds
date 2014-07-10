@@ -42,8 +42,9 @@ function minds_archive_init() {
 	elgg_extend_view('page/elements/sidebar', 'archive/featured');
 
 	elgg_extend_view('js/elgg', 'archive/js');
-	elgg_register_js('player', elgg_get_site_url() . 'mod/archive/player/mediaelement-and-player.min.js','head');
-	elgg_register_css('player', elgg_get_site_url() . 'mod/archive/player/mediaelementplayer.css');
+	elgg_register_js('player', '//vjs.zencdn.net/4.6.3/video.js','head');
+	elgg_register_css('player', '//vjs.zencdn.net/4.6.3/video-js.css');
+	elgg_register_js('player-res', elgg_get_site_url().'mod/archive/player/video.js.res.js');
 
     //Loading angularJS
     $angularRoot = elgg_get_site_url() . 'mod/archive/angular/app/';
@@ -312,17 +313,25 @@ function minds_archive_page_handler($page) {
 				include('pages/archive/upload.php');
 			}
 			break;
-		case 'kaltura':
-			switch($page[1]){
-				case 'ajax-update':
-					set_input('uploaded_entry_id', $page[2]);
-					include('pages/archive/kaltura/ajax-update.php');
-					break;
-				default:
-					return false;
+		case 'thumbnail':
+			$entity = new minds\plugin\archive\entities\video($page[1]);
+			$user_path = date('Y/m/d/', $entity->getOwnerEntity()->time_created) . $entity->owner_guid;
+			$data_root = $CONFIG->dataroot;
+			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
+			$contents = @file_get_contents($filename);
+			
+			header("Content-type: image/jpeg");
+			header('Expires: ' . date('r', strtotime("today+6 months")), true);
+			header("Pragma: public");
+			header("Cache-Control: public");
+			header("Content-Length: " . strlen($contents));
+			// this chunking is done for supposedly better performance
+			$split_string = str_split($contents, 1024);
+			foreach ($split_string as $chunk) {
+			echo $chunk;
 			}
-			break;
-		
+			exit;
+			break;	
 		case 'embed':
 			set_input('subtype', $page[1]);
 			include('pages/archive/embed.php');

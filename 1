@@ -16,7 +16,7 @@ $entity->access_id = get_input('access_id');
 $entity->tags = get_input('tags');
 
 if(get_input('thumbnailData')){
-	$thumb = str_replace('data:image/jpeg;base64,', '', get_input('thumbnailData'));
+	$thumb = str_replace('data:image/png;base64,', '', get_input('thumbnailData'));
 	$thumb = str_replace(' ', '+', $thumb);
 	$data = base64_decode($thumb);
 	
@@ -26,7 +26,7 @@ if(get_input('thumbnailData')){
 	$file->open('write');
 	$file->write($data);
 	$file->close();
-	$entity->thumbnail = get_input('thumbSec');
+	$entity->thumbnail = true;
 }
 
 if (empty($entity->title)) {
@@ -41,4 +41,4 @@ if($entity->license == 'not-selected'){
 
 
 $entity->save();
-forward($entity->getURL());
+forward($entity->getURL();

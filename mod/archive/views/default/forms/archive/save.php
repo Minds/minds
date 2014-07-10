@@ -4,24 +4,8 @@
  */
 
 
-global $SKIP_KALTURA_REWRITE;
-//this is to avoid the embed video over the longtext box
-$SKIP_KALTURA_REWRITE = true;
-
 $entity = elgg_extract('entity', $vars);
-if(!$entity){
-	$entity = new ElggObject();	
-	$entity->subtype = 'kaltura_video';
-	$entity->kaltura_video_id = get_input('entryid');
 
-	try{
-	$kmodel = KalturaModel::getInstance();
-
-	$entry = $kmodel->getEntry($entity->kaltura_video_id );
-	} catch ( Exception $e){
-	}
-	$entity->title = $entry->name;
-}
 $title = $entity->title;
 $body = $entity->description;
 $license = $entity->license;
@@ -53,15 +37,17 @@ $submit_input = elgg_view('input/submit', array('name' => 'submit', 'value' => e
 $guid = elgg_view('input/hidden', array('name' => 'guid', 'value' => $entity->guid));
 	
 	
-if($entity->getSubtype() == 'kaltura_video'){
+switch($entity->getSubtype()){
+
+	case 'video':
 	
-	$thumbnail_input = elgg_view('input/thumbnail_picker', array('entry_id'=>$entity->kaltura_video_id, 'default'=>$entity->thumbnail_sec));
-	$thumb = '<img style="width:200px;" src="' . $entity->kaltura_video_thumbnail . '" alt="" title="' . htmlspecialchars($entity->title) . '" />';
+		$thumbnail_input = elgg_view('input/thumbnail_picker', array('entity'=>$entity));
+		$thumb = '<img style="width:200px;" src="' . $entity->kaltura_video_thumbnail . '" alt="" title="' . htmlspecialchars($entity->title) . '" />';
 	
-	$video_id_input = elgg_view('input/hidden', array('name'=>'video_id', 'value'=>$entity->kaltura_video_id));
+		$video_id_input = elgg_view('input/hidden', array('name'=>'video_id', 'value'=>$entity->kaltura_video_id));
 
 
-	$form_body = <<<EOT
+		$form_body = <<<EOT
 			<p>
 				<label>$title_label</label><br />
 	                        $title_textbox
@@ -96,9 +82,8 @@ if($entity->getSubtype() == 'kaltura_video'){
 		<div class="clearfloat"></div>
 EOT;
 	
-	
-} elseif($entity->getSubtype() == 'file'){
-		
+		break;
+	case 'file':	
 		$file_replace_label = elgg_echo('minds:archive:file:replace');
 		$file_replace_input = elgg_view('input/file', array('name' => 'upload')); 
 		$form_body = <<<EOT
@@ -133,9 +118,10 @@ EOT;
 			</p>
 		<div class="clearfloat"></div>
 EOT;
-
-} elseif($entity->getSubtype() == 'album' || $entity->getSubtype() == 'image'){
-	$form_body = <<<EOT
+		break;
+	case 'album':
+	case 'image':
+		$form_body = <<<EOT
 			<p>
 				<label>$title_label</label><br />
 	                        $title_textbox
@@ -164,6 +150,7 @@ EOT;
 			</p>
 		<div class="clearfloat"></div>
 EOT;
+		break;
 }
 
 

@@ -81,7 +81,7 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
 		if (saveTimeout) $timeout.cancel(saveTimeout);
 		
 		saveTimeout = $timeout(function(){
-			$scope.updateEntry(guid);
+			$scope.updateEntity(guid);
 		},1000);
 		
 	};
@@ -91,15 +91,11 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
      * @param entryId
      * @returns {string}
      */
-    $scope.getFileThumbnail = function(entry, thumbSecond, guid) {
-            if(entry){ //Only applies to video
-                var thumbnailUrl = serviceUrl + '/p/' + partnerId + '/thumbnail/entry_id/' + entry.id + '/width/400/vid_sec/' + thumbSecond;
-                // return empty string if entryID not set, otherwise return thumbnail URL
-                return thumbnailUrl;
-            }else if(guid){
-                var thumbnailUrl = cdnUrl + '/photos/thumbnail/' + guid +'/large';
-                return thumbnailUrl;
-            }
+    $scope.getFileThumbnail = function(thumbSecond, guid) {
+	if(guid){
+		var thumbnailUrl = cdnUrl + '/photos/thumbnail/' + guid +'/large';
+               	return thumbnailUrl;
+        }
 
             return "";
     };
@@ -134,7 +130,6 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
         $scope.queue.push(file);
 
         $scope.saveEnabled = true;
-		      console.log(file);
         $scope.fileInfo[index] = {};
         $scope.fileInfo[index]['fileObj'] = file;
         $scope.fileInfo[index]['fileType'] = $scope.detectMediaType(file.type);
@@ -171,7 +166,7 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
     	return;
         for(var index in $scope.fileInfo) //Saves each file
         {
-            $scope.updateEntry(index);
+            $scope.updateEntity(index);
         }
 		elgg.system_message('Success!');
     };
@@ -200,7 +195,6 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
     $scope.bindUploaderEvents = function(elm) {
         jQuery(elm).bind('fileuploadprogress', function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-	console.log(progress, data);
             if($scope.fileInfo[data.index]) //Only if element is found
             {
                 $scope.fileInfo[data.index]['progress'] = progress;
@@ -261,6 +255,42 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
         }
 
         return false;
+    };
+
+	    /**
+     * Update an entry using its file info.
+     * @param guid, the guid of entity
+     */
+    $scope.updateEntity = function(guid) {
+    	for($index in $scope.fileInfo){
+    		if($scope.fileInfo[$index]['guid']==guid && typeof guid != 'undefined'){
+    			Elgg.updateElggEntity($scope.fileInfo[$index]);
+    		}
+    	}
+    };
+
+    /**
+     * Update an entry using its file info.
+     * @param index the index of the entry in the file info object.
+     */
+    $scope.deleteEntity = function(index) {
+        //Abort XHR requests from upload only and not other requests (like add / update)
+        if($scope.fileInfo[index] && !$scope.fileInfo[index]['xhr'].isResolved())
+        {
+            $scope.fileInfo[index]['xhr'].abort();
+        }
+
+        //Entry was created in elgg / Kaltura, remove it
+        if($scope.fileInfo[index] && $scope.fileInfo[index]['guid'])
+        {
+            //TODO: maybe implement a cancelable queue
+
+//            Elgg.deleteElggEntity($scope.fileInfo[index]['guid']);
+        }
+
+        //Removes item from the list
+        if ( ~index ) $scope.fileInfo.splice(index, 1);
+
     };
 
 }
