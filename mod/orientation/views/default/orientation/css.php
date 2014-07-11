@@ -130,7 +130,8 @@
  * Register pages
  */
 .orientation-register-wrapper{
-	width: 800px;
+	max-width: 800px;
+	width:80%;
 	margin: auto;
 	height: auto;
 	border: 1px solid #EEE;
@@ -202,7 +203,7 @@
 }
 .orientation-register-wrapper > .orientation-content{
 	display:table-cell;
-	width: 680px;
+	width: auto;
 	height: 100%;
 	position: relative;
 	padding: 16px;
@@ -241,7 +242,8 @@
 }
 
 .orientation-content #user-avatar-cropper{
-	width:400px;
+	max-width:400px;
+	width:100%;
 }
 .orientation-content .elgg-foot .elgg-button-submit, .orientation-content .deck-river-accounts .elgg-button-submits{
 	display:none;
