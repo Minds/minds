@@ -492,4 +492,70 @@ padding: 0 4px;
 .channel-admin-menu li{
 	padding:4px;
 }
+
+
+/**
+ * Mobile specific
+ */
+
+@media all
+and (min-width : 0px)
+and (max-width : 720px) {
+	.body .minds-fixed-layout{
+		width:100%;
+		margin:8px;
+	}
+
+	.minds-fixed-sidebar-left{
+		width:100%;
+	}
+	
+	.minds-fixed-sidebar-left .minds-fixed-avatar{
+		width:25%;
+		float:left;
+		margin:8px;
+	}
+
+	.minds-fixed-sidebar-left h1{
+		float:left;
+		margin:16px;
+	}
+
+	.channel-social-icons{
+		float:left;
+		width:60%;
+	}	
+	
+	.avatar-edit{
+		display:none;
+	}
+
+	.channel-admin-menu{
+		display:none;
+	}
+
+	.elgg-menu-channel{
+		width:100%;
+		clear:both;
+		margin:8px 0;
+	}
+	.elgg-menu-channel > li{
+		float:left;
+		width:50%;
+		margin:0;
+	}
+
+	.minds-fixed-content{
+
+		clear:both;
+		width:100%;
+		margin:8px;
+
+	}
+
+	.minds-fixed-content .elgg-list.x2 > .elgg-item{
+		width:100%;
+		float:none;
+		margin:8px 0;
+	}	
 }

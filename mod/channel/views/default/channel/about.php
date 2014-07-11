@@ -51,14 +51,4 @@ if (!elgg_get_config('profile_custom_fields')) {
 	}
 }
 
-//show how many subscribers
-?>
-<div class="odd">
-				<b><?php echo elgg_echo("channel:subscriber_count"); ?>: </b>
-				<?php
-					echo elgg_view("output/text", array('value' => count($user->getFriendsOf(null, 9999999999999999, 0))));
-				?>
-			</div>
-<?php
-
 echo '</div>';
