@@ -206,6 +206,7 @@ float: left;
 }
 .elgg-output img {
 	max-width: 100%;
+	height:auto;
 }
 
 .elgg-image-block .elgg-body h3{

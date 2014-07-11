@@ -383,14 +383,15 @@ function groups_handle_members_page($guid) {
 	elgg_push_breadcrumb($group->name, $group->getURL());
 	elgg_push_breadcrumb(elgg_echo('groups:members'));
 
-	$members = $group->getMembers(100,'');
+	$members = $group->getMembers(100,get_input('offset', ''));
 
-	$content =elgg_view_entity_list($members, array('full_view'=>false));	
+	$content =elgg_view_entity_list($members, array('full_view'=>false, 'list_class'=>'x2'));	
 
 	$params = array(
 		'content' => $content,
 		'title' => $title,
 		'filter' => '',
+		'list_class' => 'x2',
 	);
 	$body = elgg_view_layout('content', $params);
 
