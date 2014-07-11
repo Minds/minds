@@ -54,20 +54,31 @@ class start extends \ElggPlugin{
 	 * Create a search document
 	 */
 	public function createDocument($entity){
-		if(!in_array($entity->subtype, array('blog','image','album','kaltura_video')) || $entity->type != 'user')
-			return false;
+		if(in_array($entity->subtype, array('blog','image','album','video')) || $entity->type == 'user'){
 
-		$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search'))));
-		$params = array();
-		$params['body']  = $entity->export();
-		
-		$params['index'] = 'minds';
-		$params['type']  = $entity->type;
-		$params['id']    = $entity->guid;
-		
-		// Document will be indexed to my_index/my_type/my_id
-		$ret = $client->index($params);
-		return $ret;
+			$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search'))));
+			$params = array();
+			$data = $entity->export();
+			foreach($data as $k =>$v){
+				if(is_numeric($v))
+					$v = (string) $v;	
+				
+				if(is_bool($v))
+					continue;
+
+				$params['body'][$k]  = $v;
+			}
+			
+			$params['index'] = 'minds';
+			$params['type']  = $entity->type;
+			$params['id']    = $entity->guid;
+			
+			// Document will be indexed to my_index/my_type/my_id
+			$ret = $client->index($params);
+			return $ret;
+		} else {
+			return false;
+		}
 	}
 	
 }
