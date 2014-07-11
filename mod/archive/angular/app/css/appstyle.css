@@ -28,7 +28,6 @@
 .default-license-input{
 	width:240px;
 	padding:16px;
-	height:30px;
 }
 .default_values{
 	float:left;
@@ -105,14 +104,14 @@
     display: block;
 }
 
-.uploadlist > li.elgg-item > .itemControls {
+.uploadList > li.elgg-item > .itemControls {
     height: 60px;
     overflow: hidden;
     transition: height 0.3s;
     -webkit-transition: height 0.3s
 }
 
-.uploadlist > li.elgg-item {
+.uploadList > li.elgg-item {
     background-color: #FFF;
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -121,20 +120,20 @@
     margin-left: 0px;
 }
 
-.uploadlist table{
+.uploadList table{
 	width:100%;
 }
-.uploadlist table tr > td{
+.uploadList table tr > td{
 	padding: 8px 0;
 	vertical-align: middle;
 }
 
-.uploadlist table tr > td:first-child, .uploadlist table tr > td.label {
+.uploadList table tr > td:first-child, .uploadlist table tr > td.label {
 	font-weight:bold;
 	padding-right:8px;
 }
 
-.uploadlist table tr > td input, .uploadlist table tr > td select{
+.uploadList table tr > td input, .uploadlist table tr > td select{
 	height: 30px;
 	width: 95%;
 	padding: 8px;
@@ -148,7 +147,7 @@
     -moz-box-sizing: border-box;
 	font-size:12px;
 }
-.uploadlist .add-new-album{
+.uploadList .add-new-album{
 	color: #fff;
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 	background-color: #60b044;
@@ -162,28 +161,28 @@
 	position: absolute;
 	margin: 5px 28px;
 }
-.uploadlist table tr > td input:focus{
+.uploadList table tr > td input:focus{
 	border:inherit;
 	border-radius:inherit;
 }
 
-.uploadlist .preview{
+.uploadList .preview{
 	width: 100%;
 	margin: 16px 0;
 }
 
-.uploadlist div.bar{
+.uploadList div.bar{
    position: absolute;
 	left: 0;
 	top: 0;
 	height: 100%;
 	background-color: #4690D6;
 }
-.uploadlist .progress > .bar.p100{
+.uploadList .progress > .bar.p100{
 	background:#5ca941;
 }
 
-.uploadlist div.progress{
+.uploadList div.progress{
     color: transparent;
 	height: 10px;
 	position: absolute;

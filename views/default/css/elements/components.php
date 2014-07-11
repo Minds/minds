@@ -29,13 +29,13 @@
 *************************************** */
 .elgg-list {
 	/*border-top: 1px dotted #CCCCCC;*/
-	margin:5px 0.5%;
+	margin:5px  0;
 	clear: both;
 	width:100%;
 }
 .elgg-list > li {
 	float: left;
-	margin: 1%;
+	margin: 8px 0 8px 2%;
     border: 0;
 	background:#F8F8F8;
 	padding:0 10px 10px 11px;
@@ -53,7 +53,7 @@
 }
 .elgg-list.x4 > li {
 	width:21%;
-	margin:1%;
+	margin:8px 0 8px 2%;
 }
 .elgg-list.x1{
 	width:600px;
@@ -111,7 +111,7 @@
 @media screen and (min-width: 1800px) {
 
 	 .elgg-list > li{
-                width:16%;
+                width:16.5%;
                 height:210px;
         }
 }

@@ -166,7 +166,7 @@ function pay_update_order_status($order_guid, $status){
         // Lets add a hook here
         elgg_trigger_event('order_status_change', 'pay', $order);
 	
-	error_log("PAYPAL: Order status for {$order_guid} changed to $status");
+	error_log("PAYPAL & BITCOIN: Order status for {$order_guid} changed to $status");
 	
 	if($order->save()){
 		return true;

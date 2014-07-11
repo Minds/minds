@@ -31,10 +31,11 @@ if ($tier = get_entity(get_input('tier_id'),'object')) {
     $order->items = serialize($items);
 
     $order->amount = $tier->price;
+    $order->pay_transaction_id = generate_random_cleartext_password(); // Create a random transaction identifier. This is used by some payment handlers to validate that that a transaction return isn't a martian.
 
     $order->access_id = 1;
 
-    $order->payment_method = 'paypal';
+    $order->payment_method = get_input('handler', 'paypal');
     
     $order->recurring = true;
 
@@ -62,10 +63,15 @@ if ($tier = get_entity(get_input('tier_id'),'object')) {
 	if($order->amount == 0){
 		forward('nodes/manage');
 	} else {
+	    try {
  		pay_call_payment_handler($order->payment_method, array( 'order_guid' => $order_guid,
        		    'user_guid' => elgg_get_logged_in_user_guid(),
         	    'amount' => $order->amount,
        		    'recurring' => true
         	));
+	    } catch (\Exception $e) {
+		error_log("BITCOIN: " . $e->getMessage());
+		register_error($e->getMessage());
+	    }
 	}
 }

@@ -15,6 +15,12 @@ function minds_archive_init() {
 	add_subtype('object', 'image', 'TidypicsImage');
 	add_subtype('object', 'album', 'TidypicsAlbum');
 	add_subtype('object', 'kaltura_video', 'KalturaMedia');
+	
+	elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
+		//var_dump($row);
+		if($row->type == 'object' && $row->subtype == 'video')
+			return new minds\plugin\archive\entities\video($row);
+	});
 
 
 	if(!elgg_is_active_plugin('tidypics')){
@@ -35,11 +41,10 @@ function minds_archive_init() {
 	//list featured in sidebar
 	elgg_extend_view('page/elements/sidebar', 'archive/featured');
 
-	elgg_register_library('archive:kaltura', elgg_get_plugins_path().'archive/vendors/kaltura/api_client/includes.php');
-	elgg_register_library('archive:kaltura:editor', elgg_get_plugins_path().'archive/vendors/kaltura/editor/init.php');
-
-	//embed options
-	elgg_register_js('kaltura.js', elgg_get_site_url() . 'mod/kaltura_video/kaltura/js/kaltura.js');
+	elgg_extend_view('js/elgg', 'archive/js');
+	elgg_register_js('player', '//vjs.zencdn.net/4.6.3/video.js','head');
+	elgg_register_css('player', '//vjs.zencdn.net/4.6.3/video-js.css');
+	elgg_register_js('player-res', elgg_get_site_url().'mod/archive/player/video.js.res.js');
 
     //Loading angularJS
     $angularRoot = elgg_get_site_url() . 'mod/archive/angular/app/';
@@ -129,6 +134,7 @@ function minds_archive_init() {
 	//tidypics is a separate plugin which we plan on integrating into here shortly. Make sure this plugin is below the tidypics plugin
 	elgg_register_entity_url_handler('object', 'image','minds_archive_entity_url');
 	elgg_register_entity_url_handler('object', 'album','minds_archive_entity_url');
+	elgg_register_entity_url_handler('object', 'video', 'minds_archive_entity_url');
 	
 	//override icon urls
 	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'minds_archive_file_icon_url_override');	
@@ -152,7 +158,9 @@ function minds_archive_init() {
 	elgg_register_action("archive/feature", $action_path . "feature.php");
 	elgg_register_action("archive/save", $action_path . "save.php");
 	elgg_register_action("archive/add_album", $action_path . "tidypics/add_album.php");
+	
     elgg_register_action("archive/upload", $action_path . "upload.php");
+	
     elgg_register_action("archive/deleteElggVideo" , $action_path . "deleteAngular.php");
     elgg_register_action("archive/selectAlbum" , $action_path . "tidypics/album.php");
     elgg_register_action("archive/getKSession" , $action_path . "generateKalturaSession.php");
@@ -275,19 +283,6 @@ function minds_archive_page_handler($page) {
 		
 	global $CONFIG;
 	
-	elgg_load_library('archive:kaltura');
-
-/*	if(!elgg_get_plugin_setting("kaltura_server_url","archive")){
-		// If the URL is just 'feeds/username', or just 'feeds/', load the standard feeds index
-		include(dirname(__FILE__) . "/missconfigured.php");
-		return true;
-	}*/
-
-	// Need to have comments js/css available for image lightbox
-	elgg_load_css('minds_comments');
-	elgg_load_js('minds_comments');
-	elgg_load_js('hj.framework.ajax');
-	
 	switch($page[0]) {
 		case 'all':
 			include('pages/archive/all.php');
@@ -318,17 +313,25 @@ function minds_archive_page_handler($page) {
 				include('pages/archive/upload.php');
 			}
 			break;
-		case 'kaltura':
-			switch($page[1]){
-				case 'ajax-update':
-					set_input('uploaded_entry_id', $page[2]);
-					include('pages/archive/kaltura/ajax-update.php');
-					break;
-				default:
-					return false;
+		case 'thumbnail':
+			$entity = new minds\plugin\archive\entities\video($page[1]);
+			$user_path = date('Y/m/d/', $entity->getOwnerEntity()->time_created) . $entity->owner_guid;
+			$data_root = $CONFIG->dataroot;
+			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
+			$contents = @file_get_contents($filename);
+			
+			header("Content-type: image/jpeg");
+			header('Expires: ' . date('r', strtotime("today+6 months")), true);
+			header("Pragma: public");
+			header("Cache-Control: public");
+			header("Content-Length: " . strlen($contents));
+			// this chunking is done for supposedly better performance
+			$split_string = str_split($contents, 1024);
+			foreach ($split_string as $chunk) {
+			echo $chunk;
 			}
-			break;
-		
+			exit;
+			break;	
 		case 'embed':
 			set_input('subtype', $page[1]);
 			include('pages/archive/embed.php');

@@ -1,22 +1,36 @@
 <?php 
 
-$entry_id = $vars['entry_id'];
-$default = $vars['default'];
+$entity = $vars['entity'];
+elgg_load_js('player');
+elgg_load_css('player');
+?>
+<style type="text/css">
+    #vid {
+        width: 640px;
+        height: 360px;
+    }
 
-$kmodel = KalturaModel::getInstance();
-$mediaEntry = $kmodel->getEntry($entry_id);
+    #scrubber {
+        position: relative;
+        width: 640px;
+        height: 20px;
+        background-color: black;
+    }
 
-$length = $mediaEntry->duration;
+    #progress {
+        width: 0;
+        height: 20px;
+        background-color: red;
+    }
+</style>
 
-$width = 210;
-$height = 120;
-
-$thumb_1 = elgg_view('output/img', array('src'=> kaltura_get_thumnail($entry_id, $width, $height, $quality=100, $vid_sec = $length / 10)));
-
-$thumb_2 = elgg_view('output/img', array('src'=> kaltura_get_thumnail($entry_id, $width, $height, $quality=100, $vid_sec = $length / 8)));
-
-$thumb_3 = elgg_view('output/img', array('src'=> kaltura_get_thumnail($entry_id, $width, $height, $quality=100, $vid_sec = $length / 5)));
-
-$thumb_4 = elgg_view('output/img', array('src'=> kaltura_get_thumnail($entry_id, $width, $height, $quality=100, $vid_sec = $length / 2)));
-
-echo elgg_view('input/radio', array('name'=>'thumbnail_selector', 'value'=>$default, 'options'=>array($thumb_1=>$length / 10, $thumb_2=>$length / 8, $thumb_3=>$length / 5, $thumb_4=>$length / 2), 'align'=>'horizontal'));
+<video id="my_video" crossOrigin="" data-thumbSec="<?php echo $entity->thumbnail?>">
+	<source src="<?php echo $entity->getSourceURL('360.webm');?>" type="video/webm" />
+</video>
+<div id="scrubber">
+    <div id="progress"></div>
+</div>
+<canvas id="thecanvas" style="display:none;">
+</canvas>
+<input type="hidden" id="thumbnailData" name="thumbnailData"/>
+<input type="hidden" id="thumbSec" name="thumbSec" />

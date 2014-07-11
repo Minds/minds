@@ -58,11 +58,13 @@
 					</tr>
 				</table>
 				
-				<img class="preview" ng-show="getFileThumbnail(fileItem.entry, fileItem.thumbSecond, fileItem.guid)" ng-src="{{getFileThumbnail(fileItem.entry, fileItem.thumbSecond, fileItem.guid)}}"/>
-					<!--&#59235; other arrow-->
-				<a ng-show="isShowThumbArrows(fileItem.entryRefresh, $index)" ng-click="rotateImage(fileItem.entryRefresh, 1, $index)" class="uploadLeftArrow entypo">&#59229;</a>
-				<a ng-show="isShowThumbArrows(fileItem.entryRefresh, $index)" ng-click="rotateImage(fileItem.entryRefresh, 0, $index)" class="uploadRightArrow entypo">&#59230;</a>
-	
+				<div ng-switch="fileItem.fileType">
+					<img ng-switch-when="image" class="preview" ng-show="getFileThumbnail(fileItem.thumbSecond, fileItem.guid)" ng-src="{{getFileThumbnail(fileItem.thumbSecond, fileItem.guid)}}"/>
+					<div ng-switch-when="video" ng-show="fileItem.guid">
+						<p> Your video has been uploaded and is now being transcoded </p>
+					</div>
+					
+				</div>
 
 				<div class="progress">
 					<div class="bar p{{fileItem['progress']}}" ng-style="{width: fileItem['progress'] + '%'}"></div>

@@ -1,8 +1,5 @@
 <?php
 
-// Load Elgg engine
-elgg_load_library('archive:kaltura');
-
 // Get the current page's owner
 $page_owner = elgg_get_page_owner_entity();
 if ($page_owner === false || is_null($page_owner)) {
@@ -12,7 +9,6 @@ if ($page_owner === false || is_null($page_owner)) {
 
 // Get the post, if it exists
 $guid =  get_input('guid');
-$entryid = get_input('entryid');
 
 $entity = get_entity($guid, 'object');
 
@@ -21,11 +17,11 @@ if ($entity && !$entity->canEdit()) {
 	register_error('Sorry, you don\'t have permission');
 }
 
-	$title = elgg_view_title(elgg_echo('kalturavideo:label:adminvideos').": ".elgg_echo('kalturavideo:label:editdetails'));
+	$title = 'Edit'; 
 	$form = elgg_view_form('archive/save', array('enctype' => 'multipart/form-data'), array('entity' => $entity));
 	$body = elgg_view_layout("edit_layout", array('title'=>$title, 'content'=>$form));
 
 // Display page
-echo elgg_view_page(sprintf(elgg_echo('kalturavideo:label:adminvideos').": ".elgg_echo('kalturavideo:label:editdetails'),$post->title),$body);
+echo elgg_view_page($title,$body);
 
 ?>
