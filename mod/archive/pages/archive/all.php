@@ -9,7 +9,7 @@ $offset = get_input("offset", "");
 $filter = get_input("filter", "all");
 
 if($filter == 'media')
-$subtype = 'kaltura_video';
+$subtype = 'video';
 elseif ($filter == 'images')
 $subtype = 'image';
 elseif ($filter == 'files')

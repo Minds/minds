@@ -8,7 +8,7 @@
  *
  */
  
-elgg_load_library('archive:kaltura');
+//elgg_load_library('archive:kaltura');
  
  /**
  * Web service to create a blank entry

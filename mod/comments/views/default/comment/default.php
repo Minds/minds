@@ -2,7 +2,6 @@
 $comment = $vars['entity'];
 if(!$comment)
 	return false;
-$comment->delete();
 
 $owner = $comment->getOwnerEntity();
 if(!$owner)
