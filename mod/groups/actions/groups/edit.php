@@ -128,7 +128,7 @@ if ($is_new_group) {
 $has_uploaded_icon = (!empty($_FILES['icon']['type']) && substr_count($_FILES['icon']['type'], 'image/'));
 
 if ($has_uploaded_icon) {
-
+	
 	$icon_sizes = elgg_get_config('icon_sizes');
 
 	$prefix = "groups/" . $guid;
@@ -166,6 +166,7 @@ if ($has_uploaded_icon) {
 		}
 
 		$group->icontime = time();
+		$group->save();
 	}
 }
 

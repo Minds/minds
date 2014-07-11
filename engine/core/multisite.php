@@ -49,7 +49,7 @@ class multisite extends base{
 		if(isset($row['dataroot']))
 			$CONFIG->dataroot = unserialize($row['dataroot']);
 		else
-        	$CONFIG->dataroot = "/data/".$keyspace;
+        	$CONFIG->dataroot = "/gluster/data/minds-multisite/".$keyspace;
 	}
 
 	public function getCache($domain){

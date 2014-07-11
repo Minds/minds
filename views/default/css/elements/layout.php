@@ -180,7 +180,7 @@
 	width:100%;
 	height:auto;
 	min-height:100%;
-	margin-top:75px;
+	margin-top:74px;
 }
 
 /***** PAGE BODY LAYOUT ******/

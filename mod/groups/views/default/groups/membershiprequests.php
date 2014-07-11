@@ -7,7 +7,7 @@
  */
 
 if (!empty($vars['requests']) && is_array($vars['requests'])) {
-	echo '<ul class="elgg-list">';
+	echo '<ul class="elgg-list x2">';
 	foreach ($vars['requests'] as $user) {
 		$icon = elgg_view_entity_icon($user, 'tiny', array('use_hover' => 'true'));
 
