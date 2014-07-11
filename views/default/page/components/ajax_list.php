@@ -87,6 +87,9 @@ foreach($json as $key => $item) {
 						case 'image':
 							$items[$key] = new TidypicsImage($item);
 							break;
+						case 'video':
+							$items[$key] = new minds\plugin\archive\entities\video($item);
+							break;
 						default:
 							$items[$key] = new ElggObject($item);
 					}

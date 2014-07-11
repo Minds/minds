@@ -25,31 +25,21 @@ $description = strip_tags($entity->description);
 set_input('description', $description);
 set_input('keywords', $entity->tags);
 
-if($entity->getSubtype() == 'kaltura_video'){
+if($entity->getSubtype() == 'kaltura_video' || $entity->getSubtype() == 'video'){
 		
-	elgg_load_library('archive:kaltura');
-	
-	//set the tags
-	$kaltura_server = elgg_get_plugin_setting('kaltura_server_url',  'archive');
-	$partnerId = elgg_get_plugin_setting('partner_id', 'archive');
-	
-	$widgetUi = elgg_get_plugin_setting('custom_kdp', 'archive');
-	
-	$video_location = $kaltura_server . '/index.php/kwidget/wid/_'.$partnerId.'/uiconf_id/' . $widgetUi . '/entry_id/'. $entity->kaltura_video_id;
-	$video_location_secure = str_replace('http://', 'https://', $video_location);	
-	
-	$thumbnail = kaltura_get_thumnail($entity->kaltura_video_id, 1280, 720, 60, $entity->thumbnail_sec);	
-	
-	minds_set_metatags('og:type', 'video.other');
+	$video_location = elgg_get_site_url().'/archive/embed';
+	$video_location_secure = str_replace('http://', 'https://', $video_location);
+	$thumbnail = $entity->getIconURL();
+
+	minds_set_metatags('og:type', 'article');
 	minds_set_metatags('og:url', $entity->getPermaURL());
 	minds_set_metatags('og:image', $thumbnail);
 	minds_set_metatags('og:title', $title);
 	minds_set_metatags('og:description', $description);
-	minds_set_metatags('og:video', $video_location);
-	minds_set_metatags('og:video:secure_url',  $video_location_secure); 
-	minds_set_metatags('og:video:width', '1280');
-	minds_set_metatags('og:video:height', '720');
-//	minds_set_metatags('og:other', $video_location);
+	//minds_set_metatags('og:video:url', $video_location);
+	//minds_set_metatags('og:video:secure_url',  $video_location_secure); 
+	//minds_set_metatags('og:video:width', '1280');
+//	minds_set_metatags('og:video:height', '720');
 	 
 	minds_set_metatags('twitter:card', 'player');
 	minds_set_metatags('twitter:url', $entity->getURL());

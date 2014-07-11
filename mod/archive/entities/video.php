@@ -27,9 +27,9 @@ class video extends object{
 	
 	public function cinemr(){
 		return new cinemr\sdk\client(array(
-				'account_guid' => '332928421254402048',
-				'secret' => 'Ux4wa95LWfvQZV3e5py6XJqN5fadpunyXRJu14odLeE=',
-				'uri' => 'http://cinemr.minds.io'
+				 'account_guid' => '334044578178928640',
+                        'secret' => 'n3lZYtzXC0GbF3dtzSr6TqU3JPnFEGJlXhwSlqdj6ew=',
+				'uri' => 'http://cinemr.minds.com'
 			));
 	}
 
@@ -64,8 +64,13 @@ class video extends object{
 	}
 
 	public function getIconUrl(){
+		$domain = elgg_get_site_url();
+		global $CONFIG;
+		if(isset($CONFIG->cdn_url))
+			$domain = $CONFIG->cdn_url;
+
 		if($this->thumbnail){
-			return elgg_get_site_url() . 'archive/thumbnail/'.$this->guid.'/'.$this->last_updated;
+			return $domain . 'archive/thumbnail/'.$this->guid.'/'.$this->last_updated;
 		} else {
 			$cinemr = $this->cinemr();
        	        	return $cinemr::factory('media')->get($this->cinemr_guid.'/thumbnail');
@@ -77,6 +82,7 @@ class video extends object{
 	 * 
 	 */
 	public function save(){
+		$this->super_subtype = 'archive';
 		parent::save(true);
 		
 		$cinemr = $this->cinemr();
@@ -98,5 +104,11 @@ class video extends object{
 		$cinemr = $this->cinemr();
 		$cinemr::factory('media')->delete($this->cinemr_guid);
 	}
-	
+
+	 public function getExportableValues() {
+                return array_merge(parent::getExportableValues(), array(
+                        'thumbnail',
+			'cinemr_guid',
+		));
+	}
 }

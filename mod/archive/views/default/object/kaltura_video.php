@@ -1,12 +1,16 @@
 <?php
 
-elgg_load_library('archive:kaltura');
+//elgg_load_library('archive:kaltura');
 
 $full = elgg_extract('full_view', $vars, FALSE);
 $entity = elgg_extract('entity', $vars);
-
+if(!is_object($entity)){
+return false;
+}
 $owner = $entity->getOwnerEntity(true);
-
+if(!$owner){
+	return false; 
+}
 if($full){
 	/**
 	 * Check if the video is converted or not

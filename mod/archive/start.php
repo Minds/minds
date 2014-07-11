@@ -6,7 +6,8 @@
 **/
 
 elgg_register_event_handler('init','system','minds_archive_init', 1);
-
+function  kaltura_get_thumnail(){
+}
 function minds_archive_init() {
 
 	global $CONFIG;
@@ -315,7 +316,13 @@ function minds_archive_page_handler($page) {
 			break;
 		case 'thumbnail':
 			$entity = new minds\plugin\archive\entities\video($page[1]);
-			$user_path = date('Y/m/d/', $entity->getOwnerEntity()->time_created) . $entity->owner_guid;
+			$user = $entity->getOwnerEntity();
+			if(isset($user->legacy_guid) && $user->legacy_guid)
+				$user_guid = $user->legacy_guid;
+
+			 $user_path = date('Y/m/d/', $user->time_created) . $user_guid;
+
+
 			$data_root = $CONFIG->dataroot;
 			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
 			$contents = @file_get_contents($filename);

@@ -36,6 +36,8 @@ if($full){
 	));
 	
 	$owner = $entity->getOwnerEntity(true); 
+	if(!$owner)
+		return false;
 	$owner_link = elgg_view('output/url', array(
 		'text' => $owner->name,
 		'href' => $owner->getURL()

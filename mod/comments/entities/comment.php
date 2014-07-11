@@ -23,7 +23,6 @@ class comment extends entities\entity{
 		parent::save(false);
 		$indexes = new \minds\core\data\indexes('comments');
 		$indexes->set($this->parent_guid, array($this->guid=>$this->guid));
-		
 		return $this->guid;
 	}
 	

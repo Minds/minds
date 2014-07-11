@@ -21,7 +21,7 @@ if(get_input('thumbnailData')){
 	$data = base64_decode($thumb);
 	
 	$file = new ElggFile();
-	$file->owner_guid = $entity->owner_guid;
+	$file->owner_guid = $entity->getOwnerEntity()->guid;
 	$file->setFilename("archive/thumbnails/{$entity->guid}.jpg");
 	$file->open('write');
 	$file->write($data);
