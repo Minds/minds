@@ -572,7 +572,7 @@ li .excerpt a{
 	box-shadow: 0 0 0;
 }
 .elgg-gallery-users li.elgg-item{
-	margin:2px;
+	margin:1px;
 	width:auto;
 	padding:0;
 	height:auto;

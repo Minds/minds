@@ -85,7 +85,7 @@ function add_entity_relationship($guid_one, $relationship, $guid_two) {
 		{
 			return true;
 		}
-
+	
 	return false;
 }
 
@@ -107,6 +107,11 @@ function check_entity_relationship($guid_one, $relationship, $guid_two) {
 	if(isset($result[$guid_two])){
 		return true;
 	}
+
+	$result = $db->getRow($guid_two . ':' . $relationship . ':inverted');
+	if(isset($result[$guid_one])){
+                return true;
+        } 
 	
 	return false;
 }
@@ -127,14 +132,15 @@ function remove_entity_relationship($guid_one, $relationship, $guid_two) {
 	if ($obj == false) {
 		return false;
 	}
-
+	
 	$db = new minds\core\data\call('relationships');
 	if( $db->removeAttributes($guid_one . ':' . $relationship, array($guid_two))
-		&&
+		||
 		$db->removeAttributes($guid_two . ':' . $relationship . ':inverted', array($guid_one)))
 		{
 			return true;
 		} 
+
 	return false;
 }
 

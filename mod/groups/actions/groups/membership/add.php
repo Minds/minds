@@ -29,11 +29,13 @@ if (sizeof($user_guid)) {
 								$group->name,
 								$group->getURL())
 							));
-
+					remove_entity_relationship($user->guid, 'membership_request',$group->guid);
 					system_message(elgg_echo('groups:addedtogroup'));
 				} else {
 					// huh
 				}
+			}else{
+				remove_entity_relationship($user->guid, 'membership_request', $group->guid);
 			}
 		}
 	}

@@ -343,7 +343,7 @@ class MindsMultiInstaller extends ElggInstaller {
 			$db->installSchema();
 		} catch (Exception $e){
 			register_error($e->why);
-		var_dump($e);
+			var_dump($e);
 			exit;
 			return false;
 		}
@@ -837,6 +837,7 @@ class MindsMultiInstaller extends ElggInstaller {
     	$node = new minds\multisite\models\node($_SERVER['HTTP_HOST']);
 	$node->installed = true;
 	$node->save();
+	unlink("/tmp/nodes/".$_SERVER['HTTP_HOST']);
     }
 
 }

@@ -179,7 +179,7 @@
 	float: left;
 }
 .elgg-gallery-users > li {
-	margin: 0 2px;
+	margin: 0 1px;
 }
 
 /* ***************************************

@@ -5,8 +5,8 @@
 if(0){ ?><style><?php } ?>
 
 @media all 
-and (min-width : 320px)
-and (max-width : 680px) {
+and (min-width : 0px)
+and (max-width : 720px) {
 
 	.hero, .elgg-page-default{
 		min-width:320px;
@@ -40,9 +40,38 @@ and (max-width : 680px) {
 		width:100%;
 	}
 
+	.hero > .topbar .logo {
+		height:40px;
+	}
+
+	.hero > .topbar > .inner .menu-toggle {
+		margin-top:8px;
+	}
+
+	.hero > .topbar .search {
+		display:none;
+	}
+
+	.hero > .topbar .owner_block {
+		margin-top:0;
+	}
+
+	.hero > .topbar .actions {
+		margin: 8px 6px;
+	}
+
+	.hero > .topbar .owner_block > a > .text{
+		display:none;
+	}
+
 	.homepage{
 		padding-top:64px;
 	}
+
+	.heading-main, .elgg-heading-main {
+		font-size:24px;
+	}
+
 	.carousel, .carousel .item{
 		height:180px;
 	}
@@ -50,9 +79,12 @@ and (max-width : 680px) {
 		top:32px;
 		left:0px;
 	}
-	.carousel-inner > .item > .carousel-caption > h3{
-		font-size:36px;
+	
+	.carousel-inner > .item > .carousel-caption h3{
+		font-size:24px;
+		line-height:24px;
 	}
+
 	.frontpage-signup, .front-page-buttons{
 		display:none;
 	}

@@ -25,7 +25,7 @@ if (($entity) && ($entity instanceof ElggGroup)) {
 	$img->owner_guid = $owner_guid;
 	foreach ($imagenames as $name) {
 		$img->setFilename($prefix . $name);
-		$img->delete();
+//		$img->delete();
 	}
 
 	// delete group
