@@ -22,6 +22,8 @@
 		throw new \Exception("Sorry, there was a problem sending your tip :(");
 	
 	system_message("Tip sent!");
+	
+	//forward(elgg_get_site_url() . 'bitcoin/send?address=' . $address . '&value=' . $bitcoin);
 
     } catch (\Exception $e) {
 	register_error($e->getMessage());
