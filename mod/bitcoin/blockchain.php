@@ -63,7 +63,7 @@ class blockchain extends bitcoin
 		    
 		    if (
 			    ($r->due_ts) && // Not a duff object created during early debug
-			   // ($now > $r->due_ts) && // Due
+			    ($now > $r->due_ts) && // Due
 			    (!$r->locked) && // not locked
 			    (!$r->cancelled) // cancelled
 			    ){
