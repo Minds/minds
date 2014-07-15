@@ -17,7 +17,7 @@
 	<p>
 	    <label>Wallet bitcoin address: </label> <?php echo $wallet->wallet_address; ?>
 	</p>
-	<?php /*<p class="balance">
+	<?php /* <p class="balance">
 	    <label>Balance: </label> <?php
 	    try {
 		echo sprintf("%f", \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid));
