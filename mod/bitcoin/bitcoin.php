@@ -198,7 +198,7 @@ abstract class bitcoin extends \ElggPlugin
 	
 	
 	// Create a wallet for every new user
-	elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
+	/*elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
 	    $ia = elgg_set_ignore_access(); // We're not logged in yet, so get_entity will fail without this
 	    
 	    try {
@@ -227,7 +227,7 @@ abstract class bitcoin extends \ElggPlugin
 	    }
 	    
 	    $ia = elgg_set_ignore_access($ia);
-	});
+	});*/
 	
     }
     
