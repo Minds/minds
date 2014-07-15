@@ -11,7 +11,7 @@
 	
 	?>
 
-<div class="order"><?php echo elgg_view($order); ?></div>
+<div class="order"><?php echo elgg_view_entity($order); ?></div>
 
 <input type="hidden" name="order_guid" value="<?php echo $order->guid;?>" />
 
