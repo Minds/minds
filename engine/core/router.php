@@ -8,7 +8,8 @@ class router{
 	
 	static $routes = array(
 		"/action" => "minds\\pages\\actions",
-		"/services" => "minds\\pages\\services"
+		"/services" => "minds\\pages\\services",
+		"/cache" => "minds\\pages\\cache"
 	);
 	
 	/**
