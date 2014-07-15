@@ -17,18 +17,20 @@
 	<p>
 	    <label>Wallet bitcoin address: </label> <?php echo $wallet->wallet_address; ?>
 	</p>
-	<p class="balance">
+	<?php /*<p class="balance">
 	    <label>Balance: </label> <?php
 	    try {
 		echo sprintf("%f", \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid));
 		echo " BTC";
 	    } catch (\Exception $e) {
 		echo $e->getMessage();
-		register_error($e->getMessage());
 	    }
 	    ?>
-	</p>
+	</p> */ ?>
 	
+	<p>
+	    <a class="sendpayment button" href="<?php echo elgg_get_site_url(); ?>bitcoin/send">Send a payment...</a> 
+	</p>
     </div>
     
     <div class="report">
