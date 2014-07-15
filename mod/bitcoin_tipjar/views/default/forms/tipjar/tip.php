@@ -4,7 +4,7 @@
     <input type="text" name="value" />
     <select name="currency">
 	<option value="USD" selected>$</option>
-	<option value="Satoshi">Satoshi</option> 
+	<option value="BTC">Bitcoin</option> 
     </select>
     
     <input type="submit" value="Tip!" />
