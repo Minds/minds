@@ -25,6 +25,7 @@
 		    if (data['status']==0)
 		    {
 			$('#bitcoin_wallet').val(data['output']);
+			document.location.reload(true);
 		    }
 		}
             });
