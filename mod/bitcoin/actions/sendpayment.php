@@ -24,7 +24,15 @@ try {
     if (!$wallet) throw new Exception('Could not retrieve your wallet');
     
     // Send payment
-    minds\plugin\bitcoin\bitcoin()->sendPayment($wallet->guid, $address, bitcoin()->toSatoshi($amount));
+    if ($transaction_hash = minds\plugin\bitcoin\bitcoin()->sendPayment($wallet->guid, $address, bitcoin()->toSatoshi($amount))) {
+    
+	// If this is an order, then update the order details
+	if ($order) {
+	    $order->last_transaction_hash = $transaction_hash; // Store transaction handler hash
+	    
+	    $order->save();
+	}
+    }
     
     forward(elgg_get_site_url().'bitcoin/mywallet');
     
