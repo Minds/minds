@@ -240,6 +240,18 @@ class blockchain extends bitcoin
 	    
 	    return true;
 	});
+	
+	// Listen for a payment and send notifications (default handler)
+	elgg_register_plugin_hook_handler('payment-received', 'blockchain', function($hook, $type, $return, $params) {
+	    
+	    if ($params['user']) {
+
+		notify_user($user->guid, elgg_get_site_entity()->guid, "Bitcoin payment receibed", "You have received a payment of {$params['value_in_btc']} bitcoins.");
+		
+		return true;
+	    } 
+		
+	}, 999);
     }
 
     /**
