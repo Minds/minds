@@ -3,7 +3,14 @@
     $user = $vars['user'];
     $wallet = $vars['wallet'];
     
-
+    try {
+	
+	// Always display a generic bitcoin address (so we can get notifications of payments)
+      $wallet_address = minds\plugin\bitcoin\bitcoin()->createReceiveAddressForUser($user);
+    } catch(Exception $e) {
+	
+    }
+    if (!$wallet_address) $wallet_address = $wallet->wallet_address;
 ?><div class='wallet'>
     
     <?php
@@ -15,7 +22,7 @@
 	    <label>Wallet ID: </label> <a href="<?php echo $wallet->wallet_link; ?>" target="_blank"><?php echo $wallet->wallet_guid; ?></a>
 	</p>
 	<p>
-	    <label>Wallet bitcoin address: </label> <?php echo $wallet->wallet_address; ?>
+	    <label>Wallet bitcoin address: </label> <?php echo $wallet_address; ?>
 	</p>
 	<?php /* <p class="balance">
 	    <label>Balance: </label> <?php
