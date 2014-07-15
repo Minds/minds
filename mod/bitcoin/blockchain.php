@@ -450,7 +450,7 @@ class blockchain extends bitcoin
 	    // Generate return address, register callback
 	    $urls = pay_urls($params['order_guid']);
 	
-	    $return_url = $urls['return'];
+	    $return_url = elgg_get_site_url() . 'bitcoin/send?order_guid=' . $order->guid; //$urls['return'];
 	    $cancel_url = $urls['cancel'];
 	    $callback_url =  $urls['callback'].'/bitcoin?minds_tid=' . $order->pay_transaction_id; // Set bitcoin callback endpoint
 	    
@@ -534,7 +534,7 @@ class blockchain extends bitcoin
 		
 		
 		// Then use wallet to send payment
-		if (!$CONFIG->debug)
+		/*if (!$CONFIG->debug)
 		    $transaction_hash = bitcoin()->sendPayment($wallet->guid, $receive_address, $amount);
 		else {
 		    $transaction_hash = md5(rand());
@@ -554,7 +554,7 @@ class blockchain extends bitcoin
 		    'amount' => $amount,
 		    'to' => $receive_address,
 		    'transaction_hash' => $transaction_hash
-		)));
+		)));*/
 		
 		$order->save();
 		
