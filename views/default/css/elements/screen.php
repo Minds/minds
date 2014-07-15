@@ -8,6 +8,11 @@ if(0){ ?><style><?php } ?>
 and (min-width : 0px)
 and (max-width : 720px) {
 
+
+	.elgg-list > li:hover .excerpt, .elgg-list > li:hover .elgg-menu{
+		display:none;
+	}
+
 	.hero, .elgg-page-default{
 		min-width:320px;
 	}
@@ -26,11 +31,17 @@ and (max-width : 720px) {
 		max-width: 100px;
 	}
 	.hero > .topbar .right .elgg-button{
-		margin:2px;
-		width:52px;
+		margin: 1px;
+/* width: 52px; */
+font-size: 60%;
+padding: 2px 5px;
+width: auto;
+font-weight: bold;
 	}
 	
-	
+	.hero > .body, .elgg-page-body {	
+		margin-top:60px;
+	}	
 	
 	.minds-body-header > .inner > .elgg-head{
 		min-width:0;
@@ -54,6 +65,10 @@ and (max-width : 720px) {
 
 	.hero > .topbar .owner_block {
 		margin-top:0;
+	}
+
+	.hero > .topbar .owner_block > a > img {
+		padding:0;
 	}
 
 	.hero > .topbar .actions {

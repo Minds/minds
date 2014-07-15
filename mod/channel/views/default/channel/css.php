@@ -502,7 +502,7 @@ padding: 0 4px;
 and (min-width : 0px)
 and (max-width : 720px) {
 	.body .minds-fixed-layout{
-		width:100%;
+		width:90%;
 		margin:8px;
 	}
 
@@ -549,12 +549,12 @@ and (max-width : 720px) {
 
 		clear:both;
 		width:100%;
-		margin:8px;
+		margin:8px 0;
 
 	}
 
 	.minds-fixed-content .elgg-list.x2 > .elgg-item{
-		width:100%;
+		width:auto;
 		float:none;
 		margin:8px 0;
 	}	

@@ -112,7 +112,8 @@ input[type="radio"] {
 	-moz-box-shadow:0 0 1px #AAA;
 	-webkit-box-shadow:0 0 1px #AAA;
 	background:#FFF;
-	width:50%;
+	width:70%;
+	max-width:400px;
 }
 
 /* ***************************************

@@ -172,14 +172,16 @@
 			return c;
 		});
 
-		//$('.elgg-menu li a').tipsy({gravity: 'n'}); 
-		$('.progress_indicator').tipsy({gravity: 'e'});		
-		$('.elgg-input-text').tipsy({gravity: 'w'});
-		$('.tooltip.s').tipsy({gravity: 's'});
-		$('.tooltip.n').tipsy({gravity: 'n'});
-		$('.tooltip.w').tipsy({gravity: 'w'});
-		$('.tooltip.e').tipsy({gravity: 'e'});
-
+		if($(window).width() > 700){
+			//$('.elgg-menu li a').tipsy({gravity: 'n'}); 
+			$('.progress_indicator').tipsy({gravity: 'e'});		
+			$('.elgg-input-text').tipsy({gravity: 'w'});
+			$('.tooltip.s').tipsy({gravity: 's'});
+			$('.tooltip.n').tipsy({gravity: 'n'});
+			$('.tooltip.w').tipsy({gravity: 'w'});
+			$('.tooltip.e').tipsy({gravity: 'e'});
+		}
+	
 		$('.elgg-form-wall-add textarea').focus( function(e){ $(this).parent().find('.elgg-button-submit').css('display','block');});
 
 		$('.thumbnail-tile').hover(

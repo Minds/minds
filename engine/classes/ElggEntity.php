@@ -1058,7 +1058,6 @@ abstract class ElggEntity extends ElggData implements
 
 		$db = new minds\core\data\call('entities');
 		$result = $db->insert($this->guid, $this->toArray());
-
 		if($result && $timebased){
 			$db = new minds\core\data\call('entities_by_time');
 			$data =  array($result => $result);

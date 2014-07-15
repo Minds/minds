@@ -97,7 +97,7 @@
 .hero > .topbar .search{
 	margin: 12px 16px;
 	float:left;
-	width:200px;
+	width:160px;
 }
 .hero > .topbar .search input{
 	margin:0;

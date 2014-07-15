@@ -10,7 +10,9 @@ if(!$entity) //Elgg entity doesn't exists we return
     forward('archive/all');
 }
 
-if($entity->getSubtype() == 'kaltura_video'){
+if($entity->getSubtype() == 'video'){
+	$entity->delete();
+}elseif($entity->getSubtype() == 'kaltura_video'){
 	elgg_load_library('archive:kaltura');
 	try{
 		$kmodel = KalturaModel::getInstance();

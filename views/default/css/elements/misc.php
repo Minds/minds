@@ -1046,7 +1046,8 @@ li.elgg-menu-item-rss{
 	/*background: rgba(000,000,000,0.4);*/
 	float: left;
 	position: absolute;
-	left: 4%;	
+	left: 4%;
+	max-width:90%;	
 }
 .carousel-inner > .item > .carousel-caption h3{
 	color:#FFF;
