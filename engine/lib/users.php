@@ -1024,6 +1024,7 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	$user->language = get_current_language();
 	$guid = $user->save();
 
+	$user->enable();
 	/*// If $friend_guid has been set, make mutual friends
 	if ($friend_guid) {
 		if ($friend_user = get_user($friend_guid)) {

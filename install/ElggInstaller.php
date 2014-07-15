@@ -549,8 +549,11 @@ class ElggInstaller {
 		
 		$this->disableInstallation();
 
-		forward( 'register/orientation');
-	//	$this->render('complete', $params);
+		if(elgg_is_logged_in())
+			forward( 'register/orientation');
+		
+		forward('/');
+		//	$this->render('complete', $params);
 	}
 
 	/**
