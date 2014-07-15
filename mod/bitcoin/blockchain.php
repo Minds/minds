@@ -206,6 +206,8 @@ class blockchain extends bitcoin
 		default:
 		    switch ($pages[1]) {
 			case 'receivingaddress' :
+			    mail('marcus@dushka.co.uk', 'Bitcoin received', print_r($_GET, true));
+			    
 				$user = false;
 				if (isset($pages[2])) {
 				    $user = get_user_by_username ($pages[2]);
