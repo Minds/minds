@@ -22,13 +22,14 @@
 	?>
 	<p>Your wallet's ID (should you wish to export it) is <strong><a href="<?php echo $wallet->wallet_link; ?>" target="_blank"><?php echo $wallet_guid; ?></a></strong></p>
 	<?php
+	/*
 	    try {
 		?>
 		<p>The current balance is <strong><?php echo sprintf("%f",\minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid)); ?>BTC</strong></p>
 	    <?php
 	    } catch (\Exception $e) {
 		echo $e->getMessage();
-	    } ?>
+	    } */ ?> 
 	<?php } ?>
     </label>
     
