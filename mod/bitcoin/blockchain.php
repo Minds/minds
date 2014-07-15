@@ -363,8 +363,13 @@ class blockchain extends bitcoin
      * @param type $wallet
      */
     protected function getWalletPassword($wallet) {
-	error_log("Bitcoin: Wallet {$wallet->guid} password is {$wallet->wallet_password}");
-	return $wallet->wallet_password;
+	
+	
+	// TODO: Retrieve from session?
+	
+	return get_input('wallet_password'); // Return a password which has been submitted by the user in order to unlock the blockchain wallet.
+	
+	
     }
 
     public static function cancelRecurringPaymentCallback($order_guid) {
