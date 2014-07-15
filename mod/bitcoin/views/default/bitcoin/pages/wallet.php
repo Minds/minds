@@ -2,19 +2,24 @@
 
     $user = $vars['user'];
     $wallet = $vars['wallet'];
+    $loggedin = elgg_get_logged_in_user_entity();
     
-    try {
-	
-	// Always display a generic bitcoin address (so we can get notifications of payments)
-      $wallet_address = minds\plugin\bitcoin\bitcoin()->createReceiveAddressForUser($user);
-    } catch(Exception $e) {
-	
-    }
-    if (!$wallet_address) $wallet_address = $wallet->wallet_address;
 ?><div class='wallet'>
     
     <?php
 	if ($wallet) {
+	    
+	    if ($user->guid == $loggedin->guid) {
+		
+		try {
+
+		    // Always display a generic bitcoin address (so we can get notifications of payments)
+		  $wallet_address = minds\plugin\bitcoin\bitcoin()->createReceiveAddressForUser($user);
+		} catch(Exception $e) {
+
+		}
+		
+		if (!$wallet_address) $wallet_address = $wallet->wallet_address;
 	    ?>
     
     <div class="header">
@@ -54,6 +59,16 @@
     </div>
     
     <?php
+	    } else {
+		?>
+	    <div class="header">
+		
+		<p>
+		    <a class="sendpayment button" href="<?php echo elgg_get_site_url(); ?>bitcoin/send?address=<?php echo minds\plugin\bitcoin\bitcoin()->getReceiveAddressForUser($loggedin); ?>">Send Bitcoin to <?php echo $user->name; ?>...</a> 
+		</p>
+	    </div>
+    <?php
+	    }
 	} else {
 	  ?>
     

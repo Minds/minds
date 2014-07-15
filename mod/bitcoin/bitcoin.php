@@ -165,8 +165,9 @@ abstract class bitcoin extends \ElggPlugin
 	    elgg_load_css('bitcoin.css');
 	    
 	    switch ($pages[0]) {
+		case 'wallet':
 		case 'mywallet' :
-			set_input('username', elgg_get_logged_in_user_entity()->username);
+			set_input('username', $pages[1] ? $pages[1] : elgg_get_logged_in_user_entity()->username);
 			require_once(dirname(__FILE__) . '/pages/wallet.php');
 		    break;
 		case 'send' :
