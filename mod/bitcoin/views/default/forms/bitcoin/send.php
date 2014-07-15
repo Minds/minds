@@ -30,7 +30,7 @@
     ?>
 
 <p><label>Wallet password<br />
-    <input type="password" name="wallet_password" placeholder="Enter your wallet password to unlock your wallet"</label></p>
+	<input type="password" name="wallet_password" placeholder="Enter your wallet password to unlock your wallet" /></label></p>
 
 <input type="submit" name="Send" value="Send Payment..." />
 
