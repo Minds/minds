@@ -402,6 +402,11 @@ class blockchain extends bitcoin
 	    if ($_GET['minds_tid']!=$order->pay_transaction_id)
 		throw new \Exception('Sorry, but the security markers do not match up!');
 	    
+	    // Verify amount
+	    if ($order->amount_in_satoshi != $_GET['value'])
+		throw new \Exception('Sorry, the amount paid doesn\'t match the amount required');
+	    
+	    
 	    // Attach a payment history to the order.
 	    $order->annotate('order_details', serialize($_GET));
 	    
@@ -470,6 +475,8 @@ class blockchain extends bitcoin
 		    $amount = self::toSatoshi(0.00002);
 		    error_log("BITCOIN: Pagehandler - We're in debug mode, so we're squishing the result to $amount");
 		}
+		
+		$order->amount_in_satoshi = $amount; // Save amount in satoshi for future validation
 		
 		/**
 		 * Handle recurring payments.
@@ -543,6 +550,8 @@ class blockchain extends bitcoin
 		    'to' => $receive_address,
 		    'transaction_hash' => $transaction_hash
 		)));
+		
+		$order->save();
 		
 		// update to process
 		pay_update_order_status($order->guid, 'awaitingpayment');
