@@ -19,6 +19,10 @@
     } 
     else
     {
+	
+	$amount_btc = get_input('amount');
+	$address = get_input('address');
+	
 ?>
 <p><label>Enter the amount of Bitcoin you wish to send from your wallet<br />
 	<input type="text" name="amount" value="<?php echo $amount_btc; ?>" placeholder="Amount in BTC" /></label></p>
