@@ -246,7 +246,7 @@ class blockchain extends bitcoin
 	    
 	    if ($params['user']) {
 
-		notify_user($user->guid, elgg_get_site_entity()->guid, "Bitcoin payment receibed", "You have received a payment of {$params['value_in_btc']} bitcoins.");
+		notify_user($user->guid, elgg_get_site_entity()->guid, "Bitcoin payment received", "You have received a payment of {$params['value_in_btc']} bitcoins.");
 		
 		return true;
 	    } 
