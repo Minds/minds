@@ -345,7 +345,7 @@ class blockchain extends bitcoin
      * @param type $wallet
      * @param type $password
      */
-    protected function storeWalletPassword($wallet, $password) {
+    /*protected function storeWalletPassword($wallet, $password) {
 	
 	if (!$password) throw new \Exception("Attempt to set a null password on a wallet.");
 	
@@ -356,7 +356,7 @@ class blockchain extends bitcoin
 	$wallet->wallet_password = $password; 
 	
 	return true;
-    }
+    }*/
     
     /**
      * Retrieve password for a wallet.
@@ -690,9 +690,11 @@ class blockchain extends bitcoin
 		$wallet_obj->owner_guid = $user->guid;
 	}
 	
-	if (!$password) $password = $this->getWalletPassword ($wallet_obj);
-	if (!$password) $password = md5($user->salt . microtime(true));
-	$this->storeWalletPassword($wallet_obj, $password);
+	if (!$password) throw new \Exception('Sorry, a wallet without a password can\'t be imported.');
+	
+	//if (!$password) $password = $this->getWalletPassword ($wallet_obj);
+	//if (!$password) $password = md5($user->salt . microtime(true));
+	//$this->storeWalletPassword($wallet_obj, $password);
 		
 	$wallet_obj->wallet_guid = $wallet_guid;
 	$wallet_obj->wallet_address = $address;
