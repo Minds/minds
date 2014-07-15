@@ -7,7 +7,12 @@
     );
 
     try {
-	$wallet_guid = minds\plugin\bitcoin\bitcoin ()->createSystemWallet();
+	
+	$password = get_input('password');
+	
+	if (!$password) throw new Exception ('No password given!');
+	
+	$wallet_guid = minds\plugin\bitcoin\bitcoin ()->createSystemWallet($password);
 	$wallet = get_entity($wallet_guid);
 
 	if (!$wallet)

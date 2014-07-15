@@ -34,18 +34,28 @@
     
 </p>
 
-<a href="#import" rel="toggle">Import existing wallet...</a>
+<p><a href="#import" rel="toggle">Import existing wallet...</a>
 <div id="import" style="display: none;">
     <?= elgg_view('input/import_wallet'); ?>
 </div>
+</p>
 
-<input id="bitcoin_generate_wallet" type="button" value="Generate new system wallet and bitcoin address..." />
+<?php //if (!elgg_get_plugin_setting('central_bitcoin_wallet_guid', 'bitcoin')) { ?>
+<div class="generatewallet" style="padding:10px; border: 1px dotted #ccc;">
+    <p><label>Enter a password and click the button to generate a new wallet</label>
+	<input type="password" id="bitcoin_generate_password" /></p>
+    <input id="bitcoin_generate_wallet" type="button" value="Generate new system wallet and bitcoin address..." />
+</div>
+
 <script>
     $(document).ready(function() {
 	$('#bitcoin_generate_wallet').click(function() {
 
-	    elgg.action("<?= elgg_get_site_url(); ?>action/bitcoin/generatesystemwallet", { 
+	    elgg.action("<?= elgg_get_site_url(); ?>action/bitcoin/generatesystemwallet?password=" + $('#bitcoin_generate_password').val(), { 
 		contentType : 'application/json',
+		data: {
+		    password: $('#bitcoin_generate_password').val()
+		},
 		success : function(data) {
 		    if (data['status']==0)
 		    {
@@ -57,3 +67,6 @@
 	});
     });
 </script>
+
+<?php // } ?>
+<br />

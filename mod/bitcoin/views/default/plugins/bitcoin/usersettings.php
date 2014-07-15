@@ -8,19 +8,31 @@
 <?php } ?>
 </p>
 
-<a href="#import" rel="toggle">Import existing wallet...</a>
+<p><a href="#import" rel="toggle">Import existing wallet...</a>
 <div id="import" style="display: none;">
     <?= elgg_view('input/import_wallet'); ?>
 </div>
+</p>
 
+<?php
+// Prevent accidental regeneration and loss of bitcoin
+//if (!elgg_get_plugin_user_setting('bitcoin_address', elgg_get_logged_in_user_guid(), 'bitcoin')) { 
+    ?>
 
-<input id="bitcoin_generate_wallet" type="button" value="Generate new wallet and bitcoin address..." />
+<div class="generatewallet" style="padding:10px; border: 1px dotted #ccc;">
+    <p><label>Enter a password and click the button to generate a new wallet</label>
+	<input type="password" id="bitcoin_generate_password" /></p>
+    <input id="bitcoin_generate_wallet" type="button" value="Generate new wallet and bitcoin address..." />
+</div>
 <script>
     $(document).ready(function() {
 	$('#bitcoin_generate_wallet').click(function() {
 
-	    elgg.action("<?= elgg_get_site_url(); ?>action/bitcoin/generatewallet", { 
+	    elgg.action("<?= elgg_get_site_url(); ?>action/bitcoin/generatewallet?password=" + $('#bitcoin_generate_password').val(), { 
 		contentType : 'application/json',
+		data: {
+		    password: $('#bitcoin_generate_password').val()
+		},
 		success : function(data) {
 		    if (data['status']==0)
 		    {
@@ -32,3 +44,7 @@
 	});
     });
 </script>
+<?php
+//}
+?>
+<br />
