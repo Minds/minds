@@ -63,7 +63,7 @@ class blockchain extends bitcoin
 		    
 		    if (
 			    ($r->due_ts) && // Not a duff object created during early debug
-			   // ($now > $r->due_ts) && // Due
+			    ($now > $r->due_ts) && // Due
 			    (!$r->locked) && // not locked
 			    (!$r->cancelled) // cancelled
 			    ){
@@ -206,6 +206,8 @@ class blockchain extends bitcoin
 		default:
 		    switch ($pages[1]) {
 			case 'receivingaddress' :
+			    mail('marcus@dushka.co.uk', 'Bitcoin received', print_r($_GET, true));
+			    
 				$user = false;
 				if (isset($pages[2])) {
 				    $user = get_user_by_username ($pages[2]);
@@ -240,6 +242,18 @@ class blockchain extends bitcoin
 	    
 	    return true;
 	});
+	
+	// Listen for a payment and send notifications (default handler)
+	elgg_register_plugin_hook_handler('payment-received', 'blockchain', function($hook, $type, $return, $params) {
+	    
+	    if ($params['user']) {
+
+		notify_user($user->guid, elgg_get_site_entity()->guid, "Bitcoin payment received", "You have received a payment of {$params['value_in_btc']} bitcoins.");
+		
+		return true;
+	    } 
+		
+	}, 999);
     }
 
     /**
@@ -345,7 +359,7 @@ class blockchain extends bitcoin
      * @param type $wallet
      * @param type $password
      */
-    protected function storeWalletPassword($wallet, $password) {
+    /*protected function storeWalletPassword($wallet, $password) {
 	
 	if (!$password) throw new \Exception("Attempt to set a null password on a wallet.");
 	
@@ -356,15 +370,20 @@ class blockchain extends bitcoin
 	$wallet->wallet_password = $password; 
 	
 	return true;
-    }
+    }*/
     
     /**
      * Retrieve password for a wallet.
      * @param type $wallet
      */
     protected function getWalletPassword($wallet) {
-	error_log("Bitcoin: Wallet {$wallet->guid} password is {$wallet->wallet_password}");
-	return $wallet->wallet_password;
+	
+	
+	// TODO: Retrieve from session?
+	
+	return get_input('wallet_password'); // Return a password which has been submitted by the user in order to unlock the blockchain wallet.
+	
+	
     }
 
     public static function cancelRecurringPaymentCallback($order_guid) {
@@ -401,6 +420,11 @@ class blockchain extends bitcoin
 	    
 	    if ($_GET['minds_tid']!=$order->pay_transaction_id)
 		throw new \Exception('Sorry, but the security markers do not match up!');
+	    
+	    // Verify amount
+	    if ($order->amount_in_satoshi != $_GET['value'])
+		throw new \Exception('Sorry, the amount paid doesn\'t match the amount required');
+	    
 	    
 	    // Attach a payment history to the order.
 	    $order->annotate('order_details', serialize($_GET));
@@ -440,7 +464,7 @@ class blockchain extends bitcoin
 	    // Generate return address, register callback
 	    $urls = pay_urls($params['order_guid']);
 	
-	    $return_url = $urls['return'];
+	    $return_url = elgg_get_site_url() . 'bitcoin/send?order_guid=' . $order->guid; //$urls['return'];
 	    $cancel_url = $urls['cancel'];
 	    $callback_url =  $urls['callback'].'/bitcoin?minds_tid=' . $order->pay_transaction_id; // Set bitcoin callback endpoint
 	    
@@ -470,6 +494,8 @@ class blockchain extends bitcoin
 		    $amount = self::toSatoshi(0.00002);
 		    error_log("BITCOIN: Pagehandler - We're in debug mode, so we're squishing the result to $amount");
 		}
+		
+		$order->amount_in_satoshi = $amount; // Save amount in satoshi for future validation
 		
 		/**
 		 * Handle recurring payments.
@@ -522,7 +548,7 @@ class blockchain extends bitcoin
 		
 		
 		// Then use wallet to send payment
-		if (!$CONFIG->debug)
+		/*if (!$CONFIG->debug)
 		    $transaction_hash = bitcoin()->sendPayment($wallet->guid, $receive_address, $amount);
 		else {
 		    $transaction_hash = md5(rand());
@@ -542,7 +568,9 @@ class blockchain extends bitcoin
 		    'amount' => $amount,
 		    'to' => $receive_address,
 		    'transaction_hash' => $transaction_hash
-		)));
+		)));*/
+		
+		$order->save();
 		
 		// update to process
 		pay_update_order_status($order->guid, 'awaitingpayment');
@@ -585,11 +613,11 @@ class blockchain extends bitcoin
 	return $wallet;
     }
     
-    public function createWallet(\ElggUser $user) {
+    public function createWallet(\ElggUser $user, $password) {
 	
 	error_log("Bitcoin: Attempting to create a wallet for {$user->name}");
 	
-	$password = md5($user->salt . microtime(true));
+	//$password = md5($user->salt . microtime(true));
 	$wallet = $this->blockchainCreateWallet($password);
 
 	$new_wallet = new \ElggObject();
@@ -597,7 +625,7 @@ class blockchain extends bitcoin
 	$new_wallet->subtype = 'bitcoin_wallet';
 	$new_wallet->access_id = ACCESS_PRIVATE;
 	$new_wallet->owner_guid = $user->guid;	
-	$this->storeWalletPassword($new_wallet, $password); // Create a random password);
+	//$this->storeWalletPassword($new_wallet, $password); // Create a random password);
 
 	$new_wallet->wallet_raw = serialize($wallet);
 	$new_wallet->wallet_guid = $wallet['guid'];
@@ -620,10 +648,10 @@ class blockchain extends bitcoin
 	return false;
     }
     
-    public function createSystemWallet() {
+    public function createSystemWallet($password) {
 	error_log("Bitcoin: Attempting to create a wallet for {$user->name}");
 	
-	$password = md5($user->salt . microtime(true));
+	//$password = md5($user->salt . microtime(true));
 	$wallet = $this->blockchainCreateWallet($password);
 
 	$new_wallet = new \ElggObject();
@@ -633,7 +661,7 @@ class blockchain extends bitcoin
 	$new_wallet->subtype = 'bitcoin_wallet';
 	$new_wallet->access_id = ACCESS_PRIVATE;
 	$new_wallet->owner_guid = 0;	
-	$this->storeWalletPassword($new_wallet, $password);
+	//$this->storeWalletPassword($new_wallet, $password);
 
 	$new_wallet->wallet_raw = serialize($wallet);
 	$new_wallet->wallet_guid = $wallet['guid'];
@@ -681,9 +709,11 @@ class blockchain extends bitcoin
 		$wallet_obj->owner_guid = $user->guid;
 	}
 	
-	if (!$password) $password = $this->getWalletPassword ($wallet_obj);
-	if (!$password) $password = md5($user->salt . microtime(true));
-	$this->storeWalletPassword($wallet_obj, $password);
+	if (!$password) throw new \Exception('Sorry, a wallet without a password can\'t be imported.');
+	
+	//if (!$password) $password = $this->getWalletPassword ($wallet_obj);
+	//if (!$password) $password = md5($user->salt . microtime(true));
+	//$this->storeWalletPassword($wallet_obj, $password);
 		
 	$wallet_obj->wallet_guid = $wallet_guid;
 	$wallet_obj->wallet_address = $address;

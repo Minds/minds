@@ -7,10 +7,14 @@
     );
 
     try {
+	$password = get_input('password');
+	
+	if (!$password) throw new Exception ('No password given!');
+	
 	if ($user = elgg_get_logged_in_user_entity()) {
 	
 	   if (!$wallet = minds\plugin\bitcoin\bitcoin()->getWallet($user)) {
-	       $wallet_guid = minds\plugin\bitcoin\bitcoin ()->createWallet($user);
+	       $wallet_guid = minds\plugin\bitcoin\bitcoin ()->createWallet($user, $password);
 	       $wallet = get_entity($wallet_guid);
 	   }
 	   
