@@ -24,7 +24,7 @@ try {
 	
 	$ia = elgg_set_ignore_access($ia);
     }
-    else
+   /* else
     // Ok, if we haven't got an address, then we probably should generate one
     if (!elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin') && !get_input('wallet_guid')) {
 
@@ -38,7 +38,7 @@ try {
 	    
 	system_message("You don't appear to have a central bitcoin account, so we've created one for you. If you like, you can import an existing one.");
 	
-    }
+    }*/
     
     // Generate receive address if not already created
     \minds\plugin\bitcoin\bitcoin()->createSystemReceiveAddress();
