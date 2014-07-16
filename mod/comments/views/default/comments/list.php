@@ -1,4 +1,6 @@
 <?php
+if(!$vars['comments'] && count($vars['comments']) == 0)
+	return false;
 
 echo '<ul class="minds-comments">';
 foreach($vars['comments'] as $comment){

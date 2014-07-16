@@ -59,11 +59,11 @@ class TidypicsImage extends ElggFile {
 	public function delete() {
 
 		$album = get_entity($this->container_guid, 'album');
-		if ($album) {
+		if ($album instanceof TidypicsAlbum) {
 			$album->removeImage($this->guid);
 		}
 
-		$this->removeThumbnails();
+		//$this->removeThumbnails();
 
 		// update quota
 		$owner = $this->getOwnerEntity();

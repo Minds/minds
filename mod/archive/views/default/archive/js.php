@@ -10,7 +10,7 @@ archive.init = function(){
 			plugins : {
 				resolutionSelector : {
 					// Pass any options here
-					default_res : "720p,360p"
+					default_res : "360p"
 				}
 			 }
 		}
@@ -38,7 +38,7 @@ archive.init = function(){
         var img = document.getElementById('thumbnail_img');
 	   
 
-	$video.get(0).currentTime = $video.attr('data-thumbSec');
+	//$video.get(0).currentTime = $video.attr('data-thumbSec');
           
         $video.bind('seeked', function(){
         	draw($video.get(0), thecanvas, img);

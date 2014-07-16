@@ -1,11 +1,19 @@
 <?php
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/engine/start.php');
+global $CONFIG;
 
-$es = new elasticsearch();
-$es->index = $CONFIG->elasticsearch_prefix . 'comments';
+$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search'))));
+$params = array();
+$body['query']['query_string']['query'] = 'minds';
+$params['index'] = $CONFIG->elasticsearch_prefix . 'comments';
+$params['type'] = 'entity';
+$params['size'] = 2000;
+$params['from'] = 0;
+$params['body']  = $body;
 
-$result = $es->query('entity', NULL, 'time_created:asc',2000,0);
+$result = $client->search($params);
+
 foreach($result['hits']['hits'] as $item){
 	$data = $item['_source'];
 var_dump($data);

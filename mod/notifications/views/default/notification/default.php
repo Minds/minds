@@ -7,7 +7,8 @@ $entity = elgg_extract('entity', $vars);
 
 $owner = get_entity($entity->from_guid, 'user');
 if(!$entity->notification_view){
-var_dump($entity);
+	$entity->delete();
+	return false;
 }
 
 if($owner){
