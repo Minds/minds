@@ -5,6 +5,9 @@
 
 elgg_set_context('upload');
 
+if(!elgg_is_logged_in()){
+	forward('/register');
+}
 
 // Loading js's
 elgg_load_js('angular.min.js');

@@ -19,7 +19,7 @@ class search extends core\page implements interfaces\page{
 		$params = array();
 		
 		$query = $_GET['q'];
-	
+		$query = preg_replace("/[^A-Za-z0-9 ]/", ' ',$query);	
 		if(!$query){
 			exit;
 		}

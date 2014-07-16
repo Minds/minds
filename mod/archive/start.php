@@ -191,38 +191,6 @@ function minds_archive_page_setup() {
 	$page_owner = elgg_get_page_owner_entity();
 	$user = elgg_get_logged_in_user_entity();
 	
-	/*if (elgg_get_context() == 'archive') {
-		
-		elgg_register_menu_item('page', array(
-			'name' => elgg_echo('upload'),
-			'href' => elgg_get_site_url() . 'archive/upload',
-			'text' => elgg_echo('minds:archive:upload'),
-			'class' => 'pagesactions elgg-lightbox',
-			'priority' => 0,
-			'section'=>'actions'
-		));
-
-        elgg_register_menu_item('page', array(
-			'name' =>elgg_echo('minds:archive:all'),
-			'href' => elgg_get_site_url() . "archive/all",
-			'text' =>  elgg_echo('minds:archive:all'),
-			'priority' => 400,
-			'section' => 'menu-a'
-		));
-			
-	}
-	
-	// Group submenu option
-	if ($page_owner instanceof ElggGroup && elgg_get_context() == 'groups') {
-		if($page_owner->kaltura_video_enable != "no") {
-			elgg_register_menu_item('page', array(
-					'name' =>sprintf(elgg_echo('kalturavideo:label:groupvideos'),$page_owner->name),
-					'href' => $CONFIG->wwwroot . "archive/" . $page_owner->username,
-					'text' =>  sprintf(elgg_echo('kalturavideo:label:groupvideos'),$page_owner->name),
-				));
-		}
-	}
-	
 	/**
 	 * EMBED 
 	 */
