@@ -22,8 +22,8 @@ class blockchain extends bitcoin
 	elgg_register_action('bitcoin/generatesystemwallet', dirname(__FILE__) . '/actions/create_system_wallet.php');
 	
 	// Register payment handler
-	elgg_load_library('elgg:pay');
-	pay_register_payment_handler('bitcoin', '\minds\plugin\bitcoin\blockchain::paymentHandler');
+	//elgg_load_library('elgg:pay');
+	//pay_register_payment_handler('bitcoin', '\minds\plugin\bitcoin\blockchain::paymentHandler');
 	
 	// Handle recurring payments (DIY, until blockchain support this natively)
 	elgg_register_plugin_hook_handler('cron', 'daily', function(){

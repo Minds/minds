@@ -44,7 +44,7 @@
     $(document).ready(function() {
 	$('#bitcoin_generate_wallet').click(function() {
 
-	    elgg.action("<?= elgg_get_site_url(); ?>action/bitcoin/generatesystemwallet", { 
+	elgg.post("<?= elgg_add_action_tokens_to_url(elgg_get_site_url() . 'action/bitcoin/generatewallet'); ?>", { 
 		contentType : 'application/json',
 		success : function(data) {
 		    if (data['status']==0)

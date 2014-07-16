@@ -16,6 +16,7 @@
 	</p>
 	<p>
 	    <label>Wallet bitcoin address: </label> <?php echo $wallet->wallet_address; ?>
+		<img src="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=<?php echo $wallet->wallet_address;?>&chld=H|0"/>
 	</p>
 	<p class="balance">
 	    <label>Balance: </label> <?php
