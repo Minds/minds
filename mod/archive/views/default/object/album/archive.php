@@ -91,5 +91,5 @@ if($cover){
         $content = $img . $body;
         echo $menu;
 	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
-        echo $header;
         echo elgg_view('output/url', array('href'=>$album->getURL(), 'text'=>$image));
+	echo $header;
