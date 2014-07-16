@@ -28,8 +28,8 @@
     $(document).ready(function() {
 	$('#bitcoin_generate_wallet').click(function() {
 
-	    elgg.post("<?= elgg_add_action_tokens_to_url(elgg_get_site_url() . 'action/bitcoin/generatewallet'); ?>", { 
-		contentType : 'application/json',
+	    elgg.action("bitcoin/generatewallet", { 
+		//contentType : 'application/json',
 		data: {
 		    password: $('#bitcoin_generate_password').val()
 		},
@@ -39,6 +39,9 @@
 			$('#bitcoin_wallet').val(data['output']);
 			document.location.reload(true);
 		    }
+		},
+		error : function(data){
+			elgg.register_error(data);
 		}
             });
 	});

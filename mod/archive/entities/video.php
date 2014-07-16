@@ -27,8 +27,8 @@ class video extends object{
 	
 	public function cinemr(){
 		return new cinemr\sdk\client(array(
-				 'account_guid' => '334044578178928640',
-                        'secret' => 'n3lZYtzXC0GbF3dtzSr6TqU3JPnFEGJlXhwSlqdj6ew=',
+				'account_guid' => '335988155444367360',
+                        	'secret' => '+/rW1ArsueEjXK++0zkxlBrbLkb5suHqvqZJ64kX8rk=',
 				'uri' => 'http://cinemr.minds.com'
 			));
 	}

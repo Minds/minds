@@ -230,8 +230,8 @@ function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL)
 	}
 
 	if (!isset($CONFIG->action_token_timeout)) {
-		// default to 2 hours
-		$timeout = 2;
+		// default to 12 hours
+		$timeout = 12;
 	} else {
 		$timeout = $CONFIG->action_token_timeout;
 	}

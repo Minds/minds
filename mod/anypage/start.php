@@ -36,7 +36,7 @@ function anypage_init() {
  */
 function anypage_setup_footer_menu() {
 	$show = true;
-
+	
 	if(get_input('ajax'))
 		$show = false;
 

@@ -92,8 +92,9 @@ class ElggPlugin extends ElggEntity {
 				$this->priority = array_search('plugin', $plugins) ;
 		
 				//now load our preset settings
-				foreach($CONFIG->pluginSettings->{$plugin} as $k => $v)
-					$this->$k = $v;
+				if(isset($CONFIG->pluginSettings->{$plugin}))
+					foreach($CONFIG->pluginSettings->{$plugin} as $k => $v)
+						$this->$k = $v;
 		
 			} else {
 
