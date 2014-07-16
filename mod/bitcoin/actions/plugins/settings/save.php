@@ -24,6 +24,10 @@ try {
 	} 
 	else throw new \Exception('Wallet password must be provided in order to import');
 	
+	
+	// Generate receive address if not already created
+	\minds\plugin\bitcoin\bitcoin()->createSystemReceiveAddress();
+	
 	$ia = elgg_set_ignore_access($ia);
     }
    /* else
@@ -42,8 +46,6 @@ try {
 	
     }*/
     
-    // Generate receive address if not already created
-    \minds\plugin\bitcoin\bitcoin()->createSystemReceiveAddress();
     
     
 } catch (Exception $ex) {
