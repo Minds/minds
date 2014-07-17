@@ -36,8 +36,9 @@ class minds extends base{
 		\elgg_trigger_event('boot', 'system');
 		
 		//Load plugins @todo make this oop
-		\elgg_load_plugins();
-		
+		//\elgg_load_plugins();
+		new plugins();
+	
 		// Complete the boot process for both engine and plugins
 		elgg_trigger_event('init', 'system');
 		

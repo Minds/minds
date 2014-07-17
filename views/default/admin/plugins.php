@@ -11,8 +11,7 @@
 elgg_load_js('lightbox');
 elgg_load_css('lightbox');
 
-elgg_generate_plugin_entities();
-$installed_plugins = elgg_get_plugins('any'); 
+$all_plugins = minds\core\plugins::get('any'); 
 $show_category = get_input('category', 'all');
 $sort = get_input('sort', 'priority');
 // Get a list of the all categories
@@ -20,7 +19,7 @@ $sort = get_input('sort', 'priority');
 // @todo this could be cached somewhere after have the manifest loaded
 $categories = array();
 
-foreach ($installed_plugins as $id => $plugin) {
+foreach ($all_plugins as $id => $plugin) {
 	if (!$plugin->isValid()) {
 		if ($plugin->isActive()) {
 			// force disable and warn
@@ -40,22 +39,22 @@ foreach ($installed_plugins as $id => $plugin) {
 			break;
 		case 'active':
 			if (!$plugin->isActive()) {
-				unset($installed_plugins[$id]);
+				unset($all_plugins[$id]);
 			}
 			break;
 		case 'inactive':
 			if ($plugin->isActive()) {
-				unset($installed_plugins[$id]);
+				unset($all_plugins[$id]);
 			}
 			break;
 		case 'nonbundled':
 			if (in_array('bundled', $plugin_categories)) {
-				unset($installed_plugins[$id]);
+				unset($all_plugins[$id]);
 			}
 			break;
 		default:
 			if (!in_array($show_category, $plugin_categories)) {
-				unset($installed_plugins[$id]);
+				unset($all_plugins[$id]);
 			}
 			break;
 	}
@@ -70,7 +69,7 @@ foreach ($installed_plugins as $id => $plugin) {
 }
 
 $guids = array();
-foreach ($installed_plugins as $plugin) {
+foreach ($all_plugins as $plugin) {
 	$guids[] = $plugin->getGUID();
 }
 
@@ -78,7 +77,7 @@ foreach ($installed_plugins as $plugin) {
 switch ($sort) {
 	case 'date':
 		$plugin_list = array();
-		foreach ($installed_plugins as $plugin) {
+		foreach ($all_plugins as $plugin) {
 			$create_date = $plugin->getTimeCreated();
 			while (isset($plugin_list[$create_date])) {
 				$create_date++;
@@ -89,18 +88,16 @@ switch ($sort) {
 		break;
 	case 'alpha':
 		$plugin_list = array();
-		foreach ($installed_plugins as $plugin) {
+		foreach ($all_plugins as $plugin) {
 			$plugin_list[$plugin->getFriendlyName()] = $plugin;
 		}
 		ksort($plugin_list);
 		break;
 	case 'priority':
 	default:
-		$plugin_list = $installed_plugins;
+		$plugin_list = $all_plugins;
 		break;
 }
-
-
 
 asort($categories);
 
