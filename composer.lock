@@ -295,12 +295,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Pimple.git",
-                "reference": "6a18683f5f52c7eff442812b48122d21d44fbddb"
+                "reference": "c4d56ed5cfafcf0278e0a355d8925904dc0f931d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/6a18683f5f52c7eff442812b48122d21d44fbddb",
-                "reference": "6a18683f5f52c7eff442812b48122d21d44fbddb",
+                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/c4d56ed5cfafcf0278e0a355d8925904dc0f931d",
+                "reference": "c4d56ed5cfafcf0278e0a355d8925904dc0f931d",
                 "shasum": ""
             },
             "require": {
@@ -335,7 +335,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2014-06-26 14:39:39"
+            "time": "2014-07-13 08:59:48"
         },
         {
             "name": "psr/log",

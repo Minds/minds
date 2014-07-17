@@ -360,6 +360,7 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 		foreach($plugins as $priority => $plugin){
 			$plugin = new ElggPlugin($plugin);
 			$PLUGINS_CACHE[$plugin->guid] = $plugin;
+			array_push($PLUGINS_LIST_CACHE[$status], $plugin);
 			$return[] = $plugin;	
 		}
 		return $return;
