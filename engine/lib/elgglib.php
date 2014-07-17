@@ -955,7 +955,7 @@ function _elgg_php_exception_handler($exception) {
  * @access private
  * @todo Replace error_log calls with elgg_log calls.
  */
-function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
+function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars = array()) {
 	$error = date("Y-m-d H:i:s (T)") . ": \"$errmsg\" in file $filename (line $linenum)";
 	
 	switch ($errno) {
