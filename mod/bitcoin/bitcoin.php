@@ -61,6 +61,10 @@ abstract class bitcoin extends \ElggPlugin
      */
     abstract public function sendPayment($from_wallet_guid, $to_address, $amount_in_satoshi);
     
+    /**
+     * Temporarily unlock a given wallet, by storing its password for a short period of time
+     */
+    abstract public function unlockWallet($wallet_guid, $password);
 
 
 
@@ -196,6 +200,7 @@ abstract class bitcoin extends \ElggPlugin
 	
 	// Payment action
 	elgg_register_action('bitcoin/send', dirname(__FILE__) . '/actions/sendpayment.php');
+	elgg_register_action('bitcoin/unlock', dirname(__FILE__) . '/actions/unlockwallet.php');
 	
 	
 	// Create a wallet for every new user

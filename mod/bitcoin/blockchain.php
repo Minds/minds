@@ -372,18 +372,28 @@ class blockchain extends bitcoin
 	return true;
     }*/
     
+    public function unlockWallet($wallet_guid, $password) {
+	
+	setcookie("wallet_$wallet_guid", $password, time() + 120, '/');
+    }
+    
     /**
      * Retrieve password for a wallet.
      * @param type $wallet
      */
     protected function getWalletPassword($wallet) {
 	
+	if ($wallet)
+	{
+	    $wallet_guid = $wallet->guid;
+	    
+	    $password = $_COOKIE["wallet_$wallet_guid"];
+	}
 	
-	// TODO: Retrieve from session?
+	if (!$password)
+	    $password = get_input('wallet_password'); // Return a password which has been submitted by the user in order to unlock the blockchain wallet.
 	
-	return get_input('wallet_password'); // Return a password which has been submitted by the user in order to unlock the blockchain wallet.
-	
-	
+	return $password;
     }
 
     public static function cancelRecurringPaymentCallback($order_guid) {
@@ -635,6 +645,10 @@ class blockchain extends bitcoin
 	$new_wallet->wallet_handler = 'blockchain';
 
 	if ($guid = $new_wallet->save()) {
+	    
+	    // Temporarily unlock the wallet
+	    //$this->unlockWallet($guid, $password);
+	    
 	    // Save the address to user settings
 	    elgg_set_plugin_user_setting('bitcoin_address', $wallet['address'], $new_wallet->owner_guid, 'bitcoin');
 	    elgg_set_plugin_user_setting('bitcoin_wallet', $wallet['guid'], $new_wallet->owner_guid, 'bitcoin');
@@ -662,7 +676,7 @@ class blockchain extends bitcoin
 	$new_wallet->access_id = ACCESS_PRIVATE;
 	$new_wallet->owner_guid = 0;	
 	//$this->storeWalletPassword($new_wallet, $password);
-
+	
 	$new_wallet->wallet_raw = serialize($wallet);
 	$new_wallet->wallet_guid = $wallet['guid'];
 	$new_wallet->wallet_address = $wallet['address'];
@@ -674,6 +688,9 @@ class blockchain extends bitcoin
 	
 	if ($guid = $new_wallet->save()) {
 	
+	    // Temporarily unlock the wallet
+	    //$this->unlockWallet($guid, $password);
+	    
 	    // Save the address to user settings
 	    elgg_set_plugin_setting('central_bitcoin_account', $wallet['address'], 'bitcoin');
 	    elgg_set_plugin_setting('central_bitcoin_wallet_guid', $wallet['guid'], 'bitcoin'); // Shortcut for wallet guid
@@ -722,6 +739,9 @@ class blockchain extends bitcoin
 	$wallet_obj->wallet_handler = 'blockchain';
 	
 	if ($guid = $wallet_obj->save()) {
+	    
+	    // Temporarily unlock the wallet
+	    //$this->unlockWallet($guid, $password);
 	    
 	    // Attempt to retrieve an address, if none specified
 	    if (!$address) {

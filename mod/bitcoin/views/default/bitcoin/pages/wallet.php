@@ -29,16 +29,17 @@
 	<p>
 	    <label>Wallet bitcoin address: </label> <?php echo $wallet_address; ?>
 	</p>
-	<?php /* <p class="balance">
+	<p class="balance">
 	    <label>Balance: </label> <?php
 	    try {
 		echo sprintf("%f", \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid));
 		echo " BTC";
 	    } catch (\Exception $e) {
-		echo $e->getMessage();
+		//echo $e->getMessage();
+		echo elgg_view('input/unlockwallet', array('wallet'=>$wallet));
 	    }
 	    ?>
-	</p> */ ?>
+	</p>
 	
 	<p>
 	    <a class="sendpayment button" href="<?php echo elgg_get_site_url(); ?>bitcoin/send">Send a payment...</a> 
