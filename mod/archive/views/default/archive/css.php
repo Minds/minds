@@ -49,7 +49,59 @@ color: #CCC;
 -webkit-box-shadow: none;
 box-shadow: none;
 }
+**
+* videojs.ads.css
+*/
 
+/* Ad playback */
+.vjs-ad-playing .vjs-progress-control {
+  pointer-events: none;
+}
+.vjs-ad-playing .vjs-play-progress {
+  background-color: #ffe400;
+}
+
+/* Ad loading */
+.vjs-ad-loading .vjs-loading-spinner {
+  display: block;
+}
+.vast-skip-button {
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: 0;
+    width: auto;
+    background-color: #000;
+    color: #AAA;
+    font-size: 12px;
+    font-style: italic;
+    line-height: 12px;
+    padding: 10px;
+    z-index: 2;
+}
+
+.vast-skip-button.enabled {
+    cursor: pointer;
+    color: #fff;
+}
+
+.vast-skip-button.enabled:hover {
+    cursor: pointer;
+    background: #333;
+}
+
+.vast-blocker {
+    display: block;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
 .player-container .vjs-default-skin .vjs-control-bar { 
 	font-size: 125%; 
 }

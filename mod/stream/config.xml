@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<config>
-	<core debug="false"/>
-	<ui skin="wrath2"/>
-	<server address="minds.tv" port="" ssl="false" realname="false" encoding="utf-8" services="false" gateway="false" policyport="843"/>
-	<channels autojoin=""/>
-</config>

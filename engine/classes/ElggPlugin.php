@@ -125,9 +125,13 @@ class ElggPlugin extends ElggEntity {
 		
 		minds\core\plugins::purgeCache('plugins:all');
 		minds\core\plugins::purgeCache('plugins:active');
+		minds\core\plugins::$cache == array();
 	
 		$attributes = array();
 		foreach($this as $k=>$v){
+			if(is_null($v))
+				continue;
+
 			$attributes[$k] = $v;
 		}
 
@@ -650,7 +654,7 @@ class ElggPlugin extends ElggEntity {
 	 */
 	public function deactivate($site_guid = null) {
 		if (!$this->isActive($site_guid)) {
-			return false;
+			//return false;
 		}
 
 		// emit an event. returning false will cause this to not be deactivated.
@@ -671,7 +675,7 @@ class ElggPlugin extends ElggEntity {
 		if ($return === false) {
 			return false;
 		} else {
-			$this->setSetting('active', 0);
+			return 	$this->setSetting('active', "0");
 		}
 	}
 	
@@ -691,14 +695,14 @@ class ElggPlugin extends ElggEntity {
 	 * @throws PluginException
 	 */
 	public function start($flags =NULL) {
-		//if (!$this->canActivate()) {
-		//	return false;
-		//}
+		if (!$this->canActivate()) {
+			return false;
+		}
 
 		// include classes, plugins should really use namespace standards now
 		$this->registerClasses();
 
-		//$this->includeFile('start.php');
+		$this->includeFile('start.php');
 
 		$this->registerViews();
 		
@@ -733,7 +737,7 @@ class ElggPlugin extends ElggEntity {
 			throw new PluginException($msg);
 		}
 
-		return include $filepath;
+		return include_once($filepath);
 	}
 
 	/**

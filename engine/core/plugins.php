@@ -14,10 +14,11 @@ class plugins extends base{
 	 * Construct plugins
 	 */
 	public function __construct(){
+
 		self::$path = __MINDS_ROOT__ . "/mod/";
 		$this->load();
 		
-		\elgg_register_event_handler('system', 'ready', array($this, 'initPlugin'));
+		\elgg_register_event_handler('init', 'system', array($this, 'initPlugin'));
 	}
 
 	/**
@@ -45,7 +46,6 @@ class plugins extends base{
 	
 		//does this really need to be sorted?
 		sort($plugin_ids);
-
 		return $plugin_ids;
 	}
 	
@@ -65,7 +65,7 @@ class plugins extends base{
 		}
 		
 		//check the tmp disk cache, because it reduces a database call
-		if($cached = self::getFromCache("plugins:$status") && false){
+		if($cached = self::getFromCache("plugins:$status")){
 		
 			$rows = $cached;
 		
@@ -73,7 +73,7 @@ class plugins extends base{
 		
 			//Check if plugins are predfined in settings. Improves performance
 			//@todo remove once production does not rely on this
-			if(isset($CONFIG->plugins) && $plugins = $CONFIG->plugins){
+		/*	if(isset($CONFIG->plugins) && $plugins = $CONFIG->plugins){
 				$return = array();
 				foreach($plugins as $priority => $plugin){
 					$plugin = new \ElggPlugin($plugin);
@@ -81,7 +81,7 @@ class plugins extends base{
 					$return[] = $plugin;	
 				}
 				return $return;
-			}
+			}*/
 					
 			$db = new \minds\core\data\call('plugin');
 			$rows = $db->getRows(self::getFromDir());
@@ -95,7 +95,7 @@ class plugins extends base{
 			//do a quick check to see if the plugin is active, if it's not, then we can skip
 			if($status == 'active' && $row['active'] != 1)
 				continue;
-			
+				
 			//build the correct entity for the plugin
 			$row['guid'] = $key;
 			$plugin = self::factory($key, $row);
@@ -120,7 +120,6 @@ class plugins extends base{
 	 * Load plugins
 	 */
 	private function load(){
-		
 		/**
 		 * Disables all plugins if a 'disabled' file is found in the directory
 		 */
@@ -130,17 +129,16 @@ class plugins extends base{
 			}
 			return false;
 		}
-	
-		$return = true;
-		$plugins = $this->get('active');
 
+		$plugins = self::get('active');	
+		$return = true;
+		
 		if ($plugins) {
 			foreach ($plugins as $plugin) {
-
 				try {
 					
 					$plugin->start();
-					
+				
 				} catch (Exception $e) {
 					
 					$plugin->deactivate();
@@ -159,14 +157,14 @@ class plugins extends base{
 		}
 	
 		\elgg_trigger_event('plugins_loaded', 'plugin');
-	
+		
 		return $return;
 	}
 	
 	public function initPlugins(){
-		$plugins = self::get('active');
-		foreach($plugins as $plugin)
-			$plugin->init();
+		//$plugins = self::get('active');
+		//foreach($plugins as $plugin)
+		//	$plugin->init();
 	}
 	
 	/**
@@ -190,7 +188,7 @@ class plugins extends base{
 		//@todo, make this work in other directories, not just tmp
 		global $CONFIG;
 		$path = "/tmp/minds/".$CONFIG->cassandra->keyspace;
-		@mkdir($path, 0777, true);
+		@mkdir($path, 777, true);
 		
 		return file_put_contents("$path/$key", json_encode($data));
 	}

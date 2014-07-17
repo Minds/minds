@@ -11,6 +11,12 @@ archive.init = function(){
 				resolutionSelector : {
 					// Pass any options here
 					default_res : "360p"
+				},
+				ads: {},
+				vast: {
+					url : 'https://www.minds.io/www/delivery/fc.php?script=bannerTypeHtml:vastInlineBannerTypeHtml:vastInlineHtml&zones=pre-roll0-0%3D1&nz=1&block=1&format=vast&charset=UTF-8',
+					//url: 'https://u-ads.adap.tv/a/h/lHGLrXrmVyWu_WIW8N2efkkSly2bIgqgoOt0lqLFswM=?cb={cachebreaker}&pet=preroll&injectCompanionDummy=true&eov=eov'
+//					url: 'https://ad.doubleclick.net/pfadx/N270.126913.6102203221521/B3876671.21;dcadv=2215309;sz=0x0;ord=%5btimestamp%5d;dcmt=text/xml'
 				}
 			 }
 		}
