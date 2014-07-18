@@ -393,6 +393,9 @@ class blockchain extends bitcoin
 	if (!$password)
 	    $password = get_input('wallet_password'); // Return a password which has been submitted by the user in order to unlock the blockchain wallet.
 	
+	if ($wallet && $wallet->wallet_system_pw)
+	    $password = $wallet->wallet_system_pw;
+	
 	return $password;
     }
 
@@ -677,6 +680,9 @@ class blockchain extends bitcoin
 	$new_wallet->owner_guid = 0;	
 	//$this->storeWalletPassword($new_wallet, $password);
 	
+	// We store system passwords
+	$new_wallet->wallet_system_pw = $password;
+	
 	$new_wallet->wallet_raw = serialize($wallet);
 	$new_wallet->wallet_guid = $wallet['guid'];
 	$new_wallet->wallet_address = $wallet['address'];
@@ -757,6 +763,9 @@ class blockchain extends bitcoin
 		elgg_set_plugin_setting('central_bitcoin_account', $address, 'bitcoin');
 		elgg_set_plugin_setting('central_bitcoin_wallet_guid', $wallet_guid, 'bitcoin'); // Shortcut for wallet guid
 		elgg_set_plugin_setting('central_bitcoin_wallet_object_guid', $guid, 'bitcoin'); // Shortcut for wallet guid
+		
+		// Storing system wallet 
+		$wallet_obj->wallet_system_pw = $password;
 
 		error_log("Bitcoin: System wallet imported");
 	    }
