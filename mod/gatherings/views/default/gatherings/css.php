@@ -88,11 +88,11 @@
 .minds-live-chat ul li .avatar{
 	float:left;
 	width:25px;
-	margin:8px;
+	margin:12px;
 }
 .minds-live-chat ul li h3{
 	width:100%;
-	margin:8px;
+	margin:12px;
 	height:auto;
 	display:block;
 	font-size:14px;
@@ -112,7 +112,7 @@
 	color: #888;
 }
 .minds-live-chat ul li .messages{
-	height:150px;
+	height:140px;
 	width:auto;
 	background:#F8F8F8;
 	padding:8px;
@@ -163,12 +163,14 @@
 .minds-live-chat .call .remote, .minds-live-chat .call .local{
 	height:168px;
 }
-.minds-live-chat ul li input{
+.minds-live-chat ul li textarea{
 	border:1px solid #CCC;
 	border-radius:0;
+	padding:4px 8px;
 	-webkit-border-radius:0;
 	-moz-border-radius:0;
 	background:#EEE;
+	height:42px;
 }
 .minds-live-chat ul li .toggle-chat{
 	display:none;
@@ -189,15 +191,17 @@
 	color:#333;
 }
 .minds-live-chat ul li.userlist ul {
-overflow: scroll;
+overflow: hidden;
+overflow-y:scroll;
 position: relative;
 height: 170px;
-margin: 0 -14px;
+margin: 0;
 }
 .minds-live-chat ul li.userlist ul li{
 	width:100%;
 	height:auto;
-	float:left;
+	float:none;
+	margin:0;
 	position:relative;
 }
 .minds-live-chat ul li.userlist ul li h3{

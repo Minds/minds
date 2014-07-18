@@ -122,7 +122,7 @@ class ElggPlugin extends ElggEntity {
 	
 		global $PLUGINS_CACHE;
 		$PLUGINS_CACHE = null;
-		
+	var_dump('tying to save yo');	
 		minds\core\plugins::purgeCache('plugins:all');
 		minds\core\plugins::purgeCache('plugins:active');
 		minds\core\plugins::$cache == array();
@@ -308,7 +308,6 @@ class ElggPlugin extends ElggEntity {
 		}
 		
 		$this->$name = $value;
-		
 		return $this->save();
 	}
 

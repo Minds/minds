@@ -25,9 +25,11 @@ function gatherings_init(){
 	
 	elgg_extend_view('page/elements/foot', 'gatherings/bar');
 	elgg_extend_view('css/elgg', 'gatherings/css');
+
+	elgg_extend_view('js/elgg', 'js/gatherings/live');
 	
-	elgg_register_js('gatherings', elgg_get_simplecache_url('js', 'gatherings/live'), 'footer', 601);
-	elgg_load_js('gatherings');
+//	elgg_register_js('gatherings', elgg_get_simplecache_url('js', 'gatherings/live'), 'footer', 601);
+	//elgg_load_js('gatherings');
 	elgg_register_js('portal', elgg_get_site_url() . 'mod/gatherings/vendors/portal.js');
 	elgg_load_js('portal');
 	

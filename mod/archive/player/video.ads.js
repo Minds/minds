@@ -1,16 +1,16 @@
 /**
-* Basic Ad support plugin for video.js.
-*
-* Common code to support ad integrations.
-*/
+ * Basic Ad support plugin for video.js.
+ *
+ * Common code to support ad integrations.
+ */
 (function(window, document, vjs, undefined) {
 "use strict";
 
 var
   
   /**
-* Copies properties from one or more objects onto an original.
-*/
+   * Copies properties from one or more objects onto an original.
+   */
   extend = function(obj /*, arg1, arg2, ... */) {
     var arg, i, k;
     for (i=1; i<arguments.length; i++) {
@@ -25,14 +25,14 @@ var
   },
   
   /**
-* Add a handler for multiple listeners to an object that supports addEventListener() or on().
-*
-* @param {object} obj The object to which the handler will be assigned.
-* @param {mixed} events A string, array of strings, or hash of string/callback pairs.
-* @param {function} callback Invoked when specified events occur, if events param is not a hash.
-*
-* @return {object} obj The object passed in.
-*/
+   * Add a handler for multiple listeners to an object that supports addEventListener() or on().
+   *
+   * @param {object} obj The object to which the handler will be assigned.
+   * @param {mixed} events A string, array of strings, or hash of string/callback pairs.
+   * @param {function} callback Invoked when specified events occur, if events param is not a hash.
+   *
+   * @return {object} obj The object passed in.
+   */
   on = function(obj, events, handler) {
     
     var
@@ -79,9 +79,9 @@ var
   },
   
   /**
-* Runs the callback at the next available opportunity.
-* @see https://developer.mozilla.org/en-US/docs/Web/API/window.setImmediate
-*/
+   * Runs the callback at the next available opportunity.
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/window.setImmediate
+   */
   setImmediate = function(callback) {
     return (
       window.setImmediate ||
@@ -93,9 +93,9 @@ var
   },
 
   /**
-* Clears a callback previously registered with `setImmediate`.
-* @param {id} id The identifier of the callback to abort
-*/
+   * Clears a callback previously registered with `setImmediate`.
+   * @param {id} id The identifier of the callback to abort
+   */
   clearImmediate = function(id) {
     return (window.clearImmediate ||
             window.cancelAnimationFrame ||
@@ -105,14 +105,14 @@ var
   },
 
   /**
-* If ads are not playing, pauses the player at the next available
-* opportunity. Has no effect if ads have started. This function is necessary
-* because pausing a video element while processing a `play` event on iOS can
-* cause the video element to continuously toggle between playing and paused
-* states.
-*
-* @param {object} player The video player
-*/
+   * If ads are not playing, pauses the player at the next available
+   * opportunity. Has no effect if ads have started. This function is necessary
+   * because pausing a video element while processing a `play` event on iOS can
+   * cause the video element to continuously toggle between playing and paused
+   * states.
+   *
+   * @param {object} player The video player
+   */
   cancelContentPlay = function(player) {
     if (player.ads.cancelPlayTimeout) {
       // another cancellation is already in flight, so do nothing
@@ -131,12 +131,12 @@ var
   },
   
   /**
-* Returns an object that captures the portions of player state relevant to
-* video playback. The result of this function can be passed to
-* restorePlayerSnapshot with a player to return the player to the state it
-* was in when this function was invoked.
-* @param {object} player The videojs player object
-*/
+   * Returns an object that captures the portions of player state relevant to
+   * video playback. The result of this function can be passed to
+   * restorePlayerSnapshot with a player to return the player to the state it
+   * was in when this function was invoked.
+   * @param {object} player The videojs player object
+   */
   getPlayerSnapshot = function(player) {
     var
       tech = player.el().querySelector('.vjs-tech'),
@@ -150,9 +150,11 @@ var
         // an inaccurate snapshot.
         play: true
       };
+
     if (tech) {
       snapshot.nativePoster = tech.poster;
     }
+
     return snapshot;
   },
 
@@ -170,10 +172,10 @@ var
   },
 
   /**
-* Attempts to modify the specified player so that its state is equivalent to
-* the state of the snapshot.
-* @param {object} snapshot - the player state to apply
-*/
+   * Attempts to modify the specified player so that its state is equivalent to
+   * the state of the snapshot.
+   * @param {object} snapshot - the player state to apply
+   */
   restorePlayerSnapshot = function(player, snapshot) {
     var
       // the playback tech
@@ -230,16 +232,15 @@ var
   },
 
   /**
-* Remove the poster attribute from the video element tech, if present. When
-* reusing a video element for multiple videos, the poster image will briefly
-* reappear while the new source loads. Removing the attribute ahead of time
-* prevents the poster from showing up between videos.
-* @param {object} player The videojs player object
-*/
+   * Remove the poster attribute from the video element tech, if present. When
+   * reusing a video element for multiple videos, the poster image will briefly
+   * reappear while the new source loads. Removing the attribute ahead of time
+   * prevents the poster from showing up between videos.
+   * @param {object} player The videojs player object
+   */
   removeNativePoster = function(player) {
     var tech = player.el().querySelector('.vjs-tech');
     if (tech) {
-      // tech.poster = null;
       tech.removeAttribute('poster');
     }
   },
@@ -462,8 +463,8 @@ var
       'contentupdate',
       // events emitted by third party ad implementors
       'adsready',
-      'adstart', // startLinearAdMode()
-      'adend', // endLinearAdMode()
+      'adstart',  // startLinearAdMode()
+      'adend',    // endLinearAdMode()
     ]), fsmHandler);
     
     // implement 'contentupdate' event.
@@ -504,3 +505,4 @@ var
   vjs.plugin('ads', adFramework);
 
 })(window, document, videojs);
+

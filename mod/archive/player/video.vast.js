@@ -44,13 +44,10 @@
 
     player.vast.getContent = function(url) {
       vast.client.get(url, function(response) {
-	console.log('GETTING: ' + response + url);
 	 if (response) {
-	console.log('response: '+response);
           for (var adIdx = 0; adIdx < response.ads.length; adIdx++) {
             var ad = response.ads[adIdx];
-         console.log('ad'+ad); 
-	  player.vast.companion = undefined;
+	    player.vast.companion = undefined;
             for (var creaIdx = 0; creaIdx < ad.creatives.length; creaIdx++) {
               var creative = ad.creatives[creaIdx], foundCreative = false, foundCompanion = false;
               if (creative.type === "linear" && !foundCreative) {
@@ -217,7 +214,7 @@
       // get a list of files with unique formats
       for (i = 0; i < media_files.length; i++) {
         format = media_files[i].mimeType;
-
+console.log(format);
         if (vidFormats.indexOf(format) >= 0) {
           if(sourcesByFormat[format] === undefined) {
             sourcesByFormat[format] = [];

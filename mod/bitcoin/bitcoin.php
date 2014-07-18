@@ -191,8 +191,8 @@ abstract class bitcoin extends \ElggPlugin
 	}
 	
 	// Listen to user settings save
-	elgg_register_action('plugins/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
-	elgg_register_action('plugins/usersettings/save', dirname(__FILE__) . '/actions/plugins/usersettings/save.php');
+	elgg_register_action('bitcoin/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
+	elgg_register_action('bitcoin/usersettings/save', dirname(__FILE__) . '/actions/plugins/usersettings/save.php');
 	
 	// Payment action
 	elgg_register_action('bitcoin/send', dirname(__FILE__) . '/actions/sendpayment.php');

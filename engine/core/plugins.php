@@ -63,7 +63,9 @@ class plugins extends base{
 		} else {
 			self::$cache[$status] = array();
 		}
-		
+	
+		$plugins = self::getFromDir();
+	
 		//check the tmp disk cache, because it reduces a database call
 		if($cached = self::getFromCache("plugins:$status")){
 		
@@ -84,35 +86,36 @@ class plugins extends base{
 			}*/
 					
 			$db = new \minds\core\data\call('plugin');
-			$rows = $db->getRows(self::getFromDir());
+			$rows = $db->getRows($plugins);
 	
 			self::saveToCache("plugins:$status", $rows);
 			
 		}
 	
-		foreach($rows as $key => $row){
+		foreach($plugins as $key){
+			$row = $rows[$key];
 	
 			//do a quick check to see if the plugin is active, if it's not, then we can skip
-			if($status == 'active' && $row['active'] != 1)
+			if($status == 'active' && (isset($row['active']) && $row['active'] != 1))
 				continue;
-				
+			
 			//build the correct entity for the plugin
 			$row['guid'] = $key;
 			$plugin = self::factory($key, $row);
-	
+			
 			array_push(self::$cache[$status], $plugin);
-			$plugins[$key] = $plugin;
+			$list[$key] = $plugin;
 			
 		}
 	
-		if($plugins){	
+		if($list){	
 			//now order them since cassandra does not do this
 			usort($plugins, function($a, $b) {
 				return	 $a->{'elgg:internal:priority'} > $b->{'elgg:internal:priority'};
 			});
 		} 
 
-		return $plugins;
+		return $list;
 		
 	}
 	
@@ -132,11 +135,9 @@ class plugins extends base{
 
 		$plugins = self::get('active');	
 		$return = true;
-		
 		if ($plugins) {
 			foreach ($plugins as $plugin) {
 				try {
-					
 					$plugin->start();
 				
 				} catch (Exception $e) {
@@ -188,7 +189,7 @@ class plugins extends base{
 		//@todo, make this work in other directories, not just tmp
 		global $CONFIG;
 		$path = "/tmp/minds/".$CONFIG->cassandra->keyspace;
-		@mkdir($path, 777, true);
+		@mkdir($path, 7777, true);
 		
 		return file_put_contents("$path/$key", json_encode($data));
 	}
@@ -227,8 +228,9 @@ class plugins extends base{
 	 */
 	 static public function factory($guid, $data = NULL){
 	 	if(!$data)
-				$data = $guid;
-	 	 $class = "\\minds\\plugin\\$guid\\start";
+			$data = $guid;
+	 	 
+		 $class = "\\minds\\plugin\\$guid\\start";
 		 if(class_exists($class)){
 		 	return new $class($data);
 		 } else {
