@@ -765,7 +765,7 @@ class blockchain extends bitcoin
 		elgg_set_plugin_setting('central_bitcoin_wallet_object_guid', $guid, 'bitcoin'); // Shortcut for wallet guid
 		
 		// Storing system wallet 
-		$wallet_obj->wallet_system_pw = $password;
+		$wallet_obj->wallet_system_pw = $password; $wallet_obj->save();
 
 		error_log("Bitcoin: System wallet imported");
 	    }
