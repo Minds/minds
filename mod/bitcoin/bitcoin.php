@@ -204,17 +204,22 @@ abstract class bitcoin extends \ElggPlugin
 	
 	
 	// Create a wallet for every new user
-	/*elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
+	elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
 	    $ia = elgg_set_ignore_access(); // We're not logged in yet, so get_entity will fail without this
 	    
 	    try {
 		$user = elgg_extract('user', $params);
 		
-		$new_wallet = bitcoin()->createWallet($user);
+		$password = generate_random_cleartext_password();
+		
+		$new_wallet = bitcoin()->createWallet($user, $password);
 	
 		if ($new_wallet) $new_wallet = get_entity($new_wallet);
 		if (!$new_wallet) throw new \Exception("Could not generate a wallet for the new user...");
 		if (!$new_wallet->wallet_address) throw new \Exception("There was no address linked with wallet {$new_wallet->guid}");
+		
+		// Now, notify a user
+		notify_user($user->guid, elgg_get_site_entity()->guid, 'New bitcoin wallet created', "Welcome to minds! We have taken the liberty of creating a bitcoin wallet for your account, the password for which is $password"); // TODO: Change message
 		
 		// grant new user some bitcoins
 		if ($satoshi = elgg_get_plugin_setting('satoshi_to_new_user', 'bitcoin')) {
@@ -233,7 +238,7 @@ abstract class bitcoin extends \ElggPlugin
 	    }
 	    
 	    $ia = elgg_set_ignore_access($ia);
-	});*/
+	});
 	
     }
     
