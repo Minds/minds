@@ -523,16 +523,15 @@ function _elgg_load_site_config() {
 		$site->email = $CONFIG->site_email;
 		$site->description =  $CONFIG->site_description;
 	} else {
-		$site = new ElggSite($CONFIG->site_guid);
-	}
-	
-	$CONFIG->site = $site;
-	if (!$CONFIG->site) {
-	//	throw new InstallationException(elgg_echo('InstallationException:SiteNotInstalled'));
+		$site = get_entity($CONFIG->site_guid, 'site');
 	}
 
-	if(!isset($CONFIG->wwwroot))
-		$CONFIG->wwwroot = $CONFIG->site->getURL();
+	$CONFIG->site = $site;
+	if (!$CONFIG->site) {
+		throw new InstallationException(elgg_echo('InstallationException:SiteNotInstalled'));
+	}
+	
+	$CONFIG->wwwroot = $CONFIG->site->getURL();
 	$CONFIG->sitename = $CONFIG->site->name;
 	$CONFIG->sitedescription = $CONFIG->site->description;
 	$CONFIG->siteemail = $CONFIG->site->email;

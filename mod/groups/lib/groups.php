@@ -175,7 +175,7 @@ function groups_handle_mine_page() {
 		'relationship_guid' => $page_owner->guid,
 		'relationship' => 'member',
 		//'inverse_relationship' => true
-	));
+	)); 
 	
 	if (!$content) {
 		$content = elgg_echo('groups:none');

@@ -369,7 +369,6 @@ function elgg_get_plugins($status = 'active', $site_guid = null) {
 	
 	$db = new minds\core\data\call('plugin');
 	$rows = $db->getRows($plugin_ids);
-
 	
 	foreach($rows as $k => $row){
 

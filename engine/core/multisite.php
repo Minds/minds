@@ -42,10 +42,11 @@ class multisite extends base{
                 }
 		
 		$keyspace = @unserialize($row['keyspace']) ? unserialize($row['keyspace'])  : $row['keyspace'];
-		
+//var_dump($keyspace); exit;		
 		$CONFIG->cassandra = new \stdClass();
 		$CONFIG->cassandra->keyspace = $keyspace;
 		$CONFIG->cassandra->servers =  $CONFIG->multisite->servers;
+		
 		$CONFIG->wwwroot = "http://$domain/"; 
 		if(isset($row['dataroot']))
 			$CONFIG->dataroot = unserialize($row['dataroot']);

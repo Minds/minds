@@ -607,7 +607,6 @@ function get_user_by_username($username) {
 	}
 	
 	$entity = get_entity($guid);
-
 	if ($entity) {
 		$USERNAME_TO_GUID_MAP_CACHE[$username] = $entity->guid;
 	} else {
@@ -770,7 +769,7 @@ function send_new_password_request($user_guid) {
  * @return bool
  */
 function force_user_password_reset($user_guid, $password) {
-	$user = get_entity($user_guid);
+	$user = new ElggUser($user_guid);
 	if ($user instanceof ElggUser) {
 		$ia = elgg_set_ignore_access();
 
