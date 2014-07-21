@@ -18,7 +18,7 @@ class plugins extends base{
 		self::$path = __MINDS_ROOT__ . "/mod/";
 		$this->load();
 		
-		\elgg_register_event_handler('init', 'system', array($this, 'initPlugin'));
+		\elgg_register_event_handler('init', 'system', array($this, 'initPlugins'));
 	}
 
 	/**
@@ -163,9 +163,9 @@ class plugins extends base{
 	}
 	
 	public function initPlugins(){
-		//$plugins = self::get('active');
-		//foreach($plugins as $plugin)
-		//	$plugin->init();
+		$plugins = self::get('active');
+		foreach($plugins as $plugin)
+			$plugin->init();
 	}
 	
 	/**

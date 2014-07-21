@@ -111,6 +111,13 @@ class ElggPlugin extends ElggEntity {
 
 		//_elgg_cache_plugin_by_id($this);
 	}
+
+	/**
+	 * Run on init
+	 */
+	public function init(){
+		//do nothing.. legacy
+	}
 	
 	/**
 	 * Save the plugin object.  Make sure required values exist.
