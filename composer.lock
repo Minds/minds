@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f27ac610a4d260ea1563e564ddc2cbe8",
+    "hash": "503064a0bd58253ce1785b116e0a593c",
     "packages": [
         {
             "name": "abeautifulsite/jquery-minicolors",
@@ -219,17 +219,49 @@
             "time": "2014-07-08 13:57:00"
         },
         {
+            "name": "minds/minds-php-sdk",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:minds/minds-php-sdk.git",
+                "reference": "52439b9f78a7f13f239912f4837ddd43056750a2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/minds/minds-php-sdk/zipball/52439b9f78a7f13f239912f4837ddd43056750a2",
+                "reference": "52439b9f78a7f13f239912f4837ddd43056750a2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "description": "Minds PHP SDK",
+            "support": {
+                "source": "https://github.com/minds/minds-php-sdk/tree/master",
+                "issues": "https://github.com/minds/minds-php-sdk/issues"
+            },
+            "time": "2014-07-21 18:09:52"
+        },
+        {
             "name": "monolog/monolog",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "8228d1ee833dbec710161ac179d1fb9ff6cd6f28"
+                "reference": "61145103b6521d04c0386d1ea6899437df9d45e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/8228d1ee833dbec710161ac179d1fb9ff6cd6f28",
-                "reference": "8228d1ee833dbec710161ac179d1fb9ff6cd6f28",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/61145103b6521d04c0386d1ea6899437df9d45e2",
+                "reference": "61145103b6521d04c0386d1ea6899437df9d45e2",
                 "shasum": ""
             },
             "require": {
@@ -276,8 +308,7 @@
                 {
                     "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
-                    "homepage": "http://seld.be",
-                    "role": "Developer"
+                    "homepage": "http://seld.be"
                 }
             ],
             "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
@@ -287,7 +318,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-06-30 13:24:53"
+            "time": "2014-07-19 19:11:34"
         },
         {
             "name": "pimple/pimple",
@@ -295,12 +326,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Pimple.git",
-                "reference": "c4d56ed5cfafcf0278e0a355d8925904dc0f931d"
+                "reference": "8ac98abd7513dac79bed367c709658fe77b9e5c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/c4d56ed5cfafcf0278e0a355d8925904dc0f931d",
-                "reference": "c4d56ed5cfafcf0278e0a355d8925904dc0f931d",
+                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/8ac98abd7513dac79bed367c709658fe77b9e5c2",
+                "reference": "8ac98abd7513dac79bed367c709658fe77b9e5c2",
                 "shasum": ""
             },
             "require": {
@@ -335,7 +366,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2014-07-13 08:59:48"
+            "time": "2014-07-15 06:25:58"
         },
         {
             "name": "psr/log",
@@ -387,12 +418,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "dc2182b4275f153469321b99c3a675ef3cffafd4"
+                "reference": "c2f8a5d3181736d107d6622a536fbdcd55436674"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/dc2182b4275f153469321b99c3a675ef3cffafd4",
-                "reference": "dc2182b4275f153469321b99c3a675ef3cffafd4",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/c2f8a5d3181736d107d6622a536fbdcd55436674",
+                "reference": "c2f8a5d3181736d107d6622a536fbdcd55436674",
                 "shasum": ""
             },
             "require": {
@@ -437,7 +468,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-08 12:21:41"
+            "time": "2014-07-09 09:06:26"
         },
         {
             "name": "thobbs/phpcassa",
@@ -488,12 +519,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "389e07ee41eabc422ea88b805006bccac7de9eb3"
+                "reference": "a876df2cd5bc873beb450a56e6e410680a5b4e4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/389e07ee41eabc422ea88b805006bccac7de9eb3",
-                "reference": "389e07ee41eabc422ea88b805006bccac7de9eb3",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/a876df2cd5bc873beb450a56e6e410680a5b4e4c",
+                "reference": "a876df2cd5bc873beb450a56e6e410680a5b4e4c",
                 "shasum": ""
             },
             "require": {
@@ -530,7 +561,7 @@
                 "sms",
                 "twilio"
             ],
-            "time": "2014-04-12 21:01:44"
+            "time": "2014-07-15 17:50:20"
         }
     ],
     "packages-dev": [

@@ -15,7 +15,6 @@ class gatherings extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 		exec("which gpg", $output);
-		passt
 		var_dump($output);
 		exit;
 		//get a list of all chats, regardless

@@ -40,19 +40,29 @@ if($item->attachment_guid){
      elgg_load_css('lightbox');
 	elgg_load_js('elgg.wall');
 
-	$src = elgg_get_site_url() . "photos/thumbnail/$item->attachment_guid";
+	$attachment = new PostAttachment($item->attachment_guid);
+	$src = elgg_get_site_url() . "wall/attachment/$item->attachment_guid";
+	switch($attachment->subtype){
+		case 'image':
+			
 
-	$attachment = elgg_view('output/img', array( 
-		'src' => "$src/large",
-		'class' => 'river-img-attachment'
-	)); //we are just going to assume they are images... change soon
-	 
-	$attachment =  elgg_view('output/url', array(
-		'text'=>$attachment,
-		'href' => "$src/master",
-		'class'=>'attachment-lightbox'
-	));
+			$attachment = elgg_view('output/img', array( 
+				'src' => "$src/large",
+				'class' => 'river-img-attachment'
+			)); //we are just going to assume they are images... change soon
+			 
+			
+			break;
+		
+		default:
+			$attachment = '<div class="river-attachment"><a href="'.$src.'">Download ' . $attachment->originalfilename . '</a><p>'.round($attachment->size / (1024 * 1024)).' MB</p></div>';
+		}
 
+			$attachment =  elgg_view('output/url', array(
+				'text'=>$attachment,
+				'href' => "$src/master",
+				'class'=>'attachment-lightbox'
+			));
 
 } elseif($item->meta_title){
 	$attachment = elgg_view('output/preview', array(
