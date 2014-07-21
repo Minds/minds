@@ -171,7 +171,7 @@ class ElggObject extends ElggEntity {
       */
 	public function getOwnerEntity($brief = true) {
 		if($brief && isset($this->ownerObj) && is_array($this->ownerObj)){
-			if($this->ownerObj['name']){
+			if($this->ownerObj['name'] && $this->ownerObj['icontime']){
 				return new ElggUser($this->ownerObj, false);
 			}  else {
 				if($this->canEdit()){

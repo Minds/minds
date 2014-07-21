@@ -17,7 +17,7 @@ foreach($keyspaces as $keyspace){
 		break;
 	}
 
-	$attrs = array("strategy_options"=>array("replication_factor" => 2));
-	$out = $sys->alter_keyspace($keyspace, $attrs);
+//	$attrs = array("strategy_options"=>array("replication_factor" => 2));
+//	$out = $sys->alter_keyspace($keyspace, $attrs);
 	echo "$keyspace \n";
 }
