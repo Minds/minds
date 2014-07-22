@@ -303,6 +303,9 @@
 	line-height: 1.5em;
 	padding:0;
 }
+.minds-river-attachments img{
+	width:100%;
+}
 .minds-river-attachments > p,
 .minds-river-message > p,
 .minds-river-content > p {
@@ -310,6 +313,20 @@
 }
 .minds-river-attachments {
 	margin:0 -11px;
+}
+.minds-river-attachments .river-attachment{
+	padding: 16px;
+	background: none repeat scroll 0% 0% #E1E1E1;
+	margin: 16px;
+	border: 1px solid #AAA;
+}
+.minds-river-attachments .river-attachment > a{
+	color:#333;
+	font-size:14px;
+	font-weight:bold;
+}
+.minds-river-attachments .river-attachment > p{
+	font-size:11px;
 }
 .minds-river-attachments > img{
 	width:100%;

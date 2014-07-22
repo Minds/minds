@@ -20,25 +20,25 @@ while(true){
 	foreach($entities as $entity){
 
 		try{
-		if(!$entity instanceof ElggEntity)	{
+			if(!$entity instanceof ElggEntity)
+				continue;
 
-			continue;
-
-		}
-
-		var_dump($entity->ownerObj); continue;
+			if($entity->owner_guid == 100000000000155030){
+			var_dump($entity); exit;
+			}
+			var_dump($entity->ownerObj); continue;
 		
-		$owner = $entity->getOwnerEntity();
-		if(!$owner){
-			echo "$entity->guid does not have an owner! \n";
-			continue;
-		}
-		//var_dump( $entity->getOwnerEntity(true));
-		$entity->save();
+			$owner = $entity->getOwnerEntity();
+			if(!$owner){
+				echo "$entity->guid does not have an owner! \n";
+				continue;
+			}
+			//var_dump( $entity->getOwnerEntity(true));
+			$entity->save();
 
-		if(isset($entity->ownerObj))
-			echo "denormalised $entity->guid \n";
-		} catch(Exception $e){
+			if(isset($entity->ownerObj))
+				echo "denormalised $entity->guid \n";
+			} catch(Exception $e){
 		}
 	}
 

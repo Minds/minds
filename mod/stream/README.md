@@ -1,4 +1,0 @@
-publisher
-=========
-
-Minds Publisher Plugin

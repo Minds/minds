@@ -236,12 +236,12 @@ function channel_page_handler($page) {
 	        $content .= elgg_view_layout('widgets', $params);
 			break;
 		case 'subscribers':
-			$subscribers = get_user_friends_of($user->guid, '', $limit, $offset);
-			$content = elgg_view_entity_list($subscribers,$vars, $offset, $limit, false, false,false);
+			$subscribers = get_user_friends_of($user->guid, '', 12, get_input('offset', ''));
+			$content = elgg_view_entity_list($subscribers,array('list_class'=>'x2'));
 			break;
 		case 'subscriptions':
-			$subscriptions = get_user_friends($user->guid, '', $limit, $offset);
-			$content = elgg_view_entity_list($subscriptions,$vars, $offset, $limit, false, false,false);
+			$subscriptions = get_user_friends($user->guid, '', 12, get_input('offset', ''));
+			$content = elgg_view_entity_list($subscriptions,array('list_class'=>'x2'));
 			break;
 		case 'news':
 		case 'timeline':

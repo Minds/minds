@@ -53,10 +53,10 @@ $subtitle = '<i>' . elgg_echo('by') . ' ' . $owner_link . ' ' . elgg_view_friend
 $content = $img . $body;
 echo $menu;
 $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
-echo $header;
 
 echo elgg_view('output/url', array(
 	'href'=> $image->getURL(), 
 	'text'=>$img,
 	'class' => 'tidypics-lightbox'
 ));
+echo $header;

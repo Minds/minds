@@ -31,19 +31,11 @@ class MindsMultiInstaller extends ElggInstaller {
     public function __construct() {
         parent::__construct();
 
-	if(get_input('debug')){
-		$db = new \minds\core\data\call('entities');
-		var_dump(elgg_get_plugins('active'));
-		//$db->insert('hello', array('testing'=>'it works'));
-	//	var_dump($db-> getCf('entities'),$db->getRow('hello'));
-		exit;
-	}
-
         // Load minds translations
         register_translations(dirname(__FILE__) . '/languages/minds/', TRUE);
 
-	// Always log admin in
-	$this->setAutoLogin(true);
+		// Always log admin in
+		$this->setAutoLogin(true);
 
     }
 

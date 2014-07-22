@@ -5,11 +5,10 @@
  * @package ElggNotifications
  */
 
+
 elgg_register_event_handler('init', 'system', function(){
 	new minds\plugin\notifications\notifications();
 	
-	//uncomment below to test
-	//elgg_trigger_plugin_hook('notification', 'all', array('to'=>array(elgg_get_logged_in_user_guid()), 'object_guid'=>elgg_get_logged_in_user_guid()));
 });
 
 

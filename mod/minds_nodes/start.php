@@ -4,11 +4,8 @@
  */
 namespace minds\plugin\minds_nodes;
 
-\elgg_register_event_handler('init', 'system', function(){
-	new start();
-});
-
-class start extends \ElggPlugin{
+use minds\bases;
+class start extends bases\plugin{
 	public function __construct(){
 		parent::__construct('minds_nodes');	
 

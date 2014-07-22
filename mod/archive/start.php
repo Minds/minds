@@ -43,9 +43,12 @@ function minds_archive_init() {
 	elgg_extend_view('page/elements/sidebar', 'archive/featured');
 
 	elgg_extend_view('js/elgg', 'archive/js');
-	elgg_register_js('player', '//vjs.zencdn.net/4.6.3/video.js','head');
+	elgg_register_js('player', '//vjs.zencdn.net/4.6.3/video.js','head', 10);
 	elgg_register_css('player', '//vjs.zencdn.net/4.6.3/video-js.css');
 	elgg_register_js('player-res', elgg_get_site_url().'mod/archive/player/video.js.res.js');
+	elgg_register_js('player-vast', elgg_get_site_url().'mod/archive/player/video.vast.js', 'head', 602);
+	elgg_register_js('player-vast-client', elgg_get_site_url().'mod/archive/player/vast-client.js', 'head', 601);
+	elgg_register_js('player-ads', elgg_get_site_url().'mod/archive/player/video.ads.js', 'head', 600);
 
     //Loading angularJS
     $angularRoot = elgg_get_site_url() . 'mod/archive/angular/app/';
@@ -190,38 +193,6 @@ function minds_archive_page_setup() {
 
 	$page_owner = elgg_get_page_owner_entity();
 	$user = elgg_get_logged_in_user_entity();
-	
-	/*if (elgg_get_context() == 'archive') {
-		
-		elgg_register_menu_item('page', array(
-			'name' => elgg_echo('upload'),
-			'href' => elgg_get_site_url() . 'archive/upload',
-			'text' => elgg_echo('minds:archive:upload'),
-			'class' => 'pagesactions elgg-lightbox',
-			'priority' => 0,
-			'section'=>'actions'
-		));
-
-        elgg_register_menu_item('page', array(
-			'name' =>elgg_echo('minds:archive:all'),
-			'href' => elgg_get_site_url() . "archive/all",
-			'text' =>  elgg_echo('minds:archive:all'),
-			'priority' => 400,
-			'section' => 'menu-a'
-		));
-			
-	}
-	
-	// Group submenu option
-	if ($page_owner instanceof ElggGroup && elgg_get_context() == 'groups') {
-		if($page_owner->kaltura_video_enable != "no") {
-			elgg_register_menu_item('page', array(
-					'name' =>sprintf(elgg_echo('kalturavideo:label:groupvideos'),$page_owner->name),
-					'href' => $CONFIG->wwwroot . "archive/" . $page_owner->username,
-					'text' =>  sprintf(elgg_echo('kalturavideo:label:groupvideos'),$page_owner->name),
-				));
-		}
-	}
 	
 	/**
 	 * EMBED 

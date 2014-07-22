@@ -3,37 +3,41 @@
  * WallPost Class
  * 
  */
-class PostAttachment {
+class PostAttachment extends ElggFile{
 	
 	protected $resized = array();
 	protected $useArchive = false;
 	protected $container;
 
-	public function __construct(){
+	public function __construct($guid = NULL){
+		parent::__construct($guid);
 		
-		if(elgg_is_active_plugin('archive')){
-			//is there wallpost album setup? If so, set the container guid to it
-			  elgg_load_library('tidypics:upload');		
-			$this->useArchive = true;
+		if(!$guid){
 			
-			$this->subtype = 'image';
-						
-			$albums = elgg_get_entities(array('type'=>'object', 'subtype'=>'album', 'limit'=>0));
-			foreach($albums as $album){
-				if(isset($album->post_attachments) && $album->post_attachments){
+			if(elgg_is_active_plugin('archive')){
+				//is there wallpost album setup? If so, set the container guid to it
+				elgg_load_library('tidypics:upload');		
+				$this->useArchive = true;
+				
+				$this->subtype = 'image';
+							
+				$albums = elgg_get_entities(array('type'=>'object', 'subtype'=>'album', 'limit'=>0));
+				foreach($albums as $album){
+					if(isset($album->post_attachments) && $album->post_attachments){
+						$this->container = $album;
+					}
+				}
+	 
+	 			if(!$this->container){
+					$album = new TidypicsAlbum();
+					$album->post_attachments = true;
+					$album->title = 'Post attachments';
+					$album->access_id = 2;
+					$album->save();
 					$this->container = $album;
 				}
+				
 			}
- 
- 			if(!$this->container){
-				$album = new TidypicsAlbum();
-				$album->post_attachments = true;
-				$album->title = 'Post attachments';
-				$album->access_id = 2;
-				$album->save();
-				$this->container = $album;
-			}
-			
 		}
 	}
 	
@@ -41,14 +45,44 @@ class PostAttachment {
 	 * Save to archive
 	 */
 	public function saveToArchive($file){
-		$image = new TidypicsImage();
-		$image->container_guid = $this->container->guid;
-		$image->access_id = $album->access_id;
-		$mime = $file['type'];
-		$image->setMimeType($mime);
-		$guid = $image->save($file);
-		$this->container->prependImageList(array($guid));
-		return $guid;
+		switch($file['type']){
+			case 'image/jpeg':
+			case 'image/png':
+
+				$image = new TidypicsImage();
+				$image->container_guid = $this->container->guid;
+				$image->access_id = $album->access_id;
+				$mime = $file['type'];
+				$image->setMimeType($mime);
+				$guid = $image->save($file);
+				$this->container->prependImageList(array($guid));
+				return $guid;
+				break;
+			case 'video/mp4':
+			case 'video/webm':
+			case 'video/ogv':
+					break;
+			default:
+				$fileobj = new ElggFile();
+				$fileobj->access_id = 2;
+				$prefix = "file/";
+				$filestorename = elgg_strtolower(time().$file['name']);
+				$fileobj->setFilename($prefix . $filestorename);
+				$fileobj->setMimeType($file['type']);
+				$fileobj->originalfilename = $file['name'];
+				$fileobj->simpletype = file_get_simple_type($mime_type);
+
+				//save the space so we can add it to our quota.
+				$fileobj->size = $file['size'];
+
+				// Open the file to guarantee the directory exists
+				$fileobj->open("write");
+				$fileobj->close();
+
+				move_uploaded_file($file['tmp_name'], $fileobj->getFilenameOnFilestore());
+
+				return $guid = $fileobj->save();
+			}
 	}
 	
 

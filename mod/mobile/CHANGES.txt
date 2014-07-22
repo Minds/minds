@@ -1,3 +1,0 @@
-NEW IN 3.0
-
-- Uses twitter bootstrap to create a better experience accross a range of devices

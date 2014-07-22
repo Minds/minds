@@ -17,7 +17,7 @@ if (!is_array($plugin_guids)) {
 }
 
 foreach ($plugin_guids as $guid) {
-	$plugin = new ElggPlugin($guid);
+	$plugin = minds\core\plugins::factory($guid); 
 
 	if ($plugin->deactivate()) {
 		//system_message(elgg_echo('admin:plugins:deactivate:yes', array($plugin->getManifest()->getName())));
@@ -33,15 +33,4 @@ foreach ($plugin_guids as $guid) {
 elgg_invalidate_simplecache();
 elgg_reset_system_cache();
 
-if (count($plugin_guids) == 1) {
-	$url = 'admin/plugins';
-	$query = (string)parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
-	if ($query) {
-		$url .= "?$query";
-	}
-	$plugin = new ElggPlugin($plugin_guids[0]);
-	$id = preg_replace('/[^a-z0-9-]/i', '-', $plugin->getID());
-	forward("$url#$id");
-} else {
-	forward(REFERER);
-}
+forward(REFERER);

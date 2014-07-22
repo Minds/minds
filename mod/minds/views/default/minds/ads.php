@@ -36,14 +36,14 @@ switch($type){
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>'*/;
-	echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='336';  medianet_height= '280';  medianet_crid='637466202';  </script>  <script id=\"mNSC\" src=\"//contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script>";
+/*	echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='336';  medianet_height= '280';  medianet_crid='637466202';  </script>  <script id=\"mNSC\" src=\"//contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script>";
 	echo "<div id='taboola-right-rail-thumbs-3rd-mix'></div>
 <script type=\"text/javascript\">
 
     window._taboola = window._taboola || [];
     _taboola.push({mode:'thybrid-thumbs-2r-rr', container:'taboola-right-rail-thumbs-3rd-mix', placement:'right-rail-thumbs-3rd', target_type:'mix'});
 
-</script>";
+</script>";*/
 	break;
 	case 'content-side-single-user':
 		if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
@@ -73,8 +73,8 @@ switch($type){
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>';*/
-		echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='336';  medianet_height= '280';  medianet_crid='637466202';  </script>  <script id=\"mNSC\" src=\"//contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script>";
-        	}
+	/*	echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='336';  medianet_height= '280';  medianet_crid='637466202';  </script>  <script id=\"mNSC\" src=\"//contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script>";
+        */	}
 	break;
 	case 'content-below-banner':
 		echo '<div class="banner-ad"><div class="inner">';
@@ -90,7 +90,7 @@ switch($type){
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>';*/
-	echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='600';  medianet_height= '250';  medianet_crid='266435425';  </script>  <script id=\"mNSC\" src=\"http://contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script> ";
+//	echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='600';  medianet_height= '250';  medianet_crid='266435425';  </script>  <script id=\"mNSC\" src=\"http://contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script> ";
         	}
 		echo '</div></div>';
 	break;

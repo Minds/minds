@@ -2,12 +2,24 @@
 
     $user = $vars['user'];
     $wallet = $vars['wallet'];
+    $loggedin = elgg_get_logged_in_user_entity();
     
-
 ?><div class='wallet'>
     
     <?php
 	if ($wallet) {
+	    
+	    if ($user->guid == $loggedin->guid) {
+		
+		try {
+
+		    // Always display a generic bitcoin address (so we can get notifications of payments)
+		  $wallet_address = minds\plugin\bitcoin\bitcoin()->createReceiveAddressForUser($user);
+		} catch(Exception $e) {
+
+		}
+		
+		if (!$wallet_address) $wallet_address = $wallet->wallet_address;
 	    ?>
     
     <div class="header">
@@ -16,19 +28,22 @@
 	</p>
 	<p>
 	    <label>Wallet bitcoin address: </label> <?php echo $wallet->wallet_address; ?>
+		<img src="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=<?php echo $wallet->wallet_address;?>&chld=H|0"/>
 	</p>
-	<p class="balance">
+	<?php /* <p class="balance">
 	    <label>Balance: </label> <?php
 	    try {
 		echo sprintf("%f", \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid));
 		echo " BTC";
 	    } catch (\Exception $e) {
 		echo $e->getMessage();
-		register_error($e->getMessage());
 	    }
 	    ?>
-	</p>
+	</p> */ ?>
 	
+	<p>
+	    <a class="sendpayment button" href="<?php echo elgg_get_site_url(); ?>bitcoin/send">Send a payment...</a> 
+	</p>
     </div>
     
     <div class="report">
@@ -45,6 +60,16 @@
     </div>
     
     <?php
+	    } else {
+		?>
+	    <div class="header">
+		
+		<p>
+		    <a class="sendpayment button" href="<?php echo elgg_get_site_url(); ?>bitcoin/send?address=<?php echo minds\plugin\bitcoin\bitcoin()->getReceiveAddressForUser($loggedin); ?>">Send Bitcoin to <?php echo $user->name; ?>...</a> 
+		</p>
+	    </div>
+    <?php
+	    }
 	} else {
 	  ?>
     

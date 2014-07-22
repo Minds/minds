@@ -493,7 +493,9 @@ padding: 0 4px;
 	padding:4px;
 }
 
-
+.minds-fixed-sidebar-left h1{
+	line-height:2.3em;
+}
 /**
  * Mobile specific
  */

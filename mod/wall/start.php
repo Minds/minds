@@ -74,25 +74,23 @@ function wall_page_handler($page) {
 			include "$pages/view.php";
 			break;
 		case 'attachment':
-			$owner = new ElggUser($page[1]);
-			$owner_guid = isset($owner->legacy_guid) ? $owner->legacy_guid : $owner->guid;
-			$guid = $page[2];
-			$size = isset($page[3]) ? $page[3] : 'large';
-			$attachment = new ElggFile();
-			$attachment->owner_guid = $owner->guid;
+			$attachment = new PostAttachment($page[1]);
+			$mime = $attachment->getMimeType(); 
 			
-			global $CONFIG; 
-			$data_root = $CONFIG->dataroot;
-		
-			$user_path = date('Y/m/d/', $owner->time_created) . $owner_guid;
-			$filename = "$data_root$user_path/attachments/{$guid}/{$size}.jpg";
 			//echo $filename; exit;
-			header('Content-Type: image/jpeg');
+			$filename = $attachment->getFilename();
+			header('Content-Type: $mime');
 			header('Expires: ' . date('r', time() + 864000));
 			header("Pragma: public");
 			header("Cache-Control: public");
+			header("Content-Disposition: attachment; filename=\"$filename\"");
 			
-			echo @file_get_contents($filename);
+			if($attachment->subtype == 'image' && !isset($page[2])){
+				$attachment = new TidypicsImage($attachment);
+				echo $attachment->getThumbnail('large');
+
+			}else 	
+			echo $attachment->grabFile();
 			
 			return true;
 			break;

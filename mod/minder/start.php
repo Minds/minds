@@ -4,14 +4,10 @@
  */
 namespace minds\plugin\minder;
 
+use minds\bases;
 use minds\core\router;
 
-\elgg_register_event_handler('init', 'system', function(){
-	new start();
-});
-
-
-class start extends \ElggPlugin{
+class start extends bases\plugin{
 	
 	public function __construct(){
 		parent::__construct('minder');	

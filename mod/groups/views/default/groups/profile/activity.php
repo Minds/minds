@@ -31,9 +31,10 @@ if(!$is_member){
 
 //elgg_load_js('elgg.wall');
 			
-$content .= elgg_view_form('deck_river/post',  
+$post =  elgg_view_form('deck_river/post',  
 	array(	'action'=>'action/deck_river/post/add', 
-			'name'=>'elgg-wall-news', 
+			'name'=>'elgg-wall-news',
+		'class' => 'minds-fixed-post-box', 
 			'enctype' => 'multipart/form-data'
 	),
 	array(	'to_guid'=> $group->guid, 
@@ -42,7 +43,7 @@ $content .= elgg_view_form('deck_river/post',
 	)
 );
 
-$content  .= elgg_list_river(array('owner_guid'=>$group->guid, 'masonry'=>true, 'list_class'=>'minds-group-list'));
+$content  .= elgg_list_river(array('owner_guid'=>$group->guid, 'masonry'=>true, 'list_class'=>'minds-group-list', 'prepend'=>"<li class=\"elgg-item minds-fixed-post-box\">$post</li>"));
 
 //echo elgg_view_module('wall', null, $content);
 
