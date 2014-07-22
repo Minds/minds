@@ -340,7 +340,7 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 	if($user->legacy_guid){
 		$user_guid = $user->legacy_guid;
 	}
-
+	
 	if (!$icon_time) {
 		return minds_fetch_gravatar_url($user->email, $size, 'identicon');
 		//return "_graphics/icons/user/default{$size}.gif";
