@@ -3,6 +3,9 @@ elgg_load_js('player');
 elgg_load_css('player');
 elgg_load_js('player-res');
 elgg_load_css('player-res');
+elgg_load_js('player-vast');
+elgg_load_js('player-ads');
+elgg_load_js('player-vast-client');
 ?>
 <div class="player-container">
 	<video id="archive_player2" preload="auto" poster="MY_VIDEO_POSTER.jpg" controls class="video-js vjs-default-skin" width="100%" height="460">

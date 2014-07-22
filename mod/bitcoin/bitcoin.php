@@ -31,12 +31,12 @@ abstract class bitcoin extends \ElggPlugin
      * Create a wallet for a user.
      * @return guid|false
      */
-    abstract public function createWallet(\ElggUser $user);
+    abstract public function createWallet(\ElggUser $user, $password);
     
     /**
      * Create a system wallet.
      */
-    abstract public function createSystemWallet();
+    abstract public function createSystemWallet($password);
     
     /**
      * Import a wallet from a third party provider.
@@ -165,9 +165,14 @@ abstract class bitcoin extends \ElggPlugin
 	    elgg_load_css('bitcoin.css');
 	    
 	    switch ($pages[0]) {
+		case 'wallet':
 		case 'mywallet' :
-			set_input('username', elgg_get_logged_in_user_entity()->username);
+			set_input('username', $pages[1] ? $pages[1] : elgg_get_logged_in_user_entity()->username);
 			require_once(dirname(__FILE__) . '/pages/wallet.php');
+		    break;
+		case 'send' :
+			set_input('username', elgg_get_logged_in_user_entity()->username);
+			require_once(dirname(__FILE__) . '/pages/sendpayment.php');
 		    break;
 	    }
 	    
@@ -186,12 +191,15 @@ abstract class bitcoin extends \ElggPlugin
 	}
 	
 	// Listen to user settings save
-	elgg_register_action('plugins/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
-	elgg_register_action('plugins/usersettings/save', dirname(__FILE__) . '/actions/plugins/usersettings/save.php');
+	elgg_register_action('bitcoin/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
+	elgg_register_action('bitcoin/usersettings/save', dirname(__FILE__) . '/actions/plugins/usersettings/save.php');
+	
+	// Payment action
+	elgg_register_action('bitcoin/send', dirname(__FILE__) . '/actions/sendpayment.php');
 	
 	
 	// Create a wallet for every new user
-	elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
+	/*elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
 	    $ia = elgg_set_ignore_access(); // We're not logged in yet, so get_entity will fail without this
 	    
 	    try {
@@ -220,7 +228,7 @@ abstract class bitcoin extends \ElggPlugin
 	    }
 	    
 	    $ia = elgg_set_ignore_access($ia);
-	});
+	});*/
 	
     }
     

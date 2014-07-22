@@ -1257,7 +1257,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @param bool $ia - ignore access
 	 * @return array
 	 */
-	function getIndexKeys($ia = false){
+	protected function getIndexKeys($ia = false){
 		//remove from the various lines
 		if($this->access_id == ACCESS_PUBLIC || $ia){
 			$indexes = array( 

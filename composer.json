@@ -1,15 +1,20 @@
 {
 	"name": "minds/minds",
 	"description": "The core minds social engine",
-    "require": {
-    	"twilio/sdk" : "master",
+	"require": {
+    		"twilio/sdk" : "master",
 		"thobbs/phpcassa": "master",
 		"elasticsearch/elasticsearch": "~1.0",
-    	"abeautifulsite/jquery-minicolors": "master",
-    	"kramnorth/cinemr-php-sdk": "master"
-    },
-    "minimum-stability": "dev",
-    "autoload": {
-        "files": ["engine/autoload.php"]
-    }
+    		"abeautifulsite/jquery-minicolors": "master",
+    		"kramnorth/cinemr-php-sdk": "master",
+		"minds/minds-php-sdk": "master"
+    	},
+	"repositories": [{
+            "type": "vcs",
+            "url": "git@github.com:minds/minds-php-sdk.git"
+        }],
+	"minimum-stability": "dev",
+	"autoload": {
+        	"files": ["engine/autoload.php"]
+    	}
 }

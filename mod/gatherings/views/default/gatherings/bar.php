@@ -11,8 +11,8 @@ if(!elgg_is_logged_in()){
 ?>
 <div class="minds-live-chat">
 	<audio id="sound">
-	<source src="<?php echo elgg_get_site_url();?>mod/chat/sounds/chatter.wav" type="audio/wav"/> 
-	<source src="<?php echo elgg_get_site_url();?>mod/chat/sounds/blup.mp3" type="audio/mp3"/>
+	<source src="<?php echo elgg_get_site_url();?>mod/gatherings/sounds/chatter.wav" type="audio/wav"/> 
+	<source src="<?php echo elgg_get_site_url();?>mod/gatherings/sounds/blup.mp3" type="audio/mp3"/>
 	</audio>
 	<audio id="tone" loop>
 		<source src="https://freesound.org/data/previews/39/39061_402511-lq.ogg" type="audio/ogg"/> 
@@ -24,7 +24,7 @@ if(!elgg_is_logged_in()){
 	</audio>
 	<div class="minds-live-chat-userlist">
 		<ul>
-			<li class="userlist"> <h3> <span class="entypo"> &#59160; </span> Chat <h3/>
+			<li class="userlist"> <h3> <span class="entypo"> &#59160; </span> Chat </h3>
 				<ul>
 				<?php 
 					/*foreach($users as $user){

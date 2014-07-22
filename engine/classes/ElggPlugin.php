@@ -27,6 +27,7 @@ class ElggPlugin extends ElggEntity {
 		$this->attributes['type'] = "plugin";
 		$this->attributes['title'] = "";
 		$this->attributes['active'] = 0;
+		$this->attributes['priority'] = 0;
 		
 		// plugins must be public.
 		$this->attributes['access_id'] = ACCESS_PUBLIC;
@@ -52,9 +53,7 @@ class ElggPlugin extends ElggEntity {
 	
 		$this->initializeAttributes();		
 
-		// ElggEntity can be instantiated with a guid or an object.
-		// @todo plugins w/id 12345
-		if (is_object($plugin)) {
+		if (is_object($plugin) || is_array($plugin)) {
 			//parent::__construct($plugin);
 			foreach($plugin as $k => $v){
 				$this->attributes[$k] = $v;
@@ -92,8 +91,9 @@ class ElggPlugin extends ElggEntity {
 				$this->priority = array_search('plugin', $plugins) ;
 		
 				//now load our preset settings
-				foreach($CONFIG->pluginSettings->{$plugin} as $k => $v)
-					$this->$k = $v;
+				if(isset($CONFIG->pluginSettings->{$plugin}))
+					foreach($CONFIG->pluginSettings->{$plugin} as $k => $v)
+						$this->$k = $v;
 		
 			} else {
 
@@ -111,6 +111,13 @@ class ElggPlugin extends ElggEntity {
 
 		//_elgg_cache_plugin_by_id($this);
 	}
+
+	/**
+	 * Run on init
+	 */
+	public function init(){
+		//do nothing.. legacy
+	}
 	
 	/**
 	 * Save the plugin object.  Make sure required values exist.
@@ -122,14 +129,18 @@ class ElggPlugin extends ElggEntity {
 	
 		global $PLUGINS_CACHE;
 		$PLUGINS_CACHE = null;
+	var_dump('tying to save yo');	
+		minds\core\plugins::purgeCache('plugins:all');
+		minds\core\plugins::purgeCache('plugins:active');
+		minds\core\plugins::$cache == array();
 	
 		$attributes = array();
 		foreach($this as $k=>$v){
+			if(is_null($v))
+				continue;
+
 			$attributes[$k] = $v;
 		}
-		
-		$cache = new ElggXCache('new_entity_cache');
-		$cache->delete($this->guid);
 
 		$db = new minds\core\data\call('plugin');
 		return $db->insert($this->guid, $attributes);
@@ -222,78 +233,7 @@ class ElggPlugin extends ElggEntity {
 	 * @return bool
 	 */
 	public function setPriority($priority, $site_guid = null) {
-	
-		if (!$this->guid) {
-			return false;
-		}
-
-		$name = elgg_namespace_plugin_private_setting('internal', 'priority');
-		// if no priority assume a priority of 1
-		$old_priority = (int) $this->getPriority();
-		$old_priority = (!$old_priority) ? 1 : $old_priority;
-		$max_priority = elgg_get_max_plugin_priority();
-
-		// can't use switch here because it's not strict and
-		// php evaluates +1 == 1
-		if ($priority === '+1') {
-			$priority = $old_priority + 1;
-		} elseif ($priority === '-1') {
-			$priority = $old_priority - 1;
-		} elseif ($priority === 'first') {
-			$priority = 1;
-		} elseif ($priority === 'last') {
-			$priority = $max_priority;
-		}
-
-		// should be a number by now
-		if ($priority > 0) {
-			if (!is_numeric($priority)) {
-				return false;
-			}
-			
-			// there's nothing above the max.
-			if ($priority > $max_priority) {
-				$priority = $max_priority;
-			}
-
-			// there's nothing below 1.
-			if ($priority < 1) {
-				$priority = 1;
-			}
-
-			if ($priority > $old_priority) {
-				$op = '-';
-				$where = "CAST(value as unsigned) BETWEEN $old_priority AND $priority";
-			} else {
-				$op = '+';
-				$where = "CAST(value as unsigned) BETWEEN $priority AND $old_priority";
-			}
-
-			$plugin_list = elgg_get_plugins();
-			$reorder = array();
-			
-			foreach($plugin_list as $plugin){
-				if($plugin->getPriority() ==  $old_priority-1 && $op=='-'){
-					$plugin->$name =  $old_priority;
-					$plugin->save();
-					continue;
-				}
-				if($plugin->getPriority() ==  $old_priority+1 && $op == '+'){
-					$plugin->$name =  $old_priority;
-                                        $plugin->save();
-					continue;
-				}
-			}
-			// set this priority
-			$this->$name = $priority;
-			if ($this->save()) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		return false;
+		return minds\core\plugins\priorities::set($this, $priority);
 	}
 
 
@@ -375,7 +315,6 @@ class ElggPlugin extends ElggEntity {
 		}
 		
 		$this->$name = $value;
-		
 		return $this->save();
 	}
 
@@ -721,7 +660,7 @@ class ElggPlugin extends ElggEntity {
 	 */
 	public function deactivate($site_guid = null) {
 		if (!$this->isActive($site_guid)) {
-			return false;
+			//return false;
 		}
 
 		// emit an event. returning false will cause this to not be deactivated.
@@ -742,7 +681,7 @@ class ElggPlugin extends ElggEntity {
 		if ($return === false) {
 			return false;
 		} else {
-			$this->setSetting('active', 0);
+			return 	$this->setSetting('active', "0");
 		}
 	}
 	
@@ -761,30 +700,20 @@ class ElggPlugin extends ElggEntity {
 	 * @return true
 	 * @throws PluginException
 	 */
-	public function start($flags) {
-		//if (!$this->canActivate()) {
-		//	return false;
-		//}
-
-		// include classes
-		if ($flags & ELGG_PLUGIN_REGISTER_CLASSES) {
-			$this->registerClasses();
+	public function start($flags =NULL) {
+		if (!$this->canActivate()) {
+			return false;
 		}
+
+		// include classes, plugins should really use namespace standards now
+		$this->registerClasses();
+
+		$this->includeFile('start.php');
+
+		$this->registerViews();
 		
-		// include start file
-		if ($flags & ELGG_PLUGIN_INCLUDE_START) {
-			$this->includeFile('start.php');
-		}
-
-		// include views
-		if ($flags & ELGG_PLUGIN_REGISTER_VIEWS) {
-			$this->registerViews();
-		}
-
-		// include languages
-		if ($flags & ELGG_PLUGIN_REGISTER_LANGUAGES) {
-			$this->registerLanguages();
-		}
+		$this->registerLanguages();
+		
 		return true;
 	}
 
@@ -814,7 +743,7 @@ class ElggPlugin extends ElggEntity {
 			throw new PluginException($msg);
 		}
 
-		return include $filepath;
+		return include_once($filepath);
 	}
 
 	/**
