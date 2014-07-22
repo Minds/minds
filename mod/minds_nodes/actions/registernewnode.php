@@ -19,8 +19,8 @@ try {
 	throw new Exception("This node is not registered");
     }
 
-    if (!$email)
-        throw new Exception("Email address must be entered.");
+ //   if (!$email)
+  //      throw new Exception("Email address must be entered.");
     
     if ($domain_at_minds || $my_domain) {
 

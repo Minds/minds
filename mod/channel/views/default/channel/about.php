@@ -5,6 +5,8 @@
  */
 
 $user = elgg_get_page_owner_entity();
+if(!$user)
+	return false;
 
 $profile_fields = elgg_get_config('profile_fields');
 

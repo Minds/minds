@@ -170,9 +170,14 @@ class ElggObject extends ElggEntity {
      * @return ElggEntity The owning entity
       */
 	public function getOwnerEntity($brief = true) {
+		global $CONFIG;
 		if($brief && isset($this->ownerObj) && is_array($this->ownerObj)){
 			if($this->ownerObj['name']){
-				return new ElggUser($this->ownerObj, false);
+				if(!$this->ownerObj['icontime'])
+					$array = array_merge($this->ownerObj, array('icontime'=>$CONFIG->lastcache));
+				else
+					$array = $this->ownerObj;
+				return new ElggUser($array, false);
 			}  else {
 				if($this->canEdit()){
 	//				$this->save();

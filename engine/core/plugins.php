@@ -96,7 +96,7 @@ class plugins extends base{
 			$row = $rows[$key];
 	
 			//do a quick check to see if the plugin is active, if it's not, then we can skip
-			if($status == 'active' && (isset($row['active']) && $row['active'] != 1))
+			if($status == 'active' && (!isset($row['active']) || $row['active'] != 1))
 				continue;
 			
 			//build the correct entity for the plugin
