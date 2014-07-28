@@ -1,5 +1,4 @@
 <?php
-
 admin_gatekeeper();
 
 try {
