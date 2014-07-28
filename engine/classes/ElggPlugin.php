@@ -543,17 +543,13 @@ class ElggPlugin extends ElggEntity {
 	 * @return bool
 	 */
 	public function isValid() {
-		if (!$this->getID()) {
-			$this->errorMsg = elgg_echo('ElggPlugin:NoId', array($this->guid));
-			return false;
-		}
 		
-		if (!$this->getPackage() instanceof ElggPluginPackage) {
+		if (!$this->getPackage() instanceof ElggPluginPackage) {echo 'no package';
 			$this->errorMsg = elgg_echo('ElggPlugin:NoPluginPackagePackage', array($this->getID(), $this->guid));
 			return false;
 		}
 		
-		if (!$this->getPackage()->isValid()) {
+		if (!$this->getPackage()->isValid()) {echo 'package not valid';
 			$this->errorMsg = $this->getPackage()->getError();
 			return false;
 		}

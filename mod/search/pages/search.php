@@ -15,6 +15,7 @@ class search extends core\page implements interfaces\page{
 	 * Get requests
 	 */
 	public function get($pages){
+		global $CONFIG;
 		$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search'))));
 		$params = array();
 		
@@ -30,7 +31,7 @@ class search extends core\page implements interfaces\page{
 		$body['query']['query_string']['query'] = $query;
 		$body['query']['query_string']['fields'] = array('_all', 'name^5', 'title^8');
 		
-		$params['index'] = 'minds';
+		$params['index'] = $CONFIG->cassandra->keyspace; //we use the keyspace as this is unique to each site. why complicate things?
 		$params['size'] = \get_input('limit');
 		$params['from'] = \get_input('offset');
 		$params['body']  = $body;

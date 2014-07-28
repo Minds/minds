@@ -309,6 +309,9 @@
 	margin:0 0 8px 16px;
 	width:436px;
 }
+.elgg-list li.minds-fixed-post-box{
+	width:95%;
+}
 .minds-fixed-content .elgg-list .minds-fixed-post-box > form{
 	width:auto;
 	padding:0;

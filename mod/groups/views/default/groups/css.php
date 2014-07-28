@@ -10,16 +10,26 @@
 	padding:0 !important;
 }
 .minds-group-list > li{
-	width:44%;
-	margin:8px 1%;
-	height:auto;
+	margin: 8px;
+	height: auto;
+	width: 45%;
+}
+@media all 
+and (min-width : 0px)
+and (max-width : 1200px) {
+	.minds-group-list > li{
+		width:42%;
+	}
 }
 .group-action-button{
 	position:absolute;
 	right:20px;
 	top:40px;
 }
-
+.elgg-head .elgg-button-action{
+	padding:8px;
+	min-width:100px;
+}
 .elgg-list .group-avatar{
 
 	margin: 0 -5%;

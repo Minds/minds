@@ -6,12 +6,8 @@
 namespace minds\plugin\search;
 
 use minds\core;
- 
-\elgg_register_event_handler('init', 'system', function(){
-	new start();
-});
 
-class start extends \ElggPlugin{
+class start extends \minds\bases\plugin{
 	
 	public function __construct(){
 		parent::__construct('search');	
@@ -54,6 +50,7 @@ class start extends \ElggPlugin{
 	 * Create a search document
 	 */
 	public function createDocument($entity){
+		global $CONFIG;
 		if(in_array($entity->subtype, array('blog','image','album','video')) || $entity->type == 'user'){
 
 			$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search'))));
@@ -69,7 +66,7 @@ class start extends \ElggPlugin{
 				$params['body'][$k]  = $v;
 			}
 			
-			$params['index'] = 'minds';
+			$params['index'] = $CONFIG->cassandra->keyspace;
 			$params['type']  = $entity->type;
 			$params['id']    = $entity->guid;
 			

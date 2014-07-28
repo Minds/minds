@@ -9,7 +9,7 @@
  */
 
 $plugin = $vars['plugin'];
-$plugin_id = $plugin->getID();
+$plugin_id = $plugin->guid;
 
 // required for plugin settings backward compatibility
 $vars['entity'] = $plugin;

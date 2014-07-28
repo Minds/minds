@@ -185,7 +185,7 @@ class ElggObject extends ElggEntity {
 			}
 		}
 	
-		$owner = get_entity($this->owner_guid, 'user');
+		$owner = new ElggUser($this->owner_guid, false);
  		return $owner;
 	}
 	/**

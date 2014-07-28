@@ -57,17 +57,17 @@ function tidypics_init() {
 	elgg_register_js('jquery-fileupload-ui', "$js_base/jquery.fileupload-ui.js", 'footer');
 	
 	// Add photos link to owner block/hover menus
-	//elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'tidypics_owner_block_menu');
+	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'tidypics_owner_block_menu');
 
 	// Add admin menu item
-	elgg_register_admin_menu_item('configure', 'photos', 'pluginsettings');
+	//elgg_register_admin_menu_item('configure', 'photos', 'pluginsettings');
 
 	// Register for search
 	elgg_register_entity_type('object', 'image');
 	elgg_register_entity_type('object', 'album');
 
 	// Register for the entity menu
-	elgg_register_plugin_hook_handler('register', 'menu:entity', 'tidypics_entity_menu_setup');
+	//elgg_register_plugin_hook_handler('register', 'menu:entity', 'tidypics_entity_menu_setup');
 
 	// Register group option
 	add_group_tool_option('photos', elgg_echo('tidypics:enablephotos'), true);

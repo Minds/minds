@@ -7,7 +7,7 @@
  */
 
 $plugin = $vars['entity'];
-$plugin_id = $plugin->getID();
+$plugin_id = $plugin->guid;
 $user_guid = elgg_extract('user_guid', $vars, elgg_get_logged_in_user_guid());
 
 // Do we want to show admin settings or user settings
