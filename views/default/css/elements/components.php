@@ -271,6 +271,7 @@
 }
 .minds-list-river > li, .elgg-list-river > li {
 /*	padding:0;*/
+	padding-bottom:0;
 }
 .minds-list-river > li > .minds-river-header, .elgg-list-river > li > .minds-river-header {
 	/*padding:12px;*/

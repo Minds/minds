@@ -12,6 +12,7 @@ class plugin extends \ElggPlugin{
 	
 	public function start($flags = null){
 		//only legacy plugins use the start function
+		$this->registerViews();
 	}
 	
 	public function init(){

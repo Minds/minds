@@ -14,13 +14,17 @@ $image = get_entity($guid,'object');
 
 if (!$image) {
 	// @todo
-	return true;
+//	return true;
 }
 
-if ($size == 'master') {
+if ($size == 'master' || !$image->getThumbnail($size)) {
 	$contents = $image->getImage();
 } else {
 	$contents = $image->getThumbnail($size);
+}
+if(get_input('debug')){
+var_dump($size, $contents); 
+exit;
 }
 if (!$contents) {
 	forward("mod/tidypics/graphics/image_error_$size");

@@ -35,6 +35,12 @@
   font-weight: 300;
   src: local('Ubuntu Light'), local('Ubuntu-Light'), url(https://themes.googleusercontent.com/static/fonts/ubuntu/v4/_aijTyevf54tkVDLy-dlnLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
 }
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://themes.googleusercontent.com/static/fonts/lato/v7/9k-RPmcnxYEPm8CNFsH2gg.woff) format('woff');
+}
 .entypo{
 	font-family:'fontello', 'Ubuntu', Tahoma, sans-serif;
 	font-size:18px;
@@ -64,7 +70,7 @@ p {
 	margin-bottom: 15px;
 	font-size: 14px;
 	line-height: 28px;
-	font-weight: lighter;
+	font-weight: Lighter;
 }
 
 p:last-child {

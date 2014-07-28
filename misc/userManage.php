@@ -8,9 +8,7 @@ elgg_set_ignore_access();
 //var_dump(force_user_password_reset($john->guid, 'temp123'));
 
 //login($john);
-$user = get_user_by_username('mark');
+$user = get_user_by_username('john');
 //var_dump($user);
 $user->makeAdmin();
-
-
 
