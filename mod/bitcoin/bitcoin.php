@@ -178,6 +178,9 @@ abstract class bitcoin extends \ElggPlugin
 			set_input('username', elgg_get_logged_in_user_entity()->username);
 			require_once(dirname(__FILE__) . '/pages/sendpayment.php');
 		    break;
+		case 'settings' : 
+			require_once(dirname(__FILE__) . '/pages/settings.php');
+		    break;
 	    }
 	    
 	    return true;
@@ -200,6 +203,14 @@ abstract class bitcoin extends \ElggPlugin
 	elgg_register_admin_menu_item('minds', 'setup', 'bitcoin');  
 	
 	elgg_register_action('bitcoin/usersettings/save', dirname(__FILE__) . '/actions/plugins/usersettings/save.php');
+	elgg_register_event_handler('pagesetup', 'system', function() {
+            elgg_register_menu_item("page", array(
+                'name' => 'bitcoin',
+                'text' => elgg_echo('bitcoin:settings'),
+                'href' => 'bitcoin/settings',
+                'contexts' => array('bitcoin')
+            ));
+	});
 	
 	// Payment action
 	elgg_register_action('bitcoin/send', dirname(__FILE__) . '/actions/sendpayment.php');

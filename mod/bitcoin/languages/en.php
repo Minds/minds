@@ -6,4 +6,6 @@ add_translation('en', array(
     
     'admin:bitcoin' => 'Bitcoin',
     'admin:bitcoin:setup' => 'Configure bitcoin',
+    
+    'bitcoin:settings' => 'Bitcoin Settings'
 ));
