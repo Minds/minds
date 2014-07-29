@@ -347,6 +347,7 @@ Custom players are defined in "Application Studio" sub menu in KMC',
 	'archive:invalid_image' => 'Invalid Image',
 	'archive:no_description' => 'No Description',
 	'archive:no_tags' => 'No Tags',
+	'file' => 'File'
 );
 
 add_translation("en", $translations);

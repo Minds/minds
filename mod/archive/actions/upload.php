@@ -78,14 +78,13 @@ switch($mime_type){
 			$image->description = $desc;
 			$image->super_sybtype = 'archive';
 			$image->container_guid = $album->getGUID();
-			//$image->setMimeType($mime_type);
+			$image->setMimeType($_FILES['fileData']['type']);
 			$image->tags = $tags;
 			$image->access_id = $access_id;
 			$image->license = $license;
 			//$image->category = $category; //No category
 
 		    	$guid = $image->save($_FILES['fileData']);
-		  
 		    	if ($guid) {
 			    echo $guid;
 

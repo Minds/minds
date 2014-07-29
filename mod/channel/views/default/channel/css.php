@@ -7,7 +7,7 @@
 ?>
 
 .elgg-menu-channel li > a{
-	padding:8px;
+	padding:16px;
 	color:#222;
 	border-bottom:1px solid #EEE;
 	font-weight:bold;
@@ -20,21 +20,8 @@
 	text-decoration:none;
 	background:#EEE;
 }
-.channel-header{
-	position: relative;
-	margin: 64px 5% 100px;
-	clear: both;
-	height: 200px;
-}
-.landing-page > .channel-header{
-	/*margin-bottom:50%;*/
-}
-.channel-header .avatar{
-	float:left;
-	height:200px;
-	position:relative;
-}
-.avatar-edit{
+
+.minds-fixed-sidebar-left > a.avatar-edit{
 	display:block;
 	background: #FAFAFA;
 	padding: 8px 32px 8px 14px;
@@ -43,6 +30,11 @@
 	clear:both;
 	position:absolute;
 }
+
+.minds-fixed-sidebar-left > .subscribe-button{
+	margin:0 16px;
+}
+
 .channel-header .avatar img{
 	height:100%;
 	width:auto;

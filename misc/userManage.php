@@ -8,4 +8,3 @@ elgg_set_ignore_access(true);
 $user = new ElggUser('mark');
 $user->makeAdmin();
 
-

@@ -14,7 +14,7 @@ class start extends bases\plugin{
 	
 	public function init(){
 		//$routes = router::registerRoutes($this->registerRoutes());
-			
+		$this->registerClasses();	
 		\add_subtype('object', 'node', 'MindsNode');
 		\add_subtype('object', 'minds_tier', 'MindsTier');
 	

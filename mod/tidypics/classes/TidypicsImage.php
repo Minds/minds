@@ -250,7 +250,7 @@ class TidypicsImage extends ElggFile {
 		$prefix = "image/" . $this->container_guid . "/";
 		$filename = $this->getFilename();
 		$filename = substr($filename, strrpos($filename, '/') + 1);
-		
+	
 		if ($imageLib == 'ImageMagick') {
 			// ImageMagick command line
 			if (tp_create_im_cmdline_thumbnails($this, $prefix, $filename) != true) {
@@ -275,14 +275,14 @@ class TidypicsImage extends ElggFile {
 	 * @return string
 	 */
 	public function getThumbnail($size) {
-		if(!isset($this->thumbnail)){
+		//if(!isset($this->thumbnail)){
 			$prefix = "image/" . $this->container_guid . "/";
-            $filename = $this->getFilename().'.jpg';
-            $filename = substr($filename, strrpos($filename, '/') + 1);
-            $this->thumbnail = $prefix . 'thumb' . $filename;
+            		$filename = $this->getFilename().'.jpg';
+         		$filename = substr($filename, strrpos($filename, '/') + 1);
+         	  	$this->thumbnail = $prefix . 'thumb' . $filename;
 			$this->smallthumb = $prefix . 'smallthumb' . $filename;
 			$this->largethumb = $prefix . 'largethumb' . $filename;
-		}
+		//}
 		switch ($size) {
 			case 'thumb':
 				$thumb = $this->thumbnail;
@@ -297,7 +297,6 @@ class TidypicsImage extends ElggFile {
 				return '';
 				break;
 		}
-		
 		if (!$thumb) {
 			return '';
 		}
@@ -305,6 +304,10 @@ class TidypicsImage extends ElggFile {
 		$file = new ElggFile();
 		$file->owner_guid = $this->getOwnerGUID();
 		$file->setFilename($thumb);
+		if(get_input('debug')){
+		var_dump($file->getFilenameOnFilestore()); 
+		exit;
+		}
 		return $file->grabFile();
 	}
 
