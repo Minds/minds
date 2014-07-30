@@ -49,6 +49,14 @@ switch($mime_type){
 		
 	case "image":
 		
+		$image = new minds\plugin\archive\entities\image();
+		$image->title = $title;
+		$image->description = $description;
+		$image->container_guid = $container_guid;
+		$image->upload($_FILES['fileData']);
+		echo $image->save();
+		exit;
+		
 		// If Image then create an album. Don't upload to Kaltura.
 		if ($guid){
 			$image = new TidypicsImage($guid);

@@ -25,78 +25,70 @@ $description = strip_tags($entity->description);
 set_input('description', $description);
 set_input('keywords', $entity->tags);
 
-if($entity->getSubtype() == 'kaltura_video' || $entity->getSubtype() == 'video'){
+switch($entity->subtype){
+	case 'video':
+		$video_location = elgg_get_site_url().'/archive/embed';
+		$video_location_secure = str_replace('http://', 'https://', $video_location);
+		$thumbnail = $entity->getIconURL();
+	
+		minds_set_metatags('og:type', 'article');
+		minds_set_metatags('og:url', $entity->getPermaURL());
+		minds_set_metatags('og:image', $thumbnail);
+		minds_set_metatags('og:title', $title);
+		minds_set_metatags('og:description', $description);
+		//minds_set_metatags('og:video:url', $video_location);
+		//minds_set_metatags('og:video:secure_url',  $video_location_secure); 
+		//minds_set_metatags('og:video:width', '1280');
+		//minds_set_metatags('og:video:height', '720');
+	 
+		minds_set_metatags('twitter:card', 'player');
+		minds_set_metatags('twitter:url', $entity->getURL());
+		minds_set_metatags('twitter:title', $entity->title);
+		minds_set_metatags('twitter:image', $thumbnail);
+		minds_set_metatags('twitter:description', $description);
+		minds_set_metatags('twitter:player', $video_location);
+		minds_set_metatags('twitter:player:width', '1280');
+		minds_set_metatags('twitter:player:height', '720');
+		break;
+	case 'image':
+		minds_set_metatags('og:type', 'mindscom:photo');
+		minds_set_metatags('og:title', $entity->title);
+		minds_set_metatags('og:description', $entity->description ? $photo->description : $entity->getUrl());
+		minds_set_metatags('og:image',$entity->getIconURL('large'));
+		minds_set_metatags('mindscom:photo',$entity->getIconURL('large'));
+		minds_set_metatags('og:url',$entity->getPermaUrl());
+		 
+		minds_set_metatags('twitter:card', 'photo');
+		minds_set_metatags('twitter:url', $entity->getURL());
+		minds_set_metatags('twitter:title', $entity->title);
+		minds_set_metatags('twitter:image', $entity->getIconURL('large'));
+		minds_set_metatags('twitter:description', $entity->description ? $entity->description : $entity->getUrl());
+		break;
+	case 'album':
+		break;
+	case 'file':
+		minds_set_metatags('og:type', 'article');
+		minds_set_metatags('og:url', $entity->getPermaURL());
+		minds_set_metatags('og:image', $entity->getIconURL('large'));
+		minds_set_metatags('og:title', $title);
+		minds_set_metatags('og:description', $description);
 		
-	$video_location = elgg_get_site_url().'/archive/embed';
-	$video_location_secure = str_replace('http://', 'https://', $video_location);
-	$thumbnail = $entity->getIconURL();
-
-	minds_set_metatags('og:type', 'article');
-	minds_set_metatags('og:url', $entity->getPermaURL());
-	minds_set_metatags('og:image', $thumbnail);
-	minds_set_metatags('og:title', $title);
-	minds_set_metatags('og:description', $description);
-	//minds_set_metatags('og:video:url', $video_location);
-	//minds_set_metatags('og:video:secure_url',  $video_location_secure); 
-	//minds_set_metatags('og:video:width', '1280');
-//	minds_set_metatags('og:video:height', '720');
-	 
-	minds_set_metatags('twitter:card', 'player');
-	minds_set_metatags('twitter:url', $entity->getURL());
-	minds_set_metatags('twitter:title', $entity->title);
-	minds_set_metatags('twitter:image', $thumbnail);
-	minds_set_metatags('twitter:description', $description);
-	minds_set_metatags('twitter:player', $video_location);
-	minds_set_metatags('twitter:player:width', '1280');
-	minds_set_metatags('twitter:player:height', '720');
+		 
+		minds_set_metatags('twitter:card', 'summary');
+		minds_set_metatags('twitter:url', $entity->getURL());
+		minds_set_metatags('twitter:title', $title);
+		minds_set_metatags('twitter:image', $entity->getIconURL());
+		minds_set_metatags('twitter:description', $description);
+		break;
+}		
 	
-} elseif($entity->getSubtype() == 'file'){
-	
-	minds_set_metatags('og:type', 'article');
-	minds_set_metatags('og:url', $entity->getPermaURL());
-	minds_set_metatags('og:image', $entity->getIconURL('large'));
-	minds_set_metatags('og:title', $title);
-	minds_set_metatags('og:description', $description);
-	
-	 
-	minds_set_metatags('twitter:card', 'summary');
-	minds_set_metatags('twitter:url', $entity->getURL());
-	minds_set_metatags('twitter:title', $title);
-	minds_set_metatags('twitter:image', $entity->getIconURL());
-	minds_set_metatags('twitter:description', $description);
-	
-} elseif($entity->getSubtype() == 'image'){
-	
-	minds_set_metatags('og:type', 'mindscom:photo');
-	minds_set_metatags('og:title', $entity->getTitle());
-	minds_set_metatags('og:description', $entity->description ? $photo->description : $entity->getUrl());
-	minds_set_metatags('og:image',$entity->getIconURL('large'));
-	minds_set_metatags('mindscom:photo',$entity->getIconURL('large'));
-	minds_set_metatags('og:url',$entity->getPermaUrl());
-	 
-	minds_set_metatags('twitter:card', 'photo');
-	minds_set_metatags('twitter:url', $entity->getURL());
-	minds_set_metatags('twitter:title', $entity->getTitle());
-	minds_set_metatags('twitter:image', $entity->getIconURL('large'));
-	minds_set_metatags('twitter:description', $entity->description ? $entity->description : $entity->getUrl());
-	
-}
-
 elgg_push_breadcrumb(elgg_echo('archive:all'), 'archive/all');
 
-$crumbs_title = $owner->name;
+/*$crumbs_title = $owner->name;
 if (elgg_instanceof($owner, 'group')) {
 	elgg_push_breadcrumb($crumbs_title, "archive/group/$owner->guid/all");
 } else {
 	elgg_push_breadcrumb($crumbs_title, "archive/$owner->username");
-}
-
-if($entity->getSubtype() == 'image'){
-	//set the album
-	$album = $entity->getContainerEntity('object');
-	if(elgg_instanceof($album,'object','album')){
-		elgg_push_breadcrumb($album->title, $album->getURL());
-	}
 }
 
 if($entity->getSubtype() == 'album'){
@@ -110,15 +102,15 @@ if($entity->getSubtype() == 'album'){
 		));
 	}
 
-}
+}*/
 
 elgg_push_breadcrumb($title);
 
 $content = elgg_view_entity($entity, array('full_view' => true));
-$content .=  elgg_view('minds/ads', array('type'=>'content-below-banner'));
-$content .= elgg_view_comments($entity);
+//$content .=  elgg_view('minds/ads', array('type'=>'content-below-banner'));
+//$content .= elgg_view_comments($entity);
 
-$sidebar = elgg_view('archive/sidebar', array('guid'=>$guid));
+//$sidebar = elgg_view('archive/sidebar', array('guid'=>$guid));
 
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 
@@ -126,12 +118,13 @@ if(elgg_is_active_plugin('analytics')){
 
 	$trending_guids = analytics_retrieve(array('context'=>'archive','limit'=> get_input('limit', 2), 'offset'=>get_input('offset', '')));
 
-	$trending = elgg_list_entities(  array(  'guids' => $trending_guids,
-                                        'full_view' => FALSE,
-                                        'archive_view' => TRUE,
-                                        'limit'=>$limit,
-                                        'offset' => $offset
-                                ));
+	$trending = elgg_list_entities(array(
+					'guids' => $trending_guids,
+ 					'full_view' => FALSE,
+                    'archive_view' => TRUE,
+                    'limit'=>$limit,
+                    'offset' => $offset
+	));
 
 }
 
@@ -145,5 +138,3 @@ $body = elgg_view_layout("content", array(
 				));
 
 echo elgg_view_page($title,$body);
-
-?>

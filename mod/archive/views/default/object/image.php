@@ -10,14 +10,13 @@
 
 
 $full_view = elgg_extract('full_view', $vars, false);
-$list_type = elgg_extract('list_type', $vars);
 
-if ($full_view) {
-	echo elgg_view('object/image/full', $vars);
+if($full_view){
+	
+	echo 'full';
+	
 } else {
-	if($list_type == 'gallery'){
-		echo elgg_view('object/image/gallery', $vars);
-	} else {
-		echo elgg_view('object/image/summary', $vars);
-	}
+	
+	echo 'new style image';
+	
 }
