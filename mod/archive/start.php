@@ -290,14 +290,20 @@ function minds_archive_page_handler($page) {
 			$user = $entity->getOwnerEntity();
 			if(isset($user->legacy_guid) && $user->legacy_guid)
 				$user_guid = $user->legacy_guid;
+			else
+				$user_guid = $user->guid;
 
 			 $user_path = date('Y/m/d/', $user->time_created) . $user_guid;
 
-
+			
 			$data_root = $CONFIG->dataroot;
 			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
 			$contents = @file_get_contents($filename);
-			
+			if(get_input('debug')){
+				var_dump($user, $user->legacy_guid);
+				echo $user->legacy_guid . $filename;
+				exit;
+			}
 			header("Content-type: image/jpeg");
 			header('Expires: ' . date('r', strtotime("today+6 months")), true);
 			header("Pragma: public");

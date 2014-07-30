@@ -28,7 +28,8 @@ function anypage_init() {
 	elgg_register_plugin_hook_handler('public_pages', 'walled_garden', 'anypage_walled_garden_public_pages');
 	
 	//setup the footer
-	elgg_register_event_handler('pagesetup', 'system', 'anypage_setup_footer_menu');
+	if(elgg_get_viewtype() == 'default')
+		elgg_register_event_handler('pagesetup', 'system', 'anypage_setup_footer_menu');
 }
 
 /**

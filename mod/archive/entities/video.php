@@ -70,7 +70,7 @@ class video extends object{
 			$domain = $CONFIG->cdn_url;
 
 		if($this->thumbnail){
-			return $domain . 'archive/thumbnail/'.$this->guid.'/'.$this->last_updated;
+			return $domain . 'archive/thumbnail/'.$this->guid.'/'.$this->thumbnail;
 		} else {
 			$cinemr = $this->cinemr();
        	        	return $cinemr::factory('media')->get($this->cinemr_guid.'/thumbnail');
