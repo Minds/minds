@@ -16,9 +16,13 @@ class image extends entities\file{
 		$this->attributes['subtype'] = "image";
 	}
 	
+	public function getUrl(){
+		return elgg_get_site_url() . "archive/view/$this->container_guid/$this->guid";
+	}
+	
 	public function getIconUrl($size = 'large'){
 		global $CONFIG; //@todo remove globals!
-		return $CONFIG->cdn_url . 'archive/thumbnail/' . $this->guid;
+		return $CONFIG->cdn_url . 'archive/thumbnail/' . $this->guid . '/'.$size;
 	}
 
 	/**
@@ -62,6 +66,9 @@ class image extends entities\file{
 			}
 		}
 		
+		if(!$file['tmp_name'])
+			throw new \Exception("Upload failed. The image may be too large");
+		
 		$this->filename = "image/$this->container_guid/$this->guid/".$file['name'];
 		
 		$filename = $this->getFilenameOnFilestore();
@@ -72,6 +79,49 @@ class image extends entities\file{
 		}
 
 		return $result;
+	}
+	
+	public function createThumbnails($sizes = array('small', 'medium','large', 'xlarge')){
+		$master = $this->getFilenameOnFilestore();
+		foreach($sizes as $size){
+			switch($size){
+				case 'tiny':
+					$h = 25;
+					$w = 25;
+					$s = true;
+					$u = true;
+					break;
+				case 'small':
+					$h = 100;
+					$w = 100;
+					$s = true;
+					$u = true;
+					break;
+				case 'medium':
+					$h = 300;
+					$w = 300;
+					$s = false;
+					$u = true;
+					break;
+				case 'large':
+					$h = 600;
+					$w = 600;
+					$s = false;
+					$u = true;
+					break;
+				case 'xlarge':
+					$h = 1024;
+					$w = 1024;
+					$s = false;
+					$u = true;
+				default:
+					continue;
+			}
+			//@todo - this might not be the smartest way to do this
+			$resized = \get_resized_image_from_existing_file($master, $w, $h, $s, 0,0,0,0, $u);
+			$this->setFilename("image/$this->container_guid/$this->guid/$size.jpg");
+			file_put_contents($this->getFilenameOnFilestore(), $resized);
+		}
 	}
 
 	 public function getExportableValues() {

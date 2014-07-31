@@ -1,42 +1,29 @@
 <form novalidate name="itemsForm" class="uploadList">
 	
 	<!-- Show initially -->
-	<div id="dropzone" class="span8 well well-large" ng-hide="uploading">
+	<div id="dropzone" class="uploader-bar span8 well well-large" ng-class="status">
 			<span class="entypo">&#128228;</span>
 			
 			
 			<div class="form-span">
 				
-				<h3> Drag files here </h3>
+				<div ng-hide="uploading">
+					
+					<h3> Drag files here </h3>
 				
-				<p class="or">-- or --</p>
+					<p class="or">-- or --</p>
+				</div>
 				
 				<div class="elgg-button elgg-button-action elgg-button-upload"> <span>Click to open selector.</span>
 					<input id="fileupload" type="file" name="fileData"  multiple=""/>
 				</div>
-				<!--<div class="default_values">
-					<div class="default-license">
-						<label>License:</label>
-						<select class="elgg-input-dropdown default-license-input" ng-options="license.value as license.text for license in licenses" ng-model="default_license">
-						</select>
-					</div>
-				</div>-->
+
 			</div>
 	</div>
-	
-	<!-- Show when uploads are in progress -->
-	<div class="uploader-nav" ng-show="uploading">
-		<div class="inner">
-			<div>Album selector</div>
-			<div class="elgg-button elgg-button-action elgg-button-upload"> <span>Click to open selector.</span>
-				<input id="fileupload" type="file" name="fileData"  multiple=""/>
-			</div>
-		</div>
-	</div>
-		
+
 	<ul class="elgg-list elgg-list-entity mason">
 
-		<li class="elgg-item" ng-repeat="file in files">
+		<li class="elgg-item" ng-repeat="file in files" id="-{{file.guid}}">
 
 			<table>
 					<tr>
@@ -54,7 +41,7 @@
 					</tr>
 
 			</table>
-			<div ng-switch="file.fileType">
+			<div ng-switch="file.fileType" class="image-thumbnail">
 				<img ng-switch-when="image" class="preview" ng-src="{{file.thumb}}"/>
 				<div ng-switch-when="video" ng-show="fileItem.guid">
 					<p> Your video has been uploaded and is now being transcoded </p>

@@ -214,3 +214,11 @@ box-shadow: none;
 	padding:0;
 	width:100%;
 }
+
+.image-thumbnail{
+	margin-left:-5%;
+	width:100%;
+}
+.image-thumbnail > img{
+	width:110%;
+}

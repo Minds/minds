@@ -213,14 +213,22 @@ function minds_archive_page_handler($page) {
 			$user = $entity->getOwnerEntity();
 			if(isset($user->legacy_guid) && $user->legacy_guid)
 				$user_guid = $user->legacy_guid;
+			else 
+				$user_guid = $user->guid;
 
 			 $user_path = date('Y/m/d/', $user->time_created) . $user_guid;
 
 
 			$data_root = $CONFIG->dataroot;
 			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
-			$contents = @file_get_contents($filename);
+			if($entity->filename)
+				$filename = "$data_root$user_path/$entity->filename";
 			
+			if(isset($page[2])  && $size = $page[2]){
+				$filename = "$data_root$user_path/image/$entity->container_guid/$entity->guid/$size.jpg";
+			}
+			$contents = @file_get_contents($filename);
+
 			header("Content-type: image/jpeg");
 			header('Expires: ' . date('r', strtotime("today+6 months")), true);
 			header("Pragma: public");

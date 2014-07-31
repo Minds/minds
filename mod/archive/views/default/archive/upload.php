@@ -19,7 +19,7 @@ $albums = elgg_get_entities(array(
 
 <script>
     var serverUrl = "<?php echo $serverUrl ?>";
-    var albums = <?php echo json_encode(array_values($albumRes)) ?>;
+    var albums = <?php echo json_encode(array_values($albums)) ?>;
     var cdnUrl = "<?php echo $serverUrl ?>";
 </script>
 

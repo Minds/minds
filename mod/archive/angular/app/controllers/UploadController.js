@@ -7,9 +7,9 @@
 function UploadCtrl($scope, Elgg, $q, $timeout) {
 
     $scope.fileInfo = [];
+    $scope.status = 'select';
     $scope.queue = [];
     $scope.uploaderElement = '#fileupload';
-    $scope.saveEnabled = false;
     $scope.albums = albums;
 
 	$scope.newAlbum = function(index){
@@ -177,8 +177,9 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
     		previewMaxWidth: 100,
 	        previewMaxHeight: 100,
 	        previewCrop: true,
+	        limitConcurrentUploads: 1,
 	        add: function(e, data){
-	        	$scope.uploading = true;
+	        	$scope.status= 'uploading';
 	        	
 				data.index = $scope.files.length;
 
@@ -186,82 +187,40 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
 		       		var file = data.files[0],
 		       				entity = {
 		       					index : data.index,
-			       				file: file,
-			       				fileType: $scope.detectMediaType(file.type),
+		           				fileType: $scope.detectMediaType(file.type),
 						       	name: file.name,
 						        license: $scope.default_license,
 						        access_id: $scope.default_access
 							};
 	                  $scope.files[data.index] = entity;
 				});
-				
+				$scope.files[data.index]['progress'] = 1;
 				data.submit();
 				
-	        }
+	        },
+	        submit : function(e, data){
+	        	data.formData = $scope.files[data.index];
+	        },
+	        dropZone: $('#dropzone')
 	    }).on('fileuploadfail', function (e, data) {
 	       console.log('fail');
 	    }).on('fileuploaddone', function (e, data) {
-	    	$scope.files[data.index].guid = data.result;
-	       	$scope.files[data.index].thumb = cdnUrl + '/photos/thumbnail/' + $scope.files[data.index].guid +'/large';
-	       	
-			$('.elgg-list.mason').imagesLoaded(function(){
-				$('.elgg-list.mason').masonry('reloadItems').masonry();
-			});
-			
+	    	
+			$scope.files[data.index].guid = data.result;
+			$scope.files[data.index].thumb = cdnUrl + 'archive/thumbnail/' + $scope.files[data.index].guid +'/medium';
+			$scope.$apply();
+
 	    }).on('fileuploadprogress', function(e, data) {
 			var progress = parseInt(data.loaded / data.total * 100, 10);
             if($scope.files[data.index]){
                 $scope.files[data.index]['progress'] = progress;
 
-                $scope.$apply();
-            }else{}
+				if(progress <= 100){
+               		$scope.$apply();
+              } 
+            }
        });
-        
-    	/*
-        jQuery(elm).fileupload({
-        	maxNumberOfFiles: 24,
-        	getNumberOfFiles: function(){
-        		return $('.elgg-list > li').length;
-        	},
-            add: function (e, data) {
-            	console.log(data);
-                //$scope.uploadFiles(data, elm);
-               // console.log('we should add to a queue, and not start imediatly');
-            },
-            dropZone: $('#dropzone')
-        });
-		*/
-        // bind the events
-        //$scope.bindUploaderEvents(elm);
-    };
-    
-    /**
-     * Bind uploader events.
-     * @param elm
-     */
-    $scope.bindUploaderEvents = function(elm) {
-        jQuery(elm).bind('fileuploadprogress', function(e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            if($scope.fileInfo[data.index]) //Only if element is found
-            {
-                $scope.fileInfo[data.index]['progress'] = progress;
 
-                $scope.$apply();
-            }
-            else{
-            }
-        });
-
-		/**
-		 * Triggered once each fileupload has completed
-		 */
-        jQuery(elm).bind('fileuploaddone', function(e, data) {
-	
-			$('.elgg-list.mason').imagesLoaded(function(){
-					$('.elgg-list.mason').masonry('reloadItems').masonry();
-			});
-
-        });
     };
     
      // Initialize the jQuery uploader.
