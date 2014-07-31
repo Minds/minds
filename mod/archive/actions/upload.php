@@ -1,5 +1,4 @@
 <?php
-elgg_load_library('tidypics:upload');
 
 // Get variables
 $title = get_input("title");
@@ -7,7 +6,7 @@ $desc = get_input("description");
 $access_id = (int) get_input("access_id", 2);
 $license = get_input("license");
 $tags = get_input("tags");
-$mime_type = get_input("fileType", tp_upload_get_mimetype($_FILES['fileData']['name']));
+$mime_type = get_input("fileType", file_get_simple_type($_FILES['fileData']['type']));
 $entryId = get_input("entryId");
 //If the entity doesn't exsits then entityId will be null and will be created later.
 $guid = get_input("guid");
@@ -31,6 +30,7 @@ switch($mime_type){
 		$entity->description = $desc;
 		$entity->owner_guid = elgg_get_logged_in_user_guid();
 		$entity->license = $license;
+		
 		if(!$guid)
 			$entity->upload($_FILES['fileData']['tmp_name']);
 		$entity->access_id = 2;

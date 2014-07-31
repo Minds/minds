@@ -7,42 +7,17 @@
 $serverUrl = elgg_get_site_url();
 
 $container_guid = get_input('container_guid', elgg_get_logged_in_user_guid());
+
 $albums = elgg_get_entities(array(
     'type' => 'object',
-    //'container_guid' => $container_guid, 
 	'subtype' => 'album',
     'owner_guid' => elgg_get_logged_in_user_guid(),
     'limit' => 0
 ));
 
-$album = $albums[0];
-//if the album cant be found then lets create one
-if (!$album) { 
-	$album = new TidypicsAlbum();
-	$album->owner_guid = elgg_get_logged_in_user_guid();
-	$album->container_guid = $container_guid;
-	$album->title = 'Uploads';
-	$album->access_id = 2;
-	$album->uploads = true;
-
-	if (!$album->save()) {
-		register_error(elgg_echo("album:error"));
-		forward(REFERER);
-	}
-}
-
-$albumRes = array();
-
-foreach($albums as $album){
-	$guid = $album->guid;
-	$albumRes[$guid]['title'] = $album->title;
-	$albumRes[$guid]['id'] = (string) $guid;
-}
 ?>
 
 <script>
-    var serviceUrl = "<?php echo $serviceUrl ?>";
-    var partnerId = "<?php echo $partnerId ?>";
     var serverUrl = "<?php echo $serverUrl ?>";
     var albums = <?php echo json_encode(array_values($albumRes)) ?>;
     var cdnUrl = "<?php echo $serverUrl ?>";

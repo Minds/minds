@@ -189,9 +189,9 @@ class plugins extends base{
 		//@todo, make this work in other directories, not just tmp
 		global $CONFIG;
 		$path = "/tmp/minds/".$CONFIG->cassandra->keyspace;
-		@mkdir($path, 7777, true);
+		@mkdir($path, 0777, true);
 		
-		return file_put_contents("$path/$key", json_encode($data));
+		return @file_put_contents("$path/$key", json_encode($data));
 	}
 	
 	/**
@@ -203,7 +203,7 @@ class plugins extends base{
 	public static function getFromCache($key){
 		global $CONFIG;
 		$path = "/tmp/minds/".$CONFIG->cassandra->keyspace;
-		$data = file_get_contents("$path/$key");
+		$data = @file_get_contents("$path/$key");
 		if($data)
 			return json_decode($data, TRUE);
 			

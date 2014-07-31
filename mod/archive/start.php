@@ -45,9 +45,9 @@ function minds_archive_init() {
     elgg_register_js('angular.min.js' , $angularRoot . 'lib/angular.min.js', 'footer', 200);
 	elgg_register_js('angular-route.min.js' , $angularRoot . 'lib/angular-route.min.js','footer', 201);
 	//not liking all these scripts...
-    elgg_register_js('jquery.ui.widget.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/vendor/jquery.ui.widget.js');
-    elgg_register_js('jquery.fileupload.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/jquery.fileupload.js', 'footer', 201);
-    elgg_register_js('jquery.iframe-transport.js' , $angularRoot . 'lib/jQuery-File-Upload-8.5.0/js/jquery.iframe-transport.js');
+    elgg_register_js('jquery.ui.widget.js' , $angularRoot . 'lib/jQuery-File-Upload-9.7.0/js/vendor/jquery.ui.widget.js');
+    elgg_register_js('jquery.fileupload.js' , $angularRoot . 'lib/jQuery-File-Upload-9.7.0/js/jquery.fileupload.js', 'footer', 201);
+    elgg_register_js('jquery.iframe-transport.js' , $angularRoot . 'lib/jQuery-File-Upload-9.7.0/js/jquery.iframe-transport.js');
     elgg_register_js('kaltura-thumbnail.js' , $angularRoot . 'directives/kaltura-thumbnail.js', 'footer', 602);
 	elgg_register_js('UploadController.js' , $angularRoot . 'controllers/UploadController.js', 'footer', 650);
     elgg_register_js('KalturaService.js' , $angularRoot . 'services/KalturaService.js', 'footer', 651);

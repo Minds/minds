@@ -5,7 +5,7 @@
 	margin: 0 5%;
 	box-shadow: 0 0 2px #EEE;
 	background: #EEE;
-	padding: 16px 0;
+	padding: 15% 0;
 	clear:both;
 }
 
@@ -15,16 +15,24 @@
 	width: auto;
 	height: auto;
 	display: block;
-	font-size: 140px;
+	font-size: 124px;
 	line-height: 140px;
+	color:#666;
 }
-.form-span{
-	width:400px;
-	height:50px;
-	margin:16px auto;
-	display:block;
+#dropzone h3{
+	text-align:center;
+	font-weight:100;
+	color:#BBB;
+	text-transform:uppercase;
+	margin:24px 0;
+}
+#dropzone .or{
 	clear:both;
+	width:100%;
+	text-align:center;
+	margin:24px 0;
 }
+
 .default-license-input{
 	width:240px;
 	padding:16px;
@@ -36,12 +44,13 @@
 	vertical-align: middle;
 }
 
-.elgg-button-upload{
-	width:120px;
-	height:20px;
-	float:left;
+#dropzone .elgg-button-upload{
+	width:128px;
+	height:15px;
 	position:relative;
 	padding:14px;
+	margin:auto;
+	display:block;
 }
 .elgg-button-upload input{
 	position: absolute;
@@ -58,6 +67,11 @@
         display:block;
         margin: 24px auto 0;
         position:relative;
+}
+.uploader-nav{
+	margin:8px 5%;
+	padding:16px;
+	background:#EEE;
 }
 
 #fileupload1{

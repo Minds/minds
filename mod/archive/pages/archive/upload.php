@@ -15,30 +15,17 @@ elgg_load_js('angular-route.min.js');
 elgg_load_js('jquery.ui.widget.js');
 elgg_load_js('jquery.fileupload.js');
 elgg_load_js('jquery.iframe-transport.js');
-
-// Load directives
-//elgg_load_js('kaltura-thumbnail.js');
-// Load controllers
 elgg_load_js('UploadController.js');
-// Load services
 elgg_load_js('KalturaService.js');
-
 elgg_load_js('ElggService.js');
 elgg_load_js('app.js');
+
 // include css
 elgg_load_css('appstyle.css');
 elgg_load_js('elgg.lightbox');
 elgg_load_css('elgg.lightbox');
 
 $user_guid = elgg_get_logged_in_user_guid();
-
-$angularRoot = elgg_get_site_url() . 'mod/archive/angular/app';
-$templatesPath = $angularRoot . '/partials';
-
-$angularSettings = array(
-    'templates_path' => $templatesPath
-);
-
 //create album
 elgg_register_menu_item('title', array(
 	'name'=>'upload',
