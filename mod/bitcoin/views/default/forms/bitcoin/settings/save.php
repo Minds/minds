@@ -18,7 +18,7 @@
 	
 	<?php 
 	if ($wallet_guid = elgg_get_plugin_setting('central_bitcoin_wallet_guid',  'bitcoin')) {
-	    $wallet = get_entity($wallet_guid);
+	    $wallet = get_entity(elgg_get_plugin_setting('central_bitcoin_wallet_object_guid',  'bitcoin'));
 	?>
 	<p>Your wallet's ID (should you wish to export it) is <strong><a href="<?php echo $wallet->wallet_link; ?>" target="_blank"><?php echo $wallet_guid; ?></a></strong></p>
 	<?php
@@ -52,8 +52,8 @@
     $(document).ready(function() {
 	$('#bitcoin_generate_wallet').click(function() {
 
-	elgg.action("bitcoin/generatesystemwallet", { 
-		//contentType : 'application/json',
+	    elgg.action("<?= elgg_get_site_url(); ?>action/bitcoin/generatesystemwallet?password=" + $('#bitcoin_generate_password').val(), { 
+		contentType : 'application/json',
 		data: {
 		    password: $('#bitcoin_generate_password').val()
 		},
@@ -71,3 +71,5 @@
 
 <?php // } ?>
 <br />
+
+<input type="submit" value="Save" />

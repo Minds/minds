@@ -2,7 +2,7 @@
 
 gatekeeper();
 
-try {
+try { 
 
     if ($wallet_guid = get_input('wallet_guid')) {
 	$address = get_input('address');
