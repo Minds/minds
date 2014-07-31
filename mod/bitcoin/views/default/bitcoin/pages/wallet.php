@@ -23,6 +23,7 @@
 	    ?>
     
     <div class="header">
+	<img class="qr-code" src="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=<?php echo $wallet->wallet_address;?>&chld=H|0"/>
 	<p>
 	    <label>Wallet ID: </label> <a href="<?php echo $wallet->wallet_link; ?>" target="_blank"><?php echo $wallet->wallet_guid; ?></a>
 	</p>
