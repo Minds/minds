@@ -190,7 +190,7 @@ abstract class bitcoin extends \ElggPlugin
 	if (elgg_is_logged_in()) {
 	    elgg_register_menu_item('site', array(
 		    'name' => 'bitcoin',
-		    'text' => '&#59406;', //'My Wallet', // TODO: Replace me with a nice graphic
+		    'text' => '<span class="entypo">&#59406;</span> My Wallet', //'My Wallet', // TODO: Replace me with a nice graphic
 		    'href' => 'bitcoin/mywallet',
 		    'title' => elgg_echo('bitcoin'),
 		    'priority' => 10
