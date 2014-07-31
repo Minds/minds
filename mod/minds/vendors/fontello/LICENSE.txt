@@ -1,6 +1,15 @@
 Font license info
 
 
+## Entypo
+
+   Copyright (C) 2012 by Daniel Bruce
+
+   Author:    Daniel Bruce
+   License:   SIL (http://scripts.sil.org/OFL)
+   Homepage:  http://www.entypo.com
+
+
 ## Font Awesome
 
    Copyright (C) 2012 by Dave Gandy
@@ -15,16 +24,7 @@ Font license info
    (c) Stephen Hutchings 2012
 
    Author:    Stephen Hutchings
-   License:   CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0/)
+   License:   SIL (http://scripts.sil.org/OFL)
    Homepage:  http://typicons.com/
-
-
-## Entypo
-
-   Copyright (C) 2012 by Daniel Bruce
-
-   Author:    Daniel Bruce
-   License:   CC BY-SA (http://creativecommons.org/licenses/by-sa/2.0/)
-   Homepage:  http://www.entypo.com
 
 
