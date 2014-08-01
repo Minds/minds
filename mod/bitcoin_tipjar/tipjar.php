@@ -169,6 +169,20 @@ class tipjar extends \ElggPlugin
 		    return $return;
 	    });
 	}
+	
+	elgg_register_event_handler('pagesetup', 'system', function(){
+	    if (elgg_is_logged_in()) {
+		// Channel menu
+		elgg_register_menu_item('channel', array(
+			'name' => 'tipjar:tip',
+			'text' => 'Tip',
+			'href' => 'tipjar/tip/' . elgg_get_page_owner_entity()->username,
+
+		));
+	    }
+	    
+	});
+	
 	/*if (elgg_is_logged_in()) {
 	    elgg_register_menu_item('site', array(
 		    'name' => 'tipjar',
