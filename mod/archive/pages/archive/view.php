@@ -106,7 +106,16 @@ if($entity->getSubtype() == 'album'){
 
 elgg_push_breadcrumb($title);
 
+
 $content = elgg_view_entity($entity, array('full_view' => true));
+
+/**
+ * If loaded via our photo viewer, then don't show a standard page
+ */
+if(elgg_is_xhr()){
+	echo $content; exit;
+}
+
 //$content .=  elgg_view('minds/ads', array('type'=>'content-below-banner'));
 //$content .= elgg_view_comments($entity);
 

@@ -24,7 +24,7 @@ class indexes extends call{
 	}
 	
 	public function set($name, array $guids = array()){
-		$this->insert($this->namespace.$name, $guids);
+		return $this->insert($this->namespace.$name, $guids);
 	}
 	
 		/**

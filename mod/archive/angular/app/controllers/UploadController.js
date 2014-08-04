@@ -1,37 +1,60 @@
 /**
  * Upload controller.
- *
- * Initializes the jQuery uploader and the Kaltura service.
  */
 
-function UploadCtrl($scope, Elgg, $q, $timeout) {
+function UploadCtrl($scope, Elgg, $q, $timeout, $http, $location) {
 
     $scope.fileInfo = [];
     $scope.status = 'select';
     $scope.queue = [];
     $scope.uploaderElement = '#fileupload';
+    $scope.album = 0;
     $scope.albums = albums;
-
-	$scope.newAlbum = function(index){
-		console.log(index);
-		$scope.newAlbumFromIndex = index; //a tad hacky!
-		$.fancybox("#album-create-wrapper");
+    $scope.completed = 0;
+    
+    $scope.total = function(){
+    	return $scope.files.length;
+    }
+	
+	var type_timeout;
+	$scope.createAlbum = function(){
+		if (type_timeout) $timeout.cancel(type_timeout);
+		
+		type_timeout = $timeout(function(){
+			Elgg.createAlbum({title:$scope.albums.newInput}).then(function(guid){ 
+				$scope.albums[guid] = {
+					guid: guid,
+					title: $scope.albums.newInput
+				};
+				$scope.albums.newInput = '';
+				//make use of new album
+				$scope.clickAlbum = false;
+				$scope.album = guid;
+			});
+		},1000);
 	};
 	
-	$scope.createAlbum = function(){
-		$.fancybox.close();
-		index = $scope.newAlbumFromIndex;
-		Elgg.createAlbum({title:$scope.albumName}).then(function(guid){ 
-	   		$scope.fileInfo[index]['albumId'] = guid;
-	   	
-			//we now now add this album to the json array of albums.
-			$scope.albums.push({title: $scope.albumName, id: guid});
-			//update our list
-			$scope.fileInfo[index]['albumId'] == guid;
-			$scope.albumName = '';
-		});
-		
+	$scope.getAlbum = function(){
+		if($scope.album == 0){
+			return {
+				guid: 0,
+				title: 'Select album...'
+			};
+		}
+		return $scope.albums[$scope.album];
 	};
+    
+    $scope.selectAlbum = function(guid){
+    	$scope.clickAlbum = false;
+		$scope.album = guid;
+		
+		var guids= [];
+		//we now need to update all items to use our new album..
+		for($index in $scope.files){
+			$scope.files[$index].container_guid = guid;
+			guids.push($scope.files[$index].guid);
+		}
+    };
     
     /**
      * License options (for dropdown)
@@ -71,9 +94,14 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
 	$scope.changed = function(guid) {
 		if (saveTimeout) $timeout.cancel(saveTimeout);
 		
-		/*saveTimeout = $timeout(function(){
-			$scope.updateEntity(guid);
-		},1000);*/
+		saveTimeout = $timeout(function(){
+			$scope.updateEntity(guid).then(function($index){
+					$scope.files[$index]['progress'] = 100;
+			}, function($index){
+				$scope.files[$index]['progress'] = 'fail';
+			}, function(update){
+			});
+		},1000);
 		
 	};
 
@@ -119,28 +147,6 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
         	$scope.uploading = true;
 		//	$scope.$apply(); //sometimes this doesn't update
         }
-      
-        //$scope.queue.push(file);
-
-        //$scope.saveEnabled = true;
-        $scope.fileInfo[index] = {};
-        /*$scope.fileInfo[index]['fileObj'] = file;
-        $scope.fileInfo[index]['fileType'] = $scope.detectMediaType(file.type);
-        $scope.fileInfo[index]['name'] = file.name;
-        $scope.fileInfo[index]['updateResult'] = false;
-        $scope.fileInfo[index]['license'] = $scope.default_license;
-        $scope.fileInfo[index]['access_id'] = $scope.default_access;
-        $scope.fileInfo[index]['tags'] = "";
-        $scope.fileInfo[index]['description'] = "";*/
-
-        //if($scope.fileInfo[index]['fileType'] == 'image') {
-			//$/scope.fileInfo[index]['albumId'] = $scope.albums[0].id;
-		//} 
-	    
-		//Elgg.uploadElggFile($scope.fileInfo[index], jQuery(elm), data, $scope).then(function(guid){ 
-	   		//$scope.fileInfo[index]['guid'] = guid;
-	   //	});
-	   //$scope.$apply();
 
     };
 
@@ -170,15 +176,18 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
      * @param elm the uploader element (with #).
      */
     $scope.initializeUploader = function(elm) {
-		$scope.files = [];
 		
+		$scope.files = [];
+		$count = 0;
     	$(elm).fileupload({
     		url: elgg.security.addToken(elgg.get_site_url() + 'action/archive/upload'),
     		previewMaxWidth: 100,
 	        previewMaxHeight: 100,
 	        previewCrop: true,
 	        limitConcurrentUploads: 1,
+	        maxNumberOfFiles: 50,
 	        add: function(e, data){
+	        	
 	        	$scope.status= 'uploading';
 	        	
 				data.index = $scope.files.length;
@@ -187,8 +196,10 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
 		       		var file = data.files[0],
 		       				entity = {
 		       					index : data.index,
+		       					container_guid: $scope.album,
+		       					batch_guid: batch_guid,
 		           				fileType: $scope.detectMediaType(file.type),
-						       	name: file.name,
+						       	title: file.name,
 						        license: $scope.default_license,
 						        access_id: $scope.default_access
 							};
@@ -196,6 +207,7 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
 				});
 				$scope.files[data.index]['progress'] = 1;
 				data.submit();
+		
 				
 	        },
 	        submit : function(e, data){
@@ -203,21 +215,27 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
 	        },
 	        dropZone: $('#dropzone')
 	    }).on('fileuploadfail', function (e, data) {
-	       console.log('fail');
+	    	
+			$scope.files[data.index].progress = 'fail';
+			$scope.$apply();
+			
 	    }).on('fileuploaddone', function (e, data) {
 	    	
 			$scope.files[data.index].guid = data.result;
 			$scope.files[data.index].thumb = cdnUrl + 'archive/thumbnail/' + $scope.files[data.index].guid +'/medium';
+			$scope.files[data.index]['progress'] = 100;
+			$scope.completed++;
 			$scope.$apply();
+
 
 	    }).on('fileuploadprogress', function(e, data) {
 			var progress = parseInt(data.loaded / data.total * 100, 10);
             if($scope.files[data.index]){
                 $scope.files[data.index]['progress'] = progress;
 
-				if(progress <= 100){
+				if(progress <= 99){ //setting to 99 because only show a green bar once we have a guid..
                		$scope.$apply();
-              } 
+              	} 
             }
        });
 
@@ -233,6 +251,46 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
         }
 
         return false;
+    };
+    
+    /**
+     * Send a batch request to populate the albums. Send a warning if no album is selected
+     */
+    $scope.complete = function(){
+    	if($scope.completed != $scope.total()){
+    		alert('The upload is not complete');
+    	} else if($scope.album == 0) {
+    		alert('Please select an album');
+    	} else {
+    		var deferred  = $q.defer();
+    		
+   				data = {
+   					batch_guid : batch_guid,
+   					album_guid : $scope.album
+   				};
+   				data.__elgg_token = elgg.security.token.__elgg_token;
+                data.__elgg_ts = elgg.security.token.__elgg_ts;
+                
+    			$http({
+    				
+	                method: 'POST',
+	                url:  elgg.get_site_url() + 'action/archive/batch',
+	                data: data,
+	                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+	                
+	            }).success(function(guid, status, headers, config) {
+	                  
+	                 window.location.href = elgg.get_site_url() + 'archive/view/'+$scope.album;
+	                   //$location.absUrl() == elgg.get_site_url() + 'archive/view/'+$scope.album;
+	                 //  console.log('success');
+				}). error(function(guid, status, headers, config) {
+	                 
+	                   alert('something failed');
+	                     
+				});
+				
+				//return deferred.promise;
+    	}
     };
 
     $scope.rotateImage = function(entryRefresh, rotateLeft, index){
@@ -271,11 +329,39 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
      * @param guid, the guid of entity
      */
     $scope.updateEntity = function(guid) {
-    	for($index in $scope.fileInfo){
-    		if($scope.fileInfo[$index]['guid']==guid && typeof guid != 'undefined'){
-    			Elgg.updateElggEntity($scope.fileInfo[$index]);
+    	var deferred  = $q.defer();
+    	for($index in $scope.files){
+    		if($scope.files[$index]['guid']==guid && typeof guid != 'undefined'){
+   				
+   				$scope.files[$index]['progress'] = 95;
+   				
+   				data = $scope.files[$index];
+   				data.__elgg_token = elgg.security.token.__elgg_token;
+                data.__elgg_ts = elgg.security.token.__elgg_ts;
+                
+    			$http({
+    				
+	                method: 'POST',
+	                url:  elgg.get_site_url() + 'action/archive/save',
+	                data: data,
+	                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+	                
+	            }).success(function(guid, status, headers, config) {
+	                  
+	                  
+	                   deferred.resolve($index);
+	                   
+				}). error(function(guid, status, headers, config) {
+	                 
+	                    deferred.reject($index);
+	                     
+				});
+				
+				return deferred.promise;
     		}
+
     	}
+    	
     };
 
     /**

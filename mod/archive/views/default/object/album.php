@@ -1,23 +1,51 @@
 <?php
 /**
  * Album view
- * 
- * @uses $vars['entity'] TidypicsAlbum
- * 
- * @author Cash Costello
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2
  */
 
-$album = elgg_extract('entity', $vars);
 $full_view = elgg_extract('full_view', $vars, false);
-$archive_view = elgg_extract('archive_view', $vars, false);
+$album = elgg_extract('entity', $vars);
+	
+if($full_view){
 
-if ($full_view) {
-	echo elgg_view('object/album/full', $vars);
+	$images = elgg_get_entities(array('guids'=>$album->getChildrenGuids()));
+	echo elgg_view_entity_list($images, array('full_view'=>false, 'viewtype'=>'gallery', 'masonry'=>false, 'list_class'=>'minds-album', 'data-lightbox'=>$album->guid));
+	
 } else {
-	if (elgg_in_context('widgets')) {
-	//	echo elgg_view('object/album/list', $vars);
-	} else{
-		echo elgg_view('object/album/archive', $vars);
-	}
+	
+	$owner = $album->getOwnerEntity();
+	
+	$body = elgg_view('output/url', array(
+		'text' => $img,
+		'href' => $album->getURL(),
+		'encode_text' => false,
+		'is_trusted' => true,
+	));
+	
+	$menu = elgg_view_menu('entity', array(
+        'entity' => $album, 
+        'handler' => 'archive',
+        'sort_by' => 'priority',
+        'class' => 'elgg-menu-hz',
+    ));
+	
+	$img = elgg_view('output/img', array('src'=>$album->getIconURL('large'), 'class'=>'rich-image'));
+	$title = elgg_view('output/url', array('href'=>$album->getURL(), 'text'=>elgg_view_title($album->title)));
+	
+	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));	
+	
+	$subtitle = '<i>' . elgg_echo('by') . ' ' . $owner_link . ' ' . elgg_view_friendly_time($album->time_created) . '</i>';
+	
+	$content = $img . $body;
+	echo $menu;
+	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+	
+	echo elgg_view('output/url', array(
+		'href'=> $album->getURL(), 
+		'text'=> elgg_view('output/img', array('src'=>$album->getIconURL('large'))),
+		'class' => 'image-thumbnail'
+	));
+	echo $header;
+	
+	
 }

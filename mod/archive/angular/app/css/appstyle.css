@@ -10,6 +10,7 @@
 }
 .uploader-bar.uploading {
 	padding:0;
+	height:50px;
 }
 
 .uploader-bar .entypo{
@@ -45,6 +46,77 @@
 	display:none;
 }
 
+.uploader-bar .album-selector{
+	float:left;
+}
+.uploader-bar.select .album-selector{
+	display:none;
+}
+.minds-buttom-album{
+	width:128px;
+	height:15px;
+	position:relative;
+	padding:8px;
+	float:left;
+	margin:4px;
+	display:block;
+	background:#FAFAFA;
+	color:#888;
+	border:1px solid #DDD;
+}
+.album-selector .album-selections{
+	/* display: none; */
+	z-index: 999;
+	/* float: left; */
+	/* clear: both; */
+	position: absolute;
+	top: 38px;
+	left: 4px;
+	border: 1px solid #DDD;
+	/* padding-top: 4px; */
+	width: 200px;
+	background: #EEE;
+}
+
+.album-selector input{
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	padding: 12px 16px;
+}
+.album-selector input:focus{
+	border:0;
+}
+
+.album-selector .album-selections li{
+	list-style:none;
+	padding:8px;
+	border-bottom:1px solid #DDD;
+	cursor:pointer;
+}
+
+
+.uploader-bar .upload-stats{
+	float:right;
+	color:#888;
+	margin:12px;
+}
+.uploader-bar.select .upload-stats{
+	display:none;
+}
+.minds-buttom-save{
+	min-width:0;
+	height:15px;
+	position:relative;
+	padding:8px;
+	float:right;
+	margin:4px;
+	display:block;
+	background:#4690D6;
+	color:#FFF;
+	border:1px solid #4690D6;
+}
+
 .default-license-input{
 	width:240px;
 	padding:16px;
@@ -60,9 +132,16 @@
 	width:128px;
 	height:15px;
 	position:relative;
-	padding:14px;
+	padding:8px;
 	margin:auto;
 	display:block;
+}
+.uploader-bar.uploading .elgg-button-upload{
+	float:left;
+	margin:4px;
+}
+.uploader-bar.uploading .progress{
+	background:#DDD;
 }
 .elgg-button-upload input{
 	position: absolute;
@@ -205,6 +284,10 @@
 .uploadList .progress > .bar.p100{
 	background:#5ca941;
 }
+.uploadList .progress > .bar.pfail{
+	background:red;
+	width:100%;
+}
 
 .uploadList div.progress{
     color: transparent;
@@ -263,4 +346,13 @@ form .ng-valid{
 .disabled{
     background-color: #c5c5c5;
     cursor: not-allowed;
+}
+
+
+.masonry {
+  -webkit-transition-duration: 0 !important;
+     -moz-transition-duration: 0 !important;
+      -ms-transition-duration: 0 !important;
+       -o-transition-duration: 0 !important;
+          transition-duration: 0 !important;
 }

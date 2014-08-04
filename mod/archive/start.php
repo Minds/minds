@@ -21,6 +21,9 @@ function minds_archive_init() {
 				case 'image':
 					return new minds\plugin\archive\entities\image($row);
 					break;
+				case 'album':
+					return new minds\plugin\archive\entities\album($row);
+					break;
 				case 'video':
 					return new minds\plugin\archive\entities\video($row);
 			}
@@ -39,6 +42,8 @@ function minds_archive_init() {
 	elgg_register_js('player-vast', elgg_get_site_url().'mod/archive/player/video.vast.js', 'head', 602);
 	elgg_register_js('player-vast-client', elgg_get_site_url().'mod/archive/player/vast-client.js', 'head', 601);
 	elgg_register_js('player-ads', elgg_get_site_url().'mod/archive/player/video.ads.js', 'head', 600);
+
+	elgg_register_js('popup', elgg_get_site_url().'mod/archive/vendors/popup.min.js','head', 2);
 
     //Loading angularJS
     $angularRoot = elgg_get_site_url() . 'mod/archive/angular/app/';
@@ -101,10 +106,11 @@ function minds_archive_init() {
 	elgg_register_action("archive/monetize", $action_path . "monetize.php");
 	elgg_register_action("archive/feature", $action_path . "feature.php");
 	elgg_register_action("archive/save", $action_path . "save.php");
-	elgg_register_action("archive/add_album", $action_path . "tidypics/add_album.php");
+	elgg_register_action("archive/add_album", $action_path . "add_album.php");
 	
     elgg_register_action("archive/upload", $action_path . "upload.php");
-	
+	 elgg_register_action("archive/batch", $action_path . "batch.php");
+	 
     elgg_register_action("archive/deleteElggVideo" , $action_path . "deleteAngular.php");
     elgg_register_action("archive/selectAlbum" , $action_path . "tidypics/album.php");
 	
@@ -225,8 +231,12 @@ function minds_archive_page_handler($page) {
 				$filename = "$data_root$user_path/$entity->filename";
 			
 			if(isset($page[2])  && $size = $page[2]){
-				$filename = "$data_root$user_path/image/$entity->container_guid/$entity->guid/$size.jpg";
+				if(!isset($entity->batch_guid))
+					$entity->batch_guid = $this->container_guid;
+				
+				$filename = "$data_root$user_path/image/$entity->batch_guid/$entity->guid/$size.jpg";
 			}
+		
 			$contents = @file_get_contents($filename);
 
 			header("Content-type: image/jpeg");
@@ -247,7 +257,11 @@ function minds_archive_page_handler($page) {
 			return true;
 		case 'show':
 		case 'view':
-			set_input('guid',$page[1]);
+			if(isset($page[2])){
+				set_input('guid',$page[2]);
+			} else {
+				set_input('guid',$page[1]);
+			}
 			include('pages/archive/view.php');
 			return true;			
 			break;

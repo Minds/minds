@@ -19,6 +19,8 @@ $entity = get_entity($guid, 'object');
 $container_guid = elgg_get_logged_in_user_guid();
 $user_guid = elgg_get_logged_in_user_guid();
 
+$batch = new minds\plugin\archive\entities\batch(get_input('batch_guid'));
+
 switch($mime_type){
 	case "video":
 	case "audio":
@@ -56,11 +58,17 @@ switch($mime_type){
 		
 		$image->title = $title;
 		$image->description = $description;
-		$image->container_guid = $container_guid;
+		$image->container_guid = $container_guid; //the container guid is usually blank, as it is the batch who is control at the upload level
+		$image->batch_guid = get_input('batch_guid');
 		$image->access_id = 2;
 		$image->upload($_FILES['fileData']);
 		$image->createThumbnails();
-		echo $image->save();
+		
+		//we don't know of an album yet, this is done by an alternative batch command
+		echo $image->save(false);
+		
+		//add this image to the batch
+		$batch->addToList($image->guid);
 		exit;
 		break;
 	default:

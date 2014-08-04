@@ -29,9 +29,10 @@ class image extends entities\file{
 	 * Extend the default entity save function to update the remote service
 	 * 
 	 */
-	public function save(){
+	public function save($index = true){
 		$this->super_subtype = 'archive';
-		parent::save(true);
+			
+		parent::save($index);
 		return $this->guid;
 	}
 	
@@ -60,7 +61,7 @@ class image extends entities\file{
 		}
 		
 		if(!$this->filename){
-			$dir = $this->getFilenameOnFilestore() . "/image/$this->container_guid/$this->guid";
+			$dir = $this->getFilenameOnFilestore() . "/image/$this->batch_guid/$this->guid";
 			if (!file_exists($dir)) {
 				mkdir($dir, 0755, true);
 			}
@@ -69,7 +70,7 @@ class image extends entities\file{
 		if(!$file['tmp_name'])
 			throw new \Exception("Upload failed. The image may be too large");
 		
-		$this->filename = "image/$this->container_guid/$this->guid/".$file['name'];
+		$this->filename = "image/$this->batch_guid/$this->guid/".$file['name'];
 		
 		$filename = $this->getFilenameOnFilestore();
 		$result = move_uploaded_file($file['tmp_name'], $filename);
@@ -100,7 +101,7 @@ class image extends entities\file{
 				case 'medium':
 					$h = 300;
 					$w = 300;
-					$s = false;
+					$s = true;
 					$u = true;
 					break;
 				case 'large':
@@ -119,7 +120,7 @@ class image extends entities\file{
 			}
 			//@todo - this might not be the smartest way to do this
 			$resized = \get_resized_image_from_existing_file($master, $w, $h, $s, 0,0,0,0, $u);
-			$this->setFilename("image/$this->container_guid/$this->guid/$size.jpg");
+			$this->setFilename("image/$this->batch_guid/$this->guid/$size.jpg");
 			file_put_contents($this->getFilenameOnFilestore(), $resized);
 		}
 	}

@@ -18,17 +18,27 @@ class album extends object{
 		$this->attributes['subtype'] = "album";
 	}
 	
+	public function getURL(){
+		return elgg_get_site_url() . 'archive/view/'.$this->guid;
+	}
+	
 	/**
 	 * Get the icon url. This is configurable to be multiple images from the album or
 	 * just a specific image. It defaults the the latest image in the album
 	 */
 	public function getIconURL($size = 'large'){
-		return null;
+		global $CONFIG; //@todo remove globals!
+		return $CONFIG->cdn_url . 'archive/thumbnail/' . $this->guid . '/'.$size;
 	}
 	
 	public function getChildrenGuids(){
 		$index = new data\indexes('object:container');
-		return $index->get($this->guid);
+		return $index->get($this->guid, array('limit'=>100000));
+	}
+	
+	public function getChildren(){
+		//$guids = $this->getChildrenGuids();
+		
 	}
 
 	/**
@@ -37,6 +47,7 @@ class album extends object{
 	 */
 	public function save(){
 		$this->super_subtype = 'archive';
+		$this->access_id = 2;
 		parent::save(true);
 		return $this->guid;
 	}

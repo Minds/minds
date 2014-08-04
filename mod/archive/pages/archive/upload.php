@@ -35,11 +35,11 @@ elgg_register_menu_item('title', array(
 ));
 
 $content = elgg_view('archive/upload');
-$body = elgg_view_layout("gallery", array(	
+$body = elgg_view_layout("one_column", array(	
 	'content' => $content,
 	'sidebar' => false,
 	'title' => false,
-	'header' => false,
+	'header' => '',
 	'filter'=>'',
 ));
 

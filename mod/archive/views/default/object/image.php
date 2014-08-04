@@ -10,14 +10,21 @@
 
 
 $full_view = elgg_extract('full_view', $vars, false);
+$viewtype = elgg_extract('viewtype', $vars, false);
+$image = elgg_extract('entity', $vars);
 
 if($full_view){
 	
-	echo 'full';
+	echo elgg_view('output/img', array('src'=>$image->getIconURL('xlarge')));
+	
+} elseif($viewtype == 'gallery') {
+	
+	elgg_load_js('popup');
+ 	
+ 	$img = elgg_view('output/img', array('src'=>$image->getIconURL('medium')));
+	echo elgg_view('output/url', array('href'=>$image->getUrl(), 'text'=>$img.'hello', 'class'=>'lightbox-image', 'data-album-guid'=>'lightbox[$image->container_guid]'));
 	
 } else {
-
-	$image = elgg_extract('entity', $vars);
 	
 	$owner = $image->getOwnerEntity();
 	

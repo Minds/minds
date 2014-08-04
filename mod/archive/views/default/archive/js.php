@@ -91,6 +91,14 @@ archive.init = function(){
                 // set the source of the img tag
                 $('#thumbnailData').val(dataURL);
        }
+       
+       // Colorbox can accept a function in place of a static value:
+		$('.lightbox-image').magnificPopup({
+		  type: 'ajax',
+		  gallery:{
+		    enabled:true
+		  }
+		});
 
 };
 
