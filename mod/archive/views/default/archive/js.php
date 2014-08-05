@@ -91,7 +91,7 @@ archive.init = function(){
                 // set the source of the img tag
                 $('#thumbnailData').val(dataURL);
        }
-       
+       archive.origin_url = window.location.href
        // Colorbox can accept a function in place of a static value:
 		$('.lightbox-image').magnificPopup({
 		  type: 'ajax',
@@ -100,14 +100,13 @@ archive.init = function(){
 		  },
 		  callbacks: {
 				 elementParse: function(item) {
+				 
 					window.history.pushState("", "",item.src);
-					//console.log($(this)[0].currItem.src);
 			   },
 			   open: function(){
-			  		console.log('load the entire album (guids) into the dom');
-			  		//this.items = {
-			  			
-			  		//};
+			   				   },
+			   close: function(){
+					window.history.pushState("", "", archive.origin_url);
 			   }
 		}
 		});

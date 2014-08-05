@@ -35,5 +35,5 @@ if($entity->license == 'not-selected' && !elgg_is_xhr()){
 }
 
 
-echo $entity->save();
+echo $entity->save(false);
 forward($entity->getURL());
