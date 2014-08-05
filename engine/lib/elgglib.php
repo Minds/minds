@@ -132,7 +132,7 @@ function forward($location = "", $reason = 'system') {
 		} else if ($location === '') {
 			exit;
 		}
-	} else {
+	} else {exit;
 		throw new SecurityException(elgg_echo('SecurityException:ForwardFailedToRedirect'));
 	}
 }

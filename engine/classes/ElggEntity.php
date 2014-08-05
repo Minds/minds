@@ -23,6 +23,8 @@ abstract class ElggEntity extends ElggData implements
 	Importable // Allow import of data
 {
 
+	protected $cache = true;
+
 	/**
 	 * If set, overrides the value of getURL()
 	 */
@@ -101,8 +103,9 @@ abstract class ElggEntity extends ElggData implements
 
 			$this->$k = $v;
 		}
-		
-		cache_entity($this);
+	
+		if($this->cache)	
+			cache_entity($this);
 	}
 	
 	public function isJson($string) {

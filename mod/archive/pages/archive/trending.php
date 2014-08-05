@@ -29,7 +29,10 @@ $options = array(
 );
 $trending = new MindsTrending(null, $options);
 $guids = $trending->getList(array('type'=>'object', 'subtype'=>'kaltura_video', 'limit'=>$limit, 'offset'=>$offset));//no super subtype support atm
- 
+
+if(!$guids){
+	forward('archive/all');	 
+}
 $content = elgg_list_entities(	array(	'guids' => $guids,
 					'full_view' => FALSE,
 					'archive_view' => TRUE,

@@ -8,7 +8,7 @@
     		"abeautifulsite/jquery-minicolors": "master",
     		"kramnorth/cinemr-php-sdk": "master",
 		"minds/minds-php-sdk": "master"
-    	},
+   	},
 	"repositories": [{
             "type": "vcs",
             "url": "git@github.com:minds/minds-php-sdk.git"

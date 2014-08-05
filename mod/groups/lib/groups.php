@@ -175,7 +175,7 @@ function groups_handle_mine_page() {
 		'relationship_guid' => $page_owner->guid,
 		'relationship' => 'member',
 		//'inverse_relationship' => true
-	));
+	)); 
 	
 	if (!$content) {
 		$content = elgg_echo('groups:none');
@@ -298,10 +298,6 @@ function groups_handle_profile_page($guid) {
 	if (group_gatekeeper(false)) {	
 		$sidebar .= elgg_view('groups/sidebar/members', array('entity' => $group));
 
-		$sidebar .= elgg_view('groups/sidebar/my_status', array(
-			'entity' => $group,
-			'subscribed' => $subscribed
-		));
 	}
 
 	$params = array(

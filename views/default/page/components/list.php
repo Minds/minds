@@ -39,6 +39,8 @@ if (isset($vars['list_class'])) {
 }
 if($vars['masonry'] !== false && get_input('masonry') != 'off'){
         $list_class .= ' mason';
+} else {
+	set_input('show_loading', 'false'); // a bit of a hack!!
 }
 
 if($vars['linear'] || get_input('linear', 'off') == 'on'){

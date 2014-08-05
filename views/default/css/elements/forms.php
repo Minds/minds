@@ -421,3 +421,15 @@ form.minds-search{
 .minds-search .submit{
 	display:none;
 }
+
+
+/**
+ * minds posting
+ */
+.elgg-form-deck-river-post {
+padding: 12px;
+background: #F1F1F1;
+border: 1px solid #CCC;
+margin: 0;
+width: 96%;
+}

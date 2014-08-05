@@ -75,7 +75,8 @@ function add_entity_relationship($guid_one, $relationship, $guid_two) {
 
 	// Check for duplicates
 	if (check_entity_relationship($guid_one, $relationship, $guid_two)) {
-		return false;
+		//this is cassandra, why would it duplicate?
+//		return false;
 	}
 
 	$db = new minds\core\data\call('relationships');

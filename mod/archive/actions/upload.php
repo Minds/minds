@@ -1,5 +1,4 @@
 <?php
-elgg_load_library('tidypics:upload');
 
 // Get variables
 $title = get_input("title");
@@ -7,7 +6,7 @@ $desc = get_input("description");
 $access_id = (int) get_input("access_id", 2);
 $license = get_input("license");
 $tags = get_input("tags");
-$mime_type = get_input("fileType", tp_upload_get_mimetype($_FILES['fileData']['name']));
+$mime_type = get_input("fileType", file_get_simple_type($_FILES['fileData']['type']));
 $entryId = get_input("entryId");
 //If the entity doesn't exsits then entityId will be null and will be created later.
 $guid = get_input("guid");
@@ -20,6 +19,8 @@ $entity = get_entity($guid, 'object');
 $container_guid = elgg_get_logged_in_user_guid();
 $user_guid = elgg_get_logged_in_user_guid();
 
+$batch = new minds\plugin\archive\entities\batch(get_input('batch_guid'));
+
 switch($mime_type){
 	case "video":
 	case "audio":
@@ -31,6 +32,7 @@ switch($mime_type){
 		$entity->description = $desc;
 		$entity->owner_guid = elgg_get_logged_in_user_guid();
 		$entity->license = $license;
+		
 		if(!$guid)
 			$entity->upload($_FILES['fileData']['tmp_name']);
 		$entity->access_id = 2;
@@ -49,53 +51,25 @@ switch($mime_type){
 		
 	case "image":
 		
-		// If Image then create an album. Don't upload to Kaltura.
-		if ($guid){
-			$image = new TidypicsImage($guid);
-			$new_image = false;
-		} else {
-			$image = new TidypicsImage();
-			$new_image = true;
-		}
-
-		if($album_guid){
-			$album = new TidypicsAlbum($album_guid);
-		} else {
-			if($image->getContainerEntity() instanceof TidypicsAlbum)
-				$album = $image->getContainerEntity();
-			}
-
-			if(!$album){
-				$albums = elgg_get_entities(array( 	
-						'type'=> 'object',
-						'subtypes' => array('album'),
-						'owner_guid' => elgg_get_logged_in_user_guid(),
-					));
-				$album = $albums[0];
-			} 
-
-			$image->title = $title;
-			$image->description = $desc;
-			$image->super_sybtype = 'archive';
-			$image->container_guid = $album->getGUID();
-			//$image->setMimeType($mime_type);
-			$image->tags = $tags;
-			$image->access_id = $access_id;
-			$image->license = $license;
-			//$image->category = $category; //No category
-
-		    	$guid = $image->save($_FILES['fileData']);
-		  
-		    	if ($guid) {
-			    echo $guid;
-
-			// Only post to river/update album's image list if we're creating a new image entity
-			if ($new_image) {
-			    add_to_river('river/object/image/create', 'create', $image->getOwnerGUID(), $image->getGUID());
-			    $album->prependImageList(array($guid));
-			}
-			exit;
-		    }
+		$image = new minds\plugin\archive\entities\image();
+		
+		if(!$title)
+			$title = $_FILES['fileData']['name'];
+		
+		$image->title = $title;
+		$image->description = $description;
+		$image->container_guid = $container_guid; //the container guid is usually blank, as it is the batch who is control at the upload level
+		$image->batch_guid = get_input('batch_guid');
+		$image->access_id = 2;
+		$image->upload($_FILES['fileData']);
+		$image->createThumbnails();
+		
+		//we don't know of an album yet, this is done by an alternative batch command
+		echo $image->save(false);
+		
+		//add this image to the batch
+		$batch->addToList($image->guid);
+		exit;
 		break;
 	default:
 		//anything else should be forwarded to files. Elgg File entity. 

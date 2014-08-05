@@ -322,6 +322,8 @@ function admin_init() {
 	elgg_register_page_handler('admin', 'admin_page_handler');
 	elgg_register_page_handler('admin_plugin_screenshot', 'admin_plugin_screenshot_page_handler');
 	elgg_register_page_handler('admin_plugin_text_file', 'admin_markdown_page_handler');
+
+	elgg_admin_add_plugin_settings_menu();
 }
 
 /**
@@ -343,11 +345,11 @@ function elgg_admin_add_plugin_settings_menu() {
 	}
 
 	foreach ($active_plugins as $plugin) {
-		$plugin_id = $plugin->getID();
+		$plugin_id = $plugin->guid;
 		$settings_view_old = 'settings/' . $plugin_id . '/edit';
 		$settings_view_new = 'plugins/' . $plugin_id . '/settings';
 		if (elgg_view_exists($settings_view_new) || elgg_view_exists($settings_view_old)) {
-			elgg_register_menu_item('page', array(
+			elgg_register_menu_item('admin', array(
 				'name' => $plugin_id,
 				'href' => "admin/plugin_settings/$plugin_id",
 				'text' => $plugin->getManifest()->getName(),
@@ -439,7 +441,6 @@ function admin_pagesetup() {
 function admin_page_handler($page) {
 
 	admin_gatekeeper();
-	elgg_admin_add_plugin_settings_menu();
 	elgg_set_context('admin');
 
 	elgg_load_js('jquery.jeditable');
@@ -464,7 +465,7 @@ function admin_page_handler($page) {
 		$view = 'admin/plugin_settings';
 		$plugin = elgg_get_plugin_from_id($page[1]);
 		$vars['plugin'] = $plugin;
-
+		
 		$title = elgg_echo("admin:{$page[0]}");
 	} else {
 		$view = 'admin/' . implode('/', $page);

@@ -1,45 +1,59 @@
 /**
  * Upload controller.
- *
- * Initializes the jQuery uploader and the Kaltura service.
  */
 
-function UploadCtrl($scope, Elgg, $q, $timeout) {
+function UploadCtrl($scope, Elgg, $q, $timeout, $http, $location) {
 
     $scope.fileInfo = [];
+    $scope.status = 'select';
     $scope.queue = [];
     $scope.uploaderElement = '#fileupload';
-    $scope.saveEnabled = false;
+    $scope.album = 0;
     $scope.albums = albums;
+    $scope.completed = 0;
     
-    var config = {
-        serviceUrl: serviceUrl
-    };
-
-	$scope.newAlbum = function(index){
-		console.log(index);
-		$scope.newAlbumFromIndex = index; //a tad hacky!
-		$.fancybox("#album-create-wrapper");
-	};
+    $scope.total = function(){
+    	return $scope.files.length;
+    }
 	
+	var type_timeout;
 	$scope.createAlbum = function(){
-		$.fancybox.close();
-		index = $scope.newAlbumFromIndex;
-		Elgg.createAlbum({title:$scope.albumName}).then(function(guid){ 
-	   		$scope.fileInfo[index]['albumId'] = guid;
-	   	
-			//we now now add this album to the json array of albums.
-			$scope.albums.push({title: $scope.albumName, id: guid});
-			//update our list
-			$scope.fileInfo[index]['albumId'] == guid;
-			$scope.albumName = '';
-		});
+		if (type_timeout) $timeout.cancel(type_timeout);
 		
+		type_timeout = $timeout(function(){
+			Elgg.createAlbum({title:$scope.albums.newInput}).then(function(guid){ 
+				$scope.albums[guid] = {
+					guid: guid,
+					title: $scope.albums.newInput
+				};
+				$scope.albums.newInput = '';
+				//make use of new album
+				$scope.clickAlbum = false;
+				$scope.album = guid;
+			});
+		},1000);
 	};
 	
-    $scope.thumbConfig = {
-        serviceUrl: serviceUrl,
-        pid: partnerId
+	$scope.getAlbum = function(){
+		if($scope.album == 0){
+			return {
+				guid: 0,
+				title: 'Select album...'
+			};
+		}
+		return $scope.albums[$scope.album];
+	};
+    
+    $scope.selectAlbum = function(guid){
+    	$scope.clickAlbum = false;
+		$scope.album = guid;
+		
+		var guids= [];
+		//we now need to update all items to use our new album..
+		for($index in $scope.files){
+			$scope.files[$index].container_guid = guid;
+			guids.push($scope.files[$index].guid);
+		}
     };
     
     /**
@@ -81,7 +95,12 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
 		if (saveTimeout) $timeout.cancel(saveTimeout);
 		
 		saveTimeout = $timeout(function(){
-			$scope.updateEntity(guid);
+			$scope.updateEntity(guid).then(function($index){
+					$scope.files[$index]['progress'] = 100;
+			}, function($index){
+				$scope.files[$index]['progress'] = 'fail';
+			}, function(update){
+			});
 		},1000);
 		
 	};
@@ -115,7 +134,7 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
      * @param elm the uploader element id (with #).
      */
     $scope.uploadFiles = function(data, elm) {
-    	
+   
         var file = data.files[0];
         var index = $scope.fileInfo.length;
         data.index = index;
@@ -125,28 +144,9 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
         		$scope.fileInfo.pop(index);
         		return false;
         	}
+        	$scope.uploading = true;
+		//	$scope.$apply(); //sometimes this doesn't update
         }
-        
-        $scope.queue.push(file);
-
-        $scope.saveEnabled = true;
-        $scope.fileInfo[index] = {};
-        $scope.fileInfo[index]['fileObj'] = file;
-        $scope.fileInfo[index]['fileType'] = $scope.detectMediaType(file.type);
-        $scope.fileInfo[index]['name'] = file.name;
-        $scope.fileInfo[index]['updateResult'] = false;
-        $scope.fileInfo[index]['license'] = $scope.default_license;
-        $scope.fileInfo[index]['access_id'] = $scope.default_access;
-        $scope.fileInfo[index]['tags'] = "";
-        $scope.fileInfo[index]['description'] = "";
-		
-        if($scope.fileInfo[index]['fileType'] == 'image') {
-		$scope.fileInfo[index]['albumId'] = $scope.albums[0].id;
-	} 
-	    
-	Elgg.uploadElggFile($scope.fileInfo[index], jQuery(elm), data, $scope).then(function(guid){ 
-   		$scope.fileInfo[index]['guid'] = guid;
-   	});
 
     };
 
@@ -176,42 +176,69 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
      * @param elm the uploader element (with #).
      */
     $scope.initializeUploader = function(elm) {
-        jQuery(elm).fileupload({
-            add: function (e, data) {
-                $scope.uploadFiles(data, elm);
-            },
-            dropZone: $('#dropzone')
-        });
+		
+		$scope.files = [];
+		$count = 0;
+    	$(elm).fileupload({
+    		url: elgg.security.addToken(elgg.get_site_url() + 'action/archive/upload'),
+    		previewMaxWidth: 100,
+	        previewMaxHeight: 100,
+	        previewCrop: true,
+	        limitConcurrentUploads: 3,
+	        maxNumberOfFiles: 50,
+	        add: function(e, data){
+	        	
+	        	$scope.status= 'uploading';
+	        	
+				data.index = $scope.files.length;
 
-        // bind the events
-        $scope.bindUploaderEvents(elm);
-    };
-  
+				$scope.$apply(function(scope){
+		       		var file = data.files[0],
+		       				entity = {
+		       					index : data.index,
+		       					container_guid: $scope.album,
+		       					batch_guid: batch_guid,
+		           				fileType: $scope.detectMediaType(file.type),
+						       	title: file.name,
+						        license: $scope.default_license,
+						        access_id: $scope.default_access
+							};
+	                  $scope.files[data.index] = entity;
+				});
+				$scope.files[data.index]['progress'] = 1;
+				data.submit();
+		
+				
+	        },
+	        submit : function(e, data){
+	        	data.formData = $scope.files[data.index];
+	        },
+	        dropZone: $('#dropzone')
+	    }).on('fileuploadfail', function (e, data) {
+	    	
+			$scope.files[data.index].progress = 'fail';
+			$scope.$apply();
+			
+	    }).on('fileuploaddone', function (e, data) {
+	    	
+			$scope.files[data.index].guid = data.result;
+			$scope.files[data.index].thumb = cdnUrl + 'archive/thumbnail/' + $scope.files[data.index].guid +'/medium';
+			$scope.files[data.index]['progress'] = 100;
+			$scope.completed++;
+			$scope.$apply();
 
-    /**
-     * Bind uploader events.
-     * @param elm
-     */
-    $scope.bindUploaderEvents = function(elm) {
-        jQuery(elm).bind('fileuploadprogress', function(e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            if($scope.fileInfo[data.index]) //Only if element is found
-            {
-                $scope.fileInfo[data.index]['progress'] = progress;
 
-                $scope.$apply();
+	    }).on('fileuploadprogress', function(e, data) {
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+            if($scope.files[data.index]){
+                $scope.files[data.index]['progress'] = progress;
+
+				if(progress <= 99){ //setting to 99 because only show a green bar once we have a guid..
+               		$scope.$apply();
+              	} 
             }
-            else{
-            }
-        });
+       });
 
-        jQuery(elm).bind('fileuploaddone', function(e, data) {
-	
-			$('.elgg-list.mason').imagesLoaded(function(){
-					$('.elgg-list.mason').masonry('reloadItems').masonry();
-			});
-
-        });
     };
     
      // Initialize the jQuery uploader.
@@ -224,6 +251,46 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
         }
 
         return false;
+    };
+    
+    /**
+     * Send a batch request to populate the albums. Send a warning if no album is selected
+     */
+    $scope.complete = function(){
+    	if($scope.completed != $scope.total()){
+    		alert('The upload is not complete');
+    	} else if($scope.album == 0) {
+    		alert('Please select an album');
+    	} else {
+    		var deferred  = $q.defer();
+    		
+   				data = {
+   					batch_guid : batch_guid,
+   					album_guid : $scope.album
+   				};
+   				data.__elgg_token = elgg.security.token.__elgg_token;
+                data.__elgg_ts = elgg.security.token.__elgg_ts;
+                
+    			$http({
+    				
+	                method: 'POST',
+	                url:  elgg.get_site_url() + 'action/archive/batch',
+	                data: data,
+	                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+	                
+	            }).success(function(guid, status, headers, config) {
+	                  
+	                 window.location.href = elgg.get_site_url() + 'archive/view/'+$scope.album;
+	                   //$location.absUrl() == elgg.get_site_url() + 'archive/view/'+$scope.album;
+	                 //  console.log('success');
+				}). error(function(guid, status, headers, config) {
+	                 
+	                   alert('something failed');
+	                     
+				});
+				
+				//return deferred.promise;
+    	}
     };
 
     $scope.rotateImage = function(entryRefresh, rotateLeft, index){
@@ -262,11 +329,39 @@ function UploadCtrl($scope, Elgg, $q, $timeout) {
      * @param guid, the guid of entity
      */
     $scope.updateEntity = function(guid) {
-    	for($index in $scope.fileInfo){
-    		if($scope.fileInfo[$index]['guid']==guid && typeof guid != 'undefined'){
-    			Elgg.updateElggEntity($scope.fileInfo[$index]);
+    	var deferred  = $q.defer();
+    	for($index in $scope.files){
+    		if($scope.files[$index]['guid']==guid && typeof guid != 'undefined'){
+   				
+   				$scope.files[$index]['progress'] = 95;
+   				
+   				data = $scope.files[$index];
+   				data.__elgg_token = elgg.security.token.__elgg_token;
+                data.__elgg_ts = elgg.security.token.__elgg_ts;
+                
+    			$http({
+    				
+	                method: 'POST',
+	                url:  elgg.get_site_url() + 'action/archive/save',
+	                data: data,
+	                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+	                
+	            }).success(function(guid, status, headers, config) {
+	                  
+	                  
+	                   deferred.resolve($index);
+	                   
+				}). error(function(guid, status, headers, config) {
+	                 
+	                    deferred.reject($index);
+	                     
+				});
+				
+				return deferred.promise;
     		}
+
     	}
+    	
     };
 
     /**

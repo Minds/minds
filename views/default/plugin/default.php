@@ -14,6 +14,7 @@ if (!elgg_in_context('admin')) {
 $plugin = $vars['entity'];
 
 if (!$plugin->isValid()) {
+	echo "invalid";
 	echo elgg_view('plugin/plugin/invalid', $vars);
 } else {
 	echo elgg_view('plugin/plugin/full', $vars);

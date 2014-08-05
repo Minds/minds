@@ -5,7 +5,7 @@ require('/var/www/minds-multisite/docroot/engine/start.php');
 $offset ="";
 
 while(1) {
-$featured = elgg_get_entities(array('type'=>'object', 'subtype'=>'image','offset'=>$offset, 'limit'=>200));
+$featured = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog','offset'=>$offset, 'limit'=>200));
 
 $db = new minds\core\data\call('entities_by_time');
 foreach($featured as $entity){

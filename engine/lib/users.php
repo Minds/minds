@@ -607,7 +607,6 @@ function get_user_by_username($username) {
 	}
 	
 	$entity = get_entity($guid);
-
 	if ($entity) {
 		$USERNAME_TO_GUID_MAP_CACHE[$username] = $entity->guid;
 	} else {
@@ -770,7 +769,7 @@ function send_new_password_request($user_guid) {
  * @return bool
  */
 function force_user_password_reset($user_guid, $password) {
-	$user = get_entity($user_guid);
+	$user = new ElggUser($user_guid);
 	if ($user instanceof ElggUser) {
 		$ia = elgg_set_ignore_access();
 
@@ -1024,6 +1023,7 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	$user->language = get_current_language();
 	$guid = $user->save();
 
+	$user->enable();
 	/*// If $friend_guid has been set, make mutual friends
 	if ($friend_guid) {
 		if ($friend_user = get_user($friend_guid)) {

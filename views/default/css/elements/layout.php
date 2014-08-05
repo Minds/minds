@@ -274,28 +274,35 @@
 	line-height:64px;
 	text-align:center;
 	text-shadow:0 0 3px #FFF;
+	margin:2px 16px;
 }
 .minds-fixed-sidebar-left{
 	float:left;
-	width:200px;
+	width:280px;
 	height:100%;
-	padding:8px;
+	padding:0;
 	box-shadow:0 0 3px #888;
 	background:#FFF;
+}
+.minds-fixed-sidebar-left > h1{
+	margin:2px 16px;
+}
+.minds-fixed-sidebar-left > a{
+	margin:2px 16px;
 }
 .minds-fixed-sidebar-left .minds-fixed-avatar{
 	width:100%;
 }
 .minds-fixed-sidebar-left .channel-social-icons{
 	padding:0;
-	margin:16px 0;
+	margin:16px;
 }
 .minds-fixed-sidebar-left .channel-social-icons > a.entypo{
 	font-size:33px;
 }
 .minds-fixed-content{
 	float:left;	
-	width:960px;
+	width:888px;
 	margin-left:16px;
 	clear:right;
 }
@@ -307,7 +314,10 @@
 }
 .minds-fixed-content .elgg-list.x2 > li{
 	margin:0 0 8px 16px;
-	width:436px;
+	width:380px;
+}
+.elgg-list li.minds-fixed-post-box{
+	width:95%;
 }
 .minds-fixed-content .elgg-list .minds-fixed-post-box > form{
 	width:auto;

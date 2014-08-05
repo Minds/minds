@@ -8,7 +8,9 @@ $excerpt = strip_tags($object->excerpt);
 if (!$excerpt) {
 	$excerpt = elgg_get_excerpt($object->description);
 }
-
+if(!$object->getOwnerEntity()){
+return false;
+}
 $image = elgg_view('output/img', array('src'=>minds_fetch_image($object->description, $object->owner_guid), 'class'=>'rich-image'));
 $img_link = '<div class="rich-image-container">' . elgg_view('output/url', array('href'=>$object->getURL(), 'text'=>$image)) . '</div>';
 $readmore = elgg_view('output/url', array('href'=>$object->getURL(), 'text'=>elgg_echo('readmore'), 'class'=>'readmore'));

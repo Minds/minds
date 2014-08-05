@@ -30,21 +30,23 @@ class multisite extends base{
 
 	public function load($domain){
 		global $CONFIG;
-		if(!$row = $this->getCache($domain) ){
+	//	if(!$row = $this->getCache($domain) ){
 			$db = new data\call('domain', $CONFIG->multisite->keyspace, $CONFIG->multisite->servers);
                		$row = $db->getRow($domain);
-			$this->saveCache($domain, $row);
-		}
+	//		$this->saveCache($domain, $row);
+	//	}
 		
-		if(!($row['installed'] || $row['enabled']) && !defined('__MINDS_INSTALLING__')){
+		if(!(isset($row['installed']) || isset($row['enabled'])) && !defined('__MINDS_INSTALLING__')){
                        header("Location: install.php"); 
                        exit; 
                 }
 		
 		$keyspace = @unserialize($row['keyspace']) ? unserialize($row['keyspace'])  : $row['keyspace'];
+//var_dump($keyspace); exit;		
 		$CONFIG->cassandra = new \stdClass();
-		$CONFIG->cassandra->keyspace =$keyspace;
+		$CONFIG->cassandra->keyspace = $keyspace;
 		$CONFIG->cassandra->servers =  $CONFIG->multisite->servers;
+		
 		$CONFIG->wwwroot = "http://$domain/"; 
 		if(isset($row['dataroot']))
 			$CONFIG->dataroot = unserialize($row['dataroot']);

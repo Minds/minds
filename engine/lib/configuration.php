@@ -530,7 +530,7 @@ function _elgg_load_site_config() {
 	if (!$CONFIG->site) {
 		throw new InstallationException(elgg_echo('InstallationException:SiteNotInstalled'));
 	}
-
+	
 	$CONFIG->wwwroot = $CONFIG->site->getURL();
 	$CONFIG->sitename = $CONFIG->site->name;
 	$CONFIG->sitedescription = $CONFIG->site->description;

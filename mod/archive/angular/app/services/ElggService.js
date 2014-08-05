@@ -53,7 +53,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
    };
    
 	elggService.createAlbum = function(fileInfo){
-   		console.log('request submited');
+   	
    		var deferred = $q.defer();
 		
 		var data = {
@@ -72,10 +72,10 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
             transform: "transformRequest"
         }).
             success(function(output, status, headers, config) {
-                deferred.resolve(output.output);
+                deferred.resolve(output);
             }).
             error(function(output, status, headers, config) {
-                deferred.reject(output.output);
+                deferred.reject(output);
             });
 
         return deferred.promise;

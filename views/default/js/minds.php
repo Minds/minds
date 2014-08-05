@@ -114,7 +114,7 @@
 			console.log(px);
 			if(px < 880 && px > 200){
 				$(this).css('width', px);
-			} else if(px < 880)  {
+				} else if(px < 880)  {
 				$(this).css('height', 200);
 			}
 		});	
@@ -161,7 +161,11 @@
 			$('.minds-content-loading').remove();
 			$list.show();
 			$('.load-more').show();
-			$list.masonry();                        
+			$list.masonry(
+			{
+				stamp: '.minds-fixed-post-box'
+			}
+			);                        
 		});
 		
 		$('.hero > .topbar').on('mouseenter', '.right', function(e){ $('.topbar .right .social-login').show(); });

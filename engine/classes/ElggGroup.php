@@ -62,7 +62,7 @@ class ElggGroup extends ElggEntity
 
 			// Is it a GUID
 			} else if (is_numeric($guid)) {
-				$guid = get_entity($guid,'group'); 
+				$guid = get_entity($guid,'group');
 				if (!$this->load($guid)) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}

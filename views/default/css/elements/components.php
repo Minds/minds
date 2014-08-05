@@ -35,7 +35,7 @@
 }
 .elgg-list > li {
 	float: left;
-	margin: 8px 0 8px 2%;
+	margin: 24px 0 0 2%;
     border: 0;
 	background:#F8F8F8;
 	padding:0 10px 10px 11px;
@@ -271,6 +271,7 @@
 }
 .minds-list-river > li, .elgg-list-river > li {
 /*	padding:0;*/
+	padding-bottom:0;
 }
 .minds-list-river > li > .minds-river-header, .elgg-list-river > li > .minds-river-header {
 	/*padding:12px;*/

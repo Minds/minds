@@ -85,7 +85,11 @@ function wall_page_handler($page) {
 			header("Cache-Control: public");
 			header("Content-Disposition: attachment; filename=\"$filename\"");
 			
-			
+			if($attachment->subtype == 'image' && !isset($page[2])){
+				$attachment = new TidypicsImage($attachment);
+				echo $attachment->getThumbnail('large');
+
+			}else 	
 			echo $attachment->grabFile();
 			
 			return true;
