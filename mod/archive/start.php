@@ -30,6 +30,8 @@ function minds_archive_init() {
 		} 
 	});
 
+	elgg_register_viewtype_fallback('spotlight');
+
 	elgg_extend_view('page/elements/head', 'archive/meta');
 	
 	//list featured in sidebar
@@ -215,7 +217,7 @@ function minds_archive_page_handler($page) {
 			}
 			break;
 		case 'thumbnail':
-			$entity = new minds\plugin\archive\entities\video($page[1]);
+			$entity = get_entity($page[1]);
 			$user = $entity->getOwnerEntity();
 			if(isset($user->legacy_guid) && $user->legacy_guid)
 				$user_guid = $user->legacy_guid;
@@ -227,15 +229,26 @@ function minds_archive_page_handler($page) {
 
 			$data_root = $CONFIG->dataroot;
 			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
-			if($entity->filename)
-				$filename = "$data_root$user_path/$entity->filename";
 			
-			if(isset($page[2])  && $size = $page[2]){
-				if(!isset($entity->batch_guid))
-					$entity->batch_guid = $this->container_guid;
-				
-				$filename = "$data_root$user_path/image/$entity->batch_guid/$entity->guid/$size.jpg";
+			switch($entity->subtype){
+				case 'image':
+					if($entity->filename)
+						$filename = "$data_root$user_path/$entity->filename";
+					
+					if(isset($page[2])  && $size = $page[2]){
+						if(!isset($entity->batch_guid))
+							$entity->batch_guid = $this->container_guid;
+						
+						$filename = "$data_root$user_path/image/$entity->batch_guid/$entity->guid/$size.jpg";
+					}
+					break;
+				case 'album':
+					//get the first image attached to this album
+					$image_guids = $entity->getChildrenGuids();
+					forward($CONFIG->cdn_url.'archive/thumbnail/'.current($image_guids));
+					break;
 			}
+			
 		
 			$contents = @file_get_contents($filename);
 

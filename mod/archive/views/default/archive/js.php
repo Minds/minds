@@ -97,7 +97,19 @@ archive.init = function(){
 		  type: 'ajax',
 		  gallery:{
 		    enabled:true
-		  }
+		  },
+		  callbacks: {
+				 elementParse: function(item) {
+					window.history.pushState("", "",item.src);
+					//console.log($(this)[0].currItem.src);
+			   },
+			   open: function(){
+			  		console.log('load the entire album (guids) into the dom');
+			  		//this.items = {
+			  			
+			  		//};
+			   }
+		}
 		});
 
 };

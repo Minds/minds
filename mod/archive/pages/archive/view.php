@@ -63,6 +63,8 @@ switch($entity->subtype){
 		minds_set_metatags('twitter:title', $entity->title);
 		minds_set_metatags('twitter:image', $entity->getIconURL('large'));
 		minds_set_metatags('twitter:description', $entity->description ? $entity->description : $entity->getUrl());
+		
+		$subtitle = elgg_view('output/url', array('href'=>$entity->getContainerEntity()->getURL(), 'text'=>'Back to \''. $entity->getContainerEntity()->title .'\''));
 		break;
 	case 'album':
 		break;
@@ -106,15 +108,14 @@ if($entity->getSubtype() == 'album'){
 
 elgg_push_breadcrumb($title);
 
-
-$content = elgg_view_entity($entity, array('full_view' => true));
-
 /**
  * If loaded via our photo viewer, then don't show a standard page
  */
 if(elgg_is_xhr()){
-	echo $content; exit;
+	elgg_set_viewtype('spotlight');
 }
+
+$content = elgg_view_entity($entity, array('full_view' => true));
 
 //$content .=  elgg_view('minds/ads', array('type'=>'content-below-banner'));
 //$content .= elgg_view_comments($entity);
@@ -137,9 +138,12 @@ if(elgg_is_active_plugin('analytics')){
 
 }
 
+$sidebar = elgg_view_comments($entity);
+
 $body = elgg_view_layout("content", array(	
 					'filter'=> '', 
-					'title' => $title,
+					'title' => $title_block,
+					'subtitle'=> $subtitle,
 					'content'=> $content,
 					'menu' => $menu,
 					'sidebar' => $sidebar,

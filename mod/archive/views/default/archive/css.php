@@ -235,6 +235,25 @@ box-shadow: none;
 	width:110%;
 }
 
+.minds-spotlight{
+	z-index:1000000;
+	margin:100px 5%;
+	max-height:90%;
+}
+.minds-spotlight .main{
+	
+	background: transparent;
+}
+.minds-spotlight .sidebar{
+
+}
+.minds-spotlight img{
+	margin:auto;
+	width:auto;
+	max-height:100%;
+	max-width:100%;
+}
+
 
 /**
  * Lightbox/colorbox (tmp here)

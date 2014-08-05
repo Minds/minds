@@ -184,7 +184,7 @@ function UploadCtrl($scope, Elgg, $q, $timeout, $http, $location) {
     		previewMaxWidth: 100,
 	        previewMaxHeight: 100,
 	        previewCrop: true,
-	        limitConcurrentUploads: 1,
+	        limitConcurrentUploads: 3,
 	        maxNumberOfFiles: 50,
 	        add: function(e, data){
 	        	
