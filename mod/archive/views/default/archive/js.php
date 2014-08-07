@@ -1,3 +1,5 @@
+<?php if(0){?><script><?php } ?>
+
 elgg.provide('archive');
 
 archive.init = function(){
@@ -91,26 +93,75 @@ archive.init = function(){
                 // set the source of the img tag
                 $('#thumbnailData').val(dataURL);
        }
+
        archive.origin_url = window.location.href
-       // Colorbox can accept a function in place of a static value:
-		$('.lightbox-image').magnificPopup({
-		  type: 'ajax',
-		  gallery:{
-		    enabled:true
-		  },
-		  callbacks: {
-				 elementParse: function(item) {
-				 
-					window.history.pushState("", "",item.src);
-			   },
-			   open: function(){
-			   				   },
-			   close: function(){
-					window.history.pushState("", "", archive.origin_url);
-			   }
+	$('.lightbox-image').magnificPopup({
+		type: 'ajax',
+		gallery:{
+			enabled:true
+		},
+		preloader: true,
+		callbacks: {
+			elementParse: function(item) {
+				window.history.pushState("", "",item.src);
+			},
+			ajaxContentAdded: function(){
+				//archive.resize();
+			},
+			resize: archive.resize,
+			open: function(){    },
+			change: function(){
+				//archive.resize();
+			},
+			updateStatus: function(data){
+				console.log(data);
+				if(data.status == 'ready'){
+					archive.resize();
+				}
+			},
+			close: function(){
+				window.history.pushState("", "", archive.origin_url);
+			}
 		}
-		});
+	});
 
 };
+
+archive.resize = function(){
+
+	$('.minds-spotlight .main img').each(function() {
+       		//reset
+		$(this).css({"width":"", "height":"", 'margin-top':''});
+			console.log('resizing');
+		var maxWidth = $('.minds-spotlight .main').width() ; // Max width for the image
+                var maxHeight =$('.minds-spotlight .main').height();    // Max height for the image
+		var ratio = 0;  // Used for aspect ratio
+		var width = $(this).width();    // Current image width
+		var height = $(this).height();  // Current image height
+		// Check if the current width is larger than the max
+		if(width > maxWidth){
+		    ratio = maxWidth / width;   // get ratio for scaling image
+		    $(this).css("width", maxWidth); // Set new width
+		    $(this).css("height", height * ratio);  // Scale height based on ratio
+		    height = height * ratio;    // Reset height to match scaled image
+		    width = width * ratio;    // Reset width to match scaled image
+		}
+
+		// Check if current height is larger than max
+		if(height > maxHeight){
+		    //ratio = maxHeight / height; // get ratio for scaling image
+		    $(this).css("height", maxHeight);   // Set new height
+		  	 $(this).css("width", width * ratio);    // Scale width based on ratio
+		    width = width * ratio;    // Reset width to match scaled image
+		    height = height * ratio;    // Reset height to match scaled image
+		}
+
+		//now centre vertically
+		$(this).css('margin-top', (maxHeight - height) /2);	
+
+	});
+
+
+}
 
 elgg.register_hook_handler('init', 'system', archive.init);

@@ -107,12 +107,13 @@ if($entity->getSubtype() == 'album'){
 }*/
 
 elgg_push_breadcrumb($title);
-
+$trending = true;
 /**
  * If loaded via our photo viewer, then don't show a standard page
  */
 if(elgg_is_xhr()){
 	elgg_set_viewtype('spotlight');
+	$trending = false;
 }
 
 $content = elgg_view_entity($entity, array('full_view' => true));
@@ -124,7 +125,7 @@ $content = elgg_view_entity($entity, array('full_view' => true));
 
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 
-if(elgg_is_active_plugin('analytics')){
+if(elgg_is_active_plugin('analytics') && $trending){
 
 	$trending_guids = analytics_retrieve(array('context'=>'archive','limit'=> get_input('limit', 2), 'offset'=>get_input('offset', '')));
 

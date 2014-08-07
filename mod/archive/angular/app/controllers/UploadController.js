@@ -279,7 +279,7 @@ function UploadCtrl($scope, Elgg, $q, $timeout, $http, $location) {
 	                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 	                
 	            }).success(function(guid, status, headers, config) {
-	                  
+	                window.onbeforeunload = function(){NULL};
 	                 window.location.href = elgg.get_site_url() + 'archive/view/'+$scope.album;
 	                   //$location.absUrl() == elgg.get_site_url() + 'archive/view/'+$scope.album;
 	                 //  console.log('success');

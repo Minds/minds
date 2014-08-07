@@ -11,7 +11,7 @@ $filter = get_input("filter", "all");
 if($filter == 'media')
 $subtype = 'kaltura_video';
 elseif ($filter == 'images')
-$subtype = 'image';
+$subtype = 'album';
 elseif ($filter == 'files')
 $subtype = 'file';
 else

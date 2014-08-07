@@ -115,6 +115,10 @@
 	background:#4690D6;
 	color:#FFF;
 	border:1px solid #4690D6;
+	display:none;
+}
+.uploading .minds-buttom-save{
+display:block;
 }
 
 .default-license-input{

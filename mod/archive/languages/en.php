@@ -10,6 +10,8 @@
 
 $translations = array(
 	'minds:archive' => 'Archive',
+
+	'photos' => 'Albums',
 	
 	/**
 	 * Navigation

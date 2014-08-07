@@ -9,13 +9,13 @@ $offset = get_input("offset", "");
 $filter = get_input("filter", "all");
 
 if($filter == 'media')
-$subtype = 'video';
+	$subtype = 'video';
 elseif ($filter == 'images')
-$subtype = 'image';
+	$subtype = 'album';
 elseif ($filter == 'files')
-$subtype = 'file';
+	$subtype = 'file';
 else
-$subtype = 'archive';
+	$subtype = 'archive';
 
 $options = array(       'types' => array('object'),
                         'subtype' => $subtype,

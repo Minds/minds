@@ -2,6 +2,9 @@
 
 $user = $vars['entity'];
 
+if($user->guid == elgg_get_logged_in_user_guid()){
+	return false;
+}
 $tooltip = 'subscribe';
 if (elgg_is_logged_in()) {
 		if (elgg_get_logged_in_user_guid() != $user->guid) {

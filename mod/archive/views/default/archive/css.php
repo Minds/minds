@@ -241,17 +241,30 @@ box-shadow: none;
 	max-height:90%;
 }
 .minds-spotlight .main{
-	
-	background: transparent;
+	display: block;
+	width: 70%;
+	position: fixed;
+	background: black;
+	padding: 0;
+	height: 90%;
+	top: 5%;
+	/* bottom: 10%; */
+	/* margin: 68px; */
+	/* z-index: 999999999999999999; */
 }
 .minds-spotlight .sidebar{
-
+	position:fixed;
+	left:75%;
+	top:5%;
+	width:20%;
 }
 .minds-spotlight img{
+	display:block;
 	margin:auto;
-	width:auto;
-	max-height:100%;
-	max-width:100%;
+	width:auto; 
+	height:100%;
+/*	max-height:100%;*/
+/*	max-width:100%;*/
 }
 
 
@@ -264,19 +277,19 @@ box-shadow: none;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1042;
+  z-index: 91042;
   overflow: hidden;
   position: fixed;
   background: #0b0b0b;
   opacity: 0.8;
-  filter: alpha(opacity=80); }
+  filter: alpha(opacity=90); }
 
 .mfp-wrap {
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1043;
+  z-index: 91043;
   position: fixed;
   outline: none !important;
   -webkit-backface-visibility: hidden; }
