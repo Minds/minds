@@ -41,6 +41,27 @@
 .archive-footer .license{
 	float:left;
 }
+
+
+.archive .sidebar h2{
+	width:auto;
+	font-size:13px;
+	font-weight:400;
+	font-family:Helvetica, Arial;
+	padding:32px 16px;
+	width:100%;
+}
+.archive .sidebar .subtext{
+	display:none;
+}
+.archive .sidebar .elgg-menu-entity{
+	float:left;
+	margin:4px;
+}
+.archive .sidebar .elgg-menu-entity li{
+	padding:2px;
+}
+
 .player-container{
 	width:100%;
 	position:relative;
@@ -248,9 +269,6 @@ box-shadow: none;
 	padding: 0;
 	height: 90%;
 	top: 5%;
-	/* bottom: 10%; */
-	/* margin: 68px; */
-	/* z-index: 999999999999999999; */
 }
 .minds-spotlight .sidebar{
 	position:fixed;
@@ -261,10 +279,9 @@ box-shadow: none;
 .minds-spotlight img{
 	display:block;
 	margin:auto;
-	width:auto; 
-	height:100%;
-/*	max-height:100%;*/
-/*	max-width:100%;*/
+	width:100%; 
+	height:auto;
+
 }
 
 

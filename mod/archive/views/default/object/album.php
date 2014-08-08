@@ -6,13 +6,13 @@
 $full_view = elgg_extract('full_view', $vars, false);
 $album = elgg_extract('entity', $vars);
 	
-if($full_view){
+if($full_view ){
 
-	$images = elgg_get_entities(array('guids'=>$album->getChildrenGuids(get_input('limit',1000000))));
+	$images = elgg_get_entities(array('guids'=>$album->getChildrenGuids(get_input('limit',24), get_input('offset', ''))));
 	echo elgg_view_entity_list($images, array('full_view'=>false, 'viewtype'=>'gallery', 'masonry'=>false, 'list_class'=>'minds-album', 'data-lightbox'=>$album->guid));
 	
 } else {
-	
+	elgg_load_js('popup');
 	$owner = $album->getOwnerEntity();
 	
 	$body = elgg_view('output/url', array(
@@ -43,7 +43,8 @@ if($full_view){
 	echo elgg_view('output/url', array(
 		'href'=> $album->getURL(), 
 		'text'=> elgg_view('output/img', array('src'=>$album->getIconURL('large'))),
-		'class' => 'image-thumbnail'
+		'class' => 'image-thumbnail lightbox-image',
+		'data-album-guid'=>$album->guid
 	));
 	echo $header;
 	

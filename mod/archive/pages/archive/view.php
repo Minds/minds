@@ -24,7 +24,7 @@ $description = strip_tags($entity->description);
 
 set_input('description', $description);
 set_input('keywords', $entity->tags);
-
+$trending = true;
 switch($entity->subtype){
 	case 'video':
 		$video_location = elgg_get_site_url().'/archive/embed';
@@ -67,6 +67,7 @@ switch($entity->subtype){
 		$subtitle = elgg_view('output/url', array('href'=>$entity->getContainerEntity()->getURL(), 'text'=>'Back to \''. $entity->getContainerEntity()->title .'\''));
 		break;
 	case 'album':
+		$trending = false;
 		break;
 	case 'file':
 		minds_set_metatags('og:type', 'article');
@@ -107,11 +108,11 @@ if($entity->getSubtype() == 'album'){
 }*/
 
 elgg_push_breadcrumb($title);
-$trending = true;
+
 /**
  * If loaded via our photo viewer, then don't show a standard page
  */
-if(elgg_is_xhr() && !get_input('view')){
+if(get_input('view') == 'spotlight' && elgg_is_xhr()){
 	elgg_set_viewtype('spotlight');
 	$trending = false;
 }
@@ -142,8 +143,9 @@ if(elgg_is_active_plugin('analytics') && $trending){
 $sidebar = elgg_view_comments($entity);
 
 $body = elgg_view_layout("content", array(	
+					'class' => 'archive',
 					'filter'=> '', 
-					'title' => $title_block,
+					'title' => $title,
 					'subtitle'=> $subtitle,
 					'content'=> $content,
 					'menu' => $menu,

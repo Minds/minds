@@ -95,46 +95,57 @@ archive.init = function(){
        }
 
        archive.origin_url = window.location.href
-       $('.lightbox-image').on('click', function(e){
+       $(document).on('click', '.lightbox-image', function(e){
        		e.preventDefault();
        		var album_guid = $(this).attr('data-album-guid');  
        		var items = [];
 			_this = this;
 			//download the full list of images in this album
 			$.ajax({
-				url: elgg.get_site_url() + 'archive/view/' + album_guid + '?view=json&limit=1000000',
+				url: elgg.get_site_url() + 'archive/view/' + album_guid + '?view=json&type=album&limit=1000000',
 				dataType: 'json',
 				success: function(data){
 					images = data.object.album[0].images;
 					$.each(images, function(k){
 						items.push({
-							src: elgg.get_site_url() + 'archive/view/'+album_guid+'/'+k
+							id: k,
+							src: elgg.get_site_url() + 'archive/view/'+album_guid+'/'+k + '?view=spotlight'
 						});
 					});
+					
+					var index = items.map(function(x) {return x.id; }).indexOf($(_this).attr('id'));
 					$.magnificPopup.open({
 						type: 'ajax',
 						items: items,
+						index: index,
 						gallery:{
 							enabled:true
 						},
-						preloader: true,
+						preloader: [0,2],
 						callbacks: {
 							elementParse: function(item) {
 								window.history.pushState("", "",item.src);
+								//archive.resize();
 							},
 							ajaxContentAdded: function(){
-								//archive.resize();
+							//	archive.resize();
 							},
 							resize: archive.resize,
 							beforeOpen: function() {
-								
+								if(index > 0)
+									this.index = index;
 							},
 							change: function(){
 								//archive.resize();
 							},
 							updateStatus: function(data){
 								if(data.status == 'ready'){
-									archive.resize();
+									setTimeout(function(){
+						       			archive.resize();
+						       		}, 25);
+						       		$('.minds-spotlight .main img').imagesLoaded( function(){
+						       			archive.resize();
+						       		});
 								}
 							},
 							close: function(){
@@ -147,7 +158,13 @@ archive.init = function(){
 					console.log($(this));
 				}
 			});
-       	
+       });
+       
+       $(document).on('click', '.minds-spotlight .main img', function(e){
+       		$.magnificPopup.instance.next();
+       		setTimeout(function(){
+       			archive.resize();
+       		}, 300);
        });
 	
 
@@ -158,9 +175,9 @@ archive.resize = function(){
 	$('.minds-spotlight .main img').each(function() {
        		//reset
 		$(this).css({"width":"", "height":"", 'margin-top':''});
-			console.log('resizing');
+	
 		var maxWidth = $('.minds-spotlight .main').width() ; // Max width for the image
-                var maxHeight =$('.minds-spotlight .main').height();    // Max height for the image
+       	var maxHeight =$('.minds-spotlight .main').height();    // Max height for the image
 		var ratio = 0;  // Used for aspect ratio
 		var width = $(this).width();    // Current image width
 		var height = $(this).height();  // Current image height
@@ -175,11 +192,13 @@ archive.resize = function(){
 
 		// Check if current height is larger than max
 		if(height > maxHeight){
-		    //ratio = maxHeight / height; // get ratio for scaling image
+		    ratio = maxHeight / height; // get ratio for scaling image
 		    $(this).css("height", maxHeight);   // Set new height
 		  	 $(this).css("width", width * ratio);    // Scale width based on ratio
 		    width = width * ratio;    // Reset width to match scaled image
 		    height = height * ratio;    // Reset height to match scaled image
+		    if(height == 0|| width == 0)
+		    	$(this).css({"width":"", "height":"", 'margin-top':''}); //reset
 		}
 
 		//now centre vertically

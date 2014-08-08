@@ -28,7 +28,7 @@ $out = ob_get_contents();
 ob_end_clean();
 
 }
-$json = json_decode($out);
+$json = json_decode($out); 
 if(!$json){
 	return;
 }

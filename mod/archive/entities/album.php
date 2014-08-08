@@ -31,9 +31,9 @@ class album extends object{
 		return $CONFIG->cdn_url . 'archive/thumbnail/' . $this->guid . '/'.$size;
 	}
 	
-	public function getChildrenGuids($limit = 1000000){
+	public function getChildrenGuids($limit = 1000000, $offset = ''){
 		$index = new data\indexes('object:container');
-		return $index->get($this->guid, array('limit'=>$limit));
+		return $index->get($this->guid, array('limit'=>$limit, 'offset'=>$offset));
 	}
 	
 	public function getChildren(){

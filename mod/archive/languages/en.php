@@ -13,6 +13,8 @@ $translations = array(
 
 	'photos' => 'Albums',
 	
+	'river:remind:object:album' => '%s reminded %s',
+	
 	/**
 	 * Navigation
 	 */
