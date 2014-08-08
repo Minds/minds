@@ -35,6 +35,8 @@ class ElggInstaller {
 	public function __construct() {
 		
 		define('__MINDS_INSTALLING__', true);
+		global $CONFIG;
+		$CONFIG = new stdClass();
 		
 		$minds = new minds\core\minds();
 		$minds->loadLegacy();
@@ -578,7 +580,7 @@ class ElggInstaller {
 	 */
 	protected function continueToNextStep($currentStep) {
 		$this->isAction = FALSE;
-		forward($this->getNextStepUrl($currentStep));
+		forward($this->getNextStepUrl($currentStep));exit;
 	}
 
 	/**

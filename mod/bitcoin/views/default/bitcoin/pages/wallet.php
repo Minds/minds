@@ -23,23 +23,24 @@
 	    ?>
     
     <div class="header">
+	<img class="qr-code" src="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=<?php echo $wallet->wallet_address;?>&chld=H|0"/>
 	<p>
 	    <label>Wallet ID: </label> <a href="<?php echo $wallet->wallet_link; ?>" target="_blank"><?php echo $wallet->wallet_guid; ?></a>
 	</p>
 	<p>
 	    <label>Wallet bitcoin address: </label> <?php echo $wallet->wallet_address; ?>
-		<img src="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=<?php echo $wallet->wallet_address;?>&chld=H|0"/>
 	</p>
-	<?php /* <p class="balance">
+	<p class="balance">
 	    <label>Balance: </label> <?php
 	    try {
 		echo sprintf("%f", \minds\plugin\bitcoin\bitcoin()->getWalletBalance($wallet->guid));
 		echo " BTC";
 	    } catch (\Exception $e) {
-		echo $e->getMessage();
+		//echo $e->getMessage();
+		echo elgg_view('input/unlockwallet', array('wallet'=>$wallet));
 	    }
 	    ?>
-	</p> */ ?>
+	</p>
 	
 	<p>
 	    <a class="sendpayment button" href="<?php echo elgg_get_site_url(); ?>bitcoin/send">Send a payment...</a> 

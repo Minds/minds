@@ -179,6 +179,9 @@ $x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE, $output = 'jpeg', $quality
 	if (!$rtn_code) {
 		return FALSE;
 	}
+	
+	// @todo Enable interlancing
+	//imageinterlace($new_image, true);
 
 	// grab a compressed jpeg version of the image
 	ob_start();

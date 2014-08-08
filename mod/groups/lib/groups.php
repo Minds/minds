@@ -293,7 +293,7 @@ function groups_handle_profile_page($guid) {
 	groups_register_profile_buttons($group);
 
 	$content = elgg_view('groups/profile/layout', array('entity' => $group));
-	$sidebar = '';
+	$sidebar = elgg_view('groups/sidebar', array('entity'=>$group));
 	
 	if (group_gatekeeper(false)) {	
 		$sidebar .= elgg_view('groups/sidebar/members', array('entity' => $group));

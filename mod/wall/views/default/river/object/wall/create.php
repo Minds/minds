@@ -36,8 +36,6 @@ if($object->owner_guid == $object->to_guid || $to instanceof ElggGroup || !$to){
 
 if($item->attachment_guid){
 
-	 elgg_load_js('lightbox');
-     elgg_load_css('lightbox');
 	elgg_load_js('elgg.wall');
 
 	$attachment = new PostAttachment($item->attachment_guid);
@@ -48,7 +46,9 @@ if($item->attachment_guid){
 
 			$attachment = elgg_view('output/img', array( 
 				'src' => "$src/large",
-				'class' => 'river-img-attachment'
+				'class' => 'river-img-attachment lightbox-image',
+				'id' => $attachment->guid,
+				'data-album-guid'=>$attachment->container_guid
 			)); //we are just going to assume they are images... change soon
 			 
 			

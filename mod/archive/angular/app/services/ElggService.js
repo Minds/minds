@@ -53,12 +53,13 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
    };
    
 	elggService.createAlbum = function(fileInfo){
-   		console.log('request submited');
+   	
    		var deferred = $q.defer();
 		
 		var data = {
             'title': fileInfo['title'],
             'license': 'default',
+            'container_guid': container_guid, //in case it needs to be set, ie. we are uploading from a group
             '__elgg_token': elgg.security.token.__elgg_token,
             '__elgg_ts': elgg.security.token.__elgg_ts
         };
@@ -72,10 +73,10 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
             transform: "transformRequest"
         }).
             success(function(output, status, headers, config) {
-                deferred.resolve(output.output);
+                deferred.resolve(output);
             }).
             error(function(output, status, headers, config) {
-                deferred.reject(output.output);
+                deferred.reject(output);
             });
 
         return deferred.promise;

@@ -10,6 +10,11 @@
 
 $translations = array(
 	'minds:archive' => 'Archive',
+
+	'photos' => 'Albums',
+	
+	'river:remind:object:album' => '%s reminded %s',
+	'river:remind:object:batch' => '%s add %s photos to %s',
 	
 	/**
 	 * Navigation

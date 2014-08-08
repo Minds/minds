@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin_manifest>
 	<field key="author" value="Mark Harding (mark@minds.com)" />
-	<field key="version" value="2.1(1.8)" />
-	<field key="description" value="Minds Archive Plugin - based on the original Elgg Kaltura CE5 plugin" />
+	<field key="version" value="2.0" />
+	<field key="description" value="Minds Archive Plugin" />
 	<field key="website" value="http://www.minds.com" />
-	<field key="copyright" value="(C) minds.com 2012" />
-	<field key="licence" value="GNU Public License version 3" />
+	<field key="copyright" value="(C) minds.com 2014" />
+	<field key="licence" value="TBC" />
 	<field key="elgg_version" value="1.8" />
-	
-	<requires>
-		<type>plugin</type>
-		<version>tidypics</version>
-	</requires>
 	
 	<activate_on_install>true</activate_on_install>
 </plugin_manifest>

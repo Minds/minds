@@ -56,8 +56,7 @@
 .icon-eye:before { content: '\e80b'; } /* '' */
 .icon-layout:before { content: '\e80c'; } /* '' */
 .icon-menu:before { content: '\e80d'; } /* '' */
-.icon-code:before { content: '\e80e'; } /* '' */
-.icon-export:before { content: '\e80f'; } /* '' */
+.icon-bitcoin:before { content: '\e80e'; } /* '' */
 .icon-github:before { content: '\f300'; } /* '' */
 .icon-vimeo:before { content: '\f306'; } /* '' */
 .icon-vimeo-circled:before { content: '\f307'; } /* '' */

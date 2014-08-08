@@ -47,7 +47,7 @@ and (max-width : 1200px) {
 	display:block;
 }
 
-.group-profile .elgg-sidebar li.elgg-item img{
+.group-profile .elgg-sidebar li.elgg-item .elgg-avatar img{
 	width:auto;
 }
 
