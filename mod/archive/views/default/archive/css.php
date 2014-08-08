@@ -255,6 +255,32 @@ box-shadow: none;
 .image-thumbnail > img{
 	width:110%;
 }
+.elgg-sidebar li.elgg-item .image-thumbnail > img{
+	width:110%;
+}
+.elgg-sidebar h3{
+	font-family:Helvetica, Arial;
+}
+.elgg-sidebar .elgg-head .elgg-button-action{
+	padding:2px 8px;
+	float:right;
+}
+
+.batch-thumbnails{
+	float:left;
+	margin-left:-5%;
+	width:110%;
+}
+.batch-thumbnails img{
+	float: left;
+	width: 32%;
+	padding: 1px;
+	border: 1px solid #EEE;
+}
+.batch-thumbnails img:first-of-type{
+	width:65%;
+	
+}
 
 .minds-spotlight{
 	z-index:1000000;

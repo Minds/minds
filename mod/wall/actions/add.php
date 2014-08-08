@@ -55,7 +55,7 @@ if (!$guid) {
  * attachement
  */
 $attachment = new PostAttachment();
-
+$attachment->container_guid = $to_guid;
 if (isset($_FILES['attachment']['name']) && !empty($_FILES['attachment']['name'])) {
 			
 	$mime_type = $attachment->detectMimeType($_FILES['attachment']['tmp_name'], $_FILES['attachment']['type']);

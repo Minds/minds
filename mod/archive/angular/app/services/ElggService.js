@@ -59,6 +59,7 @@ angular.module('services.Elgg').factory('Elgg', ['$http', '$q', function($http, 
 		var data = {
             'title': fileInfo['title'],
             'license': 'default',
+            'container_guid': container_guid, //in case it needs to be set, ie. we are uploading from a group
             '__elgg_token': elgg.security.token.__elgg_token,
             '__elgg_ts': elgg.security.token.__elgg_ts
         };

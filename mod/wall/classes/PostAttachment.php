@@ -19,7 +19,7 @@ class PostAttachment extends ElggFile{
 				
 				$this->subtype = 'image';
 							
-				$albums = elgg_get_entities(array('type'=>'object', 'subtype'=>'album', 'limit'=>0));
+				$albums = elgg_get_entities(array('type'=>'object', 'subtype'=>'album', 'container_guid'=>$this->container_guid, 'limit'=>0));
 				foreach($albums as $album){
 					if(isset($album->post_attachments) && $album->post_attachments){
 						$this->container = $album;
@@ -27,10 +27,11 @@ class PostAttachment extends ElggFile{
 				}
 	 
 	 			if(!$this->container){
-					$album = new TidypicsAlbum();
+					$album = new minds\plugin\archive\entities\album();
 					$album->post_attachments = true;
 					$album->title = 'Post attachments';
 					$album->access_id = 2;
+					$album->container_guid = $this->container_guid;
 					$album->save();
 					$this->container = $album;
 				}

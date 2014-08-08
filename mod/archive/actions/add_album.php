@@ -24,6 +24,10 @@ $album->access_id = $access_id;
 $album->title = $title;
 $album->description = $description;
 
+if($container_guid != elgg_get_logged_in_user_guid()){
+	$album->container_guid = $container_guid;
+}
+
 if (!$album->save()) {
 	register_error(elgg_echo("album:error"));
 	//forward(REFERER);

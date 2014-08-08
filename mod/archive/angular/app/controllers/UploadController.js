@@ -266,7 +266,8 @@ function UploadCtrl($scope, Elgg, $q, $timeout, $http, $location) {
     		
    				data = {
    					batch_guid : batch_guid,
-   					album_guid : $scope.album
+   					album_guid : $scope.album,
+   					container_guid : container_guid //in case we are uploading from a group, server ignores otherwise
    				};
    				data.__elgg_token = elgg.security.token.__elgg_token;
                 data.__elgg_ts = elgg.security.token.__elgg_ts;
