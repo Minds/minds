@@ -65,6 +65,14 @@ switch($entity->subtype){
 		minds_set_metatags('twitter:description', $entity->description ? $entity->description : $entity->getUrl());
 		
 		$subtitle = elgg_view('output/url', array('href'=>$entity->getContainerEntity()->getURL(), 'text'=>'Back to \''. $entity->getContainerEntity()->title .'\''));
+		
+		/**
+		 * If loaded via our photo viewer, then don't show a standard page
+		 */
+		if(get_input('view') == 'spotlight' || elgg_is_xhr()){
+			elgg_set_viewtype('spotlight');
+			$trending = false;
+		}
 		break;
 	case 'album':
 		$trending = false;
@@ -108,14 +116,6 @@ if($entity->getSubtype() == 'album'){
 }*/
 
 elgg_push_breadcrumb($title);
-
-/**
- * If loaded via our photo viewer, then don't show a standard page
- */
-if(get_input('view') == 'spotlight' && elgg_is_xhr()){
-	elgg_set_viewtype('spotlight');
-	$trending = false;
-}
 
 $content = elgg_view_entity($entity, array('full_view' => true));
 
