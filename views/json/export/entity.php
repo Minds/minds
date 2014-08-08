@@ -9,21 +9,12 @@
 
 $entity = $vars['entity'];
 
-$export = new stdClass;
-$exportable_values = $entity->getExportableValues();
-
-foreach ($exportable_values as $v) {
-	$export->$v = $entity->$v;
-}
-
-$export->url = $entity->getURL();
+$export = $entity->export();
+$export['url'] = $entity->getURL();
 
 if(elgg_instanceof($entity,'object')){
-	$export->ownerObj = $entity->ownerObj;
+	$export['ownerObj'] = $entity->ownerObj;
 }
 
 global $jsonexport;
 $jsonexport[$entity->getType()][$entity->getSubtype()][] = $export;
-
-// @todo hack to fix #4504
-echo "Fix for bug #4504";

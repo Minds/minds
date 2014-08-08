@@ -111,7 +111,7 @@ $trending = true;
 /**
  * If loaded via our photo viewer, then don't show a standard page
  */
-if(elgg_is_xhr()){
+if(elgg_is_xhr() && !get_input('view')){
 	elgg_set_viewtype('spotlight');
 	$trending = false;
 }

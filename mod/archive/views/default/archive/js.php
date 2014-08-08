@@ -95,35 +95,61 @@ archive.init = function(){
        }
 
        archive.origin_url = window.location.href
-	$('.lightbox-image').magnificPopup({
-		type: 'ajax',
-		gallery:{
-			enabled:true
-		},
-		preloader: true,
-		callbacks: {
-			elementParse: function(item) {
-				window.history.pushState("", "",item.src);
-			},
-			ajaxContentAdded: function(){
-				//archive.resize();
-			},
-			resize: archive.resize,
-			open: function(){    },
-			change: function(){
-				//archive.resize();
-			},
-			updateStatus: function(data){
-				console.log(data);
-				if(data.status == 'ready'){
-					archive.resize();
+       $('.lightbox-image').on('click', function(e){
+       		e.preventDefault();
+       		var album_guid = $(this).attr('data-album-guid');  
+       		var items = [];
+			_this = this;
+			//download the full list of images in this album
+			$.ajax({
+				url: elgg.get_site_url() + 'archive/view/' + album_guid + '?view=json&limit=1000000',
+				dataType: 'json',
+				success: function(data){
+					images = data.object.album[0].images;
+					$.each(images, function(k){
+						items.push({
+							src: elgg.get_site_url() + 'archive/view/'+album_guid+'/'+k
+						});
+					});
+					$.magnificPopup.open({
+						type: 'ajax',
+						items: items,
+						gallery:{
+							enabled:true
+						},
+						preloader: true,
+						callbacks: {
+							elementParse: function(item) {
+								window.history.pushState("", "",item.src);
+							},
+							ajaxContentAdded: function(){
+								//archive.resize();
+							},
+							resize: archive.resize,
+							beforeOpen: function() {
+								
+							},
+							change: function(){
+								//archive.resize();
+							},
+							updateStatus: function(data){
+								if(data.status == 'ready'){
+									archive.resize();
+								}
+							},
+							close: function(){
+								window.history.pushState("", "", archive.origin_url);
+							}
+						}
+					});
+				},
+				error: function(data){
+					console.log($(this));
 				}
-			},
-			close: function(){
-				window.history.pushState("", "", archive.origin_url);
-			}
-		}
-	});
+			});
+       	
+       });
+	
 
 };
 

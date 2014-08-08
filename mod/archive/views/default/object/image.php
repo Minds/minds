@@ -22,7 +22,7 @@ if($full_view){
 	elgg_load_js('popup');
  	
  	$img = elgg_view('output/img', array('src'=>$image->getIconURL('medium')));
-	echo elgg_view('output/url', array('href'=>$image->getUrl(), 'text'=>$img.'hello', 'class'=>'lightbox-image', 'data-album-guid'=>'lightbox[$image->container_guid]'));
+	echo elgg_view('output/url', array('href'=>$image->getUrl(), 'text'=>$img.'hello', 'class'=>'lightbox-image', 'data-album-guid'=>$image->container_guid));
 	
 } else {
 	

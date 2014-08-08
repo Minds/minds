@@ -8,7 +8,7 @@ $album = elgg_extract('entity', $vars);
 	
 if($full_view){
 
-	$images = elgg_get_entities(array('guids'=>$album->getChildrenGuids()));
+	$images = elgg_get_entities(array('guids'=>$album->getChildrenGuids(get_input('limit',1000000))));
 	echo elgg_view_entity_list($images, array('full_view'=>false, 'viewtype'=>'gallery', 'masonry'=>false, 'list_class'=>'minds-album', 'data-lightbox'=>$album->guid));
 	
 } else {
