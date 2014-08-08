@@ -111,9 +111,9 @@ archive.init = function(){
 					beforeOpen: function() {
 						
 						var album_guid = $(this.ev[0]).attr('data-album-guid');  
-			       		var items = [];
+			       			var items = [];
 						_this = this;
-						
+						active = this;	
 						//download the full list of images in this album
 						$.ajax({
 							url: elgg.get_site_url() + 'archive/view/' + album_guid + '?view=json&type=album&limit=1000000',
@@ -140,14 +140,9 @@ archive.init = function(){
 						//archive.resize();
 					},
 					updateStatus: function(data){
-						if(data.status == 'ready'){
-							setTimeout(function(){
-				       			archive.resize();
-				       		}, 25);
 				       		$('.minds-spotlight .main img').imagesLoaded( function(){
 				       			archive.resize();
 				       		});
-						}
 					},
 					close: function(){
 						window.history.pushState("", "", archive.origin_url);
