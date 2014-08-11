@@ -13,7 +13,7 @@ class config extends base implements \ArrayAccess{
 	static public $config = array();
 	
 	public function init(){
-		
+		$this->lastcache = 0;
 	}
 	
 	public function get(){

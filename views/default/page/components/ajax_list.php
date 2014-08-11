@@ -16,7 +16,7 @@ if($elgg_path == elgg_get_site_url() || $elgg_path == null || $elgg_path == ""){
 	ob_end_clean();
 
 } else {
-
+	
 	ob_start();
 	elgg_set_viewtype('json');
 	//$handler = array_shift($path);
