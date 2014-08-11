@@ -177,14 +177,23 @@ class ElggObject extends ElggEntity {
 					$array = array_merge($this->ownerObj, array('icontime'=>$CONFIG->lastcache));
 				else
 					$array = $this->ownerObj;
-				return new ElggUser($array, false);
+				
+				$cache = true;
+				if(elgg_get_logged_in_user_guid() == $this->owner_guid)
+					$cache = false;
+				if(get_input('debug') && !$array['icontime']){
+					var_dump($array);
+					exit;
+
+				}
+				return new ElggUser($array, $cache);
 			}  else {
 				if($this->canEdit()){
 	//				$this->save();
 				}
 			}
 		}
-	
+		
 		$owner = new ElggUser($this->owner_guid, false);
  		return $owner;
 	}

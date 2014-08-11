@@ -24,6 +24,12 @@ class sessions implements \SessionHandlerInterface{
 	public function read($session_id ){
 
 		try {
+			if(function_exists('apc_fetch')){
+				if($result = apc_fetch($session_id)){
+					return $result;
+				}
+
+			}
 			$result = $this->db->getRow($session_id);
 			$this->cache[$session_id] = $result;
 			
@@ -45,7 +51,8 @@ class sessions implements \SessionHandlerInterface{
 		$params = session_get_cookie_params();
 
 		try {
-			
+			if(function_exists('apc_store'))
+				apc_store($session_id, $session_data, 60);	
 			$result = $this->db->insert($session_id, array('ts'=>$time,'data'=>$session_data), $params['lifetime']);
 
 			if($result !== false)

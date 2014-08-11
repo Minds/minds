@@ -22,6 +22,8 @@ class image extends entities\file{
 	
 	public function getIconUrl($size = 'large'){
 		global $CONFIG; //@todo remove globals!
+		if($this->time_created <= 1407542400)
+			$size = '';
 		return $CONFIG->cdn_url . 'archive/thumbnail/' . $this->guid . '/'.$size;
 	}
 

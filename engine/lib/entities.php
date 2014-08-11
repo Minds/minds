@@ -623,7 +623,7 @@ function entity_row_to_elggstar($row, $cache = true) {
  */
 function get_entity($guid, $type = 'object') {
 
-	if(!$guid){
+	if(!$guid || $guid == 0){
 		return;
 	}
 

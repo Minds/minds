@@ -226,8 +226,7 @@ function minds_archive_page_handler($page) {
 				$user_guid = $user->guid;
 
 			 $user_path = date('Y/m/d/', $user->time_created) . $user_guid;
-
-
+			
 			$data_root = $CONFIG->dataroot;
 			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
 			

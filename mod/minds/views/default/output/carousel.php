@@ -54,7 +54,7 @@ $(document).ready(function() {
  			echo "<a class=\"item $class\" $link_extras>";
 			//echo '<div>';
 			//echo '<h3>' . $subtitle . '</h3>';
-			$bg =  elgg_get_site_url() . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache";
+			$bg =  $CONFIG->cdn_url . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache";
 			echo "<img src=\"$bg\" />";
 			echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><div class=\"inner\" style=\"background:$item->shadow\"><h3>$item->title</h3></div></div>";
 	

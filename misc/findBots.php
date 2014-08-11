@@ -3,9 +3,10 @@
 require(dirname(dirname(__FILE__)).'/engine/start.php');
 elgg_set_ignore_access(true);
 try{
-//$db = new minds\core\data\call();
-//$db->getCF('session')->truncate();
+$db = new minds\core\data\call();
+$db->getCF('session')->truncate();
 }catch(Exception $e){}
+exit;
 /*$users = elgg_get_entities(array('type'=>'user', 'limit'=>400));
 foreach($users as $user){
 
@@ -26,15 +27,14 @@ foreach($users as $user){
 	
 exit;
 */
-
-$owner = new ElggUser('ewqreops');
+$blog = new ElggBlog('340939925123764224');
 $offset = '';
 //while(true){
 $blogs = elgg_get_entities(array('subtype'=>'blog', 'limit'=>100, 'offset'=>$offset, 'owner_guid'=>$owner->guid));
 $offset=end($blogs)->guid;
 $threshold = 4;
 foreach($blogs as $blog){
-	$blog->delete();
+//	$blog->delete();
 	$guard = new minds\plugin\guard\start();
 	if(!$guard->createHook('create', 'object', $blog, null)){
 		echo "found spam in $blog->title\n";

@@ -6,11 +6,6 @@ namespace minds\plugin\minds_nodes;
 
 use minds\bases;
 class start extends bases\plugin{
-	public function __construct(){
-		parent::__construct('minds_nodes');	
-
-		$this->init();
-	}
 	
 	public function init(){
 		//$routes = router::registerRoutes($this->registerRoutes());

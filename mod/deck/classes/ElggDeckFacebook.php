@@ -207,6 +207,7 @@ class ElggDeckFacebook extends ElggDeckNetwork{
 		try{	
 			$endpoint = '';
 			switch($method){
+				case 'default':
 				case 'home':
 					$query = '';
 					if($next = $params['pagination']['next']){
@@ -242,7 +243,7 @@ class ElggDeckFacebook extends ElggDeckNetwork{
 		} catch(Exception $e){
 			$result = $e->getResult();
 			if($result['error']['code'] == 190){
-				$this->authenticate();
+				//$this->authenticate();
 				return false;
 			}
 		}

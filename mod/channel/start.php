@@ -341,7 +341,10 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 		$user_guid = $user->legacy_guid;
 	}
 	
-	if (!$icon_time) {
+/*	if (!$icon_time) {
+		if(get_input('debug')){
+			var_dump(debug_backtrace()); exit;
+		}
 		return minds_fetch_gravatar_url($user->email, $size, 'identicon');
 		//return "_graphics/icons/user/default{$size}.gif";
 	}
@@ -349,7 +352,7 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 	if ($user->isBanned()) {
 		return null;
 	}
-
+*/
 /*	$filehandler = new ElggFile();
 	$filehandler->owner_guid = $user_guid;
 	$filehandler->setFilename("profile/{$user_guid}{$size}.jpg");

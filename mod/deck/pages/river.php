@@ -28,7 +28,16 @@ if(!$tabs){
 	$account->node = 'local';
 	$default_column->account_guid = $account->save();
 	$default_column_guid = $default_column->save();
-	
+
+	//our preset accounts
+	$networks = deck_river_get_networks_account('all', elgg_get_logged_in_user_guid(), null, true);
+	foreach($networks as $network){
+		$column = new ElggDeckColumn();
+		$column->method = 'default';
+		$column->account_guid = $network->guid;
+		$tabs[0]->addColumn($column->save());		
+	}	
+
 	$tabs[0]->addColumn($default_column_guid);
 }
 

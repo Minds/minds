@@ -40,6 +40,7 @@ function anypage_setup_footer_menu() {
 	if(get_input('ajax'))
 		$show = false;
 
+	$show = false;
 	global $ANYPAGE_CACHE;
 	if(!$ANYPAGE_CACHE && $show){
 		$ANYPAGE_CACHE = elgg_get_entities(array('type'=>'object', 'subtype'=>'anypage', 'limit'=>0)); 

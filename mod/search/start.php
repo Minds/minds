@@ -9,12 +9,6 @@ use minds\core;
 
 class start extends \minds\bases\plugin{
 	
-	public function __construct(){
-		parent::__construct('search');	
-		
-		$this->init();
-	}
-	
 	public function init(){
 		$routes = core\router::registerRoutes($this->registerRoutes());
 		\elgg_extend_view('css/elgg', 'search/css');

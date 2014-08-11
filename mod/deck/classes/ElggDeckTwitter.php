@@ -184,7 +184,10 @@ class ElggDeckTwitter extends ElggDeckNetwork{
 		if($next =  $pagination['next']){
 			$params['max_id'] = $next;
 		}
-		
+
+		if($method == 'default')
+			$method = 'get_statusesHome_timeline';	
+	
 		$params = array_merge($defaults, $params); 
 		//@todo check $method to see if it is allowed!
 		try{

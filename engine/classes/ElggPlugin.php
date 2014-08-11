@@ -57,12 +57,12 @@ class ElggPlugin extends ElggEntity {
 			//parent::__construct($plugin);
 			foreach($plugin as $k => $v){
 				$this->attributes[$k] = $v;
-			}		
-		
+			}
+	   
 			$this->pluginID = $this->attributes['guid'];	
 			$this->title = $this->pluginID;
-		    $this->path = elgg_get_plugins_path() . $this->getID();
-			$PLUGINS_CACHE[$this->guid] = $this;
+			$this->path = elgg_get_plugins_path() . $this->getID();
+			$PLUGINS_CACHE[$this->guid] = $this->attributes;
 		} else {
 			$plugin_path = elgg_get_plugins_path();
 
@@ -82,32 +82,21 @@ class ElggPlugin extends ElggEntity {
 				}
 				return true;
 			}
-			
-			//is this plugin
-			if(isset($CONFIG->plugins) && $plugins = $CONFIG->plugins){
-				$this->title = $plugin;
-				$this->type = 'plugin';
-				$this->active = 1;
-				$this->priority = array_search('plugin', $plugins) ;
-		
-				//now load our preset settings
-				if(isset($CONFIG->pluginSettings->{$plugin}))
-					foreach($CONFIG->pluginSettings->{$plugin} as $k => $v)
-						$this->$k = $v;
-		
-			} else {
+		if(get_input('debug')){
 
+//			var_dump($PLUGINS_CACHE[$plugin], $plugin);
+			//exit;
+		}	
 			// check if we're loading an existing plugin
-				$db = new minds\core\data\call('plugin');
-				$existing_plugin = $db->getRow($this->guid);
-				if($existing_plugin){	
-					foreach($existing_plugin as $k => $v){
-						$this->$k = $v;
-					}
+			$db = new minds\core\data\call('plugin');
+			$existing_plugin = $db->getRow($this->guid);
+			if($existing_plugin){	
+				foreach($existing_plugin as $k => $v){
+					$this->attributes[$k] = $v;
 				}
 			}
-			$PLUGINS_CACHE[$plugin] = $this;
 		}
+		$PLUGINS_CACHE[$plugin] = $this;
 
 		//_elgg_cache_plugin_by_id($this);
 	}
@@ -129,7 +118,7 @@ class ElggPlugin extends ElggEntity {
 	
 		global $PLUGINS_CACHE;
 		$PLUGINS_CACHE = null;
-	var_dump('tying to save yo');	
+	//var_dump('tying to save yo');	
 		minds\core\plugins::purgeCache('plugins:all');
 		minds\core\plugins::purgeCache('plugins:active');
 		minds\core\plugins::$cache == array();

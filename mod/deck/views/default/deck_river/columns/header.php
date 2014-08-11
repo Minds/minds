@@ -58,7 +58,7 @@ if ($has_filter) {
 	$buttons .= elgg_view('output/url', $params);
 }
 
-$title = elgg_echo($column->name);
+$title = elgg_echo($column->getAccount()->subtype);
 //$title = is_array($column_settings['title']) ? elgg_echo($column_settings['title'][0], array($column_settings['title'][1])) : elgg_echo($column_settings['title'], array());
 $subtitle = $column->getAccount()->name;
 if ($subtitle) $subtitle = '<span>' . $subtitle . '</span>';

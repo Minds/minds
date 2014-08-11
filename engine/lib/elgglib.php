@@ -993,7 +993,7 @@ register_shutdown_function('recordStats');
 function recordStats(){
 	if(isset($_REQUEST['debug'])){
 		$db = new minds\core\data\call();
-        $keys = implode("|",$db::$keys);
+       		$keys = implode("|",$db::$keys);
 		$stats = "{$db::$reads} Reads. {$db::$writes} Writes. {$db::$counts} Counts at {$_SERVER['REQUEST_URI']} with $keys called\n";
 		$filename = '/tmp/minds.stats';
 		file_put_contents ($filename, $stats, FILE_APPEND );

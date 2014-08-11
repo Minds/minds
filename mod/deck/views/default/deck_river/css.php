@@ -760,10 +760,10 @@ body {
 	border:1px solid #DDD;
 	border-radius:0;
 	color:#888;
-	content: "\1f4ce"; /* \1f4ce */
+	content: "\1f4f7"; /* \1f4f7 */
 	font-size:22px;
 	position:absolute;
-	left:112px;
+	right:242px;
 	top:5px;
 	cursor:pointer;
 	height:29px;
@@ -772,7 +772,7 @@ body {
 .deck-attachment-button-override:before{
 	font-family: "fontello";
 	color: #888;
-	content: "\1f4ce";
+	content: "\1f4f7";
 	position: absolute;
 	top: 7px;
 	left: 6px;
@@ -1824,7 +1824,7 @@ a.info-popup.ui-draggable-dragging {
 	height:auto;
 }
 .elgg-form-deck-river-post{
-	width:96%;
+	width:50%;
 }
 .elgg-form-deck-river-post input{
 	

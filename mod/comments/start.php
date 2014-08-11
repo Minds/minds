@@ -5,6 +5,11 @@
  * @author Mark Harding (mark@minds.com)
  */
 
-elgg_register_event_handler('init', 'system', function(){
-	new minds\plugin\comments\comments();
-});
+namespace minds\plugin\comments;
+
+use minds\bases;
+class start extends \minds\plugin\comments\comments{
+
+	
+
+}

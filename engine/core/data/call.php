@@ -360,5 +360,9 @@ class call extends core\base{
 		
 		return $obj;
 	}
+
+	public function stats(){
+		return $this->pool->stats();
+	}
 	
 }

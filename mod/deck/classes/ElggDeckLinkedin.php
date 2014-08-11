@@ -172,6 +172,9 @@ class ElggDeckLinkedin extends ElggDeckNetwork{
 		);
 		$params = array_merge($defaults, $params);
 
+		if($method == 'default')
+			$method = 'get_searchTweets';
+
 		$method = $this->formatMethod($method);
 		$params = array_merge($method['params'], $params); // add params
 
