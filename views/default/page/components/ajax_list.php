@@ -17,15 +17,15 @@ if($elgg_path == elgg_get_site_url() || $elgg_path == null || $elgg_path == ""){
 
 } else {
 
-ob_start();
-elgg_set_viewtype('json');
-//$handler = array_shift($path);
-
-$router = new minds\core\router();
-$router->route('/'.implode('/',$path));
-elgg_set_viewtype('default');
-$out = ob_get_contents();
-ob_end_clean();
+	ob_start();
+	elgg_set_viewtype('json');
+	//$handler = array_shift($path);
+	
+	$router = new minds\core\router();
+	$router->route('/'.implode('/',$path));
+	elgg_set_viewtype('default');
+	$out = ob_get_contents();
+	ob_end_clean();
 
 }
 $json = json_decode($out); 
