@@ -421,7 +421,7 @@ function elgg_get_calling_plugin_entity() {
 	$plugin_id = elgg_get_calling_plugin_id();
 
 	if ($plugin_id) {
-		return new ElggPlugin($plugin_id);
+		return minds\core\plugins::factory($plugin_id);
 	}
 
 	return false;
@@ -551,7 +551,7 @@ function elgg_get_plugin_user_setting($name, $user_guid = null, $plugin_id = nul
  */
 function elgg_set_plugin_setting($name, $value, $plugin_id = null) {
 	if ($plugin_id) {
-		$plugin = new ElggPlugin($plugin_id);
+		$plugin = minds\core\plugins::factory($plugin_id);
 	} else {
 		$plugin = elgg_get_calling_plugin_entity();
 	}
@@ -575,8 +575,12 @@ function elgg_set_plugin_setting($name, $value, $plugin_id = null) {
  * @todo make $plugin_id required in future version
  */
 function elgg_get_plugin_setting($name, $plugin_id = null) {
+	
 	if ($plugin_id) {
-		$plugin = new ElggPlugin($plugin_id);
+		if(!minds\core\plugins::isActive($plugin_id)){
+			return false;
+		}
+		$plugin = minds\core\plugins::factory($plugin_id);
 	} else {
 		$plugin = elgg_get_calling_plugin_entity();
 	}

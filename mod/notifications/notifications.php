@@ -9,12 +9,6 @@ use minds\core;
 
 class notifications extends \ElggPlugin{
 	
-	public function __construct(){
-		parent::__construct('notifications');	
-
-		$this->init();
-	}
-	
 	/**
 	 * Initialise the plugin
 	 */

@@ -436,7 +436,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			break;
 		$offset = end($scrapers)->guid;
 		foreach($scrapers as $scraper){
-			if(!$scraper->getOwnerEntity()){
+			if(!$scraper->getOwnerEntity(false)->username){
 				echo "There is no owner \n";
 				continue;
 			}
@@ -525,7 +525,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 						$blog->access_id = 2;
 						$blog->status = 'published';
 						$blog->rss_item_id = $item->get_id(true);
-						if(!$scraper->getOwnerEntity()){
+						if(!$scraper->getOwnerEntity(false)->username){
 							continue;
 						}
 						$guid = $blog->save();

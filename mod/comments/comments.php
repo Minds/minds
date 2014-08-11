@@ -9,12 +9,6 @@ use minds\core;
 
 class comments extends \ElggPlugin{
 	
-	public function __construct(){
-		parent::__construct('minds_comments');	
-
-		$this->init();
-	}
-	
 	/**
 	 * Initialise the plugin
 	 */

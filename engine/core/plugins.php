@@ -72,22 +72,9 @@ class plugins extends base{
 			$rows = $cached;
 		
 		} else {
-		
-			//Check if plugins are predfined in settings. Improves performance
-			//@todo remove once production does not rely on this
-		/*	if(isset($CONFIG->plugins) && $plugins = $CONFIG->plugins){
-				$return = array();
-				foreach($plugins as $priority => $plugin){
-					$plugin = new \ElggPlugin($plugin);
-					$PLUGINS_CACHE[$plugin->guid] = $plugin;
-					$return[] = $plugin;	
-				}
-				return $return;
-			}*/
 					
 			$db = new \minds\core\data\call('plugin');
 			$rows = $db->getRows($plugins);
-	
 			self::saveToCache("plugins:$status", $rows);
 			
 		}
@@ -103,7 +90,7 @@ class plugins extends base{
 			$row['guid'] = $key;
 			$plugin = self::factory($key, $row);
 			
-			array_push(self::$cache[$status], $plugin);
+			self::$cache[$status][$key] = $plugin;
 			$list[$key] = $plugin;
 			
 		}
@@ -114,7 +101,7 @@ class plugins extends base{
 				return	 $a->{'elgg:internal:priority'} > $b->{'elgg:internal:priority'};
 			});
 		} 
-
+		
 		return $list;
 		
 	}
@@ -174,8 +161,10 @@ class plugins extends base{
 	 * @return bool
 	 */
 	public function isActive($id){
-		$plugin = self::factory($id);
-		return $plugin->isActive();
+		$plugins = self::get('active');
+		return isset($plugins[$id]);
+		//$plugin = self::factory($id);
+		//return $plugin->isActive();
 	}
 
 	/**
@@ -189,7 +178,7 @@ class plugins extends base{
 		//@todo, make this work in other directories, not just tmp
 		global $CONFIG;
 		$path = "/tmp/minds/".$CONFIG->cassandra->keyspace;
-		@mkdir($path, 7777, true);
+		@mkdir($path, 0777, true);
 		
 		return file_put_contents("$path/$key", json_encode($data));
 	}
@@ -229,8 +218,8 @@ class plugins extends base{
 	 static public function factory($guid, $data = NULL){
 	 	if(!$data)
 			$data = $guid;
-	 	 
-		 $class = "\\minds\\plugin\\$guid\\start";
+		 
+		$class = "\\minds\\plugin\\$guid\\start";
 		 if(class_exists($class)){
 		 	return new $class($data);
 		 } else {

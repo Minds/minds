@@ -5,11 +5,11 @@
  * @package ElggNotifications
  */
 
+namespace minds\plugin\notifications;
 
-elgg_register_event_handler('init', 'system', function(){
-	new minds\plugin\notifications\notifications();
-	
-});
+class start extends \minds\plugin\notifications\notifications{
+
+}
 
 
 /**

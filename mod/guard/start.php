@@ -12,8 +12,8 @@ use minds\core;
 
 class start extends bases\plugin{
 	
-	public function __construct(){
-		parent::__construct('guard');	
+	public function __construct($plugin){
+		parent::__construct($plugin);	
 
 		$this->init();
 	}
