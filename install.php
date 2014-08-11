@@ -5,7 +5,7 @@
  * @package Elgg
  * @subpackage Core
  */
-
+date_default_timezone_set('UTC');
 // Quick and dirty test to see if this is a standalone install or living inside a multisite wrapper
 if (!file_exists(dirname(dirname(dirname(__FILE__))) . "/autoload.php")) {
     require(dirname(__FILE__).'/vendor/autoload.php');

@@ -61,6 +61,10 @@ abstract class bitcoin extends \ElggPlugin
      */
     abstract public function sendPayment($from_wallet_guid, $to_address, $amount_in_satoshi);
     
+    /**
+     * Temporarily unlock a given wallet, by storing its password for a short period of time
+     */
+    abstract public function unlockWallet($wallet_guid, $password);
 
 
 
@@ -174,6 +178,9 @@ abstract class bitcoin extends \ElggPlugin
 			set_input('username', elgg_get_logged_in_user_entity()->username);
 			require_once(dirname(__FILE__) . '/pages/sendpayment.php');
 		    break;
+		case 'settings' : 
+			require_once(dirname(__FILE__) . '/pages/settings.php');
+		    break;
 	    }
 	    
 	    return true;
@@ -183,7 +190,7 @@ abstract class bitcoin extends \ElggPlugin
 	if (elgg_is_logged_in()) {
 	    elgg_register_menu_item('site', array(
 		    'name' => 'bitcoin',
-		    'text' => 'My Wallet', // TODO: Replace me with a nice graphic
+		    'text' => '<span class="entypo">&#59406;</span> My Wallet', //'My Wallet', // TODO: Replace me with a nice graphic
 		    'href' => 'bitcoin/mywallet',
 		    'title' => elgg_echo('bitcoin'),
 		    'priority' => 10
@@ -192,24 +199,41 @@ abstract class bitcoin extends \ElggPlugin
 	
 	// Listen to user settings save
 	elgg_register_action('bitcoin/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
+	elgg_register_admin_menu_item('minds', 'bitcoin');	
+	elgg_register_admin_menu_item('minds', 'setup', 'bitcoin');  
+	
 	elgg_register_action('bitcoin/usersettings/save', dirname(__FILE__) . '/actions/plugins/usersettings/save.php');
+	elgg_register_event_handler('pagesetup', 'system', function() {
+            elgg_register_menu_item("page", array(
+                'name' => 'bitcoin',
+                'text' => elgg_echo('bitcoin:settings'),
+                'href' => 'bitcoin/settings',
+                'contexts' => array('bitcoin')
+            ));
+	});
 	
 	// Payment action
 	elgg_register_action('bitcoin/send', dirname(__FILE__) . '/actions/sendpayment.php');
+	elgg_register_action('bitcoin/unlock', dirname(__FILE__) . '/actions/unlockwallet.php');
 	
 	
 	// Create a wallet for every new user
-	/*elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
+	elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
 	    $ia = elgg_set_ignore_access(); // We're not logged in yet, so get_entity will fail without this
 	    
 	    try {
 		$user = elgg_extract('user', $params);
 		
-		$new_wallet = bitcoin()->createWallet($user);
+		$password = generate_random_cleartext_password();
+		
+		$new_wallet = bitcoin()->createWallet($user, $password);
 	
 		if ($new_wallet) $new_wallet = get_entity($new_wallet);
 		if (!$new_wallet) throw new \Exception("Could not generate a wallet for the new user...");
 		if (!$new_wallet->wallet_address) throw new \Exception("There was no address linked with wallet {$new_wallet->guid}");
+		
+		// Now, notify a user
+		notify_user($user->guid, elgg_get_site_entity()->guid, 'New bitcoin wallet created', "Welcome to minds! We have taken the liberty of creating a bitcoin wallet for your account, the password for which is $password"); // TODO: Change message
 		
 		// grant new user some bitcoins
 		if ($satoshi = elgg_get_plugin_setting('satoshi_to_new_user', 'bitcoin')) {
@@ -228,7 +252,7 @@ abstract class bitcoin extends \ElggPlugin
 	    }
 	    
 	    $ia = elgg_set_ignore_access($ia);
-	});*/
+	});
 	
     }
     

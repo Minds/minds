@@ -3,11 +3,6 @@
 
 $guid = get_input('guid');
 $entity = get_entity($guid, 'object');
-if(!$entity && get_input('video_id')){
-	$entity = new ElggObject();
-	$entity->subtype = 'kaltura_video';
-	$entity->kaltura_video_id = get_input('video_id');
-}
 
 $entity->title = get_input('title');
 $entity->description = get_input('description');
@@ -34,11 +29,11 @@ if (empty($entity->title)) {
 	forward(REFERER);
 }
 
-if($entity->license == 'not-selected'){
-	register_error(elgg_echo('minds:license:not-selected'));
-	forward(REFERER);
+if($entity->license == 'not-selected' && !elgg_is_xhr()){
+	//register_error(elgg_echo('minds:license:not-selected'));
+	//forward(REFERER);
 }
 
 
-$entity->save();
+echo $entity->save(false);
 forward($entity->getURL());

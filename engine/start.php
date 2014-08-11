@@ -23,6 +23,7 @@
  */
 global $START_MICROTIME;
 $START_MICROTIME = microtime(true);
+date_default_timezone_set('UTC');
 
 define('__MINDS_ROOT__', dirname(dirname(__FILE__)));
 

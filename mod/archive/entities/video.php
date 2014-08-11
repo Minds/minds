@@ -77,6 +77,10 @@ class video extends object{
 		}
 	}
 
+	public function getURL(){
+		return elgg_get_site_url() . 'archive/view/'.$this->guid;
+	}
+
 	/**
 	 * Extend the default entity save function to update the remote service
 	 * 

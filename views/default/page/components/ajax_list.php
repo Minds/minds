@@ -28,7 +28,7 @@ $out = ob_get_contents();
 ob_end_clean();
 
 }
-$json = json_decode($out);
+$json = json_decode($out); 
 if(!$json){
 	return;
 }
@@ -66,35 +66,7 @@ $items = array();
 foreach($json as $key => $item) {
 	switch(get_input('items_type')) {
 		case 'entity':
-			switch($item->type) {
-				case 'site':
-					$items[$key] = new ElggSite($item);
-					break;
-				case 'user':
-					$items[$key] = new ElggUser($item);
-					break;
-				case 'group':
-					$items[$key] = new ElggGroup($item);
-					break;
-				case 'notification':
-					$items[$key] = new minds\plugin\notifications\entities\notification($item);
-					break;
-				case 'object':
-					switch($item->subtype){
-						case 'album':
-							$items[$key] = new TidypicsAlbum($item);
-							break;
-						case 'image':
-							$items[$key] = new TidypicsImage($item);
-							break;
-						case 'video':
-							$items[$key] = new minds\plugin\archive\entities\video($item);
-							break;
-						default:
-							$items[$key] = new ElggObject($item);
-					}
-					break;
-			}
+			$items[$key] = entity_row_to_elggstar($item);
 			break;
 		case 'annotation': 
 			$items = $json;

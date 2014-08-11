@@ -6,15 +6,6 @@ elgg.provide('elgg.wall.channel');
 
 elgg.wall.init = function() {
 	
-	$('.attachment-lightbox').fancybox({
-		type: 'image',
-		href: $(this).attr('href'),
-		autoDimension: true,
-		autoScale: true,
-		padding: '0',
-		//margin: '200 20'
-	}); 
-	
 	/*var news = $('form[name=elgg-wall-news]');
 	news.on('click', 'input[type=submit]', elgg.wall.news.submit);
 

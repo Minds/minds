@@ -1,81 +1,85 @@
 <form novalidate name="itemsForm" class="uploadList">
 	
-	<div id="dropzone" class="span8 well well-large">
+	<!-- Show initially -->
+	<div id="dropzone" class="uploader-bar span8 well well-large" ng-class="status">
 			<span class="entypo">&#128228;</span>
 			
+			
 			<div class="form-span">
-				<span class="elgg-button elgg-button-action elgg-button-upload"> <span>Add files...</span>
-					<input id="fileupload" type="file" name="fileData"  multiple=""/>
-				</span>
 				
-				<div class="default_values">
-					<div class="default-license">
-						<label>Default license:</label>
-						<select class="elgg-input-dropdown default-license-input" ng-options="license.value as license.text for license in licenses" ng-model="default_license">
-						</select>
+				<div ng-hide="uploading">
+					
+					<h3> Drag files here </h3>
+				
+					<p class="or">-- or --</p>
+				</div>
+				
+				<div class="album-selector">
+					<div class="minds-buttom-album  elgg-button" ng-click="clickAlbum = !clickAlbum">
+						{{getAlbum().title}}
+					</div>
+					<div class="album-selections" ng-show="clickAlbum">
+						<input type="text" placeholder="new album..." ng-change="createAlbum()" ng-model="albums.newInput"/>
+						<li ng-repeat="album in albums" data-guid="{{album.guid}}" ng-click="selectAlbum(album.guid)">
+							{{album.title}}
+						</li>
 					</div>
 				</div>
+				
+				<div class="elgg-button elgg-button-action elgg-button-upload"> <span>Click to open selector.</span>
+					<input id="fileupload" type="file" name="fileData"  multiple=""/>
+				</div>
+				
+				<div class="minds-buttom-save  elgg-button" ng-click="complete()" >
+						Done!
+				</div>
+				
+				<div class="upload-stats"> 
+					<div class="text">{{completed}} / {{total()}} uploaded</div>
+				</div>
+				
+				<div class="progress">
+					<div class="bar p{{(completed / total() ) * 100}}" ng-style="{width: (completed / total()) * 100 + '%'}"></div>
+				</div>
 			</div>
-			<span class="more-info"> - or drag files here - </span>
 	</div>
-		
+
 	<ul class="elgg-list elgg-list-entity mason">
 
-		<li class="elgg-item" data-ng-repeat="fileItem in fileInfo | reverse" ng-show="reAlign()">
+		<li class="elgg-item" ng-repeat="file in files" id="-{{file.guid}}">
 
-			<div class="elgg-image-block">
-				<button id="delete" ng-click="deleteEntry($index)" class="entypo">
-					&#10005;
-				</button>
-
-				<table>
+			<table>
 					<tr>
 						<td>Title:</td>
 						<td>
-							<input required type="text" name='name' class="elgg-input-text" ng-model="fileItem['name']" placeholder="Enter title…" ng-change="changed(fileItem['guid'])"/>
+							<input required type="text" name='name' class="elgg-input-text" ng-model="file.title" placeholder="Enter title…" ng-change="changed(file.guid)"/>
 						</td>
 					</tr>
 					<tr>
 						<td>License:</td>
 						<td>
-							<select required name="license" id="license" class="elgg-input-dropdown uploadSelect" ng-options="license.value as license.text for license in licenses" ng-model="fileItem['license']" ng-change="changed(fileItem['guid'])">
+							<select required name="license" id="license" class="elgg-input-dropdown uploadSelect" ng-options="license.value as license.text for license in licenses" ng-model="file.license" ng-change="changed(file.guid)">
 							</select>
 						</td>
 					</tr>
-					<tr>
-						<td>Privacy:</td>
-						<td>
-							<select required name="access_id" id="access_id" class="elgg-input-dropdown elgg-input-access uploadSelect" ng-options="a.value as a.text for a in access" ng-model="fileItem['access_id']" ng-change="changed(fileItem['guid'])"></select>
-						</td>
-					</tr>
-					<tr ng-show="isImage(fileItem)">
-						<td>Album:</td>
-						<td>
-							<select name="albumId" id="album" ng-model="fileItem['albumId']"  ng-options="a.id as a.title for a in albums" ng-change="changed(fileItem['guid'])" class="elgg-input-dropdown elgg-input-access uploadSelect">
-								<option value="new"> -- New Album -- </option>
-							</select><span class="add-new-album" ng-click="newAlbum($index)">+</span>
-						</td>
-					</tr>
-				</table>
-				
-				<div ng-switch="fileItem.fileType">
-					<img ng-switch-when="image" class="preview" ng-show="getFileThumbnail(fileItem.thumbSecond, fileItem.guid)" ng-src="{{getFileThumbnail(fileItem.thumbSecond, fileItem.guid)}}"/>
-					<div ng-switch-when="video" ng-show="fileItem.guid">
-						<p> Your video has been uploaded and is now being transcoded </p>
-					</div>
-					
+
+			</table>
+			<div ng-switch="file.fileType" class="image-thumbnail">
+				<img ng-switch-when="image" class="preview" ng-src="{{file.thumb}}"/>
+				<div ng-switch-when="video" ng-show="file.guid">
+					<p> Your video has been uploaded and is now being transcoded </p>
 				</div>
 
-				<div class="progress">
-					<div class="bar p{{fileItem['progress']}}" ng-style="{width: fileItem['progress'] + '%'}"></div>
-				</div>
 			</div>
+			
+			<div class="progress">
+					<div class="bar p{{file.progress}}" ng-style="{width: file.progress + '%'}"></div>
+			</div>
+			
 		</li>
 
 	</ul>
-	<br/>
-	<a id="saveButton" ng-class="{disabled: itemsForm.$invalid}" ng-show="itemsForm.$dirty" class="elgg-button elgg-button-action" ng-click="saveAll()">Save all</a>
-	
+		
 	<div style="display:none;" id="album-create-wrapper">
 		<input type="text" placeholder="Album title"  ng-model="albumName"/>
 		<a class="elgg-button elgg-button-action" ng-click="createAlbum($index)">Create</a>

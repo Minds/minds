@@ -1,6 +1,10 @@
 $ = jQuery.noConflict();
 
 window.onbeforeunload = function (event) {
+  if(window.done){
+	window.onbeforeunload = NULL;
+	return true;
+  }
   var message = 'Any uploads or unsaved changes will be lost by leaving this page. Are you sure you want to leave?';
   if (typeof event == 'undefined') {
     event = window.event;

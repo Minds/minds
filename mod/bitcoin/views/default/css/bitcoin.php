@@ -7,7 +7,7 @@ div.wallet div.report {
 }
 
 div.wallet div.header {
-    border-bottom: 1px solid #eee;
+    
     padding-bottom: 10px;
 }
 
@@ -37,4 +37,16 @@ div.bitcoin-transaction span.action {
 div.bitcoin-transaction span.address {
     font-size: 0.8em;
     word-wrap: break-word;
+}
+
+div.wallet img.qr-code {
+    float: right;
+    width: 250px;
+    margin-bottom: 20px;
+}
+
+div.wallet div.report {
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    clear: both;
 }
