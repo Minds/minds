@@ -94,7 +94,7 @@ archive.init = function(){
                 $('#thumbnailData').val(dataURL);
        }
 
-	if(jQuery().magnificPopup) {
+	if($.magnificPopup) {
        archive.origin_url = window.location.href;
        		
 		var active = $('.lightbox-image').magnificPopup({

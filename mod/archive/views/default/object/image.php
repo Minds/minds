@@ -13,14 +13,14 @@ $full_view = elgg_extract('full_view', $vars, false);
 $viewtype = elgg_extract('viewtype', $vars, false);
 $image = elgg_extract('entity', $vars);
 
+elgg_load_js('popup');
+
 if($full_view){
 	
 	echo elgg_view('output/img', array('src'=>$image->getIconURL('xlarge')));
 	
 } elseif($viewtype == 'gallery' || elgg_is_xhr()) {
 	
-	elgg_load_js('popup');
- 	
  	$img = elgg_view('output/img', array('src'=>$image->getIconURL('medium')));
 	echo elgg_view('output/url', array('href'=>$image->getUrl(), 'text'=>$img.'hello', 'id'=>(string)$image->guid, 'class'=>'lightbox-image', 'data-album-guid'=>$image->container_guid));
 	
@@ -56,7 +56,8 @@ if($full_view){
 	echo elgg_view('output/url', array(
 		'href'=> $image->getURL(), 
 		'text'=> elgg_view('output/img', array('src'=>$image->getIconURL('large'))),
-		'class' => 'image-thumbnail'
+		'class' => 'image-thumbnail lightbox-image',
+		'data-album-guid'=>$image->container_guid
 	));
 	echo $header;
 	

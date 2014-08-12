@@ -334,7 +334,8 @@
 	left:0;
 	display:none;
 	position:fixed;
-	overflow:scroll;
+	overflow:visible;
+	overflow-x:scroll;
 	height:100%;
 	width:225px;
 	padding:12px;

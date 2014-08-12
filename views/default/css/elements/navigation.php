@@ -362,12 +362,8 @@
 	background:transparent !important;
 }
 .global-sidebar > .elgg-menu-page ul.elgg-child-menu{
-	position: fixed;
-	top: 0px;
-	left: 210px;
-	z-index: 999999;
-	width: 225px;
-	height: 100%;
+	position: relative;
+	width:auto;
 	background:#444;
 }
 .global-sidebar > .elgg-menu-page{

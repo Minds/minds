@@ -19,6 +19,14 @@
 	 		}
 	 	});
 
+		/*$('.global-sidebar .elgg-menu-page li').toggle(function(){
+			if($(this).find('a')[0].hasClass('elgg-menu-opened')){
+				$('.global-sidebar').width(225);
+			} else {
+				$('.global-sidebar').width(600);
+			}
+		});*/
+
 		if(!elgg.is_logged_in() && !$.cookie('promptSignup')){
 			setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
 		}
