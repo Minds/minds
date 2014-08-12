@@ -94,78 +94,70 @@ archive.init = function(){
                 $('#thumbnailData').val(dataURL);
        }
 
-       archive.origin_url = window.location.href
-       $(document).on('click', '.lightbox-image', function(e){
-       		e.preventDefault();
-       		var album_guid = $(this).attr('data-album-guid');  
-       		var items = [];
-			_this = this;
-			//download the full list of images in this album
-			$.ajax({
-				url: elgg.get_site_url() + 'archive/view/' + album_guid + '?view=json&type=album&limit=1000000',
-				dataType: 'json',
-				success: function(data){
-					images = data.object.album[0].images;
-					$.each(images, function(k){
-						items.push({
-							id: k,
-							src: elgg.get_site_url() + 'archive/view/'+album_guid+'/'+k + '?view=spotlight'
-						});
-					});
-					
-					var index = items.map(function(x) {return x.id; }).indexOf($(_this).attr('id'));
-					$.magnificPopup.open({
-						type: 'ajax',
-						items: items,
-						index: index,
-						gallery:{
-							enabled:true
-						},
-						preloader: [0,2],
-						callbacks: {
-							elementParse: function(item) {
-								window.history.pushState("", "",item.src);
-								//archive.resize();
-							},
-							ajaxContentAdded: function(){
-							//	archive.resize();
-							},
-							resize: archive.resize,
-							beforeOpen: function() {
-								if(index > 0)
-									this.index = index;
-							},
-							change: function(){
-								//archive.resize();
-							},
-							updateStatus: function(data){
-								if(data.status == 'ready'){
-									setTimeout(function(){
-						       			archive.resize();
-						       		}, 25);
-						       		$('.minds-spotlight .main img').imagesLoaded( function(){
-						       			archive.resize();
-						       		});
-								}
-							},
-							close: function(){
-								window.history.pushState("", "", archive.origin_url);
-							}
-						}
-					});
+	if(jQuery().magnificPopup) {
+       archive.origin_url = window.location.href;
+       		
+		var active = $('.lightbox-image').magnificPopup({
+				type: 'ajax',
+				gallery:{
+					enabled:true
 				},
-				error: function(data){
-					console.log($(this));
+				preloader: [0,2],
+				callbacks: {
+					elementParse: function(item) {
+						window.history.pushState("", "",item.src);
+						//archive.resize();
+					},
+					resize: archive.resize,
+					beforeOpen: function() {
+						
+						var album_guid = $(this.ev[0]).attr('data-album-guid');  
+			       			var items = [];
+						_this = this;
+						active = this;	
+						//download the full list of images in this album
+						$.ajax({
+							url: elgg.get_site_url() + 'archive/view/' + album_guid + '?view=json&type=album&limit=1000000',
+							dataType: 'json',
+							success: function(data){
+								images = data.object.album[0].images;
+								$.each(images, function(k){
+									items.push({
+										id: k,
+										src: elgg.get_site_url() + 'archive/view/'+album_guid+'/'+k + '?view=spotlight'
+									});
+								});
+								
+								//var index = items.map(function(x) {return x.id; }).indexOf($(_this).attr('id'));
+								_this.items = items;
+								//_this.updateItemHTML();
+							},
+							error: function(data){
+								console.log($(this));
+							}
+						});
+					},
+					change: function(){
+						//archive.resize();
+					},
+					updateStatus: function(data){
+				       		$('.minds-spotlight .main img').imagesLoaded( function(){
+				       			archive.resize();
+				       		});
+					},
+					close: function(){
+						window.history.pushState("", "", archive.origin_url);
+					}
 				}
-			});
-       });
+		});
        
        $(document).on('click', '.minds-spotlight .main img', function(e){
-       		$.magnificPopup.instance.next();
+       		active.next();
        		setTimeout(function(){
        			archive.resize();
        		}, 300);
        });
+	}
 	
 
 };

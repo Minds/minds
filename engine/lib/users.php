@@ -426,7 +426,7 @@ $offset = "", $output = 'entities') {
 		$cache = new ElggStaticVariableCache('friendsof');
 	}
 
-        if(!$row = $cache->load($user_guid)){
+    if(!$row = $cache->load($user_guid)){
 		$db = new minds\core\data\call('friendsof');
 		$row = $db->getRow($user_guid, array( 'limit' => $limit, 'offset' => $offset));
 		$cache->save($user_guid, $row);

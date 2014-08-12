@@ -43,26 +43,32 @@ if($item->attachment_guid){
 	switch($attachment->subtype){
 		case 'image':
 			
-
+			$image = new minds\plugin\archive\entities\image($attachment);
 			$attachment = elgg_view('output/img', array( 
-				'src' => "$src/large",
-				'class' => 'river-img-attachment lightbox-image',
+				'src' => $image->getIconURL('large'),
+				'class' => 'river-img-attachment',
+				
+			)); //we are just going to assume they are images... change soon
+			$attachment =  elgg_view('output/url', array(
+				'text'=>$attachment,
+				'href' => $image->getUrl(),
+				'class'=>' lightbox-image',
 				'id' => $attachment->guid,
 				'data-album-guid'=>$attachment->container_guid
-			)); //we are just going to assume they are images... change soon
-			 
+			)); 
 			
 			break;
 		
 		default:
 			$attachment = '<div class="river-attachment"><a href="'.$src.'">Download ' . $attachment->originalfilename . '</a><p>'.round($attachment->size / (1024 * 1024)).' MB</p></div>';
-		}
-
 			$attachment =  elgg_view('output/url', array(
 				'text'=>$attachment,
 				'href' => "$src/master",
-				'class'=>'attachment-lightbox'
+				'class'=>' lightbox-image',
+				'id' => $attachment->guid,
+				'data-album-guid'=>$attachment->container_guid
 			));
+		}
 
 } elseif($item->meta_title){
 	$attachment = elgg_view('output/preview', array(

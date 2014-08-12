@@ -43,7 +43,7 @@ if($full_view ){
 	echo elgg_view('output/url', array(
 		'href'=> $album->getURL(), 
 		'text'=> elgg_view('output/img', array('src'=>$album->getIconURL('large'))),
-		'class' => 'image-thumbnail lightbox-image',
+		'class' => 'image-thumbnail',
 		'data-album-guid'=>$album->guid
 	));
 	echo $header;

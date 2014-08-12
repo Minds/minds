@@ -267,19 +267,23 @@ box-shadow: none;
 }
 
 .batch-thumbnails{
-	float:left;
+	/*float:left;
 	margin-left:-5%;
-	width:110%;
+	width:110%;*/
 }
-.batch-thumbnails img{
+.batch-thumbnails.image-thumbnail{
+	margin:0;
 	float: left;
 	width: 32%;
 	padding: 1px;
 	border: 1px solid #EEE;
 }
-.batch-thumbnails img:first-of-type{
+.batch-thumbnails.image-thumbnail:first-of-type{
 	width:65%;
-	
+}
+.batch-thumbnails.image-thumbnail > img {
+	width:100%;
+	display:block;
 }
 
 .minds-spotlight{

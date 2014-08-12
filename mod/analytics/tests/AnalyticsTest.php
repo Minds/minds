@@ -14,6 +14,10 @@ class AnalyticsTest extends Minds_PHPUnit_Framework_TestCase {
 	 * @return void
 	 */
 	protected function setUp() {
+		$user = new ElggUser();
+		$user->username = 'test';
+		$user->email = 'test@test.com';
+		$user->save();
 		/**
 		 * Create a bunch of test entities (10)
 		 */
@@ -21,6 +25,7 @@ class AnalyticsTest extends Minds_PHPUnit_Framework_TestCase {
 			$entity = new ElggObject();
 			$entity->title = "Entity $i";
 			$entity->subtype = 'subtype';
+			$entity->owner_guid = $user->guid;
 			self::$entities[] = $entity->save();
 		}
 		
