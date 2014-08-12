@@ -94,6 +94,7 @@ archive.init = function(){
                 $('#thumbnailData').val(dataURL);
        }
 
+	if(jQuery().magnificPopup) {
        archive.origin_url = window.location.href;
        		
 		var active = $('.lightbox-image').magnificPopup({
@@ -156,6 +157,7 @@ archive.init = function(){
        			archive.resize();
        		}, 300);
        });
+	}
 	
 
 };
