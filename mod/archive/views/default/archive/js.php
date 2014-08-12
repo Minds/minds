@@ -96,19 +96,24 @@ archive.init = function(){
 
 	if($.magnificPopup) {
        archive.origin_url = window.location.href;
-       		
+       $(document).on('click', '.lightbox-image', function(e){
+       		e.preventDefault();
+			
+       });
 		var active = $('.lightbox-image').magnificPopup({
 				type: 'ajax',
 				gallery:{
 					enabled:true
 				},
 				preloader: [0,2],
+				removalDelay: 500,
 				callbacks: {
 					elementParse: function(item) {
 						window.history.pushState("", "",item.src);
 						//archive.resize();
 					},
 					resize: archive.resize,
+					
 					beforeOpen: function() {
 						
 						var album_guid = $(this.ev[0]).attr('data-album-guid');  
@@ -120,11 +125,11 @@ archive.init = function(){
 							url: elgg.get_site_url() + 'archive/view/' + album_guid + '?view=json&type=album&limit=1000000',
 							dataType: 'json',
 							success: function(data){
-								images = data.object.album[0].images;
-								$.each(images, function(k){
+								images = data.object.images;
+								$.each(images, function(k, v){
 									items.push({
-										id: k,
-										src: elgg.get_site_url() + 'archive/view/'+album_guid+'/'+k + '?view=spotlight'
+										id: v.guid,
+										src: elgg.get_site_url() + 'archive/view/'+album_guid+'/'+v.guid + '?view=spotlight'
 									});
 								});
 								

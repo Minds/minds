@@ -76,6 +76,15 @@ switch($entity->subtype){
 		break;
 	case 'album':
 		$trending = false;
+		/**
+		 * Perhaps slightly hacky, but if this is an asynchronous call then we should show a list of images
+		 * @todo cleanup someway. Although images are the exception to the rule? (@MEH)
+		 */
+		 if(get_input('ajax') || elgg_get_viewtype() == 'json'){
+		 	echo elgg_view_page('', elgg_list_entities(array('container_guid'=>$entity->guid, 'limit'=>get_input('limit', 24), 'offset'=>get_input('offset',''))));
+			return true;
+		 }
+		
 		break;
 	case 'file':
 		minds_set_metatags('og:type', 'article');

@@ -96,6 +96,9 @@ class ElggPlugin extends ElggEntity {
 				}
 			}
 		}
+		if(!$plugin || !is_string($plugin))
+			$plugin = $this->guid;
+		
 		$PLUGINS_CACHE[$plugin] = $this;
 
 		//_elgg_cache_plugin_by_id($this);
