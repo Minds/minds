@@ -236,6 +236,9 @@
 .elgg-owner-block .elgg-image img{
 	width:100px;
 }
+.elgg-owner-block .channel-social-icons > a.entypo {
+	font-size:20px;
+}
 /* ***************************************
 	Messages
 *************************************** */
