@@ -311,7 +311,7 @@ display:block;
 	top:5%;
 	width:20%;
 }
-.minds-spotlight img{
+.minds-spotlight .main img{
 	display:block;
 	margin:auto;
 	width:100%; 

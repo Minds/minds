@@ -75,7 +75,13 @@ switch($entity->subtype){
 		}
 		break;
 	case 'album':
+		minds_set_metatags('og:type', 'mindscom:photo');
+		minds_set_metatags('og:url', $entity->getPermaURL());
+		minds_set_metatags('og:image', $entity->getIconURL('large'));
+		minds_set_metatags('og:title', $title);
+		minds_set_metatags('og:description', $description);
 		$trending = false;
+		
 		/**
 		 * Perhaps slightly hacky, but if this is an asynchronous call then we should show a list of images
 		 * @todo cleanup someway. Although images are the exception to the rule? (@MEH)
@@ -149,7 +155,8 @@ if(elgg_is_active_plugin('analytics') && $trending){
 
 }
 
-$sidebar = elgg_view_comments($entity);
+$sidebar = elgg_view('minds_social/social_footer');
+$sidebar .= elgg_view_comments($entity);
 
 $body = elgg_view_layout("content", array(	
 					'class' => 'archive',
