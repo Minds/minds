@@ -21,7 +21,7 @@
  * @return int/bool River ID or false on failure
  */
 function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_id = "",
-$posted = 0, $annotation_id = 0) {
+$posted = 0, $annotation_id = 0, $timelines = array()) {
 
 	global $CONFIG;
 	
@@ -62,21 +62,31 @@ $posted = 0, $annotation_id = 0) {
 			));
 
 	//get the followers of the subject guid
-        $followers = $subject->getFriendsOf(null, 10000, "", 'guids');
-	if(!$followers) { $followers = array(); }
-	$followers = array_keys($followers);
-	array_push($followers, 'site');//add to public timeline
-	array_push($followers, $action_type);//timelines for actions too
-	array_push($followers, $subject_guid);//add to their own timeline
-	array_push($followers, $object->container_guid); //add to containers timeline
-	foreach($followers as $follower_guid){
+	/**
+	 * Hack to stop featured items from entering the entire 
+	 */
+	if(count($timelines) > 0){
 		$db = new minds\core\data\call('timeline');
-		$db->insert($follower_guid, array($id => time()));
+		foreach($timelines as $timeline)
+			$db->insert($timeline, array($id => $id));
+	} else {
+	
+    $followers = $subject->getFriendsOf(null, 10000, "", 'guids');
+	if(!$followers) { $followers = array(); }
+		$followers = array_keys($followers);
+		array_push($followers, 'site');//add to public timeline
+		array_push($followers, $action_type);//timelines for actions too
+		array_push($followers, $subject_guid);//add to their own timeline
+		array_push($followers, $object->container_guid); //add to containers timeline
+		foreach($followers as $follower_guid){
+			$db = new minds\core\data\call('timeline');
+			$db->insert($follower_guid, array($id => time()));
+		}
+	
+		//place on users own personal line
+		$db = new minds\core\data\call('timeline');
+		$db->insert('personal:'.$subject_guid, array($id => time()));
 	}
-
-	//place on users own personal line
-	$db = new minds\core\data\call('timeline');
-	$db->insert('personal:'.$subject_guid, array($id => time()));
 
 	if ($id) {
 //		update_entity_last_action($object_guid, $posted);

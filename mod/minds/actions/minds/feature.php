@@ -14,7 +14,7 @@ if(!$entity->featured_id || $entity->featured_id == 0){
 
 	$entity->feature();
 
-	//add_to_river('river/object/'.$entity->getSubtype().'/feature', 'feature', $entity->getOwnerGUID(), $entity->getGuid());
+	add_to_river('river/object/'.$entity->getSubtype().'/feature', 'feature', $entity->getOwnerGUID(), $entity->getGuid(), 2, time(), NULL, array('feature'));
 
 	system_message(elgg_echo("Featured..."));
 	
