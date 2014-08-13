@@ -122,8 +122,16 @@ display:block;
 }
 
 .default-license-input{
-	width:240px;
-	padding:16px;
+	width: 240px;
+	padding: 16px;
+	float: left;
+	height: 32px;
+	margin: 4px;
+	border-radius: 1px;
+	display:none;
+}
+.uploader-bar.uploading .default-license-input{
+	display:block;	
 }
 .default_values{
 	float:left;

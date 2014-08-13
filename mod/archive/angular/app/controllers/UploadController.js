@@ -79,6 +79,15 @@ function UploadCtrl($scope, Elgg, $q, $timeout, $http, $location) {
 		{value:'bsd', text:'BSD License'}
 	];
 	$scope.default_license = 'not-selected';
+	
+	$scope.setDefaultLicense = function(){
+			
+		for($index in $scope.files){
+			if($scope.files[$index].license == 'not-selected')
+				$scope.files[$index]['license'] = $scope.default_license;
+		}
+		
+	};
 
     /**
      * Access options (for dropdown)

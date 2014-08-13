@@ -30,6 +30,8 @@
 					<input id="fileupload" type="file" name="fileData"  multiple=""/>
 				</div>
 				
+				<select name="license" id="license" class="elgg-input-dropdown default-license-input" ng-options="license.value as license.text for license in licenses" ng-model="default_license" ng-change="setDefaultLicense()"></select>
+				
 				<div class="minds-buttom-save  elgg-button" ng-click="complete()" >
 						Done!
 				</div>
