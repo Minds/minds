@@ -10,6 +10,7 @@
 $entity = $vars['entity'];
 
 $export = $entity->export();
+$export['guid'] = (string) $export['guid'];
 $export['url'] = $entity->getURL();
 
 if(elgg_instanceof($entity,'object')){

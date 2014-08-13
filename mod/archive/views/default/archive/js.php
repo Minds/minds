@@ -96,15 +96,26 @@ archive.init = function(){
 
 	if($.magnificPopup) {
        archive.origin_url = window.location.href;
-       $(document).on('click', '.lightbox-image', function(e){
+	
+		$(document).on('click', '.lightbox-image', function(e){
        		e.preventDefault();
-			
-       });
-		var active = $('.lightbox-image').magnificPopup({
+       		base = this;
+
+			var active = $.magnificPopup.open({
 				type: 'ajax',
 				gallery:{
 					enabled:true
 				},
+				items:[
+					{
+						id : 0,
+						src: $(base).attr('href')
+					},
+					{
+						id :1,
+						src: $(base).attr('href')
+					}
+				],
 				preloader: [0,2],
 				removalDelay: 500,
 				callbacks: {
@@ -116,8 +127,8 @@ archive.init = function(){
 					
 					beforeOpen: function() {
 						
-						var album_guid = $(this.ev[0]).attr('data-album-guid');  
-			       			var items = [];
+						var album_guid = $(base).attr('data-album-guid');  
+			       		var items = [];
 						_this = this;
 						active = this;	
 						//download the full list of images in this album
@@ -125,17 +136,19 @@ archive.init = function(){
 							url: elgg.get_site_url() + 'archive/view/' + album_guid + '?view=json&type=album&limit=1000000',
 							dataType: 'json',
 							success: function(data){
-								images = data.object.images;
+								images = data.object['image'];
+								$i = 0;
 								$.each(images, function(k, v){
 									items.push({
-										id: v.guid,
-										src: elgg.get_site_url() + 'archive/view/'+album_guid+'/'+v.guid + '?view=spotlight'
+										id: $i,
+										src: v.url+'?view=spotlight'
 									});
+									$i++;
 								});
 								
-								//var index = items.map(function(x) {return x.id; }).indexOf($(_this).attr('id'));
 								_this.items = items;
-								//_this.updateItemHTML();
+								$.magnificPopup.instance.index = $(base).parent().index();
+								$.magnificPopup.instance.updateItemHTML();
 							},
 							error: function(data){
 								console.log($(this));
@@ -155,11 +168,12 @@ archive.init = function(){
 					}
 				}
 		});
-       
+         
+       });
        $(document).on('click', '.minds-spotlight .main img', function(e){
-       		active.next();
+       		$.magnificPopup.instance.next();
        		setTimeout(function(){
-       			archive.resize();
+       			$.magnificPopup.resize();
        		}, 300);
        });
 	}
