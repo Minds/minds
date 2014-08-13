@@ -114,4 +114,12 @@ class PostAttachment extends ElggFile{
 			
 	}
 
+	public function getIconURL($size){
+		return elgg_get_site_url() . 'wall/attachment/' .$this->guid .'/'.$size;
+	}
+
+	public function getURL(){
+		return elgg_get_site_url() . 'wall/attachment/' .$this->guid .'/master';
+	}
+
 }

@@ -42,8 +42,13 @@ if($item->attachment_guid){
 	$src = elgg_get_site_url() . "wall/attachment/$item->attachment_guid";
 	switch($attachment->subtype){
 		case 'image':
-			
-			$image = new minds\plugin\archive\entities\image($attachment);
+			if($attachment->time_created < 1407524342){
+				$image = $attachment;
+
+			} else {
+				$image = new minds\plugin\archive\entities\image($attachment);
+			}
+
 			$attachment = elgg_view('output/img', array( 
 				'src' => $image->getIconURL('large'),
 				'class' => 'river-img-attachment',

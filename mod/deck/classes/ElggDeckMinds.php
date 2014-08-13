@@ -9,7 +9,6 @@ class ElggDeckMinds extends ElggDeckNetwork{
 	public function __construct($guid=null){
 		parent::__construct($guid);		
 		
-		elgg_load_library('deck_river:minds_open_sdk');
 	}
 
 	/**

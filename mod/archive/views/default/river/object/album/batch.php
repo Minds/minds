@@ -45,6 +45,6 @@ $summary = elgg_echo("river:remind:object:batch", array($subject_link, $vars['it
 
 echo elgg_view('river/elements/layout', array(
 	'item' => $vars['item'],
-	'message' => $body,
+	'message' => '<div class="archive-batch-3">'.$body."</div>",
 	'summary' => $summary,
 ));

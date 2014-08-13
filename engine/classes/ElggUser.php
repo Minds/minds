@@ -148,7 +148,9 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	public function save() {
-		
+		if(!$this->cache){
+			return false;
+		}
 		//$timebased = $this->isEnabled();
 		$timebased = false;
 		parent::save($timebased);

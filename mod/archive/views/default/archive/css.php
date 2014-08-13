@@ -285,6 +285,11 @@ box-shadow: none;
 	width:100%;
 	display:block;
 }
+.archive-batch-3{
+	width:100%;
+height:256px;
+display:block;
+}
 
 .minds-spotlight{
 	z-index:1000000;
