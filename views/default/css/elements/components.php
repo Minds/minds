@@ -231,6 +231,7 @@
 .elgg-owner-block .elgg-body > a > h2{
 	font-size:20px;
 	font-weight:normal;
+	padding:0;
 }
 .elgg-owner-block .elgg-image img{
 	width:100px;
