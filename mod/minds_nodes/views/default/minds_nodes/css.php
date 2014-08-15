@@ -120,3 +120,48 @@ div.register-popup {
     margin-right: auto;
 }
 
+/**
+ * Domain select
+ */
+.nodes-table{
+	border:1px solid #eee;
+	background:#FFF;
+	width: 990px;
+	display: table;
+	margin: 16px auto;
+}
+.nodes-table.admin{
+	width:100%;
+}
+.nodes-table .row{
+	display: table-row;
+}
+.nodes-table .row.thead, #tiers .row.tfoot{
+	display: table-header-group;
+	background: #f9f9f9;
+}
+.nodes-table .row.thead .cell{
+	font-weight:bold;
+	color:#4690D6;
+}
+.nodes-table .cell{
+	float: none;
+	width: 25%;
+	display: table-cell;
+	vertical-align: middle;
+	position: relative;
+	padding: 15px 20px;
+	font-size: 15px;
+	color: #555;
+	text-align: center;
+	border-bottom: 1px solid #eeeeee;
+}
+.nodes-table .cell.feature{
+	text-align: left;
+	color:#4690D6;
+}
+
+.domain input{
+	padding:32px;
+	width:800px;
+}

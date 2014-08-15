@@ -20,10 +20,9 @@ class start extends bases\plugin{
 		
 		\elgg_register_action("registernode", dirname(__FILE__) . "/actions/registernode.php");
 		\elgg_register_action("registernewnode", dirname(__FILE__) . "/actions/registernewnode.php");
-		\elgg_register_action("select_tier", dirname(__FILE__) . "/actions/select_tier.php");
+		\elgg_register_action("select_tier", dirname(__FILE__) . "/actions/select_tier.php", 'public');
 		\elgg_register_action("upgrade_to", dirname(__FILE__) . "/actions/upgrade_to.php");
 		\elgg_register_action("renamenode", dirname(__FILE__) . "/actions/renamenode.php");
-		\elgg_register_action("select_free_tier", dirname(__FILE__) . "/actions/select_free_tier.php");
 	
 		\elgg_extend_view('css/elgg', 'minds_nodes/css');
 	

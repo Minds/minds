@@ -69,46 +69,45 @@ usort($tiers, function($a, $b){
 		$(document).ready(function(){
 	        
 	        $('a#tier-select-button').click(function(){
-				window.open("<?php echo elgg_get_site_url(); ?>tierlogin/?tier="+$(this).attr('data-guid'), "Please Log In", "width=800,height=650");
+			//	window.open("<?php echo elgg_get_site_url(); ?>tierlogin/?tier="+$(this).attr('data-guid'), "Please Log In", "width=800,height=650");
 	        });
 	        
 	    });
 	</script>
 <?php
 }
-return;    
-if ($tiers) {
-     
+
+
+/**
+ * Section 2 
+ * Select your domain...
+ */
 ?>
-	<ul id="tiers-selection" class="elgg-list">
-	  
-	    <?php foreach ($tiers as $tier) { ?>
-	    
-		    <li class="elgg-item tier tier-<?php echo $tier->product_id; ?>">
-		        <?php echo  elgg_view('input/tier', array('tier' => $tier)); ?>
-		    </li>
-	    
-	    <?php } ?>
-	    <br class="clearfix" />
+<div class="nodes-table domain">
+	<div class="row thead">
+		<div class="cell feature">Select Domain</div>
+		<div class="cell">
+			<input type="text" placeholder="eg. www.myawesomesite.com" name="domain"/>
+		</div>
 	</div>
+</div>
 
-<?php 
-// Returning from an order, so we need to poll while Paypal processes the payment and pings our IPN
-	if (get_input('auth')) { 
+
+<?php
+/**
+ * Step 3. Create a minds account
+ * 
+ */
+ 
+if(!elgg_is_logged_in()){
 ?>
-		<script>
-		
-		    $('#tiers-selection').html("<p>Processing payment, please wait...</p>");
-		    setTimeout("location.reload(true);", 5000);
-		    
-		</script>
+<div class="nodes-table account">
+	<div class="row thead">
+		<div class="cell feature">Select Domain</div>
+		<div class="cell">
+			<input type="text" placeholder="eg. www.myawesomesite.com" name="domain"/>
+		</div>
+	</div>
+</div>
 <?php 
-	} 
-
-} else {
-	
-	echo "<p>No tiers have been defined. Please make sure you have activated the minds_nodes plugin and then create some payment tiers!</p>";
-
 }
-
-elgg_set_ignore_access($ia);
