@@ -1,11 +1,15 @@
 <?php
 
-// "Buy" a free tier
-
-gatekeeper();
-elgg_load_library('elgg:pay');
+//elgg_load_library('elgg:pay');
 
 $ia = elgg_set_ignore_access();
+
+if(!elgg_is_logged_in()){
+	
+	//store in 
+	echo 'you are not logged in... we will store your request in a cookie until you create an account';
+	exit;
+}
 
 if ($tier = get_entity(get_input('tier_id'),'object')) {
     $order = new ElggObject();
@@ -26,6 +30,7 @@ if ($tier = get_entity(get_input('tier_id'),'object')) {
     $item->seller_guid = $order->seller_guid;
     if ($item->recurring == 'y') // TODO: Currently we have to set whole basket to recurring if one item repeats. Not idea.
             $recurring = true;
+	
     $items[] = $item;
 
     $order->items = serialize($items);
@@ -40,7 +45,7 @@ if ($tier = get_entity(get_input('tier_id'),'object')) {
     $order->recurring = true;
 
     if($order->amount == 0){
-	$order->status = "Completed";
+		$order->status = "Completed";
     }
 
     $order_guid = $order->save();
