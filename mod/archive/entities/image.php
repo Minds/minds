@@ -24,7 +24,13 @@ class image extends entities\file{
 		global $CONFIG; //@todo remove globals!
 		if($this->time_created <= 1407542400)
 			$size = '';
-		return $CONFIG->cdn_url . 'archive/thumbnail/' . $this->guid . '/'.$size;
+
+		$base_url = $CONFIG->cdn_url;
+		if($this->access_id != 2){
+			$base_url = \elgg_get_site_url();
+		}
+
+		return $base_url. 'archive/thumbnail/' . $this->guid . '/'.$size;
 	}
 
 	/**

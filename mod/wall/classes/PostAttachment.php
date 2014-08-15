@@ -32,7 +32,10 @@ class PostAttachment extends ElggFile{
 					$album->title = 'Post attachments';
 					$album->access_id = 2;
 					$album->container_guid = $this->container_guid;
-					$album->save();
+					$public = true;
+					if($album->container_guid != elgg_get_logged_in_user_guid())
+						$public = false;
+					$album->save($public);
 					$this->container = $album;
 				}
 				
