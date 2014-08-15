@@ -35,7 +35,7 @@ class call extends core\base{
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
 		
 		try{
-			$pool = new ConnectionPool($this->keyspace, $this->servers, null, 2);
+			$pool = new ConnectionPool($this->keyspace, $this->servers, null, 0, 800, 2000);
 		
 			$this->pool = $pool;
 		
