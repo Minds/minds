@@ -65,7 +65,7 @@ switch($mime_type){
 		$image->createThumbnails();
 		
 		//we don't know of an album yet, this is done by an alternative batch command
-		echo $image->save(false);
+		echo $image->save(get_input('force_public', false));
 		
 		//add this image to the batch
 		$batch->addToList($image->guid);

@@ -35,6 +35,7 @@ class ElggRiverItem {
 		if(is_int($attrs) || is_string($attrs)){
 			$db = new minds\core\data\call('newsfeed');
 			$data = $db->getRow($attrs);
+			$data['id'] = $attrs;
 		}
 		
 		if(is_array($attrs)){
@@ -204,7 +205,10 @@ class ElggRiverItem {
 	}
 	
 	private function removeFromTimelines(){
-		$followers = $this->subject->getFriendsOf(null, 10000, "", 'guids');
+		$followers = array();
+		if($this->subject instanceof ElggUser)
+			$followers = $this->subject->getFriendsOf(null, 10000, "", 'guids');
+
 		if(!$followers) 
 			$followers = array();
 		
@@ -225,10 +229,11 @@ class ElggRiverItem {
 		if($this->action_type == 'feature'){
 			$followers = array($this->action_type);
 		}
-			
+		
 		$db = new minds\core\data\call('timeline');	
 		foreach($followers as $follower_guid){
-			$db->removeAttributes($follower_guid, array($this->id), false);
+			if($follower_guid)
+				$db->removeAttributes($follower_guid, array($this->id), false);
 		}
 	}
 	
@@ -249,7 +254,7 @@ class ElggRiverItem {
 	 * Delete a river post
 	 */
 	function delete(){
-		 $this->removeFromTimelines();
+		$this->removeFromTimelines();
 		$db = new minds\core\data\call('newsfeed');
 		$db->removeRow($this->id);
 		

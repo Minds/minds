@@ -19,10 +19,10 @@ if($full_view){
 	
 	echo elgg_view('output/img', array('src'=>$image->getIconURL('xlarge')));
 	
-} elseif($viewtype == 'gallery' || elgg_is_xhr()) {
+} elseif($viewtype == 'gallery' ) {
 	
  	$img = elgg_view('output/img', array('src'=>$image->getIconURL('medium')));
-	echo elgg_view('output/url', array('href'=>$image->getUrl(), 'text'=>$img.'hello', 'id'=>(string)$image->guid, 'class'=>'lightbox-image', 'data-album-guid'=>$image->container_guid));
+	echo elgg_view('output/url', array('href'=>$image->getUrl(), 'text'=>$image->title, 'id'=>(string)$image->guid, 'class'=>'lightbox-image', 'data-album-guid'=>$image->container_guid));
 	
 } else {
 	

@@ -52,6 +52,7 @@ class multisite extends base{
 			$CONFIG->dataroot = unserialize($row['dataroot']);
 		else
         	$CONFIG->dataroot = "/gluster/data/minds-multisite/".$keyspace;
+		$CONFIG->cdn_url = "http://d2ka7pmjfsr8hl.cloudfront.net/$domain/";
 	}
 
 	public function getCache($domain){

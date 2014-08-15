@@ -38,6 +38,7 @@
 	<body>
 		<form id="upload" action="<?php echo elgg_add_action_tokens_to_url('/action/archive/upload'); ?>" method="POST" enctype="multipart/form-data">
 			<input type="hidden" value="Upload"/>
+			<input type="hidden" name="force_public" value="true"/>
 			<input type="file" name="fileData"/>
 			<?php if(get_input('subtype') == 'image'){?>
 			<input type="hidden" name="fileType" value="image"/>
