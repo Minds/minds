@@ -2,12 +2,13 @@
 	"name": "minds/minds",
 	"description": "The core minds social engine",
 	"require": {
-    		"twilio/sdk" : "master",
+    	"twilio/sdk" : "master",
 		"thobbs/phpcassa": "master",
 		"elasticsearch/elasticsearch": "~1.0",
-    		"abeautifulsite/jquery-minicolors": "master",
-    		"kramnorth/cinemr-php-sdk": "master",
-		"minds/minds-php-sdk": "master"
+    	"abeautifulsite/jquery-minicolors": "master",
+    	"kramnorth/cinemr-php-sdk": "master",
+		"minds/minds-php-sdk": "master",
+		"paypal/rest-api-sdk-php": "master"
    	},
 	"repositories": [{
             "type": "vcs",

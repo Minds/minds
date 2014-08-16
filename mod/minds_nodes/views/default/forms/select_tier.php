@@ -49,13 +49,15 @@ usort($tiers, function($a, $b){
 		<div class="cell feature">See the terms and conditions</div>
 		<?php 
 			foreach($tiers as $tier){
-				$class = $tier->price > 0 ? ' disabled' :'';
+				//$class = $tier->price > 0 ? ' disabled' :'';
 				$button =  elgg_view('output/url', array(
 					'is_action' => true, 
 					'id' => 'tier-select-button', 
 					'data-guid' => $tier->guid,
-					'href' => $tier->price > 0 ? '#' : elgg_get_site_url() . 'action/select_tier?tier_id='. $tier->guid, 
-					'text' => $tier->price > 0 ? 'Coming soon' : 'Select', 
+					'data-price' => $tier->price,
+					'href' => '#', 
+					//'text' => $tier->price > 0 ? 'Coming soon' : 'Select', 
+					'text' => 'Select',
 					'class' => 'elgg-button elgg-button-action'.$class,
 				));
 				echo '<div class="cell">'. $button . '</div>';
@@ -64,30 +66,28 @@ usort($tiers, function($a, $b){
 	</div>
 </div>
 
-<?php if(!elgg_is_logged_in()){ ?>
-<script>
-		$(document).ready(function(){
-	        
-	        $('a#tier-select-button').click(function(){
-			//	window.open("<?php echo elgg_get_site_url(); ?>tierlogin/?tier="+$(this).attr('data-guid'), "Please Log In", "width=800,height=650");
-	        });
-	        
-	    });
-	</script>
 <?php
-}
-
-
 /**
  * Section 2 
  * Select your domain...
  */
 ?>
-<div class="nodes-table domain">
+<div class="nodes-table domain hide">
 	<div class="row thead">
 		<div class="cell feature">Select Domain</div>
-		<div class="cell">
-			<input type="text" placeholder="eg. www.myawesomesite.com" name="domain"/>
+		<div class="cell free">
+			<input type="text" placeholder="eg. node" name="domain" disabled/> .minds.com
+		</div>
+	</div>
+	<div class="row paid">
+		<div class="cell feature">Own Domain?</div>
+		<div class="cell paid">
+			<input type="text" placeholder="eg. www.myawesomesite.com" name="domain" disabled/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell availability">
 		</div>
 	</div>
 </div>
@@ -101,13 +101,88 @@ usort($tiers, function($a, $b){
  
 if(!elgg_is_logged_in()){
 ?>
-<div class="nodes-table account">
+<div class="nodes-table account hide">
 	<div class="row thead">
-		<div class="cell feature">Select Domain</div>
+		<div class="cell feature">Create your account</div>
+		<div class="cell"></div>
+	</div>
+	<div class="row input">
+		<div class="cell custom">
+			Username
+		</div>
 		<div class="cell">
-			<input type="text" placeholder="eg. www.myawesomesite.com" name="domain"/>
+			<input type="text" placeholder="eg. einstein" name="username" disabled/>
+		</div>
+	</div>
+	<div class="row input">
+		<div class="cell custom">
+			Email
+		</div>
+		<div class="cell">
+			<input type="text" placeholder="eg. you@email.com" name="email" disabled/>
+		</div>
+	</div>
+	<div class="row input">
+		<div class="cell custom">
+			Password
+		</div>
+		<div class="cell">
+			<input type="password" placeholder="something secure!" name="password" disabled/>
+		</div>
+	</div>
+	<div class="row input">
+		<div class="cell custom">
+			<div class="elgg-button elgg-button-action create">Create!</div>
+		</div>
+	</div>
+	<div class="row response">
+		<div class="cell">
 		</div>
 	</div>
 </div>
 <?php 
 }
+
+/**
+ * Step 4. Payment
+ * 
+ */
+ 
+?>
+<div class="nodes-table payment hide">
+	<div class="row thead">
+		<div class="cell feature">Payment</div>
+		<div class="cell"></div>
+	</div>
+	<div class="row">
+		<div class="cell feature">
+			Card Type
+		</div>
+		<div class="cell">
+			VISA
+		</div>
+	</div>
+	<div class="row" style="background:#888;">
+		<div class="cell">
+			<input type="text" placeholder="Card Number" name="password" disabled/>
+		</div>
+		<div class="cell">
+			<input type="text" placeholder="CVC" name="password" disabled/>
+		</div>
+	</div>
+	<div class="row" s>
+		<div class="cell feature">
+			Card Number
+		</div>
+		<div class="cell">
+			<input type="password" placeholder="something secure!" name="password" disabled/>
+		</div>
+		<div class="cell feature">
+			CVC
+		</div>
+		<div class="cell">
+			<input type="password" placeholder="something secure!" name="password" disabled/>
+		</div>
+	</div>
+</div>
+

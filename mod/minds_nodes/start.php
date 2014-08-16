@@ -18,12 +18,14 @@ class start extends bases\plugin{
 		\elgg_register_action('minds/minds_tiers/batch', dirname(__FILE__) . '/actions/minds_tiers/batch.php', 'admin');
 		\elgg_register_action('minds/minds_tiers/delete', dirname(__FILE__) . '/actions/minds_tiers/delete.php', 'admin');
 		
+		\elgg_register_action("checkdomain", dirname(__FILE__) . "/actions/checkdomain.php", 'public');
 		\elgg_register_action("registernode", dirname(__FILE__) . "/actions/registernode.php");
 		\elgg_register_action("registernewnode", dirname(__FILE__) . "/actions/registernewnode.php");
 		\elgg_register_action("select_tier", dirname(__FILE__) . "/actions/select_tier.php", 'public');
 		\elgg_register_action("upgrade_to", dirname(__FILE__) . "/actions/upgrade_to.php");
 		\elgg_register_action("renamenode", dirname(__FILE__) . "/actions/renamenode.php");
 	
+		\elgg_extend_view('js/elgg', 'minds_nodes/js');
 		\elgg_extend_view('css/elgg', 'minds_nodes/css');
 	
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pagesetup'));

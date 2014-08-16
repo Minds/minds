@@ -161,7 +161,51 @@ div.register-popup {
 	color:#4690D6;
 }
 
+.nodes-table.hide .row.thead .cell{
+	font-weight:bold;
+	color:#CCC;
+}
+
 .domain input{
-	padding:32px;
+	padding:16px;
+	margin:16px;
+	width:600px;
+}
+.domain .paid{
+	display:none;
+	padding:16px;
+}
+.domain .free{
+	width:600px;
+	text-align:left;
+}
+.domain .free input{
+	margin:0;
+	width:200px;
+}
+
+.domain .availability{
+	width:100%;
+	text-align:left;
+}
+
+
+.account .cell.custom{
+	width:100px;
+	text-align:right;
+}
+.account .cell{
 	width:800px;
+	text-align:left;
+}
+.account .cell input{
+	width:800px;
+	padding:16px;
+}
+.account.hide .elgg-button{
+	border:1px solid #DDD;
+	background:#EEE;
+}
+.account .elgg-button{
+	min-width:80px;
 }
