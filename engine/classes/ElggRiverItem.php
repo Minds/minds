@@ -247,6 +247,7 @@ class ElggRiverItem {
 			$this->id = $g->generate();
 			$this->addToTimeLines();
 		}
+		error_log($this->id. json_encode($this->toArray()));
 		return $db->insert($this->id, $this->toArray());
 	}
 	
