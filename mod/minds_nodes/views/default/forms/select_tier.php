@@ -162,26 +162,22 @@ if(!elgg_is_logged_in()){
 			VISA
 		</div>
 	</div>
-	<div class="row" style="background:#888;">
+	<div class="row">
 		<div class="cell">
-			<input type="text" placeholder="Card Number" name="password" disabled/>
-		</div>
-		<div class="cell">
-			<input type="text" placeholder="CVC" name="password" disabled/>
+			<input type="text" placeholder="Card Number" name="number" disabled/> <input type="text" placeholder="CVV" name="sec" disabled/>
+
+
+			<input type="dropdown" placeholder="Expiry Month (mm)" name="month" />
+
+			<input type="text" placeholder="Expiry Year (yyyy)" name="year" disabled/>
 		</div>
 	</div>
-	<div class="row" s>
-		<div class="cell feature">
-			Card Number
+	<div class="row">
+		<div class="cell">
+			<input type="text" placeholder="First Name" name="name" disabled/>
 		</div>
 		<div class="cell">
-			<input type="password" placeholder="something secure!" name="password" disabled/>
-		</div>
-		<div class="cell feature">
-			CVC
-		</div>
-		<div class="cell">
-			<input type="password" placeholder="something secure!" name="password" disabled/>
+			<input type="text" placeholder="Last Name" name="name2" disabled/>
 		</div>
 	</div>
 </div>

@@ -97,6 +97,7 @@ minds.nodes.init = function() {
 		$('.account .input').hide();
 		$('.account .response .cell').text('password typed');
 		$('.payment').removeClass('hide');
+		$('.payment input').enable();
 	});
 	
 	
@@ -106,6 +107,24 @@ minds.nodes.init = function() {
 	 * 1) Accept card details (really?)
 	 * 2) Poll minds.com to see if the payment has been verified. 
 	 */
+	$(document).on('click', '.payment input', function(e){
+		elgg.action( elgg.get_site_url() + 'action/payment',
+			{
+				data : {
+					tier_guid : minds.nodes.tier,
+					type : 'visa',
+					number : $('input[name=number]').val(),
+					sec : $('input[name=sec]').val(),
+					month : $('input[name=month]').val(),
+					year : $('input[name=year]').val(),
+					name : $('input[name=name]').val(),
+					name2 : $('input[name=name2]').val()
+				},
+				success: function(data){
+					console.log(data);
+				}
+		});
+	});
 	
 }
 elgg.register_hook_handler('init', 'system', minds.nodes.init);

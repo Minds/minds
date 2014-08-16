@@ -19,6 +19,7 @@ class start extends bases\plugin{
 		\elgg_register_action('minds/minds_tiers/delete', dirname(__FILE__) . '/actions/minds_tiers/delete.php', 'admin');
 		
 		\elgg_register_action("checkdomain", dirname(__FILE__) . "/actions/checkdomain.php", 'public');
+		\elgg_register_action("payment", dirname(__FILE__) . "/actions/payment.php", 'public');
 		\elgg_register_action("registernode", dirname(__FILE__) . "/actions/registernode.php");
 		\elgg_register_action("registernewnode", dirname(__FILE__) . "/actions/registernewnode.php");
 		\elgg_register_action("select_tier", dirname(__FILE__) . "/actions/select_tier.php", 'public');

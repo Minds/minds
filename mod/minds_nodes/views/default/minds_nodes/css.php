@@ -209,3 +209,19 @@ div.register-popup {
 .account .elgg-button{
 	min-width:80px;
 }
+
+.payment .row{
+	background:#DDD;
+}
+.payment input{
+	padding:16px;
+}
+.payment input[name=number]{
+	width:400px;
+}
+.payment input[name=sec]{
+	width:60px;
+}
+.payment input[name=month]{
+	width:160px;
+}
