@@ -136,7 +136,8 @@ if(!elgg_is_logged_in()){
 		</div>
 	</div>
 	<div class="row response">
-		<div class="cell">
+		<div class="cell"></div>
+		<div class="cell response">
 		</div>
 	</div>
 </div>
@@ -154,31 +155,129 @@ if(!elgg_is_logged_in()){
 		<div class="cell feature">Payment</div>
 		<div class="cell"></div>
 	</div>
-	<div class="row">
+	<div class="row input">
 		<div class="cell feature">
-			Card Type
+			First Name
 		</div>
-		<div class="cell">
-			VISA
-		</div>
-	</div>
-	<div class="row">
-		<div class="cell">
-			<input type="text" placeholder="Card Number" name="number" disabled/> <input type="text" placeholder="CVV" name="sec" disabled/>
-
-
-			<input type="dropdown" placeholder="Expiry Month (mm)" name="month" />
-
-			<input type="text" placeholder="Expiry Year (yyyy)" name="year" disabled/>
-		</div>
-	</div>
-	<div class="row">
 		<div class="cell">
 			<input type="text" placeholder="First Name" name="name" disabled/>
+		</div>
+		<div class="cell feature">
+			Last Name
 		</div>
 		<div class="cell">
 			<input type="text" placeholder="Last Name" name="name2" disabled/>
 		</div>
 	</div>
+	<div class="row input">
+		<div class="cell feature">
+			Card Type
+		</div>
+		<div class="cell type">
+			<a class="visa">Visa</a>
+			<a class="mastercard">MasterCard</a>
+			<a class="amex">Amex</a>
+		</div>
+	</div>
+	<div class="row input">
+		<div class="cell feature">
+			Card Number
+		</div>
+		<div class="cell">
+			<input type="text" placeholder="Card Number" name="number" disabled/> 
+		</div>
+		
+		<div class="cell feature">
+			Expires
+		</div>
+		<div class="cell">
+			<select name="month">
+				<option value="" disabled selected>MM</option>
+				<option value="01">01</option>
+				<option value="02">02</option>
+				<option value="03">03</option>
+				<option value="04">04</option>
+				<option value="05">05</option>
+				<option value="06">06</option>
+				<option value="07">07</option>
+				<option value="08">08</option>
+				<option value="09">09</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+			</select>
+			
+			<select name="year">
+				<option value="" disabled selected>YYYY</option>
+				<option value="01">2014</option>
+				<option value="02">2015</option>
+				<option value="03">2016</option>
+				<option value="04">2017</option>
+				<option value="05">2018</option>
+				<option value="06">2019</option>
+				<option value="07">2020</option>
+			</select>
+
+		</div>
+	</div>
+	
+	<div class="row input">
+		<div class="cell feature">
+			CVV
+			<span class="helper">
+				Last 3 or 4 digits found on the signature strip
+			</span>
+		</div>
+		<div class="cell">
+			<input type="text" placeholder="CVV" name="sec" disabled/> 
+		</div>
+		<div class="cell">
+			<div class="elgg-button elgg-button-action create">Pay!</div>
+		</div>
+	</div>
+
+	<div class="row response">
+		<div class="cell">
+		</div>
+	</div>
+
+</div>
+
+<div class="nodes-table referrer hide">
+	<div class="row thead">
+		<div class="cell feature">Referrer</div>
+		<div class="cell"></div>
+	</div>
+	
+	<div class="row">
+		<div class="cell">
+			<input type="text" placeholder="Enter the username of the person who referred you to Minds." name="referrer" disabled/> 
+		</div>
+	</div>
+
+	<div class="row response">
+		<div class="cell">
+		</div>
+	</div>
+
+</div>
+
+
+
+<div class="nodes-table launch hide">
+	<div class="row thead">
+		<div class="cell feature">Launch</div>
+		<div class="cell"></div>
+	</div>
+	
+	<div class="row response">
+		<div class="cell">
+			Your node is now complete. Pleease click launch in order to complete your transaction.
+		</div>
+		<div class="cell">
+			<div class="elgg-button elgg-button-action create">Launch.</div>
+		</div>
+	</div>
+
 </div>
 

@@ -209,19 +209,48 @@ div.register-popup {
 .account .elgg-button{
 	min-width:80px;
 }
+.payment.hide{
 
+}
 .payment .row{
-	background:#DDD;
+
 }
 .payment input{
 	padding:16px;
 }
 .payment input[name=number]{
-	width:400px;
+	
 }
 .payment input[name=sec]{
 	width:60px;
 }
 .payment input[name=month]{
 	width:160px;
+}
+.payment .type a{
+	padding-right:16px;
+}
+.payment .type a:hover{
+		cursor:pointer;
+		text-decoration:none;
+	}
+.payment select {
+   background-color:#FFF;
+   width: auto;
+   padding: 5px;
+   font-size: 13px;
+   border: 1px solid #ccc;
+   height: 34px;
+}
+.payment .helper{
+	clear: both;
+	width: 100%;
+	float: left;
+	font-size: 11px;
+	color: #888;
+	padding: 16px 0;
+}
+
+.launch .response{
+	display:none;
 }

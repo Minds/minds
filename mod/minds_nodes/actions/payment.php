@@ -92,7 +92,7 @@ try {
 	var_dump($ex->getData());
 	exit(1);
 }
-var_dump('payment id' . $payment->getID());
+
 
 /**
  * Now save the card so we can continue to charge
@@ -113,7 +113,9 @@ try {
 	exit(1);
 }
 
- var_dump('card saved too'.$card->getID());
- 
- exit;
- 
+echo json_encode(array(
+	'success' => array(
+		'transaction_id' => $payment->getID()
+)));
+
+exit; 
