@@ -1666,13 +1666,13 @@ class ElggInstaller {
 		$sizes = array(
 	                'logo_main' => array(
 	            //'w' => 400,
-	            'h' => 200,
+	            'h' => 400,
 	            'square' => false,
 	            'upscale' => true
 	                ),
 	                'logo_topbar' => array(
-	            'w' => 78,
-	            'h' => 30,
+	          //  'w' => 78,
+	            'h' => 100,
 	            'square' => false,
 	            'upscale' => true
                 ));
