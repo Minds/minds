@@ -86,7 +86,7 @@ HTML;
 if($entities){
 	$content = elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true);
 } else {
-	$content = 'No content';
+	$content = '';
 }
 
 $params = array(	'content'=> $content, 
