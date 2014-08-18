@@ -11,7 +11,7 @@ $stats= "<div class='stats'><p><b>Tier: </b>$tier</p>
 ";
 
 if (!$vars['hide_buttons']) {
-    if($node->paid()){
+   // if($node->paid()){
             if($node->launched){
                     //display stats
                     $link =  elgg_view('output/url', array('text'=>'Go to my node', 'href'=>$node->getURL(), 'class'=>'elgg-button elgg-button-action'));
@@ -22,13 +22,13 @@ if (!$vars['hide_buttons']) {
                     $setup_link =  elgg_view('output/url', array('text'=>'Setup', 'href'=>'nodes/node/'.$node->guid, 'class'=>'elgg-button elgg-button-action'));
                     $content = $setup_link;
             }
-    } else {
+   // } else {
             //promt for payment
           //  $order = $node->getOrder();
            
            // $order_link = elgg_view('output/url', array('text'=>'click here', 'href'=>$order->getURL()));
            // $content = "We are still awaiting payment from you. Please $order_link for more.";
-    }
+  //  }
 }
 
 $params = array(
