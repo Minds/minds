@@ -45,6 +45,11 @@ minds.nodes.init = function() {
 	$(document).on('keyup', '.domain input', function(e){
 		e.preventDefault();
 		
+		//remove spaces
+		if (e.keyCode == 32) { 
+      		$(this).val($(this).val().replace(/ +?/g, ''));
+		}
+		
 		if($(this).parent().hasClass('paid')){
 			/**
 			 * We can't check personal domains..
@@ -119,7 +124,7 @@ minds.nodes.init = function() {
 				$('.account .response .response').text('Your account was created.');
 				
 				if(minds.nodes.price == 0){
-					$('.launch .response').display('display', 'row-table');
+					$('.launch .response').css('display', 'row-table');
 				}
 				
 			}, 
