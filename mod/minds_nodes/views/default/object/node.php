@@ -2,10 +2,6 @@
 
 $node = $vars['entity'];
 
-if(!elgg_instanceof($node,'object', 'node')){
-return false;
-}
-
 $tier = $node->getTier()->title;
 $own_domain = $node->allowedDomain() ? 'yes' : 'no';
 $expire = $node->expires();
@@ -28,10 +24,10 @@ if (!$vars['hide_buttons']) {
             }
     } else {
             //promt for payment
-            $order = $node->getOrder();
-            if(!$order){ return false; }
-            $order_link = elgg_view('output/url', array('text'=>'click here', 'href'=>$order->getURL()));
-            $content = "We are still awaiting payment from you. Please $order_link for more.";
+          //  $order = $node->getOrder();
+           
+           // $order_link = elgg_view('output/url', array('text'=>'click here', 'href'=>$order->getURL()));
+           // $content = "We are still awaiting payment from you. Please $order_link for more.";
     }
 }
 
