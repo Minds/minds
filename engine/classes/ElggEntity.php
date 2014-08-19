@@ -1207,7 +1207,7 @@ abstract class ElggEntity extends ElggData implements
 			}
 	
 			// Delete contained owned and otherwise releated objects (depth first)
-			if ($recursive) {
+			/*if ($recursive) {
 				// Temporary token overriding access controls
 				// @todo Do this better.
 				static $__RECURSIVE_DELETE_TOKEN;
@@ -1223,12 +1223,7 @@ abstract class ElggEntity extends ElggData implements
 					'limit' => 0
 				);
 					
-				/*$batch = new ElggBatch('elgg_get_entities', $options);
-				$batch->setIncrementOffset(false);
 	
-				foreach ($batch as $e) {
-					$e->delete(true);
-				}*/
 				$entities = elgg_get_entities($options);
 				foreach($entities as $e){
 					$e->delete(false);
@@ -1237,7 +1232,7 @@ abstract class ElggEntity extends ElggData implements
 				access_show_hidden_entities($entity_disable_override);
 				$__RECURSIVE_DELETE_TOKEN = null;
 				elgg_set_ignore_access($ia);
-			}
+			}*/
 	
 			// Now delete the entity itself
 			$db = new minds\core\data\call('entities');
