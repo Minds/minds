@@ -872,7 +872,7 @@ function elgg_get_entities(array $options = array()) {
 			
 					$entity = entity_row_to_elggstar($newrow);
 					if(elgg_check_access($entity))
-					$entities[] = $entity;
+						$entities[] = $entity;
 				}
 			}
 		} catch(Exception $e){
@@ -973,7 +973,6 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 	if(!$entities){
 		$entities = array();
 	}
-
 	return $viewer($entities, $options);
 }
 

@@ -8,7 +8,7 @@ class MindsOrientation{
 	public $steps = array(
 		'avatar',
 		'channel', 
-		'deck',
+		//'deck',
 		'subscribe',
 		'post',
 		'group',
@@ -19,11 +19,9 @@ class MindsOrientation{
 	);
 	
 	public function __construct(){
-		
 	}
 	
 	public function run($step){
-		
 		if(!$step && !$step = elgg_set_plugin_user_setting('orientation_last_step', $step, elgg_get_logged_in_user_guid()))
 			$step = 'avatar';
 		
@@ -47,7 +45,9 @@ class MindsOrientation{
 	}
 	
 	public function render($step, $vars = array()){
-		
+		if(minds\core\minds::detectMultisite() && $key = array_search('deck', $this->steps) !== false) {
+                    unset($this->steps[$key]);
+                } 	
 		$content = elgg_view('orientation/register', array('step'=>$step, 'steps'=>$this->steps, 'vars'=>$vars));
 		
 		$body = elgg_view_layout('one_column', array('content'=>$content));

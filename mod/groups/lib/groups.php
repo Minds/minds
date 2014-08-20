@@ -57,9 +57,7 @@ function groups_handle_all_page() {
 			}
 			break;
 	}
-	
 	$filter = elgg_view('groups/group_sort_menu', array('selected' => $selected_tab));
-	
 	
 //	$sidebar = elgg_view('groups/sidebar/find');
 //	$sidebar .= elgg_view('groups/sidebar/featured');

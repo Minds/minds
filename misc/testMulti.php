@@ -5,6 +5,37 @@ $DOMAIN = 'www.word.am';
 
 require_once('/var/www/multisite/vendor/autoload.php');
 
+$json = file_get_contents('https://www.minds.io/misc/testMulti.php?12');
+$data = json_decode($json, true);
+foreach($data as $guid => $row){
+
+	 $entities =  new minds\core\data\call('entities',  'multisite_a12bcbda2cc7075fe380bdb5b2c1d2ad', array('10.0.9.10'));
+	$entities_by_time =  new minds\core\data\call('entities_by_time',  'multisite_a12bcbda2cc7075fe380bdb5b2c1d2ad', array('10.0.9.10')); 
+
+	foreach($data as $k => $data){
+
+		 $entities_by_time->insert($k, $data);
+
+	}
+
+exit;
+
+	if(is_array($row)){
+		$entities->insert($guid, $row);
+		$entities_by_time->insert('object', array($guid=>$guid));
+		if(isset($row['subtype']))
+			$entities_by_time->insert('object:'.$row['subtype'], array($guid=>$guid));
+
+		if(isset($row['owner_guid'])){
+			$entities_by_time->insert('object:'.$row['subtype'].':user:'.$row['owner_guid'], array($guid=>$guid));
+			 $entities_by_time->insert('object:user:'.$row['owner_guid'], array($guid=>$guid));
+		}
+	
+		echo "$guid \n";
+	}
+}
+
+exit;
 $column_families = array( 'user_index_to_guid');
 foreach($column_families as $cf){
 
@@ -120,7 +151,7 @@ exit;
 	exit;
 }
 
-/*require_once(dirname(dirname(__FILE__)) . '/engine/start.php');
+/*require_once(dirname(dirname(__FILE__)) . '/engine/start.phpe);
 global $CONFIG;
 //var_dump($CONFIG->cassandra);
 //exit;

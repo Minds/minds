@@ -83,7 +83,7 @@ class PostAttachment extends ElggFile{
 
 				move_uploaded_file($file['tmp_name'], $fileobj->getFilenameOnFilestore());
 
-				return $guid = $fileobj->save();
+				return $guid = $fileobj->save(false);
 			}
 	}
 	

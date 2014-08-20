@@ -18,7 +18,14 @@ $items = elgg_get_entities(array(
 			'limit' => 0
 		));
 if(!$items){
-	return false;
+	$items = array(
+		new ElggObject(array(
+			'title' => 'Click here to customise your carousel.',
+			'href' => elgg_get_site_url() . 'admin/appearance/carousel',
+			'ext_bg' => 'http://d2ka7pmjfsr8hl.cloudfront.net/www.minds.org//carousel/background/346019177162608640/1407873642/0'
+		))
+	);
+//	return false;
 }
 //sort the tiers by price
 usort($items, function($a, $b){
@@ -52,9 +59,11 @@ $(document).ready(function() {
 
 			$class = $i==0 ?'active' : '';
  			echo "<a class=\"item $class\" $link_extras>";
-			//echo '<div>';
-			//echo '<h3>' . $subtitle . '</h3>';
-			$bg =  $CONFIG->cdn_url . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache";
+			if(isset($item->ext_bg) && $item->ext_bg)
+				$bg = $item->ext_bg;
+			else 
+				$bg =  $CONFIG->cdn_url . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache";
+	
 			echo "<img src=\"$bg\" />";
 			echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><div class=\"inner\" style=\"background:$item->shadow\"><h3>$item->title</h3></div></div>";
 	

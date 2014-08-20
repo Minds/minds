@@ -45,10 +45,10 @@ class album extends object{
 	 * Extend the default entity save function to update the remote service
 	 * 
 	 */
-	public function save(){
+	public function save($public = true){
 		$this->super_subtype = 'archive';
 		$this->access_id = 2;
-		parent::save(true);
+		parent::save($public);
 		return $this->guid;
 	}
 	
