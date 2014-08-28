@@ -48,7 +48,7 @@ if ($type == 'entity') {
 		$entity -> save();
 
 		echo 'selected';
-		notification_create(array($entity -> getOwnerGUID()), elgg_get_logged_in_user_guid(), $entity -> guid, array('notification_view' => 'like'));
+		//notification_create(array($entity -> getOwnerGUID()), elgg_get_logged_in_user_guid(), $entity -> guid, array('notification_view' => 'like'));
 		\elgg_trigger_plugin_hook('notification', 'all', array(
 				'to' => array($entity->getOwnerGuid()),
 				'object_guid'=>$entity->guid,

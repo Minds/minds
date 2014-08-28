@@ -32,6 +32,9 @@ if(!elgg_is_logged_in()){
 	unset($tabs['subscriptions']);
 }
 
+if(!minds\core\plugins::isActive('analytics'))
+	unset($tabs['trending']);
+
 //echo elgg_view('navigation/tabs', array('tabs' => $tabs));
 foreach ($tabs as $name => $tab) {
 		

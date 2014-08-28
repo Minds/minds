@@ -472,7 +472,7 @@ function minds_river_menu_setup($hook, $type, $return, $params) {
 			$return[] = ElggMenuItem::factory($options);
 		}
 		
-		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
+		$allowedReminds = array('wallpost', 'video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
 		if($object && in_array($object->getSubtype(), $allowedReminds)){
 			$options = array(
@@ -528,7 +528,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		$full = elgg_extract('full_view', $params, true);
 
 	if (elgg_is_logged_in()) {		
-		$allowedReminds = array('wallpost', 'kaltura_video', 'album', 'image', 'tidypics_batch', 'blog');
+		$allowedReminds = array('wallpost', 'video', 'album', 'image', 'tidypics_batch', 'blog');
 		//Remind button
 		if(in_array($entity->getSubtype(), $allowedReminds)){
 				$options = array(
