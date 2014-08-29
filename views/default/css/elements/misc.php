@@ -1065,20 +1065,19 @@ li.elgg-menu-item-rss{
 .carousel-inner > .item > .carousel-caption{
 	position: absolute;
 	top: 120px;
-	left: 50%;
-	width:auto;
+	left: 0;
+	width:100%;
 	height: auto;
 	font-weight:lighter;
 	z-index:2;
 }
 .carousel-inner > .item > .carousel-caption > .inner{
-	/* margin: 0 50px; */
 	width: auto;
+	margin:auto;
 	padding: 10px 13px;
 	/*background: rgba(000,000,000,0.4);*/
-	float: left;
 	position: relative;
-	left: -50%;
+	display:table;
 	max-width:90%;	
 }
 .carousel-inner > .item > .carousel-caption h3{
