@@ -423,7 +423,7 @@ li .excerpt a{
 	z-index:1;
 }
 .carousel-fat .elgg-menu-right-filter{
-	margin:50vh 0;
+	margin:50vh 0 0 0;
 }
 .elgg-menu-right-filter{
 	float:right;
@@ -1038,6 +1038,14 @@ li.elgg-menu-item-rss{
 .carousel-fat .carousel-inner > .item > img {
 	top:-20vh;
 	height:auto;
+}
+
+.carousel-fat .elgg-layout{
+	min-height:0;
+}
+.carousel-fat .minds-body-header{
+	margin:0;
+	padding:0;
 }
 
 .carousel .item.active{
