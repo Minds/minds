@@ -1029,6 +1029,9 @@ li.elgg-menu-item-rss{
 .carousel-fat .minds-body-header{
 	height:100vh;
 }
+.carousel-fat .carousel{
+	height:100vh;
+}
 .carousel-fat .carousel .item{
 	height:100vh;
 }
@@ -1100,6 +1103,10 @@ li.elgg-menu-item-rss{
 	z-index: 1;
 	float: none;
 }
+.carousel-fat .frontpage-signup{
+	margin-top:20vh;
+}
+	
 .frontpage-signup input{
 	width: 136px;
 	margin: 4px;
