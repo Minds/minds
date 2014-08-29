@@ -1065,8 +1065,8 @@ li.elgg-menu-item-rss{
 .carousel-inner > .item > .carousel-caption{
 	position: absolute;
 	top: 120px;
-	left: 10px;
-	width:100%;
+	left: 50%;
+	width:auto;
 	height: auto;
 	font-weight:lighter;
 	z-index:2;
@@ -1077,8 +1077,8 @@ li.elgg-menu-item-rss{
 	padding: 10px 13px;
 	/*background: rgba(000,000,000,0.4);*/
 	float: left;
-	position: absolute;
-	left: 4%;
+	position: relative;
+	left: -50%;
 	max-width:90%;	
 }
 .carousel-inner > .item > .carousel-caption h3{
