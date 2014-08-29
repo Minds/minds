@@ -96,4 +96,7 @@ $params = array(	'content'=> $content,
 
 $body = elgg_view_layout('one_column', $params);
 
-echo elgg_view_page('', $body, 'default', array('class'=>'index'));
+$class = 'index ';
+$class .= elgg_get_plugin_setting('style','minds') == 'fat' ? 'carousel-fat' : 'carousel-thin';
+
+echo elgg_view_page('', $body, 'default', array('class'=>$class));

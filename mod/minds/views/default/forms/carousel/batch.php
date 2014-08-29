@@ -10,6 +10,12 @@ elgg_load_css('spectrum');
 $buttons = elgg_view('input/submit', array('name'=>'add','class'=>'elgg-button elgg-button-action', 'value'=>'+'));
 $buttons .= elgg_view('input/submit', array('name'=>'submit','class'=>'elgg-button elgg-button-action', 'value'=>'Save'));
 
+if(elgg_get_plugin_setting('style','minds') != 'fat'){
+	$buttons .= elgg_view('input/submit', array('name'=>'fat','class'=>'elgg-button elgg-button-action', 'value'=>'Use Fat (full page)'));
+} else {
+	$buttons .= elgg_view('input/submit', array('name'=>'thin','class'=>'elgg-button elgg-button-action', 'value'=>'Use Thin'));
+}
+
 echo $buttons;
  
 $items = elgg_get_entities(array(
@@ -26,7 +32,7 @@ usort($items, function($a, $b){
 echo '<div class="carousel-admin-items">';
 
 foreach($items as $item){
-	echo '<div class="carousel-admin-wrapper" style="background:#888 url('. elgg_get_site_url() . 'carousel/background/'.$item->guid.'/'.$item->last_updated .')">';
+	echo '<div class="carousel-admin-wrapper" style="background:#888 url('. elgg_get_site_url() . 'carousel/background/'.$item->guid.'/'.$item->last_updated .'/0/'.elgg_get_plugin_setting('style','minds').')">';
 		echo elgg_view('input/submit', array('name'=>'delete:'.$item->guid,'class'=>'elgg-button elgg-button-action remove', 'value'=>'x'));
 		echo "<div class=\"drag entypo\">&#59404;</div>";
 		$href = elgg_view('input/text', array('name'=>"$item->guid:href", 'class'=>'carousel-href', 'value'=>$item->href, 'placeholder'=>'Enter a url here... (optional)'));

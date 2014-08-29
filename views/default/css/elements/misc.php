@@ -416,10 +416,14 @@ li .excerpt a{
 /***************
  **CUSTOMINDEX**
  **************/
+
 .front-page-buttons{
 	margin:30px 0 0;
 	float:left;
 	z-index:1;
+}
+.carousel-fat .elgg-menu-right-filter{
+	margin:50vh 0;
 }
 .elgg-menu-right-filter{
 	float:right;
@@ -997,6 +1001,8 @@ li.elgg-menu-item-rss{
 	color:#F8F8F8;
 	/*color:#222;*/
 }
+
+
 .carousel{
 	position: absolute;
 	top: 0;
@@ -1019,6 +1025,21 @@ li.elgg-menu-item-rss{
 	position: absolute;
 	display:block;
 }
+
+.carousel-fat .minds-body-header{
+	height:100vh;
+}
+.carousel-fat .carousel .item{
+	height:100vh;
+}
+.carousel-fat .carousel .item > .carousel-caption{
+	top: 30vh;
+}
+.carousel-fat .carousel-inner > .item > img {
+	top:-20vh;
+	height:auto;
+}
+
 .carousel .item.active{
 	opacity: 1;
 }
