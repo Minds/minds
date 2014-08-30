@@ -80,8 +80,10 @@ function minds_init(){
 	//subscribe users to the minds channel once they register
 	elgg_register_plugin_hook_handler('register', 'user', 'minds_subscribe_default', 1);
 	
+	\elgg_register_admin_menu_item('configure', 'donations', 'monitization');
 	
 	$actionspath = elgg_get_plugins_path() . "minds/actions";
+	elgg_register_action("minds/donations","$actionspath/minds/donations.php");
 	elgg_register_action("minds/feature","$actionspath/minds/feature.php");
 	elgg_register_action("minds/river/delete", "$actionspath/river/delete.php");
 	elgg_register_action("minds/upload", "$actionspath/minds/upload.php");

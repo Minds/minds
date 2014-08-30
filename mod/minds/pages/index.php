@@ -47,7 +47,7 @@ if(!elgg_is_logged_in()){
 //if(strpos(elgg_get_site_url(), 'www.minds.com/') !== FALSE)
 //	$subtitle = "$countdown more human sign-ups until automatic global <a href='release'><b>code release</b></a>.";
 if(!get_input('ajax'))
-$title = elgg_view('output/carousel', array('divs'=>$titles_array, 'subtitle'=> $subtitle));
+	$title = elgg_view('output/carousel', array('divs'=>$titles_array, 'subtitle'=> $subtitle));
 
 $featured_item_class = $filter == 'featured' ? 'elgg-state-selected' : null;
 $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
@@ -55,7 +55,8 @@ $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;
 $trending_menu = elgg_view_menu('trending');
 
 if(elgg_is_sticky_form('register'))
-extract(elgg_get_sticky_values('register'));
+	extract(elgg_get_sticky_values('register'));
+	
 $signup_form = elgg_is_logged_in() ? '' : <<<HTML
 <div class="frontpage-signup">
 		<form action="action/register">
@@ -67,6 +68,22 @@ $signup_form = elgg_is_logged_in() ? '' : <<<HTML
 		</form>
 	</div>
 HTML;
+
+/** Hacky and shouldn't be here **/
+$donations_box = '';
+$paypal = elgg_get_plugin_setting('paypal', 'minds');
+$bitcoin = elgg_get_plugin_setting('bitcoin', 'minds');
+if($paypal || $bitcoin){
+	$donations_box = '<div class="donations-box">';
+		
+	if($paypal)
+		$donations_box .= '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business='.urlencode($paypal) .'&lc=US&item_name='.$CONFIG->site->name.'%2e&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHostedGuest" class="donations-button donations-button-paypal" target="_blank"> <span class="entypo"> &#59409; </span> Click to donate USD </a>'; 
+	if($bitcoin)
+		$donations_box .= '<a class="donations-button donations-button-bitcoin"> <span class="entypo"> &#59408; </span> Donate Bitcoins to '.$bitcoin.'</a>';
+	$donations_box .= '</div>';
+
+}
+
 $header = <<<HTML
 <div class="elgg-head homepage clearfix">
 	$title
@@ -80,6 +97,7 @@ $header = <<<HTML
                 </li>
 	</ul>
 	$signup_form
+	$donations_box
 </div>
 HTML;
 

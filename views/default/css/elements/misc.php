@@ -1207,4 +1207,31 @@ div.register-popup {
 	display:block;
 }
 
+/**
+ * TEMP DONATIONS
  */
+.donations-box{
+	position:absolute;
+	top:80vh;
+	left:50%;
+	margin:auto;
+	margin-left:-300px;
+	width:600px;
+	overflow:visible;
+}
+
+.donations-button{
+	background:#4690D6;
+	padding:12px 24px;
+	margin:4px;
+	border-radius:5px;
+	color:#FFF;
+}
+.donations-button:hover{
+	box-shadow:0 0 3px #FFF;
+	color:#FFF;
+	text-decoration:none;
+}
+.donations-button .entypo{
+	padding-right:12px;
+}

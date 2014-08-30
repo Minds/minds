@@ -15,7 +15,7 @@
     {
       "uid": "2cb15eb2b295ee3c33fab1530e18a924",
       "css": "bitcoin",
-      "code": 59406,
+      "code": 59408,
       "src": "fontawesome"
     },
     {
@@ -532,6 +532,12 @@
       "uid": "21adad41ffebf469b2370d26bcb8a3c4",
       "css": "linkedin-circled",
       "code": 62233,
+      "src": "entypo"
+    },
+    {
+      "uid": "8d584f31a5d54de313f1f3da28708ec0",
+      "css": "paypal",
+      "code": 59409,
       "src": "entypo"
     },
     {
