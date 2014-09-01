@@ -272,7 +272,7 @@ if(!elgg_is_logged_in()){
 	
 	<div class="row response">
 		<div class="cell">
-			Your node is now complete. Pleease click launch in order to complete your transaction.
+			Your node is now complete. Please click launch in order to complete your transaction.
 		</div>
 		<div class="cell">
 			<div class="elgg-button elgg-button-action create">Launch.</div>

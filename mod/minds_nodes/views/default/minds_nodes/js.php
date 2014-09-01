@@ -124,7 +124,7 @@ minds.nodes.init = function() {
 				$('.account .response .response').text('Your account was created.');
 				
 				if(minds.nodes.price == 0){
-					$('.launch .response').css('display', 'row-table');
+					$('.launch .response').css('display', 'table-row');
 				}
 				
 			}, 
