@@ -15,8 +15,22 @@ class search extends core\page implements interfaces\page{
 	 * Get requests
 	 */
 	public function get($pages){
+	
+		if(isset($pages[0]) && $pages[0] == 'index'){
+			foreach(\elgg_get_entities(array('type'=>'user','limit'=>500)) as $entity){
+				if($entity->access_id == 2)
+					\minds\plugin\search\start::createDocument($entity);
+			}
+			foreach(\elgg_get_entities(array('type'=>'object','limit'=>500)) as $entity){
+				if($entity->access_id == 2)
+					\minds\plugin\search\start::createDocument($entity);
+			}
+			echo 'done';
+			exit;
+		}
+		
 		global $CONFIG;
-		$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search'))));
+		$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search')?:'localhost')));
 		$params = array();
 		
 		$query = $_GET['q'];
@@ -32,6 +46,10 @@ class search extends core\page implements interfaces\page{
 		$body['query']['query_string']['fields'] = array('_all', 'name^5', 'title^8');
 		
 		$params['index'] = $CONFIG->cassandra->keyspace; //we use the keyspace as this is unique to each site. why complicate things?
+		
+		if(isset($pages[0]))
+			$params['type'] = $pages[0];
+		
 		$params['size'] = \get_input('limit');
 		$params['from'] = \get_input('offset');
 		$params['body']  = $body;

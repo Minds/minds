@@ -45,7 +45,7 @@ $placeholder = elgg_echo('search');
 <form class="<?php echo $class; ?>" action="<?php echo elgg_get_site_url(); ?>search" method="get">
 	<fieldset>
 		<!--<input type="text" class="search-input" size="21" name="q" value="<?php echo elgg_echo('search'); ?>" onblur="if (this.value=='') { this.value='<?php echo elgg_echo('search'); ?>' }" onfocus="if (this.value=='<?php echo elgg_echo('search'); ?>') { this.value='' };" />-->
-		<?php echo elgg_view('input/text', array('name'=> 'q','value'=>get_input('q'), 'placeholder'=> $placeholder, 'title'=>'Hit the enter key to go!!')); ?>
+		<?php echo elgg_view('input/autocomplete', array('name'=> 'q','value'=>get_input('q'), 'placeholder'=> $placeholder, 'title'=>'Hit the enter key to go!!')); ?>
 		<input type="hidden" name="search_type" value="all" />
 		<input type="submit" value="<?php echo elgg_echo('search:go'); ?>" class="submit" />
 	</fieldset>
