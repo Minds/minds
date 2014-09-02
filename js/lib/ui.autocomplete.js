@@ -13,10 +13,11 @@ elgg.autocomplete.init = function() {
 	$('.elgg-input-autocomplete').devbridgeAutocomplete({
 		serviceUrl: elgg.get_site_url() + 'search/?view=json&limit=4', //gets set by input/autocomplete view
 		params : {
-			type : $(this).attr('data-type')
+			type : $('.user-lookup').attr('data-type')
 		},
 		paramName: 'q',
 		transformResult: function(response) {
+			
 			response = JSON.parse(response);
 	
 			var result = [];			
@@ -51,7 +52,10 @@ elgg.autocomplete.init = function() {
 
 			if($(this).attr('name')=='q'){
 				window.location.href = suggestion.data.url;
-			}		
+			} else if($(this).attr('data-type') == 'user'){
+				console.log(suggestion);
+				$(this).val(suggestion.data.username);
+			}	
 		}
 	});
 	

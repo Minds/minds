@@ -50,6 +50,9 @@ class search extends core\page implements interfaces\page{
 		if(isset($pages[0]))
 			$params['type'] = $pages[0];
 		
+		if(get_input('type'))
+			$params['type'] = get_input('type');
+		
 		$params['size'] = \get_input('limit');
 		$params['from'] = \get_input('offset');
 		$params['body']  = $body;
