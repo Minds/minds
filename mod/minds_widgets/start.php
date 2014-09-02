@@ -29,7 +29,7 @@ function minds_widgets_init(){
     elgg_register_css('widgets', $url);
 	
 	$url = elgg_get_simplecache_url('js', 'widgets');
-    elgg_register_css('widgets', $url);
+    elgg_register_js('widgets', $url);
     
     // Endpoint
     elgg_register_page_handler('widgets', 'minds_widgets_page_handler');    

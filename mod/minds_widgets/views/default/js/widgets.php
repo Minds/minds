@@ -12,7 +12,7 @@ for (index = 0; index < posts.length; ++index) {
    iframe = document.createElement('iframe');
    iframe.id = 'post-'+post.getAttribute("data-guid");
    iframe.setAttribute('style', 'border:0;');
-   iframe.src = "<?php echo elgg_get_site_url(); ?>news/"+post.getAttribute("data-guid")+"&async=true";
+   iframe.src = "<?php echo elgg_get_site_url(); ?>news/"+post.getAttribute("data-guid")+"?async=true";
    iframe.width = 640;
    iframe.height=420; //auto depending on iframe
     
