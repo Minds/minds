@@ -6,24 +6,48 @@ if(!elgg_is_logged_in()){
 
 }
 
-$username = get_input('username', elgg_get_logged_in_user_entity()->username);
-$user = get_user_by_username($username);
+$limit = get_input('limit', 12);
+$offset = get_input('offset', '');
+$slug = get_input('slug',elgg_get_logged_in_user_entity()->username);
+switch($slug){
+	
+	case 'referred':
+		$params['attrs']['namespace'] = 'object:node:referrer:'.elgg_get_logged_in_user_entity()->guid;
+		break;
+	case 'mine':
+		$user = elgg_get_logged_in_user_entity();
+	default:
+		if(!$user)
+			$user = get_user_by_username($slug);
+		$params['owner_guid']  = $user->guid;
+}
+
 
 $title_block = elgg_view_title(elgg_echo('Manage nodes'), array('class' => 'elgg-heading-main'));
 $buttons = elgg_view_menu('title', array(
 		'sort_by' => 'priority',
 		'class' => 'elgg-menu-hz',
 	));
+	
+$filter = elgg_view('minds_nodes/nav');
 
 $header = <<<HTML
 <div class="elgg-head clearfix">
-	$title_block$buttons
+	$title_block
+	$buttons
 </div>
+	$filter
 HTML;
 
-$limit = get_input('limit', 12);
-$offset = get_input('offset', '');
-$content = elgg_list_entities(array('type'=>'object', 'subtype'=>'node', 'owner_guid'=>$user->guid,'limit'=>$limit, 'offset'=>$offset));
+$params = array_merge($params, array(
+	'type'=>'object', 
+	'subtype'=>'node',
+	'limit'=>$limit, 
+	'offset'=>$offset
+));
+
+$content = elgg_list_entities($params);
+
 
 $body = elgg_view_layout("one_column", array(	
 					'header' => $header,

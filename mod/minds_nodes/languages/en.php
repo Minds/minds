@@ -16,6 +16,9 @@ $english = array(
 	'minds_tiers:feature:bandwidth' => 'Bandwidth',
 	'minds_tiers:feature:own_domain' => 'Own Domain?',
 	'minds_tiers:feature:support' => 'Support',
+	
+	'nodes:mine' => 'My networks',
+	'nodes:referred' => 'Networks referred'
     
 );
 

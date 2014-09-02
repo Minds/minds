@@ -243,7 +243,7 @@ if(!elgg_is_logged_in()){
 
 </div>
 
-<div class="nodes-table referrer hide">
+<div class="nodes-table referrer">
 	<div class="row thead">
 		<div class="cell feature">Referrer</div>
 		<div class="cell"></div>

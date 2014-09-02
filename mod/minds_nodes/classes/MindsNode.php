@@ -45,8 +45,8 @@ class MindsNode extends ElggObject{
 		if(!isset($user->email))
 			return false; //@todo better way to verify real user?
 			
-		$db = new \minds\core\data\indexes('object:node:referrer');
-		return $db->insert($user->guid, array($this->guid => $this->guid));
+		$db = new \minds\core\data\indexes();
+		return $db->insert('object:node:referrer:'.$user->guid, array($this->guid => $this->guid));
 	}
 
 	/**
