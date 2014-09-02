@@ -243,7 +243,7 @@ if(!elgg_is_logged_in()){
 
 </div>
 
-<div class="nodes-table referrer hide">
+<div class="nodes-table referrer">
 	<div class="row thead">
 		<div class="cell feature">Referrer</div>
 		<div class="cell"></div>
@@ -251,7 +251,7 @@ if(!elgg_is_logged_in()){
 	
 	<div class="row">
 		<div class="cell">
-			<input type="text" placeholder="Enter the username of the person who referred you to Minds." name="referrer" disabled/> 
+			<?php echo elgg_view('input/autocomplete', array('data-type'=>'user', 'placeholder'=>'Enter the username of who referred you', 'class'=>'user-lookup')); ?>
 		</div>
 	</div>
 

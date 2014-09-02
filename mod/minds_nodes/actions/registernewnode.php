@@ -9,6 +9,9 @@ $ROOT_DOMAIN = $CONFIG->minds_multisite_root_domain;
 $domain = get_input('domain');
 $email = get_input('email');
 
+//refferer
+$referrer = get_input('referrer');
+
 $node_guid = get_input('node_guid');
 $node = new MindsNode($node_guid);
 
@@ -34,6 +37,9 @@ try {
 			$node->save();
 			    // And say we've used the order
 	    		$order->payment_used = time();
+				
+				if($referrer)
+					$node->setReferrer($referrer);
 	
 	    	 	system_message("New minds network $domain successfully created!");
 	        	forward(elgg_get_site_url() . "nodes/ping?domain=$domain");

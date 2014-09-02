@@ -47,7 +47,7 @@ class start extends \minds\bases\plugin{
 		global $CONFIG;
 		if(in_array($entity->subtype, array('blog','image','album','video')) || $entity->type == 'user'){
 
-			$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search'))));
+			$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search')?:'localhost')));
 			$params = array();
 			$data = $entity->export();
 			foreach($data as $k =>$v){

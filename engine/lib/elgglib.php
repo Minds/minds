@@ -2112,14 +2112,16 @@ function elgg_init() {
 	elgg_register_page_handler('css', 'elgg_css_page_handler');
 	elgg_register_page_handler('ajax', 'elgg_ajax_page_handler');
 
-	elgg_register_js('elgg.autocomplete', 'js/lib/ui.autocomplete.js','footer');
-	elgg_register_js('jquery.ui.autocomplete.html', 'vendors/jquery/jquery.ui.autocomplete.html.js','footer');
-	elgg_register_js('elgg.userpicker', 'js/lib/ui.userpicker.js','footer');
-	elgg_register_js('elgg.friendspicker', 'js/lib/ui.friends_picker.js','head');//because of inline code
-	elgg_register_js('jquery.easing', 'vendors/jquery/jquery.easing.1.3.packed.js');
-	elgg_register_js('elgg.avatar_cropper', 'js/lib/ui.avatar_cropper.js', 'footer');
-	elgg_register_js('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect-0.9.8/scripts/jquery.imgareaselect.min.js','footer');
-	elgg_register_js('elgg.ui.river', 'js/lib/ui.river.js','footer');
+	elgg_register_js('elgg.autocomplete', elgg_get_site_url() . 'js/lib/ui.autocomplete.js','footer');
+	elgg_register_js('jquery.ui.autocomplete.html', elgg_get_site_url() . 'vendors/jquery/jquery.ui.autocomplete.html.js','footer');
+	elgg_register_js('elgg.userpicker', elgg_get_site_url() . 'js/lib/ui.userpicker.js','footer');
+	elgg_register_js('elgg.friendspicker', elgg_get_site_url() . 'js/lib/ui.friends_picker.js','head');//because of inline code
+	
+	elgg_register_js('jquery.autocomplete', elgg_get_site_url() . 'vendors/jquery/jquery.autocomplete.min.js');
+	elgg_register_js('jquery.easing', elgg_get_site_url() . 'vendors/jquery/jquery.easing.1.3.packed.js');
+	elgg_register_js('elgg.avatar_cropper', elgg_get_site_url() . 'js/lib/ui.avatar_cropper.js', 'footer');
+	elgg_register_js('jquery.imgareaselect', elgg_get_site_url() . 'vendors/jquery/jquery.imgareaselect-0.9.8/scripts/jquery.imgareaselect.min.js','footer');
+	elgg_register_js('elgg.ui.river', elgg_get_site_url() . 'js/lib/ui.river.js','footer');
 
 	elgg_register_css('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect-0.9.8/css/imgareaselect-deprecated.css');
 	

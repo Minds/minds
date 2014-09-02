@@ -98,6 +98,7 @@ $header = <<<HTML
 	</ul>
 	$signup_form
 	$donations_box
+
 </div>
 HTML;
 

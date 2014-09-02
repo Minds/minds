@@ -186,7 +186,8 @@ minds.nodes.init = function() {
 				data : {
 					domain : minds.nodes.domain,
 					tier_guid : minds.nodes.tier,
-					transaction_id : minds.nodes.transaction_id
+					transaction_id : minds.nodes.transaction_id,
+					referrer : $('.user-lookup').val()
 				},
 				success : function(data){
 					window.location.href = elgg.get_site_url() + 'nodes/ping?domain=' + minds.nodes.domain;
