@@ -31,6 +31,11 @@ if($ping){
 		<div class="elgg-head clearfix">
 			 <h2>Please wait...</h2>
 			<h3>Your node is currently launching. You will be forwarded shortly.</h3>
+			
+			<div class='loading-bar'>
+				<div class="progress"></div>
+			</div>
+			
 		</div>	
 	</div> 
 </div>
@@ -59,18 +64,27 @@ if($ping){
 
 <script>
 
+	var progress = 1;
+	setInterval(function() {
+		if(progress >= 100){
+			return false;
+		}
+		progress = progress+1;
+		$('.loading-bar .progress').css('width', progress + '%');
+	}, 600);
+
     // Change message after a period of time
     setTimeout(function() {
-        //  $('#pingtest-results').html('<p>Sorry, the test timed out trying to reach <?php echo $vars['domain'];?>. You could try <a href="<?php echo $domain_link; ?>">going there anyway...</a></p>');
    		$('#pingtest-results').fadeOut();
         $('#pingtest-fail').fadeIn();
-    }, 1000000);
+    }, 36000);
     
 	var xmlhttp=new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function()  {
 		if (xmlhttp.responseText == 1){
    	 		window.location = "<?php echo $domain_link; ?>";
 		} else {
+			console.log(xmlhttp.responseText);
 			//$('#pingtest-results').fadeOut();
                             //   $('#pingtest-fail').fadeIn();
 		}

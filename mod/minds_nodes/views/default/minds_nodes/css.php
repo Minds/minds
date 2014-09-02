@@ -25,6 +25,23 @@ div.node-signup div.node input {
 .minds-tiers-buttons{
 	margin:0 5% 12px; 
 }
+
+
+.loading-bar{
+	margin:32px auto;
+	width:600px;
+	height:32px;
+	display:block;
+	border-radius:3px;
+	background:#eee;
+}
+.loading-bar .progress{
+	width:1%;
+	height:100%;
+	display:block;
+	background:#4690D6;
+}
+
 /** Tier selection */
 #tiers{
 	border:1px solid #eee;
