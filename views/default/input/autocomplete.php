@@ -42,9 +42,9 @@ elgg_load_js('elgg.autocomplete');
 elgg_load_js('jquery.autocomplete');
 
 $id=rand(1000,3000);
-
+$name = $vars['name'];
 
 ?>
 
 <input type="text" <?php echo elgg_format_attributes($vars); ?> data-id="<?php echo $id;?>"/>
-<input type="hidden" name="<?php echo $vars['name'];?>" id="<?php echo $id;?>" />
+<input type="hidden" name="<?php echo $vars['name'];?>_" id="<?php echo $id;?>" />
