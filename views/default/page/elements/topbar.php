@@ -16,7 +16,7 @@
 				}
 			
 			if(elgg_is_admin_logged_in()){
-				$href = elgg_get_site_url() . 'admin/appearence/logo';
+				$href = elgg_get_site_url() . 'admin/appearance/logo';
 				echo "<a class=\"tip tip-logo\" href=\"$href\"><span class=\"entypo\">&#9881;</span> change</a>";
 			}
 		?>
