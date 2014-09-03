@@ -8,15 +8,15 @@ class MindsMultiInstaller extends ElggInstaller {
 	protected $type = 'multi';
 
     protected $steps = array(
-        'welcome',
+       'welcome',
         'settings',
         'admin',
        // 'minds',
-		'theme',
-		'footer',
-		'carousel',
-		'import',
-		'email',
+//		'theme',
+//		'footer',
+//		'carousel',
+//		'import',
+//		'email',
         'complete',
     );
     
@@ -110,15 +110,16 @@ class MindsMultiInstaller extends ElggInstaller {
     */
    protected function admin($submissionVars) {
            $formVars = array(
-                   'displayname' => array(
-                           'type' => 'text',
-                           'value' => $_SESSION['m_name'],
-                           'required' => TRUE,
-                           ),
+                   // 'displayname' => array(
+                   //        'type' => 'text',
+                   //       'value' => $_SESSION['m_name'],
+                   //      'required' => TRUE,
+                   //        ),
                    'email' => array(
                            'type' => 'text',
                            'value' => $_SESSION['m_email'],
                            'required' => TRUE,
+			   'placeholder' => 'eg. admin@site.com'
                            ),
                    'username' => array(
                            'type' => 'text',
@@ -130,11 +131,11 @@ class MindsMultiInstaller extends ElggInstaller {
                            'value' => '',
                            'required' => TRUE,
                            ),
-                   'password2' => array(
-                           'type' => 'password',
-                           'value' => '',
-                           'required' => TRUE,
-                           ),
+                   //'password2' => array(
+                   //        'type' => 'password',
+                   //        'value' => '',
+                   //        'required' => TRUE,
+                   //        ),
            );
 
            if ($this->isAction) {
@@ -186,70 +187,10 @@ class MindsMultiInstaller extends ElggInstaller {
      */
     protected function settings($submissionVars) {
         global $CONFIG;
+    	$this->saveSiteSettings($submissionVars);
+
 	
-	$formVars = array(
-            'sitename' => array(
-                'type' => 'text',
-                'value' => 'My New Community',
-                'required' => TRUE,
-            ),
-            'siteemail' => array(
-                'type' => 'text',
-                'value' => $_SESSION['m_email'],
-                'required' => FALSE,
-            ),
-            'wwwroot' => array(
-                'type' => 'hidden',
-                'value' => elgg_get_site_url(),
-                'required' => TRUE,
-            ),
-            'path' => array(
-                'type' => 'hidden',
-                'value' => $CONFIG->path,
-                'required' => TRUE,
-            ),
-            'dataroot' => array(
-                'type' => 'hidden',
-                'value' => $CONFIG->dataroot,
-                'required' => TRUE,
-            ),
-            'siteaccess' => array(
-                'type' => 'access',
-                'value' => ACCESS_PUBLIC,
-                'required' => TRUE,
-            ),
-        );
-
-        // if Apache, we give user option of having Elgg create data directory
-        //if (ElggRewriteTester::guessWebServer() == 'apache') {
-        //	$formVars['dataroot']['type'] = 'combo';
-        //	$CONFIG->translations['en']['install:settings:help:dataroot'] =
-        //			$CONFIG->translations['en']['install:settings:help:dataroot:apache'];
-        //}
-
-        if ($this->isAction) {
-            do {
-                //if (!$this->createDataDirectory($submissionVars, $formVars)) {
-                //	break;
-                //}
-
-                if (!$this->validateSettingsVars($submissionVars, $formVars)) {
-                    break;
-                }
-
-                if (!$this->saveSiteSettings($submissionVars)) {
-                    break;
-                }
-
-                system_message(elgg_echo('install:success:settings'));
-
-                $this->continueToNextStep('settings');
-            } while (FALSE);  // PHP doesn't support breaking out of if statements
-        }
-
-        $formVars = $this->makeFormSticky($formVars, $submissionVars);
-
-        $this->render('settings', array('variables' => $formVars));
+	 $this->continueToNextStep('settings');
     }
 
     /**
