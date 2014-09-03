@@ -27,29 +27,30 @@
 	    $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
 	    
 	   // $resized = get_resized_image_from_uploaded_file('logo', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale'], 'png');
-	$resized = get_resized_image_from_existing_file($_FILES['logo']['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale'], 'png');
-            
-	if ($resized) {
-                @mkdir($theme_dir);
-                
-		if (!file_put_contents($theme_dir . $name.'.png', $resized)) {
-		    register_error("The file was resized, but there was a problem saving it.");
+		$resized = get_resized_image_from_existing_file($_FILES['logo']['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale'], 'png');
+	            
+		if ($resized) {
+	        	
+	        @mkdir($theme_dir);
+	                
+			if (!file_put_contents($theme_dir . $name.'.png', $resized)) {
+			    register_error("The file was resized, but there was a problem saving it.");
+			}
+	                
+	       	elgg_set_plugin_setting('logo_override', 'true', 'minds_themeconfig');
+			elgg_set_plugin_setting('logo_override_ts', time(), 'minds_themeconfig');
+		} else { 
+				register_error("There was a problem generating your image.");
 		}
-                
-                elgg_set_plugin_setting('logo_override', 'true', 'minds_themeconfig');
-                elgg_set_plugin_setting('logo_override_ts', time(), 'minds_themeconfig');
-            }
-	    else
-		register_error("There was a problem generating your image.");
-
-            if (isset($_FILES['logo']) && ($_FILES['logo']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['logo']['error'] != 0) {
-                register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
-            }
-	    
-	    if (get_input('logo_remove') == 'y') {
-		elgg_set_plugin_setting('logo_override', '', 'minds_themeconfig');
-                elgg_set_plugin_setting('logo_override_ts', '', 'minds_themeconfig');
-	    }
+	            
+		if (isset($_FILES['logo']) && ($_FILES['logo']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['logo']['error'] != 0) {
+			register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
+		}
+		    
+		if (get_input('logo_remove') == 'y') {
+			elgg_set_plugin_setting('logo_override', '', 'minds_themeconfig');
+			elgg_set_plugin_setting('logo_override_ts', '', 'minds_themeconfig');
+		}
     }
     
     // Favicon
@@ -60,7 +61,11 @@
             'square' => true,
             'upscale' => true
         )
-    ) as $name => $size_info) { 
+    ) as $name => $size_info) {
+
+    	if(!$_FILES['favicon']['tmp_name'])
+    		continue;
+    		
         $resized = get_resized_image_from_uploaded_file('favicon', $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale'], 'jpeg');
 
         if ($resized) {
@@ -69,25 +74,25 @@
             @mkdir($theme_dir);
 
             if (!file_put_contents($theme_dir . $name.'.jpg', $resized)) {
-		register_error("The file was resized, but there was a problem saving it.");
-	    }
+				register_error("The file was resized, but there was a problem saving it.");
+	    	}
 
             elgg_set_plugin_setting('logo_favicon', 'true', 'minds_themeconfig');
             elgg_set_plugin_setting('logo_favicon_ts', time(), 'minds_themeconfig');
             
-        }
-	else
-	    register_error("There was a problem generating your image.");
+        } else {
+			register_error("There was a problem generating your favicon.");
+		}
 
         if (isset($_FILES['favicon']) && ($_FILES['favicon']['error'] != UPLOAD_ERR_NO_FILE) && $_FILES['favicon']['error'] != 0) {
             register_error(minds_themeconfig_codeToMessage($_FILES['favicon']['error'])); // Debug uploads
         }
 	
 	
-	if (get_input('favicon_remove') == 'y') {
-	    elgg_set_plugin_setting('logo_favicon', '', 'minds_themeconfig');
-	    elgg_set_plugin_setting('logo_favicon_ts', '', 'minds_themeconfig');
-	}
+		if (get_input('favicon_remove') == 'y') {
+			elgg_set_plugin_setting('logo_favicon', '', 'minds_themeconfig');
+			elgg_set_plugin_setting('logo_favicon_ts', '', 'minds_themeconfig');
+		}
     }
     
     // Background image
@@ -96,28 +101,22 @@
         $theme_dir = $CONFIG->dataroot . 'minds_themeconfig/';
         @mkdir($theme_dir);
         
-        if (move_uploaded_file($_FILES['background']['tmp_name'], $theme_dir . 'background'))
-        {
+        if (move_uploaded_file($_FILES['background']['tmp_name'], $theme_dir . 'background')){
             elgg_set_plugin_setting('background_override', 'true', 'minds_themeconfig');
             elgg_set_plugin_setting('background_override_mime', $_FILES['background']['type'], 'minds_themeconfig');
             elgg_set_plugin_setting('background_override_ts', time(), 'minds_themeconfig');
         }
     }
+	
     if (isset($_FILES['background']) && ($_FILES['background']['error'] != UPLOAD_ERR_NO_FILE) && ($_FILES['background']['error'] != 0)) {
         register_error(minds_themeconfig_codeToMessage($_FILES['background']['error'])); // Debug uploads
     }
     
     if (get_input('background_remove') == 'y') {
-	elgg_set_plugin_setting('background_override', '', 'minds_themeconfig');
-	elgg_set_plugin_setting('background_override_ts', '', 'minds_themeconfig');
-	elgg_set_plugin_setting('background_override_mime', '', 'minds_themeconfig');
+		elgg_set_plugin_setting('background_override', '', 'minds_themeconfig');
+		elgg_set_plugin_setting('background_override_ts', '', 'minds_themeconfig');
+		elgg_set_plugin_setting('background_override_mime', '', 'minds_themeconfig');
     }
-    
-    // Save frontpage text
-    elgg_set_plugin_setting('frontpagetext', get_input('frontpagetext'), 'minds_themeconfig');
-    // Save the font for the front header
-	$font = get_input('font');
-    elgg_set_plugin_setting('h2_font', $font['h2'], 'minds_themeconfig');
     
     // Save background colour
     elgg_set_plugin_setting('background_colour', preg_replace("/[^a-fA-F0-9\s]/", "", get_input('background_colour')), "minds_themeconfig");

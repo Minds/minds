@@ -1275,7 +1275,7 @@ class ElggInstaller {
 		set_config('allow_registration', TRUE, $guid);
 		set_config('walled_garden', FALSE, $guid);
 		set_config('allow_user_default_access', '', $guid);
-		set_config('simplecache_enabled', 0, $guid);
+		set_config('simplecache_enabled', 1, $guid);
 		set_config('system_cache_enabled', 0, $guid);
 
 		$this->enablePlugins();
@@ -1354,10 +1354,10 @@ class ElggInstaller {
 			}
 		}
 
-		if ($submissionVars['password1'] !== $submissionVars['password2']) {
+		/*if ($submissionVars['password1'] !== $submissionVars['password2']) {
 			register_error(elgg_echo('install:admin:password:mismatch'));
 			return FALSE;
-		}
+		}*/
 
 		if (trim($submissionVars['password1']) == "") {
 			register_error(elgg_echo('install:admin:password:empty'));
@@ -1395,7 +1395,7 @@ class ElggInstaller {
 			$guid = register_user(
 					$submissionVars['username'],
 					$submissionVars['password1'],
-					$submissionVars['displayname'],
+					$submissionVars['username'],
 					$submissionVars['email']
 					);
 		} catch (Exception $e) {

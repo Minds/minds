@@ -4,7 +4,7 @@
  */
 
 $english = array(
-	'admin:appearance:anypage' => 'Anypage Pages',
+	'admin:appearance:anypage' => 'Footer',
 	'admin:appearance:anypage:new' => 'New Page',
 
 	'anypage:warning' => 'Warning',

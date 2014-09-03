@@ -5,9 +5,10 @@ $english = array(
 	'admin:appearance:theme' => 'Configure theme',
 	'admin:appearance:fonts' => 'Configure fonts',
 	'minds_themeconfig:font_size:header' => 'Header size',
-	'admin:appearance:css' => 'Edit CSS directly (Advanced)',
-	'admin:appearance:footer' => 'Copyright message and social links',
+	'admin:appearance:css' => 'CSS Editor',
+	'admin:appearance:footer' => 'Social links',
 	'admin:appearance:themesets' => 'Themesets',
+	'admin:appearance:logo' => 'Logo',
 	'admin:monitization' => 'Monetization',
 	'admin:monitization:ads' => 'Ads',
 
