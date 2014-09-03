@@ -785,7 +785,7 @@ $english = array(
 	'admin:user:removeadmin:no' => "We could not remove administrator privileges from this user.",
 	'admin:user:self:removeadmin:no' => "You cannot remove your own administrator privileges.",
 
-	'admin:appearance:menu_items' => 'Menu Items',
+	'admin:appearance:menu_items' => 'Navigation',
 	'admin:menu_items:configure' => 'Configure main menu items',
 	'admin:menu_items:description' => 'Select which menu items you want to show as featured links.  Unused items will be added as "More" at the end of the list.',
 	'admin:menu_items:hide_toolbar_entries' => 'Remove links from tool bar menu?',

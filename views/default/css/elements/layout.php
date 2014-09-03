@@ -90,7 +90,7 @@
 	position:relative;
 	width:auto;
 }
-.hero > .topbar .logo > img{
+.hero > .topbar .logo img{
 	height:50px;
 	width:auto;
 }

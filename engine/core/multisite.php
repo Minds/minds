@@ -30,6 +30,10 @@ class multisite extends base{
 
 	public function load($domain){
 		global $CONFIG;
+		if(get_input('debug')){
+			var_dump($domain); exit;
+
+		}
 	//	if(!$row = $this->getCache($domain) ){
 			$db = new data\call('domain', $CONFIG->multisite->keyspace, $CONFIG->multisite->servers);
                		$row = $db->getRow($domain);
@@ -47,12 +51,12 @@ class multisite extends base{
 		$CONFIG->cassandra->keyspace = $keyspace;
 		$CONFIG->cassandra->servers =  $CONFIG->multisite->servers;
 		
-		$CONFIG->wwwroot = "http://$domain/"; 
+		$CONFIG->wwwroot = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://$domain/"; 
 		if(isset($row['dataroot']))
 			$CONFIG->dataroot = unserialize($row['dataroot']);
 		else
         	$CONFIG->dataroot = "/gluster/data/minds-multisite/".$keyspace;
-		$CONFIG->cdn_url = "http://d2ka7pmjfsr8hl.cloudfront.net/$domain/";
+		$CONFIG->cdn_url = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://d2ka7pmjfsr8hl.cloudfront.net/$domain/";
 	}
 
 	public function getCache($domain){

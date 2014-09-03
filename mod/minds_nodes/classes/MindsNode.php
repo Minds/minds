@@ -160,5 +160,14 @@ class MindsNode extends ElggObject{
 	public function checkNodeStatus(){
 
 	}
+	
+	public function delete(){
+		if(!$this->domain){
+			throw new \Exception('The domain must be set');
+		}
+		parent::delete();
+		
+		return  $this->client('DELETE', $this->domain);
+	}
 
 }

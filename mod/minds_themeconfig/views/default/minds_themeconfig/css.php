@@ -1,5 +1,5 @@
 <?php global $CONFIG; ?>
-<style type="text/css">
+<style type="text/css" id="custom">
 
     <?php echo htmlspecialchars_decode(elgg_get_plugin_setting('custom_css', 'minds_themeconfig')); ?>
     <?php if (get_input('preview') == 'true') echo htmlspecialchars_decode(elgg_get_plugin_setting('custom_css_preview', 'minds_themeconfig')); ?>
@@ -41,18 +41,7 @@
 	
     
     ?>
-    
-    <?php if ($h2_font = elgg_get_plugin_setting('h2_font', 'minds_themeconfig')){ ?>
-	.minds-body-header h2{
-		font-family:<?php echo $h2_font;?>;
-	}
-    <?php } ?>
 
-    <?php if ($background_colour = elgg_get_plugin_setting('background_colour', 'minds_themeconfig')) { ?>
-    body {
-        background-color: #<?php echo $background_colour;?>;
-    }
-    <?php } ?>
     
     <?php if ($topbar_colour = elgg_get_plugin_setting('topbar_colour', 'minds_themeconfig')) { ?>
     .hero > .topbar {

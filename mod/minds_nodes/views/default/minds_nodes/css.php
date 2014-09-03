@@ -271,3 +271,9 @@ div.register-popup {
 .launch .response{
 	display:none;
 }
+
+
+.node-button{
+	min-width:0;
+}
+}
