@@ -8,6 +8,7 @@ $english = array(
 	'admin:appearance:css' => 'CSS Editor',
 	'admin:appearance:footer' => 'Social links',
 	'admin:appearance:themesets' => 'Themesets',
+	'admin:appearance:logo' => 'Logo',
 	'admin:monitization' => 'Monetization',
 	'admin:monitization:ads' => 'Ads',
 

@@ -6,7 +6,7 @@ function themeconfig_init() {
     global $CONFIG;
 
 	elgg_register_admin_menu_item('configure', 'logo', 'appearance');
-    elgg_register_admin_menu_item('configure', 'theme', 'appearance');
+    //elgg_register_admin_menu_item('configure', 'theme', 'appearance');
     elgg_register_admin_menu_item('configure', 'css', 'appearance');
     //elgg_register_admin_menu_item('configure', 'fonts', 'appearance');
     elgg_register_admin_menu_item('configure', 'themesets', 'appearance');
@@ -14,6 +14,7 @@ function themeconfig_init() {
     elgg_register_admin_menu_item('configure', 'ads', 'monitization');
 
     elgg_register_action('theme/edit', dirname(__FILE__) . '/actions/edit.php', 'admin');
+	elgg_register_action('theme/logo', dirname(__FILE__) . '/actions/edit.php', 'admin');
     elgg_register_action('theme/fonts', dirname(__FILE__) . '/actions/fonts.php', 'admin');
     elgg_register_action('theme/advanced_css', dirname(__FILE__) . '/actions/advanced_css.php', 'admin');
     elgg_register_action('theme/advanced_css_preview', dirname(__FILE__) . '/actions/advanced_css_preview.php', 'admin');
