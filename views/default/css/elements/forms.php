@@ -422,6 +422,27 @@ form.minds-search{
 	display:none;
 }
 
+.autocomplete-suggestion{
+	background:#FFF;
+	border:1px solid #DDD;
+	padding:8px;
+	cursor:pointer;
+}
+.autocomplete-suggestion:hover{
+	background:#EEE;
+}
+.autocomplete-suggestion span.subtype{
+	font-weight:bold;
+	font-size:10px;
+	text-align:right;
+	float:right;
+	color:#CCC;
+}
+.autocomplete-suggestion .subtitle{
+	font-size:11px;
+	color:#CCC;
+}
+
 
 /**
  * minds posting

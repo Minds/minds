@@ -34,6 +34,20 @@ class MindsNode extends ElggObject{
 			return 'http://'. $this->domain;
 		}
 	}
+	
+	/**
+	 * Append the the relative users referred lists
+	 * 
+	 * @param string $username
+	 */
+	function setReferrer($username){
+		$user = new \minds\entities\user($username);
+		if(!isset($user->email))
+			return false; //@todo better way to verify real user?
+			
+		$db = new \minds\core\data\indexes();
+		return $db->insert('object:node:referrer:'.$user->guid, array($this->guid => $this->guid));
+	}
 
 	/**
 	 * Check when the node expires

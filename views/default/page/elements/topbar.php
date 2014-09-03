@@ -38,6 +38,9 @@
 	<?php } else { ?>
 
 			<?php 
+				if(minds\core\plugins::isActive('minds_nodes'))
+					echo elgg_view('output/url', array('text'=>'Launch a network', 'href'=>elgg_get_site_url() .'nodes/launch', 'class'=> 'elgg-button minds-button-launch'));
+				
 				echo elgg_view('output/url', array('text'=>'Sign up', 'href'=>elgg_get_site_url() .'register', 'class'=> 'elgg-button minds-button-register'));
 				echo elgg_view('output/url', array('text'=>'Login', 'href'=>elgg_get_site_url() .'login', 'class'=> 'elgg-button minds-button-login'));
 			?>

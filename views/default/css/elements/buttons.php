@@ -148,6 +148,16 @@ a.elgg-button {
 /**
  * Minds
  */
+.minds-button-launch {
+	background:linear-gradient(#378316,#338316);
+	border:1px solid #378316;
+	color:#FFF;
+}
+.minds-button-launch:hover {
+	background:#308016;
+	text-decoration:none;
+	color:#FFF;
+}
 .minds-button-register {
 	min-width:0;
 	background: #4690D6;

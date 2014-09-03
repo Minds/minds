@@ -195,8 +195,8 @@ class start extends bases\plugin{
 				break;
 			case 'manage':
 			      if(isset($pages[1])){
-	                	     \set_input('username', $pages[1]);
-	                	 }
+	              	\set_input('slug', $pages[1]);
+	              }
 				include('pages/minds_nodes/manage.php');
 				break;
 	                case 'upgrade' :

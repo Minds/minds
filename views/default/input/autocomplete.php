@@ -22,6 +22,7 @@ if (isset($vars['class'])) {
 $defaults = array(
 	'value' => '',
 	'disabled' => false,
+	'data-type' => ''
 );
 
 $vars = array_merge($defaults, $vars);
@@ -38,12 +39,12 @@ if (isset($vars['match_owner'])) {
 $ac_url_params = http_build_query($params);
 
 elgg_load_js('elgg.autocomplete');
-elgg_load_js('jquery.ui.autocomplete.html');
+elgg_load_js('jquery.autocomplete');
+
+$id=rand(1000,3000);
+$name = $vars['name'];
 
 ?>
 
-<script type="text/javascript">
-elgg.provide('elgg.autocomplete');
-elgg.autocomplete.url = "<?php echo elgg_get_site_url() . 'livesearch?' . $ac_url_params; ?>";
-</script> 
-<input type="text" <?php echo elgg_format_attributes($vars); ?> />
+<input type="text" <?php echo elgg_format_attributes($vars); ?> data-id="<?php echo $id;?>"/>
+<input type="hidden" name="<?php echo $vars['name'];?>_" id="<?php echo $id;?>" />
