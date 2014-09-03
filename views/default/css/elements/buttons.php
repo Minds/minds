@@ -205,5 +205,5 @@ a.elgg-button {
 .tip-logo{
 	font-size:11px;
 	position:absolute;
-	bottom:8px;
+	bottom:40%;
 }
