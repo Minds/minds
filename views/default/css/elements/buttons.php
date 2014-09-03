@@ -192,3 +192,18 @@ a.elgg-button {
 	text-decoration: none;
 	background: #EEE;
 }
+
+
+.tip{
+	color:#888;
+	
+}
+.tip:hover{
+	text-decoration:none;
+}
+
+.tip-logo{
+	font-size:11px;
+	position:absolute;
+	bottom:8px;
+}
