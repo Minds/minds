@@ -14,8 +14,9 @@ if (!$vars['hide_buttons']) {
    // if($node->paid()){
             if($node->launched){
                     //display stats
-                    $link =  elgg_view('output/url', array('text'=>'Go to my node', 'href'=>$node->getURL(), 'class'=>'elgg-button elgg-button-action'));
-                    $link .= " ". elgg_view('output/url', array('text'=>'Upgrade Tier', 'href'=>'nodes/upgrade/'.$node->guid, 'class'=>'elgg-button elgg-button-action'));
+                    $link =  elgg_view('output/url', array('text'=>'Load', 'href'=>$node->getURL(), 'class'=>'elgg-button elgg-button-action node-button'));
+                    $link .= " ". elgg_view('output/url', array('text'=>'Upgrade', 'href'=>'nodes/upgrade/'.$node->guid, 'class'=>'elgg-button elgg-button-action node-button'));
+					$link .= " ". elgg_view('output/confirmlink', array('text'=>'Delete', 'href'=>elgg_add_action_tokens_to_url('action/node/delete/?guid='.$node->guid), 'class'=>'elgg-button elgg-button-action node-button'));
                     $content = $link;
             } else {
                     //link to setup the node
