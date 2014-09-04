@@ -74,6 +74,7 @@ class MindsNode extends ElggObject{
 				curl_setopt($ch, CURLOPT_POST, 1);
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); // Override request type
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+				$domain .= '?' . http_build_query($data); //because post fields can not be sent with DELETE
 				break;
 		    case 'get':
 		    default:
