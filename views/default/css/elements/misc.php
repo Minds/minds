@@ -1216,7 +1216,7 @@ div.register-popup {
 	left:50%;
 	margin:auto;
 	margin-left:-300px;
-	width:600px;
+	width:700px;
 	overflow:visible;
 }
 
