@@ -101,16 +101,16 @@ font-weight: bold;
 	}
 	
 	.carousel-fat .minds-body-header{
-		height:70%;
+		height:400px;
 	}
 	.carousel-fat .carousel{
-		height:70%;
+		height:400px;
 	}
 	.carousel-fat .carousel .item{
-		height:70%;
+		height:400px;
 	}
 	.carousel-fat .carousel .item > .carousel-caption{
-		top:  25%;
+		top:  100px;
 	}
 	.carousel-fat .carousel-inner > .item > img {
 		position: absolute;
@@ -131,7 +131,7 @@ font-weight: bold;
 	.donations-box{
 		position:absolute;
 		margin-left:0;
-		top:38%;
+		top:200px;
 		left:0;
 		width:100%;
 	}
