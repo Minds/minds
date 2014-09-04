@@ -99,6 +99,46 @@ font-weight: bold;
 		font-size:24px;
 		line-height:24px;
 	}
+	
+	.carousel-fat .minds-body-header{
+		height:70%;
+	}
+	.carousel-fat .carousel{
+		height:70%;
+	}
+	.carousel-fat .carousel .item{
+		height:70%;
+	}
+	.carousel-fat .carousel .item > .carousel-caption{
+		top:  25%;
+	}
+	.carousel-fat .carousel-inner > .item > img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		min-width:100%;
+		height: 100%;
+	}
+	
+	.carousel-fat .elgg-layout{
+		min-height:0;
+	}
+	.carousel-fat .minds-body-header{
+		margin:0;
+		padding:0;
+	}
+	
+	.donations-box{
+		position:absolute;
+		margin-left:0;
+		top:38%;
+		left:0;
+		width:100%;
+	}
+	.donations-button{
+		font-size:11px;
+		float:left;
+	}
 
 	.frontpage-signup, .front-page-buttons{
 		display:none;
