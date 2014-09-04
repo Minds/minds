@@ -552,7 +552,7 @@ class ElggInstaller {
 	protected function complete() {
 		$params = array();
 		if ($this->autoLogin) {
-			$params['destination'] = 'register/orientation';
+			$params['destination'] = 'index.php';
 		} else {
 			$params['destination'] = 'index.php';
 		}
