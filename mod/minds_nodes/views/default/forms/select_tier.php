@@ -251,7 +251,7 @@ if(!elgg_is_logged_in()){
 	
 	<div class="row">
 		<div class="cell">
-			<?php echo elgg_view('input/autocomplete', array('data-type'=>'user', 'placeholder'=>'Enter the username of who referred you', 'class'=>'user-lookup')); ?>
+			<?php echo elgg_view('input/autocomplete', array('data-type'=>'user', 'placeholder'=>'Enter the username of who referred you', 'class'=>'user-lookup', 'value'=>get_input('referrer'))); ?>
 		</div>
 	</div>
 

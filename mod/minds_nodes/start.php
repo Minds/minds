@@ -180,6 +180,13 @@ class start extends bases\plugin{
 	                ));
 		}
 		
+		
+		//if this is a multisite then we forward to minds.com.
+		if(\minds\core\minds::detectMultisite()){
+			forward('https://www.minds.com/nodes/launch?referrer='.\elgg_get_plugin_setting('owner_username','minds_nodes'));
+			return true;
+		}
+		
 		if(!$pages[0]){
 			//does the user have any nodes setup? If so send them to the manage page
 			if($this->getNodes()){
