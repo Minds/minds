@@ -150,7 +150,8 @@ archive.init = function(){
 								});
 								
 								_this.items = items;
-								$.magnificPopup.instance.index = $(base).parent().index();
+								//$.magnificPopup.instance.index = $(base).parent().index();
+								$.magnificPopup.instance.index = 0;
 								$.magnificPopup.instance.updateItemHTML();
 							},
 							error: function(data){
