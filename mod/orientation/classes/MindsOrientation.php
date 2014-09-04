@@ -19,6 +19,9 @@ class MindsOrientation{
 	);
 	
 	public function __construct(){
+		if(minds\core\minds::detectMultisite() && ($key = array_search('multisite', $this->steps)) !== false) {
+		    unset($this->steps[$key]);
+		}
 	}
 	
 	public function run($step){
