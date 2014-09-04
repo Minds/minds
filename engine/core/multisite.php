@@ -55,7 +55,7 @@ class multisite extends base{
 		if(isset($row['dataroot']))
 			$CONFIG->dataroot = unserialize($row['dataroot']);
 		else
-        	$CONFIG->dataroot = "/gluster/data/minds-multisite/".$keyspace;
+        		$CONFIG->dataroot = "/gluster/data/minds-multisite/".$keyspace;
 		$CONFIG->cdn_url = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://d2ka7pmjfsr8hl.cloudfront.net/$domain/";
 	}
 
