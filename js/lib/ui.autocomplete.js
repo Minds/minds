@@ -25,10 +25,15 @@ elgg.autocomplete.init = function() {
         	return {
 				suggestions: $.map(response, function(response){
 					result = [];
+					guids = [];
 					for(type in response){
 						$.each(response[type], function(key, item){
 							div = '';
-							
+							console.log($.inArray(item.guid, guids));
+							if($.inArray(item.guid, guids) >= 0)
+								return;
+								
+							guids.push(item.guid);
 							if(item.type == 'user'){
 								div = item.name + '<span class="subtype">user</span>';
 								div += '<div class="subtitle">'+ item.username +'</div>';
