@@ -1313,6 +1313,7 @@ class ElggInstaller {
 			'minds_webservices',
 			'minds_wordpress',
 			'persona',
+			'chat',
 			'notifications',
 			'orientation',
 			'mobile',
