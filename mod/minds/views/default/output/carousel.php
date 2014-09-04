@@ -22,7 +22,7 @@ if(!$items){
 		new ElggObject(array(
 			'title' => 'Click here to customise your carousel.',
 			'href' => elgg_get_site_url() . 'admin/appearance/carousel',
-			'ext_bg' => 'http://d2ka7pmjfsr8hl.cloudfront.net/www.minds.org//carousel/background/346019177162608640/1407873642/0'
+			'ext_bg' => 'https://d3ae0shxev0cb7.cloudfront.net//carousel/background/295332731833815040/1409532063/138117/fat'
 		))
 	);
 //	return false;

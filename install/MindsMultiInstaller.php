@@ -301,6 +301,7 @@ class MindsMultiInstaller extends ElggInstaller {
 	    'archive',
             'blog',
    		'deck', 
+   		'chat',
             'persona',
             'notifications',
             //'minds_connect',
