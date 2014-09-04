@@ -128,7 +128,10 @@ archive.init = function(){
 					beforeOpen: function() {
 						
 						var album_guid = $(base).attr('data-album-guid');  
-			       		var items = [];
+			       		var items = [{
+							id : 0,
+							src: $(base).attr('href')
+						}];
 						_this = this;
 						active = this;	
 						//download the full list of images in this album
@@ -137,7 +140,7 @@ archive.init = function(){
 							dataType: 'json',
 							success: function(data){
 								images = data.object['image'];
-								$i = 0;
+								$i = 1;
 								$.each(images, function(k, v){
 									items.push({
 										id: $i,
