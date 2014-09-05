@@ -85,3 +85,74 @@ PayPal\Core\PPHttpConnection: Adding header Content-Type: application/json
 PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
 PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A015AdrYxllugdDI1on4O0a4T5mDWgVZsb.ZIAojfQq7SRk
 PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296248519140929073563568
+PayPal\Core\PPHttpConnection: Connecting to https://api.sandbox.paypal.com/v1/oauth2/token
+PayPal\Core\PPHttpConnection: Payload grant_type=client_credentials
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Basic QVdBa1poQkUtdXREQ1ZwWGJYbEpoc2JHMUt6NVFzSVpIWHVLNnZkWjdRaTNrYlMzb0kxMTN5NDQ1Vk9UOkVOV0ZqQkJOaEpkbXJ5Mmx2TTM5VmFrT0ViZ0t6a29qaXNJTXFtWVItbjNVUU93a18wRkItam4xVDNsbw==
+PayPal\Core\PPHttpConnection: Adding header Accept: */*
+PayPal\Core\PPHttpConnection: Connecting to https://api.sandbox.paypal.com/v1/payments/payment
+PayPal\Core\PPHttpConnection: Payload {"intent":"sale","payer":{"payment_method":"credit_card","funding_instruments":[{"credit_card":{"type":"amex","number":"371559788141014","expire_month":"06","expire_year":"2017","cvv2":"4365","first_name":"William","last_name":"Ottman"}}]},"transactions":[{"amount":{"currency":"USD","total":"10.00"},"description":"Minds: "}]}
+PayPal\Core\PPHttpConnection: Adding header Content-Type: application/json
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A015EAscpUAedQdC0lZg674Bdh6PEzfhsWIiFHcI1m3aNO4
+PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296267825140985743213218
+PayPal\Core\PPHttpConnection: Connecting to https://api.sandbox.paypal.com/v1/oauth2/token
+PayPal\Core\PPHttpConnection: Payload grant_type=client_credentials
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Basic QVdBa1poQkUtdXREQ1ZwWGJYbEpoc2JHMUt6NVFzSVpIWHVLNnZkWjdRaTNrYlMzb0kxMTN5NDQ1Vk9UOkVOV0ZqQkJOaEpkbXJ5Mmx2TTM5VmFrT0ViZ0t6a29qaXNJTXFtWVItbjNVUU93a18wRkItam4xVDNsbw==
+PayPal\Core\PPHttpConnection: Adding header Accept: */*
+PayPal\Core\PPHttpConnection: Connecting to https://api.sandbox.paypal.com/v1/payments/payment
+PayPal\Core\PPHttpConnection: Payload {"intent":"sale","payer":{"payment_method":"credit_card","funding_instruments":[{"credit_card":{"type":"amex","number":"371559788141014","expire_month":"06","expire_year":"2017","cvv2":"4365","first_name":"William","last_name":"Ottman"}}]},"transactions":[{"amount":{"currency":"USD","total":"10.00"},"description":"Minds: "}]}
+PayPal\Core\PPHttpConnection: Adding header Content-Type: application/json
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A015Dylqn78uNS.g5WzALdvEJvG.IJf8b-yxqD0rEXs-wRs
+PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296268083140985759350572
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/oauth2/token
+PayPal\Core\PPHttpConnection: Payload grant_type=client_credentials
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Basic QVRBQnlCQTd3VmxuNW9reTJYS2tnbEVvSDdrMERKbVpWT3ozUy1ER0pZa3JOckhjSWpaQ2RYMUhITHdIOkVBSmZJaENaWEdvNkw0WUFpeUZqbHBQVktWc3Bqd0Q1cFlVYW5TUElEelRIVTBsUkxmOFNQMjJCWDJROQ==
+PayPal\Core\PPHttpConnection: Adding header Accept: */*
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/payments/payment
+PayPal\Core\PPHttpConnection: Payload {"intent":"sale","payer":{"payment_method":"credit_card","funding_instruments":[{"credit_card":{"type":"amex","number":"371559788141014","expire_month":"06","expire_year":"2017","cvv2":"4365","first_name":"William","last_name":"Ottman"}}]},"transactions":[{"amount":{"currency":"USD","total":"10.00"},"description":"Minds: "}]}
+PayPal\Core\PPHttpConnection: Adding header Content-Type: application/json
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A015EAjCLTr5eNhFf4MloylyNsdvY-3uE8foM-rH6KkFntw
+PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296268096140985765546804
+PayPal\Transport\PPRestCall: {"id":"PAY-31G940673N006242VKQELREA","create_time":"2014-09-04T19:08:00Z","update_time":"2014-09-04T19:08:02Z","state":"approved","intent":"sale","payer":{"payment_method":"credit_card","funding_instruments":[{"credit_card":{"type":"amex","number":"xxxxxxxxxxx1014","expire_month":"6","expire_year":"2017","first_name":"William","last_name":"Ottman"}}]},"transactions":[{"amount":{"total":"10.00","currency":"USD","details":{"subtotal":"10.00"}},"description":"Minds: ","related_resources":[{"sale":{"id":"9JX78435HT6810821","create_time":"2014-09-04T19:08:00Z","update_time":"2014-09-04T19:08:02Z","amount":{"total":"10.00","currency":"USD"},"state":"completed","parent_payment":"PAY-31G940673N006242VKQELREA","links":[{"href":"https://api.paypal.com/v1/payments/sale/9JX78435HT6810821","rel":"self","method":"GET"},{"href":"https://api.paypal.com/v1/payments/sale/9JX78435HT6810821/refund","rel":"refund","method":"POST"},{"href":"https://api.paypal.com/v1/payments/payment/PAY-31G940673N006242VKQELREA","rel":"parent_payment","method":"GET"}]}}]}],"links":[{"href":"https://api.paypal.com/v1/payments/payment/PAY-31G940673N006242VKQELREA","rel":"self","method":"GET"}]}
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/vault/credit-card
+PayPal\Core\PPHttpConnection: Payload {"type":"amex","number":"371559788141014","expire_month":"06","expire_year":"2017","cvv2":"4365","first_name":"William","last_name":"Ottman"}
+PayPal\Core\PPHttpConnection: Adding header Content-Type: application/json
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A015EAjCLTr5eNhFf4MloylyNsdvY-3uE8foM-rH6KkFntw
+PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296268096140985765546804
+PayPal\Transport\PPRestCall: {"id":"CARD-38U40258AS235254FKQELREQ","state":"ok","type":"amex","number":"xxxxxxxxxxx1014","expire_month":"6","expire_year":"2017","first_name":"William","last_name":"Ottman","valid_until":"2017-09-03T00:00:00Z","create_time":"2014-09-04T19:08:02Z","update_time":"2014-09-04T19:08:02Z","links":[{"href":"https://api.paypal.com/v1/vault/credit-card/CARD-38U40258AS235254FKQELREQ","rel":"self","method":"GET"},{"href":"https://api.paypal.com/v1/vault/credit-card/CARD-38U40258AS235254FKQELREQ","rel":"delete","method":"DELETE"},{"href":"https://api.paypal.com/v1/vault/credit-card/CARD-38U40258AS235254FKQELREQ","rel":"patch","method":"PATCH"}]}
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/oauth2/token
+PayPal\Core\PPHttpConnection: Payload grant_type=client_credentials
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Basic QVRBQnlCQTd3VmxuNW9reTJYS2tnbEVvSDdrMERKbVpWT3ozUy1ER0pZa3JOckhjSWpaQ2RYMUhITHdIOkVBSmZJaENaWEdvNkw0WUFpeUZqbHBQVktWc3Bqd0Q1cFlVYW5TUElEelRIVTBsUkxmOFNQMjJCWDJROQ==
+PayPal\Core\PPHttpConnection: Adding header Accept: */*
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/payments/payment
+PayPal\Core\PPHttpConnection: Payload {"intent":"sale","payer":{"payment_method":"credit_card","funding_instruments":[{"credit_card":{"type":null,"number":null,"expire_month":null,"expire_year":null,"cvv2":null,"first_name":null,"last_name":null}}]},"transactions":[{"amount":{"currency":"USD","total":".00"},"description":"Minds: "}]}
+PayPal\Core\PPHttpConnection: Adding header Content-Type: application/json
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A015VTOTwQqR08Y0Icw82EAlNqghPVeOM.ZrKvszx7rxj9s
+PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296269343140990938528523
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/oauth2/token
+PayPal\Core\PPHttpConnection: Payload grant_type=client_credentials
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Basic QVRBQnlCQTd3VmxuNW9reTJYS2tnbEVvSDdrMERKbVpWT3ozUy1ER0pZa3JOckhjSWpaQ2RYMUhITHdIOkVBSmZJaENaWEdvNkw0WUFpeUZqbHBQVktWc3Bqd0Q1cFlVYW5TUElEelRIVTBsUkxmOFNQMjJCWDJROQ==
+PayPal\Core\PPHttpConnection: Adding header Accept: */*
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/payments/payment
+PayPal\Core\PPHttpConnection: Payload {"intent":"sale","payer":{"payment_method":"credit_card","funding_instruments":[{"credit_card":{"type":"amex","number":"371559788141014","expire_month":"06","expire_year":"2016","cvv2":"4365","first_name":"Mark","last_name":"Harding"}}]},"transactions":[{"amount":{"currency":"USD","total":"10.00"},"description":"Minds: "}]}
+PayPal\Core\PPHttpConnection: Adding header Content-Type: application/json
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A0159FNBEJvlEI6r8GWWASR8mbU2GF-lY56iIEeeTv1vtKE
+PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296270734140992981819846
+PayPal\Transport\PPRestCall: {"id":"PAY-2MM76346K9928940WKQE5E5A","create_time":"2014-09-05T15:10:44Z","update_time":"2014-09-05T15:10:46Z","state":"approved","intent":"sale","payer":{"payment_method":"credit_card","funding_instruments":[{"credit_card":{"type":"amex","number":"xxxxxxxxxxx1014","expire_month":"6","expire_year":"2016","first_name":"Mark","last_name":"Harding"}}]},"transactions":[{"amount":{"total":"10.00","currency":"USD","details":{"subtotal":"10.00"}},"description":"Minds: ","related_resources":[{"sale":{"id":"47F7429865973410B","create_time":"2014-09-05T15:10:44Z","update_time":"2014-09-05T15:10:46Z","amount":{"total":"10.00","currency":"USD"},"state":"completed","parent_payment":"PAY-2MM76346K9928940WKQE5E5A","links":[{"href":"https://api.paypal.com/v1/payments/sale/47F7429865973410B","rel":"self","method":"GET"},{"href":"https://api.paypal.com/v1/payments/sale/47F7429865973410B/refund","rel":"refund","method":"POST"},{"href":"https://api.paypal.com/v1/payments/payment/PAY-2MM76346K9928940WKQE5E5A","rel":"parent_payment","method":"GET"}]}}]}],"links":[{"href":"https://api.paypal.com/v1/payments/payment/PAY-2MM76346K9928940WKQE5E5A","rel":"self","method":"GET"}]}
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/vault/credit-card
+PayPal\Core\PPHttpConnection: Payload {"type":"amex","number":"371559788141014","expire_month":"06","expire_year":"2016","cvv2":"4365","first_name":"Mark","last_name":"Harding"}
+PayPal\Core\PPHttpConnection: Adding header Content-Type: application/json
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A0159FNBEJvlEI6r8GWWASR8mbU2GF-lY56iIEeeTv1vtKE
+PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296270734140992981819846
+PayPal\Transport\PPRestCall: {"id":"CARD-9PN56192E27646055KQE5E5Y","state":"ok","type":"amex","number":"xxxxxxxxxxx1014","expire_month":"6","expire_year":"2016","first_name":"Mark","last_name":"Harding","valid_until":"2017-09-04T00:00:00Z","create_time":"2014-09-05T15:10:47Z","update_time":"2014-09-05T15:10:47Z","links":[{"href":"https://api.paypal.com/v1/vault/credit-card/CARD-9PN56192E27646055KQE5E5Y","rel":"self","method":"GET"},{"href":"https://api.paypal.com/v1/vault/credit-card/CARD-9PN56192E27646055KQE5E5Y","rel":"delete","method":"DELETE"},{"href":"https://api.paypal.com/v1/vault/credit-card/CARD-9PN56192E27646055KQE5E5Y","rel":"patch","method":"PATCH"}]}

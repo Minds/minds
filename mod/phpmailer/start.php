@@ -156,7 +156,13 @@ function phpmailer_send($from, $from_name, $to, $to_name, $subject, $body, array
 
 	// Set destination address
 	if (isset($to)) {
-		$phpmailer->AddAddress($to, $to_name);
+		if(is_array($to)){
+			foreach($to as $t){
+				$phpmailer->AddAddress($t, '');
+			}
+		} else {
+			$phpmailer->AddAddress($to, $to_name);
+		}
 	}
 
 	// set bccs if exists

@@ -24,7 +24,7 @@ minds.nodes.init = function() {
 			$('.payment').hide();
 			$('.launch').show();
 			$('.contact').hide();
-		} else if($(this).data('price') == 'Contact'){
+		} else if($(this).data('price') == 'Custom'){
 			$('.contact').show();
 			$('.domain').hide();
 			$('.payment').hide();
@@ -68,6 +68,7 @@ minds.nodes.init = function() {
 			minds.nodes.domain = $(this).val();
 			$('.availability').show().text('Please follow the DNS setup options when using your own domain');
 			$('.account').removeClass('hide');
+			$('.payment input').enable();
 			return true;
 		} else {
 			minds.nodes.domain = $(this).val() + '.minds.com';
