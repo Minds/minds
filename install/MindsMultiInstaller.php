@@ -17,6 +17,7 @@ class MindsMultiInstaller extends ElggInstaller {
 //		'carousel',
 //		'import',
 //		'email',
+	'dns',
         'complete',
     );
     
@@ -166,6 +167,15 @@ class MindsMultiInstaller extends ElggInstaller {
 
            $this->render('admin', array('variables' => $formVars));
    }
+
+  protected function dns($submissionVars){
+
+	if ($this->isAction) {
+		 $this->continueToNextStep('dns');
+	}
+
+	$this->render('dns');
+  }
    
    /**
     * We never want to create a settings file...
@@ -241,7 +251,17 @@ class MindsMultiInstaller extends ElggInstaller {
 
 	global $CONFIG;
         try{
-		$node = new minds\multisite\models\node($_SERVER['HTTP_HOST']);
+		$domain = $_SERVER['HTTP_HOST'];
+		if(strpos($domain, '-custdom-001') !== FALSE){
+			$domain = str_replace('-custdom-001.minds.com', '', $domain);
+			$domain = str_replace('-', '.', $domain);
+		}else{
+			//don't show the dns step for non custom install
+			if(($key = array_search('dns', $this->steps)) !== false) {
+ 				unset($this->steps[$key]);
+			}
+		}
+		$node = new minds\multisite\models\node($domain);
 		
 		if($node->installed == true){
 			throw new Exception("This site is already installed");
@@ -301,7 +321,7 @@ class MindsMultiInstaller extends ElggInstaller {
 	    'archive',
             'blog',
    		'deck', 
-   		'chat',
+   		'gatherings',
             'persona',
             'notifications',
             //'minds_connect',

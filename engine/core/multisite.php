@@ -23,6 +23,15 @@ class multisite extends base{
 			$this->domain = explode(':', $this->domain);
 			$this->domain = $this->domain[0];
 		}
+	
+		$this->host = $this->domain;
+	
+		//check if this is asubdomain temp for main domain
+		if(strpos($this->domain, '-custdom-001',0) !== FALSE){
+			$this->domain = str_replace('-custdom-001.minds.com', '', $this->domain);
+			$this->domain = str_replace('-', '.', $this->domain);
+
+		}	
 
 		if($this->domain)
 			$this->load($this->domain);
@@ -51,12 +60,12 @@ class multisite extends base{
 		$CONFIG->cassandra->keyspace = $keyspace;
 		$CONFIG->cassandra->servers =  $CONFIG->multisite->servers;
 		
-		$CONFIG->wwwroot = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://$domain/"; 
+		$CONFIG->wwwroot = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://$this->host/"; 
 		if(isset($row['dataroot']))
 			$CONFIG->dataroot = unserialize($row['dataroot']);
 		else
         		$CONFIG->dataroot = "/gluster/data/minds-multisite/".$keyspace;
-		$CONFIG->cdn_url = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://d2ka7pmjfsr8hl.cloudfront.net/$domain/";
+		$CONFIG->cdn_url = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://d2ka7pmjfsr8hl.cloudfront.net/$this->host/";
 	}
 
 	public function getCache($domain){
