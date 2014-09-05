@@ -18,13 +18,24 @@ minds.nodes.init = function() {
 		minds.nodes.price = $(this).data('price');
 		
 		if($(this).data('price') == 0){
+			$('.domain').show();
 			$('.domain .paid').hide();
 			$('.domain .cell.free').show();
 			$('.payment').hide();
+			$('.launch').show();
+			$('.contact').hide();
+		} else if($(this).data('price') == 'Contact'){
+			$('.contact').show();
+			$('.domain').hide();
+			$('.payment').hide();
+			$('.launch').hide();
 		} else {
+			$('.contact').hide();
+			$('.domain').show();
 			$('.domain .paid').css('display', 'table-row');
 			$('.domain .cell.free').show();
 			$('.payment').show();
+			$('.launch').show();
 		}
 		
 	});
@@ -194,6 +205,22 @@ minds.nodes.init = function() {
 				}
 		});
 		
+	});
+	
+	$(document).on('click', '.contact .send', function(e){
+		
+				
+		elgg.action( elgg.get_site_url() + 'action/nodes/contact',{
+				data : {
+					referrer : $('.user-lookup').val(),
+					email : $('input[name=email]').val(),
+					message :  $('textarea[name=message]').val(),
+				},
+				success : function(data){
+					$('.contact .input').hide();
+					$('.contact .response').show();
+				}
+		});
 	});
 }
 elgg.register_hook_handler('init', 'system', minds.nodes.init);

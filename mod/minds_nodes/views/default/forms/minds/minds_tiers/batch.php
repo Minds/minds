@@ -4,9 +4,9 @@
 $tiers = elgg_get_entities(array(
 	'type' => 'object',
 	'subtype' => 'minds_tier',
-	'limit' => 3
+	'limit' => 4
 ));
-if(count($tiers) != 3){
+if(count($tiers) != 4){
 	$tier = new MindsTier();
 	$tier->owner_guid = elgg_get_logged_in_user_guid();
     $tier->container_guid = elgg_get_logged_in_user_guid();
