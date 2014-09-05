@@ -7,6 +7,8 @@ class MindsMultiInstaller extends ElggInstaller {
 
 	protected $type = 'multi';
 
+	protected $domain = '';
+
     protected $steps = array(
        'welcome',
         'settings',
@@ -261,6 +263,7 @@ class MindsMultiInstaller extends ElggInstaller {
  				unset($this->steps[$key]);
 			}
 		}
+		$this->domain = $domain;
 		$node = new minds\multisite\models\node($domain);
 		
 		if($node->installed == true){
@@ -355,7 +358,7 @@ class MindsMultiInstaller extends ElggInstaller {
 
     protected function disableInstallation(){
 		global $CONFIG;
-    	$node = new minds\multisite\models\node($_SERVER['HTTP_HOST']);
+    	$node = new minds\multisite\models\node($this->domain);
 		$node->installed = true;
 		$node->save();
 		unlink("/tmp/nodes/".$_SERVER['HTTP_HOST']);
