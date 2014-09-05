@@ -12,8 +12,9 @@ if(\minds\core\minds::detectMultisite()){
 </div>
 
 <?php
-}
 return true;
+}
+
 ?>
 <div>
     <label>Multisite Manager Address:</label><br />
