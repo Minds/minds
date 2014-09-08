@@ -18,7 +18,7 @@ $ROOT_DOMAIN = $CONFIG->minds_multisite_root_domain ?: '.minds.com';
         <input id="node" type="text" name="domain_at_minds" placeholder="yournetwork" value="<?php echo str_replace($ROOT_DOMAIN, '',$node->domain); ?>"/> <?php echo $ROOT_DOMAIN; ?>
     </div>
     
-	<?php if($node->allowedDomain() || true){ ?>
+	<?php if($node->allowedDomain()){ ?>
 
 	    <div class="blurb-or">...or use your own domain...</div>
 	    
