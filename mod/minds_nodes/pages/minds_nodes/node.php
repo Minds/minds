@@ -5,7 +5,7 @@ if(!elgg_is_logged_in()){
 }
 
 $node_guid = get_input('node_guid');
-$node = get_entity($node_guid, 'object');
+$node = new MindsNode($node_guid);
 
 if(!$node){
         register_error('Node does not exists');
@@ -27,7 +27,7 @@ $header = <<<HTML
 </div>
 HTML;
 
-$register_url = elgg_get_site_url() . 'action/registernewnode';
+$register_url = elgg_get_site_url() . 'action/node/edit';
 $form_params = array(
 	'action' => $register_url,
 	'class' => 'elgg-form-account',
