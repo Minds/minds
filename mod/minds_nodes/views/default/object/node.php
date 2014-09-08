@@ -15,7 +15,7 @@ if (!$vars['hide_buttons']) {
             if($node->launched){
                     //display stats
                     $link =  elgg_view('output/url', array('text'=>'Load', 'href'=>$node->getURL(), 'class'=>'elgg-button elgg-button-action node-button'));
-                    $link .= " ". elgg_view('output/url', array('text'=>'Edit', 'href'=>'nodes/edit/'.$node->guid, 'class'=>'elgg-button elgg-button-action node-button'));
+                    $link .= " ". elgg_view('output/url', array('text'=>'Edit', 'href'=>'nodes/node/'.$node->guid, 'class'=>'elgg-button elgg-button-action node-button'));
 					$link .= " ". elgg_view('output/confirmlink', array('text'=>'Delete', 'href'=>elgg_add_action_tokens_to_url('action/node/delete/?guid='.$node->guid), 'class'=>'elgg-button elgg-button-action node-button'));
                     $content = $link;
             } else {
