@@ -7,15 +7,9 @@ namespace minds\plugin\bitcoin;
 
 use minds\core;
 
-abstract class bitcoin extends \ElggPlugin     
-{
+abstract class bitcoin extends \ElggPlugin {
     public static $bitcoin;
-    
-    public function __construct($plugin) {
-	parent::__construct($plugin);
-	
-	bitcoin::$bitcoin = $this;
-    }
+
     
     /**
      * Get the base for the API Call
@@ -111,46 +105,46 @@ abstract class bitcoin extends \ElggPlugin
     
     public function logReceived($from_address, $to_user, $amount_satoshi) {
 	
-	$ia = elgg_set_ignore_access();
-	
-	$obj = new \ElggObject();
-	$obj->subtype = 'bitcoin_transaction';
-	$obj->owner_guid = $to_user->guid;
-	$obj->access_id = ACCESS_PRIVATE;
-	
-	$obj->from_address = $from_address;
-	$obj->amount_satoshi = $amount_satoshi;
-	$obj->action = 'received';
-	
-	$id = $obj->save();
-	
-	error_log("Bitcoin: Logged an incoming transaction $id: From {$from_address} to {$to_user->name} of $amount_satoshi");
-	
-	$ia = elgg_set_ignore_access($ia);
-	
-	return $id;
+		$ia = elgg_set_ignore_access();
+		
+		$obj = new \ElggObject();
+		$obj->subtype = 'bitcoin_transaction';
+		$obj->owner_guid = $to_user->guid;
+		$obj->access_id = ACCESS_PRIVATE;
+		
+		$obj->from_address = $from_address;
+		$obj->amount_satoshi = $amount_satoshi;
+		$obj->action = 'received';
+		
+		$id = $obj->save();
+		
+		error_log("Bitcoin: Logged an incoming transaction $id: From {$from_address} to {$to_user->name} of $amount_satoshi");
+		
+		$ia = elgg_set_ignore_access($ia);
+		
+		return $id;
     }
     
     public function logSent($from_user, $to_address, $amount_satoshi) {
 	
-	$ia = elgg_set_ignore_access();
-	
-	$obj = new \ElggObject();
-	$obj->subtype = 'bitcoin_transaction';
-	$obj->owner_guid = $from_user->guid;
-	$obj->access_id = ACCESS_PRIVATE;
-	
-	$obj->to_address = $to_address;
-	$obj->amount_satoshi = $amount_satoshi;
-	$obj->action = 'sent';
-	
-	$id = $obj->save();
-	
-	error_log("Bitcoin: Logged an outgoing transaction $id: From {$from_user->name} to $to_address of $amount_satoshi");
-	
-	$ia = elgg_set_ignore_access($ia);
-	
-	return $id;
+		$ia = elgg_set_ignore_access();
+		
+		$obj = new \ElggObject();
+		$obj->subtype = 'bitcoin_transaction';
+		$obj->owner_guid = $from_user->guid;
+		$obj->access_id = ACCESS_PRIVATE;
+		
+		$obj->to_address = $to_address;
+		$obj->amount_satoshi = $amount_satoshi;
+		$obj->action = 'sent';
+		
+		$id = $obj->save();
+		
+		error_log("Bitcoin: Logged an outgoing transaction $id: From {$from_user->name} to $to_address of $amount_satoshi");
+		
+		$ia = elgg_set_ignore_access($ia);
+		
+		return $id;
     }
     
     
@@ -159,100 +153,16 @@ abstract class bitcoin extends \ElggPlugin
      * Initialise
      */
     public function init() {
-	
-	// Register CSS
-	elgg_register_css('bitcoin.css', elgg_get_simplecache_url('css', 'bitcoin'));
 		
-	// Create bitcoin handler
-	elgg_register_page_handler('bitcoin', function($pages){
-	
-	    elgg_load_css('bitcoin.css');
-	    
-	    switch ($pages[0]) {
-		case 'wallet':
-		case 'mywallet' :
-			set_input('username', $pages[1] ? $pages[1] : elgg_get_logged_in_user_entity()->username);
-			require_once(dirname(__FILE__) . '/pages/wallet.php');
-		    break;
-		case 'send' :
-			set_input('username', elgg_get_logged_in_user_entity()->username);
-			require_once(dirname(__FILE__) . '/pages/sendpayment.php');
-		    break;
-		case 'settings' : 
-			require_once(dirname(__FILE__) . '/pages/settings.php');
-		    break;
-	    }
-	    
-	    return true;
-	});
-	
-	// Bitcoin wallet menu
-	if (elgg_is_logged_in()) {
-	    elgg_register_menu_item('site', array(
-		    'name' => 'bitcoin',
-		    'text' => '<span class="entypo">&#59406;</span> My Wallet', //'My Wallet', // TODO: Replace me with a nice graphic
-		    'href' => 'bitcoin/mywallet',
-		    'title' => elgg_echo('bitcoin'),
-		    'priority' => 10
-	    ));
-	}
-	
-	// Listen to user settings save
-	elgg_register_action('bitcoin/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
-	elgg_register_admin_menu_item('minds', 'bitcoin');	
-	elgg_register_admin_menu_item('minds', 'setup', 'bitcoin');  
-	
-	elgg_register_action('bitcoin/usersettings/save', dirname(__FILE__) . '/actions/plugins/usersettings/save.php');
-	elgg_register_event_handler('pagesetup', 'system', function() {
-            elgg_register_menu_item("page", array(
-                'name' => 'bitcoin',
-                'text' => elgg_echo('bitcoin:settings'),
-                'href' => 'bitcoin/settings',
-                'contexts' => array('bitcoin')
-            ));
-	});
-	
-	// Payment action
-	elgg_register_action('bitcoin/send', dirname(__FILE__) . '/actions/sendpayment.php');
-	elgg_register_action('bitcoin/unlock', dirname(__FILE__) . '/actions/unlockwallet.php');
-	
-	
-	// Create a wallet for every new user
-	elgg_register_plugin_hook_handler('register', 'user', function($hook, $type, $value, $params) {
-	    $ia = elgg_set_ignore_access(); // We're not logged in yet, so get_entity will fail without this
-	    
-	    try {
-		$user = elgg_extract('user', $params);
-		
-		$password = generate_random_cleartext_password();
-		
-		$new_wallet = bitcoin()->createWallet($user, $password);
-	
-		if ($new_wallet) $new_wallet = get_entity($new_wallet);
-		if (!$new_wallet) throw new \Exception("Could not generate a wallet for the new user...");
-		if (!$new_wallet->wallet_address) throw new \Exception("There was no address linked with wallet {$new_wallet->guid}");
-		
-		// Now, notify a user
-		notify_user($user->guid, elgg_get_site_entity()->guid, 'New bitcoin wallet created', "Welcome to minds! We have taken the liberty of creating a bitcoin wallet for your account, the password for which is $password"); // TODO: Change message
-		
-		// grant new user some bitcoins
-		if ($satoshi = elgg_get_plugin_setting('satoshi_to_new_user', 'bitcoin')) {
-		    if ($wallet_guid = elgg_get_plugin_setting('central_bitcoin_wallet_object_guid', 'bitcoin')) {
-			$result = bitcoin()->sendPayment($wallet_guid, $new_wallet->wallet_address, $satoshi);
-			if (!$result)
-				throw new \Exception("There was a problem granting satoshi to {$new_wallet->wallet_address}");
-			
-			error_log("Bitcoin: Successfully set starting amount for {$user->guid} to $satoshi");
-		    } else 
-			error_log("BITCOIN: No system bitcoin address!");
-		} else 
-		    error_log("BITCOIN: No satoshi value set!");
-	    } catch (\Exception $ex) {
-		error_log("BITCOIN: " . $ex->getMessage());
-	    }
-	    
-	    $ia = elgg_set_ignore_access($ia);
-	});
+		elgg_register_action('bitcoin/usersettings/save', dirname(__FILE__) . '/actions/plugins/usersettings/save.php');
+		elgg_register_event_handler('pagesetup', 'system', function() {
+	            elgg_register_menu_item("page", array(
+	                'name' => 'bitcoin',
+	                'text' => elgg_echo('bitcoin:settings'),
+	                'href' => 'bitcoin/settings',
+	                'contexts' => array('bitcoin')
+	            ));
+		});
 	
     }
     
