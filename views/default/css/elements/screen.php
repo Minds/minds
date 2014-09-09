@@ -6,6 +6,16 @@ if(0){ ?><style><?php } ?>
 
 @media all 
 and (min-width : 0px)
+and (max-width : 1260px) {
+		
+	.minds-topbar-icon{
+		display:none;
+	}
+	
+}
+
+@media all 
+and (min-width : 0px)
 and (max-width : 720px) {
 
 
@@ -25,18 +35,18 @@ and (max-width : 720px) {
 		margin-top:14px;
 	}
 	
-	.hero > .topbar .logo > img{
+	.hero > .topbar .logo img{
 		width: 100%;
 		height: auto;
 		max-width: 100px;
 	}
 	.hero > .topbar .right .elgg-button{
 		margin: 1px;
-/* width: 52px; */
-font-size: 60%;
-padding: 2px 5px;
-width: auto;
-font-weight: bold;
+		/* width: 52px; */
+		font-size: 60%;
+		padding: 2px 5px;
+		width: auto;
+		font-weight: bold;
 	}
 	
 	.hero > .body, .elgg-page-body {	
@@ -78,6 +88,7 @@ font-weight: bold;
 	.hero > .topbar .owner_block > a > .text{
 		display:none;
 	}
+
 
 	.homepage{
 		padding-top:64px;
