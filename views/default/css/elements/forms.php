@@ -405,6 +405,23 @@ input[type="radio"] {
 }
 
 /**
+ * Contact form
+ */
+
+.elgg-form-contact{
+	width:600px;
+	height:auto;
+	display:block;
+	margin:auto;
+}
+.elgg-form-contact input[type=text]{
+	padding:16px;
+}
+.elgg-form-contact input.time{
+	display:none;
+}
+
+/**
  * Search 
  */
 /**

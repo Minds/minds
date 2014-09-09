@@ -9,9 +9,10 @@
 		<a href="<?php echo elgg_get_site_url();?>">
 			  <?php if (elgg_get_plugin_setting('logo_override', 'minds_themeconfig')) { ?>
 	 		          <img src="<?php echo elgg_get_site_url();?>themeicons/logo_topbar/<?php echo elgg_get_plugin_setting('logo_override_ts', 'minds_themeconfig'); ?>.png"/>
-	        	<?php } else { ?>
-	
-				<img src="<?php echo elgg_get_site_url();?>_graphics/minds_2.png"/>
+	        	<?php } elseif(minds\core\plugins::isActive('minds_themeconfig')) { ?>
+					<img src="<?php echo elgg_get_site_url();?>_graphics/default_logo.png"/>
+				<?php } else { ?>
+					<img src="<?php echo elgg_get_site_url();?>_graphics/minds_2.png"/>
 			<?php 
 				}
 			
