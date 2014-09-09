@@ -517,6 +517,12 @@ function elgg_nav_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'elgg_entity_menu_setup');
 	elgg_register_plugin_hook_handler('register', 'menu:widget', 'elgg_widget_menu_setup');
 	elgg_register_plugin_hook_handler('register', 'menu:annotation', 'elgg_annotation_menu_setup');
+	
+	elgg_register_menu_item('footer', array(
+			'name' => 'contact',
+			'href' => '/contact',
+			'text' => 'Contact'
+	));
 }
 
 elgg_register_event_handler('init', 'system', 'elgg_nav_init');
