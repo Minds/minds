@@ -7,6 +7,9 @@
 //	set_input('linear', 'on');
 //}
 
+if(!elgg_is_logged_in())
+	forward('/login');
+
 $options = array();
 
 $page_type = preg_replace('[\W]', '', get_input('page_type', 'friends'));
