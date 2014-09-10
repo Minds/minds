@@ -1,4 +1,4 @@
-.bitcoin-form input[type=password]{
+.bitcoin-form input[type=password], .bitcoin-form input[type=text]{
 	padding:16px;
 	font-size:18px;
 	width:50%;

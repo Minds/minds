@@ -98,4 +98,8 @@ class start extends bases\plugin{
 		 return (float)($satoshi / 100000000);
 	}
 	
+	public static function toSatoshi($btc) {
+		 return $btc * 100000000; 
+	}
+	
 }

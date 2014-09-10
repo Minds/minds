@@ -66,5 +66,22 @@ class wallet extends entities\object{
 		return $response['content']['balance'];
 	}
 	
+	public function send($to_address, $amount = 0, $password){
+		$response = blockchain::__make_call('GET', "merchant/$this->blockchain_guid/payment", array(
+		    'password' => $password,
+		    
+		    'to' => $to_address,
+		    'amount' => $amount
+		));
+		
+		$transaction = new transaction(array(
+			'owner_guid' => $this->owner_guid,
+			'to_address' => $to_address,
+			'amount' => $amount
+		));
+		$transaction->save();
+
+	}
+	
 	
 }
