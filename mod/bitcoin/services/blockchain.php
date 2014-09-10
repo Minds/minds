@@ -1,297 +1,56 @@
 <?php
 
-namespace minds\plugin\bitcoin;
+namespace minds\plugin\bitcoin\services;
 
 use minds\core;
 
-class blockchain extends bitcoin implements \minds\plugin\pay\PaymentHandler{
+class blockchain extends core\base{
     
-    public function __construct(){
-	    parent::__construct('bitcoin');
-
-	    $this->init();
-    }
+ 	static public $base = "https://blockchain.info/";
     
     public function init() {
 		parent::init();
-		
-		// Register action handler
-		elgg_register_action('bitcoin/generatewallet', dirname(__FILE__) . '/actions/create_wallet.php');
-		elgg_register_action('bitcoin/generatesystemwallet', dirname(__FILE__) . '/actions/create_system_wallet.php');
-		
-		
-			// Handle recurring payments (DIY, until blockchain support this natively)
-			/*elgg_register_plugin_hook_handler('cron', 'daily', function(){
-			    
-			    global $CONFIG;
-			    
-			    error_log("Bitcoin: Daily cron job triggered");
-			    
-			    
-			    $ia = elgg_set_ignore_access();
-			    
-			    $now = time();
-			    $offset = 0;
-			    $limit = 50;
-			    $processed = array();
-			    $new_indexes = array();
-			    $current_user = null;
-			    $minds_address = elgg_get_plugin_setting('central_bitcoin_account', 'bitcoin');
-			    
-			    // Retrieve all recurring payments which are outstanding and not being processed
-			    while ($results = elgg_get_entities(array(
-				'type' => 'object',
-				'subtype' => 'blockchain_subscription',
-				'limit' => $limit,
-				'offset' => $offset,
-				'timebased' => false,
-		                'attrs' => array('type' => 'object', 'subtype' => 'blockchain_subscription')
-			    ))) {
-				
-				$offset+= $limit;
-				
-				error_log("Bitcoin: Found blockchain subscriptions...");
-				
-				foreach ($results as $r) {
-				    
-				    error_log("Bitcoin: Processing subscription {$r->guid}, due date " . date('r', $r->due_ts));
-				    
-				    if (
-					    ($r->due_ts) && // Not a duff object created during early debug
-					    ($now > $r->due_ts) && // Due
-					    (!$r->locked) && // not locked
-					    (!$r->cancelled) // cancelled
-					    ){
-					
-					error_log("Bitcoin: It's time to update subscription");
-					
-					$r->locked = time(); // Lock it to prevent reprocessing
-					$r->save();
-					
-					// Get basic info
-					$currency = $r->currency;
-					$amount = $r->amount;
-					
-					// Try and process payment
-					try {
-					    error_log("Bitcoin: Order GUID is {$r->order_guid}");
-					    $order = get_entity($r->order_guid);
-					    if (!$order) throw new \Exception("No order was found attached to this subscription!");
-					    
-					    $current_user = $user = get_user($order->owner_guid); 
-					    if (!$user) throw new \Exception("No user was found attached to this subscription!");
-					
-					    $wallet = $this->getWallet($user);
-					    if (!$wallet) throw new \Exception ('User has no bitcoin wallet defined.');
-					    
-					    error_log("Bitcoin: Converting $amount $currency to BTC");
-					    $amount = bitcoin()->convertToBTC($amount, $currency);
-					    if (!$amount) throw new \Exception("Problem converting $currency into BTC");
-					    
-					    $amount = bitcoin()->toSatoshi($amount);
-					    
-					    //if (!$minds_address) throw new \Exception("Minds BTC account is not configured, you should not be seeing this!");
-					    $minds_address = $order->minds_receive_address;
-					    if (!$minds_address) throw new \Exception("Order has no transaction address, payment could not be sent");
-					    
-					    // Attempt to put through the payment
-					    if (!$CONFIG->debug)
-						$transaction_hash = bitcoin()->sendPayment($wallet->guid, $minds_address, $amount);
-					    else {
-						$transaction_hash = md5(rand());
-		
-						// Debug, so lets skip sending the payment now
-						error_log("Bitcoin: We're skipping sending payment for now in debug mode. Generating a random tx as $transaction_hash.");
-					    }
-					    
-					    if (!$transaction_hash)
-						throw new \Exception('Sorry, your bitcoin transaction couldn\'t be sent');
-					    
-					    // Store new transaction hash and annotate for history
-					    $order->last_transaction_hash = $transaction_hash;
-					    $order->annotate('order_details', serialize(array(
-						'amount' => $amount,
-						'to' => $minds_address,
-						'transaction_hash' => $transaction_hash
-					    )));
-					    
-					    // Got here, so payment was successful - schedule for garbage collection and create a receipt
-					    
-					    $processed[] = $r->guid; // we have processed it, so schedule it for garbage collection.
-					    
-					    // Create a receipt for this payment
-					    $receipt = new \ElggObject();
-					    $receipt->subtype = 'blockchain_subscription_receipt';
-					    $receipt->owner_guid = $r->owner_guid;
-					    $receipt->order_guid = $r->order_guid;
-					    $receipt->renew_period = $r->renew_period;
-					    $receipt->due_ts = $r->due_ts;
-					    $receipt->amount = $r->amount;
-					    $receipt->currency = $r->currency;
-					    $receipt->processed = time();
-					    $r_id = $receipt->save();
-					    error_log("Bitcoin: Receipt id created as $r_id");
-					    
-					    // Schedule the next payment
-					    $subscription = new \ElggObject();
-					    $subscription->subtype = 'blockchain_subscription';
-					    $subscription->owner_guid = $r->owner_guid;
-					    $subscription->order_guid = $r->order_guid;
-					    $subscription->renew_period = $r->renew_period;
-					    $subscription->due_ts = $now + $r->renew_period;
-					    $subscription->amount = $r->amount;
-					    $subscription->currency = $r->currency;
-		
-					    $guid = $subscription->save();
-					    error_log("Bitcoin: New subscription created as  $guid");
-					    
-					    // Create a lookup, so we can easily cancel this order in future
-					    $new_indexes[$order->guid] = $guid;
-					   
-					    
-					    notify_user($current_user->guid, elgg_get_site_entity()->guid, 'Minds subscription renewed', "You minds subscription has been renewed for " . bitcoin()->toBTC($amount) ." bitcoins ({$r->amount} {$r->currency}}).");
-					    
-					    $current_user = null;
-					} catch (\Exception $e) {
-					    error_log("BITCOIN SUBSCRIPTION: " . $e->getMessage());
-					    
-					    // Unlock and try again next time
-					    $r->locked = 0;
-					    $r->failures++;
-					    $r->save();
-					    
-					    // Notify the user that something went wrong
-					    notify_user($current_user->guid, elgg_get_site_entity()->guid, 'Problem with your Minds subscription', 'There was a problem processing your subscription: \n\n' . $e->getMessage());
-					    
-					    // TODO: Deactivate subscribed services (or better, those services should probably know about orders)
-					    $current_user = null;
-					}
-				    }
-				}
-		    }*/
-		    
-		    // Delete all processed 
-		    error_log("Bitcoin: Removing processed ids: ");
-		    foreach ($processed as $guid){
-			$e = get_entity($guid);
-			$e->delete();
-			
-			error_log("Bitcoin: $guid deleted");
-		    }
-		    
-		    // Now, update the indexes
-		    error_log("Bitcoin: Updating indexes");
-		    $db = new \minds\core\data\call('entities_by_time');
-		    foreach ($new_indexes as $order_guid => $guid) {
-			
-			error_log("Bitcoin: Index $order_guid => $guid");
-			
-			$db->insert('object:pay:blockchain:subscription', array($order_guid => $guid));
-		    }
-		    
-		    $ia = elgg_set_ignore_access($ia);
-		    
-		});
-
-	// Endpoints
-	elgg_register_page_handler('blockchain', function($pages){
-	    
-	    switch ($pages[0]) {
-		case 'endpoint':
-		default:
-		    switch ($pages[1]) {
-			case 'receivingaddress' :
-			    mail('marcus@dushka.co.uk', 'Bitcoin received', print_r($_GET, true));
-			    
-				$user = false;
-				if (isset($pages[2])) {
-				    $user = get_user_by_username ($pages[2]);
-				}
-				
-				// Payment received
-				bitcoin()->logReceived($_GET['input_address'], $user, $_GET['value']);
-				
-				// Trigger a hook
-				if (elgg_trigger_plugin_hook('payment-received', 'blockchain', array(
-				    'user' => $user,
-				    'username' => $pages[2],
-				    'get_variables' => $_GET,
-				    
-				    'value' =>  $_GET['value'],
-				    'value_in_btc' => $_GET['value'] / 100000000,
-					
-				    'input_address' => $_GET['input_address'],
-				    'destination_address' => $_GET['destination_address'],
-				    
-				    'confirmations' => $_GET['confirmations'],
-				    
-				    'transaction_hash' => $_GET['transaction_hash'],
-				    'input_transaction_hash' => $_GET['input_transaction_hash'],
-				),false))
-					echo "*ok*";
-				else
-				    echo "ERROR";
-			    break;
-		    }
-	    }
-	    
-	    return true;
-	});
-	
-	// Listen for a payment and send notifications (default handler)
-	elgg_register_plugin_hook_handler('payment-received', 'blockchain', function($hook, $type, $return, $params) {
-	    
-	    if ($params['user']) {
-
-		notify_user($user->guid, elgg_get_site_entity()->guid, "Bitcoin payment received", "You have received a payment of {$params['value_in_btc']} bitcoins.");
-		
-		return true;
-	    } 
-		
-	}, 999);
     }
-
+    
     /**
      * Make an API call.
      */
-    private function __make_call($verb, $endpoint, array $params = null, array $headers = null) {
+    public static function __make_call($verb, $endpoint, array $params = array(), array $headers = null) {
 	
 		if (!preg_match('/https?:\/\//', $endpoint))
-			$endpoint = $this->getAPIBase () . ltrim($endpoint, '/');
+			$endpoint = self::$base . ltrim($endpoint, '/');
 		
-		$req = "";
-		if ($params) {
-		    $req = http_build_query($params);
-		}
+		$params = array_merge(array('api_code'=>elgg_get_plugin_setting('api_code', 'bitcoin')), $params);
+		$req = http_build_query($params);
 	
 		$curl_handle = curl_init();
 		
 		switch (strtolower($verb)) {
 		    case 'post':
-			curl_setopt($curl_handle, CURLOPT_POST, 1);
-			curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $req);
+				curl_setopt($curl_handle, CURLOPT_POST, 1);
+				curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $req);
 			break;
 		    case 'delete':
-			curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, 'DELETE'); // Override request type
-			curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $req);
+				curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, 'DELETE'); // Override request type
+				curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $req);
 			break;
 		    case 'put':
-			curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, 'PUT'); // Override request type
-			curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $req);
+				curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, 'PUT'); // Override request type
+				curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $req);
 			break;
 		    case 'get':
 		    default:
-			curl_setopt($curl_handle, CURLOPT_HTTPGET, true);
-			if (strpos($endpoint, '?') !== false) {
-			    $endpoint .= '&' . $req;
-			} else {
-			    $endpoint .= '?' . $req;
-			}
+				curl_setopt($curl_handle, CURLOPT_HTTPGET, true);
+				if (strpos($endpoint, '?') !== false) {
+				    $endpoint .= '&' . $req;
+				} else {
+				    $endpoint .= '?' . $req;
+				}
 			break;
 		}
 	
 		
-		error_log("Bitcoin: Making a $verb call to $endpoint");
+		//error_log("Bitcoin: Making a $verb call to $endpoint");
 		
 		curl_setopt($curl_handle, CURLOPT_URL, $endpoint);
 		curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 5);
@@ -317,7 +76,7 @@ class blockchain extends bitcoin implements \minds\plugin\pay\PaymentHandler{
 		$buffer = curl_exec($curl_handle);
 		$http_status = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
 		
-		error_log("Bitcoin: Call $endpoint returned code $http_status"); 
+		//error_log("Bitcoin: Call $endpoint returned code $http_status"); 
 		
 		if (!$http_status)
 		    throw new \Exception("Bitcoin: There was a problem executing the curl call...");
@@ -339,36 +98,19 @@ class blockchain extends bitcoin implements \minds\plugin\pay\PaymentHandler{
 		    error_log("Bitcoin: Returned blockchain error '{$return['content']}'");
 		    throw new \Exception($return['content']);
 		}
-		if ($return['content']['error']) {
-		    error_log("Bitcoin: Error value present - " . $return['content']['error']);
-		    throw new \Exception($return['content']['error']);
+		
+		if ($return['error']) {
+		    error_log("Bitcoin: Error value present - " . $return['error']);
+		    throw new \Exception($return['error']);
 		}
 		
-		error_log("BITCOIN: Raw api call result is ". print_r($return, true));
+		//error_log("BITCOIN: Raw api call result is ". print_r($return, true));
 		    
 		return $return;
     }
     
-    /**
-     * Store a password for a wallet.
-     * @param type $wallet
-     * @param type $password
-     */
-    /*protected function storeWalletPassword($wallet, $password) {
 	
-	if (!$password) throw new \Exception("Attempt to set a null password on a wallet.");
-	
-	// TODO: Find out a better way of storing passwords, perhaps against some sort of central password storage tool
-	
-	error_log("Bitcoin: Storing password $password");
-	
-	$wallet->wallet_password = $password; 
-	
-	return true;
-    }*/
-    
     public function unlockWallet($wallet_guid, $password) {
-	
 		setcookie("wallet_$wallet_guid", $password, time() + 120, '/');
     }
     
@@ -622,42 +364,7 @@ class blockchain extends bitcoin implements \minds\plugin\pay\PaymentHandler{
 	}
 	    
 	public function createWallet(\ElggUser $user, $password) {
-		
-		error_log("Bitcoin: Attempting to create a wallet for {$user->name}");
-		
-		//$password = md5($user->salt . microtime(true));
-		$wallet = $this->blockchainCreateWallet($password);
-	
-		$new_wallet = new \ElggObject();
-	
-		$new_wallet->subtype = 'bitcoin_wallet';
-		$new_wallet->access_id = ACCESS_PRIVATE;
-		$new_wallet->owner_guid = $user->guid;	
-		//$this->storeWalletPassword($new_wallet, $password); // Create a random password);
-	
-		$new_wallet->wallet_raw = serialize($wallet);
-		$new_wallet->wallet_guid = $wallet['guid'];
-		$new_wallet->wallet_address = $wallet['address'];
-		$new_wallet->wallet_link = $wallet['link'];
-		
-		$new_wallet->wallet_handler = 'blockchain';
-	
-		if ($guid = $new_wallet->save()) {
-		    
-		    // Temporarily unlock the wallet
-		    //$this->unlockWallet($guid, $password);
-		    
-		    // Save the address to user settings
-		    elgg_set_plugin_user_setting('bitcoin_address', $wallet['address'], $new_wallet->owner_guid, 'bitcoin');
-		    elgg_set_plugin_user_setting('bitcoin_wallet', $wallet['guid'], $new_wallet->owner_guid, 'bitcoin');
-		    elgg_set_plugin_user_setting('bitcoin_wallet_object', $guid, $new_wallet->owner_guid, 'bitcoin');
-	
-		    error_log("Bitcoin: Wallet created with id $guid");
-		
-		    return $guid;
-		}
-		
-		return false;
+		//now cleaner by using entities
     }
     
     public function createSystemWallet($password) {
@@ -794,7 +501,7 @@ class blockchain extends bitcoin implements \minds\plugin\pay\PaymentHandler{
 		return null;
 	    }
 	
-	public function getWalletBalance($wallet_guid) {
+	    public function getWalletBalance($wallet_guid) {
 		
 		if ($wallet = get_entity($wallet_guid)) {
 		 

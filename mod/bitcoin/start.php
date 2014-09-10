@@ -8,7 +8,7 @@
  * @author Marcus Povey <http://www.marcus-povey.co.uk>
  */
 
-namespace minds\plugin\comments;
+namespace minds\plugin\bitcoin;
 
 use minds\bases;
 use minds\core;
@@ -16,15 +16,29 @@ use minds\core;
 class start extends bases\plugin{
 	
 	public function init(){
-		$bitcoin = new \minds\plugin\bitcoin\blockchain();
 		
-		\elgg_register_css('bitcoin.css', elgg_get_simplecache_url('css', 'bitcoin'));
+		\elgg_extend_view('css/elgg', 'css/bitcoin');
 		
-		core\router::registerRoutes($this->registerRoutes());
+		/**
+		 * Register our page end points
+		 */
+		$path = "minds\\plugin\\bitcoin";
+		core\router::registerRoutes(array(
+				'/bitcoin' => "$path\\pages\\index",
+				'/bitcoin/wallet' => "$path\\pages\\wallet",
+				'/bitcoin/send' => "$path\\pages\\send",
+			));
 		
 		
-		\elgg_register_plugin_hook_handler('register', 'user', array($this, 'userRegistration'));
+		/**
+		 * We send some bitcoin to users
+		 */
+		//\elgg_register_plugin_hook_handler('register', 'user', array($this, 'userRegistration'));
 		
+		/**
+		 * Register a site menu 
+		 * @todo make this oop friendly
+		 */
 		\elgg_register_menu_item('site', array(
 		    'name' => 'bitcoin',
 		    'text' => '<span class="entypo">&#59408;</span> My Wallet',
@@ -38,18 +52,6 @@ class start extends bases\plugin{
 
 	}
 	
-	/**
-	 * Register page routes
-	 * @return array
-	 */
-	public function registerRoutes(){
-		$path = "minds\\plugin\\bitcoin";
-		return array(
-			'/bitcoin' => "$path\\pages\\index",
-			'/bitcoin/wallet' => "$path\\pages\\wallet",
-			'/bitcoin/send' => "$path\\pages\\send",
-		);
-	}
 	
 	/**
 	 * Initial user registration hook
@@ -90,6 +92,10 @@ class start extends bases\plugin{
 	    }
 	    
 	    $ia = elgg_set_ignore_access($ia);
+	}
+
+	public static function toBTC($satoshi) {
+		 return (float)($satoshi / 100000000);
 	}
 	
 }
