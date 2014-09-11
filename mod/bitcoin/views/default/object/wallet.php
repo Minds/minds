@@ -6,7 +6,7 @@ $balance = $wallet->balance();
 $address = $wallet->getReceivingAddress('bitcoin/receive/'.$wallet_guid);
 ?>
 <div class="wallet">
-	<img class="qr-code" src="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=<?php echo $wallet->address;?>&chld=H|0"/>
+	<img class="qr-code" src="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=<?php echo $address;?>&chld=H|0"/>
 	
 	
 	<h2 class="balance">

@@ -13,7 +13,7 @@ class receive extends core\page implements interfaces\page{
 	 * Get requests
 	 */
 	public function get($pages){
-		
+		error_log('BTC CALLBACK: ' . $pages);		
 		$ia = \elgg_set_ignore_access(true);
 		
 		$wallet = new entities\wallet($pages[0]);

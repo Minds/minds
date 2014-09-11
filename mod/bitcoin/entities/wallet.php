@@ -59,7 +59,7 @@ class wallet extends entities\object{
 		$response = blockchain::__make_call('get', 'api/receive', array(
 		    'method' => 'create',
 		    'address' => $this->address,
-		    'callback_url' => $callback
+		    'callback' => elgg_get_site_url() . $callback
 		));
 		return $response['content']['input_address'];
 	}
