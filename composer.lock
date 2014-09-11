@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claviska/jquery-minicolors.git",
-                "reference": "1cefd6337317cb8c7c3ffb95c4c6ddf001259dc2"
+                "reference": "8c5fa018a4514a2948e63611f5816a3d13eedf34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claviska/jquery-minicolors/zipball/1cefd6337317cb8c7c3ffb95c4c6ddf001259dc2",
-                "reference": "1cefd6337317cb8c7c3ffb95c4c6ddf001259dc2",
+                "url": "https://api.github.com/repos/claviska/jquery-minicolors/zipball/8c5fa018a4514a2948e63611f5816a3d13eedf34",
+                "reference": "8c5fa018a4514a2948e63611f5816a3d13eedf34",
                 "shasum": ""
             },
             "type": "component",
@@ -40,7 +40,7 @@
             ],
             "description": "jQuery MiniColors Plugin",
             "homepage": "http://www.abeautifulsite.net/",
-            "time": "2014-05-22 16:12:31"
+            "time": "2014-09-02 15:04:06"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -362,12 +362,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "12545cda2f7a0bd82a110f742ef455fe735e60cf"
+                "reference": "b3f039339d7a8173c7b441dbaa572ccacb712b54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/12545cda2f7a0bd82a110f742ef455fe735e60cf",
-                "reference": "12545cda2f7a0bd82a110f742ef455fe735e60cf",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/b3f039339d7a8173c7b441dbaa572ccacb712b54",
+                "reference": "b3f039339d7a8173c7b441dbaa572ccacb712b54",
                 "shasum": ""
             },
             "require": {
@@ -426,7 +426,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-07-31 22:12:22"
+            "time": "2014-09-10 15:41:01"
         },
         {
             "name": "paypal/rest-api-sdk-php",
@@ -434,12 +434,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/paypal/rest-api-sdk-php.git",
-                "reference": "9aff596bb5a3893465af5cf6bfbf5e28f7b785c1"
+                "reference": "9d5d0beb57227cc31f1072ad37ddea57f6ea71b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paypal/rest-api-sdk-php/zipball/9aff596bb5a3893465af5cf6bfbf5e28f7b785c1",
-                "reference": "9aff596bb5a3893465af5cf6bfbf5e28f7b785c1",
+                "url": "https://api.github.com/repos/paypal/rest-api-sdk-php/zipball/9d5d0beb57227cc31f1072ad37ddea57f6ea71b7",
+                "reference": "9d5d0beb57227cc31f1072ad37ddea57f6ea71b7",
                 "shasum": ""
             },
             "require": {
@@ -475,7 +475,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2014-08-12 15:15:43"
+            "time": "2014-09-09 15:28:29"
         },
         {
             "name": "paypal/sdk-core-php",
@@ -522,16 +522,16 @@
         },
         {
             "name": "pimple/pimple",
-            "version": "dev-master",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Pimple.git",
-                "reference": "3764c3985684ad6af4ad3c7d2e0595f9f09faf5f"
+                "reference": "ea22fb2880faf7b7b0e17c9809c6fe25b071fd76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/3764c3985684ad6af4ad3c7d2e0595f9f09faf5f",
-                "reference": "3764c3985684ad6af4ad3c7d2e0595f9f09faf5f",
+                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/ea22fb2880faf7b7b0e17c9809c6fe25b071fd76",
+                "reference": "ea22fb2880faf7b7b0e17c9809c6fe25b071fd76",
                 "shasum": ""
             },
             "require": {
@@ -540,7 +540,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0.x-dev"
+                    "dev-master": "2.1.x-dev"
                 }
             },
             "autoload": {
@@ -564,7 +564,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2014-07-29 17:32:26"
+            "time": "2014-07-24 07:10:08"
         },
         {
             "name": "psr/log",
