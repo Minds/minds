@@ -18,7 +18,7 @@ if (elgg_is_logged_in() && $_SESSION['__tier_selected'])
 $tiers = elgg_get_entities(array(
 	'type' => 'object',
 	'subtype' => 'minds_tier',
-	'limit' => 3
+	'limit' => 4
 ));
 
 //sort the tiers by price
@@ -32,7 +32,10 @@ usort($tiers, function($a, $b){
 		<div class="cell feature">&nbsp;</div>
 		<?php 
 			foreach($tiers as $tier){
-				echo '<div class="cell">$'. $tier->price . '/month</div>';
+				if($tier->price === 'Contact')
+					echo '<div class="cell">'. $tier->price . '</div>';
+				else 
+					echo '<div class="cell">$'. $tier->price . '/month</div>';
 			}
 		?>
 	</div>
@@ -49,7 +52,7 @@ usort($tiers, function($a, $b){
 		<div class="cell feature">See the terms and conditions</div>
 		<?php 
 			foreach($tiers as $tier){
-				//$class = $tier->price > 0 ? ' disabled' :'';
+				$class = "tier-$tier->price";
 				$button =  elgg_view('output/url', array(
 					'is_action' => true, 
 					'id' => 'tier-select-button', 
@@ -57,8 +60,8 @@ usort($tiers, function($a, $b){
 					'data-price' => $tier->price,
 					'href' => '#', 
 					//'text' => $tier->price > 0 ? 'Coming soon' : 'Select', 
-					'text' => 'Select',
-					'class' => 'elgg-button elgg-button-action'.$class,
+					'text' => $tier->price === 'Contact' ? 'Contact Us' : 'Select',
+					'class' => 'elgg-button elgg-button-action '.$class,
 				));
 				echo '<div class="cell">'. $button . '</div>';
 			}
@@ -251,7 +254,7 @@ if(!elgg_is_logged_in()){
 	
 	<div class="row">
 		<div class="cell">
-			<?php echo elgg_view('input/autocomplete', array('data-type'=>'user', 'placeholder'=>'Enter the username of who referred you', 'class'=>'user-lookup')); ?>
+			<?php echo elgg_view('input/autocomplete', array('data-type'=>'user', 'placeholder'=>'Enter the username of who referred you', 'class'=>'user-lookup', 'value'=>get_input('referrer'))); ?>
 		</div>
 	</div>
 
@@ -280,4 +283,38 @@ if(!elgg_is_logged_in()){
 	</div>
 
 </div>
+
+
+
+<div class="nodes-table contact" style="display:none;">
+	<div class="row thead">
+		<div class="cell feature">Contact</div>
+		<div class="cell"></div>
+	</div>
+	
+	<div class="row input">
+		<div class="cell">
+			<input name="email" placeholder="Your Email Address" value="<?php echo elgg_is_logged_in() ? elgg_get_logged_in_user_entity()->email : '';?>"/> 
+		</div>
+		<div class="cell">
+			<textarea placeholder="Tell us more about your site. " name="message"></textarea>
+		</div>
+	</div>
+	
+	<div class="row input">
+		<div class="cell">
+			Please leave your email address and a message and we will get back to your shortly. 
+		</div>
+		<div class="cell">
+			<div class="elgg-button elgg-button-action send">Send.</div>
+		</div>
+	</div>
+	
+	<div class="row response" style="display:none;">
+		<div class="cell">
+			Thanks. We will be in touch soon.
+		</div>
+	</div>
+</div>
+
 

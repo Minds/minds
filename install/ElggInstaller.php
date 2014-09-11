@@ -552,7 +552,7 @@ class ElggInstaller {
 	protected function complete() {
 		$params = array();
 		if ($this->autoLogin) {
-			$params['destination'] = 'register/orientation';
+			$params['destination'] = 'index.php';
 		} else {
 			$params['destination'] = 'index.php';
 		}
@@ -560,7 +560,7 @@ class ElggInstaller {
 		$this->disableInstallation();
 
 		if(elgg_is_logged_in())
-			forward( 'register/orientation');
+			forward( '/');
 		
 		forward('/');
 		//	$this->render('complete', $params);
@@ -1313,6 +1313,7 @@ class ElggInstaller {
 			'minds_webservices',
 			'minds_wordpress',
 			'persona',
+			'chat',
 			'notifications',
 			'orientation',
 			'mobile',

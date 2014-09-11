@@ -19,6 +19,7 @@ $english = array(
 	'install:email' => 'Email SMTP',
 	'install:complete' => 'Finished',
 	'install:footer' => 'Footer links',
+	'install:dns' => 'DNS',
 
 	'install:next' => 'Next',
 	'install:refresh' => 'Refresh',

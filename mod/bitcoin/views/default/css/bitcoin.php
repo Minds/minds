@@ -1,18 +1,20 @@
-div.wallet {
+.bitcoin-form input[type=password], .bitcoin-form input[type=text]{
+	padding:16px;
+	font-size:18px;
+	width:50%;
+}
+
+
+.wallet {
     margin: 20px;
 }
 
-div.wallet div.report {
-    margin-top: 20px;
+.wallet .balance {
+    font-size: 64px;
 }
 
-div.wallet div.header {
-    
-    padding-bottom: 10px;
-}
-
-div.wallet p.balance {
-    font-size: 2em;
+.wallet .address{
+	margin:24px 0;
 }
 
 div.bitcoin-transaction span.action {
@@ -41,7 +43,7 @@ div.bitcoin-transaction span.address {
 
 div.wallet img.qr-code {
     float: right;
-    width: 250px;
+    width: 300px;
     margin-bottom: 20px;
 }
 

@@ -1,8 +1,14 @@
 <?php
 
 $user = elgg_get_logged_in_user_entity();
+$domain = $vars['domain'];
 
-$domain_link = "http://". $vars['domain'] . "/install.php?username=".urlencode($user->username) . "&name=".urlencode($user->name) . "&email=".urlencode($user->email) . "&ts=".time(); 
+//due to dns propagation we sent to a temporary subdomain
+if(strpos($domain, '.minds.com') === false){
+	$domain = str_replace('.', '-', $domain) . '-custdom-001.minds.com';
+}
+
+$domain_link = "http://". $domain . "/install.php?username=".urlencode($user->username) . "&name=".urlencode($user->name) . "&email=".urlencode($user->email) . "&ts=".time(); 
 
 $ping = get_input('ping', false);
 if($ping){
@@ -46,7 +52,7 @@ if($ping){
         <div class="inner">
                 <div class="elgg-head clearfix">
  		 	<h2>Hmmmmm... something is not right</h2>
-    			<h3>Your new node (<?php echo $vars['domain']; ?>) could not be reached. If you are using a custom domain, it may be that you need to modify your DNS settings.</p>
+    			<h3>Your new node (<?php echo $domain; ?>) could not be reached. If you are using a custom domain, it may be that you need to modify your DNS settings.</p>
     			<h4>DNS details</h4>
  		   	<div class="dns">
       				<p><label>Domain:</label> <?php echo $vars['domain']; ?><br />
@@ -89,6 +95,6 @@ if($ping){
                             //   $('#pingtest-fail').fadeIn();
 		}
   	}
-	xmlhttp.open("GET","?domain=<?php echo $vars['domain'];?>&ping=true",true);
+	xmlhttp.open("GET","?domain=<?php echo $domain;?>&ping=true",true);
 	xmlhttp.send();
 </script>

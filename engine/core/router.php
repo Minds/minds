@@ -6,10 +6,12 @@ namespace minds\core;
 
 class router{
 	
+	// these are core pages, other pages are registered by plugins
 	static $routes = array(
 		"/action" => "minds\\pages\\actions",
 		"/services" => "minds\\pages\\services",
-		"/cache" => "minds\\pages\\cache"
+		"/cache" => "minds\\pages\\cache",
+		"/contact" => "minds\\pages\\contact"
 	);
 	
 	/**
@@ -28,10 +30,10 @@ class router{
 		
 		//@todo handler the homepage better
 		if(count($segments) == 1 && $segments[0] == ""){
-                        //we load the homepage controller
-                        $handler = new \minds\pages\index();
-                        return $handler->$method(array());
-                }
+	    	//we load the homepage controller
+			$handler = new \minds\pages\index();
+			return $handler->$method(array());
+	    }
 	
 		$loop = count($segments);
 		while($loop >= 0){

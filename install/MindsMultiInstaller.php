@@ -7,6 +7,8 @@ class MindsMultiInstaller extends ElggInstaller {
 
 	protected $type = 'multi';
 
+	protected $domain = '';
+
     protected $steps = array(
        'welcome',
         'settings',
@@ -17,6 +19,7 @@ class MindsMultiInstaller extends ElggInstaller {
 //		'carousel',
 //		'import',
 //		'email',
+	'dns',
         'complete',
     );
     
@@ -166,6 +169,15 @@ class MindsMultiInstaller extends ElggInstaller {
 
            $this->render('admin', array('variables' => $formVars));
    }
+
+  protected function dns($submissionVars){
+
+	if ($this->isAction) {
+		 $this->continueToNextStep('dns');
+	}
+
+	$this->render('dns');
+  }
    
    /**
     * We never want to create a settings file...
@@ -241,7 +253,18 @@ class MindsMultiInstaller extends ElggInstaller {
 
 	global $CONFIG;
         try{
-		$node = new minds\multisite\models\node($_SERVER['HTTP_HOST']);
+		$domain = $_SERVER['HTTP_HOST'];
+		if(strpos($domain, '-custdom-001') !== FALSE){
+			$domain = str_replace('-custdom-001.minds.com', '', $domain);
+			$domain = str_replace('-', '.', $domain);
+		}else{
+			//don't show the dns step for non custom install
+			if(($key = array_search('dns', $this->steps)) !== false) {
+ 				unset($this->steps[$key]);
+			}
+		}
+		$this->domain = $domain;
+		$node = new minds\multisite\models\node($domain);
 		
 		if($node->installed == true){
 			throw new Exception("This site is already installed");
@@ -301,6 +324,7 @@ class MindsMultiInstaller extends ElggInstaller {
 	    'archive',
             'blog',
    		'deck', 
+   		'gatherings',
             'persona',
             'notifications',
             //'minds_connect',
@@ -308,7 +332,8 @@ class MindsMultiInstaller extends ElggInstaller {
 	    'minds_social',
             'minds_themeconfig',
 		'anypage',
-		'tinymce'
+		'tinymce',
+		'search'
             //'minds_wordpress',
         );
         foreach ($user_editable_plugins as $plugin_id) {
@@ -334,7 +359,7 @@ class MindsMultiInstaller extends ElggInstaller {
 
     protected function disableInstallation(){
 		global $CONFIG;
-    	$node = new minds\multisite\models\node($_SERVER['HTTP_HOST']);
+    	$node = new minds\multisite\models\node($this->domain);
 		$node->installed = true;
 		$node->save();
 		unlink("/tmp/nodes/".$_SERVER['HTTP_HOST']);

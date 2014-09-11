@@ -17,7 +17,8 @@ if(get_input('add')){
 
 $items = elgg_get_entities(array(
 	'type' => 'object',
-	'subtype' => 'carousel_item'
+	'subtype' => 'carousel_item', 
+	'limit' => 100
 ));
 
 foreach($items as $k=>$item){

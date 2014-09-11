@@ -77,9 +77,11 @@ if($paypal || $bitcoin){
 	$donations_box = '<div class="donations-box">';
 		
 	if($paypal)
-		$donations_box .= '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business='.urlencode($paypal) .'&lc=US&item_name='.$CONFIG->site->name.'%2e&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHostedGuest" class="donations-button donations-button-paypal" target="_blank"> <span class="entypo"> &#59409; </span> Click to donate USD </a>'; 
+		$donations_box .= '<a onclick="window.open(this.href, \'Paypal Donations\',
+\'left=60,top=60,width=800,height=600,toolbar=1,resizable=0\'); return false;" href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business='.urlencode($paypal) .'&lc=US&item_name='.$CONFIG->site->name.'%2e&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHostedGuest" class="donations-button donations-button-paypal" target="_blank"> <span class="entypo"> &#59409; </span> Click to donate USD </a>'; 
 	if($bitcoin)
-		$donations_box .= '<a class="donations-button donations-button-bitcoin"> <span class="entypo"> &#59408; </span> Donate Bitcoins to '.$bitcoin.'</a>';
+		$donations_box .= '<a class="donations-button donations-button-bitcoin" onclick="window.open(this.href, \'Bitcoin\',
+\'left=60,top=60,width=400,height=400,toolbar=1,resizable=0\'); return false;" href="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl='. $bitcoin . '&chld=H|0"> <span class="entypo"> &#59408; </span> Donate Bitcoins to '.$bitcoin.'</a>';
 	$donations_box .= '</div>';
 
 }
@@ -116,6 +118,10 @@ $params = array(	'content'=> $content,
 $body = elgg_view_layout('one_column', $params);
 
 $class = 'index ';
+
+if(!elgg_get_plugin_setting('style','minds'))
+	elgg_set_plugin_setting('style', 'fat', 'minds');
+
 $class .= elgg_get_plugin_setting('style','minds') == 'fat' ? 'carousel-fat' : 'carousel-thin';
 
 echo elgg_view_page('', $body, 'default', array('class'=>$class));

@@ -2112,7 +2112,7 @@ function elgg_init() {
 	elgg_register_page_handler('css', 'elgg_css_page_handler');
 	elgg_register_page_handler('ajax', 'elgg_ajax_page_handler');
 
-	elgg_register_js('elgg.autocomplete', elgg_get_site_url() . 'js/lib/ui.autocomplete.js','footer');
+	elgg_register_js('elgg.autocomplete', elgg_get_site_url() . 'js/lib/ui.autocomplete.js?cb='.$CONFIG->lastcache,'footer');
 	elgg_register_js('jquery.ui.autocomplete.html', elgg_get_site_url() . 'vendors/jquery/jquery.ui.autocomplete.html.js','footer');
 	elgg_register_js('elgg.userpicker', elgg_get_site_url() . 'js/lib/ui.userpicker.js','footer');
 	elgg_register_js('elgg.friendspicker', elgg_get_site_url() . 'js/lib/ui.friends_picker.js','head');//because of inline code

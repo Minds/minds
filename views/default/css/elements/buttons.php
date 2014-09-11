@@ -192,6 +192,18 @@ a.elgg-button {
 	text-decoration: none;
 	background: #EEE;
 }
+.minds-topbar-icon{
+	padding:4px;
+	margin:11px 0;
+	min-width:0;
+	background:#4690D6;
+	color:#FFF;
+	float:left;
+}
+.minds-topbar-icon:hover{
+	color:#EEE;
+	text-decoration:none;
+}
 
 
 .tip{

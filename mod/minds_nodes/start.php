@@ -25,7 +25,10 @@ class start extends bases\plugin{
 		\elgg_register_action("select_tier", dirname(__FILE__) . "/actions/select_tier.php", 'public');
 		\elgg_register_action("upgrade_to", dirname(__FILE__) . "/actions/upgrade_to.php");
 		\elgg_register_action("renamenode", dirname(__FILE__) . "/actions/renamenode.php");
+		
+		\elgg_register_action("node/edit", dirname(__FILE__) . "/actions/edit.php");
 		\elgg_register_action("node/delete", dirname(__FILE__) . "/actions/delete.php");
+		\elgg_register_action("nodes/contact", dirname(__FILE__) . "/actions/contact.php", 'public');
 	
 		\elgg_extend_view('js/elgg', 'minds_nodes/js');
 		\elgg_extend_view('css/elgg', 'minds_nodes/css');
@@ -178,6 +181,13 @@ class start extends bases\plugin{
 	                        'text' => \elgg_echo('minds_node:manage'),
 	                        'link_class' => 'elgg-button elgg-button-action',
 	                ));
+		}
+		
+		
+		//if this is a multisite then we forward to minds.com.
+		if(\minds\core\minds::detectMultisite()){
+			forward('https://www.minds.com/nodes/launch?referrer='.\elgg_get_plugin_setting('owner_username','minds_nodes'));
+			return true;
 		}
 		
 		if(!$pages[0]){

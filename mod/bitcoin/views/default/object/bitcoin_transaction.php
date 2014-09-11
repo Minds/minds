@@ -4,7 +4,7 @@
 	
 	<span class="action"><?php echo $vars['entity']->action; ?></span>
 	
-	<span class="amount"><?php echo sprintf("%f", minds\plugin\bitcoin\bitcoin()->toBTC($vars['entity']->amount_satoshi)); ?> BTC</span> <br />
+	<span class="amount"><?php echo sprintf("%f", minds\plugin\bitcoin\start::toBTC($vars['entity']->amount)); ?> BTC</span> <br />
 	
 	<span class="address">
 	<?php

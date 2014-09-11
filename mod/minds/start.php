@@ -331,14 +331,14 @@ function minds_pagesetup(){
 	));
 	
 	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
-	if(elgg_is_logged_in())
-		elgg_register_menu_item('site', array(
-			'name' => 'news',
-			'href' => 'news/featured',
-			'text' => '<span class="entypo">&#59194;</span> News',
-			'title' => elgg_echo('news'),
-			'priority' => 1	
-		));
+
+	elgg_register_menu_item('site', array(
+		'name' => 'news',
+		'href' => 'news/featured',
+		'text' => '<span class="entypo">&#59194;</span> News',
+		'title' => elgg_echo('news'),
+		'priority' => 1	
+	));
 	
 	elgg_register_menu_item('site', array(
 		'name' => elgg_echo('minds:upload'),
@@ -361,43 +361,6 @@ function minds_pagesetup(){
 			'priority' => 60,
 			'section' => 'alt',
 		));
-	//settings
-	elgg_unregister_menu_item('topbar', 'usersettings');
-	if($user)
-	elgg_register_menu_item('topbar', array(
-			'name' => 'usersettings',
-			'href' => '/settings/user/' . $user->username,
-			'text' => '&#9881;',
-			'title' => elgg_echo('settings'),
-			'priority' => 800,
-			'section' => 'alt',
-		));
-	if(!$user){
-		elgg_register_menu_item('topbar', array(
-			'name' => 'register',
-			'href' => '/register',
-			'text' => elgg_echo('register'),
-			'priority' => 900,
-			'section' => 'alt',
-		));
-		elgg_register_menu_item('topbar', array(
-			'name' => 'login',
-			'href' => '#',
-			'text' => elgg_view('core/account/login_dropdown'),
-			'priority' => 1000,
-			'section' => 'alt',
-		));
-	} else {
-		elgg_unregister_menu_item('topbar', 'logout');
-		elgg_register_menu_item('topbar', array(
-			'name' => 'logout',
-			'href' => 'action/logout',
-			'text' => '&#59399;',
-			'title' => elgg_echo('logout'),
-			'priority' => 1000,
-			'section' => 'alt',
-		));
-	}
 	
 	// embed support
         $item = ElggMenuItem::factory(array(

@@ -6,6 +6,16 @@ if(0){ ?><style><?php } ?>
 
 @media all 
 and (min-width : 0px)
+and (max-width : 1260px) {
+		
+	.minds-topbar-icon{
+		display:none;
+	}
+	
+}
+
+@media all 
+and (min-width : 0px)
 and (max-width : 720px) {
 
 
@@ -25,18 +35,18 @@ and (max-width : 720px) {
 		margin-top:14px;
 	}
 	
-	.hero > .topbar .logo > img{
+	.hero > .topbar .logo img{
 		width: 100%;
 		height: auto;
 		max-width: 100px;
 	}
 	.hero > .topbar .right .elgg-button{
 		margin: 1px;
-/* width: 52px; */
-font-size: 60%;
-padding: 2px 5px;
-width: auto;
-font-weight: bold;
+		/* width: 52px; */
+		font-size: 60%;
+		padding: 2px 5px;
+		width: auto;
+		font-weight: bold;
 	}
 	
 	.hero > .body, .elgg-page-body {	
@@ -79,6 +89,7 @@ font-weight: bold;
 		display:none;
 	}
 
+
 	.homepage{
 		padding-top:64px;
 	}
@@ -98,6 +109,46 @@ font-weight: bold;
 	.carousel-inner > .item > .carousel-caption h3{
 		font-size:24px;
 		line-height:24px;
+	}
+	
+	.carousel-fat .minds-body-header{
+		height:400px;
+	}
+	.carousel-fat .carousel{
+		height:400px;
+	}
+	.carousel-fat .carousel .item{
+		height:400px;
+	}
+	.carousel-fat .carousel .item > .carousel-caption{
+		top:  100px;
+	}
+	.carousel-fat .carousel-inner > .item > img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		min-width:100%;
+		height: 100%;
+	}
+	
+	.carousel-fat .elgg-layout{
+		min-height:0;
+	}
+	.carousel-fat .minds-body-header{
+		margin:0;
+		padding:0;
+	}
+	
+	.donations-box{
+		position:absolute;
+		margin-left:0;
+		top:200px;
+		left:0;
+		width:100%;
+	}
+	.donations-button{
+		font-size:11px;
+		float:left;
 	}
 
 	.frontpage-signup, .front-page-buttons{
