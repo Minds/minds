@@ -9,6 +9,8 @@ use minds\plugin\bitcoin\entities;
 
 class wallet extends core\page implements interfaces\page{
 	
+	public $context = 'bitcoin';
+	
 	/**
 	 * Get requests
 	 */

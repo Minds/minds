@@ -43,9 +43,12 @@ class start extends bases\plugin{
 		\elgg_register_menu_item('site', array(
 		    'name' => 'bitcoin',
 		    'text' => '<span class="entypo">&#59408;</span> My Wallet',
-		    'href' => 'bitcoin/mywallet',
+		    'href' => 'bitcoin/wallet',
 		    'title' => elgg_echo('bitcoin')
 	    ));
+
+		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
+
 		
 		\elgg_register_action('bitcoin/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
 		\elgg_register_admin_menu_item('minds', 'bitcoin');	
@@ -53,6 +56,28 @@ class start extends bases\plugin{
 
 	}
 	
+	
+	/**
+	 * Page setup (menus etc)
+	 */
+	public function pageSetup(){
+		if(elgg_get_context() == 'bitcoin'){
+			
+			\elgg_register_menu_item('page', array(
+			    'name' => 'bitcoin',
+			    'text' => '<span class="entypo">&#59408;</span> My Wallet',
+			    'href' => 'bitcoin/wallet',
+			    'title' => elgg_echo('bitcoin')
+		    ));
+			
+			\elgg_register_menu_item('page', array(
+			    'name' => 'bitcoin:send',
+			    'text' => 'Send',
+			    'href' => 'bitcoin/send',
+			    'title' => elgg_echo('bitcoin:send')
+		    ));
+		}
+	}
 	
 	/**
 	 * Initial user registration hook

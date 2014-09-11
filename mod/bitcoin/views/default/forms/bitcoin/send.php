@@ -25,9 +25,8 @@ if ($vars['order']) {
 <p><label>Enter the amount of Bitcoin you wish to send from your wallet</label></p>
 	<input type="text" name="amount" value="<?php echo $amount_btc; ?>" placeholder="Amount in BTC" />
 	
-<p><label>Address</label></p>
-	<input type="text" name="address" value="<?php echo $address; ?>" placeholder="Bitcoin address" />
-<?php
+<p><label>Username or Bitcoin Address</label></p>
+	<?php echo elgg_view('input/autocomplete', array('name'=>'address', 'value'=>$address, 'placeholder'=>'Bitcoin address', 'data-type'=>'user', 'class'=>'user-lookup'));
   }
 ?>
 

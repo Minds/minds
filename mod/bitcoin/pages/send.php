@@ -8,7 +8,9 @@ use minds\interfaces;
 use minds\plugin\bitcoin\entities;
 
 class send extends core\page implements interfaces\page{
-	
+
+	public $context = 'bitcoin';
+
 	/**
 	 * Get requests
 	 */
@@ -37,14 +39,14 @@ class send extends core\page implements interfaces\page{
 		
 		$to_address = isset($_POST['address']) ? $_POST['address'] : NULL;
 		
-		if($_POST['username']){
+		if($user = get_user_by_username($to_address)){
 			//check if the user has a wallet
-			$to_wallet = \elgg_get_plugin_user_setting('wallet_guid', elgg_get_logged_in_user_guid(), 'bitcoin');
+			$to_wallet = \elgg_get_plugin_user_setting('wallet_guid', $user->guid, 'bitcoin');
 			if(!$to_wallet){
 				\register_error('Sorry, this user doesn\'t have a wallet configured.');
 			}
 			$to_wallet = new entities\wallet($to_wallet);
-			$to_address = $to_wallet->address;
+			$to_address = $to_wallet->getReceivingAddress('bitcoin/reveive/'.$to_wallet->guid);
 		}
 		
 		$guid = \elgg_get_plugin_user_setting('wallet_guid', elgg_get_logged_in_user_guid(), 'bitcoin');

@@ -29,7 +29,7 @@ elgg.autocomplete.init = function() {
 					for(type in response){
 						$.each(response[type], function(key, item){
 							div = '';
-							console.log($.inArray(item.guid, guids));
+							//console.log($.inArray(item.guid, guids));
 							if($.inArray(item.guid, guids) >= 0)
 								return;
 								
@@ -58,7 +58,7 @@ elgg.autocomplete.init = function() {
 			if($(this).attr('name')=='q'){
 				window.location.href = suggestion.data.url;
 			} else if($(this).attr('data-type') == 'user'){
-				console.log(suggestion);
+			//	console.log(suggestion);
 				$(this).val(suggestion.data.username);
 			}	
 		}
