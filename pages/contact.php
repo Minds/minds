@@ -25,7 +25,7 @@ class contact extends core\page implements interfaces\page{
 			return false;
 		}
 			
-		\elgg_send_email($_POST['email'], array('mark@minds.com','bill@minds.com'), 'New Email from ' . $_POST['name'], $_POST['message']);
+		\elgg_send_email('emails@minds.com', array($_POST['email'],'mark@minds.com','bill@minds.com'), 'New Email from ' . $_POST['name'] . ' ' . $_POST['email'], $_POST['message']);
 		
 		\system_message('Success!');
 		

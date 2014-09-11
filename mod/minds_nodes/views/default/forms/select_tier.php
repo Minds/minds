@@ -23,6 +23,8 @@ $tiers = elgg_get_entities(array(
 
 //sort the tiers by price
 usort($tiers, function($a, $b){
+	if($a->price === 'Custom')
+		return 1000;
 	return $a->price - $b->price;
 });
 
@@ -32,7 +34,7 @@ usort($tiers, function($a, $b){
 		<div class="cell feature">&nbsp;</div>
 		<?php 
 			foreach($tiers as $tier){
-				if($tier->price === 'Contact')
+				if($tier->price === 'Custom')
 					echo '<div class="cell">'. $tier->price . '</div>';
 				else 
 					echo '<div class="cell">$'. $tier->price . '/month</div>';
@@ -60,7 +62,7 @@ usort($tiers, function($a, $b){
 					'data-price' => $tier->price,
 					'href' => '#', 
 					//'text' => $tier->price > 0 ? 'Coming soon' : 'Select', 
-					'text' => $tier->price === 'Contact' ? 'Contact Us' : 'Select',
+					'text' => $tier->price === 'Custom' ? 'Contact Us' : 'Select',
 					'class' => 'elgg-button elgg-button-action '.$class,
 				));
 				echo '<div class="cell">'. $button . '</div>';
