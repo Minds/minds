@@ -21,7 +21,7 @@ class wallet extends core\page implements interfaces\page{
 		$wallet = new entities\wallet($guid);
 
 		if(!$wallet->guid){
-			$content = \elgg_view_form('bitcoin/create', array('action'=>'/bitcoin/wallet/create'));
+			$content = \elgg_view_form('bitcoin/create', array('action'=>'/bitcoin/wallet/create', 'class'=>'bitcoin-form'));
 		} else {
 	
 			$unlock = \elgg_view_form('bitcoin/unlock', array('action'=>'/bitcoin/wallet/authorise', 'class'=>'bitcoin-form'));
@@ -74,7 +74,7 @@ class wallet extends core\page implements interfaces\page{
 					return false;
 				}
 				$wallet->create($_POST['password']);
-				
+				setcookie('bitcoin_pswd', $_POST['password'], time()+120, '/');
 				$this->forward('bitcoin/wallet');
 				break;
 			case 'import':
