@@ -337,74 +337,30 @@ class blockchain extends core\base{
     /**
      * Low level wallet creation
      */
-    protected function blockchainCreateWallet($password) {
-	
-		$api_code = elgg_get_plugin_setting('api_code', 'bitcoin');
-		
-		if (!$password) throw new \Exception("Bitcoin: Attempting to create a wallet with a blank password");
-		if (!$api_code) throw new \Exception ("Bitcoin: An API Code needs to be specified before bitcoin transactions can be made.");
-		
-		$wallet = $this->__make_call('GET', "api/v2/create_wallet", array(
-		    'api_code' => $api_code,
-		    'password' => $password,
-		    'email' => $user->email
-		));
-		
-		if ($wallet['response'] == 500)
-		    throw new \Exception("Bitcoin: "  . $wallet['content']);
-		
-		$wallet = $wallet['content'];
-		
-		error_log("Bitcoin: Wallet response is " . var_export($wallet, true));
-		
-		// Belts and braces
-		if (empty($wallet['address'])) throw new \Exception("Bitcoin: Wallet call seemed to work, but no address was found");
-		
-		return $wallet;
-	}
+    protected function blockchainCreateWallet($password) {}
 	    
 	public function createWallet(\ElggUser $user, $password) {
 		//now cleaner by using entities
     }
     
-    public function createSystemWallet($password) {
-		error_log("Bitcoin: Attempting to create a wallet for {$user->name}");
+    static public function createSystemWallet($password) {
+			
+		$ia = elgg_set_ignore_access(true);
 		
-		//$password = md5($user->salt . microtime(true));
-		$wallet = $this->blockchainCreateWallet($password);
-	
-		$new_wallet = new \ElggObject();
-	
-		$ia = elgg_set_ignore_access();
+		$wallet = new \minds\plugin\bitcoin\entities\wallet();
+		$wallet->create($password, true);
+		$wallet->wallet_system_pw = $password;
 		
-		$new_wallet->subtype = 'bitcoin_wallet';
-		$new_wallet->access_id = ACCESS_PRIVATE;
-		$new_wallet->owner_guid = 0;	
-		//$this->storeWalletPassword($new_wallet, $password);
+		elgg_set_ignore_access($ia);
 		
-		// We store system passwords
-		$new_wallet->wallet_system_pw = $password;
-		
-		$new_wallet->wallet_raw = serialize($wallet);
-		$new_wallet->wallet_guid = $wallet['guid'];
-		$new_wallet->wallet_address = $wallet['address'];
-		$new_wallet->wallet_link = $wallet['link'];
-		
-		$new_wallet->wallet_handler = 'blockchain';
-	
-		$ia = elgg_set_ignore_access($ia);
-		
-		if ($guid = $new_wallet->save()) {
+		if ($guid = $wallet->save()) {
 		
 		    // Temporarily unlock the wallet
 		    //$this->unlockWallet($guid, $password);
 		    
 		    // Save the address to user settings
-		    elgg_set_plugin_setting('central_bitcoin_account', $wallet['address'], 'bitcoin');
-		    elgg_set_plugin_setting('central_bitcoin_wallet_guid', $wallet['guid'], 'bitcoin'); // Shortcut for wallet guid
-		    elgg_set_plugin_setting('central_bitcoin_wallet_object_guid', $guid, 'bitcoin'); // Shortcut for wallet guid
-		
-		    error_log("Bitcoin: System wallet created");
+		    elgg_set_plugin_setting('central_bitcoin_account', $wallet->address, 'bitcoin');
+		    elgg_set_plugin_setting('central_bitcoin_wallet_guid', $guid, 'bitcoin'); // Shortcut for wallet guid
 		    
 		    return $guid;
 		} 
@@ -412,7 +368,9 @@ class blockchain extends core\base{
 		return false;
     }
 
-    public function importWallet($wallet_guid, $address, $password = null, \ElggUser $user = null, $system = false){		
+    public function importWallet($wallet_guid, $address, $password = null, \ElggUser $user = null, $system = false){
+    	register_error('Sorry, importing is currently unavailable');
+		return false;		
 		error_log("Bitcoin: Importing $wallet_guid -> $address with password $password");
 		
 		if (!$wallet_guid) throw new \Exception("No wallet uuid provided");
@@ -482,125 +440,8 @@ class blockchain extends core\base{
 		}
 		
 		return false;
-    }
-    
-    public function getWallet(\ElggUser $user) {
-		error_log("Bitcoin: Getting wallet for {$user->name}");
-		
-		if ($wallets = elgg_get_entities(array(
-		    'type' => 'object',
-		    'subtype' => 'bitcoin_wallet',
-		    'owner_guid' => $user->guid
-		))) {
-		    error_log("Bitcoin: Found wallets: " . print_r($wallets, true));
-		    return $wallets[0];
-		}
-		else
-		    error_log("Bitcoin: No wallet found");
-		
-		return null;
-	    }
-	
-	    public function getWalletBalance($wallet_guid) {
-		
-		if ($wallet = get_entity($wallet_guid)) {
-		 
-		    if (elgg_instanceof($wallet, 'object', 'bitcoin_wallet'))
-		    {
-			$wallet_guid = $wallet->wallet_guid;
-			$result = $this->__make_call('GET', "merchant/$wallet_guid/balance", array(
-			    'password' => $this->getWalletPassword($wallet),
-			));
-			
-			if ($result['response'] == 500)
-			    throw new \Exception("Bitcoin: "  . $result['content']);
-			 
-			$result = $result['content'];
-			
-			if (isset($result['balance']))
-			    return self::toBTC ($result['balance']);
-			else
-			    throw new \Exception("Bitcoin: " . $result['error']);
-			
-		    }
-		} 
-		
-		return false;
-    }
-    
-    public function getAddressesFromWallet($wallet_guid){
-		if ($wallet = get_entity($wallet_guid)) {
-		 
-		    if (elgg_instanceof($wallet, 'object', 'bitcoin_wallet'))
-		    {
-			$wallet_guid = $wallet->wallet_guid;
-			$result = $this->__make_call('GET', "merchant/$wallet_guid/list", array(
-			    'password' => $this->getWalletPassword($wallet),
-			));
-			
-			if ($result['response'] == 500)
-			    throw new \Exception("Bitcoin: "  . $result['content']);
-			 
-			$result = $result['content'];
-			
-			if (isset($result['addresses']))
-			    return $result['addresses'];
-			else
-			    throw new \Exception("Bitcoin: " . $result['error']);
-			
-		    }
-		} 
-		
-		return false;
-    }
-    
-    public function sendPayment($from_wallet_guid, $to_address, $amount_in_satoshi) {
-		
-		global $CONFIG;
-		
-		error_log("BITCOIN: Attempting to send $amount_in_satoshi from $from_wallet_guid to $to_address");
-		
-		if ($wallet = get_entity($from_wallet_guid)) {
-		    
-		    if (elgg_instanceof($wallet, 'object', 'bitcoin_wallet'))
-		    {
-			error_log("BITCOIN: Got a wallet, making a call.");
-			
-			if ($CONFIG->debug && ($amount_in_satoshi > self::toSatoshi(0.00002))) {
-			    $amount_in_satoshi = self::toSatoshi(0.00002);
-			    error_log("BITCOIN: We're in debug mode, so we're squishing the result to $amount_in_satoshi");
-			}
-			
-			$wallet_guid = $wallet->wallet_guid;
-			$result = $this->__make_call('GET', "merchant/$wallet_guid/payment", array(
-			    'password' => $this->getWalletPassword($wallet),
-			    
-			    'to' => $to_address,
-			    'amount' => $amount_in_satoshi
-			));
-			
-			if ($result['response'] == 500)
-			    throw new \Exception("Bitcoin: "  . $result['content']);
-			
-			$result = $result['content'];
-			
-			error_log("BITCOIN: " . $result['message']);
-			
-			system_message($result['message']);
-		
-			error_log("BITCOIN: Transaction hash is {$result['tx_hash']}");
-					
-			// Log the transaction
-			$this->logSent(get_user($wallet->owner_guid), $to_address, $amount_in_satoshi);
-			
-			return $result['tx_hash'];
-		    }
-		    else error_log("BITCOIN: Wallet $wallet_guid is not a bitcoin_wallet");
-		}
-		else error_log("BITCOIN: Couldn't get wallet");
-		
-		return false;
-    }
+	}
+
 
     protected function getAPIBase() {
 	return "https://blockchain.info/";
@@ -625,23 +466,6 @@ class blockchain extends core\base{
 		error_log("Bitcoin: Created a receive address for $bitcoin_address to callback $callback, and that is {$result['input_address']}");
 		
 		return $result['input_address'];
-    }
-
-    public function createReceiveAddressForUser(\ElggUser $user, array $params = null, $btc_address = null) {
-		$ra = $this->getReceiveAddressForUser($user);
-		
-		if (!$ra) {
-		    
-		    $gets = "";
-		    if ($params)
-			$gets = '?' . http_build_query($params);
-		    
-		    $ra = $user->blockchain_receive_address = $this->blockchainGenerateReceivingAddress(
-			    $btc_address ? $btc_address : elgg_get_plugin_user_setting('bitcoin_address', $user->guid, 'bitcoin'), 
-			    elgg_get_site_url() . 'blockchain/endpoint/receivingaddress/' . $user->username . $gets
-			    );
-		}
-		return $ra;
     }
 
     public function getReceiveAddressForUser(\ElggUser $user) {

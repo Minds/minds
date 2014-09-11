@@ -27,6 +27,7 @@ class start extends bases\plugin{
 				'/bitcoin' => "$path\\pages\\index",
 				'/bitcoin/wallet' => "$path\\pages\\wallet",
 				'/bitcoin/send' => "$path\\pages\\send",
+				'/bitcoin/receive' => "$path\\pages\\receive"
 			));
 		
 		

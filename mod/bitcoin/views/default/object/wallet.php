@@ -3,7 +3,7 @@
 $wallet = $vars['entity'];
 
 $balance = $wallet->balance();
-
+$address = $wallet->getReceivingAddress('bitcoin/receive/'.$wallet_guid);
 ?>
 <div class="wallet">
 	<img class="qr-code" src="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=<?php echo $wallet->address;?>&chld=H|0"/>
@@ -14,7 +14,7 @@ $balance = $wallet->balance();
 	</h2>
 	
 	<h3 class="address">
-		<?php echo $wallet->address;?>
+		<?php echo $address;?>
 	</h4>
 	
 	<a href="<?php echo elgg_get_site_url();?>bitcoin/send" class="elgg-button elgg-button-action">Send</a>

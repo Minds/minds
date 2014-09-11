@@ -29,7 +29,7 @@ class wallet extends entities\object{
 	/**
 	 * Create the wallet
 	 */
-	public function create($password = 'temp123abc'){
+	public function create($password = 'temp123abc', $system = false){
 		$return = blockchain::__make_call('GET', "api/v2/create_wallet", array(
 		    'password' => $password
 		));
@@ -43,11 +43,28 @@ class wallet extends entities\object{
 		
 		$guid = $this->save();
 		
-		\elgg_set_plugin_user_setting('wallet_guid', $guid, $this->owner_guid, 'bitcoin');
+		
+		if(!$system)
+			\elgg_set_plugin_user_setting('wallet_guid', $guid, $this->owner_guid, 'bitcoin');
 		
 		return $guid;
 	}
 	
+	/**
+	 * Get a receiving address
+	 * 
+	 * This is so that we get a callback request and to protect original address
+	 */
+	public function getReceivingAddress($callback = ''){
+		$response = blockchain::__make_call('get', 'api/receive', array(
+		    'method' => 'create',
+		    'address' => $this->address,
+		    'callback_url' => $callback
+		));
+		return $response['content']['input_address'];
+	}
+	 
+	 
 	/**
 	 * Get balance
 	 */
@@ -77,7 +94,8 @@ class wallet extends entities\object{
 		$transaction = new transaction(array(
 			'owner_guid' => $this->owner_guid,
 			'to_address' => $to_address,
-			'amount' => $amount
+			'amount' => $amount,
+			'action' => 'sent'
 		));
 		$transaction->save();
 
