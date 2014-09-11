@@ -30,10 +30,10 @@ class router{
 		
 		//@todo handler the homepage better
 		if(count($segments) == 1 && $segments[0] == ""){
-                        //we load the homepage controller
-                        $handler = new \minds\pages\index();
-                        return $handler->$method(array());
-                }
+	    	//we load the homepage controller
+			$handler = new \minds\pages\index();
+			return $handler->$method(array());
+	    }
 	
 		$loop = count($segments);
 		while($loop >= 0){

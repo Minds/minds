@@ -6,9 +6,10 @@ namespace minds\core;
 
 class page extends base{
 	
+	public $context = NULL;
 	
 	public function init(){
-		
+		\elgg_set_context($this->context);
 	}
 
 	/**

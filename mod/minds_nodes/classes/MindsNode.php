@@ -18,7 +18,7 @@ class MindsNode extends ElggObject{
 	 * Is this node allowed it's own domain
 	 */
 	public function allowedDomain(){ 
-		return $this->getTier()->allowedDomain();
+		return $this->getTier()->price > 0 ? true : false;//perhaps a little simplistic
 	}
 
 	/**
@@ -129,7 +129,9 @@ class MindsNode extends ElggObject{
 	public function renameNode($new_domain){
 		global $CONFIG;
 		$this->old_domain = $this->domain;
-		
+	
+	//	$this->domain = 'heliski.minds.com';
+	//	return $this->save();	
 		if($new_domain == $this->domain)
 			return true;
 
