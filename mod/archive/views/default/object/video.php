@@ -24,6 +24,8 @@ if($full){
 	
 	$body = $video;
 
+	$body .= '<div class="archive-description">'.$entity->description.'</div>';
+
 	echo $body;
 	
 } else {

@@ -26,6 +26,9 @@ class minds extends base{
 	
 		$this->loadConfigs();
 		$this->loadLegacy();
+		
+		//@todo check configs before loading clusters
+		new clusters();
 
 		if($this->detectMultisite())
 			new multisite();

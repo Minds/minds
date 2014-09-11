@@ -1,6 +1,10 @@
 <?php
 
 add_translation('en', array(
+	'bitcoin:wallet' => 'Wallet',
+	
+	'bitcoin:send' => 'Send',
+ 	
     'bitcoin:from' => 'From',
     'bitcoin:to' => 'To',
     
