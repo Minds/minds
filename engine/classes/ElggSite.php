@@ -40,7 +40,7 @@ class ElggSite extends ElggEntity {
 		global $CONFIG;
 		$this->attributes['guid'] = 1;
 		$this->attributes['type'] = "site";
-		$this->attributes['name'] = ucwords($_SERVER['HTTP_HOST']);
+		$this->attributes['name'] = isset($_SERVER['HTTP_HOST']) ? ucwords($_SERVER['HTTP_HOST']) : '';
 		$this->attributes['description'] = NULL;
 		$this->attributes['url'] = NULL;
 	}
