@@ -6,7 +6,7 @@ namespace minds\core;
 
 class clusters extends base{
 	
-	public $seeds = array('localhost', 'www.minds.io');
+	public $seeds = array('https://www.minds.io');
 	public $ttl = 1800; //nodes live for half an hours, and then they have to reconfirm
 		
 	/**
@@ -20,6 +20,7 @@ class clusters extends base{
 		$path = "minds\\pages\\clusters";
 		router::registerRoutes(array(
 			"/api/v1/cluster" => "$path\\index",
+			"/api/v1/authenticate" => "$path\\authenticate"
 		));
 		
 		\elgg_register_plugin_hook_handler('cron', 'fifteenmin', array($this, 'cron'));
@@ -39,14 +40,15 @@ class clusters extends base{
 			try{
 				
 				$response = $this->call('GET', $seed, '/api/v1/cluster/master/join', array('uri'=>elgg_get_site_url()));
+				var_dump($response);
 				
 				$db = new data\call('user_index_to_guid');
 				$db->insert('clusters:master', $response, $this->ttl);
 				
 				
 			}catch(\Exception $e){
-				
-				error_log('CLUSTER ERROR: '.$response);
+		
+				error_log('CLUSTER ERROR: '.$e);
 				
 			}
 			
@@ -64,8 +66,21 @@ class clusters extends base{
 		/**
 		 * Confirm autorization from the other node
 		 */
-		$authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>get_input('username'), 'password'=>get_input('password')));
+		try{
+		 	$authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>get_input('username'), 'password'=>get_input('password')));
+			var_dump($authenticate);
+		}catch(\Exception $e){
+
+			//$db = new data\call('user_index_to_guid');
+			//$db->removeAttributes('clusters:master', array($node_uri));
+			
+			\register_error('Sorry, there was an issue communicating with the host');
+			return false;
+		}
 		
+		\register_error('Cross node login is coming soon!');
+	
+		return false;
 		
 		if($authenticate['error']){
 			\register_error('Sorry, we could not succesfully authenticate you.');

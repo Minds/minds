@@ -14,10 +14,10 @@ $username =  elgg_view('input/text', array(
 
 $cluster = new minds\entities\cluster('master');
 $nodes = array(
-	preg_replace('#^https?://#', '',elgg_get_site_url())
+	elgg_get_site_url() => preg_replace('#^https?://#', '',elgg_get_site_url())
 	);
 foreach($cluster->getNodes() as $uri => $ts){
-	array_push($nodes, preg_replace('#^https?://#', '',$uri));
+	$nodes[$uri] = preg_replace('#^https?://#', '',$uri);
 }
 
 $node = elgg_view('input/dropdown', array(
@@ -25,7 +25,7 @@ $node = elgg_view('input/dropdown', array(
 	//'class' => 'elgg-autofocus',
 	'placeholder' => 'node',
 	'autocomplete' => 'off',
-	'options' => $nodes
+	'options_values' => $nodes
 ));
 
 $password =  elgg_view('input/password', array(
