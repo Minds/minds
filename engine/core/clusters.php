@@ -97,6 +97,7 @@ class clusters extends base{
 			while(get_user_by_username($username)){
 				$username .= rand(1000,9000);
 			}
+			$user->name = $authenticate['name'];
 			$user->username = $username;
 			$user->email = $authenticate['email'];
 			$user->base_node = $node_uri;

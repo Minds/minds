@@ -19,6 +19,10 @@ $user = new ElggUser($guid);
 if(isset($user->legacy_guid) && $user->legacy_guid)
 	$guid = $user->legacy_guid;
 
+if(isset($user->base_node) && $user->base_node != elgg_get_site_url()){
+	forward($user->base_node . "icon/$user->guid/".$_GET['size']."/".$_GET['lastcache']);
+}
+
 $join_date = $user->time_created;
 $last_cache = (int)$_GET['lastcache']; // icontime
 
