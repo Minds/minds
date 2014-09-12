@@ -17,7 +17,9 @@ class cluster extends entity{
 	
 	public function getNodes($limit=10000){
 		$db = new data\call('user_index_to_guid');
-		return $db->getRow('clusters:'.$this->cluster);
+		$row = $db->getRow('clusters:'.$this->cluster);
+		$row[elgg_get_site_url()] = time(); //must always return ourself
+		return $row;
 	}
 	
 	/**

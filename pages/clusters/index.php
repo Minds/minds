@@ -22,6 +22,7 @@ class index extends core\page implements interfaces\page{
 					//join the cluster
 					$cluster = new entities\cluster($pages[0]);
 					$nodes = $cluster->join($_REQUEST['uri']);
+					//var_dump($nodes);
 					echo json_encode($nodes);
 					break;
 				case "leave":
