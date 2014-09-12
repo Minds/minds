@@ -4,6 +4,8 @@
  */
 namespace minds\core;
 
+use minds\entities;
+
 class clusters extends base{
 	
 	public $seeds = array('https://www.minds.io');
@@ -62,13 +64,15 @@ class clusters extends base{
 		if("https://$node_uri" == elgg_get_site_url() || "http://$node_uri" == elgg_get_site_url()){
 			return true;
 		}
-
+		
+		$username = get_input('username');
+		$password = get_input('password');
+		
 		/**
 		 * Confirm autorization from the other node
 		 */
 		try{
-		 	$authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>get_input('username'), 'password'=>get_input('password')));
-			var_dump($authenticate);
+		 	$authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>$username, 'password'=>$password));
 		}catch(\Exception $e){
 
 			//$db = new data\call('user_index_to_guid');
@@ -77,10 +81,7 @@ class clusters extends base{
 			\register_error('Sorry, there was an issue communicating with the host');
 			return false;
 		}
-		
-		\register_error('Cross node login is coming soon!');
-	
-		return false;
+
 		
 		if($authenticate['error']){
 			\register_error('Sorry, we could not succesfully authenticate you.');
@@ -91,7 +92,7 @@ class clusters extends base{
 		 * 
 		 * @todo maybe integrate OAuth2.0 at the point
 		 */
-		$user = new minds\entities\user($authenticate['guid']);
+		$user = new entities\user($authenticate['guid']);
 		if(!$user->username){
 			while(get_user_by_username($username)){
 				$username .= rand(1000,9000);
@@ -105,6 +106,8 @@ class clusters extends base{
 		}
 		
 		\login($user);
+		
+		return false; //it has to be false for some odd reason.
 	}
 	
 	/**
