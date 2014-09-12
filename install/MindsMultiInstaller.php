@@ -176,6 +176,10 @@ class MindsMultiInstaller extends ElggInstaller {
 		 $this->continueToNextStep('dns');
 	}
 
+	if($this->domain == $_SERVER['HTTP_HOST']){
+		 $this->continueToNextStep('dns');
+	}
+
 	$this->render('dns');
   }
    
@@ -259,9 +263,9 @@ class MindsMultiInstaller extends ElggInstaller {
 			$domain = str_replace('-', '.', $domain);
 		}else{
 			//don't show the dns step for non custom install
-			if(($key = array_search('dns', $this->steps)) !== false) {
- 				unset($this->steps[$key]);
-			}
+		////	if(($key = array_search('dns', $this->steps)) !== false) {
+ 		//		unset($this->steps[$key]);
+		//	}
 		}
 		$this->domain = $domain;
 		$node = new minds\multisite\models\node($domain);
