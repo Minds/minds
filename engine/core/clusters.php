@@ -25,7 +25,7 @@ class clusters extends base{
 			"/api/v1/authenticate" => "$path\\authenticate"
 		));
 		
-		\elgg_register_plugin_hook_handler('cron', 'fifteenmin', array($this, 'cron'));
+		\elgg_register_plugin_hook_handler('cron', 'halfhour', array($this, 'cron'));
 		\elgg_register_plugin_hook_handler('action', 'login', array($this, 'login'));
 	}
 	
