@@ -21,7 +21,8 @@ class index extends core\page implements interfaces\page{
 				case "join":
 					//join the cluster
 					$cluster = new entities\cluster($pages[0]);
-					$cluster->join($_REQUEST['uri']);
+					$nodes = $cluster->join($_REQUEST['uri']);
+					echo json_encode($nodes);
 					break;
 				case "leave":
 					//leave the cluster
@@ -29,8 +30,9 @@ class index extends core\page implements interfaces\page{
 				case "poll":
 					//poll the cluster to say "i'm still here"
 					break;
-				default:
 				case "info":
+				default:
+					
 					//get information on the nodes in the cluster, up 
 			}
 		} else {
@@ -39,19 +41,7 @@ class index extends core\page implements interfaces\page{
 		
 	}
 	
-	public function post($pages){
-
-		if($_POST['time'] != ''){
-			\register_error('sorry, wrong answer');
-			return false;
-		}
-			
-		\elgg_send_email($_POST['email'], array('mark@minds.com','bill@minds.com'), 'New Email from ' . $_POST['name'], $_POST['message']);
-		
-		\system_message('Success!');
-		
-		$this->get($pages);
-	}
+	public function post($pages){}
 	
 	public function put($pages){
 		throw new \Exception('Sorry, the put method is not supported for the page');

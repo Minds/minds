@@ -103,6 +103,32 @@ input[type="radio"] {
 	margin: 8px
 }
 
+.node-select{
+	
+}
+
+.node-select .label{
+	float:left;
+	background:#EEE;
+	padding:16px 28px;
+	border:1px solid #DDD;
+	border-radius:3px 0 0 3px;
+}
+.node-select select{
+	float:left;
+	-webkit-appearance: none;  /*Removes default chrome and safari style*/
+	-moz-appearance: none; /* Removes Default Firefox style*/
+	width: 200px; /*Width of select dropdown to give space for arrow image*/
+	
+	color: #888;
+	background:#FFF;
+	
+	padding:16px;
+	border:1px solid #DDD;
+	border-left:0;
+	border-radius:0 3px 3px 0;
+}
+
 .elgg-form-account {
 	margin:auto;
 	padding:32px;
