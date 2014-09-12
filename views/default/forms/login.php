@@ -38,11 +38,12 @@ $password =  elgg_view('input/password', array(
 
 	<?= $username ?>
 	
-	<div class="node-select">
-		<span class="label">Node</span><?= $node ?>
-	</div>
-	
 	<?= $password ?>
+	
+	<div class="node-select">
+		<span class="label">sign in with</span><?= $node ?>
+		<p>&nbsp;</p><br/>
+	</div>
 	
 	<ul class="elgg-menu elgg-menu-general login-box mtm">
 		<li>
