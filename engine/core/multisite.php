@@ -60,12 +60,12 @@ class multisite extends base{
 		$CONFIG->cassandra->keyspace = $keyspace;
 		$CONFIG->cassandra->servers =  $CONFIG->multisite->servers;
 		
-		$CONFIG->wwwroot = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://$this->host/"; 
+		$CONFIG->wwwroot = (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : 'https') . "://$this->host/"; 
 		if(isset($row['dataroot']))
 			$CONFIG->dataroot = unserialize($row['dataroot']);
 		else
         		$CONFIG->dataroot = "/gluster/data/minds-multisite/".$keyspace;
-		$CONFIG->cdn_url = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://d2ka7pmjfsr8hl.cloudfront.net/$this->host/";
+		$CONFIG->cdn_url = (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : 'https') . "://d2ka7pmjfsr8hl.cloudfront.net/$this->host/";
 	}
 
 	public function getCache($domain){
