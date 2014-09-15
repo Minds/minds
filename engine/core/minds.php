@@ -30,25 +30,40 @@ class minds extends base{
 		//@todo check configs before loading clusters
 		new clusters();
 
+		/*
+		 * If this is a multisite, then load the specific database settings
+		 */
 		if($this->detectMultisite())
 			new multisite();
 		
+		/**
+		 * Load session info
+		 */
 		new session();	
 
-		//Trigger the boot event hook
+		/**
+		 * Boot the system, @todo this should be oop?
+		 */
 		\elgg_trigger_event('boot', 'system');
 		
-		//Load plugins @todo make this oop
-		//\elgg_load_plugins();
+		/**
+		 * Load the plugins
+		 */
 		new plugins();
 	
-		// Complete the boot process for both engine and plugins
+		/**
+		 * Complete the boot process for both engine and plugins
+		 */
 		elgg_trigger_event('init', 'system');
 		
-		//tell the system that we have fully booted
+		/**
+		 * tell the system that we have fully booted
+		 */
 		self::$booted = true;
 		
-		// System loaded and ready
+		/**
+		 * System loaded and ready
+		 */
 		\elgg_trigger_event('ready', 'system');
 		
 		//new logger();

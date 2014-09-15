@@ -22,6 +22,7 @@ $content = elgg_view("core/settings/statistics");
 $params = array(
 	'content' => $content,
 	'title' => $title,
+	'sidebar_class' => 'elgg-sidebar-alt'
 );
 $body = elgg_view_layout('one_sidebar', $params);
 

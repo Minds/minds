@@ -563,9 +563,7 @@ li .excerpt a{
 .elgg-sidebar .elgg-owner-block .elgg-image-block .elgg-body{
 	padding:5px;
 }
-.elgg-sidebar .elgg-menu-page li a{
-        padding:8px;
-}
+
 .elgg-sidebar li.elgg-item{
 	margin: 5px;
 	width: 306px;
