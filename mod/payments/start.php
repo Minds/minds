@@ -13,6 +13,7 @@ class start extends bases\plugin{
 	public function init(){
 		
 		\elgg_extend_view('css/elgg', 'css/payments');
+		\elgg_extend_view('js/elgg', 'js/payments');
 		
 		/**
 		 * Register our page end points
