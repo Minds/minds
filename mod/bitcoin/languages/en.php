@@ -9,7 +9,7 @@ add_translation('en', array(
     'bitcoin:to' => 'To',
     
     'admin:bitcoin' => 'Bitcoin',
-    'admin:bitcoin:setup' => 'Configure bitcoin',
+    'admin:monitization:bitcoin' => 'Configure bitcoin',
     
     'bitcoin:settings' => 'Bitcoin Settings'
 ));
