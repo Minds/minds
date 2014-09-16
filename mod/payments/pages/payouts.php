@@ -23,7 +23,7 @@ class payouts extends core\page implements interfaces\page{
 		
 		$forms = elgg_get_entities(array('subtype'=>'taxForm', 'owner_guid'=>elgg_get_logged_in_user_guid()));
 		
-		$content = elgg_view_form('payments/payouts', array('action'=>'settings/payments/payouts'));
+		$content = elgg_view('payments/payouts');
 		$content .= elgg_view('payments/tax-details', array('forms'=>$forms));
 		
 		
