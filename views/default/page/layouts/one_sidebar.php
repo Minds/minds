@@ -17,6 +17,11 @@ if (isset($vars['class'])) {
 	$class = "$class {$vars['class']}";
 }
 
+$sidebar_class = 'sidebar elgg-sidebar';
+if (isset($vars['sidebar_class'])) {
+	$sidebar_class = "$sidebar_class {$vars['sidebar_class']}";
+}
+
 // navigation defaults to breadcrumbs
 $nav = elgg_extract('nav', $vars, elgg_view('navigation/breadcrumbs'));
 
@@ -37,7 +42,7 @@ if($vars['header']){
 	
 <div class="inner elgg-inner fixed">
 	<div class="<?php echo $class; ?>">
-		<div class="sidebar elgg-sidebar">
+		<div class="<?php echo $sidebar_class;?>">
         	<?php
                 	echo elgg_view('page/elements/sidebar', $vars);
         	?>

@@ -5,9 +5,18 @@
 namespace minds\plugin\minds_nodes;
 
 use minds\bases;
+use minds\core\plugins;
 class start extends bases\plugin{
 	
 	public function init(){
+		
+		/**
+		 * The payments plugin is mandatory to this plugin working, therefore we must enable it
+		 */
+		if(!plugins::isActive('payments') && elgg_is_admin_logged_in()){
+			plugins::factory('payments')->activate();
+		}
+		
 		//$routes = router::registerRoutes($this->registerRoutes());
 		$this->registerClasses();	
 		\add_subtype('object', 'node', 'MindsNode');

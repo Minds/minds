@@ -134,6 +134,22 @@
 	margin:10px 8px 0 5px;
 }
 
+/**
+ * Vertical (1 across) listing
+ */
+.elgg-list.vertical-list{
+	padding:0 !important;
+	margin:0;
+}
+.elgg-list.vertical-list li{
+	padding:16px;
+	margin:8px 0;
+	float:none;
+	width:auto;
+	height:auto;
+	min-height:0;
+}
+
 .elgg-list-river{
 	width:auto;
 }
@@ -211,7 +227,7 @@
 	font-weight: bold;
 }
 .elgg-table-alt td, .elgg-table-alt th {
-	padding: 2px 4px 2px 4px;
+	padding: 4px;
 	border-bottom: 1px solid #ccc;
 }
 .elgg-table-alt td:first-child {

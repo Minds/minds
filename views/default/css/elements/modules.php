@@ -18,16 +18,12 @@
 }
 /* Info */
 .elgg-module-info > .elgg-head {
-	background: #e4e4e4;
-	padding: 5px;
+	background: #888;
+	padding: 6px 16px;
 	margin-bottom: 10px;
-	
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
 }
 .elgg-module-info > .elgg-head * {
-	color: #333;
+	color: #FFF;
 }
 
 /* Popup */
