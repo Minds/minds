@@ -18,12 +18,16 @@
 }
 /* Info */
 .elgg-module-info > .elgg-head {
-	background: #888;
+	background: #EEE;
+	border:1px solid #CCC;
 	padding: 6px 16px;
 	margin-bottom: 10px;
 }
 .elgg-module-info > .elgg-head * {
-	color: #FFF;
+	color: #333;
+	font-size:14px;
+	font-weight:600;
+	font-family:Helvetica, Arial, Sans-Serif;
 }
 
 /* Popup */
