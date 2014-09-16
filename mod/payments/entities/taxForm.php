@@ -24,15 +24,15 @@ class taxForm extends entities\object{
 	}
 	
 	public function setEncrypted($data){
-				
-		$encrypt = new core\encrypt('AC314ED28313654E4751C525C44EF4A7A92434D1801F2BAFD7597FA27DED5FDC');
+		global $CONFIG;				
+		$encrypt = new core\encrypt($CONFIG->encryption_keys_tax_form);
 		return $this->encrypted = $encrypt->encrypt($data);
 		
 	}
 	
 	public function getEncrypted(){
-		
-		$encrypt = new core\encrypt('AC314ED28313654E4751C525C44EF4A7A92434D1801F2BAFD7597FA27DED5FDC');
+		global $CONFIG;		
+		$encrypt = new core\encrypt($CONFIG->encryption_keys_tax_form);
 		return $encrypt->decrypt($this->encrypted);
 		
 	}
