@@ -598,7 +598,7 @@ $english = array(
 	'admin:users:opt:description' => "Configure users and account information. ",
 	'admin:users:find' => 'Find',
 
-	'admin:settings' => 'Settings',
+	'admin:settings' => 'Admin Settings',
 	'admin:settings:basic' => 'Basic Settings',
 	'admin:settings:advanced' => 'Advanced Settings',
 	'admin:site:description' => "This admin panel allows you to control global settings for your site. Choose an option below to get started.",
