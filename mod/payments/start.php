@@ -23,6 +23,7 @@ class start extends bases\plugin{
 				'/settings/payments/methods' => "$path\\methods",
 				'/settings/payments/payouts' => "$path\\payouts",
 				'/settings/payments/transactions' => "$path\\transactions",
+				'/settings/payments/donate' => "$path\\donate",
 			));
 	
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
@@ -55,6 +56,25 @@ class start extends bases\plugin{
 			    'href' => 'settings/payments/transactions',
 			 ));
 		}
+	}
+	
+	public function createPayment($details, $amount, $card){
+		
+		$transaction = new entities\transaction();
+		$transaction->amount = $amount;
+		$transaction->description = $details;
+		$transaction->card = $card;
+		$transaction->save(); //save as pending. 
+		
+		try{
+			$paypal_obj= services\paypal::factory()->payment($amount, $currency = 'USD', $details, $card);
+		}catch(\Exception $e){
+			var_dump($e); exit;
+		}
+		$transaction->paypal_id = $paypal_obj->getID();
+		$transaction->status = 'complete';
+		return $transaction->save();
+		
 	}
 	
 }

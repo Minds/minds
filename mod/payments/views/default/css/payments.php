@@ -14,6 +14,31 @@
 	font-size:28px;
 	color:#333;
 }
+
+.card-input{
+	
+}
+.card-input .feature{
+	width:20%;
+}
+.card-input .cell{
+	padding:8px;
+}
+.card-input .helper{
+	font-size:11px;
+	color:#888;
+	clear:both;
+	float:left;
+	width:100%;
+}
+.card-input input{
+	padding:16px;
+}
+.card-input input[type=radio]{
+	margin: 0 12px;
+}
+
+
 .tax-options{
 	margin-bottom:12px;
 }

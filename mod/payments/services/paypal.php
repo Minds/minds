@@ -9,6 +9,7 @@ use PayPal\Api\Details;
 use PayPal\Api\Item;
 use PayPal\Api\ItemList;
 use PayPal\Api\CreditCard;
+use PayPal\Api\CreditCardToken;
 use PayPal\Api\Payer;
 use PayPal\Api\Payment;
 use PayPal\Api\FundingInstrument;
@@ -37,7 +38,7 @@ class paypal extends core\base{
 				'mode' => 'live',
 				'http.ConnectionTimeOut' => 30,
 				'log.LogEnabled' => true,
-				'log.FileName' => '../PayPal.log',
+				'log.FileName' => '/tmp/PayPal.log',
 				'log.LogLevel' => 'FINE'
 			)
 		);
@@ -86,14 +87,20 @@ class paypal extends core\base{
 	/**
 	 * Perform a payment
 	 */
-	public function payment($amount = 0, $currency = 'USD', $description, $card){
+	public function payment($amount_val = 0, $currency = 'USD', $description, $card){
 		/*
 		 * FundingInstrument
 		 * A resource representing a Payer's funding instrument.
 		 * for example, a recurring payments system would use the stored card
 		 */
 		$fi = new FundingInstrument();
-		$fi->setCreditCard($card);
+		if(is_string($card)){
+			$creditCardToken = new CreditCardToken();
+			$creditCardToken->setCreditCardId($card);
+			$fi->setCreditCardToken($creditCardToken);
+		}else{ 
+			$fi->setCreditCard($card);
+		}
 		
 		/** Payer **/
 		$payer = new Payer();
@@ -104,7 +111,7 @@ class paypal extends core\base{
 		/** Amount **/
 		$amount = new Amount();
 		$amount->setCurrency("USD")
-			->setTotal(number_format($amount, 2));
+			->setTotal(number_format($amount_val, 2));
 		
 		/**
 		 * Transaction Object
@@ -121,7 +128,7 @@ class paypal extends core\base{
 			->setPayer($payer)
 			->setTransactions(array($transaction));
 			
-		return $payment->create();
+		return $payment->create($this->context);
 	}
 	
 	/**

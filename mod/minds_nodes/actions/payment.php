@@ -14,6 +14,8 @@ use PayPal\Api\Transaction;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 
+use minds\plugin\payments\entities;
+
 $user = elgg_get_logged_in_user_entity();
 $tier = new MindsTier(get_input('tier_guid'));
 $domain = get_input('domain');
@@ -40,84 +42,23 @@ $apiContext->setConfig(
 /**
  * Add cards details
  */
-$card = new CreditCard();
-$card->setType(get_input('type'))
-	->setNumber(get_input('number'))
-	->setExpireMonth(get_input('month'))
-	->setExpireYear(get_input('year'))
-	->setCvv2(get_input('sec'))
-	->setFirstName(get_input('name'))
-	->setLastName(get_input('name2'));
+$card = new entities\card();
+$card_obj = $card->create(array(
+	'type' => get_input('type'),
+	'number' => get_input('number'),
+	'month' => get_input('month'),
+	'year' => get_input('year'),
+	'sec' => get_input('sec'),
+	'name' => get_input('name'),
+	'name2' => get_input('name2')
+	));
+$card->save();
 
-
-/*
- * FundingInstrument
- * A resource representing a Payer's funding instrument.
- * for example, a recurring payments system would use the stored card
- */
-$fi = new FundingInstrument();
-$fi->setCreditCard($card);
-
-/** Payer **/
-$payer = new Payer();
-$payer->setPaymentMethod("credit_card")
-	->setFundingInstruments(array($fi));
-
-
-/** Amount **/
-$amount = new Amount();
-$amount->setCurrency("USD")
-	->setTotal("$tier->price.00");
-
-/**
- * Transaction Object
- */
-$transaction = new Transaction();
-$transaction->setAmount($amount)
-	->setDescription("Minds: $domain");
-
-/*
- * Payment object
- */
-$payment = new Payment();
-$payment->setIntent("sale")
-	->setPayer($payer)
-	->setTransactions(array($transaction));
-
-/**
- * Payment action
- */
-try {
-	$payment->create($apiContext);
-} catch (PayPal\Exception\PPConnectionException $ex) {
-	echo "Exception: " . $ex->getMessage() . PHP_EOL;
-	var_dump($ex->getData());
-	exit(1);
-}
-
-
-/**
- * Now save the card so we can continue to charge
- */
-/**
- * Store the card (with paypal)
- * 
- */
-try {
-	$card->create($apiContext);	
-	
-	/**
-	 * @todo create a card entity
-	 */
-} catch (PayPal\Exception\PPConnectionException $ex) {
-	echo "Exception:" . $ex->getMessage() . PHP_EOL;
-	var_dump($ex->getData());
-	exit(1);
-}
+$id = minds\plugin\payments\start::createPayment('Hosting for '.$domain, $tier->price, $card->card_id);
 
 echo json_encode(array(
 	'success' => array(
-		'transaction_id' => $payment->getID()
-)));
+		'transaction_id' => $id
+	)));
 
 exit; 

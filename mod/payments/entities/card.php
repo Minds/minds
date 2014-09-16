@@ -44,10 +44,14 @@ class card extends entities\object{
 		try{
 			$obj = paypal::factory()->createCard($params);
 		} catch(\Exception $e){
+			\register_error($e->getMessage());
+			error_log('CARD EXCEPTION: '. $e->getMessage());
 			return false;
 		}
 		
 		$this->card_id = $obj->getID();
+		$this->number = $obj->number;
+		$this->card_type = $obj->type;
 			
 		return $obj;
 	}
