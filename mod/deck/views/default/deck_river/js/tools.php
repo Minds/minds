@@ -787,6 +787,53 @@ $.fn.setCursorPosition = function(pos) {
 	}
 }
 
+var lockPosting = false;
+$('.elgg-form-deck-river-post').on('submit', function(e){
+        e.preventDefault();
+        var form = $(this);
+        var data = new FormData(form[0]);
+	if(lockPosting)
+		return false;
+   
+	lockPosting = true;
+	
+        $.ajax(elgg.security.addToken(elgg.get_site_url() + 'action/deck_river/post/add'), {
+                data: data,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function(json) {
+                        json = $.parseJSON(json);
+			// the action always returns the full ul and li wrapped annotation.
+                        var ul = $('ul.elgg-list');
+                       	 
+                        ul.prepend('<li>'+json.output+'</li>');
+                       
+			ul.imagesLoaded().always(function(){
+				ul.masonry('reloadItems').masonry();	
+			});
+ 
+                        ul.masonry('reloadItems').masonry(); 
+			form.find('textarea').val('');
+           		lockPosting = false;
+		     },
+		xhr: function(){
+			var xhr = new window.XMLHttpRequest();
+		    	//Upload progress
+		  	xhr.upload.addEventListener("progress", function(evt){
+	   		   if (evt.lengthComputable) {
+				var percentComplete = evt.loaded / evt.total;
+				//Do something with upload progress
+	    		  	$('.upload-progress > .percent').css('width', percentComplete*100 + '%');
+				if(percentComplete ==1)
+					$('.upload-progress > .percent').css('width', 0);
+			    }
+	   	 	}, false);
+			return xhr;
+		}
+        });
+});
+
 
 $('.elgg-input-dragbox > div').sortable({
 		items: $('.elgg-input-dragbox span'),
@@ -827,8 +874,9 @@ $('.deck-scheduler-button').on('click',function(){
 	$('.deck-scheduler-content').toggle();
 });
 
-$(".deck-attachment-button").change(function(){
-	$(this).parent().toggleClass('attached')
+$(".deck-attachment-button-override").on('click', function(){
+	$(this).parent().toggleClass('attached');
+	$('.deck-attachment-button-override, .deck-attachment-button').css('color', 'blue');
 });
 
 $(document).on("click", ".attached > .deck-attachment-button", function (e){

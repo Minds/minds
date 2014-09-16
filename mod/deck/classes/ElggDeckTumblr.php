@@ -182,9 +182,6 @@ class ElggDeckTumblr extends ElggDeckNetwork{
 
 		$params = array_merge($defaults, $params);
 
-		if($method == 'default')
-			$method = 'user/dashboard';
-
 		//@todo check $method to see if it is allowed!
 		$method = str_replace('{base-hostname}', $this->screen_name . '.tumblr.com', $method);
 

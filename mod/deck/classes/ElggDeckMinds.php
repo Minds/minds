@@ -8,7 +8,6 @@ class ElggDeckMinds extends ElggDeckNetwork{
 	
 	public function __construct($guid=null){
 		parent::__construct($guid);		
-		
 	}
 
 	/**
@@ -107,7 +106,7 @@ class ElggDeckMinds extends ElggDeckNetwork{
 			$wallpost->save(); 
 
 			$options = array(
-				'cc' => array($wallpost->to_guid, "personal:$wallpost->to_guid"),
+				'cc' => array($wallpost->to_guid),
 				'subject_guid' => $wallpost->owner_guid,
 				'body' => $wallpost->message,
 				'view' => 'river/object/wall/create',

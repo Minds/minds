@@ -82,12 +82,12 @@ HTML;
 $date = elgg_view('input/date', array('name'=>'schedule_date','value'=>time()));
 $time = elgg_view('input/timepicker',array('name'=>'schedule_time','value'=> (time() - strtotime("today")) /60));
 
-echo <<<HTML
+/*echo <<<HTML
 	<div class="deck-scheduler-button">&#xe801;</div>
 	<div class="deck-scheduler-content">
 		$date $time
 	</div>
-HTML;
+HTML;*/
 
 echo <<<HTML
 	<div class="deck-post-preview">
@@ -99,6 +99,11 @@ echo <<<HTML
 	</div>
 HTML;
 
+echo <<<HTML
+	<div class="upload-progress" style="float: right;height: 25px;width: 162px;margin: 8px;">
+		<div class="percent" style="width:0;height:25px;background:blue;"></div>
+	</div>
+HTML;
 
 echo elgg_view('input/hidden', array('name'=>'to_guid', 'value'=>elgg_extract('to_guid', $vars, $user->guid)));
 echo elgg_view('input/hidden', array('name'=>'access_id', 'value' => elgg_extract('access_id', $vars, ACCESS_PUBLIC)));

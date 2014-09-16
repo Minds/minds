@@ -23,11 +23,6 @@ $english = array(
 	'responseToHelper:delete' => "Stop reply to %s",
 	'deck_river:linkbox:hidepicture' => "Click to not join picture",
 
-	'facebook_account' => 'Facebook',
-	'twitter_account' => 'Twitter',
-	'tumblr_account' => 'Tumblr',
-	'linkedin_account' => 'Linkedin',
-
 	// thewire network
 	'deck-river:add:network' => "Add a network",
 	'deck_river:error:network:active:too_much' => "You have linked too many accounts!",
