@@ -52,3 +52,19 @@
 .elgg-col-5of6 {
 	width: 83.33%;
 }
+
+/***
+ * Table
+ */
+
+.table{
+	width:100%;
+	display:table
+}
+.table .row{
+	display:table-row;
+}
+.table .cell{
+	padding:8px;
+	display:table-cell;
+}

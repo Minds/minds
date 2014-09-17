@@ -37,7 +37,7 @@ if ($data_options) {
 if (isset($vars['list_class'])) {
     $list_class = "$list_class {$vars['list_class']}";
 }
-if($vars['masonry'] !== false && get_input('masonry') != 'off'){
+if($vars['masonry'] !== false && get_input('masonry') != 'off' && strpos($list_class, 'vertical-list') === FALSE){
         $list_class .= ' mason';
 } else {
 	set_input('show_loading', 'false'); // a bit of a hack!!

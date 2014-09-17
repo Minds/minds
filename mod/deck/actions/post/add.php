@@ -54,6 +54,16 @@ if($scheduled > ($time+300)){
 	system_message('Scheduled');
 } else {
 	$post->doPost();
+	$wallpost = elgg_get_entities(array('subtype'=>'wallpost', 'owner_guid' =>elgg_get_logged_in_user_guid(), 'limit'=>1));
+	$wallpost= $wallpost[0]; 
+	echo elgg_view_river_item(new ElggRiverItem(array(
+				'subject_guid' => $wallpost->owner_guid,
+				'body' => $wallpost->message,
+				'view' => 'river/object/wall/create',
+				'object_guid' => $wallpost->guid, //needed until we do some changes to the thumbs and comments plugins
+				'attachment_guid' => $wallpost->attachment,
+				'access_id' => $wallpost->access_id,
+		)));
 	system_message('Message posted');
 }
 

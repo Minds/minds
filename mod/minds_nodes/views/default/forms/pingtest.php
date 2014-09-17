@@ -16,7 +16,7 @@ if($ping){
 	
 	$ch = curl_init($domain_link);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch,CURLOPT_TIMEOUT_MS,1500);
+	curl_setopt($ch,CURLOPT_TIMEOUT_MS,3000);
 	curl_exec($ch);
 	$errorno = curl_errno($ch);
 	curl_close($ch);
@@ -83,7 +83,7 @@ if($ping){
     setTimeout(function() {
    		$('#pingtest-results').fadeOut();
         $('#pingtest-fail').fadeIn();
-    }, 36000);
+    }, 42000);
     
 	var xmlhttp=new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function()  {

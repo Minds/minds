@@ -20,7 +20,7 @@
 function get_entity_statistics($owner_guid = 0) {
 	global $CONFIG, $SUBTYPE_CACHE;
 	
-	$db = new minds\core\data\call('entities_by_time');
+	$db = new minds\core\data\call('entities_by_time', NULL, NULL, 1000000, 100000);
 	
 	$entity_stats = array();
 	$owner_guid = (int)$owner_guid;
@@ -29,7 +29,10 @@ function get_entity_statistics($owner_guid = 0) {
 		$prepend = ':user:'.$owner_guid;
 	}
 
-	$types = array('object','user', 'group', 'notification','widget');
+	$types = array(
+//		'object',
+		'user',
+	);
 
 	$subtypes =$SUBTYPE_CACHE;
 

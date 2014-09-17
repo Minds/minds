@@ -175,3 +175,25 @@ PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0
 PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A015SVIn60JX3zAlTtAOAGwqX0HgbbirGT08QvFLi9UM480
 PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296286235141037822262373
 PayPal\Transport\PPRestCall: {"id":"CARD-95A73609BU0338229KQIKUEA","state":"ok","type":"amex","number":"xxxxxxxxxxx1009","expire_month":"11","expire_year":"2015","first_name":"Margaret","last_name":"Ottman","valid_until":"2017-09-09T00:00:00Z","create_time":"2014-09-10T19:44:16Z","update_time":"2014-09-10T19:44:16Z","links":[{"href":"https://api.paypal.com/v1/vault/credit-card/CARD-95A73609BU0338229KQIKUEA","rel":"self","method":"GET"},{"href":"https://api.paypal.com/v1/vault/credit-card/CARD-95A73609BU0338229KQIKUEA","rel":"delete","method":"DELETE"},{"href":"https://api.paypal.com/v1/vault/credit-card/CARD-95A73609BU0338229KQIKUEA","rel":"patch","method":"PATCH"}]}
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/oauth2/token
+PayPal\Core\PPHttpConnection: Payload grant_type=client_credentials
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Basic QVRBQnlCQTd3VmxuNW9reTJYS2tnbEVvSDdrMERKbVpWT3ozUy1ER0pZa3JOckhjSWpaQ2RYMUhITHdIOkVBSmZJaENaWEdvNkw0WUFpeUZqbHBQVktWc3Bqd0Q1cFlVYW5TUElEelRIVTBsUkxmOFNQMjJCWDJROQ==
+PayPal\Core\PPHttpConnection: Adding header Accept: */*
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/payments/payment
+PayPal\Core\PPHttpConnection: Payload {"intent":"sale","payer":{"payment_method":"credit_card","funding_instruments":[{"credit_card":{"type":null,"number":null,"expire_month":null,"expire_year":null,"cvv2":null,"first_name":null,"last_name":null}}]},"transactions":[{"amount":{"currency":"USD","total":".00"},"description":"Minds: "}]}
+PayPal\Core\PPHttpConnection: Adding header Content-Type: application/json
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A015MakugWs79BuKTbzSRKtDOsHuN7sBms.ChZ-omIYNG48
+PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296290095141049194965477
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/oauth2/token
+PayPal\Core\PPHttpConnection: Payload grant_type=client_credentials
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Basic QVRBQnlCQTd3VmxuNW9reTJYS2tnbEVvSDdrMERKbVpWT3ozUy1ER0pZa3JOckhjSWpaQ2RYMUhITHdIOkVBSmZJaENaWEdvNkw0WUFpeUZqbHBQVktWc3Bqd0Q1cFlVYW5TUElEelRIVTBsUkxmOFNQMjJCWDJROQ==
+PayPal\Core\PPHttpConnection: Adding header Accept: */*
+PayPal\Core\PPHttpConnection: Connecting to https://api.paypal.com/v1/payments/payment
+PayPal\Core\PPHttpConnection: Payload {"intent":"sale","payer":{"payment_method":"credit_card","funding_instruments":[{"credit_card":{"type":null,"number":null,"expire_month":null,"expire_year":null,"cvv2":null,"first_name":null,"last_name":null}}]},"transactions":[{"amount":{"currency":"USD","total":".00"},"description":"Minds: "}]}
+PayPal\Core\PPHttpConnection: Adding header Content-Type: application/json
+PayPal\Core\PPHttpConnection: Adding header User-Agent: PayPalSDK/rest-sdk-php 0.6.0 (lang=PHP;v=5.3.10-1ubuntu3.11;bit=64;os=Linux_3.2.0-40-virtual;machine=x86_64;openssl=1.0.1;curl=7.22.0)
+PayPal\Core\PPHttpConnection: Adding header Authorization: Bearer A0153oGy4stv5yA6PY8fOKPE9362cCvsh00AlLltEl.xcpo
+PayPal\Core\PPHttpConnection: Adding header PayPal-Request-Id: 16777296291677141054552965212

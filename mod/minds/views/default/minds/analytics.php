@@ -4,7 +4,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  <?php if elgg_is_logged_in(){?>
+  <?php if(elgg_is_logged_in()){?>
   ga('create', 'UA-35146796-1', 'minds.com', {'userId': '<?php echo elgg_get_logged_in_user_guid(); ?>'});
   <?php }else{?>
 	ga('create', 'UA-35146796-1', 'minds.com');

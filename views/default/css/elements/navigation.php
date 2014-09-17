@@ -435,14 +435,10 @@
 .elgg-menu-page a {
 	display: block;
 	
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
-	
 	font-weight:bold;
-	background-color: #F3F3F3;
+	border-bottom:1px solid #EEE;
 	margin: 0 0 3px;
-	padding: 2px 4px 2px 8px;
+	padding:12px;
 }
 .elgg-menu-page a:hover {
 	background-color: #EEE;

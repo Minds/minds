@@ -563,9 +563,7 @@ li .excerpt a{
 .elgg-sidebar .elgg-owner-block .elgg-image-block .elgg-body{
 	padding:5px;
 }
-.elgg-sidebar .elgg-menu-page li a{
-        padding:8px;
-}
+
 .elgg-sidebar li.elgg-item{
 	margin: 5px;
 	width: 306px;
@@ -619,10 +617,13 @@ li .excerpt a{
 
 .load-more{
 	clear:both;
-	width:100%;
-    padding:15px 0;
+	width:200px;
+    padding:8px;
+    margin:auto;
     text-align:center;
     background:#EFEFEF;
+    border:1px solid #DDD;
+  
     color:#999;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -630,6 +631,16 @@ li .excerpt a{
 }
 .elgg-list-river{
 	border-top:0;
+}
+
+.load-more .dots{
+	font-size:48px;
+	font-weight:900;
+	padding-bottom:8px;
+}
+.load-more p{
+	margin:0;
+	padding:0;
 }
 
 /**

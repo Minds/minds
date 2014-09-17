@@ -9,7 +9,7 @@ elgg_set_page_owner_guid($user->guid);
 $filter = get_input("filter", "all");
 
 if($filter == 'media')
-$subtype = 'kaltura_video';
+$subtype = 'video';
 elseif ($filter == 'images')
 $subtype = 'album';
 elseif ($filter == 'files')

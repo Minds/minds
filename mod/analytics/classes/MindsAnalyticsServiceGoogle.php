@@ -70,7 +70,6 @@ class MindsAnalyticsServiceGoogle extends MindsAnalyticsService{
 			var_dump($e);
 			return;
 		}
-		
 		return $this->render($results);
 	}
 		
@@ -87,6 +86,7 @@ class MindsAnalyticsServiceGoogle extends MindsAnalyticsService{
 		foreach ($results->getRows() as $row) {
 			try{		
 				$url = $row[0];			   
+				$count = $row[1];
 				$entity = get_entity($this->getGuidFromURL($url));
 					
 				//check if the entity extists
@@ -115,7 +115,7 @@ class MindsAnalyticsServiceGoogle extends MindsAnalyticsService{
 				continue; //we just want to skup
 			}
 				
-			array_push($guids, $entity->guid); //now add to the list
+			array_push($guids, array('guid'=>$entity->guid, 'count'=>$count)); //now add to the list
 			//echo "rendered $entity->guid";
 		}	
 		

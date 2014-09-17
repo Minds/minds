@@ -1279,7 +1279,7 @@ abstract class ElggEntity extends ElggData implements
 			
 			foreach($followers as $follower){
 				if($this->super_subtype)
-					array_push($indexes, "$this->type:$this->super_subtyp:network:$follower");
+					array_push($indexes, "$this->type:$this->super_subtype:network:$follower");
 				array_push($indexes, "$this->type:$this->subtype:network:$follower");
 			}
 		}

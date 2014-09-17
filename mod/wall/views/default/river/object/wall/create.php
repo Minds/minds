@@ -37,6 +37,7 @@ if($object->owner_guid == $object->to_guid || $to instanceof ElggGroup || !$to){
 if($item->attachment_guid){
 
 	elgg_load_js('elgg.wall');
+	elgg_load_js('popup');
 
 	$attachment = new PostAttachment($item->attachment_guid);
 	$src = elgg_get_site_url() . "wall/attachment/$item->attachment_guid";

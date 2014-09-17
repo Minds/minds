@@ -51,8 +51,7 @@ class start extends bases\plugin{
 
 		
 		\elgg_register_action('bitcoin/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
-		\elgg_register_admin_menu_item('minds', 'bitcoin');	
-		\elgg_register_admin_menu_item('minds', 'setup', 'bitcoin');  
+		\elgg_register_admin_menu_item('configure', 'bitcoin', 'monitization');
 
 	}
 	

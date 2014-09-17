@@ -168,7 +168,8 @@ minds.nodes.init = function() {
 					month : $('select[name=month] option:selected').text(),
 					year : $('select[name=year] option:selected').text(),
 					name : $('input[name=name]').val(),
-					name2 : $('input[name=name2]').val()
+					name2 : $('input[name=name2]').val(), 
+					domain: minds.nodes.domain
 				},
 				success: function(data){
 					if(data.success){
@@ -180,6 +181,12 @@ minds.nodes.init = function() {
 						$('.payment .response .cell').text('We could not authorize your request. Please check your details or use another card.');
 						$('.payment .input').css('display', 'table-row');
 					}
+				},
+				error: function(){
+
+					 $('.payment .response .cell').text('We could not authorize your request. Please check your details or use another card.');
+                                                $('.payment .input').css('display', 'table-row');
+
 				}
 		});
 	});

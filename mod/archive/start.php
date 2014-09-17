@@ -31,6 +31,7 @@ function minds_archive_init() {
 	});
 
 	elgg_register_viewtype_fallback('spotlight');
+	elgg_register_viewtype_fallback('embed');
 
 	elgg_extend_view('page/elements/head', 'archive/meta');
 	

@@ -133,6 +133,11 @@ function deck_river_scheduler_page_handler($page){
  * @return void
  */
 function authorize_page_handler($page) {
+
+	//needs urgent attention
+	return false; 
+
+
 	if (!isset($page[0])) {
 		return false;
 	}

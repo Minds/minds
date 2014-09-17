@@ -23,11 +23,6 @@ $english = array(
 	'responseToHelper:delete' => "Stop reply to %s",
 	'deck_river:linkbox:hidepicture' => "Click to not join picture",
 
-	'facebook_account' => 'Facebook',
-	'twitter_account' => 'Twitter',
-	'tumblr_account' => 'Tumblr',
-	'linkedin_account' => 'Linkedin',
-
 	// thewire network
 	'deck-river:add:network' => "Add a network",
 	'deck_river:error:network:active:too_much' => "You have linked too many accounts!",
@@ -205,6 +200,13 @@ $english = array(
 	'linkedin:updates:commented' => "Your comment has been posted.",
 	'linkedin:updates:favorited' => "You like this post.",
 	'linkedin:companies:follow_none' => "LinkedIn say you doesn't follow any companies.",
+
+
+	'item:object:twitter_account' => 'Twitter', 
+	'item:object:facebook_account'=> 'Facebook',
+	'item:object:tumblr_accoun' => 'Tumblr',
+	'item:object:linkedin_account' => 'Linkedin',
+	'item:object:minds_account' => 'Minds'
 );
 
 add_translation('en', $english);
