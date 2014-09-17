@@ -25,7 +25,8 @@ elgg_load_css('player');
 </style>
 
 <video id="my_video" crossOrigin="" preload="auto" data-thumbSec="<?php echo $entity->thumbnail?>">
-	<source src="<?php echo $entity->getSourceURL('360.webm');?>" type="video/webm" />
+	<source src="<?php echo $entity->getSourceURL('720.webm');?>" type="video/mp4" />
+	<source src="<?php echo $entity->getSourceURL('720.mp4');?>" type="video/webm" />
 </video>
 <div id="scrubber">
     <div id="progress"></div>
