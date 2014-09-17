@@ -40,6 +40,8 @@ try {
 				
 				if($referrer)
 					$node->setReferrer($referrer);
+				
+				minds\plugin\minds_nodes\start::sendEmail($node);
 	
 	    	 	system_message("New minds network $domain successfully created!");
 	        	forward(elgg_get_site_url() . "nodes/ping?domain=$domain");

@@ -5,7 +5,9 @@
 namespace minds\plugin\minds_nodes;
 
 use minds\bases;
+use minds\core;
 use minds\core\plugins;
+
 class start extends bases\plugin{
 	
 	public function init(){
@@ -56,6 +58,11 @@ class start extends bases\plugin{
 		// Override the return url on tier orders
 		\elgg_register_plugin_hook_handler('urls', 'pay', array($this, 'payOverride'));
 	   	
+	   	
+	   	if(get_input('email')){
+	   		$node = new \MindsNode(355694700398645248);
+	   		$this->sendEmail($node);
+	   	}
 	}
 
 	public function pagesetup(){
@@ -272,6 +279,20 @@ class start extends bases\plugin{
 			}
 	
 	    }
+	}
+	
+	public function sendEmail($node){
+		elgg_set_viewtype('email');
+		//\elgg_send_email('mark@minds.com', 'mark@kramnorth.com', 'New Order', '<h1>Thanks for your order..</h1> <p>Your order has been succesfully processed</p>');
+		if(core\plugins::isActive('phpmailer')){
+			$view = elgg_view('minds_nodes/welcome', array('node'=>$node));
+			$to = array(
+				$node->getOwnerEntity(false)->email
+			);
+
+			\phpmailer_send('info@minds.com', 'Mark & Bill, from Minds', $to, '', 'Welcome to your new site', $view, NULL, true);
+		}
+		elgg_set_viewtype('default');
 	}
 }
 
