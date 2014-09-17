@@ -27,7 +27,7 @@ class call extends core\base{
 	static $deletes = 0;
 	static $counts = 0;
 	
-	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL){
+	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL, $sendTimeout = 800, $receiveTimeout = 2000){
 		global $CONFIG;
 	//	require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/vendors/phpcassa/lib/autoload.php');
 		
@@ -35,7 +35,7 @@ class call extends core\base{
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
 		
 		try{
-			$pool = new ConnectionPool($this->keyspace, $this->servers, null, 0, 800, 2000);
+			$pool = new ConnectionPool($this->keyspace, $this->servers, null, 0, $sendTimeout, $receiveTimeout);
 		
 			$this->pool = $pool;
 		

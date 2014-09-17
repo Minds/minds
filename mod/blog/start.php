@@ -406,7 +406,7 @@ function blog_pagesetup(){
 			);
 			elgg_register_menu_item('page', $params);
 		}
-	} elseif(elgg_get_context() == 'blog' && (elgg_get_page_owner_guid() == elgg_get_logged_in_user_guid() || elgg_get_page_owner_guid() == null)){
+	} elseif(elgg_get_context() == 'blog' && elgg_is_logged_in() && (elgg_get_page_owner_guid() == elgg_get_logged_in_user_guid() || elgg_get_page_owner_guid() == null)){
 		$params = array(
                                 'name' => 'scrapper_settings',
                                 'text' => elgg_echo('blog:minds:scraper:menu'),
