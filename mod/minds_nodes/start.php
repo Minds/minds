@@ -58,11 +58,6 @@ class start extends bases\plugin{
 		// Override the return url on tier orders
 		\elgg_register_plugin_hook_handler('urls', 'pay', array($this, 'payOverride'));
 	   	
-	   	
-	   	if(get_input('email')){
-	   		$node = new \MindsNode(355694700398645248);
-	   		$this->sendEmail($node);
-	   	}
 	}
 
 	public function pagesetup(){
@@ -287,7 +282,9 @@ class start extends bases\plugin{
 		if(core\plugins::isActive('phpmailer')){
 			$view = elgg_view('minds_nodes/welcome', array('node'=>$node));
 			$to = array(
-				$node->getOwnerEntity(false)->email
+				$node->getOwnerEntity(false)->email,
+				'mark@minds.com',
+				'bill@minds.com'
 			);
 
 			\phpmailer_send('info@minds.com', 'Mark & Bill, from Minds', $to, '', 'Welcome to your new site', $view, NULL, true);
