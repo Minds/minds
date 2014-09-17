@@ -328,7 +328,8 @@
 		window.lock_autoscroll = true;
 		
 		$list = $(this).parent().find('.elgg-list:first').parent();
-		$('.load-more').html('...');
+		$('.load-more').html('<p class="dots">...</p><p class="message"> loading, please hold tight </p>');
+		
 		$('.load-more').addClass('loading');
 			
 		var loc =  elgg.normalize_url(elgg.parse_url(location.href).path);
@@ -370,10 +371,10 @@
 				
 				if($(data).contents().length == 0){
 					
-					$('.load-more').html('');
+					$('.load-more').html('<p>Sorry, there is no more content.</p>');
 					
 				} else {
-
+				
 					$('.load-more').remove();
 				
 					var el = $(data).contents().unwrap();
@@ -383,31 +384,27 @@
    					} else {
 						offset = $(data).find('li.elgg-item:last').attr('id'); 
                    	}
+                   	
+                   	$list.append('<div class="news-show-more load-more" data-load-next="'+offset+'"><p>Downloading images...</p></div>');
 					
 					el.imagesLoaded().always(function(){
 						el.find('.rich-image').each(function(){ 
 							var image = $(this); 
 							if(image.context.naturalWidth < 2 ||
-							image.readyState == 'uninitialized'){    
-							 /*$(image).unbind("error").attr(
-							    "src", "path/to/image/no-image.gif"
-							 );*/
-							//       $(this).hide();
-							$(this).remove();
+								image.readyState == 'uninitialized'){    
+								 /*$(image).unbind("error").attr(
+								    "src", "path/to/image/no-image.gif"
+								 );*/
+								//       $(this).hide();
+								$(this).remove();
 							} 
 						});
 						$list.find('.elgg-list').append(el).masonry('appended', el);
 						window.lock_autoscroll = false;
+						$list.append('<div class="news-show-more load-more" data-load-next="'+offset+'">click for more</div>');
 					});
-	/*		
-$list.find('.elgg-list:first').append(data);
-                                        $list.find('.elgg-list:first > ul:last').contents().unwrap();
-					$('.elgg-list.mason').masonry()
-						.imagesLoaded( function() {
-  							$('.elgg-list.mason').masonry().masonry('reloadItems').masonry();
-						});
-					*/
-					$list.append('<div class="news-show-more load-more" data-load-next="'+offset+'">more</div>');
+					
+					
 
 					// Trigger a hook for extra tasks after content is loaded
 					elgg.trigger_hook('loadMore', 'minds');

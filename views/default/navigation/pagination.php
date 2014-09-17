@@ -134,7 +134,7 @@ if(elgg_get_context() == 'admin' || elgg_get_context() == 'gallery'){
 
 $next_uri = elgg_http_add_url_query_elements(substr(elgg_get_site_url(),0,-1) . $_SERVER['REQUEST_URI'] , array('offset'=>$vars['load-next']));
 
-echo '<div class="news-show-more load-more" limit="'.$limit.'" last_guid="'. $vars['last_guid'] . '" data-load-next="'. $vars['load-next'] . '" style="'.$vars['style'] .'" context="'.elgg_get_context().'" next-uri="'.$next_uri.'">more</div>';
+echo '<div class="news-show-more load-more" limit="'.$limit.'" last_guid="'. $vars['last_guid'] . '" data-load-next="'. $vars['load-next'] . '" style="'.$vars['style'] .'" context="'.elgg_get_context().'" next-uri="'.$next_uri.'">click for more</div>';
 
 }
 
