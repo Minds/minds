@@ -70,6 +70,13 @@ function blog_get_page_content_read($guid = NULL) {
 	$return['buttons'] = ' ';	
 	$return['title'] = $blog->title;
 	$return['subtitle'] = elgg_get_friendly_time($blog->time_created); 
+
+	if($blog->viewcount){
+		$count = number_format($blog->viewcount);
+        	$return['subtitle'] .= " &bull; <i>Page Views: $count+ </i>";
+    	}   
+
+
 	
 /*	$container = $blog->getContainerEntity();
 	$crumbs_title = $container->name;

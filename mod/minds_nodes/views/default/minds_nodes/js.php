@@ -180,6 +180,12 @@ minds.nodes.init = function() {
 						$('.payment .response .cell').text('We could not authorize your request. Please check your details or use another card.');
 						$('.payment .input').css('display', 'table-row');
 					}
+				},
+				error: function(){
+
+					 $('.payment .response .cell').text('We could not authorize your request. Please check your details or use another card.');
+                                                $('.payment .input').css('display', 'table-row');
+
 				}
 		});
 	});

@@ -34,8 +34,8 @@ class MindsTrending{
 		
 		foreach($this->sources as $source){
 			$analytics = new MindsAnalytics($source);
-			$guids = $analytics->fetch($this->options); //guids sorted highest 
-			self::$data = array_merge(self::$data, $guids);
+			$fetched = $analytics->fetch($this->options); //guids sorted highest 
+			self::$data = array_merge(self::$data, $fetched);
 		}
 		
 		$this->pullOwners();
@@ -52,16 +52,17 @@ class MindsTrending{
 		
 		$user_guids = array();
 		
-		foreach(self::$data as $score => $guid){
-			$entity = get_entity($guid);
+		foreach(self::$data as $score => $fetched){
+			$entity = get_entity($fetched['guid']);
 			array_push($user_guids,$entity->owner_guid);
 		}
 		
 		$occurances = array_count_values($user_guids);
 		arsort($occurances);
 		$user_guids = array_keys($occurances);
-	
-		self::$data = array_merge(self::$data, $user_guids);
+		foreach($user_guids as $user_guid){
+			self::$data = array_merge(self::$data, array('guid'=>$user_guid, 'count'=>1));
+		}
 				
 		return;
 	}
@@ -132,14 +133,16 @@ class MindsTrending{
 				//$db->removeRow("trending:$timespan:$type");
 			}
 		}
+
+		$db_entities = new minds\core\data\call('entities');
 	
 		$index_variables = array();
 		//a lower score is higher in the list
-		foreach(self::$data as $score => $guid){	
-			
+		foreach(self::$data as $score => $data){	
+			$guid = $data['guid'];
 			$entity = get_entity($guid);
 			$g = new GUID();	
-		
+			
 			if(!in_array($guid, $index_variables[$entity->type])){
 				$i = $g->migrate(count($index_variables[$entity->type]));
 	                        $index_variables[$entity->type][] = $guid;
@@ -154,7 +157,11 @@ class MindsTrending{
 					$db->insert("trending:$timespan:$entity->type:$entity->subtype", array($i=>$guid));
 				}
                         }
-	
+			if($timespan == 'entire'){
+				$success = $db_entities->insert($guid, array('viewcount'=>$data['count']));
+				echo "setting count...".$data['count'] . " for $success \n";
+			}
+
 			echo "Successfuly imported $guid with score $score and index $i to $timespan:$entity->type:$entity->subtype \n";
 		}
 	

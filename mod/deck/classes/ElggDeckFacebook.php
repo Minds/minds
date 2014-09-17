@@ -63,13 +63,16 @@ class ElggDeckFacebook extends ElggDeckNetwork{
 			if ($max_accounts > 0 && deck_river_count_networks_account('all') >= (int) $max_accounts) {
 				$error[] = elgg_echo('deck_river:network:too_many_accounts', array(elgg_get_site_entity()->name));
 			}
+	
+			try{	
+				//we want a 60 day token
+				$facebook->setExtendedAccessToken();	
+				$token = $facebook->getAccessToken();
 		
-			//we want a 60 day token
-			$facebook->setExtendedAccessToken();	
-			$token = $facebook->getAccessToken();
-		
-			$fbUserProfile = $facebook->api('/me'); // Récupere l'utilisateur
-			
+				$fbUserProfile = $facebook->api('/me'); // Récupere l'utilisateur
+			} catch (Exception $e){
+				$error[] = $e;
+			}
 			// make sure don't register twice this facebook account for this user.
 			if (deck_river_get_networks_account('facebook_account', elgg_get_logged_in_user_guid(), $fbUserProfile['id']) && !$this->guid) {
 				$error[] = elgg_echo('deck_river:network:authorize:already_done');

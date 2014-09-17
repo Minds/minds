@@ -3,8 +3,8 @@ require_once(dirname(dirname(__FILE__)).'/engine/start.php');
 
 elgg_set_ignore_access(true);
 
-$old = 'mac35.minds.com';
-$new = 'www.mac35.com';
+$old = 'warriorcapital.minds.com';
+$new = 'www.warriorcapital.us';
 
 $db = new minds\core\data\call('domain', 'elggmultisite');
 

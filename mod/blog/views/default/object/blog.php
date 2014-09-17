@@ -130,6 +130,11 @@ if ($full) {
             elgg_echo('by') . ' ' . $owner_link . ' ' .
             elgg_view_friendly_time($blog->time_created) . '</i>';
 
+    if($blog->viewcount){
+	 $count = number_format($blog->viewcount);
+	$subtitle .= "<i> &bull; Views: $count+ </i>";
+    }
+
     if ($blog->ex_author ) {
         $header = elgg_view_image_block(elgg_view('output/img', array('src' => $owner_icon_url_small)), $title . $subtitle);
     } else
