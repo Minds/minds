@@ -8,8 +8,6 @@
 * @link http://microstudi.net/elgg/
 **/
 
-elgg_load_library('archive:kaltura');
-
 $configured = $vars['configured'];
 
 ?>

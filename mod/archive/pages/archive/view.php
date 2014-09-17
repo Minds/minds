@@ -31,15 +31,16 @@ switch($entity->subtype){
 		$video_location_secure = str_replace('http://', 'https://', $video_location);
 		$thumbnail = $entity->getIconURL();
 	
-		minds_set_metatags('og:type', 'article');
+		minds_set_metatags('og:type', 'video');
 		minds_set_metatags('og:url', $entity->getPermaURL());
 		minds_set_metatags('og:image', $thumbnail);
 		minds_set_metatags('og:title', $title);
 		minds_set_metatags('og:description', $description);
-		//minds_set_metatags('og:video:url', $video_location);
-		//minds_set_metatags('og:video:secure_url',  $video_location_secure); 
-		//minds_set_metatags('og:video:width', '1280');
-		//minds_set_metatags('og:video:height', '720');
+		minds_set_metatags('og:video:url', $entity->getUrl().'?view=embed');
+		minds_set_metatags('og:video:secure_url',  $entity->getUrl().'?view=embed'); 
+		minds_set_metatags('og:video:type', 'text/html');
+		minds_set_metatags('og:video:width', '1280');
+		minds_set_metatags('og:video:height', '720');
 	 
 		minds_set_metatags('twitter:card', 'player');
 		minds_set_metatags('twitter:url', $entity->getURL());
