@@ -27,7 +27,7 @@ class start extends bases\plugin{
 			));
 	
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
-
+	
 	}
 	
 	
@@ -73,8 +73,21 @@ class start extends bases\plugin{
 		}
 		$transaction->paypal_id = $paypal_obj->getID();
 		$transaction->status = 'complete';
+		
+		$this->sendConfirmation(array($transaction->getOwnerEntity(false)->email, 'mark@minds.com', 'bill@minds.com', 'billing@minds.com'), $transaction);
+		
 		return $transaction->save();
 		
+	}
+	
+	public function sendConfirmation($to, $transaction){
+		elgg_set_viewtype('email');
+		//\elgg_send_email('mark@minds.com', 'mark@kramnorth.com', 'New Order', '<h1>Thanks for your order..</h1> <p>Your order has been succesfully processed</p>');
+		if(core\plugins::isActive('phpmailer')){
+			$view = elgg_view('payments/confirmation', array('transaction'=>$transaction));
+			\phpmailer_send('mark@minds.com', 'Minds Billing', $to, '', 'Your order: ' . $transaction->guid, $view, NULL, true);
+		}
+		elgg_set_viewtype('default');
 	}
 	
 }

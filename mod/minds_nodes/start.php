@@ -5,7 +5,9 @@
 namespace minds\plugin\minds_nodes;
 
 use minds\bases;
+use minds\core;
 use minds\core\plugins;
+
 class start extends bases\plugin{
 	
 	public function init(){
@@ -272,6 +274,22 @@ class start extends bases\plugin{
 			}
 	
 	    }
+	}
+	
+	public function sendEmail($node){
+		elgg_set_viewtype('email');
+		//\elgg_send_email('mark@minds.com', 'mark@kramnorth.com', 'New Order', '<h1>Thanks for your order..</h1> <p>Your order has been succesfully processed</p>');
+		if(core\plugins::isActive('phpmailer')){
+			$view = elgg_view('minds_nodes/welcome', array('node'=>$node));
+			$to = array(
+				$node->getOwnerEntity(false)->email,
+				'mark@minds.com',
+				'bill@minds.com'
+			);
+
+			\phpmailer_send('info@minds.com', 'Mark & Bill, from Minds', $to, '', 'Welcome to your new site', $view, NULL, true);
+		}
+		elgg_set_viewtype('default');
 	}
 }
 

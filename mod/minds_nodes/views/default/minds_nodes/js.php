@@ -168,7 +168,8 @@ minds.nodes.init = function() {
 					month : $('select[name=month] option:selected').text(),
 					year : $('select[name=year] option:selected').text(),
 					name : $('input[name=name]').val(),
-					name2 : $('input[name=name2]').val()
+					name2 : $('input[name=name2]').val(), 
+					domain: minds.nodes.domain
 				},
 				success: function(data){
 					if(data.success){
