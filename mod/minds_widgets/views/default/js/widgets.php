@@ -12,9 +12,9 @@ for (index = 0; index < posts.length; ++index) {
    iframe = document.createElement('iframe');
    iframe.id = 'post-'+post.getAttribute("data-guid");
    iframe.setAttribute('style', 'border:0;');
-   iframe.src = "<?php echo elgg_get_site_url(); ?>news/"+post.getAttribute("data-guid")+"?async=true";
+   iframe.src = "<?php echo elgg_get_site_url(); ?>newsfeed/"+post.getAttribute("data-guid")+"?async=true&view=embed";
    iframe.width = 640;
-   iframe.height=420; //auto depending on iframe
+   iframe.height=300; //auto depending on iframe
     
  //  iframe.height = iframe.contentWindow.document .body.scrollHeight;
 
@@ -25,10 +25,8 @@ for (index = 0; index < posts.length; ++index) {
     * @todo continuously check the height
     */
    iframe.onload = function(){
-	   setInterval(function(){
-			id = 'post-'+post.getAttribute("data-guid");
-			document.getElementById(id).height =document.getElementById(id).contentWindow.document .body.scrollHeight;
-			document.getElementById(id).width =document.getElementById(id).contentWindow.document .body.scrollWidth;
+	   setTimeout(function(){
+			resize('post-'+post.getAttribute("data-guid"));
 	   }, 1000);
    };
 }
@@ -64,8 +62,16 @@ for (index = 0; index < posts.length; ++index) {
 			    xmlhttp.open("POST",form.getAttribute('action'), true);
 			    xmlhttp.send(data);
 			   
-			   	list.appendChild		
+			   	list.appendChild	
+			   	
+			   	resize(frame.id);	
 			}
 		}
 	}
+}
+
+
+function resize(id){
+		document.getElementById(id).height = document.getElementById(id).contentWindow.document.body.scrollHeight;
+		document.getElementById(id).width = document.getElementById(id).contentWindow.document.body.scrollWidth;
 }

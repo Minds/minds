@@ -490,10 +490,86 @@ form.minds-search{
 /**
  * minds posting
  */
-.elgg-form-deck-river-post {
+.elgg-form-deck-river-post,  .elgg-form-activity-post{
 padding: 12px;
 background: #F1F1F1;
 border: 1px solid #CCC;
 margin: 0;
 width: 96%;
+}
+
+/**
+ * 	Attacher
+ */
+
+.post-attachment-button-override{
+	font-family:"fontello";
+	background:#EEE;
+	padding:0;
+	border:1px solid #DDD;
+	border-radius:0;
+	color:#888;
+	content: "\1f4ce"; /* \1f4ce */
+	font-size:22px;
+	position:relative;
+	float:left;
+	margin:2px;
+	cursor:pointer;
+	height:29px;
+	width:36px;
+}
+.post-attachment-button-override:before{
+	font-family: "fontello";
+	color: #888;
+	content: "\1f4ce";
+	position: absolute;
+	top: 7px;
+	left: 6px;
+}
+.post-attachment-button-override.attached:before{
+	color:#4690D6;
+}
+.post-attachment-button{
+	position:absolute;
+	font-family:"fontello";
+	color:#888;
+	content: "\1f4f7"; /* \1f4f7 */
+	position: absolute;
+	height: 100%;
+	width:100%;
+	top: 0;
+	left: 0;
+	cursor: pointer;
+	opacity: 0;
+	filter:alpha(opacity=0);
+}
+.post-post-preview{
+	position:absolute;
+	width:100%;
+	bottom:46px;
+	left:12px;
+	display:none;
+}
+.post-post-preview .deck-post-preview-title, .post-post-preview .post-post-preview-title:focus{
+	background:transparent;
+	border:0;
+	font-weight:bold;
+	padding:0;
+	font-size:14px;
+	width:auto;
+	margin:0 8px;
+}
+.post-post-preview .post-post-preview-description, .post-post-preview .post-post-preview-description:focus{
+	background:transparent;
+	border:0;
+	font-weight:lighter;
+	font-style:italic;
+	padding:0;
+	overflow:hidden;
+	width:80%;
+	margin:0 8px;
+}
+.dost-post-preview .post-post-preview-icon-img{
+	float:left;
+	height:36px;
 }

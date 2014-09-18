@@ -836,15 +836,21 @@ function elgg_get_entities(array $options = array()) {
 					if(!$options['count']){
 						$db = new minds\core\data\call('entities_by_time');
 						$guids = $db->getRow($namespace, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=> $options['newest_first']));
-						if(!is_array($guids)){
-							return null;
+			
+						if(!$guids){
+							return false;
 						}
+						
+						if(isset($guids[$options['offset']])){
+							unset($guids[$options['offset']]); //prevents looping...
+						}
+
 						$db = new minds\core\data\call('entities');
 						$rows = $db->getRows(array_keys($guids));
-						if(!count($rows)){
-						//	$db = new minds\core\data\call($type);
-						//	$rows = $db->getRows(array_keys($guids));
+						if(!$rows){
+							return false;
 						}
+					
 					} else {
 						$db = new minds\core\data\call('entities_by_time');
 						$count = $db->countRow($namespace);

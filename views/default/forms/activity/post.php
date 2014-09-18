@@ -6,7 +6,7 @@ if (!$user) {
 	return false;
 }
 
-echo elgg_view('input/plaintext', array('name'=>'message', 'id'=>'post-input-box', 'placeholder' => elgg_echo('post-river:post:placeholder')));
+echo elgg_view('input/plaintext', array('name'=>'message', 'id'=>'post-input-box', 'placeholder' => elgg_echo('Message')));
 
 
 $file_input = elgg_view('input/file', array('name'=>'attachment', 'class'=>'post-attachment-button'));

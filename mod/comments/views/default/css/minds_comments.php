@@ -40,10 +40,10 @@ $graphics_url = $base_url . 'mod/hypeAlive/graphics/';
 }
 .minds-comments-form{
 	border:1px solid #CCC;
-	background:#CCC;
+	background:#DDD;
 	margin:16px 0 0;
 	margin-top:0;
-	padding:8px;
+	padding:0 8px !important;
 }
 .minds-comments-form fieldset > div{
 	margin-bottom:0;
@@ -102,10 +102,11 @@ padding:0;
 }
 
 .hj-comments-input, .comments-input {
-font-size:12px;
-height:25px;
-overflow: hidden;
-padding:4px;
+	font-size:12px;
+	height:30px;
+	overflow: hidden;
+	border-radius:0;
+	padding:8px;
 }
 
 .hj-comments-bubble-pointer {

@@ -739,3 +739,30 @@
 .minds-news-filter-box .elgg-menu-filter > li{
 	font-size:12px;
 }
+
+
+.menu-activity{
+	display:table !important;
+	width:100% !important;
+	position:relative !important;
+	float:none !important;
+	padding:0 !important;
+}
+.menu-activity > li:first-of-type{
+	border-left:1px solid #DDD;
+}
+.menu-activity > li{
+	display:table-cell;
+	background:#FEFEFE;
+	border-right:1px solid #DDD;
+	border-bottom:1px solid #DDD;
+	text-align:center;
+}
+.menu-activity > li a{
+	padding:8px;
+}
+.menu-activity > li a:hover{
+	text-decoration:none;
+	background:#888;
+	color:#FFF;
+}

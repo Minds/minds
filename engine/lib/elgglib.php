@@ -1732,6 +1732,7 @@ function elgg_js_page_handler($page) {
  * @access private
  */
 function elgg_ajax_page_handler($page) {
+	set_input('ajax', true);
 	if (is_array($page) && sizeof($page)) {
 		// throw away 'view' and form the view name
 		unset($page[0]);

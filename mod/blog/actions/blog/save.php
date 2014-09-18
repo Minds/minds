@@ -143,12 +143,14 @@ if (!$error) {
 		// add to river if changing status or published, regardless of new post
 		// because we remove it for drafts.
 		if (($new_post || $old_status == 'draft') && $status == 'published') {
-			add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid);
-
-//			if ($guid) {
-//				$blog->time_created = time();
-//				$blog->save();
-//			}
+		
+			$activity = new minds\entities\activity();
+			$activity->setTitle($blog->title)
+					->setBlurb(elgg_get_excerpt($blog->description))
+					->setUrl($blog->getURL())
+					->setThumbnail(minds_fetch_image($blog->description, $blog->owner_guid))
+					->save();
+		
 		} elseif ($old_status == 'published' && $status == 'draft') {
 			elgg_delete_river(array(
 				'object_guid' => $blog->guid,

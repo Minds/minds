@@ -33,3 +33,11 @@ if($activity->title){
 
 echo elgg_view_image_block($icon, $header . $body, $vars);
 echo elgg_view_comments($activity);
+
+echo elgg_view_menu('entity', array(
+    'entity' => $activity,
+    'handler' => 'activity',
+    'sort_by' => 'priority',
+    'class' => 'menu-activity',
+    'full_view' => $full
+));

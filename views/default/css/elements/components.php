@@ -484,7 +484,7 @@
 .list-newsfeed{
 	padding:0 !important;
 }
-.list-newsfeed li{
+.list-newsfeed > li{
 	float:none;
 	margin:8px 0;
 	width:auto;
@@ -494,11 +494,11 @@
 	font-size:14px;
 	line-height:20px;
 }
-.list-newsfeed li .head a{
+.list-newsfeed > li .head a{
 	font-weight:bold;
 	font-size:14px;
 }
-.list-newsfeed li .head a .username{
+.list-newsfeed > li .head a .username{
 	font-size:11px; 
 	color:#888;
 }
@@ -523,4 +523,19 @@
 .list-newsfeed li .activity-rich-post .url{
 	font-size:11px;
 	font-weigh:bold;
+}
+.list-newsfeed li  .activity-rich-post .thumbnail-wrapper{
+	display: block;
+	position: relative;
+	max-height: 253px;
+	overflow: hidden;
+	width:110%;
+	margin: -12px -5% 12px;
+	padding: 0;
+}
+.list-newsfeed li  .activity-rich-post .thumbnail-wrapper img.thumbnail{
+	display: block;
+	max-height: none;
+	vertical-align: top;
+	width: 100%;
 }

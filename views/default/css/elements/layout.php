@@ -201,6 +201,9 @@
 	max-width:1200px;
 	margin:auto;
 }
+.elgg-layout-two-sidebar .elgg-sidebar{
+	width:auto;
+}
 .elgg-layout-error {
 	margin-top: 20px;
 }

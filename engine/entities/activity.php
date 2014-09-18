@@ -22,11 +22,48 @@ class activity extends entity{
 		));
 	}
 	
-	/*public function save($index = true){
+	/**
+	 * Returns an array of indexes into which this entity is stored
+	 * 
+	 * @param bool $ia - ignore access
+	 * @return array
+	 */
+	protected function getIndexKeys($ia = false){
+
+		$indexes = array( 
+			$this->type
+		);
+
+		$owner = $this->getOwnerEntity();	
 		
+		/** Get the followers **/
+		$followers = in_array($this->access_id, array(2, -2, 1)) ? $owner->getFriendsOf(null, 10000, "", 'guids') : array();
+		if(!$followers) $followers = array(); 
+		$followers = array_keys($followers);
 		
+		array_push($followers, $this->owner_guid);
 		
-	}*/
+		foreach($followers as $follower)
+			array_push($indexes, "$this->type:network:$follower");
+
+		/**
+		 * @todo make it only post to a group if we are in a group
+		 */
+		array_push($indexes, "$this->type:container:$this->container_guid");
+
+		return $indexes;
+	}
+	
+	public function getExportableValues(){
+		return array_merge(parent::getExportableValues(),
+			array(
+				'title', 
+				'blurb',
+				'perma_url',
+				'message',
+				'thumbnail_src'
+			));
+	}
 	
 	/**
 	 * Set the message

@@ -37,12 +37,12 @@ function anypage_init() {
 function anypage_setup_footer_menu() {
 	$show = true;
 	
-	if(get_input('ajax'))
+	if(get_input('ajax') || elgg_get_viewtype() == 'json')
 		$show = false;
 
 //	$show = false;
 	global $ANYPAGE_CACHE;
-	if(!$ANYPAGE_CACHE && $show){
+	if($show && !$ANYPAGE_CACHE){
 		$ANYPAGE_CACHE = elgg_get_entities(array('type'=>'object', 'subtype'=>'anypage', 'limit'=>0)); 
 	}
 

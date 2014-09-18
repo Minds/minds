@@ -33,6 +33,13 @@
 		$(document).on('click', "#minds-signup-popup .cancel", function(){
 			$.fancybox.close();
 		});
+		
+		/**
+		 * Make our newsfeed icons centred @todo make less hacky
+		 */
+		$(window).on("load resize", function(){
+			$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
+		});
 	
 	 	
 	 	$(".carousel-admin-items").sortable({
@@ -271,16 +278,28 @@
 
 	minds.remove = function(e){
 		e.preventDefault();
-               var button = $(this);
+       var button = $(this);
 		var item = button.parents('.elgg-item');
-                elgg.action($(this).attr('href') + '&ajax=true', {
-                        success: function(data) {
-                  		item.effect('drop'); 
-                         },
-
-                        error: function(data){
-                        }
-                });
+		
+		if($(this).hasClass('ajax-non-action')){
+			elgg.get($(this).attr('href'), {
+                success: function(data) {
+          			item.effect('drop'); 
+                 },
+				error: function(data){
+                }
+       		 });
+			
+			return true;
+		}
+		
+        elgg.action($(this).attr('href') + '&ajax=true', {
+            success: function(data) {
+      			item.effect('drop'); 
+             },
+			error: function(data){
+            }
+        });
 	}
 
         minds.remind = function(e){
@@ -366,7 +385,8 @@
 		});
 		url = "/ajax/view/page/components/ajax_list?" + $.param($params);
 			
-		elgg.get(url, function(data) {
+		elgg.get(url, {
+			success: function(data) {
 			//$list.toggleClass('infinite-scroll-ajax-loading', false);
 				
 				if($(data).contents().length == 0){
@@ -401,15 +421,19 @@
 						});
 						$list.find('.elgg-list').append(el).masonry('appended', el);
 						window.lock_autoscroll = false;
+						$('.load-more').remove();
 						$list.append('<div class="news-show-more load-more" data-load-next="'+offset+'">click for more</div>');
 					});
-					
-					
 
 					// Trigger a hook for extra tasks after content is loaded
 					elgg.trigger_hook('loadMore', 'minds');
 				}
-			});
+			},
+			error : function(data){
+				$('.load-more').html('<p>Sorry, there is no more content.</p>');
+			}
+			
+		});
 		 
 	 };	
      
