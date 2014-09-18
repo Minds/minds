@@ -11,7 +11,8 @@ class router{
 		"/action" => "minds\\pages\\actions",
 		"/services" => "minds\\pages\\services",
 		"/cache" => "minds\\pages\\cache",
-		"/contact" => "minds\\pages\\contact"
+		"/contact" => "minds\\pages\\contact",
+		"/newsfeed" => "minds\\pages\\newsfeed\\newsfeed"
 	);
 	
 	/**

@@ -197,7 +197,9 @@
 	/*background: transparent url(<?php echo elgg_get_site_url(); ?>_graphics/sidebar_background.gif) repeat-y right top;*/
 }
 .elgg-layout-two-sidebar {
-	/*background: transparent url(<?php echo elgg_get_site_url(); ?>_graphics/two_sidebar_background.gif) repeat-y right top;*/
+	width:90%;
+	max-width:1200px;
+	margin:auto;
 }
 .elgg-layout-error {
 	margin-top: 20px;

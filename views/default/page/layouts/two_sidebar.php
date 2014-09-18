@@ -23,7 +23,7 @@ if (isset($vars['class'])) {
 			echo elgg_view('page/elements/sidebar', $vars);
 		?>
 	</div>
-	<div class="elgg-sidebar-alt">
+	<div class="elgg-sidebar-alt <?= isset($vars['sidebar-alt-class']) ? $vars['sidebar-alt-class'] : '' ?>">
 		<?php
 			echo elgg_view('page/elements/sidebar_alt', $vars);
 		?>

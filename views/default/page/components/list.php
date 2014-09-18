@@ -27,16 +27,11 @@ $offset_key = elgg_extract('offset_key', $vars, 'offset');
 $position = elgg_extract('position', $vars, 'after');
 $list_class = 'elgg-list';
 $list_id = elgg_extract('list_id', $vars, null);
-$data_options = elgg_extract('data-options', $vars, false);
-
-
-if ($data_options) {
-    $list_class = "$list_class hj-syncable";
-}
 
 if (isset($vars['list_class'])) {
     $list_class = "$list_class {$vars['list_class']}";
 }
+
 if($vars['masonry'] !== false && get_input('masonry') != 'off' && strpos($list_class, 'vertical-list') === FALSE){
         $list_class .= ' mason';
 } else {
@@ -92,7 +87,7 @@ if (is_array($items) && count($items) > 0) {
             $id = $item->getGUID();
             $time = $item->time_created;
         } else {
-	    $id = $item->id;
+	    	$id = $item->id;
             $time = $item->posted;
         }
 		$contents = elgg_view_list_item($item, $vars);

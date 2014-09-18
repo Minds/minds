@@ -476,3 +476,51 @@
 .elgg-tagcloud {
 	text-align: justify;
 }
+
+
+/**
+ * Newsfeed lists
+ */
+.list-newsfeed{
+	padding:0 !important;
+}
+.list-newsfeed li{
+	float:none;
+	margin:8px 0;
+	width:auto;
+	min-width:0;
+	min-height:0;
+	height:auto;
+	font-size:14px;
+	line-height:20px;
+}
+.list-newsfeed li .head a{
+	font-weight:bold;
+	font-size:14px;
+}
+.list-newsfeed li .head a .username{
+	font-size:11px; 
+	color:#888;
+}
+.list-newsfeed li .head .elgg-friendlytime{
+	font-size:11px;
+	color:#888;
+}
+.list-newsfeed li .activity-rich-post{
+	padding:12px;
+	border:1px solid #EEE;
+	background:#FFF;
+}
+.list-newsfeed li .activity-rich-post a{
+	color:#999;
+}
+.list-newsfeed li .activity-rich-post a:hover{
+	text-decoration:none;
+}
+.list-newsfeed li .activity-rich-post h3{
+	font-family:Georgia, Sans-Serif;	
+}
+.list-newsfeed li .activity-rich-post .url{
+	font-size:11px;
+	font-weigh:bold;
+}
