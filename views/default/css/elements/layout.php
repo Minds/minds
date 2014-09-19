@@ -203,6 +203,7 @@
 }
 .elgg-layout-two-sidebar .elgg-sidebar{
 	width:auto;
+	margin:0 0 0 10px;
 }
 .elgg-layout-error {
 	margin-top: 20px;

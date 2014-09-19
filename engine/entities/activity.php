@@ -41,6 +41,8 @@ class activity extends entity{
 		if(!$followers) $followers = array(); 
 		$followers = array_keys($followers);
 		
+		array_push($indexes, "$this->type:user:$owner->guid");
+		
 		array_push($followers, $this->owner_guid);
 		
 		foreach($followers as $follower)

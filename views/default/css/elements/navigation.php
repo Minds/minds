@@ -740,6 +740,22 @@
 	font-size:12px;
 }
 
+.newsfeed .elgg-sidebar .elgg-menu{
+	margin-top:8px;
+}
+.newsfeed .elgg-sidebar .elgg-menu li{
+	margin:8px 0;
+}
+.newsfeed .elgg-sidebar .elgg-menu li a{
+	padding:12px 124px 12px 16px;
+	border:1px solid #DDD;
+	background:#FAFAFA;
+	border-radius:2px;
+}
+.newsfeed .elgg-sidebar .elgg-menu li a:hover{
+	background:#888;
+	color:#FFF;
+}
 
 .menu-activity{
 	display:table !important;

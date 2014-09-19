@@ -10,6 +10,38 @@ class page extends base{
 	
 	public function init(){
 		\elgg_set_context($this->context);
+		$this->setup();
+	}
+	
+	public function setup(){
+		elgg_unregister_menu_item('footer', 'Code Release');
+		elgg_unregister_menu_item('site', 'activity');
+		
+		elgg_register_menu_item('site', array(
+			'name' => 'home',
+			'href' => '/',
+			'text' => '<span class="entypo">&#59404;</span> Homepage',
+			'title' => elgg_echo('home'),
+			'priority' => 1	
+		));
+		
+		$item = new \ElggMenuItem('news', elgg_echo('news'), 'news');
+	
+		elgg_register_menu_item('site', array(
+			'name' => 'news',
+			'href' => 'newsfeed',
+			'text' => '<span class="entypo">&#59194;</span> Newsfeed',
+			'title' => elgg_echo('news'),
+			'priority' => 1	
+		));
+		
+		elgg_register_menu_item('site', array(
+			'name' => elgg_echo('minds:upload'),
+			'href' => 'archive/upload',
+			'text' => '<span class="entypo">&#128228;</span> Upload',
+			'title' => elgg_echo('minds:upload'),
+			'priority' => 4
+		));
 	}
 
 	/**

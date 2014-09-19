@@ -12,6 +12,9 @@ class newsfeed extends core\page implements interfaces\page{
 	
 	public $context = 'newsfeed';
 	
+	/**
+	 * Setup, only applies to the newsfeed page
+	 */
 	public function setup($hook, $type, $return, $params) {
 
 		if($params['entity']->type != 'activity'){
@@ -78,6 +81,9 @@ class newsfeed extends core\page implements interfaces\page{
 		return $return;
 	}
 	
+	/**
+	 * Get
+	 */
 	public function get($pages){
 			
 		\elgg_register_plugin_hook_handler('register', 'menu:entity', array($this, 'setup'));
@@ -152,6 +158,9 @@ class newsfeed extends core\page implements interfaces\page{
 				);
 				break;
 			case 'all':
+				if(!elgg_is_admin_logged_in()){
+					return false;
+				}
 				$options = array(
 
 				);
@@ -167,6 +176,7 @@ class newsfeed extends core\page implements interfaces\page{
 		
 		$content .= core\entities::view(array_merge(array(
 			'type' => 'activity',
+			'limit' => 5,
 			'masonry' => false,
 			'prepend' => $post,
 			'list_class' => 'list-newsfeed'
@@ -176,12 +186,19 @@ class newsfeed extends core\page implements interfaces\page{
 			'user' => elgg_get_logged_in_user_entity()
 		));
 		
-		$sidebar_right = "welcome";
+		$sidebar_right = "<b style='margin-top:12px;display:block;'>Filter</b>";
+		\elgg_register_menu_item('page', array('text'=>'Network', 'href'=>'newsfeed/network', 'name'=>'network', 'selected' =>isset($options['network'])));
+		\elgg_register_menu_item('page', array('text'=>'Personal', 'href'=>'newsfeed/mine', 'name'=>'mine', 'selected'=> isset($options['owner_guid'])));
+		
+		if(elgg_is_admin_logged_in())
+			\elgg_register_menu_item('page', array('text'=>'All (admins only)', 'href'=>'newsfeed/all', 'name'=>'all', !isset($options['network']) || !isset($options['owner_guid'])));
 		
 		$body = \elgg_view_layout('two_sidebar', array(
 			'title'=>\elgg_echo('newsfeed'), 
 			'content'=>$content, 
-			'sidebar'=>$sidebar_right, 
+			'class' => 'newsfeed',
+			'sidebar_top'=>$sidebar_right,
+			//'sidebar' => elgg_view_menu('footer'),
 			'sidebar_alt'=>$sidebar_left,
 			'sidebar-alt-class' =>  'minds-fixed-sidebar-left'
 		));
@@ -189,6 +206,9 @@ class newsfeed extends core\page implements interfaces\page{
 		echo $this->render(array('body'=>$body));
 	}
 	
+	/**
+	 * POST
+	 */
 	public function post($pages){
 
 		switch($pages[0]){

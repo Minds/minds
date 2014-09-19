@@ -319,48 +319,6 @@ function minds_register_hook(){
 function minds_pagesetup(){
 	$user = elgg_get_logged_in_user_entity();
 
-	elgg_unregister_menu_item('footer', 'Code Release');
-	elgg_unregister_menu_item('site', 'activity');
-	
-	elgg_register_menu_item('site', array(
-		'name' => 'home',
-		'href' => '/',
-		'text' => '<span class="entypo">&#59404;</span> Homepage',
-		'title' => elgg_echo('home'),
-		'priority' => 1	
-	));
-	
-	$item = new ElggMenuItem('news', elgg_echo('news'), 'news');
-
-	elgg_register_menu_item('site', array(
-		'name' => 'news',
-		'href' => 'news/featured',
-		'text' => '<span class="entypo">&#59194;</span> News',
-		'title' => elgg_echo('news'),
-		'priority' => 1	
-	));
-	
-	elgg_register_menu_item('site', array(
-		'name' => elgg_echo('minds:upload'),
-		'href' => 'archive/upload',
-		'text' => '<span class="entypo">&#128228;</span> Upload',
-		'title' => elgg_echo('minds:upload'),
-		'priority' => 4
-	));
-
-	
-	//RIGHT MENU	
-	//profile
-	elgg_unregister_menu_item('topbar', 'profile');
-	if($user)
-	elgg_register_menu_item('topbar', array(
-			'name' => 'profile',
-			'href' => '/profile/' . elgg_get_logged_in_user_entity()->username,
-			'class'=> 'profile',
-			'text' => elgg_view_entity_icon(elgg_get_logged_in_user_entity(), 'tiny', array('use_hover'=>false)),
-			'priority' => 60,
-			'section' => 'alt',
-		));
 	
 	// embed support
         $item = ElggMenuItem::factory(array(
@@ -372,9 +330,7 @@ function minds_pagesetup(){
                 ),
         ));
         elgg_register_menu_item('embed', $item);
-	
-	//footer
-	
+
 
 }
 

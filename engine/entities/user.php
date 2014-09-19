@@ -6,6 +6,16 @@
 
 namespace minds\entities;
 
+use minds\core;
+
 class user extends \ElggUser{
+	
+	public function subscribe(){
+		$db = new core\data('friends');
+	}
+	
+	public function unSubscribe(){
+		
+	}
 	
 }

@@ -69,6 +69,9 @@ class router{
 	 * Legacy fallback...
 	 */
 	public function legacyRoute($handler, $page){
+	
+		new page(); //just to load init etc
+	
 		if (!\page_handler($handler, $page)) {
 			//try a profile then
 			if(!\page_handler('channel', "$handler/$page")){

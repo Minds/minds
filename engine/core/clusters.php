@@ -22,11 +22,14 @@ class clusters extends base{
 		$path = "minds\\pages\\clusters";
 		router::registerRoutes(array(
 			"/api/v1/cluster" => "$path\\index",
-			"/api/v1/authenticate" => "$path\\authenticate"
+			"/api/v1/authenticate" => "$path\\authenticate",
+			"/api/v1/subscriptions" => "$path\\subscriptions"
 		));
 		
 		\elgg_register_plugin_hook_handler('cron', 'halfhour', array($this, 'cron'));
 		\elgg_register_plugin_hook_handler('action', 'login', array($this, 'login'));
+		
+		\elgg_register_event_handler('create', 'all', array($this, 'createHook'));
 	}
 	
 	/**
@@ -162,6 +165,20 @@ class clusters extends base{
 	
 	public function joinCluster($cluster, $server_uri){
 		//notify everyone in the cluster
+	}
+	
+	public function createHook($event, $object_type, $entity, $params){
+			
+		switch($object_type){
+			case 'activity':
+				//get the list subscribers.
+				$db = new data\call('friendsof');
+				var_dump($db->getRow($entity->owner_guid)); exit;
+				break;
+			case 'object':
+			default:
+				//currently not supported
+		}
 	}
 		
 }

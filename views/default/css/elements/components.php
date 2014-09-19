@@ -486,7 +486,7 @@
 }
 .list-newsfeed > li{
 	float:none;
-	margin:8px 0;
+	margin:16px 0;
 	width:auto;
 	min-width:0;
 	min-height:0;
