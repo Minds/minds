@@ -36,6 +36,13 @@ if($activity->title){
 	$body .= elgg_view('activity/elements/rich', array('activity'=>$activity)); 
 }
 
+if($activity->custom_type){
+	if(elgg_view_exists('activity/elements/'.$activity->custom_type))
+		$body .= elgg_view('activity/elements/'.$activity->custom_type, array('data'=>$activity->custom_data));
+	else
+		$body .= elgg_view('activity/elements/custom', array('type'=>$activity->custom_type,'data'=>$activity->custom_data));
+}
+
 echo elgg_view_image_block($icon, $header . $body, array(
 		'class' => 'inner'
 	));

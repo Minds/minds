@@ -15,22 +15,7 @@ class subscriptions extends core\page implements interfaces\page{
 	}
 	
 	public function post($pages){
-		//check to see if a user exists..
-		$result = \elgg_authenticate(get_input('username'), get_input('password'));
-		if ($result !== true) {
-			
-			$return = array('error'=>'Could not authenticate');
-			
-		}else {
-			
-			$user = new entities\user(get_input('username'));
-			
-			$return = $user->export();
-			$return['email'] = $user->email;
-			
-		}
 		
-		echo json_encode($return);
 	}
 	
 	public function put($pages){

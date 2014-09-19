@@ -25,7 +25,7 @@ class entities extends base{
 	 * @param bool $cache - cache or load from cache?
 	 * @return object
 	 */
-	static public function build($row, $cache){
+	static public function build($row, $cache = true){
 
 		if (!is_object($row)) {
 			return $row;

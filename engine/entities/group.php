@@ -6,6 +6,6 @@
 
 namespace minds\entities;
 
-class entity extends \ElggGroup{
+class group extends \ElggGroup{
 	
 }

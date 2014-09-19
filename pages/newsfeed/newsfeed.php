@@ -15,7 +15,7 @@ class newsfeed extends core\page implements interfaces\page{
 	/**
 	 * Setup, only applies to the newsfeed page
 	 */
-	public function setup($hook, $type, $return, $params) {
+	public function pageSetup($hook, $type, $return, $params) {
 
 		if($params['entity']->type != 'activity'){
 			return $return;
@@ -86,7 +86,7 @@ class newsfeed extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 			
-		\elgg_register_plugin_hook_handler('register', 'menu:entity', array($this, 'setup'));
+		\elgg_register_plugin_hook_handler('register', 'menu:entity', array($this, 'pageSetup'));
 		
 		if(get_input('new')){
 			$activity = new entities\activity();

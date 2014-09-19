@@ -167,13 +167,26 @@ class clusters extends base{
 		//notify everyone in the cluster
 	}
 	
-	public function createHook($event, $object_type, $entity, $params){
+	public function createHook($event, $object_type, $entity, $params = array()
+	){
 			
 		switch($object_type){
 			case 'activity':
 				//get the list subscribers.
 				$db = new data\call('friendsof');
-				var_dump($db->getRow($entity->owner_guid)); exit;
+				$subscribers = $db->getRow($entity->owner_guid);
+				foreach($subscribers as $guid => $json){
+					//old, localised timestamp...
+					if(is_numeric($json)){
+						continue;
+					}
+					
+					$data = json_decode($json, true);
+					//sign our post with the secret
+				//	$secret = $data['']
+					
+				}
+				//var_dump($db->getRow($entity->owner_guid)); exit;
 				break;
 			case 'object':
 			default:

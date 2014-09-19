@@ -151,4 +151,17 @@ class activity extends entity{
 		$this->remind_object = $array;
 		return $this;
 	}
+	
+	/**
+	 * Set a custom, arbitrary set. For example a custom video view, or maybe a set of images. I envisage
+	 * certain service could extend this.
+	 * @param string $type
+	 * @param array $data
+	 * @return $this
+	 */
+	public function setCustom($type, $data = array()){
+		$this->custom_type = $type;
+		$this->custom_data = $data;
+		return $this;
+	}
 }

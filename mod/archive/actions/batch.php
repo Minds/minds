@@ -43,7 +43,25 @@ if($container instanceof ElggGroup){
 /**
  * and add a river feed
  */
-$river = new ElggRiverItem($params);
-$river->save();
+//$river = new ElggRiverItem($params);
+//$river->save();
+$images = array();
+$i = 0;
+foreach($guids as $guid){
+	if($i == 3)
+		continue;
+	
+	$i++;
+	
+	$images[] = array(
+		'src' => elgg_get_site_url() . 'archive/thumbnail/'.$guid,
+		'href' => elgg_get_site_url() . 'archive/view/'.$album_guid.'/'.$guid,
+	);
+}
+
+$activity  = new \minds\entities\activity();
+$activity->setCustom('batch', $images)
+		->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
+		->save();
 
 exit;
