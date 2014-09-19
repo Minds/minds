@@ -13,6 +13,6 @@ $activity = $vars['activity'];
 		<h3><?= $activity -> title ?></h3>
 		<p><?= $activity -> blurb ?></p>
 		
-		<p class="url"><?= $activity -> perma_url ?></p>
+		<p class="url"><?= parse_url($activity -> perma_url, PHP_URL_HOST) ?></p>
 	</a>
 </div>

@@ -9,17 +9,6 @@ if (!$user) {
 echo elgg_view('input/plaintext', array('name'=>'message', 'id'=>'post-input-box', 'placeholder' => elgg_echo('Message')));
 
 
-$file_input = elgg_view('input/file', array('name'=>'attachment', 'class'=>'post-attachment-button'));
-
-echo <<<HTML
-	<div class="post-attachment-button-override">
-		$file_input
-	</div>
-HTML;
-
-$date = elgg_view('input/date', array('name'=>'schedule_date','value'=>time()));
-$time = elgg_view('input/timepicker',array('name'=>'schedule_time','value'=> (time() - strtotime("today")) /60));
-
 /*echo <<<HTML
 	<div class="post-scheduler-button">&#xe801;</div>
 	<div class="post-scheduler-content">
@@ -30,12 +19,25 @@ HTML;*/
 echo <<<HTML
 	<div class="post-post-preview">
 			<img class="post-post-preview-icon-img"/>
-		<input type="text" name="preview-title" class="post-post-preview-title"/>
-		<textarea type="text" name="preview-description" class="post-post-preview-description"></textarea>
-		<input type="hidden" name="preview-icon" class="post-post-preview-icon"/>
-		<input type="hidden" name="preview-url" class="post-post-url"/>
+		<input type="text" name="title" class="post-post-preview-title"/>
+		<textarea type="text" name="description" class="post-post-preview-description"></textarea>
+		<input type="hidden" name="thumbnail" class="post-post-preview-icon"/>
+		<input type="hidden" name="url" class="post-post-url"/>
 	</div>
 HTML;
+
+
+
+$file_input = elgg_view('input/file', array('name'=>'attachment', 'class'=>'post-attachment-button'));
+
+echo <<<HTML
+	<div class="post-attachment-button-override">
+		$file_input
+	</div>
+HTML;
+
+$date = elgg_view('input/date', array('name'=>'schedule_date','value'=>time()));
+$time = elgg_view('input/timepicker',array('name'=>'schedule_time','value'=> (time() - strtotime("today")) /60));
 
 echo <<<HTML
 	<div class="upload-progress" style="float: right;height: 25px;width: 162px;margin: 8px;">

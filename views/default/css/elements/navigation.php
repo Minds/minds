@@ -748,14 +748,17 @@
 	float:none !important;
 	padding:0 !important;
 }
-.menu-activity > li:first-of-type{
+/*.menu-activity > li:first-of-type{
 	border-left:1px solid #DDD;
+}*/
+.menu-activity > li:last-of-type{
+	border-right:0;
 }
 .menu-activity > li{
 	display:table-cell;
 	background:#FEFEFE;
 	border-right:1px solid #DDD;
-	border-bottom:1px solid #DDD;
+	/*border-bottom:1px solid #DDD;*/
 	text-align:center;
 }
 .menu-activity > li a{

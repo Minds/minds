@@ -501,7 +501,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		if(in_array($entity->getSubtype(), $allowedReminds)){
 				$options = array(
 						'name' => 'remind',
-						'href' => "action/minds/remind?guid=$entity->guid",
+						'href' => "newsfeed/remind/$entity->guid",
 						'text' => '&#59159;',
 						'title' => elgg_echo('minds:remind'),
 						'is_action' => true,

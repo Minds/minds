@@ -24,6 +24,11 @@ $body = "";
 if($activity->message)
 	$body .= elgg_view('activity/elements/message', array('message'=>$activity->message));
 
+
+if($activity->remind_object){
+	$body .= elgg_view('activity/elements/remind', array('remind'=>$activity->remind_object));
+}
+
 /**
  * This is an rich embed
  */
@@ -31,13 +36,20 @@ if($activity->title){
 	$body .= elgg_view('activity/elements/rich', array('activity'=>$activity)); 
 }
 
-echo elgg_view_image_block($icon, $header . $body, $vars);
-echo elgg_view_comments($activity);
+echo elgg_view_image_block($icon, $header . $body, array(
+		'class' => 'inner'
+	));
+	
+//assumes true	
+if(isset($vars['comments']) && $vars['comments'] || !isset($vars['comments']))
+	echo elgg_view_comments($activity);
 
-echo elgg_view_menu('entity', array(
-    'entity' => $activity,
-    'handler' => 'activity',
-    'sort_by' => 'priority',
-    'class' => 'menu-activity',
-    'full_view' => $full
-));
+//assumes true	
+if(isset($vars['menu']) && $vars['menu'] || !isset($vars['menu']))
+	echo elgg_view_menu('entity', array(
+	    'entity' => $activity,
+	    'handler' => 'activity',
+	    'sort_by' => 'priority',
+	    'class' => 'menu-activity',
+	    'full_view' => $full
+	));

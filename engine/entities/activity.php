@@ -61,7 +61,8 @@ class activity extends entity{
 				'blurb',
 				'perma_url',
 				'message',
-				'thumbnail_src'
+				'thumbnail_src',
+				'remind_object'
 			));
 	}
 	
@@ -139,4 +140,13 @@ class activity extends entity{
 		return $this;
 	}
 	
+	/**
+	 * Set the reminded object
+	 * @param array $array - the exported array
+	 * @return $this
+	 */
+	public function setRemind($array){
+		$this->remind_object = $array;
+		return $this;
+	}
 }

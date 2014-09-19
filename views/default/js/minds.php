@@ -303,21 +303,19 @@
 	}
 
         minds.remind = function(e){
-                e.preventDefault();
-                var button = $(this);
-                var item = $(this).parent('elgg-list');
-		elgg.action($(this).attr('href') + '&ajax=true', {
-                        success: function(data) {
-				if(item.length){
-				//we are in a list so we want to add a remind item in
-				}
-        			button.css('color', '#4690D6');        
-			/*	button.effect('explode'); */      
-	  	 },
-
-                        error: function(data){
-                        }
-                });
+            e.preventDefault();
+            var button = $(this);
+            var item = $(this).parent('elgg-list');
+			elgg.post($(this).attr('href') + '?ajax=true', {
+            	success: function(data) {
+					if(item.length){
+					//we are in a list so we want to add a remind item in
+					}
+					button.css('color', '#4690D6');        
+				/*	button.effect('explode'); */      
+		  		 },
+				error: function(data){}
+            });
         }
 
 	 minds.onScroll = function(){
@@ -436,7 +434,90 @@
 		});
 		 
 	 };	
-     
+	 
+$('.post-post-preview').on('preview', function(e, url){
+	var $elem = $(this);
+	var $form = $elem.closest('form');
+	
+	url = url.replace("http://", '');
+	url = url.replace("https://", '');
+	
+	if (url) {
+		elgg.get('https://iframely.com/iframely', {
+			dataType: "json",
+			data: {
+				uri: url
+			},
+			beforeSend: function() {
+				console.log('sending');
+				//$preview.addClass('elgg-state-loading');
+			},
+			success: function(data) {
+				console.log(data.links);
+				
+				
+				$('.post-post-preview').show();
+		
+				if(data.meta.title){
+					$('.post-post-preview .post-post-preview-title').val(data.meta.title);
+				}
+				
+				if(data.meta.description){
+					$('.post-post-preview .post-post-preview-description').html(data.meta.description);
+				}
+				
+				
+				data.links.forEach(function(link) {
+					console.log($.inArray('thumbnail', link.rel));
+					if($.inArray('thumbnail', link.rel)>=0){
+						$('.post-post-preview .post-post-preview-icon-img').attr('src', link.href);
+						$('.post-post-preview .post-post-preview-icon').val(link.href);
+					}
+				});
+				
+				$('.post-post-preview .post-post-url').val(url);
+			//	var icon = data.
+				//$('.deck-post-preview .deck-post-preview-icon').html('<img src=""');
+				
+				//$elem.closest('.wall-input-url').show();
+				//urlLoaded =true;
+			}
+		});
+	}
+	/*} else if (!$preview.html()) {
+		$preview.html(framework.wall.loadedPreviewHtml);
+		if (typeof oembed !== 'undefined') {
+			$preview.find('a[title^=oembed]').oembed(null, {
+				embedMethod: 'fill',
+				maxWidth: 500
+			});
+		}
+	}*/
+});
+
+
+$('#post-input-box').on('keyup', function(e){
+	var $form = $(this).closest('form');
+
+	var text = $(this).val();
+	var match = text.match(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig);
+	if (!match) {
+		return;
+	}
+
+	if (match instanceof Array) {
+		var url = match[0];
+	} else {
+		var url = match;
+	}
+
+	if (url.length) {
+		$('.post-post-preview').trigger('preview', url);
+	}
+});
+
+var urlLoaded = false;
+
 <?php if (FALSE) : ?>
     </script>
 <?php endif; ?>

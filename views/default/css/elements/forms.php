@@ -497,6 +497,13 @@ border: 1px solid #CCC;
 margin: 0;
 width: 96%;
 }
+.elgg-form-activity-post textarea{
+	border-radius:0;
+	border:1px solid #DDD;
+}
+.elgg-form-activity-post textarea:focus{
+ 	background:#FFF;
+}
 
 /**
  * 	Attacher
@@ -544,13 +551,15 @@ width: 96%;
 	filter:alpha(opacity=0);
 }
 .post-post-preview{
-	position:absolute;
-	width:100%;
-	bottom:46px;
-	left:12px;
+	position:relative;
+	width:auto;
+	border:1px solid #DDD;
+	background:#FFF;
 	display:none;
+	margin:0 0 8px;
+	padding:16px;
 }
-.post-post-preview .deck-post-preview-title, .post-post-preview .post-post-preview-title:focus{
+.post-post-preview .post-post-preview-title, .post-post-preview .post-post-preview-title:focus{
 	background:transparent;
 	border:0;
 	font-weight:bold;
@@ -569,7 +578,7 @@ width: 96%;
 	width:80%;
 	margin:0 8px;
 }
-.dost-post-preview .post-post-preview-icon-img{
+.post-post-preview .post-post-preview-icon-img{
 	float:left;
 	height:36px;
 }

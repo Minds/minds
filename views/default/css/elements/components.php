@@ -490,9 +490,13 @@
 	width:auto;
 	min-width:0;
 	min-height:0;
+	padding:0;
 	height:auto;
 	font-size:14px;
 	line-height:20px;
+}
+.list-newsfeed > li .inner{
+	margin:8px;
 }
 .list-newsfeed > li .head a{
 	font-weight:bold;
@@ -507,6 +511,7 @@
 	color:#888;
 }
 .list-newsfeed li .activity-rich-post{
+	margin:8px 0 0;
 	padding:12px;
 	border:1px solid #EEE;
 	background:#FFF;
@@ -520,9 +525,15 @@
 .list-newsfeed li .activity-rich-post h3{
 	font-family:Georgia, Sans-Serif;	
 }
+.list-newsfeed li .activity-rich-post p{
+	margin-bottom:0;
+	padding-top:8px;
+	line-height:14px;
+	font-size:11px;
+}
 .list-newsfeed li .activity-rich-post .url{
 	font-size:11px;
-	font-weigh:bold;
+	font-weight:bold;
 }
 .list-newsfeed li  .activity-rich-post .thumbnail-wrapper{
 	display: block;
@@ -538,4 +549,9 @@
 	max-height: none;
 	vertical-align: top;
 	width: 100%;
+}
+.list-newsfeed li .activity-remind{
+	border:1px solid #DDD;
+	background:#FFF;
+	margin:16px;
 }

@@ -131,8 +131,8 @@ if ($full) {
             elgg_view_friendly_time($blog->time_created) . '</i>';
 
     if($blog->viewcount){
-	 $count = number_format($blog->viewcount);
-	$subtitle .= "<i> &bull; Views: $count+ </i>";
+		$count = number_format($blog->viewcount);
+		$subtitle .= "<i> &bull; Views: $count+ </i>";
     }
 
     if ($blog->ex_author ) {

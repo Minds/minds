@@ -27,7 +27,7 @@ class newsfeed extends core\page implements interfaces\page{
 	
 		$options = array(
 				'name' => 'remind',
-				'href' => "action/minds/remind?guid=$entity->guid",
+				'href' => "newsfeed/remind/$activity->guid",
 				'text' => '<span class="entypo">&#59159;</span> Remind',
 				'class' => '',
 				'title' => elgg_echo('minds:remind'),
@@ -53,7 +53,7 @@ class newsfeed extends core\page implements interfaces\page{
 		
 		$options = array(
 					'name' => 'share',
-					'href' => "news/$activity->guid/share",
+					'href' => "newsfeed/$activity->guid/share",
 					'text' => '<span class="entypo">&#59407;</span> Share',
 					'class' => 'elgg-lightbox',
 					'title' => elgg_echo('minds:share'),
@@ -114,6 +114,18 @@ class newsfeed extends core\page implements interfaces\page{
 						return true;
 						break;
 					case 'share':
+							$url = elgg_get_site_url() . 'newsfeed/'.$pages[0];
+							echo '<p>Copy the url below to share this post</p>';
+							echo elgg_view('input/text', array('value'=>$url, 'style'=>'width:400px'));
+							
+							echo '<script>
+									$("input[type=\'text\']").select();
+									$("input[type=\'text\']").on("click", function () {
+			  							 $(this).select();
+									});
+								</script>';
+							
+							return true;
 						break;
 					case 'delete':
 						$activity = new entities\activity($pages[0]);
@@ -151,7 +163,7 @@ class newsfeed extends core\page implements interfaces\page{
 				);
 		}
 		
-		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post'));
+		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'));
 		
 		$content .= core\entities::view(array_merge(array(
 			'type' => 'activity',
@@ -185,15 +197,60 @@ class newsfeed extends core\page implements interfaces\page{
 				if(isset($_POST['message']))
 					$activity->setMessage($_POST['message']);
 				
+				/**
+				 * Is there a rich embed?
+				 */
 				if(isset($_POST['title'])){
-					$activity->setTitle('This is a rich post')
-						->setBlurb('and this is is the description for it. this should go to bbc when clicked')
-						->setURL('https://www.bbc.co.uk/news');
+					$activity->setTitle($_POST['title'])
+						->setBlurb($_POST['description'])
+						->setURL(\elgg_normalize_url($_POST['url']))
+						->setThumbnail($_POST['thumbnail']);
+				}
+				
+				/**
+				 * Is there an attachment
+				 */
+				if(isset($_FILES['attachment']) && $_FILES['attachment']['tmp_name']){
+					$attachment = new \PostAttachment();
+					$attachment->save($_FILES['attachment']);
+					
+					$activity->setTitle($_FILES['attachment']['name'])
+							->setURL($attachment->getURL());
+							
 				}
 				
 				$activity->save();
 				$this->forward('newsfeed');
 				exit;
+			case 'remind':
+				//a remind is not a post, it is repost
+				$embeded = new entities\entity($pages[1]);
+				$embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+				$activity = new entities\activity();
+				switch($embeded->type){
+					case 'activity':
+						if($embeded->remind_object)
+							$activity->setRemind($embeded->remind_object)->save();
+						else
+							$activity->setRemind($embeded->export())->save();
+						break;
+					default:
+						/**
+						 * The following are actually treated as embeded posts. 
+						 */
+						switch($embeded->subtype){
+							case 'blog':
+								$activity->setTitle($embeded->title)
+									->setBlurb(elgg_get_excerpt($embeded->description))
+									->setURL($embeded->getURL())
+									->setThumbnail(minds_fetch_image($embeded->description))
+									->save();
+							break;
+						}
+						
+				}
+				
+				
 		}
 	}
 	
