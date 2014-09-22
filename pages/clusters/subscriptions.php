@@ -10,6 +10,8 @@ use minds\entities;
 
 class subscriptions extends core\page implements interfaces\page{
 	
+	public $csrf = false; //ignore csrf
+	
 	public function get($pages){
 	}
 	

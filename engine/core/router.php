@@ -12,7 +12,8 @@ class router{
 		"/services" => "minds\\pages\\services",
 		"/cache" => "minds\\pages\\cache",
 		"/contact" => "minds\\pages\\contact",
-		"/newsfeed" => "minds\\pages\\newsfeed\\newsfeed"
+		"/newsfeed" => "minds\\pages\\newsfeed\\newsfeed",
+		"/subscriptions" => "minds\\pages\\subscriptions\\index"
 	);
 	
 	/**

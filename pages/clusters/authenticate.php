@@ -10,6 +10,8 @@ use minds\entities;
 
 class authenticate extends core\page implements interfaces\page{
 	
+	public $csrf = false; //ignore CSRF as we can't avoid. 
+	
 	public function get($pages){}
 	
 	public function post($pages){

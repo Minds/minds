@@ -7,10 +7,14 @@ namespace minds\core;
 class page extends base{
 	
 	public $context = NULL;
+	public $csrf = true;
 	
 	public function init(){
 		\elgg_set_context($this->context);
 		$this->setup();
+		
+		if($this->csrf)
+			$this->checkCSRF();
 	}
 	
 	public function setup(){
@@ -42,6 +46,23 @@ class page extends base{
 			'title' => elgg_echo('minds:upload'),
 			'priority' => 4
 		));
+	}
+	
+	/**
+	 * Performs a blocking check for CSRF attacks...
+	 * 
+	 * No actions should use the GET method, instead all POST request, unless specifically stated via the $csrf attribute, will be featured. 
+	 */
+	public function checkCSRF(){
+		if(empty($_POST))
+			return true;
+
+		if(token::validate())
+			return true;
+		
+		\register_error('Sorry, you failed the CSRF check');
+		$this->forward(REFERRER);
+		
 	}
 
 	/**
