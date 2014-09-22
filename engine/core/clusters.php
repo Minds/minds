@@ -119,7 +119,7 @@ class clusters extends base{
 	 * 
 	 * @description Vital for inter-node communications
 	 */
-	public function call($method, $address, $endpoint, array $data = array()){
+	public function call($method, $address, $endpoint, array $data = array(), $secret = false){
 		
 		$ch = curl_init();
 
@@ -152,6 +152,13 @@ class clusters extends base{
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 		
+		if($secret){
+			$signature = self::generateSignature($data, $secret);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+	   			"X-MINDS-SIGNATURE: $signature"
+	   		));
+		}
+		
 		$result = curl_exec($ch);
 		$errors = curl_error($ch);
 		
@@ -162,28 +169,73 @@ class clusters extends base{
 		return json_decode($result, true);	
 		
 	}
+
+
+	/**
+	 * Generate a signature
+	 * 
+	 * @param array $data
+	 * @param string $secret
+	 * @param string
+	 */
+	static public function generateSignature($data, $secret){
+		//sort data array alphabetically by key
+		ksort($data);
+		
+		//combine keys and values into one long string
+		$dataString = "";
+		foreach($data as $key => $value)
+			$dataString .= $key.$value;
+
+		//lowercase everything
+		$dataString = strtolower($dataString);
+		
+
+		return hash_hmac("sha256",$dataString,$secret);
+	}
+	
+	/**
+	 * Generate a secret key
+	 */
+	static public function generateSecret($length = 128){
+		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
+  		return hash('sha256', substr( str_shuffle( $chars ), 0, $length ));
+	}
 	
 	public function joinCluster($cluster, $server_uri){
 		//notify everyone in the cluster
 	}
 	
-	public function createHook($event, $object_type, $entity, $params = array()
-	){
-			
+	public function createHook($event, $object_type, $entity, $params = array()){
+		
+		if($entity->access_id != 2)
+			return true;	
+		
 		switch($object_type){
 			case 'activity':
 				//get the list subscribers.
 				$db = new data\call('friendsof');
 				$subscribers = $db->getRow($entity->owner_guid);
 				foreach($subscribers as $guid => $json){
+					
 					//old, localised timestamp...
 					if(is_numeric($json)){
 						continue;
 					}
 					
-					$data = json_decode($json, true);
-					//sign our post with the secret
-				//	$secret = $data['']
+					$payload = json_decode($json, true);
+					$secret = $payload['secret'];
+					$host = $payload['host'];
+					
+					try{
+						$val = $this->call('POST', $host, '/newsfeed/api/'.$guid, $entity->export(), $secret);
+						var_dump($val);
+					}catch(\Exception $e){
+						var_dump($e);
+					}
+					
+					exit;
+					
 					
 				}
 				//var_dump($db->getRow($entity->owner_guid)); exit;
