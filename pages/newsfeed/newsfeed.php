@@ -231,11 +231,23 @@ class newsfeed extends core\page implements interfaces\page{
 				 * Is there an attachment
 				 */
 				if(isset($_FILES['attachment']) && $_FILES['attachment']['tmp_name']){
-					$attachment = new \PostAttachment();
-					$attachment->save($_FILES['attachment']);
 					
-					$activity->setTitle($_FILES['attachment']['name'])
+					$attachment = new \PostAttachment();
+					$guid = $attachment->save($_FILES['attachment']);
+					
+					
+							
+					if(in_array($_FILES['attachment']['type'], array('image/jpeg', 'image/png', 'image/gif', 'image/bmp'))){
+						$activity->setCustom('batch', array(array(
+							'src' => $attachment->getIconURL('medium'),
+							'href' => $attachment->getURL()
+						)));
+					} else {
+						$activity->setTitle($_FILES['attachment']['name'])
 							->setURL($attachment->getURL());
+					}
+					
+					
 							
 				}
 				

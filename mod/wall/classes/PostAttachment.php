@@ -6,7 +6,7 @@
 class PostAttachment extends ElggFile{
 	
 	protected $resized = array();
-	protected $useArchive = false;
+	protected $useArchive = true;
 	protected $container;
 
 	public function __construct($guid = NULL){
@@ -57,8 +57,8 @@ class PostAttachment extends ElggFile{
 				$image->upload($file);
 				$image->setMimeType($file['type']);
 				$image->createThumbnails();
-				$guid = $image->save($file);
-				return $guid;
+				$this->guid = $image->save($file);
+				return $this->guid;
 				break;
 			case 'video/mp4':
 			case 'video/webm':
@@ -83,7 +83,7 @@ class PostAttachment extends ElggFile{
 
 				move_uploaded_file($file['tmp_name'], $fileobj->getFilenameOnFilestore());
 
-				return $guid = $fileobj->save(false);
+				return $this->guid = $fileobj->save(false);
 			}
 	}
 	
