@@ -420,6 +420,9 @@ $offset = "", $output = 'entities') {
  */
 function get_user_friends_of($user_guid, $subtype = ELGG_ENTITIES_ANY_VALUE, $limit = 10,
 $offset = "", $output = 'entities') {
+	
+	if(!$user_guid)
+		return false;
 
 	static $cache;
 	if(!$cache){

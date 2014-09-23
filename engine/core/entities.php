@@ -41,8 +41,8 @@ class entities extends base{
 
 		if(isset($row->subtype) && $row->subtype){
 			$sub = "minds\\entities\\$row->subtype";
-			if(class_exists($default)){
-				return new $default($row, $cache);
+			if(class_exists($sub)){
+				return new $sub($row, $cache);
 			}
 		}
 		
