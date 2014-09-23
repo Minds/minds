@@ -582,3 +582,18 @@ width: 96%;
 	float:left;
 	height:36px;
 }
+
+/**
+ * Subscriptions pages
+ */
+.elgg-form-subscriptions-add{
+	width:600px;
+	margin:auto;
+	border:1px solid #DDD;
+	border-radius:3px;
+	padding:16px;
+}
+.elgg-form-subscriptions-add input[type=text]{
+	padding:16px;
+	border:1px solid #DDD;
+}

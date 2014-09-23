@@ -5,6 +5,7 @@
 namespace minds\core;
 
 use minds\core;
+use minds\entities;
 
 class session extends base{
 
@@ -89,7 +90,7 @@ class session extends base{
 	static public function isLoggedin(){
 		$user = self::getLoggedinUser();
 
-		if ((isset($user)) && ($user instanceof \ElggUser) && $user->guid) {
+		if ((isset($user)) && ($user instanceof \ElggUser || $user instanceof entities\user) && $user->guid) {
 			return true;
 		}
 
@@ -106,13 +107,13 @@ class session extends base{
 		 * The OAuth plugin, for example, might use this. 
 		 */
 		if($user = \elgg_trigger_plugin_hook('logged_in_user', 'user')){
-			return $user;
+			return new entities\user($user);
 		}
 		
 		if (isset($_SESSION['user'])) {
 			//cache username
 			$USERNAME_TO_GUID_MAP_CACHE[$_SESSION['username']] = $_SESSION['guid'];
-			return $_SESSION['user'];
+			return new entities\user($_SESSION['user']);
 		}
 	
 		return NULL;

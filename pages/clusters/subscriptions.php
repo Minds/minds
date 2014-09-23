@@ -41,7 +41,7 @@ class subscriptions extends core\page implements interfaces\page{
 				
 				$secret = core\clusters::generateSecret();
 				
-				$user = entities\user($user_guid);
+				$user = new entities\user($user_guid);
 				$user->subscribe($subscriber_guid, array('host'=>$host, 'secret'=>$secret));
 				
 				echo json_encode(array(

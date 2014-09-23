@@ -83,16 +83,9 @@ class ElggUser extends ElggEntity
 				$this->loadFromArray($guid);
 			
 				// Is $guid is an ElggUser? Use a copy constructor
-			} else if ($guid instanceof ElggUser) {
-				elgg_deprecated_notice('This type of usage of the ElggUser constructor was deprecated. Please use the clone method.', 1.7);
-
-				foreach ($guid->attributes as $key => $value) {
-					$this->attributes[$key] = $value;
-				}
-			} else if ($guid instanceof ElggEntity) {
-				throw new InvalidParameterException(elgg_echo('InvalidParameterException:NonElggUser'));
-
-			} 
+			} else if (is_object($guid)){
+				$this->load($guid);
+			}
 		}
 	}
 
@@ -138,6 +131,8 @@ class ElggUser extends ElggEntity
 	protected function loadFromLookup($string){
 		$lookup = new minds\core\data\lookup();
 		$guid = $lookup->get($string);
+		if(!$guid)
+			return false;
 
 		return $this->loadFromGUID(key($guid));
 	}

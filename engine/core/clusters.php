@@ -109,6 +109,12 @@ class clusters extends base{
 			$user->save();
 		}
 		
+		//now lets just check that
+		if($user->base_node != $node_uri){
+			\register_error('Sorry, we could not authorize your login. This user belongs to another base node.');
+			return false;
+		}
+		
 		\login($user);
 		
 		return false; //it has to be false for some odd reason.
