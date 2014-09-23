@@ -38,16 +38,21 @@ class subscriptions extends core\page implements interfaces\page{
 		
 		switch($pages[0]){
 			case 'subscribe':
-				
 				$secret = core\clusters::generateSecret();
-				
 				$user = new entities\user($user_guid);
-				$user->subscribe($subscriber_guid, array('host'=>$host, 'secret'=>$secret));
+				if(!$user->guid){
+					echo json_encode(array('error'=>'The user couldn\'t be found'));
+                        		return false;
+				}	
+
+				$db = new core\data\call('friendsof');
+                                $subscription = $db->insert($user->guid, array($subscriber_guid=>json_encode(array('host'=>$host, 'secret'=>$secret))));
 				
 				echo json_encode(array(
-					'success' => array(
-						'secret' => $secret
-					)));
+					'success' => array_merge($user->export(), array(
+						'secret' => $secret,
+						'host' => elgg_get_site_url()
+					))));
 					
 				break;
 			case 'unsubscribe':
