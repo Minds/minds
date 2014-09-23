@@ -38,16 +38,15 @@ class subscriptions extends core\page implements interfaces\page{
 		
 		switch($pages[0]){
 			case 'subscribe':
-				
 				$secret = core\clusters::generateSecret();
 				
 				$user = new entities\user($user_guid);
 				$user->subscribe($subscriber_guid, array('host'=>$host, 'secret'=>$secret));
 				
 				echo json_encode(array(
-					'success' => array(
+					'success' => array_merge($user->export(), array(
 						'secret' => $secret
-					)));
+					))));
 					
 				break;
 			case 'unsubscribe':
