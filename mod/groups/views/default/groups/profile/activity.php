@@ -45,6 +45,7 @@ if(!$is_member){
 
 $post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'), array('container_guid'=>$group->guid, 'access_id'=>$group->guid));
 \elgg_register_plugin_hook_handler('register', 'menu:entity', array('\minds\pages\newsfeed\newsfeed', 'pageSetup'));
+
 $content .= core\entities::view(array(
 	'type' => 'activity',
 	'limit' => 5,

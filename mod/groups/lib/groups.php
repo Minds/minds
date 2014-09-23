@@ -290,7 +290,14 @@ function groups_handle_profile_page($guid) {
 
 	groups_register_profile_buttons($group);
 
-	$content = elgg_view('groups/profile/layout', array('entity' => $group));
+	
+	if (group_gatekeeper(false)) {
+		$content = elgg_view('groups/profile/activity', array('entity' => $group));
+	} else {
+		$content = elgg_view('groups/profile/closed_membership');
+	}
+	
+	
 	$sidebar = elgg_view('groups/sidebar', array('entity'=>$group));
 	
 	if (group_gatekeeper(false)) {	
