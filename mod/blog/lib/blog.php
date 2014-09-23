@@ -65,6 +65,9 @@ function blog_get_page_content_read($guid = NULL) {
         minds_set_metatags('twitter:image', minds_fetch_image($blog->description, $blog->owner_guid));
         minds_set_metatags('twitter:description', $excerpt);
 
+
+	minds_set_metatags('DC.date.issued', date("Y-m-d",$blog->time_created)); 
+
 	$title = elgg_view_title($blog->title, array('class' => 'heading-main elgg-heading-main'));
 
 	$return['buttons'] = ' ';	
