@@ -239,8 +239,14 @@ class newsfeed extends core\page implements interfaces\page{
 							
 				}
 				
+				if(isset($_POST['container_guid']) && $container_guid = $_POST['container_guid']){
+					$activity->container_guid = $container_guid ;
+					$activity->access_id = $container_guid ;
+					$activity->indexes = array("activity:container:$container_guid");
+				}
+				
 				$activity->save();
-				$this->forward('newsfeed');
+				$this->forward(REFERRER);
 				exit;
 			case 'remind':
 				//a remind is not a post, it is repost

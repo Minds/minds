@@ -7,6 +7,8 @@ namespace minds\entities;
 
 class activity extends entity{
 	
+	public $indexes = NULL;
+	
 	/**
 	 * Initialise attributes
 	 * @return void
@@ -29,6 +31,10 @@ class activity extends entity{
 	 * @return array
 	 */
 	protected function getIndexKeys($ia = false){
+		
+		if($this->indexes){
+			return $this->indexes;
+		}
 
 		$indexes = array( 
 			$this->type
@@ -36,17 +42,19 @@ class activity extends entity{
 
 		$owner = $this->getOwnerEntity();	
 		
-		/** Get the followers **/
-		$followers = in_array($this->access_id, array(2, -2, 1)) ? $owner->getFriendsOf(null, 10000, "", 'guids') : array();
-		if(!$followers) $followers = array(); 
-		$followers = array_keys($followers);
-		
-		array_push($indexes, "$this->type:user:$owner->guid");
-		
-		array_push($followers, $this->owner_guid);
-		
-		foreach($followers as $follower)
-			array_push($indexes, "$this->type:network:$follower");
+		if($ia || in_array($this->access_id, array(2, -2, 1))){
+			/** Get the followers **/
+			$followers = in_array($this->access_id, array(2, -2, 1)) ? $owner->getFriendsOf(null, 10000, "", 'guids') : array();
+			if(!$followers) $followers = array(); 
+			$followers = array_keys($followers);
+			
+			array_push($indexes, "$this->type:user:$owner->guid");
+			
+			array_push($followers, $this->owner_guid);
+			
+			foreach($followers as $follower)
+				array_push($indexes, "$this->type:network:$follower");
+		}
 
 		/**
 		 * @todo make it only post to a group if we are in a group

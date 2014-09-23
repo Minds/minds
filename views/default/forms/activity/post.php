@@ -46,6 +46,7 @@ echo <<<HTML
 HTML;
 
 echo elgg_view('input/hidden', array('name'=>'to_guid', 'value'=>elgg_extract('to_guid', $vars, $user->guid)));
+echo elgg_view('input/hidden', array('name'=>'container_guid', 'value'=>elgg_extract('container_guid', $vars)));
 echo elgg_view('input/hidden', array('name'=>'access_id', 'value' => elgg_extract('access_id', $vars, ACCESS_PUBLIC)));
 
 echo elgg_view('input/submit', array('value'=>'Post'));

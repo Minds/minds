@@ -172,7 +172,7 @@ function channel_page_handler($page) {
 
 		
 
-	$post = "<li class=\"elgg-item minds-fixed-post-box\">".elgg_view_form('deck_river/post',  
+	/*$post = "<li class=\"elgg-item minds-fixed-post-box\">".elgg_view_form('deck_river/post',  
 						array(	'action'=>'action/deck_river/post/add', 
 								'name'=>'post',
 								'class'=>'minds-fixed-post-box', 
@@ -182,7 +182,7 @@ function channel_page_handler($page) {
 						 	//	'access_id'=> ACCESS_PRIVATE, 
 						 		'hide_accounts'=>true
 						)
-					) . "</li>";
+					) . "</li>";*/
 
 	switch($page[1]){
 		case 'custom':
@@ -247,12 +247,13 @@ function channel_page_handler($page) {
 		case 'timeline':
 		default:
 			//$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river'));
-			$content = elgg_list_river(array(
-				'type'=>'timeline',
-				'owner_guid'=>'personal:'.$user->guid,
-				'list_class'=>'minds-list-river x2',
-				'limit'=>12,
-				'prepend' => $post
+			$content = \minds\core\entities::view(array(
+				'type' => 'activity',
+				'limit' => 5,
+				'masonry' => false,
+			//	'prepend' => $post,
+				'list_class' => 'list-newsfeed',
+				'owner_guid' => $user->guid
 			));
 			$class = 'landing-page';
 	}

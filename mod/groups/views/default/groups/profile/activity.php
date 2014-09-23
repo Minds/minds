@@ -6,6 +6,7 @@
  * 
  * @package Groups
  */
+use minds\core;
 
 if ($vars['entity']->activity_enable == 'no') {
 	return true;
@@ -31,7 +32,7 @@ if(!$is_member){
 
 //elgg_load_js('elgg.wall');
 			
-$post =  elgg_view_form('deck_river/post',  
+/*$post =  elgg_view_form('deck_river/post',  
 	array(	'action'=>'action/deck_river/post/add', 
 			'name'=>'elgg-wall-news',
 			'enctype' => 'multipart/form-data'
@@ -40,10 +41,18 @@ $post =  elgg_view_form('deck_river/post',
 	 		'access_id'=> ACCESS_PRIVATE, 
 	 		'hide_accounts'=>true
 	)
-);
+);*/
 
-$content = $post;
-$content  .= elgg_list_river(array('owner_guid'=>$group->guid, 'masonry'=>true, 'list_class'=>'minds-group-list'));
+$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'), array('container_guid'=>$group->guid, 'access_id'=>$group->guid));
+		
+$content .= core\entities::view(array(
+	'type' => 'activity',
+	'limit' => 5,
+	'masonry' => false,
+	'prepend' => $post,
+	'list_class' => 'list-newsfeed',
+	'container_guid' => $group->guid
+));
 
 //echo elgg_view_module('wall', null, $content);
 
