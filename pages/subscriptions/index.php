@@ -56,8 +56,9 @@ class index extends core\page implements interfaces\page{
 					
 					} else {
 						
-						$this->forward(REFERRER);
 						\register_error('Sorry, there was a problem');
+						
+						$this->forward(REFERRER);
 						return false;
 						
 					}
@@ -66,10 +67,25 @@ class index extends core\page implements interfaces\page{
 				
 				//send a request to the hosts site, to initiate subscription process
 				try{
-					$val = core\clusters::call('POST', 'localhost', '/api/v1/subscriptions/subscribe/359690255927873536', array('guid'=>elgg_get_logged_in_user_guid(), 'host'=>'10.52.0.124'));
-					var_dump($val);
+					$parts = explode('@', $_POST['address']);
+					$data = core\clusters::call('POST', "https://$parts[1]", '/api/v1/subscriptions/subscribe/'.$parts[0], array('guid'=>elgg_get_logged_in_user_guid(), 'host'=>elgg_get_site_url()));
+					$data['success']['host'] = "https://$parts[1]/";
+					
+					if(core\session::getLoggedinUser()->subscribe($data['success']['guid'], $data['success'])){
+						\system_message('Success!');
+						
+						
+						$this->forward(REFERRER);
+						return true;
+					}
+					
+					throw new \Exception('Sorry, there was a problem');
+					
 				}catch(\Exception $e){
-					var_dump($e);
+					\register_error($e->getMessage());	
+							
+					$this->forward(REFERRER);
+					return false;
 				}
 				break;
 		}
