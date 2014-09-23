@@ -72,7 +72,9 @@ class activity extends entity{
 				'perma_url',
 				'message',
 				'thumbnail_src',
-				'remind_object'
+				'remind_object',
+				'custom_type',
+				'custom_data'
 			));
 	}
 	
