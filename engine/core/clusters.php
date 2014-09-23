@@ -211,7 +211,10 @@ class clusters extends base{
 	public function joinCluster($cluster, $server_uri){
 		//notify everyone in the cluster
 	}
-	
+
+	/**
+	 * We may have to make this issue a cron job, as it could take a long time to post out
+	 */	
 	public function createHook($event, $object_type, $entity, $params = array()){
 		
 		if($entity->access_id != 2)
@@ -221,7 +224,7 @@ class clusters extends base{
 			case 'activity':
 				//get the list subscribers.
 				$db = new data\call('friendsof');
-				$subscribers = $db->getRow($entity->owner_guid);
+				$subscribers = $db->getRow($entity->owner_guid, array('limit'=>10000));
 				foreach($subscribers as $guid => $json){
 					
 					//old, localised timestamp...
@@ -229,19 +232,15 @@ class clusters extends base{
 						continue;
 					}
 					
-					var_dump($guid, $json); exit;
 					$payload = json_decode($json, true);
 					$secret = $payload['secret'];
 					$host = $payload['host'];
 					
 					try{
 						$val = $this->call('POST', $host, '/newsfeed/api/'.$guid, $entity->export(), $secret);
-						var_dump($val);
 					}catch(\Exception $e){
-						var_dump($e);
+						\register_error($e->getMessage());
 					}
-					
-					exit;
 					
 					
 				}
