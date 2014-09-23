@@ -19,6 +19,9 @@ class user extends \ElggUser{
 		$friendsof = new core\data\call('friendsof');
 		
 		
+		if(is_array($data))
+			$data = json_encode($data);
+		
 		if($friends->insert($this->guid, array($guid=>$data)) && $friendsof->insert($guid, array($this->guid=>$data)))
 			return true;
 		

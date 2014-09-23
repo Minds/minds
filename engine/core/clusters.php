@@ -148,8 +148,8 @@ class clusters extends base{
 		}
 
 		curl_setopt($ch, CURLOPT_URL, $address . $endpoint);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 6);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
 		//curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		//curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -229,6 +229,7 @@ class clusters extends base{
 						continue;
 					}
 					
+					var_dump($guid, $json); exit;
 					$payload = json_decode($json, true);
 					$secret = $payload['secret'];
 					$host = $payload['host'];
