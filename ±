@@ -40,11 +40,11 @@ class multisite extends base{
 	public function load($domain){
 		global $CONFIG;
 	
-		if(!$row = $this->getCache($domain) ){
+	//	if(!$row = $this->getCache($domain) ){
 			$db = new data\call('domain', $CONFIG->multisite->keyspace, $CONFIG->multisite->servers);
                		$row = $db->getRow($domain);
-			$this->saveCache($domain, $row);
-		}
+	//		$this->saveCache($domain, $row);
+	//	}
 		
 		if(!(isset($row['installed']) || isset($row['enabled'])) && !defined('__MINDS_INSTALLING__')){
                        header("Location: install.php"); 

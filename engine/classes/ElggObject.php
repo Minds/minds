@@ -181,11 +181,6 @@ class ElggObject extends ElggEntity {
 				$cache = true;
 				if(elgg_get_logged_in_user_guid() == $this->owner_guid)
 					$cache = false;
-				if(get_input('debug') && !$array['icontime']){
-					var_dump($array);
-					exit;
-
-				}
 				return new ElggUser($array, $cache);
 			}  else {
 				if($this->canEdit()){

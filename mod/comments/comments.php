@@ -56,10 +56,6 @@ class comments extends \ElggPlugin{
 		else 
 			$comments = array();
 
-		if(\get_input('debug')){
-			$db = new \minds\core\data\call('entities');
-			var_dump($db->getRows($guids)); exit;	
-		}	
 		if($comments)
 			usort($comments, function($a, $b){ return $a->time_created - $b->time_created;});
 

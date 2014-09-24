@@ -23,6 +23,17 @@ class activity extends entity{
 			'node' => elgg_get_site_url()
 		));
 	}
+
+	public function save($index = true){
+
+		//cache owner_guid for brief
+		if($owner = $this->getOwnerEntity(false))
+			$this->ownerObj = $owner->export();
+		
+		return parent::save($index);
+
+	}
+	
 	
 	/**
 	 * Returns an array of indexes into which this entity is stored
@@ -71,6 +82,7 @@ class activity extends entity{
 				'blurb',
 				'perma_url',
 				'message',
+				'ownerObj',
 				'thumbnail_src',
 				'remind_object',
 				'custom_type',

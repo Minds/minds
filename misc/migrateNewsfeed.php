@@ -1,5 +1,8 @@
 <?php
 
+global $DOMAIN;
+$DOMAIN='www.word.am';
+
 require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 use minds\entities;
@@ -47,7 +50,7 @@ foreach($newsfeed->get('', 1000000) as $guid => $row){
 		case 'blog':
 			
 			$activity->setTitle($object->title)
-					->setBlob($object->excerpt)
+					->setBlurb($object->excerpt)
 					->setURL($object->getURL())
 					->setThumbnail(minds_fetch_image($object->description,$object->owner_guid));
 			
@@ -64,7 +67,7 @@ foreach($newsfeed->get('', 1000000) as $guid => $row){
 					)));
 				} else {
 					$activity->setTitle($attachment->originalfilename.'123')
-							->setBlob(round($attachment->size / (1024 * 1024)).' MB')
+							->setBlurb(round($attachment->size / (1024 * 1024)).' MB')
 							->setURL($attachment->getIconURL('medium'));
 				}
 			}
