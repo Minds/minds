@@ -70,7 +70,12 @@ function elgg_set_user_password() {
 		if ($result) {
 			if ($password == $password2) {
 				$user->salt = generate_random_cleartext_password(); // Reset the salt
-				$user->password = generate_user_password($user, $password);
+				
+				$algo = 'sha256';
+				if(strlen($user->password) == 32)
+					$algo = 'md5';
+
+				$user->password = generate_user_password($user, $password, $algo);
 				if ($user->save()) {
 					system_message(elgg_echo('user:password:success'));
 					return true;
