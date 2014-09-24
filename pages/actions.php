@@ -8,6 +8,8 @@ use minds\core;
 use minds\interfaces;
 
 class actions extends core\page implements interfaces\page{
+
+	public $csrf = false; //actions handle CSRF on their own
 	
 	public function action($pages){
 		$action = implode('/', $pages);

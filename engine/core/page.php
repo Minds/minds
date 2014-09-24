@@ -8,7 +8,7 @@ class page extends base{
 	
 	public $context = NULL;
 	public $csrf = true;
-	
+
 	public function init(){
 		\elgg_set_context($this->context);
 		$this->setup();

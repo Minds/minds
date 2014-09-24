@@ -71,7 +71,7 @@ class router{
 	 */
 	public function legacyRoute($handler, $page){
 	
-		new page(); //just to load init etc
+		new page(false); //just to load init etc
 	
 		if (!\page_handler($handler, $page)) {
 			//try a profile then
