@@ -17,6 +17,12 @@ class notifications extends \ElggPlugin{
 		\elgg_register_plugin_hook_handler('cron', 'daily', array($this, 'cronHandler'));
 		\elgg_register_plugin_hook_handler('cron', 'weekly', array($this, 'cronHandler'));
 		\add_subtype('notificaiton', 'email', 'ElggNotificationEmail');
+		
+		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
+			//var_dump($row);
+			if($row->type == 'notification')
+				return new entities\notification($row);
+		});
 
 		core\router::registerRoutes($this->registerRoutes());
 
