@@ -169,7 +169,7 @@
         input.addClass('minds-processing');
 
         elgg.post(action, {
-        	data: data,
+        	data: elgg.security.addToken(data),
 	    	//contentType : 'application/json',
             success : function(output) {
 				//console.log('saving');
