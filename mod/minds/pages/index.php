@@ -46,8 +46,9 @@ if(!elgg_is_logged_in()){
 //$countdown = $max - $user_count;
 //if(strpos(elgg_get_site_url(), 'www.minds.com/') !== FALSE)
 //	$subtitle = "$countdown more human sign-ups until automatic global <a href='release'><b>code release</b></a>.";
+elgg_load_js('carousel');
 if(!get_input('ajax'))
-	$title = elgg_view('output/carousel', array('divs'=>$titles_array, 'subtitle'=> $subtitle));
+	$title = minds\core\views::view('output/carousel', array('divs'=>$titles_array, 'subtitle'=> $subtitle));
 
 $featured_item_class = $filter == 'featured' ? 'elgg-state-selected' : null;
 $trending_item_class = $filter == 'trending' ? 'elgg-state-selected' : null;

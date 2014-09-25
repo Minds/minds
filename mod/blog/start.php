@@ -18,6 +18,8 @@ elgg_register_event_handler('init', 'system', 'blog_init');
  * Init blog plugin.
  */
 function blog_init() {
+	
+	minds\core\views::cache('blog/featured');
 
 	add_subtype('object', 'blog', 'ElggBlog');
 	add_subtype('object', 'scraper');

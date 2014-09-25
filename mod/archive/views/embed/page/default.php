@@ -8,7 +8,6 @@ $messages = elgg_view('page/elements/messages', array('object' => $vars['sysmess
 $header = elgg_view('page/elements/header', $vars);
 $global_sidebar = elgg_view('page/elements/global_sidebar', $vars);
 $body = elgg_view('page/elements/body', $vars);
-$footer = elgg_view('page/elements/footer', $vars);
 
 // Set the content type
 header("Content-type: text/html; charset=UTF-8");
