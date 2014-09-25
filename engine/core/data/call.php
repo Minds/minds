@@ -54,23 +54,24 @@ class call extends core\base{
 	 * @return void
 	 */
 	public function installSchema(){
-		$cfs = array(	'site' => array('site_id' => 'UTF8Type'),
+		$cfs = array(	
+						'site' => array('site_id' => 'UTF8Type'),
 						'plugin' => array('active' => 'IntegerType'),
 						'config' => array(),
 						'entities'=> array('type'=>'UTF8Type'),
 						'entities_by_time' => array(),
 						'user_index_to_guid' => array(),
-						'widget' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' ),
+						//'widget' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' ),
 						'session' => array(),
-						'annotation' => array(),	
+						//'annotation' => array(),	
 						'friends' => array(), //@replace with relationships soon
 						'friendsof' => array(), //@replace with relationships soon
 						'relationships' => array(), //this is a new index for relationships (friends will be merged into here soon)
-						'newsfeed' => array(),
-						'timeline' => array(),
+						//'newsfeed' => array(),
+						//'timeline' => array(),
 						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ),
-                        'api_users' => array('secret'=>'UTF8Type'),
-                        'log' => array(),
+                        			//'api_users' => array('secret'=>'UTF8Type'),
+                    				'log' => array(),
 				);
 		foreach($cfs as $cf => $indexes){
 			$this->createCF($cf, $indexes);
@@ -116,7 +117,7 @@ class call extends core\base{
 	 */
 	public function get($offset = "", $limit=10){
 		self::$reads++;
-		return $this->cf->get_range($offset,"", $limit);
+		return $this->cf->get_range($offset,"", $limit, new ColumnSlice('','',10000));
 	}
 	
 	/**

@@ -52,7 +52,9 @@ $content .= core\entities::view(array(
 	'masonry' => false,
 	'prepend' => $post,
 	'list_class' => 'list-newsfeed',
-	'container_guid' => $group->guid
+	'container_guid' => $group->guid,
+	'pagination' => true,
+//	'count'=>6
 ));
 
 //echo elgg_view_module('wall', null, $content);
