@@ -7,6 +7,9 @@
 
 function minds_init(){
 	
+	minds\core\views::cache('output/carousel');
+	
+	
 	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
 	
 	elgg_register_page_handler('news', 'minds_news_page_handler');
