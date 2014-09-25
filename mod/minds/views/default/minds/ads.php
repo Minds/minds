@@ -4,7 +4,7 @@ $type = elgg_extract('type', $vars, 'content-side');
 switch($type){
 	case 'content-side':	
 		if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
-			echo elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds');
+		//	echo elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds');
 		} else {
 			echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Minds large block -->
@@ -47,7 +47,7 @@ switch($type){
 	break;
 	case 'content-side-single-user':
 		if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
-               		echo elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds');
+               		//echo elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds');
        		} else {
 		echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Minds large block -->
@@ -62,7 +62,7 @@ switch($type){
 	break;
 	case 'content-side-single-user-2':
 		if(elgg_get_plugin_user_setting('adblock2', elgg_get_page_owner_guid(), 'minds')){
-                	echo elgg_get_plugin_user_setting('adblock2', elgg_get_page_owner_guid(), 'minds');
+                //	echo elgg_get_plugin_user_setting('adblock2', elgg_get_page_owner_guid(), 'minds');
         	} else {
         /*	echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Minds large block -->
@@ -96,7 +96,7 @@ switch($type){
 	break;
 	case 'content-foot-user-1':
 		if(elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds')){
-                	echo elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds');
+                	//echo elgg_get_plugin_user_setting('adblock3', elgg_get_page_owner_guid(), 'minds');
         	} else {
 			echo '<script type="text/javascript"><!--
                 google_ad_client = "ca-pub-9303771378013875";

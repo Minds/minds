@@ -51,7 +51,7 @@ class ElggDiskFilestore extends ElggFilestore {
 	 */
 	public function open(ElggFile $file, $mode) {
 		$fullname = $this->getFilenameOnFilestore($file);
-
+		error_log('FILESYSTEM OPEN');
 		// Split into path and name
 		$ls = strrpos($fullname, "/");
 		if ($ls === false) {
@@ -101,6 +101,7 @@ class ElggDiskFilestore extends ElggFilestore {
 	 * @return bool
 	 */
 	public function write($f, $data) {
+		error_log('FILE SYSTEM WRITING');
 		return fwrite($f, $data);
 	}
 
@@ -117,7 +118,7 @@ class ElggDiskFilestore extends ElggFilestore {
 		if ($offset) {
 			$this->seek($f, $offset);
 		}
-
+		error_log('FILESYSTEM READING');
 		return fread($f, $length);
 	}
 

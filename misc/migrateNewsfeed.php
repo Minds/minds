@@ -16,7 +16,9 @@ $indexes = new minds\core\data\call('entities_by_time');
 /**
  * Convert all of our newsfeed object into new style entities
  */
-foreach($newsfeed->get('', 1000000) as $guid => $row){
+function migrate($rows){
+//foreach($newsfeed->get('', 1000000) as $guid => $row){
+foreach($rows as $row){	
 	$activity = new entities\activity();
 	$activity->guid = $row['id'];
 	$activity->time_created = $row['posted'];
@@ -76,18 +78,57 @@ foreach($newsfeed->get('', 1000000) as $guid => $row){
 			
 			break;
 		default:
-
+			echo "what about $object->subtype \n";
 	}
 	
-	$activity->indexes = array('awaiting-indexing');
+//	$activity->indexes = array('awaiting-indexing');
 	$guid = $activity->save();
 	echo "successfully migrated $guid to an entity \n";
 }
+}
 
+$feeds = array(
+	'mark',
+	'bill',
+	'ottman',
+	'john',
+	'benjamin',
+	'johnny',
+	'peggy',
+	'markandrewculp',
+	'benwerd',
+	'markna',
+	'dharma',
+	'reuters',
+	'nature',
+	'nasa'
+);
+
+foreach($feeds as $username){
+	echo "doing $username \n";
+	$user = new \minds\entities\user($username);
+	
+
+	//personal
+	$personal = $timeline->getRow("personal:$user->guid", array('limit'=>10000));
+	$indexes->removeRow("activity:user:$user->guid");
+//	$indexes->insert("activity:user:$user->guid", $personal);
+
+ 	migrate($newsfeed->getRows(array_keys($personal)));
+
+	//network 
+//	$network = $timeline->getRow("$user->guid", array('limit'=>10000));
+//	$indexes->removeRow("activity:network:$user->guid");
+//	$indexes->insert("activity:network:$user->guid", $network);
+
+//	migrate($newsfeed->getRows(array_keys($network)));	
+
+}
+exit;
 /**
  * We now need to index, plus we should also adjust the access_id's at this time
  */
-foreach($timeline->get('', 100000) as $row => $data){
+foreach($timeline->get('', 1000000) as $row => $data){
 	$columns = array();
 	foreach($data as $guid => $ts){
 		$columns[$guid] = $guid;
@@ -96,18 +137,30 @@ foreach($timeline->get('', 100000) as $row => $data){
 	if($row == 'awaiting-indexing')
 		continue;
 	
+	//is personal:guid
+	if($guid = end(explode(':', $row))){
+		$row = $guid;
+		$personal = true;
+	} else {
+		$personal = false;
+	}	
+
 	if(!is_numeric($row))
 		continue; 
 	
 	$entity = get_entity($row);
 	if($entity instanceof entities\user){
-		echo "Moving over users feed \n";
-		$indexes->removeRow("activity:user:$entity->guid"); //remove any test data..
-		$indexes->insert("activity:user:$entity->guid", $columns);
+		echo "Moving over $entity->username 's feed \n";
+		//$indexes->removeRow("activity:user:$entity->guid"); //remove any test data..
+		if($personal)
+			$indexes->insert("activity:user:$entity->guid", $columns);
+		else
+			$indexes->insert("activity:network:$entity->guid", $columns);
+
 	}
 	if($entity instanceof ElggGroup){
 		echo "Moving over groups feed \n";
-		$indexes->removeRow("activity:container:$entity->guid"); //remove any test data..
+		//$indexes->removeRow("activity:container:$entity->guid"); //remove any test data..
 		$indexes->insert("activity:container:$entity->guid", $columns);
 	}
 }

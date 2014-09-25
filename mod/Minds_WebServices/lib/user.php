@@ -73,7 +73,7 @@ function user_get_profile($username = null) {
 		$core['email'] = $user->email;
 	
 	$profile_info['core'] = $core;
-	$profile_info['profile_fields'] = $profile_fields;
+	//$profile_info['profile_fields'] = $profile_fields;
 	$profile_info['avatar_url'] = get_entity_icon_url($user,'medium');
 	return $profile_info;
 }

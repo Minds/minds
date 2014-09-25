@@ -530,8 +530,15 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 						}
 						$guid = $blog->save();
 						echo 'Saved a blog titled: ' . $blog->title . "\n";
-						add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid,2, $item->get_date('U'));
+						//add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid,2, $item->get_date('U'));
 						
+						$activity = new minds\entities\activity();
+						$activity->setTitle($blog->title)
+							->setBlurb($blog->excerpt)
+							->setThumbnail(minds_fetch_image($blog->description))
+							->setUrl($blog->getURL())
+							->save();
+
 						//make timestamp of last blog so we don't have timezone issues...
 						//$scraper->timestamp = $item->get_date('U');
 					}catch(Exception $e){

@@ -1,7 +1,0 @@
-Pete Harris from Curverider contributed the icons. Thanks Pete!
-
-Igor Nuk from UNESCO sent me Spanish and French language files as well
-as a version tweaked to make it easier to customise.
-
-Many clients too numerous to mention have funded enhancements since the
-original version was funded by the Royal Institute of British Architects.

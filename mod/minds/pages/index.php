@@ -9,7 +9,7 @@
  * Free & Open Source Social Media
  */
 global $CONFIG;
-$limit = get_input('limit', 12);
+$limit = get_input('limit', 4);
 $offset = get_input('offset', 0);
 $filter = get_input('filter', 'featured');
 

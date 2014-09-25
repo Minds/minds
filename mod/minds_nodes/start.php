@@ -23,6 +23,14 @@ class start extends bases\plugin{
 		$this->registerClasses();	
 		\add_subtype('object', 'node', 'MindsNode');
 		\add_subtype('object', 'minds_tier', 'MindsTier');
+
+		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
+			if($row->subtype == 'node')
+				return new \MindsNode($row);
+
+			if($row->subtype == 'minds_tier')
+				return new \MindsTier($row);
+		});
 	
 		// Register action
 		\elgg_register_action('minds/minds_tiers/new', dirname(__FILE__) . '/actions/minds_tiers/new.php', 'admin');

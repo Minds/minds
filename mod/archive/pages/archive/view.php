@@ -142,7 +142,7 @@ $content = elgg_view_entity($entity, array('full_view' => true));
 
 $title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
 
-if(elgg_is_active_plugin('analytics') && $trending){
+if(elgg_is_active_plugin('analytics') && $trending && false){
 
 	$trending_guids = analytics_retrieve(array('context'=>'archive','limit'=> get_input('limit', 2), 'offset'=>get_input('offset', '')));
 
