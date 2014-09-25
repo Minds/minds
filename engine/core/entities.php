@@ -15,7 +15,7 @@ class entities extends base{
 	}
 	
 	static public function view($options){
-		$options['count'] = NULL;
+	//	$options['count'] = NULL;
 		return \elgg_list_entities($options);
 	}
 	
