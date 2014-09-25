@@ -834,19 +834,21 @@ function execute_new_password_request($user_guid, $conf_code) {
  * @return string
  */
 function generate_random_cleartext_password() {
-	return substr(md5(microtime() . rand()), 0, 8);
+	return substr(hash('sha256', microtime() . rand()), 0, 8);
 }
 
 /**
- * Generate a password for a user, currently uses MD5.
+ * Generate a password for a user.
  *
  * @param ElggUser $user     The user this is being generated for.
  * @param string   $password Password in clear text
  *
  * @return string
  */
-function generate_user_password(ElggUser $user, $password) {
-	return md5($password . $user->salt);
+function generate_user_password(ElggUser $user, $password, $algo = 'sha256') {
+	if($algo == 'md5')
+			return md5($password . $user->salt);	
+	return hash('sha256', $password . $user->salt);
 }
 
 /**
@@ -1056,7 +1058,7 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
  */
 function generate_invite_code($username) {
 	$secret = datalist_get('__site_secret__');
-	return md5($username . $secret);
+	return hash('sha256', $username . $secret);
 }
 
 /**

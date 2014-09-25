@@ -155,7 +155,11 @@ function pam_auth_userpass(array $credentials = array()) {
 		throw new LoginException(elgg_echo('LoginException:AccountLocked'));
 	}
 
-	if ($user->password !== generate_user_password($user, $credentials['password'])) {
+	$algo = 'sha256';
+	if(strlen($user->password) == 32)
+		$algo = 'md5';
+
+	if ($user->password !== generate_user_password($user, $credentials['password'], $algo)) {
 		log_login_failure($user->guid);
 		throw new LoginException(elgg_echo('LoginException:PasswordFailure'));
 	}
