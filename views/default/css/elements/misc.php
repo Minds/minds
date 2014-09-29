@@ -217,18 +217,17 @@ input[name=terms]{
 	z-index:9999;
 	position:fixed;
 	bottom:0;
-	right:0;
+	left:50%;
+	width:650px;
+	margin-left:-325px;
 	background:#FAFAFA;
 	border:1px solid #DDD;
 	padding:0;
 	border-radius: 0;
-	margin:0 8px;
-}
-.static-footer:hover{
-	width:auto;
 }
 .static-footer .footer-social-links{
-	float:left;
+	float:right;
+	line-height:33px;
 }
 .static-footer .footer-social-links > a{
 	font-size:26px;
@@ -243,7 +242,7 @@ input[name=terms]{
 }
 .elgg-menu-footer-default{
 	margin:0;
-	float:none;
+	float:left;
 }
 .minds-static-footer:hover .elgg-menu-footer-default{
 	display:block;
