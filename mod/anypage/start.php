@@ -11,6 +11,11 @@ elgg_register_event_handler('init', 'system', 'anypage_init');
 function anypage_init() {
 	add_subtype('object', 'anypage', 'AnyPage');
 	
+	elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
+		if($row->type == 'object' && $row->subtype == 'anypage')
+			return new \AnyPage($row);
+	});
+	
 	//minds\core\views::cache('page/elements/global_sidebar_footer');
 
 	elgg_register_admin_menu_item('configure', 'anypage', 'appearance');

@@ -19,7 +19,10 @@ $indexes = new minds\core\data\call('entities_by_time');
 function migrate($rows){
 //foreach($newsfeed->get('', 1000000) as $guid => $row){
 foreach($rows as $row){	
-	$activity = new entities\activity();
+	$activity = new entities\activity($row['id']);
+	if($activity->time_created == time())
+		continue;
+
 	$activity->guid = $row['id'];
 	$activity->time_created = $row['posted'];
 	
@@ -89,19 +92,8 @@ foreach($rows as $row){
 
 $feeds = array(
 	'mark',
-	'bill',
-	'ottman',
-	'john',
-	'benjamin',
-	'johnny',
-	'peggy',
 	'markandrewculp',
-	'benwerd',
-	'markna',
-	'dharma',
-	'reuters',
-	'nature',
-	'nasa'
+	'drdro'
 );
 
 foreach($feeds as $username){

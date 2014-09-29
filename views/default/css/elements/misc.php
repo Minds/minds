@@ -219,8 +219,10 @@ input[name=terms]{
 	bottom:0;
 	right:0;
 	background:#FAFAFA;
-	padding:4px;
-	border-radius: 3px 0 0 0;
+	border:1px solid #DDD;
+	padding:0;
+	border-radius: 0;
+	margin:0 8px;
 }
 .static-footer:hover{
 	width:auto;
@@ -241,25 +243,24 @@ input[name=terms]{
 }
 .elgg-menu-footer-default{
 	margin:0;
+	float:none;
 }
 .minds-static-footer:hover .elgg-menu-footer-default{
 	display:block;
 }
-.elgg-menu-footer-default li{
-	padding:0 4px 8px;
+.static-footer .elgg-menu-footer-default li{
+	border-right:1px solid #DDD;
+	padding:8px 16px;;
 }
-.elgg-menu-footer-default li:after{
+.static-footer .elgg-menu-footer-default li:after{
 	content:none;
 }
-.minds-static-footer .info{
-	color:#FFF;
-	padding: 12px 0 0 10px;
-position: absolute;
+.static-footer .elgg-menu-footer-default li a{
+	
+	font-size:13px;
+	color:#666;
+	
 }
-.minds-static-footer:hover .info{
-	display:none;
-}
-
 
 /**
  * Minds Tiles

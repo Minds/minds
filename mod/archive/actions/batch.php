@@ -27,19 +27,9 @@ foreach($guids as $guid){
 	$db->insert($guid, $data);
 }
 
-$params = array(
-        'to_guid' => get_input('container_guid'),
-        'subject_guid' => elgg_get_logged_in_user_guid(),
-        //'body' => $message,
-        'view' => 'river/object/album/batch',
-        'object_guid' => $album_guid,
-        'batch_guids' => json_encode($guids),
-        'batch_count' => count($guids)
-);
+if(!$guids || empty($guids))
+	exit;
 
-if($container instanceof ElggGroup){
-	$params['timeline_override'] = array($container->guid);
-}
 /**
  * and add a river feed
  */
