@@ -1246,3 +1246,11 @@ div.register-popup {
 .donations-button .entypo{
 	padding-right:12px;
 }
+
+#taboola-header-thumbnails{
+	border: 1px solid #EEE;
+	padding: 8px;
+	margin: 8px auto;
+	width:60%;
+	display:block;
+}

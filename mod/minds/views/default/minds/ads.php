@@ -135,19 +135,6 @@ switch($type){
 		(adsbygoogle = window.adsbygoogle || []).push({});
 	</script>';
 	break;		
-	case 'news':
-		echo '<script type="text/javascript"><!--
-google_ad_client = "ca-pub-9303771378013875";
-/* News */
-google_ad_slot = "6842535224";
-google_ad_width = 300;
-google_ad_height = 600;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>';
-	break;
 	case 'large-block':
 		echo '<script type="text/javascript"><!--
 	google_ad_client = "ca-pub-9303771378013875";
@@ -208,24 +195,16 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
         s.async = true;
         document.getElementById("contentad9733").appendChild(s);
     })();</script> </div>',
-				'toobla' => "<div id='taboola-below-main-column'></div>
-<script type='text/javascript'>
-
-window._taboola = window._taboola || [];
-
-_taboola.push({mode:'thumbs-2r',
-container:'taboola-below-main-column',
-placement:'below-main-column'});
-
-</script>
-
-
-<div id='taboola-text-2-columns-mix'></div>
-<script type='text/javascript'>
-
-	window._taboola = window._taboola || [];
-
-	_taboola.push({mode:'text-links-2c', container:'taboola-text-2-columns-mix', placement:'text-2-columns', target_type:'mix'}); </script>"
+				'toobla' => "<div id=\"taboola-below-article-thumbnails\"></div>
+<script type=\"text/javascript\">
+  window._taboola = window._taboola || [];
+  _taboola.push({
+    mode: 'thumbnails-c',
+    container: 'taboola-below-article-thumbnails',
+    placement: 'Below Article Thumbnails',
+    target_type: 'mix'
+  });
+</script>"
 
 );
 	//$rand = array_rand($providers);
@@ -288,6 +267,18 @@ _taboola.push({mode:'thumbs-4r', container:'taboola-right-rail',
 placement:'right-rail'});
 
 </script></div>";
+	break;
+	case "content-header":
+		echo "<div id=\"taboola-header-thumbnails\"></div>
+<script type=\"text/javascript\">
+  window._taboola = window._taboola || [];
+  _taboola.push({
+    mode: 'thumbnails-a',
+    container: 'taboola-header-thumbnails',
+    placement: 'Header Thumbnails',
+    target_type: 'mix'
+  });
+</script>";
 	break;
 	default:
 		echo '';

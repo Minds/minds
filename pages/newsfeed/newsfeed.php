@@ -86,6 +86,9 @@ class newsfeed extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 			
+		if(!\minds\core\session::isLoggedin() && !isset($pages[0]))
+			$this->forward('login');
+		
 		\elgg_register_plugin_hook_handler('register', 'menu:entity', array($this, 'pageSetup'));
 		
 		if(get_input('new')){
