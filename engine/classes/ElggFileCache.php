@@ -96,7 +96,6 @@ class ElggFileCache extends ElggCache {
 	 */
 	protected function sanitizeFilename($filename) {
 		// @todo : Writeme
-
 		return $filename;
 	}
 
@@ -193,7 +192,7 @@ class ElggFileCache extends ElggCache {
 		// @todo Check size and age, clean up accordingly
 		$size = 0;
 		$dir = $this->getVariable("cache_path");
-
+		
 		// Short circuit if both size and age are unlimited
 		if (($this->getVariable("max_age") == 0) && ($this->getVariable("max_size") == 0)) {
 			return;
