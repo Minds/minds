@@ -109,6 +109,7 @@ function minds_init(){
 			default:
 				$item = get_entity($page[1]);
 				$filename = $CONFIG->dataroot . 'carousel/' . $page[1] . $page[4];
+				error_log("LOADING $filename");
 				//pre AUG 29 2014
 				if(!file_exists($filename))
 					$filename = $CONFIG->dataroot . 'carousel/' . $page[1];
