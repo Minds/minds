@@ -256,7 +256,11 @@ class newsfeed extends core\page implements interfaces\page{
 					$activity->access_id = $container_guid ;
 					$activity->indexes = array("activity:container:$container_guid");
 				}
-				
+			
+				if(isset($_POST['to_guid']) && $_POST['to_guid'] != elgg_get_logged_in_user_guid()){
+					 $activity->indexes = array("activity:user:".$_POST['to_guid']);	
+				}
+	
 				$activity->save();
 				$this->forward(REFERRER);
 				exit;

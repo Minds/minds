@@ -79,7 +79,7 @@ class MindsTrending{
 			'subtype' => null,
 			'limit' => 12,
 			'offset' => 0,
-			'count' => false,
+			'count' => NULL,
 			'reversed' => false
 		);	
 	

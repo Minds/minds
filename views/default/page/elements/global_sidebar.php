@@ -22,5 +22,5 @@ if(elgg_get_context() == 'admin' || elgg_get_context() == 'anypage'){
 		<?php echo elgg_view_menu('actions'); ?>
 		
 		<!-- We have a footer too.. -->
-		<?php echo minds\core\views::view('page/elements/global_sidebar_footer'); ?>
+		<?php echo elgg_view('page/elements/global_sidebar_footer'); ?>
 </div>
