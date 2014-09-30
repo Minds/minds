@@ -45,4 +45,18 @@ class indexes extends call{
 		$this->removeAttributes($key, $guids);
 	}
 	
+	/**
+	 * Static methods
+	 */
+	 static public function fetch($key, array $options = array('limit'=>12, 'offset'=>'','reversed'=>true)){
+	 	
+	 	$db = new call('entities_by_time');
+		try{
+			return $db->getRow($key, $options);
+		} catch (\Exception $e){
+			return false;
+		}
+		
+	 }
+	
 }

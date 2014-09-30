@@ -1254,3 +1254,8 @@ div.register-popup {
 	width:60%;
 	display:block;
 }
+
+
+.global-sidebar .elgg-menu-page a{
+	border:0;
+}
