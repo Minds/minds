@@ -218,8 +218,8 @@ input[name=terms]{
 	position:fixed;
 	bottom:0;
 	left:50%;
-	width:650px;
-	margin-left:-325px;
+	width:450px;
+	margin-left:-225px;
 	background:#FAFAFA;
 	border:1px solid #DDD;
 	padding:0;
