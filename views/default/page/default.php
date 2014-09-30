@@ -57,10 +57,12 @@ if(get_input('async')){
 			
 			<?php echo $body; ?>
 		</div>
-		
+
+		<?php if(!elgg_is_logged_in()):?>
 		<div class="static-footer">
 			<?php echo $footer; ?>	
 		</div>
+		<?php endif; ?>
 	</div>
 <?php echo elgg_view('page/elements/foot'); ?>
 </body>

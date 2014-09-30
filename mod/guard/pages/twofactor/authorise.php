@@ -11,7 +11,7 @@ use minds\plugin\guard\lib;
 
 class authorise extends core\page implements interfaces\page{
 
-	public $CSRF = false;
+	public $csrf = false;
 	
 	/**
 	 * Get requests

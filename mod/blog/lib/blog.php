@@ -79,18 +79,9 @@ function blog_get_page_content_read($guid = NULL) {
         	$return['subtitle'] .= " &bull; <i>Page Views: $count+ </i>";
     	}   
 
-
-	
-/*	$container = $blog->getContainerEntity();
-	$crumbs_title = $container->name;
-	if (elgg_instanceof($container, 'group')) {
-		elgg_push_breadcrumb($crumbs_title, "blog/group/$container->guid/all");
-	} else {
-		elgg_push_breadcrumb($crumbs_title, "blog/owner/$container->username");
-	}
-*/
 	elgg_push_breadcrumb($blog->title);
-	$return['content'] = elgg_view_entity($blog, array('full_view' => true));
+	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'content-header'));
+	$return['content'] .= elgg_view_entity($blog, array('full_view' => true));
 	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'content-below-banner'));
 	//check to see if comment are on
 	if ($blog->comments_on != 'Off') {

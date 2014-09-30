@@ -4,6 +4,11 @@
 	width:50%;
 }
 
+.bitcoin-disclaimer{
+	border:1px solid #EEE;
+	padding:16px;
+	font-weight:bold;
+}
 
 .wallet {
     margin: 20px;

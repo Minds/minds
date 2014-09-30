@@ -52,8 +52,10 @@ class wallet extends core\page implements interfaces\page{
 			}
 
 		}
+
+		$sidebar = '<div class="bitcoin-disclaimer">We encourage you to continually backup your Bitcoin on your own devices and paper wallets!</div>';
 		
-		$body = \elgg_view_layout('content', array('title'=>\elgg_echo('bitcoin:wallet'), 'content'=>$content));
+		$body = \elgg_view_layout('content', array('title'=>\elgg_echo('bitcoin:wallet'), 'content'=>$content, 'sidebar'=>$sidebar));
 		
 		echo $this->render(array('body'=>$body));
 		

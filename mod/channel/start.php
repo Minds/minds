@@ -184,6 +184,8 @@ function channel_page_handler($page) {
 						)
 					) . "</li>";*/
 
+	$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'),array('to_guid'=>$user->guid));
+
 	switch($page[1]){
 		case 'custom':
 			$content = elgg_view_form('channel/custom', array('enctype' => 'multipart/form-data'), array('entity' => $user));
@@ -251,7 +253,7 @@ function channel_page_handler($page) {
 				'type' => 'activity',
 				'limit' => 5,
 				'masonry' => false,
-			//	'prepend' => $post,
+				'prepend' => $post,
 				'list_class' => 'list-newsfeed',
 				'owner_guid' => $user->guid
 			));

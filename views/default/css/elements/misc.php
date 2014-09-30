@@ -217,16 +217,17 @@ input[name=terms]{
 	z-index:9999;
 	position:fixed;
 	bottom:0;
-	right:0;
+	left:50%;
+	width:650px;
+	margin-left:-325px;
 	background:#FAFAFA;
-	padding:4px;
-	border-radius: 3px 0 0 0;
-}
-.static-footer:hover{
-	width:auto;
+	border:1px solid #DDD;
+	padding:0;
+	border-radius: 0;
 }
 .static-footer .footer-social-links{
-	float:left;
+	float:right;
+	line-height:33px;
 }
 .static-footer .footer-social-links > a{
 	font-size:26px;
@@ -241,25 +242,24 @@ input[name=terms]{
 }
 .elgg-menu-footer-default{
 	margin:0;
+	float:left;
 }
 .minds-static-footer:hover .elgg-menu-footer-default{
 	display:block;
 }
-.elgg-menu-footer-default li{
-	padding:0 4px 8px;
+.static-footer .elgg-menu-footer-default li{
+	border-right:1px solid #DDD;
+	padding:8px 16px;;
 }
-.elgg-menu-footer-default li:after{
+.static-footer .elgg-menu-footer-default li:after{
 	content:none;
 }
-.minds-static-footer .info{
-	color:#FFF;
-	padding: 12px 0 0 10px;
-position: absolute;
+.static-footer .elgg-menu-footer-default li a{
+	
+	font-size:13px;
+	color:#666;
+	
 }
-.minds-static-footer:hover .info{
-	display:none;
-}
-
 
 /**
  * Minds Tiles
@@ -1245,4 +1245,12 @@ div.register-popup {
 }
 .donations-button .entypo{
 	padding-right:12px;
+}
+
+#taboola-header-thumbnails{
+	border: 1px solid #EEE;
+	padding: 8px;
+	margin: 8px auto;
+	width:60%;
+	display:block;
 }
