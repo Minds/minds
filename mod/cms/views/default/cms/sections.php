@@ -1,24 +1,13 @@
 <?php
 
 $sections = $vars['sections'];
+usort($sections, function($a, $b){
+	return $a->time_created - $b->time_created;
+});
+?>
 
-foreach($sections as $section):?>
+<div class="cms-sections" data-group="<?= $vars['group'] ?>">
 
-	<section class="cms-section">
-		<div class="container">
-			<div class="left">
-				<div class="cell">
-					<h2>Left</h2>
-					<p>Left example...</p>
-				</div>
-			</div>
-			<div class="right">
-				<div class="cell">
-					<h2>Right</h2>
-					<p>Right example...</p>
-				</div>
-			</div>
-		</div>
-	</section>
-	
-<?php endforeach;
+<?php foreach($sections as $section): echo elgg_view('cms/sections/section', array('section'=>$section)); endforeach; ?>
+
+</div>

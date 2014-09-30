@@ -23,6 +23,7 @@ class start extends bases\plugin{
 		$path = "minds\\plugin\\cms";
 		core\router::registerRoutes(array(
 				'/p' => "$path\\pages\\page",
+				'/s' => "$path\\pages\\sections",
 				'/admin/cms/sections' => "$path\\pages\\sections",
 			));
 		
@@ -73,7 +74,7 @@ class start extends bases\plugin{
 			return $return . $add;
 
 		$sections = core\entities::get(array('guids'=>$guids));
-		$return .= elgg_view('cms/sections', array('sections'=>$sections));
+		$return .= elgg_view('cms/sections', array('sections'=>$sections, 'group'=>'index'));
 		$return .= $add;
 		
 		return $return;
