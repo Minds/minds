@@ -14,8 +14,17 @@ if(!$entity->featured_id || $entity->featured_id == 0){
 
 	$entity->feature();
 
-	add_to_river('river/object/'.$entity->getSubtype().'/feature', 'feature', $entity->getOwnerGUID(), $entity->getGuid(), 2, time(), NULL, array('feature'));
-
+	//add_to_river('river/object/'.$entity->getSubtype().'/feature', 'feature', $entity->getOwnerGUID(), $entity->getGuid(), 2, time(), NULL, array('feature'));
+	$activity = new minds\entities\activity();
+	$activity->setTitle($entity->title)
+			->setBlurb($entity->excerpt)
+			->setUrl($entity->getURL())
+			->setThumbnail($entity->getIconURL());
+	$activity->owner_guid = $entity->owner_guid;		
+	$activity->indexes = array('activity:featured');
+	$activity->save();
+	
+	
 	system_message(elgg_echo("Featured..."));
 	
 	echo 'featured';

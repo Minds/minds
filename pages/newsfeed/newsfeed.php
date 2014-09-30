@@ -91,16 +91,16 @@ class newsfeed extends core\page implements interfaces\page{
 		
 		\elgg_register_plugin_hook_handler('register', 'menu:entity', array($this, 'pageSetup'));
 		
-		if(get_input('new')){
-			$activity = new entities\activity();
-			$activity->setTitle('This is a rich post')
-					->setBlurb('and this is is the description for it. this should go to bbc when clicked')
-					->setURL('https://www.bbc.co.uk/news')
-					->save();
-		}
-		
 		if(!isset($pages[0])){
 			$pages[0] = 'network';
+		}
+		
+		if(!elgg_is_logged_in()){
+			$this->forward('login');
+		}
+		
+		if(elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0){
+			$pages[0] = 'featured';
 		}
 
 		switch($pages[0]){
@@ -168,6 +168,11 @@ class newsfeed extends core\page implements interfaces\page{
 
 				);
 				break;
+			case 'featured':
+				$options = array(
+					'attrs' => array('namespace'=>'activity:featured')
+				);
+				break;
 			case 'network':
 			default:
 				$options = array(
@@ -192,7 +197,7 @@ class newsfeed extends core\page implements interfaces\page{
 		$sidebar_right = "<b style='margin-top:12px;display:block;'>Filter</b>";
 		\elgg_register_menu_item('page', array('text'=>'Network', 'href'=>'newsfeed/network', 'name'=>'network', 'selected' =>isset($options['network'])));
 		\elgg_register_menu_item('page', array('text'=>'Personal', 'href'=>'newsfeed/mine', 'name'=>'mine', 'selected'=> isset($options['owner_guid'])));
-		
+		\elgg_register_menu_item('page', array('text'=>'Featured', 'href'=>'newsfeed/featured', 'name'=>'featured', 'selected'=> isset($options['attrs'])));
 		if(elgg_is_admin_logged_in())
 			\elgg_register_menu_item('page', array('text'=>'All (admins only)', 'href'=>'newsfeed/all', 'name'=>'all', !isset($options['network']) || !isset($options['owner_guid'])));
 		

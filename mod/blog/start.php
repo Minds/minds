@@ -21,7 +21,11 @@ function blog_init() {
 	
 	minds\core\views::cache('blog/featured');
 
-	add_subtype('object', 'blog', 'ElggBlog');
+	\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
+		if($row->type == 'object' && $row->subtype == 'blog')
+			return new \ElggBlog($row);
+	});
+
 	add_subtype('object', 'scraper');
 
 	elgg_register_library('elgg:blog', elgg_get_plugins_path() . 'blog/lib/blog.php');
