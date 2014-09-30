@@ -27,14 +27,14 @@ $section = $vars['section'];
 		
 		<div class="left">
 			<div class="cell">
-				<h2><input type="text" placeholder="Header 2." class="h2" value="<?= $section->leftH2 ?>"/></h2>
-				<p><textarea placeholder="Paragraph with some text here." class="p"><?= $section->leftP ?></textarea></p>
+				<h2><input type="text" placeholder="Header 2." class="h2" value="<?= $section->leftH2 ?>" style="color:<?=$section->color?>"/></h2>
+				<p><textarea placeholder="Paragraph with some text here." class="p" style="color:<?=$section->color?>"><?= $section->leftP ?></textarea></p>
 			</div>
 		</div>
 		<div class="right">
 			<div class="cell">
-				<h2><input type="text" placeholder="Header 2." class="h2" value="<?= $section->rightH2 ?>"/></h2>
-				<p><textarea placeholder="Paragraph with some text here." class="p"><?= $section->rightP ?></textarea></p>
+				<h2><input type="text" placeholder="Header 2." class="h2" value="<?= $section->rightH2 ?>" style="color:<?=$section->color?>"/></h2>
+				<p><textarea placeholder="Paragraph with some text here." class="p" style="color:<?=$section->color?>"><?= $section->rightP ?></textarea></p>
 			</div>
 		</div>
 		<script>

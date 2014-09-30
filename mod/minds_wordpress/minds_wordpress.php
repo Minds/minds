@@ -29,7 +29,7 @@ class minds_wordpress extends \ElggPlugin{
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pagesetup'));
 	
 		\elgg_extend_view('login/extend', 'minds_wordpress/login');
-		\elgg_extend_view('page/elements/topbar', 'minds_wordpress/menu');
+		//\elgg_extend_view('page/elements/topbar', 'minds_wordpress/menu');
 		\elgg_extend_view('css/elgg', 'minds_wordpress/css');
 		
 		if(\get_input('wp_auth') && \elgg_is_logged_in()){

@@ -35,7 +35,7 @@ class start extends bases\plugin{
 		
 		//\elgg_register_action('bitcoin/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
 		\elgg_register_admin_menu_item('configure', 'pages', 'cms');
-		\elgg_register_admin_menu_item('configure', 'sections', 'cms');
+	//	\elgg_register_admin_menu_item('configure', 'sections', 'cms');
 	}
 	
 	
@@ -68,8 +68,11 @@ class start extends bases\plugin{
 	public function index($hook, $type, $return, $params){
 		
 		$guids = core\data\indexes::fetch('object:cms:sections:index', array('limit'=>1000));
-		
-		$add = '<div class="cms-section-add"><a href="#" data-group="index"> + Add a panel </a></div>';
+
+		$add = '';
+		if(elgg_is_admin_logged_in())		
+			$add = '<div class="cms-section-add"><a href="#" data-group="index"> + Add a panel </a></div>';
+
 		if(!$guids)
 			return $return . $add;
 
