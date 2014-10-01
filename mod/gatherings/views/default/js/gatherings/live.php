@@ -68,7 +68,7 @@ minds.live.init = function() {
 		/**
 		 * The connection to the socket server
 		 */
-		portal.open("https://<?php echo elgg_get_plugin_setting('server_url', 'gatherings'); ?>/", { sharing:false }).on({
+		portal.open("https://<?php echo elgg_get_plugin_setting('server_url', 'gatherings') ?: 'chat-ssl.minds.com'; ?>/", { sharing:false }).on({
 			open: function() {
 				//subscribe the user to the site chat
 				portal.find().send("connect", { guid: user.guid, name: user.name, username: user.username, node: elgg.get_site_url()});
@@ -164,7 +164,7 @@ minds.live.init = function() {
 					)
 					.animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
 					
-				// return to the sender that we have recieved the message
+				// return to the sender that we have received the message
 				if(data.from_guid != elgg.get_logged_in_user_guid())
 					portal.find().send("recieved", { to_guid: data.from_guid });
 
@@ -568,6 +568,8 @@ minds.live.init = function() {
 			waiting: function(delay, attempts) {
 				console.log("The socket will try to reconnect after " + delay + " ms");
 				console.log("The total number of reconnection attempts is " + attempts);
+				
+				$('.minds-live-chat-userlist .userlist ul').html('<span class="chat-msg">The server couldn\'t be reached, trying again...</span>');
 			},
 			heartbeat: function() {
 				console.log("The server's heart beats");
@@ -575,16 +577,24 @@ minds.live.init = function() {
 			users: function(data){
 				var users = data.users; //format GUID=>LAST_ACTION
 				var guids = Object.keys(users);
-				
+				console.log('chat..',data);
 				var user_list = $('.minds-live-chat-userlist .userlist ul');
 				user_list.html('');
 				for(var i=0; i < guids.length; i++){
-					console.log(guids);
+	
 					var guid = guids[i];
 					if(guid != elgg.get_logged_in_user_guid()){
 						var user = users[guid];
 						user_list.append('<li class="user" id="'+ guid + '"> <h3>'+user.name+'</h3></li>');
 					}
+				}
+				
+				if(user_list.html() == ''){
+					user_list.html('<span class="chat-msg">Nobody is online</span>');
+					//check again in 3 seconds
+					setTimeout(function(){
+						portal.find().send("users");
+					}, 3000);
 				}
 			}
 		});

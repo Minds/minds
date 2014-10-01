@@ -130,6 +130,19 @@
 .minds-live-chat ul li .message .user_name{
 	font-weight:bold;
 }
+
+/**
+ * Status messages (and errors)
+ */
+.minds-live-chat .chat-msg{
+	display:block;
+	width:100%;
+	line-height:125px;
+	text-align:center;
+	color:#888;
+	font-weight:bold;
+}
+
 .minds-live-chat ul li .rt-stats{
 	background: #F8F8F8;
 	color: #888;

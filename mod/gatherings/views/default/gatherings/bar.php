@@ -26,26 +26,11 @@ if(!elgg_is_logged_in()){
 		<ul>
 			<li class="userlist"> <h3> <span class="entypo"> &#59160; </span> Chat </h3>
 				<ul>
-				<?php 
-					/*foreach($users as $user){
-						if($user->guid != elgg_get_logged_in_user_guid()){
-							 echo "<li class='user' id='$user->guid'> <h3>$user->name</h3></li>";
-						}
-					}*/
-				?>
+					<span class="chat-loading">
+						Please wait... Connecting...
+					</span>
 				</ul>
 			</li>
-			<?php 
-/*				foreach($users as $user){
-					if($user->guid != elgg_get_logged_in_user_guid()){
-						echo "<li class='box' id='$user->guid'>
-							<h3>$user->name</h3>
-							<div class='messages'>
-							</div>
-							<div> <input type='text' class='elgg-input' /> </div></li>";
-					}
-				}*/
-				?>
 		</ul>
 	</div>
 </div>
