@@ -35,11 +35,11 @@ and (max-width : 720px) {
 		margin-top:14px;
 	}
 	
-	.hero > .topbar .logo img{
+/*	.hero > .topbar .logo img{
 		width: 100%;
 		height: auto;
 		max-width: 100px;
-	}
+	}*/
 	.hero > .topbar .right .elgg-button{
 		margin: 1px;
 		/* width: 52px; */

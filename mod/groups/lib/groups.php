@@ -113,7 +113,7 @@ function groups_search_page() {
  */
 function groups_handle_owned_page() {
 
-	$page_owner = elgg_get_page_owner_entity();
+	$page_owner = elgg_get_page_owner_entity() ?: elgg_get_logged_in_user_entity();
 
 	if ($page_owner->guid == elgg_get_logged_in_user_guid()) {
 		$title = elgg_echo('groups:owned');
@@ -126,7 +126,7 @@ function groups_handle_owned_page() {
 
 	$content = elgg_list_entities(array(
 		'type' => 'group',
-		'owner_guid' => elgg_get_page_owner_guid(),
+		'owner_guid' => $page_owner->guid,
 		'full_view' => false,
 	));
 	if (!$content) {
