@@ -51,9 +51,9 @@
 	height: 610px;
 	margin-top: -40px;
 	z-index: -1;
-	-webkit-transform: translate3d(0, -20px, 0);
+	/*-webkit-transform: translate3d(0, -20px, 0);
 	transform: translate3d(0, -20px, 0);
-
+	*/
 }
 .cms-section .container .cell h2{
 	font-family:"Lato", Helvetica, Arial, Sans-Serif;

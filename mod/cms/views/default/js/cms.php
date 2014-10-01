@@ -54,8 +54,10 @@ minds.cms.init = function() {
     		}
     	});
     });
-    
-    $('.icon-colour input').minicolors();
+
+	if(jQuery().minicolors) {    
+    		$('.icon-colour input').minicolors();
+	}
     $(document).on('change', '.icon-colour input', function(){
     	var section = $(this).parents('section')[0];
     	$(section).find('textarea').css('color', $(this).val());
