@@ -22,6 +22,13 @@ if (elgg_is_logged_in() && $context) {
 
 	// generate a list of default tabs
 	$tabs = array(
+		'featured' => array(
+                'text' => elgg_echo('Featured'),
+                'href' => (isset($vars['trending_link'])) ? $vars['trending_link'] : "$context/list/featured",
+                'selected' => ($filter_context == 'featured'),
+                'priority' => 1,
+                'item_class'=>'elgg-menu-item-hover-over'
+        ),
 		'all' => array(
 			'text' => elgg_echo('all'),
 			'href' => (isset($vars['all_link'])) ? $vars['all_link'] : "$context/all",

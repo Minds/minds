@@ -90,15 +90,6 @@ if($paypal || $bitcoin){
 $header = <<<HTML
 <div class="elgg-head homepage clearfix">
 	$title
-	<ul class="elgg-menu elgg-menu-right-filter elgg-menu-hz">
-		<li class="elgg-menu-item-featured $featured_item_class">
-			<a href="?filter=featured">Featured</a>
-		</li>
-		<li class="elgg-menu-item-trending $trending_item_class elgg-menu-item-hover-over">
-                        <a href="?filter=trending">Trending</a>
-			$trending_menu
-                </li>
-	</ul>
 	$signup_form
 	$donations_box
 
@@ -106,12 +97,6 @@ $header = <<<HTML
 HTML;
 
 $content .= elgg_trigger_plugin_hook('output-extend', 'index');
-
-if($entities){
-	$content .= elgg_view_entity_list($entities, array('full_view'=>false), $offset, $limit, false, false, true);
-} else {
-	$content .= '';
-}
 
 $params = array(	'content'=> $content, 
 					'header'=> $header,

@@ -20,6 +20,11 @@ elgg_register_event_handler('init', 'system', 'blog_init');
 function blog_init() {
 	
 	minds\core\views::cache('blog/featured');
+	
+	$path = "minds\\plugin\\blog";
+	minds\core\router::registerRoutes(array(
+			'/blog/list' => "$path\\pages\\lists"
+		));
 
 	\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 		if($row->type == 'object' && $row->subtype == 'blog')
@@ -34,7 +39,7 @@ function blog_init() {
 	elgg_register_menu_item('site', array(
 		'name' => 'blog',
 		'text' => '<span class="entypo">&#59396;</span> Blog',
-		'href' => elgg_is_active_plugin('analytics') ? 'blog/trending' : 'blog/all',
+		'href' => 'blog/list/featured',
 		'title' => elgg_echo('blog:blogs'),
 		'priority' => 3
 	));
