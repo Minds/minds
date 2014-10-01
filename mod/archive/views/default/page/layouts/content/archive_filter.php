@@ -18,12 +18,20 @@ if ($context) {
 	$filter_context = elgg_extract('filter_context', $vars, 'all');
 	
 	$tabs = array(
+	
+		'featured' => array(
+			'text' => elgg_echo('Featured'),
+            'href' => "$context/featured",
+            'selected' => ($filter_context == 'featured'),
+            'priority' => 0,
+            'section'=>'filter'
+		),		
 
 		'all' => array(
 			'text' => elgg_echo('all'),
                         'href' => "$context/all?filter=$type_context",
                         'selected' => ($filter_context == 'all'),
-                        'priority' => 0,
+                        'priority' => 100,
                         'section'=>'filter'
 		),		
 		
@@ -31,7 +39,7 @@ if ($context) {
                         'text' => elgg_echo('trending') . elgg_view_menu('trending'),
                         'href' => "$context/trending?filter=$type_context",
                         'selected' => ($filter_context == 'trending'),
-                        'priority' => 0,
+                        'priority' => 150,
                         'section'=>'filter',
                         'item_class'=>'elgg-menu-item-hover-over'
                 ),
@@ -40,7 +48,7 @@ if ($context) {
                         'text' => elgg_echo('friends'),
                         'href' => "$context/network/$username?filter=$type_context",
                         'selected' => ($filter_context == 'network'),
-                        'priority' => 0,
+                        'priority' => 200,
                         'section'=>'filter'
                 ),
 
