@@ -436,10 +436,14 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	elgg_set_ignore_access(true);
 	elgg_set_context('scraper');
 
-//	$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'), 'limit'=>0));
 	elgg_load_library('simplepie');
 	$offset = "";
-	//$user = get_user_by_username('NaturalSociety');
+
+
+	if(elgg_get_plugin_setting('running', 'blog') == 'yes')
+		return $return_value;
+
+	elgg_set_plugin_setting('running', 'yes', 'blog');
 
 	while(true){	
 		$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'),'limit'=>30, 'offset'=>$offset,'newest_first'=>true));
@@ -565,6 +569,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			}
 		}
 	}
+	elgg_set_plugin_setting('running', 'no', 'blog');
 	elgg_set_ignore_access(false);
 	return $return_value;	
 }

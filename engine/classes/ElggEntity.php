@@ -1554,7 +1554,10 @@ abstract class ElggEntity extends ElggData implements
 	
 		$db->insert('object:featured', array($this->featured_id => $this->getGUID()));
 		$db->insert('object:'.$this->subtype.':featured', array($this->featured_id => $this->getGUID()));
+		if($this->super_subtype)
+			 $db->insert('object:'.$this->super_subtype.':featured', array($this->featured_id => $this->getGUID()));
 		
+	
 		$this->featured = 1;	
 		$this->save();
 		

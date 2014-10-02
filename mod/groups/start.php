@@ -21,7 +21,7 @@ function groups_init() {
 	elgg_register_entity_type('group', '');
 
 	// Set up the menu... hide for now
-	if(elgg_is_logged_in() && elgg_get_site_url() != 'https://www.minds.com/'){
+	if(elgg_is_logged_in()){
 
 		elgg_register_menu_item('site', array(
 			'name' => 'groups',

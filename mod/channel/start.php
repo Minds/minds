@@ -248,6 +248,7 @@ function channel_page_handler($page) {
 		case 'news':
 		case 'timeline':
 		default:
+			\elgg_register_plugin_hook_handler('register', 'menu:entity', array('\minds\pages\newsfeed\newsfeed', 'pageSetup'));
 			//$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river'));
 			$content = \minds\core\entities::view(array(
 				'type' => 'activity',

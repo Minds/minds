@@ -12,7 +12,7 @@
 
 .cms-section{
 	display:block;
-	min-height: 360px;
+	min-height: 425px;
 	position:relative;
 	overflow:hidden;
 }
@@ -22,7 +22,7 @@
 	max-width: 82.14285714285714em;
 	box-sizing: border-box;
 	display:block;
-	line-height: 360px;
+	line-height: 420px;
 }
 
 .cms-section .container .left{

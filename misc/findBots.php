@@ -2,6 +2,18 @@
 
 require(dirname(dirname(__FILE__)).'/engine/start.php');
 elgg_set_ignore_access(true);
+
+$groups = minds\core\entities::get(array('type'=>'group', 'limit'=>1000));
+foreach($groups as $group){
+
+	if(!$group->name && !$group->title){
+		$group->delete();
+	} else {
+		echo "keeping $group->name \n";
+	}
+}
+exit;
+
 try{
 $db = new minds\core\data\call();
 $db->getCF('session')->truncate();

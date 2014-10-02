@@ -41,11 +41,15 @@ class lists extends core\page implements interfaces\page{
 			case 'featured':
 			default:	
 				$params['title'] = 'Featured Blogs';
-				$guids = core\data\indexes::fetch('object:blog:featured', array('offset'=>get_input('offset', ''), 'limit'=>get_input('limit', '')));
+				$guids = core\data\indexes::fetch('object:blog:featured', array('offset'=>get_input('offset', ''), 'limit'=>get_input('limit', 12)));
 				$params['guids'] = $guids;
 		}
-		
-		$content = core\entities::view($params);
+	
+
+		if(isset($params['guids']) && !$params['guids'])
+			$content = '';
+		else
+			$content = core\entities::view($params);
 		
 		elgg_register_menu_item('filter', array(
 			'name' => 'featured',
@@ -54,6 +58,13 @@ class lists extends core\page implements interfaces\page{
 			'selected' => $pages[0] == 'featured',
 			'priority' => 1,
 		));
+		elgg_register_menu_item('filter', array(
+                        'name' => 'trending',
+                        'text' => elgg_echo('trending'),
+                        'href' => "blog/trending",
+                        'selected' => $pages[0] == 'trending',
+                        'priority' => 2,
+                ));
 		
 		$body = elgg_view_layout('gallery', array(
 			'title'=>$params['title'],

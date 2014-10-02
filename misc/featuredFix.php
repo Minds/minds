@@ -1,20 +1,14 @@
 <?php
 
-require('/var/www/minds-multisite/docroot/engine/start.php');
-
-$offset ="";
-
-while(1) {
-$featured = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog','offset'=>$offset, 'limit'=>200));
+require('/var/www/elgg/engine/start.php');
 
 $db = new minds\core\data\call('entities_by_time');
-foreach($featured as $entity){
-	elgg_set_ignore_access();
-	if($entity->featured == 1){
-		echo "$entity->guid \n";
-		$db->insert('object:featured', array($entity->featured_id => $entity->getGUID()));
-		$db->insert('object:'.$entity->subtype.':featured', array($entity->featured_id => $entity->getGUID()));
-	}
-}
-$offset = end($featured)->guid;
+$videos = $db->getRow('object:video:featured', array('limit'=>10000));
+$images = $db->getRow('object:image:featured', array('limit'=>10000));
+$albums = $db->getRow('object:album:featured', array('limit'=>10000));
+
+
+$guids = array_merge($videos, $images, $albums);
+foreach($guids as $id => $guid){
+	echo $db->insert('object:archive:featured', array($id => $guid));
 }

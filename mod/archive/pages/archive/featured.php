@@ -3,7 +3,7 @@
 // Get the current page's owner
 $page_owner = elgg_get_logged_in_user_guid();
 elgg_set_page_owner_guid($page_owner);
-
+elgg_set_context('featured');
 $limit = get_input("limit", 12);
 $offset = get_input("offset", 0);
 
@@ -28,4 +28,3 @@ $body = elgg_view_layout("gallery", array(
 
 echo elgg_view_page('',$body);
 
-?>
