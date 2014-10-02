@@ -38,4 +38,14 @@ class notification extends entities\entity{
 		
 	}
 	
+	public function getExportableValues(){
+		return array_merge(parent::getExportableValues(),
+			array(
+				'object_guid',
+				'from_guid',
+				'notification_view',
+				'params'
+			));
+	}
+	
 }

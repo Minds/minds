@@ -16,7 +16,7 @@ class view extends core\page implements interfaces\page{
 		$user_guid = get_input('user_guid', elgg_get_logged_in_user_guid());
 
 		$db = new \minds\core\data\call('entities_by_time');
-		$guids = $db->getRow('notifications:'.$user_guid, array('limit'=> get_input('limit', 12), 'offset'=>get_input('offset','')));
+		$guids = $db->getRow('notifications:'.$user_guid, array('limit'=> get_input('limit', 5), 'offset'=>get_input('offset','')));
 		 \minds\plugin\notifications\notifications::resetCounter($user_guid);
 		if(!$guids){
 			echo 'Sorry, you don\'t have any notifications';
@@ -24,7 +24,7 @@ class view extends core\page implements interfaces\page{
 		}
 		$options = array(
 			'guids'=>$guids,
-			'limit' => get_input('limit', 12),
+			'limit' => get_input('limit', 5),
 			'offset' => get_input('offset','')
 		);
 

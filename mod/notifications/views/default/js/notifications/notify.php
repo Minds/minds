@@ -52,6 +52,7 @@ elgg.notify.getNotifications = function(e) {
     	
      $.get(url, function(data) {
       		$('#notification').html(data);
+      		$('#notification .load-more').show();
             //$('#notification').append(data);
      });
 

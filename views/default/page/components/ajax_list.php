@@ -81,6 +81,7 @@ foreach($json as $key => $item) {
 			$items[$key] = $new_item;
 	}
 }
+
 header('Content-type: text/plain');
 //hack to remove the first entity
 array_shift($items);

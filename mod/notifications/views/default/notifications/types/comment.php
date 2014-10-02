@@ -35,7 +35,7 @@ if ($type == 'entity') {
 	$object_title = 'a post';
 }
 
-$description = $notification -> description;
+$description = htmlspecialchars($notification->description, ENQ_QUOTES);
 if (strlen($description) > 60) {
 	$description = substr($notification -> description, 0, 75) . '...';
 }
@@ -43,7 +43,6 @@ if (strlen($description) > 60) {
 $body .= elgg_view('output/url', array('href' => $actor -> getURL(), 'text' => $actor -> name));
 $body .= ' commented on ';
 $body .= elgg_view('output/url', array('href' => $object_url, 'text' => $object_title));
-
 $body .= "<br/>";
 
 $body .= "<div class='notify_description'>" . $description . "</div>";

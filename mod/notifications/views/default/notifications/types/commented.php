@@ -11,7 +11,7 @@ if($subtype == 'thewire' && $entity->to_guid == elgg_get_logged_in_user_guid()){
 	$object_title = $object->title;
 }
 
-$description = $entity->description;
+$description = htmlspecialchars($entity->description,  ENT_QUOTES);
 if (strlen($description) > 60){
   $description = substr($entity->description,0,75) . '...' ;
 } 
