@@ -344,7 +344,7 @@
 		
 		window.lock_autoscroll = true;
 		
-		$list = $(this).parent().find('.elgg-list:first').parent();
+		$list = $(this).closest('.elgg-list');
 		$('.load-more').html('<p class="dots">...</p><p class="message"> loading, please hold tight </p>');
 		
 		$('.load-more').addClass('loading');
