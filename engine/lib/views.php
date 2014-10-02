@@ -801,7 +801,7 @@ function elgg_view_menu($menu_name, array $vars = array()) {
  * @todo The annotation hook might be better as a generic plugin hook to append content.
  */
 function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $debug = false) {
-	
+
 	// No point continuing if entity is null
 	if (!$entity || !($entity instanceof ElggEntity)) {
 		return false;
@@ -838,21 +838,13 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 	}
 	
 	$contents = '';
-	if (elgg_view_exists("$entity_type/$subtype")) {
+	if (elgg_view_exists("$entity_type/$subtype") && $subtype !='default') {
 		$contents = elgg_view("$entity_type/$subtype", $vars, $bypass, $debug);
 	}
 	if (empty($contents)) {
 		$contents = elgg_view("$entity_type/default", $vars, $bypass, $debug);
 	}
 	
-	// Marcus Povey 20090616 : Speculative and low impact approach for fixing #964
-	if ($vars['full_view']) {
-		$annotations = elgg_view_entity_annotations($entity, $vars['full_view']);
-
-		if ($annotations) {
-			$contents .= $annotations;
-		}
-	} 
 	return $contents;
 }
 

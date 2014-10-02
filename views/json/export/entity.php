@@ -17,5 +17,6 @@ if(elgg_instanceof($entity,'object')){
 	$export['ownerObj'] = $entity->ownerObj;
 }
 
+//error_log(print_r(debug_backtrace(), TRUE)); 
 global $jsonexport;
 $jsonexport[$entity->getType()][$entity->getSubtype()][] = $export;
