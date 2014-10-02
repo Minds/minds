@@ -205,7 +205,7 @@ class plugins extends base{
 	public static function purgeCache($key){
 		global $CONFIG;
 		$path = "/tmp/minds/".$CONFIG->cassandra->keyspace;
-		return unlink("$path/$key");
+		return @unlink("$path/$key");
 	}
 	
 	/**

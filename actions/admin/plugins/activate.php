@@ -23,6 +23,7 @@ foreach ($plugin_guids as $guid) {
 
 	if ($plugin->activate()) {
 		$activated_guids[] = $guid;
+		system_message('Activated');
 	} else {
 		$msg = $plugin->getError();
 		$string = ($msg) ? 'admin:plugins:activate:no_with_msg' : 'admin:plugins:activate:no';

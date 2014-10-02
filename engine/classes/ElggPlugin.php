@@ -561,11 +561,7 @@ class ElggPlugin extends ElggEntity {
 		}
 
 		$active = $this->active == 1 ? true : false;
-	
-		global $CONFIG;
-		if(!$active && isset($CONFIG->plugins))
-			$active = in_array($this->guid, $CONFIG->plugins);
-		
+
 		return $active;
 	}
 
@@ -601,7 +597,7 @@ class ElggPlugin extends ElggEntity {
 	 */
 	public function activate($site_guid = null) {
 		if ($this->isActive($site_guid)) {
-			return false;
+			return true;
 		}
 		
 		if (!$this->canActivate()) {

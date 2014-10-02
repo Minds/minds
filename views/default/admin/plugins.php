@@ -12,9 +12,11 @@ elgg_load_js('lightbox');
 elgg_load_css('lightbox');
 
 //lets purge cache
-minds\core\plugins::purgeCache();
+minds\core\plugins::purgeCache('plugins:all');
+minds\core\plugins::purgeCache('plugins:active');
+minds\core\plugins::$cache == array();
 
-$all_plugins = minds\core\plugins::get('any');
+$all_plugins = minds\core\plugins::get('all');
 $show_category = get_input('category', 'all');
 $sort = get_input('sort', 'priority');
 // Get a list of the all categories
