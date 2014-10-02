@@ -10,7 +10,9 @@ minds.cms.init = function() {
     		method : 'put',
     		success : function(data){
     			console.log(data);
+    			
     			$('.cms-sections').append(data);
+    			$('.cms-sections').find('.icon-colour input').minicolors();
     		}
     	});
     });
