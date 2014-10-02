@@ -15,6 +15,7 @@ $section = $vars['section'];
 			</a>
 			<a class="cms-icon icon-move">
 				Move
+				<input type="hidden" name="position" class="<?= $section->position ?>"/>
 			</a>
 			<a class="cms-icon icon-bg">
 				<span>Background</span>
@@ -37,11 +38,6 @@ $section = $vars['section'];
 				<p><textarea placeholder="Paragraph with some text here." class="p" style="color:<?=$section->color?>"><?= $section->rightP ?></textarea></p>
 			</div>
 		</div>
-		<script>
-			$( document ).ready(function(){
-				
-			});
-		</script>
 		<?php else: ?>
 		
 			<div class="left">

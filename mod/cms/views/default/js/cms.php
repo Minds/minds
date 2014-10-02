@@ -76,7 +76,30 @@ minds.cms.init = function() {
     	 	minds.cms.update($(_this));
     	 },1000);
     });
-    	
+   
+   
+   $(".cms-sections-editable").sortable({
+			//items:                '.cms-sections section.cms-section',
+			//connectWith:          '.cms-section',
+			helper: 			  'clone',
+			handle:               '.icon-move',
+			forcePlaceholderSize: true,
+			//placeholder:          'elgg-widget-placeholder',
+			opacity:              0.8,
+			//revert:               500,
+			distance: 				0,
+			stop:                 function(e, ui){ 
+									console.log('you just moved me to '+ ui.item.index()); 
+									//ui.item.find('#order').val(ui.item.index());
+									
+									$('.cms-sections-editable > section').each(function(i,j){
+										section = $(this).find('input[name=position]');
+										section.val($(this).index());
+										minds.cms.update($(this));
+									});
+									
+								}
+		}); 	
 }
 
 minds.cms.update = function(section){
@@ -86,7 +109,8 @@ minds.cms.update = function(section){
 		leftP: section.find('.left .p').val(),
 		rightH2: section.find('.right .h2').val(),
 		rightP: section.find('.right .p').val(),
-		color: section.find('.icon-colour input').val()
+		color: section.find('.icon-colour input').val(),
+		position: section.find('input[name=position]').val()
 	};
 
 	$.ajax({
