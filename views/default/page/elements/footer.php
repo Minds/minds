@@ -1,4 +1,7 @@
 <?php echo elgg_view_menu('footer'); 
+
+if(minds\core\minds::detectMultisite())
+	return true;
 ?>
 
 <div class="footer-social-links">

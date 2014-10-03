@@ -370,6 +370,7 @@ class ElggGroup extends ElggEntity
 		return array_merge(parent::getExportableValues(), array(
 			'name',
 			'description',
+			'icontime'
 		));
 	}
 
