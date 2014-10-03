@@ -42,13 +42,21 @@ class lists extends core\page implements interfaces\page{
 			default:	
 				$params['title'] = 'Featured Blogs';
 				$guids = core\data\indexes::fetch('object:blog:featured', array('offset'=>get_input('offset', ''), 'limit'=>get_input('limit', 12)));
-				$params['guids'] = $guids;
+				$entities = core\entities::get(array('guids'=>$guids));
+				usort($entities, function($a, $b){
+				    //return strcmp($b->featured_id, $a->featured_id);
+					if ((int)$a->featured_id == (int) $b->featured_id) { //imposisble
+					   return 0;
+					 }
+					return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+				});
+				$content = elgg_view_entity_list($entities, $params);
 		}
 	
 
 		if(isset($params['guids']) && !$params['guids'])
 			$content = '';
-		else
+		elseif(!$content)
 			$content = core\entities::view($params);
 		
 		elgg_register_menu_item('filter', array(

@@ -15,14 +15,14 @@ $section = $vars['section'];
 			</a>
 			<a class="cms-icon icon-move">
 				Move
-				<input type="hidden" name="position" class="<?= $section->position ?>"/>
+				<input type="hidden" name="position" value="<?= $section->position ?>"/>
 			</a>
 			<a class="cms-icon icon-bg">
 				<span>Background</span>
 				<input type="file" name="bg"/>
 			</a>
 			<a class="cms-icon icon-colour">
-				<input type="text" name="colour" class="text-color"/>
+				<input type="text" name="colour" class="text-color" value="<?= $section->color ?>"/>
 			</a>
 		</div>
 		

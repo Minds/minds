@@ -45,7 +45,7 @@ $apiContext->setConfig(
 $card = new entities\card();
 $card_obj = $card->create(array(
 	'type' => get_input('type'),
-	'number' => get_input('number'),
+	'number' => str_replace(' ', '', get_input('number')),
 	'month' => get_input('month'),
 	'year' => get_input('year'),
 	'sec' => get_input('sec'),
