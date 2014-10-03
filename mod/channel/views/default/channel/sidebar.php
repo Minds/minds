@@ -4,39 +4,39 @@ $user = elgg_extract('user', $vars);
 elgg_register_menu_item('channel', array(
 	'name' => 'channel:subscribed',
 	'text' => 'Subscribers ('. $user->getSubscribersCount() .')',
-	'href' => $user->username . '/subscribers' ,
+	'href' => elgg_get_site_url() . $user->username . '/subscribers' ,
 	'priority' => 1
 ));
 elgg_register_menu_item('channel', array(
 	'name' => 'channel:subscriptions',
 	'text' => 'Subscriptions ('. $user->getSubscriptionsCount() .')',
-	'href' => $user->username . '/subscriptions',
+	'href' => elgg_get_site_url() . $user->username . '/subscriptions',
 	'priority' => 2
 ));
 
 elgg_register_menu_item('channel', array(
 	'name' => 'channel:news',
 	'text' => '<span class="entypo">&#59194;</span> News',
-	'href' => $user->username . '/news',
+	'href' => elgg_get_site_url() . $user->username . '/news',
 	'priority' => 100
 ));
 elgg_register_menu_item('channel', array(
 	'name' => 'channel:blog',
 	'text' => '<span class="entypo">&#59396;</span> Blogs',
-	'href' => $user->username . '/blogs',
+	'href' => elgg_get_site_url() . $user->username . '/blogs',
 	'priority' => 101
 ));
 elgg_register_menu_item('channel', array(
 	'name' => 'channel:archive',
 	'text' => '<span class="entypo">&#128193;</span>Archive',
-	'href' => $user->username . '/archive',
+	'href' => elgg_get_site_url() . $user->username . '/archive',
 	'priority' => 102
 ));
 if($user->canEdit()){
 	elgg_register_menu_item('channel', array(
 		'name' => 'channel:custom',
 		'text' => 'Custom',
-		'href' => $user->username . '/custom',
+		'href' => elgg_get_site_url() . $user->username . '/custom',
 		'priority' => 103
 	));
 }

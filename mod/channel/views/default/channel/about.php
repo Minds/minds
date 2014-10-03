@@ -47,7 +47,7 @@ if (!elgg_get_config('profile_custom_fields')) {
 		if ($user->description) {
 			echo "<p class='profile-aboutme-title'><b>" . elgg_echo("profile:aboutme") . "</b></p>";
 			echo "<div class='profile-aboutme-contents'>";
-			echo elgg_view('output/longtext', array('value' => $user->description, 'class' => 'mtn'));
+			echo elgg_view('output/longtext', array('value' => htmlspecialchars($user->description, ENT_QUOTES), 'class' => 'mtn'));
 			echo "</div>";
 		}
 	}

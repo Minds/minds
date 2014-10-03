@@ -13,7 +13,7 @@ $newsfeed = new minds\core\data\call('newsfeed');
 $timeline = new minds\core\data\call('timeline');
 $indexes = new minds\core\data\call('entities_by_time');
 
-$groups = $indexes->getRow('group', array('limit'=>100000));
+/*$groups = $indexes->getRow('group', array('limit'=>100000));
 
 foreach($groups as $guid => $ts){
 
@@ -27,7 +27,25 @@ foreach($groups as $guid => $ts){
 	$indexes->removeRow("activity:container:$guid");
 	$indexes->insert("activity:container:$guid", $columns);
 	//echo "$guid \n";
+}*/
+
+$user = new entities\user('garrett.burns');
+$videos = minds\core\entities::get(array('subtype'=>'video', 'owner_guid'=>$user->guid, 'limit'=>1000));
+
+foreach($videos as $video){
+
+	$activity = new entities\activity();
+	$activity->owner_guid = $video->owner_guid;
+	$activity->time_created = $video->time_created;
+	$activity->article_media = 'video';
+	$activity->setTitle($video->title)
+		->setBlurb($video->description)
+		->setURL($video->getURL())
+		->setThumbnail($video->getIconURL())
+		->save();
+
 }
+exit;
 /**
  * Convert all of our newsfeed object into new style entities
  */

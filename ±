@@ -1,23 +1,144 @@
-<?php echo elgg_view_menu('footer'); 
-?>
-
-<div class="footer-social-links">
 <?php
-$networks = array(
-	'facebook'=>array(
-		'url' => '#',
-		'icon' => '&#62221;'
-	),
-	'twitter'=>array(
-                'url' => '#',
-                'icon' => '&#62218;'
-        )
-);
-foreach($networks as $network => $n){
-	if($url = $n['url']){
-		$icon = $n['icon'];
-		echo "<a class=\"entypo\" href=\"$url\" target=\"_blank\">$icon</a>";
-	}
+/**
+ * Defines database credentials.
+ *
+ * Most of Elgg's configuration is stored in the database.  This file contains the
+ * credentials to connect to the database, as well as a few optional configuration
+ * values.
+ *
+ * The Elgg installation attempts to populate this file with the correct settings
+ * and then rename it to settings.php.
+ *
+ * @todo Turn this into something we handle more automatically.
+ * @package Elgg.Core
+ * @subpackage Configuration
+ */
+error_reporting(0);
+//ini_set('display_errors', 'off');
+global $CONFIG;
+if (!isset($CONFIG)) {
+	$CONFIG = new stdClass;
 }
-?>
-</div>	
+
+$CONFIG->start_time = time();
+
+/*
+ * Cassandra configuration
+ *
+ * You will use the same database connection for reads and writes.
+ * This is the easiest configuration, and will suit 99.99% of setups. However, if you're
+ * running a really popular site, you'll probably want to spread out your database connections
+ * and implement database replication.  That's beyond the scope of this configuration file
+ * to explain, but if you know you need it, skip past this section.
+ */
+$CONFIG->cassandra = new stdClass;
+$CONFIG->cassandra->keyspace = 'minds';
+$CONFIG->cassandra->servers = array( '10.0.8.105', '10.0.9.10');
+
+
+/** 
+ * Other Elgg Settings
+ */
+$CONFIG->installed = '1380131874';
+$CONFIG->path = '/var/www/elgg/';
+$CONFIG->dataroot = '/gluster/data/elgg/';
+$CONFIG->default_site = '1';
+$CONFIG->site_id = '1';
+$CONFIG->__site_secret__ = '48htoiwgnio384y4548ujtg'; 
+$CONFIG->default_access = 2;
+$CONFIG->simplecache_enabled = 0;
+$CONFIG->system_cache_enabled = 1;
+//$CONFIG->debug = 0;
+$CONFIG->cdn_url = $_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' ? 'https://d3ae0shxev0cb7.cloudfront.net/' : 'http://cdn.minds.com/';
+$CONFIG->lastcache = 138160;
+$CONFIG->allow_registration = true;
+$CONFIG->force_ssl =false;
+
+
+$CONFIG->encryption_keys_tax_form = 'F945269EFC4DD42560765E4F1D9042599494FA5868F2F4E8DB42C6A2046B1121';
+
+$CONFIG->site_categories = array('Uncategorized','Autos & Vehicles', 'Comedy', 'Consciousness', 'Education', 'Entertainment', 'Film & Animation', 'Gaming', 'Health', 'How To & Style', 'Music', 'News & Politics', 'Nonprofits & Activism', 'People & Blogs', 'Pets & Animals', 'Science & Technology', 'Sports', 'Travel & Events');
+
+/**
+ * Set the site here to save load time
+ * (this works better than any cache!)
+ */
+$CONFIG->site_name = 'Minds';
+$CONFIG->site_url = $_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' ? 'https://www.minds.com/' : 'http://www.minds.com/';
+$CONFIG->site_email = 'access@minds.com';
+$CONFIG->site_description = 'Minds is an open source social network. Search, create, blog and share free video, images, audio and text. All site information is licensed creative commons or public domain. Create a channel on Minds.com to broadcast your content, or launch your own social network with Minds Multisite.';
+$CONFIG->site_keywords = 'open source social network, open source, social media, open source social media, creative commons, public domain, blog, channel, video, images, pictures, archive, stream, search, share, free, open content, social network, blog, groups, download, free download';
+
+/**
+ * Overrides default system cache path from inside data root to custom location.
+ *
+ * @global string $CONFIG->system_cache_path
+ * @name $CONFIG->system_cache_path
+ */
+$CONFIG->system_cache_path = '/tmp/elgg_system_cache/';
+
+/**
+ * Elasticsearch Settings
+ */
+//server for elasticsearch
+$CONFIG->elasticsearch_server = 'http://10.0.5.12:9200/';
+//namespace
+$CONFIG->elasticsearch_prefix = '';
+$CONFIG->elasticsearch_sitesearch_index = '';
+
+/**
+ * Memcache setup (optional)
+ * This is where you may optionally set up memcache.
+ *
+ * Requirements:
+ * 	1) One or more memcache servers (http://www.danga.com/memcached/)
+ *  2) PHP memcache wrapper (http://uk.php.net/manual/en/memcache.setup.php)
+ *
+ * Note: Multiple server support is only available on server 1.2.1
+ * or higher with PECL library > 2.0.0
+ */
+$CONFIG->memcache = false;
+//
+$CONFIG->memcache_servers = array (
+	array('localhost', 11211),
+//	array('server2', 11211)
+);
+
+
+/**
+ * Use non-standard headers for broken MTAs.
+ *
+ * The default header EOL for headers is \r\n.  This causes problems
+ * on some broken MTAs.  Setting this to TRUE will cause Elgg to use
+ * \n, which will fix some problems sending email on broken MTAs.
+ *
+ * @global bool $CONFIG->broken_mta
+ */
+$CONFIG->broken_mta = FALSE;
+
+/**
+ * Disable the database query cache
+ *
+ * Elgg stores each query and its results in a query cache.
+ * On large sites or long-running scripts, this cache can grow to be
+ * large.  To disable query caching, set this to TRUE.
+ *
+ * @global bool $CONFIG->db_disable_query_cache
+ */
+$CONFIG->db_disable_query_cache = FALSE;
+
+/**
+ * Minimum password length
+ *
+ * This value is used when validating a user's password during registration.
+ *
+ * @global int $CONFIG->min_password_length
+ */
+$CONFIG->min_password_length = 6;
+
+/**
+ * Where multisite admin endpoint is installed
+ */
+$CONFIG->multisite_endpoint = "http://10.0.30.209:82/minds/"; // Where the Web services endpoint is
+$CONFIG->multisite_server_ip = "Multisite2LoadBalancer2-1442974952.us-east-1.elb.amazonaws.com"; // IP address to prompt people to set DNS to
+$CONFIG->minds_multisite_root_domain = '.minds.com'; // Suffix for new nodes
