@@ -12,6 +12,11 @@ $tabs = array(
 		'url' => "groups/all",
 		'selected' => $vars['selected'] == 'all',
 	),
+	'featured' => array(
+		'title' => elgg_echo('Featured'),
+		'url' => "groups/featured",
+		'selected' => $vars['selected'] == 'featured',
+	),
 	'owner' => array(
 		'title' => elgg_echo('groups:owned'),
 		'url' => "groups/owner/$page_owner->username",

@@ -7,7 +7,7 @@
  * @subpackage Core
  *
  */
-if(elgg_get_context()=='news' || elgg_get_context() == 'settings'){
+if(elgg_get_context()=='news' || elgg_get_context() == 'settings' || elgg_get_context() == 'channel'){
 	return true;
 }
 elgg_push_context('owner_block');
