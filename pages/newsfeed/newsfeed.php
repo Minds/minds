@@ -248,7 +248,7 @@ class newsfeed extends core\page implements interfaces\page{
 					if(in_array($_FILES['attachment']['type'], array('image/jpeg', 'image/png', 'image/gif', 'image/bmp'))){
 						$activity->setCustom('batch', array(array(
 							'src' => $attachment->getIconURL('medium'),
-							'href' => $attachment->getURL()
+							'href' => elgg_get_site_url() . 'archive/view/' . $attachment->container_guid . '/' . $attachment->guid
 						)));
 					} else {
 						$activity->setTitle($_FILES['attachment']['name'])

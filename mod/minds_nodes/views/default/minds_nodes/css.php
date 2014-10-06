@@ -268,6 +268,10 @@ div.register-popup {
 	padding: 16px 0;
 }
 
+.response .reason, .response .reason2{
+	text-align:left;
+}
+
 .launch .response{
 	display:none;
 }

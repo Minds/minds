@@ -159,7 +159,34 @@ if(!elgg_is_logged_in()){
 	<div class="row thead">
 		<div class="cell feature">Payment</div>
 		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
 	</div>
+	
+	
+	<div class="row response">
+		<div class="cell reason"></div>
+		<div class="cell reason2"></div>
+	</div>
+	
+	<div class="row input plan">
+		<div class="cell feature">
+			Plan
+		</div>
+		<div class="cell radio">
+			<input type="radio" name="plan" value="monthly"/>
+			<span class="x-month">$X</span>/month
+		</div>
+		<div class="cell radio">
+			<input type="radio" name="plan" value="yearly" checked/>
+			<span class="x-year">$X</span>/year
+			<span class="saving" style="margin-left:12px;vertical-align: middle; color:#888; font-size:11px;">
+				Save <span class="x-save">$X</span>
+			</span>
+		</div>
+		<div class="cell"></div>
+	</div>
+	
 	<div class="row input">
 		<div class="cell feature">
 			First Name
@@ -238,11 +265,6 @@ if(!elgg_is_logged_in()){
 		</div>
 		<div class="cell">
 			<div class="elgg-button elgg-button-action create">Pay!</div>
-		</div>
-	</div>
-
-	<div class="row response">
-		<div class="cell">
 		</div>
 	</div>
 
