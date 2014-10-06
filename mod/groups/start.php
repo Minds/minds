@@ -25,7 +25,7 @@ function groups_init() {
 
 		elgg_register_menu_item('site', array(
 			'name' => 'groups',
-			'href' => 'groups/all',
+			'href' => 'groups/featured',
 			'text' => '<span class="entypo">&#59397;</span> Groups',
 			'title' => elgg_echo('groups'),
 		));
