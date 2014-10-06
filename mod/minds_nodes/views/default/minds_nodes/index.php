@@ -1,4 +1,4 @@
-<ul class="elgg-list">
+<ul class="elgg-list" style="clear:both; float:right;">
 	<li class="elgg-item">
 		<h2>Launch</h2>	
 	</li>
