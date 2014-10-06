@@ -1552,10 +1552,10 @@ abstract class ElggEntity extends ElggData implements
 	 	$g = new GUID(); 
 		$this->featured_id = $g->generate();
 	
-		$db->insert('object:featured', array($this->featured_id => $this->getGUID()));
-		$db->insert('object:'.$this->subtype.':featured', array($this->featured_id => $this->getGUID()));
+		$db->insert($this->type.':featured', array($this->featured_id => $this->getGUID()));
+		$db->insert($this->type. ':'.$this->subtype.':featured', array($this->featured_id => $this->getGUID()));
 		if($this->super_subtype)
-			 $db->insert('object:'.$this->super_subtype.':featured', array($this->featured_id => $this->getGUID()));
+			 $db->insert($this->type.':'.$this->super_subtype.':featured', array($this->featured_id => $this->getGUID()));
 		
 	
 		$this->featured = 1;	
@@ -1575,8 +1575,8 @@ abstract class ElggEntity extends ElggData implements
 		
 		if($this->featured_id){
 			//supports legacy imports
-			$db->removeAttributes('object:featured', array($this->featured_id));
-			$db->removeAttributes('object:'.$this->subtype.':featured', array($this->featured_id)); 
+			$db->removeAttributes("$this->type:featured", array($this->featured_id));
+			$db->removeAttributes("$this->type:$this->subtype:featured", array($this->featured_id)); 
 			$this->featured_id = null;
 		}
 	

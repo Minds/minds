@@ -253,6 +253,9 @@ function groups_page_handler($page) {
 		case 'all':
 			groups_handle_all_page();
 			break;
+		case 'featured':
+			groups_handle_featured_page();
+			break;
 		case 'search':
 			groups_search_page();
 			break;
@@ -411,36 +414,6 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 		'priority' => 100,
 	);
 	$return[] = ElggMenuItem::factory($options);
-
-	// number of members
-	$num_members = $entity->getMembers(10, 0, 0, true);
-	$members_string = elgg_echo('groups:member');
-	$options = array(
-		'name' => 'members',
-		'text' => $num_members . ' ' . $members_string,
-		'href' => false,
-		'priority' => 200,
-	);
-	$return[] = ElggMenuItem::factory($options);
-
-	// feature link
-	if (elgg_is_admin_logged_in()) {
-		if ($entity->featured_group == "yes") {
-			$url = "action/groups/featured?group_guid={$entity->guid}&action_type=unfeature";
-			$wording = elgg_echo("groups:makeunfeatured");
-		} else {
-			$url = "action/groups/featured?group_guid={$entity->guid}&action_type=feature";
-			$wording = elgg_echo("groups:makefeatured");
-		}
-		$options = array(
-			'name' => 'feature',
-			'text' => $wording,
-			'href' => $url,
-			'priority' => 300,
-			'is_action' => true
-		);
-		$return[] = ElggMenuItem::factory($options);
-	}
 
 	return $return;
 }

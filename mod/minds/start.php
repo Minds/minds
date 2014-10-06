@@ -488,7 +488,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		}
 	}
 	if(elgg_is_admin_logged_in()){
-		if($entity instanceof ElggObject){
+		if($entity instanceof ElggObject || $entity instanceof ElggGroup){
 			//feature button
 			$options = array(
 						'name' => 'feature',
