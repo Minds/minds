@@ -234,6 +234,9 @@ function channel_page_handler($page) {
 			$subscriptions = get_user_friends($user->guid, '', 12, get_input('offset', ''));
 			$content .= elgg_view_entity_list($subscriptions,array('list_class'=>'x2'));
 			break;
+		case 'carousel':
+			$content = elgg_view_form('carousel/batch', null, array('items'=>$carousels));
+			break;
 		case 'news':
 		case 'timeline':
 		default:

@@ -6,6 +6,13 @@
  */
 ?>
 
+.channel .elgg-layout-two-sidebar{
+	padding-top:250px;
+}
+.channel .elgg-layout-two-sidebar .elgg-main{
+	margin-top:150px;
+}
+
 .elgg-menu-channel li > a{
 	padding:16px;
 	color:#222;
