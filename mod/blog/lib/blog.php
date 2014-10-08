@@ -81,7 +81,7 @@ function blog_get_page_content_read($guid = NULL) {
 
 	elgg_push_breadcrumb($blog->title);
 	
-	$carousels = minds\core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
+	$carousels = minds\core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$blog->owner_guid));
 	if($carousels){
 		$return['content_header'] .= elgg_view('carousel/carousel', array('items'=>$carousels));
 		$return['class'] = 'content-carousel';

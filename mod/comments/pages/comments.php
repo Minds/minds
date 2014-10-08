@@ -21,6 +21,9 @@ class comments extends core\page implements interfaces\page{
 		
 		$indexes = new \minds\core\data\indexes('comments');
 		$guids = $indexes->get($entity->guid, array('limit'=>\get_input('limit',3), 'offset'=>\get_input('offset',''), 'reversed'=>true));
+		if(isset($guids[get_input('offset')]))
+			unset($guids[get_input('offset')]);
+
 		if($guids)
 			$comments = \elgg_get_entities(array('guids'=>$guids, 'limit'=>\get_input('limit',3), 'offset'=>\get_input('offset','')));
 		else 

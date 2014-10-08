@@ -19,6 +19,8 @@ class lists extends core\page implements interfaces\page{
 		
 		if(!isset($pages[0]))
 			$pages[0] = 'featured';
+
+		elgg_register_title_button();
 		
 		$params = array(
 			'type' => 'object',
