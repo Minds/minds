@@ -27,6 +27,7 @@ if(!isset($vars['items'])){
 		'limit' => 0
 	));
 	echo elgg_view('input/hidden', array('name'=>'owner_guid', 'value'=>0));
+	echo elgg_view('input/hidden', array('name'=>'oadmin', 'value'=>'admin'));
 } else {
 	$items = $vars['items'];
 	echo elgg_view('input/hidden', array('name'=>'owner_guid', 'value'=>elgg_get_page_owner_guid()));
