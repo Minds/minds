@@ -235,7 +235,7 @@ function channel_page_handler($page) {
 			$content .= elgg_view_entity_list($subscriptions,array('list_class'=>'x2'));
 			break;
 		case 'carousel':
-			$content = elgg_view_form('carousel/batch', null, array('items'=>$carousels));
+			$content = elgg_view_form('carousel/batch', array('enctype'=>'multipart/form-data'), array('items'=>$carousels));
 			break;
 		case 'news':
 		case 'timeline':
