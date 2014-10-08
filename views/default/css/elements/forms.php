@@ -500,6 +500,7 @@ width: 96%;
 .elgg-form-activity-post textarea{
 	border-radius:0;
 	border:1px solid #DDD;
+	height:34px;
 }
 .elgg-form-activity-post textarea:focus{
  	background:#FFF;

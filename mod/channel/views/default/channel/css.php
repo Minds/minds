@@ -512,9 +512,20 @@ and (max-width : 720px) {
 	}
 	
 	.minds-fixed-sidebar-left .minds-fixed-avatar{
-		width:25%;
-		float:left;
-		margin:8px;
+		width:100%;
+		margin:-142px 0 0;
+	}
+
+	#profile-details{	
+		clear:both;
+	}
+
+	.minds-fixed-sidebar-left > a.avatar-edit{
+		margin-top:-24px;
+	}
+
+	.channel .elgg-layout-two-sidebar .elgg-main{
+		margin-top:0;
 	}
 
 	.minds-fixed-sidebar-left h1{

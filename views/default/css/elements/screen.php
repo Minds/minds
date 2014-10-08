@@ -99,6 +99,12 @@ and (max-width : 720px) {
 	}
 
 
+	.minds-fixed-sidebar-left{
+		height:auto;
+		float:none;
+		box-shadow: 0 0 0;
+	}
+
 	.homepage{
 		padding-top:64px;
 	}
@@ -108,7 +114,7 @@ and (max-width : 720px) {
 	}
 
 	.carousel, .carousel .item{
-		height:180px;
+		height:240px;
 	}
 	.carousel-inner > .item > .carousel-caption{
 		top:32px;
