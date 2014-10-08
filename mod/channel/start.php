@@ -253,6 +253,7 @@ function channel_page_handler($page) {
 	$body = elgg_view_layout('two_sidebar', array(
 		'content' => $content, 
 		'header'=>$carousel, 
+		'hide_ads' => true,
 		'sidebar_top'=>'',
 		'sidebar' => '',
 		'sidebar_alt'=> elgg_view('channel/sidebar', array('user'=>$user)),

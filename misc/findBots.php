@@ -3,7 +3,7 @@
 require(dirname(dirname(__FILE__)).'/engine/start.php');
 elgg_set_ignore_access(true);
 
-$groups = minds\core\entities::get(array('type'=>'group', 'limit'=>1000));
+/*$groups = minds\core\entities::get(array('type'=>'group', 'limit'=>1000));
 foreach($groups as $group){
 
 	if(!$group->name && !$group->title){
@@ -13,12 +13,12 @@ foreach($groups as $group){
 	}
 }
 exit;
-
-try{
+*/
+/*try{
 $db = new minds\core\data\call();
 $db->getCF('session')->truncate();
 }catch(Exception $e){}
-exit;
+*/
 /*$users = elgg_get_entities(array('type'=>'user', 'limit'=>400));
 foreach($users as $user){
 
@@ -39,15 +39,14 @@ foreach($users as $user){
 	
 exit;
 */
-$blog = new ElggBlog('340939925123764224');
 $offset = '';
 //while(true){
-$blogs = elgg_get_entities(array('subtype'=>'blog', 'limit'=>100, 'offset'=>$offset, 'owner_guid'=>$owner->guid));
+$blogs = elgg_get_entities(array('subtype'=>'blog', 'limit'=>500, 'offset'=>$offset));
 $offset=end($blogs)->guid;
 $threshold = 4;
 foreach($blogs as $blog){
 //	$blog->delete();
-	$guard = new minds\plugin\guard\start();
+	$guard = minds\core\plugins::factory('guard');
 	if(!$guard->createHook('create', 'object', $blog, null)){
 		echo "found spam in $blog->title\n";
 		$blog->delete();

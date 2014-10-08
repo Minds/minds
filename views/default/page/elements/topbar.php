@@ -13,7 +13,7 @@
 	        	<?php } elseif(minds\core\plugins::isActive('minds_themeconfig')) { ?>
 					<img src="<?php echo elgg_get_site_url();?>_graphics/default_logo.png"/>
 				<?php } else { ?>
-					<img src="<?php echo elgg_get_site_url();?>_graphics/minds_2.png"/>
+					<img src="<?php echo elgg_get_site_url();?>_graphics/minds_2.png" class="minds-com"/>
 			<?php 
 				}
 			

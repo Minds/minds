@@ -165,7 +165,7 @@ minds.nodes.init = function() {
 			{
 				data : {
 					tier_guid : minds.nodes.tier,
-					plan: $('input[name=plan]').val(),
+					plan: $('input[name=plan]:checked').val(),
 					type : minds.nodes.card_type.toLowerCase(),
 					number : $('input[name=number]').val(),
 					sec : $('input[name=sec]').val(),

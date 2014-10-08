@@ -437,19 +437,20 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 	elgg_set_context('scraper');
 
 	elgg_load_library('simplepie');
-	$offset = "";
+	$offsets = array();
 
 
-	if(elgg_get_plugin_setting('running', 'blog') == 'yes')
+	if(elgg_get_plugin_setting('running', 'blog') >= time() + 360)
 		return $return_value;
 
-	elgg_set_plugin_setting('running', 'yes', 'blog');
+	elgg_set_plugin_setting('running', time(), 'blog');
 
 	while(true){	
-		$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'),'limit'=>30, 'offset'=>$offset,'newest_first'=>true));
-		if($offset == end($scrapers)->guid)
+		$scrapers = elgg_get_entities(array('type'=>'object','subtypes'=>array('scraper'),'limit'=>30, 'offset'=>end($offsets),'newest_first'=>true));
+		if(in_array(end($scrapers)->guid, $offsets))
 			break;
-		$offset = end($scrapers)->guid;
+
+		array_push($offsets, end($scrapers)->guid);
 		foreach($scrapers as $scraper){
 			if(!$scraper->getOwnerEntity(false)->username){
 				echo "There is no owner \n";
@@ -548,6 +549,7 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 						//add_to_river('river/object/blog/create', 'create', $blog->owner_guid, $guid,2, $item->get_date('U'));
 						
 						$activity = new minds\entities\activity();
+						$activity->owner_guid = $scraper->owner_guid;
 						$activity->setTitle($blog->title)
 							->setBlurb($blog->excerpt)
 							->setThumbnail(minds_fetch_image($blog->description))
