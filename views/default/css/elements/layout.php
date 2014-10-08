@@ -136,7 +136,7 @@
 }
 
 .hero > .topbar .right .elgg-button{
-	margin:12px 8px;
+	margin:12px 2px;
 }
 
 .hero > .topbar .right .carrot{

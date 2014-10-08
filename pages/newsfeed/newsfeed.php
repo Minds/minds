@@ -293,7 +293,7 @@ class newsfeed extends core\page implements interfaces\page{
 								$activity->setTitle($embeded->title)
 									->setBlurb(elgg_get_excerpt($embeded->description))
 									->setURL($embeded->getURL())
-									->setThumbnail(minds_fetch_image($embeded->description))
+									->setThumbnail(minds_fetch_image($embeded->description, $embeded->owner_guid))
 									->save();
 							break;
 						}

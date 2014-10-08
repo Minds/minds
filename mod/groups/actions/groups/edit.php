@@ -128,6 +128,10 @@ if ($is_new_group) {
 $has_uploaded_icon = (!empty($_FILES['icon']['type']) && substr_count($_FILES['icon']['type'], 'image/'));
 
 if ($has_uploaded_icon) {
+
+	if($group->legacy_guid){
+		$guid = $group->legacy_guid;
+	}
 	
 	$icon_sizes = elgg_get_config('icon_sizes');
 

@@ -344,10 +344,10 @@
 		
 		window.lock_autoscroll = true;
 		
-		$list = $(this).closest('.elgg-list');
-		$('.load-more').html('<p class="dots">...</p><p class="message"> loading, please hold tight </p>');
+		$list = $(this).parent().find('.elgg-list:first').parent();
+		$list.find('.load-more').html('<p class="dots">...</p><p class="message"> loading, please hold tight </p>');
 		
-		$('.load-more').addClass('loading');
+		$list.find('.load-more').addClass('loading');
 			
 		var loc =  elgg.normalize_url(elgg.parse_url(location.href).path);
 		if($list.find('.load-more').attr('next-uri'))
@@ -362,7 +362,7 @@
 
 		$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			
-		if(loc.indexOf('trending') > -1 <?php if(elgg_is_active_plugin('analytics')){ echo "|| loc.indexOf('view') > -1"; }?> || $params.filter == 'trending' || loc.indexOf('search') > -1){
+		if(loc.indexOf('trending') > -1 <?php //if(elgg_is_active_plugin('analytics')){ echo "|| loc.indexOf('view') > -1"; }?> || $params.filter == 'trending' || loc.indexOf('search') > -1){
 			offset = $list.find('.elgg-list').children().length;
 		} else {
 			offset = $('.load-more').attr('data-load-next');
@@ -389,11 +389,11 @@
 				
 				if($(data).contents().length == 0){
 					
-					$('.load-more').html('<p>Sorry, there is no more content.</p>');
+					$list.find('.load-more').html('<p>Sorry, there is no more content.</p>');
 					
 				} else {
 				
-					$('.load-more').remove();
+					$list.find('.load-more').remove();
 				
 					var el = $(data).contents().unwrap();
 					
@@ -419,7 +419,7 @@
 						});
 						$list.find('.elgg-list').append(el).masonry('appended', el);
 						window.lock_autoscroll = false;
-						$('.load-more').remove();
+						$list.find('.load-more').remove();
 						$list.append('<div class="news-show-more load-more" data-load-next="'+offset+'">click for more</div>');
 					});
 
@@ -428,7 +428,7 @@
 				}
 			},
 			error : function(data){
-				$('.load-more').html('<p>Sorry, there is no more content.</p>');
+				$list.find('.load-more').html('<p>Sorry, there is no more content.</p>');
 			}
 			
 		});

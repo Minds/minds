@@ -58,7 +58,7 @@ class start extends bases\plugin{
 		}
 	}
 	
-	public function createPayment($details, $amount, $card){
+	static public function createPayment($details, $amount, $card){
 		
 		$transaction = new entities\transaction();
 		$transaction->amount = $amount;
@@ -74,13 +74,13 @@ class start extends bases\plugin{
 		$transaction->paypal_id = $paypal_obj->getID();
 		$transaction->status = 'complete';
 		
-		$this->sendConfirmation(array($transaction->getOwnerEntity(false)->email, 'mark@minds.com', 'bill@minds.com', 'billing@minds.com'), $transaction);
+		self::sendConfirmation(array($transaction->getOwnerEntity(false)->email, 'mark@minds.com', 'bill@minds.com', 'billing@minds.com'), $transaction);
 		
 		return $transaction->save();
 		
 	}
 	
-	public function sendConfirmation($to, $transaction){
+	static public function sendConfirmation($to, $transaction){
 		elgg_set_viewtype('email');
 		//\elgg_send_email('mark@minds.com', 'mark@kramnorth.com', 'New Order', '<h1>Thanks for your order..</h1> <p>Your order has been succesfully processed</p>');
 		if(core\plugins::isActive('phpmailer')){
