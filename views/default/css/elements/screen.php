@@ -98,6 +98,9 @@ and (max-width : 720px) {
 		display:none;
 	}
 
+	.content-carousel{
+		margin-top:80px;
+	}
 
 	.minds-fixed-sidebar-left{
 		height:auto;

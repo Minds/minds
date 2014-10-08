@@ -226,6 +226,11 @@
 	float: left;
 	margin: 0 10px 0 0;
 }
+
+.content-carousel{
+	margin-top:226px;
+}
+
 .elgg-main {
 	position: relative;
 	min-height: 360px;
