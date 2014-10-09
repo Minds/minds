@@ -33,6 +33,7 @@ $metadata = elgg_view_menu('entity', array(
 
 $body = elgg_view('notifications/types/' . $entity->notification_view, array('entity'=>$entity));
 
+if($entity->notification_view != 'feature')
 $owner_icon = elgg_view_entity_icon($owner, 'small');
 
 $read = $entity->read;

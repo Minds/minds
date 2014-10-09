@@ -36,9 +36,7 @@ class notifications extends \ElggPlugin{
 		
 		//\elgg_register_event_handler('create', 'object', 'notifications_notify');
 		
-		$notification_js = \elgg_get_simplecache_url('js', 'notifications/notify');
-		\elgg_register_js('elgg.notifications', $notification_js, 'footer');
-		\elgg_load_js('elgg.notifications');
+		\elgg_extend_view('js/elgg','js/notifications/notify');
 		\elgg_extend_view('css/elgg','notifications/css');
 		
 	
