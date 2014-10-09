@@ -18,6 +18,14 @@ if (isset($vars['class'])) {
 ?>
 
 <div class="<?php echo $class; ?>">
+	
+	<header class="minds-header">
+		<?php
+			if(isset($vars['header']))
+				echo $vars['header'];
+		?>
+	</header>
+	
 	<div class="elgg-sidebar">
 		<?php
 			echo elgg_view('page/elements/sidebar', $vars);

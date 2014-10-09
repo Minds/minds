@@ -15,8 +15,8 @@ $body_params = array();
 $content .= elgg_view_form('select_tier', $form_params, $body_params);
 
 $body = elgg_view_layout("one_column", array(	
-					'header' => false,
-					'content'=> $buttons. $content ,
+					'header' => $buttons != '' ? $buttons : false,
+					'content'=>  $content ,
 				));
 
 echo elgg_view_page($title,$body); 

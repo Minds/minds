@@ -19,6 +19,12 @@ use minds\plugin\payments\entities;
 $user = elgg_get_logged_in_user_entity();
 $tier = new MindsTier(get_input('tier_guid'));
 $domain = get_input('domain');
+$plan = get_input('plan', 'monthly');
+$price = $tier->price;
+
+if($plan == 'yearly'){
+	$price = $price * 10;
+}
 
 $apiContext = new ApiContext(
 	new OAuthTokenCredential(
@@ -54,7 +60,7 @@ $card_obj = $card->create(array(
 	));
 $card->save();
 
-$id = minds\plugin\payments\start::createPayment('Hosting for '.$domain, $tier->price, $card->card_id);
+$id = minds\plugin\payments\start::createPayment('Hosting for '.$domain, $price, $card->card_id);
 
 echo json_encode(array(
 	'success' => array(

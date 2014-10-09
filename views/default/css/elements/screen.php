@@ -11,7 +11,16 @@ and (max-width : 1260px) {
 	.minds-topbar-icon{
 		display:none;
 	}
-	
+
+}
+
+@media all
+and (min-width : 0px)
+and (max-width : 1090px) {
+
+	 .minds-button-launch{
+                display:none;
+        }
 }
 
 @media all 
@@ -35,11 +44,11 @@ and (max-width : 720px) {
 		margin-top:14px;
 	}
 	
-/*	.hero > .topbar .logo img{
+	.hero > .topbar .logo img.minds-com{
 		width: 100%;
 		height: auto;
 		max-width: 100px;
-	}*/
+	}
 	.hero > .topbar .right .elgg-button{
 		margin: 1px;
 		/* width: 52px; */
@@ -89,6 +98,15 @@ and (max-width : 720px) {
 		display:none;
 	}
 
+	.content-carousel{
+		margin-top:80px;
+	}
+
+	.minds-fixed-sidebar-left{
+		height:auto;
+		float:none;
+		box-shadow: 0 0 0;
+	}
 
 	.homepage{
 		padding-top:64px;
@@ -99,7 +117,7 @@ and (max-width : 720px) {
 	}
 
 	.carousel, .carousel .item{
-		height:180px;
+		height:240px;
 	}
 	.carousel-inner > .item > .carousel-caption{
 		top:32px;

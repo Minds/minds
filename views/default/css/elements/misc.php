@@ -443,9 +443,6 @@ li .excerpt a{
 .front-page-buttons a{
 	margin-right:20px;
 }
-.minds_index h2, h3{
-	font-family: 'Ubuntu Light', 'Ubuntu', 'Ubuntu Beta', UbuntuBeta, Ubuntu, 'Bitstream Vera Sans', 'DejaVu Sans', Tahoma, sans-serif;
-}
 .minds_index h3 a{
 	color:#4690D6;
 	font-weight:normal;
@@ -1070,7 +1067,8 @@ li.elgg-menu-item-rss{
 	top: 0;
 	left: 0;
 	min-width:100%;
-	height: 100%;
+	height:auto;
+	min-height:380px;
 
 }
 .carousel-inner > .item > .carousel-caption{

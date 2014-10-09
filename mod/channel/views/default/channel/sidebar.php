@@ -32,6 +32,13 @@ elgg_register_menu_item('channel', array(
 	'href' => elgg_get_site_url() . $user->username . '/archive',
 	'priority' => 102
 ));
+elgg_register_menu_item('channel', array(
+        'name' => 'channel:archive',
+        'text' => '<span class="entypo">&#59404</span>Edit Carousel',
+        'href' => elgg_get_site_url() . $user->username . '/carousel',
+        'priority' => 103
+));
+
 if($user->canEdit()){
 	elgg_register_menu_item('channel', array(
 		'name' => 'channel:custom',

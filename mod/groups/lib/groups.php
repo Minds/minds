@@ -72,6 +72,29 @@ function groups_handle_all_page() {
 	echo elgg_view_page($title, $body);
 }
 
+function groups_handle_featured_page(){
+	$title = "Featured";
+	
+	$guids = minds\core\data\indexes::fetch("group:featured", array('limit'=>get_input('limit', 10), 'offset'=>get_input('offset', '')));
+	if(is_array($guids)){
+		$entities = minds\core\entities::get(array('guids'=>$guids));
+		usort($entities, function($a, $b){
+			return $a->featured_id - $b->featured_id;
+		});
+		$content = elgg_view_entity_list($entities, array('full_view'=>false));
+	}
+	
+	$nav = elgg_view('groups/filter', array('selected'=>'featured'));
+	$params = array(
+		'header' => elgg_view_title($title) . $nav,
+		'content' => $content,
+		'class' => 'groups'
+	);
+	$body = elgg_view_layout('one_column', $params);
+
+	echo elgg_view_page($title, $body);
+}
+
 function groups_search_page() {
 	elgg_push_breadcrumb(elgg_echo('search'));
 

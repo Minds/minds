@@ -1,25 +1,44 @@
 <?php
-
+/**
+ * This should really be updated to the latest restful style
+ */
+ 
 if(get_input('fat'))
 	elgg_set_plugin_setting('style','fat', 'minds');
 
 if(get_input('thin'))
 	elgg_set_plugin_setting('style','thin', 'minds');
 
-if(get_input('add')){
-	$item = new ElggFile();
-	$item->subtype = 'carousel_item';
-	$item->title = '';
-	$item->owner_guid = elgg_get_logged_in_user_guid();
-	$item->access_id = ACCESS_PUBLIC;
-	$item->save();
-}
+if(get_input('admin')){
+	if(get_input('add')){
+		$item = new ElggFile();
+		$item->subtype = 'carousel_item';
+		$item->title = '';
+		$item->owner_guid = elgg_get_logged_in_user_guid();
+		$item->access_id = ACCESS_PUBLIC;
+		$item->save();
+	}
 
-$items = elgg_get_entities(array(
-	'type' => 'object',
-	'subtype' => 'carousel_item', 
-	'limit' => 100
-));
+	$items = elgg_get_entities(array(
+		'type' => 'object',
+		'subtype' => 'carousel_item', 
+		'limit' => 100
+	));
+} else {
+	if(get_input('add')){
+		$item = new minds\entities\carousel();
+		$item->title = '';
+		$item->owner_guid = elgg_get_logged_in_user_guid();
+		$item->access_id = ACCESS_PUBLIC;
+		$item->save();
+	}
+
+	$items = elgg_get_entities(array(
+		'type' => 'object',
+		'subtype' => 'carousel', 
+		'limit' => 100
+	));
+}
 
 foreach($items as $k=>$item){
 	

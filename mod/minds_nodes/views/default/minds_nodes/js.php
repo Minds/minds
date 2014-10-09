@@ -36,8 +36,11 @@ minds.nodes.init = function() {
 			$('.domain .cell.free').show();
 			$('.payment').show();
 			$('.launch').show();
+			
+			$('.payment .x-month').html('$'+minds.nodes.price);
+			$('.payment .x-year').html('$'+(minds.nodes.price * 10));
+			$('.payment .x-save').html('$'+(minds.nodes.price * 2));
 		}
-		
 	});
 	
 	
@@ -156,12 +159,13 @@ minds.nodes.init = function() {
 	 * 2) Poll minds.com to see if the payment has been verified. 
 	 */
 	$(document).on('click', '.payment .create', function(e){
-		$('.payment .response .cell').text('Please wait whilst we authorize your request. This may take a few moments...');
+		$('.payment .response .reason').text('Please wait whilst we authorize your request. This may take a few moments...');
 		$('.payment .input').hide();
 		elgg.action( elgg.get_site_url() + 'action/payment',
 			{
 				data : {
 					tier_guid : minds.nodes.tier,
+					plan: $('input[name=plan]:checked').val(),
 					type : minds.nodes.card_type.toLowerCase(),
 					number : $('input[name=number]').val(),
 					sec : $('input[name=sec]').val(),
@@ -184,8 +188,9 @@ minds.nodes.init = function() {
 				},
 				error: function(){
 
-					 $('.payment .response .cell').text('We could not authorize your request. Please check your details or use another card.');
-                                                $('.payment .input').css('display', 'table-row');
+					 $('.payment .response .reason').text('We could not authorize your request.');
+					 $('.payment .response .reason2').text('Please check your details or use another card.');
+                     $('.payment .input').css('display', 'table-row');
 
 				}
 		});

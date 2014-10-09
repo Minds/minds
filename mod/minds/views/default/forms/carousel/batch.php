@@ -10,19 +10,28 @@ elgg_load_css('spectrum');
 $buttons = elgg_view('input/submit', array('name'=>'add','class'=>'elgg-button elgg-button-action', 'value'=>'+'));
 $buttons .= elgg_view('input/submit', array('name'=>'submit','class'=>'elgg-button elgg-button-action', 'value'=>'Save'));
 
-if(elgg_get_plugin_setting('style','minds') != 'fat'){
-	$buttons .= elgg_view('input/submit', array('name'=>'fat','class'=>'elgg-button elgg-button-action', 'value'=>'Use Fat (full page)'));
-} else {
-	$buttons .= elgg_view('input/submit', array('name'=>'thin','class'=>'elgg-button elgg-button-action', 'value'=>'Use Thin'));
+if(!elgg_get_page_owner_guid()){
+	if(elgg_get_plugin_setting('style','minds') != 'fat'){
+		$buttons .= elgg_view('input/submit', array('name'=>'fat','class'=>'elgg-button elgg-button-action', 'value'=>'Use Fat (full page)'));
+	} else {
+		$buttons .= elgg_view('input/submit', array('name'=>'thin','class'=>'elgg-button elgg-button-action', 'value'=>'Use Thin'));
+	}
 }
 
 echo $buttons;
  
-$items = elgg_get_entities(array(
-	'type' => 'object',
-	'subtype' => 'carousel_item',
-	'limit' => 0
-));
+if(!isset($vars['items'])){
+	$items = elgg_get_entities(array(
+		'type' => 'object',
+		'subtype' => 'carousel_item',
+		'limit' => 0
+	));
+	echo elgg_view('input/hidden', array('name'=>'owner_guid', 'value'=>0));
+	echo elgg_view('input/hidden', array('name'=>'oadmin', 'value'=>'admin'));
+} else {
+	$items = $vars['items'];
+	echo elgg_view('input/hidden', array('name'=>'owner_guid', 'value'=>elgg_get_page_owner_guid()));
+}
 
 //sort the tiers by price
 usort($items, function($a, $b){

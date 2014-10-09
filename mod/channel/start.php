@@ -169,29 +169,18 @@ function channel_page_handler($page) {
 		require "{$base_dir}mod/channel/pages/edit.php";
 		return true;
 	}
-
-		
-
-	/*$post = "<li class=\"elgg-item minds-fixed-post-box\">".elgg_view_form('deck_river/post',  
-						array(	'action'=>'action/deck_river/post/add', 
-								'name'=>'post',
-								'class'=>'minds-fixed-post-box', 
-								'enctype' => 'multipart/form-data'
-						),
-						array(	'to_guid'=> $user->guid, 
-						 	//	'access_id'=> ACCESS_PRIVATE, 
-						 		'hide_accounts'=>true
-						)
-					) . "</li>";*/
+	
+	$carousels = minds\core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
+	$carousel = elgg_view('carousel/carousel', array('items'=>$carousels));
 
 	$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'),array('to_guid'=>$user->guid));
 
 	switch($page[1]){
 		case 'custom':
-			$content = elgg_view_form('channel/custom', array('enctype' => 'multipart/form-data'), array('entity' => $user));
+			$content .= elgg_view_form('channel/custom', array('enctype' => 'multipart/form-data'), array('entity' => $user));
 			break;
 		case 'avatar':
-			$content = '<div class="avatar-page">';
+			$content .= '<div class="avatar-page">';
 			$content .= elgg_view('core/avatar/upload', array('entity' => $user));
 			// only offer the crop view if an avatar has been uploaded
 			if (isset($user->icontime)) {
@@ -204,7 +193,7 @@ function channel_page_handler($page) {
 			break;
 		case 'blog':
 		case 'blogs':
-			$content = elgg_list_entities(array(	
+			$content .= elgg_list_entities(array(	
 											'type'=>'object', 
 											'subtype'=>'blog', 
 											'owner_guid'=>$user->guid, 
@@ -215,7 +204,7 @@ function channel_page_handler($page) {
 											));			
 			break;
 		case 'archive':
-			$content = elgg_list_entities(array(	
+			$content .= elgg_list_entities(array(	
 											'type'=>'object', 
 											'subtype'=>'archive', 
 											'owner_guid'=>$user->guid, 
@@ -239,18 +228,21 @@ function channel_page_handler($page) {
 			break;
 		case 'subscribers':
 			$subscribers = get_user_friends_of($user->guid, '', 12, get_input('offset', ''));
-			$content = elgg_view_entity_list($subscribers,array('list_class'=>'x2'));
+			$content .= elgg_view_entity_list($subscribers,array('list_class'=>'x2'));
 			break;
 		case 'subscriptions':
 			$subscriptions = get_user_friends($user->guid, '', 12, get_input('offset', ''));
-			$content = elgg_view_entity_list($subscriptions,array('list_class'=>'x2'));
+			$content .= elgg_view_entity_list($subscriptions,array('list_class'=>'x2'));
+			break;
+		case 'carousel':
+			$content = elgg_view_form('carousel/batch', array('enctype'=>'multipart/form-data'), array('items'=>$carousels));
 			break;
 		case 'news':
 		case 'timeline':
 		default:
 			\elgg_register_plugin_hook_handler('register', 'menu:entity', array('\minds\pages\newsfeed\newsfeed', 'pageSetup'));
 			//$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river'));
-			$content = \minds\core\entities::view(array(
+			$content .= \minds\core\entities::view(array(
 				'type' => 'activity',
 				'limit' => 5,
 				'masonry' => false,
@@ -261,10 +253,14 @@ function channel_page_handler($page) {
 			$class = 'landing-page';
 	}
 	
-	$body = elgg_view_layout('fixed', array(
+	$body = elgg_view_layout('two_sidebar', array(
 		'content' => $content, 
-		'header'=>false, 
-		'sidebar'=> elgg_view('channel/sidebar', array('user'=>$user)),
+		'header'=>$carousel, 
+		'hide_ads' => true,
+		'sidebar_top'=>'',
+		'sidebar' => '',
+		'sidebar_alt'=> elgg_view('channel/sidebar', array('user'=>$user)),
+		'sidebar-alt-class' =>  'minds-fixed-sidebar-left'
 	));
 	echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel'));
 	return true;

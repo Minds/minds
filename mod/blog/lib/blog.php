@@ -50,20 +50,20 @@ function blog_get_page_content_read($guid = NULL) {
 	$excerpt = $blog->excerpt ? strip_tags($blog->excerpt) : elgg_get_excerpt($blog->description) ?:  $CONFIG->site_description; 
 	$excerpt = str_replace('"', "'", $excerpt);
 	set_input('description', $excerpt);
-        set_input('keywords', $blog->tags);
+    set_input('keywords', $blog->tags);
 
-        //set up for facebook
-        minds_set_metatags('og:type', 'article');
-        minds_set_metatags('og:url',$blog->getPermaURL());
-        minds_set_metatags('og:title',$blog->title);
-        minds_set_metatags('og:description', $excerpt);
-        minds_set_metatags('og:image', minds_fetch_image($blog->description, $blog->owner_guid, 800));
-        //setup for twitter
-        minds_set_metatags('twitter:card', 'summary');
-        minds_set_metatags('twitter:url', $blog->getURL());
-        minds_set_metatags('twitter:title', $blog->title);
-        minds_set_metatags('twitter:image', minds_fetch_image($blog->description, $blog->owner_guid));
-        minds_set_metatags('twitter:description', $excerpt);
+    //set up for facebook
+    minds_set_metatags('og:type', 'article');
+    minds_set_metatags('og:url',$blog->getPermaURL());
+    minds_set_metatags('og:title',$blog->title);
+    minds_set_metatags('og:description', $excerpt);
+    minds_set_metatags('og:image', minds_fetch_image($blog->description, $blog->owner_guid, 800));
+    //setup for twitter
+    minds_set_metatags('twitter:card', 'summary');
+    minds_set_metatags('twitter:url', $blog->getURL());
+    minds_set_metatags('twitter:title', $blog->title);
+    minds_set_metatags('twitter:image', minds_fetch_image($blog->description, $blog->owner_guid));
+    minds_set_metatags('twitter:description', $excerpt);
 
 
 	minds_set_metatags('DC.date.issued', date("Y-m-d",$blog->time_created)); 
@@ -80,6 +80,13 @@ function blog_get_page_content_read($guid = NULL) {
     	}   
 
 	elgg_push_breadcrumb($blog->title);
+	
+	$carousels = minds\core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$blog->owner_guid));
+	if($carousels){
+		$return['content_header'] .= elgg_view('carousel/carousel', array('items'=>$carousels));
+		$return['class'] = 'content-carousel';
+	}
+	
 	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'content-header'));
 	$return['content'] .= elgg_view_entity($blog, array('full_view' => true));
 	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'content-below-banner'));

@@ -7,13 +7,9 @@ elgg.provide('elgg.notify');
 
 elgg.notify.init = function() {
 	if (elgg.is_logged_in()) {
-		//setInterval(elgg.chat.markMessageRead, 2000);
-		
-		//elgg.notify.getUnreadNotifications
-//		setInterval(elgg.notify.getUnreadNotifications, 20000);
-        
-        $("#notify_button").bind("click", elgg.notify.getNotifications);
+        	$(document).on("click",'#notify_button', elgg.notify.getNotifications);
 	}
+
 };
 
 /**
@@ -49,7 +45,7 @@ elgg.notify.getUnreadNotifications = function() {
 elgg.notify.getNotifications = function(e) {
    
      var url = elgg.get_site_url() + "notifications";
-    	
+	console.log('polling for new notifications');    	
      $.get(url, function(data) {
       		$('#notification').html(data);
       		$('#notification .load-more').show();
