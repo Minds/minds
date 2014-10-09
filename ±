@@ -1,144 +1,594 @@
 <?php
 /**
- * Defines database credentials.
- *
- * Most of Elgg's configuration is stored in the database.  This file contains the
- * credentials to connect to the database, as well as a few optional configuration
- * values.
- *
- * The Elgg installation attempts to populate this file with the correct settings
- * and then rename it to settings.php.
- *
- * @todo Turn this into something we handle more automatically.
- * @package Elgg.Core
- * @subpackage Configuration
+ * Groups function library
  */
-error_reporting(0);
-//ini_set('display_errors', 'off');
-global $CONFIG;
-if (!isset($CONFIG)) {
-	$CONFIG = new stdClass;
+
+/**
+ * List all groups
+ */
+function groups_handle_all_page() {
+
+	// all groups doesn't get link to self
+	elgg_pop_breadcrumb();
+	elgg_push_breadcrumb(elgg_echo('groups'));
+	
+	elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
+
+//	if (elgg_get_plugin_setting('limited_groups', 'groups') != 'yes' || elgg_is_admin_logged_in()) {
+		elgg_register_title_button();
+//	}
+
+	$selected_tab = get_input('filter', 'newest');
+
+	switch ($selected_tab) {
+		case 'popular':
+			$content = elgg_list_entities_from_relationship_count(array(
+				'type' => 'group',
+				'relationship' => 'member',
+				'inverse_relationship' => false,
+				'full_view' => false,
+			));
+			if (!$content) {
+				$content = elgg_echo('groups:none');
+			}
+			break;
+		case 'discussion':
+			$content = elgg_list_entities(array(
+				'type' => 'object',
+				'subtype' => 'groupforumtopic',
+				'order_by' => 'e.last_action desc',
+				'limit' => 40,
+				'full_view' => false,
+			));
+			if (!$content) {
+				$content = elgg_echo('discussion:none');
+			}
+			break;
+		case 'newest':
+		default:
+			$content = elgg_list_entities(array(
+				'type' => 'group',
+				'full_view' => false,
+				'limit' => get_input('limit', 10),
+				'offset' => get_input('offset', ''),
+			));
+			if (!$content) {
+				$content = elgg_echo('groups:none');
+			}
+			break;
+	}
+
+	$title = elgg_echo('groups:all');
+	$nav = elgg_view('groups/filter', array('selected'=>'all'));
+
+	$params = array(
+		'header' => elgg_view_title($title) . $nav,
+		'content' => $content,
+		'sidebar' => $sidebar,
+		'class' => 'groups'
+	);
+	$body = elgg_view_layout('one_column', $params);
+
+	echo elgg_view_page($title, $body);
 }
 
-$CONFIG->start_time = time();
+function groups_search_page() {
+	elgg_push_breadcrumb(elgg_echo('search'));
 
-/*
- * Cassandra configuration
- *
- * You will use the same database connection for reads and writes.
- * This is the easiest configuration, and will suit 99.99% of setups. However, if you're
- * running a really popular site, you'll probably want to spread out your database connections
- * and implement database replication.  That's beyond the scope of this configuration file
- * to explain, but if you know you need it, skip past this section.
- */
-$CONFIG->cassandra = new stdClass;
-$CONFIG->cassandra->keyspace = 'minds';
-$CONFIG->cassandra->servers = array( '10.0.8.105', '10.0.9.10');
+	$tag = get_input("tag");
+	$title = elgg_echo('groups:search:title', array($tag));
 
+	// groups plugin saves tags as "interests" - see groups_fields_setup() in start.php
+	$params = array(
+		'metadata_name' => 'interests',
+		'metadata_value' => $tag,
+		'type' => 'group',
+		'full_view' => FALSE,
+	);
+	$content = elgg_list_entities_from_metadata($params);
+	if (!$content) {
+		$content = elgg_echo('groups:search:none');
+	}
 
-/** 
- * Other Elgg Settings
- */
-$CONFIG->installed = '1380131874';
-$CONFIG->path = '/var/www/elgg/';
-$CONFIG->dataroot = '/gluster/data/elgg/';
-$CONFIG->default_site = '1';
-$CONFIG->site_id = '1';
-$CONFIG->__site_secret__ = '48htoiwgnio384y4548ujtg'; 
-$CONFIG->default_access = 2;
-$CONFIG->simplecache_enabled = 0;
-$CONFIG->system_cache_enabled = 1;
-//$CONFIG->debug = 0;
-$CONFIG->cdn_url = $_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' ? 'https://d3ae0shxev0cb7.cloudfront.net/' : 'http://cdn.minds.com/';
-$CONFIG->lastcache = 138160;
-$CONFIG->allow_registration = true;
-$CONFIG->force_ssl =false;
+	//$sidebar = elgg_view('groups/sidebar/find');
+	//$sidebar .= elgg_view('groups/sidebar/featured');
 
+	$params = array(
+		'content' => $content,
+		'sidebar' => $sidebar,
+		'filter' => false,
+		'title' => $title,
+	);
+	$body = elgg_view_layout('content', $params);
 
-$CONFIG->encryption_keys_tax_form = 'F945269EFC4DD42560765E4F1D9042599494FA5868F2F4E8DB42C6A2046B1121';
-
-$CONFIG->site_categories = array('Uncategorized','Autos & Vehicles', 'Comedy', 'Consciousness', 'Education', 'Entertainment', 'Film & Animation', 'Gaming', 'Health', 'How To & Style', 'Music', 'News & Politics', 'Nonprofits & Activism', 'People & Blogs', 'Pets & Animals', 'Science & Technology', 'Sports', 'Travel & Events');
+	echo elgg_view_page($title, $body);
+}
 
 /**
- * Set the site here to save load time
- * (this works better than any cache!)
+ * List owned groups
  */
-$CONFIG->site_name = 'Minds';
-$CONFIG->site_url = $_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' ? 'https://www.minds.com/' : 'http://www.minds.com/';
-$CONFIG->site_email = 'access@minds.com';
-$CONFIG->site_description = 'Minds is an open source social network. Search, create, blog and share free video, images, audio and text. All site information is licensed creative commons or public domain. Create a channel on Minds.com to broadcast your content, or launch your own social network with Minds Multisite.';
-$CONFIG->site_keywords = 'open source social network, open source, social media, open source social media, creative commons, public domain, blog, channel, video, images, pictures, archive, stream, search, share, free, open content, social network, blog, groups, download, free download';
+function groups_handle_owned_page() {
+
+	$page_owner = elgg_get_page_owner_entity() ?: elgg_get_logged_in_user_entity();
+
+	if ($page_owner->guid == elgg_get_logged_in_user_guid()) {
+		$title = elgg_echo('groups:owned');
+	} else {
+		$title = elgg_echo('groups:owned:user', array($page_owner->name));
+	}
+	elgg_push_breadcrumb($title);
+
+	elgg_register_title_button();
+
+	$content = elgg_list_entities(array(
+		'type' => 'group',
+		'owner_guid' => $page_owner->guid,
+		'full_view' => false,
+	));
+	if (!$content) {
+		$content = elgg_echo('groups:none');
+	}
+
+	$nav = elgg_view('groups/filter', array('selected'=>'owner'));
+
+	$params = array(
+		'header' => elgg_view_title($title) . $nav,
+		'content' => $content,
+		'title' => $title,
+		'class' => 'groups'
+	);
+	$body = elgg_view_layout('one_column', $params);
+
+	echo elgg_view_page($title, $body);
+}
 
 /**
- * Overrides default system cache path from inside data root to custom location.
- *
- * @global string $CONFIG->system_cache_path
- * @name $CONFIG->system_cache_path
+ * List groups the user is memober of
  */
-$CONFIG->system_cache_path = '/tmp/elgg_system_cache/';
+function groups_handle_mine_page() {
+
+	$page_owner = elgg_get_page_owner_entity();
+	if(!$page_owner){ 
+		$username = get_input('username');
+		$user = get_user_by_username($username);
+		elgg_set_page_owner_guid($user->guid);
+		$page_owner = $user;
+	}
+
+	if ($page_owner->guid == elgg_get_logged_in_user_guid()) {
+		$title = elgg_echo('groups:yours');
+	} else {
+		$title = elgg_echo('groups:user', array($page_owner->name));
+	}
+	elgg_push_breadcrumb($title);
+
+	elgg_register_title_button();
+
+	$content = elgg_list_entities_from_relationship(array(
+		'full_view' => false,
+		'relationship_guid' => $page_owner->guid,
+		'relationship' => 'member',
+		'offset'=>get_input('offset','')
+		//'inverse_relationship' => true
+	)); 
+	
+	if (!$content) {
+		$content = elgg_echo('groups:none');
+	}
+
+	$nav = elgg_view('groups/filter', array('selected'=>'mine'));
+
+	$params = array(
+		'header' => elgg_view_title($title) . $nav,
+		'content' => $content,
+		'title' => $title,
+		'class' => 'groups'
+	);
+	$body = elgg_view_layout('one_column', $params);
+
+	echo elgg_view_page($title, $body);
+}
 
 /**
- * Elasticsearch Settings
+ * Create or edit a group
+ *
+ * @param string $page
+ * @param int $guid
  */
-//server for elasticsearch
-$CONFIG->elasticsearch_server = 'http://10.0.5.12:9200/';
-//namespace
-$CONFIG->elasticsearch_prefix = '';
-$CONFIG->elasticsearch_sitesearch_index = '';
+function groups_handle_edit_page($page, $guid = 0) {
+	gatekeeper();
+	
+	if ($page == 'add') {
+		elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
+		$title = elgg_echo('groups:add');
+		elgg_push_breadcrumb($title);
+		if (elgg_get_plugin_setting('limited_groups', 'groups') != 'yes' || elgg_is_admin_logged_in()) {
+			$content = elgg_view('groups/edit');
+		} else {
+			$content = elgg_echo('groups:cantcreate');
+		}
+	} else {
+		$title = elgg_echo("groups:edit");
+		$group = get_entity($guid, 'group');
+
+		if ($group && $group->canEdit()) {
+			elgg_set_page_owner_guid($group->getGUID());
+			elgg_push_breadcrumb($group->name, $group->getURL());
+			elgg_push_breadcrumb($title);
+			$content = elgg_view("groups/edit", array('entity' => $group));
+		} else {
+			$content = elgg_echo('groups:noaccess');
+		}
+	}
+	
+	$params = array(
+		'content' => $content,
+		'title' => $title,
+		'filter' => '',
+	);
+	$body = elgg_view_layout('content', $params);
+
+	echo elgg_view_page($title, $body);
+}
 
 /**
- * Memcache setup (optional)
- * This is where you may optionally set up memcache.
- *
- * Requirements:
- * 	1) One or more memcache servers (http://www.danga.com/memcached/)
- *  2) PHP memcache wrapper (http://uk.php.net/manual/en/memcache.setup.php)
- *
- * Note: Multiple server support is only available on server 1.2.1
- * or higher with PECL library > 2.0.0
+ * Group invitations for a user
  */
-$CONFIG->memcache = false;
-//
-$CONFIG->memcache_servers = array (
-	array('localhost', 11211),
-//	array('server2', 11211)
-);
+function groups_handle_invitations_page() {
+	gatekeeper();
 
+	$user = elgg_get_page_owner_entity();
 
-/**
- * Use non-standard headers for broken MTAs.
- *
- * The default header EOL for headers is \r\n.  This causes problems
- * on some broken MTAs.  Setting this to TRUE will cause Elgg to use
- * \n, which will fix some problems sending email on broken MTAs.
- *
- * @global bool $CONFIG->broken_mta
- */
-$CONFIG->broken_mta = FALSE;
+	$title = elgg_echo('groups:invitations');
+	elgg_push_breadcrumb($title);
+
+	// @todo temporary workaround for exts #287.
+	$invitations = groups_get_invited_groups(elgg_get_logged_in_user_guid());
+	$content = elgg_view('groups/invitationrequests', array('invitations' => $invitations));
+
+	$nav = elgg_view('groups/filter', array('selected'=>'invitiations'));
+
+	$params = array(
+		'header' => elgg_view_title($title) . $nav,
+		'content' => $content,
+		'title' => $title,
+	);
+	$body = elgg_view_layout('one_sidebar', $params);
+
+	echo elgg_view_page($title, $body);
+}
 
 /**
- * Disable the database query cache
+ * Group profile page
  *
- * Elgg stores each query and its results in a query cache.
- * On large sites or long-running scripts, this cache can grow to be
- * large.  To disable query caching, set this to TRUE.
- *
- * @global bool $CONFIG->db_disable_query_cache
+ * @param int $guid Group entity GUID
  */
-$CONFIG->db_disable_query_cache = FALSE;
+function groups_handle_profile_page($guid) {
+	elgg_set_page_owner_guid($guid);
+	
+	// turn this into a core function
+	global $autofeed;
+	$autofeed = true;
+
+	elgg_push_context('group_profile');
+
+	$group = get_entity($guid);
+	if (!$group) {
+		forward('groups/all');
+	}
+	
+	//set up for facebook
+	minds_set_metatags('og:type', 'profile');
+	minds_set_metatags('og:url',$group->getURL());
+	minds_set_metatags('og:title',$group->title);
+
+
+	elgg_push_breadcrumb($group->name);
+
+	groups_register_profile_buttons($group);
+
+	
+	if (group_gatekeeper(false)) {
+		$content = elgg_view('groups/profile/activity', array('entity' => $group));
+	} else {
+		$content = elgg_view('groups/profile/closed_membership');
+	}
+	
+	
+	$sidebar = elgg_view('groups/sidebar', array('entity'=>$group));
+	
+	if (group_gatekeeper(false)) {	
+		$sidebar .= elgg_view('groups/sidebar/members', array('entity' => $group));
+
+	}
+
+	$params = array(
+		'content' => $content,
+		'sidebar' => $sidebar,
+		'title' => $group->name,
+		'filter' => '',
+		'class' => 'group-profile'
+	);
+	$body = elgg_view_layout('content', $params);
+
+	echo elgg_view_page($group->name, $body);
+}
 
 /**
- * Minimum password length
+ * Group activity page
  *
- * This value is used when validating a user's password during registration.
- *
- * @global int $CONFIG->min_password_length
+ * @param int $guid Group entity GUID
  */
-$CONFIG->min_password_length = 6;
+function groups_handle_activity_page($guid) {
+
+	elgg_set_page_owner_guid($guid);
+
+	$group = get_entity($guid,'group');
+	if (!$group || !elgg_instanceof($group, 'group')) {
+		forward();
+	}
+
+	group_gatekeeper();
+
+	$title = elgg_echo('groups:activity');
+
+	elgg_push_breadcrumb($group->name, $group->getURL());
+	elgg_push_breadcrumb($title);
+
+	$db_prefix = elgg_get_config('dbprefix');
+	//we want to grab activity from entities where this group is the container guid
+	$entities = elgg_get_entities(array('container_guid'=>$guid, 'limit'=>0));
+	foreach($entities as $entity){
+		$entity_guids[] = $entity->getGUID();
+	}
+	/*$content = elgg_list_river(array(
+		'joins' => array("JOIN {$db_prefix}entities e ON e.guid = rv.object_guid"),
+		'wheres' => array("e.container_guid = $guid")
+	));*/
+	$content = minds_elastic_list_news(array('object_guids'=>$entity_guids));
+	if (!$content) {
+		$content = '<p>' . elgg_echo('groups:activity:none') . '</p>';
+	}
+	
+	$params = array(
+		'content' => $content,
+		'title' => $title,
+		'filter' => '',
+	);
+	$body = elgg_view_layout('content', $params);
+
+	echo elgg_view_page($title, $body);
+}
 
 /**
- * Where multisite admin endpoint is installed
+ * Group members page
+ *
+ * @param int $guid Group entity GUID
  */
-$CONFIG->multisite_endpoint = "http://10.0.30.209:82/minds/"; // Where the Web services endpoint is
-$CONFIG->multisite_server_ip = "Multisite2LoadBalancer2-1442974952.us-east-1.elb.amazonaws.com"; // IP address to prompt people to set DNS to
-$CONFIG->minds_multisite_root_domain = '.minds.com'; // Suffix for new nodes
+function groups_handle_members_page($guid) {
+
+	elgg_set_page_owner_guid($guid);
+
+	$group = get_entity($guid, 'group');
+	if (!$group || !elgg_instanceof($group, 'group')) {
+		forward();
+	}
+
+	group_gatekeeper();
+
+	$title = elgg_echo('groups:members:title', array($group->name));
+
+	elgg_push_breadcrumb($group->name, $group->getURL());
+	elgg_push_breadcrumb(elgg_echo('groups:members'));
+
+	$members = $group->getMembers(100,get_input('offset', ''));
+
+	$content =elgg_view_entity_list($members, array('full_view'=>false, 'list_class'=>'x2'));	
+
+	$params = array(
+		'content' => $content,
+		'title' => $title,
+		'filter' => '',
+		'list_class' => 'x2',
+	);
+	$body = elgg_view_layout('content', $params);
+
+	echo elgg_view_page($title, $body);
+}
+
+/**
+ * Invite users to a group
+ *
+ * @param int $guid Group entity GUID
+ */
+function groups_handle_invite_page($guid) {
+	gatekeeper();
+
+	elgg_set_page_owner_guid($guid);
+
+	$group = get_entity($guid, 'group');
+
+	$title = elgg_echo('groups:invite:title');
+
+	elgg_push_breadcrumb($group->name, $group->getURL());
+	elgg_push_breadcrumb(elgg_echo('groups:invite'));
+
+	if ($group && $group->canEdit()) {
+		$content = elgg_view_form('groups/invite', array(
+			'id' => 'invite_to_group',
+			'class' => 'elgg-form-alt mtm',
+		), array(
+			'entity' => $group,
+		));
+	} else {
+		$content .= elgg_echo('groups:noaccess');
+	}
+
+	$params = array(
+		'content' => $content,
+		'title' => $title,
+		'filter' => '',
+	);
+	$body = elgg_view_layout('content', $params);
+
+	echo elgg_view_page($title, $body);
+}
+
+/**
+ * Manage requests to join a group
+ * 
+ * @param int $guid Group entity GUID
+ */
+function groups_handle_requests_page($guid) {
+
+	gatekeeper();
+
+	elgg_set_page_owner_guid($guid);
+
+	$group = get_entity($guid, 'group');
+
+	$title = elgg_echo('groups:membershiprequests');
+
+	if ($group && $group->canEdit()) {
+		elgg_push_breadcrumb($group->name, $group->getURL());
+		elgg_push_breadcrumb($title);
+		
+		$requests = elgg_get_entities_from_relationship(array(
+			'type' => 'user',
+			'relationship' => 'membership_request',
+			'relationship_guid' => $guid,
+			'inverse_relationship' => true,
+			'limit' => 0,
+		));
+		$content = elgg_view('groups/membershiprequests', array(
+			'requests' => $requests,
+			'entity' => $group,
+		));
+
+	} else {
+		$content = elgg_echo("groups:noaccess");
+	}
+
+	$params = array(
+		'content' => $content,
+		'title' => $title,
+		'filter' => '',
+	);
+	$body = elgg_view_layout('content', $params);
+
+	echo elgg_view_page($title, $body);
+}
+
+/**
+ * Registers the buttons for title area of the group profile page
+ *
+ * @param ElggGroup $group
+ */
+function groups_register_profile_buttons($group) {
+
+	$actions = array();
+
+	// group owners
+	if ($group->canEdit()) {
+		// edit and invite
+		$url = elgg_get_site_url() . "groups/edit/{$group->getGUID()}";
+		$actions[$url] = 'groups:edit';
+		$url = elgg_get_site_url() . "groups/invite/{$group->getGUID()}";
+		$actions[$url] = 'groups:invite';
+	}
+
+	// group members
+	if ($group->isMember(elgg_get_logged_in_user_entity())) {
+		if ($group->getOwnerGUID() != elgg_get_logged_in_user_guid()) {
+			// leave
+			$url = elgg_get_site_url() . "action/groups/leave?group_guid={$group->getGUID()}";
+			$url = elgg_add_action_tokens_to_url($url);
+			$actions[$url] = 'groups:leave';
+		}
+	} elseif (elgg_is_logged_in()) {
+		// join - admins can always join.
+		$url = elgg_get_site_url() . "action/groups/join?group_guid={$group->getGUID()}";
+		$url = elgg_add_action_tokens_to_url($url);
+		if ($group->isPublicMembership() || $group->canEdit()) {
+			$actions[$url] = 'groups:join';
+		} else {
+			// request membership
+			$actions[$url] = 'groups:joinrequest';
+		}
+	}
+
+	if ($actions) {
+		foreach ($actions as $url => $text) {
+			elgg_register_menu_item('title', array(
+				'name' => $text,
+				'href' => $url,
+				'text' => elgg_echo($text),
+				'link_class' => 'elgg-button elgg-button-action',
+			));
+		}
+	}
+}
+
+/**
+ * Prepares variables for the group edit form view.
+ *
+ * @param mixed $group ElggGroup or null. If a group, uses values from the group.
+ * @return array
+ */
+function groups_prepare_form_vars($group = null) {
+	$values = array(
+		'name' => '',
+		'membership' => ACCESS_PUBLIC,
+		'vis' => ACCESS_PUBLIC,
+		'guid' => null,
+		'entity' => null
+	);
+
+	// handle customizable profile fields
+	$fields = elgg_get_config('group');
+
+	if ($fields) {
+		foreach ($fields as $name => $type) {
+			$values[$name] = '';
+		}
+	}
+
+	// handle tool options
+	$tools = elgg_get_config('group_tool_options');
+	if ($tools) {
+		foreach ($tools as $group_option) {
+			$option_name = $group_option->name . "_enable";
+			$values[$option_name] = $group_option->default_on ? 'yes' : 'no';
+		}
+	}
+
+	// get current group settings
+	if ($group) {
+		foreach (array_keys($values) as $field) {
+			if (isset($group->$field)) {
+				$values[$field] = $group->$field;
+			}
+		}
+
+		if ($group->access_id != ACCESS_PUBLIC && $group->access_id != ACCESS_LOGGED_IN) {
+			// group only access - this is done to handle access not created when group is created
+			$values['vis'] = ACCESS_PRIVATE;
+		} else {
+			$values['vis'] = $group->access_id;
+		}
+
+		$values['entity'] = $group;
+	}
+
+	// get any sticky form settings
+	if (elgg_is_sticky_form('groups')) {
+		$sticky_values = elgg_get_sticky_values('groups');
+		foreach ($sticky_values as $key => $value) {
+			$values[$key] = $value;
+		}
+	}
+
+	elgg_clear_sticky_form('groups');
+
+	return $values;
+}

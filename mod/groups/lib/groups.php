@@ -191,6 +191,7 @@ function groups_handle_mine_page() {
 		'full_view' => false,
 		'relationship_guid' => $page_owner->guid,
 		'relationship' => 'member',
+		'offset'=>get_input('offset','')
 		//'inverse_relationship' => true
 	)); 
 	

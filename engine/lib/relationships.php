@@ -240,8 +240,8 @@ function elgg_get_entities_from_relationship($options) {
 		return $db->countRow($id);
 	}
 
-	if(isset($guids[$options['offset']]))
-		return false;
+	//if(isset($guids[$options['offset']]))
+	//	return false;
 
 	if($guids){
 		$options['guids'] = array_keys($guids); 
