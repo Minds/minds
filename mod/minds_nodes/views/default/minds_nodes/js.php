@@ -57,10 +57,21 @@ minds.nodes.init = function() {
 	 * @todo should we reserver?
 	 */
 	$(document).on('keyup', '.domain input', function(e){
-		e.preventDefault();
+		
+		
+		/*if( $(this).val() != "" ) {
+			var regx = /^[A-Za-z0-9\b]+$/;
+			if (!regx.test($(this).val())) {
+				$(this).val($(this).val().replace(/^[A-Za-z0-9\b]+$/, ''));
+				//e.preventDefault();
+				//return false;
+			}
+		}*/
+		$(this).val($(this).val().replace(/[^a-z0-9\-]/ig,"-"));
 		
 		//remove spaces
-		if (e.keyCode == 32) { 
+		if (e.keyCode == 32) {
+			e.preventDefault();
       		$(this).val($(this).val().replace(/ +?/g, ''));
 		}
 		

@@ -115,7 +115,14 @@ class clusters extends base{
 			return false;
 		}
 		
-		\login($user);
+		if(!\login($user)){
+			\register_error('Sorry, we could not authorize your login.');
+			return false;
+		}
+		
+		//now lets sync up this users newsfeed.
+		
+		
 		
 		return false; //it has to be false for some odd reason.
 	}
@@ -251,5 +258,10 @@ class clusters extends base{
 				//currently not supported
 		}
 	}
+	
+	/**
+	 * Sync activity feeds
+	 */
+	public function syncFeeds(){}
 		
 }
