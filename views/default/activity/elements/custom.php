@@ -9,7 +9,10 @@ elgg_load_js('popup');
 	<div class="archive-batch archive-batch-<?=count($data)?>">
 		<?php foreach($data as $image):
 			$image = (array) $image;
-			?>
+			if(strpos($image['href'], 'wall/attachment') !== FALSE)
+				$image['href'] = str_replace('wall/attachment','archive/view/0', $image['href']);
+
+		?>
 				
 			<a href="<?= $image['href']?>" class="image-thumbnail lightbox-image batch-thumbnails">
 				<img src="<?= $image['src']?>"/>

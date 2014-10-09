@@ -4,7 +4,6 @@
  */
 namespace minds\core;
 
-use minds\entities;
 
 class clusters extends base{
 	
@@ -95,7 +94,7 @@ class clusters extends base{
 		 * 
 		 * @todo maybe integrate OAuth2.0 at the point
 		 */
-		$user = new entities\user($authenticate['guid']);
+		$user = new \minds\entities\user($authenticate['guid']);
 		if(!$user->username){
 			while(get_user_by_username($username)){
 				$username .= rand(1000,9000);
