@@ -95,11 +95,11 @@ class newsfeed extends core\page implements interfaces\page{
 			$pages[0] = 'network';
 		}
 		
-		if(!elgg_is_logged_in()){
-			$this->forward('login');
-		}
+		//if(!elgg_is_logged_in()){
+		//	$this->forward('login');
+		//}
 		
-		if(elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0){
+		if(\minds\core\session::isLoggedin() && elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0){
 			$pages[0] = 'featured';
 		}
 
@@ -157,7 +157,7 @@ class newsfeed extends core\page implements interfaces\page{
 				break;
 			case 'mine':
 				$options = array(
-					'owner_guid' => elgg_get_logged_in_user_guid()
+					'owner_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
 				);
 				break;
 			case 'all':
@@ -176,7 +176,7 @@ class newsfeed extends core\page implements interfaces\page{
 			case 'network':
 			default:
 				$options = array(
-					'network' => elgg_get_logged_in_user_guid()
+					'network' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
 				);
 		}
 		
