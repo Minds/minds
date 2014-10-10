@@ -27,7 +27,7 @@ class activity extends entity{
 	public function save($index = true){
 
 		//cache owner_guid for brief
-		if($owner = $this->getOwnerEntity(false))
+		if(!$this->ownerObj && $owner = $this->getOwnerEntity(false))
 			$this->ownerObj = $owner->export();
 		
 		return parent::save($index);
