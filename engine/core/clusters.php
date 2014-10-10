@@ -7,7 +7,7 @@ namespace minds\core;
 
 class clusters extends base{
 	
-	public $seeds = array('https://www.minds.com');
+	public $seeds = array('https://www.minds.io');
 	public $ttl = 1800; //nodes live for half an hours, and then they have to reconfirm
 		
 	/**
@@ -57,6 +57,62 @@ class clusters extends base{
 			}
 			
 		}
+		
+	}
+	
+	/**
+	 * Call
+	 * 
+	 * @description Vital for inter-node communications
+	 */
+	public function call($method, $address, $endpoint, array $data = array(), $secret = false){
+		
+		$ch = curl_init();
+
+		switch (strtolower($method)) {
+		    case 'post':
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+				break;
+		    case 'delete':
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); // Override request type
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+				$endpoint .= '?' . http_build_query($data); //because post fields can not be sent with DELETE
+				break;
+		    case 'get':
+		    default:
+				curl_setopt($ch, CURLOPT_HTTPGET, true);
+				$endpoint .= '?' . http_build_query($data);
+				break;
+		}
+
+		curl_setopt($ch, CURLOPT_URL, $address . $endpoint);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 6);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+		//curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		//curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_USERAGENT, "Minds Clusters v1");
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		
+		if($secret){
+			$signature = self::generateSignature($data, $secret);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+	   			"X-MINDS-SIGNATURE: $signature"
+	   		));
+		}
+		
+		$result = curl_exec($ch);
+		$errors = curl_error($ch);
+		
+		if($errors){
+			throw new \Exception($errors);
+		}
+	
+		return json_decode($result, true);	
 		
 	}
 	
@@ -120,68 +176,11 @@ class clusters extends base{
 		}
 		
 		//now lets sync up this users newsfeed.
-		
+		$this->syncFeeds($user); 
 		
 		
 		return false; //it has to be false for some odd reason.
 	}
-	
-	/**
-	 * Call
-	 * 
-	 * @description Vital for inter-node communications
-	 */
-	public function call($method, $address, $endpoint, array $data = array(), $secret = false){
-		
-		$ch = curl_init();
-
-		switch (strtolower($method)) {
-		    case 'post':
-				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-				break;
-		    case 'delete':
-				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); // Override request type
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-				$endpoint .= '?' . http_build_query($data); //because post fields can not be sent with DELETE
-				break;
-		    case 'get':
-		    default:
-				curl_setopt($ch, CURLOPT_HTTPGET, true);
-				$endpoint .= '?' . http_build_query($data);
-				break;
-		}
-
-		curl_setopt($ch, CURLOPT_URL, $address . $endpoint);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 6);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-		//curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		//curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_USERAGENT, "Minds Clusters v1");
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-		
-		if($secret){
-			$signature = self::generateSignature($data, $secret);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-	   			"X-MINDS-SIGNATURE: $signature"
-	   		));
-		}
-		
-		$result = curl_exec($ch);
-		$errors = curl_error($ch);
-		
-		if($errors){
-			throw new \Exception($errors);
-		}
-	
-		return json_decode($result, true);	
-		
-	}
-
 
 	/**
 	 * Generate a signature
@@ -260,7 +259,25 @@ class clusters extends base{
 	
 	/**
 	 * Sync activity feeds
+	 * 
+	 * @param object $user - the user object
 	 */
-	public function syncFeeds(){}
+	public function syncFeeds($user){
+		
+		//first, lets check that it is an external account
+		if(!$user instanceof \minds\entities\user && $user->base_node)
+			return false;
+		
+		//gather the feeds (not all, just 30 of the latest)
+		$data = $this->call("GET", $user->base_node, 'newsfeed/network/'.$user->guid, array('limit'=>30, 'view'=>'json'));
+		if($data){
+			foreach($data['activity'][''] as $activity){
+				$new = new \minds\entities\activity($activity);
+				$new->external = true;
+				$new->save();
+			}
+		}
+		
+	}
 		
 }
