@@ -89,6 +89,13 @@ class activity extends entity{
 				'custom_data'
 			));
 	}
+
+	/**
+	 * Returns the owner entity
+	 */
+	public function getOwnerEntity($brief = false){
+		return parent::getOwnerEntity(true);
+	}
 	
 	/**
 	 * Set the message
