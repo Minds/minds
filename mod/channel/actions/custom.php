@@ -13,14 +13,13 @@ if(get_input('remove_bg') == 'yes'){
 	$thumb->owner_guid = $guid;
 	$thumb->setFilename('profile/background_thumb.jpg');
 	if($thumb->exists())
-	$thumb->delete();
+		@unlink($thumb->getFilenameOnFilestore());
 	
 	$file = new ElggFile;
 	$file->owner_guid = $guid;
 	$file->setFilename('profile/background.jpg');
 	if($file->exists())
-	$file->delete();
-	
+		@unlink($thumb->getFilenameOnFilestore());
 		
 	$user->background = false;
 	$user->save();

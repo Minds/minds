@@ -205,7 +205,7 @@ box-shadow: none;
 	margin:auto;
 	height:100%;
 	width:100%;
-	background: transparent url(<?php echo elgg_get_site_url(); ?>mod/embed_extender/graphics/play_button.png) no-repeat center center;
+	background: transparent url(<?php echo elgg_get_site_url(); ?>_graphics/play.png) no-repeat center center;
 	z-index:2;
 }
 .archive-video img{

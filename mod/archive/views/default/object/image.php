@@ -19,7 +19,7 @@ if($full_view){
 	
 	echo elgg_view('output/img', array('src'=>$image->getIconURL('xlarge')));
 	
-} elseif($viewtype == 'gallery' || elgg_get_context() == 'archive') {
+} elseif($viewtype == 'gallery') {
 	
  	$img = elgg_view('output/img', array('src'=>$image->getIconURL('medium')));
 	echo elgg_view('output/url', array('href'=>$image->getUrl(), 'text'=>$img, 'id'=>(string)$image->guid, 'class'=>'lightbox-image', 'data-album-guid'=>$image->container_guid));

@@ -33,7 +33,7 @@ elgg_register_menu_item('channel', array(
 	'priority' => 102
 ));
 elgg_register_menu_item('channel', array(
-        'name' => 'channel:archive',
+        'name' => 'channel:carousel',
         'text' => '<span class="entypo">&#59404</span>Edit Carousel',
         'href' => elgg_get_site_url() . $user->username . '/carousel',
         'priority' => 103
