@@ -25,6 +25,7 @@ $english = array(
 	'blog:edit' => 'Edit blog post',
 	'blog:excerpt' => 'Excerpt',
 	'blog:body' => 'Body',
+	'blog:header' => 'Header banner',
 	'blog:save_status' => 'Last saved: ',
 	'blog:never' => 'Never',
 
