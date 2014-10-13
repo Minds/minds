@@ -10,7 +10,7 @@ class MindsOrientation{
 		'channel', 
 		//'deck',
 		'subscribe',
-		'post',
+		//'post',
 		'group',
 		'import',
 		'revenue',

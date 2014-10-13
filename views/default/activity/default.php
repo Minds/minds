@@ -3,7 +3,7 @@
 $activity = $vars['entity'];
 
 $owner_link = '';
-$owner = $activity->getOwnerEntity();
+$owner = $activity->getOwnerEntity(true);
 if ($owner) {
 	$owner_link = elgg_view('output/url', array(
 		'href' => $owner->getURL(),

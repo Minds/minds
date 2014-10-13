@@ -265,7 +265,7 @@ class clusters extends base{
 	public function syncFeeds($user){
 		
 		//first, lets check that it is an external account
-		if(!$user instanceof \minds\entities\user && $user->base_node)
+		if(!$user instanceof \minds\entities\user && !$user->base_node)
 			return false;
 		
 		//gather the feeds (not all, just 30 of the latest)
@@ -274,6 +274,9 @@ class clusters extends base{
 			foreach($data['activity'][''] as $activity){
 				$new = new \minds\entities\activity($activity);
 				$new->external = true;
+				$new->indexes = array(
+					'activity:network:'.$user->guid
+				);
 				$new->save();
 			}
 		}
