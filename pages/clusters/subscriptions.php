@@ -46,7 +46,8 @@ class subscriptions extends core\page implements interfaces\page{
 				}	
 
 				$db = new core\data\call('friendsof');
-                                $subscription = $db->insert($user->guid, array($subscriber_guid=>json_encode(array('host'=>$host, 'secret'=>$secret))));
+				$data = array_merge($_POST, array('host'=>$host, 'secret'=>$secret));
+				$subscription = $db->insert($user->guid, array($subscriber_guid=>json_encode($data)));
 				
 				echo json_encode(array(
 					'success' => array_merge($user->export(), array(
