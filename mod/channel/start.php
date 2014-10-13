@@ -227,12 +227,34 @@ function channel_page_handler($page) {
 	        $content .= elgg_view_layout('widgets', $params);
 			break;
 		case 'subscribers':
-			$subscribers = get_user_friends_of($user->guid, '', 12, get_input('offset', ''));
-			$content .= elgg_view_entity_list($subscribers,array('list_class'=>'x2'));
+			$db = new minds\core\data\call('friendsof');
+			$subscribers= $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+			$users = array();
+			foreach($subscribers as $guid => $subscriber){
+				if(is_numeric($subscriber)){
+					//this is a local, old style subscription
+					$users[] = new minds\entities\user($guid);
+					continue;
+				} 
+				
+				$users[] = new minds\entities\user(json_decode($subscriber,true));
+			}
+			$content .= elgg_view_entity_list($users,array('list_class'=>'x2'));
 			break;
 		case 'subscriptions':
-			$subscriptions = get_user_friends($user->guid, '', 12, get_input('offset', ''));
-			$content .= elgg_view_entity_list($subscriptions,array('list_class'=>'x2'));
+			$db = new minds\core\data\call('friends');
+			$subscriptions = $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+			$users = array();
+			foreach($subscriptions as $guid => $subscription){
+				if(is_numeric($subscription)){
+					//this is a local, old style subscription
+					$users[] = new minds\entities\user($guid);
+					continue;
+				} 
+				
+				$users[] = new minds\entities\user(json_decode($subscription,true));
+			}
+			$content .= elgg_view_entity_list($users,array('list_class'=>'x2'));
 			break;
 		case 'carousel':
 			$content = elgg_view_form('carousel/batch', array('enctype'=>'multipart/form-data'), array('items'=>$carousels));

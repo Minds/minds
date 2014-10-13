@@ -39,6 +39,15 @@ class user extends \ElggUser{
 		
 		return false;
 	}
+
+	public function getSubscribersCount(){
+		if($this->host){
+			return 0;
+		}
+
+		$db = new core\data\call('friendsof');
+		return (int) $db->countRow($this->guid);
+	}
 	
 	/**
 	 * Set the secret key for clusters to use
