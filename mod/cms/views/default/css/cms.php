@@ -36,6 +36,9 @@
 	display:inline-block;
 	vertical-align:middle;
 }
+.cms-section .container a{
+	color:#000;
+}
 
 
 .cms-section-bg{
@@ -94,6 +97,7 @@
 	float:left;
 	clear:both;
 	line-height:14px;
+	width:90px;
 }
 .icon-bg{
 	position:relative;
