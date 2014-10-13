@@ -47,6 +47,7 @@ class subscriptions extends core\page implements interfaces\page{
 
 				$db = new core\data\call('friendsof');
 				$data = array_merge($_POST, array('host'=>$host, 'secret'=>$secret));
+				error_log("$subscriber_guid : " . print_r($data, true));
 				$subscription = $db->insert($user->guid, array($subscriber_guid=>json_encode($data)));
 				
 				echo json_encode(array(
