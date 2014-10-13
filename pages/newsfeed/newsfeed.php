@@ -184,7 +184,7 @@ class newsfeed extends core\page implements interfaces\page{
 		
 		$content .= core\entities::view(array_merge(array(
 			'type' => 'activity',
-			'limit' => 5,
+			'limit' => get_input('limit', 5),
 			'masonry' => false,
 			'prepend' => $post,
 			'list_class' => 'list-newsfeed'
