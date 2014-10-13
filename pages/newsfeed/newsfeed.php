@@ -156,6 +156,7 @@ class newsfeed extends core\page implements interfaces\page{
 				}
 				break;
 			case 'mine':
+			case 'user':
 				$options = array(
 					'owner_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
 				);

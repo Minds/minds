@@ -240,9 +240,13 @@ class clusters extends base{
 					$payload = json_decode($json, true);
 					$secret = $payload['secret'];
 					$host = $payload['host'];
-					
+					$export = $entity->export();
+					foreach($export as $k => $v){
+						if(is_array($v))
+							$export[$k] = json_encode($export[$k]);
+					}
 					try{
-						$val = $this->call('POST', $host, '/newsfeed/api/'.$guid, $entity->export(), $secret);
+						$val = $this->call('POST', $host, '/newsfeed/api/'.$guid, $export, $secret);
 					}catch(\Exception $e){
 						\register_error($e->getMessage());
 					}
