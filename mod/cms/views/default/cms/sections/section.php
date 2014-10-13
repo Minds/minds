@@ -24,6 +24,9 @@ $section = $vars['section'];
 			<a class="cms-icon icon-colour">
 				<input type="text" name="colour" class="text-color" value="<?= $section->color ?>"/>
 			</a>
+			<a class="cms-icon icon-href">
+				<input type="text" name="href" class="" value="<?= $section->href ?>" placeholder="url"/>
+			</a>
 		</div>
 		
 		<div class="left">
@@ -39,20 +42,21 @@ $section = $vars['section'];
 			</div>
 		</div>
 		<?php else: ?>
-		
-			<div class="left">
-				<div class="cell">
-					<h2 style="color:<?=$section->color?>"><?= $section->leftH2 ?></h2>
-					<p style="color:<?=$section->color?>"><?= $section->leftP ?></p>
+			<a href="<?= $section->href ?>" target="_blank">		
+				<div class="left">
+					<div class="cell">
+						<h2 style="color:<?=$section->color?>"><?= $section->leftH2 ?></h2>
+						<p style="color:<?=$section->color?>"><?= $section->leftP ?></p>
+					</div>
 				</div>
-			</div>
-			
-			<div class="right">
-				<div class="cell">
-					<h2 style="color:<?=$section->color?>"><?= $section->rightH2 ?></h2>
-					<p style="color:<?=$section->color?>"> <?= $section->rightP ?></p>
+				
+				<div class="right">
+					<div class="cell">
+						<h2 style="color:<?=$section->color?>"><?= $section->rightH2 ?></h2>
+						<p style="color:<?=$section->color?>"> <?= $section->rightP ?></p>
+					</div>
 				</div>
-			</div>
+			</a>
 		
 		<?php endif; ?>
 	</div>

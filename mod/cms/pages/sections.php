@@ -79,7 +79,8 @@ class sections extends core\page implements interfaces\page{
 			'rightH2' => '',
 			'rightP' => '',
 			'color' => '',
-			'position' => 0
+			'position' => 0,
+			'href' => ''
 		);
 		foreach($_POST as $k=>$v){
 			if(!isset($vars[$k]))
