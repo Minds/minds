@@ -1,3 +1,3 @@
 <p class="message">
-	<?= $vars['message'] ?>
+	<?= htmlspecialchars($vars['message'],ENT_QUOTES) ?>
 </p>

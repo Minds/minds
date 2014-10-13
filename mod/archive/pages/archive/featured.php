@@ -7,7 +7,7 @@ elgg_set_context('featured');
 $limit = get_input("limit", 12);
 $offset = get_input("offset", 0);
 
-$guids = minds\core\data\indexes::fetch('object:archive:featured', array('offset'=>$offset, 'limit'=>$limit));
+$guids = minds\core\data\indexes::fetch('object:archive:featured', array('offset'=>$offset, 'limit'=>$limit, 'reversed'=>true));
 
 if($guids){
 	$entities = elgg_get_entities(array(	
@@ -22,7 +22,7 @@ if($guids){
        		 }
 		return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
 	});
-	$content = elgg_view_entity_list($entities, array('full_view'=>FALSE));
+	$content = elgg_view_entity_list($entities, array('full_view'=>FALSE, 'load-next'=>end($entities)->featured_id));
 } else {
 	$content = '';
 }

@@ -33,6 +33,8 @@ $text = filter_tags($text);
 
 $text = minds_autosrc(elgg_autop($text));
 
+$text = str_replace('<script', '<xss-script', $text);
+
 $attributes = elgg_format_attributes($vars);
 
 echo "<div $attributes>$text</div>";
