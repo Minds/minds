@@ -73,9 +73,9 @@ class index extends core\page implements interfaces\page{
 								'host'=>elgg_get_site_url()
 								)));
 					
-					var_dump($data); exit;
+
 					$data['success']['host'] = "https://$parts[1]/";
-					var_dump($data); exit;
+					
 					if(core\session::getLoggedinUser()->subscribe($data['success']['guid'], $data['success'])){
 						\system_message('Success!');
 						

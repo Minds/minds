@@ -22,12 +22,35 @@ $title = elgg_echo('channels');
 $options = array('type' => 'user', 'full_view' => false, 'limit'=>$limit);
 switch ($vars['page']) {
 	case 'subscribers':
-		$subscribers = get_user_friends_of($page_owner->guid, '', $limit, $offset);
-		$content = elgg_view_entity_list($subscribers,$vars, $offset, $limit, false, false,false);
+		$db = new minds\core\data\call('friendsof');
+		$subscriptions = $db->getRow($pageowner->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+		$users = array();
+		foreach($subscribers as $guid => $subscription){
+			if(is_numeric($subscribers)){
+				//this is a local, old style subscription
+				$users[] = new minds\entities\user($guid);
+				continue;
+			} 
+			
+			$users[] = new minds\entities\user(json_decode($subscribers,true));
+		}
+		
+		$content = elgg_view_entity_list($users,$vars, $offset, $limit, false, false,false);
 		break;
 	case 'subscriptions':
-		$subscriptions = get_user_friends($page_owner->guid, '', $limit, $offset);
-                $content = elgg_view_entity_list($subscriptions,$vars, $offset, $limit, false, false,false);
+		$db = new minds\core\data\call('friends');
+		$subscriptions = $db->getRow($page_owner->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+		$users = array();
+		foreach($subscriptions as $guid => $subscription){
+			if(is_numeric($subscription)){
+				//this is a local, old style subscription
+				$users[] = new minds\entities\user($guid);
+				continue;
+			} 
+			
+			$users[] = new minds\entities\user(json_decode($subscription,true));
+		}
+		$content = elgg_view_entity_list($users,$vars, $offset, $limit, false, false,false);
 		break;
 	case 'popular':
 		$options['limit'] = $limit;
