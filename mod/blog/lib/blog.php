@@ -81,10 +81,18 @@ function blog_get_page_content_read($guid = NULL) {
 
 	elgg_push_breadcrumb($blog->title);
 	
-	$carousels = minds\core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$blog->owner_guid));
-	if($carousels){
-		$return['content_header'] .= elgg_view('carousel/carousel', array('items'=>$carousels));
+	if($blog->header_bg){
+		$return['content_header'] .= elgg_view('carousel/carousel', 
+			array('items'=> array(
+				new ElggObject(array('ext_bg' => elgg_get_site_url().'blog/header/'.$blog->guid))
+			)));
 		$return['class'] = 'content-carousel';
+	} else {
+		$carousels = minds\core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$blog->owner_guid));
+		if($carousels){
+			$return['content_header'] .= elgg_view('carousel/carousel', array('items'=>$carousels));
+			$return['class'] = 'content-carousel';
+		}
 	}
 	
 	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'content-header'));
@@ -366,6 +374,7 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 	$vars = array();
 	$vars['id'] = 'blog-post-edit';
 	$vars['class'] = 'elgg-form-alt';
+	$vars['enctype'] = 'multipart/form-data';
 
 	$sidebar = '';
 	if ($page == 'edit') {

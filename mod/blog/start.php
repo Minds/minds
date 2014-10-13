@@ -194,6 +194,19 @@ function blog_page_handler($page) {
 			
 			return true;	
 			break;
+		case 'header':
+			$blog = new ElggBlog($page[1]);
+			$header = new ElggFile();
+			$header->owner_guid = $blog->owner_guid;
+			$header->setFilename("blog/{$blog->guid}.jpg");
+			header('Content-Type: image/jpeg');
+			header('Expires: ' . date('r', time() + 864000));
+			header("Pragma: public");
+ 			header("Cache-Control: public");
+			echo file_get_contents($header->getFilenameOnFilestore());
+			
+			exit;
+			break;
 		case 'read': // Elgg 1.7 compatibility
 			register_error(elgg_echo("changebookmark"));
 			forward("blog/view/{$page[1]}");
