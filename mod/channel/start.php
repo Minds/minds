@@ -228,16 +228,16 @@ function channel_page_handler($page) {
 			break;
 		case 'subscribers':
 			$db = new minds\core\data\call('friendsof');
-			$subscriptions = $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+			$subscribers= $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
 			$users = array();
-			foreach($subscribers as $guid => $subscription){
-				if(is_numeric($subscribers)){
+			foreach($subscribers as $guid => $subscriber){
+				if(is_numeric($subscriber)){
 					//this is a local, old style subscription
 					$users[] = new minds\entities\user($guid);
 					continue;
 				} 
 				
-				$users[] = new minds\entities\user(json_decode($subscribers,true));
+				$users[] = new minds\entities\user(json_decode($subscriber,true));
 			}
 			$content .= elgg_view_entity_list($users,array('list_class'=>'x2'));
 			break;
