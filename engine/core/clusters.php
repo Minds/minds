@@ -122,7 +122,7 @@ class clusters extends base{
 		if($node_uri == elgg_get_site_url() || "https://$node_uri" == elgg_get_site_url() || "http://$node_uri" == elgg_get_site_url()){
 			return true;
 		}
-		
+
 		$username = get_input('username');
 		$password = get_input('password');
 		

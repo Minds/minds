@@ -4,7 +4,7 @@ require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access(true);
 
-//login(new minds\entities\user('markandrewculp'));
+//login(new minds\entities\user('mark'));
 
 $db = new minds\core\data\call();
 $db->getCF('session')->truncate();
