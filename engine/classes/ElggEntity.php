@@ -845,9 +845,9 @@ abstract class ElggEntity extends ElggData implements
 	 * @return ElggEntity The owning entity
 	 */
 	public function getOwnerEntity($brief = false) {
-        if($brief && isset($this->ownerObj)){
-			$owner = json_decode($this->ownerObj);
-			if($owner->name){
+        	if($brief && isset($this->ownerObj)){
+			$owner = is_array($this->ownerObj) ? $this->ownerObj : json_decode($this->ownerObj);
+			if(isset($owner['name']) || $owner->name){
 				return new ElggUser($owner);
 			}  else {
 				if($this->canEdit()){
