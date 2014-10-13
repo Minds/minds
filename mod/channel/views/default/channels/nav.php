@@ -20,6 +20,11 @@ $tabs = array(
 		'href' => "channels/subscriptions",
 		'selected' => $vars['selected'] == 'subscriptions',
 	),
+	'subscribe' => array(
+		'text' => elgg_echo('Subscribe'),
+		'href' => "subscriptions/add",
+		'selected' => $vars['selected'] == 'subscribe',
+	),
 	'newest' => array(
 		'text' => elgg_echo('channels:label:newest'),
 		'href' => "channels/newest",
