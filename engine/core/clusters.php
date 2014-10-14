@@ -7,7 +7,7 @@ namespace minds\core;
 
 class clusters extends base{
 	
-	public $seeds = array('https://www.minds.io');
+	public $seeds = array('https://www.minds.com');
 	public $ttl = 1800; //nodes live for half an hours, and then they have to reconfirm
 		
 	/**
@@ -267,20 +267,21 @@ class clusters extends base{
 		//first, lets check that it is an external account
 		if(!$user instanceof \minds\entities\user && !$user->base_node)
 			return false;
-		
-		//gather the feeds (not all, just 30 of the latest)
-		$data = $this->call("GET", $user->base_node, 'newsfeed/network/'.$user->guid, array('limit'=>30, 'view'=>'json'));
-		if($data){
-			foreach($data['activity'][''] as $activity){
-				$new = new \minds\entities\activity($activity);
-				$new->external = true;
-				$new->indexes = array(
-					'activity:network:'.$user->guid
-				);
-				$new->save();
+	
+		foreach(array('network', 'user') as $feed){	
+			//gather the feeds (not all, just 30 of the latest)
+			$data = $this->call("GET", $user->base_node, "newsfeed/$feed/$user->guid", array('limit'=>30, 'view'=>'json'));
+			if($data){
+				foreach($data['activity'][''] as $activity){
+					$new = new \minds\entities\activity($activity);
+					$new->external = true;
+					$new->indexes = array(
+						"activity:$feed:$user->guid"
+					);
+					$new->save();
+				}
 			}
 		}
-		
 	}
 		
 }
