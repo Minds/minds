@@ -301,15 +301,16 @@ class newsfeed extends core\page implements interfaces\page{
 						
 				}
 			case 'api':
-				
+				error_log('Answering api activity request');	
 				if(!isset($pages[1])){
+					error_log('feed guid not supplied');
 					echo json_encode(array('error'=>'You must supply the feed guid in the request uri'));
 					return false;
 				}
 				$subscriber_guid = $pages[1];
 				
 				$ia = elgg_set_ignore_access(true);
-				
+					
 				/**
 				 * First off, lets just verify our user exists, and is in fact subscribed to this user
 				 */
@@ -317,11 +318,12 @@ class newsfeed extends core\page implements interfaces\page{
 				$subscription = $db->getRow($subscriber_guid, array('limit'=> 1, 'offset'=>$_POST['owner_guid']));
 				
 				if(key($subscription) != $_POST['owner_guid']){
+					error_log('we are not a subscriber');
 					echo json_encode(array('error'=> "$subscriber_guid is not a subscriber."));
 					return true;
 				}
 				
-				$payload = json_decode($subscription, true);
+				$payload = json_decode(reset($subscription), true);
 				$secret = $payload['secret'];//the shared secret
 				
 				/**
@@ -333,9 +335,19 @@ class newsfeed extends core\page implements interfaces\page{
 				 */
 				$signature = \minds\core\clusters::generateSignature($_POST, $secret);
 				if($_SERVER['HTTP_X_MINDS_SIGNATURE'] != $signature){
+					error_log('wrong signature');
 					echo json_encode(array('error'=>'Incorrect signature. Please check the secret key'));
 					return false;
 				}
+
+				error_log(print_r($_POST['ownerObj'], true));
+				$activity = new \minds\entities\activity($_POST);
+				$activity->external = true;
+				$new->indexes = array(
+					'activity:network:'. $subscriber_guid 
+				);
+				$activity->save();
+
 
 				elgg_set_ignore_access($ia); //cancel access
 			break;

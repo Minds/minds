@@ -66,7 +66,7 @@ $items = array();
 foreach($json as $key => $item) {
 	switch(get_input('items_type')) {
 		case 'entity':
-			$items[$key] = entity_row_to_elggstar($item);
+			$items[$key] = minds\core\entities::build($item);
 			break;
 		case 'annotation': 
 			$items = $json;
