@@ -97,7 +97,7 @@ function minds_init(){
 	
 	elgg_register_action("carousel/add", "$actionspath/carousel/add.php", "admin");
 	elgg_register_action("carousel/delete", "$actionspath/carousel/delete.php", "admin");
-	elgg_register_action("carousel/batch", "$actionspath/carousel/batch.php", "admin");
+	elgg_register_action("carousel/batch", "$actionspath/carousel/batch.php");
 	
 	elgg_register_admin_menu_item('configure', 'carousel', 'appearance');
 	

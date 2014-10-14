@@ -10,6 +10,7 @@ if(get_input('thin'))
 	elgg_set_plugin_setting('style','thin', 'minds');
 
 if(get_input('admin')){
+	admin_gatekeeper();
 	if(get_input('add')){
 		$item = new ElggFile();
 		$item->subtype = 'carousel_item';
