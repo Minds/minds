@@ -13,7 +13,8 @@ if ($entity_stats) {
 	$rows = '';
 	foreach ($entity_stats as $k => $entry) {
 		foreach ($entry as $a => $b) {
-
+			if(!$b)
+				continue;
 			// This function controls the alternating class
 			$even_odd = ( 'odd' != $even_odd ) ? 'odd' : 'even';
 
