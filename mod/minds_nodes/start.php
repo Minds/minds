@@ -53,6 +53,8 @@ class start extends bases\plugin{
 		\elgg_extend_view('css/elgg', 'minds_nodes/css');
 	
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pagesetup'));
+		
+		\elgg_extend_view('core/settings/statistics', 'minds_nodes/statistics');
 	
 		// Register an admin menu
 		//elgg_register_admin_menu_item('minds', 'minds_tiers');	
