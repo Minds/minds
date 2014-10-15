@@ -35,7 +35,15 @@ class lists extends core\page implements interfaces\page{
 				var_dump($guids); exit;
 				$content = 'This is the owner';
 			case 'category':
-				//join up the slugs to create the category filter
+				if(!isset($pages[1])){
+					$content = '';
+					break;
+				}
+				$guids = $db->getRow("object:market:category:".$pages[1], array('limit'=>$limit, 'offset'=>$offset));
+				if($guids)
+					$content = \elgg_list_entities(array('guids'=>$guids));
+				else 
+					$content = '';
 				break;
 			case 'all':
 			default:
@@ -46,9 +54,11 @@ class lists extends core\page implements interfaces\page{
 					$content = '';
 		}
 		
-		$body = \elgg_view_layout('one_column', array(
+		$body = \elgg_view_layout('one_sidebar', array(
 			'content'=>$content,
-			'header' => elgg_view('market/header')
+			'header' => elgg_view('market/header'),
+			'sidebar' => elgg_view('market/sidebar'),
+			'sidebar_class' => 'elgg-sidebar-alt'
 		));
 		
 		echo $this->render(array('body'=>$body));

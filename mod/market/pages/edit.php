@@ -30,7 +30,11 @@ class edit extends core\page implements interfaces\page{
 		
 		$form = \elgg_view_form('market/edit', array('method'=>'POST', 'action'=>$_SERVER['REQUEST_URI']), $form_data);
 		
-		$body = \elgg_view_layout('content', array('content'=>$form));
+		$body = \elgg_view_layout('one_sidebar', array(
+			'content'=>$form,
+			'sidebar' => elgg_view('market/sidebar'),
+			'sidebar_class'=> 'elgg-sidebar-alt'
+		));
 		
 		echo $this->render(array('body'=>$body));
 	}

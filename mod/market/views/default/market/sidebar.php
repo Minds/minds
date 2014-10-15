@@ -1,15 +1,9 @@
 <?php
 /**
- * Market sidebar
+ * Sidebar
  */
-
-echo elgg_view('page/elements/comments_block', array(
-	'subtypes' => 'market',
-	'owner_guid' => elgg_get_page_owner_guid(),
-));
-
-echo elgg_view('page/elements/tagcloud_block', array(
-	'subtypes' => 'market',
-	'owner_guid' => elgg_get_page_owner_guid(),
-));
-
+ 
+?>
+<a href="<?= elgg_get_site_url(); ?>market/add">Add</a>
+<?php
+echo elgg_view('market/sidebar/categories'); 

@@ -49,6 +49,7 @@ class start extends bases\plugin{
 		return array(
 			'/market' => "$path\\pages\\lists",
 			'/market/item' => "$path\\pages\\view",
+			'/market/add' => "$path\\pages\\edit",
 			'/market/item/edit' => "$path\\pages\\edit"
 		);
 	}
