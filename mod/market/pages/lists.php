@@ -23,7 +23,6 @@ class lists extends core\page implements interfaces\page{
 		$lookup = new core\data\lookup();
 		
 		$index = new core\data\indexes();
-		var_dump($lookup->get('mark@minds.com'), $index->get('object:blog'));exit;
 		
 		switch($pages[0]){
 			case 'owner':
@@ -41,10 +40,16 @@ class lists extends core\page implements interfaces\page{
 			case 'all':
 			default:
 				$guids = $db->getRow("object:market", array('limit'=>$limit, 'offset'=>$offset));
-				$content = \elgg_list_entities(array('guids'=>$guids));
+				if($guids)
+					$content = \elgg_list_entities(array('guids'=>$guids));
+				else 
+					$content = '';
 		}
 		
-		$body = \elgg_view_layout('one_column', array('content'=>$content));
+		$body = \elgg_view_layout('one_column', array(
+			'content'=>$content,
+			'header' => elgg_view('market/header')
+		));
 		
 		echo $this->render(array('body'=>$body));
 	}
