@@ -34,6 +34,12 @@ class ElggBlog extends ElggObject {
 	 * Icon URL
 	 */
 	public function getIconURL($size = 'medium'){
+		if($this->header_bg){
+			global $CONFIG;
+			$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
+			$image = elgg_get_site_url() . 'blog/header/'.$this->guid;
+			return $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2707';
+		}
 		return minds_fetch_image($this->description, $this->owner_guid);
 	}
 

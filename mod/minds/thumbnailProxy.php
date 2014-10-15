@@ -17,14 +17,14 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 2);
-curl_setopt($ch,CURLOPT_TIMEOUT_MS,1000);
+curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 3);
+curl_setopt($ch,CURLOPT_TIMEOUT_MS,2000);
 $image = curl_exec($ch);
 $errorno = curl_errno($ch);
 curl_close($ch);
 
 if($errorno){
-	var_dump($errorno);
+	var_dump('error:' . $errorno);
 	die();
 }
 

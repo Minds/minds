@@ -42,7 +42,7 @@ $owner_link = elgg_view('output/url', array(
 
     <div class="elgg-body">
 
-        <ul class="elgg-menu elgg-menu-entity elgg-menu-hz elgg-menu-entity-default">
+        <ul class="elgg-menu elgg-menu-entity elgg-menu-hz elgg-menu-entity-default" style="display:block;">
             <li class="elgg-menu-item-edit">
                 <a href="<?php echo elgg_get_site_url(); ?>oauth2/edit/<?php echo $entity->guid; ?>" title="Edit Application">Edit</a>
             </li>
@@ -50,7 +50,7 @@ $owner_link = elgg_view('output/url', array(
                 <?php echo elgg_view('output/confirmlink', array(
                     'title' => 'Delete Application', 
                     'href' => elgg_get_site_url() . 'action/oauth2/delete?guid=' . $entity->guid, 
-                    'text' => '<span class="elgg-icon elgg-icon-delete "></span>')); 
+                    'text' => 'Delete')); 
                 ?>
             </li>
         </ul>
