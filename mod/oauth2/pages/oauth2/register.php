@@ -11,7 +11,7 @@
  */
 
 $entity = null;
-
+elgg_set_context('settings');
 if ($page[0] == 'edit' && $entity = get_entity($page[1])) {
 
     if (!elgg_instanceof($entity, 'object', 'oauth2_client') || !$entity->canEdit()) {
@@ -27,9 +27,10 @@ $content = elgg_view_form('oauth2/register', null, array('entity' => $entity));
 $params = array(
     'title'   => $title, 
     'content' => $content,
-    'filter'  => ''
+    'filter'  => '',
+    'sidebar_class' => 'elgg-sidebar-alt'
 );
 
-$body = elgg_view_layout('content', $params);
+$body = elgg_view_layout('one_sidebar', $params);
 
 echo elgg_view_page($title, $body);

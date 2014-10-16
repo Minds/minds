@@ -41,6 +41,8 @@ if ($secret) {
     $entity->client_secret = $secret;
 }
 
+$entity->save();
+
 $label = $guid ? 'updated' : 'registered';
 system_message(elgg_echo("oauth2:register:$label"));
 

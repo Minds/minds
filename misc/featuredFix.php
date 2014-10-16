@@ -9,7 +9,11 @@ $albums = $db->getRow('object:album:featured', array('limit'=>100000));
 
 //$db->removeRow('object:archive:featured');
 //$guids = array_merge($videos, $images, $albums);
-foreach($albums as $id => $guid){
+foreach($videos as $id => $guid){
 	echo "$id \n";
+	$video = new minds\plugin\archive\entities\image($guid);
+	if(!$video->featured_id){
+		continue;
+	}
 	echo $db->insert('object:archive:featured', array($id => $guid));
 }

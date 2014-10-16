@@ -86,7 +86,7 @@ $params = array(
     'filter'  => ''
 );
 
-$body = elgg_view_layout('content', $params);
+$body = elgg_view_layout('one_column', $params);
 
 echo elgg_view_page($client->title, $body);
 

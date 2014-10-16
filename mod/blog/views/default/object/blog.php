@@ -21,31 +21,15 @@ if (!$excerpt) {
     $excerpt = elgg_get_excerpt($blog->description);
 }
 
-$owner_icon_url_small = $owner_icon_url_large = null;
-if ($blog->ex_email)
-    $owner_icon_url_small = minds_fetch_gravatar_url($blog->ex_email, 'small', $owner->getIconURL('small'));
-/*if ($blog->ex_email) {
-    // Email present, try a gravatar override
-
-    $icon_sizes = elgg_get_config('icon_sizes');
-    $size = 'small';
-
-    // avatars must be square
-    $size = $icon_sizes[$size]['w'];
-
-    $hash = md5($blog->ex_email);
-    $owner_icon_url_small = "https://secure.gravatar.com/avatar/$hash.jpg?s=$size&d=" . urlencode($owner->getIconURL('small'));
-    $owner_icon_url_large = "https://secure.gravatar.com/avatar/$hash.jpg?s=140&d=" . urlencode($owner->getIconURL('large'));
-    
-} */
 
 $owner_icon = elgg_view_entity_icon($owner, 'small');
 
 $owner_link = elgg_view('output/url', array(
-    'href' => $blog->ex_profile_url ? $blog->ex_profile_url : "blog/owner/$owner->username",
-    'text' => $blog->ex_author ? $blog->ex_author : $owner->name,
+    'href' => "blog/owner/$owner->username",
+    'text' => $owner->name,
     'is_trusted' => true,
-        ));
+));
+
 $author_text = elgg_echo('byline', array($owner_link));
 $date = elgg_view_friendly_time($blog->time_created);
 
@@ -55,7 +39,7 @@ $metadata = elgg_view_menu('entity', array(
     'sort_by' => 'priority',
     'class' => 'elgg-menu-hz',
     'full_view' => $full
-        ));
+));
 
 $subtitle = "$author_text $date $comments_link $categories";
 
@@ -98,6 +82,7 @@ if ($full) {
         //'icon' => $owner_icon,
         'body' => $body,
     ));
+	
 } elseif ($sidebar) {
 
     $image = elgg_view('output/img', array('src' => $owner_icon_url_large ? $owner_icon_url_large : minds_fetch_image($blog->description, $blog->owner_guid, 360), 'class' => 'rich-image'));
@@ -108,7 +93,7 @@ if ($full) {
     echo $title;
 } else {
     // brief view
-    $src = minds_fetch_image($blog, $blog->owner_guid);
+    $src = $blog->getIconURL();
     
     $class = 'rich-image';
     if (strpos($src, 'youtube') !== false) {
@@ -135,10 +120,7 @@ if ($full) {
 		$subtitle .= "<i> &bull; Views: $count+ </i>";
     }
 
-    if ($blog->ex_author ) {
-        $header = elgg_view_image_block(elgg_view('output/img', array('src' => $owner_icon_url_small)), $title . $subtitle);
-    } else
-        $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+    $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
   
     echo elgg_view('output/url', array('href' => $blog->getURL(), 'text' => $image, 'class' => 'blog-rich-image-holder'));
     echo $extras;

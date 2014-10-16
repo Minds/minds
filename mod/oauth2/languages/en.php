@@ -25,7 +25,7 @@ $english = array(
     'oauth2'                           => 'Minds Connect',
 
     // Forms
-    'oauth2:name:label'           => 'Display Name',
+    'oauth2:name:label'           => 'Application Name',
     'oauth2:url:label'            => 'Application URL',
     'oauth2:client_id:label'      => 'Client ID',
     'oauth2:client_secret:label'  => 'Client Secret',
