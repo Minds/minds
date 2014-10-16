@@ -136,7 +136,7 @@ if (!$error) {
 		/**
 		 * If we have a header banner image
 		 */
-		if(isset($_FILES['header']['tmp_name'])){
+		if(is_uploaded_file($_FILES['header']['tmp_name'])){
 			$resized = get_resized_image_from_uploaded_file('header', 2000);
 			$file = new ElggFile();
 			$file->owner_guid = $blog->owner_guid;
