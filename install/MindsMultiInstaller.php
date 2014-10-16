@@ -338,7 +338,8 @@ class MindsMultiInstaller extends ElggInstaller {
             'minds_themeconfig',
 		'anypage',
 		'tinymce',
-		'search'
+		'search',
+		'cms',
             //'minds_wordpress',
         );
         foreach ($user_editable_plugins as $plugin_id) {
