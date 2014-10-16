@@ -44,6 +44,10 @@ class lists extends core\page implements interfaces\page{
 			default:	
 				$params['title'] = 'Featured Blogs';
 				$guids = core\data\indexes::fetch('object:blog:featured', array('offset'=>get_input('offset', ''), 'limit'=>get_input('limit', 12)));
+				if(!$guids){
+					$content = ' ';
+					break;
+				}
 				$entities = core\entities::get(array('guids'=>$guids));
 				usort($entities, function($a, $b){
 				    //return strcmp($b->featured_id, $a->featured_id);
