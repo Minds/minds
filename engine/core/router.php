@@ -103,7 +103,7 @@ HTML;
 	 * Detect the content type and apply the viewtype
 	 */
 	public function detectContentType(){
-		if($_SERVER["CONTENT_TYPE"] == 'application/json'){
+		if(isset($_SERVER["CONTENT_TYPE"]) && $_SERVER["CONTENT_TYPE"] == 'application/json'){
 			\elgg_set_viewtype('json');
 		}
 	}
