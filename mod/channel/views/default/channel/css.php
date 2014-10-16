@@ -28,6 +28,9 @@
 	background:#EEE;
 }
 
+.minds-fixed-sidebar-left{
+	z-index:2;
+}
 .minds-fixed-sidebar-left > a.avatar-edit{
 	display:block;
 	background: #FAFAFA;
