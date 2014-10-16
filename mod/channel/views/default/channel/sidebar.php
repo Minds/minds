@@ -16,7 +16,7 @@ elgg_register_menu_item('channel', array(
 
 elgg_register_menu_item('channel', array(
 	'name' => 'channel:news',
-	'text' => '<span class="entypo">&#59194;</span> News',
+	'text' => '<span class="entypo">&#59194;</span> Wall',
 	'href' => elgg_get_site_url() . $user->username . '/news',
 	'priority' => 100
 ));

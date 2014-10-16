@@ -141,6 +141,9 @@ class MindsTrending{
 		foreach(self::$data as $score => $data){	
 			$guid = $data['guid'];
 			$entity = get_entity($guid);
+			if(!$entity)
+				continue;
+
 			$g = new GUID();	
 			
 			if(!in_array($guid, $index_variables[$entity->type])){
@@ -158,8 +161,10 @@ class MindsTrending{
 				}
                         }
 			if($timespan == 'entire'){
+				if(!$guid)
+					continue;
 				$success = $db_entities->insert($guid, array('viewcount'=>$data['count']));
-				echo "setting count...".$data['count'] . " for $success \n";
+				//echo "setting count...".$data['count'] . " for $success \n";
 			}
 
 			echo "Successfuly imported $guid with score $score and index $i to $timespan:$entity->type:$entity->subtype \n";

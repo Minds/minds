@@ -34,7 +34,7 @@ class start extends bases\plugin{
 
 		
 		//\elgg_register_action('bitcoin/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
-		\elgg_register_admin_menu_item('configure', 'pages', 'cms');
+		//\elgg_register_admin_menu_item('configure', 'pages', 'cms');
 	//	\elgg_register_admin_menu_item('configure', 'sections', 'cms');
 	}
 	
