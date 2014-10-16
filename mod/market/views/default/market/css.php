@@ -1,22 +1,30 @@
 <?php
-/**
- * Elgg Market Plugin
- * @author slyhne
- */
-
 ?>
-
-.market_pricetag {
-	font: 12px/100% Arial, Helvetica, sans-serif;
-	font-weight: bold;
-	color: #ffffff;
-	background:#00a700;
-	border: 1px solid #00a700;
-	-webkit-border-radius: 4px; 
-	-moz-border-radius: 4px;
-	width: auto;
-	height: 12px;
-	padding: 2px 10px 2px 10px;
-	margin:10px 0 10px 0;
+.market-sidebar-section{
+	background: #EEE;
+	border: 1px solid #DDD;
+}
+.market-sidebar-section h3{
+	padding: 8px 16px;
+	font-size: 16px;
+	background: #333;
+	color: #FFF;
 }
 
+.minds-menu-market{
+	
+}
+.minds-menu-market li{
+	list-style:none;
+}
+.minds-menu-market li a{
+	display:block;
+	color:#333;
+	padding:12px 16px;
+	border-bottom:1px solid #EEE;
+	font-weight:bold;
+}
+.minds-menu-market li a:hover{
+	background:#DDD;
+	text-decoration:none;
+}

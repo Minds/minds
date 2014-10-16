@@ -33,6 +33,8 @@ class start extends bases\plugin{
 		
 		$routes = core\router::registerRoutes($this->registerRoutes());
 		
+		\elgg_extend_view('css/elgg', 'market/css');
+		
 		/**
 		 * Register a site menu 
 		 * @todo make this oop friendly

@@ -15,12 +15,20 @@ class basket extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 		
+		$basket = new entities\basket();
+		
 		switch($pages[0]){
 			case 'add':
+				$item = new entities\item($pages[1]);
+				$basket->addItem($item, 1)
+					->save();
+					
+				$this->forward('market/basket');
 				break;
 		}
 		
-		
+		$guids = array_keys($basket->items);
+		$content = core\entities::view(array('guids'=>$guids));
 		
 		$body = \elgg_view_layout('one_sidebar', array(
 			'content' => $content,

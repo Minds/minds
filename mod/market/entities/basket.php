@@ -14,7 +14,7 @@ class basket extends entities\entity{
 	
 	protected $total = 0;
 	protected $cookie_id = 'mindsMarketBasket';
-	static public $items = array(); //ITEM_GUID => QUANTITY
+	public $items = array(); //ITEM_GUID => QUANTITY
 	
 	public function __construct(){
 		$this->load();
@@ -25,7 +25,7 @@ class basket extends entities\entity{
 	 */
 	public function load(){
 		if(isset($_COOKIE[$this->cookie_id]))
-			return self::$items = json_decode($_COOKIE[$this->cookie_id], true);
+			return $this->items = json_decode($_COOKIE[$this->cookie_id], true);
 		
 		return false;
 	}
@@ -34,7 +34,7 @@ class basket extends entities\entity{
 	 * Save the basket back to the cookie
 	 */
 	public function save(){
-		return setcookie($this->cookie_id, json_encode(self::$items), time()+360, '/');
+		return setcookie($this->cookie_id, json_encode($this->items), time()+360, '/');
 	}
 	
 	/**
@@ -53,10 +53,12 @@ class basket extends entities\entity{
 	 * @return void
 	 */
 	public function addItem($item, $quantity = 1){
-		if(!isset(self::$items[$item->guid]))
-			self::$items[$item->guid] = $quantity;
+		if(!isset($this->items[$item->guid]))
+			$this->items[$item->guid] = $quantity;
 		else 
-			self::$items[$item->guid]+$quantity;
+			$this->items[$item->guid]+$quantity;
+		
+		return $this;
 	}
 	
 	/**
@@ -67,13 +69,13 @@ class basket extends entities\entity{
 	 * @return bool
 	 */
 	public function removeItem($item, $quantity = 1){
-		if(!isset(self::$items[$item->guid]))
+		if(!isset($this->items[$item->guid]))
 			return false;
 	
 		if(self::$items[$item->guid] == 1)
-			unset(self::$items[$item->guid]);
+			unset($this->items[$item->guid]);
 		else
-			self::$items[$item->guid]-$quantity;
+			$this->items[$item->guid]-$quantity;
 		
 		return true;
 	}
@@ -82,14 +84,8 @@ class basket extends entities\entity{
 	 * Returns a list of items in the basket
 	 */
 	public function getItems(){
-		$items = array();
-		foreach($this->getItems() as $item_guid => $quantity){
-			$item = new item($item_guid);
-			$items[$item] = $quantity;
-		}
-		return $items;
+		return $this->items;
 	}
-	
 	/*
 	 * Calculates the total value of the basket
 	 */
@@ -97,6 +93,15 @@ class basket extends entities\entity{
 		foreach($this->getItems() as $item => $quantity)
 			$this->total += $item->price * $quantity;
 		
+		return $this->total;
+	}
+	
+	/**
+	 * Return the total of the basket
+	 * WARNING: DO NOT USE THIS VALUE FOR CHECKOUT, it is only as an indicator to the user
+	 * @return int
+	 */
+	public function total(){
 		return $this->total;
 	}
 	
