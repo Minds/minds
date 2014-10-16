@@ -221,6 +221,9 @@ function minds_archive_page_handler($page) {
 			break;
 		case 'thumbnail':
 			$entity = get_entity($page[1]);
+			if(!$entity){
+				forward(elgg_get_site_url() . '_graphics/placeholder.png');
+			}
 			$user = $entity->getOwnerEntity();
 			if(isset($user->legacy_guid) && $user->legacy_guid)
 				$user_guid = $user->legacy_guid;

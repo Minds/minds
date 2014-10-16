@@ -25,6 +25,7 @@ if($full){
 	$body = $video;
 
 	$body .= '<div class="archive-description">'.$entity->description.'</div>';
+	$body .= elgg_view('minds/license', array('license'=>$entity->license));
 
 	echo $body;
 	

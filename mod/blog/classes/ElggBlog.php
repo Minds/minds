@@ -33,14 +33,17 @@ class ElggBlog extends ElggObject {
 	/**
 	 * Icon URL
 	 */
-	public function getIconURL($size = 'medium'){
+	public function getIconURL($size = ''){
 		if($this->header_bg){
 			global $CONFIG;
 			$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
 			$image = elgg_get_site_url() . 'blog/header/'.$this->guid;
-			return $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2707';
+			$src = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2707';
+			if($size)
+				$src .= '&width='.$size;
+			return $src;
 		}
-		return minds_fetch_image($this->description, $this->owner_guid);
+		return minds_fetch_image($this->description, $this->owner_guid, $size);
 	}
 
 	/**

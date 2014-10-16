@@ -97,7 +97,7 @@ function minds_init(){
 	
 	elgg_register_action("carousel/add", "$actionspath/carousel/add.php", "admin");
 	elgg_register_action("carousel/delete", "$actionspath/carousel/delete.php", "admin");
-	elgg_register_action("carousel/batch", "$actionspath/carousel/batch.php", "admin");
+	elgg_register_action("carousel/batch", "$actionspath/carousel/batch.php");
 	
 	elgg_register_admin_menu_item('configure', 'carousel', 'appearance');
 	
@@ -613,7 +613,7 @@ function minds_fetch_image($description, $owner_guid=null, $width=null, $height=
   	}
 	if($CONFIG->cdn_url){
 		$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
-		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2707';
+		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2708';
 		if($width){ $image .= '&width=' . $width; } 
 	} 
 	return $image;

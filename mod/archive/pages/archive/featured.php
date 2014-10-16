@@ -13,6 +13,7 @@ if($guids){
 	$entities = elgg_get_entities(array(	
 		'guids'=> $guids,
 		'full_view' => FALSE,
+		'limit' => 12
 		//'archive_view' => TRUE
 	));
 	usort($entities, function($a, $b){
