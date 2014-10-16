@@ -23,7 +23,14 @@ class start extends bases\plugin{
 	}
 	
 	public function init(){
-		//\elgg_register_page_handler('market', array($this, 'pageHandler'));
+		
+		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
+			if($row->subtype == 'market')
+				return new entities\item($row);
+			if($row->subtype == 'market_order')
+				return new entities\order($row);
+		});
+		
 		$routes = core\router::registerRoutes($this->registerRoutes());
 		
 		/**
@@ -50,7 +57,8 @@ class start extends bases\plugin{
 			'/market' => "$path\\pages\\lists",
 			'/market/item' => "$path\\pages\\view",
 			'/market/add' => "$path\\pages\\edit",
-			'/market/item/edit' => "$path\\pages\\edit"
+			'/market/item/edit' => "$path\\pages\\edit",
+			'/market/basket' => "$path\\pages\\basket"
 		);
 	}
 	
