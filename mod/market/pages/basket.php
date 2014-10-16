@@ -1,6 +1,6 @@
 <?php
 /**
- * Market view page
+ * Market basket controller
  */
 namespace minds\plugin\market\pages;
 
@@ -8,15 +8,19 @@ use minds\core;
 use minds\interfaces;
 use minds\plugin\market\entities;
 
-class view extends core\page implements interfaces\page{
+class basket extends core\page implements interfaces\page{
 	
 	/**
 	 * Get requests
 	 */
 	public function get($pages){
 		
-		$item = new entities\item($pages[0]);
-		$content = elgg_view_entity($item, array('full_view'=>true));
+		switch($pages[0]){
+			case 'add':
+				break;
+		}
+		
+		
 		
 		$body = \elgg_view_layout('one_sidebar', array(
 			'content' => $content,

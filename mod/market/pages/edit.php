@@ -19,18 +19,26 @@ class edit extends core\page implements interfaces\page{
 		$form_data = array();
 		
 		if(isset($pages[0])){
-			$item = entities\item($pages[0]);
+			$item = new entities\item($pages[0]);
 			$form_data = array(
 				'title' => $item->title,
 				'description'=> $item->description,
 				'price'=> $item->price,
-				'category' => $item->category
+				'category' => $item->category,
+				'guid' => $item->guid
 			);
 		}
 		
-		$form = \elgg_view_form('market/edit', array('method'=>'POST', 'action'=>$_SERVER['REQUEST_URI']), $form_data);
+		$form = \elgg_view_form('market/edit', array(
+				'method'=>'POST', 
+				'action'=>isset($pages[0]) ? elgg_get_site_url() . 'market/item/edit/'.$pages[0] : $_SERVER['REQUEST_URI']
+			), $form_data);
 		
-		$body = \elgg_view_layout('content', array('content'=>$form));
+		$body = \elgg_view_layout('one_sidebar', array(
+			'content'=>$form,
+			'sidebar' => elgg_view('market/sidebar'),
+			'sidebar_class'=> 'elgg-sidebar-alt'
+		));
 		
 		echo $this->render(array('body'=>$body));
 	}
@@ -39,7 +47,7 @@ class edit extends core\page implements interfaces\page{
 	 * Creates or edits an item
 	 */
 	public function post($pages){
-		if(isset($pages[0]) && is_int($pages[0]))
+		if(isset($pages[0]) && is_numeric($pages[0]))
 			$item = new market\entities\item($pages[0]);
 		else 
 			$item = new market\entities\item();
