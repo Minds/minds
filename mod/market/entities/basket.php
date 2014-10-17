@@ -12,7 +12,6 @@ use minds\entities;
 
 class basket extends entities\entity{
 	
-	protected $total = 0;
 	protected $cookie_id = 'mindsMarketBasket';
 	public $items = array(); //ITEM_GUID => QUANTITY
 	
@@ -54,9 +53,9 @@ class basket extends entities\entity{
 	 */
 	public function addItem($item, $quantity = 1){
 		if(!isset($this->items[$item->guid]))
-			$this->items[$item->guid] = $quantity;
+			$this->items[$item->guid] = array('quantity'=>$quantity, 'price'=>$item->price);
 		else 
-			$this->items[$item->guid]+$quantity;
+			$this->items[$item->guid]['quantity'] = $this->items[$item->guid]['quantity'] + $quantity;
 		
 		return $this;
 	}
@@ -97,12 +96,27 @@ class basket extends entities\entity{
 	}
 	
 	/**
+	 * Count the items, inluding the quantity for each
+	 */
+	public function countItems(){
+		$count = 0; 
+		foreach($this->items as $guid => $data)
+			$count = $count + $data['quantity'];
+		
+		return $count;
+	}
+	
+	/**
 	 * Return the total of the basket
 	 * WARNING: DO NOT USE THIS VALUE FOR CHECKOUT, it is only as an indicator to the user
-	 * @return int
+	 * @return float
 	 */
 	public function total(){
-		return $this->total;
+		$this->total = 0;
+		foreach($this->items as $guid => $data)
+			$this->total = $this->total + ($data['price'] *  $data['quantity']);
+		
+		return (float) $this->total;
 	}
 	
 	public function checkout(){

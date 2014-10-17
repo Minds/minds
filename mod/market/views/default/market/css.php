@@ -17,14 +17,15 @@
 .minds-menu-market li{
 	list-style:none;
 }
-.minds-menu-market li a{
+.minds-menu-market li a, .market-menu-item{
 	display:block;
 	color:#333;
+	background:#EEE;
 	padding:12px 16px;
 	border-bottom:1px solid #EEE;
 	font-weight:bold;
 }
-.minds-menu-market li a:hover{
+.minds-menu-market li a:hover, .market-menu-item:hover{
 	background:#DDD;
 	text-decoration:none;
 }

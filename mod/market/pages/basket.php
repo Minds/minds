@@ -28,7 +28,10 @@ class basket extends core\page implements interfaces\page{
 		}
 		
 		$guids = array_keys($basket->items);
-		$content = core\entities::view(array('guids'=>$guids));
+		if($guids)
+			$content = core\entities::view(array('guids'=>$guids, 'pagination'=>false));
+		else
+			$content = '';
 		
 		$body = \elgg_view_layout('one_sidebar', array(
 			'content' => $content,

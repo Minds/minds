@@ -8,6 +8,8 @@
 use minds\plugin\market\entities;
 
 $basket = new entities\basket();
+?>
 
-echo count($basket->getItems());
-echo $basket->total();
+<a href="<?= elgg_get_site_url()?>market/basket" class="market-menu-item">
+	$<?= $basket->total() ?> / <?= $basket->countItems() ?> Items
+</a>

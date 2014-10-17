@@ -60,7 +60,8 @@ class start extends bases\plugin{
 			'/market/item' => "$path\\pages\\view",
 			'/market/add' => "$path\\pages\\edit",
 			'/market/item/edit' => "$path\\pages\\edit",
-			'/market/basket' => "$path\\pages\\basket"
+			'/market/basket' => "$path\\pages\\basket",
+			'/market/checkout' => "$path\\pages\\checkout"
 		);
 	}
 	
