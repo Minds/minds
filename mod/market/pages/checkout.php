@@ -19,11 +19,11 @@ class checkout extends core\page implements interfaces\page{
 		$basket = new entities\basket();
 		$guids = array_keys($basket->items);
 		if(!$guids){
-			$this->forward(REFERRER);
+		//	$this->forward(REFERRER);
 		}
 		
 		//show the payments form
-		$content = elgg_view('input/card');
+		$content = elgg_view_form('market/checkout', array('action'=>elgg_get_site_url() . 'market/checkout/payment'));
 		
 		/*if($guids)
 			$content = core\entities::view(array('guids'=>$guids, 'pagination'=>false));
@@ -45,7 +45,7 @@ class checkout extends core\page implements interfaces\page{
 			case 'payment':
 				$card = new payments\entities\card();
 				$c = $card->create(array(
-						'type' => $_POST['type'],
+						'type' => $_POST['card_type'],
 						'number' => $_POST['number'],
 						'month' => $_POST['month'],
 						'year' => $_POST['year'],
@@ -53,6 +53,10 @@ class checkout extends core\page implements interfaces\page{
 						'name' => $_POST['name'],
 						'name2' => $_POST['name2']
 					));
+				var_dump($c, $_POST); exit;
+				//calculate the total of the basket
+				
+				//configure the details
 				payments\start::createPayment($details, $amount, $c);
 				break;
 			case 'confirm':
