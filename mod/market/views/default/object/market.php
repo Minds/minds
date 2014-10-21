@@ -11,25 +11,43 @@ $menu= elgg_view_menu('entity', array(
 
 if ($full) {
 ?>
+<div class="minds-market-full">
+	<?= $menu ?>
 	<h1><?= $item->title ?></h1>
-	<a href="<?= elgg_get_site_url() ?>market/basket/add/<?=$item->guid?>">$<?= $item->price ?>Add to basket</a>
 	
+	<div class="minds-market-subbanner">
+		<a href="<?= elgg_get_site_url() ?>market/basket/add/<?=$item->guid?>" class="elgg-button elgg-button-action add-to-basket">$<?= $item->price ?> - Add to basket</a>
+		
+		<div class="market-owner-block">
+			<a href="<?= $item->getURL() ?>">
+				<img src="<?= $item->getOwnerEntity()->getIconURL('small'); ?>"/>
+				<?= $item->getOwnerEntity()->name; ?>
+			</a>
+		</div>
+	</div>
+	
+	<div class="minds-market-description">
+		<?= $item->description ?>
+	</div>
+	
+	
+</div>
 <?php } else {
 	/**
 	 * Brief view
 	 */
-	$image = elgg_view('output/img', array());
 	$title = $item->title;
 	$price = $item->price;
 ?>
 <?= $menu ?>
 <div class="minds-market-item">
-	<a href="<?= $item->getURL() ?>">
+	<a href="<?= $item->getURL() ?>" class="minds-market-thumbnail">
+		<img src="<?= $item->getIconURL('thumb') ?>"/>
 	</a>
 	<a href="<?= $item->getURL() ?>">
 		<h3><?= $title ?> <span class="price"> $<?= $item->price ?> </span> </h3>
 	</a>
-	<a class="elgg-button elgg-button-action" href="">Add to basket</a>
+	<a class="elgg-button elgg-button-action" href="<?= elgg_get_site_url() . "market/basket/add/$item->guid" ?>">$<?= $item->price ?> - Add to basket</a>
 </div>	
 <?php }
 

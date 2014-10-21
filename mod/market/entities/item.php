@@ -74,6 +74,13 @@ class item extends entities\object{
 		return \elgg_get_site_url() .'market/item/'.$this->guid;
 	}
 	
+	/**
+	 * Get the icon src
+	 */
+	public function getIconUrl($size = 'master'){
+		return elgg_get_site_url() . "market/image/$this->guid/$size";
+	}
+	
 	public function getExportableValues(){
 		return array_merge(parent::getExportableValues(),
 			array(
