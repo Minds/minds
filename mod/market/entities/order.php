@@ -67,4 +67,15 @@ class order extends entities\object{
 	public function getURL(){
 		return elgg_get_site_url() . 'market/orders/'.$this->guid;
 	}
+	
+	/**
+	 * The indexes...
+	 */
+	public function getIndexKeys($ia = false){
+		$seller = $this->item['owner_guid'];
+		$indexes = array_merge(parent::getIndexKeys($ia), array(
+			"object:market_order:seller:$seller"
+		));
+		return $indexes;
+	}
 }
