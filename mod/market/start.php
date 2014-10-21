@@ -33,7 +33,7 @@ class start extends bases\plugin{
 		
 		$routes = core\router::registerRoutes($this->registerRoutes());
 		
-		\elgg_extend_view('css/elgg', 'market/css');
+		\elgg_extend_view('css/elgg', 'market/css', 800);
 		
 		/**
 		 * Register a site menu 
@@ -64,7 +64,9 @@ class start extends bases\plugin{
 			'/market/item/edit' => "$path\\pages\\edit",
 			'/market/image' => "$path\\pages\\image",
 			'/market/basket' => "$path\\pages\\basket",
-			'/market/checkout' => "$path\\pages\\checkout"
+			'/market/checkout' => "$path\\pages\\checkout",
+			'/market/orders' => "$path\\pages\\orders",
+			'/market/sellet' => "$path\\pages\\seller"
 		);
 	}
 	

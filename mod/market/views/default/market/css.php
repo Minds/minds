@@ -134,3 +134,18 @@
 	display:block;
 	text-align:center;
 }
+
+/**
+ * Orders
+ */
+.minds-market-order-items{
+	width:auto;
+	padding:0;
+}
+.minds-market-order-items > li{
+	float:none;
+	width:auto; 
+	min-height:0;
+	height:auto;
+	margin:12px 0 !important;
+}

@@ -47,6 +47,7 @@ class order extends entities\object{
 	 */
 	public function setItem($item){
 		$this->item = $item;
+		$this->setTotal($item['price'] * $item['quantity']);
 		return $this;
 	}
 	
@@ -59,5 +60,11 @@ class order extends entities\object{
 		$this->total = $total;
 		return $this;
 	}
-
+	
+	/**
+	 * Return the url
+	 */
+	public function getURL(){
+		return elgg_get_site_url() . 'market/orders/'.$this->guid;
+	}
 }
