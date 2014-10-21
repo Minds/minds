@@ -78,7 +78,14 @@ class start extends bases\plugin{
 		return array(
 			'uncategorised',
 			'food',
-			'food:chocolate'
+			'food:chocolate',
+			'technology',
+			'fashion',
+			'toys',
+			'sports',
+			'movies',
+			'books',
+			'services'
 		);
 	}
 	
