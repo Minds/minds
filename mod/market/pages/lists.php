@@ -41,7 +41,7 @@ class lists extends core\page implements interfaces\page{
 				}
 				$guids = $db->getRow("object:market:category:".$pages[1], array('limit'=>$limit, 'offset'=>$offset));
 				if($guids)
-					$content = \elgg_list_entities(array('guids'=>$guids));
+					$content = core\entities::view(array('guids'=>$guids, 'full_view'=>false));
 				else 
 					$content = '';
 				break;
@@ -49,7 +49,7 @@ class lists extends core\page implements interfaces\page{
 			default:
 				$guids = $db->getRow("object:market", array('limit'=>$limit, 'offset'=>$offset));
 				if($guids)
-					$content = \elgg_list_entities(array('guids'=>$guids));
+					$content = core\entities::view(array('guids'=>$guids, 'full_view'=>false));
 				else 
 					$content = '';
 		}

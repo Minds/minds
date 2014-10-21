@@ -29,3 +29,21 @@
 	background:#DDD;
 	text-decoration:none;
 }
+.market-menu-item-add{
+	background:#4690D6;
+	color:#FFF;
+}
+
+
+.minds-market-item{
+	
+}
+.minds-market-item h3{
+	padding:8px;
+	font-size:18px;
+	width:auto;
+}
+.minds-market-item h3 .price{
+	font-style:italic;
+	color:#999;
+}

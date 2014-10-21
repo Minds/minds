@@ -16,19 +16,23 @@ class checkout extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 		
-		$basket = new entities\basket();
-		$guids = array_keys($basket->items);
-		if(!$guids){
-		//	$this->forward(REFERRER);
+		if($pages[0] == 'success'){
+			
+			$content = 'Your order has been sucessfully placed. Your transaction reference is '.$pages[1];
+			
+		} else {
+		
+			$basket = new entities\basket();
+			$guids = array_keys($basket->items);
+			if(!$guids){
+				$this->forward(REFERRER);
+			}
+			
+			//show the payments form
+			$content = elgg_view_form('market/checkout', array('action'=>elgg_get_site_url() . 'market/checkout/payment'));
+		
 		}
-		
-		//show the payments form
-		$content = elgg_view_form('market/checkout', array('action'=>elgg_get_site_url() . 'market/checkout/payment'));
-		
-		/*if($guids)
-			$content = core\entities::view(array('guids'=>$guids, 'pagination'=>false));
-		else
-			$content = '';*/
+
 		
 		$body = \elgg_view_layout('one_sidebar', array(
 			'content' => $content,
@@ -43,23 +47,59 @@ class checkout extends core\page implements interfaces\page{
 		
 		switch($pages[0]){
 			case 'payment':
+			
+				/**
+				 * Gather the accurate basket items. Prevents forgery of the cookies.
+				 */
+				$basket = new entities\basket();
+				$guids = array_keys($basket->items);
+				$items = array();
+				$total = 0;
+				foreach(core\entities::get(array('guids'=>$guids)) as $item){
+					$items[$item->guid] = array_merge($item->export(), array('quantity'=>$basket->items[$item->guid]['quantity']));
+					$total = $total + ($items[$item->guid]['price'] * $items[$item->guid]['quantity']);
+				}
+				
 				$card = new payments\entities\card();
 				$c = $card->create(array(
 						'type' => $_POST['card_type'],
-						'number' => $_POST['number'],
+						'number' => (int) $_POST['number'],
 						'month' => $_POST['month'],
 						'year' => $_POST['year'],
 						'sec' => $_POST['sec'],
 						'name' => $_POST['name'],
 						'name2' => $_POST['name2']
 					));
-				var_dump($c, $_POST); exit;
-				//calculate the total of the basket
+
+				if(!$c)
+					return $this->forward(REFERRER);
 				
+
 				//configure the details
-				payments\start::createPayment($details, $amount, $c);
-				break;
-			case 'confirm':
+				$transaction_id = payments\start::createPayment("Order from the market", $total, $c->id);
+				$transaction = new payments\entities\transaction($transaction_id);
+				
+				/**
+				 * Create an order for each item
+				 */
+				foreach($items as $item){
+					
+					$order = new entities\order();
+					$order->setItem($item)
+						->setTransactionID($transaction_id)
+						->save();
+						
+					$transaction->orders[] = $order->guid;
+				}
+				
+				$transaction->save();
+				
+				
+				//empty the basket
+				$basket->delete();
+				
+				
+				$this->forward('market/checkout/success/'.$transaction_id);
 				break;
 		}
 		
@@ -68,8 +108,11 @@ class checkout extends core\page implements interfaces\page{
 	public function put($pages){
 		
 	}
+	
 	public function delete($pages){
 		
 	}
 	
+	
+	//private function calculateTotal
 }

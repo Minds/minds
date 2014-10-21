@@ -40,7 +40,7 @@ class basket extends entities\entity{
 	 * Delete the basket (empty)
 	 */
 	public function delete(){
-		self::$items = array();
+		$this->items = array();
 		return setcookie($this->cookie_id, '', time()-360, '/');
 	}
 	
@@ -84,15 +84,6 @@ class basket extends entities\entity{
 	 */
 	public function getItems(){
 		return $this->items;
-	}
-	/*
-	 * Calculates the total value of the basket
-	 */
-	public function calculateTotal(){
-		foreach($this->getItems() as $item => $quantity)
-			$this->total += $item->price * $quantity;
-		
-		return $this->total;
 	}
 	
 	/**

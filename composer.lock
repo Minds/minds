@@ -329,13 +329,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:minds/minds-php-sdk.git",
-                "reference": "52439b9f78a7f13f239912f4837ddd43056750a2"
+                "url": "git@github.com:Minds/minds-php-sdk.git",
+                "reference": "4d9ec92b8f9e00b80ae4e12a79735a5545408714"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minds/minds-php-sdk/zipball/52439b9f78a7f13f239912f4837ddd43056750a2",
-                "reference": "52439b9f78a7f13f239912f4837ddd43056750a2",
+                "url": "https://api.github.com/repos/Minds/minds-php-sdk/zipball/4d9ec92b8f9e00b80ae4e12a79735a5545408714",
+                "reference": "4d9ec92b8f9e00b80ae4e12a79735a5545408714",
                 "shasum": ""
             },
             "require": {
@@ -351,10 +351,10 @@
             },
             "description": "Minds PHP SDK",
             "support": {
-                "source": "https://github.com/minds/minds-php-sdk/tree/master",
-                "issues": "https://github.com/minds/minds-php-sdk/issues"
+                "source": "https://github.com/Minds/minds-php-sdk/tree/master",
+                "issues": "https://github.com/Minds/minds-php-sdk/issues"
             },
-            "time": "2014-07-21 18:09:52"
+            "time": "2014-10-15 09:57:21"
         },
         {
             "name": "monolog/monolog",
@@ -362,12 +362,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "ec3961874c43840e96da3a8a1ed20d8c73d7e5aa"
+                "reference": "b738a6c04c5fcc9e304d72f287e25256439fd13e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/ec3961874c43840e96da3a8a1ed20d8c73d7e5aa",
-                "reference": "ec3961874c43840e96da3a8a1ed20d8c73d7e5aa",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/b738a6c04c5fcc9e304d72f287e25256439fd13e",
+                "reference": "b738a6c04c5fcc9e304d72f287e25256439fd13e",
                 "shasum": ""
             },
             "require": {
@@ -426,7 +426,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-09-30 13:30:58"
+            "time": "2014-10-17 18:12:45"
         },
         {
             "name": "paypal/rest-api-sdk-php",
@@ -434,18 +434,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/paypal/rest-api-sdk-php.git",
-                "reference": "bb7654b0b873b9c7268986127105254808106d1c"
+                "reference": "9b3b82922094660d63b6b13e4ae8cbca5a8ef210"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paypal/rest-api-sdk-php/zipball/bb7654b0b873b9c7268986127105254808106d1c",
-                "reference": "bb7654b0b873b9c7268986127105254808106d1c",
+                "url": "https://api.github.com/repos/paypal/rest-api-sdk-php/zipball/9b3b82922094660d63b6b13e4ae8cbca5a8ef210",
+                "reference": "9b3b82922094660d63b6b13e4ae8cbca5a8ef210",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
-                "paypal/sdk-core-php": "2.5.*",
                 "php": ">=5.3.0"
             },
             "require-dev": {
@@ -475,53 +474,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2014-09-26 17:19:24"
-        },
-        {
-            "name": "paypal/sdk-core-php",
-            "version": "v2.5.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/paypal/sdk-core-php.git",
-                "reference": "21b252cf48b361bd4e0df7041bc7f7a1764b0102"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/paypal/sdk-core-php/zipball/21b252cf48b361bd4e0df7041bc7f7a1764b0102",
-                "reference": "21b252cf48b361bd4e0df7041bc7f7a1764b0102",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "PayPal": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache2"
-            ],
-            "authors": [
-                {
-                    "name": "PayPal",
-                    "homepage": "https://github.com/paypal/sdk-core-php/contributors"
-                }
-            ],
-            "description": "PayPal Core SDK for PHP",
-            "homepage": "https://github.com/paypal/sdk-core-php",
-            "keywords": [
-                "paypal",
-                "php",
-                "sdk"
-            ],
-            "time": "2014-09-23 19:49:54"
+            "time": "2014-10-16 14:57:07"
         },
         {
             "name": "pimple/pimple",
@@ -619,12 +572,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "ea86d91a10c5737a1e043aa29fe05837f942d163"
+                "reference": "e133748fd9165e24f8e9498ef5862f8bd37004e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/ea86d91a10c5737a1e043aa29fe05837f942d163",
-                "reference": "ea86d91a10c5737a1e043aa29fe05837f942d163",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/e133748fd9165e24f8e9498ef5862f8bd37004e5",
+                "reference": "e133748fd9165e24f8e9498ef5862f8bd37004e5",
                 "shasum": ""
             },
             "require": {
@@ -668,7 +621,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-09-28 16:15:31"
+            "time": "2014-10-04 06:08:58"
         },
         {
             "name": "thobbs/phpcassa",
@@ -764,20 +717,11 @@
             "time": "2014-07-15 17:50:20"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [
-
-    ],
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "stability-flags": [],
+    "prefer-stable": false,
+    "platform": [],
+    "platform-dev": []
 }

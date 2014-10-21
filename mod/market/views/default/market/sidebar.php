@@ -4,7 +4,7 @@
  */
  
 ?>
-<a href="<?= elgg_get_site_url(); ?>market/add" class="elgg-button elgg-button-action">Add</a>
+<a href="<?= elgg_get_site_url(); ?>market/add" class="market-menu-item market-menu-item-add">Add</a>
 
 <a href="<?= elgg_get_site_url()?>market/all" class="market-menu-item">
 	Market: All

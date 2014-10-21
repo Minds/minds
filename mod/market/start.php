@@ -45,6 +45,8 @@ class start extends bases\plugin{
 		    'href' => 'market',
 		    'title' => elgg_echo('market')
 	    ));
+		
+		\elgg_register_plugin_hook_handler('register', 'menu:entity',array($this, 'menuOverride'), 900);
 	}
 	
 	/**
@@ -60,6 +62,7 @@ class start extends bases\plugin{
 			'/market/item' => "$path\\pages\\view",
 			'/market/add' => "$path\\pages\\edit",
 			'/market/item/edit' => "$path\\pages\\edit",
+			'/market/image' => "$path\\pages\\image",
 			'/market/basket' => "$path\\pages\\basket",
 			'/market/checkout' => "$path\\pages\\checkout"
 		);
@@ -79,4 +82,26 @@ class start extends bases\plugin{
 		);
 	}
 	
+	public function menuOverride($hook, $type, $return, $params){
+		if(!isset($params['entity']) && $params['entity']->subtype != 'market')
+			return $return;
+		
+		$entity = $params['entity'];
+		foreach($return as $k => $item){
+			if(in_array($item->getName(), array('access', 'feature', 'thumbs:up', 'thumbs:down')))
+				unset($return[$k]);
+		}
+		
+		$options = array(
+						'name' => 'edit',
+						'href' => "market/item/edit/$entity->guid",
+						'text' => 'Edit',
+						'title' => elgg_echo('edit'),
+						'priority' => 1,
+					);
+		$return[] = \ElggMenuItem::factory($options);	
+		
+		
+		return $return;
+	}
 }
