@@ -7,7 +7,7 @@
 
 function minds_init(){
 	
-	minds\core\views::cache('output/carousel');
+	//minds\core\views::cache('output/carousel');
 	
 	
 	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
