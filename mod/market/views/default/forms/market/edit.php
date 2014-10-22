@@ -17,11 +17,28 @@ $save = elgg_view('input/submit', array('name' => 'submit', 'value' => elgg_echo
 ?>
 
 <div>
-	<?= $title ?>
+	<p>
+		<b>Title: </b>
+		<?= $title ?>
+	</p>
+	<p>
+		<b>Description: </b>
 	<?= $description ?>
+	</p>
+	<p>
+		<b>Price: </b>
 	<?= $price ?>
+	</p>
+	<p>
+		<b>Category: </b>
 	<?= $category ?>
+	</p>
+	<p>
+		<b>Image: </b>
 	<?= $image ?>
+	</p>
+	<p> 
 	<?= $save ?>
+	</p>
 	
 </div>

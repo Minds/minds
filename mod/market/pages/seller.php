@@ -18,7 +18,11 @@ class seller extends core\page implements interfaces\page{
 		switch($pages[0]){
 			case 'orders':
 				$guids = core\data\indexes::fetch('object:market_order:seller:'.elgg_get_logged_in_user_guid(), array('limit'=> 12));
-				var_dump($guids);exit;
+				if(!$guids){
+					$content = ' ';
+					break;
+				}
+				$content = core\entities::view(array('guids'=>$guids, 'full_view'=>false));
 				break;
 		}
 		

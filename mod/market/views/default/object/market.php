@@ -41,9 +41,11 @@ if ($full) {
 ?>
 <?= $menu ?>
 <div class="minds-market-item">
+	<?php if($item->image):?>
 	<a href="<?= $item->getURL() ?>" class="minds-market-thumbnail">
 		<img src="<?= $item->getIconURL('thumb') ?>"/>
 	</a>
+	<?php endif; ?>
 	<a href="<?= $item->getURL() ?>">
 		<h3><?= $title ?> <span class="price"> $<?= $item->price ?> </span> </h3>
 	</a>

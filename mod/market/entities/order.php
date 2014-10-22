@@ -10,7 +10,7 @@ use minds\plugin\market\entities\basket;
 use minds\core;
 
 class order extends entities\object{
-	
+
 	public function initializeAttributes(){
 		parent::initializeAttributes();
 		$this->attributes = array_merge($this->attributes, array(

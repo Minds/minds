@@ -47,6 +47,7 @@ class start extends bases\plugin{
 	    ));
 		
 		\elgg_register_plugin_hook_handler('register', 'menu:entity',array($this, 'menuOverride'), 900);
+		\elgg_register_plugin_hook_handler('acl', 'all', array($this, 'acl'));
 	}
 	
 	/**
@@ -113,4 +114,16 @@ class start extends bases\plugin{
 		
 		return $return;
 	}
+	
+	/**
+	 * ACL extension to allow for seller access to placed orders
+	 */
+	 public function acl($hook, $type, $return, $params){
+	 	$entity = $params['entity'];
+		$user = $params['user'];
+		if($entity->item['owner_guid'] == $user->guid)
+			return true;
+
+		return false;
+	 }
 }
