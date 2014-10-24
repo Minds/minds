@@ -24,8 +24,9 @@ class contact extends core\page implements interfaces\page{
 			\register_error('sorry, wrong answer');
 			return false;
 		}
-			
-		\elgg_send_email('emails@minds.com', array($_POST['email'],'mark@minds.com','bill@minds.com'), 'New Email from ' . $_POST['name'] . ' ' . $_POST['email'], $_POST['message']);
+
+		$contact = array($_POST['email'],'mark@minds.com','bill@minds.com', elgg_get_site_entity()->email);
+		\elgg_send_email('emails@minds.com', $contact, 'New Email from ' . $_POST['name'] . ' ' . $_POST['email'], $_POST['message']);
 		
 		\system_message('Success!');
 		

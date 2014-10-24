@@ -296,6 +296,7 @@ class MindsMultiInstaller extends ElggInstaller {
       */
 	protected function installDatabase() {
 		global $CONFIG;
+		
 		try{
 			$db = new minds\core\data\call(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
 			if(!$db->keyspaceExists($CONFIG->cassandra->keyspace)){
@@ -321,6 +322,8 @@ class MindsMultiInstaller extends ElggInstaller {
 
         global $CONFIG;
 
+
+	 $db = new \minds\core\data\call('plugin');
         // Now, specify what plugins are visible for any given domain
         $domain = $CONFIG->elgg_multisite_settings;
         $user_editable_plugins = array(
@@ -328,7 +331,7 @@ class MindsMultiInstaller extends ElggInstaller {
 	    'archive',
             'blog',
    		'deck',
-		'minds_WebServices', 
+		'Minds_WebServices', 
    		'gatherings',
             'persona',
             'notifications',
@@ -343,10 +346,7 @@ class MindsMultiInstaller extends ElggInstaller {
             //'minds_wordpress',
         );
         foreach ($user_editable_plugins as $plugin_id) {
-        	$plugin = new ElggPlugin($plugin_id);
-		$plugin->save();
-		$plugin = new ElggPlugin($plugin_id);
-		$plugin->activate();
+		$db->insert($plugin_id, array('type'=>'plugin', 'active'=>1, 'access_id'=>2));	
         }
         
         // Now configure some plugins
@@ -354,7 +354,8 @@ class MindsMultiInstaller extends ElggInstaller {
             foreach ($CONFIG->plugin_install_defaults as $plugin => $settings) {
                 if (is_array($settings)) {
                     foreach ($settings as $key => $value)
-                        elgg_set_plugin_setting($key, $value, $plugin);
+                       $db->insert($plugin, array($key=>$value));
+			 //elgg_set_plugin_setting($key, $value, $plugin);
                 }
             }
         }

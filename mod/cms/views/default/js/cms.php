@@ -12,8 +12,10 @@ minds.cms.init = function() {
     			console.log(data);
     			
     			$('.cms-sections').append(data);
-    			$('.cms-sections').find('.icon-colour input').minicolors();
-    		}
+    			if(jQuery().minicolors) { 
+				$('.cms-sections').find('.icon-colour input').minicolors();
+			}    
+		}
     	});
     });
     
