@@ -31,7 +31,8 @@ class edit extends core\page implements interfaces\page{
 		
 		$form = \elgg_view_form('market/edit', array(
 				'method'=>'POST', 
-				'action'=>isset($pages[0]) ? elgg_get_site_url() . 'market/item/edit/'.$pages[0] : $_SERVER['REQUEST_URI']
+				'action'=>isset($pages[0]) ? elgg_get_site_url() . 'market/item/edit/'.$pages[0] : $_SERVER['REQUEST_URI'],
+				'enctype' => 'multipart/form-data'
 			), $form_data);
 		
 		$body = \elgg_view_layout('one_sidebar', array(
@@ -57,6 +58,27 @@ class edit extends core\page implements interfaces\page{
 		$item->price = $_POST['price'];
 		$item->category = $_POST['category'];
 		$guid = $item->save();
+		//is a file uploaded?
+		if(is_uploaded_file($_FILES['image']['tmp_name'])){
+			$sizes = array(
+				'thumb' => array('w' => 200, 'h' => 200, 'square' => FALSE, 'upscale' =>true),
+				'medium' => array('w' => 600, 'h' => 600, 'square' => FALSE, 'upscale' => true),
+				'master' => array('w' => 2000, 'h' => 2000, 'square' => FALSE, 'upscale' => FALSE),
+			);
+			foreach($sizes as $size => $info){
+				$resized = \get_resized_image_from_uploaded_file('image', $info['w'], $info['h'], $info['square'], $info['upscale']);
+				$file = new \ElggFile();
+				$file->owner_guid = $item->owner_guid;
+				$file->setFilename("market/{$guid}/$size.jpg");
+				$file->open('write');
+				$file->write($resized);
+				$file->close();
+				$item->image = true;
+			}
+		}
+
+		$item->save();
+		
 		
 		if($guid){
 			$this->forward($item->getURL());

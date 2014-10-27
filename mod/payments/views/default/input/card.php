@@ -3,8 +3,10 @@ $cards = elgg_get_entities(array('subtype'=>'card', 'owner_guid'=>elgg_get_logge
 foreach($cards as $c){
 	echo elgg_view('output/url', array('href'=>'', 'text'=>elgg_view_entity($c)));
 }
-		?>
--- or new card --
+if($cards)
+	echo "-- or new card --";
+?>
+
 <div class="table card-input">
 	<div class="row input">
 			<div class="cell feature">
