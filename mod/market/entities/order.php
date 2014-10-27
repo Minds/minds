@@ -78,4 +78,11 @@ class order extends entities\object{
 		));
 		return $indexes;
 	}
+	
+	public function getSellerEntity($brief = true){
+		if($this->item['owner'] && $brief)
+			return new \minds\entities\user($this->item['owner']);
+		
+		return new \minds\entities\user($this->item['owner_guid']);
+	}
 }

@@ -46,6 +46,7 @@ class start extends bases\plugin{
 		    'title' => elgg_echo('market')
 	    ));
 		
+		
 		\elgg_register_plugin_hook_handler('register', 'menu:entity',array($this, 'menuOverride'), 900);
 		\elgg_register_plugin_hook_handler('acl', 'all', array($this, 'acl'));
 	}
