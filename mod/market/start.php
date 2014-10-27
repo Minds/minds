@@ -107,7 +107,7 @@ class start extends bases\plugin{
 		
 		$entity = $params['entity'];
 		foreach($return as $k => $item){
-			if(in_array($item->getName(), array('access', 'feature', 'thumbs:up', 'thumbs:down')))
+			if(in_array($item->getName(), array('access', 'feature', 'thumbs:up', 'thumbs:down', 'delete')))
 				unset($return[$k]);
 		}
 		
@@ -117,6 +117,15 @@ class start extends bases\plugin{
 						'text' => 'Edit',
 						'title' => elgg_echo('edit'),
 						'priority' => 1,
+					);
+		$return[] = \ElggMenuItem::factory($options);	
+		
+		$options = array(
+						'name' => 'delete',
+						'href' => "market/item/delete/$entity->guid",
+						'text' => 'Delete',
+						'title' => elgg_echo('delete'),
+						'class'=>'ajax-non-action'
 					);
 		$return[] = \ElggMenuItem::factory($options);	
 		
