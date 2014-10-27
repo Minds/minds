@@ -268,8 +268,12 @@ class MindsMultiInstaller extends ElggInstaller {
 		//	}
 		}
 		$this->domain = $domain;
-		$node = new minds\multisite\models\node($domain);
-		
+		try{
+			$node = new minds\multisite\models\node($domain);
+		}catch(\Exception $e){
+			header('Location: https://www.minds.com/');
+			exit;
+		}
 		if($node->installed == true){
 			throw new Exception("This site is already installed");
 		}
