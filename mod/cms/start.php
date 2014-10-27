@@ -74,7 +74,7 @@ class start extends bases\plugin{
 			$add = '<div class="cms-section-add"><a href="#" data-group="index"> + Add a panel </a></div>';
 
 		if(!$guids)
-			return $return . $add;
+			$sections = array();
 
 		$sections = core\entities::get(array('guids'=>$guids));
 		$return .= elgg_view('cms/sections', array('sections'=>$sections, 'group'=>'index'));

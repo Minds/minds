@@ -11,10 +11,10 @@ class MindsOrientation{
 		//'deck',
 		'subscribe',
 		//'post',
-		'group',
-		'import',
-		'revenue',
-		'multisite',
+		//'group',
+		//'import',
+		//'revenue',
+		//'multisite',
 		'complete',
 	);
 	
@@ -378,6 +378,6 @@ class MindsOrientation{
 	 */
 	public function complete(){
 		$user = elgg_get_logged_in_user_entity();
-		forward('/'.$user->name);
+		forward('/'.$user->username);
 	}
 }
