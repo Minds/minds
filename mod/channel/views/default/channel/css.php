@@ -8,8 +8,8 @@
 
 .channel .elgg-layout-two-sidebar{
 	padding-top:250px;
-	width:900px;
 }
+.channel .landing-page{	max-width:900px;}
 .channel .elgg-layout-two-sidebar .elgg-main{
 	margin-top:150px;
 }

@@ -149,3 +149,21 @@
 	height:auto;
 	margin:12px 0 !important;
 }
+
+.minds-market-order-table{
+	display:table;
+	width:100%;
+}
+.minds-market-order-table > .row{
+	display:table-row;
+}
+
+.minds-market-order-table > .row > .cell{
+	display:table-cell;
+	padding:16px;
+}
+
+.minds-market-order-table > .row > .cell h3{
+	font-weight:bold;
+	font-size:16px;
+}

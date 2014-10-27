@@ -46,6 +46,7 @@ class start extends bases\plugin{
 		    'title' => elgg_echo('market')
 	    ));
 		
+		
 		\elgg_register_plugin_hook_handler('register', 'menu:entity',array($this, 'menuOverride'), 900);
 		\elgg_register_plugin_hook_handler('acl', 'all', array($this, 'acl'));
 	}
@@ -78,6 +79,14 @@ class start extends bases\plugin{
 	 * @return array
 	 */
 	static public function getCategories(){
+		
+		if($categories = \elgg_get_plugin_setting('categories', 'market')){
+			
+			$categories = explode(',',$categories);
+			return $categories;
+			
+		}
+		
 		return array(
 			'uncategorised',
 			'food',
@@ -98,7 +107,7 @@ class start extends bases\plugin{
 		
 		$entity = $params['entity'];
 		foreach($return as $k => $item){
-			if(in_array($item->getName(), array('access', 'feature', 'thumbs:up', 'thumbs:down')))
+			if(in_array($item->getName(), array('access', 'feature', 'thumbs:up', 'thumbs:down', 'delete')))
 				unset($return[$k]);
 		}
 		
@@ -108,6 +117,15 @@ class start extends bases\plugin{
 						'text' => 'Edit',
 						'title' => elgg_echo('edit'),
 						'priority' => 1,
+					);
+		$return[] = \ElggMenuItem::factory($options);	
+		
+		$options = array(
+						'name' => 'delete',
+						'href' => "market/item/delete/$entity->guid",
+						'text' => 'Delete',
+						'title' => elgg_echo('delete'),
+						'class'=>'ajax-non-action'
 					);
 		$return[] = \ElggMenuItem::factory($options);	
 		

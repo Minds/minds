@@ -94,6 +94,13 @@
 	height:50px;
 	width:auto;
 }
+.hero > .topbar .logo h1{
+	display: inline-block;
+	padding: 16px;
+	color: #888;
+	font-weight: 100;
+	font-size: 42px;
+}
 .hero > .topbar .search{
 	margin: 12px 16px;
 	float:left;

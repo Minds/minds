@@ -28,15 +28,38 @@ if(!isset($vars['items'])){
 	));
 	echo elgg_view('input/hidden', array('name'=>'owner_guid', 'value'=>0));
 	echo elgg_view('input/hidden', array('name'=>'admin', 'value'=>'admin'));
+	
+	if(!$items){
+		$item = new ElggFile();
+		$item->subtype = 'carousel_item';
+		$item->title = '';
+		$item->owner_guid = elgg_get_logged_in_user_guid();
+		$item->access_id = ACCESS_PUBLIC;
+		$item->save();
+		$items[] = $item;
+	}
+	
 } else {
 	$items = $vars['items'];
 	echo elgg_view('input/hidden', array('name'=>'owner_guid', 'value'=>elgg_get_page_owner_guid()));
+	
+	if(!$items){
+		$item = new minds\entities\carousel();
+		$item->title = '';
+		$item->owner_guid = elgg_get_logged_in_user_guid();
+		$item->access_id = ACCESS_PUBLIC;
+		$item->save();
+		$items[] = $item;
+	}
+	
 }
 
 //sort the tiers by price
 usort($items, function($a, $b){
 	return $a->order - $b->order;
 });
+
+
 
 echo '<div class="carousel-admin-items">';
 
