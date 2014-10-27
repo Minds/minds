@@ -79,6 +79,14 @@ class start extends bases\plugin{
 	 * @return array
 	 */
 	static public function getCategories(){
+		
+		if($categories = \elgg_get_plugin_setting('categories', 'market')){
+			
+			$categories = explode(',',$categories);
+			return $categories;
+			
+		}
+		
 		return array(
 			'uncategorised',
 			'food',
