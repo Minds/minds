@@ -28,23 +28,41 @@ elgg_register_menu_item('channel', array(
 ));
 elgg_register_menu_item('channel', array(
 	'name' => 'channel:archive',
-	'text' => '<span class="entypo">&#128193;</span>Archive',
+	'text' => '<span class="entypo">&#128193;</span> Uploads',
 	'href' => elgg_get_site_url() . $user->username . '/archive',
 	'priority' => 102
 ));
+
 elgg_register_menu_item('channel', array(
+	'name' => 'channel:archive',
+	'text' => '<span class="entypo">&#128193;</span> Uploads',
+	'href' => elgg_get_site_url() . $user->username . '/archive',
+	'priority' => 103
+));
+
+if($bitcoin = \elgg_get_plugin_user_setting('wallet_guid', $user->guid, 'bitcoin')){
+	elgg_register_menu_item('channel', array(
+		'name' => 'channel:groups',
+		'text' => '<span class="entypo">&#59397;</span> Groups',
+		'href' => elgg_get_site_url() . $user->username . '/groups',
+		'priority' => 105
+	));
+}
+
+if($user->canEdit()){
+	
+	elgg_register_menu_item('channel', array(
         'name' => 'channel:carousel',
         'text' => '<span class="entypo">&#59404</span>Edit Carousel',
         'href' => elgg_get_site_url() . $user->username . '/carousel',
-        'priority' => 103
-));
+        'priority' => 106
+	));
 
-if($user->canEdit()){
 	elgg_register_menu_item('channel', array(
 		'name' => 'channel:custom',
 		'text' => 'Custom',
 		'href' => elgg_get_site_url() . $user->username . '/custom',
-		'priority' => 103
+		'priority' => 110
 	));
 }
 

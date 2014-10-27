@@ -174,7 +174,7 @@ function channel_page_handler($page) {
 	$carousel = elgg_view('carousel/carousel', array('items'=>$carousels));
 
 	$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'),array('to_guid'=>$user->guid));
-
+		$class ='';
 	switch($page[1]){
 		case 'custom':
 			$content .= elgg_view_form('channel/custom', array('enctype' => 'multipart/form-data'), array('entity' => $user));
@@ -225,6 +225,15 @@ function channel_page_handler($page) {
 	        $content .= elgg_view('page/layouts/widgets/add_button', $params);
 			$content .= elgg_view('page/layouts/widgets/add_panel', $params);
 	        $content .= elgg_view_layout('widgets', $params);
+			break;
+		case 'groups':			
+			$content = elgg_list_entities_from_relationship(array(
+				'full_view' => false,
+				'relationship_guid' => $user->guid,
+				'relationship' => 'member',
+				'offset'=>get_input('offset','')
+				//'inverse_relationship' => true
+			)); 
 			break;
 		case 'subscribers':
 			$db = new minds\core\data\call('friendsof');
@@ -277,6 +286,7 @@ function channel_page_handler($page) {
 	
 	$body = elgg_view_layout('two_sidebar', array(
 		'content' => $content, 
+		'class'=>$class,
 		'header'=>$carousel, 
 		'hide_ads' => true,
 		'sidebar_top'=>'',
