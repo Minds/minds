@@ -72,7 +72,7 @@ if($user->canEdit() ){
 	}
 }
 ?>
-<h1><?= $user->name ?></h1>
+<a href="<?=$user->getURL()?>"><h1><?= $user->name ?></h1></a>
 <?= $user->website ? elgg_view('output/url', array('text'=>$user->website, 'href'=>$user->website)) : false ?>
 
 <?php 

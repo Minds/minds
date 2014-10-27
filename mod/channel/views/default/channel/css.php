@@ -498,6 +498,7 @@ padding: 0 4px;
 
 .minds-fixed-sidebar-left h1{
 	line-height:2.3em;
+	padding-left:16px;
 }
 /**
  * Mobile specific
