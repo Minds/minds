@@ -74,6 +74,10 @@ function wall_page_handler($page) {
 			include "$pages/view.php";
 			break;
 		case 'attachment':
+		
+			if(!$page[1]){
+				exit;
+			}
 			$attachment = new PostAttachment($page[1]);
 			$mime = $attachment->getMimeType(); 
 			

@@ -49,6 +49,11 @@ class lists extends core\page implements interfaces\page{
 					break;
 				}
 				$entities = core\entities::get(array('guids'=>$guids));
+				if(!$entities){
+					$content = ' ';
+					break;
+				}
+
 				usort($entities, function($a, $b){
 				    //return strcmp($b->featured_id, $a->featured_id);
 					if ((int)$a->featured_id == (int) $b->featured_id) { //imposisble
@@ -59,10 +64,9 @@ class lists extends core\page implements interfaces\page{
 				$content = elgg_view_entity_list($entities, $params);
 		}
 	
-
 		if(isset($params['guids']) && !$params['guids'])
 			$content = '';
-		elseif(!$content)
+		elseif(!$content && elgg_get_viewtype() !='json')
 			$content = core\entities::view($params);
 		
 		elgg_register_menu_item('filter', array(
