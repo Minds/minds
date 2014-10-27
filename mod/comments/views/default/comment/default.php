@@ -7,7 +7,7 @@ $owner = $comment->getOwnerEntity();
 if(!$owner)
 	$owner = get_user_by_username('minds');
 
-if($owner->username == 'minds'){
+if($owner->username == 'minds' && $comment->time_created <= 1406851200){
 
 	$owner->name = 'anonymous';
 	$owner->username = 'privacy';

@@ -26,14 +26,13 @@ class lists extends core\page implements interfaces\page{
 		
 		switch($pages[0]){
 			case 'owner':
-				$owner = new entities\user($pages[0]);
-				if(!$owner){
+				$owner = new entities\user($pages[1]);
+				if(!$owner->username){
 					echo "The user could not be found \n";
 					return false;
 				}
-				$guids = $db->getRow("object:market:user:$owner->guid", array('limit'=>$limit, 'offset'=>$offset));
-				var_dump($guids); exit;
-				$content = 'This is the owner';
+				$content = core\entities::view(array('subtype'=>'market', 'owner_guid'=>$owner->guid, 'limit'=>$limit, 'offset'=> $offset, 'full_view'=>false));
+				break;
 			case 'category':
 				if(!isset($pages[1])){
 					$content = '';
@@ -41,7 +40,7 @@ class lists extends core\page implements interfaces\page{
 				}
 				$guids = $db->getRow("object:market:category:".$pages[1], array('limit'=>$limit, 'offset'=>$offset));
 				if($guids)
-					$content = \elgg_list_entities(array('guids'=>$guids));
+					$content = core\entities::view(array('guids'=>$guids, 'full_view'=>false));
 				else 
 					$content = '';
 				break;
@@ -49,7 +48,7 @@ class lists extends core\page implements interfaces\page{
 			default:
 				$guids = $db->getRow("object:market", array('limit'=>$limit, 'offset'=>$offset));
 				if($guids)
-					$content = \elgg_list_entities(array('guids'=>$guids));
+					$content = core\entities::view(array('guids'=>$guids, 'full_view'=>false));
 				else 
 					$content = '';
 		}

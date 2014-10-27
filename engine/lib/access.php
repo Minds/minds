@@ -80,6 +80,9 @@ function elgg_check_access($entity, $user = null){
 		return true;
 	}
 	
+	if(elgg_trigger_plugin_hook('acl', $entity->type, array('entity'=>$entity, 'user'=>$user)))
+		return true;
+	
 	return false;
 
 }
