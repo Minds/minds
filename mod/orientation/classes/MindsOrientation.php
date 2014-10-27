@@ -11,9 +11,9 @@ class MindsOrientation{
 		//'deck',
 		'subscribe',
 		//'post',
-		'group',
-		'import',
-		'revenue',
+		//'group',
+		//'import',
+		//'revenue',
 		//'multisite',
 		'complete',
 	);
