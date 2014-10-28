@@ -19,7 +19,7 @@ $offset = get_input('offset', '');
 
 $title = elgg_echo('channels');
 
-$options = array('type' => 'user', 'full_view' => false, 'limit'=>$limit);
+$options = array('type' => 'user', 'full_view' => false, 'limit'=>$limit, 'masonry'=>false, 'list_class'=>'users-list');
 switch ($vars['page']) {
 	case 'subscribers':
 		$db = new minds\core\data\call('friendsof');
@@ -58,7 +58,7 @@ switch ($vars['page']) {
 			$content = ' ';
 			break;
 		}
-		$options = array('guids'=>$guids);
+		$options['guids'] = $guids;
 		
 		$content = elgg_list_entities($options);
 		break;
