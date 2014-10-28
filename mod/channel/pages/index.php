@@ -52,6 +52,16 @@ switch ($vars['page']) {
 		}
 		$content = elgg_view_entity_list($users,$vars, $offset, $limit, false, false,false);
 		break;
+	case 'featured':
+		$guids = minds\core\data\indexes::fetch('user:featured', array('limit'=>$limit, 'offset'=>$offset));
+		if(!$guids){
+			$content = ' ';
+			break;
+		}
+		$options = array('guids'=>$guids);
+		
+		$content = elgg_list_entities($options);
+		break;
 	case 'popular':
 		$options['limit'] = $limit;
 		$options['newest_first'] = false;
