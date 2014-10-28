@@ -7,6 +7,7 @@ namespace minds\plugin\market\pages;
 use minds\core;
 use minds\interfaces;
 use minds\plugin\market\entities;
+use minds\plugin\market\notifications;
 use minds\plugin\payments;
 
 class checkout extends core\page implements interfaces\page{
@@ -90,10 +91,13 @@ class checkout extends core\page implements interfaces\page{
 						->save();
 						
 					$transaction->orders[] = $order->guid;
+					
+					notifications::sendToBuyer($order->getOwnerEntity(false), 'Your order: '.$order->guid, elgg_view('market/emails/buyer', array('order'=>$order)));
+					notifications::sendToSeller($order->getSellerEntity(), 'New Order: '.$order->guid, elgg_view('market/emails/seller', array('order'=>$order)));
+					
 				}
 				
 				$transaction->save();
-				
 				
 				//empty the basket
 				$basket->delete();

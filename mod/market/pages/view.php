@@ -15,6 +15,13 @@ class view extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 		
+		if($pages[0] == 'delete'){
+			
+			$item = new entities\item($pages[1]);
+			return $item->delete();
+			
+		}
+		
 		$item = new entities\item($pages[0]);
 		$content = elgg_view_entity($item, array('full_view'=>true));
 		
