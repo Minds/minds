@@ -4,6 +4,11 @@
  */
 
 $tabs = array(
+	'featured' => array(
+		'text' => elgg_echo('channels:label:featured'),
+         'href' => "channels/featured",
+         'selected' => $vars['selected'] == 'featured',
+        ),
 	'trending' => array(
 		'text' => elgg_echo('channels:label:trending') . elgg_view_menu('trending'),
          'href' => "channels/trending",

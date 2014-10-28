@@ -28,7 +28,7 @@
 		});*/
 
 		if(!elgg.is_logged_in() && !$.cookie('promptSignup')){
-			setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
+		//	setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
 		}
 		$(document).on('click', "#minds-signup-popup .cancel", function(){
 			$.fancybox.close();
