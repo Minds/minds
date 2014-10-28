@@ -463,6 +463,16 @@ function channel_hover_menu_setup($hook, $type, $return, $params) {
 		$item->setSection('action');
 		//$item->setLinkClass('elgg-lightbox');
 		$return[] = $item;
+		
+		$options = array(
+					'name' => 'feature',
+					'href' => "action/minds/feature?guid=$user->guid",
+					'text' => $user->featured_id ? elgg_echo('un-feature') : elgg_echo('feature'),
+					'title' => elgg_echo('feature'),
+					'is_action' => true,
+					'priority' => 2,
+				);
+		$return[] = ElggMenuItem::factory($options);
 	}
 
 	return $return;

@@ -70,7 +70,6 @@ function minds_init(){
 	elgg_extend_view('navigation/pagination', 'minds/navigation');
 	elgg_register_ajax_view('page/components/ajax_list');
 	
-	elgg_register_plugin_hook_handler('register', 'menu:river', 'minds_river_menu_setup');
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'minds_entity_menu_setup');
 	
 	//setup the licenses pages
@@ -143,35 +142,6 @@ function minds_init(){
                 elgg_set_user_validation_status($object->guid, true, 'tier_signup');      
             }
     }, 1);
-        
-        // Endpoint
-        elgg_register_page_handler('tierlogin', function($pages) {
-            
-            $_SESSION['fb_referrer'] = 'y'; // Prevent Bootcamp intercepting login
-            $_SESSION['__tier_selected'] = get_input('tier');
-            $_SESSION['_from_tier'] = 'y';
-            $content = "<div class=\"register-popup\">".elgg_view_form('register', null, array('returntoreferer' => true))."</div>";
-            
-            // If we've returned to the window after a successful login, then refresh back to parent
-            if (elgg_is_logged_in()) {
-                $content .= "
-                <script>
-                    window.opener.location.reload();  
-
-                    window.close();
-                </script>
-                ";
-            }
-            
-            $params = array(
-                'title' => elgg_echo('minds_widgets:tab:'.$tab),
-                'content' => $content,
-                'sidebar' => ''
-            );
-            
-            echo elgg_view_page('Login', elgg_view_layout('default', $params),'default_popup');
-            return true;
-        });
 
 
 	elgg_register_page_handler('thumbProxy', function($pages){
@@ -375,76 +345,6 @@ function minds_quota_decrement($event, $object_type, $object) {
 
 }
 
-
-/**
- * Edit the river menu defaults
- */
-function minds_river_menu_setup($hook, $type, $return, $params) {
-	if (elgg_is_logged_in()) {
-		$item = $params['item'];
-		$object = $item->getObjectEntity();
-		$subject = $item->getSubjectEntity();
-		//Delete button
-		elgg_unregister_menu_item('river', 'delete'); 
-		if ($subject->canEdit() || ( $object && $object->canEdit())) {
-			$options = array(
-				'name' => 'delete',
-				'href' => "action/river/delete?id=$item->id",
-				'text' => '<span class="entypo">&#10062;</span> Delete',
-				'class' => '',
-				'title' => elgg_echo('delete'),
-				//'confirm' => elgg_echo('deleteconfirm'),
-				'is_action' => true,
-				'priority' => 200,
-			);
-			$return[] = ElggMenuItem::factory($options);
-		}
-		
-		$allowedReminds = array('wallpost', 'video', 'album', 'image', 'tidypics_batch', 'blog');
-		//Remind button
-		if($object && in_array($object->getSubtype(), $allowedReminds)){
-			$options = array(
-					'name' => 'remind',
-					'href' => "action/minds/remind?guid=$object->guid",
-					'text' => '<span class="entypo">&#59159;</span> Remind',
-					'class' => '',
-					'title' => elgg_echo('minds:remind'),
-					'is_action' => true,
-					'priority' => 1,
-				);
-			$return[] = ElggMenuItem::factory($options);
-		}
-		
-		
-		elgg_load_js('lightbox');
-		elgg_load_css('lightbox');
-		$options = array(
-					'name' => 'embed',
-					'href' => "news/$item->id/embed",
-					'text' => '<span class="entypo">&#59406;</span> Embed',
-					'class' => 'elgg-lightbox',
-					'title' => elgg_echo('minds:embed'),
-					'is_action' => true,
-					'priority' => 1,
-				);
-		$return[] = ElggMenuItem::factory($options);
-		
-		
-		$options = array(
-					'name' => 'share',
-					'href' => "news/$item->id/share",
-					'text' => '<span class="entypo">&#59407;</span> Share',
-					'class' => 'elgg-lightbox',
-					'title' => elgg_echo('minds:share'),
-					'is_action' => true,
-					'priority' => 1,
-				);
-		$return[] = ElggMenuItem::factory($options);
-		//
-	}
-
-	return $return;
-}
 /**
  * Edit the river menu defaults
  */
@@ -488,7 +388,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 		}
 	}
 	if(elgg_is_admin_logged_in()){
-		if($entity instanceof ElggObject || $entity instanceof ElggGroup){
+		if($entity instanceof ElggObject || $entity instanceof ElggGroup || $entity->type == 'user'){
 			//feature button
 			$options = array(
 						'name' => 'feature',
