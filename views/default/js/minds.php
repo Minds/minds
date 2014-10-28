@@ -6,16 +6,19 @@
 	 elgg.provide('minds');
 	 
 	 minds.init = function() {	
-	 	var sidebarOpen = false;
+	 	var sidebarOpen = $.cookie('sidebarOpen') == "true" ? true : false;
 	 	$(document).on('click', '.menu-toggle', function(){
 	 		if(sidebarOpen){
 	 			$('.global-sidebar').removeClass('show');
 	 			$('.hero').removeClass('sidebar-active');
 	 			sidebarOpen = false;
+	 		//	$.removeCookie('sidebarOpen'); 
+	 			$.cookie('sidebarOpen', 'false', { path: '/' });
 	 		} else {
 	 			$('.global-sidebar').addClass('show');
 	 			$('.hero').addClass('sidebar-active');
 	 			sidebarOpen = true
+	 			$.cookie('sidebarOpen', 'true', { path: '/' });
 	 		}
 	 	});
 

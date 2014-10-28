@@ -373,7 +373,7 @@
 	position:fixed;
 	left:0;
 	bottom:0;
-	width:248px;
+	width:160px;
 	background:#111;
 }
 .global-sidebar > .elgg-menu-footer > li{

@@ -22,7 +22,10 @@
 	min-height:100%;
 }
 .hero.sidebar-active{
-	margin-left:250px;
+	margin-left:172px;
+}
+.hero.sidebar-active .topbar{
+	width:90%;
 }
 .hero .header > .inner, .elgg-page-default .elgg-page-header > .elgg-inner {
 	width: 90%;
@@ -104,7 +107,7 @@
 .hero > .topbar .search{
 	margin: 12px 16px;
 	float:left;
-	width:160px;
+	width:130px;
 }
 .hero > .topbar .search input{
 	margin:0;
@@ -353,7 +356,7 @@
 	overflow:visible;
 	overflow-x:scroll;
 	height:100%;
-	width:225px;
+	width:160px;
 	padding:12px;
 	background:#222;
 	box-shadow:0 0 4px #000;

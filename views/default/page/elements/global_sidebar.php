@@ -1,7 +1,7 @@
 <?php 
 $class = '';
 
-if(elgg_get_context() == 'admin' || elgg_get_context() == 'anypage'){
+if(elgg_get_context() == 'admin' || elgg_get_context() == 'anypage' || (isset($_COOKIE['sidebarOpen']) && $_COOKIE['sidebarOpen'] == 'true')){
 	$class	= 'show';
 }
 ?>
