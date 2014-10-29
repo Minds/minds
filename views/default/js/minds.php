@@ -7,7 +7,12 @@
 	 
 	 minds.init = function() {	
 	 	var sidebarOpen = $.cookie('sidebarOpen') == "true" ? true : false;
+	 	if($(window).width() < 720)
+	 		sidebarOpen = false;
+	 		
 	 	$(document).on('click', '.menu-toggle', function(){
+	 		$('.hero').removeClass('sidebar-active-default');
+	 		$('.global-sidebar').removeClass('show-default');
 	 		if(sidebarOpen){
 	 			$('.global-sidebar').removeClass('show');
 	 			$('.hero').removeClass('sidebar-active');
@@ -31,7 +36,7 @@
 		});*/
 
 		if(!elgg.is_logged_in() && !$.cookie('promptSignup')){
-			setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
+		//	setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
 		}
 		$(document).on('click', "#minds-signup-popup .cancel", function(){
 			$.fancybox.close();

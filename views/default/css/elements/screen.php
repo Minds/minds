@@ -26,6 +26,16 @@ and (max-width : 1090px) {
 @media all 
 and (min-width : 0px)
 and (max-width : 720px) {
+	
+	.sidebar-active-default{
+		margin-left:0 !important;
+	}
+	.sidebar-active-default .topbar{
+		width:100% !important;
+	}
+	.show-default{
+		display:none !important;
+	}
 
 
 	.elgg-list > li:hover .excerpt, .elgg-list > li:hover .elgg-menu{

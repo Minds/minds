@@ -25,7 +25,7 @@
 	margin-left:172px;
 }
 .hero.sidebar-active .topbar{
-	width:90%;
+	width:92%;
 }
 .hero .header > .inner, .elgg-page-default .elgg-page-header > .elgg-inner {
 	width: 90%;

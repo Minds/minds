@@ -4,8 +4,6 @@
  */
 namespace minds\core;
 
-use minds\entities;
-
 class encrypt extends base{
 		
 	private $key;

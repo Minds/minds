@@ -10,8 +10,9 @@ minds.nodes.init = function() {
 	$(document).on('click', '#tier-select-button', function(e){
 		e.preventDefault();
 		$('.domain').removeClass('hide');
-		$(window).scrollTop($('.domain').offset().top);
-		
+		//$(window).scrollTop($('.domain').offset().top);
+		$(window).scrollTop(50);
+
 		$('.domain .cell input').enable();
 		
 		minds.nodes.tier = $(this).attr('data-guid');

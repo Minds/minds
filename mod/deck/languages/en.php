@@ -201,10 +201,10 @@ $english = array(
 	'linkedin:updates:favorited' => "You like this post.",
 	'linkedin:companies:follow_none' => "LinkedIn say you doesn't follow any companies.",
 
-
+	'item:object:deck_tab' => 'Deck tabs',
 	'item:object:twitter_account' => 'Twitter', 
 	'item:object:facebook_account'=> 'Facebook',
-	'item:object:tumblr_accoun' => 'Tumblr',
+	'item:object:tumblr_account' => 'Tumblr',
 	'item:object:linkedin_account' => 'Linkedin',
 	'item:object:minds_account' => 'Minds'
 );

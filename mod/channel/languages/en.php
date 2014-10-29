@@ -94,6 +94,7 @@ $english = array(
 	'channel:edit:location:label' => 'Place',
 	'channel:edit:email:label' => 'Email',
 	'channel:edit:description:label' => 'About',
+	'channel:edit:website:label' => 'Website',
 
 );
 

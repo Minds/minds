@@ -81,6 +81,13 @@
 .channel-header .actions > div{
 	margin:2px 0;
 }
+.channel .minds-fixed-sidebar-left > a.name{
+	display:inline-block;
+	width:100%;
+}
+.channel .minds-fixed-sidebar-left > a h1{
+	padding-left:0;
+}
 
 .channel-social-icons{
 	padding:8px 0;
@@ -169,7 +176,7 @@ padding: 0 4px;
 	border-radius: 8px;
 }
 #profile-details {
-	padding: 15px 0;
+	padding: 12px;
 }
 /*** ownerblock ***/
 #profile-owner-block {
@@ -526,6 +533,7 @@ padding: 0 4px;
 
 .minds-fixed-sidebar-left h1{
 	line-height:2.3em;
+	padding-left:16px;
 }
 /**
  * Mobile specific
