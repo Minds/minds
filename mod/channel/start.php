@@ -561,6 +561,7 @@ function channel_custom_vars($user = null) {
 		'description' => '',
 		'contactemail' => '',
 		'location' => '',
+		'website' => '',
 		
 		'social_link_fb' => '',
 		'social_link_gplus' => '',
@@ -568,7 +569,8 @@ function channel_custom_vars($user = null) {
 		'social_link_tumblr' => '',
 		'social_link_linkedin' => '',		
 		'social_link_github' => '',
-		'social_link_pinterest' => ''
+		'social_link_pinterest' => '',
+		'social_link_instagram' => ''
 	);
 
 	if($user){
