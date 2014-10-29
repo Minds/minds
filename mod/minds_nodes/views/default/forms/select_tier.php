@@ -36,7 +36,9 @@ usort($tiers, function($a, $b){
 			foreach($tiers as $tier){
 				if($tier->price === 'Custom')
 					echo '<div class="cell">'. $tier->price . '</div>';
-				else 
+				elseif($tier->price === 0)
+					echo '<div class="cell">Free</div>';
+				else  
 					echo '<div class="cell">$'. $tier->price . '/month</div>';
 			}
 		?>

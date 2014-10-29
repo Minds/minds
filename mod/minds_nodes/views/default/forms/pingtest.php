@@ -51,18 +51,8 @@ if($ping){
 <div class="minds-body-header">
         <div class="inner">
                 <div class="elgg-head clearfix">
- 		 	<h2>Hmmmmm... something is not right</h2>
-    			<h3>Your new node (<?php echo $domain; ?>) could not be reached. If you are using a custom domain, it may be that you need to modify your DNS settings.</p>
-    			<h4>DNS details</h4>
- 		   	<div class="dns">
-      				<p><label>Domain:</label> <?php echo $vars['domain']; ?><br />
-        			<label>IP Address:</label> <?php echo $CONFIG->multisite_server_ip; ?></p>
-   			 </div>
-    
-   			 <br />
-    
-    
-  			  <p>If you believe this to be a mistake, you could try <a href="<?php echo $domain_link; ?>">going there anyway...</a></p>
+ 		 	<h2>Nearly there..</h2>
+    			<h3>There was a delay in launching your site. Please wait a moment and then try <a href="<?= $domain_link ?>" going to <?= $domain_link?></a></h3>
 		</div>
 	<div>
 </div>
@@ -81,9 +71,9 @@ if($ping){
 
     // Change message after a period of time
     setTimeout(function() {
-   		$('#pingtest-results').fadeOut();
+   	$('#pingtest-results').fadeOut();
         $('#pingtest-fail').fadeIn();
-    }, 42000);
+    }, 60000);
     
 	var xmlhttp=new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function()  {

@@ -277,7 +277,7 @@ function channel_page_handler($page) {
 				'type' => 'activity',
 				'limit' => 5,
 				'masonry' => false,
-				'prepend' => $post,
+				'prepend' => elgg_is_logged_in() ? $post : '',
 				'list_class' => 'list-newsfeed',
 				'owner_guid' => $user->guid
 			));

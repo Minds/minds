@@ -2,7 +2,7 @@
 $class = '';
 
 if(elgg_get_context() == 'admin' || elgg_get_context() == 'anypage' || (isset($_COOKIE['sidebarOpen']) && $_COOKIE['sidebarOpen'] == 'true')){
-	$class	= 'show';
+	$class	= 'show show-default';
 }
 ?>
 <div class="global-sidebar <?php echo $class; ?>">

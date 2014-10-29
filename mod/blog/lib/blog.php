@@ -596,7 +596,7 @@ function blog_sidebar($blog){
 	}
 
 	//show featured blogs
-	$return = minds\core\views::view('blog/featured');
+	$return .= minds\core\views::view('blog/featured');
 
 //	$return .= elgg_view('minds/ads', array('type'=>'content.ad-side'));
 	
