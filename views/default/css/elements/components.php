@@ -498,9 +498,19 @@
 .list-newsfeed > li .inner{
 	margin:8px;
 }
+.list-newsfeed li > .inner > .elgg-body{
+	overflow:visible;
+}
+.list-newsfeed > li .head{
+	margin: 0px;
+	display: block;
+	overflow: hidden;
+	height: 50px;
+}
 .list-newsfeed > li .head a{
 	font-weight:bold;
 	font-size:14px;
+	display:block;
 }
 .list-newsfeed > li .head a .username{
 	font-size:11px; 
@@ -538,7 +548,7 @@
 .list-newsfeed li  .activity-rich-post .thumbnail-wrapper{
 	display: block;
 	position: relative;
-	max-height: 253px;
+	max-height: 400px;
 	overflow: hidden;
 	width:110%;
 	margin: -12px -5% 12px;

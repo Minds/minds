@@ -14,7 +14,7 @@ if($owner->username == 'minds' && $comment->time_created <= 1406851200){
 
 }
 
-$icon = elgg_view_entity_icon($owner, 'tiny');
+$icon = elgg_view_entity_icon($owner, 'small');
 
 $author = elgg_view('output/url', array('text' => $owner -> name, 'href' => $owner -> getURL(), 'class' => 'minds-comments-owner'));
 	

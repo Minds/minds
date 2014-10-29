@@ -81,6 +81,13 @@
 .channel-header .actions > div{
 	margin:2px 0;
 }
+.channel .minds-fixed-sidebar-left > a.name{
+	display:inline-block;
+	width:100%;
+}
+.channel .minds-fixed-sidebar-left > a h1{
+	padding-left:0;
+}
 
 .channel-social-icons{
 	padding:8px 0;
@@ -169,7 +176,7 @@ padding: 0 4px;
 	border-radius: 8px;
 }
 #profile-details {
-	padding: 15px 0;
+	padding: 12px;
 }
 /*** ownerblock ***/
 #profile-owner-block {
@@ -307,17 +314,44 @@ padding: 0 4px;
 	padding:0;
 	width:100%;
 }
-.channels .elgg-list li{
+.channels .users-list li{
 	float: left;
-	margin: 15px;
+	margin: 8px;
+	padding:0;
 	border: 0;
-	width: 260px;
-	overflow: hidden;
-	height: 125px;
+	width: 360px;
+	height: auto;
 	display: block;
+	background:transparent;
 	box-shadow:none;
 	-webkit-box-shadow:none;
 	-moz-box-shadow:none;
+}
+.users-list li .elgg-image{
+	float:none;
+	width:100%;
+}
+.users-list li .elgg-image img{
+	width:360px;
+	background-size:cover !important;
+}
+.users-list li .elgg-body{
+	position:absolute;
+	padding:8px;
+	bottom:16px;
+}
+.users-list li .elgg-body h2{
+	margin-top:8px;
+}
+.users-list li .elgg-body h2 a{
+	font-size:18px; 
+	color: #333;
+	text-shadow: 1px 1px 1px #EEE;
+	
+}
+.users-list li .elgg-body .subscribe-button{
+	float:right;
+	width:120px;
 }
 
 /**

@@ -89,6 +89,11 @@ $channel_location_input = elgg_view('input/text', array(
 		'name' => 'location',
 		'value' =>  $form_vars['location']
 ));
+$channel_website_label = elgg_echo('channel:edit:website:label');
+$channel_website_input = elgg_view('input/text', array(
+                'name' => 'website',
+                'value' =>  $form_vars['website']
+));
 $channel_email_label = elgg_echo('channel:edit:email:label');
 $channel_email_input = elgg_view('input/text', array(
                 'name' => 'contactemail',
@@ -130,6 +135,7 @@ $social_tumblr_input = elgg_view('input/text', array('name'=>'social_link_tumblr
 $social_linkedin_input = elgg_view('input/text', array('name'=>'social_link_linkedin', 'value'=>$user->social_link_linkedin));
 $social_github_input =elgg_view('input/text', array('name'=>'social_link_github', 'value'=>$user->social_link_github));
 $social_pinterest_input = elgg_view('input/text', array('name'=>'social_link_pinterest', 'value'=>$user->social_link_pinterest));
+$social_instagram_input = elgg_view('input/text', array('name'=>'social_link_instagram', 'value'=>$user->social_link_instagram));
 
 $form = <<<FORM
 				
@@ -261,6 +267,14 @@ $form = <<<FORM
                                 $social_pinterest_input
                         </td>
                 </tr>
+                 <tr>
+                        <td class="label">
+                                <!--PINTEREST--><span class="entypo">&#59410;</span>
+                        </td>
+                        <td>
+                                $social_instagram_input
+                        </td>
+                </tr>
 				
 	</table>
 			
@@ -276,6 +290,14 @@ $form = <<<FORM
 			</td>
 			<td>
 				$channel_brief_description_input
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				$channel_website_label
+			</td>
+			<td>
+				$channel_website_input
 			</td>
 		</tr>
 		<tr>

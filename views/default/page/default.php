@@ -34,6 +34,9 @@ if(get_input('async')){
 	echo $body;
 	exit;
 }
+
+if(isset($_COOKIE['sidebarOpen']) && $_COOKIE['sidebarOpen'] == 'true')
+	$class .= ' sidebar-active sidebar-active-default';
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -145,7 +145,8 @@ blockquote {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family:"Lato", Helvetica, Arial;
+/*	font-family:"Lato", Helvetica, Arial; */
+	font-family:Helvetica, Arial, sans";
 	font-weight:400;
 	color: #333;
 }

@@ -373,7 +373,7 @@
 	position:fixed;
 	left:0;
 	bottom:0;
-	width:248px;
+	width:180px;
 	background:#111;
 }
 .global-sidebar > .elgg-menu-footer > li{
@@ -515,11 +515,6 @@
 .elgg-menu-footer > li > a {
 	display: inline-block;
 	color: #999;
-}
-
-.elgg-menu-footer > li:after {
-	content: "\007C";
-	padding: 0 4px;
 }
 
 .elgg-menu-footer-default {
