@@ -113,3 +113,47 @@
 	opacity: 0;
 	filter: alpha(opacity=0);
 }
+
+
+/**
+ * Footer
+ */
+.cms-footer{
+	background: #222;
+	width: 100%;
+	padding: 64px 0;
+	height: 45px;
+	display: block;
+	position: relative;
+}
+.cms-footer > .inner{
+	width:900px;
+	display:block;
+	margin:auto;
+}
+.cms-footer > .inner .cms-footer-nav{
+	float:left;
+}
+.cms-footer-nav ul li a{
+ 	font-size:14px;
+ 	font-weight:100;
+ 	font-family:"Lato", Helvetica, Arial, Sans-serif;
+ 	padding:8px;
+ 	color:#EEE;
+ }
+ 	
+.cms-footer-copyright{
+	float:right;
+	clear:left;
+	color:#888;
+	font-size:12px;
+	font-family:"Lato", Helvetica, Arial, Sans-serif;
+}
+.cms-footer-social{
+	float:right;
+}
+.cms-footer-social a{
+	color:#BBB;
+	font-size:34px;
+	padding:0 4px;
+}

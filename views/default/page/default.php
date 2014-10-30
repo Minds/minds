@@ -61,7 +61,7 @@ if(isset($_COOKIE['sidebarOpen']) && $_COOKIE['sidebarOpen'] == 'true')
 			<?php echo $body; ?>
 		</div>
 
-		<?php if(!elgg_is_logged_in()):?>
+		<?php if(!elgg_is_logged_in() && false):?>
 		<div class="static-footer">
 			<?php echo $footer; ?>	
 		</div>

@@ -80,6 +80,8 @@ class start extends bases\plugin{
 		$return .= elgg_view('cms/sections', array('sections'=>$sections, 'group'=>'index'));
 		$return .= $add;
 		
+		$return .= elgg_view('cms/footer');
+		
 		return $return;
 	}
 
