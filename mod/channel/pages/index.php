@@ -35,7 +35,7 @@ switch ($vars['page']) {
 			$users[] = new minds\entities\user(json_decode($subscribers,true));
 		}
 		
-		$content = elgg_view_entity_list($users,$vars, $offset, $limit, false, false,false);
+		$content = elgg_view_entity_list($users,$options, $offset, $limit, false, false,false);
 		break;
 	case 'subscriptions':
 		$db = new minds\core\data\call('friends');
@@ -50,7 +50,7 @@ switch ($vars['page']) {
 			
 			$users[] = new minds\entities\user(json_decode($subscription,true));
 		}
-		$content = elgg_view_entity_list($users,$vars, $offset, $limit, false, false,false);
+		$content = elgg_view_entity_list($users,$options, $offset, $limit, false, false,false);
 		break;
 	case 'featured':
 		$guids = minds\core\data\indexes::fetch('user:featured', array('limit'=>$limit, 'offset'=>$offset));
@@ -69,10 +69,10 @@ switch ($vars['page']) {
 		break;
 	case 'trending':
 		//trending
-       		$options = array(
+       		$opts = array(
                 	'timespan' => get_input('timespan', 'day')
        	 	);
-	        $trending = new MindsTrending(null, $options);
+	        $trending = new MindsTrending(null, $opts);
 		$guids = $trending->getList(array('type'=>'user', 'limit'=>$limit, 'offset'=>(int) $offset));
 		$options['guids'] = $guids;
 		if($guids){

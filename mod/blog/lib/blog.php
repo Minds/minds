@@ -71,7 +71,7 @@ function blog_get_page_content_read($guid = NULL) {
 	$title = elgg_view_title($blog->title, array('class' => 'heading-main elgg-heading-main'));
 
 	$return['buttons'] = ' ';	
-	$return['title'] = $blog->title;
+	$return['title'] .= $blog->title;
 	$return['subtitle'] = elgg_get_friendly_time($blog->time_created); 
 
 	if($blog->viewcount){
@@ -95,7 +95,6 @@ function blog_get_page_content_read($guid = NULL) {
 		}
 	}
 	
-	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'content-header'));
 	$return['content'] .= elgg_view_entity($blog, array('full_view' => true));
 	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'content-below-banner'));
 	//check to see if comment are on
