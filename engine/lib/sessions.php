@@ -325,6 +325,8 @@ function login(ElggUser $user, $persistent = false) {
 		return false;
 	}
 
+	setcookie('sidebarOpen', 'true', time() + 60, '/');
+
 	return true;
 }
 
