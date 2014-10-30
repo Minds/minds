@@ -312,7 +312,8 @@ padding: 0 4px;
  */
 .channels .elgg-list {
 	padding:0;
-	width:100%;
+	width:1128px;
+	margin:auto;
 }
 .channels .users-list li{
 	float: left;
