@@ -12,7 +12,7 @@
    	},
 	"repositories": [{
             "type": "vcs",
-            "url": "git@github.com:minds/minds-php-sdk.git"
+            "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com:minds/minds-php-sdk.git"
         }],
 	"minimum-stability": "dev",
 	"autoload": {
