@@ -16,7 +16,7 @@
 ?>
 
 /* Clearfix */
-.clearfix:after,
+/*.clearfix:after,
 .elgg-grid:after,
 .elgg-layout:after,
 .elgg-inner:after,
@@ -31,7 +31,7 @@
 	height: 0;
 	clear: both;
 	visibility: hidden;	
-}
+}*/
 
 /* Fluid width container that does not wrap floats */
 .elgg-body,
