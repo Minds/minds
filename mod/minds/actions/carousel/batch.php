@@ -36,7 +36,8 @@ if(get_input('admin')){
 
 	$items = elgg_get_entities(array(
 		'type' => 'object',
-		'subtype' => 'carousel', 
+		'subtype' => 'carousel',
+		'owner_guid'=>get_input('owner_guid', elgg_get_logged_in_user_guid()), 
 		'limit' => 100
 	));
 }
