@@ -27,10 +27,12 @@
 
 .cms-section .container .left{
 	float:left;
+	max-width:500px;
 }
 
 .cms-section .container .right{
 	float:right;
+	max-width:500px;
 }
 .cms-section .container .cell{
 	display:inline-block;
@@ -80,6 +82,7 @@
 	font-size:16px;
 	border:0;
 	background:transparent;
+	width:500px;
 }
 
 
