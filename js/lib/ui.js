@@ -169,16 +169,16 @@ elgg.ui.initHoverMenu = function(parent) {
 	}
 
 	// avatar image menu link
-	$(parent).find(".elgg-avatar").on('mouseover', function() {
+	$(document).on('mouseover',".elgg-avatar", function() {
 		$(this).children(".elgg-icon-hover-menu").show();
 	})
-	.on('mouseout', function() {
+	.on('mouseout',".elgg-avatar", function() {
 		$(this).children(".elgg-icon-hover-menu").hide();
 	});
 
 
 	// avatar contextual menu
-	$(".elgg-avatar > .elgg-icon-hover-menu").on('click', function(e) {
+	$(document).on('click', ".elgg-avatar > .elgg-icon-hover-menu", function(e) {
 		// check if we've attached the menu to this element already
 		var $hovermenu = $(this).data('hovermenu') || null;
 

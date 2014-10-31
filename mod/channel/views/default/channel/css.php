@@ -338,8 +338,11 @@ padding: 0 4px;
 }
 .users-list li .elgg-body{
 	position:absolute;
-	padding:8px;
-	bottom:16px;
+	padding:8px 8px 0;
+	bottom:23px;
+}
+.users-list li .elgg-avatar > .elgg-icon-hover-menu{
+	right:0 !important;
 }
 .users-list li .elgg-body h2{
 	margin-top:8px;
@@ -611,3 +614,4 @@ and (max-width : 720px) {
 		margin:8px 0;
 	}	
 }
+
