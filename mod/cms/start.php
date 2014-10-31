@@ -55,7 +55,14 @@ class start extends bases\plugin{
 					'text' => $title
 				));
 			}
-		}
+		} 
+		elgg_register_menu_item('footer', array(
+			'name' => 'add',
+			'href' => elgg_get_site_url() . 'p/add',
+			'text' => '+ Add', 
+			'priority'=>99999
+		));
+
 	}
 	
 	/**
