@@ -156,7 +156,7 @@ if(elgg_is_active_plugin('analytics') && $trending && false){
 
 }
 
-$sidebar = elgg_view('minds_social/social_footer');
+//$sidebar = elgg_view('minds_social/social_footer');
 $sidebar .= elgg_view_comments($entity);
 
 $body = elgg_view_layout("content", array(	
