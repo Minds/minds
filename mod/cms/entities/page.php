@@ -50,8 +50,12 @@ class page extends entities\object{
 		);
 	}
 	
-	public function save($ia = false){
-		$guid = parent::save($ia);
+	public function getURL(){
+		return elgg_get_site_url() . 'p/'.$this->uri;
+	}
+	
+	public function save($timebased = true){
+		$guid = parent::save($timebased);
 		
 		$lu = new data\lookup();
 		$lu->set("object:cms:menu:$this->context", array($this->uri => "$this->title"));

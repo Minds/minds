@@ -31,6 +31,7 @@ class start extends bases\plugin{
 		\elgg_register_plugin_hook_handler('output-extend', 'index', array($this, 'index'));
 
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
+		\elgg_register_plugin_hook_handler('register', 'menu:entity',array($this, 'menuOverride'), 900);
 
 		
 		//\elgg_register_action('bitcoin/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
@@ -76,10 +77,41 @@ class start extends bases\plugin{
 		$return .= elgg_view('cms/sections', array('sections'=>$sections, 'group'=>'index'));
 		$return .= $add;
 		
-		$return .= elgg_view('cms/footer');
+		elgg_extend_view('page/elements/foot', 'cms/footer');
 		
 		return $return;
 	}
 
+	public function menuOverride($hook, $type, $return, $params){
+		if(isset($params['entity']) &&  $params['entity']->subtype == 'cms_page'){
+		
+			$entity = $params['entity'];
+			foreach($return as $k => $item){
+				if(in_array($item->getName(), array('access', 'feature', 'thumbs:up', 'thumbs:down', 'delete')))
+					unset($return[$k]);
+			}
+			
+			$options = array(
+							'name' => 'edit',
+							'href' => "p/edit/$entity->uri",
+							'text' => 'Edit',
+							'title' => elgg_echo('edit'),
+							'priority' => 1,
+						);
+			$return[] = \ElggMenuItem::factory($options);	
+			
+			$options = array(
+							'name' => 'delete',
+							'href' => "p/delete/$entity->uri",
+							'text' => 'Delete',
+							'title' => elgg_echo('delete'),
+							'class'=>'ajax-non-action'
+						);
+			$return[] = \ElggMenuItem::factory($options);	
+			
+			
+			return $return;
+		}
+	}
 	
 }

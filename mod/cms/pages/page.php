@@ -28,8 +28,15 @@ class page extends core\page implements interfaces\page{
 			default:
 				try{
 					$page = new entities\page($pages[0]);
+					
+					$menu = elgg_view_menu('entity', array(
+						'entity'=>$page,
+						'class' => 'elgg-menu-hz'
+					));
+					
 					$title = $page->title;
-					$content = elgg_view_title($title);
+					$content .= $menu;
+					$content .= elgg_view_title($title);
 					$content .= elgg_view('cms/pages/body', array('body'=>$page->body));
 				} catch(exceptions\notfound $e){
 					$title = '404 - Page not found';
@@ -39,7 +46,7 @@ class page extends core\page implements interfaces\page{
 		
 		$body = elgg_view_layout('one_sidebar', array(
 			'content'=>$content, 
-			'sidebar_class'=>'elgg-sidebar-alt',
+			'sidebar_class'=>'elgg-sidebar-alt cms-sidebar-wrapper',
 			'sidebar' => elgg_view('cms/pages/sidebar', array('context'=> 'footer'))
 		));
 		
@@ -64,6 +71,7 @@ class page extends core\page implements interfaces\page{
 			->setUri(get_input('uri'))
 			->save();
 	
+		$this->forward($page->getURL());
 	}
 	
 	public function put($pages){}

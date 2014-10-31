@@ -166,3 +166,53 @@
 .cms-page-body .hero{
 	margin-bottom:-230px;	
 }
+
+.cms-sidebar-wrapper{
+	width: 164px;
+	margin-right: 32px;
+	padding-right: 32px;
+	border-right: 1px solid #EEE;
+}
+
+.cms-pages-sidebar{
+
+}
+.cms-pages-sidebar ul{
+	float:none;
+	text-align:left;
+}
+.cms-pages-sidebar ul li{
+	float:none;
+	display:block;
+}
+.cms-pages-sidebar ul li a{
+	display:block;
+	font-size:13px;
+	font-weight:bold;
+	color:#333;
+	padding:16px 32px;
+	border-bottom:1px solid #DDD;
+}
+.cms-pages-sidebar ul li a:hover{
+	background:#EEE;
+	cursor:pointer;
+}
+.cms-pages-sidebar-admin{
+	margin-top:32px;
+}
+.cms-pages-sidebar-admin > a{
+	background:#EEE;
+	padding:16px 32px;
+	border-bottom:1px solid #DDD;
+	color:#333;
+	font-weight:bold;
+	display:block;
+}
+.elgg-form-cms-page h4{
+	font-size:16px;
+	font-weight:bold;
+	line-height:18px;
+}
+.elgg-form-cms-page p{
+	padding:8px 0;
+}
