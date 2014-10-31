@@ -13,7 +13,13 @@ class contact extends core\page implements interfaces\page{
 		
 		$content = \elgg_view_form('contact', array('action'=>'contact'));
 		
-		$body = \elgg_view_layout('one_column', array('title'=>\elgg_echo('guard:twofactor'), 'content'=>$content));
+		$body = \elgg_view_layout('one_sidebar', array(
+			'title'=>\elgg_echo('guard:twofactor'), 
+			'content'=>$content,
+			'sidebar'=>elgg_view('cms/pages/sidebar'),
+			'sidebar_class' => 'elgg-sidebar-alt cms-sidebar-wrapper',
+			'hide_ads'=>true
+		));
 		
 		echo $this->render(array('body'=>$body));
 	}

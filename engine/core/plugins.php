@@ -19,6 +19,7 @@ class plugins extends base{
 		$this->load();
 		
 		\elgg_register_event_handler('init', 'system', array($this, 'initPlugins'));
+		\elgg_register_event_handler('activate', 'plugin', array($this, 'clearCache'));
 	}
 
 	/**
@@ -206,6 +207,14 @@ class plugins extends base{
 		global $CONFIG;
 		$path = "/tmp/minds/".$CONFIG->cassandra->keyspace;
 		return @unlink("$path/$key");
+	}
+
+	/**
+	 * Clear resources cache for cdn
+	 */
+	public function clearCache(){
+		\datalist_set('lastcache', time());
+		\datalist_set('simplecache_lastcached_default', time());
 	}
 	
 	/**

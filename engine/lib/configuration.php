@@ -602,7 +602,10 @@ function _elgg_load_application_config() {
 	
 	if(!isset($CONFIG->lastcache)){
 		$lastcached = datalist_get("simplecache_lastcached_$viewtype") ?: datalist_get("lastcache");
-		$CONFIG->lastcache = $lastcached;
+		if($lastcached)
+			$CONFIG->lastcache = $lastcached;
+		else
+		$CONFIG->lastcache = time();
 		if(minds_is_multisite())
 			$CONFIG->lastcache = $CONFIG->lastcache_multi . $CONFIG->lastcache;
 	}

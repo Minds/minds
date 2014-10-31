@@ -1,3 +1,3 @@
 <p class="message">
-	<?= htmlspecialchars($vars['message'],ENT_QUOTES) ?>
+	<?= strip_tags($vars['message'], '<a>') ?>
 </p>

@@ -34,6 +34,7 @@
 }
 .hero > .body > .inner, .elgg-page-default .elgg-page-body > .elgg-inner {
 	width: 90%;
+	height:100%;
 	margin: 0 auto;
 	padding: 16px 0;
 }
@@ -188,7 +189,7 @@
 .hero > .body, .elgg-page-body{
 	position:relative;
 	width:100%;
-	height:auto;
+	height:100%;
 	min-height:100%;
 	margin-top:74px;
 }

@@ -58,8 +58,8 @@ class multisite extends base{
 		$CONFIG->cassandra->servers =  $CONFIG->multisite->servers;
 		
 		$CONFIG->wwwroot = (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : 'https') . "://$this->host/"; 
-		if(strpos($CONFIG->wwwroot, '.minds.com') === FALSE)
-			$CONFIG->wwwroot = "http://$this->host/";
+		//if(strpos($CONFIG->wwwroot, '.minds.com') === FALSE)
+		//	$CONFIG->wwwroot = "http://$this->host/";
 
 		if(isset($row['dataroot']))
 			$CONFIG->dataroot = unserialize($row['dataroot']);

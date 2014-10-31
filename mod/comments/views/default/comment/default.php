@@ -20,7 +20,7 @@ $author = elgg_view('output/url', array('text' => $owner -> name, 'href' => $own
 	
 $menu = elgg_view_menu('comments', array(
 	'comment' => $comment,
-    'handler' => $handler,
+    'handler' => 'comments',
     'class' => 'elgg-menu-hz',
     'sort_by' => 'priority',
 ));

@@ -30,7 +30,8 @@ class start extends bases\plugin{
 
 		\elgg_register_plugin_hook_handler('output-extend', 'index', array($this, 'index'));
 
-		//\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
+		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
+		\elgg_register_plugin_hook_handler('register', 'menu:entity',array($this, 'menuOverride'), 900);
 
 		
 		//\elgg_register_action('bitcoin/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
@@ -42,23 +43,28 @@ class start extends bases\plugin{
 	/**
 	 * Page setup (menus etc)
 	 */
-	public function pageSetup(){
-		if(elgg_get_context() == 'bitcoin'){
-			
-			\elgg_register_menu_item('page', array(
-			    'name' => 'bitcoin',
-			    'text' => '<span class="entypo">&#59408;</span> My Wallet',
-			    'href' => 'bitcoin/wallet',
-			    'title' => elgg_echo('bitcoin')
-		    ));
-			
-			\elgg_register_menu_item('page', array(
-			    'name' => 'bitcoin:send',
-			    'text' => 'Send',
-			    'href' => 'bitcoin/send',
-			    'title' => elgg_echo('bitcoin:send')
-		    ));
+	public function pageSetup($event, $type, $params){
+		
+		$lu = new core\data\lookup();
+		$menu = $lu->get('object:cms:menu:footer');
+		if($menu){
+			foreach($menu as $path => $title){
+				elgg_register_menu_item('footer', array(
+					'name' => $title,
+					'href' => elgg_get_site_url() . 'p/'.$path,
+					'text' => $title
+				));
+			}
 		}
+		if(elgg_is_admin_logged_in()){ 
+		elgg_register_menu_item('footer', array(
+			'name' => 'add',
+			'href' => elgg_get_site_url() . 'p/add',
+			'text' => '+ Add', 
+			'priority'=>99999
+		));
+		}
+
 	}
 	
 	/**
@@ -80,8 +86,42 @@ class start extends bases\plugin{
 		$return .= elgg_view('cms/sections', array('sections'=>$sections, 'group'=>'index'));
 		$return .= $add;
 		
+		elgg_extend_view('page/elements/foot', 'cms/footer');
+		
 		return $return;
 	}
 
+	public function menuOverride($hook, $type, $return, $params){
+		if(isset($params['entity']) &&  $params['entity']->subtype == 'cms_page'){
+		
+			$entity = $params['entity'];
+			foreach($return as $k => $item){
+				if(in_array($item->getName(), array('access', 'feature', 'thumbs:up', 'thumbs:down', 'delete')))
+					unset($return[$k]);
+			}
+		
+			if($entity->canEdit()){	
+				$options = array(
+								'name' => 'edit',
+								'href' => "p/edit/$entity->uri",
+								'text' => 'Edit',
+								'title' => elgg_echo('edit'),
+								'priority' => 1,
+							);
+				$return[] = \ElggMenuItem::factory($options);	
+				
+				$options = array(
+								'name' => 'delete',
+								'href' => "p/delete/$entity->uri",
+								'text' => 'Delete',
+								'title' => elgg_echo('delete'),
+								'class'=>'ajax-non-action'
+							);
+				$return[] = \ElggMenuItem::factory($options);	
+				
+			}
+			return $return;
+		}
+	}
 	
 }

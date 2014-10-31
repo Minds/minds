@@ -169,7 +169,9 @@ class clusters extends base{
 			\register_error('Sorry, we could not authorize your login. This user belongs to another base node.');
 			return false;
 		}
-		
+		$user->access_id = 2;
+		$user->enable();	
+	
 		if(!\login($user)){
 			\register_error('Sorry, we could not authorize your login.');
 			return false;

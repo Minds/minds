@@ -79,7 +79,7 @@ class comments extends \ElggPlugin{
 	
 		$comment = $params['comment'];
 	
-		unset($return);
+		//unset($return);
 		
 		/**
 		 * Delete
