@@ -25,7 +25,7 @@
 	border-bottom:1px solid #EEE;
 	font-weight:bold;
 }
-.minds-menu-market li a:hover, .market-menu-item:hover{
+.minds-menu-market li a:hover, .market-menu-item:hover, .market-menu-item.active{
 	background:#DDD;
 	text-decoration:none;
 }

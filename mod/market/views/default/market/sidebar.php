@@ -5,7 +5,9 @@
  
 ?>
 
-
+<a href="<?= elgg_get_site_url()?>market/featured" class="market-menu-item <?= $_SERVER['REQUEST_URI'] == '/market/featured' ? 'active' : '' ?>">
+	Market: Featured
+</a>
 <a href="<?= elgg_get_site_url()?>market/all" class="market-menu-item">
 	Market: All
 </a>

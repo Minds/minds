@@ -106,7 +106,7 @@ class start extends bases\plugin{
 		
 		$entity = $params['entity'];
 		foreach($return as $k => $item){
-			if(in_array($item->getName(), array('access', 'feature', 'thumbs:up', 'thumbs:down', 'delete')))
+			if(in_array($item->getName(), array('access', 'thumbs:up', 'thumbs:down', 'delete')))
 				unset($return[$k]);
 		}
 		
