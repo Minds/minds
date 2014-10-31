@@ -7,7 +7,9 @@
 	right:0;
 	z-index: 100;
 }
-
+.index{
+margin-bottom:-230px;
+}
 /* ***************************************
 	AVATAR UPLOADING & CROPPING
 *************************************** */

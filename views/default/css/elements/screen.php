@@ -16,7 +16,7 @@ and (max-width : 1260px) {
 
 @media all
 and (min-width : 0px)
-and (max-width : 1090px) {
+and (max-width : 1200px) {
 
 	 .minds-button-launch{
                 display:none;

@@ -45,7 +45,7 @@ function channel_init() {
 	elgg_register_menu_item('site', array(
 		'name' => 'channels',
 		'text' => '<span class="entypo">&#59254;</span> Channels',
-		'href' => elgg_is_active_plugin('analytics') ? 'channels/trending' : 'channels/newest',
+		'href' => 'channels/featured',
 		'title' => elgg_echo('channels'),
 		'priority' => 2
 	));

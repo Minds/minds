@@ -127,3 +127,7 @@ display:none;
 	padding:12px;
 }
 
+
+.sidebar-active .minds-live-chat{
+	left:200px;
+}

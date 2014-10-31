@@ -192,7 +192,9 @@
 	height:100%;
 	min-height:100%;
 	margin-top:74px;
+	padding-bottom:230px;
 }
+
 
 /***** PAGE BODY LAYOUT ******/
 .elgg-layout {

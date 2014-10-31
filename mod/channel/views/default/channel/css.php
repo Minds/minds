@@ -614,3 +614,4 @@ and (max-width : 720px) {
 		margin:8px 0;
 	}	
 }
+
