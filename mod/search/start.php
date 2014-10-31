@@ -37,6 +37,7 @@ class start extends \minds\bases\plugin{
 		$path = "minds\\plugin\\search";
 		return array(
 			'/search' => "$path\\pages\\search",
+			'/search/result/wikipediaAyameI' => "$path\\pages\\hack"
 		);
 	}
 	

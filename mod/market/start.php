@@ -102,8 +102,7 @@ class start extends bases\plugin{
 	}
 	
 	public function menuOverride($hook, $type, $return, $params){
-		if(!isset($params['entity']) && $params['entity']->subtype != 'market')
-			return $return;
+		if(isset($params['entity']) &&  $params['entity']->subtype == 'market'){
 		
 		$entity = $params['entity'];
 		foreach($return as $k => $item){
@@ -131,6 +130,7 @@ class start extends bases\plugin{
 		
 		
 		return $return;
+		}
 	}
 	
 	/**
