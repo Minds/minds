@@ -27,8 +27,8 @@ class paypal extends core\base{
 	public function init(){
 		$this->context = new ApiContext(
 			new OAuthTokenCredential(
-				elgg_get_plugin_setting('paypalKey', 'payments') ?: 'AWAkZhBE-utDCVpXbXlJhsbG1Kz5QsIZHXuK6vdZ7Qi3kbS3oI113y445VOT',
-				elgg_get_plugin_setting('paypalSecret', 'payments') ?: 'ENWFjBBNhJdmry2lvM39VakOEbgKzkojisIMqmYR-n3UQOwk_0FB-jn1T3lo'
+				elgg_get_plugin_setting('paypalKey', 'payments') ?: 'AaUOIRC8rTb2jXZtnUvjMXWH1BH-5spBnL2kILF2AEPygMxvWOqME3e06hnj',
+				elgg_get_plugin_setting('paypalSecret', 'payments')?: 'EOWEZBB5n4Kc84mxXQhqF1rgz0GMKXyJ_fmWi5s1sk7k_35GeWTtXIwU6p2t'
 				//'ATAByBA7wVln5oky2XKkglEoH7k0DJmZVOz3S-DGJYkrNrHcIjZCdX1HHLwH',
 				//'EAJfIhCZXGo6L4YAiyFjlpPVKVspjwD5pYUanSPIDzTHU0lRLf8SP22BX2Q9'
 			)
