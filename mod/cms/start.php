@@ -55,13 +55,15 @@ class start extends bases\plugin{
 					'text' => $title
 				));
 			}
-		} 
+		}
+		if(elgg_is_admin_logged_in()){ 
 		elgg_register_menu_item('footer', array(
 			'name' => 'add',
 			'href' => elgg_get_site_url() . 'p/add',
 			'text' => '+ Add', 
 			'priority'=>99999
 		));
+		}
 
 	}
 	
@@ -97,26 +99,27 @@ class start extends bases\plugin{
 				if(in_array($item->getName(), array('access', 'feature', 'thumbs:up', 'thumbs:down', 'delete')))
 					unset($return[$k]);
 			}
-			
-			$options = array(
-							'name' => 'edit',
-							'href' => "p/edit/$entity->uri",
-							'text' => 'Edit',
-							'title' => elgg_echo('edit'),
-							'priority' => 1,
-						);
-			$return[] = \ElggMenuItem::factory($options);	
-			
-			$options = array(
-							'name' => 'delete',
-							'href' => "p/delete/$entity->uri",
-							'text' => 'Delete',
-							'title' => elgg_echo('delete'),
-							'class'=>'ajax-non-action'
-						);
-			$return[] = \ElggMenuItem::factory($options);	
-			
-			
+		
+			if($entity->canEdit()){	
+				$options = array(
+								'name' => 'edit',
+								'href' => "p/edit/$entity->uri",
+								'text' => 'Edit',
+								'title' => elgg_echo('edit'),
+								'priority' => 1,
+							);
+				$return[] = \ElggMenuItem::factory($options);	
+				
+				$options = array(
+								'name' => 'delete',
+								'href' => "p/delete/$entity->uri",
+								'text' => 'Delete',
+								'title' => elgg_echo('delete'),
+								'class'=>'ajax-non-action'
+							);
+				$return[] = \ElggMenuItem::factory($options);	
+				
+			}
 			return $return;
 		}
 	}

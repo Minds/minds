@@ -397,7 +397,7 @@ function elgg_admin_sort_page_menu($hook, $type, $return, $params) {
  * @return void
  * @access private
  */
-function admin_pagesetup() {
+function admin_pagesetup(){
 	if (elgg_in_context('admin')) {
 		$url = elgg_get_simplecache_url('css', 'admin');
 		elgg_register_css('elgg.admin', $url);

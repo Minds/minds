@@ -166,7 +166,16 @@
 .cms-page-body .hero{
 	margin-bottom:-230px;	
 }
-
+.cms-page-body p, .cms-page-body h2{
+	font-family:"Lato", Helvetica, Arial;
+}
+.cms-page-body h2{
+	line-height:90px;
+}
+.cms-page-body p{
+	font-weight:300;
+	font-size:16px;
+}
 .cms-sidebar-wrapper{
 	width: 164px;
 	margin-right: 32px;

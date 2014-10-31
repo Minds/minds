@@ -22,7 +22,7 @@ function thumbs_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:river', 'thumbs_river_menu_setup');
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'thumbs_entity_menu_setup');
 	elgg_register_plugin_hook_handler('register', 'menu:thumbs', 'thumbs_entity_menu_setup');
-	elgg_register_plugin_hook_handler('register', 'menu:comments', 'thumbs_comments_menu_setup');
+	elgg_register_plugin_hook_handler('register', 'menu:comments', 'thumbs_entity_menu_setup');
 
 	$actions_base = elgg_get_plugins_path() . 'thumbs/actions/thumbs';
 	elgg_register_action('thumbs/up', "$actions_base/up.php");
@@ -36,9 +36,11 @@ function thumbs_entity_menu_setup($hook, $type, $return, $params) {
 	if (elgg_in_context('widgets')) {
 		return $return;
 	}
-
+	
 	$entity = $params['entity'];
-
+	if(!$entity && isset($params['comment']))
+		$entity = $params['comment'];
+	
 	if ($entity -> type != "group" && $entity -> type != "user") {
 
 		// likes button
@@ -54,13 +56,6 @@ function thumbs_entity_menu_setup($hook, $type, $return, $params) {
 		if ($count) {
 			$options = array('name' => 'thumbs:count', 'text' => $count, 'href' => false, 'priority' => 50, );
 			$return[] = ElggMenuItem::factory($options);
-		}
-	}
-
-	//Remove comments link
-	foreach ($return as $key => $item) {
-		if ($item -> getName() == 'comment') {
-			unset($return[$key]);
 		}
 	}
 
@@ -114,44 +109,6 @@ function thumbs_river_menu_setup($hook, $type, $return, $params) {
 	return $return;
 }
 
-/**
- * Add thumb options to Minds Comments
- */
-function thumbs_comments_menu_setup($hook, $type, $return, $params) {
-	if (elgg_is_logged_in()) {
-		$type = $params['type'];
-		$pid = $params['pid'];
-		$id = $params['id'];
-		$thumbsUP = $params['thumbs:up'];
-		$thumbsDOWN = $params['thumbs:down'];
-		$alreadyUP = is_array($thumbsUP) ? in_array(elgg_get_logged_in_user_guid(), $thumbsUP) : false;
-		$alreadyDOWN = is_array($thumbsDOWN) ? in_array(elgg_get_logged_in_user_guid(), $thumbsDOWN) : false;
-		
-		// up button
-		$options = array('name' => 'thumbs:up', 'text' => elgg_view('thumbs/button-up', array('type' => 'comment', 'comment_type'=>$type, 'pid'=>$pid, 'id'=>$id, 'count'=>count($thumbsUP), 'already'=>$alreadyUP)), 'href' => false, 'priority' => 98, );
-		$return[] = ElggMenuItem::factory($options);
-
-		// down button
-		$options = array('name' => 'thumbs:down', 'text' => elgg_view('thumbs/button-down', array('type' => 'comment', 'comment_type'=>$type, 'pid'=>$pid, 'id'=>$id, 'count'=>count($thumbsDOWN), 'already'=>$alreadyDOWN)), 'href' => false, 'priority' => 99, );
-		$return[] = ElggMenuItem::factory($options);
-
-		// count
-		$count = elgg_view('thumbs/count', array('type' => 'comment','thumbsUP'=>$thumbsUP, 'thumbsDOWN'=>$thumbsDOWN, 'id'=>$id ));
-		if ($count) {
-			$options = array('name' => 'thumbs:count', 'text' => $count, 'href' => false, 'priority' => 90, );
-			$return[] = ElggMenuItem::factory($options);
-		}
-
-	}
-	//Remove comments link
-	foreach ($return as $key => $item) {
-		if ($item -> getName() == 'comment') {
-			unset($return[$key]);
-		}
-	}
-
-	return $return;
-}
 
 /**
  * Count how many people have voted up and entity

@@ -47,7 +47,8 @@ class page extends core\page implements interfaces\page{
 		$body = elgg_view_layout('one_sidebar', array(
 			'content'=>$content, 
 			'sidebar_class'=>'elgg-sidebar-alt cms-sidebar-wrapper',
-			'sidebar' => elgg_view('cms/pages/sidebar', array('context'=> 'footer'))
+			'sidebar' => elgg_view('cms/pages/sidebar', array('context'=> 'footer')),
+			'hide_ads' => true
 		));
 		
 		elgg_extend_view('page/elements/foot', 'cms/footer');
