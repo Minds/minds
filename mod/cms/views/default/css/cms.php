@@ -122,7 +122,7 @@
 	background: #222;
 	width: 100%;
 	padding: 64px 0;
-	height: 45px;
+	height: 110px;
 	display: block;
 	position: relative;
 }
@@ -156,4 +156,13 @@
 	color:#BBB;
 	font-size:34px;
 	padding:0 4px;
+}
+
+
+/**
+ * Pages
+ */
+
+.cms-page-body .hero{
+	margin-bottom:-230px;	
 }
