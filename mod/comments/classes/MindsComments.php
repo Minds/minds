@@ -1,5 +1,7 @@
 <?php
 
+use minds\plugin\search\services\elasticsearch as elasticsearch;
+
 class MindsComments {
 
 	function __construct() {
