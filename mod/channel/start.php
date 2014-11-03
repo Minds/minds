@@ -44,7 +44,7 @@ function channel_init() {
 	
 	elgg_register_menu_item('site', array(
 		'name' => 'channels',
-		'text' => '<span class="entypo">&#59254;</span> Channels',
+		'text' => '<span class="entypo">&#59254;</span> Directory',
 		'href' => 'channels/featured',
 		'title' => elgg_echo('channels'),
 		'priority' => 2
