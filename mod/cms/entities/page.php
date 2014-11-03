@@ -63,6 +63,14 @@ class page extends entities\object{
 		return $guid;
 	}
 	
+	public function delete($recursive = true){
+		
+		$lu = new data\lookup();
+		$lu->removeColumn("object:cms:menu:$this->context", $this->uri);
+				
+		return parent::delete($recursive);
+	}
+	
 	public function setTitle($title){
 		$this->title = $title;
 		return $this;

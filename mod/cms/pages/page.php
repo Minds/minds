@@ -25,6 +25,13 @@ class page extends core\page implements interfaces\page{
 			case 'add':
 				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/add')); 
 				break;
+			case 'delete':
+				$page = new entities\page($pages[1]);
+				if($page->canEdit()){
+					$page->delete();
+				}
+				$this->forward(REFERRER);
+				break;
 			default:
 				try{
 					$page = new entities\page($pages[0]);
