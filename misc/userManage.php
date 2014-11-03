@@ -4,7 +4,6 @@ require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access(true);
 
-
 //$user = new minds\entities\user('hobbesdeutschjr.');
 //$user->cache = true;
 //$user->username = 'HobbesDeutschJr';

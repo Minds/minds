@@ -16,7 +16,7 @@ class hack extends core\page implements interfaces\page {
          */
         public function get($pages){
 		\elgg_load_library('elgg:blog');
-		$blog = new \ElggBlog(370619333145006080);
+		$blog = new \ElggBlog(374026707536973824);
 		$content = elgg_view_entity($blog, array('full_view' => true));
 
 		$body = \elgg_view_layout('content', array(

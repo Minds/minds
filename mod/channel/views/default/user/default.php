@@ -33,7 +33,15 @@ if (elgg_in_context('owner_block') || elgg_in_context('widgets')) {
 
 if (elgg_get_context() == 'gallery') {
 	echo $icon;
-} else {
+} elseif(elgg_get_context() == 'search'){
+	$icon = elgg_view_entity_icon($entity, 'medium', $vars);
+	 $overview = elgg_view('user/overview', array('entity' => $entity));
+        $list_body = "<h2>$title</h2>$overview";
+        
+        $vars['class'] = 'user';
+        echo elgg_view_image_block($icon, $list_body, $vars);
+
+} else  {
 	
 	$overview = elgg_view('user/overview', array('entity' => $entity));
 	$list_body = "$overview <h2>$title</h2>";
