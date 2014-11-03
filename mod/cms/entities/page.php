@@ -82,7 +82,19 @@ class page extends entities\object{
 	}
 	
 	public function setUri($uri){
+		//remove the old path uri
+		if($this->uri && $this->uri != $uri){
+			$lu = new data\lookup();
+			$lu->removeColumn("object:cms:menu:$this->context", $this->uri);
+		}
 		$this->uri = $uri;
+		return $this;
+	}
+	
+	public function setForwarding($url){
+		if($url){
+			$this->forwarding = $url;
+		}
 		return $this;
 	}
 

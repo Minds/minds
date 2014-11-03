@@ -36,6 +36,9 @@ class page extends core\page implements interfaces\page{
 				try{
 					$page = new entities\page($pages[0]);
 					
+					if($page->forwarding)
+						$this->forward($page->forwarding);
+					
 					$menu = elgg_view_menu('entity', array(
 						'entity'=>$page,
 						'class' => 'elgg-menu-hz'
@@ -76,7 +79,8 @@ class page extends core\page implements interfaces\page{
 		
 		$page->setTitle(get_input('title'))
 			->setBody(get_input('body'))
-			->setUri(get_input('uri'))
+			->setUri(get_input('uri', time()))
+			->setForwarding(get_input('forwarding', false))
 			->save();
 	
 		$this->forward($page->getURL());

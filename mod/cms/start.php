@@ -49,20 +49,26 @@ class start extends bases\plugin{
 		$menu = $lu->get('object:cms:menu:footer');
 		if($menu){
 			foreach($menu as $path => $title){
+				$edit_link = elgg_view('output/url', array('href'=>elgg_get_site_url() . 'p/edit/'.$path, 'text'=>'edit', 'class'=>'cms-sidebar-edit'));
+				if(elgg_is_admin_logged_in())
+					$text =  $title . $edit_link;
+				else 
+					$text = $title;
+				
 				elgg_register_menu_item('footer', array(
 					'name' => $title,
 					'href' => elgg_get_site_url() . 'p/'.$path,
-					'text' => $title
+					'text' => $text
 				));
 			}
 		}
 		if(elgg_is_admin_logged_in()){ 
-		elgg_register_menu_item('footer', array(
-			'name' => 'add',
-			'href' => elgg_get_site_url() . 'p/add',
-			'text' => '+ Add', 
-			'priority'=>99999
-		));
+			elgg_register_menu_item('footer', array(
+				'name' => 'add',
+				'href' => elgg_get_site_url() . 'p/add',
+				'text' => '+ Add', 
+				'priority'=>99999
+			));
 		}
 
 	}

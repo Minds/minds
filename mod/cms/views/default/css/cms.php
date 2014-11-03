@@ -209,6 +209,19 @@
 	background:#EEE;
 	cursor:pointer;
 }
+.cms-pages-sidebar .cms-sidebar-edit{
+	position:absolute;
+	right:0; 
+	top:0;
+	display: inline-block;
+	padding: 15px 4px;
+	border: 0;
+	font-weight: 100;
+	font-size: 11px;
+}
+.cms-footer-nav .cms-sidebar-edit{
+	display:none;
+}
 .cms-pages-sidebar-admin{
 	margin-top:32px;
 }
