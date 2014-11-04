@@ -7,7 +7,18 @@ elgg_set_context('featured');
 $limit = get_input("limit", 12);
 $offset = get_input("offset", 0);
 
-$guids = minds\core\data\indexes::fetch('object:archive:featured', array('offset'=>$offset, 'limit'=>$limit, 'reversed'=>true));
+switch(get_input('subtype', 'default')){
+	case 'video':
+		$key = 'object:video:featured';
+		break;
+	case 'albums':
+		$key = 'object:album:featured';
+		break;
+	default:
+		$key = 'object:archive:featured';
+}
+
+$guids = minds\core\data\indexes::fetch($key, array('offset'=>$offset, 'limit'=>$limit, 'reversed'=>true));
 
 if($guids){
 	$entities = elgg_get_entities(array(	
