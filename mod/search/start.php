@@ -25,6 +25,7 @@ class start extends \minds\bases\plugin{
 			if($entity->access_id == 2)
 				$this->createDocument($entity);
 		}*/
+		\elgg_register_event_handler('create', 'all', array($this, 'hook'));
 	}
 	
 	/**
@@ -46,7 +47,7 @@ class start extends \minds\bases\plugin{
 	 */
 	public function createDocument($entity){
 		global $CONFIG;
-		if(in_array($entity->subtype, array('blog','image','album','video')) || $entity->type == 'user'){
+		if(in_array($entity->subtype, array('blog','image','album','video')) || $entity->type == 'user' || $entity->type == 'activity'){
 
 			$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search')?:'localhost')));
 			$params = array();
@@ -70,6 +71,16 @@ class start extends \minds\bases\plugin{
 			return $ret;
 		} else {
 			return false;
+		}
+	}
+	
+	public function hook($hook, $type, $entity, $params){
+		if($entity && $entity->access_id == 2){
+			try{
+				$this->createDocument($entity);
+			} catch(\Exception $e){
+				
+			}
 		}
 	}
 	
