@@ -4,14 +4,18 @@ require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access(true);
 
+$user = new minds\entities\user(274640662849130496);
+//var_dump($user); exit;
+//$user->delete(); exit;
 //$user = new minds\entities\user('hobbesdeutschjr.');
 //$user->cache = true;
 //$user->username = 'HobbesDeutschJr';
 //$user->save();
 
-//$db = new minds\core\data\call('user_index_to_guid');
-//$db->removeRow(strtolower($user->username));
-
+$db = new minds\core\data\call('user_index_to_guid');
+var_dump($db->getRow('drdro')); exit;
+$db->removeRow(strtolower('taylorahumphrey'));
+exit;
 //login(new minds\entities\user('mark'));
 
 $db = new minds\core\data\call();

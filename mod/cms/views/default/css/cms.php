@@ -291,6 +291,7 @@ and (max-width : 720px) {
 		float:left;
 		width:150px;
 		overflow:hidden;
+		padding:12px;
 	}
 	.cms-section .container .cell h2, .cms-section .container .cell input.h2{
 		font-size:16px;
@@ -298,5 +299,6 @@ and (max-width : 720px) {
 	.cms-section .container .cell p, .cms-section .container .cell textarea.p{
 		font-size:11px;
 		width:120px;
+		line-height:16px;
 	}
 }

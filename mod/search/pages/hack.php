@@ -16,14 +16,21 @@ class hack extends core\page implements interfaces\page {
          */
         public function get($pages){
 		\elgg_load_library('elgg:blog');
-		$blog = new \ElggBlog(374026707536973824);
-		$content = elgg_view_entity($blog, array('full_view' => true));
+//		$blog = new \ElggBlog(374026707536973824);
 
+
+//		$content = elgg_view_entity($blog, array('full_view' => true));
+
+		$page = new \minds\plugin\cms\entities\page('about');
+		$title = $page->title;
+					$content .= $menu;
+					$content .= elgg_view('cms/pages/body', array('body'=>$page->body));
 		$body = \elgg_view_layout('content', array(
+			'title' => $title,
 			'content'=>$content,
-			'sidebar' => \blog_sidebar($blog)
+			'sidebar' => elgg_view('page/elements/ads', array('content-side-single'))
 		));
-		echo $this->render(array('body'=>$body));
+		echo $this->render(array('body'=>$body, 'title'=>$title));
 	}
 
 		public function post($pages){

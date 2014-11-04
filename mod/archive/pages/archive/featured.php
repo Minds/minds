@@ -12,7 +12,7 @@ switch(get_input('subtype', 'default')){
 		$key = 'object:video:featured';
 		break;
 	case 'albums':
-		$key = 'object:album:featured';
+		$key = 'object:image:featured';
 		break;
 	default:
 		$key = 'object:archive:featured';
