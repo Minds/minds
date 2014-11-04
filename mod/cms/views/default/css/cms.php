@@ -241,3 +241,62 @@
 .elgg-form-cms-page p{
 	padding:8px 0;
 }
+
+
+
+/**
+ * Screen size specific
+ */
+@media all 
+and (min-width : 0px)
+and (max-width : 1200px) {
+	.cms-footer > .inner{
+		width:90%;
+	}
+}
+
+@media all 
+and (min-width : 0px)
+and (max-width : 720px) {
+	.cms-page-body .main{
+		padding:16px;
+	}
+	.cms-page-body h2{
+		line-height:46px;
+	}
+	.cms-footer > .inner .cms-footer-nav{
+		margin-bottom:32px;
+	}
+	.cms-footer > .inner .cms-footer-nav ul{
+		text-align:left;
+	}
+	.cms-footer .cms-footer-copyright{
+		float:left;
+	}
+	
+	
+	.cms-section{
+		min-height:200px;
+	}
+	.cms-section .cms-section-bg{
+		height:400px;
+	}
+	.cms-section .container{
+		line-height:200px;
+	}
+	.cms-section-admin{
+		display:none;
+	}
+	.cms-section .container .left, .cms-section .container .right{
+		float:left;
+		width:150px;
+		overflow:hidden;
+	}
+	.cms-section .container .cell h2, .cms-section .container .cell input.h2{
+		font-size:16px;
+	}
+	.cms-section .container .cell p, .cms-section .container .cell textarea.p{
+		font-size:11px;
+		width:120px;
+	}
+}

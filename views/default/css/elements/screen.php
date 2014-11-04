@@ -83,6 +83,13 @@ and (max-width : 720px) {
 	.hero > .topbar .logo {
 		height:40px;
 	}
+	
+	.hero > .topbar .logo h1{
+		font-size:14px;
+	}
+	.logo .tip-logo{
+		display:none;
+	}
 
 	.hero > .topbar > .inner .menu-toggle {
 		margin-top:8px;
@@ -210,4 +217,6 @@ and (max-width : 720px) {
 	.sidebar{
 		display:none;
 	}
+	
+	
 }
