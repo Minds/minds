@@ -61,6 +61,21 @@ class start extends bases\plugin{
 					'text' => $text
 				));
 			}
+		} else {
+			foreach(array('about', 'terms', 'privacy') as $path){
+				$title = ucwords($path);
+				$page = new entities\page();
+				$page->setTitle($title)
+					->setBody('')
+					->setUri($path)
+					->save();
+					
+				elgg_register_menu_item('footer', array(
+					'name' => $title,
+					'href' => elgg_get_site_url() . 'p/'.$path,
+					'text' => $title
+				));
+			}
 		}
 		if(elgg_is_admin_logged_in()){ 
 			elgg_register_menu_item('footer', array(
