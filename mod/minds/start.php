@@ -443,7 +443,7 @@ function minds_filter($text) {
 	// hashtags
 	$text = preg_replace(
 				'/(^|[^\w])#(\w*[^\s\d!-\/:-@]+\w*)/',
-				'$1<a href="' . $CONFIG->wwwroot . 'search/?q=$2">#$2</a>',
+				'$1<a href="' . $CONFIG->wwwroot . 'search/activity?q=%23$2">#$2</a>',
 				$text);
 
 	$text = trim($text);
