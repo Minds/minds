@@ -69,12 +69,29 @@ function minds_archive_init() {
 
 
     //site menu
-	elgg_register_menu_item('site', array(
+	/*elgg_register_menu_item('site', array(
 			'name' => elgg_echo('minds:archive'),
 			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
 			'href' => 'archive/featured',
 			'text' => '<span class="entypo">&#59392;</span> Archive',
 			'title' =>  elgg_echo('minds:archive'),
+			'priority' => 4
+	));*/
+	
+	elgg_register_menu_item('site', array(
+			'name' => 'video',
+			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
+			'href' => 'archive/featured/video',
+			'text' => '<span class="entypo">&#58277;</span> Videos',
+			'title' =>  elgg_echo('minds:archive:video'),
+			'priority' => 4
+	));
+	elgg_register_menu_item('site', array(
+			'name' => 'images',
+			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
+			'href' => 'archive/featured/albums',
+			'text' => '<span class="entypo">&#128247;</span> Pictures',
+			'title' =>  elgg_echo('minds:archive:images'),
 			'priority' => 4
 	));
 		
@@ -197,6 +214,8 @@ function minds_archive_page_handler($page) {
 			include('pages/archive/top.php');
 			break;
 		case 'featured':
+			if(isset($page[1]))
+				set_input('subtype', $page[1]);
 			include('pages/archive/featured.php');
 			break;	
 		case 'trending':

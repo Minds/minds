@@ -131,6 +131,12 @@ class clusters extends base{
 		 */
 		try{
 		 	$authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>$username, 'password'=>$password));
+			if(!$authenticate){
+				//try again forcing https...
+				$node_uri = str_replace('http://', 'https://', $node_uri);
+				 $authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>$username, 'password'=>$password));
+			}
+				
 		}catch(\Exception $e){
 
 			//$db = new data\call('user_index_to_guid');
@@ -141,7 +147,7 @@ class clusters extends base{
 		}
 
 		
-		if($authenticate['error']){
+		if(!$authenticate || $authenticate['error']){
 			\register_error('Sorry, we could not succesfully authenticate you.');
 			return false;
 		}
@@ -150,6 +156,7 @@ class clusters extends base{
 		 * 
 		 * @todo maybe integrate OAuth2.0 at the point
 		 */
+		
 		$user = new \minds\entities\user($authenticate['guid']);
 		if(!$user->username){
 			while(get_user_by_username($username)){
