@@ -33,18 +33,18 @@ elgg_register_menu_item('channel', array(
 	'priority' => 102
 ));
 
-elgg_register_menu_item('channel', array(
-	'name' => 'channel:archive',
-	'text' => '<span class="entypo">&#128193;</span> Uploads',
-	'href' => elgg_get_site_url() . $user->username . '/archive',
-	'priority' => 103
-));
+ elgg_register_menu_item('channel', array(
+                'name' => 'channel:groups',
+                'text' => '<span class="entypo">&#59397;</span> Groups',
+                'href' => elgg_get_site_url() . $user->username . '/groups',
+                'priority' => 105
+        ));
 
 if($bitcoin = \elgg_get_plugin_user_setting('wallet_guid', $user->guid, 'bitcoin')){
 	elgg_register_menu_item('channel', array(
-		'name' => 'channel:groups',
-		'text' => '<span class="entypo">&#59397;</span> Groups',
-		'href' => elgg_get_site_url() . $user->username . '/groups',
+		'name' => 'channel:bitcoin',
+		'text' => '<span class="entypo">&#59408;</span> Send bitcoin',
+		'href' => elgg_get_site_url() . '/bitcoin/send/?address='.$user->username,
 		'priority' => 105
 	));
 }

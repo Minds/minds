@@ -24,7 +24,12 @@ $errorno = curl_errno($ch);
 curl_close($ch);
 
 if($errorno){
-	var_dump('error:' . $errorno);
+	header('Content-type: image/jpeg');
+header('Access-Control-Allow-Origin: *');	
+	$img = imagecreatetruecolor(120, 1);
+	$bg = imagecolorallocate ( $img, 255, 255, 255 );
+	imagefilledrectangle($img,0,0,120,1,$bg);
+	imagejpeg($img,NULL,100);
 	die();
 }
 
