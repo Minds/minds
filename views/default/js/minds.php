@@ -26,6 +26,10 @@
 	 			$.cookie('sidebarOpen', 'true', { path: '/' });
 	 		}
 	 	});
+	 	
+	 	$('img').error(function(){
+	 		$(this).remove();
+	 	});
 
 		/*$('.global-sidebar .elgg-menu-page li').toggle(function(){
 			if($(this).find('a')[0].hasClass('elgg-menu-opened')){
