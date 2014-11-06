@@ -129,9 +129,16 @@ if (!$error) {
 		}
 	}
 }
+
+if(get_input('removeHeader')){
+	$blog->header_bg = false;
+}
+
 // only try to save base entity if no errors
 if (!$error) {
 	if ($guid = $blog->save()) {
+		
+		
 		
 		/**
 		 * If we have a header banner image
@@ -145,6 +152,7 @@ if (!$error) {
 			$file->write($resized);
 			$file->close();
 			$blog->header_bg = true;
+			$blog->last_updated = time();
 			$blog->save();
 		}
 		

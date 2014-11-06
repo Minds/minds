@@ -44,13 +44,9 @@ function categories_save($event, $object_type, $object) {
 		$marker = get_input('universal_category_marker');
 
 		if ($marker == 'on') {
-			$categories = get_input('universal_categories_list');
-
-			if (empty($categories)) {
-				$categories = array();
-			}
-
-			$object->universal_categories = $categories;
+			$category = get_input('universal_categories_list');
+			$object->category = $category;
+			//$object->save();
 		}
 	}
 	return TRUE;
@@ -74,7 +70,7 @@ function categories_save_site_categories($hook, $type, $value, $params) {
 	$categories = $categories;
 
 	$site = elgg_get_site_entity();
-	$site->categories = explode(',',$categories);
+	$site->categories = $categories;
 	$site->save();
 	
 	system_message(elgg_echo("categories:save:success"));
