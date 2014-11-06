@@ -8,7 +8,9 @@
     	"abeautifulsite/jquery-minicolors": "master",
     	"kramnorth/cinemr-php-sdk": "master",
 		"minds/minds-php-sdk": "master",
-		"paypal/rest-api-sdk-php": "master"
+		"paypal/rest-api-sdk-php": "master",
+		"facebook/php-sdk-v4": "4.0.*",
+		"tijsverkoyen/twitteroauth": "master"
    	},
 	"repositories": [{
             "type": "vcs",
@@ -16,6 +18,6 @@
         }],
 	"minimum-stability": "dev",
 	"autoload": {
-        	"files": ["engine/autoload.php"]
-    	}
+		"files": ["engine/autoload.php"]
+	}
 }
