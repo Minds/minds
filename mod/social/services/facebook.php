@@ -27,7 +27,7 @@ class facebook extends core\base{
 	public function authorizeURL(){
 				
 		$helper = new FacebookRedirectLoginHelper($this->redirect_uri);
-		return $loginUrl = $helper->getLoginUrl();
+		return $loginUrl = $helper->getLoginUrl(array('publish_actions'));
 
 	}
 	
@@ -76,13 +76,13 @@ class facebook extends core\base{
 			$req = new FacebookRequest( $session, 'POST', '/me/feed', $data);
 		    $response = $req->execute()->getGraphObject();
 		
-		  //  echo "Posted with id: " . $response->getProperty('id');
+		    echo "Posted with id: " . $response->getProperty('id');
 		
 		  } catch(FacebookRequestException $e) {
 		
-		    //echo "Exception occured, code: " . $e->getCode();
-		   // echo " with message: " . $e->getMessage();
-		
+		    echo "Exception occured, code: " . $e->getCode();
+		   echo " with message: " . $e->getMessage();
+			\elgg_set_plugin_user_setting('facebook', 'failed', core\session::getLoggedinUser()->guid, 'social');		
 		  }   
 	}
 		
