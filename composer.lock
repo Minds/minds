@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "23b9bf8dfd4d6feb47ea90d8681cddb6",
+    "hash": "a7c185106a7f6987562abb9aae2ce2e2",
     "packages": [
         {
             "name": "abeautifulsite/jquery-minicolors",
@@ -41,44 +41,6 @@
             "description": "jQuery MiniColors Plugin",
             "homepage": "http://www.abeautifulsite.net/",
             "time": "2014-09-11 13:14:06"
-        },
-        {
-            "name": "dg/twitter-php",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dg/twitter-php.git",
-                "reference": "ae184168d7e6a542c43f77982e7bb98db46edf2d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dg/twitter-php/zipball/ae184168d7e6a542c43f77982e7bb98db46edf2d",
-                "reference": "ae184168d7e6a542c43f77982e7bb98db46edf2d",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "David Grudl",
-                    "homepage": "http://davidgrudl.com"
-                }
-            ],
-            "description": "Small and easy Twitter library for PHP",
-            "homepage": "https://github.com/dg/twitter-php",
-            "keywords": [
-                "oauth",
-                "twitter"
-            ],
-            "time": "2014-11-05 00:21:01"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -643,51 +605,6 @@
             "time": "2014-01-18 15:33:09"
         },
         {
-            "name": "ricardoper/twitteroauth",
-            "version": "v1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ricardoper/TwitterOAuth.git",
-                "reference": "c9fd4755efa9a2394f7a35c1ceed315fc24c6446"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ricardoper/TwitterOAuth/zipball/c9fd4755efa9a2394f7a35c1ceed315fc24c6446",
-                "reference": "c9fd4755efa9a2394f7a35c1ceed315fc24c6446",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "TwitterOAuth\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ricardo Pereira",
-                    "email": "github@ricardopereira.es",
-                    "homepage": "http://ricardopereira.es"
-                }
-            ],
-            "description": "PHP library to communicate with Twitter OAuth API version 1.1",
-            "homepage": "https://github.com/ricardoper",
-            "keywords": [
-                "API v1.1",
-                "oauth",
-                "php",
-                "twitter"
-            ],
-            "time": "2014-09-09 15:44:14"
-        },
-        {
             "name": "symfony/event-dispatcher",
             "version": "dev-master",
             "target-dir": "Symfony/Component/EventDispatcher",
@@ -879,11 +796,20 @@
             "time": "2014-10-31 21:39:21"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
     "minimum-stability": "dev",
-    "stability-flags": [],
-    "prefer-stable": false,
-    "platform": [],
-    "platform-dev": []
+    "stability-flags": [
+
+    ],
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
 }

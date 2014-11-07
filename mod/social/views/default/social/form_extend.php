@@ -12,7 +12,7 @@ foreach($services as $service){
 	} else {
 		try{
 			$url = minds\plugin\social\services\build::build($service)->authorizeURL();
-			echo elgg_view('output/url', array('href'=>$url, 'text'=>$service, 'id'=>'social-'.$service, 'class'=>'social-popup'));
+			echo elgg_view('output/url', array('href'=>$url, 'text'=>elgg_echo("icon:$service"). ' ', 'id'=>'social-'.$service, 'class'=>'entypo social-popup'));
 		} catch(\Exception $e){
 			error_log($e->getMessage());
 		}
