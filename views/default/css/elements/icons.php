@@ -424,3 +424,11 @@ font-weight: 400;
 color: #FFF;
 margin: 12px 0;
 }
+.minds-hovercard .subscribe-button{
+	font-size: 12px;
+	margin: 8px 122px;
+	width: 166px;
+}
+.minds-hovercard .subscriber-button > a{
+	padding:4px 8px;
+}
