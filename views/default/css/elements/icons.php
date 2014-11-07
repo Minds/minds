@@ -364,7 +364,7 @@
  */
 .minds-hovercard{
 	display:none;
-	position:fixed;
+	position:absolute;
 
 	width:300px;
 	height:200px;
@@ -419,10 +419,10 @@
 }
 .hovercard-container h3{
 	float: left;
-font-size: 17px;
-font-weight: 400;
-color: #FFF;
-margin: 12px 0;
+	font-size: 17px;
+	font-weight: 400;
+	color: #FFF;
+	margin: 12px 0;
 }
 .minds-hovercard .subscribe-button{
 	font-size: 12px;
