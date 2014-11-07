@@ -35,8 +35,8 @@ class paypal extends core\base{
 		);
 		$this->context->setConfig(
 			array(
-		//		'mode' => 'live',
-				'mode' => 'sandbox',
+				'mode' => 'live',
+		//		'mode' => 'sandbox',
 				'http.ConnectionTimeOut' => 30,
 				'log.LogEnabled' => true,
 				'log.FileName' => '/tmp/PayPal.log',

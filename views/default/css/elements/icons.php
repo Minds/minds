@@ -429,6 +429,9 @@ margin: 12px 0;
 	margin: 8px 122px;
 	width: 166px;
 }
-.minds-hovercard .subscriber-button > a{
-	padding:4px 8px;
+.minds-hovercard .subscribe-button > a{
+	padding:6px 16px;
+}
+.minds-hovercard .subscribers-count{
+	padding:6px 12px 0;
 }
