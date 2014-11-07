@@ -295,10 +295,13 @@ elgg.ui.initDatePicker = function() {
 };
 
 elgg.ui.hoverCard = {
-	mouseenter: function(){
-		$(this).find('.minds-hovercard').show();
+	mouseenter: function(e){
+		var icon =  $(this);
+		var hc = $(this).children('.minds-hovercard');
+		hc.show();
+		hc.css({position:'fixed', display:'block', left:icon.offset().left,top: (icon.offset().top - $(window).scrollTop())+ 40});
 	},
-	mouseleave: function(){
+	mouseleave: function(e){
 		_this = this;
 		setTimeout(function(){
 			if($(_this).find('.minds-hovercard:hover').length != 0)
