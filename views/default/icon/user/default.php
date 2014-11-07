@@ -60,6 +60,8 @@ if (isset($vars['hover'])) {
 	$use_hover = $vars['hover'];
 }
 
+
+
 $spacer_url = elgg_get_site_url() . '_graphics/spacer.gif';
 
 $icon_url = elgg_format_url($user->getIconURL($size));
@@ -99,5 +101,7 @@ if ($use_link) {
 } else {
 	echo "<a>$icon</a>";
 }
+
+echo elgg_view('icon/user/hovercard' ,array('user' => $user , 'size' => $size));
 ?>
 </div>

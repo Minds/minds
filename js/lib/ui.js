@@ -19,6 +19,8 @@ elgg.ui.init = function () {
 	$(document).on('click', '.elgg-menu-page .elgg-menu-parent', elgg.ui.toggleMenu);
 
 	$(document).on('click', '.elgg-requires-confirmation', elgg.ui.requiresConfirmation);
+	
+	$(document).on(elgg.ui.hoverCard, '.elgg-avatar');
 
 	$('.elgg-autofocus').focus();
 };
@@ -289,6 +291,21 @@ elgg.ui.initDatePicker = function() {
 			success: loadDatePicker,
 			error: loadDatePicker // english language is already loaded.
 		});
+	}
+};
+
+elgg.ui.hoverCard = {
+	mouseenter: function(){
+		$(this).find('.minds-hovercard').show();
+	},
+	mouseleave: function(){
+		_this = this;
+		setTimeout(function(){
+			if($(_this).find('.minds-hovercard:hover').length != 0)
+				return true;
+			else
+				$(_this).find('.minds-hovercard').hide();
+		}, 100);
 	}
 };
 

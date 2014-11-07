@@ -268,6 +268,17 @@ function channel_page_handler($page) {
 		case 'carousel':
 			$content = elgg_view_form('carousel/batch', array('enctype'=>'multipart/form-data'), array('items'=>$carousels));
 			break;
+		case 'banner':
+			global $CONFIG;
+			$carousel = $carousels[0];
+			$filename = $CONFIG->dataroot . 'carousel/' . $carousel->guid . 'thin';
+			header('Content-Type: image/jpeg');
+			header('Expires: ' . date('r', time() + 864000));
+			header("Pragma: public");
+ 			header("Cache-Control: public");
+			echo file_get_contents($filename);
+			exit;
+			break;
 		case 'news':
 		case 'timeline':
 		default:

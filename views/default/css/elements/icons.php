@@ -357,3 +357,70 @@
 .elgg-avatar-large > a > img{
 	width:425px;
 }
+
+
+/**
+ * Hovercard
+ */
+.minds-hovercard{
+	display:none;
+	position:fixed;
+
+	width:300px;
+	height:200px;
+	margin-top:8px;
+	box-shadow: 0 0 3px #888;
+	background:#FAFAFA;
+	z-index:1000;
+}
+
+.minds-hovercard .hovercard-banner{
+	width:100%;
+	height:120px;
+	overflow:hidden;
+	display:block;
+}
+.hovercard-banner-img{
+	min-width: 300px;
+	height: 120px;
+}
+.hovercard-banner .top-arrow{
+	z-index:-1;
+	transform: translate(24px, -10px) rotate(45deg);
+	-webkit-transform-origin: 0 0;
+	background:#FFF;
+	box-shadow: 0 0 3px #888;
+	display: block;
+	height: 15px;
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	width: 15px;
+}
+.top-arrow > img{
+	transform: rotate(-45deg) translate(0px, -254px);
+}
+.hovercard-banner .gradient{
+	position:absolute;
+	top:60px;
+	left:0;
+	width:300px;
+	height:60px;
+	background: linear-gradient(transparent, rgba(0,0,0,0.8));
+}
+.hovercard-container{
+	position:absolute;
+	top:72px;
+	width:300px;
+}
+.hovercard-container .hovercard-icon{
+	margin:0 12px;
+	float:left;
+}
+.hovercard-container h3{
+	float: left;
+font-size: 17px;
+font-weight: 400;
+color: #FFF;
+margin: 12px 0;
+}
