@@ -296,15 +296,15 @@ elgg.ui.initDatePicker = function() {
 
 elgg.ui.hoverCard = {
 	mouseenter: function(){
-		$(this).find('.minds-hovercard').show();
+		$(this).children('.minds-hovercard').show();
 	},
 	mouseleave: function(){
 		_this = this;
 		setTimeout(function(){
-			if($(_this).find('.minds-hovercard:hover').length != 0)
+			if($(_this).children('.minds-hovercard:hover').length != 0)
 				return true;
 			else
-				$(_this).find('.minds-hovercard').hide();
+				$(_this).children('.minds-hovercard').hide();
 		}, 100);
 	}
 };
