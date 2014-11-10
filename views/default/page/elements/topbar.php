@@ -7,7 +7,7 @@
 
 <div class="center">
 	<div class="logo">
-		<a href="<?php echo elgg_get_site_url();?>">
+		<a href="<?php echo elgg_is_logged_in() ? elgg_get_site_url() .'newsfeed' : elgg_get_site_url();?>">
 			  <?php if (elgg_get_plugin_setting('logo_override', 'minds_themeconfig')) { ?>
 	 		          <img src="<?php echo elgg_get_site_url();?>themeicons/logo_topbar/<?php echo elgg_get_plugin_setting('logo_override_ts', 'minds_themeconfig'); ?>.png"/>
 	        	<?php } elseif(minds\core\plugins::isActive('minds_themeconfig')) { ?>

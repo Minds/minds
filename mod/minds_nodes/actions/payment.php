@@ -30,8 +30,8 @@ $apiContext = new ApiContext(
 	new OAuthTokenCredential(
 		//'AWAkZhBE-utDCVpXbXlJhsbG1Kz5QsIZHXuK6vdZ7Qi3kbS3oI113y445VOT',
 		//'ENWFjBBNhJdmry2lvM39VakOEbgKzkojisIMqmYR-n3UQOwk_0FB-jn1T3lo'
-		'ATAByBA7wVln5oky2XKkglEoH7k0DJmZVOz3S-DGJYkrNrHcIjZCdX1HHLwH',
-		'EAJfIhCZXGo6L4YAiyFjlpPVKVspjwD5pYUanSPIDzTHU0lRLf8SP22BX2Q9'
+		'AaUOIRC8rTb2jXZtnUvjMXWH1BH-5spBnL2kILF2AEPygMxvWOqME3e06hnj',
+		'EOWEZBB5n4Kc84mxXQhqF1rgz0GMKXyJ_fmWi5s1sk7k_35GeWTtXIwU6p2t'
 	)
 );
 
@@ -51,7 +51,7 @@ $apiContext->setConfig(
 $card = new entities\card();
 $card_obj = $card->create(array(
 	'type' => get_input('type'),
-	'number' => str_replace(' ', '', get_input('number')),
+	'number' => (int) str_replace(' ', '', get_input('number')),
 	'month' => get_input('month'),
 	'year' => get_input('year'),
 	'sec' => get_input('sec'),

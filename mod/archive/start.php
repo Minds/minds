@@ -90,7 +90,7 @@ function minds_archive_init() {
 			'name' => 'images',
 			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
 			'href' => 'archive/featured/albums',
-			'text' => '<span class="entypo">&#128247;</span> Pictures',
+			'text' => '<span class="entypo">&#128247;</span> Images',
 			'title' =>  elgg_echo('minds:archive:images'),
 			'priority' => 4
 	));
@@ -214,8 +214,8 @@ function minds_archive_page_handler($page) {
 			include('pages/archive/top.php');
 			break;
 		case 'featured':
-			if(isset($pages[1]))
-				set_input('subtype', $pages[1]);
+			if(isset($page[1]))
+				set_input('subtype', $page[1]);
 			include('pages/archive/featured.php');
 			break;	
 		case 'trending':

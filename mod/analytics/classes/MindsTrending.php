@@ -17,7 +17,7 @@ class MindsTrending{
 		
 		$defaults = array(
 			'timespan' => 'day',	
-			'limit' => 500
+			'limit' => 800
 		);
 		
 		$options = array_merge($defaults, $options);
