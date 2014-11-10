@@ -35,10 +35,15 @@ class twitter extends core\base{
 	}
 
 	public function post($activity){
+		$message = $activity['message'];
+		if(strlen($message) > 140){
+			$message = substr($message,0,80) . '...';
+			$message .= elgg_get_site_url() . 'newsfeed/'.$activity['guid'];
+		}
 		$tw = $this->tw();
 		$tw->setOAuthToken(\elgg_get_plugin_user_setting('twitter_access_token', core\session::getLoggedinUser()->guid, 'social'));
 		$tw->setOAuthTokenSecret(\elgg_get_plugin_user_setting('twitter_access_secret', core\session::getLoggedinUser()->guid, 'social'));
-		$tw->statusesUpdate($activity['message']);
+		$tw->statusesUpdate($message);
 
 	}
 	

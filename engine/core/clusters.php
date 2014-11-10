@@ -283,7 +283,9 @@ class clusters extends base{
 	
 		foreach(array('network', 'user') as $feed){	
 			//gather the feeds (not all, just 30 of the latest)
-			$data = $this->call("GET", $user->base_node, "newsfeed/$feed/$user->guid", array('limit'=>30, 'view'=>'json'));
+			try{
+				$data = $this->call("GET", $user->base_node, "newsfeed/$feed/$user->guid", array('limit'=>30, 'view'=>'json'));
+			}catch(\Exception $e){}
 			if($data){
 				foreach($data['activity'][''] as $activity){
 					$new = new \minds\entities\activity($activity);

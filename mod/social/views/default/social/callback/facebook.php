@@ -13,8 +13,9 @@
 
 	var label = document.createElement('label')
 	label.htmlFor = "id";
-	label.appendChild(document.createTextNode('facebook'));
-
+	label.className = 'entypo';
+	label.innerHTML = '&#62221;';
+ 
 	div.appendChild(checkbox);
 	div.appendChild(label);
 	window.close();

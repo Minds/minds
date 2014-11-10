@@ -8,7 +8,7 @@
 elgg_register_event_handler('init', 'system', 'analytics_init', 1);
 
 function analytics_init() {
-	return true;
+	
 	//register google library
 	elgg_register_library('google:client', elgg_get_plugins_path() . 'analytics/vendors/google-api-php-client/src/Google_Client.php');
 	elgg_load_library('google:client');
