@@ -26,7 +26,7 @@ if (!empty($categories)) {
 	if (!is_array($categories)) {
 		$categories = explode(',', $categories);
 		foreach($categories as $k => $v)
-			$categories[$k] = trim($v);
+			$categories[$k] = ltrim($v);
 	}
 
 	// checkboxes want Label => value, so in our case we need category => category

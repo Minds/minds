@@ -4,7 +4,8 @@ require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access(true);
 
-$user = new minds\entities\user(274640662849130496);
+$user = new minds\entities\user('markandrewculp');
+var_dump($user); exit;
 //var_dump($user); exit;
 //$user->delete(); exit;
 //$user = new minds\entities\user('hobbesdeutschjr.');

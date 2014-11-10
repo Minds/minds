@@ -13,7 +13,8 @@
 
 	var label = document.createElement('label')
 	label.htmlFor = "id";
-	label.appendChild(document.createTextNode('twitter'));
+	label.className = 'entypo';
+	label.innerHTML = '&#62218;';
 
 	div.appendChild(checkbox);
 	div.appendChild(label);
