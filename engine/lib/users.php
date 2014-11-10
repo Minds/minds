@@ -1622,6 +1622,7 @@ function users_init() {
 	elgg_register_page_handler('collections', 'collections_page_handler');
 
 	elgg_register_plugin_hook_handler('register', 'menu:user_hover', 'elgg_user_hover_menu');
+	elgg_register_plugin_hook_handler('register', 'menu:hovercard', 'elgg_user_hover_menu');
 
 	elgg_register_action('register', '', 'public');
 	elgg_register_action('useradd', '', 'admin');

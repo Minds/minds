@@ -300,6 +300,8 @@ elgg.ui.hoverCard = {
 		var hc = $(this).children('.minds-hovercard');
 		hc.show();
 		hc.css({position:'fixed', display:'block', left:icon.offset().left,top: (icon.offset().top - $(window).scrollTop())+ 40});
+		hc.find('.hovercard-banner-img')[0].css('margin-top', (120 - hc.find('.hovercard-banner-img').height()) /2); 
+		hc.find('.hovercard-banner-img')[0].css('margin-left', (300 - hc.find('.hovercard-banner-img').width()) /2); 	
 	},
 	mouseleave: function(e){
 		_this = this;

@@ -29,4 +29,5 @@ $banner = elgg_view('output/img', array(
 		<h3><?=$user->name?></h3>
 	</div>
 	<?= $overview ?>
+	<?= elgg_view_menu('hovercard', array('entity'=>$user)) ?>
 </div>

@@ -435,3 +435,16 @@
 .minds-hovercard .subscribers-count{
 	padding:6px 12px 0;
 }
+
+.minds-hovercard .elgg-menu > li{
+	position: relative;
+	display: inline-block;
+	padding: 4px 6px;
+	font-size: 11px;
+}
+.minds-hovercard .elgg-menu > li > a{
+	color:#333;
+}
+.minds-hovercard .elgg-menu > li > a:hover{
+	background:transparent;
+}
