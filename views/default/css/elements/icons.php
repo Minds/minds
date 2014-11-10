@@ -426,7 +426,7 @@
 }
 .minds-hovercard .subscribe-button{
 	font-size: 12px;
-	margin: 8px 122px;
+	margin:0 122px;
 	width: 166px;
 }
 .minds-hovercard .subscribe-button > a{
@@ -435,7 +435,12 @@
 .minds-hovercard .subscribers-count{
 	padding:6px 12px 0;
 }
-
+.minds-hovercard .overview{
+	height: 40px;
+	display: BLOCK;
+	width: 300px;
+	margin-top:8px;
+}
 .minds-hovercard .elgg-menu > li{
 	position: relative;
 	display: inline-block;
