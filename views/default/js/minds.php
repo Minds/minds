@@ -50,8 +50,12 @@
 		 * Make our newsfeed icons centred @todo make less hacky
 		 */
 		$(window).on("load resize", function(){
-			$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
-			 $('.carousel-inner > .item > img').css('margin-top', ($('.carousel-inner > .item').height() - $('.carousel-inner > .item > img').height()) /2); 
+			setTimeout(function(){
+
+				$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
+				$('.carousel-inner > .item > img').css('margin-top', ($('.carousel-inner > .item').height() - $('.carousel-inner > .item > img').height()) /2); 
+				
+			}, 2000);
 		});
 	
 	 	
