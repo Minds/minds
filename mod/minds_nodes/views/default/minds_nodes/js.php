@@ -18,6 +18,9 @@ minds.nodes.init = function() {
 		minds.nodes.tier = $(this).attr('data-guid');
 		minds.nodes.price = $(this).data('price');
 		
+		if($('input[name=tier_guid]').length != 0)
+			$('input[name=tier_guid]').val(minds.nodes.tier);
+		
 		if($(this).data('price') == 0){
 			$('.domain').show();
 			$('.domain .paid').hide();
