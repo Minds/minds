@@ -14,7 +14,7 @@ $banner = elgg_view('output/img', array(
 	'class'=>'hovercard-banner-img'
 ));
 ?>
-<div class="minds-hovercard">
+<div class="minds-hovercard" <?php if(isset($vars['show'])){ ?> style="display:block;" <?php } ?>'>
 	
 	<div class="hovercard-banner">
 		<?=$banner ?>
@@ -22,12 +22,14 @@ $banner = elgg_view('output/img', array(
 		<div class="gradient"></div>
 	</div>
 	
-	<div class="hovercard-container">
-		<div class="hovercard-icon">
-			<?= $icon ?>
+	<a href="<?= $user->getUrl() ?>">
+		<div class="hovercard-container">
+			<div class="hovercard-icon">
+				<?= $icon ?>
+			</div>
+			<h3><?=$user->name?></h3>
 		</div>
-		<h3><?=$user->name?></h3>
-	</div>
+	</a>
 	<div class="overview">
 	<?= $overview ?>
 	</div>
