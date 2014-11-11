@@ -453,3 +453,6 @@
 .minds-hovercard .elgg-menu > li > a:hover{
 	background:transparent;
 }
+.minds-hovercard .hovercard-icon > img{
+	width:100px !important;
+}

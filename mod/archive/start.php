@@ -243,13 +243,13 @@ function minds_archive_page_handler($page) {
 			if(!$entity){
 				forward(elgg_get_site_url() . '_graphics/placeholder.png');
 			}
-			$user = $entity->getOwnerEntity();
+			$user = $entity->getOwnerEntity(false);
 			if(isset($user->legacy_guid) && $user->legacy_guid)
 				$user_guid = $user->legacy_guid;
 			else 
 				$user_guid = $user->guid;
-
-			 $user_path = date('Y/m/d/', $user->time_created) . $user_guid;
+			
+			$user_path = date('Y/m/d/', $user->time_created) . $user_guid;
 			
 			$data_root = $CONFIG->dataroot;
 			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
@@ -273,7 +273,6 @@ function minds_archive_page_handler($page) {
 					break;
 			}
 			
-		
 			$contents = @file_get_contents($filename);
 
 			header("Content-type: image/jpeg");
