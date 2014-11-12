@@ -76,7 +76,7 @@ if(in_array(elgg_get_site_url(), array('https://www.minds.com/','https://www.min
 		<div class="com-ui">
 		
 			<div class="frontpage-signup node">
-				<form action="node/launch" method="GET">
+				<form action="nodes/launch" method="GET">
 					<div class="domain-input">
 						<input type="text" name="domain" placeholder="your-site" autocomplete="off"/>
 						<div class="url-domain">.minds.com</div>
