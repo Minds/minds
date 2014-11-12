@@ -35,7 +35,7 @@ if(get_input('async')){
 	exit;
 }
 
-if(isset($_COOKIE['sidebarOpen']) && $_COOKIE['sidebarOpen'] == 'true')
+if(isset($_COOKIE['sidebarOpen']) && $_COOKIE['sidebarOpen'] == 'true' && elgg_is_logged_in())
 	$class .= ' sidebar-active sidebar-active-default';
 ?>
 <!DOCTYPE html>

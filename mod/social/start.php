@@ -30,6 +30,7 @@ class start extends bases\plugin{
 
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
 		\elgg_register_event_handler('create', 'activity', array($this, 'postHook'));
+
 	}
 	
 	
@@ -72,5 +73,18 @@ class start extends bases\plugin{
 		}
 		return $services;
 	}
-	
+
+	static public function setMetatags($name, $content){
+
+		global $SOCIAL_META_TAGS;
+
+		$strip = strip_tags($content);
+		$SOCIAL_META_TAGS[$name]['property'] = $name;
+		$SOCIAL_META_TAGS[$name]['content'] = strip_tags($content);
+
+		return;
+
+	}
+
+
 }
