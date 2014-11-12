@@ -586,5 +586,9 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 	return $new_list;*/
 	return $entities;
 }
-
+if(!function_exists('minds_set_metatags')){
+	function minds_set_metatags(){
+		return;
+	}
+}
 elgg_register_event_handler('init','system','minds_init');		

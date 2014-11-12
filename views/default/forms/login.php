@@ -4,6 +4,8 @@
  */
 global $CONFIG;
 //echo "<h4>".$CONFIG->sitename."</h4>";
+elgg_load_css('select2');
+elgg_load_js('select2');
  
 $username =  elgg_view('input/text', array(
 	'name' => 'username',
