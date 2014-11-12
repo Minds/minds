@@ -49,7 +49,8 @@ class start extends bases\plugin{
 		elgg_load_js('wraprtc');
 
 		core\router::registerRoutes(array(
-			'/gatherings' => "\\minds\\plugin\\gatherings\\pages\\gatherings"
+			'/gatherings' => "\\minds\\plugin\\gatherings\\pages\\gatherings",
+			'/gatherings/conversation' => '\\minds\\plugin\\gatherings\\pages\\conversation'
 		));
 
 		// Register a page handler, so we can have nice URLs
