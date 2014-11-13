@@ -11,9 +11,9 @@ $networks = array(
 		'url' => 'http://facebook.com/mindsdotcom',
 		'icon' => '&#62221;'
 	),
-	'twitter'=>array(
-                'url' => 'http://twitter.com/mindsdotcom',
-                'icon' => '&#62218;'
+	'github'=>array(
+                'url' => 'http://github.com/minds',
+                'icon' => '&#62208;'
         )
 );
 foreach($networks as $network => $n){

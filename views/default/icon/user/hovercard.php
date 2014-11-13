@@ -9,8 +9,9 @@ $icon = elgg_view('output/img', array(
 ));
 $overview = elgg_view('user/overview', array('entity' => $user));
 
+global $CONFIG;
 $banner = elgg_view('output/img', array(
-	'src'=>elgg_get_site_url() . "$user->username/banner",
+	'src'=>$CONFIG->cdn_url. "$user->username/banner/",
 	'class'=>'hovercard-banner-img'
 ));
 ?>

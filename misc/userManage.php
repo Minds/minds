@@ -4,8 +4,7 @@ require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access(true);
 
-$user = new minds\entities\user('markandrewculp');
-var_dump($user); exit;
+$user = new minds\entities\user(100000000000002125);
 //var_dump($user); exit;
 //$user->delete(); exit;
 //$user = new minds\entities\user('hobbesdeutschjr.');
@@ -14,8 +13,13 @@ var_dump($user); exit;
 //$user->save();
 
 $db = new minds\core\data\call('user_index_to_guid');
-var_dump($db->getRow('drdro')); exit;
-$db->removeRow(strtolower('taylorahumphrey'));
+$data = $db->getRow('music');
+
+foreach($data as $guid => $time){
+	if($guid != '100000000000002125'){
+		$db->removeAttributes('music', array($guid));
+	}
+}
 exit;
 //login(new minds\entities\user('mark'));
 

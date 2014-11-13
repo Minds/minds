@@ -1,7 +1,10 @@
 <?php
+
+if(!isset($vars['hide_cards'])){
 $cards = elgg_get_entities(array('subtype'=>'card', 'owner_guid'=>elgg_get_logged_in_user_guid()));
 foreach($cards as $c){
 	echo elgg_view('output/url', array('href'=>'', 'text'=>elgg_view_entity($c)));
+}
 }
 if($cards && !isset($vars['hide_cards']))
 	echo "-- or new card --";
