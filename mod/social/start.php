@@ -16,8 +16,9 @@ class start extends bases\plugin{
 		
 		\elgg_extend_view('css/elgg', 'css/social');
 		\elgg_extend_view('js/elgg', 'js/social');
-		
-		\elgg_extend_view('forms/activity/post', 'social/form_extend');
+	
+		if(elgg_is_logged_in())	
+			\elgg_extend_view('forms/activity/post', 'social/form_extend');
 		
 		/**
 		 * Register our page end points

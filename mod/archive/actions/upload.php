@@ -1,5 +1,4 @@
 <?php
-
 // Get variables
 $title = get_input("title");
 $desc = get_input("description");
@@ -18,7 +17,6 @@ $entity = get_entity($guid, 'object');
 
 $container_guid = elgg_get_logged_in_user_guid();
 $user_guid = elgg_get_logged_in_user_guid();
-
 $batch = new minds\plugin\archive\entities\batch(get_input('batch_guid'));
 
 switch($mime_type){
@@ -36,14 +34,14 @@ switch($mime_type){
 		if(!$guid)
 			$entity->upload($_FILES['fileData']['tmp_name']);
 		$entity->access_id = 2;
-	
+		
 		if($guid = $entity->save()){
 			
 		    	echo strval($guid);
 			//	system_message(elgg_echo('archive:upload:success'));
 			$activity = new minds\entities\activity();
 			$activity->setTitle($entity->title)
-				->setUrl($entity->getURL()))
+				->setUrl($entity->getURL())
 				->setThumbnail($entity->getIconURL())
 				->save();
 

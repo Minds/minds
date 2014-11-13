@@ -269,7 +269,10 @@ function channel_page_handler($page) {
 			$content = elgg_view_form('carousel/batch', array('enctype'=>'multipart/form-data'), array('items'=>$carousels));
 			break;
 		case 'banner':
-			global $CONFIG;
+			global $CONFIG;	
+			if(!$carousel){
+				return false;
+			}
 			$carousel = $carousels[0];
 			$filename = $CONFIG->dataroot . 'carousel/' . $carousel->guid . 'thin';
 			header('Content-Type: image/jpeg');
