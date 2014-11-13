@@ -577,10 +577,10 @@ function blog_sidebar($blog){
 	if($blog){
 		
 		if(!$blog->rss_item_id){
-			$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single'));
+		//	$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single'));
 		} 
 			
-		$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
+		//$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
 		//show more posts from this user
 		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>3));
 		if (($key = array_search($blog, $owners_blogs)) !== false) {
