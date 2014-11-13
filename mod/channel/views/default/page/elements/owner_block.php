@@ -28,7 +28,7 @@ if ($owner instanceof ElggGroup){
 	
 }elseif($owner instanceof ElggUser) {
 
-	$avatar = elgg_view('output/img', array('src'=>$owner->getIconURL('medium')));
+	/*$avatar = elgg_view('output/img', array('src'=>$owner->getIconURL('medium')));
 	
 	$img_lnk = elgg_view('output/url', array('href'=>$owner->getUrl(), 'text'=>$avatar));
 	
@@ -45,7 +45,9 @@ if ($owner instanceof ElggGroup){
 	echo elgg_view('page/components/module', array(
 		'body' => elgg_view_image_block($img_lnk, $body),
 		'class' => 'elgg-owner-block',
-	));
+	));*/
+
+	echo elgg_view('icon/user/hovercard', array('user'=>$owner, 'show'=>true));
 }
 
 elgg_pop_context();
