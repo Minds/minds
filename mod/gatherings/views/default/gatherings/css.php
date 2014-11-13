@@ -110,6 +110,7 @@
 	right: 33px;
 	padding: 10px;
 	color: #888;
+	display:none;
 }
 .minds-live-chat ul li .messages{
 	height:140px;
