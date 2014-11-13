@@ -18,20 +18,10 @@ if($user->guid){
 		if (!check_entity_relationship($group->guid, 'invited', $user->guid)) {
 
 			// Create relationship
-			add_entity_relationship($group->guid, 'invited', $user->guid);
+			$result = add_entity_relationship($group->guid, 'invited', $user->guid);
 
 			// Send email
 			$url = elgg_normalize_url("groups/invitations/$user->username");
-			/*$result = notify_user($user->getGUID(), $group->owner_guid,
-					elgg_echo('groups:invite:subject', array($user->name, $group->name)),
-					elgg_echo('groups:invite:body', array(
-						$user->name,
-						$logged_in_user->name,
-						$group->name,
-						$url,
-					)),
-					NULL);*/
-			//$result  = notification_create(array($user->getGUID()), $group->owner_guid, $group_guid, array('invite_url'=> $url,'notification_view'=>'group_invite'));
 			\elgg_trigger_plugin_hook('notification', 'all', array(
 				'to' => array($user->getGUID()),
 				'object_guid'=>$group->guid,

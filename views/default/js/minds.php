@@ -9,6 +9,9 @@
 	 	var sidebarOpen = $.cookie('sidebarOpen') == "true" ? true : false;
 	 	if($(window).width() < 720)
 	 		sidebarOpen = false;
+
+		if($("select[name=node]").length != 0)	
+		$("select[name=node]").select2();
 	 		
 	 	$(document).on('click', '.menu-toggle', function(){
 	 		$('.hero').removeClass('sidebar-active-default');

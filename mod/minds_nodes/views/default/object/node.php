@@ -2,10 +2,10 @@
 
 $node = $vars['entity'];
 
-$tier = $node->getTier()->title;
+$tier = $node->getTier();
 $own_domain = $node->allowedDomain() ? 'yes' : 'no';
 $expire = $node->expires();
-$stats= "<div class='stats'><p><b>Tier: </b>$tier</p>
+$stats= "<div class='stats'><p><b>Tier: </b>$$tier->price</p>
                 <p><b>Domain?: </b> $own_domain</p>
                 <p><b>Expires: </b> $expire days</p>
 ";
@@ -42,7 +42,7 @@ $params = array(
 	'title' => $node->launched ? elgg_view('output/url', array('text'=>$node->domain,'href'=>$node->getURL())) : 'New node',
 	'metadata' => $metadata,
 	'subtitle' => $subtitle,
-	'content' => $content,
+	'content' => $stats . $content,
 );
 
 $params = $params + $vars;

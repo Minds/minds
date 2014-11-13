@@ -13,7 +13,8 @@ class router{
 		"/cache" => "minds\\pages\\cache",
 		"/contact" => "minds\\pages\\contact",
 		"/newsfeed" => "minds\\pages\\newsfeed\\newsfeed",
-		"/subscriptions" => "minds\\pages\\subscriptions\\index"
+		"/subscriptions" => "minds\\pages\\subscriptions\\index",
+		"/assets" => "minds\\pages\\assets"
 	);
 	
 	/**

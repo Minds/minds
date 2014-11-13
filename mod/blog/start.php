@@ -188,8 +188,8 @@ function blog_page_handler($page) {
 				$featured = minds_get_featured('', get_input('limit',12), 'entities',get_input('offset')); 
 				$params['footer'] .= elgg_view_entity_list($featured, array('full_view'=>false), get_input('offset'), get_input('limit',12), false, false, true);
 			}
-			$params['pagetitle'] = $params['title'];
-			$params['title'] =  elgg_view('page/elements/ads', array('type'=>'content-header')). $params['pagetitle'];
+			//$params['pagetitle'] = $params['title'];
+			//$params['title'] =  elgg_view('page/elements/ads', array('type'=>'content-header')). $params['pagetitle'];
 			$body = elgg_view_layout('content', $params);
 	
 			echo elgg_view_page($params['pagetitle'], $body);

@@ -8,8 +8,7 @@
 function minds_init(){
 	
 	//minds\core\views::cache('output/carousel');
-	
-	
+
 	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
 	
 	elgg_register_page_handler('news', 'minds_news_page_handler');
@@ -108,7 +107,7 @@ function minds_init(){
 			default:
 				$item = get_entity($page[1]);
 				$filename = $CONFIG->dataroot . 'carousel/' . $page[1] . $page[4];
-				error_log("LOADING $filename");
+				//error_log("LOADING $filename");
 				//pre AUG 29 2014
 				if(!file_exists($filename))
 					$filename = $CONFIG->dataroot . 'carousel/' . $page[1];
@@ -586,5 +585,4 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 	return $new_list;*/
 	return $entities;
 }
-
 elgg_register_event_handler('init','system','minds_init');		

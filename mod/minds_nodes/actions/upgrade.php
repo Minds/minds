@@ -32,11 +32,12 @@ if(!$c)
 
 $card->save();
 
-//configure the details
-$transaction_id = payments\start::createPayment("Node upgrade for $node->domain", $total, $c->id);
-
 $node->tier_guid = get_input('tier_guid');
 $node->nextcharge = time() + 2592000;
+//configure the details
+$transaction_id = payments\start::createPayment("Node upgrade for $node->domain", $node->getTier()->price, $c->id);
+
 $node->save();
 
-forward($node->getURL());
+system_message('Success!');
+forward('/nodes/manage');
