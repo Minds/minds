@@ -83,7 +83,7 @@ usort($tiers, function($a, $b){
 	<div class="row thead">
 		<div class="cell feature">Select Domain</div>
 		<div class="cell free">
-			<input type="text" placeholder="eg. node" name="domain" disabled/> .minds.com
+			<input type="text" placeholder="eg. node" name="domain"  value="<?= get_input('domain') ?>" disabled/> .minds.com
 		</div>
 	</div>
 	<div class="row paid">

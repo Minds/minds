@@ -8,8 +8,7 @@
 function minds_init(){
 	
 	//minds\core\views::cache('output/carousel');
-	
-	
+
 	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
 	
 	elgg_register_page_handler('news', 'minds_news_page_handler');
@@ -586,5 +585,4 @@ function minds_get_featured($type, $limit = 5, $output = 'entities', $offset = "
 	return $new_list;*/
 	return $entities;
 }
-
 elgg_register_event_handler('init','system','minds_init');		

@@ -5,14 +5,14 @@
     	"twilio/sdk" : "master",
 		"thobbs/phpcassa": "master",
 		"elasticsearch/elasticsearch": "~1.0",
-    	"abeautifulsite/jquery-minicolors": "master",
-    	"kramnorth/cinemr-php-sdk": "master",
+	    	"abeautifulsite/jquery-minicolors": "master",
+    		"kramnorth/cinemr-php-sdk": "master",
 		"minds/minds-php-sdk": "master",
 		"paypal/rest-api-sdk-php": "master",
 		"facebook/php-sdk-v4": "4.0.*",
 		"tijsverkoyen/twitteroauth": "master",
-		"peehaa/opcachegui": "1.0.0-rc3"
-   	},
+  		"ivaynberg/select2":"master" 
+	},
 	"repositories": [{
             "type": "vcs",
             "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git"

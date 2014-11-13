@@ -27,6 +27,15 @@ if ($full) {
 	</div>
 	
 	<div class="minds-market-description">
+		<?php if($item->size){ ?>
+			<p>Size: <?= $item->size ?></p>
+		<?php } ?>
+		<?php if($item->color){ ?>
+			<p>Color: <?= $item->color ?></p>
+		<?php } ?>
+		<?php if($item->stock){ ?>
+			<p>Stock: <?= $item->stock ?></p>
+		<?php } ?>
 		<?= $item->description ?>
 	</div>
 	

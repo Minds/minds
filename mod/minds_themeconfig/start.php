@@ -8,7 +8,7 @@ function themeconfig_init() {
 	elgg_register_admin_menu_item('configure', 'logo', 'appearance');
     //elgg_register_admin_menu_item('configure', 'theme', 'appearance');
     elgg_register_admin_menu_item('configure', 'css', 'appearance');
-    //elgg_register_admin_menu_item('configure', 'fonts', 'appearance');
+    elgg_register_admin_menu_item('configure', 'fonts', 'appearance');
     elgg_register_admin_menu_item('configure', 'themesets', 'appearance');
     elgg_register_admin_menu_item('configure', 'footer', 'appearance');
     elgg_register_admin_menu_item('configure', 'ads', 'monitization');
