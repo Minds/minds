@@ -163,7 +163,7 @@ class clusters extends base{
 				$username .= rand(1000,9000);
 			}
 			$user->name = $authenticate['name'];
-			$user->username = $username;
+			$user->username = $authenticate['username'];
 			$user->email = $authenticate['email'];
 			$user->base_node = $node_uri;
 			$user->salt = generate_random_cleartext_password(); // Note salt generated before password!
@@ -176,6 +176,11 @@ class clusters extends base{
 			\register_error('Sorry, we could not authorize your login. This user belongs to another base node.');
 			return false;
 		}
+		
+		$user->name = $authenticate['name'];
+		$user->username = $authenticate['username'];
+		$user->email = $authenticate['email'];
+		$user->avatar_url = $authenticate['avatar_url'];
 		$user->access_id = 2;
 		$user->enable();	
 	
@@ -186,7 +191,7 @@ class clusters extends base{
 		
 		//now lets sync up this users newsfeed.
 		$this->syncFeeds($user); 
-		
+		$this->syncCarousels($user);
 		
 		return false; //it has to be false for some odd reason.
 	}
@@ -297,6 +302,32 @@ class clusters extends base{
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Sync carousels
+	 */
+	public function syncCarousel($user){
+		
+		//first, lets check that it is an external account
+		if(!$user instanceof \minds\entities\user && !$user->base_node)
+			return false;
+		
+		try{
+				$data = $this->call("GET", $user->base_node, "$user->username/api/carousel", array('limit'=>30, 'view'=>'json'));
+		}catch(\Exception $e){}
+		
+		if($data){
+			foreach($data as $d){
+				$i = new ElggObject(array(
+					'title' => $d['title'],
+					'href' => $d['href'],
+					'ext_bg' => $d['bg']
+				));
+				$i->save();
+			}
+		}
+		
 	}
 		
 }

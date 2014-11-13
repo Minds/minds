@@ -1,15 +1,15 @@
 <?php
 /**
- * Gatherings entity model
+ * Gatherings conversation entity
  * 
- * A gathering is essential a thread holder.
  */
  
 namespace minds\plugin\gatherings\entities;
 
 use minds\entities\object;
+use minds\plugin\gatherings\helpers;
 
-class gathering extends object{
+class conversation extends object{
 	
 	/**
 	 * Get messages
@@ -22,11 +22,11 @@ class gathering extends object{
 	 * Encrypts the object 'message
 	 */
 	public function encrypt(){
-		
+		helpers\openssl::encrypt('string', $public_key);
 	}
 	
 	public function decrypt(){
-		
+		helpers\openssl::encrypt('string', $private_key);
 	}
 	
 }

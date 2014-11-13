@@ -279,6 +279,22 @@ function channel_page_handler($page) {
 			echo file_get_contents($filename);
 			exit;
 			break;
+		case 'api':
+			if($page[2] == 'carousels'){
+				$return = array();
+				foreach($carousels as $carousel){
+					$return[] = array(
+									'guid' => $carousel->guid,
+									'href' => $carousel->href,
+									'title'=>$carousel->title,
+									'shadow'=>$carousel->shadow,
+									'bg' => elgg_get_site_url() . "carousel/background/$carousel->guid/$carousel->last_updated/123/thin"
+								);
+				}
+				echo json_encode($return);
+			}
+			exit;
+			break;
 		case 'news':
 		case 'timeline':
 		default:
