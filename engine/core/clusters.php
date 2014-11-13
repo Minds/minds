@@ -35,7 +35,7 @@ class clusters extends base{
 	 * Called every minute so we can communicate with the rest of the cluster
 	 */
 	public function cron(){
-		
+	echo 1;	
 		error_log('running cron to talk to cluster');
 		
 		//assert our position on the network
@@ -51,7 +51,7 @@ class clusters extends base{
 				
 				
 			}catch(\Exception $e){
-		
+				var_dump($e);		
 				error_log('CLUSTER ERROR: '.$e);
 				
 			}

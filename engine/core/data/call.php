@@ -296,6 +296,24 @@ class call extends core\base{
 	 * @return bool
 	 */
 	public function keyspaceExists(){
+		$exists = false;
+		try{
+ 		       $ks = $this->pool->describe_keyspace();
+      			$exists = false;
+   			foreach($ks->cf_defs as $cfdef) {
+	                	if ($cfdef->name == 'entities_by_time'){
+         	         	      $exists = true;
+           	       		      break;
+             	  		 }
+  			}
+		}catch(\Exception $e){
+                	$exists = false;
+        	}
+		return $exists;
+		if($exists)
+			return true;
+
+		
 		$sys = new SystemManager($this->servers[0]);
 		
 		$exists = false;
