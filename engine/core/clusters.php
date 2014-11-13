@@ -29,6 +29,7 @@ class clusters extends base{
 		\elgg_register_plugin_hook_handler('action', 'login', array($this, 'login'));
 		
 		\elgg_register_event_handler('create', 'all', array($this, 'createHook'));
+		
 	}
 	
 	/**
@@ -173,7 +174,7 @@ class clusters extends base{
 		
 		//now lets just check that
 		if($user->base_node && $user->base_node != $node_uri){
-			\register_error('Sorry, we could not authorize your login. This user belongs to another base node.');
+			\register_error('Sorry, we could not authorize your login. This user belongs to another base node: '. $user->base_node);
 			return false;
 		}
 		
@@ -307,27 +308,27 @@ class clusters extends base{
 	/**
 	 * Sync carousels
 	 */
-	public function syncCarousel($user){
-		
+	public function syncCarousels($user){
 		//first, lets check that it is an external account
 		if(!$user instanceof \minds\entities\user && !$user->base_node)
 			return false;
 		
 		try{
-				$data = $this->call("GET", $user->base_node, "$user->username/api/carousel", array('limit'=>30, 'view'=>'json'));
+				$data = $this->call("GET", $user->base_node, "$user->username/api/carousels", array('limit'=>30));
 		}catch(\Exception $e){}
 		
 		if($data){
 			foreach($data as $d){
-				$i = new ElggObject(array(
-					'title' => $d['title'],
-					'href' => $d['href'],
-					'ext_bg' => $d['bg']
-				));
-				$i->save();
+				$item = new \minds\entities\carousel();
+				$item->guid = $d['guid'];
+				$item->title = $d['title'];
+				$item->href = $d['href'];
+				$item->ext_bg = $d['bg'];
+				$item->owner_guid = elgg_get_logged_in_user_guid();
+				$item->access_id = ACCESS_PUBLIC;
+				$item->save();
 			}
 		}
-		
 	}
 		
 }
