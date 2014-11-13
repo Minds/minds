@@ -50,7 +50,7 @@ if (isset($vars['img_class'])) {
 	$img_class = $vars['img_class'];
 }
 
-$use_hover = elgg_extract('use_hover', $vars, true);
+$use_hover = elgg_extract('use_hover', $vars, false);
 if (isset($vars['override'])) {
 	elgg_deprecated_notice("Use 'use_hover' rather than 'override' with user avatars", 1.8, 5);
 	$use_hover = false;
@@ -59,6 +59,8 @@ if (isset($vars['hover'])) {
 	// only 1.8.0 was released with 'hover' as the key
 	$use_hover = $vars['hover'];
 }
+
+
 
 $spacer_url = elgg_get_site_url() . '_graphics/spacer.gif';
 
@@ -99,5 +101,7 @@ if ($use_link) {
 } else {
 	echo "<a>$icon</a>";
 }
+
+echo elgg_view('icon/user/hovercard' ,array('user' => $user , 'size' => $size));
 ?>
 </div>

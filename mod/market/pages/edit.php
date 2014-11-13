@@ -57,6 +57,10 @@ class edit extends core\page implements interfaces\page{
 		$item->description = $_POST['description'];
 		$item->price = $_POST['price'];
 		$item->category = $_POST['category'];
+		$item->size = $_POST['size'];
+		$item->color = $_POST['color'];
+		$item->stock = $_POST['stock'];
+
 		$guid = $item->save();
 		//is a file uploaded?
 		if(is_uploaded_file($_FILES['image']['tmp_name'])){

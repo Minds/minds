@@ -9,6 +9,9 @@
 	 	var sidebarOpen = $.cookie('sidebarOpen') == "true" ? true : false;
 	 	if($(window).width() < 720)
 	 		sidebarOpen = false;
+
+		if($("select[name=node]").length != 0)	
+		$("select[name=node]").select2();
 	 		
 	 	$(document).on('click', '.menu-toggle', function(){
 	 		$('.hero').removeClass('sidebar-active-default');
@@ -50,8 +53,12 @@
 		 * Make our newsfeed icons centred @todo make less hacky
 		 */
 		$(window).on("load resize", function(){
-			$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
-			 $('.carousel-inner > .item > img').css('margin-top', ($('.carousel-inner > .item').height() - $('.carousel-inner > .item > img').height()) /2); 
+			setTimeout(function(){
+
+				$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
+				$('.carousel-inner > .item > img').css('margin-top', ($('.carousel-inner > .item').height() - $('.carousel-inner > .item > img').height()) /2); 
+				
+			}, 2000);
 		});
 	
 	 	

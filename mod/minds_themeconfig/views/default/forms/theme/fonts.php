@@ -1,6 +1,5 @@
 <?php
 global $CONFIG;
-
 foreach ($CONFIG->theme_fonts as $element => $code) {
     ?>
     <div class="font-selection font-selection-<?php echo $element; ?>">
@@ -66,21 +65,5 @@ foreach ($CONFIG->theme_fonts as $element => $code) {
 	    }
 	});
 	
-	$('.font-colour').ColorPicker({
-	    onSubmit: function(hsb, hex, rgb, el) {
-		
-		var sample = $(el).attr('data-sample');
-		
-		$('#'+sample + " .sample").css("color", "#" + hex);
-	
-		$(el).val(hex);
-		$(el).ColorPickerHide();
-		
-		
-	    },
-	    onBeforeShow: function () {
-		$(this).ColorPickerSetColor(this.value);
-	    }
-	});
     });
 </script>

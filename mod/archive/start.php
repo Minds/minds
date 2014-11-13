@@ -90,7 +90,7 @@ function minds_archive_init() {
 			'name' => 'images',
 			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
 			'href' => 'archive/featured/albums',
-			'text' => '<span class="entypo">&#128247;</span> Pictures',
+			'text' => '<span class="entypo">&#128247;</span> Images',
 			'title' =>  elgg_echo('minds:archive:images'),
 			'priority' => 4
 	));

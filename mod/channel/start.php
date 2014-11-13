@@ -35,7 +35,7 @@ function channel_init() {
 	elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'channel_override_avatar_url');
 	elgg_unregister_plugin_hook_handler('entity:icon:url', 'user', 'user_avatar_hook');
 	
-	elgg_register_plugin_hook_handler('register', 'menu:user_hover', 'channel_hover_menu_setup');
+	elgg_register_plugin_hook_handler('register', 'menu:hovercard', 'channel_hover_menu_setup');
 	
 	//setup the channel elements menu content with defaults
 	elgg_register_plugin_hook_handler('register', 'menu:channel_elements', 'channel_elements_menu_setup');
@@ -268,6 +268,17 @@ function channel_page_handler($page) {
 		case 'carousel':
 			$content = elgg_view_form('carousel/batch', array('enctype'=>'multipart/form-data'), array('items'=>$carousels));
 			break;
+		case 'banner':
+			global $CONFIG;
+			$carousel = $carousels[0];
+			$filename = $CONFIG->dataroot . 'carousel/' . $carousel->guid . 'thin';
+			header('Content-Type: image/jpeg');
+			header('Expires: ' . date('r', time() + 864000));
+			header("Pragma: public");
+ 			header("Cache-Control: public");
+			echo file_get_contents($filename);
+			exit;
+			break;
 		case 'news':
 		case 'timeline':
 		default:
@@ -470,6 +481,7 @@ function channel_hover_menu_setup($hook, $type, $return, $params) {
 					'text' => $user->featured_id ? elgg_echo('un-feature') : elgg_echo('feature'),
 					'title' => elgg_echo('feature'),
 					'is_action' => true,
+					'section'=>'admin',
 					'priority' => 2,
 				);
 		$return[] = ElggMenuItem::factory($options);

@@ -7,7 +7,7 @@
  */
 
 $password = $password2 = '';
-$username = get_input('u');
+$u = get_input('u');
 $email = get_input('e');
 $name = get_input('n');
 

@@ -1105,6 +1105,68 @@ li.elgg-menu-item-rss{
 	clear: both;
 }
 
+.com-ui{
+	display:block;
+	margin:auto;
+	width:990px;
+}
+.com-ui .frontpage-signup{
+	width:400px;
+	box-shadow:0 0 3px #FFF;
+}
+.com-ui .node{
+	float:left;
+	background: #FFF;
+	padding: 8px;
+	width:380px;
+}
+.com-ui .node .domain-input{
+	position:relative;
+	width:260px;
+	float:left;
+}
+.com-ui .node .domain-input input{
+	width:100%;
+	float:left;
+	border:1px solid #DDD;
+}
+.com-ui .node .domain-input .url-domain{
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding:12px;
+	font-weight:bold;
+}
+.com-ui input[type=submit]{
+	width:auto;
+	float:left;
+	margin-left:12px;
+}
+
+.com-ui .user{
+	float:right;
+	background: #FFF;
+	padding: 8px;
+} 
+.com-ui .user .user-input{
+	position:relative;
+	width:260px;
+	float:left;
+}
+.com-ui .user .user-input input{
+	width:100%;
+	float:left;
+	border:1px solid #DDD;
+	padding-left:120px;
+}
+.com-ui .user .user-input .url-domain{
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding:12px;
+	font-weight:bold;
+}
+
 .frontpage-signup{
 	position: relative;
 	width: 600px;

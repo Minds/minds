@@ -114,7 +114,7 @@ input[type="radio"] {
 	border:1px solid #DDD;
 	border-radius:3px 0 0 3px;
 }
-.node-select select{
+.node-select select, .node-select .select2-container > a{
 	float:left;
 	-webkit-appearance: none;  /*Removes default chrome and safari style*/
 	-moz-appearance: none; /* Removes Default Firefox style*/
@@ -123,7 +123,7 @@ input[type="radio"] {
 	color: #888;
 	background:#FFF;
 	
-	padding:16px;
+	padding:12px;
 	border:1px solid #DDD;
 	border-left:0;
 	border-radius:0 3px 3px 0;

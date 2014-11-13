@@ -23,6 +23,11 @@ if (!$vars['hide_buttons']) {
                     $setup_link =  elgg_view('output/url', array('text'=>'Setup', 'href'=>'nodes/node/'.$node->guid, 'class'=>'elgg-button elgg-button-action'));
                     $content = $setup_link;
             }
+            
+			if($node->getTier()->price == 0){
+				//upgrade icon
+				$content .= " ". elgg_view('output/url', array('text'=>'Upgrade', 'href'=>'nodes/upgrade/'.$node->guid, 'class'=>'elgg-button elgg-button-action node-button'));
+			}
    // } else {
             //promt for payment
           //  $order = $node->getOrder();
@@ -37,7 +42,7 @@ $params = array(
 	'title' => $node->launched ? elgg_view('output/url', array('text'=>$node->domain,'href'=>$node->getURL())) : 'New node',
 	'metadata' => $metadata,
 	'subtitle' => $subtitle,
-	'content' => $stats . $content,
+	'content' => $content,
 );
 
 $params = $params + $vars;
