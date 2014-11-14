@@ -388,13 +388,19 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 	if ($return_value) {
 		return null;
 	}
-
+	
 	$user = $params['entity'];
 	$size = $params['size'];
 	
 	if (!elgg_instanceof($user, 'user')) {
 		return null;
 	}
+if(get_input('debugm')){
+
+var_dump($user); exit; 
+}
+	if($user->avatar_url)
+		return $user->avatar_url;
 
 	$user_guid = $user->getGUID();
 	$icon_time = $user->icontime;
