@@ -13,7 +13,7 @@ class openssl{
 	 * @param string $password
 	 * @return array - Public & Private
 	 */
-	static public function newKeypair($password = ''){
+	static public function newKeypair($password = NULL){
 			
 		$config = array(
 		    "digest_alg" => "sha512",

@@ -7,8 +7,9 @@ namespace minds\plugin\gatherings\pages;
 use minds\core;
 use minds\interfaces;
 use minds\plugin\gatherings\entities;
+use minds\plugin\gatherings\helpers;
 
-class gatherings extends core\page implements interfaces\page{
+class conversations extends core\page implements interfaces\page{
 	
 	public $context = 'gatherings';
 	
@@ -16,31 +17,17 @@ class gatherings extends core\page implements interfaces\page{
 	 * Reading messages and getting lists of messages
 	 */
 	public function get($pages){
-		exec("which gpg", $output);
-		var_dump($output);
-		exit;
-		//get a list of all chats, regardless
-		//we maintain a list of a users 'recent chats' with key=>time and value=>gathering_guid
-		//the gathering model is responsible for REMOVING and ADDING this data
-		$indexes = new core\data\indexes('object:gatherings');
-		$guids = $indexes->get(\elgg_get_logged_in_user_guid() . ":recent");
-		if(!$guids){
-			//the user doesn't have any recent chats. maybe show them a list of their subscriptions?
-		}
-		$gatherings = elgg_get_entities(array('subtype'=>'gatherings', 'guids'=>$guids));
 		
-		switch($pages[0]){
-			case is_numeric($pages[0]):
-				$gathering = new entities\gathering($pages[0]);
-				
-				break;
-			case 'list':
-			default:
-				
-		}
+		$guids = core\data\indexes::fetch("object:conversation:participant:".elgg_get_logged_in_user_guid());
+		if($guids)
+			$conversations = core\entities::view(array('guids'=>$guids));
+		else
+			$conversations = 'Start a conversation';
 		
-		$layout = elgg_view_layout('content', array('content'=>$content));
-		$this->render($layout);
+		$content = $conversations;
+				
+		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content));
+		echo $this->render(array('body'=>$layout));
 		
 	}
 	

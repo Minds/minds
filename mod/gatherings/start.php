@@ -18,26 +18,20 @@ class start extends bases\plugin{
 	public function init(){
 		
 		if(elgg_is_logged_in() && false){
-	
 			elgg_register_menu_item('site', array(	'name'=>'gathering',
-								'title'=>elgg_echo('gatherings:menu:site'),
-								'href'=>'gatherings/all',
-								'text' => '<span class="entypo">&#59160;</span> Gatherings',
-								'priority' => 150	
-						));
+					'title'=>elgg_echo('gatherings:menu:site'),
+					'href'=>'gatherings/all',
+					'text' => '<span class="entypo">&#59160;</span> Gatherings',
+					'priority' => 150	
+			));
 		}
-
-		/*add_subtype("object", "gathering", "MindsGathering");  
-			
-		elgg_register_library('bblr', elgg_get_plugins_path() . 'gatherings/vendors/bblr-php-sdk/bblr.php');
-		elgg_register_library('minds:gatherings', elgg_get_plugins_path() . 'gatherings/lib/gatherings.php');
-		
-		// Register a url handler for the new object
-		elgg_register_entity_url_handler('object', 'gathering', 'gatherings_url');*/
 		
 		\elgg_extend_view('page/elements/foot', 'gatherings/bar');
 		\elgg_extend_view('css/elgg', 'gatherings/css');
 		\elgg_extend_view('js/elgg', 'js/gatherings/live');
+		\elgg_extend_view('js/elgg', 'js/gatherings/crypt');
+		
+		elgg_register_js('jcryption', elgg_get_site_url() . 'mod/gatherings/vendors/jcryption.js');
 
 		elgg_register_js('portal', elgg_get_site_url() . 'mod/gatherings/vendors/portal.js');
 		elgg_load_js('portal');
@@ -50,8 +44,11 @@ class start extends bases\plugin{
 
 		core\router::registerRoutes(array(
 			'/gatherings' => "\\minds\\plugin\\gatherings\\pages\\gatherings",
-			'/gatherings/conversation' => '\\minds\\plugin\\gatherings\\pages\\conversation'
+			'/gatherings/configuration' => "\\minds\\plugin\\gatherings\\pages\\configuration",
+			'/gatherings/conversations' => '\\minds\\plugin\\gatherings\\pages\\conversations'
 		));
+		
+		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
 
 		// Register a page handler, so we can have nice URLs
 		elgg_register_page_handler('gatherings',array($this, 'pageHandler'));
@@ -71,6 +68,15 @@ class start extends bases\plugin{
 	public function encrypt($message){
 		$user = \elgg_get_logged_in_user_entity();
 		
+	}
+	
+	/**
+	 * Sets the sidebar menus
+	 */
+	public function pageSetup(){
+		if(elgg_get_context() == 'gatherings'){
+			
+		}
 	}
 	 
 

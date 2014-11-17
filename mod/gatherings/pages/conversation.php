@@ -11,10 +11,23 @@ use minds\plugin\gatherings\helpers;
 
 class conversation extends core\page implements interfaces\page{
 	
+	public $context = 'gatherings';
+	
 	/**
 	 * Reading messages and getting lists of messages
 	 */
 	public function get($pages){
+		
+		switch($pages[0]){
+			case is_numeric($pages[0]):
+				$conversation_guid = $pages[0];
+				$messages = core\data\indexes::fetch("object:conversations:$conservation_guid:messages");
+				var_dump($messages); exit;
+				break;
+			case "new":
+				
+				break;
+		}
 		
 		$keypair = helpers\openssl::newKeypair('boo!');
 		//var_dump($keypair);
