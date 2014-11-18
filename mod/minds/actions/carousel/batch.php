@@ -51,6 +51,7 @@ foreach($items as $k=>$item){
 	}
 	
 	$item->title = str_replace("$item->guid:", '', get_input("$item->guid:title"));
+	$item->subtitle = str_replace("$item->guid:", '', get_input("$item->guid:subtitle"));
 	$item->shadow = str_replace("$item->guid:", '', get_input("$item->guid:shadow"));
 	$item->order = str_replace("$item->guid:", '', get_input("$item->guid:order"));
 	$item->color = str_replace("$item->guid:", '', get_input("$item->guid:color"));

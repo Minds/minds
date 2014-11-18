@@ -93,6 +93,7 @@ foreach($items as $item){
 HTML;
 
 		echo elgg_view('input/plaintext', array('name'=>"$item->guid:title", 'value'=>$item->title, 'placeholder'=>'Type here..', 'style'=>'color:'.$item->color .'; background:'.$item->shadow, 'rows'=>1));
+		echo elgg_view('input/text', array('name'=>"$item->guid:subtitle", 'value'=>$item->subtitle, 'placeholder'=>'Type here..'));
 		echo elgg_view('input/hidden', array('name'=>"$item->guid:order", 'value'=>$item->order, 'id'=>"order"));
 	echo '</div>';
 }

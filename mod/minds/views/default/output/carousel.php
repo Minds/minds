@@ -65,7 +65,7 @@ $(document).ready(function() {
 				$bg =  $CONFIG->cdn_url . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache/".elgg_get_plugin_setting('style','minds');
 	
 			echo "<img src=\"$bg\" />";
-			echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><div class=\"inner\" style=\"background:$item->shadow\"><h3>$item->title</h3></div></div>";
+			echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><div class=\"inner\" style=\"background:$item->shadow\"><h3>$item->title</h3><p style=\"color:$item->color\">$item->subtitle</p></div></div>";
 	
 			echo '</a>';
 			$i++;

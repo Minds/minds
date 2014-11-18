@@ -25,10 +25,10 @@ foreach($data as $guid => $time){
 }
 exit;
 //login(new minds\entities\user('mark'));
-
+*/
 $db = new minds\core\data\call();
 $db->getCF('session')->truncate();
 //reset_login_failure_count($john->guid);
-$user = new ElggUser('john');
+$user = new ElggUser('mark');
 $user->makeAdmin();
 
