@@ -4,7 +4,7 @@ require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access(true);
 
-$user = new minds\entities\user(100000000000002125);
+/*$user = new minds\entities\user(100000000000002125);
 //var_dump($user); exit;
 //$user->delete(); exit;
 //$user = new minds\entities\user('hobbesdeutschjr.');
@@ -22,10 +22,10 @@ foreach($data as $guid => $time){
 }
 exit;
 //login(new minds\entities\user('mark'));
-
+*/
 $db = new minds\core\data\call();
 $db->getCF('session')->truncate();
 //reset_login_failure_count($john->guid);
-$user = new ElggUser('john');
+$user = new ElggUser('mark');
 $user->makeAdmin();
 

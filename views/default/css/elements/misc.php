@@ -1012,7 +1012,6 @@ li.elgg-menu-item-rss{
 	/*color:#222;*/
 }
 
-
 .carousel{
 	position: absolute;
 	top: 0;
@@ -1096,6 +1095,10 @@ li.elgg-menu-item-rss{
 	line-height:64px;
 	font-size:64px;
 	text-shadow:0 0 2px #BBB;
+}
+.carousel-inner > .item > .carousel-caption p{
+	color:#FFF;
+	text-align:center;
 }
 
 .elgg-widget-more{
