@@ -1153,7 +1153,7 @@ li.elgg-menu-item-rss{
 } 
 .com-ui .user .user-input{
 	position:relative;
-	width:260px;
+	width:255px;
 	float:left;
 }
 .com-ui .user .user-input input{

@@ -20,8 +20,14 @@ archive.init = function(){
 				//	url : 'https://ads.adap.tv/a/t/integration_test'
 			//		url : 'https://www.minds.io/www/delivery/fc.php?script=bannerTypeHtml:vastInlineBannerTypeHtml:vastInlineHtml&zones=pre-roll0-0%3D1&nz=1&block=1&format=vast&charset=UTF-8',
 				//	url : 'https://u-ads.adap.tv/a/h/lHGLrXrmVyXT0CUmlN9BKBg48KA_lCq_HpYLH5qBiuY=?cb={cachebreaker}&pet=preroll&pageUrl=EMBEDDING_PAGE_URL&description=VIDEO_DESCRIPTION&duration=VIDEO_DURATION&id=VIDEO_ID&keywords=VIDEO_KEYWORDS&title=VIDEO_TITLE&url=VIDEO_URL&injectCompanionDummy=true&eov=eov'
-					url : 'https://pubads.g.doubleclick.net/gampad/ads?sz=215x215&iu=/4403/minds.com&ciu_szs&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&url='+encodeURIComponent(window.location.href)+'&correlator='+ts+'&nofb=1&ad_rules=0'
-					//url: 'https://ad.doubleclick.net/pfadx/N270.126913.6102203221521/B3876671.21;dcadv=2215309;sz=0x0;ord=%5btimestamp%5d;dcmt=text/xml'
+				//	url : 'https://pubads.g.doubleclick.net/gampad/ads?sz=215x215&iu=/4403/minds.com&ciu_szs&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&url='+encodeURIComponent(window.location.href)+'&correlator='+ts+'&nofb=1&ad_rules=0'
+					//url: 'https://ad.doubleclick.net/pfadx/N270.126913.6102203221521/B3876671.21;dcadv=2215309;sz=0x0;ord=%5btimestamp%5d;dcmt=text/xml',
+					//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=57735&LR_SCHEMA=vast2-vpaid&LR_AUTOPLAY=1&LR_TITLE=minds&LR_VIDEO_ID=minds&LR_VERTICALS=donna'
+					//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=1331&LR_CAMPAIGN_ID=229&LR_SCHEMA=vast2',
+					//donnas
+					//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=57735&LR_SCHEMA=vast2-vpaid&LR_AUTOPLAY=1&LR_TITLE=minds&LR_VIDEO_ID=minds&LR_VERTICALS=donna&LR_FORMAT=application/javascript',
+					//q1 media
+					url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=51365&LR_FORMAT=application/javascript&LR_SCHEMA=vast2-vpaid'
 				}
 			 }
 		}

@@ -4,7 +4,10 @@ require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access(true);
 
-/*$user = new minds\entities\user(100000000000002125);
+$user = new minds\entities\user('markandrewculp');
+$cluster = new minds\core\clusters();
+$cluster->syncCarousels($user);
+var_dump($user); exit;
 //var_dump($user); exit;
 //$user->delete(); exit;
 //$user = new minds\entities\user('hobbesdeutschjr.');

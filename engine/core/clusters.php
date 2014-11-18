@@ -314,7 +314,7 @@ class clusters extends base{
 			return false;
 		
 		try{
-				$data = $this->call("GET", $user->base_node, "$user->username/api/carousels", array('limit'=>30));
+			$data = $this->call("GET", $user->base_node, "$user->username/api/carousels", array('limit'=>30));
 		}catch(\Exception $e){}
 		
 		if($data){
@@ -324,7 +324,7 @@ class clusters extends base{
 				$item->title = $d['title'];
 				$item->href = $d['href'];
 				$item->ext_bg = $d['bg'];
-				$item->owner_guid = elgg_get_logged_in_user_guid();
+				$item->owner_guid = $user->guid;
 				$item->access_id = ACCESS_PUBLIC;
 				$item->save();
 			}

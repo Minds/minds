@@ -7,7 +7,7 @@
 "use strict";
 
 var
-  
+
   /**
    * Copies properties from one or more objects onto an original.
    */
@@ -23,7 +23,7 @@ var
     }
     return obj;
   },
-  
+
   /**
    * Add a handler for multiple listeners to an object that supports addEventListener() or on().
    *
@@ -34,11 +34,11 @@ var
    * @return {object} obj The object passed in.
    */
   on = function(obj, events, handler) {
-    
+
     var
-      
+
       type = Object.prototype.toString.call(events),
-      
+
       register = function(obj, event, handler) {
         if (obj.addEventListener) {
           obj.addEventListener(event, handler);
@@ -50,10 +50,10 @@ var
           throw new Error('object has no mechanism for adding event listeners');
         }
       },
-      
+
       i,
       ii;
-    
+
     switch (type) {
       case '[object String]':
         register(obj, events, handler);
@@ -73,11 +73,11 @@ var
       default:
         throw new Error('Unrecognized events parameter type: ' + type);
     }
-    
+
     return obj;
-    
+
   },
-  
+
   /**
    * Runs the callback at the next available opportunity.
    * @see https://developer.mozilla.org/en-US/docs/Web/API/window.setImmediate
@@ -129,7 +129,7 @@ var
       }
     });
   },
-  
+
   /**
    * Returns an object that captures the portions of player state relevant to
    * video playback. The result of this function can be passed to
@@ -143,12 +143,7 @@ var
       snapshot = {
         src: player.currentSrc(),
         currentTime: player.currentTime(),
-
-        // on slow connections, player.paused() may be true when starting and
-        // stopping ads even though play has been requested. Hard-coding the
-        // playback state works for the purposes of ad playback but makes this
-        // an inaccurate snapshot.
-        play: true
+        type: player.currentType()
       };
 
     if (tech) {
@@ -187,7 +182,8 @@ var
       // finish restoring the playback state
       resume = function() {
         player.currentTime(snapshot.currentTime);
-        if (snapshot.play) {
+        //If this wasn't a postroll resume
+        if (!player.ended()) {
           player.play();
         }
       },
@@ -206,29 +202,50 @@ var
           resume();
           return;
         }
-        
+
         // delay a bit and then check again unless we're out of attempts
         if (attempts--) {
           setTimeout(tryToResume, 50);
         }
-      };
+      },
+
+      // whether the video element has been modified since the
+      // snapshot was taken
+      srcChanged;
 
     if (snapshot.nativePoster) {
       tech.poster = snapshot.nativePoster;
     }
 
-    // with a custom ad display or burned-in ads, the content player state
-    // hasn't been modified and so no restoration is required
-    if (player.currentSrc() === snapshot.src) {
-      player.play();
-      return;
+    // Determine whether the player needs to be restored to its state
+    // before ad playback began. With a custom ad display or burned-in
+    // ads, the content player state hasn't been modified and so no
+    // restoration is required
+
+    if (player.src()) {
+      // the player was in src attribute mode before the ad and the
+      // src attribute has not been modified, no restoration is required
+      // to resume playback
+      srcChanged = player.src() !== snapshot.src;
+    } else {
+      // the player was configured through source element children
+      // and the currentSrc hasn't changed, no restoration is required
+      // to resume playback
+      srcChanged = player.currentSrc() !== snapshot.src;
     }
 
-    player.src(snapshot.src);
-    // safari requires a call to `load` to pick up a changed source
-    player.load();
-
-    player.one('loadedmetadata', tryToResume);
+    if (srcChanged) {
+      // if the src changed for ad playback, reset it
+      player.src({ src: snapshot.src, type: snapshot.type });
+      // safari requires a call to `load` to pick up a changed source
+      player.load();
+      // and then resume from the snapshots time once the original src has loaded
+      player.one('loadedmetadata', tryToResume);
+    } else if (!player.ended()) {
+      // the src didn't change and this wasn't a postroll
+      // just resume playback at the current time.
+      player.play();
+    }
   },
 
   /**
@@ -274,9 +291,9 @@ var
 
       // merge options and defaults
       settings = extend({}, defaults, options || {}),
-      
+
       fsmHandler;
-    
+
     // replace the ad initializer with the ad namespace
     player.ads = {
       state: 'content-set',
@@ -289,7 +306,7 @@ var
         player.trigger('adend');
       }
     };
-    
+
     fsmHandler = function(event) {
 
       // Ad Playback State Machine
@@ -302,7 +319,6 @@ var
               },
               'play': function() {
                 this.state = 'ads-ready?';
-                this.snapshot = getPlayerSnapshot(player);
                 cancelContentPlay(player);
 
                 // remove the poster so it doesn't flash between videos
@@ -320,24 +336,17 @@ var
           },
           'preroll?': {
             enter: function() {
-              
-              // capture current player state snapshot (playing, currentTime, src)
-              this.snapshot = getPlayerSnapshot(player);
-
-              // remove the poster so it doesn't flash between videos
-              removeNativePoster(player);
-              
               // change class to show that we're waiting on ads
               player.el().className += ' vjs-ad-loading';
-              
+
               // schedule an adtimeout event to fire if we waited too long
               player.ads.timeout = window.setTimeout(function() {
                 player.trigger('adtimeout');
               }, settings.prerollTimeout);
-              
+
               // signal to ad plugin that it's their opportunity to play a preroll
               player.trigger('readyforpreroll');
-              
+
             },
             leave: function() {
               window.clearTimeout(player.ads.timeout);
@@ -385,9 +394,6 @@ var
             }
           },
           'ad-timeout-playback': {
-            enter: function() {
-              restorePlayerSnapshot(player, this.snapshot);
-            },
             events: {
               'adsready': function() {
                 if (player.paused()) {
@@ -406,11 +412,20 @@ var
             }
           },
           'ad-playback': {
+            enter: function() {
+              // capture current player state snapshot (playing, currentTime, src)
+              this.snapshot = getPlayerSnapshot(player);
+
+              // remove the poster so it doesn't flash between videos
+              removeNativePoster(player);
+            },
+            leave: function() {
+              removeClass(player.el(), 'vjs-ad-playing');
+              restorePlayerSnapshot(player, this.snapshot);
+            },
             events: {
               'adend': function() {
                 this.state = 'content-playback';
-                removeClass(player.el(), 'vjs-ad-playing');
-                restorePlayerSnapshot(player, this.snapshot);
               }
             }
           },
@@ -418,7 +433,6 @@ var
             events: {
               'adstart': function() {
                 this.state = 'ad-playback';
-                this.snapshot = getPlayerSnapshot(player);
                 player.el().className += ' vjs-ad-playing';
 
                 // remove the poster so it doesn't flash between videos
@@ -436,12 +450,12 @@ var
         };
 
       (function(state) {
-        
+
         var noop = function() {};
-        
+
         // process the current event with a noop default handler
         (fsm[state].events[event.type] || noop).apply(player.ads);
-        
+
         // execute leave/enter callbacks if present
         if (state !== player.ads.state) {
           (fsm[state].leave || noop).apply(player.ads);
@@ -451,7 +465,7 @@ var
             videojs.log('ads', state + ' -> ' + player.ads.state);
           }
         }
-        
+
       })(player.ads.state);
 
     };
@@ -464,26 +478,30 @@ var
       // events emitted by third party ad implementors
       'adsready',
       'adstart',  // startLinearAdMode()
-      'adend',    // endLinearAdMode()
+      'adend'     // endLinearAdMode()
     ]), fsmHandler);
+    
+    // keep track of the current content source
+    // if you want to change the src of the video without triggering
+    // the ad workflow to restart, you can update this variable before
+    // modifying the player's source
+    player.ads.contentSrc = player.currentSrc();
     
     // implement 'contentupdate' event.
     (function(){
       var
-        // keep track of last src
-        lastSrc,
         // check if a new src has been set, if so, trigger contentupdate
         checkSrc = function() {
           var src;
           if (player.ads.state !== 'ad-playback') {
             src = player.currentSrc();
-            if (src !== lastSrc) {
+            if (src !== player.ads.contentSrc) {
               player.trigger({
                 type: 'contentupdate',
-                oldValue: lastSrc,
+                oldValue: player.ads.contentSrc,
                 newValue: src
               });
-              lastSrc = src;
+              player.ads.contentSrc = src;
             }
           }
         };
@@ -492,17 +510,16 @@ var
       // check immediately in case we missed the loadstart
       setImmediate(checkSrc);
     })();
-    
+
     // kick off the fsm
     if (!player.paused()) {
       // simulate a play event if we're autoplaying
       fsmHandler({type:'play'});
     }
-    
+
   };
 
   // register the ad plugin framework
   vjs.plugin('ads', adFramework);
 
 })(window, document, videojs);
-

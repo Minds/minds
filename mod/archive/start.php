@@ -39,8 +39,8 @@ function minds_archive_init() {
 	elgg_extend_view('page/elements/sidebar', 'archive/featured');
 
 	elgg_extend_view('js/elgg', 'archive/js');
-	elgg_register_js('player', '//vjs.zencdn.net/4.6.3/video.js','head', 10);
-	elgg_register_css('player', '//vjs.zencdn.net/4.6.3/video-js.css');
+	elgg_register_js('player', '//vjs.zencdn.net/4.9.1/video.js','head', 10);
+	elgg_register_css('player', '//vjs.zencdn.net/4.9.1/video-js.css');
 	elgg_register_js('player-res', elgg_get_site_url().'mod/archive/player/video.js.res.js');
 	elgg_register_js('player-vast', elgg_get_site_url().'mod/archive/player/video.vast.js', 'head', 602);
 	elgg_register_js('player-vast-client', elgg_get_site_url().'mod/archive/player/vast-client.js', 'head', 601);
