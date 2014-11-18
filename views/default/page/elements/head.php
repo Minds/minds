@@ -46,7 +46,7 @@ $release = get_version(true);
 <?php foreach ($css as $item) {?>
 	<link rel="stylesheet" href="<?php echo $item['src']; ?>" type="text/css" />
 <?php } ?>
-
+	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,700italic|Indie+Flower' rel='stylesheet' type='text/css'>
 <?php
 	$ie_url = elgg_get_simplecache_url('css', 'ie');
 	$ie7_url = elgg_get_simplecache_url('css', 'ie7');

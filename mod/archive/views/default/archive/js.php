@@ -27,7 +27,7 @@ archive.init = function(){
 					//donnas
 					//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=57735&LR_SCHEMA=vast2-vpaid&LR_AUTOPLAY=1&LR_TITLE=minds&LR_VIDEO_ID=minds&LR_VERTICALS=donna&LR_FORMAT=application/javascript',
 					//q1 media
-					url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=51365&LR_FORMAT=application/javascript&LR_SCHEMA=vast2-vpaid'
+					//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=51365&LR_FORMAT=application/javascript&LR_SCHEMA=vast2-vpaid'
 				}
 			 }
 		}

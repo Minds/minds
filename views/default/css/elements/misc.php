@@ -1096,6 +1096,7 @@ li.elgg-menu-item-rss{
 	line-height:64px;
 	font-size:64px;
 	text-shadow:0 0 2px #BBB;
+	font-family:"Lato", 'Helvetica', Arial, Sans-Serif;
 }
 
 .elgg-widget-more{
