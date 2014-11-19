@@ -2,7 +2,7 @@
 elgg.provide('minds.crypt');
 
 minds.crypt.init = function() {
-	
+	return true;
 	var privateKey = $('.privateKey').html();
 	var encrypted = $('.encrypted').html();
 	

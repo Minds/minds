@@ -18,30 +18,26 @@ class conversation extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 		
-		switch($pages[0]){
-			case is_numeric($pages[0]):
-				$conversation_guid = $pages[0];
-				$messages = core\data\indexes::fetch("object:conversations:$conservation_guid:messages");
-				var_dump($messages); exit;
-				break;
-			case "new":
-				
-				break;
+		$encrypted = FALSE;
+		$user = new \minds\entities\user($pages[0]);
+		
+		if(\elgg_get_plugin_user_setting('publickey', $user->guid, 'gatherings'))
+				$encrypted = TRUE;
+		
+		$convseration = new entities\conversation(elgg_get_logged_in_user_guid(), $user->guid);
+		$a = elgg_get_logged_in_user_guid();
+		$b = $user->guid;
+		$guids = core\data\indexes::fetch("object:gathering:conversation:$a:$b");
+		$messages = core\entities::get(array('guids'=>$guids));
+		foreach($messages as $message){
+			$message = new entities\message($message);
+			var_dump($message->decryptMessage());
 		}
+			exit;
+		$content = elgg_view_form('conversation', array('action'=>elgg_get_site_url() . 'gatherings/conversation/new'), array('encrypted'=>$encrypted,'user'=>$user));
 		
-		$keypair = helpers\openssl::newKeypair('boo!');
-		//var_dump($keypair);
-		
-		$encrypted = helpers\openssl::encrypt('gee, I hope this works...', $keypair['public']);
-		
-		echo helpers\openssl::decrypt($encrypted, $keypair['private'], 'boo!');
-		
-		
-		
-		exit;
-		
-		$layout = elgg_view_layout('content', array('content'=>$content));
-		$this->render($layout);
+		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content));
+		echo $this->render(array('body'=>$layout));
 		
 	}
 	
@@ -49,47 +45,14 @@ class conversation extends core\page implements interfaces\page{
 	 * Posting messages 
 	 */
 	public function post($pages){
-		$type = $pages[0];
-		$parent_guid = $pages[1];
-		$parent_entity = \get_entity($parent_guid);
-		$ia = \elgg_set_ignore_access(true);
 		
-		$desc = $_POST['comment'];
+		$conversation = new entities\conversation(elgg_get_logged_in_user_guid(), get_input('user_guid'));
 		
-		if (!\elgg_is_logged_in()){
-			exit;	
-			//relies on the minds user account being created @todo fix this?
-			$owner = new \ElggUser('minds');
-		
-			if (false !== strpos($desc, 'http')){
-				exit; //most probably spam
-			}
-		
-		}else {
-			$owner = elgg_get_logged_in_user_entity();
-		}
-		
-		$comment = new entities\comment();
-		$comment->description = $desc;
-		$comment->parent_guid = $parent_guid;
-		if($comment->save()){
-		
-			\elgg_trigger_plugin_hook('notification', 'all', array(
-				'to' => array($parent_entity->owner_guid),
-				'object_guid'=>$parent_guid,
-				'description'=>$desc,
-				'notification_view'=>'comment'
-			));
-			
-			\elgg_trigger_event('comment:create', 'comment', $data); 
-			
-			\elgg_set_ignore_access($ia);
-			
-			echo "<li class=\"minds-comment\">";
-			echo $comment->view();
-			echo "</li>";
-		}
-		exit;
+		$message = new entities\message($conversation);
+		$message->setMessage(get_input('message'))
+				->save();
+				
+		$this->forward(REFERRER);
 	}
 	
 	/**

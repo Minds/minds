@@ -26,6 +26,9 @@ class start extends bases\plugin{
 			));
 		}
 		
+		if (\elgg_is_logged_in())
+			\elgg_extend_view('page/elements/topbar/right/actions', 'gatherings/topbar_icon');
+		
 		\elgg_extend_view('page/elements/foot', 'gatherings/bar');
 		\elgg_extend_view('css/elgg', 'gatherings/css');
 		\elgg_extend_view('js/elgg', 'js/gatherings/live');
@@ -45,8 +48,15 @@ class start extends bases\plugin{
 		core\router::registerRoutes(array(
 			'/gatherings' => "\\minds\\plugin\\gatherings\\pages\\gatherings",
 			'/gatherings/configuration' => "\\minds\\plugin\\gatherings\\pages\\configuration",
+			'/gatherings/conversation' => '\\minds\\plugin\\gatherings\\pages\\conversation',
 			'/gatherings/conversations' => '\\minds\\plugin\\gatherings\\pages\\conversations'
 		));
+		
+		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
+			//var_dump($row);
+			if($row->subttype == 'message')
+				return new entities\message($row);
+		});
 		
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
 

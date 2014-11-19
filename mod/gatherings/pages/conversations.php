@@ -20,13 +20,24 @@ class conversations extends core\page implements interfaces\page{
 		
 		$guids = core\data\indexes::fetch("object:conversation:participant:".elgg_get_logged_in_user_guid());
 		if($guids)
-			$conversations = core\entities::view(array('guids'=>$guids));
+			$conversations = core\entities::get(array('guids'=>$guids));
 		else
-			$conversations = 'Start a conversation';
+			$conversations = NULL;
 		
-		$content = $conversations;
+		
+		/**
+		 * Content: - the first conversation, if there is one..
+		 */
+		if($conversations)
+			$content = \elgg_view_entity($conversations[0], array('full_view'=>true));
+		else 
+			$content = elgg_view('gatherings/conversations/welcome');
+		
+		$sidebar = \elgg_view_entity_list($conversations, array('full_view'=>false));
+		
+		
 				
-		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content));
+		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content, 'sidbar'=>$sidebar));
 		echo $this->render(array('body'=>$layout));
 		
 	}

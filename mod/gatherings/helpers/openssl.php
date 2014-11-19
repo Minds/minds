@@ -60,7 +60,7 @@ class openssl{
 	 * @param string @password - default = ''
 	 * @return string
 	 */
-	static public function decrypt($encrypted, $private_key, $password = ''){
+	static public function decrypt($encrypted, $private_key, $password = NULL){
 			
 		openssl_private_decrypt($encrypted, $decrypted, openssl_get_privatekey($private_key, $password));
 		

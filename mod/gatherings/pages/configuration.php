@@ -21,9 +21,9 @@ class configuration extends core\page implements interfaces\page{
 		switch($pages[0]){
 			case "keypair-1":
 				$keypair = helpers\openssl::newKeypair(get_input('password'));
-				\elgg_set_plugin_user_setting('publickey', $keypair['public']);
-				\elgg_set_plugin_user_setting('option', '1');
-				\elgg_set_plugin_user_setting('privatekey', $keypair['private']);
+				\elgg_set_plugin_user_setting('publickey', $keypair['public'], elgg_get_logged_in_user_guid(), 'gatherings');
+				\elgg_set_plugin_user_setting('option', '1', elgg_get_logged_in_user_guid(), 'gatherings');
+				\elgg_set_plugin_user_setting('privatekey', $keypair['private'], elgg_get_logged_in_user_guid(), 'gatherings');
 				$content = '<p>Encryption is now enabled</p>';
 				$content .= elgg_view('gatherings/publickey', array('key'=>$keypair['public']));
 				break;
