@@ -18,6 +18,8 @@ class conversation extends core\page implements interfaces\page{
 	 * Reading messages and getting lists of messages
 	 */
 	public function get($pages){
+		if(!isset($pages[0]) && get_input('username') || $pages[0] == 'new')
+			$pages[0] = get_input('username');
 		
 		$user = new \minds\entities\user($pages[0]);
 		
@@ -41,13 +43,15 @@ class conversation extends core\page implements interfaces\page{
 			$a = elgg_get_logged_in_user_guid();
 			$b = $user->guid;
 			$guids = core\data\indexes::fetch("object:gathering:conversation:$a:$b");
-			$messages = core\entities::get(array('guids'=>$guids));
-			foreach($messages as $k => $message){
-				$messages[$k] = new entities\message($message, $this->passphrase);
-				//var_dump($message->decryptMessage());
+			if($guids){
+				$messages = core\entities::get(array('guids'=>$guids));
+				foreach($messages as $k => $message){
+					$messages[$k] = new entities\message($message, $this->passphrase);
+					//var_dump($message->decryptMessage());
+				}
+				$messages = array_reverse($messages);
+				$content = elgg_view('gatherings/conversation', array('conversation'=>$conversation, 'messages'=>$messages));
 			}
-			$messages = array_reverse($messages);
-			$content = elgg_view('gatherings/conversation', array('conversation'=>$conversation, 'messages'=>$messages));
 			$content .= elgg_view_form('conversation', array('action'=>elgg_get_site_url() . 'gatherings/conversation/'.$user->guid), array('encrypted'=>$encrypted,'user'=>$user));
 		}
 		
@@ -76,7 +80,8 @@ class conversation extends core\page implements interfaces\page{
 		$message = new entities\message($conversation);
 		$message->setMessage(get_input('message'))
 				->save();
-				
+
+		$conversation->update();		
 		$this->forward(REFERRER);
 	}
 	

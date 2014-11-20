@@ -130,7 +130,7 @@
 	text-decoration:none;
 }
 .hero > .topbar .actions{
-	margin:21px 6px;
+	margin:10px 6px;
 	float:right;
 }
 .hero > .topbar .more{

@@ -1,7 +1,7 @@
 <?php
 ?>
 
-<form action="gatherings/conversation/new" class="conversation-engage">
+<form action="<?= elgg_get_site_url() ?>gatherings/conversation/new" class="conversation-engage">
 	
 	<?= elgg_view('input/autocomplete', array('data-type'=>'user', 'placeholder'=>'Who do you want to chat with?', 'class'=>'user-lookup', 'name'=>'username', 'value'=>get_input('referrer'))) ?>
 	
