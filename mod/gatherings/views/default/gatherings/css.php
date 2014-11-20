@@ -253,3 +253,69 @@ margin: 0;
 
 	background-position: 0 -630px;
 }  
+
+/**
+ * conversations
+ */
+
+.conversations-list{
+	border-right:1px solid #EEE;
+}
+.conversations-list li{
+	display:block;
+	width:auto;
+	margin:8px;
+	height:50px;
+	border-bottom:1px solid #EEE;
+}
+
+.conversations-list li .icon{
+	float:left;
+}
+.conversations-list li > a{
+	display: block;
+	width: 100%;
+	height: 50px;
+}
+.conversations-list li h3{
+	float:left;
+	margin:2px 16px;
+}
+
+.conversation-engage{
+	margin:16px;
+}
+.conversation-engage input[type=text]{
+	padding:16px;
+}
+.conversation-engage input[type=submit]{
+	margin-top:8px;
+}
+
+.message .message-content{
+	padding:8px;
+	overflow:hidden;
+}
+.message .time{
+	float: right;
+	padding-top: 20px;
+	font-size: 11px;
+	color: #888;
+}
+
+.conversation-configuration{
+	padding:16px;
+}
+
+.conversation-configuration form{
+	margin-top:12px;
+}
+.conversation-configuration input[type=text]{
+	width: 300px;
+	padding: 16px;
+}
+
+.conversation-unlock input[type=password]{
+	padding:16px;
+	margin:8px 0 ;
+}

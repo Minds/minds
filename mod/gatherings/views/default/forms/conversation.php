@@ -9,9 +9,9 @@ $encrypted = $vars['encrypted'];
 		
 	</div>
 	<div class="input">
-		<textarea name="message"></textarea>
+		<textarea name="message" placeholder="Type your message here..."></textarea>
 		<input type="hidden" name="user_guid" value="<?= $user->guid ?>"/>
-		<input type="submit" value="Send"/>
+		<input type="submit" value="Send" class="elgg-button elgg-button-action"/>
 	</div>
 </div>
 

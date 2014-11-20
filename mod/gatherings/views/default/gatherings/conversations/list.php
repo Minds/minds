@@ -9,7 +9,9 @@ $conversations = $vars['conversations'];
 			<div class="icon">
 				<?= elgg_view_entity_icon($user, 'small'); ?>
 			</div>
-			<h3><?= $user->name ?></h3>
+			<a href="<?= elgg_get_site_url() ?>gatherings/conversation/<?=$user->username?>">
+				<h3><?= $user->name ?></h3>
+			</a>
 		</li>
 	<?php endforeach; ?>
 </ul>

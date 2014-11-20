@@ -15,8 +15,9 @@ class message extends object{
 	private $conversation;
 	private $message;
 	public $subtype = 'message';
+	private $passphrase = NULL;
 	
-	public function __construct($guid = NULL){
+	public function __construct($guid = NULL, $passphrase = NULL){
 		
 		$this->initializeAttributes();
 		
@@ -28,6 +29,8 @@ class message extends object{
 		}
 		
 		$this->subtype = 'message';
+		
+		$this->passphrase = $passphrase;
 	}
 	
 	protected function initializeAttributes(){
@@ -102,6 +105,9 @@ class message extends object{
 	public function decryptMessage($participant_guid = NULL, $passphrase = NULL){
 		if(!$participant_guid)
 			$participant_guid = elgg_get_logged_in_user_guid();
+		
+		if(!$passphrase && $this->passphrase)
+			$passphrase = $this->passphrase;
 		
 		$key = "message:$participant_guid";
 		$private_key = \elgg_get_plugin_user_setting('privatekey', $user_guid, 'gatherings');
