@@ -14,8 +14,11 @@ class message extends object{
 	
 	private $conversation;
 	private $message;
+	public $subtype = 'message';
 	
 	public function __construct($guid = NULL){
+		
+		$this->initializeAttributes();
 		
 		if(is_object($guid) && $guid instanceof conversation){
 			//loading from a conversation object
@@ -24,6 +27,7 @@ class message extends object{
 			parent::__construct($guid);
 		}
 		
+		$this->subtype = 'message';
 	}
 	
 	protected function initializeAttributes(){
@@ -45,6 +49,7 @@ class message extends object{
 		$a = $this->conversation->participants[0];
 		$b = $this->conversation->participants[1];
 		
+		//set the messages belonging to each user..
 		$indexes[] = "object:gathering:conversation:$a:$b";
 		$indexes[] = "object:gathering:conversation:$b:$a";
 		
@@ -53,6 +58,7 @@ class message extends object{
 	
 	private function setConversation($conversation){
 		$this->conversation = $conversation;
+		$this->conversation->update();
 	}
 	
 	/**
@@ -68,6 +74,7 @@ class message extends object{
 			throw new \Exception('Can not save a message without a conversation');
 
 		$this->encryptMessage();
+		$this->conversation->update();
 		return	parent::save($timebased);
 	}
 	

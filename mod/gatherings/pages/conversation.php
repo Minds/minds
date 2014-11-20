@@ -29,14 +29,27 @@ class conversation extends core\page implements interfaces\page{
 		$b = $user->guid;
 		$guids = core\data\indexes::fetch("object:gathering:conversation:$a:$b");
 		$messages = core\entities::get(array('guids'=>$guids));
-		foreach($messages as $message){
-			$message = new entities\message($message);
-			var_dump($message->decryptMessage());
+		foreach($messages as $k => $message){
+			$messages[$k] = new entities\message($message);
+			//var_dump($message->decryptMessage());
 		}
-			exit;
-		$content = elgg_view_form('conversation', array('action'=>elgg_get_site_url() . 'gatherings/conversation/new'), array('encrypted'=>$encrypted,'user'=>$user));
+		$messages = array_reverse($messages);
 		
-		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content));
+		$conversation_guids = core\data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid());
+		if($conversation_guids){
+			$convserations = array();
+			foreach($conversation_guids as $user_guid => $ts){
+				$user = new \minds\entities\user($user_guid);
+				if($user->username){
+					$conversations[] = $user;
+				}
+			}
+		}
+			
+		$content = elgg_view('gatherings/conversation', array('conversation'=>$conversation, 'messages'=>$messages));
+		$content .= elgg_view_form('conversation', array('action'=>elgg_get_site_url() . 'gatherings/conversation/'.$user->guid), array('encrypted'=>$encrypted,'user'=>$user));
+		
+		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content, 'sidebar'=>elgg_view('gatherings/conversations/list', array('conversations'=>$conversations))));
 		echo $this->render(array('body'=>$layout));
 		
 	}
