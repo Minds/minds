@@ -310,7 +310,7 @@ margin: 0;
 .conversation-configuration form{
 	margin-top:12px;
 }
-.conversation-configuration input[type=text]{
+.conversation-configuration input[type=password]{
 	width: 300px;
 	padding: 16px;
 }
