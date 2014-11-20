@@ -110,7 +110,7 @@ class message extends object{
 			$passphrase = $this->passphrase;
 		
 		$key = "message:$participant_guid";
-		$private_key = \elgg_get_plugin_user_setting('privatekey', $user_guid, 'gatherings');
+		$private_key = isset($_SESSION['tmp_privatekey']) ? $_SESSION['tmp_privatekey'] : \elgg_get_plugin_user_setting('privatekey', $user_guid, 'gatherings');
 		$option = \elgg_get_plugin_user_setting('option', $user_guid, 'gatherings');
 		if($private_key && (int) $option == 1){
 			return helpers\openssl::decrypt(base64_decode($this->$key), $private_key, $passphrase);
