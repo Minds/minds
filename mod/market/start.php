@@ -142,7 +142,7 @@ class start extends bases\plugin{
 		if($entity->item['owner_guid'] == $user->guid)
 			return true;
 
-		return false;
+	//	return false;
 	 }
 
 }

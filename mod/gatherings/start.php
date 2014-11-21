@@ -54,7 +54,7 @@ class start extends bases\plugin{
 		
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			//var_dump($row);
-			if($row->subttype == 'message')
+			if($row->subtype == 'message')
 				return new entities\message($row);
 		});
 		
@@ -69,6 +69,7 @@ class start extends bases\plugin{
 		elgg_register_action("gatherings/save", "$action_base/save.php");
 		elgg_register_action("gatherings/delete", "$action_base/delete.php");
 	
+		\elgg_register_plugin_hook_handler('acl', 'all', array($this, 'acl'));
 		
 	}
 
@@ -102,6 +103,24 @@ class start extends bases\plugin{
 		}
 		return $conversations;
 	}
-	 
+
+
+	/**
+	 * Extends the acl to allow access to message users are supposed to see
+	 */
+	public function acl($event, $type, $return, $params){
+		
+		$message = $params['entity'];
+		$user = $params['user'];
+
+		if($message instanceof \minds\plugin\gatherings\entities\message){
+			$key = "message:$user->guid";
+			if($message->$key)
+				return true;
+		}
+
+		return $return;
+
+	}	 
 
 }

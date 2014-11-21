@@ -45,8 +45,11 @@ class conversation{
 			$user_guid = $this->participants[$i];
 			
 			foreach($this->participants as $key => $participant){
-				if($user_guid != $participant)
+				if($user_guid != $participant){
 					$indexes->insert("object:gathering:conversations:$user_guid", array($participant=> time()));
+					//create an index so we can see the unread messages.. reset on each view of the messages
+					$indexes->insert("object:gathering:conversations:unread", array($participant=> 1));
+				}
 			}
 			
 			$i++;
