@@ -130,8 +130,13 @@
 	text-decoration:none;
 }
 .hero > .topbar .actions{
-	margin:10px 6px;
-	float:right;
+	margin: 20px 6px;
+	float: right;
+	width: 52px;
+}
+.hero > .topbar .actions > span{
+	float:left;
+	margin-right:8px;
 }
 .hero > .topbar .more{
 	clear:both;
