@@ -34,6 +34,7 @@ class message extends object{
 	}
 	
 	protected function initializeAttributes(){
+		parent::initializeAttributes();
 		$this->attributes = array_merge($this->attributes, array(
 			'access_id' => ACCESS_PRIVATE,
 			'owner_guid'=> \elgg_get_logged_in_user_guid(),
