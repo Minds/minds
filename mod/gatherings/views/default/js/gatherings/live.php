@@ -585,7 +585,8 @@ minds.live.init = function() {
 					var guid = guids[i];
 					if(guid != elgg.get_logged_in_user_guid()){
 						var user = users[guid];
-						user_list.append('<li class="user" id="'+ guid + '"> <h3>'+user.name+'</h3></li>');
+						var avatar_src = elgg.get_site_url() + 'icon/' + guid + '/small';
+						user_list.append('<li class="user" id="'+ guid + '"> <img src="'+avatar_src+'" class="avatar"/> <h3>'+user.name+'</h3></li>');
 					}
 				}
 				
