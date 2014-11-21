@@ -10,8 +10,7 @@
 		"minds/minds-php-sdk": "master",
 		"paypal/rest-api-sdk-php": "master",
 		"facebook/php-sdk-v4": "4.0.*",
-		"tijsverkoyen/twitteroauth": "master",
-		"peehaa/opcachegui": "1.0.0-rc3"
+		"tijsverkoyen/twitteroauth": "master"
    	},
 	"repositories": [{
             "type": "vcs",

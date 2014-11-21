@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fe03e1ccd20c4ddf74a11c709f5f6666",
+    "hash": "a7c185106a7f6987562abb9aae2ce2e2",
     "packages": [
         {
             "name": "abeautifulsite/jquery-minicolors",
@@ -305,12 +305,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "53c6cf358bf50a3d31a003639245dac1d4de694b"
+                "reference": "ab41ed9a94196ce2793f400b88313918b4fc64dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/53c6cf358bf50a3d31a003639245dac1d4de694b",
-                "reference": "53c6cf358bf50a3d31a003639245dac1d4de694b",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/ab41ed9a94196ce2793f400b88313918b4fc64dc",
+                "reference": "ab41ed9a94196ce2793f400b88313918b4fc64dc",
                 "shasum": ""
             },
             "require": {
@@ -369,7 +369,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-10-29 06:32:01"
+            "time": "2014-11-11 12:05:51"
         },
         {
             "name": "paypal/rest-api-sdk-php",
@@ -377,12 +377,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
-                "reference": "d5f9b1d43ce4d9ac5d911c03faddada94ccc1f9f"
+                "reference": "24e0609e5b10c358daeb331f93486703eb7422dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/d5f9b1d43ce4d9ac5d911c03faddada94ccc1f9f",
-                "reference": "d5f9b1d43ce4d9ac5d911c03faddada94ccc1f9f",
+                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/24e0609e5b10c358daeb331f93486703eb7422dd",
+                "reference": "24e0609e5b10c358daeb331f93486703eb7422dd",
                 "shasum": ""
             },
             "require": {
@@ -417,51 +417,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2014-11-06 06:10:09"
-        },
-        {
-            "name": "peehaa/opcachegui",
-            "version": "v1.0.0-rc3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PeeHaa/OpCacheGUI.git",
-                "reference": "cc9d0498df7de190bd07c4553c6602be4d77bb8f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PeeHaa/OpCacheGUI/zipball/cc9d0498df7de190bd07c4553c6602be4d77bb8f",
-                "reference": "cc9d0498df7de190bd07c4553c6602be4d77bb8f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.3.*"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Pieter Hordijk",
-                    "email": "info@pieterhordijk.com",
-                    "homepage": "https://pieterhordijk.com",
-                    "role": "developer"
-                }
-            ],
-            "description": "GUI for PHP's OpCache",
-            "homepage": "https://github.com/PeeHaa/OpCacheGUI",
-            "keywords": [
-                "Opcache",
-                "cache",
-                "graphs",
-                "gui",
-                "opcodes"
-            ],
-            "time": "2014-11-01 20:50:29"
+            "time": "2014-11-20 23:07:12"
         },
         {
             "name": "pimple/pimple",
@@ -554,17 +510,17 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "dev-master",
+            "version": "2.7.x-dev",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "dcf345d5ed96bc6c3b4521c1989670d2c9e5014e"
+                "reference": "30e571ce1bba949b44f49b977966898a41c77a01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/dcf345d5ed96bc6c3b4521c1989670d2c9e5014e",
-                "reference": "dcf345d5ed96bc6c3b4521c1989670d2c9e5014e",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/30e571ce1bba949b44f49b977966898a41c77a01",
+                "reference": "30e571ce1bba949b44f49b977966898a41c77a01",
                 "shasum": ""
             },
             "require": {
@@ -584,7 +540,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev"
+                    "dev-master": "2.7-dev"
                 }
             },
             "autoload": {
@@ -608,7 +564,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-03 03:55:50"
+            "time": "2014-11-20 13:24:30"
         },
         {
             "name": "thobbs/phpcassa",
@@ -699,12 +655,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "2ec5b2398128f8d38d23168d0c199c5679402edf"
+                "reference": "723d46b4cc4c4304e7a2f69ff48a46e1d92fe265"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/2ec5b2398128f8d38d23168d0c199c5679402edf",
-                "reference": "2ec5b2398128f8d38d23168d0c199c5679402edf",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/723d46b4cc4c4304e7a2f69ff48a46e1d92fe265",
+                "reference": "723d46b4cc4c4304e7a2f69ff48a46e1d92fe265",
                 "shasum": ""
             },
             "require": {
@@ -741,13 +697,23 @@
                 "sms",
                 "twilio"
             ],
-            "time": "2014-10-31 21:39:21"
+            "time": "2014-11-13 18:56:24"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
     "minimum-stability": "dev",
-    "stability-flags": [],
-    "platform": [],
-    "platform-dev": []
+    "stability-flags": [
+
+    ],
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
 }
