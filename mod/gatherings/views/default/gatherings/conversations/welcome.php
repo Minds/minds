@@ -18,13 +18,13 @@
 		$publickey = elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings');
 		if((int) $option == 1){ ?>
 			<div class="keypair-1 configured">
-				<p>You have configured encryption. Your public key is:</p>
-				<pre><?= $publickey ?></pre>
+				<p>You have configured encryption. </p>
+				<!--<pre><?= $publickey ?></pre>-->
 			</div>
 		<?php } elseif((int)$options == 2){ ?>
 			<div class="keypair-2 configured">
 				<p>You have configured 'advanced' encryption. Your public key is:</p>
-				<pre><?= $publickey ?></pre>
+				<!--<pre><?= $publickey ?></pre>-->
 			</div>
 		<?php } else { ?>
 			<div class="un-configured">

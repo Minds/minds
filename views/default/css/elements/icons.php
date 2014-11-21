@@ -454,16 +454,16 @@
 	background:transparent;
 }
 
-.sidebar .minds-hovercard{
+.sidebar > .minds-hovercard{
 	position:relative;
 	width:100%;
 	box-shadow:0 0 0;
 	margin-top:0;
 }
-.sidebar .minds-hovercard .top-arrow{
+.sidebar > .minds-hovercard .top-arrow{
 	display:none;
 }
 
-.sidebar .hovercard-banner .gradient{
+.sidebar > .hovercard-banner .gradient{
 	width:100%;
 }

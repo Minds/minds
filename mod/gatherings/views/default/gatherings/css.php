@@ -261,7 +261,7 @@ margin: 0;
 .conversations-list{
 	border-right:1px solid #EEE;
 }
-.conversations-list li{
+.conversations-list > li{
 	display:block;
 	width:auto;
 	margin:8px;
@@ -269,15 +269,15 @@ margin: 0;
 	border-bottom:1px solid #EEE;
 }
 
-.conversations-list li .icon{
+.conversations-list > li .icon{
 	float:left;
 }
-.conversations-list li > a{
+.conversations-list > li > a{
 	display: block;
 	width: 100%;
 	height: 50px;
 }
-.conversations-list li h3{
+.conversations-list > li h3{
 	float:left;
 	margin:2px 16px;
 }
@@ -318,4 +318,15 @@ margin: 0;
 .conversation-unlock input[type=password]{
 	padding:16px;
 	margin:8px 0 ;
+}
+
+.count{
+	position: absolute;
+background: red;
+border-radius: 100%;
+padding: 0 6px;
+color: #FFF;
+font-size: 10px;
+bottom: 23px;
+right: -7px;
 }

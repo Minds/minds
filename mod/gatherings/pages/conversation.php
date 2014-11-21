@@ -8,6 +8,7 @@ use minds\core;
 use minds\interfaces;
 use minds\plugin\gatherings\entities;
 use minds\plugin\gatherings\helpers;
+use minds\plugin\gatherings\counter;
 
 class conversation extends core\page implements interfaces\page{
 	
@@ -20,7 +21,9 @@ class conversation extends core\page implements interfaces\page{
 	public function get($pages){
 		if(!isset($pages[0]) && get_input('username') || $pages[0] == 'new')
 			$pages[0] = get_input('username');
-		
+
+		counter::clear();
+
 		$user = new \minds\entities\user($pages[0]);
 		
 		$show = true;
