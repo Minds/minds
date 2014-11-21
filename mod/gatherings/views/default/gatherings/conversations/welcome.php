@@ -18,7 +18,7 @@
 		$publickey = elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings');
 		if((int) $option == 1){ ?>
 			<div class="keypair-1 configured">
-				<p>You have configured 'basic' encryption. Your public key is:</p>
+				<p>You have configured encryption. Your public key is:</p>
 				<pre><?= $publickey ?></pre>
 			</div>
 		<?php } elseif((int)$options == 2){ ?>
@@ -32,7 +32,7 @@
 				
 				<form action="<?= elgg_get_site_url() ?>gatherings/configuration/keypair-1" method="POST">
 					<input type="password" name="passphrase" placeholder="Enter a secure password - recommended"/>
-					<input type="submit" value="Enable basic encryption" class="elgg-button elgg-button-action"/>
+					<input type="submit" value="Enable encryption" class="elgg-button elgg-button-action"/>
 					
 					<?= elgg_view('input/securitytoken') ?>
 				</form>
