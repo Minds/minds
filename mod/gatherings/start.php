@@ -31,10 +31,14 @@ class start extends bases\plugin{
 		
 		\elgg_extend_view('page/elements/foot', 'gatherings/bar');
 		\elgg_extend_view('css/elgg', 'gatherings/css');
+		
+		\elgg_extend_view('js/initialize_elgg', 'js/init');
 		\elgg_extend_view('js/elgg', 'js/gatherings/live');
+		\elgg_extend_view('js/elgg', 'js/gatherings/stored');
 		\elgg_extend_view('js/elgg', 'js/gatherings/crypt');
 		
 		elgg_register_js('jcryption', elgg_get_site_url() . 'mod/gatherings/vendors/jcryption.js');
+		elgg_load_js('jcryption');
 
 		elgg_register_js('portal', elgg_get_site_url() . 'mod/gatherings/vendors/portal.js');
 		elgg_load_js('portal');
@@ -49,7 +53,8 @@ class start extends bases\plugin{
 			'/gatherings' => "\\minds\\plugin\\gatherings\\pages\\gatherings",
 			'/gatherings/configuration' => "\\minds\\plugin\\gatherings\\pages\\configuration",
 			'/gatherings/conversation' => '\\minds\\plugin\\gatherings\\pages\\conversation',
-			'/gatherings/conversations' => '\\minds\\plugin\\gatherings\\pages\\conversations'
+			'/gatherings/conversations' => '\\minds\\plugin\\gatherings\\pages\\conversations',
+			'/gatherings/decrypt' => '\\minds\\plugin\\gatherings\\pages\\decrypt'
 		));
 		
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){

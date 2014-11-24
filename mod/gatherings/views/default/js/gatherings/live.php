@@ -1,6 +1,8 @@
 <?php if(0){?><script><?php } ?>
 elgg.provide('minds.live');
 
+minds.live.guidToPulbicKeys = [];
+
 minds.live.init = function() {
 	
 	var user = elgg.get_logged_in_user_entity();
@@ -36,16 +38,6 @@ minds.live.init = function() {
 			e.stopPropagation();
 			minds.live.sound('off');
 		});
-
-
-		/**
-	 	 * Default to bottom of divs
-		 */
-		$(function() {
-			var conversation    = $('.conversation-wrapper');
-			var height = conversation[0].scrollHeight;
-			conversation.scrollTop(height);
-		});	
 	
 		
 		$(document).on('dblclick', 'video.remote', function(e){
@@ -60,7 +52,14 @@ minds.live.init = function() {
 			  elem.webkitRequestFullscreen();
 			}
 		});
-	
+		
+		function encrypt(guid, message){
+			var jse = new JSEncrypt();
+		 	var pub = JSON.parse(window.localStorage.getItem('publickey:'+guid));
+			jse.setPublicKey(pub);
+			
+			return jse.encrypt(message);
+		}	
 		/*
 		 * Send a message
 		 */
@@ -72,8 +71,33 @@ minds.live.init = function() {
 				to_guid: parent.attr('id') 
 			}); 
 			if(e.which == 13){
-			 e.preventDefault();
-				portal.find().send("message", { to_guid: parent.attr('id'), message: $(this).val(), from_name:user.name }); 
+			 	e.preventDefault();
+			 	
+			 	var message = $(this).val();
+			 	
+			 	
+			 	encrypted = encrypt(parent.attr('id'), message);
+			 	own = encrypt(user.guid, message);
+				
+				if(encrypted)
+					message = 'the sent message was encrypted';
+					
+			
+				/**
+				 * Send to live chat
+				 */
+				var data = { to_guid: parent.attr('id'), message: message, from_name:user.name };
+				data["message:"+parent.attr('id')] = encrypted;
+				data["message:"+user.guid] = own;
+				
+				portal.find().send("message", data); 
+				
+				
+				/**
+				 * Also send to minds.. so we can store
+				 */
+				
+				
 				$(this).val('');
 			}
 			//	minds.live.sendChat();
@@ -98,7 +122,13 @@ minds.live.init = function() {
 		portal.open("https://<?php echo elgg_get_plugin_setting('server_url', 'gatherings') ?: 'chat-ssl.minds.com'; ?>/", { sharing:false }).on({
 			open: function() {
 				//subscribe the user to the site chat
-				portal.find().send("connect", { guid: user.guid, name: user.name, username: user.username, node: elgg.get_site_url()});
+				portal.find().send("connect", { 
+										guid: user.guid, 
+										name: user.name,
+										username: user.username, 
+										node: elgg.get_site_url(),
+										publickey: elgg.user_publicKEY
+									});
 			},
 			close: function(reason) {
 				//remove the user from the site chat..
@@ -186,10 +216,39 @@ minds.live.init = function() {
 					minds.live.saveCacheChat(data.from_guid, '<span class="user_name">'+from+'</span>'+ data.message, data.from_name);
 				}
 				
-				box.find('.messages').append(
+				if(data.hasOwnProperty("message:" + elgg.get_logged_in_user_guid())){
+					
+					encrypted = data["message:" + elgg.get_logged_in_user_guid()];
+					data.message = encrypted;
+					//we now need to decrypt this message
+					elgg.post(elgg.get_site_url() + 'gatherings/decrypt', {
+						data: elgg.security.addToken(data),
+						//contentType : 'application/json',
+						success : function(output) {
+							if(output){
+								box.find('.messages').append(
+									'<span class="message"><span class="user_name">'+from+'</span>' + data.message + '</span>'
+								).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
+							} else {
+								//didn't decrypt.. ask for password
+								
+							}
+					    },
+					    error: function(out){
+					    	alert('oops..')
+					    }
+					});
+					
+				} else {
+									
+					box.find('.messages').append(
 						'<span class="message"><span class="user_name">'+from+'</span>' + data.message + '</span>'
-					)
-					.animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
+					).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
+					
+				}
+					
+					
+				//stored messages hack..
 					
 				// return to the sender that we have received the message
 				if(data.from_guid != elgg.get_logged_in_user_guid())
@@ -607,11 +666,15 @@ minds.live.init = function() {
 				console.log('chat..',data);
 				var user_list = $('.minds-live-chat-userlist .userlist ul');
 				user_list.html('');
+				
 				for(var i=0; i < guids.length; i++){
 	
 					var guid = guids[i];
+					var user = users[guid];
+					//update the public keys list
+					window.localStorage.setItem('publickey:'+guid, JSON.stringify(user.publickey));
+					
 					if(guid != elgg.get_logged_in_user_guid()){
-						var user = users[guid];
 						var avatar_src = elgg.get_site_url() + 'icon/' + guid + '/small';
 						user_list.append('<li class="user" id="'+ guid + '"> <img src="'+avatar_src+'" class="avatar"/> <h3>'+user.name+'</h3></li>');
 					}
@@ -892,7 +955,7 @@ minds.live.openChatWindow = function(id,name,message, minimised){
 				//messages
                 		$(function() {
                        			$('.messages').each(function(){
-                                	var height = $(this)[0].scrollHeight;console.log(height);
+                                	var height = $(this)[0].scrollHeight;
                         	        $(this).scrollTop(height);
                    		     });
              			   });  
