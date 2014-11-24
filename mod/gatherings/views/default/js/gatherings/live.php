@@ -21,6 +21,40 @@ minds.live.init = function() {
 
 		var guid = new String(user.guid);
 		
+		
+		/**
+		 * Sound options
+		 */
+		var soundon = ls.getItem('sound');
+		
+		if(soundon == 'on' || !soundon){
+			$('.sound-off').hide();
+			$('.sound-on').show();
+			
+			document.getElementById("tone").muted = false;
+			document.getElementById("ringer").muted = false;
+			document.getElementById("sound").muted = false;
+		} else {
+			$('.sound-off').show();
+			$('.sound-on').hide();
+			
+			document.getElementById("tone").muted = true;
+			document.getElementById("ringer").muted = true;
+			document.getElementById("sound").muted = true;
+		}
+		
+		$(document).on('click', '.sound-on', function(e){
+			e.preventDefault();
+			ls.setItem('sound', 'off');
+			soundon = 'off';
+		});
+		$(document).on('click', '.sound-off', function(e){
+			e.preventDefault();
+			ls.setItem('sound', 'on');
+			soundon = 'on';
+		});
+		
+		
 		$(document).on('dblclick', 'video.remote', function(e){
 			elem = this;
 			if (elem.requestFullscreen) {

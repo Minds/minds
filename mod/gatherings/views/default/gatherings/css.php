@@ -97,6 +97,12 @@
 	display:block;
 	font-size:14px;
 }
+
+.minds-live-chat ul li h3 .sound{
+	float:right;
+	margin-right:26px;
+}
+
 .minds-live-chat ul li .del.entypo{
 	position: absolute;
 	top: 5px;
