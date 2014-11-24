@@ -26,32 +26,15 @@ minds.live.init = function() {
 		 * Sound options
 		 */
 		var soundon = ls.getItem('sound');
-		
-		if(soundon == 'on' || !soundon){
-			$('.sound-off').hide();
-			$('.sound-on').show();
-			
-			document.getElementById("tone").muted = false;
-			document.getElementById("ringer").muted = false;
-			document.getElementById("sound").muted = false;
-		} else {
-			$('.sound-off').show();
-			$('.sound-on').hide();
-			
-			document.getElementById("tone").muted = true;
-			document.getElementById("ringer").muted = true;
-			document.getElementById("sound").muted = true;
-		}
+		minds.live.sound(soundon);	
 		
 		$(document).on('click', '.sound-on', function(e){
-			e.preventDefault();
-			ls.setItem('sound', 'off');
-			soundon = 'off';
+			e.stopPropagation();
+			minds.live.sound('on');
 		});
 		$(document).on('click', '.sound-off', function(e){
-			e.preventDefault();
-			ls.setItem('sound', 'on');
-			soundon = 'on';
+			e.stopPropagation();
+			minds.live.sound('off');
 		});
 		
 		
@@ -979,6 +962,28 @@ minds.live.linkify = function (inputText) {
 
 minds.live.streamSalt = function(){
 	return Math.random().toString(36).substring(2);
+}
+
+minds.live.sound = function(soundon){
+	if(soundon == 'on' || !soundon){
+		window.localStorage.setItem('sound','on');
+console.log('sound is now on');
+        	$('.sound-on').hide();
+                $('.sound-off').show();
+                        
+                document.getElementById("tone").muted = false;
+                document.getElementById("ringer").muted = false;
+                document.getElementById("sound").muted = false;
+         } else {
+		window.localStorage.setItem('sound', 'off');
+		console.log('sound is now off');
+                $('.sound-on').show();
+                $('.sound-off').hide();
+                        
+                document.getElementById("tone").muted = true;
+                document.getElementById("ringer").muted = true;
+                document.getElementById("sound").muted = true;
+         }
 }
 
 elgg.register_hook_handler('init', 'system', minds.live.init);
