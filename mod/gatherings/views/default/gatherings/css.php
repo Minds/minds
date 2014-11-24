@@ -298,6 +298,10 @@ margin: 0;
 	margin-top:8px;
 }
 
+.conversation-wrapper{
+	overflow:scroll;
+	height:60vh;
+}
 .message .message-content{
 	padding:8px;
 	overflow:hidden;

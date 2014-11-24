@@ -36,7 +36,17 @@ minds.live.init = function() {
 			e.stopPropagation();
 			minds.live.sound('off');
 		});
-		
+
+
+		/**
+	 	 * Default to bottom of divs
+		 */
+		$(function() {
+			var conversation    = $('.conversation-wrapper');
+			var height = conversation[0].scrollHeight;
+			conversation.scrollTop(height);
+		});	
+	
 		
 		$(document).on('dblclick', 'video.remote', function(e){
 			elem = this;
@@ -878,6 +888,14 @@ minds.live.openChatWindow = function(id,name,message, minimised){
 		//	$('.minds-live-chat-userlist > ul').append(box).animate({ scrollTop: $('.box#'+id).find('.messages')[0].scrollHeight},1000);
 			if($('li.box#'+id).length > 0){
 				$('li.box#'+id).animate({ scrollTop: $('li.box#'+id).find('.messages')[0].scrollHeight},1000);	
+
+				//messages
+                		$(function() {
+                       			$('.messages').each(function(){
+                                	var height = $(this)[0].scrollHeight;console.log(height);
+                        	        $(this).scrollTop(height);
+                   		     });
+             			   });  
 			}
 			minds.live.adjustOffset();
 		}
