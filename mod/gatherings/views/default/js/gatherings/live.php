@@ -74,7 +74,7 @@ minds.live.init = function() {
 			 	e.preventDefault();
 			 	
 			 	var message = $(this).val();
-			 	
+			 	var original = message;
 			 	
 			 	encrypted = encrypt(parent.attr('id'), message);
 			 	own = encrypt(user.guid, message);
@@ -96,6 +96,9 @@ minds.live.init = function() {
 				/**
 				 * Also send to minds.. so we can store
 				 */
+				elgg.post(elgg.get_site_url() + 'gatherings/conversation', {
+					data: elgg.security.addToken({user_guid: parent.attr('id'), message: original)
+				});
 				
 				
 				$(this).val('');
