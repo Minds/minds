@@ -219,29 +219,13 @@ minds.live.init = function() {
 				if(data.hasOwnProperty("message:" + elgg.get_logged_in_user_guid())){
 					
 					encrypted = data["message:" + elgg.get_logged_in_user_guid()];
-					data.message = encrypted;
-					//we now need to decrypt this message
-					elgg.post(elgg.get_site_url() + 'gatherings/decrypt', {
-						data: elgg.security.addToken(data),
-						//contentType : 'application/json',
-						success : function(output) {
-							if(output){
-								box.find('.messages').append(
-									'<span class="message"><span class="user_name">'+from+'</span>' + output + '</span>'
-								).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
-							} else {
-								//didn't decrypt.. ask for password
-								box.find('.messages').append(
-									'<span class="message"><span class="user_name">'+from+'</span>' + output + '</span>'
-								).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
-								
-								//now trigger the 
-							}
-					    },
-					    error: function(out){
-					    	alert('oops..')
-					    }
-					});
+					
+					//create the box as if it wasn't encrypted, and then we can handle in a cleaner function
+					span = $('<span class="message" data-encrypted="'+encrypted+'"><span class="user_name">'+from+'</span></span>').uniqueId();
+					box.find('.messages').append(span).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
+					console.log('trigger the decryptor with id ' + span.attr('id'));
+					
+					minds.live.decryptor(span.attr('id'));
 					
 				} else {
 									
@@ -1069,6 +1053,61 @@ console.log('sound is now on');
                 document.getElementById("ringer").muted = true;
                 document.getElementById("sound").muted = true;
          }
+}
+
+minds.live.decryptor = function(id){
+	
+	var span = $(document).find('#'+id);
+	var encrypted = span.data('encrypted');
+	
+	if(encrypted){
+		//span.removeData('encrypted');
+		elgg.post(elgg.get_site_url() + 'gatherings/decrypt', {
+			data: elgg.security.addToken({message: encrypted}),
+			//contentType : 'application/json',
+			success : function(output) {
+				if(output){
+					span.append(output);
+				} else {
+					unlock_box = $('<input type="password" name="password" placeholder="enter your password to unlock"/>');
+					span.append(unlock_box);
+					
+					/**
+					 * The user can now enter their password to unlock the chat...
+					 */
+					$(unlock_box).on('keypress', function(e){
+						if(e.which == 13){ //the enter key was pressed...
+			 				e.preventDefault();
+			 				
+			 				elgg.post(elgg.get_site_url() + 'gatherings/unlock', {
+								data: elgg.security.addToken({password: $(this).val() }),
+								success: function(){
+									unlock_box.remove();
+									//now reloop this funciton...
+									minds.live.decryptor(id);
+								},
+								error: function(){
+									alert('Ooops. Did you enter the wrong password?');
+								}
+							});
+			 				
+			 			}
+					});
+				}
+		    },
+		    error: function(out){
+		    	
+		    }
+		});
+	} else {
+		//something went wrong...
+		return false;
+	}
+
+	/*data.message = encrypted;
+	//we now need to decrypt this message
+	
+	*/
 }
 
 elgg.register_hook_handler('init', 'system', minds.live.init);

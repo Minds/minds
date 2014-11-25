@@ -54,7 +54,8 @@ class start extends bases\plugin{
 			'/gatherings/configuration' => "\\minds\\plugin\\gatherings\\pages\\configuration",
 			'/gatherings/conversation' => '\\minds\\plugin\\gatherings\\pages\\conversation',
 			'/gatherings/conversations' => '\\minds\\plugin\\gatherings\\pages\\conversations',
-			'/gatherings/decrypt' => '\\minds\\plugin\\gatherings\\pages\\decrypt'
+			'/gatherings/decrypt' => '\\minds\\plugin\\gatherings\\pages\\decrypt',
+			'/gatherings/unlock' => '\\minds\\plugin\\gatherings\\pages\\unlock'
 		));
 		
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
