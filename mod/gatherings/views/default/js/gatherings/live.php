@@ -198,11 +198,13 @@ minds.live.init = function() {
 				console.log(data);
 				data.message = minds.live.linkify(data.message);
 				
+				var sender;
+				
 				// The user is sending the message
 				if(data.from_guid == elgg.get_logged_in_user_guid()){
 					box = $('.minds-live-chat-userlist').find('li.box#' + data.to_guid);
 					var from = "You: ";
-				
+					sender = data.from_guid;
 				} else {
 					//play sound
 					document.getElementById('sound').play();
@@ -213,7 +215,7 @@ minds.live.init = function() {
 					}
 					box.addClass('active');
 					var from = box.find('h3').text() + ": ";
-					
+					sender = data.from_guid;
 				}
 				
 				if(data.hasOwnProperty("message:" + elgg.get_logged_in_user_guid())){
@@ -223,7 +225,7 @@ minds.live.init = function() {
 					//create the box as if it wasn't encrypted, and then we can handle in a cleaner function
 					span = $('<span class="message" data-encrypted="'+encrypted+'"><span class="user_name">'+from+'</span></span>').uniqueId();
 					box.find('.messages').append(span).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
-					minds.live.decryptor(span.attr('id'));
+					minds.live.decryptor(span.attr('id'), sender);
 					
 				} else {
 				
@@ -1059,7 +1061,7 @@ console.log('sound is now on');
          }
 }
 
-minds.live.decryptor = function(id){
+minds.live.decryptor = function(id, sender){
 	
 	var span = $(document).find('#'+id);
 	var encrypted = span.data('encrypted');
@@ -1075,6 +1077,24 @@ minds.live.decryptor = function(id){
 					
 					box = span.parents('li.box');
 					minds.live.saveCacheChat(box.attr('id'), span.html(), box.find('h3').text());
+					
+					var stored = $('.conversation-wrapper');
+					if(stored.length > 0){
+						for($i = 0; $i < conversation_participants.length; $i++){
+							console.log(sender);
+							if(sender == conversation_participants[$i]){
+							
+								var template = window["obj_template_"+conversation_participants[$i]];
+								item = $(template);
+								item.find('.message-content').append(output);
+								$('ul.conversation-messages').append(item);
+								minds.conversations.scrollFix();
+								
+								return true;
+							}
+							
+						}
+					}
 					
 				} else {
 					unlock_box = $('<input type="password" name="password" placeholder="enter your password to unlock"/>');
@@ -1092,7 +1112,7 @@ minds.live.decryptor = function(id){
 								success: function(){
 									unlock_box.remove();
 									//now reloop this funciton...
-									minds.live.decryptor(id);
+									minds.live.decryptor(id, sender);
 								},
 								error: function(){
 									alert('Ooops. Did you enter the wrong password?');

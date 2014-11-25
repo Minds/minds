@@ -6,22 +6,30 @@ minds.conversations.init = function() {
 	/**
  	 * Default to bottom of divs
 	 */
-	$(function() {
-		var conversation    = $('.conversation-wrapper');
-		if(conversation.length > 0){
-			var height = conversation[0].scrollHeight;
-			conversation.scrollTop(height);
-		}
-	});
-	
+	minds.conversations.scrollFix();
 	
 	/**
 	 * Check to see if we have a connection to the user on the other side
 	 */
 	$('.elgg-form-conversation').on('submit', function(e){
+		e.preventDefault();
 		
 		var user_guid = $(this).find('input[name="user_guid"]').val();
 		var message = $(this).find('textarea').val();
+		
+		_this = this;
+		elgg.post(elgg.get_site_url() + 'gatherings/conversation', {
+			data: elgg.security.addToken({user_guid: user_guid, message: message}),
+			//contentType : 'application/json',
+			success : function(output) {
+				$(_this).find('textarea').val('');
+				data = JSON.parse(output);
+				console.log(data);
+				item = $('<li class="clearfix">'+data.output+'</li>');
+				$('ul.conversation-messages').append(item);
+				minds.conversations.scrollFix();
+			}
+		});
 		
 		function encrypt(guid, message){
 			var jse = new JSEncrypt();
@@ -38,10 +46,25 @@ minds.conversations.init = function() {
 		data["message:"+ user_guid] = encrypted;
 		data["message:"+ elgg.get_logged_in_user_guid()] = own;
 		
-		console.log(user_guid);
 		portal.find().send("message", data);
 	});
+	
+	$('.elgg-form-conversation textarea').on('keypress', function(e){
+		//submit form on enter key
+		if(e.which == 13){
+			 e.preventDefault();
+			 $(this).parent().submit();
+		}
+	});
 		
+}
+
+minds.conversations.scrollFix = function(){
+	var conversation   = $('.conversation-wrapper');
+	if(conversation.length > 0){
+		var height = conversation[0].scrollHeight;
+		conversation.scrollTop(height);
+	}
 }
 
 

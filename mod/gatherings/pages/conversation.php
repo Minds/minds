@@ -42,7 +42,7 @@ class conversation extends core\page implements interfaces\page{
 		}
 		
 		if($show){
-			$convseration = new entities\conversation(elgg_get_logged_in_user_guid(), $user->guid);
+			$conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $user->guid);
 			$a = elgg_get_logged_in_user_guid();
 			$b = $user->guid;
 			$guids = core\data\indexes::fetch("object:gathering:conversation:$a:$b");
@@ -79,6 +79,8 @@ class conversation extends core\page implements interfaces\page{
 			$_SESSION['tmp_privatekey_ts'] = time();
 			
 			setcookie('tmp_priv_pswd', $new_pswd, time() + (60 * 60 * 60 * 24), '/', NULL, NULL, true);
+			
+			$this->passphrase = $new_pswd;
 			return $this->get($pages);
 		}
 		
@@ -88,7 +90,12 @@ class conversation extends core\page implements interfaces\page{
 		$message->setMessage(get_input('message'))
 				->save();
 
-		$conversation->update();		
+		$conversation->update();	
+		
+		if(elgg_is_xhr()){
+			echo elgg_view_entity($message);
+		}
+			
 		$this->forward(REFERRER);
 	}
 	
