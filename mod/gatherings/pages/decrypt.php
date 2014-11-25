@@ -23,7 +23,7 @@ class decrypt extends core\page implements interfaces\page{
 	public function post($pages){
 		
 		$message = get_input('message');
-		$passphrase = NULL;
+		$passphrase = isset($_COOKIE['tmp_priv_pswd']) ? $_COOKIE['tmp_priv_pswd'] : NULL;
 		
 		$private_key = isset($_SESSION['tmp_privatekey']) ? $_SESSION['tmp_privatekey'] : \elgg_get_plugin_user_setting('privatekey', elgg_get_logged_in_user_guid(), 'gatherings');
 		$option = \elgg_get_plugin_user_setting('option', elgg_get_logged_in_user_guid(), 'gatherings');

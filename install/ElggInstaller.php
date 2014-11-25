@@ -1083,7 +1083,7 @@ class ElggInstaller {
 			register_error($msg);
 			return FALSE;
 		}
-	echo 4; exit;	
+		
 		try  {
 			$db = new minds\core\data\call(NULL, NULL,$CONFIG->cassandra->servers);	
 			$db->keyspaceExists();
@@ -1102,7 +1102,7 @@ class ElggInstaller {
 	 */
 	protected function installDatabase() {
 		global $CONFIG;
-echo 3;exit;
+		
 		try{
 			$db = new minds\core\data\call(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
 			$db->installSchema();

@@ -28,14 +28,14 @@ class conversation extends core\page implements interfaces\page{
 		
 		$show = true;
 		$option = \elgg_get_plugin_user_setting('option', elgg_get_logged_in_user_guid(), 'gatherings');
-		if((int)$option == 1 && !$this->passphrase && (!isset($_SESSION['tmp_privatekey']) || !(isset($_SESSION['tmp_privatekey_ts']) && time() - $_SESSION['tmp_privatekey_ts'] <= 360))){
+		
+		if((int)$option == 1 && !$this->passphrase && (!isset($_SESSION['tmp_privatekey']) || !isset($_COOKIE['tmp_priv_pswd']))){
 			//we need a password from the user...
 			$content = elgg_view_form('message_unlock', array('action'=>elgg_get_site_url() . 'gatherings/conversation/'.$pages[0].'/unlock'));
 			
 			$show = false;
 			
 			if(isset($_SESSION['tmp_privatekey'])){
-			//	var_dump($_SESSION['tmp_privatekey_ts'], time(), time() - $_SESSION['tmp_privatekey_ts']);exit;
 				unset($_SESSION['tmp_privatekey']);
 				unset($_SESSION['tmp_privatekey_ts']);
 			}
@@ -72,9 +72,13 @@ class conversation extends core\page implements interfaces\page{
 		
 		if(isset($pages[1]) && $pages[1] == 'unlock'){
 			$this->passphrase = get_input('passphrase');
-			$tmp = helpers\openssl::temporaryPrivateKey(\elgg_get_plugin_user_setting('privatekey', elgg_get_logged_in_user_guid(), 'gatherings'), $this->passphrase);
+			
+			$new_pswd = base64_encode(openssl_random_pseudo_bytes(128));
+			$tmp = helpers\openssl::temporaryPrivateKey(\elgg_get_plugin_user_setting('privatekey', elgg_get_logged_in_user_guid(), 'gatherings'), $this->passphrase, $new_pswd);
 			$_SESSION['tmp_privatekey'] = $tmp;
 			$_SESSION['tmp_privatekey_ts'] = time();
+			
+			setcookie('tmp_priv_pswd', $new_pswd, time() + (60 * 60 * 60 * 24), '/', NULL, NULL, true);
 			return $this->get($pages);
 		}
 		

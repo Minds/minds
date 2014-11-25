@@ -19,7 +19,7 @@ minds.conversations.init = function() {
 	 * Check to see if we have a connection to the user on the other side
 	 */
 	$('.elgg-form-conversation').on('submit', function(e){
-		e.preventDefault();
+		//e.preventDefault();
 		
 		user_guid = $(this).find('input[name="user_guid"]').val();
 		portal.find().send("message", 

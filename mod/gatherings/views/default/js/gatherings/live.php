@@ -227,11 +227,15 @@ minds.live.init = function() {
 						success : function(output) {
 							if(output){
 								box.find('.messages').append(
-									'<span class="message"><span class="user_name">'+from+'</span>' + data.message + '</span>'
+									'<span class="message"><span class="user_name">'+from+'</span>' + output + '</span>'
 								).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
 							} else {
 								//didn't decrypt.. ask for password
+								box.find('.messages').append(
+									'<span class="message"><span class="user_name">'+from+'</span>' + output + '</span>'
+								).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
 								
+								//now trigger the 
 							}
 					    },
 					    error: function(out){

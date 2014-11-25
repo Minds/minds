@@ -111,7 +111,14 @@ class message extends object{
 			$passphrase = $this->passphrase;
 		
 		$key = "message:$participant_guid";
-		$private_key = isset($_SESSION['tmp_privatekey']) ? $_SESSION['tmp_privatekey'] : \elgg_get_plugin_user_setting('privatekey', $user_guid, 'gatherings');
+		if(isset($_SESSION['tmp_privatekey'])){
+			$private_key = $_SESSION['tmp_privatekey'];
+			//don't really like the cookie logic in models, but let overlook for now. 
+			$passphrase = isset($_COOKIE['tmp_priv_pswd']) ? $_COOKIE['tmp_priv_pswd'] : NULL;
+		} else {
+			 $private_key =  \elgg_get_plugin_user_setting('privatekey', $user_guid, 'gatherings');
+		}
+		
 		$option = \elgg_get_plugin_user_setting('option', $user_guid, 'gatherings');
 		if($private_key && (int) $option == 1){
 			return helpers\openssl::decrypt(base64_decode($this->$key), $private_key, $passphrase);

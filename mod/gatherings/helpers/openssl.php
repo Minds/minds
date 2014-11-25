@@ -67,9 +67,17 @@ class openssl{
 		return $decrypted;
 	}
 	
-	static public function temporaryPrivateKey($private_key, $password = NULL){
+	/**
+	 * Return a temporary key
+	 * 
+	 * @param string $private_key - the protected private key
+	 * @param string $password - the password to unlock the private key
+	 * @param string $newpass (optional) - the new password for the temporary key
+	 * @return string - the new key
+	 */
+	static public function temporaryPrivateKey($private_key, $password = NULL, $newpass = NULL){
 		$private_key = openssl_get_privatekey($private_key, $password);
-		openssl_pkey_export($private_key, $pkeyout);
+		openssl_pkey_export($private_key, $pkeyout, $newpass);
 		return $pkeyout;
 	}
 	
