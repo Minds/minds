@@ -24,7 +24,7 @@ class conversation extends core\page implements interfaces\page{
 
 		counter::clear();
 
-		$user = new \minds\entities\user($pages[0]);
+		
 		
 		$show = true;
 		$option = \elgg_get_plugin_user_setting('option', elgg_get_logged_in_user_guid(), 'gatherings');
@@ -42,10 +42,33 @@ class conversation extends core\page implements interfaces\page{
 		}
 		
 		if($show){
-			$conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $user->guid);
-			$a = elgg_get_logged_in_user_guid();
-			$b = $user->guid;
-			$guids = core\data\indexes::fetch("object:gathering:conversation:$a:$b");
+			$users = array();
+			if(strpos($pages[0], ':') !== FALSE){
+				
+				//this is a group chat
+				$usernames = explode(':', $pages[0]);
+				foreach($usernames as $u){
+					$users[] = new \minds\entities\user($u);
+				}
+				
+			} else {
+				$user = new \minds\entities\user($pages[0]);
+			}
+			
+			
+			$conversation = new entities\conversation(elgg_get_logged_in_user_guid());
+			if($users){
+				foreach($users as $user){
+					if($user->guid)
+						array_push($conversation->participants, $user->guid);
+				}
+				
+			} else {
+				$conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $user->guid);
+			}
+
+			$ik = $conversation->getIndexKeys(); 
+			$guids = core\data\indexes::fetch("object:gathering:conversation:".$ik[0]);
 			if($guids){
 				$messages = core\entities::get(array('guids'=>$guids));
 				foreach($messages as $k => $message){
