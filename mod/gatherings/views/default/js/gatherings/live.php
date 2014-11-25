@@ -219,6 +219,9 @@ minds.live.init = function() {
 					box.addClass('active');
 					var from = box.find('h3').text() + ": ";
 					sender = data.from_guid;
+					
+					//animate the header
+					minds.live.blinker('New message from ' + data.from_name);
 				}
 				
 				if(data.hasOwnProperty("message:" + elgg.get_logged_in_user_guid())){
@@ -717,6 +720,8 @@ minds.live.init = function() {
 				}
 			}
 			toggles.removeClass('active');	
+			$('title').html('Minds');
+			clearTimeout(minds.live.blinkerTS);
 		});
 
 		$(document).on('click', '.minds-live-chat-userlist li .del', function (e) {
@@ -1139,6 +1144,19 @@ minds.live.decryptor = function(id, sender){
 	//we now need to decrypt this message
 	
 	*/
+}
+
+minds.live.blinkerTS = '';
+
+minds.live.blinker = function(message){
+
+	$('title').html(message);
+	minds.live.blinkerTS = setTimeout(function(){
+		$('title').html('Minds');
+		clearTimeout(minds.live.blinkerTS);
+		minds.live.blinker(message);	
+	}, 20);
+	
 }
 
 elgg.register_hook_handler('init', 'system', minds.live.init);
