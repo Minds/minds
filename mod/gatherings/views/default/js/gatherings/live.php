@@ -97,7 +97,7 @@ minds.live.init = function() {
 				 * Also send to minds.. so we can store
 				 */
 				elgg.post(elgg.get_site_url() + 'gatherings/conversation', {
-					data: elgg.security.addToken({user_guid: parent.attr('id'), message: original)
+					data: elgg.security.addToken({user_guid: parent.attr('id'), message: original})
 				});
 				
 				
