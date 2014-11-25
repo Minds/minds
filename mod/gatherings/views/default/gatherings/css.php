@@ -298,6 +298,13 @@ margin: 0;
 	margin-top:8px;
 }
 
+.sidebar .conversation-engage{
+margin: 16px 0;
+}
+.sidebar .conversation-engage input[type=text]{
+	width:190px;
+}
+
 .conversation-wrapper{
 	overflow:scroll;
 	height:60vh;
