@@ -882,7 +882,7 @@ minds.live.adjustOffset = function(e){
                         prev = $(this).prev();
                        // console.log(prev.html());
                         if(prev){
-                                $(this).offset({ left:prev.offset().left + prev.width() + 35});
+                                $(this).offset({ left:prev.offset().left + prev.width() + 8});
                         }
                 });
 }
