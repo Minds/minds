@@ -24,7 +24,8 @@
 	width:100%;
 	height:200px;
 	display:block;
-	overflow: scroll;
+	overflow:hidden;
+	overflow-y: scroll;
 	padding:8px;
 	border:1px solid #eee;
 }
@@ -306,7 +307,8 @@ margin: 16px 0;
 }
 
 .conversation-wrapper{
-	overflow:scroll;
+	overflow:hidden;
+	overflow-y:scroll;
 	height:60vh;
 }
 .message .message-content{
