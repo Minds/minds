@@ -1073,6 +1073,16 @@ minds.live.decryptor = function(id, sender){
 	
 	var span = $(document).find('#'+id);
 	var encrypted = span.data('encrypted');
+
+	var loader = $('<span class="loader">.</span>');
+	span.append(loader);
+
+	var count = 1;
+	setInterval(function(){
+		count++;
+		span.find('.loader').html(new Array(count % 10).join('.'));
+	},100);
+
 	
 	if(encrypted){
 		//span.removeData('encrypted');
@@ -1082,14 +1092,14 @@ minds.live.decryptor = function(id, sender){
 			success : function(output) {
 				if(output){
 					span.append(output);
-					
+					span.find('.loader').remove();
 					box = span.parents('li.box');
 					minds.live.saveCacheChat(box.attr('id'), span.html(), box.find('h3').text());
 					
 					var stored = $('.conversation-wrapper');
 					if(stored.length > 0){
 						for($i = 0; $i < conversation_participants.length; $i++){
-							console.log(sender);
+							
 							if(sender == conversation_participants[$i]){
 							
 								var template = window["obj_template_"+conversation_participants[$i]];
