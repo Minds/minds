@@ -202,7 +202,7 @@ minds.live.init = function() {
 				if(data.from_guid == elgg.get_logged_in_user_guid()){
 					box = $('.minds-live-chat-userlist').find('li.box#' + data.to_guid);
 					var from = "You: ";
-					minds.live.saveCacheChat(data.to_guid, from + data.message, box.find('h3').text());
+				
 				} else {
 					//play sound
 					document.getElementById('sound').play();
@@ -213,7 +213,7 @@ minds.live.init = function() {
 					}
 					box.addClass('active');
 					var from = box.find('h3').text() + ": ";
-					minds.live.saveCacheChat(data.from_guid, '<span class="user_name">'+from+'</span>'+ data.message, data.from_name);
+					
 				}
 				
 				if(data.hasOwnProperty("message:" + elgg.get_logged_in_user_guid())){
@@ -223,11 +223,15 @@ minds.live.init = function() {
 					//create the box as if it wasn't encrypted, and then we can handle in a cleaner function
 					span = $('<span class="message" data-encrypted="'+encrypted+'"><span class="user_name">'+from+'</span></span>').uniqueId();
 					box.find('.messages').append(span).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
-					console.log('trigger the decryptor with id ' + span.attr('id'));
-					
 					minds.live.decryptor(span.attr('id'));
 					
 				} else {
+				
+					if(data.from_guid == elgg.get_logged_in_user_guid()){ 
+						minds.live.saveCacheChat(data.to_guid, from + data.message, box.find('h3').text());
+					} else {
+						minds.live.saveCacheChat(data.from_guid, '<span class="user_name">'+from+'</span>'+ data.message, data.from_name);
+					}
 									
 					box.find('.messages').append(
 						'<span class="message"><span class="user_name">'+from+'</span>' + data.message + '</span>'
@@ -1068,6 +1072,10 @@ minds.live.decryptor = function(id){
 			success : function(output) {
 				if(output){
 					span.append(output);
+					
+					box = span.parents('li.box');
+					minds.live.saveCacheChat(box.attr('id'), span.html(), box.find('h3').text());
+					
 				} else {
 					unlock_box = $('<input type="password" name="password" placeholder="enter your password to unlock"/>');
 					span.append(unlock_box);
