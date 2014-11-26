@@ -737,6 +737,8 @@ minds.live.init = function() {
 							success : function(output) {
 								elgg.user_publicKEY = output;
 								portal.find().send("users");
+								
+								location.reload();
 							}
 						});
 					
