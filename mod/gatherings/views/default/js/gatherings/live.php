@@ -103,7 +103,7 @@ minds.live.init = function() {
 				 * Also send to minds.. so we can store
 				 */
 				elgg.post(elgg.get_site_url() + 'gatherings/conversation', {
-					data: elgg.security.addToken({user_guid: parent.attr('id'), message: original})
+					data: elgg.security.addToken({participants: [user.guid, parent.attr('id')], message: original})
 				});
 				
 				
@@ -727,7 +727,11 @@ minds.live.init = function() {
 				box = $('.minds-live-chat-userlist').find('li.box#' + toggles.attr('id'));
 				if(box.length == 0){
 					var guid = toggles.attr('id');
-					minds.live.startChat(guid);
+					minds.live.startChat({
+						id: guid,
+						username: $(this).html(),
+						name: $(this).html()
+					});
 				} else {
 					box.addClass('toggled');
 				}
