@@ -924,6 +924,7 @@ minds.live.openChatWindow = function(params,name,message, minimised){
 		var username = params.username;
 		var avatar_url = elgg.get_site_url() + 'icon/'+id+'/small';
 		var message = params.message || '';
+		var minimised = params.minimized || true;
 	} else {
 		var id = params;
 		var name = name;

@@ -47,16 +47,11 @@ class message extends object{
 	 */
 	protected function getIndexKeys($ia = false){
 		$indexes = array();
-				
-		//get conversation serialised keys
-		//right now this method on supports two participants, but we need to come up with a logic of support each possible orientaiton 
-		$a = $this->conversation->participants[0];
-		$b = $this->conversation->participants[1];
 		
-		//set the messages belonging to each user..
-		$indexes[] = "object:gathering:conversation:$a:$b";
-		$indexes[] = "object:gathering:conversation:$b:$a";
-		
+		foreach($this->conversation->getIndexKeys() as $ik){
+			$indexes[] = "object:gathering:conversation:$ik";
+		}
+
 		return $indexes;
 	}
 	

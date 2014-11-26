@@ -61,20 +61,35 @@ class conversation{
 	 * Return the index keys for the messages to be stored under
 	 */
 	public function getIndexKeys(){
-		$o = $this->participants;
-		array_walk($o, 
-				function(&$user_guid, $key, $participants){
-					$i =  "$user_guid";
+
+		$return = array();
+		for($i=0; $i <  count($this->participants); $i++){
+
+			//this is going to be prepended on each loop
+			$first = $this->participants[$i];
+
+			$a = $this->participants;
+			unset($a[$i]); //remove the first
+		
+			//now do an array walk..
+			array_walk($a, 
+				function(&$u, $k, $participants){
+					$i =  "$u";
+					
 					foreach($participants as $participant){
-						if($user_guid != $participant){
+						if($u != $participant){
 							$i .= ":$participant";
 						}
 					}
-					$user_guid = $i;
-				},
-				$this->participants
-			);
-		return $o;
+					$u = $i;
+				}, $a);
+				
+			foreach($a as $ending)
+				$return[] = "$first:$ending";
+
+		}
+
+		return $return;
 	}
 	
 	public function save($timebased = true){

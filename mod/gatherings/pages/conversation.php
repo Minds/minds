@@ -67,8 +67,9 @@ class conversation extends core\page implements interfaces\page{
 				$conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $user->guid);
 			}
 
-			$ik = $conversation->getIndexKeys(); 
+			$ik = $conversation->getIndexKeys();
 			$guids = core\data\indexes::fetch("object:gathering:conversation:".$ik[0]);
+
 			if($guids){
 				$messages = core\entities::get(array('guids'=>$guids));
 				foreach($messages as $k => $message){
@@ -104,10 +105,11 @@ class conversation extends core\page implements interfaces\page{
 			setcookie('tmp_priv_pswd', $new_pswd, time() + (60 * 60 * 60 * 24), '/', NULL, NULL, true);
 			
 			$this->passphrase = $new_pswd;
-			return $this->get($pages);
+			return $this->forward(REFERRER);
 		}
 		
-		$conversation = new entities\conversation(elgg_get_logged_in_user_guid(), get_input('user_guid'));
+		$conversation = new entities\conversation();
+		$conversation->participants = $_POST['participants'];
 		
 		$message = new entities\message($conversation);
 		$message->setMessage(get_input('message'))

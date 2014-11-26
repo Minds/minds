@@ -17,9 +17,18 @@ minds.conversations.init = function() {
 		var user_guid = $(this).find('input[name="user_guid"]').val();
 		var message = $(this).find('textarea').val();
 		
+		
+		var participants = [];
+		$(this).find('input[name="participants[]"]').each(function() { participants.push($(this).val()); });
+	
+	
 		_this = this;
 		elgg.post(elgg.get_site_url() + 'gatherings/conversation', {
-			data: elgg.security.addToken({user_guid: user_guid, message: message}),
+			data: elgg.security.addToken({
+				user_guid: user_guid, 
+				message: message,
+				participants: participants,
+			}),
 			//contentType : 'application/json',
 			success : function(output) {
 				$(_this).find('textarea').val('');
@@ -32,6 +41,11 @@ minds.conversations.init = function() {
 			}
 		});
 		
+		
+		//currently we can not support live group chat
+		if(participants.length > 2)
+			return true;
+		
 		function encrypt(guid, message){
 			var jse = new JSEncrypt();
 		 	var pub = JSON.parse(window.localStorage.getItem('publickey:'+guid));
@@ -39,7 +53,7 @@ minds.conversations.init = function() {
 			
 			return jse.encrypt(message);
 		}
-		
+	
 		encrypted = encrypt(user_guid, message);
 		own = encrypt(elgg.get_logged_in_user_guid(), message);
 		
