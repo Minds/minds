@@ -685,40 +685,52 @@ minds.live.init = function() {
 				var users = data.users; //format GUID=>LAST_ACTION
 				var guids = Object.keys(users);
 				
+				var user_list = $('.minds-live-chat-userlist .userlist ul');
+				user_list.html('<span class="chat-msg">Please wait, loading your chat list...</span>');
+				
 				elgg.post(elgg.get_site_url() + 'gatherings/live/userlist', {
 						data: elgg.security.addToken({
 							guids: guids
 						}),
 						//contentType : 'application/json',
 						success : function(output) {
-							console.log(output);
+							output = JSON.parse(output);
+							
+							user_list.html('');
+							
+							for(var i=0; i < guids.length; i++){
+					
+								var guid = guids[i];
+								var user = users[guid];
+								console.log($.inArray(guid, output)); 
+								if($.inArray(guid, output) == -1)
+									continue;
+									
+								//update the public keys list
+								window.localStorage.setItem('publickey:'+guid, JSON.stringify(user.publickey));
+								
+								if(guid != elgg.get_logged_in_user_guid()){
+									var avatar_src = elgg.get_site_url() + 'icon/' + guid + '/small';
+									user_list.append('<li class="user" id="'+ guid + '"> <img src="'+avatar_src+'" class="avatar"/> <h3>'+user.name+'</h3></li>');
+								}
+							}
+							
+							
+							/**
+							 * Noone online?
+							 */
+							if(user_list.html() == ''){
+								user_list.html('<span class="chat-msg">Nobody is online</span>');
+								//check again in 3 seconds
+								setTimeout(function(){
+									portal.find().send("users");
+								}, 3000);
+							}
+							
 						}
 					});
+
 				
-				console.log('chat..',data);
-				var user_list = $('.minds-live-chat-userlist .userlist ul');
-				user_list.html('');
-				
-				for(var i=0; i < guids.length; i++){
-	
-					var guid = guids[i];
-					var user = users[guid];
-					//update the public keys list
-					window.localStorage.setItem('publickey:'+guid, JSON.stringify(user.publickey));
-					
-					if(guid != elgg.get_logged_in_user_guid()){
-						var avatar_src = elgg.get_site_url() + 'icon/' + guid + '/small';
-						user_list.append('<li class="user" id="'+ guid + '"> <img src="'+avatar_src+'" class="avatar"/> <h3>'+user.name+'</h3></li>');
-					}
-				}
-				
-				if(user_list.html() == ''){
-					user_list.html('<span class="chat-msg">Nobody is online</span>');
-					//check again in 3 seconds
-					setTimeout(function(){
-						portal.find().send("users");
-					}, 3000);
-				}
 			}
 		});
 	
