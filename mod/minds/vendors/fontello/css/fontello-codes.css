@@ -61,6 +61,9 @@
 .icon-bitcoin:before { content: '\e810'; } /* '' */
 .icon-paypal:before { content: '\e811'; } /* '' */
 .icon-instagram:before { content: '\e812'; } /* '' */
+.icon-sound:before { content: '\e813'; } /* '' */
+.icon-mute:before { content: '\e814'; } /* '' */
+.icon-bell:before { content: '\e815'; } /* '' */
 .icon-github:before { content: '\f300'; } /* '' */
 .icon-vimeo:before { content: '\f306'; } /* '' */
 .icon-vimeo-circled:before { content: '\f307'; } /* '' */

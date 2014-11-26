@@ -10,9 +10,9 @@
 		"minds/minds-php-sdk": "master",
 		"paypal/rest-api-sdk-php": "master",
 		"facebook/php-sdk-v4": "4.0.*",
-		"tijsverkoyen/twitteroauth": "master",
-  		"ivaynberg/select2":"master" 
-	},
+  		"ivaynberg/select2":"master",
+		"tijsverkoyen/twitteroauth": "master"
+   	},
 	"repositories": [{
             "type": "vcs",
             "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git"

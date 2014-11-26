@@ -1,6 +1,8 @@
 <?php if(0){?><script><?php } ?>
 elgg.provide('minds.live');
 
+minds.live.guidToPulbicKeys = [];
+
 minds.live.init = function() {
 	
 	var user = elgg.get_logged_in_user_entity();
@@ -12,7 +14,13 @@ minds.live.init = function() {
 		var activeChats = JSON.parse(ls.getItem('activeChats'));
 		if(activeChats){
 			$.each(activeChats, function(){
-				minds.live.openChatWindow(this.id, this.name, '', true);
+				minds.live.openChatWindow({ 
+					id: this.id,
+					username: this.username,
+					name: this.name,
+					message: '',
+					minimized: true
+				});
 			});
 		}
 
@@ -20,6 +28,23 @@ minds.live.init = function() {
 		var availableUsers = [];
 
 		var guid = new String(user.guid);
+		
+		
+		/**
+		 * Sound options
+		 */
+		var soundon = ls.getItem('sound');
+		minds.live.sound(soundon);	
+		
+		$(document).on('click', '.sound-on', function(e){
+			e.stopPropagation();
+			minds.live.sound('on');
+		});
+		$(document).on('click', '.sound-off', function(e){
+			e.stopPropagation();
+			minds.live.sound('off');
+		});
+	
 		
 		$(document).on('dblclick', 'video.remote', function(e){
 			elem = this;
@@ -33,7 +58,14 @@ minds.live.init = function() {
 			  elem.webkitRequestFullscreen();
 			}
 		});
-	
+		
+		function encrypt(guid, message){
+			var jse = new JSEncrypt();
+		 	var pub = JSON.parse(window.localStorage.getItem('publickey:'+guid));
+			jse.setPublicKey(pub);
+			
+			return jse.encrypt(message);
+		}	
 		/*
 		 * Send a message
 		 */
@@ -45,8 +77,36 @@ minds.live.init = function() {
 				to_guid: parent.attr('id') 
 			}); 
 			if(e.which == 13){
-			 e.preventDefault();
-				portal.find().send("message", { to_guid: parent.attr('id'), message: $(this).val(), from_name:user.name }); 
+			 	e.preventDefault();
+			 	
+			 	var message = $(this).val();
+			 	var original = message;
+			 	
+			 	encrypted = encrypt(parent.attr('id'), message);
+			 	own = encrypt(user.guid, message);
+				
+				if(encrypted)
+					message = 'the sent message was encrypted';
+					
+			
+				/**
+				 * Send to live chat
+				 */
+				var data = { to_guid: parent.attr('id'), message: message, from_name:user.name, from_username: user.username };
+				data["message:"+parent.attr('id')] = encrypted;
+				data["message:"+user.guid] = own;
+				
+				portal.find().send("message", data); 
+				
+				
+				/**
+				 * Also send to minds.. so we can store
+				 */
+				elgg.post(elgg.get_site_url() + 'gatherings/conversation', {
+					data: elgg.security.addToken({participants: [user.guid, parent.attr('id')], message: original})
+				});
+				
+				
 				$(this).val('');
 			}
 			//	minds.live.sendChat();
@@ -71,7 +131,13 @@ minds.live.init = function() {
 		portal.open("https://<?php echo elgg_get_plugin_setting('server_url', 'gatherings') ?: 'chat-ssl.minds.com'; ?>/", { sharing:false }).on({
 			open: function() {
 				//subscribe the user to the site chat
-				portal.find().send("connect", { guid: user.guid, name: user.name, username: user.username, node: elgg.get_site_url()});
+				portal.find().send("connect", { 
+										guid: user.guid, 
+										name: user.name,
+										username: user.username, 
+										node: elgg.get_site_url(),
+										publickey: elgg.user_publicKEY
+									});
 			},
 			close: function(reason) {
 				//remove the user from the site chat..
@@ -141,28 +207,69 @@ minds.live.init = function() {
 				console.log(data);
 				data.message = minds.live.linkify(data.message);
 				
+				var sender;
+				
 				// The user is sending the message
 				if(data.from_guid == elgg.get_logged_in_user_guid()){
 					box = $('.minds-live-chat-userlist').find('li.box#' + data.to_guid);
 					var from = "You: ";
-					minds.live.saveCacheChat(data.to_guid, from + data.message, box.find('h3').text());
+					sender = data.from_guid;
 				} else {
 					//play sound
 					document.getElementById('sound').play();
 					box = $('.minds-live-chat-userlist').find('li.box#' + data.from_guid);
 					if(box.length == 0){
-						minds.live.openChatWindow(data.from_guid, data.from_name, data.message);
-						return true;	
+						minds.live.openChatWindow({
+							id: data.from_guid, 
+							username: data.from_username,
+							name: data.from_name, 
+							message: ''
+						});
 					}
+					
+					if(!box.length){
+						//strange thing here..
+						box = $('.minds-live-chat-userlist').find('li.box#' + data.from_guid);
+					}
+					
 					box.addClass('active');
 					var from = box.find('h3').text() + ": ";
-					minds.live.saveCacheChat(data.from_guid, '<span class="user_name">'+from+'</span>'+ data.message, data.from_name);
+					sender = data.from_guid;
+					
+					//animate the header
+					minds.live.blinker('New message from ' + data.from_name);
 				}
-				
-				box.find('.messages').append(
+
+				if(data.hasOwnProperty("message:" + elgg.get_logged_in_user_guid())){
+										
+					encrypted = data["message:" + elgg.get_logged_in_user_guid()];
+					
+					//create the box as if it wasn't encrypted, and then we can handle in a cleaner function
+					span = $('<span class="message" data-encrypted="'+encrypted+'"><span class="user_name">'+from+'</span></span>').uniqueId();
+					
+					box.find('.messages').append(span);
+					
+					if(box.find('.messages').length > 0)
+						box.find('.messages').animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
+						
+					minds.live.decryptor(span.attr('id'), sender, data);
+					
+				} else {
+
+					if(data.from_guid == elgg.get_logged_in_user_guid()){ 
+						minds.live.saveCacheChat(data.to_guid, from + data.message, box.find('h3').text());
+					} else {
+						minds.live.saveCacheChat(data.from_guid, '<span class="user_name">'+from+'</span>'+ data.message, data.from_name);
+					}
+									
+					box.find('.messages').append(
 						'<span class="message"><span class="user_name">'+from+'</span>' + data.message + '</span>'
-					)
-					.animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
+					).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
+					
+				}
+					
+					
+				//stored messages hack..
 					
 				// return to the sender that we have received the message
 				if(data.from_guid != elgg.get_logged_in_user_guid())
@@ -577,25 +684,53 @@ minds.live.init = function() {
 			users: function(data){
 				var users = data.users; //format GUID=>LAST_ACTION
 				var guids = Object.keys(users);
-				console.log('chat..',data);
-				var user_list = $('.minds-live-chat-userlist .userlist ul');
-				user_list.html('');
-				for(var i=0; i < guids.length; i++){
-	
-					var guid = guids[i];
-					if(guid != elgg.get_logged_in_user_guid()){
-						var user = users[guid];
-						user_list.append('<li class="user" id="'+ guid + '"> <h3>'+user.name+'</h3></li>');
-					}
-				}
 				
-				if(user_list.html() == ''){
-					user_list.html('<span class="chat-msg">Nobody is online</span>');
-					//check again in 3 seconds
-					setTimeout(function(){
-						portal.find().send("users");
-					}, 3000);
-				}
+				var user_list = $('.minds-live-chat-userlist .userlist ul');
+				user_list.html('<span class="chat-msg">Please wait, loading your chat list...</span>');
+				
+				elgg.post(elgg.get_site_url() + 'gatherings/live/userlist', {
+						data: elgg.security.addToken({
+							guids: guids
+						}),
+						//contentType : 'application/json',
+						success : function(output) {
+							output = JSON.parse(output);
+							
+							user_list.html('');
+							
+							for(var i=0; i < guids.length; i++){
+					
+								var guid = guids[i];
+								var user = users[guid];
+								console.log($.inArray(guid, output)); 
+								if($.inArray(guid, output) == -1)
+									continue;
+									
+								//update the public keys list
+								window.localStorage.setItem('publickey:'+guid, JSON.stringify(user.publickey));
+								
+								if(guid != elgg.get_logged_in_user_guid()){
+									var avatar_src = elgg.get_site_url() + 'icon/' + guid + '/small';
+									user_list.append('<li class="user" id="'+ guid + '"> <img src="'+avatar_src+'" class="avatar"/> <h3>'+user.name+'</h3></li>');
+								}
+							}
+							
+							
+							/**
+							 * Noone online?
+							 */
+							if(user_list.html() == ''){
+								user_list.html('<span class="chat-msg">Nobody is online</span>');
+								//check again in 3 seconds
+								setTimeout(function(){
+									portal.find().send("users");
+								}, 10000);
+							}
+							
+						}
+					});
+
+				
 			}
 		});
 	
@@ -603,6 +738,39 @@ minds.live.init = function() {
 		 * Li click hooks
 		 */
 		$(document).on('click','.minds-live-chat-userlist li h3', function (e) {
+		
+			if(!elgg.user_publicKEY){
+			
+				//prompt the user to enable encryption, show a form to enter a password for secure chat
+				toggles = $(this).parent().addClass('toggled');
+				
+				passphrase = $('<p class="prompt">Please enter a password in order to enable encryption</p><input type="password" name="passphrase" placeholder="Enter a password..."/>');
+				
+				$(this).parents('.userlist').find('ul').html(passphrase);
+				
+				passphrase.on('keypress', function(e){
+					if(e.which == 13){
+					
+						var passphrase = $(this).val();
+						elgg.post(elgg.get_site_url() + 'gatherings/configuration/keypair-1', {
+							data: elgg.security.addToken({
+								passphrase: passphrase
+							}),
+							//contentType : 'application/json',
+							success : function(output) {
+								elgg.user_publicKEY = output;
+								portal.find().send("users");
+								
+								location.reload();
+							}
+						});
+					
+					}
+				});
+				
+				return true;
+			
+			}
 			
 			//update the user list.
 			portal.find().send("users");
@@ -615,7 +783,11 @@ minds.live.init = function() {
 				box = $('.minds-live-chat-userlist').find('li.box#' + toggles.attr('id'));
 				if(box.length == 0){
 					var guid = toggles.attr('id');
-					minds.live.startChat(guid);
+					minds.live.startChat({
+						id: guid,
+						username: $(this).html(),
+						name: $(this).html()
+					});
 				} else {
 					box.addClass('toggled');
 				}
@@ -629,6 +801,8 @@ minds.live.init = function() {
 				}
 			}
 			toggles.removeClass('active');	
+			$('title').html('Minds');
+			clearTimeout(minds.live.blinkerTS);
 		});
 
 		$(document).on('click', '.minds-live-chat-userlist li .del', function (e) {
@@ -789,7 +963,7 @@ minds.live.adjustOffset = function(e){
                         prev = $(this).prev();
                        // console.log(prev.html());
                         if(prev){
-                                $(this).offset({ left:prev.offset().left + prev.width() + 35});
+                                $(this).offset({ left:prev.offset().left + prev.width() + 8});
                         }
                 });
 }
@@ -800,70 +974,89 @@ minds.live.adjustOffset = function(e){
  * 
  * Gathers information about a user
  */
-minds.live.openChatWindow = function(id,name,message, minimised){
+minds.live.openChatWindow = function(params,name,message, minimised){
 	
-	var name = name;
-	var username = '';
-	var avatar_url = '';
 	
-	elgg.get('services/api/rest/json?method=user.get_profile&username='+id, {
+	
+	if(typeof params === 'object'){
+		var id = params.id;
+		var name = params.name;
+		var username = params.username;
+		var avatar_url = elgg.get_site_url() + 'icon/'+id+'/small';
+		var message = params.message || '';
+		var minimised = params.minimized || true;
+	} else {
+		var id = params;
+		var name = name;
+		var username = id;
+		var avatar_url = elgg.get_site_url() + 'icon/'+id+'/small';
+	}
+	
+	/*elgg.get('services/api/rest/json?method=user.get_profile&username='+id, {
 		success: function (data){
 			name = data.result.core.name;
 			username = data.result.core.username;
 			avatar_url = data.result.avatar_url;
-		
-			 var newmsg = '';	
-			var cache = minds.live.getCacheChat(id);
-			if(cache){
-				var length = cache.length;
-					var newmsg = '';
-					for (var i = 0; i < length; i++) {
-						newmsg	+= '<span class="message">' + cache[i] + '</span>';
-					}
-			}
-					
-			if(message){
-				message = '<span class="message"><span class="user_name">'+name+'</span>: ' + message + '</span>';
-			}
-			
-			message = newmsg + message;
-			if(minimised){
-				var liclass = 'toggle';
-			} else {
-				var liclass = 'toggled';
-			}
-			var box = '<li class="box '+ liclass + '" id="' + id + '">' +
-		       			 	//'<a href="/' + username + '">'+ 
-		       			 		'<a href="' + elgg.get_site_url() + username + '"><img src="' + avatar_url + '" class="avatar"/></a>'+
-		       			 		'<h3>'+
-		       			 			name + 
-		       			 		'</h3>' + 
-		       			 	//'</a>' + 
-		       			 	'<span class="del entypo">&#10062;</span>' +
-		       			 	'<span class="video entypo">&#58277;</span>' +
-		       			 	
-		       			 	
-		       			 	
-		       			 	'<div class="call">' +
-		       			 		'<div id="flash-p2p-'+ id + '" style="display:none; height:100px;"></div>' + 
-		       			 		
-		       			 		'<video id="local-'+id+'" class="local" autoplay muted></video>' + 
-		       			 		'<video id="remote-'+id+'" class="remote" autoplay></video>' + 
-		       			 	//	'<div id="flash" style="display:none;"> </div>'+ 
-		       			 	'</div>' + 
-		       			 	
-		       			 '<div class="messages">' + message +  '</div>' + 
-		       			 '<div class="rt-stats"></div>' +
-		        		 '<div> <textarea class="elgg-input" ></textarea> </div>' +
-				'</li>';
-			 $('.minds-live-chat-userlist > ul').append(box);	
-		//	$('.minds-live-chat-userlist > ul').append(box).animate({ scrollTop: $('.box#'+id).find('.messages')[0].scrollHeight},1000);
-			if($('li.box#'+id).length > 0){
-				$('li.box#'+id).animate({ scrollTop: $('li.box#'+id).find('.messages')[0].scrollHeight},1000);	
-			}
-			minds.live.adjustOffset();
+	*/	
+	var newmsg = '';	
+	var cache = minds.live.getCacheChat(id);
+	if(cache){
+		var length = cache.length;
+		var newmsg = '';
+		for (var i = 0; i < length; i++) {
+			newmsg	+= '<span class="message">' + cache[i] + '</span>';
 		}
-	})
+	}
+			
+	if(message){
+		message = '<span class="message"><span class="user_name">'+name+'</span>: ' + message + '</span>';
+	}
+			
+	message = newmsg + message;
+	if(minimised){
+		var liclass = 'toggle';
+	} else {
+		var liclass = 'toggled';
+	}
+	var box = '<li class="box '+ liclass + '" id="' + id + '">' +
+   			 	//'<a href="/' + username + '">'+ 
+   			 		'<a href="' + elgg.get_site_url() + username + '"><img src="' + avatar_url + '" class="avatar"/></a>'+
+   			 		'<h3>'+
+   			 			name + 
+   			 		'</h3>' + 
+   			 	//'</a>' + 
+   			 	'<span class="del entypo">&#10062;</span>' +
+   			 	'<span class="video entypo">&#58277;</span>' +
+   			 	
+   			 	
+   			 	
+   			 	'<div class="call">' +
+   			 		'<div id="flash-p2p-'+ id + '" style="display:none; height:100px;"></div>' + 
+   			 		
+   			 		'<video id="local-'+id+'" class="local" autoplay muted></video>' + 
+   			 		'<video id="remote-'+id+'" class="remote" autoplay></video>' + 
+   			 	//	'<div id="flash" style="display:none;"> </div>'+ 
+   			 	'</div>' + 
+   			 	
+   			 '<div class="messages">' + message +  '</div>' + 
+   			 '<div class="rt-stats"></div>' +
+    		 '<div> <textarea class="elgg-input" ></textarea> </div>' +
+	'</li>';
+	$('.minds-live-chat-userlist > ul').append(box);	
+	//$('.minds-live-chat-userlist > ul').append(box).animate({ scrollTop: $('.box#'+id).find('.messages')[0].scrollHeight},1000);
+		
+	/**
+	 * Scroll to bottom on new window/message
+	 */
+	if($('li.box#'+id).length > 0){
+		$(function() {
+           	$('.messages').each(function(){
+                var height = $(this)[0].scrollHeight;
+            	$(this).scrollTop(height);
+			});
+		});  
+	}
+	minds.live.adjustOffset();
 	
 }
 
@@ -899,9 +1092,10 @@ minds.live.saveCacheChat = function(id, message, name){
  * Remove a chat
  */
 minds.live.removeChat = function(id){
-	$('.box#'+id).remove();
-	minds.live.removeCacheChat(id);
+	$(document).find('.box#'+id).remove();
+	console.log($(document).find('.minds-live-chat-userlist  .box#'+id));
 	minds.live.adjustOffset();	
+	minds.live.removeCacheChat(id);
 }
 minds.live.removeCacheChat = function(id){
 	//remove the chat log
@@ -913,7 +1107,7 @@ minds.live.removeCacheChat = function(id){
 	ls = window.localStorage;
 	var activeChats = JSON.parse(ls.getItem('activeChats'));
 	$.each(activeChats, function(i, val) {
-		console.log(id);
+		//console.log(id);
 		if(i == id){
 			delete activeChats[i];
 		}
@@ -944,6 +1138,136 @@ minds.live.linkify = function (inputText) {
 
 minds.live.streamSalt = function(){
 	return Math.random().toString(36).substring(2);
+}
+
+minds.live.sound = function(soundon){
+	if(soundon == 'on' || !soundon){
+		window.localStorage.setItem('sound','on');
+console.log('sound is now on');
+        	$('.sound-on').hide();
+                $('.sound-off').show();
+                        
+                document.getElementById("tone").muted = false;
+                document.getElementById("ringer").muted = false;
+                document.getElementById("sound").muted = false;
+         } else {
+		window.localStorage.setItem('sound', 'off');
+		console.log('sound is now off');
+                $('.sound-on').show();
+                $('.sound-off').hide();
+                        
+                document.getElementById("tone").muted = true;
+                document.getElementById("ringer").muted = true;
+                document.getElementById("sound").muted = true;
+         }
+}
+
+minds.live.decryptor = function(id, sender, data){
+	
+	var span = $(document).find('#'+id);
+	var encrypted = span.data('encrypted');
+
+	var loader = $('<span class="loader">.</span>');
+	span.append(loader);
+
+	var count = 1;
+	setInterval(function(){
+		count++;
+		span.find('.loader').html(new Array(count % 10).join('.'));
+	},100);
+
+
+	if(encrypted){
+		//span.removeData('encrypted');
+		elgg.post(elgg.get_site_url() + 'gatherings/decrypt', {
+			data: elgg.security.addToken({message: encrypted}),
+			//contentType : 'application/json',
+			success : function(output) {
+				if(output){
+					span.append(output);
+					span.find('.loader').remove();
+					box = span.parents('li.box');
+					minds.live.saveCacheChat(box.attr('id'), span.html(), box.find('h3').text());
+					
+					var stored = $('.conversation-wrapper');
+					if(stored.length > 0){
+						if(data.hasOwnProperty('from_stored') && sender == elgg.get_logged_in_user_guid()){
+							return true;
+						}
+					
+						//live chat not supported for group chat yet..
+						if(conversation_participants.length > 2)
+							return true;
+					
+						for($i = 0; $i < conversation_participants.length; $i++){
+							
+							if(sender == conversation_participants[$i]){
+							
+								var template = window["obj_template_"+conversation_participants[$i]];
+								item = $(template);
+								item.find('.message-content').append(output);
+								$('ul.conversation-messages').append(item);
+								minds.conversations.scrollFix();
+								
+								return true;
+							}
+							
+						}
+					}
+					
+				} else {
+					unlock_box = $('<input type="password" name="password" placeholder="enter your password to unlock"/>');
+					span.append(unlock_box);
+					
+					/**
+					 * The user can now enter their password to unlock the chat...
+					 */
+					$(unlock_box).on('keypress', function(e){
+						if(e.which == 13){ //the enter key was pressed...
+			 				e.preventDefault();
+			 				
+			 				elgg.post(elgg.get_site_url() + 'gatherings/unlock', {
+								data: elgg.security.addToken({password: $(this).val() }),
+								success: function(){
+									unlock_box.remove();
+									//now reloop this funciton...
+									minds.live.decryptor(id, sender, data);
+								},
+								error: function(){
+									alert('Ooops. Did you enter the wrong password?');
+								}
+							});
+			 				
+			 			}
+					});
+				}
+		    },
+		    error: function(out){
+		    	
+		    }
+		});
+	} else {
+		//something went wrong...
+		return false;
+	}
+
+	/*data.message = encrypted;
+	//we now need to decrypt this message
+	
+	*/
+}
+
+minds.live.blinkerTS = '';
+
+minds.live.blinker = function(message){
+
+	$('title').html(message);
+	minds.live.blinkerTS = setTimeout(function(){
+		$('title').html('Minds');
+		clearTimeout(minds.live.blinkerTS);
+		minds.live.blinker(message);	
+	}, 20);
+	
 }
 
 elgg.register_hook_handler('init', 'system', minds.live.init);

@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ff358098aa56c6ee9ad93433f208dbc3",
+    "hash": "d84f34683ad84cf96f305942bd9dd450",
     "packages": [
         {
             "name": "abeautifulsite/jquery-minicolors",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claviska/jquery-minicolors.git",
-                "reference": "c4aa3dffa348ff5c76565340901290201e91eee1"
+                "reference": "4d9e8b59b236296216338a5febeff0bcb23ee6a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claviska/jquery-minicolors/zipball/c4aa3dffa348ff5c76565340901290201e91eee1",
-                "reference": "c4aa3dffa348ff5c76565340901290201e91eee1",
+                "url": "https://api.github.com/repos/claviska/jquery-minicolors/zipball/4d9e8b59b236296216338a5febeff0bcb23ee6a0",
+                "reference": "4d9e8b59b236296216338a5febeff0bcb23ee6a0",
                 "shasum": ""
             },
             "type": "component",
@@ -40,7 +40,7 @@
             ],
             "description": "jQuery MiniColors Plugin",
             "homepage": "http://www.abeautifulsite.net/",
-            "time": "2014-09-11 13:14:06"
+            "time": "2014-11-25 17:37:19"
         },
         {
             "name": "components/jquery",
@@ -48,16 +48,13 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/jquery.git",
-                "reference": "9e2c56ed9f17e6b55de97ae64a3ed0cf17cd30d4"
+                "reference": "104762e247cc7e377cdbba9d27414a5944b9c81e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/jquery/zipball/9e2c56ed9f17e6b55de97ae64a3ed0cf17cd30d4",
-                "reference": "9e2c56ed9f17e6b55de97ae64a3ed0cf17cd30d4",
+                "url": "https://api.github.com/repos/components/jquery/zipball/104762e247cc7e377cdbba9d27414a5944b9c81e",
+                "reference": "104762e247cc7e377cdbba9d27414a5944b9c81e",
                 "shasum": ""
-            },
-            "require": {
-                "robloach/component-installer": "*"
             },
             "type": "component",
             "extra": {
@@ -80,13 +77,12 @@
             "authors": [
                 {
                     "name": "John Resig",
-                    "email": "jeresig@gmail.com",
-                    "homepage": "http://ejohn.org/"
+                    "email": "jeresig@gmail.com"
                 }
             ],
             "description": "jQuery JavaScript Library",
             "homepage": "http://jquery.com",
-            "time": "2014-07-02 11:52:43"
+            "time": "2014-11-16 14:44:25"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -292,12 +288,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ivaynberg/select2.git",
-                "reference": "6d029f3f2fe69be6211c4c0dbf9444c23e8e3e29"
+                "reference": "48ae56a2b6bb2cadafd39777945f002920b3eb56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ivaynberg/select2/zipball/6d029f3f2fe69be6211c4c0dbf9444c23e8e3e29",
-                "reference": "6d029f3f2fe69be6211c4c0dbf9444c23e8e3e29",
+                "url": "https://api.github.com/repos/ivaynberg/select2/zipball/48ae56a2b6bb2cadafd39777945f002920b3eb56",
+                "reference": "48ae56a2b6bb2cadafd39777945f002920b3eb56",
                 "shasum": ""
             },
             "require": {
@@ -327,7 +323,7 @@
             ],
             "description": "Select2 is a jQuery based replacement for select boxes.",
             "homepage": "http://ivaynberg.github.io/select2/",
-            "time": "2014-11-05 22:48:33"
+            "time": "2014-11-25 17:48:21"
         },
         {
             "name": "kramnorth/cinemr-php-sdk",
@@ -362,12 +358,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/assetic.git",
-                "reference": "eb82167d176eb40078469ef9408ff56fd32a5d66"
+                "reference": "0db20de988b7adc79375d33b2a566183af83c930"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/eb82167d176eb40078469ef9408ff56fd32a5d66",
-                "reference": "eb82167d176eb40078469ef9408ff56fd32a5d66",
+                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/0db20de988b7adc79375d33b2a566183af83c930",
+                "reference": "0db20de988b7adc79375d33b2a566183af83c930",
                 "shasum": ""
             },
             "require": {
@@ -428,7 +424,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "2014-10-30 11:33:12"
+            "time": "2014-11-25 17:50:26"
         },
         {
             "name": "minds/minds-php-sdk",
@@ -540,12 +536,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
-                "reference": "2c3f25bd293b993c8277786ec8de4eafebca2aee"
+                "reference": "493c6f8531f7602b44062fd34b708af50078c675"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/2c3f25bd293b993c8277786ec8de4eafebca2aee",
-                "reference": "2c3f25bd293b993c8277786ec8de4eafebca2aee",
+                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/493c6f8531f7602b44062fd34b708af50078c675",
+                "reference": "493c6f8531f7602b44062fd34b708af50078c675",
                 "shasum": ""
             },
             "require": {
@@ -580,7 +576,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2014-11-12 21:25:33"
+            "time": "2014-11-23 04:17:00"
         },
         {
             "name": "pimple/pimple",
@@ -722,12 +718,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "8e5829263631e686bf4d1254b02411263b8fa228"
+                "reference": "30e571ce1bba949b44f49b977966898a41c77a01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/8e5829263631e686bf4d1254b02411263b8fa228",
-                "reference": "8e5829263631e686bf4d1254b02411263b8fa228",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/30e571ce1bba949b44f49b977966898a41c77a01",
+                "reference": "30e571ce1bba949b44f49b977966898a41c77a01",
                 "shasum": ""
             },
             "require": {
@@ -771,7 +767,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-10 18:00:54"
+            "time": "2014-11-20 13:24:30"
         },
         {
             "name": "symfony/process",
@@ -909,12 +905,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "2ec5b2398128f8d38d23168d0c199c5679402edf"
+                "reference": "723d46b4cc4c4304e7a2f69ff48a46e1d92fe265"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/2ec5b2398128f8d38d23168d0c199c5679402edf",
-                "reference": "2ec5b2398128f8d38d23168d0c199c5679402edf",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/723d46b4cc4c4304e7a2f69ff48a46e1d92fe265",
+                "reference": "723d46b4cc4c4304e7a2f69ff48a46e1d92fe265",
                 "shasum": ""
             },
             "require": {
@@ -951,13 +947,23 @@
                 "sms",
                 "twilio"
             ],
-            "time": "2014-10-31 21:39:21"
+            "time": "2014-11-13 18:56:24"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
     "minimum-stability": "dev",
-    "stability-flags": [],
-    "platform": [],
-    "platform-dev": []
+    "stability-flags": [
+
+    ],
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
 }

@@ -24,7 +24,8 @@
 	width:100%;
 	height:200px;
 	display:block;
-	overflow: scroll;
+	overflow:hidden;
+	overflow-y: scroll;
 	padding:8px;
 	border:1px solid #eee;
 }
@@ -97,6 +98,12 @@
 	display:block;
 	font-size:14px;
 }
+
+.minds-live-chat ul li h3 .sound{
+	float:right;
+	margin-right:26px;
+}
+
 .minds-live-chat ul li .del.entypo{
 	position: absolute;
 	top: 5px;
@@ -110,6 +117,7 @@
 	right: 33px;
 	padding: 10px;
 	color: #888;
+	display:none;
 }
 .minds-live-chat ul li .messages{
 	height:140px;
@@ -220,6 +228,17 @@ margin: 0;
 .minds-live-chat ul li.userlist ul li h3{
 	font-size:12px;
 }
+
+.userlist .prompt{
+	font-size:12px;
+	line-height:13px;
+	color:#333;
+	padding:8px;
+}
+.userlist input[type=password]{
+	margin:0;
+	padding:16px;
+}
 /* ***************************************
 	Chat
 *************************************** */
@@ -252,3 +271,93 @@ margin: 0;
 
 	background-position: 0 -630px;
 }  
+
+/**
+ * conversations
+ */
+
+.conversations-list{
+	border-right:1px solid #EEE;
+}
+.conversations-list > li{
+	display:block;
+	width:auto;
+	margin:8px;
+	height:50px;
+	border-bottom:1px solid #EEE;
+}
+
+.conversations-list > li .icon{
+	float:left;
+}
+.conversations-list > li > a{
+	display: block;
+	width: 100%;
+	height: 50px;
+}
+.conversations-list > li h3{
+	float:left;
+	margin:2px 16px;
+}
+
+.conversation-engage{
+	margin:16px;
+}
+.conversation-engage input[type=text]{
+	padding:16px;
+}
+.conversation-engage input[type=submit]{
+	margin-top:8px;
+}
+
+.sidebar .conversation-engage{
+margin: 16px 0;
+}
+.sidebar .conversation-engage input[type=text]{
+	width:190px;
+}
+
+.conversation-wrapper{
+	overflow:hidden;
+	overflow-y:scroll;
+	height:60vh;
+	margin:16px;
+}
+.message .message-content{
+	padding:8px;
+	overflow:hidden;
+}
+.message .time{
+	float: right;
+	padding-top: 20px;
+	font-size: 11px;
+	color: #888;
+}
+
+.conversation-configuration{
+	padding:16px;
+}
+
+.conversation-configuration form{
+	margin-top:12px;
+}
+.conversation-configuration input[type=password]{
+	width: 300px;
+	padding: 16px;
+}
+
+.conversation-unlock input[type=password]{
+	padding:16px;
+	margin:8px 0 ;
+}
+
+.count{
+	position: absolute;
+background: red;
+border-radius: 100%;
+padding: 0 6px;
+color: #FFF;
+font-size: 10px;
+bottom: 23px;
+right: -7px;
+}

@@ -24,7 +24,7 @@ if(!elgg_is_logged_in()){
 	</audio>
 	<div class="minds-live-chat-userlist">
 		<ul>
-			<li class="userlist"> <h3> <span class="entypo"> &#59160; </span> Chat </h3>
+			<li class="userlist"> <h3> <span class="entypo"> &#59160; </span> Chat <span class="sound sound-on entypo" title="turn sound on">&#59412;</span> <span class="sound sound-off entypo" title="Mute sound">&#59411;</span> </h3> 
 				<ul>
 					<span class="chat-loading">
 						Please wait... Connecting...
