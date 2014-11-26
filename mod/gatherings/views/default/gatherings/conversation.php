@@ -9,7 +9,8 @@ $conversation = $vars['conversation'];
 
 	<script>
 		var conversation_participants = [];
-		<?php foreach($conversation->participants as $participant): if($participant == elgg_get_logged_in_user_guid()) continue;
+		<?php foreach($conversation->participants as $participant):
+		// if($participant == elgg_get_logged_in_user_guid()) continue;
 		?>
 		conversation_participants.push("<?=$participant?>");
 		var obj_template_<?=$participant?> = <?= json_encode(elgg_view_entity(new minds\plugin\gatherings\entities\message(array('owner_guid'=>$participant)))); ?>;

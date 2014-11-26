@@ -14,7 +14,13 @@ minds.live.init = function() {
 		var activeChats = JSON.parse(ls.getItem('activeChats'));
 		if(activeChats){
 			$.each(activeChats, function(){
-				minds.live.openChatWindow(this.id, this.name, '', true);
+				minds.live.openChatWindow({ 
+					id: this.id,
+					username: this.username,
+					name: this.name,
+					message: '',
+					minimized: true
+				});
 			});
 		}
 
@@ -86,7 +92,7 @@ minds.live.init = function() {
 				/**
 				 * Send to live chat
 				 */
-				var data = { to_guid: parent.attr('id'), message: message, from_name:user.name };
+				var data = { to_guid: parent.attr('id'), message: message, from_name:user.name, from_username: user.username };
 				data["message:"+parent.attr('id')] = encrypted;
 				data["message:"+user.guid] = own;
 				
@@ -213,9 +219,19 @@ minds.live.init = function() {
 					document.getElementById('sound').play();
 					box = $('.minds-live-chat-userlist').find('li.box#' + data.from_guid);
 					if(box.length == 0){
-						minds.live.openChatWindow(data.from_guid, data.from_name, data.message);
-						return true;	
+						minds.live.openChatWindow({
+							id: data.from_guid, 
+							username: data.from_username,
+							name: data.from_name, 
+							message: ''
+						});
 					}
+					
+					if(!box.length){
+						//strange thing here..
+						box = $('.minds-live-chat-userlist').find('li.box#' + data.from_guid);
+					}
+					
 					box.addClass('active');
 					var from = box.find('h3').text() + ": ";
 					sender = data.from_guid;
@@ -223,18 +239,23 @@ minds.live.init = function() {
 					//animate the header
 					minds.live.blinker('New message from ' + data.from_name);
 				}
-				
+
 				if(data.hasOwnProperty("message:" + elgg.get_logged_in_user_guid())){
-					
+										
 					encrypted = data["message:" + elgg.get_logged_in_user_guid()];
 					
 					//create the box as if it wasn't encrypted, and then we can handle in a cleaner function
 					span = $('<span class="message" data-encrypted="'+encrypted+'"><span class="user_name">'+from+'</span></span>').uniqueId();
-					box.find('.messages').append(span).animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
-					minds.live.decryptor(span.attr('id'), sender);
+					
+					box.find('.messages').append(span);
+					
+					if(box.find('.messages').length > 0)
+						box.find('.messages').animate({ scrollTop: box.find('.messages')[0].scrollHeight},1000);
+						
+					minds.live.decryptor(span.attr('id'), sender, data);
 					
 				} else {
-				
+
 					if(data.from_guid == elgg.get_logged_in_user_guid()){ 
 						minds.live.saveCacheChat(data.to_guid, from + data.message, box.find('h3').text());
 					} else {
@@ -893,78 +914,88 @@ minds.live.adjustOffset = function(e){
  * 
  * Gathers information about a user
  */
-minds.live.openChatWindow = function(id,name,message, minimised){
+minds.live.openChatWindow = function(params,name,message, minimised){
 	
-	var name = name;
-	var username = '';
-	var avatar_url = '';
 	
-	elgg.get('services/api/rest/json?method=user.get_profile&username='+id, {
+	
+	if(typeof params === 'object'){
+		var id = params.id;
+		var name = params.name;
+		var username = params.username;
+		var avatar_url = elgg.get_site_url() + 'icon/'+id+'/small';
+		var message = params.message || '';
+	} else {
+		var id = params;
+		var name = name;
+		var username = id;
+		var avatar_url = elgg.get_site_url() + 'icon/'+id+'/small';
+	}
+	
+	/*elgg.get('services/api/rest/json?method=user.get_profile&username='+id, {
 		success: function (data){
 			name = data.result.core.name;
 			username = data.result.core.username;
 			avatar_url = data.result.avatar_url;
-		
-			 var newmsg = '';	
-			var cache = minds.live.getCacheChat(id);
-			if(cache){
-				var length = cache.length;
-					var newmsg = '';
-					for (var i = 0; i < length; i++) {
-						newmsg	+= '<span class="message">' + cache[i] + '</span>';
-					}
-			}
-					
-			if(message){
-				message = '<span class="message"><span class="user_name">'+name+'</span>: ' + message + '</span>';
-			}
-			
-			message = newmsg + message;
-			if(minimised){
-				var liclass = 'toggle';
-			} else {
-				var liclass = 'toggled';
-			}
-			var box = '<li class="box '+ liclass + '" id="' + id + '">' +
-		       			 	//'<a href="/' + username + '">'+ 
-		       			 		'<a href="' + elgg.get_site_url() + username + '"><img src="' + avatar_url + '" class="avatar"/></a>'+
-		       			 		'<h3>'+
-		       			 			name + 
-		       			 		'</h3>' + 
-		       			 	//'</a>' + 
-		       			 	'<span class="del entypo">&#10062;</span>' +
-		       			 	'<span class="video entypo">&#58277;</span>' +
-		       			 	
-		       			 	
-		       			 	
-		       			 	'<div class="call">' +
-		       			 		'<div id="flash-p2p-'+ id + '" style="display:none; height:100px;"></div>' + 
-		       			 		
-		       			 		'<video id="local-'+id+'" class="local" autoplay muted></video>' + 
-		       			 		'<video id="remote-'+id+'" class="remote" autoplay></video>' + 
-		       			 	//	'<div id="flash" style="display:none;"> </div>'+ 
-		       			 	'</div>' + 
-		       			 	
-		       			 '<div class="messages">' + message +  '</div>' + 
-		       			 '<div class="rt-stats"></div>' +
-		        		 '<div> <textarea class="elgg-input" ></textarea> </div>' +
-				'</li>';
-			 $('.minds-live-chat-userlist > ul').append(box);	
-		//	$('.minds-live-chat-userlist > ul').append(box).animate({ scrollTop: $('.box#'+id).find('.messages')[0].scrollHeight},1000);
-			if($('li.box#'+id).length > 0){
-				$('li.box#'+id).animate({ scrollTop: $('li.box#'+id).find('.messages')[0].scrollHeight},1000);	
-
-				//messages
-                		$(function() {
-                       			$('.messages').each(function(){
-                                	var height = $(this)[0].scrollHeight;
-                        	        $(this).scrollTop(height);
-                   		     });
-             			   });  
-			}
-			minds.live.adjustOffset();
+	*/	
+	var newmsg = '';	
+	var cache = minds.live.getCacheChat(id);
+	if(cache){
+		var length = cache.length;
+		var newmsg = '';
+		for (var i = 0; i < length; i++) {
+			newmsg	+= '<span class="message">' + cache[i] + '</span>';
 		}
-	})
+	}
+			
+	if(message){
+		message = '<span class="message"><span class="user_name">'+name+'</span>: ' + message + '</span>';
+	}
+			
+	message = newmsg + message;
+	if(minimised){
+		var liclass = 'toggle';
+	} else {
+		var liclass = 'toggled';
+	}
+	var box = '<li class="box '+ liclass + '" id="' + id + '">' +
+   			 	//'<a href="/' + username + '">'+ 
+   			 		'<a href="' + elgg.get_site_url() + username + '"><img src="' + avatar_url + '" class="avatar"/></a>'+
+   			 		'<h3>'+
+   			 			name + 
+   			 		'</h3>' + 
+   			 	//'</a>' + 
+   			 	'<span class="del entypo">&#10062;</span>' +
+   			 	'<span class="video entypo">&#58277;</span>' +
+   			 	
+   			 	
+   			 	
+   			 	'<div class="call">' +
+   			 		'<div id="flash-p2p-'+ id + '" style="display:none; height:100px;"></div>' + 
+   			 		
+   			 		'<video id="local-'+id+'" class="local" autoplay muted></video>' + 
+   			 		'<video id="remote-'+id+'" class="remote" autoplay></video>' + 
+   			 	//	'<div id="flash" style="display:none;"> </div>'+ 
+   			 	'</div>' + 
+   			 	
+   			 '<div class="messages">' + message +  '</div>' + 
+   			 '<div class="rt-stats"></div>' +
+    		 '<div> <textarea class="elgg-input" ></textarea> </div>' +
+	'</li>';
+	$('.minds-live-chat-userlist > ul').append(box);	
+	//$('.minds-live-chat-userlist > ul').append(box).animate({ scrollTop: $('.box#'+id).find('.messages')[0].scrollHeight},1000);
+		
+	/**
+	 * Scroll to bottom on new window/message
+	 */
+	if($('li.box#'+id).length > 0){
+		$(function() {
+           	$('.messages').each(function(){
+                var height = $(this)[0].scrollHeight;
+            	$(this).scrollTop(height);
+			});
+		});  
+	}
+	minds.live.adjustOffset();
 	
 }
 
@@ -1000,9 +1031,10 @@ minds.live.saveCacheChat = function(id, message, name){
  * Remove a chat
  */
 minds.live.removeChat = function(id){
-	$('.box#'+id).remove();
-	minds.live.removeCacheChat(id);
+	$(document).find('.box#'+id).remove();
+	console.log($(document).find('.minds-live-chat-userlist  .box#'+id));
 	minds.live.adjustOffset();	
+	minds.live.removeCacheChat(id);
 }
 minds.live.removeCacheChat = function(id){
 	//remove the chat log
@@ -1014,7 +1046,7 @@ minds.live.removeCacheChat = function(id){
 	ls = window.localStorage;
 	var activeChats = JSON.parse(ls.getItem('activeChats'));
 	$.each(activeChats, function(i, val) {
-		console.log(id);
+		//console.log(id);
 		if(i == id){
 			delete activeChats[i];
 		}
@@ -1069,7 +1101,7 @@ console.log('sound is now on');
          }
 }
 
-minds.live.decryptor = function(id, sender){
+minds.live.decryptor = function(id, sender, data){
 	
 	var span = $(document).find('#'+id);
 	var encrypted = span.data('encrypted');
@@ -1083,7 +1115,7 @@ minds.live.decryptor = function(id, sender){
 		span.find('.loader').html(new Array(count % 10).join('.'));
 	},100);
 
-	
+
 	if(encrypted){
 		//span.removeData('encrypted');
 		elgg.post(elgg.get_site_url() + 'gatherings/decrypt', {
@@ -1098,6 +1130,10 @@ minds.live.decryptor = function(id, sender){
 					
 					var stored = $('.conversation-wrapper');
 					if(stored.length > 0){
+						if(data.hasOwnProperty('from_stored') && sender == elgg.get_logged_in_user_guid()){
+							return true;
+						}
+					
 						for($i = 0; $i < conversation_participants.length; $i++){
 							
 							if(sender == conversation_participants[$i]){
@@ -1130,7 +1166,7 @@ minds.live.decryptor = function(id, sender){
 								success: function(){
 									unlock_box.remove();
 									//now reloop this funciton...
-									minds.live.decryptor(id, sender);
+									minds.live.decryptor(id, sender, data);
 								},
 								error: function(){
 									alert('Ooops. Did you enter the wrong password?');

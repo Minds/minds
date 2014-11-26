@@ -23,6 +23,7 @@ minds.conversations.init = function() {
 			//contentType : 'application/json',
 			success : function(output) {
 				$(_this).find('textarea').val('');
+				
 				data = JSON.parse(output);
 				console.log(data);
 				item = $('<li class="clearfix">'+data.output+'</li>');
@@ -42,7 +43,7 @@ minds.conversations.init = function() {
 		encrypted = encrypt(user_guid, message);
 		own = encrypt(elgg.get_logged_in_user_guid(), message);
 		
-		var data = { to_guid: user_guid, message: 'encrypted...', from_name:elgg.get_logged_in_user_entity().name};
+		var data = { to_guid: user_guid, message: 'encrypted...', from_name:elgg.get_logged_in_user_entity().name, from_username:elgg.get_logged_in_user_entity().username, from_stored: true};
 		data["message:"+ user_guid] = encrypted;
 		data["message:"+ elgg.get_logged_in_user_guid()] = own;
 		
