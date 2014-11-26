@@ -123,7 +123,7 @@ minds.live.init = function() {
 				//reciever_salt: minds.live.streamSalt() //set both salts now and just expect the user to arrive..
 			}); 
 		});
-	
+		console.log(elgg.user_publicKEY);
 		
 		/**
 		 * The connection to the socket server
@@ -699,15 +699,18 @@ minds.live.init = function() {
 							user_list.html('');
 							
 							for(var i=0; i < guids.length; i++){
-					
+				
+								
+	
 								var guid = guids[i];
 								var user = users[guid];
+								//update the public keys list
+                                                                window.localStorage.setItem('publickey:'+guid, JSON.stringify(user.publickey));
+
 								console.log($.inArray(guid, output)); 
 								if($.inArray(guid, output) == -1)
 									continue;
 									
-								//update the public keys list
-								window.localStorage.setItem('publickey:'+guid, JSON.stringify(user.publickey));
 								
 								if(guid != elgg.get_logged_in_user_guid()){
 									var avatar_src = elgg.get_site_url() + 'icon/' + guid + '/small';
