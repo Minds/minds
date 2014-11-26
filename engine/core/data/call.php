@@ -194,6 +194,8 @@ class call extends core\base{
 	 * Count the columns of a row
 	 */
 	public function countRow($key){
+		if(!$key)
+			return 0;
 		try{self::$counts++;
 			return $this->cf->get_count($key);
 		}catch(Exception $e){

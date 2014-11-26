@@ -19,8 +19,8 @@ class conversation extends core\page implements interfaces\page{
 	 * Reading messages and getting lists of messages
 	 */
 	public function get($pages){
-		if(!isset($pages[0]) && get_input('username') || $pages[0] == 'new')
-			$pages[0] = get_input('username');
+		if(!isset($pages[0]) && get_input('u') || $pages[0] == 'new')
+			$pages[0] = get_input('u');
 
 		counter::clear();
 
@@ -48,11 +48,12 @@ class conversation extends core\page implements interfaces\page{
 				//this is a group chat
 				$usernames = explode(':', $pages[0]);
 				foreach($usernames as $u){
+					$u = strtolower($u);
 					$users[] = new \minds\entities\user($u);
 				}
 				
 			} else {
-				$user = new \minds\entities\user($pages[0]);
+				$user = new \minds\entities\user(strtolower($pages[0]));
 			}
 			
 			
