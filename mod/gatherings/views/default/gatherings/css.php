@@ -310,6 +310,7 @@ margin: 16px 0;
 	overflow:hidden;
 	overflow-y:scroll;
 	height:60vh;
+	margin:16px;
 }
 .message .message-content{
 	padding:8px;
