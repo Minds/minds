@@ -228,6 +228,17 @@ margin: 0;
 .minds-live-chat ul li.userlist ul li h3{
 	font-size:12px;
 }
+
+.userlist .prompt{
+	font-size:12px;
+	line-height:13px;
+	color:#333;
+	padding:8px;
+}
+.userlist input[type=password]{
+	margin:0;
+	padding:16px;
+}
 /* ***************************************
 	Chat
 *************************************** */

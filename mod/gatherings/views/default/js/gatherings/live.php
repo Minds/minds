@@ -715,6 +715,37 @@ minds.live.init = function() {
 		 * Li click hooks
 		 */
 		$(document).on('click','.minds-live-chat-userlist li h3', function (e) {
+		
+			if(!elgg.user_publicKEY){
+			
+				//prompt the user to enable encryption, show a form to enter a password for secure chat
+				toggles = $(this).parent().addClass('toggled');
+				
+				passphrase = $('<p class="prompt">Please enter a password in order to enable encryption</p><input type="password" name="passphrase" placeholder="Enter a password..."/>');
+				
+				$(this).parents('.userlist').find('ul').html(passphrase);
+				
+				passphrase.on('keypress', function(e){
+					if(e.which == 13){
+					
+						var passphrase = $(this).val();
+						elgg.post(elgg.get_site_url() + 'gatherings/configuration/keypair-1', {
+							data: elgg.security.addToken({
+								passphrase: passphrase
+							}),
+							//contentType : 'application/json',
+							success : function(output) {
+								elgg.user_publicKEY = output;
+								portal.find().send("users");
+							}
+						});
+					
+					}
+				});
+				
+				return true;
+			
+			}
 			
 			//update the user list.
 			portal.find().send("users");
