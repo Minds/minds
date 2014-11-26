@@ -724,7 +724,7 @@ minds.live.init = function() {
 								//check again in 3 seconds
 								setTimeout(function(){
 									portal.find().send("users");
-								}, 3000);
+								}, 10000);
 							}
 							
 						}
