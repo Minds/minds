@@ -684,6 +684,17 @@ minds.live.init = function() {
 			users: function(data){
 				var users = data.users; //format GUID=>LAST_ACTION
 				var guids = Object.keys(users);
+				
+				elgg.post(elgg.get_site_url() + 'gatherings/live/userlist', {
+						data: elgg.security.addToken({
+							guids: guids
+						}),
+						//contentType : 'application/json',
+						success : function(output) {
+							console.log(output);
+						}
+					});
+				
 				console.log('chat..',data);
 				var user_list = $('.minds-live-chat-userlist .userlist ul');
 				user_list.html('');
