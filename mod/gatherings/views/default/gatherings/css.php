@@ -344,6 +344,20 @@ margin: 16px 0;
 	padding:16px;
 }
 
+.conversation-configuration .large-icon{
+	margin:12px 0;
+	line-height:200px;
+	font-size:200px;
+	width:100%;
+	text-align:center;
+}
+.conversation-configuration h3{
+	text-align:center;
+}
+.conversation-configuration p{
+text-align:center;
+}
+
 .conversation-configuration form{
 	margin-top:12px;
 }

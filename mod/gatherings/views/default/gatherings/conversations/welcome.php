@@ -11,6 +11,8 @@
 
 
 <div class="conversation-configuration">
+
+	<div class="entypo large-icon">&#128274;</div>
 	<h3>Encryption</h3>
 	
 	<?php 
