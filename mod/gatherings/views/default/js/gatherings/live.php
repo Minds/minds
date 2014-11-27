@@ -23,6 +23,12 @@ minds.live.init = function() {
 				});
 			});
 		}
+		
+		//clear cache on logout
+		$('.elgg-menu-item-logout').on('click', function(){
+			window.sessionStorage.clear();
+			window.localStorage.clear();
+		});
 
 		//store a list of the logged in users
 		var availableUsers = [];
