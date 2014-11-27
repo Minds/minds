@@ -3,7 +3,7 @@
 	<div class="entypo large-icon">&#128274;</div>
 	<h3>Encryption</h3>
 	
-	<p><b>WARNING: Changing your password will issue new encryption and make your exisiting messages unreadable.</b></p>
+	<p><b>WARNING: Changing your password will issue new encryption and make your existing messages unreadable.</b></p>
 	<form action="<?= elgg_get_site_url() ?>gatherings/configuration/keypair-1" method="POST">
 		<label for="passphrase">
 			Secure password
