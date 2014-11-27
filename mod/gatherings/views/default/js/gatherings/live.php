@@ -1201,6 +1201,10 @@ minds.live.decryptor = function(id, sender, data){
 						//live chat not supported for group chat yet..
 						if(conversation_participants.length > 2)
 							return true;
+							
+						//getting a little too hacky now..
+						if($.inArray(box.attr('id'), conversation_participants) == -1)
+							return true;
 					
 						for($i = 0; $i < conversation_participants.length; $i++){
 							
