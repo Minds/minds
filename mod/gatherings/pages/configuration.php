@@ -32,7 +32,17 @@ class configuration extends core\page implements interfaces\page{
 	public function post($pages){
 		switch($pages[0]){
 			case "keypair-1":
+				
+				if(!elgg_is_xhr()){
+					if(get_input('passphrase')	!= get_input('passphrase2')){
+						\register_error('Sorry, your passwords didn\'t match');
+						return $this->forward(REFERRER);
+					}
+				}
+				
 				$keypair = helpers\openssl::newKeypair(get_input('passphrase'));
+				
+				
 				\elgg_set_plugin_user_setting('publickey', $keypair['public'], elgg_get_logged_in_user_guid(), 'gatherings');
 				\elgg_set_plugin_user_setting('option', '1', elgg_get_logged_in_user_guid(), 'gatherings');
 				\elgg_set_plugin_user_setting('privatekey', $keypair['private'], elgg_get_logged_in_user_guid(), 'gatherings');

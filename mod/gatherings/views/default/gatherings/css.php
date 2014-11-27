@@ -359,16 +359,31 @@ text-align:center;
 }
 
 .conversation-configuration form{
-	margin-top:12px;
+	width:600px;
+	margin:32px auto;
+	display:block;
+}
+.conversation-configuration label{
+	float: left;
+    padding: 16px;
+    width:100px;
 }
 .conversation-configuration input[type=password]{
-	width: 300px;
+	margin:8px 0;
+	width: 400px;
+	display:block;
 	padding: 16px;
+}
+.conversation-configuration input[type=submit]{
+	/*margin-left:16px;*/
+	margin:auto;
+	display:block;
 }
 
 .conversation-unlock input[type=password]{
 	padding:16px;
-	margin:8px 0 ;
+	margin:8px 0;
+	display:block;
 }
 
 .count{

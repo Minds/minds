@@ -33,13 +33,22 @@
 				<p>Your messages are currently <b>NOT</b> encrypted. Please select an encryption method below:</p>
 				
 				<form action="<?= elgg_get_site_url() ?>gatherings/configuration/keypair-1" method="POST">
+					<label for="passphrase">
+						Secure password
+					</label>
 					<input type="password" name="passphrase" placeholder="Enter a secure password - recommended"/>
+					<br/>
+					<label for="passphrase">
+						Confirm password
+					</label>
+					<input type="password" name="passphrase2" placeholder="enter the same password again..."/>
+					<br/>
 					<input type="submit" value="Enable encryption" class="elgg-button elgg-button-action"/>
 					
 					<?= elgg_view('input/securitytoken') ?>
 				</form>
 				
-				<form action="<?= elgg_get_site_url() ?>gatherings/configuration/keypair-2" method="POST">
+				<form action="<?= elgg_get_site_url() ?>gatherings/configuration/keypair-2" method="POST" style="display:none;">
 					<input type="submit" value="Enable advanced encryption" class="elgg-button elgg-button-action" disabled/>
 				</form>
 				
