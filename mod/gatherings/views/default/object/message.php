@@ -9,7 +9,7 @@ $owner = $message->getOwnerEntity();
 		<?= elgg_view_entity_icon($owner, 'small') ?>
 	</div>
 	<div class="clearfix message-content">
-		<?= $message->decryptMessage() ?>
+		<?= minds_filter($message->decryptMessage()) ?>
 		<span class="time">
 			<?= elgg_view_friendly_time($message->time_created) ?>
 		</span>

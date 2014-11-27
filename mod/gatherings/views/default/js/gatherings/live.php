@@ -1212,6 +1212,8 @@ minds.live.decryptor = function(id, sender, data){
 							
 								var template = window["obj_template_"+conversation_participants[$i]];
 								item = $(template);
+								
+								output = minds.live.linkify(output);
 								item.find('.message-content').append(output);
 								$('ul.conversation-messages').append(item);
 								minds.conversations.scrollFix();
