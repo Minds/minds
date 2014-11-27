@@ -49,7 +49,7 @@ class conversation{
 				if($user_guid != $participant){
 					$indexes->insert("object:gathering:conversations:$user_guid", array($participant=> json_encode(array(
 							'ts'=>time(), 
-							'unread'=> $participant == elgg_get_logged_in_user_guid() ? 0 : $count, 
+							'unread'=> $participant == elgg_get_logged_in_user_guid() ? $count : 0, 
 							'participants'=>$this->participants
 					))));
 					//create an index so we can see the unread messages.. reset on each view of the messages
