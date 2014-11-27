@@ -34,6 +34,11 @@ class configuration extends core\page implements interfaces\page{
 		switch($pages[0]){
 			case "keypair-1":
 				
+				if(!get_input('passphrase')){
+					\register_error('You must enter a password');
+					return $this->forward(REFERRER);
+				}
+				
 				if(!elgg_is_xhr()){
 					if(get_input('passphrase')	!= get_input('passphrase2')){
 						\register_error('Sorry, your passwords didn\'t match');
