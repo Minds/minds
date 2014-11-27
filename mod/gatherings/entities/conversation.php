@@ -44,6 +44,11 @@ class conversation{
 		$i = 0;
 		while($i < count($this->participants)){
 			$user_guid = $this->participants[$i];
+			if($user_guid == elgg_get_logged_in_user_guid()){
+				$i++;
+				continue;
+			}
+				
 			
 			foreach($this->participants as $key => $participant){
 				if($user_guid != $participant){
