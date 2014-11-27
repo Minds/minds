@@ -11,7 +11,10 @@ $conversations = $vars['conversations'];
 
 </form>
 <ul class="conversations-list">
-	<?php foreach($conversations as $user): ?>
+	<?php foreach($conversations as $user):
+		if($user->guid == elgg_get_logged_in_user_entity()->guid)
+			continue;
+	 ?>
 		<li class="<?= ($conversation && in_array($user->guid, $conversation->participants)) ? 'active' : '' ?>">
 			<div class="icon">
 				<?= elgg_view_entity_icon($user, 'small'); ?>
