@@ -1,6 +1,6 @@
 <?php
 
-$sections = $vars['sections'];
+$sections =  $vars['sections'] ?: array();
 usort($sections, function($a, $b){
 	return $a->position - $b->position;
 });

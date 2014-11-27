@@ -79,6 +79,8 @@ class conversation extends core\page implements interfaces\page{
 				}
 				$messages = array_reverse($messages);
 				$content = elgg_view('gatherings/conversation', array('conversation'=>$conversation, 'messages'=>$messages));
+			} else {
+				$content = elgg_view('gatherings/conversation', array('conversation'=>$conversation, 'messages'=>array()));
 			}
 			$content .= elgg_view_form('conversation', array('action'=>elgg_get_site_url() . 'gatherings/conversation/'.$user->guid), array('encrypted'=>$encrypted,'user'=>$user, 'conversation'=>$conversation));
 		}
