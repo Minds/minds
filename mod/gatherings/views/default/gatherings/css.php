@@ -282,11 +282,17 @@ margin: 0;
 .conversations-list > li{
 	display:block;
 	width:auto;
-	margin:8px;
+	padding:8px;
 	height:50px;
 	border-bottom:1px solid #EEE;
 }
-
+.conversations-list > li:hover{
+	background:#EEE;
+}
+.conversations-list > li.active{
+	background:#4690D6;
+	color:#FFF;
+}
 .conversations-list > li .icon{
 	float:left;
 }
@@ -304,7 +310,7 @@ margin: 0;
 	font-size:11px;
 	color:#DDD;
 	margin:12px 0;
-	}
+}
 
 .conversation-engage{
 	margin:16px;

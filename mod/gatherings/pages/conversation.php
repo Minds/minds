@@ -24,7 +24,8 @@ class conversation extends core\page implements interfaces\page{
 
 		counter::clear();
 
-		
+		// a list of open conversations
+		$conversations = \minds\plugin\gatherings\start::getConversationsList();
 		
 		$show = true;
 		$option = \elgg_get_plugin_user_setting('option', elgg_get_logged_in_user_guid(), 'gatherings');
@@ -54,6 +55,8 @@ class conversation extends core\page implements interfaces\page{
 				
 			} else {
 				$user = new \minds\entities\user(strtolower($pages[0]));
+				if(!in_array($user, $conversations))
+					$conversations[] = $user;
 			}
 			
 			
@@ -84,10 +87,8 @@ class conversation extends core\page implements interfaces\page{
 			}
 			$content .= elgg_view_form('conversation', array('action'=>elgg_get_site_url() . 'gatherings/conversation/'.$user->guid), array('encrypted'=>$encrypted,'user'=>$user, 'conversation'=>$conversation));
 		}
-		
-		$conversations = \minds\plugin\gatherings\start::getConversationsList();
 
-		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content, 'sidebar'=>elgg_view('gatherings/conversations/list', array('conversations'=>$conversations))));
+		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content, 'sidebar'=>elgg_view('gatherings/conversations/list', array('conversations'=>$conversations, 'conversation'=>$conversation))));
 		echo $this->render(array('body'=>$layout));
 		
 	}

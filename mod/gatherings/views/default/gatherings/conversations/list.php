@@ -1,5 +1,5 @@
 <?php
-
+$conversation = isset($vars['conversation'])  ? $vars['conversation'] : NULL;
 $conversations = $vars['conversations'];
 ?>
 
@@ -12,7 +12,7 @@ $conversations = $vars['conversations'];
 </form>
 <ul class="conversations-list">
 	<?php foreach($conversations as $user): ?>
-		<li>
+		<li class="<?= ($conversation && in_array($user->guid, $conversation->participants)) ? 'active' : '' ?>">
 			<div class="icon">
 				<?= elgg_view_entity_icon($user, 'small'); ?>
 			</div>
