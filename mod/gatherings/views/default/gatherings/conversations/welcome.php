@@ -22,6 +22,8 @@
 			<div class="keypair-1 configured">
 				<p>You have configured encryption. </p>
 				<!--<pre><?= $publickey ?></pre>-->
+				
+				<p><a href="<?= elgg_get_site_url() ?>gatherings/configuration">Settings</a>
 			</div>
 		<?php } elseif((int)$options == 2){ ?>
 			<div class="keypair-2 configured">
