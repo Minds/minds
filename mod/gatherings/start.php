@@ -104,13 +104,24 @@ class start extends bases\plugin{
 			
 			arsort($conversation_guids);
 			
-			foreach($conversation_guids as $user_guid => $ts){
+			foreach($conversation_guids as $user_guid => $data){
+				if(is_numeric($data)){
+					$ts = $data;
+					$unread = 0;
+				} else {
+					$data = json_decode($data, true);
+					$unread = $data['unread'];
+					$ts = $data['ts'];
+				}
 				$u = new \minds\entities\user($user_guid);
 				$u->last_msg = $ts;
+				$u->unread = $unread;
 				if($u->username){
 					$conversations[] = $u;
 				}
+				continue;
 			}
+			
 		}
 		return $conversations;
 	}

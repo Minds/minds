@@ -311,6 +311,17 @@ margin: 0;
 	color:#DDD;
 	margin:12px 0;
 }
+.conversations-list > li div.unread{
+	width: 12px;
+	height: 12px;
+	display: block;
+	border-radius: 100%;
+	float: right;
+	/* position: absolute; */
+	background: green;
+	color: transparent;
+	margin: 14px;
+}
 
 .conversation-engage{
 	margin:16px;

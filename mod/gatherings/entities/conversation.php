@@ -11,6 +11,7 @@ use minds\entities\object;
 class conversation{
 	
 	public $participants = array();
+	public $ts = 0;
 	
 	/**
 	 * Construct a conversation 
@@ -35,7 +36,7 @@ class conversation{
 	/**
 	 * Update the users own list of active conversations, along with a timestamp
 	 */
-	public function update(){
+	public function update($count = 1){
 		//now update this message as being the last message for the conversation. this is the list of users conversations
 		$indexes = new data\indexes();
 		
@@ -46,15 +47,32 @@ class conversation{
 			
 			foreach($this->participants as $key => $participant){
 				if($user_guid != $participant){
-					$indexes->insert("object:gathering:conversations:$user_guid", array($participant=> time()));
+					$indexes->insert("object:gathering:conversations:$user_guid", array($participant=> json_encode(array(
+							'ts'=>time(), 
+							'unread'=>$count, 
+							'participants'=>$this->participants
+					))));
 					//create an index so we can see the unread messages.. reset on each view of the messages
-					$indexes->insert("object:gathering:conversations:unread", array($participant=> 1));
+					$indexes->insert("object:gathering:conversations:unread", array($participant=> $count));
 				}
 			}
 			
 			$i++;
 		}
 
+	}
+	
+	public function clearCount(){
+		$indexes = new data\indexes();
+		foreach($this->participants as $key => $participant){
+			if($user_guid != $participant){
+				$indexes->insert("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array($participant=> json_encode(array(
+						'ts'=>time(), 
+						'unread'=>0, 
+						'participants'=>$this->participants
+				))));
+			}
+		}
 	}
 		
 	/**

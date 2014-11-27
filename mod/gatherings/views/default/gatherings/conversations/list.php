@@ -18,7 +18,13 @@ $conversations = $vars['conversations'];
 			</div>
 			<a href="<?= elgg_get_site_url() ?>gatherings/conversation/<?=$user->username?>">
 				<h3><?= $user->name ?></h3>
+				
+				<?php if($user->unread): ?>
+				<div class="unread">.</div>
+				<?php endif; ?>
+				
 				<span class="ts"><?= elgg_view_friendly_time($user->last_msg) ?></span>
+				
 			</a>
 		</li>
 	<?php endforeach; ?>
