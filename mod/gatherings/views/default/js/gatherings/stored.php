@@ -78,6 +78,37 @@ minds.conversations.init = function() {
 			 $(this).parent().submit();
 		}
 	});
+	
+	
+	/**
+	 * Load earlier messages
+	 */
+	lock = false;
+	$('.conversation-messages .load-more').on('click', function(e){
+		if(lock)
+			return false;
+		lock = true;
+		guid = $(this).next().attr('id');
+		elgg.get(window.location.href, {
+			data: elgg.security.addToken({
+				offset:guid,
+				view: 'json'
+			}),
+			//contentType : 'application/json',
+			success : function(output) {
+				messages = output.object.message;
+				$.each(messages.reverse(), function(i,message){
+					var msg_view = $('<li class="clearfix">' + window["obj_template_"+ message.ownerObj.guid] + "</li>");
+					msg_view.find('.message-content').html(message.message + '<span class="time">'+message.friendly_ts+'</span>');
+					msg_view.attr('id', message.guid);
+					
+					$('.conversation-messages').prepend(msg_view);
+				});
+				
+				lock=false;
+			}
+		});
+	});
 		
 }
 

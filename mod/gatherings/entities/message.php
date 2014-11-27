@@ -122,5 +122,15 @@ class message extends object{
 		return $this->$key;
 	}
 	
+	
+	public function getExportableValues(){
+		return array_merge(parent::getExportableValues(),
+			array(
+				"friendly_ts",
+				"message",
+				"message:".elgg_get_logged_in_user_guid()
+			));
+	}
+	
 }
 

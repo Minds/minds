@@ -21,8 +21,14 @@ $conversation = $vars['conversation'];
 
 	<ul class="conversation-messages">
 		
+		<?php if(count($messages == 30)): ?>
+		<li class="clearfix load-more">
+			<p>Click to load earlier message.</p>
+		</li>
+		<?php endif; ?>
+		
 		<?php foreach($messages as $message){ ?>
-			<li class="clearfix">
+			<li class="clearfix" id="<?= $message->guid ?>">
 				<?= elgg_view_entity($message) ?>
 			</li>
 		<?php } ?>

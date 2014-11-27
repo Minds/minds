@@ -836,7 +836,7 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 	if (empty($subtype)) {
 		$subtype = 'default';
 	}
-	
+
 	$contents = '';
 	if (elgg_view_exists("$entity_type/$subtype") && $subtype !='default') {
 		$contents = elgg_view("$entity_type/$subtype", $vars, $bypass, $debug);
