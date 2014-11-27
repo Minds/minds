@@ -100,9 +100,13 @@ class start extends bases\plugin{
 	static public function getConversationsList(){
 		$conversation_guids = core\data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid());
 		if($conversation_guids){
-			$convserations = array();
+			$conversations = array();
+			
+			arsort($conversation_guids);
+			
 			foreach($conversation_guids as $user_guid => $ts){
 				$u = new \minds\entities\user($user_guid);
+				$u->last_msg = $ts;
 				if($u->username){
 					$conversations[] = $u;
 				}

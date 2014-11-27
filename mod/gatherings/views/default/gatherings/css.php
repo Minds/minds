@@ -299,6 +299,12 @@ margin: 0;
 	float:left;
 	margin:2px 16px;
 }
+.conversations-list > li span.ts{
+	float:right;
+	font-size:11px;
+	color:#DDD;
+	margin:12px 0;
+	}
 
 .conversation-engage{
 	margin:16px;
