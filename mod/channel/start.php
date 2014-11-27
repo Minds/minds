@@ -279,7 +279,8 @@ function channel_page_handler($page) {
 			header('Expires: ' . date('r', time() + 864000));
 			header("Pragma: public");
  			header("Cache-Control: public");
-			echo file_get_contents($filename);
+			if(file_exists($filename))
+				echo file_get_contents($filename);
 			exit;
 			break;
 		case 'api':

@@ -225,7 +225,7 @@ class notifications extends \ElggPlugin{
 	 * Create hook
 	 * @return void
 	 */
-	public function createHook($hook, $type, $params, $return){
+	public function createHook($hook, $type, $params, $return = NULL){
 		if($type == 'activity'){
 			if (preg_match_all('!@(.+)(?:\s|$)!U', $params->message, $matches)){
 				$usernames = $matches[1];
