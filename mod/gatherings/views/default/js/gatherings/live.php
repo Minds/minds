@@ -1095,8 +1095,8 @@ minds.live.saveCacheChat = function(id, message, name){
  * Remove a chat
  */
 minds.live.removeChat = function(id){
-	$(document).find('.box#'+id).remove();
-	console.log($(document).find('.minds-live-chat-userlist  .box#'+id));
+	$('.minds-live-chat-userlist').find('.box#'+id).remove();
+	$('.minds-live-chat-userlist').find('.box#'+id).remove();
 	minds.live.adjustOffset();	
 	minds.live.removeCacheChat(id);
 }
