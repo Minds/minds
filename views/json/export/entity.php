@@ -15,6 +15,7 @@ $export['url'] = $entity->getURL();
 
 if(elgg_instanceof($entity,'object')){
 	$export['ownerObj'] = $entity->ownerObj;
+	 $export['ownerObj']['guid'] = (string)  $entity->ownerObj['guid'];
 }
 
 //error_log(print_r(debug_backtrace(), TRUE)); 
