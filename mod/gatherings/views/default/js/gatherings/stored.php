@@ -4,6 +4,13 @@ elgg.provide('minds.conversations');
 minds.conversations.init = function() {
 
 	/**
+	 * Listen to when a live search user is selected
+	 */
+	$('input[name=u]').on('minds-ac-select', function(e, params){
+		window.location.href = elgg.get_site_url() + 'gatherings/conversation/'+ params.username;
+	});
+
+	/**
  	 * Default to bottom of divs
 	 */
 	minds.conversations.scrollFix();

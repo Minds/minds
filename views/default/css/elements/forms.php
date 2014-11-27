@@ -481,6 +481,10 @@ form.minds-search{
 	float:right;
 	color:#CCC;
 }
+.autocomplete-suggestion img{
+	float: left;
+	margin: 5px 8px 5px 0px;
+}
 .autocomplete-suggestion .subtitle{
 	font-size:11px;
 	color:#CCC;
