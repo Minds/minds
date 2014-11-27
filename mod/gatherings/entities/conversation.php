@@ -61,35 +61,21 @@ class conversation{
 	 * Return the index keys for the messages to be stored under
 	 */
 	public function getIndexKeys(){
-
-		$return = array();
-		for($i=0; $i <  count($this->participants); $i++){
-
-			//this is going to be prepended on each loop
-			$first = $this->participants[$i];
-
-			$a = $this->participants;
-			unset($a[$i]); //remove the first
+		return self::permutate($this->participants);
+	}
+	
+	static public function permutate($input){
 		
-			//now do an array walk..
-			array_walk($a, 
-				function(&$u, $k, $participants){
-					$i =  "$u";
-					
-					foreach($participants as $participant){
-						if($u != $participant){
-							$i .= ":$participant";
-						}
-					}
-					$u = $i;
-				}, $a);
-				
-			foreach($a as $ending)
-				$return[] = "$first:$ending";
+		if(1 === count($input))
+			return $input;
 
-		}
+		$result = array();
+		foreach($input as $key => $item)
+			foreach(self::permutate(array_diff_key($input, array($key => $item))) as $p)
+				$result[] = "$item:$p";
+		
+		return $result;
 
-		return $return;
 	}
 	
 	public function save($timebased = true){

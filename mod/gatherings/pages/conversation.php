@@ -67,7 +67,7 @@ class conversation extends core\page implements interfaces\page{
 			} else {
 				$conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $user->guid);
 			}
-
+			
 			$ik = $conversation->getIndexKeys();
 			$guids = core\data\indexes::fetch("object:gathering:conversation:".$ik[0]);
 
