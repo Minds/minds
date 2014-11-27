@@ -334,6 +334,7 @@ margin: 16px 0;
 	overflow-y:scroll;
 	height:60vh;
 	margin:16px;
+	padding-right:32px;
 }
 .message .message-content{
 	padding:8px;
@@ -344,6 +345,19 @@ margin: 16px 0;
 	padding-top: 20px;
 	font-size: 11px;
 	color: #888;
+}
+
+.message .actions{
+	float:right;
+	display:none;
+	margin-top:27px;
+}
+.message:hover .actions{
+	display:block;
+}
+.message:hover .actions a{
+	cursor:pointer;
+	color:#888;
 }
 
 .conversation-configuration{

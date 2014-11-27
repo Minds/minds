@@ -77,6 +77,11 @@ class message extends object{
 		return	parent::save($timebased);
 	}
 	
+	public function delete(){
+		$db = new \minds\core\data\call('entities');
+		return $db->removeRow($this->guid);
+	}
+	
 	/**
 	 * Encrypt the message
 	 * 

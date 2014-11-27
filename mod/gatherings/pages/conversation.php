@@ -137,11 +137,10 @@ class conversation extends core\page implements interfaces\page{
 	 * Deleting messages
 	 */
 	public function delete($pages){
-		$comment = new entities\comment($pages[0]);
-		if($comment->delete())
-			echo 'true';
-		else 
-			echo false;
+		
+		$message = new entities\message($pages[0]);
+		$message->delete();
+		
 	}
 	
 }

@@ -81,6 +81,22 @@ minds.conversations.init = function() {
 	
 	
 	/**
+	 * Remove a message
+	 */
+	$(document).on('click', '.message .actions .delete', function(){
+		guid = $(this).parents('li').attr('id');
+		that = this;
+		elgg.ajax(elgg.get_site_url() + 'gatherings/conversation/'+guid, {
+			method: 'DELETE',
+			//contentType : 'application/json',
+			success : function(output) {
+				$(that).parents('li').remove();
+			}
+		});
+	});
+	
+	
+	/**
 	 * Load earlier messages
 	 */
 	lock = false;
