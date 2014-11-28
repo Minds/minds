@@ -79,7 +79,7 @@ class conversation extends core\page implements interfaces\page{
 				foreach($conversations as $c){
 					if(in_array($c->guid, $conversation->participants)){
 						if($c->unread)
-							$conversation->update();
+							$conversation->clearCount();
 					}
 				}
 	
