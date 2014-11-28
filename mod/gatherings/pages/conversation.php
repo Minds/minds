@@ -75,8 +75,14 @@ class conversation extends core\page implements interfaces\page{
 			$guids = core\data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>30, 'offset'=>get_input('offset')));
 
 			if($guids){
-				$conversation->clearCount();
-				
+			
+				foreach($conversations as $c){
+					if(in_array($c->guid, $conversation->participants)){
+						if($c->unread)
+							$conversation->update();
+					}
+				}
+	
 				$messages = core\entities::get(array('guids'=>$guids));
 				foreach($messages as $k => $message){
 					$messages[$k] = new entities\message($message, $this->passphrase);
@@ -122,7 +128,7 @@ class conversation extends core\page implements interfaces\page{
 				->save();
 
 		$conversation->update();	
-		
+	
 		if(elgg_is_xhr()){
 			echo elgg_view_entity($message);
 		}

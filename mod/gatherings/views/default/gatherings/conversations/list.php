@@ -26,7 +26,7 @@ $conversations = $vars['conversations'];
 				<div class="unread">.</div>
 				<?php endif; ?>
 				
-				<span class="ts"><?= elgg_view_friendly_time($user->last_msg) ?></span>
+				<span class="ts"><?= elgg_view_friendly_time($user->last_msg ?: time()) ?></span>
 				
 			</a>
 		</li>

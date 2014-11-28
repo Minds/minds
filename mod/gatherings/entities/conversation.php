@@ -65,13 +65,11 @@ class conversation{
 	public function clearCount(){
 		$indexes = new data\indexes();
 		foreach($this->participants as $key => $participant){
-			if($user_guid != $participant){
-				$indexes->insert("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array($participant=> json_encode(array(
-						'ts'=>time(), 
-						'unread'=>0, 
-						'participants'=>$this->participants
-				))));
-			}
+			$indexes->insert("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array($participant=> json_encode(array(
+					'ts'=>time(), 
+					'unread'=>0, 
+					'participants'=>$this->participants
+			))));
 		}
 	}
 		

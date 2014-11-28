@@ -98,7 +98,7 @@ class start extends bases\plugin{
 	}
 
 	static public function getConversationsList(){
-		$conversation_guids = core\data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid());
+		$conversation_guids = core\data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array('limit'=>50));
 		if($conversation_guids){
 			$conversations = array();
 			
