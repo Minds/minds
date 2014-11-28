@@ -47,7 +47,13 @@ elgg.tinymce.init = function() {
 	   ],
 	   content_css: elgg.get_site_url()+"css/elgg.0.css",
 	   toolbar: "insertfile undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons", 
-	   file_browser_callback : mindsBrowser
+	   file_browser_callback : mindsBrowser,
+	   setup: function (editor) {
+	        editor.on('keyup', function (e) {  
+	        	//this is a hack...
+	         	$(document).trigger('updated-tinymce', editor.id);
+	        });
+	    }
 	   /*style_formats: [
 	        {title: 'Bold text', inline: 'b'},
 	        {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},

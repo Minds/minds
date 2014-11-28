@@ -14,6 +14,8 @@ minds.cms.init = function() {
     			$('.cms-sections').append(data);
     			if(jQuery().minicolors) { 
 				$('.cms-sections').find('.icon-colour input').minicolors();
+				
+				elgg.tinymce.init();
 			}    
 		}
     	});
@@ -74,12 +76,21 @@ minds.cms.init = function() {
     
     var typingTimer;                //timer identifier
     $(document).on('keyup', '.cms-section', function(e){
-    	 clearTimeout(typingTimer);
-    	 _this = this;
+    	 tigger_update(this);
+    });
+     $(document).on('updated-tinymce', function(e, id){
+     	fake_input = $('#'+id);
+     	section = fake_input.parents('.cms-section');
+    	tigger_update(section);
+    });
+    
+    function tigger_update(_this){
+    	clearTimeout(typingTimer);
     	 typingTimer = setTimeout(function(){
     	 	minds.cms.update($(_this));
     	 },1000);
-    });
+	}
+ 
    
    
    $(".cms-sections-editable").sortable({
@@ -113,6 +124,7 @@ minds.cms.update = function(section){
 		leftP: section.find('.left .p').val(),
 		rightH2: section.find('.right .h2').val(),
 		rightP: section.find('.right .p').val(),
+		content: tinymce.get(section.find('textarea').attr('id')).getContent(),
 		color: section.find('.icon-colour input').val(),
 		href: section.find('input[name=href]').val(),
 		position: section.find('input[name=position]').val()

@@ -29,6 +29,9 @@ $section = $vars['section'];
 			</a>
 		</div>
 		
+		<?php if($section->version == 2): ?>
+			<?= elgg_view('input/longtext', array('name'=>'content', 'value'=>$section->content)); ?>
+		<?php else: ?>
 		<div class="left">
 			<div class="cell">
 				<h2><input type="text" placeholder="Header 2." class="h2" value="<?= $section->leftH2 ?>" style="color:<?=$section->color?>"/></h2>
@@ -41,6 +44,14 @@ $section = $vars['section'];
 				<p><textarea placeholder="Paragraph with some text here." class="p" style="color:<?=$section->color?>"><?= $section->rightP ?></textarea></p>
 			</div>
 		</div>
+		
+		<?php endif; ?>
+		<?php else: ?>
+		
+		<?php if($section->version == 2): ?>
+			<div class="section-gui-ouput">
+				<?= $section->content; ?>
+			</div>
 		<?php else: ?>
 			<a href="<?= $section->href ?>" target="_blank">		
 				<div class="left">
@@ -57,7 +68,7 @@ $section = $vars['section'];
 					</div>
 				</div>
 			</a>
-		
+		<?php endif; ?>
 		<?php endif; ?>
 	</div>
 </section>

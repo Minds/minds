@@ -74,6 +74,7 @@ class sections extends core\page implements interfaces\page{
 		}
 		
 		$vars = array(
+			'content'=>'',
 			'leftH2' => '',
 			'leftP' => '',
 			'rightH2' => '',
@@ -100,6 +101,7 @@ class sections extends core\page implements interfaces\page{
 	public function put($pages){
 		$section = new entities\section();
 		$section->group = $pages[0];
+		$section->version = 2;
 		
 		$guid = $section->save();
 		//$section->guid = $guid;//duh, it should already do this!!!
