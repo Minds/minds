@@ -810,7 +810,7 @@ minds.live.init = function() {
 				}
 			}
 			toggles.removeClass('active');	
-			$('title').html('Minds');
+			$('title').html('<?= elgg_get_site_entity()->name?>');
 			clearTimeout(minds.live.blinkerTS);
 		});
 
@@ -1278,7 +1278,7 @@ minds.live.blinker = function(message){
 
 	$('title').html(message);
 	minds.live.blinkerTS = setTimeout(function(){
-		$('title').html('Minds');
+		$('title').html('<?= elgg_get_site_entity()->name ?>');
 		clearTimeout(minds.live.blinkerTS);
 		minds.live.blinker(message);	
 	}, 20);

@@ -23,6 +23,8 @@
 		<span class="notifications">
 			<?php echo elgg_view_menu('notifications'); ?>
 		</span>
+
+		<?= elgg_view('page/elements/topbar/right/actions') ?>
 	</div>
 	
 	<div class="owner_block">
