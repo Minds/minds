@@ -278,6 +278,10 @@ margin: 0;
 
 .conversations-list{
 	border-right:1px solid #EEE;
+	height: 400px;
+	overflow: hidden;
+	overflow-y: scroll;
+	border-bottom: 4px solid #DDD;
 }
 .conversations-list > li{
 	display:block;
