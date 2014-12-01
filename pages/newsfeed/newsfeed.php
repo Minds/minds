@@ -57,7 +57,7 @@ class newsfeed extends core\page implements interfaces\page{
 		$options = array(
 					'name' => 'share',
 					'href' => "newsfeed/$activity->guid/share",
-					'text' => '<span class="entypo">&#59407;</span> Share',
+					'text' => '<span class="entypo">&#59407;</span> Link',
 					'class' => 'elgg-lightbox',
 					'title' => elgg_echo('minds:share'),
 					'is_action' => true,
