@@ -1,5 +1,9 @@
 <?php 
 	$user = elgg_extract('user', $vars, elgg_get_logged_in_user_entity());
+	if(get_input('debug')){
+		var_dump($user); exit;
+
+	}
 ?>
 <div class="channel-social-icons">
 			<?php

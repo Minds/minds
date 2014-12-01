@@ -6,7 +6,6 @@
 $guid = get_input('guid');
 $user = get_entity($guid, 'user');
 
-
 if(get_input('remove_bg') == 'yes'){
 	
 	$thumb = new ElggFile;
@@ -62,15 +61,15 @@ if ($guid) {
 	}
 
 	$form_vars = channel_custom_vars($user);
-
 	foreach($form_vars as $k => $v){
 		$user->$k = get_input($k, $v);
 	}
-
+	
 	$user->background_timestamp = time();
 		
-	$user->save();
-
+	$guid = $user->save();
+	if($guid == $_SESSION['user']->guid)
+		$_SESSION['user'] = $user;
 }
 system_message(elgg_echo('channel:custom:saved'));
 forward($user->getURL());
