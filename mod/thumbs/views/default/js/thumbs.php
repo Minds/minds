@@ -11,16 +11,19 @@ elgg.thumbs.init = function() {
 elgg.thumbs.action = function(e) {
 	var link = $(this);
 
-		elgg.action($(this).attr('href'), {
-			success: function(data) {
-				if(data.output == 'selected'){
-					link.css('color', '#4690D6');
-				} else {
-					link.css('color', '#AAAAAA');
-				}
-				
+	var guid = new String($(this).attr('guid'));
+	var action = "up";
+	
+	elgg.post(elgg.get_site_url() + 'thumbs/actions/' + guid + '/' + action , {
+		success: function(data) {
+			if(data.output == 'selected'){
+				link.css('color', '#4690D6');
+			} else {
+				link.css('color', '#AAAAAA');
 			}
-		});
+			
+		}
+	});
 
 	e.preventDefault();
 };

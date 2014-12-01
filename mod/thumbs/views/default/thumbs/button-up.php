@@ -11,11 +11,14 @@ if($type=='entity'){
 	if (!isset($vars['entity'])) {
 		return true;
 	}
+	$entity = $vars['entity'];
 	$guid = $vars['entity']->getGUID();
-	$url = elgg_get_site_url() . "action/thumbs/up?guid={$guid}";
-        $thumbs_up = unserialize($vars['entity']->{'thumbs:up'});
-        $already = is_array($thumbs_up) ? in_array(elgg_get_logged_in_user_guid(), $thumbs_up) : false;
-//	$already = false;
+	$url = elgg_get_site_url() . "thumbs/actions/$guid/up";
+	
+	$already = minds\plugin\thumbs\helpers\buttons::hasThumbed($entity, 'up');
+	
+    $count = $vars['entity']->{'thumbs:up:count'};
+  
 } elseif($type=='comment'){
 	$id = $vars['id'];
 	$comment_type = $vars['comment_type'];
@@ -33,9 +36,9 @@ if (elgg_is_logged_in()) {
 			'text' => '<span class="entypo">&#128077;</span>',
 			'title' => elgg_echo('thumbs:up'),
 			'class'=> $already ? 'thumbs-button-up selected' : 'thumbs-button-up',
+			'guid' => $guid,
 			'data-role' => 'none',
 			'rel'=>'external',
-			'is_action' => true,
 			'is_trusted' => true,
 		);
 		$up_button = elgg_view('output/url', $params);
