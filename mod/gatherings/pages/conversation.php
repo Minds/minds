@@ -72,7 +72,7 @@ class conversation extends core\page implements interfaces\page{
 			}
 			
 			$ik = $conversation->getIndexKeys();
-			$guids = core\data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>30, 'offset'=>get_input('offset')));
+			$guids = core\data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>12, 'offset'=>get_input('offset')));
 
 			if($guids){
 			
@@ -118,6 +118,11 @@ class conversation extends core\page implements interfaces\page{
 			
 			$this->passphrase = $new_pswd;
 			return $this->forward(REFERRER);
+		}
+
+		if(!get_input('message')){
+			header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+			exit;
 		}
 		
 		$conversation = new entities\conversation();

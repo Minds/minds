@@ -151,7 +151,7 @@ minds.live.init = function() {
 			},
 			connect: function(){
 				console.log('you are connected. hurrah!');
-				
+				portal.find().send("users");	
 				//are we on a gathering page?
 				if($(document).find('.gathering').length > 0){
 					//minds.live.startGathering($(document).find('gathering').attr('data-guid'));
@@ -1185,7 +1185,8 @@ minds.live.decryptor = function(id, sender, data){
 		span.find('.loader').html(new Array(count % 10).join('.'));
 	},100);
 
-
+	console.log('Minds debug: Decrptor triggered. ::', id, sender, data);
+	console.log(encrypted); 
 	if(encrypted){
 		//span.removeData('encrypted');
 		elgg.post(elgg.get_site_url() + 'gatherings/decrypt', {
