@@ -72,7 +72,7 @@ class conversation extends core\page implements interfaces\page{
 			}
 			
 			$ik = $conversation->getIndexKeys();
-			$guids = core\data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>30, 'offset'=>get_input('offset')));
+			$guids = core\data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>12, 'offset'=>get_input('offset')));
 
 			if($guids){
 			
