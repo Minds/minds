@@ -119,6 +119,11 @@ class conversation extends core\page implements interfaces\page{
 			$this->passphrase = $new_pswd;
 			return $this->forward(REFERRER);
 		}
+
+		if(!get_input('message')){
+			header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+			exit;
+		}
 		
 		$conversation = new entities\conversation();
 		$conversation->participants = $_POST['participants'];
