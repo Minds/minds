@@ -85,7 +85,8 @@ minds.cms.init = function() {
      $(document).on('updated-tinymce', function(e, id){
      	fake_input = $('#'+id);
      	section = fake_input.parents('.cms-section');
-    	tigger_update(section);
+     	if(section.length)
+    		tigger_update(section);
     });
     
     function tigger_update(_this){

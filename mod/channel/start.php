@@ -279,8 +279,14 @@ function channel_page_handler($page) {
 			header('Expires: ' . date('r', time() + 864000));
 			header("Pragma: public");
  			header("Cache-Control: public");
-			if(file_exists($filename))
+			if(file_exists($filename)){
 				echo file_get_contents($filename);
+			} else {
+				$img = imagecreatetruecolor(120, 1);
+				$bg = imagecolorallocate ( $img, 50, 50, 50 );
+				imagefilledrectangle($img,0,0,120,1,$bg);
+				imagejpeg($img,NULL,100);
+			}
 			exit;
 			break;
 		case 'api':

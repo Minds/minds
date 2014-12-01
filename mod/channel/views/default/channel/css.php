@@ -321,12 +321,15 @@ padding: 0 4px;
 	padding:0;
 	border: 0;
 	width: 360px;
-	height: auto;
+	height: 225px;
 	display: block;
 	background:transparent;
 	box-shadow:none;
 	-webkit-box-shadow:none;
 	-moz-box-shadow:none;
+}
+.users-list .hovercard-banner .top-arrow{
+	display:none;
 }
 .users-list li .elgg-image{
 	float:none;
