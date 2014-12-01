@@ -1,5 +1,6 @@
 <?php
 $section = $vars['section'];
+
 ?>
 <section class="cms-section" data-guid="<?= $section->guid ?>">
 	<div class="cms-section-bg"  <?php if($section->background): ?> style="background-image:url(<?=elgg_get_site_url() . "s/$section->guid/bg/".$section->last_updated ?>)" <?php endif; ?>></div>

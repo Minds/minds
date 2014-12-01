@@ -2,7 +2,7 @@
 elgg.provide('minds.cms');
 
 minds.cms.init = function() {
-    	
+    
     $('.cms-section-add > a').on('click', function(e){
     	e.preventDefault();
     	$.ajax({
@@ -11,11 +11,15 @@ minds.cms.init = function() {
     		success : function(data){
     			console.log(data);
     			
+    			if($('.cms-sections').find('section').length == 0)
+    				window.location.reload();
+    			
     			$('.cms-sections').append(data);
     			if(jQuery().minicolors) { 
 				$('.cms-sections').find('.icon-colour input').minicolors();
 				
 				elgg.tinymce.init();
+				
 			}    
 		}
     	});
