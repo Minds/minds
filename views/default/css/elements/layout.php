@@ -365,7 +365,7 @@
 	overflow:visible;
 	overflow-x:scroll;
 	height:100%;
-	width:160px;
+	width:172px;
 	padding:12px;
 	background:#222;
 	box-shadow:0 0 4px #000;
