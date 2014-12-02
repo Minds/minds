@@ -34,6 +34,7 @@ $params = array(
 	'title' => elgg_echo('thumbs:up'),
 	'class'=> $already ? 'thumbs-button thumbs-button-down selected' : 'thumbs-button thumbs-button-down',
 	'guid' => $guid,
+	'data-action' => $already ? 'down-cancel' : 'down', 
 	'is_trusted' => true,
 );
 $up_button = elgg_view('output/url', $params);

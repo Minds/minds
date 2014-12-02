@@ -44,7 +44,7 @@ class actions extends core\page implements interfaces\page{
 				
 				break;
 		}
-
+		
 	}
 	
 

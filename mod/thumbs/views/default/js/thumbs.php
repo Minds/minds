@@ -12,14 +12,32 @@ elgg.thumbs.action = function(e) {
 	var link = $(this);
 
 	var guid = new String($(this).attr('guid'));
-	var action = "up";
+	var count = new Number(link.find('.count').html());
+	var action = link.data('action');
 	
-	elgg.post($(this).attr('href'), {
+	elgg.post(elgg.get_site_url() + 'thumbs/actions/'+guid+'/'+action, {
 		success: function(data) {
-			if(data.output == 'selected'){
-				link.css('color', '#4690D6');
-			} else {
-				link.css('color', '#AAAAAA');
+			switch(link.data('action')){
+				case "up":
+					link.css('color', '#4690D6');
+					link.find('.count').html(count + 1);
+					link.data('action', 'up-cancel');
+					break;
+				case "up-cancel":
+					link.css('color', '#AAAAAA');
+					link.find('.count').html(count - 1);
+					link.data('action', 'up');
+					break;
+				case "down":
+					link.css('color', '#4690D6');
+					link.find('.count').html(count +1);
+					link.data('action', 'down-cancel');
+					break;
+				case "down-cancel":
+					link.find('.count').html(count - 1);
+					link.css('color', '#AAAAAA');
+					link.data('action', 'down');
+					break;
 			}
 			
 		}
