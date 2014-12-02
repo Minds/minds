@@ -417,7 +417,7 @@
 				
 					var el = $(data).contents().unwrap();
 					
-					if(loc == elgg.get_site_url() || loc == elgg.get_site_url() + 'blog/list/featured'){
+					if(loc == elgg.get_site_url() || loc == elgg.get_site_url() + 'blog/list/featured' || loc == elgg.get_site_url() + 'channels/featured'){
 						offset = $(data).find('li.elgg-item:last').attr('featured_id');
    					} else {
 						offset = $(data).find('li.elgg-item:last').attr('id'); 
