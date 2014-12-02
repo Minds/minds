@@ -19,10 +19,25 @@
 
 .thumbs-list{
 	width:260px;
+	margin-top:0;
 }
+.thumbs-list h3{ 
+	font-size: 14px;
+	font-weight: 600;
+	padding: 6px 12px;
+	/* text-align: center; */
+	color: #888;
+	/* background: #666; */
+}
+.thumbs-list h3 span{
+	padding-right:6px;
+} 
 .thumbs-list li{
 	width:252px !important;
 } 
+.thumbs-list li .blog-rich-image-holder{
+	height:120px;
+}
 
 
 /* ***************************************
