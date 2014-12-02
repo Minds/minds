@@ -59,7 +59,7 @@ switch ($vars['page']) {
 			break;
 		}
 		$options['guids'] = $guids;
-		
+		$options['load-next'] = end(array_keys($guids));		
 		$content = elgg_list_entities($options);
 		break;
 	case 'popular':
