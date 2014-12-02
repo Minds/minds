@@ -17,6 +17,13 @@
 	color:#FFF;
 }
 
+.thumbs-list{
+	width:260px;
+}
+.thumbs-list li{
+	width:252px !important;
+} 
+
 
 /* ***************************************
 	Likes

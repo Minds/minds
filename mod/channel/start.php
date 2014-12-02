@@ -327,7 +327,7 @@ function channel_page_handler($page) {
 		'header'=>$carousel, 
 		'hide_ads' => true,
 		'sidebar_top'=>'',
-		'sidebar' => '',
+		'sidebar' => elgg_view('channel/thumbs', array('user'=>$user)),
 		'sidebar_alt'=> elgg_view('channel/sidebar', array('user'=>$user)),
 		'sidebar-alt-class' =>  'minds-fixed-sidebar-left'
 	));

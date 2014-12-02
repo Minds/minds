@@ -68,10 +68,10 @@ class actions extends core\page implements interfaces\page{
 		$db->insert($entity->guid, array("thumbs:$direction:user_guids" => json_encode($user_guids)));
 				
 		//now add to the entity list of thumbed up users
-		$db->insert("thumbs:$direction:entity:$entity->guid", array(elgg_get_logged_in_user_guid() => time()));
+		$indexes->insert("thumbs:$direction:entity:$entity->guid", array(elgg_get_logged_in_user_guid() => time()));
 				
 		//now add to the users list of thumbed up content
-		$db->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid(), array($entity->guid => time()));
+		$indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid(), array($entity->guid => time()));
 	}
 
 	private function magicCancel($direction = 'up', $entity){
@@ -88,10 +88,10 @@ class actions extends core\page implements interfaces\page{
 		$db->insert($entity->guid, array("thumbs:$direction:user_guids" => json_encode($user_guids)));
 				
 		//now remove from the entities list of thumbed up users
-		$db->removeAttributes("thumbs:$direction:entity:$entity->guid", array(elgg_get_logged_in_user_guid()));
+		$indexes->removeAttributes("thumbs:$direction:entity:$entity->guid", array(elgg_get_logged_in_user_guid()));
 				
 		//now remove from the users list of thumbs up content
-		$db->removeAttributes("thumbs:$direction:user:" . elgg_get_logged_in_user_guid(), array($entity->guid));
+		$indexes->removeAttributes("thumbs:$direction:user:" . elgg_get_logged_in_user_guid(), array($entity->guid));
 	}
 	
 }
