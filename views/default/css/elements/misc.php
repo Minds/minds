@@ -255,7 +255,7 @@ li .rich-image{
 li .blog-rich-image-holder{
 	position: relative;
 	width: 110%;
-	height: 260px;
+	height: auto;
 	display: block;
 	overflow: hidden;
 	margin: 0 -10px;
