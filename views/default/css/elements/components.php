@@ -1,4 +1,4 @@
-<?php
+.elgg-list > li<?php
 /**
  * Layout Object CSS
  *
@@ -38,7 +38,7 @@
 	margin: 24px 0 0 2%;
     border: 0;
 	background:#F8F8F8;
-	padding:0 10px 10px 11px;
+	/*padding:0 10px 10px 11px;*/
         width: 29%;
         /*width:28%;*/
 	overflow: hidden;
@@ -50,6 +50,9 @@
 	-webkit-box-shadow: 0 0 1px #DDD;
 	-moz-box-shadow: 0 0 1px #DDD;
 	border: 1px solid #DDD;
+}
+.elgg-list > li .elgg-image-block{
+	padding:16px;
 }
 .elgg-list.x4 > li {
 	width:21%;

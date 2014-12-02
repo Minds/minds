@@ -1,8 +1,22 @@
 <?php
 /**
- * Likes CSS
+ * Thumbs CSS
  */
 ?>
+
+.thumbs-button{
+	text-decoration:none !important;
+	vertical-align:middle;
+}
+.thumbs-button .count{
+	font-size:12px;
+	color:#888;
+	vertical-align:middle;
+}
+.thumbs-button:hover .count{
+	color:#FFF;
+}
+
 
 /* ***************************************
 	Likes

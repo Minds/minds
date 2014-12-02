@@ -14,7 +14,7 @@ elgg.thumbs.action = function(e) {
 	var guid = new String($(this).attr('guid'));
 	var action = "up";
 	
-	elgg.post(elgg.get_site_url() + 'thumbs/actions/' + guid + '/' + action , {
+	elgg.post($(this).attr('href'), {
 		success: function(data) {
 			if(data.output == 'selected'){
 				link.css('color', '#4690D6');

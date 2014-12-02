@@ -81,6 +81,11 @@ class actions extends core\page implements interfaces\page{
 		
 	
 		$db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} - 1));
+		
+		
+		$user_guids = json_decode($entity->{"thumbs:$direction:user_guids"}, true) ?: array();
+		$user_guids = array_diff($user_guids, array(elgg_get_logged_in_user_guid()));
+		$db->insert($entity->guid, array("thumbs:$direction:user_guids" => json_encode($user_guids)));
 				
 		//now remove from the entities list of thumbed up users
 		$db->removeAttributes("thumbs:$direction:entity:$entity->guid", array(elgg_get_logged_in_user_guid()));
