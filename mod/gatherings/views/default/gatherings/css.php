@@ -421,7 +421,7 @@ text-align:center;
 	display:block;
 }
 
-.count{
+.topbar .right .actions .count{
 	position: absolute;
 background: red;
 border-radius: 100%;
