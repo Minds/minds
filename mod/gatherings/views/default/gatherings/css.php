@@ -431,3 +431,8 @@ font-size: 10px;
 bottom: 23px;
 right: -7px;
 }
+
+
+.topbar .right .actions .gatherings{
+	margin-top:-1px;
+}

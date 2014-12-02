@@ -20,6 +20,8 @@ class contact extends core\page implements interfaces\page{
 			'sidebar_class' => 'elgg-sidebar-alt cms-sidebar-wrapper',
 			'hide_ads'=>true
 		));
+
+		elgg_extend_view('page/elements/foot', 'cms/footer');
 		
 		echo $this->render(array('body'=>$body));
 	}
