@@ -38,7 +38,19 @@
 .thumbs-list li .blog-rich-image-holder{
 	height:120px;
 }
-
+.thumbs-list .elgg-image{
+	display:none;
+}
+.thumbs-list h2{
+	font-size:13px;
+	font-weight:600;
+}
+.thumbs-list li .blog-rich-image-holder img{
+	top:0;
+}
+.thumbs-list .menu-v2 > li a{
+	font-size:9px;
+}
 
 /* ***************************************
 	Likes

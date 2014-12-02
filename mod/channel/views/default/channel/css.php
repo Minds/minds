@@ -547,6 +547,14 @@ padding: 0 4px;
 	line-height:2.3em;
 	padding-left:16px;
 }
+@media all
+and (min-width : 720px)
+and (max-width : 1200px) {
+	 .channel .elgg-sidebar{
+                display:none;
+	}
+}
+
 /**
  * Mobile specific
  */
@@ -557,6 +565,10 @@ and (max-width : 720px) {
 	.body .minds-fixed-layout{
 		width:90%;
 		margin:8px;
+	}
+
+	.channel .elgg-sidebar{
+		display:none;
 	}
 
 	.minds-fixed-sidebar-left{
