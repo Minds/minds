@@ -194,6 +194,9 @@ function channel_page_handler($page) {
 			break;
 		case 'blog':
 		case 'blogs':
+			if($user->guid == elgg_get_logged_in_user_guid())
+				$content .= elgg_view('output/url', array('class'=>'elgg-button elgg-button-action', 'style'=>'margin-left:48px;', 'href'=>elgg_get_site_url() . 'blog/add', 'text'=>'Add new blog', 'title'=>'New blog'));
+				
 			$content .= elgg_list_entities(array(	
 											'type'=>'object', 
 											'subtype'=>'blog', 
