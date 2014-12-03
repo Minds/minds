@@ -1038,7 +1038,7 @@ li.elgg-menu-item-rss{
 	top: 30vh;
 }
 .carousel-fat .carousel-inner > .item > img {
-	top:-20vh;
+	/*top:-20vh;*/
 	height:auto;
 }
 
