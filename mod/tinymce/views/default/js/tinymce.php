@@ -36,8 +36,9 @@ elgg.tinymce.init = function() {
 
 	tinyMCE.init({
 		selector: "textarea",
-		 relative_urls: false,
+		relative_urls: false,
 	    theme: "modern",
+	    fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt 42pt 54pt 64pt 86pt 72pt",
 	    width: "100%",
 	    height: 400,
 	    plugins: [
@@ -46,7 +47,7 @@ elgg.tinymce.init = function() {
 	         "save table contextmenu directionality emoticons template paste textcolor"
 	   ],
 	   content_css: elgg.get_site_url()+"css/elgg.0.css",
-	   toolbar: "insertfile undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons", 
+	   toolbar: "fontselect | fontsizeselect | styleselect | forecolor | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media", 
 	   file_browser_callback : mindsBrowser,
 	   setup: function (editor) {
 	        editor.on('keyup', function (e) {  
