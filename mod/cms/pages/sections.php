@@ -81,7 +81,8 @@ class sections extends core\page implements interfaces\page{
 			'rightP' => '',
 			'color' => '',
 			'position' => 0,
-			'href' => ''
+			'href' => '',
+			'top_offset' => ''
 		);
 		foreach($_POST as $k=>$v){
 			if(!isset($vars[$k]))

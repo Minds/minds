@@ -58,11 +58,19 @@
 	width: 100%;
 	height: 610px;
 	margin-top: -40px;
-	z-index: -1;
+	z-index: 0
+	;
 	/*-webkit-transform: translate3d(0, -20px, 0);
 	transform: translate3d(0, -20px, 0);
 	*/
 }
+
+.cms-section .cms-section-bg img{
+	width:100%;
+	min-width:1280px;
+	position:relative;
+}
+
 .cms-section .container .cell h2{
 	font-family:"Lato", Helvetica, Arial, Sans-Serif;
 	font-size:28px;
@@ -304,6 +312,7 @@ and (max-width : 720px) {
 	.cms-section .cms-section-bg{
 		height:400px;
 	}
+
 	.cms-section .container{
 		line-height:200px;
 	}

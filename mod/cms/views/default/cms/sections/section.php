@@ -1,9 +1,12 @@
 <?php
 $section = $vars['section'];
-
+$img_src = elgg_get_site_url() . "s/$section->guid/bg/".$section->last_updated;
 ?>
 <section class="cms-section" data-guid="<?= $section->guid ?>">
-	<div class="cms-section-bg"  <?php if($section->background): ?> style="background-image:url(<?=elgg_get_site_url() . "s/$section->guid/bg/".$section->last_updated ?>)" <?php endif; ?>></div>
+	<div class="cms-section-bg"  <?php if($section->background): ?> <?php endif; ?>>
+		<img src="<?=$img_src?>" style="top:<?= $section->top_offset ?>px; <?php if(!$section->background): ?> display:none; <?php endif; ?>"/>
+		<input type="hidden" name="top_offset" value="<?= $section->top_offset ?>"/>
+	</div>
 	<div class="container">
 		
 		<?php if(elgg_is_admin_logged_in()):

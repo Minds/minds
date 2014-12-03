@@ -96,6 +96,29 @@ minds.cms.init = function() {
     	 },1000);
 	}
  
+ 	$(".cms-section .cms-section-bg img").draggable({
+			scroll: false,
+			axis: "y",
+			drag: function(event, ui) {
+				img = $(event.target);
+              	wrapper = img.parent();
+         
+				if(ui.position.top >= 0){
+					ui.position.top = 0;
+				} else if(ui.position.top <= wrapper.height() - img.height()) {
+					ui.position.top = wrapper.height() - img.height();
+				}
+					
+				input = wrapper.find("input[name=top_offset]");
+				if(input.length > 0)
+					input.val(ui.position.top);
+					
+			},
+            stop: function(event, ui) {
+             	img = $(event.target);
+           		minds.cms.update(img.parents('section'));	
+			}
+        });
    
    
    $(".cms-sections-editable").sortable({
@@ -132,7 +155,8 @@ minds.cms.update = function(section){
 		content: tinymce.get(section.find('textarea').attr('id')).getContent(),
 		color: section.find('.icon-colour input').val(),
 		href: section.find('input[name=href]').val(),
-		position: section.find('input[name=position]').val()
+		position: section.find('input[name=position]').val(),
+		top_offset: section.find('input[name=top_offset]').val()
 	};
 
 	$.ajax({
