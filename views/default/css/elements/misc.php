@@ -1040,6 +1040,9 @@ li.elgg-menu-item-rss{
 .carousel-fat .carousel-inner > .item > img {
 	/*top:-20vh;*/
 	height:auto;
+	min-height	100%;
+	width:auto;
+	min-width:100%;
 }
 
 .carousel-fat .elgg-layout{
