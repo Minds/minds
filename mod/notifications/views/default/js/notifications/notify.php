@@ -17,6 +17,10 @@ elgg.notify.init = function() {
     					} else {
     						icon.find('.notifier').append('<span class="notification-new">1</span>');
     					}
+    					
+    					var title = $('title').html();
+    					$('title').html('(1) '+ title);
+    					
     				}
     			}
     		
