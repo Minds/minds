@@ -35,5 +35,16 @@ if($entity->license == 'not-selected' && !elgg_is_xhr()){
 }
 
 
+//update the activity entity
+$activity_guids = minds\core\data\indexes::fetch("activity:entitylink:$entity->guid");
+foreach($activity_guids as $activity_guid){
+	$activity = new minds\entities\activity($activity_guid);
+	$activity->setTitle($entity->title)
+			->setUrl($entity->getURL())
+			->setThumbnail($entity->getIconURL())
+			->save(false);
+}
+
+
 echo $entity->save(false);
 forward($entity->getURL());

@@ -43,6 +43,7 @@ switch($mime_type){
 			$activity->setTitle($entity->title)
 				->setUrl($entity->getURL())
 				->setThumbnail($entity->getIconURL())
+				->setFromEntity($entity)
 				->save();
 
 			exit;
