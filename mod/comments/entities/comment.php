@@ -39,4 +39,10 @@ class comment extends entities\entity{
 		echo \elgg_view('comment/default', array('entity'=>$this));
 	}
 	
+	public function getURL(){
+		
+		$entity = \minds\core\entities::build(new entities\entity($this->parent_guid));
+		return $entity->getURL();
+		
+	}
 }

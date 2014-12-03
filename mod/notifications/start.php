@@ -245,8 +245,14 @@ class start extends \ElggPlugin{
 	 * @return void
 	 */
 	public function createHook($hook, $type, $params, $return = NULL){
-		if($type == 'activity'){
-			if (preg_match_all('!@(.+)(?:\s|$)!U', $params->message, $matches)){
+		if($type == 'activity' || $type == 'comment'){
+			if($params->message)
+				$message = $params->message;
+		
+			if($type == 'comment')
+				$message = $params->description;
+			
+			if (preg_match_all('!@(.+)(?:\s|$)!U', $message, $matches)){
 				$usernames = $matches[1];
 				$to = array();
 				foreach($usernames as $username){
