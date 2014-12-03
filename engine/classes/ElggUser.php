@@ -154,9 +154,11 @@ class ElggUser extends ElggEntity
 		$data = array($this->guid => time());
 
 		$db = new minds\core\data\call('user_index_to_guid');
-		$db->insert(strtolower($this->username), $data);
-		$db->insert(strtolower($this->email), $data);
-
+		if(!$db->getRow(strtolower($this->username))){
+			$db->insert(strtolower($this->username), $data);
+			$db->insert(strtolower($this->email), $data);
+		}
+ 
 		//update our session, if it is us logged in
 		if(elgg_is_logged_in() && $this->guid == elgg_get_logged_in_user_guid()){
 			$_SESSION['user'] = $this;
@@ -639,7 +641,8 @@ class ElggUser extends ElggEntity
 			'username',
 			'language',
 			'icontime',
-			'legacy_guid'
+			'legacy_guid',
+			'featured_id'
 		));
 	}
 

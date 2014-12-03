@@ -1100,6 +1100,9 @@ li.elgg-menu-item-rss{
 .carousel-inner > .item > .carousel-caption p{
 	color:#FFF;
 	text-align:center;
+	font-family:"Lato", 'Helvetica', Arial, Sans-Serif;
+	padding-top:12px;
+	font-size:20px;
 }
 
 .elgg-widget-more{
