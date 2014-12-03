@@ -136,6 +136,8 @@ RewriteEngine on
 #################
 
 # Using new router
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.+)$ index.php [QSA,E=ORIG_URI:/$1]
 
 </IfModule>
