@@ -19,12 +19,15 @@
 	 		if(sidebarOpen){
 	 			$('.global-sidebar').removeClass('show');
 	 			$('.hero').removeClass('sidebar-active');
+	 			$('body').removeClass('sidebar-active');
+	 			
 	 			sidebarOpen = false;
 	 		//	$.removeCookie('sidebarOpen'); 
 	 			$.cookie('sidebarOpen', 'false', { path: '/' });
 	 		} else {
 	 			$('.global-sidebar').addClass('show');
 	 			$('.hero').addClass('sidebar-active');
+	 			$('body').addClass('sidebar-active');
 	 			sidebarOpen = true
 	 			$.cookie('sidebarOpen', 'true', { path: '/' });
 	 		}
