@@ -60,7 +60,9 @@ minds.cms.init = function() {
     		success : function(data){
     			console.log(data);
     		//	$(section).find('.cms-section-bg').attr('style="background-image: ' + data + '"');
-    			$(section).find('.cms-section-bg').css('background-image', 'url('+data+')');
+    			$(section).find('.cms-section-bg img').css('display', 'block');
+    			$(section).find('.cms-section-bg img').attr('src', data);
+    		//	$(section).find('.cms-section-bg').css('background-image', 'url('+data+')');
     		}
     	});
     });
