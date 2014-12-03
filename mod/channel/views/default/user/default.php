@@ -7,7 +7,7 @@
  */
 
 $entity = $vars['entity'];
-$size = elgg_extract('size', $vars, 'medium');
+$size = elgg_extract('size', $vars, 'large');
 
 $icon = elgg_view_entity_icon($entity, $size, $vars);
 
@@ -33,24 +33,19 @@ if (elgg_in_context('owner_block') || elgg_in_context('widgets')) {
 
 if (elgg_get_context() == 'gallery') {
 	echo $icon;
-} else {
-	if ($entity->isBanned()) {
-		$banned = elgg_echo('banned');
-		$params = array(
-			'entity' => $entity,
-			'title' => $title,
-			'metadata' => $metadata,
-		);
-	} else {
-		$params = array(
-			'entity' => $entity,
-			'title' => $title,
-			'subtitle' => $entity->location . ' ' . $entity->briefdescription,
-			'content' => elgg_view('user/overview', array('entity' => $entity)),
-		);
-	}
+} elseif(elgg_get_context() == 'search'){
+	$icon = elgg_view_entity_icon($entity, 'medium', $vars);
+	 $overview = elgg_view('user/overview', array('entity' => $entity));
+        $list_body = "<h2>$title</h2>$overview";
+        
+        $vars['class'] = 'user';
+        echo elgg_view_image_block($icon, $list_body, $vars);
 
-	$list_body = elgg_view('user/elements/summary', $params);
-
+} else  {
+	
+	$overview = elgg_view('user/overview', array('entity' => $entity));
+	$list_body = "$overview <h2>$title</h2>";
+	
+	$vars['class'] = 'user';
 	echo elgg_view_image_block($icon, $list_body, $vars);
 }

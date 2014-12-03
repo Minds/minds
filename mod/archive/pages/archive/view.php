@@ -31,39 +31,39 @@ switch($entity->subtype){
 		$video_location_secure = str_replace('http://', 'https://', $video_location);
 		$thumbnail = $entity->getIconURL();
 	
-		minds_set_metatags('og:type', 'video');
-		minds_set_metatags('og:url', $entity->getPermaURL());
-		minds_set_metatags('og:image', $thumbnail);
-		minds_set_metatags('og:title', $title);
-		minds_set_metatags('og:description', $description);
-		minds_set_metatags('og:video:url', $entity->getUrl().'?view=embed');
-		minds_set_metatags('og:video:secure_url',  $entity->getUrl().'?view=embed'); 
-		minds_set_metatags('og:video:type', 'text/html');
-		minds_set_metatags('og:video:width', '1280');
-		minds_set_metatags('og:video:height', '720');
+		minds\plugin\social\start::setMetatags('og:type', 'video');
+		minds\plugin\social\start::setMetatags('og:url', $entity->getPermaURL());
+		minds\plugin\social\start::setMetatags('og:image', $thumbnail);
+		minds\plugin\social\start::setMetatags('og:title', $title);
+		minds\plugin\social\start::setMetatags('og:description', $description);
+		minds\plugin\social\start::setMetatags('og:video:url', $entity->getUrl().'?view=embed');
+		minds\plugin\social\start::setMetatags('og:video:secure_url',  $entity->getUrl().'?view=embed'); 
+		minds\plugin\social\start::setMetatags('og:video:type', 'text/html');
+		minds\plugin\social\start::setMetatags('og:video:width', '1280');
+		minds\plugin\social\start::setMetatags('og:video:height', '720');
 	 
-		minds_set_metatags('twitter:card', 'player');
-		minds_set_metatags('twitter:url', $entity->getURL());
-		minds_set_metatags('twitter:title', $entity->title);
-		minds_set_metatags('twitter:image', $thumbnail);
-		minds_set_metatags('twitter:description', $description);
-		minds_set_metatags('twitter:player', $video_location);
-		minds_set_metatags('twitter:player:width', '1280');
-		minds_set_metatags('twitter:player:height', '720');
+		minds\plugin\social\start::setMetatags('twitter:card', 'player');
+		minds\plugin\social\start::setMetatags('twitter:url', $entity->getURL());
+		minds\plugin\social\start::setMetatags('twitter:title', $entity->title);
+		minds\plugin\social\start::setMetatags('twitter:image', $thumbnail);
+		minds\plugin\social\start::setMetatags('twitter:description', $description);
+		minds\plugin\social\start::setMetatags('twitter:player', $video_location);
+		minds\plugin\social\start::setMetatags('twitter:player:width', '1280');
+		minds\plugin\social\start::setMetatags('twitter:player:height', '720');
 		break;
 	case 'image':
-		minds_set_metatags('og:type', 'mindscom:photo');
-		minds_set_metatags('og:title', $entity->title);
-		minds_set_metatags('og:description', $entity->description ? $photo->description : $entity->getUrl());
-		minds_set_metatags('og:image',$entity->getIconURL('large'));
-		minds_set_metatags('mindscom:photo',$entity->getIconURL('large'));
-		minds_set_metatags('og:url',$entity->getPermaUrl());
+		minds\plugin\social\start::setMetatags('og:type', 'mindscom:photo');
+		minds\plugin\social\start::setMetatags('og:title', $entity->title);
+		minds\plugin\social\start::setMetatags('og:description', $entity->description ? $photo->description : $entity->getUrl());
+		minds\plugin\social\start::setMetatags('og:image',$entity->getIconURL('large'));
+		minds\plugin\social\start::setMetatags('mindscom:photo',$entity->getIconURL('large'));
+		minds\plugin\social\start::setMetatags('og:url',$entity->getPermaUrl());
 		 
-		minds_set_metatags('twitter:card', 'photo');
-		minds_set_metatags('twitter:url', $entity->getURL());
-		minds_set_metatags('twitter:title', $entity->title);
-		minds_set_metatags('twitter:image', $entity->getIconURL('large'));
-		minds_set_metatags('twitter:description', $entity->description ? $entity->description : $entity->getUrl());
+		minds\plugin\social\start::setMetatags('twitter:card', 'photo');
+		minds\plugin\social\start::setMetatags('twitter:url', $entity->getURL());
+		minds\plugin\social\start::setMetatags('twitter:title', $entity->title);
+		minds\plugin\social\start::setMetatags('twitter:image', $entity->getIconURL('large'));
+		minds\plugin\social\start::setMetatags('twitter:description', $entity->description ? $entity->description : $entity->getUrl());
 		
 		$subtitle = elgg_view('output/url', array('href'=>$entity->getContainerEntity()->getURL(), 'text'=>'Back to \''. $entity->getContainerEntity()->title .'\''));
 		
@@ -76,11 +76,11 @@ switch($entity->subtype){
 		}
 		break;
 	case 'album':
-		minds_set_metatags('og:type', 'mindscom:photo');
-		minds_set_metatags('og:url', $entity->getPermaURL());
-		minds_set_metatags('og:image', $entity->getIconURL('large'));
-		minds_set_metatags('og:title', $title);
-		minds_set_metatags('og:description', $description);
+		minds\plugin\social\start::setMetatags('og:type', 'mindscom:photo');
+		minds\plugin\social\start::setMetatags('og:url', $entity->getPermaURL());
+		minds\plugin\social\start::setMetatags('og:image', $entity->getIconURL('large'));
+		minds\plugin\social\start::setMetatags('og:title', $title);
+		minds\plugin\social\start::setMetatags('og:description', $description);
 		$trending = false;
 		
 		/**
@@ -94,18 +94,18 @@ switch($entity->subtype){
 		
 		break;
 	case 'file':
-		minds_set_metatags('og:type', 'article');
-		minds_set_metatags('og:url', $entity->getPermaURL());
-		minds_set_metatags('og:image', $entity->getIconURL('large'));
-		minds_set_metatags('og:title', $title);
-		minds_set_metatags('og:description', $description);
+		minds\plugin\social\start::setMetatags('og:type', 'article');
+		minds\plugin\social\start::setMetatags('og:url', $entity->getPermaURL());
+		minds\plugin\social\start::setMetatags('og:image', $entity->getIconURL('large'));
+		minds\plugin\social\start::setMetatags('og:title', $title);
+		minds\plugin\social\start::setMetatags('og:description', $description);
 		
 		 
-		minds_set_metatags('twitter:card', 'summary');
-		minds_set_metatags('twitter:url', $entity->getURL());
-		minds_set_metatags('twitter:title', $title);
-		minds_set_metatags('twitter:image', $entity->getIconURL());
-		minds_set_metatags('twitter:description', $description);
+		minds\plugin\social\start::setMetatags('twitter:card', 'summary');
+		minds\plugin\social\start::setMetatags('twitter:url', $entity->getURL());
+		minds\plugin\social\start::setMetatags('twitter:title', $title);
+		minds\plugin\social\start::setMetatags('twitter:image', $entity->getIconURL());
+		minds\plugin\social\start::setMetatags('twitter:description', $description);
 		break;
 }		
 	
@@ -156,7 +156,7 @@ if(elgg_is_active_plugin('analytics') && $trending && false){
 
 }
 
-$sidebar = elgg_view('minds_social/social_footer');
+//$sidebar = elgg_view('minds_social/social_footer');
 $sidebar .= elgg_view_comments($entity);
 
 $body = elgg_view_layout("content", array(	
@@ -171,3 +171,4 @@ $body = elgg_view_layout("content", array(
 				));
 
 echo elgg_view_page($title,$body);
+

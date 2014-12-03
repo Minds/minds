@@ -22,7 +22,10 @@
 	min-height:100%;
 }
 .hero.sidebar-active{
-	margin-left:250px;
+	margin-left:172px;
+}
+.hero.sidebar-active .topbar{
+	width:92%;
 }
 .hero .header > .inner, .elgg-page-default .elgg-page-header > .elgg-inner {
 	width: 90%;
@@ -31,6 +34,7 @@
 }
 .hero > .body > .inner, .elgg-page-default .elgg-page-body > .elgg-inner {
 	width: 90%;
+	height:100%;
 	margin: 0 auto;
 	padding: 16px 0;
 }
@@ -94,10 +98,17 @@
 	height:50px;
 	width:auto;
 }
+.hero > .topbar .logo h1{
+	display: inline-block;
+	padding: 16px;
+	color: #888;
+	font-weight: 100;
+	font-size: 42px;
+}
 .hero > .topbar .search{
 	margin: 12px 16px;
 	float:left;
-	width:160px;
+	width:130px;
 }
 .hero > .topbar .search input{
 	margin:0;
@@ -119,8 +130,13 @@
 	text-decoration:none;
 }
 .hero > .topbar .actions{
-	margin:21px 6px;
-	float:right;
+	margin: 20px 6px;
+	float: right;
+	width: 52px;
+}
+.hero > .topbar .actions > span{
+	float:left;
+	margin-right:8px;
 }
 .hero > .topbar .more{
 	clear:both;
@@ -178,10 +194,12 @@
 .hero > .body, .elgg-page-body{
 	position:relative;
 	width:100%;
-	height:auto;
+	height:100%;
 	min-height:100%;
 	margin-top:74px;
+	padding-bottom:230px;
 }
+
 
 /***** PAGE BODY LAYOUT ******/
 .elgg-layout {
@@ -346,7 +364,7 @@
 	overflow:visible;
 	overflow-x:scroll;
 	height:100%;
-	width:225px;
+	width:160px;
 	padding:12px;
 	background:#222;
 	box-shadow:0 0 4px #000;

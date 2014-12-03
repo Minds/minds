@@ -13,7 +13,15 @@ class contact extends core\page implements interfaces\page{
 		
 		$content = \elgg_view_form('contact', array('action'=>'contact'));
 		
-		$body = \elgg_view_layout('one_column', array('title'=>\elgg_echo('guard:twofactor'), 'content'=>$content));
+		$body = \elgg_view_layout('one_sidebar', array(
+			'title'=>\elgg_echo('guard:twofactor'), 
+			'content'=>$content,
+			'sidebar'=>elgg_view('cms/pages/sidebar'),
+			'sidebar_class' => 'elgg-sidebar-alt cms-sidebar-wrapper',
+			'hide_ads'=>true
+		));
+
+		elgg_extend_view('page/elements/foot', 'cms/footer');
 		
 		echo $this->render(array('body'=>$body));
 	}
@@ -24,8 +32,9 @@ class contact extends core\page implements interfaces\page{
 			\register_error('sorry, wrong answer');
 			return false;
 		}
-			
-		\elgg_send_email('emails@minds.com', array($_POST['email'],'mark@minds.com','bill@minds.com'), 'New Email from ' . $_POST['name'] . ' ' . $_POST['email'], $_POST['message']);
+
+		$contact = array($_POST['email'],'mark@minds.com','bill@minds.com', elgg_get_site_entity()->email);
+		\elgg_send_email('emails@minds.com', $contact, 'New Email from ' . $_POST['name'] . ' ' . $_POST['email'], $_POST['message']);
 		
 		\system_message('Success!');
 		

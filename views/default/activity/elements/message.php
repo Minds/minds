@@ -1,3 +1,3 @@
 <p class="message">
-	<?= $vars['message'] ?>
+	<?= minds_filter(strip_tags($vars['message'], '<a>')) ?>
 </p>

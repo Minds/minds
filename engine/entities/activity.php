@@ -27,13 +27,12 @@ class activity extends entity{
 	public function save($index = true){
 
 		//cache owner_guid for brief
-		if($owner = $this->getOwnerEntity(false))
+		if(!$this->ownerObj && $owner = $this->getOwnerEntity(false))
 			$this->ownerObj = $owner->export();
 		
 		return parent::save($index);
 
 	}
-	
 	
 	/**
 	 * Returns an array of indexes into which this entity is stored
@@ -71,6 +70,12 @@ class activity extends entity{
 		 * @todo make it only post to a group if we are in a group
 		 */
 		array_push($indexes, "$this->type:container:$this->container_guid");
+		
+		/**
+		 * Make a link from entity to this activity post
+		 */
+		if($this->entity_guid)
+			array_push($indexes, "$this->type:entitylink:$this->entity_guid");
 
 		return $indexes;
 	}
@@ -88,6 +93,13 @@ class activity extends entity{
 				'custom_type',
 				'custom_data'
 			));
+	}
+
+	/**
+	 * Returns the owner entity
+	 */
+	public function getOwnerEntity($brief = false){
+		return parent::getOwnerEntity(true);
 	}
 	
 	/**
@@ -161,6 +173,9 @@ class activity extends entity{
 	 * @return $this
 	 */
 	public function setFromEntity($entity){
+		
+		$this->entity_guid = $entity->guid;
+		
 		return $this;
 	}
 	

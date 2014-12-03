@@ -66,7 +66,7 @@ $items = array();
 foreach($json as $key => $item) {
 	switch(get_input('items_type')) {
 		case 'entity':
-			$items[$key] = entity_row_to_elggstar($item);
+			$items[$key] = minds\core\entities::build($item);
 			break;
 		case 'annotation': 
 			$items = $json;
@@ -87,8 +87,14 @@ header('Content-type: text/plain');
 array_shift($items);
 
 //hack to preserve ordering of featured list... keys won't work
-if($elgg_path == elgg_get_site_url() || $elgg_path == null){
-	usort($items, 'featured_sort');
+if($elgg_path == elgg_get_site_url() || $elgg_path == null || $elgg_path == elgg_get_site_url().'blog/list/featured'){
+	usort($items, function($a, $b){
+		//return strcmp($b->featured_id, $a->featured_id);
+		if ((int)$a->featured_id == (int) $b->featured_id) { //imposisble
+		   return 0;
+		}
+		return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+	});
 }
 
 if(get_input('items_type') == 'river'){

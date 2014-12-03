@@ -129,9 +129,32 @@ if (!$error) {
 		}
 	}
 }
+
+if(get_input('removeHeader')){
+	$blog->header_bg = false;
+}
+
 // only try to save base entity if no errors
 if (!$error) {
 	if ($guid = $blog->save()) {
+		
+		
+		
+		/**
+		 * If we have a header banner image
+		 */
+		if(is_uploaded_file($_FILES['header']['tmp_name'])){
+			$resized = get_resized_image_from_uploaded_file('header', 2000);
+			$file = new ElggFile();
+			$file->owner_guid = $blog->owner_guid;
+			$file->setFilename("blog/{$guid}.jpg");
+			$file->open('write');
+			$file->write($resized);
+			$file->close();
+			$blog->header_bg = true;
+			$blog->last_updated = time();
+			$blog->save();
+		}
 		
 		// remove sticky form entries
 		elgg_clear_sticky_form('blog');

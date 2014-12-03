@@ -6,14 +6,12 @@ $graphics_url = $base_url . 'mod/hypeAlive/graphics/';
 .minds-comments{
 	margin:0;
 	background: #EFEFEF;
-	border: 1px solid #CCC;
 }
 .minds-comments .minds-comment{
 	background: #f9f9f9;
-	padding: 8px;
-	margin: 8px;
-	border: 1px solid #DDD;
-	border-radius: 4px;
+	padding: 4px 16px;
+	margin: 0;
+	border-top: 1px solid #DDD;
 }	
 .minds-comments .minds-comments-timestamp{
 	clear:both;
@@ -39,11 +37,11 @@ $graphics_url = $base_url . 'mod/hypeAlive/graphics/';
 	float:right;
 }
 .minds-comments-form{
-	border:1px solid #CCC;
-	background:#DDD;
+	border-top:1px solid #DDD;
+	border-bottom:1px solid #DDD;
 	margin:16px 0 0;
 	margin-top:0;
-	padding:0 8px !important;
+	padding:0 16px !important;
 }
 .minds-comments-form fieldset > div{
 	margin-bottom:0;
@@ -129,3 +127,7 @@ display:none;
 	padding:12px;
 }
 
+
+.sidebar-active .minds-live-chat{
+	left:200px;
+}

@@ -5,17 +5,20 @@
     	"twilio/sdk" : "master",
 		"thobbs/phpcassa": "master",
 		"elasticsearch/elasticsearch": "~1.0",
-    	"abeautifulsite/jquery-minicolors": "master",
-    	"kramnorth/cinemr-php-sdk": "master",
+	    	"abeautifulsite/jquery-minicolors": "master",
+    		"kramnorth/cinemr-php-sdk": "master",
 		"minds/minds-php-sdk": "master",
-		"paypal/rest-api-sdk-php": "master"
+		"paypal/rest-api-sdk-php": "master",
+		"facebook/php-sdk-v4": "4.0.*",
+  		"ivaynberg/select2":"master",
+		"tijsverkoyen/twitteroauth": "master"
    	},
 	"repositories": [{
             "type": "vcs",
-            "url": "git@github.com:minds/minds-php-sdk.git"
+            "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git"
         }],
 	"minimum-stability": "dev",
 	"autoload": {
-        	"files": ["engine/autoload.php"]
-    	}
+		"files": ["engine/autoload.php"]
+	}
 }

@@ -35,7 +35,7 @@ function channel_init() {
 	elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'channel_override_avatar_url');
 	elgg_unregister_plugin_hook_handler('entity:icon:url', 'user', 'user_avatar_hook');
 	
-	elgg_register_plugin_hook_handler('register', 'menu:user_hover', 'channel_hover_menu_setup');
+	elgg_register_plugin_hook_handler('register', 'menu:hovercard', 'channel_hover_menu_setup');
 	
 	//setup the channel elements menu content with defaults
 	elgg_register_plugin_hook_handler('register', 'menu:channel_elements', 'channel_elements_menu_setup');
@@ -44,8 +44,8 @@ function channel_init() {
 	
 	elgg_register_menu_item('site', array(
 		'name' => 'channels',
-		'text' => '<span class="entypo">&#59254;</span> Channels',
-		'href' => elgg_is_active_plugin('analytics') ? 'channels/trending' : 'channels/newest',
+		'text' => '<span class="entypo">&#59254;</span> Directory',
+		'href' => 'channels/featured',
 		'title' => elgg_echo('channels'),
 		'priority' => 2
 	));
@@ -174,7 +174,7 @@ function channel_page_handler($page) {
 	$carousel = elgg_view('carousel/carousel', array('items'=>$carousels));
 
 	$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'),array('to_guid'=>$user->guid));
-
+		$class ='';
 	switch($page[1]){
 		case 'custom':
 			$content .= elgg_view_form('channel/custom', array('enctype' => 'multipart/form-data'), array('entity' => $user));
@@ -226,16 +226,78 @@ function channel_page_handler($page) {
 			$content .= elgg_view('page/layouts/widgets/add_panel', $params);
 	        $content .= elgg_view_layout('widgets', $params);
 			break;
+		case 'groups':			
+			$content = elgg_list_entities_from_relationship(array(
+				'full_view' => false,
+				'relationship_guid' => $user->guid,
+				'relationship' => 'member',
+				'offset'=>get_input('offset','')
+				//'inverse_relationship' => true
+			)); 
+			break;
 		case 'subscribers':
-			$subscribers = get_user_friends_of($user->guid, '', 12, get_input('offset', ''));
-			$content .= elgg_view_entity_list($subscribers,array('list_class'=>'x2'));
+			$db = new minds\core\data\call('friendsof');
+			$subscribers= $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+			$users = array();
+			foreach($subscribers as $guid => $subscriber){
+				if(is_numeric($subscriber)){
+					//this is a local, old style subscription
+					$users[] = new minds\entities\user($guid);
+					continue;
+				} 
+				
+				$users[] = new minds\entities\user(json_decode($subscriber,true));
+			}
+			$content .= elgg_view_entity_list($users,array('list_class'=>'x2'));
 			break;
 		case 'subscriptions':
-			$subscriptions = get_user_friends($user->guid, '', 12, get_input('offset', ''));
-			$content .= elgg_view_entity_list($subscriptions,array('list_class'=>'x2'));
+			$db = new minds\core\data\call('friends');
+			$subscriptions = $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+			$users = array();
+			foreach($subscriptions as $guid => $subscription){
+				if(is_numeric($subscription)){
+					//this is a local, old style subscription
+					$users[] = new minds\entities\user($guid);
+					continue;
+				} 
+				
+				$users[] = new minds\entities\user(json_decode($subscription,true));
+			}
+			$content .= elgg_view_entity_list($users,array('list_class'=>'x2'));
 			break;
 		case 'carousel':
 			$content = elgg_view_form('carousel/batch', array('enctype'=>'multipart/form-data'), array('items'=>$carousels));
+			break;
+		case 'banner':
+			global $CONFIG;	
+			if(!$carousel){
+				return false;
+			}
+			$carousel = $carousels[0];
+			$filename = $CONFIG->dataroot . 'carousel/' . $carousel->guid . 'thin';
+			header('Content-Type: image/jpeg');
+			header('Expires: ' . date('r', time() + 864000));
+			header("Pragma: public");
+ 			header("Cache-Control: public");
+			if(file_exists($filename))
+				echo file_get_contents($filename);
+			exit;
+			break;
+		case 'api':
+			if($page[2] == 'carousels'){
+				$return = array();
+				foreach($carousels as $carousel){
+					$return[] = array(
+									'guid' => $carousel->guid,
+									'href' => $carousel->href,
+									'title'=>$carousel->title,
+									'shadow'=>$carousel->shadow,
+									'bg' => elgg_get_site_url() . "carousel/background/$carousel->guid/$carousel->last_updated/123/thin"
+								);
+				}
+				echo json_encode($return);
+			}
+			exit;
 			break;
 		case 'news':
 		case 'timeline':
@@ -246,7 +308,7 @@ function channel_page_handler($page) {
 				'type' => 'activity',
 				'limit' => 5,
 				'masonry' => false,
-				'prepend' => $post,
+				'prepend' => elgg_is_logged_in() ? $post : '',
 				'list_class' => 'list-newsfeed',
 				'owner_guid' => $user->guid
 			));
@@ -255,6 +317,7 @@ function channel_page_handler($page) {
 	
 	$body = elgg_view_layout('two_sidebar', array(
 		'content' => $content, 
+		'class'=>$class,
 		'header'=>$carousel, 
 		'hide_ads' => true,
 		'sidebar_top'=>'',
@@ -326,13 +389,19 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 	if ($return_value) {
 		return null;
 	}
-
+	
 	$user = $params['entity'];
 	$size = $params['size'];
 	
 	if (!elgg_instanceof($user, 'user')) {
 		return null;
 	}
+if(get_input('debugm')){
+
+var_dump($user); exit; 
+}
+	if($user->avatar_url)
+		return $user->avatar_url;
 
 	$user_guid = $user->getGUID();
 	$icon_time = $user->icontime;
@@ -431,6 +500,17 @@ function channel_hover_menu_setup($hook, $type, $return, $params) {
 		$item->setSection('action');
 		//$item->setLinkClass('elgg-lightbox');
 		$return[] = $item;
+		
+		$options = array(
+					'name' => 'feature',
+					'href' => "action/minds/feature?guid=$user->guid",
+					'text' => $user->featured_id ? elgg_echo('un-feature') : elgg_echo('feature'),
+					'title' => elgg_echo('feature'),
+					'is_action' => true,
+					'section'=>'admin',
+					'priority' => 2,
+				);
+		$return[] = ElggMenuItem::factory($options);
 	}
 
 	return $return;
@@ -519,6 +599,7 @@ function channel_custom_vars($user = null) {
 		'description' => '',
 		'contactemail' => '',
 		'location' => '',
+		'website' => '',
 		
 		'social_link_fb' => '',
 		'social_link_gplus' => '',
@@ -526,7 +607,8 @@ function channel_custom_vars($user = null) {
 		'social_link_tumblr' => '',
 		'social_link_linkedin' => '',		
 		'social_link_github' => '',
-		'social_link_pinterest' => ''
+		'social_link_pinterest' => '',
+		'social_link_instagram' => ''
 	);
 
 	if($user){

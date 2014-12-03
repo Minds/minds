@@ -24,7 +24,8 @@
 	width:100%;
 	height:200px;
 	display:block;
-	overflow: scroll;
+	overflow:hidden;
+	overflow-y: scroll;
 	padding:8px;
 	border:1px solid #eee;
 }
@@ -97,6 +98,12 @@
 	display:block;
 	font-size:14px;
 }
+
+.minds-live-chat ul li h3 .sound{
+	float:right;
+	margin-right:26px;
+}
+
 .minds-live-chat ul li .del.entypo{
 	position: absolute;
 	top: 5px;
@@ -110,6 +117,7 @@
 	right: 33px;
 	padding: 10px;
 	color: #888;
+	display:none;
 }
 .minds-live-chat ul li .messages{
 	height:140px;
@@ -220,6 +228,17 @@ margin: 0;
 .minds-live-chat ul li.userlist ul li h3{
 	font-size:12px;
 }
+
+.userlist .prompt{
+	font-size:12px;
+	line-height:13px;
+	color:#333;
+	padding:8px;
+}
+.userlist input[type=password]{
+	margin:0;
+	padding:16px;
+}
 /* ***************************************
 	Chat
 *************************************** */
@@ -252,3 +271,168 @@ margin: 0;
 
 	background-position: 0 -630px;
 }  
+
+/**
+ * conversations
+ */
+
+.conversations-list{
+	border-right:1px solid #EEE;
+	height: 400px;
+	overflow: hidden;
+	overflow-y: scroll;
+	border-bottom: 4px solid #DDD;
+}
+.conversations-list > li{
+	display:block;
+	width:auto;
+	padding:8px;
+	height:50px;
+	border-bottom:1px solid #EEE;
+}
+.conversations-list > li:hover{
+	background:#EEE;
+}
+.conversations-list > li.active{
+	background:#4690D6;
+	color:#FFF;
+}
+.conversations-list > li .icon{
+	float:left;
+}
+.conversations-list > li > a{
+	display: block;
+	width: 100%;
+	height: 50px;
+}
+.conversations-list > li h3{
+	float:left;
+	margin:2px 16px;
+}
+.conversations-list > li span.ts{
+	float:right;
+	font-size:11px;
+	color:#DDD;
+	margin:12px 0;
+}
+.conversations-list > li div.unread{
+	width: 12px;
+	height: 12px;
+	display: block;
+	border-radius: 100%;
+	float: right;
+	/* position: absolute; */
+	background: green;
+	color: transparent;
+	margin: 14px;
+}
+
+.conversation-engage{
+	margin:16px;
+}
+.conversation-engage input[type=text]{
+	padding:16px;
+}
+.conversation-engage input[type=submit]{
+	margin-top:8px;
+}
+
+.sidebar .conversation-engage{
+margin: 16px 0;
+}
+.sidebar .conversation-engage input[type=text]{
+	width:190px;
+}
+
+.conversation-wrapper{
+	overflow:hidden;
+	overflow-y:scroll;
+	height:60vh;
+	margin:16px;
+	padding-right:32px;
+}
+.message .message-content{
+	padding:8px;
+	overflow:hidden;
+}
+.message .time{
+	float: right;
+	padding-top: 20px;
+	font-size: 11px;
+	color: #888;
+}
+
+.message .actions{
+	float:right;
+	display:none;
+	margin-top:27px;
+}
+.message:hover .actions{
+	display:block;
+}
+.message:hover .actions a{
+	cursor:pointer;
+	color:#888;
+}
+
+.conversation-configuration{
+	padding:16px;
+}
+
+.conversation-configuration .large-icon{
+	margin:12px 0;
+	line-height:200px;
+	font-size:200px;
+	width:100%;
+	text-align:center;
+}
+.conversation-configuration h3{
+	text-align:center;
+}
+.conversation-configuration p{
+text-align:center;
+}
+
+.conversation-configuration form{
+	width:600px;
+	margin:32px auto;
+	display:block;
+}
+.conversation-configuration label{
+	float: left;
+    padding: 16px;
+    width:100px;
+}
+.conversation-configuration input[type=password]{
+	margin:8px 0;
+	width: 400px;
+	display:block;
+	padding: 16px;
+}
+.conversation-configuration input[type=submit]{
+	/*margin-left:16px;*/
+	margin:auto;
+	display:block;
+}
+
+.conversation-unlock input[type=password]{
+	padding:16px;
+	margin:8px 0;
+	display:block;
+}
+
+.topbar .right .actions .count{
+	position: absolute;
+background: red;
+border-radius: 100%;
+padding: 0 6px;
+color: #FFF;
+font-size: 10px;
+bottom: 23px;
+right: -7px;
+}
+
+
+.topbar .right .actions .gatherings{
+	margin-top:-1px;
+}

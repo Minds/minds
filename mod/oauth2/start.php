@@ -46,6 +46,8 @@ function oauth2_init() {
     $js = elgg_get_simplecache_url('js', 'oauth2/oauth2');
     elgg_register_simplecache_view('js/oauth2/oauth2');
     elgg_register_js('oauth2', $js, 'footer');
+	
+	elgg_extend_view('css/elgg', 'oauth2/css');
 
     // Register a cron to cleanup expired tokens
     elgg_register_plugin_hook_handler('cron', 'hourly', 'oauth2_expire_tokens');

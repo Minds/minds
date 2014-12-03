@@ -10,12 +10,16 @@ minds.nodes.init = function() {
 	$(document).on('click', '#tier-select-button', function(e){
 		e.preventDefault();
 		$('.domain').removeClass('hide');
-		$(window).scrollTop($('.domain').offset().top);
-		
+		//$(window).scrollTop($('.domain').offset().top);
+		$(window).scrollTop(50);
+
 		$('.domain .cell input').enable();
 		
 		minds.nodes.tier = $(this).attr('data-guid');
 		minds.nodes.price = $(this).data('price');
+		
+		if($('input[name=tier_guid]').length != 0)
+			$('input[name=tier_guid]').val(minds.nodes.tier);
 		
 		if($(this).data('price') == 0){
 			$('.domain').show();
@@ -57,10 +61,21 @@ minds.nodes.init = function() {
 	 * @todo should we reserver?
 	 */
 	$(document).on('keyup', '.domain input', function(e){
-		e.preventDefault();
+		
+		
+		/*if( $(this).val() != "" ) {
+			var regx = /^[A-Za-z0-9\b]+$/;
+			if (!regx.test($(this).val())) {
+				$(this).val($(this).val().replace(/^[A-Za-z0-9\b]+$/, ''));
+				//e.preventDefault();
+				//return false;
+			}
+		}*/
+		$(this).val($(this).val().replace(/[^a-z0-9\-]/ig,"-"));
 		
 		//remove spaces
-		if (e.keyCode == 32) { 
+		if (e.keyCode == 32) {
+			e.preventDefault();
       		$(this).val($(this).val().replace(/ +?/g, ''));
 		}
 		

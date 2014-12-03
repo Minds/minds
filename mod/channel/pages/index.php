@@ -19,15 +19,48 @@ $offset = get_input('offset', '');
 
 $title = elgg_echo('channels');
 
-$options = array('type' => 'user', 'full_view' => false, 'limit'=>$limit);
+$options = array('type' => 'user', 'full_view' => false, 'limit'=>$limit, 'masonry'=>false, 'list_class'=>'users-list');
 switch ($vars['page']) {
 	case 'subscribers':
-		$subscribers = get_user_friends_of($page_owner->guid, '', $limit, $offset);
-		$content = elgg_view_entity_list($subscribers,$vars, $offset, $limit, false, false,false);
+		$db = new minds\core\data\call('friendsof');
+		$subscriptions = $db->getRow($pageowner->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+		$users = array();
+		foreach($subscribers as $guid => $subscription){
+			if(is_numeric($subscribers)){
+				//this is a local, old style subscription
+				$users[] = new minds\entities\user($guid);
+				continue;
+			} 
+			
+			$users[] = new minds\entities\user(json_decode($subscribers,true));
+		}
+		
+		$content = elgg_view_entity_list($users,$options, $offset, $limit, false, false,false);
 		break;
 	case 'subscriptions':
-		$subscriptions = get_user_friends($page_owner->guid, '', $limit, $offset);
-                $content = elgg_view_entity_list($subscriptions,$vars, $offset, $limit, false, false,false);
+		$db = new minds\core\data\call('friends');
+		$subscriptions = $db->getRow($page_owner->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+		$users = array();
+		foreach($subscriptions as $guid => $subscription){
+			if(is_numeric($subscription)){
+				//this is a local, old style subscription
+				$users[] = new minds\entities\user($guid);
+				continue;
+			} 
+			
+			$users[] = new minds\entities\user(json_decode($subscription,true));
+		}
+		$content = elgg_view_entity_list($users,$options, $offset, $limit, false, false,false);
+		break;
+	case 'featured':
+		$guids = minds\core\data\indexes::fetch('user:featured', array('limit'=>$limit, 'offset'=>$offset));
+		if(!$guids){
+			$content = ' ';
+			break;
+		}
+		$options['guids'] = $guids;
+		$options['load-next'] = end(array_keys($guids));		
+		$content = elgg_list_entities($options);
 		break;
 	case 'popular':
 		$options['limit'] = $limit;
@@ -36,10 +69,10 @@ switch ($vars['page']) {
 		break;
 	case 'trending':
 		//trending
-       		$options = array(
+       		$opts = array(
                 	'timespan' => get_input('timespan', 'day')
        	 	);
-	        $trending = new MindsTrending(null, $options);
+	        $trending = new MindsTrending(null, $opts);
 		$guids = $trending->getList(array('type'=>'user', 'limit'=>$limit, 'offset'=>(int) $offset));
 		$options['guids'] = $guids;
 		if($guids){

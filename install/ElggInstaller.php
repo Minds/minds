@@ -1102,7 +1102,7 @@ class ElggInstaller {
 	 */
 	protected function installDatabase() {
 		global $CONFIG;
-
+		
 		try{
 			$db = new minds\core\data\call(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
 			$db->installSchema();
@@ -1233,7 +1233,7 @@ class ElggInstaller {
 	 */
 	protected function saveSiteSettings($submissionVars) {
 		global $CONFIG;
-
+		
 		// ensure that file path, data path, and www root end in /
 		$submissionVars['path'] = sanitise_filepath($submissionVars['path']);
 		$submissionVars['dataroot'] = sanitise_filepath($submissionVars['dataroot']);
@@ -1294,8 +1294,8 @@ class ElggInstaller {
 		 */
 		$defaults = array(
 			'htmlawed',
-			'logbrowser',
-			'logrotate',
+			//'logbrowser',
+			//'logrotate',
 			'oauth2', 
 			'oauth_api', 
 			'channel', 
@@ -1304,7 +1304,6 @@ class ElggInstaller {
 			'tidypics', 
 			'archive', 
 			'embed',
-			'embed_extender',
 			'blog',
 			'thumbs',
 			'minds_search', 
@@ -1316,15 +1315,13 @@ class ElggInstaller {
 			'chat',
 			'notifications',
 			'orientation',
-			'mobile',
 			'minds'
 		);
+		
+		$db = new \minds\core\data\call('plugin');
 		foreach($defaults as $plugin_id){
 			try{
-				$plugin = new ElggPlugin($plugin_id);
-				$plugin->save();
-			//	$plugin->setPriority('last');
-				$plugin->activate();
+				$db->insert($plugin_id, array('type'=>'plugin', 'active'=>1, 'access_id'=>2));
 			} catch(Exception $e){
 				
 				var_dump($e);

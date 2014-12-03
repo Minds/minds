@@ -13,6 +13,8 @@ $newsfeed = new minds\core\data\call('newsfeed');
 $timeline = new minds\core\data\call('timeline');
 $indexes = new minds\core\data\call('entities_by_time');
 
+$indexes->removeRow('activity:user:100000000000000063'); exit;
+
 /*$groups = $indexes->getRow('group', array('limit'=>100000));
 
 foreach($groups as $guid => $ts){

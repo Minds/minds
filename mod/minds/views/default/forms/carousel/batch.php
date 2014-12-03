@@ -27,16 +27,39 @@ if(!isset($vars['items'])){
 		'limit' => 0
 	));
 	echo elgg_view('input/hidden', array('name'=>'owner_guid', 'value'=>0));
-	echo elgg_view('input/hidden', array('name'=>'oadmin', 'value'=>'admin'));
+	echo elgg_view('input/hidden', array('name'=>'admin', 'value'=>'admin'));
+	
+	if(!$items){
+		$item = new ElggFile();
+		$item->subtype = 'carousel_item';
+		$item->title = '';
+		$item->owner_guid = elgg_get_logged_in_user_guid();
+		$item->access_id = ACCESS_PUBLIC;
+		$item->save();
+		$items[] = $item;
+	}
+	
 } else {
 	$items = $vars['items'];
 	echo elgg_view('input/hidden', array('name'=>'owner_guid', 'value'=>elgg_get_page_owner_guid()));
+	
+	if(!$items){
+		$item = new minds\entities\carousel();
+		$item->title = '';
+		$item->owner_guid = elgg_get_logged_in_user_guid();
+		$item->access_id = ACCESS_PUBLIC;
+		$item->save();
+		$items[] = $item;
+	}
+	
 }
 
 //sort the tiers by price
 usort($items, function($a, $b){
 	return $a->order - $b->order;
 });
+
+
 
 echo '<div class="carousel-admin-items">';
 
@@ -70,6 +93,7 @@ foreach($items as $item){
 HTML;
 
 		echo elgg_view('input/plaintext', array('name'=>"$item->guid:title", 'value'=>$item->title, 'placeholder'=>'Type here..', 'style'=>'color:'.$item->color .'; background:'.$item->shadow, 'rows'=>1));
+		echo elgg_view('input/text', array('name'=>"$item->guid:subtitle", 'value'=>$item->subtitle, 'placeholder'=>'Type here..'));
 		echo elgg_view('input/hidden', array('name'=>"$item->guid:order", 'value'=>$item->order, 'id'=>"order"));
 	echo '</div>';
 }

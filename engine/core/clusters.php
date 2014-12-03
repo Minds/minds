@@ -4,7 +4,6 @@
  */
 namespace minds\core;
 
-use minds\entities;
 
 class clusters extends base{
 	
@@ -30,13 +29,14 @@ class clusters extends base{
 		\elgg_register_plugin_hook_handler('action', 'login', array($this, 'login'));
 		
 		\elgg_register_event_handler('create', 'all', array($this, 'createHook'));
+		
 	}
 	
 	/**
 	 * Called every minute so we can communicate with the rest of the cluster
 	 */
 	public function cron(){
-		
+	echo 1;	
 		error_log('running cron to talk to cluster');
 		
 		//assert our position on the network
@@ -52,72 +52,13 @@ class clusters extends base{
 				
 				
 			}catch(\Exception $e){
-		
+				var_dump($e);		
 				error_log('CLUSTER ERROR: '.$e);
 				
 			}
 			
 		}
 		
-	}
-	
-	public function login(){
-		//check if the select node is this one or not. 
-		$node_uri = \get_input('node');
-		if($node_uri == elgg_get_site_url() || "https://$node_uri" == elgg_get_site_url() || "http://$node_uri" == elgg_get_site_url()){
-			return true;
-		}
-		
-		$username = get_input('username');
-		$password = get_input('password');
-		
-		/**
-		 * Confirm autorization from the other node
-		 */
-		try{
-		 	$authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>$username, 'password'=>$password));
-		}catch(\Exception $e){
-
-			//$db = new data\call('user_index_to_guid');
-			//$db->removeAttributes('clusters:master', array($node_uri));
-			
-			\register_error('Sorry, there was an issue communicating with the host');
-			return false;
-		}
-
-		
-		if($authenticate['error']){
-			\register_error('Sorry, we could not succesfully authenticate you.');
-			return false;
-		}
-		/**
-		 * Now create a pseudo account and import information from the user
-		 * 
-		 * @todo maybe integrate OAuth2.0 at the point
-		 */
-		$user = new entities\user($authenticate['guid']);
-		if(!$user->username){
-			while(get_user_by_username($username)){
-				$username .= rand(1000,9000);
-			}
-			$user->name = $authenticate['name'];
-			$user->username = $username;
-			$user->email = $authenticate['email'];
-			$user->base_node = $node_uri;
-			$user->salt = generate_random_cleartext_password(); // Note salt generated before password!
-			$user->password = generate_user_password($user, generate_random_cleartext_password()); //random password because this isn't actually a user registered here
-			$user->save();
-		}
-		
-		//now lets just check that
-		if($user->base_node && $user->base_node != $node_uri){
-			\register_error('Sorry, we could not authorize your login. This user belongs to another base node.');
-			return false;
-		}
-		
-		\login($user);
-		
-		return false; //it has to be false for some odd reason.
 	}
 	
 	/**
@@ -175,7 +116,86 @@ class clusters extends base{
 		return json_decode($result, true);	
 		
 	}
+	
+	public function login(){
+		//check if the select node is this one or not. 
+		$node_uri = \get_input('node');
+		if($node_uri == elgg_get_site_url() || "https://$node_uri" == elgg_get_site_url() || "http://$node_uri" == elgg_get_site_url()){
+			return true;
+		}
 
+		$username = get_input('username');
+		$password = get_input('password');
+		
+		/**
+		 * Confirm autorization from the other node
+		 */
+		try{
+		 	$authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>$username, 'password'=>$password));
+			if(!$authenticate){
+				//try again forcing https...
+				$node_uri = str_replace('http://', 'https://', $node_uri);
+				 $authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>$username, 'password'=>$password));
+			}
+				
+		}catch(\Exception $e){
+
+			//$db = new data\call('user_index_to_guid');
+			//$db->removeAttributes('clusters:master', array($node_uri));
+			
+			\register_error('Sorry, there was an issue communicating with the host');
+			return false;
+		}
+
+		
+		if(!$authenticate || $authenticate['error']){
+			\register_error('Sorry, we could not succesfully authenticate you.');
+			return false;
+		}
+		/**
+		 * Now create a pseudo account and import information from the user
+		 * 
+		 * @todo maybe integrate OAuth2.0 at the point
+		 */
+		
+		$user = new \minds\entities\user($authenticate['guid']);
+		if(!$user->username){
+			while(get_user_by_username($username)){
+				$username .= rand(1000,9000);
+			}
+			$user->name = $authenticate['name'];
+			$user->username = $authenticate['username'];
+			$user->email = $authenticate['email'];
+			$user->base_node = $node_uri;
+			$user->salt = generate_random_cleartext_password(); // Note salt generated before password!
+			$user->password = generate_user_password($user, generate_random_cleartext_password()); //random password because this isn't actually a user registered here
+			$user->save();
+		}
+		
+		//now lets just check that
+		if($user->base_node && $user->base_node != $node_uri){
+			\register_error('Sorry, we could not authorize your login. This user belongs to another base node: '. $user->base_node);
+			return false;
+		}
+		
+		$user->name = $authenticate['name'];
+		$user->username = $authenticate['username'];
+		$user->email = $authenticate['email'];
+		$user->avatar_url = $authenticate['avatar_url'];
+		$user->access_id = 2;
+		$user->enable();	
+	
+		if(!\login($user)){
+			\register_error('Sorry, we could not authorize your login.');
+			return false;
+		}
+		
+		//now lets sync up this users newsfeed.
+		$this->syncFeeds($user); 
+		$this->syncCarousels($user);
+		
+		return false; //it has to be false for some odd reason.
+	}
 
 	/**
 	 * Generate a signature
@@ -235,9 +255,13 @@ class clusters extends base{
 					$payload = json_decode($json, true);
 					$secret = $payload['secret'];
 					$host = $payload['host'];
-					
+					$export = $entity->export();
+					foreach($export as $k => $v){
+						if(is_array($v))
+							$export[$k] = json_encode($export[$k]);
+					}
 					try{
-						$val = $this->call('POST', $host, '/newsfeed/api/'.$guid, $entity->export(), $secret);
+						$val = $this->call('POST', $host, '/newsfeed/api/'.$guid, $export, $secret);
 					}catch(\Exception $e){
 						\register_error($e->getMessage());
 					}
@@ -249,6 +273,61 @@ class clusters extends base{
 			case 'object':
 			default:
 				//currently not supported
+		}
+	}
+	
+	/**
+	 * Sync activity feeds
+	 * 
+	 * @param object $user - the user object
+	 */
+	public function syncFeeds($user){
+		
+		//first, lets check that it is an external account
+		if(!$user instanceof \minds\entities\user && !$user->base_node)
+			return false;
+	
+		foreach(array('network', 'user') as $feed){	
+			//gather the feeds (not all, just 30 of the latest)
+			try{
+				$data = $this->call("GET", $user->base_node, "newsfeed/$feed/$user->guid", array('limit'=>30, 'view'=>'json'));
+			}catch(\Exception $e){}
+			if($data){
+				foreach($data['activity'][''] as $activity){
+					$new = new \minds\entities\activity($activity);
+					$new->external = true;
+					$new->indexes = array(
+						"activity:$feed:$user->guid"
+					);
+					$new->save();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Sync carousels
+	 */
+	public function syncCarousels($user){
+		//first, lets check that it is an external account
+		if(!$user instanceof \minds\entities\user && !$user->base_node)
+			return false;
+		
+		try{
+			$data = $this->call("GET", $user->base_node, "$user->username/api/carousels", array('limit'=>30));
+		}catch(\Exception $e){}
+		
+		if($data){
+			foreach($data as $d){
+				$item = new \minds\entities\carousel();
+				$item->guid = $d['guid'];
+				$item->title = $d['title'];
+				$item->href = $d['href'];
+				$item->ext_bg = $d['bg'];
+				$item->owner_guid = $user->guid;
+				$item->access_id = ACCESS_PUBLIC;
+				$item->save();
+			}
 		}
 	}
 		

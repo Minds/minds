@@ -36,10 +36,10 @@ class notifications extends \ElggPlugin{
 		
 		//\elgg_register_event_handler('create', 'object', 'notifications_notify');
 		
-		$notification_js = \elgg_get_simplecache_url('js', 'notifications/notify');
-		\elgg_register_js('elgg.notifications', $notification_js, 'footer');
-		\elgg_load_js('elgg.notifications');
+		\elgg_extend_view('js/elgg','js/notifications/notify');
 		\elgg_extend_view('css/elgg','notifications/css');
+		
+		\elgg_register_event_handler('create', 'all', array($this, 'createHook'));
 		
 	
 		/*$actions_base = elgg_get_plugins_path() . 'notifications/actions';
@@ -218,6 +218,31 @@ class notifications extends \ElggPlugin{
 				$mail->subscription = $type;
 				$mail->send();
 				break;
+		}
+	}
+	
+	/**
+	 * Create hook
+	 * @return void
+	 */
+	public function createHook($hook, $type, $params, $return = NULL){
+		if($type == 'activity'){
+			if (preg_match_all('!@(.+)(?:\s|$)!U', $params->message, $matches)){
+				$usernames = $matches[1];
+				$to = array();
+				foreach($usernames as $username){
+					$user= new \minds\entities\user($username);
+					if($user->guid)
+						$to[] = $user->guid;
+				}
+				if($to)
+					\elgg_trigger_plugin_hook('notification', 'activity', array(
+						'to'=>$to, 
+						'object_guid' => $params->guid,
+						'notification_view' => 'tag',
+						'description' => $params->message
+						));
+			}
 		}
 	}
 	

@@ -280,4 +280,8 @@ div.register-popup {
 .node-button{
 	min-width:0;
 }
+
+.elgg-form-nodes-upgrade .card-input{
+	width:990px;
+	margin:auto;
 }

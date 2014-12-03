@@ -17,14 +17,19 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 2);
-curl_setopt($ch,CURLOPT_TIMEOUT_MS,1000);
+curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 3);
+curl_setopt($ch,CURLOPT_TIMEOUT_MS,2000);
 $image = curl_exec($ch);
 $errorno = curl_errno($ch);
 curl_close($ch);
 
 if($errorno){
-	var_dump($errorno);
+	header('Content-type: image/jpeg');
+header('Access-Control-Allow-Origin: *');	
+	$img = imagecreatetruecolor(120, 1);
+	$bg = imagecolorallocate ( $img, 255, 255, 255 );
+	imagefilledrectangle($img,0,0,120,1,$bg);
+	imagejpeg($img,NULL,100);
 	die();
 }
 

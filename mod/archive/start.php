@@ -39,8 +39,8 @@ function minds_archive_init() {
 	elgg_extend_view('page/elements/sidebar', 'archive/featured');
 
 	elgg_extend_view('js/elgg', 'archive/js');
-	elgg_register_js('player', '//vjs.zencdn.net/4.6.3/video.js','head', 10);
-	elgg_register_css('player', '//vjs.zencdn.net/4.6.3/video-js.css');
+	elgg_register_js('player', '//vjs.zencdn.net/4.9.1/video.js','head', 10);
+	elgg_register_css('player', '//vjs.zencdn.net/4.9.1/video-js.css');
 	elgg_register_js('player-res', elgg_get_site_url().'mod/archive/player/video.js.res.js');
 	elgg_register_js('player-vast', elgg_get_site_url().'mod/archive/player/video.vast.js', 'head', 602);
 	elgg_register_js('player-vast-client', elgg_get_site_url().'mod/archive/player/vast-client.js', 'head', 601);
@@ -69,12 +69,29 @@ function minds_archive_init() {
 
 
     //site menu
-	elgg_register_menu_item('site', array(
+	/*elgg_register_menu_item('site', array(
 			'name' => elgg_echo('minds:archive'),
 			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
 			'href' => 'archive/featured',
 			'text' => '<span class="entypo">&#59392;</span> Archive',
 			'title' =>  elgg_echo('minds:archive'),
+			'priority' => 4
+	));*/
+	
+	elgg_register_menu_item('site', array(
+			'name' => 'video',
+			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
+			'href' => 'archive/featured/video',
+			'text' => '<span class="entypo">&#58277;</span> Videos',
+			'title' =>  elgg_echo('minds:archive:video'),
+			'priority' => 4
+	));
+	elgg_register_menu_item('site', array(
+			'name' => 'images',
+			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
+			'href' => 'archive/featured/albums',
+			'text' => '<span class="entypo">&#128247;</span> Images',
+			'title' =>  elgg_echo('minds:archive:images'),
 			'priority' => 4
 	));
 		
@@ -197,6 +214,8 @@ function minds_archive_page_handler($page) {
 			include('pages/archive/top.php');
 			break;
 		case 'featured':
+			if(isset($page[1]))
+				set_input('subtype', $page[1]);
 			include('pages/archive/featured.php');
 			break;	
 		case 'trending':
@@ -221,13 +240,16 @@ function minds_archive_page_handler($page) {
 			break;
 		case 'thumbnail':
 			$entity = get_entity($page[1]);
-			$user = $entity->getOwnerEntity();
+			if(!$entity){
+				forward(elgg_get_site_url() . '_graphics/placeholder.png');
+			}
+			$user = $entity->getOwnerEntity(false);
 			if(isset($user->legacy_guid) && $user->legacy_guid)
 				$user_guid = $user->legacy_guid;
 			else 
 				$user_guid = $user->guid;
-
-			 $user_path = date('Y/m/d/', $user->time_created) . $user_guid;
+			
+			$user_path = date('Y/m/d/', $user->time_created) . $user_guid;
 			
 			$data_root = $CONFIG->dataroot;
 			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
@@ -251,7 +273,6 @@ function minds_archive_page_handler($page) {
 					break;
 			}
 			
-		
 			$contents = @file_get_contents($filename);
 
 			header("Content-type: image/jpeg");

@@ -3,7 +3,7 @@
 $activity = $vars['entity'];
 
 $owner_link = '';
-$owner = $activity->getOwnerEntity();
+$owner = $activity->getOwnerEntity(true);
 if ($owner) {
 	$owner_link = elgg_view('output/url', array(
 		'href' => $owner->getURL(),
@@ -17,7 +17,7 @@ $date = elgg_view_friendly_time($vars['entity']->time_created);
 
 $subtitle = "$owner_link $date";
 
-$header = "<div class=\"head\">$owner_link &bull; $date</div>";
+$header = "<div class=\"head\">$owner_link $date</div>";
 
 $body = "";
 

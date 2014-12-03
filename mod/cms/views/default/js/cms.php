@@ -12,8 +12,10 @@ minds.cms.init = function() {
     			console.log(data);
     			
     			$('.cms-sections').append(data);
-    			$('.cms-sections').find('.icon-colour input').minicolors();
-    		}
+    			if(jQuery().minicolors) { 
+				$('.cms-sections').find('.icon-colour input').minicolors();
+			}    
+		}
     	});
     });
     
@@ -58,7 +60,9 @@ minds.cms.init = function() {
     });
 
 	if(jQuery().minicolors) {    
-    		$('.icon-colour input').minicolors();
+    		$('.icon-colour input').minicolors({
+    			defaultValue : $('.icon-colour input').val()
+    		});
 	}
     $(document).on('change', '.icon-colour input', function(){
     	var section = $(this).parents('section')[0];
@@ -110,6 +114,7 @@ minds.cms.update = function(section){
 		rightH2: section.find('.right .h2').val(),
 		rightP: section.find('.right .p').val(),
 		color: section.find('.icon-colour input').val(),
+		href: section.find('input[name=href]').val(),
 		position: section.find('input[name=position]').val()
 	};
 

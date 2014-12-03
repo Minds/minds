@@ -2,10 +2,10 @@
 
 $node = $vars['entity'];
 
-$tier = $node->getTier()->title;
+$tier = $node->getTier();
 $own_domain = $node->allowedDomain() ? 'yes' : 'no';
 $expire = $node->expires();
-$stats= "<div class='stats'><p><b>Tier: </b>$tier</p>
+$stats= "<div class='stats'><p><b>Tier: </b>$$tier->price</p>
                 <p><b>Domain?: </b> $own_domain</p>
                 <p><b>Expires: </b> $expire days</p>
 ";
@@ -23,6 +23,11 @@ if (!$vars['hide_buttons']) {
                     $setup_link =  elgg_view('output/url', array('text'=>'Setup', 'href'=>'nodes/node/'.$node->guid, 'class'=>'elgg-button elgg-button-action'));
                     $content = $setup_link;
             }
+            
+			if($node->getTier()->price == 0){
+				//upgrade icon
+				$content .= " ". elgg_view('output/url', array('text'=>'Upgrade', 'href'=>'nodes/upgrade/'.$node->guid, 'class'=>'elgg-button elgg-button-action node-button'));
+			}
    // } else {
             //promt for payment
           //  $order = $node->getOrder();

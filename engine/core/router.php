@@ -13,7 +13,8 @@ class router{
 		"/cache" => "minds\\pages\\cache",
 		"/contact" => "minds\\pages\\contact",
 		"/newsfeed" => "minds\\pages\\newsfeed\\newsfeed",
-		"/subscriptions" => "minds\\pages\\subscriptions\\index"
+		"/subscriptions" => "minds\\pages\\subscriptions\\index",
+		"/assets" => "minds\\pages\\assets"
 	);
 	
 	/**
@@ -26,6 +27,8 @@ class router{
 		if(!$uri)
 			$uri = strtok($_SERVER["REQUEST_URI"],'?');
 			
+		$this->detectContentType();
+		
 		$route = rtrim($uri, '/');
 		$segments = explode('/', $route);
 		$method = $method ? $method : strtolower($_SERVER['REQUEST_METHOD']);
@@ -94,6 +97,15 @@ HTML;
 						));
 				echo \elgg_view_page('404', $body);
 			}
+		}
+	}
+	
+	/**
+	 * Detect the content type and apply the viewtype
+	 */
+	public function detectContentType(){
+		if(isset($_SERVER["CONTENT_TYPE"]) && $_SERVER["CONTENT_TYPE"] == 'application/json'){
+			\elgg_set_viewtype('json');
 		}
 	}
 	

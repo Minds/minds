@@ -845,9 +845,12 @@ abstract class ElggEntity extends ElggData implements
 	 * @return ElggEntity The owning entity
 	 */
 	public function getOwnerEntity($brief = false) {
-        if($brief && isset($this->ownerObj)){
-			$owner = json_decode($this->ownerObj);
-			if($owner->name){
+        	if($brief && isset($this->ownerObj)){
+			$owner = is_array($this->ownerObj) ? $this->ownerObj : json_decode($this->ownerObj, true);
+			if(is_object($this->ownerObj)){
+				$owner = json_decode(json_encode($this->ownerObj), true);
+			}
+			if(isset($owner['name']) || $owner->name){
 				return new ElggUser($owner);
 			}  else {
 				if($this->canEdit()){
@@ -1554,9 +1557,9 @@ abstract class ElggEntity extends ElggData implements
 	
 		$db->insert($this->type.':featured', array($this->featured_id => $this->getGUID()));
 		$db->insert($this->type. ':'.$this->subtype.':featured', array($this->featured_id => $this->getGUID()));
-		if($this->super_subtype)
-			 $db->insert($this->type.':'.$this->super_subtype.':featured', array($this->featured_id => $this->getGUID()));
-		
+		if(in_array($this->subtype, array('video', 'image', 'album'))){
+			$db->insert('object:archive:featured', array($this->featured_id => $this->guid));
+		}
 	
 		$this->featured = 1;	
 		$this->save();

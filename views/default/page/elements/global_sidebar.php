@@ -1,8 +1,8 @@
 <?php 
 $class = '';
 
-if(elgg_get_context() == 'admin' || elgg_get_context() == 'anypage'){
-	$class	= 'show';
+if(elgg_is_logged_in() && (elgg_get_context() == 'admin' || elgg_get_context() == 'anypage' || (isset($_COOKIE['sidebarOpen']) && $_COOKIE['sidebarOpen'] == 'true'))){
+	$class	= 'show show-default';
 }
 ?>
 <div class="global-sidebar <?php echo $class; ?>">
@@ -22,5 +22,5 @@ if(elgg_get_context() == 'admin' || elgg_get_context() == 'anypage'){
 		<?php echo elgg_view_menu('actions'); ?>
 		
 		<!-- We have a footer too.. -->
-		<?php echo elgg_view('page/elements/global_sidebar_footer'); ?>
+		<?php //echo elgg_view('page/elements/global_sidebar_footer'); ?>
 </div>

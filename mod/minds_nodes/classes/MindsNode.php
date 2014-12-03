@@ -128,7 +128,8 @@ class MindsNode extends ElggObject{
 	 */
 	public function renameNode($new_domain){
 		global $CONFIG;
-		$this->old_domain = $this->domain;
+		if(!$this->old_domain)
+			$this->old_domain = $this->domain;
 	
 	//	$this->domain = 'heliski.minds.com';
 	//	return $this->save();	

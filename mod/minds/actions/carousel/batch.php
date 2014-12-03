@@ -10,6 +10,7 @@ if(get_input('thin'))
 	elgg_set_plugin_setting('style','thin', 'minds');
 
 if(get_input('admin')){
+	admin_gatekeeper();
 	if(get_input('add')){
 		$item = new ElggFile();
 		$item->subtype = 'carousel_item';
@@ -35,7 +36,8 @@ if(get_input('admin')){
 
 	$items = elgg_get_entities(array(
 		'type' => 'object',
-		'subtype' => 'carousel', 
+		'subtype' => 'carousel',
+		'owner_guid'=>get_input('owner_guid', elgg_get_logged_in_user_guid()), 
 		'limit' => 100
 	));
 }
@@ -49,6 +51,7 @@ foreach($items as $k=>$item){
 	}
 	
 	$item->title = str_replace("$item->guid:", '', get_input("$item->guid:title"));
+	$item->subtitle = str_replace("$item->guid:", '', get_input("$item->guid:subtitle"));
 	$item->shadow = str_replace("$item->guid:", '', get_input("$item->guid:shadow"));
 	$item->order = str_replace("$item->guid:", '', get_input("$item->guid:order"));
 	$item->color = str_replace("$item->guid:", '', get_input("$item->guid:color"));

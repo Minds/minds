@@ -62,6 +62,7 @@ $english = array(
 	'channels:label:suggested' => 'Suggested',
 	'channels:label:online' => 'Online', 
 	'channels:label:trending' => 'Trending',
+	'channels:label:featured' => 'Featured',
 	
 	'channels:searchtag' => 'Search by tags',
 	'channels:searchname' => 'Search by name',
@@ -93,6 +94,7 @@ $english = array(
 	'channel:edit:location:label' => 'Place',
 	'channel:edit:email:label' => 'Email',
 	'channel:edit:description:label' => 'About',
+	'channel:edit:website:label' => 'Website',
 
 );
 

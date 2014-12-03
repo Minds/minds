@@ -6,17 +6,32 @@
 	 elgg.provide('minds');
 	 
 	 minds.init = function() {	
-	 	var sidebarOpen = false;
+	 	var sidebarOpen = $.cookie('sidebarOpen') == "true" ? true : false;
+	 	if($(window).width() < 720)
+	 		sidebarOpen = false;
+
+		if($("select[name=node]").length != 0)	
+		$("select[name=node]").select2();
+	 		
 	 	$(document).on('click', '.menu-toggle', function(){
+	 		$('.hero').removeClass('sidebar-active-default');
+	 		$('.global-sidebar').removeClass('show-default');
 	 		if(sidebarOpen){
 	 			$('.global-sidebar').removeClass('show');
 	 			$('.hero').removeClass('sidebar-active');
 	 			sidebarOpen = false;
+	 		//	$.removeCookie('sidebarOpen'); 
+	 			$.cookie('sidebarOpen', 'false', { path: '/' });
 	 		} else {
 	 			$('.global-sidebar').addClass('show');
 	 			$('.hero').addClass('sidebar-active');
 	 			sidebarOpen = true
+	 			$.cookie('sidebarOpen', 'true', { path: '/' });
 	 		}
+	 	});
+	 	
+	 	$('img').error(function(){
+	 		$(this).remove();
 	 	});
 
 		/*$('.global-sidebar .elgg-menu-page li').toggle(function(){
@@ -28,7 +43,7 @@
 		});*/
 
 		if(!elgg.is_logged_in() && !$.cookie('promptSignup')){
-			setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
+		//	setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
 		}
 		$(document).on('click', "#minds-signup-popup .cancel", function(){
 			$.fancybox.close();
@@ -38,8 +53,12 @@
 		 * Make our newsfeed icons centred @todo make less hacky
 		 */
 		$(window).on("load resize", function(){
-			$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
-			 $('.carousel-inner > .item > img').css('margin-top', ($('.carousel-inner > .item').height() - $('.carousel-inner > .item > img').height()) /2); 
+			setTimeout(function(){
+
+				$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
+				$('.channel .carousel-inner > .item > img').css('margin-top', ($('.carousel-inner > .item').height() - $('.carousel-inner > .item > img').height()) /2); 
+				
+			}, 2000);
 		});
 	
 	 	
@@ -363,7 +382,7 @@
 
 		$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			
-		if(loc.indexOf('trending') > -1 <?php //if(elgg_is_active_plugin('analytics')){ echo "|| loc.indexOf('view') > -1"; }?> || $params.filter == 'trending' || loc.indexOf('search') > -1){
+		if(loc.indexOf('trending') > -1 <?php if(minds\core\plugins::isActive('analytics')){ echo "|| loc.indexOf('view') > -1"; }?> || $params.filter == 'trending' || loc.indexOf('search') > -1){
 			offset = $list.find('.elgg-list').children().length;
 		} else {
 			offset = $('.load-more').attr('data-load-next');
@@ -398,7 +417,7 @@
 				
 					var el = $(data).contents().unwrap();
 					
-					if(loc == elgg.get_site_url()){
+					if(loc == elgg.get_site_url() || loc == elgg.get_site_url() + 'blog/list/featured' || loc == elgg.get_site_url() + 'channels/featured'){
 						offset = $(data).find('li.elgg-item:last').attr('featured_id');
    					} else {
 						offset = $(data).find('li.elgg-item:last').attr('id'); 

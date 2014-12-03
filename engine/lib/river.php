@@ -22,7 +22,7 @@
  */
 function add_to_river($view, $action_type, $subject_guid, $object_guid, $access_id = "",
 $posted = 0, $annotation_id = 0, $timelines = array()) {
-
+	return false;
 	global $CONFIG;
 	
 	// use default viewtype for when called from web services api

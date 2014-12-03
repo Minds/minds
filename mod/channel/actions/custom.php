@@ -6,21 +6,19 @@
 $guid = get_input('guid');
 $user = get_entity($guid, 'user');
 
-
 if(get_input('remove_bg') == 'yes'){
 	
 	$thumb = new ElggFile;
 	$thumb->owner_guid = $guid;
 	$thumb->setFilename('profile/background_thumb.jpg');
 	if($thumb->exists())
-	$thumb->delete();
+		@unlink($thumb->getFilenameOnFilestore());
 	
 	$file = new ElggFile;
 	$file->owner_guid = $guid;
 	$file->setFilename('profile/background.jpg');
 	if($file->exists())
-	$file->delete();
-	
+		@unlink($thumb->getFilenameOnFilestore());
 		
 	$user->background = false;
 	$user->save();
@@ -63,15 +61,15 @@ if ($guid) {
 	}
 
 	$form_vars = channel_custom_vars($user);
-
 	foreach($form_vars as $k => $v){
 		$user->$k = get_input($k, $v);
 	}
-
+	
 	$user->background_timestamp = time();
 		
-	$user->save();
-
+	$guid = $user->save();
+	if($guid == $_SESSION['user']->guid)
+		$_SESSION['user'] = $user;
 }
 system_message(elgg_echo('channel:custom:saved'));
 forward($user->getURL());

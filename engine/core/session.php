@@ -56,12 +56,20 @@ class session extends base{
 		}
 		
 		if(isset($_SESSION['user'])){
-			setcookie('loggedin', 1, time() + 3600, '/'); 
+			setcookie('loggedin', 1, time() + (60 * 60 * 24 * 30), '/'); 
 			cache_entity($_SESSION['user']);
 		} else { 
-			setcookie('loggedin', 0, time() + 3600, '/');
+			setcookie('loggedin', 0, time() + (60 * 60 * 24 * 30), '/');
 		}
-		
+
+
+		if(!isset($_COOKIE['loggedin'])){
+			setcookie('loggedin', 0, time() + (60 * 60 * 24 * 30), '/');
+			$_SESSION = array();
+                        unset($_COOKIE[session_name()]);
+                        session_destroy();
+		}	
+	
 		header('X-Powered-By: Minds', true);
 		
 		register_shutdown_function(array($this, 'shutdown'));

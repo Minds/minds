@@ -63,6 +63,18 @@ $body_input = elgg_view('input/longtext', array(
 	'value' => $vars['description']
 ));
 
+$header_label = elgg_echo('blog:header');
+$header_input = elgg_view('input/file', array(
+	'name' => 'header',
+	'id' => 'blog_header'
+));
+
+$header_remove = '';
+if($blog->header_bg){
+	$header_remove = elgg_view('input/checkbox', array('name'=>'removeHeader'));
+	$header_remove .= "remove header";
+}
+
 $save_status = elgg_echo('blog:save_status');
 if ($vars['guid']) {
 	$entity = get_entity($vars['guid']);
@@ -131,6 +143,11 @@ $draft_warning
 <div>
 	<label for="blog_description">$body_label</label>
 	$body_input
+</div>
+
+<div>
+	<label for="blog_header">$header_label</label>
+	$header_input $header_remove
 </div>
 
 <div>

@@ -35,7 +35,8 @@ elgg.autocomplete.init = function() {
 								
 							guids.push(item.guid);
 							if(item.type == 'user'){
-								div = item.name + '<span class="subtype">user</span>';
+								avatar = '<img src="'+elgg.get_site_url() + 'icon/'+item.guid+'/tiny" class="tiny-icon"/>';
+								div = avatar + item.name + '<span class="subtype">user</span>';
 								div += '<div class="subtitle">'+ item.username +'</div>';
 							} else {
 								div = item.title + '<span class="subtype">' + item.subtype +'</span>';
@@ -60,6 +61,7 @@ elgg.autocomplete.init = function() {
 			} else if($(this).attr('data-type') == 'user'){
 			//	console.log(suggestion);
 				$(this).val(suggestion.data.username);
+				$(this).trigger('minds-ac-select', { username: suggestion.data.username });
 			}	
 		}
 	});

@@ -34,7 +34,6 @@ body {
 <?php // force vertical scroll bar ?>
 html, body {
 	height: 100%;
-	margin-bottom: 1px;
 }
 img {
 	border-width:0;

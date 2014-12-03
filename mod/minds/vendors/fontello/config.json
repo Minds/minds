@@ -187,6 +187,12 @@
       "src": "entypo"
     },
     {
+      "uid": "2c5335c6e56b876139d7a58ab2f4b2fe",
+      "css": "bell",
+      "code": 59413,
+      "src": "entypo"
+    },
+    {
       "uid": "97902f87200ce74d181044df02a0458d",
       "css": "attention",
       "code": 59402,
@@ -238,6 +244,18 @@
       "uid": "1e099a876c8a6a83f10c9bafa9886614",
       "css": "mic",
       "code": 127908,
+      "src": "entypo"
+    },
+    {
+      "uid": "2f750a9be253e8e451209574336e7020",
+      "css": "mute",
+      "code": 59412,
+      "src": "entypo"
+    },
+    {
+      "uid": "ef51920c7a9bed4d87f53709db115e34",
+      "css": "sound",
+      "code": 59411,
       "src": "entypo"
     },
     {
@@ -532,6 +550,12 @@
       "uid": "21adad41ffebf469b2370d26bcb8a3c4",
       "css": "linkedin-circled",
       "code": 62233,
+      "src": "entypo"
+    },
+    {
+      "uid": "0fbfb1cd7a847c88ea4c141d0e1bbdb5",
+      "css": "instagram",
+      "code": 59410,
       "src": "entypo"
     },
     {

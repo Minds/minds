@@ -10,6 +10,8 @@ use minds\plugin\gatherings\entities;
 
 class gatherings extends core\page implements interfaces\page{
 	
+	public $context = 'gatherings';
+	
 	/**
 	 * Reading messages and getting lists of messages
 	 */

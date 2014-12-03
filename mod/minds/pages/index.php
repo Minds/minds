@@ -70,6 +70,38 @@ $signup_form = elgg_is_logged_in() ? '' : <<<HTML
 	</div>
 HTML;
 
+if(in_array(elgg_get_site_url(), array('https://www.minds.com/','https://www.minds.io/','http://127.0.0.1/'))){
+	
+	$signup_form = elgg_is_logged_in() ? '' : <<<HTML
+		<div class="com-ui">
+		
+			<div class="frontpage-signup node">
+				<form action="nodes/launch" method="GET">
+					<div class="domain-input">
+						<input type="text" name="domain" placeholder="Enter your new site address" autocomplete="off"/>
+						<div class="url-domain">.minds.com</div>
+					</div>
+					<input type="submit" value="Create site" class="elgg-button elgg-button-submit"/>
+				</form>
+			</div>
+	
+			<div class="frontpage-signup user">
+				<form action="register" method="GET">
+					<div class="user-input">
+						<div class="url-domain">www.minds.com/</div>
+						<input type="text" name="u" placeholder="you" autocomplete="off"/>
+					</div>
+					<input type="submit" value="Create channel" class="elgg-button elgg-button-submit"/>
+				</form>
+			</div>
+		
+		</div>
+HTML;
+	
+	
+}
+
+
 /** Hacky and shouldn't be here **/
 $donations_box = '';
 $paypal = elgg_get_plugin_setting('paypal', 'minds');

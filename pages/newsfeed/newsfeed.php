@@ -95,11 +95,11 @@ class newsfeed extends core\page implements interfaces\page{
 			$pages[0] = 'network';
 		}
 		
-		if(!elgg_is_logged_in()){
-			$this->forward('login');
-		}
+		//if(!elgg_is_logged_in()){
+		//	$this->forward('login');
+		//}
 		
-		if(elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0){
+		if(!is_numeric($pages[0]) && \minds\core\session::isLoggedin() && elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0){
 			$pages[0] = 'featured';
 		}
 
@@ -156,8 +156,9 @@ class newsfeed extends core\page implements interfaces\page{
 				}
 				break;
 			case 'mine':
+			case 'user':
 				$options = array(
-					'owner_guid' => elgg_get_logged_in_user_guid()
+					'owner_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
 				);
 				break;
 			case 'all':
@@ -176,7 +177,7 @@ class newsfeed extends core\page implements interfaces\page{
 			case 'network':
 			default:
 				$options = array(
-					'network' => elgg_get_logged_in_user_guid()
+					'network' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
 				);
 		}
 		
@@ -184,7 +185,7 @@ class newsfeed extends core\page implements interfaces\page{
 		
 		$content .= core\entities::view(array_merge(array(
 			'type' => 'activity',
-			'limit' => 5,
+			'limit' => get_input('limit', 5),
 			'masonry' => false,
 			'prepend' => $post,
 			'list_class' => 'list-newsfeed'
@@ -300,15 +301,16 @@ class newsfeed extends core\page implements interfaces\page{
 						
 				}
 			case 'api':
-				
+				error_log('Answering api activity request');	
 				if(!isset($pages[1])){
+					error_log('feed guid not supplied');
 					echo json_encode(array('error'=>'You must supply the feed guid in the request uri'));
 					return false;
 				}
 				$subscriber_guid = $pages[1];
 				
 				$ia = elgg_set_ignore_access(true);
-				
+					
 				/**
 				 * First off, lets just verify our user exists, and is in fact subscribed to this user
 				 */
@@ -316,11 +318,12 @@ class newsfeed extends core\page implements interfaces\page{
 				$subscription = $db->getRow($subscriber_guid, array('limit'=> 1, 'offset'=>$_POST['owner_guid']));
 				
 				if(key($subscription) != $_POST['owner_guid']){
+					error_log('we are not a subscriber');
 					echo json_encode(array('error'=> "$subscriber_guid is not a subscriber."));
 					return true;
 				}
 				
-				$payload = json_decode($subscription, true);
+				$payload = json_decode(reset($subscription), true);
 				$secret = $payload['secret'];//the shared secret
 				
 				/**
@@ -332,9 +335,19 @@ class newsfeed extends core\page implements interfaces\page{
 				 */
 				$signature = \minds\core\clusters::generateSignature($_POST, $secret);
 				if($_SERVER['HTTP_X_MINDS_SIGNATURE'] != $signature){
+					error_log('wrong signature');
 					echo json_encode(array('error'=>'Incorrect signature. Please check the secret key'));
 					return false;
 				}
+
+				error_log(print_r($_POST['ownerObj'], true));
+				$activity = new \minds\entities\activity($_POST);
+				$activity->external = true;
+				$new->indexes = array(
+					'activity:network:'. $subscriber_guid 
+				);
+				$activity->save();
+
 
 				elgg_set_ignore_access($ia); //cancel access
 			break;

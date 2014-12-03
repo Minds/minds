@@ -16,7 +16,7 @@ and (max-width : 1260px) {
 
 @media all
 and (min-width : 0px)
-and (max-width : 1090px) {
+and (max-width : 1200px) {
 
 	 .minds-button-launch{
                 display:none;
@@ -26,6 +26,16 @@ and (max-width : 1090px) {
 @media all 
 and (min-width : 0px)
 and (max-width : 720px) {
+	
+	.sidebar-active-default{
+		margin-left:0 !important;
+	}
+	.sidebar-active-default .topbar{
+		width:100% !important;
+	}
+	.show-default{
+		display:none !important;
+	}
 
 
 	.elgg-list > li:hover .excerpt, .elgg-list > li:hover .elgg-menu{
@@ -72,6 +82,13 @@ and (max-width : 720px) {
 
 	.hero > .topbar .logo {
 		height:40px;
+	}
+	
+	.hero > .topbar .logo h1{
+		font-size:14px;
+	}
+	.logo .tip-logo{
+		display:none;
 	}
 
 	.hero > .topbar > .inner .menu-toggle {
@@ -200,4 +217,6 @@ and (max-width : 720px) {
 	.sidebar{
 		display:none;
 	}
+	
+	
 }

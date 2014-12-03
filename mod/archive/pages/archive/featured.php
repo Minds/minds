@@ -7,12 +7,24 @@ elgg_set_context('featured');
 $limit = get_input("limit", 12);
 $offset = get_input("offset", 0);
 
-$guids = minds\core\data\indexes::fetch('object:archive:featured', array('offset'=>$offset, 'limit'=>$limit));
+switch(get_input('subtype', 'default')){
+	case 'video':
+		$key = 'object:video:featured';
+		break;
+	case 'albums':
+		$key = 'object:image:featured';
+		break;
+	default:
+		$key = 'object:archive:featured';
+}
+
+$guids = minds\core\data\indexes::fetch($key, array('offset'=>$offset, 'limit'=>$limit, 'reversed'=>true));
 
 if($guids){
 	$entities = elgg_get_entities(array(	
 		'guids'=> $guids,
 		'full_view' => FALSE,
+		'limit' => 12
 		//'archive_view' => TRUE
 	));
 	usort($entities, function($a, $b){
@@ -22,7 +34,7 @@ if($guids){
        		 }
 		return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
 	});
-	$content = elgg_view_entity_list($entities, array('full_view'=>FALSE));
+	$content = elgg_view_entity_list($entities, array('full_view'=>FALSE, 'load-next'=>end($entities)->featured_id));
 } else {
 	$content = '';
 }

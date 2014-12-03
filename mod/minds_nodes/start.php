@@ -45,6 +45,7 @@ class start extends bases\plugin{
 		\elgg_register_action("upgrade_to", dirname(__FILE__) . "/actions/upgrade_to.php");
 		\elgg_register_action("renamenode", dirname(__FILE__) . "/actions/renamenode.php");
 		
+		\elgg_register_action("nodes_upgrade", dirname(__FILE__) . "/actions/upgrade.php");
 		\elgg_register_action("node/edit", dirname(__FILE__) . "/actions/edit.php");
 		\elgg_register_action("node/delete", dirname(__FILE__) . "/actions/delete.php");
 		\elgg_register_action("nodes/contact", dirname(__FILE__) . "/actions/contact.php", 'public');
@@ -53,6 +54,8 @@ class start extends bases\plugin{
 		\elgg_extend_view('css/elgg', 'minds_nodes/css');
 	
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pagesetup'));
+		
+		\elgg_extend_view('core/settings/statistics', 'minds_nodes/statistics');
 	
 		// Register an admin menu
 		//elgg_register_admin_menu_item('minds', 'minds_tiers');	
@@ -229,13 +232,13 @@ class start extends bases\plugin{
 	              }
 				include('pages/minds_nodes/manage.php');
 				break;
-	                case 'upgrade' :
-	                    \set_input('node_guid', $pages[1]);
-	                    include('pages/minds_nodes/upgrade_to.php');
-	                    break;
 			case 'node':
 				\set_input('node_guid', $pages[1]);
 				include('pages/minds_nodes/node.php');
+				break;
+			case 'upgrade':
+				\set_input('node_guid', $pages[1]);
+				include('pages/minds_nodes/upgrade.php');
 				break;
 			case 'ping':
 				$title = \elgg_echo("register:node:testping");

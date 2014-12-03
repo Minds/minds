@@ -8,27 +8,25 @@
  */
 
 if (isset($vars['entity']) && $vars['entity'] instanceof ElggEntity) {
-	$selected_categories = $vars['entity']->universal_categories;
+	$selected_categories = $vars['entity']->category;
 }
 
-// use sticky values if set
-if (isset($vars['universal_categories_list'])) {
-	$selected_categories = $vars['universal_categories_list'];
-}
 global $CONFIG;
-$categories = elgg_get_site_entity()->categories;
-$categories = $CONFIG->site_categories;
+$categories = $CONFIG->site_categories ?: elgg_get_site_entity()->categories;
+
 
 if (empty($categories)) {
 	$categories = array();
 }
 if (empty($selected_categories)) {
-	$selected_categories = array();
+	$selected_categories = '';
 }
 
 if (!empty($categories)) {
 	if (!is_array($categories)) {
-		$categories = array($categories);
+		$categories = explode(',', $categories);
+		foreach($categories as $k => $v)
+			$categories[$k] = ltrim($v);
 	}
 
 	// checkboxes want Label => value, so in our case we need category => category

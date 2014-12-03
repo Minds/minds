@@ -6,7 +6,7 @@
  *
  * @uses $vars['entity'] The entity being edited or created
  */
-
+echo 1; exit;
 if (isset($vars['entity']) && $vars['entity'] instanceof ElggEntity) {
 	$selected_categories = $vars['entity']->universal_categories;
 }

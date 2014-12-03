@@ -177,8 +177,8 @@ function blog_page_handler($page) {
 			$params = blog_get_page_content_archive($user->guid, $page[2], $page[3]);
 			break;
 		case 'view':
-			$params = blog_get_page_content_read($page[1]);
 			if(!get_input('offset')){
+				$params = blog_get_page_content_read($page[1]);
 				set_input('limit',1);
 			}
 			if(elgg_is_active_plugin('analytics')){
@@ -188,11 +188,26 @@ function blog_page_handler($page) {
 				$featured = minds_get_featured('', get_input('limit',12), 'entities',get_input('offset')); 
 				$params['footer'] .= elgg_view_entity_list($featured, array('full_view'=>false), get_input('offset'), get_input('limit',12), false, false, true);
 			}
+			//$params['pagetitle'] = $params['title'];
+			//$params['title'] =  elgg_view('page/elements/ads', array('type'=>'content-header')). $params['pagetitle'];
 			$body = elgg_view_layout('content', $params);
 	
-			echo elgg_view_page($params['title'], $body);
+			echo elgg_view_page($params['pagetitle'], $body);
 			
 			return true;	
+			break;
+		case 'header':
+			$blog = new ElggBlog($page[1]);
+			$header = new ElggFile();
+			$header->owner_guid = $blog->owner_guid;
+			$header->setFilename("blog/{$blog->guid}.jpg");
+			header('Content-Type: image/jpeg');
+			header('Expires: ' . date('r', time() + 864000));
+			header("Pragma: public");
+ 			header("Cache-Control: public");
+			echo file_get_contents($header->getFilenameOnFilestore());
+			
+			exit;
 			break;
 		case 'read': // Elgg 1.7 compatibility
 			register_error(elgg_echo("changebookmark"));

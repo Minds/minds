@@ -71,11 +71,17 @@ function elgg_check_access($entity, $user = null){
 	if(in_array($entity->access_id, array(ACCESS_LOGGED_IN, ACCESS_PUBLIC))){
 		return true;
 	}
+
+	if(elgg_is_admin_user($user))
+		return true;
 	
 	$access_array = get_access_array($user->guid, 0);
 	if(in_array($entity->access_id, $access_array) || in_array($entity->container_guid, $access_array) || in_array($entity->guid, $access_array)){
 		return true;
 	}
+	
+	if(elgg_trigger_plugin_hook('acl', $entity->type, array('entity'=>$entity, 'user'=>$user)))
+		return true;
 	
 	return false;
 

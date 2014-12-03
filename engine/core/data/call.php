@@ -55,26 +55,34 @@ class call extends core\base{
 	 */
 	public function installSchema(){
 		$cfs = array(	
-						'site' => array('site_id' => 'UTF8Type'),
-						'plugin' => array('active' => 'IntegerType'),
-						'config' => array(),
-						'entities'=> array('type'=>'UTF8Type'),
-						'entities_by_time' => array(),
-						'user_index_to_guid' => array(),
-						//'widget' => array('owner_guid'=>'UTF8Type', 'access_id'=>'IntegerType' ),
-						'session' => array(),
-						//'annotation' => array(),	
-						'friends' => array(), //@replace with relationships soon
-						'friendsof' => array(), //@replace with relationships soon
-						'relationships' => array(), //this is a new index for relationships (friends will be merged into here soon)
-						//'newsfeed' => array(),
-						//'timeline' => array(),
-						'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ),
-                        			//'api_users' => array('secret'=>'UTF8Type'),
-                    				'log' => array(),
-				);
+			//'site' => array('site_id' => 'UTF8Type'),
+			'plugin' => array('active' => 'IntegerType'),
+			//'config' => array(),
+			'entities'=> array('type'=>'UTF8Type'),
+			'entities_by_time' => array(),
+			'user_index_to_guid' => array(),
+			'session' => array(),
+			'friends' => array(), //@replace with relationships soon
+			'friendsof' => array(), //@replace with relationships soon
+			'relationships' => array(), //this is a new index for relationships (friends will be merged into here soon)
+			//'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ),
+                    	//'log' => array(),
+		);
+	
+		$ks = $this->pool->describe_keyspace();
+ 
 		foreach($cfs as $cf => $indexes){
-			$this->createCF($cf, $indexes);
+			$exists = false;
+			foreach($ks->cf_defs as $cfdef) {
+				if ($cfdef->name == $cf){
+					$exists = true;
+					break;
+				}
+			}
+			if(!$exists){
+				error_log("Installing $cf...\n");
+				$this->createCF($cf, $indexes);
+			}
 		}
 	}
 	
@@ -186,6 +194,8 @@ class call extends core\base{
 	 * Count the columns of a row
 	 */
 	public function countRow($key){
+		if(!$key)
+			return 0;
 		try{self::$counts++;
 			return $this->cf->get_count($key);
 		}catch(Exception $e){
@@ -288,6 +298,24 @@ class call extends core\base{
 	 * @return bool
 	 */
 	public function keyspaceExists(){
+		$exists = false;
+		try{
+ 		       $ks = $this->pool->describe_keyspace();
+      			$exists = false;
+   			foreach($ks->cf_defs as $cfdef) {
+	                	if ($cfdef->name == 'entities_by_time'){
+         	         	      $exists = true;
+           	       		      break;
+             	  		 }
+  			}
+		}catch(\Exception $e){
+                	$exists = false;
+        	}
+		return $exists;
+		if($exists)
+			return true;
+
+		
 		$sys = new SystemManager($this->servers[0]);
 		
 		$exists = false;

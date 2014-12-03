@@ -7,7 +7,9 @@
 	right:0;
 	z-index: 100;
 }
-
+.index{
+margin-bottom:-230px;
+}
 /* ***************************************
 	AVATAR UPLOADING & CROPPING
 *************************************** */
@@ -1010,7 +1012,6 @@ li.elgg-menu-item-rss{
 	/*color:#222;*/
 }
 
-
 .carousel{
 	position: absolute;
 	top: 0;
@@ -1094,6 +1095,11 @@ li.elgg-menu-item-rss{
 	line-height:64px;
 	font-size:64px;
 	text-shadow:0 0 2px #BBB;
+	font-family:"Lato", 'Helvetica', Arial, Sans-Serif;
+}
+.carousel-inner > .item > .carousel-caption p{
+	color:#FFF;
+	text-align:center;
 }
 
 .elgg-widget-more{
@@ -1101,6 +1107,68 @@ li.elgg-menu-item-rss{
 	height: auto;
 	display: block;
 	clear: both;
+}
+
+.com-ui{
+	display:block;
+	margin:auto;
+	width:990px;
+}
+.com-ui .frontpage-signup{
+	width:400px;
+	box-shadow:0 0 3px #FFF;
+}
+.com-ui .node{
+	float:left;
+	background: #FFF;
+	padding: 8px;
+	width:380px;
+}
+.com-ui .node .domain-input{
+	position:relative;
+	width:260px;
+	float:left;
+}
+.com-ui .node .domain-input input{
+	width:100%;
+	float:left;
+	border:1px solid #DDD;
+}
+.com-ui .node .domain-input .url-domain{
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding:12px;
+	font-weight:bold;
+}
+.com-ui input[type=submit]{
+	width:auto;
+	float:left;
+	margin-left:12px;
+}
+
+.com-ui .user{
+	float:right;
+	background: #FFF;
+	padding: 8px;
+} 
+.com-ui .user .user-input{
+	position:relative;
+	width:255px;
+	float:left;
+}
+.com-ui .user .user-input input{
+	width:100%;
+	float:left;
+	border:1px solid #DDD;
+	padding-left:120px;
+}
+.com-ui .user .user-input .url-domain{
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding:12px;
+	font-weight:bold;
 }
 
 .frontpage-signup{

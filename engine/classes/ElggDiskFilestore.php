@@ -51,7 +51,7 @@ class ElggDiskFilestore extends ElggFilestore {
 	 */
 	public function open(ElggFile $file, $mode) {
 		$fullname = $this->getFilenameOnFilestore($file);
-		error_log('FILESYSTEM OPEN');
+		//error_log('FILESYSTEM OPEN');
 		// Split into path and name
 		$ls = strrpos($fullname, "/");
 		if ($ls === false) {
@@ -101,7 +101,7 @@ class ElggDiskFilestore extends ElggFilestore {
 	 * @return bool
 	 */
 	public function write($f, $data) {
-		error_log('FILE SYSTEM WRITING');
+		//error_log('FILE SYSTEM WRITING');
 		return fwrite($f, $data);
 	}
 
@@ -118,7 +118,7 @@ class ElggDiskFilestore extends ElggFilestore {
 		if ($offset) {
 			$this->seek($f, $offset);
 		}
-		error_log('FILESYSTEM READING');
+		//error_log('FILESYSTEM READING');
 		return fread($f, $length);
 	}
 
@@ -213,7 +213,7 @@ class ElggDiskFilestore extends ElggFilestore {
 				array($file->getFilename(), $file->guid));
 			throw new InvalidParameterException($msg);
 		}
-		error_log('ATTEMPTING TO GET FILENAME: '. $this->dir_root . $this->makefileMatrix($owner_guid) . $file->getFilename());
+		//error_log('ATTEMPTING TO GET FILENAME: '. $this->dir_root . $this->makefileMatrix($owner_guid) . $file->getFilename());
 		return $this->dir_root . $this->makefileMatrix($owner_guid) . $file->getFilename();
 	}
 

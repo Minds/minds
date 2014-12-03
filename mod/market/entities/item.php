@@ -38,14 +38,13 @@ class item extends entities\object{
 	 * @return array
 	 */
 	private function getCategoryTree(){
-		$return = array($this->category);
-		//$parts = explode(':',$this->category);
+		$return = array('object:market:category:'.$this->category);
 		$cat = $this->category;
 		
 		while(true){
 			$cat = substr($cat, 0, strrpos( $cat, ':', -1));
 			if($cat)
-				$return[] = $cat;
+				$return[] = 'object:market:category:'.$cat;
 			else break;
 		}
 		return $return;
@@ -73,6 +72,21 @@ class item extends entities\object{
 	 */
 	public function getURL(){
 		return \elgg_get_site_url() .'market/item/'.$this->guid;
+	}
+	
+	/**
+	 * Get the icon src
+	 */
+	public function getIconUrl($size = 'master'){
+		return elgg_get_site_url() . "market/image/$this->guid/$size";
+	}
+	
+	public function getExportableValues(){
+		return array_merge(parent::getExportableValues(),
+			array(
+				'price',
+				'category'
+			));
 	}
 		
 }

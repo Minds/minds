@@ -4,6 +4,11 @@
  */
 
 $tabs = array(
+	'featured' => array(
+		'text' => elgg_echo('channels:label:featured'),
+         'href' => "channels/featured",
+         'selected' => $vars['selected'] == 'featured',
+        ),
 	'trending' => array(
 		'text' => elgg_echo('channels:label:trending') . elgg_view_menu('trending'),
          'href' => "channels/trending",
@@ -19,6 +24,11 @@ $tabs = array(
 		'text' => elgg_echo('channels:label:subscriptions'),
 		'href' => "channels/subscriptions",
 		'selected' => $vars['selected'] == 'subscriptions',
+	),
+	'subscribe' => array(
+		'text' => elgg_echo('Subscribe'),
+		'href' => "subscriptions/add",
+		'selected' => $vars['selected'] == 'subscribe',
 	),
 	'newest' => array(
 		'text' => elgg_echo('channels:label:newest'),

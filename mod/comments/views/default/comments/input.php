@@ -14,7 +14,7 @@ if(elgg_is_logged_in()){
 }
 
 if($user){
-	$icon = elgg_view_entity_icon($user, 'tiny');
+	$icon = elgg_view_entity_icon($user, 'small');
 }
 
 $form_body .= elgg_view_image_block($icon, $input_text);

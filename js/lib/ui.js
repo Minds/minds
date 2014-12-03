@@ -19,6 +19,8 @@ elgg.ui.init = function () {
 	$(document).on('click', '.elgg-menu-page .elgg-menu-parent', elgg.ui.toggleMenu);
 
 	$(document).on('click', '.elgg-requires-confirmation', elgg.ui.requiresConfirmation);
+	
+	$(document).on(elgg.ui.hoverCard, '.elgg-avatar');
 
 	$('.elgg-autofocus').focus();
 };
@@ -169,16 +171,16 @@ elgg.ui.initHoverMenu = function(parent) {
 	}
 
 	// avatar image menu link
-	$(parent).find(".elgg-avatar").on('mouseover', function() {
+	$(document).on('mouseover',".elgg-avatar", function() {
 		$(this).children(".elgg-icon-hover-menu").show();
 	})
-	.on('mouseout', function() {
+	.on('mouseout',".elgg-avatar", function() {
 		$(this).children(".elgg-icon-hover-menu").hide();
 	});
 
 
 	// avatar contextual menu
-	$(".elgg-avatar > .elgg-icon-hover-menu").on('click', function(e) {
+	$(document).on('click', ".elgg-avatar > .elgg-icon-hover-menu", function(e) {
 		// check if we've attached the menu to this element already
 		var $hovermenu = $(this).data('hovermenu') || null;
 
@@ -289,6 +291,28 @@ elgg.ui.initDatePicker = function() {
 			success: loadDatePicker,
 			error: loadDatePicker // english language is already loaded.
 		});
+	}
+};
+
+elgg.ui.hoverCard = {
+	mouseenter: function(e){
+		var icon =  $(this);
+		var hc = $(this).children('.minds-hovercard');
+		hc.show();
+		hc.css({position:'fixed', display:'block', left:icon.offset().left,top: (icon.offset().top - $(window).scrollTop())+ 40});
+		if(hc.find('.hovercard-banner-img').length > 0){
+			hc.find('.hovercard-banner-img')[0].css('margin-top', (120 - hc.find('.hovercard-banner-img').height()) /2); 
+			hc.find('.hovercard-banner-img')[0].css('margin-left', (300 - hc.find('.hovercard-banner-img').width()) /2); 
+		}
+	},
+	mouseleave: function(e){
+		_this = this;
+		setTimeout(function(){
+			if($(_this).find('.minds-hovercard:hover').length != 0)
+				return true;
+			else
+				$(_this).find('.minds-hovercard').hide();
+		}, 100);
 	}
 };
 
