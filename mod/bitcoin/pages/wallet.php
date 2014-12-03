@@ -16,6 +16,9 @@ class wallet extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 		
+		if(!elgg_is_logged_in())
+			$this->forward('/register');
+		
 		$guid = \elgg_get_plugin_user_setting('wallet_guid', elgg_get_logged_in_user_guid(), 'bitcoin');
 		
 		$wallet = new entities\wallet($guid);
