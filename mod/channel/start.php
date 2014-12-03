@@ -174,7 +174,8 @@ function channel_page_handler($page) {
 	$carousel = elgg_view('carousel/carousel', array('items'=>$carousels));
 
 	$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'),array('to_guid'=>$user->guid));
-		$class ='';
+	$class ='';
+	$sidebar = '';
 	switch($page[1]){
 		case 'custom':
 			$content .= elgg_view_form('channel/custom', array('enctype' => 'multipart/form-data'), array('entity' => $user));
@@ -319,6 +320,7 @@ function channel_page_handler($page) {
 				'owner_guid' => $user->guid
 			));
 			$class = 'landing-page';
+			$sidebar = elgg_view('channel/thumbs', array('user'=>$user));
 	}
 	
 	$body = elgg_view_layout('two_sidebar', array(
@@ -327,7 +329,7 @@ function channel_page_handler($page) {
 		'header'=>$carousel, 
 		'hide_ads' => true,
 		'sidebar_top'=>'',
-		'sidebar' => elgg_view('channel/thumbs', array('user'=>$user)),
+		'sidebar' => $sidebar,
 		'sidebar_alt'=> elgg_view('channel/sidebar', array('user'=>$user)),
 		'sidebar-alt-class' =>  'minds-fixed-sidebar-left'
 	));

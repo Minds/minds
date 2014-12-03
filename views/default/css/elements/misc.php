@@ -882,6 +882,18 @@ li.elgg-menu-item-rss{
 	background-size: cover !important;
 	background-position: center !important;
 }
+.carousel-admin-wrapper .bg_wrapper{
+	overflow:hidden;
+	width:100%;
+	height:250px;
+	position:absolute;
+}
+.carousel-admin-wrapper img{
+	width:100%;
+	min-width:997px;
+	height:auto;
+	position:relative;
+}
 .carousel-admin-wrapper .remove{
 	float: right;
 	margin: 8px;
@@ -931,13 +943,25 @@ li.elgg-menu-item-rss{
 */
 .carousel-admin-wrapper > textarea{
 	display:block;
-	padding:32px;
+	margin:32px;
+	padding:0;
 	background: transparent;
 	border: 0;
 	font-size: 60px;
 	color: #FFF;
 	font-weight: 100;
 	text-align: left;
+	width:800px;
+	position:absolute;
+	border:1px dotted #DDD;
+}
+.carousel-admin-wrapper > input[type=text]{
+	position:absolute;
+	top:160px;
+	margin:32px;
+	border:1px dotted #DDD;
+	background:transparent;
+	width:800px;
 }
 
 #carousel_wrapper{
@@ -1030,10 +1054,11 @@ li.elgg-menu-item-rss{
 	opacity: 1;
 }
 .carousel-inner > .item > img {
-	position: absolute;
+	position: relative;
 	top: 0;
 	left: 0;
-	min-width:100%;
+	width:100%;
+	min-width:997px;
 	height:auto;
 	min-height:380px;
 
