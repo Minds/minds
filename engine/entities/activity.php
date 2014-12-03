@@ -94,6 +94,13 @@ class activity extends entity{
 				'custom_data'
 			));
 	}
+	
+	/**
+	 * Return a friendly url
+	 */
+	public function getURL(){
+		return elgg_get_site_url() . 'newsfeed/'.$this->guid;
+	}
 
 	/**
 	 * Returns the owner entity

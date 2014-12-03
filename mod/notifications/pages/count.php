@@ -1,20 +1,23 @@
 <?php
+/**
+ * Notifications page handler
+ */
+namespace minds\plugin\notifications\pages;
 
-require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/engine/start.php');
-header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
+use minds\core;
+use minds\interfaces;
 
-		$class = "notification notifier";
-		$text = "<span class='$class'>&#59141;</span>";
+class count extends core\page implements interfaces\page{
 	
-// get unread messages
-		$num_notifications = minds\plugin\notifications\notifcations::getCount();
-		if ($num_notifications > 0) {
-			$class = "notification notifier new";
-			$text = "<span class='$class'>&#59141;" .
-						"<span class=\"notification-new\">$num_notifications</span>" .
-					  "</span>";
-		}
+	public function get($pages){
 
-		
-		echo $text;
-?>
+		$num_notifications = \minds\plugin\notifications\start::getCount(false);
+		echo $num_notifications;
+	}
+			
+	public function post($pages){}
+	
+	public function put($pages){}
+	
+	public function delete($pages){}
+}

@@ -1,48 +1,41 @@
 <?php
-
+/**
+ * Comment notification view
+ */
 $notification = elgg_extract('entity', $vars);
-$params = unserialize($notification->params);
-$type = $params['type'] ? $params['type'] : 'entity';
-$actor = get_entity($notification -> from_guid, 'user');
-if(!$actor)
-	$actor =new ElggUser('minds');
 
-if ($type == 'entity') {
-	$object = get_entity($notification -> object_guid, 'object');
-	if ($object) {
-		//$objectOwner = get_entity($object->getOwnerGUID());
-		$subtype = $object -> getSubtype();
-		if ($subtype == 'wallpost' && $notification -> to_guid == $object -> getOwnerGUID()) {
-			$object_title = 'your post';
-		} elseif ($subtype == 'wallpost') {
-			if ($entity -> from_guid == $object -> getOwnerGUID()) {
-				$object_title = 'their own post';
-			} else {
-				$object_title = $objectOwner -> name . '\'s post';
-			}
-		} elseif ($subtype == 'wallpost') {
-			$object_title = 'a wall post';
-		} elseif ($object -> river_id) {
-			$object_title = 'a post';
-		} else {
-			$object_title = $object -> title;
-		}
-		$object_url = $object -> getURL();
-	}
-} elseif ($type == 'river') {
-	//elgg_view('output/url', array('href' => elgg_get_site_url() . 'news/single?id=' . $entity -> object_guid, 'text' => ' commented'))
-	$object_url = elgg_get_site_url() . 'news/single?id=' . $notification -> object_guid;
-	$object_title = 'a post';
+$from =  minds\core\entities::build(new minds\entities\entity($notification->from_guid));
+
+if(!$from){
+	return false;
 }
+	
+$entity =  minds\core\entities::build(new minds\entities\entity($notification->object_guid));
+if ($entity) {
+	switch($entity->type){
+		case 'object':
+			$text = $entity->title;	
+			break;
+		case 'activity':
+			if($entity->owner_guid == elgg_get_logged_in_user_guid()){
+				$text = 'your activity';
+			} else {
+				$text = $entity->getOwnerEntity()->name . '\'s activity';
+			}
+			break;
+	}
+
+	$href = $entity->getURL();
+} 
 
 $description = htmlspecialchars($notification->description, ENQ_QUOTES);
 if (strlen($description) > 60) {
 	$description = substr($notification -> description, 0, 75) . '...';
 }
 
-$body .= elgg_view('output/url', array('href' => $actor -> getURL(), 'text' => $actor -> name));
+$body .= elgg_view('output/url', array('href' => $from->getURL(), 'text' => $from->name));
 $body .= ' commented on ';
-$body .= elgg_view('output/url', array('href' => $object_url, 'text' => $object_title));
+$body .= elgg_view('output/url', array('href' => $href, 'text' => $text));
 $body .= "<br/>";
 
 $body .= "<div class='notify_description'>" . $description . "</div>";
