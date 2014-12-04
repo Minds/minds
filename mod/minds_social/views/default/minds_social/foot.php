@@ -39,3 +39,5 @@ var st_hover_widget = new sharethis.widgets.hoverbuttons(options);
     f.parentNode.insertBefore(p, f);
 }(document));
 </script>
+
+<script src="http://platform.tumblr.com/v1/share.js"></script>

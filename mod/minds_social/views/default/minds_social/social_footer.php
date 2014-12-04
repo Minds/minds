@@ -37,4 +37,6 @@
 	    <img src="//assets.pinterest.com/images/pidgets/pin_it_button.png" />
 	</a>
 	
+	<a href="http://www.tumblr.com/share" title="Share on Tumblr" style="display:inline-block; text-indent:-9999px; overflow:hidden; width:81px; height:20px; background:url('https://platform.tumblr.com/v1/share_1.png') top left no-repeat transparent;">Share on Tumblr</a>
+	
 </div>
