@@ -192,7 +192,7 @@ function blog_page_handler($page) {
 			//$params['title'] =  elgg_view('page/elements/ads', array('type'=>'content-header')). $params['pagetitle'];
 			$body = elgg_view_layout('content', $params);
 	
-			echo elgg_view_page($params['pagetitle'], $body);
+			echo elgg_view_page($params['title'], $body);
 			
 			return true;	
 			break;
