@@ -95,6 +95,9 @@ class page extends core\page implements interfaces\page{
 			$page = new entities\page();
 		
 		if(is_uploaded_file($_FILES['banner']['tmp_name'])){
+			if(!$page->guid)
+				$page->save();
+			
 			$resized = get_resized_image_from_uploaded_file('banner', 2000);
 			$file = new \ElggFile();
 			$file->owner_guid = $page->owner_guid;
