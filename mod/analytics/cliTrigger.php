@@ -6,10 +6,10 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/engine/start.php');
 //trending_cron();
 
 $timespans = array(
-//	'day', 
-//	'week', 
-//	'month', 
-//	'year',
+	'day', 
+	'week', 
+	'month', 
+	'year',
 	'entire'
 );
 foreach($timespans as $timespan){
