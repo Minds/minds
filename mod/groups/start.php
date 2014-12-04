@@ -293,6 +293,19 @@ function groups_page_handler($page) {
 		case 'requests':
 			groups_handle_requests_page($page[1]);
 			break;
+		case 'banner':
+
+			$group = new ElggGroup($page[1]);
+			$header = new ElggFile();
+			$header->owner_guid = $group->owner_guid;
+			$header->setFilename("group/{$group->guid}.jpg");
+		
+			header('Content-Type: image/jpeg');
+			header('Expires: ' . date('r', time() + 864000));
+			header("Pragma: public");
+			header("Cache-Control: public");
+			echo file_get_contents($header->getFilenameOnFilestore());
+			break;
 		default:
 			return false;
 	}

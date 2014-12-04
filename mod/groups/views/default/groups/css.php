@@ -126,3 +126,8 @@ and (max-width : 1200px) {
 	background-color: #4690D6;
 	color: white;
 }
+
+
+.group-banner .minds-body-header{
+	height:320px;
+}

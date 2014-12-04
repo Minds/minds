@@ -141,6 +141,9 @@ if ($tools) {
 		));
 		?>
 </div>
+<label>Banner Image</label>
+<p><input type="file" name="banner"/></p>
+<input type="hidden" name="banner_position" value="<?= $group->banner_position ?>"/>
 <?php
 	}
 }
