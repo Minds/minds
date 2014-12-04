@@ -3,8 +3,10 @@ $user = elgg_extract('user', $vars);
 
 // get a list of the users thumbed up content
 
-$entities = \minds\plugin\thumbs\helpers\lists::getUserThumbs($user);
+$entities = \minds\plugin\thumbs\helpers\lists::getUserThumbs($user, 'object');
 
+if(!$entities)
+	return false;
 ?>
 
 <ul class="thumbs-list elgg-list">

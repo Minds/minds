@@ -59,7 +59,6 @@
 			setTimeout(function(){
 
 				$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
-				//$('.channel .carousel-inner > .item > img').css('margin-top', ($('.carousel-inner > .item').height() - $('.carousel-inner > .item > img').height()) /2); 
 				
 			}, 2000);
 		});

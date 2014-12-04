@@ -21,6 +21,9 @@ class actions extends core\page implements interfaces\page{
 		$entity = core\entities::build(new \minds\entities\entity($guid));
 		if(!$entity)
 			throw new \Exception("Entity $guid not found");
+		
+		if($entity instanceof \minds\entities\activity && $entity->entity_guid)
+			$entity = core\entities::build(new \minds\entities\entity($entity->entity_guid));
 
 		switch($action){
 			case "up":
@@ -72,6 +75,7 @@ class actions extends core\page implements interfaces\page{
 				
 		//now add to the users list of thumbed up content
 		$indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid(), array($entity->guid => time()));
+		$indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid() .":$entity->type", array($entity->guid => time()));
 	}
 
 	private function magicCancel($direction = 'up', $entity){
@@ -92,6 +96,7 @@ class actions extends core\page implements interfaces\page{
 				
 		//now remove from the users list of thumbs up content
 		$indexes->removeAttributes("thumbs:$direction:user:" . elgg_get_logged_in_user_guid(), array($entity->guid));
+		$indexes->removeAttributes("thumbs:$direction:user:" . elgg_get_logged_in_user_guid() .":$entity->type", array($entity->guid));
 	}
 	
 }
