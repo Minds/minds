@@ -262,17 +262,19 @@
 	color: white;
 	font-weight: bold;
 	display: block;
-	padding: 3px 10px;
 	cursor: pointer;
 	opacity: 0.9;
 	
+	padding: 16px;
+	
+	/*
 	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
 	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
 	
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;
-	border-radius: 8px;
+	border-radius: 8px; */
 }
 .elgg-state-success {
 	background-color: black;

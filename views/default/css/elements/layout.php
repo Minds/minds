@@ -168,10 +168,13 @@
 
 /***** PAGE MESSAGES ******/
 .elgg-system-messages {
-	position: fixed;
+	/*position: fixed;
 	top: 48px;
 	right: 20px;
-	max-width: 500px;
+	max-width: 500px;*/
+	position: fixed;
+	top: 70px;
+	width: 100%;
 	z-index: 20000;
 }
 .elgg-system-messages li {
