@@ -1,5 +1,26 @@
+/**
+ * Directory lists
+ */
+.nodes-directory-list{
 
+}
+.nodes-directory-list > li{
+	width:300px;
+	background:#FFF;
+	padding-top:16px;
+}
+.nodes-directory-list > li .node_logo{
+	width:100%;
+}
+.nodes-directory-list > li h3{
+	font-size: 16px;
+	text-align: center;
+	padding: 16px;
+}
 
+/**
+ * Other 
+ */
 div.node-signup {
     margin-top: 30px;
 
