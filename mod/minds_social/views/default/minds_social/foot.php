@@ -28,3 +28,14 @@
 var options={ "publisher": "7b9c530d-60a6-4696-8812-fdb47d887122", "position": "left", "ad": { "visible": false, "openDelay": 5, "closeDelay": 0}, "chicklets": { "items": ["reddit", "facebook", "twitter", "googleplus", "linkedin", "pinterest"]}};
 var st_hover_widget = new sharethis.widgets.hoverbuttons(options);
 </script>
+
+
+<script type="text/javascript">
+(function(d){
+    var f = d.getElementsByTagName('SCRIPT')[0], p = d.createElement('SCRIPT');
+    p.type = 'text/javascript';
+    p.async = true;
+    p.src = '//assets.pinterest.com/js/pinit.js';
+    f.parentNode.insertBefore(p, f);
+}(document));
+</script>

@@ -31,4 +31,10 @@
 		<img src="https://secure.reddit.com/static/spreddit7.gif" alt="submit to reddit" border="0" /> 
 	</a>
 	
+	<a href="https://www.pinterest.com/pin/create/button/?url=<?= urlencode($og_url);?>"
+	    data-pin-do="buttonPin"
+	    data-pin-config="above">
+	    <img src="//assets.pinterest.com/images/pidgets/pin_it_button.png" />
+	</a>
+	
 </div>
