@@ -57,12 +57,6 @@ class start extends bases\plugin{
 			$options = array('name' => 'thumbs:down', 'text' => elgg_view('thumbs/button-down', array('entity' => $entity)), 'href' => false, 'priority' => 99, );
 			$return[] = ElggMenuItem::factory($options);
 	
-			// likes count
-			$count = elgg_view('thumbs/count', array('entity' => $entity));
-			if ($count) {
-				$options = array('name' => 'thumbs:count', 'text' => $count, 'href' => false, 'priority' => 50, );
-				$return[] = ElggMenuItem::factory($options);
-			}
 		}
 	
 		return $return;
