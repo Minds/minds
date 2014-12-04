@@ -59,6 +59,30 @@
 			setTimeout(function(){
 
 				$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
+
+
+				/*var img = $('.carousel-inner > .item > img');
+				var img_height = img.height();
+				var img_offset = img.offset().top;
+				var ratio = img.height() / img.width();
+				
+				var container_height = $('.carousel-inner > .item').height();
+				
+				if((img_height + img_offset) < container_height){
+					
+					if(!img.attr('data-css-top'))
+						img.data('css-top', img_offset);
+					
+					img.css('top', 'auto');
+					img.css('bottom', 0);
+					
+				} else if(img.width() > 1000) {
+				
+					img.css('top', img.data('css-top'));
+					
+				}*/
+
+			
 				
 			}, 2000);
 		});

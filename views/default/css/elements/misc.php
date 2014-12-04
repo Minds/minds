@@ -1060,8 +1060,8 @@ li.elgg-menu-item-rss{
 	position: relative;
 	top: 0;
 	left: 0;
-	width:100%;
-	min-width:997px;
+	width:auto;
+	min-width:100%;
 	height:auto;
 	min-height:380px;
 
