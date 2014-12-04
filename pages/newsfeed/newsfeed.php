@@ -299,6 +299,7 @@ class newsfeed extends core\page implements interfaces\page{
 									->setURL($embeded->getURL())
 									->setThumbnail($embeded->getIconUrl())
 									->setMessage($message)
+									->setFromEntity($embeded)
 									->save();
 							break;
 						}
