@@ -291,10 +291,14 @@ class newsfeed extends core\page implements interfaces\page{
 						 */
 						switch($embeded->subtype){
 							case 'blog':
+								$message = false;
+								if($embeded->owner_guid != elgg_get_logged_in_user_guid())
+									$message = 'via <a href="'.$embeded->getOwnerEntity()->getURL() . '">'. $embeded->getOwnerEntity()->name . '</a>';
 								$activity->setTitle($embeded->title)
 									->setBlurb(elgg_get_excerpt($embeded->description))
 									->setURL($embeded->getURL())
 									->setThumbnail($embeded->getIconUrl())
+									->setMessage($message)
 									->save();
 							break;
 						}
