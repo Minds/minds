@@ -63,6 +63,7 @@ $english = array(
 	'channels:label:online' => 'Online', 
 	'channels:label:trending' => 'Trending',
 	'channels:label:featured' => 'Featured',
+	'channels:label:sites' => 'Sites',
 	
 	'channels:searchtag' => 'Search by tags',
 	'channels:searchname' => 'Search by name',
