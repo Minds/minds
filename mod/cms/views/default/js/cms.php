@@ -145,6 +145,30 @@ minds.cms.init = function() {
 									
 								}
 		}); 	
+		
+	$(".cms-banner-editable .carousel .item img").css('cursor', "move");
+	$(".cms-banner-editable .carousel .item img").draggable({
+		scroll: false,
+		axis: "y",
+		drag: function(event, ui) {
+			img = $(event.target);
+          	wrapper = img.parent();
+     
+			if(ui.position.top >= 0){
+				ui.position.top = 0;
+			} else if(ui.position.top <= wrapper.height() - img.height()) {
+				ui.position.top = wrapper.height() - img.height();
+			}
+
+			form = wrapper.parents('.body').find('.elgg-form-cms-page');
+			form.find('input[name=banner_position]').val(ui.position.top);
+				
+		},
+        stop: function(event, ui) {
+         	img = $(event.target);
+       	//	minds.cms.update(img.parents('section'));	
+		}
+    });
 }
 
 minds.cms.update = function(section){

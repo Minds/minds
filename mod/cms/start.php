@@ -23,6 +23,7 @@ class start extends bases\plugin{
 		$path = "minds\\plugin\\cms";
 		core\router::registerRoutes(array(
 				'/p' => "$path\\pages\\page",
+				'/p/header' => "$path\\pages\\header",
 				'/s' => "$path\\pages\\sections",
 				'/admin/cms/sections' => "$path\\pages\\sections",
 			));

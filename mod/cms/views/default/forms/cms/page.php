@@ -13,6 +13,11 @@ $page = elgg_extract('page', $vars);
 <h4>Description</h4>
 <?= elgg_view('input/longtext', array('name'=>'body', 'placeholder'=>'eg. html content etc', 'value'=> $page ? $page->body : '' )) ?>
 
+<br/>
+<h4>Banner Image</h4>
+<p><input type="file" name="banner"/></p>
+<input type="hidden" name="banner_position" value="<?= $page->banner_position ?>"/>
+
 <h4>Path URI</h4>
 <p><input type="text" name="uri" placeholder="eg. about" value="<?= $page ? $page->uri : '' ?>" required/></p>
 

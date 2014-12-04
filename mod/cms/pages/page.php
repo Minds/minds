@@ -17,13 +17,22 @@ class page extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 		
+		$header = false;
+		$class = '';
 		switch($pages[0]){
 			case 'edit':
 				$page = new entities\page($pages[1]);
-				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/edit/'.$page->guid), array('page'=>$page)); 
+				if($page->banner){
+					$header = elgg_view('carousel/carousel', 
+						array('items'=> array(
+							new \ElggObject(array('ext_bg' => elgg_get_site_url().'p/header/'.$page->guid, 'top_offset'=>$page->banner_position))
+						)));
+					$class = "cms-banner cms-banner-editable";
+				}
+				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/edit/'.$page->guid, 'enctype'=>'multipart/form-data'), array('page'=>$page)); 
 				break;
 			case 'add':
-				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/add')); 
+				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/add', 'enctype'=>'multipart/form-data')); 
 				break;
 			case 'delete':
 				$page = new entities\page($pages[1]);
@@ -43,8 +52,15 @@ class page extends core\page implements interfaces\page{
 						'entity'=>$page,
 						'class' => 'elgg-menu-hz'
 					));
-					
+
 					$title = $page->title;
+					if($page->banner){
+						$header = elgg_view('carousel/carousel', 
+							array('items'=> array(
+								new \ElggObject(array('ext_bg' => elgg_get_site_url().'p/header/'.$page->guid, 'top_offset'=>$page->banner_position))
+							)));
+						$class = "cms-banner";
+					}
 					$content .= $menu;
 					$content .= elgg_view_title($title);
 					$content .= elgg_view('cms/pages/body', array('body'=>$page->body));
@@ -55,6 +71,7 @@ class page extends core\page implements interfaces\page{
 		}
 		
 		$body = elgg_view_layout('one_sidebar', array(
+			'header'=> $header,
 			'content'=>$content, 
 			'sidebar_class'=>'elgg-sidebar-alt cms-sidebar-wrapper',
 			'sidebar' => elgg_view('cms/pages/sidebar', array('context'=> 'footer')),
@@ -63,7 +80,7 @@ class page extends core\page implements interfaces\page{
 		
 		elgg_extend_view('page/elements/foot', 'cms/footer');
 		
-		echo $this->render(array('title'=>$title, 'body'=>$body, 'class'=>'cms-page-body'));
+		echo $this->render(array('title'=>$title, 'body'=>$body, 'class'=>'cms-page-body '. $class));
 		
 	}
 	
@@ -77,10 +94,22 @@ class page extends core\page implements interfaces\page{
 		else
 			$page = new entities\page();
 		
+		if(is_uploaded_file($_FILES['banner']['tmp_name'])){
+			$resized = get_resized_image_from_uploaded_file('banner', 2000);
+			$file = new \ElggFile();
+			$file->owner_guid = $page->owner_guid;
+			$file->setFilename("cms/page/{$page->guid}.jpg");
+			$file->open('write');
+			$file->write($resized);
+			$file->close();
+			$page->banner = true;
+		}
+		
 		$page->setTitle(get_input('title'))
 			->setBody(get_input('body'))
 			->setUri(get_input('uri', time()))
 			->setForwarding(get_input('forwarding', false))
+			->setBannerPosition(get_input('banner_position'))
 			->save();
 	
 		$this->forward($page->getURL());

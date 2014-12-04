@@ -206,6 +206,9 @@ body {
 .cms-page-body h2{
 	line-height:90px;
 }
+.cms-page-body.cms-banner > .body .inner{
+	margin-top:172px;
+} 
 .cms-page-body p{
 	font-weight:300;
 	font-size:16px;

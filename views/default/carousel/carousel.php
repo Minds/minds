@@ -66,7 +66,9 @@ $(document).ready(function() {
 				$bg =  $CONFIG->cdn_url . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache/fat";
 	
 			echo "<img src=\"$bg\" style=\"top:{$item->top_offset}px\"/>";
-			echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><div class=\"inner\" style=\"background:$item->shadow\"><h3>$item->title</h3></div></div>";
+			
+			if($item->title)
+				echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><div class=\"inner\" style=\"background:$item->shadow\"><h3>$item->title</h3></div></div>";
 	
 			echo '</a>';
 			$i++;
