@@ -17,7 +17,7 @@ $upload_input = elgg_view('input/file', array(
 	'name' => 'background',
 ));
 
-$form_vars = channel_custom_vars($user);
+$form_vars = minds\plugin\channel\start::channel_custom_vars($user);
 
 if($user->background){
 	$upload_input .= elgg_view('output/url', array(
