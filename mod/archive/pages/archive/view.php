@@ -21,12 +21,18 @@ $menu = elgg_view_menu('entity', array(
 
 $title = $entity->title;
 $description = strip_tags($entity->description);
+$sidebar_comments = true;
+$content = false;
 
 set_input('description', $description);
 set_input('keywords', $entity->tags);
 $trending = true;
 switch($entity->subtype){
 	case 'video':
+		
+		if(!elgg_is_xhr())
+			$sidebar_comments = false;
+		
 		$video_location = elgg_get_site_url().'/archive/embed';
 		$video_location_secure = str_replace('http://', 'https://', $video_location);
 		$thumbnail = $entity->getIconURL();
@@ -50,6 +56,25 @@ switch($entity->subtype){
 		minds\plugin\social\start::setMetatags('twitter:player', $video_location);
 		minds\plugin\social\start::setMetatags('twitter:player:width', '1280');
 		minds\plugin\social\start::setMetatags('twitter:player:height', '720');
+		
+		$body = "<div class=\"cinemr-screen\">";
+		$body .= elgg_view_entity($entity, array('full_view' => true, 'video_only'=> true));
+		$body .= "</div>";
+		
+		$title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
+		
+		$content .= '<div class="archive-description">'.$entity->description.'</div>';
+		$content .= elgg_view('minds/license', array('license'=>$entity->license));
+		$content .= elgg_view_comments($entity) . "</div>";
+
+		$body .= elgg_view_layout("content", array(	
+			'menu' => $menu,
+			'title' => $title_block,
+			'content'=> $content,
+		));
+		
+		echo elgg_view_page($title,$body, 'default', array('class'=>'cinemr-screen-body'));
+		exit;
 		break;
 	case 'image':
 		minds\plugin\social\start::setMetatags('og:type', 'mindscom:photo');
@@ -133,7 +158,8 @@ if($entity->getSubtype() == 'album'){
 
 elgg_push_breadcrumb($title);
 
-$content = elgg_view_entity($entity, array('full_view' => true));
+if(!$content)
+	$content = elgg_view_entity($entity, array('full_view' => true));
 
 //$content .=  elgg_view('minds/ads', array('type'=>'content-below-banner'));
 //$content .= elgg_view_comments($entity);
@@ -154,21 +180,23 @@ if(elgg_is_active_plugin('analytics') && $trending && false){
                     'offset' => $offset
 	));
 
+} else {
+	$trending = '';
 }
 
-//$sidebar = elgg_view('minds_social/social_footer');
-$sidebar .= elgg_view_comments($entity);
+if($sidebar_comments)
+	$sidebar .= elgg_view_comments($entity);
 
 $body = elgg_view_layout("content", array(	
-					'class' => 'archive',
-					'filter'=> '', 
-					'title' => $title,
-					'subtitle'=> $subtitle,
-					'content'=> $content,
-					'menu' => $menu,
-					'sidebar' => $sidebar,
-					'footer' => $trending
-				));
+	'class' => 'archive',
+	'filter'=> '', 
+	'title' => $title,
+	'subtitle'=> $subtitle,
+	'content'=> $content,
+	'menu' => $menu,
+	'sidebar' => $sidebar,
+	'footer' => $trending
+));
 
 echo elgg_view_page($title,$body);
 
