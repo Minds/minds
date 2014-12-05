@@ -84,15 +84,21 @@ class channel extends core\page implements interfaces\page{
 												));			
 				break;
 			case 'archive':
+				$subtype = 'archive';
+				$subtype_input = get_input('subtype');
+				if($subtype_input && in_array($subtype_input, array('video', 'image', 'album')))
+					$subtype = $subtype_input;
+					
+				$content .= elgg_view('channel/archive_filter', array('user'=>$user, 'subtype'=>$subtype));
 				$content .= elgg_list_entities(array(	
-												'type'=>'object', 
-												'subtype'=>'archive', 
-												'owner_guid'=>$user->guid, 
-												'limit'=>8, 
-												'offset'=>get_input('offset',''),
-												'full_view'=>false,
-												'list_class' => 'x2'
-												));	
+					'type'=>'object', 
+					'subtype'=> $subtype, 
+					'owner_guid'=>$user->guid, 
+					'limit'=>8, 
+					'offset'=>get_input('offset',''),
+					'full_view'=>false,
+					'list_class' => 'x2'
+				));	
 				break;
 			case 'widgets':			
 				// main profile page

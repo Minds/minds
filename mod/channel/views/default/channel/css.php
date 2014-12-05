@@ -555,6 +555,26 @@ and (max-width : 1200px) {
 	}
 }
 
+
+.channel-content-filter{
+	background:#EEE;
+	border:1px solid #DDD;
+	width:100%;
+}
+.channel-content-filter li{
+	display:inline-block;
+	border-right:1px solid #DDD;
+}
+.channel-content-filter li a{
+	display:block;
+	padding:8px 16px;
+	color:#333;
+	font-weight:bold;
+}
+.channel-content-filter li a:hover, .channel-content-filter li a.active{
+	background:#333;
+	color:#FFF;
+}
 /**
  * Mobile specific
  */
