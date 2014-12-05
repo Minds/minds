@@ -185,7 +185,7 @@ minds.cms.update = function(section){
 		top_offset: section.find('input[name=top_offset]').val()
 	};
 	
-	if(tinymce){
+	if (typeof variable !== 'undefined') {	
 		data.content = tinymce.get(section.find('textarea').attr('id')).getContent();
 	}
 
