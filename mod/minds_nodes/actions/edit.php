@@ -4,8 +4,10 @@ $node_guid = get_input('node_guid');
 $node = new MindsNode($node_guid);
 
 if(!$node->domain){
-	register_error('The following domain could not be found');
-	return false;
+	register_error('The domain could not be found');
+	
+	forward(REFERER);
+	//return false;
 }
 
 $domain_at_minds = get_input('domain_at_minds');
@@ -23,3 +25,5 @@ $node->renameNode($domain);
 
 
 $node->save();
+
+forward(REFERER);
