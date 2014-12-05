@@ -43,7 +43,10 @@ class start extends \ElggPlugin{
 		 * Returns the url.. this should really be in models/entities now
 		 */
 		elgg_register_entity_url_handler('user', 'all', function($user){
-			return elgg_get_site_url() . $user->username;
+			if($user->base_node)
+				return $user->base_node. $user->username;
+			else 
+				return elgg_get_site_url() . $user->username;
 		});
 
 		elgg_register_plugin_hook_handler('entity:icon:url', 'user', array($this, 'avatarURL'));
@@ -192,7 +195,11 @@ class start extends \ElggPlugin{
 	
 		$join_date = $user->getTimeCreated();
 		//return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
-		return  $CONFIG->cdn_url . "icon/$user_guid/$size/$join_date/$icon_time/".$CONFIG->lastcache;
+		
+		if($user->base_node)
+			return $user->base_node . "icon/$user_guid/$size/$join_date/$icon_time/".$CONFIG->lastcache;
+		else
+			return  $CONFIG->cdn_url . "icon/$user_guid/$size/$join_date/$icon_time/".$CONFIG->lastcache;
 	}
 	
 	
@@ -238,32 +245,3 @@ class start extends \ElggPlugin{
 	}
 	
 }
-
-
-/**
- * Channels page handler (for suggested and search etc)
- *
- * @param array $page url segments
- * @return bool
- */
-function channels_page_handler($page) {
-	$base = elgg_get_plugins_path() . 'channel/pages';
-
-	if(!isset($page[0])){
-		$page[0] = elgg_is_active_plugin('analytics') ? 'trending' : 'newest';
-	}
-
-	$vars = array();
-	$vars['page'] = $page[0];
-
-	if ($page[0] == 'search') {
-		$vars['search_type'] = $page[1];
-		require_once "$base/search.php";
-	} else {
-		require_once "$base/index.php";
-	}
-	return true;
-}
-
-
-

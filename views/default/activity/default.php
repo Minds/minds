@@ -1,7 +1,9 @@
 <?php
 
 $activity = $vars['entity'];
-
+if(get_input('debug2')){
+	var_dump($activity); exit;
+}
 $owner_link = '';
 $owner = $activity->getOwnerEntity(true);
 if ($owner) {
