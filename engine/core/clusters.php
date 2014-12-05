@@ -294,8 +294,10 @@ class clusters extends base{
 			}catch(\Exception $e){}
 			if($data){
 				foreach($data['activity'][''] as $activity){
+					$activity['ownerObj']['base_node'] = $user->base_node;
 					$new = new \minds\entities\activity($activity);
 					$new->external = true;
+					$new->node = $user->base_node;
 					$new->indexes = array(
 						"activity:$feed:$user->guid"
 					);

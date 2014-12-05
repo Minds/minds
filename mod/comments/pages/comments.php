@@ -5,6 +5,7 @@
 namespace minds\plugin\comments\pages;
 
 use minds\core;
+use minds\core\data;
 use minds\interfaces;
 //use minds\plugin\comments;
 use minds\plugin\comments\entities;
@@ -63,15 +64,23 @@ class comments extends core\page implements interfaces\page{
 		$comment->description = $desc;
 		$comment->parent_guid = $parent_guid;
 		if($comment->save()){
+			
+			$subscribers = data\indexes::fetch('comments:subscriptions:'.$parent_entity->guid) ?: array();
+			$subscribers[$parent_entity->owner_guid] = $parent_entity->owner_guid;
+			if(isset($subscribers[$comment->owner_guid]))
+				unset($subscribers[$comment->owner_guid]);
 		
 			\elgg_trigger_plugin_hook('notification', 'all', array(
-				'to' => array($parent_entity->owner_guid),
+				'to' => $subscribers,
 				'object_guid'=>$parent_guid,
 				'description'=>$desc,
 				'notification_view'=>'comment'
 			));
 			
 			\elgg_trigger_event('comment:create', 'comment', $data); 
+			
+			$indexes = new data\indexes();
+			$indexes->set('comments:subscriptions:'.$parent_entity->guid, array($comment->owner_guid => $comment->owner_guid));
 			
 			\elgg_set_ignore_access($ia);
 			

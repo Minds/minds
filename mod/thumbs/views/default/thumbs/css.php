@@ -1,8 +1,56 @@
 <?php
 /**
- * Likes CSS
+ * Thumbs CSS
  */
 ?>
+
+.thumbs-button{
+	text-decoration:none !important;
+	vertical-align:middle;
+}
+.thumbs-button .count{
+	font-size:12px;
+	color:#888;
+	vertical-align:middle;
+}
+.thumbs-button:hover .count{
+	color:#FFF;
+}
+
+.thumbs-list{
+	width:260px;
+	margin-top:0;
+}
+.thumbs-list h3{ 
+	font-size: 14px;
+	font-weight: 600;
+	padding: 6px 12px;
+	/* text-align: center; */
+	color: #888;
+	/* background: #666; */
+}
+.thumbs-list h3 span{
+	padding-right:6px;
+} 
+.thumbs-list li{
+	width:252px !important;
+} 
+.thumbs-list li .blog-rich-image-holder{
+	height:120px;
+}
+.thumbs-list .elgg-image{
+	display:none;
+}
+.thumbs-list h2{
+	font-size:13px;
+	font-weight:600;
+}
+.thumbs-list li .blog-rich-image-holder img{
+	top:0;
+}
+.thumbs-list .menu-v2 > li a{
+	font-size:9px;
+}
 
 /* ***************************************
 	Likes

@@ -37,7 +37,7 @@ $metadata = elgg_view_menu('entity', array(
     'entity' => $vars['entity'],
     'handler' => 'blog',
     'sort_by' => 'priority',
-    'class' => 'elgg-menu-hz',
+    'class' => $fulle ? 'elgg-menu-hz' : 'menu-v2',
     'full_view' => $full
 ));
 

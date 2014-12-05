@@ -2,7 +2,7 @@
 elgg.provide('minds.cms');
 
 minds.cms.init = function() {
-    	
+    
     $('.cms-section-add > a').on('click', function(e){
     	e.preventDefault();
     	$.ajax({
@@ -11,9 +11,15 @@ minds.cms.init = function() {
     		success : function(data){
     			console.log(data);
     			
+    			if($('.cms-sections').find('section').length == 0)
+    				window.location.reload();
+    			
     			$('.cms-sections').append(data);
     			if(jQuery().minicolors) { 
 				$('.cms-sections').find('.icon-colour input').minicolors();
+				
+				elgg.tinymce.init();
+				
 			}    
 		}
     	});
@@ -54,7 +60,9 @@ minds.cms.init = function() {
     		success : function(data){
     			console.log(data);
     		//	$(section).find('.cms-section-bg').attr('style="background-image: ' + data + '"');
-    			$(section).find('.cms-section-bg').css('background-image', 'url('+data+')');
+    			$(section).find('.cms-section-bg img').css('display', 'block');
+    			$(section).find('.cms-section-bg img').attr('src', data);
+    		//	$(section).find('.cms-section-bg').css('background-image', 'url('+data+')');
     		}
     	});
     });
@@ -74,12 +82,45 @@ minds.cms.init = function() {
     
     var typingTimer;                //timer identifier
     $(document).on('keyup', '.cms-section', function(e){
-    	 clearTimeout(typingTimer);
-    	 _this = this;
+    	 tigger_update(this);
+    });
+     $(document).on('updated-tinymce', function(e, id){
+     	fake_input = $('#'+id);
+     	section = fake_input.parents('.cms-section');
+     	if(section.length)
+    		tigger_update(section);
+    });
+    
+    function tigger_update(_this){
+    	clearTimeout(typingTimer);
     	 typingTimer = setTimeout(function(){
     	 	minds.cms.update($(_this));
     	 },1000);
-    });
+	}
+ 
+ 	$(".cms-section .cms-section-bg img").draggable({
+			scroll: false,
+			axis: "y",
+			drag: function(event, ui) {
+				img = $(event.target);
+              	wrapper = img.parent();
+         
+				if(ui.position.top >= 0){
+					ui.position.top = 0;
+				} else if(ui.position.top <= wrapper.height() - img.height()) {
+					ui.position.top = wrapper.height() - img.height();
+				}
+					
+				input = wrapper.find("input[name=top_offset]");
+				if(input.length > 0)
+					input.val(ui.position.top);
+					
+			},
+            stop: function(event, ui) {
+             	img = $(event.target);
+           		minds.cms.update(img.parents('section'));	
+			}
+        });
    
    
    $(".cms-sections-editable").sortable({
@@ -104,6 +145,30 @@ minds.cms.init = function() {
 									
 								}
 		}); 	
+		
+	$(".cms-banner-editable .carousel .item img").css('cursor', "move");
+	$(".cms-banner-editable .carousel .item img").draggable({
+		scroll: false,
+		axis: "y",
+		drag: function(event, ui) {
+			img = $(event.target);
+          	wrapper = img.parent();
+     
+			if(ui.position.top >= 0){
+				ui.position.top = 0;
+			} else if(ui.position.top <= wrapper.height() - img.height()) {
+				ui.position.top = wrapper.height() - img.height();
+			}
+
+			form = wrapper.parents('.body').find('.elgg-form-cms-page');
+			form.find('input[name=banner_position]').val(ui.position.top);
+				
+		},
+        stop: function(event, ui) {
+         	img = $(event.target);
+       	//	minds.cms.update(img.parents('section'));	
+		}
+    });
 }
 
 minds.cms.update = function(section){
@@ -113,9 +178,11 @@ minds.cms.update = function(section){
 		leftP: section.find('.left .p').val(),
 		rightH2: section.find('.right .h2').val(),
 		rightP: section.find('.right .p').val(),
+		content: tinymce.get(section.find('textarea').attr('id')).getContent(),
 		color: section.find('.icon-colour input').val(),
 		href: section.find('input[name=href]').val(),
-		position: section.find('input[name=position]').val()
+		position: section.find('input[name=position]').val(),
+		top_offset: section.find('input[name=top_offset]').val()
 	};
 
 	$.ajax({

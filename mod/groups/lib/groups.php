@@ -221,6 +221,7 @@ function groups_handle_mine_page() {
 function groups_handle_edit_page($page, $guid = 0) {
 	gatekeeper();
 	
+	$header = false;
 	if ($page == 'add') {
 		elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
 		$title = elgg_echo('groups:add');
@@ -242,16 +243,26 @@ function groups_handle_edit_page($page, $guid = 0) {
 		} else {
 			$content = elgg_echo('groups:noaccess');
 		}
+
+	if($group->banner){
+			$header = elgg_view('carousel/carousel', 
+				array('items'=> array(
+					new \ElggObject(array('ext_bg' => elgg_get_site_url().'groups/banner/'.$group->guid, 'top_offset'=>$group->banner_position))
+				)));
+			$class = "group-banner group-banner-editable";
+		}
 	}
 	
 	$params = array(
+		'content_header' => $header,
 		'content' => $content,
 		'title' => $title,
 		'filter' => '',
+		'class' => $class
 	);
 	$body = elgg_view_layout('content', $params);
 
-	echo elgg_view_page($title, $body);
+	echo elgg_view_page($title, $body, 'default', array('class'=>$class));
 }
 
 /**
@@ -292,6 +303,8 @@ function groups_handle_profile_page($guid) {
 	// turn this into a core function
 	global $autofeed;
 	$autofeed = true;
+	
+	$header = false;
 
 	elgg_push_context('group_profile');
 
@@ -324,17 +337,26 @@ function groups_handle_profile_page($guid) {
 		$sidebar .= elgg_view('groups/sidebar/members', array('entity' => $group));
 
 	}
+	
+	if($group->banner){
+		$header = elgg_view('carousel/carousel', 
+			array('items'=> array(
+				new \ElggObject(array('ext_bg' => elgg_get_site_url().'groups/banner/'.$group->guid, 'top_offset'=>$group->banner_position))
+			)));
+		$class = "group-banner";
+	}
 
 	$params = array(
+		'content_header' => $header, 
 		'content' => $content,
 		'sidebar' => $sidebar,
 		'title' => $group->name,
 		'filter' => '',
-		'class' => 'group-profile'
+		'class' => 'group-profile ' . $class
 	);
 	$body = elgg_view_layout('content', $params);
 
-	echo elgg_view_page($group->name, $body);
+	echo elgg_view_page($group->name, $body, 'default', array('class'=>$class));
 }
 
 /**

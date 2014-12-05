@@ -361,7 +361,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 				$options = array(
 						'name' => 'remind',
 						'href' => "newsfeed/remind/$entity->guid",
-						'text' => '&#59159;',
+						'text' => '&#59159; Remind',
 						'title' => elgg_echo('minds:remind'),
 						'is_action' => true,
 						'priority' => 1,

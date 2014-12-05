@@ -2,7 +2,6 @@
 	<span title="Navigation" class="entypo tooltip n menu-toggle">&#57349;</span>
 	<?php //echo elgg_view_menu('site',array('sort_by'=>'priority')); ?>
 	<?php echo elgg_view('search/search_box'); ?>
-	<a href="/archive/upload" class="elgg-button minds-topbar-icon">Upload</a>
 </div>
 
 <div class="center">

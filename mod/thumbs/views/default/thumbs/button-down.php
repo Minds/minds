@@ -5,39 +5,38 @@
  * @uses $vars['entity']
  */
 
-$type = elgg_extract('type', $vars, 'entity');
- 
-if($type=='entity'){
-	if (!isset($vars['entity'])) {
-		return true;
-	}
-	$guid = $vars['entity']->getGUID();
-	$url = elgg_get_site_url() . "action/thumbs/down?guid={$guid}";
-	$thumbs_down = unserialize($vars['entity']->{'thumbs:down'});
-        $already = is_array($thumbs_down) ? in_array(elgg_get_logged_in_user_guid(), $thumbs_down) : false;
-}elseif($type=='comment'){
-	$id = $vars['id'];
-	$comment_type = $vars['comment_type'];
-	$url = elgg_get_site_url() . "action/thumbs/down?type=comment&comment_type={$comment_type}&id={$id}";
-	$already = $vars['already'];
-}
-
 elgg_load_js("elgg.thumbs");
 
-
-// check to see if the user has already liked this
-if (elgg_is_logged_in()) {
-		
-		$params = array(
-			'href' => $url,
-			'text' => '<span class="entypo">&#128078;</span>',
-			'title' => elgg_echo('thumbs:down'),
-			'class'=> $already ? 'thumbs-button-down selected' : 'thumbs-button-down',
-			'data-role' => 'none',
-			'rel'=>'external',
-			'is_action' => true,
-			'is_trusted' => true,
-		);
-		$down_button = elgg_view('output/url', $params);
-		echo $down_button;
+if (!elgg_is_logged_in()){
+	return false;
 }
+
+$type = elgg_extract('type', $vars, 'entity');
+if (!isset($vars['entity'])) {
+	return true;
+}
+$entity = $vars['entity'];
+$guid = $entity->guid;
+
+$already = minds\plugin\thumbs\helpers\buttons::hasThumbed($entity, 'down');
+
+if($already)
+	$url = elgg_get_site_url() . "thumbs/actions/$guid/down-cancel";
+else
+	$url = elgg_get_site_url() . "thumbs/actions/$guid/down";
+
+$count = $vars['entity']->{'thumbs:down:count'};
+  
+
+$params = array(
+	'href' => $url,
+	'text' => "<span class=\"entypo\">&#128078; <span class=\"count\"> $count </span></span>",
+	'title' => elgg_echo('thumbs:up'),
+	'class'=> $already ? 'thumbs-button thumbs-button-down selected' : 'thumbs-button thumbs-button-down',
+	'guid' => $guid,
+	'data-action' => $already ? 'down-cancel' : 'down', 
+	'is_trusted' => true,
+);
+$up_button = elgg_view('output/url', $params);
+
+echo $up_button;

@@ -2,6 +2,17 @@
 
 $node = $vars['entity'];
 
+if(isset($vars['directory_output']) || elgg_get_context() == 'channel'){ ?>
+
+	<a href="http://<?= $node->domain ?>">
+		<img src="//<?= $node->domain ?>/themeicons/logo_main/<?= time() ?>.png" class="node_logo" onerror="this.src='<?=elgg_get_site_url()?>_graphics/minds_2.png'"/>
+		<h3><?= $node->domain ?></h3>
+	</a>
+<?php
+	return true;	
+
+}
+
 $tier = $node->getTier();
 $own_domain = $node->allowedDomain() ? 'yes' : 'no';
 $expire = $node->expires();

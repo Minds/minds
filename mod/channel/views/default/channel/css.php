@@ -9,8 +9,17 @@
 .channel .elgg-layout-two-sidebar{
 	padding-top:250px;
 }
-.channel .landing-page{	max-width:900px;}
+.channel .landing-page{	
+	/*max-width:900px;*/
+}
+.channel .single-column{	
+	max-width:900px;
+}
 .channel .elgg-layout-two-sidebar .elgg-main{
+	margin-top:150px;
+}
+
+.channel .elgg-sidebar{
 	margin-top:150px;
 }
 
@@ -312,7 +321,7 @@ padding: 0 4px;
  */
 .channels .elgg-list {
 	padding:0;
-	width:1128px;
+	width:1000px;
 	margin:auto;
 }
 .channels .users-list > li{
@@ -320,13 +329,16 @@ padding: 0 4px;
 	margin: 8px;
 	padding:0;
 	border: 0;
-	width: 360px;
-	height: auto;
+	width: 310px;
+	height: 225px;
 	display: block;
 	background:transparent;
 	box-shadow:none;
 	-webkit-box-shadow:none;
 	-moz-box-shadow:none;
+}
+.users-list .hovercard-banner .top-arrow{
+	display:none;
 }
 .users-list li .elgg-image{
 	float:none;
@@ -538,6 +550,34 @@ padding: 0 4px;
 	line-height:2.3em;
 	padding-left:16px;
 }
+@media all
+and (min-width : 720px)
+and (max-width : 1200px) {
+	 .channel .elgg-sidebar{
+                display:none;
+	}
+}
+
+
+.channel-content-filter{
+	background:#EEE;
+	border:1px solid #DDD;
+	width:100%;
+}
+.channel-content-filter li{
+	display:inline-block;
+	border-right:1px solid #DDD;
+}
+.channel-content-filter li a{
+	display:block;
+	padding:8px 16px;
+	color:#333;
+	font-weight:bold;
+}
+.channel-content-filter li a:hover, .channel-content-filter li a.active{
+	background:#333;
+	color:#FFF;
+}
 /**
  * Mobile specific
  */
@@ -548,6 +588,10 @@ and (max-width : 720px) {
 	.body .minds-fixed-layout{
 		width:90%;
 		margin:8px;
+	}
+
+	.channel .elgg-sidebar{
+		display:none;
 	}
 
 	.minds-fixed-sidebar-left{

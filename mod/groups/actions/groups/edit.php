@@ -109,6 +109,8 @@ if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {
 	}
 }
 
+$group->banner_position = get_input('banner_position');
+
 $guid = $group->save();
 
 // group saved so clear sticky form
@@ -197,6 +199,18 @@ if ($must_move_icons) {
 			rename("$old_path/{$group_guid}{$size}.jpg", "$new_path/{$group_guid}{$size}.jpg");
 		}
 	}
+}
+
+if(is_uploaded_file($_FILES['banner']['tmp_name'])){
+	$resized = get_resized_image_from_uploaded_file('banner', 2000);
+	$file = new \ElggFile();
+	$file->owner_guid = $group->owner_guid;
+	$file->setFilename("group/{$group->guid}.jpg");
+	$file->open('write');
+	$file->write($resized);
+	$file->close();
+	$group->banner = true;
+	$group->save();
 }
 
 system_message(elgg_echo("groups:saved"));
