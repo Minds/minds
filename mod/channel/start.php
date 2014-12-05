@@ -370,6 +370,9 @@ function channel_url($user) {
 	if(elgg_is_admin_logged_in()){
 		//var_dump($user->username, $user->guid);
 	}
+	if($user->base_node)
+		return $user->base_node. $user->username;
+	else 
 	return elgg_get_site_url() . $user->username;
 }
 
@@ -396,10 +399,7 @@ function channel_override_avatar_url($hook, $entity_type, $return_value, $params
 	if (!elgg_instanceof($user, 'user')) {
 		return null;
 	}
-if(get_input('debugm')){
 
-var_dump($user); exit; 
-}
 	if($user->avatar_url)
 		return $user->avatar_url;
 
@@ -429,7 +429,11 @@ var_dump($user); exit;
 
 	$join_date = $user->getTimeCreated();
 	//return $CONFIG->cdn_url .  "mod/channel/icondirect.php?lastcache=$icon_time&joindate=$join_date&guid=$user_guid&size=$size";
-	return  $CONFIG->cdn_url . "icon/$user_guid/$size/$join_date/$icon_time/".$CONFIG->lastcache;
+
+	if($user->base_node)
+		return $user->base_node . "icon/$user_guid/$size/$join_date/$icon_time/".$CONFIG->lastcache;
+	else
+		return  $CONFIG->cdn_url . "icon/$user_guid/$size/$join_date/$icon_time/".$CONFIG->lastcache;
 }
 
 /**

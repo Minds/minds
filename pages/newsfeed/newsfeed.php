@@ -99,7 +99,7 @@ class newsfeed extends core\page implements interfaces\page{
 		//	$this->forward('login');
 		//}
 		
-		if(!is_numeric($pages[0]) && \minds\core\session::isLoggedin() && elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0){
+		if(!is_numeric($pages[0]) && \minds\core\session::isLoggedin() && elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0 && !elgg_get_logged_in_user_entity()->base_node){
 			$pages[0] = 'featured';
 		}
 
