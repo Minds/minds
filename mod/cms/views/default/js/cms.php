@@ -173,17 +173,21 @@ minds.cms.init = function() {
 
 minds.cms.update = function(section){
 
+	
 	var data = {
 		leftH2: section.find('.left .h2').val(),
 		leftP: section.find('.left .p').val(),
 		rightH2: section.find('.right .h2').val(),
 		rightP: section.find('.right .p').val(),
-		content: tinymce.get(section.find('textarea').attr('id')).getContent(),
 		color: section.find('.icon-colour input').val(),
 		href: section.find('input[name=href]').val(),
 		position: section.find('input[name=position]').val(),
 		top_offset: section.find('input[name=top_offset]').val()
 	};
+	
+	if(tinymce){
+		data.content = tinymce.get(section.find('textarea').attr('id')).getContent();
+	}
 
 	$.ajax({
 		url : elgg.get_site_url() + 'admin/cms/sections/' + section.attr('data-guid'),
