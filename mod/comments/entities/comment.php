@@ -13,7 +13,8 @@ class comment extends entities\entity{
 		parent::initializeAttributes();
 		$this->attributes = array_merge($this->attributes, array(
 			'type' => 'comment',
-			'owner_guid'=>elgg_get_logged_in_user_guid()
+			'owner_guid'=>elgg_get_logged_in_user_guid(),
+			'access_id' => 2
 		));
 	}
 	
