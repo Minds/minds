@@ -16,7 +16,8 @@ $encrypted = $vars['encrypted'];
 		<?php foreach($conversation->participants as $guid): ?>
 		<input type="hidden" name="participants[]" value="<?= $guid ?>"/>	
 		<?php endforeach; ?>
-		<input type="submit" value="Send" class="elgg-button elgg-button-action"/>
+		<input type="submit" value="Send" class="elgg-button elgg-button-action" style="float:left;"/>
+		<div class="system-messages-output"></div>
 	</div>
 </div>
 
