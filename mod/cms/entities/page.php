@@ -104,5 +104,11 @@ class page extends entities\object{
 		}
 		return $this;
 	}
+	
+	public function setContext($context = 'footer'){
+		$this->context = $context;
+		
+		return $this;
+	}
 
 }

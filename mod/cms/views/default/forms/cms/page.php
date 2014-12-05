@@ -1,7 +1,7 @@
 <?php
 
 $page = elgg_extract('page', $vars);
-
+$context = elgg_extract('context', $vars, $page->context ?: 'footer');
 ?>
 
 <h4>Title</h4>
@@ -21,4 +21,6 @@ $page = elgg_extract('page', $vars);
 <h4>Path URI</h4>
 <p><input type="text" name="uri" placeholder="eg. about" value="<?= $page ? $page->uri : '' ?>" required/></p>
 
+
+<input type="hidden" name="context" value="<?= $context ?>"/>
 <input type="submit" value="Save!" class="elgg-button elgg-button-action"/>

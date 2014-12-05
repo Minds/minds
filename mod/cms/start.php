@@ -47,9 +47,13 @@ class start extends bases\plugin{
 	public function pageSetup($event, $type, $params){
 		
 		$lu = new core\data\lookup();
-		$menu = $lu->get('object:cms:menu:footer');
-		if($menu){
-			foreach($menu as $path => $title){
+		
+		/**
+		 * Footer setup
+		 */
+		$footer = $lu->get('object:cms:menu:footer');
+		if($footer){
+			foreach($footer as $path => $title){
 				$edit_link = elgg_view('output/url', array('href'=>elgg_get_site_url() . 'p/edit/'.$path, 'text'=>'edit', 'class'=>'cms-sidebar-edit'));
 				if(elgg_is_admin_logged_in())
 					$text =  $title . $edit_link;
@@ -78,6 +82,7 @@ class start extends bases\plugin{
 				));
 			}
 		}
+		
 		if(elgg_is_admin_logged_in()){ 
 			elgg_register_menu_item('footer', array(
 				'name' => 'add',
@@ -86,6 +91,33 @@ class start extends bases\plugin{
 				'priority'=>99999
 			));
 		}
+		
+		/**
+		 * Topbar menu setup
+		 */
+		$topbar = $lu->get('object:cms:menu:topbar');
+		if($topbar){
+			foreach($topbar as $path => $title){
+				
+				$text = $title;
+				
+				elgg_register_menu_item('topbar', array(
+					'name' => $title,
+					'href' => elgg_get_site_url() . 'p/'.$path,
+					'text' => $text
+				));
+			}
+		}
+		
+		if(elgg_is_admin_logged_in()){ 
+			elgg_register_menu_item('topbar', array(
+				'name' => 'add',
+				'href' => elgg_get_site_url() . 'p/add?context=topbar',
+				'text' => '+ Add', 
+				'priority'=>99999
+			));
+		}
+		
 
 	}
 	

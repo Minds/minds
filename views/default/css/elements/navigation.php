@@ -173,6 +173,7 @@
 .elgg-menu-topbar {
 	margin:0;
 	float: left;
+	padding:16px 0;
 }
 
 .elgg-menu-topbar > li {
@@ -182,7 +183,8 @@
 .elgg-menu-topbar > li > a {
 	padding-top: 2px;
 	color: #333;
-	margin: 1px 15px 0;
+	font-weight:bold;
+	margin: 1px 8px 0;
 }
 
 .elgg-menu-topbar > li > a:hover {

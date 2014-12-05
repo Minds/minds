@@ -32,7 +32,7 @@ class page extends core\page implements interfaces\page{
 				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/edit/'.$page->guid, 'enctype'=>'multipart/form-data'), array('page'=>$page)); 
 				break;
 			case 'add':
-				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/add', 'enctype'=>'multipart/form-data')); 
+				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/add', 'enctype'=>'multipart/form-data'), array('context'=>get_input('context', 'footer'))); 
 				break;
 			case 'delete':
 				$page = new entities\page($pages[1]);
@@ -109,6 +109,7 @@ class page extends core\page implements interfaces\page{
 		}
 		
 		$page->setTitle(get_input('title'))
+			->setContext(get_input('context'))
 			->setBody(get_input('body'))
 			->setUri(get_input('uri', time()))
 			->setForwarding(get_input('forwarding', false))
