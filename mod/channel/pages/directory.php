@@ -72,7 +72,7 @@ class directory extends core\page implements interfaces\page{
 				
 			case 'trending':
 	       		$opts = array('timespan' => get_input('timespan', 'day'));
-		        $trending = new MindsTrending(null, $opts);
+		        $trending = new \MindsTrending(null, $opts);
 				$guids = $trending->getList(array('type'=>'user', 'limit'=>$limit, 'offset'=>(int) $offset));
 				
 				if($guids){

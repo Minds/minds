@@ -55,7 +55,7 @@
 	padding:16px;
 }
 .elgg-list.x4 > li {
-	width:21%;
+	width:22%;
 	margin:8px 0 8px 2%;
 }
 .elgg-list.x1{
@@ -104,7 +104,7 @@
 @media screen and (min-width: 1400px) {
 	
 	.elgg-list > li{
-		width:21%;
+		width:22%;
 		height:210px;
 	}
 	.elgg-list.x4 > li {
@@ -114,8 +114,9 @@
 @media screen and (min-width: 1800px) {
 
 	 .elgg-list > li{
-                width:16.5%;
+                width:18.5%;
                 height:210px;
+		margin:0 0 0 1%;
         }
 }
 /**
