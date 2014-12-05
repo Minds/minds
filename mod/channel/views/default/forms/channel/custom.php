@@ -193,7 +193,7 @@ $form = <<<FORM
 				$h1_colour_input
 			</td>
 		</tr>
-		<tr>
+		<tr style="display:none;">
 			<td class="label">
 				$h3_colour_label
 			</td>
