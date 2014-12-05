@@ -14,7 +14,7 @@ archive.init = function(){
 						// Pass any options here
 						default_res : "360p"
 					},
-					ads: {},
+					/*ads: {},
 					vast: {
 					//	url : 'https://ads.adap.tv/a/t/integration_test'
 				//		url : 'https://www.minds.io/www/delivery/fc.php?script=bannerTypeHtml:vastInlineBannerTypeHtml:vastInlineHtml&zones=pre-roll0-0%3D1&nz=1&block=1&format=vast&charset=UTF-8',
@@ -27,7 +27,7 @@ archive.init = function(){
 						//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=57735&LR_SCHEMA=vast2-vpaid&LR_AUTOPLAY=1&LR_TITLE=minds&LR_VIDEO_ID=minds&LR_VERTICALS=donna&LR_FORMAT=application/javascript',
 						//q1 media
 						//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=51365&LR_FORMAT=application/javascript&LR_SCHEMA=vast2-vpaid'
-					}
+					}*/
 				 }
 			}).ready(function(){
 				var myPlayer = this;    // Store the video object
