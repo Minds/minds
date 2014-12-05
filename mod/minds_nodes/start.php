@@ -68,7 +68,7 @@ class start extends bases\plugin{
 	
 		// Override the return url on tier orders
 		\elgg_register_plugin_hook_handler('urls', 'pay', array($this, 'payOverride'));
-	   	
+			   	
 	}
 
 	public function pagesetup(){
@@ -80,6 +80,16 @@ class start extends bases\plugin{
 			);
 			\elgg_register_menu_item('page', $params);
 		}
+		
+		
+		\elgg_register_menu_item('site', array(
+		    'name' => 'nodes',
+		    'text' => '<span class="entypo">&#xE817;</span> My nodes',
+		    'href' => '#nodes-switcher',
+		    'title' => elgg_echo('nodes:mynodes'),
+		    'priority' => 99,
+		    'rel' => 'toggle'
+		));
 	}
 	
 	/**
