@@ -28,11 +28,13 @@
 .cms-section .container .left{
 	float:left;
 	max-width:500px;
+	position:relative;
 }
 
 .cms-section .container .right{
 	float:right;
 	max-width:500px;
+	position:relative;
 }
 .cms-section .container .cell{
 	display:inline-block;
