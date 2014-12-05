@@ -98,7 +98,7 @@ minds.cms.init = function() {
     	 },1000);
 	}
  
- 	$(".cms-section .cms-section-bg img").draggable({
+ 	$(".cms-sections-editable .cms-section .cms-section-bg img").draggable({
 			scroll: false,
 			axis: "y",
 			drag: function(event, ui) {
