@@ -94,6 +94,7 @@
 .cms-section .section-gui-ouput{
 	line-height:1.2em;
 	padding-top:50px;
+	position:relative;
 }
 
 .cms-section .container .cell textarea.p{
