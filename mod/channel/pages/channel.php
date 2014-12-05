@@ -191,6 +191,13 @@ class channel extends core\page implements interfaces\page{
 				}
 				exit;
 				break;
+			case 'thumbs':
+			case 'votes':
+				$guids = \minds\plugin\thumbs\helpers\lists::getUserThumbsGuids($user, false, array('limit'=>$limit, 'offset'=>$offset));
+				if($guids)
+					$content .= core\entities::view(array('guids'=>$guids, 'full_view'=>false, 'list_class' => 'list-newsfeed'));
+				$class = 'single-column';
+				break;
 			case 'news':
 			case 'timeline':
 			default:

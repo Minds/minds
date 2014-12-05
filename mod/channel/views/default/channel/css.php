@@ -12,6 +12,9 @@
 .channel .landing-page{	
 	/*max-width:900px;*/
 }
+.channel .single-column{	
+	max-width:900px;
+}
 .channel .elgg-layout-two-sidebar .elgg-main{
 	margin-top:150px;
 }
