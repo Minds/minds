@@ -3,8 +3,9 @@
     $entities = elgg_get_entities([
 	'type' => 'object',
 	'subtype' => 'node',
-	'limit' => 999
-    ]);
+	'limit' => 999,
+	'owner_guid' => elgg_get_logged_in_user_guid()
+    ]); 
 ?>
 <div id="nodes-switcher" class="nodes-switcher" style="display:none;">
     <div class="nodes-list">
