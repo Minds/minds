@@ -65,6 +65,7 @@ switch($entity->subtype){
 		
 		$content .= '<div class="archive-description">'.$entity->description.'</div>';
 		$content .= elgg_view('minds/license', array('license'=>$entity->license));
+		$content .= elgg_view('minds_social/social_footer');
 		$content .= elgg_view_comments($entity) . "</div>";
 
 		$body .= elgg_view_layout("content", array(	
