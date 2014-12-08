@@ -139,7 +139,7 @@ class start extends bases\plugin{
 		    'text' => '<span class="entypo">&#xE817;</span> My nodes',
 		    'href' => '#nodes-switcher',
 		    'title' => elgg_echo('nodes:mynodes'),
-		    'priority' => 99,
+		    'priority' => 9999, // Make sure we're last, so the sidebar selector works...
 		    'rel' => 'toggle'
 		));
 	}
