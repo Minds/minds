@@ -82,8 +82,9 @@ class directory extends core\page implements interfaces\page{
 				break;
 			
 			case 'newest':
-                $options['newest_first'] = true;
-                $content = elgg_list_entities($options);
+                		$options['limit'] = $limit;
+				$options['newest_first'] = true;
+                		$content = elgg_list_entities($options);
 				break;
 			
 			case 'featured':
