@@ -423,7 +423,21 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	function isFriendOf($user_guid) {
-		return user_is_friend($user_guid, $this->getGUID());
+		$cacher = \minds\core\data\cache\factory::build();
+                if($cache = $cacher->get("$user_guid:friendof:$this->guid")){
+			if($cache == 'yes')
+				return true;
+			else
+				return false;
+		}
+
+		$is = user_is_friend($user_guid, $this->getGUID());
+		if($is)
+			$cacher->set("$user_guid:friendof:$this->guid", 'yes');
+		else
+			$cacher->set("$user_guid:friendof:$this->guid", 'no');
+
+		return $is;
 	}
 
 	/**
@@ -458,8 +472,17 @@ class ElggUser extends ElggEntity
 	 * @return 
 	 */
 	function getSubscribersCount(){
+				
+		$cacher = \minds\core\data\cache\factory::build();
+		if($cache = $cacher->get("friendsof:$this->guid"))
+			return $cache;
+
 		$db = new minds\core\data\call('friendsof');
-		return (int) $db->countRow($this->guid);
+		$count = $db->countRow($this->guid);
+		if(!$count)
+			$count = 1;
+		$cacher->set("friendsof:$this->guid", $count);
+		return $count;
 	}
 	
 	/**

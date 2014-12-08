@@ -154,7 +154,6 @@ class call extends core\base{
 	 public function getRow($key, array $options = array()){
 	 	self::$reads++;
 		array_push(self::$keys, $key);
-
 		$defaults = array(  'multi' => false,
 							'offset' => "",
 							'finish' => "",
@@ -196,7 +195,8 @@ class call extends core\base{
 	public function countRow($key){
 		if(!$key)
 			return 0;
-		try{self::$counts++;
+		try{
+			self::$counts++;
 			return $this->cf->get_count($key);
 		}catch(Exception $e){
 			return 0;

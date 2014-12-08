@@ -88,13 +88,20 @@ function blog_get_page_content_read($guid = NULL) {
 			)));
 		$return['class'] = 'content-carousel';
 	} else {
-		$carousels = minds\core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$blog->owner_guid));
+		$cacher = minds\core\data\cache\factory::build();
+		if(!$carousels = $cacher->get("object:carousel:user:$blog->owner_guid") && $carousels != 'not-set'){
+			$carousels = minds\core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$blog->owner_guid));
+			$cacher->set("object:carousel:user:$blog->owner_guid", $carousels ?: 'not-set');
+		} elseif($carousels == 'not-set'){
+			$carousels = FALSE;
+		}
 		if($carousels){
 			$return['content_header'] .= elgg_view('carousel/carousel', array('items'=>$carousels));
 			$return['class'] = 'content-carousel';
 		}
 	}
-	
+
+	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'responsive'));	
 	$return['content'] .= elgg_view_entity($blog, array('full_view' => true));
 	$return['content'] .= elgg_view('page/elements/ads', array('type'=>'content-below-banner'));
 	//check to see if comment are on
@@ -210,13 +217,19 @@ function blog_get_trending_page_content_list() {
 	$limit = get_input('limit', 8);
 	$offset = get_input('offset', 0);
 
-	//trending
-        $options = array(
-                'timespan' => get_input('timespan', 'day')
-        );
-        $trending = new MindsTrending(array(), $options);
-	$guids = $trending->getList(array('type'=>'object', 'subtype'=>'blog', 'limit'=>$limit, 'offset'=>$offset, 'count'=>NULL));
+	$cacher = minds\core\data\cache\factory::build();
+	if(!$guids = $cacher->get("trending-guids:$limit:$offset")){
 	
+
+		//trending
+		$options = array(
+       	        	'timespan' => get_input('timespan', 'day')
+       	 	);
+       	 	$trending = new MindsTrending(array(), $options);
+		$guids = $trending->getList(array('type'=>'object', 'subtype'=>'blog', 'limit'=>$limit, 'offset'=>$offset, 'count'=>NULL));
+		$cacher->set("trending-guids:$limit:$offset", $guids);
+	}
+		
 	if($guids)	{
 		$list = elgg_list_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>0, 'full_view'=>false, 'pagination_legacy' => true));
 	}        
@@ -581,13 +594,13 @@ function blog_sidebar($blog){
 		} 
 			
 		$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
+		
 		//show more posts from this user
 		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>3));
 		if (($key = array_search($blog, $owners_blogs)) !== false) {
 		    unset($owners_blogs[$key]);
 		}
-		//if(get_input('debug'))
-		//	var_dump($owners_blogs);
+		
 		set_input('ajax', true);
 		$owners_blogs = elgg_view_entity_list($owners_blogs, array('full_view'=>false, 'sidebar'=>true, 'class'=>'blog-sidebar', 'pagination'=>false, 'masonry'=>false));
 		$return .= elgg_view_module('aside', elgg_echo('blog:owner_more_posts', array($blog->getOwnerEntity()->name)), $owners_blogs, array('class'=>'blog-sidebar'));

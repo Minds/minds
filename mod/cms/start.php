@@ -47,11 +47,21 @@ class start extends bases\plugin{
 	public function pageSetup($event, $type, $params){
 		
 		$lu = new core\data\lookup();
-		
+		$cacher = core\data\cache\factory::build();
+
+		if(!$footer = $cacher->get('cms:footer')){
+			$footer = $lu->get('object:cms:menu:footer');
+			$cacher->set('cms:footer', $footer);
+		}
+
+		if(!$topbar = $cacher->get('cms:topbar') && $topbar != 'not-set'){
+			$topbar = $lu->get('object:cms:menu:topbar');
+			$cacher->set('cms:topbar', $topbar ?: 'not-set');
+		}
+	
 		/**
 		 * Footer setup
 		 */
-		$footer = $lu->get('object:cms:menu:footer');
 		if($footer){
 			foreach($footer as $path => $title){
 				$edit_link = elgg_view('output/url', array('href'=>elgg_get_site_url() . 'p/edit/'.$path, 'text'=>'edit', 'class'=>'cms-sidebar-edit'));
@@ -95,7 +105,6 @@ class start extends bases\plugin{
 		/**
 		 * Topbar menu setup
 		 */
-		$topbar = $lu->get('object:cms:menu:topbar');
 		if($topbar){
 			foreach($topbar as $path => $title){
 				
