@@ -133,15 +133,23 @@ class start extends bases\plugin{
 			\elgg_register_menu_item('page', $params);
 		}
 		
-		
-		\elgg_register_menu_item('site', array(
-		    'name' => 'nodes',
-		    'text' => '<span class="entypo">&#xE817;</span> My nodes',
-		    'href' => '#nodes-switcher',
-		    'title' => elgg_echo('nodes:mynodes'),
-		    'priority' => 9999, // Make sure we're last, so the sidebar selector works...
-		    'rel' => 'toggle'
-		));
+		if (elgg_is_logged_in()) {
+		    if (elgg_get_entities([
+			'type' => 'object',
+			'subtype' => 'node',
+			'count' => true,
+			'owner_guid' => elgg_get_logged_in_user_guid()
+		    ])) {
+			\elgg_register_menu_item('site', array(
+			    'name' => 'nodes',
+			    'text' => '<span class="entypo">&#xE817;</span> My nodes',
+			    'href' => '#nodes-switcher',
+			    'title' => elgg_echo('nodes:mynodes'),
+			    'priority' => 9999, // Make sure we're last, so the sidebar selector works...
+			    'rel' => 'toggle'
+			));
+		    }
+		}
 	}
 	
 	/**
