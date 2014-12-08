@@ -1,7 +1,7 @@
 <?php
     $node = $vars['entity'];
 
-    $url = elgg_get_site_url() . 'nodes/manage';
+    $url = elgg_get_site_url() . 'nodes/node/'.$node->guid;
     $icon = $node->getIcon('small');
     if ($node->launched) {
 	$url = $node->getURL();
