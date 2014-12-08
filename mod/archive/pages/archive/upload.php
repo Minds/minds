@@ -9,6 +9,11 @@ if(!elgg_is_logged_in()){
 	forward('/register');
 }
 
+if(!elgg_get_plugin_user_setting('upload', elgg_get_logged_in_user_guid(), 'archive')){
+	elgg_set_plugin_user_setting('upload', 'yes', elgg_get_logged_in_user_guid(), 'archive');
+}
+
+
 // Loading js's
 elgg_load_js('angular.min.js');
 elgg_load_js('angular-route.min.js');
