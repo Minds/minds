@@ -292,8 +292,10 @@ div.register-popup {
 div.nodes-switcher {
     margin-bottom: 20px;
     overflow: hidden;
-    border: 1px solid #444;
-    padding: 5px;
+    /*border: 1px solid #444;
+    padding: 5px;*/
+    margin-left: 5px;
+    margin-top: -10px;
 }
 
 div.nodes-switcher h1 {
