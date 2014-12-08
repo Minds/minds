@@ -84,7 +84,7 @@ function blog_get_page_content_read($guid = NULL) {
 	if($blog->header_bg){
 		$return['content_header'] .= elgg_view('carousel/carousel', 
 			array('items'=> array(
-				new ElggObject(array('ext_bg' => elgg_get_site_url().'blog/header/'.$blog->guid))
+				new ElggObject(array('ext_bg' => elgg_get_site_url().'blog/header/'.$blog->guid, 'top_offset'=>$blog->banner_position))
 			)));
 		$return['class'] = 'content-carousel';
 	} else {
@@ -418,6 +418,15 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 		$title = elgg_echo('blog:add');
 		$content = elgg_view_form('blog/save', $vars, $body_vars);
 	}
+	
+	
+	if($blog->header_bg){
+		$return['content_header'] .= elgg_view('carousel/carousel', 
+			array('items'=> array(
+				new ElggObject(array('ext_bg' => elgg_get_site_url().'blog/header/'.$blog->guid, 'top_offset'=>$blog->banner_position))
+			)));
+		$return['class'] = 'content-carousel blog-banner-editable';
+	}
 
 	$return['title'] = $title;
 	$return['content'] = $content;
@@ -446,7 +455,8 @@ function blog_prepare_form_vars($post = NULL, $revision = NULL) {
 		'container_guid' => NULL,
 		'guid' => NULL,
 		'draft_warning' => '',
-		'license' => ''
+		'license' => '',
+		'banner_position' => 0
 	);
 
 	if ($post) {

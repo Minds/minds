@@ -61,7 +61,8 @@ $values = array(
 	'excerpt' => '',
 	'tags' => '',
 	'container_guid' => (int)get_input('container_guid'),
-	'license' => ''
+	'license' => '',
+	'banner_position' => 0
 );
 
 // fail if a required entity isn't set
@@ -133,6 +134,8 @@ if (!$error) {
 if(get_input('removeHeader')){
 	$blog->header_bg = false;
 }
+
+$blog->banner_position = get_input('banner_position', 0);
 
 // only try to save base entity if no errors
 if (!$error) {

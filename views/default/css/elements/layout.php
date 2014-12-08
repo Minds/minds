@@ -245,7 +245,7 @@
 	margin: 0 10px 0 0;
 }
 
-.content-carousel{
+.content-carousel .layout{
 	margin-top:226px;
 }
 

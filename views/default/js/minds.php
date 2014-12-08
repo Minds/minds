@@ -162,6 +162,32 @@
 			}
         });
         
+        /**
+         * Should really standardise this... this is pretty dumb!!
+         */
+       	$(".blog-banner-editable .carousel .item img").css('cursor', "move");
+		$(".blog-banner-editable .carousel .item img").draggable({
+			scroll: false,
+			axis: "y",
+			drag: function(event, ui) {
+				img = $(event.target);
+	          	wrapper = img.parent();
+	     
+				if(ui.position.top >= 0){
+					ui.position.top = 0;
+				} else if(ui.position.top <= wrapper.height() - img.height()) {
+					ui.position.top = wrapper.height() - img.height();
+				}
+	
+				wrapper.parents('.body').find('input[name=banner_position]').val(ui.position.top);
+					
+			},
+	        stop: function(event, ui) {
+	         	img = $(event.target);
+	       	//	minds.cms.update(img.parents('section'));	
+			}
+	    });
+        
         $("").draggable({
 			scroll: false,
 			axis: "y",
