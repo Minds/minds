@@ -1,8 +1,11 @@
 <?php
 $activity = $vars['activity'];
+$target = "_blank";
+if(strpos($activity -> perma_url, elgg_get_site_url()) !== FALSE)
+	$target = '_self';
 ?>
 <div class="activity-rich-post">
-	<a href="<?= $activity -> perma_url ?>" target="_blank">
+	<a href="<?= $activity -> perma_url ?>" target="<?= $target ?>">
 		
 		<?php if($activity->thumbnail_src){?>
 			<div class="thumbnail-wrapper">

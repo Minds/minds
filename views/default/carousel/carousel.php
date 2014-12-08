@@ -55,7 +55,11 @@ $(document).ready(function() {
 		foreach($items as $item){
 			$link_extras = "";
 			if($item->href){
-				$link_extras = "href=\"{$item->href}\" target=\"_blank\"";
+				if(strpos($item->href, elgg_get_site_url()) !== FALSE)
+					$target = '_self';
+				else
+					$target = '_blank';
+				$link_extras = "href=\"{$item->href}\" target=\"$target\"";
 			}
 
 			$class = $i==0 ?'active' : '';
