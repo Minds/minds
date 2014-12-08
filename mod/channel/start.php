@@ -80,7 +80,7 @@ class start extends \ElggPlugin{
 			$router = new core\router();
 			$path = implode('/', $pages);
 			$router->route('/channel/'.$path);
-			exit;
+			return true;
 		});
 		
 		elgg_extend_view('page/elements/head', 'channel/metatags');

@@ -1,5 +1,5 @@
 <?php
-$remind = $vars['remind'];
+$remind = (array) $vars['remind'];
 $entity = minds\core\entities::build(new minds\entities\entity($remind));
 
 if(isset($remind['thumbnail_src']))
