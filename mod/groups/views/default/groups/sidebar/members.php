@@ -19,7 +19,7 @@ $all_link = elgg_view('output/url', array(
 $members = $vars['entity']->getMembers(100,'');
 
 $body = elgg_view_entity_list($members, array('list_type' => 'gallery',
-                'gallery_class' => 'elgg-gallery-users', 'pagination'=>false));
+                'gallery_class' => 'elgg-gallery-users', 'pagination'=>false, 'size'=>'small'));
  
 $body .= "<div class='center mts'>$all_link</div>";
 

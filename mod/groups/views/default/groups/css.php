@@ -48,7 +48,7 @@ and (max-width : 1200px) {
 }
 
 .group-profile .elgg-sidebar li.elgg-item .elgg-avatar img{
-	width:auto;
+	/*width:auto;*/
 }
 
 .group-profile .elgg-form-wall-add{
