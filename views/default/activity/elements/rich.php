@@ -1,7 +1,7 @@
 <?php
 $activity = $vars['activity'];
 $target = "_blank";
-if(strpos($activity -> perma_url, elgg_get_site_url()) !== FALSE)
+if(strpos($activity -> perma_url, parse_url(elgg_get_site_url(), PHP_URL_HOST)) !== FALSE)
 	$target = '_self';
 ?>
 <div class="activity-rich-post">
