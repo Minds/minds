@@ -302,12 +302,15 @@ div.nodes-switcher h1 {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    
 }
 
 div.nodes-switcher h1,
 div.nodes-switcher h1 a {
     color: white;
     font-size: 1em;
+    line-height: 19px;
+    vertical-align: middle;
 }
 
 div.nodes-switcher div.node {
