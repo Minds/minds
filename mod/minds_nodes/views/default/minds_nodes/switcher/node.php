@@ -2,10 +2,9 @@
     $node = $vars['entity'];
 
     $url = elgg_get_site_url() . 'nodes/manage';
-    $icon = elgg_get_site_url() . '_graphics/icons/default/small.png';
+    $icon = $node->getIcon('small');
     if ($node->launched) {
 	$url = $node->getURL();
-	$icon = $node->getIcon('small');
     }
 ?>
 <div class="node">
