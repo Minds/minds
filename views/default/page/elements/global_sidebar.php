@@ -8,7 +8,12 @@ if(elgg_is_logged_in() && (elgg_get_context() == 'admin' || elgg_get_context() =
 <div class="global-sidebar <?php echo $class; ?>">
 		<?php echo elgg_view_menu('site',array('sort_by'=>'priority'));  ?>
     
-		<?= elgg_view('minds_nodes/switcher'); ?>
+		<?= elgg_view('minds_nodes/switcher', array('entities' => elgg_get_entities(array(
+		    'type' => 'object',
+		    'subtype' => 'node',
+		    'limit' => 999,
+		    'owner_guid' => elgg_get_logged_in_user_guid()
+		)))); ?>	
 		
 		<!-- Admin Links -->
 		<?php 
