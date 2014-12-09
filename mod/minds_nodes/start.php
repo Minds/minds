@@ -134,11 +134,11 @@ class start extends bases\plugin{
 	    $value = $cacher->get($key);
 	    if (!$value)
 	    {
-		error_log('MPDEBUG - Value for key ' . $key . ' not in cache '  . print_r($params, true));
+		//error_log('MPDEBUG - Value for key ' . $key . ' not in cache '  . print_r($params, true));
 		$value = elgg_get_entities($params);
 		$cacher->set($key, $value);
 	    } else {
-		error_log('MPDEBUG - Value for key ' . $key . ' retrieved from cache ' . print_r($params, true));
+		//error_log('MPDEBUG - Value for key ' . $key . ' retrieved from cache ' . print_r($params, true));
 	    }
 	    
 	    return $value;
