@@ -96,12 +96,7 @@ class start extends bases\plugin{
 		}
 		
 		if (elgg_is_logged_in()) {
-		    if (elgg_get_entities(array(
-			'type' => 'object',
-			'subtype' => 'node',
-			'count' => true,
-			'owner_guid' => elgg_get_logged_in_user_guid()
-		    ))) {
+		    if (self::getNodes(elgg_get_logged_in_user_entity(), true)) {
 			\elgg_register_menu_item('site', array(
 			    'name' => 'nodes',
 			    'text' => '<span class="entypo">&#xE817;</span> My nodes',
@@ -112,6 +107,25 @@ class start extends bases\plugin{
 			));
 		    }
 		}
+	}
+	
+	/**
+	 * Retrieve nodes/count of nodes belonging to a user.
+	 * @param \minds\plugin\minds_nodes\ElggUser $user
+	 * @param array|int|false $count
+	 */
+	public static function getNodes(ElggUser $user = null, $count = false) {
+	    
+	    $params = array(
+		'type' => 'object',
+		'subtype' => 'node',
+		'count' => $count,
+		'owner_guid' => $user ? $user->guid : elgg_get_logged_in_user_guid()
+	    );
+	    
+	    if (!$count) $params['limit'] = 999;
+	    
+	    return elgg_get_entities($params);
 	}
 	
 	public static function iconUrlHook($hook, $type, $returnvalue, $params) 
@@ -287,7 +301,7 @@ class start extends bases\plugin{
 		
 		if(!$pages[0]){
 			//does the user have any nodes setup? If so send them to the manage page
-			if($this->getNodes()){
+			if(self::getNodes(elgg_get_logged_in_user_entity(), true)){
 				$pages[0] = 'manage';
 			} else {
 			//if not then send them to the launch page
@@ -330,11 +344,6 @@ class start extends bases\plugin{
 				include('pages/minds_nodes/index.php');
 		}
 		return true;
-	}
-
-	public static function getNodes($owner_guid, $limit=12, $offset=""){
-		$nodes = elgg_get_entities(array('type'=>'object', 'subtype'=>'node', 'limit'=>$limit, 'offset'=>$offset));
-		return $nodes;
 	}
 	
 	public static function payOverride($hook, $type, $return, $params) {
