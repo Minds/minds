@@ -179,4 +179,16 @@ class MindsNode extends ElggObject{
 		return  $this->client('DELETE', $this->domain);
 	}
 
+	public function save($index = true) {
+	    
+	    if ($user = elgg_get_logged_in_user_entity()) {
+		
+		$cacher = \minds\core\data\cache\factory::build();
+		$cacher->destroy("object::node::{$user->guid}");
+		$cacher->destroy("object::node::{$user->guid}::count");
+		
+	    }
+	    
+	    return parent::save($index);
+	}
 }

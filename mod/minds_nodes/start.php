@@ -110,22 +110,38 @@ class start extends bases\plugin{
 	}
 	
 	/**
-	 * Retrieve nodes/count of nodes belonging to a user.
+	 * Retrieve nodes/count of nodes belonging to a user, caching the result.
 	 * @param \minds\plugin\minds_nodes\ElggUser $user
 	 * @param array|int|false $count
 	 */
 	public static function getNodes(ElggUser $user = null, $count = false) {
 	    
+	    if (!$user) $user = elgg_get_logged_in_user_entity ();
+	    
 	    $params = array(
 		'type' => 'object',
 		'subtype' => 'node',
 		'count' => $count,
-		'owner_guid' => $user ? $user->guid : elgg_get_logged_in_user_guid()
+		'owner_guid' => $user->guid
 	    );
 	    
 	    if (!$count) $params['limit'] = 999;
 	    
-	    return elgg_get_entities($params);
+	    $cacher = \minds\core\data\cache\factory::build();
+	    $key = "object::node::{$user->guid}";
+	    if ($count) $key.= "::count";
+	    
+	    $value = $cacher->get($key);
+	    if (!$value)
+	    {
+		error_log('MPDEBUG - Value for key ' . $key . ' not in cache '  . print_r($params, true));
+		$value = elgg_get_entities($params);
+		$cacher->set($key, $value);
+	    } else {
+		error_log('MPDEBUG - Value for key ' . $key . ' retrieved from cache ' . print_r($params, true));
+	    }
+	    
+	    return $value;
 	}
 	
 	public static function iconUrlHook($hook, $type, $returnvalue, $params) 
