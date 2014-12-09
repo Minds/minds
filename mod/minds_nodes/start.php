@@ -14,7 +14,7 @@ class start extends bases\plugin{
 	 * Return the favicon of a remote domain
 	 * @param type $url The domain to retrieve.
 	 */
-	protected function getIconFromMetadata($url) {
+	static function getIconFromMetadata($url) {
 	    
 	    // Use Google S2 for now to offload complexity and load. TODO: Discuss whether scraping is better
 	    return "https://www.google.com/s2/favicons?domain=$url";
@@ -81,45 +81,7 @@ class start extends bases\plugin{
 		\elgg_register_plugin_hook_handler('urls', 'pay', array($this, 'payOverride'));
 		
 		// Node Icons - handle remote icons, cached icons etc
-		elgg_register_plugin_hook_handler('entity:icon:url', 'object', function($hook, $type, $returnvalue, $params) {
-		    $node = $params['entity'];
-		    $size = $params['size'];
-		    if (elgg_instanceof($node, 'object', 'node')) {
-
-			$icon = null;
-			if ($node->launched) {
-			    
-			    // Have we cached an icon recently?
-			    $label_ts = "cached_icon_{$size}_ts";
-			    $label_icon = "cached_icon_{$size}_url";
-			    if ($node->$label_ts > time() - (60*60*24*7)) {
-				$icon = $node->$label_icon;
-				
-				//error_log('ICON Loaded from cache ' . $icon);
-			    }
-			    
-			    // No icon, attempt to retrieve it 
-			    if (!$icon) {
-				$icon = $this->getIconFromMetadata($node->getURL());
-				if ($icon) {
-				    $node->$label_icon = $icon;
-				    $node->$label_ts = time();
-				    
-				    $node->save();
-				    
-				    //error_log('ICON Saving ' . $icon);
-				}
-			    }
-			    
-			    return $icon;
-			}
-			
-			// No icon, return default
-			if (!$icon)
-			    return elgg_get_site_url() . '_graphics/icon.png';
-			    //elgg_get_site_url() . '_graphics/icons/default/'.$size.'.png';
-		    }
-		});	
+		elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'minds\plugin\minds_nodes\start::iconUrlHook');	
 			   	
 	}
 
@@ -150,6 +112,47 @@ class start extends bases\plugin{
 			));
 		    }
 		}
+	}
+	
+	public static function iconUrlHook($hook, $type, $returnvalue, $params) 
+	{
+	    $node = $params['entity'];
+	    $size = $params['size'];
+	    if (elgg_instanceof($node, 'object', 'node')) {
+
+		$icon = null;
+		if ($node->launched) {
+
+		    // Have we cached an icon recently?
+		    $label_ts = "cached_icon_{$size}_ts";
+		    $label_icon = "cached_icon_{$size}_url";
+		    if ($node->$label_ts > time() - (60*60*24*7)) {
+			$icon = $node->$label_icon;
+
+			//error_log('ICON Loaded from cache ' . $icon);
+		    }
+
+		    // No icon, attempt to retrieve it 
+		    if (!$icon) {
+			$icon = self::getIconFromMetadata($node->getURL());
+			if ($icon) {
+			    $node->$label_icon = $icon;
+			    $node->$label_ts = time();
+
+			    $node->save();
+
+			    //error_log('ICON Saving ' . $icon);
+			}
+		    }
+
+		    return $icon;
+		}
+
+		// No icon, return default
+		if (!$icon)
+		    return elgg_get_site_url() . '_graphics/icon.png';
+		    //elgg_get_site_url() . '_graphics/icons/default/'.$size.'.png';
+	    }
 	}
 	
 	/**
