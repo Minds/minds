@@ -19,12 +19,15 @@
 	 		if(sidebarOpen){
 	 			$('.global-sidebar').removeClass('show');
 	 			$('.hero').removeClass('sidebar-active');
+	 			$('body').removeClass('sidebar-active');
+	 			
 	 			sidebarOpen = false;
 	 		//	$.removeCookie('sidebarOpen'); 
 	 			$.cookie('sidebarOpen', 'false', { path: '/' });
 	 		} else {
 	 			$('.global-sidebar').addClass('show');
 	 			$('.hero').addClass('sidebar-active');
+	 			$('body').addClass('sidebar-active');
 	 			sidebarOpen = true
 	 			$.cookie('sidebarOpen', 'true', { path: '/' });
 	 		}
@@ -56,7 +59,30 @@
 			setTimeout(function(){
 
 				$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
-				$('.channel .carousel-inner > .item > img').css('margin-top', ($('.carousel-inner > .item').height() - $('.carousel-inner > .item > img').height()) /2); 
+
+
+				/*var img = $('.carousel-inner > .item > img');
+				var img_height = img.height();
+				var img_offset = img.offset().top;
+				var ratio = img.height() / img.width();
+				
+				var container_height = $('.carousel-inner > .item').height();
+				
+				if((img_height + img_offset) < container_height){
+					
+					if(!img.attr('data-css-top'))
+						img.data('css-top', img_offset);
+					
+					img.css('top', 'auto');
+					img.css('bottom', 0);
+					
+				} else if(img.width() > 1000) {
+				
+					img.css('top', img.data('css-top'));
+					
+				}*/
+
+			
 				
 			}, 2000);
 		});
@@ -112,6 +138,75 @@
 				}
 			});
 		}
+		
+		$(".bg_wrapper > img, .cms-section .cms-section-bg img").css('cursor','s-resize');
+		$(".bg_wrapper > img").draggable({
+			scroll: false,
+			axis: "y",
+			drag: function(event, ui) {
+				img = $(event.target);
+              	wrapper = img.parent();
+         
+				if(ui.position.top >= 0){
+					ui.position.top = 0;
+				} else if(ui.position.top <= wrapper.height() - img.height()) {
+					ui.position.top = wrapper.height() - img.height();
+				}
+				
+				input = wrapper.parent().find('#top_offset');
+				if(input.length > 0)
+					input.val(ui.position.top);
+			},
+            stop: function(event, ui) {
+            //####
+			}
+        });
+        
+        /**
+         * Should really standardise this... this is pretty dumb!!
+         */
+       	$(".blog-banner-editable .carousel .item img").css('cursor', "move");
+		$(".blog-banner-editable .carousel .item img").draggable({
+			scroll: false,
+			axis: "y",
+			drag: function(event, ui) {
+				img = $(event.target);
+	          	wrapper = img.parent();
+	     
+				if(ui.position.top >= 0){
+					ui.position.top = 0;
+				} else if(ui.position.top <= wrapper.height() - img.height()) {
+					ui.position.top = wrapper.height() - img.height();
+				}
+	
+				wrapper.parents('.body').find('input[name=banner_position]').val(ui.position.top);
+					
+			},
+	        stop: function(event, ui) {
+	         	img = $(event.target);
+	       	//	minds.cms.update(img.parents('section'));	
+			}
+	    });
+        
+        $("").draggable({
+			scroll: false,
+			axis: "y",
+			drag: function(event, ui) {
+			
+				img = $(event.target);
+              	wrapper = img.parent();
+         
+				if(ui.position.top >= 0){
+					ui.position.top = 0;
+				} else if(ui.position.top <= wrapper.height() - img.height()) {
+					ui.position.top = wrapper.height() - img.height();
+				}
+			//	wrapper.parent().find('#top_offset').val(ui.position.top);
+			},
+            stop: function(event, ui) {
+            //####
+			}
+        });
 	 
 		$('.carousel-admin-wrapper > textarea').on('keyup', function(){
 			var px = $(this).val().length*36 + 20;

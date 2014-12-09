@@ -6,7 +6,9 @@
  */
 
 function minds_init(){
-	
+	global $CONFIG;
+	$base_url = isset($CONFIG->cdn_url) ? $CONFIG->cdn_url : elgg_get_site_url();	
+
 	//minds\core\views::cache('output/carousel');
 
 	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
@@ -28,36 +30,36 @@ function minds_init(){
 	elgg_extend_view('page/elements/ads', 'minds/ads');
 
 	//plugin for cookie manipulation via JS
-	elgg_register_js('jquery-cookie', elgg_get_config('wwwroot').'mod/minds/vendors/jquery-cookie/jquery.cookie.js', 'footer');
+	elgg_register_js('jquery-cookie', $base_url .'mod/minds/vendors/jquery-cookie/jquery.cookie.js', 'footer');
 	elgg_load_js('jquery-cookie');
 	
 	//register textarea expander
-	elgg_register_js('jquery.autosize', elgg_get_site_url() . 'mod/minds/vendors/autosize/jquery.autosize.js', 'footer');
+	elgg_register_js('jquery.autosize', $base_url . 'mod/minds/vendors/autosize/jquery.autosize.js', 'footer');
 	
 	/**
 	 * Carousel js libraries
 	 */
-	elgg_register_js('carousel',  elgg_get_site_url() . 'mod/minds/vendors/bootstrap-carousel/carousel.min.js');
-	elgg_register_css('carousel',  elgg_get_site_url() . 'mod/minds/vendors/bootstrap-carousel/carousel.css');
-	elgg_register_js('spectrum', elgg_get_site_url() . 'mod/minds/vendors/spectrum/spectrum.js');
-	elgg_register_css('spectrum', elgg_get_site_url() . 'mod/minds/vendors/spectrum/spectrum.css');
+	elgg_register_js('carousel',  $base_url . 'mod/minds/vendors/bootstrap-carousel/carousel.min.js');
+	elgg_register_css('carousel',  $base_url . 'mod/minds/vendors/bootstrap-carousel/carousel.css');
+	elgg_register_js('spectrum', $base_url . 'mod/minds/vendors/spectrum/spectrum.js');
+	elgg_register_css('spectrum', $base_url . 'mod/minds/vendors/spectrum/spectrum.css');
 	
 	/** 
 	 * Masonry libraries
 	 */
-	elgg_register_js('jquery-masonry', elgg_get_site_url() . 'mod/minds/vendors/masonry/masonary.min.js','header',600);
+	elgg_register_js('jquery-masonry', $base_url . 'mod/minds/vendors/masonry/masonary.min.js','header',600);
 	elgg_load_js('jquery-masonry');
-	elgg_register_js('jquery-imagesLoaded', elgg_get_site_url() . 'mod/minds/vendors/masonry/imagesLoaded.min.js','header',700);	
+	elgg_register_js('jquery-imagesLoaded', $base_url . 'mod/minds/vendors/masonry/imagesLoaded.min.js','header',700);	
 	elgg_load_js('jquery-imagesLoaded');
 
 	//register jquery.form
-	elgg_register_js('jquery.form', elgg_get_site_url() . 'mod/minds/vendors/jquery/jquery.form.min.js', 'footer');
+	elgg_register_js('jquery.form', $base_url . 'mod/minds/vendors/jquery/jquery.form.min.js', 'footer');
 	elgg_load_js('jquery.form');
 	
 	//registers tipsy
-	elgg_register_js('jquery.tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/javascripts/jquery.tipsy.min.js', 'footer');
+	elgg_register_js('jquery.tipsy', $base_url . 'mod/minds/vendors/tipsy/src/javascripts/jquery.tipsy.min.js', 'footer');
 	elgg_load_js('jquery.tipsy');
-	elgg_register_css('tipsy', elgg_get_site_url() . 'mod/minds/vendors/tipsy/src/stylesheets/tipsy.css', 'footer');
+	elgg_register_css('tipsy', $base_url . 'mod/minds/vendors/tipsy/src/stylesheets/tipsy.css', 'footer');
 	elgg_load_css('tipsy');
 		
 	//set the custom index
@@ -361,7 +363,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 				$options = array(
 						'name' => 'remind',
 						'href' => "newsfeed/remind/$entity->guid",
-						'text' => '&#59159;',
+						'text' => '&#59159; Remind',
 						'title' => elgg_echo('minds:remind'),
 						'is_action' => true,
 						'priority' => 1,

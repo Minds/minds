@@ -48,7 +48,7 @@ and (max-width : 1200px) {
 }
 
 .group-profile .elgg-sidebar li.elgg-item .elgg-avatar img{
-	width:auto;
+	/*width:auto;*/
 }
 
 .group-profile .elgg-form-wall-add{
@@ -125,4 +125,9 @@ and (max-width : 1200px) {
 .elgg-menu-groups-my-status li.elgg-state-selected > a {
 	background-color: #4690D6;
 	color: white;
+}
+
+
+.group-banner .minds-body-header{
+	height:320px;
 }

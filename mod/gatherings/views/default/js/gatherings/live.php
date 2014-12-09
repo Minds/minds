@@ -720,7 +720,7 @@ minds.live.init = function() {
 								
 								if(guid != elgg.get_logged_in_user_guid()){
 									var avatar_src = elgg.get_site_url() + 'icon/' + guid + '/small';
-									user_list.append('<li class="user" id="'+ guid + '"> <img src="'+avatar_src+'" class="avatar"/> <h3>'+user.name+'</h3></li>');
+									user_list.append('<li class="user" id="'+ guid + '" data-username="'+user.username+'"> <img src="'+avatar_src+'" class="avatar"/> <h3>'+user.name+'</h3></li>');
 								}
 							}
 							
@@ -794,7 +794,7 @@ minds.live.init = function() {
 					var guid = toggles.attr('id');
 					minds.live.startChat({
 						id: guid,
-						username: $(this).html(),
+						username: toggles.data('username'),
 						name: $(this).html()
 					});
 				} else {
@@ -985,8 +985,6 @@ minds.live.adjustOffset = function(e){
  */
 minds.live.openChatWindow = function(params,name,message, minimised){
 	
-	
-	
 	if(typeof params === 'object'){
 		var id = params.id;
 		var name = params.name;
@@ -1027,7 +1025,7 @@ minds.live.openChatWindow = function(params,name,message, minimised){
 	} else {
 		var liclass = 'toggled';
 	}
-	var box = '<li class="box '+ liclass + '" id="' + id + '">' +
+	var box = '<li class="box '+ liclass + '" id="' + id + '" data-username="'+username+'">' +
    			 	//'<a href="/' + username + '">'+ 
    			 		'<a href="' + elgg.get_site_url() + username + '"><img src="' + avatar_url + '" class="avatar"/></a>'+
    			 		'<h3>'+
@@ -1073,7 +1071,7 @@ minds.live.getCacheChat = function(id){
 	var key = 'chat.'+id;
 	return JSON.parse(sessionStorage.getItem(key));
 }
-minds.live.saveCacheChat = function(id, message, name){
+minds.live.saveCacheChat = function(id, message, name, username){
 	ss = window.sessionStorage;
 	var key = 'chat.'+id;
 	var chatSession = JSON.parse(ss.getItem(key));
@@ -1090,7 +1088,8 @@ minds.live.saveCacheChat = function(id, message, name){
 		activeChats = {};
 	}
 	chat = { id: id,
-		 name: name	
+		 name: name,
+		username: username	
 		};
 	activeChats[id] = chat;
 
@@ -1197,7 +1196,7 @@ minds.live.decryptor = function(id, sender, data){
 					span.append(output);
 					span.find('.loader').remove();
 					box = span.parents('li.box');
-					minds.live.saveCacheChat(box.attr('id'), span.html(), box.find('h3').text());
+					minds.live.saveCacheChat(box.attr('id'), span.html(), box.find('h3').text(), box.data('username'));
 					
 					var stored = $('.conversation-wrapper');
 					if(stored.length > 0){

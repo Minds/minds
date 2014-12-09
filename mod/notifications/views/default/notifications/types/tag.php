@@ -1,19 +1,19 @@
 <?php
 
 $notification = elgg_extract('entity', $vars);
-$actor = $notification->getOwnerEntity();
 
-$description = htmlspecialchars($notification->description, ENQ_QUOTES);
-if (strlen($description) > 60) {
-	$description = substr($notification -> description, 0, 75) . '...';
+$from =  minds\core\entities::build(new minds\entities\entity($notification->from_guid));
+
+if(!$from){
+	return false;
 }
 
-$body .= elgg_view('output/url', array('href' => $actor -> getURL(), 'text' => $actor -> name));
-$body .= ' tagged you in a ';
-$body .= elgg_view('output/url', array('href' => elgg_get_site_url() . 'newsfeed/'.$notification->object_guid, 'text' => 'post'));
-$body .= "<br/>";
+$entity =  minds\core\entities::build(new minds\entities\entity($notification->object_guid));
 
-$body .= "<div class='notify_description'>" . $description . "</div>";
+$body .= elgg_view('output/url', array('href' => $from->getURL(), 'text' => $from->name));
+$body .= ' tagged you in a ';
+$body .= elgg_view('output/url', array('href' => $entity->getURL(), 'text' => 'post'));
+$body .= "<br/>";
 
 $body .= "<span class='notify_time'>" . elgg_view_friendly_time($notification-> time_created) . "</span>";
 

@@ -78,6 +78,16 @@ function minds_archive_init() {
 			'priority' => 4
 	));*/
 	
+	$prompt = elgg_get_plugin_user_setting('upload', elgg_get_logged_in_user_guid(), 'archive') ? '' : elgg_view('orientation/navigation_prompt', array('message'=>'Upload your media'));
+			
+	elgg_register_menu_item('site', array(
+		'name' => elgg_echo('minds:upload'),
+		'href' => 'archive/upload',
+		'text' => '<span class="entypo">&#128228;</span> Upload' . $prompt,
+		'title' => elgg_echo('minds:upload'),
+		'priority' => 4
+	));
+	
 	elgg_register_menu_item('site', array(
 			'name' => 'video',
 			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',

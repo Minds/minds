@@ -31,38 +31,6 @@ margin-bottom:-230px;
 	height: 100px;
 }
 
-/* ***************************************
-	FRIENDS COLLECTIONS
-*************************************** */
-
-#friends_collections_accordian li {
-	color: #666;
-}
-#friends_collections_accordian li h2 {
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	border-radius: 8px;
-	
-	background: none repeat scroll 0 0 #4690D6;
-	color: white;
-	cursor: pointer;
-	font-size: 1.2em;
-	margin: 10px 0;
-	padding: 4px 2px 4px 6px;
-}
-#friends_collections_accordian li h2:hover {
-	background-color: #333;
-}
-#friends_collections_accordian .friends_collections_controls {
-	float: right;
-	font-size: 70%;
-}
-#friends_collections_accordian .friends-picker-main-wrapper {
-	background: none repeat scroll 0 0 white;
-	display: none;
-	padding: 0;
-}
-
 /**
  * Minds stuff
  * @todo move this to relevant sub files
@@ -287,7 +255,7 @@ li .rich-image{
 li .blog-rich-image-holder{
 	position: relative;
 	width: 110%;
-	height: 100%;
+	height: auto;
 	display: block;
 	overflow: hidden;
 	margin: 0 -10px;
@@ -569,7 +537,7 @@ li .excerpt a{
 	padding: 0;
 	height: auto;
 	background: #FFF; 
-	border: 1px solid #888;
+	border: 1px solid #DDD;
 	box-shadow: 0 0 0;
 }
 .elgg-gallery-users li.elgg-item{
@@ -579,11 +547,8 @@ li .excerpt a{
 	height:auto;
 }
 .elgg-sidebar li.elgg-item img{
-	width:100%;
 }
 .elgg-sidebar li.elgg-item a{
-	padding:0;
-	font-weight:bold;
 }
 .elgg-sidebar li.elgg-item h3, .elgg-sidebar li .stamp{
 	padding: 8px;
@@ -603,6 +568,7 @@ li .excerpt a{
 }
 .blog-sidebar li img.rich-image{
 	margin:0;
+	height:360px;
 }
 .elgg-sidebar li a h3{
 	color:#333;
@@ -916,6 +882,18 @@ li.elgg-menu-item-rss{
 	background-size: cover !important;
 	background-position: center !important;
 }
+.carousel-admin-wrapper .bg_wrapper{
+	overflow:hidden;
+	width:100%;
+	height:250px;
+	position:absolute;
+}
+.carousel-admin-wrapper img{
+	width:100%;
+	min-width:997px;
+	height:auto;
+	position:relative;
+}
 .carousel-admin-wrapper .remove{
 	float: right;
 	margin: 8px;
@@ -965,13 +943,25 @@ li.elgg-menu-item-rss{
 */
 .carousel-admin-wrapper > textarea{
 	display:block;
-	padding:32px;
+	margin:32px;
+	padding:0;
 	background: transparent;
 	border: 0;
 	font-size: 60px;
 	color: #FFF;
 	font-weight: 100;
 	text-align: left;
+	width:800px;
+	position:absolute;
+	border:1px dotted #DDD;
+}
+.carousel-admin-wrapper > input[type=text]{
+	position:absolute;
+	top:160px;
+	margin:32px;
+	border:1px dotted #DDD;
+	background:transparent;
+	width:800px;
 }
 
 #carousel_wrapper{
@@ -1048,8 +1038,11 @@ li.elgg-menu-item-rss{
 	top: 30vh;
 }
 .carousel-fat .carousel-inner > .item > img {
-	top:-20vh;
+	/*top:-20vh;*/
 	height:auto;
+	min-height	100%;
+	width:auto;
+	min-width:100%;
 }
 
 .carousel-fat .elgg-layout{
@@ -1064,9 +1057,10 @@ li.elgg-menu-item-rss{
 	opacity: 1;
 }
 .carousel-inner > .item > img {
-	position: absolute;
+	position: relative;
 	top: 0;
 	left: 0;
+	width:auto;
 	min-width:100%;
 	height:auto;
 	min-height:380px;
@@ -1100,6 +1094,9 @@ li.elgg-menu-item-rss{
 .carousel-inner > .item > .carousel-caption p{
 	color:#FFF;
 	text-align:center;
+	font-family:"Lato", 'Helvetica', Arial, Sans-Serif;
+	padding-top:12px;
+	font-size:20px;
 }
 
 .elgg-widget-more{

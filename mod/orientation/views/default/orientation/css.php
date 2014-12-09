@@ -290,3 +290,24 @@ box-shadow: 0 0 0;
 	height:400px !important;
 	overflow:scroll;
 }
+
+.orientation-nav-prompt-arrow{
+	width: 0;
+	height: 0;
+	border-top: 16px solid #222;
+	border-bottom: 17px solid #222;
+	border-right: 16px solid #4690D6;
+	color: transparent;
+	/* float: left; */
+	position: absolute;
+	top: 0;
+	left:0;
+}
+.orientation-nav-prompt{
+	position: fixed;
+	left: 125px;
+	background: #4690D6;
+	padding: 8px 24px;
+	margin-top: -25px;
+
+}

@@ -4,53 +4,51 @@ elgg.provide('archive');
 
 archive.init = function(){
 	if($('#archive_player2').length){
-	var ts = Math.round((new Date()).getTime() / 1000);
-	videojs("archive_player2", 
-		{
-			autoplay: true,
-			"height":"auto", 
-			"width":"auto",
-			plugins : {
-				resolutionSelector : {
-					// Pass any options here
-					default_res : "360p"
-				},
-				ads: {},
-				vast: {
-				//	url : 'https://ads.adap.tv/a/t/integration_test'
-			//		url : 'https://www.minds.io/www/delivery/fc.php?script=bannerTypeHtml:vastInlineBannerTypeHtml:vastInlineHtml&zones=pre-roll0-0%3D1&nz=1&block=1&format=vast&charset=UTF-8',
-				//	url : 'https://u-ads.adap.tv/a/h/lHGLrXrmVyXT0CUmlN9BKBg48KA_lCq_HpYLH5qBiuY=?cb={cachebreaker}&pet=preroll&pageUrl=EMBEDDING_PAGE_URL&description=VIDEO_DESCRIPTION&duration=VIDEO_DURATION&id=VIDEO_ID&keywords=VIDEO_KEYWORDS&title=VIDEO_TITLE&url=VIDEO_URL&injectCompanionDummy=true&eov=eov'
-				//	url : 'https://pubads.g.doubleclick.net/gampad/ads?sz=215x215&iu=/4403/minds.com&ciu_szs&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&url='+encodeURIComponent(window.location.href)+'&correlator='+ts+'&nofb=1&ad_rules=0'
-					//url: 'https://ad.doubleclick.net/pfadx/N270.126913.6102203221521/B3876671.21;dcadv=2215309;sz=0x0;ord=%5btimestamp%5d;dcmt=text/xml',
-					//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=57735&LR_SCHEMA=vast2-vpaid&LR_AUTOPLAY=1&LR_TITLE=minds&LR_VIDEO_ID=minds&LR_VERTICALS=donna'
-					//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=1331&LR_CAMPAIGN_ID=229&LR_SCHEMA=vast2',
-					//donnas
-					//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=57735&LR_SCHEMA=vast2-vpaid&LR_AUTOPLAY=1&LR_TITLE=minds&LR_VIDEO_ID=minds&LR_VERTICALS=donna&LR_FORMAT=application/javascript',
-					//q1 media
-					//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=51365&LR_FORMAT=application/javascript&LR_SCHEMA=vast2-vpaid'
-				}
-			 }
-		}
-	).ready(function(){
-	    var myPlayer = this;    // Store the video object
-	    var aspectRatio = 9/16; // Make up an aspect ratio
-
-	    function resizeVideoJS(){
-	      // Get the parent element's actual width
-	      var width = document.getElementById(myPlayer.id()).parentElement.offsetWidth;
-	      // Set width to fill parent element, Set height
-	      myPlayer.width(width).height( width * aspectRatio );
-		console.log('resizing');
-	    }
-
-	    resizeVideoJS(); // Initialize the function
-	    window.onresize = resizeVideoJS; // Call the function on resize
-	  });
-        }
+		var ts = Math.round((new Date()).getTime() / 1000);
+		videojs("archive_player2", {
+				autoplay: true,
+				"height":"auto", 
+				"width":"auto",
+				plugins : {
+					resolutionSelector : {
+						// Pass any options here
+						default_res : "360p"
+					},
+					/*ads: {},
+					vast: {
+					//	url : 'https://ads.adap.tv/a/t/integration_test'
+				//		url : 'https://www.minds.io/www/delivery/fc.php?script=bannerTypeHtml:vastInlineBannerTypeHtml:vastInlineHtml&zones=pre-roll0-0%3D1&nz=1&block=1&format=vast&charset=UTF-8',
+					//	url : 'https://u-ads.adap.tv/a/h/lHGLrXrmVyXT0CUmlN9BKBg48KA_lCq_HpYLH5qBiuY=?cb={cachebreaker}&pet=preroll&pageUrl=EMBEDDING_PAGE_URL&description=VIDEO_DESCRIPTION&duration=VIDEO_DURATION&id=VIDEO_ID&keywords=VIDEO_KEYWORDS&title=VIDEO_TITLE&url=VIDEO_URL&injectCompanionDummy=true&eov=eov'
+					//	url : 'https://pubads.g.doubleclick.net/gampad/ads?sz=215x215&iu=/4403/minds.com&ciu_szs&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&url='+encodeURIComponent(window.location.href)+'&correlator='+ts+'&nofb=1&ad_rules=0'
+						//url: 'https://ad.doubleclick.net/pfadx/N270.126913.6102203221521/B3876671.21;dcadv=2215309;sz=0x0;ord=%5btimestamp%5d;dcmt=text/xml',
+						//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=57735&LR_SCHEMA=vast2-vpaid&LR_AUTOPLAY=1&LR_TITLE=minds&LR_VIDEO_ID=minds&LR_VERTICALS=donna'
+						//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=1331&LR_CAMPAIGN_ID=229&LR_SCHEMA=vast2',
+						//donnas
+						//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=57735&LR_SCHEMA=vast2-vpaid&LR_AUTOPLAY=1&LR_TITLE=minds&LR_VIDEO_ID=minds&LR_VERTICALS=donna&LR_FORMAT=application/javascript',
+						//q1 media
+						//url: 'https://ad4.liverail.com/?LR_PUBLISHER_ID=51365&LR_FORMAT=application/javascript&LR_SCHEMA=vast2-vpaid'
+					}*/
+				 }
+			}).ready(function(){
+				var myPlayer = this;    // Store the video object
+				var aspectRatio = 9/16; // Make up an aspect ratio
 	
-	var $scrubber = $("#scrubber");
+					function resizeVideoJS(){
+						// Get the parent element's actual width
+						var width = document.getElementById(myPlayer.id()).parentElement.offsetWidth;
+						// Set width to fill parent element, Set height
+						myPlayer.width(width).height( width * aspectRatio );
+						console.log('resizing');
+				    }
+	
+		   			resizeVideoJS(); // Initialize the function
+		    		window.onresize = resizeVideoJS; // Call the function on resize
+				});
+		}
+	
+		var $scrubber = $("#scrubber");
         var $progress = $("#progress");
-	var $video = $('video');
+		var $video = $('video');
         var thecanvas = document.getElementById('thecanvas');
         var img = document.getElementById('thumbnail_img');
 	   
@@ -61,14 +59,14 @@ archive.init = function(){
         	draw($video.get(0), thecanvas, img);
         });
 
-	$video.bind('timeupdate', function(e){
-		var video = $video.get(0);
+		$video.bind('timeupdate', function(e){
+			var video = $video.get(0);
         	var percent = video.currentTime / video.duration;
         	updateProgressWidth(percent);
-	});
+		});
 
 
-         $scrubber.bind("mousedown", function(e) {
+		$scrubber.bind("mousedown", function(e) {
             var $this = $(this);
             var x = e.pageX - $this.offset().left;
             var percent = x / $this.width();
@@ -76,14 +74,14 @@ archive.init = function(){
             updateVideoTime(percent);
         });
 
-	function updateProgressWidth(percent) {
+		function updateProgressWidth(percent) {
             $progress.width((percent * 100) + "%");
         }
         
         function updateVideoTime(percent) {
             var video = $video.get(0);
             video.currentTime = percent * video.duration;
-	    $('#thumbSec').val(video.currentTime);
+	    	$('#thumbSec').val(video.currentTime);
         }
                  
                  
@@ -151,7 +149,7 @@ archive.init = function(){
 								$.each(images, function(k, v){
 									items.push({
 										id: $i,
-										src: v.url+'?view=spotlight'
+										src: v.url
 									});
 									$i++;
 								});

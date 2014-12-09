@@ -57,6 +57,8 @@ foreach($items as $k=>$item){
 	$item->color = str_replace("$item->guid:", '', get_input("$item->guid:color"));
 	$item->href = str_replace("$item->guid:", '', get_input("$item->guid:href"));
 	
+	$item->top_offset = str_replace("$item->guid:", '', get_input("$item->guid:top_offset"));
+	
 	//Upload and compress
 	//if(isset($file["$item->guid:title"]['tmp_name'])){
 		$files = array();

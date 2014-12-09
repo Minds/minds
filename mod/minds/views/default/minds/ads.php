@@ -2,10 +2,22 @@
 
 $type = elgg_extract('type', $vars, 'content-side');
 switch($type){
+	case 'responsive':
+		echo '<div class="responsive-ad" style="display:none;"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="7588308825"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>';
+		break;
 	case 'content-side':	
-		if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
+		//if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
 		//	echo elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds');
-		} else {
+		//} else {
 			echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Minds large block -->
 <ins class="adsbygoogle"
@@ -15,7 +27,7 @@ switch($type){
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>';
-		}
+		//}
 			echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Minds large block -->
 <ins class="adsbygoogle"
@@ -38,7 +50,7 @@ switch($type){
 </script>';
 	break;
 	case 'content-side-single-user':
-		if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
+		if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds') && false){
                		//echo elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds');
        		} else {
 		echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -53,10 +65,10 @@ switch($type){
         	}
 	break;
 	case 'content-side-single-user-2':
-		if(elgg_get_plugin_user_setting('adblock2', elgg_get_page_owner_guid(), 'minds')){
+		if(elgg_get_plugin_user_setting('adblock2', elgg_get_page_owner_guid(), 'minds') && false){
                 //	echo elgg_get_plugin_user_setting('adblock2', elgg_get_page_owner_guid(), 'minds');
         	} else {
-        /*	echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        	echo '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Minds large block -->
 <ins class="adsbygoogle"
      style="display:inline-block;width:336px;height:280px"
@@ -64,7 +76,7 @@ switch($type){
      data-ad-slot="5788264423"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
-</script>';*/
+</script>';
 	/*	echo "<script id=\"mNCC\" language=\"javascript\">  medianet_width='336';  medianet_height= '280';  medianet_crid='637466202';  </script>  <script id=\"mNSC\" src=\"//contextual.media.net/nmedianet.js?cid=8CU21QO2U\" language=\"javascript\"></script>";
         */	}
 	break;

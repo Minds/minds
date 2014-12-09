@@ -41,10 +41,13 @@ class search extends core\page implements interfaces\page{
 		$category = \get_input('category');
 		if($category)
 			$query = "query AND $category";
+		
+		if(get_input('subtype'))
+			$query .= ' +subtype:"'.get_input('subtype') .'"';
 
 		$body['query']['query_string']['query'] = $query;
 		$body['query']['query_string']['fields'] = array('_all', 'name^5', 'title^8');
-		
+			
 		$params['index'] = $CONFIG->cassandra->keyspace; //we use the keyspace as this is unique to each site. why complicate things?
 		
 		if(isset($pages[0]))
@@ -63,7 +66,8 @@ class search extends core\page implements interfaces\page{
 		}
 
 		if(empty($guids)){
-			$content = 'Sorry, no results could be found';
+			$content = \elgg_view('search/filter');
+			$content .= '<div style="padding:16px; margin:42px 2%; width:400px;font-weight:bold; font-size:24px;">Sorry, no results could be found</div>';
 		} else {
 			//$entities = \elgg_get_entities(array('guids'=>$guids));
 			//$content = \elgg_view('search/list', array('entities'=>$entities));

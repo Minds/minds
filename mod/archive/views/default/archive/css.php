@@ -332,6 +332,37 @@ box-shadow: none;
 
 
 /**
+ * Cinemr screen!
+ */
+
+.cinemr-screen-body .minds-body-header{
+	display:none;
+}
+.cinemr-screen{
+	background:#111;
+}
+.cinemr-screen .player-container{
+	width:1280px;
+	margin:auto;
+}
+.cinemr-screen .archive-video-content-wrapper{
+	background:#FFF;
+	width:90%;
+	margin:auto;
+	padding:16px;
+}
+.cinemr-screen .minds-comments-bar{
+	background:#FFF;
+	width:300px;
+	margin:auto;
+}
+@media screen and (max-width: 1300px){
+	.cinemr-screen .player-container{
+		width:840px;
+	}
+}
+
+/**
  * Lightbox/colorbox (tmp here)
  */
 /* Magnific Popup CSS */

@@ -20,10 +20,10 @@ if($node->allowedDomain() && $domain){
 	$domain = $domain_at_minds . '.minds.com';
 }
 
-//$node->domain = $domain;
-$node->renameNode($domain);
-
-
-$node->save();
-
-forward(REFERER);
+try{
+	//$node->domain = $domain;
+	$node->renameNode($domain);
+	$node->save();
+} catch (\Exception $e){
+	register_error($e->getMessage());
+}
