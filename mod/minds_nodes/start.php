@@ -96,12 +96,12 @@ class start extends bases\plugin{
 		}
 		
 		if (elgg_is_logged_in()) {
-		    if (elgg_get_entities([
+		    if (elgg_get_entities(array(
 			'type' => 'object',
 			'subtype' => 'node',
 			'count' => true,
 			'owner_guid' => elgg_get_logged_in_user_guid()
-		    ])) {
+		    ))) {
 			\elgg_register_menu_item('site', array(
 			    'name' => 'nodes',
 			    'text' => '<span class="entypo">&#xE817;</span> My nodes',
