@@ -9,8 +9,16 @@ if (get_input('embed') == 'yes') {
     	url = passed_url;
 
     </script>
-    <a class="entypo minds-remind" href="<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>widgets/<?php echo $vars['tab']; ?>/service/" title="ReMind (repost)" onClick='window.open(this.href + "?url=" + encodeURIComponent(url) + "&title=<?php echo get_input('title'); ?>", "Remind", "width=800,height=600");
-    		return false;' alt="Remind (repost)">&#59159;</a>
+    <div class="minds-widget minds-widget-remind">
+	<div class="widget-button">
+	    <a class="entypo minds-remind" href="<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>widgets/<?php echo $vars['tab']; ?>/service/" title="ReMind (repost)" onClick='window.open(this.href + "?url=" + encodeURIComponent(url) + "&title=<?php echo get_input('title'); ?>", "Remind", "width=800,height=600");
+		return false;'><img src="<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>mod/minds_widgets/gfx/lightbulb_25.png" /></a> 
+	    
+	    <a class="entypo minds-remind" href="<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>widgets/<?php echo $vars['tab']; ?>/service/" title="ReMind (repost)" onClick='window.open(this.href + "?url=" + encodeURIComponent(url) + "&title=<?php echo get_input('title'); ?>", "Remind", "width=800,height=600");
+		return false;'> reMind </a> 
+	</div>
+	<div class="count">123K</div>
+    </div>
     <?php
 } else {
     ?>

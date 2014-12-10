@@ -127,5 +127,67 @@
     padding: 0;
 }
 
-<?php
 
+
+
+
+
+
+
+/* Widget generic */
+div.minds-widget div.widget-button {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 2px;
+    
+    float: left;
+    height: 25px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    
+    padding-right: 5px;
+}
+
+div.minds-widget div.widget-button a {
+    text-decoration: none;
+    color: black;
+}
+
+div.minds-widget div.widget-button img {
+    max-height: 25px;
+    margin-right: 5px;
+}
+
+div.minds-widget div.count {
+    float: left;
+    
+    margin-left: 5px;
+    height: 21px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 2px;
+    
+    margin-top: 2px;
+    margin-bottom: 2px;
+    
+    float: left;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    
+}
+
+/* Remind widget */

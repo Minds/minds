@@ -1,1 +1,1 @@
-<iframe  height="16" width="20" frameborder="0" seamless="true" scrolling="no" src="<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>widgets/<?php echo $vars['tab']; ?>/service/?url=<?php echo urlencode(get_input('url')); ?>&embed=yes"></iframe>
+<iframe  height="31" width="135" frameborder="0" seamless="true" scrolling="no" src="<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>widgets/<?php echo $vars['tab']; ?>/service/?url=<?php echo urlencode(get_input('url')); ?>&embed=yes"></iframe>
