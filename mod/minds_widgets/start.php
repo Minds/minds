@@ -49,7 +49,8 @@ function minds_widgets_page_handler($pages) {
 
                 // Load CSS
                 case 'css' :
-                        echo elgg_view('minds_widgets/css');
+			echo elgg_view('css/widgets');
+                        //echo elgg_view('minds_widgets/css');
                     break;
 
                 // Actually use the service: the service endpoint
