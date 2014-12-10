@@ -67,14 +67,13 @@ function minds_service_remind($url, $message, $username) {
 	$river = new ElggRiverItem($options);
 	if ($result = $river->save()) {
 	    
-	    // Remind has been saved, cache/increment count. TODO: Discuss whether this is the best way
-	    $cacher = \minds\core\data\cache\factory::build();
+	    // Remind has been saved, update counter
+	    $lookup = new \minds\core\data\lookup('count:external:reminds');
 	    
-	    $key = "remind-".md5($url);
-	    $count = (int)$cacher->get($key);
-	    $cacher->set($key, $count++);
+	    $count = (int)$lookup->get($url);
+	    $lookup->set($url, $count++);
 	    
-	    return $result;
+	    return $guid;
 	}
 	return false;
 }
