@@ -126,5 +126,15 @@ class session extends base{
 	
 		return NULL;
 	}
+    
+    /**
+     * Get the logged in user guid
+     */
+    static public function getLoggedInUserGuid(){
+        if($user = self::getLoggedinUser())
+            return $user->guid;
+        
+        return false;
+    }
 	
 }

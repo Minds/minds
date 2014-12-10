@@ -1,65 +1,99 @@
 <?php
-
 /**
- * Elgg OAuth2 server implementation
+ * Minds Channel Profiles
  *
- * Uses the oauth2-server-php library by Brent Shaffer
- * https://github.com/bshaffer/oauth2-server-php
- * 
- * @author Billy Gunn (billy@arckinteractive.com)
- * @copyright Minds.com 2013
- * @link http://minds.com
+ * @package channel
  */
+namespace minds\plugin\oauth2;
 
-elgg_register_event_handler('init','system','oauth2_init');
+use minds\core;
 
-function oauth2_init() {
+class start extends \ElggPlugin{
 
-    $base = elgg_get_plugins_path() . 'oauth2';
+    /**
+     * Initialize the oauth2 plugin
+     */
+    public function init() {
 
-    // Register our OAuth2 storage implementation
-    elgg_register_class('ElggOAuth2DataStore', "$base/lib/ElggOAuth2DataStore.php");
+        /**
+         * @todo update this once minds gets a better PAM system
+         */
+        register_pam_handler("\\minds\\plugin\\oauth2\\start::pam", 'sufficient', 'user');
+        register_pam_handler("\\minds\\plugin\\oauth2\\start::pam", 'sufficient', 'api');
+        
+        $user_pam = new \ElggPAM('user');
+        $user_auth_result = $user_pam->authenticate();
+    //    var_dump( $user_auth_result ); exit;
+    
+    	elgg_register_plugin_hook_handler('logged_in_user', 'user', array($this, 'loggedInUserEntity'));
+    
+        elgg_extend_view('js/elgg', 'js/oauth2/oauth2');
+    	elgg_extend_view('css/elgg', 'oauth2/css');
+    
+        // Admin menu to manage applications
+        elgg_register_admin_menu_item('configure', 'oauth2', 'settings');
+        
+        
+        core\router::registerRoutes(array(
+            '/oauth2/token' => "\\minds\\plugin\\oauth2\\pages\\token",
+            '/oauth2/grant' => "\\minds\\plugin\\oauth2\\pages\\token", //this is soon to be deprecated
+            '/oauth2/authorize' => "\\minds\\plugin\\oauth2\\pages\\authorize",
+            '/oauth2/applications' => "\\minds\\plugin\\oauth2\\pages\\applications",
+        ));
 
-    // Register our oauth2 library
-    elgg_register_library('oauth2', "$base/lib/oauth2.php");
+    }
 
-    // page handler
-    elgg_register_page_handler('oauth2', 'oauth2_page_handler');
-    elgg_register_page_handler('developers', 'oauth2_page_handler');
+    public static function loggedInUserEntity(){
 
-//    $item = new ElggMenuItem('developers', elgg_echo('oauth2:developers'), 'developers');
-  //  elgg_register_menu_item('site', $item);
+        if(get_input('access_token')){
+            static $OAUTH2_LOGGED_IN;
+            if($OAUTH2_LOGGED_IN){
+                return $OAUTH2_LOGGED_IN;
+            }
+        
+            $storage = new storage();
+            // Create a server instance
+            $server = new \OAuth2\Server($storage);
+            // Get the token data
+            $token = $storage->getAccessToken(get_input('access_token'));
+            $user = new \ElggUser($token['user_id']);
+            $OAUTH2_LOGGED_IN = $user;
+            return $user;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * PAM: Confirm that the call includes an access token
+     *
+     * @return bool
+     */
+    public static function pam($credentials = NULL) {
+    
+        $storage = new storage();
+        $server = new \OAuth2\Server($storage);
+      
+        if (!$server->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
+            return false;
+        }
+       
+        // Get the token data
+        $token = $storage->getAccessToken(get_input('access_token'));
 
-    // Register actions
-    elgg_register_action('oauth2/register', $base . '/actions/register.php');
-    elgg_register_action('oauth2/unregister', $base . '/actions/unregister.php');
-    elgg_register_action('oauth2/delete', $base . '/actions/delete.php');
-    elgg_register_action('oauth2/authorize', $base . '/actions/authorize.php');
+        static $OAUTH2_LOGGED_IN;
+        $user = new \ElggUser($token['user_id']);
+        
+        if($user->guid){
+            $OAUTH2_LOGGED_IN = $user;
+            return true;
+        }
+  
+        return false;
+    }
 
-    // Hook into pam
-    register_pam_handler('oauth2_pam_handler', 'sufficient', 'user');
-    register_pam_handler('oauth2_pam_handler', 'sufficient', 'api');
-
-	elgg_register_plugin_hook_handler('logged_in_user', 'user', 'oauth2_logged_in_user_entity');
-
-    // register javascript
-    $js = elgg_get_simplecache_url('js', 'oauth2/oauth2');
-    elgg_register_simplecache_view('js/oauth2/oauth2');
-    elgg_register_js('oauth2', $js, 'footer');
-	
-	elgg_extend_view('css/elgg', 'oauth2/css');
-
-    // Register a cron to cleanup expired tokens
-    elgg_register_plugin_hook_handler('cron', 'hourly', 'oauth2_expire_tokens');
-
-    // Admin menu to manage applications
-    elgg_register_admin_menu_item('configure', 'oauth2', 'settings');
-			
-	//register subtypes
-	oauth2_subtypes();
 }
-
-function oauth2_page_handler($page) {
+/*function oauth2_page_handler($page) {
 
     // Load our library methods
     elgg_load_library('oauth2');
@@ -111,11 +145,11 @@ function oauth2_page_handler($page) {
 
     return true;
 }
-
+*/
 /**
  * Auto login if a cookie is found
  */
-function oauth2_SSO(){
+/*function oauth2_SSO(){
  	// Load our oauth2 library
 	elgg_load_library('oauth2');
 	$storage = new ElggOAuth2DataStore();
@@ -133,115 +167,4 @@ function oauth2_SSO(){
 	login($user);
 	header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
 
-}
-/**
- * PAM: Confirm that the call includes an access token
- *
- * @return bool
- */
-function oauth2_pam_handler($credentials = NULL) {
-
-    // Load our oauth2 library
-    elgg_load_library('oauth2');
-
-    // Get our custom storage object
-    $storage = new ElggOAuth2DataStore();
-
-    // Create a server instance
-    $server = new OAuth2_Server($storage);
-
-    $ia = elgg_get_ignore_access(true);
-
-    // Validate the request
-    if (!$server->verifyAccessRequest(OAuth2_Request::createFromGlobals())) { 
-       // error_log('oauth2_pam_handler() - ' . $server->getResponse());
-        elgg_set_ignore_access($ia);
-        return false;
-    }
-
-    // Get the token data
-    $token = $storage->getAccessToken(get_input('access_token'));
-
-    // get the user associated with this token
-    $user = get_entity($token['user_id'], 'user');
-
-    elgg_set_ignore_access($ia);
-
-    // couldn't get the user
-    if (!$user || !($user instanceof ElggUser)) {
-        error_log('oauth2_pam_handler() - Failed to retrieve user');
-        return false;
-    }
-
-    // try logging in the user object here
-    if (!login($user)) { 
-        error_log('oauth2_pam_handler() - Failed to login user');
-        return false;
-    }
-
-    // save the fact that we've validated this request already
-    
-    // tell the PAM system that it worked
-    return true;
-}
-
-function oauth2_logged_in_user_entity(){
-
-	if(get_input('access_token')){
-		static $OAUTH2_LOGGED_IN;
-		if($OAUTH2_LOGGED_IN){
-			return $OAUTH2_LOGGED_IN;
-		}
-	
-		elgg_load_library('oauth2');
-		$storage = new ElggOAuth2DataStore();
-		// Create a server instance
-		$server = new OAuth2_Server($storage);
-		// Get the token data
-		$token = $storage->getAccessToken(get_input('access_token'));
-    	$user =	new ElggUser($token['user_id']);
-		$OAUTH2_LOGGED_IN = $user;
-		return $user;
-	}
-	
-	return false;
-}
-
-//@todo update to casandra way
-function oauth2_expire_tokens() {
-
-    $access = elgg_get_ignore_access();
-    elgg_set_ignore_access(true);
-
-    $options = array(
-        'type' => 'object',
-        'subtype' => 'oauth2_access_token',
-        'limit'   => 9999
-    );
-
-    $entities = elgg_get_entities($options);
-
-    if (!empty($entities)) {
-        foreach ($entities as $e) {
-        	if($entity->time_create < time() + 3600){
-            	$e->delete();
-			}
-        }
-    }
-
-    elgg_set_ignore_access($access);
-}
-
-/*
- * Run once method to register subtypes
- *
- */
-function oauth2_subtypes() {
-	add_subtype('object', 'oauth2_client');
-	add_subtype('object', 'oauth2_access_token');
-	add_subtype('object', 'oauth2_refresh_token');
-	add_subtype('object', 'oauth2_auth_code');
-}
-
-  
-
+}*/

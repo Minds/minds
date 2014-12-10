@@ -14,7 +14,8 @@ class router{
 		"/contact" => "minds\\pages\\contact",
 		"/newsfeed" => "minds\\pages\\newsfeed\\newsfeed",
 		"/subscriptions" => "minds\\pages\\subscriptions\\index",
-		"/assets" => "minds\\pages\\assets"
+		"/assets" => "minds\\pages\\assets",
+		"/api" => "minds\\pages\\api\\api"
 	);
 	
 	/**
@@ -32,6 +33,9 @@ class router{
 		$route = rtrim($uri, '/');
 		$segments = explode('/', $route);
 		$method = $method ? $method : strtolower($_SERVER['REQUEST_METHOD']);
+        
+        if($method == 'post' && !$_POST)
+            $this->postDataFix();
 		
 		//@todo handler the homepage better
 		if(count($segments) == 1 && $segments[0] == ""){
@@ -106,8 +110,24 @@ HTML;
 	public function detectContentType(){
 		if(isset($_SERVER["CONTENT_TYPE"]) && $_SERVER["CONTENT_TYPE"] == 'application/json'){
 			\elgg_set_viewtype('json');
+            if(strtolower($_SERVER['REQUEST_METHOD']) == 'post'){
+                   $this->postDataFix();
+            }
 		}
 	}
+    
+    /**
+     * PHP sucks when it comes to json post data... this is a hack
+     * 
+     */
+    public function postDataFix(){
+        $postdata = file_get_contents("php://input");   
+        $request = json_decode($postdata, true);
+        foreach($request as $k => $v){
+            $_POST[$k] = $v;
+            $_REQUEST[$k] = $v;
+        }
+    }
 	
 	/**
 	 * Register routes...
