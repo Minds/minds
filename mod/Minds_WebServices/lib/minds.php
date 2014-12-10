@@ -65,7 +65,18 @@ function minds_service_remind($url, $message, $username) {
 		$options['timeline_override'] = array($wallpost->to_guid); //only post to the to_guid timeline..
 		
 	$river = new ElggRiverItem($options);
-	return $river->save();
+	if ($result = $river->save()) {
+	    
+	    // Remind has been saved, cache/increment count. TODO: Discuss whether this is the best way
+	    $cacher = \minds\core\data\cache\factory::build();
+	    
+	    $key = "remind-".md5($url);
+	    $count = (int)$cacher->get($key);
+	    $cacher->set($key, $count++);
+	    
+	    return $result;
+	}
+	return false;
 }
 
 expose_function('remind',
