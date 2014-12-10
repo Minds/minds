@@ -1,10 +1,10 @@
 <?php
-if (get_input('embed') == 'yes') {
+if (get_input('embed',$vars['embed']) == 'yes') {
     
     
     ?>
     <script>
-        var passed_url = '<?= get_input('url'); ?>';
+        var passed_url = '<?= get_input('url', $vars['url']); ?>';
         var url = (window.location != window.parent.location) ? document.referrer : document.location;
 
         if (passed_url != "")
