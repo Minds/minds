@@ -1,5 +1,7 @@
 <?php
 if (get_input('embed') == 'yes') {
+    
+    
     ?>
     <script>
         var passed_url = '<?= get_input('url'); ?>';
@@ -17,8 +19,13 @@ if (get_input('embed') == 'yes') {
 	    <a class="entypo minds-remind" href="<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>widgets/<?php echo $vars['tab']; ?>/service/" title="ReMind (repost)" onClick='window.open(this.href + "?url=" + encodeURIComponent(url) + "&title=<?php echo get_input('title'); ?>", "Remind", "width=800,height=600");
 		return false;'> reMind </a> 
 	</div>
-	<div class="count">123K</div>
+	<div class="count"></div>
     </div>
+    <script>
+	$(document).ready(function() {
+	    $('div.minds-widget div.count').load('<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>widgets/<?php echo $vars['tab']; ?>/data/?url=' + encodeURIComponent(url));
+	});
+    </script>
     <?php
 } else {
     ?>

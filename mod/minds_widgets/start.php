@@ -57,6 +57,12 @@ function minds_widgets_page_handler($pages) {
                         require_once(dirname(__FILE__) . '/pages/service.php') ;
                         return true;
                     break;
+		
+		// Data (e.g. counters)
+		case 'data' :
+                        require_once(dirname(__FILE__) . '/pages/data.php') ;
+                        return true;
+                    break;
 
                 // Get the code
                 case 'getcode':
