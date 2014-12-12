@@ -21,7 +21,7 @@ $conversation = $vars['conversation'];
 
 	<ul class="conversation-messages">
 		
-		<?php if(count($messages == 30)): ?>
+		<?php if(count($messages) == 30): ?>
 		<li class="clearfix load-more">
 			<p>Click to load earlier message.</p>
 		</li>

@@ -145,6 +145,7 @@ function blog_save($title, $text, $excerpt, $tags , $access, $container_guid, $p
 	);
 	$return['success'] = true;
 	$return['message'] = elgg_echo('blog:message:saved');
+	$return['guid'] = $guid;
 	return $return;
 	} 
 	
