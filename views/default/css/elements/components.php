@@ -1,4 +1,4 @@
-<?php
+.elgg-list > li<?php
 /**
  * Layout Object CSS
  *
@@ -38,7 +38,7 @@
 	margin: 24px 0 0 2%;
     border: 0;
 	background:#F8F8F8;
-	padding:0 10px 10px 11px;
+	/*padding:0 10px 10px 11px;*/
         width: 29%;
         /*width:28%;*/
 	overflow: hidden;
@@ -51,8 +51,11 @@
 	-moz-box-shadow: 0 0 1px #DDD;
 	border: 1px solid #DDD;
 }
+.elgg-list > li .elgg-image-block{
+	padding:16px;
+}
 .elgg-list.x4 > li {
-	width:21%;
+	width:22%;
 	margin:8px 0 8px 2%;
 }
 .elgg-list.x1{
@@ -101,7 +104,7 @@
 @media screen and (min-width: 1400px) {
 	
 	.elgg-list > li{
-		width:21%;
+		width:22%;
 		height:210px;
 	}
 	.elgg-list.x4 > li {
@@ -111,8 +114,9 @@
 @media screen and (min-width: 1800px) {
 
 	 .elgg-list > li{
-                width:16.5%;
+                width:18.5%;
                 height:210px;
+		margin:0 0 0 1%;
         }
 }
 /**

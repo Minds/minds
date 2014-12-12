@@ -1,42 +1,34 @@
-<?php
-/**
- * Chat JavaScript extension for elgg.js
- */
-?>
+<?php if(0){ ?><script><?php } ?>
 elgg.provide('elgg.notify');
 
 elgg.notify.init = function() {
 	if (elgg.is_logged_in()) {
-        	$(document).on("click",'#notify_button', elgg.notify.getNotifications);
+        $(document).on("click",'#notify_button', elgg.notify.getNotifications);
+        	
+    	elgg.get(elgg.get_site_url() + 'notifications/count',
+    		{
+    			success: function(data){
+    				if(data > 0){
+    					var icon  = $('#notify_button');
+    					var count = icon.find('.notification-new');
+    					
+    					if(count.length === 0){
+    						count.html(data);
+    					} else {
+    						icon.find('.notifier').append('<span class="notification-new">1</span>');
+    					}
+    					
+    					var title = $('title').html();
+    					$('title').html('(1) '+ title);
+    					
+    				}
+    			}
+    		
+    		});
 	}
 
 };
 
-/**
- * Change the color of new messages.
- */
-/*elgg.notify.markMessageRead = function() {
-	var activeMessages = $('.elgg-chat-messages .elgg-chat-unread');
-	var message = $(activeMessages[0]);
-	message.animate({backgroundColor: '#ffffff'}, 1000).removeClass('elgg-chat-unread');
-};*/
-
-/**
- * Get the number of unready messages
- * 
- */
-elgg.notify.getUnreadNotifications = function() {
-   
- 	var url = elgg.normalize_url("mod/notifications/pages/count.php"  + '?' + Math.random());
-    	
-  	$.get(url, function(data) {
-      		$('#notify_button').html(data);
-            //console.log(data);
-            //$('#notification').append(data);
-     });
-
-
-}
 
 /**
  * Get notifications via AJAX.

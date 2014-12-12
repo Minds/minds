@@ -22,7 +22,7 @@
 	min-height:100%;
 }
 .hero.sidebar-active{
-	margin-left:172px;
+	margin-left:186px;
 }
 .hero.sidebar-active .topbar{
 	width:92%;
@@ -245,8 +245,8 @@
 	margin: 0 10px 0 0;
 }
 
-.content-carousel{
-	margin-top:226px;
+.content-carousel .layout{
+	margin-top:300px;
 }
 
 .elgg-main {
@@ -310,6 +310,7 @@
 	padding:0;
 	box-shadow:0 0 3px #888;
 	background:#FFF;
+	margin-top:10px;
 }
 .minds-fixed-sidebar-left > h1{
 	margin:2px 16px;
@@ -364,7 +365,7 @@
 	overflow:visible;
 	overflow-x:scroll;
 	height:100%;
-	width:160px;
+	width:172px;
 	padding:12px;
 	background:#222;
 	box-shadow:0 0 4px #000;

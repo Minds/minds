@@ -61,7 +61,8 @@ $values = array(
 	'excerpt' => '',
 	'tags' => '',
 	'container_guid' => (int)get_input('container_guid'),
-	'license' => ''
+	'license' => '',
+	'banner_position' => 0
 );
 
 // fail if a required entity isn't set
@@ -134,6 +135,8 @@ if(get_input('removeHeader')){
 	$blog->header_bg = false;
 }
 
+$blog->banner_position = get_input('banner_position', 0);
+
 // only try to save base entity if no errors
 if (!$error) {
 	if ($guid = $blog->save()) {
@@ -171,15 +174,23 @@ if (!$error) {
 			$activity->setTitle($blog->title)
 					->setBlurb(elgg_get_excerpt($blog->description))
 					->setUrl($blog->getURL())
-					->setThumbnail(minds_fetch_image($blog->description, $blog->owner_guid))
+					->setThumbnail($blog->getIconURL())
+					->setFromEntity($blog)
 					->save();
 		
-		} elseif ($old_status == 'published' && $status == 'draft') {
-			elgg_delete_river(array(
-				'object_guid' => $blog->guid,
-				'action_type' => 'create',
-			));
+		} else {
+			$activity_guids = minds\core\data\indexes::fetch("activity:entitylink:$entity->guid");
+			foreach($activity_guids as $activity_guid){
+				$activity = new minds\entities\activity($activity_guid);
+				$activity->setTitle($blog->title)
+					->setBlurb(elgg_get_excerpt($blog->description))
+					->setUrl($blog->getURL())
+					->setThumbnail($blog->getIconURL())
+					->setFromEntity($blog)
+					->save();
+			}
 		}
+		
 
 		if ($blog->status == 'published' || $save == false) {
 			forward($blog->getURL());

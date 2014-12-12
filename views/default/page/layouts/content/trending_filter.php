@@ -66,5 +66,5 @@ if (elgg_is_logged_in() && $context) {
 		elgg_register_menu_item('filter', $tab);
 	}
 
-	echo elgg_view_menu('filter', array('sort_by' => 'priority', 'class' => 'elgg-menu-hz'));
+	echo elgg_view_menu('filter', array('sort_by' => 'priority', 'class' => 'elgg-menu-hz minds-trending-filter'));
 }

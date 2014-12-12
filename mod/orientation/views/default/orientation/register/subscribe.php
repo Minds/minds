@@ -23,6 +23,6 @@ $user = elgg_get_logged_in_user_entity();
 	$options['guids'] = $guids;
 	$options['type'] = 'user';
 	$options['pagination'] = false;
-
+	$options['masonry'] = false;
 	echo elgg_list_entities($options);
 

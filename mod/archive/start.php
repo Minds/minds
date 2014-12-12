@@ -41,7 +41,7 @@ function minds_archive_init() {
 	elgg_extend_view('js/elgg', 'archive/js');
 	elgg_register_js('player', '//vjs.zencdn.net/4.9.1/video.js','head', 10);
 	elgg_register_css('player', '//vjs.zencdn.net/4.9.1/video-js.css');
-	elgg_register_js('player-res', elgg_get_site_url().'mod/archive/player/video.js.res.js');
+	elgg_register_js('player-res', elgg_get_site_url().'mod/archive/player/video.js.res.js?12');
 	elgg_register_js('player-vast', elgg_get_site_url().'mod/archive/player/video.vast.js', 'head', 602);
 	elgg_register_js('player-vast-client', elgg_get_site_url().'mod/archive/player/vast-client.js', 'head', 601);
 	elgg_register_js('player-ads', elgg_get_site_url().'mod/archive/player/video.ads.js', 'head', 600);
@@ -77,6 +77,16 @@ function minds_archive_init() {
 			'title' =>  elgg_echo('minds:archive'),
 			'priority' => 4
 	));*/
+	
+	$prompt = elgg_get_plugin_user_setting('upload', elgg_get_logged_in_user_guid(), 'archive') ? '' : elgg_view('orientation/navigation_prompt', array('message'=>'Upload your media'));
+			
+	elgg_register_menu_item('site', array(
+		'name' => elgg_echo('minds:upload'),
+		'href' => 'archive/upload',
+		'text' => '<span class="entypo">&#128228;</span> Upload' . $prompt,
+		'title' => elgg_echo('minds:upload'),
+		'priority' => 4
+	));
 	
 	elgg_register_menu_item('site', array(
 			'name' => 'video',

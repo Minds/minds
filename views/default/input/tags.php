@@ -18,6 +18,7 @@ if (isset($vars['class'])) {
 $defaults = array(
 	'value' => '',
 	'disabled' => false,
+	'placeholder' => 'Separate each tag with a comma'
 );
 
 if (isset($vars['entity'])) {

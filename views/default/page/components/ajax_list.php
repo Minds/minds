@@ -28,6 +28,7 @@ if($elgg_path == elgg_get_site_url() || $elgg_path == null || $elgg_path == ""){
 	ob_end_clean();
 
 }
+
 $json = json_decode($out); 
 if(!$json){
 	return;

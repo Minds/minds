@@ -27,6 +27,11 @@ and (max-width : 1200px) {
 and (min-width : 0px)
 and (max-width : 720px) {
 	
+	.responsive-ad{
+		display:block !important;
+		padding:16px;
+	}
+
 	.sidebar-active-default{
 		margin-left:0 !important;
 	}
@@ -101,6 +106,7 @@ and (max-width : 720px) {
 
 	.hero > .topbar .owner_block {
 		margin-top:0;
+		display:none;
 	}
 
 	.hero > .topbar .owner_block > a > img {

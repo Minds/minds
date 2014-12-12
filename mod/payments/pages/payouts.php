@@ -24,6 +24,7 @@ class payouts extends core\page implements interfaces\page{
 		$forms = elgg_get_entities(array('subtype'=>'taxForm', 'owner_guid'=>elgg_get_logged_in_user_guid()));
 		
 		$content = elgg_view('payments/payouts');
+		$content .= elgg_view('payments/tos');
 		$content .= elgg_view('payments/tax-details', array('forms'=>$forms));
 		
 		
@@ -80,6 +81,15 @@ class payouts extends core\page implements interfaces\page{
 			$tax_form->setEncrypted($w8);
 			$tax_form->save();
 
+		}
+		
+		/**
+		 * Accepted?
+		 */
+		if(isset($_POST['accept_tos'])){
+			\elgg_set_plugin_user_setting('accepted_partner_tos', $_POST['accept_tos'], \elgg_get_logged_in_user_guid(), 'payments');
+		} else {
+			\elgg_set_plugin_user_setting('accepted_partner_tos', 'no', \elgg_get_logged_in_user_guid(), 'payments');
 		}
 		
 		/**

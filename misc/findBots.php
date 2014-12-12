@@ -40,15 +40,18 @@ foreach($users as $user){
 exit;
 */
 $offset = '';
-//while(true){
-$blogs = elgg_get_entities(array('subtype'=>'blog', 'limit'=>500, 'offset'=>$offset));
-$offset=end($blogs)->guid;
-$threshold = 4;
-foreach($blogs as $blog){
-//	$blog->delete();
-	$guard = minds\core\plugins::factory('guard');
-	if(!$guard->createHook('create', 'object', $blog, null)){
-		echo "found spam in $blog->title\n";
-		$blog->delete();
+while(true){
+	$blogs = elgg_get_entities(array('subtype'=>'blog', 'limit'=>500, 'offset'=>$offset));
+	$offset=end($blogs)->guid;
+	$threshold = 4;
+	foreach($blogs as $blog){
+	//	$blog->delete();
+
+		echo "Searching $blog->guid from " . elgg_get_friendly_time($blog->time_created) . "\n";
+		$guard = minds\core\plugins::factory('guard');
+		if(!$guard->createHook('create', 'object', $blog, null)){
+			echo "found spam in $blog->title\n";
+			$blog->delete();
+		}
 	}
 }

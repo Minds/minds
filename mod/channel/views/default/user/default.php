@@ -42,7 +42,10 @@ if (elgg_get_context() == 'gallery') {
         echo elgg_view_image_block($icon, $list_body, $vars);
 
 } else  {
-	
+	if($size == 'large'){
+		echo elgg_view('icon/user/hovercard', array('user'=>$entity, 'show'=>true));
+		return true;
+	}
 	$overview = elgg_view('user/overview', array('entity' => $entity));
 	$list_body = "$overview <h2>$title</h2>";
 	

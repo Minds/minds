@@ -343,7 +343,7 @@ class MindsMultiInstaller extends ElggInstaller {
             'mobile',
 	    'minds_social',
             'minds_themeconfig',
-		'anypage',
+		//'anypage',
 		'tinymce',
 		'search',
 		'cms',

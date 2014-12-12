@@ -68,6 +68,10 @@ $header_input = elgg_view('input/file', array(
 	'name' => 'header',
 	'id' => 'blog_header'
 ));
+$header_offset = elgg_view('input/hidden', array(
+	'name' => 'banner_position',
+	'value' => $vars['banner_position']
+));
 
 $header_remove = '';
 if($blog->header_bg){
@@ -147,7 +151,7 @@ $draft_warning
 
 <div>
 	<label for="blog_header">$header_label</label>
-	$header_input $header_remove
+	$header_input $header_remove $header_offset 
 </div>
 
 <div>

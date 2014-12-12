@@ -66,23 +66,40 @@
 	width:100%;
 	position:relative;
 }
+
+@charset "utf-8";
+
+/*
+You are free to style the button however you wish. I plan to use
+an icon from my site's own icon font to make it more visible. These
+are just basic styles to make it look ok with plain text.
+*/
+
 /* Position the button */
 .vjs-res-button {
-float: right;
-line-height: 3em;
+	float: right;
+	line-height: 3em;
 }
 
 /* Don't show hover effects on title */
 ul li.vjs-menu-title.vjs-res-menu-title:hover {
-cursor: default;
-background-color: transparent;
-color: #CCC;
-
--moz-box-shadow: none;
--webkit-box-shadow: none;
-box-shadow: none;
+	cursor: default;
+	background-color: transparent;
+	color: #CCC;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
 }
-**
+
+/* Needed to keep text visible in video.js 4.9 */ 
+.vjs-res-button .vjs-control-content .vjs-control-text {
+	width: auto;
+	height: auto;
+	clip: auto;
+}
+
+/**
 * videojs.ads.css
 */
 
@@ -271,6 +288,7 @@ box-shadow: none;
 	width:100%;
 	height:256px;
 	display:block;
+	overflow:hidden;
 }
 
 .batch-thumbnails{
@@ -330,6 +348,37 @@ box-shadow: none;
 
 }
 
+
+/**
+ * Cinemr screen!
+ */
+
+.cinemr-screen-body .minds-body-header{
+	display:none;
+}
+.cinemr-screen{
+	background:#111;
+}
+.cinemr-screen .player-container{
+	width:1280px;
+	margin:auto;
+}
+.cinemr-screen .archive-video-content-wrapper{
+	background:#FFF;
+	width:90%;
+	margin:auto;
+	padding:16px;
+}
+.cinemr-screen .minds-comments-bar{
+	background:#FFF;
+	width:300px;
+	margin:auto;
+}
+@media screen and (max-width: 1300px){
+	.cinemr-screen .player-container{
+		width:840px;
+	}
+}
 
 /**
  * Lightbox/colorbox (tmp here)

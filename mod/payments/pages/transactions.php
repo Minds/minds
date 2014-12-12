@@ -21,12 +21,16 @@ class transactions extends core\page implements interfaces\page{
 		 */
 		elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
 		
-		$content = elgg_list_entities(array(
+		$transactions = elgg_get_entities(array(
 				'subtype' => 'transaction',
 				'owner_guid' => elgg_get_logged_in_user_guid(),
 				'list_class' => 'vertical-list credit-cards',
 			));
-		
+		if($transactions){
+			$content = elgg_view_entity_list($transactions, array('list_class'=>'vertical-list credit-cards'));
+		} else {
+			$content = 'No transaction history';
+		}
 		
 		$body = \elgg_view_layout('one_sidebar_alt', array('title'=>\elgg_echo('bitcoin:wallet'), 'content'=>$content));
 		

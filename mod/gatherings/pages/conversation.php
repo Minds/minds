@@ -55,8 +55,11 @@ class conversation extends core\page implements interfaces\page{
 				
 			} else {
 				$user = new \minds\entities\user(strtolower($pages[0]));
-				if(!in_array($user, $conversations))
+				if(!in_array($user, $conversations)){
+					$user->last_msg = time();
+					$user->unread = 0;
 					$conversations[] = $user;
+				}
 			}
 			
 			

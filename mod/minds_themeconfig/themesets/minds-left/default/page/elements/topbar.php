@@ -10,6 +10,7 @@
 	<?php echo elgg_view('search/search_box'); ?>
 	 <span title="Navigation" class="entypo tooltip n menu-toggle">&#57349;</span>
 
+	<?= elgg_view_menu('topbar') ?>
 </div>
 
 <div class="center">

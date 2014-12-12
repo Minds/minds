@@ -16,10 +16,10 @@ if (isset($vars['class'])) {
 
 $defaults = array(
 	'value' => '',
-	'disabled' => false,
+	'disabled' => false
 );
 
 $vars = array_merge($defaults, $vars);
 ?>
 
-<input type="text" <?php echo elgg_format_attributes($vars); ?> />
+<input type="text" <?php echo elgg_format_attributes($vars); ?> placeholder="Separate each tag with a comma" />

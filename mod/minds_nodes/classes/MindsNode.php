@@ -179,4 +179,10 @@ class MindsNode extends ElggObject{
 		return  $this->client('DELETE', $this->domain);
 	}
 
+	public function getExportableValues() {
+                return array_merge(parent::getExportableValues(), array(
+                        'domain',
+                ));
+        }
+
 }

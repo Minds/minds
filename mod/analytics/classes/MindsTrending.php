@@ -136,6 +136,8 @@ class MindsTrending{
 
 		$db_entities = new minds\core\data\call('entities');
 	
+
+		$used_guids = array();
 		$index_variables = array();
 		//a lower score is higher in the list
 		foreach(self::$data as $score => $data){	
@@ -163,7 +165,13 @@ class MindsTrending{
 			if($timespan == 'entire'){
 				if(!$guid)
 					continue;
-				$success = $db_entities->insert($guid, array('viewcount'=>$data['count']));
+				$count = $data['count'];
+				if(isset($used_guids[$guid]))
+					$count = $count + $used_guids[$guid];
+
+				$success = $db_entities->insert($guid, array('viewcount'=>$count));
+				
+				$used_guids[$guid] = $count;
 				//echo "setting count...".$data['count'] . " for $success \n";
 			}
 

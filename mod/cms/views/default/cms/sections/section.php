@@ -1,8 +1,12 @@
 <?php
 $section = $vars['section'];
+$img_src = elgg_get_site_url() . "s/$section->guid/bg/".$section->last_updated;
 ?>
 <section class="cms-section" data-guid="<?= $section->guid ?>">
-	<div class="cms-section-bg"  <?php if($section->background): ?> style="background-image:url(<?=elgg_get_site_url() . "s/$section->guid/bg/".$section->last_updated ?>)" <?php endif; ?>></div>
+	<div class="cms-section-bg"  <?php if($section->background): ?> <?php endif; ?>>
+		<img src="<?=$img_src?>" style="top:<?= $section->top_offset ?>px; <?php if(!$section->background): ?> display:none; <?php endif; ?>"/>
+		<input type="hidden" name="top_offset" value="<?= $section->top_offset ?>"/>
+	</div>
 	<div class="container">
 		
 		<?php if(elgg_is_admin_logged_in()):
@@ -29,6 +33,9 @@ $section = $vars['section'];
 			</a>
 		</div>
 		
+		<?php if($section->version == 2): ?>
+			<?= elgg_view('input/longtext', array('name'=>'content', 'value'=>$section->content)); ?>
+		<?php else: ?>
 		<div class="left">
 			<div class="cell">
 				<h2><input type="text" placeholder="Header 2." class="h2" value="<?= $section->leftH2 ?>" style="color:<?=$section->color?>"/></h2>
@@ -41,6 +48,14 @@ $section = $vars['section'];
 				<p><textarea placeholder="Paragraph with some text here." class="p" style="color:<?=$section->color?>"><?= $section->rightP ?></textarea></p>
 			</div>
 		</div>
+		
+		<?php endif; ?>
+		<?php else: ?>
+		
+		<?php if($section->version == 2): ?>
+			<div class="section-gui-ouput">
+				<?= $section->content; ?>
+			</div>
 		<?php else: ?>
 			<a href="<?= $section->href ?>" target="_blank">		
 				<div class="left">
@@ -57,7 +72,7 @@ $section = $vars['section'];
 					</div>
 				</div>
 			</a>
-		
+		<?php endif; ?>
 		<?php endif; ?>
 	</div>
 </section>

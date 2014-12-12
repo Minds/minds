@@ -64,13 +64,16 @@ usort($items, function($a, $b){
 echo '<div class="carousel-admin-items">';
 
 foreach($items as $item){
-	echo '<div class="carousel-admin-wrapper" style="background:#888 url('. elgg_get_site_url() . 'carousel/background/'.$item->guid.'/'.$item->last_updated .'/0/'.elgg_get_plugin_setting('style','minds').')">';
-		echo elgg_view('input/submit', array('name'=>'delete:'.$item->guid,'class'=>'elgg-button elgg-button-action remove', 'value'=>'x'));
-		echo "<div class=\"drag entypo\">&#59404;</div>";
-		$href = elgg_view('input/text', array('name'=>"$item->guid:href", 'class'=>'carousel-href', 'value'=>$item->href, 'placeholder'=>'Enter a url here... (optional)'));
-		$shadow = elgg_view('input/text', array('name'=>"$item->guid:shadow", 'class'=>'shadow-color', 'value'=>$item->shadow?:'transparent', 'size' => 1));
-		$color = elgg_view('input/text', array('name'=>"$item->guid:color", 'class'=>'text-color carousel-colorpicker', 'value'=>$item->color, 'size' => 1));
-		$file = elgg_view('input/file', array('name'=>"$item->guid:background", 'class'=>'bg-input'));
+	$img_src  = elgg_get_site_url() . 'carousel/background/'.$item->guid.'/'.$item->last_updated .'/0/fat';
+	echo '<div class="carousel-admin-wrapper" style="background:#888">';
+	echo "<div class=\"bg_wrapper\"><img src=\"$img_src\" class=\"carousel_img\" style=\"top:{$item->top_offset}px\"/></div>";
+	echo elgg_view('input/submit', array('name'=>'delete:'.$item->guid,'class'=>'elgg-button elgg-button-action remove', 'value'=>'x'));
+	echo "<div class=\"drag entypo\">&#59404;</div>";
+	$href = elgg_view('input/text', array('name'=>"$item->guid:href", 'class'=>'carousel-href', 'value'=>$item->href, 'placeholder'=>'Enter a url here... (optional)'));
+	$shadow = elgg_view('input/text', array('name'=>"$item->guid:shadow", 'class'=>'shadow-color', 'value'=>$item->shadow?:'transparent', 'size' => 1));
+	$color = elgg_view('input/text', array('name'=>"$item->guid:color", 'class'=>'text-color carousel-colorpicker', 'value'=>$item->color, 'size' => 1));
+	
+	$file = elgg_view('input/file', array('name'=>"$item->guid:background", 'class'=>'bg-input'));
 	echo <<<HTML
 		<div class="actions"> 
 			<div class="href">
@@ -91,7 +94,7 @@ foreach($items as $item){
 			</div>
 		</div>
 HTML;
-
+		echo  elgg_view('input/hidden', array('name'=>"$item->guid:top_offset", 'value'=>$item->top_offset, 'id'=>'top_offset'));
 		echo elgg_view('input/plaintext', array('name'=>"$item->guid:title", 'value'=>$item->title, 'placeholder'=>'Type here..', 'style'=>'color:'.$item->color .'; background:'.$item->shadow, 'rows'=>1));
 		echo elgg_view('input/text', array('name'=>"$item->guid:subtitle", 'value'=>$item->subtitle, 'placeholder'=>'Type here..'));
 		echo elgg_view('input/hidden', array('name'=>"$item->guid:order", 'value'=>$item->order, 'id'=>"order"));

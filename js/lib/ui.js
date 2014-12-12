@@ -296,6 +296,9 @@ elgg.ui.initDatePicker = function() {
 
 elgg.ui.hoverCard = {
 	mouseenter: function(e){
+		//prevent other hovercards being open at the same time
+		$(document).find('.minds-hovercard').hide(); 
+		
 		var icon =  $(this);
 		var hc = $(this).children('.minds-hovercard');
 		hc.show();

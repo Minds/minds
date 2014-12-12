@@ -154,9 +154,11 @@ class ElggUser extends ElggEntity
 		$data = array($this->guid => time());
 
 		$db = new minds\core\data\call('user_index_to_guid');
-		$db->insert(strtolower($this->username), $data);
-		$db->insert(strtolower($this->email), $data);
-
+		if(!$db->getRow(strtolower($this->username))){
+			$db->insert(strtolower($this->username), $data);
+			$db->insert(strtolower($this->email), $data);
+		}
+ 
 		//update our session, if it is us logged in
 		if(elgg_is_logged_in() && $this->guid == elgg_get_logged_in_user_guid()){
 			$_SESSION['user'] = $this;
@@ -421,7 +423,21 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	function isFriendOf($user_guid) {
-		return user_is_friend($user_guid, $this->getGUID());
+		$cacher = \minds\core\data\cache\factory::build();
+                if($cache = $cacher->get("$user_guid:friendof:$this->guid")){
+			if($cache == 'yes')
+				return true;
+			else
+				return false;
+		}
+
+		$is = user_is_friend($user_guid, $this->getGUID());
+		if($is)
+			$cacher->set("$user_guid:friendof:$this->guid", 'yes');
+		else
+			$cacher->set("$user_guid:friendof:$this->guid", 'no');
+
+		return $is;
 	}
 
 	/**
@@ -456,8 +472,17 @@ class ElggUser extends ElggEntity
 	 * @return 
 	 */
 	function getSubscribersCount(){
+				
+		$cacher = \minds\core\data\cache\factory::build();
+		if($cache = $cacher->get("friendsof:$this->guid"))
+			return $cache;
+
 		$db = new minds\core\data\call('friendsof');
-		return (int) $db->countRow($this->guid);
+		$count = $db->countRow($this->guid);
+		if(!$count)
+			$count = 1;
+		$cacher->set("friendsof:$this->guid", $count);
+		return $count;
 	}
 	
 	/**
@@ -639,7 +664,8 @@ class ElggUser extends ElggEntity
 			'username',
 			'language',
 			'icontime',
-			'legacy_guid'
+			'legacy_guid',
+			'featured_id'
 		));
 	}
 

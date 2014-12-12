@@ -1,10 +1,9 @@
 <?php 
 
-$entity = elgg_extract('entity', $vars);
+$notification = elgg_extract('entity', $vars);
 
-$object = get_entity($entity->object_guid);
-
-if($object){
+$entity =  minds\core\entities::build(new minds\entities\entity($notification->object_guid));
+if($entity){
 	
 	$actor = get_entity($entity->from_guid);
 	

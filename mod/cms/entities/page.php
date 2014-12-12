@@ -97,5 +97,18 @@ class page extends entities\object{
 		}
 		return $this;
 	}
+	
+	public function setBannerPosition($pos){
+		if($pos){
+			$this->banner_position = $pos;
+		}
+		return $this;
+	}
+	
+	public function setContext($context = 'footer'){
+		$this->context = $context;
+		
+		return $this;
+	}
 
 }

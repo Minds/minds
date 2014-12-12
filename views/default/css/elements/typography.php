@@ -5,6 +5,8 @@
  * @package Elgg.Core
  * @subpackage UI
  */
+global $CONFIG;
+$base_url = isset($CONFIG->cdn_url) ? elgg_get_site_url() : elgg_get_site_url();
 ?>
 
 /* ***************************************
@@ -12,20 +14,20 @@
 *************************************** */
 @font-face {
     font-family: 'entypo';
-    src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.eot?') format('eot'),
-         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.woff') format('woff'),
-         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.ttf') format('truetype'),
-         url('<?php echo elgg_get_site_url();?>mod/minds/vendors/entypo/entypo.svg') format('svg');
+    src: url('<?= $base_url ?>mod/minds/vendors/entypo/entypo.eot?') format('eot'),
+         url('<?= $base_url ?>mod/minds/vendors/entypo/entypo.woff') format('woff'),
+         url('<?= $base_url ?>mod/minds/vendors/entypo/entypo.ttf') format('truetype'),
+         url('<?= $base_url ?>mod/minds/vendors/entypo/entypo.svg') format('svg');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
   font-family: 'fontello';
-  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246');
-  src: url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.eot?96059246#iefix') format('embedded-opentype'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.woff?96059246') format('woff'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.ttf?96059246') format('truetype'),
-       url('<?php echo elgg_get_site_url();?>mod/minds/vendors/fontello/font/fontello.svg?96059246#fontello') format('svg');
+  src: url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.eot?96059246');
+  src: url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.eot?96059246#iefix') format('embedded-opentype'),
+       url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.woff?96059246') format('woff'),
+       url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.ttf?96059246') format('truetype'),
+       url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.svg?96059246#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -145,14 +147,14 @@ blockquote {
 }
 
 h1, h2, h3, h4, h5, h6 {
-/*	font-family:"Lato", Helvetica, Arial; */
+	/*font-family:"Lato", Helvetica, Arial;*/ 
 	font-family:Helvetica, Arial, sans";
 	font-weight:400;
 	color: #333;
 }
 
 h1 { font-size: 1.8em; }
-h2 { font-size: 42px; line-height: 1.1em; padding-bottom:5px}
+h2 { font-size: 42px; line-height: 1.1em; padding-bottom:5px; font-family:"Lato", Helvetica, Arial;}
 h3 { font-size: 28px; line-height: 28px;}
 h4 { font-size: 1.0em; }
 h5 { font-size: 0.9em; }

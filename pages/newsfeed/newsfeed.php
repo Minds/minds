@@ -57,7 +57,7 @@ class newsfeed extends core\page implements interfaces\page{
 		$options = array(
 					'name' => 'share',
 					'href' => "newsfeed/$activity->guid/share",
-					'text' => '<span class="entypo">&#59407;</span> Share',
+					'text' => '<span class="entypo">&#59407;</span> Link',
 					'class' => 'elgg-lightbox',
 					'title' => elgg_echo('minds:share'),
 					'is_action' => true,
@@ -99,7 +99,7 @@ class newsfeed extends core\page implements interfaces\page{
 		//	$this->forward('login');
 		//}
 		
-		if(!is_numeric($pages[0]) && \minds\core\session::isLoggedin() && elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0){
+		if(!is_numeric($pages[0]) && \minds\core\session::isLoggedin() && elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0 && !elgg_get_logged_in_user_entity()->base_node){
 			$pages[0] = 'featured';
 		}
 
@@ -207,7 +207,7 @@ class newsfeed extends core\page implements interfaces\page{
 			'content'=>$content, 
 			'class' => 'newsfeed',
 			'sidebar_top'=>$sidebar_right,
-			//'sidebar' => elgg_view_menu('footer'),
+			'sidebar' => elgg_view('page/elements/ads', array('type'=>'responsive-content', 'width'=>'200px', 'height'=>'auto', 'float'=>'none')),
 			'sidebar_alt'=>$sidebar_left,
 			'sidebar-alt-class' =>  'minds-fixed-sidebar-left'
 		));
@@ -291,10 +291,15 @@ class newsfeed extends core\page implements interfaces\page{
 						 */
 						switch($embeded->subtype){
 							case 'blog':
+								$message = false;
+								if($embeded->owner_guid != elgg_get_logged_in_user_guid())
+									$message = 'via <a href="'.$embeded->getOwnerEntity()->getURL() . '">'. $embeded->getOwnerEntity()->name . '</a>';
 								$activity->setTitle($embeded->title)
 									->setBlurb(elgg_get_excerpt($embeded->description))
 									->setURL($embeded->getURL())
-									->setThumbnail(minds_fetch_image($embeded->description, $embeded->owner_guid))
+									->setThumbnail($embeded->getIconUrl())
+									->setMessage($message)
+									->setFromEntity($embeded)
 									->save();
 							break;
 						}

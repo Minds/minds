@@ -192,7 +192,7 @@ function blog_page_handler($page) {
 			//$params['title'] =  elgg_view('page/elements/ads', array('type'=>'content-header')). $params['pagetitle'];
 			$body = elgg_view_layout('content', $params);
 	
-			echo elgg_view_page($params['pagetitle'], $body);
+			echo elgg_view_page($params['title'], $body, 'default', $params);
 			
 			return true;	
 			break;
@@ -276,7 +276,7 @@ function blog_page_handler($page) {
 
 	$body = elgg_view_layout('content', $params);
 
-	echo elgg_view_page($params['title'], $body);
+	echo elgg_view_page($params['title'], $body, 'default', $params);
 	return true;
 }
 
@@ -422,7 +422,7 @@ function blog_run_upgrades($event, $type, $details) {
  */
 function blog_pagesetup(){
 	if(elgg_get_context() == 'settings'){
-		if(elgg_is_logged_in()){
+		if(elgg_is_logged_in() && elgg_is_admin_logged_in()){
 			$user = elgg_get_logged_in_user_entity();
 
 			$params = array(

@@ -7,6 +7,8 @@ elgg_load_library('orientation');
 
 gatekeeper();
 
+setcookie('sidebarOpen', 'true', time()+60, '/');
+
 $orientation = new MindsOrientation();
 $orientation->run(get_input('step'));
 exit;

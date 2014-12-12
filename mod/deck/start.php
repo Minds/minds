@@ -86,7 +86,7 @@ function deck_river_init() {
 	elgg_register_plugin_hook_handler('access:collections:write', 'user', 'deck_river_access_collections');
 	
 	//run the cron script every minute...
-	elgg_register_plugin_hook_handler('cron', 'minute', 'deck_cron_handler');
+	//elgg_register_plugin_hook_handler('cron', 'minute', 'deck_cron_handler');
 	
 	$cassandra = datalist_get('cassandra'); //for cassandra ported
 

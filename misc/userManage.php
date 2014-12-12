@@ -3,11 +3,18 @@
 require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access(true);
+$user = new minds\entities\user('mark');
+$user->makeAdmin();
 
-$user = new minds\entities\user('markandrewculp');
-$cluster = new minds\core\clusters();
-$cluster->syncCarousels($user);
-var_dump($user); exit;
+
+exit;
+$user = new minds\entities\user('ottman');
+login($user); 
+
+exit;
+//$cluster = new minds\core\clusters();
+//$cluster->syncCarousels($user);
+//var_dump($user); exit;
 //var_dump($user); exit;
 //$user->delete(); exit;
 //$user = new minds\entities\user('hobbesdeutschjr.');
@@ -16,16 +23,16 @@ var_dump($user); exit;
 //$user->save();
 
 $db = new minds\core\data\call('user_index_to_guid');
-$data = $db->getRow('music');
+$data = $db->getRow('education');
+
 
 foreach($data as $guid => $time){
-	if($guid != '100000000000002125'){
-		$db->removeAttributes('music', array($guid));
+	if($guid != "100000000000091117"){
+		$db->removeAttributes('education', array($guid));
 	}
 }
 exit;
 //login(new minds\entities\user('mark'));
-*/
 $db = new minds\core\data\call();
 $db->getCF('session')->truncate();
 //reset_login_failure_count($john->guid);

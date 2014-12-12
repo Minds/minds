@@ -1562,12 +1562,14 @@ function elgg_views_handle_deprecated_views() {
  */
 function elgg_views_boot() {
 	global $CONFIG;
+	$base_url = isset($CONFIG->cdn_url) ? $CONFIG->cdn_url : elgg_get_site_url();
+
 
 	elgg_register_simplecache_view('css/ie');
 	elgg_register_simplecache_view('css/ie6');
 	elgg_register_simplecache_view('css/ie7');
 
-	elgg_register_js('jquery', elgg_get_site_url().'vendors/jquery/jquery-1.11.0.js', 'head');
+	elgg_register_js('jquery', $base_url .'vendors/jquery/jquery-1.11.0.js', 'head');
 	elgg_register_js('jquery-ui', '/vendors/jquery/jquery-ui-1.10.4.min.js', 'footer');
 	elgg_register_js('jquery.form', '/vendors/jquery/jquery.form.js');
 
@@ -1588,8 +1590,8 @@ function elgg_views_boot() {
 	elgg_register_css('lightbox', $lightbox_css_url);
 
 
-	elgg_register_css('select2', elgg_get_site_url() . 'vendor/ivaynberg/select2/select2.css');
-	elgg_register_js('select2', elgg_get_site_url() . 'vendor/ivaynberg/select2/select2.js');
+	elgg_register_css('select2', $base_url . 'vendor/ivaynberg/select2/select2.css');
+	elgg_register_js('select2', $base_url . 'vendor/ivaynberg/select2/select2.js');
 
 	elgg_register_simplecache_view('css/elgg');
 	$elgg_css_url = elgg_get_simplecache_url('css', 'elgg');

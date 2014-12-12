@@ -226,6 +226,7 @@ function UploadCtrl($scope, Elgg, $q, $timeout, $http, $location) {
 	    }).on('fileuploadfail', function (e, data) {
 	    	
 			$scope.files[data.index].progress = 'fail';
+			$scope.completed++; //still update so we can continue..
 			$scope.$apply();
 			
 	    }).on('fileuploaddone', function (e, data) {

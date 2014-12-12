@@ -48,7 +48,6 @@ class configuration extends core\page implements interfaces\page{
 				
 				$keypair = helpers\openssl::newKeypair(get_input('passphrase'));
 				
-				
 				\elgg_set_plugin_user_setting('publickey', $keypair['public'], elgg_get_logged_in_user_guid(), 'gatherings');
 				\elgg_set_plugin_user_setting('option', '1', elgg_get_logged_in_user_guid(), 'gatherings');
 				\elgg_set_plugin_user_setting('privatekey', $keypair['private'], elgg_get_logged_in_user_guid(), 'gatherings');
@@ -58,7 +57,9 @@ class configuration extends core\page implements interfaces\page{
 
 				$_SESSION['tmp_privatekey'] = $tmp;
 				$_SESSION['tmp_privatekey_ts'] = time();
-			
+		
+				unset($_COOKIE['tmp_priv_pswd']);
+	
 				setcookie('tmp_priv_pswd', $new_pswd, time() + (60 * 60 * 60 * 24), '/', NULL, NULL, true);
 				
 				if(elgg_is_xhr()){

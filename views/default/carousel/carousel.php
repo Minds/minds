@@ -55,7 +55,11 @@ $(document).ready(function() {
 		foreach($items as $item){
 			$link_extras = "";
 			if($item->href){
-				$link_extras = "href=\"{$item->href}\" target=\"_blank\"";
+				if(strpos($item->href, elgg_get_site_url()) !== FALSE)
+					$target = '_self';
+				else
+					$target = '_blank';
+				$link_extras = "href=\"{$item->href}\" target=\"$target\"";
 			}
 
 			$class = $i==0 ?'active' : '';
@@ -63,10 +67,12 @@ $(document).ready(function() {
 			if(isset($item->ext_bg) && $item->ext_bg)
 				$bg = $item->ext_bg;
 			else 
-				$bg =  $CONFIG->cdn_url . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache/thin";
+				$bg =  $CONFIG->cdn_url . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache/fat";
 	
-			echo "<img src=\"$bg\" />";
-			echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><div class=\"inner\" style=\"background:$item->shadow\"><h3>$item->title</h3></div></div>";
+			echo "<img src=\"$bg\" style=\"top:{$item->top_offset}px\"/>";
+			
+			if($item->title)
+				echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><div class=\"inner\" style=\"background:$item->shadow\"><h3>$item->title</h3></div></div>";
 	
 			echo '</a>';
 			$i++;
