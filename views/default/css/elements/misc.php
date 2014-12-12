@@ -573,7 +573,7 @@ li .excerpt a{
 }
 .blog-sidebar li img.rich-image{
 	margin:0;
-	height:360px;
+/*	height:360px ; */
 }
 .elgg-sidebar li a h3{
 	color:#333;
