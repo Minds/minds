@@ -3,7 +3,8 @@
 $users = elgg_list_entities(array(
 	'type' => 'user',
 	'subtype'=> null,
-	'full_view' => FALSE
+	'full_view' => FALSE,
+	'masonry' => false
 ));
 
 ?>

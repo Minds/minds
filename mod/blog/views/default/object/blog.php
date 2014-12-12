@@ -52,12 +52,43 @@ if ($full) {
 
     $body = elgg_view('output/longtext', array(
         'value' => $blog->description,
-        'class' => 'blog-post',
+        'class' => 'blog-post clearfix',
     ));
 
-    //assume a youtube, vimeo, liveleak scraper
-//	if($blog->rss_item_id && $blog->license == 'attribution-noncommercial-noderivs-cc'){
-//	}	
+    if(!$blog->rss_item_id){
+        $ads = 2;
+        $added =0;
+        $length = strlen($body);
+        $sep = "</p>";
+        $paragraphs = explode($sep, $body);
+        foreach($paragraphs as $i => $p){
+       	   if($length < 300)
+		break; //can't fit an ad here
+            if(trim($p))
+                $paragraphs[$i] .= $sep;
+            if(($i % 10 == 0) && $added < $ads ){
+                $paragraphs[$i] .= elgg_view('page/elements/ads', array(
+					'type'=>'responsive-content', 
+					'float'=> $added % 2 == 0 ? 'left' : 'right', 
+					'height'=> $length > 2000 ? 'auto' : '280px', 
+					'width'=> $length > 2000 ? '300' : '336px'
+					));
+                $added++;
+            }
+	    if($length < 2200)
+    		break;
+        }
+        $body = implode('', $paragraphs);
+	if($added == 1){
+		$body .= elgg_view('page/elements/ads', array(
+                                        'type'=>'responsive-content',
+                                        'float'=> 'none',
+                                        'height'=> 'auto',
+                                        'width'=> '95%' 
+                                        ));
+	}
+
+    }
 
     $body .= elgg_view('minds/license', array('license' => $blog->license));
 

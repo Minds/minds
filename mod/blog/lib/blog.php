@@ -196,6 +196,7 @@ function blog_get_page_content_list($user_guid = NULL, $container_guid = NULL) {
 	}
 
 	$return['filter'] = elgg_view('page/layouts/content/trending_filter', $return);
+	$return['class'] = 'blog';
 	return $return;
 }
 
@@ -603,7 +604,7 @@ function blog_sidebar($blog){
 			$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single'));
 		} 
 			
-		$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
+		//$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
 		
 		//show more posts from this user
 		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>3));

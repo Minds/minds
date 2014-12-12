@@ -147,14 +147,14 @@ blockquote {
 }
 
 h1, h2, h3, h4, h5, h6 {
-/*	font-family:"Lato", Helvetica, Arial; */
+	/*font-family:"Lato", Helvetica, Arial;*/ 
 	font-family:Helvetica, Arial, sans";
 	font-weight:400;
 	color: #333;
 }
 
 h1 { font-size: 1.8em; }
-h2 { font-size: 42px; line-height: 1.1em; padding-bottom:5px}
+h2 { font-size: 42px; line-height: 1.1em; padding-bottom:5px; font-family:"Lato", Helvetica, Arial;}
 h3 { font-size: 28px; line-height: 28px;}
 h4 { font-size: 1.0em; }
 h5 { font-size: 0.9em; }

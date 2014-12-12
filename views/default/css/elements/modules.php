@@ -218,3 +218,12 @@ a.elgg-widget-collapsed:before {
 	font-weight:bold;
 	cursor:pointer;
 }
+
+.responsive-ad-content{
+	float: right;
+	width: 300px;
+	margin: 12px;
+	padding: 9px;
+	background: #FEFEFE;
+	border: 1px solid #DDD;
+}

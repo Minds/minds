@@ -785,3 +785,9 @@
 	background:#888;
 	color:#FFF;
 }
+
+.minds-trending-filter{
+	font-family:"Lato", Arial;
+	margin:16px auto;
+	float:none;
+}

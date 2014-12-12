@@ -37,12 +37,12 @@ class start extends bases\plugin{
 	public function pageSetup(){
 		if(elgg_get_context() == 'settings'){
 			
-			\elgg_register_menu_item('page', array(
+			/*\elgg_register_menu_item('page', array(
 			    'name' => 'payments:methods',
 			    'text' => 'Payment Methods',
 			    'href' => 'settings/payments/methods',
 			    'title' => elgg_echo('payments:methods')
-		    ));
+		    	));*/
 			
 			\elgg_register_menu_item('page', array(
 			    'name' => 'payments:payouts',
