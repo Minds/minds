@@ -8,6 +8,7 @@
 namespace minds\pages\api\v1;
 
 use minds\core;
+use minds\entities;
 use minds\interfaces;
 use minds\api\factory;
 
@@ -39,10 +40,14 @@ class newsfeed implements interfaces\api{
         $activity = core\entities::get(array_merge(array(
             'type' => 'activity',
             'limit' => get_input('limit', 5),
+            'offset'=> get_input('offset', '')
         ), $options));
         
-        if($activity)
+        if($activity){
             $response['activity'] = factory::exportable($activity);
+            $response['load-next'] = (string) end($activity)->guid;
+            $response['load-previous'] = (string) key($activity)->guid;
+        }
         
         return factory::response($response);
         
@@ -50,7 +55,17 @@ class newsfeed implements interfaces\api{
     
     public function post($pages){
         
-        return factory::response(array());
+        //factory::authorize();
+        error_log(print_r($_POST, true));
+        $activity = new entities\activity();
+        if(isset($_POST['message']))
+            $activity->setMessage($_POST['message']);
+        
+        if($guid = $activity->save()){
+            return factory::response(array('guid'=>$guid));
+        } else {
+            return factory::response(array('status'=>'failed', 'message'=>'could not save'));
+        }
         
     }
     

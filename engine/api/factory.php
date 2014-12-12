@@ -73,6 +73,7 @@ class factory{
      */
     public static function exportable($entities){
         foreach($entities as $k => $entity){
+            $entities[$k]->guid = (string) $entity->guid; //javascript doesn't like long numbers..
             $entities[$k] = $entity->export();
         }
         return $entities;

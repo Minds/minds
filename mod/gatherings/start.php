@@ -56,7 +56,11 @@ class start extends bases\plugin{
 			'/gatherings/conversations' => '\\minds\\plugin\\gatherings\\pages\\conversations',
 			'/gatherings/decrypt' => '\\minds\\plugin\\gatherings\\pages\\decrypt',
 			'/gatherings/unlock' => '\\minds\\plugin\\gatherings\\pages\\unlock',
-			'/gatherings/live' => '\\minds\\plugin\\gatherings\\pages\\live'
+			'/gatherings/live' => '\\minds\\plugin\\gatherings\\pages\\live',
+			
+            //@todo debate whether this is the best way to load api endpoints
+            '/api/v1/conversations' => '\\minds\\plugin\\gatherings\\api\\v1\\conversations',
+            '/api/v1/keys' => '\\minds\\plugin\\gatherings\\api\\v1\\keys'
 		));
 		
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
