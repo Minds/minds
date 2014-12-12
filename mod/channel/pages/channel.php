@@ -215,6 +215,8 @@ class channel extends core\page implements interfaces\page{
 				));
 				$class = 'landing-page';
 				$sidebar = elgg_view('channel/thumbs', array('user'=>$user));
+				if(!$sidebar)
+					$class = 'single-column';
 		}
 		
 		$body = elgg_view_layout('two_sidebar', array(

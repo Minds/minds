@@ -22,7 +22,7 @@
 	min-height:100%;
 }
 .hero.sidebar-active{
-	margin-left:172px;
+	margin-left:186px;
 }
 .hero.sidebar-active .topbar{
 	width:92%;
@@ -246,7 +246,7 @@
 }
 
 .content-carousel .layout{
-	margin-top:226px;
+	margin-top:300px;
 }
 
 .elgg-main {

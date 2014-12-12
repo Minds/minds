@@ -60,14 +60,14 @@ if($user->canEdit()){
 	
 	elgg_register_menu_item('channel', array(
         'name' => 'channel:carousel',
-        'text' => '<span class="entypo">&#59404</span>Edit Carousel',
+        'text' => '<span class="entypo">&#59404</span>Edit Banners',
         'href' => elgg_get_site_url() . $user->username . '/carousel',
         'priority' => 110
 	));
 
 	elgg_register_menu_item('channel', array(
 		'name' => 'channel:custom',
-		'text' => 'Custom',
+		'text' => 'Customise',
 		'href' => elgg_get_site_url() . $user->username . '/custom',
 		'priority' => 112
 	));

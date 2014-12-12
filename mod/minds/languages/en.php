@@ -11,7 +11,7 @@ $english = array(
 	
 	//login
 	'login' => 'Enter',
-	'logout' => 'Exit',
+	'logout' => 'Sign Out',
 	'register' => 'Create a channel',
 	'register:early' => 'Request Early Access',
 	

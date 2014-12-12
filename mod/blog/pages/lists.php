@@ -87,7 +87,7 @@ class lists extends core\page implements interfaces\page{
 		$body = elgg_view_layout('gallery', array(
 			'title'=>$params['title'],
 			'content'=>$content,
-			'filter' => elgg_view('page/layouts/content/filter', array('filter_context'=>$pages[0]))
+			'filter' =>  elgg_view('page/layouts/content/trending_filter', $params) 
 		));
 		
 		echo $this->render(array('body'=>$body));
