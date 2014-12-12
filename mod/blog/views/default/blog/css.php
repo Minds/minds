@@ -14,10 +14,10 @@
 
 }
 
-.blog-sidebar li{
+/*.blog-sidebar li{
 	width:125px;
 	height:75px;
-}
+}*/
 
 .scrapers .elgg-list{
 	width:auto;

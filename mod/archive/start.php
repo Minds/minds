@@ -281,6 +281,13 @@ function minds_archive_page_handler($page) {
 					$image_guids = $entity->getChildrenGuids();
 					forward($CONFIG->cdn_url.'archive/thumbnail/'.current($image_guids));
 					break;
+				case 'video':
+					if(!$entity->thumbnail){
+
+						$cinemr = $entity->cinemr();
+                        			forward(cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail'));
+					}
+					break;
 			}
 			
 			$contents = @file_get_contents($filename);

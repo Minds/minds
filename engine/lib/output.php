@@ -34,7 +34,7 @@ function parse_urls($text) {
 				$url = trim($url, \'.\');
 			}
 			$urltext = str_replace("/", "/<wbr />", $url);
-			return "<a href=\"$url\" target="_blank">$urltext</a>$period";
+			return "<a href=\"$url\" target=\"_blank\">$urltext</a>$period";
 		'
 	), $text);
 
