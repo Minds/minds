@@ -67,7 +67,7 @@ $(document).ready(function() {
 			if(isset($item->ext_bg) && $item->ext_bg)
 				$bg = $item->ext_bg;
 			else 
-				$bg =  $CONFIG->cdn_url . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache/fat";
+				$bg =  $CONFIG->cdn_url . "carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache/fat";
 	
 			echo "<img src=\"$bg\" style=\"top:{$item->top_offset}px\"/>";
 			

@@ -37,6 +37,8 @@ class start extends \ElggPlugin{
 			'/channel' => "\\minds\\plugin\\channel\\pages\\channel",
 			'/channels' => "\\minds\\plugin\\channel\\pages\\directory",
 			'/directory' => "\\minds\\plugin\\channel\\pages\\directory",
+			
+            '/api/v1/channel' =>  "\\minds\\plugin\\channel\\api\\v1\\channel"
 		));
 		
 		/**
