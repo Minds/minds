@@ -33,7 +33,7 @@ $img_src = elgg_get_site_url() . "s/$section->guid/bg/".$section->last_updated;
 			</a>
 		</div>
 		
-		<?php if($section->version == 2): ?>
+		<?php if($section->version == 2 && false): ?>
 			<?= elgg_view('input/longtext', array('name'=>'content', 'value'=>$section->content)); ?>
 		<?php else: ?>
 		<div class="left">
@@ -52,7 +52,7 @@ $img_src = elgg_get_site_url() . "s/$section->guid/bg/".$section->last_updated;
 		<?php endif; ?>
 		<?php else: ?>
 		
-		<?php if($section->version == 2): ?>
+		<?php if($section->version == 2 && false): ?>
 			<div class="section-gui-ouput">
 				<?= $section->content; ?>
 			</div>
