@@ -55,7 +55,7 @@ class page extends base{
 		if(token::validate())
 			return true;
 		
-		\register_error('Sorry, you failed the CSRF check');
+		//\register_error('Sorry, you failed the CSRF check');
 		$this->forward(REFERRER);
 		
 	}

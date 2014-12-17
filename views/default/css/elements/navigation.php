@@ -400,8 +400,7 @@
 .elgg-menu-filter {
 	display: table;
 	width: auto;
-	margin:16px;
-	float:left;
+	margin:16px auto;
 }
 .elgg-menu-filter > li {
 	float: left;
@@ -423,8 +422,8 @@
 }
 
 .elgg-menu-filter-type{
-	border-left:2px solid #999;
-	padding-left:25px;
+	/*border-left:2px solid #999;
+	padding-left:25px;*/
 }
 
 /* ***************************************
