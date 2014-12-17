@@ -83,7 +83,7 @@ function minds_archive_init() {
 	elgg_register_menu_item('site', array(
 		'name' => elgg_echo('minds:upload'),
 		'href' => 'archive/upload',
-		'text' => '<span class="entypo">&#128228;</span> Upload' . $prompt,
+		'text' => '<span class="entypo">&#128228;</span> Upload',
 		'title' => elgg_echo('minds:upload'),
 		'priority' => 4
 	));

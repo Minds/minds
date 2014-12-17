@@ -18,7 +18,7 @@
 }
 
 .thumbs-list{
-	width:260px;
+	width:260px !important;
 	margin-top:0;
 }
 .thumbs-list h3{ 
