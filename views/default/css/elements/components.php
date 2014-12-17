@@ -97,6 +97,11 @@
             width:300px;
             height:210px;
     }
+
+    .sidebar-active .elgg-list{
+                width:720px;
+    }
+
 }
 @media screen and (min-width: 1300px) {
 	
@@ -107,9 +112,11 @@
 		width:300px;
 		height:210px;
 	}
-	.elgg-list.x4 > li {
-		width:12.5%;
+
+	.sidebar-active .elgg-list{
+		width:1000px;
 	}
+
 }
 @media screen and (min-width: 1600px) {
 	
@@ -121,6 +128,10 @@
                 width:300px;
                 height:210px;
         }
+
+	.sidebar-active .elgg-list{
+		width:1320px;
+	}
 }
 /**
  * MASON PROTOTYPE
