@@ -63,7 +63,7 @@
 	position:fixed;
 	bottom:-200px;
 	left:0;
-	z-index:900;
+	z-index:999999;
 }
 .minds-live-chat ul li{
 	position:absolute;

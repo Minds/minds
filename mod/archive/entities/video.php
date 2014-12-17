@@ -87,7 +87,7 @@ class video extends object{
 	 */
 	public function save(){
 		$this->super_subtype = 'archive';
-		parent::save(true);
+		parent::save(!$this->guid);
 		
 		$cinemr = $this->cinemr();
 		$cinemr::factory('media')->post($this->cinemr_guid, array(
