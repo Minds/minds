@@ -9,7 +9,7 @@ usort($sections, function($a, $b){
 <div class="cms-sections <?= elgg_is_admin_logged_in() ? 'cms-sections-editable' :''?>" data-group="<?= $vars['group'] ?>">
 
 <?php 
-	if($sections){
+	if(!empty($sections)){
 		foreach($sections as $section): 
 			echo elgg_view('cms/sections/section', array('section'=>$section)); 
 		endforeach; 

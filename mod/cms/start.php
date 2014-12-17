@@ -144,8 +144,8 @@ class start extends bases\plugin{
 
 		if(!$guids)
 			$sections = array();
-
-		$sections = core\entities::get(array('guids'=>$guids));
+		else
+			$sections = core\entities::get(array('guids'=>$guids));
 		$return .= elgg_view('cms/sections', array('sections'=>$sections, 'group'=>'index'));
 		$return .= $add;
 		
