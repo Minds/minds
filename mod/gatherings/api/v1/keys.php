@@ -25,9 +25,10 @@ class keys implements interfaces\api{
         
         $unlock_password = get_input('password');
         $new_password = get_input('new_password');
-
         $tmp = helpers\openssl::temporaryPrivateKey(\elgg_get_plugin_user_setting('privatekey', elgg_get_logged_in_user_guid(), 'gatherings'), $unlock_password, NULL);
-        if($tmp){
+        $pub = \elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings');
+       
+	if($tmp){
             $response['key'] = $tmp;
         } else {
             $response['status'] = 'error';

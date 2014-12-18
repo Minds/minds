@@ -52,9 +52,6 @@ class channel implements interfaces\api{
            $response['channel']['carousels'][] = array(
                 'src'=> $carousel->ext_bg ?: $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
             );
-             $response['channel']['carousels'][] = array(
-                'src'=> $carousel->ext_bg ?: $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
-            );
         }
         
         
