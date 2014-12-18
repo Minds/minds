@@ -39,7 +39,7 @@ class conversations implements interfaces\api{
                     
                     foreach($messages as $k => $message){
                         $key = "message:".elgg_get_logged_in_user_guid();
-                        $messages[$k]->message = $messages[$k]->$key;
+                        $messages[$k]->message = base64_decode($messages[$k]->$key);
                     }
                     
                     $messages = array_reverse($messages);
@@ -48,6 +48,12 @@ class conversations implements interfaces\api{
                     $response['load-previous'] = (string) reset($messages)->guid;
                 }
             }
+            
+            //return the public keys
+            $response['publickeys'] = array(
+                elgg_get_logged_in_user_guid() => elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings'),
+                $pages[0] => elgg_get_plugin_user_setting('publickey', $pages[0], 'gatherings')
+            );
             
         } else {
         
