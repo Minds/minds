@@ -25,6 +25,9 @@ class router{
 	 */
 	public function route($uri = null, $method = null){
 	
+		if ((!$uri) && (isset($_SERVER['REDIRECT_ORIG_URI'])))
+		    $uri = strtok($_SERVER['REDIRECT_ORIG_URI'],'?');
+		
 		if(!$uri)
 			$uri = strtok($_SERVER["REQUEST_URI"],'?');
 			

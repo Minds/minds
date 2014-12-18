@@ -8,6 +8,8 @@ namespace minds\plugin\cms\entities;
 use minds\entities;
 
 class section extends entities\object{
+
+	public $version = 1;
 	
 	/**
 	 * Initialise attributes

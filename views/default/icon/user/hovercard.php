@@ -34,5 +34,5 @@ $banner = elgg_view('output/img', array(
 	<div class="overview">
 	<?= $overview ?>
 	</div>
-	<?= elgg_view_menu('hovercard', array('entity'=>$user)) ?>
+	<?= elgg_get_context() == 'gatherings' ? '' : elgg_view_menu('hovercard', array('entity'=>$user))?>
 </div>

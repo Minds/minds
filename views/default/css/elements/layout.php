@@ -22,7 +22,7 @@
 	min-height:100%;
 }
 .hero.sidebar-active{
-	margin-left:172px;
+	margin-left:186px;
 }
 .hero.sidebar-active .topbar{
 	width:92%;
@@ -198,6 +198,7 @@
 	min-height:100%;
 	margin-top:74px;
 	padding-bottom:230px;
+	background:#E9EAED;
 }
 
 
@@ -234,10 +235,6 @@
 	height:100%;
 	margin: 0 0 0 10px;
 	padding:0 0 15px 0;
-	background: #FFF; 
-	/*-moz-box-shadow: 0 0 3px #888;
-	-webkit-box-shadow: 0 0 3px#888;
-	box-shadow: 0 0 3px #888;*/
 }
 .elgg-sidebar-alt {
 	position: relative;
@@ -246,24 +243,29 @@
 }
 
 .content-carousel .layout{
-	margin-top:226px;
+	margin-top:300px;
 }
 
 .elgg-main {
 	position: relative;
 	min-height: 360px;
 	padding: 10px;
-	background:#FFF;
+	/*background:#FFF;*/
 }
 .elgg-layout-one-sidebar .elgg-main {
 	position: relative;
 	min-height: 360px;
 	padding:0;
+
+	background:#FFF;
 	/*border-left:2px solid #cccccc;*/
 	/*-moz-box-shadow: 0 0 3px #888;
 	-webkit-box-shadow: 0 0 3px#888;
 	box-shadow: 0 0 3px #888;*/
 	margin:0 0 10px 0;
+}
+.elgg-layout-one-sidebar .elgg-sidebar{
+	background:#FFF;
 }
 .elgg-main > .elgg-breadcrumbs{
 	margin:10px;
@@ -276,7 +278,7 @@
 .elgg-main > .elgg-list,.elgg-main > .elgg-content{
 	margin:0;
 	padding:1px 30px;
-	background:#FFF;
+	/*background:#FFF;*/
 }
 
 .hero > .body > .inner.fixed-inner{

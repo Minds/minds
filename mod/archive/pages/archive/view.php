@@ -100,6 +100,7 @@ switch($entity->subtype){
 			elgg_set_viewtype('spotlight');
 			$trending = false;
 		}
+		$sidebar = elgg_view('output/longtext', array('value'=>$entity->description, 'style'=>'padding:12px;font-size:11px;'));
 		break;
 	case 'album':
 		minds\plugin\social\start::setMetatags('og:type', 'mindscom:photo');

@@ -17,6 +17,7 @@
 	margin: 0 2%;
 	background: #EEE;
 	border: 1px solid #DDD;
+	text-align:center;
 }
 
 .search-filter li{

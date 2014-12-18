@@ -20,7 +20,7 @@ $login_box = elgg_view('core/account/login_box');
 $sep = "<div style=\"margin: auto; width: 300px; text-align: center; padding: 16px; font-weight: bold;\"> - or create a new account - </div>";
 
 $form_params = array(
-	'action' => $register_url,
+	'action' => 'action/register',
 	'class' => 'elgg-form-account',
 );
 

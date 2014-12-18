@@ -21,6 +21,9 @@ and (max-width : 1200px) {
 	 .minds-button-launch{
                 display:none;
         }
+	.elgg-menu-topbar{
+		display:none;
+	}
 }
 
 @media all 
@@ -30,6 +33,33 @@ and (max-width : 720px) {
 	.responsive-ad{
 		display:block !important;
 		padding:16px;
+	}
+
+	.elgg-layout-two-sidebar .elgg-sidebar{
+		display:none;
+	}
+
+	.newsfeed .elgg-main{
+		clear:both;
+		padding:0;
+	}
+	.elgg-sidebar-alt.minds-fixed-sidebar-left{
+		display:none;
+	}
+
+	.elgg-form-activity-post{
+		width:auto;
+	}
+	.upload-progress{
+		display:none;
+	}
+
+	.minds-fixed-sidebar-left .minds-fixed-avatar{
+		margin:16px 0 0;
+	}
+
+	.minds-fixed-sidebar-left > a.avatar-edit{
+		display:none;
 	}
 
 	.sidebar-active-default{
@@ -42,6 +72,9 @@ and (max-width : 720px) {
 		display:none !important;
 	}
 
+	.minds-live-chat{
+		display:none;
+	}
 
 	.elgg-list > li:hover .excerpt, .elgg-list > li:hover .elgg-menu{
 		display:none;
@@ -209,12 +242,17 @@ and (max-width : 720px) {
 	.elgg-form-login{
 		width:70%;
 	}
+
+	.elgg-list{
+		width:auto;
+	}
 	
 	/**
 	 * 	Listings and tiles
 	 */
 	.elgg-list.mason > li{
-		width:90%;
+		width:auto;
+		float:none;
 	}
 	
 	/**

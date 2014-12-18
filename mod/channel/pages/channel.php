@@ -117,7 +117,9 @@ class channel extends core\page implements interfaces\page{
 					'full_view' => false,
 					'relationship_guid' => $user->guid,
 					'relationship' => 'member',
-					'offset'=>get_input('offset','')
+					'offset'=>get_input('offset',''),
+					'list_class'=>'x2',
+					//'masonry'=> false
 					//'inverse_relationship' => true
 				)); 
 				break;
@@ -213,6 +215,8 @@ class channel extends core\page implements interfaces\page{
 				));
 				$class = 'landing-page';
 				$sidebar = elgg_view('channel/thumbs', array('user'=>$user));
+				if(!$sidebar)
+					$class = 'single-column';
 		}
 		
 		$body = elgg_view_layout('two_sidebar', array(

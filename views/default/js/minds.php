@@ -31,6 +31,10 @@
 	 			sidebarOpen = true
 	 			$.cookie('sidebarOpen', 'true', { path: '/' });
 	 		}
+			if($('.elgg-list.mason').length > 0){
+				$('.elgg-list.mason').masonry().masonry('reloadItems');
+			}
+
 	 	});
 	 	
 	 	$('img').error(function(){

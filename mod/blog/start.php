@@ -422,7 +422,7 @@ function blog_run_upgrades($event, $type, $details) {
  */
 function blog_pagesetup(){
 	if(elgg_get_context() == 'settings'){
-		if(elgg_is_logged_in()){
+		if(elgg_is_logged_in() && elgg_is_admin_logged_in()){
 			$user = elgg_get_logged_in_user_entity();
 
 			$params = array(

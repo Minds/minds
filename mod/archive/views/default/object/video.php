@@ -78,7 +78,7 @@ if($full){
 	
 	$image = elgg_view('output/url', array(
 			'href' => $entity->getURL(),
-			'class' => 'archive archive-video',
+			'class' => 'archive archive-video t1',
 			'text' =>  '<span></span><img src=\'' . $entity->getIconURL()  . '\'/>',
 			'title' => $entity->title,
 		));

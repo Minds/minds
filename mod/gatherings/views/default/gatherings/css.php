@@ -63,7 +63,7 @@
 	position:fixed;
 	bottom:-200px;
 	left:0;
-	z-index:900;
+	z-index:999999;
 }
 .minds-live-chat ul li{
 	position:absolute;
@@ -338,7 +338,8 @@ margin: 0;
 }
 
 .sidebar .conversation-engage{
-margin: 16px 0;
+	margin: 16px 0;
+	padding-left:8px;
 }
 .sidebar .conversation-engage input[type=text]{
 	width:190px;

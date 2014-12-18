@@ -400,8 +400,9 @@
 .elgg-menu-filter {
 	display: table;
 	width: auto;
-	margin:16px;
-	float:left;
+	margin: 16px auto;
+	z-index: 9999;
+	position: relative;
 }
 .elgg-menu-filter > li {
 	float: left;
@@ -423,8 +424,8 @@
 }
 
 .elgg-menu-filter-type{
-	border-left:2px solid #999;
-	padding-left:25px;
+	/*border-left:2px solid #999;
+	padding-left:25px;*/
 }
 
 /* ***************************************
@@ -784,4 +785,10 @@
 	text-decoration:none;
 	background:#888;
 	color:#FFF;
+}
+
+.minds-trending-filter{
+	font-family:"Lato", Arial;
+	margin:16px auto;
+	float:none;
 }

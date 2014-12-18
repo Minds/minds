@@ -207,7 +207,7 @@ class newsfeed extends core\page implements interfaces\page{
 			'content'=>$content, 
 			'class' => 'newsfeed',
 			'sidebar_top'=>$sidebar_right,
-			//'sidebar' => elgg_view_menu('footer'),
+			'sidebar' => elgg_view('page/elements/ads', array('type'=>'responsive-content', 'width'=>'200px', 'height'=>'auto', 'float'=>'none')),
 			'sidebar_alt'=>$sidebar_left,
 			'sidebar-alt-class' =>  'minds-fixed-sidebar-left'
 		));

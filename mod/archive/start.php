@@ -41,7 +41,7 @@ function minds_archive_init() {
 	elgg_extend_view('js/elgg', 'archive/js');
 	elgg_register_js('player', '//vjs.zencdn.net/4.9.1/video.js','head', 10);
 	elgg_register_css('player', '//vjs.zencdn.net/4.9.1/video-js.css');
-	elgg_register_js('player-res', elgg_get_site_url().'mod/archive/player/video.js.res.js');
+	elgg_register_js('player-res', elgg_get_site_url().'mod/archive/player/video.js.res.js?12');
 	elgg_register_js('player-vast', elgg_get_site_url().'mod/archive/player/video.vast.js', 'head', 602);
 	elgg_register_js('player-vast-client', elgg_get_site_url().'mod/archive/player/vast-client.js', 'head', 601);
 	elgg_register_js('player-ads', elgg_get_site_url().'mod/archive/player/video.ads.js', 'head', 600);
@@ -83,7 +83,7 @@ function minds_archive_init() {
 	elgg_register_menu_item('site', array(
 		'name' => elgg_echo('minds:upload'),
 		'href' => 'archive/upload',
-		'text' => '<span class="entypo">&#128228;</span> Upload' . $prompt,
+		'text' => '<span class="entypo">&#128228;</span> Upload',
 		'title' => elgg_echo('minds:upload'),
 		'priority' => 4
 	));
@@ -280,6 +280,13 @@ function minds_archive_page_handler($page) {
 					//get the first image attached to this album
 					$image_guids = $entity->getChildrenGuids();
 					forward($CONFIG->cdn_url.'archive/thumbnail/'.current($image_guids));
+					break;
+				case 'video':
+					if(!$entity->thumbnail){
+
+						$cinemr = $entity->cinemr();
+                        			forward(cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail'));
+					}
 					break;
 			}
 			

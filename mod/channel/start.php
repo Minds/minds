@@ -45,9 +45,9 @@ class start extends \ElggPlugin{
 		 * Returns the url.. this should really be in models/entities now
 		 */
 		elgg_register_entity_url_handler('user', 'all', function($user){
-			if($user->base_node)
-				return $user->base_node. $user->username;
-			else 
+			//if($user->base_node)
+			//	return $user->base_node. $user->username;
+			//else 
 				return elgg_get_site_url() . $user->username;
 		});
 

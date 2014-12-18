@@ -353,7 +353,7 @@ function logout() {
 			return false;
 		}
 		$_SESSION['user']->code = "";
-		$_SESSION['user']->save();
+	//	$_SESSION['user']->save();
 	}
 
 	unset($_SESSION['username']);
