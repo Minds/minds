@@ -400,7 +400,9 @@
 .elgg-menu-filter {
 	display: table;
 	width: auto;
-	margin:16px auto;
+	margin: 16px auto;
+	z-index: 9999;
+	position: relative;
 }
 .elgg-menu-filter > li {
 	float: left;

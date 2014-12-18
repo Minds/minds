@@ -18,7 +18,10 @@
 .channel .elgg-layout-two-sidebar .elgg-main{
 	margin-top:150px;
 }
-
+.channel .elgg-main > .elgg-list{
+	padding:0;
+	width:auto;
+}
 .channel .elgg-sidebar{
 	margin-top:150px;
 }

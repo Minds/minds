@@ -36,7 +36,8 @@
 	float: left;
 	margin: 24px 12px;
     	border: 0;
-	background:#F8F8F8;
+	/*background:#F8F8F8;*/
+	background:#FFF;
         width: 300px;
 	overflow: hidden;
 	height:240px;

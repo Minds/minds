@@ -496,7 +496,7 @@ form.minds-search{
  */
 .elgg-form-deck-river-post,  .elgg-form-activity-post{
 padding: 12px;
-background: #F1F1F1;
+background: #FFF;
 border: 1px solid #CCC;
 margin: 0;
 width: 96%;
