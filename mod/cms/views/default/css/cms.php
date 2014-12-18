@@ -49,7 +49,7 @@
 }
 
 .cms-section-bg{
-	
+	background-color:#FFF;	
 	background-size: cover;
 	background-position: 60% center;
 	background-repeat: no-repeat;
