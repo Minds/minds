@@ -32,3 +32,4 @@ $conversations = $vars['conversations'];
 		</li>
 	<?php endforeach; ?>
 </ul>
+<a href="<?= elgg_get_site_url() ?>gatherings/configure" style="display:block; padding:16px; font-weight:bold;">Configuration & Settings</a>

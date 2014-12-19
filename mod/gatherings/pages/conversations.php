@@ -21,6 +21,10 @@ class conversations extends core\page implements interfaces\page{
 		$content = elgg_view('gatherings/conversations/welcome');
 		
 		$conversations = \minds\plugin\gatherings\start::getConversationsList();	
+		if(count($conversations)){
+			$conversation = $conversations[0]->guid;
+			$this->forward(elgg_get_site_url() . 'gatherings/conversation/'.$conversation);
+		}
 				
 		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content, 'sidebar'=>elgg_view('gatherings/conversations/list', array('conversations'=>$conversations))));
 		echo $this->render(array('body'=>$layout));
