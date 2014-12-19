@@ -16,6 +16,7 @@ class message extends object{
 	private $message;
 	public $subtype = 'message';
 	private $passphrase = NULL;
+	public $client_encrypted = false;
 	
 	public function __construct($guid = NULL, $passphrase = NULL){
 		
@@ -72,7 +73,8 @@ class message extends object{
 		if(!$this->conversation)
 			throw new \Exception('Can not save a message without a conversation');
 
-		$this->encryptMessage();
+		if(!$this->client_encrypted)
+			$this->encryptMessage();
 		$this->conversation->update();
 		return	parent::save($timebased);
 	}

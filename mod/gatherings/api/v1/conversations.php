@@ -72,8 +72,25 @@ class conversations implements interfaces\api{
     
     public function post($pages){
         
-       
-        
+    	$conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
+		
+        $message = new entities\message($conversation);
+	$message->client_encrypted = true;
+	foreach($conversation->participants as $guid){
+		$key = "message:$guid";
+		$message->$key = rawurldecode($_POST[$key]);
+		error_log(print_r($message->$key, true));
+	}
+//	error_log(print_r($message, true));
+	$message->save();
+
+	$conversation->update();	
+
+	$key = "message:".elgg_get_logged_in_user_guid();
+	$message->message = $message->$key;
+	$response["message"] = $message->export();;
+
+        return factory::response($response);
     }
     
     public function put($pages){
