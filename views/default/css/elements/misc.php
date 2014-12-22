@@ -8,7 +8,7 @@
 	z-index: 100;
 }
 .index{
-margin-bottom:-230px;
+margin-bottom:-115px;
 }
 /* ***************************************
 	AVATAR UPLOADING & CROPPING

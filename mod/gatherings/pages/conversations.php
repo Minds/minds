@@ -27,7 +27,7 @@ class conversations extends core\page implements interfaces\page{
 		}
 				
 		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content, 'sidebar'=>elgg_view('gatherings/conversations/list', array('conversations'=>$conversations))));
-		echo $this->render(array('body'=>$layout));
+		echo $this->render(array('body'=>$layout, 'class'=>'white-bg'));
 		
 	}
 

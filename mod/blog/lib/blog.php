@@ -600,7 +600,7 @@ function blog_sidebar($blog){
 
 	if($blog){
 		
-		if(!$blog->rss_item_id){
+		if(!$blog->rss_item_id && $blog->featured_id){
 			$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single'));
 		} 
 			

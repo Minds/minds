@@ -230,7 +230,7 @@ class channel extends core\page implements interfaces\page{
 			'sidebar-alt-class' =>  'minds-fixed-sidebar-left'
 		));
 		
-		echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel'));
+		echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel grey-bg'));
 
 	}
 	
