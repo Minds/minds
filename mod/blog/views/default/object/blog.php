@@ -55,7 +55,7 @@ if ($full) {
         'class' => 'blog-post clearfix',
     ));
 
-    if(!$blog->rss_item_id){
+    if(!$blog->rss_item_id && $blog->featured_id){
         $ads = 2;
         $added =0;
         $length = strlen($body);

@@ -212,7 +212,7 @@ class newsfeed extends core\page implements interfaces\page{
 			'sidebar-alt-class' =>  'minds-fixed-sidebar-left'
 		));
 		
-		echo $this->render(array('body'=>$body));
+		echo $this->render(array('body'=>$body, 'class'=>'grey-bg'));
 	}
 	
 	/**

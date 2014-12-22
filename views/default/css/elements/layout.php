@@ -198,9 +198,11 @@
 	min-height:100%;
 	margin-top:74px;
 	padding-bottom:230px;
+	background:#FFF;
+}
+.hero.grey-bg > .body{
 	background:#E9EAED;
 }
-
 
 /***** PAGE BODY LAYOUT ******/
 .elgg-layout {
