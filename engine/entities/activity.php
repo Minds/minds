@@ -91,7 +91,9 @@ class activity extends entity{
 				'thumbnail_src',
 				'remind_object',
 				'custom_type',
-				'custom_data'
+				'custom_data',
+				'thumbs:up:user_guids',
+				'thumbs:down:user_guids'
 			));
 	}
 	
