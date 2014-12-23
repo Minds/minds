@@ -5,6 +5,7 @@
  
 namespace minds\plugin\thumbs\helpers;
 
+use minds\core;
 use minds\core\data;
 use minds\core\entities;
 
