@@ -370,6 +370,7 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      * @ingroup oauth2_section_4
      */
     public function checkUserCredentials($username, $password){
+	$username = strtolower($username);
         $result = elgg_authenticate($username, $password);
 
         if ($result !== true) {
@@ -392,6 +393,7 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      * @endcode
      */
     public function getUserDetails($username=null){
+	$username = strtolower($username);
         $user = new \minds\entities\user($username);
         if($user->guid)
             return array(
