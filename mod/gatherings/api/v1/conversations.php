@@ -78,7 +78,7 @@ class conversations implements interfaces\api{
 	$message->client_encrypted = true;
 	foreach($conversation->participants as $guid){
 		$key = "message:$guid";
-		$message->$key = rawurldecode($_POST[$key]);
+		$message->$key = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
 		error_log(print_r($message->$key, true));
 	}
 //	error_log(print_r($message, true));
