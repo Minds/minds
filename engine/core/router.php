@@ -126,10 +126,12 @@ HTML;
     public function postDataFix(){
         $postdata = file_get_contents("php://input");   
         $request = json_decode($postdata, true);
-        foreach($request as $k => $v){
-            $_POST[$k] = $v;
-            $_REQUEST[$k] = $v;
-        }
+        if($request){
+		foreach($request as $k => $v){
+		    $_POST[$k] = $v;
+		    $_REQUEST[$k] = $v;
+		}
+	}
     }
 	
 	/**
