@@ -37,7 +37,8 @@ class start extends bases\plugin{
 		
 		
 		core\router::registerRoutes(array(
-			'/thumbs/actions' => "\\minds\\plugin\\thumbs\\pages\\actions"
+			'/thumbs/actions' => "\\minds\\plugin\\thumbs\\pages\\actions",
+			'/api/v1/thumbs' => "\\minds\\plugin\\thumbs\\api\\v1\\thumbs",
 		));
 	}
 	
