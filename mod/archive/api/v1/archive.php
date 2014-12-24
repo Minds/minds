@@ -46,10 +46,28 @@ class archive implements interfaces\api{
      * API:: /v1/archive
      */
     public function put($pages){
+	echo "User:: ";
+	return factory::response(array('guid'=>elgg_get_logged_in_user_guid()));
+	$image = new \minds\plugin\archive\entities\image();
+	$image->save();	
+	$dir = $image->getFilenameOnFilestore() . "/image/$image->batch_guid/$image->guid";	
+
+	/* PUT data comes in on the stdin stream */
+	$putdata = fopen("php://input", "r");
+
+	/* Open a file for writing */
+	$fp = fopen($dir, "w");
+
+	/* Read the data 1 KB at a time
+	   and write to the file */
+	while ($data = fread($putdata, 1024))
+	    fwrite($fp, $data);
+
+	/* Close the streams */
+	fclose($fp);
+	fclose($putdata);
         
-        
-        
-        return factory::response(array());
+        return factory::response(array('guid'=>$guid));
         
     }
     

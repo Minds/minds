@@ -73,8 +73,8 @@ class start extends \ElggPlugin{
     
         $storage = new storage();
         $server = new \OAuth2\Server($storage);
-      
-        if (!$server->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
+
+	if (!$server->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
             return false;
         }
        
