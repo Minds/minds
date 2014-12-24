@@ -30,11 +30,11 @@ class newsfeed implements interfaces\api{
         switch($pages[0]){
             default:
             case 'personal':
-		$options = array(
-			'owner_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
-		);
-		break;
-	    case 'network':
+        		$options = array(
+        			'owner_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
+        		);
+        		break;
+    	    case 'network':
                 $options = array(
                     'network' => isset($pages[1]) ? $pages[1] : core\session::getLoggedInUserGuid()
                 );
