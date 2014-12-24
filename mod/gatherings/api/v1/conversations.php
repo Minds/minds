@@ -29,10 +29,13 @@ class conversations implements interfaces\api{
             $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
 
             $ik = $conversation->getIndexKeys();
-            $guids = core\data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>get_input('limit',12), 'offset'=>get_input('offset')));
+            $guids = core\data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>get_input('limit',12), 'offset'=>get_input('offset', ''), 'finish'=>get_input('start', ''), 'reversed'=>true));
+	     if(isset($guids[get_input('start')])){
+                        unset($guids[get_input('start')]);
+                }
 
-            if($guids){
-            
+	    if($guids){
+ 
                 $messages = core\entities::get(array('guids'=>$guids));
                 
                 if($messages){
