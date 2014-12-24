@@ -29,6 +29,10 @@ function minds_archive_init() {
 			}
 		} 
 	});
+    
+    minds\core\router::registerRoutes(array(
+            '/api/v1/archive' => "\\minds\\plugin\\thumbs\\api\\v1\\archive",
+        ));
 
 	elgg_register_viewtype_fallback('spotlight');
 	elgg_register_viewtype_fallback('embed');
