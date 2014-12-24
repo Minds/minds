@@ -50,11 +50,14 @@ class thumbs implements interfaces\api{
         
         $entity = core\entities::build(new \minds\entities\entity($guid));
         
-        if($entity->guid)
-            helpers\storage::insert($direction, $entity);
-        else
+        if($entity->guid){
+            if(helpers\buttons::hasThumbed($entity, $direction))
+	        helpers\storage::cancel($direction, $entity);
+	    else 
+	        helpers\storage::insert($direction, $entity);
+        }else{
              return factory::response(array('status'=>'error', 'message'=>'entity not found'));
-        
+        }
          return factory::response(array());
         
     }
