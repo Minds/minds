@@ -181,7 +181,7 @@ class newsfeed extends core\page implements interfaces\page{
 				);
 		}
 		
-		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'));
+		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data', 'class'=> 'enable-social-share'));
 		
 		$content .= core\entities::view(array_merge(array(
 			'type' => 'activity',
