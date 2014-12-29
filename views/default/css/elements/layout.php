@@ -197,7 +197,7 @@
 	height:100%;
 	min-height:100%;
 	margin-top:74px;
-	padding-bottom:230px;
+	padding-bottom:112px;
 	background:#FFF;
 }
 .hero.grey-bg > .body{
