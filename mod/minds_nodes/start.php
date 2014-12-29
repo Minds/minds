@@ -99,7 +99,7 @@ class start extends bases\plugin{
 		    //if (self::getNodes(elgg_get_logged_in_user_entity(), true)) {
 			\elgg_register_menu_item('site', array(
 			    'name' => 'nodes',
-			    'text' => '<span class="entypo">&#xE817;</span> My nodes',
+			    'text' => '<span class="entypo">&#xE817;</span> My sites',
 			    'href' => '#nodes-switcher',
 			    'title' => elgg_echo('nodes:mynodes'),
 			    'priority' => 9999, // Make sure we're last, so the sidebar selector works...
