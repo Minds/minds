@@ -45,7 +45,13 @@ class start extends \ElggPlugin{
 
     public static function loggedInUserEntity(){
 
-        if(get_input('access_token')){
+	$bearer = new \OAuth2\TokenType\Bearer();
+        $access_token = $bearer->getAccessTokenParameter(\OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response());
+ 
+        // Get the token data
+        $token = get_input('access_token', $access_token);
+
+        if($token){
             static $OAUTH2_LOGGED_IN;
             if($OAUTH2_LOGGED_IN){
                 return $OAUTH2_LOGGED_IN;
@@ -55,7 +61,7 @@ class start extends \ElggPlugin{
             // Create a server instance
             $server = new \OAuth2\Server($storage);
             // Get the token data
-            $token = $storage->getAccessToken(get_input('access_token'));
+            $token = $storage->getAccessToken($token);
             $user = new \ElggUser($token['user_id']);
             $OAUTH2_LOGGED_IN = $user;
             return $user;
@@ -77,9 +83,12 @@ class start extends \ElggPlugin{
 	if (!$server->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
             return false;
         }
-       
+      
+	$bearer = new \OAuth2\TokenType\Bearer();
+	$access_token = $bearer->getAccessTokenParameter(\OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response());
+ 
         // Get the token data
-        $token = $storage->getAccessToken(get_input('access_token'));
+        $token = $storage->getAccessToken(get_input('access_token', $access_token));
 
         static $OAUTH2_LOGGED_IN;
         $user = new \ElggUser($token['user_id']);
