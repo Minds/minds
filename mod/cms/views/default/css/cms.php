@@ -202,7 +202,7 @@ body {
  */
 
 .cms-page-body .hero{
-	margin-bottom:-230px;	
+	margin-bottom:-112px;	
 }
 .cms-page-body p, .cms-page-body h2{
 	font-family:"Lato", Helvetica, Arial;
