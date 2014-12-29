@@ -8,7 +8,7 @@
 	z-index: 100;
 }
 .index{
-margin-bottom:-230px;
+margin-bottom:-115px;
 }
 /* ***************************************
 	AVATAR UPLOADING & CROPPING
@@ -144,6 +144,8 @@ input[name=terms]{
 	text-align:center;
 	font-size:56px;
 	font-weight:lighter;
+	float:none;
+	margin:auto;
 }
 .minds-body-header h3{
 	text-align:center;
@@ -153,6 +155,9 @@ input[name=terms]{
 .minds-body-header .elgg-menu-entity, .minds-body-header .elgg-menu-title{
 	margin:10px;
 	clear:right;
+	position:absolute;
+	right:2%;
+	top:36px;
 }
 .elgg-form-wall-add{
 	float:right;
@@ -568,7 +573,7 @@ li .excerpt a{
 }
 .blog-sidebar li img.rich-image{
 	margin:0;
-	height:360px;
+/*	height:360px ; */
 }
 .elgg-sidebar li a h3{
 	color:#333;
@@ -881,6 +886,17 @@ li.elgg-menu-item-rss{
 	-o-background-size: cover;
 	background-size: cover !important;
 	background-position: center !important;
+}
+.carousel-admin-wrapper .drag.entypo{
+	font-size: 37px;
+	padding: 16px;
+	z-index: 999999;
+	position: relative;
+	/* color: #FFF; */
+	text-shadow: 0 0 3px #FFF;
+	width: 25px;
+	margin: 0;
+	cursor: pointer;
 }
 .carousel-admin-wrapper .bg_wrapper{
 	overflow:hidden;

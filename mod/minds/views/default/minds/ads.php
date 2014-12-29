@@ -14,6 +14,18 @@ switch($type){
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script></div>';
 		break;
+	case 'responsive-content':
+		echo '<div class="responsive-ad responsive-ad-content" style="float:'.$vars['float'].';height:'.$vars['height'].';width:'. $vars['width'] .';"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9303771378013875"
+     data-ad-slot="7588308825"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>';
+		break;
 	case 'content-side':	
 		//if(elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds')){
 		//	echo elgg_get_plugin_user_setting('adblock', elgg_get_page_owner_guid(), 'minds');
@@ -214,7 +226,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	//$rand = array_rand($providers);
 //	$rand = get_input('show_ad', 'toobla');
 	echo '<div class="content-block-ratator">' .$providers['toobla'] .  '</div>';
-	echo '<div class="content-block-ratator">' .$providers['contentad']. '</div>';
+//	echo '<div class="content-block-ratator">' .$providers['contentad']. '</div>';
 	break;	
 	case 'content.ad':
 	        echo '<div class="contentad"><div id="contentad9733"></div>

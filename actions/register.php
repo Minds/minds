@@ -68,7 +68,7 @@ if (elgg_get_config('allow_registration')) {
                             forward(REFERER);
                         
 			// Forward on success, assume everything else is an error...
-			forward('register/orientation');
+			forward($new_user->getURL());
 		} else {
 			register_error(elgg_echo("registerbad"));
 		}

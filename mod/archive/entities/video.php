@@ -69,12 +69,12 @@ class video extends object{
 		if(isset($CONFIG->cdn_url))
 			$domain = $CONFIG->cdn_url;
 
-		if($this->thumbnail){
-			return $domain . 'archive/thumbnail/'.$this->guid.'/'.$this->thumbnail.'/1';
-		} else {
-			$cinemr = $this->cinemr();
-       	        	return $cinemr::factory('media')->get($this->cinemr_guid.'/thumbnail');
-		}
+		//if($this->thumbnail){
+			return $domain . 'archive/thumbnail/'.$this->guid.'/'.$this->thumbnail.'/3';
+		//} else {
+		//	$cinemr = $this->cinemr();
+       	       // 	return $cinemr::factory('media')->get($this->cinemr_guid.'/thumbnail');
+		//}
 	}
 
 	public function getURL(){
@@ -87,7 +87,7 @@ class video extends object{
 	 */
 	public function save(){
 		$this->super_subtype = 'archive';
-		parent::save(true);
+		parent::save(!$this->guid);
 		
 		$cinemr = $this->cinemr();
 		$cinemr::factory('media')->post($this->cinemr_guid, array(

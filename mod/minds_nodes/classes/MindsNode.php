@@ -191,4 +191,10 @@ class MindsNode extends ElggObject{
 	    
 	    return parent::save($index);
 	}
+			
+	public function getExportableValues() {
+                return array_merge(parent::getExportableValues(), array(
+                        'domain',
+                ));
+        }
 }

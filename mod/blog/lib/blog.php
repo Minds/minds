@@ -196,6 +196,7 @@ function blog_get_page_content_list($user_guid = NULL, $container_guid = NULL) {
 	}
 
 	$return['filter'] = elgg_view('page/layouts/content/trending_filter', $return);
+	$return['class'] = 'blog';
 	return $return;
 }
 
@@ -218,7 +219,8 @@ function blog_get_trending_page_content_list() {
 	$offset = get_input('offset', 0);
 
 	$cacher = minds\core\data\cache\factory::build();
-	if(!$guids = $cacher->get("trending-guids:$limit:$offset")){
+	$hash = md5(elgg_get_site_url());
+	if(!$guids = $cacher->get("$hash:trending-guids:$limit:$offset")){
 	
 
 		//trending
@@ -227,7 +229,7 @@ function blog_get_trending_page_content_list() {
        	 	);
        	 	$trending = new MindsTrending(array(), $options);
 		$guids = $trending->getList(array('type'=>'object', 'subtype'=>'blog', 'limit'=>$limit, 'offset'=>$offset, 'count'=>NULL));
-		$cacher->set("trending-guids:$limit:$offset", $guids);
+		$cacher->set("$hash:trending-guids:$limit:$offset", $guids);
 	}
 		
 	if($guids)	{
@@ -599,11 +601,11 @@ function blog_sidebar($blog){
 
 	if($blog){
 		
-		if(!$blog->rss_item_id){
+		if(!$blog->rss_item_id && $blog->featured_id){
 			$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single'));
 		} 
 			
-		$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
+		//$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
 		
 		//show more posts from this user
 		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>3));

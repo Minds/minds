@@ -284,7 +284,7 @@ function usersettings_pagesetup() {
 			'text' => elgg_echo('usersettings:plugins:opt:linktext'),
 			'href' => "settings/plugins/{$user->username}",
 		);
-		elgg_register_menu_item('page', $params);
+	//	elgg_register_menu_item('page', $params);
 		$params = array(
 			'name' => '1_statistics',
 			'text' => elgg_echo('usersettings:statistics:opt:linktext'),

@@ -1,7 +1,7 @@
 
 <div class="tos">
    
-	<div class="tos-scroll" style="overflow:scroll; height:100px; border:1px solid #DDD;padding:16px;margin-bottom:12px;">
+	<div class="tos-scroll" style="overflow:scroll; height:200px; border:1px solid #DDD;padding:16px;margin-bottom:12px;">
 	  	<p>Terms of Service &ndash;<br /> Minds Partnership Program</p>
 		<p><strong>If you have been invited to participate in and have opted into our Minds Partnership program (the "Program"), and your participation in The Program has not been terminated, then the following terms shall apply.</strong> By participating in The Program you agree to become bound by the terms and conditions herein (&ldquo;The Agreement&rdquo;). If you do not agree to all of the terms and conditions herein you may not participate in The Program and are not eligible to receive The Program services (including, but not limited to, Program payments). To the extent that these terms and conditions are considered an offer on behalf of Minds, acceptance of such offer is expressly limited to these terms.</p>
 		<p>You will comply with all all of the terms and conditions contained in the <a href="/p/terms">Minds Terms of Service</a> and all other operating rules, policies, and procedures that may be published from time to time by Minds.</p>

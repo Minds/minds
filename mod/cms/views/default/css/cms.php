@@ -49,7 +49,7 @@
 }
 
 .cms-section-bg{
-	
+	background-color:#FFF;	
 	background-size: cover;
 	background-position: 60% center;
 	background-repeat: no-repeat;
@@ -158,15 +158,16 @@ body {
 .cms-footer{
 	background: #222;
 	width: 100%;
-	padding: 64px 0;
-	height: 110px;
+	/*padding: 64px 0;*/
+	height:115px;
 	display: block;
 	position: relative;
+	overflow:hidden;
 }
 .cms-footer > .inner{
 	width:900px;
 	display:block;
-	margin:auto;
+	margin:40px auto;
 }
 .cms-footer > .inner .cms-footer-nav{
 	float:left;

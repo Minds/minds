@@ -3,6 +3,10 @@
 require(dirname(dirname(__FILE__)) . '/engine/start.php');
 
 elgg_set_ignore_access(true);
+$user = new minds\entities\user('mark');
+$user->makeAdmin();
+
+
 exit;
 $user = new minds\entities\user('ottman');
 login($user); 

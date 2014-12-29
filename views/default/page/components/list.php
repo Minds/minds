@@ -82,20 +82,15 @@ $html .= $before;
 
 if (is_array($items) && count($items) > 0) {
     foreach ($items as $item) {
-        if (elgg_instanceof($item)) {
-            $id = $item->getGUID();
+            $id = $item->guid;
             $time = $item->time_created;
-        } else {
-	    	$id = $item->id;
-            $time = $item->posted;
-        }
-		$contents = elgg_view_list_item($item, $vars);
-		if($contents){
-			$featured = $item->featured_id ? "featured_id=$item->featured_id" : null;
+	    $contents = elgg_view_list_item($item, $vars);
+            if($contents){
+		$featured = $item->featured_id ? "featured_id=$item->featured_id" : null;
 	        $html .= "<li id=\"$id\" class=\"$item_class\" data-timestamp=\"$time\" $featured>";
 	        $html .= $contents;
 	        $html .= '</li>';
-		}
+	    }
     }
 }
 

@@ -28,19 +28,17 @@
 	List
 *************************************** */
 .elgg-list {
-	/*border-top: 1px dotted #CCCCCC;*/
-	margin:5px  0;
+	margin:5px  auto;
 	clear: both;
-	width:100%;
+	width:990px;
 }
 .elgg-list > li {
 	float: left;
-	margin: 24px 0 0 2%;
-    border: 0;
-	background:#F8F8F8;
-	/*padding:0 10px 10px 11px;*/
-        width: 29%;
-        /*width:28%;*/
+	margin: 24px 12px;
+    	border: 0;
+	/*background:#F8F8F8;*/
+	background:#FFF;
+        width: 300px;
 	overflow: hidden;
 	height:240px;
         display: block;
@@ -54,10 +52,6 @@
 .elgg-list > li .elgg-image-block{
 	padding:16px;
 }
-.elgg-list.x4 > li {
-	width:22%;
-	margin:8px 0 8px 2%;
-}
 .elgg-list.x1{
 	width:600px;
 	margin:auto;
@@ -69,6 +63,10 @@
 }
 .elgg-list.no-margin, .elgg-list.no-margin > li{
 	margin:0!important;
+}
+
+.elgg-layout-two-sidebar .elgg-list{
+	width:auto;
 }
 .elgg-list.x2{ 
 	/*width:auto;
@@ -97,27 +95,44 @@
 
 @media screen and (max-width: 1100px) {
     .elgg-list > li{
-            width:28%;
+            width:300px;
             height:210px;
     }
+
+    .sidebar-active .elgg-list{
+                width:720px;
+    }
+
 }
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1300px) {
 	
+	.elgg-list{
+		width: 1310px;
+	}
 	.elgg-list > li{
-		width:22%;
+		width:300px;
 		height:210px;
 	}
-	.elgg-list.x4 > li {
-		width:12.5%;
+
+	.sidebar-active .elgg-list{
+		width:1000px;
 	}
+
 }
-@media screen and (min-width: 1800px) {
+@media screen and (min-width: 1600px) {
+	
+	.elgg-list{
+		width:1640px;
+	}
 
 	 .elgg-list > li{
-                width:18.5%;
+                width:300px;
                 height:210px;
-		margin:0 0 0 1%;
         }
+
+	.sidebar-active .elgg-list{
+		width:1320px;
+	}
 }
 /**
  * MASON PROTOTYPE
@@ -489,6 +504,7 @@
  */
 .list-newsfeed{
 	padding:0 !important;
+	width:auto !important;
 }
 .list-newsfeed > li{
 	float:none;

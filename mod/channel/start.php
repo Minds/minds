@@ -43,9 +43,9 @@ class start extends \ElggPlugin{
 		 * Returns the url.. this should really be in models/entities now
 		 */
 		elgg_register_entity_url_handler('user', 'all', function($user){
-			if($user->base_node)
-				return $user->base_node. $user->username;
-			else 
+			//if($user->base_node)
+			//	return $user->base_node. $user->username;
+			//else 
 				return elgg_get_site_url() . $user->username;
 		});
 
@@ -134,10 +134,7 @@ class start extends \ElggPlugin{
 	 */
 	public function hoverMenuSetup($hook, $type, $return, $params) {
 		$user = $params['entity'];
-	
-		if (elgg_is_logged_in() && $user->canEdit()) {
-			/*elgg_load_js('lightbox');
-			elgg_load_css('lightbox');*/
+		if (elgg_is_logged_in() && (elgg_is_admin_logged_in() || elgg_get_logged_in_user_guid() == $user->guid)) {
 			$url = "channel/$user->username/custom/";
 			$item = new \ElggMenuItem('send', elgg_echo('channel:custom'), $url);
 			$item->setSection('action');

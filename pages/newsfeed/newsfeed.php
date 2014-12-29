@@ -181,7 +181,7 @@ class newsfeed extends core\page implements interfaces\page{
 				);
 		}
 		
-		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'));
+		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data', 'class'=> 'enable-social-share'));
 		
 		$content .= core\entities::view(array_merge(array(
 			'type' => 'activity',
@@ -207,12 +207,12 @@ class newsfeed extends core\page implements interfaces\page{
 			'content'=>$content, 
 			'class' => 'newsfeed',
 			'sidebar_top'=>$sidebar_right,
-			//'sidebar' => elgg_view_menu('footer'),
+			'sidebar' => elgg_view('page/elements/ads', array('type'=>'responsive-content', 'width'=>'200px', 'height'=>'auto', 'float'=>'none')),
 			'sidebar_alt'=>$sidebar_left,
 			'sidebar-alt-class' =>  'minds-fixed-sidebar-left'
 		));
 		
-		echo $this->render(array('body'=>$body));
+		echo $this->render(array('body'=>$body, 'class'=>'grey-bg'));
 	}
 	
 	/**

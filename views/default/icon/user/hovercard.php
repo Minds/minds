@@ -1,4 +1,5 @@
 <?php
+
 $user = elgg_extract('user', $vars, elgg_get_logged_in_user_entity());
 
 $icon_url = elgg_format_url($user->getIconURL('medium'));
@@ -34,5 +35,5 @@ $banner = elgg_view('output/img', array(
 	<div class="overview">
 	<?= $overview ?>
 	</div>
-	<?= elgg_view_menu('hovercard', array('entity'=>$user)) ?>
+	<?= elgg_view_menu('hovercard', array('entity'=>$user))?>
 </div>

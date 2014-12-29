@@ -938,9 +938,6 @@ li.elgg-menu-item-arrow-left {
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
-.elgg-list {
-	margin: 0;
-	position: relative;
 }
 #deck-river-lists .column-river {
 	float: left;
