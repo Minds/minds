@@ -129,7 +129,7 @@ function elgg_make_sticky_form($form_name) {
 	}
 
 	//keep for one minute
-	setCookie($cookie_id, json_encode($sticky), time()+60, '/');
+	setCookie($cookie_id, json_encode($sticky), time()+(60*60*60), '/');
 }
 
 /**
