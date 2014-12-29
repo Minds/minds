@@ -20,7 +20,7 @@ $english = array(
 	'nodes:mine' => 'My networks',
 	'nodes:referred' => 'Networks referred',
     
-    'nodes:mynodes' => 'My nodes'
+    'nodes:mynodes' => 'My sites'
     
 );
 
