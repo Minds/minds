@@ -9,7 +9,7 @@ namespace minds\plugin\archive\api\v1;
 
 use minds\core;
 use minds\interfaces;
-use minds\entities;
+use minds\plugin\archive\entities;
 use minds\api\factory;
 
 class archive implements interfaces\api{
@@ -35,6 +35,50 @@ class archive implements interfaces\api{
      */
     public function post($pages){
 
+	$guid = $pages[0];
+	$album = NULL;
+
+	if(isset($_POST['album_guid'])){
+		$album = new entities\album($_POST['album_guid']);
+		if(!$album->guid)
+			return factory::response(array('error'=>'Sorry, the album was not found'));
+	} else {
+		//does the user already have and album?
+		$albums = core\entities::get(array('subtype'=>'album', 'owner_guid'=>elgg_get_logged_in_user_guid()));
+		if($albums){
+			if(isset($_POST['album_title'])){
+				foreach($albums as $a){
+					if($_POST['album_title'] == $a->title){
+						$album = $a;
+						break;
+					}
+				}
+			}
+		}
+
+		if(!$album){
+			$album = new entities\album();
+			if(isset($_POST['album_title'])){
+				$album->title = $_POST['album_title'];
+			} else {
+				$album->title = "API Uploads";
+			}
+			$album->save();
+			$ablums = array($album);
+		}
+	} 
+
+	$index = new core\data\indexes('object:container');
+	$index->set($album->guid, array($guid=>$guid));
+
+	$db = new core\data\call('entities');
+	$db->insert($guid, array('container_guid'=>$album->guid));
+	
+	$activity = new \minds\entities\activity();
+	$activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
+		//->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
+		->save();
+
          return factory::response(array());
         
     }
@@ -49,11 +93,12 @@ class archive implements interfaces\api{
 	
 	$image = new \minds\plugin\archive\entities\image();
 	$image->batch_guid = 0;
-	$guid = $image->save();	
-	$dir = $image->getFilenameOnFilestore() . "/image/$image->batch_guid/$image->guid";	
-	$image->filename = "$dir/upload.jpg";
-	if (!file_exists($dir)) {
-	    mkdir($dir, 0755, true);
+	$image->access_id = 2;
+	$guid = $image->save();
+	$dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";	
+	$image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
+	if (!file_exists($dir)) {    
+		mkdir($dir, 0755, true);
 	}
 
 	/**
@@ -61,7 +106,7 @@ class archive implements interfaces\api{
 	 * @todo ^^
 	 */
 	$putdata = fopen("php://input", "r");
-	$fp = fopen($image->filename, "w");
+	$fp = fopen("$dir/master.jpg", "w");
 	$raw = '';
 	while ($data = fread($putdata, 1024)){
 	    $raw .= $data;
