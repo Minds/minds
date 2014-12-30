@@ -87,53 +87,53 @@ class archive implements interfaces\api{
      * Upload a file to the archive
      * @param array $pages
      * 
-     * API:: /v1/archive
+     * API:: /v1/archive/:type
      */
     public function put($pages){
 	
-	$image = new \minds\plugin\archive\entities\image();
-	$image->batch_guid = 0;
-	$image->access_id = 2;
-	$guid = $image->save();
-	$dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";	
-	$image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
-	if (!file_exists($dir)) {    
-		mkdir($dir, 0755, true);
+	switch($pages[0]){
+
+		case 'video':
+			error_log(print_r($_FILES,true));
+			$video = new entities\video();
+
+			$fp = tmpfile();
+			$metaDatas = stream_get_meta_data($fp);
+			$tmpFilename = $metaDatas['uri'];
+			$req = $this->parsePut();
+                        $body = $req['body'];
+			fwrite($fp, $body);
+			$video->upload($tmpFilename);
+			$guid = $video->save();
+			 fclose($fp);
+			break;
+		case 'image':
+			$image = new \minds\plugin\archive\entities\image();
+			$image->batch_guid = 0;
+			$image->access_id = 2;
+			$guid = $image->save();
+			$dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";	
+			$image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
+			if (!file_exists($dir)) {    
+				mkdir($dir, 0755, true);
+			}
+
+			/**
+			 * PHP PUT is a bit tricky, this should really be in a helper function
+			 * @todo ^^
+			 */
+			$fp = fopen("$dir/master.jpg", "w");
+			$req = $this->parsePut();
+			$body = $req['body'];			
+			fwrite($fp, $body);
+			fclose($fp);
+
+
+			$loc = $image->getFilenameOnFilestore();
+			$image->createThumbnails();
+			$image->save();
 	}
 
-	/**
-	 * PHP PUT is a bit tricky, this should really be in a helper function
-	 * @todo ^^
-	 */
-	$putdata = fopen("php://input", "r");
-	$fp = fopen("$dir/master.jpg", "w");
-	$raw = '';
-	while ($data = fread($putdata, 1024)){
-	    $raw .= $data;
-	}
-	
-	$boundary = substr($raw, 0, strpos($raw, "\r\n"));
-	$parts = array_slice(explode($boundary, $raw), 1);
-
-	foreach($parts as $part){
-	    // If this is the last part, break
-	    if ($part == "--\r\n")
-		break;
-	    
-	// Separate content from headers
-	    $part = ltrim($part, "\r\n");
-	    list($raw_headers, $body) = explode("\r\n\r\n", $part, 2);	
-	}
-	
-
-	fwrite($fp, $body);
-	fclose($fp);
-	fclose($putdata);
-
-
-	$loc = $image->getFilenameOnFilestore();
-	$image->createThumbnails();
-        $image->save();
         return factory::response(array('guid'=>$guid, "location"=>$loc));
         
     }
@@ -149,6 +149,34 @@ class archive implements interfaces\api{
          return factory::response();
         
     }
-    
+   
+    /**
+     * Helper function, move this to a static class soon
+     */
+    public function parsePut(){
+        $putdata = fopen("php://input", "r");
+        $raw = '';
+        while ($data = fread($putdata, 1024)){
+            $raw .= $data;
+        }
+	
+	$boundary = substr($raw, 0, strpos($raw, "\r\n"));
+        $parts = array_slice(explode($boundary, $raw), 1);
+
+        foreach($parts as $part){
+            // If this is the last part, break
+	    if ($part == "--\r\n")
+               break;
+
+       		
+            // Separate content from headers
+            $part = ltrim($part, "\r\n");
+            list($raw_headers, $body) = explode("\r\n\r\n", $part, 2);
+        }
+
+	fclose($putdata);
+	return array('headers'=>$raw_headers, 'body'=>$body);
+    }
+ 
 }
         
