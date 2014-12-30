@@ -85,9 +85,9 @@ class video extends object{
 	 * Extend the default entity save function to update the remote service
 	 * 
 	 */
-	public function save(){
+	public function save($force = false){
 		$this->super_subtype = 'archive';
-		parent::save(!$this->guid);
+		parent::save((!$this->guid || $force));
 		
 		$cinemr = $this->cinemr();
 		$cinemr::factory('media')->post($this->cinemr_guid, array(

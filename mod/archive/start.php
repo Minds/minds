@@ -289,7 +289,7 @@ function minds_archive_page_handler($page) {
 					if(!$entity->thumbnail){
 
 						$cinemr = $entity->cinemr();
-                        			forward(cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail'));
+                        			forward($cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail'));
 					}
 					break;
 			}
