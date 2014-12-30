@@ -27,7 +27,8 @@ class authenticate extends core\page implements interfaces\page{
 			
 			$return = $user->export();
 			$return['email'] = $user->email;
-			
+			if ($user->isAdmin()) 
+			    $return['admin'] = true;
 			
 		}
 		
