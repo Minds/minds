@@ -117,7 +117,7 @@ class clusters extends base{
 		
 	}
 	
-	public function login(){
+	public function login(){ 
 		//check if the select node is this one or not. 
 		$node_uri = \get_input('node');
 		if($node_uri == elgg_get_site_url() || "https://$node_uri" == elgg_get_site_url() || "http://$node_uri" == elgg_get_site_url()){
@@ -137,7 +137,7 @@ class clusters extends base{
 				$node_uri = str_replace('http://', 'https://', $node_uri);
 				 $authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>$username, 'password'=>$password));
 			}
-				
+							
 		}catch(\Exception $e){
 
 			//$db = new data\call('user_index_to_guid');
@@ -152,6 +152,7 @@ class clusters extends base{
 			\register_error('Sorry, we could not succesfully authenticate you.');
 			return false;
 		}
+		
 		/**
 		 * Now create a pseudo account and import information from the user
 		 * 
@@ -183,6 +184,14 @@ class clusters extends base{
 		$user->email = $authenticate['email'];
 		$user->avatar_url = $authenticate['avatar_url'];
 		$user->access_id = 2;
+		
+		// If this a trusted domain, check to see if it's an admin (and if so, grant admin)
+		if ($this->isTrustedDomain($node_uri)) {
+		    $user->admin = 'no';
+		    if (isset($authenticate['admin']) && $authenticate['admin'])
+			$user->admin = 'yes';
+		}
+		
 		$user->enable();	
 	
 		if(!\login($user)){
@@ -231,7 +240,52 @@ class clusters extends base{
 	public function joinCluster($cluster, $server_uri){
 		//notify everyone in the cluster
 	}
+	
+	/**
+	 * Get a list of domains trusted by this node.
+	 */
+	protected function getTrustedDomains() {
+	   
+	    // Probably want a better storage for this.
+	    $trusted_domains = trim(elgg_get_plugin_setting('trusted_domains', 'minds_nodes'));
+	    if (!$trusted_domains)
+		$trusted_domains = 'minds.com';
+	    
+	    $trusted_domains = explode(' ', $trusted_domains);
+	    
+	    // Sanitise trusted domains (incase they were entered as urls)
+	    foreach ($trusted_domains as $key => $url) {
+		
+		// Check for scheme
+		if (preg_match('/https?:\/\//', $url))
+		{
+		    $details = parse_url($url);
+		    $trusted_domains[$key] = $details['host'];
+		}
+		
+	    }
+	    
+	    return $trusted_domains;
+	}
 
+	/**
+	 * Return whether a given URL/node is trusted by this node.
+	 * @param type $url
+	 */
+	public function isTrustedDomain($url) 
+	{
+	    // If there's no scheme, prepend https:// so parse_url will work.
+	    if (!preg_match('/https?:\/\//', $url))
+		$url = "https://$url";
+	    
+	    $details = parse_url($url);
+	    $node = $details['host'];
+	    
+	    $trusted_domains = $this->getTrustedDomains();
+	    
+	    return in_array($node, $trusted_domains);
+	}
+	
 	/**
 	 * We may have to make this issue a cron job, as it could take a long time to post out
 	 */	
