@@ -1,9 +1,5 @@
 <?php
 
-    $trusted_domains = trim(elgg_get_plugin_setting('trusted_domains', 'minds_nodes'));
-    if (!$trusted_domains) {
-	$trusted_domains = 'minds.com';
-    }
 ?>
 
 <?php 
@@ -27,10 +23,4 @@ return true;
 <div>
     <label>Multisite Manager Key (token):</label><br />
     <input type="password" name="params[manager_key]" value="<?php echo elgg_get_plugin_setting('manager_key', 'minds_nodes') ?>" class="elgg-input-text" style="width: 300px;">
-</div>
-
-<div>
-    <label>Trusted domains</label>
-    <p>Accounts that have admin privileges on the following domains (space separated) will have admin privileges on this site.</p>
-    <textarea name="params[trusted_domains]"><?= $trusted_domains; ?></textarea>
 </div>
