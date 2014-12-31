@@ -20,10 +20,10 @@ class notifications implements interfaces\api{
      * API:: /v1/notifications
      */      
     public function get($pages){
-	   $response = array();
+	$response = array();
 
-	   $db = new \minds\core\data\call('entities_by_time');
-       $guids = $db->getRow('notifications:'.$user_guid, array('limit'=> get_input('limit', 5), 'offset'=>get_input('offset','')));
+	$db = new \minds\core\data\call('entities_by_time');
+       	$guids = $db->getRow('notifications:'.elgg_get_logged_in_user_guid(), array('limit'=> get_input('limit', 5), 'offset'=>get_input('offset','')));
         if(!$guids){
             $response = array();
         } else {
@@ -35,8 +35,12 @@ class notifications implements interfaces\api{
                 $entity = \minds\core\entities::build(new \minds\entities\entity($data['object_guid']));
                 $response['notifications'][$k]['ownerObj'] = $owner->export();
                 $response['notifications'][$k]['fromObj'] = $from->export();
+		$response['notifications'][$k]['fromObj']['guid'] = (string) $from->guid;
+		$response['notifications'][$k]['from_guid'] = (string) $from->guid;
                 $response['notifications'][$k]['entityObj'] = $entity->export();
             }
+		$response['load-next'] = (string) end($notifications)->guid;
+		$response['load-previous'] = (string) key($notifications)->guid;
         }
 
         return factory::response($response);

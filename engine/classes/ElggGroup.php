@@ -56,19 +56,13 @@ class ElggGroup extends ElggEntity
 					$this->attributes[$key] = $value;
 				}
 
-			// Is this is an ElggEntity but not an ElggGroup = ERROR!
-			} else if ($guid instanceof ElggEntity) {
-				throw new InvalidParameterException(elgg_echo('InvalidParameterException:NonElggGroup'));
-
-			// Is it a GUID
+				// Is it a GUID
 			} else if (is_numeric($guid)) {
 				$guid = get_entity($guid,'group');
 				if (!$this->load($guid)) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
-			} else {
-				throw new InvalidParameterException(elgg_echo('InvalidParameterException:UnrecognisedValue'));
-			}
+			} 
 		}
 	}
 
