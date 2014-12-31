@@ -379,6 +379,11 @@ ul li.vjs-menu-title.vjs-res-menu-title:hover {
 		width:840px;
 	}
 }
+@media screen and (max-width: 720px){
+        .cinemr-screen .player-container{
+                width:100%;
+        }
+}
 
 /**
  * Lightbox/colorbox (tmp here)
