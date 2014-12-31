@@ -59,6 +59,7 @@ class start extends \ElggPlugin{
 		return array(
 			'/notifications' => "$path\\pages\\view",
 			'/notifications/count' => "$path\\pages\\count",
+			'/api/v1/notifications' => "$path\\api\\v1\\notifications"
 		);
 	}
 	
