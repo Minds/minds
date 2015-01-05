@@ -7,9 +7,11 @@ elgg_set_context('featured');
 $limit = get_input("limit", 12);
 $offset = get_input("offset", 0);
 
+$masonry = true;
 switch(get_input('subtype', 'default')){
 	case 'video':
 		$key = 'object:video:featured';
+		$masonry = false;
 		break;
 	case 'albums':
 		$key = 'object:image:featured';
@@ -24,7 +26,7 @@ if($guids){
 	$entities = elgg_get_entities(array(	
 		'guids'=> $guids,
 		'full_view' => FALSE,
-		'limit' => 12
+		'limit' => 12,
 		//'archive_view' => TRUE
 	));
 	usort($entities, function($a, $b){
