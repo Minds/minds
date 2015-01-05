@@ -93,6 +93,14 @@
     transition-duration: 0.6s;
 }
 
+@media screen and (max-width: 720px){
+
+	.sidebar-active .elgg-list{
+		width:auto !important;
+	}
+
+}
+
 @media screen and (max-width: 1100px) {
     .elgg-list > li{
             width:300px;

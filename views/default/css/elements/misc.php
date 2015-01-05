@@ -1146,6 +1146,7 @@ li.elgg-menu-item-rss{
 	width:100%;
 	float:left;
 	border:1px solid #DDD;
+	font-size:12px;
 }
 .com-ui .node .domain-input .url-domain{
 	position: absolute;
@@ -1158,6 +1159,7 @@ li.elgg-menu-item-rss{
 	width:auto;
 	float:left;
 	margin-left:12px;
+	font-size:12px;
 }
 
 .com-ui .user{
@@ -1175,6 +1177,7 @@ li.elgg-menu-item-rss{
 	float:left;
 	border:1px solid #DDD;
 	padding-left:120px;
+	font-size:12px;
 }
 .com-ui .user .user-input .url-domain{
 	position: absolute;
