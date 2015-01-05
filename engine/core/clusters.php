@@ -117,7 +117,7 @@ class clusters extends base{
 		
 	}
 	
-	public function login(){ 
+	public function login(){
 		//check if the select node is this one or not. 
 		$node_uri = \get_input('node');
 		if($node_uri == elgg_get_site_url() || "https://$node_uri" == elgg_get_site_url() || "http://$node_uri" == elgg_get_site_url()){
@@ -137,7 +137,7 @@ class clusters extends base{
 				$node_uri = str_replace('http://', 'https://', $node_uri);
 				 $authenticate = $this->call('POST', $node_uri, 'api/v1/authenticate', array('username'=>$username, 'password'=>$password));
 			}
-							
+				
 		}catch(\Exception $e){
 
 			//$db = new data\call('user_index_to_guid');
@@ -152,7 +152,6 @@ class clusters extends base{
 			\register_error('Sorry, we could not succesfully authenticate you.');
 			return false;
 		}
-		
 		/**
 		 * Now create a pseudo account and import information from the user
 		 * 
@@ -232,7 +231,7 @@ class clusters extends base{
 	public function joinCluster($cluster, $server_uri){
 		//notify everyone in the cluster
 	}
-	
+
 	/**
 	 * We may have to make this issue a cron job, as it could take a long time to post out
 	 */	
