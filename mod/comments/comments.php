@@ -40,6 +40,7 @@ class comments extends \ElggPlugin{
 		$path = "minds\\plugin\\comments";
 		return array(
 			'/comments' => "$path\\pages\\comments",
+			'/api/v1/comments' => "$path\\api\\v1\\comments"
 		);
 	}
 	 
