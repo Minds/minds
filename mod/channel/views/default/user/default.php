@@ -21,12 +21,6 @@ if (elgg_get_logged_in_user_guid() == $entity->guid) {
 
 $title = "<a href=\"" . $entity->getUrl() . "\" $rel>" . $entity->name . "</a>";
 
-$metadata = elgg_view_menu('entity', array(
-	'entity' => $entity,
-	'sort_by' => 'priority',
-	'class' => 'elgg-menu-hz',
-));
-
 if (elgg_in_context('owner_block') || elgg_in_context('widgets')) {
 	$metadata = '';
 }

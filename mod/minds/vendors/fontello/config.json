@@ -19,6 +19,12 @@
       "src": "fontawesome"
     },
     {
+      "uid": "e331ff486a299c6bdf0056426c8fac53",
+      "css": "youtube-squared",
+      "code": 59414,
+      "src": "fontawesome"
+    },
+    {
       "uid": "7222571caa5c15f83dcfd447c58d68d9",
       "css": "search",
       "code": 128269,
@@ -388,6 +394,12 @@
       "uid": "ed62f5f10b256b0a959e6c847ed8f4a6",
       "css": "tape",
       "code": 9991,
+      "src": "entypo"
+    },
+    {
+      "uid": "8a1d446e5555e76f82ddb1c8b526f579",
+      "css": "flow-tree",
+      "code": 59415,
       "src": "entypo"
     },
     {

@@ -95,7 +95,7 @@ If you are ready to proceed, click the Next button.",
 	'install:settings:help:language' => 'The default language for the site',
 	'install:settings:help:siteaccess' => 'The default access level for new user created content',
 
-	'install:admin:instructions' => "It is now time to create an administrator's account.",
+	'install:admin:instructions' => "It is now time to create an administrator's account for your new site. This account will be able to control your entire site.",
 
 	'install:admin:label:displayname' => 'Display Name',
 	'install:admin:label:email' => 'Email Address',

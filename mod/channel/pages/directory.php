@@ -111,7 +111,7 @@ class directory extends core\page implements interfaces\page{
 		);
 		
 		$body = elgg_view_layout('tiles', $params);
-		echo $this->render(array('body'=>$body));
+		echo $this->render(array('body'=>$body, 'class'=>'grey-bg'));
 
 	}
 	

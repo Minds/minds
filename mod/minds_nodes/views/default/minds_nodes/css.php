@@ -306,3 +306,49 @@ div.register-popup {
 	width:990px;
 	margin:auto;
 }
+
+
+/* Switcher */
+
+div.nodes-switcher {
+    margin-bottom: 20px;
+    overflow: hidden;
+    /*border: 1px solid #444;
+    padding: 5px;*/
+    margin-left: 5px;
+    margin-top: -10px;
+}
+
+div.nodes-switcher h1 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    
+}
+
+div.nodes-switcher h1,
+div.nodes-switcher h1 a {
+    color: white;
+    font-size: 1em;
+    line-height: 19px;
+    vertical-align: middle;
+}
+
+div.nodes-switcher div.node {
+    min-height: 20px;
+    margin-bottom: 10px;
+}
+
+div.nodes-switcher div.icon {
+    padding: 2px;
+    border: 1px solid #444;
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+div.nodes-switcher div.icon  img {
+    width: 20px;
+    height: 20px;
+}

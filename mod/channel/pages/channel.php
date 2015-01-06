@@ -49,7 +49,7 @@ class channel extends core\page implements interfaces\page{
 		$carousels = core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
 		$carousel = elgg_view('carousel/carousel', array('items'=>$carousels));
 	
-		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data'),array('to_guid'=>$user->guid));
+		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data', 'class'=> elgg_get_logged_in_user_guid() == $user->guid ? 'enable-social-share' : ''),array('to_guid'=>$user->guid));
 		$class ='';
 		$sidebar = '';
 		switch($pages[1]){
@@ -230,7 +230,7 @@ class channel extends core\page implements interfaces\page{
 			'sidebar-alt-class' =>  'minds-fixed-sidebar-left'
 		));
 		
-		echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel'));
+		echo elgg_view_page($user->name, $body, 'default', array('class'=>'channel grey-bg'));
 
 	}
 	

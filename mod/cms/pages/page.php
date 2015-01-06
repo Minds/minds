@@ -80,7 +80,7 @@ class page extends core\page implements interfaces\page{
 		
 		elgg_extend_view('page/elements/foot', 'cms/footer');
 		
-		echo $this->render(array('title'=>$title, 'body'=>$body, 'class'=>'cms-page-body '. $class));
+		echo $this->render(array('title'=>$title, 'body'=>$body, 'class'=>'cms-page-body white-bg '. $class));
 		
 	}
 	

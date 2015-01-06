@@ -1,3 +1,4 @@
+if(!window.console) {window.console={}; window.console.log = function(){};} 
 /**
  * @namespace Singleton object for holding the Elgg javascript library
  */

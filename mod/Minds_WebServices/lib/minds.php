@@ -65,7 +65,17 @@ function minds_service_remind($url, $message, $username) {
 		$options['timeline_override'] = array($wallpost->to_guid); //only post to the to_guid timeline..
 		
 	$river = new ElggRiverItem($options);
-	return $river->save();
+	if ($result = $river->save()) {
+	    
+	    // Remind has been saved, update counter
+	    $lookup = new \minds\core\data\lookup('count:external:reminds');
+	    
+	    $count = (int)$lookup->get($url);
+	    $lookup->set($url, $count++);
+	    
+	    return $guid;
+	}
+	return false;
 }
 
 expose_function('remind',
