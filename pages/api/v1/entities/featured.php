@@ -26,7 +26,6 @@ class featured implements interfaces\api{
         $options = array(
             'type' => 'object',
             'subtype' => NULL,
-            'owner_guid'=> NULL,
             'limit'=>12,
             'offset'=>''
             );
@@ -35,10 +34,20 @@ class featured implements interfaces\api{
             if(isset($_GET[$key]))
                 $options[$key] = $_GET[$key];
         }
+
+	$key = $options['type'] . ':featured';
+	if($options['subtype'])
+		$key = $options['type'] . ':' . $options['subtype'] . ':featured';
+
+	$guids = core\data\indexes::fetch($key, $options);
+	if(!$guids){
+		return factory::response(array('status'=>'error', 'message'=>'not found'));
+	}
         
-       
+        $options = array('guids'=>$guids);
         $entities = core\entities::get($options);
-        
+ 	
+
         if($entities){
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->guid;
