@@ -352,7 +352,8 @@ function groups_handle_profile_page($guid) {
 		'sidebar' => $sidebar,
 		'title' => $group->name,
 		'filter' => '',
-		'class' => 'group-profile ' . $class
+		'class' => 'group-profile ' . $class,
+		'hide_ads' => true
 	);
 	$body = elgg_view_layout('content', $params);
 

@@ -14,6 +14,14 @@
 	height: auto;
 	width: 45%;
 }
+.group-profile{
+	margin:auto;
+	width:990px;
+}
+.group-profile .elgg-menu-title{
+	float:none;
+	clear:both;
+}
 @media all 
 and (min-width : 0px)
 and (max-width : 1200px) {

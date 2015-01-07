@@ -40,22 +40,58 @@
 	 	$('img').error(function(){
 	 		$(this).remove();
 	 	});
-
-		/*$('.global-sidebar .elgg-menu-page li').toggle(function(){
-			if($(this).find('a')[0].hasClass('elgg-menu-opened')){
-				$('.global-sidebar').width(225);
-			} else {
-				$('.global-sidebar').width(600);
-			}
-		});*/
-
+		
 		if(!elgg.is_logged_in() && !$.cookie('promptSignup')){
 		//	setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
 		}
+		
 		$(document).on('click', "#minds-signup-popup .cancel", function(){
 			$.fancybox.close();
 		});
 		
+		/**
+		 * Save form input, incase people refresh
+		 */
+		$(document).on('change', '.elgg-form-blog-save', function(e){	
+		var form = $('.elgg-form-blog-save');
+		
+			if(form.length > 0){
+				localStorage.setItem("blog-form", JSON.stringify(form.serializeArray()));
+			}
+		});
+		$(document).on('updated-tinymce', function(e){
+			var form = $('.elgg-form-blog-save');
+                        if(form.length > 0){
+				form.find('textarea').val(tinyMCE.activeEditor.getContent());
+				form.trigger('change');
+			}
+		});
+		$(document).on('click', '.elgg-menu-item-add', function(e){
+			localStorage.removeItem("blog-form");
+		});
+
+		/**
+		 * Do we have a saved form?
+		 */
+		$(document).ready(function (){	
+			var form = $('.elgg-form-blog-save');
+                        if(form.length > 0){
+				var data = localStorage.getItem("blog-form");
+				if (null == data || $.isEmptyObject(data)) return; // nothing to do
+				$.each(JSON.parse(data), function (i, kv) {
+					// find form element, set its value
+					var $input = form.find('[name=' + kv.name + ']');
+
+					// how to set it's value?
+					if ($input.is(':checkbox') || $input.is(':radio')) {
+						$input.filter(function () { return $(this).val() == kv.value; }).first().attr('checked', 'checked');
+					} else {
+						$input.val(kv.value);
+					}
+				}); 
+			}
+		});
+
 		/**
 		 * Make our newsfeed icons centred @todo make less hacky
 		 */

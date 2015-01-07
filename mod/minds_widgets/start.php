@@ -49,12 +49,19 @@ function minds_widgets_page_handler($pages) {
 
                 // Load CSS
                 case 'css' :
-                        echo elgg_view('minds_widgets/css');
+			echo elgg_view('css/widgets');
+                        //echo elgg_view('minds_widgets/css');
                     break;
 
                 // Actually use the service: the service endpoint
                 case 'service' :
                         require_once(dirname(__FILE__) . '/pages/service.php') ;
+                        return true;
+                    break;
+		
+		// Data (e.g. counters)
+		case 'data' :
+                        require_once(dirname(__FILE__) . '/pages/data.php') ;
                         return true;
                     break;
 

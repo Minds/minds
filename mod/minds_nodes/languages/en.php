@@ -18,7 +18,9 @@ $english = array(
 	'minds_tiers:feature:support' => 'Support',
 	
 	'nodes:mine' => 'My networks',
-	'nodes:referred' => 'Networks referred'
+	'nodes:referred' => 'Networks referred',
+    
+    'nodes:mynodes' => 'My sites'
     
 );
 

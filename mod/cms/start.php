@@ -48,15 +48,16 @@ class start extends bases\plugin{
 		
 		$lu = new core\data\lookup();
 		$cacher = core\data\cache\factory::build();
+		$hash = md5(elgg_get_site_url());
 
-		if(!$footer = $cacher->get('cms:footer')){
-			$footer = $lu->get('object:cms:menu:footer');
-			$cacher->set('cms:footer', $footer);
+		if(!$footer = $cacher->get("$hash:cms:footer")){
+			$footer = $lu->get("object:cms:menu:footer");
+			$cacher->set("$hash:cms:footer", $footer);
 		}
 
-		if(!$topbar = $cacher->get('cms:topbar') && $topbar != 'not-set'){
-			$topbar = $lu->get('object:cms:menu:topbar');
-			$cacher->set('cms:topbar', $topbar ?: 'not-set');
+		if(!$topbar = $cacher->get("$hash:cms:topbar") && $topbar != 'not-set'){
+			$topbar = $lu->get("object:cms:menu:topbar");
+			$cacher->set("$hash:cms:topbar", $topbar ?: 'not-set');
 		}
 	
 		/**

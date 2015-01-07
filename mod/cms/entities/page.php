@@ -8,7 +8,7 @@ namespace minds\plugin\cms\entities;
 use minds\plugin\cms\exceptions;
 use minds\entities;
 use minds\core\data;
-
+use minds\core;
 class page extends entities\object{
 	
 	/**
@@ -60,6 +60,9 @@ class page extends entities\object{
 		$lu = new data\lookup();
 		$lu->set("object:cms:menu:$this->context", array($this->uri => "$this->title"));
 
+		$cacher = core\data\cache\factory::build();
+                $hash = md5(elgg_get_site_url());
+                $cacher->destroy("$hash:cms:$this->context");
 		return $guid;
 	}
 	
@@ -67,7 +70,9 @@ class page extends entities\object{
 		
 		$lu = new data\lookup();
 		$lu->removeColumn("object:cms:menu:$this->context", $this->uri);
-				
+		$cacher = core\data\cache\factory::build();
+		$hash = md5(elgg_get_site_url());
+		$cacher->destroy("$hash:cms:$this->context");
 		return parent::delete($recursive);
 	}
 	

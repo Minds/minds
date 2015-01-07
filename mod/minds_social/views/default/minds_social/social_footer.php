@@ -1,10 +1,16 @@
 <?php
 	global $SOCIAL_META_TAGS;
 	$og_url = $SOCIAL_META_TAGS['og:url']['content'];
+	
+	elgg_load_css('widgets');
 ?>
 <div class="minds-social">
 <!--	<div class="fb-like" data-href="<?php echo $og_url;?>" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="arial"></div> -->
 	
+	<div class="minds-share-button">
+	<?= elgg_view_form('minds_widgets/service/remind', null, array('tab' => 'remind', 'embed' => 'yes')); ?>
+	</div>
+    
 	<a id="fb-share" style='text-decoration:none;' type="icon_link" onClick="window.open('http://www.facebook.com/sharer.php?u=<?php echo $og_url;?>','sharer','toolbar=0,status=0,width=580,height=325');" href="javascript: void(0)">
 	    <img src="<?php echo elgg_get_site_url();?>mod/minds_social/graphics/facebook_share.png" width="62" height="18" alt="Share" class="fb-shares"/> <span class="count">0</span>
 	</a>
@@ -30,5 +36,13 @@
 	<a href="https://secure.reddit.com/submit" class='reddit-share' onclick="window.location = 'https://secure.reddit.com/submit?url=' + encodeURIComponent(window.location); return false"> 
 		<img src="https://secure.reddit.com/static/spreddit7.gif" alt="submit to reddit" border="0" /> 
 	</a>
+	
+	<a href="https://www.pinterest.com/pin/create/button/?url=<?= urlencode($og_url);?>"
+	    data-pin-do="buttonPin"
+	    data-pin-config="above">
+	    <img src="//assets.pinterest.com/images/pidgets/pin_it_button.png" />
+	</a>
+	
+	<a href="http://www.tumblr.com/share" title="Share on Tumblr" style="display:inline-block; text-indent:-9999px; overflow:hidden; width:81px; height:20px; background:url('https://platform.tumblr.com/v1/share_1.png') top left no-repeat transparent;">Share on Tumblr</a>
 	
 </div>

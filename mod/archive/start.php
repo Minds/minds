@@ -293,7 +293,12 @@ function minds_archive_page_handler($page) {
 					}
 					break;
 			}
-			
+		
+			if(!file_exists($filename)){
+				$user_path = date('Y/m/d/', $user->time_created) . $user->guid;
+				$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
+			}
+	
 			$contents = @file_get_contents($filename);
 
 			header("Content-type: image/jpeg");

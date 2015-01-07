@@ -25,6 +25,7 @@
     }
     
     if (get_input('embed')!='yes') {
+	
         $params = array(
                 'title' => elgg_echo('minds_widgets:tab:'.$tab),
                 'content' => $content,
@@ -35,5 +36,6 @@
 
         echo elgg_view_page(elgg_echo('minds_widgets:tab:'.$tab), $body);
     } else {
+	elgg_load_css('widgets');
         echo elgg_view_page(elgg_echo('minds_widgets:tab:'.$tab), $content, 'widget_embed');
     }

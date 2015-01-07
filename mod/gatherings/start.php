@@ -25,6 +25,16 @@ class start extends bases\plugin{
 					'priority' => 150	
 			));
 		}
+
+		if(elgg_is_logged_in()){
+			 elgg_register_menu_item('site', array(  
+					'name'=>'gathering',
+                                        'title'=>elgg_echo('gatherings:chat'),
+                                        'href'=>'gatherings/conversations',
+                                        'text' => '<span class="entypo">&#59168;</span> Messenger',
+                                        'priority' => 150
+                        ));
+		}
 		
 		if (\elgg_is_logged_in())
 			\elgg_extend_view('page/elements/topbar/right/actions', 'gatherings/topbar_icon');

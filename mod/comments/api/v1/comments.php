@@ -35,6 +35,10 @@ class comments implements interfaces\api{
             $comments = array();
 
         usort($comments, function($a, $b){ return $a->time_created - $b->time_created;});
+	foreach($comments as $k => $comment){
+		$owner = $comment->getOwnerEntity();
+		$comments[$k]->ownerObj = $owner->export();
+	}
         
         $response['comments'] = factory::exportable($comments);
        

@@ -127,5 +127,71 @@
     padding: 0;
 }
 
-<?php
 
+
+
+
+
+
+
+/* Widget generic */
+div.minds-widget div.widget-button {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 2px;
+    
+    float: left;
+    height: 25px;
+    display: -webkit-box !important;
+    display: -webkit-flex !important;
+    display: -moz-box !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -webkit-flex-align: center !important;
+    -ms-flex-align: center !important;
+    -webkit-align-items: center !important;
+    align-items: center !important;
+    
+    padding-right: 5px;
+}
+
+div.minds-widget div.widget-button a {
+    text-decoration: none;
+    color: black;
+}
+
+div.minds-widget div.widget-button img {
+    max-height: 25px;
+    margin-right: 5px;
+}
+
+div.minds-widget div.count {
+    float: left;
+    
+    margin-left: 5px;
+    height: 21px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 2px;
+    
+    margin-top: 2px !important;
+    margin-bottom: 2px;
+    
+    float: left;
+    display: -webkit-box !important;
+    display: -webkit-flex !important;
+    display: -moz-box !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -webkit-flex-align: center !important;
+    -ms-flex-align: center !important;
+    -webkit-align-items: center !important;
+    align-items: center !important;
+    
+}
+
+div.minds-share-button form {
+    padding: 0px !important;
+}
+
+/* Remind widget */

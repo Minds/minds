@@ -17,8 +17,8 @@ echo elgg_view('input/plaintext', array('name'=>'message', 'id'=>'post-input-box
 HTML;*/
 
 echo <<<HTML
-	<div class="post-post-preview">
-			<img class="post-post-preview-icon-img"/>
+	<div id="post-preview" class="post-post-preview">
+			<img id="photopreview" class="post-post-preview-icon-img"/>
 		<input type="text" name="title" class="post-post-preview-title"/>
 		<textarea type="text" name="description" class="post-post-preview-description"></textarea>
 		<input type="hidden" name="thumbnail" class="post-post-preview-icon"/>
@@ -28,7 +28,7 @@ HTML;
 
 
 
-$file_input = elgg_view('input/file', array('name'=>'attachment', 'class'=>'post-attachment-button'));
+$file_input = elgg_view('input/file', array('name'=>'attachment', 'class'=>'post-attachment-button', 'accept' => "image/*;capture=camera", 'onchange'=>"photoPreview(this)"));
 
 echo <<<HTML
 	<div class="post-attachment-button-override">
@@ -52,3 +52,18 @@ echo elgg_view('input/hidden', array('name'=>'access_id', 'value' => elgg_extrac
 echo elgg_view('input/submit', array('value'=>'Post'));
 ?>
 
+<script>
+    function photoPreview(input) {
+
+	if (input.files && input.files[0]) {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+		$('#post-preview').show();
+		$('#photopreview').attr('src', e.target.result);
+	    }
+
+	    reader.readAsDataURL(input.files[0]);
+	}
+    }
+</script>

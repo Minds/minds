@@ -158,15 +158,16 @@ body {
 .cms-footer{
 	background: #222;
 	width: 100%;
-	padding: 64px 0;
-	height: 110px;
+	/*padding: 64px 0;*/
+	height:115px;
 	display: block;
 	position: relative;
+	overflow:hidden;
 }
 .cms-footer > .inner{
 	width:900px;
 	display:block;
-	margin:auto;
+	margin:40px auto;
 }
 .cms-footer > .inner .cms-footer-nav{
 	float:left;
@@ -201,7 +202,7 @@ body {
  */
 
 .cms-page-body .hero{
-	margin-bottom:-230px;	
+	margin-bottom:-112px;	
 }
 .cms-page-body p, .cms-page-body h2{
 	font-family:"Lato", Helvetica, Arial;

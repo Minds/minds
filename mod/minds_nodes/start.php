@@ -10,6 +10,17 @@ use minds\core\plugins;
 
 class start extends bases\plugin{
 	
+	/**
+	 * Return the favicon of a remote domain
+	 * @param type $url The domain to retrieve.
+	 */
+	static function getIconFromMetadata($url) {
+	    
+	    // Use Google S2 for now to offload complexity and load. TODO: Discuss whether scraping is better
+	    return "https://www.google.com/s2/favicons?domain=$url";
+	    
+	}
+    
 	public function init(){
 		
 		/**
@@ -68,7 +79,10 @@ class start extends bases\plugin{
 	
 		// Override the return url on tier orders
 		\elgg_register_plugin_hook_handler('urls', 'pay', array($this, 'payOverride'));
-	   	
+		
+		// Node Icons - handle remote icons, cached icons etc
+		elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'minds\plugin\minds_nodes\start::iconUrlHook');	
+			   	
 	}
 
 	public function pagesetup(){
@@ -80,6 +94,95 @@ class start extends bases\plugin{
 			);
 			\elgg_register_menu_item('page', $params);
 		}
+		
+		if (elgg_is_logged_in()) {
+		    //if (self::getNodes(elgg_get_logged_in_user_entity(), true)) {
+			\elgg_register_menu_item('site', array(
+			    'name' => 'nodes',
+			    'text' => '<span class="entypo">&#xE817;</span> My sites',
+			    'href' => '#nodes-switcher',
+			    'title' => elgg_echo('nodes:mynodes'),
+			    'priority' => 9999, // Make sure we're last, so the sidebar selector works...
+			    'rel' => 'toggle'
+			));
+		   // }
+		}
+	}
+	
+	/**
+	 * Retrieve nodes/count of nodes belonging to a user, caching the result.
+	 * @param \minds\plugin\minds_nodes\ElggUser $user
+	 * @param array|int|false $count
+	 */
+	public static function getNodes(ElggUser $user = null, $count = false) {
+	    
+	    if (!$user) $user = elgg_get_logged_in_user_entity ();
+	    
+	    $params = array(
+		'type' => 'object',
+		'subtype' => 'node',
+		'count' => $count,
+		'owner_guid' => $user->guid
+	    );
+	    
+	    if (!$count) $params['limit'] = 999;
+	    
+	    $cacher = \minds\core\data\cache\factory::build();
+	    $key = "object::node::{$user->guid}";
+	    if ($count) $key.= "::count";
+	    
+	    $value = $cacher->get($key);
+	    if (!$value)
+	    {
+		//error_log('MPDEBUG - Value for key ' . $key . ' not in cache '  . print_r($params, true));
+		$value = elgg_get_entities($params);
+		$cacher->set($key, $value);
+	    } else {
+		//error_log('MPDEBUG - Value for key ' . $key . ' retrieved from cache ' . print_r($params, true));
+	    }
+	    
+	    return $value;
+	}
+	
+	public static function iconUrlHook($hook, $type, $returnvalue, $params) 
+	{
+	    $node = $params['entity'];
+	    $size = $params['size'];
+	    if (elgg_instanceof($node, 'object', 'node')) {
+
+		$icon = null;
+		if ($node->launched) {
+
+		    // Have we cached an icon recently?
+		    $label_ts = "cached_icon_{$size}_ts";
+		    $label_icon = "cached_icon_{$size}_url";
+		    if ($node->$label_ts > time() - (60*60*24*7)) {
+			$icon = $node->$label_icon;
+
+			//error_log('ICON Loaded from cache ' . $icon);
+		    }
+
+		    // No icon, attempt to retrieve it 
+		    if (!$icon) {
+			$icon = self::getIconFromMetadata($node->getURL());
+			if ($icon) {
+			    $node->$label_icon = $icon;
+			    $node->$label_ts = time();
+
+			    $node->save();
+
+			    //error_log('ICON Saving ' . $icon);
+			}
+		    }
+
+		    return $icon;
+		}
+
+		// No icon, return default
+		if (!$icon)
+		    return elgg_get_site_url() . '_graphics/icon.png';
+		    //elgg_get_site_url() . '_graphics/icons/default/'.$size.'.png';
+	    }
 	}
 	
 	/**
@@ -214,7 +317,7 @@ class start extends bases\plugin{
 		
 		if(!$pages[0]){
 			//does the user have any nodes setup? If so send them to the manage page
-			if($this->getNodes()){
+			if(self::getNodes(elgg_get_logged_in_user_entity(), true)){
 				$pages[0] = 'manage';
 			} else {
 			//if not then send them to the launch page
@@ -257,11 +360,6 @@ class start extends bases\plugin{
 				include('pages/minds_nodes/index.php');
 		}
 		return true;
-	}
-
-	public static function getNodes($owner_guid, $limit=12, $offset=""){
-		$nodes = elgg_get_entities(array('type'=>'object', 'subtype'=>'node', 'limit'=>$limit, 'offset'=>$offset));
-		return $nodes;
 	}
 	
 	public static function payOverride($hook, $type, $return, $params) {
