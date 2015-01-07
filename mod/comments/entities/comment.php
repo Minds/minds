@@ -46,4 +46,12 @@ class comment extends entities\entity{
 		return $entity->getURL();
 		
 	}
+
+	public function getExportableValues() {
+                return array_merge(parent::getExportableValues(), array(
+			'description',
+			'ownerObj'
+		));
+	}
+
 }
