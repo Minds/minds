@@ -25,7 +25,11 @@ class image extends entities\file{
 		if($this->time_created <= 1407542400)
 			$size = '';
 
-		$base_url = $CONFIG->cdn_url;
+		if(isset($CONFIG->cdn_url))
+			$base_url = $CONFIG->cdn_url;
+		else
+			$base_url = \elgg_get_site_url();
+
 		if($this->access_id != 2){
 			$base_url = \elgg_get_site_url();
 		}
@@ -139,4 +143,13 @@ class image extends entities\file{
 			'cinemr_guid',
 		));
 	}
+
+	/**
+         * Extend exporting
+         */
+        public function export(){
+                $export = parent::export();
+                $export['thumbnail_src'] = $this->getIconUrl();
+                return $export;
+        }
 }

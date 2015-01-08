@@ -124,4 +124,13 @@ class video extends object{
 			'cinemr_guid',
 		));
 	}
+
+	/**
+	 * Extend exporting
+	 */
+	public function export(){
+		$export = parent::export();
+		$export['thumbnail_src'] = $this->getIconUrl();
+		return $export;
+	}
 }

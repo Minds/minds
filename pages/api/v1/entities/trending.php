@@ -26,7 +26,6 @@ class trending implements interfaces\api{
         $options = array(
             'type' => 'object',
             'subtype' => NULL,
-            'owner_guid'=> NULL,
             'limit'=>12,
             'offset'=>''
             );
@@ -37,7 +36,14 @@ class trending implements interfaces\api{
         }
         
        
-        $entities = core\entities::get($options);
+	$opts = array('timespan' => get_input('timespan', 'day'));
+	$trending = new \MindsTrending(null, $opts);
+	$guids = $trending->getList($options);
+	if(!$guids){
+            return factory::response(array('status'=>'error', 'message'=>'not found'));
+        }
+	$options['guids'] = $guids;
+	$entities = core\entities::get($options);
         
         if($entities){
             $response['entities'] = factory::exportable($entities);
