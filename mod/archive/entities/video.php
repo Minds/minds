@@ -57,7 +57,7 @@ class video extends object{
 		if($this->access_id == 0)
 			$expires = time() + (60*60*60);
 		$url =  $cinemr::factory('media')->get($this->cinemr_guid."/transcodes/$transcode", $expires);
-		$cacher->set("$this->guid:transcode:$transcode", $url);
+		$cacher->set("$this->guid:transcode:$transcode", $url, 1440);
 		return $url;
 	}
 	
@@ -131,6 +131,10 @@ class video extends object{
 	public function export(){
 		$export = parent::export();
 		$export['thumbnail_src'] = $this->getIconUrl();
+		$export['src'] = array(
+			'360.mp4' => $this->getSourceUrl('360.mp4'),
+			'720.mp4' => $this->getSourceUrl('720.mp4')
+		);
 		return $export;
 	}
 }

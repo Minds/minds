@@ -21,11 +21,11 @@ class apcu extends abstractCacher{
 		return apc_fetch($key);
 	}
 	
-	public function set($key, $value){
+	public function set($key, $value, $ttl = 0){
 		if(!$this->installed)
 			return $this;
 		
-		apc_store($key, $value);
+		apc_store($key, $value, $ttl);
 		return $this;
 	}
 	

@@ -9,7 +9,7 @@ abstract class abstractCacher{
 
 	abstract public function get($key);
 	
-	abstract public function set($key, $value);
+	abstract public function set($key, $value, $ttl = 0);
 	
 	abstract public function destroy($key);
 	
