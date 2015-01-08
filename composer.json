@@ -12,7 +12,8 @@
 		"facebook/php-sdk-v4": "4.0.*",
   		"ivaynberg/select2":"master",
 		"tijsverkoyen/twitteroauth": "master",
-		"bshaffer/oauth2-server-php":"master"
+		"bshaffer/oauth2-server-php":"master",
+		"everyman/neo4jphp":"dev-master"
    	},
 	"repositories": [{
             "type": "vcs",
