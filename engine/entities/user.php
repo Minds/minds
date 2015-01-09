@@ -64,7 +64,7 @@ class user extends \ElggUser{
 	
 	public function export(){
 		$export = parent::export();
-		$export['subscribed'] = $this->isSubscribed(elgg_get_logged_in_user_guid());
+		$export['subscribed'] = elgg_get_logged_in_user_entity()->isSubscribed($this->guid);
 		return $export;
 	}	
 }

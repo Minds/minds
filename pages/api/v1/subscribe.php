@@ -12,7 +12,7 @@ use minds\entities;
 use minds\interfaces;
 use minds\api\factory;
 
-class subscriptions implements interfaces\api{
+class subscribe implements interfaces\api{
 
     /**
      * Returns the entities
@@ -38,8 +38,7 @@ class subscriptions implements interfaces\api{
      */
     public function post($pages){
         
-        
-        $success = elgg_get_logged_in_user_entity()->subscribe($pages[0]);
+	$success = elgg_get_logged_in_user_entity()->subscribe($pages[0]);
         $response = array('status'=>'success');
         
         if(!$success){
