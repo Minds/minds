@@ -398,6 +398,7 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 
 		if (elgg_instanceof($blog, 'object', 'blog') && $blog->canEdit()) {
 			$vars['entity'] = $blog;
+			$vars['autosave'] = "off";
 
 			$title .= ": \"$blog->title\"";
 
@@ -414,6 +415,7 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 			$content = elgg_echo('blog:error:cannot_edit_post');
 		}
 	} else {
+		$vars['autosave'] = "on";
 		elgg_push_breadcrumb(elgg_echo('blog:add'));
 		$body_vars = blog_prepare_form_vars(null);
 

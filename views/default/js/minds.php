@@ -75,7 +75,7 @@
 		 */
 		$(document).ready(function (){	
 			var form = $('.elgg-form-blog-save');
-                        if(form.length > 0){
+                        if(form.length > 0 && form.attr('autosave') != "off"){
 				var data = localStorage.getItem("blog-form");
 				if (null == data || $.isEmptyObject(data)) return; // nothing to do
 				$.each(JSON.parse(data), function (i, kv) {
