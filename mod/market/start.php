@@ -14,7 +14,7 @@ namespace minds\plugin\market;
 use minds\core;
 use minds\bases;
 
-class start extends bases\plugin{
+class start extends Components\Plugin{
 	
 	public function __construct(){
 		parent::__construct('market');

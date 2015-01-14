@@ -10,7 +10,7 @@ namespace minds\plugin\guard;
 use minds\bases;
 use minds\core;
 
-class start extends bases\plugin{
+class start extends Components\Plugin{
 	
 	public function __construct($plugin){
 		parent::__construct($plugin);	

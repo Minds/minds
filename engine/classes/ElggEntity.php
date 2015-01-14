@@ -86,7 +86,7 @@ abstract class ElggEntity extends ElggData implements
 	}
 	
 	protected function loadFromGUID($guid){
-		$db = new minds\core\data\call('entities');
+		$db = new Minds\Core\Data\Call('entities');
 		$row = $db->getRow($guid, array('limit'=>400));
 		$row['guid'] = $guid;
 		$this->loadFromArray($row);
@@ -1062,10 +1062,10 @@ abstract class ElggEntity extends ElggData implements
 			elgg_trigger_event('create', $this->type, $this);
 		}	
 
-		$db = new minds\core\data\call('entities');
+		$db = new Minds\Core\Data\Call('entities');
 		$result = $db->insert($this->guid, $this->toArray());
 		if($result && $timebased){
-			$db = new minds\core\data\call('entities_by_time');
+			$db = new Minds\Core\Data\Call('entities_by_time');
 			$data =  array($result => $result);
 		
 			foreach($this->getIndexKeys() as $index){
@@ -1238,11 +1238,11 @@ abstract class ElggEntity extends ElggData implements
 			}*/
 	
 			// Now delete the entity itself
-			$db = new minds\core\data\call('entities');
+			$db = new Minds\Core\Data\Call('entities');
 			$res = $db->removeRow($this->guid);
 	
 			
-			$db = new minds\core\data\call('entities_by_time');
+			$db = new Minds\Core\Data\Call('entities_by_time');
 			foreach($this->getIndexKeys() as $rowkey)
 				$db->removeAttributes($rowkey, array($this->guid), false);
 				
@@ -1550,7 +1550,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return int $guid
 	 */
 	 public function feature(){
-	 	$db = new minds\core\data\call('entities_by_time');
+	 	$db = new Minds\Core\Data\Call('entities_by_time');
 		
 	 	$g = new GUID(); 
 		$this->featured_id = $g->generate();
@@ -1574,7 +1574,7 @@ abstract class ElggEntity extends ElggData implements
 	 */
 	public function unFeature(){
 		
-		$db = new minds\core\data\call('entities_by_time');
+		$db = new Minds\Core\Data\Call('entities_by_time');
 		
 		if($this->featured_id){
 			//supports legacy imports
@@ -1586,7 +1586,7 @@ abstract class ElggEntity extends ElggData implements
 		$this->featured = 0;
 		$this->save();
 	
-		$db = new minds\core\data\call('entities');
+		$db = new Minds\Core\Data\Call('entities');
 		$result = $db->removeAttributes($this->guid, array('featured_id'));
 	
 		return true;

@@ -15,7 +15,7 @@ class view extends core\page implements interfaces\page{
 	public function get($pages){
 		$user_guid = get_input('user_guid', elgg_get_logged_in_user_guid());
 
-		$db = new \minds\core\data\call('entities_by_time');
+		$db = new \Minds\Core\Data\Call('entities_by_time');
 		$guids = $db->getRow('notifications:'.$user_guid, array('limit'=> get_input('limit', 5), 'offset'=>get_input('offset','')));
 		 \minds\plugin\notifications\notifications::resetCounter($user_guid);
 		if(!$guids){

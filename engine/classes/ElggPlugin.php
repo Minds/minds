@@ -88,7 +88,7 @@ class ElggPlugin extends ElggEntity {
 			//exit;
 		}	
 			// check if we're loading an existing plugin
-			$db = new minds\core\data\call('plugin');
+			$db = new Minds\Core\Data\Call('plugin');
 			$existing_plugin = $db->getRow($this->guid);
 			if($existing_plugin){	
 				foreach($existing_plugin as $k => $v){
@@ -134,7 +134,7 @@ class ElggPlugin extends ElggEntity {
 			$attributes[$k] = $v;
 		}
 
-		$db = new minds\core\data\call('plugin');
+		$db = new Minds\Core\Data\Call('plugin');
 		return $db->insert($this->guid, $attributes);
 
 	}

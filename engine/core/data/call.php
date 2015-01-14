@@ -4,7 +4,7 @@
  *
  */
 
-namespace minds\core\data;
+namespace Minds\Core\Data;
 
 use phpcassa\ColumnFamily;
 use phpcassa\ColumnSlice;
@@ -19,7 +19,7 @@ use phpcassa\UUID;
 use minds\core;
 use minds\core\config;
 
-class call extends core\base{
+class Call extends core\base{
 
 	static $keys = array();	
 	static $reads = 0;

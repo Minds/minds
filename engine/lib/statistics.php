@@ -20,7 +20,7 @@
 function get_entity_statistics($owner_guid = 0) {
 	global $CONFIG, $SUBTYPE_CACHE;
 	
-	$db = new minds\core\data\call('entities_by_time', NULL, NULL, 1000000, 100000);
+	$db = new Minds\Core\Data\Call('entities_by_time', NULL, NULL, 1000000, 100000);
 	
 	$entity_stats = array();
 	$owner_guid = (int)$owner_guid;
@@ -60,7 +60,7 @@ function get_entity_statistics($owner_guid = 0) {
 function get_number_users($show_deactivated = false) {
 	global $CONFIG;
 
-	$db = new minds\core\data\call('entities_by_time');
+	$db = new Minds\Core\Data\Call('entities_by_time');
 	$count = $db->countRow('user');
 	
 	return $count;

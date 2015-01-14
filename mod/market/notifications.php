@@ -13,7 +13,7 @@ use minds\core;
 use minds\bases;
 use minds\entities\user;
 
-class notifications extends bases\plugin{
+class notifications extends Components\Plugin{
 	
 	static public function send($params){
 		return \elgg_send_email(elgg_get_site_entity()->email, $params['to'], $params['subject'], $params['body']);

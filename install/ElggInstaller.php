@@ -1015,7 +1015,7 @@ class ElggInstaller {
 	 */
 	protected function checkDatabaseSettings($server, $keyspace) {
 		try{
-			$db = new minds\core\data\call(NULL, $keyspace, array($server));
+			$db = new Minds\Core\Data\Call(NULL, $keyspace, array($server));
 			$attrs = array(	  "strategy_options" => array("replication_factor" => "2"));	
 			$db->createKeyspace($attrs);
 			return true;
@@ -1085,7 +1085,7 @@ class ElggInstaller {
 		}
 		
 		try  {
-			$db = new minds\core\data\call(NULL, NULL,$CONFIG->cassandra->servers);	
+			$db = new Minds\Core\Data\Call(NULL, NULL,$CONFIG->cassandra->servers);	
 			$db->keyspaceExists();
 		} catch (Exception $e) {
 			register_error($e->getMessage());
@@ -1104,7 +1104,7 @@ class ElggInstaller {
 		global $CONFIG;
 		
 		try{
-			$db = new minds\core\data\call(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
+			$db = new Minds\Core\Data\Call(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
 			$db->installSchema();
 		} catch (Exception $e){
 			register_error($e->why);
@@ -1318,7 +1318,7 @@ class ElggInstaller {
 			'minds'
 		);
 		
-		$db = new \minds\core\data\call('plugin');
+		$db = new \Minds\Core\Data\Call('plugin');
 		foreach($defaults as $plugin_id){
 			try{
 				$db->insert($plugin_id, array('type'=>'plugin', 'active'=>1, 'access_id'=>2));

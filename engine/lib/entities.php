@@ -651,7 +651,7 @@ function get_entity($guid, $type = 'object') {
 		return $cached_entity;
 	}
 
-	$db = new minds\core\data\call('entities');
+	$db = new Minds\Core\Data\Call('entities');
 	$row = $db->getRow($guid);
 	if(!$row){
 		return false;
@@ -812,7 +812,7 @@ function elgg_get_entities(array $options = array()) {
 			//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 			if($options['guids']){
 			
-				$db = new minds\core\data\call('entities');
+				$db = new Minds\Core\Data\Call('entities');
 				$rows = $db->getRows($options['guids']);
 
 			} else{ 
@@ -834,7 +834,7 @@ function elgg_get_entities(array $options = array()) {
 						} 
 					}
 					if(!$options['count']){
-						$db = new minds\core\data\call('entities_by_time');
+						$db = new Minds\Core\Data\Call('entities_by_time');
 						$guids = $db->getRow($namespace, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=> $options['newest_first']));
 			
 						if(!$guids){
@@ -845,23 +845,23 @@ function elgg_get_entities(array $options = array()) {
 							unset($guids[$options['offset']]); //prevents looping...
 						}
 
-						$db = new minds\core\data\call('entities');
+						$db = new Minds\Core\Data\Call('entities');
 						$rows = $db->getRows(array_keys($guids));
 						if(!$rows){
 							return false;
 						}
 					
 					} else {
-						$db = new minds\core\data\call('entities_by_time');
+						$db = new Minds\Core\Data\Call('entities_by_time');
 						$count = $db->countRow($namespace);
 						return $count;
 					}
 				} else {
 					if($attrs){
-						$db = new minds\core\data\call('entities');
+						$db = new Minds\Core\Data\Call('entities');
 						$rows = $db->getByIndex($attrs, $options['offset'], $options['limit']);
 					} else {
-						$db = new minds\core\data\call('entities');
+						$db = new Minds\Core\Data\Call('entities');
 						$rows = $db->get($offset,"", $limit);
 					}
 				}

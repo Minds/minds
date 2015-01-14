@@ -298,7 +298,7 @@ function login(ElggUser $user, $persistent = false) {
 		$user->{'cookie:'.md5($code)} = $expires; //cookie_id => expires
 		setcookie("mindsperm", $code, $expires, "/");
 		//add to the user index cf
-		$db = new minds\core\data\call('user_index_to_guid');
+		$db = new Minds\Core\Data\Call('user_index_to_guid');
 		$db->insert('cookie:'. md5($code), array($user->getGUID() => $expires));
 	}
 	

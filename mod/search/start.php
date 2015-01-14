@@ -7,7 +7,7 @@ namespace minds\plugin\search;
 
 use minds\core;
 
-class start extends \minds\bases\plugin{
+class start extends \minds\Components\Plugin{
 	
 	public function init(){
 		$routes = core\router::registerRoutes($this->registerRoutes());

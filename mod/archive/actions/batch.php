@@ -17,7 +17,7 @@ $index->set($album_guid, $guids);
 /**
  * Now update the container guid for each entity (we are not loading the entities here as we don't want to read, just write)
  */
-$db = new minds\core\data\call('entities');
+$db = new Minds\Core\Data\Call('entities');
 $data = array('container_guid'=>$album_guid);
 if($container instanceof ElggGroup){
 	$data['access_id'] = $container->guid;

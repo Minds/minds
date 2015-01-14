@@ -302,7 +302,7 @@ class MindsMultiInstaller extends ElggInstaller {
 		global $CONFIG;
 		
 		try{
-			$db = new minds\core\data\call(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
+			$db = new Minds\Core\Data\Call(null, $CONFIG->cassandra->keyspace, $CONFIG->cassandra->servers);
 			if(!$db->keyspaceExists($CONFIG->cassandra->keyspace)){
 				$attrs = array(	  "strategy_options" => array("replication_factor" => "2"));	
 				$db->createKeyspace($attrs);
@@ -327,7 +327,7 @@ class MindsMultiInstaller extends ElggInstaller {
         global $CONFIG;
 
 
-	 $db = new \minds\core\data\call('plugin');
+	 $db = new \Minds\Core\Data\Call('plugin');
         // Now, specify what plugins are visible for any given domain
         $domain = $CONFIG->elgg_multisite_settings;
         $user_editable_plugins = array(

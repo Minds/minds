@@ -7,7 +7,7 @@ require(dirname(dirname(__FILE__)) . '/start.php');
 elgg_set_ignore_access();
 
 try{
-	$db = new minds\core\data\call();
+	$db = new Minds\Core\Data\Call();
 	$db->createCF('log');
 }catch(Exception $e){
 	var_dump($e);

@@ -22,7 +22,7 @@ class notifications implements interfaces\api{
     public function get($pages){
 	$response = array();
 
-	$db = new \minds\core\data\call('entities_by_time');
+	$db = new \Minds\Core\Data\Call('entities_by_time');
        	$guids = $db->getRow('notifications:'.elgg_get_logged_in_user_guid(), array('limit'=> get_input('limit', 5), 'offset'=>get_input('offset','')));
         if(!$guids){
             $response = array();

@@ -7,20 +7,20 @@ require(dirname(dirname(__FILE__)) . '/start.php');
 elgg_set_ignore_access();
 
 try{
-	$db = new minds\core\data\call();
+	$db = new Minds\Core\Data\Call();
 	$db->createCF('relationships');
 }catch(Exception $e){
 	
 }
 
 try{
-	$db = new minds\core\data\call();
+	$db = new Minds\Core\Data\Call();
 	$db->createCF('entities', array('type'=>'UTF8Type'));
 }catch(Exception $e){
 	
 }
 
-$entities = new minds\core\data\call('entities');
+$entities = new Minds\Core\Data\Call('entities');
 
 $site = elgg_get_site_entity();
 $entities->insert($site->guid, $site->toArray());

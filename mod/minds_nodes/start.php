@@ -8,7 +8,7 @@ use minds\bases;
 use minds\core;
 use minds\core\plugins;
 
-class start extends bases\plugin{
+class start extends Components\Plugin{
 	
 	/**
 	 * Return the favicon of a remote domain

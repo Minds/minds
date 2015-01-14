@@ -8,7 +8,7 @@ namespace minds\plugin\social\services;
 use minds\bases;
 use minds\core;
 
-class build extends bases\plugin{
+class build extends Components\Plugin{
 
 	static public function build($service){
 		$class_name = "minds\\plugin\\social\\services\\$service";

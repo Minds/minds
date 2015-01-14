@@ -13,7 +13,7 @@ namespace minds\plugin\gatherings;
 use minds\bases;
 use minds\core;
 
-class start extends bases\plugin{
+class start extends Components\Plugin{
 	
 	public function init(){
 		

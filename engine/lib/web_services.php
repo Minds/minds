@@ -748,7 +748,7 @@ function create_api_user($site_guid) {
 		($site_guid, '$public', '$secret')");
 
 */
-        $db = new minds\core\data\call('api_users');
+        $db = new Minds\Core\Data\Call('api_users');
         $insert = $db->insert($public, array('secret' => $secret));
         
 	if ($insert) {
@@ -772,7 +772,7 @@ function get_api_user($site_guid, $api_key) {
 
 	$site_guid = (int)$site_guid;
         
-        $db = new minds\core\data\call('api_users');
+        $db = new Minds\Core\Data\Call('api_users');
         
         if ($api_user = $db->getRow($api_key))
         {
@@ -895,7 +895,7 @@ function create_user_token($username, $expire = 60) {
 		return false;
 	}
 
-	$db = new minds\core\data\call('token');
+	$db = new Minds\Core\Data\Call('token');
 	if ($db->insert($token, array( 'owner_guid' => $user->guid, 'site_guid' => $site_guid, 'expires' => $time))) {
 		return $token;
 	}
@@ -973,7 +973,7 @@ function validate_user_token($token, $site_guid) {
 
 	$time = time();
 	try{
-		$db = new minds\core\data\call('token');
+		$db = new Minds\Core\Data\Call('token');
 		$user = $db->getRow($token);
 	} catch(Exception $e){
 		var_dump($e); 
@@ -1012,7 +1012,7 @@ function remove_user_token($token, $site_guid) {
 
 	/*return delete_data("DELETE from {$CONFIG->dbprefix}users_apisessions
 		where site_guid=$site_guid and token='$token'");*/
-	$db = new minds\core\data\call('token');
+	$db = new Minds\Core\Data\Call('token');
 	return $db->removeRow($token);
 }
 
@@ -1035,7 +1035,7 @@ function remove_expired_user_tokens() {
                 )
         ))) {
             foreach ($result as $guid => $obj){
-            	$db = new minds\core\data\call('token');
+            	$db = new Minds\Core\Data\Call('token');
            		$db->removeRow($guid);
             }
                 

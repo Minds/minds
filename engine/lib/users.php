@@ -72,7 +72,7 @@ function create_user_entity(array $options = array()) {
 
 	$options['username'] = strtolower($options['username']);
 	
-	$db = new minds\core\data\call('entities');
+	$db = new Minds\Core\Data\Call('entities');
 	$result = $db->insert($options['guid'], $options);
 	
 	return $result;	
@@ -315,10 +315,10 @@ function user_add_friend($user_guid, $friend_guid) {
 	}
 	
 	//add this this users list of subscriptions
-	$friends = new minds\core\data\call('friends');
+	$friends = new Minds\Core\Data\Call('friends');
 	$friends->insert($user_guid, array($friend_guid => time()));
 	//add user to friends list of subscriptions
-	$friendsof = new minds\core\data\call('friendsof');
+	$friendsof = new Minds\Core\Data\Call('friendsof');
 	$friendsof->insert($friend_guid, array($user_guid => time()));
 
 	//hack - update session!
@@ -349,9 +349,9 @@ function user_remove_friend($user_guid, $friend_guid) {
 		}
 	}*/
 
-	$friends = new minds\core\data\call('friends');
+	$friends = new Minds\Core\Data\Call('friends');
 	$friends->removeAttributes($user_guid, array($friend_guid));
-	$friendsof = new minds\core\data\call('friendsof');
+	$friendsof = new Minds\Core\Data\Call('friendsof');
 	$friendsof->removeAttributes($friend_guid, array($user_guid));	
 
 	//hack - update session!
@@ -395,13 +395,13 @@ $offset = "", $output = 'entities') {
 	}
 
 	if(!$row = $cache->load($user_guid)){
-		$db = new minds\core\data\call('friends');
+		$db = new Minds\Core\Data\Call('friends');
 		$row = $db->getRow($user_guid, array('limit' => $limit, 'offset' => $offset));
 		$cache->save($user_guid,$row);
 	}
 
 	if($output == 'entities'){
-	//	$db = new minds\core\data\call('user');
+	//	$db = new Minds\Core\Data\Call('user');
 	//	$guids = $db->getRows($row);
 		$row = elgg_get_entities(array('type'=>'user', 'guids'=>array_keys($row)));
 	}
@@ -430,7 +430,7 @@ $offset = "", $output = 'entities') {
 	}
 
     if(!$row = $cache->load($user_guid)){
-		$db = new minds\core\data\call('friendsof');
+		$db = new Minds\Core\Data\Call('friendsof');
 		$row = $db->getRow($user_guid, array( 'limit' => $limit, 'offset' => $offset));
 		$cache->save($user_guid, $row);
 	}
@@ -574,7 +574,7 @@ function get_user($guid) {
  */
 function get_user_index_to_guid($index){
 	try{
-		$db = new minds\core\data\call('user_index_to_guid');
+		$db = new Minds\Core\Data\Call('user_index_to_guid');
 		$row = $db->getRow($index);
 		if(!$row || !is_array($row)){
 			return false;
@@ -629,7 +629,7 @@ function get_user_by_username($username) {
 function get_user_by_code($code) {
 	global $CONFIG, $CODE_TO_GUID_MAP_CACHE;
 
-	$index = new minds\core\data\call('user_index_to_guid');
+	$index = new Minds\Core\Data\Call('user_index_to_guid');
 	$guid = $index->getRow('code:'.$code);	
 
     $entity = get_entity($guid, 'user');
@@ -644,7 +644,7 @@ function get_user_by_code($code) {
 function get_user_by_cookie($cookie){
 
 	try{
-		$db = new minds\core\data\call('user_index_to_guid');
+		$db = new Minds\Core\Data\Call('user_index_to_guid');
 		$results = $db->getRow("cookie:$cookie");
 	} catch(Exception $e){
 		return false;

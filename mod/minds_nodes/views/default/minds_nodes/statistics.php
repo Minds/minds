@@ -3,7 +3,7 @@
 $user = elgg_get_page_owner_entity();
 $rows = '';
 
-$db = new minds\core\data\call('entities_by_time');
+$db = new Minds\Core\Data\Call('entities_by_time');
 $count = $db->countRow('object:node:referrer:'.$user->guid);
 
 $rows .= <<< END

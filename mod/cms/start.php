@@ -10,7 +10,7 @@ namespace minds\plugin\cms;
 use minds\bases;
 use minds\core;
 
-class start extends bases\plugin{
+class start extends Components\Plugin{
 	
 	public function init(){
 		

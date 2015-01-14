@@ -333,7 +333,7 @@ function get_all_private_settings($entity_guid, $entity_type) {
 function set_private_setting($entity_guid, $entity_type, $name, $value) {
 	global $CONFIG;
 
-	$db = new minds\core\data\call('entities');
+	$db = new Minds\Core\Data\Call('entities');
 	$result = $db->insert($entity_guid, array(
 		$name => $value
 	));
@@ -366,7 +366,7 @@ function remove_private_setting($entity_guid, $name) {
 		return false;
 	}
 
-	$db = new minds\core\data\call('entities');
+	$db = new Minds\Core\Data\Call('entities');
 	$result = $db->removeAttributes($entity_guid, array($name));
 
 

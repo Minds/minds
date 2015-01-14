@@ -49,7 +49,7 @@ $posted = 0, $annotation_id = 0, $timelines = array()) {
 	$serialized_object = serialize($object);
 
 	// Attempt to save river item; return success status
-	$db = new minds\core\data\call('newsfeed');
+	$db = new Minds\Core\Data\Call('newsfeed');
 	$id = $db->insert(0, array(
 					'subject_guid'=>$subject_guid,
 					'object_guid'=>$object_guid,
@@ -66,7 +66,7 @@ $posted = 0, $annotation_id = 0, $timelines = array()) {
 	 * Hack to stop featured items from entering the entire 
 	 */
 	if(count($timelines) > 0){
-		$db = new minds\core\data\call('timeline');
+		$db = new Minds\Core\Data\Call('timeline');
 		foreach($timelines as $timeline)
 			$db->insert($timeline, array($id => $id));
 	} else {
@@ -79,12 +79,12 @@ $posted = 0, $annotation_id = 0, $timelines = array()) {
 		array_push($followers, $subject_guid);//add to their own timeline
 		array_push($followers, $object->container_guid); //add to containers timeline
 		foreach($followers as $follower_guid){
-			$db = new minds\core\data\call('timeline');
+			$db = new Minds\Core\Data\Call('timeline');
 			$db->insert($follower_guid, array($id => time()));
 		}
 	
 		//place on users own personal line
-		$db = new minds\core\data\call('timeline');
+		$db = new Minds\Core\Data\Call('timeline');
 		$db->insert('personal:'.$subject_guid, array($id => time()));
 	}
 
@@ -157,13 +157,13 @@ function elgg_delete_river(array $options = array()) {
 		//container_guid
 		array_push($followers, $object->container_guid);
 
-		$db = new minds\core\data\call('timeline');
+		$db = new Minds\Core\Data\Call('timeline');
 		foreach($followers as $follower){
 			$db->removeAttributes($follower, array($item->id));
 		}
 
 		//remove from the main newsfeed now
-		$db = new minds\core\data\call('newsfeed');
+		$db = new Minds\Core\Data\Call('newsfeed');
 		$db->removeRow($item->id);
 
 	}
@@ -202,7 +202,7 @@ function elgg_get_river(array $options = array()) {
 	//no params, then get the public line
 	if($options['type'] == 'timeline'){
 		
-		$timeline = new minds\core\data\call('timeline');
+		$timeline = new Minds\Core\Data\Call('timeline');
 		$row = $timeline->getRow($options['owner_guid'], array('offset'=>$options['offset'], 'limit'=>$options['limit']));
 		if(!$row)
 			return false;
@@ -214,13 +214,13 @@ function elgg_get_river(array $options = array()) {
         	}
 
 		if($ids){
-			$newsfeed = new minds\core\data\call('newsfeed');
+			$newsfeed = new Minds\Core\Data\Call('newsfeed');
 			$rows = $newsfeed->getRows($ids);
 		}
 
 	} elseif($options['type'] == 'newsfeed'){
 		
-		$db = new minds\core\data\call('newsfeed');
+		$db = new Minds\Core\Data\Call('newsfeed');
 		
 		if($ids = $options['ids']){
 

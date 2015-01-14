@@ -74,7 +74,7 @@ class plugins extends base{
 		
 		} else {
 					
-			$db = new \minds\core\data\call('plugin');
+			$db = new \Minds\Core\Data\Call('plugin');
 			$rows = $db->getRows($plugins);
 			self::saveToCache("plugins:$status", $rows);
 			

@@ -61,7 +61,7 @@ class ElggNotificationEmail extends ElggNotification {
 		return $return;*/
 		try{
 			
-			$db = new minds\core\data\call('entities_by_time');
+			$db = new Minds\Core\Data\Call('entities_by_time');
 			$guids = $db->getRow('notification:subscriptions:'.$this->subscription, array('offset'=>$this->last_sent ?: $offset, 'limit'=>$limit));	
 			unset($guids[$this->last_sent]);
 
@@ -116,7 +116,7 @@ class ElggNotificationEmail extends ElggNotification {
 	}
 
 	public function delete(){
-		$db = new minds\core\data\call($this->type);
+		$db = new Minds\Core\Data\Call($this->type);
 		return $db->removeRow($this->guid);
 	}
 }

@@ -7,7 +7,7 @@ namespace minds\plugin\minder;
 use minds\bases;
 use minds\core\router;
 
-class start extends bases\plugin{
+class start extends Components\Plugin{
 	
 	public function __construct(){
 		parent::__construct('minder');	

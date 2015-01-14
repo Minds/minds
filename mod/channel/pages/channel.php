@@ -124,7 +124,7 @@ class channel extends core\page implements interfaces\page{
 				)); 
 				break;
 			case 'subscribers':
-				$db = new \minds\core\data\call('friendsof');
+				$db = new \Minds\Core\Data\Call('friendsof');
 				$subscribers= $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
 				$users = array();
 				foreach($subscribers as $guid => $subscriber){
@@ -139,7 +139,7 @@ class channel extends core\page implements interfaces\page{
 				$content .= elgg_view_entity_list($users,array('list_class'=>'x2', 'masonry'=>false));
 				break;
 			case 'subscriptions':
-				$db = new \minds\core\data\call('friends');
+				$db = new \Minds\Core\Data\Call('friends');
 				$subscriptions = $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
 				$users = array();
 				foreach($subscriptions as $guid => $subscription){

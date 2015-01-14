@@ -28,7 +28,7 @@ class comment extends entities\entity{
 	}
 	
 	public function delete(){
-		$db = new \minds\core\data\call('entities');
+		$db = new \Minds\Core\Data\Call('entities');
 		$db->removeRow($this->guid);
 		
 		$indexes = new \minds\core\data\indexes('comments');

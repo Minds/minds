@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "67c915b89b527d0e6b4fbb4f117736d7",
+    "hash": "7df72baf149b183bee33c3a188c4c6fd",
     "packages": [
         {
             "name": "abeautifulsite/jquery-minicolors",
@@ -634,8 +634,14 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git",
+                "url": "git@github.com:minds/minds-php-sdk.git",
                 "reference": "dba40df8c2ac1ec501626e645f5ffaa13f57c5ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/minds/minds-php-sdk/zipball/dba40df8c2ac1ec501626e645f5ffaa13f57c5ce",
+                "reference": "dba40df8c2ac1ec501626e645f5ffaa13f57c5ce",
+                "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
@@ -649,6 +655,10 @@
                 ]
             },
             "description": "Minds PHP SDK",
+            "support": {
+                "source": "https://github.com/minds/minds-php-sdk/tree/master",
+                "issues": "https://github.com/minds/minds-php-sdk/issues"
+            },
             "time": "2014-10-21 17:55:40"
         },
         {
@@ -729,12 +739,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
-                "reference": "d69ecbc1706eae3c4037f807dafb31e9b9aace85"
+                "reference": "dd99971e5042cccddba67b266b3406077eb573a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/d69ecbc1706eae3c4037f807dafb31e9b9aace85",
-                "reference": "d69ecbc1706eae3c4037f807dafb31e9b9aace85",
+                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/dd99971e5042cccddba67b266b3406077eb573a8",
+                "reference": "dd99971e5042cccddba67b266b3406077eb573a8",
                 "shasum": ""
             },
             "require": {
@@ -769,7 +779,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2014-12-22 20:09:48"
+            "time": "2015-01-11 03:04:24"
         },
         {
             "name": "pimple/pimple",
@@ -906,28 +916,28 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "2.7.x-dev",
+            "version": "dev-master",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "f812eb83d21f4d8ab2ab67262590c508905922ee"
+                "reference": "fc68ffa937eb0cf415c682e3cb1141748b67aba5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/f812eb83d21f4d8ab2ab67262590c508905922ee",
-                "reference": "f812eb83d21f4d8ab2ab67262590c508905922ee",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/fc68ffa937eb0cf415c682e3cb1141748b67aba5",
+                "reference": "fc68ffa937eb0cf415c682e3cb1141748b67aba5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=5.5.9"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.0,>=2.0.5|~3.0.0",
-                "symfony/dependency-injection": "~2.6|~3.0.0",
-                "symfony/expression-language": "~2.6|~3.0.0",
-                "symfony/stopwatch": "~2.3|~3.0.0"
+                "symfony/config": "~2.7|~3.0",
+                "symfony/dependency-injection": "~2.7|~3.0",
+                "symfony/expression-language": "~2.7|~3.0",
+                "symfony/stopwatch": "~2.7|~3.0"
             },
             "suggest": {
                 "symfony/dependency-injection": "",
@@ -936,7 +946,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.7-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -960,7 +970,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2015-01-05 15:02:26"
+            "time": "2015-01-08 17:12:45"
         },
         {
             "name": "symfony/process",
@@ -969,16 +979,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process.git",
-                "reference": "0180c01f9a0d4ce8fc0f3c89860345965a2a7e17"
+                "reference": "eb512e3b08841f1e0e39960d69109e47c729988b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/0180c01f9a0d4ce8fc0f3c89860345965a2a7e17",
-                "reference": "0180c01f9a0d4ce8fc0f3c89860345965a2a7e17",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/eb512e3b08841f1e0e39960d69109e47c729988b",
+                "reference": "eb512e3b08841f1e0e39960d69109e47c729988b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=5.3.9"
             },
             "type": "library",
             "extra": {
@@ -1007,7 +1017,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
-            "time": "2015-01-07 15:58:19"
+            "time": "2015-01-09 06:51:41"
         },
         {
             "name": "thobbs/phpcassa",

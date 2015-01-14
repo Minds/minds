@@ -80,7 +80,7 @@ class message extends object{
 	}
 	
 	public function delete(){
-		$db = new \minds\core\data\call('entities');
+		$db = new \Minds\Core\Data\Call('entities');
 		return $db->removeRow($this->guid);
 	}
 	

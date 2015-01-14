@@ -14,7 +14,7 @@ use minds\bases;
 use minds\core;
 use ElggMenuItem;
 
-class start extends bases\plugin{
+class start extends Components\Plugin{
 	
 	public function init(){
 		elgg_extend_view('css/elgg', 'thumbs/css');

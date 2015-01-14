@@ -141,7 +141,7 @@ class blockchain extends core\base{
 		error_log("Bitcoin: Cancelling order $order_guid");
 		
 		// Look for any future subscriptions and delete
-		$db = new \minds\core\data\call('entities_by_time');
+		$db = new \Minds\Core\Data\Call('entities_by_time');
 		if ($guids = $db->getRow('object:pay:blockchain:subscription', array('offset'=> $order_guid, 'limit'=>1))) {
 		    $subscription = get_entity($guids[0], 'object');
 		
@@ -292,7 +292,7 @@ class blockchain extends core\base{
 			    error_log("Bitcoin: Subscription created, next subscription is $guid");
 			    
 			    // Create a lookup, so we can easily cancel this order in future
-			    $db = new \minds\core\data\call('entities_by_time');
+			    $db = new \Minds\Core\Data\Call('entities_by_time');
 			    $db->insert('object:pay:blockchain:subscription', array($order->guid => $guid));
 			}
 			

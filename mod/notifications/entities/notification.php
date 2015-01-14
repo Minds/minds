@@ -21,7 +21,7 @@ class notification extends entities\entity{
 
 		$guid = parent::save(false);
 		
-		$db = new \minds\core\data\call('entities_by_time');
+		$db = new \Minds\Core\Data\Call('entities_by_time');
 		$db->insert('notifications:'.$this->to_guid, array($this->guid => $this->guid));
 
 		\minds\plugin\notifications\notifications::increaseCounter($this->to_guid);
@@ -33,7 +33,7 @@ class notification extends entities\entity{
 		
 		parent::delete();
 		
-		$db = new \minds\core\data\call('entities_by_time');
+		$db = new \Minds\Core\Data\Call('entities_by_time');
 		$db->removeAttributes('notifications:' . $this->to_guid, array($this->guid));
 		
 	}
