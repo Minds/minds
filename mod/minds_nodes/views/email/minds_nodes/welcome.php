@@ -2,7 +2,7 @@
 $node = $vars['node'];
 ?>
 
-<h1>Congratulations on your launching <?= $node->domain ?>!</h1> 
+<h1>Congratulations on launching <?= $node->domain ?>!</h1> 
 
 <p>If you need a hand getting setup, feel free to reply to this email. </p>
 
