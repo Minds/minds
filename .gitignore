@@ -6,6 +6,7 @@
 /2
 #ignore composer
 /vendor
+/components
 # ignore IDE/hidden/OS cache files
 .*
 *~
