@@ -32,6 +32,31 @@ class Subscriptions implements Interfaces\PreparedInterface{
     }
     
     /**
+     * Import bulk users
+     */
+    public function createBulkUsers(array $users = array()){
+        foreach($users as $user){
+           $exp[] = array(
+                        'username'=>$user->username,
+                        'guid'=>$user->guid
+                        );
+        }
+        $this->template = "FOREACH (u IN " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp))  . " | MERGE(user:User {guid: u.guid, username: u.username}))";
+        return $this;
+    }
+    
+    /**
+     * Import bulk subscriptions
+     */
+     public function createSubscriptions(array $subscriptions = array()){
+         
+     }
+     
+     /**
+      * Import bulk subscriber
+      */
+    
+    /**
      * Create a subscription
      * @param User $user
      * @param User $subscriber
