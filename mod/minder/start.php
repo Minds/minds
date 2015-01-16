@@ -4,7 +4,7 @@
  */
 namespace minds\plugin\minder;
 
-use minds\bases;
+use Minds\Components;
 use minds\core\router;
 
 class start extends Components\Plugin{

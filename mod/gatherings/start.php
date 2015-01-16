@@ -10,7 +10,7 @@
 
 namespace minds\plugin\gatherings;
 
-use minds\bases;
+use Minds\Components;
 use minds\core;
 
 class start extends Components\Plugin{

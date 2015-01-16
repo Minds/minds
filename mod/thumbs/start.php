@@ -10,7 +10,7 @@
 
 namespace minds\plugin\thumbs;
 
-use minds\bases;
+use Minds\Components;
 use minds\core;
 use ElggMenuItem;
 

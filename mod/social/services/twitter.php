@@ -7,7 +7,7 @@
 
 namespace minds\plugin\social\services;
 
-use minds\bases;
+use Minds\Components;
 use minds\core;
 use TijsVerkoyen;
 

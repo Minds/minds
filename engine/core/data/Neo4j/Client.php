@@ -17,7 +17,9 @@ class Client implements Interfaces\ClientInterface{
     }
     
     public function request(Interfaces\PreparedInterface $request){
-        
+        $build = $request->build();
+        $query = new \Everyman\Neo4j\Cypher\Query($this->neo4j, $build['string'], $build['values']);
+        return $query->getResultSet();
     }
     
 }    

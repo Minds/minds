@@ -4,7 +4,7 @@
  */
 namespace minds\plugin\minds_nodes;
 
-use minds\bases;
+use Minds\Components;
 use minds\core;
 use minds\core\plugins;
 

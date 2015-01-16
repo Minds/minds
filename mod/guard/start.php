@@ -7,7 +7,7 @@
  */
 namespace minds\plugin\guard;
 
-use minds\bases;
+use Minds\Components;
 use minds\core;
 
 class start extends Components\Plugin{

@@ -13,13 +13,7 @@ class minds extends base{
 	/**
 	 * Initialise the site
 	 */
-	public function init(){
-	    $cypher = new \Minds\Core\Data\Neo4j\Prepared\CypherQuery();
-      //  $cypher->
-		$neo = \Minds\Core\Data\Client::build('neo4j');
-        var_dump($neo->request($cypher));
-        exit;
-	}
+	public function init(){}
 	
 	/**
 	 * Start the minds engine

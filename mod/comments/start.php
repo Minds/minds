@@ -7,7 +7,7 @@
 
 namespace minds\plugin\comments;
 
-use minds\bases;
+use Minds\Components;
 class start extends \minds\plugin\comments\comments{
 
 	

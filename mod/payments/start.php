@@ -5,7 +5,7 @@
 
 namespace minds\plugin\payments;
 
-use minds\bases;
+use Minds\Components;
 use minds\core;
 
 class start extends Components\Plugin{
