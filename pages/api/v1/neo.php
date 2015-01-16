@@ -20,6 +20,21 @@ class neo implements interfaces\api{
      * API:: /v1/neo/
      */      
     public function get($pages){
+        $neo = \Minds\Core\Data\Client::build('neo4j');
+        $cypher = new \Minds\Core\Data\Neo4j\Prepared\CypherQuery();        
+        
+        $prepared =  new \Minds\Core\Data\Neo4j\Prepared\Subscriptions();
+        //create john
+        $neo->request($prepared->createUser(new entities\user('john')));
+        //create mark
+        $neo->request($prepared->createUser(new entities\user('mark')));
+         
+        $prepared->createSubscription(new entities\user('john'), elgg_get_logged_in_user_entity());
+        $req = $neo->request($prepared);
+        
+        $req = $neo->request($prepared->getSubscribers(new entities\user('john')));
+        var_dump($req);
+        exit;
 
         $neo = \Minds\Core\Data\Client::build('neo4j');
         $cypher = new \Minds\Core\Data\Neo4j\Prepared\CypherQuery();
