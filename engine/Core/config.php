@@ -6,7 +6,7 @@
  * @todo - make this not an array access but simple 1 param
  * @todo - make so we don't have a global $CONFIG. 
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class config extends base implements \ArrayAccess{
 	

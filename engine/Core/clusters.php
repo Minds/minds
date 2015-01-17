@@ -2,7 +2,7 @@
 /**
  * Minds clusters controller
  */
-namespace minds\core;
+namespace Minds\Core;
 
 
 class clusters extends base{

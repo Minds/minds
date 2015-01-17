@@ -7,7 +7,7 @@ namespace minds\plugin\market\entities;
 
 use minds\entities;
 use minds\plugin\market\entities\basket;
-use minds\core;
+use Minds\Core;
 
 class order extends entities\object{
 

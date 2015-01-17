@@ -88,9 +88,9 @@ function blog_get_page_content_read($guid = NULL) {
 			)));
 		$return['class'] = 'content-carousel';
 	} else {
-		$cacher = minds\core\data\cache\factory::build();
+		$cacher = Minds\Core\data\cache\factory::build();
 		if(!$carousels = $cacher->get("object:carousel:user:$blog->owner_guid") && $carousels != 'not-set'){
-			$carousels = minds\core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$blog->owner_guid));
+			$carousels = Minds\Core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$blog->owner_guid));
 			$cacher->set("object:carousel:user:$blog->owner_guid", $carousels ?: 'not-set');
 		} elseif($carousels == 'not-set'){
 			$carousels = FALSE;
@@ -218,7 +218,7 @@ function blog_get_trending_page_content_list() {
 	$limit = get_input('limit', 8);
 	$offset = get_input('offset', 0);
 
-	$cacher = minds\core\data\cache\factory::build();
+	$cacher = Minds\Core\data\cache\factory::build();
 	$hash = md5(elgg_get_site_url());
 	if(!$guids = $cacher->get("$hash:trending-guids:$limit:$offset")){
 	
@@ -620,7 +620,7 @@ function blog_sidebar($blog){
 	}
 
 	//show featured blogs
-	$return .= minds\core\views::view('blog/featured');
+	$return .= Minds\Core\views::view('blog/featured');
 
 //	$return .= elgg_view('minds/ads', array('type'=>'content.ad-side'));
 	

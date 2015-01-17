@@ -5,7 +5,7 @@
 namespace minds\plugin\oauth2;
 
 use OAuth2;
-use minds\core\data;
+use Minds\Core\data;
 
 class storage implements OAuth2\Storage\AccessTokenInterface, OAuth2\Storage\RefreshTokenInterface,
 OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterface, OAuth2\Storage\AuthorizationCodeInterface {

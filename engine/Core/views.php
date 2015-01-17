@@ -2,7 +2,7 @@
 /**
  * for now, a clean wrapper around the old elgg view system, with the added benefit of static caching of view.
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class views extends base{
 	

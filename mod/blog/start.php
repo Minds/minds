@@ -19,10 +19,10 @@ elgg_register_event_handler('init', 'system', 'blog_init');
  */
 function blog_init() {
 	
-	minds\core\views::cache('blog/featured');
+	Minds\Core\views::cache('blog/featured');
 	
 	$path = "minds\\plugin\\blog";
-	minds\core\router::registerRoutes(array(
+	Minds\Core\router::registerRoutes(array(
 			'/blog/list' => "$path\\pages\\lists"
 		));
 

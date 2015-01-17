@@ -2,7 +2,7 @@
 
 namespace minds\plugin\bitcoin\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 //use minds\plugin\comments;
 use minds\plugin\bitcoin\entities;

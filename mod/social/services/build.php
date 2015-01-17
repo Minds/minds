@@ -6,7 +6,7 @@
 namespace minds\plugin\social\services;
 
 use Minds\Components;
-use minds\core;
+use Minds\Core;
 
 class build extends Components\Plugin{
 

@@ -1,6 +1,6 @@
 <?php
 
-use minds\core;
+use Minds\Core;
 
 class routerTest extends \Minds_PHPUnit_Framework_TestCase {
 

@@ -4,7 +4,7 @@
  */
 namespace minds\plugin\wp\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\plugin\minds_wordpress;
 

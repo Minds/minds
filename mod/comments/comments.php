@@ -5,7 +5,7 @@
  
 namespace minds\plugin\comments;
 
-use minds\core;
+use Minds\Core;
 
 class comments extends \ElggPlugin{
 	

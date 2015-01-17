@@ -6,7 +6,7 @@
  */
 namespace minds\plugin\minds_wordpress;
 
-use minds\core;
+use Minds\Core;
 
 class minds_wordpress extends \ElggPlugin{
 	

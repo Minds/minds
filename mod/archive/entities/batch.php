@@ -7,7 +7,7 @@
 namespace minds\plugin\archive\entities;
 
 use minds\entities\object;
-use minds\core\data;
+use Minds\Core\data;
 
 class batch extends object{
 	

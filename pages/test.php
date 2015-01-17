@@ -4,7 +4,7 @@
  */
 namespace minds\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 
 class test extends core\page implements interfaces\page{

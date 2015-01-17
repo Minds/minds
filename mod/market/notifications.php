@@ -9,7 +9,7 @@
 
 namespace minds\plugin\market;
 
-use minds\core;
+use Minds\Core;
 use Minds\Components;
 use minds\entities\user;
 

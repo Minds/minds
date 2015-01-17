@@ -4,7 +4,7 @@
  */
 namespace minds\plugin\channel\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\entities;
 
@@ -205,7 +205,7 @@ class channel extends core\page implements interfaces\page{
 			default:
 				\elgg_register_plugin_hook_handler('register', 'menu:entity', array('\minds\pages\newsfeed\newsfeed', 'pageSetup'));
 				//$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river'));
-				$content .= \minds\core\entities::view(array(
+				$content .= \Minds\Core\entities::view(array(
 					'type' => 'activity',
 					'limit' => 5,
 					'masonry' => false,

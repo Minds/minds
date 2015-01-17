@@ -21,7 +21,7 @@ if($elgg_path == elgg_get_site_url() || $elgg_path == null || $elgg_path == ""){
 	elgg_set_viewtype('json');
 	//$handler = array_shift($path);
 	
-	$router = new minds\core\router();
+	$router = new Minds\Core\router();
 	$router->route('/'.implode('/',$path));
 	elgg_set_viewtype('default');
 	$out = ob_get_contents();
@@ -67,7 +67,7 @@ $items = array();
 foreach($json as $key => $item) {
 	switch(get_input('items_type')) {
 		case 'entity':
-			$items[$key] = minds\core\entities::build($item);
+			$items[$key] = Minds\Core\entities::build($item);
 			break;
 		case 'annotation': 
 			$items = $json;

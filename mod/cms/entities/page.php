@@ -7,8 +7,8 @@ namespace minds\plugin\cms\entities;
  
 use minds\plugin\cms\exceptions;
 use minds\entities;
-use minds\core\data;
-use minds\core;
+use Minds\Core\data;
+use Minds\Core;
 class page extends entities\object{
 	
 	/**

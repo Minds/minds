@@ -11,7 +11,7 @@
  */
 require_once(dirname(__FILE__) . "/engine/start.php");
 
-$router = new minds\core\router();
+$router = new Minds\Core\router();
 $router->route();
 exit;
 global $CONFIG;

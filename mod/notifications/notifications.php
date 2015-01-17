@@ -5,6 +5,6 @@
  
 namespace minds\plugin\notifications;
 
-use minds\core;
+use Minds\Core;
 
 class notifications extends start{}

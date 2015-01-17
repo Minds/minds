@@ -517,7 +517,7 @@
 
 		$params = elgg.parse_str(elgg.parse_url(location.href).query);
 			
-		if(loc.indexOf('trending') > -1 <?php if(minds\core\plugins::isActive('analytics')){ echo "|| loc.indexOf('view') > -1"; }?> || $params.filter == 'trending' || loc.indexOf('search') > -1){
+		if(loc.indexOf('trending') > -1 <?php if(Minds\Core\plugins::isActive('analytics')){ echo "|| loc.indexOf('view') > -1"; }?> || $params.filter == 'trending' || loc.indexOf('search') > -1){
 			offset = $list.find('.elgg-list').children().length;
 		} else {
 			offset = $('.load-more').attr('data-load-next');

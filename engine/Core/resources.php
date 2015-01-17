@@ -2,7 +2,7 @@
 /**
  * Resource (css/js) manager
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class resources extends base{
 	

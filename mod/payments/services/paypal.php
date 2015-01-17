@@ -2,7 +2,7 @@
 
 namespace minds\plugin\payments\services;
 
-use minds\core;
+use Minds\Core;
 
 use PayPal\Api\Amount;
 use PayPal\Api\Details;

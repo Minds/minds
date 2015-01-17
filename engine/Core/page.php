@@ -2,7 +2,7 @@
 /**
  * Minds page controller. All page handler should extends upon this class. 
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class page extends base{
 	

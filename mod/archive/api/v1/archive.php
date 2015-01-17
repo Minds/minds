@@ -7,7 +7,7 @@
  */
 namespace minds\plugin\archive\api\v1;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\plugin\archive\entities;
 use minds\api\factory;

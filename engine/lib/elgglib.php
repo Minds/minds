@@ -269,7 +269,7 @@ function elgg_get_loaded_css() {
 function elgg_register_external_file($type, $name, $url, $location, $priority = 500) {
 	if($location == 'head')
 		$location = 'header';
-	minds\core\resources::register($name, $url, $type, $location, $priority);
+	Minds\Core\resources::register($name, $url, $type, $location, $priority);
 }
 
 /**
@@ -282,7 +282,7 @@ function elgg_register_external_file($type, $name, $url, $location, $priority = 
  * @since 1.8.0
  */
 function elgg_unregister_external_file($type, $name) {
-	minds\core\resources::unRegister($name, $type);
+	Minds\Core\resources::unRegister($name, $type);
 }
 
 /**
@@ -295,7 +295,7 @@ function elgg_unregister_external_file($type, $name) {
  * @since 1.8.0
  */
 function elgg_load_external_file($type, $name) {
-	minds\core\resources::load($name, $type);
+	Minds\Core\resources::load($name, $type);
 }
 
 /**
@@ -310,7 +310,7 @@ function elgg_load_external_file($type, $name) {
 function elgg_get_loaded_external_files($type, $location) {
 	if($location == 'head')
 		$location = 'header';
-	return minds\core\resources::getLoaded($type, $location);
+	return Minds\Core\resources::getLoaded($type, $location);
 }
 
 /**
@@ -1338,7 +1338,7 @@ function elgg_add_action_tokens_to_url($url, $html_encode = FALSE) {
 
 	// append action tokens to the existing query
 	$query['__elgg_ts'] = time();
-	$query['__elgg_token'] = minds\core\token::generate($query['__elgg_ts']);
+	$query['__elgg_token'] = Minds\Core\token::generate($query['__elgg_ts']);
 	$components['query'] = http_build_query($query);
 
 	// rebuild the full url

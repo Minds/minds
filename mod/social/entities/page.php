@@ -7,7 +7,7 @@ namespace minds\plugin\cms\entities;
  
 use minds\plugin\cms\exceptions;
 use minds\entities;
-use minds\core\data;
+use Minds\Core\data;
 
 class page extends entities\object{
 	

@@ -2,7 +2,7 @@
 /**
  * Minds base object. All classes inherit this. 
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class base{
 	

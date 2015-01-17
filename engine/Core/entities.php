@@ -2,9 +2,9 @@
 /**
  * Defacto entities controller for minds
  */
-namespace minds\core;
+namespace Minds\Core;
 
-use minds\core\data;
+use Minds\Core\data;
 class entities extends base{
 	
 	public function init(){}

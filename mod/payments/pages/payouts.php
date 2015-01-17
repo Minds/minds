@@ -2,7 +2,7 @@
 
 namespace minds\plugin\payments\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\plugin\payments;
 use minds\plugin\payments\entities;

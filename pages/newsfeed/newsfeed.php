@@ -4,7 +4,7 @@
  */
 namespace minds\pages\newsfeed;
 
-use minds\core;
+use Minds\Core;
 use minds\entities;
 use minds\interfaces;
 
@@ -86,7 +86,7 @@ class newsfeed extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 			
-		if(!\minds\core\session::isLoggedin() && !isset($pages[0]))
+		if(!\Minds\Core\session::isLoggedin() && !isset($pages[0]))
 			$this->forward('login');
 		
 		\elgg_register_plugin_hook_handler('register', 'menu:entity', array($this, 'pageSetup'));
@@ -99,7 +99,7 @@ class newsfeed extends core\page implements interfaces\page{
 		//	$this->forward('login');
 		//}
 		
-		if(!is_numeric($pages[0]) && \minds\core\session::isLoggedin() && elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0 && !elgg_get_logged_in_user_entity()->base_node){
+		if(!is_numeric($pages[0]) && \Minds\Core\session::isLoggedin() && elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0 && !elgg_get_logged_in_user_entity()->base_node){
 			$pages[0] = 'featured';
 		}
 
@@ -338,7 +338,7 @@ class newsfeed extends core\page implements interfaces\page{
 				/**
 				 * Validate our signature..
 				 */
-				$signature = \minds\core\clusters::generateSignature($_POST, $secret);
+				$signature = \Minds\Core\clusters::generateSignature($_POST, $secret);
 				if($_SERVER['HTTP_X_MINDS_SIGNATURE'] != $signature){
 					error_log('wrong signature');
 					echo json_encode(array('error'=>'Incorrect signature. Please check the secret key'));

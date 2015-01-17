@@ -36,5 +36,5 @@ else
 	require_once(dirname(dirname(__FILE__)) . '/vendor/autoload.php');
 //require_once(dirname(__FILE__) . '/autoload.php');
 
-$minds = new minds\core\minds();
+$minds = new Minds\Core\minds();
 $minds->start();

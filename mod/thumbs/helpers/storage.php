@@ -5,9 +5,9 @@
  
 namespace minds\plugin\thumbs\helpers;
 
-use minds\core;
-use minds\core\data;
-use minds\core\entities;
+use Minds\Core;
+use Minds\Core\data;
+use Minds\Core\entities;
 
 class storage{
 

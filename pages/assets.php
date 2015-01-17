@@ -4,7 +4,7 @@
  */
 namespace minds\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;

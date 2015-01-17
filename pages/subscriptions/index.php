@@ -4,7 +4,7 @@
  */
 namespace minds\pages\subscriptions;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\entities;
 

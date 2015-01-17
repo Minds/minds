@@ -17,7 +17,7 @@
  */
 namespace minds\plugin\guard\lib;
 
-use minds\core;
+use Minds\Core;
 
 class twofactor{
 	

@@ -4,8 +4,8 @@
  */
 namespace minds\plugin\comments\pages;
 
-use minds\core;
-use minds\core\data;
+use Minds\Core;
+use Minds\Core\data;
 use minds\interfaces;
 //use minds\plugin\comments;
 use minds\plugin\comments\entities;
@@ -20,7 +20,7 @@ class comments extends core\page implements interfaces\page{
 		$parent_guid = $pages[1];
 		$entity = get_entity($parent_guid);
 		
-		$indexes = new \minds\core\data\indexes('comments');
+		$indexes = new \Minds\Core\data\indexes('comments');
 		$guids = $indexes->get($entity->guid, array('limit'=>\get_input('limit',3), 'offset'=>\get_input('offset',''), 'reversed'=>true));
 		if(isset($guids[get_input('offset')]))
 			unset($guids[get_input('offset')]);

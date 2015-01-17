@@ -2,7 +2,7 @@
 
 namespace minds\plugin\social\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\plugin\social\services;
 

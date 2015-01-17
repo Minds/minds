@@ -122,9 +122,9 @@ class ElggPlugin extends ElggEntity {
 		global $PLUGINS_CACHE;
 		$PLUGINS_CACHE = null;
 	//var_dump('tying to save yo');	
-		minds\core\plugins::purgeCache('plugins:all');
-		minds\core\plugins::purgeCache('plugins:active');
-		minds\core\plugins::$cache == array();
+		Minds\Core\plugins::purgeCache('plugins:all');
+		Minds\Core\plugins::purgeCache('plugins:active');
+		Minds\Core\plugins::$cache == array();
 	
 		$attributes = array();
 		foreach($this as $k=>$v){
@@ -225,7 +225,7 @@ class ElggPlugin extends ElggEntity {
 	 * @return bool
 	 */
 	public function setPriority($priority, $site_guid = null) {
-		return minds\core\plugins\priorities::set($this, $priority);
+		return Minds\Core\plugins\priorities::set($this, $priority);
 	}
 
 

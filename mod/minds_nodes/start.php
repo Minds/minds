@@ -5,8 +5,8 @@
 namespace minds\plugin\minds_nodes;
 
 use Minds\Components;
-use minds\core;
-use minds\core\plugins;
+use Minds\Core;
+use Minds\Core\plugins;
 
 class start extends Components\Plugin{
 	
@@ -127,7 +127,7 @@ class start extends Components\Plugin{
 	    
 	    if (!$count) $params['limit'] = 999;
 	    
-	    $cacher = \minds\core\data\cache\factory::build();
+	    $cacher = \Minds\Core\data\cache\factory::build();
 	    $key = "object::node::{$user->guid}";
 	    if ($count) $key.= "::count";
 	    
@@ -310,7 +310,7 @@ class start extends Components\Plugin{
 		
 		
 		//if this is a multisite then we forward to minds.com.
-		if(\minds\core\minds::detectMultisite()){
+		if(\Minds\Core\minds::detectMultisite()){
 			forward('https://www.minds.com/nodes/launch?referrer='.\elgg_get_plugin_setting('owner_username','minds_nodes'));
 			return true;
 		}

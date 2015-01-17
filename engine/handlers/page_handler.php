@@ -6,7 +6,7 @@
 
 require_once(dirname(dirname(__FILE__)) . "/start.php");
 
-$router = new minds\core\router();
+$router = new Minds\Core\router();
 $router->route();
 exit;
 

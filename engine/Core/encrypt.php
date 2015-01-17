@@ -2,7 +2,7 @@
 /**
  * Minds encryption
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class encrypt extends base{
 		

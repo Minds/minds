@@ -2,9 +2,9 @@
 /**
  * Logs actions to the activity log
  */
-namespace minds\core;
+namespace Minds\Core;
 
-use minds\core\data;
+use Minds\Core\data;
 class logger extends base{
 	
 	public function init(){

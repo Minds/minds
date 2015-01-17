@@ -17,7 +17,7 @@ if (!is_array($plugin_guids)) {
 }
 
 foreach ($plugin_guids as $guid) {
-	$plugin = minds\core\plugins::factory($guid); 
+	$plugin = Minds\Core\plugins::factory($guid); 
 
 	if ($plugin->deactivate()) {
 		//system_message(elgg_echo('admin:plugins:deactivate:yes', array($plugin->getManifest()->getName())));

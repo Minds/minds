@@ -4,7 +4,7 @@
  */
 namespace minds\plugin\gatherings\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\plugin\gatherings\entities;
 

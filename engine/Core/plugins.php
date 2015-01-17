@@ -3,7 +3,7 @@
  * Handles plugins for Minds
  * 
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class plugins extends base{
 	

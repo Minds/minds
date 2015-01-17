@@ -18,7 +18,7 @@ $priority = $plugin->getPriority();
 $active = $plugin->isActive();
 
 $can_activate = $plugin->canActivate();
-$max_priority = minds\core\plugins\priorities::getMax();
+$max_priority = Minds\Core\plugins\priorities::getMax();
 $actions_base = '/action/admin/plugins/';
 $css_id = preg_replace('/[^a-z0-9-]/i', '-', $plugin->getID());
 

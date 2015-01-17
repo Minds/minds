@@ -19,7 +19,7 @@ global $SESSION;
  * @deprecated
  */
 function _elgg_session_boot($force = false) {
-	return new minds\core\session($force);
+	return new Minds\Core\session($force);
 }
 
 /**
@@ -32,7 +32,7 @@ function _elgg_session_boot($force = false) {
  * @return ElggUser
  */
 function elgg_get_logged_in_user_entity() {
-	return minds\core\session::getLoggedinUser();
+	return Minds\Core\session::getLoggedinUser();
 }
 
 /**
@@ -56,7 +56,7 @@ function elgg_get_logged_in_user_guid() {
  * @return bool
  */
 function elgg_is_logged_in() {
-	return minds\core\session::isLoggedin();
+	return Minds\Core\session::isLoggedin();
 }
 
 /**

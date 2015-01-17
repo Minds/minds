@@ -6,7 +6,7 @@
  */
 namespace minds\plugin\oauth2;
 
-use minds\core;
+use Minds\Core;
 
 class start extends \ElggPlugin{
 

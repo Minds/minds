@@ -10,7 +10,7 @@
 		<a href="<?php echo elgg_is_logged_in() ? elgg_get_site_url() .'newsfeed' : elgg_get_site_url();?>">
 			  <?php if (elgg_get_plugin_setting('logo_override', 'minds_themeconfig')) { ?>
 	 		          <img src="<?php echo elgg_get_site_url();?>themeicons/logo_topbar/<?php echo elgg_get_plugin_setting('logo_override_ts', 'minds_themeconfig'); ?>.png"/>
-	        	<?php } elseif(minds\core\plugins::isActive('minds_themeconfig')) { ?>
+	        	<?php } elseif(Minds\Core\plugins::isActive('minds_themeconfig')) { ?>
 	        		<h1><?= elgg_get_site_entity()->name ?></h1>
 				<?php } else { ?>
 					<img src="<?php echo elgg_get_site_url();?>_graphics/minds_2.png" class="minds-com"/>
@@ -50,7 +50,7 @@
 	<?php } else { ?>
 
 			<?php 
-				if(minds\core\plugins::isActive('minds_nodes'))
+				if(Minds\Core\plugins::isActive('minds_nodes'))
 					echo elgg_view('output/url', array('text'=>'Create Site', 'href'=>elgg_get_site_url() .'nodes/launch', 'class'=> 'elgg-button minds-button-launch'));
 				
 				echo elgg_view('output/url', array('text'=>'Create Channel', 'href'=>elgg_get_site_url() .'register', 'class'=> 'elgg-button minds-button-register'));

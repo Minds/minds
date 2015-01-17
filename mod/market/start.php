@@ -11,7 +11,7 @@
 
 namespace minds\plugin\market;
 
-use minds\core;
+use Minds\Core;
 use Minds\Components;
 
 class start extends Components\Plugin{

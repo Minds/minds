@@ -4,13 +4,13 @@
  */
 $notification = elgg_extract('entity', $vars);
 
-$from =  minds\core\entities::build(new minds\entities\entity($notification->from_guid));
+$from =  Minds\Core\entities::build(new minds\entities\entity($notification->from_guid));
 
 if(!$from){
 	return false;
 }
 	
-$entity =  minds\core\entities::build(new minds\entities\entity($notification->object_guid));
+$entity =  Minds\Core\entities::build(new minds\entities\entity($notification->object_guid));
 if ($entity) {
 	switch($entity->type){
 		case 'object':

@@ -8,7 +8,7 @@
 namespace minds\plugin\social\services;
 
 use Minds\Components;
-use minds\core;
+use Minds\Core;
 use TijsVerkoyen;
 
 class twitter extends core\base{

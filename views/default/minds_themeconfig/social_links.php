@@ -1,7 +1,7 @@
 <?php
 
 
-if(minds\core\minds::detectMultisite())
+if(Minds\Core\minds::detectMultisite())
 	return true;
 ?>
 

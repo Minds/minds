@@ -4,8 +4,8 @@
  */
 namespace minds\plugin\channel\pages;
 
-use minds\core;
-use minds\core\data;
+use Minds\Core;
+use Minds\Core\data;
 use minds\interfaces;
 use minds\entities;
 

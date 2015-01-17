@@ -3,9 +3,9 @@
  * Handles the orderring a priorities (helper functions)
  */
  
-namespace minds\core\plugins;
+namespace Minds\Core\plugins;
 
-use minds\core;
+use Minds\Core;
 
 class priorities extends core\plugins{
 	

@@ -6,7 +6,7 @@
 
 namespace minds\entities;
 
-use minds\core;
+use Minds\Core;
 
 class user extends \ElggUser{
 	

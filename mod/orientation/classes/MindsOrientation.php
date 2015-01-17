@@ -19,7 +19,7 @@ class MindsOrientation{
 	);
 	
 	public function __construct(){
-		if(minds\core\minds::detectMultisite() && ($key = array_search('multisite', $this->steps)) !== false) {
+		if(Minds\Core\minds::detectMultisite() && ($key = array_search('multisite', $this->steps)) !== false) {
 		    unset($this->steps[$key]);
 		}
 	}
@@ -48,7 +48,7 @@ class MindsOrientation{
 	}
 	
 	public function render($step, $vars = array()){
-		if(minds\core\minds::detectMultisite() && $key = array_search('deck', $this->steps) !== false) {
+		if(Minds\Core\minds::detectMultisite() && $key = array_search('deck', $this->steps) !== false) {
                     unset($this->steps[$key]);
                 } 	
 		$content = elgg_view('orientation/register', array('step'=>$step, 'steps'=>$this->steps, 'vars'=>$vars));

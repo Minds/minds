@@ -534,7 +534,7 @@ function get_entity_as_row($guid, $type) {
  */
 function entity_row_to_elggstar($row, $cache = true) {
 	
-	return \minds\core\entities::build($row, $cache);
+	return \Minds\Core\entities::build($row, $cache);
 	
 	if (!($row instanceof stdClass)) {
 		return $row;

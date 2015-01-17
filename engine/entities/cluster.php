@@ -5,7 +5,7 @@
 
 namespace minds\entities;
 
-use minds\core\data;
+use Minds\Core\data;
 
 class cluster extends entity{
 	

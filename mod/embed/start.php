@@ -22,7 +22,7 @@ function embed_init() {
 	
 	elgg_register_js('elgg.embed', elgg_get_simplecache_url('js', 'embed/embed'), 'footer');
 	
-	//minds\core\resources::registerView('embed.minds', 'js/embed/embed.js', 'js');
+	//Minds\Core\resources::registerView('embed.minds', 'js/embed/embed.js', 'js');
 }
 
 /**

@@ -20,7 +20,7 @@ switch(get_input('subtype', 'default')){
 		$key = 'object:archive:featured';
 }
 
-$guids = minds\core\data\indexes::fetch($key, array('offset'=>$offset, 'limit'=>$limit, 'reversed'=>true));
+$guids = Minds\Core\data\indexes::fetch($key, array('offset'=>$offset, 'limit'=>$limit, 'reversed'=>true));
 
 if($guids){
 	$entities = elgg_get_entities(array(	

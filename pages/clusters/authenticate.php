@@ -4,7 +4,7 @@
  */
 namespace minds\pages\clusters;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\entities;
 

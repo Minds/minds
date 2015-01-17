@@ -11,7 +11,7 @@ $guids = $batch->getList();
 /**
  * Run a batch command to append this guids to the container index
  */
-$index = new minds\core\data\indexes('object:container');
+$index = new Minds\Core\data\indexes('object:container');
 $index->set($album_guid, $guids);
 
 /**

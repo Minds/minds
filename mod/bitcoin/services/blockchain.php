@@ -2,7 +2,7 @@
 
 namespace minds\plugin\bitcoin\services;
 
-use minds\core;
+use Minds\Core;
 
 class blockchain extends core\base{
     
