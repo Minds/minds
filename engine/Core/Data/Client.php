@@ -6,7 +6,7 @@ namespace Minds\Core\data;
 
 class Client{
     
-    private static $default = '\Minds\Core\data\cassandra\client';
+    private static $default = '\Minds\Core\Data\cassandra\client';
 
     /**
      * Build the client
