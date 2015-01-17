@@ -22,7 +22,7 @@ class comment extends entities\entity{
 	public function save(){
 
 		parent::save(false);
-		$indexes = new \Minds\Core\data\indexes('comments');
+		$indexes = new \Minds\Core\Data\indexes('comments');
 		$indexes->set($this->parent_guid, array($this->guid=>$this->guid));
 		return $this->guid;
 	}
@@ -31,7 +31,7 @@ class comment extends entities\entity{
 		$db = new \Minds\Core\Data\Call('entities');
 		$db->removeRow($this->guid);
 		
-		$indexes = new \Minds\Core\data\indexes('comments');
+		$indexes = new \Minds\Core\Data\indexes('comments');
 		$indexes->remove($this->parent_guid, array($this->guid));
 		return true;
 	}

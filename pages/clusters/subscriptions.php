@@ -45,7 +45,7 @@ class subscriptions extends core\page implements interfaces\page{
                         		return false;
 				}	
 
-				$db = new core\data\call('friendsof');
+				$db = new core\Data\Call('friendsof');
 				$data = array_merge($_POST, array('host'=>$host, 'secret'=>$secret));
 				error_log("$subscriber_guid : " . print_r($data, true));
 				$subscription = $db->insert($user->guid, array($subscriber_guid=>json_encode($data)));
@@ -62,7 +62,7 @@ class subscriptions extends core\page implements interfaces\page{
 				/**
 				 * First off, lets just verify our user exists, and is in fact subscribed to this user
 				 */
-				$db = new core\data\call('friends');
+				$db = new core\Data\Call('friends');
 				$subscription = $db->getRow($user_guid, array('limit'=> 1, 'offset'=>$subscriber_guid));
 				
 				if(key($subscription) != $subscriber_guid){

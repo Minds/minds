@@ -14,9 +14,9 @@ class dataTest extends \Minds_PHPUnit_Framework_TestCase {
 		 * @return void
 		 */
         public static function setUpBeforeClass() {
-			self::$db = new data\call();
+			self::$db = new Data\Call();
 			self::$db->createCF('test', array('index'=> 'UTF8Type'));
-			self::$db = new data\call('test'); 
+			self::$db = new Data\Call('test'); 
         }
 		
 		/**

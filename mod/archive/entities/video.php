@@ -48,7 +48,7 @@ class video extends object{
 	 * @return string
 	 */
 	public function getSourceUrl($transcode = '720.mp4'){
-		$cacher = \Minds\Core\data\cache\factory::build();
+		$cacher = \Minds\Core\Data\cache\factory::build();
 		if($return = $cacher->get("$this->guid:transcode:$transcode"))
 			return $return;
 		

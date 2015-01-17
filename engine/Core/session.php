@@ -13,7 +13,7 @@ class session extends base{
 
 	public function __construct($force = NULL){
 			
-		$handler = new core\data\sessions();
+		$handler = new core\Data\Sessions();
 	        session_set_save_handler(
 			array($handler, "open"),
         		array($handler, "close"),

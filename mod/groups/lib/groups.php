@@ -75,7 +75,7 @@ function groups_handle_all_page() {
 function groups_handle_featured_page(){
 	$title = "Featured";
 	
-	$guids = Minds\Core\data\indexes::fetch("group:featured", array('limit'=>get_input('limit', 10), 'offset'=>get_input('offset', '')));
+	$guids = Minds\Core\Data\indexes::fetch("group:featured", array('limit'=>get_input('limit', 10), 'offset'=>get_input('offset', '')));
 	if(is_array($guids)){
 		$entities = Minds\Core\entities::get(array('guids'=>$guids));
 		usort($entities, function($a, $b){

@@ -16,7 +16,7 @@ class lists extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 		
-		$db = new core\data\call('entities_by_time');
+		$db = new core\Data\Call('entities_by_time');
 		$limit = isset($_REQUEST['limit']) ? $_REQUEST['limit'] : 12;
 		$offset = isset($_REQUEST['offset']) ? $_REQUEST['offset'] : "";
 		
