@@ -127,7 +127,7 @@ class start extends Components\Plugin{
 	    
 	    if (!$count) $params['limit'] = 999;
 	    
-	    $cacher = \Minds\Core\data\cache\factory::build();
+	    $cacher = \Minds\Core\Data\cache\factory::build();
 	    $key = "object::node::{$user->guid}";
 	    if ($count) $key.= "::count";
 	    

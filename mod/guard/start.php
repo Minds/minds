@@ -107,7 +107,7 @@ class start extends Components\Plugin{
 			// to login. This temporary code should be removed within 2 minutes.
 			$key = md5($user->username . $user->salt. time() . rand(0,63));
 
-			$lookup = new \Minds\Core\data\lookup('twofactor');
+			$lookup = new \Minds\Core\Data\lookup('twofactor');
 			$lookup->set($key, array('_guid'=>$user->guid, 'ts'=>time(), 'secret'=>$secret));
 			
 			//forward to the twofactor page
