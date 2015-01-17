@@ -27,7 +27,7 @@ class refreshToken extends entities\entity{
 		if(!isset($guid[0]))
 			throw new \Exception('Lookup failed');
 		
-		$db = new data\call('entities');
+		$db = new Data\Call('entities');
 		$data = $db->getRow($guid[0], array('limit'=>200));
 		
 		foreach($data as $k => $v){
