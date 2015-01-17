@@ -84,9 +84,10 @@ class newsfeed implements interfaces\api{
 	$activity = new entities\activity($pages[0]); 
 	if(!$activity->guid)
 		return factory::response(array('status'=>'error', 'message'=>'could not find activity post'));      
- 
-        return factory::response(array());
-        
+	
+ 	if($activity->delete())
+        	return factory::response(array('message'=>'removed ' . $pages[0]));
+        	return factory::response(array('status'=>'error', 'message'=>'could not delete'));
     }
     
 }

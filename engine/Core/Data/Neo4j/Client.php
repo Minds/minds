@@ -13,7 +13,7 @@ class Client implements Interfaces\ClientInterface{
     
     public function __construct(array $options = array()){
         
-        $this->neo4j = new \Everyman\Neo4j\Client();
+        $this->neo4j = new \Everyman\Neo4j\Client('10.56.0.15');
         
     }
     

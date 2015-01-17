@@ -92,6 +92,7 @@ class activity extends entity{
 				'remind_object',
 				'custom_type',
 				'custom_data',
+				'thumbs:up:count',
 				'thumbs:up:user_guids',
 				'thumbs:down:user_guids'
 			));
