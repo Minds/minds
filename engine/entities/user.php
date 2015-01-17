@@ -15,8 +15,8 @@ class user extends \ElggUser{
 		if(empty($data))
 			$data = time();
 		
-		$friends = new core\data\call('friends');
-		$friendsof = new core\data\call('friendsof');
+		$friends = new core\Data\Call('friends');
+		$friendsof = new core\Data\Call('friendsof');
 		
 		
 		if(is_array($data))
@@ -33,7 +33,7 @@ class user extends \ElggUser{
 	}
 	
 	public function isSubscribed($guid){
-		$db = new core\data\call('friends');
+		$db = new core\Data\Call('friends');
 		if(key($db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid))) == $guid)
 			return true;
 		
@@ -45,7 +45,7 @@ class user extends \ElggUser{
 			return 0;
 		}
 
-		$db = new core\data\call('friendsof');
+		$db = new core\Data\Call('friendsof');
 		return (int) $db->countRow($this->guid);
 	}
 	

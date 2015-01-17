@@ -15,9 +15,9 @@ class lists{
 	static public function getUserThumbsGuids($user, $type = NULL, $params = array()){
 		$params = array_merge($params, array('limit'=>12, 'offset' => '', 'reversed'=>true));
 		if($type)
-			$guids = data\indexes::fetch("thumbs:up:user:$user->guid:$type", $params);
+			$guids = Data\indexes::fetch("thumbs:up:user:$user->guid:$type", $params);
 		else
-			$guids = data\indexes::fetch("thumbs:up:user:$user->guid", $params);
+			$guids = Data\indexes::fetch("thumbs:up:user:$user->guid", $params);
 
 		return array_keys($guids);
 	}

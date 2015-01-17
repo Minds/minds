@@ -16,7 +16,7 @@ class counter{
 		if(!$user)
                         $user = elgg_get_logged_in_user_entity();
 
-		$indexes = new core\data\indexes();
+		$indexes = new core\Data\indexes();
 		return $indexes->set("object:gathering:conversations:unread", array($user->guid=>1));
 	}
 
@@ -28,7 +28,7 @@ class counter{
 		if(self::$unread)
 			return self::$unread;
 
-		$result = core\data\indexes::fetch("object:gathering:conversations:unread", array('offset'=>$user->guid, 'limit'=>1));
+		$result = core\Data\indexes::fetch("object:gathering:conversations:unread", array('offset'=>$user->guid, 'limit'=>1));
 		if($result){
 			self::$unread = reset($result);
 			return reset($result);
@@ -43,7 +43,7 @@ class counter{
 		if(!$user)
                         $user = elgg_get_logged_in_user_entity();
 
-		$indexes = new core\data\indexes();
+		$indexes = new core\Data\indexes();
 		$indexes->set("object:gathering:conversations:unread", array($user->guid=>0));
 
 		self::$unread = 0;

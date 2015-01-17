@@ -16,7 +16,7 @@ class logger extends base{
 	}
 	
 	public function log($event, $object_type, $object) {
-		$db = new data\call('log');
+		$db = new Data\Call('log');
 		$data = array(
 			'event'=>$event,
 			'entity' => $object->guid,
@@ -27,7 +27,7 @@ class logger extends base{
 	}
 	
 	public function get($limit = 20, $offset = ''){
-		$db = new data\call('log');
+		$db = new Data\Call('log');
 		foreach($db->get() as $id => $row){
 			var_dump($id, $row);
 		}

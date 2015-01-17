@@ -28,7 +28,7 @@ class page extends entities\object{
 	
 	public function __construct($guid = NULL){
 		if(is_string($guid) && !is_numeric($guid)){
-			$guids = data\indexes::fetch("object:cms:page:$guid", array('limit'=>1));
+			$guids = Data\indexes::fetch("object:cms:page:$guid", array('limit'=>1));
 			if(!$guids)
 				throw new exceptions\notfound($guid);
 			
@@ -57,7 +57,7 @@ class page extends entities\object{
 	public function save($timebased = true){
 		$guid = parent::save($timebased);
 		
-		$lu = new data\lookup();
+		$lu = new Data\lookup();
 		$lu->set("object:cms:menu:$this->context", array($this->uri => "$this->title"));
 
 		return $guid;
@@ -65,7 +65,7 @@ class page extends entities\object{
 	
 	public function delete($recursive = true){
 		
-		$lu = new data\lookup();
+		$lu = new Data\lookup();
 		$lu->removeColumn("object:cms:menu:$this->context", $this->uri);
 				
 		return parent::delete($recursive);
@@ -84,7 +84,7 @@ class page extends entities\object{
 	public function setUri($uri){
 		//remove the old path uri
 		if($this->uri && $this->uri != $uri){
-			$lu = new data\lookup();
+			$lu = new Data\lookup();
 			$lu->removeColumn("object:cms:menu:$this->context", $this->uri);
 		}
 		$this->uri = $uri;

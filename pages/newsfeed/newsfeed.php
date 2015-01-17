@@ -319,7 +319,7 @@ class newsfeed extends core\page implements interfaces\page{
 				/**
 				 * First off, lets just verify our user exists, and is in fact subscribed to this user
 				 */
-				$db = new core\data\call('friends');
+				$db = new core\Data\Call('friends');
 				$subscription = $db->getRow($subscriber_guid, array('limit'=> 1, 'offset'=>$_POST['owner_guid']));
 				
 				if(key($subscription) != $_POST['owner_guid']){

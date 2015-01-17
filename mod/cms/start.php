@@ -46,8 +46,8 @@ class start extends Components\Plugin{
 	 */
 	public function pageSetup($event, $type, $params){
 		
-		$lu = new core\data\lookup();
-		$cacher = core\data\cache\factory::build();
+		$lu = new core\Data\lookup();
+		$cacher = core\Data\cache\factory::build();
 		$hash = md5(elgg_get_site_url());
 
 		if(!$footer = $cacher->get("$hash:cms:footer")){
@@ -137,7 +137,7 @@ class start extends Components\Plugin{
 	 */
 	public function index($hook, $type, $return, $params){
 		
-		$guids = core\data\indexes::fetch('object:cms:sections:index', array('limit'=>1000));
+		$guids = core\Data\indexes::fetch('object:cms:sections:index', array('limit'=>1000));
 
 		$add = '';
 		if(elgg_is_admin_logged_in())		

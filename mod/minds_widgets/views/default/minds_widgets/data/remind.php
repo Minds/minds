@@ -1,6 +1,6 @@
 <?php
 
-$lookup = new \Minds\Core\data\lookup('count:external:reminds');
+$lookup = new \Minds\Core\Data\lookup('count:external:reminds');
     
 $count = (int)$lookup->get(get_input('url'));
 

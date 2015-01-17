@@ -18,7 +18,7 @@ class batch extends object{
 	}
 	
 	public function addToList($guid){
-		$index = new data\indexes('batch');
+		$index = new Data\indexes('batch');
 		return $index->set($this->guid, array($guid=>$guid));
 	}
 	
@@ -27,7 +27,7 @@ class batch extends object{
 	 * FYI doing a direct db instead of loading this entity might make sense.
 	 */
 	public function getList($limit=10000000){
-		$index = new data\indexes('batch');
+		$index = new Data\indexes('batch');
 		return $index->get($this->guid, array('limit'=>$limit));
 	}
 

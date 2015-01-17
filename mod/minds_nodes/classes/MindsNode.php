@@ -45,7 +45,7 @@ class MindsNode extends ElggObject{
 		if(!isset($user->email))
 			return false; //@todo better way to verify real user?
 			
-		$db = new \Minds\Core\data\indexes();
+		$db = new \Minds\Core\Data\indexes();
 		return $db->insert('object:node:referrer:'.$user->guid, array($this->guid => $this->guid));
 	}
 
@@ -183,7 +183,7 @@ class MindsNode extends ElggObject{
 	    
 	    if ($user = elgg_get_logged_in_user_entity()) {
 		
-		$cacher = \Minds\Core\data\cache\factory::build();
+		$cacher = \Minds\Core\Data\cache\factory::build();
 		$cacher->destroy("object::node::{$user->guid}");
 		$cacher->destroy("object::node::{$user->guid}::count");
 		

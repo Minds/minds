@@ -129,7 +129,7 @@ class ElggUser extends ElggEntity
 	}
 
 	protected function loadFromLookup($string){
-		$lookup = new Minds\Core\data\lookup();
+		$lookup = new Minds\Core\Data\lookup();
 		$guid = $lookup->get($string);
 		if(!$guid)
 			return false;
@@ -423,7 +423,7 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	function isFriendOf($user_guid) {
-		$cacher = \Minds\Core\data\cache\factory::build();
+		$cacher = \Minds\Core\Data\cache\factory::build();
                 if($cache = $cacher->get("$user_guid:friendof:$this->guid")){
 			if($cache == 'yes')
 				return true;
@@ -473,7 +473,7 @@ class ElggUser extends ElggEntity
 	 */
 	function getSubscribersCount(){
 				
-		$cacher = \Minds\Core\data\cache\factory::build();
+		$cacher = \Minds\Core\Data\cache\factory::build();
 		if($cache = $cacher->get("friendsof:$this->guid"))
 			return $cache;
 

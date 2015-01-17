@@ -22,7 +22,7 @@ class gatherings extends core\page implements interfaces\page{
 		//get a list of all chats, regardless
 		//we maintain a list of a users 'recent chats' with key=>time and value=>gathering_guid
 		//the gathering model is responsible for REMOVING and ADDING this data
-		$indexes = new core\data\indexes('object:gatherings');
+		$indexes = new core\Data\indexes('object:gatherings');
 		$guids = $indexes->get(\elgg_get_logged_in_user_guid() . ":recent");
 		if(!$guids){
 			//the user doesn't have any recent chats. maybe show them a list of their subscriptions?
