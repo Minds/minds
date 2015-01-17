@@ -60,7 +60,7 @@ class page extends entities\object{
 		$lu = new Data\lookup();
 		$lu->set("object:cms:menu:$this->context", array($this->uri => "$this->title"));
 
-		$cacher = core\data\cache\factory::build();
+		$cacher = core\Data\cache\factory::build();
                 $hash = md5(elgg_get_site_url());
                 $cacher->destroy("$hash:cms:$this->context");
 		return $guid;
@@ -70,7 +70,7 @@ class page extends entities\object{
 		
 		$lu = new Data\lookup();
 		$lu->removeColumn("object:cms:menu:$this->context", $this->uri);
-		$cacher = core\data\cache\factory::build();
+		$cacher = core\Data\cache\factory::build();
 		$hash = md5(elgg_get_site_url());
 		$cacher->destroy("$hash:cms:$this->context");
 		return parent::delete($recursive);
