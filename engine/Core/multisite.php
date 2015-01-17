@@ -41,7 +41,7 @@ class multisite extends base{
 		global $CONFIG;
 	
 		if(!$row = $this->getCache($domain) ){
-			$db = new data\call('domain', $CONFIG->multisite->keyspace, $CONFIG->multisite->servers);
+			$db = new Data\Call('domain', $CONFIG->multisite->keyspace, $CONFIG->multisite->servers);
                		$row = $db->getRow($domain);
 			$this->saveCache($domain, $row);
 		}
@@ -85,7 +85,7 @@ class multisite extends base{
 
 	public function getKeyspace($domain = NULL){
 		global $CONFIG;
-		$db = new data\call('domain', $CONFIG->multisite->keyspace, $CONFIG->multisite->servers);
+		$db = new Data\Call('domain', $CONFIG->multisite->keyspace, $CONFIG->multisite->servers);
 		$row = $db->getRow($domain);
 		return $keyspace = unserialize($row['keyspace']);
 	}

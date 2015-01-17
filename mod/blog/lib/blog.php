@@ -88,7 +88,7 @@ function blog_get_page_content_read($guid = NULL) {
 			)));
 		$return['class'] = 'content-carousel';
 	} else {
-		$cacher = Minds\Core\data\cache\factory::build();
+		$cacher = Minds\Core\Data\cache\factory::build();
 		if(!$carousels = $cacher->get("object:carousel:user:$blog->owner_guid") && $carousels != 'not-set'){
 			$carousels = Minds\Core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$blog->owner_guid));
 			$cacher->set("object:carousel:user:$blog->owner_guid", $carousels ?: 'not-set');
@@ -218,7 +218,7 @@ function blog_get_trending_page_content_list() {
 	$limit = get_input('limit', 8);
 	$offset = get_input('offset', 0);
 
-	$cacher = Minds\Core\data\cache\factory::build();
+	$cacher = Minds\Core\Data\cache\factory::build();
 	$hash = md5(elgg_get_site_url());
 	if(!$guids = $cacher->get("$hash:trending-guids:$limit:$offset")){
 	

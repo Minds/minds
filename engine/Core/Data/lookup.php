@@ -14,7 +14,7 @@ class lookup{
 	private $namespace = '';
 	
 	public function __construct($namespace = NULL){
-		$this->call = new call('user_index_to_guid');
+		$this->call = new Call('user_index_to_guid');
 		
 		if($namespace)
 			$this->setNamespace($namespace);

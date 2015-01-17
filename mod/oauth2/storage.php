@@ -36,7 +36,7 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      * DATA GET/SET Method
      */
     public function set($key, $values, $expires = NULL){
-        $db = new data\call('entities');
+        $db = new Data\Call('entities');
         foreach($values as $k => $v)
             if($v === NULL)
                 unset($values[$k]);
@@ -45,12 +45,12 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
     }
     
     public function get($key){
-        $db = new data\call('entities');
+        $db = new Data\Call('entities');
         return $db->getRow($key);
     }
     
     public function remove($key){
-        $db = new data\call('entities');
+        $db = new Data\Call('entities');
         return $db->removeRow($key);
     }
 

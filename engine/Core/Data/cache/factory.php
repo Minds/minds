@@ -3,7 +3,7 @@
  * A very quick and easy cache factory
  * @author Mark Harding
  */
-namespace Minds\Core\data\cache;
+namespace Minds\Core\Data\cache;
 
 class factory{
 
@@ -19,7 +19,7 @@ class factory{
 		if(!$cacher)
 			$cacher = self::$default;
 		
-		$cacher = "\\minds\\core\\data\\cache\\$cacher";
+		$cacher = "\\Minds\\Core\\Data\\cache\\$cacher";
 		if(class_exists($cacher)){
 			return new $cacher();
 		}

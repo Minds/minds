@@ -36,7 +36,7 @@ if($entity->license == 'not-selected' && !elgg_is_xhr()){
 
 
 //update the activity entity
-$activity_guids = Minds\Core\data\indexes::fetch("activity:entitylink:$entity->guid");
+$activity_guids = Minds\Core\Data\indexes::fetch("activity:entitylink:$entity->guid");
 if($activity_guids){
 	foreach($activity_guids as $activity_guid){
 		$activity = new minds\entities\activity($activity_guid);
