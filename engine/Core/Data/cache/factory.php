@@ -19,7 +19,7 @@ class factory{
 		if(!$cacher)
 			$cacher = self::$default;
 		
-		$cacher = "\\minds\\core\\data\\cache\\$cacher";
+		$cacher = "\\Minds\\Core\\Data\\cache\\$cacher";
 		if(class_exists($cacher)){
 			return new $cacher();
 		}
