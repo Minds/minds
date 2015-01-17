@@ -50,7 +50,7 @@ class indexes extends call{
 	 */
 	 static public function fetch($key, array $options = array('limit'=>12, 'offset'=>'','reversed'=>true)){
 	 	
-	 	$db = new call('entities_by_time');
+	 	$db = new Call('entities_by_time');
 		try{
 			return $db->getRow($key, $options);
 		} catch (\Exception $e){

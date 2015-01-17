@@ -21,13 +21,13 @@ class refreshToken extends entities\entity{
 	}
 	
 	public function load($token){
-		$lookup = new data\lookup('oauth2:token');
+		$lookup = new Data\lookup('oauth2:token');
 		$guid = $lookup->get($token);
 		
 		if(!isset($guid[0]))
 			throw new \Exception('Lookup failed');
 		
-		$db = new data\call('entities');
+		$db = new Data\Call('entities');
 		$data = $db->getRow($guid[0], array('limit'=>200));
 		
 		foreach($data as $k => $v){
@@ -38,7 +38,7 @@ class refreshToken extends entities\entity{
 	public function save(){
 		$guid = parent::save();
 
-		$lookup = new data\lookup('oauth2:token');
+		$lookup = new Data\lookup('oauth2:token');
 		$lookup->set($this->refresh_token, $guid);
 	}
 	

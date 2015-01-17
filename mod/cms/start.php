@@ -46,7 +46,7 @@ class start extends Components\Plugin{
 	 */
 	public function pageSetup($event, $type, $params){
 		
-		$lu = new core\data\lookup();
+		$lu = new core\Data\lookup();
 		$cacher = core\data\cache\factory::build();
 		$hash = md5(elgg_get_site_url());
 

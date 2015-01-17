@@ -14,8 +14,8 @@ class storage{
 
     public static function insert($direction = 'up', $entity){
         
-        $db = new core\data\call('entities');
-        $indexes = new core\data\call('entities_by_time');
+        $db = new core\Data\Call('entities');
+        $indexes = new core\Data\Call('entities_by_time');
         
         //quick and easy, direct insert to entity
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} + 1));
@@ -34,8 +34,8 @@ class storage{
 
     public static function cancel($direction = 'up', $entity){
         
-        $db = new core\data\call('entities');
-        $indexes = new core\data\call('entities_by_time');
+        $db = new core\Data\Call('entities');
+        $indexes = new core\Data\Call('entities_by_time');
         
     
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} - 1));
