@@ -21,7 +21,7 @@ class accessToken extends entities\entity{
 	}
 	
 	public function load($token){
-		$lookup = new data\lookup('oauth2:token');
+		$lookup = new Data\lookup('oauth2:token');
 		$guid = $lookup->get($token);
 		
 		if(!isset($guid[0]))
@@ -38,7 +38,7 @@ class accessToken extends entities\entity{
 	public function save(){
 		$guid = parent::save();
 		error_log($guid);
-		$lookup = new data\lookup('oauth2:token');
+		$lookup = new Data\lookup('oauth2:token');
 		$lookup->set($this->access_token, $guid);
 	}
 	

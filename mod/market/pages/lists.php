@@ -20,7 +20,7 @@ class lists extends core\page implements interfaces\page{
 		$limit = isset($_REQUEST['limit']) ? $_REQUEST['limit'] : 12;
 		$offset = isset($_REQUEST['offset']) ? $_REQUEST['offset'] : "";
 		
-		$lookup = new core\data\lookup();
+		$lookup = new core\Data\lookup();
 		
 		$index = new core\data\indexes();
 		

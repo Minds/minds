@@ -21,7 +21,7 @@ class code extends entities\entity{
 	}
 	
 	public function load($code){
-		$lookup = new data\lookup('oauth2:code');
+		$lookup = new Data\lookup('oauth2:code');
 		$guid = $lookup->get($code);
 		
 		if(!isset($guid[0]))
@@ -38,14 +38,14 @@ class code extends entities\entity{
 	public function save(){
 		$guid = parent::save();
 
-		$lookup = new data\lookup('oauth2:code');
+		$lookup = new Data\lookup('oauth2:code');
 		$lookup->set($this->authorization_code, $guid);
 	}
 	
 	public function delete(){
 		//parent::delete();
 		
-		$lookup = new data\lookup('oauth2:code');
+		$lookup = new Data\lookup('oauth2:code');
 		$lookup->remove($this->authorization_code);
 	}
 	
