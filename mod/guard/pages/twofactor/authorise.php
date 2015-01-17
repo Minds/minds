@@ -31,7 +31,7 @@ class authorise extends core\page implements interfaces\page{
 		$twofactor = new lib\twofactor();
 		
 		//get our one user twofactor token
-		$lookup = new \Minds\Core\data\lookup('twofactor');
+		$lookup = new \Minds\Core\Data\lookup('twofactor');
 		$return = $lookup->get($pages[0]);
 		$lookup->remove($pages[0]);
 		

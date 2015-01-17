@@ -3,13 +3,13 @@
  * The session storage handler
  */
  
-namespace Minds\Core\data;
+namespace Minds\Core\Data;
 
 if (version_compare(phpversion(), '5.4.0', '<')) {
 	require_once(__MINDS_ROOT__ . '/engine/classes/stub/SessionHandlerInterface.php');	
 }
 
-class sessions implements \SessionHandlerInterface{
+class Sessions implements \SessionHandlerInterface{
 
 	private $db;
 
