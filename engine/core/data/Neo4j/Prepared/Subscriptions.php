@@ -41,15 +41,27 @@ class Subscriptions implements Interfaces\PreparedInterface{
                         'guid'=>$user->guid
                         );
         }
-        $this->template = "FOREACH (u IN " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp))  . " | MERGE(user:User {guid: u.guid, username: u.username}))";
+        $this->template = "FOREACH (u IN " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp))  . " | MERGE(user:User {guid: str(u.guid), username: u.username}))";
         return $this;
     }
     
     /**
      * Import bulk subscriptions
      */
-     public function createSubscriptions(array $subscriptions = array()){
-         
+     public function createBulkSubscriptions(array $subscriptions = array()){
+         foreach($subscriptions as $subscriber=> $array){
+              foreach($array as $subscription_guid => $ts){
+                  $exp[] = array(
+                            'guid'=> (string) $subscriber,
+                            'subscription_guid' => (string) $subscription_guid
+                            );
+              }
+         }
+           
+         $this->template = "UNWIND " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp)) . " AS row ".
+                                "MATCH (u:User {guid:row.guid}), (subscriber:User {guid:row.subscription_guid}) " .
+                                "CREATE (u)-[:SUBSCRIBED]->(subscriber)";
+         return $this;
      }
      
      /**
@@ -85,4 +97,21 @@ class Subscriptions implements Interfaces\PreparedInterface{
         $this->values = array('guid'=>$user->guid);
         return $this;
     }
+    
+    /**
+     * Return subscriptions of subscriptions
+     * @param User $user
+     * @param $this
+     */
+    public function getSubscriptionsOfSubscriptions(Entities\User $user){
+        $this->temaplte = "MATCH (user {guid: {guid}})-[:SUBSCRIBED*2..2]-(fof) ".
+                            "WHERE NOT (user)-[:SUBSCRIBED]-(fof) " .
+                            "RETURN fof, COUNT(*) ".
+                            "ORDER BY COUNT(*) DESC";
+        $this->values = array(
+                            'guid' => $user->guid
+                            );
+        return $this;
+    }
+        
 }

@@ -33,6 +33,8 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
     public function sync($slugs = array()){
         $prepared = new Prepared\Subscriptions();
         
+        $subscriptions = new \Minds\Core\Data\Call('friends');
+        
         //transfer over all user
         $offset = '';
         while(true){
@@ -41,9 +43,18 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
                 break;
             $offset = end($users)->guid;
             $this->client->request($prepared->createBulkUsers($users));
+            
+            
+            $guids = array();
+            foreach($users as $user){
+                $guids[] = $user->guid;
+            }
+            $this->client->request($prepared->createBulkSubscriptions($subscriptions->getRows($guids)));
             break;
             exit;
         }
+        
+        
         
         return $this;
     } 
