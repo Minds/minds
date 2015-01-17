@@ -238,7 +238,7 @@ function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL)
 
 	if (($token) && ($ts)) {
 		// Validate token
-		if (minds\core\token::validate($ts, $token)) {
+		if (Minds\Core\token::validate($ts, $token)) {
 			$hour = 60 * 60;
 			$timeout = $timeout * $hour;
 			$now = time();

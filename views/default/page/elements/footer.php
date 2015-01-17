@@ -1,6 +1,6 @@
 <?php echo elgg_view_menu('footer'); 
 
-if(minds\core\minds::detectMultisite())
+if(Minds\Core\minds::detectMultisite())
 	return true;
 ?>
 

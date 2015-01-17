@@ -5,7 +5,7 @@
 namespace minds\plugin\minder;
 
 use Minds\Components;
-use minds\core\router;
+use Minds\Core\router;
 
 class start extends Components\Plugin{
 	
@@ -38,7 +38,7 @@ class start extends Components\Plugin{
 	}
 	
 	public function queue($user){
-		$db = \minds\core\data\lookup('minder:queue');
+		$db = \Minds\Core\data\lookup('minder:queue');
 		$guids = $db->get($user->guid);
 		if(count($guids) < 10){
 			//the user doesn't have enough 'up votes' yet, so grab some random people from the site

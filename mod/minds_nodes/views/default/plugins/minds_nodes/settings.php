@@ -3,7 +3,7 @@
 ?>
 
 <?php 
-if(\minds\core\minds::detectMultisite()){
+if(\Minds\Core\minds::detectMultisite()){
 ?>
 <div>
     <label>Your Minds.com username (for referrals):</label><br />

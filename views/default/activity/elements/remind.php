@@ -1,6 +1,6 @@
 <?php
 $remind = (array) $vars['remind'];
-$entity = minds\core\entities::build(new minds\entities\entity($remind));
+$entity = Minds\Core\entities::build(new minds\entities\entity($remind));
 
 if(isset($remind['thumbnail_src']))
 	$entity->thumbnail_src = $remind['thumbnail_src'];

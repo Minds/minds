@@ -5,7 +5,7 @@
  
 namespace minds\plugin\gatherings\entities;
 
-use minds\core\data;
+use Minds\Core\data;
 use minds\entities\object;
 
 class conversation{

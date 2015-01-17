@@ -3,7 +3,7 @@
  * The session storage handler
  */
  
-namespace minds\core\data;
+namespace Minds\Core\data;
 
 if (version_compare(phpversion(), '5.4.0', '<')) {
 	require_once(__MINDS_ROOT__ . '/engine/classes/stub/SessionHandlerInterface.php');	

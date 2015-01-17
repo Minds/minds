@@ -2,7 +2,7 @@
 /**
  * Simple page tokens 
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class token{
 

@@ -4,7 +4,7 @@
  */
 namespace minds\plugin\oauth2\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\plugin\oauth2\entities;
 use minds\plugin\oauth2\storage;

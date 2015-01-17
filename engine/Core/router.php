@@ -2,7 +2,7 @@
 /**
  * The minds router. 
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class router{
 	

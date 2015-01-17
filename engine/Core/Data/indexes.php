@@ -4,9 +4,9 @@
  *
  */
 
-namespace minds\core\data;
+namespace Minds\Core\data;
 
-use minds\core;
+use Minds\Core;
 
 class indexes extends call{
 

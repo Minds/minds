@@ -5,7 +5,7 @@
  
 namespace minds\plugin\search;
 
-use minds\core;
+use Minds\Core;
 
 class start extends \minds\Components\Plugin{
 	

@@ -68,7 +68,7 @@ function minds_service_remind($url, $message, $username) {
 	if ($result = $river->save()) {
 	    
 	    // Remind has been saved, update counter
-	    $lookup = new \minds\core\data\lookup('count:external:reminds');
+	    $lookup = new \Minds\Core\data\lookup('count:external:reminds');
 	    
 	    $count = (int)$lookup->get($url);
 	    $lookup->set($url, $count++);

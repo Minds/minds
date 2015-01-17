@@ -252,7 +252,7 @@ class MindsMultiInstaller extends ElggInstaller {
      * @throws InstallationException
      */
     public function setupMulti() {
-	new minds\core\multisite();
+	new Minds\Core\multisite();
         $this->setInstallStatus();
 
 	global $CONFIG;

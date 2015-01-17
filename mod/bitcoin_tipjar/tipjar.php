@@ -8,7 +8,7 @@
 
 namespace minds\plugin\bitcoin_tipjar;
 
-use minds\core;
+use Minds\Core;
 use \minds\plugin\bitcoin;
 
 class tipjar extends \ElggPlugin     

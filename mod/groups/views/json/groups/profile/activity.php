@@ -2,7 +2,7 @@
 
 $group = $vars['entity'];
 
-echo minds\core\entities::view(array(
+echo Minds\Core\entities::view(array(
 	'type' => 'activity',
 	'limit' => 5,
 	'masonry' => false,

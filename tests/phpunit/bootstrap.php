@@ -6,7 +6,7 @@ define('__MINDS_ROOT__', $root);
 
 require_once($root.'/vendor/autoload.php');
 
-$minds = new minds\core\minds();
+$minds = new Minds\Core\minds();
 $minds->loadConfigs();
 $minds->loadLegacy();
 

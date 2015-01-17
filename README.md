@@ -42,7 +42,7 @@ You should generally store your indexes on **write** and retrieve later with a l
 
 ##### Example of indexes
 ```
-$index = new \minds\core\data\indexes();
+$index = new \Minds\Core\data\indexes();
 
 $guids = $index->get('object:blog', array('limit'=>12, 'offset'=>''));
 
@@ -53,7 +53,7 @@ $index->set('index:key:separated:by:colon', array('key'=>'value'));
 ##### Example user lookup
 ``` 
 $email = 'mark@minds.com'
-$lookup = new \minds\core\data\lookup();
+$lookup = new \Minds\Core\data\lookup();
 
 $guid = $lookup->get($email, array('limit'=>1));
 $user = new \minds\entities\user($guid);
@@ -88,7 +88,7 @@ Below is an example of how to start your plugin.
 <?php 
 namespace minds\plugin\myplugin;
 
-use minds\core;
+use Minds\Core;
 
 class myplugin extends core\plugin{
 	public function init(){
@@ -102,7 +102,7 @@ The old Elgg page handler only supported *GET* requests by default and brought w
 ```
 	//place this in the init of your plugin
 	public funciton init(){
-		\minds\core\router::registerRoutes(array(
+		\Minds\Core\router::registerRoutes(array(
 			'/myplugin' => '\minds\plugin\myplugin\pages\default',
 			'/myplugin/another_page' => '\minds\plugin\myplugin\pages\another_page'
 		));
@@ -117,7 +117,7 @@ For example, when you hit http://MYSITE/myplugin, minds will now load your page 
 namespace minds\plugin\myplugin\pages;
 
 use minds\interfaces;
-use minds\core;
+use Minds\Core;
 class default extends core\page inherits interfaces\page{
 	public function get($pages){
 		echo "This is my plugin default page";

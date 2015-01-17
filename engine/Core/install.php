@@ -2,7 +2,7 @@
 /**
  * Installer for Minds
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class minds extends base{
 	

@@ -14,7 +14,7 @@
 
 $params = get_input('params');
 $plugin_id = get_input('plugin_id');
-$plugin = minds\core\plugins::factory($plugin_id);
+$plugin = Minds\Core\plugins::factory($plugin_id);
 
 if (!($plugin instanceof ElggPlugin)) {
 	register_error(elgg_echo('plugins:settings:save:fail', array($plugin_id)));

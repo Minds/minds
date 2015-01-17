@@ -1,6 +1,6 @@
 <?php
 
-use minds\core\data;
+use Minds\Core\data;
 
 class dataTest extends \Minds_PHPUnit_Framework_TestCase {
 		

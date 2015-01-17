@@ -2,7 +2,7 @@
 /**
  * Minds openssl controller
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class openssl extends base{
 	

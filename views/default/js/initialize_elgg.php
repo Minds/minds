@@ -13,7 +13,7 @@ elgg.config.viewtype = '<?php echo elgg_get_viewtype(); ?>';
 elgg.config.simplecache_enabled = <?php echo (int)elgg_is_simplecache_enabled(); ?>;
 
 elgg.security.token.__elgg_ts = <?php echo $ts = time(); ?>;
-elgg.security.token.__elgg_token = '<?php echo minds\core\token::generate($ts); ?>';
+elgg.security.token.__elgg_token = '<?php echo Minds\Core\token::generate($ts); ?>';
 
 <?php
 // @todo json export should be smoother than this...  

@@ -7,7 +7,7 @@
  */
 namespace minds\plugin\comments\api\v1;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\api\factory;
 

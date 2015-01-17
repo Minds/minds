@@ -2,7 +2,7 @@
 
 namespace minds\plugin\cms\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 //use minds\plugin\comments;
 use minds\plugin\cms\entities;

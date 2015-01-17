@@ -5,7 +5,7 @@ $params = unserialize($notification->params);
 $type = $params['type'] ? $params['type'] : 'entity';
 
 
-$entity =  minds\core\entities::build(new minds\entities\entity($notification->object_guid));
+$entity =  Minds\Core\entities::build(new minds\entities\entity($notification->object_guid));
 if(!$entity || !$entity->title)
 	return false;
 		

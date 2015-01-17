@@ -2,7 +2,7 @@
 
 echo elgg_view('footer/analytics');
 
-$js = minds\core\resources::getLoaded('js', 'footer');
+$js = Minds\Core\resources::getLoaded('js', 'footer');
 foreach ($js as $script) { ?>
 	<script type="text/javascript" src="<?php echo $script['src']; ?>"></script>
 <?php

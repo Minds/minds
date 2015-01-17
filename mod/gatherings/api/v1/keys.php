@@ -7,7 +7,7 @@
  */
 namespace minds\plugin\gatherings\api\v1;
 
-use minds\core;
+use Minds\Core;
 use minds\plugin\gatherings\entities;
 use minds\plugin\gatherings\helpers;
 use minds\interfaces;

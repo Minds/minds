@@ -6,7 +6,7 @@
  * 
  * @package Groups
  */
-use minds\core;
+use Minds\Core;
 
 if ($vars['entity']->activity_enable == 'no') {
 	return true;

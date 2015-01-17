@@ -30,7 +30,7 @@ function minds_archive_init() {
 		} 
 	});
     
-    minds\core\router::registerRoutes(array(
+    Minds\Core\router::registerRoutes(array(
             '/api/v1/archive' => "\\minds\\plugin\\archive\\api\\v1\\archive",
         ));
 

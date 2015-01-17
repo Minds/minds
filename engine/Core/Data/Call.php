@@ -16,8 +16,8 @@ use phpcassa\Index\IndexExpression;
 use phpcassa\Schema\DataType\LongType;
 use phpcassa\UUID;
 
-use minds\core;
-use minds\core\config;
+use Minds\Core;
+use Minds\Core\config;
 
 class Call extends core\base{
 

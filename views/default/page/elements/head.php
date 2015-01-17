@@ -30,8 +30,8 @@ END;
 	$feedref = "";
 }
 
-$js = minds\core\resources::getLoaded('js','header');
-$css = minds\core\resources::getLoaded('css','header');
+$js = Minds\Core\resources::getLoaded('js','header');
+$css = Minds\Core\resources::getLoaded('css','header');
 
 $version = get_version();
 $release = get_version(true);

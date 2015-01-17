@@ -2,11 +2,11 @@
 /**
  * Minds Data Client Factory
  */
-namespace minds\core\data;
+namespace Minds\Core\data;
 
 class Client{
     
-    private static $default = '\minds\core\data\cassandra\client';
+    private static $default = '\Minds\Core\data\cassandra\client';
 
     /**
      * Build the client

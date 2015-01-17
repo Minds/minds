@@ -5,7 +5,7 @@
 
 namespace minds\plugin\gatherings;
 
-use minds\core;
+use Minds\Core;
 
 class counter{
 

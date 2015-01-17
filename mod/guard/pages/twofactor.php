@@ -4,7 +4,7 @@
  */
 namespace minds\plugin\guard\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\entities;
 use minds\plugin\guard\lib;

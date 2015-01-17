@@ -6,7 +6,7 @@
 namespace minds\plugin\oauth2\entities;
 
 use minds\entities;
-use minds\core\data;
+use Minds\Core\data;
 
 class accessToken extends entities\entity{
 	

@@ -4,7 +4,7 @@
  */
 namespace minds\plugin\thumbs\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 
 class actions extends core\page implements interfaces\page{

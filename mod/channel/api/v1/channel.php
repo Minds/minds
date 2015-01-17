@@ -7,7 +7,7 @@
  */
 namespace minds\plugin\channel\api\v1;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 use minds\entities;
 use minds\api\factory;

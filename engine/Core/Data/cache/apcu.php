@@ -3,7 +3,7 @@
  * A very quick and easy cache factory
  * @author Mark Harding
  */
-namespace minds\core\data\cache;
+namespace Minds\Core\data\cache;
 
 class apcu extends abstractCacher{
 	

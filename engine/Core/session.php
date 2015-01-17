@@ -2,9 +2,9 @@
 /**
  * Minds session manager
  */
-namespace minds\core;
+namespace Minds\Core;
 
-use minds\core;
+use Minds\Core;
 use minds\entities;
 
 class session extends base{

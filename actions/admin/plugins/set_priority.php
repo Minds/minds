@@ -16,7 +16,7 @@
 $plugin_guid = get_input('plugin_guid');
 $priority = get_input('priority');
 
-$plugin = minds\core\plugins::factory($plugin_guid);
+$plugin = Minds\Core\plugins::factory($plugin_guid);
 
 if ($plugin->setPriority($priority)) {
 	system_message(elgg_echo('admin:plugins:set_priority:yes', array($plugin->getManifest()->getName())));

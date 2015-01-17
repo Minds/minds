@@ -11,7 +11,7 @@
 namespace minds\plugin\thumbs;
 
 use Minds\Components;
-use minds\core;
+use Minds\Core;
 use ElggMenuItem;
 
 class start extends Components\Plugin{

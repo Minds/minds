@@ -41,7 +41,7 @@ define('ELGG_PLUGIN_USER_SETTING_PREFIX', 'plugin:user_setting:');
  * @deprecated
  */
 function elgg_get_plugin_ids_in_dir($dir = null) {
-	return minds\core\plugins::getFromDir($dir);
+	return Minds\Core\plugins::getFromDir($dir);
 }
 
 /**
@@ -62,7 +62,7 @@ function _elgg_cache_plugin_by_id(ElggPlugin $plugin) {
  * @deprecated
  */
 function elgg_get_plugin_from_id($plugin_id) {
-	return minds\core\plugins::factory($plugin_id);
+	return Minds\Core\plugins::factory($plugin_id);
 }
 
 /**
@@ -80,28 +80,28 @@ function elgg_plugin_exists($id) {
  * @access private
  */
 function elgg_get_max_plugin_priority() {
-	return minds\core\plugins\priorities::getMax();
+	return Minds\Core\plugins\priorities::getMax();
 }
 
 /**
  * @deprecated
  */
 function elgg_is_active_plugin($plugin_id, $site_guid = null) {
-	return minds\core\plugins::isActive($plugin_id);
+	return Minds\Core\plugins::isActive($plugin_id);
 }
 
 /**
  * @deprecated
  */
 function elgg_load_plugins() {
-	//private function now in minds\core\plugins.
+	//private function now in Minds\Core\plugins.
 }
 
 /**
  * @deprecated
  */
 function elgg_get_plugins($status = 'active', $site_guid = null) {
-	return minds\core\plugins::get($status);
+	return Minds\Core\plugins::get($status);
 }
 
 /**
@@ -421,7 +421,7 @@ function elgg_get_calling_plugin_entity() {
 	$plugin_id = elgg_get_calling_plugin_id();
 
 	if ($plugin_id) {
-		return minds\core\plugins::factory($plugin_id);
+		return Minds\Core\plugins::factory($plugin_id);
 	}
 
 	return false;
@@ -551,7 +551,7 @@ function elgg_get_plugin_user_setting($name, $user_guid = null, $plugin_id = nul
  */
 function elgg_set_plugin_setting($name, $value, $plugin_id = null) {
 	if ($plugin_id) {
-		$plugin = minds\core\plugins::factory($plugin_id);
+		$plugin = Minds\Core\plugins::factory($plugin_id);
 	} else {
 		$plugin = elgg_get_calling_plugin_entity();
 	}
@@ -577,10 +577,10 @@ function elgg_set_plugin_setting($name, $value, $plugin_id = null) {
 function elgg_get_plugin_setting($name, $plugin_id = null) {
 	
 	if ($plugin_id) {
-		if(!minds\core\plugins::isActive($plugin_id)){
+		if(!Minds\Core\plugins::isActive($plugin_id)){
 			return false;
 		}
-		$plugin = minds\core\plugins::factory($plugin_id);
+		$plugin = Minds\Core\plugins::factory($plugin_id);
 	} else {
 		$plugin = elgg_get_calling_plugin_entity();
 	}

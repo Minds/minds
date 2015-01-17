@@ -2,7 +2,7 @@
 /**
  * Minds main class
  */
-namespace minds\core;
+namespace Minds\Core;
 
 class multisite extends base{
 

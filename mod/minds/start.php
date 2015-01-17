@@ -9,7 +9,7 @@ function minds_init(){
 	global $CONFIG;
 	$base_url = isset($CONFIG->cdn_url) ? $CONFIG->cdn_url : elgg_get_site_url();	
 
-	//minds\core\views::cache('output/carousel');
+	//Minds\Core\views::cache('output/carousel');
 
 	elgg_register_event_handler('pagesetup', 'system', 'minds_pagesetup');
 	
@@ -225,7 +225,7 @@ function minds_news_page_handler($page) {
 				
 				echo $content;
 				
-				$js = minds\core\resources::getLoaded('js', 'footer');
+				$js = Minds\Core\resources::getLoaded('js', 'footer');
 				foreach ($js as $script) { ?>
 					<script type="text/javascript" src="<?php echo $script['src']; ?>"></script>
 				<?php

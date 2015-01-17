@@ -6,7 +6,7 @@
 namespace minds\plugin\payments\entities;
  
 use minds\entities;
-use minds\core;
+use Minds\Core;
 
 class taxForm extends entities\object{
 	

@@ -4,7 +4,7 @@
  */
 namespace minds\plugin\notifications\pages;
 
-use minds\core;
+use Minds\Core;
 use minds\interfaces;
 
 class count extends core\page implements interfaces\page{
