@@ -179,7 +179,7 @@ if (!$error) {
 					->save();
 		
 		} else {
-			$activity_guids = Minds\Core\data\indexes::fetch("activity:entitylink:$entity->guid");
+			$activity_guids = Minds\Core\Data\indexes::fetch("activity:entitylink:$entity->guid");
 			foreach($activity_guids as $activity_guid){
 				$activity = new minds\entities\activity($activity_guid);
 				$activity->setTitle($blog->title)

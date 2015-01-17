@@ -3,7 +3,7 @@
  * A very quick and easy cache factory
  * @author Mark Harding
  */
-namespace Minds\Core\data\cache;
+namespace Minds\Core\Data\cache;
 
 class factory{
 

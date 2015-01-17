@@ -110,7 +110,7 @@ class start extends \ElggPlugin{
 			return $user->notifications_count;
 		}
 
-		$lu = new core\data\lookup();
+		$lu = new core\Data\lookup();
 		$result = $lu->get("notifications:count", array('offset'=>elgg_get_logged_in_user_guid()));
 		if(!isset($result[elgg_get_logged_in_user_guid()])){
 			return 0;
@@ -132,7 +132,7 @@ class start extends \ElggPlugin{
 			}
 			elgg_set_ignore_access(false);
 			
-			$lu = new core\data\lookup();
+			$lu = new core\Data\lookup();
 			$lu->set("notifications:count", array($user_guid => 1));
 		}catch(Exception $e){
 			var_dump($e); exit;
@@ -153,7 +153,7 @@ class start extends \ElggPlugin{
 			$user->save();
 			elgg_set_ignore_access(false);
 			
-			$lu = new core\data\lookup();
+			$lu = new core\Data\lookup();
 			$lu->set("notifications:count", array($user_guid => 0));
 		}catch(Exception $e){}
 	 }

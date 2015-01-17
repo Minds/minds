@@ -47,7 +47,7 @@ class clusters extends base{
 				$response = $this->call('GET', $seed, '/api/v1/cluster/master/join', array('uri'=>elgg_get_site_url()));
 				var_dump($response);
 				
-				$db = new data\call('user_index_to_guid');
+				$db = new Data\Call('user_index_to_guid');
 				$db->insert('clusters:master', $response, $this->ttl);
 				
 				
@@ -140,7 +140,7 @@ class clusters extends base{
 				
 		}catch(\Exception $e){
 
-			//$db = new data\call('user_index_to_guid');
+			//$db = new Data\Call('user_index_to_guid');
 			//$db->removeAttributes('clusters:master', array($node_uri));
 			
 			\register_error('Sorry, there was an issue communicating with the host');
@@ -243,7 +243,7 @@ class clusters extends base{
 		switch($object_type){
 			case 'activity':
 				//get the list subscribers.
-				$db = new data\call('friendsof');
+				$db = new Data\Call('friendsof');
 				$subscribers = $db->getRow($entity->owner_guid, array('limit'=>10000));
 				foreach($subscribers as $guid => $json){
 					

@@ -57,10 +57,10 @@ class page extends entities\object{
 	public function save($timebased = true){
 		$guid = parent::save($timebased);
 		
-		$lu = new data\lookup();
+		$lu = new Data\lookup();
 		$lu->set("object:cms:menu:$this->context", array($this->uri => "$this->title"));
 
-		$cacher = core\data\cache\factory::build();
+		$cacher = core\Data\cache\factory::build();
                 $hash = md5(elgg_get_site_url());
                 $cacher->destroy("$hash:cms:$this->context");
 		return $guid;
@@ -68,9 +68,9 @@ class page extends entities\object{
 	
 	public function delete($recursive = true){
 		
-		$lu = new data\lookup();
+		$lu = new Data\lookup();
 		$lu->removeColumn("object:cms:menu:$this->context", $this->uri);
-		$cacher = core\data\cache\factory::build();
+		$cacher = core\Data\cache\factory::build();
 		$hash = md5(elgg_get_site_url());
 		$cacher->destroy("$hash:cms:$this->context");
 		return parent::delete($recursive);
@@ -89,7 +89,7 @@ class page extends entities\object{
 	public function setUri($uri){
 		//remove the old path uri
 		if($this->uri && $this->uri != $uri){
-			$lu = new data\lookup();
+			$lu = new Data\lookup();
 			$lu->removeColumn("object:cms:menu:$this->context", $this->uri);
 		}
 		$this->uri = $uri;

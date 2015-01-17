@@ -30,7 +30,7 @@ class directory extends core\page implements interfaces\page{
 		switch($pages[0]){
 			
 			case 'subscribers':
-				$db = new data\call('friendsof');
+				$db = new Data\Call('friendsof');
 				$subscriptions = $db->getRow($pageowner->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
 				
 				$users = array();
@@ -47,7 +47,7 @@ class directory extends core\page implements interfaces\page{
 				break;
 				
 			case 'subscriptions':
-				$db = new data\call('friends');
+				$db = new Data\Call('friends');
 				$subscriptions = $db->getRow($page_owner->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
 				
 				$users = array();

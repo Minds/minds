@@ -42,7 +42,7 @@ You should generally store your indexes on **write** and retrieve later with a l
 
 ##### Example of indexes
 ```
-$index = new \Minds\Core\data\indexes();
+$index = new \Minds\Core\Data\indexes();
 
 $guids = $index->get('object:blog', array('limit'=>12, 'offset'=>''));
 
@@ -53,7 +53,7 @@ $index->set('index:key:separated:by:colon', array('key'=>'value'));
 ##### Example user lookup
 ``` 
 $email = 'mark@minds.com'
-$lookup = new \Minds\Core\data\lookup();
+$lookup = new \Minds\Core\Data\lookup();
 
 $guid = $lookup->get($email, array('limit'=>1));
 $user = new \minds\entities\user($guid);

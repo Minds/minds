@@ -33,9 +33,9 @@ class live extends core\page implements interfaces\page{
                     return false;
                 }
 				
-				//$friends = new core\data\call('friends');
+				//$friends = new core\Data\Call('friends');
 				//$friends = $friends->getRow(elgg_get_logged_in_user_guid(), array('limit'=>10000));
-				$friendsof = new core\data\call('friendsof');
+				$friendsof = new core\Data\Call('friendsof');
 				$friendsof = $friendsof->getRow(elgg_get_logged_in_user_guid(), array('limit'=>10000));
 				
 				foreach($guids as $guid){
