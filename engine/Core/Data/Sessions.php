@@ -14,7 +14,7 @@ class Sessions implements \SessionHandlerInterface{
 	private $db;
 
 	public function open($save_path , $name){
-		$this->db = new call('session');
+		$this->db = new Call('session');
 	}
 
 	public function close(){
