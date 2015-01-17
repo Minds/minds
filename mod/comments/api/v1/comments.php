@@ -24,7 +24,7 @@ class comments implements interfaces\api{
         $response = array();
         $guid = $pages[0];
         
-        $indexes = new core\data\indexes('comments');
+        $indexes = new core\Data\indexes('comments');
         $guids = $indexes->get($guid, array('limit'=>\get_input('limit',3), 'offset'=>\get_input('offset',''), 'reversed'=>true));
         if(isset($guids[get_input('offset')]))
             unset($guids[get_input('offset')]);

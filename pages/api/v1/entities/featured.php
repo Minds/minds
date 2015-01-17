@@ -39,7 +39,7 @@ class featured implements interfaces\api{
 	if($options['subtype'])
 		$key = $options['type'] . ':' . $options['subtype'] . ':featured';
 
-	$guids = core\data\indexes::fetch($key, $options);
+	$guids = core\Data\indexes::fetch($key, $options);
 	if(!$guids){
 		return factory::response(array('status'=>'error', 'message'=>'not found'));
 	}

@@ -43,7 +43,7 @@ class lists extends core\page implements interfaces\page{
 			case 'featured':
 			default:	
 				$params['title'] = 'Featured Blogs';
-				$guids = core\data\indexes::fetch('object:blog:featured', array('offset'=>get_input('offset', ''), 'limit'=>get_input('limit', 12)));
+				$guids = core\Data\indexes::fetch('object:blog:featured', array('offset'=>get_input('offset', ''), 'limit'=>get_input('limit', 12)));
 				if(!$guids){
 					$content = ' ';
 					break;

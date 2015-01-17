@@ -137,7 +137,7 @@ class start extends Components\Plugin{
 	 */
 	public function index($hook, $type, $return, $params){
 		
-		$guids = core\data\indexes::fetch('object:cms:sections:index', array('limit'=>1000));
+		$guids = core\Data\indexes::fetch('object:cms:sections:index', array('limit'=>1000));
 
 		$add = '';
 		if(elgg_is_admin_logged_in())		

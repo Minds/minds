@@ -28,7 +28,7 @@ class page extends entities\object{
 	
 	public function __construct($guid = NULL){
 		if(is_string($guid) && !is_numeric($guid)){
-			$guids = data\indexes::fetch("object:cms:page:$guid", array('limit'=>1));
+			$guids = Data\indexes::fetch("object:cms:page:$guid", array('limit'=>1));
 			if(!$guids)
 				throw new exceptions\notfound($guid);
 			

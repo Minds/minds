@@ -22,7 +22,7 @@ class lists extends core\page implements interfaces\page{
 		
 		$lookup = new core\Data\lookup();
 		
-		$index = new core\data\indexes();
+		$index = new core\Data\indexes();
 		
 		switch($pages[0]){
 			case 'owner':

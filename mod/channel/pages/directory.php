@@ -89,7 +89,7 @@ class directory extends core\page implements interfaces\page{
 			
 			case 'featured':
 			default:
-				$guids = data\indexes::fetch('user:featured', array('limit'=>$limit, 'offset'=>$offset));
+				$guids = Data\indexes::fetch('user:featured', array('limit'=>$limit, 'offset'=>$offset));
 				if(!$guids){
 					$content = ' ';
 					break;

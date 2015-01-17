@@ -65,7 +65,7 @@ class comments extends core\page implements interfaces\page{
 		$comment->parent_guid = $parent_guid;
 		if($comment->save()){
 			
-			$subscribers = data\indexes::fetch('comments:subscriptions:'.$parent_entity->guid) ?: array();
+			$subscribers = Data\indexes::fetch('comments:subscriptions:'.$parent_entity->guid) ?: array();
 			$subscribers[$parent_entity->owner_guid] = $parent_entity->owner_guid;
 			if(isset($subscribers[$comment->owner_guid]))
 				unset($subscribers[$comment->owner_guid]);
@@ -79,7 +79,7 @@ class comments extends core\page implements interfaces\page{
 			
 			\elgg_trigger_event('comment:create', 'comment', $data); 
 			
-			$indexes = new data\indexes();
+			$indexes = new Data\indexes();
 			$indexes->set('comments:subscriptions:'.$parent_entity->guid, array($comment->owner_guid => $comment->owner_guid));
 			
 			\elgg_set_ignore_access($ia);

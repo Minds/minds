@@ -38,7 +38,7 @@ class conversation{
 	 */
 	public function update($count = 1){
 		//now update this message as being the last message for the conversation. this is the list of users conversations
-		$indexes = new data\indexes();
+		$indexes = new Data\indexes();
 		
 		$keys = array();
 		$i = 0;
@@ -63,7 +63,7 @@ class conversation{
 	}
 	
 	public function clearCount(){
-		$indexes = new data\indexes();
+		$indexes = new Data\indexes();
 		foreach($this->participants as $key => $participant){
 			$indexes->insert("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array($participant=> json_encode(array(
 					'ts'=>time(), 

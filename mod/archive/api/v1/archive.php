@@ -87,7 +87,7 @@ class archive implements interfaces\api{
                 ->save();
 	}
 
-	$index = new core\data\indexes('object:container');
+	$index = new core\Data\indexes('object:container');
 	$index->set($album->guid, array($guid=>$guid));
 
 	$allowed = array('title', 'description');
