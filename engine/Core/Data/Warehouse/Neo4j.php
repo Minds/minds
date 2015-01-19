@@ -18,7 +18,7 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
      * @return void
      */
     public function run(array $slugs = array()){
-        $this->client = \Minds\Core\Data\Client::build('neo4j');
+        $this->client = \Minds\Core\Data\Client::build('Neo4j');
         switch($slugs[0]){
             case 'sync':
                 array_shift($slugs);
@@ -38,20 +38,21 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
         //transfer over all user
         $offset = '';
         while(true){
-            $users = core\entities::get(array('type'=>'user', 'offset'=>$offset, 'limit'=>50));
+            error_log("Syncing 50 entities from $offset");
+	    $users = core\entities::get(array('type'=>'user', 'offset'=>$offset, 'limit'=>250));
             if(!is_array($users) || end($users)->guid == $offset)
                 break;
             $offset = end($users)->guid;
             $this->client->request($prepared->createBulkUsers($users));
-            
-            
+            error_log("Imported users");
             $guids = array();
             foreach($users as $user){
                 $guids[] = $user->guid;
             }
             $this->client->request($prepared->createBulkSubscriptions($subscriptions->getRows($guids)));
-            break;
-            exit;
+	    error_log("Imported subscriptions");
+           // break;
+           // exit;
         }
         
         
