@@ -101,15 +101,32 @@ class Subscriptions implements Interfaces\PreparedInterface{
     /**
      * Return subscriptions of subscriptions
      * @param User $user
-     * @param $this
+     * @return $this
      */
     public function getSubscriptionsOfSubscriptions(Entities\User $user){
-        $this->temaplte = "MATCH (user {guid: {guid}})-[:SUBSCRIBED*2..2]-(fof) ".
+        $this->template = "MATCH (user {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof) ".
                             "WHERE NOT (user)-[:SUBSCRIBED]-(fof) " .
                             "RETURN fof, COUNT(*) ".
-                            "ORDER BY COUNT(*) DESC";
+                            "ORDER BY COUNT(*) DESC ".
+                            "LIMIT 10";
         $this->values = array(
                             'guid' => $user->guid
+                            );
+        return $this;
+    }
+    
+    /**
+     * Return degree
+     * @param User $user
+     * @return $this
+     */
+    public function getDegree($a, $b){
+        $this->template = "MATCH (a {guid:{a_guid}}), (b {guid:{b_guid}}), " .
+                            "p = shortestPath( a-[*..16]->b ) " .
+                            "RETURN length(p)-1";
+        $this->values = array(
+                            'a_guid'=> (string) $a->guid,
+                            'b_guid'=> (string) $b->guid
                             );
         return $this;
     }

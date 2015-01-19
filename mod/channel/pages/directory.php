@@ -5,7 +5,8 @@
 namespace minds\plugin\channel\pages;
 
 use Minds\Core;
-use Minds\Core\data;
+use Minds\Core\Data;
+use Minds\Core\Data\Neo4j\Prepared;
 use minds\interfaces;
 use minds\entities;
 
@@ -86,6 +87,15 @@ class directory extends core\page implements interfaces\page{
 				$options['newest_first'] = true;
                 		$content = elgg_list_entities($options);
 				break;
+            case 'suggested':
+                $client = \Minds\Core\Data\Client::build('Neo4j');
+                $prepared = new Prepared\Subscriptions();
+                $response = $client->request($prepared->getSubscriptionsOfSubscriptions(elgg_get_logged_in_user_entity()));
+                foreach($response as $node){
+                            var_dump($node);
+                        }
+                exit;
+                break;
 			
 			case 'featured':
 			default:

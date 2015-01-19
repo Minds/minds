@@ -12,8 +12,8 @@ class Client implements Interfaces\ClientInterface{
     private $prepared;
     
     public function __construct(array $options = array()){
-        
-        $this->neo4j = new \Everyman\Neo4j\Client('10.56.0.15');
+        global $CONFIG;
+        $this->neo4j = new \Everyman\Neo4j\Client(isset($CONFIG['neo4j_server']) ? $CONFIG['neo4j_server'] : NULL);
         
     }
     
