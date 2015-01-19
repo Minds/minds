@@ -5,7 +5,7 @@
  
 namespace minds\plugin\thumbs\helpers;
 
-use Minds\Core\data;
+use Minds\Core\Data;
 use Minds\Core\entities;
 class lists{
 

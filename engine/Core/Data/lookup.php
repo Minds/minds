@@ -4,7 +4,7 @@
  *
  */
 
-namespace Minds\Core\data;
+namespace Minds\Core\Data;
 
 use Minds\Core;
 

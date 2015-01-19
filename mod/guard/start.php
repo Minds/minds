@@ -74,7 +74,7 @@ class start extends Components\Plugin{
 	    return false;
 	}
 	
-	public function createHook($hook, $type, $params, $return){
+	public function createHook($hook, $type, $params, $return = NULL){
 		$object = $params;
 		if($this->strposa($object->description, $this->prohbitedDomains())){
 			\register_error('Sorry, your post contains a reference to a domain name linked to spam. You can not use short urls (eg. bit.ly). Please remove it and try again');

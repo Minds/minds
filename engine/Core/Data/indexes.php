@@ -4,11 +4,11 @@
  *
  */
 
-namespace Minds\Core\data;
+namespace Minds\Core\Data;
 
 use Minds\Core;
 
-class indexes extends call{
+class indexes extends Call{
 
 	private $namespace = '';
 	
