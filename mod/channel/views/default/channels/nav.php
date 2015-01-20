@@ -15,7 +15,12 @@ $tabs = array(
          'selected' => $vars['selected'] == 'trending',
          'item_class'=>'elgg-menu-item-hover-over'
         ),
-	'subscribers' => array(
+	'discover' => array(
+                'text' => elgg_echo('channels:label:discover'),
+                'href' => "channels/suggested",
+                'selected' => $vars['selected'] == 'discover',
+        ),
+	/*'subscribers' => array(
 		'text' => elgg_echo('channels:label:subscribers'),
 		'href' => "channels/subscribers",
 		'selected' => $vars['selected'] == 'subscribers',
@@ -29,7 +34,7 @@ $tabs = array(
 		'text' => elgg_echo('Subscribe'),
 		'href' => "subscriptions/add",
 		'selected' => $vars['selected'] == 'subscribe',
-	),
+	),*/
 	'newest' => array(
 		'text' => elgg_echo('channels:label:newest'),
 		'href' => "channels/newest",

@@ -4,6 +4,7 @@
  */
 namespace Minds\Core\Data\Neo4j;
 
+use Neoxygen\NeoClient;
 use Minds\Core\Data\Interfaces;
 
 class Client implements Interfaces\ClientInterface{
@@ -13,8 +14,12 @@ class Client implements Interfaces\ClientInterface{
     
     public function __construct(array $options = array()){
         global $CONFIG;
-        $this->neo4j = new \Everyman\Neo4j\Client(isset($CONFIG['neo4j_server']) ? $CONFIG['neo4j_server'] : NULL);
-        
+        //$this->neo4j = new \Everyman\Neo4j\Client(isset($CONFIG->neo4j_server) ? $CONFIG->neo4j_server : NULL);
+    	$this->neo4j = NeoClient\ClientBuilder::create()
+    				->addConnection('default','http','10.56.0.15',7474)
+				->setAutoFormatResponse(true)
+				->setDefaultTimeout(20)
+    				->build();
     }
     
     public function setPrepared(Interfaces\PreparedInterface $prepared){
@@ -24,8 +29,10 @@ class Client implements Interfaces\ClientInterface{
         
     public function request(Interfaces\PreparedInterface $request){
         $build = $request->build();
-        $query = new \Everyman\Neo4j\Cypher\Query($this->neo4j, $build['string'], $build['values']);
-        return $query->getResultSet();
+
+	$response = $this->neo4j->sendCypherQuery($build['string'], $build['values']);
+	
+	return $response;
     }
     
 }    

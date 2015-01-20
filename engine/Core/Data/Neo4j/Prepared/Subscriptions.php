@@ -104,13 +104,13 @@ class Subscriptions implements Interfaces\PreparedInterface{
      * @return $this
      */
     public function getSubscriptionsOfSubscriptions(Entities\User $user){
-        $this->template = "MATCH (user {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof) ".
+        $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
                             "WHERE NOT (user)-[:SUBSCRIBED]-(fof) " .
                             "RETURN fof, COUNT(*) ".
                             "ORDER BY COUNT(*) DESC ".
                             "LIMIT 10";
         $this->values = array(
-                            'guid' => $user->guid
+                            'guid' => (string) $user->guid
                             );
         return $this;
     }

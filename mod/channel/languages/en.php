@@ -54,7 +54,8 @@ $english = array(
 	'channel:subscriber_count' => 'Subscribers',
 	
 	'channels' => 'Channels',
-	
+
+	'channels:label:discover' => 'Discover channels',	
 	'channels:label:subscribers' => 'My Subscribers',
 	'channels:label:subscriptions' => 'My Subscriptions',
 	'channels:label:newest' => 'Newest',
