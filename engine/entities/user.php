@@ -11,21 +11,7 @@ use Minds\Core;
 class user extends \ElggUser{
 	
 	public function subscribe($guid, $data = array()){
-		
-		if(empty($data))
-			$data = time();
-		
-		$friends = new core\Data\Call('friends');
-		$friendsof = new core\Data\Call('friendsof');
-		
-		
-		if(is_array($data))
-			$data = json_encode($data);
-		
-		if($friends->insert($this->guid, array($guid=>$data)) && $friendsof->insert($guid, array($this->guid=>$data)))
-			return true;
-		
-		return false;
+		return \Minds\Helpers\Subscriptions::subscribe($this->guid, $guid, $data);
 	}
 	
 	public function unSubscribe($guid){

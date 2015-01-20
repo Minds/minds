@@ -59,8 +59,8 @@ class Subscriptions implements Interfaces\PreparedInterface{
          }
            
          $this->template = "UNWIND " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp)) . " AS row ".
-                                "MATCH (u:User {guid:row.guid}), (subscriber:User {guid:row.subscription_guid}) " .
-                                "CREATE (u)-[:SUBSCRIBED]->(subscriber)";
+                                "MATCH (u:User {guid:row.guid}), (subscription:User {guid:row.subscription_guid}) " .
+                                "CREATE (u)-[:SUBSCRIBED]->(subscription)";
          return $this;
      }
      
@@ -70,19 +70,17 @@ class Subscriptions implements Interfaces\PreparedInterface{
     
     /**
      * Create a subscription
-     * @param User $user
-     * @param User $subscriber
+     * @param User or integer $user
+     * @param User or integer $to
      * @return $this
      */
-    public function createSubscription(Entities\User $user, Entities\User $subscriber){
-        $this->template =   "MATCH (user {guid: {user_guid}, username: {user_username}})," .
-                            "(subscriber {guid: {subscriber_guid}, username: {subscriber_username}}) " . 
-                            "MERGE (subscriber)-[r:SUBSCRIBED]->(user) RETURN r";
+    public function createSubscription($user, $to){
+        $this->template =   "MATCH (user:User {guid: {user_guid}})," .
+                            "(to:User {guid: {subscriber_guid}}) " . 
+                            "MERGE (user)-[:SUBSCRIBED]->(to)";
         $this->values = array(
-            'user_guid' => $user->guid,
-            'user_username' => $user->username,
-            'subscriber_guid' => $subscriber->guid,
-            'subscriber_username' => $subscriber->username
+            'user_guid' => is_numeric($user) ? $user : $user->guid,
+            'subscriber_guid' => is_numeric($to) ? $to: $to->guid,
             );
         return $this;
     }
@@ -105,7 +103,7 @@ class Subscriptions implements Interfaces\PreparedInterface{
      */
     public function getSubscriptionsOfSubscriptions(Entities\User $user){
         $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
-                            "WHERE NOT (user)-[:SUBSCRIBED]-(fof) " .
+                            "WHERE NOT (user)-[:SUBSCRIBED]-(fof) AND NOT (fof.guid = user.guid) " .
                             "RETURN fof, COUNT(*) ".
                             "ORDER BY COUNT(*) DESC ".
                             "LIMIT 10";

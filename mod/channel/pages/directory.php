@@ -91,20 +91,21 @@ class directory extends core\page implements interfaces\page{
                 $client = \Minds\Core\Data\Client::build('Neo4j');
                 $prepared = new Prepared\Subscriptions();
                 
-		$response = $client->request($prepared->getSubscriptionsOfSubscriptions(elgg_get_logged_in_user_entity()));
-
-		$response = $response->getRows();
-		
-		$users = array();
-		foreach($response['fof'] as $k => $node){
-                //	$users[] = new entities\user(array('guid'=>$node['guid'], 'username'=>$node['username'])); 
-			$user_guids[] = $node['guid'];
-		}
+        		$response = $client->request($prepared->getSubscriptionsOfSubscriptions(elgg_get_logged_in_user_entity()));
+        
+        		$response = $response->getRows();
+        		
+        		$users = array();
+        		foreach($response['fof'] as $k => $node){
+                        //	$users[] = new entities\user(array('guid'=>$node['guid'], 'username'=>$node['username'])); 
+        			$user_guids[] = $node['guid'];
+        		}
                 
-		//$content = elgg_view_entity_list($users)
-			$options['guids'] = $user_guids;
-			$options['pagination'] = false;
+                if($user_guids){
+                     $options['guids'] = $user_guids;
+			         $options['pagination'] = false;
                 	$content = elgg_list_entities($options);
+                }
 			break;
 			
 			case 'featured':

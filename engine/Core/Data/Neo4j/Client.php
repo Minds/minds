@@ -16,9 +16,9 @@ class Client implements Interfaces\ClientInterface{
         global $CONFIG;
         //$this->neo4j = new \Everyman\Neo4j\Client(isset($CONFIG->neo4j_server) ? $CONFIG->neo4j_server : NULL);
     	$this->neo4j = NeoClient\ClientBuilder::create()
-    				->addConnection('default','http','10.56.0.15',7474)
-				->setAutoFormatResponse(true)
-				->setDefaultTimeout(20)
+    				->addConnection('default','http',isset($CONFIG->neo4j_server) ? $CONFIG->neo4j_server : 'localhost',7474)
+                    ->setAutoFormatResponse(true)
+                    ->setDefaultTimeout(20)
     				->build();
     }
     
@@ -29,10 +29,8 @@ class Client implements Interfaces\ClientInterface{
         
     public function request(Interfaces\PreparedInterface $request){
         $build = $request->build();
-
-	$response = $this->neo4j->sendCypherQuery($build['string'], $build['values']);
-	
-	return $response;
+        $response = $this->neo4j->sendCypherQuery($build['string'], $build['values']);
+        return $response;
     }
     
 }    
