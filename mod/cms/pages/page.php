@@ -21,15 +21,19 @@ class page extends core\page implements interfaces\page{
 		$class = '';
 		switch($pages[0]){
 			case 'edit':
-				$page = new entities\page($pages[1]);
-				if($page->banner){
+				try{
+				    $page = new entities\page($pages[1]);
+				    if($page->banner){
 					$header = elgg_view('carousel/carousel', 
 						array('items'=> array(
 							new \ElggObject(array('ext_bg' => elgg_get_site_url().'p/header/'.$page->guid, 'top_offset'=>$page->banner_position))
 						)));
 					$class = "cms-banner cms-banner-editable";
-				}
-				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/edit/'.$page->guid, 'enctype'=>'multipart/form-data'), array('page'=>$page)); 
+				    }
+				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/edit/'.$page->guid, 'enctype'=>'multipart/form-data'), array('page'=>$page));
+                                } catch (\Exception $e){
+                                    echo $e->getMessage(); exit;
+                                } 
 				break;
 			case 'add':
 				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/add', 'enctype'=>'multipart/form-data'), array('context'=>get_input('context', 'footer'))); 
