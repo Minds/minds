@@ -79,8 +79,8 @@ class Subscriptions implements Interfaces\PreparedInterface{
                             "(to:User {guid: {subscriber_guid}}) " . 
                             "MERGE (user)-[:SUBSCRIBED]->(to)";
         $this->values = array(
-            'user_guid' => is_numeric($user) ? $user : $user->guid,
-            'subscriber_guid' => is_numeric($to) ? $to: $to->guid,
+            'user_guid' => is_numeric($user) ? (string) $user : $user->guid,
+            'subscriber_guid' => is_numeric($to) ? (string) $to: $to->guid,
             );
         return $this;
     }
