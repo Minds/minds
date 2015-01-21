@@ -13,7 +13,6 @@
   		"ivaynberg/select2":"master",
 		"tijsverkoyen/twitteroauth": "master",
 		"bshaffer/oauth2-server-php":"master",
-		"everyman/neo4jphp":"dev-master",
 		"neoxygen/neoclient": "~2.0"
    	},
 	"repositories": [{
