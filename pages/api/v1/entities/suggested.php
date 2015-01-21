@@ -55,8 +55,6 @@ class suggested implements interfaces\api{
                 //users only action. objects should use 'pass'
                 $prepared = new Core\Data\Neo4j\Prepared\Subscriptions();
                 Core\Data\Client::build('Neo4j')->request($prepared->createPass(Core\session::getLoggedinUser()->guid, $pages[1]));
-                
-            }
         }
         
     }

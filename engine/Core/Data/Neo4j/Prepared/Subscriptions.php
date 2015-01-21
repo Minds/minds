@@ -91,8 +91,8 @@ class Subscriptions implements Interfaces\PreparedInterface{
      * @param integer $to
      * @return $this
      */
-    public function createSubscription($user, $to){
-        $this->template =   "MATCH (user:User {guid: {user_guid}})," .
+    public function createPass($user, $to){
+	$this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(to:User {guid: {subscriber_guid}}) " . 
                             "MERGE (user)-[:PASS]->(to)";
         $this->values = array(
