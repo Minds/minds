@@ -585,7 +585,8 @@ width: 96%;
 }
 .post-post-preview .post-post-preview-icon-img{
 	float:left;
-	height:36px;
+	/*height:36px;*/
+	width: 100%;
 }
 
 /**

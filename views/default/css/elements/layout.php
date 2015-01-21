@@ -169,9 +169,13 @@
 /***** PAGE MESSAGES ******/
 .elgg-system-messages {
 	position: fixed;
-	top: 48px;
-	right: 20px;
-	max-width: 500px;
+	display:block;
+	top: 60px;
+	left:50%;
+	margin:auto;
+	margin-left:-250px;
+	width: 500px;
+	padding:16px;
 	z-index: 20000;
 }
 .elgg-system-messages li {

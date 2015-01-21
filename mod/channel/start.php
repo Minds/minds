@@ -227,7 +227,8 @@ class start extends \ElggPlugin{
 			'social_link_linkedin' => '',		
 			'social_link_github' => '',
 			'social_link_pinterest' => '',
-			'social_link_instagram' => ''
+			'social_link_instagram' => '',
+			'social_link_youtube' => ''
 		);
 	
 		if($user){
