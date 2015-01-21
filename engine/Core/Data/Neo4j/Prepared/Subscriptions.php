@@ -106,9 +106,10 @@ class Subscriptions implements Interfaces\PreparedInterface{
                             "WHERE NOT (user)-[:SUBSCRIBED]-(fof) AND NOT (fof.guid = user.guid) " .
                             "RETURN fof, COUNT(*) ".
                             "ORDER BY COUNT(*) DESC ".
-                            "LIMIT 10";
+                            "LIMIT {limit}";
         $this->values = array(
-                            'guid' => (string) $user->guid
+                            'guid' => (string) $user->guid,
+			    'limit' => 12
                             );
         return $this;
     }
