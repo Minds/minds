@@ -16,7 +16,7 @@
 	}
     
     ?>
-	<li><a ref="<?= elgg_get_site_url(); ?>nodes/launch" class="elgg-button elgg-button-action">+ Launch a node</a></li>
+	<li><a href="<?= elgg_get_site_url(); ?>nodes/launch" class="elgg-button elgg-button-action">+ Launch a node</a></li>
 	</ul>
     </div>
 </div>
