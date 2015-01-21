@@ -536,6 +536,7 @@ function register_error($error) {
  * @example events/advanced.php Advanced example of registering an event handler
  *                              callback and halting execution.
  * @example events/all.php      Example of how to use the 'all' keyword.
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_register_event_handler($event, $object_type, $callback, $priority = 500) {
 	global $CONFIG;
@@ -577,6 +578,7 @@ function elgg_register_event_handler($event, $object_type, $callback, $priority 
  *
  * @return void
  * @since 1.7
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_unregister_event_handler($event, $object_type, $callback) {
 	global $CONFIG;
@@ -620,6 +622,7 @@ function elgg_unregister_event_handler($event, $object_type, $callback) {
  * @return bool The result of running all handler callbacks.
  * @link http://docs.elgg.org/Tutorials/Core/Events
  * @internal @example events/emit.php Basic emitting of an Elgg event.
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_trigger_event($event, $object_type, $object = null) {
 	global $CONFIG;
@@ -718,6 +721,7 @@ function elgg_trigger_event($event, $object_type, $object = null) {
  * @example hooks/register/advanced.php Registering for a plugin hook and changing the params.
  * @link http://docs.elgg.org/Tutorials/Plugins/Hooks
  * @since 1.8.0
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 500) {
 	global $CONFIG;
@@ -759,6 +763,7 @@ function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 
  *
  * @return void
  * @since 1.8.0
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_unregister_plugin_hook_handler($hook, $entity_type, $callback) {
 	global $CONFIG;
@@ -819,6 +824,7 @@ function elgg_unregister_plugin_hook_handler($hook, $entity_type, $callback) {
  * @link http://docs.elgg.org/Tutorials/Plugins/Hooks
  *
  * @since 1.8.0
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_trigger_plugin_hook($hook, $type, $params = null, $returnvalue = null) {
 	global $CONFIG;
