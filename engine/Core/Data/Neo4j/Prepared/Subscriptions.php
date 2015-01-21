@@ -86,6 +86,23 @@ class Subscriptions implements Interfaces\PreparedInterface{
     }
     
     /**
+     * Create a pass
+     * @param integer $user
+     * @param integer $to
+     * @return $this
+     */
+    public function createSubscription($user, $to){
+        $this->template =   "MATCH (user:User {guid: {user_guid}})," .
+                            "(to:User {guid: {subscriber_guid}}) " . 
+                            "MERGE (user)-[:PASS]->(to)";
+        $this->values = array(
+            'user_guid' => (string) $user,
+            'subscriber_guid' => (string) $to,
+            );
+        return $this;
+    }
+    
+    /**
      * Return subscribers
      * @param User $user
      * @return $this
@@ -103,7 +120,7 @@ class Subscriptions implements Interfaces\PreparedInterface{
      */
     public function getSubscriptionsOfSubscriptions(Entities\User $user){
         $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
-                            "WHERE NOT (user)-[:SUBSCRIBED]-(fof) AND NOT (fof.guid = user.guid) " .
+                            "WHERE NOT (user)-[:SUBSCRIBED]-(fof) AND NOT (fof.guid = user.guid) AND NOT (user)-[:PASS]->(fof) " .
                             "RETURN fof, COUNT(*) ".
                             "ORDER BY COUNT(*) DESC ".
                             "LIMIT {limit}";

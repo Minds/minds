@@ -48,7 +48,18 @@ class suggested implements interfaces\api{
         
     }
     
-    public function post($pages){}
+    public function post($pages){
+        
+        switch($pages[0]){
+            case 'pass':
+                //users only action. objects should use 'pass'
+                $prepared = new Core\Data\Neo4j\Prepared\Subscriptions();
+                Core\Data\Client::build('Neo4j')->request($prepared->createPass(Core\session::getLoggedinUser()->guid, $pages[1]));
+                
+            }
+        }
+        
+    }
     
     public function put($pages){}
     
