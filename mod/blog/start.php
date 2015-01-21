@@ -205,8 +205,11 @@ function blog_page_handler($page) {
 			header('Expires: ' . date('r', time() + 864000));
 			header("Pragma: public");
  			header("Cache-Control: public");
-			echo file_get_contents($header->getFilenameOnFilestore());
 			
+			try{
+				echo file_get_contents($header->getFilenameOnFilestore());
+			}catch(\Exception $e){}
+
 			exit;
 			break;
 		case 'read': // Elgg 1.7 compatibility

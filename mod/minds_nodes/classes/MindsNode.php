@@ -18,7 +18,8 @@ class MindsNode extends ElggObject{
 	 * Is this node allowed it's own domain
 	 */
 	public function allowedDomain(){ 
-		return $this->getTier()->price > 0 ? true : false;//perhaps a little simplistic
+		return true;
+//		return $this->getTier()->price > 0 ? true : false;//perhaps a little simplistic
 	}
 
 	/**

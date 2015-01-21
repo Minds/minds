@@ -169,25 +169,31 @@ if (!$error) {
 		// add to river if changing status or published, regardless of new post
 		// because we remove it for drafts.
 		if (($new_post || $old_status == 'draft') && $status == 'published') {
-		
-			$activity = new minds\entities\activity();
-			$activity->setTitle($blog->title)
-					->setBlurb(elgg_get_excerpt($blog->description))
-					->setUrl($blog->getURL())
-					->setThumbnail($blog->getIconURL())
-					->setFromEntity($blog)
-					->save();
-		
-		} else {
-			$activity_guids = Minds\Core\Data\indexes::fetch("activity:entitylink:$entity->guid");
-			foreach($activity_guids as $activity_guid){
-				$activity = new minds\entities\activity($activity_guid);
+			if($blog->access_id ==2){	
+				$activity = new minds\entities\activity();
 				$activity->setTitle($blog->title)
 					->setBlurb(elgg_get_excerpt($blog->description))
 					->setUrl($blog->getURL())
 					->setThumbnail($blog->getIconURL())
 					->setFromEntity($blog)
 					->save();
+			}
+		
+		} else {
+			$activity_guids = minds\core\data\indexes::fetch("activity:entitylink:$entity->guid");
+			foreach($activity_guids as $activity_guid){	
+				if($blog->access_id == 2){
+					$activity = new minds\entities\activity($activity_guid);
+					$activity->setTitle($blog->title)
+					->setBlurb(elgg_get_excerpt($blog->description))
+					->setUrl($blog->getURL())
+					->setThumbnail($blog->getIconURL())
+					->setFromEntity($blog)
+					->save();
+				} else {
+					$activity = new minds\entities\activity($activity_guid);
+					$activity->delete();
+				}
 			}
 		}
 		
