@@ -28,19 +28,17 @@
 	List
 *************************************** */
 .elgg-list {
-	/*border-top: 1px dotted #CCCCCC;*/
-	margin:5px  0;
+	margin:5px  auto;
 	clear: both;
-	width:100%;
+	width:990px;
 }
 .elgg-list > li {
 	float: left;
-	margin: 24px 0 0 2%;
-    border: 0;
-	background:#F8F8F8;
-	padding:0 10px 10px 11px;
-        width: 29%;
-        /*width:28%;*/
+	margin: 24px 12px;
+    	border: 0;
+	/*background:#F8F8F8;*/
+	background:#FFF;
+        width: 300px;
 	overflow: hidden;
 	height:240px;
         display: block;
@@ -51,9 +49,8 @@
 	-moz-box-shadow: 0 0 1px #DDD;
 	border: 1px solid #DDD;
 }
-.elgg-list.x4 > li {
-	width:21%;
-	margin:8px 0 8px 2%;
+.elgg-list > li .elgg-image-block{
+	padding:16px;
 }
 .elgg-list.x1{
 	width:600px;
@@ -66,6 +63,10 @@
 }
 .elgg-list.no-margin, .elgg-list.no-margin > li{
 	margin:0!important;
+}
+
+.elgg-layout-two-sidebar .elgg-list{
+	width:auto;
 }
 .elgg-list.x2{ 
 	/*width:auto;
@@ -92,28 +93,54 @@
     transition-duration: 0.6s;
 }
 
+@media screen and (max-width: 720px){
+
+	.sidebar-active .elgg-list{
+		width:auto !important;
+	}
+
+}
+
 @media screen and (max-width: 1100px) {
     .elgg-list > li{
-            width:28%;
+            width:300px;
             height:210px;
     }
+
+    .sidebar-active .elgg-list{
+                width:720px;
+    }
+
 }
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1300px) {
 	
+	.elgg-list{
+		width: 1310px;
+	}
 	.elgg-list > li{
-		width:21%;
+		width:300px;
 		height:210px;
 	}
-	.elgg-list.x4 > li {
-		width:12.5%;
+
+	.sidebar-active .elgg-list{
+		width:1000px;
 	}
+
 }
-@media screen and (min-width: 1800px) {
+@media screen and (min-width: 1600px) {
+	
+	.elgg-list{
+		width:1640px;
+	}
 
 	 .elgg-list > li{
-                width:16.5%;
+                width:300px;
                 height:210px;
         }
+
+	.sidebar-active .elgg-list{
+		width:1320px;
+	}
 }
 /**
  * MASON PROTOTYPE
@@ -262,17 +289,19 @@
 	color: white;
 	font-weight: bold;
 	display: block;
-	padding: 8px 16px;
 	cursor: pointer;
 	opacity: 0.9;
 	
+	padding: 16px;
+	
+	/*
 	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
 	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
 	
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px; */
 }
 .elgg-state-success {
 	background-color: black;
@@ -483,6 +512,7 @@
  */
 .list-newsfeed{
 	padding:0 !important;
+	width:auto !important;
 }
 .list-newsfeed > li{
 	float:none;
@@ -565,3 +595,4 @@
 	background:#FFF;
 	margin:16px;
 }
+
