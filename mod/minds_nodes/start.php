@@ -115,7 +115,6 @@ class start extends Components\Plugin{
 	 * @param array|int|false $count
 	 */
 	public static function getNodes(ElggUser $user = null, $count = false) {
-	    
 	    if (!$user) $user = elgg_get_logged_in_user_entity ();
 	    
 	    $params = array(
@@ -131,9 +130,8 @@ class start extends Components\Plugin{
 	    $key = "object::node::{$user->guid}";
 	    if ($count) $key.= "::count";
 	    
-	    $value = $cacher->get($key);
-	    if (!$value)
-	    {
+		$value = $cacher->get($key);
+	    if (!$value){
 		//error_log('MPDEBUG - Value for key ' . $key . ' not in cache '  . print_r($params, true));
 		$value = elgg_get_entities($params);
 		$cacher->set($key, $value);

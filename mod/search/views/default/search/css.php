@@ -12,6 +12,9 @@
 	display:none;
 }
 
+li.elgg-item > .minds-hovercard{
+	position:relative;
+}
 
 .search-filter{
 	margin: 0 2%;

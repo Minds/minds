@@ -67,7 +67,8 @@ class facebook extends core\base{
 			$data['message'] = $activity['message'];
 		
 		if(isset($activity['perma_url']) && $activity['perma_url'] != elgg_get_site_url())
-			$data['link'] = str_replace(parse_url($activity['perma_url'], PHP_URL_SCHEME), '', $activity['perma_url']);
+			$data['link'] = $activity['perma_url'];
+			//$data['link'] = str_replace(parse_url($activity['perma_url'], PHP_URL_SCHEME), '', $activity['perma_url']);
 		
 		if(isset($activity['thumbnail_src']) && $activity['thumbnail_src'])
 			$data['link']['picture'] = $activity['thumbnail_src'];
@@ -80,9 +81,10 @@ class facebook extends core\base{
 		
 		  } catch(FacebookRequestException $e) {
 		
-		    echo "Exception occured, code: " . $e->getCode();
-		   echo " with message: " . $e->getMessage();
-			\elgg_set_plugin_user_setting('facebook', 'failed', core\session::getLoggedinUser()->guid, 'social');		
+			echo "Exception occured, code: " . $e->getCode();
+			echo " with message: " . $e->getMessage();
+			\elgg_set_plugin_user_setting('facebook', 'failed', core\session::getLoggedinUser()->guid, 'social');	
+			error_log($e->getMessage());	
 		  }   
 	}
 		

@@ -29,6 +29,14 @@ and (max-width : 1200px) {
 @media all 
 and (min-width : 0px)
 and (max-width : 720px) {
+
+	.content-carousel .layout{
+		margin-top:80px !important;
+	}
+
+	.carousel-inner > .item > img{
+		top:0 !important;
+	}
 	
 	.responsive-ad{
 		display:block !important;

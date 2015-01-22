@@ -19,12 +19,12 @@ This *readme* file should hopefuly explain all you need to get started, if not, 
 
 ## Installation
 ### Requirements
-- PHP 5.3+
+- PHP 5.4+
 - Cassandra
 - Nginx (recommended)
 - Unix/Linux (recommened)
 - Elasticsearch (for search only)
-- Kaltura (for video features only)
+- Cinemr (for video features only)
 
 ### Setup
 - Go to localhost/install.php and follow the instruction. (debugging may be needed)

@@ -23,11 +23,11 @@ $base_url = isset($CONFIG->cdn_url) ? elgg_get_site_url() : elgg_get_site_url();
 }
 @font-face {
   font-family: 'fontello';
-  src: url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.eot?96059246');
-  src: url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.eot?96059246#iefix') format('embedded-opentype'),
-       url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.woff?96059246') format('woff'),
-       url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.ttf?96059246') format('truetype'),
-       url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.svg?96059246#fontello') format('svg');
+  src: url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.eot?960592461');
+  src: url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.eot?960592461#iefix') format('embedded-opentype'),
+       url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.woff?960592461') format('woff'),
+       url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.ttf?960592461') format('truetype'),
+       url('<?= $base_url ?>mod/minds/vendors/fontello/font/fontello.svg?960592461#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }

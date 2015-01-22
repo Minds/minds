@@ -42,7 +42,7 @@ minds.cms.init = function() {
     	e.preventDefault();
     	var section = $(this).parents('section')[0];
 		
-		files = event.target.files;
+		files = e.target.files;
 		var data = new FormData();
 		$.each(files, function(key, value){
 			data.append(key, value);
