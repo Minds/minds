@@ -773,7 +773,7 @@ function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 
  * @deprecated Use Minds\Core\Events
  */
 function elgg_unregister_plugin_hook_handler($hook, $entity_type, $callback) {
-    return \Minds\Core\events::unregister("elgg/hook/$entity_type", $hook);
+    return \Minds\Core\events::unregister("elgg/hook/$entity_type", $hook, $callback);
 	/*global $CONFIG;
 
 	if (isset($CONFIG->hooks[$hook]) && isset($CONFIG->hooks[$hook][$entity_type])) {
