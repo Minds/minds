@@ -53,10 +53,10 @@ class events {
      * @param \callable $handler
      */
     public static function unregister($namespace, $event, $handler) {
-	if (isset(self::$events[$event]) && isset(self::$events[$event][$namespace])) {
-	    foreach (self::$events[$event][$namespace] as $key => $event_callback) {
-		if ($event_callback == $callback) {
-		    unset(self::$events[$event][$namespace][$key]);
+	if (isset(self::$events[$namespace]) && isset(self::$events[$namespace][$event])) {
+	    foreach (self::$events[$namespace][$event] as $key => $event_callback) {
+		if ($event_callback == $handler) {
+		    unset(self::$events[$namespace][$event][$key]);
 		}
 	    }
 	}
@@ -93,14 +93,13 @@ class events {
 	}
 
 	// New event format, expects event object
-	$event = new Event([
+	$eventobj = new Event([
 	    'namespace' => $namespace,
 	    'event' => $event,
 	    'parameters' => $params
 	]);
-	$event->setResponse($default_return);
-	$args = [$event];
-
+	$eventobj->setResponse($default_return);
+	
 	try {
 
 	    // Dispatch event
@@ -111,24 +110,27 @@ class events {
 
 			    // There's a potential namespace collision on old style elgg events/hooks, so we namespace them off, however some hooks/events check this parameter. 
 			    // Therefore we need to normalise the namespace before dispatch
-			    if (strpos('elgg/event', $namespace) === 0) {
+			    if (strpos($namespace, 'elgg/event/') === 0) {
 				// old style event
 				$namespace = str_replace('elgg/event/', '', $namespace);
 
-				if (call_user_func_array($callback, array($event, $namespace, $params)) === false) {
+				$args = array($event, $namespace, $params);
+				if (call_user_func_array($callback, $args) === false) {
 				    throw new exceptions\StopEventException("Event propagation for old style $namespace/$event stopped by $callback");
 				}
-			    } elseif (strpos('elgg/hook', $namespace) === 0) {
+			    } elseif (strpos($namespace, 'elgg/hook/') === 0) {
 
 				// Old style hook
 				$namespace = str_replace('elgg/hook/', '', $namespace);
 
-				$temp_return_value = call_user_func_array($callback, array($event, $namespace, $default_return, $params));
-				if (!is_null($temp_return_value)) {
-				    $event->setResponse($temp_return_value);
+				$args = array($event, $namespace, $eventobj->response(), $params);
+				$temp_return_value = call_user_func_array($callback, $args);
+				if (!is_null($temp_return_value)) { 
+				    $eventobj->setResponse($temp_return_value);
 				}
 			    } else {
-				call_user_func_array($callback, array($event));
+				$args = array($eventobj);
+				call_user_func_array($callback, $args);
 			    }
 			}
 		    }
@@ -138,7 +140,7 @@ class events {
 	    // Stop execution when we get this exception, all other exceptions bubble up.
 	}
 	
-	return $event->response();
+	return $eventobj->response();
     }
 
 }
