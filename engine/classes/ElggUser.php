@@ -491,6 +491,7 @@ class ElggUser extends ElggEntity
 	 * @return 
 	 */
 	function getSubscriptionsCount(){
+		return 0;
 		$db = new minds\core\data\call('friends');
 		return (int) $db->countRow($this->guid);
 	}
