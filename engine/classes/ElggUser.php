@@ -491,9 +491,16 @@ class ElggUser extends ElggEntity
 	 * @return 
 	 */
 	function getSubscriptionsCount(){
-		return 0;
-		$db = new minds\core\data\call('friends');
-		return (int) $db->countRow($this->guid);
+		$cacher = \minds\core\data\cache\factory::build();
+                if($cache = $cacher->get("friends:$this->guid"))
+                        return $cache;
+
+                $db = new minds\core\data\call('friends');
+                $count = $db->countRow($this->guid);
+                if(!$count)
+                        $count = 1;
+                $cacher->set("friends:$this->guid", $count);
+                return $count;
 	}
 	
 	/**
