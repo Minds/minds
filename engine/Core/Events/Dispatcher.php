@@ -1,10 +1,9 @@
 <?php
 
-namespace Minds\Core;
+namespace Minds\Core\Events;
 
-use Minds\Core\Data\Event;
 
-class events {
+class Dispatcher {
 
     /**
      * Register of event listeners and their handlers.

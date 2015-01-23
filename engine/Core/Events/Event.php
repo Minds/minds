@@ -1,6 +1,6 @@
 <?php
 
-namespace Minds\Core\Data;
+namespace Minds\Core\Events;
 
 /**
  * Data passed to new style plugin event/hook handlers
