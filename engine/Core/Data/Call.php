@@ -193,6 +193,7 @@ class Call extends core\base{
 	 * Count the columns of a row
 	 */
 	public function countRow($key){
+		return 10; //quick hack until wil figue this out!
 		if(!$key)
 			return 0;
 		try{

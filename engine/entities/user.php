@@ -31,8 +31,15 @@ class user extends \ElggUser{
 			return 0;
 		}
 
-		$db = new core\Data\Call('friendsof');
-		return (int) $db->countRow($this->guid);
+		$cacher = \minds\core\data\cache\factory::build();
+		if($cache = $cacher->get("$this->guid:friendsofcount")){
+			return $cache;
+		}
+		
+		$db = new core\data\call('friendsof');
+		$return = (int) $db->countRow($this->guid);
+		$cacher->set("$this->guid:friendsofcount", $return);
+		return $return;
 	}
 	
 	/**

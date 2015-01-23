@@ -28,8 +28,8 @@ if (elgg_is_logged_in()) {
 		<span class="text">
 			<?php echo $text;?>
 		</span>
-		<span class="subscribers-count">
-			<?php echo $user->getSubscribersCount();?>
-		</span>
+		<!--<span class="subscribers-count">
+			<?php //echo $user->getSubscribersCount();?>
+		</span>-->
 	</a>
 </div>
