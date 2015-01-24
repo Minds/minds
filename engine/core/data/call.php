@@ -35,7 +35,7 @@ class call extends core\base{
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
 		
 		try{
-			$pool = new ConnectionPool($this->keyspace, $this->servers, null, 0, $sendTimeout, $receiveTimeout);
+			$pool = new ConnectionPool($this->keyspace, $this->servers, null, 2, $sendTimeout, $receiveTimeout);
 		
 			$this->pool = $pool;
 		
@@ -193,7 +193,7 @@ class call extends core\base{
 	 * Count the columns of a row
 	 */
 	public function countRow($key){
-		return 10; //quick hack until wil figue this out!
+		//return 10; //quick hack until wil figue this out!
 		if(!$key)
 			return 0;
 		try{
