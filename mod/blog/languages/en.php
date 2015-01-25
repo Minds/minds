@@ -78,7 +78,7 @@ View and comment on the new blog post:
 	// scraper
 	'blog:minds:scraper' => 'RSS Mirror Tool',
 	'blog:minds:scraper:create' => 'Create new RSS Mirror',
-	'blog:minds:scraper:menu' => 'Manage RSS Mirrors',
+	'blog:minds:scraper:menu' => 'RSS mirror management',
 	'blog:minds:scraper:name' => 'Name',
 	'blog:minds:scraper:url' => 'Url of rss feed',
 );
