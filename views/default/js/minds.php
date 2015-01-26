@@ -306,6 +306,9 @@
 			}
 			);                        
 		});
+		$('.elgg-list.mason').imagesLoaded().always(function(){
+			console.log('all images loaded');
+		});
 		
 		$('.hero > .topbar').on('mouseenter', '.right', function(e){ $('.topbar .right .social-login').show(); });
 		$('.hero > .body').on('click', function(e){ $('.topbar .right .social-login').hide(); });

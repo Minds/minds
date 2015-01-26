@@ -59,12 +59,15 @@ class search extends core\page implements interfaces\page{
 		$params['size'] = \get_input('limit');
 		$params['from'] = \get_input('offset');
 		$params['body']  = $body;
-		$results = $client->search($params);
-		$guids = array();
-		foreach($results['hits']['hits'] as $raw){
-			array_push($guids, $raw['_id']);
+		try{
+			$results = $client->search($params);
+                	$guids = array();
+			foreach($results['hits']['hits'] as $raw){
+                        	array_push($guids, $raw['_id']);
+            		}
+		}catch(\Exception $e){
+			$guids = array();
 		}
-
 		if(empty($guids)){
 			$content = \elgg_view('search/filter');
 			$content .= '<div style="padding:16px; margin:42px 2%; width:400px;font-weight:bold; font-size:24px;">Sorry, no results could be found</div>';

@@ -83,7 +83,7 @@ class MindsNode extends ElggObject{
 				$domain .= '?' . http_build_query($data);
 				break;
 		}
-echo elgg_get_plugin_setting('manager_addr', 'minds_nodes')."/v1/nodes/$domain";
+		
 		curl_setopt($ch, CURLOPT_URL, elgg_get_plugin_setting('manager_addr', 'minds_nodes')."/v1/nodes/$domain");
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 2);
