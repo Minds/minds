@@ -220,7 +220,8 @@ function blog_get_trending_page_content_list() {
 
 	$cacher = minds\core\data\cache\factory::build();
 	$hash = md5(elgg_get_site_url());
-	if(!$guids = $cacher->get("$hash:trending-guids:$limit:$offset")){
+	$tspan = get_input('timespan', 'day');
+	if(!$guids = $cacher->get("$hash:trending-guids:$limit:$offset:$tspan")){
 	
 
 		//trending
@@ -229,7 +230,7 @@ function blog_get_trending_page_content_list() {
        	 	);
        	 	$trending = new MindsTrending(array(), $options);
 		$guids = $trending->getList(array('type'=>'object', 'subtype'=>'blog', 'limit'=>$limit, 'offset'=>$offset, 'count'=>NULL));
-		$cacher->set("$hash:trending-guids:$limit:$offset", $guids);
+		$cacher->set("$hash:trending-guids:$limit:$offset:$tspan", $guids);
 	}
 		
 	if($guids)	{
