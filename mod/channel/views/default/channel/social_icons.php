@@ -9,7 +9,7 @@
 						$network = str_replace('social_link_', '', $k);
 						if(!isset($network_icons[$network]))
 							continue;
-						echo elgg_view('output/url', array('text'=>$network_icons[$network], 'href'=>$v, 'class'=>'entypo'));
+						echo elgg_view('output/url', array('text'=>$network_icons[$network], 'href'=>$v, 'class'=>'entypo', 'target'=>'_blank'));
 					}
 				}
 			?>

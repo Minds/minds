@@ -42,7 +42,7 @@ class lists extends core\page implements interfaces\page{
 				break;
 			case 'featured':
 			default:	
-				$params['title'] = 'Featured Blogs';
+				$params['title'] = 'Blogs';
 				$guids = core\data\indexes::fetch('object:blog:featured', array('offset'=>get_input('offset', ''), 'limit'=>get_input('limit', 12)));
 				if(!$guids){
 					$content = ' ';
@@ -84,6 +84,7 @@ class lists extends core\page implements interfaces\page{
                         'priority' => 2,
                 ));
 		
+		$params['filter_context'] = $pages[0];
 		$body = elgg_view_layout('gallery', array(
 			'title'=>$params['title'],
 			'content'=>$content,
