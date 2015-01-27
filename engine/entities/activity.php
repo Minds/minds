@@ -98,6 +98,13 @@ class activity extends entity{
 				'thumbs:down:user_guids'
 			));
 	}
+
+	public function export(){
+		$export = parent::export();
+		if($this->entity_guid)
+			$export['entity_guid'] = (string) $this->entity_guid;
+		return $export;
+	}
 	
 	/**
 	 * Return a friendly url

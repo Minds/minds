@@ -40,7 +40,6 @@ class newsfeed implements interfaces\api{
                 );
                 break;
         }
-        
 
         $activity = core\entities::get(array_merge(array(
             'type' => 'activity',

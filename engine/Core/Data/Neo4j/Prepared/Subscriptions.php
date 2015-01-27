@@ -124,7 +124,7 @@ class Subscriptions implements Interfaces\PreparedInterface{
 			    "NOT (user)-[:SUBSCRIBED]-(fof) " .
 			    "AND NOT (fof.guid = user.guid) " . 
 			    "AND NOT (user)-[:PASS]->(fof) " .
-                            "RETURN fof ".
+                            "RETURN DISTINCT fof ".
                             //"ORDER BY COUNT(*) DESC ".
                             "LIMIT {limit}";
         $this->values = array(
