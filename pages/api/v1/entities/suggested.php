@@ -25,7 +25,7 @@ class suggested implements interfaces\api{
         $prepared = new Data\Neo4j\Prepared\Subscriptions();
         $result= Data\Client::build('Neo4j')->request($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser()));
 	error_log('hello');
-error_log('USER GUID:' . Core\session::getLoggedInUser()->guid);	   
+//error_log('USER GUID:' . Core\session::getLoggedInUser()->guid);	   
         $rows = $result->getRows();
         $guids = array();
         foreach($rows['fof'] as $fof){

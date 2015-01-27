@@ -16,7 +16,7 @@ if($ping){
 	
 	$ch = curl_init($domain_link);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch,CURLOPT_TIMEOUT_MS,3000);
+	curl_setopt($ch,CURLOPT_TIMEOUT_MS,5000);
 	curl_exec($ch);
 	$errorno = curl_errno($ch);
 	curl_close($ch);
@@ -67,13 +67,14 @@ if($ping){
 		}
 		progress = progress+1;
 		$('.loading-bar .progress').css('width', progress + '%');
-	}, 600);
+	}, 1000);
 
     // Change message after a period of time
     setTimeout(function() {
    	$('#pingtest-results').fadeOut();
         $('#pingtest-fail').fadeIn();
-    }, 60000);
+    }, 100000); 
+	//roughly hang for 1 min
     
 	var xmlhttp=new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function()  {
@@ -82,7 +83,7 @@ if($ping){
 		} else {
 			console.log(xmlhttp.responseText);
 			//$('#pingtest-results').fadeOut();
-                            //   $('#pingtest-fail').fadeIn();
+                        //$('#pingtest-fail').fadeIn();
 		}
   	}
 	xmlhttp.open("GET","?domain=<?php echo $domain;?>&ping=true",true);

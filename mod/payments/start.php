@@ -46,7 +46,7 @@ class start extends Components\Plugin{
 			
 			\elgg_register_menu_item('page', array(
 			    'name' => 'payments:payouts',
-			    'text' => 'Payout Preferences',
+			    'text' => 'Payout preferences',
 			    'href' => 'settings/payments/payouts',
 			 ));
 			 

@@ -120,9 +120,12 @@ class Subscriptions implements Interfaces\PreparedInterface{
      */
     public function getSubscriptionsOfSubscriptions(Entities\User $user){
         $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
-                            "WHERE NOT (user)-[:SUBSCRIBED]-(fof) AND NOT (fof.guid = user.guid) AND NOT (user)-[:PASS]->(fof) " .
-                            "RETURN fof, COUNT(*) ".
-                            "ORDER BY COUNT(*) DESC ".
+                            "WHERE " . 
+			    "NOT (user)-[:SUBSCRIBED]-(fof) " .
+			    "AND NOT (fof.guid = user.guid) " . 
+			    "AND NOT (user)-[:PASS]->(fof) " .
+                            "RETURN fof ".
+                            //"ORDER BY COUNT(*) DESC ".
                             "LIMIT {limit}";
         $this->values = array(
                             'guid' => (string) $user->guid,

@@ -90,6 +90,7 @@ class activity extends entity{
 				'ownerObj',
 				'thumbnail_src',
 				'remind_object',
+				'entity_guid',
 				'custom_type',
 				'custom_data',
 				'thumbs:up:count',

@@ -84,7 +84,8 @@ class archive implements interfaces\api{
 		$activity = new \minds\entities\activity();
         	$activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
                 	//->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
-                ->save();
+			->setFromEntity($activity)
+                	->save();
 	}
 
 	$index = new core\Data\indexes('object:container');

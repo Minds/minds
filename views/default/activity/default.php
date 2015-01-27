@@ -48,10 +48,15 @@ if($activity->custom_type){
 echo elgg_view_image_block($icon, $header . $body, array(
 		'class' => 'inner'
 	));
-	
-//assumes true	
-if(isset($vars['comments']) && $vars['comments'] || !isset($vars['comments']))
+
+//a bit of a hack until we remove old style elgg views
+if($activity->entity_guid){
+	$obj = new \Minds\entities\entity();
+	$obj->guid = $activity->entity_guid;
+	echo elgg_view_comments($obj);
+} else {	
 	echo elgg_view_comments($activity);
+}
 
 //assumes true	
 if(isset($vars['menu']) && $vars['menu'] || !isset($vars['menu']))
