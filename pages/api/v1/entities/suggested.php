@@ -23,12 +23,26 @@ class suggested implements interfaces\api{
      */      
     public function get($pages){
         $prepared = new Data\Neo4j\Prepared\Common();
-        $result= Data\Client::build('Neo4j')->request($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser()));
-        
-	$rows = $result->getRows();
-        $guids = array();
-        foreach($rows['fof'] as $fof){
-            $guids[] = $fof['guid'];
+        switch($pages[0]){
+            case 'video':
+                $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid));
+                
+                $rows = $result->getRows();
+                $guids = array();
+                foreach($rows['object'] as $object){
+                    $guids[] = $object['object'];
+                }
+                break;
+            case 'user':
+            default:
+                
+                $result= Data\Client::build('Neo4j')->request($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser()));
+                
+                $rows = $result->getRows();
+                $guids = array();
+                foreach($rows['fof'] as $fof){
+                    $guids[] = $fof['guid'];
+                }
         }
 	
         if(!$guids){
