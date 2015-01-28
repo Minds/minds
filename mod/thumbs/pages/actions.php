@@ -6,6 +6,7 @@ namespace minds\plugin\thumbs\pages;
 
 use Minds\Core;
 use minds\interfaces;
+use Minds\plugin\thumbs\helpers;
 
 class actions extends core\page implements interfaces\page{
 	
@@ -59,7 +60,8 @@ class actions extends core\page implements interfaces\page{
 	 * Magic insert function
 	 */
 	private function magicInsert($direction = 'up', $entity){
-		
+	    helpers\storage::insert($direction, $entity);
+        return;
 		$db = new core\Data\Call('entities');
 		$indexes = new core\Data\Call('entities_by_time');
 		
