@@ -31,15 +31,36 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
      * Syncronise the data
      */
     public function sync($slugs = array()){
-        $prepared = new Prepared\Common();
+        switch($slugs[0]){
+	        case 'users':
+                $this->syncUsers();
+	        break;
+            case 'subscriptions':
+		        error_log('Sorry, please transfer users first..');    
+	        break;
+            case 'videos':
+                $this->syncVideos();
+            break;
+            default:
+                $this->syncUsers();
+	            $this->syncVideos();
+	    }
+	
         
+        
+        return $this;
+    } 
+
+    /**
+     * Sync users, with their subscriptions
+     */
+    public function syncUsers(){
         $subscriptions = new \Minds\Core\Data\Call('friends');
-        
-        //transfer over all user
+        $prepared = new Prepared\Common();
         $offset = '';
         while(true){
-            error_log("Syncing 50 entities from $offset");
-	    $users = core\entities::get(array('type'=>'user', 'offset'=>$offset, 'limit'=>250));
+            error_log("Syncing 250 users from $offset");
+            $users = core\entities::get(array('type'=>'user', 'offset'=>$offset, 'limit'=>250));
             if(!is_array($users) || end($users)->guid == $offset)
                 break;
             $offset = end($users)->guid;
@@ -50,13 +71,47 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
                 $guids[] = $user->guid;
             }
             $this->client->request($prepared->createBulkSubscriptions($subscriptions->getRows($guids)));
-	    error_log("Imported subscriptions");
+            error_log("Imported subscriptions");
            // break;
            // exit;
         }
-        
-        
-        
-        return $this;
-    } 
+    }
+
+    /**
+     * sync videos
+     * @return void
+     */
+    public function syncVideos(){
+        $prepared = new Prepared\Common();
+        //transfer over videos
+        $offset = "";
+        while(true){
+            error_log("Syncing 250 videos from $offset");
+            $videos = core\entities::get(array('subtype'=>'video', 'offset'=>$offset, 'limit'=>250));
+            if(!is_array($videos) || end($videos)->guid == $offset)
+                break;
+            $offset = end($videos)->guid;
+            $this->client->request($prepared->createBulkObjects($videos, 'video'));
+            error_log("Imported videos");
+        }
+    }
+
+    /**
+     * sync users
+     * @param array (optional) $users
+     * @return void
+     */
+    public function syncThumbs($users = NULL){
+        $indexes = new Core\Data\Call('entities_by_time');
+        if(!$users && !is_array($users){
+            while(true){
+
+            }
+        }
+    
+        foreach($users as $user){
+            $thumbs_up = array();
+        }
+
+    }
 }   

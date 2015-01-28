@@ -14,7 +14,7 @@ require_once(dirname(dirname(__FILE__)) . "/engine/start.php");
  * Commence Neo4j population.
  */
 $start = microtime();
-\Minds\Core\Data\Warehouse\Factory::build('Neo4j')->run(array('sync'));
+\Minds\Core\Data\Warehouse\Factory::build('Neo4j')->run(array('sync', isset($argv[1]) ? $argv[1] : NULL));
 $end = microtime();
 
 $total = $end-$start;
