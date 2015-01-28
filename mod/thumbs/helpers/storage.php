@@ -33,7 +33,9 @@ class storage{
         
         $prepared = new Core\Data\Neo4j\Prepared\Common();
         if($direction == 'up')
-            $return =  Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($entity->guid, $entity->subtype));
+            Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($entity->guid, $entity->subtype));
+        elseif($direction == 'down')
+            Core\Data\Client::build('Neo4j')->request($prepared->createVoteDOWN($entity->guid, $entity->subtype));
     }
 
     public static function cancel($direction = 'up', $entity){

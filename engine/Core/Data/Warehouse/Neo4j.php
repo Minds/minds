@@ -41,6 +41,9 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
             case 'videos':
                 $this->syncVideos();
             break;
+            case 'images':
+                $this->syncImages();
+                break;
             default:
                 $this->syncUsers();
 	            $this->syncVideos();
@@ -93,6 +96,23 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
             $offset = end($videos)->guid;
             $this->client->request($prepared->createBulkObjects($videos, 'video'));
             error_log("Imported videos");
+        }
+    }
+
+    /**
+     * sync images
+     */
+    public function syncImages(){
+        $prepared = new Prepared\Common();
+        $offset = "";
+        while(true){
+            error_log("Syncing 250 images from $offset");
+            $images = core\entities::get(array('subtype'=>'image', 'offset'=>$offset, 'limit'=>250));
+            if(!is_array($images) || end($images)->guid == $offset)
+                break;
+            $offset = end($images)->guid;
+            $this->client->request($prepared->createBulkObjects($images, 'image'));
+            error_log("Imported images");
         }
     }
 

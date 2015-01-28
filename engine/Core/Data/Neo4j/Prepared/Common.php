@@ -93,7 +93,7 @@ class Common implements Interfaces\PreparedInterface{
      */
     public function createPass($user, $to){
 	   $this->template =   "MATCH (user:User {guid: {user_guid}})," .
-                            "(to:User {guid: {subscriber_guid}}) " . 
+                            "(to {guid: {subscriber_guid}}) " . 
                             "MERGE (user)-[:PASS]->(to)";
         $this->values = array(
             'user_guid' => (string) $user,
@@ -176,8 +176,21 @@ class Common implements Interfaces\PreparedInterface{
      * Return suggested content, based on 
      */
     public function getSuggestedObjects($user_guid, $subtype = 'video'){
-        $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*]-(object:$subtype) " .
-                            "WHERE NOT a-[:UP|:DOWN|:PASSED]->(object) " .
+        $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*..4]-(object:$subtype) " .
+                            "WHERE NOT a-[:UP|:DOWN|:PASS]->(object) " .
+                            "RETURN object LIMIT 12";
+        $this->values = array(
+                            'user_guid'=> (string) $user_guid
+                            );
+        return $this;
+    }
+
+    /**
+     * To be used only when no suggested content is found..
+     */
+    public function getObjects($user_guid, $subtype='video'){
+        $this->template = "MATCH (object:$subtype), (user:User {guid:{user_guid}}) " .
+                            "WHERE NOT user-[:UP|:DOWN|:PASS]->(object) " .
                             "RETURN object LIMIT 12";
         $this->values = array(
                             'user_guid'=> (string) $user_guid
@@ -205,5 +218,26 @@ class Common implements Interfaces\PreparedInterface{
             );
         return $this;
     }
+   
+    /**
+     * Create a down vote on an object 
+     * @param int $guid
+     * @param string $subtype
+     * @param int (optional) $user_guid
+     * @return $this;
+     */
+    public function createVoteDOWN($guid, $subtype, $user_guid = NULL){
+        if(!$user_guid)
+            $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
+
+        $this->template =   "MATCH (user:User {guid: {user_guid}})," .
+                            "(object:$subtype {guid: {object_guid}}) " .
+                            "MERGE (user)-[:DOWN]->(object)";
+        $this->values = array(
+            'user_guid' => (string) $user_guid,
+            'object_guid' => (string) $guid,
+            );
+        return $this;
+    } 
         
 }

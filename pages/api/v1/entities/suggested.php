@@ -28,11 +28,38 @@ class suggested implements interfaces\api{
                 $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid));
                 
                 $rows = $result->getRows();
+                if(!$rows){
+                    $result= Data\Client::build('Neo4j')->request($prepared->getObjects(Core\session::getLoggedInUser()->guid, 'video'));
+                    $rows = $result->getRows();
+                }              
+ 
                 $guids = array();
                 foreach($rows['object'] as $object){
                     $guids[] = $object['guid'];
                 }
+                if(!$guids){
+                    //show trending videos
+                    $options = array(
+                        'timespan' => get_input('timespan', 'day')
+                        );
+                    $trending = new \MindsTrending(null, $options);
+                    $guids = $trending->getList(array('type'=>'object', 'subtype'=>'kaltura_video', 'limit'=>6));
+                }
                 break;
+            case 'image':
+                $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'image'));
+
+                $rows = $result->getRows();
+                if(!$rows){
+                    $result= Data\Client::build('Neo4j')->request($prepared->getObjects(Core\session::getLoggedInUser()->guid, 'image'));
+                    $rows = $result->getRows();
+                }
+                
+                $guids = array();
+                foreach($rows['object'] as $object){
+                    $guids[] = $object['guid'];
+                }
+                break; 
             case 'user':
             default:
                 
