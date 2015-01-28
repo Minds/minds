@@ -176,12 +176,11 @@ class Common implements Interfaces\PreparedInterface{
      * Return suggested content, based on 
      */
     public function getSuggestedObjects($user_guid, $subtype = 'video'){
-        $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*2..2]->(object:$subtype) " .
-                            "WHERE NOT a-[:UP|:DOWN|:PASSED]->(b)" .
-                            "RETURN object";
+        $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*]-(object:$subtype) " .
+                            "WHERE NOT a-[:UP|:DOWN|:PASSED]->(object) " .
+                            "RETURN object LIMIT 12";
         $this->values = array(
-                            'a_guid'=> (string) $a->guid,
-                            'b_guid'=> (string) $b->guid
+                            'user_guid'=> (string) $user_guid
                             );
         return $this;
     }

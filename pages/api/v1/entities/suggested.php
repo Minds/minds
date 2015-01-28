@@ -30,7 +30,7 @@ class suggested implements interfaces\api{
                 $rows = $result->getRows();
                 $guids = array();
                 foreach($rows['object'] as $object){
-                    $guids[] = $object['object'];
+                    $guids[] = $object['guid'];
                 }
                 break;
             case 'user':
