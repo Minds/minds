@@ -92,7 +92,7 @@ class Common implements Interfaces\PreparedInterface{
      * @return $this
      */
     public function createPass($user, $to){
-	$this->template =   "MATCH (user:User {guid: {user_guid}})," .
+	   $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(to:User {guid: {subscriber_guid}}) " . 
                             "MERGE (user)-[:PASS]->(to)";
         $this->values = array(
@@ -183,6 +183,27 @@ class Common implements Interfaces\PreparedInterface{
                             'a_guid'=> (string) $a->guid,
                             'b_guid'=> (string) $b->guid
                             );
+        return $this;
+    }
+    
+    /**
+     * Create a vote on an object
+     * @param int $guid
+     * @param string $subtype
+     * @param int (optional) $user_guid
+     * @return $this
+     */
+    public function createVoteUP($guid, $subtype, $user_guid = NULL){
+        if(!$user_guid)
+            $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
+        
+        $this->template =   "MATCH (user:User {guid: {user_guid}})," .
+                            "(object:$subtype {guid: {object_guid}}) " . 
+                            "MERGE (user)-[:UP]->(object)";
+        $this->values = array(
+            'user_guid' => (string) $user_guid,
+            'object_guid' => (string) $guid,
+            );
         return $this;
     }
         

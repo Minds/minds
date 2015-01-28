@@ -103,7 +103,7 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
      */
     public function syncThumbs($users = NULL){
         $indexes = new Core\Data\Call('entities_by_time');
-        if(!$users && !is_array($users){
+        if(!$users && !is_array($users)){
             while(true){
 
             }

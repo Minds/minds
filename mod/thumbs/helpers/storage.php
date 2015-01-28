@@ -6,7 +6,7 @@
 namespace minds\plugin\thumbs\helpers;
 
 use Minds\Core;
-use Minds\Core\data;
+use Minds\Core\Data;
 use Minds\Core\entities;
 
 class storage{
@@ -14,8 +14,8 @@ class storage{
 
     public static function insert($direction = 'up', $entity){
         
-        $db = new core\Data\Call('entities');
-        $indexes = new core\Data\Call('entities_by_time');
+        $db = new Data\Call('entities');
+        $indexes = new Data\Call('entities_by_time');
         
         //quick and easy, direct insert to entity
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} + 1));
@@ -30,12 +30,16 @@ class storage{
         //now add to the users list of thumbed up content
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid(), array($entity->guid => time()));
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid() .":$entity->type", array($entity->guid => time()));
+        
+        $prepared = new Core\Data\Neo4j\Prepared\Common();
+        if($direction == 'up')
+            $return =  Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($entity->guid, $entity->subtype));
     }
 
     public static function cancel($direction = 'up', $entity){
         
-        $db = new core\Data\Call('entities');
-        $indexes = new core\Data\Call('entities_by_time');
+        $db = new Data\Call('entities');
+        $indexes = new Data\Call('entities_by_time');
         
     
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} - 1));

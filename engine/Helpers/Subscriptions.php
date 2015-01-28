@@ -32,7 +32,7 @@ class Subscriptions{
         $prepared = new Core\Data\Neo4j\Prepared\Common();
         $return =  Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
 
-	\Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
+	   \Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
         return $return;
     }
     
