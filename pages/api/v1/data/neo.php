@@ -23,7 +23,7 @@ class neo implements interfaces\api{
         $neo = \Minds\Core\Data\Client::build('neo4j');
         $cypher = new \Minds\Core\Data\Neo4j\Prepared\CypherQuery();        
 
-        $prepared =  new \Minds\Core\Data\Neo4j\Prepared\Subscriptions();
+        $prepared =  new \Minds\Core\Data\Neo4j\Prepared\Common();
         //create john
         $neo->request($prepared->createUser(new entities\user('john')));
         //create mark

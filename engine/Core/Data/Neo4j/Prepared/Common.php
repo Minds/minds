@@ -1,13 +1,13 @@
 <?php
 /**
- * Subscriptions, prepared cyphers
+ * Common prepared cypher queries
  */
 namespace Minds\Core\Data\Neo4j\Prepared;
 
 use Minds\Core\Data\Interfaces;
 use Minds\Entities;
 
-class Subscriptions implements Interfaces\PreparedInterface{
+class Common implements Interfaces\PreparedInterface{
     
     private $template;
     private $values = array(); 
@@ -121,9 +121,8 @@ class Subscriptions implements Interfaces\PreparedInterface{
     public function getSubscriptionsOfSubscriptions(Entities\User $user){
         $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
                             "WHERE " . 
-			    "NOT (user)-[:SUBSCRIBED]-(fof) " .
-			    "AND NOT (fof.guid = user.guid) " . 
-			    "AND NOT (user)-[:PASS]->(fof) " .
+			                 "NOT (user)-[:SUBSCRIBED|:PASSED]->(fof) " .
+			                 "AND NOT (fof.guid = user.guid) " . 
                             "RETURN DISTINCT fof ".
                             //"ORDER BY COUNT(*) DESC ".
                             "LIMIT {limit}";
@@ -142,6 +141,43 @@ class Subscriptions implements Interfaces\PreparedInterface{
     public function getDegree($a, $b){
         $this->template = "MATCH (a {guid:{a_guid}}), (b {guid:{b_guid}}), " .
                             "p = shortestPath( a-[*..16]->b ) " .
+                            "RETURN length(p)-1";
+        $this->values = array(
+                            'a_guid'=> (string) $a->guid,
+                            'b_guid'=> (string) $b->guid
+                            );
+        return $this;
+    }
+    
+    /**
+     * Create objects
+     */
+    public function createObject(Entities\entity $object){
+        $this->template = "MERGE (object:$object->subtype { guid: {guid} })";
+        $this->values = array('guid'=>$object->guid);
+        return $this;
+    }
+    
+    /**
+     * Import bulk users
+     */
+    public function createBulkObjects(array $objects = array(), $subtype="video"){
+        foreach($objects as $object){
+           $exp[] = array(
+                        'guid'=>$object->guid,
+                        'subtype'=>$object->subtype
+                        );
+        }
+        $this->template = "FOREACH (o IN " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp))  . " | MERGE(object:$subtype {guid: str(o.guid)}))";
+        return $this;
+    }
+    
+    /**
+     * Return suggested content, based on 
+     */
+    public function getSuggestedObjects($user_guid, $subtype = 'video'){
+        $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*2..2]->(b:$subtype) " .
+                            "WHERE NOT a-[:UP|:DOWN|:PASSED]->(b)" .
                             "RETURN length(p)-1";
         $this->values = array(
                             'a_guid'=> (string) $a->guid,

@@ -31,7 +31,7 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
      * Syncronise the data
      */
     public function sync($slugs = array()){
-        $prepared = new Prepared\Subscriptions();
+        $prepared = new Prepared\Common();
         
         $subscriptions = new \Minds\Core\Data\Call('friends');
         

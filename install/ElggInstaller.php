@@ -45,7 +45,7 @@ class ElggInstaller {
 		global $CONFIG;
 		$CONFIG = new stdClass();
 		
-		$minds = new Minds\Core\minds();
+		$minds = new Minds\Core\Minds();
 		$minds->loadLegacy();
 	//	_elgg_session_boot(true);		
 		$this->isAction = $_SERVER['REQUEST_METHOD'] === 'POST';
@@ -100,7 +100,7 @@ class ElggInstaller {
 		if ($stepIndex > $dbIndex) {
 			// once the database has been created, load rest of engine
 			global $CONFIG;
-			$minds = new Minds\Core\minds();
+			$minds = new Minds\Core\Minds();
 			$minds->loadConfigs();
 			new Minds\Core\session();	
 			//$minds->start();//we can start the engine now

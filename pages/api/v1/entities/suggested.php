@@ -22,7 +22,7 @@ class suggested implements interfaces\api{
      * API:: /v1/entities/suggested
      */      
     public function get($pages){
-        $prepared = new Data\Neo4j\Prepared\Subscriptions();
+        $prepared = new Data\Neo4j\Prepared\Common();
         $result= Data\Client::build('Neo4j')->request($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser()));
         
 	$rows = $result->getRows();
@@ -53,7 +53,7 @@ class suggested implements interfaces\api{
         switch($pages[0]){
             case 'pass':
                 //users only action. objects should use 'pass'
-                $prepared = new Core\Data\Neo4j\Prepared\Subscriptions();
+                $prepared = new Core\Data\Neo4j\Prepared\Common();
                 Core\Data\Client::build('Neo4j')->request($prepared->createPass(Core\session::getLoggedinUser()->guid, $pages[1]));
         }
         

@@ -89,7 +89,7 @@ class directory extends core\page implements interfaces\page{
 				break;
             case 'suggested':
                 $client = \Minds\Core\Data\Client::build('Neo4j');
-                $prepared = new Prepared\Subscriptions();
+                $prepared = new Prepared\Common();
                 
         		$response = $client->request($prepared->getSubscriptionsOfSubscriptions(elgg_get_logged_in_user_entity()));
         

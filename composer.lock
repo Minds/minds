@@ -265,7 +265,7 @@
             },
             "autoload": {
                 "psr-0": {
-                    "Guzzle\\Common": ""
+                    "Guzzle\Common(": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",

@@ -29,7 +29,7 @@ class Subscriptions{
         if($friends->insert($user_guid, array($to_guid=>$data)) && $friendsof->insert($to_guid, array($user_guid=>$data)))
             $return =  true;
         
-        $prepared = new Core\Data\Neo4j\Prepared\Subscriptions();
+        $prepared = new Core\Data\Neo4j\Prepared\Common();
         $return =  Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
 
 	\Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
