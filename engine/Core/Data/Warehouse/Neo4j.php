@@ -60,21 +60,38 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
     public function syncUsers(){
         $subscriptions = new \Minds\Core\Data\Call('friends');
         $prepared = new Prepared\Common();
+        $attempts = 0;
         $offset = '';
         while(true){
-            error_log("Syncing 250 users from $offset");
-            $users = core\entities::get(array('type'=>'user', 'offset'=>$offset, 'limit'=>250));
+            error_log("Syncing 100 users from $offset");
+            $users = core\entities::get(array('type'=>'user', 'offset'=>$offset, 'limit'=>100));
             if(!is_array($users) || end($users)->guid == $offset)
                 break;
+            $last_offset = $offset;
             $offset = end($users)->guid;
-            $this->client->request($prepared->createBulkUsers($users));
-            error_log("Imported users");
+            try{
+                $this->client->request($prepared->createBulkUsers($users));
+                error_log("Imported users");
+            } catch (\Exception $e){
+                if($attempts == 0){
+                    error_log("Hmm.. slight issue, re-running ({$e->getMessage()})");
+                    $offset = $last_offset;
+                    $attempts++;
+                    continue;
+                } else {
+                     error_log("Hmm.. slight issue, skipping ({$e->getMessage()})");
+                }
+            }
             $guids = array();
             foreach($users as $user){
                 $guids[] = $user->guid;
             }
-            $this->client->request($prepared->createBulkSubscriptions($subscriptions->getRows($guids)));
-            error_log("Imported subscriptions");
+            try{
+                $this->client->request($prepared->createBulkSubscriptions($subscriptions->getRows($guids)));
+                error_log("Imported subscriptions");
+            } catch(\Exception $e){
+                error_log("Hmm.. slight issue, re-running ({$e->getMessage()})");
+            }
            // break;
            // exit;
         }
