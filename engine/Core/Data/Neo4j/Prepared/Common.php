@@ -60,7 +60,7 @@ class Common implements Interfaces\PreparedInterface{
            
          $this->template = "UNWIND " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp)) . " AS row ".
                                 "MATCH (u:User {guid:row.guid}), (subscription:User {guid:row.subscription_guid}) " .
-                                "CREATE (u)-[:SUBSCRIBED]->(subscription) CREATE(u)-[:ACTED]->(subscription)";
+                                "MERGE (u)-[:SUBSCRIBED]->(subscription) MERGE (u)-[:ACTED]->(subscription)";
          return $this;
      }
      
@@ -123,7 +123,7 @@ class Common implements Interfaces\PreparedInterface{
                             "WHERE " . 
 			                 "NOT (user)-[:ACTED]->(fof) " .
 			                 "AND NOT (fof.guid = user.guid) " . 
-                            "RETURN DISTINCT fof ".
+                            "RETURN fof ".
                             //"ORDER BY COUNT(*) DESC ".
                             "LIMIT {limit}";
         $this->values = array(
