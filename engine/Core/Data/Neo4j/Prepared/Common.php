@@ -60,7 +60,7 @@ class Common implements Interfaces\PreparedInterface{
            
          $this->template = "UNWIND " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp)) . " AS row ".
                                 "MATCH (u:User {guid:row.guid}), (subscription:User {guid:row.subscription_guid}) " .
-                                "CREATE (u)-[:SUBSCRIBED]->(subscription)";
+                                "CREATE (u)-[:SUBSCRIBED]->(subscription) CREATE(u)-[:ACTED]->(subscription)";
          return $this;
      }
      
@@ -77,7 +77,7 @@ class Common implements Interfaces\PreparedInterface{
     public function createSubscription($user, $to){
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(to:User {guid: {subscriber_guid}}) " . 
-                            "MERGE (user)-[:SUBSCRIBED]->(to)";
+                            "MERGE (user)-[:SUBSCRIBED]->(to) MERGE (user)-[:ACTED]->(to)";
         $this->values = array(
             'user_guid' => is_numeric($user) ? (string) $user : $user->guid,
             'subscriber_guid' => is_numeric($to) ? (string) $to: $to->guid,
@@ -94,7 +94,7 @@ class Common implements Interfaces\PreparedInterface{
     public function createPass($user, $to){
 	   $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(to {guid: {subscriber_guid}}) " . 
-                            "MERGE (user)-[:PASS]->(to)";
+                            "MERGE (user)-[:PASS]->(to) MERGE (user)-[:ACTED]->(to)";
         $this->values = array(
             'user_guid' => (string) $user,
             'subscriber_guid' => (string) $to,
@@ -121,7 +121,7 @@ class Common implements Interfaces\PreparedInterface{
     public function getSubscriptionsOfSubscriptions(Entities\User $user){
         $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
                             "WHERE " . 
-			                 "NOT (user)-[:SUBSCRIBED|:PASSED]->(fof) " .
+			                 "NOT (user)-[:ACTED]->(fof) " .
 			                 "AND NOT (fof.guid = user.guid) " . 
                             "RETURN DISTINCT fof ".
                             //"ORDER BY COUNT(*) DESC ".
@@ -177,7 +177,7 @@ class Common implements Interfaces\PreparedInterface{
      */
     public function getSuggestedObjects($user_guid, $subtype = 'video'){
         $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*..4]-(object:$subtype) " .
-                            "WHERE NOT a-[:UP|:DOWN|:PASS]->(object) " .
+                            "WHERE NOT a-[:ACTED]->(object) " .
                             "RETURN object LIMIT 12";
         $this->values = array(
                             'user_guid'=> (string) $user_guid
@@ -190,7 +190,7 @@ class Common implements Interfaces\PreparedInterface{
      */
     public function getObjects($user_guid, $subtype='video'){
         $this->template = "MATCH (object:$subtype), (user:User {guid:{user_guid}}) " .
-                            "WHERE NOT user-[:UP|:DOWN|:PASS]->(object) " .
+                            "WHERE NOT user-[:ACTED]->(object) " .
                             "RETURN object LIMIT 12";
         $this->values = array(
                             'user_guid'=> (string) $user_guid
@@ -211,7 +211,7 @@ class Common implements Interfaces\PreparedInterface{
         
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(object:$subtype {guid: {object_guid}}) " . 
-                            "MERGE (user)-[:UP]->(object)";
+                            "MERGE (user)-[:UP]->(object) MERGE (user)-[:ACTED]->(object)";
         $this->values = array(
             'user_guid' => (string) $user_guid,
             'object_guid' => (string) $guid,
@@ -232,7 +232,7 @@ class Common implements Interfaces\PreparedInterface{
 
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(object:$subtype {guid: {object_guid}}) " .
-                            "MERGE (user)-[:DOWN]->(object)";
+                            "MERGE (user)-[:DOWN]->(object) MERGE (user)-[:ACTED]->(object)";
         $this->values = array(
             'user_guid' => (string) $user_guid,
             'object_guid' => (string) $guid,
