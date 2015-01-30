@@ -4,8 +4,25 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "15e2f06af1e4ef05162517c64fd7912b",
+    "hash": "70d52742bfeb06ced7e8a9730fb6ca8d",
     "packages": [
+        {
+            "name": "Minds/Surge",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/Surge.git",
+                "reference": "0bb4873a25872a76305d2a8a0da0921cf3bf2e12"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Surge\\": "src/"
+                }
+            },
+            "description": "A php library for sending push notifications",
+            "time": "2015-01-30 21:06:46"
+        },
         {
             "name": "abeautifulsite/jquery-minicolors",
             "version": "dev-master",
@@ -1400,12 +1417,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thobbs/phpcassa.git",
-                "reference": "5d90e13f1c7593fb023025f45f0769874a968277"
+                "reference": "6bdbd6a8a4814430183d5e2f4e91be1ec691b44b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thobbs/phpcassa/zipball/5d90e13f1c7593fb023025f45f0769874a968277",
-                "reference": "5d90e13f1c7593fb023025f45f0769874a968277",
+                "url": "https://api.github.com/repos/thobbs/phpcassa/zipball/6bdbd6a8a4814430183d5e2f4e91be1ec691b44b",
+                "reference": "6bdbd6a8a4814430183d5e2f4e91be1ec691b44b",
                 "shasum": ""
             },
             "require": {
@@ -1435,7 +1452,7 @@
             "keywords": [
                 "cassandra"
             ],
-            "time": "2014-04-09 17:14:24"
+            "time": "2015-01-30 17:58:46"
         },
         {
             "name": "tijsverkoyen/twitteroauth",
@@ -1536,7 +1553,8 @@
         "abeautifulsite/jquery-minicolors": 20,
         "kramnorth/cinemr-php-sdk": 20,
         "minds/minds-php-sdk": 20,
-        "tijsverkoyen/twitteroauth": 20
+        "tijsverkoyen/twitteroauth": 20,
+        "minds/surge": 20
     },
     "prefer-stable": false,
     "platform": [],

@@ -20,9 +20,9 @@ class notifications implements interfaces\api{
      * API:: /v1/notifications
      */      
     public function get($pages){
-	$response = array();
+	   $response = array();
 
-	$db = new \Minds\Core\Data\Call('entities_by_time');
+	   $db = new \Minds\Core\Data\Call('entities_by_time');
        	$guids = $db->getRow('notifications:'.elgg_get_logged_in_user_guid(), array('limit'=> get_input('limit', 5), 'offset'=>get_input('offset','')));
         if(!$guids){
             $response = array();
@@ -50,7 +50,23 @@ class notifications implements interfaces\api{
     /**
      * Not supported
      */
-    public function post($pages){}
+    public function post($pages){
+        
+        $service = $_POST['service'];
+        $device_id = $_POST['token'];
+        
+        //register the push notification
+        $token = \Surge\Token::create(array(
+                    'service'=>$service,
+                    'token'=>$device_id
+                    ));
+                    
+        $user_guid = Core\session::getLoggedinUser()->guid;
+        $db = new Core\Data\Call('entities');
+        $db->insert($user_guid, array('surge_token' => $token));
+        
+        return factory::response($response);
+    }
     
     /**
      * Not supported

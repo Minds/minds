@@ -13,12 +13,19 @@
   		"ivaynberg/select2":"3.5.2",
 		"tijsverkoyen/twitteroauth": "dev-master@dev",
 		"bshaffer/oauth2-server-php":"1.6",
-		"neoxygen/neoclient": "~2.1"
+		"neoxygen/neoclient": "~2.1",
+		"Minds/Surge": "dev-master@dev"
    	},
-	"repositories": [{
+	"repositories": [
+		{
             "type": "vcs",
             "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git"
-        }],
+        },
+        {
+            "type": "vcs",
+            "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/Surge.git"
+        }
+        ],
 	"autoload": {
 		"files": ["engine/autoload.php"]
 	}

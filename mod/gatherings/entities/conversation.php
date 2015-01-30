@@ -59,6 +59,13 @@ class conversation{
 			
 			$i++;
 		}
+        
+        //send push notifications
+        $db = new Data\Call('entities');
+        $users = $db->getRows($this->participants);
+        foreach($users as $user){
+            \Minds\plugin\notifications\Push::send(array('message'=>'You have a new message.', 'token'=>$user->surge_token));
+        }
 
 	}
 	
