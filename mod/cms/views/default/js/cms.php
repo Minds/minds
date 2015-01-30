@@ -71,13 +71,50 @@ minds.cms.init = function() {
     		$('.icon-colour input').minicolors({
     			defaultValue : $('.icon-colour input').val()
     		});
+    		$('.icon-overlay input[type=text]').minicolors({
+                defaultValue : $('.icon-overlay input[name=overlay_background]').val(),
+                opacity: true,
+                change: function(hex, opacity){
+                    var section = $(this).parents('section')[0];
+                     $(section).find('.cms-overlay').css('opacity', opacity);
+                   $(section).find('input[name=overlay_colour]').css('background', opacity);
+                }
+            });
 	}
+	
+	$(document).on('change', '.icon-overlay input', function(){
+        var section = $(this).parents('section')[0];
+        $(section).find('.cms-overlay').css('background', $(this).val());
+        $(section).find('input[name=overlay_colour]').css('background', $(this).val());
+        
+        minds.cms.update($(section));
+    });
+	
     $(document).on('change', '.icon-colour input', function(){
     	var section = $(this).parents('section')[0];
     	$(section).find('textarea').css('color', $(this).val());
     	$(section).find('input').css('color', $(this).val());
     	
     	minds.cms.update($(section));
+    });
+    
+    $(document).on('click', '.icon-toggle', function(){
+        var section = $(this).parents('section')[0];
+        var size = $(section).find('input[name=size]').val();
+
+        if(size == 'thin' || !size){
+            //now make fat
+            $(section).removeClass('cms-section-thin');
+            $(section).addClass('cms-section-fat');
+            $(section).find('input[name=size]').val('fat');
+        } else {
+            //now make thin
+            $(section).removeClass('cms-section-fat');
+            $(section).addClass('cms-section-thin');
+            $(section).find('input[name=size]').val('thin');
+        }
+        
+        minds.cms.update($(section));
     });
     
     var typingTimer;                //timer identifier
@@ -182,7 +219,10 @@ minds.cms.update = function(section){
 		color: section.find('.icon-colour input').val(),
 		href: section.find('input[name=href]').val(),
 		position: section.find('input[name=position]').val(),
-		top_offset: section.find('input[name=top_offset]').val()
+		top_offset: section.find('input[name=top_offset]').val(),
+		overlay_colour: section.find('input[name=overlay_colour]').val(),
+		overlay_opacity:  section.find('input[name=overlay_opacity]').val(),
+		size:  section.find('input[name=size]').val(),
 	};
 	
 	if (typeof tinymce !== 'undefined') {	

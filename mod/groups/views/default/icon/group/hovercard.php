@@ -19,8 +19,11 @@ $banner = elgg_view('output/img', array(
 <div class="minds-hovercard" <?php if(isset($vars['show'])){ ?> style="display:block;" <?php } ?>'>
     
     <div class="hovercard-banner">
-        <?=$banner ?>
-        <div class="top-arrow"><?= $banner ?></div>
+        <?php if($group->banner) { 
+		echo $banner;
+	} ?>
+	
+        <!--<div class="top-arrow"><?= $banner ?></div>-->
         <div class="gradient"></div>
     </div>
     
@@ -38,7 +41,7 @@ $banner = elgg_view('output/img', array(
                 Join
             </a>
         <?php } else { ?>
-            <a href="<?= elgg_get_site_url() . "group/profile/$group->getGUID()" ?>" class="elgg-button elgg-button-action">
+            <a href="<?= elgg_get_site_url() . "groups/profile/$group->guid" ?>" class="elgg-button elgg-button-action">
                 Enter
             </a>
         <?php } ?>

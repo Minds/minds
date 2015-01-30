@@ -82,7 +82,10 @@ class sections extends core\page implements interfaces\page{
 			'color' => '',
 			'position' => 0,
 			'href' => '',
-			'top_offset' => ''
+			'top_offset' => '',
+			'overlay_colour' => '',
+			'overlay_opacity' => 0.5,
+			'size' => 'thin'
 		);
 		foreach($_POST as $k=>$v){
 			if(!isset($vars[$k]))
