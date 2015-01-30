@@ -49,6 +49,8 @@ function groups_handle_all_page() {
 			$content = elgg_list_entities(array(
 				'type' => 'group',
 				'full_view' => false,
+				'masonry'=>false,
+				'list_class'=>'minds-group-list',
 				'limit' => get_input('limit', 10),
 				'offset' => get_input('offset', ''),
 			));
