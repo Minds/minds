@@ -76,15 +76,21 @@ minds.cms.init = function() {
                 opacity: true,
                 change: function(hex, opacity){
                     var section = $(this).parents('section')[0];
-                     $(section).find('.cms-overlay').css('opacity', opacity);
-                   $(section).find('input[name=overlay_colour]').val(opacity);
+                    if(opacity)
+		        $(section).find('.cms-overlay').css('opacity', opacity);
+		    
+		    if(hex)
+		        $(section).find('.cms-overlay').css('background', hex);
+
+		console.log(hex, opacity);
+                   $(section).find('input[name=overlay_opacity]').val(opacity);
                 }
             });
 	}
 	
 	$(document).on('change', '.icon-overlay input', function(){
         var section = $(this).parents('section')[0];
-        $(section).find('.cms-overlay').css('background', $(this).val());
+        //$(section).find('.cms-overlay').css('background', $(this).val());
         $(section).find('input[name=overlay_colour]').css('background', $(this).val());
         
         minds.cms.update($(section));
