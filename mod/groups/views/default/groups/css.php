@@ -19,6 +19,9 @@
 	box-shadow:none;
 	overflow:visible;
 }
+.minds-group-list > li .minds-hovercard{
+    height:172px;
+}
 .group-profile{
 	margin:auto;
 	width:990px;
