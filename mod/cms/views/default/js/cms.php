@@ -77,7 +77,7 @@ minds.cms.init = function() {
                 change: function(hex, opacity){
                     var section = $(this).parents('section')[0];
                      $(section).find('.cms-overlay').css('opacity', opacity);
-                   $(section).find('input[name=overlay_colour]').css('background', opacity);
+                   $(section).find('input[name=overlay_colour]').val(opacity);
                 }
             });
 	}
