@@ -19,7 +19,10 @@ $banner = elgg_view('output/img', array(
 <div class="minds-hovercard" <?php if(isset($vars['show'])){ ?> style="display:block;" <?php } ?>'>
     
     <div class="hovercard-banner">
-        <?=$banner ?>
+        <?php if($group->banner) { 
+		echo $banner;
+	} ?>
+	
         <!--<div class="top-arrow"><?= $banner ?></div>-->
         <div class="gradient"></div>
     </div>
