@@ -20,7 +20,7 @@ $banner = elgg_view('output/img', array(
     
     <div class="hovercard-banner">
         <?=$banner ?>
-        <div class="top-arrow"><?= $banner ?></div>
+        <!--<div class="top-arrow"><?= $banner ?></div>-->
         <div class="gradient"></div>
     </div>
     
