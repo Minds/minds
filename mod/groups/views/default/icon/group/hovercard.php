@@ -41,7 +41,7 @@ $banner = elgg_view('output/img', array(
                 Join
             </a>
         <?php } else { ?>
-            <a href="<?= elgg_get_site_url() . "group/profile/$group->getGUID()" ?>" class="elgg-button elgg-button-action">
+            <a href="<?= elgg_get_site_url() . "group/profile/$group->guid" ?>" class="elgg-button elgg-button-action">
                 Enter
             </a>
         <?php } ?>
