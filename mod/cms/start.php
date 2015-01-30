@@ -106,7 +106,7 @@ class start extends bases\plugin{
 		/**
 		 * Topbar menu setup
 		 */
-		if($topbar){
+		if($topbar && is_array($topbar)){
 			foreach($topbar as $path => $title){
 				
 				$text = $title;
