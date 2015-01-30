@@ -20,7 +20,7 @@
 	overflow:visible;
 }
 .minds-group-list > li .minds-hovercard{
-    height:172px;
+    height:184px;
 }
 .group-profile{
 	margin:auto;
