@@ -54,20 +54,21 @@ class conversation{
 					))));
 					//create an index so we can see the unread messages.. reset on each view of the messages
 					$indexes->insert("object:gathering:conversations:unread", array($participant=> $count));
-				}
+    			}
 			}
 			
 			$i++;
 		}
         
-        //send push notifications
-        $db = new Data\Call('entities');
-        $users = $db->getRows($this->participants);
-        foreach($users as $user){
-            \Minds\plugin\notifications\Push::send(array('message'=>'You have a new message.', 'token'=>$user->surge_token));
-        }
-
 	}
+
+    public function notify(){
+        foreach($this->participants as $participant){
+            if($participant != elgg_get_logged_in_user_guid()){
+                \Minds\plugin\notifications\Push::queue($participant, array('message'=>'You have a new message.'));
+            }
+        }
+    }
 	
 	public function clearCount(){
 		$indexes = new Data\indexes();

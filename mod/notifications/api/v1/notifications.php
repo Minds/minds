@@ -51,7 +51,6 @@ class notifications implements interfaces\api{
      * Not supported
      */
     public function post($pages){
-        
         $service = $_POST['service'];
         $device_id = $_POST['token'];
         
