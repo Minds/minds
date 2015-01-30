@@ -12,7 +12,15 @@
 .minds-group-list > li{
 	margin: 8px;
 	height: auto;
-	width: 45%;
+	width: auto;
+	border:0;
+	padding:0; 
+	background:transparent;
+	box-shadow:none;
+	overflow:visible;
+}
+.minds-group-list > li .minds-hovercard{
+    height:184px;
 }
 .group-profile{
 	margin:auto;

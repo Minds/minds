@@ -325,7 +325,7 @@ class call extends core\base{
 		foreach ($ksdefs as $ksdef)
         	$exists = $exists || $ksdef->name == $this->keyspace;
 
-        if ($exists){
+   		if ($exists){
 			return true;
 		} else {
 			return false;

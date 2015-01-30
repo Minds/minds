@@ -291,6 +291,7 @@
 	display: block;
 	cursor: pointer;
 	opacity: 0.9;
+	text-align:center;
 	
 	padding: 16px;
 	
