@@ -115,6 +115,9 @@ class start extends bases\plugin{
 	 * @param array|int|false $count
 	 */
 	public static function getNodes(ElggUser $user = null, $count = false) {
+	    if(!elgg_is_logged_in()){
+		return NULL;
+	    }
 	    if (!$user) $user = elgg_get_logged_in_user_entity ();
 	    
 	    $params = array(
