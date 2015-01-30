@@ -92,7 +92,9 @@ function groups_handle_featured_page(){
 	$params = array(
 		'header' => elgg_view_title($title) . $nav,
 		'content' => $content,
-		'class' => 'groups'
+		'class' => 'groups',
+		'list_class'=>'minds-group-list',
+		'masonry'=>false
 	);
 	$body = elgg_view_layout('one_column', $params);
 
@@ -151,6 +153,8 @@ function groups_handle_owned_page() {
 		'type' => 'group',
 		'owner_guid' => $page_owner->guid,
 		'full_view' => false,
+		'list_class'=>'minds-group-list',
+		'masonry'=>false
 	));
 	if (!$content) {
 		$content = elgg_echo('groups:none');
