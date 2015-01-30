@@ -857,7 +857,7 @@ abstract class ElggEntity extends ElggData implements
 					//$this->save();
 				}
 			}
-        }
+       		}
 
 		return new minds\entities\user($this->owner_guid);
 	}

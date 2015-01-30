@@ -10,7 +10,8 @@ class MindsMultiInstaller extends ElggInstaller {
 	protected $domain = '';
 
     protected $steps = array(
-       'welcome',
+	'welcome',
+	'async',
         'settings',
         'admin',
        // 'minds',
@@ -192,6 +193,11 @@ class MindsMultiInstaller extends ElggInstaller {
        return true;
    }
 
+   protected function async(){
+	$this->continueToNextStep('async');	
+	//echo 1;
+   }
+
     /**
      * Site settings controller
      *
@@ -271,7 +277,8 @@ class MindsMultiInstaller extends ElggInstaller {
 		try{
 			$node = new minds\multisite\models\node($domain);
 		}catch(\Exception $e){
-			header('Location: https://www.minds.com/');
+			//var_dump($e); exit;
+			header('Location: https://www.minds.com/nodes/launch');
 			exit;
 		}
 		if($node->installed == true){
@@ -307,12 +314,19 @@ class MindsMultiInstaller extends ElggInstaller {
 				$attrs = array(	  "strategy_options" => array("replication_factor" => "2"));	
 				$db->createKeyspace($attrs);
 			}
+			//$db->installSchema();
+		} catch (Exception $e){
+		//	register_error($e->why);
+		//	var_dump($e);
+		//	exit;
+		}
+
+		try{
 			$db->installSchema();
 		} catch (Exception $e){
 			register_error($e->why);
-			var_dump($e);
-			exit;
-			return false;
+                        var_dump($e);
+                        exit;
 		}
 		
 		return true;
