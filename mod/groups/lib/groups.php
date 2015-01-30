@@ -201,7 +201,9 @@ function groups_handle_mine_page() {
 		'full_view' => false,
 		'relationship_guid' => $page_owner->guid,
 		'relationship' => 'member',
-		'offset'=>get_input('offset','')
+		'offset'=>get_input('offset',''),
+		'list_class'=>'minds-group-list',
+        'masonry'=>false
 		//'inverse_relationship' => true
 	)); 
 	
