@@ -85,7 +85,11 @@ function groups_handle_featured_page(){
 		usort($entities, function($a, $b){
 			return $a->featured_id - $b->featured_id;
 		});
-		$content = elgg_view_entity_list($entities, array('full_view'=>false));
+		$content = elgg_view_entity_list($entities, array(
+		              'full_view'=>false,
+		              'list_class'=>'minds-group-list',
+                        'masonry'=>false
+                     ));
 	}
 	
 	$nav = elgg_view('groups/filter', array('selected'=>'featured'));
@@ -151,6 +155,8 @@ function groups_handle_owned_page() {
 		'type' => 'group',
 		'owner_guid' => $page_owner->guid,
 		'full_view' => false,
+		'list_class'=>'minds-group-list',
+		'masonry'=>false
 	));
 	if (!$content) {
 		$content = elgg_echo('groups:none');
