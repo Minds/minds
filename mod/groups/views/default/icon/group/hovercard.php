@@ -32,12 +32,15 @@ $banner = elgg_view('output/img', array(
             <h3><?=$group->name?></h3>
         </div>
     </a>
-    <div class="overview" style="width:auto; margin-left:120px;">
-        <?= $group->brief_description ?>
+    <div class="buttons" style="margin-top:8px; margin-left:120px">
+        <?php if(!$group->isMember()){ ?>
+            <a href="<?= elgg_get_site_url() . "action/groups/join?group_guid={$group->getGUID()}" ?>" class="elgg-button elgg-button-action">
+                Join
+            </a>
+        <?php } else { ?>
+            <a href="<?= elgg_get_site_url() . "group/profile/$group->getGUID()" ?>" class="elgg-button elgg-button-action">
+                Enter
+            </a>
+        <?php } ?>
     </div>
-    <?php if(!$group->isMember()){ ?>
-        <a href="<?= elgg_get_site_url() . "action/groups/join?group_guid={$group->getGUID()}" ?>" class="elgg-button elgg-action-button">
-            Join
-        </a>
-    <?php } ?>
 </div>
