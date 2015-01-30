@@ -9,12 +9,29 @@
 	font-weight:bold;
 }
 
+.arrow-down{
+    position: absolute;
+    left: 50%;
+    margin-top:-150px;
+    margin-left: -20px;
+    font-size: 40px;
+    text-decoration: none;
+    font-style: normal;
+    z-index: 9999;
+    color: #FFF;
+    padding: 17px;
+    border-radius: 100%;
+    text-shadow: 0px 0px 3px #888;
+}
 
 .cms-section{
 	display:block;
 	min-height: 425px;
 	position:relative;
 	overflow:hidden;
+}
+.cms-section.cms-section-fat{
+    min-height:100vh;
 }
 .cms-section .container{
 	margin:0 auto;
@@ -23,6 +40,9 @@
 	box-sizing: border-box;
 	display:block;
 	line-height: 420px;
+}
+.cms-section.cms-section-fat .container{
+    line-height:100vh;
 }
 
 .cms-section .container .left{
@@ -71,6 +91,21 @@
 	width:100%;
 	min-width:1280px;
 	position:relative;
+}
+
+.cms-section .cms-section-bg .cms-overlay{
+    position:absolute;
+    width:100%;
+    height:100%;
+    left:0;
+    top:0;
+    display:block;
+}
+.cms-sections-editable .cms-section-bg:hover .cms-overlay{
+    display:none;
+}
+.cms-section.cms-section-fat .cms-section-bg .cms-overlay{
+    height:120vh;
 }
 
 .cms-section .container .cell h2{
@@ -124,14 +159,15 @@ body {
 	display: table;
 	position: absolute;
 	right: 0;
-	padding: 16px;
+	margin: 16px;
 	z-index:99;
+	box-shadow: 0 0 3px #888;
 }
 .cms-section-admin .cms-icon{
-	border:1px solid #DDD;
+	border-bottom:1px solid #DDD;
 	background:#EEE;
-	padding:8px;
-	font-weight:bold;
+	padding:12px;
+	font-weight:300;
 	float:left;
 	clear:both;
 	line-height:14px;
@@ -150,6 +186,11 @@ body {
 	cursor: pointer;
 	opacity: 0;
 	filter: alpha(opacity=0);
+	border-radius:0;
+}
+.cms-icon .minicolors-position-left .minicolors-panel{
+    left:auto;
+    right:12px !important;
 }
 
 /**

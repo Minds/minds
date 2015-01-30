@@ -8,6 +8,8 @@ usort($sections, function($a, $b){
 
 <div class="cms-sections <?= elgg_is_admin_logged_in() ? 'cms-sections-editable' :''?>" data-group="<?= $vars['group'] ?>">
 
+    <i class="arrow-down entypo">&#59417;</i>
+
 <?php 
 	if(!empty($sections)){
 		foreach($sections as $section): 
