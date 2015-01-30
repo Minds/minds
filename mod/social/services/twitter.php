@@ -40,6 +40,8 @@ class twitter extends core\base{
 			$message = substr($message,0,80) . '...';
 			$message .= elgg_get_site_url() . 'newsfeed/'.$activity['guid'];
 		}
+		if(!$message)
+			return true;
 		$tw = $this->tw();
 		$tw->setOAuthToken(\elgg_get_plugin_user_setting('twitter_access_token', core\session::getLoggedinUser()->guid, 'social'));
 		$tw->setOAuthTokenSecret(\elgg_get_plugin_user_setting('twitter_access_secret', core\session::getLoggedinUser()->guid, 'social'));
