@@ -30,12 +30,14 @@ class storage{
         //now add to the users list of thumbed up content
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid(), array($entity->guid => time()));
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid() .":$entity->type", array($entity->guid => time()));
-        
-        $prepared = new Core\Data\Neo4j\Prepared\Common();
-        if($direction == 'up')
-            Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($entity->guid, $entity->subtype));
-        elseif($direction == 'down')
-            Core\Data\Client::build('Neo4j')->request($prepared->createVoteDOWN($entity->guid, $entity->subtype));
+
+        if(in_array($entity->subtype, array('video', 'image'))){        
+            $prepared = new Core\Data\Neo4j\Prepared\Common();
+            if($direction == 'up')
+                Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($entity->guid, $entity->subtype));
+            elseif($direction == 'down')
+                Core\Data\Client::build('Neo4j')->request($prepared->createVoteDOWN($entity->guid, $entity->subtype));
+        }
     }
 
     public static function cancel($direction = 'up', $entity){

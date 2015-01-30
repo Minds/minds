@@ -128,7 +128,7 @@ class Common implements Interfaces\PreparedInterface{
                             "LIMIT {limit}";
         $this->values = array(
                             'guid' => (string) $user->guid,
-			    'limit' => 12
+			                'limit' => 12
                             );
         return $this;
     }

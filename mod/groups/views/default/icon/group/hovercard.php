@@ -33,7 +33,7 @@ $banner = elgg_view('output/img', array(
         </div>
     </a>
     <div class="overview" style="width:auto; margin-left:120px;">
-        <?= $group->description ?>
+        <?= $group->brief_description ?>
     </div>
     <?php if(!$group->isMember()){ ?>
         <a href="<?= elgg_get_site_url() . "action/groups/join?group_guid={$group->getGUID()}" ?>" class="elgg-button elgg-action-button">

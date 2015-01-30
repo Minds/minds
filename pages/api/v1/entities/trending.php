@@ -21,11 +21,14 @@ class trending implements interfaces\api{
      * API:: /v1/entities/ or /v1/entities/all
      */      
     public function get($pages){
-        
+        //temp hack..
+        if(isset($pages[0]) && $pages[0] == 'video')
+            $pages[0] = 'kaltura_video';
+
         //the allowed, plus default, options
         $options = array(
             'type' => 'object',
-            'subtype' => NULL,
+            'subtype' => isset($pages[0]) ? $pages[0] : NULL,
             'limit'=>12,
             'offset'=>''
             );
@@ -47,8 +50,8 @@ class trending implements interfaces\api{
         
         if($entities){
             $response['entities'] = factory::exportable($entities);
-            $response['load-next'] = (string) end($entities)->guid;
-            $response['load-previous'] = (string) key($entities)->guid;
+            $response['load-next'] = isset($_GET['load-next']) ? count($entities) + $_GET['load-next'] : count($entities);
+            $response['load-previous'] = isset($_GET['load-previous']) ? $_GET['load-previous'] - count($entities) : 0;
         }
         
         return factory::response($response);

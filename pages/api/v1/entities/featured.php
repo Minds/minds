@@ -21,11 +21,14 @@ class featured implements interfaces\api{
      * API:: /v1/entities/ or /v1/entities/all
      */      
     public function get($pages){
+
+        if(isset($pages[0]) && $pages[0] == 'video')
+            $pages[0] = 'kaltura_video';
         
         //the allowed, plus default, options
         $options = array(
             'type' => 'object',
-            'subtype' => NULL,
+            'subtype' => isset($pages[0]) ? $pages[0] : NULL,
             'limit'=>12,
             'offset'=>''
             );

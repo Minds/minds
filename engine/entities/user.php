@@ -19,7 +19,7 @@ class user extends \ElggUser{
 	}
 	
 	public function isSubscribed($guid){
-		$db = new core\Data\Call('friends');
+		$db = new Core\Data\Call('friends');
 		if(key($db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid))) == $guid)
 			return true;
 		
@@ -31,12 +31,12 @@ class user extends \ElggUser{
 			return 0;
 		}
 
-		$cacher = \minds\core\data\cache\factory::build();
+		$cacher = Core\Data\cache\factory::build();
 		if($cache = $cacher->get("$this->guid:friendsofcount")){
 			return $cache;
 		}
 		
-		$db = new core\data\call('friendsof');
+		$db = new Core\Data\Call('friendsof');
 		$return = (int) $db->countRow($this->guid);
 		$cacher->set("$this->guid:friendsofcount", $return);
 		return $return;
