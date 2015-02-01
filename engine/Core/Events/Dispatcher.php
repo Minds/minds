@@ -8,7 +8,7 @@ class Dispatcher {
     /**
      * Register of event listeners and their handlers.
      */
-    private static $events = [];
+    private static $events = array();
 
     /**
      * Register a handler for an event.
@@ -92,11 +92,11 @@ class Dispatcher {
 	}
 
 	// New event format, expects event object
-	$eventobj = new Event([
+	$eventobj = new Event(array(
 	    'namespace' => $namespace,
 	    'event' => $event,
 	    'parameters' => $params
-	]);
+	));
 	$eventobj->setResponse($default_return);
 	
 	try {
