@@ -107,28 +107,31 @@ class Dispatcher {
 		    foreach ($callback_list as $callback) {
 			if (is_callable($callback)) {
 
+			    $ns = $namespace;
+			    $ev = $event;
+			    
 			    // There's a potential namespace collision on old style elgg events/hooks, so we namespace them off, however some hooks/events check this parameter. 
 			    // Therefore we need to normalise the namespace before dispatch
-			    if (strpos($namespace, 'elgg/event/') === 0) {
+			    if (strpos($ns, 'elgg/event/') === 0) {
 				// old style event
-				$namespace = str_replace('elgg/event/', '', $namespace);
+				$ns = str_replace('elgg/event/', '', $ns);
 
-				$args = array($event, $namespace, $params);
+				$args = array($ev, $ns, $params);
 				if (call_user_func_array($callback, $args) === false) {
-				    throw new exceptions\StopEventException("Event propagation for old style $namespace/$event stopped by $callback");
+				    throw new exceptions\StopEventException("Event propagation for old style $ns/$ev stopped by $callback");
 				}
-			    } elseif (strpos($namespace, 'elgg/hook/') === 0) {
+			    } elseif (strpos($ns, 'elgg/hook/') === 0) {
 
 				// Old style hook
-				$namespace = str_replace('elgg/hook/', '', $namespace);
+				$ns = str_replace('elgg/hook/', '', $ns);
 
-				$args = array($event, $namespace, $eventobj->response(), $params);
+				$args = array($ev, $ns, $eventobj->response(), $params);
 				$temp_return_value = call_user_func_array($callback, $args);
 				if (!is_null($temp_return_value)) { 
 				    $eventobj->setResponse($temp_return_value);
 				}
 			    } else {
-				$args = array($eventobj);
+				$args = array($eventobj); 
 				call_user_func_array($callback, $args);
 			    }
 			}
