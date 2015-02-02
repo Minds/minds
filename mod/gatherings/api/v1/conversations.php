@@ -30,11 +30,11 @@ class conversations implements interfaces\api{
 
             $ik = $conversation->getIndexKeys();
             $guids = core\Data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>get_input('limit',12), 'offset'=>get_input('offset', ''), 'finish'=>get_input('start', ''), 'reversed'=>true));
-	     if(isset($guids[get_input('start')])){
-                        unset($guids[get_input('start')]);
-                }
+            if(isset($guids[get_input('start')])){
+                unset($guids[get_input('start')]);
+            }
 
-	    if($guids){
+            if($guids){
  
                 $messages = core\entities::get(array('guids'=>$guids));
                 
@@ -52,7 +52,7 @@ class conversations implements interfaces\api{
                 }
             }
             $me = elgg_get_logged_in_user_guid();
-	    $you = $pages[0] ;
+            $you = $pages[0] ;
             //return the public keys
             $response['publickeys'] = array(
                 $me => elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings'),
@@ -64,7 +64,7 @@ class conversations implements interfaces\api{
             $conversations = \minds\plugin\gatherings\start::getConversationsList();
     
             if($conversations){
-                $response['conversations'] = factory::exportable($conversations);
+                $response['conversations'] = factory::exportable($conversations, array('unread', 'ts'));
             }
             
         }

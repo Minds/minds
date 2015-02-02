@@ -71,10 +71,13 @@ class factory{
      * @param array $entities - an array of entities
      * @return array - an array of the entities
      */
-    public static function exportable($entities){
+    public static function exportable($entities, $exceptions = array()){
         foreach($entities as $k => $entity){
             $entities[$k]->guid = (string) $entity->guid; //javascript doesn't like long numbers..
             $entities[$k] = $entity->export();
+            foreach($exceptions as $exception){
+                $entities[$exception] = $entity->$exception;
+            }
         }
         return $entities;
     }
