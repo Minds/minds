@@ -136,6 +136,7 @@ class conversation extends core\page implements interfaces\page{
 				->save();
 
 		$conversation->update();	
+        $conversation->notify();
 	
 		if(elgg_is_xhr()){
 			echo elgg_view_entity($message);
