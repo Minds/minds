@@ -10,7 +10,7 @@ use Surge;
 
 class Push {
 
-    public $locked = false;
+    public static $locked = false;
     
     public static function send($message = array(), $token = NULL){
         error_log('sending..');
@@ -53,13 +53,16 @@ class Push {
 
         $db = new Core\Data\Call('entities_by_time');
         $jobs = $db->getRow('push:queue');
-        foreach($jobs as $guid => $job){
-            echo "sending $guid \n";
-            $job = json_decode($job, true);
-            $user = new \Minds\entities\user($job['user_guid']);
-            if($user->surge_token)
-                self::send($job['message'], $user->surge_token);
-            $db->removeAttributes('push:queue', array($guid));
+        if($jobs){
+            foreach($jobs as $guid => $job){
+                echo "sending $guid \n";
+                $job = json_decode($job, true);
+                $user = new \Minds\entities\user($job['user_guid'], false); //dont cache... or find a better way to grab token id
+                if($user->surge_token)
+                    self::send($job['message'], $user->surge_token);
+                echo "Surge token was :: $user->surge_token \n";
+                $db->removeAttributes('push:queue', array($guid));
+            }
         }
         self::$locked = false;
     }

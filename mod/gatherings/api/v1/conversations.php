@@ -88,6 +88,7 @@ class conversations implements interfaces\api{
 	$message->save();
 
 	$conversation->update();	
+    $conversation->notify();
 
 	$key = "message:".elgg_get_logged_in_user_guid();
 	$message->message = $message->$key;
