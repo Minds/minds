@@ -11,12 +11,14 @@ class Event {
     private $return = null;
     
     function __construct($data) {
-	$this->data = $data;
+        $this->data = $data;
     }
     
     public function setResponse($return) {
-	$this->return = $return;
+        $this->return = $return;
     }
     
-    public function response() { return $this->return; }
+    public function response() {
+        return $this->return; 
+    }
 }
