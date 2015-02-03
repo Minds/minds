@@ -35,8 +35,8 @@ class notifications implements interfaces\api{
                 $entity = \Minds\Core\entities::build(new \minds\entities\entity($data['object_guid']));
                 $response['notifications'][$k]['ownerObj'] = $owner->export();
                 $response['notifications'][$k]['fromObj'] = $from->export();
-		$response['notifications'][$k]['fromObj']['guid'] = (string) $from->guid;
-		$response['notifications'][$k]['from_guid'] = (string) $from->guid;
+		        $response['notifications'][$k]['fromObj']['guid'] = (string) $from->guid;
+		        $response['notifications'][$k]['from_guid'] = (string) $from->guid;
                 $response['notifications'][$k]['entityObj'] = $entity->export();
             }
 		$response['load-next'] = (string) end($notifications)->guid;
@@ -66,9 +66,6 @@ class notifications implements interfaces\api{
                     'token'=>$device_id
                     ));
        
-       
-        error_log('requesting surge token...');
-                    
         $user_guid = Core\session::getLoggedinUser()->guid;
         $db = new Core\Data\Call('entities');
         $db->insert($user_guid, array('surge_token' => $token));

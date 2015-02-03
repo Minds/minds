@@ -76,7 +76,7 @@ class factory{
             $entities[$k]->guid = (string) $entity->guid; //javascript doesn't like long numbers..
             $entities[$k] = $entity->export();
             foreach($exceptions as $exception){
-                $entities[$exception] = $entity->$exception;
+                $entities[$k][$exception] = $entity->$exception;
             }
         }
         return $entities;

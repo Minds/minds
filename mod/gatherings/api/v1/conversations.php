@@ -27,7 +27,7 @@ class conversations implements interfaces\api{
         if(isset($pages[0])){
             
             $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
-
+            $conversation->clearCount();
             $ik = $conversation->getIndexKeys();
             $guids = core\Data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>get_input('limit',12), 'offset'=>get_input('offset', ''), 'finish'=>get_input('start', ''), 'reversed'=>true));
             if(isset($guids[get_input('start')])){
@@ -64,7 +64,7 @@ class conversations implements interfaces\api{
             $conversations = \minds\plugin\gatherings\start::getConversationsList();
     
             if($conversations){
-                $response['conversations'] = factory::exportable($conversations, array('unread', 'ts'));
+                $response['conversations'] = factory::exportable($conversations, array('unread', 'last_msg'));
             }
             
         }

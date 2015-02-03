@@ -130,7 +130,7 @@ class start extends Components\Plugin{
 				$u = new \minds\entities\user($user_guid);
 				$u->last_msg = $ts;
 				$u->unread = $unread;
-				if($u->username){
+				if($u->username && $u->guid != core\session::getLoggedinUser()->guid){
 					$conversations[] = $u;
 				}
 				continue;
