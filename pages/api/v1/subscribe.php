@@ -18,14 +18,44 @@ class subscribe implements interfaces\api{
      * Returns the entities
      * @param array $pages
      * 
-     * API:: /v1/entities/ or /v1/entities/all
+     * API:: /v1/subscribe/subscriptions/:guid or /v1/subscribe/subscribers/:guid
      */      
     public function get($pages){
+        $response = array();
         
-        $response = array(
-            'status' => 'error',
-            'message' => 'not implemented yet'
-            );
+        switch($pages[0]){
+            case 'subscriptions':
+                $db = new \Minds\Core\Data\Call('friends');
+                $subscribers= $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+                $users = array();
+                foreach($subscribers as $guid => $subscriber){
+                    if(is_numeric($subscriber)){
+                        //this is a local, old style subscription
+                        $users[] = new \minds\entities\user($guid);
+                        continue;
+                    } 
+                    
+                    $users[] = new \minds\entities\user(json_decode($subscriber,true));
+                }
+                $response['users'] = factory::exportable($users);
+                break;
+            case 'subscribers':
+                $db = new \Minds\Core\Data\Call('friendsof');
+                $subscribers= $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+                $users = array();
+                foreach($subscribers as $guid => $subscriber){
+                    if(is_numeric($subscriber)){
+                        //this is a local, old style subscription
+                        $users[] = new \minds\entities\user($guid);
+                        continue;
+                    } 
+                    
+                    $users[] = new \minds\entities\user(json_decode($subscriber,true));
+                }
+                $response['users'] = factory::exportable($users);
+                break;
+        }
+        
         return factory::response($response);
         
     }
