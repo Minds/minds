@@ -536,9 +536,11 @@ function register_error($error) {
  * @example events/advanced.php Advanced example of registering an event handler
  *                              callback and halting execution.
  * @example events/all.php      Example of how to use the 'all' keyword.
+ * @deprecated Use Minds\Core\Events
  */
-function elgg_register_event_handler($event, $object_type, $callback, $priority = 500) {
-	global $CONFIG;
+function elgg_register_event_handler($event, $object_type, $callback, $priority = 500) { 
+	return \Minds\Core\Events\Dispatcher::register("elgg/event/$object_type", $event, $callback, $priority); // Register event with new system, but prefix it in the oldstyle namespace
+	/*global $CONFIG;
 
 	if (empty($event) || empty($object_type)) {
 		return false;
@@ -565,7 +567,7 @@ function elgg_register_event_handler($event, $object_type, $callback, $priority 
 	}
 	$CONFIG->events[$event][$object_type][$priority] = $callback;
 	ksort($CONFIG->events[$event][$object_type]);
-	return true;
+	return true;*/
 }
 
 /**
@@ -577,8 +579,11 @@ function elgg_register_event_handler($event, $object_type, $callback, $priority 
  *
  * @return void
  * @since 1.7
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_unregister_event_handler($event, $object_type, $callback) {
+    return \Minds\Core\Events\Dispatcher::unregister("elgg/event/$object_type", $event);
+    /*
 	global $CONFIG;
 
 	if (isset($CONFIG->events[$event]) && isset($CONFIG->events[$event][$object_type])) {
@@ -587,7 +592,7 @@ function elgg_unregister_event_handler($event, $object_type, $callback) {
 				unset($CONFIG->events[$event][$object_type][$key]);
 			}
 		}
-	}
+	}*/
 }
 
 /**
@@ -620,9 +625,11 @@ function elgg_unregister_event_handler($event, $object_type, $callback) {
  * @return bool The result of running all handler callbacks.
  * @link http://docs.elgg.org/Tutorials/Core/Events
  * @internal @example events/emit.php Basic emitting of an Elgg event.
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_trigger_event($event, $object_type, $object = null) {
-	global $CONFIG;
+    return \Minds\Core\Events\Dispatcher::trigger("elgg/event/$object_type", $event, $object);
+	/*global $CONFIG;
 
 	$events = array();
 	if (isset($CONFIG->events[$event][$object_type])) {
@@ -650,7 +657,7 @@ function elgg_trigger_event($event, $object_type, $object = null) {
 		}
 	}
 
-	return true;
+	return true;*/
 }
 
 /**
@@ -718,10 +725,14 @@ function elgg_trigger_event($event, $object_type, $object = null) {
  * @example hooks/register/advanced.php Registering for a plugin hook and changing the params.
  * @link http://docs.elgg.org/Tutorials/Plugins/Hooks
  * @since 1.8.0
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 500) {
-	global $CONFIG;
+    return \Minds\Core\Events\Dispatcher::register("elgg/hook/$type", $hook, $callback, $priority); // Register hook with new system, but prefix it in the oldstyle namespace
+    
+	/*global $CONFIG;
 
+	
 	if (empty($hook) || empty($type)) {
 		return false;
 	}
@@ -747,7 +758,7 @@ function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 
 	}
 	$CONFIG->hooks[$hook][$type][$priority] = $callback;
 	ksort($CONFIG->hooks[$hook][$type]);
-	return true;
+	return true;*/
 }
 
 /**
@@ -759,9 +770,11 @@ function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 
  *
  * @return void
  * @since 1.8.0
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_unregister_plugin_hook_handler($hook, $entity_type, $callback) {
-	global $CONFIG;
+    return \Minds\Core\Events\Dispatcher::unregister("elgg/hook/$entity_type", $hook, $callback);
+	/*global $CONFIG;
 
 	if (isset($CONFIG->hooks[$hook]) && isset($CONFIG->hooks[$hook][$entity_type])) {
 		foreach ($CONFIG->hooks[$hook][$entity_type] as $key => $hook_callback) {
@@ -769,7 +782,7 @@ function elgg_unregister_plugin_hook_handler($hook, $entity_type, $callback) {
 				unset($CONFIG->hooks[$hook][$entity_type][$key]);
 			}
 		}
-	}
+	}*/
 }
 
 /**
@@ -819,9 +832,11 @@ function elgg_unregister_plugin_hook_handler($hook, $entity_type, $callback) {
  * @link http://docs.elgg.org/Tutorials/Plugins/Hooks
  *
  * @since 1.8.0
+ * @deprecated Use Minds\Core\Events
  */
 function elgg_trigger_plugin_hook($hook, $type, $params = null, $returnvalue = null) {
-	global $CONFIG;
+    return \Minds\Core\Events\Dispatcher::trigger("elgg/hook/$type", $hook, $params, $returnvalue);
+	/*global $CONFIG;
 
 	$hooks = array();
 	if (isset($CONFIG->hooks[$hook][$type])) {
@@ -857,7 +872,7 @@ function elgg_trigger_plugin_hook($hook, $type, $params = null, $returnvalue = n
 		}
 	}
 
-	return $returnvalue;
+	return $returnvalue;*/
 }
 
 /**
