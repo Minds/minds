@@ -26,7 +26,7 @@ class subscribe implements interfaces\api{
         switch($pages[0]){
             case 'subscriptions':
                 $db = new \Minds\Core\Data\Call('friends');
-                $subscribers= $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+                $subscribers= $db->getRow($pages[1], array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
                 $users = array();
                 foreach($subscribers as $guid => $subscriber){
                     if(is_numeric($subscriber)){
@@ -38,12 +38,18 @@ class subscribe implements interfaces\api{
                     $users[] = new \minds\entities\user(json_decode($subscriber,true));
                 }
                 $response['users'] = factory::exportable($users);
+                $response['load-next'] = (string) end($users)->guid;
+                $response['load-previous'] = (string) key($users)->guid;
                 break;
             case 'subscribers':
                 $db = new \Minds\Core\Data\Call('friendsof');
-                $subscribers= $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+                $subscribers= $db->getRow($pages[1], array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
                 $users = array();
                 foreach($subscribers as $guid => $subscriber){
+                    if($guid == get_input('offset')){
+                        unset($subscribers[$guid]);
+                        continue;
+                    }
                     if(is_numeric($subscriber)){
                         //this is a local, old style subscription
                         $users[] = new \minds\entities\user($guid);
@@ -53,6 +59,8 @@ class subscribe implements interfaces\api{
                     $users[] = new \minds\entities\user(json_decode($subscriber,true));
                 }
                 $response['users'] = factory::exportable($users);
+                $response['load-next'] = (string) end($users)->guid;
+                $response['load-previous'] = (string) key($users)->guid;
                 break;
         }
         
