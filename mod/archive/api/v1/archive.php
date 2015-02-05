@@ -192,7 +192,7 @@ class archive implements interfaces\api{
             $raw .= $data;
         }
 	
-	$boundary = substr($raw, 0, strpos($raw, "\r\n"));
+	   $boundary = substr($raw, 0, strpos($raw, "\r\n"));
         $parts = array_slice(explode($boundary, $raw), 1);
 
         foreach($parts as $part){
