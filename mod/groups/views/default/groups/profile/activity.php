@@ -48,7 +48,7 @@ $post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctyp
 
 $content .= core\entities::view(array(
 	'type' => 'activity',
-	'limit' => 4,
+	'limit' => get_input('limit', 4),
 	'masonry' => false,
 	'prepend' => $post,
 	'list_class' => 'list-newsfeed',
