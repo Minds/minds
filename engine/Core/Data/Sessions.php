@@ -15,6 +15,7 @@ class Sessions implements \SessionHandlerInterface{
 
 	public function open($save_path , $name){
 		$this->db = new Call('session');
+        return true;
 	}
 
 	public function close(){
@@ -41,7 +42,7 @@ class Sessions implements \SessionHandlerInterface{
  			return false;
 		}
 		
-		return '';
+		return false;
 
 	}
 
