@@ -13,19 +13,12 @@ class session extends base{
 
 	public function __construct($force = NULL){
 			
-		$handler = new core\Data\Sessions();
-	        session_set_save_handler(
-			array($handler, "open"),
-        		array($handler, "close"),
-            		array($handler, "read"),
-            		array($handler, "write"),
-            		array($handler, "destroy"),
-           		array($handler, "gc")
-		);
+	    session_set_save_handler(new core\Data\Sessions());
 		
 		ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // Persistent cookies - 30 days
 		session_name('minds');
 		session_start();
+        
 		session_cache_limiter('public');
 	
 		//@todo move these to new page model
