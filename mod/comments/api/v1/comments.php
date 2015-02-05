@@ -8,6 +8,7 @@
 namespace minds\plugin\comments\api\v1;
 
 use Minds\Core;
+use Minds\Core\Data;
 use minds\interfaces;
 use minds\api\factory;
 
@@ -35,21 +36,48 @@ class comments implements interfaces\api{
             $comments = array();
 
         usort($comments, function($a, $b){ return $a->time_created - $b->time_created;});
-	foreach($comments as $k => $comment){
-		$owner = $comment->getOwnerEntity();
-		$comments[$k]->ownerObj = $owner->export();
-	}
-        
+	    foreach($comments as $k => $comment){
+            if(!$comment->guid){
+                unset($comments[$k]);
+                continue;
+            }
+		    $owner = $comment->getOwnerEntity();
+		    $comments[$k]->ownerObj = $owner->export();
+	    }
         $response['comments'] = factory::exportable($comments);
-       
+        $response['load-next'] = reset($comments)->guid;
+        $response['load-previous'] = key($comments)->guid;       
     
         return factory::response($response);
         
     }
     
     public function post($pages){
-        
-    	
+       
+        $parent = new \Minds\entities\entity($pages[0]);
+    	$comment = new \Minds\plugin\comments\entities\comment();
+        $comment->description = $_POST['comment'];
+        $comment->parent_guid = $pages[0];
+        if($comment->save()){
+            $subscribers = Data\indexes::fetch('comments:subscriptions:'.$pages[0]) ?: array();
+            $subscribers[$parent->owner_guid] = $parent->owner_guid;
+            if(isset($subscribers[$comment->owner_guid]))
+                unset($subscribers[$comment->owner_guid]);
+
+            \elgg_trigger_plugin_hook('notification', 'all', array(
+                'to' => $subscribers,
+                'object_guid'=>$pages[0],
+                'description'=>$desc,
+                'notification_view'=>'comment'
+            ));
+            
+            \elgg_trigger_event('comment:create', 'comment', $data);
+            
+            $indexes = new data\indexes();
+            $indexes->set('comments:subscriptions:'.$parent->guid, array($comment->owner_guid => $comment->owner_guid));
+        } 
+        $comment->ownerObj = Core\session::getLoggedinUser()->export();
+        $response['comment'] = $comment->export();
 
         return factory::response($response);
     }

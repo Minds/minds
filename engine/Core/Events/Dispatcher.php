@@ -100,7 +100,7 @@ class Dispatcher {
     	));
     	$eventobj->setResponse($default_return);
     	
-    	try {
+        try {
     	    
     	    // Dispatch event
             foreach ($calls as $callbacks) {
