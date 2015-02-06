@@ -24,6 +24,7 @@ class start extends Components\Plugin{
 				'/settings/payments/payouts' => "$path\\payouts",
 				'/settings/payments/transactions' => "$path\\transactions",
 				'/settings/payments/donate' => "$path\\donate",
+				'/api/v1/wallet' => "minds\\plugin\\payments\\api\\v1\\wallet"
 			));
 	
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
