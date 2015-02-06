@@ -58,7 +58,10 @@ class thumbs implements interfaces\api{
         }else{
              return factory::response(array('status'=>'error', 'message'=>'entity not found'));
         }
-         return factory::response(array());
+        
+        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $guid, 'vote');
+        
+        return factory::response(array());
         
     }
     

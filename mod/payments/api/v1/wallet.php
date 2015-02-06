@@ -26,7 +26,7 @@ class wallet implements interfaces\api{
         switch($pages[0]){
             
             case "count":
-                $response['count'] = 5;
+                $response['count'] = Core\session::getLoggedinUser()->points_count;
                 break;
                 
             case "transactions":

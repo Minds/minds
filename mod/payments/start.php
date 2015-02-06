@@ -7,6 +7,7 @@ namespace minds\plugin\payments;
 
 use Minds\Components;
 use Minds\Core;
+use Minds\Core\Events;
 
 class start extends Components\Plugin{
 	
@@ -90,5 +91,26 @@ class start extends Components\Plugin{
 		}
 		elgg_set_viewtype('default');
 	}
+    
+    /**
+     * @return void
+     */
+    static public function createTransaction($user_guid, $points, $entity_guid = NULL, $description = ""){
+        $transaction = new entities\PointTransaction();
+        $transaction->setPoints($points)
+            ->setOwnerGuid($user_guid)
+            ->setDescription($description)
+            ->setEntityGuid($entity_guid)
+            ->save();
+        /**
+         * Update the userscount
+         */
+        $user = new \Minds\entites\user($user_guid);
+        if($user->guid){
+            $count = $user->points_count;
+            $db = new Core\Data\Call('entities');
+            $db->insert($user_guid, array('points_count' => $count + $points));
+        }
+    }
 	
 }
