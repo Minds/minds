@@ -842,7 +842,7 @@ function elgg_get_entities(array $options = array()) {
 						}
 						
 						if(isset($guids[$options['offset']])){
-							unset($guids[$options['offset']]); //prevents looping...
+						//	unset($guids[$options['offset']]); //prevents looping...
 						}
 
 						$db = new Minds\Core\Data\Call('entities');

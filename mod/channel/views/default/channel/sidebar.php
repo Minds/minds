@@ -51,7 +51,7 @@ elgg_register_menu_item('channel', array(
 if($bitcoin = \elgg_get_plugin_user_setting('wallet_guid', $user->guid, 'bitcoin')){
 	elgg_register_menu_item('channel', array(
 		'name' => 'channel:bitcoin',
-		'text' => '<span class="entypo">&#59408;</span> Send bitcoin',
+		'text' => '<span class="entypo">&#59408;</span> Send Bitcoin',
 		'href' => elgg_get_site_url() . '/bitcoin/send/?address='.$user->username,
 		'priority' => 107
 	));
