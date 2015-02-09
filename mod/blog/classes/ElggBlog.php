@@ -38,7 +38,7 @@ class ElggBlog extends ElggObject {
 			global $CONFIG;
 			$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
 			$image = elgg_get_site_url() . 'blog/header/'.$this->guid . '/'.$this->last_updated;
-			$src = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2707';
+			$src = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2708';
 			if($size)
 				$src .= '&width='.$size;
 			return $src;
