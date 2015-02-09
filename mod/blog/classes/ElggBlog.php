@@ -27,6 +27,7 @@ class ElggBlog extends ElggObject {
 		return array_merge(parent::getExportableValues(), array(
 			'excerpt',
 			'ownerObj',
+			'header_bg'
 		));
 	}
 	
