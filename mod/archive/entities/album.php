@@ -7,7 +7,7 @@
 namespace minds\plugin\archive\entities;
 
 use minds\entities\object;
-use Minds\Core\data;
+use Minds\Core\Data;
 
 class album extends object{
 		

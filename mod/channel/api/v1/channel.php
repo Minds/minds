@@ -11,6 +11,7 @@ use Minds\Core;
 use minds\interfaces;
 use minds\entities;
 use minds\api\factory;
+use ElggFile;
 
 class channel implements interfaces\api{
 
@@ -68,12 +69,12 @@ class channel implements interfaces\api{
             $guid = Core\session::getLoggedinUser()->legacy_guid;
         
         $icon_sizes = elgg_get_config('icon_sizes');
-        
+       error_log(print_r($_FILES, true)); 
         // get the images and save their file handlers into an array
         // so we can do clean up if one fails.
         $files = array();
         foreach ($icon_sizes as $name => $size_info) {
-            $resized = get_resized_image_from_uploaded_file('fileData', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale']);
+            $resized = get_resized_image_from_uploaded_file('file', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale']);
         
             if ($resized) {
                 //@todo Make these actual entities.  See exts #348.

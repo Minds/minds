@@ -123,6 +123,27 @@ $x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE, $output = 'jpeg', $quality
 		return FALSE;
 	}
 
+    $exif = exif_read_data($input_name);
+    $angle = 0;
+    if (!empty($exif['Orientation'])) {
+        switch ($exif['Orientation']) {
+        case 3:
+            $angle = 180 ;
+            break;
+
+        case 6:
+            $angle = -90;
+            break;
+
+        case 8:
+            $angle = 90; 
+            break;
+        default:
+            $angle = 0;
+            break;
+        }   
+    }   
+
 	// get the parameters for resizing the image
 	$options = array(
 		'maxwidth' => $maxwidth,
@@ -144,6 +165,8 @@ $x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE, $output = 'jpeg', $quality
 	if (!$original_image) {
 		return FALSE;
 	}
+
+    
 
 	// allocate the new image
 	$new_image = imagecreatetruecolor($params['newwidth'], $params['newheight']);
@@ -182,6 +205,9 @@ $x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE, $output = 'jpeg', $quality
 	
 	// @todo Enable interlancing
 	//imageinterlace($new_image, true);
+
+    //correct orientation
+    $new_image = imagerotate($new_image, $angle, 0);
 
 	// grab a compressed jpeg version of the image
 	ob_start();

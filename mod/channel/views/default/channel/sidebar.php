@@ -1,6 +1,7 @@
 <?php
 $user = elgg_extract('user', $vars);
-
+if(!$user)
+    return false;
 elgg_register_menu_item('channel', array(
 	'name' => 'channel:subscribed',
 	'text' => 'Subscribers ('. $user->getSubscribersCount() .')',

@@ -81,9 +81,9 @@ class subscribe implements interfaces\api{
      */
     public function post($pages){
         
-	$success = elgg_get_logged_in_user_entity()->subscribe($pages[0]);
+	    $success = elgg_get_logged_in_user_entity()->subscribe($pages[0]);
         $response = array('status'=>'success');
-        
+         \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $pages[0], 'subscribed');
         if(!$success){
             $response = array(
                 'status' => 'error'

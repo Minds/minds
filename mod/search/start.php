@@ -74,7 +74,7 @@ class start extends \minds\Components\Plugin{
 		}
 	}
 	
-	public function hook($hook, $type, $entity, $params){
+	public function hook($hook, $type, $entity, $params = array()){
 		if($entity && $entity->access_id == 2){
 			try{
 				$this->createDocument($entity);

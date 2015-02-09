@@ -136,7 +136,7 @@ class plugins extends base{
 						$plugin->guid, 
 						$e->getMessage()
 					));
-					
+					error_log($msg);
 					\elgg_add_admin_notice('cannot_start' . $plugin->getID(), $msg);
 					$return = false;
 	

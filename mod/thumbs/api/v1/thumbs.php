@@ -51,15 +51,16 @@ class thumbs implements interfaces\api{
         $entity = core\entities::build(new \minds\entities\entity($guid));
         
         if($entity->guid){
-            if(helpers\buttons::hasThumbed($entity, $direction))
-	        helpers\storage::cancel($direction, $entity);
-	    else 
-	        helpers\storage::insert($direction, $entity);
+            if(helpers\buttons::hasThumbed($entity, $direction)){
+	            helpers\storage::cancel($direction, $entity);
+                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, -1, $guid, 'vote removed');
+            } else {
+	            helpers\storage::insert($direction, $entity);
+                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $guid, 'vote');
+            }
         }else{
              return factory::response(array('status'=>'error', 'message'=>'entity not found'));
         }
-        
-        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $guid, 'vote');
         
         return factory::response(array());
         

@@ -68,8 +68,9 @@ class Sessions implements \SessionHandlerInterface{
 	
 	public function destroy($session_id ) {
 		try {
-			return (bool)$this->db->removeRow($session_id);
-		} catch (Exception $e) {
+			$this->db->removeRow($session_id);
+		    return true;
+        } catch (Exception $e) {
 			return false;
 		}
 	}

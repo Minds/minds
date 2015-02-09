@@ -63,4 +63,11 @@ class PointsTransaction extends entities\object{
          return $this;
      }
 
+    public function getExportableValues() {
+        return array_merge(parent::getExportableValues(), array(
+            'entity_guid',
+            'points'
+        ));
+    }
+
 }

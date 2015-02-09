@@ -73,8 +73,8 @@ class factory{
      */
     public static function exportable($entities, $exceptions = array()){
         foreach($entities as $k => $entity){
-            $entities[$k]->guid = (string) $entity->guid; //javascript doesn't like long numbers..
             $entities[$k] = $entity->export();
+            $entities[$k]['guid'] = (string) $entity->guid; //javascript doesn't like long numbers..
             foreach($exceptions as $exception){
                 $entities[$k][$exception] = $entity->$exception;
             }

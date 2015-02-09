@@ -15,6 +15,12 @@ class start extends Components\Plugin{
 		
 		\elgg_extend_view('css/elgg', 'css/payments');
 		\elgg_extend_view('js/elgg', 'js/payments');
+
+        \elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
+            if($row->subtype == 'points_transaction'){
+                return new entities\PointsTransaction($row);
+            }
+        });
 		
 		/**
 		 * Register our page end points
@@ -96,7 +102,7 @@ class start extends Components\Plugin{
      * @return void
      */
     static public function createTransaction($user_guid, $points, $entity_guid = NULL, $description = ""){
-        $transaction = new entities\PointTransaction();
+        $transaction = new entities\PointsTransaction();
         $transaction->setPoints($points)
             ->setOwnerGuid($user_guid)
             ->setDescription($description)
@@ -105,12 +111,14 @@ class start extends Components\Plugin{
         /**
          * Update the userscount
          */
-        $user = new \Minds\entites\user($user_guid);
-        if($user->guid){
-            $count = $user->points_count;
-            $db = new Core\Data\Call('entities');
-            $db->insert($user_guid, array('points_count' => $count + $points));
-        }
+        $count = 0;
+        $db=new Core\Data\Call('entities');
+        $slice = $db->getRow($user_guid, array("offset"=>"points_count", "limit"=>1));
+        if(isset($slice['points_count'])){
+            $count = $slice['points_count'];
+        } 
+        $db->insert($user_guid, array('points_count' => (int) $count + $points));
+        
     }
 	
 }

@@ -57,6 +57,7 @@ class search extends core\page implements interfaces\page{
 			$params['type'] = get_input('type');
 		
 		$params['size'] = \get_input('limit');
+        if(\get_input('offset'))
 		$params['from'] = \get_input('offset');
 		$params['body']  = $body;
 		try{

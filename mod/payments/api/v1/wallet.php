@@ -26,11 +26,23 @@ class wallet implements interfaces\api{
         switch($pages[0]){
             
             case "count":
-                $response['count'] = Core\session::getLoggedinUser()->points_count;
+                $db=new Core\Data\Call('entities');
+                $slice = $db->getRow(Core\session::getLoggedinUser()->guid, array("offset"=>"points_count", "limit"=>1));
+                $count = isset($slice['points_count']) ? (int) $slice['points_count'] : 0;
+                
+                $satoshi_rate = 1;//@todo make this configurable for admins
+                $satoshi = $count * $satoshi_rate;
+                $btc = ($satoshi / 1000000000);
+            
+                $response['count'] = $count;
+                $response['satoshi'] = $satoshi;
+                $response['btc'] = sprintf('%.9f', $btc);
                 break;
                 
             case "transactions":
-                
+                $entities = Core\entities::get(array('subtype'=>'points_transaction', 'owner_guid'=> Core\session::getLoggedinUser()->guid, 'limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+                $response['transactions'] = factory::exportable($entities);
+                $response['load-next'] = end($entities)->guid;
                 break;
                 
         }

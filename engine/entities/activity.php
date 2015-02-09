@@ -33,7 +33,14 @@ class activity extends entity{
 		return parent::save($index);
 
 	}
-	
+
+    public function delete(){
+        $indexes = $this->getIndexKeys(true);
+        $db = new \Minds\Core\Data\Call('entities');
+        $res = $db->removeRow($this->guid);
+        return true;
+    
+    }
 	/**
 	 * Returns an array of indexes into which this entity is stored
 	 * 

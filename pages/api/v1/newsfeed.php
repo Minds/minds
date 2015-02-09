@@ -60,17 +60,49 @@ class newsfeed implements interfaces\api{
     public function post($pages){
         
         //factory::authorize();
-        error_log(print_r($_POST, true));
-        $activity = new entities\activity();
-        if(isset($_POST['message']))
-            $activity->setMessage($_POST['message']);
-        
-        if($guid = $activity->save()){
-            return factory::response(array('guid'=>$guid));
-        } else {
-            return factory::response(array('status'=>'failed', 'message'=>'could not save'));
+        switch($pages[0]){
+            case 'remind':
+                $embeded = new entities\entity($pages[1]);
+                $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+                $activity = new entities\activity();
+                switch($embeded->type){
+                    case 'activity':
+                        if($embeded->remind_object)
+                            $activity->setRemind($embeded->remind_object)->save();
+                        else
+                            $activity->setRemind($embeded->export())->save();
+                     break;
+                     default:
+                         /**
+                           * The following are actually treated as embeded posts.
+                           */
+                           switch($embeded->subtype){
+                               case 'blog':
+                                   $message = false;
+                                    if($embeded->owner_guid != elgg_get_logged_in_user_guid())
+                                        $message = 'via <a href="'.$embeded->getOwnerEntity()->getURL() . '">'. $embeded->getOwnerEntity()->name . '</a>';
+                                        $activity->setTitle($embeded->title)
+                                        ->setBlurb(elgg_get_excerpt($embeded->description))
+                                        ->setURL($embeded->getURL())
+                                        ->setThumbnail($embeded->getIconUrl())
+                                        ->setMessage($message)
+                                        ->setFromEntity($embeded)
+                                        ->save();
+                                    break;
+                            }
+                }
+            break;
+            default:
+                $activity = new entities\activity();
+                if(isset($_POST['message']))
+                    $activity->setMessage($_POST['message']);
+                
+                if($guid = $activity->save()){
+                    return factory::response(array('guid'=>$guid));
+                } else {
+                    return factory::response(array('status'=>'failed', 'message'=>'could not save'));
+                }
         }
-        
     }
     
     public function put($pages){

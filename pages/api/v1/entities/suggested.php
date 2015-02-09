@@ -93,9 +93,9 @@ class suggested implements interfaces\api{
         
         switch($pages[0]){
             case 'pass':
-                //users only action. objects should use 'pass'
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
                 Core\Data\Client::build('Neo4j')->request($prepared->createPass(Core\session::getLoggedinUser()->guid, $pages[1]));
+                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $pages[1], 'pass');
         }
         
     }
