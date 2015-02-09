@@ -38,6 +38,11 @@ class activity extends entity{
         $indexes = $this->getIndexKeys(true);
         $db = new \Minds\Core\Data\Call('entities');
         $res = $db->removeRow($this->guid);
+        
+        foreach($indexes as $index){
+            $db->removeAttributes($index, array($this->guid));
+        }
+        
         return true;
     
     }
