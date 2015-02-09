@@ -252,7 +252,7 @@ and (max-width : 720px) {
 	}
 
 	.elgg-list{
-		width:auto;
+		width:100% !important;
 	}
 	
 	/**
@@ -269,6 +269,9 @@ and (max-width : 720px) {
 	.sidebar{
 		display:none;
 	}
-	
+
+	.elgg-footer{
+		margin-right:0;
+	}	
 	
 }

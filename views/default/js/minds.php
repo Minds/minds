@@ -565,15 +565,11 @@
 					
 					el.imagesLoaded().always(function(){
 						el.find('.rich-image').each(function(){ 
-							var image = $(this); 
-							if(image.context.naturalWidth < 2 ||
-								image.readyState == 'uninitialized'){    
-								 /*$(image).unbind("error").attr(
-								    "src", "path/to/image/no-image.gif"
-								 );*/
-								//       $(this).hide();
-								$(this).remove();
-							} 
+							var image = $(this);
+							if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+								image.remove();
+							}	
+
 						});
 						$list.find('.elgg-list').append(el).masonry('appended', el);
 						window.lock_autoscroll = false;
