@@ -204,8 +204,10 @@ class ElggObject extends ElggEntity {
 			$this->ownerObj = $owner->export();
 		
 		$guid = parent::save($index);
-        $prepared = new Minds\Core\Data\Neo4j\Prepared\Common();
-        $return = Minds\Core\Data\Client::build('Neo4j')->request($prepared->createObject($this));
+        try{
+            $prepared = new Minds\Core\Data\Neo4j\Prepared\Common();
+            $return = Minds\Core\Data\Client::build('Neo4j')->request($prepared->createObject($this));
+        } catch (\Exception $e){}
         return $guid;
 	}
 }

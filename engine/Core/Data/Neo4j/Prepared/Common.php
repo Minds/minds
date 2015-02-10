@@ -152,7 +152,7 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * Create objects
      */
-    public function createObject(Entities\entity $object){
+    public function createObject(\ElggObject $object){
         $this->template = "MERGE (object:$object->subtype { guid: {guid} })";
         $this->values = array('guid'=>$object->guid);
         return $this;
