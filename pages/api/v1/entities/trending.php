@@ -22,13 +22,13 @@ class trending implements interfaces\api{
      */      
     public function get($pages){
         //temp hack..
-        if(isset($pages[0]) && $pages[0] == 'video')
-            $pages[0] = 'kaltura_video';
+        if(isset($pages[1]) && $pages[1] == 'video')
+            $pages[1] = 'kaltura_video';
 
         //the allowed, plus default, options
         $options = array(
-            'type' => 'object',
-            'subtype' => isset($pages[0]) ? $pages[0] : NULL,
+            'type' => isset($pages[0]) ? $pages[0] : 'object',
+            'subtype' => isset($pages[1]) ? $pages[1] : NULL,
             'limit'=>12,
             'offset'=>''
             );
@@ -39,14 +39,14 @@ class trending implements interfaces\api{
         }
         
        
-	$opts = array('timespan' => get_input('timespan', 'day'));
-	$trending = new \MindsTrending(null, $opts);
-	$guids = $trending->getList($options);
-	if(!$guids){
+	    $opts = array('timespan' => get_input('timespan', 'day'));
+    	$trending = new \MindsTrending(null, $opts);
+    	$guids = $trending->getList($options);
+    	if(!$guids){
             return factory::response(array('status'=>'error', 'message'=>'not found'));
         }
-	$options['guids'] = $guids;
-	$entities = core\entities::get($options);
+    	$options['guids'] = $guids;
+    	$entities = core\entities::get($options);
         
         if($entities){
             $response['entities'] = factory::exportable($entities);

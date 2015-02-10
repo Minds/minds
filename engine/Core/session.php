@@ -108,7 +108,9 @@ class session extends base{
 		 * The OAuth plugin, for example, might use this. 
 		 */
 		if($user = \elgg_trigger_plugin_hook('logged_in_user', 'user')){
-			return new entities\user($user);
+            if(is_object($user) || is_array($user)){
+			    return new entities\user($user);
+            }
 		}
 		
 		if (isset($_SESSION['user'])) {

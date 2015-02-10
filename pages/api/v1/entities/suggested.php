@@ -23,7 +23,9 @@ class suggested implements interfaces\api{
      */      
     public function get($pages){
         $prepared = new Data\Neo4j\Prepared\Common();
-        switch($pages[0]){
+        if(!isset($pages[1]))
+            $pages[1] = $pages[0];
+        switch($pages[1]){
             case 'video':
                 $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid));
                 

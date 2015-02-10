@@ -8,7 +8,7 @@ namespace Minds\Core\Events;
 class Event {
     
     private $data;
-    private $return = null;
+    private $return = true;
     
     function __construct($data) {
         $this->data = $data;

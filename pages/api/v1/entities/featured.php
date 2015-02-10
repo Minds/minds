@@ -22,13 +22,13 @@ class featured implements interfaces\api{
      */      
     public function get($pages){
 
-        if(isset($pages[0]) && $pages[0] == 'video')
-            $pages[0] = 'kaltura_video';
+        if(isset($pages[1]) && $pages[1] == 'video')
+            $pages[1] = 'kaltura_video';
         
         //the allowed, plus default, options
         $options = array(
-            'type' => 'object',
-            'subtype' => isset($pages[0]) ? $pages[0] : NULL,
+            'type' => isset($pages[0]) ? $pages[0] : 'object',
+            'subtype' => isset($pages[1]) ? $pages[1] : NULL,
             'limit'=>12,
             'offset'=>''
             );
@@ -38,14 +38,14 @@ class featured implements interfaces\api{
                 $options[$key] = $_GET[$key];
         }
 
-	$key = $options['type'] . ':featured';
-	if($options['subtype'])
-		$key = $options['type'] . ':' . $options['subtype'] . ':featured';
+	    $key = $options['type'] . ':featured';
+    	if($options['subtype'])
+    		$key = $options['type'] . ':' . $options['subtype'] . ':featured';
 
-	$guids = core\Data\indexes::fetch($key, $options);
-	if(!$guids){
-		return factory::response(array('status'=>'error', 'message'=>'not found'));
-	}
+    	$guids = core\Data\indexes::fetch($key, $options);
+    	if(!$guids){
+	    	return factory::response(array('status'=>'error', 'message'=>'not found'));
+    	}
         
         $options = array('guids'=>$guids);
         $entities = core\entities::get($options);

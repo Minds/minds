@@ -119,7 +119,7 @@ class Common implements Interfaces\PreparedInterface{
      * @return $this
      */
     public function getSubscriptionsOfSubscriptions(Entities\User $user){
-        $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
+        $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]-(fof:User) ".
                             "WHERE " . 
 			                 "NOT (user)-[:ACTED]->(fof) " .
 			                 "AND NOT (fof.guid = user.guid) " . 
@@ -176,7 +176,7 @@ class Common implements Interfaces\PreparedInterface{
      * Return suggested content, based on 
      */
     public function getSuggestedObjects($user_guid, $subtype = 'video'){
-        $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*..4]-(object:$subtype) " .
+        $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*..2]-(object:$subtype) " .
                             "WHERE NOT a-[:ACTED]->(object) " .
                             "RETURN object LIMIT 12";
         $this->values = array(

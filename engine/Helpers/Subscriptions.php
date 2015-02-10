@@ -32,6 +32,10 @@ class Subscriptions{
         $prepared = new Core\Data\Neo4j\Prepared\Common();
         $return =  Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
 
+        //grab the newsfeed
+        $nf = new Core\Data\Call('entities_by_time');
+        $nf->insert("activity:network:$user_guid", $nf->getRow("activity:user:$to_guid", array('limit'=>12)));
+
 	   \Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
         return $return;
     }

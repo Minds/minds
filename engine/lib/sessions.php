@@ -280,10 +280,10 @@ function login(ElggUser $user, $persistent = false) {
 	}
 	
 	if(!elgg_trigger_event('login', 'user', $user)){
-		return false;
+        return false;
 	}
-
-	$_SESSION['user'] = $user;
+	
+    $_SESSION['user'] = $user;
 	$_SESSION['guid'] = $user->getGUID();
 	$_SESSION['id'] = $_SESSION['guid'];
 	$_SESSION['username'] = $user->username;

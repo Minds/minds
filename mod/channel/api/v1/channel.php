@@ -68,42 +68,56 @@ class channel implements interfaces\api{
         if(Core\session::getLoggedinUser()->legacy_guid)
             $guid = Core\session::getLoggedinUser()->legacy_guid;
         
-        $icon_sizes = elgg_get_config('icon_sizes');
-       error_log(print_r($_FILES, true)); 
-        // get the images and save their file handlers into an array
-        // so we can do clean up if one fails.
-        $files = array();
-        foreach ($icon_sizes as $name => $size_info) {
-            $resized = get_resized_image_from_uploaded_file('file', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale']);
-        
-            if ($resized) {
-                //@todo Make these actual entities.  See exts #348.
-                $file = new ElggFile();
-                $file->owner_guid = Core\session::getLoggedinUser()->guid;
-                $file->setFilename("profile/{$guid}{$name}.jpg");
-                $file->open('write');
-                $file->write($resized);
-                $file->close();
-                $files[] = $file;
-            } else {
-                // cleanup on fail
-                foreach ($files as $file) {
-                    $file->delete();
+        switch($pages[0]){
+            case "avatar":
+                $icon_sizes = elgg_get_config('icon_sizes');
+                
+                // get the images and save their file handlers into an array
+                // so we can do clean up if one fails.
+                $files = array();
+                foreach ($icon_sizes as $name => $size_info) {
+                    $resized = get_resized_image_from_uploaded_file('file', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale']);
+                
+                    if ($resized) {
+                        //@todo Make these actual entities.  See exts #348.
+                        $file = new ElggFile();
+                        $file->owner_guid = Core\session::getLoggedinUser()->guid;
+                        $file->setFilename("profile/{$guid}{$name}.jpg");
+                        $file->open('write');
+                        $file->write($resized);
+                        $file->close();
+                        $files[] = $file;
+                    } else {
+                        // cleanup on fail
+                        foreach ($files as $file) {
+                            $file->delete();
+                        }
+                
+                        register_error(elgg_echo('avatar:resize:fail'));
+                        forward(REFERER);
+                    }
                 }
-        
-                register_error(elgg_echo('avatar:resize:fail'));
-                forward(REFERER);
-            }
-        }
-        
-        // reset crop coordinates
-        $owner->x1 = 0;
-        $owner->x2 = 0;
-        $owner->y1 = 0;
-        $owner->y2 = 0;
-        
-        $owner->icontime = time();
-        $owner->save();
+                
+                // reset crop coordinates
+                $owner->x1 = 0;
+                $owner->x2 = 0;
+                $owner->y1 = 0;
+                $owner->y2 = 0;
+                
+                $owner->icontime = time();
+                $owner->save();
+                break;
+            case "info":
+            default:
+                if(!$owner->canEdit()){
+                    return factory::response(array('status'=>'error'));
+                }
+                foreach(array('name', 'website') as $field){
+                    if(isset($_POST[$field]))
+                        $owner->$field = $_POST[$field];
+                }
+                $owner->save();
+       }
         
        return factory::response(array());
         

@@ -68,7 +68,7 @@ class Dispatcher {
      * @param mixed $params Parameters to pass to the callback
      * @param mixed $default_return Default return value, if not set by the handler.
      */
-    public static function trigger($namespace, $event, $params, $default_return = null) {
+    public static function trigger($namespace, $event, $params, $default_return = true) {
     	$calls = array();           
         
         if (isset(self::$events[$namespace][$event])){
@@ -142,6 +142,7 @@ class Dispatcher {
     	    }
     	} catch (\Minds\Core\exceptions\StopEventException $ex) {
     	    // Stop execution when we get this exception, all other exceptions bubble up.
+            return false;
     	}
     	
     	return $eventobj->response();

@@ -457,21 +457,15 @@ function minds_filter($text) {
  */
 function minds_subscribe_default($hook, $type, $value, $params){
 	$user = elgg_extract('user', $params);
-
+    $user = new Minds\entities\user($user);
 	// no clue what's going on, so don't react.
 	if (!$user instanceof ElggUser) {
 		return;
 	}
 
-	// another plugin is requesting that registration be terminated
-	// no need for uservalidationbyadmin
-	if (!$value) {
-		return $value;
-	}
+	$minds = new Minds\entities\user('minds'); 
 	
-	$minds = get_user_by_username('minds');
-	
-	$user->addFriend($minds->guid);
+	$user->subscribe($minds->guid);
 	
 	return $value;
 }
