@@ -71,13 +71,17 @@ class activity extends entity{
 			$followers = array_keys($followers);
 			
 			array_push($indexes, "$this->type:user:$owner->guid");
-			
+
 			array_push($followers, $this->owner_guid);
 			
 			foreach($followers as $follower)
 				array_push($indexes, "$this->type:network:$follower");
+
 		}
 
+        if($this->to_guid == $owner->guid)
+            array_push($indexes, "$this->type:user:own:$owner->guid");
+    
 		/**
 		 * @todo make it only post to a group if we are in a group
 		 */
@@ -231,4 +235,14 @@ class activity extends entity{
 		$this->custom_data = $data;
 		return $this;
 	}
+
+    /**
+     * Set the to_guid
+     * @param int $guid
+     * @return $this
+     */
+    public function setToGuid($guid){
+        $this->to_guid = $guid;
+        return $this;
+    }
 }

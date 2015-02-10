@@ -34,7 +34,7 @@ class Subscriptions{
 
         //grab the newsfeed
         $nf = new Core\Data\Call('entities_by_time');
-        $nf->insert("activity:network:$user_guid", $nf->getRow("activity:user:$to_guid", array('limit'=>12)));
+        $nf->insert("activity:network:$user_guid", $nf->getRow("activity:user:own:$to_guid", array('limit'=>12)));
 
 	   \Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
         return $return;
