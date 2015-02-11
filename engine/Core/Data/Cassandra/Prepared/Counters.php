@@ -2,11 +2,11 @@
 /**
  * Prepared query
  */
-namespace Minds\Core\Data\Neo4j\Prepared;
+namespace Minds\Core\Data\Cassandra\Prepared;
 
 use  Minds\Core\Data\Interfaces;
 
-class CypherQuery implements Interfaces\PreparedInterface{
+class Counters implements Interfaces\PreparedInterface{
     
     private $template;
     private $values; 
@@ -17,6 +17,25 @@ class CypherQuery implements Interfaces\PreparedInterface{
             'values'=>$this->values
             );
             
+    }
+    
+    public function update($guid, $metric, $value){
+        $this->template = "UPDATE counters SET count = count + :count WHERE guid = :guid AND metric = :metric";
+        $this->values = array(
+            "count" => $value,
+            "guid" => (string) $guid,
+            "metric" => $metric
+            );
+        return $this;
+    }
+    
+    public function get($guid, $metric){
+        $this->template = "SELECT count FROM counters WHERE guid = :guid AND metric = :metric";
+        $this->values = array(
+            "guid" => (string) $guid,
+            "metric" => $metric
+            );
+        return $this;
     }
     
     public function setQuery($template, $values = array()){

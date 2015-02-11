@@ -16,17 +16,17 @@ class Client implements Interfaces\ClientInterface{
         global $CONFIG;
         $options = array_merge(array(
             'keyspace' => $CONFIG->cassandra->keyspace,
-            'servers' => $CONFIG->cassandra->servers,
+            'servers' => $CONFIG->cassandra->cql_servers,
         ), $options);
 
-        $this->cassandra = new CassandraLibrary\Connection($data_config['servers'], $options['keyspace']);
+        $this->cassandra = new CassandraLibrary\Connection($options['servers'], $options['keyspace']);
     }
     
     public function request(Interfaces\PreparedInterface $request){
         $cql = $request->build();
         
         $prepared = $this->cassandra->prepare($cql['string']);
-        $statement = $this->cassandra->executeAsync($prepared['id'], CassandraLibrary\Request\Request::strictTypeValues($cql['prepared_data'], $prepared['metadata']['columns']), \Cassandra\Request\Request::CONSISTENCY_ONE);
+        $statement = $this->cassandra->executeAsync($prepared['id'], CassandraLibrary\Request\Request::strictTypeValues($cql['values'], $prepared['metadata']['columns']), \Cassandra\Request\Request::CONSISTENCY_ONE);
         
         $response = $statement->getResponse();
         

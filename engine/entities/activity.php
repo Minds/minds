@@ -23,6 +23,11 @@ class activity extends entity{
 			'node' => elgg_get_site_url()
 		));
 	}
+    
+    public function __construct($guid = NULL){
+        parent::__construct($guid);   
+        \Minds\Helpers\Counters::increment($this, 'impression');
+    }
 
 	public function save($index = true){
 
@@ -244,5 +249,12 @@ class activity extends entity{
     public function setToGuid($guid){
         $this->to_guid = $guid;
         return $this;
+    }
+    
+    /**
+     * Return the count for this entity
+     */
+    public function getImpressions(){
+        return \Minds\Helpers\Counters::get($this, 'impression');
     }
 }

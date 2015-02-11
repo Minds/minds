@@ -23,10 +23,21 @@ class System implements Interfaces\PreparedInterface{
      * Create a table
      * 
      * @param string $table - the table name
-     * @param array $columns. Column name => Type
+     * @param array $columns. Column name => type
+     * @parAM array $primary_keys - $key
      * @return $this
      */
-    public function createTable($table, $columns = array()){
+    public function createTable($table, $columns = array(), $primary_keys = array()){
+        $cql = "CREATE TABLE $table";
+        $s = array();
+        foreach($columns as $key => $validator){
+            $s[] = "$key $validator";
+        }
+        $s[] = " PRIMARY KEY (" . implode(', ', $primary_keys) . ")";
+        $cql .= " (" . implode(', ', $s) . ")";
+        
+        $this->template = $cql;
+        return $this;
     }
     
     /**
