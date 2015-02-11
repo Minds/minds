@@ -124,6 +124,7 @@ class activity extends entity{
 		$export = parent::export();
 		if($this->entity_guid)
 			$export['entity_guid'] = (string) $this->entity_guid;
+        $export['impressions'] = $this->getImpressions();
 		return $export;
 	}
 	

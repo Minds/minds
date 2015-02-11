@@ -53,7 +53,7 @@ class Counters{
      * @return int
      */
     public static function get($entity, $metric){
-        $cacher = Core\cache\factory::build();
+        $cacher = Core\Data\cache\factory::build();
         if(is_numeric($entity)){
             $guid = $entity;
         } else {
@@ -67,7 +67,8 @@ class Counters{
         $result = $client->request($query->get($guid, $metric));
         if(isset($result[0]) && isset($result[0]['count']))
             $count = $result[0]['count'];
-        $count =  0;
+        else 
+            $count =  0;
         $cacher->set("counter:$guid:$metric", $count, 360); //cache for 10 minutes
         return $count;
     }
