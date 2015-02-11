@@ -30,7 +30,6 @@ class actions extends core\page implements interfaces\page{
 			case "up":
 				
 				$this->magicInsert('up', $entity);
-			
 				break;
 			case "up-cancel":
 				

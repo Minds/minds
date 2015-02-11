@@ -181,8 +181,8 @@ class start extends \ElggPlugin{
 			'object_guid'=> NULL
 		);
 		$params = array_merge($defaults, $params);
-
-		foreach($params['to'] as $t){
+		
+        foreach($params['to'] as $t){
 		//	if($t != $params['from']){
 				$notification = new entities\notification();
 				$notification->to_guid = (int)$t;
@@ -197,6 +197,22 @@ class start extends \ElggPlugin{
 				$notification->time_created = time();
 				$notification->save();
 		//	}
+            $message = "";
+            
+            switch($params['notification_view']){
+                case "comment":
+                    $message = \Minds\Core\session::getLoggedinUser()->name . " commented: " . $params['description'];
+                    break;
+                case "like":
+                    $message = \Minds\Core\session::getLoggedinUser()->name . " voted up " . $params['title'];
+                    break;
+                case "mention":
+                    $message = \Minds\Core\session::getLoggedinUser()->name . " mentioned you in a post";
+                    break;
+                default:
+                    $message = "You have a notification";
+            }
+            \Minds\plugin\notifications\Push::queue($t, array('message'=>$message, 'uri'=>'notification'));
 		}
 		return $return;
 	}

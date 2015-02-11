@@ -38,6 +38,8 @@ class storage{
             elseif($direction == 'down')
                 Core\Data\Client::build('Neo4j')->request($prepared->createVoteDOWN($entity->guid, $entity->subtype));
         }
+        
+        elgg_trigger_plugin_hook('notification', 'thumbs', array('to'=>array($entity->owner_guid), 'notification_view'=>'like', 'title'=>$entity->title, 'object_guid'=>$entity->guid));
     }
 
     public static function cancel($direction = 'up', $entity){

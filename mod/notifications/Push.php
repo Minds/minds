@@ -13,24 +13,24 @@ class Push {
     public static $locked = false;
     
     public static function send($message = array(), $token = NULL){
-        error_log('sending..');
-        error_log($token);
         if(!$token)
             return false;
         $config = new Surge\Config(array(
             'Apple' => array(
-                'cert'=> '/var/secure/apns-production.pem'
-                //'sandbox'=>true
+                //'cert'=> '/var/secure/apns-production.pem'
+                'sandbox'=>true,
+                'cert'=> '/var/secure/apns.pem'
             ),
             'Google' => array(
                 'api_key' => 'AIzaSyCp0LVJLY7SzTlxPqVn2-2zWZXQKb1MscQ'
             )));
 
         error_log('trying to send..');           
-           error_log("sending for $token"); 
+        error_log("sending for $token"); 
         $message = Surge\Messages\Factory::build($token)
             ->setTitle($message['title'])
-            ->setMessage($message['message']);
+            ->setMessage($message['message'])
+            ->setURI(isset($message['uri']) ? $message['uri'] : 'chat');
             
         Surge\Surge::send($message, $config);
     }
