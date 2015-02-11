@@ -64,6 +64,7 @@ class newsfeed implements interfaces\api{
             case 'remind':
                 $embeded = new entities\entity($pages[1]);
                 $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+                \Minds\Helpers\Counters::increment($pages[1], 'remind');
                 $activity = new entities\activity();
                 switch($embeded->type){
                     case 'activity':

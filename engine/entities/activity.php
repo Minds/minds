@@ -125,6 +125,7 @@ class activity extends entity{
 		if($this->entity_guid)
 			$export['entity_guid'] = (string) $this->entity_guid;
         $export['impressions'] = $this->getImpressions();
+        $export['reminds'] = $this->getRemindCount();
 		return $export;
 	}
 	
@@ -257,5 +258,16 @@ class activity extends entity{
      */
     public function getImpressions(){
         return \Minds\Helpers\Counters::get($this, 'impression');
+    }
+
+    /**
+     * Return the count of reminds
+     * @return int
+     */
+    public function getRemindCount(){
+        if($this->remind_object)
+            return \Minds\Helpers\Counters::get($this->remind_object['guid'], 'remind');
+
+        return \Minds\Helpers\Counters::get($this, 'remind');
     }
 }

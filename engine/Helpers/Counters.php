@@ -20,7 +20,10 @@ class Counters{
         if(is_numeric($entity)){
             $guid = $entity;
         } else {
-            $guid = $entity->guid;
+            if($entity->guid)
+                $guid = $entity->guid;
+            else
+                return null;
         }
         $client =Core\Data\Client::build('Cassandra');
         $query = new Core\Data\Cassandra\Prepared\Counters();

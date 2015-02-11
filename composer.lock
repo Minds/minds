@@ -760,8 +760,14 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git",
+                "url": "git@github.com:minds/minds-php-sdk.git",
                 "reference": "dba40df8c2ac1ec501626e645f5ffaa13f57c5ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/minds/minds-php-sdk/zipball/dba40df8c2ac1ec501626e645f5ffaa13f57c5ce",
+                "reference": "dba40df8c2ac1ec501626e645f5ffaa13f57c5ce",
+                "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
@@ -775,6 +781,10 @@
                 ]
             },
             "description": "Minds PHP SDK",
+            "support": {
+                "source": "https://github.com/minds/minds-php-sdk/tree/master",
+                "issues": "https://github.com/minds/minds-php-sdk/issues"
+            },
             "time": "2014-10-21 17:55:40"
         },
         {
@@ -964,12 +974,12 @@
             "version": "v2.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/silexphp/Pimple.git",
+                "url": "https://github.com/fabpot/Pimple.git",
                 "reference": "ea22fb2880faf7b7b0e17c9809c6fe25b071fd76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/ea22fb2880faf7b7b0e17c9809c6fe25b071fd76",
+                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/ea22fb2880faf7b7b0e17c9809c6fe25b071fd76",
                 "reference": "ea22fb2880faf7b7b0e17c9809c6fe25b071fd76",
                 "shasum": ""
             },
@@ -1585,8 +1595,12 @@
             "time": "2014-12-04 19:17:59"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "thobbs/phpcassa": 20,
@@ -1597,7 +1611,10 @@
         "tijsverkoyen/twitteroauth": 20,
         "minds/surge": 20
     },
-    "prefer-stable": false,
-    "platform": [],
-    "platform-dev": []
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
 }

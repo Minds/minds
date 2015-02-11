@@ -63,4 +63,11 @@ class user extends \ElggUser{
         //$export['subscriptions_count'] = 
 		return $export;
 	}	
+
+    public function getExportableValues() {
+        return array_merge(parent::getExportableValues(), array(
+            'website'
+        ));
+    }
+
 }

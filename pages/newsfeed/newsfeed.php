@@ -280,7 +280,8 @@ class newsfeed extends core\page implements interfaces\page{
 				//a remind is not a post, it is repost
 				$embeded = new entities\entity($pages[1]);
 				$embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
-				$activity = new entities\activity();
+				\Minds\Helpers\Counters::increment($embeded, 'remind'); 
+                $activity = new entities\activity();
 				switch($embeded->type){
 					case 'activity':
 						if($embeded->remind_object)
