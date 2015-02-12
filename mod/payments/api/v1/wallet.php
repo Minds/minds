@@ -41,7 +41,7 @@ class wallet implements interfaces\api{
                 break;
                 
             case "transactions":
-                $entities = Core\entities::get(array('subtype'=>'points_transaction', 'owner_guid'=> Core\session::getLoggedinUser()->guid, 'limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+                $entities = Core\entities::get(array('subtype'=>'points_transaction', 'owner_guid'=> Core\session::getLoggedinUser()->guid, 'limit'=>isset($_GET['limit']) ? $_GET['limit'] : 12, 'offset'=>isset($_GET['offset']) ? $_GET['offset'] : ""));
                 $response['transactions'] = factory::exportable($entities);
                 $response['load-next'] = end($entities)->guid;
                 break;
@@ -53,6 +53,34 @@ class wallet implements interfaces\api{
     }
     
     public function post($pages){
+        
+        switch($pages[0]){
+            case "qoute":
+                $ex_rate = 0.001;
+                $points = $_POST['points'];
+                $usd = $ex_rate * $points;
+                return factory::response(array('usd'=>$usd));
+                break;
+            case "charge":
+                
+                $ex_rate = 0.001;
+                $points = $_POST['points'];
+                $usd = $ex_rate * $points; 
+                
+                $card = new \Minds\plugin\payments\entities\card();
+                $card_obj = $card->create(array(
+                    'type' => $_POST['type'],
+                    'number' => (int) str_replace(' ', '', $_POST['number']),
+                    'month' => $_POST['month'],
+                    'year' => $_POST['year'],
+                    'sec' => $_POST['sec'],
+                    'name' => $_POST['name'],
+                    'name2' => $_POST['name2']
+                    ));
+
+                $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->card_id);
+                break;
+        }
         
 
         return factory::response($response);
