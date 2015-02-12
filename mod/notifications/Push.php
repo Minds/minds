@@ -17,9 +17,9 @@ class Push {
             return false;
         $config = new Surge\Config(array(
             'Apple' => array(
-                //'cert'=> '/var/secure/apns-production.pem'
-                'sandbox'=>true,
-                'cert'=> '/var/secure/apns.pem'
+                'cert'=> '/var/secure/apns-production.pem'
+                //'sandbox'=>true,
+                //'cert'=> '/var/secure/apns.pem'
             ),
             'Google' => array(
                 'api_key' => 'AIzaSyCp0LVJLY7SzTlxPqVn2-2zWZXQKb1MscQ'

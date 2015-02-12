@@ -37,6 +37,7 @@ class wallet implements interfaces\api{
                 $response['count'] = $count;
                 $response['satoshi'] = $satoshi;
                 $response['btc'] = sprintf('%.9f', $btc);
+                $response['usd'] = round($count / 10000, 2);
                 break;
                 
             case "transactions":

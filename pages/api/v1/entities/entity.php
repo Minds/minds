@@ -29,8 +29,13 @@ class entity implements interfaces\api{
             if($entity instanceof \ElggEntity){
                 $response['entity'] = $entity->export();
                 $response['entity']['guid'] = (string) $entity->guid;
-                $response['entity']['thumbnail_src'] = $entity->getIconUrl();
-                $response['entity']['perma_url'] = $entity->getURL();
+                if($entity->entityObj){
+                    $response['entity']['entityObj']['guid'] = (string) $entity->entityObj->guid;
+                }
+                if($entity->type == "object"){
+                    $response['entity']['thumbnail_src'] = $entity->getIconUrl();
+                    $response['entity']['perma_url'] = $entity->getURL();
+                }
             }
         }
 
