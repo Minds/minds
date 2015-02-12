@@ -80,8 +80,8 @@ class Counters{
         } else {
             $guid = $entity->guid;
         }
-        if($count = $cacher->get("counter:$guid:$metric") && $cache){
-            return $count;
+        if(($count = $cacher->get("counter:$guid:$metric")) && $cache){
+            return (int) $count;
         }
         $client = Core\Data\Client::build('Cassandra');
         $query = new Core\Data\Cassandra\Prepared\Counters();
@@ -91,7 +91,7 @@ class Counters{
         else 
             $count =  0;
         $cacher->set("counter:$guid:$metric", $count, 360); //cache for 10 minutes
-        return $count;
+        return (int) $count;
     }
         
 }   
