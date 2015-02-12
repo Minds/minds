@@ -73,14 +73,14 @@ class Counters{
      * @param string $metric
      * @return int
      */
-    public static function get($entity, $metric){
+    public static function get($entity, $metric, $cache = true){
         $cacher = Core\Data\cache\factory::build();
         if(is_numeric($entity)){
             $guid = $entity;
         } else {
             $guid = $entity->guid;
         }
-        if($count = $cacher->get("counter:$guid:$metric")){
+        if($count = $cacher->get("counter:$guid:$metric") && $cache){
             return $count;
         }
         $client = Core\Data\Client::build('Cassandra');

@@ -26,9 +26,7 @@ class wallet implements interfaces\api{
         switch($pages[0]){
             
             case "count":
-                $db=new Core\Data\Call('entities');
-                $slice = $db->getRow(Core\session::getLoggedinUser()->guid, array("offset"=>"points_count", "limit"=>1));
-                $count = isset($slice['points_count']) ? (int) $slice['points_count'] : 0;
+                $count = (int) \Minds\Helpers\Counters::get(Core\session::getLoggedinUser()->guid, 'points', false);
                 
                 $satoshi_rate = 1;//@todo make this configurable for admins
                 $satoshi = $count * $satoshi_rate;
