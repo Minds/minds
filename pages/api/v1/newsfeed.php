@@ -46,6 +46,8 @@ class newsfeed implements interfaces\api{
             'limit' => get_input('limit', 5),
             'offset'=> get_input('offset', '')
         ), $options));
+
+        \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
         
         if($activity){
             $response['activity'] = factory::exportable($activity);

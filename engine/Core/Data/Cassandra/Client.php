@@ -40,5 +40,20 @@ class Client implements Interfaces\ClientInterface{
         
         return $response;
     }
+
+    public function batchRequest($requests = array()){
+
+        $batchRequest = new CassandraLibrary\Request\Batch(CassandraLibrary\Request\Batch::TYPE_COUNTER, CassandraLibrary\Request\Request::CONSISTENCY_ONE);
+
+        foreach($requests as $request){
+            $cql = $request;
+            $prepared = $this->cassandra->prepare($cql['string']);
+            $batchRequest->appendQueryId($prepared['id'], CassandraLibrary\Request\Request::strictTypeValues($cql['values'], $prepared['metadata']['columns']));
+        }
+       
+        $response = $this->cassandra->syncRequest($batchRequest);
+        //return $response->fetchAll();
+        
+    }
     
 }    

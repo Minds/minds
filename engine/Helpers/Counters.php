@@ -50,6 +50,24 @@ class Counters{
     }
     
     /**
+     * Increment a batch
+     * @return $this
+     */
+    public static function incrementBatch($entities, $metric, $value = 1){
+        $prepared = array();
+        $client = Core\Data\Client::build('Cassandra');
+        $query = new Core\Data\Cassandra\Prepared\Counters();
+        foreach($entities as $entity){
+            if(is_numeric($entity)){
+                $prepared[] = $query->update($entity, $metric, $value)->build();
+            } else {
+                $prepared[] = $query->update($entity->guid, $metric, $value)->build();
+            }
+        }
+        $client->batchRequest($prepared);
+    }
+    
+    /**
      * Return the count for a single entity/metric
      * @param mixed Entity or number - $entity
      * @param string $metric

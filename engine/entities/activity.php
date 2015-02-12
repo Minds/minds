@@ -26,7 +26,6 @@ class activity extends entity{
     
     public function __construct($guid = NULL){
         parent::__construct($guid);   
-        \Minds\Helpers\Counters::increment($this, 'impression');
     }
 
 	public function save($index = true){
