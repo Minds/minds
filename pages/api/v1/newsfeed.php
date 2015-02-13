@@ -46,6 +46,9 @@ class newsfeed implements interfaces\api{
             'limit' => get_input('limit', 5),
             'offset'=> get_input('offset', '')
         ), $options));
+        if(get_input('offset')){
+            array_shift($activity);
+        }
 
         \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
         
@@ -67,6 +70,9 @@ class newsfeed implements interfaces\api{
                 $embeded = new entities\entity($pages[1]);
                 $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
                 \Minds\Helpers\Counters::increment($pages[1], 'remind');
+                elgg_trigger_plugin_hook('notification', 'thumbs', array('to'=>array($entity->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
+                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
+                \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
                 $activity = new entities\activity();
                 switch($embeded->type){
                     case 'activity':

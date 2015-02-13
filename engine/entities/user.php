@@ -41,6 +41,22 @@ class user extends \ElggUser{
 		$cacher->set("$this->guid:friendsofcount", $return);
 		return $return;
 	}
+
+    public function getSubscriptonsCount(){
+        if($this->host){
+            return 0;
+        }
+
+        $cacher = Core\Data\cache\factory::build();
+        if($cache = $cacher->get("$this->guid:friendscount")){
+            return $cache;
+        }
+
+        $db = new Core\Data\Call('friends');
+        $return = (int) $db->countRow($this->guid);
+        $cacher->set("$this->guid:friendscount", $return);
+        return $return;
+    }
 	
 	/**
 	 * Set the secret key for clusters to use
@@ -60,7 +76,7 @@ class user extends \ElggUser{
 		if(Core\session::isLoggedIn())
             $export['subscribed'] = elgg_get_logged_in_user_entity()->isSubscribed($this->guid);
         $export['subscribers_count'] = $this->getSubscribersCount();
-        //$export['subscriptions_count'] = 
+        $export['subscriptions_count'] = $this->getSubscriptionsCount();
 		return $export;
 	}	
 

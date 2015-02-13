@@ -28,7 +28,7 @@ class keys implements interfaces\api{
         $tmp = helpers\openssl::temporaryPrivateKey(\elgg_get_plugin_user_setting('privatekey', elgg_get_logged_in_user_guid(), 'gatherings'), $unlock_password, NULL);
         $pub = \elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings');
        
-	if($tmp){
+	    if($tmp){
             $response['key'] = $tmp;
         } else {
             $response['status'] = 'error';
@@ -40,7 +40,36 @@ class keys implements interfaces\api{
     }
     
     public function post($pages){
-        
+      
+        switch($pages[0]){
+            case "setup":
+                $keypair = \Minds\plugin\gatherings\helpers\openssl::newKeypair(get_input('passphrase'));
+
+                \elgg_set_plugin_user_setting('publickey', $keypair['public'], elgg_get_logged_in_user_guid(), 'gatherings');
+                \elgg_set_plugin_user_setting('option', '1', elgg_get_logged_in_user_guid(), 'gatherings');
+                \elgg_set_plugin_user_setting('privatekey', $keypair['private'], elgg_get_logged_in_user_guid(), 'gatherings');
+         
+                $tmp = helpers\openssl::temporaryPrivateKey($keypair['private'], get_input('passphrase'), NULL);
+                 $response['key'] = $tmp;             
+ 
+                break;
+            case "unlock":
+            default:
+
+                $unlock_password = get_input('password');
+                $new_password = get_input('new_password');
+                $tmp = helpers\openssl::temporaryPrivateKey(\elgg_get_plugin_user_setting('privatekey', elgg_get_logged_in_user_guid(), 'gatherings'), $unlock_password, NULL);
+                $pub = \elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings');
+               
+                if($tmp){
+                    $response['key'] = $tmp;
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = "please check your password";
+                }
+        }   
+ 
+        return factory::response($response);  
        
         
     }

@@ -206,8 +206,11 @@ class start extends \ElggPlugin{
                 case "like":
                     $message = \Minds\Core\session::getLoggedinUser()->name . " voted up " . $params['title'];
                     break;
-                case "mention":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " mentioned you in a post";
+                case "tag":
+                    $message = \Minds\Core\session::getLoggedinUser()->name . " mentioned you in a post: " . $params['description'];
+                    break;
+                case "remind":
+                    $message = \Minds\Core\session::getLoggedinUser()->name . " reminded " . $params['title'];
                     break;
                 default:
                     $message = "You have a notification";

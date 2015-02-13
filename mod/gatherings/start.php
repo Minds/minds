@@ -111,15 +111,19 @@ class start extends Components\Plugin{
 		}
 	}
 
-	static public function getConversationsList(){
-		$conversation_guids = core\Data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array('limit'=>50));
+	static public function getConversationsList($offset= ""){
+		$conversation_guids = core\Data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array('limit'=>50, 'offset'=>$offset));
 		if($conversation_guids){
 			$conversations = array();
 			
-			arsort($conversation_guids);
+            arsort($conversation_guids);
 			
 			foreach($conversation_guids as $user_guid => $data){
-				if(is_numeric($data)){
+			    if($user_guid == $offset){
+                    unset($conversation_guids[$user_guid]);
+                    continue;
+                }
+            	if(is_numeric($data)){
 					$ts = $data;
 					$unread = 0;
 				} else {
