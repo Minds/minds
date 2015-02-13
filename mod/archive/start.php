@@ -34,6 +34,23 @@ function minds_archive_init() {
             '/api/v1/archive' => "\\minds\\plugin\\archive\\api\\v1\\archive",
         ));
 
+    //allow videos to show their src info from cinemr
+    Minds\Core\Events\Dispatcher::register('export', 'activity', function($event, $namespace, $params, $return = array()){
+        if(!isset($params['entity'])){
+            return null;
+        }
+        $entity = $params['entity'];
+        if($entity instanceof Minds\entities\activity && $entity->custom_type == 'video'){
+            $guid = $entity->custom_data['guid'];
+            $cacher = \Minds\Core\Data\cache\factory::build();
+            if($return = $cacher->get("$guid:transcode:320.mp4"))
+               return $return;
+
+        }
+
+        //but what about reminds.. they need the src too?
+    });
+
 	elgg_register_viewtype_fallback('spotlight');
 	elgg_register_viewtype_fallback('embed');
 

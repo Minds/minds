@@ -21,17 +21,22 @@ class archive implements interfaces\api{
      * API:: /v1/archive/:filter || :guid
      */      
     public function get($pages){
-	$response = array();
+        $response = array();
 
-	if(is_numeric($pages[0])){
-		$entity = core\entities::build(new \minds\entities\entity($pages[0]));
-		$response = reset(factory::exportable(array($entity)));
-		$response['transcodes'] = array(
-			'360.mp4' => $entity->getSourceUrl('360.mp4'),
-			'720.mp4' =>  $entity->getSourceUrl('720.mp4')
-		);
-
-	}
+        if(is_numeric($pages[0])){
+            $entity = core\entities::build(new \minds\entities\entity($pages[0]));
+            if(is_string($pages[1]) && $pages[1] == 'play'){
+                //echo $entity->getSourceUrl('360.mp4'); exit;
+                Header( "HTTP/1.1 301 Moved Permanently" ); 
+                header("Location:" . $entity->getSourceUrl('360.mp4'));
+                exit;    
+            }
+            $response = reset(factory::exportable(array($entity)));
+            $response['transcodes'] = array(
+                '360.mp4' => $entity->getSourceUrl('360.mp4'),
+                '720.mp4' =>  $entity->getSourceUrl('720.mp4')
+            );  
+        }
 
         return factory::response($response);
         
@@ -108,6 +113,7 @@ class archive implements interfaces\api{
                 'thumbnail_src'=>$entity->getIconUrl(),
                 'guid'=>$entity->guid))
                 ->setTitle($entity->title)
+                ->setBlurb($entity->description)
                 ->save();
 
         }	
