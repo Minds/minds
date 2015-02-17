@@ -37,8 +37,10 @@ class notifications implements interfaces\api{
                 $response['notifications'][$k]['fromObj'] = $from->export();
 		        $response['notifications'][$k]['fromObj']['guid'] = (string) $from->guid;
 		        $response['notifications'][$k]['from_guid'] = (string) $from->guid;
-                $response['notifications'][$k]['entityObj'] = $entity->export();
-                $response['notifications'][$k]['entityObj']['guid'] = (string) $entity->guid;
+                if($entity){
+                    $response['notifications'][$k]['entityObj'] = $entity->export();
+                    $response['notifications'][$k]['entityObj']['guid'] = (string) $entity->guid;
+                }
             }
 		    $response['load-next'] = (string) end($notifications)->guid;
 		    $response['load-previous'] = (string) key($notifications)->guid;

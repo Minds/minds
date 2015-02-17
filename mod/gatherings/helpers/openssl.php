@@ -78,7 +78,7 @@ class openssl{
 	static public function temporaryPrivateKey($private_key, $password = NULL, $newpass = NULL){
 		$private_key = openssl_get_privatekey($private_key, $password);
 		openssl_pkey_export($private_key, $pkeyout, $newpass);
-		return $pkeyout;
-	}
+	    return $pkeyout;
+    }
 	
 }

@@ -48,9 +48,10 @@ class comment extends entities\entity{
 	}
 
 	public function getExportableValues() {
-                return array_merge(parent::getExportableValues(), array(
+        return array_merge(parent::getExportableValues(), array(
 			'description',
-			'ownerObj'
+			'ownerObj',
+            'parent_guid'
 		));
 	}
 

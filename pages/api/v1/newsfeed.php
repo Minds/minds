@@ -28,6 +28,10 @@ class newsfeed implements interfaces\api{
             $pages[0] = 'network';
         
         switch($pages[0]){
+            case 'single':
+                $activity = new \Minds\entities\activity($pages[1]);
+                return factory::response(array('activity'=>$activity->export()));
+                break;
             default:
             case 'personal':
         		$options = array(

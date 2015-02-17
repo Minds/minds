@@ -17,6 +17,14 @@ class user extends \ElggUser{
 	public function unSubscribe($guid){
 		
 	}
+
+    public function isSubscriber($guid){
+        $db = new Core\Data\Call('friendsof');
+        if(key($db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid))) == $guid)
+            return true;
+        
+        return false; 
+    }
 	
 	public function isSubscribed($guid){
 		$db = new Core\Data\Call('friends');
@@ -73,8 +81,10 @@ class user extends \ElggUser{
 	
 	public function export(){
 		$export = parent::export();
-		if(Core\session::isLoggedIn())
+		if(Core\session::isLoggedIn()){
             $export['subscribed'] = elgg_get_logged_in_user_entity()->isSubscribed($this->guid);
+            $export['subscriber'] = elgg_get_logged_in_user_entity()->isSubscriber($this->guid);
+        }
         $export['subscribers_count'] = $this->getSubscribersCount();
         $export['subscriptions_count'] = $this->getSubscriptionsCount();
 		return $export;

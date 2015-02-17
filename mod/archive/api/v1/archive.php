@@ -89,7 +89,9 @@ class archive implements interfaces\api{
             $activity = new \minds\entities\activity();
                 $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
                         //->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
-                ->setFromEntity($activity)
+                    ->setFromEntity($activity)
+                    ->setTitle($_POST['title'])
+                    ->setBlurb($_POST['description'])
                         ->save();
         }
 

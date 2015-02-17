@@ -155,12 +155,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/duoshuo/php-cassandra.git",
-                "reference": "f7e531bce60351908055c26737c26047f0e7acb7"
+                "reference": "5afcfa7873f09a94d17dcdd4d148379c3665c687"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/duoshuo/php-cassandra/zipball/f7e531bce60351908055c26737c26047f0e7acb7",
-                "reference": "f7e531bce60351908055c26737c26047f0e7acb7",
+                "url": "https://api.github.com/repos/duoshuo/php-cassandra/zipball/5afcfa7873f09a94d17dcdd4d148379c3665c687",
+                "reference": "5afcfa7873f09a94d17dcdd4d148379c3665c687",
                 "shasum": ""
             },
             "require": {
@@ -187,7 +187,7 @@
                 }
             ],
             "description": "Cassandra client library for PHP, which support Protocol v3 and asynchronous request",
-            "time": "2015-01-22 07:47:44"
+            "time": "2015-02-16 09:32:11"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -760,8 +760,14 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git",
+                "url": "git@github.com:minds/minds-php-sdk.git",
                 "reference": "dba40df8c2ac1ec501626e645f5ffaa13f57c5ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/minds/minds-php-sdk/zipball/dba40df8c2ac1ec501626e645f5ffaa13f57c5ce",
+                "reference": "dba40df8c2ac1ec501626e645f5ffaa13f57c5ce",
+                "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
@@ -775,6 +781,10 @@
                 ]
             },
             "description": "Minds PHP SDK",
+            "support": {
+                "source": "https://github.com/minds/minds-php-sdk/tree/master",
+                "issues": "https://github.com/minds/minds-php-sdk/issues"
+            },
             "time": "2014-10-21 17:55:40"
         },
         {
@@ -851,16 +861,16 @@
         },
         {
             "name": "neoxygen/neoclient",
-            "version": "2.1.2",
+            "version": "2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neoxygen/neo4j-neoclient.git",
-                "reference": "7167dcd1023cf12f2573162798f28b953e2591ed"
+                "reference": "3cacfb256dac48e3fb8cfe3ac31ef97eace4eb19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neoxygen/neo4j-neoclient/zipball/7167dcd1023cf12f2573162798f28b953e2591ed",
-                "reference": "7167dcd1023cf12f2573162798f28b953e2591ed",
+                "url": "https://api.github.com/repos/neoxygen/neo4j-neoclient/zipball/3cacfb256dac48e3fb8cfe3ac31ef97eace4eb19",
+                "reference": "3cacfb256dac48e3fb8cfe3ac31ef97eace4eb19",
                 "shasum": ""
             },
             "require": {
@@ -909,7 +919,7 @@
                 "high-availibility",
                 "neo4j"
             ],
-            "time": "2015-02-08 23:45:17"
+            "time": "2015-02-13 20:37:32"
         },
         {
             "name": "paypal/rest-api-sdk-php",
@@ -964,12 +974,12 @@
             "version": "v2.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/silexphp/Pimple.git",
+                "url": "https://github.com/fabpot/Pimple.git",
                 "reference": "ea22fb2880faf7b7b0e17c9809c6fe25b071fd76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/ea22fb2880faf7b7b0e17c9809c6fe25b071fd76",
+                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/ea22fb2880faf7b7b0e17c9809c6fe25b071fd76",
                 "reference": "ea22fb2880faf7b7b0e17c9809c6fe25b071fd76",
                 "shasum": ""
             },
@@ -3136,7 +3146,9 @@
             "time": "2014-12-30 01:16:35"
         }
     ],
-    "aliases": [],
+    "aliases": [
+
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "thobbs/phpcassa": 20,
@@ -3147,7 +3159,10 @@
         "tijsverkoyen/twitteroauth": 20,
         "minds/surge": 20
     },
-    "prefer-stable": false,
-    "platform": [],
-    "platform-dev": []
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
 }

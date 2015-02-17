@@ -29,6 +29,10 @@ This *readme* file should hopefuly explain all you need to get started, if not, 
 ### Setup
 - Go to localhost/install.php and follow the instruction. (debugging may be needed)
 
+### Generate new docs (core devs only)
+
+- php vendor/bin/apigen generate -s src -d ./docs/api
+
 --------
 
 ## Getting started

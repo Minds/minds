@@ -1439,8 +1439,15 @@ abstract class ElggEntity extends ElggData implements
 	public function export(){
 		$export = array();
 		foreach($this->getExportableValues() as $v){
-			if(!is_null($this->$v))
-				$export[$v] = $this->$v;
+			if(!is_null($this->$v)){
+				if(is_int($this->$v) && strlen($this->$v) < 15){
+                    $export[$v] = (int) $this->$v;
+                } elseif(!is_array($this->$v) && !is_object($this->$v)){
+                    $export[$v] = (string) $this->$v;
+                } else {
+                    $export[$v] = $this->$v;
+                }
+            }
 		}
 		return $export;
 	}
