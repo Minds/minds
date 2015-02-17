@@ -29,5 +29,8 @@
         ],
 	"autoload": {
 		"files": ["engine/autoload.php"]
+	},
+	"require-dev": {
+		"apigen/apigen": "~4.0"
 	}
 }

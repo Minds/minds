@@ -1,0 +1,8 @@
+source:
+    - engine/Core
+    - engine/Helpers
+    - engine/Components
+
+noSourceCode: true
+templateTheme: bootstrap
+destination: ./docs/api
