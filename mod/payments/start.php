@@ -111,14 +111,7 @@ class start extends Components\Plugin{
         /**
          * Update the userscount
          */
-        $count = 0;
-        $db=new Core\Data\Call('entities');
-        $slice = $db->getRow($user_guid, array("offset"=>"points_count", "limit"=>1));
-        if(isset($slice['points_count'])){
-            $count = $slice['points_count'];
-        } 
-        $db->insert($user_guid, array('points_count' => (int) $count + $points));
-        
+        \Minds\Helpers\Counters::increment($user_guid, 'points', $points); 
     }
 	
 }

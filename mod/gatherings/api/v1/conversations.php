@@ -61,10 +61,12 @@ class conversations implements interfaces\api{
             
         } else {
         
-            $conversations = \minds\plugin\gatherings\start::getConversationsList();
+            $conversations = \minds\plugin\gatherings\start::getConversationsList(get_input('offset', ''));
     
             if($conversations){
                 $response['conversations'] = factory::exportable($conversations, array('unread', 'last_msg'));
+                $response['load-next'] = (string) end($conversations)->guid;
+                $response['load-previous'] = (string) reset($conversations)->guid;
             }
             
         }

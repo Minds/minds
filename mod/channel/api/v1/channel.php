@@ -41,7 +41,9 @@ class channel implements interfaces\api{
             'large' => $user->getIconURL('large'),
             'master' => $user->getIconURL('master')
         );
-        
+        $response['channel']['chat'] = (bool) elgg_get_plugin_user_setting('option', elgg_get_logged_in_user_guid(), 'gatherings') == 1 ? true : false;
+
+
         $carousels = core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
         foreach($carousels as $carousel){
             global $CONFIG;

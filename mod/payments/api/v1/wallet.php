@@ -26,9 +26,7 @@ class wallet implements interfaces\api{
         switch($pages[0]){
             
             case "count":
-                $db=new Core\Data\Call('entities');
-                $slice = $db->getRow(Core\session::getLoggedinUser()->guid, array("offset"=>"points_count", "limit"=>1));
-                $count = isset($slice['points_count']) ? (int) $slice['points_count'] : 0;
+                $count = (int) \Minds\Helpers\Counters::get(Core\session::getLoggedinUser()->guid, 'points', false);
                 
                 $satoshi_rate = 1;//@todo make this configurable for admins
                 $satoshi = $count * $satoshi_rate;
@@ -55,7 +53,7 @@ class wallet implements interfaces\api{
     public function post($pages){
         
         switch($pages[0]){
-            case "qoute":
+            case "quote":
                 $ex_rate = 0.001;
                 $points = $_POST['points'];
                 $usd = $ex_rate * $points;
@@ -79,6 +77,11 @@ class wallet implements interfaces\api{
                     ));
 
                 $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->card_id);
+                if($response['id']){
+                    \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, NULL, "purchase");
+                }
+                break;
+            case "withdraw":
                 break;
         }
         

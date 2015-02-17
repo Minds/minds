@@ -21,17 +21,22 @@ class archive implements interfaces\api{
      * API:: /v1/archive/:filter || :guid
      */      
     public function get($pages){
-	$response = array();
+        $response = array();
 
-	if(is_numeric($pages[0])){
-		$entity = core\entities::build(new \minds\entities\entity($pages[0]));
-		$response = reset(factory::exportable(array($entity)));
-		$response['transcodes'] = array(
-			'360.mp4' => $entity->getSourceUrl('360.mp4'),
-			'720.mp4' =>  $entity->getSourceUrl('720.mp4')
-		);
-
-	}
+        if(is_numeric($pages[0])){
+            $entity = core\entities::build(new \minds\entities\entity($pages[0]));
+            if(is_string($pages[1]) && $pages[1] == 'play'){
+                //echo $entity->getSourceUrl('360.mp4'); exit;
+                Header( "HTTP/1.1 301 Moved Permanently" ); 
+                header("Location:" . $entity->getSourceUrl('360.mp4'));
+                exit;    
+            }
+            $response = reset(factory::exportable(array($entity)));
+            $response['transcodes'] = array(
+                '360.mp4' => $entity->getSourceUrl('360.mp4'),
+                '720.mp4' =>  $entity->getSourceUrl('720.mp4')
+            );  
+        }
 
         return factory::response($response);
         
@@ -45,71 +50,73 @@ class archive implements interfaces\api{
      */
     public function post($pages){
 
-	$guid = $pages[0];
-	$album = NULL;
+        $guid = $pages[0];
+        $album = NULL;
 
-	$entity = core\entities::build(new \minds\entities\entity($guid));
+        $entity = core\entities::build(new \minds\entities\entity($guid));
 
-	if($entity->subtype == 'image'){
-		if(isset($_POST['album_guid'])){
-			$album = new entities\album($_POST['album_guid']);
-			if(!$album->guid)
-				return factory::response(array('error'=>'Sorry, the album was not found'));
-		} else {
-			//does the user already have and album?
-			$albums = core\entities::get(array('subtype'=>'album', 'owner_guid'=>elgg_get_logged_in_user_guid()));
-			if($albums){
-				if(isset($_POST['album_title'])){
-					foreach($albums as $a){
-						if($_POST['album_title'] == $a->title){
-							$album = $a;
-							break;
-						}
-					}
-				}
-			}
+        if($entity->subtype == 'image'){
+            if(isset($_POST['album_guid'])){
+                $album = new entities\album($_POST['album_guid']);
+                if(!$album->guid)
+                    return factory::response(array('error'=>'Sorry, the album was not found'));
+            } else {
+                //does the user already have and album?
+                $albums = core\entities::get(array('subtype'=>'album', 'owner_guid'=>elgg_get_logged_in_user_guid()));
+                if($albums){
+                    if(isset($_POST['album_title'])){
+                        foreach($albums as $a){
+                            if($_POST['album_title'] == $a->title){
+                                $album = $a;
+                                break;
+                            }
+                        }
+                    }
+                }
 
-			if(!$album){
-				$album = new entities\album();
-				if(isset($_POST['album_title'])){
-					$album->title = $_POST['album_title'];
-				} else {
-					$album->title = "API Uploads";
-				}
-				$album->save();
-				$ablums = array($album);
-			}
-		}
-		$entity->container_guid = $album->guid; 
-		$activity = new \minds\entities\activity();
-        	$activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
-                	//->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
-			->setFromEntity($activity)
-                	->save();
-	}
+                if(!$album){
+                    $album = new entities\album();
+                    if(isset($_POST['album_title'])){
+                        $album->title = $_POST['album_title'];
+                    } else {
+                        $album->title = "API Uploads";
+                    }
+                    $album->save();
+                    $ablums = array($album);
+                }
+            }
+            $entity->container_guid = $album->guid; 
+            $activity = new \minds\entities\activity();
+                $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
+                        //->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
+                ->setFromEntity($activity)
+                        ->save();
+        }
 
-	$index = new core\Data\indexes('object:container');
-	$index->set($album->guid, array($guid=>$guid));
+        $index = new core\Data\indexes('object:container');
+        $index->set($album->guid, array($guid=>$guid));
 
-	$allowed = array('title', 'description');
-	foreach($allowed as $key){
- 	    if(isset($_POST[$key])){
-		$entity->$key = $_POST[$key];
-	    }
-	}
-	
-	$entity->access_id = 2;
-	$entity->save(true);
+        $allowed = array('title', 'description', 'license');
+        foreach($allowed as $key){
+            if(isset($_POST[$key])){
+            $entity->$key = $_POST[$key];
+            }
+        }
+        
+        $entity->access_id = 2;
+        $entity->save(true);
 
-	if($entity->subtype == 'video'){
+        if($entity->subtype == 'video'){
 
-		$activity = new \minds\entities\activity();
-		$activity->setCustom('video', array(
-			'thumbnail_src'=>$entity->getIconUrl(),
-			'guid'=>$entity->guid))
-			->save();
+            $activity = new \minds\entities\activity();
+            $activity->setCustom('video', array(
+                'thumbnail_src'=>$entity->getIconUrl(),
+                'guid'=>$entity->guid))
+                ->setTitle($entity->title)
+                ->setBlurb($entity->description)
+                ->save();
 
-	}	
+        }	
 
          return factory::response(array());
         

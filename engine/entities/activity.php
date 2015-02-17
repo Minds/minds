@@ -125,6 +125,9 @@ class activity extends entity{
 			$export['entity_guid'] = (string) $this->entity_guid;
         $export['impressions'] = $this->getImpressions();
         $export['reminds'] = $this->getRemindCount();
+        
+        $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export', 'activity', array('entity'=>$this), array()));
+
 		return $export;
 	}
 	
