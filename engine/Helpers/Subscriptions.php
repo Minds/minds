@@ -1,12 +1,14 @@
 <?php
-/**
- * Subscriptions helpers
- */
 namespace Minds\Helpers;
 
 use Minds\Core;
 use Minds\Core\Events;
 
+/**
+ * Subscriptions helpers
+ * 
+ * Helper methods for subscriptions
+ */
 class Subscriptions{
 
     /**
@@ -35,10 +37,12 @@ class Subscriptions{
 
         //grab the newsfeed
         $nf = new Core\Data\Call('entities_by_time');
-        $nf->insert("activity:network:$user_guid", $nf->getRow("activity:user:own:$to_guid", array('limit'=>12)));
+        $feed = $nf->getRow("activity:user:own:$to_guid", array('limit'=>12));
+        if($feed)
+            $nf->insert("activity:network:$user_guid", $feed);
 
         \Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
-        Events\Dispatcher::trigger('subscribe', 'all');        
+        Events\Dispatcher::trigger('subscribe', 'all', array('user_guid'=>$user_guid, 'to_guid'=>$to_guid));        
         return $return;
     }
     

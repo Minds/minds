@@ -148,6 +148,23 @@ class Common implements Interfaces\PreparedInterface{
                             );
         return $this;
     }
+
+    /**
+     * Return if mutual
+     * @param $a
+     * @param $b
+     * @return $this;
+     */
+    public function isMutual($a, $b){
+        $this->template = "MATCH (a {guid:{a_guid}}), (b {guid:{b_guid}}), " .
+                            "p = shortestPath( a-[]->b ) " .
+                            "RETURN length(p)-1";
+        $this->values = array(
+                            'a_guid'=> (string) $a,
+                            'b_guid'=> (string) $b
+                            );
+        return $this;
+    }
     
     /**
      * Create objects

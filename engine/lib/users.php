@@ -1271,6 +1271,7 @@ function user_create_hook_add_site_relationship($event, $object_type, $object) {
  * @access private
  */
 function user_avatar_hook($hook, $entity_type, $returnvalue, $params) {
+
 	$user = $params['entity'];
 	$size = $params['size'];
 

@@ -6,7 +6,7 @@ namespace Minds\Core\Data\Neo4j\Prepared;
 
 use  Minds\Core\Data\Interfaces;
 
-class CypherQuery implements Interfaces\PreparedInterface{
+class Suggested implements Interfaces\PreparedInterface{
     
     private $template;
     private $values; 

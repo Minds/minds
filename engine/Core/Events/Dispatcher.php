@@ -12,12 +12,12 @@ class Dispatcher {
 
     /**
      * Register a handler for an event.
-     * @param type $namespace Namespace for this event (e.g. object type)
      * @param type $event The event
+     * @param type $namespace Namespace for this event (e.g. object type)
      * @param \callable $handler a callable handler
      * @param type $priority Priority - lower numbers executed first.
      */
-    public static function register($namespace, $event, $handler, $priority = 500) {
+    public static function register($event, $namespace, $handler, $priority = 500) {
         
     	if (empty($namespace) || empty($event) || !is_callable($handler)) {
     	    return false;
@@ -63,18 +63,18 @@ class Dispatcher {
 
     /**
      * Trigger the event.
-     * @param string $namespace
      * @param string $event
+     * @param string $namespace
      * @param mixed $params Parameters to pass to the callback
      * @param mixed $default_return Default return value, if not set by the handler.
      */
-    public static function trigger($namespace, $event, $params, $default_return = true) {
+    public static function trigger($event, $namespace, $params, $default_return = true) {
     	$calls = array();           
         
         if (isset(self::$events[$namespace][$event])){
             $calls[] = self::$events[$namespace][$event];
         }
-        
+                
         //parent propogation
         foreach(self::$events as $ns => $es){
             if($ns == 'all' || $ns == 'elgg/hook/all' || $ns == 'elgg/event/all'){
@@ -91,8 +91,8 @@ class Dispatcher {
                 }
             }
         }
-
-    	// New event format, expects event object
+    	
+        // New event format, expects event object
     	$eventobj = new Event(array(
     	    'namespace' => $namespace,
     	    'event' => $event,

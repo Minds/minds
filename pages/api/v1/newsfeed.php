@@ -21,7 +21,9 @@ class newsfeed implements interfaces\api{
      * API:: /v1/newsfeed/
      */      
     public function get($pages){
-        
+        Core\Events\Dispatcher::trigger("hallo", "newsfeed", function($eventobj){
+            var_dump($eventobj); exit;
+            });        
         $response = array();
         
         if(!isset($pages[0]))

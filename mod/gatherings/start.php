@@ -72,6 +72,25 @@ class start extends Components\Plugin{
             '/api/v1/conversations' => '\\minds\\plugin\\gatherings\\api\\v1\\conversations',
             '/api/v1/keys' => '\\minds\\plugin\\gatherings\\api\\v1\\keys'
 		));
+
+        /**
+         * if it's a mutual match then create a conversation
+         */
+        Core\Events\Dispatcher::register('subscribe', 'all', function($event){
+            $params = $event->getParameters();
+
+            $friendsof = new Core\Data\Call('friendsof');
+            $mutual = false;
+            if($item = $friendsof->getRow($params['user_guid'], array('offset'=>$params['to_guid'], 'limit'=>1))){
+                    if($item && key($item) == $params['to_guid'])
+                        $mutual = true;
+            }
+            
+            if($mutual){
+                $conversation = new entities\conversation($params['user_guid'], $params['to_guid']);
+                $conversation->update();
+            }
+        });
 		
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			//var_dump($row);

@@ -539,7 +539,7 @@ function register_error($error) {
  * @deprecated Use Minds\Core\Events
  */
 function elgg_register_event_handler($event, $object_type, $callback, $priority = 500) { 
-	return \Minds\Core\Events\Dispatcher::register("elgg/event/$object_type", $event, $callback, $priority); // Register event with new system, but prefix it in the oldstyle namespace
+	return \Minds\Core\Events\Dispatcher::register($event, "elgg/event/$object_type", $callback, $priority); // Register event with new system, but prefix it in the oldstyle namespace
 	/*global $CONFIG;
 
 	if (empty($event) || empty($object_type)) {
@@ -628,7 +628,7 @@ function elgg_unregister_event_handler($event, $object_type, $callback) {
  * @deprecated Use Minds\Core\Events
  */
 function elgg_trigger_event($event, $object_type, $object = null) {
-    return \Minds\Core\Events\Dispatcher::trigger("elgg/event/$object_type", $event, $object);
+    return \Minds\Core\Events\Dispatcher::trigger($event, "elgg/event/$object_type", $object);
 	/*global $CONFIG;
 
 	$events = array();
@@ -728,7 +728,7 @@ function elgg_trigger_event($event, $object_type, $object = null) {
  * @deprecated Use Minds\Core\Events
  */
 function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 500) {
-    return \Minds\Core\Events\Dispatcher::register("elgg/hook/$type", $hook, $callback, $priority); 
+    return \Minds\Core\Events\Dispatcher::register($hook, "elgg/hook/$type", $callback, $priority); 
 }
 
 /**
@@ -796,7 +796,7 @@ function elgg_unregister_plugin_hook_handler($hook, $entity_type, $callback) {
  * @deprecated Use Minds\Core\Events
  */
 function elgg_trigger_plugin_hook($hook, $type, $params = null, $returnvalue = null) {
-    return \Minds\Core\Events\Dispatcher::trigger("elgg/hook/$type", $hook, $params, $returnvalue);
+    return \Minds\Core\Events\Dispatcher::trigger($hook, "elgg/hook/$type", $params, $returnvalue);
 	/*global $CONFIG;
 
 	$hooks = array();

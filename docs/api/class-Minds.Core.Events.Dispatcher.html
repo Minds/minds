@@ -174,7 +174,7 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_register">#</a>
-			<code>register( <span>type <var>$namespace</var></span>, <span>type <var>$event</var></span>, <span>callable <var>$handler</var></span>, <span>type <var>$priority</var> = <span class="php-num">500</span></span> )</code>
+			<code>register( <span>type <var>$event</var></span>, <span>type <var>$namespace</var></span>, <span>callable <var>$handler</var></span>, <span>type <var>$priority</var> = <span class="php-num">500</span></span> )</code>
 
 			<div class="description short">
 				<p>Register a handler for an event.</p>
@@ -186,10 +186,10 @@
 
 					<h4>Parameters</h4>
 					<div class="list"><dl>
-						<dt><var>$namespace</var></dt>
-						<dd>Namespace for this event (e.g. object type)</dd>
 						<dt><var>$event</var></dt>
 						<dd>The event</dd>
+						<dt><var>$namespace</var></dt>
+						<dd>Namespace for this event (e.g. object type)</dd>
 						<dt><var>$handler</var></dt>
 						<dd>a callable handler</dd>
 						<dt><var>$priority</var></dt>
@@ -254,7 +254,7 @@ TODO: Handle unregister of closures.</p>
 
 			<td class="name"><div>
 			<a class="anchor" href="#_trigger">#</a>
-			<code>trigger( <span>string <var>$namespace</var></span>, <span>string <var>$event</var></span>, <span>mixed <var>$params</var></span>, <span>mixed <var>$default_return</var> = <span class="php-keyword1">true</span></span> )</code>
+			<code>trigger( <span>string <var>$event</var></span>, <span>string <var>$namespace</var></span>, <span>mixed <var>$params</var></span>, <span>mixed <var>$default_return</var> = <span class="php-keyword1">true</span></span> )</code>
 
 			<div class="description short">
 				<p>Trigger the event.</p>
@@ -266,9 +266,9 @@ TODO: Handle unregister of closures.</p>
 
 					<h4>Parameters</h4>
 					<div class="list"><dl>
-						<dt><var>$namespace</var></dt>
-						<dd></dd>
 						<dt><var>$event</var></dt>
+						<dd></dd>
+						<dt><var>$namespace</var></dt>
 						<dd></dd>
 						<dt><var>$params</var></dt>
 						<dd>Parameters to pass to the callback</dd>
