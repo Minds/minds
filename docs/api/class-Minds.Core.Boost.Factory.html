@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>Class Minds\Core\Data\cache\abstractCacher</title>
+	<title>Class Minds\Core\Boost\Factory</title>
 
 	<link rel="stylesheet" href="resources/bootstrap.min.css?08b23951ef4599ca9cbf1f902d0e8290c9653ddd">
 	<link rel="stylesheet" href="resources/style.css?062e9e59e0b8c44fbaaded5b7ffc21f907b78669">
@@ -18,7 +18,7 @@
 				<div class="nav-collapse">
 					<ul class="nav">
 						<li>
-							<a href="namespace-Minds.Core.Data.cache.html" title="Summary of Minds\Core\Data\cache"><span>Namespace</span></a>
+							<a href="namespace-Minds.Core.Boost.html" title="Summary of Minds\Core\Boost"><span>Namespace</span></a>
 						</li>
 						<li class="active">
 <span>Class</span>						</li>
@@ -58,16 +58,16 @@
 							Core<span></span>
 						</a>
 							<ul>
-					<li>
+					<li class="active">
 						<a href="namespace-Minds.Core.Boost.html">
 							Boost						</a>
 							</li>
-					<li class="active">
+					<li>
 						<a href="namespace-Minds.Core.Data.html">
 							Data<span></span>
 						</a>
 							<ul>
-					<li class="active">
+					<li>
 						<a href="namespace-Minds.Core.Data.cache.html">
 							cache						</a>
 							</li>
@@ -125,9 +125,9 @@
 		<div id="elements">
 			<h3>Classes</h3>
 			<ul>
-				<li class="active"><a href="class-Minds.Core.Data.cache.abstractCacher.html">abstractCacher</a></li>
-				<li><a href="class-Minds.Core.Data.cache.apcu.html">apcu</a></li>
-				<li><a href="class-Minds.Core.Data.cache.factory.html">factory</a></li>
+				<li><a href="class-Minds.Core.Boost.Boost.html">Boost</a></li>
+				<li class="active"><a href="class-Minds.Core.Boost.Factory.html">Factory</a></li>
+				<li><a href="class-Minds.Core.Boost.Queue.html">Queue</a></li>
 			</ul>
 
 
@@ -143,18 +143,15 @@
 <div id="right">
 	<div id="rightInner">
 <div id="content" class="class">
-	<h1>Class abstractCacher</h1>
+	<h1>Class Factory</h1>
 
 
-
-
-
-	<div>
-		<h3>Direct known subclasses</h3>
-		<p class="elementList">
-			<code><a href="class-Minds.Core.Data.cache.apcu.html">Minds\Core\Data\cache\apcu</a></code>
-		</p>
+	<div class="description">
+	<p>Provide core functionality for boosting items</p>
 	</div>
+
+
+
 
 
 
@@ -162,98 +159,51 @@
 
 
 	<div class="alert alert-info">
-		<b>Abstract</b><br>
 		
-		<b>Namespace:</b> <a href="namespace-Minds.html">Minds</a>\<a href="namespace-Minds.Core.html">Core</a>\<a href="namespace-Minds.Core.Data.html">Data</a>\<a href="namespace-Minds.Core.Data.cache.html">cache</a><br>
+		
+		<b>Namespace:</b> <a href="namespace-Minds.html">Minds</a>\<a href="namespace-Minds.Core.html">Core</a>\<a href="namespace-Minds.Core.Boost.html">Boost</a><br>
 		
 
-			<b>Located at</b> Data/cache/abstractCacher.php		<br>
+			<b>Located at</b> Boost/Factory.php		<br>
 	</div>
 
 
 
 		<h2>Methods summary</h2>
 		<table class="summary table table-bordered table-striped methods" id="methods">
-		<tr data-order="get" id="_get">
+		<tr data-order="build" id="_build">
 
 			<td class="attributes"><code>
-				abstract public 
-				
+				 public static
+				BoostHandlerInterface
 				
 				</code>
 			</td>
 
 			<td class="name"><div>
-			<a class="anchor" href="#_get">#</a>
-			<code>get( <span> <var>$key</var></span> )</code>
+			<a class="anchor" href="#_build">#</a>
+			<code>build( <span>string <var>$handler</var></span>, <span>array <var>$options</var> = <span class="php-keyword1">array</span>()</span> )</code>
 
 			<div class="description short">
-				
+				<p>Build the handler</p>
 			</div>
 
 			<div class="description detailed hidden">
-				
+				<p>Build the handler</p>
 
 
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$handler</var></dt>
+						<dd></dd>
+						<dt><var>$options</var></dt>
+						<dd>(optional)</dd>
+					</dl></div>
 
-
-
-
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="set" id="_set">
-
-			<td class="attributes"><code>
-				abstract public 
-				
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_set">#</a>
-			<code>set( <span> <var>$key</var></span>, <span> <var>$value</var></span>, <span> <var>$ttl</var> = <span class="php-num">0</span></span> )</code>
-
-			<div class="description short">
-				
-			</div>
-
-			<div class="description detailed hidden">
-				
-
-
-
-
-
-
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="destroy" id="_destroy">
-
-			<td class="attributes"><code>
-				abstract public 
-				
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_destroy">#</a>
-			<code>destroy( <span> <var>$key</var></span> )</code>
-
-			<div class="description short">
-				
-			</div>
-
-			<div class="description detailed hidden">
-				
-
-
-
+					<h4>Returns</h4>
+					<div class="list">
+						BoostHandlerInterface
+					</div>
 
 
 
