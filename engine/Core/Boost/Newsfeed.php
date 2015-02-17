@@ -4,9 +4,9 @@ use Minds\interfaces\BoostHandlerInterface;
 use Minds\Core\Data;
 
 /**
- * Provide core functionality for boosting items
+ * Newsfeed Boost handler
  */
-class Boost implements BoostHandlerInterface{
+class Newsfeed implements BoostHandlerInterface{
 	
     /**
      * Boost an entity

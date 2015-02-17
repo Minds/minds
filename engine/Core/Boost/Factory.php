@@ -4,7 +4,7 @@ use Minds\Core\Data;
 use minds\interfaces;
 
 /**
- * Provide core functionality for boosting items
+ * A factory providing handlers boosting items
  */
 class Factory{
 	

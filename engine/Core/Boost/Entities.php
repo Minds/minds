@@ -3,9 +3,9 @@
 namespace Minds\Core;
 
 /**
- * Provide core functionality for boosting items
+ * Entities boost handler
  */
-class Boost{
+class Entities{
 	
     
     
