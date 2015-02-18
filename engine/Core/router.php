@@ -15,6 +15,7 @@ class router{
 		"/newsfeed" => "minds\\pages\\newsfeed\\newsfeed",
 		"/subscriptions" => "minds\\pages\\subscriptions\\index",
 		"/assets" => "minds\\pages\\assets",
+        "/boost" => "minds\\pages\\boost",
 		"/api" => "minds\\pages\\api\\api"
 	);
 	

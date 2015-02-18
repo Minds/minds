@@ -8,7 +8,6 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
-use Minds\Core\Boost;
 use minds\entities;
 use minds\interfaces;
 use minds\api\factory;
@@ -41,9 +40,13 @@ class boost implements interfaces\api{
             return factory::response(array('status' => 'error', 'message' => 'impressions must be sent in post body'));
         
         $response = array();
-	    if(!Boost\Factory::build(ucfirst($pages[0]))->boost($pages[1], $_POST['impressions']))
+	    if(Core\Boost\Factory::build(ucfirst($pages[0]))->boost($pages[1], $_POST['impressions'])){
+            $points = 0 - $_POST['impressions']; //make it negative
+            \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, NULL, "boost");
+        } else {
 	        $response['status'] = 'error';
-        
+        }
+
         return factory::response($response);
         
     }

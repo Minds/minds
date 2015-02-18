@@ -29,8 +29,7 @@ interface BoostHandlerInterface{
      * @param int impressions
      * @return boolean
      */
-    public function accept($entity, $impressions){
-    }
+    public function accept($entity, $impressions);
     
     /**
      * Return a boost

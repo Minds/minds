@@ -28,6 +28,15 @@ class Counters implements Interfaces\PreparedInterface{
             );
         return $this;
     }
+
+    public function clear($guid, $metric){
+        $this->template = "UPDATE counters SET count = count - count WHERE guid = :guid AND metric = :metric";
+        $this->values = array(
+            "guid" => (string) $guid,
+            "metric" => $metric
+            );
+        return $this;
+    }
     
     public function get($guid, $metric){
         $this->template = "SELECT count FROM counters WHERE guid = :guid AND metric = :metric";

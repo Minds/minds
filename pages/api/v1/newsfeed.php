@@ -21,9 +21,6 @@ class newsfeed implements interfaces\api{
      * API:: /v1/newsfeed/
      */      
     public function get($pages){
-        Core\Events\Dispatcher::trigger("hallo", "newsfeed", function($eventobj){
-            var_dump($eventobj); exit;
-            });        
         $response = array();
         
         if(!isset($pages[0]))
@@ -57,7 +54,16 @@ class newsfeed implements interfaces\api{
         }
 
         \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
-        
+       
+        if(get_input('offset') == ""){
+            $boost_guid = Core\Boost\Factory::build("Newsfeed")->getBoost();
+            if($boost_guid){
+                $boost_guid = $boost_guid;
+                $boost_object = new entities\activity($boost_guid);
+                array_unshift($activity, $boost_object);
+            }
+        }
+         
         if($activity){
             $response['activity'] = factory::exportable($activity);
             $response['load-next'] = (string) end($activity)->guid;

@@ -93,5 +93,28 @@ class Counters{
         $cacher->set("counter:$guid:$metric", $count, 360); //cache for 10 minutes
         return (int) $count;
     }
-        
+
+    /**
+     * Reset a counter
+     * @param mixed - Entity or number $entity
+     * @param string $metric
+     * @param int $value (optional) 
+     * @return void;
+     */
+    public static function clear($entity, $metric, $value = 0){
+        if(is_numeric($entity)){
+            $guid = $entity;
+        } else {
+            if($entity->guid)
+                $guid = $entity->guid;
+            else
+                return null;
+        }
+        $client =Core\Data\Client::build('Cassandra');
+        $query = new Core\Data\Cassandra\Prepared\Counters();
+        //$client->request($query->clear($guid, $metric));
+        $count = self::get($entity, $metric, false);
+        self::decrement($entity, $metric, $count);
+    } 
+            
 }   

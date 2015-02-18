@@ -5,7 +5,6 @@
 namespace minds\pages;
 
 use Minds\Core;
-use Minds\Core\Boost;
 use minds\interfaces;
 
 class boost extends core\page implements interfaces\page{
@@ -15,15 +14,16 @@ class boost extends core\page implements interfaces\page{
         if($pages[0] == 'admin'){
           
             if(!elgg_is_admin_logged_in())
-                return false;
+                return $this->forward("/");
             
             $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
             $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
-            
-            $guids = Boost\Factory::build(ucfirst($pages[1]))->getReviewQueue($limit, $offset);
+
+            $type = isset($_GET['type']) ? $_GET['type'] : 'Newsfeed';            
+            $guids = Core\Boost\Factory::build(ucfirst($type))->getReviewQueue($limit, $offset);
             
     		if($guids){
-    		    $entities = Core\entities::get(array('guid' => $guids));
+                $entities = Core\entities::get(array('guids' => array_keys($guids)));
                 foreach($entities as $k => $entity){
                     $entities[$k]->boost_impressions = $guids[$entity->guid];
                 }
@@ -48,9 +48,14 @@ class boost extends core\page implements interfaces\page{
 	public function post($pages){
 
         if($pages[0] == 'admin'){
-            
-            Boost\Factory::build(ucfirst($pages[1]))->accept($_POST['guid'], $_POST['impressions']);
-		
+            $type = isset($_POST['type']) ? $_POST['type'] : 'Newsfeed';
+            if(isset($_POST['accept'])){            
+                Core\Boost\Factory::build(ucfirst($type))->accept($_POST['guid'], $_POST['impressions']);
+		    } elseif(isset($_POST['reject'])){
+                Core\Boost\Factory::build(ucfirst($type))->reject($_POST['guid']);
+                //refund the point
+                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $_POST['impressions'], NULL, "boost refund");
+            }
             $this->forward('/boost/admin');
             
         }
