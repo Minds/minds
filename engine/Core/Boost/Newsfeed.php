@@ -10,13 +10,18 @@ class Newsfeed implements BoostHandlerInterface{
 	
     /**
      * Boost an entity
-     * @param object $entity - the entity to boost
+     * @param object/int $entity - the entity to boost
      * @param int $impressions
      * @return boolean
      */
     public function boost($entity, $impressions){
+        if(is_object($entity)){
+            $guid = $entity->guid;
+        } else {
+            $guid = $entity;
+        }
         $db = new Data\Call('entities_by_time');
-        return $db->insert("boost:newsfeed:review", array($entity->guid => $impressions));
+        return $db->insert("boost:newsfeed:review", array($guid => $impressions));
     }
     
      /**
@@ -38,8 +43,18 @@ class Newsfeed implements BoostHandlerInterface{
      * @return boolean
      */
     public function accept($entity, $impressions){
+        if(is_object($entity)){
+            $guid = $entity->guid;
+        } else {
+            $guid = $entity;
+        }
         $db = new Data\Call('entities_by_time');
-        return $db->insert("boost:newsfeed", array($entity->guid => $impressions));
+        $accept = $db->insert("boost:newsfeed", array($guid => $impressions));
+        if($accept){
+            //remove from review
+            $db->removeAttributes("boost:newsfeed:review", array($guid));
+        }
+        return $accept;
     }
     
     /**

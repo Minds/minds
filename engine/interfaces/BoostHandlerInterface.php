@@ -8,7 +8,7 @@ interface BoostHandlerInterface{
 	
     /**
      * Boost an entity, place in a review queue first
-     * @param object $entity - the entity to boost
+     * @param object/int $entity - the entity to boost
      * @param int $impressions
      * @return boolean
      */
@@ -25,7 +25,7 @@ interface BoostHandlerInterface{
     
     /**
      * Accept a boost
-     * @param object $entity
+     * @param object/int $entity
      * @param int impressions
      * @return boolean
      */
