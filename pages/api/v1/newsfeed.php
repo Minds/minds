@@ -55,7 +55,7 @@ class newsfeed implements interfaces\api{
 
         \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
        
-        if(get_input('offset') == ""){
+        if(get_input('offset') == "" && $pages[0] == 'network'){
             $boost_guid = Core\Boost\Factory::build("Newsfeed")->getBoost();
             if($boost_guid){
                 $boost_guid = $boost_guid;

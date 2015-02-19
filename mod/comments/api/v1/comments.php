@@ -89,7 +89,10 @@ class comments implements interfaces\api{
     }
     
     public function delete($pages){
-        
+       
+        $comment = new \Minds\plugin\comments\entities\comment($pages[0]);
+        $comment->delete();
+
         return factory::response(array());
         
     }
