@@ -6,7 +6,7 @@
 namespace Minds\Api;
 class Routes{
     
-    public $routes = array();
+    public static $routes = array();
     
     /**
      * Add to router

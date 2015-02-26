@@ -1,10 +1,11 @@
 <?php
-/**
- * The minds API factory
- */
  
 namespace Minds\Api;
+use Minds\interfaces;
 
+/**
+ * The minds API factory
+  */
 class Factory{
     
     /**
@@ -25,22 +26,27 @@ class Factory{
                 $route_length = strlen($route);
                 $route = substr($route, 0, $route_length-$slug_length);
             }
-            
-            if(isset(Routes::$routes[$route])){
-                $class_name = Routes::$routes[$route];
+           
+            //Literal routes
+            $actual = str_replace('\\', '/', $route);
+            if(isset(Routes::$routes[$actual])){
+                $class_name = Routes::$routes[$actual];
                 if(class_exists($class_name)){
-
                     $handler = new $class_name();
+                    if(!$handler instanceof interfaces\ApiIgnorePam)
+                        self::pamCheck();
                     $pages = array_splice($segments, $loop) ?: array();
                     return $handler->$method($pages);
                 
                 }
             }
 
+            //autloaded routes
             $class_name = "\\minds\\pages\\api\\$route";
             if(class_exists($class_name)){
-
                 $handler = new $class_name();
+                if(!$handler instanceof interfaces\ApiIgnorePam)
+                    self::pamCheck();
                 $pages = array_splice($segments, $loop) ?: array();
                 return $handler->$method($pages);
                 
@@ -53,9 +59,19 @@ class Factory{
      * PAM checker
      */
     public static function pamCheck(){
-        $user_pam = new \ElggPAM('oauth');
+        $user_pam = new \ElggPAM('user');
+        $api_pam = new \ElggPAM('api'); 
         $user_auth_result = $user_pam->authenticate();
-        var_dump( $user_auth_result ); exit;        
+        if($user_auth_result && $api_pam->authenticate()){
+           
+        } else {
+            error_log(print_r($_SESSION, true));
+             ob_end_clean();
+             header('Content-type: application/json');
+             echo json_encode(array('error'=>'Sorry, you are not authenticated'));
+             exit;
+
+        }
     }
     
     /**

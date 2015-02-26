@@ -183,15 +183,25 @@ class newsfeed extends core\page implements interfaces\page{
 		
 		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data', 'class'=> 'enable-social-share'));
 	
-		$content .= core\entities::view(array_merge(array(
+		$entities = core\entities::get(array_merge(array(
 			'type' => 'activity',
-			'limit' => get_input('limit', 5),
-			'masonry' => false,
-			'prepend' => $post,
-			'list_class' => 'list-newsfeed'
+			'limit' => get_input('limit', 5)
 		), $options));
+		if(count($entities) == 1){
+            $activity = reset($entities);
+             \Minds\plugin\social\start::setMetatags('og:type', 'article');
+            \Minds\plugin\social\start::setMetatags('og:title', $activity->title ?: $activity->message);
+            \Minds\plugin\social\start::setMetatags('og:description', $activity->blurb ?: 'via Minds');
+            \Minds\plugin\social\start::setMetatags('og:image', $activity->thumbnail_src ?: $activity->custom_data[0]['src']);
+        }
+
+        $content .= elgg_view_entity_list($entities, array_merge(array(
+                    'masonry' => false,
+                    'prepend' => $post,
+                    'list_class' => 'list-newsfeed'
+                   ), $options));
 		
-		$sidebar_left = elgg_view('channel/sidebar', array(
+        $sidebar_left = elgg_view('channel/sidebar', array(
 			'user' => elgg_get_logged_in_user_entity()
 		));
 		

@@ -12,6 +12,7 @@ namespace minds\plugin\gatherings;
 
 use Minds\Components;
 use Minds\Core;
+use Minds\Api;
 
 class start extends Components\Plugin{
 	
@@ -67,11 +68,10 @@ class start extends Components\Plugin{
 			'/gatherings/decrypt' => '\\minds\\plugin\\gatherings\\pages\\decrypt',
 			'/gatherings/unlock' => '\\minds\\plugin\\gatherings\\pages\\unlock',
 			'/gatherings/live' => '\\minds\\plugin\\gatherings\\pages\\live',
-			
-            //@todo debate whether this is the best way to load api endpoints
-            '/api/v1/conversations' => '\\minds\\plugin\\gatherings\\api\\v1\\conversations',
-            '/api/v1/keys' => '\\minds\\plugin\\gatherings\\api\\v1\\keys'
 		));
+
+        Api\Routes::add('v1/conversations', '\\minds\\plugin\\gatherings\\api\\v1\\conversations');
+        Api\Routes::add('v1/keys', '\\minds\\plugin\\gatherings\\api\\v1\\keys');
 
         /**
          * if it's a mutual match then create a conversation
