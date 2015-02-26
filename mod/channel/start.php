@@ -7,6 +7,7 @@
 namespace minds\plugin\channel;
 
 use Minds\Core;
+use Minds\Api;
 
 class start extends \ElggPlugin{
 	
@@ -38,8 +39,11 @@ class start extends \ElggPlugin{
 			'/channels' => "\\minds\\plugin\\channel\\pages\\directory",
 			'/directory' => "\\minds\\plugin\\channel\\pages\\directory",
 			
-            '/api/v1/channel' =>  "\\minds\\plugin\\channel\\api\\v1\\channel"
+           // '/api/v1/channel' =>  "\\minds\\plugin\\channel\\api\\v1\\channel"
 		));
+        
+        Api\Routes::add('v1/channel', "\\minds\\plugin\\channel\\api\\v1\\channel");
+        
 		
 		/**
 		 * Returns the url.. this should really be in models/entities now

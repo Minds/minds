@@ -10,7 +10,7 @@ namespace minds\pages\api\v1;
 use Minds\Core;
 use minds\entities;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class boost implements interfaces\api{
 
@@ -19,7 +19,7 @@ class boost implements interfaces\api{
      */      
     public function get($pages){
         $response = array();
-        return factory::response($response);
+        return Factory::response($response);
     }
     
     /**
@@ -31,13 +31,13 @@ class boost implements interfaces\api{
     public function post($pages){
         
         if(!isset($pages[0]))
-             return factory::response(array('status' => 'error', 'message' => ':type must be passed in uri'));
+             return Factory::response(array('status' => 'error', 'message' => ':type must be passed in uri'));
         
         if(!isset($pages[1]))
-            return factory::response(array('status' => 'error', 'message' => ':guid must be passed in uri'));
+            return Factory::response(array('status' => 'error', 'message' => ':guid must be passed in uri'));
         
         if(!isset($_POST['impressions']))
-            return factory::response(array('status' => 'error', 'message' => 'impressions must be sent in post body'));
+            return Factory::response(array('status' => 'error', 'message' => 'impressions must be sent in post body'));
         
         $response = array();
 	    if(Core\Boost\Factory::build(ucfirst($pages[0]))->boost($pages[1], $_POST['impressions'])){
@@ -56,7 +56,7 @@ class boost implements interfaces\api{
 	        $response['status'] = 'error';
         }
 
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     

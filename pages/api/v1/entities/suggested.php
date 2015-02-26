@@ -11,7 +11,7 @@ use Minds\Core;
 use Minds\Core\Data;
 use minds\entities;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class suggested implements interfaces\api{
 
@@ -75,7 +75,7 @@ class suggested implements interfaces\api{
         }
 	
         if(!$guids){
-            return factory::response(array('status'=>'error', 'message'=>'not found'));
+            return Factory::response(array('status'=>'error', 'message'=>'not found'));
         }
         
 	   $options['guids'] = $guids;
@@ -87,7 +87,7 @@ class suggested implements interfaces\api{
             $response['load-previous'] = (string) key($entities)->guid;
         }
         
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     

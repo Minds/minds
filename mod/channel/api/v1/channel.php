@@ -10,7 +10,7 @@ namespace minds\plugin\channel\api\v1;
 use Minds\Core;
 use minds\interfaces;
 use minds\entities;
-use minds\api\factory;
+use Minds\Api\Factory;
 use ElggFile;
 
 class channel implements interfaces\api{
@@ -28,7 +28,7 @@ class channel implements interfaces\api{
         
         $user = new entities\user($pages[0]);
         if(!$user->username){
-            return factory::response(array('status'=>'error', 'message'=>'The user could not be found'));
+            return Factory::response(array('status'=>'error', 'message'=>'The user could not be found'));
         }
         
         $return = factory::exportable(array($user));
@@ -59,7 +59,7 @@ class channel implements interfaces\api{
         
         
 
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     
@@ -112,7 +112,7 @@ class channel implements interfaces\api{
             case "info":
             default:
                 if(!$owner->canEdit()){
-                    return factory::response(array('status'=>'error'));
+                    return Factory::response(array('status'=>'error'));
                 }
                 foreach(array('name', 'website') as $field){
                     if(isset($_POST[$field]))
@@ -121,19 +121,19 @@ class channel implements interfaces\api{
                 $owner->save();
        }
         
-       return factory::response(array());
+       return Factory::response(array());
         
     }
     
     public function put($pages){
         
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     
     public function delete($pages){
         
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     

@@ -10,7 +10,7 @@ namespace minds\pages\api\v1;
 use Minds\Core;
 use minds\entities;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class register implements interfaces\api{
 
@@ -19,7 +19,7 @@ class register implements interfaces\api{
      */      
     public function get($pages){
                 
-        return factory::response(array('status'=>'error', 'message'=>'GET is not supported for this endpoint'));
+        return Factory::response(array('status'=>'error', 'message'=>'GET is not supported for this endpoint'));
         
     }
     
@@ -44,7 +44,7 @@ class register implements interfaces\api{
         } catch (\Exception $e){
             $response = array('status'=>'error', 'message'=>$e->getMessage());
         }
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     

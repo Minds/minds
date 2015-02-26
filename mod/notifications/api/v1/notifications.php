@@ -9,7 +9,7 @@ namespace minds\plugin\notifications\api\v1;
 
 use Minds\Core;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class notifications implements interfaces\api{
 
@@ -46,7 +46,7 @@ class notifications implements interfaces\api{
 		    $response['load-previous'] = (string) key($notifications)->guid;
         }
 
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     
@@ -73,7 +73,7 @@ class notifications implements interfaces\api{
         $db = new Core\Data\Call('entities');
         $db->insert($user_guid, array('surge_token' => $token));
         
-        return factory::response($response);
+        return Factory::response($response);
     }
     
     /**

@@ -10,7 +10,7 @@ namespace minds\pages\api\v1\entities;
 use Minds\Core;
 use minds\entities;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class featured implements interfaces\api{
 
@@ -44,7 +44,7 @@ class featured implements interfaces\api{
 
     	$guids = core\Data\indexes::fetch($key, $options);
     	if(!$guids){
-	    	return factory::response(array('status'=>'error', 'message'=>'not found'));
+	    	return Factory::response(array('status'=>'error', 'message'=>'not found'));
     	}
         
         $options = array('guids'=>$guids);
@@ -57,7 +57,7 @@ class featured implements interfaces\api{
             $response['load-previous'] = (string) key($entities)->guid;
         }
         
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     

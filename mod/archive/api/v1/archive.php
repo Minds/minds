@@ -10,7 +10,7 @@ namespace minds\plugin\archive\api\v1;
 use Minds\Core;
 use minds\interfaces;
 use minds\plugin\archive\entities;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class archive implements interfaces\api{
 
@@ -38,7 +38,7 @@ class archive implements interfaces\api{
             );  
         }
 
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     
@@ -59,7 +59,7 @@ class archive implements interfaces\api{
             if(isset($_POST['album_guid'])){
                 $album = new entities\album($_POST['album_guid']);
                 if(!$album->guid)
-                    return factory::response(array('error'=>'Sorry, the album was not found'));
+                    return Factory::response(array('error'=>'Sorry, the album was not found'));
             } else {
                 //does the user already have and album?
                 $albums = core\entities::get(array('subtype'=>'album', 'owner_guid'=>elgg_get_logged_in_user_guid()));
@@ -120,7 +120,7 @@ class archive implements interfaces\api{
 
         }	
 
-         return factory::response(array());
+         return Factory::response(array());
         
     }
     
@@ -175,7 +175,7 @@ class archive implements interfaces\api{
 			$image->save();
 	}
 
-        return factory::response(array('guid'=>$guid, "location"=>$loc));
+        return Factory::response(array('guid'=>$guid, "location"=>$loc));
         
     }
     
@@ -187,7 +187,7 @@ class archive implements interfaces\api{
      */
     public function delete($pages){
      
-         return factory::response();
+         return Factory::response();
         
     }
    

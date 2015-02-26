@@ -9,31 +9,31 @@ namespace minds\pages\api;
 
 use Minds\Core;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class api implements interfaces\api{
 
 	public function get($pages){
         
-        return factory::build($pages);
+        return Factory::build($pages);
         
 	}
 	
 	public function post($pages){
 	    
-        return factory::build($pages);
+        return Factory::build($pages);
         
 	}
 	
 	public function put($pages){
 	    
-        return factory::build($pages);
+        return Factory::build($pages);
         
 	}
 	
 	public function delete($pages){
 	    
-        return factory::build($pages);
+        return Factory::build($pages);
         
 	}
 	

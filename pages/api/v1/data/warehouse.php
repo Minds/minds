@@ -10,7 +10,7 @@ namespace minds\pages\api\v1\data;
 use Minds\Core;
 use minds\entities;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class warehouse implements interfaces\api{
 
@@ -24,23 +24,23 @@ class warehouse implements interfaces\api{
         \Minds\Core\Data\Warehouse\Factory::build(array_shift($pages))->run($pages);
         $end = microtime();
         
-        return factory::response(array('took'=>$end-$start));
+        return Factory::response(array('took'=>$end-$start));
     }
     
     public function post($pages){}
     
     public function put($pages){
         
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     
     public function delete($pages){
 	$activity = new entities\activity($pages[0]); 
 	if(!$activity->guid)
-		return factory::response(array('status'=>'error', 'message'=>'could not find activity post'));      
+		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));      
  
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     

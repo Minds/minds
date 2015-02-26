@@ -10,7 +10,7 @@ namespace minds\pages\api\v1\entities;
 use Minds\Core;
 use minds\entities;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class entity implements interfaces\api{
 
@@ -39,7 +39,7 @@ class entity implements interfaces\api{
             }
         }
 
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     

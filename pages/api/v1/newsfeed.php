@@ -10,7 +10,7 @@ namespace minds\pages\api\v1;
 use Minds\Core;
 use minds\entities;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class newsfeed implements interfaces\api{
 
@@ -29,7 +29,7 @@ class newsfeed implements interfaces\api{
         switch($pages[0]){
             case 'single':
                 $activity = new \Minds\entities\activity($pages[1]);
-                return factory::response(array('activity'=>$activity->export()));
+                return Factory::response(array('activity'=>$activity->export()));
                 break;
             default:
             case 'personal':
@@ -70,7 +70,7 @@ class newsfeed implements interfaces\api{
             $response['load-previous'] = (string) key($activity)->guid;
         }
         
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     
@@ -125,27 +125,27 @@ class newsfeed implements interfaces\api{
                             ->setThumbnail($_POST['thumbnail']);
                 }
                 if($guid = $activity->save()){
-                    return factory::response(array('guid'=>$guid));
+                    return Factory::response(array('guid'=>$guid));
                 } else {
-                    return factory::response(array('status'=>'failed', 'message'=>'could not save'));
+                    return Factory::response(array('status'=>'failed', 'message'=>'could not save'));
                 }
         }
     }
     
     public function put($pages){
         
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     
     public function delete($pages){
 	$activity = new entities\activity($pages[0]); 
 	if(!$activity->guid)
-		return factory::response(array('status'=>'error', 'message'=>'could not find activity post'));      
+		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));      
 	
  	if($activity->delete())
-        	return factory::response(array('message'=>'removed ' . $pages[0]));
-        	return factory::response(array('status'=>'error', 'message'=>'could not delete'));
+        	return Factory::response(array('message'=>'removed ' . $pages[0]));
+        	return Factory::response(array('status'=>'error', 'message'=>'could not delete'));
     }
     
 }

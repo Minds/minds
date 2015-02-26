@@ -10,7 +10,7 @@ namespace minds\plugin\comments\api\v1;
 use Minds\Core;
 use Minds\Core\Data;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class comments implements interfaces\api{
 
@@ -48,7 +48,7 @@ class comments implements interfaces\api{
         $response['load-next'] = (string) reset($comments)->guid;
         $response['load-previous'] = (string) key($comments)->guid;       
     
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     
@@ -79,12 +79,12 @@ class comments implements interfaces\api{
         $comment->ownerObj = Core\session::getLoggedinUser()->export();
         $response['comment'] = $comment->export();
 
-        return factory::response($response);
+        return Factory::response($response);
     }
     
     public function put($pages){
         
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     
@@ -93,7 +93,7 @@ class comments implements interfaces\api{
         $comment = new \Minds\plugin\comments\entities\comment($pages[0]);
         $comment->delete();
 
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     

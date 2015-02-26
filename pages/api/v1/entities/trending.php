@@ -10,7 +10,7 @@ namespace minds\pages\api\v1\entities;
 use Minds\Core;
 use minds\entities;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class trending implements interfaces\api{
 
@@ -43,7 +43,7 @@ class trending implements interfaces\api{
     	$trending = new \MindsTrending(null, $opts);
     	$guids = $trending->getList($options);
     	if(!$guids){
-            return factory::response(array('status'=>'error', 'message'=>'not found'));
+            return Factory::response(array('status'=>'error', 'message'=>'not found'));
         }
     	$options['guids'] = $guids;
     	$entities = core\entities::get($options);
@@ -54,7 +54,7 @@ class trending implements interfaces\api{
             $response['load-previous'] = isset($_GET['load-previous']) ? $_GET['load-previous'] - count($entities) : 0;
         }
         
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     

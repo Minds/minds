@@ -11,7 +11,7 @@ use Minds\Core;
 use minds\plugin\gatherings\entities;
 use minds\plugin\gatherings\helpers;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class keys implements interfaces\api{
 
@@ -36,7 +36,7 @@ class keys implements interfaces\api{
             $response['message'] = "please check your password";
         }
     
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     
@@ -73,20 +73,20 @@ class keys implements interfaces\api{
                 }
         }   
  
-        return factory::response($response);  
+        return Factory::response($response);  
        
         
     }
     
     public function put($pages){
         
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     
     public function delete($pages){
         
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     

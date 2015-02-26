@@ -3,8 +3,9 @@
  * The minds API factory
  */
  
-namespace minds\api;
-class factory{
+namespace Minds\Api;
+
+class Factory{
     
     /**
      * Builds the api controller
@@ -23,6 +24,17 @@ class factory{
                 $slug_length = strlen($segments[$offset+1].'\\');
                 $route_length = strlen($route);
                 $route = substr($route, 0, $route_length-$slug_length);
+            }
+            
+            if(isset(Routes::$routes[$route])){
+                $class_name = Routes::$routes[$route];
+                if(class_exists($class_name)){
+
+                    $handler = new $class_name();
+                    $pages = array_splice($segments, $loop) ?: array();
+                    return $handler->$method($pages);
+                
+                }
             }
 
             $class_name = "\\minds\\pages\\api\\$route";

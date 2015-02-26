@@ -9,7 +9,7 @@ namespace minds\plugin\notifications\api\v1;
 
 use Minds\Core;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class invite implements interfaces\api{
 
@@ -21,7 +21,7 @@ class invite implements interfaces\api{
      */      
     public function get($pages){
 	   $response = array();
-       return factory::response($response);
+       return Factory::response($response);
     }
     
     /**
@@ -55,7 +55,7 @@ class invite implements interfaces\api{
         }
 
            $response = array(); 
-        return factory::response($response);
+        return Factory::response($response);
     }
     
     /**

@@ -10,7 +10,7 @@ namespace minds\plugin\thumbs\api\v1;
 use Minds\Core;
 use minds\interfaces;
 use minds\entities;
-use minds\api\factory;
+use Minds\Api\Factory;
 use minds\plugin\thumbs\helpers;
 
 class thumbs implements interfaces\api{
@@ -28,12 +28,12 @@ class thumbs implements interfaces\api{
         
         $entity = core\entities::build(new \minds\entities\entity($guid));
         if(!$entity->guid)
-            return factory::response(array('status'=>'error', 'message'=>'entity not found'));
+            return Factory::response(array('status'=>'error', 'message'=>'entity not found'));
 
         $response = array();
         $response['count'] = $entity->{'thumbs:up:count'};
 
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     
@@ -60,10 +60,10 @@ class thumbs implements interfaces\api{
                 \Minds\plugin\payments\start::createTransaction($entity->owner_guid, 1, $guid, 'vote'); 
             }
         }else{
-             return factory::response(array('status'=>'error', 'message'=>'entity not found'));
+             return Factory::response(array('status'=>'error', 'message'=>'entity not found'));
         }
         
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     
@@ -89,9 +89,9 @@ class thumbs implements interfaces\api{
         if($entity->guid)
             helpers\storage::cancel($direction, $entity);
         else
-             return factory::response(array('status'=>'error', 'message'=>'entity not found'));
+             return Factory::response(array('status'=>'error', 'message'=>'entity not found'));
         
-         return factory::response();
+         return Factory::response();
         
     }
     

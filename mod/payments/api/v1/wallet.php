@@ -9,7 +9,7 @@ namespace minds\plugin\payments\api\v1;
 
 use Minds\Core;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class wallet implements interfaces\api{
 
@@ -46,7 +46,7 @@ class wallet implements interfaces\api{
                 
         }
     
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     
@@ -57,7 +57,7 @@ class wallet implements interfaces\api{
                 $ex_rate = 0.001;
                 $points = $_POST['points'];
                 $usd = $ex_rate * $points;
-                return factory::response(array('usd'=>$usd));
+                return Factory::response(array('usd'=>$usd));
                 break;
             case "charge":
                 
@@ -104,18 +104,18 @@ class wallet implements interfaces\api{
         }
         
 
-        return factory::response($response);
+        return Factory::response($response);
     }
     
     public function put($pages){
         
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     
     public function delete($pages){
         
-        return factory::response(array());
+        return Factory::response(array());
         
     }
     

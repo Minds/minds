@@ -9,7 +9,7 @@ namespace minds\pages\api\v1;
 
 use Minds\Core;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class entities implements interfaces\api{
 
@@ -44,7 +44,7 @@ class entities implements interfaces\api{
             $response['load-previous'] = (string) key($entities)->guid;
         }
         
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     

@@ -10,7 +10,7 @@ namespace minds\pages\api\v1;
 use Minds\Core;
 use minds\entities;
 use minds\interfaces;
-use minds\api\factory;
+use Minds\Api\Factory;
 
 class subscribe implements interfaces\api{
 
@@ -71,7 +71,7 @@ class subscribe implements interfaces\api{
                 break;
         }
         
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     
@@ -92,7 +92,7 @@ class subscribe implements interfaces\api{
             );
         }
         
-        return factory::response($response);
+        return Factory::response($response);
         
     }
     
