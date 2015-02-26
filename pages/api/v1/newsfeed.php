@@ -118,6 +118,12 @@ class newsfeed implements interfaces\api{
                 if(isset($_POST['message']))
                     $activity->setMessage($_POST['message']);
                 
+                if(isset($_POST['title'])){
+                        $activity->setTitle($_POST['title'])
+                            ->setBlurb($_POST['description'])
+                            ->setURL(\elgg_normalize_url($_POST['url']))
+                            ->setThumbnail($_POST['thumbnail']);
+                }
                 if($guid = $activity->save()){
                     return factory::response(array('guid'=>$guid));
                 } else {

@@ -51,7 +51,7 @@ class wallet implements interfaces\api{
     }
     
     public function post($pages){
-        
+        $response = array(); 
         switch($pages[0]){
             case "quote":
                 $ex_rate = 0.001;
@@ -79,6 +79,24 @@ class wallet implements interfaces\api{
                 $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->card_id);
                 if($response['id']){
                     \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, NULL, "purchase");
+                }
+                break;
+            case "paypal":
+                switch($pages[1]){
+                    case "confirm":
+                        $ex_rate = 0.001;
+                        $points = $_POST['points'];
+                        $usd = $ex_rate * $points;
+
+                        $payment = \Minds\plugin\payments\services\paypal::factory()->capture($_POST['id'], $usd);
+                        if($payment->getId()){
+                             //ok, now charge!
+                             \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, NULL, "purchase");
+                        } else {
+                            $response['status'] = 'error';
+                        }
+                        
+                    break;
                 }
                 break;
             case "withdraw":

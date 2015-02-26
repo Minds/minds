@@ -53,8 +53,6 @@ class factory{
      */
     public static function response($data = array()){
         
-       
-        
         $data = array_merge(array(
             'status' => 'success', //should success be assumed?
         ), $data);
@@ -75,6 +73,8 @@ class factory{
         foreach($entities as $k => $entity){
             $entities[$k] = $entity->export();
             $entities[$k]['guid'] = (string) $entity->guid; //javascript doesn't like long numbers..
+            if(isset($entities[$k]['ownerObj']['guid']))
+                $entities[$k]['ownerObj']['guid'] = (string) $entity->ownerObj['guid'];
             foreach($exceptions as $exception){
                 $entities[$k][$exception] = $entity->$exception;
             }

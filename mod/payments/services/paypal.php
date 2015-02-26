@@ -5,6 +5,8 @@ namespace minds\plugin\payments\services;
 use Minds\Core;
 
 use PayPal\Api\Amount;
+use PayPal\Api\Authorization;
+use PayPal\Api\Capture;
 use PayPal\Api\Details;
 use PayPal\Api\Item;
 use PayPal\Api\ItemList;
@@ -14,6 +16,7 @@ use PayPal\Api\Payer;
 use PayPal\Api\Payment;
 use PayPal\Api\FundingInstrument;
 use PayPal\Api\Transaction;
+use PayPal\Api\PaymentExecution;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 
@@ -131,6 +134,33 @@ class paypal extends core\base{
 			
 		return $payment->create($this->context);
 	}
+
+    public function getPayment($id){
+        $result = Payment::get($id, $this->context);
+        return $result;
+    }
+
+    public function getAuthorization($id){
+         $result = Authorization::get($id, $this->context);
+         return $result;
+    }
+
+    public function executePayment($id){
+        $payment = Payment::get($id, $this->context);
+        $execution = new PaymentExecution();
+        $result = $payment->execute($execution, $this->context);
+        return $result;
+    }
+
+    public function capture($id, $amount){
+        $auth =  Authorization::get($id, $this->context);
+         $amt = new Amount();
+         $amt->setCurrency("USD")
+         ->setTotal($amount);
+        $capture = new Capture();
+        $capture->setAmount($amt);
+        return $auth->capture($capture, $this->context);
+    }
 	
 	/**
 	 * Factory

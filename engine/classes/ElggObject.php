@@ -125,7 +125,11 @@ class ElggObject extends ElggEntity {
 			'featured',
 			'featured_id',
 			'ownerObj',
-			'category'
+			'category',
+            'thumbs:up:count',
+            'thumbs:up:user_guids',
+            'thumbs:down:count',
+            'thumbs:down:user_guids'
 		));
 	}
 

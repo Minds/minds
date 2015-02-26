@@ -29,6 +29,8 @@ class subscribe implements interfaces\api{
                 $subscribers= $db->getRow($pages[1], array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
                 $users = array();
                 foreach($subscribers as $guid => $subscriber){
+                    if($guid == get_input('offset'))
+                        continue;
                     if(is_numeric($subscriber)){
                         //this is a local, old style subscription
                         $users[] = new \minds\entities\user($guid);

@@ -43,6 +43,15 @@ class boost implements interfaces\api{
 	    if(Core\Boost\Factory::build(ucfirst($pages[0]))->boost($pages[1], $_POST['impressions'])){
             $points = 0 - $_POST['impressions']; //make it negative
             \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, NULL, "boost");
+            if(isset($pages[2]) && $pages[2] != Core\session::getLoggedinUser()->guid){
+                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                'to'=>array($pages[2]),
+                'object_guid' => $pages[1],
+                'notification_view' => 'boost_gift',
+                'params' => array('impressions'=>$_POST['impressions']),
+                'impressions' => $_POST['impressions']
+                ));
+            }
         } else {
 	        $response['status'] = 'error';
         }

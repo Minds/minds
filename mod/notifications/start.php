@@ -182,7 +182,8 @@ class start extends \ElggPlugin{
 			'object_guid'=> NULL
 		);
 		$params = array_merge($defaults, $params);
-		
+	error_log('notification fired...');
+    error_log(print_r($params['to'], true));	
         foreach($params['to'] as $t){
 		//	if($t != $params['from']){
 				$notification = new entities\notification();
@@ -194,7 +195,7 @@ class start extends \ElggPlugin{
 				$notification->read = 0;
 				$notification->access_id = 2;
 				$notification->owner_guid = \elgg_get_logged_in_user_guid();
-				$notification->params = serialize($params['params']);
+				$notification->params = json_encode($params['params']);
 				$notification->time_created = time();
 				$notification->save();
 		//	}
@@ -212,6 +213,9 @@ class start extends \ElggPlugin{
                     break;
                 case "remind":
                     $message = \Minds\Core\session::getLoggedinUser()->name . " reminded " . $params['title'];
+                    break;
+                case "boost_gift":
+                    $message = \Minds\Core\session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " impressions";
                     break;
                 default:
                     $message = "You have a notification";
@@ -286,7 +290,8 @@ class start extends \ElggPlugin{
 						'to'=>$to, 
 						'object_guid' => $params->guid,
 						'notification_view' => 'tag',
-						'description' => $params->message
+						'description' => $params->message,
+                        'title' => $params->title
 						));
 			}
 		}

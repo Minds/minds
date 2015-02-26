@@ -69,14 +69,15 @@ class comments extends core\page implements interfaces\page{
 			$subscribers[$parent_entity->owner_guid] = $parent_entity->owner_guid;
 			if(isset($subscribers[$comment->owner_guid]))
 				unset($subscribers[$comment->owner_guid]);
-		
-			\elgg_trigger_plugin_hook('notification', 'all', array(
+            
+            $subscribers = array_unique($subscribers);
+		    \elgg_trigger_plugin_hook('notification', 'all', array(
 				'to' => $subscribers,
 				'object_guid'=>$parent_guid,
 				'description'=>$desc,
 				'notification_view'=>'comment'
 			));
-			
+           	
 			\elgg_trigger_event('comment:create', 'comment', $data); 
 			
 			$indexes = new Data\indexes();
