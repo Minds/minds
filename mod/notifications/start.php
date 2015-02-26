@@ -8,6 +8,7 @@
 namespace minds\plugin\notifications;
 
 use Minds\Core;
+use minds\Api;
 
 class start extends \ElggPlugin{
 	
@@ -27,6 +28,8 @@ class start extends \ElggPlugin{
 		});
 
 		core\router::registerRoutes($this->registerRoutes());
+        Api\Routes::add('v1/notifications', "minds\\plugin\\notifications\\api\\v1\\notifications");
+        Api\Routes::add('v1/invite', "minds\\plugin\\notifications\\api\\v1\\invite");
 
 		elgg_register_event_handler('pagesetup', 'system', 'notifications_plugin_pagesetup');
 		elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
@@ -58,9 +61,7 @@ class start extends \ElggPlugin{
 		$path = "minds\\plugin\\notifications";
 		return array(
 			'/notifications' => "$path\\pages\\view",
-			'/notifications/count' => "$path\\pages\\count",
-			'/api/v1/notifications' => "$path\\api\\v1\\notifications",
-            '/api/v1/invite' => "$path\\api\\v1\\invite"
+			'/notifications/count' => "$path\\pages\\count"
 		);
 	}
 	

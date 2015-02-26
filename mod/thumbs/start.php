@@ -12,6 +12,7 @@ namespace minds\plugin\thumbs;
 
 use Minds\Components;
 use Minds\Core;
+use Minds\Api;
 use ElggMenuItem;
 
 class start extends Components\Plugin{
@@ -37,9 +38,9 @@ class start extends Components\Plugin{
 		
 		
 		core\router::registerRoutes(array(
-			'/thumbs/actions' => "\\minds\\plugin\\thumbs\\pages\\actions",
-			'/api/v1/thumbs' => "\\minds\\plugin\\thumbs\\api\\v1\\thumbs",
+			'/thumbs/actions' => "\\minds\\plugin\\thumbs\\pages\\actions"
 		));
+        Api\Routes::add('v1/thumbs', "\\minds\\plugin\\thumbs\\api\\v1\\thumbs");
 	}
 	
 	public function menu($hook, $type, $return, $params) {

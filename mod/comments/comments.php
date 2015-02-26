@@ -6,6 +6,7 @@
 namespace minds\plugin\comments;
 
 use Minds\Core;
+use Minds\Api;
 
 class comments extends \ElggPlugin{
 	
@@ -14,6 +15,8 @@ class comments extends \ElggPlugin{
 	 */
 	public function init(){
 		core\router::registerRoutes($this->registerRoutes());
+        Api\Routes::add('v1/comments', "minds\\plugin\\comments\\api\\v1\\comments");
+        
 		\elgg_register_plugin_hook_handler('comments', 'all', array($this, 'displayHook'));
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			//var_dump($row);
@@ -39,8 +42,7 @@ class comments extends \ElggPlugin{
 	public function registerRoutes(){
 		$path = "minds\\plugin\\comments";
 		return array(
-			'/comments' => "$path\\pages\\comments",
-			'/api/v1/comments' => "$path\\api\\v1\\comments"
+			'/comments' => "$path\\pages\\comments"
 		);
 	}
 	 

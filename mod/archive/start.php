@@ -30,9 +30,7 @@ function minds_archive_init() {
 		} 
 	});
     
-    Minds\Core\router::registerRoutes(array(
-            '/api/v1/archive' => "\\minds\\plugin\\archive\\api\\v1\\archive",
-        ));
+    Minds\Api\Routes::add('v1/archive', "\\minds\\plugin\\archive\\api\\v1\\archive");
 
 	elgg_register_viewtype_fallback('spotlight');
 	elgg_register_viewtype_fallback('embed');
