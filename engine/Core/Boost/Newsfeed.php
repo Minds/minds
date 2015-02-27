@@ -57,6 +57,16 @@ class Newsfeed implements BoostHandlerInterface{
             $db->removeAttributes("boost:newsfeed:review", array($guid));
             //clear the counter for boost_impressions
             Helpers\Counters::clear($guid, "boost_impressions");
+            
+            $entity = new \Minds\entities\activity($guid);
+            Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                'to'=>array($entity->owner_guid),
+                'object_guid' => $guid,
+                'title' => $entity->title,
+                'notification_view' => 'boost_accepted',
+                'params' => array('impressions'=>$impressions),
+                'impressions' => $impressions
+                ));
         }
         return $accept;
     }
@@ -74,6 +84,14 @@ class Newsfeed implements BoostHandlerInterface{
         }
         $db = new Data\Call('entities_by_time');
         $db->removeAttributes("boost:newsfeed:review", array($guid));
+
+        $entity = new \Minds\entities\activity($guid);
+            Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                'to'=>array($entity->owner_guid),
+                'object_guid' => $guid,
+                'title' => $entity->title,
+                'notification_view' => 'boost_rejected',
+                ));
         return true;//need to double check somehow..
     }
     
@@ -101,6 +119,15 @@ class Newsfeed implements BoostHandlerInterface{
             if($count > $impressions){
                 //remove from boost queue
                 $db->removeAttributes("boost:newsfeed", array($boost));
+                $entity = new \Minds\entities\activity($boost);
+                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                'to'=>array($entity->owner_guid),
+                'object_guid' => $boost,
+                'title' => $entity->title,
+                'notification_view' => 'boost_completed',
+                'params' => array('impressions'=>$impressions),
+                'impressions' => $impressions
+                ));
                 continue; //max count met
             }
             array_push($mem_log, $boost);

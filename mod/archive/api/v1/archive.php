@@ -12,7 +12,7 @@ use minds\interfaces;
 use minds\plugin\archive\entities;
 use Minds\Api\Factory;
 
-class archive implements interfaces\api{
+class archive implements interfaces\api, interfaces\ApiIgnorePam{
 
     /**
      * Return the archive items

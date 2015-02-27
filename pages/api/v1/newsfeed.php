@@ -60,12 +60,13 @@ class newsfeed implements interfaces\api{
             if($boost_guid){
                 $boost_guid = $boost_guid;
                 $boost_object = new entities\activity($boost_guid);
+                $boost_object->boosted = true;
                 array_unshift($activity, $boost_object);
             }
         }
          
         if($activity){
-            $response['activity'] = factory::exportable($activity);
+            $response['activity'] = factory::exportable($activity, array('boosted'));
             $response['load-next'] = (string) end($activity)->guid;
             $response['load-previous'] = (string) key($activity)->guid;
         }

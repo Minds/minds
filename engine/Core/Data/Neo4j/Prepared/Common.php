@@ -128,7 +128,7 @@ class Common implements Interfaces\PreparedInterface{
                             "LIMIT {limit}";
         $this->values = array(
                             'guid' => (string) $user->guid,
-			                'limit' => 12
+			                'limit' => 16
                             );
         return $this;
     }
@@ -195,7 +195,7 @@ class Common implements Interfaces\PreparedInterface{
     public function getSuggestedObjects($user_guid, $subtype = 'video'){
         $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*..2]-(object:$subtype) " .
                             "WHERE NOT a-[:ACTED]->(object) " .
-                            "RETURN object LIMIT 12";
+                            "RETURN object LIMIT 16";
         $this->values = array(
                             'user_guid'=> (string) $user_guid
                             );

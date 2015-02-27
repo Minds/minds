@@ -218,6 +218,15 @@ class start extends \ElggPlugin{
                 case "boost_gift":
                     $message = \Minds\Core\session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " impressions";
                     break;
+                case "boost_accepted":
+                    $message = $params['impressions'] . " impressions for " . $params['title'] . ' were accepted';
+                    break;
+                case "boost_rejected":
+                    $message = "Your boost request for " . $params['title'] . " were rejected";
+                    break;
+                case "boost_completed":
+                    $message =  $params['impressions'] . "/" . $params['impressions'] . " impressions were met for " . $params['title'];
+                    break;
                 default:
                     $message = "You have a notification";
             }
