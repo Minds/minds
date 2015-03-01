@@ -15,6 +15,7 @@ class Factory{
      * @return BoostHandlerInterface
      */
     public static function build($handler, $options = array()){
+        $handler = ucfirst($handler);
         $handler = "Minds\\Core\\Boost\\$handler";
         if(class_exists($handler)){
             $class = new $handler($options);

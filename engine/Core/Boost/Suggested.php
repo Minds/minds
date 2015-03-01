@@ -1,11 +1,14 @@
 <?php
 
-namespace Minds\Core;
+namespace Minds\Core\Boost;
 
+use Minds\Core;
+use Minds\Core\Data;
+use minds\interfaces;
 /**
  * Suggested boost handler
  */
-class Suggested{
+class Suggested implements interfaces\BoostHandlerInterface{
     
    /**
      * Boost an entity
