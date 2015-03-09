@@ -116,6 +116,7 @@ class newsfeed implements interfaces\api{
             break;
             default:
                 $activity = new entities\activity();
+                error_log(print_r($_POST, true)); 
                 if(isset($_POST['message']))
                     $activity->setMessage($_POST['message']);
                 
@@ -123,7 +124,7 @@ class newsfeed implements interfaces\api{
                         $activity->setTitle($_POST['title'])
                             ->setBlurb($_POST['description'])
                             ->setURL(\elgg_normalize_url($_POST['url']))
-                            ->setThumbnail($_POST['thumbnail']);
+                            ->setThumbnail(urldecode($_POST['thumbnail']));
                 }
                 if($guid = $activity->save()){
                     return Factory::response(array('guid'=>$guid));

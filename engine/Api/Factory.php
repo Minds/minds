@@ -65,7 +65,7 @@ class Factory{
         if($user_auth_result && $api_pam->authenticate()){
            
         } else {
-            error_log(print_r($_SESSION, true));
+             error_log('failed authentication:: OAUTH via API');
              ob_end_clean();
              header('Content-type: application/json');
              echo json_encode(array('error'=>'Sorry, you are not authenticated'));
