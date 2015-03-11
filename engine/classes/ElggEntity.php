@@ -846,7 +846,7 @@ abstract class ElggEntity extends ElggData implements
 	 */
 	public function getOwnerEntity($brief = false) {
         	if($brief && isset($this->ownerObj)){
-			$owner = is_array($this->ownerObj) ? $this->ownerObj : json_decode($this->ownerObj, true);
+			$owner = is_array($this->ownerObj) || is_object($this->ownerObj) ? $this->ownerObj : json_decode($this->ownerObj, true);
 			if(is_object($this->ownerObj)){
 				$owner = json_decode(json_encode($this->ownerObj), true);
 			}
@@ -1449,6 +1449,7 @@ abstract class ElggEntity extends ElggData implements
                 }
             }
 		}
+		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
 		return $export;
 	}
 	

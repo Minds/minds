@@ -74,25 +74,37 @@ class Dispatcher {
         if (isset(self::$events[$namespace][$event])){
             $calls[] = self::$events[$namespace][$event];
         }
-                
+	if(isset(self::$events[$namespace]['all'])){
+		$calls[] = self::$events[$namespace]['all'];
+	}
+	//always trigger the all listener for namespace
+	foreach(array('all', 'elgg/hook/all', 'elgg/event/all') as $ns){
+	    if(isset(self::$events[$ns][$event])){
+	        $calls[] = self::$events[$ns][$event];
+	    }
+        } 
+   
         //parent propogation
-        foreach(self::$events as $ns => $es){
-            if($ns == 'all' || $ns == 'elgg/hook/all' || $ns == 'elgg/event/all'){
-                foreach($es as $e => $cb){
-                    if($e == $event || $event == 'all'){
-                        $calls[] = $cb;
-                    }
-                }
-            } elseif ($event == 'all'){
+        /*foreach(self::$events as $ns => $es){
+            if ($event == 'all'){
                 if($ns == $namespace){
                     foreach($es as $e => $cb){
                         $calls[] = $cb;
                     }
                 }
             }
-        }
+        }*/
 
         $calls = array_unique($calls);
+
+	if($event == 'create'){
+		error_log('create event called');
+	//	echo "<pre>";
+	//	print_r($calls);exit;
+		error_log(print_r($calls, true));
+
+	}
+
         // New event format, expects event object
     	$eventobj = new Event(array(
     	    'namespace' => $namespace,

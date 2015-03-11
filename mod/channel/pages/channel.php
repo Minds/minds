@@ -22,10 +22,11 @@ class channel extends core\page implements interfaces\page{
 			if($user){
 				elgg_set_page_owner_guid($user->guid);
 			} else {
-				return false;
+				return $this->notfound();
+				
 			}
 		}else{
-			return false;
+			return $this->notfound();
 		}
 		
 		// short circuit if invalid or banned username
@@ -127,14 +128,16 @@ class channel extends core\page implements interfaces\page{
 				$db = new \Minds\Core\Data\Call('friendsof');
 				$subscribers= $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
 				$users = array();
-				foreach($subscribers as $guid => $subscriber){
-					if(is_numeric($subscriber)){
-						//this is a local, old style subscription
-						$users[] = new \minds\entities\user($guid);
-						continue;
-					} 
-					
-					$users[] = new \minds\entities\user(json_decode($subscriber,true));
+				if($subscribers){
+					foreach($subscribers as $guid => $subscriber){
+						if(is_numeric($subscriber)){
+							//this is a local, old style subscription
+							$users[] = new \minds\entities\user($guid);
+							continue;
+						} 
+						
+						$users[] = new \minds\entities\user(json_decode($subscriber,true));
+					}
 				}
 				$content .= elgg_view_entity_list($users,array('list_class'=>'x2', 'masonry'=>false));
 				break;
@@ -142,14 +145,16 @@ class channel extends core\page implements interfaces\page{
 				$db = new \Minds\Core\Data\Call('friends');
 				$subscriptions = $db->getRow($user->guid, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
 				$users = array();
-				foreach($subscriptions as $guid => $subscription){
-					if(is_numeric($subscription)){
-						//this is a local, old style subscription
-						$users[] = new \minds\entities\user($guid);
-						continue;
-					} 
-					
-					$users[] = new \minds\entities\user(json_decode($subscription,true));
+				if($subscriptions){
+					foreach($subscriptions as $guid => $subscription){
+						if(is_numeric($subscription)){
+							//this is a local, old style subscription
+							$users[] = new \minds\entities\user($guid);
+							continue;
+						} 
+						
+						$users[] = new \minds\entities\user(json_decode($subscription,true));
+					}
 				}
 				$content .= elgg_view_entity_list($users,array('list_class'=>'x2', 'masonry'=>false));
 				break;
@@ -239,5 +244,23 @@ class channel extends core\page implements interfaces\page{
 	public function put($pages){}
 
 	public function delete($pages){}
-	
+
+	public function notfound(){
+	    header("HTTP/1.0 404 Not Found");
+            $buttons = \elgg_view('output/url', array('onclick'=>'window.history.back()', 'text'=>'Go back...', 'class'=>'elgg-button elgg-button-action'));
+            $header = <<<HTML
+<div class="elgg-head clearfix">
+        <h2>404</h2>
+        <h3>Ooooopppsss.... we couldn't find the page you where looking for! </h3>
+        <div class="front-page-buttons">
+                $buttons
+        </div>
+</div>
+HTML;
+             $body = \elgg_view_layout( "one_column", array(
+                 'content' => null,
+                 'header'=>$header
+             ));
+             echo \elgg_view_page('404', $body);
+	}	
 }

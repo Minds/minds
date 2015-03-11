@@ -60,8 +60,9 @@ class Counters{
         foreach($entities as $entity){
             if(is_numeric($entity)){
                 $prepared[] = $query->update($entity, $metric, $value)->build();
-            } else {
-                $prepared[] = $query->update($entity->guid, $metric, $value)->build();
+            } elseif($entity->guid) {
+            
+		    $prepared[] = $query->update($entity->guid, $metric, $value)->build();
             }
         }
         $client->batchRequest($prepared);
@@ -85,12 +86,16 @@ class Counters{
         }
         $client = Core\Data\Client::build('Cassandra');
         $query = new Core\Data\Cassandra\Prepared\Counters();
-        $result = $client->request($query->get($guid, $metric));
-        if(isset($result[0]) && isset($result[0]['count']))
-            $count = $result[0]['count'];
-        else 
-            $count =  0;
-        $cacher->set("counter:$guid:$metric", $count, 360); //cache for 10 minutes
+        try{
+	    $result = $client->request($query->get($guid, $metric));
+            if(isset($result[0]) && isset($result[0]['count']))
+                $count = $result[0]['count'];
+            else 
+                $count =  0;
+       	 } catch(\Exception $e){
+		return 0;
+	}
+	 $cacher->set("counter:$guid:$metric", $count, 360); //cache for 10 minutes
         return (int) $count;
     }
 

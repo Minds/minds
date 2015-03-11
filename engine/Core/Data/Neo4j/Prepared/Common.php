@@ -25,7 +25,7 @@ class Common implements Interfaces\PreparedInterface{
      * @param User $user
      * @return $this
      */
-    public function createUser(Entities\User $user){
+    public function createUser($user){
         $this->template = "MERGE (user:User { guid: {guid}, username:{username} })";
         $this->values = array('guid'=>$user->guid, 'username'=>$user->username);
         return $this;

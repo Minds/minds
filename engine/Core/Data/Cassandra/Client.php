@@ -26,7 +26,7 @@ class Client implements Interfaces\ClientInterface{
         $cql = $request->build();
         
         $prepared = $this->cassandra->prepare($cql['string']);
-        $statement = $this->cassandra->executeAsync($prepared['id'], CassandraLibrary\Request\Request::strictTypeValues($cql['values'], $prepared['metadata']['columns']), \Cassandra\Request\Request::CONSISTENCY_ONE);
+        $statement = $this->cassandra->executeAsync($prepared['id'], CassandraLibrary\Request\Request::strictTypeValues($cql['values'], $prepared['metadata']['columns']), \Cassandra\Request\Request::CONSISTENCY_ONE, array('names_for_values'=>true));
         
         $response = $statement->getResponse();
         
@@ -43,7 +43,7 @@ class Client implements Interfaces\ClientInterface{
 
     public function batchRequest($requests = array()){
 
-        $batchRequest = new CassandraLibrary\Request\Batch(CassandraLibrary\Request\Batch::TYPE_COUNTER, CassandraLibrary\Request\Request::CONSISTENCY_ONE);
+        $batchRequest = new CassandraLibrary\Request\Batch(CassandraLibrary\Request\Batch::TYPE_COUNTER, CassandraLibrary\Request\Request::CONSISTENCY_ONE, array('names_for_values'=>true));
 
         foreach($requests as $request){
             $cql = $request;

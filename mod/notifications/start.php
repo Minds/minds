@@ -203,7 +203,10 @@ class start extends \ElggPlugin{
             $message = "";
             
             switch($params['notification_view']){
-                case "comment":
+                case "friends":
+		    $message = \Minds\Core\session::getLoggedinUser()->name . " subscribed to you";
+		    break;
+	        case "comment":
                     $message = \Minds\Core\session::getLoggedinUser()->name . " commented: " . $params['description'];
                     break;
                 case "like":

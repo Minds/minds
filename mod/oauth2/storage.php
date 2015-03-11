@@ -397,7 +397,7 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
         $user = new \minds\entities\user($username);
         if($user->guid)
             return array(
-                'user_id' => $user->guid,
+                'user_id' => (string) $user->guid,
                 'scope' => ''
             );
         return false;

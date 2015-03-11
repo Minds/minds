@@ -61,10 +61,10 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
         $subscriptions = new \Minds\Core\Data\Call('friends');
         $prepared = new Prepared\Common();
         $attempts = 0;
-        $offset = '';
+        $offset = '100000000000002247';
         while(true){
-            error_log("Syncing 100 users from $offset");
-            $users = core\entities::get(array('type'=>'user', 'offset'=>$offset, 'limit'=>100));
+            error_log("Syncing 50 users from $offset");
+            $users = core\entities::get(array('type'=>'user', 'offset'=>$offset, 'limit'=>50));
             if(!is_array($users) || end($users)->guid == $offset)
                 break;
             $last_offset = $offset;
@@ -87,8 +87,12 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
                 $guids[] = $user->guid;
             }
             try{
-                $this->client->request($prepared->createBulkSubscriptions($subscriptions->getRows($guids)));
-                error_log("Imported subscriptions");
+               $bulk_subscriptions = $subscriptions->getRows($guids);
+	       foreach( $bulk_subscriptions as $subscriber => $us){
+		$us = array_splice($us, 0, 200);	
+		 $this->client->request($prepared->createBulkSubscriptions(array($subscriber=>$us)));
+                 error_log("Imported subscriptions");
+	      }
             } catch(\Exception $e){
                 error_log("Hmm.. slight issue, re-running ({$e->getMessage()})");
             }

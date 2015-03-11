@@ -19,7 +19,7 @@ class index extends core\page implements interfaces\page{
 			
 			switch($pages[1]){
 				case "join":
-					error_log('CLUSTER JOIN REQUEST FROM: '. $_REQUEST['uri']);
+					//error_log('CLUSTER JOIN REQUEST FROM: '. $_REQUEST['uri']);
 
 					//join the cluster
 					$cluster = new entities\cluster($pages[0]);

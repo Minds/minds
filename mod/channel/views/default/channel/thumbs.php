@@ -3,7 +3,7 @@ $user = elgg_extract('user', $vars);
 
 // get a list of the users thumbed up content
 
-$entities = \minds\plugin\thumbs\helpers\lists::getUserThumbs($user, 'object');
+$entities = \minds\plugin\thumbs\helpers\lists::getUserThumbs($user, 'object', array('limit'=>3));
 
 if(!$entities)
 	return false;

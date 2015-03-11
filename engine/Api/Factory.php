@@ -59,6 +59,7 @@ class Factory{
      * PAM checker
      */
     public static function pamCheck(){
+	error_log("checking pam");
         $user_pam = new \ElggPAM('user');
         $api_pam = new \ElggPAM('api'); 
         $user_auth_result = $user_pam->authenticate();
@@ -68,7 +69,7 @@ class Factory{
              error_log('failed authentication:: OAUTH via API');
              ob_end_clean();
              header('Content-type: application/json');
-             echo json_encode(array('error'=>'Sorry, you are not authenticated'));
+             echo json_encode(array('error'=>'Sorry, you are not authenticated', 'code'=>401));
              exit;
 
         }

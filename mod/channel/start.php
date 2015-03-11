@@ -42,8 +42,16 @@ class start extends \ElggPlugin{
            // '/api/v1/channel' =>  "\\minds\\plugin\\channel\\api\\v1\\channel"
 		));
         
-        Api\Routes::add('v1/channel', "\\minds\\plugin\\channel\\api\\v1\\channel");
-        
+	        Api\Routes::add('v1/channel', "\\minds\\plugin\\channel\\api\\v1\\channel");
+        	\Minds\Core\Events\Dispatcher::register('export:extender', 'all', function($event){
+		    $params = $event->getParameters();
+		    $export = array();
+		    if($params['entity']->ownerObj){
+			$export['ownerObj'] = $params['entity']->ownerObj;
+			$export['ownerObj']['guid'] = (string) $params['entity']->ownerObj['guid'];	
+		        $event->setResponse($export);
+	     	    }
+		});
 		
 		/**
 		 * Returns the url.. this should really be in models/entities now

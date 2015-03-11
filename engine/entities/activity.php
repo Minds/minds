@@ -124,10 +124,10 @@ class activity extends entity{
 		$export = parent::export();
 		if($this->entity_guid)
 			$export['entity_guid'] = (string) $this->entity_guid;
-        $export['impressions'] = $this->getImpressions();
-        $export['reminds'] = $this->getRemindCount();
+       		$export['impressions'] = $this->getImpressions();
+        	$export['reminds'] = $this->getRemindCount();
         
-        $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
+      		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 
 		return $export;
 	}

@@ -290,6 +290,7 @@ class newsfeed extends core\page implements interfaces\page{
 				//a remind is not a post, it is repost
 				$embeded = new entities\entity($pages[1]);
 				$embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+				elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
 				\Minds\Helpers\Counters::increment($embeded, 'remind'); 
                 $activity = new entities\activity();
 				switch($embeded->type){

@@ -613,7 +613,7 @@ function blog_sidebar($blog){
 		
 		//show more posts from this user
 		$owners_blogs = elgg_get_entities(array('type'=>'object', 'subtype'=>'blog', 'owner_guid'=>$blog->owner_guid, 'limit'=>3));
-		if (($key = array_search($blog, $owners_blogs)) !== false) {
+		if ($owners_blogs && ($key = array_search($blog, $owners_blogs)) !== false) {
 		    unset($owners_blogs[$key]);
 		}
 		

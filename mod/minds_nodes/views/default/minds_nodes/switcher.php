@@ -7,12 +7,13 @@
     <div class="nodes-list">
 	<ul>
     <?php
-    
+   	if($entities){ 
 	foreach ($entities as $entity) {
 	    
 	    echo "<li>";
 	    echo elgg_view('minds_nodes/switcher/node', ['entity' => $entity]);
 	    echo "</li>";
+	}
 	}
     
     ?>

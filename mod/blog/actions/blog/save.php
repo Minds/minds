@@ -180,7 +180,7 @@ if (!$error) {
 			}
 		
 		} else {
-			$activity_guids = minds\core\data\indexes::fetch("activity:entitylink:$entity->guid");
+			$activity_guids = Minds\Core\Data\indexes::fetch("activity:entitylink:$entity->guid");
 			foreach($activity_guids as $activity_guid){	
 				if($blog->access_id == 2){
 					$activity = new minds\entities\activity($activity_guid);

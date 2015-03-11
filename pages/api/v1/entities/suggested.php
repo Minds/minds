@@ -25,6 +25,8 @@ class suggested implements interfaces\api{
         $prepared = new Data\Neo4j\Prepared\Common();
         if(!isset($pages[1]))
             $pages[1] = $pages[0];
+	error_log("loading suggested entities");
+	$ts = microtime(true);
         switch($pages[1]){
             case 'video':
                 $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid));
@@ -80,7 +82,8 @@ class suggested implements interfaces\api{
         
 	   $options['guids'] = $guids;
 	   $entities = Core\entities::get($options);
-
+	$diff = microtime(true) - $ts;
+	error_log("loaded suggested entities in $diff");
         if($entities){
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->guid;
