@@ -46,7 +46,7 @@ class search extends core\page implements interfaces\page{
 			$query .= ' +subtype:"'.get_input('subtype') .'"';
 
 		$body['query']['query_string']['query'] = $query;
-		$body['query']['query_string']['fields'] = array('_all', 'name^5', 'title^8');
+		$body['query']['query_string']['fields'] = array('_all', 'name^5', 'title^8', 'username^16');
 			
 		$params['index'] = $CONFIG->cassandra->keyspace; //we use the keyspace as this is unique to each site. why complicate things?
 		

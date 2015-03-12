@@ -20,7 +20,8 @@ class user extends \ElggUser{
 
     public function isSubscriber($guid){
         $db = new Core\Data\Call('friendsof');
-        if(key($db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid))) == $guid)
+	$row = $db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid));
+        if($row && key($row) == $guid)
             return true;
         
         return false; 
@@ -28,7 +29,8 @@ class user extends \ElggUser{
 	
 	public function isSubscribed($guid){
 		$db = new Core\Data\Call('friends');
-		if(key($db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid))) == $guid)
+		$row = $db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid));
+		if($row && key($row) == $guid)
 			return true;
 		
 		return false;

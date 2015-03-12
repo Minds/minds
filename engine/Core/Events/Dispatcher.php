@@ -97,14 +97,6 @@ class Dispatcher {
 
         $calls = array_unique($calls);
 
-	if($event == 'create'){
-		error_log('create event called');
-	//	echo "<pre>";
-	//	print_r($calls);exit;
-		error_log(print_r($calls, true));
-
-	}
-
         // New event format, expects event object
     	$eventobj = new Event(array(
     	    'namespace' => $namespace,

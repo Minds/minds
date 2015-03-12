@@ -15,7 +15,13 @@ class Channel implements interfaces\BoostHandlerInterface{
     private $guid;
    
     public function __construct($options){
-       $this->guid = $options['direction'];
+	if(is_numeric($options['destination'])){
+	    $this->guid = $options['destination'];
+	} elseif(is_string($options['destination'])) {
+		error_log($options['destination']);
+	    $lookup = new Data\lookup();
+	    $this->guid = key($lookup->get($options['destination']));
+	}
     }
     
    /**
@@ -34,13 +40,15 @@ class Channel implements interfaces\BoostHandlerInterface{
         
         $db = new Data\Call('entities_by_time');
         $result = $db->insert("boost:channel:$this->guid:review", array($guid => $points));
-        
+
+
+	error_log("this is $this->guid");        
         //send a notification of boost offer
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to' => array($this->guid),
                 'object_guid' => $guid,
                 'notification_view' => 'boost_request',
-                'params' => array('points'=>$_POST['points']),
+                'params' => array('points'=>$points),
                 'points' => $points
                 ));
         

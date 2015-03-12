@@ -15,10 +15,20 @@ use Minds\Api\Factory;
 class boost implements interfaces\api{
 
     /**
-     * Not implemented
+     * Return impressions/points for a request
+     * @param array $pages
+     * API:: /v1/boost/:guid 
      */      
     public function get($pages){
         $response = array();
+
+	switch($pages[0]){
+	    case is_numeric($pages[0]):
+	        $entity = entities\Factory::build($pages[0]);
+		$response['entity'] = $entity->export();
+	    break;
+	}
+
         return Factory::response($response);
     }
     
