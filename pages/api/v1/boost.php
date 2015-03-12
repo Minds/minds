@@ -26,6 +26,13 @@ class boost implements interfaces\api{
 	    case is_numeric($pages[0]):
 	        $entity = entities\Factory::build($pages[0]);
 		$response['entity'] = $entity->export();
+		//going to assume this is a channel only review for now
+	        $boost_ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+		$guids = $boost_ctrl->getReviewQueue(1, $pages[0]);
+		if(!$guids){
+		    return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
+		}
+		$response['points'] = reset($guids);
 	    break;
 	}
 
@@ -79,9 +86,36 @@ class boost implements interfaces\api{
         
     }
     
-    public function put($pages){}
+    /**
+     * Called when a boost is to be accepted (assume channels only right now
+     * @param array $pages
+     */
+    public function put($pages){
+	//validate the points
+    	$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+	$guids = $ctrl->getReviewQueue(1, $pages[0]);
+	if(!$guids){
+            return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
+        }
+	$points = reset($guids);
+        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, $pages[0], "boost (remind)");
+	$accept = $ctrl->accept($pages[0], $points);
+	return Factory::response(array());
+    }
     
-    public function delete($pages){}
+    /**
+     * Called when a boost is rejected (assume channels only right now)
+     */
+    public function delete($pages){
+	$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+        $guids = $ctrl->getReviewQueue(1, $pages[0]);
+        if(!$guids){
+            return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
+        }
+        $points = reset($guids);
+	\Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, $pages[0], "boost refund");
+    	$ctrl->reject($pages[0]);
+    }
     
 }
         
