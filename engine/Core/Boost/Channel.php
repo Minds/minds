@@ -105,7 +105,8 @@ class Channel implements interfaces\BoostHandlerInterface{
                            $message = false;
                             if($embeded->owner_guid != elgg_get_logged_in_user_guid())
                                 $message = 'via <a href="'.$embeded->getOwnerEntity()->getURL() . '">'. $embeded->getOwnerEntity()->name . '</a>';
-                                $activity->setTitle($embeded->title)
+                                $activity->p2p_boosted = true;
+				$activity->setTitle($embeded->title)
                                 ->setBlurb(elgg_get_excerpt($embeded->description))
                                 ->setURL($embeded->getURL())
                                 ->setThumbnail($embeded->getIconUrl())

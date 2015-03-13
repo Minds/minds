@@ -34,6 +34,10 @@ class boost implements interfaces\api{
 		}
 		$response['points'] = reset($guids);
 	    break;
+	    case "rates":
+	        $response['rate'] = 1;
+		$response['cap'] = 1000;
+	    break;
 	}
 
         return Factory::response($response);
