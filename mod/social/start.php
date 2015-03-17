@@ -25,9 +25,11 @@ class start extends Components\Plugin{
 		 */
 		$path = "minds\\plugin\\social";
 		core\router::registerRoutes(array(
-				'/plugin/social/redirect' => "$path\\pages\\redirect",
-			));
-		
+		    '/plugin/social/redirect' => "$path\\pages\\redirect",
+	            '/plugin/social/authorize' => "$path\\pages\\authorize"
+                ));
+
+		Core\Events\Dispatcher::register('social', 'dispatch', array($this, 'dispatch'));		
 
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
 		\elgg_register_event_handler('create', 'activity', array($this, 'postHook'));
@@ -61,6 +63,19 @@ class start extends Components\Plugin{
 				}
 			} catch(\Exception $e){var_dump($e);exit;}
 		}
+	}
+
+	public function dispatch($event){
+		$params = $event->getParameters();
+		error_log('dispatching social');
+		error_log(print_r($params, true));
+		foreach($params['services'] as $service => $selected){
+			if($selected){
+				services\build::build($service)->post($params['data']);
+
+			}
+		}
+
 	}
 	
 	static public function userConfiguredServices($user = NULL){

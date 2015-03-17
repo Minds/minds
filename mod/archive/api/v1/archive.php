@@ -119,8 +119,21 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
                 ->save();
 
         }	
-
-         return Factory::response(array());
+error_log(print_r($_POST,true));
+	//forward to facebook etc
+	Core\Events\Dispatcher::trigger('social', 'dispatch', array(
+		'services' => array(
+			'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? true : false,
+			'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? true : false
+		),
+		'data' => array(
+			'message' => $entity->title,
+			'thumbnail_src'=>$entity->getIconUrl(),
+			'perma_url' => $entity->getURL()
+		)
+	));
+	\Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $entity->guid, 'upload');
+        return Factory::response(array());
         
     }
     

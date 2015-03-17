@@ -64,6 +64,8 @@ class comments implements interfaces\api{
             if(isset($subscribers[$comment->owner_guid]))
                 unset($subscribers[$comment->owner_guid]);
 
+	    \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
+
             \elgg_trigger_plugin_hook('notification', 'all', array(
                 'to' => $subscribers,
                 'object_guid'=>$pages[0],
