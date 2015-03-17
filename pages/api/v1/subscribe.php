@@ -98,7 +98,18 @@ class subscribe implements interfaces\api{
     
     public function put($pages){}
     
-    public function delete($pages){}
+    public function delete($pages){
+       $success = elgg_get_logged_in_user_entity()->unSubscribe($pages[0]);
+        $response = array('status'=>'success');
+         \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, -1, $pages[0], 'unsubscribed');
+        if(!$success){
+            $response = array(
+                'status' => 'error'
+            );
+        }
+
+        return Factory::response($response); 
+    }
     
 }
         

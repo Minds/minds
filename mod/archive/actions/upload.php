@@ -40,9 +40,11 @@ switch($mime_type){
 		    	echo strval($guid);
 			//	system_message(elgg_echo('archive:upload:success'));
 			$activity = new minds\entities\activity();
-			$activity->setTitle($entity->title)
-				->setUrl($entity->getURL())
-				->setThumbnail($entity->getIconURL())
+			$activity->setCustom('video', array(
+                			'thumbnail_src'=>$entity->getIconUrl(),
+             				'guid'=>$entity->guid))
+				->setTitle($entity->title)
+				->setBlurb($entity->description)
 				->setFromEntity($entity)
 				->save();
 

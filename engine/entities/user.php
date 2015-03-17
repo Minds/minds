@@ -9,14 +9,14 @@ namespace minds\entities;
 use Minds\Core;
 
 class user extends \ElggUser{
+
+    public function subscribe($guid, $data = array()){
+	return \Minds\Helpers\Subscriptions::subscribe($this->guid, $guid, $data);
+    }
 	
-	public function subscribe($guid, $data = array()){
-		return \Minds\Helpers\Subscriptions::subscribe($this->guid, $guid, $data);
-	}
-	
-	public function unSubscribe($guid){
-		
-	}
+    public function unSubscribe($guid){
+        return \Minds\Helpers\Subscriptions::unSubscribe($this->guid, $guid, $data);		
+    }
 
     public function isSubscriber($guid){
         $db = new Core\Data\Call('friendsof');

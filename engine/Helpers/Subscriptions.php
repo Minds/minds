@@ -47,6 +47,27 @@ class Subscriptions{
     }
     
     public static function unSubscribe($user, $from){
+
+	$return = false;
+        
+        $friends = new Core\Data\Call('friends');
+        $friendsof = new Core\Data\Call('friendsof');
+        
+        if($friends->removeAttributes($user, array($from)) && $friendsof->removeAttributes($from, array($user)))
+            $return =  true;
+        
+	//@todo make unsubscribe work with neo4j
+        //$prepared = new Core\Data\Neo4j\Prepared\Common();
+        //$return =  Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
+
+        //grab the newsfeed
+        $nf = new Core\Data\Call('entities_by_time');
+        $feed = $nf->getRow("activity:user:own:$from", array('limit'=>12));
+        if($feed)
+            $nf->removeAttributes("activity:network:$user", array_keys($feed));
+
+        \Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
+        return $return;
         
     }
     
