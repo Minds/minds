@@ -49,8 +49,8 @@ class channel implements interfaces\api{
             global $CONFIG;
             if(!$CONFIG->cdn_url)
                 $CONFIG->cdn_url = elgg_get_site_url();
-            else 
-                $CONFIG->cdn_url .= '/';
+           // else 
+                //$CONFIG->cdn_url .= '/';
             
            $response['channel']['carousels'][] = array(
                 'src'=> $carousel->ext_bg ?: $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"

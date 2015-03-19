@@ -646,7 +646,8 @@ function get_entity($guid, $type = 'object') {
 		$cached_entity = $memcache->load($guid);
 	}
 	
-	if ($cached_entity) {
+    if ($cached_entity) {
+        error_log("loaded $guid from memcached");
 		// @todo use ACL and cached entity access_id to determine if user can see it
 		return $cached_entity;
 	}

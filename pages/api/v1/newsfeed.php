@@ -127,6 +127,16 @@ class newsfeed implements interfaces\api{
                             ->setThumbnail(urldecode($_POST['thumbnail']));
                 }
                 if($guid = $activity->save()){
+                    Core\Events\Dispatcher::trigger('social', 'dispatch', array(
+                        'services' => array(
+                            'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? true : false,
+                            'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? true : false
+                        ),
+                        'data' => array(
+                            'message' => $_POST['message'],
+                            'perma_url'=> \elgg_normalize_url($_POST['url']) ?: NULL
+                        )
+                    ));
                     return Factory::response(array('guid'=>$guid));
                 } else {
                     return Factory::response(array('status'=>'failed', 'message'=>'could not save'));

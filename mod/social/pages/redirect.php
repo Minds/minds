@@ -16,7 +16,11 @@ class redirect extends core\page implements interfaces\page{
 		if(!isset($pages[0])){
 			return false;
 		}
-		
+
+        if($_REQUEST['access_token']){
+                        $_SESSION['user'] = core\session::getLoggedinUser(); //hate this hack..    
+        }
+
 		try{
 			$service = services\build::build($pages[0]);
 		}catch(\Exception $e){

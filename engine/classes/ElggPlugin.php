@@ -353,18 +353,14 @@ class ElggPlugin extends ElggEntity {
 	 */
 	public function getUserSetting($name, $user_guid = null) {
 
-		if ($user_guid) {
-			$user = get_entity($user_guid, 'user');
-		} else {
-			$user = elgg_get_logged_in_user_entity();
-		}
-
-		if (!($user instanceof ElggUser)) {
-			return false;
+		if (!$user_guid) {
+			$user_guid = elgg_get_logged_in_user_guid();
 		}
 
 		$name = elgg_namespace_plugin_private_setting('user_setting', $name, $this->getID());
-		return get_private_setting($user->guid,'user', $name);
+        $user = new \Minds\entities\user($user_guid);
+        return $user->$name;
+        //return get_private_setting($user_guid,'user', $name);
 	}
 
 	/**
@@ -452,7 +448,7 @@ class ElggPlugin extends ElggEntity {
 
 		//update session... @todo, make this work better. Probably put through User class
 		$_SESSION['user']->$name = $value;
-
+        
 		return set_private_setting($user->guid, 'entities',$name, $value);
 	}
 

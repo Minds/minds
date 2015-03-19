@@ -331,7 +331,7 @@ function get_all_private_settings($entity_guid, $entity_type) {
  * @link http://docs.elgg.org/DataModel/Entities/PrivateSettings
  */
 function set_private_setting($entity_guid, $entity_type, $name, $value) {
-	global $CONFIG;
+	global $CONFIG, $ENTITY_CACHE;
 
 	$db = new Minds\Core\Data\Call('entities');
 	$result = $db->insert($entity_guid, array(
@@ -341,7 +341,9 @@ function set_private_setting($entity_guid, $entity_type, $name, $value) {
 	if (function_exists('xcache_get')) {
                 $newentity_cache = new ElggXCache('new_entity_cache');
         	$newentity_cache->delete($entity_guid);
-	}
+    }
+
+    unset($ENTITY_CACHE[$entity_guid]); 
 	
 	return $result !== false;
 }

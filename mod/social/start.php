@@ -70,9 +70,10 @@ class start extends Components\Plugin{
 		error_log('dispatching social');
 		error_log(print_r($params, true));
 		foreach($params['services'] as $service => $selected){
-			if($selected){
-				services\build::build($service)->post($params['data']);
-
+            if($selected){
+                try{
+				    services\build::build($service)->post($params['data']);
+                }catch(\Exception $e){}
 			}
 		}
 

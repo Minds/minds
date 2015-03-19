@@ -36,11 +36,11 @@ class twitter extends core\base{
 
 	public function post($activity){
 		$message = $activity['message'];
-		if(strlen($message) > 140){
-			$message = substr($message,0,80) . '...';
-			$message .= elgg_get_site_url() . 'newsfeed/'.$activity['guid'];
+		if(strlen($message) > 115){
+			$message = substr($message,0,105) . '...';
 		}
-		if(!$message)
+        $message .= " " . $activity['perma_url']; 
+        if(!$message)
 			return true;
 		$tw = $this->tw();
 		$tw->setOAuthToken(\elgg_get_plugin_user_setting('twitter_access_token', core\session::getLoggedinUser()->guid, 'social'));

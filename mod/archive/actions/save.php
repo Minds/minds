@@ -39,12 +39,24 @@ if($entity->license == 'not-selected' && !elgg_is_xhr()){
 $activity_guids = Minds\Core\Data\indexes::fetch("activity:entitylink:$entity->guid");
 if($activity_guids){
 	foreach($activity_guids as $activity_guid){
-		$activity = new minds\entities\activity($activity_guid);
+        $activity = new minds\entities\activity($activity_guid);
+
+        if($entity->subtype == 'video'){
+           $activity->setCustom('video', array(
+                'thumbnail_src'=>$entity->getIconUrl(),
+                'guid'=>$entity->guid))
+                ->setTitle($entity->title)
+                ->setBlurb($entity->description)
+                ->setThumbnail("")
+                 ->save(); 
+
+        } else {
 		$activity->setTitle($entity->title)
 				->setUrl($entity->getURL())
 				->setThumbnail($entity->getIconURL())
 				->save(false);
-	}
+        }    
+    }
 }
 
 echo $entity->save(false);

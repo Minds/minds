@@ -13,6 +13,7 @@ use Facebook\FacebookRequest;
 use Facebook\GraphUser;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookRedirectLoginHelper;
+use Facebook\FacebookJavaScriptLoginHelper;
 use Facebook\Entities\AccessToken;
 
 class facebook extends core\base{
@@ -21,8 +22,8 @@ class facebook extends core\base{
 	
 	public function init(){		
 		FacebookSession::setDefaultApplication(elgg_get_plugin_setting('facebook_api_key','social'),elgg_get_plugin_setting('facebook_api_secret', 'social'));
-		$this->redirect_uri = elgg_get_site_url() . 'plugin/social/redirect/facebook';
-	}
+        $this->redirect_uri = elgg_get_site_url() . 'plugin/social/redirect/facebook';
+    }
 	
 	public function authorizeURL(){
 				
@@ -33,14 +34,18 @@ class facebook extends core\base{
 	
 	public function authorizeCallback(){
 		$helper = new FacebookRedirectLoginHelper($this->redirect_uri);
-		try {
+        try {
 		  $session = $helper->getSessionFromRedirect();
 		} catch(FacebookRequestException $e) {
 		  // When Facebook returns an error
-		} catch(\Exception $e) {
-		  // When validation fails or other local issues
+            error_log("FB ERROR:: " . $e->getMessage());
+        } catch(\Exception $e) {
+            // When validation fails or other local issues
+            error_log("FB ERROR:: " . $e->getMessage());
 		}
-		
+
+        error_log(print_r($session,true));
+
 		if ($session) {
 			$accessToken = $session->getAccessToken();
   			$at = $accessToken->extend();
@@ -59,14 +64,16 @@ class facebook extends core\base{
 	 * @param array $activity
 	 */
 	public function post($activity){
-		$at = new AccessToken(\elgg_get_plugin_user_setting('facebook_access_token', core\session::getLoggedinUser()->guid, 'social'));
+        //odd bug here. the whole plugin and user cache needs a rewrite to get around this..
+        invalidate_cache_for_entity(core\session::getLoggedinUser()->guid);
+        $at = new AccessToken(\elgg_get_plugin_user_setting('facebook_access_token', core\session::getLoggedinUser()->guid, 'social'));
 		$session = new FacebookSession($at);
 		
 		$data = array();
 		if(isset($activity['message']))
 			$data['message'] = $activity['message'];
 		
-		if(isset($activity['perma_url']) && $activity['perma_url'] != elgg_get_site_url())
+		if(isset($activity['perma_url']) && $activity['perma_url'] != elgg_get_site_url() && $activity['perma_url'] )
 			$data['link'] = $activity['perma_url'];
 			//$data['link'] = str_replace(parse_url($activity['perma_url'], PHP_URL_SCHEME), '', $activity['perma_url']);
 		
