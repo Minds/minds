@@ -13,7 +13,7 @@ use minds\entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class suggested implements interfaces\api{
+class suggested implements interfaces\api, interfaces\ApiIgnorePam{
 
     /**
      * Returns the entities
@@ -29,7 +29,7 @@ class suggested implements interfaces\api{
 	$ts = microtime(true);
         switch($pages[1]){
             case 'video':
-                $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid));
+                $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'video', $_GET['skip']));
                 
                 $rows = $result->getRows();
                 if(!$rows){
@@ -51,7 +51,7 @@ class suggested implements interfaces\api{
                 }
                 break;
             case 'image':
-                $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'image'));
+                $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'image', $_GET['skip']));
 
                 $rows = $result->getRows();
                 if(!$rows){
@@ -67,7 +67,7 @@ class suggested implements interfaces\api{
             case 'user':
             default:
                 
-                $result= Data\Client::build('Neo4j')->request($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser()));
+                $result= Data\Client::build('Neo4j')->request($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser(), $_GET['skip']));
                 
                 $rows = $result->getRows();
                 $guids = array();

@@ -13,7 +13,10 @@ class Export{
        
         foreach($array as $k => $v){
             if(is_numeric($v) || is_string($v)){
-                $return[$k] = (string) $v;
+                if(strlen((string) $v) < 12)
+                    $return[$k] = $v;
+                else
+                    $return[$k] = (string) $v;
             } elseif(is_bool($v)){
                 $return[$k] = $v;
             } elseif(is_object($v) || is_array($v)){

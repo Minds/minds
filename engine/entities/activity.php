@@ -39,6 +39,9 @@ class activity extends entity{
 	}
 
     public function delete(){
+        if($this->p2p_boosted)
+                return false;
+    
         $indexes = $this->getIndexKeys(true);
         $db = new \Minds\Core\Data\Call('entities');
         $res = $db->removeRow($this->guid);
@@ -116,7 +119,8 @@ class activity extends entity{
 				'thumbs:up:count',
 				'thumbs:up:user_guids',
                 'thumbs:down:count',
-				'thumbs:down:user_guids'
+                'thumbs:down:user_guids',
+                'p2p_boosted'
 			));
 	}
 

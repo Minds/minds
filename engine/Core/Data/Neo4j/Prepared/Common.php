@@ -116,19 +116,22 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * Return subscriptions of subscriptions
      * @param User $user
+     * @param int $skip default 0
      * @return $this
      */
-    public function getSubscriptionsOfSubscriptions(Entities\User $user){
+    public function getSubscriptionsOfSubscriptions(Entities\User $user, $skip = 0){
         $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]-(fof:User) ".
                             "WHERE " . 
 			                 "NOT (user)-[:ACTED]->(fof) " .
 			                 "AND NOT (fof.guid = user.guid) " . 
                             "RETURN fof ".
                             //"ORDER BY COUNT(*) DESC ".
+                            "SKIP {skip} " . 
                             "LIMIT {limit}";
         $this->values = array(
                             'guid' => (string) $user->guid,
-			                'limit' => 16
+                            'limit' => 16,
+                            'skip' => (int) $skip
                             );
         return $this;
     }
@@ -192,12 +195,13 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * Return suggested content, based on 
      */
-    public function getSuggestedObjects($user_guid, $subtype = 'video'){
+    public function getSuggestedObjects($user_guid, $subtype = 'video', $skip = 0){
         $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*..2]-(object:$subtype) " .
                             "WHERE NOT a-[:ACTED]->(object) " .
-                            "RETURN object LIMIT 16";
+                            "RETURN object SKIP {skip} LIMIT 16 ";
         $this->values = array(
-                            'user_guid'=> (string) $user_guid
+            'user_guid'=> (string) $user_guid,
+             'skip' => (int) $skip
                             );
         return $this;
     }
@@ -225,7 +229,7 @@ class Common implements Interfaces\PreparedInterface{
     public function createVoteUP($guid, $subtype, $user_guid = NULL){
         if(!$user_guid)
             $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
-        
+        error_log("NEO4j vote up for $guid :: $subtype :: $user_guid");
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(object:$subtype {guid: {object_guid}}) " . 
                             "MERGE (user)-[:UP]->(object) MERGE (user)-[:ACTED]->(object)";
@@ -246,6 +250,7 @@ class Common implements Interfaces\PreparedInterface{
     public function createVoteDOWN($guid, $subtype, $user_guid = NULL){
         if(!$user_guid)
             $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
+        error_log("NEO4j vote down for $guid :: $subtype :: $user_guid");
 
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(object:$subtype {guid: {object_guid}}) " .
