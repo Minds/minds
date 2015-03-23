@@ -222,7 +222,7 @@ class start extends \ElggPlugin{
                     $message = \Minds\Core\session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " impressions";
                     break;
                 case "boost_request":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " has requests a boost for " . $params['points'] . " points";
+                    $message = \Minds\Core\session::getLoggedinUser()->name . " has requested a boost for " . $params['points'] . " points";
                     break;  
                 case "boost_accepted":
                     $message = $params['impressions'] . " impressions for " . $params['title'] . ' were accepted';

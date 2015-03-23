@@ -155,6 +155,7 @@ padding: 0 4px;
 .subscribe-button > a{
 	padding: 8px 16px;
 	float:left;
+    width:100%;
 }
 .subscribe-button span{
 	color:#FFF;

@@ -77,7 +77,6 @@ class start extends \minds\Components\Plugin{
 	}
 	
 	public function hook($hook, $type, $entity, $params = array()){
-		error_log("create hook fired ");
 		if($entity && $entity->access_id == 2){
 			try{
 				$this->createDocument($entity);

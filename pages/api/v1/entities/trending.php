@@ -25,6 +25,21 @@ class trending implements interfaces\api{
         if(isset($pages[1]) && $pages[1] == 'video')
             $pages[1] = 'kaltura_video';
 
+        switch($pages[1]){
+            case 'image':
+                $prepared = new Core\Data\Neo4j\Prepared\Common();
+                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('image'));
+                $rows = $result->getRows();
+                
+                $guids = array();
+                foreach($rows['object'] as $object){
+                    $guids[] = $object['guid'];
+                } 
+                $entities = core\entities::get(array('guids'=>$guids));       
+                break;
+        }
+
+        if(!$entities){
         //the allowed, plus default, options
         $options = array(
             'type' => isset($pages[0]) ? $pages[0] : 'object',
@@ -47,7 +62,8 @@ class trending implements interfaces\api{
         }
     	$options['guids'] = $guids;
     	$entities = core\entities::get($options);
-        
+        }
+
         if($entities){
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = isset($_GET['load-next']) ? count($entities) + $_GET['load-next'] : count($entities);

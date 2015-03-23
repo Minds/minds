@@ -92,6 +92,7 @@ class Common implements Interfaces\PreparedInterface{
      * @return $this
      */
     public function createPass($user, $to){
+       error_log("NEO4j PASS Created for $user :: $to");
 	   $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(to {guid: {subscriber_guid}}) " . 
                             "MERGE (user)-[:PASS]->(to) MERGE (user)-[:ACTED]->(to)";
@@ -174,7 +175,7 @@ class Common implements Interfaces\PreparedInterface{
      */
     public function createObject(\ElggObject $object){
         $this->template = "MERGE (object:$object->subtype { guid: {guid} })";
-        $this->values = array('guid'=>$object->guid);
+        $this->values = array('guid'=>(string) $object->guid);
         return $this;
     }
     
@@ -184,7 +185,7 @@ class Common implements Interfaces\PreparedInterface{
     public function createBulkObjects(array $objects = array(), $subtype="video"){
         foreach($objects as $object){
            $exp[] = array(
-                        'guid'=>$object->guid,
+                        'guid'=> $object->guid,
                         'subtype'=>$object->subtype
                         );
         }
@@ -210,6 +211,7 @@ class Common implements Interfaces\PreparedInterface{
      * To be used only when no suggested content is found..
      */
     public function getObjects($user_guid, $subtype='video'){
+        error_log("getting $user_guid $subtype");
         $this->template = "MATCH (object:$subtype), (user:User {guid:{user_guid}}) " .
                             "WHERE NOT user-[:ACTED]->(object) " .
                             "RETURN object LIMIT 12";
@@ -218,7 +220,15 @@ class Common implements Interfaces\PreparedInterface{
                             );
         return $this;
     }
-    
+
+    /**
+     * Get trending objects
+     */
+    public function getTrendingObjects($subtype='video'){
+        $this->template = "MATCH (object:$subtype)-[r:UP]-() RETURN object, count(r) as c ORDER BY c DESC LIMIT 12";
+        return $this;
+    }
+
     /**
      * Create a vote on an object
      * @param int $guid

@@ -187,7 +187,7 @@ class newsfeed extends core\page implements interfaces\page{
 			'type' => 'activity',
 			'limit' => get_input('limit', 5)
 		), $options));
-		if(count($entities) == 1){
+		if(is_array($entities) && count($entities) == 1){
             $activity = reset($entities);
              \Minds\plugin\social\start::setMetatags('og:type', 'article');
             \Minds\plugin\social\start::setMetatags('og:title', $activity->title ?: $activity->message);
@@ -287,40 +287,41 @@ class newsfeed extends core\page implements interfaces\page{
 				$this->forward(REFERRER);
 				exit;
 			case 'remind':
-				//a remind is not a post, it is repost
-				$embeded = new entities\entity($pages[1]);
-				$embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
-				elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
-				\Minds\Helpers\Counters::increment($embeded, 'remind'); 
+                $embeded = new entities\entity($pages[1]);
+                $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+                \Minds\Helpers\Counters::increment($pages[1], 'remind');
+                elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
+                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
+                \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
                 $activity = new entities\activity();
-				switch($embeded->type){
-					case 'activity':
-						if($embeded->remind_object)
-							$activity->setRemind($embeded->remind_object)->save();
-						else
-							$activity->setRemind($embeded->export())->save();
-						break;
-					default:
-						/**
-						 * The following are actually treated as embeded posts. 
-						 */
-						switch($embeded->subtype){
-							case 'blog':
-								$message = false;
-								if($embeded->owner_guid != elgg_get_logged_in_user_guid())
-									$message = 'via <a href="'.$embeded->getOwnerEntity()->getURL() . '">'. $embeded->getOwnerEntity()->name . '</a>';
-								$activity->setTitle($embeded->title)
-									->setBlurb(elgg_get_excerpt($embeded->description))
-									->setURL($embeded->getURL())
-									->setThumbnail($embeded->getIconUrl())
-									->setMessage($message)
-									->setFromEntity($embeded)
-									->save();
-							break;
-						}
-						
-				}
-			case 'api':
+                switch($embeded->type){
+                    case 'activity':
+                        if($embeded->remind_object)
+                            $activity->setRemind($embeded->remind_object)->save();
+                        else
+                            $activity->setRemind($embeded->export())->save();
+                     break;
+                     default:
+                         /**
+                           * The following are actually treated as embeded posts.
+                           */
+                           switch($embeded->subtype){
+                               case 'blog':
+                                   $message = false;
+                                    if($embeded->owner_guid != elgg_get_logged_in_user_guid())
+                                        $message = 'via @' . $embeded->ownerObj['username'];
+                                        $activity->setTitle($embeded->title)
+                                        ->setBlurb(elgg_get_excerpt($embeded->description))
+                                        ->setURL($embeded->getURL())
+                                        ->setThumbnail($embeded->getIconUrl())
+                                        ->setMessage($message)
+                                        ->setFromEntity($embeded)
+                                        ->save();
+                                    break;
+                            }
+                }
+            break; 
+            case 'api':
 				error_log('Answering api activity request');	
 				if(!isset($pages[1])){
 					error_log('feed guid not supplied');

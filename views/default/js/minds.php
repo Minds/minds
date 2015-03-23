@@ -98,8 +98,9 @@
 		$(window).on("load resize", function(){
 			setTimeout(function(){
 
+                if( $('.thumbnail-wrapper img').height() > 360){
 				$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
-
+                }
 
 				/*var img = $('.carousel-inner > .item > img');
 				var img_height = img.height();

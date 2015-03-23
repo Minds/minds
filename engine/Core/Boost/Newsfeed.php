@@ -131,7 +131,7 @@ class Newsfeed implements BoostHandlerInterface{
                 continue; //max count met
             }
             array_push($mem_log, $boost);
-            $cacher->set(Core\session::getLoggedinUser()->guid . ":seenboosts", $mem_log);
+            $cacher->set(Core\session::getLoggedinUser()->guid . ":seenboosts", $mem_log, (12 * 3600));
             return $boost;
         }
     }

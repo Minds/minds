@@ -33,6 +33,9 @@ class conversations implements interfaces\api{
             if(isset($guids[get_input('start')])){
                 unset($guids[get_input('start')]);
             }
+            if(isset($guids[get_input('offset')])){
+                unset($guids[get_input('offset')]);
+            }
 
             if($guids){
  

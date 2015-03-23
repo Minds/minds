@@ -55,7 +55,13 @@ if ($pagination && $count) {
 	if ($data_options) {
 		$ajaxify = true;
 	}
-	$nav .= elgg_view('navigation/pagination', array_merge(array(
+    
+    $next = "";
+    if($items){
+        $next = elgg_get_context() == 'main' ? end($items)->featured_id : end($items)->guid ?: end($items)->id;
+    }
+    $next = end($items)->guid;
+    $nav .= elgg_view('navigation/pagination', array_merge(array(
         	'baseurl' => $base_url,
 		//'offset' => $offset,
 		//'count' => $count,
@@ -64,7 +70,7 @@ if ($pagination && $count) {
 		'ajaxify' => $ajaxify,
 		'list_id' => $list_id,
 		'last_guid' => $last_guid,
-		'load-next' => elgg_get_context() == 'main' ? end($items)->featured_id : end($items)->guid ?: end($items)->id
+		'load-next' => $next 
 	), $vars));
 }
 

@@ -41,6 +41,7 @@ class Subscriptions{
         if($feed)
             $nf->insert("activity:network:$user_guid", $feed);
 
+        
         \Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
         Events\Dispatcher::trigger('subscribe', 'all', array('user_guid'=>$user_guid, 'to_guid'=>$to_guid));        
         return $return;
@@ -52,9 +53,10 @@ class Subscriptions{
         
         $friends = new Core\Data\Call('friends');
         $friendsof = new Core\Data\Call('friendsof');
-        
-        if($friends->removeAttributes($user, array($from)) && $friendsof->removeAttributes($from, array($user)))
-            $return =  true;
+        error_log("$user is unsubscribing from $from"); 
+        $friends->removeAttributes($user, array($from));
+        $friendsof->removeAttributes($from, array($user));
+        $return = true;
         
 	//@todo make unsubscribe work with neo4j
         //$prepared = new Core\Data\Neo4j\Prepared\Common();

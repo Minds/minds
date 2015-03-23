@@ -9,7 +9,7 @@
 		"abeautifulsite/jquery-minicolors": "dev-master@dev",
 		"kramnorth/cinemr-php-sdk": "dev-master@dev",
 		"minds/minds-php-sdk": "dev-master@dev",
-		"paypal/rest-api-sdk-php": "1.0.*",
+		"paypal/rest-api-sdk-php": "1.2.*",
 		"facebook/php-sdk-v4": "4.0.*",
   		"ivaynberg/select2":"3.5.2",
 		"tijsverkoyen/twitteroauth": "dev-master@dev",
