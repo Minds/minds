@@ -98,7 +98,7 @@
 		$(window).on("load resize", function(){
 			setTimeout(function(){
 
-                if( $('.thumbnail-wrapper img').height() > 360){
+                if( $('.thumbnail-wrapper img').height() / 2 > 360){
 				$('.thumbnail-wrapper img.thumbnail').css('margin-top', ($('.thumbnail-wrapper').height() - $('.thumbnail-wrapper img').height()) /2); 
                 }
 

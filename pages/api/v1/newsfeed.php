@@ -82,7 +82,7 @@ class newsfeed implements interfaces\api{
             case 'remind':
                 $embeded = new entities\entity($pages[1]);
                 $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
-                \Minds\Helpers\Counters::increment($pages[1], 'remind');
+                \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
                 \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
                 \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');

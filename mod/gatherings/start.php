@@ -131,14 +131,24 @@ class start extends Components\Plugin{
 	}
 
 	static public function getConversationsList($offset= ""){
-		$conversation_guids = core\Data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array('limit'=>50, 'offset'=>$offset));
+        //@todo review for scalability. currently for pagination we need to load all conversation guids/time 
+        $conversation_guids = core\Data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array('limit'=>10000));
 		if($conversation_guids){
 			$conversations = array();
 			
             arsort($conversation_guids);
-			
-			foreach($conversation_guids as $user_guid => $data){
-			    if($user_guid == $offset){
+            $i = 0;
+            $ready = false;
+            foreach($conversation_guids as $user_guid => $data){
+                if(!$ready && $offset){
+                    if($user_guid == $offset)
+                        $ready = true;
+                    continue;
+                }
+                if($i++ > 12 && !$offset)
+                    continue;
+
+                if($user_guid == $offset){
                     unset($conversation_guids[$user_guid]);
                     continue;
                 }

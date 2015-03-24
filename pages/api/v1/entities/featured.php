@@ -23,7 +23,7 @@ class featured implements interfaces\api{
     public function get($pages){
 
         if(isset($pages[1]) && $pages[1] == 'video')
-            $pages[1] = 'kaltura_video';
+            $pages[1] = 'video';
         
         //the allowed, plus default, options
         $options = array(

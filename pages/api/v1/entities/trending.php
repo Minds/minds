@@ -37,6 +37,18 @@ class trending implements interfaces\api{
                 } 
                 $entities = core\entities::get(array('guids'=>$guids));       
                 break;
+
+            case 'video':
+                $prepared = new Core\Data\Neo4j\Prepared\Common();
+                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('video'));
+                $rows = $result->getRows();
+                
+                $guids = array();
+                foreach($rows['object'] as $object){
+                    $guids[] = $object['guid'];
+                } 
+                $entities = core\entities::get(array('guids'=>$guids));       
+                break;
         }
 
         if(!$entities){
