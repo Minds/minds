@@ -12,7 +12,7 @@ $icon = elgg_view('output/img', array(
 
 global $CONFIG;
 $banner = elgg_view('output/img', array(
-    'src'=>$CONFIG->cdn_url. "groups/banner/$group->guid",
+    'src'=> elgg_get_site_url() . "groups/banner/$group->guid",
     'class'=>'hovercard-banner-img'
 ));
 ?>
@@ -32,12 +32,12 @@ $banner = elgg_view('output/img', array(
             <div class="hovercard-icon">
                 <?= $icon ?>
             </div>
-            <h3><?=$group->name?></h3>
+            <h3><?=strlen($group->name) < 28 ? $group->name : substr($group->name, 0, 28) . '...'?></h3>
         </div>
     </a>
     <div class="buttons" style="margin-top:14px; margin-left:128px">
         <?php if(!$group->isMember()){ ?>
-            <a href="<?= elgg_get_site_url() . "action/groups/join?group_guid={$group->getGUID()}" ?>" class="elgg-button elgg-button-action">
+            <a href="<?= elgg_add_action_tokens_to_url(elgg_get_site_url() . "action/groups/join?group_guid={$group->getGUID()}") ?>" class="elgg-button elgg-button-action">
                 Join
             </a>
         <?php } else { ?>

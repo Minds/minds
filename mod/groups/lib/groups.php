@@ -203,6 +203,7 @@ function groups_handle_mine_page() {
 		'full_view' => false,
 		'relationship_guid' => $page_owner->guid,
 		'relationship' => 'member',
+		'limit'=>12,
 		'offset'=>get_input('offset',''),
 		'list_class'=>'minds-group-list',
         'masonry'=>false
@@ -577,6 +578,12 @@ function groups_register_profile_buttons($group) {
 		}
 	}
 
+	if($group->canEdit()){
+		$url = elgg_get_site_url() . "action/minds/feature?guid={$group->getGUID()}";
+                $url = elgg_add_action_tokens_to_url($url);
+		$actions[$url] = $group->featured_id ? 'un-feature' : 'feature';
+	}
+
 	if ($actions) {
 		foreach ($actions as $url => $text) {
 			elgg_register_menu_item('title', array(
@@ -587,6 +594,7 @@ function groups_register_profile_buttons($group) {
 			));
 		}
 	}
+
 }
 
 /**
