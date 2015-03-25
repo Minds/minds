@@ -80,12 +80,21 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
             return Factory::response(array('status'=>'error', 'message'=>'not found'));
         }
         
-	   $options['guids'] = $guids;
-	   $entities = Core\entities::get($options);
-	$diff = microtime(true) - $ts;
-	error_log("loaded suggested entities in $diff");
+	    $options['guids'] = $guids;
+ 
+        $entities = Core\entities::get($options);
+        $boost_guid = Core\Boost\Factory::build("Suggested")->getBoost();
+        if($boost_guid){
+            $boost_guid = $boost_guid;
+            $boost_object = entities\Factory::build($boost_guid);
+            $boost_object->boosted = true;
+            array_splice($entities, 2, 0, array($boost_guid => $boost_object));
+        }
+
+        $diff = microtime(true) - $ts;
+    	error_log("loaded suggested entities in $diff");
         if($entities){
-            $response['entities'] = factory::exportable($entities);
+            $response['entities'] = factory::exportable($entities, array('boosted'));
             $response['load-next'] = (string) end($entities)->guid;
             $response['load-previous'] = (string) key($entities)->guid;
         }

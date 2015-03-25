@@ -7,7 +7,7 @@ $user = get_user_by_username($username);
 $filter = get_input("filter", "all");
 
 $page_owner = get_user_by_username($username);
-if(!$pages_owner){
+if(!$page_owner){
 return false;
 }
 elgg_set_page_owner_guid($page_owner->getGUID());

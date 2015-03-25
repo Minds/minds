@@ -56,7 +56,7 @@ class boost extends core\page implements interfaces\page{
                 //refund the point
                 \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $_POST['impressions'], NULL, "boost refund");
             }
-            $this->forward('/boost/admin');
+            $this->forward('/boost/admin?type='.$type);
             
         }
 	}

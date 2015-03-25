@@ -1341,3 +1341,11 @@ div.register-popup {
 .global-sidebar .elgg-menu-page a{
 	border:0;
 }
+
+
+.boost li:hover .elgg-menu{
+    display:none;
+}
+.boost li{
+    width:300px !important;
+}
