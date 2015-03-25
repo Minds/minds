@@ -8,7 +8,7 @@ $items = $vars['items'];
 if(!$items){
 	if(elgg_get_page_owner_entity()->canEdit()){
 		$options = array(
-			'title' => 'Click here to customise your carousel.',
+			'title' => 'Click here to customise your banners.',
 			'href' => elgg_get_page_owner_entity()->getURL() . '/carousel',
 			'ext_bg' => 'https://d3ae0shxev0cb7.cloudfront.net//carousel/background/295332731833815040/1409532063/138117/fat'
 		);

@@ -159,7 +159,8 @@ function get_users_membership($user_guid) {
 		'relationship' => 'member',
 		'relationship_guid' => $user_guid,
 		'inverse_relationship' => FALSE,
-		'type'=>'group'
+		'type'=>'group',
+		'limit'=>100
 	);
 	return elgg_get_entities_from_relationship($options);
 }

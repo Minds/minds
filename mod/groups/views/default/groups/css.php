@@ -22,6 +22,10 @@
 .minds-group-list > li .minds-hovercard{
     height:184px;
 }
+
+.minds-group-list > li .hovercard-container h3{
+	font-size:13px;
+}
 .group-profile{
 	margin:auto;
 	width:990px;

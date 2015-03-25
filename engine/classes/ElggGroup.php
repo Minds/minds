@@ -58,7 +58,7 @@ class ElggGroup extends ElggEntity
 
 			// Is this is an ElggEntity but not an ElggGroup = ERROR!
 			} else if ($guid instanceof ElggEntity) {
-				throw new InvalidParameterException(elgg_echo('InvalidParameterException:NonElggGroup'));
+				//throw new InvalidParameterException(elgg_echo('InvalidParameterException:NonElggGroup'));
 
 			// Is it a GUID
 			} else if (is_numeric($guid)) {
@@ -370,7 +370,8 @@ class ElggGroup extends ElggEntity
 		return array_merge(parent::getExportableValues(), array(
 			'name',
 			'description',
-			'icontime'
+			'icontime',
+			'banner'
 		));
 	}
 
