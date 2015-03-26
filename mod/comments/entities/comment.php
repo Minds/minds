@@ -43,7 +43,8 @@ class comment extends entities\entity{
 	public function getURL(){
 		
 		$entity = \Minds\Core\entities::build(new entities\entity($this->parent_guid));
-		return $entity->getURL();
+        if($entity)
+            return $entity->getURL();
 		
 	}
 

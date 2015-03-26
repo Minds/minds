@@ -139,7 +139,7 @@ class channel extends core\page implements interfaces\page{
 						$users[] = new \minds\entities\user(json_decode($subscriber,true));
 					}
 				}
-				$content .= elgg_view_entity_list($users,array('list_class'=>'x2', 'masonry'=>false));
+				$content .= elgg_view_entity_list($users,array('list_class'=>'x2 users-list', 'masonry'=>false));
 				break;
 			case 'subscriptions':
 				$db = new \Minds\Core\Data\Call('friends');
@@ -156,7 +156,7 @@ class channel extends core\page implements interfaces\page{
 						$users[] = new \minds\entities\user(json_decode($subscription,true));
 					}
 				}
-				$content .= elgg_view_entity_list($users,array('list_class'=>'x2', 'masonry'=>false));
+				$content .= elgg_view_entity_list($users,array('list_class'=>'x2 users-list', 'masonry'=>false));
 				break;
 			case 'carousel':
 				$content = elgg_view_form('carousel/batch', array('enctype'=>'multipart/form-data'), array('items'=>$carousels));

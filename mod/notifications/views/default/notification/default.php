@@ -32,7 +32,9 @@ $metadata = elgg_view_menu('entity', array(
 ));
 
 $body = elgg_view('notifications/types/' . $entity->notification_view, array('entity'=>$entity));
-
+if(!$body){
+    $body = "<i>This notification view is not available on the desktop yet</i>";
+}
 if($entity->notification_view != 'feature')
 $owner_icon = elgg_view_entity_icon($owner, 'small');
 

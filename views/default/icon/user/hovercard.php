@@ -29,7 +29,7 @@ $banner = elgg_view('output/img', array(
 			<div class="hovercard-icon">
 				<?= $icon ?>
 			</div>
-			<h3><?=$user->name?></h3>
+            <h3><?=strlen($user->name) < 23 ? $user->name : substr($user->name, 0, 23) . '...'?></h3>
 		</div>
 	</a>
 	<div class="overview">

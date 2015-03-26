@@ -328,7 +328,7 @@ padding: 0 4px;
 	width:1000px;
 	margin:auto;
 }
-.channels .users-list > li{
+.channels .users-list > li, .channel .users-list > li{
 	float: left;
 	margin: 8px;
 	padding:0;

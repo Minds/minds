@@ -82,7 +82,10 @@ function elgg_check_access($entity, $user = null){
 	
 	if(elgg_trigger_plugin_hook('acl', $entity->type, array('entity'=>$entity, 'user'=>$user)))
 		return true;
-	
+
+	if(get_input('debugm')){
+		var_dump('oops', $access_array); exit;
+	}	
 	return false;
 
 }
