@@ -64,7 +64,9 @@ class Counters{
                 $prepared[] = $query->update($entity, $metric, $value)->build();
             } elseif($entity->guid) {
             
-		    $prepared[] = $query->update($entity->guid, $metric, $value)->build();
+		        $prepared[] = $query->update($entity->guid, $metric, $value)->build();
+                if($entity->remind_object)
+                    $prepared[] = $query->update($entity->remind_object['guid'], $metric, $value)->build();
             }
         }
         $client->batchRequest($prepared);

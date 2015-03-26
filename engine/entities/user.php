@@ -26,7 +26,7 @@ class user extends \ElggUser{
         if($cacher->get("$this->guid:isSubscriber:$guid") === FALSE)
             return false;
 
-        $return = false;
+        $return = 0;
         $db = new Core\Data\Call('friendsof');
     	$row = $db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid));
         if($row && key($row) == $guid)
@@ -42,14 +42,14 @@ class user extends \ElggUser{
 
         if($cacher->get("$this->guid:isSubscribed:$guid"))
             return true;
-        if($cacher->get("$this->guid:isSubscribed:$guid") === FALSE)
-            return false;
+        if($cacher->get("$this->guid:isSubscribed:$guid") === 0)
+           return false;
         
-        $return = false;
+        $return = 0;
         $db = new Core\Data\Call('friends');
 		$row = $db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid));
 		if($row && key($row) == $guid)
-			return $return;
+			$return = true;
 		
         $cacher->set("$this->guid:isSubscribed:$guid", $return);
 

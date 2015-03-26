@@ -185,7 +185,8 @@ class newsfeed extends core\page implements interfaces\page{
 	
 		$entities = core\entities::get(array_merge(array(
 			'type' => 'activity',
-			'limit' => get_input('limit', 5)
+            'limit' => get_input('limit', 5),
+            'offset' => get_input('offset','')
 		), $options));
 		if(is_array($entities) && count($entities) == 1){
             $activity = reset($entities);
