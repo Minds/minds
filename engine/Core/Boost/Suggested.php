@@ -46,6 +46,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
      * @return boolean
      */
     public function accept($entity, $impressions){
+        $cacher = Core\Data\cache\factory::build();
         if(is_object($entity)){
             $guid = $entity->guid;
         } else {
@@ -54,6 +55,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
         $db = new Data\Call('entities_by_time');
         $accept = $db->insert("boost:suggested", array($guid => $impressions));
         if($accept){
+            $cahcer->destroy("boost:suggest");
             //remove from review
             $db->removeAttributes("boost:suggested:review", array($guid));
             //clear the counter for boost_impressions
@@ -101,17 +103,22 @@ class Suggested implements interfaces\BoostHandlerInterface{
      * @return array
      */
     public function getBoost($offset = ""){
+        $cacher = Core\Data\cache\factory::build();
         $db = new Data\Call('entities_by_time');
-          
-        $boosts = $db->getRow("boost:suggested", array('limit'=>15));
+
+        $boosts = $cacher->get("boost:suggested");
+        if(!$boosts){
+            $boosts = $db->getRow("boost:suggested", array('limit'=>15));
+            $cacher->set("boost:suggested", $boosts);
+        }    
         if(!$boosts){
             return null;
         }
-
+        
         $prepared = new Data\Neo4j\Prepared\Common();
         $result= Data\Client::build('Neo4j')->request($prepared->getActed(array_keys($boosts)));
         $rows = $result->getRows();
-
+        
         foreach($boosts as $boost => $impressions){
             $seen = false;
             foreach($rows['items'] as $item){

@@ -19,21 +19,41 @@ class user extends \ElggUser{
     }
 
     public function isSubscriber($guid){
-        $db = new Core\Data\Call('friendsof');
-	$row = $db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid));
-        if($row && key($row) == $guid)
+        $cacher = Core\Data\cache\factory::build();
+
+        if($cacher->get("$this->guid:isSubscriber:$guid"))
             return true;
-        
-        return false; 
+        if($cacher->get("$this->guid:isSubscriber:$guid") === FALSE)
+            return false;
+
+        $return = false;
+        $db = new Core\Data\Call('friendsof');
+    	$row = $db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid));
+        if($row && key($row) == $guid)
+            $return = true;
+
+        $cacher->set("$this->guid:isSubscriber:$guid", $return);
+
+        return $return; 
     }
 	
 	public function isSubscribed($guid){
-		$db = new Core\Data\Call('friends');
+        $cacher = Core\Data\cache\factory::build();
+
+        if($cacher->get("$this->guid:isSubscribed:$guid"))
+            return true;
+        if($cacher->get("$this->guid:isSubscribed:$guid") === FALSE)
+            return false;
+        
+        $return = false;
+        $db = new Core\Data\Call('friends');
 		$row = $db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid));
 		if($row && key($row) == $guid)
-			return true;
+			return $return;
 		
-		return false;
+        $cacher->set("$this->guid:isSubscribed:$guid", $return);
+
+		return $return ;
 	}
 
 	public function getSubscribersCount(){
