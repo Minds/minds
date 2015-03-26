@@ -101,22 +101,28 @@ class Suggested implements interfaces\BoostHandlerInterface{
      * @return array
      */
     public function getBoost($offset = ""){
-        $cacher = Core\Data\cache\factory::build();
         $db = new Data\Call('entities_by_time');
-        $mem_log =  $cacher->get(Core\session::getLoggedinUser()->guid . ":seenboosts") ?: array();
           
         $boosts = $db->getRow("boost:suggested", array('limit'=>15));
         if(!$boosts){
             return null;
         }
+
+        $prepared = new Data\Neo4j\Prepared\Common();
+        $result= Data\Client::build('Neo4j')->request($prepared->getActed(array_keys($boosts)));
+        $rows = $result->getRows();
+
         foreach($boosts as $boost => $impressions){
-            if(in_array($boost, $mem_log)){
-                continue; // already seen
+            $seen = false;
+            foreach($rows['items'] as $item){
+                if($item['guid'] == $boost)
+                       $seen = true; 
             }
-            //increment impression counter
-            Helpers\Counters::increment($boost, "boost_impressions", 1);
+            if($seen)
+                continue;
+
             //get the current impressions count for this boost
-            $count = Helpers\Counters::get($boost, "boost_impressions", false); 
+            $count = Helpers\Counters::get($boost, "boost_swipes", false); 
             if($count > $impressions){
                 //remove from boost queue
                 $db->removeAttributes("boost:suggested", array($boost));
@@ -131,8 +137,6 @@ class Suggested implements interfaces\BoostHandlerInterface{
                 ));
                 continue; //max count met
             }
-            array_push($mem_log, $boost);
-            $cacher->set(Core\session::getLoggedinUser()->guid . ":seenboosts", $mem_log);
             return $boost;
         }
     }

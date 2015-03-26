@@ -9,6 +9,7 @@ namespace minds\pages\api\v1\entities;
 
 use Minds\Core;
 use Minds\Core\Data;
+use Minds\Helpers;
 use minds\entities;
 use minds\interfaces;
 use Minds\Api\Factory;
@@ -110,6 +111,10 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
                 Core\Data\Client::build('Neo4j')->request($prepared->createPass(Core\session::getLoggedinUser()->guid, $pages[1]));
                 \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $pages[1], 'pass');
+                break;
+            case 'acted':
+                Helpers\Counters::increment($boost, "boost_swipes", 1);
+                break;
         }
         
     }

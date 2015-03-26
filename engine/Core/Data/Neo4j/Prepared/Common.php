@@ -271,5 +271,28 @@ class Common implements Interfaces\PreparedInterface{
             );
         return $this;
     } 
-        
+
+    /**
+     * Return matching guids
+     * @param array $guids
+     * @param int $user_guid
+     * @return $this
+     */
+    public function getActed($guids, $user_guid = NULL){
+        if(!$user_guid)
+                        $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
+
+        foreach($guids as $k => $guid){
+            $guids[$k] = (string) $guid;
+        }
+
+        $this->template =   "MATCH (user:User {guid: {user_guid}})-[:ACTED]-(items) WHERE items.guid IN {guids} RETURN items";
+        $this->values = array(
+            'user_guid' => (string) $user_guid,
+            'guids' => $guids
+            );
+        return $this;
+ 
+    }
+
 }
