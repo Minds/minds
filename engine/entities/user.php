@@ -23,7 +23,7 @@ class user extends \ElggUser{
 
         if($cacher->get("$this->guid:isSubscriber:$guid"))
             return true;
-        if($cacher->get("$this->guid:isSubscriber:$guid") === FALSE)
+        if($cacher->get("$this->guid:isSubscriber:$guid") === 0)
             return false;
 
         $return = 0;
