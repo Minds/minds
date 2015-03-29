@@ -2,7 +2,7 @@
 
 namespace Minds\Core\Events;
 
-
+use Minds\Core\exceptions;
 class Dispatcher {
 
     /**
