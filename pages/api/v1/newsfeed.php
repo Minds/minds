@@ -89,10 +89,12 @@ class newsfeed implements interfaces\api{
                 $activity = new entities\activity();
                 switch($embeded->type){
                     case 'activity':
-                        if($embeded->remind_object)
+                        if($embeded->remind_object){
                             $activity->setRemind($embeded->remind_object)->save();
-                        else
+                            \Minds\Helpers\Counters::increment($embeded->remind_object['guid'], 'remind');
+                        }else{
                             $activity->setRemind($embeded->export())->save();
+                        }      
                      break;
                      default:
                          /**

@@ -41,10 +41,20 @@ class Subscriptions{
         if($feed)
             $nf->insert("activity:network:$user_guid", $feed);
 
-        
+        $cacher = Core\Data\cache\factory::build();
+        $cacher->set("$user_guid:isSubscribed:$to_guid", true);
+        $cacher->set("$to_guid:isSubscriber:$user_guid", true);
+
         \Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
         Events\Dispatcher::trigger('subscribe', 'all', array('user_guid'=>$user_guid, 'to_guid'=>$to_guid));        
+        Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                'to'=>array($to_guid),
+                'object_guid' => $user_guid,
+                'notification_view' => 'friends',
+                'params' => array()
+                )); 
         return $return;
+
     }
     
     public static function unSubscribe($user, $from){
@@ -67,6 +77,10 @@ class Subscriptions{
         $feed = $nf->getRow("activity:user:own:$from", array('limit'=>12));
         if($feed)
             $nf->removeAttributes("activity:network:$user", array_keys($feed));
+
+        $cacher = Core\Data\cache\factory::build();
+        $cacher->set("$user:isSubscribed:$to",false);
+        $cacher->set("$to:isSubscriber:$user", false);
 
         \Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
         return $return;

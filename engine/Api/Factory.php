@@ -2,7 +2,7 @@
  
 namespace Minds\Api;
 use Minds\interfaces;
-
+use Minds\Helpers;
 /**
  * The minds API factory
   */
@@ -13,7 +13,8 @@ class Factory{
      * This is almost like an autoloader
      */
     public static function build($segments){
-            
+        Helpers\RequestMetrics::increment('api');
+       
         $method = strtolower($_SERVER['REQUEST_METHOD']);
         
         $route = implode('\\',$segments);
