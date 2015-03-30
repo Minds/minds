@@ -16,7 +16,7 @@ class Client implements Interfaces\ClientInterface{
         global $CONFIG;
         //$this->neo4j = new \Everyman\Neo4j\Client(isset($CONFIG->neo4j_server) ? $CONFIG->neo4j_server : NULL);
     	$this->neo4j = NeoClient\ClientBuilder::create()
-    				->addConnection('default','http',isset($CONFIG->neo4j_server) ? $CONFIG->neo4j_server : 'localhost',7474, true, 'neo4j', '5cafd1c45371e9c6b0e25412b7b88fc1')
+    				->addConnection('default','http',isset($CONFIG->neo4j_server) ? $CONFIG->neo4j_server : 'localhost',7474, true, 'neo4j', 'Avitas@201')
                     ->setAutoFormatResponse(true)
                     ->setDefaultTimeout(20)
     				->build();

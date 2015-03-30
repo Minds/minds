@@ -129,8 +129,9 @@ class activity extends entity{
 		if($this->entity_guid)
 			$export['entity_guid'] = (string) $this->entity_guid;
        		$export['impressions'] = $this->getImpressions();
-        	$export['reminds'] = $this->getRemindCount();
-
+            $export['reminds'] = $this->getRemindCount();
+            if($this->message)
+                $export['message'] = strip_tags($this->message);
       		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 
 		return $export;

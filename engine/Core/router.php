@@ -16,6 +16,7 @@ class router{
 		"/subscriptions" => "minds\\pages\\subscriptions\\index",
 		"/assets" => "minds\\pages\\assets",
         "/boost" => "minds\\pages\\boost",
+        "/analytics" => "minds\\pages\\analytics",
 		"/api" => "minds\\pages\\api\\api"
 	);
 	

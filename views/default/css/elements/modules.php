@@ -227,3 +227,13 @@ a.elgg-widget-collapsed:before {
 	background: #FEFEFE;
 	border: 1px solid #DDD;
 }
+
+
+.minds-dashboard{
+    display:table;
+    width:100%;
+}
+.minds-dashboard .minds-module{
+    display:table-cell;
+    padding:16px;
+}
