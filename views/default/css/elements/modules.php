@@ -227,3 +227,28 @@ a.elgg-widget-collapsed:before {
 	background: #FEFEFE;
 	border: 1px solid #DDD;
 }
+
+.minds-modal-wrapper{
+    display:none;
+    z-index:99999999;
+    background:rgba(0,0,0,0.5);
+    position:fixed;
+    height:100%;
+    width:100%;
+    left:0;
+    top:0;
+}
+.minds-modal{
+    width:300px;
+    min-height:300px;
+    box-shadow:0 0 3px #888;
+    background:#FFF;
+    position:fixed;
+    top:25%;
+    left:50%;
+    margin-left:-150px;
+    z-index:99999999;
+}
+.minds-modal .inner{
+    padding:8px;
+}

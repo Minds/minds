@@ -41,13 +41,15 @@
 	 		$(this).remove();
 	 	});
 		
-		if(!elgg.is_logged_in() && !$.cookie('promptSignup')){
-		//	setTimeout(function(){ $.fancybox("#minds-signup-popup"); $.cookie('promptSignup', true) }, 4000);
-		}
+	//	if(!elgg.is_logged_in() && !$.cookie('promptMobile')){
+			setTimeout(function(){ 
+                $('.minds-mobile-popup').parent().show();
+                $.cookie('promptMobile', true) }, 4000);
+	//	}
 		
-		$(document).on('click', "#minds-signup-popup .cancel", function(){
-			$.fancybox.close();
-		});
+		$(document).on('click', ".minds-mobile-popup-wrapper .cancel", function(){
+		    $('.minds-mobile-popup').hide();
+        });
 		
 		/**
 		 * Save form input, incase people refresh
