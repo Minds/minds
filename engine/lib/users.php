@@ -778,7 +778,8 @@ function force_user_password_reset($user_guid, $password) {
 
 		$user->salt = generate_random_cleartext_password();
 		$hash = generate_user_password($user, $password);    
-		$user->password = $hash;
+        $user->password = $hash;
+        $user->override_password = true;
 		$result = (bool)$user->save();
 		
 		elgg_set_ignore_access($ia);

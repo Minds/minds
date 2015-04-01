@@ -51,7 +51,7 @@ foreach($guids as $guid){
 
 $activity  = new \minds\entities\activity();
 $activity->setCustom('batch', $images)
-		->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
+		//->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
 		->save();
 
 exit;

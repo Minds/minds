@@ -75,7 +75,9 @@ function elgg_set_user_password() {
 				if(strlen($user->password) == 32)
 					$algo = 'md5';
 
-				$user->password = generate_user_password($user, $password, $algo);
+                $user->password = generate_user_password($user, $password, $algo);
+                $user->override_password = true;
+                error_log('commence and override');
 				if ($user->save()) {
 					system_message(elgg_echo('user:password:success'));
 					return true;

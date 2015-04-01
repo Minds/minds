@@ -55,7 +55,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
         $db = new Data\Call('entities_by_time');
         $accept = $db->insert("boost:suggested", array($guid => $impressions));
         if($accept){
-            $cahcer->destroy("boost:suggest");
+            $cacher->destroy("boost:suggest");
             //remove from review
             $db->removeAttributes("boost:suggested:review", array($guid));
             //clear the counter for boost_impressions
