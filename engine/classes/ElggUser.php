@@ -45,6 +45,7 @@ class ElggUser extends ElggEntity
 	}
 
 	protected $cache = true;
+    public $override_password = false;
 
 	/**
 	 * Construct a new user entity, optionally from a given id value.
@@ -146,10 +147,31 @@ class ElggUser extends ElggEntity
 		if(!$this->cache){
 			return false;
 		}
-		//$timebased = $this->isEnabled();
-		$timebased = false;
-		parent::save($timebased);
-		
+
+        //we do a manual save because we don't want to always update the password
+        //@todo find a better less hacky solution
+        $new = true; 
+        if($this->guid){
+            $new = false;
+            elgg_trigger_event('update', $this->type, $this);
+        } else {
+            $this->guid = (string) new GUID();
+            elgg_trigger_event('create', $this->type, $this);
+        }
+        
+        $db = new Minds\Core\Data\Call('entities');
+        $array = $this->toArray();
+        if(!$this->override_password && !$new){
+            error_log('ignoring password save');
+            error_log("new is $new and override is $this->override_password");
+            //echo "updating pswd"; exit;
+            unset($array['password']);
+            unset($array['salt']);
+        }else{
+            error_log('allowing password save!');
+        }
+        $result = $db->insert($this->guid, $array);
+
 		//now place email and username in index
 		$data = array($this->guid => time());
 

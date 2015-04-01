@@ -42,7 +42,7 @@ if(get_input('ajax')){
 		echo 'subscribed';
 	}
 }
-//Send notification...... Chris
+/*//Send notification...... Chris
 
 $from_guid = elgg_get_logged_in_user_guid();
 
@@ -52,6 +52,6 @@ $from_guid = elgg_get_logged_in_user_guid();
 	'description'=>$message,
 	'notification_view'=>'friends'
 ));
-
+*/
 // Forward back to the page you friended the user on
 forward(REFERER);

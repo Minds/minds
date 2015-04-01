@@ -108,7 +108,8 @@
 						$user->access_id = ACCESS_PUBLIC;
 						$user->salt = generate_random_cleartext_password(); // Note salt generated before password!
 						$user->password = generate_user_password($user, generate_random_cleartext_password());
-						$user->owner_guid = 0; // Users aren't owned by anyone, even if they are admin created.
+                        $user->allow_password = true;
+                        $user->owner_guid = 0; // Users aren't owned by anyone, even if they are admin created.
 						$user->container_guid = 0; // Users aren't contained by anyone, even if they are admin created.
 						$user->language = get_current_language();
 						$user->persona_status = 'prereg';
