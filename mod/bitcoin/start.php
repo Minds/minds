@@ -42,7 +42,7 @@ class start extends Components\Plugin{
 		 */
 		\elgg_register_menu_item('site', array(
 		    'name' => 'bitcoin',
-		    'text' => '<span class="entypo">&#59408;</span> My Wallet',
+		    'text' => '<span class="entypo">&#59408;</span> Bitcoin',
 		    'href' => 'bitcoin/wallet',
 		    'title' => elgg_echo('bitcoin')
 	    ));

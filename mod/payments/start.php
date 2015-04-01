@@ -16,6 +16,9 @@ class start extends Components\Plugin{
 		\elgg_extend_view('css/elgg', 'css/payments');
 		\elgg_extend_view('js/elgg', 'js/payments');
 
+        if (\elgg_is_logged_in())
+            \elgg_extend_view('page/elements/topbar/right/actions', 'wallet/topbar_icon');
+
         \elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
             if($row->subtype == 'points_transaction'){
                 return new entities\PointsTransaction($row);
@@ -31,6 +34,7 @@ class start extends Components\Plugin{
 				'/settings/payments/payouts' => "$path\\payouts",
 				'/settings/payments/transactions' => "$path\\transactions",
 				'/settings/payments/donate' => "$path\\donate",
+                '/wallet' => "minds\\plugin\\payments\\pages\\wallet",
 				'/api/v1/wallet' => "minds\\plugin\\payments\\api\\v1\\wallet"
 			));
 	

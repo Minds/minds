@@ -251,7 +251,7 @@ a.elgg-widget-collapsed:before {
 }
 .minds-modal .inner{
     padding:8px;
-
+}
 .minds-dashboard{
     display:table;
     width:100%;

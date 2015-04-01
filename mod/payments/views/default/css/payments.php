@@ -1,3 +1,33 @@
+.wallet-icon .entypo{
+    font-weight:100;
+}
+.wallet-icon .points{
+    font-size: 12px;
+    color: green;
+    font-weight: 600;
+    font-family: "Lato", Arial, Sans-serif;
+}
+
+.wallet-dashboard{
+    width:600px;
+    margin:auto;
+}
+.wallet-dashboard .icon{
+    text-align:center;
+    font-size:120px;
+    line-height:140px;
+}
+.wallet-dashboard > p{
+    text-align:center;
+    color:green;
+    font-weight:bold;
+    font-size:24px;
+}
+.wallet-mobile-message{
+    text-align:center;
+    padding-top:12px;
+}
+
 .credit-cards li{
 	
 }

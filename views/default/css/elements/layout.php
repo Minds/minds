@@ -71,13 +71,13 @@
 	position:relative;
 }
 .hero > .topbar > .inner > .left{
-	width:25%;
+	width:35%;
 }
 .hero > .topbar > .inner > .center{
-	width:50%;
+	width:30%;
 }
 .hero > .topbar > .inner > .right{
-	width:25%;
+	width:35%;
     text-align: right;
 }
 .hero > .topbar > .inner .menu-toggle{
@@ -121,9 +121,12 @@
 	font-size:16px;
 }
 .hero > .topbar .owner_block > a > img{
-	padding:0px 8px 8px;
+    margin: 0px 8px 8px;
+      border-radius: 2px;
+        box-shadow: 0 0 3px #888;
 }
 .hero > .topbar .owner_block > a > .text{
+    display:none;
 	padding:8px;
 	float:left;
 	text-align:right;
@@ -132,7 +135,7 @@
 .hero > .topbar .actions{
 	margin: 20px 6px;
 	float: right;
-	width: 52px;
+	width: 125px;
 }
 .hero > .topbar .actions > span{
 	float:left;
