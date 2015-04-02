@@ -23,8 +23,11 @@ class notifications implements interfaces\api{
 	   $response = array();
 
 	   $db = new \Minds\Core\Data\Call('entities_by_time');
-       	$guids = $db->getRow('notifications:'.elgg_get_logged_in_user_guid(), array('limit'=> get_input('limit', 5), 'offset'=>get_input('offset','')));
-        if(!$guids){
+       $guids = $db->getRow('notifications:'.elgg_get_logged_in_user_guid(), array('limit'=> get_input('limit', 5), 'offset'=>get_input('offset','')));
+       if(get_input('offset')){
+        array_shift($guids);
+       }
+       if(!$guids){
             $response = array();
         } else {
             $notifications = core\entities::get(array('guids'=>$guids));

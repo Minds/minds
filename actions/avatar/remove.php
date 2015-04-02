@@ -7,7 +7,7 @@ $guid = get_input('guid');
 $user = get_entity($guid,'user');
 if ($user) {
 	// Delete all icons from diskspace
-	$icon_sizes = elgg_get_config('icon_sizes');
+/*	$icon_sizes = elgg_get_config('icon_sizes');
 	foreach ($icon_sizes as $name => $size_info) {
 		$file = new ElggFile();
 		$file->owner_guid = $guid;
@@ -16,7 +16,7 @@ if ($user) {
 		if (!$file->delete()) {
 			elgg_log("Avatar file remove failed. Remove $filepath manually, please.", 'WARNING');
 		}
-	}
+    }*/
 	
 	// Remove crop coords
 	unset($user->x1);

@@ -61,9 +61,10 @@ class Suggested implements interfaces\BoostHandlerInterface{
             //clear the counter for boost_impressions
             Helpers\Counters::clear($guid, "boost_impressions");
             
-            $entity = new \Minds\entities\activity($guid);
+            $entity = \Minds\entities\Factory::build($guid);
+            $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                'to'=>array($entity->owner_guid),
+                'to'=>array($to_guid),
                 'object_guid' => $guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_accepted',
@@ -88,9 +89,10 @@ class Suggested implements interfaces\BoostHandlerInterface{
         $db = new Data\Call('entities_by_time');
         $db->removeAttributes("boost:suggested:review", array($guid));
 
-        $entity = new \Minds\entities\activity($guid);
+        $entity = \Minds\entities\Factory::build($guid);
+                    $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                'to'=>array($entity->owner_guid),
+                'to'=>array($to_guid),
                 'object_guid' => $guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_rejected',
