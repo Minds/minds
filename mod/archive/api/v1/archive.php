@@ -50,6 +50,18 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
      */
     public function post($pages){
 
+        if(!is_numeric($pages[0])){
+            //images should still use put, large videos use post because of memory issues.
+            switch($pages[0]){
+                case 'video':
+                    $video = new entities\video();
+                    $video->upload($_FILES['file']['tmp_name']);
+                    $guid = $video->save();
+                    break;
+            }
+            return Factory::response(array('guid'=>$guid, "location"=>$loc));
+        }
+
         $guid = $pages[0];
         $album = NULL;
 

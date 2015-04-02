@@ -425,15 +425,16 @@ text-align:center;
 .topbar .right .actions .count{
 	position: absolute;
 background: red;
-border-radius: 100%;
-padding: 0 6px;
+border-radius: 50%;
+padding: 0 4px;
 color: #FFF;
 font-size: 10px;
-bottom: 23px;
+bottom: -10px;
 right: -7px;
 }
 
 
 .topbar .right .actions .gatherings{
+    position:relative;
 	margin-top:-1px;
 }
