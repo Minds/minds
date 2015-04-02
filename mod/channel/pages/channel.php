@@ -212,7 +212,7 @@ class channel extends core\page implements interfaces\page{
 				//$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river'));
 				$content .= \Minds\Core\entities::view(array(
 					'type' => 'activity',
-					'limit' => 5,
+					'limit' => get_input('limit', 5),
 					'masonry' => false,
 					'prepend' => elgg_is_logged_in() ? $post : '',
 					'list_class' => 'list-newsfeed',
