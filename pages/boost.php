@@ -22,7 +22,7 @@ class boost extends core\page implements interfaces\page{
             $type = isset($_GET['type']) ? $_GET['type'] : 'Newsfeed';            
             $guids = Core\Boost\Factory::build(ucfirst($type))->getReviewQueue($limit, $offset);
             
-    		if($guids){
+            if($guids){
                 $entities = Core\entities::get(array('guids' => array_keys($guids)));
                 foreach($entities as $k => $entity){
                     $entities[$k]->boost_impressions = $guids[$entity->guid];

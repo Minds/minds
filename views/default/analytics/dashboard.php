@@ -18,4 +18,16 @@
                 <li><?= $user->username ?></li>
             <?php endforeach; ?>
     </div>
+
+    <div class="minds-module boosts">
+        <h3>Boosts</h3>
+        <ul>
+            <li><b>Approved (newsfeed):</b> <?= $vars['boosts']['approved']?></li>
+            <li><b>Impressions remaining (newsfeed):</b> <?= $vars['boosts']['impressions'] - $vars['boosts']['impressions_met']?></li>
+             <li><b>Approved (suggested):</b> <?= $vars['boosts_suggested']['approved']?></li>
+            <li><b>Impressions remaining (suggested):</b> <?= $vars['boosts_suggested']['impressions'] - $vars['boosts_suggested']['impressions_met']?></li>
+        </ul>
+        
+    </div>
+
 </div>
