@@ -73,7 +73,7 @@ class boost implements interfaces\api{
                 'params' => array('impressions'=>$_POST['impressions']),
                 'impressions' => $_POST['impressions']
                 ));
-            } else {
+            } elseif($pages[0] != 'channel') {
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array(Core\session::getLoggedinUser()->guid),
                 'object_guid' => $pages[1],
@@ -81,7 +81,7 @@ class boost implements interfaces\api{
                 'params' => array('impressions'=>$_POST['impressions']),
                 'impressions' => $_POST['impressions']
                 ));
-            }           
+            } 
         } else {
 	        $response['status'] = 'error';
         }

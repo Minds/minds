@@ -41,8 +41,8 @@ class Channel implements interfaces\BoostHandlerInterface{
         $db = new Data\Call('entities_by_time');
         $result = $db->insert("boost:channel:$this->guid:review", array($guid => $points));
 
-
-	error_log("this is $this->guid");        
+        
+    	error_log("this is $this->guid");        
         //send a notification of boost offer
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to' => array($this->guid),
@@ -51,7 +51,19 @@ class Channel implements interfaces\BoostHandlerInterface{
                 'params' => array('points'=>$points),
                 'points' => $points
                 ));
-        
+       
+        //send back to use
+        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                'to'=>array(Core\session::getLoggedinUser()->guid),
+                'object_guid' => $pages[1],
+                'notification_view' => 'boost_submitted_p2p',
+                'params' => array(
+                    'points' => $points, 
+                    'channel' =>  $_POST['destination']
+                 ),
+                'points' => $points
+                )); 
+
         return $result;
     }
     

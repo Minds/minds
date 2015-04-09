@@ -28,7 +28,7 @@ class trending implements interfaces\api{
         switch($pages[1]){
             case 'image':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
-                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('image'));
+                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('image'), get_input('offset', 0));
                 $rows = $result->getRows();
                 
                 $guids = array();
@@ -40,7 +40,7 @@ class trending implements interfaces\api{
 
             case 'video':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
-                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('video'));
+               $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('video'), get_input('offset', 0));
                 $rows = $result->getRows();
                 
                 $guids = array();

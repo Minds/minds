@@ -69,6 +69,9 @@ class Counters{
 		        $prepared[] = $query->update($entity->guid, $metric, $value)->build();
                 if($entity->remind_object)
                     $prepared[] = $query->update($entity->remind_object['guid'], $metric, $value)->build();
+
+                if($entity->owner_guid)
+                    $prepared[] = $query->update($entity->owner_guid, $metric, $value)->build();
             }
         }
         $client->batchRequest($prepared);

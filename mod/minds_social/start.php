@@ -29,7 +29,7 @@ function minds_social_init(){
 //	elgg_register_event_handler('create','object','minds_social_action');
 //	elgg_register_event_handler('create','annotation','minds_social_action');
 	
-	elgg_extend_view('forms/login', 'minds_social/login');
+//	elgg_extend_view('forms/login', 'minds_social/login');
 		
  	elgg_extend_view('page/elements/head','minds_social/meta');
 	elgg_extend_view('page/elements/foot', 'minds_social/foot');

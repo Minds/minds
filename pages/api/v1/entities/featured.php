@@ -30,7 +30,7 @@ class featured implements interfaces\api{
             'type' => isset($pages[0]) ? $pages[0] : 'object',
             'subtype' => isset($pages[1]) ? $pages[1] : NULL,
             'limit'=>12,
-            'offset'=>''
+            'offset'=>get_input('offset', '')
             );
             
         foreach($options as $key => $value){

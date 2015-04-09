@@ -224,8 +224,11 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * Get trending objects
      */
-    public function getTrendingObjects($subtype='video'){
-        $this->template = "MATCH (object:$subtype)-[r:UP]-() RETURN object, count(r) as c ORDER BY c DESC LIMIT 12";
+    public function getTrendingObjects($subtype='video', $skip = 0){
+        $this->template = "MATCH (object:$subtype)-[r:UP]-() RETURN object, count(r) as c ORDER BY c DESC SKIP {skip} LIMIT 12";
+        $this->values = array(
+            'skip' => (int) $skip,
+        );
         return $this;
     }
 

@@ -16,9 +16,22 @@ foreach($rows['items'] as $item){
     echo $item['guid'];
 }
 exit;
+ */
 $db = new Minds\Core\Data\Call('entities_by_time');
-$db->removeRow("boost:newsfeed");
+$db2 = new Minds\Core\Data\Call('entities');
+$guids = $db->getRow("activity:user:100000000000000134");
+$i = 0;
+foreach($guids as $guid){
+    if(!$db2->getRow($guid)){
+        echo "$guid doesn't exist \n";
+        $db->removeAttributes("activity:user:100000000000000134", array($guid));
+    }       
+}
+exit;
+var_dump($guids); exit;
 
+
+/*
 $notification = Minds\entities\Factory::build(427462132519407616);
 var_dump($notification);
  */

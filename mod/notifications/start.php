@@ -219,13 +219,13 @@ class start extends \ElggPlugin{
                     $message = \Minds\Core\session::getLoggedinUser()->name . " reminded " . $params['title'];
                     break;
                 case "boost_gift":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " impressions";
+                    $message = \Minds\Core\session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " view";
                     break;
                 case "boost_request":
                     $message = \Minds\Core\session::getLoggedinUser()->name . " has requested a boost for " . $params['points'] . " points";
                     break;  
                 case "boost_accepted":
-                    $message = $params['impressions'] . " impressions for " . $params['title'] . ' were accepted';
+                    $message = $params['impressions'] . " views for " . $params['title'] . ' were accepted';
                     break;
                 case "boost_rejected":
                     $message = "Your boost request for " . $params['title'] . " were rejected";

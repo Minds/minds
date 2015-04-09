@@ -4,7 +4,7 @@
  */
 
 namespace minds\entities;
-
+use Minds\Helpers;
 class activity extends entity{
 	
 	public $indexes = NULL;
@@ -132,6 +132,10 @@ class activity extends entity{
             $export['reminds'] = $this->getRemindCount();
             if($this->message)
                 $export['message'] = strip_tags($this->message);
+         if($this->entity_guid){
+                $export['thumbs:up:count'] = Helpers\Counters::get($this->entity_guid,'thumbs:up');
+                $export['thumbs:down:count'] = Helpers\Counters::get($this->entity_guid,'thumbs:down');
+            }
       		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 
 		return $export;

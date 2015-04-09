@@ -8,6 +8,7 @@ namespace minds\plugin\thumbs\helpers;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Core\entities;
+use Minds\Helpers;
 
 class storage{
 
@@ -20,6 +21,10 @@ class storage{
         //quick and easy, direct insert to entity
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} + 1));
         
+        Helpers\Counters::increment($entity->guid, "thumbs:$direction");
+        if($entity->type == 'activity' && $entity->entity_guid)
+            Helpers\Counters::increment($entity->entity_guid, "thumbs:$direction");
+
         $user_guids = $entity->{"thumbs:$direction:user_guids"} ?: array();
         $user_guids[] = elgg_get_logged_in_user_guid();
         $db->insert($entity->guid, array("thumbs:$direction:user_guids" => json_encode($user_guids)));
@@ -50,7 +55,11 @@ class storage{
         
     
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} - 1));
-        
+        Helpers\Counters::increment($entity->guid, "thumbs:$direction", -1);
+        if($entity->type == 'activity' && $entity->entity_guid)
+            Helpers\Counters::increment($entity->entity_guid, "thumbs:$direction", -1);
+
+
         $user_guids = $entity->{"thumbs:$direction:user_guids"} ? : array();
         $user_guids = array_diff($user_guids, array(elgg_get_logged_in_user_guid()));
         $db->insert($entity->guid, array("thumbs:$direction:user_guids" => json_encode($user_guids)));

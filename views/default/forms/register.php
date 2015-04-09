@@ -17,11 +17,7 @@ if (elgg_is_sticky_form('register')) {
 }
 
 ?>
-	<div class='social'>
-		<?php echo elgg_view('minds_social/login');?>
-	</div>
-	- OR - 
-	
+
 	<div class="blob" style="margin: 16px 0; font-style: italic; color: #888;">
 		Anonymous accounts are fine with us.
 	</div>

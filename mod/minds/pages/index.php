@@ -70,7 +70,7 @@ $signup_form = elgg_is_logged_in() ? '' : <<<HTML
 	</div>
 HTML;
 
-if(in_array(elgg_get_site_url(), array('https://www.minds.com/','https://www.minds.io/','http://127.0.0.1/'))){
+/*if(in_array(elgg_get_site_url(), array('https://www.minds.com/','https://www.minds.io/','http://127.0.0.1/'))){
 	
 	$signup_form = elgg_is_logged_in() ? '' : <<<HTML
 		<div class="com-ui">
@@ -100,7 +100,7 @@ HTML;
 	
 	
 }
-
+ */
 
 /** Hacky and shouldn't be here **/
 $donations_box = '';
