@@ -135,7 +135,7 @@ error_log(print_r($_POST,true));
 	//forward to facebook etc
 	Core\Events\Dispatcher::trigger('social', 'dispatch', array(
 		'services' => array(
-			'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? true : false,
+			'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? $_POST['facebook'] : false,
 			'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? true : false
 		),
 		'data' => array(

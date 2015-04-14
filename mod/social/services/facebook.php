@@ -19,10 +19,13 @@ use Facebook\Entities\AccessToken;
 class facebook extends core\base{
 	
 	protected $redirect_uri;
-	
+    public $access_token;
+
 	public function init(){		
 		FacebookSession::setDefaultApplication(elgg_get_plugin_setting('facebook_api_key','social'),elgg_get_plugin_setting('facebook_api_secret', 'social'));
         $this->redirect_uri = elgg_get_site_url() . 'plugin/social/redirect/facebook';
+       if(!$this->access_token)
+            $this->access_token = \elgg_get_plugin_user_setting('facebook_access_token', core\session::getLoggedinUser()->guid, 'social');
     }
 	
 	public function authorizeURL(){
@@ -64,9 +67,9 @@ class facebook extends core\base{
 	 * @param array $activity
 	 */
 	public function post($activity){
-        //odd bug here. the whole plugin and user cache needs a rewrite to get around this..
-        invalidate_cache_for_entity(core\session::getLoggedinUser()->guid);
-        $at = new AccessToken(\elgg_get_plugin_user_setting('facebook_access_token', core\session::getLoggedinUser()->guid, 'social'));
+        error_log("access_token == $this->access_token");    
+        error_log(print_r($activity, true));
+        $at = new AccessToken($this->access_token);
 		$session = new FacebookSession($at);
 		
 		$data = array();
@@ -75,7 +78,7 @@ class facebook extends core\base{
 		
 		if(isset($activity['perma_url']) && $activity['perma_url'] != elgg_get_site_url() && $activity['perma_url'] )
 			$data['link'] = $activity['perma_url'];
-			//$data['link'] = str_replace(parse_url($activity['perma_url'], PHP_URL_SCHEME), '', $activity['perma_url']);
+		    //$data['link'] = str_replace(parse_url($activity['perma_url'], PHP_URL_SCHEME), '', $activity['perma_url']);
 		
 		if(isset($activity['thumbnail_src']) && $activity['thumbnail_src'])
 			$data['link']['picture'] = $activity['thumbnail_src'];
@@ -83,13 +86,14 @@ class facebook extends core\base{
 		try {
 			$req = new FacebookRequest( $session, 'POST', '/me/feed', $data);
 		    $response = $req->execute()->getGraphObject();
-		
-		    echo "Posted with id: " . $response->getProperty('id');
+	       error_log("posted to fb");	
+	//	    echo "Posted with id: " . $response->getProperty('id');
 		
 		  } catch(FacebookRequestException $e) {
 		
-			echo "Exception occured, code: " . $e->getCode();
-			echo " with message: " . $e->getMessage();
+	//		echo "Exception occured, code: " . $e->getCode();
+      //      echo " with message: " . $e->getMessage();
+            error_log("FB POST ERROR " .  $e->getCode());
 			\elgg_set_plugin_user_setting('facebook', 'failed', core\session::getLoggedinUser()->guid, 'social');	
 			error_log($e->getMessage());	
 		  }   

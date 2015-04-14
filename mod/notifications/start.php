@@ -183,8 +183,6 @@ class start extends \ElggPlugin{
 			'object_guid'=> NULL
 		);
 		$params = array_merge($defaults, $params);
-	error_log('notification fired...');
-    error_log(print_r($params['to'], true));	
         foreach($params['to'] as $t){
 		//	if($t != $params['from']){
 				$notification = new entities\notification();
@@ -285,11 +283,10 @@ class start extends \ElggPlugin{
 	 * Create hook
 	 * @return void
 	 */
-	public function createHook($hook, $type, $params, $return = NULL){
+    public function createHook($hook, $type, $params, $return = NULL){
 		if($type == 'activity' || $type == 'comment'){
 			if($params->message)
 				$message = $params->message;
-		
 			if($type == 'comment')
 				$message = $params->description;
 			

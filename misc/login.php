@@ -17,14 +17,15 @@ foreach($rows['items'] as $item){
 }
 exit;
  */
+$user_guid = "100000000000000063";
 $db = new Minds\Core\Data\Call('entities_by_time');
 $db2 = new Minds\Core\Data\Call('entities');
-$guids = $db->getRow("activity:user:100000000000000134");
+$guids = $db->getRow("activity:user:$user_guid");
 $i = 0;
 foreach($guids as $guid){
     if(!$db2->getRow($guid)){
         echo "$guid doesn't exist \n";
-        $db->removeAttributes("activity:user:100000000000000134", array($guid));
+        $db->removeAttributes("activity:user:$user_guid", array($guid));
     }       
 }
 exit;

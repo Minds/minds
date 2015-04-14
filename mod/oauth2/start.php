@@ -85,7 +85,8 @@ class start extends \ElggPlugin{
         }
         
        //can not have a session too
-        session_destroy(); 
+        if(session_status() == PHP_SESSION_ACTIVE)
+            session_destroy(); 
 
 
 	$bearer = new \OAuth2\TokenType\Bearer();

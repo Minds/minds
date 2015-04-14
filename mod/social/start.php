@@ -32,7 +32,7 @@ class start extends Components\Plugin{
 		Core\Events\Dispatcher::register('social', 'dispatch', array($this, 'dispatch'));		
 
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
-		\elgg_register_event_handler('create', 'activity', array($this, 'postHook'));
+		//\elgg_register_event_handler('create', 'activity', array($this, 'postHook'));
 
 	}
 	
@@ -67,12 +67,16 @@ class start extends Components\Plugin{
 
 	public function dispatch($event){
 		$params = $event->getParameters();
-		error_log('dispatching social');
-		error_log(print_r($params, true));
+		//error_log('dispatching social');
+		//error_log(print_r($params, true));
 		foreach($params['services'] as $service => $selected){
             if($selected){
                 try{
-				    services\build::build($service)->post($params['data']);
+                    $p = array();
+                    if(is_string($selected))
+                        $p['access_token'] = $selected;
+                    error_log("at==$selected");
+                    services\build::build($service, $p)->post($params['data']);
                 }catch(\Exception $e){}
 			}
 		}

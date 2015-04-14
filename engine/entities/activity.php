@@ -45,7 +45,8 @@ class activity extends entity{
         $indexes = $this->getIndexKeys(true);
         $db = new \Minds\Core\Data\Call('entities');
         $res = $db->removeRow($this->guid);
-        
+
+        $db = new \Minds\Core\Data\Call('entities_by_time'); 
         foreach($indexes as $index){
             $db->removeAttributes($index, array($this->guid));
         }

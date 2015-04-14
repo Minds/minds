@@ -36,12 +36,22 @@ class storage{
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid(), array($entity->guid => time()));
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid() .":$entity->type", array($entity->guid => time()));
 
-        if(in_array($entity->subtype, array('video', 'image'))){        
+        if(in_array($entity->subtype, array('video', 'image')) || ($entity->type == 'activity' && $entity->customer_data)){        
             $prepared = new Core\Data\Neo4j\Prepared\Common();
-            if($direction == 'up')
-                Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($entity->guid, $entity->subtype));
-            elseif($direction == 'down')
-                Core\Data\Client::build('Neo4j')->request($prepared->createVoteDOWN($entity->guid, $entity->subtype));
+            $subtype = $entity->subtype;
+            $guid = $entity->guid;
+            if($entity->custom_type == 'video'){
+                $subtype = 'video';
+                $guid = $entity->custom_data['guid'];
+            }elseif($entity->custom_type == 'batch'){
+                $subtype = 'image';
+            }
+              
+            if($direction == 'up'){
+                Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($guid, $subtype));
+            }elseif($direction == 'down'){
+                Core\Data\Client::build('Neo4j')->request($prepared->createVoteDOWN($guid, $subtype));
+            }
         }
 
         if($entity->owner_guid != Core\session::getLoggedinUser()->guid)        

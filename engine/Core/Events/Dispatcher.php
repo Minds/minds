@@ -96,7 +96,7 @@ class Dispatcher {
         }*/
 
         $calls = array_unique($calls);
-
+        
         // New event format, expects event object
     	$eventobj = new Event(array(
     	    'namespace' => $namespace,

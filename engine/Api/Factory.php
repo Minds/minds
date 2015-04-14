@@ -60,7 +60,7 @@ class Factory{
      * PAM checker
      */
     public static function pamCheck(){
-	error_log("checking pam");
+	    //error_log("checking pam");
         $user_pam = new \ElggPAM('user');
         $api_pam = new \ElggPAM('api'); 
         $user_auth_result = $user_pam->authenticate();

@@ -81,7 +81,8 @@ class session extends base{
 		    );*/
 			$_SESSION = array();
 			unset($_COOKIE[session_name()]);
-			session_destroy();
+            if(session_status() == PHP_SESSION_ACTIVE)
+                session_destroy();
 		}
 	}
 	

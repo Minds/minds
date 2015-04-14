@@ -130,6 +130,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         }
 
         //remove from review
+        error_log('user_guid is ' . $this->guid);
         $db->removeAttributes("boost:channel:$this->guid:review", array($guid));
         
         $entity = new \Minds\entities\activity($guid);

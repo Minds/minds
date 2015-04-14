@@ -118,7 +118,7 @@ class newsfeed implements interfaces\api{
             break;
             default:
                 $activity = new entities\activity();
-                error_log(print_r($_POST, true)); 
+                //error_log(print_r($_POST, true)); 
                 if(isset($_POST['message']))
                     $activity->setMessage($_POST['message']);
                 
@@ -129,9 +129,10 @@ class newsfeed implements interfaces\api{
                             ->setThumbnail(urldecode($_POST['thumbnail']));
                 }
                 if($guid = $activity->save()){
+                   //Core\Events\Dispatcher::trigger('create', 'activity', $activity);
                     Core\Events\Dispatcher::trigger('social', 'dispatch', array(
                         'services' => array(
-                            'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? true : false,
+                            'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? $_POST['facebook'] : false,
                             'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? true : false
                         ),
                         'data' => array(
@@ -156,7 +157,11 @@ class newsfeed implements interfaces\api{
 	$activity = new entities\activity($pages[0]); 
 	if(!$activity->guid)
 		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));      
-	
+
+    if(!$activity->canEdit()){
+        return Factory::response(array('status'=>'error', 'message'=>'you don\'t have permission'));
+    }
+
  	if($activity->delete())
         	return Factory::response(array('message'=>'removed ' . $pages[0]));
         	return Factory::response(array('status'=>'error', 'message'=>'could not delete'));

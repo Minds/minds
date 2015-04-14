@@ -33,8 +33,12 @@ class wallet implements interfaces\api{
                 $btc = ($satoshi / 1000000000);
             
                 $response['count'] = $count;
-               	$response['cap'] = 1000;
-		$response['satoshi'] = $satoshi;
+                $response['cap'] = 1000;
+                $response['boost_rate'] = 1;
+                $response['ex'] = array(
+                    'usd' => 0.001
+                );
+		        $response['satoshi'] = $satoshi;
                 $response['btc'] = sprintf('%.9f', $btc);
                 $response['usd'] = round($count / 10000, 2);
                 break;
