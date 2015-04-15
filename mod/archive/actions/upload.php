@@ -36,7 +36,8 @@ switch($mime_type){
 		$entity->access_id = 2;
 		
 		if($guid = $entity->save()){
-			
+
+            $batch->addToList($entity->guid);			
 		    	echo strval($guid);
 			//	system_message(elgg_echo('archive:upload:success'));
 			$activity = new minds\entities\activity();
