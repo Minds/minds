@@ -301,10 +301,16 @@ and (max-width : 720px) {
 	 * 	Pages
 	 */
 	.sidebar{
-	/*	display:none; */
+	    display:none; 
+/*        width:100%;
+        float:none;  */
+	}
+
+    .force-mobile-sidebar .sidebar{
         width:100%;
         float:none;
-	}
+        display:block;
+    }
 
 	.elgg-footer{
 		margin-right:0;

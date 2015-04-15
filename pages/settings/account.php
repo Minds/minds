@@ -22,7 +22,8 @@ $content = elgg_view('core/settings/account');
 $params = array(
 	'content' => $content,
 	'title' => $title,
-	'sidebar_class' => 'elgg-sidebar-alt'
+	'sidebar_class' => 'elgg-sidebar-alt',
+    'class' => 'force-mobile-sidebar'
 );
 $body = elgg_view_layout('one_sidebar', $params);
 
