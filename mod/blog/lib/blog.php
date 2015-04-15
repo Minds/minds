@@ -609,7 +609,7 @@ function blog_sidebar($blog){
 			$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single'));
 		} 
 			
-		//$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
+		$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
 
         $cacher = \Minds\Core\Data\cache\factory::build();
         

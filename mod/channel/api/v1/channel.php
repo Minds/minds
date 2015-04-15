@@ -8,6 +8,7 @@
 namespace minds\plugin\channel\api\v1;
 
 use Minds\Core;
+use Minds\Helpers;
 use minds\interfaces;
 use minds\entities;
 use Minds\Api\Factory;
@@ -53,10 +54,11 @@ class channel implements interfaces\api{
                 //$CONFIG->cdn_url .= '/';
             
            $response['channel']['carousels'][] = array(
-                'src'=> $carousel->ext_bg ?: $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
+                'src'=> $carousel->ext_bg ? str_replace('/thin', '/fat', $carousel->ext_bg) : $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
             );
         }
-        
+
+        $response['channel']['impressions'] = Helpers\Counters::get($user->guid, 'impression');
         
 
         return Factory::response($response);

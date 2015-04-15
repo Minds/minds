@@ -83,7 +83,12 @@ class start extends \ElggPlugin{
 	if (!$server->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
             return false;
         }
-      
+        
+       //can not have a session too
+        if(session_status() == PHP_SESSION_ACTIVE)
+            session_destroy(); 
+
+
 	$bearer = new \OAuth2\TokenType\Bearer();
 	$access_token = $bearer->getAccessTokenParameter(\OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response());
  

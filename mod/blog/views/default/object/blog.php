@@ -68,7 +68,7 @@ if ($full) {
                 $paragraphs[$i] .= $sep;
             if(($i % 10 == 0) && $added < $ads ){
                 $paragraphs[$i] .= elgg_view('page/elements/ads', array(
-					'type'=>'responsive-content', 
+					'type'=>'responsive', 
 					'float'=> $added % 2 == 0 ? 'left' : 'right', 
 					'height'=> $length > 2000 ? 'auto' : '280px', 
 					'width'=> $length > 2000 ? '300' : '336px'
@@ -81,7 +81,7 @@ if ($full) {
         $body = implode('', $paragraphs);
 	if($added == 1){
 		$body .= elgg_view('page/elements/ads', array(
-                                        'type'=>'responsive-content',
+                                        'type'=>'responsive',
                                         'float'=> 'none',
                                         'height'=> 'auto',
                                         'width'=> '95%' 

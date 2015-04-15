@@ -28,7 +28,7 @@ class clusters extends base{
 		\elgg_register_plugin_hook_handler('cron', 'halfhour', array($this, 'cron'));
 		\elgg_register_plugin_hook_handler('action', 'login', array($this, 'login'));
 		
-		\elgg_register_event_handler('create', 'all', array($this, 'createHook'));
+		//\elgg_register_event_handler('create', 'all', array($this, 'createHook'));
 		
 	}
 	

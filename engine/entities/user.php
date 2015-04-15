@@ -114,7 +114,8 @@ class user extends \ElggUser{
 
     public function getExportableValues() {
         return array_merge(parent::getExportableValues(), array(
-            'website'
+            'website',
+            'briefdescription'
         ));
     }
 

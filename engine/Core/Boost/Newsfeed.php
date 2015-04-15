@@ -122,6 +122,7 @@ class Newsfeed implements BoostHandlerInterface{
                 $entity = new \Minds\entities\activity($boost);
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($entity->owner_guid),
+                'from'=> 100000000000000519,
                 'object_guid' => $boost,
                 'title' => $entity->title,
                 'notification_view' => 'boost_completed',

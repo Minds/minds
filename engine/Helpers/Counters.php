@@ -19,7 +19,7 @@ class Counters{
     public static function increment($entity, $metric, $value = 1){
         if(is_numeric($entity)){
             $guid = $entity;
-            error_log($guid);
+            //error_log($guid);
         } else {
             if($entity->guid)
                 $guid = $entity->guid;
@@ -29,7 +29,7 @@ class Counters{
         $client =Core\Data\Client::build('Cassandra');
         $query = new Core\Data\Cassandra\Prepared\Counters();
         $client->request($query->update($guid, $metric, $value));
-        error_log("$guid:$metric:$value");
+        //error_log("$guid:$metric:$value");
         $cacher = Core\Data\cache\factory::build();
         $cacher->destroy("counter:$guid:$metric");
     }
@@ -69,6 +69,9 @@ class Counters{
 		        $prepared[] = $query->update($entity->guid, $metric, $value)->build();
                 if($entity->remind_object)
                     $prepared[] = $query->update($entity->remind_object['guid'], $metric, $value)->build();
+
+                if($entity->owner_guid)
+                    $prepared[] = $query->update($entity->owner_guid, $metric, $value)->build();
             }
         }
         $client->batchRequest($prepared);

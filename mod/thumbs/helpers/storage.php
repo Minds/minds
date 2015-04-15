@@ -8,6 +8,7 @@ namespace minds\plugin\thumbs\helpers;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Core\entities;
+use Minds\Helpers;
 
 class storage{
 
@@ -20,6 +21,10 @@ class storage{
         //quick and easy, direct insert to entity
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} + 1));
         
+        Helpers\Counters::increment($entity->guid, "thumbs:$direction");
+        if($entity->type == 'activity' && $entity->entity_guid)
+            Helpers\Counters::increment($entity->entity_guid, "thumbs:$direction");
+
         $user_guids = $entity->{"thumbs:$direction:user_guids"} ?: array();
         $user_guids[] = elgg_get_logged_in_user_guid();
         $db->insert($entity->guid, array("thumbs:$direction:user_guids" => json_encode($user_guids)));
@@ -31,12 +36,22 @@ class storage{
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid(), array($entity->guid => time()));
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid() .":$entity->type", array($entity->guid => time()));
 
-        if(in_array($entity->subtype, array('video', 'image'))){        
+        if(in_array($entity->subtype, array('video', 'image')) || ($entity->type == 'activity' && $entity->customer_data)){        
             $prepared = new Core\Data\Neo4j\Prepared\Common();
-            if($direction == 'up')
-                Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($entity->guid, $entity->subtype));
-            elseif($direction == 'down')
-                Core\Data\Client::build('Neo4j')->request($prepared->createVoteDOWN($entity->guid, $entity->subtype));
+            $subtype = $entity->subtype;
+            $guid = $entity->guid;
+            if($entity->custom_type == 'video'){
+                $subtype = 'video';
+                $guid = $entity->custom_data['guid'];
+            }elseif($entity->custom_type == 'batch'){
+                $subtype = 'image';
+            }
+              
+            if($direction == 'up'){
+                Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($guid, $subtype));
+            }elseif($direction == 'down'){
+                Core\Data\Client::build('Neo4j')->request($prepared->createVoteDOWN($guid, $subtype));
+            }
         }
 
         if($entity->owner_guid != Core\session::getLoggedinUser()->guid)        
@@ -50,7 +65,11 @@ class storage{
         
     
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} - 1));
-        
+        Helpers\Counters::increment($entity->guid, "thumbs:$direction", -1);
+        if($entity->type == 'activity' && $entity->entity_guid)
+            Helpers\Counters::increment($entity->entity_guid, "thumbs:$direction", -1);
+
+
         $user_guids = $entity->{"thumbs:$direction:user_guids"} ? : array();
         $user_guids = array_diff($user_guids, array(elgg_get_logged_in_user_guid()));
         $db->insert($entity->guid, array("thumbs:$direction:user_guids" => json_encode($user_guids)));

@@ -29,7 +29,36 @@ class analytics extends core\page implements interfaces\page{
 
             $rps = ($requests[0] + $requests[5] + $requests[10]) / 900; 
 
-            $content = elgg_view('analytics/dashboard', array('users' => $users, 'requests'=>$requests, 'rps' => $rps));
+
+            $boost_guids = $db->getRow("boost:newsfeed", array('limit'=>1000));
+            $boost_impressions = 0;
+            $boost_impressions_met = 0;
+            foreach($boost_guids as $guid => $impressions){
+                $boost_impressions = $boost_impressions + $impressions; 
+                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get($guid, "boost_impressions", false); 
+            }
+
+            $boosts = array(
+                'approved' => count($boost_guids),
+                'impressions' => $boost_impressions,
+                'impressions_met' => $boot_impressions_met
+            );
+      
+            $boost_guids = $db->getRow("boost:suggested", array('limit'=>1000));
+            $boost_impressions = 0;
+            $boost_impressions_met = 0;
+            foreach($boost_guids as $guid => $impressions){
+                $boost_impressions = $boost_impressions + $impressions;
+                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get($guid, "boost_impressions", false);
+            } 
+      
+            $boosts_suggested = array(
+                'approved' => count($boost_guids),
+                'impressions' => $boost_impressions,
+                'impressions_met' => $boot_impressions_met
+            );
+
+            $content = elgg_view('analytics/dashboard', array('users' => $users, 'requests'=>$requests, 'rps' => $rps, 'boosts' => $boosts, 'boosts_suggested'=> $boosts_suggested));
 
             $body = \elgg_view_layout('one_sidebar', array(
                 'title'=> 'Analytics',

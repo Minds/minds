@@ -183,8 +183,6 @@ class start extends \ElggPlugin{
 			'object_guid'=> NULL
 		);
 		$params = array_merge($defaults, $params);
-	error_log('notification fired...');
-    error_log(print_r($params['to'], true));	
         foreach($params['to'] as $t){
 		//	if($t != $params['from']){
 				$notification = new entities\notification();
@@ -219,13 +217,13 @@ class start extends \ElggPlugin{
                     $message = \Minds\Core\session::getLoggedinUser()->name . " reminded " . $params['title'];
                     break;
                 case "boost_gift":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " impressions";
+                    $message = \Minds\Core\session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " view";
                     break;
                 case "boost_request":
                     $message = \Minds\Core\session::getLoggedinUser()->name . " has requested a boost for " . $params['points'] . " points";
                     break;  
                 case "boost_accepted":
-                    $message = $params['impressions'] . " impressions for " . $params['title'] . ' were accepted';
+                    $message = $params['impressions'] . " views for " . $params['title'] . ' were accepted';
                     break;
                 case "boost_rejected":
                     $message = "Your boost request for " . $params['title'] . " were rejected";
@@ -285,11 +283,10 @@ class start extends \ElggPlugin{
 	 * Create hook
 	 * @return void
 	 */
-	public function createHook($hook, $type, $params, $return = NULL){
+    public function createHook($hook, $type, $params, $return = NULL){
 		if($type == 'activity' || $type == 'comment'){
 			if($params->message)
 				$message = $params->message;
-		
 			if($type == 'comment')
 				$message = $params->description;
 			

@@ -8,6 +8,7 @@ namespace minds\plugin\archive\entities;
 
 use minds\entities\object;
 use cinemr;
+use Minds\Helpers;
 
 class video extends object{
 	
@@ -134,7 +135,9 @@ class video extends object{
 		$export['src'] = array(
 			'360.mp4' => $this->getSourceUrl('360.mp4'),
 			'720.mp4' => $this->getSourceUrl('720.mp4')
-		);
+        );
+        $export['thumbs:up:count'] = Helpers\Counters::get($this->guid,'thumbs:up');
+        $export['thumbs:down:count'] = Helpers\Counters::get($this->guid,'thumbs:down');
 		return $export;
 	}
 }

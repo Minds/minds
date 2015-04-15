@@ -38,7 +38,7 @@ elgg.tinymce.init = function() {
 		selector: "textarea",
 		relative_urls: false,
 	    theme: "modern",
-	    fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt 42pt 54pt 64pt 86pt 72pt",
+	    fontsize_formats: "8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 20pt 22pt 26pt 36pt 42pt 54pt 64pt 86pt 72pt",
 	    font_formats: "Ubuntu=ubuntu;Century Gothic = Century Gothic,sans-serif; Andale Mono=andale mono,times;"+
                 "Arial=arial,helvetica,sans-serif;"+
                 "Arial Black=arial black,avant garde;"+

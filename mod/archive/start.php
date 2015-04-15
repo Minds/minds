@@ -15,7 +15,8 @@ function minds_archive_init() {
 	elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 		if($row->type == 'object'){
 			switch($row->subtype){
-				case 'video':
+                case 'video':
+                case 'kaltura_video':
 					return new minds\plugin\archive\entities\video($row);
 					break;
 				case 'image':
