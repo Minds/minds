@@ -137,7 +137,7 @@ class newsfeed implements interfaces\api{
                         ),
                         'data' => array(
                             'message' => $_POST['message'],
-                            'perma_url'=> \elgg_normalize_url($_POST['url']) ?: NULL
+                            'perma_url'=> isset($_POST['url']) ? \elgg_normalize_url($_POST['url']) : \elgg_normalize_url($activity->getURL())
                         )
                     ));
                     return Factory::response(array('guid'=>$guid));

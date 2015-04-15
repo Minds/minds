@@ -22,13 +22,13 @@ class trending implements interfaces\api{
      */      
     public function get($pages){
         //temp hack..
-        if(isset($pages[1]) && $pages[1] == 'video')
-            $pages[1] = 'kaltura_video';
+        //if(isset($pages[1]) && $pages[1] == 'video')
+          //  $pages[1] = 'kaltura_video';
 
         switch($pages[1]){
             case 'image':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
-                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('image'), get_input('offset', 0));
+                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('image', get_input('offset', 0)));
                 $rows = $result->getRows();
                 
                 $guids = array();
@@ -40,7 +40,7 @@ class trending implements interfaces\api{
 
             case 'video':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
-               $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('video'), get_input('offset', 0));
+               $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('video', get_input('offset', 0)));
                 $rows = $result->getRows();
                 
                 $guids = array();

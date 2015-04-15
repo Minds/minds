@@ -5,6 +5,7 @@
 namespace minds\plugin\archive\entities;
 
 use minds\entities;
+use Minds\Helpers;
 
 class image extends entities\file{
 	
@@ -150,6 +151,8 @@ class image extends entities\file{
         public function export(){
                 $export = parent::export();
                 $export['thumbnail_src'] = $this->getIconUrl();
+                $export['thumbs:up:count'] = Helpers\Counters::get($this->guid,'thumbs:up');
+                $export['thumbs:down:count'] = Helpers\Counters::get($this->guid,'thumbs:down');
                 return $export;
         }
 }
