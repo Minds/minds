@@ -31,12 +31,21 @@ and (min-width : 0px)
 and (max-width : 720px) {
 
 	.content-carousel .layout{
-		margin-top:80px !important;
+		margin-top:40px !important;
 	}
 
 	.carousel-inner > .item > img{
 		top:0 !important;
 	}
+
+    .carousel-inner > .item > .carousel-caption p{
+        font-size:15px;
+        line-height:15px;
+    }
+
+    .cms-sections{
+        display:none;
+    }
 	
 	.responsive-ad{
 		display:block !important;
@@ -95,7 +104,12 @@ and (max-width : 720px) {
 	.hero > .topbar{
 		min-width:320px;
 	}
-	
+
+    .hero > .topbar > .inner{
+        padding:0;
+        width:100%;
+    }
+
 	.hero > .topbar > .inner .global-menu{
 		margin-top:14px;
 	}
@@ -105,17 +119,23 @@ and (max-width : 720px) {
 		height: auto;
 		max-width: 100px;
 	}
-	.hero > .topbar .right .elgg-button{
-		margin: 1px;
+    
+    .hero > .topbar .right .minds-button-register{
+        display:none;
+    }
+	
+    .hero > .topbar .right .elgg-button{
+		margin: 8px;
 		/* width: 52px; */
 		font-size: 60%;
-		padding: 2px 5px;
+		padding: 6px 5px;
 		width: auto;
 		font-weight: bold;
 	}
 	
 	.hero > .body, .elgg-page-body {	
-		margin-top:60px;
+		margin-top:48px;
+        padding-bottom:0;
 	}	
 	
 	.minds-body-header > .inner > .elgg-head{
@@ -127,8 +147,9 @@ and (max-width : 720px) {
 	}
 
 	.hero > .topbar .logo {
-		height:40px;
-	}
+		height:22px;
+	    padding:8px;
+    }
 	
 	.hero > .topbar .logo h1{
 		font-size:14px;
@@ -138,7 +159,8 @@ and (max-width : 720px) {
 	}
 
 	.hero > .topbar > .inner .menu-toggle {
-		margin-top:8px;
+		margin:0;
+        padding:16px;
 	}
 
 	.hero > .topbar .search {
@@ -155,8 +177,12 @@ and (max-width : 720px) {
 	}
 
 	.hero > .topbar .actions {
-		margin: 8px 6px;
+		margin: 12px 0;
+        width:80px;
 	}
+    .hero > .topbar .actions .gatherings {
+        display:none;
+    }
 
 	.hero > .topbar .owner_block > a > .text{
 		display:none;
@@ -171,6 +197,14 @@ and (max-width : 720px) {
 		float:none;
 		box-shadow: 0 0 0;
 	}
+
+    .minds-body-header .elgg-menu-title{
+        float: none;
+        position: relative;
+        top: 0;
+        right: 0;
+        margin: 16px 0;
+    }
 
 	.homepage{
 		padding-top:64px;
@@ -200,7 +234,7 @@ and (max-width : 720px) {
 		height:400px;
 	}
 	.carousel-fat .carousel .item{
-		height:400px;
+		height:500px;
 	}
 	.carousel-fat .carousel .item > .carousel-caption{
 		top:  100px;
@@ -267,11 +301,17 @@ and (max-width : 720px) {
 	 * 	Pages
 	 */
 	.sidebar{
-		display:none;
+	/*	display:none; */
+        width:100%;
+        float:none;
 	}
 
 	.elgg-footer{
 		margin-right:0;
-	}	
+	}
+   
+    .node-select{
+        display:none;
+    }
 	
 }
