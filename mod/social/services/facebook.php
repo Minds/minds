@@ -69,20 +69,26 @@ class facebook extends core\base{
 	public function post($activity){
         error_log("access_token == $this->access_token");    
         error_log(print_r($activity, true));
+        
         $at = new AccessToken($this->access_token);
 		$session = new FacebookSession($at);
 		
 		$data = array();
-		if(isset($activity['message']))
-			$data['message'] = $activity['message'];
-		
+		if(isset($activity['message'])){
+            $data['message'] = $activity['message'];
+        }
+
+
 		if(isset($activity['perma_url']) && $activity['perma_url'] != elgg_get_site_url() && $activity['perma_url'] )
 			$data['link'] = $activity['perma_url'];
 		    //$data['link'] = str_replace(parse_url($activity['perma_url'], PHP_URL_SCHEME), '', $activity['perma_url']);
 		
-		if(isset($activity['thumbnail_src']) && $activity['thumbnail_src'])
+		if(isset($activity['thumbnail_src']) && $activity['thumbnail_src']){
 			$data['link']['picture'] = $activity['thumbnail_src'];
-		
+            $data['link']['description'] = '@' . core\session::getLoggedinUser()->username;
+        }
+        
+
 		try {
 			$req = new FacebookRequest( $session, 'POST', '/me/feed', $data);
 		    $response = $req->execute()->getGraphObject();

@@ -46,7 +46,13 @@ class image extends entities\file{
 		$this->super_subtype = 'archive';
 			
 		parent::save($index);
-		return $this->guid;
+
+		try{
+            $prepared = new \Minds\Core\Data\Neo4j\Prepared\Common();
+            \Minds\Core\Data\Client::build('Neo4j')->request($prepared->createObject($this));
+        }catch (\Exception $e){}
+
+        return $this->guid;
 	}
 	
 	/**

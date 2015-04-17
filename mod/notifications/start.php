@@ -289,7 +289,8 @@ class start extends \ElggPlugin{
 				$message = $params->message;
 			if($type == 'comment')
 				$message = $params->description;
-			
+		    if($params->title)
+                $message .= $params->title;    
 			if (preg_match_all('!@(.+)(?:\s|$)!U', $message, $matches)){
 				$usernames = $matches[1];
 				$to = array();
