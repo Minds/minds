@@ -37,7 +37,7 @@ class Subscriptions{
 
         //grab the newsfeed
         $nf = new Core\Data\Call('entities_by_time');
-        $feed = $nf->getRow("activity:user:own:$to_guid", array('limit'=>12));
+        $feed = $nf->getRow("activity:user:$to_guid", array('limit'=>12));
         if($feed)
             $nf->insert("activity:network:$user_guid", $feed);
 
@@ -74,7 +74,7 @@ class Subscriptions{
 
         //grab the newsfeed
         $nf = new Core\Data\Call('entities_by_time');
-        $feed = $nf->getRow("activity:user:own:$from", array('limit'=>12));
+        $feed = $nf->getRow("activity:user:$from", array('limit'=>12));
         if($feed)
             $nf->removeAttributes("activity:network:$user", array_keys($feed));
 

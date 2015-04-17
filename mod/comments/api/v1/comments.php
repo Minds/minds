@@ -91,9 +91,12 @@ class comments implements interfaces\api{
     }
     
     public function delete($pages){
-       
+
+         
         $comment = new \Minds\plugin\comments\entities\comment($pages[0]);
-        $comment->delete();
+        if($comment->canEdit()){
+            $comment->delete();
+        }
 
         return Factory::response(array());
         
