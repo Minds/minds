@@ -15,6 +15,7 @@
 		"tijsverkoyen/twitteroauth": "dev-master@dev",
 		"bshaffer/oauth2-server-php":"1.6",
 		"neoxygen/neoclient": "2.1.11",
+		"videlalvaro/php-amqplib": "2.2.*",
 		"Minds/Surge": "dev-master@dev"
    	},
 	"repositories": [
@@ -31,6 +32,6 @@
 		"files": ["engine/autoload.php"]
 	},
     "require-dev":{
-        "apigen/apigen": "~4.0"
+        "apigen/apigen": "4.1.1"
     }
 }

@@ -10,13 +10,17 @@ class Client{
     /**
      * Build the client
      */
-     public function build($client = "RabbitMQ", $options = array()){
+     public static function build($client = "RabbitMQ", $options = array()){
       
-        if(substr($handler, 0, 1) != "\\")
-            $handler = "\\Minds\\Core\\Queue\\$handler\\Client";
+        if(substr($client, 0, 1) != "\\")
+            $client = "\\Minds\\Core\\Queue\\$client\\Client";
 
-        if(class_exists($handler)){
-            return new $handler($options);
+        if(class_exists($client)){
+            $class = new $client($options);
+            if($class instanceof Interfaces\QueueClient)
+                return $class;
+            
+            throw new \Exception("Queue factory is not of Interface QueueClient");
         } else {
             throw new \Exception("Factory not found");
         }
