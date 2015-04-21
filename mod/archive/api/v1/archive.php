@@ -101,7 +101,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
             $activity = new \minds\entities\activity();
                 $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
                         //->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
-                    ->setFromEntity($activity)
+                    ->setFromEntity($entity)
                     ->setTitle($_POST['title'])
                     ->setBlurb($_POST['description'])
                         ->save();
@@ -123,7 +123,8 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
         if($entity->subtype == 'video'){
 
             $activity = new \minds\entities\activity();
-            $activity->setCustom('video', array(
+            $activity->setFromEntity($entity)
+                ->setCustom('video', array(
                 'thumbnail_src'=>$entity->getIconUrl(),
                 'guid'=>$entity->guid))
                 ->setTitle($entity->title)

@@ -5,7 +5,9 @@ require_once(dirname(dirname(__FILE__)) . "/engine/start.php");
 use Minds\Core;
 use Minds\Core\Data;
 
-//var_dump(new Minds\entities\user('mark'));
+var_dump(new Minds\entities\user('collectiveevolution'));
+exit;
+
 //login(new Minds\entities\user('minds'));
 
 

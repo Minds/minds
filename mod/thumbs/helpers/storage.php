@@ -22,8 +22,6 @@ class storage{
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} + 1));
         
         Helpers\Counters::increment($entity->guid, "thumbs:$direction");
-        if($entity->type == 'activity' && $entity->entity_guid)
-            Helpers\Counters::increment($entity->entity_guid, "thumbs:$direction");
 
         $user_guids = $entity->{"thumbs:$direction:user_guids"} ?: array();
         $user_guids[] = elgg_get_logged_in_user_guid();
@@ -43,8 +41,11 @@ class storage{
             if($entity->custom_type == 'video'){
                 $subtype = 'video';
                 $guid = $entity->custom_data['guid'];
+                Helpers\Counters::increment($guid, "thumbs:$direction");
             }elseif($entity->custom_type == 'batch'){
                 $subtype = 'image';
+                $guid = $entity->entity_guid;
+                Helpers\Counters::increment($guid, "thumbs:$direction");
             }
               
             if($direction == 'up'){
