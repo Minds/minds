@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "27b23efdf287f79812a5601236bd607e",
+    "hash": "467bc1be792d74f58d263f1d8fa53d6a",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -1516,26 +1516,35 @@
         },
         {
             "name": "videlalvaro/php-amqplib",
-            "version": "v2.2.6",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/php-amqplib.git",
-                "reference": "6ef2ca9a45bb9fb20872f824f4c7c1518315bd3f"
+                "reference": "0b5cfa6f3aef99c9a568469f3ece7f39e1d79099"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/6ef2ca9a45bb9fb20872f824f4c7c1518315bd3f",
-                "reference": "6ef2ca9a45bb9fb20872f824f4c7c1518315bd3f",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/0b5cfa6f3aef99c9a568469f3ece7f39e1d79099",
+                "reference": "0b5cfa6f3aef99c9a568469f3ece7f39e1d79099",
                 "shasum": ""
             },
             "require": {
                 "ext-bcmath": "*",
+                "ext-mbstring": "*",
                 "php": ">=5.3.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "3.7.*"
             },
+            "suggest": {
+                "ext-sockets": "Use AMQPSocketConnection"
+            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "PhpAmqpLib": ""
@@ -1557,7 +1566,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2013-12-22 12:49:53"
+            "time": "2015-03-31 10:44:35"
         }
     ],
     "packages-dev": [
@@ -3290,6 +3299,7 @@
         "kramnorth/cinemr-php-sdk": 20,
         "minds/minds-php-sdk": 20,
         "tijsverkoyen/twitteroauth": 20,
+        "videlalvaro/php-amqplib": 20,
         "minds/surge": 20
     },
     "prefer-stable": false,

@@ -8,6 +8,7 @@ php:
 services:
   - cassandra
   - elasticsearch
+  - rabbitmq
 
 ##USE THRIFT WITH CASSANDRA
 before_script:

@@ -15,7 +15,7 @@
 		"tijsverkoyen/twitteroauth": "dev-master@dev",
 		"bshaffer/oauth2-server-php":"1.6",
 		"neoxygen/neoclient": "2.1.11",
-		"videlalvaro/php-amqplib": "2.2.*",
+		"videlalvaro/php-amqplib": "dev-master@dev",
 		"Minds/Surge": "dev-master@dev"
    	},
 	"repositories": [
