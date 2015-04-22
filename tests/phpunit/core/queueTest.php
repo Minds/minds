@@ -33,8 +33,8 @@ class queueTest extends \Minds_PHPUnit_Framework_TestCase {
         public function testReceive(){
             $rq = Core\Queue\Client::build("RabbitMQ")
                 ->setExchange()
-                ->setQueue("newqueue");
-                //->send("Testing send");
+                ->setQueue("newqueue")
+                ->send("Testing send");
                 
              sleep(1);   
              
@@ -43,8 +43,6 @@ class queueTest extends \Minds_PHPUnit_Framework_TestCase {
                 $rq->close();
              });
              
-             
         }
 	
-
 }
