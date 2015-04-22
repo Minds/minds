@@ -64,6 +64,13 @@ class activity extends entity{
             $db->removeAttributes($index, array($this->guid));
         }
         
+        Queue\Client::build()->setExchange("mindsqueue")
+                            ->setQueue("FeedCleanup")
+                            ->send(array(
+                                "guid" => $this->guid,
+                                "owner_guid" => $this->owner_guid
+                                ));
+        
         return true;
     
     }

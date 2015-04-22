@@ -7,7 +7,7 @@ use Minds\entities;
 use Surge;
 
 /**
- * Removes entities from multiple feeds, in the background
+ * Add entities to multiple feeds, in the background
  */
 
 class FeedDispatcher implements Interfaces\QueueRunner{
@@ -15,9 +15,9 @@ class FeedDispatcher implements Interfaces\QueueRunner{
    public function run(){
        $client = Queue\Client::Build();
        $client->setExchange("mindsqueue", "direct")
-               ->setQueue("FeedCleanup")
+               ->setQueue("FeedDispatcher")
                ->receive(function($data){
-                   echo "Received a feed dispatch request \n";
+                   echo "Received a feed dispatch request";
                    
                    $data = $data->getData();
                    
@@ -27,29 +27,18 @@ class FeedDispatcher implements Interfaces\QueueRunner{
                    $fof = new Data\Call('friendsof');
                    $offset = "";
                    while(true){
-                        $guids = $fof->getRow($entity->owner_guid, array('limit'=>2000, 'offset'=>$offset));
-                        if(!$guids)
-                            break;
-
-                        $guids = array_keys($guids);
-                        if($offset)
-                            array_shift($guids); 
-                       
-                        if(!$guids)
-                            break;
-                        
-                        if($offset == $guids[0])
-                            break;
-                       
+                        $guids = $fof->getRow($entity->owner_guid, array('limit'=>1000, 'offset'=>$offset));
+                        if(!$guids || in_array($offset, $guids))
+                            break; 
                         $offset = end($guids);
+                        var_dump($guids); 
                         
                         $followers = array_keys($guids);
 
                         foreach($followers as $follower)
-                            $db->removeAttributes("$entity->type:network:$follower", array($entity->guid));
+                            $db->insert("$entity->type:network:$follower", array($entity->guid => $entity->guid));
                    }    
-                  
-                   echo "Succesfully deployed all feeds for $entity->guid \n\n";
+                   
                });
    }   
            
