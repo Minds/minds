@@ -65,7 +65,14 @@ class conversation{
     public function notify(){
         foreach($this->participants as $participant){
             if($participant != elgg_get_logged_in_user_guid()){
-                \Minds\plugin\notifications\Push::queue($participant, array('message'=>'You have a new message.'));
+               // \Minds\plugin\notifications\Push::queue($participant, array('message'=>'You have a new message.'));
+                Core\Queue\Client::build()->setExchange("mindsqueue")
+                                          ->setQueue("Push")
+                                          ->send(array(
+                                                "user_guid"=>$participant,
+                                                "message"=>"You have a new message.",
+                                                "uri" => 'chat'
+                                               ));
             }
         }
     }
