@@ -18,8 +18,8 @@ if(!isset($argv[1])){
     exit;
 }
 
-$runner = $argv[1];
 
+$runner = $argv[1];
 echo "Starting $runner Runner \n";
 
 try{

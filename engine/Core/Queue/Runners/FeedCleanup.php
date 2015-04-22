@@ -7,38 +7,46 @@ use Minds\entities;
 use Surge;
 
 /**
- * Add entities to multiple feeds, in the background
+ * Removes entities from multiple feeds, in the background
  */
 
-class FeedDispatcher implements Interfaces\QueueRunner{
+class FeedCleanup implements Interfaces\QueueRunner{
     
    public function run(){
        $client = Queue\Client::Build();
        $client->setExchange("mindsqueue", "direct")
-               ->setQueue("FeedDispatcher")
+               ->setQueue("FeedCleanup")
                ->receive(function($data){
-                   echo "Received a feed dispatch request";
+                   echo "Received a feed cleanup request \n";
                    
                    $data = $data->getData();
-                   
-                   $entity = entities\Factory::build($data['guid']);
                    
                    $db = new Data\Call('entities_by_time');
                    $fof = new Data\Call('friendsof');
                    $offset = "";
                    while(true){
-                        $guids = $fof->getRow($entity->owner_guid, array('limit'=>1000, 'offset'=>$offset));
-                        if(!$guids || in_array($offset, $guids))
-                            break; 
-                        $offset = end($guids);
-                        var_dump($guids); 
-                        
-                        $followers = array_keys($guids);
+                        $guids = $fof->getRow($data['owner_guid'], array('limit'=>2000, 'offset'=>$offset));
+                        if(!$guids)
+                            break;
 
+                        $guids = array_keys($guids);
+                        if($offset)
+                            array_shift($guids); 
+                       
+                        if(!$guids)
+                            break;
+                        
+                        if($offset == $guids[0])
+                            break;
+                       
+                        $offset = end($guids);
+                        
+                        $followers =$guids;
                         foreach($followers as $follower)
-                            $db->insert("$entity->type:network:$follower", array($entity->guid => $entity->guid));
+                            $db->removeAttributes("activity:network:$follower", array($data['guid']));
                    }    
-                   
+                  
+                   echo "Succesfully removed all feeds for $guid \n\n";
                });
    }   
            
