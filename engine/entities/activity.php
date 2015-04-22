@@ -5,6 +5,8 @@
 
 namespace minds\entities;
 use Minds\Helpers;
+use Minds\Core\Queue;
+
 class activity extends entity{
 	
 	public $indexes = NULL;
@@ -34,8 +36,19 @@ class activity extends entity{
 		if(!$this->ownerObj && $owner = $this->getOwnerEntity(false))
 			$this->ownerObj = $owner->export();
 		
-		return parent::save($index);
+		$guid = parent::save($index);
 
+        //d
+        if(in_array($this->access_id, array(2, -2, 1))){
+            Queue\Client::build()->setExchange("mindsqueue")
+                                ->setQueue("FeedDispatcher")
+                                ->send(array(
+                                    "guid" => $this->guid,
+                                    "owner_guid" => $this->owner_guid
+                                    ));
+        }
+        
+        return $guid;
 	}
 
     public function delete(){
@@ -71,21 +84,10 @@ class activity extends entity{
 		);
 
 		$owner = $this->getOwnerEntity();	
+        
+        array_push($indexes, "$this->type:user:$owner->guid");
+        array_push($indexes, "$this->type:network:$owner->guid");
 		
-		if($ia || in_array($this->access_id, array(2, -2, 1))){
-			/** Get the followers **/
-			$followers = in_array($this->access_id, array(2, -2, 1)) ? $owner->getFriendsOf(null, 10000, "", 'guids') : array();
-			if(!$followers) $followers = array(); 
-			$followers = array_keys($followers);
-			
-			array_push($indexes, "$this->type:user:$owner->guid");
-
-			array_push($followers, $this->owner_guid);
-			
-			foreach($followers as $follower)
-				array_push($indexes, "$this->type:network:$follower");
-
-		}
 
         if($this->to_guid == $owner->guid)
             array_push($indexes, "$this->type:user:own:$owner->guid");
