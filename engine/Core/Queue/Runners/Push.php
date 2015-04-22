@@ -37,12 +37,14 @@ class Push implements Interfaces\QueueRunner{
                         return false;
                     }
                  
-                    $message = Surge\Messages\Factory::build($token)
+                    $message = Surge\Messages\Factory::build($user->surge_token)
                         ->setTitle($data['message'])
                         ->setMessage($data['message'])
                         ->setURI(isset($data['uri']) ? $data['uri'] : 'chat');
                         
                     Surge\Surge::send($message, $config);
+
+                    echo "sent a push notification to $user->guid \n";
                });
    }   
            
