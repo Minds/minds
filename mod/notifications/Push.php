@@ -15,6 +15,7 @@ class Push {
     public static function send($message = array(), $token = NULL){
         if(!$token)
             return false;
+        
         $config = new Surge\Config(array(
             'Apple' => array(
                 'cert'=> '/var/secure/apns-production.pem'
@@ -45,6 +46,8 @@ class Push {
         $db->insert('push:queue', array($guid->generate() => json_encode($job)));
     }
     
+    
+    /**Deprecated**/
     public static function run(){
         if(!self::$locked)
             self::$locked = true;

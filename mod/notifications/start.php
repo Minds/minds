@@ -234,7 +234,15 @@ class start extends \ElggPlugin{
                 default:
                     $message = "You have a notification";
             }
-            \Minds\plugin\notifications\Push::queue($t, array('message'=>$message, 'uri'=>'notification'));
+
+            Core\Queue\Client::build()->setExchange("mindsqueue")
+                                      ->setQueue("Push")
+                                      ->send(array(
+                                            "user_guid"=>$t,
+                                            "message"=>$message,
+                                            "uri" => 'notification'
+                                           ));
+            //\Minds\plugin\notifications\Push::queue($t, array('message'=>$message, 'uri'=>'notification'));
 		}
 		return $return;
 	}
