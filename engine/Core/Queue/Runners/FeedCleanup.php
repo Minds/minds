@@ -7,7 +7,7 @@ use Minds\entities;
 use Surge;
 
 /**
- * Removes entities from multiple feeds, in the background
+ * Add entities to multiple feeds, in the background
  */
 
 class FeedDispatcher implements Interfaces\QueueRunner{
@@ -15,7 +15,7 @@ class FeedDispatcher implements Interfaces\QueueRunner{
    public function run(){
        $client = Queue\Client::Build();
        $client->setExchange("mindsqueue", "direct")
-               ->setQueue("FeedCleanup")
+               ->setQueue("FeedDispatcher")
                ->receive(function($data){
                    echo "Received a feed dispatch request";
                    
@@ -36,7 +36,7 @@ class FeedDispatcher implements Interfaces\QueueRunner{
                         $followers = array_keys($guids);
 
                         foreach($followers as $follower)
-                            $db->removeAttributes("$entity->type:network:$follower", array($entity->guid));
+                            $db->insert("$entity->type:network:$follower", array($entity->guid => $entity->guid));
                    }    
                    
                });
