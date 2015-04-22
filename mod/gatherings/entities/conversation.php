@@ -5,6 +5,7 @@
  
 namespace minds\plugin\gatherings\entities;
 
+use Minds\Core;
 use Minds\Core\Data;
 use minds\entities\object;
 
