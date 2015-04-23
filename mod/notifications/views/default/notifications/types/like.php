@@ -15,7 +15,7 @@ try{
 
 	$body .= elgg_view('output/url', array('href'=>$actor->getURL(), 'text'=>$actor->name));
 	$body .= ' has voted up ';
-	$body .= elgg_view('output/url', array('href'=>$object_url, 'text'=> $object_title));
+	$body .= elgg_view('output/url', array('href'=>$entity->getURL(), 'text'=> $object_title));
 	
 	$body .= "<br/>";
 	

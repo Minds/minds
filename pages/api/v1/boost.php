@@ -95,29 +95,30 @@ class boost implements interfaces\api{
      * @param array $pages
      */
     public function put($pages){
-	//validate the points
+	    //validate the points
     	$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
-	$guids = $ctrl->getReviewQueue(1, $pages[0]);
-	if(!$guids){
+	    $guids = $ctrl->getReviewQueue(1, $pages[0]);
+	    if(!$guids){
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
         }
-	$points = reset($guids);
+	    $points = reset($guids);
         \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, $pages[0], "boost (remind)");
-	$accept = $ctrl->accept($pages[0], $points);
-	return Factory::response(array());
+	    $accept = $ctrl->accept($pages[0], $points);
+	    return Factory::response(array());
     }
     
     /**
      * Called when a boost is rejected (assume channels only right now)
      */
     public function delete($pages){
-	$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+	    $ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
         $guids = $ctrl->getReviewQueue(1, $pages[0]);
         if(!$guids){
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
         }
         $points = reset($guids);
-	\Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, $pages[0], "boost refund");
+        $entity = new \Minds\entities\activity($pages[0]);
+        \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $pages[0], "boost refund");
     	$ctrl->reject($pages[0]);
     }
     

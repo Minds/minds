@@ -65,17 +65,20 @@ class Counters{
             if(is_numeric($entity)){
                 $prepared[] = $query->update($entity, $metric, $value)->build();
             } elseif($entity->guid) {
-            
 		        $prepared[] = $query->update($entity->guid, $metric, $value)->build();
-                if($entity->remind_object)
+                if($entity->remind_object && isset($entity->remind_object['guid']))
                     $prepared[] = $query->update($entity->remind_object['guid'], $metric, $value)->build();
 
                 if($entity->owner_guid)
                     $prepared[] = $query->update($entity->owner_guid, $metric, $value)->build();
             }
         }
-        $client->batchRequest($prepared);
-    }
+        try {
+            $client->batchRequest($prepared);
+        } catch(\Exception $e){
+            error_log("exception in batch increment " . $e->getMessage());
+        }  
+     }
     
     /**
      * Return the count for a single entity/metric

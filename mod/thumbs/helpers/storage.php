@@ -34,7 +34,7 @@ class storage{
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid(), array($entity->guid => time()));
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid() .":$entity->type", array($entity->guid => time()));
 
-        if(in_array($entity->subtype, array('video', 'image')) || ($entity->type == 'activity' && $entity->customer_data)){        
+        if(in_array($entity->subtype, array('video', 'image')) || ($entity->type == 'activity' && $entity->custom_data)){        
             $prepared = new Core\Data\Neo4j\Prepared\Common();
             $subtype = $entity->subtype;
             $guid = $entity->guid;

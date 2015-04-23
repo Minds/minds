@@ -175,7 +175,7 @@ switch($mime_type){
 	    if ($guid) {
 		$message = elgg_echo("file:saved");
 		system_message($message);
-		add_to_river('river/object/file/create', 'create', elgg_get_logged_in_user_guid(), $file->guid);
+		//add_to_river('river/object/file/create', 'create', elgg_get_logged_in_user_guid(), $file->guid);
 		echo $file->guid;
 		exit;
 	//        forward($file->getURL());

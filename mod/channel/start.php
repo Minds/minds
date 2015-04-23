@@ -35,7 +35,8 @@ class start extends \ElggPlugin{
 		));
 		
 		core\router::registerRoutes(array(
-			'/channel' => "\\minds\\plugin\\channel\\pages\\channel",
+            '/profile' => "\\minds\\plugin\\channel\\pages\\channel",
+            '/channel' => "\\minds\\plugin\\channel\\pages\\channel",
 			'/channels' => "\\minds\\plugin\\channel\\pages\\directory",
 			'/directory' => "\\minds\\plugin\\channel\\pages\\directory",
 			

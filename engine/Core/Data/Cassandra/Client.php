@@ -43,7 +43,7 @@ class Client implements Interfaces\ClientInterface{
 
     public function batchRequest($requests = array()){
 
-        $batchRequest = new CassandraLibrary\Request\Batch(CassandraLibrary\Request\Batch::TYPE_COUNTER, CassandraLibrary\Request\Request::CONSISTENCY_ONE, array('names_for_values'=>true));
+        $batchRequest = new CassandraLibrary\Request\Batch(CassandraLibrary\Request\Batch::TYPE_COUNTER, CassandraLibrary\Request\Request::CONSISTENCY_ONE);
 
         foreach($requests as $request){
             $cql = $request;

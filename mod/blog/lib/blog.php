@@ -607,9 +607,9 @@ function blog_sidebar($blog){
 		
 		if(!$blog->rss_item_id && $blog->featured_id){
 			$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single'));
-		} 
 			
-		$return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
+		    $return .= elgg_view('page/elements/ads', array('type'=>'content-side-single-user-2'));
+        }
 
         $cacher = \Minds\Core\Data\cache\factory::build();
         

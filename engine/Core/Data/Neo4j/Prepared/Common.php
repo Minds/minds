@@ -121,7 +121,20 @@ class Common implements Interfaces\PreparedInterface{
      * @return $this
      */
     public function getSubscriptionsOfSubscriptions(Entities\User $user, $skip = 0){
-        $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]-(fof:User) ".
+        if($user->getSubscriptionsCount() > 500){
+            //users with huge graphs take longer to discover friends of friends, so for now we just show who they aren't subscribed to for speed.
+            //we can perhaps do background tasks for this in the future
+            $this->template = "MATCH (user:User {guid: {guid}}), (fof:User) ".
+                            "WHERE " .
+                             "NOT (user)-[:ACTED]->(fof) " .
+                             "AND NOT (fof.guid = user.guid) " .
+                            "RETURN fof ".
+                            //"ORDER BY COUNT(*) DESC ".
+                            "SKIP {skip} " .
+                            "LIMIT {limit}";
+
+        } else {
+            $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]-(fof:User) ".
                             "WHERE " . 
 			                 "NOT (user)-[:ACTED]->(fof) " .
 			                 "AND NOT (fof.guid = user.guid) " . 
@@ -129,6 +142,7 @@ class Common implements Interfaces\PreparedInterface{
                             //"ORDER BY COUNT(*) DESC ".
                             "SKIP {skip} " . 
                             "LIMIT {limit}";
+        }
         $this->values = array(
                             'guid' => (string) $user->guid,
                             'limit' => 16,
@@ -225,7 +239,7 @@ class Common implements Interfaces\PreparedInterface{
      * Get trending objects
      */
     public function getTrendingObjects($subtype='video', $skip = 0){
-        $this->template = "MATCH (object:$subtype)-[r:UP]-() RETURN object, count(r) as c ORDER BY c DESC SKIP {skip} LIMIT 12";
+        $this->template = "MATCH (object:$subtype)-[r:UP]-() RETURN object, count(r) as c ORDER BY c DESC, object.guid SKIP {skip} LIMIT 12";
         $this->values = array(
             'skip' => (int) $skip,
         );
@@ -296,6 +310,15 @@ class Common implements Interfaces\PreparedInterface{
             );
         return $this;
  
+    }
+
+    public function removeEntity($guid){
+        $this->template = "MATCH (n { guid: {guid} })-[r]-() DELETE n, r";
+        $this->values = array(
+            'guid' => (string) $guid
+        );
+        return $this;
+
     }
 
 }

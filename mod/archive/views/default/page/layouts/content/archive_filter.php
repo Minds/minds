@@ -95,7 +95,12 @@ if ($context) {
 		unset($tabs['mine']);
 		unset($tabs['friends']);
 	}
-	
+
+    if(!elgg_is_admin_logged_in()){
+        unset($tabs['all']);
+
+    }
+
 	foreach ($tabs as $name => $tab) {
 		
 		//remove other options if on the featured wall

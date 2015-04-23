@@ -14,12 +14,14 @@ class header extends core\page implements interfaces\page{
 	
 
 	public function get($pages){
-		
-		$page = new entities\page($pages[0]);
+	    $ia = elgg_set_ignore_access(true);	
+        $page = new entities\page($pages[0]);
 		$header = new \ElggFile();
 		$header->owner_guid = $page->owner_guid;
 		$header->setFilename("cms/page/{$page->guid}.jpg");
-	
+        elgg_set_ignore_access($ia);
+
+
 		header('Content-Type: image/jpeg');
 		header('Expires: ' . date('r', time() + 864000));
 		header("Pragma: public");

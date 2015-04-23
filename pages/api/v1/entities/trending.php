@@ -51,7 +51,7 @@ class trending implements interfaces\api{
                 break;
         }
 
-        if(!$entities){
+        /*if(!$entities){
         //the allowed, plus default, options
         $options = array(
             'type' => isset($pages[0]) ? $pages[0] : 'object',
@@ -75,7 +75,7 @@ class trending implements interfaces\api{
     	$options['guids'] = $guids;
     	$entities = core\entities::get($options);
         }
-
+         */
         if($entities){
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = isset($_GET['load-next']) ? count($entities) + $_GET['load-next'] : count($entities);

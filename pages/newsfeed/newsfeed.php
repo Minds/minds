@@ -318,7 +318,16 @@ class newsfeed extends core\page implements interfaces\page{
                                         ->setMessage($message)
                                         ->setFromEntity($embeded)
                                         ->save();
-                                    break;
+                                        break;
+                                case 'video':
+                                    $activity->setCustom('video', array(
+                                                'thumbnail_src'=>$embeded->getIconUrl(),
+                                                'guid'=>$embeded->guid))
+                                    ->setTitle($embeded->title)
+                                    ->setBlurb($embeded->description)
+                                    ->setFromEntity($embeded)
+                                    ->save();
+                                break;
                             }
                 }
             break; 

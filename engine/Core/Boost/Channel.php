@@ -40,7 +40,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         
         $db = new Data\Call('entities_by_time');
         $result = $db->insert("boost:channel:$this->guid:review", array($guid => $points));
-
+        $db->insert("boost:channel:all:review", array("$this->guid:$guid" => time())); //this is a hack to allow us to refund points after 48 hours. @todo think of something smarter
         
     	error_log("this is $this->guid");        
         //send a notification of boost offer
@@ -132,7 +132,8 @@ class Channel implements interfaces\BoostHandlerInterface{
         //remove from review
         error_log('user_guid is ' . $this->guid);
         $db->removeAttributes("boost:channel:$this->guid:review", array($guid));
-        
+        $db->removeAttributes("boost:channel:all:review", array("$this->guid:$guid"));
+
         $entity = new \Minds\entities\activity($guid);
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
             'to'=>array($entity->owner_guid),
@@ -164,6 +165,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         }
         $db = new Data\Call('entities_by_time');
         $db->removeAttributes("boost:channel:$this->guid:review", array($guid));
+        $db->removeAttributes("boost:channel:all:review", array("$this->guid:$guid"));
 
         $entity = new \Minds\entities\activity($guid);
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
@@ -186,5 +188,39 @@ class Channel implements interfaces\BoostHandlerInterface{
        ///
        
     }
-        
+
+    public function autoExpire(){
+
+        $db = new Data\Call('entities_by_time');
+        $boosts = $db->getRow("boost:channel:all:review");
+        foreach($boosts as $boost => $ts){
+            list($destination, $guid) = explode(':',$boost);
+            if(time() > $ts + (3600 * 48)){
+                $this->guid = $destination;
+                $guids = $this->getReviewQueue(1, $guid);
+                $points = reset($guids);
+               
+                echo "$guid has expired. refunding ($points) points to $destination \n";
+               
+                $db->removeAttributes("boost:channel:all:review", array($boost));
+                $db->removeAttributes("boost:channel:$destination:review", array($guid));
+               
+                $entity =  new \Minds\entities\activity($guid);
+               
+                \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $guid, "boost refund");
+               
+                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                    'to'=>array($entity->owner_guid),
+                    'from'=> $destination,
+                    'object_guid' => $guid,
+                    'title' => $entity->title,
+                    'notification_view' => 'boost_rejected',
+                    ));
+            } else {
+                echo "$guid is ok... \n";
+            }
+        }
+
+    }
+
 }

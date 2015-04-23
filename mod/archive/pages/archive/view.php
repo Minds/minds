@@ -42,9 +42,9 @@ switch($entity->subtype){
 		minds\plugin\social\start::setMetatags('og:image', $thumbnail);
 		minds\plugin\social\start::setMetatags('og:title', $title);
 		minds\plugin\social\start::setMetatags('og:description', $description);
-		minds\plugin\social\start::setMetatags('og:video:url', $entity->getUrl().'?view=embed');
-		minds\plugin\social\start::setMetatags('og:video:secure_url',  $entity->getUrl().'?view=embed'); 
-		minds\plugin\social\start::setMetatags('og:video:type', 'text/html');
+		minds\plugin\social\start::setMetatags('og:video:url', $entity->getSourceUrl('360.mp4'));
+		minds\plugin\social\start::setMetatags('og:video:secure_url',   $entity->getSourceUrl('360.mp4')); 
+		minds\plugin\social\start::setMetatags('og:video:type', 'video/mp4');
 		minds\plugin\social\start::setMetatags('og:video:width', '1280');
 		minds\plugin\social\start::setMetatags('og:video:height', '720');
 	 

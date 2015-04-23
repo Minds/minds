@@ -4,6 +4,24 @@ require_once(dirname(dirname(__FILE__)) . "/engine/start.php");
 
 use Minds\Core;
 use Minds\Core\Data;
+use Minds\Helpers;
+
+
+$page = new \Minds\plugin\cms\entities\page(404652918289993728);
+$page->owner_guid = "100000000000000341";
+$page->save();
+exit;
+$db = new Minds\Core\Data\Call('entities_by_time');
+$guids = $db->getRow("object:image:user:100000000000000599");
+
+foreach($guids as $guid){
+    $prepared = new Core\Data\Neo4j\Prepared\Common();
+    $result= Core\Data\Client::build('Neo4j')->request($prepared->removeEntity($guid));
+    
+    echo "$guid \n";
+}
+
+exit;
 
 var_dump(new Minds\entities\user('collectiveevolution'));
 exit;
