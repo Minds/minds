@@ -20,11 +20,12 @@ class FeedDispatcher implements Interfaces\QueueRunner{
                    echo "Received a feed dispatch request \n";
                    
                    $data = $data->getData();
-                   
+                   $keyspace = $data['keyspace'];
+
                    $entity = entities\Factory::build($data['guid']);
                    
-                   $db = new Data\Call('entities_by_time');
-                   $fof = new Data\Call('friendsof');
+                   $db = new Data\Call('entities_by_time', $keyspace);
+                   $fof = new Data\Call('friendsof', $keyspace);
                    $offset = "";
                    while(true){
                         $guids = $fof->getRow($entity->owner_guid, array('limit'=>2000, 'offset'=>$offset));

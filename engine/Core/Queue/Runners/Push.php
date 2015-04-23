@@ -19,6 +19,11 @@ class Push implements Interfaces\QueueRunner{
                    echo "Received a push notification";
                    
                    $data = $data->getData();
+                   $keyspace = $data['keyspace'];
+                   
+                   //for multisite support.
+                   global $CONFIG; 
+                   $CONFIG->cassandra->keyspace = $keyspace;
                    
                    $config = new Surge\Config(array(
                         'Apple' => array(

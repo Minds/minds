@@ -20,9 +20,10 @@ class FeedCleanup implements Interfaces\QueueRunner{
                    echo "Received a feed cleanup request \n";
                    
                    $data = $data->getData();
+                   $keyspace = $data['keyspace'];
                    
-                   $db = new Data\Call('entities_by_time');
-                   $fof = new Data\Call('friendsof');
+                   $db = new Data\Call('entities_by_time', 'keyspace');
+                   $fof = new Data\Call('friendsof', 'keyspace');
                    $offset = "";
                    while(true){
                         $guids = $fof->getRow($data['owner_guid'], array('limit'=>2000, 'offset'=>$offset));

@@ -64,10 +64,13 @@ class Client implements Interfaces\QueueClient{
        return $this;
     }
     
-    public function setQueue($name = "", $binder =""){
+    public function setQueue($name = "", $binder = ""){
         
        if(!$this->exchange)
             throw new \Exception("setExchange() must be called prio to setQueue");
+       
+       if(!$binder)
+        $binder = $name;
         
        $this->queue = $name;
        $this->binder = $binder;
