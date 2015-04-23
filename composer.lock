@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "467bc1be792d74f58d263f1d8fa53d6a",
+    "hash": "75e403d4c054907427d7839ae252734e",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -155,12 +155,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/duoshuo/php-cassandra.git",
-                "reference": "731146e6b9f37bd0f2cdbbe7b58be49cb8cd6a29"
+                "reference": "8268f9af0ed9d4faf5a1c71a79680ec345e98c93"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/duoshuo/php-cassandra/zipball/731146e6b9f37bd0f2cdbbe7b58be49cb8cd6a29",
-                "reference": "731146e6b9f37bd0f2cdbbe7b58be49cb8cd6a29",
+                "reference": "8268f9af0ed9d4faf5a1c71a79680ec345e98c93",
                 "shasum": ""
             },
             "require": {
@@ -194,7 +194,7 @@
                 "driver",
                 "nosql"
             ],
-            "time": "2015-04-10 11:11:38"
+            "time": "2015-03-06 12:44:41"
         },
         {
             "name": "elasticsearch/elasticsearch",

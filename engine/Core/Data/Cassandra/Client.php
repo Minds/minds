@@ -33,7 +33,7 @@ class Client implements Interfaces\ClientInterface{
         if($response instanceof \Cassandra\Response\Error)
             throw new \Exception($response->getData());
 
-        if($response->getData())
+        if($response->getData() && $cql['values'])
                return $response->fetchAll();
         else
             return true; //assume true because of no exception

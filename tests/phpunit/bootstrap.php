@@ -31,6 +31,9 @@ error_reporting(E_ALL | E_STRICT);
  */
 try{
 	require_once($root .'/install/ElggInstaller.php');
+    
+    $CONFIG->cassandra = (object) array( 'servers'=> array('localhost'), 'keyspace'=>'minds_test_phpcassa', 'cql_servers'=> array('localhost'));
+    
 	$db = new Minds\Core\Data\Call(null, 'minds_test_phpcassa', array('localhost'));
 	if($db->keyspaceExists()){
 		$db->dropKeyspace(true);
@@ -39,7 +42,7 @@ try{
 	$db->installSchema();
 	
 	//bootstrap the cassandra config
-	$CONFIG->cassandra = (object) array( 'servers'=> array('localhost'), 'keyspace'=>'minds_test_phpcassa');
+	
 	$CONFIG->default_access = 2; //public access
 
 	$site = new ElggSite();

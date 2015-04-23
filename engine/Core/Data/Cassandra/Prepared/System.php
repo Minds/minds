@@ -9,7 +9,7 @@ use  Minds\Core\Data\Interfaces;
 class System implements Interfaces\PreparedInterface{
     
     private $template;
-    private $values; 
+    private $values = array(); 
     
     public function build(){
         return array(
