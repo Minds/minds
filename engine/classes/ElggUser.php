@@ -162,13 +162,13 @@ class ElggUser extends ElggEntity
         $db = new Minds\Core\Data\Call('entities');
         $array = $this->toArray();
         if(!$this->override_password && !$new){
-            error_log('ignoring password save');
-            error_log("new is $new and override is $this->override_password");
+            //error_log('ignoring password save');
+            //error_log("new is $new and override is $this->override_password");
             //echo "updating pswd"; exit;
             unset($array['password']);
             unset($array['salt']);
         }else{
-            error_log('allowing password save!');
+            //error_log('allowing password save!');
         }
         $result = $db->insert($this->guid, $array);
 

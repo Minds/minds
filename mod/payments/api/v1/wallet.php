@@ -45,13 +45,8 @@ class wallet implements interfaces\api{
                 
             case "transactions":
                 $entities = Core\entities::get(array('subtype'=>'points_transaction', 'owner_guid'=> Core\session::getLoggedinUser()->guid, 'limit'=>isset($_GET['limit']) ? $_GET['limit'] : 12, 'offset'=>isset($_GET['offset']) ? $_GET['offset'] : ""));
-                if(isset($_GET['offset']) && $_GET['offset'])
-                    array_shift($entities);
-
-                if($entities){
-                    $response['transactions'] = factory::exportable($entities);
-                    $response['load-next'] = (string) end($entities)->guid;
-                }
+                $response['transactions'] = factory::exportable($entities);
+                $response['load-next'] = end($entities)->guid;
                 break;
                 
         }
