@@ -33,7 +33,7 @@ class Subscriptions{
             $return =  true;
         
         $prepared = new Core\Data\Neo4j\Prepared\Common();
-        $return =  Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
+        Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
 
         //grab the newsfeed
         $nf = new Core\Data\Call('entities_by_time');
@@ -53,13 +53,14 @@ class Subscriptions{
                 'notification_view' => 'friends',
                 'params' => array()
                 )); 
-        return $return;
+                
+        return (bool) $return;
 
     }
     
     public static function unSubscribe($user, $from){
 
-	$return = false;
+	   $return = false;
         
         $friends = new Core\Data\Call('friends');
         $friendsof = new Core\Data\Call('friendsof');
@@ -79,15 +80,50 @@ class Subscriptions{
             $nf->removeAttributes("activity:network:$user", array_keys($feed));
 
         $cacher = Core\Data\cache\factory::build();
-        $cacher->set("$user:isSubscribed:$to",false);
-        $cacher->set("$to:isSubscriber:$user", false);
+        $cacher->set("$user:isSubscribed:$from",false);
+        $cacher->set("$from:isSubscriber:$user", false);
 
         \Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
-        return $return;
+        return (bool) $return;
         
     }
     
     public static function isSubscribed($user, $to){
+        $cacher = Core\Data\cache\factory::build();
+
+        if($cacher->get("$user:isSubscribed:$to"))
+            return true;
+        if($cacher->get("$user:isSubscribed:$to") === 0)
+           return false;
+        
+        $return = 0;
+        $db = new Core\Data\Call('friends');
+        $row = $db->getRow($user, array('limit'=> 1, 'offset'=>$to));
+        if($row && key($row) == $to)
+            $return = true;
+        
+        $cacher->set("$user:isSubscribed:$to", $return);
+
+        return (bool) $return ;   
+    }
+    
+    public static function isSubscriber($user, $to){
+        $cacher = Core\Data\cache\factory::build();
+
+        if($cacher->get("$user:isSubscriber:$to"))
+            return true;
+        if($cacher->get("$user:isSubscriber:$to") === 0)
+            return false;
+
+        $return = 0;
+        $db = new Core\Data\Call('friendsof');
+        $row = $db->getRow($user, array('limit'=> 1, 'offset'=>$to));
+        if($row && key($row) == $to)
+            $return = true;
+
+        $cacher->set("$user:isSubscriber:$to", $return);
+
+        return (bool) $return; 
     }
     
     public static function getSubscriptions($user){
