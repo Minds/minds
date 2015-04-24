@@ -40,6 +40,16 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
                 'invitecode' => ""
             );
             elgg_trigger_plugin_hook('register', 'user', $params, TRUE);
+            
+            \Minds\plugin\payments\start::createTransaction($guid, 100, $guid, "Welcome.");
+            Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                'to'=>array($guid),
+                'from' => 100000000000000519,
+                'notification_view' => 'welcome_points',
+                'params' => array('points'=>100),
+                'points' => 100
+                ));
+
             $response = array('guid'=>$guid);
         } catch (\Exception $e){
             $response = array('status'=>'error', 'message'=>$e->getMessage());
