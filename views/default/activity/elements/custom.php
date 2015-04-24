@@ -6,7 +6,8 @@ $data = is_array($vars['data']) ? $vars['data'] : json_decode(json_encode($vars[
 if($type == 'batch'){
 elgg_load_js('popup');
 ?>
-	<div class="archive-batch archive-batch-<?=count($data)?>">
+    <p>Uploaded <?=count($data)?> image</a>
+    <div class="archive-batch archive-batch-<?=count($data)?>">
 		<?php foreach($data as $image):
 			$image = (array) $image;
 			if(strpos($image['href'], 'wall/attachment') !== FALSE)
