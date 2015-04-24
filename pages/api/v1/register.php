@@ -50,6 +50,16 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
                 'points' => 100
                 ));
 
+            //@todo maybe put this in background process
+            foreach(array("welcome_boost", "welcome_chat", "welcome_discover") as $notif_type){
+               Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                'to'=>array($guid),
+                'from' => "100000000000000519",
+                'notification_view' => $notif_type,
+                )); 
+            }
+
+
             $response = array('guid'=>$guid);
         } catch (\Exception $e){
             $response = array('status'=>'error', 'message'=>$e->getMessage());
