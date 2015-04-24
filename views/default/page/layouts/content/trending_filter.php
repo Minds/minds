@@ -59,7 +59,11 @@ if (elgg_is_logged_in() && $context) {
 	if(!elgg_is_active_plugin('analytics')){
 		unset($tabs['trending']);
 	}
-	
+
+    if(!elgg_is_admin_logged_in()){
+        unset($tabs['all']);
+    }
+
 	foreach ($tabs as $name => $tab) {
 		$tab['name'] = $name;
 		
