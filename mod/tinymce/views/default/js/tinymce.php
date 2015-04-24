@@ -61,7 +61,7 @@ elgg.tinymce.init = function() {
 	    plugins: [
 	         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
 	         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-	         "save table contextmenu directionality emoticons template paste textcolor"
+	         "save table directionality emoticons template paste textcolor"
 	   ],
 	   content_css: elgg.get_site_url()+"css/elgg.0.css",
 	   toolbar: "fontselect | fontsizeselect | styleselect | forecolor | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media", 
