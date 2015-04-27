@@ -4,6 +4,7 @@ $options = array(
 	'type' => 'object',
 	'subtype' => 'cancel_account_request',
 	'owner_guid' => $userguid,
+    'limit'=>100, 
 	'count' => true
 );
 
