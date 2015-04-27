@@ -38,15 +38,20 @@ class wallet implements interfaces\api{
                 $response['ex'] = array(
                     'usd' => 0.001
                 );
-		        $response['satoshi'] = $satoshi;
+                $response['satoshi'] = $satoshi;
                 $response['btc'] = sprintf('%.9f', $btc);
                 $response['usd'] = round($count / 10000, 2);
                 break;
                 
             case "transactions":
                 $entities = Core\entities::get(array('subtype'=>'points_transaction', 'owner_guid'=> Core\session::getLoggedinUser()->guid, 'limit'=>isset($_GET['limit']) ? $_GET['limit'] : 12, 'offset'=>isset($_GET['offset']) ? $_GET['offset'] : ""));
-                $response['transactions'] = factory::exportable($entities);
-                $response['load-next'] = end($entities)->guid;
+                if(isset($_GET['offset']) && $_GET['offset'])
+                    array_shift($entities);
+
+                if($entities){
+                    $response['transactions'] = factory::exportable($entities);
+                    $response['load-next'] = (string) end($entities)->guid;
+                }
                 break;
                 
         }
