@@ -22,8 +22,8 @@ class FeedCleanup implements Interfaces\QueueRunner{
                    $data = $data->getData();
                    $keyspace = $data['keyspace'];
                    
-                   $db = new Data\Call('entities_by_time', 'keyspace');
-                   $fof = new Data\Call('friendsof', 'keyspace');
+                   $db = new Data\Call('entities_by_time', $keyspace);
+                   $fof = new Data\Call('friendsof', $keyspace);
                    $offset = "";
                    while(true){
                         $guids = $fof->getRow($data['owner_guid'], array('limit'=>2000, 'offset'=>$offset));
