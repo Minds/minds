@@ -164,7 +164,7 @@ class channel implements interfaces\api{
                 if(!$owner->canEdit()){
                     return Factory::response(array('status'=>'error'));
                 }
-                foreach(array('name', 'website', 'briefdescription') as $field){
+                foreach(array('name', 'website', 'briefdescription', 'gender', 'dob', 'zip') as $field){
                     if(isset($_POST[$field]))
                         $owner->$field = $_POST[$field];
                 }
