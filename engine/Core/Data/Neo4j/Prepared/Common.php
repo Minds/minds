@@ -318,7 +318,7 @@ class Common implements Interfaces\PreparedInterface{
      * @return $this
      */
     public function updateEntity($entity, $properties = array()){
-        $this->template = "MERGE (entity { guid: {guid}}) SET entity += {properties}";
+        $this->template = "MERGE (entity { guid: {guid}}) SET entity += {properties} RETURN id(entity)";
         $this->values = array(
             'guid'=>$entity->guid, 
             'properties'=>$properties

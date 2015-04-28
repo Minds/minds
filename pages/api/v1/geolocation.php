@@ -32,7 +32,7 @@ class geolocation implements interfaces\api, interfaces\ApiIgnorePam{
 
         return Factory::response(array(
             'city' => $city,
-            'coorinates' => $coorinates
+            'coordinates' => $coorinates
         ));
     }
     

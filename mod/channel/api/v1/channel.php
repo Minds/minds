@@ -44,6 +44,7 @@ class channel implements interfaces\api{
         );
         $response['channel']['chat'] = (bool) elgg_get_plugin_user_setting('option', elgg_get_logged_in_user_guid(), 'gatherings') == 1 ? true : false;
         $response['channel']['briefdescription'] = $response['channel']['briefdescription'] ?: '';
+        $response['channel']['city'] = $response['channel']['city'] ?: "";
         //$response['channel']['gender'] = 'male'; 
 
         $carousels = core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
@@ -168,6 +169,16 @@ class channel implements interfaces\api{
                 foreach(array('name', 'website', 'briefdescription', 'gender', 'dob', 'city', 'coordinates') as $field){
                     if(isset($_POST[$field]))
                         $owner->$field = $_POST[$field];
+                }
+                if(isset($_POST['coordinates'])){
+                    //update neo4j with our coordinates
+                    $prepared = new Core\Data\Neo4j\Prepared\Common();
+                    list($lat, $lon) = explode(',',$_POST['coordinates']);
+                    $result = Core\Data\Client::build('Neo4j')->request($prepared->updateEntity($owner, array('lat'=> $lat, 'lon'=>$lon)));
+                    $rows = $result->getRows();
+                    $id = $rows["id(entity)"][0];
+                    error_log(print_r($id, true));
+                    Core\Data\Client::build('Neo4j')->request($prepared->linkNodeToGeom($id));
                 }
                 $owner->save();
        }
