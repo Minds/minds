@@ -53,7 +53,7 @@ class newsfeed implements interfaces\api{
             array_shift($activity);
         }
 
-        \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
+     //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
        
         if(get_input('offset') == "" && $pages[0] == 'network'){
             $boost_guid = Core\Boost\Factory::build("Newsfeed")->getBoost();
@@ -148,7 +148,17 @@ class newsfeed implements interfaces\api{
     }
     
     public function put($pages){
-        
+
+        $activity = new entities\activity($pages[0]);
+        if(!$activity->guid)
+            return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
+
+        switch($pages[1]){
+            case 'view':
+                \Minds\Helpers\Counters::increment($activity->guid, "impression");
+                break;
+        }
+
         return Factory::response(array());
         
     }
