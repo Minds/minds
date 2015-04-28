@@ -311,7 +311,26 @@ class Common implements Interfaces\PreparedInterface{
         return $this;
  
     }
+    
+    /**
+     * Update a node
+     * @param Entity $entity
+     * @return $this
+     */
+    public function updateEntity($entity, $properties = array()){
+        $this->template = "MERGE (entity { guid: {guid}}) SET entity += {properties}";
+        $this->values = array(
+            'guid'=>$entity->guid, 
+            'properties'=>$properties
+            );
+        return $this;
+    }
 
+    /**
+     * Remove a node
+     * @param Entity $entity
+     * @return $this
+     */
     public function removeEntity($guid){
         $this->template = "MATCH (n { guid: {guid} })-[r]-() DELETE n, r";
         $this->values = array(
@@ -319,6 +338,41 @@ class Common implements Interfaces\PreparedInterface{
         );
         return $this;
 
+    }
+    
+    /**
+     * Links a node to a geom layer
+     * ** THIS REQUIRES YOU TO HAVE THE NODE ID, NODE ENTIY GUID **
+     * @param int $node_id
+     * @return $this
+     */
+    public function linkNodeToGeom($node_id){
+        $this->template = ':POST /db/data/index/node/geom 
+{ 
+    "value" : "dummy",
+    "key" : "dummy", 
+    "uri" : "http://localhost:7474/db/data/node/' . $node_id . '"
+}';
+        return $this;
+    }
+    
+    /**
+     * Return users via their location
+     * @param User/string/int $user (can be an object or guid)
+     * @param string (optional) $latlong
+     * @param double (optional) $distance - distance to search
+     * @return $this
+     */
+    public function getUserByLocation($user, $latlon = NULL, $distance = 100.0){
+        if($latlon)
+            $latlong = $user->coordinates;
+        
+        $this->template = "start n = node:geom({filter}) MATCH (u:User {guid:{guid}}) WHERE NOT u-[:ACTED]-n AND NOT u.guid = n.guid return n";
+        $this->value = array(
+            "filter" => "withinDistance:[$latlong,$distance]",
+            "guid" => is_object($user) ? $user->guid : $user
+        );
+        return $this;
     }
 
 }

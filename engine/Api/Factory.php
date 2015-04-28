@@ -13,7 +13,9 @@ class Factory{
      * This is almost like an autoloader
      */
     public static function build($segments){
+        try{
         Helpers\RequestMetrics::increment('api');
+        } catch(\Exception $e){}
        
         $method = strtolower($_SERVER['REQUEST_METHOD']);
         
