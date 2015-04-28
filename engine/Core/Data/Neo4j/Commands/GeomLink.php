@@ -9,7 +9,14 @@ use Neoxygen\NeoClient\Command\AbstractCommand;
 */
 class GeomLink extends AbstractCommand
 {
+
+
     public $node_id;
+
+    private $nodeUri;
+    public function setArguments($nodeUri){
+        $this->nodeUri = (string) $nodeUri;
+    }
 
     public function execute()
     {
@@ -18,13 +25,14 @@ class GeomLink extends AbstractCommand
         $data = json_encode(array(
                     "value" => "dummy",
                     "key" => "dummy",
-                    "uri" => "http://localhost:7474/db/data/node/' . $this->node_id . '"
+                    "uri" => $this->nodeUri 
                 ));
 
         // The arguments for the send method of the http client are
         // $method, $path, $body = null, $connectionAlias = null
 
-        return $this->httpClient->send($method, $path, $data, $this->connection);
+        return $this->process($method, $path, $data, $this->connection);
+//        return $this->httpClient->sendRequest($request);
     }
 }
 

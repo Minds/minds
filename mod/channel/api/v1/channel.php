@@ -174,11 +174,11 @@ class channel implements interfaces\api{
                     //update neo4j with our coordinates
                     $prepared = new Core\Data\Neo4j\Prepared\Common();
                     list($lat, $lon) = explode(',',$_POST['coordinates']);
-                    $result = Core\Data\Client::build('Neo4j')->request($prepared->updateEntity($owner, array('lat'=> $lat, 'lon'=>$lon)));
+                    $result = Core\Data\Client::build('Neo4j')->request($prepared->updateEntity($owner, array('lat'=> (double) $lat, (double) 'lon'=>$lon)));
                     $rows = $result->getRows();
                     $id = $rows["id(entity)"][0];
                     error_log(print_r($id, true));
-                    Core\Data\Client::build('Neo4j')->request($prepared->linkNodeToGeom($id));
+                    Core\Data\Client::build('Neo4j')->client()->geoLink($id);
                 }
                 $owner->save();
        }

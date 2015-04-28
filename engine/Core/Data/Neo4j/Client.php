@@ -17,7 +17,7 @@ class Client implements Interfaces\ClientInterface{
         //$this->neo4j = new \Everyman\Neo4j\Client(isset($CONFIG->neo4j_server) ? $CONFIG->neo4j_server : NULL);
     	$this->neo4j = NeoClient\ClientBuilder::create()
                     ->addConnection('default','http',isset($CONFIG->neo4j_server) ? $CONFIG->neo4j_server : 'localhost',7474, true, 'neo4j', 'Avitas@201')
-                    ->registerCommand('geomlink', 'Minds\Core\Data\Neo4j\Commands\GeomLink')
+                    ->registerExtension('geo', 'Minds\Core\Data\Neo4j\Extensions\Geo')
                     ->setAutoFormatResponse(true)
                     ->setDefaultTimeout(20)
     				->build();
@@ -33,5 +33,9 @@ class Client implements Interfaces\ClientInterface{
         $response = $this->neo4j->sendCypherQuery($build['string'], $build['values']);
         return $response;
     }
-    
+
+    public function client($command){
+         return $this->neo4j;
+    }
+
 }    
