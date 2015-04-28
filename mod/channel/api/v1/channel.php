@@ -44,6 +44,7 @@ class channel implements interfaces\api{
         );
         $response['channel']['chat'] = (bool) elgg_get_plugin_user_setting('option', elgg_get_logged_in_user_guid(), 'gatherings') == 1 ? true : false;
         $response['channel']['briefdescription'] = $response['channel']['briefdescription'] ?: '';
+        $response['channel']['gender'] = 'male'; 
 
         $carousels = core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
         foreach($carousels as $carousel){
@@ -164,7 +165,7 @@ class channel implements interfaces\api{
                 if(!$owner->canEdit()){
                     return Factory::response(array('status'=>'error'));
                 }
-                foreach(array('name', 'website', 'briefdescription') as $field){
+                foreach(array('name', 'website', 'briefdescription', 'gender', 'dob', 'zip') as $field){
                     if(isset($_POST[$field]))
                         $owner->$field = $_POST[$field];
                 }

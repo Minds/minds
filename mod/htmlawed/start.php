@@ -55,7 +55,9 @@ function htmlawed_filter_tags($hook, $type, $result, $params) {
 		'cdata'=>0,
 		'hook_tag' => 'htmlawed_tag_post_processor',
 		'elements'=>'*-applet-script,'.$extraALLOW, // object, embed allowed
-		'schemes' => '*:http,https,ftp,news,mailto,rtsp,teamspeak,gopher,mms,callto',
+        'schemes' => '*:http,https,ftp,news,mailto,rtsp,teamspeak,gopher,mms,callto',
+        'css_expression' => true,
+        'style_pass' => 1
 		// apparent this doesn't work.
 		// 'style:color,cursor,text-align,font-size,font-weight,font-style,border,margin,padding,float'
 	);
@@ -112,7 +114,7 @@ function htmlawed_tag_post_processor($element, $attributes = false) {
 		'font-weight', 'font-style', 'border', 'border-top', 'background-color',
 		'border-bottom', 'border-left', 'border-right',
 		'margin', 'margin-top', 'margin-bottom', 'margin-left',
-		'margin-right',	'padding', 'float', 'text-decoration'
+		'margin-right',	'padding', 'float', 'text-decoration', 'display'
 	);
 
 	$params = array('tag' => $element);
