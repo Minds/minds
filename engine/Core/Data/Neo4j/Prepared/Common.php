@@ -363,15 +363,21 @@ class Common implements Interfaces\PreparedInterface{
      * @param double (optional) $distance - distance to search
      * @return $this
      */
-    public function getUserByLocation($user, $latlon = NULL, $distance = 100.0){
-        if($latlon)
-            $latlong = $user->coordinates;
-        
-        $this->template = "start n = node:geom({filter}) MATCH (u:User {guid:{guid}}) WHERE NOT u-[:ACTED]-n AND NOT u.guid = n.guid return n";
-        $this->value = array(
-            "filter" => "withinDistance:[$latlong,$distance]",
-            "guid" => is_object($user) ? $user->guid : $user
+    public function getUserByLocation($user, $latlon = NULL, $distance = 100.0, $limit = 12, $skip = 0){
+        if(!$latlon)
+            $latlon = $user->coordinates;
+
+        $km = $distance * 1.609344;       
+        $distance =  number_format((float)$km, 2, '.', '');  
+       
+        $this->template = "start n = node:geom({filter}) MATCH (u:User {guid:{guid}}) WHERE NOT u-[:ACTED]->n AND NOT u.guid = n.guid return n as fof SKIP {skip} LIMIT {limit}";
+        $this->values = array(
+            "filter" => "withinDistance:[$latlon,$distance]",
+            "guid" => is_object($user) ? $user->guid : $user,
+            "limit"=> (int) $limit,
+            "skip" => (int) $skip
         );
+        error_log(print_r($this->values, true));
         return $this;
     }
 

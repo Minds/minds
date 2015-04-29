@@ -67,9 +67,13 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
                 break; 
             case 'user':
             default:
-                
-                $result= Data\Client::build('Neo4j')->request($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser(), $_GET['skip']));
-                
+            
+                if(isset($_GET['nearby']) && $_GET['nearby'] === "true"){
+                    $result= Data\Client::build('Neo4j')->request($prepared->getUserByLocation(Core\session::getLoggedInUser(), $_GET['coordinates'], isset($_GET['distance']) ? $_GET['distance'] : 25, 12, $_GET['skip']));
+                } else {                
+                    $result= Data\Client::build('Neo4j')->request($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser(), $_GET['skip']));
+                }
+
                 $rows = $result->getRows();
                 $guids = array();
                 foreach($rows['fof'] as $fof){
