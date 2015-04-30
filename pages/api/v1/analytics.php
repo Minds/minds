@@ -27,7 +27,6 @@ class analytics implements interfaces\api{
     public function put($pages){
         switch($pages[0]){
             case 'open':
-                error_log("analytics setting " . Core\session::getLoggedinUser()->guid);
                 $db = new Core\Data\Call('entities_by_time');
                 $db->insert("analytics:open", array(Core\session::getLoggedinUser()->guid => time()), 300);
             break;
