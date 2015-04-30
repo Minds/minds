@@ -28,7 +28,6 @@ $content = elgg_list_entities($options);
 
 $sidebar = elgg_view('archive/sidebar');
 
-$context = elgg_extract('context', $vars, elgg_get_context());
 elgg_register_menu_item('title', array('name'=>'upload', 'text'=>elgg_echo('upload'), 'href'=>'archive/upload','class'=>'elgg-button elgg-button-action'));
 /*
 		// Get categories, if they're installed
