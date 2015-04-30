@@ -50,7 +50,7 @@ class FeedDispatcher implements Interfaces\QueueRunner{
                             $db->insert("$entity->type:network:$follower", array($entity->guid => $entity->guid));
                    }    
                   
-                   echo "Succesfully deployed all feeds for $entity->guid \n\n";
+                   echo "Succesfully deployed all feeds for $entity->owner_guid:$entity->guid \n\n";
                });
    }   
            
