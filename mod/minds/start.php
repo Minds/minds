@@ -116,6 +116,9 @@ function minds_init(){
 				if(!file_exists($filename))
 					$filename = $CONFIG->dataroot . 'carousel/' . $page[1] . '.jpg';
 
+                    if(!file_exists($filename))
+                        exit;
+                    
                     $finfo    = finfo_open(FILEINFO_MIME);
                     $mimetype = finfo_file($finfo, $filename);
                     finfo_close($finfo);
