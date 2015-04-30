@@ -200,7 +200,7 @@ class channel extends core\page implements interfaces\page{
 				break;
 			case 'thumbs':
 			case 'votes':
-				$guids = \minds\plugin\thumbs\helpers\lists::getUserThumbsGuids($user, false, array('limit'=>$limit, 'offset'=>$offset));
+				$guids = \minds\plugin\thumbs\helpers\lists::getUserThumbsGuids($user, false, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
 				if($guids)
 					$content .= core\entities::view(array('guids'=>$guids, 'full_view'=>false, 'list_class' => 'list-newsfeed'));
 				$class = 'single-column';
