@@ -377,7 +377,6 @@ class Common implements Interfaces\PreparedInterface{
             "limit"=> (int) $limit,
             "skip" => (int) $skip
         );
-        error_log(print_r($this->values, true));
         return $this;
     }
 

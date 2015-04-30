@@ -26,7 +26,6 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
         $prepared = new Data\Neo4j\Prepared\Common();
         if(!isset($pages[1]))
             $pages[1] = $pages[0];
-	error_log("loading suggested entities");
 	$ts = microtime(true);
         switch($pages[1]){
             case 'video':
