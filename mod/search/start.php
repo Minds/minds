@@ -48,7 +48,7 @@ class start extends \minds\Components\Plugin{
 	 */
 	public function createDocument($entity){
 		global $CONFIG;
-		error_log("attempting index of $entity->type");
+		//error_log("attempting index of $entity->type");
 		if(in_array($entity->subtype, array('blog','image','album','video')) || $entity->type == 'user' || $entity->type == 'activity'){
 
 			$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search')?:'localhost')));
