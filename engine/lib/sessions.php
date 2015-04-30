@@ -342,11 +342,13 @@ function logout() {
 	 * Cookie cleanup
 	 */
 	$user = elgg_get_logged_in_user_entity();
-	foreach($user as $k=>$v){
-		if(strpos($k, 'cookie:') !== FALSE){
-			$user->removePrivateSetting($k);
-		}
-	}
+    if($user){
+        foreach($user as $k=>$v){
+            if(strpos($k, 'cookie:') !== FALSE){
+                $user->removePrivateSetting($k);
+            }
+        }
+    }
 	
 	if (isset($_SESSION['user'])) {
 		if (!elgg_trigger_event('logout', 'user', $_SESSION['user'])) {
@@ -366,8 +368,10 @@ function logout() {
 	setcookie("mindsperm", "", (time() - (86400 * 30)), "/");
 	setcookie("mindsSSO", "", (time() - (86400 * 30)), "/");
 
-	session_destroy();
-	session_regenerate_id(true);
+    if(session_id() !== ''){
+	    session_destroy();
+        session_regenerate_id(true);
+    }
 	setcookie(session_name(), '', (time() - (86400 * 30)), "/");
 	
 	elgg_trigger_event('loggedout', 'user', $user);
