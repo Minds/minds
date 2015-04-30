@@ -11,7 +11,9 @@ $conversations = $vars['conversations'];
 
 </form>
 <ul class="conversations-list">
-	<?php foreach($conversations as $user):
+<?php 
+    if($conversations){
+    foreach($conversations as $user):
 		if($user->guid == elgg_get_logged_in_user_entity()->guid)
 			continue;
 	 ?>
@@ -30,6 +32,9 @@ $conversations = $vars['conversations'];
 				
 			</a>
 		</li>
-	<?php endforeach; ?>
+<?php 
+    endforeach; 
+    }    
+?>
 </ul>
 <a href="<?= elgg_get_site_url() ?>gatherings/configuration" style="display:block; padding:16px; font-weight:bold;">Configuration & Settings</a>
