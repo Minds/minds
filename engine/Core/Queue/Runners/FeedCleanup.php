@@ -47,7 +47,7 @@ class FeedCleanup implements Interfaces\QueueRunner{
                             $db->removeAttributes("activity:network:$follower", array($data['guid']));
                    }    
                   
-                   echo "Succesfully removed all feeds for $guid \n\n";
+                   echo "Succesfully removed all feeds for " . $data['guid'] . " \n\n";
                });
    }   
            
