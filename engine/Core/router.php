@@ -62,7 +62,10 @@ class router{
 			if(isset(self::$routes[$route])){
 				$handler = new self::$routes[$route]();
 				$pages = array_splice($segments, $loop) ?: array();
-				return $handler->$method($pages);
+                if(method_exists($handler, $method))
+                    return $handler->$method($pages);
+                else
+                    exit;
 			} 
 			--$loop;
 		}
