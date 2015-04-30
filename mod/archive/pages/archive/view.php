@@ -90,9 +90,11 @@ switch($entity->subtype){
 		minds\plugin\social\start::setMetatags('twitter:title', $entity->title);
 		minds\plugin\social\start::setMetatags('twitter:image', $entity->getIconURL('large'));
 		minds\plugin\social\start::setMetatags('twitter:description', $entity->description ? $entity->description : $entity->getUrl());
-		
-		$subtitle = elgg_view('output/url', array('href'=>$entity->getContainerEntity()->getURL(), 'text'=>'Back to \''. $entity->getContainerEntity()->title .'\''));
-		
+
+        if($entity->getContainerEntity())    
+		    $subtitle = elgg_view('output/url', array('href'=>$entity->getContainerEntity()->getURL(), 'text'=>'Back to \''. $entity->getContainerEntity()->title .'\''));
+        else
+            $subtitle = "";
 		/**
 		 * If loaded via our photo viewer, then don't show a standard page
 		 */
