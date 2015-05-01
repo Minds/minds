@@ -261,7 +261,11 @@ class newsfeed extends core\page implements interfaces\page{
 						$activity->setCustom('batch', array(array(
 							'src' => $attachment->getIconURL('medium'),
 							'href' => elgg_get_site_url() . 'archive/view/' . $attachment->container_guid . '/' . $attachment->guid
-						)));
+                        )))
+                                ->setFromEntity($attachment)
+                                ->setTitle($_POST['message'])
+                                ->setURL(null)
+                                ->setMessage(null);
 					} else {
 						$activity->setTitle($_FILES['attachment']['name'])
 							->setURL($attachment->getURL());
