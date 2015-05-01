@@ -46,7 +46,10 @@ class router{
 		if(count($segments) == 1 && $segments[0] == ""){
 	    	//we load the homepage controller
 			$handler = new \minds\pages\index();
-			return $handler->$method(array());
+            if(method_exists($handler, $method))
+                return $handler->$method(array());
+            else
+                exit;
 	    }
 	
 		$loop = count($segments);
