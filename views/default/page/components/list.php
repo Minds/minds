@@ -61,7 +61,6 @@ if ($pagination && $count) {
         $next = elgg_get_context() == 'main' ? end($items)->featured_id : end($items)->guid ?: end($items)->id;
         $next = end($items)->guid;
     }
-    $next = "";
 
     $nav .= elgg_view('navigation/pagination', array_merge(array(
         	'baseurl' => $base_url,
