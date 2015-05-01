@@ -88,6 +88,8 @@ class directory extends core\page implements interfaces\page{
                 		$content = elgg_list_entities($options);
 				break;
             case 'suggested':
+                if(!\Minds\Core\session::isLoggedin())
+                    exit;
                 $client = \Minds\Core\Data\Client::build('Neo4j');
                 $prepared = new Prepared\Common();
                 
