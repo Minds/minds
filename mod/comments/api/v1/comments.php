@@ -26,12 +26,12 @@ class comments implements interfaces\api{
         $guid = $pages[0];
         
         $indexes = new core\Data\indexes('comments');
-        $guids = $indexes->get($guid, array('limit'=>\get_input('limit',3), 'offset'=>\get_input('offset',''), 'reversed'=>true));
+        $guids = $indexes->get($guid, array('limit'=>\get_input('limit',3), 'offset'=>\get_input('offset',''), 'reversed'=>false));
         if(isset($guids[get_input('offset')]))
             unset($guids[get_input('offset')]);
 
         if($guids)
-            $comments = \elgg_get_entities(array('guids'=>$guids, 'limit'=>\get_input('limit',3), 'offset'=>\get_input('offset','')));
+            $comments = \elgg_get_entities(array('guids'=>$guids));
         else 
             $comments = array();
 
@@ -45,7 +45,7 @@ class comments implements interfaces\api{
 		    $comments[$k]->ownerObj = $owner->export();
 	    }
         $response['comments'] = factory::exportable($comments);
-        $response['load-next'] = (string) reset($comments)->guid;
+        $response['load-next'] = (string) end($comments)->guid;
         $response['load-previous'] = (string) key($comments)->guid;       
     
         return Factory::response($response);
