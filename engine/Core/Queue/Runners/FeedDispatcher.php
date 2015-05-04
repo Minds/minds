@@ -28,26 +28,30 @@ class FeedDispatcher implements Interfaces\QueueRunner{
                    $fof = new Data\Call('friendsof', $keyspace);
                    $offset = "";
                    while(true){
-                        $guids = $fof->getRow($entity->owner_guid, array('limit'=>2000, 'offset'=>$offset));
-                        if(!$guids)
-                            break;
+                       try{
+                           $guids = $fof->getRow($entity->owner_guid, array('limit'=>2000, 'offset'=>$offset));
+                            if(!$guids)
+                                break;
 
-                        $guids = array_keys($guids);
-                        if($offset)
-                            array_shift($guids); 
-                       
-                        if(!$guids)
-                            break;
-                        
-                        if($offset == $guids[0])
-                            break;
-                       
-                        $offset = end($guids);
-                        
-                        $followers = $guids;
+                            $guids = array_keys($guids);
+                            if($offset)
+                                array_shift($guids); 
+                           
+                            if(!$guids)
+                                break;
+                            
+                            if($offset == $guids[0])
+                                break;
+                           
+                            $offset = end($guids);
+                            
+                            $followers = $guids;
 
-                        foreach($followers as $follower)
-                            $db->insert("$entity->type:network:$follower", array($entity->guid => $entity->guid));
+                            foreach($followers as $follower)
+                                $db->insert("$entity->type:network:$follower", array($entity->guid => $entity->guid));
+                       } catch(\Exception $e){
+                           echo "Ooops... slight bump, there.. " . $e->getMessage() . " \n";
+                       }
                    }    
                   
                    echo "Succesfully deployed all feeds for $entity->owner_guid:$entity->guid \n\n";
