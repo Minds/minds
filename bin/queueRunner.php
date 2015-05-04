@@ -23,7 +23,7 @@ $runner = $argv[1];
 echo "Starting $runner Runner \n";
 
 try{
-    echo "Running... \n";
+    echo "Running $runner... \n";
     echo "Press Ctrl + C to cancel \n";
     $runner = Minds\Core\Queue\Runners\Factory::build($runner)->run();
 } catch(Exception $e){
