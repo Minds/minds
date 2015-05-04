@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "75e403d4c054907427d7839ae252734e",
+    "hash": "657baa55ab9c01e84d663302cb23f952",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -61,16 +61,16 @@
         },
         {
             "name": "bshaffer/oauth2-server-php",
-            "version": "v1.6",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bshaffer/oauth2-server-php.git",
-                "reference": "7b083b76673d25e3522a579ec7566603da4b9132"
+                "reference": "8878e192dcd3abb48d92b69a5d2cf75bcda4eb72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bshaffer/oauth2-server-php/zipball/7b083b76673d25e3522a579ec7566603da4b9132",
-                "reference": "7b083b76673d25e3522a579ec7566603da4b9132",
+                "url": "https://api.github.com/repos/bshaffer/oauth2-server-php/zipball/8878e192dcd3abb48d92b69a5d2cf75bcda4eb72",
+                "reference": "8878e192dcd3abb48d92b69a5d2cf75bcda4eb72",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +105,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2015-01-16 22:43:04"
+            "time": "2015-04-24 03:00:33"
         },
         {
             "name": "components/jquery",
@@ -201,12 +201,12 @@
             "version": "v1.3.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/elastic/elasticsearch-php.git",
+                "url": "https://github.com/elasticsearch/elasticsearch-php.git",
                 "reference": "a273a9583e1859e02d0676faaabe577b12427ff1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/a273a9583e1859e02d0676faaabe577b12427ff1",
+                "url": "https://api.github.com/repos/elasticsearch/elasticsearch-php/zipball/a273a9583e1859e02d0676faaabe577b12427ff1",
                 "reference": "a273a9583e1859e02d0676faaabe577b12427ff1",
                 "shasum": ""
             },
@@ -2624,16 +2624,16 @@
         },
         {
             "name": "nette/http",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/http.git",
-                "reference": "355aa597359084f1978f4eaaef94dbe33d2e8dff"
+                "reference": "c682f0f20caeb1cf57ab8786e6427010a1206a13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/http/zipball/355aa597359084f1978f4eaaef94dbe33d2e8dff",
-                "reference": "355aa597359084f1978f4eaaef94dbe33d2e8dff",
+                "url": "https://api.github.com/repos/nette/http/zipball/c682f0f20caeb1cf57ab8786e6427010a1206a13",
+                "reference": "c682f0f20caeb1cf57ab8786e6427010a1206a13",
                 "shasum": ""
             },
             "require": {
@@ -2679,7 +2679,7 @@
             ],
             "description": "Nette HTTP Component",
             "homepage": "http://nette.org",
-            "time": "2015-02-25 00:17:52"
+            "time": "2015-04-08 01:05:15"
         },
         {
             "name": "nette/mail",

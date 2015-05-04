@@ -13,7 +13,7 @@
 		"facebook/php-sdk-v4": "4.0.*",
   		"ivaynberg/select2":"3.5.2",
 		"tijsverkoyen/twitteroauth": "dev-master@dev",
-		"bshaffer/oauth2-server-php":"1.6",
+		"bshaffer/oauth2-server-php":"1.7",
 		"neoxygen/neoclient": "2.1.11",
 		"videlalvaro/php-amqplib": "dev-master@dev",
 		"Minds/Surge": "dev-master@dev"
