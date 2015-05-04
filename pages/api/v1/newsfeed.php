@@ -120,7 +120,7 @@ class newsfeed implements interfaces\api{
                 $activity = new entities\activity();
                 //error_log(print_r($_POST, true)); 
                 if(isset($_POST['message']))
-                    $activity->setMessage($_POST['message']);
+                    $activity->setMessage(urldecode($_POST['message']));
                 
                 if(isset($_POST['title'])){
                         $activity->setTitle($_POST['title'])
