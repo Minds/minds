@@ -136,7 +136,7 @@ class newsfeed implements interfaces\api{
                             'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? true : false
                         ),
                         'data' => array(
-                            'message' => $_POST['message'],
+                            'message' => urldecode($_POST['message']),
                             'perma_url'=> isset($_POST['url']) ? \elgg_normalize_url($_POST['url']) : \elgg_normalize_url($activity->getURL())
                         )
                     ));
