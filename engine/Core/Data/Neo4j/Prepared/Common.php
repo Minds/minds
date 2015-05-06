@@ -134,7 +134,8 @@ class Common implements Interfaces\PreparedInterface{
                             "LIMIT {limit}";
 
         } else {
-            $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]-(fof:User) ".
+            error_log("loading default matches for $user->guid");
+            $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
                             "WHERE " . 
 			                 "NOT (user)-[:ACTED]->(fof) " .
 			                 "AND NOT (fof.guid = user.guid) " . 
