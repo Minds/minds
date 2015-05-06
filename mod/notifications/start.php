@@ -124,7 +124,8 @@ class start extends \ElggPlugin{
 	/**
 	 * Increase a users notification counter
 	 */
-	 public function increaseCounter($user_guid){
+    public function increaseCounter($user_guid){
+        return false;
 	 	try{
 		 	elgg_set_ignore_access(true);
 			$user = new \ElggUser($user_guid);
@@ -137,7 +138,8 @@ class start extends \ElggPlugin{
 			$lu = new core\Data\lookup();
 			$lu->set("notifications:count", array($user_guid => 1));
 		}catch(Exception $e){
-			var_dump($e); exit;
+            var_dump($e);
+            return false;
 		}
 	 }
 	 
