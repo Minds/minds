@@ -193,7 +193,13 @@ class newsfeed extends core\page implements interfaces\page{
              \Minds\plugin\social\start::setMetatags('og:type', 'article');
             \Minds\plugin\social\start::setMetatags('og:title', $activity->title ?: $activity->message);
             \Minds\plugin\social\start::setMetatags('og:description', $activity->blurb ?: 'via Minds');
-            \Minds\plugin\social\start::setMetatags('og:image', $activity->thumbnail_src ?: $activity->custom_data[0]['src']);
+            $thumb = $activity->thumbnail_src;
+            if(!$thumb && isset($activity->custom_data[0]['src']))
+                $thumb = $activity->custom_data[0]['src'];
+            if(!$thumb && isset($activity->custom_data['thumbnail_src']))
+                $thumb = $activity->custom_data['thumbnail_src'];
+            \Minds\plugin\social\start::setMetatags('og:image:url', $thumb);
+            \Minds\plugin\social\start::setMetatags('og:image', $thumb);
         }
 
         $content .= elgg_view_entity_list($entities, array_merge(array(
