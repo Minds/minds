@@ -1,6 +1,6 @@
 
 var ApiGen = ApiGen || {};
-ApiGen.config = {"options":{"elementDetailsCollapsed":true,"elementsOrder":"natural"},"name":"Twitter Bootstrap theme","templatesPath":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap","resources":{"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/resources":"resources"},"templates":{"overview":{"filename":"index.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/overview.latte"},"combined":{"filename":"resources\/combined.js","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/combined.js.latte"},"elementlist":{"filename":"elementlist.js","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/elementlist.js.latte"},"404":{"filename":"404.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/404.latte"},"package":{"filename":"package-%s.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/package.latte"},"namespace":{"filename":"namespace-%s.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/namespace.latte"},"class":{"filename":"class-%s.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/class.latte"},"constant":{"filename":"constant-%s.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/constant.latte"},"function":{"filename":"function-%s.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/function.latte"},"source":{"filename":"source-%s.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/source.latte"},"tree":{"filename":"tree.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/tree.latte"},"deprecated":{"filename":"deprecated.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/deprecated.latte"},"todo":{"filename":"todo.html","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/todo.latte"},"sitemap":{"filename":"sitemap.xml","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/sitemap.xml.latte"},"opensearch":{"filename":"opensearch.xml","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/opensearch.xml.latte"},"robots":{"filename":"robots.txt","template":"\/Users\/mark\/Documents\/Minds\/vendor\/apigen\/apigen\/src\/templates\/bootstrap\/robots.txt.latte"}}};
+ApiGen.config = {"options":{"elementDetailsCollapsed":true,"elementsOrder":"natural"},"name":"Twitter Bootstrap theme","templatesPath":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src","resources":{"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/resources":"resources"},"templates":{"overview":{"filename":"index.html","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/overview.latte"},"combined":{"filename":"resources\/combined.js","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/combined.js.latte"},"elementlist":{"filename":"elementlist.js","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/elementlist.js.latte"},"404":{"filename":"404.html","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/404.latte"},"package":{"filename":"package-%s.html","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/package.latte"},"namespace":{"filename":"namespace-%s.html","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/namespace.latte"},"class":{"filename":"class-%s.html","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/class.latte"},"constant":{"filename":"constant-%s.html","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/constant.latte"},"function":{"filename":"function-%s.html","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/function.latte"},"annotationGroup":{"filename":"annotation-group-%s.html","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/annotation-group.latte"},"source":{"filename":"source-%s.html","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/source.latte"},"tree":{"filename":"tree.html","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/tree.latte"},"sitemap":{"filename":"sitemap.xml","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/sitemap.xml.latte"},"opensearch":{"filename":"opensearch.xml","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/opensearch.xml.latte"},"robots":{"filename":"robots.txt","template":"\/var\/www\/elgg\/vendor\/apigen\/apigen\/bin\/..\/..\/..\/..\/vendor\/apigen\/theme-bootstrap\/src\/robots.txt.latte"}}};
 
 
 	/*! jQuery v1.10.2 | (c) 2005, 2013 jQuery Foundation, Inc. | jquery.org/license
@@ -1070,6 +1070,7 @@ jQuery.fn.sortElements = (function(){
 			matchContains: true,
 			scrollHeight: 200,
 			max: 20,
+			width: 300,
 			noRecord: '',
 			highlight: function(value, term) {
 				var term = term.toUpperCase().replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1").replace(/[A-Z0-9]/g, function(m, offset) {
@@ -1152,12 +1153,17 @@ jQuery.fn.sortElements = (function(){
 
 	// Open details
 	if (ApiGen.config.options.elementDetailsCollapsed) {
-		$('tr', $content).filter(':has(.detailed)')
-			.click(function() {
-				var $this = $(this);
-				$('.short', $this).hide();
-				$('.detailed', $this).show();
-			});
+		$(document.body).on('click', 'tr', function(ev) {
+
+			var short = this.querySelector('.short')
+			, detailed = this.querySelector('.detailed')
+
+			if (!short || !detailed) return
+
+			$(short).toggleClass('hidden')
+			$(detailed).toggleClass('hidden')
+
+		})
 	}
 
 	// Splitter
@@ -1250,7 +1256,7 @@ jQuery.fn.sortElements = (function(){
 
 		var $firstLine = $('#' + parseInt(matches[0]));
 		if ($firstLine.length > 0) {
-			$document.scrollTop($firstLine.offset().top);
+			$right.scrollTop($firstLine.position().top);
 		}
 	}
 
@@ -1259,8 +1265,8 @@ jQuery.fn.sortElements = (function(){
 	$('.l a').click(function(event) {
 		event.preventDefault();
 
-		var $selectedLine = $(this).parent();
-		var selectedLine = parseInt($selectedLine.attr('id'));
+		var selectedLine = $(this).parent().index() + 1;
+		var $selectedLine = $('pre.code .l').eq(selectedLine - 1);
 
 		if (event.shiftKey) {
 			if (lastLine) {
