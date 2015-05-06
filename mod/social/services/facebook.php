@@ -79,7 +79,7 @@ class facebook extends core\base{
         }
 
 
-		if(isset($activity['perma_url']) && $activity['perma_url'] != elgg_get_site_url() && $activity['perma_url'] ){
+		if(isset($activity['perma_url']) && $activity['perma_url'] != elgg_get_site_url() && $activity['perma_url'] && isset($activity['thumbnail_src'])){
             $data['link'] = array();
             $data['link'] = $activity['perma_url'];
             //$data['link'] = str_replace(parse_url($activity['perma_url'], PHP_URL_SCHEME), '', $activity['perma_url']);
