@@ -133,7 +133,7 @@ class newsfeed implements interfaces\api{
                     Core\Events\Dispatcher::trigger('social', 'dispatch', array(
                         'services' => array(
                             'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? $_POST['facebook'] : false,
-                            'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? true : false
+                            'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? $_POST['twitter'] : false
                         ),
                         'data' => array(
                             'message' => urldecode($_POST['message']),

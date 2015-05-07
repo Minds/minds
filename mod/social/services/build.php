@@ -15,7 +15,7 @@ class build extends Components\Plugin{
 		if(!class_exists($class_name))
 			throw new \Exception('Service does not exists');
 		
-		$class = new $class_name;
+		$class = new $class_name($params);
         if(isset($params['access_token']))
             $class->access_token = $params['access_token'];
         return $class;

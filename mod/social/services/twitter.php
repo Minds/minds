@@ -16,7 +16,17 @@ class twitter extends core\base{
 	public function init(){
 
 	}
-	
+
+    private $token;
+    private $secret;
+
+    public function __construct($params = array()){
+        error_log(print_r($params, true));
+        if(isset($params['access_token'])){
+            list($this->token, $this->secret) = explode('&&',$params['access_token']);
+        }
+    }
+
 	public function authorizeURL(){
 		$tw = $this->tw();
 		$token = $this->requestToken();
@@ -25,27 +35,41 @@ class twitter extends core\base{
 	}
 	
 	public function authorizeCallback(){
-		$tw = $this->tw();
-		$response = $tw->oAuthAccessToken($_REQUEST['oauth_token'], $_REQUEST['oauth_verifier']);
-		
-		\elgg_set_plugin_user_setting('twitter', 'enabled', core\session::getLoggedinUser()->guid, 'social');
-		\elgg_set_plugin_user_setting('twitter_access_token', (string) $response['oauth_token'], core\session::getLoggedinUser()->guid, 'social');
-		\elgg_set_plugin_user_setting('twitter_access_secret', (string) $response['oauth_token_secret'], core\session::getLoggedinUser()->guid, 'social');
-		echo elgg_view('social/callback/twitter');
-	}
+        if(core\session::getLoggedinUser()->guid && !isset($_REQUEST['client_id'])){
+            $tw = $this->tw();
+            $response = $tw->oAuthAccessToken($_REQUEST['oauth_token'], $_REQUEST['oauth_verifier']);
+            
+            \elgg_set_plugin_user_setting('twitter', 'enabled', core\session::getLoggedinUser()->guid, 'social');
+            \elgg_set_plugin_user_setting('twitter_access_token', (string) $response['oauth_token'], core\session::getLoggedinUser()->guid, 'social');
+            \elgg_set_plugin_user_setting('twitter_access_secret', (string) $response['oauth_token_secret'], core\session::getLoggedinUser()->guid, 'social');
+            echo elgg_view('social/callback/twitter');
+        } else {
+            $tw = $this->tw();
+            $response = $tw->oAuthAccessToken($_REQUEST['oauth_token'], $_REQUEST['oauth_verifier']);
+            echo json_encode($response);
+        }
+        //echo json_encode($response);
+    }
 
 	public function post($activity){
-		$message = $activity['message'];
+
+        error_log($this->token);
+        error_log($this->secret);
+
+        $message = $activity['message'];
 		if(strlen($message) > 115){
 			$message = substr($message,0,105) . '...';
 		}
         $message .= " " . $activity['perma_url']; 
+        error_log("mesage is ".$message);
         if(!$message)
 			return true;
 		$tw = $this->tw();
-		$tw->setOAuthToken(\elgg_get_plugin_user_setting('twitter_access_token', core\session::getLoggedinUser()->guid, 'social'));
-		$tw->setOAuthTokenSecret(\elgg_get_plugin_user_setting('twitter_access_secret', core\session::getLoggedinUser()->guid, 'social'));
+   
+        $tw->setOAuthToken($this->token ?: \elgg_get_plugin_user_setting('twitter_access_token', core\session::getLoggedinUser()->guid, 'social'));
+		$tw->setOAuthTokenSecret($this->secret ?: \elgg_get_plugin_user_setting('twitter_access_secret', core\session::getLoggedinUser()->guid, 'social'));
 		$tw->statusesUpdate($message);
+        error_log("set API request to twitter");
 
 	}
 	
