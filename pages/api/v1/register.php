@@ -59,6 +59,14 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
                 )); 
             }
 
+            //@todo again, maybe in a background task?
+            if(isset($_POST['referrer']) && $_POST['referrer']){
+                $user = new entities\user(ltrim($_POST['referrer'],'@'));
+                if($user->guid){
+                     \Minds\plugin\payments\start::createTransaction($user->guid, 100, $guid, "Referred @" . $_POST['username']);
+                }
+            }
+
 
             $response = array('guid'=>$guid);
         } catch (\Exception $e){
