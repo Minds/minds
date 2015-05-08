@@ -72,6 +72,8 @@ class Factory{
              error_log('failed authentication:: OAUTH via API');
              ob_end_clean();
              header('Content-type: application/json');
+             header("Access-Control-Allow-Origin: *");
+             header('HTTP/1.1 401 Unauthorized', true, 401);
              echo json_encode(array('error'=>'Sorry, you are not authenticated', 'code'=>401));
              exit;
 
@@ -92,6 +94,7 @@ class Factory{
         ob_end_clean();
         
         header('Content-type: application/json');
+        header("Access-Control-Allow-Origin: *");
         echo json_encode($data);
         
     }
