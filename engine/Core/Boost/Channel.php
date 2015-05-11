@@ -199,9 +199,14 @@ class Channel implements interfaces\BoostHandlerInterface{
                 $this->guid = $destination;
                 $guids = $this->getReviewQueue(1, $guid);
                 $points = reset($guids);
-               
+
+
+                if(!$destination){
+                    echo "$guid issue with destination.. \n";
+                    continue;
+                } 
                 echo "$guid has expired. refunding ($points) points to $destination \n";
-               
+                
                 $db->removeAttributes("boost:channel:all:review", array($boost));
                 $db->removeAttributes("boost:channel:$destination:review", array($guid));
                
