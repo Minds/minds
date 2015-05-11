@@ -79,19 +79,16 @@ class facebook extends core\base{
         }
 
 
-		if(isset($activity['perma_url']) && $activity['perma_url'] != elgg_get_site_url() && $activity['perma_url'] && isset($activity['thumbnail_src'])){
-            $data['link'] = array();
+		if(isset($activity['perma_url']) && $activity['perma_url'] != elgg_get_site_url() && isset($activity['thumbnail_src'])){
             $data['link'] = $activity['perma_url'];
             //$data['link'] = str_replace(parse_url($activity['perma_url'], PHP_URL_SCHEME), '', $activity['perma_url']);
         }
 		
 		if(isset($activity['thumbnail_src']) && $activity['thumbnail_src']){
-            if(!isset($data['link']))
-                $data['link'] = array();
-            $data['link']['picture'] = $activity['thumbnail_src'];
-            $data['link']['description'] = '@' . core\session::getLoggedinUser()->username;
+            $data['picture'] = $activity['thumbnail_src'];
+            $data['description'] = $activity['description'] ?: '@' . core\session::getLoggedinUser()->username;
         }
-        
+       error_log(print_r($data, true)); 
 
 		try {
 			$req = new FacebookRequest( $session, 'POST', '/me/feed', $data);
