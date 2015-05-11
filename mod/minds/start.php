@@ -148,7 +148,9 @@ function minds_init(){
     }, 1);
 
 
-	elgg_register_page_handler('thumbProxy', function($pages){
+    elgg_register_page_handler('thumbProxy', function($pages){
+        if(isset($pages[0]))
+            set_input('width', $pages[0]);
 		include('thumbnailProxy.php');
 		return true;
 	});
