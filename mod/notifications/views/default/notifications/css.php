@@ -9,6 +9,7 @@
 #notification{
 	height:auto;
     min-height:240px;
+    max-height:320px;
     position:fixed;
 	right:5%;
 	overflow-x:hidden;
