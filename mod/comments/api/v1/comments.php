@@ -56,7 +56,7 @@ class comments implements interfaces\api{
        
         $parent = new \Minds\entities\entity($pages[0]);
     	$comment = new \Minds\plugin\comments\entities\comment();
-        $comment->description = $_POST['comment'];
+        $comment->description = urldecode($_POST['comment']);
         $comment->parent_guid = $pages[0];
         if($comment->save()){
             $subscribers = Data\indexes::fetch('comments:subscriptions:'.$pages[0]) ?: array();
@@ -69,7 +69,7 @@ class comments implements interfaces\api{
             \elgg_trigger_plugin_hook('notification', 'all', array(
                 'to' => $subscribers,
                 'object_guid'=>$pages[0],
-                'description'=>$desc,
+                'description'=>$comment->description,
                 'notification_view'=>'comment'
             ));
             
