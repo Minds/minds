@@ -28,13 +28,12 @@ if(!$entity->featured_id || $entity->featured_id == 0){
                     'thumbnail_src'=>$entity->getIconUrl(),
                     'guid'=>$entity->guid))
                 ->setTitle($entity->title)
-                ->setBlurb($entity->description)
+                ->setBlurb($entity->description);
     }
     if($entity->subtype == 'image'){
          $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$entity->guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$entity->container_guid.'/'.$entity->guid)))
-                        //->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
                     ->setFromEntity($entity)
-                    ->setTitle($entity->title)
+                    ->setTitle($entity->title);
     }
 	$activity->owner_guid = $entity->owner_guid;		
 	$activity->indexes = array('activity:featured');
