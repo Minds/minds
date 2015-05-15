@@ -146,7 +146,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
             )
         ));
         \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $entity->guid, 'upload');
-        return Factory::response(array());
+        return Factory::response(array('guid'=>$entity->guid, 'activity_guid'=>$activity->guid));
         
     }
     
