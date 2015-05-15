@@ -101,6 +101,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         \Minds\Helpers\Counters::increment($pages[1], 'remind');
 
         $activity = new entities\activity();
+        $activity->p2p_boosted = true;
         switch($embeded->type){
             case 'activity':
                 if($embeded->remind_object)
