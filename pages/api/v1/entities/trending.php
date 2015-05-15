@@ -49,6 +49,17 @@ class trending implements interfaces\api{
                 } 
                 $entities = core\entities::get(array('guids'=>$guids));       
                 break;
+            default:
+                $opts = array('timespan' => get_input('timespan', 'day'));
+                $trending = new \MindsTrending(null, $opts);
+                $guids = $trending->getList(array('type'=>'user', 'limit'=>12, 'offset'=>get_input('offset', '')));
+                if(!$guids){
+                    return Factory::response(array('status'=>'error', 'message'=>'not found'));
+                }
+                $options['guids'] = $guids;
+                $entities = core\entities::get($options);
+
+
         }
 
         /*if(!$entities){
