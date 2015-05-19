@@ -18,7 +18,19 @@ class entity implements interfaces\api{
      * Returns the entities
      * @param array $pages
      * 
-     * API:: /v1/entities/entity/:guid
+     * @SWG\GET(
+     *     tags={"entities"},
+     *     summary="Returns a single entity",
+     *     path="/v1/entities/entity/{guid}",
+     *     @SWG\Parameter(
+     *      name="guid",
+     *      in="path",
+     *      description="Guid",
+     *      required=false,
+     *      type="integer"
+     *     ),
+     *     @SWG\Response(name="200", description="Array")
+     * )
      */      
     public function get($pages){
         

@@ -22,7 +22,7 @@ class boost implements interfaces\api{
      * @SWG\GET(
      *     tags={"boost"},
      *     summary="Returns information regarding a boost, or the current boost rates",
-     *     path="/boost/{guid}",
+     *     path="/v1/boost/{guid}",
      *     @SWG\Parameter(
      *      name="guid",
      *      in="path",
@@ -35,7 +35,7 @@ class boost implements interfaces\api{
      * @SWG\GET(
      *     tags={"boost"},
      *     summary="Returns  the current boost rates",
-     *     path="/boost/rate",
+     *     path="/v1/boost/rate",
      *     @SWG\Response(name="200", description="Array"),
      *     security={
      *         {

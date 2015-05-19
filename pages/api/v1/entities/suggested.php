@@ -20,13 +20,46 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
      * Returns the entities
      * @param array $pages
      * 
-     * API:: /v1/entities/suggested
+     * @SWG\GET(
+     *     tags={"entities"},
+     *     summary="Returns suggested entities",
+     *     path="/v1/entities/suggested/{type}/{subtype}",
+     *     @SWG\Parameter(
+     *      name="type",
+     *      in="path",
+     *      description="Type (eg. object, user, activity)",
+     *      required=false,
+     *      type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *      name="subtype",
+     *      in="path",
+     *      description="Subtype (eg. video, image, blog)",
+     *      required=false,
+     *      type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *      name="limit",
+     *      in="query",
+     *      description="Limit the number of returned entities",
+     *      required=false,
+     *      type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *      name="skip",
+     *      in="query",
+     *      description="How many entities to skip",
+     *      required=false,
+     *      type="integer"
+     *     ),
+     *     @SWG\Response(name="200", description="Array")
+     * )
      */      
     public function get($pages){
         $prepared = new Data\Neo4j\Prepared\Common();
         if(!isset($pages[1]))
             $pages[1] = $pages[0];
-	$ts = microtime(true);
+	    $ts = microtime(true);
         switch($pages[1]){
             case 'video':
                 $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'video', $_GET['skip']));
@@ -108,6 +141,28 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
         
     }
     
+    /**
+     * @SWG\POST(
+     *     tags={"entities"},
+     *     summary="Add a relationship to an entity",
+     *     path="/v1/entities/suggested/{action}/{guid}",
+     *     @SWG\Parameter(
+     *      name="action",
+     *      in="path",
+     *      description="Action (eg. pass)",
+     *      required=true,
+     *      type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *      name="guid",
+     *      in="path",
+     *      description="The entity to create the relationship on",
+     *      required=false,
+     *      type="integer"
+     *     ),
+     *     @SWG\Response(name="200", description="Array")
+     * )
+     */
     public function post($pages){
         
         switch($pages[0]){

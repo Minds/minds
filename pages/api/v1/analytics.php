@@ -28,7 +28,7 @@ class analytics implements interfaces\api{
      * @SWG\PUT(
      *     tags={"analytics"},
      *     summary="Send an analytic metric",
-     *     path="/analytics",
+     *     path="/v1/analytics",
      *     consumes={"application/json"},
      *     produces={"application/json"},
      *     @SWG\Response(name="200", description="An example resource", @SWG\Schema(
