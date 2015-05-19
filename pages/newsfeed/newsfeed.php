@@ -190,16 +190,47 @@ class newsfeed extends core\page implements interfaces\page{
 		), $options));
 		if(is_array($entities) && count($entities) == 1){
             $activity = reset($entities);
-             \Minds\plugin\social\start::setMetatags('og:type', 'article');
+            global $CONFIG;
+
+            \Minds\plugin\social\start::setMetatags('og:type', 'article');
             \Minds\plugin\social\start::setMetatags('og:title', $activity->title ?: $activity->message);
             \Minds\plugin\social\start::setMetatags('og:description', $activity->blurb ?: 'via Minds');
+
+            if($activity->custom_type == 'video'){
+                \Minds\plugin\social\start::setMetatags('og:type', 'video');
+                \Minds\plugin\social\start::setMetatags('og:url', elgg_get_site_url() . 'archive/view/' . $activity->custom_data['guid']);
+             //   \Minds\plugin\social\start::setMetatags('og:image', $activity->custom_data['thumbnail_src']);
+                \Minds\plugin\social\start::setMetatags('og:video:url', elgg_get_site_url() . 'api/v1/archive/' . $activity->custom_data['guid'] . '/play');
+                \Minds\plugin\social\start::setMetatags('og:video:secure_url', elgg_get_site_url() . 'api/v1/archive/' . $activity->custom_data['guid'] . '/play');
+                \Minds\plugin\social\start::setMetatags('og:video:type', 'video/mp4');
+                \Minds\plugin\social\start::setMetatags('og:video:width', '640');
+                \Minds\plugin\social\start::setMetatags('og:video:height', '360');
+            }
+
+
+            \Minds\plugin\social\start::setMetatags('og:url', elgg_get_site_url() . 'newsfeed/'. $activity->guid);
             $thumb = $activity->thumbnail_src;
             if(!$thumb && isset($activity->custom_data[0]['src']))
                 $thumb = $activity->custom_data[0]['src'];
             if(!$thumb && isset($activity->custom_data['thumbnail_src']))
                 $thumb = $activity->custom_data['thumbnail_src'];
-            \Minds\plugin\social\start::setMetatags('og:image:url', $thumb);
-            \Minds\plugin\social\start::setMetatags('og:image', $thumb);
+            \Minds\plugin\social\start::setMetatags('og:image',$CONFIG->cdn_url . "thumbProxy/460?src=".urlencode($thumb));
+            \Minds\plugin\social\start::setMetatags('og:image:url', $CONFIG->cdn_url . "thumbProxy/800?src=".urlencode($thumb));
+            
+            if (in_array($_SERVER['HTTP_USER_AGENT'], array(
+                  'facebookexternalhit/1.1 (+https://www.facebook.com/externalhit_uatext.php)',
+                    'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'
+                ))) {
+                    $a = elgg_view('output/img', array('src'=> $thumb));
+                    $b = elgg_view('output/img', array('src'=> $CONFIG->cdn_url . "thumbProxy/320?src=".urlencode($thumb)));
+                    $c = elgg_view('output/img', array('src'=> $CONFIG->cdn_url . "thumbProxy/460?src=".urlencode($thumb)));
+                    $d = elgg_view('output/img', array('src'=> $CONFIG->cdn_url . "thumbProxy/800?src=".urlencode($thumb)));
+                    echo $this->render(array(
+                        'body'=> $a, $b, $c, $d,
+                        'title'=>$activity->title ?: $activity->message
+                        ));
+                    exit;
+                }
         }
 
         $content .= elgg_view_entity_list($entities, array_merge(array(

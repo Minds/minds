@@ -15,13 +15,14 @@ class Channel implements interfaces\BoostHandlerInterface{
     private $guid;
    
     public function __construct($options){
-	if(is_numeric($options['destination'])){
-	    $this->guid = $options['destination'];
-	} elseif(is_string($options['destination'])) {
-		error_log($options['destination']);
-	    $lookup = new Data\lookup();
-	    $this->guid = key($lookup->get($options['destination']));
-	}
+        if(isset($options['destination'])){
+        	if(is_numeric($options['destination'])){
+        	    $this->guid = $options['destination'];
+        	} elseif(is_string($options['destination'])) {
+        	    $lookup = new Data\lookup();
+        	    $this->guid = key($lookup->get($options['destination']));
+        	}
+        }
     }
     
    /**
@@ -40,9 +41,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         
         $db = new Data\Call('entities_by_time');
         $result = $db->insert("boost:channel:$this->guid:review", array($guid => $points));
-        $db->insert("boost:channel:all:review", array("$this->guid:$guid" => time())); //this is a hack to allow us to refund points after 48 hours. @todo think of something smarter
-        
-    	error_log("this is $this->guid");        
+   
         //send a notification of boost offer
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to' => array($this->guid),
@@ -59,7 +58,7 @@ class Channel implements interfaces\BoostHandlerInterface{
                 'notification_view' => 'boost_submitted_p2p',
                 'params' => array(
                     'points' => $points, 
-                    'channel' =>  $_POST['destination']
+                    'channel' => $this->guid
                  ),
                 'points' => $points
                 )); 
@@ -98,17 +97,23 @@ class Channel implements interfaces\BoostHandlerInterface{
         
         $embeded = new entities\entity($guid);
         $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
-        \Minds\Helpers\Counters::increment($pages[1], 'remind');
+        \Minds\Helpers\Counters::increment($guid, 'remind');
 
         $activity = new entities\activity();
+        $activity->p2p_boosted = true;
         switch($embeded->type){
             case 'activity':
                 if($embeded->remind_object)
                     $activity->setRemind($embeded->remind_object)->save();
                 else
                     $activity->setRemind($embeded->export())->save();
-             break;
-             default:
+            break;
+            case 'object':
+            
+                
+                
+            break;
+            default:
                  /**
                    * The following are actually treated as embeded posts.
                    */
@@ -199,9 +204,14 @@ class Channel implements interfaces\BoostHandlerInterface{
                 $this->guid = $destination;
                 $guids = $this->getReviewQueue(1, $guid);
                 $points = reset($guids);
-               
+
+
+                if(!$destination){
+                    echo "$guid issue with destination.. \n";
+                    continue;
+                } 
                 echo "$guid has expired. refunding ($points) points to $destination \n";
-               
+                
                 $db->removeAttributes("boost:channel:all:review", array($boost));
                 $db->removeAttributes("boost:channel:$destination:review", array($guid));
                

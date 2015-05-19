@@ -214,7 +214,7 @@ class channel extends core\page implements interfaces\page{
 					'type' => 'activity',
 					'limit' => get_input('limit', 5),
 					'masonry' => false,
-					'prepend' => elgg_is_logged_in() ? $post : '',
+					'prepend' => elgg_is_logged_in() && $user->guid == elgg_get_logged_in_user_guid() ? $post : '',
 					'list_class' => 'list-newsfeed',
 					'owner_guid' => $user->guid
 				));

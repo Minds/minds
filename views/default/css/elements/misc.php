@@ -1343,9 +1343,9 @@ div.register-popup {
 }
 
 
-.boost li:hover .elgg-menu{
+.boost > li:hover .elgg-menu{
     display:none;
 }
-.boost li{
+.boost > li{
     width:300px !important;
 }

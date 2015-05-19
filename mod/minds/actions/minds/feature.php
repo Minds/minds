@@ -14,12 +14,27 @@ if(!$entity->featured_id || $entity->featured_id == 0){
 
 	$entity->feature();
 
-	//add_to_river('river/object/'.$entity->getSubtype().'/feature', 'feature', $entity->getOwnerGUID(), $entity->getGuid(), 2, time(), NULL, array('feature'));
+    //add_to_river('river/object/'.$entity->getSubtype().'/feature', 'feature', $entity->getOwnerGUID(), $entity->getGuid(), 2, time(), NULL, array('feature'));
 	$activity = new minds\entities\activity();
-	$activity->setTitle($entity->title)
+    if($entity->subtype == 'blog'){
+        $activity->setTitle($entity->title)
 			->setBlurb($entity->excerpt)
 			->setUrl($entity->getURL())
-			->setThumbnail($entity->getIconURL());
+            ->setThumbnail($entity->getIconURL());
+    }
+    if($entity->subtype == 'video'){
+        $activity->setFromEntity($entity)
+                ->setCustom('video', array(
+                    'thumbnail_src'=>$entity->getIconUrl(),
+                    'guid'=>$entity->guid))
+                ->setTitle($entity->title)
+                ->setBlurb($entity->description);
+    }
+    if($entity->subtype == 'image'){
+         $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$entity->guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$entity->container_guid.'/'.$entity->guid)))
+                    ->setFromEntity($entity)
+                    ->setTitle($entity->title);
+    }
 	$activity->owner_guid = $entity->owner_guid;		
 	$activity->indexes = array('activity:featured');
 	$activity->save();

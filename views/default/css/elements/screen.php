@@ -26,9 +26,42 @@ and (max-width : 1200px) {
 	}
 }
 
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px)
+and (-webkit-min-device-pixel-ratio: 1)  { 
+
+    .hero, .elgg-page-default{
+        min-width:740px;
+    }
+
+    .hero > .body, .elgg-page-body{
+        max-width:768px;
+    }
+
+    .hero > .topbar{
+        min-width:740px;
+    }
+
+    .frontpage-signup{
+        display:none;
+    }
+
+    .cms-section .container {
+        max-width:768px !important;
+        min-width: 0 !important;
+    }
+
+
+    .cms-section .container > a > div{
+        max-width: 300px !important;
+        padding: 16px;
+    }
+}
+
 @media all 
 and (min-width : 0px)
-and (max-width : 720px) {
+and (max-width : 726px) {
 
 	.content-carousel .layout{
 		margin-top:40px !important;
