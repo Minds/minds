@@ -1,0 +1,39 @@
+{
+    "basePath": "https://www.minds.com/api/v1/boost",
+    "swaggerVersion": "2.0",
+    "apiVersion": "1",
+    "resourcePath": "/boost",
+    "apis": [
+        {
+            "path": "/boost/{metric}",
+            "description": "Return impressions/points for a request",
+            "operations": [
+                {
+                    "method": "PUT",
+                    "summary": "Send an analytical metric",
+                    "nickname": "get",
+                    "type": "analytics",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "metric",
+                            "type": "string",
+                            "required": true,
+                            "allowMultiple": false,
+                            "description": "A metric type. ie.view",
+                            "format": "int64"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 400,
+                            "message": "Invalid metric supplied"
+                        }
+                    ],
+                    "notes": "",
+                    "authorizations": {}
+                }
+            ]
+        }
+    ]
+}

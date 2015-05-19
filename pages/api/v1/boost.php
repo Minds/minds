@@ -4,6 +4,7 @@
  * 
  * @version 1
  * @author Mark Harding
+ * 
  */
 namespace minds\pages\api\v1;
 
@@ -17,28 +18,52 @@ class boost implements interfaces\api{
     /**
      * Return impressions/points for a request
      * @param array $pages
-     * API:: /v1/boost/:guid 
+     * 
+     * @SWG\GET(
+     *     tags={"boost"},
+     *     summary="Returns information regarding a boost, or the current boost rates",
+     *     path="/boost/{guid}",
+     *     @SWG\Parameter(
+     *      name="guid",
+     *      in="path",
+     *      description="the guid",
+     *      required=true,
+     *      type="string"
+     *     ),
+     *     @SWG\Response(name="200", description="Array")
+     * )
+     * @SWG\GET(
+     *     tags={"boost"},
+     *     summary="Returns  the current boost rates",
+     *     path="/boost/rate",
+     *     @SWG\Response(name="200", description="Array"),
+     *     security={
+     *         {
+     *             "minds_oauth2": {}
+     *         }
+     *     }
+     * )
      */      
     public function get($pages){
         $response = array();
 
-	switch($pages[0]){
-	    case is_numeric($pages[0]):
-	        $entity = entities\Factory::build($pages[0]);
-		    $response['entity'] = $entity->export();
-    		//going to assume this is a channel only review for now
-	        $boost_ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
-    		$guids = $boost_ctrl->getReviewQueue(1, $pages[0]);
-            if(!$guids || key($guids) != $pages[0]){
-	    	    return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
-    		}
-	    	$response['points'] = reset($guids);
-	    break;
-	    case "rates":
-	        $response['rate'] = 1;
-		$response['cap'] = 1000;
-	    break;
-	}
+    	switch($pages[0]){
+    	    case is_numeric($pages[0]):
+    	        $entity = entities\Factory::build($pages[0]);
+    		    $response['entity'] = $entity->export();
+        		//going to assume this is a channel only review for now
+    	        $boost_ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+        		$guids = $boost_ctrl->getReviewQueue(1, $pages[0]);
+                if(!$guids || key($guids) != $pages[0]){
+    	    	    return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
+        		}
+    	    	$response['points'] = reset($guids);
+    	    break;
+    	    case "rates":
+    	        $response['rate'] = 1;
+    		$response['cap'] = 1000;
+    	    break;
+    	}
 
         return Factory::response($response);
     }

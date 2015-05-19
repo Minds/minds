@@ -1,0 +1,79 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Minds Public API",
+        "version": "1.0"
+    },
+    "host": "www.minds.com",
+    "basePath": "/api/v1",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/analytics": {
+            "put": {
+                "tags": [
+                    "analytics"
+                ],
+                "summary": "Send an analytic metric",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {},
+                "security": [
+                    {
+                        "minds_oauth2": []
+                    }
+                ]
+            }
+        },
+        "/boost/{guid}": {
+            "get": {
+                "tags": [
+                    "boost"
+                ],
+                "summary": "Returns information regarding a boost, or the current boost rates",
+                "parameters": [
+                    {
+                        "name": "guid",
+                        "in": "path",
+                        "description": "the guid",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/boost/rate": {
+            "get": {
+                "tags": [
+                    "boost"
+                ],
+                "summary": "Returns  the current boost rates",
+                "responses": {},
+                "security": [
+                    {
+                        "minds_oauth2": []
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {},
+    "securityDefinitions": {
+        "minds_oauth2": {
+            "type": "oauth2",
+            "flow": "implicit",
+            "authorizationUrl": "https://www.minds.com/oauth2/authorize",
+            "scopes": []
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}

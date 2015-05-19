@@ -4,8 +4,10 @@
  * 
  * @version 1
  * @author Mark Harding
+ * 
  */
 namespace minds\pages\api\v1;
+use Swagger\Annotations as SWG;
 
 use Minds\Core;
 use minds\entities;
@@ -23,6 +25,22 @@ class analytics implements interfaces\api{
     /**
      * Sets an analytic 
      * @param array $pages
+     * @SWG\PUT(
+     *     tags={"analytics"},
+     *     summary="Send an analytic metric",
+     *     path="/analytics",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(name="200", description="An example resource", @SWG\Schema(
+     *             type="array",
+     *             @SWG\Items(ref="#/definitions/Pet")
+     *         )),
+     *  security={
+     *         {
+     *             "minds_oauth2": {}
+     *         }
+     *     }
+     * )
      */
     public function put($pages){
         switch($pages[0]){
