@@ -37,8 +37,10 @@ class FeedDispatcher implements Interfaces\QueueRunner{
                             if($offset)
                                 array_shift($guids); 
                            
-                            if(!$guids)
+                            if(!$guids){
+                                echo "No more for $entity->guid. Moving on \n";
                                 break;
+                            }
                             
                             if($offset == $guids[0])
                                 break;
@@ -49,6 +51,13 @@ class FeedDispatcher implements Interfaces\QueueRunner{
 
                             foreach($followers as $follower)
                                 $db->insert("$entity->type:network:$follower", array($entity->guid => $entity->guid));
+
+                            echo "First batch for $entity->guid dispatched. Loading next from $offset... \n";
+                            var_dump($offset);
+                            if($offset == 0 || !$offset){
+                                echo "done..";
+                                break;
+                            }
                        } catch(\Exception $e){
                            echo "Ooops... slight bump, there.. " . $e->getMessage() . " \n";
                        }

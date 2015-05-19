@@ -13,19 +13,25 @@ if(strpos($src, 'http') === FALSE){
 //get the original file
 
 $ch = curl_init($src);
+curl_setopt($ch, CURLOPT_USERAGENT, 'Minds/1.0 (+http://www.minds.com/)');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 3);
+curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 4);
 curl_setopt($ch,CURLOPT_TIMEOUT_MS,2000);
 $image = curl_exec($ch);
 $errorno = curl_errno($ch);
 curl_close($ch);
 
+    if(get_input('debug')){
+                echo $errorno; exit;
+                            }
+
+
 if($errorno){
-	header('Content-type: image/jpeg');
-header('Access-Control-Allow-Origin: *');	
+    header('Content-type: image/jpeg');
+    header('Access-Control-Allow-Origin: *');	
 	$img = imagecreatetruecolor(120, 1);
 	$bg = imagecolorallocate ( $img, 255, 255, 255 );
 	imagefilledrectangle($img,0,0,120,1,$bg);

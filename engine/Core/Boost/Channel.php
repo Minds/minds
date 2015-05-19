@@ -58,7 +58,7 @@ class Channel implements interfaces\BoostHandlerInterface{
                 'notification_view' => 'boost_submitted_p2p',
                 'params' => array(
                     'points' => $points, 
-                    'channel' => $this->guid
+                    'channel' => isset($_POST['destination']) ? $_POST['destination'] : $this->guid
                  ),
                 'points' => $points
                 )); 

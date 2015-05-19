@@ -39,7 +39,7 @@ class activity extends entity{
 		$guid = parent::save($index);
 
         //d
-        if(in_array($this->access_id, array(2, -2, 1))){
+        if(!$this->indexes && in_array($this->access_id, array(2, -2, 1))){
             Queue\Client::build()->setExchange("mindsqueue")
                                 ->setQueue("FeedDispatcher")
                                 ->send(array(

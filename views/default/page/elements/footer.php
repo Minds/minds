@@ -14,7 +14,11 @@ $networks = array(
 	'github'=>array(
                 'url' => 'http://github.com/minds',
                 'icon' => '&#62208;'
-        )
+            ),
+    'twitter'=>array(
+                'url' => 'https://twitter.com/minds',
+                'icon' => '&#62218;'
+            )
 );
 foreach($networks as $network => $n){
 	if($url = $n['url']){

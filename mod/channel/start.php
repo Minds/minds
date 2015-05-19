@@ -43,13 +43,13 @@ class start extends \ElggPlugin{
            // '/api/v1/channel' =>  "\\minds\\plugin\\channel\\api\\v1\\channel"
 		));
         
-	        Api\Routes::add('v1/channel', "\\minds\\plugin\\channel\\api\\v1\\channel");
-        	\Minds\Core\Events\Dispatcher::register('export:extender', 'all', function($event){
+	    Api\Routes::add('v1/channel', "\\minds\\plugin\\channel\\api\\v1\\channel");
+        \Minds\Core\Events\Dispatcher::register('export:extender', 'all', function($event){
 		    $params = $event->getParameters();
 		    $export = array();
 		    if($params['entity']->ownerObj){
-			$export['ownerObj'] = $params['entity']->ownerObj;
-			$export['ownerObj']['guid'] = (string) $params['entity']->ownerObj['guid'];	
+			    $export['ownerObj'] = $params['entity']->ownerObj;
+			    $export['ownerObj']['guid'] = (string) $params['entity']->ownerObj['guid'];	
 		        $event->setResponse($export);
 	     	    }
 		});
@@ -68,7 +68,9 @@ class start extends \ElggPlugin{
 		elgg_unregister_plugin_hook_handler('entity:icon:url', 'user', 'user_avatar_hook');
 		
 		elgg_register_plugin_hook_handler('register', 'menu:hovercard', array($this, 'hoverMenuSetup'));
-		
+        elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
+
+
 		//setup the channel elements menu content with defaults
 		elgg_register_plugin_hook_handler('register', 'menu:channel_elements', function($hook, $type, $return, $params) {
 			$user = elgg_get_page_owner_entity();
@@ -213,7 +215,20 @@ class start extends \ElggPlugin{
 		else
 			return  $CONFIG->cdn_url . "icon/$user_guid/$size/$join_date/$icon_time/".$CONFIG->lastcache;
 	}
-	
+
+
+    public function pageSetup(){
+       if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
+            $user = elgg_get_logged_in_user_entity();
+        
+            $url = elgg_get_site_url() . "$user->username/disable";
+            //$url = elgg_add_action_tokens_to_url($url);       
+            $item = new \ElggMenuItem('disable:channel', 'Deactivate channel', $url);
+            $item->setLinkClass('elgg-requires-confirmation');  
+            elgg_register_menu_item('page', $item); 
+            
+        } 
+    }    
 	
 	static public function channel_custom_vars($user = null) {
 		// input names => defaults

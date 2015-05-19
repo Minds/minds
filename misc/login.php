@@ -7,7 +7,11 @@ use Minds\Core\Data;
 use Minds\Helpers;
 
 
-$page = new \Minds\plugin\cms\entities\page(404652918289993728);
+$user = new Minds\entities\user('john');
+//login($user);
+exit;
+
+/*$page = new \Minds\plugin\cms\entities\page(404652918289993728);
 $page->owner_guid = "100000000000000341";
 $page->save();
 exit;
@@ -47,30 +51,22 @@ foreach($rows['object'] as $k => $object){
 
 exit;
 
+ */
 
 
-
-$user_guid = 100000000000000519;
+$user_guid = 100000000000000134;
 $db = new Minds\Core\Data\Call('entities_by_time');
 $offset = "";
+$guids = $db->getRow("activity:network:$user_guid");
 
+foreach($guids as $guid){
+    $entity = Minds\entities\Factory::build($guid);
 
-while(true){
-
-    $user_guids = $db->getRow("user", array('limit'=>2000, 'offset'=>$offset));
-    echo "$offset \n";
-    foreach($user_guids as $guid => $meta){
-        if($guid != $user_guid)
-            $db->removeAttributes("activity:user:$guid", array("421981950383755264"));
-        $db->insert("activity:network:$guid", array("421981950383755264"=>"421981950383755264"));
+    if(!$entity->guid){
+        echo "$guid was removed.. \n";
     }
-
-    end($user_guids);
-    $offset = key($user_guids);
-
 }
-
-
+exit;
 
 /*
 $prepared = new Data\Neo4j\Prepared\Common();

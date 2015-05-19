@@ -31,6 +31,10 @@ class channel implements interfaces\api{
         if(!$user->username){
             return Factory::response(array('status'=>'error', 'message'=>'The user could not be found'));
         }
+
+        if($user->enabled != "yes"){
+            return Factory::response(array('status'=>'error', 'message'=>'The user is disabled'));
+        }
         
         $return = factory::exportable(array($user));
         
@@ -193,9 +197,20 @@ class channel implements interfaces\api{
         return Factory::response(array());
         
     }
-    
+
+    /**
+     * Deactivate an account
+     */
     public function delete($pages){
-        
+
+        if(!Core\session::getLoggedinUser()){
+            return Factory::response(array('status'=>'error', 'message'=>'not logged in'));
+        }
+
+        $channel = Core\session::getLoggedinUser();
+        $channel->enabled = 'no';
+        $channel->save();
+
         return Factory::response(array());
         
     }

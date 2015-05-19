@@ -15,11 +15,11 @@ class channel extends core\page implements interfaces\page{
 	public $context = 'channel';
 	
 	public function get($pages){
-
-		if (isset($pages[0])) {
+        
+        if (isset($pages[0])) {
 			$username = $pages[0];
 			$user = get_user_by_username($username);
-			if($user){
+			if($user && $user->enabled != "no"){
 				elgg_set_page_owner_guid($user->guid);
 			} else {
 				return $this->notfound();
@@ -54,7 +54,14 @@ class channel extends core\page implements interfaces\page{
 		$class ='';
 		$sidebar = '';
 		switch($pages[1]){
-			case 'custom':
+            case 'disable':
+                $user->enabled = 'no';
+                $user->save();
+                logout();
+
+                return $this->notfound();
+                break;
+            case 'custom':
 				$content .= elgg_view_form('channel/custom', array('enctype' => 'multipart/form-data'), array('entity' => $user));
 				break;
 			case 'avatar':
