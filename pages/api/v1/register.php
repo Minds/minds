@@ -27,7 +27,11 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
      * Registers a user
      * @param array $pages
      * 
-     * API:: /v1/register
+     * @SWG\Post(
+     *     summary="Create a new channel",
+     *     path="/v1/register",
+     *     @SWG\Response(name="200", description="Array")
+     * )
      */
     public function post($pages){
        

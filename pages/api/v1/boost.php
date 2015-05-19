@@ -4,6 +4,7 @@
  * 
  * @version 1
  * @author Mark Harding
+ * 
  */
 namespace minds\pages\api\v1;
 
@@ -17,7 +18,31 @@ class boost implements interfaces\api{
     /**
      * Return impressions/points for a request
      * @param array $pages
-     * API:: /v1/boost/:guid 
+     * 
+     * @SWG\GET(
+     *     tags={"boost"},
+     *     summary="Returns information regarding a boost, or the current boost rates",
+     *     path="/v1/boost/{guid}",
+     *     @SWG\Parameter(
+     *      name="guid",
+     *      in="path",
+     *      description="the guid",
+     *      required=true,
+     *      type="string"
+     *     ),
+     *     @SWG\Response(name="200", description="Array")
+     * )
+     * @SWG\GET(
+     *     tags={"boost"},
+     *     summary="Returns  the current boost rates",
+     *     path="/v1/boost/rate",
+     *     @SWG\Response(name="200", description="Array"),
+     *     security={
+     *         {
+     *             "minds_oauth2": {}
+     *         }
+     *     }
+     * )
      */      
     public function get($pages){
         $response = array();

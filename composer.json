@@ -16,7 +16,8 @@
 		"bshaffer/oauth2-server-php":"1.7",
 		"neoxygen/neoclient": "2.1.11",
 		"videlalvaro/php-amqplib": "dev-master@dev",
-		"Minds/Surge": "dev-master@dev"
+		"Minds/Surge": "dev-master@dev",
+		"zircote/swagger-php": "2.*@dev"
    	},
 	"repositories": [
 		{

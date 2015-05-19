@@ -15,6 +15,16 @@ class logout implements interfaces\api{
 
     public function get($pages){}
     
+    /**
+     * Logout
+     * @param $pages
+     * 
+     * @SWG\Post(
+     *     summary="Logout",
+     *     path="/v1/logout",
+     *     @SWG\Response(name="200", description="Array")
+     * )
+     */
     public function post($pages){
 error_log("logout request received");        
         $db = new Core\Data\Call('entities');
