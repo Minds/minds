@@ -67,6 +67,16 @@
 	position:relative;
 }
 
+.controls.audio{
+    margin-left:5%;
+}
+.controls .play, .controls .pause{
+    color:#FFF;
+    font-size:40px;
+    line-height:50px;
+    display:none;
+}
+
 @charset "utf-8";
 
 /*

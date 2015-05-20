@@ -21,7 +21,6 @@ $batch = new minds\plugin\archive\entities\batch(get_input('batch_guid'));
 
 switch($mime_type){
 	case "video":
-	case "audio":
 		if($guid)
 			$entity = new minds\plugin\archive\entities\video($guid);
 		else
@@ -56,7 +55,29 @@ switch($mime_type){
 		}
 	
 		break;
-		
+	case "audio":
+        if($guid)
+            $entity = new minds\plugin\archive\entities\audio($guid);
+        else
+            $entity = new minds\plugin\archive\entities\audio();
+        $entity->title = $title;
+        $entity->description = $desc;
+        $entity->owner_guid = elgg_get_logged_in_user_guid();
+        $entity->license = $license;
+
+        if(!$guid)
+            $entity->upload($_FILES['fileData']['tmp_name']);
+        $entity->access_id = 2;
+        
+        if($guid = $entity->save()){
+            //@todo do newsfeed later
+            echo "$guid";
+            exit;
+        }
+
+        echo "failed"; exit;
+
+        break;	
 	case "image":
 		
 		$image = new minds\plugin\archive\entities\image();

@@ -29,7 +29,7 @@ set_input('keywords', $entity->tags);
 $trending = true;
 switch($entity->subtype){
 	case 'video':
-		
+    case 'audio':		
 		if(!elgg_is_xhr())
 			$sidebar_comments = false;
 		

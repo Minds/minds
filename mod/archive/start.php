@@ -19,6 +19,9 @@ function minds_archive_init() {
                 case 'kaltura_video':
 					return new minds\plugin\archive\entities\video($row);
 					break;
+                case 'audio':
+                    return new minds\plugin\archive\entities\audio($row);
+                    break;
 				case 'image':
 					return new minds\plugin\archive\entities\image($row);
 					break;
@@ -48,6 +51,7 @@ function minds_archive_init() {
 	elgg_register_js('player-vast', elgg_get_site_url().'mod/archive/player/video.vast.js', 'head', 602);
 	elgg_register_js('player-vast-client', elgg_get_site_url().'mod/archive/player/vast-client.js', 'head', 601);
 	elgg_register_js('player-ads', elgg_get_site_url().'mod/archive/player/video.ads.js', 'head', 600);
+    elgg_register_js('wavesurfer', elgg_get_site_url().'mod/archive/player/wavesurfer.min.js', 'head', 602);
 
 	elgg_register_js('popup', elgg_get_site_url().'mod/archive/vendors/popup.min.js','head', 2);
 	elgg_extend_view('groups/sidebar', 'archive/albums');
