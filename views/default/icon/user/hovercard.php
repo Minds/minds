@@ -12,7 +12,7 @@ $overview = elgg_view('user/overview', array('entity' => $user));
 
 global $CONFIG;
 $banner = elgg_view('output/img', array(
-	'src'=>$CONFIG->cdn_url. "$user->username/banner/",
+	'src'=>$CONFIG->cdn_url. "$user->username/banner/$user->icontime",
 	'class'=>'hovercard-banner-img'
 ));
 ?>

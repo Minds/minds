@@ -114,4 +114,8 @@ foreach($items as $k=>$item){
 	//}
 }
 
+$user = \Minds\Core\session::getLoggedinUser();
+$user->icontime = time();
+$user->save();
+
 forward(REFERRER);
