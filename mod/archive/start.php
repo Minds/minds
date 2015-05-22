@@ -270,7 +270,8 @@ function minds_archive_page_handler($page) {
 			
 			$data_root = $CONFIG->dataroot;
 			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
-			
+
+
 			switch($entity->subtype){
 				case 'image':
 					if($entity->filename)
@@ -294,7 +295,10 @@ function minds_archive_page_handler($page) {
 						$cinemr = $entity->cinemr();
                         			forward($cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail'));
 					}
-					break;
+                    break;
+                case 'audio':
+                    $filename = elgg_get_site_url() . 'mod/archive/graphics/wave.png';
+                    break;
 			}
 		
 			if(!file_exists($filename)){

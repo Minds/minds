@@ -28,7 +28,11 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
             if(is_string($pages[1]) && $pages[1] == 'play'){
                 //echo $entity->getSourceUrl('360.mp4'); exit;
                 Header( "HTTP/1.1 301 Moved Permanently" ); 
-                header("Location:" . $entity->getSourceUrl('360.mp4'));
+                if($entity->subtype == 'audio'){
+                    header("Location:" . $entity->getSourceUrl('128.mp3'));
+                } else {
+                    header("Location:" . $entity->getSourceUrl('360.mp4'));
+                }
                 exit;    
             }
             $response = reset(factory::exportable(array($entity)));

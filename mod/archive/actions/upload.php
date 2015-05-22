@@ -70,8 +70,18 @@ switch($mime_type){
         $entity->access_id = 2;
         
         if($guid = $entity->save()){
-            //@todo do newsfeed later
+            $batch->addToList($entity->guid);  
             echo "$guid";
+
+            $activity = new minds\entities\activity();
+            $activity->setCustom('video', array(
+                            'thumbnail_src'=> elgg_get_site_url() . 'mod/archive/graphics/wave.png',
+                            'guid'=>$entity->guid))
+                ->setTitle($entity->title)
+                ->setBlurb($entity->description)
+                ->setFromEntity($entity)
+                ->save();
+
             exit;
         }
 
