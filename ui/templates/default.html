@@ -1,0 +1,10 @@
+<form>
+    <input type="text" ng-model="data.message"/>
+    <button ng-click="post()">Submit</button>
+</form>
+
+<div>
+    <p ng-repeat="activity in feed">
+        {{activity.message}}
+    </p>
+</div>

@@ -5,6 +5,7 @@
 namespace minds\pages;
 
 use Minds\Core;
+use Minds\Core\Security;
 use minds\interfaces;
 
 class index extends core\page implements interfaces\page{
@@ -13,6 +14,7 @@ class index extends core\page implements interfaces\page{
 	 * Get requests
 	 */
 	public function get($pages){
+	    Security\XSRF::setCookie();
 		include(dirname(dirname(__FILE__)) . '/ui/index.php');
 	}
 	

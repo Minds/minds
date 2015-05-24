@@ -1,5 +1,4 @@
-/*jshint unused: vars */
-define(['angular', 'controllers/main',  'controllers/docs', 'controllers/governance']/*deps*/, function (angular, MainCtrl, AboutCtrl)/*invoke*/ {
+define(['angular', 'controllers/controllers', 'angular-route'], function (angular){
   'use strict';
 
   /**
@@ -10,38 +9,19 @@ define(['angular', 'controllers/main',  'controllers/docs', 'controllers/governa
    *
    * Main module of the application.
    */
-  return angular
-    .module('orgApp', ['orgApp.controllers.MainCtrl',
-    'orgApp.controllers.DocsCtrl',
-	'orgApp.controllers.GovernanceCtrl',
-	/*angJSDeps*/
-    'ngCookies',
-    'ngResource',
-    'ngSanitize',
-    'ngRoute',
-    'ngAnimate',
-    'ngTouch'
-  ])
-    .config(function ($routeProvider) {
+  var app= angular.module('minds', ['app.controllers', 'ngRoute']);
+  
+  
+  app.config(function ($routeProvider) {
       $routeProvider
         .when('/', {
-          templateUrl: 'views/main.html',
-          controller: 'MainCtrl'
-        })
-        .when('/docs', {
-          templateUrl: 'views/docs.html',
-          controller: 'DocsCtrl'
-        })
-        .when('/code', {
-          templateUrl: 'views/code.html',
-          controller: 'CodeCtrl'
-        })
-        .when('/governance', {
-          templateUrl: 'views/governance.html',
-          controller: 'GovernanceCtrl'
+          templateUrl: '/ui/templates/default.html',
+          controller: 'DefaultCtrl'
         })
         .otherwise({
           redirectTo: '/'
         });
     });
+    
+    return app;
 });

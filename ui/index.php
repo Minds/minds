@@ -12,7 +12,7 @@
     <!-- endbuild -->
     <link href='//fonts.googleapis.com/css?family=Lato:300,400,700|Roboto+Slab:400,300,100,700' rel='stylesheet' type='text/css'>
   </head>
-  <body ng-app="orgApp">
+  <body ng-app="app">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->

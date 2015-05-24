@@ -1,15 +1,15 @@
 /*jshint unused: vars */
 require.config({
   paths: {
-    angular: '../../bower_components/angular/angular',
-    'angular-animate': '../../bower_components/angular-animate/angular-animate',
-    'angular-cookies': '../../bower_components/angular-cookies/angular-cookies',
-    'angular-mocks': '../../bower_components/angular-mocks/angular-mocks',
-    'angular-resource': '../../bower_components/angular-resource/angular-resource',
-    'angular-route': '../../bower_components/angular-route/angular-route',
-    'angular-sanitize': '../../bower_components/angular-sanitize/angular-sanitize',
-    'angular-touch': '../../bower_components/angular-touch/angular-touch',
-    bootstrap: '../../bower_components/bootstrap/dist/js/bootstrap'
+    angular: '../vendors/angular/angular',
+    'angular-animate': '../vendors/angular-animate/angular-animate',
+    'angular-cookies': '../vendors/angular-cookies/angular-cookies',
+    'angular-mocks': '../vendors/angular-mocks/angular-mocks',
+    'angular-resource': '../vendors/angular-resource/angular-resource',
+    'angular-route': '../vendors/angular-route/angular-route',
+    'angular-sanitize': '../vendors/angular-sanitize/angular-sanitize',
+    'angular-touch': '../vendors/angular-touch/angular-touch',
+    bootstrap: '../vendors/bootstrap/dist/js/bootstrap'
   },
   shim: {
     angular: {
@@ -54,18 +54,12 @@ window.name = 'NG_DEFER_BOOTSTRAP!';
 require([
   'angular',
   'app',
-  'angular-route',
-  'angular-cookies',
-  'angular-sanitize',
-  'angular-resource',
-  'angular-animate',
-  'angular-touch'
-], function(angular, app, ngRoutes, ngCookies, ngSanitize, ngResource, ngAnimate, ngTouch) {
+], function(angular, app) {
   'use strict';
   /* jshint ignore:start */
   var $html = angular.element(document.getElementsByTagName('html')[0]);
   /* jshint ignore:end */
   angular.element().ready(function() {
-    angular.resumeBootstrap([app.name]);
+    angular.bootstrap(document,[app.name]);
   });
 });

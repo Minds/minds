@@ -67,7 +67,7 @@ class Factory{
         $user_pam = new \ElggPAM('user');
         $api_pam = new \ElggPAM('api'); 
         $user_auth_result = $user_pam->authenticate();
-        if($user_auth_result && $api_pam->authenticate() || Security\XSRF::validate()){
+        if($user_auth_result && $api_pam->authenticate() || Security\XSRF::validateRequest()){
            
         } else {
              error_log('failed authentication:: OAUTH via API');
