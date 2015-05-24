@@ -17,7 +17,8 @@
 		"neoxygen/neoclient": "2.1.11",
 		"videlalvaro/php-amqplib": "dev-master@dev",
 		"Minds/Surge": "dev-master@dev",
-		"zircote/swagger-php": "2.*@dev"
+		"zircote/swagger-php": "2.*@dev",
+		"beelab/bowerphp": "0.3.*@beta"
    	},
 	"repositories": [
 		{

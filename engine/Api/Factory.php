@@ -3,6 +3,7 @@
 namespace Minds\Api;
 use Minds\interfaces;
 use Minds\Helpers;
+use Minds\Core\Security;
 /**
  * The minds API factory
   */
@@ -66,7 +67,7 @@ class Factory{
         $user_pam = new \ElggPAM('user');
         $api_pam = new \ElggPAM('api'); 
         $user_auth_result = $user_pam->authenticate();
-        if($user_auth_result && $api_pam->authenticate()){
+        if($user_auth_result && $api_pam->authenticate() || Security\XSRF::validate()){
            
         } else {
              error_log('failed authentication:: OAUTH via API');
