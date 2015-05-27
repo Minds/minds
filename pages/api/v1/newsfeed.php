@@ -124,7 +124,7 @@ class newsfeed implements interfaces\api{
                 
                 if(isset($_POST['title'])){
                         $activity->setTitle($_POST['title'])
-                            ->setBlurb($_POST['description'])
+                            ->setBlurb(urldecode($_POST['description']))
                             ->setURL(\elgg_normalize_url($_POST['url']))
                             ->setThumbnail(urldecode($_POST['thumbnail']));
                 }
