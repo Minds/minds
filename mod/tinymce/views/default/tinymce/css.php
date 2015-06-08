@@ -32,3 +32,12 @@
 .mceLast .mceStatusbar {
 	padding-left: 5px;
 }
+.mce-content-body{
+    padding:8px;
+}
+.mce-content-body img{
+    padding:8px;
+}
+.mce-tinymce img{
+     padding:8px;
+}

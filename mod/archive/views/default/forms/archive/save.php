@@ -39,6 +39,7 @@ $guid = elgg_view('input/hidden', array('name' => 'guid', 'value' => $entity->gu
 	
 switch($entity->getSubtype()){
 
+    case 'audio':
 	case 'video':
 	
 		$thumbnail_input = elgg_view('input/thumbnail_picker', array('entity'=>$entity));

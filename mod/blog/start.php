@@ -488,8 +488,10 @@ function minds_blog_scraper($hook, $entity_type, $return_value, $params){
 			}
 			
 			$feed = new SimplePie();
-			$feed->set_feed_url($scraper->feed_url);
-			$feed->enable_cache(false);
+            $feed->set_feed_url($scraper->feed_url);
+            $feed->set_output_encoding('utf-8');
+            $feed->enable_cache(false);
+            $feed->handle_content_type();
 			$feed->init();
 			//swamp the orderring so we do the latest, last
 			if(!$feed){

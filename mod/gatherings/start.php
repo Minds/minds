@@ -70,6 +70,7 @@ class start extends Components\Plugin{
 			'/gatherings/live' => '\\minds\\plugin\\gatherings\\pages\\live',
 		));
 
+        Api\Routes::add('v1/gatherings', '\\minds\\plugin\\gatherings\\api\\v1\\conversations');
         Api\Routes::add('v1/conversations', '\\minds\\plugin\\gatherings\\api\\v1\\conversations');
         Api\Routes::add('v1/keys', '\\minds\\plugin\\gatherings\\api\\v1\\keys');
 

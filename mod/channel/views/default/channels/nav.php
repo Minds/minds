@@ -40,7 +40,7 @@ $tabs = array(
 		'href' => "channels/newest",
 		'selected' => $vars['selected'] == 'newest',
 	),
-	'newest' => array(
+	'sites' => array(
 		'text' => elgg_echo('channels:label:sites'),
 		'href' => "channels/sites",
 		'selected' => $vars['selected'] == 'sites',

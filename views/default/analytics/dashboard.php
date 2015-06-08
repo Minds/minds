@@ -31,3 +31,13 @@
     </div>
 
 </div>
+<div class="minds-dashboard analytics">
+     <div class="minds-module anyltics-requests">
+        <h3>Leaderboard</h3>
+        <ul>
+           <?php foreach($vars['leaderboard'] as $user): ?>
+            <li><?= $user['user']->username ?>: (<?= $user['points']?>)</li>
+           <?php endforeach;?>
+        </ul>
+    </div>
+</div>

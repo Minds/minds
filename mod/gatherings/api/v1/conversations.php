@@ -103,7 +103,19 @@ class conversations implements interfaces\api{
     }
     
     public function put($pages){
-        
+
+        switch($pages[0]){
+            case 'call':
+               \Minds\Core\Queue\Client::build()->setExchange("mindsqueue")
+                                                ->setQueue("Push")
+                                                ->send(array(
+                                                     "user_guid"=>$pages[1],
+                                                    "message"=> \Minds\Core\session::getLoggedInUser()->name . " is calling you.",
+                                                    "uri" => 'call'
+                                                )); 
+                break;
+        }
+
         return Factory::response(array());
         
     }

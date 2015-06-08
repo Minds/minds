@@ -386,7 +386,7 @@ function minds_entity_menu_setup($hook, $type, $return, $params) {
 				'href' => "action/$handler/delete?guid={$entity->getGUID()}",
 				'text' => '&#10062;',
 				'title' => elgg_echo('delete'),
-				//'confirm' => elgg_echo('deleteconfirm'),
+				'confirm' => elgg_echo('deleteconfirm'),
 				'is_action' => true,
 				'priority' => 200,
 			);

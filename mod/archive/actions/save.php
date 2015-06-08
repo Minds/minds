@@ -41,7 +41,7 @@ if($activity_guids){
 	foreach($activity_guids as $activity_guid){
         $activity = new minds\entities\activity($activity_guid);
 
-        if($entity->subtype == 'video'){
+        if($entity->subtype == 'video' || $entity->subtype == 'audio'){
            $activity->setCustom('video', array(
                 'thumbnail_src'=>$entity->getIconUrl(),
                 'guid'=>$entity->guid))
@@ -51,9 +51,8 @@ if($activity_guids){
                  ->save(); 
 
         } else {
-		$activity->setTitle($entity->title)
+    		$activity->setTitle($entity->title)
 				->setUrl($entity->getURL())
-				->setThumbnail($entity->getIconURL())
 				->save(false);
         }    
     }

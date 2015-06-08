@@ -58,7 +58,37 @@ class analytics extends core\page implements interfaces\page{
                 'impressions_met' => $boot_impressions_met
             );
 
-            $content = elgg_view('analytics/dashboard', array('users' => $users, 'requests'=>$requests, 'rps' => $rps, 'boosts' => $boosts, 'boosts_suggested'=> $boosts_suggested));
+
+            /**
+             * This page is getting messy!
+             */
+            $cql = "SELECT * FROM counters WHERE metric = :metric LIMIT 1000000 ALLOW FILTERING";
+            $values = array(
+                'metric' => 'points',
+                'limit' => 10000
+            );
+
+            $client = Core\Data\Client::build('Cassandra');
+            $prepared = new Core\Data\Cassandra\Prepared\Custom();
+            $results = (array) $client->request($prepared->query($cql,$values));
+
+            //find who has the most points
+            usort($results, array($this, "sortResults"));
+            $leaderboard = array();
+            $i = 0;
+            foreach($results as $result){
+                if($i++ > 25)
+                    break;
+                $user = new \Minds\entities\user($result['guid']);
+                $username = "@$user->username";
+                $count = $result['count'];
+                $leaderboard[] = array(
+                    'user'=>$user,
+                    'points' => $count
+                );
+            }
+
+            $content = elgg_view('analytics/dashboard', array('users' => $users, 'requests'=>$requests, 'rps' => $rps, 'boosts' => $boosts, 'boosts_suggested'=> $boosts_suggested, 'leaderboard'=>$leaderboard));
 
             $body = \elgg_view_layout('one_sidebar', array(
                 'title'=> 'Analytics',
@@ -71,6 +101,13 @@ class analytics extends core\page implements interfaces\page{
 
             echo $this->render(array('body'=>$body));
     }
+
+    public function sortResults($a, $b){
+                        if($a['count'] == $b['count'])
+                                                   return 0;
+                                         return ($a['count'] < $b['count']) ? 1 : -1;
+                                    }
+
 
     public function post($pages){
     }
