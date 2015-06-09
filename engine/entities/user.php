@@ -28,7 +28,7 @@ class user extends \ElggUser{
      */
     public function getEmail(){
         global $CONFIG; //@todo use object config instead
-        return base64_decode(Helpers\OpenSSL::decrypt($this->email, file_get_contents($CONFIG->encryptionKeys['email']['private'])));
+        return Helpers\OpenSSL::decrypt(base64_decode($this->email), file_get_contents($CONFIG->encryptionKeys['email']['private']));
     }
 
     public function subscribe($guid, $data = array()){
