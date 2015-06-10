@@ -37,11 +37,11 @@ class Common implements Interfaces\PreparedInterface{
     public function createBulkUsers(array $users = array()){
         foreach($users as $user){
            $exp[] = array(
-                        'username'=>$user->username,
-                        'guid'=>$user->guid
+                    //    'username'=>$user->username,
+                        'guid'=>$user
                         );
         }
-        $this->template = "FOREACH (u IN " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp))  . " | MERGE(user:User {guid: str(u.guid), username: u.username}))";
+        $this->template = "FOREACH (u IN " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp))  . " | MERGE(user:User {guid: str(u.guid)}))";
         return $this;
     }
     
@@ -321,7 +321,7 @@ class Common implements Interfaces\PreparedInterface{
     public function updateEntity($entity, $properties = array()){
         $this->template = "MERGE (entity { guid: {guid}}) SET entity += {properties} RETURN id(entity)";
         $this->values = array(
-            'guid'=>$entity->guid, 
+            'guid'=> (string) $entity->guid, 
             'properties'=>$properties
             );
         return $this;
