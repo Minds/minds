@@ -95,7 +95,7 @@ function minds_social_facebook_login(){
 				$data = $facebook->api('/me');
 				$email= $data['email'];
 				$user = get_entity($users->guid);
-				$user->email = $email;
+				$user->setEmail($email);
 				$user->save();
 			}
 

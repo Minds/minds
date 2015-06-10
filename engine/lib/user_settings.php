@@ -202,7 +202,7 @@ function elgg_set_user_email() {
 			if (!get_user_by_email($email)) {
 				if ($user->email != $email) {
 
-					$user->email = $email;
+					$user->setEmail($email);
 					if ($user->save()) {
 						system_message(elgg_echo('email:save:success'));
 						return true;

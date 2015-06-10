@@ -26,7 +26,7 @@ $content = <<<__HTML
 	</tr>
 	<tr class="even">
 		<td class="column-one">$label_email</td>
-		<td>$user->email</td>
+		<td>$user->getEmail()</td>
 	</tr>
 	<tr class="odd">
 		<td class="column-one">$label_member_since</td>

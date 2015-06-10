@@ -15,7 +15,7 @@ if (!isset($_GET['guid'])) {
 }
 
 $guid = $_GET['guid'];
-$user = new ElggUser($guid);
+$user = new Minds\entities\user($guid);
 if(isset($user->legacy_guid) && $user->legacy_guid)
 	$guid = $user->legacy_guid;
 
@@ -69,5 +69,5 @@ if (isset($data_root)) {
 // something went wrong so load engine and try to forward to default icon
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 //elgg_log("Profile icon direct failed.", "WARNING");
-forward(minds_fetch_gravatar_url($user->email, $size, 'mm')); 
+forward(minds_fetch_gravatar_url($user->getEmail(), $size, 'mm')); 
 //forward("_graphics/icons/user/default{$size}.gif");

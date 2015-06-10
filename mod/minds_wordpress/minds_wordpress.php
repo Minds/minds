@@ -142,7 +142,7 @@ class minds_wordpress extends \ElggPlugin{
                 $user = \elgg_get_logged_in_user_entity();
                 $data['author'] = array(
                     'name' => $user->name,
-                    'email' => $user->email,
+                    'email' => $user->getEmail(),
                     'minds_author_icon' => $user->getIcon('small'),
                     'profile' => $user->getUrl()
                 );

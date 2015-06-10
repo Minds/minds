@@ -392,7 +392,7 @@ class start extends Components\Plugin{
 		if(core\plugins::isActive('phpmailer')){
 			$view = elgg_view('minds_nodes/welcome', array('node'=>$node));
 			$to = array(
-				$node->getOwnerEntity(false)->email,
+				$node->getOwnerEntity(false)->getEmail(),
 				'mark@minds.com',
 				'bill@minds.com'
 			);

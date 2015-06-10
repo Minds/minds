@@ -16,7 +16,7 @@ echo elgg_view('input/text', array(
 	'name' => 'email',
 	'placeholder' => 'Your Email Address',
 	'autocomplete' => 'off',
-	'value' => elgg_is_logged_in() ? $user->email : ''
+	'value' => elgg_is_logged_in() ? $user->getEmail() : ''
 	));	
 	
 echo elgg_view('input/text', array(

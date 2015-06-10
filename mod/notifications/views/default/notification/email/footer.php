@@ -1,6 +1,6 @@
 <?php
 $recipient = $vars['recipient'];
-$token = md5($vars['recipient']->email . $vars['recipient']->guid);
+$token = md5($vars['recipient']->getEmail() . $vars['recipient']->guid);
 ?>
 					<!-- FOOTER -->
 					<table class="footer" width="600" align="center" style="background:#FFF; border-bottom:1px solid #CCC; border-left:1px solid #CCC; border-right:1px solid #CCC; border-radius: 0 0 3px 3px; padding:16px;">

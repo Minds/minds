@@ -37,7 +37,7 @@
     
     <div class="email">
         <?php /* <p><label>Enter your email address:<br /> */ ?>
-                <input id="email" required type="hidden" name="email" placeholder="you@yourdomain.com" value="<?php echo elgg_get_logged_in_user_entity()->email; ?>" /> </label></p>
+                <input id="email" required type="hidden" name="email" placeholder="you@yourdomain.com" value="<?php echo elgg_get_logged_in_user_entity()->getEmail(); ?>" /> </label></p>
     </div>
     
     <div class="blurb-or">Enter your network name...</div>

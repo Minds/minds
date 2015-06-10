@@ -103,9 +103,9 @@ class ElggNotificationEmail extends ElggNotification {
 		
 		foreach($recipients as $k => $recipient){
 			$template = $this->getTemplate(array('recipient'=>$recipient));
-			$send = phpmailer_send(elgg_get_site_entity()->email,elgg_get_site_entity()->name, $recipient->email, $recipient->name, $this->subject, $template, null, true);
+			$send = phpmailer_send(elgg_get_site_entity()->email,elgg_get_site_entity()->name, $recipient->getEmail(), $recipient->name, $this->subject, $template, null, true);
 //			var_dump($send);	
-			echo " $recipient->guid:$recipient->username:$recipient->email \n";
+			echo " $recipient->guid:$recipient->username:$recipient->getEmail() \n";
 		}
 		
 		$this->last_sent = end($recipients)->guid;
