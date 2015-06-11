@@ -10,7 +10,7 @@ Production | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token
 Objectional Refactoring | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=objectional-refactoring)](https://magnum.travis-ci.com/Minds/Minds) | a prototype of an objectional codebase, with legacy fallback for Elgg.
 
 ## Introduction
-Minds is a scalable and fully functional social engine built on top of Elgg. Some functions should feel familiar to Elgg developers, however we have made some changes major code changes to create a more scalable and less complex code base. 
+Minds is the free and open-source social network platform. 
 
 This *readme* file should hopefuly explain all you need to get started, if not, please add to it or email **mark@minds.com**.
 
@@ -40,7 +40,7 @@ Minds is gradually implementing an Object Orientated code base. Elgg functions c
 
 
 ### Calling the database
-Minds implements Cassandra as its database. Cassandra is a NoSQL datastore, and as such we have removed the relational queries used by Elgg. 
+Minds implements Cassandra as its database. Cassandra is a NoSQL datastore. 
 
 You should generally store your indexes on **write** and retrieve later with a lookup query.
 
@@ -66,7 +66,7 @@ $user = new \minds\entities\user($guid);
 
 --------
 ### Entities
-Elgg's 'classes' folder is large an unstructured. Entities have now been moved to their own folder in **engine/entities** and can be called with the new namespace **minds\entities**.
+Elgg's 'classes' folder is large and unstructured. Entities have now been moved to their own folder in **engine/entities** and can be called with the new namespace **minds\entities**.
 
 ```
 use minds\entities;
@@ -144,33 +144,14 @@ http://minds.com, http://minds.org
 - Mark Harding (mark@minds.com)
 - Bill Ottman (bill@minds.com)
 - John Ottman (john@minds.com)
-- Ian Crossland (ian@minds.com)
 - Marcus Povey (marcus@minds.com)
 
 
 
 
-Minds is released under the GNU General Public License (GPL) Version 2 and the
-Massachusetts Institute of Technology (MIT) License. See LICENSE.txt 
+Minds is released under the GNU Affero General Public License (AGPL) Version 3. See LICENSE.txt 
 in the root of the package you downloaded.
 
 For installation instructions, see INSTALL.txt.
 
 For upgrade instructions, see UPGRADE.txt.
-
-
-
-###Elgg
-
-Copyright (c) 2008-2012 See COPYRIGHT.txt
-
-See CONTRIBUTORS.txt for development credits.
-
-Elgg is managed by the Elgg Foundation, a nonprofit organization that was
-founded to govern, protect, and promote the Elgg open source social network
-engine.  The Foundation aims to provide a stable, commercially and
-individually independent organization that operates in the best interest of Elgg
-as an open source project.
-
-The project site can be found at http://elgg.org/
-

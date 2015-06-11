@@ -52,7 +52,7 @@ function phpmailer_notify_handler(ElggEntity $from, ElggUser $to, $subject, $mes
 
 
 	//return phpmailer_send($from_email, $from_name, $to->email, '', $subject, $message);
-	return elgg_send_email($from_email, $to->email, $subject, $message);
+	return elgg_send_email($from_email, $to->getEmail(), $subject, $message);
 }
 
 /**

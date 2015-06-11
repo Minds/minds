@@ -165,7 +165,7 @@ class clusters extends base{
 			}
 			$user->name = $authenticate['name'];
 			$user->username = $authenticate['username'];
-			$user->email = $authenticate['email'];
+			$user->setEmail($authenticate['email']);
 			$user->base_node = $node_uri;
 			$user->salt = generate_random_cleartext_password(); // Note salt generated before password!
 			$user->password = generate_user_password($user, generate_random_cleartext_password()); //random password because this isn't actually a user registered here
@@ -180,7 +180,7 @@ class clusters extends base{
 		
 		$user->name = $authenticate['name'];
 		$user->username = $authenticate['username'];
-		$user->email = $authenticate['email'];
+		$user->setEmail($authenticate['email']);
 		$user->avatar_url = $authenticate['avatar_url'];
 		$user->access_id = 2;
 		$user->enable();	

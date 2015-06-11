@@ -26,7 +26,7 @@ class authenticate extends core\page implements interfaces\page{
 			$user = new entities\user(get_input('username'));
 			
 			$return = $user->export();
-			$return['email'] = $user->email;
+			$return['email'] = $user->getEmail();
 			
 		}
 		

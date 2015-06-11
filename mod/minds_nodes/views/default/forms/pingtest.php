@@ -8,7 +8,7 @@ if(strpos($domain, '.minds.com') === false){
 	$domain = str_replace('.', '-', $domain) . '-custdom-001.minds.com';
 }
 
-$domain_link = "http://". $domain . "/install.php?username=".urlencode($user->username) . "&name=".urlencode($user->name) . "&email=".urlencode($user->email) . "&ts=".time(); 
+$domain_link = "http://". $domain . "/install.php?username=".urlencode($user->username) . "&name=".urlencode($user->name) . "&email=".urlencode($user->getEmail()) . "&ts=".time(); 
 
 $ping = get_input('ping', false);
 if($ping){

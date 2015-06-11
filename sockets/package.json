@@ -1,0 +1,16 @@
+{
+  "name": "minds-sockets",
+  "version": "1.0.0",
+  "description": "Sockets server for minds",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mark Harding (mark@minds.com)",
+  "license": "TBC",
+  "dependencies": {
+    "express": "^4.9.0",
+    "lodash-node": "^2.4.1",
+    "socket.io": "^1.1.0"
+  }
+}

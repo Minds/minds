@@ -86,7 +86,7 @@ class start extends Components\Plugin{
 		$transaction->paypal_id = $paypal_obj->getID();
 		$transaction->status = 'complete';
 		
-		self::sendConfirmation(array($transaction->getOwnerEntity(false)->email, 'mark@minds.com', 'bill@minds.com', 'billing@minds.com'), $transaction);
+		self::sendConfirmation(array($transaction->getOwnerEntity(false)->getEmail(), 'mark@minds.com', 'bill@minds.com', 'billing@minds.com'), $transaction);
 		
 		return $transaction->save();
 		

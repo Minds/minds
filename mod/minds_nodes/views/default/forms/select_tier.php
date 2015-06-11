@@ -320,7 +320,7 @@ if(!elgg_is_logged_in()){
 	
 	<div class="row input">
 		<div class="cell">
-			<input name="email" placeholder="Your Email Address" value="<?php echo elgg_is_logged_in() ? elgg_get_logged_in_user_entity()->email : '';?>"/> 
+			<input name="email" placeholder="Your Email Address" value="<?php echo elgg_is_logged_in() ? elgg_get_logged_in_user_entity()->getEmail() : '';?>"/> 
 		</div>
 		<div class="cell">
 			<textarea placeholder="Tell us more about your site. " name="message"></textarea>

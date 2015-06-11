@@ -52,6 +52,13 @@ try{
 	// bootstrap site info
 	$CONFIG->site_guid = $site_guid;
 	$CONFIG->site = $site;
+    
+    //for testing email encryption/decryption
+    $CONFIG->encryptionKeys = array(
+        'email' => array(
+            'public' => dirname(__FILE__) . '/keys/email-public.key',
+            'private' => dirname(__FILE__) . '/keys/email-private.key'
+        ));
 }catch(Exception $e){
 	var_dump($e);
 	exit;

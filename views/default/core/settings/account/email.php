@@ -13,7 +13,7 @@ if ($user) {
 	$content = elgg_echo('email:address:label') . ': ';
 	$content .= elgg_view('input/email', array(
 		'name' => 'email',
-		'value' => $user->email,
+		'value' => $user->getEmail(),
 	));
 	echo elgg_view_module('info', $title, $content);
 }
