@@ -41,6 +41,14 @@
 	 		$(this).remove();
 	 	});
 		
+
+        var UA = navigator.userAgent;
+        if(UA.match(/Android/i) != null){
+
+            $('.banners').show();
+
+        }
+
 	//	if(!elgg.is_logged_in() && !$.cookie('promptMobile')){
 		/*	setTimeout(function(){ 
                 $('.minds-mobile-popup').parent().show();
