@@ -48,7 +48,8 @@ class invite implements interfaces\api{
             $contact = $_POST['contact'];
             $name = $contact['name']['formatted'];
             $email = $contact['emails'][0]['value'];
-            $html = "<h1>Hey $name, $user->name invited you to use Minds</h1> <a href='http://minds.com/app'>Click here</a> to download the app: http://minds.com/app</a>";
+            //$html = "<h1>Hey $name, $user->name invited you to use Minds</h1> <a href='http://minds.com/app'>Click here</a> to download the app: http://minds.com/app</a>";
+            $html = elgg_view('emails/invite', array('user'=>$user, 'name'=>$name));
             if($email)
                 $send = phpmailer_send(elgg_get_site_entity()->email,elgg_get_site_entity()->name, $email, $name, "$user->name invited you to Minds", $html, null, true);
 

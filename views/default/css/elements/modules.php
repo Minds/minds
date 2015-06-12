@@ -260,3 +260,47 @@ a.elgg-widget-collapsed:before {
     display:table-cell;
     padding:16px;
 }
+
+.banners{
+    display:none;
+    position:fixed;
+    width:100%;
+    z-index:999;
+}
+.banners .android-banner{
+    width: 100%;
+    /* height: 80px; */
+    background: #333;
+    color: #FFF;
+    display: block;
+}
+.banners .android-banner .inner{
+    padding:16px;
+}
+.banners .android-banner .icon{
+    float: left;
+    border-radius: 8px;
+      margin-right: 9px;
+}
+.banners .android-banner .icon img{
+    width: 50px;
+    background: #FFF;
+    border-radius: 7px;
+    vertical-align: middle;
+}
+.banners .android-banner .info{
+    padding-top:5px;
+}
+.banners .android-banner .info h1{
+    color: #FFF;
+    font-size: 16px;
+    font-weight: 300;
+}
+.banners .android-banner .info p{
+      font-size: 12px;
+}
+.banners .android-banner .download{
+      position: absolute;
+      right: 16px;
+      top: 33px;
+}

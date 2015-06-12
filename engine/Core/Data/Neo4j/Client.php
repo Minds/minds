@@ -14,10 +14,20 @@ class Client implements Interfaces\ClientInterface{
     
     public function __construct(array $options = array()){
         global $CONFIG;
-        //$this->neo4j = new \Everyman\Neo4j\Client(isset($CONFIG->neo4j_server) ? $CONFIG->neo4j_server : NULL);
-    	$this->neo4j = NeoClient\ClientBuilder::create()
-                    ->addConnection('default','http',isset($CONFIG->neo4j_server) ? $CONFIG->neo4j_server : 'localhost',7474, true, 'neo4j', 'Avitas@201')
-                    ->registerExtension('geo', 'Minds\Core\Data\Neo4j\Extensions\Geo')
+    	
+        $servers = isset($CONFIG->neo4j_servers) ?  $CONFIG->neo4j_servers : array('default'=>array('address'=>'localhost', 'port'=>7474, 'password' => ''));
+
+        $builder = NeoClient\ClientBuilder::create();
+
+        foreach($servers as $id => $config){
+            $builder->addConnection($id,'http', $config['address'], isset($config['port']) ? $config['port'] : 7474, true, 'neo4j', $config['password']);
+            if(isset($config['master']) && $config['master'])
+                $builder->setMasterConnection($id);
+            if(!isset($config['salve']) || $config['slave'])
+                $builder->setSlaveConnection($id);
+        }
+
+        $this->neo4j = $builder->registerExtension('geo', 'Minds\Core\Data\Neo4j\Extensions\Geo')
                     ->setAutoFormatResponse(true)
                     ->setDefaultTimeout(20)
     				->build();

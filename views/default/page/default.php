@@ -44,6 +44,7 @@ if(isset($_COOKIE['sidebarOpen']) && $_COOKIE['sidebarOpen'] == 'true' && elgg_i
 <?php echo elgg_view('page/elements/head', $vars); ?>
 </head>
 <body class="<?php echo $class;?>">
+    <?= elgg_view('page/elements/banners') ?>
 	<?php echo $global_sidebar; ?>
 	<div class="hero elgg-page elgg-page-default <?php echo $class;?>">
 		<div class="messages elgg-page-messages">
