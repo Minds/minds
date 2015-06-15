@@ -56,6 +56,33 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 
         if(!is_numeric($pages[0])){
             //images should still use put, large videos use post because of memory issues.
+            //some images are uploaded like videos though, if they don't have mime tags.. hack time!
+            
+            if(@!is_array(getimagesize($_FILES['file']['tmp_name']))){
+                error_log('image as a video..');
+                $image = new \minds\plugin\archive\entities\image();
+                $image->batch_guid = 0;
+                $image->access_id = 2;
+                $guid = $image->save();
+                $dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";
+                $image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
+                if (!file_exists($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+
+                /**
+                 * PHP PUT is a bit tricky, this should really be in a helper function
+                 * @todo ^^
+                 */
+                $fp = fopen("$dir/master.jpg", "w");
+                fwrite($fp, file_get_contents($_FILES['file']['tmp_name']));
+                fclose($fp);
+
+                $loc = $image->getFilenameOnFilestore();
+                $image->createThumbnails();
+                $image->save();
+                $pages[0] = 'image';
+            }
             switch($pages[0]){
                 case 'video':
                     $video = new entities\video();
