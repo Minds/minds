@@ -52,7 +52,7 @@ class Client implements Interfaces\QueueClient{
         register_shutdown_function(function($channel, $connection){
             $channel->close();
             $connection->close();
-            error_log("SHUTDOWN RABBITMQ CONNECTIONS");
+            //error_log("SHUTDOWN RABBITMQ CONNECTIONS");
             }, $this->channel, $this->connection);
     }
     
@@ -86,14 +86,14 @@ class Client implements Interfaces\QueueClient{
     
     public function send($message){
         $msg = new Message();
-        error_log("\n === NEW MESSAGE FROM MINDS ===");
+        //error_log("\n === NEW MESSAGE FROM MINDS ===");
         $msg = new AMQPMessage($msg->setData($message));
-        error_log("=== AMPQ MESSAGE CONTRUCTED === \n");
+        //error_log("=== AMPQ MESSAGE CONTRUCTED === \n");
         if($this->connection->isConnected()){
             $this->channel->basic_publish($msg, $this->exchange, $this->binder);
-            error_log("Published from minds and complete...\n");
+            //error_log("Published from minds and complete...\n");
         }else
-            error_log("Not connected.. but tried to send message to channel");
+            //error_log("Not connected.. but tried to send message to channel");
         return $this;   
     }
     
