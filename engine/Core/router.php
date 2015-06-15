@@ -17,7 +17,8 @@ class router{
 		"/assets" => "minds\\pages\\assets",
         "/boost" => "minds\\pages\\boost",
         "/analytics" => "minds\\pages\\analytics",
-		"/api" => "minds\\pages\\api\\api"
+		"/api" => "minds\\pages\\api\\api",
+        "/app" => "minds\\pages\\app"
 	);
 	
 	/**
