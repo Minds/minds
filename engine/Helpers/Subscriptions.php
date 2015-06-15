@@ -95,10 +95,10 @@ class Subscriptions{
     public static function isSubscribed($user, $to){
         $cacher = Core\Data\cache\factory::build();
 
-        if($cacher->get("$user:isSubscribed:$to"))
-            return true;
-        if($cacher->get("$user:isSubscribed:$to") === 0)
-           return false;
+        //if($cacher->get("$user:isSubscribed:$to"))
+        //    return true;
+        //if($cacher->get("$user:isSubscribed:$to") === 0)
+        //   return false;
         
         $return = 0;
         $db = new Core\Data\Call('friends');
