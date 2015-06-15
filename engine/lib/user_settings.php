@@ -197,6 +197,7 @@ function elgg_set_user_email() {
 		return false;
 	}
 
+    $user = new Minds\entities\user($user);
 	if ($user) {
 		if (strcmp($email, $user->email) != 0) {
 			if (!get_user_by_email($email)) {
