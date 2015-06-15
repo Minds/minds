@@ -75,9 +75,11 @@ class message extends object{
 
 		if(!$this->client_encrypted)
 			$this->encryptMessage();
-		$this->conversation->update();
+
+        $this->conversation->update();
 		return	parent::save($timebased);
-	}
+
+    }
 	
 	public function delete(){
 		$db = new \Minds\Core\Data\Call('entities');

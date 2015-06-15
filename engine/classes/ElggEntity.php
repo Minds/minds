@@ -1074,8 +1074,8 @@ abstract class ElggEntity extends ElggData implements
 			
 			if(!$new && $this->access_id != ACCESS_PUBLIC){
 				$remove = array("$this->type", "$this->type:$this->subtype", "$this->type:$this->super_subtype");
-				foreach($remove as $index)
-					$db->removeAttributes($index, array($this->guid), false);
+			//	foreach($remove as $index)
+			//		$db->removeAttributes($index, array($this->guid), false);
 			}
 		}
 		return $this->guid;

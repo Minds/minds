@@ -44,6 +44,13 @@ class Client implements Interfaces\ClientInterface{
         return $response;
     }
 
+    public function requestRead(Interfaces\PreparedInterface $request){
+        $build = $request->build();
+        $response = $this->neo4j->sendReadQuery($build['string'], $build['values']);
+        return $response;
+    }
+
+
     public function client($command){
          return $this->neo4j;
     }

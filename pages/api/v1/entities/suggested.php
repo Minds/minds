@@ -62,11 +62,11 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
 	    $ts = microtime(true);
         switch($pages[1]){
             case 'video':
-                $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'video', $_GET['skip']));
+                $result= Data\Client::build('Neo4j')->requestRead($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'video', $_GET['skip']));
                 
                 $rows = $result->getRows();
                 if(!$rows){
-                    $result= Data\Client::build('Neo4j')->request($prepared->getObjects(Core\session::getLoggedInUser()->guid, 'video'));
+                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getObjects(Core\session::getLoggedInUser()->guid, 'video'));
                     $rows = $result->getRows();
                 }              
  
@@ -84,11 +84,11 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
                 }
                 break;
             case 'image':
-                $result= Data\Client::build('Neo4j')->request($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'image', $_GET['skip']));
+                $result= Data\Client::build('Neo4j')->requestRead($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'image', $_GET['skip']));
 
                 $rows = $result->getRows();
                 if(!$rows){
-                    $result= Data\Client::build('Neo4j')->request($prepared->getObjects(Core\session::getLoggedInUser()->guid, 'image'));
+                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getObjects(Core\session::getLoggedInUser()->guid, 'image'));
                     $rows = $result->getRows();
                 }
                 
@@ -101,10 +101,10 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
             default:
             
                 if(isset($_GET['nearby']) && $_GET['nearby'] === "true"){
-                    error_log($_GET['coordinates']);
-                    $result= Data\Client::build('Neo4j')->request($prepared->getUserByLocation(Core\session::getLoggedInUser(), isset($_GET['coordinates']) && $_GET['coordinates'] != "false" ? $_GET['coordinates'] : NULL, isset($_GET['distance']) ? $_GET['distance'] : 25, 12, $_GET['skip']));
+                    //error_log($_GET['coordinates']);
+                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getUserByLocation(Core\session::getLoggedInUser(), isset($_GET['coordinates']) && $_GET['coordinates'] != "false" ? $_GET['coordinates'] : NULL, isset($_GET['distance']) ? $_GET['distance'] : 25, 12, $_GET['skip']));
                 } else {                
-                    $result= Data\Client::build('Neo4j')->request($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser(), $_GET['skip']));
+                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser(), $_GET['skip']));
                 }
 
                 $rows = $result->getRows();
@@ -130,7 +130,7 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
         }
 
         $diff = microtime(true) - $ts;
-    	error_log("loaded suggested entities in $diff");
+    	//error_log("loaded suggested entities in $diff");
         if($entities){
             $response['entities'] = factory::exportable($entities, array('boosted'));
             $response['load-next'] = (string) end($entities)->guid;
