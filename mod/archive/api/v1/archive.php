@@ -58,7 +58,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
             //images should still use put, large videos use post because of memory issues.
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
             
-            if(@!is_array(getimagesize($_FILES['file']['tmp_name']))){
+            if(@is_array(getimagesize($_FILES['file']['tmp_name']))){
                 error_log('image as a video..');
                 $image = new \minds\plugin\archive\entities\image();
                 $image->batch_guid = 0;
