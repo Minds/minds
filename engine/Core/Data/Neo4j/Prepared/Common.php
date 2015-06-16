@@ -368,6 +368,9 @@ class Common implements Interfaces\PreparedInterface{
         if(!$latlon)
             $latlon = $user->coordinates;
 
+        if(!$latlon)
+            return false; //should probably throw an exception instead
+
         $km = $distance * 1.609344;       
         $distance =  number_format((float)$km, 2, '.', '');  
        
