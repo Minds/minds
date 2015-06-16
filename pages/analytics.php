@@ -27,8 +27,7 @@ class analytics extends core\page implements interfaces\page{
                 10 => (int) Helpers\RequestMetrics::get("api", time() - 600)
             );
 
-            $rps = ($requests[0] + $requests[5] + $requests[10]) / 900; 
-
+            $rps = ($requests[0] + $requests[5] + $requests[10]) / (600 + (Helpers\RequestMetrics::buildTS(time()) - time())); 
 
             $boost_guids = $db->getRow("boost:newsfeed", array('limit'=>1000));
             $boost_impressions = 0;
