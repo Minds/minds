@@ -115,7 +115,7 @@ class Newsfeed implements BoostHandlerInterface{
             //increment impression counter
             Helpers\Counters::increment($boost, "boost_impressions", 1);
             //get the current impressions count for this boost
-            Helpers\Counters::increment("global", "boost_impressions", 1);
+            Helpers\Counters::increment(0, "boost_impressions", 1);
             $count = Helpers\Counters::get($boost, "boost_impressions", false); 
             if($count > $impressions){
                 //remove from boost queue
