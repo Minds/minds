@@ -39,6 +39,9 @@ function phpmailer_notify_handler(ElggEntity $from, ElggUser $to, $subject, $mes
 	if (!$to) {
 		throw new NotificationException(sprintf(elgg_echo('NotificationException:MissingParameter'), 'to'));
 	}
+    
+    $to = new Minds\entities\user($to);
+
 
 	if ($to->email == "") {
 		throw new NotificationException(sprintf(elgg_echo('NotificationException:NoEmailAddress'), $to->guid));
