@@ -91,13 +91,13 @@ class boost implements interfaces\api{
         //    return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
 
         $_POST['impressions'] = round($_POST['impressions']);
-        if(!isset($_POST['destination']) && round($_POST['impressions']) == 0)
+        if((!isset($_POST['destination']) || $_POST['destination'] == '') && round($_POST['impressions']) == 0)
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
 
         $response = array();
 	    if(Core\Boost\Factory::build(ucfirst($pages[0]), array('destination'=>isset($_POST['destination']) ? $_POST['destination'] : NULL))->boost($pages[1], $_POST['impressions'])){
             //dont use rate for p2p boosts
-            if(isset($_POST['destination']))
+            if(isset($_POST['destination']) && $_POST['destination'])
                 $points = 0 - $_POST['impressions'];
             else
                 $points = 0 - ($_POST['impressions'] / $this->rate); //make it negative
