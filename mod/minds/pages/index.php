@@ -74,13 +74,13 @@ $app_buttons = <<<HTML
 <div class="app-buttons" style="  position: relative; width: 300px; margin: auto; margin-top:20vh;">
     <div class="apple" style="float:left; margin:10px 8px;">
         <a href="https://geo.itunes.apple.com/us/app/minds-com/id961771928?mt=8&amp;uo=6" target="_blank">
-                                                    <img src="http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.png">
+            <img src="https://www.minds.com/_graphics/appstore.png">
         </a>
     </div>
     <div class="google" style="float:left; margin:8px;" target="_blank">
        <a href="https://play.google.com/store/apps/details?id=com.minds.mobile" align="center">
-                                            <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png">
-    </a>
+            <img alt="Android app on Google Play" src="https://www.minds.com/_graphics/playstore.png">
+        </a>
     </div>
 </div> 
 HTML;
