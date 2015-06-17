@@ -91,7 +91,7 @@ class boost implements interfaces\api{
         //    return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
 
         $_POST['impressions'] = round($_POST['impressions']);
-        if(round($_POST['impressions']) == 0)
+        if(!isset($_POST['destination']) && round($_POST['impressions']) == 0)
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
 
         $response = array();
