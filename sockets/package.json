@@ -11,6 +11,7 @@
   "dependencies": {
     "express": "^4.9.0",
     "lodash-node": "^2.4.1",
-    "socket.io": "^1.1.0"
+    "socket.io": "^1.1.0",
+    "twilio": "^2.2.1"
   }
 }
