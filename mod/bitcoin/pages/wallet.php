@@ -78,9 +78,14 @@ class wallet extends core\page implements interfaces\page{
 					$this->forward('bitcoin/wallet');
 					return false;
 				}
-				$wallet->create($_POST['password']);
-				setcookie('bitcoin_pswd', $_POST['password'], time()+120, '/');
-				$this->forward('bitcoin/wallet');
+                try{
+                $wallet->create($_POST['password']);
+				    setcookie('bitcoin_pswd', $_POST['password'], time()+120, '/');
+                    $this->forward('bitcoin/wallet');
+                } catch(\Exception $e){
+                    \register_error($e->message);
+                    $this->forward('bitcoin/wallet');
+                }
 				break;
 			case 'import':
 				break;
