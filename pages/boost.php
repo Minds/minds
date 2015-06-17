@@ -54,7 +54,7 @@ class boost extends core\page implements interfaces\page{
 		    } elseif(isset($_POST['reject'])){
                 Core\Boost\Factory::build(ucfirst($type))->reject($_POST['guid']);
                 //refund the point
-                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $_POST['impressions'], NULL, "boost refund");
+                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $_POST['impressions'] / 0.25, NULL, "boost refund");
             }
             $this->forward('/boost/admin?type='.$type);
             
