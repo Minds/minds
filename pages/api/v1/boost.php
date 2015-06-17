@@ -96,7 +96,11 @@ class boost implements interfaces\api{
 
         $response = array();
 	    if(Core\Boost\Factory::build(ucfirst($pages[0]), array('destination'=>isset($_POST['destination']) ? $_POST['destination'] : NULL))->boost($pages[1], $_POST['impressions'])){
-            $points = 0 - ($_POST['impressions'] / $this->rate); //make it negative
+            //dont use rate for p2p boosts
+            if(isset(isset($_POST['destination']))
+                $points = 0 - $_POST['impressions'];
+            else
+                $points = 0 - ($_POST['impressions'] / $this->rate); //make it negative
 
             \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, $pages[1], "boost");
             //a boost gift
