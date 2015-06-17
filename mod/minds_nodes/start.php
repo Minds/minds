@@ -85,7 +85,8 @@ class start extends Components\Plugin{
 			   	
 	}
 
-	public function pagesetup(){
+    public function pagesetup(){
+        return true;
 		if (\elgg_get_context() == "settings" && \elgg_get_logged_in_user_guid()) {
 			$params = array(
 				'name' => 'my_nodes',
