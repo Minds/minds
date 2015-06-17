@@ -92,7 +92,11 @@ class page extends core\page implements interfaces\page{
 	 * Post comments
 	 */
 	public function post($pages){
-		
+
+        if(!elgg_is_admin_logged_in()){
+            exit;
+        }
+
 		if(isset($pages[1]))
 			$page = new entities\page($pages[1]);
 		else
