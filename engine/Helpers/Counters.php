@@ -30,7 +30,7 @@ class Counters{
         $query = new Core\Data\Cassandra\Prepared\Counters();
         try{
             $client->request($query->update($guid, $metric, $value));
-        }catch(\Exception){}
+        }catch(\Exception $e){}
         //error_log("$guid:$metric:$value");
         $cacher = Core\Data\cache\factory::build();
         $cacher->destroy("counter:$guid:$metric");
