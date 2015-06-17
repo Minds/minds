@@ -87,8 +87,10 @@ class boost implements interfaces\api{
         if(!isset($_POST['impressions']))
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be sent in post body'));
 
-        if($_POST['impressions'] != round($_POST['impressions']))
-            return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
+        //if($_POST['impressions'] != round($_POST['impressions']))
+        //    return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
+
+        $_POST['impressions'] = round($_POST['impressions']);
 
         $response = array();
 	    if(Core\Boost\Factory::build(ucfirst($pages[0]), array('destination'=>isset($_POST['destination']) ? $_POST['destination'] : NULL))->boost($pages[1], $_POST['impressions'])){
