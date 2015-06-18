@@ -15,7 +15,7 @@ use Minds\Api\Factory;
 
 class boost implements interfaces\api{
 
-    private $rate = 0.25;
+    private $rate = 1;
 
     /**
      * Return impressions/points for a request
