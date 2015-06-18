@@ -134,7 +134,7 @@ class Common implements Interfaces\PreparedInterface{
                             "LIMIT {limit}";
 
         } else {
-            error_log("loading default matches for $user->guid");
+            //error_log("loading default matches for $user->guid");
             $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
                             "WHERE " . 
 			                 "NOT (user)-[:ACTED]->(fof) " .
@@ -226,7 +226,7 @@ class Common implements Interfaces\PreparedInterface{
      * To be used only when no suggested content is found..
      */
     public function getObjects($user_guid, $subtype='video'){
-        error_log("getting $user_guid $subtype");
+        //error_log("getting $user_guid $subtype");
         $this->template = "MATCH (object:$subtype), (user:User {guid:{user_guid}}) " .
                             "WHERE NOT user-[:ACTED]->(object) " .
                             "RETURN object LIMIT 12";
@@ -257,7 +257,7 @@ class Common implements Interfaces\PreparedInterface{
     public function createVoteUP($guid, $subtype, $user_guid = NULL){
         if(!$user_guid)
             $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
-        error_log("NEO4j vote up for $guid :: $subtype :: $user_guid");
+        //error_log("NEO4j vote up for $guid :: $subtype :: $user_guid");
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(object:$subtype {guid: {object_guid}}) " . 
                             "MERGE (user)-[:UP]->(object) MERGE (user)-[:ACTED]->(object)";
@@ -278,7 +278,7 @@ class Common implements Interfaces\PreparedInterface{
     public function createVoteDOWN($guid, $subtype, $user_guid = NULL){
         if(!$user_guid)
             $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
-        error_log("NEO4j vote down for $guid :: $subtype :: $user_guid");
+        //error_log("NEO4j vote down for $guid :: $subtype :: $user_guid");
 
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(object:$subtype {guid: {object_guid}}) " .
