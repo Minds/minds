@@ -53,16 +53,18 @@ class channel implements interfaces\api{
         $response['channel']['dob'] = $response['channel']['dob'] ?: ""; 
 
         $carousels = core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
-        foreach($carousels as $carousel){
-            global $CONFIG;
-            if(!$CONFIG->cdn_url)
-                $CONFIG->cdn_url = elgg_get_site_url();
-           // else 
-                //$CONFIG->cdn_url .= '/';
-            
-           $response['channel']['carousels'][] = array(
-                'src'=> $carousel->ext_bg ? str_replace('/thin', '/fat', $carousel->ext_bg) : $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
-            );
+        if($carousels){
+            foreach($carousels as $carousel){
+                global $CONFIG;
+                if(!$CONFIG->cdn_url)
+                    $CONFIG->cdn_url = elgg_get_site_url();
+               // else 
+                    //$CONFIG->cdn_url .= '/';
+                
+               $response['channel']['carousels'][] = array(
+                    'src'=> $carousel->ext_bg ? str_replace('/thin', '/fat', $carousel->ext_bg) : $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
+                );
+            }
         }
 
         $response['channel']['impressions'] = Helpers\Counters::get($user->guid, 'impression');
