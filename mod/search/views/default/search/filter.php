@@ -1,5 +1,6 @@
 <?php
 $path = elgg_get_site_url() . 'search/?q=' . get_input('q');
+$path= strip_tags($path);
 
 $categories = elgg_get_site_entity()->categories;
 
