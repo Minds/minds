@@ -198,6 +198,11 @@ function elgg_set_user_email() {
 	}
 
     $user = new Minds\entities\user($user);
+    if(!$user->canEdit()){
+        register_error(elgg_echo('email:save:fail'));
+        return false;
+    }
+
 	if ($user) {
 		if (strcmp($email, $user->email) != 0) {
 			if (!get_user_by_email($email)) {
