@@ -67,7 +67,7 @@ class analytics extends core\page implements interfaces\page{
                 'metric' => 'points',
                 'limit' => 10000
             );
-
+try{
             $client = Core\Data\Client::build('Cassandra');
             $prepared = new Core\Data\Cassandra\Prepared\Custom();
             $results = (array) $client->request($prepared->query($cql,$values));
@@ -87,7 +87,9 @@ class analytics extends core\page implements interfaces\page{
                     'points' => $count
                 );
             }
+}catch(\Exception $e){
 
+}
             $content = elgg_view('analytics/dashboard', array('users' => $users, 'user_count'=>$user_count, 'requests'=>$requests, 'rps' => $rps, 'globals'=>array('boosts'=>Helpers\Counters::get(0, 'boost_impressions', false)), 'boosts' => $boosts, 'boosts_suggested'=> $boosts_suggested, 'leaderboard'=>$leaderboard));
 
             $body = \elgg_view_layout('one_sidebar', array(
