@@ -1,6 +1,7 @@
 <?php
+global $CONFIG;
 $section = $vars['section'];
-$img_src = elgg_get_site_url() . "s/$section->guid/bg/".$section->last_updated;
+$img_src = $CONFIG->cdn_url . "s/$section->guid/bg/".$section->last_updated;
 ?>
 <section class="cms-section <?= $section->size == 'fat' ? 'cms-section-fat' : 'cms-section-thin'?>" data-guid="<?= $section->guid ?>">
 	<div class="cms-section-bg"  <?php if($section->background): ?> <?php endif; ?>>
