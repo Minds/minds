@@ -54,7 +54,10 @@ class channel extends core\page implements interfaces\page{
 		$class ='';
 		$sidebar = '';
 		switch($pages[1]){
-            case 'disable':
+        case 'disable':
+                if(!$user->canEdit()){
+                    return true;
+                }
                 $user->enabled = 'no';
                 $user->save();
                 logout();
@@ -62,6 +65,9 @@ class channel extends core\page implements interfaces\page{
                 return $this->notfound();
                 break;
             case 'custom':
+                if(!$user->canEdit()){
+                    return true;
+                }
 				$content .= elgg_view_form('channel/custom', array('enctype' => 'multipart/form-data'), array('entity' => $user));
 				break;
 			case 'avatar':
