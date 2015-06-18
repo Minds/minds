@@ -92,7 +92,7 @@ class Common implements Interfaces\PreparedInterface{
      * @return $this
      */
     public function createPass($user, $to){
-       error_log("NEO4j PASS Created for $user :: $to");
+       //error_log("NEO4j PASS Created for $user :: $to");
 	   $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(to {guid: {subscriber_guid}}) " . 
                             "MERGE (user)-[:PASS]->(to) MERGE (user)-[:ACTED]->(to)";
