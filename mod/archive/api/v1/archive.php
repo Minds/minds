@@ -59,7 +59,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
             
             if(@is_array(getimagesize($_FILES['file']['tmp_name']))){
-                error_log('image as a video..');
+                //error_log('image as a video..');
                 $image = new \minds\plugin\archive\entities\image();
                 $image->batch_guid = 0;
                 $image->access_id = 2;
@@ -163,7 +163,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
                 ->save();
 
         }	
-        error_log(print_r($_POST,true));
+        //error_log(print_r($_POST,true));
         //forward to facebook etc
         Core\Events\Dispatcher::trigger('social', 'dispatch', array(
             'services' => array(
@@ -192,7 +192,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 	switch($pages[0]){
 
 		case 'video':
-			error_log(print_r($_FILES,true));
+			//error_log(print_r($_FILES,true));
 			$video = new entities\video();
 
 			$fp = tmpfile();
