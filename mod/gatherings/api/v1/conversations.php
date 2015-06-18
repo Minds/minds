@@ -79,7 +79,7 @@ class conversations implements interfaces\api{
     }
     
     public function post($pages){
-        error_log("got a message to send");
+        //error_log("got a message to send");
         $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
 		
         $message = new entities\message($conversation);
@@ -87,7 +87,7 @@ class conversations implements interfaces\api{
 	    foreach($conversation->participants as $guid){
 		    $key = "message:$guid";
 		    $message->$key = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
-		    error_log(print_r($message->$key, true));
+		    //error_log(print_r($message->$key, true));
 	    }
     //	error_log(print_r($message, true));
 	    $message->save();
