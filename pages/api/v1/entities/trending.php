@@ -84,7 +84,7 @@ class trending implements interfaces\api{
                 break;
             default:
                 $opts = array('timespan' => get_input('timespan', 'day'));
-                $trending = new \MindsTrending(null, $opts);
+                $trending = new \MindsTrending(array('google'), $opts);
                 $guids = $trending->getList(array('type'=>'user', 'limit'=>12, 'offset'=>get_input('offset', '')));
                 if(!$guids){
                     return Factory::response(array('status'=>'error', 'message'=>'not found'));
