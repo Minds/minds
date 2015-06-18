@@ -19,7 +19,7 @@ class analytics extends core\page implements interfaces\page{
             $db = new Core\Data\Call('entities_by_time');
 
             $guids = $db->getRow("analytics:open");
-            $users = Core\entities::get(array('guids'=>array_keys($guids)));
+            $users = Core\entities::get(array('guids'=>array_keys($guids), 'limit'=>5));
 
             $requests = array(
                 0 => (int) Helpers\RequestMetrics::get("api", time()),
