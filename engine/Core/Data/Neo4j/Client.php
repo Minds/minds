@@ -51,7 +51,7 @@ class Client implements Interfaces\ClientInterface{
     }
 
 
-    public function client($command){
+    public function client($command = NULL){
          return $this->neo4j;
     }
 
