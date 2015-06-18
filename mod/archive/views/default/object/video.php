@@ -83,7 +83,7 @@ if($full){
 			'title' => $entity->title,
 		));
 	
-	$title = elgg_view('output/url', array('href'=>$entity->getURL(), 'text'=>elgg_view_title($entity->title)));
+	$title = elgg_view('output/url', array('href'=>$entity->getURL(), 'text'=>elgg_view_title(strip_tags($entity->title))));
 
 	$extras = '<span class="extras"> <p class="time">'. $date . '</p>' . $menu .'</span>';
 	
@@ -91,7 +91,7 @@ if($full){
 	
 	$content = $image . $body;
 	echo $menu;
-	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), strip_tags($title) . $subtitle);
+	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
 	echo $image;
 	echo $header;
 
