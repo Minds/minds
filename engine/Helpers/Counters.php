@@ -50,9 +50,11 @@ class Counters{
             $guid = $entity->guid;
         }
         $value = $value * -1; //force negative
-        $client =Core\Data\Client::build('Cassandra');
-        $query = new Core\Data\Cassandra\Prepared\Counters();
-        $client->request($query->update($guid, $metric, $value));
+        try{
+            $client =Core\Data\Client::build('Cassandra');
+            $query = new Core\Data\Cassandra\Prepared\Counters();
+            $client->request($query->update($guid, $metric, $value));
+        }catch(\Exception $e){}
     }
     
     /**
