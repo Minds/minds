@@ -20,7 +20,10 @@ class page extends core\page implements interfaces\page{
 		$header = false;
 		$class = '';
 		switch($pages[0]){
-			case 'edit':
+            case 'edit':
+                if(!elgg_is_admin_logged_in()){
+                    exit;
+                } 
 				try{
 				    $page = new entities\page($pages[1]);
 				    if($page->banner){
@@ -36,6 +39,9 @@ class page extends core\page implements interfaces\page{
                                 } 
 				break;
 			case 'add':
+                 if(!elgg_is_admin_logged_in()){
+                   exit;
+                }
 				$content = elgg_view_form('cms/page', array('action'=>elgg_get_site_url().'p/add', 'enctype'=>'multipart/form-data'), array('context'=>get_input('context', 'footer'))); 
 				break;
 			case 'delete':
