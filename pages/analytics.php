@@ -88,7 +88,7 @@ class analytics extends core\page implements interfaces\page{
                 );
             }
 
-            $content = elgg_view('analytics/dashboard', array('users' => $users, 'user_count'=>$user_cound, 'requests'=>$requests, 'rps' => $rps, 'globals'=>array('boosts'=>Helpers\Counters::get(0, 'boost_impressions', false)), 'boosts' => $boosts, 'boosts_suggested'=> $boosts_suggested, 'leaderboard'=>$leaderboard));
+            $content = elgg_view('analytics/dashboard', array('users' => $users, 'user_count'=>$user_count, 'requests'=>$requests, 'rps' => $rps, 'globals'=>array('boosts'=>Helpers\Counters::get(0, 'boost_impressions', false)), 'boosts' => $boosts, 'boosts_suggested'=> $boosts_suggested, 'leaderboard'=>$leaderboard));
 
             $body = \elgg_view_layout('one_sidebar', array(
                 'title'=> 'Analytics',
