@@ -58,7 +58,7 @@ $(document).ready(function() {
 			}
 
             $item->title = htmlspecialchars($item->title, ENT_QUOTES, 'UTF-8');
-            $item->subtitle = htmlspecialchars($item->subtitle, ENT_QUOTES, 'UTF-8');
+            $item->subtitle = strip_tags($item->subtitle);
 
 			$class = $i==0 ?'active' : '';
  			echo "<a class=\"item $class\" $link_extras>";
