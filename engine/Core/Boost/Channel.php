@@ -20,7 +20,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         	    $this->guid = $options['destination'];
         	} elseif(is_string($options['destination'])) {
         	    $lookup = new Data\lookup();
-        	    $this->guid = key($lookup->get($options['destination']));
+        	    $this->guid = key($lookup->get(strtolower($options['destination'])));
         	}
         }
     }
