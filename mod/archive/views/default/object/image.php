@@ -51,7 +51,7 @@ if($full_view){
 	
 	$content = $img . $body;
 	echo $menu;
-	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), strip_tags($title) . $subtitle);
 	
 	echo elgg_view('output/url', array(
 		'href'=> $image->getURL(), 

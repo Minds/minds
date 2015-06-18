@@ -51,7 +51,7 @@ if($full){
 	));
 	
 	$title = elgg_view('output/url', array(
-		'text' => $entity->title,
+		'text' => strip_tags($entity->title),
 		'href' => $entity->getURL(),
 	));
 	
@@ -67,7 +67,7 @@ if($full){
 	
 	$params = array(
 		'entity' => $album,
-		'title' => $title,
+		'title' => strip_tags($title),
 		'metadata' => $menu,
 		'subtitle' => $subtitle,
 		'content'=>$description,
@@ -91,7 +91,7 @@ if($full){
 	
 	$content = $image . $body;
 	echo $menu;
-	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+	$header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), strip_tags($title) . $subtitle);
 	echo $image;
 	echo $header;
 
