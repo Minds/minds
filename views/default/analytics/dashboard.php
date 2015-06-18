@@ -12,7 +12,7 @@
 
 
      <div class="minds-module users">
-        <h3>Online Users</h3>
+     <h3>Online Users (<?= $vars['user_count'] ?>)</h3>
         <ul>
             <?php foreach($vars['users'] as $user): ?>
                 <li><?= $user->username ?></li>
