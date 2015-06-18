@@ -116,8 +116,10 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
 
                 $rows = $result->getRows();
                 $guids = array();
-                foreach($rows['fof'] as $fof){
-                    $guids[] = $fof['guid'];
+                if(isset($rows['fof'])){
+                    foreach($rows['fof'] as $fof){
+                        $guids[] = $fof['guid'];
+                    }
                 }
         }
 	

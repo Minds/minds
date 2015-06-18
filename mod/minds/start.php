@@ -463,7 +463,7 @@ function minds_filter($text) {
 function minds_subscribe_default($hook, $type, $value, $params){
 	$user = elgg_extract('user', $params);
     $user = new Minds\entities\user($user);
-	error_log('trying to subscribe user to minds');
+	//error_log('trying to subscribe user to minds');
 	// no clue what's going on, so don't react.
 	if (!$user instanceof ElggUser) {
 		error_log('user is not user');
