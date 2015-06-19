@@ -15,15 +15,24 @@ if (!isset($_GET['guid'])) {
 }
 
 $guid = $_GET['guid'];
-$user = new Minds\entities\user($guid);
-if(isset($user->legacy_guid) && $user->legacy_guid)
-	$guid = $user->legacy_guid;
+$cacher = Minds\Core\Data\cache\factory::build('apcu');
 
-if(isset($user->base_node) && $user->base_node && $user->base_node != elgg_get_site_url()){
-	forward($user->base_node . "icon/$user->guid/".$_GET['size']."/".$_GET['lastcache']);
+if($cached = $cacher->get("usericon:$guid")){
+    $join_date = $cached;
+} else {
+
+    $user = new Minds\entities\user($guid);
+    if(isset($user->legacy_guid) && $user->legacy_guid)
+        $guid = $user->legacy_guid;
+
+    if(isset($user->base_node) && $user->base_node && $user->base_node != elgg_get_site_url()){
+        forward($user->base_node . "icon/$user->guid/".$_GET['size']."/".$_GET['lastcache']);
+    }
+
+    $join_date = $user->time_created;
+    $cacher->set("usericon:$guid", $join_date);
 }
 
-$join_date = $user->time_created;
 $last_cache = (int)$_GET['lastcache']; // icontime
 
 // If is the same ETag, content didn't changed.
@@ -43,10 +52,6 @@ $data_root = $CONFIG->dataroot;
 if (isset($data_root)) {
 
 		$user_path = date('Y/m/d/', $join_date) . $guid;
-		if(get_input('debug')){
-			var_dump($user_path, $guid);
-			exit;
-		}
 		$filename = "$data_root$user_path/profile/{$guid}{$size}.jpg";
 		$contents = @file_get_contents($filename);
 		if (!empty($contents)) {
