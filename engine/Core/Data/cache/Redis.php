@@ -44,7 +44,7 @@ class Redis extends abstractCacher{
 	}
 
 	public function set($key, $value, $ttl = 0){
-        error_log("still setting $key with value $value for $ttl seconds");
+        //error_log("still setting $key with value $value for $ttl seconds");
         try{
 		    $redis = new RedisServer();
             $redis->connect($this->master);
