@@ -5,9 +5,9 @@
  */
 namespace Minds\Core\Data\cache;
 
-use Redis;
+use Redis as RedisServer;
 
-class apcu extends abstractCacher{
+class Redis extends abstractCacher{
 	
     private $master = "127.0.0.1";
     private $slave = "127.0.0.1";
@@ -23,23 +23,42 @@ class apcu extends abstractCacher{
 	}
 
 	public function get($key){
-		$redis = new Redis();
-        $redis->connect($this->slave);
-        if($value = $redis->get($key))
-            return json_decode($key, true);
+        
+        try{
+		    $redis = new RedisServer();
+            $redis->connect($this->slave);
+            if($value = $redis->get($key)){
+                return json_decode($value, true);
+            };
+        } catch(\Exception $e){
+            error_log("could not read redis $this->slave");
+        }
         return false;
 	}
 
 	public function set($key, $value, $ttl = 0){
-		$redis = new Redis();
-        $redis->connect($this->master);
-        $redis->set($key, json_encode($value), array('xx', 'px'=>$ttl));
+        error_log("still setting $key with value $value for $ttl seconds");
+        try{
+		    $redis = new RedisServer();
+            $redis->connect($this->master);
+            if($ttl)
+                $redis->set($key, json_encode($value), array('ex'=>$ttl));
+            else
+                $redis->set($key, json_encode($value));
+        } catch(\Exception $e){
+            error_log("could not write to redis $this->master");
+            error_log($e->getMessage());
+        }
 	}
 
 	public function destroy($key){
-		$redis = new Redis();
-        $redis->connect($this->master);
-        $redis->delete($key);
+		try{
+            $redis = new RedisServer();
+            $redis->connect($this->master);
+            $redis->delete($key);
+        } catch(\Exception $e){
+            error_log("could not delete from redis $this->master");
+        }
 	}
 }
 	

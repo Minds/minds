@@ -64,7 +64,7 @@ class start extends Components\Plugin{
 		\elgg_extend_view('js/elgg', 'minds_nodes/js');
 		\elgg_extend_view('css/elgg', 'minds_nodes/css');
 	
-		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pagesetup'));
+//		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pagesetup'));
 		
 		\elgg_extend_view('core/settings/statistics', 'minds_nodes/statistics');
 	
@@ -293,6 +293,7 @@ class start extends Components\Plugin{
 	 * @todo, move this to new page handler
 	 */
 	public function pageHandler($pages){
+        return forward(REFERRER);
 		global $CONFIG;
 
 		\elgg_register_menu_item('title', array(

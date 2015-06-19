@@ -450,7 +450,7 @@ class ElggUser extends ElggEntity
 	 */
 	function isFriendOf($user_guid) {
 		$cacher = \Minds\Core\Data\cache\factory::build();
-                if($cache = $cacher->get("$user_guid:friendof:$this->guid")){
+        if($cache = $cacher->get("$user_guid:friendof:$this->guid")){
 			if($cache == 'yes')
 				return true;
 			else

@@ -8,7 +8,7 @@ if(elgg_is_logged_in() && (elgg_get_context() == 'admin' || elgg_get_context() =
 <div class="global-sidebar <?php echo $class; ?>">
 		<?php echo elgg_view_menu('site',array('sort_by'=>'priority'));  ?>
     
-		<?= elgg_view('minds_nodes/switcher', array('entities' => minds\plugin\minds_nodes\start::getNodes())); ?>	
+		<?php //elgg_view('minds_nodes/switcher', array('entities' => minds\plugin\minds_nodes\start::getNodes())); ?>	
 		
 		<!-- Admin Links -->
 		<?php 

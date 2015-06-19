@@ -74,7 +74,7 @@ class Subscriptions{
         $friendsof->removeAttributes($from, array($user));
         $return = true;
         
-	//@todo make unsubscribe work with neo4j
+	    //@todo make unsubscribe work with neo4j
         //$prepared = new Core\Data\Neo4j\Prepared\Common();
         //$return =  Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
 
@@ -100,8 +100,8 @@ class Subscriptions{
 
         if($cacher->get("$user:isSubscribed:$to"))
             return true;
-        //if($cacher->get("$user:isSubscribed:$to") === 0)
-        //   return false;
+        if($cacher->get("$user:isSubscribed:$to") === 0)
+           return false;
         
         $return = 0;
         $db = new Core\Data\Call('friends');

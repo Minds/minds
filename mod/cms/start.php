@@ -51,8 +51,8 @@ class start extends Components\Plugin{
 		$hash = md5(elgg_get_site_url());
 
 		if(!$footer = $cacher->get("$hash:cms:footer")){
-			$footer = $lu->get("object:cms:menu:footer");
-			$cacher->set("$hash:cms:footer", $footer);
+    		$footer = $lu->get("object:cms:menu:footer");
+            $cacher->set("$hash:cms:footer", $footer);
 		}
 
 		if(!$topbar = $cacher->get("$hash:cms:topbar") && $topbar != 'not-set'){

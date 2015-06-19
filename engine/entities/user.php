@@ -48,8 +48,8 @@ class user extends \ElggUser{
 
         if($cacher->get("$this->guid:isSubscriber:$guid"))
             return true;
-        //if($cacher->get("$this->guid:isSubscriber:$guid") === 0)
-        //    return false;
+        if($cacher->get("$this->guid:isSubscriber:$guid") === 0)
+            return false;
 
         $return = 0;
         $db = new Core\Data\Call('friendsof');
@@ -67,8 +67,8 @@ class user extends \ElggUser{
 
         if($cacher->get("$this->guid:isSubscribed:$guid"))
             return true;
-        //if($cacher->get("$this->guid:isSubscribed:$guid") === 0)
-        //   return false;
+        if($cacher->get("$this->guid:isSubscribed:$guid") === 0)
+           return false;
         
         $return = 0;
         $db = new Core\Data\Call('friends');
