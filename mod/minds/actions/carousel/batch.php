@@ -43,7 +43,10 @@ if(get_input('admin')){
 }
 
 foreach($items as $k=>$item){
-	
+
+    if(!$item->canEdit())
+        continue;
+
 	if(get_input("delete:$item->guid")){
 			$item->delete();
 			unset($items[$k]);

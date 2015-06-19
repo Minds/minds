@@ -102,15 +102,24 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
             
                 if(isset($_GET['nearby']) && $_GET['nearby'] === "true"){
                     //error_log($_GET['coordinates']);
-                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getUserByLocation(Core\session::getLoggedInUser(), isset($_GET['coordinates']) && $_GET['coordinates'] != "false" ? $_GET['coordinates'] : NULL, isset($_GET['distance']) ? $_GET['distance'] : 25, 12, $_GET['skip']));
+                    $p = $prepared->getUserByLocation(Core\session::getLoggedInUser(), isset($_GET['coordinates']) && $_GET['coordinates'] != "false" ? $_GET['coordinates'] : NULL, isset($_GET['distance']) ? $_GET['distance'] : 25, 12, $_GET['skip']);
+                    if($p)
+                        $result= Data\Client::build('Neo4j')->requestRead($p);
+                    else 
+                        $result = false;
+                    if(!$result){
+                         return Factory::response(array('status'=>'error', 'message'=>'not found'));
+                    }
                 } else {                
                     $result= Data\Client::build('Neo4j')->requestRead($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser(), $_GET['skip']));
                 }
 
                 $rows = $result->getRows();
                 $guids = array();
-                foreach($rows['fof'] as $fof){
-                    $guids[] = $fof['guid'];
+                if(isset($rows['fof'])){
+                    foreach($rows['fof'] as $fof){
+                        $guids[] = $fof['guid'];
+                    }
                 }
         }
 	

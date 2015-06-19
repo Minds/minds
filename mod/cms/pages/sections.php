@@ -45,7 +45,11 @@ class sections extends core\page implements interfaces\page{
 
 	
 	public function post($pages){
-		
+
+        if(!elgg_is_admin_logged_in()){
+            exit;
+        }
+
 		$section = new entities\section($pages[0]);
 		
 		if(isset($_FILES)){

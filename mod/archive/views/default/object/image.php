@@ -43,7 +43,7 @@ if($full_view){
     ));
 	
 	$img = elgg_view('output/img', array('src'=>$image->getIconURL('large'), 'class'=>'rich-image'));
-	$title = elgg_view('output/url', array('href'=>$image->getURL(), 'text'=>elgg_view_title($image->title)));
+	$title = elgg_view('output/url', array('href'=>$image->getURL(), 'text'=>elgg_view_title(strip_tags($image->title))));
 	
 	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));	
 	

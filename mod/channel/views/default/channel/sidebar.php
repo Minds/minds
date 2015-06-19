@@ -99,7 +99,7 @@ if($user->canEdit() ){
 }
 ?>
 <a href="<?=$user->getURL()?>" class="name"><h1><?= $user->name ?></h1></a>
-<?= $user->website ? elgg_view('output/url', array('text'=>$user->website, 'href'=>$user->website)) : false ?>
+<?php //$user->website ? elgg_view('output/url', array('text'=>$user->website, 'href'=>$user->website)) : false ?>
 
 <?php 
 	echo $user->guid != elgg_get_logged_in_user_guid() ? elgg_view('channel/subscribe', array('entity'=>$user)) : '';

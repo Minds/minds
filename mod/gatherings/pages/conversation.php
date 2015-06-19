@@ -154,9 +154,13 @@ class conversation extends core\page implements interfaces\page{
 	 * Deleting messages
 	 */
 	public function delete($pages){
-		
-		$message = new entities\message($pages[0]);
-		$message->delete();
+        
+        if($message->canEdit()){
+
+		    $message = new entities\message($pages[0]);
+            $message->delete();
+
+        }
 		
 	}
 	

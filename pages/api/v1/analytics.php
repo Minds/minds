@@ -46,7 +46,7 @@ class analytics implements interfaces\api{
         switch($pages[0]){
             case 'open':
                 $db = new Core\Data\Call('entities_by_time');
-                $db->insert("analytics:open", array(Core\session::getLoggedinUser()->guid => time()), 300);
+                $db->insert("analytics:open", array(Core\session::getLoggedinUser()->guid => time()));
             break;
         }
 

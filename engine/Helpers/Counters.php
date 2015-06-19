@@ -28,7 +28,9 @@ class Counters{
         }
         $client =Core\Data\Client::build('Cassandra');
         $query = new Core\Data\Cassandra\Prepared\Counters();
-        $client->request($query->update($guid, $metric, $value));
+        try{
+            $client->request($query->update($guid, $metric, $value));
+        }catch(\Exception $e){}
         //error_log("$guid:$metric:$value");
         $cacher = Core\Data\cache\factory::build();
         $cacher->destroy("counter:$guid:$metric");
@@ -48,9 +50,11 @@ class Counters{
             $guid = $entity->guid;
         }
         $value = $value * -1; //force negative
-        $client =Core\Data\Client::build('Cassandra');
-        $query = new Core\Data\Cassandra\Prepared\Counters();
-        $client->request($query->update($guid, $metric, $value));
+        try{
+            $client =Core\Data\Client::build('Cassandra');
+            $query = new Core\Data\Cassandra\Prepared\Counters();
+            $client->request($query->update($guid, $metric, $value));
+        }catch(\Exception $e){}
     }
     
     /**

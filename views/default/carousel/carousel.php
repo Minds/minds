@@ -62,6 +62,8 @@ $(document).ready(function() {
 				$link_extras = "href=\"{$item->href}\" target=\"$target\"";
 			}
 
+            $item->title = htmlspecialchars($item->title, ENT_QUOTES, 'UTF-8');
+
 			$class = $i==0 ?'active' : '';
  			echo "<a class=\"item $class\" $link_extras>";
 			if(isset($item->ext_bg) && $item->ext_bg)

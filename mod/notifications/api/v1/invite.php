@@ -44,7 +44,7 @@ class invite implements interfaces\api{
         }
 
         if(isset($_POST['contact'])){
-            error_log(print_r($_POST['contact'],true));
+            //error_log(print_r($_POST['contact'],true));
             $contact = $_POST['contact'];
             $name = $contact['name']['formatted'];
             $email = $contact['emails'][0]['value'];

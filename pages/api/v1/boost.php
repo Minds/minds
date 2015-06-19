@@ -15,6 +15,8 @@ use Minds\Api\Factory;
 
 class boost implements interfaces\api{
 
+    private $rate = 1;
+
     /**
      * Return impressions/points for a request
      * @param array $pages
@@ -60,7 +62,7 @@ class boost implements interfaces\api{
     	    	$response['points'] = reset($guids);
     	    break;
     	    case "rates":
-    	        $response['rate'] = 1;
+    	        $response['rate'] = $this->rate;
     		$response['cap'] = 1000;
     	    break;
     	}
@@ -84,10 +86,22 @@ class boost implements interfaces\api{
         
         if(!isset($_POST['impressions']))
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be sent in post body'));
-        
+
+        //if($_POST['impressions'] != round($_POST['impressions']))
+        //    return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
+
+        $_POST['impressions'] = round($_POST['impressions']);
+        if((!isset($_POST['destination']) || $_POST['destination'] == '') && round($_POST['impressions']) == 0)
+            return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
+
         $response = array();
 	    if(Core\Boost\Factory::build(ucfirst($pages[0]), array('destination'=>isset($_POST['destination']) ? $_POST['destination'] : NULL))->boost($pages[1], $_POST['impressions'])){
-            $points = 0 - $_POST['impressions']; //make it negative
+            //dont use rate for p2p boosts
+            if(isset($_POST['destination']) && $_POST['destination'])
+                $points = 0 - $_POST['impressions'];
+            else
+                $points = 0 - ($_POST['impressions'] / $this->rate); //make it negative
+
             \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, $pages[1], "boost");
             //a boost gift
             if(isset($pages[2]) && $pages[2] != Core\session::getLoggedinUser()->guid){

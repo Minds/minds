@@ -51,7 +51,7 @@ if($full){
 	));
 	
 	$title = elgg_view('output/url', array(
-		'text' => $entity->title,
+		'text' => strip_tags($entity->title),
 		'href' => $entity->getURL(),
 	));
 	
@@ -67,7 +67,7 @@ if($full){
 	
 	$params = array(
 		'entity' => $album,
-		'title' => $title,
+		'title' => strip_tags($title),
 		'metadata' => $menu,
 		'subtitle' => $subtitle,
 		'content'=>$description,
@@ -83,7 +83,7 @@ if($full){
 			'title' => $entity->title,
 		));
 	
-	$title = elgg_view('output/url', array('href'=>$entity->getURL(), 'text'=>elgg_view_title($entity->title)));
+	$title = elgg_view('output/url', array('href'=>$entity->getURL(), 'text'=>elgg_view_title(strip_tags($entity->title))));
 
 	$extras = '<span class="extras"> <p class="time">'. $date . '</p>' . $menu .'</span>';
 	
