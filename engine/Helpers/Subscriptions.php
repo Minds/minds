@@ -31,10 +31,13 @@ class Subscriptions{
         
         if($friends->insert($user_guid, array($to_guid=>$data)) && $friendsof->insert($to_guid, array($user_guid=>$data)))
             $return =  true;
-        
-        $prepared = new Core\Data\Neo4j\Prepared\Common();
-        Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
 
+        try{
+            $prepared = new Core\Data\Neo4j\Prepared\Common();
+            Core\Data\Client::build('Neo4j')->requestWrite($prepared->createSubscription($user_guid, $to_guid));
+        }catch(\Exception $e){
+            error_log("could not write $user_guid subscription to $to_guid in neo4j");
+        }
         //grab the newsfeed
         $nf = new Core\Data\Call('entities_by_time');
         $feed = $nf->getRow("activity:user:$to_guid", array('limit'=>12));

@@ -50,6 +50,11 @@ class Client implements Interfaces\ClientInterface{
         return $response;
     }
 
+    public function requestWrite(Interfaces\PreparedInterface $request){
+        $build = $request->build();
+        $response = $this->neo4j->sendWriteQuery($build['string'], $build['values']);
+        return $response;
+    }
 
     public function client($command = NULL){
          return $this->neo4j;
