@@ -28,8 +28,14 @@ class Redis extends abstractCacher{
 		    $redis = new RedisServer();
             $redis->connect($this->slave);
             if($value = $redis->get($key)){
-                return json_decode($value, true);
-            };
+             
+                $value = json_decode($value, true);
+
+                if(is_numeric($value)){
+                    return (int) $value;
+                }
+                return $value;
+            }
         } catch(\Exception $e){
             error_log("could not read redis $this->slave");
         }
