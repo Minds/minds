@@ -1,7 +1,7 @@
 <?php
 
 $user = $vars['entity'];
-
+$user = new Minds\entities\user($user);
 if($user->guid == elgg_get_logged_in_user_guid()){
 	return false;
 }
