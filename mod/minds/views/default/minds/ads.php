@@ -1,5 +1,5 @@
 <?php
-
+return true;
 $type = elgg_extract('type', $vars, 'content-side');
 switch($type){
 	case 'responsive':
