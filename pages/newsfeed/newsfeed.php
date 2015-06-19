@@ -136,13 +136,15 @@ class newsfeed extends core\page implements interfaces\page{
 							
 							return true;
 						break;
-					case 'delete':
-						$activity = new entities\activity($pages[0]);
-						if($activity->delete()){
-							system_message('Success!');
-						} else {
-							register_error('Ooops! Try again');
-						}
+                    case 'delete':
+                        if($activity->canEdit()){
+						    $activity = new entities\activity($pages[0]);
+						    if($activity->delete()){
+						    	system_message('Success!');
+						    } else {
+						    	register_error('Ooops! Try again');
+                            }
+                        }
 			
 						$this->forward(REFERRER);
 						break;
