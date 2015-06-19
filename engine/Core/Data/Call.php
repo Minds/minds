@@ -35,7 +35,7 @@ class Call extends core\base{
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
 		
 		try{
-			$pool = new ConnectionPool($this->keyspace, $this->servers, 1, 2, $sendTimeout, $receiveTimeout);
+			$pool = new ConnectionPool($this->keyspace, $this->servers, 3, 2, $sendTimeout, $receiveTimeout);
 		
 			$this->pool = $pool;
 		
@@ -196,7 +196,9 @@ class Call extends core\base{
 	/**
 	 * Count the columns of a row
 	 */
-	public function countRow($key){
+    public function countRow($key){
+        if(!$this->cf)
+            return 0;
 		//return 10; //quick hack until wil figue this out!
 		if(!$key)
 			return 0;
@@ -215,7 +217,9 @@ class Call extends core\base{
 	 */
 	public function removeRow($key){
 		self::$deletes++;
-		return $this->cf->remove($key);
+        if($this->cf)
+            return $this->cf->remove($key);
+        return false;
 	}
 	
 	/**
@@ -239,7 +243,10 @@ class Call extends core\base{
 	 */
 	public function removeAttributes($key, array $attributes = array(), $verify= false){
 		self::$deletes++;
-		if(empty($attributes)){
+        if(!$this->cf)
+            return false;
+
+        if(empty($attributes)){
 			return false; // don't allow as this will delete the row!
 		}
 		if($verify)
