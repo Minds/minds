@@ -4,7 +4,8 @@ $params = unserialize($notification->params);
 $type = $params['type'] ? $params['type'] : 'entity';
 
 $actor = get_entity($notification->from_guid,'user');
-
+if(!$actor)
+    return;
 $description = $notification->description;
 	if (strlen($description) > 60){
 	  $description = substr($notification->description,0,75) . '...' ;
