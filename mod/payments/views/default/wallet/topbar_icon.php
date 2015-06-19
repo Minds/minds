@@ -1,4 +1,5 @@
 <?php 
+return;
 $count = \Minds\Helpers\Counters::get(\Minds\Core\session::getLoggedinUser()->guid, 'points', false);
 $points = $count;
 if($count > 1000)
