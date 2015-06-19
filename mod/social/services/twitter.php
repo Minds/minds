@@ -21,7 +21,6 @@ class twitter extends core\base{
     private $secret;
 
     public function __construct($params = array()){
-        error_log(print_r($params, true));
         if(isset($params['access_token'])){
             list($this->token, $this->secret) = explode('&&',$params['access_token']);
         }

@@ -20,7 +20,7 @@ class start extends Components\Plugin{
             \elgg_extend_view('page/elements/topbar/right/actions', 'wallet/topbar_icon');
 
         \elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
-            if($row->subtype == 'points_transaction'){
+            if($row->type == "object" && $row->subtype == 'points_transaction'){
                 return new entities\PointsTransaction($row);
             }
         });

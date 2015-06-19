@@ -34,7 +34,7 @@ if($full_view ){
     ));
 	
 	$img = elgg_view('output/img', array('src'=>$album->getIconURL('large'), 'class'=>'rich-image'));
-	$title = elgg_view('output/url', array('href'=>$album->getURL(), 'text'=>elgg_view_title($album->title)));
+	$title = elgg_view('output/url', array('href'=>$album->getURL(), 'text'=>elgg_view_title(strip_tags($album->title))));
 	
 	$owner_link  = elgg_view('output/url', array('href'=>$owner->getURL(), 'text'=>$owner->name));	
 	

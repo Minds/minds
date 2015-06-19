@@ -6,6 +6,10 @@
 $guid = get_input('guid');
 $user = get_entity($guid, 'user');
 
+if(!$user->canEdit()){
+    forward(REFERRER);
+}
+
 if(get_input('remove_bg') == 'yes'){
 	
 	$thumb = new ElggFile;

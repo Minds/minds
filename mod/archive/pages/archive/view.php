@@ -19,7 +19,7 @@ $menu = elgg_view_menu('entity', array(
 		'class' => 'elgg-menu-hz',
 	));
 
-$title = $entity->title;
+$title = strip_tags($entity->title);
 $description = strip_tags($entity->description);
 $sidebar_comments = true;
 $content = false;
@@ -61,7 +61,7 @@ switch($entity->subtype){
 		$body .= elgg_view_entity($entity, array('full_view' => true, 'video_only'=> true));
 		$body .= "</div>";
 		
-		$title_block = elgg_view_title($title, array('class' => 'elgg-heading-main'));
+		$title_block = elgg_view_title(strip_tags($title), array('class' => 'elgg-heading-main'));
 		
 		$content .= '<div class="archive-description">'.$entity->description.'</div>';
 		$content .= elgg_view('minds/license', array('license'=>$entity->license));

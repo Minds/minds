@@ -23,7 +23,7 @@ class Client implements Interfaces\ClientInterface{
             $builder->addConnection($id,'http', $config['address'], isset($config['port']) ? $config['port'] : 7474, true, 'neo4j', $config['password']);
             if(isset($config['master']) && $config['master'])
                 $builder->setMasterConnection($id);
-            if(!isset($config['salve']) || $config['slave'])
+            if(!isset($config['slave']) || $config['slave'])
                 $builder->setSlaveConnection($id);
         }
 
@@ -50,8 +50,13 @@ class Client implements Interfaces\ClientInterface{
         return $response;
     }
 
+    public function requestWrite(Interfaces\PreparedInterface $request){
+        $build = $request->build();
+        $response = $this->neo4j->sendWriteQuery($build['string'], $build['values']);
+        return $response;
+    }
 
-    public function client($command){
+    public function client($command = NULL){
          return $this->neo4j;
     }
 

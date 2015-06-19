@@ -7,7 +7,7 @@ namespace Minds\Core\Data\cache;
 
 class factory{
 
-	static private $default  = 'apcu';
+	static private $default  = 'Redis';
 	
 	/**
 	 * Build the cacher

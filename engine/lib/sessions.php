@@ -275,8 +275,9 @@ function login(ElggUser $user, $persistent = false) {
 	}
 
 	//is the user disabled?
-	if(!$user->isEnabled()){
-		throw new LoginException(elgg_echo('LoginException:DisabledUser'));
+    if(!$user->isEnabled()){
+        $user->enabled = "yes"; //renable on login
+		//throw new LoginException(elgg_echo('LoginException:DisabledUser'));
 	}
 	
 	if(!elgg_trigger_event('login', 'user', $user)){

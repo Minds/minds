@@ -18,8 +18,9 @@ class analytics extends core\page implements interfaces\page{
 
             $db = new Core\Data\Call('entities_by_time');
 
-            $guids = $db->getRow("analytics:open");
-            $users = Core\entities::get(array('guids'=>array_keys($guids)));
+            $guids = $db->getRow("analytics:open", array('limit'=>5));
+            $users = Core\entities::get(array('guids'=>array_keys($guids), 'limit'=>5));
+            $user_count = $db->countRow("analytics:open");
 
             $requests = array(
                 0 => (int) Helpers\RequestMetrics::get("api", time()),
@@ -27,8 +28,7 @@ class analytics extends core\page implements interfaces\page{
                 10 => (int) Helpers\RequestMetrics::get("api", time() - 600)
             );
 
-            $rps = ($requests[0] + $requests[5] + $requests[10]) / 900; 
-
+            $rps = ($requests[0] + $requests[5] + $requests[10]) / (600 + (Helpers\RequestMetrics::buildTS(time()) - time())); 
 
             $boost_guids = $db->getRow("boost:newsfeed", array('limit'=>1000));
             $boost_impressions = 0;
@@ -67,7 +67,7 @@ class analytics extends core\page implements interfaces\page{
                 'metric' => 'points',
                 'limit' => 10000
             );
-
+try{
             $client = Core\Data\Client::build('Cassandra');
             $prepared = new Core\Data\Cassandra\Prepared\Custom();
             $results = (array) $client->request($prepared->query($cql,$values));
@@ -87,8 +87,10 @@ class analytics extends core\page implements interfaces\page{
                     'points' => $count
                 );
             }
+}catch(\Exception $e){
 
-            $content = elgg_view('analytics/dashboard', array('users' => $users, 'requests'=>$requests, 'rps' => $rps, 'boosts' => $boosts, 'boosts_suggested'=> $boosts_suggested, 'leaderboard'=>$leaderboard));
+}
+            $content = elgg_view('analytics/dashboard', array('users' => $users, 'user_count'=>$user_count, 'requests'=>$requests, 'rps' => $rps, 'globals'=>array('boosts'=>Helpers\Counters::get(0, 'boost_impressions', false)), 'boosts' => $boosts, 'boosts_suggested'=> $boosts_suggested, 'leaderboard'=>$leaderboard));
 
             $body = \elgg_view_layout('one_sidebar', array(
                 'title'=> 'Analytics',

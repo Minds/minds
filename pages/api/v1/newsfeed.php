@@ -157,7 +157,10 @@ class newsfeed implements interfaces\api{
 
         switch($pages[1]){
             case 'view':
-                \Minds\Helpers\Counters::increment($activity->guid, "impression");
+                try{
+                    \Minds\Helpers\Counters::increment($activity->guid, "impression");
+                } catch(\Exception $e){
+                }
                 break;
         }
 

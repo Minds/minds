@@ -27,7 +27,7 @@ if($full){
         return true;
     }
 
-    $body .= '<div class="archive-description">'.$entity->description.'</div>';
+    $body .= '<div class="archive-description">'.strip_tags($entity->description).'</div>';
     $body .= elgg_view('minds/license', array('license'=>$entity->license));
     echo $body;
 
@@ -89,7 +89,7 @@ if($full){
 
     $content = $image . $body;
     echo $menu;
-    $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), $title . $subtitle);
+    $header = elgg_view_image_block(elgg_view_entity_icon($owner, 'small'), strip_tags($title) . $subtitle);
     echo $image;
     echo $header;
 
