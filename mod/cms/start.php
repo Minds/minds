@@ -47,7 +47,7 @@ class start extends Components\Plugin{
 	public function pageSetup($event, $type, $params){
 		
 		$lu = new core\Data\lookup();
-		$cacher = core\Data\cache\factory::build();
+		$cacher = core\Data\cache\factory::build('apcu');
 		$hash = md5(elgg_get_site_url());
 
 		if(!$footer = $cacher->get("$hash:cms:footer")){
