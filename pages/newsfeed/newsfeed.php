@@ -137,7 +137,7 @@ class newsfeed extends core\page implements interfaces\page{
 							return true;
 						break;
                     case 'delete':
-                        if($activity->canEdit()){
+                        if($activity && $activity->canEdit()){
 						    $activity = new entities\activity($pages[0]);
 						    if($activity->delete()){
 						    	system_message('Success!');
