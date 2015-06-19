@@ -50,7 +50,7 @@ class Subscriptions{
         $cacher->destroy("friendsof:$to_guid");
         $cacher->destroy("friends:$user_guid");
 
-        \Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
+        //\Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
         Events\Dispatcher::trigger('subscribe', 'all', array('user_guid'=>$user_guid, 'to_guid'=>$to_guid));        
         Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($to_guid),
@@ -90,7 +90,7 @@ class Subscriptions{
         $cacher->destroy("friendsof:$from");
         $cacher->destroy("friends:$user");
 
-        \Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
+        //\Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
         return (bool) $return;
         
     }
