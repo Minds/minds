@@ -71,7 +71,7 @@ class Sessions implements \SessionHandlerInterface{
 	public function destroy($session_id ) {
 		try {
 			$cacher = cache\factory::build();
-            $cacher->destory($session_id);
+            $cacher->destroy($session_id);
             
             $this->db->removeRow($session_id);
 
