@@ -27,7 +27,8 @@ class Redis extends abstractCacher{
         try{
 		    $redis = new RedisServer();
             $redis->connect($this->slave);
-            if($value = $redis->get($key)){
+            $value = $redis->get($key);
+            if($value !== FALSE){
              
                 $value = json_decode($value, true);
 
