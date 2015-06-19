@@ -26,6 +26,7 @@ class Call extends core\base{
 	static $writes = 0;
 	static $deletes = 0;
 	static $counts = 0;
+    static $pool;
 	
 	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL, $sendTimeout = 800, $receiveTimeout = 2000){
 		global $CONFIG;
@@ -35,9 +36,10 @@ class Call extends core\base{
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
 		
 		try{
-			$pool = new ConnectionPool($this->keyspace, $this->servers, 3, 2, $sendTimeout, $receiveTimeout);
+            if(!self::$pool)
+			    self::$pool = new ConnectionPool($this->keyspace, $this->servers, 1, 2, $sendTimeout, $receiveTimeout);
 		
-			$this->pool = $pool;
+			$this->pool = self::$pool;
 		
 			if(isset($cf)){
 				$this->cf_name = $cf;
