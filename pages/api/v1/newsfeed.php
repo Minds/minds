@@ -159,6 +159,7 @@ class newsfeed implements interfaces\api{
             case 'view':
                 try{
                     \Minds\Helpers\Counters::increment($activity->guid, "impression");
+                    \Minds\Helpers\Counters::increment($activity->owner_guid, "impression");
                 } catch(\Exception $e){
                 }
                 break;
