@@ -53,11 +53,12 @@ $(document).ready(function() {
 		$i = 0;
 		foreach($items as $item){
 			$link_extras = "";
-			if($item->href){
-				$link_extras = "href=\"{$item->href}\" target=\"_blank\"";
+            if($item->href){
+                $href = strip_tags($item->href);
+				$link_extras = "href=\"{$href}\" target=\"_blank\"";
 			}
 
-            $item->title = htmlspecialchars($item->title, ENT_QUOTES, 'UTF-8');
+            $item->title = strip_tags($item->title);
             $item->subtitle = strip_tags($item->subtitle);
 
 			$class = $i==0 ?'active' : '';
@@ -66,9 +67,12 @@ $(document).ready(function() {
 				$bg = $item->ext_bg;
 			else 
 				$bg =  $CONFIG->cdn_url . "/carousel/background/$item->guid/$item->last_updated/$CONFIG->lastcache/fat";
-	
-			echo "<img src=\"$bg\" style=\"top:{$item->top_offset}px\"/>";
-			echo "<div class=\"carousel-caption\" style=\"color:$item->color\"><div class=\"inner\" style=\"background:$item->shadow\"><h3>$item->title</h3><p style=\"color:$item->color\">$item->subtitle</p></div></div>";
+
+            $offset = strip_tags($item->top_offset);    
+            $color = strip_tags($item->color);
+            $shadow = strip_tags($item->shadow);
+			echo "<img src=\"$bg\" style=\"top:{$offset}px\"/>";
+			echo "<div class=\"carousel-caption\" style=\"color:$color\"><div class=\"inner\" style=\"background:$shadow\"><h3>$item->title</h3><p style=\"color:$color\">$item->subtitle</p></div></div>";
 	
 			echo '</a>';
 			$i++;
