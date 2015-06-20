@@ -54,7 +54,7 @@ $(document).ready(function() {
 		foreach($items as $item){
 			$link_extras = "";
             if($item->href){
-                $href = strip_tags($item->href);
+                $href = htmlspecialchars($item->href, ENT_QUOTES);
 				$link_extras = "href=\"{$href}\" target=\"_blank\"";
 			}
 
