@@ -40,7 +40,7 @@ class start extends Components\Plugin{
 		if (\elgg_is_logged_in())
 			\elgg_extend_view('page/elements/topbar/right/actions', 'gatherings/topbar_icon');
 		
-		\elgg_extend_view('page/elements/foot', 'gatherings/bar');
+//		\elgg_extend_view('page/elements/foot', 'gatherings/bar');
 		\elgg_extend_view('css/elgg', 'gatherings/css');
 		
 		\elgg_extend_view('js/initialize_elgg', 'js/init');
