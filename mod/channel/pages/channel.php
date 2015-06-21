@@ -223,14 +223,18 @@ class channel extends core\page implements interfaces\page{
 			default:
 				\elgg_register_plugin_hook_handler('register', 'menu:entity', array('\minds\pages\newsfeed\newsfeed', 'pageSetup'));
 				//$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river'));
-				$content .= \Minds\Core\entities::view(array(
+				$entities = \Minds\Core\entities::get(array(
 					'type' => 'activity',
 					'limit' => get_input('limit', 5),
 					'masonry' => false,
 					'prepend' => elgg_is_logged_in() && $user->guid == elgg_get_logged_in_user_guid() ? $post : '',
 					'list_class' => 'list-newsfeed',
 					'owner_guid' => $user->guid
-				));
+                ));
+                if($entities)
+                    $content .= elgg_view_entity_list($entities, array('list_class' => 'list-newsfeed','masonry' => false,'prepend' => elgg_is_logged_in() && $user->guid == elgg_get_logged_in_user_guid() ? $post : ''));
+                else
+                    $content = "";
 				$class = 'landing-page';
 				$sidebar = elgg_view('channel/thumbs', array('user'=>$user));
 				if(!$sidebar)
