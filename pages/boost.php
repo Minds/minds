@@ -25,7 +25,7 @@ class boost extends core\page implements interfaces\page{
             if($guids){
                 $entities = Core\entities::get(array('guids' => array_keys($guids)));
                 $db=new Core\Data\Call('entities_by_time');
-                $count = $db->countRow("boost:$type:review");
+                $count = $db->countRow("boost:".strtolower($type).":review");
                 foreach($entities as $k => $entity){
                     $entities[$k]->boost_impressions = $guids[$entity->guid];
                 }
