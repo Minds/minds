@@ -71,7 +71,7 @@ $signup_form = elgg_is_logged_in() ? '' : <<<HTML
 HTML;
 
 $app_buttons = <<<HTML
-<div class="app-buttons" style="  position: relative; width: 300px; margin: auto; margin-top:20vh;">
+<div class="app-buttons" style="  position: relative; width: 300px; margin: auto; margin-top:25vh;">
     <div class="apple" style="width:100%; text-align:center;">
         <a href="https://geo.itunes.apple.com/us/app/minds-com/id961771928?mt=8&amp;uo=6" target="_blank">
             <img src="https://www.minds.com/_graphics/appstore.png" width="300px:>
