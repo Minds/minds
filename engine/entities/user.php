@@ -132,7 +132,8 @@ class user extends \ElggUser{
             $export['subscribed'] = elgg_get_logged_in_user_entity()->isSubscribed($this->guid);
             $export['subscriber'] = elgg_get_logged_in_user_entity()->isSubscriber($this->guid);
         }
-        $export['subscribers_count'] = $this->getSubscribersCount();
+        if($this->username != "minds")
+            $export['subscribers_count'] = $this->getSubscribersCount();
         $export['subscriptions_count'] = $this->getSubscriptionsCount();
 		return $export;
 	}	
