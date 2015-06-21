@@ -54,7 +54,8 @@ class Redis extends abstractCacher{
                 return $value;
             }
         } catch(\Exception $e){
-            error_log("could not read redis $this->slave");
+//            error_log("could not read redis $this->slave");
+   //         error_log($e->getMessage());
         }
         return false;
 	}
