@@ -100,7 +100,7 @@ class GUID{
     public function generate(){
         $t = floor($this->getUnixTimestamp() - $this->epoch);
         if(!$this->lastTime){
-            $this->lastTime = \Minds\Core\Data\cache\factory::build()->get('lastTime'); 
+            $this->lastTime = (int) \Minds\Core\Data\cache\factory::build()->get('lastTime') ?: NULL; 
         }
         if ($t !== $this->lastTime) {
             if ($t < $this->lastTime) {
