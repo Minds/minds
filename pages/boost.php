@@ -24,10 +24,12 @@ class boost extends core\page implements interfaces\page{
             
             if($guids){
                 $entities = Core\entities::get(array('guids' => array_keys($guids)));
+                $db=new Core\Data\Call('entities_by_time');
+                $count = $db->countRow("boost:$type:review");
                 foreach($entities as $k => $entity){
                     $entities[$k]->boost_impressions = $guids[$entity->guid];
                 }
-                $content = elgg_view('boost/admin', array('entities' => $entities));
+                $content = elgg_view('boost/admin', array('entities' => $entities, 'remaining'=>$count));
             } else {
                 $content = "No new boosts";
             }

@@ -9,6 +9,7 @@ $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : "Newsfeed";
 echo "<a href=\"". elgg_get_site_url() . "boost/admin?type=Newsfeed\">Newsfeed</a> | <a href=\"". elgg_get_site_url() . "boost/admin?type=Suggested\">Suggested</a>";
 
 echo "<ul class=\"elgg-list x1 boost\">";
+echo "<p>Showing 12 of (" . $vars['remaining'] . ") boosts</p>";
 foreach($entities as $entity){
     echo "<li class=\"elgg-item\">";
 
