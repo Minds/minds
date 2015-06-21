@@ -44,7 +44,7 @@ class start extends Components\Plugin{
 		\elgg_extend_view('css/elgg', 'gatherings/css');
 		
 		\elgg_extend_view('js/initialize_elgg', 'js/init');
-		\elgg_extend_view('js/elgg', 'js/gatherings/live');
+		//\elgg_extend_view('js/elgg', 'js/gatherings/live');
 		\elgg_extend_view('js/elgg', 'js/gatherings/stored');
 		\elgg_extend_view('js/elgg', 'js/gatherings/crypt');
 		
