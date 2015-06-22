@@ -13,7 +13,7 @@ echo "<p>Showing 12 of (" . $vars['remaining'] . ") boosts</p>";
 echo "<ul class=\"elgg-list x1 boost list-newsfeed\">";
 
 foreach($entities as $entity){
-    echo "<li class=\"elgg-item\">";
+    echo "<li class=\"elgg-item\" id=\"$entity->guid\">";
 
     echo elgg_view_entity($entity);
     echo "<p>Impressions: $entity->boost_impressions </p>";
