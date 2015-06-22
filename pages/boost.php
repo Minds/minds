@@ -12,6 +12,9 @@ class boost extends core\page implements interfaces\page{
 	public function get($pages){
 		
         if($pages[0] == 'admin'){
+            
+            $db = new Core\Data\Call('entities_by_time');
+            $db->insert("boost:newsfeed:review", array("459748446950133766"=>10, "459748420802842637"=>10, "449242984400031744"=>10, "449242823019991040"=>10, "449239562749743104"=>10, "449239410223878144"=>10, "449239191503507456"=>10));
           
             if(!elgg_is_admin_logged_in())
                 return $this->forward("/");
