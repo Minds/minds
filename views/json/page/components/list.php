@@ -9,6 +9,6 @@ $items = $vars['items'];
 
 if (is_array($items) && sizeof($items) > 0) {
 	foreach ($items as $item) {
-		elgg_view('object/default', array('item'=>$item));
+		elgg_view_list_item($item, $vars);
 	}
 }
