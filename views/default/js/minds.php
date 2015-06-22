@@ -81,7 +81,7 @@
 			localStorage.removeItem("blog-form");
 		});
 		
-		if($(document).find('.boost-page')){
+		if($(document).find('.boost-page').length > 0){
 		  $(document).on('keydown', function(e){
 		  
 		      //first in list is
