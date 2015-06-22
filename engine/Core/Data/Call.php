@@ -100,7 +100,7 @@ class Call extends core\base{
 	 * @return the cassandra column family interface
 	 */
 	public function getCf($cf){
-		return new ColumnFamily($this->pool, $cf);
+		return new ColumnFamily(self::$pool, $cf);
 	}
 	
 	public function insert($guid = NULL, array $data = array(), $ttl = NULL){
