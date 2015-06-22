@@ -89,7 +89,7 @@ class start extends Components\Plugin{
             
             if($mutual){
                 $conversation = new entities\conversation($params['user_guid'], $params['to_guid']);
-                $conversation->update();
+                $conversation->update(0, true);
             }
         });
 		
