@@ -33,7 +33,7 @@ class Counters{
         }catch(\Exception $e){}
         //error_log("$guid:$metric:$value");
         $cacher = Core\Data\cache\factory::build();
-        $cacher->destroy("counter:$guid:$metric");
+        //$cacher->destroy("counter:$guid:$metric");
     }
     
     /**
@@ -56,7 +56,7 @@ class Counters{
             $client->request($query->update($guid, $metric, $value));
 
             $cacher = Core\Data\cache\factory::build();
-            $cacher->destroy("counter:$guid:$metric");
+            //$cacher->destroy("counter:$guid:$metric");
         }catch(\Exception $e){}
     }
     
