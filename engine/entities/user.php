@@ -93,7 +93,7 @@ class user extends \ElggUser{
 		
 		$db = new Core\Data\Call('friendsof');
 		$return = (int) $db->countRow($this->guid);
-		$cacher->set("$this->guid:friendsofcount", $return);
+		$cacher->set("$this->guid:friendsofcount", $return, 360);
 		return $return;
 	}
 
@@ -109,7 +109,7 @@ class user extends \ElggUser{
 
         $db = new Core\Data\Call('friends');
         $return = (int) $db->countRow($this->guid);
-        $cacher->set("$this->guid:friendscount", $return);
+        $cacher->set("$this->guid:friendscount", $return, 360);
         return $return;
     }
 	
