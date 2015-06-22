@@ -103,7 +103,7 @@
                       break;
                   }
                   
-                  if(items.length < 3){
+                  if(items.length < 6){
                       if(fetch)
                         fetch.abort();
                        //load next batch in
