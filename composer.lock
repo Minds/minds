@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "517a3e8d3c89175d8e4b638456fb68b2",
+    "hash": "dc5f06d6a9462c4bcb83e20461fed8c6",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -1738,6 +1738,52 @@
                 "rabbitmq"
             ],
             "time": "2015-06-17 18:49:56"
+        },
+        {
+            "name": "vscn/cruftflake",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lucasvscn/cruftflake.git",
+                "reference": "4874ef26edbf69e9c7732ecdf3ddd3673131f369"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lucasvscn/cruftflake/zipball/4874ef26edbf69e9c7732ecdf3ddd3673131f369",
+                "reference": "4874ef26edbf69e9c7732ecdf3ddd3673131f369",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Davegardnerisme\\CruftFlake\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Dave Gardner",
+                    "email": "dave@davegardner.me.uk"
+                }
+            ],
+            "description": "This package provides a PHP implementation of Twitter Snoflake ID Generator algoritm",
+            "keywords": [
+                "snowflake",
+                "uuid",
+                "zookeeper"
+            ],
+            "time": "2015-02-13 03:23:09"
         },
         {
             "name": "zircote/swagger-php",
@@ -3507,7 +3553,8 @@
         "tijsverkoyen/twitteroauth": 20,
         "videlalvaro/php-amqplib": 20,
         "minds/surge": 20,
-        "zircote/swagger-php": 20
+        "zircote/swagger-php": 20,
+        "vscn/cruftflake": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
