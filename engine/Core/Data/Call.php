@@ -102,13 +102,8 @@ class Call extends core\base{
 	}
 	
 	public function insert($guid = NULL, array $data = array(), $ttl = NULL){
-            if(!$this->cf){
-               error_log("CF NOT SET");
-                return false;
-            }
 		if(!$guid){
-			$guid = new \GUID();
-			$guid = $guid->generate();
+			$guid = Core\Guid::build();
 		}
 		self::$writes++;
 		//unset guid, we don't want it twice
