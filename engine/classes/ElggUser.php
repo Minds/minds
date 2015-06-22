@@ -130,17 +130,17 @@ class ElggUser extends ElggEntity
 	}
 
 	protected function loadFromLookup($string){
-        $cacher = Minds\Core\Data\cache\factory::build();
-        if($guid = $cacher->get("lookup:$string")){
-            return $this->loadFromGUID(key($guid));
-        }
+        //$cacher = Minds\Core\Data\cache\factory::build();
+        //if($guid = $cacher->get("lookup:$string")){
+        //    return $this->loadFromGUID(key($guid));
+        //}
 
         $lookup = new Minds\Core\Data\lookup();
 		$guid = $lookup->get($string);
 		if(!$guid)
 			return false;
 
-        $cacher->set("lookup:$string", $guid); 
+        //$cacher->set("lookup:$string", $guid); 
 
 		return $this->loadFromGUID(key($guid));
 	}
