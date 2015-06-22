@@ -41,9 +41,8 @@ class Push {
             'user_guid' => $user_guid,
             'message' => $message
             );
-        $guid = new \GUID();
         $db = new Core\Data\Call('entities_by_time');
-        $db->insert('push:queue', array($guid->generate() => json_encode($job)));
+        $db->insert('push:queue', array(Core\Guid::build() => json_encode($job)));
     }
     
     

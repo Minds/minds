@@ -112,7 +112,7 @@ class ElggUser extends ElggEntity
 	protected function loadFromGUID($guid){
 		if(is_numeric($guid) && strlen($guid) < 18){
 			$g = new GUID();
-       			$guid = $g->migrate($guid);
+            $guid = $g->migrate($guid);
 		}
 
 		if($cached = retrieve_cached_entity($guid)){

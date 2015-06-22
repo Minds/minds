@@ -75,8 +75,7 @@ class image extends entities\file{
 	public function upload($file){
 				
 		if(!$this->guid){
-			$g = new \GUID();
-			$this->guid = $g->generate();
+			$this->guid = \Minds\Core\Guid::build();
 		}
 		
 		if(!$this->filename){

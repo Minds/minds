@@ -1058,7 +1058,7 @@ abstract class ElggEntity extends ElggData implements
 				$memcache->delete($this->guid);
 			}
 		} else {
-			$this->guid = (string) new GUID();
+			$this->guid = Minds\Core\Guid::build();
 			elgg_trigger_event('create', $this->type, $this);
 		}	
 
@@ -1555,8 +1555,7 @@ abstract class ElggEntity extends ElggData implements
 	 public function feature(){
 	 	$db = new Minds\Core\Data\Call('entities_by_time');
 		
-	 	$g = new GUID(); 
-		$this->featured_id = $g->generate();
+		$this->featured_id = Minds\Core\Guid::build();
 	
 		$db->insert($this->type.':featured', array($this->featured_id => $this->getGUID()));
 		$db->insert($this->type. ':'.$this->subtype.':featured', array($this->featured_id => $this->getGUID()));
