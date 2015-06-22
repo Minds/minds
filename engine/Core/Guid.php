@@ -9,14 +9,20 @@ class Guid{
     static $socket;
 
     static function build(){
-        if(!self::$socket){
-            self::$socket = self::connect();
+        $guid = NULL;
+        //use ZMQ id generator if we can
+        if(class_exists('\ZMQ_CONTEXT')){
+            if(!self::$socket){
+                self::$socket = self::connect();
+            }
+            try{
+                self::$socket->send('GEN');
+                $guid = self::$socket->recv();
+            }catch(\Exception $e){
+                error_log("Could not connect to GUID server, conflicts possible");
+            }
         }
-        try{
-            self::$socket->send('GEN');
-            $guid = self::$socket->recv();
-        }catch(\Exception $e){
-            error_log("Could not connect to GUID server, conflicts possible");
+        if(!$guid){
             $g = new \GUID();
             $guid = $g->generate();;
         }

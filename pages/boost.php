@@ -34,16 +34,18 @@ class boost extends core\page implements interfaces\page{
                 $content = "No new boosts";
             }
     		
-    		$body = \elgg_view_layout('one_sidebar', array(
+    		$body = \elgg_view_layout('one_column', array(
     			'title'=> 'Boost Admin', 
-    			'content'=>$content,
-    			'sidebar_class' => 'elgg-sidebar-alt cms-sidebar-wrapper',
-    			'hide_ads'=>true
+    			'content'=>$content
     		));
     
+            if(get_input('ajax')){
+                echo $content;
+                exit;
+            }
     		elgg_extend_view('page/elements/foot', 'cms/footer');
     		
-    		echo $this->render(array('body'=>$body));
+    		echo $this->render(array('body'=>$body, 'class'=>'boost-page'));
         }
 	}
 	
@@ -51,9 +53,10 @@ class boost extends core\page implements interfaces\page{
 
         if($pages[0] == 'admin'){
             $type = isset($_POST['type']) ? $_POST['type'] : 'Newsfeed';
-            if(isset($_POST['accept'])){            
+            if($_POST['action'] == 'accept' || isset($_POST['accept'])){
                 Core\Boost\Factory::build(ucfirst($type))->accept($_POST['guid'], $_POST['impressions']);
 		    } elseif(isset($_POST['reject'])){
+		        echo 1;
                 Core\Boost\Factory::build(ucfirst($type))->reject($_POST['guid']);
                 $entity = \Minds\entities\Factory::build($_POST['guid']);
                 if($entity->type == "user"){
@@ -64,7 +67,9 @@ class boost extends core\page implements interfaces\page{
                 //refund the point
                 \Minds\plugin\payments\start::createTransaction($user_guid, $_POST['impressions'] / 1, NULL, "boost refund");
             }
-            $this->forward('/boost/admin?type='.$type);
+            
+            if (!elgg_is_xhr())
+                $this->forward('/boost/admin?type='.$type);
             
         }
 	}

@@ -80,6 +80,58 @@
 		$(document).on('click', '.elgg-menu-item-add', function(e){
 			localStorage.removeItem("blog-form");
 		});
+		
+		if($(document).find('.boost-page')){
+		  $(document).on('keydown', function(e){
+		  
+		      //first in list is
+		      var items = $(document).find('.boost > li');
+
+		      switch(e.keyCode){
+		          case 37: //left
+		               //  submit form
+		              var button = $(items[0]).find('.accept-button');
+		              button.val('test');
+		              button.trigger('click');
+		              //alert('going left');
+		          break;
+		          case 39: //right
+		              var button = $(items[0]).find('.reject-button');
+                      button.trigger('click');
+		             // alert('going right');
+		          break;
+		      }
+		      
+		      if(items.length < 6){
+		          //load next batch in
+		          elgg.get('/boost/admin?offset=' + $('.load-more-boosts').attr('data-load-next') + '&ajax=true', function(data){
+		              if($(data).contents().length == 0){
+		                  alert('no more boost could be loaded');
+		                  return false;
+		              }
+		              
+		              var list =  $(data).filter('.boost').find().remove().contents();
+		              $(list).appendTo('.boost');
+		          });
+		      }
+             });
+
+            $('.boost form input[type=submit]').on('click', function(e){
+                $('input#action').val($(this).attr('name'));
+                return true;
+            });
+    
+    		$('.boost form').on('submit', function(e){
+    
+                $(this).parents('li').remove();
+                e.preventDefault();
+                elgg.post('/boost/admin', {
+                    data: $(this).serialize(),
+                    success: function(){}
+                });
+    		});
+		
+        }
 
 		/**
 		 * Do we have a saved form?
