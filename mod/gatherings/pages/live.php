@@ -19,7 +19,7 @@ class live extends core\page implements interfaces\page{
 	}
 	
 	public function post($pages){
-				
+        exit; //how are people still calling this?				
 		switch($pages[0]){
 			case "userlist":
 				
