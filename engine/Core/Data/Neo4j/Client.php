@@ -30,6 +30,7 @@ class Client implements Interfaces\ClientInterface{
         $this->neo4j = $builder->registerExtension('geo', 'Minds\Core\Data\Neo4j\Extensions\Geo')
                     ->setAutoFormatResponse(true)
                     ->setDefaultTimeout(20)
+                    ->enableHAMode()
     				->build();
     }
     
