@@ -26,7 +26,7 @@ class Call extends core\base{
 	static $writes = 0;
 	static $deletes = 0;
 	static $counts = 0;
-    static $pool;
+    private $pool;
 	
 	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL, $sendTimeout = 800, $receiveTimeout = 2000){
 		global $CONFIG;
@@ -36,12 +36,10 @@ class Call extends core\base{
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
 		
 		try{
-            if(!self::$pool)
-			    self::$pool = new ConnectionPool($this->keyspace, $this->servers, 1, 2, $sendTimeout, $receiveTimeout);
+            if(!$this->pool)
+                $this->pool = Pool::build($this->keyspace, $this->servers, NULL, 2, $sendTimeout, $receiveTimeout);
 		
-//			$this->pool = self::$pool;
-		
-			if(isset($cf)){
+			if($cf){
 				$this->cf_name = $cf;
 				$this->cf = $this->getCf($cf);
 			}
@@ -71,7 +69,7 @@ class Call extends core\base{
                     	//'log' => array(),
 		);
 	
-		$ks = self::$pool->describe_keyspace();
+		$ks = $this->pool->describe_keyspace();
  
 		foreach($cfs as $cf => $indexes){
 			$exists = false;
@@ -100,10 +98,14 @@ class Call extends core\base{
 	 * @return the cassandra column family interface
 	 */
 	public function getCf($cf){
-		return new ColumnFamily(self::$pool, $cf);
+		return new ColumnFamily($this->pool, $cf);
 	}
 	
 	public function insert($guid = NULL, array $data = array(), $ttl = NULL){
+            if(!$this->cf){
+               error_log("CF NOT SET");
+                return false;
+            }
 		if(!$guid){
 			$guid = new \GUID();
 			$guid = $guid->generate();
@@ -314,35 +316,18 @@ class Call extends core\base{
 	public function keyspaceExists(){
 		$exists = false;
 		try{
- 		       $ks = self::$pool->describe_keyspace();
-      			$exists = false;
+            $ks = $this->pool->describe_keyspace();
+            $exists = false;
    			foreach($ks->cf_defs as $cfdef) {
-	                	if ($cfdef->name == 'entities_by_time'){
-         	         	      $exists = true;
-           	       		      break;
-             	  		 }
+            	if ($cfdef->name == 'entities_by_time'){
+                    $exists = true;
+   	       		      break;
+     	  		 }
   			}
 		}catch(\Exception $e){
-                	$exists = false;
-        	}
+            $exists = false;
+        }
 		return $exists;
-		if($exists)
-			return true;
-
-		
-		$sys = new SystemManager($this->servers[0]);
-		
-		$exists = false;
-		
-		$ksdefs = $sys->describe_keyspaces();
-		foreach ($ksdefs as $ksdef)
-        	$exists = $exists || $ksdef->name == $this->keyspace;
-
-   		if ($exists){
-			return true;
-		} else {
-			return false;
-		}
 	}
 	
 	/**
@@ -405,7 +390,7 @@ class Call extends core\base{
 	}
 
 	public function stats(){
-		return self::$pool->stats();
+		return $this->pool->stats();
 	}
 	
 }

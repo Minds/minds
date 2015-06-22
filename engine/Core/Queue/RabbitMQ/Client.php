@@ -92,8 +92,9 @@ class Client implements Interfaces\QueueClient{
         if($this->connection->isConnected()){
             $this->channel->basic_publish($msg, $this->exchange, $this->binder);
             //error_log("Published from minds and complete...\n");
-        }else
+        }else {
             //error_log("Not connected.. but tried to send message to channel");
+        }
         return $this;   
     }
     
