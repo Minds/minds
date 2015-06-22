@@ -12,8 +12,15 @@ class Guid{
         if(!self::$socket){
             self::$socket = self::connect();
         }
-        self::$socket->send('GEN');
-        return $socket->recv();
+        try{
+            self::$socket->send('GEN');
+            $guid = self::$socket->recv();
+        }catch(\Exception $e){
+            error_log("Could not connect to GUID server, conflicts possible");
+            $g = new \GUID();
+            $guid = $g->generate();;
+        }
+        return $guid;
     }
 
     static function connect(){
@@ -22,8 +29,9 @@ class Guid{
         
         $socket = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REQ);
         $socket->connect("tcp://localhost:{$port}");
-        $socket->setSockOpt(\ZMQ::ZMQ_RCVTIMEO, 500);
-        $socket->setSockOpt(\ZMQ::ZMQ_SNDTIMEO, 500);
+        $socket->setSockOpt(\ZMQ::SOCKOPT_LINGER, 0);
+        $socket->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 500);
+        $socket->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 500);
         return $socket;
     }
 

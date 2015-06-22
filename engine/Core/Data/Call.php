@@ -39,7 +39,7 @@ class Call extends core\base{
             if(!self::$pool)
 			    self::$pool = new ConnectionPool($this->keyspace, $this->servers, 1, 2, $sendTimeout, $receiveTimeout);
 		
-			$this->pool = self::$pool;
+//			$this->pool = self::$pool;
 		
 			if(isset($cf)){
 				$this->cf_name = $cf;
@@ -71,7 +71,7 @@ class Call extends core\base{
                     	//'log' => array(),
 		);
 	
-		$ks = $this->pool->describe_keyspace();
+		$ks = self::$pool->describe_keyspace();
  
 		foreach($cfs as $cf => $indexes){
 			$exists = false;
@@ -314,7 +314,7 @@ class Call extends core\base{
 	public function keyspaceExists(){
 		$exists = false;
 		try{
- 		       $ks = $this->pool->describe_keyspace();
+ 		       $ks = self::$pool->describe_keyspace();
       			$exists = false;
    			foreach($ks->cf_defs as $cfdef) {
 	                	if ($cfdef->name == 'entities_by_time'){
@@ -405,7 +405,7 @@ class Call extends core\base{
 	}
 
 	public function stats(){
-		return $this->pool->stats();
+		return self::$pool->stats();
 	}
 	
 }
