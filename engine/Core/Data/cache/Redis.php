@@ -81,6 +81,17 @@ class Redis extends abstractCacher{
         } catch(\Exception $e){
             error_log("could not delete from redis $this->master");
         }
-	}
+    }
+
+    public function __destruct(){
+        try{
+            if($this->redisSlave){
+                $this->redisSlave->close();
+            }
+            if($this->redisMaster){
+                $this->redisMaster->close();
+            }
+        }catch(\Exception $e){}
+    }
 }
 	
