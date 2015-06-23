@@ -121,6 +121,13 @@ class channel implements interfaces\api{
                 $owner->save();
                 break;
             case "banner":
+                //remove all older banners
+                $db = new Core\Data\Call('entities_by_time');
+                $banners = $db->getRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
+                if($banners){
+                    $db->removeRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
+                }
+             
                 $item = new \minds\entities\carousel();
                 $item->title = '';
                 $item->owner_guid = elgg_get_logged_in_user_guid();
