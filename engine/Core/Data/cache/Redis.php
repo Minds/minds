@@ -69,7 +69,7 @@ class Redis extends abstractCacher{
             else
                 $redis->set($key, json_encode($value));
         } catch(\Exception $e){
-            error_log("could not write to redis $this->master");
+            error_log("could not write ($key) to redis $this->master");
             error_log($e->getMessage());
         }
 	}
@@ -79,7 +79,7 @@ class Redis extends abstractCacher{
             $redis = $this->getMaster();
             $redis->delete($key);
         } catch(\Exception $e){
-            error_log("could not delete from redis $this->master");
+            error_log("could not delete ($key) from redis $this->master");
         }
     }
 

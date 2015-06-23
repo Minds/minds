@@ -226,7 +226,8 @@ class channel extends core\page implements interfaces\page{
 				$entities = \Minds\Core\entities::get(array(
 					'type' => 'activity',
 					'limit' => get_input('limit', 5),
-					'masonry' => false,
+                    'offset' => get_input('offset', ""),
+                    'masonry' => false,
 					'prepend' => elgg_is_logged_in() && $user->guid == elgg_get_logged_in_user_guid() ? $post : '',
 					'list_class' => 'list-newsfeed',
 					'owner_guid' => $user->guid

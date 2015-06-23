@@ -214,7 +214,10 @@ class Call extends core\base{
 	 * @param int/string $key - the key
 	 * @return mixed
 	 */
-	public function removeRow($key){
+    public function removeRow($key){
+        if(!$key){
+            return false;
+        }
 		self::$deletes++;
         if($this->cf)
             return $this->cf->remove($key);

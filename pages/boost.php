@@ -58,7 +58,7 @@ class boost extends core\page implements interfaces\page{
             $type = isset($_POST['type']) ? $_POST['type'] : 'Newsfeed';
             if($_POST['action'] == 'accept' || isset($_POST['accept'])){
                 Core\Boost\Factory::build(ucfirst($type))->accept($_POST['guid'], $_POST['impressions']);
-		    } elseif(isset($_POST['reject'])){
+		    } elseif($_POST['action'] == 'reject' || isset($_POST['reject'])){
 		        echo 1;
                 Core\Boost\Factory::build(ucfirst($type))->reject($_POST['guid']);
                 $entity = \Minds\entities\Factory::build($_POST['guid']);
