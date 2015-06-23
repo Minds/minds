@@ -48,7 +48,7 @@ if (!in_array($size, array('xlarge', 'large', 'medium', 'small', 'tiny', 'master
 }
 
 $data_root = $CONFIG->dataroot;
-
+header("WWW-Serv: 1");
 if (isset($data_root)) {
 
 		$user_path = date('Y/m/d/', $join_date) . $guid;
@@ -75,4 +75,5 @@ if (isset($data_root)) {
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 //elgg_log("Profile icon direct failed.", "WARNING");
 //forward(minds_fetch_gravatar_url($user->getEmail(), $size, 'mm')); 
+//error_log("couldnt find avatar for $guid with joindate:$join_date");
 forward("_graphics/icons/user/default{$size}.gif");
