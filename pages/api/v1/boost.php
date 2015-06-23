@@ -63,7 +63,8 @@ class boost implements interfaces\api{
     	    break;
     	    case "rates":
     	        $response['rate'] = $this->rate;
-    		$response['cap'] = 1000;
+                $response['cap'] = 1000;
+                $response['min'] = 20;
     	    break;
     	}
 
