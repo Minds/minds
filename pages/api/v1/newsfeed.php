@@ -85,7 +85,7 @@ class newsfeed implements interfaces\api{
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
 
-                $cacher = \Minds\Core\cache\Factory::build();
+                $cacher = \Minds\Core\Data\cache\Factory::build();
                 if(!$cacher->get(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){          
                     $cacher->set(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
                     \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
