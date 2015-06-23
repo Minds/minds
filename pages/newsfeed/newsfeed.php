@@ -337,11 +337,13 @@ class newsfeed extends core\page implements interfaces\page{
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
 
                 $cacher = \Minds\Core\Data\cache\Factory::build();
-                if(!$cacher->get(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
-                    $cacher->set(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
+                //if(!$cacher->get(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
+                //    $cacher->set(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
+                if($embeded->owner_guid != Core\session::getLoggedinUser()->guid){
                     \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
                     \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
                 }
+                //}
 
                 $activity = new entities\activity();
                 switch($embeded->type){
