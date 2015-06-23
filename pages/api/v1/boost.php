@@ -66,6 +66,15 @@ class boost implements interfaces\api{
                 $response['cap'] = 1000;
                 $response['min'] = 20;
     	    break;
+            case "p2p":
+                $db = new Core\Data\Call('entities_by_time');
+                $queue_guids = $db->getRow("boost:channel" . Core\session::getLoggedinUser()->guid  . ":review");
+                $entities =  core\entities::get(array('guids'=>$queue_guids));
+                foreach($entities as $guid => $entities){
+                    $entity->points = $queue_guids[$guid];   
+                }
+                $response['boosts'] = factory::exportable($entities, array('points'));
+                break;
     	}
 
         return Factory::response($response);
