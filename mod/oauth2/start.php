@@ -80,7 +80,7 @@ class start extends \ElggPlugin{
         $storage = new storage();
         $server = new \OAuth2\Server($storage);
 
-	if (!$server->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
+	    if (!$server->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
             return false;
         }
         
@@ -89,8 +89,8 @@ class start extends \ElggPlugin{
             session_destroy(); 
 
 
-	$bearer = new \OAuth2\TokenType\Bearer();
-	$access_token = $bearer->getAccessTokenParameter(\OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response());
+	    $bearer = new \OAuth2\TokenType\Bearer();
+	    $access_token = $bearer->getAccessTokenParameter(\OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response());
  
         // Get the token data
         $token = $storage->getAccessToken(get_input('access_token', $access_token));
@@ -98,7 +98,7 @@ class start extends \ElggPlugin{
         static $OAUTH2_LOGGED_IN;
         $user = new \ElggUser($token['user_id']);
         
-        if($user->guid){
+        if($user->guid && !$user->isBanned()){
             $OAUTH2_LOGGED_IN = $user;
             return true;
         }
