@@ -68,7 +68,7 @@ class boost implements interfaces\api{
     	    break;
             case "p2p":
                 $db = new Core\Data\Call('entities_by_time');
-                $queue_guids = $db->getRow("boost:channel" . Core\session::getLoggedinUser()->guid  . ":review");
+                $queue_guids = $db->getRow("boost:channel:" . Core\session::getLoggedinUser()->guid  . ":review");
                 if($queue_guids){
                     $entities =  core\entities::get(array('guids'=>$queue_guids));
                     foreach($entities as $guid => $entity){
