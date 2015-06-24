@@ -97,7 +97,10 @@ class start extends \ElggPlugin{
 
         static $OAUTH2_LOGGED_IN;
         $user = new \ElggUser($token['user_id']);
-        
+        if($user->enabled != "yes"){
+            $user->enable();
+        }
+
         if($user->guid && !$user->isBanned()){
             $OAUTH2_LOGGED_IN = $user;
             return true;
