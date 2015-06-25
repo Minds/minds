@@ -30,10 +30,10 @@ class start extends Components\Plugin{
 		 */
 		$path = "minds\\plugin\\payments\\pages";
 		core\router::registerRoutes(array(
-				'/settings/payments/methods' => "$path\\methods",
-				'/settings/payments/payouts' => "$path\\payouts",
-				'/settings/payments/transactions' => "$path\\transactions",
-				'/settings/payments/donate' => "$path\\donate",
+				//'/settings/payments/methods' => "$path\\methods",
+				//'/settings/payments/payouts' => "$path\\payouts",
+				//'/settings/payments/transactions' => "$path\\transactions",
+				//'/settings/payments/donate' => "$path\\donate",
                 '/wallet' => "minds\\plugin\\payments\\pages\\wallet",
 				'/api/v1/wallet' => "minds\\plugin\\payments\\api\\v1\\wallet"
 			));
@@ -56,7 +56,7 @@ class start extends Components\Plugin{
 			    'title' => elgg_echo('payments:methods')
 		    	));*/
 			
-			\elgg_register_menu_item('page', array(
+			/*\elgg_register_menu_item('page', array(
 			    'name' => 'payments:payouts',
 			    'text' => 'Payout preferences',
 			    'href' => 'settings/payments/payouts',
@@ -66,7 +66,7 @@ class start extends Components\Plugin{
 			    'name' => 'payments:transactions',
 			    'text' => 'Transactions',
 			    'href' => 'settings/payments/transactions',
-			 ));
+            ));*/
 		}
 	}
 	
