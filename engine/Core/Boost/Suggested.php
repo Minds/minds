@@ -66,6 +66,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($to_guid),
                 'object_guid' => $guid,
+                'from'=> 100000000000000519,
                 'title' => $entity->title,
                 'notification_view' => 'boost_accepted',
                 'params' => array('impressions'=>$impressions),
@@ -93,6 +94,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
                     $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($to_guid),
+                'from'=> 100000000000000519,
                 'object_guid' => $guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_rejected',
