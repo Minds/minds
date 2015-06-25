@@ -18,7 +18,7 @@ if (isset($vars['object']) && is_array($vars['object']) && sizeof($vars['object'
 		if(!is_array($list)){ continue; }
 		foreach ($list as $message) {
 			echo "<li class=\"elgg-message elgg-state-$type\">";
-			echo elgg_autop($message);
+			echo elgg_autop(strip_tags($message));
 			echo '</li>';
 		}
 	}
