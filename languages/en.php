@@ -264,7 +264,7 @@ $english = array(
  * Access
  */
 
-	'PRIVATE' => "Private",
+	'PRIVATE' => "Unlisted",
 	'LOGGED_IN' => "Logged in users",
 	'PUBLIC' => "Public",
 	'access:friends:label' => "Friends",
