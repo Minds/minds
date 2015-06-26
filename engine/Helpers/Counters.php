@@ -17,7 +17,7 @@ class Counters{
      * @return void
      */
     public static function increment($entity, $metric, $value = 1){
-        if(is_numeric($entity)){
+        if(is_numeric($entity) || is_string($entity)){
             $guid = $entity;
             //error_log($guid);
         } else {
@@ -44,7 +44,7 @@ class Counters{
      * @return void
      */
     public static function decrement($entity, $metric, $value = 1){
-        if(is_numeric($entity)){
+        if(is_numeric($entity) || is_string($entity)){
             $guid = $entity;
         } else {
             $guid = $entity->guid;
@@ -69,7 +69,7 @@ class Counters{
         $client = Core\Data\Client::build('Cassandra');
         $query = new Core\Data\Cassandra\Prepared\Counters();
         foreach($entities as $entity){
-            if(is_numeric($entity)){
+            if(is_numeric($entity) || is_string($entity)){
                 $prepared[] = $query->update($entity, $metric, $value)->build();
             } elseif($entity->guid) {
 		        $prepared[] = $query->update($entity->guid, $metric, $value)->build();
@@ -95,7 +95,7 @@ class Counters{
      */
     public static function get($entity, $metric, $cache = true){
         $cacher = Core\Data\cache\factory::build();
-        if(is_numeric($entity)){
+        if(is_numeric($entity) || is_string($entity)){
             $guid = $entity;
         } else {
             $guid = $entity->guid;
@@ -127,7 +127,7 @@ class Counters{
      * @return void;
      */
     public static function clear($entity, $metric, $value = 0){
-        if(is_numeric($entity)){
+        if(is_numeric($entity) || is_string($entity)){
             $guid = $entity;
         } else {
             if($entity->guid)

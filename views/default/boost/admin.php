@@ -13,13 +13,14 @@ echo "<p>Showing 12 of (" . $vars['remaining'] . ") boosts</p>";
 echo "<ul class=\"elgg-list x1 boost list-newsfeed\">";
 
 foreach($entities as $entity){
-    echo "<li class=\"elgg-item\" id=\"$entity->guid\">";
+    echo "<li class=\"elgg-item\" id=\"$entity->boost_id\">";
 
     echo elgg_view_entity($entity);
     echo "<p>Impressions: $entity->boost_impressions </p>";
     
     echo "<form method=\"POST\" action=\"" . elgg_get_site_url() . "boost/admin?type=$type\">";
         echo "<input type=\"hidden\" name=\"type\" value=\"$type\">";
+        echo "<input type=\"hidden\" name=\"_id\" value=\"$entity->boost_id\">";
         echo "<input type=\"hidden\" name=\"guid\" value=\"$entity->guid\">";
         echo "<input type=\"hidden\" name=\"impressions\" value=\"$entity->boost_impressions\">";
         echo "<input type=\"submit\" name=\"accept\" value=\"Accept\" class=\"button accept-button\">";
@@ -33,4 +34,4 @@ foreach($entities as $entity){
 echo "</ul>";
 
 ?>
-<div class="load-more-boosts" data-load-next="<?= end($entities)->guid ?>"></div>
+<div class="load-more-boosts" data-load-next="<?= end($entities)->boost_id ?>"></div>

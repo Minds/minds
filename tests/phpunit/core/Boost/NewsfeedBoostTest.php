@@ -20,24 +20,36 @@ class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
 
     public function testCanRequestBoost(){
         $result = Boost\Factory::build('Newsfeed')->boost("1000", 10);
-        $this->assertEquals("boost:newsfeed:review", $result);
-        
-        $db = new Data\Call('entities_by_time'); 
-        $confirm = $db->getRow("boost:newsfeed:review");
-        $this->assertEquals("1000", key($confirm));
-        $this->assertEquals(10, $confirm["1000"]);
+        $this->assertEquals($result['err'], NULL);
     }
     
     public function testCanAcceptBoost(){
        Boost\Factory::build('Newsfeed')->boost("2000", 10);
-       $this->assertEquals("boost:newsfeed", Boost\Factory::build('Newsfeed')->accept("2000", 10));
+       
+       $queue = Boost\Factory::build('Newsfeed')->getReviewQueue(1);
+       foreach($queue as $boost){
+           $result = Boost\Factory::build('Newsfeed')->accept((string) $boost['_id']);
+
+       }
+       $this->assertEquals(0, Boost\Factory::build('Newsfeed')->getReviewQueueCount());
     }
     
     public function testCanRejectBoost(){
-        Boost\Factory::build('Newsfeed')->boost("3000", 10);
-        Boost\Factory::build('Newsfeed')->reject("3000");
-        $db = new Data\Call('entities_by_time'); 
-        $this->assertArrayNotHasKey("3000",  $db->getRow("boost:newsfeed:review"));
+        Boost\Factory::build('Newsfeed')->boost("2000", 10);
+       
+        $queue = Boost\Factory::build('Newsfeed')->getReviewQueue(1);
+        foreach($queue as $boost){
+            $result = Boost\Factory::build('Newsfeed')->reject((string) $boost['_id']);
+        }
+        $this->assertEquals(0, Boost\Factory::build('Newsfeed')->getReviewQueueCount());
+    }
+
+    public function testCanExpireBoost(){
+        Boost\Factory::build('Newsfeed')->boost("2000", 10);
+        for($i=1; $i<10; $i++){
+            Boost\Factory::build('Newsfeed')->getBoost();
+        }
+      //  Boost\Factory::build('Newsfeed')->
     }
 
 }
