@@ -43,11 +43,20 @@
 		
 
         var UA = navigator.userAgent;
-        if(UA.match(/Android/i) != null){
+        if(UA.match(/Android/i) != null ){
 
             $('.banners').show();
+            $('.banners .android-banner').css('display', 'block');
 
         }
+
+        if(UA.match(/iPhone/i) != null ){
+
+             $('.banners').show();
+             $('.banners .ios-banner').css('display', 'block');
+
+        }
+
 
 	//	if(!elgg.is_logged_in() && !$.cookie('promptMobile')){
 		/*	setTimeout(function(){ 
