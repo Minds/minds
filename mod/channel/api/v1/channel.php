@@ -26,7 +26,11 @@ class channel implements interfaces\api{
         
         if($pages[0] == 'me')
             $pages[0] = elgg_get_logged_in_user_guid();
-        
+
+        if(is_string($pages[0]) && !is_numeric($pages[0])){
+            $pages[0] = strtolower($pages[0]);
+        }
+
         $user = new entities\user($pages[0]);
         if(!$user->username){
             return Factory::response(array('status'=>'error', 'message'=>'The user could not be found'));
