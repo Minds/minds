@@ -40,7 +40,7 @@ class analytics extends core\page implements interfaces\page{
             }
 
             $boosts = array(
-                'approved' => count($boost_guids),
+                'approved' => $boost_objs->count(),
                 'impressions' => $boost_impressions,
                 'impressions_met' => $boot_impressions_met
             );
@@ -54,7 +54,7 @@ class analytics extends core\page implements interfaces\page{
             } 
       
             $boosts_suggested = array(
-                'approved' => count($boost_guids),
+                'approved' => $boost_objs->count(),
                 'impressions' => $boost_impressions,
                 'impressions_met' => $boot_impressions_met
             );
