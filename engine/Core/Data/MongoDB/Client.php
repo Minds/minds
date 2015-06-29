@@ -17,6 +17,9 @@ class Client implements Interfaces\ClientInterface{
     
     public function __construct(array $options = array()){
         global $CONFIG;
+
+        if(!class_exists('\MongoClient'))
+            throw new \Exception("Mongo is not installed");
     	
         $servers = isset($CONFIG->mongodb_servers) ?  $CONFIG->mongodb_servers : array('127.0.0.1');
         $servers = implode(',', $servers);

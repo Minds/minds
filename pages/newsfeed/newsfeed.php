@@ -192,12 +192,17 @@ class newsfeed extends core\page implements interfaces\page{
 		), $options));
         
         if($pages[0] == 'network'){
-            $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
-            if($boost['guid']){
-                $boost_guid = $boost['guid'];
-                $boost_object = new \Minds\entities\activity($boost['guid']);
-                $boost_object->boosted = true;
-                array_unshift($entities, $boost_object);
+            try{
+                $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
+                if($boost['guid']){
+                    $boost_guid = $boost['guid'];
+                    $boost_object = new \Minds\entities\activity($boost['guid']);
+                    $boost_object->boosted = true;
+                    array_unshift($entities, $boost_object);
+                    \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
+                    \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                }
+            }catch(\Exception $e){
             }
         }
         

@@ -56,17 +56,20 @@ class newsfeed implements interfaces\api{
      //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
        
         if($pages[0] == 'network'){
-            $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
-            if($boost && $boost['guid']){
-                $boost_guid = $boost['guid'];
-                $boost_object = new entities\activity($boost['guid']);
-                $boost_object->boosted = true;
-                array_unshift($activity, $boost_object);
-                if(get_input('offset')){
-                    //bug: sometimes views weren't being calculated on scroll down
-                    \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
-                    \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+            try{
+                $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
+                if($boost && $boost['guid']){
+                    $boost_guid = $boost['guid'];
+                    $boost_object = new entities\activity($boost['guid']);
+                    $boost_object->boosted = true;
+                    array_unshift($activity, $boost_object);
+                    if(get_input('offset')){
+                        //bug: sometimes views weren't being calculated on scroll down
+                        \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
+                        \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                    }
                 }
+            }catch(\Exception $e){
             }
         }
          
