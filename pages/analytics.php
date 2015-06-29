@@ -33,8 +33,8 @@ class analytics extends core\page implements interfaces\page{
             $mongo = Core\Data\Client::build('MongoDB');
             $boost_impressions = 0;
             $boost_impressions_met = 0;
-            $boosts = $mongo->find("boost", array('state'=>'approved', 'type'=>'newsfeed'));
-            foreach($boosts as $boost){
+            $boost_objs = $mongo->find("boost", array('state'=>'approved', 'type'=>'newsfeed'));
+            foreach($boost_objs as $boost){
                 $boost_impressions = $boost_impressions + $boost['impressions']; 
                 $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false); 
             }
@@ -45,10 +45,10 @@ class analytics extends core\page implements interfaces\page{
                 'impressions_met' => $boot_impressions_met
             );
       
-            $boosts = $mongo->find("boost", array('state'=>'approved', 'type'=>'suggested'));
+            $boost_objs = $mongo->find("boost", array('state'=>'approved', 'type'=>'suggested'));
             $boost_impressions = 0;
             $boost_impressions_met = 0;
-            foreach($boosts as $boost){
+            foreach($boost_objs as $boost){
                 $boost_impressions = $boost_impressions + $boost['impressions'];
                 $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
             } 
