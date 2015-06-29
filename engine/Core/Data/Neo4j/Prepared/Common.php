@@ -248,6 +248,17 @@ class Common implements Interfaces\PreparedInterface{
     }
 
     /**
+     * Get trending users
+     */
+    public function getTrendingUsers($skip = 0){
+        $this->template = "MATCH (user:User)-[r:SUBSCRIBED]-() RETURN user, count(r) as c ORDER BY c DESC, user.guid SKIP {skip} LIMIT 12";
+        $this->values = array(
+            'skip' => (int) $skip,
+        );
+        return $this;
+    }
+
+    /**
      * Create a vote on an object
      * @param int $guid
      * @param string $subtype

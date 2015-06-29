@@ -82,10 +82,16 @@ class trending implements interfaces\api{
                 } 
                 $entities = core\entities::get(array('guids'=>$guids));       
                 break;
+            case 'user':
             default:
-                $opts = array('timespan' => get_input('timespan', 'day'));
-                $trending = new \MindsTrending(array('google'), $opts);
-                $guids = $trending->getList(array('type'=>'user', 'limit'=>12, 'offset'=>get_input('offset', '')));
+                $client = \Minds\Core\Data\Client::build('Neo4j');
+                $response = $client->requestRead($prepared->getTrendingUsers(get_input('offset',0)));
+                $response = $response->getRows();
+
+                $guids = array();
+                foreach($response['user'] as $k => $node){
+                    $guids[] = $node['guid'];
+                } 
                 if(!$guids){
                     return Factory::response(array('status'=>'error', 'message'=>'not found'));
                 }
