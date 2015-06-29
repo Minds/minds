@@ -370,22 +370,21 @@ class newsfeed extends core\page implements interfaces\page{
                             $activity->setRemind($embeded->export())->save();
                      break;
                      default:
-                          $embeded = new entities\activity($embeded);
+                          $mock_embeded = new entities\activity($embeded);
                          /**
                            * The following are actually treated as embeded posts.
                            */
                            switch($embeded->subtype){
                                case 'blog':
-                                    $activity->setRemind($embeded->setTitle($embeded->title)
+                                    $activity->setRemind($mock_embeded->setTitle($embeded->title)
                                         ->setBlurb(elgg_get_excerpt($embeded->description))
                                         ->setURL($embeded->getURL())
                                         ->setThumbnail($embeded->getIconUrl())
-                                        ->setMessage($message)
                                         ->setFromEntity($embeded)
                                         ->export())->save();
                                         break;
                                 case 'video':
-                                     $activity->setRemind($embeded->setCustom('video', array(
+                                     $activity->setRemind($mock_embeded->setCustom('video', array(
                                                 'thumbnail_src'=>$embeded->getIconUrl(),
                                                 'guid'=>$embeded->guid))
                                     ->setTitle($embeded->title)
