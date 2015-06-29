@@ -30,12 +30,13 @@ class analytics extends core\page implements interfaces\page{
 
             $rps = ($requests[0] + $requests[5] + $requests[10]) / (600 + (Helpers\RequestMetrics::buildTS(time()) - time())); 
 
-            $boost_guids = $db->getRow("boost:newsfeed", array('limit'=>1000));
+            $mongo = Core\Data\Client::build('MongoDB');
             $boost_impressions = 0;
             $boost_impressions_met = 0;
-            foreach($boost_guids as $guid => $impressions){
-                $boost_impressions = $boost_impressions + $impressions; 
-                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get($guid, "boost_impressions", false); 
+            $boosts = $mongo->find("boost", array('state'=>'approved', 'type'=>'newsfeed'));
+            foreach($boosts as $boost){
+                $boost_impressions = $boost_impressions + $boost['impressions']; 
+                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false); 
             }
 
             $boosts = array(
@@ -44,12 +45,12 @@ class analytics extends core\page implements interfaces\page{
                 'impressions_met' => $boot_impressions_met
             );
       
-            $boost_guids = $db->getRow("boost:suggested", array('limit'=>1000));
+            $boosts = $mongo->find("boost", array('state'=>'approved', 'type'=>'suggested'));
             $boost_impressions = 0;
             $boost_impressions_met = 0;
-            foreach($boost_guids as $guid => $impressions){
-                $boost_impressions = $boost_impressions + $impressions;
-                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get($guid, "boost_impressions", false);
+            foreach($boosts as $boost){
+                $boost_impressions = $boost_impressions + $boost['impressions'];
+                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
             } 
       
             $boosts_suggested = array(
