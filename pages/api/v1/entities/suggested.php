@@ -130,9 +130,9 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
 	    $options['guids'] = $guids;
  
         $entities = Core\entities::get($options);
-        $boost_guid = Core\Boost\Factory::build("Suggested")->getBoost();
-        if($boost_guid){
-            $boost_guid = $boost_guid;
+        $boost = Core\Boost\Factory::build("Suggested")->getBoost();
+        if($boost && $boost['guid']){
+            $boost_guid = $boost['guid'];
             $boost_object = entities\Factory::build($boost_guid);
             $boost_object->boosted = true;
             array_splice($entities, 2, 0, array($boost_guid => $boost_object));
