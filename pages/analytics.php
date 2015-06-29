@@ -30,30 +30,31 @@ class analytics extends core\page implements interfaces\page{
 
             $rps = ($requests[0] + $requests[5] + $requests[10]) / (600 + (Helpers\RequestMetrics::buildTS(time()) - time())); 
 
-            $boost_guids = $db->getRow("boost:newsfeed", array('limit'=>1000));
+            $mongo = Core\Data\Client::build('MongoDB');
             $boost_impressions = 0;
             $boost_impressions_met = 0;
-            foreach($boost_guids as $guid => $impressions){
-                $boost_impressions = $boost_impressions + $impressions; 
-                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get($guid, "boost_impressions", false); 
+            $boost_objs = $mongo->find("boost", array('state'=>'approved', 'type'=>'newsfeed'));
+            foreach($boost_objs as $boost){
+                $boost_impressions = $boost_impressions + $boost['impressions']; 
+                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false); 
             }
 
             $boosts = array(
-                'approved' => count($boost_guids),
+                'approved' => $boost_objs->count(),
                 'impressions' => $boost_impressions,
                 'impressions_met' => $boot_impressions_met
             );
       
-            $boost_guids = $db->getRow("boost:suggested", array('limit'=>1000));
+            $boost_objs = $mongo->find("boost", array('state'=>'approved', 'type'=>'suggested'));
             $boost_impressions = 0;
             $boost_impressions_met = 0;
-            foreach($boost_guids as $guid => $impressions){
-                $boost_impressions = $boost_impressions + $impressions;
-                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get($guid, "boost_impressions", false);
+            foreach($boost_objs as $boost){
+                $boost_impressions = $boost_impressions + $boost['impressions'];
+                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
             } 
       
             $boosts_suggested = array(
-                'approved' => count($boost_guids),
+                'approved' => $boost_objs->count(),
                 'impressions' => $boost_impressions,
                 'impressions_met' => $boot_impressions_met
             );

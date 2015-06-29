@@ -78,13 +78,13 @@ class Newsfeed implements BoostHandlerInterface{
             //$db->removeAttributes("boost:newsfeed:review", array($guid));
             //clear the counter for boost_impressions
             //Helpers\Counters::clear($guid, "boost_impressions");
-            
+
             $entity = new \Minds\entities\activity($boost['guid']);
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($entity->owner_guid),
                 'object_guid' => $entity->guid,
                 'from'=> 100000000000000519,
-                'object_guid' => $guid,
+                'object_guid' => $entity->guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_accepted',
                 'params' => array('impressions'=>$boost['impressions']),
@@ -133,7 +133,7 @@ class Newsfeed implements BoostHandlerInterface{
         }
         $boosts->limit(15);
         foreach($boosts as $boost){
-            if(in_array($boost, $mem_log)){
+            if(in_array((string)$boost['_id'], $mem_log)){
                 continue; // already seen
             }
 
@@ -159,7 +159,7 @@ class Newsfeed implements BoostHandlerInterface{
                 ));
                 continue; //max count met
             }
-            array_push($mem_log, $boost['_id']);
+            array_push($mem_log, (string) $boost['_id']);
             $cacher->set(Core\session::getLoggedinUser()->guid . ":seenboosts", $mem_log, (12 * 3600));
             return $boost;
         }

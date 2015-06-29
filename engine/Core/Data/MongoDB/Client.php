@@ -34,6 +34,11 @@ class Client implements Interfaces\ClientInterface{
         } catch(\Exception $e){
             error_log("MongoDB Connection: " . $e->getMessage());
         }
+
+        register_shutdown_function(function(){
+            if($this->mongodb)
+                $this->mongodb->close();
+        });
     }
 
     public function client(){
@@ -94,7 +99,9 @@ class Client implements Interfaces\ClientInterface{
             $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
             if(isset($query['_id']) && isset($query['_id']['$gt']))
                 $query['_id']['$gt'] = new MongoId($query['_id']['$gt']);
-    
+            elseif(isset($query['_id']) && is_string($query['_id']))
+                $query['_id'] = new MongoId($query['_id']);
+
             $projections = array_merge($projections, array());
             return $collection->find($query, $projections);
         }catch(\exception $e){
