@@ -84,6 +84,7 @@ class trending implements interfaces\api{
                 break;
             case 'user':
             default:
+                 $prepared = new Core\Data\Neo4j\Prepared\Common();
                 $client = \Minds\Core\Data\Client::build('Neo4j');
                 $response = $client->requestRead($prepared->getTrendingUsers(get_input('offset',0)));
                 $response = $response->getRows();
