@@ -123,7 +123,7 @@ class Newsfeed implements BoostHandlerInterface{
      * @return array
      */
     public function getBoost($offset = ""){
-        $cacher = Core\Data\cache\factory::build();
+        $cacher = Core\Data\cache\factory::build('apcu');
         $mem_log =  $cacher->get(Core\session::getLoggedinUser()->guid . ":seenboosts") ?: array();
           
         $boosts = $this->db->find("boost", array('type'=>'newsfeed', 'state'=>'approved'));
