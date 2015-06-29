@@ -86,7 +86,8 @@ class Suggested implements interfaces\BoostHandlerInterface{
                     'notification_view' => 'boost_accepted',
                     'params' => array('impressions'=>$boost['impressions']),
                     'impressions' => $boost['impressions']
-                    ));
+                ));
+                error_log('notification should have been sent to ' . $entity->guid);
             }
         }
         return $accept;
@@ -126,7 +127,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
     public function getBoost($offset = ""){
         $cacher = Core\Data\cache\factory::build();
 
-        $boosts = $this->db->find("boost", array('type'=>'newsfeed', 'state'=>'approved'));
+        $boosts = $this->db->find("boost", array('type'=>'suggested', 'state'=>'approved'));
         if(!$boosts){
             return null;
         }
