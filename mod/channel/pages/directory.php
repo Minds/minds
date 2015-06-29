@@ -72,24 +72,14 @@ class directory extends core\page implements interfaces\page{
 				break;
 				
 			case 'trending':
-		         $client = \Minds\Core\Data\Client::build('Neo4j');
-                $prepared = new Prepared\Common();
-
-                $response = $client->requestRead($prepared->getTrendingUsers(get_input('offset',0)));
-
-                $response = $response->getRows();
-
-                $users = array();
-                foreach($response['user'] as $k => $node){
-                        //  $users[] = new entities\user(array('guid'=>$node['guid'], 'username'=>$node['username'])); 
-                    $user_guids[] = $node['guid'];
-                }
-
-                if($user_guids){
-                     $options['guids'] = $user_guids;
-                    $content = elgg_list_entities($options);
-                }
-        	
+	       		$opts = array('timespan' => get_input('timespan', 'day'));
+		        $trending = new \MindsTrending(null, $opts);
+				$guids = $trending->getList(array('type'=>'user', 'limit'=>$limit, 'offset'=>(int) $offset));
+				
+				if($guids){
+					$options['guids'] = $guids;
+					$content = elgg_list_entities($options);
+				}
 				break;
 			
 			case 'newest':
