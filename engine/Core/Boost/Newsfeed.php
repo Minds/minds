@@ -133,7 +133,7 @@ class Newsfeed implements BoostHandlerInterface{
         }
         $boosts->limit(15);
         foreach($boosts as $boost){
-            if(in_array($boost['_id'], $mem_log)){
+            if(in_array((string)$boost['_id'], $mem_log)){
                 continue; // already seen
             }
 
@@ -159,7 +159,7 @@ class Newsfeed implements BoostHandlerInterface{
                 ));
                 continue; //max count met
             }
-            array_push($mem_log, $boost['_id']);
+            array_push($mem_log, (string) $boost['_id']);
             $cacher->set(Core\session::getLoggedinUser()->guid . ":seenboosts", $mem_log, (12 * 3600));
             return $boost;
         }
