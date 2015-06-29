@@ -883,7 +883,7 @@ function validate_username($username) {
 	
 	// Blacklist non-alpha chars
 	if (preg_match('/[^a-zA-Z0-9]+/', $username)) {
-	    throw new RegistrationException(elgg_echo('registration:invalidchars'));
+	    throw new RegistrationException(elgg_echo('Invalid username! Alphanumerics only please.'));
 	}
 
 	// Blacklist for bad characters (partially nicked from mediawiki)
