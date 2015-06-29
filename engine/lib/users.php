@@ -880,6 +880,11 @@ function validate_username($username) {
 		$msg = elgg_echo('registration:usernametoolong', array(128));
 		throw new RegistrationException($msg);
 	}
+	
+	// Blacklist non-alpha chars
+	if (preg_match('/[^a-zA-Z0-9]+/', $username)) {
+	    throw new RegistrationException(elgg_echo('registration:invalidchars'));
+	}
 
 	// Blacklist for bad characters (partially nicked from mediawiki)
 	$blacklist = '/[' .
