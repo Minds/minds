@@ -133,7 +133,7 @@ class Newsfeed implements BoostHandlerInterface{
         }
         $boosts->limit(15);
         foreach($boosts as $boost){
-            if(in_array($boost, $mem_log)){
+            if(in_array($boost['_id'], $mem_log)){
                 continue; // already seen
             }
 
