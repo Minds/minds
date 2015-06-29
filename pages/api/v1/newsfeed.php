@@ -62,6 +62,11 @@ class newsfeed implements interfaces\api{
                 $boost_object = new entities\activity($boost['guid']);
                 $boost_object->boosted = true;
                 array_unshift($activity, $boost_object);
+                if(get_input('offset')){
+                    //bug: sometimes views weren't being calculated on scroll down
+                    \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
+                    \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                }
             }
         }
          

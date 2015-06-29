@@ -83,6 +83,8 @@ class Newsfeed implements BoostHandlerInterface{
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($entity->owner_guid),
                 'object_guid' => $entity->guid,
+                'from'=> 100000000000000519,
+                'object_guid' => $guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_accepted',
                 'params' => array('impressions'=>$boost['impressions']),
@@ -108,6 +110,7 @@ class Newsfeed implements BoostHandlerInterface{
         $entity = new \Minds\entities\activity($boost['guid']);
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
             'to'=>array($entity->owner_guid),
+            'from'=> 100000000000000519,
             'object_guid' => $entity->guid,
             'title' => $entity->title,
             'notification_view' => 'boost_rejected',
