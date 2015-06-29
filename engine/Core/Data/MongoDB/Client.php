@@ -34,6 +34,11 @@ class Client implements Interfaces\ClientInterface{
         } catch(\Exception $e){
             error_log("MongoDB Connection: " . $e->getMessage());
         }
+
+        register_shutdown_function(function(){
+            if($this->mongodb)
+                $this->mongodb->close();
+        });
     }
 
     public function client(){
