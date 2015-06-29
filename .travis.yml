@@ -9,6 +9,8 @@ php:
 
 services:
 #  - cassandra
+  - mongodb
+  - redis
   - elasticsearch
   - rabbitmq
 

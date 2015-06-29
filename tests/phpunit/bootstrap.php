@@ -35,9 +35,9 @@ try{
     $CONFIG->cassandra = (object) array( 'servers'=> array('localhost'), 'keyspace'=>'minds_test_phpcassa', 'cql_servers'=> array('localhost'));
     
 	$db = new Minds\Core\Data\Call(null, 'minds_test_phpcassa', array('localhost'));
-	if($db->keyspaceExists()){
+	//if($db->keyspaceExists()){
 		$db->dropKeyspace(true);
-	}
+	//}
 	$db->createKeyspace();
 	$db->installSchema();
 	
@@ -52,6 +52,8 @@ try{
 	// bootstrap site info
 	$CONFIG->site_guid = $site_guid;
 	$CONFIG->site = $site;
+    
+    $CONFIG->mongodb_db = 'unittest';
     
     //for testing email encryption/decryption
     $CONFIG->encryptionKeys = array(

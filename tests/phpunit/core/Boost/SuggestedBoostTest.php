@@ -3,7 +3,7 @@
 use Minds\Core\Data;
 use Minds\Core\Boost;
 
-class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
+class SuggestedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
     
     /**
      * Run before each test
@@ -13,9 +13,9 @@ class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
     }
 
     public function testCanLoadFromFactory() {
-        $newsfeed = Boost\Factory::build('Newsfeed');
-        $this->assertInstanceOf('\Minds\Core\Boost\Newsfeed', $newsfeed);
-        $this->assertInstanceOf('\Minds\interfaces\BoostHandlerInterface', $newsfeed);
+        $suggested = Boost\Factory::build('Suggested');
+        $this->assertInstanceOf('\Minds\Core\Boost\Suggested', $suggested);
+        $this->assertInstanceOf('\Minds\interfaces\BoostHandlerInterface', $suggested);
     }
 
     public function testCanRequestBoost(){
@@ -24,7 +24,7 @@ class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
             ->method('insert')
             ->will($this->returnValue(array('err'=>NULL)));
 
-        $result = Boost\Factory::build('Newsfeed', array(), $db)->boost("1000", 10);
+        $result = Boost\Factory::build('Suggested', array(), $db)->boost("1000", 10);
         $this->assertEquals($result['err'], NULL);
     }
     
@@ -42,7 +42,7 @@ class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
             ->method('find')
             ->will($this->returnValue($collection_mock));
             
-        $result = Boost\Factory::build('Newsfeed', array(), $db)->accept("abc123");
+        $result = Boost\Factory::build('Suggested', array(), $db)->accept("abc123");
         $this->assertEquals($result['err'], NULL);
     }
     
@@ -59,7 +59,7 @@ class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
             ->method('find')
             ->will($this->returnValue($collection_mock));
             
-        $result = Boost\Factory::build('Newsfeed', array(), $db)->reject("abc123");
+        $result = Boost\Factory::build('Suggested', array(), $db)->reject("abc123");
         $this->assertEquals($result['err'], NULL);
     }
 
@@ -76,7 +76,7 @@ class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
             ->with("boost", array('_id' => "abc123"))
             ->will($this->returnValue(array('err'=>NULL)));
             
-        $result = Boost\Factory::build('Newsfeed', array(), $db)->getBoost();
+        $result = Boost\Factory::build('Suggested', array(), $db)->getBoost();
     }
 
 }

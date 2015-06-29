@@ -84,10 +84,15 @@ class Call extends core\base{
 				$this->createCF($cf, $indexes);
 			}
 		}
-        
-        $client = Client::build('Cassandra');
-        $query = new Cassandra\Prepared\System();
-        $client->request($query->createTable("counters", array("guid"=>"varchar", "metric"=>"varchar", "count"=>"counter"), array("guid", "metric")));
+
+        try{
+            $client = Client::build('Cassandra');
+            $query = new Cassandra\Prepared\System();
+            $client->request($query->createTable("counters", array("guid"=>"varchar", "metric"=>"varchar", "count"=>"counter"), array("guid", "metric")));
+        } catch (\Exception $e){
+            echo $e->getMessage();
+            exit;
+        }
 	}
 	
 	/**

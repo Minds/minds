@@ -46,6 +46,10 @@ if($activity->title){
 echo elgg_view_image_block($icon, $header . $body, array(
 		'class' => 'inner'
 	));
+    
+if($activity->boosted){
+    echo "<span class=\"boosted\">Boosted</span>";    
+}
 
 //a bit of a hack until we remove old style elgg views
 if($activity->entity_guid){

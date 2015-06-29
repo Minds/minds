@@ -48,4 +48,11 @@ function _minds_autoload($class) {
 		return true;
 	}
 
+    //test have a different path also
+    $file = str_replace('/engine/tests/', '/tests/', $file);
+    if(file_exists($file)){
+        require_once $file;
+        return true;
+    }
+
 }

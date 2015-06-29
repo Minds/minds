@@ -190,6 +190,22 @@ class newsfeed extends core\page implements interfaces\page{
             'limit' => get_input('limit', 5),
             'offset' => get_input('offset','')
 		), $options));
+        
+        if($pages[0] == 'network'){
+            try{
+                $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
+                if($boost['guid']){
+                    $boost_guid = $boost['guid'];
+                    $boost_object = new \Minds\entities\activity($boost['guid']);
+                    $boost_object->boosted = true;
+                    array_unshift($entities, $boost_object);
+                    \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
+                    \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                }
+            }catch(\Exception $e){
+            }
+        }
+        
 		if(is_array($entities) && count($entities) == 1){
             $activity = reset($entities);
             global $CONFIG;

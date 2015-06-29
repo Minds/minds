@@ -123,7 +123,7 @@
                           }
                           
                           var list =  $(data).filter('.boost');
-                          list.find('li:first').remove();
+                         // list.find('li:first').remove();
                           $('.load-more-boosts').attr('data-load-next', list.find('> li:last').attr('id'));
                           $(list).contents().appendTo('.boost');
                     });

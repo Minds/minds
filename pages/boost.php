@@ -12,25 +12,33 @@ class boost extends core\page implements interfaces\page{
 	public function get($pages){
 		
         if($pages[0] == 'admin'){
-            
-            $db = new Core\Data\Call('entities_by_time');
-            $db->insert("boost:newsfeed:review", array("459748446950133766"=>10, "459748420802842637"=>10, "449242984400031744"=>10, "449242823019991040"=>10, "449239562749743104"=>10, "449239410223878144"=>10, "449239191503507456"=>10));
-          
+    
             if(!elgg_is_admin_logged_in())
                 return $this->forward("/");
-            
+
             $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
             $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
 
             $type = isset($_GET['type']) ? $_GET['type'] : 'Newsfeed';            
-            $guids = Core\Boost\Factory::build(ucfirst($type))->getReviewQueue($limit, $offset);
+            $queue = Core\Boost\Factory::build(ucfirst($type))->getReviewQueue($limit, $offset);
+            $count =  Core\Boost\Factory::build(ucfirst($type))->getReviewQueueCount();
+            $guids = array();
+            foreach($queue as $data){
+                $_id = (string) $data['_id'];
+                $guids[$_id] = $data['guid'];
+            }
             
             if($guids){
-                $entities = Core\entities::get(array('guids' => array_keys($guids)));
-                $db=new Core\Data\Call('entities_by_time');
-                $count = $db->countRow("boost:".strtolower($type).":review");
+                $entities = Core\entities::get(array('guids' => $guids));
+                $db = new Core\Data\Call('entities_by_time');
+
                 foreach($entities as $k => $entity){
-                    $entities[$k]->boost_impressions = $guids[$entity->guid];
+                    foreach($queue as $data){
+                        if($data['guid'] == $entity->guid){
+                            $entities[$k]->boost_impressions = $data['impressions'];
+                            $entities[$k]->boost_id = (string) $data['_id'];
+                        }
+                    }
                 }
                 $content = elgg_view('boost/admin', array('entities' => $entities, 'remaining'=>$count));
             } else {
@@ -57,10 +65,10 @@ class boost extends core\page implements interfaces\page{
         if($pages[0] == 'admin'){
             $type = isset($_POST['type']) ? $_POST['type'] : 'Newsfeed';
             if($_POST['action'] == 'accept' || isset($_POST['accept'])){
-                Core\Boost\Factory::build(ucfirst($type))->accept($_POST['guid'], $_POST['impressions']);
+                Core\Boost\Factory::build(ucfirst($type))->accept($_POST['_id']);
 		    } elseif($_POST['action'] == 'reject' || isset($_POST['reject'])){
 		        echo 1;
-                Core\Boost\Factory::build(ucfirst($type))->reject($_POST['guid']);
+                Core\Boost\Factory::build(ucfirst($type))->reject($_POST['_id']);
                 $entity = \Minds\entities\Factory::build($_POST['guid']);
                 if($entity->type == "user"){
                     $user_guid = $entity->guid;
