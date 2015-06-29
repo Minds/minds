@@ -2,7 +2,9 @@
 
 $user = elgg_get_logged_in_user_entity();
 
-echo '<p> Contact </p>';
+echo '<h3> Contact </h3>';
+
+echo '<p><i>Please report all security related matters to <b>security@minds.com</b>, using GnuPG if possible.</i></p>';
  
 echo elgg_view('input/text', array(
 	'name' => 'name',
