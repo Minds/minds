@@ -56,10 +56,10 @@ class newsfeed implements interfaces\api{
      //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
        
         if($pages[0] == 'network'){
-            $boost_guid = Core\Boost\Factory::build("Newsfeed")->getBoost();
-            if($boost_guid){
-                $boost_guid = $boost_guid;
-                $boost_object = new entities\activity($boost_guid);
+            $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
+            if($boost && $boost['guid']){
+                $boost_guid = $boost['guid'];
+                $boost_object = new entities\activity($boost['guid']);
                 $boost_object->boosted = true;
                 array_unshift($activity, $boost_object);
             }

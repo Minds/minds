@@ -596,4 +596,11 @@
 	background:#FFF;
 	margin:16px;
 }
-
+.list-newsfeed li span.boosted{
+    padding: 4px 16px;
+    font-weight: bold;
+    color: #4690D6;
+    /* float: right; */
+    display: block;
+    text-align: right;
+}

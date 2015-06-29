@@ -14,11 +14,11 @@ class Factory{
      * @param array $options (optional)
      * @return BoostHandlerInterface
      */
-    public static function build($handler, $options = array()){
+    public static function build($handler, $options = array(), $db = NULL){
         $handler = ucfirst($handler);
         $handler = "Minds\\Core\\Boost\\$handler";
         if(class_exists($handler)){
-            $class = new $handler($options);
+            $class = new $handler($options, $db);
             if($class instanceof interfaces\BoostHandlerInterface){
                 return $class;
             }

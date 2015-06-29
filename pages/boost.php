@@ -15,10 +15,7 @@ class boost extends core\page implements interfaces\page{
     
             if(!elgg_is_admin_logged_in())
                 return $this->forward("/");
-            
-            $boosts = Core\Boost\Factory::build("Newsfeed")->getBoost();
-            var_dump($boosts); exit;
-            
+
             $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
             $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
 

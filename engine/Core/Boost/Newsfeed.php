@@ -9,7 +9,17 @@ use Minds\Helpers;
  * Newsfeed Boost handler
  */
 class Newsfeed implements BoostHandlerInterface{
-	
+
+    private $db;    
+
+    public function __construct($options = array(), Data\Interfaces\ClientInterface $db = NULL){
+        if($db){
+            $this->db = $db;
+        } else {
+            $this->db = Data\Client::build('MongoDB');
+        }
+    }
+ 
     /**
      * Boost an entity
      * @param object/int $entity - the entity to boost
@@ -22,8 +32,7 @@ class Newsfeed implements BoostHandlerInterface{
         } else {
             $guid = $entity;
         }
-        $db = Data\Client::build('MongoDB');
-        return $db->insert("boost", array('guid'=>$guid, 'impressions'=>$impressions, 'state' => 'review', 'type'=> 'newsfeed'));
+        return $this->db->insert("boost", array('guid'=>$guid, 'impressions'=>$impressions, 'state' => 'review', 'type'=> 'newsfeed'));
     }
     
      /**
@@ -33,12 +42,11 @@ class Newsfeed implements BoostHandlerInterface{
      * @return array
      */
     public function getReviewQueue($limit, $offset = ""){
-        $db = Data\Client::build('MongoDB');
         $query = array('state'=>'review', 'type'=>'newsfeed');
         if($offset){
             $query['_id'] = array('$gt'=>$offset);
         }
-        $boosts = $db->find("boost", $query);
+        $boosts = $this->db->find("boost", $query);
         if($boosts)
             $boosts->limit($limit);
         return $boosts;
@@ -49,9 +57,8 @@ class Newsfeed implements BoostHandlerInterface{
      * @return int
      */
     public function getReviewQueueCount(){
-        $db = Data\Client::build('MongoDB');
         $query = array('state'=>'review', 'type'=>'newsfeed');
-        $count = $db->count("boost", $query);
+        $count = $this->db->count("boost", $query);
         return $count;
     }
     
@@ -62,11 +69,10 @@ class Newsfeed implements BoostHandlerInterface{
      * @return boolean
      */
     public function accept($_id, $impressions = 0){
-        $db = Data\Client::build('MongoDB');
-        $boost_data= $db->find("boost", array('_id' => $_id));
+        $boost_data= $this->db->find("boost", array('_id' => $_id));
         $boost_data->next();
         $boost = $boost_data->current();
-        $accept = $db->update("boost", array('_id' => $_id), array('state'=>'approved'));
+        $accept = $this->db->update("boost", array('_id' => $_id), array('state'=>'approved'));
         if($accept){
             //remove from review
             //$db->removeAttributes("boost:newsfeed:review", array($guid));
@@ -79,8 +85,8 @@ class Newsfeed implements BoostHandlerInterface{
                 'object_guid' => $entity->guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_accepted',
-                'params' => array('impressions'=>$impressions),
-                'impressions' => $impressions
+                'params' => array('impressions'=>$boost['impressions']),
+                'impressions' => $boost['impressions']
                 ));
         }
         return $accept;
@@ -92,14 +98,12 @@ class Newsfeed implements BoostHandlerInterface{
      * @return boolean
      */
     public function reject($_id){
-        $db = Data\Client::build('MongoDB');
-       
 
-        $boost_data= $db->find("boost", array('_id' => $_id));
+        $boost_data= $this->db->find("boost", array('_id' => $_id));
         $boost_data->next();
         $boost = $boost_data->current();
         
-        $db->remove("boost", array('_id'=>$_id));
+        $this->db->remove("boost", array('_id'=>$_id));
         
         $entity = new \Minds\entities\activity($boost['guid']);
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
@@ -117,10 +121,9 @@ class Newsfeed implements BoostHandlerInterface{
      */
     public function getBoost($offset = ""){
         $cacher = Core\Data\cache\factory::build();
-        $db = Data\Client::build('MongoDB');
         $mem_log =  $cacher->get(Core\session::getLoggedinUser()->guid . ":seenboosts") ?: array();
           
-        $boosts = $db->find("boost", array('type'=>'newsfeed', 'state'=>'approved'));
+        $boosts = $this->db->find("boost", array('type'=>'newsfeed', 'state'=>'approved'));
         if(!$boosts){
             return null;
         }
@@ -136,9 +139,10 @@ class Newsfeed implements BoostHandlerInterface{
             //get the current impressions count for this boost
             Helpers\Counters::increment(0, "boost_impressions", 1);
             $count = Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false); 
+
             if($count > $impressions){
                 //remove from boost queue
-                $db->remove("boost", array('_id' => $boost['_id']));
+                $this->db->remove("boost", array('_id' => $boost['_id']));
                 $entity = new \Minds\entities\activity($boost['guid']);
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($entity->owner_guid),
