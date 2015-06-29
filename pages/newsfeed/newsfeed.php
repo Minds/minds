@@ -371,6 +371,8 @@ class newsfeed extends core\page implements interfaces\page{
                      break;
                      default:
                           $mock_embeded = new entities\activity($embeded);
+                          $mock_embeded->subtype = '';
+                          $mock_embeded->type = 'activity';
                          /**
                            * The following are actually treated as embeded posts.
                            */
