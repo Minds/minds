@@ -28,7 +28,8 @@ class twofactor extends core\page implements interfaces\page{
 	}
 	
 	public function post($pages){
-		
+	
+        invalidate_cache_for_entity(\elgg_get_logged_in_user_guid());	
 		$user = \elgg_get_logged_in_user_entity();
 		$twofactor = new lib\twofactor();
 		

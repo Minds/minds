@@ -191,6 +191,7 @@ class ElggUser extends ElggEntity
 		//update our session, if it is us logged in
 		if(elgg_is_logged_in() && $this->guid == elgg_get_logged_in_user_guid()){
 			$_SESSION['user'] = $this;
+            session_regenerate_id(true);
 		}
 
         try{
