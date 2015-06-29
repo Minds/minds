@@ -125,11 +125,12 @@ function elgg_set_user_name() {
 	}
 
 	if (($user) && ($user->canEdit()) && ($name)) {
-		if ($name != $user->name) {
+	
+    	if ($name != $user->name) {
 			$user->name = $name;
-			if ($user->save()) {
+            if ($guid = $user->save()) {
 				system_message(elgg_echo('user:name:success'));
-				return true;
+                return true;
 			} else {
 				register_error(elgg_echo('user:name:fail'));
 			}
@@ -209,8 +210,7 @@ function elgg_set_user_email() {
 
 	if ($user) {
 		if (strcmp($email, $user->email) != 0) {
-			if (!get_user_by_email($email)) {
-				if ($user->email != $email) {
+				if ($user->getEmail() != $email) {
 
 					$user->setEmail($email);
 					if ($user->save()) {
@@ -220,9 +220,6 @@ function elgg_set_user_email() {
 						register_error(elgg_echo('email:save:fail'));
 					}
 				}
-			} else {
-				register_error(elgg_echo('registration:dupeemail'));
-			}
 		} else {
 			// no change
 			return null;
