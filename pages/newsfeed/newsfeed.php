@@ -365,30 +365,28 @@ class newsfeed extends core\page implements interfaces\page{
                             $activity->setRemind($embeded->export())->save();
                      break;
                      default:
+                          $embeded = new entities\activity($embeded);
                          /**
                            * The following are actually treated as embeded posts.
                            */
                            switch($embeded->subtype){
                                case 'blog':
-                                   $message = false;
-                                    if($embeded->owner_guid != elgg_get_logged_in_user_guid())
-                                        $message = 'via @' . $embeded->ownerObj['username'];
-                                        $activity->setTitle($embeded->title)
+                                    $activity->setRemind($embeded->setTitle($embeded->title)
                                         ->setBlurb(elgg_get_excerpt($embeded->description))
                                         ->setURL($embeded->getURL())
                                         ->setThumbnail($embeded->getIconUrl())
                                         ->setMessage($message)
                                         ->setFromEntity($embeded)
-                                        ->save();
+                                        ->export())->save();
                                         break;
                                 case 'video':
-                                    $activity->setCustom('video', array(
+                                     $activity->setRemind($embeded->setCustom('video', array(
                                                 'thumbnail_src'=>$embeded->getIconUrl(),
                                                 'guid'=>$embeded->guid))
                                     ->setTitle($embeded->title)
                                     ->setBlurb($embeded->description)
                                     ->setFromEntity($embeded)
-                                    ->save();
+                                    ->export())->save();
                                 break;
                             }
                 }
