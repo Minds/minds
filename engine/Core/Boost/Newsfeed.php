@@ -124,6 +124,7 @@ class Newsfeed implements BoostHandlerInterface{
         $mem_log =  $cacher->get(Core\session::getLoggedinUser()->guid . ":seenboosts") ?: array();
           
         $boosts = $this->db->find("boost", array('type'=>'newsfeed', 'state'=>'approved'));
+
         if(!$boosts){
             return null;
         }
@@ -150,8 +151,8 @@ class Newsfeed implements BoostHandlerInterface{
                 'object_guid' => $entity->guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_completed',
-                'params' => array('impressions'=>$impressions),
-                'impressions' => $impressions
+                'params' => array('impressions'=>$boost['impressions']),
+                'impressions' => $boost['impressions']
                 ));
                 continue; //max count met
             }

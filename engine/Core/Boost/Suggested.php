@@ -33,7 +33,6 @@ class Suggested implements interfaces\BoostHandlerInterface{
         } else {
             $guid = $entity;
         }
-        $db = new Data\Call('entities_by_time');
         return $this->db->insert("boost", array('guid'=>$guid, 'impressions'=>$impressions, 'state' => 'review', 'type'=> 'suggested'));
     }
     
@@ -77,15 +76,17 @@ class Suggested implements interfaces\BoostHandlerInterface{
         $accept = $this->db->update("boost", array('_id' => $_id), array('state'=>'approved'));
         if($accept){
             $entity = \Minds\entities\Factory::build($boost['guid']);
-            $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
-            Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                'to'=>array($to_guid),
-                'object_guid' => $entity->guid,
-                'title' => $entity->title,
-                'notification_view' => 'boost_accepted',
-                'params' => array('impressions'=>$boost['impressions']),
-                'impressions' => $boost['impressions']
-                ));
+            if($entity){
+                $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
+                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                    'to'=>array($to_guid),
+                    'object_guid' => $entity->guid,
+                    'title' => $entity->title,
+                    'notification_view' => 'boost_accepted',
+                    'params' => array('impressions'=>$boost['impressions']),
+                    'impressions' => $boost['impressions']
+                    ));
+            }
         }
         return $accept;
     }
@@ -103,13 +104,15 @@ class Suggested implements interfaces\BoostHandlerInterface{
         $this->db->remove("boost", array('_id'=>$_id));
 
         $entity = \Minds\entities\Factory::build($boost['guid']);
-        $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-            'to'=>array($to_guid),
-            'object_guid' => $entity->guid,
-            'title' => $entity->title,
-            'notification_view' => 'boost_rejected',
-            ));
+        if($entity){
+            $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
+            Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                'to'=>array($to_guid),
+                'object_guid' => $entity->guid,
+                'title' => $entity->title,
+                'notification_view' => 'boost_rejected',
+                ));
+        }
         return true;//need to double check somehow..
     }
     
@@ -127,7 +130,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
         $boosts->limit(15);
         
         $boost_guids = array();
-        foreach($boost as $boost){
+        foreach($boosts as $boost){
             $boost_guids[] = $boost['guid'];
         }
 
@@ -149,7 +152,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
             if($count > $impressions){
                 //remove from boost queue
                 $this->db->remove("boost", array('_id' => $boost['_id']));
-                $entity = new \Minds\entities\activity($boost['guid']);
+                $entity = \Minds\entities\Factory::build($boost['guid']);
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($entity->owner_guid),
                 'from' => 100000000000000519,
