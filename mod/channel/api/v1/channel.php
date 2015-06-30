@@ -184,9 +184,10 @@ class channel implements interfaces\api{
                 if(!$owner->canEdit()){
                     return Factory::response(array('status'=>'error'));
                 }
+                $update = array();
                 foreach(array('name', 'website', 'briefdescription', 'gender', 'dob', 'city', 'coordinates') as $field){
                     if(isset($_POST[$field]))
-                        $owner->$field = $_POST[$field];
+                        $update[$field] = $_POST[$field];
                 }
                 if(isset($_POST['coordinates'])){
                     //update neo4j with our coordinates
@@ -198,7 +199,8 @@ class channel implements interfaces\api{
                     error_log(print_r($id, true));
                     Core\Data\Client::build('Neo4j')->client()->geoLink($id);
                 }
-                $owner->save();
+                $db = new Core\Data\Call('entities');
+                $db->insert($owner->guid, $update);
        }
         
        return Factory::response(array());
