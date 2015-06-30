@@ -33,6 +33,6 @@ try {
 		$ia = elgg_set_ignore_access($ia);
 	}*/
     
-} catch (Exception $ex) {
+} catch (\Exception $ex) {
     register_error($ex->getMessage());
 }

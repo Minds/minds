@@ -32,7 +32,7 @@ try {
 	} else
 	    throw new Exception("Could not get user...");
     }*/
-} catch (Exception $ex) {
+} catch (\Exception $ex) {
     error_log("Bitcoin: " . $ex->getMessage());
     register_error($ex->getMessage());
 }

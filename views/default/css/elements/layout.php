@@ -390,6 +390,7 @@
 
 .elgg-footer{
 	margin-right:350px;
+	clear: both;
 }
 .elgg-footer > .elgg-list{
 	clear:none;

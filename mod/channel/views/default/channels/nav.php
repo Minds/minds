@@ -51,6 +51,9 @@ if(!elgg_is_logged_in()){
 	unset($tabs['subscribers']);
 	unset($tabs['subscriptions']);
 }
+if (!elgg_is_admin_logged_in()) {
+    unset($tabs['newest']);
+}
 
 if(!Minds\Core\plugins::isActive('analytics'))
 	unset($tabs['trending']);
