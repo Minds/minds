@@ -35,12 +35,12 @@ elgg.autocomplete.init = function() {
 								
 							guids.push(item.guid);
 							if(item.type == 'user'){
-								avatar = '<img src="'+elgg.get_site_url() + 'icon/'+item.guid+'/tiny" class="tiny-icon"/>';
-								div = avatar + item.name + '<span class="subtype">user</span>';
-								div += '<div class="subtitle">'+ item.username +'</div>';
+								avatar = '<img src="'+elgg.get_site_url() + 'icon/'+$(item.guid).text()+'/tiny" class="tiny-icon"/>';
+								div = avatar + $(item.name).text() + '<span class="subtype">user</span>';
+								div += '<div class="subtitle">'+ $(item.username).text() +'</div>';
 							} else {
 								div = item.title + '<span class="subtype">' + item.subtype +'</span>';
-								div += '<div class="subtitle">'+item.ownerObj.name+'</div>';
+								div += '<div class="subtitle">'+$(item.ownerObj.name).text()+'</div>';
 							}
 							
 							result.push({
