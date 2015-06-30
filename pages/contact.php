@@ -33,6 +33,11 @@ class contact extends core\page implements interfaces\page{
 			return false;
 		}
 
+        if(!$_POST['message']){
+            \register_error('sorry, you have to enter a message');
+            return $this->get($pages);
+        }
+
 		$contact = array($_POST['email'],'info@minds.com', elgg_get_site_entity()->site);
 		\elgg_send_email('emails@minds.com', $contact, 'New Email from ' . $_POST['name'] . ' ' . $_POST['email'], $_POST['message']);
 		
