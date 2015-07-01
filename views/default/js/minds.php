@@ -42,20 +42,30 @@
 	 	});
 		
 
-        var UA = navigator.userAgent;
-        if(UA.match(/Android/i) != null ){
+        if(!$.cookie('acted_banner')){
+            var UA = navigator.userAgent;
+            if(UA.match(/Android/i) != null ){
 
-            $('.banners').show();
-            $('.banners .android-banner').css('display', 'block');
+                $('.banners').show();
+                $('.banners .android-banner').css('display', 'block');
 
+            }
+
+            if(UA.match(/iPhone/i) != null ){
+
+                 $('.banners').show();
+                 $('.banners .ios-banner').css('display', 'block');
+
+            }
         }
-
-        if(UA.match(/iPhone/i) != null ){
-
-             $('.banners').show();
-             $('.banners .ios-banner').css('display', 'block');
-
-        }
+        $('.banners .exit').on('click', function(e){
+            e.preventDefault();
+            $.cookie('acted_banner', 'yes', { expires: 30, path: '/' });
+            $('.banners').remove();
+        });
+         $('.banners a').on('click', function(e){
+             $.cookie('acted_banner', 'yes', { expires: 30, path: '/' });
+         });
 
 
 	//	if(!elgg.is_logged_in() && !$.cookie('promptMobile')){

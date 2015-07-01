@@ -1,6 +1,9 @@
 <div class="banners">
    <a class="banner android-banner" href="https://play.google.com/store/apps/details?id=com.minds.mobile" target="_blank">
       <div class="inner">
+            <div class="exit">
+                X
+             </div>
           <div class="icon">
             <img src="<?= elgg_get_site_url() ?>_graphics/icon.png" >
           </div>
@@ -15,6 +18,9 @@
     </a>
     <a class="banner ios-banner" href="https://geo.itunes.apple.com/us/app/minds-com/id961771928?mt=8&uo=6" target="_blank">
       <div class="inner">
+        <div class="exit">
+                        X
+          </div>
           <div class="icon">
             <img src="<?= elgg_get_site_url() ?>_graphics/icon.png" >
           </div>
