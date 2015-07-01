@@ -301,8 +301,9 @@ function groups_handle_invitations_page() {
 		'header' => elgg_view_title($title) . $nav,
 		'content' => $content,
 		'title' => $title,
+        'class' => 'groups'
 	);
-	$body = elgg_view_layout('one_sidebar', $params);
+	$body = elgg_view_layout('one_column', $params);
 
 	echo elgg_view_page($title, $body);
 }
