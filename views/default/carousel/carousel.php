@@ -78,7 +78,7 @@ $(document).ready(function() {
             $color =  htmlspecialchars($item->color, ENT_QUOTES);
             $shadow = htmlspecialchars($item->shadow, ENT_QUOTES);
 			if($item->title)
-				echo "<div class=\"carousel-caption\" style=\"color:$color\"><div class=\"inner\" style=\"background:$shadow\"><h3>$item->title</h3></div></div>";
+				echo "<div class=\"carousel-caption\" style=\"color:$color\"><div class=\"inner\" style=\"background:$shadow\"><h3 style=\"color:$color\">$item->title</h3></div></div>";
 	
 			echo '</a>';
 			$i++;
