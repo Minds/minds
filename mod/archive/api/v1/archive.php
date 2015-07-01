@@ -8,6 +8,7 @@
 namespace minds\plugin\archive\api\v1;
 
 use Minds\Core;
+use Minds\Helpers;
 use minds\interfaces;
 use minds\plugin\archive\entities;
 use Minds\Api\Factory;
@@ -25,6 +26,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 
         if(is_numeric($pages[0])){
             $entity = core\entities::build(new \minds\entities\entity($pages[0]));
+            Helpers\Counters::increment($pages[0], 'plays');
             if(is_string($pages[1]) && $pages[1] == 'play'){
                 //echo $entity->getSourceUrl('360.mp4'); exit;
                 Header( "HTTP/1.1 301 Moved Permanently" ); 

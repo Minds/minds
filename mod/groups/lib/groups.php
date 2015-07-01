@@ -578,7 +578,7 @@ function groups_register_profile_buttons($group) {
 		}
 	}
 
-	if($group->canEdit()){
+	if($group->canEdit() && elgg_is_admin_logged_in()){
 		$url = elgg_get_site_url() . "action/minds/feature?guid={$group->getGUID()}";
                 $url = elgg_add_action_tokens_to_url($url);
 		$actions[$url] = $group->featured_id ? 'un-feature' : 'feature';
