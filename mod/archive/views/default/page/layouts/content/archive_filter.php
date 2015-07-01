@@ -35,14 +35,14 @@ if ($context) {
                         'section'=>'filter'
 		),		
 		
-//		'trending' =>  array(
-//                        'text' => elgg_echo('trending') . elgg_view_menu('trending'),
-//                        'href' => "$context/trending?filter=$type_context",
-//                        'selected' => ($filter_context == 'trending'),
-//                        'priority' => 150,
-//                        'section'=>'filter',
-//                        'item_class'=>'elgg-menu-item-hover-over'
-//                ),
+		'trending' =>  array(
+                        'text' => elgg_echo('trending') . elgg_view_menu('trending'),
+                        'href' => "$context/trending?filter=$type_context",
+                        'selected' => ($filter_context == 'trending'),
+                        'priority' => 150,
+                        'section'=>'filter',
+                        'item_class'=>'elgg-menu-item-hover-over'
+                ),
 
 		'friends' => array(
                         'text' => elgg_echo('friends'),
