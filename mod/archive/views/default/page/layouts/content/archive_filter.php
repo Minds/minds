@@ -41,7 +41,7 @@ if ($context) {
                         'selected' => ($filter_context == 'trending'),
                         'priority' => 150,
                         'section'=>'filter',
-                        'item_class'=>'elgg-menu-item-hover-over'
+                        'item_class'=>'filter'
                 ),
 
 		'friends' => array(
