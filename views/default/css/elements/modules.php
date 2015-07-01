@@ -265,7 +265,7 @@ a.elgg-widget-collapsed:before {
     display:none;
     position:fixed;
     width:100%;
-    z-index:999;
+    z-index:30000;
     top:50px;
 }
 .banners .banner{
@@ -276,7 +276,17 @@ a.elgg-widget-collapsed:before {
     display: none;
 }
 .banners .banner .inner{
-    padding:16px;
+    padding:16px 42px;
+}
+.banners .exit{
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 32px 12px;
+    background: #777;
+    vertical-align: middle;
+    font-weight: bold;
+    z-index:9999;
 }
 .banners .banner .icon{
     float: left;
