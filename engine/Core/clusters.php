@@ -120,7 +120,7 @@ class clusters extends base{
 	public function login(){
 		//check if the select node is this one or not. 
 		$node_uri = \get_input('node');
-		if($node_uri == elgg_get_site_url() || "https://$node_uri" == elgg_get_site_url() || "http://$node_uri" == elgg_get_site_url()){
+		if(!$node_uri || $node_uri == elgg_get_site_url() || "https://$node_uri" == elgg_get_site_url() || "http://$node_uri" == elgg_get_site_url()){
 			return true;
 		}
 
