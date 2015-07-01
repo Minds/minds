@@ -54,7 +54,7 @@ function minds_archive_init() {
     elgg_register_js('wavesurfer', elgg_get_site_url().'mod/archive/player/wavesurfer.min.js', 'head', 602);
 
 	elgg_register_js('popup', elgg_get_site_url().'mod/archive/vendors/popup.min.js','head', 2);
-	elgg_extend_view('groups/sidebar', 'archive/albums');
+	//elgg_extend_view('groups/sidebar', 'archive/albums');
 
     //Loading angularJS
     $angularRoot = elgg_get_site_url() . 'mod/archive/angular/app/';
