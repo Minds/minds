@@ -80,14 +80,7 @@ if ($context) {
 			'selected' => ($type_context == 'images'),
 			'priority' => 200,
 			'section'=>'type'
-		),
-		'filter:files' => array(
-			'text' => elgg_echo('file'),
-			'href' => '?filter=files',
-			'selected' => ($type_context == 'files'),
-			'priority' => 300,
-			'section'=>'type'
-		),
+		)
 
 	);
 	

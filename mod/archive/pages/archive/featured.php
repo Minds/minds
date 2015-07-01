@@ -8,12 +8,14 @@ $limit = get_input("limit", 12);
 $offset = get_input("offset", 0);
 
 $masonry = true;
-switch(get_input('subtype', 'default')){
+switch(get_input('filter', 'default')){
 	case 'video':
+    case 'media':
 		$key = 'object:video:featured';
 		$masonry = false;
 		break;
 	case 'albums':
+    case 'images':
 		$key = 'object:image:featured';
 		break;
 	default:
