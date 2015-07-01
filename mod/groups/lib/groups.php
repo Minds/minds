@@ -83,8 +83,11 @@ function groups_handle_featured_page(){
 	if(is_array($guids)){
 		$entities = Minds\Core\entities::get(array('guids'=>$guids));
 		usort($entities, function($a, $b){
-			return $a->featured_id - $b->featured_id;
-		});
+		    if ((int)$a->featured_id == (int) $b->featured_id) { //imposisble
+                return 0;
+            }
+            return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+        });
 		$content = elgg_view_entity_list($entities, array(
 		              'full_view'=>false,
 		              'list_class'=>'minds-group-list',
