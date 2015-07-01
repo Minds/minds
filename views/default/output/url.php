@@ -46,6 +46,10 @@ if ($url) {
 		}
 	}
 
+    if(0 === strpos($url, "javascript:")){
+        $url = "";
+    }
+
 	$vars['href'] = $url;
 }
 
