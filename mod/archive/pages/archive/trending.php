@@ -33,7 +33,7 @@ switch($filter){
         break;
     case "all":
     default:
-        forward("/archive/trending?filter=video");
+        forward("/archive/trending?filter=media");
         exit;
 }
 
