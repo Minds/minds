@@ -523,29 +523,33 @@
 	}
 
 	minds.remove = function(e){
+	    
+	    // If something else has prevented action, don't continue
+	    if (!e.isDefaultPrevented()) {
 		e.preventDefault();
-       var button = $(this);
+		var button = $(this);
 		var item = button.parents('.elgg-item');
-		
-		if($(this).hasClass('ajax-non-action')){
-			elgg.get($(this).attr('href'), {
-                success: function(data) {
-          			item.effect('drop'); 
-                 },
-				error: function(data){
-                }
-       		 });
-			
-			return true;
+
+		if ($(this).hasClass('ajax-non-action')) {
+		    elgg.get($(this).attr('href'), {
+			success: function(data) {
+			    item.effect('drop');
+			},
+			error: function(data) {
+			}
+		    });
+
+		    return true;
 		}
-		
-        elgg.action($(this).attr('href') + '&ajax=true', {
-            success: function(data) {
-      			item.effect('drop'); 
-             },
-			error: function(data){
-            }
-        });
+
+		elgg.action($(this).attr('href') + '&ajax=true', {
+		    success: function(data) {
+			item.effect('drop');
+		    },
+		    error: function(data) {
+		    }
+		});
+	    }
 	}
 
         minds.remind = function(e){
