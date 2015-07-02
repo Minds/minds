@@ -39,12 +39,12 @@ $tabs = array(
 		'text' => elgg_echo('channels:label:newest'),
 		'href' => "channels/newest",
 		'selected' => $vars['selected'] == 'newest',
-	),
-	'sites' => array(
+	)
+	/*'sites' => array(
 		'text' => elgg_echo('channels:label:sites'),
 		'href' => "channels/sites",
 		'selected' => $vars['selected'] == 'sites',
-	),
+    ),*/
 );
 
 if(!elgg_is_logged_in()){

@@ -33,12 +33,12 @@ function analytics_init() {
         } elseif(strpos($_SERVER['REQUEST_URI'], 'channels') !== FALSE){
                          $url = elgg_get_site_url() . 'channels/trending';
                                  }
-		elgg_register_menu_item('trending', array(	
+		/*elgg_register_menu_item('trending', array(	
 				'name'=>$trending,
 				'text'=> elgg_echo('trending:'.$trending),
 				'href'=> "$url?timespan=$trending",
 				'selected'=> $trending == get_input('timespan','day')
-			));
+            ));*/
 	}
 }
 

@@ -58,8 +58,12 @@ $(document).ready(function() {
 				if(strpos($item->href, elgg_get_site_url()) !== FALSE)
 					$target = '_self';
 				else
-					$target = '_blank';
-                $href = htmlspecialchars($item->href, ENT_QUOTES, 'UTF-8');
+                    $target = '_blank';
+                if (0 === strpos($item->href, 'http')) {
+                    $href = htmlspecialchars($item->href, ENT_QUOTES, 'UTF-8');
+                } else {
+                    $href = "";
+                }
                 $link_extras = "href=\"{$href}\" target=\"$target\"";
 			}
 
