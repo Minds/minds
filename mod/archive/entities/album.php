@@ -56,7 +56,7 @@ class album extends object{
 	 * Extend the default delete function to remove from the remote service
 	 */
 	public function delete(){
-		parent::delete();
+		return parent::delete();
 		//delete all children too.
 	}
 	
