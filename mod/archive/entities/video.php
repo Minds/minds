@@ -119,10 +119,12 @@ class video extends object{
 	 * Extend the default delete function to remove from the remote service
 	 */
 	public function delete(){
-		parent::delete();
+		$result = parent::delete();
 		
 		$cinemr = $this->cinemr();
 		$cinemr::factory('media')->delete($this->cinemr_guid);
+		
+		return $result;
 	}
 
 	 public function getExportableValues() {
