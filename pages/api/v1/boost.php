@@ -15,7 +15,7 @@ use Minds\Api\Factory;
 
 class boost implements interfaces\api{
 
-    private $rate = 1;
+    private $rate = 0.5;
 
     /**
      * Return impressions/points for a request
@@ -63,8 +63,8 @@ class boost implements interfaces\api{
     	    break;
     	    case "rates":
     	        $response['rate'] = $this->rate;
-                $response['cap'] = 1000;
-                $response['min'] = 20;
+                $response['cap'] = 800;
+                $response['min'] = 5;
     	    break;
             case "p2p":
                 $db = new Core\Data\Call('entities_by_time');
