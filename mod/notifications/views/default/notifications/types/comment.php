@@ -35,7 +35,7 @@ if (strlen($description) > 60) {
 
 $body .= elgg_view('output/url', array('href' => $from->getURL(), 'text' => $from->name));
 $body .= ' commented on ';
-$body .= elgg_view('output/url', array('href' => $href, 'text' => $text ? 'your post'));
+$body .= elgg_view('output/url', array('href' => $href, 'text' => $text ?: 'your post'));
 $body .= "<br/>";
 
 $body .= "<div class='notify_description'>" . $description . "</div>";
