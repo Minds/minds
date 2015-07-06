@@ -29,7 +29,7 @@ class view extends core\page implements interfaces\page{
 			'masonry' => false
 		);
 
-		if(!elgg_is_xhr()){
+//        if(!elgg_is_xhr()){
 			
 			gatekeeper();
 			
@@ -49,7 +49,7 @@ class view extends core\page implements interfaces\page{
 			
 			echo \elgg_view_page($title, $body, 'default', array('class'=>'grey-bg'));
 			
-		} else {
+/*		} else {
 			
 			
 				
@@ -65,7 +65,7 @@ class view extends core\page implements interfaces\page{
 				
 			}
 
-		}
+}*/
 	}
 	
 	public function post($pages){}
