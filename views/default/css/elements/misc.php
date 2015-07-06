@@ -31,6 +31,11 @@ margin-bottom:-115px;
 	height: 100px;
 }
 
+.imgareaselect-selection {  
+    opacity: 0.3 !important;
+    background: #000;
+}
+
 /**
  * Minds stuff
  * @todo move this to relevant sub files
