@@ -24,7 +24,7 @@ class view extends core\page implements interfaces\page{
 		}
 		$options = array(
 			'guids'=>$guids,
-			'limit' => get_input('limit', 5),
+			'limit' => get_input('limit', 12),
 			'offset' => get_input('offset',''),
 			'masonry' => false
 		);
