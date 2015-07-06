@@ -68,7 +68,7 @@ class conversation extends core\page implements interfaces\page{
 				foreach($users as $user){
 					if($user->guid){
                         array_push($conversation->participants, $user->guid);
-                        if(!$user->isSubscriber(elgg_get_logged_in_user_guid())){
+                        if(!$user->isSubscribed(elgg_get_logged_in_user_guid())){
                             register_error("$user->name is not subscribed to you");
                             forward(REFERRER);
                         }
@@ -76,7 +76,7 @@ class conversation extends core\page implements interfaces\page{
 				}
 				
 			} else {
-                if(!$user->isSubscriber(elgg_get_logged_in_user_guid())){
+                if(!$user->isSubscribed(elgg_get_logged_in_user_guid())){
                             register_error("$user->name is not subscribed to you");
                     $subscriber = false;
                 }
