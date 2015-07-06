@@ -144,8 +144,10 @@
 	font-size: 8px;
 	font-weight: bold;
 }
-.notifications .elgg-list{
-	width:auto;
+
+.notifications .elgg-list {
+  max-width: 480px;
+  min-width: 320px;
 }
 .notifications .elgg-item{
 	width:auto;

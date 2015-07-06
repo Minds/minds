@@ -25,10 +25,11 @@ class view extends core\page implements interfaces\page{
 		$options = array(
 			'guids'=>$guids,
 			'limit' => get_input('limit', 5),
-			'offset' => get_input('offset','')
+			'offset' => get_input('offset',''),
+			'masonry' => false
 		);
 
-		if(get_input('full') || elgg_get_viewtype() == 'json'){
+		if(!elgg_is_xhr()){
 			
 			gatekeeper();
 			
@@ -44,9 +45,9 @@ class view extends core\page implements interfaces\page{
 				);
 
 
-			$body = elgg_view_layout('content', $params);
+			$body = elgg_view_layout('one_column', $params);
 			
-			echo elgg_view_page($title, $body);
+			echo \elgg_view_page($title, $body, 'default', array('class'=>'grey-bg'));
 			
 		} else {
 			
