@@ -10,7 +10,7 @@ if(!$from){
 	return false;
 }
 	
-$entity =  Minds\entities\Factory::build(($notification->object_guid);
+$entity =  Minds\entities\Factory::build($notification->object_guid);
 if ($entity) {
 	switch($entity->type){
 		case 'object':
