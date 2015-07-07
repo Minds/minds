@@ -37,7 +37,7 @@ class conversation{
 	/**
 	 * Update the users own list of active conversations, along with a timestamp
 	 */
-	public function update($count = 1){
+	public function update($count = 1, $force_read = false){
 		//now update this message as being the last message for the conversation. this is the list of users conversations
 		$indexes = new Data\indexes();
 		
@@ -47,10 +47,11 @@ class conversation{
 			$user_guid = $this->participants[$i];
 			
 			foreach($this->participants as $key => $participant){
-				if($user_guid != $participant){
+                if($user_guid != $participant){
+                    $unread = $participant == elgg_get_logged_in_user_guid() ? $count : 0;
 					$indexes->insert("object:gathering:conversations:$user_guid", array($participant=> json_encode(array(
 							'ts'=>time(), 
-							'unread'=> $participant == elgg_get_logged_in_user_guid() ? $count : 0, 
+							'unread'=> !$force_read ? $unread : 0, 
 							'participants'=>$this->participants
 					))));
 					//create an index so we can see the unread messages.. reset on each view of the messages

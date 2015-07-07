@@ -880,6 +880,11 @@ function validate_username($username) {
 		$msg = elgg_echo('registration:usernametoolong', array(128));
 		throw new RegistrationException($msg);
 	}
+	
+	// Blacklist non-alpha chars
+	if (preg_match('/[^a-zA-Z0-9]+/', $username)) {
+	    throw new RegistrationException(elgg_echo('Invalid username! Alphanumerics only please.'));
+	}
 
 	// Blacklist for bad characters (partially nicked from mediawiki)
 	$blacklist = '/[' .
@@ -1017,9 +1022,9 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	access_show_hidden_entities($access_status);
 
 	// Create user
-	$user = new ElggUser();
+	$user = new Minds\entities\user();
 	$user->username = $username;
-	$user->email = $email;
+	$user->setEmail($email);
 	$user->name = $name;
 	$user->access_id = ACCESS_PUBLIC;
 	$user->salt = generate_random_cleartext_password(); // Note salt generated before password!

@@ -99,6 +99,9 @@ class GUID{
      */
     public function generate(){
         $t = floor($this->getUnixTimestamp() - $this->epoch);
+        if(!$this->lastTime){
+       //     $this->lastTime = (int) \Minds\Core\Data\cache\factory::build()->get('lastTime') ?: NULL; 
+        }
         if ($t !== $this->lastTime) {
             if ($t < $this->lastTime) {
                 throw new \UnexpectedValueException(
@@ -115,8 +118,10 @@ class GUID{
                         'Timestamp overflow (past end of lifespan) - unable to generate any more IDs'
                         );
             }
-            $this->sequence = 0;
+            $this->sequence = mt_rand(1,20);
+            //$this->sequence = 0;
             $this->lastTime = $t;
+         //   \Minds\Core\Data\cache\factory::build()->set('lastTime', $t);
         } else {
             $this->sequence++;
             if ($this->sequence > 4095) {

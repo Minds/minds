@@ -10,6 +10,11 @@ if(!$entity) //Elgg entity doesn't exists we return
     forward('archive/all');
 }
 
+if(!$entity->canEdit()){
+
+    forward('archive/all');
+}
+
 if($entity->getSubtype() == 'video' || $entity->subtype == 'audio'){
 	$entity->delete();
 }elseif($entity->getSubtype() == 'kaltura_video'){

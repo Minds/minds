@@ -10,7 +10,7 @@ $user = $vars['user'];
 <div class="notification_subscriptions">
 	<div class="current_email">
 		<h3>Email Address</h3>
-		<p>Your current email address: <b><?php echo $user->email;?></b></p>
+		<p>Your current email address: <b><?php echo $user->getEmail();?></b></p>
 	</div>
 	<div class="recieve-update">
 		<label>Recieve updates:</label>

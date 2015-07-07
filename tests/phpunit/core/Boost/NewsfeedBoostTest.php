@@ -19,25 +19,64 @@ class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
     }
 
     public function testCanRequestBoost(){
-        $result = Boost\Factory::build('Newsfeed')->boost("1000", 10);
-        $this->assertEquals("boost:newsfeed:review", $result);
-        
-        $db = new Data\Call('entities_by_time'); 
-        $confirm = $db->getRow("boost:newsfeed:review");
-        $this->assertEquals("1000", key($confirm));
-        $this->assertEquals(10, $confirm["1000"]);
+        $db = $this->getMock('\Minds\Core\Data\MongoDB\Client');
+        $db->expects($this->once())
+            ->method('insert')
+            ->will($this->returnValue(array('err'=>NULL)));
+
+        $result = Boost\Factory::build('Newsfeed', array(), $db)->boost("1000", 10);
+        $this->assertEquals($result['err'], NULL);
     }
     
     public function testCanAcceptBoost(){
-       Boost\Factory::build('Newsfeed')->boost("2000", 10);
-       $this->assertEquals("boost:newsfeed", Boost\Factory::build('Newsfeed')->accept("2000", 10));
+
+        $collection_mock = new \Minds\tests\phpunit\mocks\MockMongoCursor(array(array('_id'=>'abc123', 'guid'=>'abc123', 'impressions'=>10)));
+
+        $db = $this->getMock('\Minds\Core\Data\MongoDB\Client');
+        $db->expects($this->once())
+            ->method('update')
+            ->with("boost", array('_id' => "abc123"), array('state'=>'approved'))
+            ->will($this->returnValue(array('err'=>NULL)));
+        
+        $db->expects($this->once())
+            ->method('find')
+            ->will($this->returnValue($collection_mock));
+            
+        $result = Boost\Factory::build('Newsfeed', array(), $db)->accept("abc123");
+        $this->assertEquals($result['err'], NULL);
     }
     
-    public function testCanRejectBoost(){
-        Boost\Factory::build('Newsfeed')->boost("3000", 10);
-        Boost\Factory::build('Newsfeed')->reject("3000");
-        $db = new Data\Call('entities_by_time'); 
-        $this->assertArrayNotHasKey("3000",  $db->getRow("boost:newsfeed:review"));
+   public function testCanRejectBoost(){
+        $collection_mock = new \Minds\tests\phpunit\mocks\MockMongoCursor(array(array('_id'=>'abc123', 'guid'=>'abc123', 'impressions'=>10)));
+
+        $db = $this->getMock('\Minds\Core\Data\MongoDB\Client');
+        $db->expects($this->once())
+            ->method('remove')
+            ->with("boost", array('_id' => "abc123"))
+            ->will($this->returnValue(array('err'=>NULL)));
+        
+        $db->expects($this->once())
+            ->method('find')
+            ->will($this->returnValue($collection_mock));
+            
+        $result = Boost\Factory::build('Newsfeed', array(), $db)->reject("abc123");
+        $this->assertEquals($result['err'], NULL);
+    }
+
+    public function testCanExpireBoost(){
+        $collection_mock = new \Minds\tests\phpunit\mocks\MockMongoCursor(array(array('_id'=>'abc123', 'guid'=>'abc123', 'impressions'=>-1)));
+
+        $db = $this->getMock('\Minds\Core\Data\MongoDB\Client');
+        $db->expects($this->once())
+            ->method('find')
+            ->will($this->returnValue($collection_mock));
+ 
+        $db->expects($this->once())
+            ->method('remove')
+            ->with("boost", array('_id' => "abc123"))
+            ->will($this->returnValue(array('err'=>NULL)));
+            
+        $result = Boost\Factory::build('Newsfeed', array(), $db)->getBoost();
     }
 
 }

@@ -13,6 +13,8 @@ use Minds\Api\Factory;
 
 class wallet implements interfaces\api{
 
+    private $ex_rate = 0.005;
+
     /**
      * Returns the wallet info
      * @param array $pages
@@ -34,9 +36,10 @@ class wallet implements interfaces\api{
             
                 $response['count'] = $count;
                 $response['cap'] = 1000;
-                $response['boost_rate'] = 1;
+                $response['min'] = 20;
+                $response['boost_rate'] = 0.5;
                 $response['ex'] = array(
-                    'usd' => 0.001
+                    'usd' => 0.005
                 );
                 $response['satoshi'] = $satoshi;
                 $response['btc'] = sprintf('%.9f', $btc);
@@ -64,14 +67,14 @@ class wallet implements interfaces\api{
         $response = array(); 
         switch($pages[0]){
             case "quote":
-                $ex_rate = 0.001;
+                $ex_rate = $this->ex_rate;
                 $points = $_POST['points'];
                 $usd = $ex_rate * $points;
                 return Factory::response(array('usd'=>$usd));
                 break;
             case "charge":
                 
-                $ex_rate = 0.001;
+                $ex_rate = $this->ex_rate;
                 $points = $_POST['points'];
                 $usd = $ex_rate * $points; 
                 
@@ -94,7 +97,7 @@ class wallet implements interfaces\api{
             case "paypal":
                 switch($pages[1]){
                     case "confirm":
-                        $ex_rate = 0.001;
+                        $ex_rate = $this->ex_rate;
                         $points = $_POST['points'];
                         $usd = $ex_rate * $points;
 

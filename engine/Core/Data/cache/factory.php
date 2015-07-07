@@ -7,7 +7,7 @@ namespace Minds\Core\Data\cache;
 
 class factory{
 
-	static private $default  = 'apcu';
+	static private $default  = 'Redis';
 	
 	/**
 	 * Build the cacher
@@ -18,7 +18,10 @@ class factory{
 	static public function build($cacher = NULL){
 		if(!$cacher)
 			$cacher = self::$default;
-		
+        
+        if(!class_exists('\Redis') && $cacher = "Redis")
+            $cacher = "apcu";
+
 		$cacher = "\\Minds\\Core\\Data\\cache\\$cacher";
 		if(class_exists($cacher)){
 			return new $cacher();

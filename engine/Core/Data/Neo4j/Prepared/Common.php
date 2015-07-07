@@ -37,11 +37,11 @@ class Common implements Interfaces\PreparedInterface{
     public function createBulkUsers(array $users = array()){
         foreach($users as $user){
            $exp[] = array(
-                        'username'=>$user->username,
-                        'guid'=>$user->guid
+                    //    'username'=>$user->username,
+                        'guid'=>$user
                         );
         }
-        $this->template = "FOREACH (u IN " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp))  . " | MERGE(user:User {guid: str(u.guid), username: u.username}))";
+        $this->template = "FOREACH (u IN " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp))  . " | MERGE(user:User {guid: str(u.guid)}))";
         return $this;
     }
     
@@ -92,7 +92,7 @@ class Common implements Interfaces\PreparedInterface{
      * @return $this
      */
     public function createPass($user, $to){
-       error_log("NEO4j PASS Created for $user :: $to");
+       //error_log("NEO4j PASS Created for $user :: $to");
 	   $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(to {guid: {subscriber_guid}}) " . 
                             "MERGE (user)-[:PASS]->(to) MERGE (user)-[:ACTED]->(to)";
@@ -134,7 +134,7 @@ class Common implements Interfaces\PreparedInterface{
                             "LIMIT {limit}";
 
         } else {
-            error_log("loading default matches for $user->guid");
+            //error_log("loading default matches for $user->guid");
             $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
                             "WHERE " . 
 			                 "NOT (user)-[:ACTED]->(fof) " .
@@ -226,7 +226,7 @@ class Common implements Interfaces\PreparedInterface{
      * To be used only when no suggested content is found..
      */
     public function getObjects($user_guid, $subtype='video'){
-        error_log("getting $user_guid $subtype");
+        //error_log("getting $user_guid $subtype");
         $this->template = "MATCH (object:$subtype), (user:User {guid:{user_guid}}) " .
                             "WHERE NOT user-[:ACTED]->(object) " .
                             "RETURN object LIMIT 12";
@@ -257,7 +257,7 @@ class Common implements Interfaces\PreparedInterface{
     public function createVoteUP($guid, $subtype, $user_guid = NULL){
         if(!$user_guid)
             $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
-        error_log("NEO4j vote up for $guid :: $subtype :: $user_guid");
+        //error_log("NEO4j vote up for $guid :: $subtype :: $user_guid");
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(object:$subtype {guid: {object_guid}}) " . 
                             "MERGE (user)-[:UP]->(object) MERGE (user)-[:ACTED]->(object)";
@@ -278,7 +278,7 @@ class Common implements Interfaces\PreparedInterface{
     public function createVoteDOWN($guid, $subtype, $user_guid = NULL){
         if(!$user_guid)
             $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
-        error_log("NEO4j vote down for $guid :: $subtype :: $user_guid");
+        //error_log("NEO4j vote down for $guid :: $subtype :: $user_guid");
 
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(object:$subtype {guid: {object_guid}}) " .
@@ -321,7 +321,7 @@ class Common implements Interfaces\PreparedInterface{
     public function updateEntity($entity, $properties = array()){
         $this->template = "MERGE (entity { guid: {guid}}) SET entity += {properties} RETURN id(entity)";
         $this->values = array(
-            'guid'=>$entity->guid, 
+            'guid'=> (string) $entity->guid, 
             'properties'=>$properties
             );
         return $this;
@@ -367,6 +367,9 @@ class Common implements Interfaces\PreparedInterface{
     public function getUserByLocation($user, $latlon = NULL, $distance = 100.0, $limit = 12, $skip = 0){
         if(!$latlon)
             $latlon = $user->coordinates;
+
+        if(!$latlon)
+            return false; //should probably throw an exception instead
 
         $km = $distance * 1.609344;       
         $distance =  number_format((float)$km, 2, '.', '');  

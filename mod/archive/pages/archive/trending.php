@@ -1,10 +1,5 @@
 <?php
 
- if(!class_exists('MindsTrending')){
-                forward(REFERRER);
-        }
-
-
 // Get the current page's owner
 $page_owner = elgg_get_logged_in_user_guid();
 elgg_set_page_owner_guid($page_owner);
@@ -13,22 +8,34 @@ $limit = get_input("limit", 8);
 $offset = get_input("offset", 0);
 $filter = get_input("filter", "all");
 
+switch($filter){
+    case "images":
+    case "image":
+        $prepared = new Minds\Core\Data\Neo4j\Prepared\Common();
+        $result= Minds\Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('image', get_input('offset', 0)));
+        $rows = $result->getRows();
+        
+        $guids = array();
+        foreach($rows['object'] as $object){
+            $guids[] = $object['guid'];
+        } 
+        break;
+    case "media":
+    case "video";
+        $prepared = new Minds\Core\Data\Neo4j\Prepared\Common();
+        $result= Minds\Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('video', get_input('offset', 0)));
+        $rows = $result->getRows();
 
-if($filter == 'media')
-$subtype = 'kaltura_video';
-elseif ($filter == 'images')
-$subtype = 'image';
-elseif ($filter == 'files')
-$subtype = 'file';
-else
-$subtype = 'archive';
-
-//trending
-$options = array(
-	'timespan' => get_input('timespan', 'day')
-);
-$trending = new MindsTrending(null, $options);
-$guids = $trending->getList(array('type'=>'object', 'subtype'=>'kaltura_video', 'limit'=>$limit, 'offset'=>$offset));//no super subtype support atm
+        $guids = array();
+        foreach($rows['object'] as $object){
+            $guids[] = $object['guid'];
+        }
+        break;
+    case "all":
+    default:
+        forward("/archive/trending?filter=media");
+        exit;
+}
 
 if(!$guids){
 	forward('archive/all');	 

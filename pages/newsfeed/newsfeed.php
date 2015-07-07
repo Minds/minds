@@ -136,13 +136,15 @@ class newsfeed extends core\page implements interfaces\page{
 							
 							return true;
 						break;
-					case 'delete':
+                    case 'delete':
 						$activity = new entities\activity($pages[0]);
-						if($activity->delete()){
-							system_message('Success!');
-						} else {
-							register_error('Ooops! Try again');
-						}
+                        if($activity && $activity->canEdit()){
+                            if($activity->delete()){
+						    	system_message('Success!');
+						    } else {
+						    	register_error('Ooops! Try again');
+                            }
+                        }
 			
 						$this->forward(REFERRER);
 						break;
@@ -188,6 +190,22 @@ class newsfeed extends core\page implements interfaces\page{
             'limit' => get_input('limit', 5),
             'offset' => get_input('offset','')
 		), $options));
+        
+        if($pages[0] == 'network'){
+            try{
+                $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
+                if($boost['guid']){
+                    $boost_guid = $boost['guid'];
+                    $boost_object = new \Minds\entities\activity($boost['guid']);
+                    $boost_object->boosted = true;
+                    array_unshift($entities, $boost_object);
+                    \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
+                    \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                }
+            }catch(\Exception $e){
+            }
+        }
+        
 		if(is_array($entities) && count($entities) == 1){
             $activity = reset($entities);
             global $CONFIG;
@@ -333,8 +351,16 @@ class newsfeed extends core\page implements interfaces\page{
                 $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
                 \Minds\Helpers\Counters::increment($pages[1], 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
-                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
-                \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
+
+                if($embeded->owner_guid != Core\session::getLoggedinUser()->guid){
+                    $cacher = \Minds\Core\Data\cache\Factory::build();
+                    if(!$cacher->get(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
+                        $cacher->set(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
+                        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
+                        \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
+                    }
+                }
+
                 $activity = new entities\activity();
                 switch($embeded->type){
                     case 'activity':
@@ -344,30 +370,29 @@ class newsfeed extends core\page implements interfaces\page{
                             $activity->setRemind($embeded->export())->save();
                      break;
                      default:
+                          $mock_embeded = new entities\activity($embeded);
+                          $mock_embeded->subtype = '';
+                          $mock_embeded->type = 'activity';
                          /**
                            * The following are actually treated as embeded posts.
                            */
                            switch($embeded->subtype){
                                case 'blog':
-                                   $message = false;
-                                    if($embeded->owner_guid != elgg_get_logged_in_user_guid())
-                                        $message = 'via @' . $embeded->ownerObj['username'];
-                                        $activity->setTitle($embeded->title)
+                                    $activity->setRemind($mock_embeded->setTitle($embeded->title)
                                         ->setBlurb(elgg_get_excerpt($embeded->description))
                                         ->setURL($embeded->getURL())
                                         ->setThumbnail($embeded->getIconUrl())
-                                        ->setMessage($message)
                                         ->setFromEntity($embeded)
-                                        ->save();
+                                        ->export())->save();
                                         break;
                                 case 'video':
-                                    $activity->setCustom('video', array(
+                                     $activity->setRemind($mock_embeded->setCustom('video', array(
                                                 'thumbnail_src'=>$embeded->getIconUrl(),
                                                 'guid'=>$embeded->guid))
                                     ->setTitle($embeded->title)
                                     ->setBlurb($embeded->description)
                                     ->setFromEntity($embeded)
-                                    ->save();
+                                    ->export())->save();
                                 break;
                             }
                 }

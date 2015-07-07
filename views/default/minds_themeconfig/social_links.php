@@ -1,6 +1,6 @@
 <?php
 
-
+return true;
 if(Minds\Core\minds::detectMultisite())
 	return true;
 ?>

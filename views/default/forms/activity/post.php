@@ -1,4 +1,5 @@
 <?php
+elgg_load_js('jquery.autosize');
 
 $user = elgg_get_logged_in_user_entity();
 
@@ -53,6 +54,9 @@ echo elgg_view('input/submit', array('value'=>'Post'));
 ?>
 
 <script>
+    $( document ).ready(function() {
+        $('#post-input-box').autosize();
+    });
     function photoPreview(input) {
 
 	if (input.files && input.files[0]) {

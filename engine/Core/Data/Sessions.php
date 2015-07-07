@@ -25,20 +25,20 @@ class Sessions implements \SessionHandlerInterface{
 	public function read($session_id ){
 
 		try {
-			if(function_exists('apc_fetch')){
-				if($result = apc_fetch($session_id)){
-					return $result;
-				}
-
-			}
-			$result = $this->db->getRow($session_id);
+            $cacher = cache\factory::build();
+            if($result = $cacher->get($session_id)){
+                return $result;
+            }
+            
+        	$result = $this->db->getRow($session_id);
 			$this->cache[$session_id] = $result;
 			
 			if($result){
 				//load serialized owner entity & add to cache
 				return $result['data'];
 		    }
-		} catch (Exception $e) {
+
+        } catch (Exception $e) {
  			return false;
 		}
 		
@@ -52,9 +52,11 @@ class Sessions implements \SessionHandlerInterface{
 		$params = session_get_cookie_params();
 
 		try {
-			if(function_exists('apc_store'))
-				apc_store($session_id, $session_data, 60);	
-			$result = $this->db->insert($session_id, array('ts'=>$time,'data'=>$session_data), $params['lifetime']);
+
+            $cacher = cache\factory::build();
+            $cacher->set($session_id, $session_data, $params['lifetime']);
+
+            $result = $this->db->insert($session_id, array('ts'=>$time,'data'=>$session_data), $params['lifetime']);
 
 			if($result !== false)
 				return true;
@@ -68,7 +70,11 @@ class Sessions implements \SessionHandlerInterface{
 	
 	public function destroy($session_id ) {
 		try {
-			$this->db->removeRow($session_id);
+			$cacher = cache\factory::build();
+            $cacher->destroy($session_id);
+            
+            $this->db->removeRow($session_id);
+
 		    return true;
         } catch (Exception $e) {
 			return false;

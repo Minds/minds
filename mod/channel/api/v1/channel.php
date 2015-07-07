@@ -26,7 +26,11 @@ class channel implements interfaces\api{
         
         if($pages[0] == 'me')
             $pages[0] = elgg_get_logged_in_user_guid();
-        
+
+        if(is_string($pages[0]) && !is_numeric($pages[0])){
+            $pages[0] = strtolower($pages[0]);
+        }
+
         $user = new entities\user($pages[0]);
         if(!$user->username){
             return Factory::response(array('status'=>'error', 'message'=>'The user could not be found'));
@@ -53,16 +57,18 @@ class channel implements interfaces\api{
         $response['channel']['dob'] = $response['channel']['dob'] ?: ""; 
 
         $carousels = core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
-        foreach($carousels as $carousel){
-            global $CONFIG;
-            if(!$CONFIG->cdn_url)
-                $CONFIG->cdn_url = elgg_get_site_url();
-           // else 
-                //$CONFIG->cdn_url .= '/';
-            
-           $response['channel']['carousels'][] = array(
-                'src'=> $carousel->ext_bg ? str_replace('/thin', '/fat', $carousel->ext_bg) : $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
-            );
+        if($carousels){
+            foreach($carousels as $carousel){
+                global $CONFIG;
+                if(!$CONFIG->cdn_url)
+                    $CONFIG->cdn_url = elgg_get_site_url();
+               // else 
+                    //$CONFIG->cdn_url .= '/';
+                
+               $response['channel']['carousels'][] = array(
+                    'src'=> $carousel->ext_bg ? str_replace('/thin', '/fat', $carousel->ext_bg) : $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
+                );
+            }
         }
 
         $response['channel']['impressions'] = Helpers\Counters::get($user->guid, 'impression');
@@ -119,6 +125,13 @@ class channel implements interfaces\api{
                 $owner->save();
                 break;
             case "banner":
+                //remove all older banners
+                /*$db = new Core\Data\Call('entities_by_time');
+                $banners = $db->getRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
+                if($banners){
+                    $db->removeRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
+                }*/
+             
                 $item = new \minds\entities\carousel();
                 $item->title = '';
                 $item->owner_guid = elgg_get_logged_in_user_guid();
@@ -171,9 +184,10 @@ class channel implements interfaces\api{
                 if(!$owner->canEdit()){
                     return Factory::response(array('status'=>'error'));
                 }
+                $update = array();
                 foreach(array('name', 'website', 'briefdescription', 'gender', 'dob', 'city', 'coordinates') as $field){
                     if(isset($_POST[$field]))
-                        $owner->$field = $_POST[$field];
+                        $update[$field] = $_POST[$field];
                 }
                 if(isset($_POST['coordinates'])){
                     //update neo4j with our coordinates
@@ -185,7 +199,8 @@ class channel implements interfaces\api{
                     error_log(print_r($id, true));
                     Core\Data\Client::build('Neo4j')->client()->geoLink($id);
                 }
-                $owner->save();
+                $db = new Core\Data\Call('entities');
+                $db->insert($owner->guid, $update);
        }
         
        return Factory::response(array());

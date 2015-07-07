@@ -10,6 +10,16 @@ use minds\interfaces;
  * Suggested boost handler
  */
 class Suggested implements interfaces\BoostHandlerInterface{
+
+    private $db;    
+
+    public function __construct($options = array(), Data\Interfaces\ClientInterface $db = NULL){
+        if($db){
+            $this->db = $db;
+        } else {
+            $this->db = Data\Client::build('MongoDB');
+        }
+    }
     
    /**
      * Boost an entity
@@ -23,8 +33,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
         } else {
             $guid = $entity;
         }
-        $db = new Data\Call('entities_by_time');
-        return $db->insert("boost:suggested:review", array($guid => $impressions));
+        return $this->db->insert("boost", array('guid'=>$guid, 'impressions'=>$impressions, 'state' => 'review', 'type'=> 'suggested'));
     }
     
      /**
@@ -34,9 +43,24 @@ class Suggested implements interfaces\BoostHandlerInterface{
      * @return array
      */
     public function getReviewQueue($limit, $offset = ""){
-        $db = new Data\Call('entities_by_time');
-        $guids = $db->getRow("boost:suggested:review", array('limit'=>$limit, 'offset'=>$offset));
-        return $guids;
+        $query = array('state'=>'review', 'type'=>'suggested');
+        if($offset){
+            $query['_id'] = array('$gt'=>$offset);
+        }
+        $boosts = $this->db->find("boost", $query);
+        if($boosts)
+            $boosts->limit($limit);
+        return $boosts;
+    }
+
+    /**
+     * Return the review count
+     * @return int
+     */
+    public function getReviewQueueCount(){
+        $query = array('state'=>'review', 'type'=>'suggested');
+        $count = $this->db->count("boost", $query);
+        return $count;
     }
     
     /**
@@ -45,32 +69,26 @@ class Suggested implements interfaces\BoostHandlerInterface{
      * @param int impressions
      * @return boolean
      */
-    public function accept($entity, $impressions){
-        $cacher = Core\Data\cache\factory::build();
-        if(is_object($entity)){
-            $guid = $entity->guid;
-        } else {
-            $guid = $entity;
-        }
-        $db = new Data\Call('entities_by_time');
-        $accept = $db->insert("boost:suggested", array($guid => $impressions));
+    public function accept($_id, $impressions = 0){
+        $boost_data= $this->db->find("boost", array('_id' => $_id));
+        $boost_data->next();
+        $boost = $boost_data->current();
+        $accept = $this->db->update("boost", array('_id' => $_id), array('state'=>'approved'));
         if($accept){
-            $cacher->destroy("boost:suggest");
-            //remove from review
-            $db->removeAttributes("boost:suggested:review", array($guid));
-            //clear the counter for boost_impressions
-            Helpers\Counters::clear($guid, "boost_impressions");
-            
-            $entity = \Minds\entities\Factory::build($guid);
-            $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
-            Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                'to'=>array($to_guid),
-                'object_guid' => $guid,
-                'title' => $entity->title,
-                'notification_view' => 'boost_accepted',
-                'params' => array('impressions'=>$impressions),
-                'impressions' => $impressions
+            $entity = \Minds\entities\Factory::build($boost['guid']);
+            if($entity){
+                $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
+                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                    'to'=>array($to_guid),
+                    'object_guid' => $entity->guid,
+                    'from'=> 100000000000000519,
+                    'title' => $entity->title,
+                    'notification_view' => 'boost_accepted',
+                    'params' => array('impressions'=>$boost['impressions']),
+                    'impressions' => $boost['impressions']
                 ));
+                error_log('notification should have been sent to ' . $entity->guid);
+            }
         }
         return $accept;
     }
@@ -80,23 +98,25 @@ class Suggested implements interfaces\BoostHandlerInterface{
      * @param object/int $entity
      * @return boolean
      */
-    public function reject($entity){
-        if(is_object($entity)){
-            $guid = $entity->guid;
-        } else {
-            $guid = $entity;
-        }
-        $db = new Data\Call('entities_by_time');
-        $db->removeAttributes("boost:suggested:review", array($guid));
+    public function reject($_id){
+        $boost_data= $this->db->find("boost", array('_id' => $_id));
+        $boost_data->next();
+        $boost = $boost_data->current();
+        
+        $this->db->remove("boost", array('_id'=>$_id));
 
-        $entity = \Minds\entities\Factory::build($guid);
-                    $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
+        $entity = \Minds\entities\Factory::build($boost['guid']);
+        if($entity){
+            $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($to_guid),
+                'object_guid' => $entity->guid,
+                'from'=> 100000000000000519,
                 'object_guid' => $guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_rejected',
                 ));
+        }
         return true;//need to double check somehow..
     }
     
@@ -106,44 +126,45 @@ class Suggested implements interfaces\BoostHandlerInterface{
      */
     public function getBoost($offset = ""){
         $cacher = Core\Data\cache\factory::build();
-        $db = new Data\Call('entities_by_time');
 
-        $boosts = $cacher->get("boost:suggested");
-        if(!$boosts){
-            $boosts = $db->getRow("boost:suggested", array('limit'=>15));
-            $cacher->set("boost:suggested", $boosts);
-        }    
+        $boosts = $this->db->find("boost", array('type'=>'suggested', 'state'=>'approved'));
         if(!$boosts){
             return null;
         }
+        $boosts->limit(15);
         
+        $boost_guids = array();
+        foreach($boosts as $boost){
+            $boost_guids[] = $boost['guid'];
+        }
+
         $prepared = new Data\Neo4j\Prepared\Common();
-        $result= Data\Client::build('Neo4j')->request($prepared->getActed(array_keys($boosts)));
+        $result= Data\Client::build('Neo4j')->request($prepared->getActed($boost_guids));
         $rows = $result->getRows();
         
-        foreach($boosts as $boost => $impressions){
+        foreach($boosts as $boost){
             $seen = false;
             foreach($rows['items'] as $item){
-                if($item['guid'] == $boost)
+                if($item['guid'] == $boost['guid'])
                        $seen = true; 
             }
             if($seen)
                 continue;
 
             //get the current impressions count for this boost
-            $count = Helpers\Counters::get($boost, "boost_swipes", false); 
+            $count = Helpers\Counters::get($boost['guid'], "boost_swipes", false); 
             if($count > $impressions){
                 //remove from boost queue
-                $db->removeAttributes("boost:suggested", array($boost));
-                $entity = new \Minds\entities\activity($boost);
+                $this->db->remove("boost", array('_id' => $boost['_id']));
+                $entity = \Minds\entities\Factory::build($boost['guid']);
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($entity->owner_guid),
                 'from' => 100000000000000519,
-                'object_guid' => $boost,
+                'object_guid' => $entity->guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_completed',
-                'params' => array('impressions'=>$impressions),
-                'impressions' => $impressions
+                'params' => array('impressions'=>$boost['impressions']),
+                'impressions' => $boost['impressions']
                 ));
                 continue; //max count met
             }

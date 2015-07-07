@@ -83,9 +83,11 @@ class directory extends core\page implements interfaces\page{
 				break;
 			
 			case 'newest':
+			    if (elgg_is_admin_logged_in()) {
                 		$options['limit'] = $limit;
 				$options['newest_first'] = true;
                 		$content = elgg_list_entities($options);
+			    }
 				break;
             case 'suggested':
                 if(!\Minds\Core\session::isLoggedin())
@@ -93,7 +95,7 @@ class directory extends core\page implements interfaces\page{
                 $client = \Minds\Core\Data\Client::build('Neo4j');
                 $prepared = new Prepared\Common();
                 
-        		$response = $client->request($prepared->getSubscriptionsOfSubscriptions(elgg_get_logged_in_user_entity()));
+        		$response = $client->requestRead($prepared->getSubscriptionsOfSubscriptions(elgg_get_logged_in_user_entity()));
         
         		$response = $response->getRows();
         		

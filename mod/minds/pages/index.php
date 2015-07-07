@@ -70,6 +70,21 @@ $signup_form = elgg_is_logged_in() ? '' : <<<HTML
 	</div>
 HTML;
 
+$app_buttons = <<<HTML
+<div class="app-buttons" style="  position: relative; width: 300px; margin: auto; margin-top:25vh;">
+    <div class="apple" style="width:100%; text-align:center;">
+        <a href="https://geo.itunes.apple.com/us/app/minds-com/id961771928?mt=8&amp;uo=6" target="_blank">
+            <img src="https://www.minds.com/_graphics/appstore.png" width="300px:>
+        </a>
+    </div>
+    <div class="google" style="width:100%; text-align:center;" target="_blank">
+       <a href="https://play.google.com/store/apps/details?id=com.minds.mobile" align="center">
+            <img alt="Android app on Google Play" src="https://www.minds.com/_graphics/playstore.png" width="300px">
+        </a>
+    </div>
+</div> 
+HTML;
+
 /*if(in_array(elgg_get_site_url(), array('https://www.minds.com/','https://www.minds.io/','http://127.0.0.1/'))){
 	
 	$signup_form = elgg_is_logged_in() ? '' : <<<HTML
@@ -122,8 +137,7 @@ if($paypal || $bitcoin){
 $header = <<<HTML
 <div class="elgg-head homepage clearfix">
 	$title
-	$signup_form
-	$donations_box
+    $app_buttons
 
 </div>
 HTML;

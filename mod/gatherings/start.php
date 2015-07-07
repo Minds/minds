@@ -40,11 +40,11 @@ class start extends Components\Plugin{
 		if (\elgg_is_logged_in())
 			\elgg_extend_view('page/elements/topbar/right/actions', 'gatherings/topbar_icon');
 		
-		\elgg_extend_view('page/elements/foot', 'gatherings/bar');
+//		\elgg_extend_view('page/elements/foot', 'gatherings/bar');
 		\elgg_extend_view('css/elgg', 'gatherings/css');
 		
 		\elgg_extend_view('js/initialize_elgg', 'js/init');
-		\elgg_extend_view('js/elgg', 'js/gatherings/live');
+		//\elgg_extend_view('js/elgg', 'js/gatherings/live');
 		\elgg_extend_view('js/elgg', 'js/gatherings/stored');
 		\elgg_extend_view('js/elgg', 'js/gatherings/crypt');
 		
@@ -70,6 +70,7 @@ class start extends Components\Plugin{
 			'/gatherings/live' => '\\minds\\plugin\\gatherings\\pages\\live',
 		));
 
+        Api\Routes::add('v1/gatherings', '\\minds\\plugin\\gatherings\\api\\v1\\conversations');
         Api\Routes::add('v1/conversations', '\\minds\\plugin\\gatherings\\api\\v1\\conversations');
         Api\Routes::add('v1/keys', '\\minds\\plugin\\gatherings\\api\\v1\\keys');
 
@@ -88,7 +89,7 @@ class start extends Components\Plugin{
             
             if($mutual){
                 $conversation = new entities\conversation($params['user_guid'], $params['to_guid']);
-                $conversation->update();
+                $conversation->update(0, true);
             }
         });
 		
@@ -147,6 +148,10 @@ class start extends Components\Plugin{
                 }
                 if($i++ > 12 && !$offset)
                     continue;
+
+                if($i++ > 24){
+                    continue;
+                }
 
                 if($user_guid == $offset){
                     unset($conversation_guids[$user_guid]);

@@ -79,31 +79,43 @@ class conversations implements interfaces\api{
     }
     
     public function post($pages){
-        
-    	$conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
+        //error_log("got a message to send");
+        $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
 		
         $message = new entities\message($conversation);
-	$message->client_encrypted = true;
-	foreach($conversation->participants as $guid){
-		$key = "message:$guid";
-		$message->$key = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
-		error_log(print_r($message->$key, true));
-	}
-//	error_log(print_r($message, true));
-	$message->save();
+    	$message->client_encrypted = true;
+	    foreach($conversation->participants as $guid){
+		    $key = "message:$guid";
+		    $message->$key = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
+		    //error_log(print_r($message->$key, true));
+	    }
+    //	error_log(print_r($message, true));
+	    $message->save();
+        
+        $conversation->update();	
+        $conversation->notify();
 
-	$conversation->update();	
-    $conversation->notify();
-
-	$key = "message:".elgg_get_logged_in_user_guid();
-	$message->message = $message->$key;
-	$response["message"] = $message->export();;
+	    $key = "message:".elgg_get_logged_in_user_guid();
+	    $message->message = $message->$key;
+	    $response["message"] = $message->export();;
 
         return Factory::response($response);
     }
     
     public function put($pages){
-        
+
+        switch($pages[0]){
+            case 'call':
+               \Minds\Core\Queue\Client::build()->setExchange("mindsqueue")
+                                                ->setQueue("Push")
+                                                ->send(array(
+                                                     "user_guid"=>$pages[1],
+                                                    "message"=> \Minds\Core\session::getLoggedInUser()->name . " is calling you.",
+                                                    "uri" => 'call'
+                                                )); 
+                break;
+        }
+
         return Factory::response(array());
         
     }

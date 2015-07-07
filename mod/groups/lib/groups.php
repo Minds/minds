@@ -83,8 +83,11 @@ function groups_handle_featured_page(){
 	if(is_array($guids)){
 		$entities = Minds\Core\entities::get(array('guids'=>$guids));
 		usort($entities, function($a, $b){
-			return $a->featured_id - $b->featured_id;
-		});
+		    if ((int)$a->featured_id == (int) $b->featured_id) { //imposisble
+                return 0;
+            }
+            return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+        });
 		$content = elgg_view_entity_list($entities, array(
 		              'full_view'=>false,
 		              'list_class'=>'minds-group-list',
@@ -301,8 +304,9 @@ function groups_handle_invitations_page() {
 		'header' => elgg_view_title($title) . $nav,
 		'content' => $content,
 		'title' => $title,
+        'class' => 'groups'
 	);
-	$body = elgg_view_layout('one_sidebar', $params);
+	$body = elgg_view_layout('one_column', $params);
 
 	echo elgg_view_page($title, $body);
 }
@@ -578,7 +582,7 @@ function groups_register_profile_buttons($group) {
 		}
 	}
 
-	if($group->canEdit()){
+	if($group->canEdit() && elgg_is_admin_logged_in()){
 		$url = elgg_get_site_url() . "action/minds/feature?guid={$group->getGUID()}";
                 $url = elgg_add_action_tokens_to_url($url);
 		$actions[$url] = $group->featured_id ? 'un-feature' : 'feature';

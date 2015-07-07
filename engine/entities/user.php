@@ -7,11 +7,36 @@
 namespace minds\entities;
 
 use Minds\Core;
+use Minds\Helpers;
 
 class user extends \ElggUser{
+    
+    /**
+     * Sets and encrypts a users email address
+     * @param $email
+     * @return $this
+     */
+    public function setEmail($email){
+        global $CONFIG; //@todo use object config instead
+        if(base64_decode($email, true))
+            return $this;
+        $this->email = base64_encode(Helpers\OpenSSL::encrypt($email, file_get_contents($CONFIG->encryptionKeys['email']['public'])));
+        return $this;
+    }
+    
+    /**
+     * Returns and decrypts an email address
+     * @return $this
+     */
+    public function getEmail(){
+        global $CONFIG; //@todo use object config instead
+        if($this->email && !base64_decode($this->email, true))
+           return $this->email;
+        return Helpers\OpenSSL::decrypt(base64_decode($this->email), file_get_contents($CONFIG->encryptionKeys['email']['private']));
+    }
 
     public function subscribe($guid, $data = array()){
-	return \Minds\Helpers\Subscriptions::subscribe($this->guid, $guid, $data);
+	   return \Minds\Helpers\Subscriptions::subscribe($this->guid, $guid, $data);
     }
 	
     public function unSubscribe($guid){
@@ -68,7 +93,7 @@ class user extends \ElggUser{
 		
 		$db = new Core\Data\Call('friendsof');
 		$return = (int) $db->countRow($this->guid);
-		$cacher->set("$this->guid:friendsofcount", $return);
+		$cacher->set("$this->guid:friendsofcount", $return, 360);
 		return $return;
 	}
 
@@ -84,7 +109,7 @@ class user extends \ElggUser{
 
         $db = new Core\Data\Call('friends');
         $return = (int) $db->countRow($this->guid);
-        $cacher->set("$this->guid:friendscount", $return);
+        $cacher->set("$this->guid:friendscount", $return, 360);
         return $return;
     }
 	
@@ -107,7 +132,8 @@ class user extends \ElggUser{
             $export['subscribed'] = elgg_get_logged_in_user_entity()->isSubscribed($this->guid);
             $export['subscriber'] = elgg_get_logged_in_user_entity()->isSubscriber($this->guid);
         }
-        $export['subscribers_count'] = $this->getSubscribersCount();
+        if($this->username != "minds")
+            $export['subscribers_count'] = $this->getSubscribersCount();
         $export['subscriptions_count'] = $this->getSubscriptionsCount();
 		return $export;
 	}	

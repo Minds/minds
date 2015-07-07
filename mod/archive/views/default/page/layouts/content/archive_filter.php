@@ -41,7 +41,7 @@ if ($context) {
                         'selected' => ($filter_context == 'trending'),
                         'priority' => 150,
                         'section'=>'filter',
-                        'item_class'=>'elgg-menu-item-hover-over'
+                        'item_class'=>'filter'
                 ),
 
 		'friends' => array(
@@ -80,14 +80,7 @@ if ($context) {
 			'selected' => ($type_context == 'images'),
 			'priority' => 200,
 			'section'=>'type'
-		),
-		'filter:files' => array(
-			'text' => elgg_echo('file'),
-			'href' => '?filter=files',
-			'selected' => ($type_context == 'files'),
-			'priority' => 300,
-			'section'=>'type'
-		),
+		)
 
 	);
 	

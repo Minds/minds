@@ -56,12 +56,20 @@ class newsfeed implements interfaces\api{
      //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
        
         if($pages[0] == 'network'){
-            $boost_guid = Core\Boost\Factory::build("Newsfeed")->getBoost();
-            if($boost_guid){
-                $boost_guid = $boost_guid;
-                $boost_object = new entities\activity($boost_guid);
-                $boost_object->boosted = true;
-                array_unshift($activity, $boost_object);
+            try{
+                $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
+                if($boost && $boost['guid']){
+                    $boost_guid = $boost['guid'];
+                    $boost_object = new entities\activity($boost['guid']);
+                    $boost_object->boosted = true;
+                    array_unshift($activity, $boost_object);
+                    if(get_input('offset')){
+                        //bug: sometimes views weren't being calculated on scroll down
+                        \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
+                        \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                    }
+                }
+            }catch(\Exception $e){
             }
         }
          
@@ -84,8 +92,17 @@ class newsfeed implements interfaces\api{
                 $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
-                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
-                \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
+
+                if($embeded->owner_guid != Core\session::getLoggedinUser()->guid){
+                    $cacher = \Minds\Core\Data\cache\Factory::build();
+                    if(!$cacher->get(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){          
+                        $cacher->set(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
+               
+                        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
+                        \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
+                    }
+                }
+                    
                 $activity = new entities\activity();
                 switch($embeded->type){
                     case 'activity':
@@ -124,7 +141,7 @@ class newsfeed implements interfaces\api{
                 
                 if(isset($_POST['title'])){
                         $activity->setTitle($_POST['title'])
-                            ->setBlurb($_POST['description'])
+                            ->setBlurb(urldecode($_POST['description']))
                             ->setURL(\elgg_normalize_url($_POST['url']))
                             ->setThumbnail(urldecode($_POST['thumbnail']));
                 }
@@ -157,7 +174,11 @@ class newsfeed implements interfaces\api{
 
         switch($pages[1]){
             case 'view':
-                \Minds\Helpers\Counters::increment($activity->guid, "impression");
+                try{
+                    \Minds\Helpers\Counters::increment($activity->guid, "impression");
+                    \Minds\Helpers\Counters::increment($activity->owner_guid, "impression");
+                } catch(\Exception $e){
+                }
                 break;
         }
 

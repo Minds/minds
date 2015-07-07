@@ -9,6 +9,8 @@ $CONFIG->cassandra = new stdClass;
 $CONFIG->cassandra->keyspace = '{{keyspace}}';
 $CONFIG->cassandra->servers = array('{{server}}');
 
+$CONFIG->cassandra->cql_servers = array('{{server}}:9042');
+
 
 /** 
  * Other Elgg Settings

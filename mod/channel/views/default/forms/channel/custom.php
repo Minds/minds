@@ -140,46 +140,7 @@ $social_youtube_input = elgg_view('input/text', array('name'=>'social_youtube_in
 
 $form = <<<FORM
 				
-		<table>
-			<tr>
-				<td>
-					<h3>$bg_header_label </h3>
-				</td>
-			</tr>
-			<tr>
-				<td class="label">
-					$upload_label
-				</td>
-				<td>
-					$upload_input
-				</td>
-			</tr>
-			<tr>
-				<td class="label">
-					$bg_repeat_label
-				</td>
-				<td>
-					$bg_repeat_input
-				</td>
-			</tr>
-			<tr>
-				<td class="label">
-					$bg_attachment_label
-				</td>
-				<td>
-					$bg_attachment_input
-				</td>
-			</tr>
-			<tr>
-				<td class="label">
-					$bg_colour_label
-				</td>
-				<td>
-					$bg_colour_input
-				</td>
-			</tr>
-		</table>
-			
+						
 	<table>
 		<tr>
 			<td>

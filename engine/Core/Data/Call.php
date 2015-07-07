@@ -26,6 +26,7 @@ class Call extends core\base{
 	static $writes = 0;
 	static $deletes = 0;
 	static $counts = 0;
+    private $pool;
 	
 	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL, $sendTimeout = 800, $receiveTimeout = 2000){
 		global $CONFIG;
@@ -35,11 +36,10 @@ class Call extends core\base{
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
 		
 		try{
-			$pool = new ConnectionPool($this->keyspace, $this->servers, null, 2, $sendTimeout, $receiveTimeout);
+            if(!$this->pool)
+                $this->pool = Pool::build($this->keyspace, $this->servers, NULL, 2, $sendTimeout, $receiveTimeout);
 		
-			$this->pool = $pool;
-		
-			if(isset($cf)){
+			if($cf){
 				$this->cf_name = $cf;
 				$this->cf = $this->getCf($cf);
 			}
@@ -84,10 +84,15 @@ class Call extends core\base{
 				$this->createCF($cf, $indexes);
 			}
 		}
-        
-        $client = Client::build('Cassandra');
-        $query = new Cassandra\Prepared\System();
-        $client->request($query->createTable("counters", array("guid"=>"varchar", "metric"=>"varchar", "count"=>"counter"), array("guid", "metric")));
+
+        try{
+            $client = Client::build('Cassandra');
+            $query = new Cassandra\Prepared\System();
+            $client->request($query->createTable("counters", array("guid"=>"varchar", "metric"=>"varchar", "count"=>"counter"), array("guid", "metric")));
+        } catch (\Exception $e){
+            echo $e->getMessage();
+            exit;
+        }
 	}
 	
 	/**
@@ -103,8 +108,7 @@ class Call extends core\base{
 	
 	public function insert($guid = NULL, array $data = array(), $ttl = NULL){
 		if(!$guid){
-			$guid = new \GUID();
-			$guid = $guid->generate();
+			$guid = Core\Guid::build();
 		}
 		self::$writes++;
 		//unset guid, we don't want it twice
@@ -196,7 +200,9 @@ class Call extends core\base{
 	/**
 	 * Count the columns of a row
 	 */
-	public function countRow($key){
+    public function countRow($key){
+        if(!$this->cf)
+            return 0;
 		//return 10; //quick hack until wil figue this out!
 		if(!$key)
 			return 0;
@@ -213,9 +219,14 @@ class Call extends core\base{
 	 * @param int/string $key - the key
 	 * @return mixed
 	 */
-	public function removeRow($key){
+    public function removeRow($key){
+        if(!$key){
+            return false;
+        }
 		self::$deletes++;
-		return $this->cf->remove($key);
+        if($this->cf)
+            return $this->cf->remove($key);
+        return false;
 	}
 	
 	/**
@@ -239,7 +250,10 @@ class Call extends core\base{
 	 */
 	public function removeAttributes($key, array $attributes = array(), $verify= false){
 		self::$deletes++;
-		if(empty($attributes)){
+        if(!$this->cf)
+            return false;
+
+        if(empty($attributes)){
 			return false; // don't allow as this will delete the row!
 		}
 		if($verify)
@@ -305,35 +319,18 @@ class Call extends core\base{
 	public function keyspaceExists(){
 		$exists = false;
 		try{
- 		       $ks = $this->pool->describe_keyspace();
-      			$exists = false;
+            $ks = $this->pool->describe_keyspace();
+            $exists = false;
    			foreach($ks->cf_defs as $cfdef) {
-	                	if ($cfdef->name == 'entities_by_time'){
-         	         	      $exists = true;
-           	       		      break;
-             	  		 }
+            	if ($cfdef->name == 'entities_by_time'){
+                    $exists = true;
+   	       		      break;
+     	  		 }
   			}
 		}catch(\Exception $e){
-                	$exists = false;
-        	}
+            $exists = false;
+        }
 		return $exists;
-		if($exists)
-			return true;
-
-		
-		$sys = new SystemManager($this->servers[0]);
-		
-		$exists = false;
-		
-		$ksdefs = $sys->describe_keyspaces();
-		foreach ($ksdefs as $ksdef)
-        	$exists = $exists || $ksdef->name == $this->keyspace;
-
-   		if ($exists){
-			return true;
-		} else {
-			return false;
-		}
 	}
 	
 	/**

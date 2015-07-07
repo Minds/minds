@@ -14,10 +14,11 @@
   		"ivaynberg/select2":"3.5.2",
 		"tijsverkoyen/twitteroauth": "dev-master@dev",
 		"bshaffer/oauth2-server-php":"1.7",
-		"neoxygen/neoclient": "2.1.11",
+		"neoxygen/neoclient": "2.2.8",
 		"videlalvaro/php-amqplib": "dev-master@dev",
 		"Minds/Surge": "dev-master@dev",
-		"zircote/swagger-php": "2.*@dev"
+		"zircote/swagger-php": "2.*@dev",
+        "vscn/cruftflake": "dev-master@dev"
    	},
 	"repositories": [
 		{

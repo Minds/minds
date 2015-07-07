@@ -45,7 +45,7 @@ class keys implements interfaces\api{
         switch($pages[0]){
             case "setup":
                 $keypair = \Minds\plugin\gatherings\helpers\openssl::newKeypair(get_input('passphrase'));
-                error_log(print_r($_POST,true));
+                //error_log(print_r($_POST,true));
                 \elgg_set_plugin_user_setting('publickey', $keypair['public'], elgg_get_logged_in_user_guid(), 'gatherings');
                 \elgg_set_plugin_user_setting('option', '1', elgg_get_logged_in_user_guid(), 'gatherings');
                 \elgg_set_plugin_user_setting('privatekey', $keypair['private'], elgg_get_logged_in_user_guid(), 'gatherings');

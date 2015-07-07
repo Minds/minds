@@ -260,3 +260,58 @@ a.elgg-widget-collapsed:before {
     display:table-cell;
     padding:16px;
 }
+
+.banners{
+    display:none;
+    position:fixed;
+    width:100%;
+    z-index:30000;
+    top:50px;
+}
+.banners .banner{
+    width: 100%;
+    /* height: 80px; */
+    background: #333;
+    color: #FFF;
+    display: none;
+}
+.banners .banner .inner{
+    padding:16px 42px;
+}
+.banners .exit{
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 32px 12px;
+    background: #777;
+    vertical-align: middle;
+    font-weight: bold;
+    z-index:9999;
+}
+.banners .banner .icon{
+    float: left;
+    border-radius: 8px;
+      margin-right: 9px;
+}
+.banners .banner .icon img{
+    width: 50px;
+    background: #FFF;
+    border-radius: 7px;
+    vertical-align: middle;
+}
+.banners .banner .info{
+    padding-top:5px;
+}
+.banners .banner .info h1{
+    color: #FFF;
+    font-size: 16px;
+    font-weight: 300;
+}
+.banners .banner .info p{
+      font-size: 12px;
+}
+.banners .banner .download{
+      position: absolute;
+      right: 16px;
+      top: 33px;
+}

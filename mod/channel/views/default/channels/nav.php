@@ -39,17 +39,20 @@ $tabs = array(
 		'text' => elgg_echo('channels:label:newest'),
 		'href' => "channels/newest",
 		'selected' => $vars['selected'] == 'newest',
-	),
-	'sites' => array(
+	)
+	/*'sites' => array(
 		'text' => elgg_echo('channels:label:sites'),
 		'href' => "channels/sites",
 		'selected' => $vars['selected'] == 'sites',
-	),
+    ),*/
 );
 
 if(!elgg_is_logged_in()){
 	unset($tabs['subscribers']);
 	unset($tabs['subscriptions']);
+}
+if (!elgg_is_admin_logged_in()) {
+    unset($tabs['newest']);
 }
 
 if(!Minds\Core\plugins::isActive('analytics'))

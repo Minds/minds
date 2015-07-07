@@ -20,7 +20,7 @@ class start extends Components\Plugin{
             \elgg_extend_view('page/elements/topbar/right/actions', 'wallet/topbar_icon');
 
         \elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
-            if($row->subtype == 'points_transaction'){
+            if($row->type == "object" && $row->subtype == 'points_transaction'){
                 return new entities\PointsTransaction($row);
             }
         });
@@ -30,10 +30,10 @@ class start extends Components\Plugin{
 		 */
 		$path = "minds\\plugin\\payments\\pages";
 		core\router::registerRoutes(array(
-				'/settings/payments/methods' => "$path\\methods",
-				'/settings/payments/payouts' => "$path\\payouts",
-				'/settings/payments/transactions' => "$path\\transactions",
-				'/settings/payments/donate' => "$path\\donate",
+				//'/settings/payments/methods' => "$path\\methods",
+				//'/settings/payments/payouts' => "$path\\payouts",
+				//'/settings/payments/transactions' => "$path\\transactions",
+				//'/settings/payments/donate' => "$path\\donate",
                 '/wallet' => "minds\\plugin\\payments\\pages\\wallet",
 				'/api/v1/wallet' => "minds\\plugin\\payments\\api\\v1\\wallet"
 			));
@@ -56,7 +56,7 @@ class start extends Components\Plugin{
 			    'title' => elgg_echo('payments:methods')
 		    	));*/
 			
-			\elgg_register_menu_item('page', array(
+			/*\elgg_register_menu_item('page', array(
 			    'name' => 'payments:payouts',
 			    'text' => 'Payout preferences',
 			    'href' => 'settings/payments/payouts',
@@ -66,7 +66,7 @@ class start extends Components\Plugin{
 			    'name' => 'payments:transactions',
 			    'text' => 'Transactions',
 			    'href' => 'settings/payments/transactions',
-			 ));
+            ));*/
 		}
 	}
 	
@@ -86,7 +86,7 @@ class start extends Components\Plugin{
 		$transaction->paypal_id = $paypal_obj->getID();
 		$transaction->status = 'complete';
 		
-		self::sendConfirmation(array($transaction->getOwnerEntity(false)->email, 'mark@minds.com', 'bill@minds.com', 'billing@minds.com'), $transaction);
+		self::sendConfirmation(array($transaction->getOwnerEntity(false)->getEmail(), 'mark@minds.com', 'bill@minds.com', 'billing@minds.com'), $transaction);
 		
 		return $transaction->save();
 		

@@ -72,7 +72,7 @@ class start extends \ElggPlugin{
 	public function pageSetup(){
 		if (\elgg_is_logged_in()) {
 			
-			\elgg_extend_view('page/elements/topbar', 'notifications/popup');
+			//\elgg_extend_view('page/elements/topbar', 'notifications/popup');
 			
 			$class = "notification notifier entypo";
 			$text = "<span class='$class'>&#59141;</span>";
@@ -90,8 +90,8 @@ class start extends \ElggPlugin{
 	
 			\elgg_register_menu_item('notifications', array(
 				'name' => 'notification',
-				'href' => '#notification',
-				'rel' => 'popup',
+				'href' => '/notifications',
+			//	'rel' => 'popup',
 				'text' => $text,
 				'priority' => 600,
 				'class' => 'entypo',

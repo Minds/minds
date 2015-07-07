@@ -44,6 +44,10 @@ function elgg_set_user_password() {
 		$user = get_entity($user_guid,'user');
 	}
 
+    if($user && !$user->canEdit()){
+        return false;
+    }
+
 	if ($user && $password) {
 		// let admin user change anyone's password without knowing it except his own.
 		if (!elgg_is_admin_logged_in() || elgg_is_admin_logged_in() && $user->guid == elgg_get_logged_in_user_guid()) {
@@ -121,11 +125,12 @@ function elgg_set_user_name() {
 	}
 
 	if (($user) && ($user->canEdit()) && ($name)) {
-		if ($name != $user->name) {
+	
+    	if ($name != $user->name) {
 			$user->name = $name;
-			if ($user->save()) {
+            if ($guid = $user->save()) {
 				system_message(elgg_echo('user:name:success'));
-				return true;
+                return true;
 			} else {
 				register_error(elgg_echo('user:name:fail'));
 			}
@@ -156,7 +161,7 @@ function elgg_set_user_language() {
 		$user = get_entity($user_id,'user');
 	}
 
-	if (($user) && ($language)) {
+	if (($user) && ($user->canEdit()) && ($language)) {
 		if (strcmp($language, $user->language) != 0) {
 			$user->language = $language;
 			if ($user->save()) {
@@ -197,12 +202,17 @@ function elgg_set_user_email() {
 		return false;
 	}
 
+    $user = new Minds\entities\user($user);
+    if(!$user->canEdit()){
+        register_error(elgg_echo('email:save:fail'));
+        return false;
+    }
+
 	if ($user) {
 		if (strcmp($email, $user->email) != 0) {
-			if (!get_user_by_email($email)) {
-				if ($user->email != $email) {
+				if ($user->getEmail() != $email) {
 
-					$user->email = $email;
+					$user->setEmail($email);
 					if ($user->save()) {
 						system_message(elgg_echo('email:save:success'));
 						return true;
@@ -210,9 +220,6 @@ function elgg_set_user_email() {
 						register_error(elgg_echo('email:save:fail'));
 					}
 				}
-			} else {
-				register_error(elgg_echo('registration:dupeemail'));
-			}
 		} else {
 			// no change
 			return null;

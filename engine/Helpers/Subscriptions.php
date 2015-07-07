@@ -31,10 +31,13 @@ class Subscriptions{
         
         if($friends->insert($user_guid, array($to_guid=>$data)) && $friendsof->insert($to_guid, array($user_guid=>$data)))
             $return =  true;
-        
-        $prepared = new Core\Data\Neo4j\Prepared\Common();
-        Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
 
+        try{
+            $prepared = new Core\Data\Neo4j\Prepared\Common();
+            Core\Data\Client::build('Neo4j')->requestWrite($prepared->createSubscription($user_guid, $to_guid));
+        }catch(\Exception $e){
+            error_log("could not write $user_guid subscription to $to_guid in neo4j");
+        }
         //grab the newsfeed
         $nf = new Core\Data\Call('entities_by_time');
         $feed = $nf->getRow("activity:user:$to_guid", array('limit'=>12));
@@ -44,10 +47,12 @@ class Subscriptions{
         $cacher = Core\Data\cache\factory::build();
         $cacher->set("$user_guid:isSubscribed:$to_guid", true);
         $cacher->set("$to_guid:isSubscriber:$user_guid", true);
-        $cacher->destroy("friendsof:$to_guid");
-        $cacher->destroy("friends:$user_guid");
+        //$cacher->destroy("friendsof:$to_guid");
+        //$cacher->destroy("friends:$user_guid");
+        //$cacher->destroy("$to_guid:friendofcount");
+        //$cacher->destroy("$user_guid:friendscount");
 
-        \Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
+        //\Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
         Events\Dispatcher::trigger('subscribe', 'all', array('user_guid'=>$user_guid, 'to_guid'=>$to_guid));        
         Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($to_guid),
@@ -71,7 +76,7 @@ class Subscriptions{
         $friendsof->removeAttributes($from, array($user));
         $return = true;
         
-	//@todo make unsubscribe work with neo4j
+	    //@todo make unsubscribe work with neo4j
         //$prepared = new Core\Data\Neo4j\Prepared\Common();
         //$return =  Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
 
@@ -84,10 +89,10 @@ class Subscriptions{
         $cacher = Core\Data\cache\factory::build();
         $cacher->set("$user:isSubscribed:$from",false);
         $cacher->set("$from:isSubscriber:$user", false);
-        $cacher->destroy("friendsof:$from");
-        $cacher->destroy("friends:$user");
+        //$cacher->destroy("friendsof:$from");
+        //$cacher->destroy("friends:$user");
 
-        \Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
+        //\Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
         return (bool) $return;
         
     }

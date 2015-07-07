@@ -47,5 +47,5 @@ HTML;
 	}
 	echo '</ul>';
 } else {
-		echo '<p class="mtm">' . elgg_echo('groups:invitations:none') . "</p>";
+		echo '<p class="mtm" style="text-align:center">' . elgg_echo('groups:invitations:none') . "</p>";
 }

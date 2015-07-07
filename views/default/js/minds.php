@@ -41,6 +41,33 @@
 	 		$(this).remove();
 	 	});
 		
+
+        if(!$.cookie('acted_banner')){
+            var UA = navigator.userAgent;
+            if(UA.match(/Android/i) != null ){
+
+                $('.banners').show();
+                $('.banners .android-banner').css('display', 'block');
+
+            }
+
+            if(UA.match(/iPhone/i) != null ){
+
+                 $('.banners').show();
+                 $('.banners .ios-banner').css('display', 'block');
+
+            }
+        }
+        $('.banners .exit').on('click', function(e){
+            e.preventDefault();
+            $.cookie('acted_banner', 'yes', { expires: 30, path: '/' });
+            $('.banners').remove();
+        });
+         $('.banners a').on('click', function(e){
+             $.cookie('acted_banner', 'yes', { expires: 30, path: '/' });
+         });
+
+
 	//	if(!elgg.is_logged_in() && !$.cookie('promptMobile')){
 		/*	setTimeout(function(){ 
                 $('.minds-mobile-popup').parent().show();
@@ -72,6 +99,63 @@
 		$(document).on('click', '.elgg-menu-item-add', function(e){
 			localStorage.removeItem("blog-form");
 		});
+		
+		if($(document).find('.boost-page').length > 0){
+		  var fetch;
+            $(document).on('keydown', function(e){
+		  
+                  //first in list is
+                  var items = $(document).find('.boost > li');
+                
+                  switch(e.keyCode){
+                      case 37: //left
+                           //  submit form
+                          var button = $(items[0]).find('.accept-button');
+                          button.val('test');
+                          button.trigger('click');
+                          //alert('going left');
+                     break;
+                    case 39: //right
+                          var button = $(items[0]).find('.reject-button');
+                          button.trigger('click');
+                         // alert('going right');
+                      break;
+                  }
+                  
+                  if(items.length < 6){
+                      if(fetch)
+                        fetch.abort();
+                       //load next batch in
+                      fetch = elgg.get('/boost/admin?offset=' + $('.load-more-boosts').attr('data-load-next') + '&ajax=true', function(data){
+                          if($(data).contents().length == 0){
+                              alert('no more boost could be loaded');
+                              return false;
+                          }
+                          
+                          var list =  $(data).filter('.boost');
+                         // list.find('li:first').remove();
+                          $('.load-more-boosts').attr('data-load-next', list.find('> li:last').attr('id'));
+                          $(list).contents().appendTo('.boost');
+                    });
+                }
+            });
+
+            $(document).on('click', '.boost form input[type=submit]', function(e){
+                $('input#action').val($(this).attr('name'));
+                return true;
+            });
+    
+    		$(document).on('submit', '.boost form', function(e){
+    
+                $(this).parents('li').remove();
+                e.preventDefault();
+                elgg.post('/boost/admin', {
+                    data: $(this).serialize(),
+                    success: function(){}
+                });
+    		});
+		
+        }
 
 		/**
 		 * Do we have a saved form?
@@ -439,29 +523,33 @@
 	}
 
 	minds.remove = function(e){
+	    
+	    // If something else has prevented action, don't continue
+	    if (!e.isDefaultPrevented()) {
 		e.preventDefault();
-       var button = $(this);
+		var button = $(this);
 		var item = button.parents('.elgg-item');
-		
-		if($(this).hasClass('ajax-non-action')){
-			elgg.get($(this).attr('href'), {
-                success: function(data) {
-          			item.effect('drop'); 
-                 },
-				error: function(data){
-                }
-       		 });
-			
-			return true;
+
+		if ($(this).hasClass('ajax-non-action')) {
+		    elgg.get($(this).attr('href'), {
+			success: function(data) {
+			    item.effect('drop');
+			},
+			error: function(data) {
+			}
+		    });
+
+		    return true;
 		}
-		
-        elgg.action($(this).attr('href') + '&ajax=true', {
-            success: function(data) {
-      			item.effect('drop'); 
-             },
-			error: function(data){
-            }
-        });
+
+		elgg.action($(this).attr('href') + '&ajax=true', {
+		    success: function(data) {
+			item.effect('drop');
+		    },
+		    error: function(data) {
+		    }
+		});
+	    }
 	}
 
         minds.remind = function(e){

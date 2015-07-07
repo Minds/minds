@@ -54,7 +54,7 @@ function minds_archive_init() {
     elgg_register_js('wavesurfer', elgg_get_site_url().'mod/archive/player/wavesurfer.min.js', 'head', 602);
 
 	elgg_register_js('popup', elgg_get_site_url().'mod/archive/vendors/popup.min.js','head', 2);
-	elgg_extend_view('groups/sidebar', 'archive/albums');
+	//elgg_extend_view('groups/sidebar', 'archive/albums');
 
     //Loading angularJS
     $angularRoot = elgg_get_site_url() . 'mod/archive/angular/app/';
@@ -96,19 +96,11 @@ function minds_archive_init() {
 	));
 	
 	elgg_register_menu_item('site', array(
-			'name' => 'video',
+			'name' => 'archive',
 			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
-			'href' => 'archive/featured/video',
-			'text' => '<span class="entypo">&#58277;</span> Videos',
-			'title' =>  elgg_echo('minds:archive:video'),
-			'priority' => 4
-	));
-	elgg_register_menu_item('site', array(
-			'name' => 'images',
-			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
-			'href' => 'archive/featured/albums',
-			'text' => '<span class="entypo">&#128247;</span> Images',
-			'title' =>  elgg_echo('minds:archive:images'),
+			'href' => 'archive/featured',
+			'text' => '<span class="entypo">&#58277;</span> Archive',
+			'title' =>  elgg_echo('minds:archive'),
 			'priority' => 4
 	));
 		

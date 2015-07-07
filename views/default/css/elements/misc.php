@@ -1342,10 +1342,31 @@ div.register-popup {
 	border:0;
 }
 
-
+/**
+ * Boost ui
+ */
+.boost-page .body{
+    background:#e3e3e3;
+}
+.boost-page .elgg-layout{
+    max-width: 472px;
+    margin: auto;
+}
 .boost > li:hover .elgg-menu{
     display:none;
 }
 .boost > li{
     width:300px !important;
+}
+.boost .button{
+    padding:16px;
+    color:#FFF;
+    width:200px;
+    margin:16px;
+}
+.boost .button.accept-button{
+    background:green;
+}
+.boost .button.reject-button{
+    background:red;
 }

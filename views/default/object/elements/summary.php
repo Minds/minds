@@ -18,7 +18,8 @@
  */
 
 $entity = $vars['entity'];
-
+if(!$entity)
+    return;
 $title_link = elgg_extract('title', $vars, '');
 if ($title_link === '') {
 	if (isset($entity->title)) {

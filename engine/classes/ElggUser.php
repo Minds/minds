@@ -112,7 +112,7 @@ class ElggUser extends ElggEntity
 	protected function loadFromGUID($guid){
 		if(is_numeric($guid) && strlen($guid) < 18){
 			$g = new GUID();
-       			$guid = $g->migrate($guid);
+            $guid = $g->migrate($guid);
 		}
 
 		if($cached = retrieve_cached_entity($guid)){
@@ -130,10 +130,17 @@ class ElggUser extends ElggEntity
 	}
 
 	protected function loadFromLookup($string){
-		$lookup = new Minds\Core\Data\lookup();
+        //$cacher = Minds\Core\Data\cache\factory::build();
+        //if($guid = $cacher->get("lookup:$string")){
+        //    return $this->loadFromGUID(key($guid));
+        //}
+
+        $lookup = new Minds\Core\Data\lookup();
 		$guid = $lookup->get($string);
 		if(!$guid)
 			return false;
+
+        //$cacher->set("lookup:$string", $guid); 
 
 		return $this->loadFromGUID(key($guid));
 	}
@@ -184,6 +191,7 @@ class ElggUser extends ElggEntity
 		//update our session, if it is us logged in
 		if(elgg_is_logged_in() && $this->guid == elgg_get_logged_in_user_guid()){
 			$_SESSION['user'] = $this;
+            session_regenerate_id(true);
 		}
 
         try{
@@ -450,7 +458,7 @@ class ElggUser extends ElggEntity
 	 */
 	function isFriendOf($user_guid) {
 		$cacher = \Minds\Core\Data\cache\factory::build();
-                if($cache = $cacher->get("$user_guid:friendof:$this->guid")){
+        if($cache = $cacher->get("$user_guid:friendof:$this->guid")){
 			if($cache == 'yes')
 				return true;
 			else

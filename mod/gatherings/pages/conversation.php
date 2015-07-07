@@ -62,42 +62,56 @@ class conversation extends core\page implements interfaces\page{
 				}
 			}
 			
-			
+			$subscriber = true;
 			$conversation = new entities\conversation(elgg_get_logged_in_user_guid());
 			if($users){
 				foreach($users as $user){
-					if($user->guid)
-						array_push($conversation->participants, $user->guid);
+					if($user->guid){
+                        array_push($conversation->participants, $user->guid);
+                        if(!$user->isSubscribed(elgg_get_logged_in_user_guid())){
+                            register_error("$user->name is not subscribed to you");
+                            forward(REFERRER);
+                        }
+                    }
 				}
 				
 			} else {
+                if(!$user->isSubscribed(elgg_get_logged_in_user_guid())){
+                            register_error("$user->name is not subscribed to you");
+                    $subscriber = false;
+                }
 				$conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $user->guid);
 			}
 			
-			$ik = $conversation->getIndexKeys();
-			$guids = core\Data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>12, 'offset'=>get_input('offset')));
+            if($subscriber){
+                $ik = $conversation->getIndexKeys();
+                $guids = core\Data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>12, 'offset'=>get_input('offset')));
 
-			if($guids){
-			
-				foreach($conversations as $c){
-					if(in_array($c->guid, $conversation->participants)){
-						if($c->unread)
-							$conversation->clearCount();
-					}
-				}
-	
-				$messages = core\entities::get(array('guids'=>$guids));
-				foreach($messages as $k => $message){
-					$messages[$k] = new entities\message($message, $this->passphrase);
-					//var_dump($message->decryptMessage());
-				}
-				$messages = array_reverse($messages);
-				$content = elgg_view('gatherings/conversation', array('conversation'=>$conversation, 'messages'=>$messages));
-			} else {
-				$content = elgg_view('gatherings/conversation', array('conversation'=>$conversation, 'messages'=>array()));
-			}
-			$content .= elgg_view_form('conversation', array('action'=>elgg_get_site_url() . 'gatherings/conversation/'.$user->guid), array('encrypted'=>$encrypted,'user'=>$user, 'conversation'=>$conversation));
-		}
+                if($guids){
+                
+                    foreach($conversations as $c){
+                        if(in_array($c->guid, $conversation->participants)){
+                            if($c->unread)
+                                $conversation->clearCount();
+                        }
+                    }
+        
+                    $messages = core\entities::get(array('guids'=>$guids));
+                    foreach($messages as $k => $message){
+                        $messages[$k] = new entities\message($message, $this->passphrase);
+                        //var_dump($message->decryptMessage());
+                    }
+                    $messages = array_reverse($messages);
+                    $content = elgg_view('gatherings/conversation', array('conversation'=>$conversation, 'messages'=>$messages));
+                } else {
+                    $content = elgg_view('gatherings/conversation', array('conversation'=>$conversation, 'messages'=>array()));
+                }
+                
+                $content .= elgg_view_form('conversation', array('action'=>elgg_get_site_url() . 'gatherings/conversation/'.$user->guid), array('encrypted'=>$encrypted,'user'=>$user, 'conversation'=>$conversation));
+            } else {
+                $content = "<b>You can can not chat with @$user->username because they are not subscribed to you</b>";
+            }
+        }
 
 		$layout = elgg_view_layout('one_sidebar_alt', array('content'=>$content, 'sidebar'=>elgg_view('gatherings/conversations/list', array('conversations'=>$conversations, 'conversation'=>$conversation))));
 		echo $this->render(array('body'=>$layout, 'class'=>'white-bg'));
@@ -154,9 +168,13 @@ class conversation extends core\page implements interfaces\page{
 	 * Deleting messages
 	 */
 	public function delete($pages){
-		
-		$message = new entities\message($pages[0]);
-		$message->delete();
+        
+        if($message->canEdit()){
+
+		    $message = new entities\message($pages[0]);
+            $message->delete();
+
+        }
 		
 	}
 	

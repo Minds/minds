@@ -1,14 +1,14 @@
 <?php
 
 $user = $vars['entity'];
-
+$user = new Minds\entities\user($user);
 if($user->guid == elgg_get_logged_in_user_guid()){
 	return false;
 }
 $tooltip = 'subscribe';
 if (elgg_is_logged_in()) {
 		if (elgg_get_logged_in_user_guid() != $user->guid) {
-			if ($user->isFriend()) {
+			if (elgg_get_logged_in_user_entity()->isSubscribed($user->guid)) {
 				$text = elgg_echo('friend:remove');
 				$tooltip = 'unsubscribe';
 				$href = elgg_add_action_tokens_to_url("action/friends/remove?friend={$user->guid}");

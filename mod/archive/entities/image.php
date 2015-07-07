@@ -59,7 +59,7 @@ class image extends entities\file{
 	 * Extend the default delete function to remove from the remote service
 	 */
 	public function delete(){
-		parent::delete();
+		return parent::delete();
 		
 		//remove from the filestore
 	}
@@ -75,8 +75,7 @@ class image extends entities\file{
 	public function upload($file){
 				
 		if(!$this->guid){
-			$g = new \GUID();
-			$this->guid = $g->generate();
+			$this->guid = \Minds\Core\Guid::build();
 		}
 		
 		if(!$this->filename){

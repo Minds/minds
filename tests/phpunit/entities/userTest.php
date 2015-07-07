@@ -38,4 +38,13 @@ class userTest extends Minds_PHPUnit_Framework_TestCase {
 			$this->assertEquals('user3@minds.com', $user->email);
 			$this->assertNotNull($user->guid);
 		}
+
+        public function testEmail(){
+            $user = new minds\entities\user();
+            $user->setEmail("mail@minds.com");
+            $this->assertNotNull($user->email);
+            $this->assertNotEquals("mail@minds.com", $user->email);
+            $this->assertEquals("mail@minds.com", $user->getEmail());
+        }
+
 }

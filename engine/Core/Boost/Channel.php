@@ -20,7 +20,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         	    $this->guid = $options['destination'];
         	} elseif(is_string($options['destination'])) {
         	    $lookup = new Data\lookup();
-        	    $this->guid = key($lookup->get($options['destination']));
+        	    $this->guid = key($lookup->get(strtolower($options['destination'])));
         	}
         }
     }
@@ -74,7 +74,7 @@ class Channel implements interfaces\BoostHandlerInterface{
      */
     public function getReviewQueue($limit, $offset = ""){
         $db = new Data\Call('entities_by_time');
-        $guids = $db->getRow("boost:channel:$this->guid:review", array('limit'=>$limit, 'offset'=>$offset));
+        $guids = $db->getRow("boost:channel:$this->guid:review", array('limit'=>$limit, 'offset'=>$offset, 'reversed'=>false));
         return $guids;
     }
     
