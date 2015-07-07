@@ -13,8 +13,14 @@ class XSRF{
         return md5($_SESSION['__elgg_session'] . rand(1000,9000));
     }
     
-    public static function validateRequest($payload){
+    public static function validateRequest(){
+        if(!isset($_SERVER['HTTP_X_XSRF_TOKEN']))
+            return false;
         
+        if($_SERVER['HTTP_X_XSRF_TOKEN'] == $_COOKIE['XSRF-TOKEN'])
+            return true;
+        
+        return false;
     }
     
     /**
