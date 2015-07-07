@@ -1,0 +1,10 @@
+<div class="inner">
+	<img src="assets/logos/alpha-small.png" class="logo"/>
+	
+	<div *ng-if="isLoggedIn()">
+		Loggedin
+	</div>
+	<div *ng-if="!isLoggedIn()">
+		Not Loggedin
+	</div>
+</div>

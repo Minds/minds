@@ -1,0 +1,17 @@
+Login form
+
+
+	<input 
+		type="text"
+		placeholder="Username"
+		#username
+		/>
+	<input 
+		type="password"
+		placeholder="Password"
+		#password
+		/>
+	<input
+		type="submit"
+		(click)="login(username.value, password.value)"
+		/>

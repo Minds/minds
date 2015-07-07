@@ -1,0 +1,53 @@
+@import 'defaults.scss';
+
+body{
+  padding:$minds-top-height + $minds-padding 0 0 $minds-navigation-width;
+  margin:0;
+  background:$minds-grey;
+}
+
+minds-topbar{
+  background:#FFF;
+  margin:0;
+  width:100%;
+  height:$minds-top-height;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:5;
+  
+  .inner{
+    padding:$minds-padding;
+    
+    .logo {
+      margin: auto;
+      width: auto;
+      display: block;
+      height: 70%;
+    }
+  }
+}
+
+minds-navigation{
+  background:#333;
+  padding:$minds-top-height + $minds-padding 0 0 0;
+  margin:0;
+  width:$minds-navigation-width;
+  height:100%;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:4;
+  
+  ul{
+    list-style:none;
+  }
+  li{
+    list-style:none;
+    a {
+      display:block;
+      padding:$minds-padding;
+      color:#FFF;
+    }
+  }
+}

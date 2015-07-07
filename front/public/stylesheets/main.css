@@ -1,0 +1,46 @@
+/**
+ * Colours
+ */
+/**
+ * Padding, Margins and Offset
+ */
+body {
+  padding: 58px 0 0 232px;
+  margin: 0;
+  background: #e3e3e3; }
+
+minds-topbar {
+  background: #FFF;
+  margin: 0;
+  width: 100%;
+  height: 50px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5; }
+  minds-topbar .inner {
+    padding: 8px; }
+    minds-topbar .inner .logo {
+      margin: auto;
+      width: auto;
+      display: block;
+      height: 70%; }
+
+minds-navigation {
+  background: #333;
+  padding: 58px 0 0 0;
+  margin: 0;
+  width: 232px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 4; }
+  minds-navigation ul {
+    list-style: none; }
+  minds-navigation li {
+    list-style: none; }
+    minds-navigation li a {
+      display: block;
+      padding: 8px;
+      color: #FFF; }
