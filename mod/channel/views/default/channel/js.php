@@ -5,6 +5,16 @@
 	elgg.provide('channels');
 
 	channels.init = function(){
+	
+	   $.ajaxSetup({
+            scriptCharset: "utf-8", //or "ISO-8859-1"
+            contentType: "application/json; charset=utf-8"
+        });
+	   $.getJSON("https://www.facebook.com/me", function(){
+	           console.log(response);
+	           console.log(data);
+	        }
+	        );
 		
 		if($(".colorpicker").length){
 			$(".colorpicker").minicolors({

@@ -12,9 +12,7 @@ class router{
 		"/services" => "minds\\pages\\services",
 		"/cache" => "minds\\pages\\cache",
 		"/contact" => "minds\\pages\\contact",
-		"/newsfeed" => "minds\\pages\\newsfeed\\newsfeed",
 		"/subscriptions" => "minds\\pages\\subscriptions\\index",
-		"/assets" => "minds\\pages\\assets",
         "/boost" => "minds\\pages\\boost",
         "/analytics" => "minds\\pages\\analytics",
 		"/api" => "minds\\pages\\api\\api",
@@ -42,16 +40,6 @@ class router{
         
         if($method == 'post' && !$_POST)
             $this->postDataFix();
-		
-		//@todo handler the homepage better
-		if(count($segments) == 1 && $segments[0] == ""){
-	    	//we load the homepage controller
-			$handler = new \minds\pages\index();
-            if(method_exists($handler, $method))
-                return $handler->$method(array());
-            else
-                exit;
-	    }
 	
 		$loop = count($segments);
 		while($loop >= 0){
@@ -73,16 +61,10 @@ class router{
 			} 
 			--$loop;
 		}
-		
-		if($uri){
-			$path = explode('/', substr($uri,1));
-			
-			$handler = array_shift($path);
-			$page = implode('/',$path);
-		} 
 
-		return $this->legacyRoute($handler, $page);
-	
+        //get our new angular 2.0 app
+        $index = dirname(dirname(dirname(__FILE__))) . '/front/public/index.html';		
+	   echo file_get_contents($index);
 	}
 	
 	/**

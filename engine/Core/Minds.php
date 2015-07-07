@@ -39,6 +39,8 @@ class minds extends base{
 		 */
 		new session();	
 
+        Security\XSRF::setCookie();
+        
 		/**
 		 * Boot the system, @todo this should be oop?
 		 */

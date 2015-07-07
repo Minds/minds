@@ -12,7 +12,7 @@ class page extends base{
 	public function init(){
 		\elgg_set_context($this->context);
 		$this->setup();
-		
+
 		if($this->csrf)
 			$this->checkCSRF();
 	}
