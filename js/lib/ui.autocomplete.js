@@ -63,6 +63,9 @@ elgg.autocomplete.init = function() {
 				$(this).val(suggestion.data.username);
 				$(this).trigger('minds-ac-select', { username: suggestion.data.username });
 			}	
+		},
+		formatResult: function (suggestion, currentValue) {
+		    return suggestion.value;
 		}
 	});
 	

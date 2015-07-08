@@ -57,7 +57,9 @@ class thumbs implements interfaces\api{
             } else {
 	            helpers\storage::insert($direction, $entity);
                 \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $guid, 'vote');
-               \Minds\plugin\payments\start::createTransaction($entity->owner_guid, 1, $guid, 'vote'); 
+                if($entity->owner_guid != Core\session::getLoggedinUser()->guid){
+                    \Minds\plugin\payments\start::createTransaction($entity->owner_guid, 1, $guid, 'vote');
+                }
             }
         }else{
             error_log("Entity $guid not found");

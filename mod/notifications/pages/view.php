@@ -16,7 +16,7 @@ class view extends core\page implements interfaces\page{
 		$user_guid = get_input('user_guid', elgg_get_logged_in_user_guid());
 
 		$db = new \Minds\Core\Data\Call('entities_by_time');
-		$guids = $db->getRow('notifications:'.$user_guid, array('limit'=> get_input('limit', 5), 'offset'=>get_input('offset','')));
+		$guids = $db->getRow('notifications:'.$user_guid, array('limit'=> get_input('limit', 12), 'offset'=>get_input('offset','')));
 		 \minds\plugin\notifications\notifications::resetCounter($user_guid);
 		if(!$guids){
 			echo 'Sorry, you don\'t have any notifications';
@@ -24,11 +24,12 @@ class view extends core\page implements interfaces\page{
 		}
 		$options = array(
 			'guids'=>$guids,
-			'limit' => get_input('limit', 5),
-			'offset' => get_input('offset','')
+			'limit' => get_input('limit', 12),
+			'offset' => get_input('offset',''),
+			'masonry' => false
 		);
 
-		if(get_input('full') || elgg_get_viewtype() == 'json'){
+//        if(!elgg_is_xhr()){
 			
 			gatekeeper();
 			
@@ -44,11 +45,11 @@ class view extends core\page implements interfaces\page{
 				);
 
 
-			$body = elgg_view_layout('content', $params);
+			$body = elgg_view_layout('one_column', $params);
 			
-			echo elgg_view_page($title, $body);
+			echo \elgg_view_page($title, $body, 'default', array('class'=>'grey-bg'));
 			
-		} else {
+/*		} else {
 			
 			
 				
@@ -64,7 +65,7 @@ class view extends core\page implements interfaces\page{
 				
 			}
 
-		}
+}*/
 	}
 	
 	public function post($pages){}

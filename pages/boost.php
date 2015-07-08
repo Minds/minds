@@ -8,7 +8,8 @@ use Minds\Core;
 use minds\interfaces;
 
 class boost extends core\page implements interfaces\page{
-	
+    private $rate = 0.5;
+
 	public function get($pages){
 		
         if($pages[0] == 'admin'){
@@ -76,7 +77,7 @@ class boost extends core\page implements interfaces\page{
                     $user_guid = $entity->owner_guid;
                 }
                 //refund the point
-                \Minds\plugin\payments\start::createTransaction($user_guid, $_POST['impressions'] / 1, NULL, "boost refund");
+                \Minds\plugin\payments\start::createTransaction($user_guid, $_POST['impressions'] / $this->rate, NULL, "boost refund");
             }
             
             if (!elgg_is_xhr())

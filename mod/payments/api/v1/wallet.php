@@ -37,7 +37,7 @@ class wallet implements interfaces\api{
                 $response['count'] = $count;
                 $response['cap'] = 1000;
                 $response['min'] = 20;
-                $response['boost_rate'] = 1;
+                $response['boost_rate'] = 0.5;
                 $response['ex'] = array(
                     'usd' => 0.005
                 );

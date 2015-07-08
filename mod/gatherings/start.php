@@ -149,6 +149,10 @@ class start extends Components\Plugin{
                 if($i++ > 12 && !$offset)
                     continue;
 
+                if($i++ > 24){
+                    continue;
+                }
+
                 if($user_guid == $offset){
                     unset($conversation_guids[$user_guid]);
                     continue;

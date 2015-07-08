@@ -508,14 +508,14 @@ class ElggUser extends ElggEntity
 	function getSubscribersCount(){
 				
 		$cacher = \Minds\Core\Data\cache\factory::build();
-		if($cache = $cacher->get("friendsof:$this->guid"))
+		if($cache = $cacher->get("$this->guid:friendsofcount"))
 			return $cache;
 
 		$db = new Minds\Core\Data\Call('friendsof');
 		$count = $db->countRow($this->guid);
 		if(!$count)
 			$count = 1;
-		$cacher->set("friendsof:$this->guid", $count);
+		$cacher->set("$this->guid:friendsofcount", $count);
 		return $count;
 	}
 	
@@ -526,14 +526,14 @@ class ElggUser extends ElggEntity
 	 */
 	function getSubscriptionsCount(){
 		$cacher = \Minds\Core\Data\cache\factory::build();
-                if($cache = $cacher->get("friends:$this->guid"))
+                if($cache = $cacher->get("$this->guid:friendscount"))
                         return $cache;
 
                 $db = new Minds\Core\Data\Call('friends');
                 $count = $db->countRow($this->guid);
                 if(!$count)
                         $count = 1;
-                $cacher->set("friends:$this->guid", $count);
+                $cacher->set("$this->guid:friendscount", $count);
                 return $count;
 	}
 	
