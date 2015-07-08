@@ -10,7 +10,7 @@ if(!$from){
 	return false;
 }
 	
-$entity =  Minds\Core\entities::build(new minds\entities\entity($notification->object_guid));
+$entity =  Minds\entities\Factory::build($notification->object_guid);
 if ($entity) {
 	switch($entity->type){
 		case 'object':
@@ -35,7 +35,7 @@ if (strlen($description) > 60) {
 
 $body .= elgg_view('output/url', array('href' => $from->getURL(), 'text' => $from->name));
 $body .= ' commented on ';
-$body .= elgg_view('output/url', array('href' => $href, 'text' => $text));
+$body .= elgg_view('output/url', array('href' => $href, 'text' => $text ?: 'your post'));
 $body .= "<br/>";
 
 $body .= "<div class='notify_description'>" . $description . "</div>";

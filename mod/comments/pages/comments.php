@@ -95,11 +95,13 @@ class comments extends core\page implements interfaces\page{
 	public function put($pages){}
 	
 	public function delete($pages){
-		$comment = new entities\comment($pages[0]);
-		if($comment->delete())
-			echo 'true';
-		else 
-			echo false;
+        $comment = new entities\comment($pages[0]);
+        if($comment->canEdit()){
+		    if($comment->delete())
+			    echo 'true';
+		    else 
+                echo false;
+        }
 	}
 	
 }

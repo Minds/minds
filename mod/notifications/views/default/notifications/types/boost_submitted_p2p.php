@@ -10,8 +10,9 @@ if (!$entity) {
     return true;
 } 
 
-$points = (int) $notification->params['points'];
-$channel = $notification->params['channel'];
+$params = json_decode(json_encode($notification->params), true);
+$points = (int) $params['points'];
+$channel = $params['channel'];
 
 $body = "$points points for ";
 
