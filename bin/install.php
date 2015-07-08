@@ -1,7 +1,8 @@
 <?php
-/**
- * Data warehouse
- */
+if (PHP_SAPI !== 'cli') {
+        echo "You must use the command line to run this script.";
+        exit;
+}
 
 /**
  * Start the Elgg engine
