@@ -175,7 +175,7 @@ gulp.task('build.assets.dev', ['build.scss', 'build.js.dev'], function () {
  */
 gulp.task('build.index.dev', function() {
   var target = gulp.src(injectableDevAssetsRef(), { read: false });
-  return gulp.src('./app/index.html')
+  return gulp.src('./app/index.php')
     .pipe(inject(target, { transform: transformPath('dev') }))
     .pipe(template(templateLocals()))
     .pipe(gulp.dest(PATH.dest.dev.all));
@@ -329,7 +329,7 @@ gulp.task('serve.prod', ['build.prod'], function () {
 function transformPath(env) {
   var v = '?v=' + getVersion();
   return function (filepath) {
-    arguments[0] = '/front' + filepath + v;
+    arguments[0] = filepath.replace('/' + PATH.dest[env].all, '') + v;
     return inject.transform.apply(inject.transform, arguments);
   };
 }

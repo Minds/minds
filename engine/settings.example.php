@@ -6,16 +6,16 @@ global $CONFIG;
  * Cassandra configuration
  */
 $CONFIG->cassandra = new stdClass;
-$CONFIG->cassandra->keyspace = '{{keyspace}}';
-$CONFIG->cassandra->servers = array('{{server}}');
+$CONFIG->cassandra->keyspace = '{{cassandra_keyspace}}';
+$CONFIG->cassandra->servers = array('{{cassandra_server}}');
 
-$CONFIG->cassandra->cql_servers = array('{{server}}:9042');
+$CONFIG->cassandra->cql_servers = array('{{cassandra_server}}:9042');
 
 
 /** 
  * Other Elgg Settings
  */
-$CONFIG->installed = '{{installed}}';
+$CONFIG->installed = true;
 $CONFIG->path = '{{path}}';
 $CONFIG->dataroot = '{{dataroot}}';
 $CONFIG->default_site = '{{default_site}}';

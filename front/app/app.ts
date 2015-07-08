@@ -18,7 +18,7 @@ import {Capture} from './src/controllers/capture/capture';
   { path: '/capture', component: Capture, as: 'capture' }
 ])
 @View({
-  templateUrl: 'templates/index.html',
+  templateUrl: './templates/index.html',
   directives: [Topbar, Navigation, RouterOutlet, RouterLink]
 })
 

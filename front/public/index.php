@@ -22,6 +22,13 @@ ini_set( 'display_errors','1');
     <minds-app>Loading...</minds-app>
     
      <!-- inject:js -->
+  	 <script src="/lib/traceur-runtime.js?v=0.0.1"></script>
+  	 <script src="/lib/es6-module-loader-sans-promises.js?v=0.0.1"></script>
+  	 <script src="/lib/Reflect.js?v=0.0.1"></script>
+  	 <script src="/lib/system.src.js?v=0.0.1"></script>
+  	 <script src="/lib/zone.js?v=0.0.1"></script>
+  	 <script src="/lib/angular2.js?v=0.0.1"></script>
+  	 <script src="/lib/router.js?v=0.0.1"></script>
   	 <!-- endinject -->
     
     <script>
