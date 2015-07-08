@@ -86,7 +86,7 @@ class Call extends core\base{
 		}
 
         try{
-            $client = Client::build('Cassandra');
+            $client = Client::build('Cassandra', array('keyspace'=>$this->keyspace, 'servers'=>array($this->servers[0] . ':9042')));
             $query = new Cassandra\Prepared\System();
             $client->request($query->createTable("counters", array("guid"=>"varchar", "metric"=>"varchar", "count"=>"counter"), array("guid", "metric")));
         } catch (\Exception $e){
