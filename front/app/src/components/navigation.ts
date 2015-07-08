@@ -9,4 +9,6 @@ import {RouterLink} from 'angular2/router';
   directives: [RouterLink]
 })
 
-export class Navigation { }
+export class Navigation { 
+	constructor(){ }
+}

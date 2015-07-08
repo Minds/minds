@@ -97,9 +97,4 @@ $user->validated = true;
 $user->validated_method = 'admin_user';
 $user->save();
 
-
-<<<<<<< HEAD
 echo "minds is complete \n";
-=======
-echo "minds is complete \n";
->>>>>>> 009a9db3c7bc5586561977bfad221710f76fcb49

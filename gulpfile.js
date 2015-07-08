@@ -34,16 +34,16 @@ var APP_BASE = '/';
 
 var PATH = {
   dest: {
-    all: 'public',
+    all: 'front/public',
     dev: {
-      all: 'public',
-      lib: 'public/lib',
-      ng2: 'public/lib/angular2.js',
-      router: 'public/lib/router.js'
+      all: 'front/public',
+      lib: 'front/public/lib',
+      ng2: 'front/public/lib/angular2.js',
+      router: 'front/public/lib/router.js'
     },
     prod: {
-      all: 'public',
-      lib: 'public/lib'
+      all: 'front/public',
+      lib: 'front/public/lib'
     }
   },
   src: {
@@ -139,7 +139,7 @@ gulp.task('build.lib.dev', ['build.ng2.dev'], function () {
  * Build CSS from SCSS
  */
 gulp.task('build.scss', function () {
-	  var result = gulp.src('./app/**/*scss')
+	  var result = gulp.src('./front/app/**/*scss')
 	    .pipe(sass().on('error', sass.logError))
 	    .pipe(gulp.dest(PATH.dest.dev.all));
 
@@ -150,7 +150,7 @@ gulp.task('build.scss', function () {
  * Convert Typscript to ES5 (Dev)
  */
 gulp.task('build.js.dev', function () {
-  var result = gulp.src('./app/**/*ts')
+  var result = gulp.src('./front/app/**/*ts')
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(tsc(tsProject));
@@ -165,7 +165,7 @@ gulp.task('build.js.dev', function () {
  * Build assets (Dev)
  */
 gulp.task('build.assets.dev', ['build.scss', 'build.js.dev'], function () {
-  return gulp.src(['./app/**/*.html', './app/**/*.css', './app/**/*.png', './app/**/*.jpg'])
+  return gulp.src(['./front/app/**/*.html', './front/app/**/*.css', './front/app/**/*.png', './front/app/**/*.jpg'])
     .pipe(gulp.dest(PATH.dest.dev.all));
 });
 
@@ -175,7 +175,7 @@ gulp.task('build.assets.dev', ['build.scss', 'build.js.dev'], function () {
  */
 gulp.task('build.index.dev', function() {
   var target = gulp.src(injectableDevAssetsRef(), { read: false });
-  return gulp.src('./app/index.php')
+  return gulp.src('./front/app/index.php')
     .pipe(inject(target, { transform: transformPath('dev') }))
     .pipe(template(templateLocals()))
     .pipe(gulp.dest(PATH.dest.dev.all));
@@ -211,7 +211,7 @@ gulp.task('build.lib.prod', ['build.ng2.prod'], function () {
 });
 
 gulp.task('build.js.tmp', function () {
-  var result = gulp.src(['./app/**/*ts', '!./app/init.ts'])
+  var result = gulp.src(['./front/app/**/*ts', '!./front/app/init.ts'])
     .pipe(plumber())
     .pipe(tsc(tsProject));
 
@@ -227,7 +227,7 @@ gulp.task('build.js.prod', ['build.js.tmp'], function() {
 });
 
 gulp.task('build.init.prod', function() {
-  var result = gulp.src('./app/init.ts')
+  var result = gulp.src('./front/app/init.ts')
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(tsc(tsProject));
@@ -242,7 +242,7 @@ gulp.task('build.init.prod', function() {
 gulp.task('build.assets.prod', ['build.js.prod'], function () {
   var filterHTML = filter('**/*.html');
   var filterCSS = filter('**/*.css');
-  return gulp.src(['./app/**/*.html', './app/**/*.css'])
+  return gulp.src(['./front/app/**/*.html', './front/app/**/*.css'])
     .pipe(filterHTML)
     .pipe(minifyHTML(HTMLMinifierOpts))
     .pipe(filterHTML.restore())
@@ -255,7 +255,7 @@ gulp.task('build.assets.prod', ['build.js.prod'], function () {
 gulp.task('build.index.prod', function() {
   var target = gulp.src([join(PATH.dest.prod.lib, 'lib.js'),
                          join(PATH.dest.prod.all, '**/*.css')], { read: false });
-  return gulp.src('./app/index.html')
+  return gulp.src('./front/app/index.html')
     .pipe(inject(target, { transform: transformPath('prod') }))
     .pipe(template(templateLocals()))
     .pipe(gulp.dest(PATH.dest.prod.all));
@@ -294,7 +294,7 @@ gulp.task('bump.reset', function() {
 gulp.task('serve.dev', ['build.dev'], function () {
   var app;
 
-  watch('./app/**', function () {
+  watch('./front/app/**', function () {
     gulp.start('build.app.dev');
   });
 
@@ -313,7 +313,7 @@ gulp.task('serve.dev', ['build.dev'], function () {
 gulp.task('serve.prod', ['build.prod'], function () {
   var app;
 
-  watch('./app/**', function () {
+  watch('./front/app/**', function () {
     gulp.start('build.app.prod');
   });
 

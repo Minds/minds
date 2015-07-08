@@ -1,7 +1,7 @@
 @import 'defaults.scss';
 
 body{
-  padding:$minds-top-height + $minds-padding 0 0 $minds-navigation-width;
+  padding:$minds-top-height + ($minds-padding * 2) 0 0 ($minds-navigation-width + ($minds-padding * 2));
   margin:0;
   background:$minds-grey;
 }
@@ -10,7 +10,7 @@ minds-topbar{
   background:#FFF;
   margin:0;
   width:100%;
-  height:$minds-top-height;
+  height:$minds-top-height + ($minds-padding * 2);
   position:fixed;
   top:0;
   left:0;
@@ -49,5 +49,13 @@ minds-navigation{
       padding:$minds-padding;
       color:#FFF;
     }
+  }
+}
+minds-navigation.closed{
+  display:none;
+}
+@media (max-width: 360px) {
+  minds-navigation{
+    width:85%;
   }
 }

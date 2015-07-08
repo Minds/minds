@@ -1,5 +1,6 @@
 import {Component, View, NgIf} from 'angular2/angular2';
 import {Storage} from 'src/services/storage';
+import {LoggedIn} from 'src/directives/loggedin';
 
 @Component({
   selector: 'minds-topbar',
@@ -11,13 +12,5 @@ import {Storage} from 'src/services/storage';
 })
 
 export class Topbar { 
-	constructor(public storage: Storage){
-		
-	}
-	isLoggedIn(){
-		console.log('checking ng-if');
-		if(this.storage.get('loggedin'))
-			return true;
-		return false;
-	}
+	constructor(public storage: Storage){ }
 }
