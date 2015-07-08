@@ -1,1 +1,0 @@
-SELECT SUM(value) / (ABS(2)) as x FROM table
