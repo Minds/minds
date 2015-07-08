@@ -38,7 +38,7 @@ $english = array(
 	'channel:custom:background:repeat:repeat-y' => 'Repeat vertically',
 	
 	'channel:custom:color:background' => 'Color',
-	'channel:custom:color:h1' => 'Header',
+	'channel:custom:color:h1' => 'Display Name',
 	'channel:custom:color:h3' => 'Sub-header',
 	'channel:custom:color:menu_link' => 'Navigation',
 
