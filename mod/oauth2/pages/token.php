@@ -27,6 +27,7 @@ class token extends core\page implements interfaces\page{
 	
 	
 	public function post($pages){
+        header("Access-Control-Allow-Origin: *");
         error_log('hit the token page..');
         $storage = new storage();
         
