@@ -72,8 +72,10 @@ if ($guid) {
 	$user->background_timestamp = time();
 		
 	$guid = $user->save();
-	if($user->guid == $_SESSION['user']->guid)
-		$_SESSION['user'] = $user;
+	if($user->guid == $_SESSION['user']->guid){
+        session_regenerate_id(true);
+        //   $_SESSION['user'] = $user;
+    }
 }
 system_message(elgg_echo('channel:custom:saved'));
 forward($user->getURL());
