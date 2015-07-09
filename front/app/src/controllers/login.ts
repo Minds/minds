@@ -1,10 +1,10 @@
 import {Component, View} from 'angular2/angular2';
 import {Router} from 'angular2/router';
-import {Api, OAuth} from 'src/services/api';
+import {OAuth} from 'src/services/api';
 import {Inject} from 'angular2/di';
 
 @Component({
-  viewInjector: [Api, OAuth]
+  viewInjector: [OAuth]
 })
 @View({
   templateUrl: 'templates/login.html'
@@ -12,15 +12,16 @@ import {Inject} from 'angular2/di';
 
 export class Login {
 
-	constructor(public api: Api, public oauth: OAuth, @Inject(Router) public router: Router){
+	constructor(public oauth: OAuth, @Inject(Router) public router: Router){
 		
 	}
 
 	login(username, password){
-		//try the oauth login
-		this.oauth.login()
+		var that = this; //this <=> that for promises
+		this.oauth.login(username, password)
 			.then(function(){
-				this.router.parent.navigate('/newsfeed');
+				console.log(this.router);
+				that.router.parent.navigate('/newsfeed');
 			})
 			.catch(function(e){
 				alert('there was a problem');

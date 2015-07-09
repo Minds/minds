@@ -15,7 +15,8 @@ import {Capture} from './src/controllers/capture/capture';
 @RouteConfig([
   { path: '/login', component: Login, as: 'login' },
   { path: '/newsfeed', component: Newsfeed, as: 'newsfeed' },
-  { path: '/capture', component: Capture, as: 'capture' }
+  { path: '/capture', component: Capture, as: 'capture' },
+  { path: '/:username', redirectTo: '/login' }
 ])
 @View({
   templateUrl: './templates/index.html',

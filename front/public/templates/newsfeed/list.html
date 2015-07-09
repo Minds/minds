@@ -1,3 +1,12 @@
 hello
 
 <div (click)="load()">click me</div>
+
+
+<div class="newsfeed list">
+
+    <div *ng-for="#activity of newsfeed" class="item">
+        {{activity.blurb}}
+    </div>
+
+</div>
