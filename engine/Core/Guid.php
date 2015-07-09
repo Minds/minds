@@ -11,7 +11,7 @@ class Guid{
     static function build(){
         $guid = NULL;
         //use ZMQ id generator if we can
-        if(class_exists('\ZMQ_CONTEXT')){
+        if(class_exists('\ZMQContext')){
             if(!self::$socket){
                 self::$socket = self::connect();
             }
