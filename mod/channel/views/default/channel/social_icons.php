@@ -3,7 +3,7 @@
 ?>
 <div class="channel-social-icons">
 			<?php
-				$network_icons = array('fb'=>'&#62221;', 'twitter'=>'&#62218;', 'gplus'=>'&#62224;', 'tumblr'=>'&#62230;', 'linkedin'=>'&#62233;', 'github'=>'&#62208', 'pinterest'=>'&#62227;', 'instagram'=>'&#59410;');
+				$network_icons = array('fb'=>'&#62221;', 'twitter'=>'&#62218;', 'gplus'=>'&#62224;', 'tumblr'=>'&#62230;', 'linkedin'=>'&#62233;', 'github'=>'&#62208', 'pinterest'=>'&#62227;', 'instagram'=>'&#59410;', 'youtube'=>'&#xE816;');
 				foreach($user as $k=>$v){
 					if( strpos($k, 'social_link_') !==FALSE && $v){
 						$network = str_replace('social_link_', '', $k);
