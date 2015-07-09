@@ -4411,144 +4411,6 @@ System.register("angular2/src/facade/lang", [], function($__export) {
   };
 });
 
-System.register("angular2/src/di/annotations_impl", ["angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/di/annotations_impl";
-  var __decorate,
-      __metadata,
-      CONST,
-      CONST_EXPR,
-      stringify,
-      isBlank,
-      Inject,
-      Optional,
-      DependencyAnnotation,
-      Injectable,
-      Visibility,
-      Self,
-      self,
-      Parent,
-      Ancestor,
-      Unbounded,
-      unbounded;
-  return {
-    setters: [function($__m) {
-      CONST = $__m.CONST;
-      CONST_EXPR = $__m.CONST_EXPR;
-      stringify = $__m.stringify;
-      isBlank = $__m.isBlank;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      Inject = (($traceurRuntime.createClass)(function(token) {
-        this.token = token;
-      }, {toString: function() {
-          return ("@Inject(" + stringify(this.token) + ")");
-        }}, {}));
-      $__export("Inject", Inject);
-      $__export("Inject", Inject = __decorate([CONST(), __metadata('design:paramtypes', [Object])], Inject));
-      Optional = (($traceurRuntime.createClass)(function() {}, {toString: function() {
-          return "@Optional()";
-        }}, {}));
-      $__export("Optional", Optional);
-      $__export("Optional", Optional = __decorate([CONST(), __metadata('design:paramtypes', [])], Optional));
-      DependencyAnnotation = (($traceurRuntime.createClass)(function() {}, {get token() {
-          return null;
-        }}, {}));
-      $__export("DependencyAnnotation", DependencyAnnotation);
-      $__export("DependencyAnnotation", DependencyAnnotation = __decorate([CONST(), __metadata('design:paramtypes', [])], DependencyAnnotation));
-      Injectable = (($traceurRuntime.createClass)(function() {
-        var visibility = arguments[0] !== (void 0) ? arguments[0] : unbounded;
-        this.visibility = visibility;
-      }, {}, {}));
-      $__export("Injectable", Injectable);
-      $__export("Injectable", Injectable = __decorate([CONST(), __metadata('design:paramtypes', [Visibility])], Injectable));
-      Visibility = (($traceurRuntime.createClass)(function(depth, crossBoundaries, _includeSelf) {
-        this.depth = depth;
-        this.crossBoundaries = crossBoundaries;
-        this._includeSelf = _includeSelf;
-      }, {
-        get includeSelf() {
-          return isBlank(this._includeSelf) ? false : this._includeSelf;
-        },
-        toString: function() {
-          return ("@Visibility(depth: " + this.depth + ", crossBoundaries: " + this.crossBoundaries + ", includeSelf: " + this.includeSelf + "})");
-        }
-      }, {}));
-      $__export("Visibility", Visibility);
-      $__export("Visibility", Visibility = __decorate([CONST(), __metadata('design:paramtypes', [Number, Boolean, Boolean])], Visibility));
-      Self = (function($__super) {
-        function $__0() {
-          $traceurRuntime.superConstructor($__0).call(this, 0, false, true);
-        }
-        return ($traceurRuntime.createClass)($__0, {toString: function() {
-            return "@Self()";
-          }}, {}, $__super);
-      }(Visibility));
-      $__export("Self", Self);
-      $__export("Self", Self = __decorate([CONST(), __metadata('design:paramtypes', [])], Self));
-      self = CONST_EXPR(new Self());
-      $__export("self", self);
-      Parent = (function($__super) {
-        function $__0() {
-          var self = (arguments[0] !== (void 0) ? arguments[0] : {}).self;
-          $traceurRuntime.superConstructor($__0).call(this, 1, false, self);
-        }
-        return ($traceurRuntime.createClass)($__0, {toString: function() {
-            return ("@Parent(self: " + this.includeSelf + "})");
-          }}, {}, $__super);
-      }(Visibility));
-      $__export("Parent", Parent);
-      $__export("Parent", Parent = __decorate([CONST(), __metadata('design:paramtypes', [Object])], Parent));
-      Ancestor = (function($__super) {
-        function $__0() {
-          var self = (arguments[0] !== (void 0) ? arguments[0] : {}).self;
-          $traceurRuntime.superConstructor($__0).call(this, 999999, false, self);
-        }
-        return ($traceurRuntime.createClass)($__0, {toString: function() {
-            return ("@Ancestor(self: " + this.includeSelf + "})");
-          }}, {}, $__super);
-      }(Visibility));
-      $__export("Ancestor", Ancestor);
-      $__export("Ancestor", Ancestor = __decorate([CONST(), __metadata('design:paramtypes', [Object])], Ancestor));
-      Unbounded = (function($__super) {
-        function $__0() {
-          var self = (arguments[0] !== (void 0) ? arguments[0] : {}).self;
-          $traceurRuntime.superConstructor($__0).call(this, 999999, true, self);
-        }
-        return ($traceurRuntime.createClass)($__0, {toString: function() {
-            return ("@Unbounded(self: " + this.includeSelf + "})");
-          }}, {}, $__super);
-      }(Visibility));
-      $__export("Unbounded", Unbounded);
-      $__export("Unbounded", Unbounded = __decorate([CONST(), __metadata('design:paramtypes', [Object])], Unbounded));
-      unbounded = CONST_EXPR(new Unbounded({self: true}));
-      $__export("unbounded", unbounded);
-    }
-  };
-});
-
 System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/facade/collection";
@@ -4966,6 +4828,733 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
   };
 });
 
+System.register("angular2/src/di/annotations_impl", ["angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/annotations_impl";
+  var __decorate,
+      __metadata,
+      CONST,
+      CONST_EXPR,
+      stringify,
+      isBlank,
+      Inject,
+      Optional,
+      DependencyAnnotation,
+      Injectable,
+      Visibility,
+      Self,
+      self,
+      Parent,
+      Ancestor,
+      Unbounded,
+      unbounded;
+  return {
+    setters: [function($__m) {
+      CONST = $__m.CONST;
+      CONST_EXPR = $__m.CONST_EXPR;
+      stringify = $__m.stringify;
+      isBlank = $__m.isBlank;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      Inject = (($traceurRuntime.createClass)(function(token) {
+        this.token = token;
+      }, {toString: function() {
+          return ("@Inject(" + stringify(this.token) + ")");
+        }}, {}));
+      $__export("Inject", Inject);
+      $__export("Inject", Inject = __decorate([CONST(), __metadata('design:paramtypes', [Object])], Inject));
+      Optional = (($traceurRuntime.createClass)(function() {}, {toString: function() {
+          return "@Optional()";
+        }}, {}));
+      $__export("Optional", Optional);
+      $__export("Optional", Optional = __decorate([CONST(), __metadata('design:paramtypes', [])], Optional));
+      DependencyAnnotation = (($traceurRuntime.createClass)(function() {}, {get token() {
+          return null;
+        }}, {}));
+      $__export("DependencyAnnotation", DependencyAnnotation);
+      $__export("DependencyAnnotation", DependencyAnnotation = __decorate([CONST(), __metadata('design:paramtypes', [])], DependencyAnnotation));
+      Injectable = (($traceurRuntime.createClass)(function() {
+        var visibility = arguments[0] !== (void 0) ? arguments[0] : unbounded;
+        this.visibility = visibility;
+      }, {}, {}));
+      $__export("Injectable", Injectable);
+      $__export("Injectable", Injectable = __decorate([CONST(), __metadata('design:paramtypes', [Visibility])], Injectable));
+      Visibility = (($traceurRuntime.createClass)(function(depth, crossBoundaries, _includeSelf) {
+        this.depth = depth;
+        this.crossBoundaries = crossBoundaries;
+        this._includeSelf = _includeSelf;
+      }, {
+        get includeSelf() {
+          return isBlank(this._includeSelf) ? false : this._includeSelf;
+        },
+        toString: function() {
+          return ("@Visibility(depth: " + this.depth + ", crossBoundaries: " + this.crossBoundaries + ", includeSelf: " + this.includeSelf + "})");
+        }
+      }, {}));
+      $__export("Visibility", Visibility);
+      $__export("Visibility", Visibility = __decorate([CONST(), __metadata('design:paramtypes', [Number, Boolean, Boolean])], Visibility));
+      Self = (function($__super) {
+        function $__0() {
+          $traceurRuntime.superConstructor($__0).call(this, 0, false, true);
+        }
+        return ($traceurRuntime.createClass)($__0, {toString: function() {
+            return "@Self()";
+          }}, {}, $__super);
+      }(Visibility));
+      $__export("Self", Self);
+      $__export("Self", Self = __decorate([CONST(), __metadata('design:paramtypes', [])], Self));
+      self = CONST_EXPR(new Self());
+      $__export("self", self);
+      Parent = (function($__super) {
+        function $__0() {
+          var self = (arguments[0] !== (void 0) ? arguments[0] : {}).self;
+          $traceurRuntime.superConstructor($__0).call(this, 1, false, self);
+        }
+        return ($traceurRuntime.createClass)($__0, {toString: function() {
+            return ("@Parent(self: " + this.includeSelf + "})");
+          }}, {}, $__super);
+      }(Visibility));
+      $__export("Parent", Parent);
+      $__export("Parent", Parent = __decorate([CONST(), __metadata('design:paramtypes', [Object])], Parent));
+      Ancestor = (function($__super) {
+        function $__0() {
+          var self = (arguments[0] !== (void 0) ? arguments[0] : {}).self;
+          $traceurRuntime.superConstructor($__0).call(this, 999999, false, self);
+        }
+        return ($traceurRuntime.createClass)($__0, {toString: function() {
+            return ("@Ancestor(self: " + this.includeSelf + "})");
+          }}, {}, $__super);
+      }(Visibility));
+      $__export("Ancestor", Ancestor);
+      $__export("Ancestor", Ancestor = __decorate([CONST(), __metadata('design:paramtypes', [Object])], Ancestor));
+      Unbounded = (function($__super) {
+        function $__0() {
+          var self = (arguments[0] !== (void 0) ? arguments[0] : {}).self;
+          $traceurRuntime.superConstructor($__0).call(this, 999999, true, self);
+        }
+        return ($traceurRuntime.createClass)($__0, {toString: function() {
+            return ("@Unbounded(self: " + this.includeSelf + "})");
+          }}, {}, $__super);
+      }(Visibility));
+      $__export("Unbounded", Unbounded);
+      $__export("Unbounded", Unbounded = __decorate([CONST(), __metadata('design:paramtypes', [Object])], Unbounded));
+      unbounded = CONST_EXPR(new Unbounded({self: true}));
+      $__export("unbounded", unbounded);
+    }
+  };
+});
+
+System.register("angular2/src/change_detection/parser/ast", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/change_detection/parser/ast";
+  var isBlank,
+      isPresent,
+      FunctionWrapper,
+      BaseException,
+      ListWrapper,
+      StringMapWrapper,
+      AST,
+      EmptyExpr,
+      ImplicitReceiver,
+      Chain,
+      Conditional,
+      If,
+      AccessMember,
+      SafeAccessMember,
+      KeyedAccess,
+      BindingPipe,
+      LiteralPrimitive,
+      LiteralArray,
+      LiteralMap,
+      Interpolation,
+      Binary,
+      PrefixNot,
+      Assignment,
+      MethodCall,
+      SafeMethodCall,
+      FunctionCall,
+      ASTWithSource,
+      TemplateBinding,
+      AstTransformer,
+      _evalListCache;
+  function evalList(context, locals, exps) {
+    var length = exps.length;
+    if (length > 10) {
+      throw new BaseException("Cannot have more than 10 argument");
+    }
+    var result = _evalListCache[length];
+    for (var i = 0; i < length; i++) {
+      result[i] = exps[i].eval(context, locals);
+    }
+    return result;
+  }
+  return {
+    setters: [function($__m) {
+      isBlank = $__m.isBlank;
+      isPresent = $__m.isPresent;
+      FunctionWrapper = $__m.FunctionWrapper;
+      BaseException = $__m.BaseException;
+    }, function($__m) {
+      ListWrapper = $__m.ListWrapper;
+      StringMapWrapper = $__m.StringMapWrapper;
+    }],
+    execute: function() {
+      AST = (function() {
+        function AST() {}
+        return ($traceurRuntime.createClass)(AST, {
+          eval: function(context, locals) {
+            throw new BaseException("Not supported");
+          },
+          get isAssignable() {
+            return false;
+          },
+          assign: function(context, locals, value) {
+            throw new BaseException("Not supported");
+          },
+          visit: function(visitor) {
+            return null;
+          },
+          toString: function() {
+            return "AST";
+          }
+        }, {});
+      }());
+      $__export("AST", AST);
+      EmptyExpr = (function($__super) {
+        function EmptyExpr() {
+          $traceurRuntime.superConstructor(EmptyExpr).apply(this, arguments);
+        }
+        return ($traceurRuntime.createClass)(EmptyExpr, {
+          eval: function(context, locals) {
+            return null;
+          },
+          visit: function(visitor) {}
+        }, {}, $__super);
+      }(AST));
+      $__export("EmptyExpr", EmptyExpr);
+      ImplicitReceiver = (function($__super) {
+        function ImplicitReceiver() {
+          $traceurRuntime.superConstructor(ImplicitReceiver).apply(this, arguments);
+        }
+        return ($traceurRuntime.createClass)(ImplicitReceiver, {
+          eval: function(context, locals) {
+            return context;
+          },
+          visit: function(visitor) {
+            return visitor.visitImplicitReceiver(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("ImplicitReceiver", ImplicitReceiver);
+      Chain = (function($__super) {
+        function Chain(expressions) {
+          $traceurRuntime.superConstructor(Chain).call(this);
+          this.expressions = expressions;
+        }
+        return ($traceurRuntime.createClass)(Chain, {
+          eval: function(context, locals) {
+            var result;
+            for (var i = 0; i < this.expressions.length; i++) {
+              var last = this.expressions[i].eval(context, locals);
+              if (isPresent(last))
+                result = last;
+            }
+            return result;
+          },
+          visit: function(visitor) {
+            return visitor.visitChain(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("Chain", Chain);
+      Conditional = (function($__super) {
+        function Conditional(condition, trueExp, falseExp) {
+          $traceurRuntime.superConstructor(Conditional).call(this);
+          this.condition = condition;
+          this.trueExp = trueExp;
+          this.falseExp = falseExp;
+        }
+        return ($traceurRuntime.createClass)(Conditional, {
+          eval: function(context, locals) {
+            if (this.condition.eval(context, locals)) {
+              return this.trueExp.eval(context, locals);
+            } else {
+              return this.falseExp.eval(context, locals);
+            }
+          },
+          visit: function(visitor) {
+            return visitor.visitConditional(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("Conditional", Conditional);
+      If = (function($__super) {
+        function If(condition, trueExp, falseExp) {
+          $traceurRuntime.superConstructor(If).call(this);
+          this.condition = condition;
+          this.trueExp = trueExp;
+          this.falseExp = falseExp;
+        }
+        return ($traceurRuntime.createClass)(If, {
+          eval: function(context, locals) {
+            if (this.condition.eval(context, locals)) {
+              this.trueExp.eval(context, locals);
+            } else if (isPresent(this.falseExp)) {
+              this.falseExp.eval(context, locals);
+            }
+          },
+          visit: function(visitor) {
+            return visitor.visitIf(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("If", If);
+      AccessMember = (function($__super) {
+        function AccessMember(receiver, name, getter, setter) {
+          $traceurRuntime.superConstructor(AccessMember).call(this);
+          this.receiver = receiver;
+          this.name = name;
+          this.getter = getter;
+          this.setter = setter;
+        }
+        return ($traceurRuntime.createClass)(AccessMember, {
+          eval: function(context, locals) {
+            if (this.receiver instanceof ImplicitReceiver && isPresent(locals) && locals.contains(this.name)) {
+              return locals.get(this.name);
+            } else {
+              var evaluatedReceiver = this.receiver.eval(context, locals);
+              return this.getter(evaluatedReceiver);
+            }
+          },
+          get isAssignable() {
+            return true;
+          },
+          assign: function(context, locals, value) {
+            var evaluatedContext = this.receiver.eval(context, locals);
+            if (this.receiver instanceof ImplicitReceiver && isPresent(locals) && locals.contains(this.name)) {
+              throw new BaseException(("Cannot reassign a variable binding " + this.name));
+            } else {
+              return this.setter(evaluatedContext, value);
+            }
+          },
+          visit: function(visitor) {
+            return visitor.visitAccessMember(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("AccessMember", AccessMember);
+      SafeAccessMember = (function($__super) {
+        function SafeAccessMember(receiver, name, getter, setter) {
+          $traceurRuntime.superConstructor(SafeAccessMember).call(this);
+          this.receiver = receiver;
+          this.name = name;
+          this.getter = getter;
+          this.setter = setter;
+        }
+        return ($traceurRuntime.createClass)(SafeAccessMember, {
+          eval: function(context, locals) {
+            var evaluatedReceiver = this.receiver.eval(context, locals);
+            return isBlank(evaluatedReceiver) ? null : this.getter(evaluatedReceiver);
+          },
+          visit: function(visitor) {
+            return visitor.visitSafeAccessMember(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("SafeAccessMember", SafeAccessMember);
+      KeyedAccess = (function($__super) {
+        function KeyedAccess(obj, key) {
+          $traceurRuntime.superConstructor(KeyedAccess).call(this);
+          this.obj = obj;
+          this.key = key;
+        }
+        return ($traceurRuntime.createClass)(KeyedAccess, {
+          eval: function(context, locals) {
+            var obj = this.obj.eval(context, locals);
+            var key = this.key.eval(context, locals);
+            return obj[key];
+          },
+          get isAssignable() {
+            return true;
+          },
+          assign: function(context, locals, value) {
+            var obj = this.obj.eval(context, locals);
+            var key = this.key.eval(context, locals);
+            obj[key] = value;
+            return value;
+          },
+          visit: function(visitor) {
+            return visitor.visitKeyedAccess(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("KeyedAccess", KeyedAccess);
+      BindingPipe = (function($__super) {
+        function BindingPipe(exp, name, args) {
+          $traceurRuntime.superConstructor(BindingPipe).call(this);
+          this.exp = exp;
+          this.name = name;
+          this.args = args;
+        }
+        return ($traceurRuntime.createClass)(BindingPipe, {visit: function(visitor) {
+            return visitor.visitPipe(this);
+          }}, {}, $__super);
+      }(AST));
+      $__export("BindingPipe", BindingPipe);
+      LiteralPrimitive = (function($__super) {
+        function LiteralPrimitive(value) {
+          $traceurRuntime.superConstructor(LiteralPrimitive).call(this);
+          this.value = value;
+        }
+        return ($traceurRuntime.createClass)(LiteralPrimitive, {
+          eval: function(context, locals) {
+            return this.value;
+          },
+          visit: function(visitor) {
+            return visitor.visitLiteralPrimitive(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("LiteralPrimitive", LiteralPrimitive);
+      LiteralArray = (function($__super) {
+        function LiteralArray(expressions) {
+          $traceurRuntime.superConstructor(LiteralArray).call(this);
+          this.expressions = expressions;
+        }
+        return ($traceurRuntime.createClass)(LiteralArray, {
+          eval: function(context, locals) {
+            return ListWrapper.map(this.expressions, (function(e) {
+              return e.eval(context, locals);
+            }));
+          },
+          visit: function(visitor) {
+            return visitor.visitLiteralArray(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("LiteralArray", LiteralArray);
+      LiteralMap = (function($__super) {
+        function LiteralMap(keys, values) {
+          $traceurRuntime.superConstructor(LiteralMap).call(this);
+          this.keys = keys;
+          this.values = values;
+        }
+        return ($traceurRuntime.createClass)(LiteralMap, {
+          eval: function(context, locals) {
+            var res = StringMapWrapper.create();
+            for (var i = 0; i < this.keys.length; ++i) {
+              StringMapWrapper.set(res, this.keys[i], this.values[i].eval(context, locals));
+            }
+            return res;
+          },
+          visit: function(visitor) {
+            return visitor.visitLiteralMap(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("LiteralMap", LiteralMap);
+      Interpolation = (function($__super) {
+        function Interpolation(strings, expressions) {
+          $traceurRuntime.superConstructor(Interpolation).call(this);
+          this.strings = strings;
+          this.expressions = expressions;
+        }
+        return ($traceurRuntime.createClass)(Interpolation, {
+          eval: function(context, locals) {
+            throw new BaseException("evaluating an Interpolation is not supported");
+          },
+          visit: function(visitor) {
+            visitor.visitInterpolation(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("Interpolation", Interpolation);
+      Binary = (function($__super) {
+        function Binary(operation, left, right) {
+          $traceurRuntime.superConstructor(Binary).call(this);
+          this.operation = operation;
+          this.left = left;
+          this.right = right;
+        }
+        return ($traceurRuntime.createClass)(Binary, {
+          eval: function(context, locals) {
+            var left = this.left.eval(context, locals);
+            switch (this.operation) {
+              case '&&':
+                return left && this.right.eval(context, locals);
+              case '||':
+                return left || this.right.eval(context, locals);
+            }
+            var right = this.right.eval(context, locals);
+            switch (this.operation) {
+              case '+':
+                return left + right;
+              case '-':
+                return left - right;
+              case '*':
+                return left * right;
+              case '/':
+                return left / right;
+              case '%':
+                return left % right;
+              case '==':
+                return left == right;
+              case '!=':
+                return left != right;
+              case '===':
+                return left === right;
+              case '!==':
+                return left !== right;
+              case '<':
+                return left < right;
+              case '>':
+                return left > right;
+              case '<=':
+                return left <= right;
+              case '>=':
+                return left >= right;
+              case '^':
+                return left ^ right;
+              case '&':
+                return left & right;
+            }
+            throw 'Internal error [$operation] not handled';
+          },
+          visit: function(visitor) {
+            return visitor.visitBinary(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("Binary", Binary);
+      PrefixNot = (function($__super) {
+        function PrefixNot(expression) {
+          $traceurRuntime.superConstructor(PrefixNot).call(this);
+          this.expression = expression;
+        }
+        return ($traceurRuntime.createClass)(PrefixNot, {
+          eval: function(context, locals) {
+            return !this.expression.eval(context, locals);
+          },
+          visit: function(visitor) {
+            return visitor.visitPrefixNot(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("PrefixNot", PrefixNot);
+      Assignment = (function($__super) {
+        function Assignment(target, value) {
+          $traceurRuntime.superConstructor(Assignment).call(this);
+          this.target = target;
+          this.value = value;
+        }
+        return ($traceurRuntime.createClass)(Assignment, {
+          eval: function(context, locals) {
+            return this.target.assign(context, locals, this.value.eval(context, locals));
+          },
+          visit: function(visitor) {
+            return visitor.visitAssignment(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("Assignment", Assignment);
+      MethodCall = (function($__super) {
+        function MethodCall(receiver, name, fn, args) {
+          $traceurRuntime.superConstructor(MethodCall).call(this);
+          this.receiver = receiver;
+          this.name = name;
+          this.fn = fn;
+          this.args = args;
+        }
+        return ($traceurRuntime.createClass)(MethodCall, {
+          eval: function(context, locals) {
+            var evaluatedArgs = evalList(context, locals, this.args);
+            if (this.receiver instanceof ImplicitReceiver && isPresent(locals) && locals.contains(this.name)) {
+              var fn = locals.get(this.name);
+              return FunctionWrapper.apply(fn, evaluatedArgs);
+            } else {
+              var evaluatedReceiver = this.receiver.eval(context, locals);
+              return this.fn(evaluatedReceiver, evaluatedArgs);
+            }
+          },
+          visit: function(visitor) {
+            return visitor.visitMethodCall(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("MethodCall", MethodCall);
+      SafeMethodCall = (function($__super) {
+        function SafeMethodCall(receiver, name, fn, args) {
+          $traceurRuntime.superConstructor(SafeMethodCall).call(this);
+          this.receiver = receiver;
+          this.name = name;
+          this.fn = fn;
+          this.args = args;
+        }
+        return ($traceurRuntime.createClass)(SafeMethodCall, {
+          eval: function(context, locals) {
+            var evaluatedReceiver = this.receiver.eval(context, locals);
+            if (isBlank(evaluatedReceiver))
+              return null;
+            var evaluatedArgs = evalList(context, locals, this.args);
+            return this.fn(evaluatedReceiver, evaluatedArgs);
+          },
+          visit: function(visitor) {
+            return visitor.visitSafeMethodCall(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("SafeMethodCall", SafeMethodCall);
+      FunctionCall = (function($__super) {
+        function FunctionCall(target, args) {
+          $traceurRuntime.superConstructor(FunctionCall).call(this);
+          this.target = target;
+          this.args = args;
+        }
+        return ($traceurRuntime.createClass)(FunctionCall, {
+          eval: function(context, locals) {
+            var obj = this.target.eval(context, locals);
+            if (!(obj instanceof Function)) {
+              throw new BaseException((obj + " is not a function"));
+            }
+            return FunctionWrapper.apply(obj, evalList(context, locals, this.args));
+          },
+          visit: function(visitor) {
+            return visitor.visitFunctionCall(this);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("FunctionCall", FunctionCall);
+      ASTWithSource = (function($__super) {
+        function ASTWithSource(ast, source, location) {
+          $traceurRuntime.superConstructor(ASTWithSource).call(this);
+          this.ast = ast;
+          this.source = source;
+          this.location = location;
+        }
+        return ($traceurRuntime.createClass)(ASTWithSource, {
+          eval: function(context, locals) {
+            return this.ast.eval(context, locals);
+          },
+          get isAssignable() {
+            return this.ast.isAssignable;
+          },
+          assign: function(context, locals, value) {
+            return this.ast.assign(context, locals, value);
+          },
+          visit: function(visitor) {
+            return this.ast.visit(visitor);
+          },
+          toString: function() {
+            return (this.source + " in " + this.location);
+          }
+        }, {}, $__super);
+      }(AST));
+      $__export("ASTWithSource", ASTWithSource);
+      TemplateBinding = (function() {
+        function TemplateBinding(key, keyIsVar, name, expression) {
+          this.key = key;
+          this.keyIsVar = keyIsVar;
+          this.name = name;
+          this.expression = expression;
+        }
+        return ($traceurRuntime.createClass)(TemplateBinding, {}, {});
+      }());
+      $__export("TemplateBinding", TemplateBinding);
+      AstTransformer = (function() {
+        function AstTransformer() {}
+        return ($traceurRuntime.createClass)(AstTransformer, {
+          visitImplicitReceiver: function(ast) {
+            return ast;
+          },
+          visitInterpolation: function(ast) {
+            return new Interpolation(ast.strings, this.visitAll(ast.expressions));
+          },
+          visitLiteralPrimitive: function(ast) {
+            return new LiteralPrimitive(ast.value);
+          },
+          visitAccessMember: function(ast) {
+            return new AccessMember(ast.receiver.visit(this), ast.name, ast.getter, ast.setter);
+          },
+          visitSafeAccessMember: function(ast) {
+            return new SafeAccessMember(ast.receiver.visit(this), ast.name, ast.getter, ast.setter);
+          },
+          visitMethodCall: function(ast) {
+            return new MethodCall(ast.receiver.visit(this), ast.name, ast.fn, this.visitAll(ast.args));
+          },
+          visitSafeMethodCall: function(ast) {
+            return new SafeMethodCall(ast.receiver.visit(this), ast.name, ast.fn, this.visitAll(ast.args));
+          },
+          visitFunctionCall: function(ast) {
+            return new FunctionCall(ast.target.visit(this), this.visitAll(ast.args));
+          },
+          visitLiteralArray: function(ast) {
+            return new LiteralArray(this.visitAll(ast.expressions));
+          },
+          visitLiteralMap: function(ast) {
+            return new LiteralMap(ast.keys, this.visitAll(ast.values));
+          },
+          visitBinary: function(ast) {
+            return new Binary(ast.operation, ast.left.visit(this), ast.right.visit(this));
+          },
+          visitPrefixNot: function(ast) {
+            return new PrefixNot(ast.expression.visit(this));
+          },
+          visitConditional: function(ast) {
+            return new Conditional(ast.condition.visit(this), ast.trueExp.visit(this), ast.falseExp.visit(this));
+          },
+          visitPipe: function(ast) {
+            return new BindingPipe(ast.exp.visit(this), ast.name, this.visitAll(ast.args));
+          },
+          visitKeyedAccess: function(ast) {
+            return new KeyedAccess(ast.obj.visit(this), ast.key.visit(this));
+          },
+          visitAll: function(asts) {
+            var res = ListWrapper.createFixedSize(asts.length);
+            for (var i = 0; i < asts.length; ++i) {
+              res[i] = asts[i].visit(this);
+            }
+            return res;
+          },
+          visitChain: function(ast) {
+            return new Chain(this.visitAll(ast.expressions));
+          },
+          visitAssignment: function(ast) {
+            return new Assignment(ast.target.visit(this), ast.value.visit(this));
+          },
+          visitIf: function(ast) {
+            var falseExp = isPresent(ast.falseExp) ? ast.falseExp.visit(this) : null;
+            return new If(ast.condition.visit(this), ast.trueExp.visit(this), falseExp);
+          }
+        }, {});
+      }());
+      $__export("AstTransformer", AstTransformer);
+      _evalListCache = [[], [0], [0, 0], [0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+    }
+  };
+});
+
 System.register("angular2/src/di/annotations", ["angular2/src/di/annotations_impl"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/annotations";
@@ -5151,15 +5740,18 @@ System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang"
     execute: function() {
       Reflector = (function() {
         function Reflector(reflectionCapabilities) {
-          this._typeInfo = new Map();
+          this._injectableInfo = new Map();
           this._getters = new Map();
           this._setters = new Map();
           this._methods = new Map();
           this.reflectionCapabilities = reflectionCapabilities;
         }
         return ($traceurRuntime.createClass)(Reflector, {
+          registerFunction: function(func, funcInfo) {
+            this._injectableInfo.set(func, funcInfo);
+          },
           registerType: function(type, typeInfo) {
-            this._typeInfo.set(type, typeInfo);
+            this._injectableInfo.set(type, typeInfo);
           },
           registerGetters: function(getters) {
             _mergeMaps(this._getters, getters);
@@ -5178,21 +5770,21 @@ System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang"
             }
           },
           parameters: function(typeOrFunc) {
-            if (this._typeInfo.has(typeOrFunc)) {
+            if (this._injectableInfo.has(typeOrFunc)) {
               return this._getTypeInfoField(typeOrFunc, "parameters", []);
             } else {
               return this.reflectionCapabilities.parameters(typeOrFunc);
             }
           },
           annotations: function(typeOrFunc) {
-            if (this._typeInfo.has(typeOrFunc)) {
+            if (this._injectableInfo.has(typeOrFunc)) {
               return this._getTypeInfoField(typeOrFunc, "annotations", []);
             } else {
               return this.reflectionCapabilities.annotations(typeOrFunc);
             }
           },
           interfaces: function(type) {
-            if (this._typeInfo.has(type)) {
+            if (this._injectableInfo.has(type)) {
               return this._getTypeInfoField(type, "interfaces", []);
             } else {
               return this.reflectionCapabilities.interfaces(type);
@@ -5220,11 +5812,11 @@ System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang"
             }
           },
           _getTypeInfoField: function(typeOrFunc, key, defaultValue) {
-            var res = this._typeInfo.get(typeOrFunc)[key];
+            var res = this._injectableInfo.get(typeOrFunc)[key];
             return isPresent(res) ? res : defaultValue;
           },
           _containsTypeInfo: function(typeOrFunc) {
-            return this._typeInfo.has(typeOrFunc);
+            return this._injectableInfo.has(typeOrFunc);
           }
         }, {});
       }());
@@ -5488,24 +6080,17 @@ System.register("angular2/src/change_detection/exceptions", ["angular2/src/facad
     execute: function() {
       ExpressionChangedAfterItHasBeenChecked = (function($__super) {
         function ExpressionChangedAfterItHasBeenChecked(proto, change) {
-          $traceurRuntime.superConstructor(ExpressionChangedAfterItHasBeenChecked).call(this);
-          this.message = ("Expression '" + proto.expressionAsString + "' has changed after it was checked. ") + ("Previous value: '" + change.previousValue + "'. Current value: '" + change.currentValue + "'");
+          $traceurRuntime.superConstructor(ExpressionChangedAfterItHasBeenChecked).call(this, ("Expression '" + proto.expressionAsString + "' has changed after it was checked. ") + ("Previous value: '" + change.previousValue + "'. Current value: '" + change.currentValue + "'"));
         }
-        return ($traceurRuntime.createClass)(ExpressionChangedAfterItHasBeenChecked, {toString: function() {
-            return this.message;
-          }}, {}, $__super);
+        return ($traceurRuntime.createClass)(ExpressionChangedAfterItHasBeenChecked, {}, {}, $__super);
       }(BaseException));
       $__export("ExpressionChangedAfterItHasBeenChecked", ExpressionChangedAfterItHasBeenChecked);
       ChangeDetectionError = (function($__super) {
-        function ChangeDetectionError(proto, originalException) {
-          $traceurRuntime.superConstructor(ChangeDetectionError).call(this);
-          this.originalException = originalException;
+        function ChangeDetectionError(proto, originalException, originalStack) {
+          $traceurRuntime.superConstructor(ChangeDetectionError).call(this, (originalException + " in [" + proto.expressionAsString + "]"), originalException, originalStack);
           this.location = proto.expressionAsString;
-          this.message = (this.originalException + " in [" + this.location + "]");
         }
-        return ($traceurRuntime.createClass)(ChangeDetectionError, {toString: function() {
-            return this.message;
-          }}, {}, $__super);
+        return ($traceurRuntime.createClass)(ChangeDetectionError, {}, {}, $__super);
       }(BaseException));
       $__export("ChangeDetectionError", ChangeDetectionError);
       DehydratedException = (function($__super) {
@@ -5817,6 +6402,7 @@ System.register("angular2/src/change_detection/coalesce", ["angular2/src/facade/
   "use strict";
   var __moduleName = "angular2/src/change_detection/coalesce";
   var isPresent,
+      isBlank,
       ListWrapper,
       Map,
       RecordType,
@@ -5845,8 +6431,15 @@ System.register("angular2/src/change_detection/coalesce", ["angular2/src/facade/
   }
   function _findMatching(r, rs) {
     return ListWrapper.find(rs, (function(rr) {
-      return rr.mode !== RecordType.DIRECTIVE_LIFECYCLE && rr.mode === r.mode && rr.funcOrValue === r.funcOrValue && rr.contextIndex === r.contextIndex && rr.name === r.name && ListWrapper.equals(rr.args, r.args);
+      return rr.mode !== RecordType.DIRECTIVE_LIFECYCLE && _sameDirIndex(rr, r) && rr.mode === r.mode && rr.funcOrValue === r.funcOrValue && rr.contextIndex === r.contextIndex && rr.name === r.name && ListWrapper.equals(rr.args, r.args);
     }));
+  }
+  function _sameDirIndex(a, b) {
+    var di1 = isBlank(a.directiveIndex) ? null : a.directiveIndex.directiveIndex;
+    var ei1 = isBlank(a.directiveIndex) ? null : a.directiveIndex.elementIndex;
+    var di2 = isBlank(b.directiveIndex) ? null : b.directiveIndex.directiveIndex;
+    var ei2 = isBlank(b.directiveIndex) ? null : b.directiveIndex.elementIndex;
+    return di1 === di2 && ei1 === ei2;
   }
   function _replaceIndices(r, selfIndex, indexMap) {
     var args = ListWrapper.map(r.args, (function(a) {
@@ -5863,6 +6456,7 @@ System.register("angular2/src/change_detection/coalesce", ["angular2/src/facade/
   return {
     setters: [function($__m) {
       isPresent = $__m.isPresent;
+      isBlank = $__m.isBlank;
     }, function($__m) {
       ListWrapper = $__m.ListWrapper;
       Map = $__m.Map;
@@ -6199,7 +6793,7 @@ System.register("angular2/src/change_detection/change_detection_jit_generator", 
       CHANGES_LOCAL = "changes";
       LOCALS_ACCESSOR = "this.locals";
       MODE_ACCESSOR = "this.mode";
-      CURRENT_PROTO = "currentProto";
+      CURRENT_PROTO = "this.currentProto";
       ALREADY_CHECKED_ACCESSOR = "this.alreadyChecked";
       ChangeDetectorJITGenerator = (function() {
         function ChangeDetectorJITGenerator(id, changeDetectionStrategy, records, directiveRecords) {
@@ -6238,9 +6832,9 @@ System.register("angular2/src/change_detection/change_detection_jit_generator", 
           generate: function() {
             var $__0 = this;
             var typeName = _sanitizeName(("ChangeDetector_" + this.id));
-            var classDefinition = ("\n      var " + typeName + " = function " + typeName + "(dispatcher, pipeRegistry, protos, directiveRecords) {\n        " + ABSTRACT_CHANGE_DETECTOR + ".call(this, " + JSON.stringify(this.id) + ");\n        " + DISPATCHER_ACCESSOR + " = dispatcher;\n        " + PIPE_REGISTRY_ACCESSOR + " = pipeRegistry;\n        " + PROTOS_ACCESSOR + " = protos;\n        " + DIRECTIVES_ACCESSOR + " = directiveRecords;\n        " + LOCALS_ACCESSOR + " = null;\n        " + ALREADY_CHECKED_ACCESSOR + " = false;\n        " + this._genFieldDefinitions() + "\n      }\n\n      " + typeName + ".prototype = Object.create(" + ABSTRACT_CHANGE_DETECTOR + ".prototype);\n\n      " + typeName + ".prototype.detectChangesInRecords = function(throwOnChange) {\n        if (!this.hydrated()) {\n          " + UTIL + ".throwDehydrated();\n        }\n        " + this._genLocalDefinitions() + "\n        " + this._genChangeDefinitions() + "\n        var " + IS_CHANGED_LOCAL + " = false;\n        var " + CURRENT_PROTO + ";\n        var " + CHANGES_LOCAL + " = null;\n\n        context = " + CONTEXT_ACCESSOR + ";\n\n        " + this.records.map((function(r) {
+            var classDefinition = ("\n      var " + typeName + " = function " + typeName + "(dispatcher, pipeRegistry, protos, directiveRecords) {\n        " + ABSTRACT_CHANGE_DETECTOR + ".call(this, " + JSON.stringify(this.id) + ");\n        " + DISPATCHER_ACCESSOR + " = dispatcher;\n        " + PIPE_REGISTRY_ACCESSOR + " = pipeRegistry;\n        " + PROTOS_ACCESSOR + " = protos;\n        " + DIRECTIVES_ACCESSOR + " = directiveRecords;\n        " + LOCALS_ACCESSOR + " = null;\n        " + CURRENT_PROTO + " = null;        \n        " + ALREADY_CHECKED_ACCESSOR + " = false;\n        " + this._genFieldDefinitions() + "\n      }\n\n      " + typeName + ".prototype = Object.create(" + ABSTRACT_CHANGE_DETECTOR + ".prototype);\n\n      " + typeName + ".prototype.detectChangesInRecords = function(throwOnChange) {\n        if (!this.hydrated()) {\n          " + UTIL + ".throwDehydrated();\n        }\n        try {\n          this.__detectChangesInRecords(throwOnChange);\n        } catch (e) {\n          this.throwError(" + CURRENT_PROTO + ", e, e.stack);\n        }\n      }\n      \n      " + typeName + ".prototype.__detectChangesInRecords = function(throwOnChange) {\n        " + CURRENT_PROTO + " = null;\n          \n        " + this._genLocalDefinitions() + "\n        " + this._genChangeDefinitions() + "\n        var " + IS_CHANGED_LOCAL + " = false;\n        var " + CHANGES_LOCAL + " = null;\n  \n        context = " + CONTEXT_ACCESSOR + ";\n  \n        " + this.records.map((function(r) {
               return $__0._genRecord(r);
-            })).join("\n") + "\n\n        " + ALREADY_CHECKED_ACCESSOR + " = true;\n      }\n\n      " + typeName + ".prototype.callOnAllChangesDone = function() {\n        " + this._genCallOnAllChangesDoneBody() + "\n      }\n\n      " + typeName + ".prototype.hydrate = function(context, locals, directives) {\n        " + MODE_ACCESSOR + " = \"" + ChangeDetectionUtil.changeDetectionMode(this.changeDetectionStrategy) + "\";\n        " + CONTEXT_ACCESSOR + " = context;\n        " + LOCALS_ACCESSOR + " = locals;\n        " + this._genHydrateDirectives() + "\n        " + this._genHydrateDetectors() + "\n        " + ALREADY_CHECKED_ACCESSOR + " = false;\n      }\n\n      " + typeName + ".prototype.dehydrate = function() {\n        " + this._genPipeOnDestroy() + "\n        " + this._genFieldDefinitions() + "\n        " + LOCALS_ACCESSOR + " = null;\n      }\n\n      " + typeName + ".prototype.hydrated = function() {\n        return " + CONTEXT_ACCESSOR + " !== null;\n      }\n\n      return function(dispatcher, pipeRegistry) {\n        return new " + typeName + "(dispatcher, pipeRegistry, protos, directiveRecords);\n      }\n    ");
+            })).join("\n") + "\n  \n        " + ALREADY_CHECKED_ACCESSOR + " = true;\n      }\n      \n      " + typeName + ".prototype.callOnAllChangesDone = function() {\n        " + this._genCallOnAllChangesDoneBody() + "\n      }\n\n      " + typeName + ".prototype.hydrate = function(context, locals, directives) {\n        " + MODE_ACCESSOR + " = \"" + ChangeDetectionUtil.changeDetectionMode(this.changeDetectionStrategy) + "\";\n        " + CONTEXT_ACCESSOR + " = context;\n        " + LOCALS_ACCESSOR + " = locals;\n        " + this._genHydrateDirectives() + "\n        " + this._genHydrateDetectors() + "\n        " + ALREADY_CHECKED_ACCESSOR + " = false;\n      }\n\n      " + typeName + ".prototype.dehydrate = function() {\n        " + this._genPipeOnDestroy() + "\n        " + this._genFieldDefinitions() + "\n        " + LOCALS_ACCESSOR + " = null;\n      }\n\n      " + typeName + ".prototype.hydrated = function() {\n        return " + CONTEXT_ACCESSOR + " !== null;\n      }\n\n      return function(dispatcher, pipeRegistry) {\n        return new " + typeName + "(dispatcher, pipeRegistry, protos, directiveRecords);\n      }\n    ");
             return new Function('AbstractChangeDetector', 'ChangeDetectionUtil', 'protos', 'directiveRecords', classDefinition)(AbstractChangeDetector, ChangeDetectionUtil, this.records, this.directiveRecords);
           },
           _genGetDirectiveFieldNames: function() {
@@ -9023,9 +9617,9 @@ System.register("angular2/src/core/compiler/element_ref", ["angular2/src/facade/
     execute: function() {
       ElementRef = (function() {
         function ElementRef(parentView, boundElementIndex, _renderer) {
+          this._renderer = _renderer;
           this.parentView = parentView;
           this.boundElementIndex = boundElementIndex;
-          this._renderer = _renderer;
         }
         return ($traceurRuntime.createClass)(ElementRef, {
           get renderView() {
@@ -11990,6 +12584,7 @@ System.register("angular2/src/render/dom/compiler/property_binding_parser", ["an
   var __moduleName = "angular2/src/render/dom/compiler/property_binding_parser";
   var isPresent,
       RegExpWrapper,
+      StringWrapper,
       MapWrapper,
       dashCaseToCamelCase,
       BIND_NAME_REGEXP,
@@ -11998,6 +12593,7 @@ System.register("angular2/src/render/dom/compiler/property_binding_parser", ["an
     setters: [function($__m) {
       isPresent = $__m.isPresent;
       RegExpWrapper = $__m.RegExpWrapper;
+      StringWrapper = $__m.StringWrapper;
     }, function($__m) {
       MapWrapper = $__m.MapWrapper;
     }, function($__m) {
@@ -12015,6 +12611,7 @@ System.register("angular2/src/render/dom/compiler/property_binding_parser", ["an
             var attrs = current.attrs();
             var newAttrs = new Map();
             MapWrapper.forEach(attrs, (function(attrValue, attrName) {
+              attrName = $__0._normalizeAttributeName(attrName);
               var bindParts = RegExpWrapper.firstMatch(BIND_NAME_REGEXP, attrName);
               if (isPresent(bindParts)) {
                 if (isPresent(bindParts[1])) {
@@ -12046,6 +12643,9 @@ System.register("angular2/src/render/dom/compiler/property_binding_parser", ["an
             MapWrapper.forEach(newAttrs, (function(attrValue, attrName) {
               attrs.set(attrName, attrValue);
             }));
+          },
+          _normalizeAttributeName: function(attrName) {
+            return StringWrapper.startsWith(attrName, 'data-') ? StringWrapper.substring(attrName, 5) : attrName;
           },
           _bindVariable: function(identifier, value, current, newAttrs) {
             current.bindElement().bindVariable(dashCaseToCamelCase(identifier), value);
@@ -12615,7 +13215,7 @@ System.register("angular2/src/core/application_tokens", ["angular2/di", "angular
   var __moduleName = "angular2/src/core/application_tokens";
   var OpaqueToken,
       CONST_EXPR,
-      appComponentRefToken,
+      appComponentRefPromiseToken,
       appComponentTypeToken;
   return {
     setters: [function($__m) {
@@ -12624,25 +13224,10 @@ System.register("angular2/src/core/application_tokens", ["angular2/di", "angular
       CONST_EXPR = $__m.CONST_EXPR;
     }],
     execute: function() {
-      appComponentRefToken = CONST_EXPR(new OpaqueToken('ComponentRef'));
-      $__export("appComponentRefToken", appComponentRefToken);
+      appComponentRefPromiseToken = CONST_EXPR(new OpaqueToken('Promise<ComponentRef>'));
+      $__export("appComponentRefPromiseToken", appComponentRefPromiseToken);
       appComponentTypeToken = CONST_EXPR(new OpaqueToken('RootComponent'));
       $__export("appComponentTypeToken", appComponentTypeToken);
-    }
-  };
-});
-
-System.register("angular2/src/core/compiler/interfaces", ["angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/core/compiler/interfaces";
-  var global,
-      __ignore_me;
-  return {
-    setters: [function($__m) {
-      global = $__m.global;
-    }],
-    execute: function() {
-      __ignore_me = global;
     }
   };
 });
@@ -13272,595 +13857,6 @@ System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"],
   };
 });
 
-System.register("angular2/src/change_detection/parser/ast", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/change_detection/parser/ast";
-  var isBlank,
-      isPresent,
-      FunctionWrapper,
-      BaseException,
-      ListWrapper,
-      StringMapWrapper,
-      AST,
-      EmptyExpr,
-      ImplicitReceiver,
-      Chain,
-      Conditional,
-      If,
-      AccessMember,
-      SafeAccessMember,
-      KeyedAccess,
-      BindingPipe,
-      LiteralPrimitive,
-      LiteralArray,
-      LiteralMap,
-      Interpolation,
-      Binary,
-      PrefixNot,
-      Assignment,
-      MethodCall,
-      SafeMethodCall,
-      FunctionCall,
-      ASTWithSource,
-      TemplateBinding,
-      AstTransformer,
-      _evalListCache;
-  function evalList(context, locals, exps) {
-    var length = exps.length;
-    if (length > 10) {
-      throw new BaseException("Cannot have more than 10 argument");
-    }
-    var result = _evalListCache[length];
-    for (var i = 0; i < length; i++) {
-      result[i] = exps[i].eval(context, locals);
-    }
-    return result;
-  }
-  return {
-    setters: [function($__m) {
-      isBlank = $__m.isBlank;
-      isPresent = $__m.isPresent;
-      FunctionWrapper = $__m.FunctionWrapper;
-      BaseException = $__m.BaseException;
-    }, function($__m) {
-      ListWrapper = $__m.ListWrapper;
-      StringMapWrapper = $__m.StringMapWrapper;
-    }],
-    execute: function() {
-      AST = (function() {
-        function AST() {}
-        return ($traceurRuntime.createClass)(AST, {
-          eval: function(context, locals) {
-            throw new BaseException("Not supported");
-          },
-          get isAssignable() {
-            return false;
-          },
-          assign: function(context, locals, value) {
-            throw new BaseException("Not supported");
-          },
-          visit: function(visitor) {
-            return null;
-          },
-          toString: function() {
-            return "AST";
-          }
-        }, {});
-      }());
-      $__export("AST", AST);
-      EmptyExpr = (function($__super) {
-        function EmptyExpr() {
-          $traceurRuntime.superConstructor(EmptyExpr).apply(this, arguments);
-        }
-        return ($traceurRuntime.createClass)(EmptyExpr, {
-          eval: function(context, locals) {
-            return null;
-          },
-          visit: function(visitor) {}
-        }, {}, $__super);
-      }(AST));
-      $__export("EmptyExpr", EmptyExpr);
-      ImplicitReceiver = (function($__super) {
-        function ImplicitReceiver() {
-          $traceurRuntime.superConstructor(ImplicitReceiver).apply(this, arguments);
-        }
-        return ($traceurRuntime.createClass)(ImplicitReceiver, {
-          eval: function(context, locals) {
-            return context;
-          },
-          visit: function(visitor) {
-            return visitor.visitImplicitReceiver(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("ImplicitReceiver", ImplicitReceiver);
-      Chain = (function($__super) {
-        function Chain(expressions) {
-          $traceurRuntime.superConstructor(Chain).call(this);
-          this.expressions = expressions;
-        }
-        return ($traceurRuntime.createClass)(Chain, {
-          eval: function(context, locals) {
-            var result;
-            for (var i = 0; i < this.expressions.length; i++) {
-              var last = this.expressions[i].eval(context, locals);
-              if (isPresent(last))
-                result = last;
-            }
-            return result;
-          },
-          visit: function(visitor) {
-            return visitor.visitChain(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("Chain", Chain);
-      Conditional = (function($__super) {
-        function Conditional(condition, trueExp, falseExp) {
-          $traceurRuntime.superConstructor(Conditional).call(this);
-          this.condition = condition;
-          this.trueExp = trueExp;
-          this.falseExp = falseExp;
-        }
-        return ($traceurRuntime.createClass)(Conditional, {
-          eval: function(context, locals) {
-            if (this.condition.eval(context, locals)) {
-              return this.trueExp.eval(context, locals);
-            } else {
-              return this.falseExp.eval(context, locals);
-            }
-          },
-          visit: function(visitor) {
-            return visitor.visitConditional(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("Conditional", Conditional);
-      If = (function($__super) {
-        function If(condition, trueExp, falseExp) {
-          $traceurRuntime.superConstructor(If).call(this);
-          this.condition = condition;
-          this.trueExp = trueExp;
-          this.falseExp = falseExp;
-        }
-        return ($traceurRuntime.createClass)(If, {
-          eval: function(context, locals) {
-            if (this.condition.eval(context, locals)) {
-              this.trueExp.eval(context, locals);
-            } else if (isPresent(this.falseExp)) {
-              this.falseExp.eval(context, locals);
-            }
-          },
-          visit: function(visitor) {
-            return visitor.visitIf(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("If", If);
-      AccessMember = (function($__super) {
-        function AccessMember(receiver, name, getter, setter) {
-          $traceurRuntime.superConstructor(AccessMember).call(this);
-          this.receiver = receiver;
-          this.name = name;
-          this.getter = getter;
-          this.setter = setter;
-        }
-        return ($traceurRuntime.createClass)(AccessMember, {
-          eval: function(context, locals) {
-            if (this.receiver instanceof ImplicitReceiver && isPresent(locals) && locals.contains(this.name)) {
-              return locals.get(this.name);
-            } else {
-              var evaluatedReceiver = this.receiver.eval(context, locals);
-              return this.getter(evaluatedReceiver);
-            }
-          },
-          get isAssignable() {
-            return true;
-          },
-          assign: function(context, locals, value) {
-            var evaluatedContext = this.receiver.eval(context, locals);
-            if (this.receiver instanceof ImplicitReceiver && isPresent(locals) && locals.contains(this.name)) {
-              throw new BaseException(("Cannot reassign a variable binding " + this.name));
-            } else {
-              return this.setter(evaluatedContext, value);
-            }
-          },
-          visit: function(visitor) {
-            return visitor.visitAccessMember(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("AccessMember", AccessMember);
-      SafeAccessMember = (function($__super) {
-        function SafeAccessMember(receiver, name, getter, setter) {
-          $traceurRuntime.superConstructor(SafeAccessMember).call(this);
-          this.receiver = receiver;
-          this.name = name;
-          this.getter = getter;
-          this.setter = setter;
-        }
-        return ($traceurRuntime.createClass)(SafeAccessMember, {
-          eval: function(context, locals) {
-            var evaluatedReceiver = this.receiver.eval(context, locals);
-            return isBlank(evaluatedReceiver) ? null : this.getter(evaluatedReceiver);
-          },
-          visit: function(visitor) {
-            return visitor.visitSafeAccessMember(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("SafeAccessMember", SafeAccessMember);
-      KeyedAccess = (function($__super) {
-        function KeyedAccess(obj, key) {
-          $traceurRuntime.superConstructor(KeyedAccess).call(this);
-          this.obj = obj;
-          this.key = key;
-        }
-        return ($traceurRuntime.createClass)(KeyedAccess, {
-          eval: function(context, locals) {
-            var obj = this.obj.eval(context, locals);
-            var key = this.key.eval(context, locals);
-            return obj[key];
-          },
-          get isAssignable() {
-            return true;
-          },
-          assign: function(context, locals, value) {
-            var obj = this.obj.eval(context, locals);
-            var key = this.key.eval(context, locals);
-            obj[key] = value;
-            return value;
-          },
-          visit: function(visitor) {
-            return visitor.visitKeyedAccess(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("KeyedAccess", KeyedAccess);
-      BindingPipe = (function($__super) {
-        function BindingPipe(exp, name, args) {
-          $traceurRuntime.superConstructor(BindingPipe).call(this);
-          this.exp = exp;
-          this.name = name;
-          this.args = args;
-        }
-        return ($traceurRuntime.createClass)(BindingPipe, {visit: function(visitor) {
-            return visitor.visitPipe(this);
-          }}, {}, $__super);
-      }(AST));
-      $__export("BindingPipe", BindingPipe);
-      LiteralPrimitive = (function($__super) {
-        function LiteralPrimitive(value) {
-          $traceurRuntime.superConstructor(LiteralPrimitive).call(this);
-          this.value = value;
-        }
-        return ($traceurRuntime.createClass)(LiteralPrimitive, {
-          eval: function(context, locals) {
-            return this.value;
-          },
-          visit: function(visitor) {
-            return visitor.visitLiteralPrimitive(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("LiteralPrimitive", LiteralPrimitive);
-      LiteralArray = (function($__super) {
-        function LiteralArray(expressions) {
-          $traceurRuntime.superConstructor(LiteralArray).call(this);
-          this.expressions = expressions;
-        }
-        return ($traceurRuntime.createClass)(LiteralArray, {
-          eval: function(context, locals) {
-            return ListWrapper.map(this.expressions, (function(e) {
-              return e.eval(context, locals);
-            }));
-          },
-          visit: function(visitor) {
-            return visitor.visitLiteralArray(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("LiteralArray", LiteralArray);
-      LiteralMap = (function($__super) {
-        function LiteralMap(keys, values) {
-          $traceurRuntime.superConstructor(LiteralMap).call(this);
-          this.keys = keys;
-          this.values = values;
-        }
-        return ($traceurRuntime.createClass)(LiteralMap, {
-          eval: function(context, locals) {
-            var res = StringMapWrapper.create();
-            for (var i = 0; i < this.keys.length; ++i) {
-              StringMapWrapper.set(res, this.keys[i], this.values[i].eval(context, locals));
-            }
-            return res;
-          },
-          visit: function(visitor) {
-            return visitor.visitLiteralMap(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("LiteralMap", LiteralMap);
-      Interpolation = (function($__super) {
-        function Interpolation(strings, expressions) {
-          $traceurRuntime.superConstructor(Interpolation).call(this);
-          this.strings = strings;
-          this.expressions = expressions;
-        }
-        return ($traceurRuntime.createClass)(Interpolation, {
-          eval: function(context, locals) {
-            throw new BaseException("evaluating an Interpolation is not supported");
-          },
-          visit: function(visitor) {
-            visitor.visitInterpolation(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("Interpolation", Interpolation);
-      Binary = (function($__super) {
-        function Binary(operation, left, right) {
-          $traceurRuntime.superConstructor(Binary).call(this);
-          this.operation = operation;
-          this.left = left;
-          this.right = right;
-        }
-        return ($traceurRuntime.createClass)(Binary, {
-          eval: function(context, locals) {
-            var left = this.left.eval(context, locals);
-            switch (this.operation) {
-              case '&&':
-                return left && this.right.eval(context, locals);
-              case '||':
-                return left || this.right.eval(context, locals);
-            }
-            var right = this.right.eval(context, locals);
-            switch (this.operation) {
-              case '+':
-                return left + right;
-              case '-':
-                return left - right;
-              case '*':
-                return left * right;
-              case '/':
-                return left / right;
-              case '%':
-                return left % right;
-              case '==':
-                return left == right;
-              case '!=':
-                return left != right;
-              case '===':
-                return left === right;
-              case '!==':
-                return left !== right;
-              case '<':
-                return left < right;
-              case '>':
-                return left > right;
-              case '<=':
-                return left <= right;
-              case '>=':
-                return left >= right;
-              case '^':
-                return left ^ right;
-              case '&':
-                return left & right;
-            }
-            throw 'Internal error [$operation] not handled';
-          },
-          visit: function(visitor) {
-            return visitor.visitBinary(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("Binary", Binary);
-      PrefixNot = (function($__super) {
-        function PrefixNot(expression) {
-          $traceurRuntime.superConstructor(PrefixNot).call(this);
-          this.expression = expression;
-        }
-        return ($traceurRuntime.createClass)(PrefixNot, {
-          eval: function(context, locals) {
-            return !this.expression.eval(context, locals);
-          },
-          visit: function(visitor) {
-            return visitor.visitPrefixNot(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("PrefixNot", PrefixNot);
-      Assignment = (function($__super) {
-        function Assignment(target, value) {
-          $traceurRuntime.superConstructor(Assignment).call(this);
-          this.target = target;
-          this.value = value;
-        }
-        return ($traceurRuntime.createClass)(Assignment, {
-          eval: function(context, locals) {
-            return this.target.assign(context, locals, this.value.eval(context, locals));
-          },
-          visit: function(visitor) {
-            return visitor.visitAssignment(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("Assignment", Assignment);
-      MethodCall = (function($__super) {
-        function MethodCall(receiver, name, fn, args) {
-          $traceurRuntime.superConstructor(MethodCall).call(this);
-          this.receiver = receiver;
-          this.name = name;
-          this.fn = fn;
-          this.args = args;
-        }
-        return ($traceurRuntime.createClass)(MethodCall, {
-          eval: function(context, locals) {
-            var evaluatedArgs = evalList(context, locals, this.args);
-            if (this.receiver instanceof ImplicitReceiver && isPresent(locals) && locals.contains(this.name)) {
-              var fn = locals.get(this.name);
-              return FunctionWrapper.apply(fn, evaluatedArgs);
-            } else {
-              var evaluatedReceiver = this.receiver.eval(context, locals);
-              return this.fn(evaluatedReceiver, evaluatedArgs);
-            }
-          },
-          visit: function(visitor) {
-            return visitor.visitMethodCall(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("MethodCall", MethodCall);
-      SafeMethodCall = (function($__super) {
-        function SafeMethodCall(receiver, name, fn, args) {
-          $traceurRuntime.superConstructor(SafeMethodCall).call(this);
-          this.receiver = receiver;
-          this.name = name;
-          this.fn = fn;
-          this.args = args;
-        }
-        return ($traceurRuntime.createClass)(SafeMethodCall, {
-          eval: function(context, locals) {
-            var evaluatedReceiver = this.receiver.eval(context, locals);
-            if (isBlank(evaluatedReceiver))
-              return null;
-            var evaluatedArgs = evalList(context, locals, this.args);
-            return this.fn(evaluatedReceiver, evaluatedArgs);
-          },
-          visit: function(visitor) {
-            return visitor.visitSafeMethodCall(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("SafeMethodCall", SafeMethodCall);
-      FunctionCall = (function($__super) {
-        function FunctionCall(target, args) {
-          $traceurRuntime.superConstructor(FunctionCall).call(this);
-          this.target = target;
-          this.args = args;
-        }
-        return ($traceurRuntime.createClass)(FunctionCall, {
-          eval: function(context, locals) {
-            var obj = this.target.eval(context, locals);
-            if (!(obj instanceof Function)) {
-              throw new BaseException((obj + " is not a function"));
-            }
-            return FunctionWrapper.apply(obj, evalList(context, locals, this.args));
-          },
-          visit: function(visitor) {
-            return visitor.visitFunctionCall(this);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("FunctionCall", FunctionCall);
-      ASTWithSource = (function($__super) {
-        function ASTWithSource(ast, source, location) {
-          $traceurRuntime.superConstructor(ASTWithSource).call(this);
-          this.ast = ast;
-          this.source = source;
-          this.location = location;
-        }
-        return ($traceurRuntime.createClass)(ASTWithSource, {
-          eval: function(context, locals) {
-            return this.ast.eval(context, locals);
-          },
-          get isAssignable() {
-            return this.ast.isAssignable;
-          },
-          assign: function(context, locals, value) {
-            return this.ast.assign(context, locals, value);
-          },
-          visit: function(visitor) {
-            return this.ast.visit(visitor);
-          },
-          toString: function() {
-            return (this.source + " in " + this.location);
-          }
-        }, {}, $__super);
-      }(AST));
-      $__export("ASTWithSource", ASTWithSource);
-      TemplateBinding = (function() {
-        function TemplateBinding(key, keyIsVar, name, expression) {
-          this.key = key;
-          this.keyIsVar = keyIsVar;
-          this.name = name;
-          this.expression = expression;
-        }
-        return ($traceurRuntime.createClass)(TemplateBinding, {}, {});
-      }());
-      $__export("TemplateBinding", TemplateBinding);
-      AstTransformer = (function() {
-        function AstTransformer() {}
-        return ($traceurRuntime.createClass)(AstTransformer, {
-          visitImplicitReceiver: function(ast) {
-            return ast;
-          },
-          visitInterpolation: function(ast) {
-            return new Interpolation(ast.strings, this.visitAll(ast.expressions));
-          },
-          visitLiteralPrimitive: function(ast) {
-            return new LiteralPrimitive(ast.value);
-          },
-          visitAccessMember: function(ast) {
-            return new AccessMember(ast.receiver.visit(this), ast.name, ast.getter, ast.setter);
-          },
-          visitSafeAccessMember: function(ast) {
-            return new SafeAccessMember(ast.receiver.visit(this), ast.name, ast.getter, ast.setter);
-          },
-          visitMethodCall: function(ast) {
-            return new MethodCall(ast.receiver.visit(this), ast.name, ast.fn, this.visitAll(ast.args));
-          },
-          visitSafeMethodCall: function(ast) {
-            return new SafeMethodCall(ast.receiver.visit(this), ast.name, ast.fn, this.visitAll(ast.args));
-          },
-          visitFunctionCall: function(ast) {
-            return new FunctionCall(ast.target.visit(this), this.visitAll(ast.args));
-          },
-          visitLiteralArray: function(ast) {
-            return new LiteralArray(this.visitAll(ast.expressions));
-          },
-          visitLiteralMap: function(ast) {
-            return new LiteralMap(ast.keys, this.visitAll(ast.values));
-          },
-          visitBinary: function(ast) {
-            return new Binary(ast.operation, ast.left.visit(this), ast.right.visit(this));
-          },
-          visitPrefixNot: function(ast) {
-            return new PrefixNot(ast.expression.visit(this));
-          },
-          visitConditional: function(ast) {
-            return new Conditional(ast.condition.visit(this), ast.trueExp.visit(this), ast.falseExp.visit(this));
-          },
-          visitPipe: function(ast) {
-            return new BindingPipe(ast.exp.visit(this), ast.name, this.visitAll(ast.args));
-          },
-          visitKeyedAccess: function(ast) {
-            return new KeyedAccess(ast.obj.visit(this), ast.key.visit(this));
-          },
-          visitAll: function(asts) {
-            var res = ListWrapper.createFixedSize(asts.length);
-            for (var i = 0; i < asts.length; ++i) {
-              res[i] = asts[i].visit(this);
-            }
-            return res;
-          },
-          visitChain: function(ast) {
-            return new Chain(this.visitAll(ast.expressions));
-          },
-          visitAssignment: function(ast) {
-            return new Assignment(ast.target.visit(this), ast.value.visit(this));
-          },
-          visitIf: function(ast) {
-            var falseExp = isPresent(ast.falseExp) ? ast.falseExp.visit(this) : null;
-            return new If(ast.condition.visit(this), ast.trueExp.visit(this), falseExp);
-          }
-        }, {});
-      }());
-      $__export("AstTransformer", AstTransformer);
-      _evalListCache = [[], [0], [0, 0], [0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
-    }
-  };
-});
-
 System.register("angular2/src/di/decorators", ["angular2/src/di/annotations", "angular2/src/util/decorators"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/decorators";
@@ -14169,12 +14165,13 @@ System.register("angular2/src/change_detection/change_detection_util", ["angular
   };
 });
 
-System.register("angular2/src/change_detection/abstract_change_detector", ["angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/change_detection/change_detector_ref", "angular2/src/change_detection/constants"], function($__export) {
+System.register("angular2/src/change_detection/abstract_change_detector", ["angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/change_detection/change_detector_ref", "angular2/src/change_detection/exceptions", "angular2/src/change_detection/constants"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/change_detection/abstract_change_detector";
   var isPresent,
       ListWrapper,
       ChangeDetectorRef,
+      ChangeDetectionError,
       CHECK_ONCE,
       CHECKED,
       DETACHED,
@@ -14186,6 +14183,8 @@ System.register("angular2/src/change_detection/abstract_change_detector", ["angu
       ListWrapper = $__m.ListWrapper;
     }, function($__m) {
       ChangeDetectorRef = $__m.ChangeDetectorRef;
+    }, function($__m) {
+      ChangeDetectionError = $__m.ChangeDetectionError;
     }, function($__m) {
       CHECK_ONCE = $__m.CHECK_ONCE;
       CHECKED = $__m.CHECKED;
@@ -14261,6 +14260,9 @@ System.register("angular2/src/change_detection/abstract_change_detector", ["angu
                 c.mode = CHECK_ONCE;
               c = c.parent;
             }
+          },
+          throwError: function(proto, exception, stack) {
+            throw new ChangeDetectionError(proto, exception, stack);
           }
         }, {});
       }());
@@ -16342,8 +16344,8 @@ System.register("angular2/src/router/path_recognizer", ["angular2/src/facade/lan
       RegExpWrapper,
       StringWrapper,
       isPresent,
+      isBlank,
       BaseException,
-      normalizeBlank,
       StringMapWrapper,
       ListWrapper,
       IMPLEMENTS,
@@ -16356,6 +16358,13 @@ System.register("angular2/src/router/path_recognizer", ["angular2/src/facade/lan
       paramMatcher,
       wildcardMatcher,
       PathRecognizer;
+  function normalizeString(obj) {
+    if (isBlank(obj)) {
+      return null;
+    } else {
+      return obj.toString();
+    }
+  }
   function parsePathString(route) {
     if (StringWrapper.startsWith(route, "/")) {
       route = StringWrapper.substring(route, 1);
@@ -16398,8 +16407,8 @@ System.register("angular2/src/router/path_recognizer", ["angular2/src/facade/lan
       RegExpWrapper = $__m.RegExpWrapper;
       StringWrapper = $__m.StringWrapper;
       isPresent = $__m.isPresent;
+      isBlank = $__m.isBlank;
       BaseException = $__m.BaseException;
-      normalizeBlank = $__m.normalizeBlank;
       IMPLEMENTS = $__m.IMPLEMENTS;
     }, function($__m) {
       StringMapWrapper = $__m.StringMapWrapper;
@@ -16461,7 +16470,7 @@ System.register("angular2/src/router/path_recognizer", ["angular2/src/facade/lan
           if (!StringMapWrapper.contains(params, this.name)) {
             throw new BaseException(("Route generator for '" + this.name + "' was not included in parameters passed."));
           }
-          return normalizeBlank(StringMapWrapper.get(params, this.name));
+          return normalizeString(StringMapWrapper.get(params, this.name));
         }}, {}));
       DynamicSegment = __decorate([IMPLEMENTS(Segment), __metadata('design:paramtypes', [String])], DynamicSegment);
       StarSegment = (function() {
@@ -16470,7 +16479,7 @@ System.register("angular2/src/router/path_recognizer", ["angular2/src/facade/lan
           this.regex = "(.+)";
         }
         return ($traceurRuntime.createClass)(StarSegment, {generate: function(params) {
-            return normalizeBlank(StringMapWrapper.get(params, this.name));
+            return normalizeString(StringMapWrapper.get(params, this.name));
           }}, {});
       }());
       paramMatcher = RegExpWrapper.create("^:([^\/]+)$");
@@ -16531,36 +16540,55 @@ System.register("angular2/src/router/path_recognizer", ["angular2/src/facade/lan
   };
 });
 
-System.register("angular2/src/router/router", ["angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/router/router", ["angular2/src/facade/async", "angular2/src/facade/collection", "angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/router/router";
   var PromiseWrapper,
       EventEmitter,
       ObservableWrapper,
+      ListWrapper,
       isBlank,
+      isString,
+      StringWrapper,
       isPresent,
       isArray,
+      BaseException,
       _resolveToTrue,
       _resolveToFalse,
       Router,
       RootRouter,
-      ChildRouter;
+      ChildRouter,
+      SLASH;
+  function splitAndFlattenLinkParams(linkParams) {
+    return ListWrapper.reduce(linkParams, (function(accumulation, item) {
+      if (isString(item)) {
+        return ListWrapper.concat(accumulation, StringWrapper.split(item, SLASH));
+      }
+      accumulation.push(item);
+      return accumulation;
+    }), []);
+  }
   return {
     setters: [function($__m) {
       PromiseWrapper = $__m.PromiseWrapper;
       EventEmitter = $__m.EventEmitter;
       ObservableWrapper = $__m.ObservableWrapper;
     }, function($__m) {
+      ListWrapper = $__m.ListWrapper;
+    }, function($__m) {
       isBlank = $__m.isBlank;
+      isString = $__m.isString;
+      StringWrapper = $__m.StringWrapper;
       isPresent = $__m.isPresent;
       isArray = $__m.isArray;
+      BaseException = $__m.BaseException;
     }],
     execute: function() {
       _resolveToTrue = PromiseWrapper.resolve(true);
       _resolveToFalse = PromiseWrapper.resolve(false);
       Router = (function() {
-        function Router(_registry, _pipeline, parent, hostComponent) {
-          this._registry = _registry;
+        function Router(registry, _pipeline, parent, hostComponent) {
+          this.registry = registry;
           this._pipeline = _pipeline;
           this.parent = parent;
           this.hostComponent = hostComponent;
@@ -16586,10 +16614,10 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
             var $__0 = this;
             if (isArray(config)) {
               config.forEach((function(configObject) {
-                $__0._registry.config($__0.hostComponent, configObject);
+                $__0.registry.config($__0.hostComponent, configObject);
               }));
             } else {
-              this._registry.config(this.hostComponent, config);
+              this.registry.config(this.hostComponent, config);
             }
             return this.renavigate();
           },
@@ -16640,7 +16668,7 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
             return _resolveToTrue;
           },
           recognize: function(url) {
-            return this._registry.recognize(url, this.hostComponent);
+            return this.registry.recognize(url, this.hostComponent);
           },
           renavigate: function() {
             var destination = isBlank(this.previousUrl) ? this.lastNavigationAttempt : this.previousUrl;
@@ -16650,7 +16678,38 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
             return this.navigate(destination);
           },
           generate: function(linkParams) {
-            return this._registry.generate(linkParams, this.hostComponent);
+            var normalizedLinkParams = splitAndFlattenLinkParams(linkParams);
+            var first = ListWrapper.first(normalizedLinkParams);
+            var rest = ListWrapper.slice(normalizedLinkParams, 1);
+            var router = this;
+            if (first == '') {
+              while (isPresent(router.parent)) {
+                router = router.parent;
+              }
+            } else if (first == '..') {
+              router = router.parent;
+              while (ListWrapper.first(rest) == '..') {
+                rest = ListWrapper.slice(rest, 1);
+                router = router.parent;
+                if (isBlank(router)) {
+                  throw new BaseException(("Link \"" + ListWrapper.toJSON(linkParams) + "\" has too many \"../\" segments."));
+                }
+              }
+            } else if (first != '.') {
+              throw new BaseException(("Link \"" + ListWrapper.toJSON(linkParams) + "\" must start with \"/\", \"./\", or \"../\""));
+            }
+            if (rest[rest.length - 1] == '') {
+              ListWrapper.removeLast(rest);
+            }
+            if (rest.length < 1) {
+              var msg = ("Link \"" + ListWrapper.toJSON(linkParams) + "\" must include a route name.");
+              throw new BaseException(msg);
+            }
+            var url = '';
+            if (isPresent(router.parent) && isPresent(router.parent._currentInstruction)) {
+              url = router.parent._currentInstruction.capturedUrl;
+            }
+            return url + '/' + this.registry.generate(rest, router.hostComponent);
           }
         }, {});
       }());
@@ -16663,7 +16722,7 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
           this._location.subscribe(($__0 = this, function(change) {
             return $__0.navigate(change['url']);
           }));
-          this._registry.configFromComponent(hostComponent);
+          this.registry.configFromComponent(hostComponent);
           this.navigate(location.path());
         }
         return ($traceurRuntime.createClass)(RootRouter, {commit: function(instruction) {
@@ -16676,11 +16735,14 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
       $__export("RootRouter", RootRouter);
       ChildRouter = (function($__super) {
         function ChildRouter(parent, hostComponent) {
-          $traceurRuntime.superConstructor(ChildRouter).call(this, parent._registry, parent._pipeline, parent, hostComponent);
+          $traceurRuntime.superConstructor(ChildRouter).call(this, parent.registry, parent._pipeline, parent, hostComponent);
           this.parent = parent;
         }
-        return ($traceurRuntime.createClass)(ChildRouter, {}, {}, $__super);
+        return ($traceurRuntime.createClass)(ChildRouter, {navigate: function(url) {
+            return this.parent.navigate(url);
+          }}, {}, $__super);
       }(Router));
+      SLASH = new RegExp('/');
     }
   };
 });
@@ -17896,7 +17958,7 @@ System.register("angular2/src/change_detection/parser/parser", ["angular2/src/di
   };
 });
 
-System.register("angular2/src/change_detection/dynamic_change_detector", ["angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/change_detection/abstract_change_detector", "angular2/src/change_detection/change_detection_util", "angular2/src/change_detection/proto_record", "angular2/src/change_detection/exceptions"], function($__export) {
+System.register("angular2/src/change_detection/dynamic_change_detector", ["angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/change_detection/abstract_change_detector", "angular2/src/change_detection/change_detection_util", "angular2/src/change_detection/proto_record"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/change_detection/dynamic_change_detector";
   var isPresent,
@@ -17908,7 +17970,6 @@ System.register("angular2/src/change_detection/dynamic_change_detector", ["angul
       ChangeDetectionUtil,
       uninitialized,
       RecordType,
-      ChangeDetectionError,
       DynamicChangeDetector;
   function isSame(a, b) {
     if (a === b)
@@ -17934,8 +17995,6 @@ System.register("angular2/src/change_detection/dynamic_change_detector", ["angul
       uninitialized = $__m.uninitialized;
     }, function($__m) {
       RecordType = $__m.RecordType;
-    }, function($__m) {
-      ChangeDetectionError = $__m.ChangeDetectionError;
     }],
     execute: function() {
       DynamicChangeDetector = (function($__super) {
@@ -18062,7 +18121,7 @@ System.register("angular2/src/change_detection/dynamic_change_detector", ["angul
                 return this._referenceCheck(proto, throwOnChange);
               }
             } catch (e) {
-              throw new ChangeDetectionError(proto, e);
+              this.throwError(proto, e, e.stack);
             }
           },
           _referenceCheck: function(proto, throwOnChange) {
@@ -19991,7 +20050,6 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
       OutOfBoundsError,
       Type,
       isPresent,
-      isBlank,
       CONST_EXPR,
       Key,
       resolveForwardRef,
@@ -20067,7 +20125,6 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
     }, function($__m) {
       Type = $__m.Type;
       isPresent = $__m.isPresent;
-      isBlank = $__m.isBlank;
       CONST_EXPR = $__m.CONST_EXPR;
     }, function($__m) {
       Key = $__m.Key;
@@ -20241,41 +20298,41 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
         function InjectorInlineStrategy(injector, protoStrategy) {
           this.injector = injector;
           this.protoStrategy = protoStrategy;
-          this.obj0 = null;
-          this.obj1 = null;
-          this.obj2 = null;
-          this.obj3 = null;
-          this.obj4 = null;
-          this.obj5 = null;
-          this.obj6 = null;
-          this.obj7 = null;
-          this.obj8 = null;
-          this.obj9 = null;
+          this.obj0 = undefinedValue;
+          this.obj1 = undefinedValue;
+          this.obj2 = undefinedValue;
+          this.obj3 = undefinedValue;
+          this.obj4 = undefinedValue;
+          this.obj5 = undefinedValue;
+          this.obj6 = undefinedValue;
+          this.obj7 = undefinedValue;
+          this.obj8 = undefinedValue;
+          this.obj9 = undefinedValue;
         }
         return ($traceurRuntime.createClass)(InjectorInlineStrategy, {
           hydrate: function() {
             var p = this.protoStrategy;
             var inj = this.injector;
             inj._constructionCounter = 0;
-            if (isPresent(p.keyId0) && isBlank(this.obj0))
+            if (isPresent(p.keyId0) && this.obj0 === undefinedValue)
               this.obj0 = inj._new(p.binding0, p.visibility0);
-            if (isPresent(p.keyId1) && isBlank(this.obj1))
+            if (isPresent(p.keyId1) && this.obj1 === undefinedValue)
               this.obj1 = inj._new(p.binding1, p.visibility1);
-            if (isPresent(p.keyId2) && isBlank(this.obj2))
+            if (isPresent(p.keyId2) && this.obj2 === undefinedValue)
               this.obj2 = inj._new(p.binding2, p.visibility2);
-            if (isPresent(p.keyId3) && isBlank(this.obj3))
+            if (isPresent(p.keyId3) && this.obj3 === undefinedValue)
               this.obj3 = inj._new(p.binding3, p.visibility3);
-            if (isPresent(p.keyId4) && isBlank(this.obj4))
+            if (isPresent(p.keyId4) && this.obj4 === undefinedValue)
               this.obj4 = inj._new(p.binding4, p.visibility4);
-            if (isPresent(p.keyId5) && isBlank(this.obj5))
+            if (isPresent(p.keyId5) && this.obj5 === undefinedValue)
               this.obj5 = inj._new(p.binding5, p.visibility5);
-            if (isPresent(p.keyId6) && isBlank(this.obj6))
+            if (isPresent(p.keyId6) && this.obj6 === undefinedValue)
               this.obj6 = inj._new(p.binding6, p.visibility6);
-            if (isPresent(p.keyId7) && isBlank(this.obj7))
+            if (isPresent(p.keyId7) && this.obj7 === undefinedValue)
               this.obj7 = inj._new(p.binding7, p.visibility7);
-            if (isPresent(p.keyId8) && isBlank(this.obj8))
+            if (isPresent(p.keyId8) && this.obj8 === undefinedValue)
               this.obj8 = inj._new(p.binding8, p.visibility8);
-            if (isPresent(p.keyId9) && isBlank(this.obj9))
+            if (isPresent(p.keyId9) && this.obj9 === undefinedValue)
               this.obj9 = inj._new(p.binding9, p.visibility9);
           },
           attach: function(parent, isBoundary) {
@@ -20284,76 +20341,76 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
             inj._isBoundary = isBoundary;
           },
           dehydrate: function() {
-            this.obj0 = null;
-            this.obj1 = null;
-            this.obj2 = null;
-            this.obj3 = null;
-            this.obj4 = null;
-            this.obj5 = null;
-            this.obj6 = null;
-            this.obj7 = null;
-            this.obj8 = null;
-            this.obj9 = null;
+            this.obj0 = undefinedValue;
+            this.obj1 = undefinedValue;
+            this.obj2 = undefinedValue;
+            this.obj3 = undefinedValue;
+            this.obj4 = undefinedValue;
+            this.obj5 = undefinedValue;
+            this.obj6 = undefinedValue;
+            this.obj7 = undefinedValue;
+            this.obj8 = undefinedValue;
+            this.obj9 = undefinedValue;
           },
           getObjByKeyId: function(keyId, visibility) {
             var p = this.protoStrategy;
             var inj = this.injector;
             if (p.keyId0 === keyId && (p.visibility0 & visibility) > 0) {
-              if (isBlank(this.obj0)) {
+              if (this.obj0 === undefinedValue) {
                 this.obj0 = inj._new(p.binding0, p.visibility0);
               }
               return this.obj0;
             }
             if (p.keyId1 === keyId && (p.visibility1 & visibility) > 0) {
-              if (isBlank(this.obj1)) {
+              if (this.obj1 === undefinedValue) {
                 this.obj1 = inj._new(p.binding1, p.visibility1);
               }
               return this.obj1;
             }
             if (p.keyId2 === keyId && (p.visibility2 & visibility) > 0) {
-              if (isBlank(this.obj2)) {
+              if (this.obj2 === undefinedValue) {
                 this.obj2 = inj._new(p.binding2, p.visibility2);
               }
               return this.obj2;
             }
             if (p.keyId3 === keyId && (p.visibility3 & visibility) > 0) {
-              if (isBlank(this.obj3)) {
+              if (this.obj3 === undefinedValue) {
                 this.obj3 = inj._new(p.binding3, p.visibility3);
               }
               return this.obj3;
             }
             if (p.keyId4 === keyId && (p.visibility4 & visibility) > 0) {
-              if (isBlank(this.obj4)) {
+              if (this.obj4 === undefinedValue) {
                 this.obj4 = inj._new(p.binding4, p.visibility4);
               }
               return this.obj4;
             }
             if (p.keyId5 === keyId && (p.visibility5 & visibility) > 0) {
-              if (isBlank(this.obj5)) {
+              if (this.obj5 === undefinedValue) {
                 this.obj5 = inj._new(p.binding5, p.visibility5);
               }
               return this.obj5;
             }
             if (p.keyId6 === keyId && (p.visibility6 & visibility) > 0) {
-              if (isBlank(this.obj6)) {
+              if (this.obj6 === undefinedValue) {
                 this.obj6 = inj._new(p.binding6, p.visibility6);
               }
               return this.obj6;
             }
             if (p.keyId7 === keyId && (p.visibility7 & visibility) > 0) {
-              if (isBlank(this.obj7)) {
+              if (this.obj7 === undefinedValue) {
                 this.obj7 = inj._new(p.binding7, p.visibility7);
               }
               return this.obj7;
             }
             if (p.keyId8 === keyId && (p.visibility8 & visibility) > 0) {
-              if (isBlank(this.obj8)) {
+              if (this.obj8 === undefinedValue) {
                 this.obj8 = inj._new(p.binding8, p.visibility8);
               }
               return this.obj8;
             }
             if (p.keyId9 === keyId && (p.visibility9 & visibility) > 0) {
-              if (isBlank(this.obj9)) {
+              if (this.obj9 === undefinedValue) {
                 this.obj9 = inj._new(p.binding9, p.visibility9);
               }
               return this.obj9;
@@ -20394,12 +20451,13 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
           this.protoStrategy = protoStrategy;
           this.injector = injector;
           this.objs = ListWrapper.createFixedSize(protoStrategy.bindings.length);
+          ListWrapper.fill(this.objs, undefinedValue);
         }
         return ($traceurRuntime.createClass)(InjectorDynamicStrategy, {
           hydrate: function() {
             var p = this.protoStrategy;
             for (var i = 0; i < p.keyIds.length; i++) {
-              if (isPresent(p.keyIds[i]) && isBlank(this.objs[i])) {
+              if (isPresent(p.keyIds[i]) && this.objs[i] === undefinedValue) {
                 this.objs[i] = this.injector._new(p.bindings[i], p.visibilities[i]);
               }
             }
@@ -20410,13 +20468,13 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
             inj._isBoundary = isBoundary;
           },
           dehydrate: function() {
-            ListWrapper.fill(this.objs, null);
+            ListWrapper.fill(this.objs, undefinedValue);
           },
           getObjByKeyId: function(keyId, visibility) {
             var p = this.protoStrategy;
             for (var i = 0; i < p.keyIds.length; i++) {
               if (p.keyIds[i] === keyId && (p.visibilities[i] & visibility) > 0) {
-                if (isBlank(this.objs[i])) {
+                if (this.objs[i] === undefinedValue) {
                   this.objs[i] = this.injector._new(p.bindings[i], p.visibilities[i]);
                 }
                 return this.objs[i];
@@ -20449,8 +20507,10 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
       Injector = (function() {
         function Injector(_proto) {
           var _parent = arguments[1] !== (void 0) ? arguments[1] : null;
+          var _depProvider = arguments[2] !== (void 0) ? arguments[2] : null;
           this._proto = _proto;
           this._parent = _parent;
+          this._depProvider = _depProvider;
           this._isBoundary = false;
           this._constructionCounter = 0;
           this._strategy = _proto._strategy.createInjectorStrategy(this);
@@ -20472,15 +20532,17 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
             return this._strategy;
           },
           resolveAndCreateChild: function(bindings) {
+            var depProvider = arguments[1] !== (void 0) ? arguments[1] : null;
             var resovledBindings = Injector.resolve(bindings);
-            return this.createChildFromResolved(resovledBindings);
+            return this.createChildFromResolved(resovledBindings, depProvider);
           },
           createChildFromResolved: function(bindings) {
+            var depProvider = arguments[1] !== (void 0) ? arguments[1] : null;
             var bd = bindings.map((function(b) {
               return new BindingWithVisibility(b, PUBLIC);
             }));
             var proto = new ProtoInjector(bd, 1);
-            var inj = new Injector(proto);
+            var inj = new Injector(proto, null, depProvider);
             inj._parent = this;
             return inj;
           },
@@ -20512,26 +20574,26 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
                 d18,
                 d19;
             try {
-              d0 = length > 0 ? this._getByDependency(deps[0], visibility) : null;
-              d1 = length > 1 ? this._getByDependency(deps[1], visibility) : null;
-              d2 = length > 2 ? this._getByDependency(deps[2], visibility) : null;
-              d3 = length > 3 ? this._getByDependency(deps[3], visibility) : null;
-              d4 = length > 4 ? this._getByDependency(deps[4], visibility) : null;
-              d5 = length > 5 ? this._getByDependency(deps[5], visibility) : null;
-              d6 = length > 6 ? this._getByDependency(deps[6], visibility) : null;
-              d7 = length > 7 ? this._getByDependency(deps[7], visibility) : null;
-              d8 = length > 8 ? this._getByDependency(deps[8], visibility) : null;
-              d9 = length > 9 ? this._getByDependency(deps[9], visibility) : null;
-              d10 = length > 10 ? this._getByDependency(deps[10], visibility) : null;
-              d11 = length > 11 ? this._getByDependency(deps[11], visibility) : null;
-              d12 = length > 12 ? this._getByDependency(deps[12], visibility) : null;
-              d13 = length > 13 ? this._getByDependency(deps[13], visibility) : null;
-              d14 = length > 14 ? this._getByDependency(deps[14], visibility) : null;
-              d15 = length > 15 ? this._getByDependency(deps[15], visibility) : null;
-              d16 = length > 16 ? this._getByDependency(deps[16], visibility) : null;
-              d17 = length > 17 ? this._getByDependency(deps[17], visibility) : null;
-              d18 = length > 18 ? this._getByDependency(deps[18], visibility) : null;
-              d19 = length > 19 ? this._getByDependency(deps[19], visibility) : null;
+              d0 = length > 0 ? this._getByDependency(binding, deps[0], visibility) : null;
+              d1 = length > 1 ? this._getByDependency(binding, deps[1], visibility) : null;
+              d2 = length > 2 ? this._getByDependency(binding, deps[2], visibility) : null;
+              d3 = length > 3 ? this._getByDependency(binding, deps[3], visibility) : null;
+              d4 = length > 4 ? this._getByDependency(binding, deps[4], visibility) : null;
+              d5 = length > 5 ? this._getByDependency(binding, deps[5], visibility) : null;
+              d6 = length > 6 ? this._getByDependency(binding, deps[6], visibility) : null;
+              d7 = length > 7 ? this._getByDependency(binding, deps[7], visibility) : null;
+              d8 = length > 8 ? this._getByDependency(binding, deps[8], visibility) : null;
+              d9 = length > 9 ? this._getByDependency(binding, deps[9], visibility) : null;
+              d10 = length > 10 ? this._getByDependency(binding, deps[10], visibility) : null;
+              d11 = length > 11 ? this._getByDependency(binding, deps[11], visibility) : null;
+              d12 = length > 12 ? this._getByDependency(binding, deps[12], visibility) : null;
+              d13 = length > 13 ? this._getByDependency(binding, deps[13], visibility) : null;
+              d14 = length > 14 ? this._getByDependency(binding, deps[14], visibility) : null;
+              d15 = length > 15 ? this._getByDependency(binding, deps[15], visibility) : null;
+              d16 = length > 16 ? this._getByDependency(binding, deps[16], visibility) : null;
+              d17 = length > 17 ? this._getByDependency(binding, deps[17], visibility) : null;
+              d18 = length > 18 ? this._getByDependency(binding, deps[18], visibility) : null;
+              d19 = length > 19 ? this._getByDependency(binding, deps[19], visibility) : null;
             } catch (e) {
               if (e instanceof AbstractBindingError)
                 e.addKey(binding.key);
@@ -20609,8 +20671,8 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
             }
             return obj;
           },
-          _getByDependency: function(dep, bindingVisibility) {
-            var special = isPresent(this.ei) ? this.ei.getDependency(dep) : undefinedValue;
+          _getByDependency: function(binding, dep, bindingVisibility) {
+            var special = isPresent(this._depProvider) ? this._depProvider.getDependency(this, binding, dep) : undefinedValue;
             if (special !== undefinedValue) {
               return special;
             } else {
@@ -20666,15 +20728,17 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
             return _createListOfBindings(flatten);
           },
           resolveAndCreate: function(bindings) {
+            var depProvider = arguments[1] !== (void 0) ? arguments[1] : null;
             var resolvedBindings = Injector.resolve(bindings);
-            return Injector.fromResolvedBindings(resolvedBindings);
+            return Injector.fromResolvedBindings(resolvedBindings, depProvider);
           },
           fromResolvedBindings: function(bindings) {
+            var depProvider = arguments[1] !== (void 0) ? arguments[1] : null;
             var bd = bindings.map((function(b) {
               return new BindingWithVisibility(b, PUBLIC);
             }));
             var proto = new ProtoInjector(bd, 0);
-            var inj = new Injector(proto);
+            var inj = new Injector(proto, null, depProvider);
             return inj;
           }
         });
@@ -21050,15 +21114,13 @@ System.register("angular2/src/router/route_registry", ["angular2/src/router/rout
       isType,
       isString,
       isStringMap,
-      StringWrapper,
       BaseException,
       RouteConfig,
       reflector,
       Injectable,
       RouteRegistry,
       ALLOWED_TARGETS,
-      VALID_COMPONENT_TYPES,
-      SLASH;
+      VALID_COMPONENT_TYPES;
   function assertValidConfig(config) {
     if (!StringMapWrapper.contains(config, 'path')) {
       throw new BaseException("Route config should contain a \"path\" property");
@@ -21116,15 +21178,6 @@ System.register("angular2/src/router/route_registry", ["angular2/src/router/rout
       }
     }
   }
-  function splitAndFlattenLinkParams(linkParams) {
-    return ListWrapper.reduce(linkParams, (function(accumulation, item) {
-      if (isString(item)) {
-        return ListWrapper.concat(accumulation, StringWrapper.split(item, SLASH));
-      }
-      accumulation.push(item);
-      return accumulation;
-    }), []);
-  }
   return {
     setters: [function($__m) {
       RouteRecognizer = $__m.RouteRecognizer;
@@ -21142,7 +21195,6 @@ System.register("angular2/src/router/route_registry", ["angular2/src/router/rout
       isType = $__m.isType;
       isString = $__m.isString;
       isStringMap = $__m.isStringMap;
-      StringWrapper = $__m.StringWrapper;
       BaseException = $__m.BaseException;
     }, function($__m) {
       RouteConfig = $__m.RouteConfig;
@@ -21174,8 +21226,7 @@ System.register("angular2/src/router/route_registry", ["angular2/src/router/rout
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
           return Reflect.metadata(k, v);
       };
-      RouteRegistry = (($traceurRuntime.createClass)(function(_rootHostComponent) {
-        this._rootHostComponent = _rootHostComponent;
+      RouteRegistry = (($traceurRuntime.createClass)(function() {
         this._rules = new Map();
       }, {
         config: function(parentComponent, config) {
@@ -21259,29 +21310,18 @@ System.register("angular2/src/router/route_registry", ["angular2/src/router/rout
           }));
         },
         generate: function(linkParams, parentComponent) {
-          var normalizedLinkParams = splitAndFlattenLinkParams(linkParams);
-          var url = '/';
+          var url = '';
           var componentCursor = parentComponent;
-          if (normalizedLinkParams[0] == '') {
-            componentCursor = this._rootHostComponent;
-          } else if (normalizedLinkParams[0] != '.') {
-            throw new BaseException(("Link \"" + ListWrapper.toJSON(linkParams) + "\" must start with \"/\" or \"./\""));
-          }
-          if (normalizedLinkParams[normalizedLinkParams.length - 1] == '') {
-            ListWrapper.removeLast(normalizedLinkParams);
-          }
-          if (normalizedLinkParams.length < 2) {
-            var msg = ("Link \"" + ListWrapper.toJSON(linkParams) + "\" must include a route name.");
-            throw new BaseException(msg);
-          }
-          for (var i = 1; i < normalizedLinkParams.length; i += 1) {
-            var segment = normalizedLinkParams[i];
+          for (var i = 0; i < linkParams.length; i += 1) {
+            var segment = linkParams[i];
             if (!isString(segment)) {
               throw new BaseException(("Unexpected segment \"" + segment + "\" in link DSL. Expected a string."));
+            } else if (segment == '' || segment == '.' || segment == '..') {
+              throw new BaseException(("\"" + segment + "/\" is only allowed at the beginning of a link DSL."));
             }
             var params = null;
-            if (i + 1 < normalizedLinkParams.length) {
-              var nextSegment = normalizedLinkParams[i + 1];
+            if (i + 1 < linkParams.length) {
+              var nextSegment = linkParams[i + 1];
               if (isStringMap(nextSegment)) {
                 params = nextSegment;
                 i += 1;
@@ -21299,10 +21339,9 @@ System.register("angular2/src/router/route_registry", ["angular2/src/router/rout
         }
       }, {}));
       $__export("RouteRegistry", RouteRegistry);
-      $__export("RouteRegistry", RouteRegistry = __decorate([Injectable(), __metadata('design:paramtypes', [Object])], RouteRegistry));
+      $__export("RouteRegistry", RouteRegistry = __decorate([Injectable(), __metadata('design:paramtypes', [])], RouteRegistry));
       ALLOWED_TARGETS = ['component', 'redirectTo'];
       VALID_COMPONENT_TYPES = ['constructor', 'loader'];
-      SLASH = new RegExp('/');
     }
   };
 });
@@ -21814,8 +21853,7 @@ System.register("angular2/src/core/compiler/element_injector", ["angular2/src/fa
           $traceurRuntime.superConstructor(ElementInjector).call(this, parent);
           this._proto = _proto;
           this._preBuiltObjects = null;
-          this._injector = new Injector(this._proto.protoInjector);
-          this._injector.ei = this;
+          this._injector = new Injector(this._proto.protoInjector, null, this);
           var injectorStrategy = this._injector.internalStrategy;
           this._strategy = injectorStrategy instanceof InjectorInlineStrategy ? new ElementInjectorInlineStrategy(injectorStrategy, this) : new ElementInjectorDynamicStrategy(injectorStrategy, this);
           this.hydrated = false;
@@ -21911,7 +21949,7 @@ System.register("angular2/src/core/compiler/element_injector", ["angular2/src/fa
           isComponentKey: function(key) {
             return this._strategy.isComponentKey(key);
           },
-          getDependency: function(dep) {
+          getDependency: function(injector, binding, dep) {
             var key = dep.key;
             if (!(dep instanceof DirectiveDependency))
               return undefinedValue;
@@ -22950,7 +22988,7 @@ System.register("angular2/src/core/application", ["angular2/di", "angular2/src/f
       DOCUMENT_TOKEN,
       DefaultDomCompiler,
       internalView,
-      appComponentRefToken,
+      appComponentRefPromiseToken,
       appComponentTypeToken,
       _rootInjector,
       _rootBindings,
@@ -22962,7 +23000,7 @@ System.register("angular2/src/core/application", ["angular2/di", "angular2/src/f
     } else if (JitChangeDetection.isSupported()) {
       bestChangeDetection = JitChangeDetection;
     }
-    return [bind(DOCUMENT_TOKEN).toValue(DOM.defaultDoc()), bind(appComponentTypeToken).toValue(appComponentType), bind(appComponentRefToken).toFactory((function(dynamicComponentLoader, injector, testability, registry) {
+    return [bind(DOCUMENT_TOKEN).toValue(DOM.defaultDoc()), bind(appComponentTypeToken).toValue(appComponentType), bind(appComponentRefPromiseToken).toFactory((function(dynamicComponentLoader, injector, testability, registry) {
       return dynamicComponentLoader.loadAsRoot(appComponentType, null, injector).then((function(componentRef) {
         registry.registerApplication(componentRef.location.nativeElement, testability);
         return componentRef;
@@ -22971,7 +23009,7 @@ System.register("angular2/src/core/application", ["angular2/di", "angular2/src/f
       return p.then((function(ref) {
         return ref.instance;
       }));
-    }), [appComponentRefToken]), bind(LifeCycle).toFactory((function(exceptionHandler) {
+    }), [appComponentRefPromiseToken]), bind(LifeCycle).toFactory((function(exceptionHandler) {
       return new LifeCycle(exceptionHandler, null, assertionsEnabled());
     }), [ExceptionHandler]), bind(EventManager).toFactory((function(ngZone) {
       var plugins = [new HammerGesturesPlugin(), new KeyEventsPlugin(), new DomEventsPlugin()];
@@ -23000,7 +23038,7 @@ System.register("angular2/src/core/application", ["angular2/di", "angular2/src/f
     zone.run((function() {
       var appInjector = _createAppInjector(appComponentType, componentInjectableBindings, zone);
       var compRefToken = PromiseWrapper.wrap((function() {
-        return appInjector.get(appComponentRefToken);
+        return appInjector.get(appComponentRefPromiseToken);
       }));
       var tick = (function(componentRef) {
         var appChangeDetector = internalView(componentRef.hostView).changeDetector;
@@ -23118,7 +23156,7 @@ System.register("angular2/src/core/application", ["angular2/di", "angular2/src/f
     }, function($__m) {
       internalView = $__m.internalView;
     }, function($__m) {
-      appComponentRefToken = $__m.appComponentRefToken;
+      appComponentRefPromiseToken = $__m.appComponentRefPromiseToken;
       appComponentTypeToken = $__m.appComponentTypeToken;
     }],
     execute: function() {
@@ -23277,75 +23315,49 @@ System.register("angular2/src/core/annotations_impl/annotations", ["angular2/src
   };
 });
 
-System.register("angular2/core", ["angular2/src/core/annotations/view", "angular2/src/core/application", "angular2/src/core/application_tokens", "angular2/src/core/annotations/di", "angular2/src/core/compiler/compiler", "angular2/src/core/compiler/interfaces", "angular2/src/core/compiler/query_list", "angular2/src/core/compiler/directive_resolver", "angular2/src/core/compiler/dynamic_component_loader", "angular2/src/core/compiler/view_ref", "angular2/src/core/compiler/view_container_ref", "angular2/src/core/compiler/element_ref", "angular2/src/facade/async", "angular2/src/core/zone/ng_zone"], function($__export) {
+System.register("angular2/core", ["angular2/src/core/application", "angular2/src/core/application_tokens", "angular2/src/services/app_root_url", "angular2/src/services/url_resolver", "angular2/src/core/compiler/component_url_mapper", "angular2/src/core/compiler/directive_resolver", "angular2/src/core/compiler/compiler", "angular2/src/core/compiler/view_manager", "angular2/src/core/compiler/query_list", "angular2/src/core/compiler/element_ref", "angular2/src/core/compiler/view_ref", "angular2/src/core/compiler/view_container_ref", "angular2/src/core/compiler/dynamic_component_loader", "angular2/src/core/zone/ng_zone", "angular2/src/facade/async", "angular2/src/core/compiler/proto_view_factory", "angular2/src/render/api"], function($__export) {
   "use strict";
   var __moduleName = "angular2/core";
-  var $__exportNames = {undefined: true};
-  var $__exportNames = {undefined: true};
-  var $__exportNames = {undefined: true};
-  var $__exportNames = {undefined: true};
-  var $__exportNames = {undefined: true};
-  var $__exportNames = {undefined: true};
-  var $__exportNames = {undefined: true};
-  var $__exportNames = {undefined: true};
-  var $__exportNames = {undefined: true};
   return {
     setters: [function($__m) {
-      Object.keys($__m).forEach(function(p) {
-        if (!$__exportNames[p])
-          $__export(p, $__m[p]);
-      });
+      $__export("bootstrap", $__m.bootstrap);
+      $__export("ApplicationRef", $__m.ApplicationRef);
     }, function($__m) {
-      Object.keys($__m).forEach(function(p) {
-        if (!$__exportNames[p])
-          $__export(p, $__m[p]);
-      });
+      $__export("appComponentTypeToken", $__m.appComponentTypeToken);
     }, function($__m) {
-      Object.keys($__m).forEach(function(p) {
-        if (!$__exportNames[p])
-          $__export(p, $__m[p]);
-      });
+      $__export("AppRootUrl", $__m.AppRootUrl);
     }, function($__m) {
-      Object.keys($__m).forEach(function(p) {
-        if (!$__exportNames[p])
-          $__export(p, $__m[p]);
-      });
+      $__export("UrlResolver", $__m.UrlResolver);
     }, function($__m) {
-      Object.keys($__m).forEach(function(p) {
-        if (!$__exportNames[p])
-          $__export(p, $__m[p]);
-      });
+      $__export("ComponentUrlMapper", $__m.ComponentUrlMapper);
     }, function($__m) {
-      Object.keys($__m).forEach(function(p) {
-        if (!$__exportNames[p])
-          $__export(p, $__m[p]);
-      });
+      $__export("DirectiveResolver", $__m.DirectiveResolver);
     }, function($__m) {
-      Object.keys($__m).forEach(function(p) {
-        if (!$__exportNames[p])
-          $__export(p, $__m[p]);
-      });
+      $__export("Compiler", $__m.Compiler);
+      $__export("CompilerCache", $__m.CompilerCache);
     }, function($__m) {
-      Object.keys($__m).forEach(function(p) {
-        if (!$__exportNames[p])
-          $__export(p, $__m[p]);
-      });
+      $__export("AppViewManager", $__m.AppViewManager);
     }, function($__m) {
-      Object.keys($__m).forEach(function(p) {
-        if (!$__exportNames[p])
-          $__export(p, $__m[p]);
-      });
+      $__export("QueryList", $__m.QueryList);
+    }, function($__m) {
+      $__export("ElementRef", $__m.ElementRef);
     }, function($__m) {
       $__export("ViewRef", $__m.ViewRef);
       $__export("ProtoViewRef", $__m.ProtoViewRef);
     }, function($__m) {
       $__export("ViewContainerRef", $__m.ViewContainerRef);
     }, function($__m) {
-      $__export("ElementRef", $__m.ElementRef);
-    }, function($__m) {
-      $__export("EventEmitter", $__m.EventEmitter);
+      $__export("DynamicComponentLoader", $__m.DynamicComponentLoader);
+      $__export("ComponentRef", $__m.ComponentRef);
     }, function($__m) {
       $__export("NgZone", $__m.NgZone);
+    }, function($__m) {
+      $__export("Observable", $__m.Observable);
+      $__export("EventEmitter", $__m.EventEmitter);
+    }, function($__m) {
+      $__export("ProtoViewFactory", $__m.ProtoViewFactory);
+    }, function($__m) {
+      $__export("RenderCompiler", $__m.RenderCompiler);
     }],
     execute: function() {}
   };
@@ -23358,6 +23370,7 @@ System.register("angular2/src/core/annotations/annotations", ["angular2/src/core
     setters: [function($__m) {
       $__export("ComponentAnnotation", $__m.Component);
       $__export("DirectiveAnnotation", $__m.Directive);
+      $__export("LifecycleEvent", $__m.LifecycleEvent);
       $__export("onDestroy", $__m.onDestroy);
       $__export("onChange", $__m.onChange);
       $__export("onCheck", $__m.onCheck);
@@ -23592,9 +23605,7 @@ System.register("angular2/router", ["angular2/src/router/router", "angular2/src/
     execute: function() {
       routerDirectives = CONST_EXPR([RouterOutlet, RouterLink]);
       $__export("routerDirectives", routerDirectives);
-      routerInjectables = [bind(RouteRegistry).toFactory((function(appRoot) {
-        return new RouteRegistry(appRoot);
-      }), [appComponentTypeToken]), Pipeline, bind(LocationStrategy).toClass(HTML5LocationStrategy), Location, bind(Router).toFactory((function(registry, pipeline, location, appRoot) {
+      routerInjectables = [RouteRegistry, Pipeline, bind(LocationStrategy).toClass(HTML5LocationStrategy), Location, bind(Router).toFactory((function(registry, pipeline, location, appRoot) {
         return new RootRouter(registry, pipeline, location, appRoot);
       }), [RouteRegistry, Pipeline, Location, appComponentTypeToken])];
       $__export("routerInjectables", routerInjectables);

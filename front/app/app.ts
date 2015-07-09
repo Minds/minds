@@ -6,7 +6,8 @@ import {Topbar} from './src/components/topbar';
 import {Navigation} from './src/components/navigation';
 
 import {Login} from './src/controllers/login';
-import {Newsfeed} from './src/controllers/newsfeed';
+import {Logout} from './src/controllers/logout';
+import {Newsfeed} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';
 
 @Component({
@@ -14,6 +15,7 @@ import {Capture} from './src/controllers/capture/capture';
 })
 @RouteConfig([
   { path: '/login', component: Login, as: 'login' },
+  { path: '/logout', component: Logout, as: 'logout' },	
   { path: '/newsfeed', component: Newsfeed, as: 'newsfeed' },
   { path: '/capture', component: Capture, as: 'capture' },
   { path: '/:username', redirectTo: '/login' }

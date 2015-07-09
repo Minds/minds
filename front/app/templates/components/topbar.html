@@ -1,10 +1,10 @@
 <div class="inner" layout="row">
 	<img src="assets/logos/alpha-small.png" class="logo"/>
 	
-	<div *ng-if="storage.get('loggedin')">
-		Should show you username and account here
+	<div *ng-if="!showLogin()">
+		 <a [router-link]="['/logout']" class="md-button md-raised md-primary">Exit</a>
 	</div>
-	<div *ng-if="!storage.get('loggedin')">
-		 <a href="/login" class="md-button md-raised md-primary">Login</a>
+	<div *ng-if="showLogin()">
+		<a [router-link]="['/login']" class="md-button md-raised md-primary">Login</a>
 	</div>
 </div>

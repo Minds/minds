@@ -21,8 +21,8 @@ class clusters extends base{
 		$path = "minds\\pages\\clusters";
 		router::registerRoutes(array(
 			"/api/v1/cluster" => "$path\\index",
-			"/api/v1/authenticate" => "$path\\authenticate",
-			"/api/v1/subscriptions" => "$path\\subscriptions"
+			"/api/v1/cluster/authenticate" => "$path\\authenticate",
+			"/api/v1/clusyer/subscriptions" => "$path\\subscriptions"
 		));
 		
 		\elgg_register_plugin_hook_handler('cron', 'halfhour', array($this, 'cron'));

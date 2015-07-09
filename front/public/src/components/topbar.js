@@ -10,11 +10,15 @@ if (typeof __metadata !== "function") __metadata = function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var angular2_1 = require('angular2/angular2');
+var router_1 = require('angular2/router');
 var storage_1 = require('src/services/storage');
 var Topbar = (function () {
     function Topbar(storage) {
         this.storage = storage;
     }
+    Topbar.prototype.showLogin = function () {
+        return !window.LoggedIn;
+    };
     Topbar = __decorate([
         angular2_1.Component({
             selector: 'minds-topbar',
@@ -22,7 +26,7 @@ var Topbar = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/components/topbar.html',
-            directives: [angular2_1.NgIf]
+            directives: [angular2_1.NgIf, router_1.RouterLink]
         }), 
         __metadata('design:paramtypes', [storage_1.Storage])
     ], Topbar);
@@ -30,4 +34,4 @@ var Topbar = (function () {
 })();
 exports.Topbar = Topbar;
 
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9jb21wb25lbnRzL3RvcGJhci50cyJdLCJuYW1lcyI6WyJUb3BiYXIiLCJUb3BiYXIuY29uc3RydWN0b3IiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O0FBQUEseUJBQW9DLG1CQUFtQixDQUFDLENBQUE7QUFDeEQsd0JBQXNCLHNCQUFzQixDQUFDLENBQUE7QUFHN0M7SUFVQ0EsZ0JBQW1CQSxPQUFnQkE7UUFBaEJDLFlBQU9BLEdBQVBBLE9BQU9BLENBQVNBO0lBQUdBLENBQUNBO0lBVnhDRDtRQUFDQSxvQkFBU0EsQ0FBQ0E7WUFDVEEsUUFBUUEsRUFBRUEsY0FBY0E7WUFDeEJBLFlBQVlBLEVBQUVBLENBQUNBLGlCQUFPQSxDQUFDQTtTQUN4QkEsQ0FBQ0E7UUFDREEsZUFBSUEsQ0FBQ0E7WUFDSkEsV0FBV0EsRUFBRUEsa0NBQWtDQTtZQUMvQ0EsVUFBVUEsRUFBRUEsQ0FBQ0EsZUFBSUEsQ0FBQ0E7U0FDbkJBLENBQUNBOztlQUlEQTtJQUFEQSxhQUFDQTtBQUFEQSxDQVhBLElBV0M7QUFGWSxjQUFNLFNBRWxCLENBQUEiLCJmaWxlIjoic3JjL2NvbXBvbmVudHMvdG9wYmFyLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHtDb21wb25lbnQsIFZpZXcsIE5nSWZ9IGZyb20gJ2FuZ3VsYXIyL2FuZ3VsYXIyJztcbmltcG9ydCB7U3RvcmFnZX0gZnJvbSAnc3JjL3NlcnZpY2VzL3N0b3JhZ2UnO1xuaW1wb3J0IHtMb2dnZWRJbn0gZnJvbSAnc3JjL2RpcmVjdGl2ZXMvbG9nZ2VkaW4nO1xuXG5AQ29tcG9uZW50KHtcbiAgc2VsZWN0b3I6ICdtaW5kcy10b3BiYXInLFxuICB2aWV3SW5qZWN0b3I6IFtTdG9yYWdlXVxufSlcbkBWaWV3KHtcbiAgdGVtcGxhdGVVcmw6ICd0ZW1wbGF0ZXMvY29tcG9uZW50cy90b3BiYXIuaHRtbCcsXG4gIGRpcmVjdGl2ZXM6IFtOZ0lmXVxufSlcblxuZXhwb3J0IGNsYXNzIFRvcGJhciB7IFxuXHRjb25zdHJ1Y3RvcihwdWJsaWMgc3RvcmFnZTogU3RvcmFnZSl7IH1cbn0iXSwic291cmNlUm9vdCI6Ii9zb3VyY2UvIn0=
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9jb21wb25lbnRzL3RvcGJhci50cyJdLCJuYW1lcyI6WyJUb3BiYXIiLCJUb3BiYXIuY29uc3RydWN0b3IiLCJUb3BiYXIuc2hvd0xvZ2luIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7OztBQUFBLHlCQUFzQyxtQkFBbUIsQ0FBQyxDQUFBO0FBQzFELHVCQUEyQixpQkFBaUIsQ0FBQyxDQUFBO0FBQzdDLHdCQUF3QixzQkFBc0IsQ0FBQyxDQUFBO0FBRS9DO0lBVUNBLGdCQUFtQkEsT0FBZ0JBO1FBQWhCQyxZQUFPQSxHQUFQQSxPQUFPQSxDQUFTQTtJQUFHQSxDQUFDQTtJQUt2Q0QsMEJBQVNBLEdBQVRBO1FBQ0NFLE1BQU1BLENBQUNBLENBQUNBLE1BQU1BLENBQUNBLFFBQVFBLENBQUNBO0lBQ3pCQSxDQUFDQTtJQWpCRkY7UUFBQ0Esb0JBQVNBLENBQUNBO1lBQ1RBLFFBQVFBLEVBQUVBLGNBQWNBO1lBQ3hCQSxZQUFZQSxFQUFFQSxDQUFDQSxpQkFBT0EsQ0FBQ0E7U0FDeEJBLENBQUNBO1FBQ0RBLGVBQUlBLENBQUNBO1lBQ0pBLFdBQVdBLEVBQUVBLGtDQUFrQ0E7WUFDL0NBLFVBQVVBLEVBQUVBLENBQUNBLGVBQUlBLEVBQUVBLG1CQUFVQSxDQUFDQTtTQUMvQkEsQ0FBQ0E7O2VBV0RBO0lBQURBLGFBQUNBO0FBQURBLENBbEJBLElBa0JDO0FBVFksY0FBTSxTQVNsQixDQUFBIiwiZmlsZSI6InNyYy9jb21wb25lbnRzL3RvcGJhci5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IENvbXBvbmVudCwgVmlldywgTmdJZiB9IGZyb20gJ2FuZ3VsYXIyL2FuZ3VsYXIyJztcbmltcG9ydCB7IFJvdXRlckxpbmsgfSBmcm9tICdhbmd1bGFyMi9yb3V0ZXInO1xuaW1wb3J0IHsgU3RvcmFnZSB9IGZyb20gJ3NyYy9zZXJ2aWNlcy9zdG9yYWdlJztcblxuQENvbXBvbmVudCh7XG4gIHNlbGVjdG9yOiAnbWluZHMtdG9wYmFyJyxcbiAgdmlld0luamVjdG9yOiBbU3RvcmFnZV1cbn0pXG5AVmlldyh7XG4gIHRlbXBsYXRlVXJsOiAndGVtcGxhdGVzL2NvbXBvbmVudHMvdG9wYmFyLmh0bWwnLFxuICBkaXJlY3RpdmVzOiBbTmdJZiwgUm91dGVyTGlua11cbn0pXG5cbmV4cG9ydCBjbGFzcyBUb3BiYXIgeyBcblx0Y29uc3RydWN0b3IocHVibGljIHN0b3JhZ2U6IFN0b3JhZ2UpeyB9XG5cdFxuXHQvKipcblx0ICogRGV0ZXJtaW5lIGlmIGxvZ2luIGJ1dHRvbiBzaG91bGQgYmUgc2hvd25cblx0ICovXG5cdHNob3dMb2dpbigpe1xuXHRcdHJldHVybiAhd2luZG93LkxvZ2dlZEluO1xuXHR9XG59Il0sInNvdXJjZVJvb3QiOiIvc291cmNlLyJ9

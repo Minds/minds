@@ -1,12 +1,22 @@
-hello
 
-<div (click)="load()">click me</div>
-
+<div class="post">
+    <input type="text" #message></input>
+    <button (click)="post(message.value)"></button>
+</div>
 
 <div class="newsfeed list">
 
     <div *ng-for="#activity of newsfeed" class="item">
-        {{activity.blurb}}
+
+        <div class="item item-text-wrap" [hidden]="!activity.message">
+            <p class="wrap" style="white-space: pre;">{{activity.message}}</p>
+        </div>
+
+        
+        <div class="boosted-bar" [hidden]="!activity.boosted">
+            <i class="icon ion-arrow-graph-up-right"></i> Boosted
+        </div>
+        
     </div>
 
 </div>

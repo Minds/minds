@@ -34,6 +34,19 @@ ini_set( 'display_errors','1');
   	 <!-- endinject -->
     
     <script>
+        window.LoggedIn = <?= Minds\Core\session::isLoggedIn() ? "true" : "false" ?>;
+        
+        <?php
+            $minds = array(
+                "LoggedIn" => Minds\Core\session::isLoggedIn() ? "true" : "false"
+            );
+            if(Minds\Core\session::isLoggedIn()){
+                $minds['user'] = Minds\Core\session::getLoggedinUser()->export();
+            }
+        
+        ?>
+        window.Minds = <?= json_encode($minds) ?>;
+        
         System.config({
           baseURL: './',
           paths: {

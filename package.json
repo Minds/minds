@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "dependencies": {
-    "angular2": "2.0.0-alpha.29",
+    "angular2": "2.0.0-alpha.30",
     "es6-module-loader": "^0.15.0",
     "systemjs": "^0.16.0",
     "zone.js": "^0.4.1",

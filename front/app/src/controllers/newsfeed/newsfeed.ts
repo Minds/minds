@@ -12,8 +12,8 @@ import {Client} from 'src/services/api';
 
 export class Newsfeed {
 
-	newsfeed : Array;
-	offset : String = "";
+	newsfeed : Array<Object> = [];
+	offset : string = "";
 
 	constructor(public client: Client){
 		this.load();
@@ -26,8 +26,25 @@ export class Newsfeed {
 		var self = this;
 		this.client.get('api/v1/newsfeed', {limit:12}, {cache: true})
 				.then(function(data){
-					self.newsfeed = data.activity
+					if(!data.activity){
+						return false;
+					}
+					self.newsfeed = data.activity;
 					self.offset = data['load-next'];
+				})
+				.catch(function(e){
+					console.log(e);
+				});
+	}
+	
+	/**
+	 * Post to the newsfeed
+	 */
+	post(message){
+		var self = this;
+		this.client.post('api/v1/newsfeed', {message: message})
+				.then(function(data){
+					self.load();
 				})
 				.catch(function(e){
 					console.log(e);
