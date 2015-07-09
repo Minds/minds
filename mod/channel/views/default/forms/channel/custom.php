@@ -136,7 +136,7 @@ $social_linkedin_input = elgg_view('input/text', array('name'=>'social_link_link
 $social_github_input =elgg_view('input/text', array('name'=>'social_link_github', 'value'=>$user->social_link_github));
 $social_pinterest_input = elgg_view('input/text', array('name'=>'social_link_pinterest', 'value'=>$user->social_link_pinterest));
 $social_instagram_input = elgg_view('input/text', array('name'=>'social_link_instagram', 'value'=>$user->social_link_instagram));
-$social_youtube_input = elgg_view('input/text', array('name'=>'social_youtube_input', 'value'=>$user->social_link_youtube));
+$social_youtube_input = elgg_view('input/text', array('name'=>'social_link_youtube', 'value'=>$user->social_link_youtube));
 
 $form = <<<FORM
 				
