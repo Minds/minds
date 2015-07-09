@@ -47,8 +47,10 @@ class Newsfeed implements BoostHandlerInterface{
             $query['_id'] = array('$gt'=>$offset);
         }
         $boosts = $this->db->find("boost", $query);
-        if($boosts)
+        if($boosts){
             $boosts->limit($limit);
+            $boosts->sort(array('_id'=> 1));
+        }
         return $boosts;
     }
     
