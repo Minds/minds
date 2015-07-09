@@ -72,7 +72,7 @@ if ($guid) {
 	$user->background_timestamp = time();
 		
 	$guid = $user->save();
-	if($guid == $_SESSION['user']->guid)
+	if($user->guid == $_SESSION['user']->guid)
 		$_SESSION['user'] = $user;
 }
 system_message(elgg_echo('channel:custom:saved'));
