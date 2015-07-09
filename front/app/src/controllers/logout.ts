@@ -20,6 +20,7 @@ export class Logout {
 		this.router.navigate('/login');
 		window.LoggedIn = false;
 		this.router.parent.navigate('/login');
+		console.log(this.router);
 		this.client.delete('api/v1/authenticate');
 	}
 }

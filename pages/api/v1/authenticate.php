@@ -52,6 +52,8 @@ class authenticate implements interfaces\api, interfaces\ApiIgnorePam{
     
     public function delete($pages){
         logout();
+        
+         return Factory::response(array());
     }
     
 }

@@ -43,7 +43,6 @@ ini_set( 'display_errors','1');
             if(Minds\Core\session::isLoggedIn()){
                 $minds['user'] = Minds\Core\session::getLoggedinUser()->export();
             }
-        
         ?>
         window.Minds = <?= json_encode($minds) ?>;
         
