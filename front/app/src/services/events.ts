@@ -4,7 +4,7 @@ interface Event {
   emitter: EventEmitter;
 }
 
-class LoggedIn implements Event{ 
+export class LoggedIn implements Event{ 
 	emitter = new EventEmitter();
 	
 	listen(callback : Function){
@@ -20,12 +20,19 @@ class LoggedIn implements Event{
 	}
 }
 
+var injector = Injector.resolveAndCreate([
+	bind(LoggedIn).toFactory(() => { 
+		return new LoggedIn();
+	})		
+]);
+
 /**
  * Not sure if this is genious or stupid!
  */
 export class Factory{
 	
-	build(className : String, callback: Function){
-		
+	static build(className){
+		console.log(className)
+		return injector.get(className);
 	}
 }

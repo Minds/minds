@@ -1,6 +1,6 @@
 import {Component, View, NgIf, NgFor, EventEmitter} from 'angular2/angular2';
 import {RouterLink} from 'angular2/router';
-import {LoggedIn} from 'src/services/events';
+import {Factory, LoggedIn} from 'src/services/events';
 
 @Component({
   selector: 'minds-navigation'
@@ -13,16 +13,18 @@ import {LoggedIn} from 'src/services/events';
 export class Navigation { 
 	user;
 
-	constructor(){ 
+	constructor(){
+		self = this;
+		//Factory.build(LoggedIn).listen(()=>{
+		//	console.log('receieved session event');
+		//	this.getUser();
+		//})
 		this.getUser();
-		LoggedIn.listen(()=>{
-			console.log('got loggedin event');
-		});
 	}
 	
 	getUser(){
 
-		LoggedIn.emit();
+		//Factory.build(LoggedIn).emit("ok");
 		
 		if(window.Minds.user){
 			this.user = window.Minds.user;
