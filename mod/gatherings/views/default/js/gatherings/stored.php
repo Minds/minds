@@ -73,9 +73,11 @@ minds.conversations.init = function() {
 	
 	$('.elgg-form-conversation textarea').on('keypress', function(e){
 	
-		if($(this).val().length > 320){
+		if($(this).val().length >= 320){
 			$('.system-messages-output').html( (320 - $(this).val().length) + ' characters remaining').css({color:'red', 'font-weight':'bold', 'float':'left', margin:'6px'});
-			return false;
+			if ((e.which != 8) && (e.which != 13)) { 
+			    return false;
+			}
 		} else {
 			$('.system-messages-output').html( (320 - $(this).val().length) + ' characters remaining').css({color:'#333', 'font-weight':'bold', 'float':'left', margin:'6px'});
 		}
