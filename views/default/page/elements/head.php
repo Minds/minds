@@ -39,7 +39,7 @@ $release = get_version(true);
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title><?php echo $title; ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-    <meta property="al:android:url" content="minds://">
+    <meta property="al:android:url" content="minds://newsfeed">
     <meta property="al:android:app_name" name="al:android:app_name" content="Minds" data-app>
     <meta property="al:android:package" name="al:android:package" content="com.minds.mobile" data-app>
     <?php echo elgg_view('minds/meta');?>
