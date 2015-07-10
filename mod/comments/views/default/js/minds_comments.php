@@ -2,8 +2,13 @@
     <script type="text/javascript">
 <?php endif; ?>
     elgg.provide('minds.comments');
+    
+    minds.comments.submitFlag = false;
 
     minds.comments.init = function() {
+	
+	var submitFlag = false;
+	
     	/**
     	 * Autosize the comments box..
     	 */
@@ -16,8 +21,9 @@
          */
         $(document).on('keyup', '.comments-input',function(e){
 			e = e || event;
-			if (e.keyCode === 13 && !e.ctrlKey) {
+			if (e.keyCode === 13 && !e.ctrlKey && minds.comments.submitFlag==false) {
 			    // start your submit function
+			    minds.comments.submitFlag = true;
 			    $(this).submit();
 				$(this).height('25px');
 			}
@@ -178,6 +184,8 @@
                 input.removeClass('minds-processing').val('');
                 
               	$('.elgg-list.mason').masonry().masonry('reloadItems');
+		
+		minds.comments.submitFlag = false;
             },
             error: function(out){
             	console.log(out);
