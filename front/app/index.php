@@ -13,15 +13,20 @@ ini_set( 'display_errors','1');
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
+    <!-- temporary design -->
+     <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.blue_grey-amber.min.css" /> 
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
-    <link rel="stylesheet" href="https://gitcdn.xyz/repo/angular/bower-material/master/angular-material.css">
     <link rel="stylesheet" href="stylesheets/main.css"/>
+
   </head>
   <body>
 
   
     <!-- The app component created in app.ts -->
-    <minds-app>Loading...</minds-app>
+    <minds-app  class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header  mdl-layout--overlay-drawer-button">Loading...</minds-app>
     
      <!-- inject:js -->
   	 <!-- endinject -->

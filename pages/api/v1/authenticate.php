@@ -39,7 +39,7 @@ class authenticate implements interfaces\api, interfaces\ApiIgnorePam{
         }
 
         $user = new entities\user($_POST['username']);
-        if(login($user))
+        if($user->isEnabled() && login($user) && Core\session::isLoggedIn())
             $response['status'] = 'success';
         else
             $response['status'] = 'failed';

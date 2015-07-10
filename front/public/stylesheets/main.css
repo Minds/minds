@@ -4,50 +4,56 @@
 /**
  * Padding, Margins and Offset
  */
-body {
-  padding: 66px 0 0 248px;
-  margin: 0;
-  background: #e3e3e3; }
+.minds-noshadow {
+  box-shadow: 0 0 0 !important; }
 
-minds-topbar {
-  background: #FFF;
-  margin: 0;
-  width: 100%;
-  height: 66px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 5; }
-  minds-topbar .inner {
-    padding: 8px; }
-    minds-topbar .inner .logo {
-      margin: auto;
-      width: auto;
-      display: block;
-      height: 70%; }
+minds-topbar .mdl-layout__drawer-button {
+  color: rgba(0, 0, 0, 0.54) !important; }
 
-minds-navigation {
-  background: #333;
-  padding: 58px 0 0 0;
-  margin: 0;
-  width: 232px;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 4; }
-  minds-navigation ul {
-    list-style: none; }
-  minds-navigation li {
-    list-style: none; }
-    minds-navigation li a {
-      display: block;
-      padding: 8px;
-      color: #FFF; }
+minds-topbar .minds-menu-button > i {
+  padding: 12px 0; }
 
-minds-navigation.closed {
-  display: none; }
+minds-navigation .minds-account {
+  padding: 16px; }
+  minds-navigation .minds-account .minds-account-dropdown {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 100%; }
 
-@media (max-width: 360px) {
-  minds-navigation {
-    width: 85%; } }
+minds-navigation nav.minds-navigation {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1; }
+  minds-navigation nav.minds-navigation .mdl-navigation__link {
+    display: -webkit-box !important;
+    display: -webkit-flex !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 700; }
+    minds-navigation nav.minds-navigation .mdl-navigation__link .material-icons {
+      font-size: 24px;
+      color: rgba(255, 255, 255, 0.56);
+      margin-right: 24px; }

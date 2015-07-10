@@ -18,6 +18,16 @@ export class Topbar {
 	 * Determine if login button should be shown
 	 */
 	showLogin(){
+		window.componentHandler.upgradeDom();
 		return !window.LoggedIn;
+	}
+	
+	/**
+	 * Open the navigation
+	 */
+	openNav(){
+		console.log('opening nav');
+		document.getElementsByClassName('mdl-layout__drawer')[0].style['transform'] = "translateX(0)";
+		console.log(document.getElementsByClassName('mdl-layout__drawer'));
 	}
 }

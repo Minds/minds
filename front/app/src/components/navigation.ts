@@ -1,4 +1,4 @@
-import {Component, View} from 'angular2/angular2';
+import {Component, View, NgIf, NgFor} from 'angular2/angular2';
 import {RouterLink} from 'angular2/router';
 
 @Component({
@@ -6,9 +6,18 @@ import {RouterLink} from 'angular2/router';
 })
 @View({
   templateUrl: 'templates/components/navigation.html',
-  directives: [RouterLink]
+  directives: [RouterLink, NgIf, NgFor]
 })
 
 export class Navigation { 
-	constructor(){ }
+	user;
+	constructor(){ 
+		  this.getUser();
+	}
+	
+	getUser(){
+		if(window.Minds.user){
+			this.user = window.Minds.user;
+		}
+	}
 }

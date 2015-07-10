@@ -1,6 +1,28 @@
-<div class="inner">
-	<ul>
-		<li><a [router-link]="['/newsfeed']">Newsfeed</a></li>
-		<li><a [router-link]="['/capture']">Capture</a></li>
-	</ul>
+
+<div class="minds-account" *ng-if="user">
+    <img src="/icon/{{user.guid}}/small"/>
+    <div class="minds-account-dropdown" id="accbtn">
+        <span>{{user.name}}</span>
+        <div class="mdl-layout-spacer"></div>
+        
+        <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+            <i class="material-icons">arrow_drop_down</i>
+        </button>
+        
+        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events" for="accbtn">
+        </ul>
+
+    </div>
 </div>
+
+<nav class="minds-navigation mdl-navigation">
+    <!-- This will be dynamic soon -->
+    <a class="mdl-navigation__link mdl-color--amber-600 mdl-color-text--grey-50" [router-link]="['/newsfeed']">
+        <i class="mdl-color-text--amber-300 material-icons">home</i>
+        Newsfeed
+    </a>
+    <a class="mdl-navigation__link mdl-color--amber-600 mdl-color-text--grey-50" [router-link]="['/capture']">
+        <i class="mdl-color-text--amber-300 material-icons">videocam</i>
+        Capture
+    </a>
+</nav>

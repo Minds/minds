@@ -1,17 +1,25 @@
-Login form
-
-
-	<input 
-		type="text"
-		placeholder="Username"
-		#username
-		/>
-	<input 
-		type="password"
-		placeholder="Password"
-		#password
-		/>
-	<input
-		type="submit"
-		(click)="login(username.value, password.value)"
-		/>
+<div class="mdl-grid" style="max-width:1080px">
+    <div class="mdl-cell mdl-cell--8-col">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            
+            <input class="mdl-textfield__input" 
+                    type="text"
+                    id="username"
+                    #username
+                />
+            <label class="mdl-textfield__label" for="username">Username</label>
+            
+        </div>
+         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" 
+                    type="text"
+                    id="password"
+                    #password
+                />
+            <label class="mdl-textfield__label" for="password">Password</label>
+         </div>
+        <button class="mdl-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" (click)="login(username.value, password.value)">
+            Login
+        </button>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-import {Component, View, NgFor} from 'angular2/angular2';
+import {Component, View, NgFor, NgIf} from 'angular2/angular2';
 import {Client} from 'src/services/api';
 
 @Component({
@@ -7,7 +7,7 @@ import {Client} from 'src/services/api';
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
-  directives: [ NgFor ]
+  directives: [ NgFor, NgIf ]
 })
 
 export class Newsfeed {

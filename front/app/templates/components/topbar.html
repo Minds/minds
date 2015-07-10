@@ -1,10 +1,28 @@
-<div class="inner" layout="row">
-	<img src="assets/logos/alpha-small.png" class="logo"/>
-	
-	<div *ng-if="!showLogin()">
-		 <a [router-link]="['/logout']" class="md-button md-raised md-primary">Exit</a>
-	</div>
-	<div *ng-if="showLogin()">
-		<a [router-link]="['/login']" class="md-button md-raised md-primary">Login</a>
-	</div>
+<div  (click)="openNav()" class="minds-menu-button mdl-js-button mdl-layout__drawer-button">
+    <i  (click)="openNav()" class="material-icons">menu</i>
+</div>
+
+<div class="mdl-layout__header-row">
+    <div class="mdl-layout-spacer"></div>
+    
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+        <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
+              <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+              <input class="mdl-textfield__input" type="text" id="search" />
+              <label class="mdl-textfield__label" for="search">Enter your query...</label>
+        </div>
+    </div>
+    
+    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
+        <i class="material-icons">more_vert</i>
+    </button>
+    
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="showLogin()" [router-link]="['/login']">
+      Login
+    </button>
+     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="!showLogin()" [router-link]="['/logout']">
+      Logout
+    </button>
 </div>

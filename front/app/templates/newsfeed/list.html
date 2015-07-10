@@ -6,15 +6,26 @@
 
 <div class="newsfeed list">
 
+    <div *ng-if="newsfeed.length == 0 || isLoading">
+        <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate progress-demo"></div>
+    </div>
+
     <div *ng-for="#activity of newsfeed" class="item">
 
-        <div class="item item-text-wrap" [hidden]="!activity.message">
-            <p class="wrap" style="white-space: pre;">{{activity.message}}</p>
-        </div>
-
+        <div class="mdl-card mdl-shadow--2dp demo-card-wide">
+          
+          <div class="mdl-card__supporting-text" [hidden]="!activity.message">
+            {{activity.message}}
+          </div>
+          
+          <div class="mdl-card__actions mdl-card--border">
+            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+              Get Started
+            </a>
+          </div>
+          
         
-        <div class="boosted-bar" [hidden]="!activity.boosted">
-            <i class="icon ion-arrow-graph-up-right"></i> Boosted
+          
         </div>
         
     </div>
