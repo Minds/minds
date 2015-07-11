@@ -71,6 +71,13 @@ class newsfeed implements interfaces\api{
                 }
             }catch(\Exception $e){
             }
+
+            if(isset($_GET['thumb_guids'])){
+                foreach($activity as $id => $object){
+                    unset($activity[$id]['thumbs:up:user_guids']);
+                    unset($activity[$id]['thumbs:down:user_guid']);
+                }
+            }
         }
          
         if($activity){
