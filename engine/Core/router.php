@@ -8,15 +8,8 @@ class router{
 	
 	// these are core pages, other pages are registered by plugins
 	static $routes = array(
-		"/action" => "minds\\pages\\actions",
-		"/services" => "minds\\pages\\services",
-		"/cache" => "minds\\pages\\cache",
-		"/contact" => "minds\\pages\\contact",
-		"/subscriptions" => "minds\\pages\\subscriptions\\index",
-        "/boost" => "minds\\pages\\boost",
-        "/analytics" => "minds\\pages\\analytics",
+		"/icon" => "minds\\pages\\icon",
 		"/api" => "minds\\pages\\api\\api",
-        "/app" => "minds\\pages\\app"
 	);
 	
 	/**
@@ -62,9 +55,6 @@ class router{
 			--$loop;
 		}
 
-        //get our new angular 2.0 app
-        $index = dirname(dirname(dirname(__FILE__))) . '/front/public/index.html';		
-	   echo file_get_contents($index);
 	}
 	
 	/**
