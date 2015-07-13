@@ -307,7 +307,12 @@ margin: 0;
 }
 .conversations-list > li h3{
 	float:left;
-	margin:2px 16px;
+    margin:2px 16px;
+    overflow: hidden;
+    width: auto;
+    max-width: 55%;
+   white-space: nowrap;
+   text-overflow: ellipsis;
 }
 .conversations-list > li span.ts{
 	float:right;
