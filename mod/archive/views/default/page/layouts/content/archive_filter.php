@@ -60,13 +60,13 @@ if ($context) {
 			'section' => 'filter'
 		),
 
-		'filter:all' => array(
-			'text' => elgg_echo('All types'),
-			'href' => '?filter=all',
-			'selected' => ($type_context == 'all'),
-			'priority' => 0,
-			'section'=>'type'
-		),
+//		'filter:all' => array(
+//			'text' => elgg_echo('All types'),
+//			'href' => '?filter=all',
+//			'selected' => ($type_context == 'all'),
+//			'priority' => 0,
+//			'section'=>'type'
+//		),
 		'filter:media' => array(
 			'text' => elgg_echo('kalturavideo:label:videoaudio'),
 			'href' => '?filter=media',
