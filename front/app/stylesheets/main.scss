@@ -3,6 +3,12 @@
 body{
 }
 
+minds-app{
+  .initial-loading{
+    width:100%;
+  }
+}
+
 .minds-noshadow{
   box-shadow:0 0 0 !important;
 }
@@ -19,6 +25,10 @@ minds-topbar {
 minds-navigation{
   .minds-account{
     padding:$minds-padding*2;
+    
+    img{
+      border-radius:50%;
+    }
 
     .minds-account-dropdown{
       display: -webkit-box;
@@ -59,7 +69,6 @@ minds-navigation{
       -webkit-align-items: center;
       -ms-flex-align: center;
       align-items: center;
-      color: rgba(255, 255, 255, 0.8) !important;
       font-weight: 700;
       
       .material-icons {
@@ -70,4 +79,12 @@ minds-navigation{
     }
   }
     
+}
+
+
+minds-newsfeed{
+  .item.mdl-card{
+    width:auto;
+    margin-bottom:16px;
+  }
 }

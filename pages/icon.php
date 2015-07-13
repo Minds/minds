@@ -56,7 +56,7 @@ class icon extends core\page implements interfaces\page{
             }
             exit;
         }
-        $this->forward("/assets/avatars/$size.png");
+        $this->forward("https://www.minds.com/icon/63/small");
     }
 	
 	public function post($pages){

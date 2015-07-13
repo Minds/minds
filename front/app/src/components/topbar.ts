@@ -1,10 +1,11 @@
 import { Component, View, NgIf } from 'angular2/angular2';
 import { RouterLink } from 'angular2/router';
 import { Storage } from 'src/services/storage';
+import {Sidebar} from 'src/services/ui';
 
 @Component({
   selector: 'minds-topbar',
-  viewInjector: [Storage]
+  viewInjector: [Storage, Sidebar]
 })
 @View({
   templateUrl: 'templates/components/topbar.html',
@@ -12,7 +13,7 @@ import { Storage } from 'src/services/storage';
 })
 
 export class Topbar { 
-	constructor(public storage: Storage){ }
+	constructor(public storage: Storage, public sidebar : Sidebar){ }
 	
 	/**
 	 * Determine if login button should be shown

@@ -16,13 +16,15 @@
 </div>
 
 <nav class="minds-navigation mdl-navigation">
-    <!-- This will be dynamic soon -->
-    <a class="mdl-navigation__link mdl-color--amber-600 mdl-color-text--grey-50" [router-link]="['/newsfeed']">
-        <i class="mdl-color-text--amber-300 material-icons">home</i>
-        Newsfeed
-    </a>
-    <a class="mdl-navigation__link mdl-color--amber-600 mdl-color-text--grey-50" [router-link]="['/capture']">
-        <i class="mdl-color-text--amber-300 material-icons">videocam</i>
-        Capture
-    </a>
+
+	<a *ng-for="#item of navigation.getItems()" 
+		class="mdl-navigation__link mdl-color-text--white" 
+		[class]="{'mdl-color--amber-500' : item.active, 'mdl-color--blue-grey-800': !item.active}" 
+		[router-link]="[item.path]"
+		>
+
+		<i class="mdl-color-text--amber-500 material-icons" [class]="{'mdl-color-text--blue-grey-800' : item.active}">{{item.icon}}</i>
+		{{item.text}}
+
+	</a>
 </nav>

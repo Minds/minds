@@ -26,7 +26,9 @@ ini_set( 'display_errors','1');
 
   
     <!-- The app component created in app.ts -->
-    <minds-app  class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header  mdl-layout--overlay-drawer-button">Loading...</minds-app>
+    <minds-app  class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header  mdl-layout--overlay-drawer-button">
+        <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate initial-loading"></div>
+    </minds-app>
     
      <!-- inject:js -->
   	 <!-- endinject -->
@@ -36,7 +38,57 @@ ini_set( 'display_errors','1');
         
         <?php
             $minds = array(
-                "LoggedIn" => Minds\Core\session::isLoggedIn() ? "true" : "false"
+                "LoggedIn" => Minds\Core\session::isLoggedIn() ? "true" : "false",
+                "navigation" => array(
+                    array(
+                        "name" => "newsfeed",
+                        "path" => "/newsfeed",
+                        "title" => "Newsfeed",
+                        "text" => "Newsfeed",
+                        "icon" => "home",
+                        "class" => ""
+                        ),
+                     array(
+                        "name" => "capture",
+                        "path" => "/capture",
+                        "title" => "Capture",
+                        "text" => "Capture",
+                        "icon" => "videocam",
+                        "class" => ""
+                        ),
+                     array(
+                        "name" => "discovery",
+                        "path" => "/discovery",
+                        "title" => "Discovery",
+                        "text" => "Discovery",
+                        "icon" => "search",
+                        "class" => ""
+                        ),
+                     array(
+                        "name" => "messenger",
+                        "path" => "/messenger",
+                        "title" => "Messenger",
+                        "text" => "Messenger",
+                        "icon" => "chat_bubble",
+                        "class" => ""
+                        ),
+                     array(
+                        "name" => "notifications",
+                        "path" => "/notifications",
+                        "title" => "Notifications",
+                        "text" => "Notifications",
+                        "icon" => "notifications",
+                        "class" => ""
+                        ),
+                     array(
+                        "name" => "groups",
+                        "path" => "/groups",
+                        "title" => "Groups",
+                        "text" => "Groups",
+                        "icon" => "group_work",
+                        "class" => ""
+                        )
+                )
             );
             if(Minds\Core\session::isLoggedIn()){
                 $minds['user'] = Minds\Core\session::getLoggedinUser()->export();

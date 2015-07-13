@@ -18,6 +18,11 @@ import {Capture} from './src/controllers/capture/capture';
   { path: '/logout', component: Logout, as: 'logout' },	
   { path: '/newsfeed', component: Newsfeed, as: 'newsfeed' },
   { path: '/capture', component: Capture, as: 'capture' },
+  { path: '/discovery', component: Newsfeed, as: 'discovery'},
+  { path: '/messenger', component: Newsfeed, as: 'messenger'},
+  { path: '/notifications', component: Newsfeed, as: 'notifications'},
+  { path: '/groups', component: Newsfeed, as: 'groups'},
+  	
   { path: '/:username', redirectTo: '/login' }
 ])
 @View({

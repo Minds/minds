@@ -1,33 +1,62 @@
+<div class="mdl-grid newsfeed-grid" style="max-width:1080px">
 
-<div class="post">
-    <input type="text" #message></input>
-    <button (click)="post(message.value)"></button>
-</div>
+    <div class="mdl-cell mdl-cell--8-col">
 
-<div class="newsfeed list">
 
-    <div *ng-if="newsfeed.length == 0 || isLoading">
-        <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate progress-demo"></div>
-    </div>
+	    <div *ng-if="newsfeed.length == 0 || isLoading">
+	        <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate progress-demo"></div>
+	    </div>
+	
+	    <div *ng-for="#activity of newsfeed" class="mdl-card mdl-shadow--2dp item">
+	
+			<div class="mdl-card--border owner-block">
+				<a href="/{{activity.ownerObj.username}}">
+					<img /> {{activity.ownerObj.name}}
+				</a>
+			</div>
+	          
+			<div class="mdl-card__supporting-text" [hidden]="!activity.message">
+				{{activity.message}}
+			</div>
+			
+			<div class="mdl-card__menu">
+				  <div class="material-icons mdl-badge" data-badge="1">thumb_up</div>
+				<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+				  <i class="material-icons mdl-badge" data-badge="1">thumb_down</i>
+				</button>
+				<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+				  <i class="material-icons mdl-badge" data-badge="1">chat bubble</i>
+				</button>
+				<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+				  <i class="material-icons mdl-badge" data-badge="1">repeat</i>
+				</button>
+			</div>
+	          	        
+	    </div>
+	</div>
+	
+	
+	<div class="mdl-cell mdl-cell--4-col">
 
-    <div *ng-for="#activity of newsfeed" class="item">
+		<div class="mdl-card mdl-shadow--2dp">
 
-        <div class="mdl-card mdl-shadow--2dp demo-card-wide">
-          
-          <div class="mdl-card__supporting-text" [hidden]="!activity.message">
-            {{activity.message}}
-          </div>
-          
-          <div class="mdl-card__actions mdl-card--border">
-            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-              Get Started
-            </a>
-          </div>
-          
-        
-          
-        </div>
-        
-    </div>
+			<div class="mdl-textfield mdl-js-textfield textfield-demo">
+		    	<textarea 
+		    		class="mdl-textfield__input" 
+		    		type="text"
+		    		id="status"
+		    		#status
+		    		>
+		    	</textarea>
+		    	<label class="mdl-textfield__label" for="status">Status</label>
+		  	</div>
+		  	<button 
+	    		class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+	    		(click)="post(status.value)">
+	    		Post
+	    	</button>
+
+		</div>
+	</div>
 
 </div>

@@ -1,25 +1,29 @@
-import {Component, View, NgIf, NgFor, EventEmitter} from 'angular2/angular2';
+import {Component, View, NgIf, NgFor, CSSClass, EventEmitter} from 'angular2/angular2';
 import {RouterLink} from 'angular2/router';
 import {Factory, LoggedIn} from 'src/services/events';
+import { Navigation as NavigationService } from 'src/services/navigation';
 
 @Component({
-  selector: 'minds-navigation'
+  selector: 'minds-navigation',
+  viewInjector: [NavigationService]
 })
 @View({
   templateUrl: 'templates/components/navigation.html',
-  directives: [RouterLink, NgIf, NgFor]
+  directives: [RouterLink, NgIf, NgFor, CSSClass]
 })
 
 export class Navigation { 
 	user;
-
-	constructor(){
+	items = navigation.getItems();
+	constructor(public navigation : NavigationService){
 		self = this;
 		//Factory.build(LoggedIn).listen(()=>{
 		//	console.log('receieved session event');
 		//	this.getUser();
 		//})
 		this.getUser();
+		
+		//listen to click events to close nav
 	}
 	
 	getUser(){

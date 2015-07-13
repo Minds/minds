@@ -4,6 +4,9 @@
 /**
  * Padding, Margins and Offset
  */
+minds-app .initial-loading {
+  width: 100%; }
+
 .minds-noshadow {
   box-shadow: 0 0 0 !important; }
 
@@ -15,6 +18,8 @@ minds-topbar .minds-menu-button > i {
 
 minds-navigation .minds-account {
   padding: 16px; }
+  minds-navigation .minds-account img {
+    border-radius: 50%; }
   minds-navigation .minds-account .minds-account-dropdown {
     display: -webkit-box;
     display: -webkit-flex;
@@ -51,9 +56,12 @@ minds-navigation nav.minds-navigation {
     -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
-    color: rgba(255, 255, 255, 0.8) !important;
     font-weight: 700; }
     minds-navigation nav.minds-navigation .mdl-navigation__link .material-icons {
       font-size: 24px;
       color: rgba(255, 255, 255, 0.56);
       margin-right: 24px; }
+
+minds-newsfeed .item.mdl-card {
+  width: auto;
+  margin-bottom: 16px; }
