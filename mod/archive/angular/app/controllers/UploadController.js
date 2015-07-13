@@ -197,25 +197,34 @@ function UploadCtrl($scope, Elgg, $q, $timeout, $http, $location) {
 	        maxNumberOfFiles: 50,
 	        add: function(e, data){
 	        	
-	        	$scope.status= 'uploading';
-	        	
-				data.index = $scope.files.length;
+			
+			data.index = $scope.files.length;
+			var filetype = $scope.detectMediaType(data.files[0].type);
+			
+			if ((filetype == 'audio') || (filetype == 'image') || (filetype == 'video')) {
+			    $scope.status= 'uploading';
 
-				$scope.$apply(function(scope){
-		       		var file = data.files[0],
-		       				entity = {
-		       					index : data.index,
-		       					container_guid: $scope.album,
-		       					batch_guid: batch_guid,
-		           				fileType: $scope.detectMediaType(file.type),
-						       	title: file.name,
-						        license: $scope.default_license,
-						        access_id: $scope.default_access
-							};
-	                  $scope.files[data.index] = entity;
-				});
-				$scope.files[data.index]['progress'] = 1;
-				data.submit();
+
+				    $scope.$apply(function(scope){
+				    var file = data.files[0],
+						    entity = {
+							    index : data.index,
+							    container_guid: $scope.album,
+							    batch_guid: batch_guid,
+							    fileType: $scope.detectMediaType(file.type),
+							    title: file.name,
+							    license: $scope.default_license,
+							    access_id: $scope.default_access
+							    };
+			      $scope.files[data.index] = entity;
+				    });
+				    $scope.files[data.index]['progress'] = 1;
+				    data.submit();
+				}
+				else {
+				    alert('Sorry, only video, audio or image files can be uploaded.');
+				    e.preventDefault();
+				}
 		
 				
 	        },
