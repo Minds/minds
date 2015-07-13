@@ -27,7 +27,7 @@
 				</div>
 				
 				<div class="elgg-button elgg-button-action elgg-button-upload"> <span>Click to open selector.</span>
-					<input id="fileupload" type="file" name="fileData"  multiple=""/>
+					<input id="fileupload" type="file" name="fileData"  multiple="" accept="audio/*,video/*,image/*" />
 				</div>
 				
 				<select name="license" id="license" class="elgg-input-dropdown default-license-input" ng-options="license.value as license.text for license in licenses" ng-model="default_license" ng-change="setDefaultLicense()"></select>
