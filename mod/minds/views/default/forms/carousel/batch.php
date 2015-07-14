@@ -19,13 +19,14 @@ if(!elgg_get_page_owner_guid()){
 }
 
 echo $buttons;
- 
+$admin = false; 
 if(!isset($vars['items'])){
 	$items = elgg_get_entities(array(
 		'type' => 'object',
 		'subtype' => 'carousel_item',
 		'limit' => 0
-	));
+    ));
+    $admin = true;
 	echo elgg_view('input/hidden', array('name'=>'owner_guid', 'value'=>0));
 	echo elgg_view('input/hidden', array('name'=>'admin', 'value'=>'admin'));
 	
@@ -96,7 +97,8 @@ foreach($items as $item){
 HTML;
 		echo  elgg_view('input/hidden', array('name'=>"$item->guid:top_offset", 'value'=>$item->top_offset, 'id'=>'top_offset'));
 		echo elgg_view('input/plaintext', array('name'=>"$item->guid:title", 'value'=>$item->title, 'placeholder'=>'Type here..', 'style'=>'color:'.$item->color .'; background:'.$item->shadow, 'rows'=>1));
-		echo elgg_view('input/text', array('name'=>"$item->guid:subtitle", 'value'=>$item->subtitle, 'placeholder'=>'Type here..'));
+        if($admin)
+            echo elgg_view('input/text', array('name'=>"$item->guid:subtitle", 'value'=>$item->subtitle, 'placeholder'=>'Type here..'));
 		echo elgg_view('input/hidden', array('name'=>"$item->guid:order", 'value'=>$item->order, 'id'=>"order"));
 	echo '</div>';
 }
