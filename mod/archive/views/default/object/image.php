@@ -17,7 +17,7 @@ elgg_load_js('popup');
 
 if($full_view){
 	
-	echo elgg_view('output/img', array('src'=>$image->getIconURL('xlarge')));
+	echo elgg_view('output/img', array('src'=>$image->getIconURL('xlarge'), 'class'=>'archive-image', 'style'=>'max-width:100%'));
 	
 } elseif($viewtype == 'gallery' || elgg_is_xhr() && strpos(urldecode($_SERVER['REQUEST_URI']),'archive/view') !== FALSE) {
 
