@@ -11,13 +11,7 @@ if(!$entity){
 
 elgg_set_page_owner_guid($entity->getOwnerGUID());
 $owner = elgg_get_page_owner_entity();
-
-$menu = elgg_view_menu('entity', array(
-		'entity' => $entity,
-		'handler' => 'archive',
-		'sort_by' => 'priority',
-		'class' => 'elgg-menu-hz',
-	));
+));
 
 $title = strip_tags($entity->title);
 $description = strip_tags($entity->description);
@@ -190,6 +184,13 @@ if(elgg_is_active_plugin('analytics') && $trending && false){
 
 if($sidebar_comments)
 	$sidebar .= elgg_view_comments($entity);
+
+$menu = elgg_view_menu('entity', array(
+        'entity' => $entity,
+        'handler' => 'archive',
+        'sort_by' => 'priority',
+        'class' => 'elgg-menu-hz',
+    ));
 
 $body = elgg_view_layout("content", array(	
 	'class' => 'archive',
