@@ -13,6 +13,9 @@ minds-app .initial-loading {
 minds-topbar .mdl-layout__drawer-button {
   color: rgba(0, 0, 0, 0.54) !important; }
 
+minds-topbar .logo img {
+  height: 36px; }
+
 minds-topbar .minds-menu-button > i {
   padding: 12px 0; }
 
@@ -64,4 +67,50 @@ minds-navigation nav.minds-navigation {
 
 minds-newsfeed .item.mdl-card {
   width: auto;
+  min-height: 0;
   margin-bottom: 16px; }
+  minds-newsfeed .item.mdl-card .mdl-card__supporting-text {
+    width: 100%; }
+  minds-newsfeed .item.mdl-card .mdl-card__supporting-text.message {
+    white-space: pre-line; }
+  minds-newsfeed .item.mdl-card .tabs {
+    padding: 8px 16px;
+    display: flex;
+    box-sizing: border-box; }
+    minds-newsfeed .item.mdl-card .tabs a {
+      display: flex;
+      flex-direction: column;
+      flex: auto;
+      text-align: center; }
+
+minds-newsfeed .post {
+  padding: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+  min-height: 0; }
+  minds-newsfeed .post .mdl-textfield {
+    width: 100%;
+    padding-top: 0; }
+  minds-newsfeed .post .mdl-button {
+    width: 0;
+    float: right; }
+
+.owner-block {
+  padding: 16px;
+  display: flex; }
+  .owner-block .avatar {
+    display: flex;
+    flex-direction: column; }
+  .owner-block .body {
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px; }
+  .owner-block a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #333; }
+  .owner-block span {
+    color: #888;
+    font-size: 11px; }
+  .owner-block img {
+    border-radius: 3px; }

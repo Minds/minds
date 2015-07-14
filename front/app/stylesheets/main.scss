@@ -16,6 +16,13 @@ minds-topbar {
   .mdl-layout__drawer-button{
     color: rgba(0, 0, 0, 0.54) !important;
   }
+
+  .logo{
+    img {
+      height:36px;
+     }
+   }
+
   .minds-menu-button > i{
     padding:12px 0;
   }
@@ -85,6 +92,74 @@ minds-navigation{
 minds-newsfeed{
   .item.mdl-card{
     width:auto;
+    min-height:0;
     margin-bottom:16px;
+   
+    .mdl-card__supporting-text{
+      width:100%;
+    }
+    .mdl-card__supporting-text.message{
+      white-space: pre-line;
+    }
+    
+    .tabs{
+      padding:$minds-padding $minds-padding*2;
+      display:flex;
+      box-sizing:border-box;
+      
+      a {
+        display:flex;
+        flex-direction: column;
+        flex:auto;
+        text-align:center;
+      }
+    }
+   
+  }
+  .post{
+    padding:$minds-padding * 2;
+    margin-bottom:$minds-padding * 2;
+    width:100%;
+    min-height:0;
+
+    .mdl-textfield{
+      width:100%;
+      padding-top:0;
+    }
+    .mdl-button {
+      width:0;
+      float:right;
+    }
+  }
+}
+
+.owner-block{
+  padding:$minds-padding * 2;
+  display:flex;
+  
+  .avatar{
+    display:flex;
+    flex-direction: column;
+  }
+  
+  .body{
+    display:flex;
+    flex-direction: column;
+    margin-left:$minds-margin * 2;
+  }
+  
+  a {
+    text-decoration:none;
+    font-weight:500;
+    color:#333;
+  }
+  
+  span {
+    color:#888;
+    font-size:11px;
+  }
+
+  img {
+    border-radius:3px;
   }
 }

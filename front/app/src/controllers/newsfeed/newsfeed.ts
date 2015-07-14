@@ -1,4 +1,4 @@
-import {Component, View, NgFor, NgIf} from 'angular2/angular2';
+import {Component, View, NgFor, NgIf, Pipes, DatePipe} from 'angular2/angular2';
 import {Client} from 'src/services/api';
 
 @Component({
@@ -49,5 +49,12 @@ export class Newsfeed {
 				.catch(function(e){
 					console.log(e);
 				});
+	}
+	
+	/**
+	 * A temporary hack, because pipes don't seem to work
+	 */
+	toDate(timestamp){
+		return new Date(timestamp*1000);
 	}
 }
