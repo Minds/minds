@@ -78,11 +78,11 @@ minds.conversations.init = function() {
 			if ((e.which != 8) && (e.which != 13)) { 
 			    return false;
             }
-            $('.elgg-form-conversation input[type=submit]').disable();
+            $('.elgg-form-conversation input[type=submit]').attr('disabled','disabled');
             return false;
 		} else {
             $('.system-messages-output').html( (320 - $(this).val().length) + ' characters remaining').css({color:'#333', 'font-weight':'bold', 'float':'left', margin:'6px'});
-            $('.elgg-form-conversation input[type=submit]').enable();
+            $('.elgg-form-conversation input[type=submit]').removeAttr('disabled');
 		}
 		
 		//submit form on enter key
