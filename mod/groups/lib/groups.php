@@ -523,7 +523,7 @@ function groups_handle_requests_page($guid) {
 			'relationship' => 'membership_request',
 			'relationship_guid' => $guid,
 			'inverse_relationship' => true,
-			'limit' => 0,
+			'limit' => 12,
 		));
 		$content = elgg_view('groups/membershiprequests', array(
 			'requests' => $requests,
