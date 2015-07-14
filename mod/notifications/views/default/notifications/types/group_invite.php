@@ -1,5 +1,5 @@
 <?php 
-
+return true;
 $entity = elgg_extract('entity', $vars);
 
 $to = get_entity($entity->to_guid);
