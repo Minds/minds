@@ -71,7 +71,7 @@ minds.conversations.init = function() {
 		portal.find().send("message", data);
 	});
 	
-	$('.elgg-form-conversation textarea').on('keypress', function(e){
+	$('.elgg-form-conversation textarea').on('keyup', function(e){
 	
 		if($(this).val().length >= 320){
 			$('.system-messages-output').html( (320 - $(this).val().length) + ' characters remaining').css({color:'red', 'font-weight':'bold', 'float':'left', margin:'6px'});
