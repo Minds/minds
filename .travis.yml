@@ -17,13 +17,15 @@ services:
 before_install:
     # Cassandra 2.1 install
     - sudo rm -rf /var/lib/cassandra/*
-    - wget http://www.us.apache.org/dist/cassandra/2.1.7/apache-cassandra-2.1.7-bin.tar.gz && tar -xvzf apache-cassandra-2.1.7-bin.tar.gz && sudo sh apache-cassandra-2.1.7/bin/cassandra
+    - wget http://www.us.apache.org/dist/cassandra/2.1.8/apache-cassandra-2.1.8-bin.tar.gz && tar -xvzf apache-cassandra-2.1.8-bin.tar.gz && sudo sh apache-cassandra-2.1.8/bin/cassandra
     - sleep 10
     # Neo4j 2.2 install
     - wget dist.neo4j.org/neo4j-community-2.2.0-unix.tar.gz
     - tar -xzf neo4j-community-2.2.0-unix.tar.gz
     - sed -i.bak s/dbms.security.auth_enabled=true/dbms.security.auth_enabled=false/g neo4j-community-2.2.0/conf/neo4j-server.properties
     - neo4j-community-2.2.0/bin/neo4j start
+    # Mongo Driver
+    - wget http://pecl.php.net/get/mongo-1.2.10.tgz && tar -xzf mongo-1.2.10.tgz && sh -c "cd mongo-1.2.10 && phpize && ./configure && sudo make install" && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 ##USE THRIFT WITH CASSANDRA
 before_script:
