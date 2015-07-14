@@ -123,7 +123,8 @@
 	}
 
 	.sidebar-active .elgg-list{
-		width:1000px;
+		max-width:1000px;
+		width: 100%;
 	}
 
 }
@@ -139,7 +140,8 @@
         }
 
 	.sidebar-active .elgg-list{
-		width:1320px;
+		max-width:1320px;
+		width: 100%;
 	}
 }
 /**
