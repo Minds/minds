@@ -11,7 +11,6 @@ if(!$entity){
 
 elgg_set_page_owner_guid($entity->getOwnerGUID());
 $owner = elgg_get_page_owner_entity();
-));
 
 $title = strip_tags($entity->title);
 $description = strip_tags($entity->description);
