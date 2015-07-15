@@ -33,8 +33,12 @@ class analytics extends core\page implements interfaces\page{
             $mongo = Core\Data\Client::build('MongoDB');
             $boost_impressions = 0;
             $boost_impressions_met = 0;
+            $boost_backlog = NULL;
             $boost_objs = $mongo->find("boost", array('state'=>'approved', 'type'=>'newsfeed'));
             foreach($boost_objs as $boost){
+                if($boost_backlog == NULL){
+                   $boost_backlog = (time() - $boost['_id']->getTimestamp()) / (60 * 60);
+                }
                 $boost_impressions = $boost_impressions + $boost['impressions']; 
                 $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false); 
             }
@@ -49,6 +53,7 @@ class analytics extends core\page implements interfaces\page{
                 'review' =>  $boost_reviews->count(),
                 'review_backlog' => $review_backlog,
                 'approved' => $boost_objs->count(),
+                'approved_backlog' => $boost_backlog,
                 'impressions' => $boost_impressions,
                 'impressions_met' => $boot_impressions_met
             );
