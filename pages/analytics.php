@@ -44,7 +44,7 @@ class analytics extends core\page implements interfaces\page{
                 $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false); 
             }
 
-            $boost_reviews = $mongo->find("boost", array('state'=>'review'));
+            $boost_reviews = $mongo->find("boost", array('state'=>'review', 'type'=>'newsfeed'));
             $boost_reviews->sort(array('_id'=> 1));
             foreach($boost_reviews as $obj){
                 $review_backlog = (time() - $obj['_id']->getTimestamp()) / (60 * 60);
