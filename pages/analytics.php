@@ -35,6 +35,7 @@ class analytics extends core\page implements interfaces\page{
             $boost_impressions_met = 0;
             $boost_backlog = NULL;
             $boost_objs = $mongo->find("boost", array('state'=>'approved', 'type'=>'newsfeed'));
+            $boost_objs->sort(array('_id'=> 1));
             foreach($boost_objs as $boost){
                 if($boost_backlog == NULL){
                    $boost_backlog = (time() - $boost['_id']->getTimestamp()) / (60 * 60);
@@ -44,6 +45,7 @@ class analytics extends core\page implements interfaces\page{
             }
 
             $boost_reviews = $mongo->find("boost", array('state'=>'review'));
+            $boost_review->sort(array('_id'=> 1));
             foreach($boost_reviews as $obj){
                 $review_backlog = (time() - $obj['_id']->getTimestamp()) / (60 * 60);
                 break;
