@@ -95,6 +95,12 @@ minds-newsfeed .post {
     width: 0;
     float: right; }
 
+.minds-rich-embed img {
+  width: 100%; }
+
+.minds-rich-embed .meta {
+  padding: 16px; }
+
 .owner-block {
   padding: 16px;
   display: flex; }

@@ -24,6 +24,7 @@
         "./front/app/src/controllers/logout.ts",
         "./front/app/src/controllers/newsfeed/newsfeed.ts",
         "./front/app/src/directives/loggedin.ts",
+        "./front/app/src/directives/material.ts",
         "./front/app/src/services/api.ts",
         "./front/app/src/services/api/client.ts",
         "./front/app/src/services/cookie.ts",

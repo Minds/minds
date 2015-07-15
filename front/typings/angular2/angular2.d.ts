@@ -1,4 +1,4 @@
-// Type definitions for Angular v2.0.0-alpha.30
+// Type definitions for Angular v2.0.0-alpha.31
 // Project: http://angular.io/
 // Definitions by: angular team <https://github.com/angular/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -23,7 +23,7 @@ declare module ng {
   type SetterFn = typeof Function;
   type int = number;
   interface Type extends Function {
-    // new (...args);
+    new (...args);
   }
 
   // See https://github.com/Microsoft/TypeScript/issues/1168
@@ -32,6 +32,7 @@ declare module ng {
     stack: string;
     toString(): string;
   }
+  interface InjectableReference {}
 }
 
 
@@ -440,13 +441,13 @@ declare module ng {
   /**
    * ON_PUSH means that the change detector's mode will be set to CHECK_ONCE during hydration.
    */
-  var ON_PUSH:any;
+  var ON_PUSH;
 
 
   /**
    * DEFAULT means that the change detector's mode will be set to CHECK_ALWAYS during hydration.
    */
-  var DEFAULT:any;
+  var DEFAULT;
 
 
   /**
@@ -570,7 +571,7 @@ declare module ng {
      create(cdRef: ChangeDetectorRef): Pipe;
   }
 
-  var defaultPipes:any;
+  var defaultPipes;
 
 
   /**
@@ -781,9 +782,9 @@ declare module ng {
      isOnPushChangeDetection(): boolean;
   }
 
-  var Inject:any;
+  var Inject;
 
-  var Optional:any;
+  var Optional;
 
 
   /**
@@ -1138,7 +1139,7 @@ declare module ng {
    *
    * @exportedAs angular2/di
    */
-  class Key {
+  interface Key {
 
      token: Object;
 
@@ -1443,13 +1444,13 @@ declare module ng {
      properties: List<any>;
   }
 
-  var Self:any;
+  var Self;
 
-  var Parent:any;
+  var Parent;
 
-  var Ancestor:any;
+  var Ancestor;
 
-  var Unbounded:any;
+  var Unbounded;
 
 
   /**
@@ -1460,19 +1461,6 @@ declare module ng {
      getDependency(injector: Injector, binding: ResolvedBinding, dependency: Dependency): any;
   }
 
-
-  interface AbstractControl_markAsDirtyArgs {
-    onlySelf?: boolean;
-  }
-
-  interface AbstractControl_updateValidityArgs {
-    onlySelf?: boolean;
-  }
-
-  interface AbstractControl_updateValueAndValidityArgs {
-    onlySelf?: boolean;
-    emitEvent?: boolean;
-  }
 
   /**
    * Omitting from external API doc as this is really an abstract internal concept.
@@ -1501,13 +1489,14 @@ declare module ng {
 
      markAsTouched(): void;
 
-     markAsDirty(args?: AbstractControl_markAsDirtyArgs): void;
+     markAsDirty({onlySelf}?: {onlySelf?: boolean}): void;
 
      setParent(parent: any): void;
 
-     updateValidity(args?: AbstractControl_updateValidityArgs): void;
+     updateValidity({onlySelf}?: {onlySelf?: boolean}): void;
 
-     updateValueAndValidity(args?: AbstractControl_updateValueAndValidityArgs): void;
+     updateValueAndValidity({onlySelf, emitEvent}?: {onlySelf?: boolean,
+                                                 emitEvent?: boolean}): void;
 
      find(path: List<string | number>| string): AbstractControl;
 
@@ -1516,10 +1505,6 @@ declare module ng {
      hasError(errorCode: string, path?: List<string>): boolean;
   }
 
-  interface Control_updateValueOptions {
-    onlySelf?: boolean;
-    emitEvent?: boolean;
-  }
 
   /**
    * Defines a part of a form that cannot be divided into other controls.
@@ -1532,7 +1517,7 @@ declare module ng {
    */
   class Control extends AbstractControl {
 
-     updateValue(value: any, options?: Control_updateValueOptions): void;
+     updateValue(value: any, {onlySelf, emitEvent}?: {onlySelf?: boolean, emitEvent?: boolean}): void;
 
      registerOnChange(fn: Function): void;
   }
@@ -2326,7 +2311,7 @@ declare module ng {
      setEventDispatcher(viewRef: RenderViewRef, dispatcher: any): void;
   }
 
-  var DOCUMENT_TOKEN:any;
+  var DOCUMENT_TOKEN;
 
 
   /**
@@ -3714,42 +3699,28 @@ declare module ng {
    */
   var Component : ComponentFactory ;
 
-  interface ViewArgs {
-    templateUrl?: string;
-    template?: string;
-    directives?: List<Type | any | List<any>>;
-    renderer?: string;
-    styles?: List<string>;
-    styleUrls?: List<string>;
-  }
 
   /**
    * Interface for the <a href='/angular2/angular2.api/Component'><code>Component</code></a> decorator function.
    *
    * See <a href='/angular2/angular2.api/ComponentFactory'><code>ComponentFactory</code></a>.
    */
-
   interface ComponentDecorator extends TypeDecorator {
 
 
     /**
      * Chain <a href='/angular2/angular2.api/View'><code>View</code></a> annotation.
      */
-     View(obj: ViewArgs): ViewDecorator;
+     View(obj: {
+    templateUrl?: string,
+    template?: string,
+    directives?: List<Type | any | List<any>>,
+    renderer?: string,
+    styles?: List<string>,
+    styleUrls?: List<string>,
+  }): ViewDecorator;
   }
 
-  interface ComponentFactoryArgs {
-    selector?: string;
-    properties?: List<string>;
-    events?: List<string>;
-    host?: StringMap<string, string>;
-    lifecycle?: List<LifecycleEvent>;
-    hostInjector?: List<any>;
-    exportAs?: string;
-    compileChildren?: boolean;
-    viewInjector?: List<any>;
-    changeDetection?: string;
-  }
 
   /**
    * <a href='/angular2/angular2.api/ComponentAnnotation'><code>ComponentAnnotation</code></a> factory for creating annotations, decorators or DSL.
@@ -3796,8 +3767,32 @@ declare module ng {
    */
   interface ComponentFactory {
 
-    new(obj: ComponentFactoryArgs): ComponentAnnotation;
-    (obj: ComponentFactoryArgs): ComponentDecorator;
+     new(obj: {
+    selector?: string,
+    properties?: List<string>,
+    events?: List<string>,
+    host?: StringMap<string, string>,
+    lifecycle?: List<LifecycleEvent>,
+    hostInjector?: List<any>,
+    exportAs?: string,
+    compileChildren?: boolean,
+    viewInjector?: List<any>,
+    changeDetection?: string,
+  }): ComponentAnnotation;
+
+
+     (obj: {
+    selector?: string,
+    properties?: List<string>,
+    events?: List<string>,
+    host?: StringMap<string, string>,
+    lifecycle?: List<LifecycleEvent>,
+    hostInjector?: List<any>,
+    exportAs?: string,
+    compileChildren?: boolean,
+    viewInjector?: List<any>,
+    changeDetection?: string,
+  }): ComponentDecorator;
 
   }
 
@@ -3816,16 +3811,7 @@ declare module ng {
   interface DirectiveDecorator extends TypeDecorator {
   }
 
-  interface DirectiveFactoryArgs {
-    selector?: string;
-    properties?: List<string>;
-    events?: List<string>;
-    host?: StringMap<string, string>;
-    lifecycle?: List<LifecycleEvent>;
-    hostInjector?: List<any>;
-    exportAs?: string;
-    compileChildren?: boolean;
-  }
+
   /**
    * <a href='/angular2/angular2.api/Directive'><code>Directive</code></a> factory for creating annotations, decorators or DSL.
    *
@@ -3867,8 +3853,20 @@ declare module ng {
    * ```
    */
   interface DirectiveFactory {
-     new(obj: DirectiveFactoryArgs): DirectiveAnnotation;
-     (obj: DirectiveFactoryArgs): DirectiveDecorator;
+
+     new(obj: {
+    selector?: string, properties?: List<string>, events?: List<string>,
+        host?: StringMap<string, string>, lifecycle?: List<LifecycleEvent>,
+        hostInjector?: List<any>, exportAs?: string, compileChildren?: boolean;
+  }): DirectiveAnnotation;
+
+
+     (obj: {
+    selector?: string, properties?: List<string>, events?: List<string>,
+        host?: StringMap<string, string>, lifecycle?: List<LifecycleEvent>,
+        hostInjector?: List<any>, exportAs?: string, compileChildren?: boolean;
+  }): DirectiveDecorator;
+
   }
 
 
@@ -3877,14 +3875,6 @@ declare module ng {
    */
   var View : ViewFactory ;
 
-  interface ViewDecoratorArgs {
-    templateUrl?: string;
-    template?: string;
-    directives?: List<Type | any | List<any>>;
-    renderer?: string;
-    styles?: List<string>;
-    styleUrls?: List<string>;
-  }
 
   /**
    * Interface for the <a href='/angular2/angular2.api/View'><code>View</code></a> decorator function.
@@ -3897,17 +3887,16 @@ declare module ng {
     /**
      * Chain <a href='/angular2/angular2.api/View'><code>View</code></a> annotation.
      */
-     View(obj: ViewDecoratorArgs): ViewDecorator;
+     View(obj: {
+    templateUrl?: string,
+    template?: string,
+    directives?: List<Type | any | List<any>>,
+    renderer?: string,
+    styles?: List<string>,
+    styleUrls?: List<string>,
+  }): ViewDecorator;
   }
 
-  interface ViewFactoryArgs {
-    templateUrl?: string;
-    template?: string;
-    directives?: List<Type | any | List<any>>;
-    renderer?: string;
-    styles?: List<string>;
-    styleUrls?: List<string>;
-  }
 
   /**
    * <a href='/angular2/angular2.api/ViewAnnotation'><code>ViewAnnotation</code></a> factory for creating annotations, decorators or DSL.
@@ -3953,13 +3942,29 @@ declare module ng {
    * ```
    */
   interface ViewFactory {
-     new(obj: ViewFactoryArgs): ViewAnnotation;
-     (obj: ViewFactoryArgs): ViewDecorator;
+
+     new(obj: {
+    templateUrl?: string,
+    template?: string,
+    directives?: List<Type | any | List<any>>,
+    renderer?: string,
+    styles?: List<string>,
+    styleUrls?: List<string>,
+  }): ViewAnnotation;
+
+
+     (obj: {
+    templateUrl?: string,
+    template?: string,
+    directives?: List<Type | any | List<any>>,
+    renderer?: string,
+    styles?: List<string>,
+    styleUrls?: List<string>,
+  }): ViewDecorator;
+
   }
 
-  interface QueryFactoryOptions {
-    descendants?: boolean;
-  }
+
   /**
    * <a href='/angular2/angular2.api/Query'><code>Query</code></a> factory for creating annotations, decorators or DSL.
    *
@@ -4007,8 +4012,12 @@ declare module ng {
    * ```
    */
   interface QueryFactory {
-     new(selector: Type | string, options?: QueryFactoryOptions): QueryAnnotation;
-     (selector: Type | string, options?: QueryFactoryOptions): ParameterDecorator;
+
+     new(selector: Type | string, {descendants}?: {descendants?: boolean}): QueryAnnotation;
+
+
+     (selector: Type | string, {descendants}?: {descendants?: boolean}): ParameterDecorator;
+
   }
 
 
@@ -4150,7 +4159,7 @@ declare module ng {
    * component, injector,
    * or dispose of an application.
    */
-  class ApplicationRef {
+  interface ApplicationRef {
 
 
     /**
@@ -4194,7 +4203,7 @@ declare module ng {
    *
    * ```
    */
-  var appComponentTypeToken:any;
+  var appComponentTypeToken;
 
 
   /**
@@ -4301,7 +4310,7 @@ declare module ng {
    *
    * @exportedAs angular2/view
    */
-  class Compiler {
+  interface Compiler {
 
      compileInHost(componentTypeOrBinding: Type | Binding): Promise<ProtoViewRef>;
   }
@@ -4312,7 +4321,7 @@ declare module ng {
    * This manager contains all recursion and delegates to helper methods
    * in AppViewManagerUtils and the Renderer, so unit tests get simpler.
    */
-  class AppViewManager {
+  interface AppViewManager {
 
 
     /**
@@ -4531,7 +4540,7 @@ declare module ng {
   /**
    * Reference to the element.
    *
-   * Represents an opeque refference to the underlying element. The element is a DOM ELement in
+   * Represents an opaque reference to the underlying element. The element is a DOM ELement in
    * a Browser, but may represent other types on other rendering platforms. In the browser the
    * `ElementRef` can be sent to the web-worker. Web Workers can not have references to the
    * DOM Elements.
@@ -4598,8 +4607,8 @@ declare module ng {
   /**
    * A reference to an Angular View.
    *
-   * A View is a fundemental building block of Application UI. A View is the smallest set of
-   * elements which are created and destroyed together. A View can chane properties on the elements
+   * A View is a fundamental building block of Application UI. A View is the smallest set of
+   * elements which are created and destroyed together. A View can change properties on the elements
    * within the view, but it can not change the structure of those elements.
    *
    * To change structure of the elements, the Views can contain zero or more <a href='/angular2/angular2.api/ViewContainerRef'><code>ViewContainerRef</code></a>s
@@ -4631,9 +4640,9 @@ declare module ng {
    *   <li>{{item}}</li>
    * ```
    *
-   * Notice that the original template is broken down into two separet <a href='/angular2/angular2.api/ProtoViewRef'><code>ProtoViewRef</code></a>s.
+   * Notice that the original template is broken down into two separate <a href='/angular2/angular2.api/ProtoViewRef'><code>ProtoViewRef</code></a>s.
    *
-   * The outter/inner <a href='/angular2/angular2.api/ProtoViewRef'><code>ProtoViewRef</code></a>s are then assambled into views like so:
+   * The outter/inner <a href='/angular2/angular2.api/ProtoViewRef'><code>ProtoViewRef</code></a>s are then assembled into views like so:
    *
    * ```
    * <!-- ViewRef: outter-0 -->
@@ -4665,7 +4674,7 @@ declare module ng {
 
 
   /**
-   * A reference to an an Angular ProtoView.
+   * A reference to an Angular ProtoView.
    *
    * A ProtoView is a reference to a template for easy creation of views.
    * (See <a href='/angular2/angular2.api/AppViewManager#createViewInContainer'><code>AppViewManager</code></a> and <a href='/angular2/angular2.api/AppViewManager#createRootHostView'><code>AppViewManager</code></a>).
@@ -4698,11 +4707,11 @@ declare module ng {
    *   <li>{{item}}</li>
    * ```
    *
-   * Notice that the original template is broken down into two separet <a href='/angular2/angular2.api/ProtoViewRef'><code>ProtoViewRef</code></a>s.
+   * Notice that the original template is broken down into two separate <a href='/angular2/angular2.api/ProtoViewRef'><code>ProtoViewRef</code></a>s.
    *
    * @exportedAs angular2/view
    */
-  class ProtoViewRef {
+  interface ProtoViewRef {
   }
 
 
@@ -4787,11 +4796,6 @@ declare module ng {
      hostView: ViewRef;
   }
 
-  interface NgZoneArgs {
-    onTurnStart?: /*() => void*/ Function;
-    onTurnDone?: /*() => void*/ Function;
-    onErrorHandler?: /*(error, stack) => void*/ Function;
-  }
 
   /**
    * A wrapper around zones that lets you schedule tasks after it has executed a task.
@@ -4807,16 +4811,20 @@ declare module ng {
   class NgZone {
 
 
-  /**
-   * Initializes the zone hooks.
-   *
-   * @param {() => void} onTurnStart called before code executes in the inner zone for each VM turn
-   * @param {() => void} onTurnDone called at the end of a VM turn if code has executed in the inner
-   * zone
-   * @param {(error, stack) => void} onErrorHandler called when an exception is thrown by a macro or
-   * micro task
-   */
-  initCallbacks(args?: NgZoneArgs): void;
+    /**
+     * Initializes the zone hooks.
+     *
+     * @param {() => void} onTurnStart called before code executes in the inner zone for each VM turn
+     * @param {() => void} onTurnDone called at the end of a VM turn if code has executed in the inner
+     * zone
+     * @param {(error, stack) => void} onErrorHandler called when an exception is thrown by a macro or
+     * micro task
+     */
+     initCallbacks({onTurnStart, onTurnDone, onErrorHandler}?: {
+    onTurnStart?: /*() => void*/ Function,
+    onTurnDone?: /*() => void*/ Function,
+    onErrorHandler?: /*(error, stack) => void*/ Function
+  }): void;
 
 
     /**
@@ -4879,46 +4887,6 @@ declare module ng {
      throw(error: any): void;
 
      return(value?: any): void;
-  }
-
-  class ProtoViewFactory {
-
-     createAppProtoViews(hostComponentBinding: DirectiveBinding, rootRenderProtoView:ProtoViewDto, allDirectives: List<DirectiveBinding>): List<AppProtoView>;
-  }
-
-  class RenderCompiler {
-
-
-    /**
-     * Creats a ProtoViewDto that contains a single nested component with the given componentId.
-     */
-     compileHost(directiveMetadata: DirectiveMetadata): Promise<ProtoViewDto>;
-
-
-    /**
-     * Compiles a single DomProtoView. Non recursive so that
-     * we don't need to serialize all possible components over the wire,
-     * but only the needed ones based on previous calls.
-     */
-     compile(view: ViewDefinition): Promise<ProtoViewDto>;
-  }
-
-
-  /**
-   * Cache that stores the AppProtoView of the template of a component.
-   * Used to prevent duplicate work and resolve cyclic dependencies.
-   */
-  class CompilerCache {
-
-     set(component: Type, protoView: AppProtoView): void;
-
-     get(component: Type): AppProtoView;
-
-     setHost(component: Type, protoView: AppProtoView): void;
-
-     getHost(component: Type): AppProtoView;
-
-     clear(): void;
   }
 
 
@@ -6201,6 +6169,23 @@ declare module ng {
      styles: List<string>;
   }
 
+  class RenderCompiler {
+
+
+    /**
+     * Creats a ProtoViewDto that contains a single nested component with the given componentId.
+     */
+     compileHost(directiveMetadata: DirectiveMetadata): Promise<ProtoViewDto>;
+
+
+    /**
+     * Compiles a single DomProtoView. Non recursive so that
+     * we don't need to serialize all possible components over the wire,
+     * but only the needed ones based on previous calls.
+     */
+     compile(view: ViewDefinition): Promise<ProtoViewDto>;
+  }
+
   class Renderer {
 
 
@@ -6865,6 +6850,16 @@ declare module ng {
 
      visitIf(ast: If): If;
   }
+
+  var Key: InjectableReference;
+
+  var ApplicationRef: InjectableReference;
+
+  var Compiler: InjectableReference;
+
+  var AppViewManager: InjectableReference;
+
+  var ProtoViewRef: InjectableReference;
 
 }
 

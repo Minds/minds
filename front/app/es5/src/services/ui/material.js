@@ -4,6 +4,9 @@ var Material = (function () {
     Material.rebuild = function () {
         window.componentHandler.upgradeDom();
     };
+    Material.updateElement = function (element) {
+        window.componentHandler.upgradeDom();
+    };
     return Material;
 })();
 exports.Material = Material;

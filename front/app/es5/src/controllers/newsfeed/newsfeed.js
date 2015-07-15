@@ -11,11 +11,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var angular2_1 = require('angular2/angular2');
 var api_1 = require('src/services/api');
+var material_1 = require('src/directives/material');
 var Newsfeed = (function () {
     function Newsfeed(client) {
         this.client = client;
         this.newsfeed = [];
         this.offset = "";
+        this.postMeta = {
+            title: "",
+            description: "",
+            thumbnail: "",
+            url: ""
+        };
         this.load();
     }
     Newsfeed.prototype.load = function () {
@@ -32,9 +39,14 @@ var Newsfeed = (function () {
             console.log(e);
         });
     };
-    Newsfeed.prototype.post = function (message) {
+    Newsfeed.prototype.post = function (post) {
+        if (!post.message)
+            return false;
+        console.log(this.postMeta);
+        if (this.postMeta.title)
+            Object.assign(post, this.postMeta);
         var self = this;
-        this.client.post('api/v1/newsfeed', { message: message })
+        this.client.post('api/v1/newsfeed', post)
             .then(function (data) {
             self.load();
         })
@@ -43,7 +55,40 @@ var Newsfeed = (function () {
         });
     };
     Newsfeed.prototype.getPostPreview = function (message) {
-        console.log("you said " + message.value);
+        var _this = this;
+        var self = this;
+        var match = message.value.match(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig);
+        if (!match)
+            return;
+        var url;
+        if (match instanceof Array) {
+            url = match[0];
+        }
+        else {
+            url = match;
+        }
+        if (!url.length)
+            return;
+        url = url.replace("http://", '');
+        url = url.replace("https://", '');
+        console.log('found url was ' + url);
+        if (this.timeout)
+            clearTimeout(this.timeout);
+        this.timeout = setTimeout(function () {
+            _this.client.get('api/v1/newsfeed/preview', { url: url })
+                .then(function (data) {
+                console.log(data);
+                self.postMeta.title = data.meta.title;
+                self.postMeta.url = data.meta.canonical;
+                self.postMeta.description = data.meta.description;
+                for (var _i = 0, _a = data.links; _i < _a.length; _i++) {
+                    var link = _a[_i];
+                    if (link.rel.indexOf('thumbnail') > -1) {
+                        self.postMeta.thumbnail = link.href;
+                    }
+                }
+            });
+        }, 600);
     };
     Newsfeed.prototype.toDate = function (timestamp) {
         return new Date(timestamp * 1000);
@@ -55,7 +100,7 @@ var Newsfeed = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/newsfeed/list.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives]
         }), 
         __metadata('design:paramtypes', [Client])
     ], Newsfeed);
