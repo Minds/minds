@@ -39,7 +39,15 @@ class analytics extends core\page implements interfaces\page{
                 $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false); 
             }
 
+            $boost_reviews = $mongo->find("boost", array('state'=>'review'));
+            foreach($boost_reviews as $obj){
+                $review_backlog = (time() - $obj['_id']->getTimestamp()) / (60 * 60);
+                break;
+            }
+
             $boosts = array(
+                'review' =>  $boost_reviews->count(),
+                'review_backlog' => $review_backlog,
                 'approved' => $boost_objs->count(),
                 'impressions' => $boost_impressions,
                 'impressions_met' => $boot_impressions_met

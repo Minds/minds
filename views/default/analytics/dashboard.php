@@ -24,8 +24,12 @@
         <ul>
             <li>All time served impressions <?= $vars['globals']['boosts'] ?></li>
             <li></li>
+            <li><b>Review (newsfeed):</b> <?= $vars['boosts']['review'] ?></li>
+            <li><b>Review backlog (newsfeed):</b> <?= round($vars['boosts']['review_backlog'] ?>) hours</li>
+            <br/>
             <li><b>Approved (newsfeed):</b> <?= $vars['boosts']['approved']?></li>
             <li><b>Impressions remaining (newsfeed):</b> <?= $vars['boosts']['impressions'] - $vars['boosts']['impressions_met']?></li>
+            <br/>
              <li><b>Approved (suggested):</b> <?= $vars['boosts_suggested']['approved']?></li>
             <li><b>Impressions remaining (suggested):</b> <?= $vars['boosts_suggested']['impressions'] - $vars['boosts_suggested']['impressions_met']?></li>
         </ul>
