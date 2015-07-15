@@ -51,26 +51,28 @@
 
 			</div>
 
-	        <!-- Messages -->
+	    <!-- Messages -->
 			<div class="mdl-card__supporting-text message" [hidden]="!activity.message">{{activity.message}}</div>
 
-	        <!-- Rich content -->
-          <div class="minds-rich-embed" *ng-if="activity.perma_url">
-            <img src="{{activity.thumbnail_src}}" />
-            <div class="meta">
-				      <h2 class="mdl-card__title-text" *ng-if="activity.title">{{activity.title}}</h2>
-              <p>{{activity.blurb}}</p>
-            </div>
-			    </div>
+      <!-- Rich content -->
+      <div class="minds-rich-embed" *ng-if="activity.perma_url">
+        <a [href]="activity.perma_url" target="_blank">
+          <img src="{{activity.thumbnail_src}}" />
+        </a>
+        <a [href]="activity.perma_url" target="_blank" class="meta mdl-color-text--blue-grey-900">
+		      <h2 class="mdl-card__title-text" *ng-if="activity.title">{{activity.title}}</h2>
+          <p>{{activity.blurb}}</p>
+        </a>
+	    </div>
 
-          <div class="mdl-card__supporting-text mdl-color--blue-grey-50 tabs">
+      <div class="mdl-card__supporting-text mdl-color--blue-grey-50 tabs">
 
-    				<a class="material-icons mdl-color-text--blue-grey-800">thumb_up</a>
-    				<a class="material-icons mdl-color-text--blue-grey-800" >thumb_down</a>
-    				<a class="material-icons mdl-color-text--blue-grey-800">chat_bubble</a>
-    				<a class="material-icons mdl-color-text--blue-grey-800">repeat</a>
+				<a class="material-icons mdl-color-text--blue-grey-800">thumb_up</a>
+				<a class="material-icons mdl-color-text--blue-grey-800" >thumb_down</a>
+				<a class="material-icons mdl-color-text--blue-grey-800">chat_bubble</a>
+				<a class="material-icons mdl-color-text--blue-grey-800">repeat</a>
 
-          </div>
+      </div>
 
 	    </div>
 	</div>

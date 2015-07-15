@@ -99,7 +99,9 @@ minds-newsfeed .post {
   width: 100%; }
 
 .minds-rich-embed .meta {
-  padding: 16px; }
+  padding: 16px;
+  display: block;
+  text-decoration: none; }
 
 .owner-block {
   padding: 16px;
