@@ -2,6 +2,9 @@
   "name": "minds",
   "version": "0.0.1",
   "description": "",
+  "typescript": {
+    "definition": "front/typings/tsd.d.ts"
+  },
   "dependencies": {
     "angular2": "2.0.0-alpha.30",
     "es6-module-loader": "^0.15.0",

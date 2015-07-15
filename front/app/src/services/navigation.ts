@@ -6,9 +6,12 @@ export class Navigation {
 	constructor(@Inject(Router) public router: Router){
 	}
 
-	getItems() {
-		var items = window.Minds.navigation;
-		for(item of items){
+	getItems() : Array<any> {
+		var items : Array<any> = window.Minds.navigation;
+		if(!items)
+			return [];
+
+		for(var item of items){
 			if(this.router.lastNavigationAttempt == item.path)
 				item.active = true;
 			else

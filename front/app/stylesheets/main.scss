@@ -140,6 +140,11 @@ minds-newsfeed{
   .avatar{
     display:flex;
     flex-direction: column;
+    
+    img{
+      border-radius: 3px;
+      max-height:50px;
+    }
   }
   
   .body{
@@ -162,4 +167,9 @@ minds-newsfeed{
   img {
     border-radius:3px;
   }
+}
+
+.minds-login-box{
+  padding:$minds-padding * 2;
+  margin:auto;
 }

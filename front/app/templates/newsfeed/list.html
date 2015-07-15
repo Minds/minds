@@ -1,19 +1,20 @@
 <div class="mdl-grid newsfeed-grid" style="max-width:900px">
 
     <div class="mdl-cell mdl-cell--8-col">
-    
+
     	<div class="mdl-card mdl-shadow--2dp post">
-	
+
 			<div class="mdl-textfield mdl-js-textfield textfield-demo">
-		    	<textarea 
-		    		class="mdl-textfield__input" 
+		    	<textarea
+		    		class="mdl-textfield__input"
 		    		type="text"
 		    		id="status"
 		    		#status
+            (keyup)="getPostPreview(status)"
 		    		></textarea>
 		    	<label class="mdl-textfield__label" for="status">Status</label>
 		  	</div>
-		  	<button 
+		  	<button
 	    		class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
 	    		(click)="post(status.value)">
 	    		Post
@@ -25,9 +26,9 @@
 	    <div *ng-if="newsfeed.length == 0 || isLoading">
 	        <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate progress-demo"></div>
 	    </div>
-	
+
 	    <div *ng-for="#activity of newsfeed" class="mdl-card mdl-shadow--2dp item">
-	
+
 			<!-- Owner block -->
 			<div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block">
 
@@ -45,29 +46,29 @@
 				</div>
 
 			</div>
-	          
+
 	        <!-- Messages -->
 			<div class="mdl-card__supporting-text message" [hidden]="!activity.message">{{activity.message}}</div>
-			
-	          
+
+
 	        <!-- Rich content -->
 	        <div class="mdl-card__title mdl-card--expand" *ng-if="activity.thumbnail_src">
 				<h2 class="mdl-card__title-text" *ng-if="activity.title">{{activity.title}}</h2>
 			</div>
-	          
+
 			<div class="mdl-card__supporting-text mdl-color--blue-grey-50 tabs">
-			
+
 				<a class="material-icons mdl-color-text--blue-grey-800">thumb_up</a>
 				<a class="material-icons mdl-color-text--blue-grey-800" >thumb_down</a>
 				<a class="material-icons mdl-color-text--blue-grey-800">chat_bubble</a>
 				<a class="material-icons mdl-color-text--blue-grey-800">repeat</a>
 
 			</div>
-	          	        
+
 	    </div>
 	</div>
-	
-	
+
+
 	<div class="mdl-cell mdl-cell--4-col">
 
 		<div class="mdl-card mdl-color--amber-500 mdl-shadow--2dp ad mobile-ad">
@@ -78,7 +79,7 @@
 				<a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--blue-grey-50">Go Mobile!</a>
 			</div>
 		</div>
-		
+
 	</div>
 
 </div>

@@ -23,10 +23,10 @@
         <i class="material-icons">more_vert</i>
     </button>
     
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="showLogin()" [router-link]="['/login']">
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="!loggedin" [router-link]="['/login']">
       Login
     </button>
-     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="!showLogin()" [router-link]="['/logout']">
+     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="loggedin" [router-link]="['/logout']">
       Logout
     </button>
 </div>

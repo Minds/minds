@@ -1,10 +1,10 @@
 import {Injectable} from 'angular2/angular2';
 
-export class Storage {	
+export class Storage {
 	get(key : string){
 		return window.localStorage.getItem(key);
 	}
-	set(key : string, value : Object){
+	set(key : string, value : any){
 		return window.localStorage.setItem(key, value);
 	}
 	destroy(key : string){

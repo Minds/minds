@@ -1,5 +1,5 @@
-import {Component, View, NgFor, NgIf, Pipes, DatePipe} from 'angular2/angular2';
-import {Client} from 'src/services/api';
+import { Component, View, NgFor, NgIf } from 'angular2/angular2';
+import { Client } from 'src/services/api';
 
 @Component({
   selector: 'minds-newsfeed',
@@ -25,7 +25,7 @@ export class Newsfeed {
 	load(){
 		var self = this;
 		this.client.get('api/v1/newsfeed', {limit:12}, {cache: true})
-				.then(function(data){
+				.then(function(data : MindsActivityObject){
 					if(!data.activity){
 						return false;
 					}
@@ -36,7 +36,7 @@ export class Newsfeed {
 					console.log(e);
 				});
 	}
-	
+
 	/**
 	 * Post to the newsfeed
 	 */
@@ -50,7 +50,14 @@ export class Newsfeed {
 					console.log(e);
 				});
 	}
-	
+
+  /**
+   * Get rich embed data
+   */
+  getPostPreview(message){
+    console.log("you said " + message.value);
+  }
+
 	/**
 	 * A temporary hack, because pipes don't seem to work
 	 */

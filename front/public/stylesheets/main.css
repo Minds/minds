@@ -101,6 +101,9 @@ minds-newsfeed .post {
   .owner-block .avatar {
     display: flex;
     flex-direction: column; }
+    .owner-block .avatar img {
+      border-radius: 3px;
+      max-height: 50px; }
   .owner-block .body {
     display: flex;
     flex-direction: column;
@@ -114,3 +117,7 @@ minds-newsfeed .post {
     font-size: 11px; }
   .owner-block img {
     border-radius: 3px; }
+
+.minds-login-box {
+  padding: 16px;
+  margin: auto; }

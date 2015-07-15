@@ -8,24 +8,39 @@
         "removeComments": true,
         "noLib": false,
         "emitDecoratorMetadata": true,
+        "outDir": "./front/app/es5",
         "sourceMap": true
     },
-    "files": [
-        "./front/app/app.ts",
-        "./front/app/components/about/about.ts",
-        "./front/app/components/home/home.ts",
-        "./front/app/init.ts",
-        "./front/app/services/NameList.ts",
-        "./front/typings/angular2/angular2.d.ts",
-        "./front/typings/angular2/router.d.ts",
-        "./front/typings/custom.system.d.ts",
-        "./front/typings/es6-promise/es6-promise.d.ts",
-        "./front/typings/rx/rx-lite.d.ts",
-        "./front/typings/rx/rx.d.ts",
-        "./front/typings/tsd.d.ts"
-    ],
     "filesGlob": [
         "./front/app/**/*.ts",
         "./front/typings/**/*.ts"
+    ],
+    "files": [
+        "./front/app/app.ts",
+        "./front/app/src/components/navigation.ts",
+        "./front/app/src/components/topbar.ts",
+        "./front/app/src/controllers/capture/capture.ts",
+        "./front/app/src/controllers/login.ts",
+        "./front/app/src/controllers/logout.ts",
+        "./front/app/src/controllers/newsfeed/newsfeed.ts",
+        "./front/app/src/directives/loggedin.ts",
+        "./front/app/src/services/api.ts",
+        "./front/app/src/services/api/client.ts",
+        "./front/app/src/services/cookie.ts",
+        "./front/app/src/services/events.ts",
+        "./front/app/src/services/navigation.ts",
+        "./front/app/src/services/session.ts",
+        "./front/app/src/services/storage.ts",
+        "./front/app/src/services/ui.ts",
+        "./front/app/src/services/ui/loader.ts",
+        "./front/app/src/services/ui/material.ts",
+        "./front/app/src/services/ui/sidebar.ts",
+        "./front/typings/angular2/angular2.d.ts",
+        "./front/typings/angular2/router.d.ts",
+        "./front/typings/es6-promise/es6-promise.d.ts",
+        "./front/typings/minds/minds.d.ts",
+        "./front/typings/rx/rx-lite.d.ts",
+        "./front/typings/rx/rx.d.ts",
+        "./front/typings/tsd.d.ts"
     ]
 }

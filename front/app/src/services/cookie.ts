@@ -1,17 +1,17 @@
 /**
  * A very simple cookie service
  */
-export class Cookie {	
-	
+export class Cookie {
+
 	/**
 	 * Return a cookie by name
 	 */
-	get(key : string){
-		var cookies = document.cookie ? document.cookie.split('; ') : [];
+	get(key : string) : string{
+		var cookies : Array<string> = document.cookie ? document.cookie.split('; ') : [];
 
 		if(!cookies)
-			return false;
-		
+			return;
+
 		for (let cookie of cookies) {
 			let name : string,
 				value : string;
@@ -19,7 +19,7 @@ export class Cookie {
 			if(name == key)
 				return value;
 		}
-
+		return;
 	}
 
 }

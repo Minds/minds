@@ -1,7 +1,8 @@
-import { Component, View, NgIf } from 'angular2/angular2';
+import { Component, View, NgIf} from 'angular2/angular2';
 import { RouterLink } from 'angular2/router';
 import { Storage } from 'src/services/storage';
-import {Sidebar} from 'src/services/ui';
+import { Sidebar } from 'src/services/ui/sidebar';
+import { SessionFactory } from 'src/services/session';
 
 @Component({
   selector: 'minds-topbar',
@@ -12,23 +13,29 @@ import {Sidebar} from 'src/services/ui';
   directives: [NgIf, RouterLink]
 })
 
-export class Topbar { 
-	constructor(public storage: Storage, public sidebar : Sidebar){ }
-	
+export class Topbar {
+	loggedin = false;
+	session = SessionFactory.build();
+
+	constructor(public storage: Storage, public sidebar : Sidebar){
+		this.showLogin();
+	}
+
 	/**
 	 * Determine if login button should be shown
 	 */
 	showLogin(){
-		window.componentHandler.upgradeDom();
-		return !window.LoggedIn;
+		var self = this;
+		this.loggedin = this.session.isLoggedIn((loggedin) => {
+			console.log(loggedin)
+			self.loggedin = loggedin;
+			});
 	}
-	
+
 	/**
 	 * Open the navigation
 	 */
 	openNav(){
-		console.log('opening nav');
-		document.getElementsByClassName('mdl-layout__drawer')[0].style['transform'] = "translateX(0)";
-		console.log(document.getElementsByClassName('mdl-layout__drawer'));
+		this.sidebar.open();
 	}
 }

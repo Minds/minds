@@ -1,7 +1,7 @@
-import {Component, View} from 'angular2/angular2';
-import {Router} from 'angular2/router';
-import {Client} from 'src/services/api';
-import {Inject} from 'angular2/di';
+import { Component, View, Inject } from 'angular2/angular2';
+import { Router } from 'angular2/router';
+import { Client } from 'src/services/api';
+import { SessionFactory } from 'src/services/session';
 
 @Component({
   viewInjector: [Client]
@@ -12,22 +12,29 @@ import {Inject} from 'angular2/di';
 
 export class Login {
 
-	constructor(public client : Client, @Inject(Router) public router: Router){ }
+	session = SessionFactory.build();
+
+	constructor(public client : Client, @Inject(Router) public router: Router){
+		window.componentHandler.upgradeDom();
+	}
 
 	login(username, password){
-		var that = this; //this <=> that for promises
-		this.client.post('api/v1/authenticate', {username: username, password: password})
-			.then(function(data){
+		var self = this; //this <=> that for promises
+		this.client.post('api/v1/authenticate', {username: username.value, password: password.value})
+			.then(function(data : any){
+				username.value = '';
+				password.value = '';
 				if(data.status == 'success'){
-					window.LoggedIn = true;
-					that.router.parent.navigate('/newsfeed');
+					self.session.login(data.user);
+					self.router.parent.navigate('/newsfeed');
 				} else {
-					window.LoggedIn = false;
+					self.session.logout();
 				}
 			})
 			.catch(function(e){
 				alert('there was a problem');
 				console.log(e);
+				self.session.logout();
 			});
 	}
 }

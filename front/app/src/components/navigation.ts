@@ -2,6 +2,7 @@ import {Component, View, NgIf, NgFor, CSSClass, EventEmitter} from 'angular2/ang
 import {RouterLink} from 'angular2/router';
 import {Factory, LoggedIn} from 'src/services/events';
 import { Navigation as NavigationService } from 'src/services/navigation';
+import { SessionFactory } from 'src/services/session';
 
 @Component({
   selector: 'minds-navigation',
@@ -12,26 +13,27 @@ import { Navigation as NavigationService } from 'src/services/navigation';
   directives: [RouterLink, NgIf, NgFor, CSSClass]
 })
 
-export class Navigation { 
+export class Navigation {
 	user;
-	items = navigation.getItems();
+	session = SessionFactory.build();
+	items;
 	constructor(public navigation : NavigationService){
-		self = this;
+		var self = this;
+    this.items = navigation.getItems();
 		//Factory.build(LoggedIn).listen(()=>{
 		//	console.log('receieved session event');
 		//	this.getUser();
 		//})
 		this.getUser();
-		
+
 		//listen to click events to close nav
 	}
-	
-	getUser(){
 
-		//Factory.build(LoggedIn).emit("ok");
-		
-		if(window.Minds.user){
-			this.user = window.Minds.user;
-		}
+	getUser(){
+		var self = this;
+		this.user = this.session.getLoggedInUser((user) => {
+			console.log(user);
+				self.user = user;
+			});
 	}
 }

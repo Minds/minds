@@ -3,7 +3,7 @@
  * Minds frontend
  */
 require_once(dirname(dirname(dirname(__FILE__))) . '/engine/start.php');
-error_reporting(E_ALL); 
+error_reporting(E_ALL);
 ini_set( 'display_errors','1');
 
 ?>
@@ -14,7 +14,7 @@ ini_set( 'display_errors','1');
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
     <!-- temporary design -->
-     <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.blue_grey-amber.min.css" /> 
+     <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.blue_grey-amber.min.css" />
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
@@ -24,21 +24,19 @@ ini_set( 'display_errors','1');
   </head>
   <body>
 
-  
+
     <!-- The app component created in app.ts -->
     <minds-app  class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header  mdl-layout--overlay-drawer-button">
         <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate initial-loading"></div>
     </minds-app>
-    
+
      <!-- inject:js -->
   	 <!-- endinject -->
-    
+
     <script>
-        window.LoggedIn = <?= Minds\Core\session::isLoggedIn() ? "true" : "false" ?>;
-        
         <?php
             $minds = array(
-                "LoggedIn" => Minds\Core\session::isLoggedIn() ? "true" : "false",
+                "LoggedIn" => Minds\Core\session::isLoggedIn() ? true : false,
                 "navigation" => array(
                     array(
                         "name" => "newsfeed",
@@ -95,14 +93,14 @@ ini_set( 'display_errors','1');
             }
         ?>
         window.Minds = <?= json_encode($minds) ?>;
-        
+
         System.config({
           baseURL: './',
           paths: {
             '*': '*.js'
           }
         });
-        
+
         System.import('app');
     </script>
   </body>
