@@ -30,26 +30,16 @@ class activity extends entity{
         parent::__construct($guid);
     }
 
-	public function save($index = true){
+		public function save($index = true){
 
-		//cache owner_guid for brief
-		if(!$this->ownerObj && $owner = $this->getOwnerEntity(false))
-			$this->ownerObj = $owner->export();
+			//cache owner_guid for brief
+			if(!$this->ownerObj && $owner = $this->getOwnerEntity(false))
+				$this->ownerObj = $owner->export();
 
-		$guid = parent::save($index);
-
-        //d
-			if(!$this->indexes && in_array($this->access_id, array(2, -2, 1))){
-            Queue\Client::build()->setExchange("mindsqueue")
-                                ->setQueue("FeedDispatcher")
-                                ->send(array(
-                                    "guid" => $this->guid,
-                                    "owner_guid" => $this->owner_guid
-                                    ));
-      }
+			$guid = parent::save($index);
 
       return $guid;
-	}
+		}
 
     public function delete(){
         if($this->p2p_boosted)
