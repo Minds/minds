@@ -18,8 +18,8 @@ class Client{
             $client = "\\Minds\\Core\\Queue\\$client\\Client";
 
         //@todo be able to cache with different $options variables
-        //if(isset(self::$clients[$client]))
-            //return self::$clients[$client];
+        if(isset(self::$clients[$client]))
+            return self::$clients[$client];
 
         if(class_exists($client)){
             $class = new $client($options);
