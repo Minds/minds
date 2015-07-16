@@ -5,7 +5,7 @@
  *
  * @package    Elgg.Core
  * @subpackage DataModel.Entities
- * 
+ *
  * @property string $type           object, user, group, or site (read-only after save)
  * @property string $subtype        Further clarifies the nature of the entity (read-only after save)
  * @property int    $guid           The unique identifier for this entity (read only)
@@ -35,7 +35,7 @@ abstract class ElggEntity extends ElggData implements
 	 */
 	protected $icon_override;
 
-	
+
 	/**
 	 * Volatile data structure for this object, allows for storage of data
 	 * in-memory that isn't sync'd back to the metadata table.
@@ -67,15 +67,15 @@ abstract class ElggEntity extends ElggData implements
 		$this->attributes['enabled'] = "yes";
 
 	}
-	
+
 	/**
 	 * Entity constructor
 	 */
 	public function __construct($guid = NULL){
 		$this->initializeAttributes();
-		
+
 		if($guid){
-			if(is_numeric($guid)){ 
+			if(is_numeric($guid)){
 				$this->loadFromGUID($guid);
 			} elseif(is_object($guid)){
 				$this->loadFromObject($guid);
@@ -84,18 +84,18 @@ abstract class ElggEntity extends ElggData implements
 			}
 		}
 	}
-	
+
 	protected function loadFromGUID($guid){
 		$db = new Minds\Core\Data\Call('entities');
 		$row = $db->getRow($guid, array('limit'=>400));
 		$row['guid'] = $guid;
 		$this->loadFromArray($row);
 	}
-	
+
 	protected function loadFromObject($object){
 		$this->loadFromArray($object);
 	}
-	
+
 	protected function loadFromArray($array){
 		foreach($array as $k=>$v){
 			if($this->isJson($v))
@@ -103,11 +103,11 @@ abstract class ElggEntity extends ElggData implements
 
 			$this->$k = $v;
 		}
-	
-		if($this->cache)	
+
+		if($this->cache)
 			cache_entity($this);
 	}
-	
+
 	public function isJson($string) {
 		if(!is_string($string))
 			return false;
@@ -364,9 +364,9 @@ abstract class ElggEntity extends ElggData implements
 	/**
 	 * Adds a private setting to this entity.
 	 *
-	 * Since the move to cassandra, attributes have been merged. 
+	 * Since the move to cassandra, attributes have been merged.
 	 * Therefore, this funciton will be soon deprecated and replaced with
-	 * a single set function. 
+	 * a single set function.
 	 *
 	 * @param string $name  Name of private setting
 	 * @param mixed  $value Value of private setting
@@ -731,7 +731,7 @@ abstract class ElggEntity extends ElggData implements
 	 *
 	 * @tip Can be overridden by registering for the permissions_check:comment,
 	 * <entity type> plugin hook.
-	 * 
+	 *
 	 * @param int $user_guid User guid (default is logged in user)
 	 *
 	 * @return bool
@@ -816,7 +816,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return string The entity subtype
 	 */
 	public function getSubtype() {
-		return $this->subtype;	
+		return $this->subtype;
 	}
 
 	/**
@@ -1060,18 +1060,30 @@ abstract class ElggEntity extends ElggData implements
 		} else {
 			$this->guid = Minds\Core\Guid::build();
 			elgg_trigger_event('create', $this->type, $this);
-		}	
+		}
 
 		$db = new Minds\Core\Data\Call('entities');
 		$result = $db->insert($this->guid, $this->toArray());
 		if($result && $timebased){
 			$db = new Minds\Core\Data\Call('entities_by_time');
 			$data =  array($result => $result);
-		
+
 			foreach($this->getIndexKeys() as $index){
 				$db->insert($index, $data);
 			}
-			
+
+			if(in_array($this->access_id, array(2, -2, 1))){
+					Minds\Core\Queue\Client::build()->setExchange("mindsqueue")
+							->setQueue("FeedDispatcher")
+							->send(array(
+									"guid" => $this->guid,
+									"owner_guid" => $this->owner_guid,
+									"type" => $this->type,
+									"subtype" => $this->subtype,
+									"super_subtype" => $this->super_subtype
+									));
+			}
+
 			if(!$new && $this->access_id != ACCESS_PUBLIC){
 				$remove = array("$this->type", "$this->type:$this->subtype", "$this->type:$this->super_subtype");
 			//	foreach($remove as $index)
@@ -1192,60 +1204,42 @@ abstract class ElggEntity extends ElggData implements
 	 */
 	public function delete($recursive = true) {
 		global $CONFIG, $ENTITY_CACHE;
-		
+
 		//some plugins may want to halt the delete...
 		$delete = elgg_trigger_event('delete', $this->type, $this);
-		
+
 		if ($delete && $this->canEdit()) {
-	
+
 			// delete cache
 			if (isset($ENTITY_CACHE[$this->guid])) {
 				invalidate_cache_for_entity($this->guid);
 			}
-					
+
 			// If memcache is available then delete this entry from the cache
 			if (is_memcache_available()) {
 				$memcache = new ElggMemcache('new_entity_cache');
 				$memcache->delete($this->guid);
 			}
-	
-			// Delete contained owned and otherwise releated objects (depth first)
-			/*if ($recursive) {
-				// Temporary token overriding access controls
-				// @todo Do this better.
-				static $__RECURSIVE_DELETE_TOKEN;
-				// Make it slightly harder to guess
-				$__RECURSIVE_DELETE_TOKEN = md5(elgg_get_logged_in_user_guid());
-	
-				$entity_disable_override = access_get_show_hidden_status();
-				access_show_hidden_entities(true);
-				$ia = elgg_set_ignore_access(true);
-	
-				$options = array(
-					'owner_guid' => $this->guid,
-					'limit' => 0
-				);
-					
-	
-				$entities = elgg_get_entities($options);
-				foreach($entities as $e){
-					$e->delete(false);
-				}
-				
-				access_show_hidden_entities($entity_disable_override);
-				$__RECURSIVE_DELETE_TOKEN = null;
-				elgg_set_ignore_access($ia);
-			}*/
-	
+
 			// Now delete the entity itself
 			$db = new Minds\Core\Data\Call('entities');
 			$res = $db->removeRow($this->guid);
-	
-			
+
+
 			$db = new Minds\Core\Data\Call('entities_by_time');
 			foreach($this->getIndexKeys() as $rowkey)
 				$db->removeAttributes($rowkey, array($this->guid), false);
-				
+
+			Minds\Core\Queue\Client::build()->setExchange("mindsqueue")
+            ->setQueue("FeedCleanup")
+            ->send(array(
+                "guid" => $this->guid,
+                "owner_guid" => $this->owner_guid,
+								"type" => $this->type,
+								"subtype" => $this->subtype,
+								"super_subtype" => $this->super_subtype
+                ));
+
 			return true;
 		}
 
@@ -1254,42 +1248,27 @@ abstract class ElggEntity extends ElggData implements
 
 	/**
 	 * Returns an array of indexes into which this entity is stored
-	 * 
+	 *
 	 * @param bool $ia - ignore access
 	 * @return array
 	 */
 	protected function getIndexKeys($ia = false){
 		//remove from the various lines
 		if($this->access_id == ACCESS_PUBLIC || $ia){
-			$indexes = array( 
+			$indexes = array(
 				$this->type,
 				"$this->type:$this->subtype"
 			);
-			
+
 			if($this->super_subtype)
 				array_push($indexes, "$this->type:$this->super_subtype");
 		} else {
 			$indexes = array();
 		}
 
-		$owner = $this->getOwnerEntity();	
-		if($owner instanceof ElggUser){
-			$followers = in_array($this->access_id, array(2, -2, 1)) ? $owner->getFriendsOf(null, 10000, "", 'guids') : array();
-			if(!$followers) $followers = array(); 
-			$followers = array_keys($followers);
-			
-			array_push($followers, $this->owner_guid);
-			
-			foreach($followers as $follower){
-				if($this->super_subtype)
-					array_push($indexes, "$this->type:$this->super_subtype:network:$follower");
-				array_push($indexes, "$this->type:$this->subtype:network:$follower");
-			}
-		}
-		
 		array_push($indexes, "$this->type:$this->super_subtype:user:$this->owner_guid");
 		array_push($indexes, "$this->type:$this->subtype:user:$this->owner_guid");
-		
+
 		array_push($indexes, "$this->type:container:$this->container_guid");
 		array_push($indexes, "$this->type:$this->subtype:container:$this->container_guid");
 
@@ -1439,7 +1418,7 @@ abstract class ElggEntity extends ElggData implements
 	public function export(){
 		$export = array();
 		foreach($this->getExportableValues() as $v){
-			if(!is_null($this->$v)){	
+			if(!is_null($this->$v)){
                 $export[$v] = $this->$v;
             }
         }
@@ -1447,7 +1426,7 @@ abstract class ElggEntity extends ElggData implements
 		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
 		return $export;
 	}
-	
+
 	/*
 	 * IMPORTABLE INTERFACE
 	 */
@@ -1546,51 +1525,51 @@ abstract class ElggEntity extends ElggData implements
 
 		return $entity_tags;
 	}
-	
+
 	/**
 	 * Feature
-	 * 
+	 *
 	 * @return int $guid
 	 */
 	 public function feature(){
 	 	$db = new Minds\Core\Data\Call('entities_by_time');
-		
+
 		$this->featured_id = Minds\Core\Guid::build();
-	
+
 		$db->insert($this->type.':featured', array($this->featured_id => $this->getGUID()));
 		$db->insert($this->type. ':'.$this->subtype.':featured', array($this->featured_id => $this->getGUID()));
 		if(in_array($this->subtype, array('video', 'image', 'album'))){
 			$db->insert('object:archive:featured', array($this->featured_id => $this->guid));
 		}
-	
-		$this->featured = 1;	
+
+		$this->featured = 1;
 		$this->save();
-		
+
 		return $this->featured_id;
 	 }
-	 
-	/** 
+
+	/**
 	 * Unfeature
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function unFeature(){
-		
+
 		$db = new Minds\Core\Data\Call('entities_by_time');
-		
+
 		if($this->featured_id){
 			//supports legacy imports
 			$db->removeAttributes("$this->type:featured", array($this->featured_id));
-			$db->removeAttributes("$this->type:$this->subtype:featured", array($this->featured_id)); 
+			$db->removeAttributes("$this->type:$this->subtype:featured", array($this->featured_id));
 			$this->featured_id = null;
 		}
-	
+
 		$this->featured = 0;
 		$this->save();
-	
+
 		$db = new Minds\Core\Data\Call('entities');
 		$result = $db->removeAttributes($this->guid, array('featured_id'));
-	
+
 		return true;
 	}
 }

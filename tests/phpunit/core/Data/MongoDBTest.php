@@ -8,24 +8,24 @@ class MongoDBTest extends \Minds_PHPUnit_Framework_TestCase {
 
 		/**
 		 * Set up the new column family
-		 * 
+		 *
 		 * @return void
 		 */
-        public static function setUpBeforeClass() {
-			self::$client = Data\Client::build('MongoDB');
-        }
-		
+    public static function setUpBeforeClass() {
+			//self::$client = Data\Client::build('MongoDB');
+    }
+
 		/**
 		 * Run before each test
-		 * 
+		 *
 		 * @return void
 		 */
 		protected function setUp() {
 		}
-	
+
 		/**
 		 * Test inserting into the database
-		 * 
+		 *
 		 * @return void
 		 */
        	public function testInsert(){

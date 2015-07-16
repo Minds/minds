@@ -1,6 +1,6 @@
 <?php
 /**
- * Minds activity entity. 
+ * Minds activity entity.
  */
 
 namespace minds\entities;
@@ -8,9 +8,9 @@ use Minds\Helpers;
 use Minds\Core\Queue;
 
 class activity extends entity{
-	
+
 	public $indexes = NULL;
-	
+
 	/**
 	 * Initialise attributes
 	 * @return void
@@ -20,14 +20,14 @@ class activity extends entity{
 		$this->attributes = array_merge($this->attributes, array(
 			'type' => 'activity',
 			'owner_guid' => elgg_get_logged_in_user_guid(),
-			'access_id' => 2, //private, 
-			
+			'access_id' => 2, //private,
+
 			'node' => elgg_get_site_url()
 		));
 	}
-    
+
     public function __construct($guid = NULL){
-        parent::__construct($guid);   
+        parent::__construct($guid);
     }
 
 	public function save($index = true){
@@ -35,75 +35,76 @@ class activity extends entity{
 		//cache owner_guid for brief
 		if(!$this->ownerObj && $owner = $this->getOwnerEntity(false))
 			$this->ownerObj = $owner->export();
-		
+
 		$guid = parent::save($index);
 
         //d
-        if(!$this->indexes && in_array($this->access_id, array(2, -2, 1))){
+			if(!$this->indexes && in_array($this->access_id, array(2, -2, 1))){
             Queue\Client::build()->setExchange("mindsqueue")
                                 ->setQueue("FeedDispatcher")
                                 ->send(array(
                                     "guid" => $this->guid,
                                     "owner_guid" => $this->owner_guid
                                     ));
-        }
-        
-        return $guid;
+      }
+
+      return $guid;
 	}
 
     public function delete(){
         if($this->p2p_boosted)
                 return false;
-    
+
         $indexes = $this->getIndexKeys(true);
         $db = new \Minds\Core\Data\Call('entities');
         $res = $db->removeRow($this->guid);
 
-        $db = new \Minds\Core\Data\Call('entities_by_time'); 
+        $db = new \Minds\Core\Data\Call('entities_by_time');
         foreach($indexes as $index){
             $db->removeAttributes($index, array($this->guid));
         }
-        
+
         Queue\Client::build()->setExchange("mindsqueue")
                             ->setQueue("FeedCleanup")
                             ->send(array(
                                 "guid" => $this->guid,
-                                "owner_guid" => $this->owner_guid
+                                "owner_guid" => $this->owner_guid,
+																"type" => "activity"
                                 ));
-        
+
         return true;
-    
+
     }
 	/**
 	 * Returns an array of indexes into which this entity is stored
-	 * 
+	 *
 	 * @param bool $ia - ignore access
 	 * @return array
 	 */
 	protected function getIndexKeys($ia = false){
-		
+
 		if($this->indexes){
 			return $this->indexes;
 		}
 
-		$indexes = array( 
+		$indexes = array(
 			$this->type
 		);
 
-		$owner = $this->getOwnerEntity();	
-        
+		$owner = $this->getOwnerEntity();
+
         array_push($indexes, "$this->type:user:$owner->guid");
         array_push($indexes, "$this->type:network:$owner->guid");
-		
+
 
         if($this->to_guid == $owner->guid)
             array_push($indexes, "$this->type:user:own:$owner->guid");
-    
+
 		/**
 		 * @todo make it only post to a group if we are in a group
 		 */
 		array_push($indexes, "$this->type:container:$this->container_guid");
-		
+
 		/**
 		 * Make a link from entity to this activity post
 		 */
@@ -112,11 +113,11 @@ class activity extends entity{
 
 		return $indexes;
 	}
-	
+
 	public function getExportableValues(){
 		return array_merge(parent::getExportableValues(),
 			array(
-				'title', 
+				'title',
 				'blurb',
 				'perma_url',
 				'message',
@@ -150,7 +151,7 @@ class activity extends entity{
 
 		return $export;
 	}
-	
+
 	/**
 	 * Return a friendly url
 	 */
@@ -164,7 +165,7 @@ class activity extends entity{
 	public function getOwnerEntity($brief = false){
 		return parent::getOwnerEntity(true);
 	}
-	
+
 	/**
 	 * Set the message
 	 * @param string $message
@@ -174,7 +175,7 @@ class activity extends entity{
 		$this->message = $message;
 		return $this;
 	}
-	
+
 	/**
 	 * Sets the title
 	 * @param string $title
@@ -184,7 +185,7 @@ class activity extends entity{
 		$this->title = $title;
 		return $this;
 	}
-	
+
 	/**
 	 * Sets the blurb
 	 * @param string $blurb
@@ -194,7 +195,7 @@ class activity extends entity{
 		$this->blurb = $blurb;
 		return $this;
 	}
-	
+
 	/**
 	 * Sets the url
 	 * @param string $url
@@ -204,7 +205,7 @@ class activity extends entity{
 		$this->perma_url = $url;
 		return $this;
 	}
-	
+
 	/**
 	 * Sets the thumbnail
 	 * @param string $src
@@ -214,7 +215,7 @@ class activity extends entity{
 		$this->thumbnail_src = $src;
 		return $this;
 	}
-	
+
 	/**
 	 * Sets the owner
 	 * @param mixed $owner
@@ -225,23 +226,23 @@ class activity extends entity{
 			$owner = new \minds\entities\user($owner);
 			$owner = $owner->export();
 		}
-		
+
 		$this->owner = $owner;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Set from a local minds object
 	 * @return $this
 	 */
 	public function setFromEntity($entity){
-		
+
 		$this->entity_guid = $entity->guid;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Set the reminded object
 	 * @param array $array - the exported array
@@ -251,7 +252,7 @@ class activity extends entity{
 		$this->remind_object = $array;
 		return $this;
 	}
-	
+
 	/**
 	 * Set a custom, arbitrary set. For example a custom video view, or maybe a set of images. I envisage
 	 * certain service could extend this.
@@ -274,7 +275,7 @@ class activity extends entity{
         $this->to_guid = $guid;
         return $this;
     }
-    
+
     /**
      * Return the count for this entity
      */
