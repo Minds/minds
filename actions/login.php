@@ -47,6 +47,11 @@ if (isset($_SESSION['last_forward_from'])) {
 	unset($_SESSION['last_forward_from']);
 } elseif (get_input('returntoreferer')) {
 	$forward_url = REFERER;
+} elseif (get_input('returnto')) {
+    $forward_url = get_input('returnto');
+    if (parse_url($forward_url, PHP_URL_HOST) != parse_url(elgg_get_site_url(), PHP_URL_HOST)) { // Basic security check
+	$forward_url = $user->getURL();
+    }
 } else {
 	// forward to main index page
 	$forward_url = $user->getURL();
