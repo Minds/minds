@@ -27,6 +27,19 @@ foreach($guids as $guid){
 	$db->insert($guid, $data);
 }
 
+/**
+ * Prevent already added "rich" data types from being added again to the river in thumbnail form
+ */
+$image_guids = [];
+foreach ($guids as $guid) {
+    $obj = get_entity($guid);
+    if ($obj instanceof minds\plugin\archive\entities\image) {
+	$image_guids[] = $guid;
+    }
+    $obj = null;
+}
+$guids = $image_guids;
+
 if(!$guids || empty($guids))
 	exit;
 
