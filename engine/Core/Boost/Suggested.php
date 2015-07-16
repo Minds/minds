@@ -11,7 +11,7 @@ use minds\interfaces;
  */
 class Suggested implements interfaces\BoostHandlerInterface{
 
-    private $db;    
+    private $db;
 
     public function __construct($options = array(), Data\Interfaces\ClientInterface $db = NULL){
         if($db){
@@ -20,7 +20,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
             $this->db = Data\Client::build('MongoDB');
         }
     }
-    
+
    /**
      * Boost an entity
      * @param object/int $entity - the entity to boost
@@ -35,7 +35,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
         }
         return $this->db->insert("boost", array('guid'=>$guid, 'impressions'=>$impressions, 'state' => 'review', 'type'=> 'suggested'));
     }
-    
+
      /**
      * Return boosts for review
      * @param int $limit
@@ -62,7 +62,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
         $count = $this->db->count("boost", $query);
         return $count;
     }
-    
+
     /**
      * Accept a boost
      * @param object/int $entity
@@ -102,7 +102,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
         $boost_data= $this->db->find("boost", array('_id' => $_id));
         $boost_data->next();
         $boost = $boost_data->current();
-        
+
         $this->db->remove("boost", array('_id'=>$_id));
 
         $entity = \Minds\entities\Factory::build($boost['guid']);
@@ -119,7 +119,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
         }
         return true;//need to double check somehow..
     }
-    
+
     /**
      * Return a boost
      * @return array
@@ -132,7 +132,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
             return null;
         }
         $boosts->limit(15);
-        
+
         $boost_guids = array();
         foreach($boosts as $boost){
             $boost_guids[] = $boost['guid'];
@@ -141,19 +141,21 @@ class Suggested implements interfaces\BoostHandlerInterface{
         $prepared = new Data\Neo4j\Prepared\Common();
         $result= Data\Client::build('Neo4j')->request($prepared->getActed($boost_guids));
         $rows = $result->getRows();
-        
+
         foreach($boosts as $boost){
             $seen = false;
-            foreach($rows['items'] as $item){
-                if($item['guid'] == $boost['guid'])
-                       $seen = true; 
+            if($rows){
+              foreach($rows['items'] as $item){
+                  if($item['guid'] == $boost['guid'])
+                         $seen = true;
+              }
             }
             if($seen)
                 continue;
 
             //get the current impressions count for this boost
-            $count = Helpers\Counters::get($boost['guid'], "boost_swipes", false); 
-            if($count > $impressions){
+            $count = Helpers\Counters::get($boost['guid'], "boost_swipes", false);
+            if($count > $boost['impressions']){
                 //remove from boost queue
                 $this->db->remove("boost", array('_id' => $boost['_id']));
                 $entity = \Minds\entities\Factory::build($boost['guid']);
@@ -171,5 +173,5 @@ class Suggested implements interfaces\BoostHandlerInterface{
             return $boost;
         }
     }
-        
+
 }
