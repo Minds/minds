@@ -65,4 +65,6 @@ $password =  elgg_view('input/password', array(
 
 	if (isset($vars['returntoreferer'])) {
 		echo elgg_view('input/hidden', array('name' => 'returntoreferer', 'value' => 'true'));
+	} else {
+	    echo elgg_view('input/hidden', array('name' => 'returnto', 'value' => $_SERVER['HTTP_REFERER']));
 	}
