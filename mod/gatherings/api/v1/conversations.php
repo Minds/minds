@@ -116,7 +116,7 @@ class conversations implements interfaces\api{
                 break;
             case 'no-answer':
               //leave a notification
-              elgg_trigger_plugin_hook('notification', 'thumbs', array(
+              elgg_trigger_plugin_hook('notification', 'all', array(
                   'to'=>array($pages[1]),
                   'notification_view'=>'missed_call'
                 ));
