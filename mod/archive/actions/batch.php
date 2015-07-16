@@ -32,7 +32,7 @@ foreach($guids as $guid){
  */
 $image_guids = [];
 foreach ($guids as $guid) {
-    $obj = get_entity($guid);
+    $obj = \minds\entities\Factory::build($guid);
     if ($obj instanceof minds\plugin\archive\entities\image) {
 	$image_guids[] = $guid;
     }
