@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Newsfeed API
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -17,15 +17,15 @@ class conversations implements interfaces\api{
     /**
      * Returns the conversations or conversation
      * @param array $pages
-     * 
+     *
      * API:: /v1/conversations
-     */      
+     */
     public function get($pages){
-        
+
         $response = array();
-        
+
         if(isset($pages[0])){
-            
+
             $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
             $conversation->clearCount();
             $ik = $conversation->getIndexKeys();
@@ -38,16 +38,16 @@ class conversations implements interfaces\api{
             }
 
             if($guids){
- 
+
                 $messages = core\entities::get(array('guids'=>$guids));
-                
+
                 if($messages){
-                    
+
                     foreach($messages as $k => $message){
                         $key = "message:".elgg_get_logged_in_user_guid();
                         $messages[$k]->message = $messages[$k]->$key;
                     }
-                    
+
                     $messages = array_reverse($messages);
                     $response['messages'] = factory::exportable($messages);
                     $response['load-next'] = (string) end($messages)->guid;
@@ -61,27 +61,27 @@ class conversations implements interfaces\api{
                 $me => elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings'),
                 $pages[0] => elgg_get_plugin_user_setting('publickey', $pages[0], 'gatherings')
             );
-            
+
         } else {
-        
+
             $conversations = \minds\plugin\gatherings\start::getConversationsList(get_input('offset', ''));
-    
+
             if($conversations){
                 $response['conversations'] = factory::exportable($conversations, array('unread', 'last_msg'));
                 $response['load-next'] = (string) end($conversations)->guid;
                 $response['load-previous'] = (string) reset($conversations)->guid;
             }
-            
+
         }
-    
+
         return Factory::response($response);
-        
+
     }
-    
+
     public function post($pages){
         //error_log("got a message to send");
         $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
-		
+
         $message = new entities\message($conversation);
     	$message->client_encrypted = true;
 	    foreach($conversation->participants as $guid){
@@ -91,8 +91,8 @@ class conversations implements interfaces\api{
 	    }
     //	error_log(print_r($message, true));
 	    $message->save();
-        
-        $conversation->update();	
+
+        $conversation->update();
         $conversation->notify();
 
 	    $key = "message:".elgg_get_logged_in_user_guid();
@@ -101,7 +101,7 @@ class conversations implements interfaces\api{
 
         return Factory::response($response);
     }
-    
+
     public function put($pages){
 
         switch($pages[0]){
@@ -112,19 +112,25 @@ class conversations implements interfaces\api{
                                                      "user_guid"=>$pages[1],
                                                     "message"=> \Minds\Core\session::getLoggedInUser()->name . " is calling you.",
                                                     "uri" => 'call'
-                                                )); 
+                                                ));
                 break;
+            case 'no-answer':
+              //leave a notification
+              elgg_trigger_plugin_hook('notification', 'thumbs', array(
+                  'to'=>array($pages[1]),
+                  'notification_view'=>'missed_call'
+                ));
+              break;
         }
 
         return Factory::response(array());
-        
+
     }
-    
+
     public function delete($pages){
-        
+
         return Factory::response(array());
-        
+
     }
-    
+
 }
-        
