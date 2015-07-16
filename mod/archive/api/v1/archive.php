@@ -82,6 +82,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 
                 $loc = $image->getFilenameOnFilestore();
                 $image->createThumbnails();
+                $image->access_id = 0;
                 $image->save();
                 $pages[0] = 'image';
             }
@@ -89,6 +90,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
                 case 'video':
                     $video = new entities\video();
                     $video->upload($_FILES['file']['tmp_name']);
+                    $video->access_id = 0;
                     $guid = $video->save();
                     break;
             }
@@ -202,7 +204,8 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 			$tmpFilename = $metaDatas['uri'];
 			$req = $this->parsePut();
                         $body = $req['body'];
-			fwrite($fp, $body);
+            fwrite($fp, $body);
+            $video->access_id = 0;
 			$video->upload($tmpFilename);
 			$guid = $video->save();
 			 fclose($fp);
@@ -210,7 +213,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 		case 'image':
 			$image = new \minds\plugin\archive\entities\image();
 			$image->batch_guid = 0;
-			$image->access_id = 2;
+			$image->access_id = 0;
 			$guid = $image->save();
 			$dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";	
 			$image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
