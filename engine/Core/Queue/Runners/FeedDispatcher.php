@@ -60,7 +60,7 @@ class FeedDispatcher implements Interfaces\QueueRunner{
                             }
 
                             echo "First batch for $entity->guid dispatched. Loading next from $offset... \n";
-                            var_dump($offset);
+                          //  var_dump($offset);
                             if($offset == 0 || !$offset){
                                 echo "done..";
                                 break;
@@ -70,7 +70,7 @@ class FeedDispatcher implements Interfaces\QueueRunner{
                        }
                    }
 
-                   echo "Succesfully deployed all feeds for $entity->owner_guid:$entity->guid \n\n";
+                   echo "Succesfully deployed all feeds ($entity->type, $entity->subtype, $entity->super_subtype) for $entity->owner_guid:$entity->guid \n\n";
                });
    }
 
