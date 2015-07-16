@@ -155,7 +155,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
 
             //get the current impressions count for this boost
             $count = Helpers\Counters::get($boost['guid'], "boost_swipes", false);
-            if($count > $impressions){
+            if($count > $boost['impressions']){
                 //remove from boost queue
                 $this->db->remove("boost", array('_id' => $boost['_id']));
                 $entity = \Minds\entities\Factory::build($boost['guid']);
