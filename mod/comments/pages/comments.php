@@ -32,7 +32,10 @@ class comments extends core\page implements interfaces\page{
 
 		usort($comments, function($a, $b){ return $a->time_created - $b->time_created;});
 		
-		echo elgg_view('comments/list', array('comments'=>$comments));
+		if ($comments)
+		    echo elgg_view('comments/list', array('comments'=>$comments));
+		else
+		    http_response_code (404);
 		
 	}
 	

@@ -111,7 +111,10 @@
     		//	console.log($(output).find('li:first'));
     			_this.parent().attr('data-offset', $(output).find('li:first').attr('data-guid'));
     			$('.elgg-list.mason').masonry().masonry('reloadItems');
-    		}
+    		},
+		error: function() {
+		    $('#minds-comments-' + parent_guid + ' .show-more').fadeOut();
+		}
     	});
     };
 
