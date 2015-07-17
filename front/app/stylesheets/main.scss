@@ -130,6 +130,13 @@ minds-newsfeed{
       width:0;
       float:right;
     }
+    .post-preview{
+      margin:-$minds-padding*2;
+      .mdl-spinner{
+        margin: $minds-padding * 2 auto;
+        display:block;
+      }
+    }
   }
 }
 

@@ -1,6 +1,8 @@
 import { Component, View, NgFor, NgIf, formDirectives} from 'angular2/angular2';
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
+import { InfiniteScroll } from '../../directives/infinite-scroll';
+import { Activity } from './activity';
 
 @Component({
   selector: 'minds-newsfeed',
@@ -8,19 +10,22 @@ import { Material } from 'src/directives/material';
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
-  directives: [ NgFor, NgIf, Material, formDirectives ]
+  directives: [ Activity, NgFor, NgIf, Material, formDirectives, InfiniteScroll ]
 })
 
 export class Newsfeed {
 
 	newsfeed : Array<Object> = [];
 	offset : string = "";
+  inProgress : boolean = false;
+  moreData : boolean = true;
 
   postMeta = {
     title: "",
     description: "",
     thumbnail: "",
-    url: ""
+    url: "",
+    active: false
   }
 
 	constructor(public client: Client){
@@ -32,13 +37,28 @@ export class Newsfeed {
 	 */
 	load(){
 		var self = this;
-		this.client.get('api/v1/newsfeed', {limit:12}, {cache: true})
+    if(this.inProgress){
+      console.log('already loading more..');
+      return false;
+    }
+
+    this.inProgress = true;
+
+		this.client.get('api/v1/newsfeed', {limit:12, offset: this.offset}, {cache: true})
 				.then(function(data : MindsActivityObject){
 					if(!data.activity){
+            self.moreData = false;
+            self.inProgress = false;
 						return false;
 					}
-					self.newsfeed = data.activity;
+          if(self.newsfeed){
+            for(let activity of data.activity)
+              self.newsfeed.push(activity);
+          } else {
+					     self.newsfeed = data.activity;
+          }
 					self.offset = data['load-next'];
+          self.inProgress = false;
 				})
 				.catch(function(e){
 					console.log(e);
@@ -48,19 +68,20 @@ export class Newsfeed {
 	/**
 	 * Post to the newsfeed
 	 */
-	post(post){
-    if(!post.message)
-      return false;
-
-    console.log(this.postMeta);
-
-    if(this.postMeta.title)
-      Object.assign(post, this.postMeta);
-
+	post(){
 		var self = this;
-		this.client.post('api/v1/newsfeed', post)
+		this.client.post('api/v1/newsfeed', this.postMeta)
 				.then(function(data){
 					self.load();
+          //reset
+          self.postMeta = {
+            message: "",
+            title: "",
+            description: "",
+            thumbnail: "",
+            url: "",
+            active: false
+          }
 				})
 				.catch(function(e){
 					console.log(e);
@@ -90,6 +111,8 @@ export class Newsfeed {
 		url = url.replace("https://", '');
     console.log('found url was ' + url)
 
+    self.postMeta.active = true;
+
     if(this.timeout)
       clearTimeout(this.timeout);
 
@@ -108,6 +131,8 @@ export class Newsfeed {
         });
     }, 600);
   }
+
+
 
 	/**
 	 * A temporary hack, because pipes don't seem to work

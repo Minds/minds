@@ -109,6 +109,11 @@ ini_set( 'display_errors','1');
         });
 
         System.import('app');
+
+        window.addEventListener('scroll', function(){
+          console.log('scrolling from not angular');
+
+        }, false)
     </script>
   </body>
 </html>

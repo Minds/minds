@@ -2,93 +2,79 @@
 
     <div class="mdl-cell mdl-cell--8-col">
 
-    	<div class="mdl-card mdl-shadow--2dp post">
+        <div class="mdl-card mdl-shadow--2dp post">
 
-        <form #postobj="form" (submit)="post(postobj.value)">
+            <form #postobj="form" (submit)="post()">
 
-          <div class="mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
-            <textarea
-              ng-control="message"
-              class="mdl-textfield__input"
-              type="text"
-              id="message"
-              #message
-              (keyup)="getPostPreview(message)"
-            ></textarea>
-            <label class="mdl-textfield__label" for="message">Status</label>
-          </div>
+                <div class="mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
+                    <textarea
+                      ng-control="message"
+                      class="mdl-textfield__input"
+                      type="text"
+                      id="message"
+                      #message
+                      [(ng-model)]="postMeta.message"
+                      (keyup)="getPostPreview(message)"
+                    ></textarea>
+                    <label class="mdl-textfield__label" for="message">Status</label>
+                </div>
 
-          <button
-            class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
-            >
-            Post
-          </button>
-        </form>
-		</div>
+                <div class="post-preview" *ng-if="postMeta.active">
+                  <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="postMeta.title"></div>
+                  <div class="minds-rich-embed" *ng-if="postMeta.title">
 
+                    <a>
+                      <img src="{{postMeta.thumbnail}}" />
+                    </a>
+                    <a class="meta mdl-color-text--blue-grey-900">
+            		      <h2 class="mdl-card__title-text">{{postMeta.title}}</h2>
+                      <p>{{postMeta.description}}</p>
+                    </a>
+            	    </div>
+                </div>
 
-	    <div *ng-if="newsfeed.length == 0 || isLoading">
-	        <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate progress-demo"></div>
-	    </div>
+                <button
+                  type="submit"
+                  class="mdl-button mdl-button--raised mdl-button--colored"
+                  >
+                  Post
+                </button>
 
-	    <div *ng-for="#activity of newsfeed" class="mdl-card mdl-shadow--2dp item">
+            </form>
 
-			<!-- Owner block -->
-			<div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block">
+        </div>
 
-				<div class="avatar">
-					<a href="/{{activity.ownerObj.username}}">
-						<img src="/icon/{{activity.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
-					</a>
-				</div>
+        <div *ng-if="newsfeed.length == 0 || isLoading">
+            <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate progress-demo"></div>
+        </div>
 
-				<div class="body">
-					<a href="/{{activity.ownerObj.username}}">
-						<strong>{{activity.ownerObj.name}}</strong>
-					</a>
-					<span>{{toDate(activity.time_created)}}</span>
-				</div>
+        <div class="minds-list">
 
-			</div>
+            <minds-activity *ng-for="#activity of newsfeed" [object]="activity" class="mdl-card mdl-shadow--2dp item"></minds-activity>
+            <infinite-scroll
+                distance="10%"
+                (load)="load()"
+                *ng-if="moreData"
+                />
+                  <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+              </infinite-scroll>
 
-	    <!-- Messages -->
-			<div class="mdl-card__supporting-text message" [hidden]="!activity.message">{{activity.message}}</div>
+        </div>
 
-      <!-- Rich content -->
-      <div class="minds-rich-embed" *ng-if="activity.perma_url">
-        <a [href]="activity.perma_url" target="_blank">
-          <img src="{{activity.thumbnail_src}}" />
-        </a>
-        <a [href]="activity.perma_url" target="_blank" class="meta mdl-color-text--blue-grey-900">
-		      <h2 class="mdl-card__title-text" *ng-if="activity.title">{{activity.title}}</h2>
-          <p>{{activity.blurb}}</p>
-        </a>
-	    </div>
-
-      <div class="mdl-card__supporting-text mdl-color--blue-grey-50 tabs">
-
-				<a class="material-icons mdl-color-text--blue-grey-800">thumb_up</a>
-				<a class="material-icons mdl-color-text--blue-grey-800" >thumb_down</a>
-				<a class="material-icons mdl-color-text--blue-grey-800">chat_bubble</a>
-				<a class="material-icons mdl-color-text--blue-grey-800">repeat</a>
-
-      </div>
-
-	    </div>
-	</div>
+    </div>
 
 
-	<div class="mdl-cell mdl-cell--4-col">
+    <div class="mdl-cell mdl-cell--4-col">
 
-		<div class="mdl-card mdl-color--amber-500 mdl-shadow--2dp ad mobile-ad">
-			<div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
-			</div>
+    	<div class="mdl-card mdl-color--amber-500 mdl-shadow--2dp ad mobile-ad">
+    		<div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
+    		</div>
 
-			<div class="mdl-card__actions mdl-card--border">
-				<a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--blue-grey-50">Go Mobile!</a>
-			</div>
-		</div>
+    		<div class="mdl-card__actions mdl-card--border">
+    			<a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--blue-grey-50">Go Mobile!</a>
+    		</div>
+    	</div>
 
-	</div>
+    </div>
 
 </div>

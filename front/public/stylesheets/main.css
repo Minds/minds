@@ -94,6 +94,11 @@ minds-newsfeed .post {
   minds-newsfeed .post .mdl-button {
     width: 0;
     float: right; }
+  minds-newsfeed .post .post-preview {
+    margin: -16px; }
+    minds-newsfeed .post .post-preview .mdl-spinner {
+      margin: 16px auto;
+      display: block; }
 
 .minds-rich-embed img {
   width: 100%; }

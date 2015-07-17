@@ -12,43 +12,67 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var angular2_1 = require('angular2/angular2');
 var api_1 = require('src/services/api');
 var material_1 = require('src/directives/material');
+var infinite_scroll_1 = require('../../directives/infinite-scroll');
+var activity_1 = require('./activity');
 var Newsfeed = (function () {
     function Newsfeed(client) {
         this.client = client;
         this.newsfeed = [];
         this.offset = "";
+        this.inProgress = false;
+        this.moreData = true;
         this.postMeta = {
             title: "",
             description: "",
             thumbnail: "",
-            url: ""
+            url: "",
+            active: false
         };
         this.load();
     }
     Newsfeed.prototype.load = function () {
         var self = this;
-        this.client.get('api/v1/newsfeed', { limit: 12 }, { cache: true })
+        if (this.inProgress) {
+            console.log('already loading more..');
+            return false;
+        }
+        this.inProgress = true;
+        this.client.get('api/v1/newsfeed', { limit: 12, offset: this.offset }, { cache: true })
             .then(function (data) {
             if (!data.activity) {
+                self.moreData = false;
+                self.inProgress = false;
                 return false;
             }
-            self.newsfeed = data.activity;
+            if (self.newsfeed) {
+                for (var _i = 0, _a = data.activity; _i < _a.length; _i++) {
+                    var activity = _a[_i];
+                    self.newsfeed.push(activity);
+                }
+            }
+            else {
+                self.newsfeed = data.activity;
+            }
             self.offset = data['load-next'];
+            self.inProgress = false;
         })
             .catch(function (e) {
             console.log(e);
         });
     };
-    Newsfeed.prototype.post = function (post) {
-        if (!post.message)
-            return false;
-        console.log(this.postMeta);
-        if (this.postMeta.title)
-            Object.assign(post, this.postMeta);
+    Newsfeed.prototype.post = function () {
         var self = this;
-        this.client.post('api/v1/newsfeed', post)
+        this.client.post('api/v1/newsfeed', this.postMeta)
             .then(function (data) {
             self.load();
+            self.postMeta = {
+                message: "",
+                title: "",
+                description: "",
+                thumbnail: "",
+                url: "",
+                active: false
+            };
         })
             .catch(function (e) {
             console.log(e);
@@ -72,6 +96,7 @@ var Newsfeed = (function () {
         url = url.replace("http://", '');
         url = url.replace("https://", '');
         console.log('found url was ' + url);
+        self.postMeta.active = true;
         if (this.timeout)
             clearTimeout(this.timeout);
         this.timeout = setTimeout(function () {
@@ -100,7 +125,7 @@ var Newsfeed = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/newsfeed/list.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives]
+            directives: [activity_1.Activity, angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives, infinite_scroll_1.InfiniteScroll]
         }), 
         __metadata('design:paramtypes', [Client])
     ], Newsfeed);

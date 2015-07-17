@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Newsfeed API
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -17,15 +17,15 @@ class newsfeed implements interfaces\api{
     /**
      * Returns the newsfeed
      * @param array $pages
-     * 
+     *
      * API:: /v1/newsfeed/
-     */      
+     */
     public function get($pages){
         $response = array();
-        
+
         if(!isset($pages[0]))
             $pages[0] = 'network';
-        
+
         switch($pages[0]){
             case 'single':
                 $activity = new \Minds\entities\activity($pages[1]);
@@ -54,7 +54,7 @@ class newsfeed implements interfaces\api{
         }
 
      //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
-       
+
         if($pages[0] == 'network'){
             try{
                 $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
@@ -72,19 +72,19 @@ class newsfeed implements interfaces\api{
             }catch(\Exception $e){
             }
         }
-         
+
         if($activity){
             $response['activity'] = factory::exportable($activity, array('boosted'));
             $response['load-next'] = (string) end($activity)->guid;
             $response['load-previous'] = (string) key($activity)->guid;
         }
-        
+
         return Factory::response($response);
-        
+
     }
-    
+
     public function post($pages){
-        
+
         //factory::authorize();
         switch($pages[0]){
             case 'remind':
@@ -95,14 +95,14 @@ class newsfeed implements interfaces\api{
 
                 if($embeded->owner_guid != Core\session::getLoggedinUser()->guid){
                     $cacher = \Minds\Core\Data\cache\Factory::build();
-                    if(!$cacher->get(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){          
+                    if(!$cacher->get(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
                         $cacher->set(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
-               
+
                         \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
                         \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
                     }
                 }
-                    
+
                 $activity = new entities\activity();
                 switch($embeded->type){
                     case 'activity':
@@ -111,7 +111,7 @@ class newsfeed implements interfaces\api{
                             \Minds\Helpers\Counters::increment($embeded->remind_object['guid'], 'remind');
                         }else{
                             $activity->setRemind($embeded->export())->save();
-                        }      
+                        }
                      break;
                      default:
                          /**
@@ -135,18 +135,18 @@ class newsfeed implements interfaces\api{
             break;
             default:
                 $activity = new entities\activity();
-                //error_log(print_r($_POST, true)); 
-                if(isset($_POST['message']))
+
+                if(isset($_POST['message']) && $_POST['message'])
                     $activity->setMessage(urldecode($_POST['message']));
-                
-                if(isset($_POST['title'])){
+
+                if(isset($_POST['title']) && $_POST['title']){
                         $activity->setTitle($_POST['title'])
                             ->setBlurb(urldecode($_POST['description']))
                             ->setURL(\elgg_normalize_url($_POST['url']))
                             ->setThumbnail(urldecode($_POST['thumbnail']));
                 }
                 if($guid = $activity->save()){
-                   //Core\Events\Dispatcher::trigger('create', 'activity', $activity);
+
                     Core\Events\Dispatcher::trigger('social', 'dispatch', array(
                         'services' => array(
                             'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? $_POST['facebook'] : false,
@@ -165,7 +165,7 @@ class newsfeed implements interfaces\api{
                 }
         }
     }
-    
+
     public function put($pages){
 
         $activity = new entities\activity($pages[0]);
@@ -183,13 +183,13 @@ class newsfeed implements interfaces\api{
         }
 
         return Factory::response(array());
-        
+
     }
-    
+
     public function delete($pages){
-	$activity = new entities\activity($pages[0]); 
+	$activity = new entities\activity($pages[0]);
 	if(!$activity->guid)
-		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));      
+		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
 
     if(!$activity->canEdit()){
         return Factory::response(array('status'=>'error', 'message'=>'you don\'t have permission'));
@@ -199,6 +199,5 @@ class newsfeed implements interfaces\api{
         	return Factory::response(array('message'=>'removed ' . $pages[0]));
         	return Factory::response(array('status'=>'error', 'message'=>'could not delete'));
     }
-    
+
 }
-        

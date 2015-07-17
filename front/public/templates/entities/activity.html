@@ -1,0 +1,42 @@
+
+
+<!-- Owner block -->
+<div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block">
+
+	<div class="avatar">
+		<a href="/{{activity.ownerObj.username}}">
+			<img src="/icon/{{activity.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
+		</a>
+	</div>
+
+	<div class="body">
+		<a href="/{{activity.ownerObj.username}}">
+			<strong>{{activity.ownerObj.name}}</strong>
+		</a>
+		<span>{{toDate(activity.time_created)}}</span>
+	</div>
+
+</div>
+
+<!-- Messages -->
+<div class="mdl-card__supporting-text message" [hidden]="!activity.message">{{activity.message}}</div>
+
+<!-- Rich content -->
+<div class="minds-rich-embed" *ng-if="activity.perma_url">
+  <a [href]="activity.perma_url" target="_blank">
+    <img src="{{activity.thumbnail_src}}" />
+  </a>
+  <a [href]="activity.perma_url" target="_blank" class="meta mdl-color-text--blue-grey-900">
+    <h2 class="mdl-card__title-text" *ng-if="activity.title">{{activity.title}}</h2>
+    <p>{{activity.blurb}}</p>
+  </a>
+</div>
+
+<div class="mdl-card__supporting-text mdl-color--blue-grey-50 tabs">
+
+	<a class="material-icons mdl-color-text--blue-grey-800" (click)="thumbsUp(activity.guid)">thumb_up</a>
+	<a class="material-icons mdl-color-text--blue-grey-800" (click)="thumbsUp(activity.guid)">thumb_down</a>
+	<a class="material-icons mdl-color-text--blue-grey-800" (click)="comment(activity.guid)">chat_bubble</a>
+	<a class="material-icons mdl-color-text--blue-grey-800" (click)="remind(activity.guid)">repeat</a>
+
+</div>
