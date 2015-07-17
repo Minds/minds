@@ -132,6 +132,7 @@ class newsfeed implements interfaces\api{
                                     break;
                             }
                 }
+                return Factory::response(array('guid'=>$activity->guid));
             break;
             default:
                 $activity = new entities\activity();

@@ -1,6 +1,7 @@
 import { Component, View, NgFor, NgIf, Observable, formDirectives} from 'angular2/angular2';
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
+import { Remind } from './remind';
 
 @Component({
   selector: 'minds-activity',
@@ -9,11 +10,11 @@ import { Material } from 'src/directives/material';
 })
 @View({
   templateUrl: 'templates/entities/activity.html',
-  directives: [ NgFor, NgIf, Material]
+  directives: [ NgFor, NgIf, Material, Remind]
 })
 
 export class Activity {
-  activity : Object;
+  activity : any;
 
 	constructor(public client: Client){
 	}
@@ -31,5 +32,13 @@ export class Activity {
 
   thumbsUp(){
     console.log('you hit the thumbsup for ' + this.activity.guid);
+  }
+
+  remind(){
+    let self = this;
+    this.client.post('api/v1/newsfeed/remind/' + this.activity.guid, {})
+          .then((data)=> {
+              alert('reminded');
+          });
   }
 }

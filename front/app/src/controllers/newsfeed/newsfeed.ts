@@ -45,7 +45,7 @@ export class Newsfeed {
     this.inProgress = true;
 
 		this.client.get('api/v1/newsfeed', {limit:12, offset: this.offset}, {cache: true})
-				.then(function(data : MindsActivityObject){
+				.then((data : MindsActivityObject) => {
 					if(!data.activity){
             self.moreData = false;
             self.inProgress = false;

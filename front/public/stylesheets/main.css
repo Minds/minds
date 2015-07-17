@@ -108,6 +108,9 @@ minds-newsfeed .post {
   display: block;
   text-decoration: none; }
 
+minds-remind {
+  margin: 16px; }
+
 .owner-block {
   padding: 16px;
   display: flex; }

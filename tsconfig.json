@@ -24,6 +24,7 @@
         "./front/app/src/controllers/logout.ts",
         "./front/app/src/controllers/newsfeed/activity.ts",
         "./front/app/src/controllers/newsfeed/newsfeed.ts",
+        "./front/app/src/controllers/newsfeed/remind.ts",
         "./front/app/src/directives/infinite-scroll.ts",
         "./front/app/src/directives/loggedin.ts",
         "./front/app/src/directives/material.ts",

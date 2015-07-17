@@ -12,44 +12,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var angular2_1 = require('angular2/angular2');
 var api_1 = require('src/services/api');
 var material_1 = require('src/directives/material');
-var remind_1 = require('./remind');
-var Activity = (function () {
-    function Activity(client) {
+var Remind = (function () {
+    function Remind(client) {
         this.client = client;
+        this.hideTabs = true;
     }
-    Object.defineProperty(Activity.prototype, "object", {
+    Object.defineProperty(Remind.prototype, "object", {
         set: function (value) {
             this.activity = value;
         },
         enumerable: true,
         configurable: true
     });
-    Activity.prototype.toDate = function (timestamp) {
+    Remind.prototype.toDate = function (timestamp) {
         return new Date(timestamp * 1000);
     };
-    Activity.prototype.thumbsUp = function () {
-        console.log('you hit the thumbsup for ' + this.activity.guid);
-    };
-    Activity.prototype.remind = function () {
-        var self = this;
-        this.client.post('api/v1/newsfeed/remind/' + this.activity.guid, {})
-            .then(function (data) {
-            alert('reminded');
-        });
-    };
-    Activity = __decorate([
+    Remind = __decorate([
         angular2_1.Component({
-            selector: 'minds-activity',
+            selector: 'minds-remind',
             viewInjector: [api_1.Client],
             properties: ['object']
         }),
         angular2_1.View({
             templateUrl: 'templates/entities/activity.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, remind_1.Remind]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material]
         }), 
         __metadata('design:paramtypes', [Client])
-    ], Activity);
-    return Activity;
+    ], Remind);
+    return Remind;
 })();
-exports.Activity = Activity;
-//# sourceMappingURL=activity.js.map
+exports.Remind = Remind;
+//# sourceMappingURL=remind.js.map
