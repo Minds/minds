@@ -16,6 +16,8 @@ export class InfiniteScroll{
   loadHandler: EventEmitter = new EventEmitter();
   _distance : any;
   _inprogress : boolean = false;
+  _content : any;
+  _listener : Function;
 
   constructor(viewContainer: ViewContainerRef) {
     this.scroll();
@@ -26,19 +28,26 @@ export class InfiniteScroll{
   }
 
   scroll(){
-    var content : any = document.getElementsByClassName('mdl-layout__content')[0];
+    this._content = document.getElementsByClassName('mdl-layout__content')[0];
     var self = this;
-    content.addEventListener('scroll', () => {
+    this._listener = () => {
+      var height = self._content.scrollHeight,
+          maxHeight = height - self._content.clientHeight,
+          top = self._content.scrollTop,
+          bottom = maxHeight - top,
+          distance = (bottom / maxHeight) * 100;
 
-        var height = content.scrollHeight,
-            top = content.scrollTop,
-            bottom = height - top,
-            distance = (bottom / height) * 100;
+      //console.log("Height " + height, "Max " + maxHeight, "Top " + top, "Bottom " + bottom, "Distance " + distance);
 
-        if(distance <= self._distance){
-          self.loadHandler.next(true);
-        }
-      });
+      if(distance <= self._distance){
+        self.loadHandler.next(true);
+      }
+    };
+    this._content.addEventListener('scroll', this._listener);
+  }
+
+  onDestroy(){
+    this._content.removeEventListener('scroll', this._listener)
   }
 
 }

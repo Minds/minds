@@ -18,6 +18,7 @@ var login_1 = require('./src/controllers/login');
 var logout_1 = require('./src/controllers/logout');
 var newsfeed_1 = require('./src/controllers/newsfeed/newsfeed');
 var capture_1 = require('./src/controllers/capture/capture');
+var channel_1 = require('./src/controllers/channels/channel');
 var Minds = (function () {
     function Minds() {
         this.name = 'Minds';
@@ -35,7 +36,7 @@ var Minds = (function () {
             { path: '/messenger', component: newsfeed_1.Newsfeed, as: 'messenger' },
             { path: '/notifications', component: newsfeed_1.Newsfeed, as: 'notifications' },
             { path: '/groups', component: newsfeed_1.Newsfeed, as: 'groups' },
-            { path: '/:username', redirectTo: '/login' }
+            { path: '/:username', component: channel_1.Channel, as: 'channel' }
         ]),
         angular2_1.View({
             templateUrl: './templates/index.html',

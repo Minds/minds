@@ -10,19 +10,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var angular2_1 = require('angular2/angular2');
-var ui_1 = require("src/services/ui");
-var Material = (function () {
-    function Material(viewContainer) {
-        ui_1.Material.updateElement(viewContainer.element.nativeElement);
+var api_1 = require('src/services/api');
+var material_1 = require('src/directives/material');
+var infinite_scroll_1 = require('../../directives/infinite-scroll');
+var Channel = (function () {
+    function Channel(client) {
+        this.client = client;
     }
-    Material = __decorate([
-        angular2_1.Directive({
-            selector: '[mdl]',
-            properties: ['mdl']
+    Channel = __decorate([
+        angular2_1.Component({
+            selector: 'minds-channel',
+            viewInjector: [api_1.Client]
+        }),
+        angular2_1.View({
+            templateUrl: 'templates/channels/channel.html',
+            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives, infinite_scroll_1.InfiniteScroll]
         }), 
-        __metadata('design:paramtypes', [ViewContainerRef])
-    ], Material);
-    return Material;
+        __metadata('design:paramtypes', [Client])
+    ], Channel);
+    return Channel;
 })();
-exports.Material = Material;
-//# sourceMappingURL=material.js.map
+exports.Channel = Channel;
+//# sourceMappingURL=channel.js.map

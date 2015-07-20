@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var angular2_1 = require('angular2/angular2');
+var router_1 = require("angular2/router");
 var api_1 = require('src/services/api');
 var material_1 = require('src/directives/material');
 var remind_1 = require('./remind');
@@ -45,7 +46,7 @@ var Activity = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/entities/activity.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, remind_1.Remind]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, remind_1.Remind, router_1.RouterLink]
         }), 
         __metadata('design:paramtypes', [Client])
     ], Activity);

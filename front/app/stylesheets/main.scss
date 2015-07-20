@@ -1,8 +1,5 @@
 @import 'defaults.scss';
 
-body{
-}
-
 minds-app{
   .initial-loading{
     width:100%;
@@ -88,110 +85,11 @@ minds-navigation{
 
 }
 
-
-minds-newsfeed{
-  .item.mdl-card{
-    width:auto;
-    min-height:0;
-    margin-bottom:16px;
-
-    .mdl-card__supporting-text{
-      width:100%;
-    }
-    .mdl-card__supporting-text.message{
-      white-space: pre-line;
-    }
-
-    .tabs{
-      padding:$minds-padding $minds-padding*2;
-      display:flex;
-      box-sizing:border-box;
-
-      a {
-        display:flex;
-        flex-direction: column;
-        flex:auto;
-        text-align:center;
-      }
-    }
-
-  }
-  .post{
-    padding:$minds-padding * 2;
-    margin-bottom:$minds-padding * 2;
-    width:100%;
-    min-height:0;
-
-    .mdl-textfield{
-      width:100%;
-      padding-top:0;
-    }
-    .mdl-button {
-      width:0;
-      float:right;
-    }
-    .post-preview{
-      margin:-$minds-padding*2;
-      .mdl-spinner{
-        margin: $minds-padding * 2 auto;
-        display:block;
-      }
-    }
-  }
-}
-
-.minds-rich-embed{
-  img {
-    width:100%;
-  }
-  .meta{
-    padding:$minds-padding*2;
-    display:block;
-    text-decoration: none;
-  }
-}
-
-minds-remind{
-  margin:$minds-margin * 2;
-}
-
-.owner-block{
-  padding:$minds-padding * 2;
-  display:flex;
-
-  .avatar{
-    display:flex;
-    flex-direction: column;
-
-    img{
-      border-radius: 3px;
-      max-height:50px;
-    }
-  }
-
-  .body{
-    display:flex;
-    flex-direction: column;
-    margin-left:$minds-margin * 2;
-  }
-
-  a {
-    text-decoration:none;
-    font-weight:500;
-    color:#333;
-  }
-
-  span {
-    color:#888;
-    font-size:11px;
-  }
-
-  img {
-    border-radius:3px;
-  }
-}
-
 .minds-login-box{
   padding:$minds-padding * 2;
   margin:auto;
 }
+
+@import 'feeds.scss';
+@import 'channels.scss';
+@import 'directives.scss';

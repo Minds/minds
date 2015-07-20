@@ -1,0 +1,78 @@
+<div class="mdl-grid channel-grid" style="max-width:900px" *ng-if="error">
+  <h1>{{error}}</h1>
+</div>
+
+
+<header  *ng-if="user">
+
+
+
+  <div class="minds-channel-title">
+
+    <div class="avatar">
+      <img src="/icon/{{user.guid}}/large"/>
+    </div>
+
+    <div class="body">
+      <div class="flex-bottom">
+        <h1>{{user.name}}</h1>
+        <h3>@{{user.username}}</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="minds-tabs mdl-tabs__tab-bar">
+      <a class="mdl-tabs__tab is-active">
+        <span>Feed</span>
+        <b>0</b>
+      </a>
+      <a class="mdl-tabs__tab">
+        <span>Subscribers<span>
+        <b>{{user.subscribers_count}}</b>
+      </a>
+      <a class="mdl-tabs__tab">
+        <span>Subscriptions<span>
+        <b>{{user.subscriptions_count}}</b>
+      </a>
+      <a class="mdl-tabs__tab">
+        <span>Views</span>
+        <b>{{user.impressions}}</b>
+      </a>
+  </div>
+</header>
+
+<div class="mdl-grid channel-grid" style="max-width:900px" *ng-if="user">
+
+  <section class="mdl-cell mdl-cell--4-col">
+      <div class="mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+          <h2 class="mdl-card__title-text">Bio</h2>
+        </div>
+        <div class="mdl-card__supporting-text">{{user.briefdescription}}</div>
+        <div class="mdl-card__menu" *ng-if="isOwner()">
+          <button class="mdl-button mdl-button--icon">
+            <i class="material-icons">edit</i>
+          </button>
+        </div>
+      </div>
+  </section>
+
+  <section class="mdl-cell mdl-cell--8-col">
+
+    <div class="minds-list">
+
+        <minds-activity *ng-for="#activity of feed" [object]="activity" class="mdl-card mdl-shadow--2dp item"></minds-activity>
+        <infinite-scroll
+            distance="25%"
+            (load)="loadFeed()"
+            *ng-if="moreData"
+            />
+            <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+        </infinite-scroll>
+
+    </div>
+
+  </section>
+
+</div>

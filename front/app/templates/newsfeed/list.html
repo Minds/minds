@@ -44,20 +44,16 @@
 
         </div>
 
-        <div *ng-if="newsfeed.length == 0 || isLoading">
-            <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate progress-demo"></div>
-        </div>
-
         <div class="minds-list">
 
             <minds-activity *ng-for="#activity of newsfeed" [object]="activity" class="mdl-card mdl-shadow--2dp item"></minds-activity>
             <infinite-scroll
-                distance="10%"
+                distance="25%"
                 (load)="load()"
                 *ng-if="moreData"
                 />
-                  <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
-              </infinite-scroll>
+                <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+            </infinite-scroll>
 
         </div>
 

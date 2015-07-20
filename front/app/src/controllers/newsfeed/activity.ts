@@ -1,4 +1,5 @@
 import { Component, View, NgFor, NgIf, Observable, formDirectives} from 'angular2/angular2';
+import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { Remind } from './remind';
@@ -10,7 +11,7 @@ import { Remind } from './remind';
 })
 @View({
   templateUrl: 'templates/entities/activity.html',
-  directives: [ NgFor, NgIf, Material, Remind]
+  directives: [ NgFor, NgIf, Material, Remind, RouterLink]
 })
 
 export class Activity {

@@ -1,0 +1,90 @@
+import { Component, View, NgFor, NgIf, Inject, formDirectives} from 'angular2/angular2';
+import { Router, RouteParams } from 'angular2/router';
+import { Client } from 'src/services/api';
+import { Material } from 'src/directives/material';
+import { SessionFactory } from '../../services/session';
+import { InfiniteScroll } from '../../directives/infinite-scroll';
+import { Activity } from 'src/controllers/newsfeed/activity';
+
+@Component({
+  selector: 'minds-channel',
+  viewInjector: [ Client ]
+})
+@View({
+  templateUrl: 'templates/channels/channel.html',
+  directives: [ NgFor, NgIf, Material, formDirectives, InfiniteScroll, Activity ]
+})
+
+export class Channel {
+  session = SessionFactory.build();
+  username : string;
+  user : Object;
+  feed : Array<Object> = [];
+  offset : string = "";
+  moreData : boolean = true;
+  inProgress : boolean = false;
+  error: string = "";
+
+  constructor(public client: Client,
+    @Inject(Router) public router: Router,
+    @Inject(RouteParams) public params: RouteParams
+    ){
+      this.username = params.params['username'];
+      this.load();
+  }
+
+  load(){
+    var self = this;
+    this.client.get('api/v1/channel/' + this.username, {})
+              .then((data : Array<any>) => {
+                if(data.status != "success"){
+                  self.error = data.message;
+                  return false;
+                }
+                self.user = data.channel;
+                self.loadFeed(true);
+                })
+              .catch(() => {
+                console.log('couldnt load channel');
+                });
+  }
+
+  loadFeed(refresh : boolean = false){
+    var self = this;
+    if(this.inProgress){
+      //console.log('already loading more..');
+      return false;
+    }
+
+    if(refresh){
+      this.offset = "";
+    }
+
+    this.inProgress = true;
+
+    this.client.get('api/v1/newsfeed/personal/' + this.user.guid, {limit:12, offset: this.offset}, {cache: true})
+        .then((data : MindsActivityObject) => {
+          if(!data.activity){
+            self.moreData = false;
+            self.inProgress = false;
+            return false;
+          }
+          if(self.feed && !refresh){
+            for(let activity of data.activity)
+              self.feed.push(activity);
+          } else {
+               self.feed = data.activity;
+          }
+          self.offset = data['load-next'];
+          self.inProgress = false;
+        })
+        .catch(function(e){
+          console.log(e);
+        });
+  }
+
+  isOwner(){
+    return this.session.isLoggedIn();
+  }
+
+}

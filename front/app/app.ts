@@ -9,6 +9,7 @@ import {Login} from './src/controllers/login';
 import {Logout} from './src/controllers/logout';
 import {Newsfeed} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';
+import {Channel} from './src/controllers/channels/channel';
 
 @Component({
   selector: 'minds-app',
@@ -23,7 +24,7 @@ import {Capture} from './src/controllers/capture/capture';
   { path: '/notifications', component: Newsfeed, as: 'notifications'},
   { path: '/groups', component: Newsfeed, as: 'groups'},
 
-  { path: '/:username', redirectTo: '/login' }
+  { path: '/:username', component: Channel, as: 'channel' }
 ])
 @View({
   templateUrl: './templates/index.html',

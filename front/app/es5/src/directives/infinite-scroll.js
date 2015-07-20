@@ -24,14 +24,18 @@ var InfiniteScroll = (function () {
         configurable: true
     });
     InfiniteScroll.prototype.scroll = function () {
-        var content = document.getElementsByClassName('mdl-layout__content')[0];
+        this._content = document.getElementsByClassName('mdl-layout__content')[0];
         var self = this;
-        content.addEventListener('scroll', function () {
-            var height = content.scrollHeight, top = content.scrollTop, bottom = height - top, distance = (bottom / height) * 100;
+        this._listener = function () {
+            var height = self._content.scrollHeight, maxHeight = height - self._content.clientHeight, top = self._content.scrollTop, bottom = maxHeight - top, distance = (bottom / maxHeight) * 100;
             if (distance <= self._distance) {
                 self.loadHandler.next(true);
             }
-        });
+        };
+        this._content.addEventListener('scroll', this._listener);
+    };
+    InfiniteScroll.prototype.onDestroy = function () {
+        this._content.removeEventListener('scroll', this._listener);
     };
     InfiniteScroll = __decorate([
         angular2_1.Directive({

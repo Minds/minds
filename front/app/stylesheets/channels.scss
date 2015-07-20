@@ -1,0 +1,75 @@
+@import 'defaults.scss';
+
+/**
+ * Channel profile pages
+ */
+minds-channel{
+
+  header{
+    display:flex;
+    align-items: flex-end;
+    height:330px;
+    padding:$minds-padding;
+    box-sizing:content-box;
+
+    .minds-channel-title{
+      display:flex;
+
+      .avatar{
+
+        img{
+          max-height:220px;
+          max-width:100%;
+          border-radius:50%;
+        }
+      }
+
+      > div{
+        display:flex;
+        align-items: flex-end;
+        padding:$minds-padding;
+
+        .flex-bottom{
+
+          h1{
+            margin:0;
+            line-height:30px;
+            font-size:24px;
+          }
+
+          h3{
+            margin:0;
+            line-height:18px;
+            font-size:13px;
+          }
+        }
+      }
+
+    }
+
+
+  .minds-tabs{
+    flex: 1;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    a {
+
+      span {
+        width: 100%;
+        display: block;
+        font-size:11px;
+        height: 11px;
+        vertical-align: middle;
+        line-height: 36px;
+      }
+    }
+
+  }
+ }
+
+ .mdl-card{
+   width:100%;
+   min-height:0;
+ }
+}

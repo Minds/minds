@@ -1,0 +1,19 @@
+/**
+ * Colours
+ */
+/**
+ * Padding, Margins and Offset
+ */
+/**
+ * Infinite scroll
+ */
+infinite-scroll {
+  text-align: center;
+  padding: 16px; }
+  infinite-scroll > div {
+    margin: auto;
+    display: block !important; }
+
+/**
+ * Carousel
+ */

@@ -8,7 +8,6 @@ import { Material as MaterialService } from "src/services/ui";
 
 export class Material{
   constructor(viewContainer: ViewContainerRef) {
-    console.log(viewContainer.element.nativeElement);
     //MaterialService.rebuild();
     MaterialService.updateElement(viewContainer.element.nativeElement);
   }
