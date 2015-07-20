@@ -30,6 +30,16 @@
   </a>
 </div>
 
+<!-- Images -->
+<div class="item item-image allow-select" *ng-if="activity.thumbnail_src">
+		<img [src]="activity.thumbnail_src">
+</div>
+
+<!-- Custom type:: batch -->
+<div class="item item-image allow-select" *ng-if="activity.custom_type == 'batch'">
+		<img [src]="activity.custom_data[0].src" style="width:100%">
+</div>
+
 <!-- Reminds -->
 <div *ng-if="activity.remind_object">
 	<minds-remind [object]="activity.remind_object" class="mdl-card mdl-shadow--2dp item"></minds-remind>
