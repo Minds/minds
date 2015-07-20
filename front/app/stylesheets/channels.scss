@@ -9,8 +9,9 @@ minds-channel{
     display:flex;
     align-items: flex-end;
     height:330px;
-    padding:$minds-padding;
     box-sizing:content-box;
+    position:relative;
+    overflow:hidden;
 
     .minds-channel-title{
       display:flex;

@@ -5,7 +5,19 @@
 
 <header  *ng-if="user">
 
+  <div class="minds-carousel">
 
+    <div class="inner" >
+
+      <a *ng-for="#carousel of user.carousels" class="minds-carousel-item">
+        <div class="minds-carousel-overlay"></div>
+      </a>
+      <a *ng-if="!user.carousels" class="minds-carousel-item placeholder">
+        <div class="minds-carousel-overlay"></div>
+      </a>
+
+    </div>
+  </div>
 
   <div class="minds-channel-title">
 
@@ -14,7 +26,7 @@
     </div>
 
     <div class="body">
-      <div class="flex-bottom">
+      <div class="flex-bottom  mdl-color-text--blue-grey-50">
         <h1>{{user.name}}</h1>
         <h3>@{{user.username}}</h3>
       </div>
@@ -23,19 +35,19 @@
   </div>
 
   <div class="minds-tabs mdl-tabs__tab-bar">
-      <a class="mdl-tabs__tab is-active">
+      <a class="mdl-tabs__tab is-active  mdl-color-text--blue-grey-50">
         <span>Feed</span>
         <b>0</b>
       </a>
-      <a class="mdl-tabs__tab">
+      <a class="mdl-tabs__tab mdl-color-text--blue-grey-50">
         <span>Subscribers<span>
         <b>{{user.subscribers_count}}</b>
       </a>
-      <a class="mdl-tabs__tab">
+      <a class="mdl-tabs__tab  mdl-color-text--blue-grey-50">
         <span>Subscriptions<span>
         <b>{{user.subscriptions_count}}</b>
       </a>
-      <a class="mdl-tabs__tab">
+      <a class="mdl-tabs__tab  mdl-color-text--blue-grey-50">
         <span>Views</span>
         <b>{{user.impressions}}</b>
       </a>
