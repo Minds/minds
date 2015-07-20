@@ -21,7 +21,7 @@ minds-channel{
         img{
           max-height:220px;
           max-width:100%;
-          border-radius:50%;
+          border-radius:3px;
         }
       }
 
@@ -53,6 +53,7 @@ minds-channel{
     flex: 1;
     align-items: flex-start;
     justify-content: flex-start;
+    border:0;
 
     a {
 
