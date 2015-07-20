@@ -35,11 +35,15 @@ export class Newsfeed {
 	/**
 	 * Load newsfeed
 	 */
-	load(){
+	load(refresh : boolean = false){
 		var self = this;
     if(this.inProgress){
-      console.log('already loading more..');
+      //console.log('already loading more..');
       return false;
+    }
+
+    if(refresh){
+      this.offset = "";
     }
 
     this.inProgress = true;
@@ -51,7 +55,7 @@ export class Newsfeed {
             self.inProgress = false;
 						return false;
 					}
-          if(self.newsfeed){
+          if(self.newsfeed && !refresh){
             for(let activity of data.activity)
               self.newsfeed.push(activity);
           } else {

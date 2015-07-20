@@ -30,11 +30,14 @@ var Newsfeed = (function () {
         };
         this.load();
     }
-    Newsfeed.prototype.load = function () {
+    Newsfeed.prototype.load = function (refresh) {
+        if (refresh === void 0) { refresh = false; }
         var self = this;
         if (this.inProgress) {
-            console.log('already loading more..');
             return false;
+        }
+        if (refresh) {
+            this.offset = "";
         }
         this.inProgress = true;
         this.client.get('api/v1/newsfeed', { limit: 12, offset: this.offset }, { cache: true })
@@ -44,7 +47,7 @@ var Newsfeed = (function () {
                 self.inProgress = false;
                 return false;
             }
-            if (self.newsfeed) {
+            if (self.newsfeed && !refresh) {
                 for (var _i = 0, _a = data.activity; _i < _a.length; _i++) {
                     var activity = _a[_i];
                     self.newsfeed.push(activity);
