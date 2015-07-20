@@ -9,7 +9,8 @@
 
     <div class="inner" >
 
-      <a *ng-for="#carousel of user.carousels" class="minds-carousel-item">
+      <a *ng-for="#carousel of user.carousels" class="minds-carousel-item" style="opacity:1">
+        <img [src]="carousel.src" />
         <div class="minds-carousel-overlay"></div>
       </a>
       <a *ng-if="!user.carousels" class="minds-carousel-item placeholder">
@@ -22,7 +23,7 @@
   <div class="minds-channel-title">
 
     <div class="avatar">
-      <img src="/icon/{{user.guid}}/large"/>
+      <img src="/icon/{{user.guid}}/large" class="mdl-shadow--2dp" />
     </div>
 
     <div class="body">

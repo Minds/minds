@@ -19,7 +19,7 @@ minds-channel header {
     minds-channel header .minds-channel-title .avatar img {
       max-height: 220px;
       max-width: 100%;
-      border-radius: 50%; }
+      border-radius: 3px; }
     minds-channel header .minds-channel-title > div {
       display: flex;
       align-items: flex-end;
@@ -35,7 +35,8 @@ minds-channel header {
   minds-channel header .minds-tabs {
     flex: 1;
     align-items: flex-start;
-    justify-content: flex-start; }
+    justify-content: flex-start;
+    border: 0; }
     minds-channel header .minds-tabs a span {
       width: 100%;
       display: block;
