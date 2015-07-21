@@ -53,7 +53,8 @@ if(!$entity->featured_id || $entity->featured_id == 0){
 	$user = get_user_by_username('minds');
 
 	\elgg_trigger_plugin_hook('notification', 'all', array(
-				'to' => array($to_guid),
+        'to' => array($to_guid),
+        'from'=> 100000000000000519,
 				'object_guid'=>$guid,
 				'description'=>$message,
 				'notification_view'=>'feature'
