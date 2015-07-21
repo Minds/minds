@@ -13,6 +13,11 @@ minds-channel{
     position:relative;
     overflow:hidden;
 
+    .channel-grid{
+      align-items:flex-end;
+      padding:0;
+    }
+
     .minds-channel-title{
       display:flex;
 

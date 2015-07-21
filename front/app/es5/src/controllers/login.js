@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var angular2_1 = require('angular2/angular2');
 var router_1 = require('angular2/router');
+var material_1 = require('src/directives/material');
 var api_1 = require('src/services/api');
 var session_1 = require('src/services/session');
 var Login = (function () {
@@ -48,7 +49,8 @@ var Login = (function () {
             viewInjector: [api_1.Client]
         }),
         angular2_1.View({
-            templateUrl: 'templates/login.html'
+            templateUrl: 'templates/login.html',
+            directives: [material_1.Material]
         }),
         __param(1, angular2_1.Inject(router_1.Router)), 
         __metadata('design:paramtypes', [Client, Router])

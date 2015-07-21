@@ -6,7 +6,7 @@
  *
  * @package    Elgg.Core
  * @subpackage DataModel.User
- * 
+ *
  * @property string $name     The display name that the user will be known by in the network
  * @property string $username The short, reference name for the user in the network
  * @property string $email    The email address to which Elgg will send email notifications
@@ -56,14 +56,14 @@ class ElggUser extends ElggEntity
 	 * @throws Exception if there was a problem creating the user.
 	 */
 	function __construct($guid = null, $cache = true) {
-		
+
 		$this->cache = $cache;
 
 		$this->initializeAttributes();
 
 		// compatibility for 1.7 api.
 		$this->initialise_attributes(false);
-		
+
 		if (!empty($guid)) {
 			// Is $guid is a DB entity row
 			if ($guid instanceof stdClass) {
@@ -79,10 +79,10 @@ class ElggUser extends ElggEntity
 			} else if (is_string($guid)) {
 
 				$this->loadFromLookup($guid);
-			
+
 			} else if(is_array($guid)){
 				$this->loadFromArray($guid);
-			
+
 				// Is $guid is an ElggUser? Use a copy constructor
 			} else if (is_object($guid)){
 				$this->load($guid);
@@ -102,22 +102,22 @@ class ElggUser extends ElggEntity
 		foreach($guid as $k => $v){
 			$this->attributes[$k] = $v;
 		}
-	
-		if($this->cache)	
+
+		if($this->cache)
 			cache_entity($this);
 
 		return true;
 	}
-	
+
 	protected function loadFromGUID($guid){
 		if(is_numeric($guid) && strlen($guid) < 18){
 			$g = new GUID();
             $guid = $g->migrate($guid);
 		}
 
-		if($cached = retrieve_cached_entity($guid)){
+		if($this->cache && $cached = retrieve_cached_entity($guid)){
 			$this->load($cached);
-			return true;	
+			return true;
 		}
 
 		$db = new Minds\Core\Data\Call('entities');
@@ -125,7 +125,7 @@ class ElggUser extends ElggEntity
 		$data['guid'] = $guid;
 		if($data)
 			return $this->load($data);
-		
+
 		return false;
 	}
 
@@ -140,7 +140,7 @@ class ElggUser extends ElggEntity
 		if(!$guid)
 			return false;
 
-        //$cacher->set("lookup:$string", $guid); 
+        //$cacher->set("lookup:$string", $guid);
 
 		return $this->loadFromGUID(key($guid));
 	}
@@ -157,7 +157,7 @@ class ElggUser extends ElggEntity
 
         //we do a manual save because we don't want to always update the password
         //@todo find a better less hacky solution
-        $new = true; 
+        $new = true;
         if($this->guid){
             $new = false;
             elgg_trigger_event('update', $this->type, $this);
@@ -165,7 +165,7 @@ class ElggUser extends ElggEntity
             $this->guid = (string) new GUID();
             elgg_trigger_event('create', $this->type, $this);
         }
-        
+
         $db = new Minds\Core\Data\Call('entities');
         $array = $this->toArray();
         if(!$this->override_password && !$new){
@@ -187,7 +187,7 @@ class ElggUser extends ElggEntity
 			$db->insert(strtolower($this->username), $data);
 			$db->insert(strtolower($this->email), $data);
 		}
- 
+
 		//update our session, if it is us logged in
 		if(elgg_is_logged_in() && $this->guid == elgg_get_logged_in_user_guid()){
 			$_SESSION['user'] = $this;
@@ -200,29 +200,29 @@ class ElggUser extends ElggEntity
         }catch (\Exception $e){}
 		return $this->guid;
 	}
-	
+
 	/**
 	 * Enable a user
 	 *
 	 * @return bool
 	 */
 	public function enable() {
-		
+
 		//enable all the users objects
 		if($recursive == true){
-			//@todo disable the users objects 
+			//@todo disable the users objects
 			$objects = elgg_get_entities(array('type'=>'object', 'owner_guid'=>$this->guid));
 			foreach($objects as $object){
 				//$object->enable();
 			}
 		}
-		
+
 		$db = new Minds\Core\Data\Call('entities_by_time');
 		//Remove from the list of unvalidated user
 		$db->removeAttributes('user:unvalidated', array($this->guid));
 		//add to the list of unvalidated user
 		$db->insert('user', array($this->guid => $this->guid));
-		
+
 		//Set enabled attribute to 'no'
 		$this->enabled = 'yes';
 		return (bool) $this->save();
@@ -239,26 +239,26 @@ class ElggUser extends ElggEntity
 	 */
 	public function disable($reason = "", $recursive = true){
 		if($recursive == true){
-			//@todo disable the users objects 
+			//@todo disable the users objects
 			$objects = elgg_get_entities(array('type'=>'object', 'owner_guid'=>$this->guid));
 			foreach($objects as $object){
 				//$object->disable();
 			}
 		}
-		
+
 		$db = new Minds\Core\Data\Call('entities_by_time');
-		
+
 		//Remove from the list of users
-		$db->removeAttributes('user', array($this->guid)); 
+		$db->removeAttributes('user', array($this->guid));
 		//add to the list of unvalidated user
 		$db->insert('user:unvalidated', array($this->guid => $this->guid));
-		
+
 		//Set enabled attribute to 'no'
 		$this->enabled = 'no';
-		
+
 		//clear the cache for this
 		$this->purgeCache();
-		
+
 		return (bool) $this->save();
 	}
 	/**
@@ -346,11 +346,11 @@ class ElggUser extends ElggEntity
 	 */
 	public function makeAdmin() {
 		// If already saved, use the standard function.
-		
+
 		if($this->guid){
 			$this->admin = 'yes';
                         $this->save();
-		}	
+		}
 
 		elgg_trigger_event('make_admin', 'user', $this);
 
@@ -368,7 +368,7 @@ class ElggUser extends ElggEntity
 			$this->admin = 'no';
 			$this->attributes['admin'] = 'no';
 			return $this->save();
-		}	
+		}
 		return false;
 	}
 
@@ -434,7 +434,7 @@ class ElggUser extends ElggEntity
 	 *
 	 * @return bool
 	 */
-	function isFriend() { 
+	function isFriend() {
 		return $this->isFriendOf(elgg_get_logged_in_user_guid());
 	}
 
@@ -499,14 +499,14 @@ class ElggUser extends ElggEntity
 	function getFriendsOf($subtype = null, $limit = 10, $offset = "", $output = 'entities') {
 		return get_user_friends_of($this->getGUID(), $subtype, $limit, $offset, $output);
 	}
-	
+
 	/**
 	 * Return a count of the users subscriber
-	 * 
-	 * @return 
+	 *
+	 * @return
 	 */
 	function getSubscribersCount(){
-				
+
 		$cacher = \Minds\Core\Data\cache\factory::build();
 		if($cache = $cacher->get("$this->guid:friendsofcount"))
 			return $cache;
@@ -518,11 +518,11 @@ class ElggUser extends ElggEntity
 		$cacher->set("$this->guid:friendsofcount", $count);
 		return $count;
 	}
-	
+
 	/**
 	 * Return a count of the users subscriptions
-	 * 
-	 * @return 
+	 *
+	 * @return
 	 */
 	function getSubscriptionsCount(){
 		$cacher = \Minds\Core\Data\cache\factory::build();
@@ -536,7 +536,7 @@ class ElggUser extends ElggEntity
                 $cacher->set("$this->guid:friendscount", $count);
                 return $count;
 	}
-	
+
 	/**
 	 * Lists the user's friends
 	 *
@@ -554,7 +554,7 @@ class ElggUser extends ElggEntity
 		$options = array_merge($defaults, $vars);
 
 		$friends = $this->getFriends($subtype, $limit);
-		return elgg_view_entity_list($friends, $options);	
+		return elgg_view_entity_list($friends, $options);
 
 	}
 
@@ -760,7 +760,7 @@ class ElggUser extends ElggEntity
 	 * Can a user comment on this user?
 	 *
 	 * @see ElggEntity::canComment()
-	 * 
+	 *
 	 * @param int $user_guid User guid (default is logged in user)
 	 * @return bool
 	 * @since 1.8.0
@@ -772,7 +772,7 @@ class ElggUser extends ElggEntity
 		}
 		return false;
 	}
-	
+
 	public function purgeCache(){
 		invalidate_cache_for_entity($this->guid);
 	}

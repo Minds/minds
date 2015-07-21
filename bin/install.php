@@ -52,12 +52,53 @@ foreach($args as $k => $v){
 }
 file_put_contents("$engine_dir/settings.php", $template);
 
+/**
+ * Setup cassandra
+ */
+echo "Setting up cassandra \n";
+try{
+    $db = new Minds\Core\Data\Call(null, $args['cassandra_keyspace'], array($args['cassandra_server']));
+    if($db->keyspaceExists()){
+        echo "Keyspace already installed. Done. \n";
+        exit;
+    }
+    $attrs = array(   "strategy_options" => array("replication_factor" => "3"));
+    $db->createKeyspace($attrs);
+    $db->installSchema();
+} catch (Exception $e){
+    echo "Failed.. $e->why \n";
+}
+$minds->loadConfigs();
+/**
+ * Setup sites
+ */
+echo "Setting up site \n";
+$site = new ElggSite();
+$site->name = $args['site_name'];
+$site->url = $args['site_url'];
+$site->access_id = ACCESS_PUBLIC;
+$site->email = $args['site_email'];
+$guid = $site->save();
+/**
+ * Setup default user
+ */
+echo "Setting up a default user \n";
+$guid = register_user(
+                    $args['username'],
+                    $args['password'],
+                    $args['username'],
+                    $args['email']
+                    );
+$user = new Minds\entities\user($guid);
+$user->validated = true;
+$user->validated_method = 'admin_user';
+$user->save();
 
 /**
  * Configure plugins
  */
 $db = new Minds\Core\Data\Call('plugin', $args['cassandra_keyspace'], array($args['cassandra_server']));
-$plugins = array('channel');
+$plugins = array('channel', 'thumbs', 'payments', 'blog');
 foreach($plugins as $plugin){
   $db->insert($plugin, array('type'=>'plugin', 'active'=>1, 'access_id'=>2));
 }

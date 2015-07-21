@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, Observable, formDirectives} from 'angular2/angular2';
+import { Component, View, NgFor, NgIf, CSSClass, Observable, formDirectives} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
@@ -11,7 +11,7 @@ import { Activity } from './activity';
 })
 @View({
   templateUrl: 'templates/entities/activity.html',
-  directives: [ NgFor, NgIf, Material, RouterLink]
+  directives: [ NgFor, NgIf, CSSClass, Material, RouterLink]
 })
 
 export class Remind {

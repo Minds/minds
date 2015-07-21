@@ -23,6 +23,7 @@ export class Channel {
   offset : string = "";
   moreData : boolean = true;
   inProgress : boolean = false;
+  editing : string = "";
   error: string = "";
 
   constructor(public client: Client,
@@ -85,6 +86,30 @@ export class Channel {
 
   isOwner(){
     return this.session.isLoggedIn();
+  }
+
+  toggleEditing(section : string){
+    if(this.editing == section)
+      this.editing = "";
+    else
+      this.editing = section;
+  }
+
+  updateField(field : string){
+    if(!field)
+      return false;
+
+    var self = this;
+    let data = {};
+    data[field] = this.user[field];
+    this.client.post('api/v1/channel/info', data)
+              .then((data : any) => {
+                if(data.status != "success"){
+                  alert('error saving');
+                  return false;
+                }
+                self.editing = "";
+                });
   }
 
 }

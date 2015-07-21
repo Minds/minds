@@ -73,6 +73,28 @@ export class Client {
 	}
 
 	/**
+	 * Return a PUT request
+	 */
+	put(endpoint : string, data : Object = {}, options: Object = {}){
+		var self = this;
+		return new Promise((resolve, reject) => {
+			self.http.put(
+					self.base + endpoint,
+					JSON.stringify(data),
+					this.buildOptions(options)
+				)
+				.toRx()
+				.subscribe(res => {
+						if(res.status != 200){
+							return reject("Header: " + status);
+						}
+						var data = res.json();
+						return resolve(data);
+				});
+		});
+	}
+
+	/**
 	 * Return a DELETE request
 	 */
 	delete(endpoint : string, data : Object = {}, options: Object = {}){

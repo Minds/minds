@@ -14,6 +14,9 @@ minds-channel header {
   box-sizing: content-box;
   position: relative;
   overflow: hidden; }
+  minds-channel header .channel-grid {
+    align-items: flex-end;
+    padding: 0; }
   minds-channel header .minds-channel-title {
     display: flex; }
     minds-channel header .minds-channel-title .avatar img {

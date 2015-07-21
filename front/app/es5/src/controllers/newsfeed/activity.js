@@ -12,15 +12,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var angular2_1 = require('angular2/angular2');
 var router_1 = require("angular2/router");
 var api_1 = require('src/services/api');
+var session_1 = require('src/services/session');
 var material_1 = require('src/directives/material');
 var remind_1 = require('./remind');
 var Activity = (function () {
     function Activity(client) {
         this.client = client;
+        this.session = session_1.SessionFactory.build();
     }
     Object.defineProperty(Activity.prototype, "object", {
         set: function (value) {
             this.activity = value;
+            if (!this.activity['thumbs:up:user_guids'])
+                this.activity['thumbs:up:user_guids'] = [];
+            if (!this.activity['thumbs:down:user_guids'])
+                this.activity['thumbs:down:user_guids'] = [];
         },
         enumerable: true,
         configurable: true
@@ -29,8 +35,28 @@ var Activity = (function () {
         return new Date(timestamp * 1000);
     };
     Activity.prototype.thumbsUp = function () {
-        console.log('you hit the thumbsup for ' + this.activity.guid);
-        this.client.post('api/v1/thumbs');
+        this.client.put('api/v1/thumbs/' + this.activity.guid + '/up', {});
+        if (!this.hasThumbedUp()) {
+            this.activity['thumbs:up:user_guids'].push(this.session.getLoggedInUser().guid);
+        }
+        else {
+            for (var key in this.activity['thumbs:up:user_guids']) {
+                if (this.activity['thumbs:up:user_guids'][key] == this.session.getLoggedInUser().guid)
+                    delete this.activity['thumbs:up:user_guids'][key];
+            }
+        }
+    };
+    Activity.prototype.thumbsDown = function () {
+        this.client.put('api/v1/thumbs/' + this.activity.guid + '/down', {});
+        if (!this.hasThumbedDown()) {
+            this.activity['thumbs:down:user_guids'].push(this.session.getLoggedInUser().guid);
+        }
+        else {
+            for (var key in this.activity['thumbs:down:user_guids']) {
+                if (this.activity['thumbs:down:user_guids'][key] == this.session.getLoggedInUser().guid)
+                    delete this.activity['thumbs:down:user_guids'][key];
+            }
+        }
     };
     Activity.prototype.remind = function () {
         var self = this;
@@ -38,6 +64,19 @@ var Activity = (function () {
             .then(function (data) {
             alert('reminded');
         });
+    };
+    Activity.prototype.hasThumbedUp = function () {
+        if (this.activity['thumbs:up:user_guids'].indexOf(this.session.getLoggedInUser().guid) > -1)
+            return true;
+        return false;
+    };
+    Activity.prototype.hasThumbedDown = function () {
+        if (this.activity['thumbs:down:user_guids'].indexOf(this.session.getLoggedInUser().guid) > -1)
+            return true;
+        return false;
+    };
+    Activity.prototype.hasReminded = function () {
+        return false;
     };
     Activity = __decorate([
         angular2_1.Component({
@@ -47,7 +86,7 @@ var Activity = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/entities/activity.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, remind_1.Remind, router_1.RouterLink]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, angular2_1.CSSClass, material_1.Material, remind_1.Remind, router_1.RouterLink]
         }), 
         __metadata('design:paramtypes', [Client])
     ], Activity);

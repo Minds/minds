@@ -3,21 +3,21 @@
     <div class="mdl-cell mdl-cell--12-col">
 
         <div class="mdl-card mdl-color--amber-500 mdl-shadow--2dp minds-login-box">
-        
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                
-                <input class="mdl-textfield__input" 
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" [mdl]>
+
+                <input class="mdl-textfield__input"
                         type="text"
                         id="username"
                         #username
                     />
                 <label class="mdl-textfield__label mdl-color-text--blue-grey-50"  for="username">Username</label>
-                
+
     		</div>
     		<div></div>
-    		
-    		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" 
+
+    		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" [mdl]>
+                <input class="mdl-textfield__input"
                         type="password"
                         id="password"
                         #password
@@ -25,11 +25,11 @@
                 <label class="mdl-textfield__label mdl-color-text--blue-grey-50" for="password">Password</label>
              </div>
              <div></div>
-    
+
             <button class="mdl-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" (click)="login(username, password);">
                 Login
             </button>
-        
+
         </div>
 
     </div>

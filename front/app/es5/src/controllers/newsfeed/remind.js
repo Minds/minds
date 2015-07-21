@@ -36,7 +36,7 @@ var Remind = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/entities/activity.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, router_1.RouterLink]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, angular2_1.CSSClass, material_1.Material, router_1.RouterLink]
         }), 
         __metadata('design:paramtypes', [Client])
     ], Remind);

@@ -69,6 +69,23 @@ var Client = (function () {
             });
         });
     };
+    Client.prototype.put = function (endpoint, data, options) {
+        var _this = this;
+        if (data === void 0) { data = {}; }
+        if (options === void 0) { options = {}; }
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            self.http.put(self.base + endpoint, JSON.stringify(data), _this.buildOptions(options))
+                .toRx()
+                .subscribe(function (res) {
+                if (res.status != 200) {
+                    return reject("Header: " + status);
+                }
+                var data = res.json();
+                return resolve(data);
+            });
+        });
+    };
     Client.prototype.delete = function (endpoint, data, options) {
         var _this = this;
         if (data === void 0) { data = {}; }

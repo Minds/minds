@@ -29,6 +29,7 @@ var Channel = (function () {
         this.offset = "";
         this.moreData = true;
         this.inProgress = false;
+        this.editing = "";
         this.error = "";
         this.username = params.params['username'];
         this.load();
@@ -83,6 +84,27 @@ var Channel = (function () {
     };
     Channel.prototype.isOwner = function () {
         return this.session.isLoggedIn();
+    };
+    Channel.prototype.toggleEditing = function (section) {
+        if (this.editing == section)
+            this.editing = "";
+        else
+            this.editing = section;
+    };
+    Channel.prototype.updateField = function (field) {
+        if (!field)
+            return false;
+        var self = this;
+        var data = {};
+        data[field] = this.user[field];
+        this.client.post('api/v1/channel/info', data)
+            .then(function (data) {
+            if (data.status != "success") {
+                alert('error saving');
+                return false;
+            }
+            self.editing = "";
+        });
     };
     Channel = __decorate([
         angular2_1.Component({

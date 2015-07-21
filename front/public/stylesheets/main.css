@@ -89,6 +89,7 @@ minds-newsfeed, minds-channel {
     width: auto;
     min-height: 0;
     margin-bottom: 16px;
+    border-radius: 3px;
     /**
       * Action tabs
       */
@@ -102,7 +103,8 @@ minds-newsfeed, minds-channel {
       * Owner block
       */ }
     minds-newsfeed .item.mdl-card .mdl-card__supporting-text, minds-channel .item.mdl-card .mdl-card__supporting-text {
-      width: 100%; }
+      width: 100%;
+      box-sizing: border-box; }
     minds-newsfeed .item.mdl-card .mdl-card__supporting-text.message, minds-channel .item.mdl-card .mdl-card__supporting-text.message {
       white-space: pre-line; }
     minds-newsfeed .item.mdl-card .tabs, minds-channel .item.mdl-card .tabs {
@@ -113,7 +115,10 @@ minds-newsfeed, minds-channel {
         display: flex;
         flex-direction: column;
         flex: auto;
-        text-align: center; }
+        text-align: center;
+        cursor: pointer; }
+      minds-newsfeed .item.mdl-card .tabs .selected, minds-channel .item.mdl-card .tabs .selected {
+        color: #4690D6 !important; }
     minds-newsfeed .item.mdl-card .minds-rich-embed img, minds-channel .item.mdl-card .minds-rich-embed img {
       width: 100%; }
     minds-newsfeed .item.mdl-card .minds-rich-embed .meta, minds-channel .item.mdl-card .minds-rich-embed .meta {
@@ -177,6 +182,9 @@ minds-channel header {
   box-sizing: content-box;
   position: relative;
   overflow: hidden; }
+  minds-channel header .channel-grid {
+    align-items: flex-end;
+    padding: 0; }
   minds-channel header .minds-channel-title {
     display: flex; }
     minds-channel header .minds-channel-title .avatar img {

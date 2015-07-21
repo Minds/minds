@@ -12,9 +12,11 @@
      width:auto;
      min-height:0;
      margin-bottom:16px;
+     border-radius:3px;
 
      .mdl-card__supporting-text{
        width:100%;
+       box-sizing: border-box;
      }
      .mdl-card__supporting-text.message{
        white-space: pre-line;
@@ -33,6 +35,10 @@
          flex-direction: column;
          flex:auto;
          text-align:center;
+         cursor:pointer;
+       }
+       .selected{
+         color:$minds-blue !important;
        }
      }
 

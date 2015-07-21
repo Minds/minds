@@ -1,13 +1,15 @@
 import { Component, View, Inject } from 'angular2/angular2';
 import { Router } from 'angular2/router';
+import { Material } from 'src/directives/material';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 
 @Component({
-  viewInjector: [Client]
+  viewInjector: [ Client ]
 })
 @View({
-  templateUrl: 'templates/login.html'
+  templateUrl: 'templates/login.html',
+  directives: [ Material ]
 })
 
 export class Login {

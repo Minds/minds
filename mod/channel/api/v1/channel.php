@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Channel API
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -19,11 +19,11 @@ class channel implements interfaces\api{
     /**
      * Return channel profile information
      * @param array $pages
-     * 
+     *
      * API:: /v1/channel/:username
-     */      
+     */
     public function get($pages){
-        
+
         if($pages[0] == 'me')
             $pages[0] = elgg_get_logged_in_user_guid();
 
@@ -39,9 +39,9 @@ class channel implements interfaces\api{
         if($user->enabled != "yes"){
             return Factory::response(array('status'=>'error', 'message'=>'The user is disabled'));
         }
-        
+
         $return = factory::exportable(array($user));
-        
+
         $response['channel'] = $return[0];
         $response['channel']['avatar_url'] = array(
             'tiny' => $user->getIconURL('tiny'),
@@ -54,7 +54,7 @@ class channel implements interfaces\api{
         $response['channel']['briefdescription'] = $response['channel']['briefdescription'] ?: '';
         $response['channel']['city'] = $response['channel']['city'] ?: "";
         $response['channel']['gender'] = $response['channel']['gender'] ?: "";
-        $response['channel']['dob'] = $response['channel']['dob'] ?: ""; 
+        $response['channel']['dob'] = $response['channel']['dob'] ?: "";
 
         $carousels = core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
         if($carousels){
@@ -62,9 +62,9 @@ class channel implements interfaces\api{
                 global $CONFIG;
                 if(!$CONFIG->cdn_url)
                     $CONFIG->cdn_url = elgg_get_site_url();
-               // else 
+               // else
                     //$CONFIG->cdn_url .= '/';
-                
+
                $response['channel']['carousels'][] = array(
                     'src'=> $carousel->ext_bg ? str_replace('/thin', '/fat', $carousel->ext_bg) : $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
                 );
@@ -72,29 +72,29 @@ class channel implements interfaces\api{
         }
 
         $response['channel']['impressions'] = Helpers\Counters::get($user->guid, 'impression');
-        
+
 
         return Factory::response($response);
-        
+
     }
-    
+
     public function post($pages){
-        
+
         $owner = Core\session::getLoggedinUser();
         $guid = Core\session::getLoggedinUser()->guid;
         if(Core\session::getLoggedinUser()->legacy_guid)
             $guid = Core\session::getLoggedinUser()->legacy_guid;
-        
+
         switch($pages[0]){
             case "avatar":
                 $icon_sizes = elgg_get_config('icon_sizes');
-                
+
                 // get the images and save their file handlers into an array
                 // so we can do clean up if one fails.
                 $files = array();
                 foreach ($icon_sizes as $name => $size_info) {
                     $resized = get_resized_image_from_uploaded_file('file', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale']);
-                
+
                     if ($resized) {
                         //@todo Make these actual entities.  See exts #348.
                         $file = new ElggFile();
@@ -109,18 +109,18 @@ class channel implements interfaces\api{
                         foreach ($files as $file) {
                             $file->delete();
                         }
-                
+
                         register_error(elgg_echo('avatar:resize:fail'));
                         forward(REFERER);
                     }
                 }
-                
+
                 // reset crop coordinates
                 $owner->x1 = 0;
                 $owner->x2 = 0;
                 $owner->y1 = 0;
                 $owner->y2 = 0;
-                
+
                 $owner->icontime = time();
                 $owner->save();
                 break;
@@ -131,7 +131,7 @@ class channel implements interfaces\api{
                 if($banners){
                     $db->removeRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
                 }*/
-             
+
                 $item = new \minds\entities\carousel();
                 $item->title = '';
                 $item->owner_guid = elgg_get_logged_in_user_guid();
@@ -177,7 +177,7 @@ class channel implements interfaces\api{
                     $item->last_updated = time();
                     $item->background = true;
                 }
-                $item->save();    
+                $item->save();
             break;
             case "info":
             default:
@@ -189,6 +189,7 @@ class channel implements interfaces\api{
                     if(isset($_POST[$field]))
                         $update[$field] = $_POST[$field];
                 }
+
                 if(isset($_POST['coordinates'])){
                     //update neo4j with our coordinates
                     $prepared = new Core\Data\Neo4j\Prepared\Common();
@@ -201,16 +202,18 @@ class channel implements interfaces\api{
                 }
                 $db = new Core\Data\Call('entities');
                 $db->insert($owner->guid, $update);
+                //update session also
+                Core\session::regenerate();
        }
-        
+
        return Factory::response(array());
-        
+
     }
-    
+
     public function put($pages){
-        
+
         return Factory::response(array());
-        
+
     }
 
     /**
@@ -227,8 +230,7 @@ class channel implements interfaces\api{
         $channel->save();
 
         return Factory::response(array());
-        
+
     }
-    
+
 }
-        
