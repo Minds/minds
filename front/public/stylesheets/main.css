@@ -19,6 +19,10 @@ minds-topbar .logo img {
 minds-topbar .minds-menu-button > i {
   padding: 12px 0; }
 
+@media screen and (max-width: 790px) {
+  minds-topbar .logo img {
+    height: 30px; } }
+
 minds-navigation .minds-account {
   padding: 16px; }
   minds-navigation .minds-account img {
@@ -68,6 +72,19 @@ minds-navigation nav.minds-navigation {
 .minds-login-box {
   padding: 16px;
   margin: auto; }
+
+.mdl-tabs__tab.is-active {
+  border-bottom: 2px solid #FFC108; }
+
+.coming-soon section {
+  height: 300px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  padding: 55px;
+  text-transform: uppercase;
+  font-weight: 100;
+  font-size: 41px; }
 
 /**
  * Colours

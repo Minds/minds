@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var angular2_1 = require('angular2/angular2');
 var router_1 = require('angular2/router');
+var material_1 = require('src/directives/material');
 var storage_1 = require('src/services/storage');
 var sidebar_1 = require('src/services/ui/sidebar');
 var session_1 = require('src/services/session');
@@ -39,7 +40,7 @@ var Topbar = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/components/topbar.html',
-            directives: [angular2_1.NgIf, router_1.RouterLink]
+            directives: [angular2_1.NgIf, router_1.RouterLink, material_1.Material]
         }), 
         __metadata('design:paramtypes', [Storage, Sidebar])
     ], Topbar);

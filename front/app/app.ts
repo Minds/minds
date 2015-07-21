@@ -7,8 +7,10 @@ import {Navigation} from './src/components/navigation';
 
 import {Login} from './src/controllers/login';
 import {Logout} from './src/controllers/logout';
+import {ComingSoon} from './src/controllers/comingsoon';
 import {Newsfeed} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';
+import {Discovery} from './src/controllers/discovery/discovery';
 import {Channel} from './src/controllers/channels/channel';
 
 @Component({
@@ -19,10 +21,10 @@ import {Channel} from './src/controllers/channels/channel';
   { path: '/logout', component: Logout, as: 'logout' },
   { path: '/newsfeed', component: Newsfeed, as: 'newsfeed' },
   { path: '/capture', component: Capture, as: 'capture' },
-  { path: '/discovery', component: Newsfeed, as: 'discovery'},
-  { path: '/messenger', component: Newsfeed, as: 'messenger'},
-  { path: '/notifications', component: Newsfeed, as: 'notifications'},
-  { path: '/groups', component: Newsfeed, as: 'groups'},
+  { path: '/discovery', component: Discovery, as: 'discovery'},
+  { path: '/messenger', component:  ComingSoon, as: 'messenger'},
+  { path: '/notifications', component: ComingSoon, as: 'notifications'},
+  { path: '/groups', component: ComingSoon, as: 'groups'},
 
   { path: '/:username', component: Channel, as: 'channel' }
 ])

@@ -21,6 +21,8 @@
         "./front/app/src/components/topbar.ts",
         "./front/app/src/controllers/capture/capture.ts",
         "./front/app/src/controllers/channels/channel.ts",
+        "./front/app/src/controllers/comingsoon.ts",
+        "./front/app/src/controllers/discovery/discovery.ts",
         "./front/app/src/controllers/login.ts",
         "./front/app/src/controllers/logout.ts",
         "./front/app/src/controllers/newsfeed/activity.ts",

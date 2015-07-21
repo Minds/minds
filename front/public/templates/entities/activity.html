@@ -22,7 +22,7 @@
 <!-- Rich content -->
 <div class="minds-rich-embed" *ng-if="activity.perma_url">
   <a [href]="activity.perma_url" target="_blank">
-    <img src="{{activity.thumbnail_src}}" />
+    <img [src]="activity.thumbnail_src" />
   </a>
   <a [href]="activity.perma_url" target="_blank" class="meta mdl-color-text--blue-grey-900">
     <h2 class="mdl-card__title-text" *ng-if="activity.title">{{activity.title}}</h2>

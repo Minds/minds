@@ -24,6 +24,13 @@ minds-topbar {
     padding:12px 0;
   }
 }
+@media screen and (max-width: 790px){
+  minds-topbar {
+    .logo img{
+      height:30px;
+    }
+  }
+}
 
 
 minds-navigation{
@@ -88,6 +95,23 @@ minds-navigation{
 .minds-login-box{
   padding:$minds-padding * 2;
   margin:auto;
+}
+
+.mdl-tabs__tab.is-active{
+  border-bottom:2px solid $minds-amber;
+}
+
+.coming-soon{
+  section {
+    height: 300px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 55px;
+    text-transform: uppercase;
+    font-weight: 100;
+    font-size: 41px;
+  }
 }
 
 @import 'feeds.scss';
