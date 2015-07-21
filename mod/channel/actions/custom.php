@@ -4,7 +4,7 @@
  */
 
 $guid = get_input('guid');
-$user = get_entity($guid, 'user');
+$user = new Minds\entities\user($guid, false);
 
 if(!$user->canEdit()){
     forward(REFERRER);
@@ -74,7 +74,7 @@ if ($guid) {
 	$guid = $user->save();
 	if($user->guid == $_SESSION['user']->guid){
         session_regenerate_id(true);
-        //   $_SESSION['user'] = $user;
+        $_SESSION['user'] = $user;
     }
 }
 system_message(elgg_echo('channel:custom:saved'));

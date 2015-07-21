@@ -115,7 +115,7 @@ class ElggUser extends ElggEntity
             $guid = $g->migrate($guid);
 		}
 
-		if($cached = retrieve_cached_entity($guid)){
+		if($this->cache && $cached = retrieve_cached_entity($guid)){
 			$this->load($cached);
 			return true;	
 		}
