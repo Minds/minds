@@ -83,7 +83,7 @@ var Channel = (function () {
         });
     };
     Channel.prototype.isOwner = function () {
-        return this.session.isLoggedIn();
+        return this.session.getLoggedInUser().guid == this.user.guid;
     };
     Channel.prototype.toggleEditing = function (section) {
         if (this.editing == section)

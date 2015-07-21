@@ -85,7 +85,7 @@ export class Channel {
   }
 
   isOwner(){
-    return this.session.isLoggedIn();
+    return this.session.getLoggedInUser().guid == this.user.guid;
   }
 
   toggleEditing(section : string){
