@@ -18,7 +18,8 @@ minds-channel header {
     align-items: flex-end;
     padding: 0; }
   minds-channel header .minds-channel-title {
-    display: flex; }
+    display: flex;
+    margin: 0; }
     minds-channel header .minds-channel-title .avatar img {
       max-height: 220px;
       max-width: 100%;
