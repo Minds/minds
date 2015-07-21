@@ -30,6 +30,11 @@ export class Activity {
       this.activity['thumbs:down:user_guids'] = [];
   }
 
+  delete(){
+    this.client.delete('api/v1/newsfeed/'+this.activity.guid);
+    delete this.activity;
+  }
+
 	/**
 	 * A temporary hack, because pipes don't seem to work
 	 */

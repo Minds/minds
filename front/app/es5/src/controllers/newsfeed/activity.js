@@ -31,6 +31,10 @@ var Activity = (function () {
         enumerable: true,
         configurable: true
     });
+    Activity.prototype.delete = function () {
+        this.client.delete('api/v1/newsfeed/' + this.activity.guid);
+        delete this.activity;
+    };
     Activity.prototype.toDate = function (timestamp) {
         return new Date(timestamp * 1000);
     };

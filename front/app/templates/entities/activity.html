@@ -53,3 +53,18 @@
 	<a class="material-icons mdl-color-text--blue-grey-800" (click)="remind(activity.guid)" [class]="{'selected': hasReminded()}">repeat</a>
 
 </div>
+
+<div class="mdl-card__menu">
+	<button class="mdl-button mdl-js-button mdl-button--icon" id="more-{{activity.guid}}" [mdl]>
+		<i class="material-icons">more_vert</i>
+	</button>
+
+	<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+			for="more-{{activity-guid}}"
+			[mdl]
+			>
+		<li class="mdl-menu__item" disabled>Share</li>
+		<li class="mdl-menu__item" *ng-if="activity.owner_guid == session.getLoggedInUser().guid" (click)="delete()">Delete</li>
+	</ul>
+
+</div>
