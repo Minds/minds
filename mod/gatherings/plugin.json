@@ -1,0 +1,7 @@
+{
+  "name": "gatherings",
+  "version": "1.0.0",
+  "routes": {
+    "/gatherings": "app/src/gatherings"
+  }
+}

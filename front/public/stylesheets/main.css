@@ -76,6 +76,10 @@ minds-navigation nav.minds-navigation {
 .mdl-tabs__tab.is-active {
   border-bottom: 2px solid #FFC108; }
 
+.mdl-textfield__label .material-icons {
+  line-height: 0;
+  vertical-align: middle; }
+
 .coming-soon section {
   height: 300px;
   align-items: center;
@@ -288,3 +292,6 @@ infinite-scroll {
   .minds-carousel .placeholder {
     background-color: #4690C3;
     opacity: 1; }
+
+minds-gatherings .minds-gatherings-search {
+  width: 100%; }

@@ -12,6 +12,7 @@ import {Newsfeed} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';
 import {Discovery} from './src/controllers/discovery/discovery';
 import {Channel} from './src/controllers/channels/channel';
+import {Gatherings} from './src/plugins/gatherings/gatherings';
 
 @Component({
   selector: 'minds-app',
@@ -22,7 +23,9 @@ import {Channel} from './src/controllers/channels/channel';
   { path: '/newsfeed', component: Newsfeed, as: 'newsfeed' },
   { path: '/capture', component: Capture, as: 'capture' },
   { path: '/discovery', component: Discovery, as: 'discovery'},
-  { path: '/messenger', component:  ComingSoon, as: 'messenger'},
+
+  { path: '/messenger', component:  Gatherings, as: 'messenger'},
+
   { path: '/notifications', component: ComingSoon, as: 'notifications'},
   { path: '/groups', component: ComingSoon, as: 'groups'},
 

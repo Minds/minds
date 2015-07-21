@@ -56,7 +56,8 @@ var PATH = {
       './node_modules/reflect-metadata/Reflect.js.map',
       './node_modules/systemjs/dist/system.src.js',
       './node_modules/angular2/node_modules/zone.js/dist/zone.js'
-    ]
+    ],
+    plugins: './mod'
   }
 };
 
@@ -122,6 +123,36 @@ gulp.task('clean.tmp', function(done) {
   del('tmp', done);
 });
 
+// -------------
+// Build plugins.
+gulp.task('build.plugins', function () {
+//  var result = gulp.src('./front/app/**/*scss');
+  var plugins = fs.readdirSync(PATH.src.plugins);
+  plugins.map(function(plugin){
+    var path = PATH.src.plugins + '/' + plugin;
+    try {
+      var info = require(path + '/plugin.json');
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+
+    // ----------
+    // Build plugins to source
+    gulp.src(path + '/app/**/*ts')
+      .pipe(gulp.dest('./front/app/src/plugins/' + plugin));
+
+    gulp.src(path + '/app/templates/**/*html')
+      .pipe(gulp.dest('./front/app/templates/plugins/' + plugin));
+
+    gulp.src(path + '/app/stylesheets/**/*scss')
+      .pipe(concat('plugins.scss'))
+      .pipe(gulp.dest('./front/app/stylesheets/'));
+
+  });
+
+});
+
 // --------------
 // Build dev.
 
@@ -171,7 +202,6 @@ gulp.task('build.assets.dev', ['build.scss', 'build.js.dev'], function () {
 
 /**
  * Compile index page (Dev)
- * @todo replace with php
  */
 gulp.task('build.index.dev', function() {
   var target = gulp.src(injectableDevAssetsRef(), { read: false });
@@ -182,7 +212,7 @@ gulp.task('build.index.dev', function() {
 });
 
 gulp.task('build.app.dev', function (done) {
-  runSequence('clean.app.dev', 'build.assets.dev', 'build.index.dev', done);
+  runSequence('clean.app.dev', 'build.plugins', 'build.assets.dev', 'build.index.dev', done);
 });
 
 gulp.task('build.dev', function (done) {

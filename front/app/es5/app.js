@@ -21,6 +21,7 @@ var newsfeed_1 = require('./src/controllers/newsfeed/newsfeed');
 var capture_1 = require('./src/controllers/capture/capture');
 var discovery_1 = require('./src/controllers/discovery/discovery');
 var channel_1 = require('./src/controllers/channels/channel');
+var gatherings_1 = require('./src/plugins/gatherings/gatherings');
 var Minds = (function () {
     function Minds() {
         this.name = 'Minds';
@@ -35,7 +36,7 @@ var Minds = (function () {
             { path: '/newsfeed', component: newsfeed_1.Newsfeed, as: 'newsfeed' },
             { path: '/capture', component: capture_1.Capture, as: 'capture' },
             { path: '/discovery', component: discovery_1.Discovery, as: 'discovery' },
-            { path: '/messenger', component: comingsoon_1.ComingSoon, as: 'messenger' },
+            { path: '/messenger', component: gatherings_1.Gatherings, as: 'messenger' },
             { path: '/notifications', component: comingsoon_1.ComingSoon, as: 'notifications' },
             { path: '/groups', component: comingsoon_1.ComingSoon, as: 'groups' },
             { path: '/:username', component: channel_1.Channel, as: 'channel' }
