@@ -2,7 +2,7 @@
 /**
  * View for notifications
  */
-$ia = elgg_set_ignore_access(true);§
+$ia = elgg_set_ignore_access(true);
 $entity = elgg_extract('entity', $vars);
 
 $owner = get_entity($entity->from_guid, 'user');
