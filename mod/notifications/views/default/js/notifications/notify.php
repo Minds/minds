@@ -3,7 +3,7 @@ elgg.provide('elgg.notify');
 
 elgg.notify.init = function() {
 	if (elgg.is_logged_in()) {
-        $(document).on("click",'#notify_button', elgg.notify.getNotifications);
+//        $(document).on("click",'#notify_button', elgg.notify.getNotifications);
         	
     	elgg.get(elgg.get_site_url() + 'notifications/count',
     		{
