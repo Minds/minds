@@ -2,7 +2,7 @@
 /**
  * View for notifications
  */
-
+$ia = elgg_set_ignore_access(true);§
 $entity = elgg_extract('entity', $vars);
 
 $owner = get_entity($entity->from_guid, 'user');
@@ -54,3 +54,4 @@ try{
 	echo elgg_view_image_block($owner_icon, $body, $vars);
 } catch(Exception $e){
 }
+elgg_set_ignore_access($ia);
