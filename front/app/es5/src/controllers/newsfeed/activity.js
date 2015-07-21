@@ -30,6 +30,7 @@ var Activity = (function () {
     };
     Activity.prototype.thumbsUp = function () {
         console.log('you hit the thumbsup for ' + this.activity.guid);
+        this.client.post('api/v1/thumbs');
     };
     Activity.prototype.remind = function () {
         var self = this;

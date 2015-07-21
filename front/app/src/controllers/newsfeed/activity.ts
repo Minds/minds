@@ -33,6 +33,7 @@ export class Activity {
 
   thumbsUp(){
     console.log('you hit the thumbsup for ' + this.activity.guid);
+    this.client.post('api/v1/thumbs');
   }
 
   remind(){
@@ -42,4 +43,8 @@ export class Activity {
               alert('reminded');
           });
   }
+
+  /**
+   * Has thumbed up
+   */
 }
