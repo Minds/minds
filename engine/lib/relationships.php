@@ -136,11 +136,13 @@ function remove_entity_relationship($guid_one, $relationship, $guid_two) {
 	
 	$db = new Minds\Core\Data\Call('relationships');
 	
-	
-	if( ($db->removeAttributes($guid_one . ':' . $relationship, array($guid_two))!==false)
-		||
-		($db->removeAttributes($guid_two . ':' . $relationship . ':inverted', array($guid_one))!==false))
-		{
+   // error_log($db->removeAttributes($guid_one . ':' . $relationship, array($guid_two)));
+   // error_log($db->removeAttributes($guid_two . ':' . $relationship . ':inverted', array($guid_one)));
+
+
+	if( $db->removeAttributes($guid_one . ':' . $relationship, array($guid_two))!==false
+		&&
+		$db->removeAttributes($guid_two . ':' . $relationship . ':inverted', array($guid_one))!==false){
 			return true;
 		} 
 
