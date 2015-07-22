@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Featured API
- *
+ * 
  * @version 1
  * @author Mark Harding
  */
@@ -17,7 +17,7 @@ class featured implements interfaces\api{
     /**
      * Returns the entities
      * @param array $pages
-     *
+     * 
      * @SWG\GET(
      *     tags={"entities"},
      *     summary="Returns featured entities",
@@ -52,7 +52,7 @@ class featured implements interfaces\api{
      *     ),
      *     @SWG\Response(name="200", description="Array")
      * )
-     */
+     */      
     public function get($pages){
 
         $type = "object";
@@ -72,7 +72,7 @@ class featured implements interfaces\api{
             default:
                 $type = "user";
         }
-
+        
         //the allowed, plus default, options
         $options = array(
             'type' => $type,
@@ -80,39 +80,40 @@ class featured implements interfaces\api{
             'limit'=>12,
             'offset'=>get_input('offset', '')
             );
-
+            
         foreach($options as $key => $value){
             if(isset($_GET[$key]))
                 $options[$key] = $_GET[$key];
         }
 
-  	    /*$key = $options['type'] . ':featured';
-      	if($options['subtype'])
-      		$key = $options['type'] . ':' . $options['subtype'] . ':featured';
+	    $key = $options['type'] . ':featured';
+    	if($options['subtype'])
+    		$key = $options['type'] . ':' . $options['subtype'] . ':featured';
 
-      	$guids = core\Data\indexes::fetch($key, $options);
-      	if(!$guids){
-  	    	return Factory::response(array('status'=>'error', 'message'=>'not found'));
-      	}*/
-
-        //$options = array('guids'=>$guids);
+    	$guids = core\Data\indexes::fetch($key, $options);
+    	if(!$guids){
+	    	return Factory::response(array('status'=>'error', 'message'=>'not found'));
+    	}
+        
+        $options = array('guids'=>$guids);
         $entities = core\entities::get($options);
-
+ 	
 
         if($entities){
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->guid;
             $response['load-previous'] = (string) key($entities)->guid;
         }
-
+        
         return Factory::response($response);
-
+        
     }
-
+    
     public function post($pages){}
-
+    
     public function put($pages){}
-
+    
     public function delete($pages){}
-
+    
 }
+        
