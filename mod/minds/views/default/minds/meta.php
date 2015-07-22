@@ -37,7 +37,7 @@ if((in_array(elgg_get_context(), array('channel', 'profile', 'news', 'blog', 'ar
 
 	echo <<<BODY
 	
-		body{
+		/*body{
 				background-color: $owner->background_colour;
 				
 				background-image:  url({$siteURL}mod/channel/background.php?guid=$owner->guid&t=$owner->background_timestamp) !important;
@@ -48,12 +48,12 @@ if((in_array(elgg_get_context(), array('channel', 'profile', 'news', 'blog', 'ar
 										
 				background-attachment:$owner->background_attachment;
 				
-			}
+            }*/
 		
 		/** HEADER (h1) **/	
 		.name > h1{	
 			color:$owner->h1_colour;
-			text-shadow:0 0 3px #888 !important;
+            /*text-shadow:0 0 3px #888 !important;*/
 		}
 		/** HEADER (h3) **/
 		.channel-header h3{
