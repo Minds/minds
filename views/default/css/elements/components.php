@@ -531,7 +531,7 @@
 .list-newsfeed > li .inner{
 	margin:8px;
 }
-.list-newsfeed li > .inner > .elgg-body{
+.list-newsfeed li > .inner > .elgg-body, .activity-remind > .inner > .elgg-body{
 	overflow:visible;
 }
 .list-newsfeed > li .head{
@@ -596,7 +596,8 @@
 .list-newsfeed li .activity-remind{
 	border:1px solid #DDD;
 	background:#FFF;
-	margin:16px;
+    margin:16px 0;
+    width:100%;
 }
 .list-newsfeed li span.boosted{
     padding: 4px 16px;
