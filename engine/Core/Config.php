@@ -8,7 +8,7 @@
  */
 namespace Minds\Core;
 
-class config extends base implements \ArrayAccess{
+class Config extends base implements \ArrayAccess{
 
 	static public $config = array();
 
