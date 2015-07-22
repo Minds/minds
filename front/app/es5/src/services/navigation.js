@@ -24,10 +24,23 @@ var Navigation = (function () {
             return [];
         for (var _i = 0; _i < items.length; _i++) {
             var item = items[_i];
-            if (this.router.lastNavigationAttempt == item.path)
+            if (this.router.lastNavigationAttempt == item.path || this.router.lastNavigationAttempt.indexOf(item.path) > -1)
                 item.active = true;
             else
                 item.active = false;
+            if (item.submenus) {
+                for (var _a = 0, _b = item.submenus; _a < _b.length; _a++) {
+                    var subitem = _b[_a];
+                    var path = subitem.path;
+                    for (var p in subitem.params) {
+                        path += '/' + subitem.params[p];
+                    }
+                    if (this.router.lastNavigationAttempt.indexOf(path) > -1)
+                        subitem.active = true;
+                    else
+                        subitem.active = false;
+                }
+            }
         }
         return items;
     };

@@ -48,6 +48,15 @@ minds-newsfeed, minds-channel {
         cursor: pointer; }
       minds-newsfeed .item.mdl-card .tabs .selected, minds-channel .item.mdl-card .tabs .selected {
         color: #4690D6 !important; }
+    minds-newsfeed .item.mdl-card .minds-more, minds-channel .item.mdl-card .minds-more {
+      height: 50px;
+      width: 24px; }
+      minds-newsfeed .item.mdl-card .minds-more i, minds-channel .item.mdl-card .minds-more i {
+        font-size: 50px;
+        width: 50px;
+        left: 50%;
+        transform: translate(-25px, -12px);
+        font-weight: 100; }
     minds-newsfeed .item.mdl-card .minds-rich-embed img, minds-channel .item.mdl-card .minds-rich-embed img {
       width: 100%; }
     minds-newsfeed .item.mdl-card .minds-rich-embed .meta, minds-channel .item.mdl-card .minds-rich-embed .meta {
@@ -68,7 +77,8 @@ minds-newsfeed, minds-channel {
       minds-newsfeed .item.mdl-card .owner-block .body, minds-channel .item.mdl-card .owner-block .body {
         display: flex;
         flex-direction: column;
-        margin-left: 16px; }
+        margin-left: 16px;
+        margin-top: 8px; }
       minds-newsfeed .item.mdl-card .owner-block a, minds-channel .item.mdl-card .owner-block a {
         text-decoration: none;
         font-weight: 500;

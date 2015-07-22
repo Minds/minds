@@ -41,6 +41,7 @@ ini_set( 'display_errors','1');
                     array(
                         "name" => "newsfeed",
                         "path" => "/newsfeed",
+                        "params" => array(),
                         "title" => "Newsfeed",
                         "text" => "Newsfeed",
                         "icon" => "home",
@@ -49,6 +50,7 @@ ini_set( 'display_errors','1');
                      array(
                         "name" => "capture",
                         "path" => "/capture",
+                        "params" => array(),
                         "title" => "Capture",
                         "text" => "Capture",
                         "icon" => "videocam",
@@ -57,14 +59,57 @@ ini_set( 'display_errors','1');
                      array(
                         "name" => "discovery",
                         "path" => "/discovery",
+                        "params" => array(
+                          "filter"=>"featured",
+                          "type" =>""
+                        ),
                         "title" => "Discovery",
                         "text" => "Discovery",
                         "icon" => "search",
-                        "class" => ""
+                        "class" => "",
+                        "submenus" => array(
+                            array(
+                              "name" => "discovery",
+                              "path" => "/discovery",
+                              "params" => array(
+                                "filter"=> "suggested",
+                                "type" =>""
+                              ),
+                              "title" => "Suggested (Discovery)",
+                              "text" => "Suggested",
+                              "icon" => "call_split",
+                              "class" => ""
+                            ),
+                            array(
+                              "name" => "discovery",
+                              "path" => "/discovery",
+                              "params" => array(
+                                "filter" => "trending",
+                                "type" =>""
+                              ),
+                              "title" => "Trending (Discovery)",
+                              "text" => "Trending",
+                              "icon" => "trending_up",
+                              "class" => ""
+                            ),
+                            array(
+                              "name" => "discovery",
+                              "path" => "/discovery",
+                              "params" => array(
+                                "filter"=> "featured",
+                                "type" =>""
+                              ),
+                              "title" => "Featured (Discovery)",
+                              "text" => "Featured",
+                              "icon" => "star",
+                              "class" => ""
+                            )
+                          )
                         ),
                      array(
                         "name" => "messenger",
                         "path" => "/messenger",
+                        "params" => array(),
                         "title" => "Messenger",
                         "text" => "Messenger",
                         "icon" => "chat_bubble",
@@ -73,6 +118,7 @@ ini_set( 'display_errors','1');
                      array(
                         "name" => "notifications",
                         "path" => "/notifications",
+                        "params" => array(),
                         "title" => "Notifications",
                         "text" => "Notifications",
                         "icon" => "notifications",
@@ -81,6 +127,7 @@ ini_set( 'display_errors','1');
                      array(
                         "name" => "groups",
                         "path" => "/groups",
+                        "params" => array(),
                         "title" => "Groups",
                         "text" => "Groups",
                         "icon" => "group_work",

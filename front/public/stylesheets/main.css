@@ -80,6 +80,12 @@ minds-navigation nav.minds-navigation {
   line-height: 0;
   vertical-align: middle; }
 
+.mdl-shadow--2dp {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 3px 1px -2px rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.07); }
+
+.mdl-shadow--4dp {
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.07), 0 3px 1px -2px rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.07); }
+
 .coming-soon section {
   height: 300px;
   align-items: center;
@@ -140,6 +146,15 @@ minds-newsfeed, minds-channel {
         cursor: pointer; }
       minds-newsfeed .item.mdl-card .tabs .selected, minds-channel .item.mdl-card .tabs .selected {
         color: #4690D6 !important; }
+    minds-newsfeed .item.mdl-card .minds-more, minds-channel .item.mdl-card .minds-more {
+      height: 50px;
+      width: 24px; }
+      minds-newsfeed .item.mdl-card .minds-more i, minds-channel .item.mdl-card .minds-more i {
+        font-size: 50px;
+        width: 50px;
+        left: 50%;
+        transform: translate(-25px, -12px);
+        font-weight: 100; }
     minds-newsfeed .item.mdl-card .minds-rich-embed img, minds-channel .item.mdl-card .minds-rich-embed img {
       width: 100%; }
     minds-newsfeed .item.mdl-card .minds-rich-embed .meta, minds-channel .item.mdl-card .minds-rich-embed .meta {
@@ -160,7 +175,8 @@ minds-newsfeed, minds-channel {
       minds-newsfeed .item.mdl-card .owner-block .body, minds-channel .item.mdl-card .owner-block .body {
         display: flex;
         flex-direction: column;
-        margin-left: 16px; }
+        margin-left: 16px;
+        margin-top: 8px; }
       minds-newsfeed .item.mdl-card .owner-block a, minds-channel .item.mdl-card .owner-block a {
         text-decoration: none;
         font-weight: 500;

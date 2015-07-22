@@ -1,9 +1,5 @@
 <div class="mdl-tabs__tab-bar">
-    <a class="mdl-tabs__tab is-active">Suggested</a>
-    <a class="mdl-tabs__tab">Trending</a>
-    <a class="mdl-tabs__tab">Featured</a>
-    <a class="mdl-tabs__tab"></a>
-    <a class="mdl-tabs__tab">Videos</a>
-    <a class="mdl-tabs__tab">Images</a>
-    <a class="mdl-tabs__tab is-active">Channels</a>
+    <a [router-link]="['/discovery', {filter: _filter, type: 'videos'}]" class="mdl-tabs__tab" [class]="{'is-active': _type == 'videos' || _type == 'all'}">Videos</a>
+    <a [router-link]="['/discovery', {filter: _filter, type: 'images'}]" class="mdl-tabs__tab" [class]="{'is-active': _type == 'images' || _type == 'all'}">Images</a>
+    <a [router-link]="['/discovery', {filter: _filter, type: 'channels'}]" class="mdl-tabs__tab" [class]="{'is-active': _type == 'channels' || _type == 'all'}">Channels</a>
 </div>

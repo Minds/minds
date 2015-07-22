@@ -22,7 +22,9 @@ import {Gatherings} from './src/plugins/gatherings/gatherings';
   { path: '/logout', component: Logout, as: 'logout' },
   { path: '/newsfeed', component: Newsfeed, as: 'newsfeed' },
   { path: '/capture', component: Capture, as: 'capture' },
-  { path: '/discovery', component: Discovery, as: 'discovery'},
+
+  { path: '/discovery/:filter', component: Discovery, as: 'discovery'},
+  { path: '/discovery/:filter/:type', component: Discovery, as: 'discovery'},
 
   { path: '/messenger', component:  Gatherings, as: 'messenger'},
 

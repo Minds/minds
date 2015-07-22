@@ -76,7 +76,8 @@ export class Newsfeed {
 		var self = this;
 		this.client.post('api/v1/newsfeed', this.postMeta)
 				.then(function(data){
-					self.load();
+					self.load(true);
+          console.log(data);
           //reset
           self.postMeta = {
             message: "",

@@ -42,6 +42,19 @@
        }
      }
 
+     .minds-more{
+       height:50px;
+       width:24px;
+
+       i {
+         font-size: 50px;
+         width: 50px;
+         left: 50%;
+         transform: translate(-25px, -12px);
+         font-weight:100;
+       }
+     }
+
      /**
       * Rich embeds
       */
@@ -84,6 +97,7 @@
          display:flex;
          flex-direction: column;
          margin-left:$minds-margin * 2;
+         margin-top:$minds-margin;
        }
 
        a {
