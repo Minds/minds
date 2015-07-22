@@ -38,7 +38,8 @@ class search extends core\page implements interfaces\page{
 		if(!$query){
 			exit;
 		}
-		$category = \get_input('category');
+        $query = "*$query*";
+        $category = \get_input('category');
 		if($category)
 			$query = "query AND $category";
 		
