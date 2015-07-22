@@ -104,12 +104,12 @@ function check_entity_relationship($guid_one, $relationship, $guid_two) {
 	global $CONFIG;
 
 	$db = new Minds\Core\Data\Call('relationships');
-	$result = $db->getRow($guid_one . ':' . $relationship); 
+	$result = $db->getRow($guid_one . ':' . $relationship, array('offset'=>$guid2, 'limit'=>1)); 
 	if(isset($result[$guid_two])){
 		return true;
 	}
 
-	$result = $db->getRow($guid_two . ':' . $relationship . ':inverted');
+	$result = $db->getRow($guid_two . ':' . $relationship . ':inverted', array('offset'=>$guid_one, 'limit'=>1));
 	if(isset($result[$guid_one])){
                 return true;
         } 
