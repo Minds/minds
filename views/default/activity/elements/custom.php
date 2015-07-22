@@ -14,7 +14,7 @@ elgg_load_js('popup');
     <p style="white-space:pre"><?= strip_tags($vars['title']) ?></p>
 
 
-    <div class="archive-batch archive-batch-<?=count($data)?>">
+    <div class="archive-batch archive-batch-<?=count($data)?>" style="width:100%; margin-left:-5%">
 		<?php foreach($data as $image):
 			$image = (array) $image; 
 			if(strpos($image['href'], 'wall/attachment') !== FALSE)
@@ -22,8 +22,8 @@ elgg_load_js('popup');
 
 		?>
 				
-			<a href="<?= $image['href']?>" class="image-thumbnail lightbox-image batch-thumbnails">
-				<img src="<?= $image['src']?>"/>
+			<a href="<?= $image['href']?>" class="image-thumbnail lightbox-image batch-thumbnails" stlye="display:block;">
+				<img src="<?= $image['src']?>" style="width:100%"/>
 			</a>
 			
 		<?php endforeach; ?>
