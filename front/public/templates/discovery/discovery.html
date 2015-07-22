@@ -3,3 +3,48 @@
     <a [router-link]="['/discovery', {filter: _filter, type: 'images'}]" class="mdl-tabs__tab" [class]="{'is-active': _type == 'images' || _type == 'all'}">Images</a>
     <a [router-link]="['/discovery', {filter: _filter, type: 'channels'}]" class="mdl-tabs__tab" [class]="{'is-active': _type == 'channels' || _type == 'all'}">Channels</a>
 </div>
+
+<div class="mdl-grid newsfeed-grid" style="max-width:900px">
+
+    <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp" *ng-for="#entity of entities">
+
+      <!-- START: Owner block -->
+      <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="entity.type == 'object'">
+        <div class="avatar">
+          <a [router-link]="['/channel', {username: entity.ownerObj.username}]">
+            <img src="/icon/{{entity.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
+          </a>
+        </div>
+        <div class="body">
+          <a [router-link]="['/channel', {username: entity.ownerObj.username}]">
+            <strong>{{entity.ownerObj.name}}</strong>
+          </a>
+          <span>{{toDate(entity.time_created)}}</span>
+        </div>
+      </div>
+      <!-- END: Owner Block -->
+
+      <!-- START: User Only -->
+      <div class="minds-usercard" *ng-if="entity.type == 'user'">
+        <div class="minds-usercard-banner">
+          <img src="/icon/{{entity.username}}/banner/"/>
+          <div class="minds-banner-overlay"></div>
+        </div>
+
+        <a [router-link]="['/channel', {username: entity.username}]" class="mdl-card__supporting-text minds-usercard-block">
+          <div class="avatar">
+        			<img src="/icon/{{entity.guid}}/small}}" class="mdl-shadow--2dp"/>
+        	</div>
+          <div class="body">
+            <h3>{{entity.name}}</h3>
+            <span>@{{entity.username}}</span>
+          </div>
+        </a>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" >
+
+        </div>
+      </div>
+      <!-- END: User Only -->
+    </div>
+
+</div>

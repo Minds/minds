@@ -311,3 +311,37 @@ infinite-scroll {
 
 minds-gatherings .minds-gatherings-search {
   width: 100%; }
+
+minds-usercard, .minds-usercard {
+  min-height: 0; }
+  minds-usercard .minds-usercard-banner, .minds-usercard .minds-usercard-banner {
+    width: 100%;
+    height: 120px;
+    overflow: hidden;
+    position: relative; }
+    minds-usercard .minds-usercard-banner > img, .minds-usercard .minds-usercard-banner > img {
+      width: 100%; }
+    minds-usercard .minds-usercard-banner .minds-banner-overlay, .minds-usercard .minds-usercard-banner .minds-banner-overlay {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8)); }
+  minds-usercard .minds-usercard-block, .minds-usercard .minds-usercard-block {
+    margin-top: -72px;
+    position: relative;
+    display: flex;
+    text-decoration: none;
+    color: #FFF; }
+    minds-usercard .minds-usercard-block .body, .minds-usercard .minds-usercard-block .body {
+      flex: 1;
+      margin: 16px; }
+      minds-usercard .minds-usercard-block .body h3, .minds-usercard .minds-usercard-block .body h3 {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 16px;
+        line-height: 18px;
+        padding: 0;
+        margin: 0; }

@@ -24,16 +24,18 @@ var Discovery = (function () {
         this.params = params;
         this._filter = "featured";
         this._type = "all";
+        this.entities = [];
         this._filter = params.params['filter'];
         if (params.params['type'])
             this._type = params.params['type'];
         this.load();
     }
     Discovery.prototype.load = function () {
-        console.log("loading " + this._filter + ' (' + this._type + ')');
+        var self = this;
         this.client.get('api/v1/entities/' + this._filter + '/' + this._type, { limit: 12, offset: "" })
             .then(function (data) {
             console.log(data);
+            self.entities = data.entities;
         });
     };
     Discovery = __decorate([

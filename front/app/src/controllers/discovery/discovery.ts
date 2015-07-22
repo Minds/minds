@@ -18,6 +18,7 @@ import { Activity } from 'src/controllers/newsfeed/activity';
 export class Discovery {
   _filter : string = "featured";
   _type : string = "all";
+  entities : Array<Object> = [];
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
@@ -30,10 +31,11 @@ export class Discovery {
   }
 
   load(){
-    console.log("loading " + this._filter + ' (' + this._type + ')');
+    var self = this;
     this.client.get('api/v1/entities/'+this._filter+'/'+this._type, {limit:12, offset:""})
       .then((data : any) => {
         console.log(data);
+        self.entities = data.entities;
         });
   }
 
