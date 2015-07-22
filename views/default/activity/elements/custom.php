@@ -14,7 +14,7 @@ elgg_load_js('popup');
     <p style="white-space:pre"><?= strip_tags($vars['title']) ?></p>
 
 
-    <div class="archive-batch archive-batch-<?=count($data)?>" style="width:100%; margin-left:-5%">
+    <div class="archive-batch archive-batch-<?=count($data)?>" style="width:110%; margin-left:-5%">
 		<?php foreach($data as $image):
 			$image = (array) $image; 
 			if(strpos($image['href'], 'wall/attachment') !== FALSE)
