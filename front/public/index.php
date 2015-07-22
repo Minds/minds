@@ -44,6 +44,7 @@ ini_set( 'display_errors','1');
         <?php
             $minds = array(
                 "LoggedIn" => Minds\Core\session::isLoggedIn() ? true : false,
+                "cdn_url" => Minds\Core\Config::get('cdn_url'),
                 "navigation" => array(
                     array(
                         "name" => "newsfeed",
