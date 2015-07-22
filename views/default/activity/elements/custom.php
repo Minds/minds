@@ -22,7 +22,7 @@ elgg_load_js('popup');
 
 		?>
 				
-			<a href="<?= $image['href']?>" class="image-thumbnail lightbox-image batch-thumbnails" stlye="display:block;">
+			<a href="<?= $image['href']?>" class="image-thumbnail lightbox-image batch-thumbnails" style="display:block; margin:0;">
 				<img src="<?= $image['src']?>" style="width:100%"/>
 			</a>
 			
