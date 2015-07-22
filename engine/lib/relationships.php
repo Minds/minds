@@ -104,7 +104,7 @@ function check_entity_relationship($guid_one, $relationship, $guid_two) {
 	global $CONFIG;
 
 	$db = new Minds\Core\Data\Call('relationships');
-	$result = $db->getRow($guid_one . ':' . $relationship, array('offset'=>$guid2, 'limit'=>1)); 
+	$result = $db->getRow($guid_one . ':' . $relationship, array('offset'=>$guid_two, 'limit'=>1)); 
 	if(isset($result[$guid_two])){
 		return true;
 	}
