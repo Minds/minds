@@ -30,7 +30,7 @@ class conversation extends core\page implements interfaces\page{
 		$show = true;
 		$option = \elgg_get_plugin_user_setting('option', elgg_get_logged_in_user_guid(), 'gatherings');
 		
-		if((int)$option == 1 && !$this->passphrase && (!isset($_SESSION['tmp_privatekey']) || !isset($_COOKIE['tmp_priv_pswd']))){
+		if(!$this->passphrase && (!isset($_SESSION['tmp_privatekey']) || !isset($_COOKIE['tmp_priv_pswd']))){
 			//we need a password from the user...
 			$content = elgg_view_form('message_unlock', array('action'=>elgg_get_site_url() . 'gatherings/conversation/'.$pages[0].'/unlock'));
 			
