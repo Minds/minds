@@ -130,9 +130,9 @@ function remove_entity_relationship($guid_one, $relationship, $guid_two) {
 	global $CONFIG;
 
 	$obj = check_entity_relationship($guid_one, $relationship, $guid_two);
-	if ($obj == false) {
-		return false;
-	}
+	//if ($obj == false) {
+	//	return false;
+	//}
 	
 	$db = new Minds\Core\Data\Call('relationships');
 	
