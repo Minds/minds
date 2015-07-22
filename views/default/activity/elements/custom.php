@@ -11,9 +11,7 @@ elgg_load_js('popup');
     <p>Uploaded <?= $count; ?> image<?php if ($count > 1) {echo 's'; } ?></a>
     <?php } ?>
 
-    <p style="white-space:pre">
-        <?= strip_tags($vars['title']) ?>
-    </p>
+    <p style="white-space:pre"><?= strip_tags($vars['title']) ?></p>
 
 
     <div class="archive-batch archive-batch-<?=count($data)?>">
