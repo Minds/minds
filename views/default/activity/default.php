@@ -39,7 +39,7 @@ if($activity->custom_type){
 /**
  * This is an rich embed
   */
-if($activity->title){
+if($activity->title && !$activity->custom_type){
     $body .= elgg_view('activity/elements/rich', array('activity'=>$activity)); 
  }
 

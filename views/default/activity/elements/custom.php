@@ -10,6 +10,12 @@ elgg_load_js('popup');
     <?php if(!$vars['title']){?>
     <p>Uploaded <?= $count; ?> image<?php if ($count > 1) {echo 's'; } ?></a>
     <?php } ?>
+
+    <p style="white-space:pre">
+        <?= strip_tags($vars['title']) ?>
+    </p>
+
+
     <div class="archive-batch archive-batch-<?=count($data)?>">
 		<?php foreach($data as $image):
 			$image = (array) $image; 
