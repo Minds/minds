@@ -235,7 +235,7 @@ class channel extends core\page implements interfaces\page{
                 if($entities)
                     $content .= elgg_view_entity_list($entities, array('list_class' => 'list-newsfeed','masonry' => false,'prepend' => elgg_is_logged_in() && $user->guid == elgg_get_logged_in_user_guid() ? $post : ''));
                 else
-                    $content = "";
+                    $content = $post;
 				$class = 'landing-page';
 				$sidebar = elgg_view('channel/thumbs', array('user'=>$user));
 				if(!$sidebar)
