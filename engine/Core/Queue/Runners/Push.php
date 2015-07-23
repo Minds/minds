@@ -24,32 +24,36 @@ class Push implements Interfaces\QueueRunner{
                    //for multisite support.
                    global $CONFIG; 
                    $CONFIG->cassandra->keyspace = $keyspace;
-                   
-                   $config = new Surge\Config(array(
-                        'Apple' => array(
-                            'cert'=> '/var/secure/apns-production.pem'
-                         //   'sandbox'=>true,
-                         //   'cert'=> '/var/secure/apns.pem'
-                        ),
-                        'Google' => array(
-                            'api_key' => 'AIzaSyCp0LVJLY7SzTlxPqVn2-2zWZXQKb1MscQ'
-                        )));
+
+                   try{
+                       $config = new Surge\Config(array(
+                            'Apple' => array(
+                                'cert'=> '/var/secure/apns-production.pem'
+                             //   'sandbox'=>true,
+                             //   'cert'=> '/var/secure/apns.pem'
+                            ),
+                            'Google' => array(
+                                'api_key' => 'AIzaSyCp0LVJLY7SzTlxPqVn2-2zWZXQKb1MscQ'
+                            )));
+                            
+                        $user = new user($data['user_guid'], false);
                         
-                    $user = new user($data['user_guid'], false);
-                    
-                    if(!$user->surge_token){
-                        echo "$user->username hasn't configured push yet.. not sending \n";
-                        return false;
-                    }
-                 
-                    $message = Surge\Messages\Factory::build($user->surge_token)
-                        ->setTitle($data['message'])
-                        ->setMessage($data['message'])
-                        ->setURI(isset($data['uri']) ? $data['uri'] : 'chat');
-                        
-                    Surge\Surge::send($message, $config);
+                        if(!$user->surge_token){
+                            echo "$user->username hasn't configured push yet.. not sending \n";
+                            return false;
+                        }
+                     
+                        $message = Surge\Messages\Factory::build($user->surge_token)
+                            ->setTitle($data['message'])
+                            ->setMessage($data['message'])
+                            ->setURI(isset($data['uri']) ? $data['uri'] : 'chat');
+                            
+                       Surge\Surge::send($message, $config);
 
                     echo "sent a push notification to $user->guid \n";
+                } catch (\Exception $e){
+                    echo "Failed to send push notification \n";
+                }
                });
    }   
            
