@@ -389,7 +389,8 @@ minds-card-user {
     overflow: hidden;
     position: relative; }
     minds-card-user .minds-usercard-banner > img {
-      width: 100%; }
+      min-width: 100%;
+      max-height: 100%; }
     minds-card-user .minds-usercard-banner .minds-banner-overlay {
       position: absolute;
       top: 60px;
