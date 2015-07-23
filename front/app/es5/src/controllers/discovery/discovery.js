@@ -54,6 +54,7 @@ var Discovery = (function () {
                 self.entities = data.entities;
             }
             else {
+                data.entities.shift();
                 for (var _i = 0, _a = data.entities; _i < _a.length; _i++) {
                     var entity = _a[_i];
                     self.entities.push(entity);
