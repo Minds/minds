@@ -69,13 +69,19 @@ var Activity = (function () {
         });
     };
     Activity.prototype.hasThumbedUp = function () {
-        if (this.activity['thumbs:up:user_guids'].indexOf(this.session.getLoggedInUser().guid) > -1)
-            return true;
+        for (var _i = 0, _a = this.activity['thumbs:up:user_guids']; _i < _a.length; _i++) {
+            var guid = _a[_i];
+            if (guid == this.session.getLoggedInUser().guid)
+                return true;
+        }
         return false;
     };
     Activity.prototype.hasThumbedDown = function () {
-        if (this.activity['thumbs:down:user_guids'].indexOf(this.session.getLoggedInUser().guid) > -1)
-            return true;
+        for (var _i = 0, _a = this.activity['thumbs:down:user_guids']; _i < _a.length; _i++) {
+            var guid = _a[_i];
+            if (guid == this.session.getLoggedInUser().guid)
+                return true;
+        }
         return false;
     };
     Activity.prototype.hasReminded = function () {

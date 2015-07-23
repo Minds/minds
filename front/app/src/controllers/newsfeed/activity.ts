@@ -78,14 +78,18 @@ export class Activity {
    * Has thumbed up
    */
   hasThumbedUp(){
-    if(this.activity['thumbs:up:user_guids'].indexOf(this.session.getLoggedInUser().guid) > -1)
-      return true;
+    for(var guid of this.activity['thumbs:up:user_guids']){
+      if(guid == this.session.getLoggedInUser().guid)
+        return true;
+    }
     return false;
   }
 
   hasThumbedDown(){
-    if(this.activity['thumbs:down:user_guids'].indexOf(this.session.getLoggedInUser().guid) > -1)
-      return true;
+    for(var guid of this.activity['thumbs:down:user_guids']){
+      if(guid == this.session.getLoggedInUser().guid)
+        return true;
+    }
     return false;
   }
 
