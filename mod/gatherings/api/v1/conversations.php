@@ -116,7 +116,7 @@ class conversations implements interfaces\api{
                 break;
             case 'no-answer':
               //leave a notification
-              $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
+              $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[1]);
               $message = new entities\CallMissed($conversation);
               $message->save();
               $conversation->update();
@@ -129,7 +129,7 @@ class conversations implements interfaces\api{
                                              ));
               break;
             case 'ended':
-              $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
+              $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[1]);
               $message = new entities\CallEnded($conversation);
               $message->save();
               break;
