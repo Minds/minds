@@ -83,21 +83,21 @@ class conversations implements interfaces\api{
         $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
 
         $message = new entities\message($conversation);
-    	$message->client_encrypted = true;
-	    foreach($conversation->participants as $guid){
-		    $key = "message:$guid";
-		    $message->$key = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
-		    //error_log(print_r($message->$key, true));
-	    }
-    //	error_log(print_r($message, true));
-	    $message->save();
+        $message->client_encrypted = true;
+        foreach($conversation->participants as $guid){
+          $key = "message:$guid";
+          $message->$key = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
+          //error_log(print_r($message->$key, true));
+        }
+        //	error_log(print_r($message, true));
+        $message->save();
 
         $conversation->update();
         $conversation->notify();
 
-	    $key = "message:".elgg_get_logged_in_user_guid();
-	    $message->message = $message->$key;
-	    $response["message"] = $message->export();;
+        $key = "message:".elgg_get_logged_in_user_guid();
+        $message->message = $message->$key;
+        $response["message"] = $message->export();
 
         return Factory::response($response);
     }
@@ -116,10 +116,22 @@ class conversations implements interfaces\api{
                 break;
             case 'no-answer':
               //leave a notification
-              elgg_trigger_plugin_hook('notification', 'all', array(
-                  'to'=>array($pages[1]),
-                  'notification_view'=>'missed_call'
-                ));
+              $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
+              $message = new entities\CallMissed($conversation);
+              $message->save();
+              $conversation->update();
+              Core\Queue\Client::build()->setExchange("mindsqueue")
+                                        ->setQueue("Push")
+                                        ->send(array(
+                                              "user_guid"=>$pages[0],
+                                              "message"=> \Minds\Core\session::getLoggedInUser()->name . " tried to call you.",
+                                              "uri" => 'chat'
+                                             ));
+              break;
+            case 'ended':
+              $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
+              $message = new entities\CallEnded($conversation);
+              $message->save();
               break;
         }
 
