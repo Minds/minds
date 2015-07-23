@@ -1,0 +1,37 @@
+<div class="minds-usercard-banner">
+	<img src="/icon/{{user.username}}/banner/"/>
+	<div class="minds-banner-overlay"></div>
+</div>
+
+<a [router-link]="['/channel', {username: user.username}]" class="mdl-card__supporting-text minds-usercard-block">
+	<div class="avatar">
+			<img src="/icon/{{user.guid}}/small}}" class="mdl-shadow--2dp"/>
+	</div>
+	<div class="body">
+		<h3>{{user.name}}</h3>
+		<span>@{{user.username}}</span>
+
+		<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" (click)="subscribe()" [hidden]="user.subscribed || user.guid == session.getLoggedInUser().guid">
+			Subscribe
+		</button>
+		<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" (click)="unSubscribe()" [hidden]="!user.subscribed || user.guid == session.getLoggedInUser().guid">
+			Un-Subscribe
+		</button>
+
+	</div>
+</a>
+
+<div class="minds-tabs mdl-tabs__tab-bar">
+		<a class="mdl-tabs__tab mdl-color-text--blue-grey-500 1">
+			<span>Subscribers</span>
+			<b>{{user.subscribers_count}}</b>
+		</a>
+		<a class="mdl-tabs__tab mdl-color-text--blue-grey-500 2">
+			<span>Subscriptions</span>
+			<b>{{user.subscriptions_count}}</b>
+		</a>
+		<a class="mdl-tabs__tab mdl-color-text--blue-grey-500 3">
+			<span>Views</span>
+			<b>{{user.impressions}}</b>
+		</a>
+</div>

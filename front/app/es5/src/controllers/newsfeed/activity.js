@@ -66,7 +66,6 @@ var Activity = (function () {
         var self = this;
         this.client.post('api/v1/newsfeed/remind/' + this.activity.guid, {})
             .then(function (data) {
-            alert('reminded');
         });
     };
     Activity.prototype.hasThumbedUp = function () {
@@ -89,7 +88,7 @@ var Activity = (function () {
             properties: ['object']
         }),
         angular2_1.View({
-            templateUrl: 'templates/entities/activity.html',
+            templateUrl: 'templates/cards/activity.html',
             directives: [angular2_1.NgFor, angular2_1.NgIf, angular2_1.CSSClass, material_1.Material, remind_1.Remind, router_1.RouterLink]
         }), 
         __metadata('design:paramtypes', [Client])

@@ -10,7 +10,7 @@ ini_set( 'display_errors','1');
 <html>
   <head>
     <title>Minds <?= "" ?></title>
-    <base href="/">
+    <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
     <!-- temporary design -->
@@ -151,10 +151,6 @@ ini_set( 'display_errors','1');
 
         System.import('app');
 
-        window.addEventListener('scroll', function(){
-          console.log('scrolling from not angular');
-
-        }, false)
     </script>
   </body>
 </html>

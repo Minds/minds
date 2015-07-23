@@ -12,35 +12,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var angular2_1 = require('angular2/angular2');
 var router_1 = require("angular2/router");
 var api_1 = require('src/services/api');
+var session_1 = require('src/services/session');
 var material_1 = require('src/directives/material');
-var Remind = (function () {
-    function Remind(client) {
+var UserCard = (function () {
+    function UserCard(client) {
         this.client = client;
-        this.hideTabs = true;
+        this.session = session_1.SessionFactory.build();
     }
-    Object.defineProperty(Remind.prototype, "object", {
+    Object.defineProperty(UserCard.prototype, "object", {
         set: function (value) {
-            this.activity = value;
+            this.user = value;
         },
         enumerable: true,
         configurable: true
     });
-    Remind.prototype.toDate = function (timestamp) {
-        return new Date(timestamp * 1000);
-    };
-    Remind = __decorate([
+    UserCard = __decorate([
         angular2_1.Component({
-            selector: 'minds-remind',
+            selector: 'minds-card-user',
             viewInjector: [api_1.Client],
             properties: ['object']
         }),
         angular2_1.View({
-            templateUrl: 'templates/cards/activity.html',
+            templateUrl: 'templates/cards/user.html',
             directives: [angular2_1.NgFor, angular2_1.NgIf, angular2_1.CSSClass, material_1.Material, router_1.RouterLink]
         }), 
         __metadata('design:paramtypes', [Client])
-    ], Remind);
-    return Remind;
+    ], UserCard);
+    return UserCard;
 })();
-exports.Remind = Remind;
-//# sourceMappingURL=remind.js.map
+exports.UserCard = UserCard;
+//# sourceMappingURL=user.js.map

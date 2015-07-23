@@ -71,9 +71,6 @@ class channel implements interfaces\api{
             }
         }
 
-        $response['channel']['impressions'] = Helpers\Counters::get($user->guid, 'impression');
-
-
         return Factory::response($response);
 
     }

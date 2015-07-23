@@ -2,21 +2,34 @@
     <i  (click)="sidebar.open()" class="material-icons">menu</i>
 </div>
 
+<!--<div class="minds-logo">
+  <a [router-link]="['/']">
+    <img src="/assets/logos/small.png"/>
+  </a>
+</div>-->
+
 <div class="mdl-layout__header-row">
-	<div class="mdl-layout-spacer"></div>
-	<div class="logo">
-		<img src="/assets/logos/small.png" />
-	</div>
+
+    <div class="minds-logo">
+      <a [router-link]="['/newsfeed']">
+        <img src="/assets/logos/small.png"/>
+      </a>
+    </div>
+
+    <div class="mdl-textfield mdl-js-textfield minds-search-bar">
+        <i class="material-icons">search</i>
+        <input class="mdl-textfield__input" type="text" id="search" />
+        <label class="mdl-textfield__label" for="search">
+
+        </label>
+    </div>
+
     <div class="mdl-layout-spacer"></div>
 
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-        <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
-              <i class="material-icons">search</i>
-        </label>
-        <div class="mdl-textfield__expandable-holder">
-              <input class="mdl-textfield__input" type="text" id="search" />
-              <label class="mdl-textfield__label" for="search">Enter your query...</label>
-        </div>
+    <div class="minds-account" *ng-if="loggedin">
+      <a [router-link]="['/channel', {username: session.getLoggedInUser().username}]">
+        <img src="/icon/{{session.getLoggedInUser().guid}}/small" />
+      </a>
     </div>
 
     <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="header-actions" [mdl]>

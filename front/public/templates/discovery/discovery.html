@@ -25,25 +25,7 @@
       <!-- END: Owner Block -->
 
       <!-- START: User Only -->
-      <div class="minds-usercard" *ng-if="entity.type == 'user'">
-        <div class="minds-usercard-banner">
-          <img src="/icon/{{entity.username}}/banner/"/>
-          <div class="minds-banner-overlay"></div>
-        </div>
-
-        <a [router-link]="['/channel', {username: entity.username}]" class="mdl-card__supporting-text minds-usercard-block">
-          <div class="avatar">
-        			<img src="/icon/{{entity.guid}}/small}}" class="mdl-shadow--2dp"/>
-        	</div>
-          <div class="body">
-            <h3>{{entity.name}}</h3>
-            <span>@{{entity.username}}</span>
-          </div>
-        </a>
-        <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" >
-
-        </div>
-      </div>
+      <minds-card-user [object]="entity" *ng-if="entity.type == 'user'"></minds-card-user>
       <!-- END: User Only -->
     </div>
 

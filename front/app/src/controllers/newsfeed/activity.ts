@@ -11,7 +11,7 @@ import { Remind } from './remind';
   properties: ['object']
 })
 @View({
-  templateUrl: 'templates/entities/activity.html',
+  templateUrl: 'templates/cards/activity.html',
   directives: [ NgFor, NgIf, CSSClass, Material, Remind, RouterLink]
 })
 
@@ -70,7 +70,7 @@ export class Activity {
     let self = this;
     this.client.post('api/v1/newsfeed/remind/' + this.activity.guid, {})
           .then((data)=> {
-              alert('reminded');
+
           });
   }
 
