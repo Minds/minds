@@ -26,17 +26,41 @@ var Discovery = (function () {
         this._filter = "featured";
         this._type = "all";
         this.entities = [];
+        this.moreData = true;
+        this.offset = "";
+        this.inProgress = false;
         this._filter = params.params['filter'];
         if (params.params['type'])
             this._type = params.params['type'];
         this.load();
     }
-    Discovery.prototype.load = function () {
+    Discovery.prototype.load = function (refresh) {
+        if (refresh === void 0) { refresh = false; }
         var self = this;
-        this.client.get('api/v1/entities/' + this._filter + '/' + this._type, { limit: 12, offset: "" })
+        if (this.inProgress)
+            return false;
+        if (refresh)
+            this.offset = "";
+        this.inProgress = true;
+        this.client.get('api/v1/entities/' + this._filter + '/' + this._type, { limit: 12, offset: this.offset })
             .then(function (data) {
-            console.log(data);
-            self.entities = data.entities;
+            console.log(1);
+            if (!data.entities) {
+                self.moreData = false;
+                self.inProgress = false;
+                return false;
+            }
+            if (refresh) {
+                self.entities = data.entities;
+            }
+            else {
+                for (var _i = 0, _a = data.entities; _i < _a.length; _i++) {
+                    var entity = _a[_i];
+                    self.entities.push(entity);
+                }
+            }
+            self.offset = data['load-next'];
+            self.inProgress = false;
         });
     };
     Discovery = __decorate([

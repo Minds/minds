@@ -20,6 +20,9 @@ export class Discovery {
   _filter : string = "featured";
   _type : string = "all";
   entities : Array<Object> = [];
+  moreData : boolean = true;
+  offset: string = "";
+  inProgress : boolean = false;
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
@@ -31,13 +34,36 @@ export class Discovery {
     this.load();
   }
 
-  load(){
+  load(refresh : boolean = false){
     var self = this;
-    this.client.get('api/v1/entities/'+this._filter+'/'+this._type, {limit:12, offset:""})
+
+    if(this.inProgress) return false;
+
+    if(refresh)
+      this.offset = "";
+
+    this.inProgress = true;
+
+    this.client.get('api/v1/entities/'+this._filter+'/'+this._type, {limit:12, offset:this.offset})
       .then((data : any) => {
-        console.log(data);
-        self.entities = data.entities;
-        });
+        console.log(1);
+        if(!data.entities){
+          self.moreData = false;
+          self.inProgress = false;
+          return false;
+        }
+
+        if(refresh){
+          self.entities = data.entities;
+        }else{
+          for(let entity of data.entities)
+            self.entities.push(entity);
+        }
+
+        self.offset = data['load-next'];
+        self.inProgress = false;
+
+      });
   }
 
 }

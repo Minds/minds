@@ -29,4 +29,12 @@
       <!-- END: User Only -->
     </div>
 
+    <infinite-scroll
+        distance="25%"
+        (load)="load()"
+        *ng-if="moreData"
+        />
+        <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+    </infinite-scroll>
+
 </div>
