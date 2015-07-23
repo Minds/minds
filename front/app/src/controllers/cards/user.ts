@@ -17,8 +17,10 @@ import { Material } from 'src/directives/material';
 export class UserCard {
   user : any;
   session = SessionFactory.build();
+  minds: {};
 
 	constructor(public client: Client){
+    this.minds = window.Minds;
 	}
 
   set object(value: any) {

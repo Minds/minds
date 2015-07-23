@@ -18,6 +18,7 @@ var UserCard = (function () {
     function UserCard(client) {
         this.client = client;
         this.session = session_1.SessionFactory.build();
+        this.minds = window.Minds;
     }
     Object.defineProperty(UserCard.prototype, "object", {
         set: function (value) {
