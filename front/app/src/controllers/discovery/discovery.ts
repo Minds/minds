@@ -31,7 +31,7 @@ export class Discovery {
     this._filter = params.params['filter'];
     if(params.params['type'])
       this._type = params.params['type'];
-    this.load();
+    this.load(true);
   }
 
   load(refresh : boolean = false){

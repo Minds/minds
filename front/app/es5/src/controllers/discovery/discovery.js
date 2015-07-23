@@ -32,7 +32,7 @@ var Discovery = (function () {
         this._filter = params.params['filter'];
         if (params.params['type'])
             this._type = params.params['type'];
-        this.load();
+        this.load(true);
     }
     Discovery.prototype.load = function (refresh) {
         if (refresh === void 0) { refresh = false; }
