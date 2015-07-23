@@ -17247,7 +17247,7 @@ System.register("angular2/src/dom/browser_adapter", ["angular2/src/facade/collec
         return null;
       }
     }
-    return baseElement.href;
+    return baseElement.attr('href');
   }
   function relativePath(url) {
     if (isBlank(urlParsingNode)) {

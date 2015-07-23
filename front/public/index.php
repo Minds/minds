@@ -11,6 +11,7 @@ ini_set( 'display_errors','1');
   <head>
     <title>Minds <?= "" ?></title>
     <base href="/" />
+    <script>baseElement = document.querySelector('base');baseElement.attr = baseElement.getAttribute;</script>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
     <!-- temporary design -->
