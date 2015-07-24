@@ -11,7 +11,7 @@
 		<a [router-link]="['/channel', {username: activity.ownerObj.username}]">
 			<strong>{{activity.ownerObj.name}}</strong>
 		</a>
-		<span>{{toDate(activity.time_created)}}</span>
+		<span>{{activity.time_created * 1000 | date:'medium'}}</span>
 	</div>
 
 </div>
