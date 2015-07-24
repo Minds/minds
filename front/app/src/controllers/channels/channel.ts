@@ -4,6 +4,7 @@ import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from '../../services/session';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
+import { AutoGrow } from '../../directives/autogrow';
 import { Activity } from 'src/controllers/newsfeed/activity';
 
 @Component({
@@ -12,7 +13,7 @@ import { Activity } from 'src/controllers/newsfeed/activity';
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
-  directives: [ NgFor, NgIf, Material, formDirectives, InfiniteScroll, Activity ]
+  directives: [ NgFor, NgIf, Material, formDirectives, InfiniteScroll, Activity, AutoGrow ]
 })
 
 export class Channel {
@@ -45,8 +46,8 @@ export class Channel {
                 self.user = data.channel;
                 self.loadFeed(true);
                 })
-              .catch(() => {
-                console.log('couldnt load channel');
+              .catch((e) => {
+                console.log('couldnt load channel', e);
                 });
   }
 

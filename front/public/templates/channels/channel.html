@@ -64,26 +64,24 @@
         <div class="mdl-card__title">
           <h2 class="mdl-card__title-text">Bio</h2>
         </div>
-        <div class="mdl-card__supporting-text" (click)="toggleEditing('bio')" [hidden]="editing == 'bio'" style="white-space:pre-line">{{user.briefdescription}}</div>
+
+        <div class="mdl-card__supporting-text" id="bio" *ng-if="!isOwner()" style="white-space:pre-line">{{user.briefdescription}}</div>
 
         <!-- OWNER EDIT FORM -->
-        <div class="mdl-card__supporting-text" [hidden]="editing != 'bio'">
-
-          <form>
-            <textarea
-              class="mdl-textfield__input"
-              type="text"
-              id="message"
-              [(ng-model)]="user.briefdescription"
-            ></textarea>
-          </form>
-
+        <div class="mdl-card__supporting-text" *ng-if="isOwner()">
+          <textarea
+            (click)="editing = 'bio'"
+            [auto-grow]
+            class="mdl-textfield__input"
+            type="text"
+            id="message"
+            [(ng-model)]="user.briefdescription"
+          ></textarea>
         </div>
 
         <!-- OWNER EDIT BUTTONS -->
         <div class="mdl-card__menu" *ng-if="isOwner()" >
           <button class="mdl-button mdl-button--icon" >
-            <i class="material-icons" (click)="toggleEditing('bio')" [hidden]="editing == 'bio'">edit</i>
             <i class="material-icons" (click)="updateField('briefdescription')" [hidden]="editing != 'bio'">save</i>
           </button>
         </div>

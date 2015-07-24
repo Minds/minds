@@ -18,6 +18,7 @@ var api_1 = require('src/services/api');
 var material_1 = require('src/directives/material');
 var session_1 = require('../../services/session');
 var infinite_scroll_1 = require('../../directives/infinite-scroll');
+var autogrow_1 = require('../../directives/autogrow');
 var activity_1 = require('src/controllers/newsfeed/activity');
 var Channel = (function () {
     function Channel(client, router, params) {
@@ -45,8 +46,8 @@ var Channel = (function () {
             self.user = data.channel;
             self.loadFeed(true);
         })
-            .catch(function () {
-            console.log('couldnt load channel');
+            .catch(function (e) {
+            console.log('couldnt load channel', e);
         });
     };
     Channel.prototype.loadFeed = function (refresh) {
@@ -113,7 +114,7 @@ var Channel = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/channels/channel.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives, infinite_scroll_1.InfiniteScroll, activity_1.Activity]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives, infinite_scroll_1.InfiniteScroll, activity_1.Activity, autogrow_1.AutoGrow]
         }),
         __param(1, angular2_1.Inject(router_1.Router)),
         __param(2, angular2_1.Inject(router_1.RouteParams)), 
