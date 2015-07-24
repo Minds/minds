@@ -47,7 +47,7 @@ class Push implements Interfaces\QueueRunner{
                             ->setTitle($data['message'])
                             ->setMessage($data['message'])
                             ->setURI(isset($data['uri']) ? $data['uri'] : 'chat')
-                            ->setSound(isset($data['sound') ? $data['sound'] : 'default');
+                            ->setSound(isset($data['sound']) ? $data['sound'] : 'default');
                             
                        Surge\Surge::send($message, $config);
 
