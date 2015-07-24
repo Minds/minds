@@ -22,26 +22,43 @@ var Login = (function () {
         this.client = client;
         this.router = router;
         this.session = session_1.SessionFactory.build();
+        this.errorMessage = "";
+        this.twofactorToken = "";
+        this.hideLogin = false;
         window.componentHandler.upgradeDom();
     }
     Login.prototype.login = function (username, password) {
+        this.errorMessage = "";
         var self = this;
         this.client.post('api/v1/authenticate', { username: username.value, password: password.value })
             .then(function (data) {
             username.value = '';
             password.value = '';
-            if (data.status == 'success') {
-                self.session.login(data.user);
-                self.router.parent.navigate('/newsfeed');
-            }
-            else {
-                self.session.logout();
-            }
+            self.session.login(data.user);
+            self.router.parent.navigate('/newsfeed');
         })
             .catch(function (e) {
-            alert('there was a problem');
-            console.log(e);
-            self.session.logout();
+            if (e.status == 'failed') {
+                self.errorMessage = "Incorrect username/password. Please try again.";
+                self.session.logout();
+            }
+            if (e.status == 'error') {
+                self.twofactorToken = e.message;
+                self.hideLogin = true;
+            }
+        });
+    };
+    Login.prototype.twofactorAuth = function (code) {
+        var self = this;
+        this.client.post('api/v1/authenticate/two-factor', { token: this.twofactorToken, code: code.value })
+            .then(function (data) {
+            self.session.login(data.user);
+            self.router.parent.navigate('/newsfeed');
+        })
+            .catch(function (e) {
+            self.errorMessage = "Sorry, we couldn't verify your two factor code. Please try logging again.";
+            self.twofactorToken = "";
+            self.hideLogin = false;
         });
     };
     Login = __decorate([

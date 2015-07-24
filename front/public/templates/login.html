@@ -1,37 +1,76 @@
 <div class="mdl-grid" style="max-width:1080px">
 
-    <div class="mdl-cell mdl-cell--12-col">
+    <div class="mdl-cell mdl-cell--12-col" [hidden]="!errorMessage">
+          <div class="mdl-card mdl-color--red-500 mdl-color-text--blue-grey-50  mdl-shadow--2dp minds-login-box" style="min-height:0;">
+              <div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
+                {{errorMessage}}
+              </div>
+          </div>
+    </div>
 
-        <div class="mdl-card mdl-color--amber-500 mdl-shadow--2dp minds-login-box">
+    <!-- START: LOGIN -->
+    <div class="mdl-cell mdl-cell--12-col" [hidden]="hideLogin">
+
+        <div class="mdl-card mdl-color--blue-grey-500 mdl-color-text--blue-grey-50  mdl-shadow--2dp minds-login-box">
 
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" [mdl]>
 
-                <input class="mdl-textfield__input"
-                        type="text"
-                        id="username"
-                        #username
-                    />
-                <label class="mdl-textfield__label mdl-color-text--blue-grey-50"  for="username">Username</label>
+              <input class="mdl-textfield__input"
+                      type="text"
+                      id="username"
+                      #username
+                  />
+              <label class="mdl-textfield__label mdl-color-text--blue-grey-50"  for="username">Username</label>
 
-    		</div>
-    		<div></div>
+            </div>
+            <div></div>
 
-    		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" [mdl]>
-                <input class="mdl-textfield__input"
-                        type="password"
-                        id="password"
-                        #password
-                    />
-                <label class="mdl-textfield__label mdl-color-text--blue-grey-50" for="password">Password</label>
-             </div>
-             <div></div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" [mdl]>
+                  <input class="mdl-textfield__input"
+                          type="password"
+                          id="password"
+                          #password
+                      />
+                  <label class="mdl-textfield__label mdl-color-text--blue-grey-50" for="password">Password</label>
+            </div>
+            <div></div>
 
-            <button class="mdl-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" (click)="login(username, password);">
+            <button class="mdl-button mdl-button--raised mdl-color--blue-grey-200" (click)="login(username, password);">
                 Login
             </button>
 
         </div>
 
     </div>
+    <!-- END: LOGIN -->
+
+    <!-- START: TWOFACTOR -->
+    <div class="mdl-cell mdl-cell--12-col" [hidden]="!twofactorToken">
+        <div class="mdl-card mdl-color--blue-grey-500 mdl-shadow--2dp minds-login-box">
+          <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text mdl-color-text--blue-grey-50">Twofactor Login</h2>
+          </div>
+
+          <div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
+            We just sent you a text. Enter the code below to authenticate.
+          </div>
+
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-color-text--blue-grey-50" [mdl]>
+                <input class="mdl-textfield__input"
+                        type="text"
+                        id="code"
+                        #code
+                    />
+                <label class="mdl-textfield__label mdl-color-text--blue-grey-50" for="code">Enter your code here</label>
+          </div>
+          <div></div>
+
+          <button class="mdl-button mdl-button--raised mdl-color--blue-grey-200" (click)="twofactorAuth(code)">
+              Login
+          </button>
+
+        </div>
+    </div>
+    <!-- END: TWOFACOR -->
 
 </div>

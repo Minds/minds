@@ -48,6 +48,8 @@ var Client = (function () {
                     return reject("Header: " + status);
                 }
                 var data = res.json();
+                if (data.status != 'success')
+                    return reject(data);
                 return resolve(data);
             });
         });
@@ -65,6 +67,8 @@ var Client = (function () {
                     return reject("Header: " + status);
                 }
                 var data = res.json();
+                if (data.status != 'success')
+                    return reject(data);
                 return resolve(data);
             });
         });
@@ -82,6 +86,8 @@ var Client = (function () {
                     return reject("Header: " + status);
                 }
                 var data = res.json();
+                if (data.status != 'success')
+                    return reject(data);
                 return resolve(data);
             });
         });
@@ -99,6 +105,8 @@ var Client = (function () {
                     return reject("Header: " + status);
                 }
                 var data = res.json();
+                if (data.status != 'success')
+                    return reject(data);
                 return resolve(data);
             });
         });
