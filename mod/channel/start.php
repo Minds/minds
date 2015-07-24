@@ -233,7 +233,7 @@ class start extends \ElggPlugin{
 	static public function channel_custom_vars($user = null) {
 		// input names => defaults
 		$values = array(
-			'background' => null,
+			'background' => "",
 			'background_colour' => '#FAFAFA',
 			'background_repeat' => 'repeat',
 			'background_attachment' => 'fixed',

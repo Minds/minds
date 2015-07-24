@@ -152,7 +152,7 @@ class ElggUser extends ElggEntity
 	 */
 	public function save() {
 		if(!$this->cache){
-			return false;
+		//	return false;
 		}
 
         //we do a manual save because we don't want to always update the password

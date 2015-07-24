@@ -65,10 +65,10 @@ if ($guid) {
 	}
 
 	$form_vars = minds\plugin\channel\start::channel_custom_vars($user);
-	foreach($form_vars as $k => $v){
-		$user->$k = get_input($k, $v);
-	}
-	
+    foreach($form_vars as $k => $v){
+        $user->$k = get_input($k, $v) ?: "";
+    }
+
 	$user->background_timestamp = time();
 		
 	$guid = $user->save();
