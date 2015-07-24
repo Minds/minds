@@ -126,11 +126,13 @@ class channel implements interfaces\api{
                 break;
             case "banner":
                 //remove all older banners
-                /*$db = new Core\Data\Call('entities_by_time');
-                $banners = $db->getRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
-                if($banners){
+                try{
+                    $db = new Core\Data\Call('entities_by_time');
+                    //$banners = $db->getRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
+                    //if($banners){
                     $db->removeRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
-                }*/
+                    //}
+                }catch(\Exception $e){}
              
                 $item = new \minds\entities\carousel();
                 $item->title = '';
