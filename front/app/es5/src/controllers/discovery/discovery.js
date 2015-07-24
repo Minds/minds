@@ -17,7 +17,7 @@ var router_1 = require('angular2/router');
 var api_1 = require('src/services/api');
 var material_1 = require('src/directives/material');
 var infinite_scroll_1 = require('../../directives/infinite-scroll');
-var user_1 = require('src/controllers/cards/user');
+var cards_1 = require('src/controllers/cards/cards');
 var Discovery = (function () {
     function Discovery(client, router, params) {
         this.client = client;
@@ -71,7 +71,7 @@ var Discovery = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/discovery/discovery.html',
-            directives: [router_1.RouterLink, angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives, infinite_scroll_1.InfiniteScroll, angular2_1.CSSClass, user_1.UserCard]
+            directives: [router_1.RouterLink, angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives, infinite_scroll_1.InfiniteScroll, angular2_1.CSSClass, cards_1.UserCard, cards_1.VideoCard]
         }),
         __param(1, angular2_1.Inject(router_1.Router)),
         __param(2, angular2_1.Inject(router_1.RouteParams)), 

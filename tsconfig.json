@@ -20,6 +20,8 @@
         "./front/app/src/components/navigation.ts",
         "./front/app/src/components/topbar.ts",
         "./front/app/src/controllers/capture/capture.ts",
+        "./front/app/src/controllers/cards/cards.ts",
+        "./front/app/src/controllers/cards/object/video.ts",
         "./front/app/src/controllers/cards/user.ts",
         "./front/app/src/controllers/channels/channel.ts",
         "./front/app/src/controllers/comingsoon.ts",

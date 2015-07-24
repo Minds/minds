@@ -8,21 +8,7 @@
 
     <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp" *ng-for="#entity of entities">
 
-      <!-- START: Owner block -->
-      <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="entity.type == 'object'">
-        <div class="avatar">
-          <a [router-link]="['/channel', {username: entity.ownerObj.username}]">
-            <img src="/icon/{{entity.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
-          </a>
-        </div>
-        <div class="body">
-          <a [router-link]="['/channel', {username: entity.ownerObj.username}]">
-            <strong>{{entity.ownerObj.name}}</strong>
-          </a>
-          <span>{{toDate(entity.time_created)}}</span>
-        </div>
-      </div>
-      <!-- END: Owner Block -->
+      <minds-card-video [object]="entity" *ng-if="entity.subtype == 'video'"></minds-card-video>
 
       <!-- START: User Only -->
       <minds-card-user [object]="entity" *ng-if="entity.type == 'user'"></minds-card-user>
