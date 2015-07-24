@@ -32,8 +32,9 @@ var Session = (function () {
     };
     Session.prototype.login = function (user) {
         if (user === void 0) { user = null; }
-        this.loggedinEmitter.next(true);
         this.userEmitter.next(user);
+        window.Minds.user = user;
+        this.loggedinEmitter.next(true);
     };
     Session.prototype.logout = function () {
         this.loggedinEmitter.next(false);

@@ -49,8 +49,9 @@ export class Session {
 	 * Emit login event
 	 */
 	login(user : any = null){
-		this.loggedinEmitter.next(true);
 		this.userEmitter.next(user);
+		window.Minds.user = user;
+		this.loggedinEmitter.next(true);
 	}
 
 	/**
