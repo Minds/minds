@@ -111,7 +111,8 @@ class conversations implements interfaces\api{
                                                 ->send(array(
                                                      "user_guid"=>$pages[1],
                                                     "message"=> \Minds\Core\session::getLoggedInUser()->name . " is calling you.",
-                                                    "uri" => 'call'
+                                                    "uri" => 'call',
+                                                    "sound" => 'ringing-1.m4a'
                                                 ));
                 break;
             case 'no-answer':
