@@ -26,7 +26,7 @@ $actor = get_entity($notification -> from_guid);
 		}
 $body .= elgg_view('output/url', array('href'=>$actor->getURL(), 'text'=>$actor->name));
 	$body .= ' has reminded ';
-	$body .= elgg_view('output/url', array('href'=>$object_url, 'text'=> $object_title));
+	$body .= elgg_view('output/url', array('href'=>$object_url, 'text'=> $object_title ?: "your post"));
 	
 	$body .= "<br/>";
 	
