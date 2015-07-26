@@ -28,6 +28,10 @@ class entities extends base{
 	 */
 	static public function build($row, $cache = true){
 
+        if(is_array($row)){
+            $row = (object) $row;
+        }
+
 		if (!is_object($row)) {
 			return $row;
 		}

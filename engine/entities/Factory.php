@@ -14,9 +14,16 @@ class Factory{
 	static public function build($value){
 	    if(is_numeric($value)){
 	        $db = new Data\Call('entities');
-		$row = $db->getRow($value);
-		$row['guid'] = $value;
+
+        if(is_object($value) || is_array($value)){
+            $row = $value;
+        } else {
+		    $row = $db->getRow($value);
+		    $row['guid'] = $value;
+        }
 		return Core\entities::build((object) $row);
 	    }
 	}
+
+    
 }

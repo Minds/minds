@@ -29,7 +29,7 @@ if($elgg_path == elgg_get_site_url() || $elgg_path == null || $elgg_path == ""){
 
 }
 
-$json = json_decode($out); 
+$json = json_decode($out, true); 
 if(!$json){
 	return;
 }
@@ -46,20 +46,7 @@ switch(get_input('items_type')){
 		$json = $new_json;
 		break;
 	case 'search':
-		$json = (array) $json->result;
-		break;
-	case 'annotation': 
-		foreach ($json as $child) {
-			$json = $child;
-		}
-		$json = elgg_get_annotations(array(
-			'items' => $json->guid,
-			'offset' => get_input('offset'),
-			'limit' => 25,
-		));
-		break;
-	case 'river':
-		$json = $json->activity;
+		$json = (array) $json['result'];
 		break;
 }
 
@@ -82,7 +69,6 @@ foreach($json as $key => $item) {
 			$items[$key] = $new_item;
 	}
 }
-
 header('Content-type: text/plain');
 //hack to remove the first entity
 array_shift($items);
