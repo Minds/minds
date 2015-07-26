@@ -342,6 +342,7 @@ function groups_handle_profile_page($guid) {
 
 	groups_register_profile_buttons($group);
 
+    \elgg_register_plugin_hook_handler('register', 'menu:entity', array('\minds\pages\newsfeed\newsfeed', 'pageSetup'));
 	
 	if (group_gatekeeper(false)) {
 		$content = elgg_view('groups/profile/activity', array('entity' => $group));
