@@ -47,7 +47,7 @@ class start extends \ElggPlugin{
         \Minds\Core\Events\Dispatcher::register('export:extender', 'all', function($event){
 		    $params = $event->getParameters();
 		    $export = array();
-		    if($params['entity']->ownerObj){
+		    if($params['entity']->ownerObj && is_array($params['entity']->ownerObj)){
 			    $export['ownerObj'] = $params['entity']->ownerObj;
 			    $export['ownerObj']['guid'] = (string) $params['entity']->ownerObj['guid'];	
 		        $event->setResponse($export);
