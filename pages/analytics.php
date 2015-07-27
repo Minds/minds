@@ -28,7 +28,7 @@ class analytics extends core\page implements interfaces\page{
                 10 => (int) Helpers\RequestMetrics::get("api", time() - 600)
             );
 
-            $rps = ($requests[0] + $requests[5] + $requests[10]) / (600 + (Helpers\RequestMetrics::buildTS(time()) - time())); 
+            $rps = ($requests[0] + $requests[5] + $requests[10]) / (600 + (Helpers\RequestMetrics::buildTS(time()) - time()));
 
             $mongo = Core\Data\Client::build('MongoDB');
             $boost_impressions = 0;
@@ -40,8 +40,8 @@ class analytics extends core\page implements interfaces\page{
                 if($boost_backlog == NULL){
                    $boost_backlog = (time() - $boost['_id']->getTimestamp()) / (60 * 60);
                 }
-                $boost_impressions = $boost_impressions + $boost['impressions']; 
-                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false); 
+                $boost_impressions = $boost_impressions + $boost['impressions'];
+                $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
             }
 
             $boost_reviews = $mongo->find("boost", array('state'=>'review', 'type'=>'newsfeed'));
@@ -59,15 +59,15 @@ class analytics extends core\page implements interfaces\page{
                 'impressions' => $boost_impressions,
                 'impressions_met' => $boot_impressions_met
             );
-      
+
             $boost_objs = $mongo->find("boost", array('state'=>'approved', 'type'=>'suggested'));
             $boost_impressions = 0;
             $boost_impressions_met = 0;
             foreach($boost_objs as $boost){
                 $boost_impressions = $boost_impressions + $boost['impressions'];
                 $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
-            } 
-      
+            }
+
             $boosts_suggested = array(
                 'approved' => $boost_objs->count(),
                 'impressions' => $boost_impressions,
@@ -106,7 +106,26 @@ try{
 }catch(\Exception $e){
 
 }*/
-            $content = elgg_view('analytics/dashboard', array('users' => $users, 'user_count'=>$user_count, 'requests'=>$requests, 'rps' => $rps, 'globals'=>array('boosts'=>Helpers\Counters::get(0, 'boost_impressions', false)), 'boosts' => $boosts, 'boosts_suggested'=> $boosts_suggested, 'leaderboard'=>$leaderboard));
+            $content = elgg_view('analytics/dashboard', array(
+                'users' => $users,
+                'user_count'=>$user_count,
+                'requests'=>$requests,
+                'rps' => $rps,
+                'mam' => array(
+                  "month" => Helpers\Analytics::get("active", "month"),
+                  "last-month" => Helpers\Analytics::get("active", "month", Helpers\Analytics::buildTS("last-month"))
+                ),
+                'dam' => array(
+                  "day" => Helpers\Analytics::get("active", "day"),
+                  "yesterday" =>  Helpers\Analytics::get("active", "day", Helpers\Analytics::buildTS("midnight -1"))
+                ),
+                'globals'=>array(
+                    'boosts'=>Helpers\Counters::get(0, 'boost_impressions', false)
+                  ),
+                'boosts' => $boosts,
+                'boosts_suggested'=> $boosts_suggested,
+                'leaderboard'=>$leaderboard
+              ));
 
             $body = \elgg_view_layout('one_sidebar', array(
                 'title'=> 'Analytics',

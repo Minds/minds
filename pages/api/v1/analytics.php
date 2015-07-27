@@ -1,15 +1,16 @@
 <?php
 /**
  * Minds Analytics Api endpoint
- * 
+ *
  * @version 1
  * @author Mark Harding
- * 
+ *
  */
 namespace minds\pages\api\v1;
 use Swagger\Annotations as SWG;
 
 use Minds\Core;
+use Minds\Helpers;
 use minds\entities;
 use minds\interfaces;
 use Minds\Api\Factory;
@@ -18,12 +19,12 @@ class analytics implements interfaces\api{
 
     public function get($pages){
     }
-    
+
     public function post($pages){
     }
-    
+
     /**
-     * Sets an analytic 
+     * Sets an analytic
      * @param array $pages
      * @SWG\PUT(
      *     tags={"analytics"},
@@ -45,16 +46,14 @@ class analytics implements interfaces\api{
     public function put($pages){
         switch($pages[0]){
             case 'open':
-                $db = new Core\Data\Call('entities_by_time');
-                $db->insert("analytics:open", array(Core\session::getLoggedinUser()->guid => time()));
+                Helpers\Analytics::increment("active");
             break;
         }
 
         return Factory::response(array());
     }
-    
+
     public function delete($pages){
     }
-    
+
 }
-        
