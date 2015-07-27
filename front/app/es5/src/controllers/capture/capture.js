@@ -10,18 +10,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var angular2_1 = require('angular2/angular2');
+var upload_1 = require('src/services/api/upload');
 var Capture = (function () {
-    function Capture() {
+    function Capture(upload) {
+        this.upload = upload;
         console.log("this is the capture");
     }
+    Capture.prototype.uploadFile = function () {
+        this.upload.post('api/v1/archive', this.postMeta)
+            .then(function (response) {
+            console.log(response);
+        })
+            .catch(function (e) {
+            console.error(e);
+        });
+    };
     Capture = __decorate([
         angular2_1.Component({
-            selector: 'minds-capture'
+            selector: 'minds-capture',
+            viewInjector: [upload_1.Upload]
         }),
         angular2_1.View({
             template: 'this is capture'
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [Upload])
     ], Capture);
     return Capture;
 })();
