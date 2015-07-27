@@ -8,6 +8,7 @@
             <li><b>Last 15 minutes</b>: <?= $vars['requests'][0] + $vars['requests'][5] + $vars['requests'][10]; ?></li>
             <li><b>Requests per second</b>: <?= $vars['rps'] ?></li>
         </ul>
+        <br/>
         <h3>Active Users</h3>
         <ul>
             <li><b>Today</b>:<?= $vars['dam']['day'] ?></li>
@@ -19,7 +20,7 @@
 
 
      <div class="minds-module users">
-     <h3>Online Users (<?= $vars['user_count'] ?>)</h3>
+     <h3>Online Users</h3>
         <ul>
             <?php foreach($vars['users'] as $user): ?>
                 <li><?= $user->username ?></li>
