@@ -40,7 +40,6 @@ class storage{
             $prepared = new Core\Data\Neo4j\Prepared\Common();
             $subtype = $entity->subtype;
             $guid = $entity->guid;
-            $cacher->destroy("counter:$guid:thumbs:$direction");
             if($entity->custom_type == 'video'){
                 $subtype = 'video';
                 $guid = $entity->custom_data['guid'];
@@ -50,7 +49,7 @@ class storage{
                 $guid = $entity->entity_guid;
                 Helpers\Counters::increment($guid, "thumbs:$direction");
             }
-              
+            $cacher->destroy("counter:$guid:thumbs:$direction");  
             if($direction == 'up'){
                 Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($guid, $subtype));
             }elseif($direction == 'down'){
