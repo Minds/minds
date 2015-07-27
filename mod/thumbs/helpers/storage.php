@@ -40,6 +40,7 @@ class storage{
             $prepared = new Core\Data\Neo4j\Prepared\Common();
             $subtype = $entity->subtype;
             $guid = $entity->guid;
+            $cacher->destroy("counter:$guid:thumbs:$direction");
             if($entity->custom_type == 'video'){
                 $subtype = 'video';
                 $guid = $entity->custom_data['guid'];
