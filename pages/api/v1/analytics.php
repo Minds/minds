@@ -46,7 +46,7 @@ class analytics implements interfaces\api{
     public function put($pages){
         switch($pages[0]){
             case 'open':
-                Helpers\Analytics::increment("active");
+                Helpers\Analytics::increment("app-opens");
             break;
         }
 
