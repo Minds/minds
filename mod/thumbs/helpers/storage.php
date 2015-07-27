@@ -22,6 +22,8 @@ class storage{
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} + 1));
         
         Helpers\Counters::increment($entity->guid, "thumbs:$direction");
+        $cacher = Core\Data\cache\factory::build();
+        $cacher->destroy("counter:$entity->guid:thumbs:$direction");
 
         $user_guids = $entity->{"thumbs:$direction:user_guids"} ?: array();
         $user_guids[] = elgg_get_logged_in_user_guid();
