@@ -117,7 +117,7 @@ try{
                 ),
                 'dam' => array(
                   "day" => Helpers\Analytics::get("active", "day"),
-                  "yesterday" =>  Helpers\Analytics::get("active", "day", Helpers\Analytics::buildTS("midnight -1"))
+                  "yesterday" =>  Helpers\Analytics::get("active", "day", Helpers\Analytics::buildTS("yesterday"))
                 ),
                 'globals'=>array(
                     'boosts'=>Helpers\Counters::get(0, 'boost_impressions', false)

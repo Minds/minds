@@ -26,7 +26,7 @@ class Analytics{
      */
     static public function increment($metric = "active", $ts = NULL){
       $db = new Core\Data\Call('entities_by_time');
-      $ts = self::buildTS("daily", $ts);
+      $ts = self::buildTS("day", $ts);
       $db->insert("analytics:$metric:day:$ts", array(Core\session::getLoggedinUser()->guid => time()));
       $ts = self::buildTS("month", $ts);
       $db->insert("analytics:$metric:month:$ts", array(Core\session::getLoggedinUser()->guid => time()));
