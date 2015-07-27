@@ -3,10 +3,17 @@
     <div class="minds-module anyltics-requests">
         <h3>API Requests</h3>
         <ul>
-            <li><b>Last 5 minutes</b>: <?= $vars['requests'][0]; ?>
-            <li><b>Last 10 minutes</b>: <?= $vars['requests'][0] + $vars['requests'][5]; ?>
-            <li><b>Last 15 minutes</b>: <?= $vars['requests'][0] + $vars['requests'][5] + $vars['requests'][10]; ?>
-            <li><b>Requests per second</b>: <?= $vars['rps'] ?>
+            <li><b>Last 5 minutes</b>: <?= $vars['requests'][0]; ?></li>
+            <li><b>Last 10 minutes</b>: <?= $vars['requests'][0] + $vars['requests'][5]; ?></li>
+            <li><b>Last 15 minutes</b>: <?= $vars['requests'][0] + $vars['requests'][5] + $vars['requests'][10]; ?></li>
+            <li><b>Requests per second</b>: <?= $vars['rps'] ?></li>
+        </ul>
+        <h3>Active Users</h3>
+        <ul>
+            <li><b>Today</b>:<?= $vars['dam']['day'] ?></li>
+            <li><b>Yesterday</b>: <?= $vars['dam']['yesterday'] ?></li>
+            <li><b>This Month</b>: <?= $vars['mam']['month']  ?></li>
+            <li><b>Last Month</b>: <?= $vars['mam']['last-month'] ?></li>
         </ul>
     </div>
 
@@ -35,7 +42,7 @@
              <li><b>Approved (suggested):</b> <?= $vars['boosts_suggested']['approved']?></li>
             <li><b>Impressions remaining (suggested):</b> <?= $vars['boosts_suggested']['impressions'] - $vars['boosts_suggested']['impressions_met']?></li>
         </ul>
-        
+
     </div>
 
 </div>
