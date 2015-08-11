@@ -144,9 +144,11 @@ ini_set( 'display_errors','1');
         window.Minds = <?= json_encode($minds) ?>;
 
         System.config({
+          defaultJSExtensions: true,
           baseURL: './',
           paths: {
-            '*': '*.js'
+            '*': '*.js',
+            'angular2/*': 'lib/*.js'
           }
         });
 

@@ -1,4 +1,4 @@
-// Type definitions for Angular v2.0.0-alpha.31
+// Type definitions for Angular v2.0.0-alpha.34
 // Project: http://angular.io/
 // Definitions by: angular team <https://github.com/angular/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -8,13 +8,12 @@
 // Please do not create manual edits or send pull requests
 // modifying this file.
 // ***********************************************************
-
+///<reference path="./angular2.d.ts"/>
 
 
 
 /**
  * @module
- * @public
  * @description
  * Maps application URLs into application states, to support deep-linking and navigation.
  */
@@ -36,16 +35,12 @@ declare module ng {
    * When the router navigates from a URL, it must first recognizes it and serialize it into an
    * `Instruction`.
    * The router uses the `RouteRegistry` to get an `Instruction`.
-   *
-   * @exportedAs angular2/router
    */
   class Router {
 
      navigating: boolean;
 
      lastNavigationAttempt: string;
-
-     previousUrl: string;
 
      registry: RouteRegistry;
 
@@ -74,19 +69,13 @@ declare module ng {
      * # Usage
      *
      * ```
-     * router.config({ 'path': '/', 'component': IndexCmp});
-     * ```
-     *
-     * Or:
-     *
-     * ```
      * router.config([
      *   { 'path': '/', 'component': IndexComp },
      *   { 'path': '/user/:id', 'component': UserComp },
      * ]);
      * ```
      */
-     config(config: StringMap<string, any>| List<StringMap<string, any>>): Promise<any>;
+     config(definitions: List<RouteDefinition>): Promise<any>;
 
 
     /**
@@ -95,25 +84,25 @@ declare module ng {
      * If the given URL begins with a `/`, router will navigate absolutely.
      * If the given URL does not begin with `/`, the router will navigate relative to this component.
      */
-     navigate(url: string): Promise<any>;
-
-
-    /**
-     * Subscribe to URL updates from the router
-     */
-     subscribe(onNext: any): void;
+     navigate(url: string, _skipLocationChange?: boolean): Promise<any>;
 
 
     /**
      * Updates this router and all descendant routers according to the given instruction
      */
-     commit(instruction: Instruction): Promise<any>;
+     commit(instruction: Instruction, _skipLocationChange?: boolean): Promise<any>;
+
+
+    /**
+     * Subscribe to URL updates from the router
+     */
+     subscribe(onNext: (value: any) => void): void;
 
 
     /**
      * Removes the contents of this router's outlet and all descendant outlets
      */
-     deactivate(): Promise<any>;
+     deactivate(instruction: Instruction): Promise<any>;
 
 
     /**
@@ -138,7 +127,7 @@ declare module ng {
 
   class RootRouter extends Router {
 
-     commit(instruction: any): Promise<any>;
+     commit(instruction: Instruction, _skipLocationChange?: boolean): Promise<any>;
   }
 
 
@@ -153,15 +142,27 @@ declare module ng {
    */
   class RouterOutlet {
 
+     childRouter: Router;
+
 
     /**
      * Given an instruction, update the contents of this outlet.
      */
-     activate(instruction: Instruction): Promise<any>;
+     commit(instruction: Instruction): Promise<any>;
 
-     deactivate(): Promise<any>;
 
-     canDeactivate(instruction: Instruction): Promise<boolean>;
+    /**
+     * Called by Router during recognition phase
+     */
+     canDeactivate(nextInstruction: Instruction): Promise<boolean>;
+
+
+    /**
+     * Called by Router during recognition phase
+     */
+     canReuse(nextInstruction: Instruction): Promise<boolean>;
+
+     deactivate(nextInstruction: Instruction): Promise<any>;
   }
 
 
@@ -171,9 +172,9 @@ declare module ng {
    * Consider the following route configuration:
    *
    * ```
-   * @RouteConfig({
-   *   path: '/user', component: UserCmp, as: 'user'
-   * });
+   * @RouteConfig([
+   *   { path: '/user', component: UserCmp, as: 'user' }
+   * ]);
    * class MyComp {}
    * ```
    *
@@ -193,8 +194,6 @@ declare module ng {
    * If the route begins with `./`, the router will instead look in the current component's
    * children for the route. And if the route begins with `../`, the router will look at the
    * current component's parent.
-   *
-   * @exportedAs angular2/router
    */
   class RouterLink {
 
@@ -224,13 +223,13 @@ declare module ng {
     /**
      * Given a component and a configuration object, add the route to this registry
      */
-     config(parentComponent: any, config: StringMap<string, any>): void;
+     config(parentComponent: any, config: RouteDefinition, isRootLevelRoute?: boolean): void;
 
 
     /**
      * Reads the annotations of a component and configures the registry based on them
      */
-     configFromComponent(component: any): void;
+     configFromComponent(component: any, isRootComponent?: boolean): void;
 
 
     /**
@@ -257,7 +256,7 @@ declare module ng {
 
      back(): void;
 
-     onPopState(fn: any): void;
+     onPopState(fn: (_: any) => any): void;
 
      getBaseHref(): string;
   }
@@ -317,16 +316,11 @@ declare module ng {
 
      back(): void;
 
-     subscribe(onNext: any, onThrow?: any, onReturn?: any): void;
+     subscribe(onNext: (value: any) => void, onThrow?: (exception: any) => void, onReturn?: () => void): void;
   }
 
-  var appBaseHrefToken : OpaqueToken ;
+  const appBaseHrefToken : OpaqueToken ;
 
-  class Instruction {
-    reuseComponentsFrom(oldInstruction: Instruction): void;
-    params(): StringMap<string, string>;
-    hasChild(): boolean;
-  }
 
   /**
    * Responsible for performing each step of navigation.
@@ -339,15 +333,134 @@ declare module ng {
      process(instruction: Instruction): Promise<any>;
   }
 
-  var routerDirectives : List<any> ;
+
+  /**
+   * Defines route lifecycle method [onActivate]
+   */
+  interface OnActivate {
+
+     onActivate(nextInstruction: Instruction, prevInstruction: Instruction): any;
+  }
+
+
+  /**
+   * Defines route lifecycle method [onDeactivate]
+   */
+  interface OnDeactivate {
+
+     onDeactivate(nextInstruction: Instruction, prevInstruction: Instruction): any;
+  }
+
+
+  /**
+   * Defines route lifecycle method [onReuse]
+   */
+  interface OnReuse {
+
+     onReuse(nextInstruction: Instruction, prevInstruction: Instruction): any;
+  }
+
+
+  /**
+   * Defines route lifecycle method [canDeactivate]
+   */
+  interface CanDeactivate {
+
+     canDeactivate(nextInstruction: Instruction, prevInstruction: Instruction): any;
+  }
+
+
+  /**
+   * Defines route lifecycle method [canReuse]
+   */
+  interface CanReuse {
+
+     canReuse(nextInstruction: Instruction, prevInstruction: Instruction): any;
+  }
+
+  var CanActivate : (hook: (next: Instruction, prev: Instruction) => Promise<boolean>| boolean) => ClassDecorator ;
+
+
+  /**
+   * An `Instruction` represents the component hierarchy of the application based on a given route
+   */
+  class Instruction {
+
+     accumulatedUrl: string;
+
+     reuse: boolean;
+
+     specificity: number;
+
+     component: any;
+
+     capturedUrl: string;
+
+     child: Instruction;
+
+     params(): StringMap<string, string>;
+  }
+
+  const routerDirectives : List<any> ;
 
   var routerInjectables : List<any> ;
 
-  var RouteConfig;
+  class Route implements RouteDefinition {
+
+     path: string;
+
+     component: Type;
+
+     as: string;
+
+     loader: Function;
+
+     redirectTo: string;
+  }
+
+  class Redirect implements RouteDefinition {
+
+     path: string;
+
+     redirectTo: string;
+
+     as: string;
+  }
+
+  class AsyncRoute implements RouteDefinition {
+
+     path: string;
+
+     loader: Function;
+
+     as: string;
+  }
+
+  interface RouteDefinition {
+
+     path: string;
+
+     component?: Type | ComponentDefinition;
+
+     loader?: Function;
+
+     redirectTo?: string;
+
+     as?: string;
+  }
+
+  var RouteConfig : (configs: List<RouteDefinition>) => ClassDecorator ;
+
+  interface ComponentDefinition {
+
+     type: string;
+
+     loader?: Function;
+
+     component?: Type;
+  }
 
 }
-
-
 
 declare module "angular2/router" {
   export = ng;
