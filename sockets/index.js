@@ -1,14 +1,17 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var redis = require('socket.io-redis');
 var _ = require('lodash-node');
 var twilio = require('twilio')('AC2e0a25157a4e150f3a87fd6e2f21730c', 'add6d113b8a62e1111c4795e375071de');
 
 var users = [];
 var call_queue = [];
 
+io.adapter(redis({ host: '10.0.3.218', port: 6379 }));
+
 app.get('/', function (req, res){
-  res.sendfile('index.html');
+  res.sendStatus(200);
 });
 
 io.on('connection', function (socket) {
@@ -75,8 +78,10 @@ io.on('connection', function (socket) {
         if(err){
             console.log(err);
         } else {
-            io.to(currentUser.socket).emit('turnToken', response);
-            console.log(response);
+       //     io.to(currentUser.socket)
+         //       .emit('turnToken', response);
+            socket.emit('turnToken', response);
+             //console.log(response);
             console.log(currentUser.guid + ' sent a twillio token');
         }
     });

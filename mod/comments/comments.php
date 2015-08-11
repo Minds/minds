@@ -51,11 +51,18 @@ class comments extends \ElggPlugin{
 	 */
 	public function displayHook($hook, $entity_type, $returnvalue, $params){ return self::display($params['entity']); }
 	public function display($entity, $form=true) {
-		
+
+        $limit = \get_input('limit',3);
+        $offset = \get_input('offset','');
+        if(get_input('ajax')){
+            $limit = 3;
+            $offset = '';
+        }
+
 		$indexes = new core\Data\indexes('comments');
-		$guids = $indexes->get($entity->guid, array('limit'=>\get_input('limit',3), 'offset'=>\get_input('offset',''), 'reversed'=>true));
+		$guids = $indexes->get($entity->guid, array('limit'=>$limit, 'offset'=>$offset, 'reversed'=>true));
 		if($guids)
-			$comments = \elgg_get_entities(array('guids'=>$guids, 'limit'=>\get_input('limit',3), 'offset'=>\get_input('offset','')));
+			$comments = \elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>$offset));
 		else 
 			$comments = array();
 

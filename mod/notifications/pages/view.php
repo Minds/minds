@@ -41,7 +41,7 @@ class view extends core\page implements interfaces\page{
 				'title' => $title,
 				'sidebar' => $sidebar,
 				'filter_override' => '',
-				'class' => 'notifications'
+				'class' => 'notifications x1'
 				);
 
 

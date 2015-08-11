@@ -22,6 +22,8 @@ class storage{
         $db->insert($entity->guid, array("thumbs:$direction:count" => $entity->{"thumbs:$direction:count"} + 1));
         
         Helpers\Counters::increment($entity->guid, "thumbs:$direction");
+        $cacher = Core\Data\cache\factory::build();
+        $cacher->destroy("counter:$entity->guid:thumbs:$direction");
 
         $user_guids = $entity->{"thumbs:$direction:user_guids"} ?: array();
         $user_guids[] = elgg_get_logged_in_user_guid();
@@ -47,7 +49,7 @@ class storage{
                 $guid = $entity->entity_guid;
                 Helpers\Counters::increment($guid, "thumbs:$direction");
             }
-              
+            $cacher->destroy("counter:$guid:thumbs:$direction");  
             if($direction == 'up'){
                 Core\Data\Client::build('Neo4j')->request($prepared->createVoteUP($guid, $subtype));
             }elseif($direction == 'down'){

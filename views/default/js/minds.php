@@ -654,20 +654,27 @@
                    	}
                    	
                    	$list.append('<div class="news-show-more load-more" data-load-next="'+offset+'"><p>Downloading images...</p></div>');
-					
-					el.imagesLoaded().always(function(){
-						el.find('.rich-image').each(function(){ 
-							var image = $(this);
-							if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
-								image.remove();
-							}	
 
-						});
-						$list.find('.elgg-list').append(el).masonry('appended', el);
-						window.lock_autoscroll = false;
-						$list.find('.load-more').remove();
-						$list.append('<div class="news-show-more load-more" data-load-next="'+offset+'">click for more</div>');
-					});
+                    if($list.find('.elgg-list').hasClass('x1') || $list.find('.elgg-list').hasClass('list-newsfeed')){
+                        $list.find('.elgg-list').append(el);
+                        window.lock_autoscroll = false;
+                        $list.find('.load-more').remove();
+                        $list.append('<div class="news-show-more load-more" data-load-next="'+offset+'">click for more</div>');
+                    } else {        
+                        el.imagesLoaded().always(function(){
+                            el.find('.rich-image').each(function(){ 
+                                var image = $(this);
+                                if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+                                    image.remove();
+                                }	
+
+                            });
+                            $list.find('.elgg-list').append(el).masonry('appended', el);
+                            window.lock_autoscroll = false;
+                            $list.find('.load-more').remove();
+                            $list.append('<div class="news-show-more load-more" data-load-next="'+offset+'">click for more</div>');
+                        });
+                    }
 
 					// Trigger a hook for extra tasks after content is loaded
 					elgg.trigger_hook('loadMore', 'minds');

@@ -18,10 +18,6 @@ class analytics extends core\page implements interfaces\page{
 
             $db = new Core\Data\Call('entities_by_time');
 
-            $guids = $db->getRow("analytics:open", array('limit'=>5));
-            $users = Core\entities::get(array('guids'=>array_keys($guids), 'limit'=>5));
-            $user_count = $db->countRow("analytics:open");
-
             $requests = array(
                 0 => (int) Helpers\RequestMetrics::get("api", time()),
                 5 => (int) Helpers\RequestMetrics::get("api", time() - 300),
@@ -107,8 +103,6 @@ try{
 
 }*/
             $content = elgg_view('analytics/dashboard', array(
-                'users' => $users,
-                'user_count'=>$user_count,
                 'requests'=>$requests,
                 'rps' => $rps,
                 'mam' => array(
