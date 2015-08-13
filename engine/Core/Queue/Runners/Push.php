@@ -47,9 +47,10 @@ class Push implements Interfaces\QueueRunner{
                             ->setTitle($data['message'])
                             ->setMessage($data['message'])
                             ->setURI(isset($data['uri']) ? $data['uri'] : 'chat')
-                            ->setSound(isset($data['sound']) ? $data['sound'] : 'default');
+                            ->setSound(isset($data['sound']) ? $data['sound'] : 'default')
+                            ->setJsonObject($data['json']);
                             
-                       Surge\Surge::send($message, $config);
+                      Surge\Surge::send($message, $config);
 
                     echo "sent a push notification to $user->guid \n";
                 } catch (\Exception $e){
