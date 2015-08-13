@@ -23,6 +23,10 @@ app.get('/', function (req, res){
   res.sendStatus(200);
 });
 
+setInterval(function(){
+    console.log("Sockets: " + io.sockets.sockets.length);
+}, 5000);
+
 io.on('connection', function (socket) {
 
   /**
@@ -30,6 +34,7 @@ io.on('connection', function (socket) {
    */
   socket.on('register', function (guid, access_token) {
     if(!guid){
+        console.log("guid not sent along with " + socket.id);
         socket.emit('connect_error', 'Guid must be set..');
         return;
     }
@@ -44,6 +49,11 @@ io.on('connection', function (socket) {
         if(err){
           socket.emit('connect_error', 'Could not authenticate..');
           return;
+        }
+
+        if(!result.rows || result.rows.length == 0){
+            //console.log("false login attempt from " + guid);
+            return;
         }
 
         for(var i=0; i < result.rows.length; i++){
@@ -62,15 +72,6 @@ io.on('connection', function (socket) {
             }
         }
 
-        
-        /**
-         * Add our user to cache lookup
-         */
-        mem_users.push({
-          guid: guid,
-          socket: socket.id,
-          ts: Date.now()
-        });
 
         //socket.emit('connect_successful', _.pluck(users, 'guid'));
         socket.broadcast.emit('online', guid);
@@ -94,6 +95,7 @@ io.on('connection', function (socket) {
     redisClient.get("sockets:socket:" + socket.id, function(err, reply){
         if(err)
             return;
+
         var from_guid = reply;
 
         redisClient.get("sockets:guid:" + guid, function(err, reply){
@@ -101,17 +103,10 @@ io.on('connection', function (socket) {
                 return;
             var to_socket = reply;
             if(!to_socket){
-                console.log('could not find ' + guid);
+                //console.log('could not find ' + guid);
                 return;
             }
-            console.log("got reply and now trying to emit to socket " + reply); 
-            var sock = io.sockets.connected[to_socket];
-            //if(sock){
-                io.to(reply).emit('messageReceived', from_guid, message);
-            //} else {
-             //   console.log('log could not find socket on this server, sending pub event..');
-             //   return;
-           // }
+            io.to(reply).emit('messageReceived', from_guid, message);
             console.log(guid + " was sent a " + message.type);
         });
     });
@@ -133,8 +128,10 @@ io.on('connection', function (socket) {
         if(err)
            return;
         redisClient.del('sockets:socket:'+socket.id);
-        redisClient.del('sockets:guid:'+reply);
-        console.log('Logged out: ' + reply);
+        if(reply){
+            redisClient.del('sockets:guid:'+reply);
+            console.log('Logged out: ' + reply);
+        }
       });
   });
 
