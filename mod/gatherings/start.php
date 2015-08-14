@@ -96,7 +96,11 @@ class start extends Components\Plugin{
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			//var_dump($row);
 			if($row->subtype == 'message')
-				return new entities\message($row);
+                return new entities\message($row);
+            if($row->subtype == 'call_missed')
+                return new entities\CallMissed($row);
+            if($row->subtype == 'call_ended')
+                return new entities\CallEnded($row);
 		});
 		
 		\elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
