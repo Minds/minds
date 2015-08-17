@@ -1,0 +1,19 @@
+<form #postobj="form" (submit)="uploadFile()">
+
+
+    <input
+      type="file"
+      id="file"
+      #file
+      [(ng-model)]="postMeta.file"
+    />
+
+
+    <button
+      type="submit"
+      class="mdl-button mdl-button--raised mdl-button--colored"
+      >
+      Post
+    </button>
+
+</form>

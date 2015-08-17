@@ -701,7 +701,7 @@ var Reflect;
         if (typeof O !== "function" || O === functionPrototype) {
             return proto;
         }
-        // TypeScript doesn't set __proto__ in ES5, as it's non-standard. 
+        // TypeScript doesn't set __proto__ in ES5, as it's non-standard.
         // Try to determine the superclass constructor. Compatible implementations
         // must either set __proto__ on a subclass constructor to the superclass constructor,
         // or ensure each class has a valid `constructor` property on its prototype that
@@ -4479,7 +4479,7 @@ var Reflect;
   };
 
   /**
-   *  Repeats the source observable sequence upon error each time the notifier emits or until it successfully terminates. 
+   *  Repeats the source observable sequence upon error each time the notifier emits or until it successfully terminates.
    *  if the notifier completes, the observable sequence completes.
    *
    * @example
@@ -13345,9 +13345,14 @@ System.register("http/src/static_request", ["http/src/headers", "angular2/src/fa
           this.headers = new Headers(requestOptions.headers);
           this.cache = requestOptions.cache;
         }
-        return ($traceurRuntime.createClass)(Request, {text: function() {
+        return ($traceurRuntime.createClass)(Request, {
+          text: function() {
             return isPresent(this._body) ? this._body.toString() : '';
-          }}, {});
+          },
+          body: function() {
+            return isPresent(this._body) ? this._body : null;
+          }
+        }, {});
       }());
       $__export("Request", Request);
     }
@@ -14271,7 +14276,9 @@ System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/st
               $__0._xhr.setRequestHeader(name, value);
             }));
           }
-          this._xhr.send(this.request.text());
+
+          this._xhr.send(this.request.body());
+
         }
         return ($traceurRuntime.createClass)(XHRConnection, {dispose: function() {
             this._xhr.abort();

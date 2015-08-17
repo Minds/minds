@@ -10,13 +10,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var angular2_1 = require('angular2/angular2');
+var http_1 = require('http/http');
 var upload_1 = require('src/services/api/upload');
 var Capture = (function () {
-    function Capture(upload) {
+    function Capture(upload, http) {
         this.upload = upload;
+        this.http = http;
+        this.postMeta = {};
         console.log("this is the capture");
     }
     Capture.prototype.uploadFile = function () {
+        console.log('called');
+        console.log(this.postMeta);
+        var formData = new FormData();
+        formData.append("file[]", this.postMeta.file);
+        this.http.put('api/v1/archive', formData, {})
+            .toRx()
+            .subscribe(function (res) {
+            console.log(res);
+        });
+        return true;
         this.upload.post('api/v1/archive', this.postMeta)
             .then(function (response) {
             console.log(response);
@@ -28,12 +41,13 @@ var Capture = (function () {
     Capture = __decorate([
         angular2_1.Component({
             selector: 'minds-capture',
-            viewBindings: [upload_1.Upload]
+            viewBindings: [upload_1.Upload, http_1.Http]
         }),
         angular2_1.View({
-            template: 'this is capture'
+            templateUrl: 'templates/capture/capture.html',
+            directives: [angular2_1.FORM_DIRECTIVES]
         }), 
-        __metadata('design:paramtypes', [Upload])
+        __metadata('design:paramtypes', [Upload, Http])
     ], Capture);
     return Capture;
 })();
