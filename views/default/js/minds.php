@@ -749,7 +749,7 @@ $('.post-post-preview').on('preview', function(e, url){
 });
 
 
-$('#post-input-box').on('keyup', function(e){
+$('#post-input-box').on('change', function(e){
 	var $form = $(this).closest('form');
 
 	var text = $(this).val();

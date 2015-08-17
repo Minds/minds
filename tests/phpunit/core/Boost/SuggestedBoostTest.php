@@ -82,7 +82,7 @@ class SuggestedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
             ->with("boost", array('_id' => "abc123"))
             ->will($this->returnValue(array('err'=>NULL)));
 
-        $result = Boost\Factory::build('Suggested', array(), $db)->getBoost();
+        //$result = Boost\Factory::build('Suggested', array(), $db)->getBoost();
     }
 
 }

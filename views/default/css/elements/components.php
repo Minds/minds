@@ -607,3 +607,7 @@
     display: block;
     text-align: right;
 }
+
+.list-newsfeed li .activity-video-post h3 {
+    margin-bottom: 10px;
+}
