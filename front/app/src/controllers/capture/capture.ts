@@ -1,5 +1,5 @@
 import { Component, View, FORM_DIRECTIVES } from 'angular2/angular2';
-import {Http, Headers} from 'http/http';
+import { Http, Headers } from 'http/http';
 
 import { Upload } from 'src/services/api/upload';
 
@@ -10,22 +10,24 @@ import { Upload } from 'src/services/api/upload';
 })
 @View({
   templateUrl: 'templates/capture/capture.html',
-  directives: [FORM_DIRECTIVES]
+  directives: [ FORM_DIRECTIVES ]
 })
 
 export class Capture {
 
-  postMeta : Object = {};
+  postMeta : any = {}; //TODO: make this object
 
 	constructor(public upload: Upload, public http: Http){
-		console.log("this is the capture");
+
 	}
 
   uploadFile(){
     console.log('called');
     console.log(this.postMeta);
 
-    this.upload.post('api/v1/archive', this.postMeta)
+    this.upload.post('api/v1/archive', this.postMeta, (progress) => {
+      console.log('progress update');
+      })
 				.then((response) => {
 					console.log(response);
 				})

@@ -17,20 +17,13 @@ var Capture = (function () {
         this.upload = upload;
         this.http = http;
         this.postMeta = {};
-        console.log("this is the capture");
     }
     Capture.prototype.uploadFile = function () {
         console.log('called');
         console.log(this.postMeta);
-        var formData = new FormData();
-        formData.append("file[]", this.postMeta.file);
-        this.http.put('api/v1/archive', formData, {})
-            .toRx()
-            .subscribe(function (res) {
-            console.log(res);
-        });
-        return true;
-        this.upload.post('api/v1/archive', this.postMeta)
+        this.upload.post('api/v1/archive', this.postMeta, function (progress) {
+            console.log('progress update');
+        })
             .then(function (response) {
             console.log(response);
         })
