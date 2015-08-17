@@ -35,7 +35,7 @@ var Navigation = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/components/navigation.html',
-            directives: [router_1.RouterLink, angular2_1.NgIf, angular2_1.NgFor, angular2_1.CSSClass]
+            directives: [router_1.RouterLink, angular2_1.NgIf, angular2_1.NgFor, angular2_1.NgClass]
         }), 
         __metadata('design:paramtypes', [NavigationService])
     ], Navigation);

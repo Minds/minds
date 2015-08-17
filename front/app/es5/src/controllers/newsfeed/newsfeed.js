@@ -125,11 +125,11 @@ var Newsfeed = (function () {
     Newsfeed = __decorate([
         angular2_1.Component({
             selector: 'minds-newsfeed',
-            viewInjector: [api_1.Client]
+            viewBindings: [api_1.Client]
         }),
         angular2_1.View({
             templateUrl: 'templates/newsfeed/list.html',
-            directives: [activity_1.Activity, angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives, infinite_scroll_1.InfiniteScroll]
+            directives: [activity_1.Activity, angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.FORM_DIRECTIVES, infinite_scroll_1.InfiniteScroll]
         }), 
         __metadata('design:paramtypes', [Client])
     ], Newsfeed);

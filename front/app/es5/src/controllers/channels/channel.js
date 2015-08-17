@@ -110,11 +110,11 @@ var Channel = (function () {
     Channel = __decorate([
         angular2_1.Component({
             selector: 'minds-channel',
-            viewInjector: [api_1.Client]
+            viewBindings: [api_1.Client]
         }),
         angular2_1.View({
             templateUrl: 'templates/channels/channel.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives, infinite_scroll_1.InfiniteScroll, activity_1.Activity, autogrow_1.AutoGrow]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.FORM_DIRECTIVES, infinite_scroll_1.InfiniteScroll, activity_1.Activity, autogrow_1.AutoGrow]
         }),
         __param(1, angular2_1.Inject(router_1.Router)),
         __param(2, angular2_1.Inject(router_1.RouteParams)), 

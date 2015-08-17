@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var angular2_1 = require('angular2/angular2');
+var http_1 = require('http/http');
 var cookie_1 = require('src/services/cookie');
 var Upload = (function () {
     function Upload(http) {
@@ -51,7 +52,7 @@ var Upload = (function () {
         });
     };
     Upload = __decorate([
-        __param(0, angular2_1.Inject(angular2_1.Http)), 
+        __param(0, angular2_1.Inject(http_1.Http)), 
         __metadata('design:paramtypes', [Http])
     ], Upload);
     return Upload;

@@ -35,8 +35,7 @@ var Topbar = (function () {
     };
     Topbar = __decorate([
         angular2_1.Component({
-            selector: 'minds-topbar',
-            viewInjector: [storage_1.Storage, sidebar_1.Sidebar]
+            selector: 'minds-topbar'
         }),
         angular2_1.View({
             templateUrl: 'templates/components/topbar.html',

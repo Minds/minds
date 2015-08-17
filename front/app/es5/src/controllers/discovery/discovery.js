@@ -67,11 +67,11 @@ var Discovery = (function () {
     Discovery = __decorate([
         angular2_1.Component({
             selector: 'minds-discovery',
-            viewInjector: [api_1.Client]
+            viewBindings: [api_1.Client]
         }),
         angular2_1.View({
             templateUrl: 'templates/discovery/discovery.html',
-            directives: [router_1.RouterLink, angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.formDirectives, infinite_scroll_1.InfiniteScroll, angular2_1.CSSClass, cards_1.UserCard, cards_1.VideoCard]
+            directives: [router_1.RouterLink, angular2_1.NgFor, angular2_1.NgIf, material_1.Material, infinite_scroll_1.InfiniteScroll, angular2_1.NgClass, cards_1.UserCard, cards_1.VideoCard]
         }),
         __param(1, angular2_1.Inject(router_1.Router)),
         __param(2, angular2_1.Inject(router_1.RouteParams)), 

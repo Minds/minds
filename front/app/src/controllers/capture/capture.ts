@@ -4,7 +4,7 @@ import { Upload } from 'src/services/api/upload';
 
 @Component({
   selector: 'minds-capture',
-  viewInjector: [ Upload ]
+  viewBindings: [ Upload ]
 })
 @View({
   template: 'this is capture'

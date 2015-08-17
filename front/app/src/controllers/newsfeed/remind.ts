@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, CSSClass, Observable, formDirectives} from 'angular2/angular2';
+import { Component, View, NgFor, NgIf, NgClass, Observable} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
@@ -6,12 +6,12 @@ import { Activity } from './activity';
 
 @Component({
   selector: 'minds-remind',
-  viewInjector: [ Client ],
+  viewBindings: [ Client ],
   properties: ['object']
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
-  directives: [ NgFor, NgIf, CSSClass, Material, RouterLink]
+  directives: [ NgFor, NgIf, NgClass, Material, RouterLink]
 })
 
 export class Remind {

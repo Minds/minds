@@ -7,14 +7,14 @@ import { SessionFactory } from 'src/services/session';
 
 @Component({
   selector: 'minds-topbar',
-  viewInjector: [ Storage, Sidebar ]
+  viewBindings: [ Storage, Sidebar ]
 })
 @View({
   templateUrl: 'templates/components/topbar.html',
   directives: [ NgIf, RouterLink, Material ]
 })
 
-export class Topbar {
+export class Topbar{
 	loggedin = false;
 	session = SessionFactory.build();
 

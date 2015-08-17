@@ -1,6 +1,7 @@
 /// <reference path="../typings/tsd.d.ts" />
-import {Component, View, bootstrap, httpInjectables} from 'angular2/angular2';
+import {Component, View, bootstrap} from 'angular2/angular2';
 import {RouteConfig, RouterOutlet, RouterLink, routerInjectables} from 'angular2/router';
+import {HTTP_BINDINGS} from 'http/http';
 
 import {Topbar} from './src/components/topbar';
 import {Navigation} from './src/components/navigation';
@@ -46,4 +47,4 @@ class Minds {
   }
 }
 
-bootstrap(Minds, [routerInjectables, httpInjectables]);
+bootstrap(Minds, [routerInjectables, HTTP_BINDINGS]);

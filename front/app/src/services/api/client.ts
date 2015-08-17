@@ -1,4 +1,5 @@
-import {Inject, Injector, bind, Http, Headers} from 'angular2/angular2';
+import {Inject, Injector, bind} from 'angular2/angular2';
+import {Http, Headers} from 'http/http';
 import {Cookie} from 'src/services/cookie';
 
 /**

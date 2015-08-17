@@ -31,12 +31,12 @@ var Remind = (function () {
     Remind = __decorate([
         angular2_1.Component({
             selector: 'minds-remind',
-            viewInjector: [api_1.Client],
+            viewBindings: [api_1.Client],
             properties: ['object']
         }),
         angular2_1.View({
             templateUrl: 'templates/cards/activity.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, angular2_1.CSSClass, material_1.Material, router_1.RouterLink]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, angular2_1.NgClass, material_1.Material, router_1.RouterLink]
         }), 
         __metadata('design:paramtypes', [Client])
     ], Remind);

@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, CSSClass, Observable, formDirectives} from 'angular2/angular2';
+import { Component, View, NgFor, NgIf, NgClass, Observable, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { MessengerConversation } from "./messenger-conversation";
 import { MessengerSetup } from "./messenger-setup";
@@ -13,7 +13,7 @@ import { Material } from 'src/directives/material';
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/gatherings.html',
-  directives: [ NgFor, NgIf, CSSClass, Material, RouterLink, MessengerConversation, MessengerSetup]
+  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, MessengerConversation, MessengerSetup]
 })
 
 export class Gatherings {

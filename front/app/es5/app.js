@@ -12,6 +12,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 /// <reference path="../typings/tsd.d.ts" />
 var angular2_1 = require('angular2/angular2');
 var router_1 = require('angular2/router');
+var http_1 = require('http/http');
 var topbar_1 = require('./src/components/topbar');
 var navigation_1 = require('./src/components/navigation');
 var login_1 = require('./src/controllers/login');
@@ -50,5 +51,5 @@ var Minds = (function () {
     ], Minds);
     return Minds;
 })();
-angular2_1.bootstrap(Minds, [router_1.routerInjectables, angular2_1.httpInjectables]);
+angular2_1.bootstrap(Minds, [router_1.routerInjectables, http_1.HTTP_BINDINGS]);
 //# sourceMappingURL=app.js.map

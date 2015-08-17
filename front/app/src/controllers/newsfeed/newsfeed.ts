@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, formDirectives} from 'angular2/angular2';
+import { Component, View, NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/angular2';
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
@@ -6,11 +6,11 @@ import { Activity } from './activity';
 
 @Component({
   selector: 'minds-newsfeed',
-  viewInjector: [ Client ]
+  viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
-  directives: [ Activity, NgFor, NgIf, Material, formDirectives, InfiniteScroll ]
+  directives: [ Activity, NgFor, NgIf, Material, FORM_DIRECTIVES, InfiniteScroll ]
 })
 
 export class Newsfeed {

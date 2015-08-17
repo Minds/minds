@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, Inject, formDirectives, CSSClass} from 'angular2/angular2';
+import { Component, View, NgFor, NgIf, Inject, NgClass} from 'angular2/angular2';
 import { Router, RouteParams, RouterLink } from 'angular2/router';
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
@@ -9,11 +9,11 @@ import { Activity } from 'src/controllers/newsfeed/activity';
 
 @Component({
   selector: 'minds-discovery',
-  viewInjector: [ Client ]
+  viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/discovery/discovery.html',
-  directives: [ RouterLink, NgFor, NgIf, Material, formDirectives, InfiniteScroll, CSSClass, UserCard, VideoCard ]
+  directives: [ RouterLink, NgFor, NgIf, Material, InfiniteScroll, NgClass, UserCard, VideoCard ]
 })
 
 export class Discovery {

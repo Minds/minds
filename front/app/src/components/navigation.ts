@@ -1,4 +1,4 @@
-import { Component, View, NgIf, NgFor, CSSClass, EventEmitter } from 'angular2/angular2';
+import { Component, View, NgIf, NgFor, NgClass, EventEmitter } from 'angular2/angular2';
 import { RouterLink } from 'angular2/router';
 import { Factory, LoggedIn } from 'src/services/events';
 import { Navigation as NavigationService } from 'src/services/navigation';
@@ -6,11 +6,11 @@ import { SessionFactory } from 'src/services/session';
 
 @Component({
   selector: 'minds-navigation',
-  viewInjector: [NavigationService]
+  viewBindings: [NavigationService]
 })
 @View({
   templateUrl: 'templates/components/navigation.html',
-  directives: [RouterLink, NgIf, NgFor, CSSClass]
+  directives: [RouterLink, NgIf, NgFor, NgClass]
 })
 
 export class Navigation {

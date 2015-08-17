@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var angular2_1 = require('angular2/angular2');
+var http_1 = require('http/http');
 var cookie_1 = require('src/services/cookie');
 var Client = (function () {
     function Client(http) {
@@ -27,7 +28,7 @@ var Client = (function () {
     };
     Client.prototype.buildOptions = function (options) {
         var XSRF_TOKEN = this.cookie.get('XSRF-TOKEN');
-        var headers = new angular2_1.Headers();
+        var headers = new http_1.Headers();
         headers.append('X-XSRF-TOKEN', XSRF_TOKEN);
         return Object.assign(options, {
             headers: headers,
@@ -112,7 +113,7 @@ var Client = (function () {
         });
     };
     Client = __decorate([
-        __param(0, angular2_1.Inject(angular2_1.Http)), 
+        __param(0, angular2_1.Inject(http_1.Http)), 
         __metadata('design:paramtypes', [Http])
     ], Client);
     return Client;

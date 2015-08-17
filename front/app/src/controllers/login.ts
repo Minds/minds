@@ -5,7 +5,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 
 @Component({
-  viewInjector: [ Client ]
+  viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/login.html',

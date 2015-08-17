@@ -28,7 +28,7 @@ var Capture = (function () {
     Capture = __decorate([
         angular2_1.Component({
             selector: 'minds-capture',
-            viewInjector: [upload_1.Upload]
+            viewBindings: [upload_1.Upload]
         }),
         angular2_1.View({
             template: 'this is capture'

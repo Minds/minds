@@ -47,10 +47,10 @@
 
 <div class="mdl-card__supporting-text mdl-color--blue-grey-50 tabs" *ng-if="!hideTabs">
 
-	<a class="material-icons mdl-color-text--blue-grey-800" (click)="thumbsUp(activity.guid)" [class]="{'selected': hasThumbedUp()}">thumb_up</a>
-	<a class="material-icons mdl-color-text--blue-grey-800" (click)="thumbsDown(activity.guid)" [class]="{'selected': hasThumbedDown()}">thumb_down</a>
+	<a class="material-icons mdl-color-text--blue-grey-800" (click)="thumbsUp(activity.guid)" [ng-class]="{'selected': hasThumbedUp()}">thumb_up</a>
+	<a class="material-icons mdl-color-text--blue-grey-800" (click)="thumbsDown(activity.guid)" [ng-class]="{'selected': hasThumbedDown()}">thumb_down</a>
 	<a class="material-icons mdl-color-text--blue-grey-800" (click)="comment(activity.guid)">chat_bubble</a>
-	<a class="material-icons mdl-color-text--blue-grey-800" (click)="remind(activity.guid)" [class]="{'selected': hasReminded()}">repeat</a>
+	<a class="material-icons mdl-color-text--blue-grey-800" (click)="remind(activity.guid)" [ng-class]="{'selected': hasReminded()}">repeat</a>
 
 </div>
 

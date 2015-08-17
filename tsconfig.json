@@ -51,6 +51,7 @@
         "./front/app/src/services/ui/material.ts",
         "./front/app/src/services/ui/sidebar.ts",
         "./front/typings/angular2/angular2.d.ts",
+        "./front/typings/angular2/http.d.ts",
         "./front/typings/angular2/router.d.ts",
         "./front/typings/es6-promise/es6-promise.d.ts",
         "./front/typings/minds/minds.d.ts",

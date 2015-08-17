@@ -1,40 +1,24 @@
-
-<!--<div class="minds-account" *ng-if="user">
-    <img src="/icon/{{user.guid}}/small"/>
-    <div class="minds-account-dropdown" id="accbtn">
-        <span>{{user.name}}</span>
-        <div class="mdl-layout-spacer"></div>
-
-        <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-            <i class="material-icons">arrow_drop_down</i>
-        </button>
-
-        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events" for="accbtn">
-        </ul>
-
-    </div>
-</div>-->
-
 <nav class="minds-navigation mdl-navigation">
 
   <div *ng-for="#item of navigation.getItems()">
+
   	<a class="mdl-navigation__link mdl-color-text--white"
-  		[class]="{'mdl-color--blue-grey-700' : item.active, 'mdl-color--blue-grey-800': !item.active}"
+  		[ng-class]="{'mdl-color--blue-grey-700' : item.active, 'mdl-color--blue-grey-800': !item.active}"
   		[router-link]="[item.path, item.params]"
   		>
 
-  		<i class="mdl-color-text--amber-500 material-icons" [class]="{'mdl-color-text--amber-500' : true}">{{item.icon}}</i>
+  		<i class="mdl-color-text--amber-500 material-icons" [ng-class]="{'mdl-color-text--amber-500' : true}">{{item.icon}}</i>
   		{{item.text}}
 
   	</a>
 
     <div *ng-for="#subitem of item.submenus" [hidden]="!item.active">
       <a class="mdl-navigation__link mdl-color-text--white"
-        [class]="{'mdl-color--blue-grey-600' : subitem.active, 'mdl-color--blue-grey-700': !subitem.active}"
+        [ng-class]="{'mdl-color--blue-grey-600' : subitem.active, 'mdl-color--blue-grey-700': !subitem.active}"
         [router-link]="[subitem.path, subitem.params]"
         >
 
-        <i class="mdl-color-text--amber-500 material-icons" [class]="{'mdl-color-text--amber-500' : true}">{{subitem.icon}}</i>
+        <i class="mdl-color-text--amber-500 material-icons" [ng-class]="{'mdl-color-text--amber-500' : true}">{{subitem.icon}}</i>
         {{subitem.text}}
 
       </a>

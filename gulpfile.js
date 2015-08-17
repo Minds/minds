@@ -55,7 +55,8 @@ var PATH = {
       './node_modules/reflect-metadata/Reflect.js',
       './node_modules/reflect-metadata/Reflect.js.map',
       './node_modules/systemjs/dist/system.src.js',
-      './node_modules/angular2/node_modules/zone.js/dist/zone.js'
+      './node_modules/angular2/node_modules/zone.js/dist/zone.js',
+      './node_modules/angular2/bundles/http.js'
     ],
     plugins: './mod'
   }
@@ -69,6 +70,9 @@ var ng2Builder = new Builder({
   meta: {
     rx: {
       format: 'cjs'
+    },
+    'angular2/src/router/route_definition': {
+      format: 'es6'
     }
   }
 });
@@ -311,46 +315,6 @@ gulp.task('bump.reset', function() {
   return gulp.src('package.json')
     .pipe(bump({ version: '0.0.0' }))
     .pipe(gulp.dest('./'));
-});
-
-// --------------
-// Test.
-
-// To be implemented.
-
-// --------------
-// Serve dev.
-
-gulp.task('serve.dev', ['build.dev'], function () {
-  var app;
-
-  watch('./front/app/**', function () {
-    gulp.start('build.app.dev');
-  });
-
-  app = connect();
-  app.use(serveStatic(join(__dirname, PATH.dest.dev.all)));
-
-  http.createServer(app).listen(port, function () {
-    //openResource('http://localhost:' + port);
-  });
-
-});
-
-// --------------
-// Serve prod.
-
-gulp.task('serve.prod', ['build.prod'], function () {
-  var app;
-
-  watch('./front/app/**', function () {
-    gulp.start('build.app.prod');
-  });
-
-  app = connect().use(serveStatic(join(__dirname, PATH.dest.prod.all)));
-  http.createServer(app).listen(port, function () {
-    //openResource('http://localhost:' + port);
-  });
 });
 
 // --------------

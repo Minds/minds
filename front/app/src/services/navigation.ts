@@ -1,20 +1,21 @@
 import {Inject} from 'angular2/angular2';
-import {Router} from 'angular2/router';
+import {Router, Location} from 'angular2/router';
 
 export class Navigation {
 
-	constructor(@Inject(Router) public router: Router){
+	constructor(@Inject(Router) public router: Router, @Inject(Location) public location: Location){
 	}
 
 	getItems() : Array<any> {
+
 		var items : Array<any> = window.Minds.navigation;
 		if(!items)
 			return [];
 
-		var last = this.router.lastNavigationAttempt;
+		var path = this.location.path();
 		for(var item of items){
 
-			if(this.router.lastNavigationAttempt == item.path || (last && last.indexOf(item.path) > -1))
+			if(path == item.path || (path && path.indexOf(item.path) > -1))
 				item.active = true;
 			else
 				item.active = false;
@@ -23,12 +24,12 @@ export class Navigation {
 			// a bit messy and only allows 1 tier
 			if(item.submenus){
 				for(var subitem of item.submenus){
-					var path = subitem.path;
+					var sub_path = subitem.path;
 					for(var p in subitem.params){
 						if(subitem.params[p])
-							path +=  '/' + subitem.params[p];
+							sub_path +=  '/' + subitem.params[p];
 					}
-					if(last && last.indexOf(path) > -1)
+					if(path && path.indexOf(sub_path) > -1)
 						subitem.active = true;
 					else
 						subitem.active = false;
