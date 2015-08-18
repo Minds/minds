@@ -155,9 +155,9 @@ function groups_handle_owned_page() {
 	elgg_push_breadcrumb($title);
 
 	elgg_register_title_button();
-
-	$content = elgg_list_entities(array(
-		'type' => 'group',
+    
+    $content = elgg_list_entities(array(
+		'type' => 'group:', //hack because no subtype - using :
 		'owner_guid' => $page_owner->guid,
 		'full_view' => false,
 		'list_class'=>'minds-group-list',
