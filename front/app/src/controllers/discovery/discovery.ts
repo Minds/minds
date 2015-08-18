@@ -56,7 +56,8 @@ export class Discovery {
         if(refresh){
           self.entities = data.entities;
         }else{
-          data.entities.shift();
+          if(self.offset)
+            data.entities.shift();
           for(let entity of data.entities)
             self.entities.push(entity);
         }

@@ -23,6 +23,7 @@ var capture_1 = require('./src/controllers/capture/capture');
 var discovery_1 = require('./src/controllers/discovery/discovery');
 var channel_1 = require('./src/controllers/channels/channel');
 var gatherings_1 = require('./src/plugins/gatherings/gatherings');
+var notifications_1 = require('./src/controllers/notifications/notifications');
 var Minds = (function () {
     function Minds() {
         this.name = 'Minds';
@@ -39,7 +40,7 @@ var Minds = (function () {
             { path: '/discovery/:filter', component: discovery_1.Discovery, as: 'discovery' },
             { path: '/discovery/:filter/:type', component: discovery_1.Discovery, as: 'discovery' },
             { path: '/messenger', component: gatherings_1.Gatherings, as: 'messenger' },
-            { path: '/notifications', component: comingsoon_1.ComingSoon, as: 'notifications' },
+            { path: '/notifications', component: notifications_1.Notifications, as: 'notifications' },
             { path: '/groups', component: comingsoon_1.ComingSoon, as: 'groups' },
             { path: '/:username', component: channel_1.Channel, as: 'channel' }
         ]),

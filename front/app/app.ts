@@ -14,6 +14,8 @@ import {Capture} from './src/controllers/capture/capture';
 import {Discovery} from './src/controllers/discovery/discovery';
 import {Channel} from './src/controllers/channels/channel';
 import {Gatherings} from './src/plugins/gatherings/gatherings';
+import {Notifications} from './src/controllers/notifications/notifications';
+
 
 @Component({
   selector: 'minds-app',
@@ -29,7 +31,7 @@ import {Gatherings} from './src/plugins/gatherings/gatherings';
 
   { path: '/messenger', component:  Gatherings, as: 'messenger'},
 
-  { path: '/notifications', component: ComingSoon, as: 'notifications'},
+  { path: '/notifications', component: Notifications, as: 'notifications'},
   { path: '/groups', component: ComingSoon, as: 'groups'},
 
   { path: '/:username', component: Channel, as: 'channel' }
