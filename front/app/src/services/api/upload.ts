@@ -31,16 +31,20 @@ export class Upload  {
 		return new Promise((resolve, reject) => {
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', self.base + endpoint, true);
-			xhr.upload.onprogress = (e) => {
+			xhr.onprogress = function(e){
 				progress(e.loaded/e.total);
 			}
 			xhr.onload = function(){
     		if (this.status == 200) {
-					resolve(this.response);
+					resolve(JSON.parse(this.response));
 				} else {
-					reject(this.response);
+					reject(JSON.parse(this.response));
 				}
 			}
+			xhr.onreadystatechange = function(){
+				console.log(this);
+			}
+			xhr.send(formData);
 		});
 	}
 

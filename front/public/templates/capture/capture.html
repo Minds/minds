@@ -1,19 +1,37 @@
-<form #postobj="form" (submit)="uploadFile()">
+
+<div class="mdl-grid capture-grid" style="max-width:900px">
+
+  <form #postobj="form" (submit)="uploadFile()">
 
 
+      <input
+        type="file"
+        id="file"
+        #file
+        [(ng-model)]="postMeta.file"
+        (change)="uploadFile()"
+      />
+
+
+      <button
+        type="submit"
+        class="mdl-button mdl-button--raised mdl-button--colored"
+        >
+        Post
+      </button>
+
+  </form>
+
+</div>
+
+<div class="mdl-grid capture-grid" style="max-width:900px">
+  <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp" *ng-for="#upload of uploads; #i = index">
     <input
-      type="file"
-      id="file"
-      #file
-      [(ng-model)]="postMeta.file"
-    />
-
-
-    <button
-      type="submit"
-      class="mdl-button mdl-button--raised mdl-button--colored"
-      >
-      Post
-    </button>
-
-</form>
+      type="text"
+      [(ng-model)]="upload.name"
+      (change)="modify(i)"
+      />
+    <br/>
+    {{upload.progress}}/100
+  </div>
+</div>
