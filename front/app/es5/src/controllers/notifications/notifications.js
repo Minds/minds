@@ -12,6 +12,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var angular2_1 = require('angular2/angular2');
 var router_1 = require('angular2/router');
 var api_1 = require('src/services/api');
+var session_1 = require('../../services/session');
 var material_1 = require('src/directives/material');
 var infinite_scroll_1 = require('../../directives/infinite-scroll');
 var Notifications = (function () {
@@ -21,6 +22,7 @@ var Notifications = (function () {
         this.moreData = true;
         this.offset = "";
         this.inProgress = false;
+        this.session = session_1.SessionFactory.build();
         this.load(true);
     }
     Notifications.prototype.load = function (refresh) {

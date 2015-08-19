@@ -27,36 +27,33 @@
 
           <!-- comment -->
           <template ng-switch-when="comment">
-            <!-- need to have multiple link options... some are objects, some are newsfeed -->
-            <div *ng-switch="notification.entityObj.type">
-              <!-- Object-->
-              <a ng-switch-when="object" href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
-                <p>
-                  {{notification.fromObj.name}} commented on
-                  <span class="minds-blue" *ng-if="notification.entityObj.title" >{{notification.entityObj.title}}</span>
-                  <span class="minds-blue" *ng-if="!notification.entityObj.title">your {{notification.entityObj.subtype}}</span>
-                </p>
-              </a>
-              <!-- Activity -->
-              <a ng-switch-when="activity" href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
-                <p *ng-if="notification.entityObj.owner_guid == $root.user_guid && !notification.entityObj.title">
-                  {{notification.fromObj.name}} commented on <span class="minds-blue">your activity</span>
-                </p>
-                <p *ng-if="notification.entityObj.owner_guid != $root.user_guid  && !notification.entityObj.title">
-                {{notification.fromObj.name}} commented on <span class="minds-blue">{{notification.entityObj.ownerObj.name}}'s activity</span>
-                </p>
+            <!-- Object-->
+            <a *ng-if="notification.entityObj.type == 'object'" href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+              <p>
+                {{notification.fromObj.name}} commented on
+                <span class="minds-blue" *ng-if="notification.entityObj.title" >{{notification.entityObj.title}}</span>
+                <span class="minds-blue" *ng-if="!notification.entityObj.title">your {{notification.entityObj.subtype}}</span>
+              </p>
+            </a>
+            <!-- Activity -->
+            <a *ng-if="notification.entityObj.type == 'activity'" href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+              <p *ng-if="notification.entityObj.owner_guid == session.getLoggedInUser().guid && !notification.entityObj.title">
+                {{notification.fromObj.name}} commented on <span class="minds-blue">your activity</span>
+              </p>
+              <p *ng-if="notification.entityObj.owner_guid != session.getLoggedInUser().guid  && !notification.entityObj.title">
+              {{notification.fromObj.name}} commented on <span class="minds-blue">{{notification.entityObj.ownerObj.name}}'s activity</span>
+              </p>
 
-                <p *ng-if="notification.entityObj.title">
-                {{notification.fromObj.name}} commented on <span class="minds-blue">{{notification.entityObj.title}}</span>
-                </p>
-              </a>
-              <!-- Default -->
-              <a ng-switch-default>
-                <p style="font-style:italic">
-                There was an error viewing this notification.
-                </p>
-              </a>
-            </div>
+              <p *ng-if="notification.entityObj.title">
+              {{notification.fromObj.name}} commented on <span class="minds-blue">{{notification.entityObj.title}}</span>
+              </p>
+            </a>
+            <!-- Default -->
+            <a *ng-if="notification.entityObj.type != 'object' && notification.entityObj.type != 'activity'">
+              <p style="font-style:italic">
+              There was an error viewing this notification.
+              </p>
+            </a>
           </template>
 
           <!-- up voted content -->

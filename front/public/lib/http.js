@@ -4362,529 +4362,6 @@ System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/d
   };
 });
 
-System.register("angular2/src/facade/lang", [], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/facade/lang";
-  var _global,
-      Type,
-      BaseException,
-      Math,
-      Date,
-      assertionsEnabled_,
-      StringWrapper,
-      StringJoiner,
-      NumberParseError,
-      NumberWrapper,
-      RegExp,
-      RegExpWrapper,
-      RegExpMatcherWrapper,
-      FunctionWrapper,
-      Json,
-      DateWrapper;
-  function getTypeNameForDebugging(type) {
-    return type['name'];
-  }
-  function makeTypeError(message) {
-    return new TypeError(message);
-  }
-  function assertionsEnabled() {
-    return assertionsEnabled_;
-  }
-  function ENUM_INDEX(value) {
-    return value;
-  }
-  function CONST_EXPR(expr) {
-    return expr;
-  }
-  function CONST() {
-    return function(target) {
-      return target;
-    };
-  }
-  function ABSTRACT() {
-    return function(t) {
-      return t;
-    };
-  }
-  function IMPLEMENTS(_) {
-    return function(t) {
-      return t;
-    };
-  }
-  function isPresent(obj) {
-    return obj !== undefined && obj !== null;
-  }
-  function isBlank(obj) {
-    return obj === undefined || obj === null;
-  }
-  function isString(obj) {
-    return typeof obj === "string";
-  }
-  function isFunction(obj) {
-    return typeof obj === "function";
-  }
-  function isType(obj) {
-    return isFunction(obj);
-  }
-  function isStringMap(obj) {
-    return typeof obj === 'object' && obj !== null;
-  }
-  function isPromise(obj) {
-    return obj instanceof _global.Promise;
-  }
-  function isArray(obj) {
-    return Array.isArray(obj);
-  }
-  function isNumber(obj) {
-    return typeof obj === 'number';
-  }
-  function isDate(obj) {
-    return obj instanceof Date && !isNaN(obj.valueOf());
-  }
-  function stringify(token) {
-    if (typeof token === 'string') {
-      return token;
-    }
-    if (token === undefined || token === null) {
-      return '' + token;
-    }
-    if (token.name) {
-      return token.name;
-    }
-    var res = token.toString();
-    var newLineIndex = res.indexOf("\n");
-    return (newLineIndex === -1) ? res : res.substring(0, newLineIndex);
-  }
-  function serializeEnum(val) {
-    return val;
-  }
-  function deserializeEnum(val, values) {
-    return val;
-  }
-  function looseIdentical(a, b) {
-    return a === b || typeof a === "number" && typeof b === "number" && isNaN(a) && isNaN(b);
-  }
-  function getMapKey(value) {
-    return value;
-  }
-  function normalizeBlank(obj) {
-    return isBlank(obj) ? null : obj;
-  }
-  function normalizeBool(obj) {
-    return isBlank(obj) ? false : obj;
-  }
-  function isJsObject(o) {
-    return o !== null && (typeof o === "function" || typeof o === "object");
-  }
-  function print(obj) {
-    if (obj instanceof BaseException) {
-      console.log(obj.stack);
-    } else {
-      console.log(obj);
-    }
-  }
-  $__export("getTypeNameForDebugging", getTypeNameForDebugging);
-  $__export("makeTypeError", makeTypeError);
-  $__export("assertionsEnabled", assertionsEnabled);
-  $__export("ENUM_INDEX", ENUM_INDEX);
-  $__export("CONST_EXPR", CONST_EXPR);
-  $__export("CONST", CONST);
-  $__export("ABSTRACT", ABSTRACT);
-  $__export("IMPLEMENTS", IMPLEMENTS);
-  $__export("isPresent", isPresent);
-  $__export("isBlank", isBlank);
-  $__export("isString", isString);
-  $__export("isFunction", isFunction);
-  $__export("isType", isType);
-  $__export("isStringMap", isStringMap);
-  $__export("isPromise", isPromise);
-  $__export("isArray", isArray);
-  $__export("isNumber", isNumber);
-  $__export("isDate", isDate);
-  $__export("stringify", stringify);
-  $__export("serializeEnum", serializeEnum);
-  $__export("deserializeEnum", deserializeEnum);
-  $__export("looseIdentical", looseIdentical);
-  $__export("getMapKey", getMapKey);
-  $__export("normalizeBlank", normalizeBlank);
-  $__export("normalizeBool", normalizeBool);
-  $__export("isJsObject", isJsObject);
-  $__export("print", print);
-  return {
-    setters: [],
-    execute: function() {
-      _global = (typeof window === 'undefined' ? global : window);
-      $__export("global", _global);
-      Type = Function;
-      $__export("Type", Type);
-      BaseException = function($__super) {
-        function BaseException(message, _originalException, _originalStack, _context) {
-          $traceurRuntime.superConstructor(BaseException).call(this, message);
-          this.message = message;
-          this._originalException = _originalException;
-          this._originalStack = _originalStack;
-          this._context = _context;
-          this.stack = (new Error(message)).stack;
-        }
-        return ($traceurRuntime.createClass)(BaseException, {
-          get originalException() {
-            return this._originalException;
-          },
-          get originalStack() {
-            return this._originalStack;
-          },
-          get context() {
-            return this._context;
-          },
-          toString: function() {
-            return this.message;
-          }
-        }, {}, $__super);
-      }(Error);
-      $__export("BaseException", BaseException);
-      Math = _global.Math;
-      $__export("Math", Math);
-      Date = _global.Date;
-      $__export("Date", Date);
-      assertionsEnabled_ = typeof _global['assert'] !== 'undefined';
-      _global.assert = function assert(condition) {
-        if (assertionsEnabled_) {
-          _global['assert'].call(condition);
-        }
-      };
-      StringWrapper = function() {
-        function StringWrapper() {}
-        return ($traceurRuntime.createClass)(StringWrapper, {}, {
-          fromCharCode: function(code) {
-            return String.fromCharCode(code);
-          },
-          charCodeAt: function(s, index) {
-            return s.charCodeAt(index);
-          },
-          split: function(s, regExp) {
-            return s.split(regExp);
-          },
-          equals: function(s, s2) {
-            return s === s2;
-          },
-          replace: function(s, from, replace) {
-            return s.replace(from, replace);
-          },
-          replaceAll: function(s, from, replace) {
-            return s.replace(from, replace);
-          },
-          toUpperCase: function(s) {
-            return s.toUpperCase();
-          },
-          toLowerCase: function(s) {
-            return s.toLowerCase();
-          },
-          startsWith: function(s, start) {
-            return s.startsWith(start);
-          },
-          substring: function(s, start) {
-            var end = arguments[2] !== (void 0) ? arguments[2] : null;
-            return s.substring(start, end === null ? undefined : end);
-          },
-          replaceAllMapped: function(s, from, cb) {
-            return s.replace(from, function() {
-              for (var matches = [],
-                  $__10 = 0; $__10 < arguments.length; $__10++)
-                matches[$__10] = arguments[$__10];
-              matches.splice(-2, 2);
-              return cb(matches);
-            });
-          },
-          contains: function(s, substr) {
-            return s.indexOf(substr) != -1;
-          },
-          compare: function(a, b) {
-            if (a < b) {
-              return -1;
-            } else if (a > b) {
-              return 1;
-            } else {
-              return 0;
-            }
-          }
-        });
-      }();
-      $__export("StringWrapper", StringWrapper);
-      StringJoiner = function() {
-        function StringJoiner() {
-          var parts = arguments[0] !== (void 0) ? arguments[0] : [];
-          this.parts = parts;
-        }
-        return ($traceurRuntime.createClass)(StringJoiner, {
-          add: function(part) {
-            this.parts.push(part);
-          },
-          toString: function() {
-            return this.parts.join("");
-          }
-        }, {});
-      }();
-      $__export("StringJoiner", StringJoiner);
-      NumberParseError = function($__super) {
-        function NumberParseError(message) {
-          $traceurRuntime.superConstructor(NumberParseError).call(this);
-          this.message = message;
-        }
-        return ($traceurRuntime.createClass)(NumberParseError, {toString: function() {
-            return this.message;
-          }}, {}, $__super);
-      }(BaseException);
-      $__export("NumberParseError", NumberParseError);
-      NumberWrapper = function() {
-        function NumberWrapper() {}
-        return ($traceurRuntime.createClass)(NumberWrapper, {}, {
-          toFixed: function(n, fractionDigits) {
-            return n.toFixed(fractionDigits);
-          },
-          equal: function(a, b) {
-            return a === b;
-          },
-          parseIntAutoRadix: function(text) {
-            var result = parseInt(text);
-            if (isNaN(result)) {
-              throw new NumberParseError("Invalid integer literal when parsing " + text);
-            }
-            return result;
-          },
-          parseInt: function(text, radix) {
-            if (radix == 10) {
-              if (/^(\-|\+)?[0-9]+$/.test(text)) {
-                return parseInt(text, radix);
-              }
-            } else if (radix == 16) {
-              if (/^(\-|\+)?[0-9ABCDEFabcdef]+$/.test(text)) {
-                return parseInt(text, radix);
-              }
-            } else {
-              var result = parseInt(text, radix);
-              if (!isNaN(result)) {
-                return result;
-              }
-            }
-            throw new NumberParseError("Invalid integer literal when parsing " + text + " in base " + radix);
-          },
-          parseFloat: function(text) {
-            return parseFloat(text);
-          },
-          get NaN() {
-            return NaN;
-          },
-          isNaN: function(value) {
-            return isNaN(value);
-          },
-          isInteger: function(value) {
-            return Number.isInteger(value);
-          }
-        });
-      }();
-      $__export("NumberWrapper", NumberWrapper);
-      RegExp = _global.RegExp;
-      $__export("RegExp", RegExp);
-      RegExpWrapper = function() {
-        function RegExpWrapper() {}
-        return ($traceurRuntime.createClass)(RegExpWrapper, {}, {
-          create: function(regExpStr) {
-            var flags = arguments[1] !== (void 0) ? arguments[1] : '';
-            flags = flags.replace(/g/g, '');
-            return new _global.RegExp(regExpStr, flags + 'g');
-          },
-          firstMatch: function(regExp, input) {
-            regExp.lastIndex = 0;
-            return regExp.exec(input);
-          },
-          test: function(regExp, input) {
-            regExp.lastIndex = 0;
-            return regExp.test(input);
-          },
-          matcher: function(regExp, input) {
-            regExp.lastIndex = 0;
-            return {
-              re: regExp,
-              input: input
-            };
-          }
-        });
-      }();
-      $__export("RegExpWrapper", RegExpWrapper);
-      RegExpMatcherWrapper = function() {
-        function RegExpMatcherWrapper() {}
-        return ($traceurRuntime.createClass)(RegExpMatcherWrapper, {}, {next: function(matcher) {
-            return matcher.re.exec(matcher.input);
-          }});
-      }();
-      $__export("RegExpMatcherWrapper", RegExpMatcherWrapper);
-      FunctionWrapper = function() {
-        function FunctionWrapper() {}
-        return ($traceurRuntime.createClass)(FunctionWrapper, {}, {apply: function(fn, posArgs) {
-            return fn.apply(null, posArgs);
-          }});
-      }();
-      $__export("FunctionWrapper", FunctionWrapper);
-      Json = function() {
-        function Json() {}
-        return ($traceurRuntime.createClass)(Json, {}, {
-          parse: function(s) {
-            return _global.JSON.parse(s);
-          },
-          stringify: function(data) {
-            return _global.JSON.stringify(data, null, 2);
-          }
-        });
-      }();
-      $__export("Json", Json);
-      DateWrapper = function() {
-        function DateWrapper() {}
-        return ($traceurRuntime.createClass)(DateWrapper, {}, {
-          create: function(year) {
-            var month = arguments[1] !== (void 0) ? arguments[1] : 1;
-            var day = arguments[2] !== (void 0) ? arguments[2] : 1;
-            var hour = arguments[3] !== (void 0) ? arguments[3] : 0;
-            var minutes = arguments[4] !== (void 0) ? arguments[4] : 0;
-            var seconds = arguments[5] !== (void 0) ? arguments[5] : 0;
-            var milliseconds = arguments[6] !== (void 0) ? arguments[6] : 0;
-            return new Date(year, month - 1, day, hour, minutes, seconds, milliseconds);
-          },
-          fromMillis: function(ms) {
-            return new Date(ms);
-          },
-          toMillis: function(date) {
-            return date.getTime();
-          },
-          now: function() {
-            return new Date();
-          },
-          toJson: function(date) {
-            return date.toJSON();
-          }
-        });
-      }();
-      $__export("DateWrapper", DateWrapper);
-    }
-  };
-});
-
-System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_xhr", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/backends/xhr_backend";
-  var __decorate,
-      __metadata,
-      RequestMethodsMap,
-      ResponseTypes,
-      Response,
-      ResponseOptions,
-      Injectable,
-      BrowserXhr,
-      EventEmitter,
-      ObservableWrapper,
-      isPresent,
-      ENUM_INDEX,
-      XHRConnection,
-      XHRBackend;
-  return {
-    setters: [function($__m) {
-      RequestMethodsMap = $__m.RequestMethodsMap;
-      ResponseTypes = $__m.ResponseTypes;
-    }, function($__m) {
-      Response = $__m.Response;
-    }, function($__m) {
-      ResponseOptions = $__m.ResponseOptions;
-    }, function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
-      BrowserXhr = $__m.BrowserXhr;
-    }, function($__m) {
-      EventEmitter = $__m.EventEmitter;
-      ObservableWrapper = $__m.ObservableWrapper;
-    }, function($__m) {
-      isPresent = $__m.isPresent;
-      ENUM_INDEX = $__m.ENUM_INDEX;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      XHRConnection = function() {
-        function XHRConnection(req, browserXHR, baseResponseOptions) {
-          var $__3 = this;
-          var requestMethodsMap = new RequestMethodsMap();
-          this.request = req;
-          this.response = new EventEmitter();
-          this._xhr = browserXHR.build();
-          this._xhr.open(requestMethodsMap.getMethod(ENUM_INDEX(req.method)), req.url);
-          this._xhr.addEventListener('load', function(_) {
-            var response = isPresent($__3._xhr.response) ? $__3._xhr.response : $__3._xhr.responseText;
-            var status = $__3._xhr.status === 1223 ? 204 : $__3._xhr.status;
-            if (status === 0) {
-              status = response ? 200 : 0;
-            }
-            var responseOptions = new ResponseOptions({
-              body: response,
-              status: status
-            });
-            if (isPresent(baseResponseOptions)) {
-              responseOptions = baseResponseOptions.merge(responseOptions);
-            }
-            ObservableWrapper.callNext($__3.response, new Response(responseOptions));
-            ObservableWrapper.callReturn($__3.response);
-          });
-          this._xhr.addEventListener('error', function(err) {
-            var responseOptions = new ResponseOptions({
-              body: err,
-              type: ResponseTypes.Error
-            });
-            if (isPresent(baseResponseOptions)) {
-              responseOptions = baseResponseOptions.merge(responseOptions);
-            }
-            ObservableWrapper.callThrow($__3.response, new Response(responseOptions));
-          });
-          if (isPresent(req.headers)) {
-            req.headers.forEach(function(value, name) {
-              $__3._xhr.setRequestHeader(name, value);
-            });
-          }
-          this._xhr.send(this.request.text());
-        }
-        return ($traceurRuntime.createClass)(XHRConnection, {dispose: function() {
-            this._xhr.abort();
-          }}, {});
-      }();
-      $__export("XHRConnection", XHRConnection);
-      XHRBackend = ($traceurRuntime.createClass)(function(_browserXHR, _baseResponseOptions) {
-        this._browserXHR = _browserXHR;
-        this._baseResponseOptions = _baseResponseOptions;
-      }, {createConnection: function(request) {
-          return new XHRConnection(request, this._browserXHR, this._baseResponseOptions);
-        }}, {});
-      $__export("XHRBackend", XHRBackend);
-      $__export("XHRBackend", XHRBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserXhr, ResponseOptions])], XHRBackend));
-    }
-  };
-});
-
 System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_jsonp", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "http/src/backends/jsonp_backend";
@@ -5020,6 +4497,123 @@ System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/
         }}, {});
       $__export("JSONPBackend", JSONPBackend);
       $__export("JSONPBackend", JSONPBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserJsonp, ResponseOptions])], JSONPBackend));
+    }
+  };
+});
+
+System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_xhr", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/backends/xhr_backend";
+  var __decorate,
+      __metadata,
+      RequestMethodsMap,
+      ResponseTypes,
+      Response,
+      ResponseOptions,
+      Injectable,
+      BrowserXhr,
+      EventEmitter,
+      ObservableWrapper,
+      isPresent,
+      ENUM_INDEX,
+      XHRConnection,
+      XHRBackend;
+  return {
+    setters: [function($__m) {
+      RequestMethodsMap = $__m.RequestMethodsMap;
+      ResponseTypes = $__m.ResponseTypes;
+    }, function($__m) {
+      Response = $__m.Response;
+    }, function($__m) {
+      ResponseOptions = $__m.ResponseOptions;
+    }, function($__m) {
+      Injectable = $__m.Injectable;
+    }, function($__m) {
+      BrowserXhr = $__m.BrowserXhr;
+    }, function($__m) {
+      EventEmitter = $__m.EventEmitter;
+      ObservableWrapper = $__m.ObservableWrapper;
+    }, function($__m) {
+      isPresent = $__m.isPresent;
+      ENUM_INDEX = $__m.ENUM_INDEX;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      XHRConnection = function() {
+        function XHRConnection(req, browserXHR, baseResponseOptions) {
+          var $__3 = this;
+          var requestMethodsMap = new RequestMethodsMap();
+          this.request = req;
+          this.response = new EventEmitter();
+          this._xhr = browserXHR.build();
+          this._xhr.open(requestMethodsMap.getMethod(ENUM_INDEX(req.method)), req.url);
+          this._xhr.addEventListener('load', function(_) {
+            var response = isPresent($__3._xhr.response) ? $__3._xhr.response : $__3._xhr.responseText;
+            var status = $__3._xhr.status === 1223 ? 204 : $__3._xhr.status;
+            if (status === 0) {
+              status = response ? 200 : 0;
+            }
+            var responseOptions = new ResponseOptions({
+              body: response,
+              status: status
+            });
+            if (isPresent(baseResponseOptions)) {
+              responseOptions = baseResponseOptions.merge(responseOptions);
+            }
+            ObservableWrapper.callNext($__3.response, new Response(responseOptions));
+            ObservableWrapper.callReturn($__3.response);
+          });
+          this._xhr.addEventListener('error', function(err) {
+            var responseOptions = new ResponseOptions({
+              body: err,
+              type: ResponseTypes.Error
+            });
+            if (isPresent(baseResponseOptions)) {
+              responseOptions = baseResponseOptions.merge(responseOptions);
+            }
+            ObservableWrapper.callThrow($__3.response, new Response(responseOptions));
+          });
+          if (isPresent(req.headers)) {
+            req.headers.forEach(function(value, name) {
+              $__3._xhr.setRequestHeader(name, value);
+            });
+          }
+          this._xhr.send(this.request.text());
+        }
+        return ($traceurRuntime.createClass)(XHRConnection, {dispose: function() {
+            this._xhr.abort();
+          }}, {});
+      }();
+      $__export("XHRConnection", XHRConnection);
+      XHRBackend = ($traceurRuntime.createClass)(function(_browserXHR, _baseResponseOptions) {
+        this._browserXHR = _browserXHR;
+        this._baseResponseOptions = _baseResponseOptions;
+      }, {createConnection: function(request) {
+          return new XHRConnection(request, this._browserXHR, this._baseResponseOptions);
+        }}, {});
+      $__export("XHRBackend", XHRBackend);
+      $__export("XHRBackend", XHRBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserXhr, ResponseOptions])], XHRBackend));
     }
   };
 });
@@ -5253,6 +4847,40 @@ System.register("http/src/base_request_options", ["angular2/src/facade/lang", "h
   };
 });
 
+System.register("http/src/interfaces", ["angular2/src/facade/lang", "http/src/url_search_params"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/interfaces";
+  var BaseException,
+      URLSearchParamsUnionFixer,
+      URLSearchParams_UnionFixer,
+      ConnectionBackend,
+      Connection;
+  return {
+    setters: [function($__m) {
+      BaseException = $__m.BaseException;
+    }, function($__m) {
+      URLSearchParamsUnionFixer = $__m.URLSearchParamsUnionFixer;
+    }],
+    execute: function() {
+      URLSearchParams_UnionFixer = URLSearchParamsUnionFixer;
+      ConnectionBackend = function() {
+        function ConnectionBackend() {}
+        return ($traceurRuntime.createClass)(ConnectionBackend, {createConnection: function(request) {
+            throw new BaseException('Abstract!');
+          }}, {});
+      }();
+      $__export("ConnectionBackend", ConnectionBackend);
+      Connection = function() {
+        function Connection() {}
+        return ($traceurRuntime.createClass)(Connection, {dispose: function() {
+            throw new BaseException('Abstract!');
+          }}, {});
+      }();
+      $__export("Connection", Connection);
+    }
+  };
+});
+
 System.register("http/src/base_response_options", ["angular2/di", "angular2/src/facade/lang", "http/src/headers", "http/src/enums"], function($__export) {
   "use strict";
   var __moduleName = "http/src/base_response_options";
@@ -5338,40 +4966,6 @@ System.register("http/src/base_response_options", ["angular2/di", "angular2/src/
       }(ResponseOptions);
       $__export("BaseResponseOptions", BaseResponseOptions);
       $__export("BaseResponseOptions", BaseResponseOptions = __decorate([Injectable(), __metadata('design:paramtypes', [])], BaseResponseOptions));
-    }
-  };
-});
-
-System.register("http/src/interfaces", ["angular2/src/facade/lang", "http/src/url_search_params"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/interfaces";
-  var BaseException,
-      URLSearchParamsUnionFixer,
-      URLSearchParams_UnionFixer,
-      ConnectionBackend,
-      Connection;
-  return {
-    setters: [function($__m) {
-      BaseException = $__m.BaseException;
-    }, function($__m) {
-      URLSearchParamsUnionFixer = $__m.URLSearchParamsUnionFixer;
-    }],
-    execute: function() {
-      URLSearchParams_UnionFixer = URLSearchParamsUnionFixer;
-      ConnectionBackend = function() {
-        function ConnectionBackend() {}
-        return ($traceurRuntime.createClass)(ConnectionBackend, {createConnection: function(request) {
-            throw new BaseException('Abstract!');
-          }}, {});
-      }();
-      $__export("ConnectionBackend", ConnectionBackend);
-      Connection = function() {
-        function Connection() {}
-        return ($traceurRuntime.createClass)(Connection, {dispose: function() {
-            throw new BaseException('Abstract!');
-          }}, {});
-      }();
-      $__export("Connection", Connection);
     }
   };
 });
@@ -5895,157 +5489,408 @@ System.register("http/src/url_search_params", ["angular2/src/facade/lang", "angu
   };
 });
 
-System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"], function($__export) {
+System.register("angular2/src/facade/lang", [], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/facade/async";
-  var global,
-      Rx,
-      PromiseWrapper,
-      TimerWrapper,
-      ObservableWrapper,
-      Observable,
-      EventEmitter;
+  var __moduleName = "angular2/src/facade/lang";
+  var _global,
+      Type,
+      BaseException,
+      Math,
+      Date,
+      assertionsEnabled_,
+      StringWrapper,
+      StringJoiner,
+      NumberParseError,
+      NumberWrapper,
+      RegExp,
+      RegExpWrapper,
+      RegExpMatcherWrapper,
+      FunctionWrapper,
+      Json,
+      DateWrapper;
+  function getTypeNameForDebugging(type) {
+    return type['name'];
+  }
+  function makeTypeError(message) {
+    return new TypeError(message);
+  }
+  function assertionsEnabled() {
+    return assertionsEnabled_;
+  }
+  function ENUM_INDEX(value) {
+    return value;
+  }
+  function CONST_EXPR(expr) {
+    return expr;
+  }
+  function CONST() {
+    return function(target) {
+      return target;
+    };
+  }
+  function ABSTRACT() {
+    return function(t) {
+      return t;
+    };
+  }
+  function IMPLEMENTS(_) {
+    return function(t) {
+      return t;
+    };
+  }
+  function isPresent(obj) {
+    return obj !== undefined && obj !== null;
+  }
+  function isBlank(obj) {
+    return obj === undefined || obj === null;
+  }
+  function isString(obj) {
+    return typeof obj === "string";
+  }
+  function isFunction(obj) {
+    return typeof obj === "function";
+  }
+  function isType(obj) {
+    return isFunction(obj);
+  }
+  function isStringMap(obj) {
+    return typeof obj === 'object' && obj !== null;
+  }
+  function isPromise(obj) {
+    return obj instanceof _global.Promise;
+  }
+  function isArray(obj) {
+    return Array.isArray(obj);
+  }
+  function isNumber(obj) {
+    return typeof obj === 'number';
+  }
+  function isDate(obj) {
+    return obj instanceof Date && !isNaN(obj.valueOf());
+  }
+  function stringify(token) {
+    if (typeof token === 'string') {
+      return token;
+    }
+    if (token === undefined || token === null) {
+      return '' + token;
+    }
+    if (token.name) {
+      return token.name;
+    }
+    var res = token.toString();
+    var newLineIndex = res.indexOf("\n");
+    return (newLineIndex === -1) ? res : res.substring(0, newLineIndex);
+  }
+  function serializeEnum(val) {
+    return val;
+  }
+  function deserializeEnum(val, values) {
+    return val;
+  }
+  function looseIdentical(a, b) {
+    return a === b || typeof a === "number" && typeof b === "number" && isNaN(a) && isNaN(b);
+  }
+  function getMapKey(value) {
+    return value;
+  }
+  function normalizeBlank(obj) {
+    return isBlank(obj) ? null : obj;
+  }
+  function normalizeBool(obj) {
+    return isBlank(obj) ? false : obj;
+  }
+  function isJsObject(o) {
+    return o !== null && (typeof o === "function" || typeof o === "object");
+  }
+  function print(obj) {
+    if (obj instanceof BaseException) {
+      console.log(obj.stack);
+    } else {
+      console.log(obj);
+    }
+  }
+  $__export("getTypeNameForDebugging", getTypeNameForDebugging);
+  $__export("makeTypeError", makeTypeError);
+  $__export("assertionsEnabled", assertionsEnabled);
+  $__export("ENUM_INDEX", ENUM_INDEX);
+  $__export("CONST_EXPR", CONST_EXPR);
+  $__export("CONST", CONST);
+  $__export("ABSTRACT", ABSTRACT);
+  $__export("IMPLEMENTS", IMPLEMENTS);
+  $__export("isPresent", isPresent);
+  $__export("isBlank", isBlank);
+  $__export("isString", isString);
+  $__export("isFunction", isFunction);
+  $__export("isType", isType);
+  $__export("isStringMap", isStringMap);
+  $__export("isPromise", isPromise);
+  $__export("isArray", isArray);
+  $__export("isNumber", isNumber);
+  $__export("isDate", isDate);
+  $__export("stringify", stringify);
+  $__export("serializeEnum", serializeEnum);
+  $__export("deserializeEnum", deserializeEnum);
+  $__export("looseIdentical", looseIdentical);
+  $__export("getMapKey", getMapKey);
+  $__export("normalizeBlank", normalizeBlank);
+  $__export("normalizeBool", normalizeBool);
+  $__export("isJsObject", isJsObject);
+  $__export("print", print);
   return {
-    setters: [function($__m) {
-      global = $__m.global;
-    }, function($__m) {
-      Rx = $__m;
-    }],
+    setters: [],
     execute: function() {
-      $__export("Promise", Promise);
-      PromiseWrapper = function() {
-        function PromiseWrapper() {}
-        return ($traceurRuntime.createClass)(PromiseWrapper, {}, {
-          resolve: function(obj) {
-            return Promise.resolve(obj);
+      _global = (typeof window === 'undefined' ? global : window);
+      $__export("global", _global);
+      Type = Function;
+      $__export("Type", Type);
+      BaseException = function($__super) {
+        function BaseException(message, _originalException, _originalStack, _context) {
+          $traceurRuntime.superConstructor(BaseException).call(this, message);
+          this.message = message;
+          this._originalException = _originalException;
+          this._originalStack = _originalStack;
+          this._context = _context;
+          this.stack = (new Error(message)).stack;
+        }
+        return ($traceurRuntime.createClass)(BaseException, {
+          get originalException() {
+            return this._originalException;
           },
-          reject: function(obj, _) {
-            return Promise.reject(obj);
+          get originalStack() {
+            return this._originalStack;
           },
-          catchError: function(promise, onError) {
-            return promise.catch(onError);
+          get context() {
+            return this._context;
           },
-          all: function(promises) {
-            if (promises.length == 0)
-              return Promise.resolve([]);
-            return Promise.all(promises);
+          toString: function() {
+            return this.message;
+          }
+        }, {}, $__super);
+      }(Error);
+      $__export("BaseException", BaseException);
+      Math = _global.Math;
+      $__export("Math", Math);
+      Date = _global.Date;
+      $__export("Date", Date);
+      assertionsEnabled_ = typeof _global['assert'] !== 'undefined';
+      _global.assert = function assert(condition) {
+        if (assertionsEnabled_) {
+          _global['assert'].call(condition);
+        }
+      };
+      StringWrapper = function() {
+        function StringWrapper() {}
+        return ($traceurRuntime.createClass)(StringWrapper, {}, {
+          fromCharCode: function(code) {
+            return String.fromCharCode(code);
           },
-          then: function(promise, success, rejection) {
-            return promise.then(success, rejection);
+          charCodeAt: function(s, index) {
+            return s.charCodeAt(index);
           },
-          wrap: function(computation) {
-            return new Promise(function(res, rej) {
-              try {
-                res(computation());
-              } catch (e) {
-                rej(e);
+          split: function(s, regExp) {
+            return s.split(regExp);
+          },
+          equals: function(s, s2) {
+            return s === s2;
+          },
+          replace: function(s, from, replace) {
+            return s.replace(from, replace);
+          },
+          replaceAll: function(s, from, replace) {
+            return s.replace(from, replace);
+          },
+          toUpperCase: function(s) {
+            return s.toUpperCase();
+          },
+          toLowerCase: function(s) {
+            return s.toLowerCase();
+          },
+          startsWith: function(s, start) {
+            return s.startsWith(start);
+          },
+          substring: function(s, start) {
+            var end = arguments[2] !== (void 0) ? arguments[2] : null;
+            return s.substring(start, end === null ? undefined : end);
+          },
+          replaceAllMapped: function(s, from, cb) {
+            return s.replace(from, function() {
+              for (var matches = [],
+                  $__10 = 0; $__10 < arguments.length; $__10++)
+                matches[$__10] = arguments[$__10];
+              matches.splice(-2, 2);
+              return cb(matches);
+            });
+          },
+          contains: function(s, substr) {
+            return s.indexOf(substr) != -1;
+          },
+          compare: function(a, b) {
+            if (a < b) {
+              return -1;
+            } else if (a > b) {
+              return 1;
+            } else {
+              return 0;
+            }
+          }
+        });
+      }();
+      $__export("StringWrapper", StringWrapper);
+      StringJoiner = function() {
+        function StringJoiner() {
+          var parts = arguments[0] !== (void 0) ? arguments[0] : [];
+          this.parts = parts;
+        }
+        return ($traceurRuntime.createClass)(StringJoiner, {
+          add: function(part) {
+            this.parts.push(part);
+          },
+          toString: function() {
+            return this.parts.join("");
+          }
+        }, {});
+      }();
+      $__export("StringJoiner", StringJoiner);
+      NumberParseError = function($__super) {
+        function NumberParseError(message) {
+          $traceurRuntime.superConstructor(NumberParseError).call(this);
+          this.message = message;
+        }
+        return ($traceurRuntime.createClass)(NumberParseError, {toString: function() {
+            return this.message;
+          }}, {}, $__super);
+      }(BaseException);
+      $__export("NumberParseError", NumberParseError);
+      NumberWrapper = function() {
+        function NumberWrapper() {}
+        return ($traceurRuntime.createClass)(NumberWrapper, {}, {
+          toFixed: function(n, fractionDigits) {
+            return n.toFixed(fractionDigits);
+          },
+          equal: function(a, b) {
+            return a === b;
+          },
+          parseIntAutoRadix: function(text) {
+            var result = parseInt(text);
+            if (isNaN(result)) {
+              throw new NumberParseError("Invalid integer literal when parsing " + text);
+            }
+            return result;
+          },
+          parseInt: function(text, radix) {
+            if (radix == 10) {
+              if (/^(\-|\+)?[0-9]+$/.test(text)) {
+                return parseInt(text, radix);
               }
-            });
+            } else if (radix == 16) {
+              if (/^(\-|\+)?[0-9ABCDEFabcdef]+$/.test(text)) {
+                return parseInt(text, radix);
+              }
+            } else {
+              var result = parseInt(text, radix);
+              if (!isNaN(result)) {
+                return result;
+              }
+            }
+            throw new NumberParseError("Invalid integer literal when parsing " + text + " in base " + radix);
           },
-          completer: function() {
-            var resolve;
-            var reject;
-            var p = new Promise(function(res, rej) {
-              resolve = res;
-              reject = rej;
-            });
+          parseFloat: function(text) {
+            return parseFloat(text);
+          },
+          get NaN() {
+            return NaN;
+          },
+          isNaN: function(value) {
+            return isNaN(value);
+          },
+          isInteger: function(value) {
+            return Number.isInteger(value);
+          }
+        });
+      }();
+      $__export("NumberWrapper", NumberWrapper);
+      RegExp = _global.RegExp;
+      $__export("RegExp", RegExp);
+      RegExpWrapper = function() {
+        function RegExpWrapper() {}
+        return ($traceurRuntime.createClass)(RegExpWrapper, {}, {
+          create: function(regExpStr) {
+            var flags = arguments[1] !== (void 0) ? arguments[1] : '';
+            flags = flags.replace(/g/g, '');
+            return new _global.RegExp(regExpStr, flags + 'g');
+          },
+          firstMatch: function(regExp, input) {
+            regExp.lastIndex = 0;
+            return regExp.exec(input);
+          },
+          test: function(regExp, input) {
+            regExp.lastIndex = 0;
+            return regExp.test(input);
+          },
+          matcher: function(regExp, input) {
+            regExp.lastIndex = 0;
             return {
-              promise: p,
-              resolve: resolve,
-              reject: reject
+              re: regExp,
+              input: input
             };
           }
         });
       }();
-      $__export("PromiseWrapper", PromiseWrapper);
-      TimerWrapper = function() {
-        function TimerWrapper() {}
-        return ($traceurRuntime.createClass)(TimerWrapper, {}, {
-          setTimeout: function(fn, millis) {
-            return global.setTimeout(fn, millis);
+      $__export("RegExpWrapper", RegExpWrapper);
+      RegExpMatcherWrapper = function() {
+        function RegExpMatcherWrapper() {}
+        return ($traceurRuntime.createClass)(RegExpMatcherWrapper, {}, {next: function(matcher) {
+            return matcher.re.exec(matcher.input);
+          }});
+      }();
+      $__export("RegExpMatcherWrapper", RegExpMatcherWrapper);
+      FunctionWrapper = function() {
+        function FunctionWrapper() {}
+        return ($traceurRuntime.createClass)(FunctionWrapper, {}, {apply: function(fn, posArgs) {
+            return fn.apply(null, posArgs);
+          }});
+      }();
+      $__export("FunctionWrapper", FunctionWrapper);
+      Json = function() {
+        function Json() {}
+        return ($traceurRuntime.createClass)(Json, {}, {
+          parse: function(s) {
+            return _global.JSON.parse(s);
           },
-          clearTimeout: function(id) {
-            global.clearTimeout(id);
-          },
-          setInterval: function(fn, millis) {
-            return global.setInterval(fn, millis);
-          },
-          clearInterval: function(id) {
-            global.clearInterval(id);
+          stringify: function(data) {
+            return _global.JSON.stringify(data, null, 2);
           }
         });
       }();
-      $__export("TimerWrapper", TimerWrapper);
-      ObservableWrapper = function() {
-        function ObservableWrapper() {}
-        return ($traceurRuntime.createClass)(ObservableWrapper, {}, {
-          subscribe: function(emitter, onNext) {
-            var onThrow = arguments[2] !== (void 0) ? arguments[2] : null;
-            var onReturn = arguments[3] !== (void 0) ? arguments[3] : null;
-            return emitter.observer({
-              next: onNext,
-              throw: onThrow,
-              return: onReturn
-            });
+      $__export("Json", Json);
+      DateWrapper = function() {
+        function DateWrapper() {}
+        return ($traceurRuntime.createClass)(DateWrapper, {}, {
+          create: function(year) {
+            var month = arguments[1] !== (void 0) ? arguments[1] : 1;
+            var day = arguments[2] !== (void 0) ? arguments[2] : 1;
+            var hour = arguments[3] !== (void 0) ? arguments[3] : 0;
+            var minutes = arguments[4] !== (void 0) ? arguments[4] : 0;
+            var seconds = arguments[5] !== (void 0) ? arguments[5] : 0;
+            var milliseconds = arguments[6] !== (void 0) ? arguments[6] : 0;
+            return new Date(year, month - 1, day, hour, minutes, seconds, milliseconds);
           },
-          isObservable: function(obs) {
-            return obs instanceof Observable;
+          fromMillis: function(ms) {
+            return new Date(ms);
           },
-          dispose: function(subscription) {
-            subscription.dispose();
+          toMillis: function(date) {
+            return date.getTime();
           },
-          callNext: function(emitter, value) {
-            emitter.next(value);
+          now: function() {
+            return new Date();
           },
-          callThrow: function(emitter, error) {
-            emitter.throw(error);
-          },
-          callReturn: function(emitter) {
-            emitter.return(null);
+          toJson: function(date) {
+            return date.toJSON();
           }
         });
       }();
-      $__export("ObservableWrapper", ObservableWrapper);
-      Observable = function() {
-        function Observable() {}
-        return ($traceurRuntime.createClass)(Observable, {observer: function(generator) {
-            return null;
-          }}, {});
-      }();
-      $__export("Observable", Observable);
-      EventEmitter = function($__super) {
-        function EventEmitter() {
-          $traceurRuntime.superConstructor(EventEmitter).call(this);
-          this._subject = new Rx.Subject();
-          this._immediateScheduler = Rx.Scheduler.immediate;
-        }
-        return ($traceurRuntime.createClass)(EventEmitter, {
-          observer: function(generator) {
-            return this._subject.observeOn(this._immediateScheduler).subscribe(function(value) {
-              setTimeout(function() {
-                return generator.next(value);
-              });
-            }, function(error) {
-              return generator.throw ? generator.throw(error) : null;
-            }, function() {
-              return generator.return ? generator.return() : null;
-            });
-          },
-          toRx: function() {
-            return this._subject;
-          },
-          next: function(value) {
-            this._subject.onNext(value);
-          },
-          throw: function(error) {
-            this._subject.onError(error);
-          },
-          return: function(value) {
-            this._subject.onCompleted();
-          }
-        }, {}, $__super);
-      }(Observable);
-      $__export("EventEmitter", EventEmitter);
+      $__export("DateWrapper", DateWrapper);
     }
   };
 });
@@ -6490,83 +6335,157 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
   };
 });
 
-System.register("angular2/src/di/metadata", ["angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/metadata";
-  var __decorate,
-      __metadata,
-      CONST,
-      stringify,
-      InjectMetadata,
-      OptionalMetadata,
-      DependencyMetadata,
-      InjectableMetadata,
-      SelfMetadata,
-      SkipSelfMetadata,
-      HostMetadata;
+  var __moduleName = "angular2/src/facade/async";
+  var global,
+      Rx,
+      PromiseWrapper,
+      TimerWrapper,
+      ObservableWrapper,
+      Observable,
+      EventEmitter;
   return {
     setters: [function($__m) {
-      CONST = $__m.CONST;
-      stringify = $__m.stringify;
+      global = $__m.global;
+    }, function($__m) {
+      Rx = $__m;
     }],
     execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
+      $__export("Promise", Promise);
+      PromiseWrapper = function() {
+        function PromiseWrapper() {}
+        return ($traceurRuntime.createClass)(PromiseWrapper, {}, {
+          resolve: function(obj) {
+            return Promise.resolve(obj);
+          },
+          reject: function(obj, _) {
+            return Promise.reject(obj);
+          },
+          catchError: function(promise, onError) {
+            return promise.catch(onError);
+          },
+          all: function(promises) {
+            if (promises.length == 0)
+              return Promise.resolve([]);
+            return Promise.all(promises);
+          },
+          then: function(promise, success, rejection) {
+            return promise.then(success, rejection);
+          },
+          wrap: function(computation) {
+            return new Promise(function(res, rej) {
+              try {
+                res(computation());
+              } catch (e) {
+                rej(e);
+              }
+            });
+          },
+          completer: function() {
+            var resolve;
+            var reject;
+            var p = new Promise(function(res, rej) {
+              resolve = res;
+              reject = rej;
+            });
+            return {
+              promise: p,
+              resolve: resolve,
+              reject: reject
+            };
+          }
+        });
+      }();
+      $__export("PromiseWrapper", PromiseWrapper);
+      TimerWrapper = function() {
+        function TimerWrapper() {}
+        return ($traceurRuntime.createClass)(TimerWrapper, {}, {
+          setTimeout: function(fn, millis) {
+            return global.setTimeout(fn, millis);
+          },
+          clearTimeout: function(id) {
+            global.clearTimeout(id);
+          },
+          setInterval: function(fn, millis) {
+            return global.setInterval(fn, millis);
+          },
+          clearInterval: function(id) {
+            global.clearInterval(id);
+          }
+        });
+      }();
+      $__export("TimerWrapper", TimerWrapper);
+      ObservableWrapper = function() {
+        function ObservableWrapper() {}
+        return ($traceurRuntime.createClass)(ObservableWrapper, {}, {
+          subscribe: function(emitter, onNext) {
+            var onThrow = arguments[2] !== (void 0) ? arguments[2] : null;
+            var onReturn = arguments[3] !== (void 0) ? arguments[3] : null;
+            return emitter.observer({
+              next: onNext,
+              throw: onThrow,
+              return: onReturn
+            });
+          },
+          isObservable: function(obs) {
+            return obs instanceof Observable;
+          },
+          dispose: function(subscription) {
+            subscription.dispose();
+          },
+          callNext: function(emitter, value) {
+            emitter.next(value);
+          },
+          callThrow: function(emitter, error) {
+            emitter.throw(error);
+          },
+          callReturn: function(emitter) {
+            emitter.return(null);
+          }
+        });
+      }();
+      $__export("ObservableWrapper", ObservableWrapper);
+      Observable = function() {
+        function Observable() {}
+        return ($traceurRuntime.createClass)(Observable, {observer: function(generator) {
+            return null;
+          }}, {});
+      }();
+      $__export("Observable", Observable);
+      EventEmitter = function($__super) {
+        function EventEmitter() {
+          $traceurRuntime.superConstructor(EventEmitter).call(this);
+          this._subject = new Rx.Subject();
+          this._immediateScheduler = Rx.Scheduler.immediate;
         }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      InjectMetadata = ($traceurRuntime.createClass)(function(token) {
-        this.token = token;
-      }, {toString: function() {
-          return ("@Inject(" + stringify(this.token) + ")");
-        }}, {});
-      $__export("InjectMetadata", InjectMetadata);
-      $__export("InjectMetadata", InjectMetadata = __decorate([CONST(), __metadata('design:paramtypes', [Object])], InjectMetadata));
-      OptionalMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
-          return "@Optional()";
-        }}, {});
-      $__export("OptionalMetadata", OptionalMetadata);
-      $__export("OptionalMetadata", OptionalMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], OptionalMetadata));
-      DependencyMetadata = ($traceurRuntime.createClass)(function() {}, {get token() {
-          return null;
-        }}, {});
-      $__export("DependencyMetadata", DependencyMetadata);
-      $__export("DependencyMetadata", DependencyMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], DependencyMetadata));
-      InjectableMetadata = ($traceurRuntime.createClass)(function() {}, {}, {});
-      $__export("InjectableMetadata", InjectableMetadata);
-      $__export("InjectableMetadata", InjectableMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], InjectableMetadata));
-      SelfMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
-          return "@Self()";
-        }}, {});
-      $__export("SelfMetadata", SelfMetadata);
-      $__export("SelfMetadata", SelfMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], SelfMetadata));
-      SkipSelfMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
-          return "@SkipSelf()";
-        }}, {});
-      $__export("SkipSelfMetadata", SkipSelfMetadata);
-      $__export("SkipSelfMetadata", SkipSelfMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], SkipSelfMetadata));
-      HostMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
-          return "@Host()";
-        }}, {});
-      $__export("HostMetadata", HostMetadata);
-      $__export("HostMetadata", HostMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], HostMetadata));
+        return ($traceurRuntime.createClass)(EventEmitter, {
+          observer: function(generator) {
+            return this._subject.observeOn(this._immediateScheduler).subscribe(function(value) {
+              setTimeout(function() {
+                return generator.next(value);
+              });
+            }, function(error) {
+              return generator.throw ? generator.throw(error) : null;
+            }, function() {
+              return generator.return ? generator.return() : null;
+            });
+          },
+          toRx: function() {
+            return this._subject;
+          },
+          next: function(value) {
+            this._subject.onNext(value);
+          },
+          throw: function(error) {
+            this._subject.onError(error);
+          },
+          return: function(value) {
+            this._subject.onCompleted();
+          }
+        }, {}, $__super);
+      }(Observable);
+      $__export("EventEmitter", EventEmitter);
     }
   };
 });
@@ -6617,150 +6536,6 @@ System.register("angular2/src/di/decorators", ["angular2/src/di/metadata", "angu
   };
 });
 
-System.register("angular2/src/util/decorators", ["angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/util/decorators";
-  var global,
-      isFunction,
-      stringify,
-      Reflect;
-  function extractAnnotation(annotation) {
-    if (isFunction(annotation) && annotation.hasOwnProperty('annotation')) {
-      annotation = annotation.annotation;
-    }
-    return annotation;
-  }
-  function applyParams(fnOrArray, key) {
-    if (fnOrArray === Object || fnOrArray === String || fnOrArray === Function || fnOrArray === Number || fnOrArray === Array) {
-      throw new Error(("Can not use native " + stringify(fnOrArray) + " as constructor"));
-    }
-    if (isFunction(fnOrArray)) {
-      return fnOrArray;
-    } else if (fnOrArray instanceof Array) {
-      var annotations = fnOrArray;
-      var fn = fnOrArray[fnOrArray.length - 1];
-      if (!isFunction(fn)) {
-        throw new Error(("Last position of Class method array must be Function in key " + key + " was '" + stringify(fn) + "'"));
-      }
-      var annoLength = annotations.length - 1;
-      if (annoLength != fn.length) {
-        throw new Error(("Number of annotations (" + annoLength + ") does not match number of arguments (" + fn.length + ") in the function: " + stringify(fn)));
-      }
-      var paramsAnnotations = [];
-      for (var i = 0,
-          ii = annotations.length - 1; i < ii; i++) {
-        var paramAnnotations = [];
-        paramsAnnotations.push(paramAnnotations);
-        var annotation = annotations[i];
-        if (annotation instanceof Array) {
-          for (var j = 0; j < annotation.length; j++) {
-            paramAnnotations.push(extractAnnotation(annotation[j]));
-          }
-        } else if (isFunction(annotation)) {
-          paramAnnotations.push(extractAnnotation(annotation));
-        } else {
-          paramAnnotations.push(annotation);
-        }
-      }
-      Reflect.defineMetadata('parameters', paramsAnnotations, fn);
-      return fn;
-    } else {
-      throw new Error(("Only Function or Array is supported in Class definition for key '" + key + "' is '" + stringify(fnOrArray) + "'"));
-    }
-  }
-  function Class(clsDef) {
-    var constructor = applyParams(clsDef.hasOwnProperty('constructor') ? clsDef.constructor : undefined, 'constructor');
-    var proto = constructor.prototype;
-    if (clsDef.hasOwnProperty('extends')) {
-      if (isFunction(clsDef.extends)) {
-        constructor.prototype = proto = Object.create(clsDef.extends.prototype);
-      } else {
-        throw new Error(("Class definition 'extends' property must be a constructor function was: " + stringify(clsDef.extends)));
-      }
-    }
-    for (var key in clsDef) {
-      if (key != 'extends' && key != 'prototype' && clsDef.hasOwnProperty(key)) {
-        proto[key] = applyParams(clsDef[key], key);
-      }
-    }
-    if (this && this.annotations instanceof Array) {
-      Reflect.defineMetadata('annotations', this.annotations, constructor);
-    }
-    return constructor;
-  }
-  function makeDecorator(annotationCls) {
-    var chainFn = arguments[1] !== (void 0) ? arguments[1] : null;
-    function DecoratorFactory(objOrType) {
-      var annotationInstance = new annotationCls(objOrType);
-      if (this instanceof annotationCls) {
-        return annotationInstance;
-      } else {
-        var chainAnnotation = isFunction(this) && this.annotations instanceof Array ? this.annotations : [];
-        chainAnnotation.push(annotationInstance);
-        var TypeDecorator = function TypeDecorator(cls) {
-          var annotations = Reflect.getOwnMetadata('annotations', cls);
-          annotations = annotations || [];
-          annotations.push(annotationInstance);
-          Reflect.defineMetadata('annotations', annotations, cls);
-          return cls;
-        };
-        TypeDecorator.annotations = chainAnnotation;
-        TypeDecorator.Class = Class;
-        if (chainFn)
-          chainFn(TypeDecorator);
-        return TypeDecorator;
-      }
-    }
-    DecoratorFactory.prototype = Object.create(annotationCls.prototype);
-    return DecoratorFactory;
-  }
-  function makeParamDecorator(annotationCls) {
-    function ParamDecoratorFactory() {
-      for (var args = [],
-          $__1 = 0; $__1 < arguments.length; $__1++)
-        args[$__1] = arguments[$__1];
-      var annotationInstance = Object.create(annotationCls.prototype);
-      annotationCls.apply(annotationInstance, args);
-      if (this instanceof annotationCls) {
-        return annotationInstance;
-      } else {
-        ParamDecorator.annotation = annotationInstance;
-        return ParamDecorator;
-      }
-      function ParamDecorator(cls, unusedKey, index) {
-        var parameters = Reflect.getMetadata('parameters', cls);
-        parameters = parameters || [];
-        while (parameters.length <= index) {
-          parameters.push(null);
-        }
-        parameters[index] = parameters[index] || [];
-        var annotationsForParam = parameters[index];
-        annotationsForParam.push(annotationInstance);
-        Reflect.defineMetadata('parameters', parameters, cls);
-        return cls;
-      }
-    }
-    ParamDecoratorFactory.prototype = Object.create(annotationCls.prototype);
-    return ParamDecoratorFactory;
-  }
-  $__export("Class", Class);
-  $__export("makeDecorator", makeDecorator);
-  $__export("makeParamDecorator", makeParamDecorator);
-  return {
-    setters: [function($__m) {
-      global = $__m.global;
-      isFunction = $__m.isFunction;
-      stringify = $__m.stringify;
-    }],
-    execute: function() {
-      Reflect = global.Reflect;
-      if (!(Reflect && Reflect.getMetadata)) {
-        throw 'reflect-metadata shim is required when using class decorators';
-      }
-    }
-  };
-});
-
 System.register("angular2/src/di/forward_ref", ["angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/forward_ref";
@@ -6788,6 +6563,83 @@ System.register("angular2/src/di/forward_ref", ["angular2/src/facade/lang"], fun
       isFunction = $__m.isFunction;
     }],
     execute: function() {}
+  };
+});
+
+System.register("angular2/src/di/key", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/di/type_literal", "angular2/src/di/forward_ref"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/key";
+  var MapWrapper,
+      stringify,
+      isBlank,
+      BaseException,
+      TypeLiteral,
+      resolveForwardRef,
+      Key,
+      KeyRegistry,
+      _globalKeyRegistry;
+  return {
+    setters: [function($__m) {
+      MapWrapper = $__m.MapWrapper;
+    }, function($__m) {
+      stringify = $__m.stringify;
+      isBlank = $__m.isBlank;
+      BaseException = $__m.BaseException;
+    }, function($__m) {
+      TypeLiteral = $__m.TypeLiteral;
+      $__export({TypeLiteral: $__m.TypeLiteral});
+    }, function($__m) {
+      resolveForwardRef = $__m.resolveForwardRef;
+    }],
+    execute: function() {
+      Key = function() {
+        function Key(token, id) {
+          this.token = token;
+          this.id = id;
+          if (isBlank(token)) {
+            throw new BaseException('Token must be defined!');
+          }
+        }
+        return ($traceurRuntime.createClass)(Key, {get displayName() {
+            return stringify(this.token);
+          }}, {
+          get: function(token) {
+            return _globalKeyRegistry.get(resolveForwardRef(token));
+          },
+          get numberOfKeys() {
+            return _globalKeyRegistry.numberOfKeys;
+          }
+        });
+      }();
+      $__export("Key", Key);
+      KeyRegistry = function() {
+        function KeyRegistry() {
+          this._allKeys = new Map();
+        }
+        return ($traceurRuntime.createClass)(KeyRegistry, {
+          get: function(token) {
+            if (token instanceof Key)
+              return token;
+            var theToken = token;
+            if (token instanceof TypeLiteral) {
+              theToken = token.type;
+            }
+            token = theToken;
+            if (this._allKeys.has(token)) {
+              return this._allKeys.get(token);
+            }
+            var newKey = new Key(token, Key.numberOfKeys);
+            this._allKeys.set(token, newKey);
+            return newKey;
+          },
+          get numberOfKeys() {
+            return MapWrapper.size(this._allKeys);
+          }
+        }, {});
+      }();
+      $__export("KeyRegistry", KeyRegistry);
+      _globalKeyRegistry = new KeyRegistry();
+    }
   };
 });
 
@@ -7525,6 +7377,276 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
   };
 });
 
+System.register("angular2/src/di/metadata", ["angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/metadata";
+  var __decorate,
+      __metadata,
+      CONST,
+      stringify,
+      InjectMetadata,
+      OptionalMetadata,
+      DependencyMetadata,
+      InjectableMetadata,
+      SelfMetadata,
+      SkipSelfMetadata,
+      HostMetadata;
+  return {
+    setters: [function($__m) {
+      CONST = $__m.CONST;
+      stringify = $__m.stringify;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      InjectMetadata = ($traceurRuntime.createClass)(function(token) {
+        this.token = token;
+      }, {toString: function() {
+          return ("@Inject(" + stringify(this.token) + ")");
+        }}, {});
+      $__export("InjectMetadata", InjectMetadata);
+      $__export("InjectMetadata", InjectMetadata = __decorate([CONST(), __metadata('design:paramtypes', [Object])], InjectMetadata));
+      OptionalMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
+          return "@Optional()";
+        }}, {});
+      $__export("OptionalMetadata", OptionalMetadata);
+      $__export("OptionalMetadata", OptionalMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], OptionalMetadata));
+      DependencyMetadata = ($traceurRuntime.createClass)(function() {}, {get token() {
+          return null;
+        }}, {});
+      $__export("DependencyMetadata", DependencyMetadata);
+      $__export("DependencyMetadata", DependencyMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], DependencyMetadata));
+      InjectableMetadata = ($traceurRuntime.createClass)(function() {}, {}, {});
+      $__export("InjectableMetadata", InjectableMetadata);
+      $__export("InjectableMetadata", InjectableMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], InjectableMetadata));
+      SelfMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
+          return "@Self()";
+        }}, {});
+      $__export("SelfMetadata", SelfMetadata);
+      $__export("SelfMetadata", SelfMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], SelfMetadata));
+      SkipSelfMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
+          return "@SkipSelf()";
+        }}, {});
+      $__export("SkipSelfMetadata", SkipSelfMetadata);
+      $__export("SkipSelfMetadata", SkipSelfMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], SkipSelfMetadata));
+      HostMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
+          return "@Host()";
+        }}, {});
+      $__export("HostMetadata", HostMetadata);
+      $__export("HostMetadata", HostMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], HostMetadata));
+    }
+  };
+});
+
+System.register("angular2/src/di/opaque_token", ["angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/opaque_token";
+  var __decorate,
+      __metadata,
+      CONST,
+      OpaqueToken;
+  return {
+    setters: [function($__m) {
+      CONST = $__m.CONST;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      OpaqueToken = ($traceurRuntime.createClass)(function(desc) {
+        this._desc = 'Token(' + desc + ')';
+      }, {toString: function() {
+          return this._desc;
+        }}, {});
+      $__export("OpaqueToken", OpaqueToken);
+      $__export("OpaqueToken", OpaqueToken = __decorate([CONST(), __metadata('design:paramtypes', [String])], OpaqueToken));
+    }
+  };
+});
+
+System.register("angular2/src/util/decorators", ["angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/util/decorators";
+  var global,
+      isFunction,
+      stringify,
+      Reflect;
+  function extractAnnotation(annotation) {
+    if (isFunction(annotation) && annotation.hasOwnProperty('annotation')) {
+      annotation = annotation.annotation;
+    }
+    return annotation;
+  }
+  function applyParams(fnOrArray, key) {
+    if (fnOrArray === Object || fnOrArray === String || fnOrArray === Function || fnOrArray === Number || fnOrArray === Array) {
+      throw new Error(("Can not use native " + stringify(fnOrArray) + " as constructor"));
+    }
+    if (isFunction(fnOrArray)) {
+      return fnOrArray;
+    } else if (fnOrArray instanceof Array) {
+      var annotations = fnOrArray;
+      var fn = fnOrArray[fnOrArray.length - 1];
+      if (!isFunction(fn)) {
+        throw new Error(("Last position of Class method array must be Function in key " + key + " was '" + stringify(fn) + "'"));
+      }
+      var annoLength = annotations.length - 1;
+      if (annoLength != fn.length) {
+        throw new Error(("Number of annotations (" + annoLength + ") does not match number of arguments (" + fn.length + ") in the function: " + stringify(fn)));
+      }
+      var paramsAnnotations = [];
+      for (var i = 0,
+          ii = annotations.length - 1; i < ii; i++) {
+        var paramAnnotations = [];
+        paramsAnnotations.push(paramAnnotations);
+        var annotation = annotations[i];
+        if (annotation instanceof Array) {
+          for (var j = 0; j < annotation.length; j++) {
+            paramAnnotations.push(extractAnnotation(annotation[j]));
+          }
+        } else if (isFunction(annotation)) {
+          paramAnnotations.push(extractAnnotation(annotation));
+        } else {
+          paramAnnotations.push(annotation);
+        }
+      }
+      Reflect.defineMetadata('parameters', paramsAnnotations, fn);
+      return fn;
+    } else {
+      throw new Error(("Only Function or Array is supported in Class definition for key '" + key + "' is '" + stringify(fnOrArray) + "'"));
+    }
+  }
+  function Class(clsDef) {
+    var constructor = applyParams(clsDef.hasOwnProperty('constructor') ? clsDef.constructor : undefined, 'constructor');
+    var proto = constructor.prototype;
+    if (clsDef.hasOwnProperty('extends')) {
+      if (isFunction(clsDef.extends)) {
+        constructor.prototype = proto = Object.create(clsDef.extends.prototype);
+      } else {
+        throw new Error(("Class definition 'extends' property must be a constructor function was: " + stringify(clsDef.extends)));
+      }
+    }
+    for (var key in clsDef) {
+      if (key != 'extends' && key != 'prototype' && clsDef.hasOwnProperty(key)) {
+        proto[key] = applyParams(clsDef[key], key);
+      }
+    }
+    if (this && this.annotations instanceof Array) {
+      Reflect.defineMetadata('annotations', this.annotations, constructor);
+    }
+    return constructor;
+  }
+  function makeDecorator(annotationCls) {
+    var chainFn = arguments[1] !== (void 0) ? arguments[1] : null;
+    function DecoratorFactory(objOrType) {
+      var annotationInstance = new annotationCls(objOrType);
+      if (this instanceof annotationCls) {
+        return annotationInstance;
+      } else {
+        var chainAnnotation = isFunction(this) && this.annotations instanceof Array ? this.annotations : [];
+        chainAnnotation.push(annotationInstance);
+        var TypeDecorator = function TypeDecorator(cls) {
+          var annotations = Reflect.getOwnMetadata('annotations', cls);
+          annotations = annotations || [];
+          annotations.push(annotationInstance);
+          Reflect.defineMetadata('annotations', annotations, cls);
+          return cls;
+        };
+        TypeDecorator.annotations = chainAnnotation;
+        TypeDecorator.Class = Class;
+        if (chainFn)
+          chainFn(TypeDecorator);
+        return TypeDecorator;
+      }
+    }
+    DecoratorFactory.prototype = Object.create(annotationCls.prototype);
+    return DecoratorFactory;
+  }
+  function makeParamDecorator(annotationCls) {
+    function ParamDecoratorFactory() {
+      for (var args = [],
+          $__1 = 0; $__1 < arguments.length; $__1++)
+        args[$__1] = arguments[$__1];
+      var annotationInstance = Object.create(annotationCls.prototype);
+      annotationCls.apply(annotationInstance, args);
+      if (this instanceof annotationCls) {
+        return annotationInstance;
+      } else {
+        ParamDecorator.annotation = annotationInstance;
+        return ParamDecorator;
+      }
+      function ParamDecorator(cls, unusedKey, index) {
+        var parameters = Reflect.getMetadata('parameters', cls);
+        parameters = parameters || [];
+        while (parameters.length <= index) {
+          parameters.push(null);
+        }
+        parameters[index] = parameters[index] || [];
+        var annotationsForParam = parameters[index];
+        annotationsForParam.push(annotationInstance);
+        Reflect.defineMetadata('parameters', parameters, cls);
+        return cls;
+      }
+    }
+    ParamDecoratorFactory.prototype = Object.create(annotationCls.prototype);
+    return ParamDecoratorFactory;
+  }
+  $__export("Class", Class);
+  $__export("makeDecorator", makeDecorator);
+  $__export("makeParamDecorator", makeParamDecorator);
+  return {
+    setters: [function($__m) {
+      global = $__m.global;
+      isFunction = $__m.isFunction;
+      stringify = $__m.stringify;
+    }],
+    execute: function() {
+      Reflect = global.Reflect;
+      if (!(Reflect && Reflect.getMetadata)) {
+        throw 'reflect-metadata shim is required when using class decorators';
+      }
+    }
+  };
+});
+
 System.register("angular2/src/di/binding", ["angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/reflection/reflection", "angular2/src/di/key", "angular2/src/di/metadata", "angular2/src/di/exceptions", "angular2/src/di/forward_ref"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/binding";
@@ -7789,83 +7911,6 @@ System.register("angular2/src/reflection/reflection", ["angular2/src/reflection/
   };
 });
 
-System.register("angular2/src/di/key", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/di/type_literal", "angular2/src/di/forward_ref"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/di/key";
-  var MapWrapper,
-      stringify,
-      isBlank,
-      BaseException,
-      TypeLiteral,
-      resolveForwardRef,
-      Key,
-      KeyRegistry,
-      _globalKeyRegistry;
-  return {
-    setters: [function($__m) {
-      MapWrapper = $__m.MapWrapper;
-    }, function($__m) {
-      stringify = $__m.stringify;
-      isBlank = $__m.isBlank;
-      BaseException = $__m.BaseException;
-    }, function($__m) {
-      TypeLiteral = $__m.TypeLiteral;
-      $__export({TypeLiteral: $__m.TypeLiteral});
-    }, function($__m) {
-      resolveForwardRef = $__m.resolveForwardRef;
-    }],
-    execute: function() {
-      Key = function() {
-        function Key(token, id) {
-          this.token = token;
-          this.id = id;
-          if (isBlank(token)) {
-            throw new BaseException('Token must be defined!');
-          }
-        }
-        return ($traceurRuntime.createClass)(Key, {get displayName() {
-            return stringify(this.token);
-          }}, {
-          get: function(token) {
-            return _globalKeyRegistry.get(resolveForwardRef(token));
-          },
-          get numberOfKeys() {
-            return _globalKeyRegistry.numberOfKeys;
-          }
-        });
-      }();
-      $__export("Key", Key);
-      KeyRegistry = function() {
-        function KeyRegistry() {
-          this._allKeys = new Map();
-        }
-        return ($traceurRuntime.createClass)(KeyRegistry, {
-          get: function(token) {
-            if (token instanceof Key)
-              return token;
-            var theToken = token;
-            if (token instanceof TypeLiteral) {
-              theToken = token.type;
-            }
-            token = theToken;
-            if (this._allKeys.has(token)) {
-              return this._allKeys.get(token);
-            }
-            var newKey = new Key(token, Key.numberOfKeys);
-            this._allKeys.set(token, newKey);
-            return newKey;
-          },
-          get numberOfKeys() {
-            return MapWrapper.size(this._allKeys);
-          }
-        }, {});
-      }();
-      $__export("KeyRegistry", KeyRegistry);
-      _globalKeyRegistry = new KeyRegistry();
-    }
-  };
-});
-
 System.register("angular2/src/di/exceptions", ["angular2/src/facade/collection", "angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/exceptions";
@@ -8009,51 +8054,6 @@ System.register("angular2/src/di/exceptions", ["angular2/src/facade/collection",
   };
 });
 
-System.register("angular2/src/di/opaque_token", ["angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/di/opaque_token";
-  var __decorate,
-      __metadata,
-      CONST,
-      OpaqueToken;
-  return {
-    setters: [function($__m) {
-      CONST = $__m.CONST;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      OpaqueToken = ($traceurRuntime.createClass)(function(desc) {
-        this._desc = 'Token(' + desc + ')';
-      }, {toString: function() {
-          return this._desc;
-        }}, {});
-      $__export("OpaqueToken", OpaqueToken);
-      $__export("OpaqueToken", OpaqueToken = __decorate([CONST(), __metadata('design:paramtypes', [String])], OpaqueToken));
-    }
-  };
-});
-
 System.register("http/src/http_utils", ["angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "http/src/http_utils";
@@ -8065,123 +8065,20 @@ System.register("http/src/http_utils", ["angular2/src/facade/lang"], function($_
   };
 });
 
-System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+System.register("angular2/src/di/type_literal", [], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/reflection/reflector";
-  var isPresent,
-      Map,
-      StringMapWrapper,
-      ReflectionInfo,
-      Reflector;
-  function _mergeMaps(target, config) {
-    StringMapWrapper.forEach(config, function(v, k) {
-      return target.set(k, v);
-    });
-  }
+  var __moduleName = "angular2/src/di/type_literal";
+  var TypeLiteral;
   return {
-    setters: [function($__m) {
-      isPresent = $__m.isPresent;
-    }, function($__m) {
-      Map = $__m.Map;
-      StringMapWrapper = $__m.StringMapWrapper;
-    }],
+    setters: [],
     execute: function() {
-      ReflectionInfo = function() {
-        function ReflectionInfo(annotations, parameters, factory, interfaces) {
-          this._annotations = annotations;
-          this._parameters = parameters;
-          this._factory = factory;
-          this._interfaces = interfaces;
-        }
-        return ($traceurRuntime.createClass)(ReflectionInfo, {}, {});
+      TypeLiteral = function() {
+        function TypeLiteral() {}
+        return ($traceurRuntime.createClass)(TypeLiteral, {get type() {
+            throw new Error("Type literals are only supported in Dart");
+          }}, {});
       }();
-      $__export("ReflectionInfo", ReflectionInfo);
-      Reflector = function() {
-        function Reflector(reflectionCapabilities) {
-          this._injectableInfo = new Map();
-          this._getters = new Map();
-          this._setters = new Map();
-          this._methods = new Map();
-          this.reflectionCapabilities = reflectionCapabilities;
-        }
-        return ($traceurRuntime.createClass)(Reflector, {
-          isReflectionEnabled: function() {
-            return this.reflectionCapabilities.isReflectionEnabled();
-          },
-          registerFunction: function(func, funcInfo) {
-            this._injectableInfo.set(func, funcInfo);
-          },
-          registerType: function(type, typeInfo) {
-            this._injectableInfo.set(type, typeInfo);
-          },
-          registerGetters: function(getters) {
-            _mergeMaps(this._getters, getters);
-          },
-          registerSetters: function(setters) {
-            _mergeMaps(this._setters, setters);
-          },
-          registerMethods: function(methods) {
-            _mergeMaps(this._methods, methods);
-          },
-          factory: function(type) {
-            if (this._containsReflectionInfo(type)) {
-              var res = this._injectableInfo.get(type)._factory;
-              return isPresent(res) ? res : null;
-            } else {
-              return this.reflectionCapabilities.factory(type);
-            }
-          },
-          parameters: function(typeOrFunc) {
-            if (this._injectableInfo.has(typeOrFunc)) {
-              var res = this._injectableInfo.get(typeOrFunc)._parameters;
-              return isPresent(res) ? res : [];
-            } else {
-              return this.reflectionCapabilities.parameters(typeOrFunc);
-            }
-          },
-          annotations: function(typeOrFunc) {
-            if (this._injectableInfo.has(typeOrFunc)) {
-              var res = this._injectableInfo.get(typeOrFunc)._annotations;
-              return isPresent(res) ? res : [];
-            } else {
-              return this.reflectionCapabilities.annotations(typeOrFunc);
-            }
-          },
-          interfaces: function(type) {
-            if (this._injectableInfo.has(type)) {
-              var res = this._injectableInfo.get(type)._interfaces;
-              return isPresent(res) ? res : [];
-            } else {
-              return this.reflectionCapabilities.interfaces(type);
-            }
-          },
-          getter: function(name) {
-            if (this._getters.has(name)) {
-              return this._getters.get(name);
-            } else {
-              return this.reflectionCapabilities.getter(name);
-            }
-          },
-          setter: function(name) {
-            if (this._setters.has(name)) {
-              return this._setters.get(name);
-            } else {
-              return this.reflectionCapabilities.setter(name);
-            }
-          },
-          method: function(name) {
-            if (this._methods.has(name)) {
-              return this._methods.get(name);
-            } else {
-              return this.reflectionCapabilities.method(name);
-            }
-          },
-          _containsReflectionInfo: function(typeOrFunc) {
-            return this._injectableInfo.has(typeOrFunc);
-          }
-        }, {});
-      }();
-      $__export("Reflector", Reflector);
+      $__export("TypeLiteral", TypeLiteral);
     }
   };
 });
@@ -8374,20 +8271,123 @@ System.register("angular2/src/reflection/reflection_capabilities", ["angular2/sr
   };
 });
 
-System.register("angular2/src/di/type_literal", [], function($__export) {
+System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/type_literal";
-  var TypeLiteral;
+  var __moduleName = "angular2/src/reflection/reflector";
+  var isPresent,
+      Map,
+      StringMapWrapper,
+      ReflectionInfo,
+      Reflector;
+  function _mergeMaps(target, config) {
+    StringMapWrapper.forEach(config, function(v, k) {
+      return target.set(k, v);
+    });
+  }
   return {
-    setters: [],
+    setters: [function($__m) {
+      isPresent = $__m.isPresent;
+    }, function($__m) {
+      Map = $__m.Map;
+      StringMapWrapper = $__m.StringMapWrapper;
+    }],
     execute: function() {
-      TypeLiteral = function() {
-        function TypeLiteral() {}
-        return ($traceurRuntime.createClass)(TypeLiteral, {get type() {
-            throw new Error("Type literals are only supported in Dart");
-          }}, {});
+      ReflectionInfo = function() {
+        function ReflectionInfo(annotations, parameters, factory, interfaces) {
+          this._annotations = annotations;
+          this._parameters = parameters;
+          this._factory = factory;
+          this._interfaces = interfaces;
+        }
+        return ($traceurRuntime.createClass)(ReflectionInfo, {}, {});
       }();
-      $__export("TypeLiteral", TypeLiteral);
+      $__export("ReflectionInfo", ReflectionInfo);
+      Reflector = function() {
+        function Reflector(reflectionCapabilities) {
+          this._injectableInfo = new Map();
+          this._getters = new Map();
+          this._setters = new Map();
+          this._methods = new Map();
+          this.reflectionCapabilities = reflectionCapabilities;
+        }
+        return ($traceurRuntime.createClass)(Reflector, {
+          isReflectionEnabled: function() {
+            return this.reflectionCapabilities.isReflectionEnabled();
+          },
+          registerFunction: function(func, funcInfo) {
+            this._injectableInfo.set(func, funcInfo);
+          },
+          registerType: function(type, typeInfo) {
+            this._injectableInfo.set(type, typeInfo);
+          },
+          registerGetters: function(getters) {
+            _mergeMaps(this._getters, getters);
+          },
+          registerSetters: function(setters) {
+            _mergeMaps(this._setters, setters);
+          },
+          registerMethods: function(methods) {
+            _mergeMaps(this._methods, methods);
+          },
+          factory: function(type) {
+            if (this._containsReflectionInfo(type)) {
+              var res = this._injectableInfo.get(type)._factory;
+              return isPresent(res) ? res : null;
+            } else {
+              return this.reflectionCapabilities.factory(type);
+            }
+          },
+          parameters: function(typeOrFunc) {
+            if (this._injectableInfo.has(typeOrFunc)) {
+              var res = this._injectableInfo.get(typeOrFunc)._parameters;
+              return isPresent(res) ? res : [];
+            } else {
+              return this.reflectionCapabilities.parameters(typeOrFunc);
+            }
+          },
+          annotations: function(typeOrFunc) {
+            if (this._injectableInfo.has(typeOrFunc)) {
+              var res = this._injectableInfo.get(typeOrFunc)._annotations;
+              return isPresent(res) ? res : [];
+            } else {
+              return this.reflectionCapabilities.annotations(typeOrFunc);
+            }
+          },
+          interfaces: function(type) {
+            if (this._injectableInfo.has(type)) {
+              var res = this._injectableInfo.get(type)._interfaces;
+              return isPresent(res) ? res : [];
+            } else {
+              return this.reflectionCapabilities.interfaces(type);
+            }
+          },
+          getter: function(name) {
+            if (this._getters.has(name)) {
+              return this._getters.get(name);
+            } else {
+              return this.reflectionCapabilities.getter(name);
+            }
+          },
+          setter: function(name) {
+            if (this._setters.has(name)) {
+              return this._setters.get(name);
+            } else {
+              return this.reflectionCapabilities.setter(name);
+            }
+          },
+          method: function(name) {
+            if (this._methods.has(name)) {
+              return this._methods.get(name);
+            } else {
+              return this.reflectionCapabilities.method(name);
+            }
+          },
+          _containsReflectionInfo: function(typeOrFunc) {
+            return this._injectableInfo.has(typeOrFunc);
+          }
+        }, {});
+      }();
+      $__export("Reflector", Reflector);
     }
   };
 });

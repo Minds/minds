@@ -1,6 +1,7 @@
 import { Component, View, NgFor, NgIf, NgSwitch, NgSwitchWhen, NgSwitchDefault, Inject, NgClass } from 'angular2/angular2';
 import { RouterLink } from 'angular2/router';
 import { Client } from 'src/services/api';
+import { SessionFactory } from '../../services/session';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 
@@ -19,6 +20,7 @@ export class Notifications {
   moreData : boolean = true;
   offset: string = "";
   inProgress : boolean = false;
+  session = SessionFactory.build();
 
   constructor(public client: Client){
     this.load(true);
