@@ -17,6 +17,7 @@
     ],
     "files": [
         "./front/app/app.ts",
+        "./front/app/init.ts",
         "./front/app/src/components/navigation.ts",
         "./front/app/src/components/topbar.ts",
         "./front/app/src/controllers/capture/capture.ts",
@@ -31,6 +32,7 @@
         "./front/app/src/controllers/newsfeed/activity.ts",
         "./front/app/src/controllers/newsfeed/newsfeed.ts",
         "./front/app/src/controllers/newsfeed/remind.ts",
+        "./front/app/src/controllers/notifications/notifications.ts",
         "./front/app/src/directives/autogrow.ts",
         "./front/app/src/directives/infinite-scroll.ts",
         "./front/app/src/directives/loggedin.ts",

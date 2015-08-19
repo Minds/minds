@@ -1,4 +1,4 @@
-// Type definitions for Angular v2.0.0-local_sha.624b8ba
+// Type definitions for Angular v2.0.0-local_sha.f0e7f13
 // Project: http://angular.io/
 // Definitions by: angular team <https://github.com/angular/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -360,9 +360,6 @@ declare module ngHttp {
   }
 
 
-
-
-
   /**
    * Abstract class from which real connections are derived.
    */
@@ -446,7 +443,7 @@ declare module ngHttp {
     /**
      * Body to be used when creating the request.
      */
-     body: string | FormData;
+     body: string;
 
      mode: RequestModesOpts;
 
@@ -682,7 +679,7 @@ declare module ngHttp {
     /**
      * Performs a request with `post` http method.
      */
-     post(url: string, body: string | FormData, options?: RequestOptionsArgs): EventEmitter;
+     post(url: string, body: string, options?: RequestOptionsArgs): EventEmitter;
 
 
     /**

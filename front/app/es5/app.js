@@ -33,7 +33,7 @@ var Minds = (function () {
             selector: 'minds-app',
         }),
         router_1.RouteConfig([
-            { path: '/login', component: login_1.Login, as: 'login' },
+            new router_1.Route({ path: '/login', component: login_1.Login, as: 'login' }),
             { path: '/logout', component: logout_1.Logout, as: 'logout' },
             { path: '/newsfeed', component: newsfeed_1.Newsfeed, as: 'newsfeed' },
             { path: '/capture', component: capture_1.Capture, as: 'capture' },
@@ -42,7 +42,8 @@ var Minds = (function () {
             { path: '/messenger', component: gatherings_1.Gatherings, as: 'messenger' },
             { path: '/notifications', component: notifications_1.Notifications, as: 'notifications' },
             { path: '/groups', component: comingsoon_1.ComingSoon, as: 'groups' },
-            { path: '/:username', component: channel_1.Channel, as: 'channel' }
+            { path: '/:username', component: channel_1.Channel, as: 'channel' },
+            { path: '/', redirectTo: '/newsfeed' }
         ]),
         angular2_1.View({
             templateUrl: './templates/index.html',
@@ -52,5 +53,5 @@ var Minds = (function () {
     ], Minds);
     return Minds;
 })();
-angular2_1.bootstrap(Minds, [router_1.routerInjectables, http_1.HTTP_BINDINGS]);
+angular2_1.bootstrap(Minds, [router_1.ROUTER_BINDINGS, http_1.HTTP_BINDINGS]);
 //# sourceMappingURL=app.js.map

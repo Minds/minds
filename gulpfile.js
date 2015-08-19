@@ -39,7 +39,8 @@ var PATH = {
       all: 'front/public',
       lib: 'front/public/lib',
       ng2: 'front/public/lib/angular2.js',
-      router: 'front/public/lib/router.js'
+      router: 'front/public/lib/router.js',
+      http: 'front/public/lib/http.js'
     },
     prod: {
       all: 'front/public',
@@ -56,15 +57,17 @@ var PATH = {
       './node_modules/reflect-metadata/Reflect.js.map',
       './node_modules/systemjs/dist/system.src.js',
       './node_modules/angular2/node_modules/zone.js/dist/zone.js',
-      './node_modules/angular2/bundles/http.js'
+    //  './node_modules/angular2/bundles/http.js'
     ],
     plugins: './mod'
   }
 };
 
 var ng2Builder = new Builder({
+  defaultJSExtensions: true,
   paths: {
     'angular2/*': 'node_modules/angular2/es6/dev/*.js',
+    'http/*': 'node_modules/ngHttp/es6/dev/*.js',
     rx: 'node_modules/angular2/node_modules/rx/dist/rx.js'
   },
   meta: {
@@ -162,6 +165,7 @@ gulp.task('build.plugins', function () {
 
 gulp.task('build.ng2.dev', function () {
   ng2Builder.build('angular2/router', PATH.dest.dev.router, {});
+  ng2Builder.build('http/http', PATH.dest.dev.http, {});
   return ng2Builder.build('angular2/angular2', PATH.dest.dev.ng2, {});
 });
 
@@ -332,7 +336,7 @@ function injectableDevAssetsRef() {
   var src = PATH.src.lib.map(function(path) {
     return join(PATH.dest.dev.lib, path.split('/').pop());
   });
-  src.push(PATH.dest.dev.ng2, PATH.dest.dev.router,
+  src.push(PATH.dest.dev.ng2, PATH.dest.dev.router, PATH.dest.dev.http,
            join(PATH.dest.dev.all, '**/*.css'));
   return src;
 }

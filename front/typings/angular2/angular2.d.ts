@@ -1,4 +1,4 @@
-// Type definitions for Angular v2.0.0-local_sha.624b8ba
+// Type definitions for Angular v2.0.0-local_sha.f0e7f13
 // Project: http://angular.io/
 // Definitions by: angular team <https://github.com/angular/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -40,135 +40,6 @@ declare module ng {
 declare module ng {
 
   /**
-   * Bootstrapping for Angular applications.
-   * 
-   * You instantiate an Angular application by explicitly specifying a component to use as the root
-   * component for your
-   * application via the `bootstrap()` method.
-   * 
-   * ## Simple Example
-   * 
-   * Assuming this `index.html`:
-   * 
-   * ```html
-   * <html>
-   *   <!-- load Angular script tags here. -->
-   *   <body>
-   *     <my-app>loading...</my-app>
-   *   </body>
-   * </html>
-   * ```
-   * 
-   * An application is bootstrapped inside an existing browser DOM, typically `index.html`. Unlike
-   * Angular 1, Angular 2
-   * does not compile/process bindings in `index.html`. This is mainly for security reasons, as well
-   * as architectural
-   * changes in Angular 2. This means that `index.html` can safely be processed using server-side
-   * technologies such as
-   * bindings. Bindings can thus use double-curly `{{ syntax }}` without collision from Angular 2
-   * component double-curly
-   * `{{ syntax }}`.
-   * 
-   * We can use this script code:
-   * 
-   * ```
-   * @Component({
-   *    selector: 'my-app'
-   * })
-   * @View({
-   *    template: 'Hello {{ name }}!'
-   * })
-   * class MyApp {
-   *   name:string;
-   * 
-   *   constructor() {
-   *     this.name = 'World';
-   *   }
-   * }
-   * 
-   * main() {
-   *   return bootstrap(MyApp);
-   * }
-   * ```
-   * 
-   * When the app developer invokes `bootstrap()` with the root component `MyApp` as its argument,
-   * Angular performs the
-   * following tasks:
-   * 
-   *  1. It uses the component's `selector` property to locate the DOM element which needs to be
-   * upgraded into
-   *     the angular component.
-   *  2. It creates a new child injector (from the platform injector). Optionally, you can also
-   * override the injector configuration for an app by
-   * invoking `bootstrap` with the `componentInjectableBindings` argument.
-   *  3. It creates a new `Zone` and connects it to the angular application's change detection domain
-   * instance.
-   *  4. It creates a shadow DOM on the selected component's host element and loads the template into
-   * it.
-   *  5. It instantiates the specified component.
-   *  6. Finally, Angular performs change detection to apply the initial data bindings for the
-   * application.
-   * 
-   * 
-   * ## Instantiating Multiple Applications on a Single Page
-   * 
-   * There are two ways to do this.
-   * 
-   * 
-   * ### Isolated Applications
-   * 
-   * Angular creates a new application each time that the `bootstrap()` method is invoked. When
-   * multiple applications
-   * are created for a page, Angular treats each application as independent within an isolated change
-   * detection and
-   * `Zone` domain. If you need to share data between applications, use the strategy described in the
-   * next
-   * section, "Applications That Share Change Detection."
-   * 
-   * 
-   * ### Applications That Share Change Detection
-   * 
-   * If you need to bootstrap multiple applications that share common data, the applications must
-   * share a common
-   * change detection and zone. To do that, create a meta-component that lists the application
-   * components in its template.
-   * By only invoking the `bootstrap()` method once, with the meta-component as its argument, you
-   * ensure that only a
-   * single change detection zone is created and therefore data can be shared across the applications.
-   * 
-   * 
-   * ## Platform Injector
-   * 
-   * When working within a browser window, there are many singleton resources: cookies, title,
-   * location, and others.
-   * Angular services that represent these resources must likewise be shared across all Angular
-   * applications that
-   * occupy the same browser window.  For this reason, Angular creates exactly one global platform
-   * injector which stores
-   * all shared services, and each angular application injector has the platform injector as its
-   * parent.
-   * 
-   * Each application has its own private injector as well. When there are multiple applications on a
-   * page, Angular treats
-   * each application injector's services as private to that application.
-   * 
-   * 
-   * # API
-   * - `appComponentType`: The root component which should act as the application. This is a reference
-   * to a `Type`
-   *   which is annotated with `@Component(...)`.
-   * - `componentInjectableBindings`: An additional set of bindings that can be added to the app
-   * injector
-   * to override default injection behavior.
-   * - `errorReporter`: `function(exception:any, stackTrace:string)` a default error reporter for
-   * unhandled exceptions.
-   * 
-   * Returns a `Promise` of {@link ApplicationRef}.
-   */
-  function bootstrap(appComponentType: /*Type*/ any, componentInjectableBindings?: List<Type | Binding | List<any>>) : Promise<ApplicationRef> ;
-  
-
-  /**
    * Declare reusable UI building blocks for an application.
    * 
    * Each Angular component requires a single `@Component` and at least one `@View` annotation. The
@@ -183,7 +54,7 @@ declare module ng {
    * 
    * All template expressions and statements are then evaluated against the component instance.
    * 
-   * For details on the `@View` annotation, see {@link View}.
+   * For details on the `@View` annotation, see {@link ViewMetadata}.
    * 
    * ## Example
    * 
@@ -203,7 +74,7 @@ declare module ng {
    * }
    * ```
    */
-  class ComponentAnnotation extends DirectiveAnnotation {
+  class ComponentMetadata extends DirectiveMetadata {
     
 
     /**
@@ -267,7 +138,7 @@ declare module ng {
   /**
    * Directives allow you to attach behavior to elements in the DOM.
    * 
-   * {@link Directive}s with an embedded view are called {@link Component}s.
+   * {@link DirectiveMetadata}s with an embedded view are called {@link ComponentMetadata}s.
    * 
    * A directive consists of a single directive annotation and a controller class. When the
    * directive's `selector` matches
@@ -300,7 +171,7 @@ declare module ng {
    * current `ElementInjector` resolves the constructor dependencies for each directive.
    * 
    * Angular then resolves dependencies as follows, according to the order in which they appear in the
-   * {@link View}:
+   * {@link ViewMetadata}:
    * 
    * 1. Dependencies on the current element
    * 2. Dependencies on element injectors and their parents until it encounters a Shadow DOM boundary
@@ -325,7 +196,7 @@ declare module ng {
    * To inject element-specific special objects, declare the constructor parameter as:
    * - `element: ElementRef` to obtain a reference to logical element in the view.
    * - `viewContainer: ViewContainerRef` to control child template instantiation, for
-   * {@link Directive} directives only
+   * {@link DirectiveMetadata} directives only
    * - `bindingPropagation: BindingPropagation` to control change detection in a more granular way.
    * 
    * ## Example
@@ -507,9 +378,9 @@ declare module ng {
    *   properties: [
    *     'text: tooltip'
    *   ],
-   *   hostListeners: {
-   *     'onmouseenter': 'onMouseEnter()',
-   *     'onmouseleave': 'onMouseLeave()'
+   *   host: {
+   *     '(mouseenter)': 'onMouseEnter()',
+   *     '(mouseleave)': 'onMouseLeave()'
    *   }
    * })
    * class Tooltip{
@@ -549,7 +420,7 @@ declare module ng {
    * location in the current view
    * where these actions are performed.
    * 
-   * Views are always created as children of the current {@link View}, and as siblings of the
+   * Views are always created as children of the current {@link ViewMetadata}, and as siblings of the
    * `<template>` element. Thus a
    * directive in a child view cannot inject the directive that created it.
    * 
@@ -638,7 +509,7 @@ declare module ng {
    * the instantiated
    * view occurs on the second `<li></li>` which is a sibling to the `<template>` element.
    */
-  class DirectiveAnnotation extends InjectableMetadata {
+  class DirectiveMetadata extends InjectableMetadata {
     
 
     /**
@@ -684,7 +555,7 @@ declare module ng {
      * - `directiveProperty` specifies the component property where the value is written.
      * - `bindingProperty` specifies the DOM property where the value is read from.
      * 
-     * You can include a {@link Pipe} when specifying a `bindingProperty` to allow for data
+     * You can include a {@link PipeMetadata} when specifying a `bindingProperty` to allow for data
      * transformation and structural change detection of the value. These pipes will be evaluated in
      * the context of this component.
      * 
@@ -1009,7 +880,7 @@ declare module ng {
    * }
    * ```
    */
-  class PipeAnnotation extends InjectableMetadata {
+  class PipeMetadata extends InjectableMetadata {
     
      name: string;
   }
@@ -1026,7 +897,7 @@ declare module ng {
     
 
     /**
-     * Notify a directive whenever a {@link View} that contains it is destroyed.
+     * Notify a directive whenever a {@link ViewMetadata} that contains it is destroyed.
      * 
      * ## Example
      * 
@@ -1163,7 +1034,7 @@ declare module ng {
    * When a component is instantiated, the template is loaded into the component's shadow root, and
    * the expressions and statements in the template are evaluated against the component.
    * 
-   * For details on the `@Component` annotation, see {@link Component}.
+   * For details on the `@Component` annotation, see {@link ComponentMetadata}.
    * 
    * ## Example
    * 
@@ -1184,7 +1055,7 @@ declare module ng {
    * }
    * ```
    */
-  class ViewAnnotation {
+  class ViewMetadata {
     
 
     /**
@@ -1283,7 +1154,7 @@ declare module ng {
    * 
    * See {@link QueryList} for usage and example.
    */
-  class QueryAnnotation extends DependencyMetadata {
+  class QueryMetadata extends DependencyMetadata {
     
      descendants: boolean;
     
@@ -1325,13 +1196,452 @@ declare module ng {
    * }
    * ```
    */
-  class AttributeAnnotation extends DependencyMetadata {
+  class AttributeMetadata extends DependencyMetadata {
     
      attributeName: string;
     
      token: void;
     
      toString(): string;
+  }
+  
+
+  /**
+   * {@link AttributeMetadata} factory function.
+   */
+  var Attribute : AttributeFactory ;
+  
+
+  /**
+   * {@link AttributeMetadata} factory for creating annotations, decorators or DSL.
+   * 
+   * ## Example as TypeScript Decorator
+   * 
+   * ```
+   * import {Attribute, Component, View} from "angular2/angular2";
+   * 
+   * @Component({...})
+   * @View({...})
+   * class MyComponent {
+   *   constructor(@Attribute('title') title: string) {
+   *     ...
+   *   }
+   * }
+   * ```
+   * 
+   * ## Example as ES5 DSL
+   * 
+   * ```
+   * var MyComponent = ng
+   *   .Component({...})
+   *   .View({...})
+   *   .Class({
+   *     constructor: [new ng.Attribute('title'), function(title) {
+   *       ...
+   *     }]
+   *   })
+   * ```
+   * 
+   * ## Example as ES5 annotation
+   * 
+   * ```
+   * var MyComponent = function(title) {
+   *   ...
+   * };
+   * 
+   * MyComponent.annotations = [
+   *   new ng.Component({...})
+   *   new ng.View({...})
+   * ]
+   * MyComponent.parameters = [
+   *   [new ng.Attribute('title')]
+   * ]
+   * ```
+   */
+  interface AttributeFactory {
+    
+     new(name: string): AttributeMetadata;
+  
+    
+     (name: string): TypeDecorator;
+  
+  }
+  
+
+  /**
+   * {@link ComponentMetadata} factory function.
+   */
+  var Component : ComponentFactory ;
+  
+
+  /**
+   * Interface for the {@link ComponentMetadata} decorator function.
+   * 
+   * See {@link ComponentFactory}.
+   */
+  interface ComponentDecorator extends TypeDecorator {
+    
+
+    /**
+     * Chain {@link ViewMetadata} annotation.
+     */
+     View(obj: {
+    templateUrl?: string,
+    template?: string,
+    directives?: List<Type | any | List<any>>,
+    pipes?: List<Type | any | List<any>>,
+    renderer?: string,
+    styles?: List<string>,
+    styleUrls?: List<string>,
+  }): ViewDecorator;
+  }
+  
+
+  /**
+   * {@link ComponentAnnotation} factory for creating annotations, decorators or DSL.
+   * 
+   * ## Example as TypeScript Decorator
+   * 
+   * ```
+   * import {Component, View} from "angular2/angular2";
+   * 
+   * @Component({...})
+   * @View({...})
+   * class MyComponent {
+   *   constructor() {
+   *     ...
+   *   }
+   * }
+   * ```
+   * 
+   * ## Example as ES5 DSL
+   * 
+   * ```
+   * var MyComponent = ng
+   *   .Component({...})
+   *   .View({...})
+   *   .Class({
+   *     constructor: function() {
+   *       ...
+   *     }
+   *   })
+   * ```
+   * 
+   * ## Example as ES5 annotation
+   * 
+   * ```
+   * var MyComponent = function() {
+   *   ...
+   * };
+   * 
+   * MyComponent.annotations = [
+   *   new ng.Component({...})
+   *   new ng.View({...})
+   * ]
+   * ```
+   */
+  interface ComponentFactory {
+    
+     new(obj: {
+    selector?: string,
+    properties?: List<string>,
+    events?: List<string>,
+    host?: StringMap<string, string>,
+    lifecycle?: List<LifecycleEvent>,
+    bindings?: List<any>,
+    exportAs?: string,
+    compileChildren?: boolean,
+    viewBindings?: List<any>,
+    changeDetection?: string,
+  }): ComponentMetadata;
+  
+    
+     (obj: {
+    selector?: string,
+    properties?: List<string>,
+    events?: List<string>,
+    host?: StringMap<string, string>,
+    lifecycle?: List<LifecycleEvent>,
+    bindings?: List<any>,
+    exportAs?: string,
+    compileChildren?: boolean,
+    viewBindings?: List<any>,
+    changeDetection?: string,
+  }): ComponentDecorator;
+  
+  }
+  
+
+  /**
+   * {@link DirectiveMetadata} factory function.
+   */
+  var Directive : DirectiveFactory ;
+  
+
+  /**
+   * Interface for the {@link DirectiveMetadata} decorator function.
+   * 
+   * See {@link DirectiveFactory}.
+   */
+  interface DirectiveDecorator extends TypeDecorator {
+  }
+  
+
+  /**
+   * {@link DirectiveMetadata} factory for creating annotations, decorators or DSL.
+   * 
+   * ## Example as TypeScript Decorator
+   * 
+   * ```
+   * import {Directive} from "angular2/angular2";
+   * 
+   * @Directive({...})
+   * class MyDirective {
+   *   constructor() {
+   *     ...
+   *   }
+   * }
+   * ```
+   * 
+   * ## Example as ES5 DSL
+   * 
+   * ```
+   * var MyDirective = ng
+   *   .Directive({...})
+   *   .Class({
+   *     constructor: function() {
+   *       ...
+   *     }
+   *   })
+   * ```
+   * 
+   * ## Example as ES5 annotation
+   * 
+   * ```
+   * var MyDirective = function() {
+   *   ...
+   * };
+   * 
+   * MyDirective.annotations = [
+   *   new ng.Directive({...})
+   * ]
+   * ```
+   */
+  interface DirectiveFactory {
+    
+     new(obj: {
+    selector?: string, properties?: List<string>, events?: List<string>,
+        host?: StringMap<string, string>, lifecycle?: List<LifecycleEvent>, bindings?: List<any>,
+        exportAs?: string, compileChildren?: boolean;
+  }): DirectiveMetadata;
+  
+    
+     (obj: {
+    selector?: string, properties?: List<string>, events?: List<string>,
+        host?: StringMap<string, string>, lifecycle?: List<LifecycleEvent>, bindings?: List<any>,
+        exportAs?: string, compileChildren?: boolean;
+  }): DirectiveDecorator;
+  
+  }
+  
+
+  /**
+   * {@link ViewMetadata} factory function.
+   */
+  var View : ViewFactory ;
+  
+
+  /**
+   * Interface for the {@link ViewMetadata} decorator function.
+   * 
+   * See {@link ViewFactory}.
+   */
+  interface ViewDecorator extends TypeDecorator {
+    
+
+    /**
+     * Chain {@link ViewMetadata} annotation.
+     */
+     View(obj: {
+    templateUrl?: string,
+    template?: string,
+    directives?: List<Type | any | List<any>>,
+    pipes?: List<Type | any | List<any>>,
+    renderer?: string,
+    styles?: List<string>,
+    styleUrls?: List<string>,
+  }): ViewDecorator;
+  }
+  
+
+  /**
+   * {@link ViewAnnotation} factory for creating annotations, decorators or DSL.
+   * 
+   * ## Example as TypeScript Decorator
+   * 
+   * ```
+   * import {Component, View} from "angular2/angular2";
+   * 
+   * @Component({...})
+   * @View({...})
+   * class MyComponent {
+   *   constructor() {
+   *     ...
+   *   }
+   * }
+   * ```
+   * 
+   * ## Example as ES5 DSL
+   * 
+   * ```
+   * var MyComponent = ng
+   *   .Component({...})
+   *   .View({...})
+   *   .Class({
+   *     constructor: function() {
+   *       ...
+   *     }
+   *   })
+   * ```
+   * 
+   * ## Example as ES5 annotation
+   * 
+   * ```
+   * var MyComponent = function() {
+   *   ...
+   * };
+   * 
+   * MyComponent.annotations = [
+   *   new ng.Component({...})
+   *   new ng.View({...})
+   * ]
+   * ```
+   */
+  interface ViewFactory {
+    
+     new(obj: {
+    templateUrl?: string,
+    template?: string,
+    directives?: List<Type | any | List<any>>,
+    encapsulation?: ViewEncapsulation,
+    styles?: List<string>,
+    styleUrls?: List<string>,
+  }): ViewMetadata;
+  
+    
+     (obj: {
+    templateUrl?: string,
+    template?: string,
+    directives?: List<Type | any | List<any>>,
+    encapsulation?: ViewEncapsulation,
+    styles?: List<string>,
+    styleUrls?: List<string>,
+  }): ViewDecorator;
+  
+  }
+  
+
+  /**
+   * {@link QueryMetadata} factory function.
+   */
+  var Query : QueryFactory ;
+  
+
+  /**
+   * {@link QueryMetadata} factory for creating annotations, decorators or DSL.
+   * 
+   * ## Example as TypeScript Decorator
+   * 
+   * ```
+   * import {Query, QueryList, Component, View} from "angular2/angular2";
+   * 
+   * @Component({...})
+   * @View({...})
+   * class MyComponent {
+   *   constructor(@Query(SomeType) queryList: QueryList) {
+   *     ...
+   *   }
+   * }
+   * ```
+   * 
+   * ## Example as ES5 DSL
+   * 
+   * ```
+   * var MyComponent = ng
+   *   .Component({...})
+   *   .View({...})
+   *   .Class({
+   *     constructor: [new ng.Query(SomeType), function(queryList) {
+   *       ...
+   *     }]
+   *   })
+   * ```
+   * 
+   * ## Example as ES5 annotation
+   * 
+   * ```
+   * var MyComponent = function(queryList) {
+   *   ...
+   * };
+   * 
+   * MyComponent.annotations = [
+   *   new ng.Component({...})
+   *   new ng.View({...})
+   * ]
+   * MyComponent.parameters = [
+   *   [new ng.Query(SomeType)]
+   * ]
+   * ```
+   */
+  interface QueryFactory {
+    
+     new(selector: Type | string, {descendants}?: {descendants?: boolean}): QueryMetadata;
+  
+    
+     (selector: Type | string, {descendants}?: {descendants?: boolean}): ParameterDecorator;
+  
+  }
+  
+
+  /**
+   * {@link ViewQueryMetadata} factory function.
+   */
+  var ViewQuery : QueryFactory ;
+  
+
+  /**
+   * {@link PipeMetadata} factory function.
+   */
+  var Pipe : PipeFactory ;
+  
+
+  /**
+   * {@link PipeMetadata} factory for creating decorators.
+   * 
+   * ## Example as TypeScript Decorator
+   * 
+   * ```
+   * import {Pipe} from "angular2/angular2";
+   * 
+   * @Pipe({...})
+   * class MyPipe {
+   *   constructor() {
+   *     ...
+   *   }
+   * 
+   *   transform(v, args) {}
+   * }
+   * ```
+   */
+  interface PipeFactory {
+    
+     new(obj: {
+    name: string,
+  }): any;
+  
+    
+     (obj: {name: string}): any;
+  
   }
   
 
@@ -1543,445 +1853,6 @@ declare module ng {
   
 
   /**
-   * {@link Attribute} factory function.
-   */
-  var Attribute : AttributeFactory ;
-  
-
-  /**
-   * {@link Attribute} factory for creating annotations, decorators or DSL.
-   * 
-   * ## Example as TypeScript Decorator
-   * 
-   * ```
-   * import {Attribute, Component, View} from "angular2/angular2";
-   * 
-   * @Component({...})
-   * @View({...})
-   * class MyComponent {
-   *   constructor(@Attribute('title') title: string) {
-   *     ...
-   *   }
-   * }
-   * ```
-   * 
-   * ## Example as ES5 DSL
-   * 
-   * ```
-   * var MyComponent = ng
-   *   .Component({...})
-   *   .View({...})
-   *   .Class({
-   *     constructor: [new ng.Attribute('title'), function(title) {
-   *       ...
-   *     }]
-   *   })
-   * ```
-   * 
-   * ## Example as ES5 annotation
-   * 
-   * ```
-   * var MyComponent = function(title) {
-   *   ...
-   * };
-   * 
-   * MyComponent.annotations = [
-   *   new ng.Component({...})
-   *   new ng.View({...})
-   * ]
-   * MyComponent.parameters = [
-   *   [new ng.Attribute('title')]
-   * ]
-   * ```
-   */
-  interface AttributeFactory {
-    
-     new(name: string): AttributeAnnotation;
-  
-    
-     (name: string): TypeDecorator;
-  
-  }
-  
-
-  /**
-   * {@link Component} factory function.
-   */
-  var Component : ComponentFactory ;
-  
-
-  /**
-   * Interface for the {@link Component} decorator function.
-   * 
-   * See {@link ComponentFactory}.
-   */
-  interface ComponentDecorator extends TypeDecorator {
-    
-
-    /**
-     * Chain {@link View} annotation.
-     */
-     View(obj: {
-    templateUrl?: string,
-    template?: string,
-    directives?: List<Type | any | List<any>>,
-    pipes?: List<Type | any | List<any>>,
-    renderer?: string,
-    styles?: List<string>,
-    styleUrls?: List<string>,
-  }): ViewDecorator;
-  }
-  
-
-  /**
-   * {@link ComponentAnnotation} factory for creating annotations, decorators or DSL.
-   * 
-   * ## Example as TypeScript Decorator
-   * 
-   * ```
-   * import {Component, View} from "angular2/angular2";
-   * 
-   * @Component({...})
-   * @View({...})
-   * class MyComponent {
-   *   constructor() {
-   *     ...
-   *   }
-   * }
-   * ```
-   * 
-   * ## Example as ES5 DSL
-   * 
-   * ```
-   * var MyComponent = ng
-   *   .Component({...})
-   *   .View({...})
-   *   .Class({
-   *     constructor: function() {
-   *       ...
-   *     }
-   *   })
-   * ```
-   * 
-   * ## Example as ES5 annotation
-   * 
-   * ```
-   * var MyComponent = function() {
-   *   ...
-   * };
-   * 
-   * MyComponent.annotations = [
-   *   new ng.Component({...})
-   *   new ng.View({...})
-   * ]
-   * ```
-   */
-  interface ComponentFactory {
-    
-     new(obj: {
-    selector?: string,
-    properties?: List<string>,
-    events?: List<string>,
-    host?: StringMap<string, string>,
-    lifecycle?: List<LifecycleEvent>,
-    bindings?: List<any>,
-    exportAs?: string,
-    compileChildren?: boolean,
-    viewBindings?: List<any>,
-    changeDetection?: string,
-  }): ComponentAnnotation;
-  
-    
-     (obj: {
-    selector?: string,
-    properties?: List<string>,
-    events?: List<string>,
-    host?: StringMap<string, string>,
-    lifecycle?: List<LifecycleEvent>,
-    bindings?: List<any>,
-    exportAs?: string,
-    compileChildren?: boolean,
-    viewBindings?: List<any>,
-    changeDetection?: string,
-  }): ComponentDecorator;
-  
-  }
-  
-
-  /**
-   * {@link Directive} factory function.
-   */
-  var Directive : DirectiveFactory ;
-  
-
-  /**
-   * Interface for the {@link Directive} decorator function.
-   * 
-   * See {@link DirectiveFactory}.
-   */
-  interface DirectiveDecorator extends TypeDecorator {
-  }
-  
-
-  /**
-   * {@link Directive} factory for creating annotations, decorators or DSL.
-   * 
-   * ## Example as TypeScript Decorator
-   * 
-   * ```
-   * import {Directive} from "angular2/angular2";
-   * 
-   * @Directive({...})
-   * class MyDirective {
-   *   constructor() {
-   *     ...
-   *   }
-   * }
-   * ```
-   * 
-   * ## Example as ES5 DSL
-   * 
-   * ```
-   * var MyDirective = ng
-   *   .Directive({...})
-   *   .Class({
-   *     constructor: function() {
-   *       ...
-   *     }
-   *   })
-   * ```
-   * 
-   * ## Example as ES5 annotation
-   * 
-   * ```
-   * var MyDirective = function() {
-   *   ...
-   * };
-   * 
-   * MyDirective.annotations = [
-   *   new ng.Directive({...})
-   * ]
-   * ```
-   */
-  interface DirectiveFactory {
-    
-     new(obj: {
-    selector?: string, properties?: List<string>, events?: List<string>,
-        host?: StringMap<string, string>, lifecycle?: List<LifecycleEvent>, bindings?: List<any>,
-        exportAs?: string, compileChildren?: boolean;
-  }): DirectiveAnnotation;
-  
-    
-     (obj: {
-    selector?: string, properties?: List<string>, events?: List<string>,
-        host?: StringMap<string, string>, lifecycle?: List<LifecycleEvent>, bindings?: List<any>,
-        exportAs?: string, compileChildren?: boolean;
-  }): DirectiveDecorator;
-  
-  }
-  
-
-  /**
-   * {@link View} factory function.
-   */
-  var View : ViewFactory ;
-  
-
-  /**
-   * Interface for the {@link View} decorator function.
-   * 
-   * See {@link ViewFactory}.
-   */
-  interface ViewDecorator extends TypeDecorator {
-    
-
-    /**
-     * Chain {@link View} annotation.
-     */
-     View(obj: {
-    templateUrl?: string,
-    template?: string,
-    directives?: List<Type | any | List<any>>,
-    pipes?: List<Type | any | List<any>>,
-    renderer?: string,
-    styles?: List<string>,
-    styleUrls?: List<string>,
-  }): ViewDecorator;
-  }
-  
-
-  /**
-   * {@link ViewAnnotation} factory for creating annotations, decorators or DSL.
-   * 
-   * ## Example as TypeScript Decorator
-   * 
-   * ```
-   * import {Component, View} from "angular2/angular2";
-   * 
-   * @Component({...})
-   * @View({...})
-   * class MyComponent {
-   *   constructor() {
-   *     ...
-   *   }
-   * }
-   * ```
-   * 
-   * ## Example as ES5 DSL
-   * 
-   * ```
-   * var MyComponent = ng
-   *   .Component({...})
-   *   .View({...})
-   *   .Class({
-   *     constructor: function() {
-   *       ...
-   *     }
-   *   })
-   * ```
-   * 
-   * ## Example as ES5 annotation
-   * 
-   * ```
-   * var MyComponent = function() {
-   *   ...
-   * };
-   * 
-   * MyComponent.annotations = [
-   *   new ng.Component({...})
-   *   new ng.View({...})
-   * ]
-   * ```
-   */
-  interface ViewFactory {
-    
-     new(obj: {
-    templateUrl?: string,
-    template?: string,
-    directives?: List<Type | any | List<any>>,
-    encapsulation?: ViewEncapsulation,
-    styles?: List<string>,
-    styleUrls?: List<string>,
-  }): ViewAnnotation;
-  
-    
-     (obj: {
-    templateUrl?: string,
-    template?: string,
-    directives?: List<Type | any | List<any>>,
-    encapsulation?: ViewEncapsulation,
-    styles?: List<string>,
-    styleUrls?: List<string>,
-  }): ViewDecorator;
-  
-  }
-  
-
-  /**
-   * {@link Query} factory function.
-   */
-  var Query : QueryFactory ;
-  
-
-  /**
-   * {@link Query} factory for creating annotations, decorators or DSL.
-   * 
-   * ## Example as TypeScript Decorator
-   * 
-   * ```
-   * import {Query, QueryList, Component, View} from "angular2/angular2";
-   * 
-   * @Component({...})
-   * @View({...})
-   * class MyComponent {
-   *   constructor(@Query(SomeType) queryList: QueryList) {
-   *     ...
-   *   }
-   * }
-   * ```
-   * 
-   * ## Example as ES5 DSL
-   * 
-   * ```
-   * var MyComponent = ng
-   *   .Component({...})
-   *   .View({...})
-   *   .Class({
-   *     constructor: [new ng.Query(SomeType), function(queryList) {
-   *       ...
-   *     }]
-   *   })
-   * ```
-   * 
-   * ## Example as ES5 annotation
-   * 
-   * ```
-   * var MyComponent = function(queryList) {
-   *   ...
-   * };
-   * 
-   * MyComponent.annotations = [
-   *   new ng.Component({...})
-   *   new ng.View({...})
-   * ]
-   * MyComponent.parameters = [
-   *   [new ng.Query(SomeType)]
-   * ]
-   * ```
-   */
-  interface QueryFactory {
-    
-     new(selector: Type | string, {descendants}?: {descendants?: boolean}): QueryAnnotation;
-  
-    
-     (selector: Type | string, {descendants}?: {descendants?: boolean}): ParameterDecorator;
-  
-  }
-  
-
-  /**
-   * {@link ViewQuery} factory function.
-   */
-  var ViewQuery : QueryFactory ;
-  
-
-  /**
-   * {@link Pipe} factory function.
-   */
-  var Pipe : PipeFactory ;
-  
-
-  /**
-   * {@link Pipe} factory for creating decorators.
-   * 
-   * ## Example as TypeScript Decorator
-   * 
-   * ```
-   * import {Pipe} from "angular2/angular2";
-   * 
-   * @Pipe({...})
-   * class MyPipe {
-   *   constructor() {
-   *     ...
-   *   }
-   * 
-   *   transform(v, args) {}
-   * }
-   * ```
-   */
-  interface PipeFactory {
-    
-     new(obj: {
-    name: string,
-  }): any;
-  
-    
-     (obj: {name: string}): any;
-  
-  }
-  
-
-  /**
    * CHECK_ONCE means that after calling detectChanges the mode of the change detector
    * will become CHECKED.
    */
@@ -2072,6 +1943,8 @@ declare module ng {
     
      markPathToRootAsCheckOnce(): void;
     
+     handleEvent(eventName: string, elIndex: number, locals: Locals): void;
+    
      detectChanges(): void;
     
      checkNoChanges(): void;
@@ -2128,7 +2001,8 @@ declare module ng {
   
 
   /**
-   * Indicates that the result of a {@link Pipe} transformation has changed even though the reference
+   * Indicates that the result of a {@link PipeMetadata} transformation has changed even though the
+   * reference
    * has not changed.
    * 
    * The wrapped value will be unwrapped by change detection, and the unwrapped value will be stored.
@@ -2284,13 +2158,13 @@ declare module ng {
     
 
     /**
-     * Returns the current {@link Component} type.
+     * Returns the current {@link ComponentMetadata} type.
      */
      hostComponentType: Type;
     
 
     /**
-     * Returns the current {@link Component} instance.
+     * Returns the current {@link ComponentMetadata} instance.
      */
      hostComponent: any;
     
@@ -2306,6 +2180,135 @@ declare module ng {
      */
      injector: Injector;
   }
+  
+
+  /**
+   * Bootstrapping for Angular applications.
+   * 
+   * You instantiate an Angular application by explicitly specifying a component to use as the root
+   * component for your
+   * application via the `bootstrap()` method.
+   * 
+   * ## Simple Example
+   * 
+   * Assuming this `index.html`:
+   * 
+   * ```html
+   * <html>
+   *   <!-- load Angular script tags here. -->
+   *   <body>
+   *     <my-app>loading...</my-app>
+   *   </body>
+   * </html>
+   * ```
+   * 
+   * An application is bootstrapped inside an existing browser DOM, typically `index.html`. Unlike
+   * Angular 1, Angular 2
+   * does not compile/process bindings in `index.html`. This is mainly for security reasons, as well
+   * as architectural
+   * changes in Angular 2. This means that `index.html` can safely be processed using server-side
+   * technologies such as
+   * bindings. Bindings can thus use double-curly `{{ syntax }}` without collision from Angular 2
+   * component double-curly
+   * `{{ syntax }}`.
+   * 
+   * We can use this script code:
+   * 
+   * ```
+   * @Component({
+   *    selector: 'my-app'
+   * })
+   * @View({
+   *    template: 'Hello {{ name }}!'
+   * })
+   * class MyApp {
+   *   name:string;
+   * 
+   *   constructor() {
+   *     this.name = 'World';
+   *   }
+   * }
+   * 
+   * main() {
+   *   return bootstrap(MyApp);
+   * }
+   * ```
+   * 
+   * When the app developer invokes `bootstrap()` with the root component `MyApp` as its argument,
+   * Angular performs the
+   * following tasks:
+   * 
+   *  1. It uses the component's `selector` property to locate the DOM element which needs to be
+   * upgraded into
+   *     the angular component.
+   *  2. It creates a new child injector (from the platform injector). Optionally, you can also
+   * override the injector configuration for an app by
+   * invoking `bootstrap` with the `componentInjectableBindings` argument.
+   *  3. It creates a new `Zone` and connects it to the angular application's change detection domain
+   * instance.
+   *  4. It creates a shadow DOM on the selected component's host element and loads the template into
+   * it.
+   *  5. It instantiates the specified component.
+   *  6. Finally, Angular performs change detection to apply the initial data bindings for the
+   * application.
+   * 
+   * 
+   * ## Instantiating Multiple Applications on a Single Page
+   * 
+   * There are two ways to do this.
+   * 
+   * 
+   * ### Isolated Applications
+   * 
+   * Angular creates a new application each time that the `bootstrap()` method is invoked. When
+   * multiple applications
+   * are created for a page, Angular treats each application as independent within an isolated change
+   * detection and
+   * `Zone` domain. If you need to share data between applications, use the strategy described in the
+   * next
+   * section, "Applications That Share Change Detection."
+   * 
+   * 
+   * ### Applications That Share Change Detection
+   * 
+   * If you need to bootstrap multiple applications that share common data, the applications must
+   * share a common
+   * change detection and zone. To do that, create a meta-component that lists the application
+   * components in its template.
+   * By only invoking the `bootstrap()` method once, with the meta-component as its argument, you
+   * ensure that only a
+   * single change detection zone is created and therefore data can be shared across the applications.
+   * 
+   * 
+   * ## Platform Injector
+   * 
+   * When working within a browser window, there are many singleton resources: cookies, title,
+   * location, and others.
+   * Angular services that represent these resources must likewise be shared across all Angular
+   * applications that
+   * occupy the same browser window.  For this reason, Angular creates exactly one global platform
+   * injector which stores
+   * all shared services, and each angular application injector has the platform injector as its
+   * parent.
+   * 
+   * Each application has its own private injector as well. When there are multiple applications on a
+   * page, Angular treats
+   * each application injector's services as private to that application.
+   * 
+   * 
+   * # API
+   * - `appComponentType`: The root component which should act as the application. This is a reference
+   * to a `Type`
+   *   which is annotated with `@Component(...)`.
+   * - `componentInjectableBindings`: An additional set of bindings that can be added to the app
+   * injector
+   * to override default injection behavior.
+   * - `errorReporter`: `function(exception:any, stackTrace:string)` a default error reporter for
+   * unhandled exceptions.
+   * 
+   * Returns a `Promise` of {@link ApplicationRef}.
+   */
+  function bootstrap(appComponentType: /*Type*/ any, componentInjectableBindings?: List<Type | Binding | List<any>>) : Promise<ApplicationRef> ;
   
 
   /**
@@ -2366,7 +2369,7 @@ declare module ng {
   
 
   /**
-   * Resolve a `Type` from a {@link Component} into a URL.
+   * Resolve a `Type` from a {@link ComponentMetadata} into a URL.
    * 
    * This interface can be overridden by the application developer to create custom behavior.
    * 
@@ -2386,7 +2389,7 @@ declare module ng {
   
 
   /**
-   * Resolve a `Type` for {@link Directive}.
+   * Resolve a `Type` for {@link DirectiveMetadata}.
    * 
    * This interface can be overridden by the application developer to create custom behavior.
    * 
@@ -2396,9 +2399,9 @@ declare module ng {
     
 
     /**
-     * Return {@link Directive} for a given `Type`.
+     * Return {@link DirectiveMetadata} for a given `Type`.
      */
-     resolve(type: Type): DirectiveAnnotation;
+     resolve(type: Type): DirectiveMetadata;
   }
   
 
@@ -3030,7 +3033,7 @@ declare module ng {
    * A ProtoView is a reference to a template for easy creation of views.
    * (See {@link AppViewManager#createViewInContainer} and {@link AppViewManager#createRootHostView}).
    * 
-   * A `ProtoView` is a foctary for creating `View`s.
+   * A `ProtoView` is a factory for creating `View`s.
    * 
    * ## Example
    * 
@@ -4452,16 +4455,16 @@ declare module ng {
    * # Example:
    * 
    * ```
-   * <div ng-style="{'text-align': alignEpr}"></div>
+   * <div [ng-style]="{'text-align': alignExp}"></div>
    * ```
    * 
-   * In the above example the `text-align` style will be updated based on the `alignEpr` value
+   * In the above example the `text-align` style will be updated based on the `alignExp` value
    * changes.
    * 
    * # Syntax
    * 
-   * - `<div ng-style="{'text-align': alignEpr}"></div>`
-   * - `<div ng-style="styleExp"></div>`
+   * - `<div [ng-style]="{'text-align': alignExp}"></div>`
+   * - `<div [ng-style]="styleExp"></div>`
    */
   class NgStyle {
     
@@ -5398,7 +5401,7 @@ declare module ng {
   
   const FORM_BINDINGS : List<Type> ;
   
-  class DirectiveMetadata {
+  class RenderDirectiveMetadata {
     
      id: any;
     
@@ -5648,7 +5651,7 @@ declare module ng {
     
      template: string;
     
-     directives: List<DirectiveMetadata>;
+     directives: List<RenderDirectiveMetadata>;
     
      styleAbsUrls: List<string>;
     

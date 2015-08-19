@@ -1,6 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 import {Component, View, bootstrap} from 'angular2/angular2';
-import {RouteConfig, RouterOutlet, RouterLink, routerInjectables} from 'angular2/router';
+import {RouteConfig, RouterOutlet, RouterLink, Route, ROUTER_BINDINGS} from 'angular2/router';
 import {HTTP_BINDINGS} from 'http/http';
 
 import {Topbar} from './src/components/topbar';
@@ -21,7 +21,7 @@ import {Notifications} from './src/controllers/notifications/notifications';
   selector: 'minds-app',
 })
 @RouteConfig([
-  { path: '/login', component: Login, as: 'login' },
+  new Route({ path: '/login', component: Login, as: 'login' }),
   { path: '/logout', component: Logout, as: 'logout' },
   { path: '/newsfeed', component: Newsfeed, as: 'newsfeed' },
   { path: '/capture', component: Capture, as: 'capture' },
@@ -34,7 +34,9 @@ import {Notifications} from './src/controllers/notifications/notifications';
   { path: '/notifications', component: Notifications, as: 'notifications'},
   { path: '/groups', component: ComingSoon, as: 'groups'},
 
-  { path: '/:username', component: Channel, as: 'channel' }
+  { path: '/:username', component: Channel, as: 'channel' },
+
+  { path: '/', redirectTo: '/newsfeed' }
 ])
 @View({
   templateUrl: './templates/index.html',
@@ -49,4 +51,4 @@ class Minds {
   }
 }
 
-bootstrap(Minds, [routerInjectables, HTTP_BINDINGS]);
+bootstrap(Minds, [ROUTER_BINDINGS, HTTP_BINDINGS]);
