@@ -4224,41 +4224,62 @@ System.register("angular2/di", ["angular2/src/di/metadata", "angular2/src/di/dec
   };
 });
 
-System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_xhr", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
+System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/decorators", "http/src/interfaces", "http/src/static_request", "http/src/base_request_options", "http/src/enums"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/backends/xhr_backend";
+  var __moduleName = "http/src/http";
   var __decorate,
       __metadata,
-      RequestMethodsMap,
-      ResponseTypes,
-      Response,
-      ResponseOptions,
-      Injectable,
-      BrowserXhr,
-      EventEmitter,
-      ObservableWrapper,
+      isString,
       isPresent,
-      ENUM_INDEX,
-      XHRConnection,
-      XHRBackend;
+      makeTypeError,
+      Injectable,
+      ConnectionBackend,
+      Request,
+      RequestOptions,
+      RequestMethods,
+      Http,
+      Jsonp;
+  function httpRequest(backend, request) {
+    return backend.createConnection(request).response;
+  }
+  function mergeOptions(defaultOpts, providedOpts, method, url) {
+    var newOptions = defaultOpts;
+    if (isPresent(providedOpts)) {
+      newOptions = newOptions.merge(new RequestOptions({
+        method: providedOpts.method,
+        url: providedOpts.url,
+        search: providedOpts.search,
+        headers: providedOpts.headers,
+        body: providedOpts.body,
+        mode: providedOpts.mode,
+        credentials: providedOpts.credentials,
+        cache: providedOpts.cache
+      }));
+    }
+    if (isPresent(method)) {
+      return newOptions.merge(new RequestOptions({
+        method: method,
+        url: url
+      }));
+    } else {
+      return newOptions.merge(new RequestOptions({url: url}));
+    }
+  }
   return {
     setters: [function($__m) {
-      RequestMethodsMap = $__m.RequestMethodsMap;
-      ResponseTypes = $__m.ResponseTypes;
-    }, function($__m) {
-      Response = $__m.Response;
-    }, function($__m) {
-      ResponseOptions = $__m.ResponseOptions;
+      isString = $__m.isString;
+      isPresent = $__m.isPresent;
+      makeTypeError = $__m.makeTypeError;
     }, function($__m) {
       Injectable = $__m.Injectable;
     }, function($__m) {
-      BrowserXhr = $__m.BrowserXhr;
+      ConnectionBackend = $__m.ConnectionBackend;
     }, function($__m) {
-      EventEmitter = $__m.EventEmitter;
-      ObservableWrapper = $__m.ObservableWrapper;
+      Request = $__m.Request;
     }, function($__m) {
-      isPresent = $__m.isPresent;
-      ENUM_INDEX = $__m.ENUM_INDEX;
+      RequestOptions = $__m.RequestOptions;
+    }, function($__m) {
+      RequestMethods = $__m.RequestMethods;
     }],
     execute: function() {
       __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
@@ -4283,60 +4304,60 @@ System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/st
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
           return Reflect.metadata(k, v);
       };
-      XHRConnection = function() {
-        function XHRConnection(req, browserXHR, baseResponseOptions) {
-          var $__3 = this;
-          var requestMethodsMap = new RequestMethodsMap();
-          this.request = req;
-          this.response = new EventEmitter();
-          this._xhr = browserXHR.build();
-          this._xhr.open(requestMethodsMap.getMethod(ENUM_INDEX(req.method)), req.url);
-          this._xhr.addEventListener('load', function(_) {
-            var response = isPresent($__3._xhr.response) ? $__3._xhr.response : $__3._xhr.responseText;
-            var status = $__3._xhr.status === 1223 ? 204 : $__3._xhr.status;
-            if (status === 0) {
-              status = response ? 200 : 0;
-            }
-            var responseOptions = new ResponseOptions({
-              body: response,
-              status: status
-            });
-            if (isPresent(baseResponseOptions)) {
-              responseOptions = baseResponseOptions.merge(responseOptions);
-            }
-            ObservableWrapper.callNext($__3.response, new Response(responseOptions));
-            ObservableWrapper.callReturn($__3.response);
-          });
-          this._xhr.addEventListener('error', function(err) {
-            var responseOptions = new ResponseOptions({
-              body: err,
-              type: ResponseTypes.Error
-            });
-            if (isPresent(baseResponseOptions)) {
-              responseOptions = baseResponseOptions.merge(responseOptions);
-            }
-            ObservableWrapper.callThrow($__3.response, new Response(responseOptions));
-          });
-          if (isPresent(req.headers)) {
-            req.headers.forEach(function(value, name) {
-              $__3._xhr.setRequestHeader(name, value);
-            });
+      Http = ($traceurRuntime.createClass)(function(_backend, _defaultOptions) {
+        this._backend = _backend;
+        this._defaultOptions = _defaultOptions;
+      }, {
+        request: function(url, options) {
+          var responseObservable;
+          if (isString(url)) {
+            responseObservable = httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
+          } else if (url instanceof Request) {
+            responseObservable = httpRequest(this._backend, url);
           }
-          this._xhr.send(this.request.text());
+          return responseObservable;
+        },
+        get: function(url, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
+        },
+        post: function(url, body, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.POST, url)));
+        },
+        put: function(url, body, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PUT, url)));
+        },
+        delete: function(url, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.DELETE, url)));
+        },
+        patch: function(url, body, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PATCH, url)));
+        },
+        head: function(url, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.HEAD, url)));
         }
-        return ($traceurRuntime.createClass)(XHRConnection, {dispose: function() {
-            this._xhr.abort();
-          }}, {});
-      }();
-      $__export("XHRConnection", XHRConnection);
-      XHRBackend = ($traceurRuntime.createClass)(function(_browserXHR, _baseResponseOptions) {
-        this._browserXHR = _browserXHR;
-        this._baseResponseOptions = _baseResponseOptions;
-      }, {createConnection: function(request) {
-          return new XHRConnection(request, this._browserXHR, this._baseResponseOptions);
-        }}, {});
-      $__export("XHRBackend", XHRBackend);
-      $__export("XHRBackend", XHRBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserXhr, ResponseOptions])], XHRBackend));
+      }, {});
+      $__export("Http", Http);
+      $__export("Http", Http = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Http));
+      Jsonp = function($__super) {
+        function $__0(backend, defaultOptions) {
+          $traceurRuntime.superConstructor($__0).call(this, backend, defaultOptions);
+        }
+        return ($traceurRuntime.createClass)($__0, {request: function(url, options) {
+            var responseObservable;
+            if (isString(url)) {
+              url = new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url));
+            }
+            if (url instanceof Request) {
+              if (url.method !== RequestMethods.GET) {
+                makeTypeError('JSONP requests must use GET request method.');
+              }
+              responseObservable = httpRequest(this._backend, url);
+            }
+            return responseObservable;
+          }}, {}, $__super);
+      }(Http);
+      $__export("Jsonp", Jsonp);
+      $__export("Jsonp", Jsonp = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Jsonp));
     }
   };
 });
@@ -4747,62 +4768,41 @@ System.register("angular2/src/facade/lang", [], function($__export) {
   };
 });
 
-System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/decorators", "http/src/interfaces", "http/src/static_request", "http/src/base_request_options", "http/src/enums"], function($__export) {
+System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_xhr", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/http";
+  var __moduleName = "http/src/backends/xhr_backend";
   var __decorate,
       __metadata,
-      isString,
-      isPresent,
-      makeTypeError,
+      RequestMethodsMap,
+      ResponseTypes,
+      Response,
+      ResponseOptions,
       Injectable,
-      ConnectionBackend,
-      Request,
-      RequestOptions,
-      RequestMethods,
-      Http,
-      Jsonp;
-  function httpRequest(backend, request) {
-    return backend.createConnection(request).response;
-  }
-  function mergeOptions(defaultOpts, providedOpts, method, url) {
-    var newOptions = defaultOpts;
-    if (isPresent(providedOpts)) {
-      newOptions = newOptions.merge(new RequestOptions({
-        method: providedOpts.method,
-        url: providedOpts.url,
-        search: providedOpts.search,
-        headers: providedOpts.headers,
-        body: providedOpts.body,
-        mode: providedOpts.mode,
-        credentials: providedOpts.credentials,
-        cache: providedOpts.cache
-      }));
-    }
-    if (isPresent(method)) {
-      return newOptions.merge(new RequestOptions({
-        method: method,
-        url: url
-      }));
-    } else {
-      return newOptions.merge(new RequestOptions({url: url}));
-    }
-  }
+      BrowserXhr,
+      EventEmitter,
+      ObservableWrapper,
+      isPresent,
+      ENUM_INDEX,
+      XHRConnection,
+      XHRBackend;
   return {
     setters: [function($__m) {
-      isString = $__m.isString;
-      isPresent = $__m.isPresent;
-      makeTypeError = $__m.makeTypeError;
+      RequestMethodsMap = $__m.RequestMethodsMap;
+      ResponseTypes = $__m.ResponseTypes;
+    }, function($__m) {
+      Response = $__m.Response;
+    }, function($__m) {
+      ResponseOptions = $__m.ResponseOptions;
     }, function($__m) {
       Injectable = $__m.Injectable;
     }, function($__m) {
-      ConnectionBackend = $__m.ConnectionBackend;
+      BrowserXhr = $__m.BrowserXhr;
     }, function($__m) {
-      Request = $__m.Request;
+      EventEmitter = $__m.EventEmitter;
+      ObservableWrapper = $__m.ObservableWrapper;
     }, function($__m) {
-      RequestOptions = $__m.RequestOptions;
-    }, function($__m) {
-      RequestMethods = $__m.RequestMethods;
+      isPresent = $__m.isPresent;
+      ENUM_INDEX = $__m.ENUM_INDEX;
     }],
     execute: function() {
       __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
@@ -4827,60 +4827,199 @@ System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/d
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
           return Reflect.metadata(k, v);
       };
-      Http = ($traceurRuntime.createClass)(function(_backend, _defaultOptions) {
-        this._backend = _backend;
-        this._defaultOptions = _defaultOptions;
-      }, {
-        request: function(url, options) {
-          var responseObservable;
-          if (isString(url)) {
-            responseObservable = httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
-          } else if (url instanceof Request) {
-            responseObservable = httpRequest(this._backend, url);
+      XHRConnection = function() {
+        function XHRConnection(req, browserXHR, baseResponseOptions) {
+          var $__3 = this;
+          var requestMethodsMap = new RequestMethodsMap();
+          this.request = req;
+          this.response = new EventEmitter();
+          this._xhr = browserXHR.build();
+          this._xhr.open(requestMethodsMap.getMethod(ENUM_INDEX(req.method)), req.url);
+          this._xhr.addEventListener('load', function(_) {
+            var response = isPresent($__3._xhr.response) ? $__3._xhr.response : $__3._xhr.responseText;
+            var status = $__3._xhr.status === 1223 ? 204 : $__3._xhr.status;
+            if (status === 0) {
+              status = response ? 200 : 0;
+            }
+            var responseOptions = new ResponseOptions({
+              body: response,
+              status: status
+            });
+            if (isPresent(baseResponseOptions)) {
+              responseOptions = baseResponseOptions.merge(responseOptions);
+            }
+            ObservableWrapper.callNext($__3.response, new Response(responseOptions));
+            ObservableWrapper.callReturn($__3.response);
+          });
+          this._xhr.addEventListener('error', function(err) {
+            var responseOptions = new ResponseOptions({
+              body: err,
+              type: ResponseTypes.Error
+            });
+            if (isPresent(baseResponseOptions)) {
+              responseOptions = baseResponseOptions.merge(responseOptions);
+            }
+            ObservableWrapper.callThrow($__3.response, new Response(responseOptions));
+          });
+          if (isPresent(req.headers)) {
+            req.headers.forEach(function(value, name) {
+              $__3._xhr.setRequestHeader(name, value);
+            });
           }
-          return responseObservable;
-        },
-        get: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
-        },
-        post: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.POST, url)));
-        },
-        put: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PUT, url)));
-        },
-        delete: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.DELETE, url)));
-        },
-        patch: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PATCH, url)));
-        },
-        head: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.HEAD, url)));
+          this._xhr.send(this.request.text());
         }
-      }, {});
-      $__export("Http", Http);
-      $__export("Http", Http = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Http));
-      Jsonp = function($__super) {
-        function $__0(backend, defaultOptions) {
-          $traceurRuntime.superConstructor($__0).call(this, backend, defaultOptions);
+        return ($traceurRuntime.createClass)(XHRConnection, {dispose: function() {
+            this._xhr.abort();
+          }}, {});
+      }();
+      $__export("XHRConnection", XHRConnection);
+      XHRBackend = ($traceurRuntime.createClass)(function(_browserXHR, _baseResponseOptions) {
+        this._browserXHR = _browserXHR;
+        this._baseResponseOptions = _baseResponseOptions;
+      }, {createConnection: function(request) {
+          return new XHRConnection(request, this._browserXHR, this._baseResponseOptions);
+        }}, {});
+      $__export("XHRBackend", XHRBackend);
+      $__export("XHRBackend", XHRBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserXhr, ResponseOptions])], XHRBackend));
+    }
+  };
+});
+
+System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_jsonp", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/backends/jsonp_backend";
+  var __decorate,
+      __metadata,
+      ReadyStates,
+      RequestMethods,
+      Response,
+      ResponseOptions,
+      Injectable,
+      BrowserJsonp,
+      EventEmitter,
+      ObservableWrapper,
+      StringWrapper,
+      isPresent,
+      makeTypeError,
+      JSONPConnection,
+      JSONPBackend;
+  return {
+    setters: [function($__m) {
+      ReadyStates = $__m.ReadyStates;
+      RequestMethods = $__m.RequestMethods;
+    }, function($__m) {
+      Response = $__m.Response;
+    }, function($__m) {
+      ResponseOptions = $__m.ResponseOptions;
+    }, function($__m) {
+      Injectable = $__m.Injectable;
+    }, function($__m) {
+      BrowserJsonp = $__m.BrowserJsonp;
+    }, function($__m) {
+      EventEmitter = $__m.EventEmitter;
+      ObservableWrapper = $__m.ObservableWrapper;
+    }, function($__m) {
+      StringWrapper = $__m.StringWrapper;
+      isPresent = $__m.isPresent;
+      makeTypeError = $__m.makeTypeError;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
         }
-        return ($traceurRuntime.createClass)($__0, {request: function(url, options) {
-            var responseObservable;
-            if (isString(url)) {
-              url = new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url));
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      JSONPConnection = function() {
+        function JSONPConnection(req, _dom, baseResponseOptions) {
+          var $__3 = this;
+          this._dom = _dom;
+          this.baseResponseOptions = baseResponseOptions;
+          this._finished = false;
+          if (req.method !== RequestMethods.GET) {
+            throw makeTypeError("JSONP requests must use GET request method.");
+          }
+          this.request = req;
+          this.response = new EventEmitter();
+          this.readyState = ReadyStates.LOADING;
+          this._id = _dom.nextRequestID();
+          _dom.exposeConnection(this._id, this);
+          var callback = _dom.requestCallback(this._id);
+          var url = req.url;
+          if (url.indexOf('=JSONP_CALLBACK&') > -1) {
+            url = StringWrapper.replace(url, '=JSONP_CALLBACK&', ("=" + callback + "&"));
+          } else if (url.lastIndexOf('=JSONP_CALLBACK') === url.length - '=JSONP_CALLBACK'.length) {
+            url = StringWrapper.substring(url, 0, url.length - '=JSONP_CALLBACK'.length) + ("=" + callback);
+          }
+          var script = this._script = _dom.build(url);
+          script.addEventListener('load', function(event) {
+            if ($__3.readyState === ReadyStates.CANCELLED)
+              return;
+            $__3.readyState = ReadyStates.DONE;
+            _dom.cleanup(script);
+            if (!$__3._finished) {
+              ObservableWrapper.callThrow($__3.response, makeTypeError('JSONP injected script did not invoke callback.'));
+              return;
             }
-            if (url instanceof Request) {
-              if (url.method !== RequestMethods.GET) {
-                makeTypeError('JSONP requests must use GET request method.');
-              }
-              responseObservable = httpRequest(this._backend, url);
+            var responseOptions = new ResponseOptions({body: $__3._responseData});
+            if (isPresent($__3.baseResponseOptions)) {
+              responseOptions = $__3.baseResponseOptions.merge(responseOptions);
             }
-            return responseObservable;
-          }}, {}, $__super);
-      }(Http);
-      $__export("Jsonp", Jsonp);
-      $__export("Jsonp", Jsonp = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Jsonp));
+            ObservableWrapper.callNext($__3.response, new Response(responseOptions));
+          });
+          script.addEventListener('error', function(error) {
+            if ($__3.readyState === ReadyStates.CANCELLED)
+              return;
+            $__3.readyState = ReadyStates.DONE;
+            _dom.cleanup(script);
+            ObservableWrapper.callThrow($__3.response, error);
+          });
+          _dom.send(script);
+        }
+        return ($traceurRuntime.createClass)(JSONPConnection, {
+          finished: function(data) {
+            this._finished = true;
+            this._dom.removeConnection(this._id);
+            if (this.readyState === ReadyStates.CANCELLED)
+              return;
+            this._responseData = data;
+          },
+          dispose: function() {
+            this.readyState = ReadyStates.CANCELLED;
+            var script = this._script;
+            this._script = null;
+            if (isPresent(script)) {
+              this._dom.cleanup(script);
+            }
+            ObservableWrapper.callReturn(this.response);
+          }
+        }, {});
+      }();
+      $__export("JSONPConnection", JSONPConnection);
+      JSONPBackend = ($traceurRuntime.createClass)(function(_browserJSONP, _baseResponseOptions) {
+        this._browserJSONP = _browserJSONP;
+        this._baseResponseOptions = _baseResponseOptions;
+      }, {createConnection: function(request) {
+          return new JSONPConnection(request, this._browserJSONP, this._baseResponseOptions);
+        }}, {});
+      $__export("JSONPBackend", JSONPBackend);
+      $__export("JSONPBackend", JSONPBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserJsonp, ResponseOptions])], JSONPBackend));
     }
   };
 });
@@ -5148,234 +5287,6 @@ System.register("http/src/interfaces", ["angular2/src/facade/lang", "http/src/ur
   };
 });
 
-System.register("http/src/base_response_options", ["angular2/di", "angular2/src/facade/lang", "http/src/headers", "http/src/enums"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/base_response_options";
-  var __decorate,
-      __metadata,
-      Injectable,
-      isPresent,
-      Headers,
-      ResponseTypes,
-      ResponseOptions,
-      BaseResponseOptions;
-  return {
-    setters: [function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
-      isPresent = $__m.isPresent;
-    }, function($__m) {
-      Headers = $__m.Headers;
-    }, function($__m) {
-      ResponseTypes = $__m.ResponseTypes;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      ResponseOptions = function() {
-        function ResponseOptions() {
-          var $__4 = arguments[0] !== (void 0) ? arguments[0] : {},
-              body = $__4.body,
-              status = $__4.status,
-              headers = $__4.headers,
-              statusText = $__4.statusText,
-              type = $__4.type,
-              url = $__4.url;
-          this.body = isPresent(body) ? body : null;
-          this.status = isPresent(status) ? status : null;
-          this.headers = isPresent(headers) ? headers : null;
-          this.statusText = isPresent(statusText) ? statusText : null;
-          this.type = isPresent(type) ? type : null;
-          this.url = isPresent(url) ? url : null;
-        }
-        return ($traceurRuntime.createClass)(ResponseOptions, {merge: function(options) {
-            return new ResponseOptions({
-              body: isPresent(options) && isPresent(options.body) ? options.body : this.body,
-              status: isPresent(options) && isPresent(options.status) ? options.status : this.status,
-              headers: isPresent(options) && isPresent(options.headers) ? options.headers : this.headers,
-              statusText: isPresent(options) && isPresent(options.statusText) ? options.statusText : this.statusText,
-              type: isPresent(options) && isPresent(options.type) ? options.type : this.type,
-              url: isPresent(options) && isPresent(options.url) ? options.url : this.url
-            });
-          }}, {});
-      }();
-      $__export("ResponseOptions", ResponseOptions);
-      BaseResponseOptions = function($__super) {
-        function $__2() {
-          $traceurRuntime.superConstructor($__2).call(this, {
-            status: 200,
-            statusText: 'Ok',
-            type: ResponseTypes.Default,
-            headers: new Headers()
-          });
-        }
-        return ($traceurRuntime.createClass)($__2, {}, {}, $__super);
-      }(ResponseOptions);
-      $__export("BaseResponseOptions", BaseResponseOptions);
-      $__export("BaseResponseOptions", BaseResponseOptions = __decorate([Injectable(), __metadata('design:paramtypes', [])], BaseResponseOptions));
-    }
-  };
-});
-
-System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_jsonp", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/backends/jsonp_backend";
-  var __decorate,
-      __metadata,
-      ReadyStates,
-      RequestMethods,
-      Response,
-      ResponseOptions,
-      Injectable,
-      BrowserJsonp,
-      EventEmitter,
-      ObservableWrapper,
-      StringWrapper,
-      isPresent,
-      makeTypeError,
-      JSONPConnection,
-      JSONPBackend;
-  return {
-    setters: [function($__m) {
-      ReadyStates = $__m.ReadyStates;
-      RequestMethods = $__m.RequestMethods;
-    }, function($__m) {
-      Response = $__m.Response;
-    }, function($__m) {
-      ResponseOptions = $__m.ResponseOptions;
-    }, function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
-      BrowserJsonp = $__m.BrowserJsonp;
-    }, function($__m) {
-      EventEmitter = $__m.EventEmitter;
-      ObservableWrapper = $__m.ObservableWrapper;
-    }, function($__m) {
-      StringWrapper = $__m.StringWrapper;
-      isPresent = $__m.isPresent;
-      makeTypeError = $__m.makeTypeError;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      JSONPConnection = function() {
-        function JSONPConnection(req, _dom, baseResponseOptions) {
-          var $__3 = this;
-          this._dom = _dom;
-          this.baseResponseOptions = baseResponseOptions;
-          this._finished = false;
-          if (req.method !== RequestMethods.GET) {
-            throw makeTypeError("JSONP requests must use GET request method.");
-          }
-          this.request = req;
-          this.response = new EventEmitter();
-          this.readyState = ReadyStates.LOADING;
-          this._id = _dom.nextRequestID();
-          _dom.exposeConnection(this._id, this);
-          var callback = _dom.requestCallback(this._id);
-          var url = req.url;
-          if (url.indexOf('=JSONP_CALLBACK&') > -1) {
-            url = StringWrapper.replace(url, '=JSONP_CALLBACK&', ("=" + callback + "&"));
-          } else if (url.lastIndexOf('=JSONP_CALLBACK') === url.length - '=JSONP_CALLBACK'.length) {
-            url = StringWrapper.substring(url, 0, url.length - '=JSONP_CALLBACK'.length) + ("=" + callback);
-          }
-          var script = this._script = _dom.build(url);
-          script.addEventListener('load', function(event) {
-            if ($__3.readyState === ReadyStates.CANCELLED)
-              return;
-            $__3.readyState = ReadyStates.DONE;
-            _dom.cleanup(script);
-            if (!$__3._finished) {
-              ObservableWrapper.callThrow($__3.response, makeTypeError('JSONP injected script did not invoke callback.'));
-              return;
-            }
-            var responseOptions = new ResponseOptions({body: $__3._responseData});
-            if (isPresent($__3.baseResponseOptions)) {
-              responseOptions = $__3.baseResponseOptions.merge(responseOptions);
-            }
-            ObservableWrapper.callNext($__3.response, new Response(responseOptions));
-          });
-          script.addEventListener('error', function(error) {
-            if ($__3.readyState === ReadyStates.CANCELLED)
-              return;
-            $__3.readyState = ReadyStates.DONE;
-            _dom.cleanup(script);
-            ObservableWrapper.callThrow($__3.response, error);
-          });
-          _dom.send(script);
-        }
-        return ($traceurRuntime.createClass)(JSONPConnection, {
-          finished: function(data) {
-            this._finished = true;
-            this._dom.removeConnection(this._id);
-            if (this.readyState === ReadyStates.CANCELLED)
-              return;
-            this._responseData = data;
-          },
-          dispose: function() {
-            this.readyState = ReadyStates.CANCELLED;
-            var script = this._script;
-            this._script = null;
-            if (isPresent(script)) {
-              this._dom.cleanup(script);
-            }
-            ObservableWrapper.callReturn(this.response);
-          }
-        }, {});
-      }();
-      $__export("JSONPConnection", JSONPConnection);
-      JSONPBackend = ($traceurRuntime.createClass)(function(_browserJSONP, _baseResponseOptions) {
-        this._browserJSONP = _browserJSONP;
-        this._baseResponseOptions = _baseResponseOptions;
-      }, {createConnection: function(request) {
-          return new JSONPConnection(request, this._browserJSONP, this._baseResponseOptions);
-        }}, {});
-      $__export("JSONPBackend", JSONPBackend);
-      $__export("JSONPBackend", JSONPBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserJsonp, ResponseOptions])], JSONPBackend));
-    }
-  };
-});
-
 System.register("http/src/backends/mock_backend", ["angular2/di", "http/src/static_request", "http/src/enums", "http/src/interfaces", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "http/src/backends/mock_backend";
@@ -5498,6 +5409,95 @@ System.register("http/src/backends/mock_backend", ["angular2/di", "http/src/stat
   };
 });
 
+System.register("http/src/base_response_options", ["angular2/di", "angular2/src/facade/lang", "http/src/headers", "http/src/enums"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/base_response_options";
+  var __decorate,
+      __metadata,
+      Injectable,
+      isPresent,
+      Headers,
+      ResponseTypes,
+      ResponseOptions,
+      BaseResponseOptions;
+  return {
+    setters: [function($__m) {
+      Injectable = $__m.Injectable;
+    }, function($__m) {
+      isPresent = $__m.isPresent;
+    }, function($__m) {
+      Headers = $__m.Headers;
+    }, function($__m) {
+      ResponseTypes = $__m.ResponseTypes;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      ResponseOptions = function() {
+        function ResponseOptions() {
+          var $__4 = arguments[0] !== (void 0) ? arguments[0] : {},
+              body = $__4.body,
+              status = $__4.status,
+              headers = $__4.headers,
+              statusText = $__4.statusText,
+              type = $__4.type,
+              url = $__4.url;
+          this.body = isPresent(body) ? body : null;
+          this.status = isPresent(status) ? status : null;
+          this.headers = isPresent(headers) ? headers : null;
+          this.statusText = isPresent(statusText) ? statusText : null;
+          this.type = isPresent(type) ? type : null;
+          this.url = isPresent(url) ? url : null;
+        }
+        return ($traceurRuntime.createClass)(ResponseOptions, {merge: function(options) {
+            return new ResponseOptions({
+              body: isPresent(options) && isPresent(options.body) ? options.body : this.body,
+              status: isPresent(options) && isPresent(options.status) ? options.status : this.status,
+              headers: isPresent(options) && isPresent(options.headers) ? options.headers : this.headers,
+              statusText: isPresent(options) && isPresent(options.statusText) ? options.statusText : this.statusText,
+              type: isPresent(options) && isPresent(options.type) ? options.type : this.type,
+              url: isPresent(options) && isPresent(options.url) ? options.url : this.url
+            });
+          }}, {});
+      }();
+      $__export("ResponseOptions", ResponseOptions);
+      BaseResponseOptions = function($__super) {
+        function $__2() {
+          $traceurRuntime.superConstructor($__2).call(this, {
+            status: 200,
+            statusText: 'Ok',
+            type: ResponseTypes.Default,
+            headers: new Headers()
+          });
+        }
+        return ($traceurRuntime.createClass)($__2, {}, {}, $__super);
+      }(ResponseOptions);
+      $__export("BaseResponseOptions", BaseResponseOptions);
+      $__export("BaseResponseOptions", BaseResponseOptions = __decorate([Injectable(), __metadata('design:paramtypes', [])], BaseResponseOptions));
+    }
+  };
+});
+
 System.register("http/src/static_request", ["http/src/headers", "angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "http/src/static_request";
@@ -5539,6 +5539,58 @@ System.register("http/src/static_request", ["http/src/headers", "angular2/src/fa
           }}, {});
       }();
       $__export("Request", Request);
+    }
+  };
+});
+
+System.register("http/src/static_response", ["angular2/src/facade/lang", "http/src/http_utils"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/static_response";
+  var BaseException,
+      isString,
+      Json,
+      isJsObject,
+      Response;
+  return {
+    setters: [function($__m) {
+      BaseException = $__m.BaseException;
+      isString = $__m.isString;
+      Json = $__m.Json;
+    }, function($__m) {
+      isJsObject = $__m.isJsObject;
+    }],
+    execute: function() {
+      Response = function() {
+        function Response(responseOptions) {
+          this._body = responseOptions.body;
+          this.status = responseOptions.status;
+          this.statusText = responseOptions.statusText;
+          this.headers = responseOptions.headers;
+          this.type = responseOptions.type;
+          this.url = responseOptions.url;
+        }
+        return ($traceurRuntime.createClass)(Response, {
+          blob: function() {
+            throw new BaseException('"blob()" method not implemented on Response superclass');
+          },
+          json: function() {
+            var jsonResponse;
+            if (isJsObject(this._body)) {
+              jsonResponse = this._body;
+            } else if (isString(this._body)) {
+              jsonResponse = Json.parse(this._body);
+            }
+            return jsonResponse;
+          },
+          text: function() {
+            return this._body.toString();
+          },
+          arrayBuffer: function() {
+            throw new BaseException('"arrayBuffer()" method not implemented on Response superclass');
+          }
+        }, {});
+      }();
+      $__export("Response", Response);
     }
   };
 });
@@ -5635,54 +5687,76 @@ System.register("http/src/headers", ["angular2/src/facade/lang", "angular2/src/f
   };
 });
 
-System.register("http/src/static_response", ["angular2/src/facade/lang", "http/src/http_utils"], function($__export) {
+System.register("http/src/enums", [], function($__export) {
   "use strict";
-  var __moduleName = "http/src/static_response";
-  var BaseException,
-      isString,
-      Json,
-      isJsObject,
-      Response;
+  var __moduleName = "http/src/enums";
+  var RequestModesOpts,
+      RequestCacheOpts,
+      RequestCredentialsOpts,
+      RequestMethods,
+      RequestMethodsMap,
+      ReadyStates,
+      ResponseTypes;
   return {
-    setters: [function($__m) {
-      BaseException = $__m.BaseException;
-      isString = $__m.isString;
-      Json = $__m.Json;
-    }, function($__m) {
-      isJsObject = $__m.isJsObject;
-    }],
+    setters: [],
     execute: function() {
-      Response = function() {
-        function Response(responseOptions) {
-          this._body = responseOptions.body;
-          this.status = responseOptions.status;
-          this.statusText = responseOptions.statusText;
-          this.headers = responseOptions.headers;
-          this.type = responseOptions.type;
-          this.url = responseOptions.url;
+      $__export("RequestModesOpts", RequestModesOpts);
+      (function(RequestModesOpts) {
+        RequestModesOpts[RequestModesOpts["Cors"] = 0] = "Cors";
+        RequestModesOpts[RequestModesOpts["NoCors"] = 1] = "NoCors";
+        RequestModesOpts[RequestModesOpts["SameOrigin"] = 2] = "SameOrigin";
+      })(RequestModesOpts || ($__export("RequestModesOpts", RequestModesOpts = {})));
+      $__export("RequestCacheOpts", RequestCacheOpts);
+      (function(RequestCacheOpts) {
+        RequestCacheOpts[RequestCacheOpts["Default"] = 0] = "Default";
+        RequestCacheOpts[RequestCacheOpts["NoStore"] = 1] = "NoStore";
+        RequestCacheOpts[RequestCacheOpts["Reload"] = 2] = "Reload";
+        RequestCacheOpts[RequestCacheOpts["NoCache"] = 3] = "NoCache";
+        RequestCacheOpts[RequestCacheOpts["ForceCache"] = 4] = "ForceCache";
+        RequestCacheOpts[RequestCacheOpts["OnlyIfCached"] = 5] = "OnlyIfCached";
+      })(RequestCacheOpts || ($__export("RequestCacheOpts", RequestCacheOpts = {})));
+      $__export("RequestCredentialsOpts", RequestCredentialsOpts);
+      (function(RequestCredentialsOpts) {
+        RequestCredentialsOpts[RequestCredentialsOpts["Omit"] = 0] = "Omit";
+        RequestCredentialsOpts[RequestCredentialsOpts["SameOrigin"] = 1] = "SameOrigin";
+        RequestCredentialsOpts[RequestCredentialsOpts["Include"] = 2] = "Include";
+      })(RequestCredentialsOpts || ($__export("RequestCredentialsOpts", RequestCredentialsOpts = {})));
+      $__export("RequestMethods", RequestMethods);
+      (function(RequestMethods) {
+        RequestMethods[RequestMethods["GET"] = 0] = "GET";
+        RequestMethods[RequestMethods["POST"] = 1] = "POST";
+        RequestMethods[RequestMethods["PUT"] = 2] = "PUT";
+        RequestMethods[RequestMethods["DELETE"] = 3] = "DELETE";
+        RequestMethods[RequestMethods["OPTIONS"] = 4] = "OPTIONS";
+        RequestMethods[RequestMethods["HEAD"] = 5] = "HEAD";
+        RequestMethods[RequestMethods["PATCH"] = 6] = "PATCH";
+      })(RequestMethods || ($__export("RequestMethods", RequestMethods = {})));
+      RequestMethodsMap = function() {
+        function RequestMethodsMap() {
+          this._methods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'];
         }
-        return ($traceurRuntime.createClass)(Response, {
-          blob: function() {
-            throw new BaseException('"blob()" method not implemented on Response superclass');
-          },
-          json: function() {
-            var jsonResponse;
-            if (isJsObject(this._body)) {
-              jsonResponse = this._body;
-            } else if (isString(this._body)) {
-              jsonResponse = Json.parse(this._body);
-            }
-            return jsonResponse;
-          },
-          text: function() {
-            return this._body.toString();
-          },
-          arrayBuffer: function() {
-            throw new BaseException('"arrayBuffer()" method not implemented on Response superclass');
-          }
-        }, {});
+        return ($traceurRuntime.createClass)(RequestMethodsMap, {getMethod: function(method) {
+            return this._methods[method];
+          }}, {});
       }();
-      $__export("Response", Response);
+      $__export("RequestMethodsMap", RequestMethodsMap);
+      $__export("ReadyStates", ReadyStates);
+      (function(ReadyStates) {
+        ReadyStates[ReadyStates["UNSENT"] = 0] = "UNSENT";
+        ReadyStates[ReadyStates["OPEN"] = 1] = "OPEN";
+        ReadyStates[ReadyStates["HEADERS_RECEIVED"] = 2] = "HEADERS_RECEIVED";
+        ReadyStates[ReadyStates["LOADING"] = 3] = "LOADING";
+        ReadyStates[ReadyStates["DONE"] = 4] = "DONE";
+        ReadyStates[ReadyStates["CANCELLED"] = 5] = "CANCELLED";
+      })(ReadyStates || ($__export("ReadyStates", ReadyStates = {})));
+      $__export("ResponseTypes", ResponseTypes);
+      (function(ResponseTypes) {
+        ResponseTypes[ResponseTypes["Basic"] = 0] = "Basic";
+        ResponseTypes[ResponseTypes["Cors"] = 1] = "Cors";
+        ResponseTypes[ResponseTypes["Default"] = 2] = "Default";
+        ResponseTypes[ResponseTypes["Error"] = 3] = "Error";
+        ResponseTypes[ResponseTypes["Opaque"] = 4] = "Opaque";
+      })(ResponseTypes || ($__export("ResponseTypes", ResponseTypes = {})));
     }
   };
 });
@@ -5821,231 +5895,442 @@ System.register("http/src/url_search_params", ["angular2/src/facade/lang", "angu
   };
 });
 
-System.register("http/src/enums", [], function($__export) {
+System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/enums";
-  var RequestModesOpts,
-      RequestCacheOpts,
-      RequestCredentialsOpts,
-      RequestMethods,
-      RequestMethodsMap,
-      ReadyStates,
-      ResponseTypes;
-  return {
-    setters: [],
-    execute: function() {
-      $__export("RequestModesOpts", RequestModesOpts);
-      (function(RequestModesOpts) {
-        RequestModesOpts[RequestModesOpts["Cors"] = 0] = "Cors";
-        RequestModesOpts[RequestModesOpts["NoCors"] = 1] = "NoCors";
-        RequestModesOpts[RequestModesOpts["SameOrigin"] = 2] = "SameOrigin";
-      })(RequestModesOpts || ($__export("RequestModesOpts", RequestModesOpts = {})));
-      $__export("RequestCacheOpts", RequestCacheOpts);
-      (function(RequestCacheOpts) {
-        RequestCacheOpts[RequestCacheOpts["Default"] = 0] = "Default";
-        RequestCacheOpts[RequestCacheOpts["NoStore"] = 1] = "NoStore";
-        RequestCacheOpts[RequestCacheOpts["Reload"] = 2] = "Reload";
-        RequestCacheOpts[RequestCacheOpts["NoCache"] = 3] = "NoCache";
-        RequestCacheOpts[RequestCacheOpts["ForceCache"] = 4] = "ForceCache";
-        RequestCacheOpts[RequestCacheOpts["OnlyIfCached"] = 5] = "OnlyIfCached";
-      })(RequestCacheOpts || ($__export("RequestCacheOpts", RequestCacheOpts = {})));
-      $__export("RequestCredentialsOpts", RequestCredentialsOpts);
-      (function(RequestCredentialsOpts) {
-        RequestCredentialsOpts[RequestCredentialsOpts["Omit"] = 0] = "Omit";
-        RequestCredentialsOpts[RequestCredentialsOpts["SameOrigin"] = 1] = "SameOrigin";
-        RequestCredentialsOpts[RequestCredentialsOpts["Include"] = 2] = "Include";
-      })(RequestCredentialsOpts || ($__export("RequestCredentialsOpts", RequestCredentialsOpts = {})));
-      $__export("RequestMethods", RequestMethods);
-      (function(RequestMethods) {
-        RequestMethods[RequestMethods["GET"] = 0] = "GET";
-        RequestMethods[RequestMethods["POST"] = 1] = "POST";
-        RequestMethods[RequestMethods["PUT"] = 2] = "PUT";
-        RequestMethods[RequestMethods["DELETE"] = 3] = "DELETE";
-        RequestMethods[RequestMethods["OPTIONS"] = 4] = "OPTIONS";
-        RequestMethods[RequestMethods["HEAD"] = 5] = "HEAD";
-        RequestMethods[RequestMethods["PATCH"] = 6] = "PATCH";
-      })(RequestMethods || ($__export("RequestMethods", RequestMethods = {})));
-      RequestMethodsMap = function() {
-        function RequestMethodsMap() {
-          this._methods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'];
-        }
-        return ($traceurRuntime.createClass)(RequestMethodsMap, {getMethod: function(method) {
-            return this._methods[method];
-          }}, {});
-      }();
-      $__export("RequestMethodsMap", RequestMethodsMap);
-      $__export("ReadyStates", ReadyStates);
-      (function(ReadyStates) {
-        ReadyStates[ReadyStates["UNSENT"] = 0] = "UNSENT";
-        ReadyStates[ReadyStates["OPEN"] = 1] = "OPEN";
-        ReadyStates[ReadyStates["HEADERS_RECEIVED"] = 2] = "HEADERS_RECEIVED";
-        ReadyStates[ReadyStates["LOADING"] = 3] = "LOADING";
-        ReadyStates[ReadyStates["DONE"] = 4] = "DONE";
-        ReadyStates[ReadyStates["CANCELLED"] = 5] = "CANCELLED";
-      })(ReadyStates || ($__export("ReadyStates", ReadyStates = {})));
-      $__export("ResponseTypes", ResponseTypes);
-      (function(ResponseTypes) {
-        ResponseTypes[ResponseTypes["Basic"] = 0] = "Basic";
-        ResponseTypes[ResponseTypes["Cors"] = 1] = "Cors";
-        ResponseTypes[ResponseTypes["Default"] = 2] = "Default";
-        ResponseTypes[ResponseTypes["Error"] = 3] = "Error";
-        ResponseTypes[ResponseTypes["Opaque"] = 4] = "Opaque";
-      })(ResponseTypes || ($__export("ResponseTypes", ResponseTypes = {})));
+  var __moduleName = "angular2/src/facade/collection";
+  var isJsObject,
+      global,
+      isPresent,
+      isBlank,
+      isArray,
+      List,
+      Map,
+      Set,
+      StringMap,
+      createMapFromPairs,
+      createMapFromMap,
+      _clearValues,
+      _arrayFromMap,
+      MapWrapper,
+      StringMapWrapper,
+      ListWrapper,
+      createSetFromList,
+      SetWrapper;
+  function isListLikeIterable(obj) {
+    if (!isJsObject(obj))
+      return false;
+    return isArray(obj) || (!(obj instanceof Map) && Symbol.iterator in obj);
+  }
+  function iterateListLike(obj, fn) {
+    if (isArray(obj)) {
+      for (var i = 0; i < obj.length; i++) {
+        fn(obj[i]);
+      }
+    } else {
+      var iterator = obj[Symbol.iterator]();
+      var item;
+      while (!((item = iterator.next()).done)) {
+        fn(item.value);
+      }
     }
-  };
-});
-
-System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/facade/async";
-  var global,
-      Rx,
-      PromiseWrapper,
-      TimerWrapper,
-      ObservableWrapper,
-      Observable,
-      EventEmitter;
+  }
+  $__export("isListLikeIterable", isListLikeIterable);
+  $__export("iterateListLike", iterateListLike);
   return {
     setters: [function($__m) {
+      isJsObject = $__m.isJsObject;
       global = $__m.global;
-    }, function($__m) {
-      Rx = $__m;
+      isPresent = $__m.isPresent;
+      isBlank = $__m.isBlank;
+      isArray = $__m.isArray;
     }],
     execute: function() {
-      $__export("Promise", Promise);
-      PromiseWrapper = function() {
-        function PromiseWrapper() {}
-        return ($traceurRuntime.createClass)(PromiseWrapper, {}, {
-          resolve: function(obj) {
-            return Promise.resolve(obj);
-          },
-          reject: function(obj, _) {
-            return Promise.reject(obj);
-          },
-          catchError: function(promise, onError) {
-            return promise.catch(onError);
-          },
-          all: function(promises) {
-            if (promises.length == 0)
-              return Promise.resolve([]);
-            return Promise.all(promises);
-          },
-          then: function(promise, success, rejection) {
-            return promise.then(success, rejection);
-          },
-          wrap: function(computation) {
-            return new Promise(function(res, rej) {
-              try {
-                res(computation());
-              } catch (e) {
-                rej(e);
-              }
-            });
-          },
-          completer: function() {
-            var resolve;
-            var reject;
-            var p = new Promise(function(res, rej) {
-              resolve = res;
-              reject = rej;
-            });
-            return {
-              promise: p,
-              resolve: resolve,
-              reject: reject
+      List = global.Array;
+      $__export("List", List);
+      Map = global.Map;
+      $__export("Map", Map);
+      Set = global.Set;
+      $__export("Set", Set);
+      StringMap = global.Object;
+      $__export("StringMap", StringMap);
+      createMapFromPairs = (function() {
+        try {
+          if (new Map([[1, 2]]).size === 1) {
+            return function createMapFromPairs(pairs) {
+              return new Map(pairs);
             };
           }
-        });
-      }();
-      $__export("PromiseWrapper", PromiseWrapper);
-      TimerWrapper = function() {
-        function TimerWrapper() {}
-        return ($traceurRuntime.createClass)(TimerWrapper, {}, {
-          setTimeout: function(fn, millis) {
-            return global.setTimeout(fn, millis);
-          },
-          clearTimeout: function(id) {
-            global.clearTimeout(id);
-          },
-          setInterval: function(fn, millis) {
-            return global.setInterval(fn, millis);
-          },
-          clearInterval: function(id) {
-            global.clearInterval(id);
+        } catch (e) {}
+        return function createMapAndPopulateFromPairs(pairs) {
+          var map = new Map();
+          for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i];
+            map.set(pair[0], pair[1]);
           }
-        });
-      }();
-      $__export("TimerWrapper", TimerWrapper);
-      ObservableWrapper = function() {
-        function ObservableWrapper() {}
-        return ($traceurRuntime.createClass)(ObservableWrapper, {}, {
-          subscribe: function(emitter, onNext) {
-            var onThrow = arguments[2] !== (void 0) ? arguments[2] : null;
-            var onReturn = arguments[3] !== (void 0) ? arguments[3] : null;
-            return emitter.observer({
-              next: onNext,
-              throw: onThrow,
-              return: onReturn
+          return map;
+        };
+      })();
+      createMapFromMap = (function() {
+        try {
+          if (new Map(new Map())) {
+            return function createMapFromMap(m) {
+              return new Map(m);
+            };
+          }
+        } catch (e) {}
+        return function createMapAndPopulateFromMap(m) {
+          var map = new Map();
+          m.forEach(function(v, k) {
+            map.set(k, v);
+          });
+          return map;
+        };
+      })();
+      _clearValues = (function() {
+        if ((new Map()).keys().next) {
+          return function _clearValues(m) {
+            var keyIterator = m.keys();
+            var k;
+            while (!((k = keyIterator.next()).done)) {
+              m.set(k.value, null);
+            }
+          };
+        } else {
+          return function _clearValuesWithForeEach(m) {
+            m.forEach(function(v, k) {
+              m.set(k, null);
             });
-          },
-          isObservable: function(obs) {
-            return obs instanceof Observable;
-          },
-          dispose: function(subscription) {
-            subscription.dispose();
-          },
-          callNext: function(emitter, value) {
-            emitter.next(value);
-          },
-          callThrow: function(emitter, error) {
-            emitter.throw(error);
-          },
-          callReturn: function(emitter) {
-            emitter.return(null);
-          }
-        });
-      }();
-      $__export("ObservableWrapper", ObservableWrapper);
-      Observable = function() {
-        function Observable() {}
-        return ($traceurRuntime.createClass)(Observable, {observer: function(generator) {
-            return null;
-          }}, {});
-      }();
-      $__export("Observable", Observable);
-      EventEmitter = function($__super) {
-        function EventEmitter() {
-          $traceurRuntime.superConstructor(EventEmitter).call(this);
-          this._subject = new Rx.Subject();
-          this._immediateScheduler = Rx.Scheduler.immediate;
+          };
         }
-        return ($traceurRuntime.createClass)(EventEmitter, {
-          observer: function(generator) {
-            return this._subject.observeOn(this._immediateScheduler).subscribe(function(value) {
-              setTimeout(function() {
-                return generator.next(value);
-              });
-            }, function(error) {
-              return generator.throw ? generator.throw(error) : null;
-            }, function() {
-              return generator.return ? generator.return() : null;
-            });
-          },
-          toRx: function() {
-            return this._subject;
-          },
-          next: function(value) {
-            this._subject.onNext(value);
-          },
-          throw: function(error) {
-            this._subject.onError(error);
-          },
-          return: function(value) {
-            this._subject.onCompleted();
+      })();
+      _arrayFromMap = (function() {
+        try {
+          if ((new Map()).values().next) {
+            return function createArrayFromMap(m, getValues) {
+              return getValues ? Array.from(m.values()) : Array.from(m.keys());
+            };
           }
-        }, {}, $__super);
-      }(Observable);
-      $__export("EventEmitter", EventEmitter);
+        } catch (e) {}
+        return function createArrayFromMapWithForeach(m, getValues) {
+          var res = ListWrapper.createFixedSize(m.size),
+              i = 0;
+          m.forEach(function(v, k) {
+            ListWrapper.set(res, i, getValues ? v : k);
+            i++;
+          });
+          return res;
+        };
+      })();
+      MapWrapper = function() {
+        function MapWrapper() {}
+        return ($traceurRuntime.createClass)(MapWrapper, {}, {
+          clone: function(m) {
+            return createMapFromMap(m);
+          },
+          createFromStringMap: function(stringMap) {
+            var result = new Map();
+            for (var prop in stringMap) {
+              result.set(prop, stringMap[prop]);
+            }
+            return result;
+          },
+          toStringMap: function(m) {
+            var r = {};
+            m.forEach(function(v, k) {
+              return r[k] = v;
+            });
+            return r;
+          },
+          createFromPairs: function(pairs) {
+            return createMapFromPairs(pairs);
+          },
+          forEach: function(m, fn) {
+            m.forEach(fn);
+          },
+          get: function(map, key) {
+            return map.get(key);
+          },
+          size: function(m) {
+            return m.size;
+          },
+          delete: function(m, k) {
+            m.delete(k);
+          },
+          clearValues: function(m) {
+            _clearValues(m);
+          },
+          iterable: function(m) {
+            return m;
+          },
+          keys: function(m) {
+            return _arrayFromMap(m, false);
+          },
+          values: function(m) {
+            return _arrayFromMap(m, true);
+          }
+        });
+      }();
+      $__export("MapWrapper", MapWrapper);
+      StringMapWrapper = function() {
+        function StringMapWrapper() {}
+        return ($traceurRuntime.createClass)(StringMapWrapper, {}, {
+          create: function() {
+            return {};
+          },
+          contains: function(map, key) {
+            return map.hasOwnProperty(key);
+          },
+          get: function(map, key) {
+            return map.hasOwnProperty(key) ? map[key] : undefined;
+          },
+          set: function(map, key, value) {
+            map[key] = value;
+          },
+          keys: function(map) {
+            return Object.keys(map);
+          },
+          isEmpty: function(map) {
+            for (var prop in map) {
+              return false;
+            }
+            return true;
+          },
+          delete: function(map, key) {
+            delete map[key];
+          },
+          forEach: function(map, callback) {
+            for (var prop in map) {
+              if (map.hasOwnProperty(prop)) {
+                callback(map[prop], prop);
+              }
+            }
+          },
+          merge: function(m1, m2) {
+            var m = {};
+            for (var attr in m1) {
+              if (m1.hasOwnProperty(attr)) {
+                m[attr] = m1[attr];
+              }
+            }
+            for (var attr in m2) {
+              if (m2.hasOwnProperty(attr)) {
+                m[attr] = m2[attr];
+              }
+            }
+            return m;
+          },
+          equals: function(m1, m2) {
+            var k1 = Object.keys(m1);
+            var k2 = Object.keys(m2);
+            if (k1.length != k2.length) {
+              return false;
+            }
+            var key;
+            for (var i = 0; i < k1.length; i++) {
+              key = k1[i];
+              if (m1[key] !== m2[key]) {
+                return false;
+              }
+            }
+            return true;
+          }
+        });
+      }();
+      $__export("StringMapWrapper", StringMapWrapper);
+      ListWrapper = function() {
+        function ListWrapper() {}
+        return ($traceurRuntime.createClass)(ListWrapper, {}, {
+          createFixedSize: function(size) {
+            return new List(size);
+          },
+          createGrowableSize: function(size) {
+            return new List(size);
+          },
+          get: function(m, k) {
+            return m[k];
+          },
+          set: function(m, k, v) {
+            m[k] = v;
+          },
+          clone: function(array) {
+            return array.slice(0);
+          },
+          map: function(array, fn) {
+            return array.map(fn);
+          },
+          forEach: function(array, fn) {
+            for (var i = 0; i < array.length; i++) {
+              fn(array[i]);
+            }
+          },
+          first: function(array) {
+            if (!array)
+              return null;
+            return array[0];
+          },
+          last: function(array) {
+            if (!array || array.length == 0)
+              return null;
+            return array[array.length - 1];
+          },
+          find: function(list, pred) {
+            for (var i = 0; i < list.length; ++i) {
+              if (pred(list[i]))
+                return list[i];
+            }
+            return null;
+          },
+          indexOf: function(array, value) {
+            var startIndex = arguments[2] !== (void 0) ? arguments[2] : 0;
+            return array.indexOf(value, startIndex);
+          },
+          reduce: function(list, fn, init) {
+            return list.reduce(fn, init);
+          },
+          filter: function(array, pred) {
+            return array.filter(pred);
+          },
+          any: function(list, pred) {
+            for (var i = 0; i < list.length; ++i) {
+              if (pred(list[i]))
+                return true;
+            }
+            return false;
+          },
+          contains: function(list, el) {
+            return list.indexOf(el) !== -1;
+          },
+          reversed: function(array) {
+            var a = ListWrapper.clone(array);
+            return a.reverse();
+          },
+          concat: function(a, b) {
+            return a.concat(b);
+          },
+          insert: function(list, index, value) {
+            list.splice(index, 0, value);
+          },
+          removeAt: function(list, index) {
+            var res = list[index];
+            list.splice(index, 1);
+            return res;
+          },
+          removeAll: function(list, items) {
+            for (var i = 0; i < items.length; ++i) {
+              var index = list.indexOf(items[i]);
+              list.splice(index, 1);
+            }
+          },
+          removeLast: function(list) {
+            return list.pop();
+          },
+          remove: function(list, el) {
+            var index = list.indexOf(el);
+            if (index > -1) {
+              list.splice(index, 1);
+              return true;
+            }
+            return false;
+          },
+          clear: function(list) {
+            list.splice(0, list.length);
+          },
+          join: function(list, s) {
+            return list.join(s);
+          },
+          isEmpty: function(list) {
+            return list.length == 0;
+          },
+          fill: function(list, value) {
+            var start = arguments[2] !== (void 0) ? arguments[2] : 0;
+            var end = arguments[3] !== (void 0) ? arguments[3] : null;
+            list.fill(value, start, end === null ? list.length : end);
+          },
+          equals: function(a, b) {
+            if (a.length != b.length)
+              return false;
+            for (var i = 0; i < a.length; ++i) {
+              if (a[i] !== b[i])
+                return false;
+            }
+            return true;
+          },
+          slice: function(l) {
+            var from = arguments[1] !== (void 0) ? arguments[1] : 0;
+            var to = arguments[2] !== (void 0) ? arguments[2] : null;
+            return l.slice(from, to === null ? undefined : to);
+          },
+          splice: function(l, from, length) {
+            return l.splice(from, length);
+          },
+          sort: function(l, compareFn) {
+            if (isPresent(compareFn)) {
+              l.sort(compareFn);
+            } else {
+              l.sort();
+            }
+          },
+          toString: function(l) {
+            return l.toString();
+          },
+          toJSON: function(l) {
+            return JSON.stringify(l);
+          },
+          maximum: function(list, predicate) {
+            if (list.length == 0) {
+              return null;
+            }
+            var solution = null;
+            var maxValue = -Infinity;
+            for (var index = 0; index < list.length; index++) {
+              var candidate = list[index];
+              if (isBlank(candidate)) {
+                continue;
+              }
+              var candidateValue = predicate(candidate);
+              if (candidateValue > maxValue) {
+                solution = candidate;
+                maxValue = candidateValue;
+              }
+            }
+            return solution;
+          }
+        });
+      }();
+      $__export("ListWrapper", ListWrapper);
+      createSetFromList = (function() {
+        var test = new Set([1, 2, 3]);
+        if (test.size === 3) {
+          return function createSetFromList(lst) {
+            return new Set(lst);
+          };
+        } else {
+          return function createSetAndPopulateFromList(lst) {
+            var res = new Set(lst);
+            if (res.size !== lst.length) {
+              for (var i = 0; i < lst.length; i++) {
+                res.add(lst[i]);
+              }
+            }
+            return res;
+          };
+        }
+      })();
+      SetWrapper = function() {
+        function SetWrapper() {}
+        return ($traceurRuntime.createClass)(SetWrapper, {}, {
+          createFromList: function(lst) {
+            return createSetFromList(lst);
+          },
+          has: function(s, key) {
+            return s.has(key);
+          },
+          delete: function(m, k) {
+            m.delete(k);
+          }
+        });
+      }();
+      $__export("SetWrapper", SetWrapper);
     }
   };
 });
@@ -6128,6 +6413,36 @@ System.register("angular2/src/di/metadata", ["angular2/src/facade/lang"], functi
       $__export("HostMetadata", HostMetadata);
       $__export("HostMetadata", HostMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], HostMetadata));
     }
+  };
+});
+
+System.register("angular2/src/di/forward_ref", ["angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/forward_ref";
+  var stringify,
+      isFunction;
+  function forwardRef(forwardRefFn) {
+    forwardRefFn.__forward_ref__ = forwardRef;
+    forwardRefFn.toString = function() {
+      return stringify(this());
+    };
+    return forwardRefFn;
+  }
+  function resolveForwardRef(type) {
+    if (isFunction(type) && type.hasOwnProperty('__forward_ref__') && type.__forward_ref__ === forwardRef) {
+      return type();
+    } else {
+      return type;
+    }
+  }
+  $__export("forwardRef", forwardRef);
+  $__export("resolveForwardRef", resolveForwardRef);
+  return {
+    setters: [function($__m) {
+      stringify = $__m.stringify;
+      isFunction = $__m.isFunction;
+    }],
+    execute: function() {}
   };
 });
 
@@ -6318,36 +6633,6 @@ System.register("angular2/src/util/decorators", ["angular2/src/facade/lang"], fu
         throw 'reflect-metadata shim is required when using class decorators';
       }
     }
-  };
-});
-
-System.register("angular2/src/di/forward_ref", ["angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/di/forward_ref";
-  var stringify,
-      isFunction;
-  function forwardRef(forwardRefFn) {
-    forwardRefFn.__forward_ref__ = forwardRef;
-    forwardRefFn.toString = function() {
-      return stringify(this());
-    };
-    return forwardRefFn;
-  }
-  function resolveForwardRef(type) {
-    if (isFunction(type) && type.hasOwnProperty('__forward_ref__') && type.__forward_ref__ === forwardRef) {
-      return type();
-    } else {
-      return type;
-    }
-  }
-  $__export("forwardRef", forwardRef);
-  $__export("resolveForwardRef", resolveForwardRef);
-  return {
-    setters: [function($__m) {
-      stringify = $__m.stringify;
-      isFunction = $__m.isFunction;
-    }],
-    execute: function() {}
   };
 });
 
@@ -7349,83 +7634,6 @@ System.register("angular2/src/reflection/reflection", ["angular2/src/reflection/
   };
 });
 
-System.register("angular2/src/di/key", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/di/type_literal", "angular2/src/di/forward_ref"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/di/key";
-  var MapWrapper,
-      stringify,
-      isBlank,
-      BaseException,
-      TypeLiteral,
-      resolveForwardRef,
-      Key,
-      KeyRegistry,
-      _globalKeyRegistry;
-  return {
-    setters: [function($__m) {
-      MapWrapper = $__m.MapWrapper;
-    }, function($__m) {
-      stringify = $__m.stringify;
-      isBlank = $__m.isBlank;
-      BaseException = $__m.BaseException;
-    }, function($__m) {
-      TypeLiteral = $__m.TypeLiteral;
-      $__export({TypeLiteral: $__m.TypeLiteral});
-    }, function($__m) {
-      resolveForwardRef = $__m.resolveForwardRef;
-    }],
-    execute: function() {
-      Key = function() {
-        function Key(token, id) {
-          this.token = token;
-          this.id = id;
-          if (isBlank(token)) {
-            throw new BaseException('Token must be defined!');
-          }
-        }
-        return ($traceurRuntime.createClass)(Key, {get displayName() {
-            return stringify(this.token);
-          }}, {
-          get: function(token) {
-            return _globalKeyRegistry.get(resolveForwardRef(token));
-          },
-          get numberOfKeys() {
-            return _globalKeyRegistry.numberOfKeys;
-          }
-        });
-      }();
-      $__export("Key", Key);
-      KeyRegistry = function() {
-        function KeyRegistry() {
-          this._allKeys = new Map();
-        }
-        return ($traceurRuntime.createClass)(KeyRegistry, {
-          get: function(token) {
-            if (token instanceof Key)
-              return token;
-            var theToken = token;
-            if (token instanceof TypeLiteral) {
-              theToken = token.type;
-            }
-            token = theToken;
-            if (this._allKeys.has(token)) {
-              return this._allKeys.get(token);
-            }
-            var newKey = new Key(token, Key.numberOfKeys);
-            this._allKeys.set(token, newKey);
-            return newKey;
-          },
-          get numberOfKeys() {
-            return MapWrapper.size(this._allKeys);
-          }
-        }, {});
-      }();
-      $__export("KeyRegistry", KeyRegistry);
-      _globalKeyRegistry = new KeyRegistry();
-    }
-  };
-});
-
 System.register("angular2/src/di/exceptions", ["angular2/src/facade/collection", "angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/exceptions";
@@ -7569,6 +7777,94 @@ System.register("angular2/src/di/exceptions", ["angular2/src/facade/collection",
   };
 });
 
+System.register("angular2/src/di/key", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/di/type_literal", "angular2/src/di/forward_ref"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/key";
+  var MapWrapper,
+      stringify,
+      isBlank,
+      BaseException,
+      TypeLiteral,
+      resolveForwardRef,
+      Key,
+      KeyRegistry,
+      _globalKeyRegistry;
+  return {
+    setters: [function($__m) {
+      MapWrapper = $__m.MapWrapper;
+    }, function($__m) {
+      stringify = $__m.stringify;
+      isBlank = $__m.isBlank;
+      BaseException = $__m.BaseException;
+    }, function($__m) {
+      TypeLiteral = $__m.TypeLiteral;
+      $__export({TypeLiteral: $__m.TypeLiteral});
+    }, function($__m) {
+      resolveForwardRef = $__m.resolveForwardRef;
+    }],
+    execute: function() {
+      Key = function() {
+        function Key(token, id) {
+          this.token = token;
+          this.id = id;
+          if (isBlank(token)) {
+            throw new BaseException('Token must be defined!');
+          }
+        }
+        return ($traceurRuntime.createClass)(Key, {get displayName() {
+            return stringify(this.token);
+          }}, {
+          get: function(token) {
+            return _globalKeyRegistry.get(resolveForwardRef(token));
+          },
+          get numberOfKeys() {
+            return _globalKeyRegistry.numberOfKeys;
+          }
+        });
+      }();
+      $__export("Key", Key);
+      KeyRegistry = function() {
+        function KeyRegistry() {
+          this._allKeys = new Map();
+        }
+        return ($traceurRuntime.createClass)(KeyRegistry, {
+          get: function(token) {
+            if (token instanceof Key)
+              return token;
+            var theToken = token;
+            if (token instanceof TypeLiteral) {
+              theToken = token.type;
+            }
+            token = theToken;
+            if (this._allKeys.has(token)) {
+              return this._allKeys.get(token);
+            }
+            var newKey = new Key(token, Key.numberOfKeys);
+            this._allKeys.set(token, newKey);
+            return newKey;
+          },
+          get numberOfKeys() {
+            return MapWrapper.size(this._allKeys);
+          }
+        }, {});
+      }();
+      $__export("KeyRegistry", KeyRegistry);
+      _globalKeyRegistry = new KeyRegistry();
+    }
+  };
+});
+
+System.register("http/src/http_utils", ["angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/http_utils";
+  return {
+    setters: [function($__m) {
+      $__export({isJsObject: $__m.isJsObject});
+    }],
+    execute: function() {}
+  };
+});
+
 System.register("angular2/src/di/opaque_token", ["angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/opaque_token";
@@ -7614,453 +7910,157 @@ System.register("angular2/src/di/opaque_token", ["angular2/src/facade/lang"], fu
   };
 });
 
-System.register("http/src/http_utils", ["angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/http_utils";
+  var __moduleName = "angular2/src/facade/async";
+  var global,
+      Rx,
+      PromiseWrapper,
+      TimerWrapper,
+      ObservableWrapper,
+      Observable,
+      EventEmitter;
   return {
     setters: [function($__m) {
-      $__export({isJsObject: $__m.isJsObject});
-    }],
-    execute: function() {}
-  };
-});
-
-System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/facade/collection";
-  var isJsObject,
-      global,
-      isPresent,
-      isBlank,
-      isArray,
-      List,
-      Map,
-      Set,
-      StringMap,
-      createMapFromPairs,
-      createMapFromMap,
-      _clearValues,
-      _arrayFromMap,
-      MapWrapper,
-      StringMapWrapper,
-      ListWrapper,
-      createSetFromList,
-      SetWrapper;
-  function isListLikeIterable(obj) {
-    if (!isJsObject(obj))
-      return false;
-    return isArray(obj) || (!(obj instanceof Map) && Symbol.iterator in obj);
-  }
-  function iterateListLike(obj, fn) {
-    if (isArray(obj)) {
-      for (var i = 0; i < obj.length; i++) {
-        fn(obj[i]);
-      }
-    } else {
-      var iterator = obj[Symbol.iterator]();
-      var item;
-      while (!((item = iterator.next()).done)) {
-        fn(item.value);
-      }
-    }
-  }
-  $__export("isListLikeIterable", isListLikeIterable);
-  $__export("iterateListLike", iterateListLike);
-  return {
-    setters: [function($__m) {
-      isJsObject = $__m.isJsObject;
       global = $__m.global;
-      isPresent = $__m.isPresent;
-      isBlank = $__m.isBlank;
-      isArray = $__m.isArray;
+    }, function($__m) {
+      Rx = $__m;
     }],
     execute: function() {
-      List = global.Array;
-      $__export("List", List);
-      Map = global.Map;
-      $__export("Map", Map);
-      Set = global.Set;
-      $__export("Set", Set);
-      StringMap = global.Object;
-      $__export("StringMap", StringMap);
-      createMapFromPairs = (function() {
-        try {
-          if (new Map([[1, 2]]).size === 1) {
-            return function createMapFromPairs(pairs) {
-              return new Map(pairs);
-            };
-          }
-        } catch (e) {}
-        return function createMapAndPopulateFromPairs(pairs) {
-          var map = new Map();
-          for (var i = 0; i < pairs.length; i++) {
-            var pair = pairs[i];
-            map.set(pair[0], pair[1]);
-          }
-          return map;
-        };
-      })();
-      createMapFromMap = (function() {
-        try {
-          if (new Map(new Map())) {
-            return function createMapFromMap(m) {
-              return new Map(m);
-            };
-          }
-        } catch (e) {}
-        return function createMapAndPopulateFromMap(m) {
-          var map = new Map();
-          m.forEach(function(v, k) {
-            map.set(k, v);
-          });
-          return map;
-        };
-      })();
-      _clearValues = (function() {
-        if ((new Map()).keys().next) {
-          return function _clearValues(m) {
-            var keyIterator = m.keys();
-            var k;
-            while (!((k = keyIterator.next()).done)) {
-              m.set(k.value, null);
-            }
-          };
-        } else {
-          return function _clearValuesWithForeEach(m) {
-            m.forEach(function(v, k) {
-              m.set(k, null);
+      $__export("Promise", Promise);
+      PromiseWrapper = function() {
+        function PromiseWrapper() {}
+        return ($traceurRuntime.createClass)(PromiseWrapper, {}, {
+          resolve: function(obj) {
+            return Promise.resolve(obj);
+          },
+          reject: function(obj, _) {
+            return Promise.reject(obj);
+          },
+          catchError: function(promise, onError) {
+            return promise.catch(onError);
+          },
+          all: function(promises) {
+            if (promises.length == 0)
+              return Promise.resolve([]);
+            return Promise.all(promises);
+          },
+          then: function(promise, success, rejection) {
+            return promise.then(success, rejection);
+          },
+          wrap: function(computation) {
+            return new Promise(function(res, rej) {
+              try {
+                res(computation());
+              } catch (e) {
+                rej(e);
+              }
             });
-          };
-        }
-      })();
-      _arrayFromMap = (function() {
-        try {
-          if ((new Map()).values().next) {
-            return function createArrayFromMap(m, getValues) {
-              return getValues ? Array.from(m.values()) : Array.from(m.keys());
-            };
-          }
-        } catch (e) {}
-        return function createArrayFromMapWithForeach(m, getValues) {
-          var res = ListWrapper.createFixedSize(m.size),
-              i = 0;
-          m.forEach(function(v, k) {
-            ListWrapper.set(res, i, getValues ? v : k);
-            i++;
-          });
-          return res;
-        };
-      })();
-      MapWrapper = function() {
-        function MapWrapper() {}
-        return ($traceurRuntime.createClass)(MapWrapper, {}, {
-          clone: function(m) {
-            return createMapFromMap(m);
           },
-          createFromStringMap: function(stringMap) {
-            var result = new Map();
-            for (var prop in stringMap) {
-              result.set(prop, stringMap[prop]);
-            }
-            return result;
-          },
-          toStringMap: function(m) {
-            var r = {};
-            m.forEach(function(v, k) {
-              return r[k] = v;
+          completer: function() {
+            var resolve;
+            var reject;
+            var p = new Promise(function(res, rej) {
+              resolve = res;
+              reject = rej;
             });
-            return r;
-          },
-          createFromPairs: function(pairs) {
-            return createMapFromPairs(pairs);
-          },
-          forEach: function(m, fn) {
-            m.forEach(fn);
-          },
-          get: function(map, key) {
-            return map.get(key);
-          },
-          size: function(m) {
-            return m.size;
-          },
-          delete: function(m, k) {
-            m.delete(k);
-          },
-          clearValues: function(m) {
-            _clearValues(m);
-          },
-          iterable: function(m) {
-            return m;
-          },
-          keys: function(m) {
-            return _arrayFromMap(m, false);
-          },
-          values: function(m) {
-            return _arrayFromMap(m, true);
+            return {
+              promise: p,
+              resolve: resolve,
+              reject: reject
+            };
           }
         });
       }();
-      $__export("MapWrapper", MapWrapper);
-      StringMapWrapper = function() {
-        function StringMapWrapper() {}
-        return ($traceurRuntime.createClass)(StringMapWrapper, {}, {
-          create: function() {
-            return {};
+      $__export("PromiseWrapper", PromiseWrapper);
+      TimerWrapper = function() {
+        function TimerWrapper() {}
+        return ($traceurRuntime.createClass)(TimerWrapper, {}, {
+          setTimeout: function(fn, millis) {
+            return global.setTimeout(fn, millis);
           },
-          contains: function(map, key) {
-            return map.hasOwnProperty(key);
+          clearTimeout: function(id) {
+            global.clearTimeout(id);
           },
-          get: function(map, key) {
-            return map.hasOwnProperty(key) ? map[key] : undefined;
+          setInterval: function(fn, millis) {
+            return global.setInterval(fn, millis);
           },
-          set: function(map, key, value) {
-            map[key] = value;
-          },
-          keys: function(map) {
-            return Object.keys(map);
-          },
-          isEmpty: function(map) {
-            for (var prop in map) {
-              return false;
-            }
-            return true;
-          },
-          delete: function(map, key) {
-            delete map[key];
-          },
-          forEach: function(map, callback) {
-            for (var prop in map) {
-              if (map.hasOwnProperty(prop)) {
-                callback(map[prop], prop);
-              }
-            }
-          },
-          merge: function(m1, m2) {
-            var m = {};
-            for (var attr in m1) {
-              if (m1.hasOwnProperty(attr)) {
-                m[attr] = m1[attr];
-              }
-            }
-            for (var attr in m2) {
-              if (m2.hasOwnProperty(attr)) {
-                m[attr] = m2[attr];
-              }
-            }
-            return m;
-          },
-          equals: function(m1, m2) {
-            var k1 = Object.keys(m1);
-            var k2 = Object.keys(m2);
-            if (k1.length != k2.length) {
-              return false;
-            }
-            var key;
-            for (var i = 0; i < k1.length; i++) {
-              key = k1[i];
-              if (m1[key] !== m2[key]) {
-                return false;
-              }
-            }
-            return true;
+          clearInterval: function(id) {
+            global.clearInterval(id);
           }
         });
       }();
-      $__export("StringMapWrapper", StringMapWrapper);
-      ListWrapper = function() {
-        function ListWrapper() {}
-        return ($traceurRuntime.createClass)(ListWrapper, {}, {
-          createFixedSize: function(size) {
-            return new List(size);
+      $__export("TimerWrapper", TimerWrapper);
+      ObservableWrapper = function() {
+        function ObservableWrapper() {}
+        return ($traceurRuntime.createClass)(ObservableWrapper, {}, {
+          subscribe: function(emitter, onNext) {
+            var onThrow = arguments[2] !== (void 0) ? arguments[2] : null;
+            var onReturn = arguments[3] !== (void 0) ? arguments[3] : null;
+            return emitter.observer({
+              next: onNext,
+              throw: onThrow,
+              return: onReturn
+            });
           },
-          createGrowableSize: function(size) {
-            return new List(size);
+          isObservable: function(obs) {
+            return obs instanceof Observable;
           },
-          get: function(m, k) {
-            return m[k];
+          dispose: function(subscription) {
+            subscription.dispose();
           },
-          set: function(m, k, v) {
-            m[k] = v;
+          callNext: function(emitter, value) {
+            emitter.next(value);
           },
-          clone: function(array) {
-            return array.slice(0);
+          callThrow: function(emitter, error) {
+            emitter.throw(error);
           },
-          map: function(array, fn) {
-            return array.map(fn);
-          },
-          forEach: function(array, fn) {
-            for (var i = 0; i < array.length; i++) {
-              fn(array[i]);
-            }
-          },
-          first: function(array) {
-            if (!array)
-              return null;
-            return array[0];
-          },
-          last: function(array) {
-            if (!array || array.length == 0)
-              return null;
-            return array[array.length - 1];
-          },
-          find: function(list, pred) {
-            for (var i = 0; i < list.length; ++i) {
-              if (pred(list[i]))
-                return list[i];
-            }
+          callReturn: function(emitter) {
+            emitter.return(null);
+          }
+        });
+      }();
+      $__export("ObservableWrapper", ObservableWrapper);
+      Observable = function() {
+        function Observable() {}
+        return ($traceurRuntime.createClass)(Observable, {observer: function(generator) {
             return null;
-          },
-          indexOf: function(array, value) {
-            var startIndex = arguments[2] !== (void 0) ? arguments[2] : 0;
-            return array.indexOf(value, startIndex);
-          },
-          reduce: function(list, fn, init) {
-            return list.reduce(fn, init);
-          },
-          filter: function(array, pred) {
-            return array.filter(pred);
-          },
-          any: function(list, pred) {
-            for (var i = 0; i < list.length; ++i) {
-              if (pred(list[i]))
-                return true;
-            }
-            return false;
-          },
-          contains: function(list, el) {
-            return list.indexOf(el) !== -1;
-          },
-          reversed: function(array) {
-            var a = ListWrapper.clone(array);
-            return a.reverse();
-          },
-          concat: function(a, b) {
-            return a.concat(b);
-          },
-          insert: function(list, index, value) {
-            list.splice(index, 0, value);
-          },
-          removeAt: function(list, index) {
-            var res = list[index];
-            list.splice(index, 1);
-            return res;
-          },
-          removeAll: function(list, items) {
-            for (var i = 0; i < items.length; ++i) {
-              var index = list.indexOf(items[i]);
-              list.splice(index, 1);
-            }
-          },
-          removeLast: function(list) {
-            return list.pop();
-          },
-          remove: function(list, el) {
-            var index = list.indexOf(el);
-            if (index > -1) {
-              list.splice(index, 1);
-              return true;
-            }
-            return false;
-          },
-          clear: function(list) {
-            list.splice(0, list.length);
-          },
-          join: function(list, s) {
-            return list.join(s);
-          },
-          isEmpty: function(list) {
-            return list.length == 0;
-          },
-          fill: function(list, value) {
-            var start = arguments[2] !== (void 0) ? arguments[2] : 0;
-            var end = arguments[3] !== (void 0) ? arguments[3] : null;
-            list.fill(value, start, end === null ? list.length : end);
-          },
-          equals: function(a, b) {
-            if (a.length != b.length)
-              return false;
-            for (var i = 0; i < a.length; ++i) {
-              if (a[i] !== b[i])
-                return false;
-            }
-            return true;
-          },
-          slice: function(l) {
-            var from = arguments[1] !== (void 0) ? arguments[1] : 0;
-            var to = arguments[2] !== (void 0) ? arguments[2] : null;
-            return l.slice(from, to === null ? undefined : to);
-          },
-          splice: function(l, from, length) {
-            return l.splice(from, length);
-          },
-          sort: function(l, compareFn) {
-            if (isPresent(compareFn)) {
-              l.sort(compareFn);
-            } else {
-              l.sort();
-            }
-          },
-          toString: function(l) {
-            return l.toString();
-          },
-          toJSON: function(l) {
-            return JSON.stringify(l);
-          },
-          maximum: function(list, predicate) {
-            if (list.length == 0) {
-              return null;
-            }
-            var solution = null;
-            var maxValue = -Infinity;
-            for (var index = 0; index < list.length; index++) {
-              var candidate = list[index];
-              if (isBlank(candidate)) {
-                continue;
-              }
-              var candidateValue = predicate(candidate);
-              if (candidateValue > maxValue) {
-                solution = candidate;
-                maxValue = candidateValue;
-              }
-            }
-            return solution;
-          }
-        });
+          }}, {});
       }();
-      $__export("ListWrapper", ListWrapper);
-      createSetFromList = (function() {
-        var test = new Set([1, 2, 3]);
-        if (test.size === 3) {
-          return function createSetFromList(lst) {
-            return new Set(lst);
-          };
-        } else {
-          return function createSetAndPopulateFromList(lst) {
-            var res = new Set(lst);
-            if (res.size !== lst.length) {
-              for (var i = 0; i < lst.length; i++) {
-                res.add(lst[i]);
-              }
-            }
-            return res;
-          };
+      $__export("Observable", Observable);
+      EventEmitter = function($__super) {
+        function EventEmitter() {
+          $traceurRuntime.superConstructor(EventEmitter).call(this);
+          this._subject = new Rx.Subject();
+          this._immediateScheduler = Rx.Scheduler.immediate;
         }
-      })();
-      SetWrapper = function() {
-        function SetWrapper() {}
-        return ($traceurRuntime.createClass)(SetWrapper, {}, {
-          createFromList: function(lst) {
-            return createSetFromList(lst);
+        return ($traceurRuntime.createClass)(EventEmitter, {
+          observer: function(generator) {
+            return this._subject.observeOn(this._immediateScheduler).subscribe(function(value) {
+              setTimeout(function() {
+                return generator.next(value);
+              });
+            }, function(error) {
+              return generator.throw ? generator.throw(error) : null;
+            }, function() {
+              return generator.return ? generator.return() : null;
+            });
           },
-          has: function(s, key) {
-            return s.has(key);
+          toRx: function() {
+            return this._subject;
           },
-          delete: function(m, k) {
-            m.delete(k);
+          next: function(value) {
+            this._subject.onNext(value);
+          },
+          throw: function(error) {
+            this._subject.onError(error);
+          },
+          return: function(value) {
+            this._subject.onCompleted();
           }
-        });
-      }();
-      $__export("SetWrapper", SetWrapper);
+        }, {}, $__super);
+      }(Observable);
+      $__export("EventEmitter", EventEmitter);
     }
   };
 });
