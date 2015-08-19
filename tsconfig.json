@@ -17,7 +17,6 @@
     ],
     "files": [
         "./front/app/app.ts",
-        "./front/app/init.ts",
         "./front/app/src/components/navigation.ts",
         "./front/app/src/components/topbar.ts",
         "./front/app/src/controllers/capture/capture.ts",

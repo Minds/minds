@@ -278,6 +278,29 @@ minds-newsfeed, minds-channel {
         margin: 16px auto;
         display: block; }
 
+.notifications-grid .mdl-card {
+  width: 100%;
+  min-height: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: row; }
+  .notifications-grid .mdl-card .avatar {
+    display: flex;
+    flex-direction: column; }
+    .notifications-grid .mdl-card .avatar img {
+      border-radius: 3px;
+      max-height: 50px; }
+  .notifications-grid .mdl-card .body {
+    padding: 0 16px; }
+    .notifications-grid .mdl-card .body a {
+      color: #333;
+      text-decoration: none; }
+    .notifications-grid .mdl-card .body p {
+      padding: 0;
+      margin: 0; }
+    .notifications-grid .mdl-card .body .ts {
+      font-size: 11px; }
+
 /**
  * Colours
  */
