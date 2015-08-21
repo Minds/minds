@@ -13,9 +13,13 @@ import {Newsfeed} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';
 import {Discovery} from './src/controllers/discovery/discovery';
 import {Channel} from './src/controllers/channels/channel';
-import {Gatherings} from './src/plugins/gatherings/gatherings';
 import {Notifications} from './src/controllers/notifications/notifications';
 
+/**
+ * TODO: Load these automagically from gulp
+ */
+import {Gatherings} from './src/plugins/gatherings/gatherings';
+import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups';
 
 @Component({
   selector: 'minds-app',
@@ -32,7 +36,11 @@ import {Notifications} from './src/controllers/notifications/notifications';
   { path: '/messenger', component:  Gatherings, as: 'messenger'},
 
   { path: '/notifications', component: Notifications, as: 'notifications'},
-  { path: '/groups', component: ComingSoon, as: 'groups'},
+
+  { path: '/groups/:filter', component: Groups, as: 'groups'},
+  { path: '/groups/create', component: GroupsCreator, as: 'groups-create'},
+  { path: '/groups/profile/:guid', component: GroupsProfile, as: 'groups-profile'},
+
 
   { path: '/:username', component: Channel, as: 'channel' },
 

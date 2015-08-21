@@ -17,13 +17,13 @@ var topbar_1 = require('./src/components/topbar');
 var navigation_1 = require('./src/components/navigation');
 var login_1 = require('./src/controllers/login');
 var logout_1 = require('./src/controllers/logout');
-var comingsoon_1 = require('./src/controllers/comingsoon');
 var newsfeed_1 = require('./src/controllers/newsfeed/newsfeed');
 var capture_1 = require('./src/controllers/capture/capture');
 var discovery_1 = require('./src/controllers/discovery/discovery');
 var channel_1 = require('./src/controllers/channels/channel');
-var gatherings_1 = require('./src/plugins/gatherings/gatherings');
 var notifications_1 = require('./src/controllers/notifications/notifications');
+var gatherings_1 = require('./src/plugins/gatherings/gatherings');
+var groups_1 = require('./src/plugins/groups/groups');
 var Minds = (function () {
     function Minds() {
         this.name = 'Minds';
@@ -41,7 +41,9 @@ var Minds = (function () {
             { path: '/discovery/:filter/:type', component: discovery_1.Discovery, as: 'discovery' },
             { path: '/messenger', component: gatherings_1.Gatherings, as: 'messenger' },
             { path: '/notifications', component: notifications_1.Notifications, as: 'notifications' },
-            { path: '/groups', component: comingsoon_1.ComingSoon, as: 'groups' },
+            { path: '/groups/:filter', component: groups_1.Groups, as: 'groups' },
+            { path: '/groups/create', component: groups_1.GroupsCreator, as: 'groups-create' },
+            { path: '/groups/profile/:guid', component: groups_1.GroupsProfile, as: 'groups-profile' },
             { path: '/:username', component: channel_1.Channel, as: 'channel' },
             { path: '/', redirectTo: '/newsfeed' }
         ]),

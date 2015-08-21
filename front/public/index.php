@@ -137,12 +137,39 @@ ini_set( 'display_errors','1');
                      array(
                         "name" => "groups",
                         "path" => "/groups",
-                        "params" => array(),
+                        "params" => array(
+                          "filter"=>"featured",
+                          "guid" =>""
+                        ),
                         "title" => "Groups",
                         "text" => "Groups",
                         "icon" => "group_work",
-                        "class" => ""
+                        "class" => "",
+                        "submenus" => array(
+                          array(
+                            "name" => "groups",
+                            "path" => "/groups",
+                            "params" => array(
+                              "filter"=> "featured"
+                            ),
+                            "title" => "Featured (Groups)",
+                            "text" => "Featured",
+                            "icon" => "star",
+                            "class" => ""
+                          ),
+                          array(
+                            "name" => "groups",
+                            "path" => "/groups",
+                            "params" => array(
+                              "filter"=> "member"
+                            ),
+                            "title" => "My Groups",
+                            "text" => "My",
+                            "icon" => "person_pin",
+                            "class" => ""
+                          )
                         )
+                      )
                 )
             );
             if(Minds\Core\session::isLoggedIn()){
