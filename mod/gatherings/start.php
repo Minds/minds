@@ -41,6 +41,15 @@ class start extends Components\Plugin{
           }
       });
 
+			$link = new Core\Navigation\Item();
+			Core\Navigation\Manager::add($link
+				->setPriority(5)
+				->setIcon('chat_bubble')
+				->setName('Messenger')
+				->setTitle('Messenger')
+				->setPath('/messenger')
+			);
+
 			//@todo move to new oop style
 			\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 				//var_dump($row);

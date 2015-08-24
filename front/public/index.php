@@ -47,8 +47,11 @@ ini_set( 'display_errors','1');
             $minds = array(
                 "LoggedIn" => Minds\Core\session::isLoggedIn() ? true : false,
                 "cdn_url" => Minds\Core\Config::get('cdn_url'),
-                "navigation" => array(
-                    array(
+                "navigation" => Minds\Core\Navigation\Manager::export()
+              );
+
+
+                  /*  array(
                         "name" => "newsfeed",
                         "path" => "/newsfeed",
                         "params" => array(),
@@ -171,12 +174,12 @@ ini_set( 'display_errors','1');
                         )
                       )
                 )
-            );
+            );*/
             if(Minds\Core\session::isLoggedIn()){
                 $minds['user'] = Minds\Core\session::getLoggedinUser()->export();
             }
         ?>
-        window.Minds = <?= json_encode($minds) ?>;
+        window.Minds = <?= json_encode($minds, JSON_PRETTY_PRINT) ?>;
 
         System.config({
           defaultJSExtensions: true,
