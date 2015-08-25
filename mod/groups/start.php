@@ -44,6 +44,14 @@ function groups_init() {
 		->addSubItem($my_link)
 	);
 
+	Minds\Api\Routes::add('v1/groups/group', '\\minds\\plugin\\groups\\api\\v1\\group');
+	Minds\Api\Routes::add('v1/groups', '\\minds\\plugin\\groups\\api\\v1\\groups');
+
+	elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
+		if($row->type == 'group')
+			return new Minds\plugin\groups\entities\Group($row);
+	});
+
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('groups', 'groups_page_handler');
 
