@@ -153,10 +153,13 @@ gulp.task('build.plugins', function () {
       .pipe(gulp.dest('./front/app/templates/plugins/' + plugin));
 
     gulp.src(path + '/app/stylesheets/**/*scss')
-      .pipe(concat('plugins.scss'))
-      .pipe(gulp.dest('./front/app/stylesheets/'));
+      .pipe(gulp.dest('./front/app/stylesheets/plugins/' + plugin));
 
   });
+
+  gulp.src('./front/app/stylesheets/plugins/**/*scss')
+    .pipe(concat('plugins.scss'))
+    .pipe(gulp.dest('./front/app/stylesheets/'));
 
 });
 
