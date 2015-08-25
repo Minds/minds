@@ -27,10 +27,17 @@ export class GroupsCreator {
 
   }
 
+  membershipChange(value){
+    console.log(value);
+    this.group.membership = value;
+    this.group.foo = 'bar';
+  }
+
   save(){
     console.log(this.group);
+
     var self = this;
-    this.client.post('api/v1/groups', this.group)
+    this.client.post('api/v1/groups/group', this.group)
       .then((response) => {
 
       })
