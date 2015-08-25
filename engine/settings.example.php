@@ -15,7 +15,7 @@ $CONFIG->cassandra->cql_servers = array('{{cassandra_server}}:9042');
 /** 
  * Other Elgg Settings
  */
-$CONFIG->installed = '{{installed}}';
+$CONFIG->installed = true;
 $CONFIG->path = '{{path}}';
 $CONFIG->dataroot = '{{dataroot}}';
 $CONFIG->default_site = '{{default_site}}';

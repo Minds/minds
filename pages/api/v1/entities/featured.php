@@ -55,13 +55,28 @@ class featured implements interfaces\api{
      */      
     public function get($pages){
 
-        if(isset($pages[1]) && $pages[1] == 'video')
-            $pages[1] = 'video';
+        $type = "object";
+        $subtype = NULL;
+
+        switch($pages[0]){
+            case "video";
+            case "videos":
+                $subtype = "video";
+                break;
+            case "images":
+                $subtype = "images";
+                break;
+            case "channels":
+                $type = "user";
+            case "all":
+            default:
+                $type = "user";
+        }
         
         //the allowed, plus default, options
         $options = array(
-            'type' => isset($pages[0]) ? $pages[0] : 'object',
-            'subtype' => isset($pages[1]) ? $pages[1] : NULL,
+            'type' => $type,
+            'subtype' => $subtype,
             'limit'=>12,
             'offset'=>get_input('offset', '')
             );

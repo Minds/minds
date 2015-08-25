@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dc5f06d6a9462c4bcb83e20461fed8c6",
+    "hash": "eaf2852d9e1a506aafc1ba17fbf2e783",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -642,12 +642,12 @@
             "version": "3.5.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ivaynberg/select2.git",
+                "url": "https://github.com/select2/select2.git",
                 "reference": "6633cda9061d9fc65075dd140c63f9a6adbcbd72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ivaynberg/select2/zipball/6633cda9061d9fc65075dd140c63f9a6adbcbd72",
+                "url": "https://api.github.com/repos/select2/select2/zipball/6633cda9061d9fc65075dd140c63f9a6adbcbd72",
                 "reference": "6633cda9061d9fc65075dd140c63f9a6adbcbd72",
                 "shasum": ""
             },
@@ -786,7 +786,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:minds/minds-php-sdk.git",
+                "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git",
                 "reference": "dba40df8c2ac1ec501626e645f5ffaa13f57c5ce"
             },
             "dist": {
@@ -1691,12 +1691,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/php-amqplib.git",
+<<<<<<< HEAD
                 "reference": "cce38fe1947a79b70cf54f88efec17563f0fa983"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/cce38fe1947a79b70cf54f88efec17563f0fa983",
                 "reference": "cce38fe1947a79b70cf54f88efec17563f0fa983",
+=======
+                "reference": "4403cd9458ea248218393733d9e6461eb780755e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/4403cd9458ea248218393733d9e6461eb780755e",
+                "reference": "4403cd9458ea248218393733d9e6461eb780755e",
+>>>>>>> angular
                 "shasum": ""
             },
             "require": {
@@ -1737,7 +1746,11 @@
                 "queue",
                 "rabbitmq"
             ],
+<<<<<<< HEAD
             "time": "2015-07-23 22:40:45"
+=======
+            "time": "2015-06-29 19:09:28"
+>>>>>>> angular
         },
         {
             "name": "vscn/cruftflake",

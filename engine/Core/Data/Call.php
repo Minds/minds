@@ -68,9 +68,9 @@ class Call extends core\base{
 			//'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ),
                     	//'log' => array(),
 		);
-	
+
 		$ks = $this->pool->describe_keyspace();
- 
+
 		foreach($cfs as $cf => $indexes){
 			$exists = false;
 			foreach($ks->cf_defs as $cfdef) {

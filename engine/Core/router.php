@@ -10,17 +10,8 @@ class router{
 
 	// these are core pages, other pages are registered by plugins
 	static $routes = array(
-		"/action" => "minds\\pages\\actions",
-		"/services" => "minds\\pages\\services",
-		"/cache" => "minds\\pages\\cache",
-		"/contact" => "minds\\pages\\contact",
-		"/newsfeed" => "minds\\pages\\newsfeed\\newsfeed",
-		"/subscriptions" => "minds\\pages\\subscriptions\\index",
-		"/assets" => "minds\\pages\\assets",
-        "/boost" => "minds\\pages\\boost",
-        "/analytics" => "minds\\pages\\analytics",
+		"/icon" => "minds\\pages\\icon",
 		"/api" => "minds\\pages\\api\\api",
-        "/app" => "minds\\pages\\app"
 	);
 
 	/**
@@ -78,15 +69,6 @@ class router{
 			}
 			--$loop;
 		}
-
-		if($uri){
-			$path = explode('/', substr($uri,1));
-
-			$handler = array_shift($path);
-			$page = implode('/',$path);
-		}
-
-		return $this->legacyRoute($handler, $page);
 
 	}
 

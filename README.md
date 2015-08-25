@@ -1,16 +1,16 @@
-Minds (Core)
+Minds
 ==========
 
-___Copyright (c) Copyleft 2008-2014___
+___Copyright (c) Copyleft 2008-2015___
 
 Branch  | Status | |
 ------------- | ------------- | ----------
 Master | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=master)](https://magnum.travis-ci.com/Minds/Minds)  | main working branch |
 Production | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=production)](https://magnum.travis-ci.com/Minds/Minds) | safe for use on production servers
-Objectional Refactoring | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=objectional-refactoring)](https://magnum.travis-ci.com/Minds/Minds) | a prototype of an objectional codebase, with legacy fallback for Elgg.
+Angular | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=angular)](https://magnum.travis-ci.com/Minds/Minds) | a new front end
 
 ## Introduction
-Minds is the free and open-source social network platform. 
+Minds is the free and open-source social networking platform. 
 
 This *readme* file should hopefuly explain all you need to get started, if not, please add to it or email **mark@minds.com**.
 
@@ -18,15 +18,42 @@ This *readme* file should hopefuly explain all you need to get started, if not, 
 
 
 ## Installation
+
+We recommend you use our vagrant/chef cookbook for quick setup. https://github.com/Minds/minds-cookbook
+
 ### Requirements
 - PHP 5.4+
 - Cassandra
-- Nginx (recommended)
-- Unix/Linux (recommened)
+- Nginx
+- RabbitMQ (ability to disable to low traffic sites coming soon)
+- Unix/Linux
+
+_Optional_
+- Neo4j (for suggested users)
 - Elasticsearch (for search only)
+- Redis (for caching in clustered environments)
+- MongoDB (for boost functions)
 - Cinemr (for video features only)
 
+### Development Tools
+
+##### Composer
+
+- Run `curl -sS https://getcomposer.org/installer | php`
+
+##### NPM
+
+- Visit https://nodejs.org/ and install nodejs
+
+##### Gulp 
+
+- Run `sudo npm install -g gulp`
+
+
 ### Setup
+
+The new minds front end requires plugins to be compiled. Run `gulp build`.
+
 - Go to localhost/install.php and follow the instruction. (debugging may be needed)
 
 ### Generate new docs (core devs only)

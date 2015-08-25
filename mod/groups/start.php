@@ -15,29 +15,50 @@ elgg_register_event_handler('init', 'system', 'groups_fields_setup', 10000);
  */
 function groups_init() {
 
-	elgg_register_library('elgg:groups', elgg_get_plugins_path() . 'groups/lib/groups.php');
+	$featured_link = new Minds\Core\Navigation\Item();
+	$featured_link
+		->setPriority(1)
+		->setIcon('star')
+		->setName('Featured')
+		->setTitle('Featured (Groups)')
+		->setPath('/groups')
+		->setParams(array('filter'=>'featured'));
+	$my_link = new Minds\Core\Navigation\Item();
+	$my_link
+		->setPriority(2)
+		->setIcon('person_pin')
+		->setName('My')
+		->setTitle('My (Groups)')
+		->setPath('/groups')
+		->setParams(array('filter'=>'member'));
 
-	// register group entities for search
-	elgg_register_entity_type('group', '');
+	$root_link = new Minds\Core\Navigation\Item();
+	Minds\Core\Navigation\Manager::add($root_link
+		->setPriority(7)
+		->setIcon('group_work')
+		->setName('Groups')
+		->setTitle('Groups')
+		->setPath('/groups')
+		->setParams(array('filter'=>'featured'))
+		->addSubItem($featured_link)
+		->addSubItem($my_link)
+	);
 
-	// Set up the menu... hide for now
-	if(elgg_is_logged_in()){
+	Minds\Api\Routes::add('v1/groups/group', '\\minds\\plugin\\groups\\api\\v1\\group');
+	Minds\Api\Routes::add('v1/groups', '\\minds\\plugin\\groups\\api\\v1\\groups');
 
-		elgg_register_menu_item('site', array(
-			'name' => 'groups',
-			'href' => 'groups/featured',
-			'text' => '<span class="entypo">&#59397;</span> Groups',
-			'title' => elgg_echo('groups'),
-		));
-	}
-	
+	elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
+		if($row->type == 'group')
+			return new Minds\plugin\groups\entities\Group($row);
+	});
+
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('groups', 'groups_page_handler');
 
 	// Register URL handlers for groups
 	elgg_register_entity_url_handler('group', 'all', 'groups_url');
 	elgg_register_plugin_hook_handler('entity:icon:url', 'group', 'groups_icon_url_override');
-	
+
 	// Register an icon handler for groups
 	elgg_register_page_handler('groupicon', 'groups_icon_handler');
 
@@ -58,7 +79,7 @@ function groups_init() {
 
 	// Add some widgets
 	elgg_register_widget_type('a_users_groups', elgg_echo('groups:widget:membership'), elgg_echo('groups:widgets:description'));
-	
+
 	// add group activity tool option
 	add_group_tool_option('activity', elgg_echo('groups:enableactivity'), true);
 	elgg_extend_view('groups/tool_latest', 'groups/profile/activity_module');
@@ -68,8 +89,8 @@ function groups_init() {
 
 	// group entity menu
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'groups_entity_menu_setup');
-	
-	// group user hover menu	
+
+	// group user hover menu
 	elgg_register_plugin_hook_handler('register', 'menu:user_hover', 'groups_user_entity_menu_setup');
 
 	// delete and edit annotations for topic replies
@@ -78,11 +99,11 @@ function groups_init() {
 	//extend some views
 	elgg_extend_view('css/elgg', 'groups/css');
 	elgg_extend_view('js/elgg', 'groups/js');
-	
+
 	// Access permissions
 	//elgg_register_plugin_hook_handler('access:collections:write', 'all', 'groups_write_acl_plugin_hook');
 	elgg_register_plugin_hook_handler('access:collections:read', 'all', 'groups_read_acl_plugin_hook');
-	
+
 	// Register profile menu hook
 	//elgg_register_plugin_hook_handler('profile_menu', 'profile', 'forum_profile_menu');
 	//elgg_register_plugin_hook_handler('profile_menu', 'profile', 'activity_profile_menu');
@@ -90,13 +111,13 @@ function groups_init() {
 	// allow ecml in discussion and profiles
 	elgg_register_plugin_hook_handler('get_views', 'ecml', 'groups_ecml_views_hook');
 	elgg_register_plugin_hook_handler('get_views', 'ecml', 'groupprofile_ecml_views_hook');
-	
+
 	// Register a handler for create groups
 	elgg_register_event_handler('create', 'group', 'groups_create_event_listener');
 
 	// Register a handler for delete groups
 	elgg_register_event_handler('delete', 'group', 'groups_delete_event_listener');
-	
+
 	elgg_register_event_handler('join', 'group', 'groups_user_join_event_listener');
 	elgg_register_event_handler('leave', 'group', 'groups_user_leave_event_listener');
 	elgg_register_event_handler('pagesetup', 'system', 'groups_setup_sidebar_menus');
@@ -171,7 +192,7 @@ function groups_setup_sidebar_menus() {
 				'text' => $text,
 				'href' => $url,
 			));
-			
+
 			elgg_register_menu_item('page', array(
 				'name' => 'blog',
 				'text' => elgg_echo('blog'),
@@ -191,7 +212,7 @@ function groups_setup_sidebar_menus() {
 			$url =  "groups/owner/$user->username";
 			$item = new ElggMenuItem('groups:owned', elgg_echo('groups:owned'), $url);
 			elgg_register_menu_item('page', $item);
-			
+
 			$url = "groups/member/$user->username";
 			$item = new ElggMenuItem('groups:member', elgg_echo('groups:yours'), $url);
 			elgg_register_menu_item('page', $item);
@@ -240,7 +261,7 @@ function groups_page_handler($page) {
 			forward($group->getURL());
 		}
 	}
-	
+
 	elgg_load_library('elgg:groups');
 
 	if (!isset($page[0])) {
@@ -299,7 +320,7 @@ function groups_page_handler($page) {
 			$header = new ElggFile();
 			$header->owner_guid = $group->owner_guid;
 			$header->setFilename("group/{$group->guid}.jpg");
-		
+
 			header('Content-Type: image/jpeg');
 			header('Expires: ' . date('r', time() + 864000));
 			header("Pragma: public");
@@ -437,14 +458,14 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 function groups_user_entity_menu_setup($hook, $type, $return, $params) {
 	if (elgg_is_logged_in()) {
 		$group = elgg_get_page_owner_entity();
-		
+
 		// Check for valid group
 		if (!elgg_instanceof($group, 'group')) {
 			return $return;
 		}
-	
+
 		$entity = $params['entity'];
-		
+
 		// Make sure we have a user and that user is a member of the group
 		if (!elgg_instanceof($entity, 'user') || !$group->isMember($entity)) {
 			return $return;
@@ -463,7 +484,7 @@ function groups_user_entity_menu_setup($hook, $type, $return, $params) {
 				'priority' => 999,
 			);
 			$return[] = ElggMenuItem::factory($options);
-		} 
+		}
 	}
 
 	return $return;
@@ -476,7 +497,7 @@ function groups_annotation_menu_setup($hook, $type, $return, $params) {
 	if (elgg_in_context('widgets')) {
 		return $return;
 	}
-	
+
 	$annotation = $params['annotation'];
 
 	if ($annotation->name != 'group_topic_post') {
@@ -543,7 +564,7 @@ function groups_read_acl_plugin_hook($hook, $entity_type, $returnvalue, $params)
 		return $MEMBERSHIP_CACHE[$user_guid];
 
 	//avoid recursion
-	$ia = elgg_set_ignore_access();//feels odd, we should decentralize	
+	$ia = elgg_set_ignore_access();//feels odd, we should decentralize
 
 	$MEMBERSHIP_CACHE = array();
 	$user = get_entity($params['user_id']);
@@ -672,7 +693,7 @@ function groups_get_invited_groups($user_guid, $return_guids = FALSE) {
 		'inverse_relationship' => TRUE,
 		'limit' => 0,
 		'type' => 'group'
-	)); 
+	));
 	elgg_set_ignore_access($ia);
 
 	if ($return_guids) {
@@ -700,7 +721,7 @@ function groups_join_group($group, $user) {
 	$ia = elgg_set_ignore_access(TRUE);
 	$result = $group->join($user);
 	elgg_set_ignore_access($ia);
-	
+
 	if ($result) {
 		// flush user's access info so the collection is added
 		get_access_list($user->guid, 0, true);
@@ -786,7 +807,7 @@ function discussion_init() {
 
 	// commenting not allowed on discussion topics (use a different annotation)
 	elgg_register_plugin_hook_handler('permissions_check:comment', 'object', 'discussion_comment_override');
-	
+
 	$action_base = elgg_get_plugins_path() . 'groups/actions/discussion';
 	elgg_register_action('discussion/save', "$action_base/save.php");
 	elgg_register_action('discussion/delete', "$action_base/delete.php");

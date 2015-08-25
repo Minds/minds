@@ -39,6 +39,8 @@ class minds extends base{
 		 */
 		new session();	
 
+        Security\XSRF::setCookie();
+        
 		/**
 		 * Boot the system, @todo this should be oop?
 		 */
@@ -75,7 +77,7 @@ class minds extends base{
 		
 		global $CONFIG;
 		if(!isset($CONFIG))
-			$CONFIG = new config();
+			$CONFIG = new Config();
 		
 		// Load the system settings
 		if (file_exists(__MINDS_ROOT__ . '/engine/settings.php')){

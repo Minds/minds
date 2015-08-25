@@ -1,1 +1,0 @@
-a:1:{s:5:"GROUP";a:3:{i:0;a:3:{s:9:"expr_type";s:6:"colref";s:9:"base_expr";s:1:"a";s:8:"sub_tree";b:0;}i:1;a:3:{s:9:"expr_type";s:6:"colref";s:9:"base_expr";s:1:"b";s:8:"sub_tree";b:0;}i:2;a:3:{s:9:"expr_type";s:6:"colref";s:9:"base_expr";s:7:"table.c";s:8:"sub_tree";b:0;}}}

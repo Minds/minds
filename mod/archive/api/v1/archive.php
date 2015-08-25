@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Archive API
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -18,9 +18,9 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
     /**
      * Return the archive items
      * @param array $pages
-     * 
+     *
      * API:: /v1/archive/:filter || :guid
-     */      
+     */
     public function get($pages){
         $response = array();
 
@@ -29,29 +29,29 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
             Helpers\Counters::increment($pages[0], 'plays');
             if(is_string($pages[1]) && $pages[1] == 'play'){
                 //echo $entity->getSourceUrl('360.mp4'); exit;
-                Header( "HTTP/1.1 301 Moved Permanently" ); 
+                Header( "HTTP/1.1 301 Moved Permanently" );
                 if($entity->subtype == 'audio'){
                     header("Location:" . $entity->getSourceUrl('128.mp3'));
                 } else {
                     header("Location:" . $entity->getSourceUrl('360.mp4'));
                 }
-                exit;    
+                exit;
             }
             $response = reset(factory::exportable(array($entity)));
             $response['transcodes'] = array(
                 '360.mp4' => $entity->getSourceUrl('360.mp4'),
                 '720.mp4' =>  $entity->getSourceUrl('720.mp4')
-            );  
+            );
         }
 
         return Factory::response($response);
-        
+
     }
-    
+
     /**
      * Update entity based on guid
      * @param array $pages
-     * 
+     *
      * API:: /v1/archive/:guid
      */
     public function post($pages){
@@ -59,7 +59,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
         if(!is_numeric($pages[0])){
             //images should still use put, large videos use post because of memory issues.
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
-            
+
             if(@is_array(getimagesize($_FILES['file']['tmp_name']))){
                 //error_log('image as a video..');
                 $image = new \minds\plugin\archive\entities\image();
@@ -85,14 +85,16 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
                 $image->access_id = 0;
                 $image->save();
                 $pages[0] = 'image';
-            }
-            switch($pages[0]){
-                case 'video':
-                    $video = new entities\video();
-                    $video->upload($_FILES['file']['tmp_name']);
-                    $video->access_id = 0;
-                    $guid = $video->save();
-                    break;
+            } else {
+              switch($pages[0]){
+                  case 'video':
+                  default:
+                      $video = new entities\video();
+                      $video->upload($_FILES['file']['tmp_name']);
+                      $video->access_id = 0;
+                      $guid = $video->save();
+                      break;
+              }
             }
             return Factory::response(array('guid'=>$guid, "location"=>$loc));
         }
@@ -132,7 +134,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
                     $ablums = array($album);
                 }
             }
-            $entity->container_guid = $album->guid; 
+            $entity->container_guid = $album->guid;
             $activity = new \minds\entities\activity();
                 $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
                         //->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
@@ -151,7 +153,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
             $entity->$key = $_POST[$key];
             }
         }
-        
+
         $entity->access_id = 2;
         $entity->save(true);
 
@@ -166,7 +168,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
                 ->setBlurb($entity->description)
                 ->save();
 
-        }	
+        }
         //error_log(print_r($_POST,true));
         //forward to facebook etc
         Core\Events\Dispatcher::trigger('social', 'dispatch', array(
@@ -182,17 +184,17 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
         ));
         \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $entity->guid, 'upload');
         return Factory::response(array('guid'=>$entity->guid, 'activity_guid'=>$activity->guid));
-        
+
     }
-    
+
     /**
      * Upload a file to the archive
      * @param array $pages
-     * 
+     *
      * API:: /v1/archive/:type
      */
     public function put($pages){
-	
+
 	switch($pages[0]){
 
 		case 'video':
@@ -215,9 +217,9 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 			$image->batch_guid = 0;
 			$image->access_id = 0;
 			$guid = $image->save();
-			$dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";	
+			$dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";
 			$image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
-			if (!file_exists($dir)) {    
+			if (!file_exists($dir)) {
 				mkdir($dir, 0755, true);
 			}
 
@@ -227,7 +229,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 			 */
 			$fp = fopen("$dir/master.jpg", "w");
 			$req = $this->parsePut();
-			$body = $req['body'];			
+			$body = $req['body'];
 			fwrite($fp, $body);
 			fclose($fp);
 
@@ -238,21 +240,21 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 	}
 
         return Factory::response(array('guid'=>$guid, "location"=>$loc));
-        
+
     }
-    
+
     /**
      * Delete an entity
      * @param array $pages
-     * 
+     *
      * API:: /v1/archive/:guid
      */
     public function delete($pages){
-     
+
          return Factory::response();
-        
+
     }
-   
+
     /**
      * Helper function, move this to a static class soon
      */
@@ -262,7 +264,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
         while ($data = fread($putdata, 1024)){
             $raw .= $data;
         }
-	
+
 	   $boundary = substr($raw, 0, strpos($raw, "\r\n"));
         $parts = array_slice(explode($boundary, $raw), 1);
 
@@ -271,7 +273,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 	    if ($part == "--\r\n")
                break;
 
-       		
+
             // Separate content from headers
             $part = ltrim($part, "\r\n");
             list($raw_headers, $body) = explode("\r\n\r\n", $part, 2);
@@ -280,6 +282,5 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 	fclose($putdata);
 	return array('headers'=>$raw_headers, 'body'=>$body);
     }
- 
+
 }
-        

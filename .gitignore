@@ -1,6 +1,11 @@
 # ignore Elgg configuration
 /engine/settings.php
 /engine/multi.settings.php
+
+# Ignore front end plugins
+/front/app/src/plugins
+/front/app/templates/plugins
+
 /.htaccess
 .htaccess
 /2

@@ -1,0 +1,56 @@
+<div class="mdl-grid groups-grid" style="max-width:900px">
+
+  <form (submit)="save()">
+
+    <div class="mdl-textfield mdl-js-textfield minds-groups-name" [mdl]>
+      <input
+        class="mdl-textfield__input"
+        type="text"
+        id="name"
+        [(ng-model)]="group.name"
+        />
+      <label class="mdl-textfield__label" for="name">Name</label>
+    </div>
+
+    <div class="mdl-textfield mdl-js-textfield minds-groups-brief">
+      <textarea
+        class="mdl-textfield__input"
+        type="text"
+        rows= "3"
+        id="brief"
+        [(ng-model)]="group.briefdescription"
+        ></textarea>
+      <label class="mdl-textfield__label" for="brief">A short description about your new group (less than 100 words)</label>
+    </div>
+
+    <div class="minds-groups-visibilty">
+      <h5>Membership</h5>
+      <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="open">
+        <input
+          type="radio"
+          id="open"
+          class="mdl-radio__button"
+          name="options"
+          (change)="membershipChange(2)"
+          />
+        <span class="mdl-radio__label">Open - anyone can join</span>
+      </label>
+      <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="closed">
+        <input
+          type="radio"
+          id="closed"
+          class="mdl-radio__button"
+          name="options"
+          (change)="membershipChange(0)"
+          />
+        <span class="mdl-radio__label">Closed - invite or request to join</span>
+      </label>
+    </div>
+
+    <div class="minds-groups-save">
+     <button class="mdl-button mdl-button--raised mdl-button--colored">Create</button>
+    </div>
+
+  </form>
+
+</div>

@@ -11,7 +11,7 @@ use Minds\Core;
 use minds\Api;
 
 class start extends \ElggPlugin{
-	
+
 	/**
 	 * Initialise the plugin
 	 */
@@ -20,7 +20,7 @@ class start extends \ElggPlugin{
 		\elgg_register_plugin_hook_handler('cron', 'daily', array($this, 'cronHandler'));
 		\elgg_register_plugin_hook_handler('cron', 'weekly', array($this, 'cronHandler'));
 		\add_subtype('notificaiton', 'email', 'ElggNotificationEmail');
-		
+
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			//var_dump($row);
 			if($row->type == 'notification')
@@ -28,33 +28,42 @@ class start extends \ElggPlugin{
 		});
 
 		core\router::registerRoutes($this->registerRoutes());
-        Api\Routes::add('v1/notifications', "minds\\plugin\\notifications\\api\\v1\\notifications");
-        Api\Routes::add('v1/invite', "minds\\plugin\\notifications\\api\\v1\\invite");
+    Api\Routes::add('v1/notifications', "minds\\plugin\\notifications\\api\\v1\\notifications");
+    Api\Routes::add('v1/invite', "minds\\plugin\\notifications\\api\\v1\\invite");
+
+		$link = new Core\Navigation\Item();
+		Core\Navigation\Manager::add($link
+			->setPriority(6)
+			->setIcon('notifications')
+			->setName('Notifications')
+			->setTitle('Notificaitons')
+			->setPath('/notifications')
+		);
 
 		elgg_register_event_handler('pagesetup', 'system', 'notifications_plugin_pagesetup');
 		elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
 
 		// Unset the default notification settings
 		\elgg_unregister_plugin_hook_handler('usersettings:save', 'user', 'notification_user_settings_save');
-	
+
 		\elgg_register_plugin_hook_handler('notification', 'all', array($this,'createNotification'));
-		
+
 		//\elgg_register_event_handler('create', 'object', 'notifications_notify');
-		
+
 		\elgg_extend_view('js/elgg','js/notifications/notify');
 		\elgg_extend_view('css/elgg','notifications/css');
-		
+
 		\elgg_register_event_handler('create', 'all', array($this, 'createHook'));
-		
-	
+
+
 		/*$actions_base = elgg_get_plugins_path() . 'notifications/actions';
 		elgg_register_action("notificationsettings/save", "$actions_base/save.php");
 		elgg_register_action("notificationsettings/groupsave", "$actions_base/groupsave.php");*/
 	}
-	
+
 	/**
 	 * Page registrations
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function registerRoutes(){
@@ -64,20 +73,20 @@ class start extends \ElggPlugin{
 			'/notifications/count' => "$path\\pages\\count"
 		);
 	}
-	
+
 	/**
 	 * Notifications pagesetup
 	 * - Adds the 'notifier' icon to the header
 	 */
 	public function pageSetup(){
 		if (\elgg_is_logged_in()) {
-			
+
 			//\elgg_extend_view('page/elements/topbar', 'notifications/popup');
-			
+
 			$class = "notification notifier entypo";
 			$text = "<span class='$class'>&#59141;</span>";
 			$tooltip = \elgg_echo("notification");
-			
+
 			// get unread messages
 			$num_notifications = $this->getCount();
 			if ($num_notifications > 0) {
@@ -87,7 +96,7 @@ class start extends \ElggPlugin{
 						  "</span>";
 				$tooltip .= " (" . \elgg_echo("notifications:unread", array($num_notifications)) . ")";
 			}
-	
+
 			\elgg_register_menu_item('notifications', array(
 				'name' => 'notification',
 				'href' => '/notifications',
@@ -97,11 +106,11 @@ class start extends \ElggPlugin{
 				'class' => 'entypo',
 				'title' => $tooltip,
 				'id'=>'notify_button',
-				'section' => 'alt',//this is custom to the minds theme. 
+				'section' => 'alt',//this is custom to the minds theme.
 			));
 		}
 	}
-	
+
 	/**
 	 * Return a count of notifications
 	 * @return int
@@ -118,9 +127,9 @@ class start extends \ElggPlugin{
 			return 0;
 		}
 		return (int) $result[elgg_get_logged_in_user_guid()];
-		
+
 	}
-	
+
 	/**
 	 * Increase a users notification counter
 	 */
@@ -134,7 +143,7 @@ class start extends \ElggPlugin{
 				$user->save();
 			}
 			elgg_set_ignore_access(false);
-			
+
 			$lu = new core\Data\lookup();
 			$lu->set("notifications:count", array($user_guid => 1));
 		}catch(Exception $e){
@@ -142,7 +151,7 @@ class start extends \ElggPlugin{
             return false;
 		}
 	 }
-	 
+
 	 /**
 	  * Reset user notification counter
 	  */
@@ -150,18 +159,18 @@ class start extends \ElggPlugin{
 	 	try{
 		 	if(!$user_guid)
 				$user_guid = elgg_get_logged_in_user_guid();
-		
+
 			elgg_set_ignore_access(true);
 			$user = new \ElggUser($user_guid);
 			$user->notifications_count = 0;
 			$user->save();
 			elgg_set_ignore_access(false);
-			
+
 			$lu = new core\Data\lookup();
 			$lu->set("notifications:count", array($user_guid => 0));
 		}catch(Exception $e){}
 	 }
-	
+
 	/**
 	 * Return a list of notifications
 	 * @return array
@@ -169,14 +178,14 @@ class start extends \ElggPlugin{
 	public function getNotifications($user = NULL, $limit = 12, $offset = ""){
 		if(!$user)
 			$user = \elgg_logged_in_user_entity();
-		
+
 		return elgg_get_entities(array('attrs'=>array('namespace'=>'notifications:'.$user->guid), 'limit'=>$limit,'offset'=>$offset ));
 	}
-	
-	
+
+
 	/**
 	 * Create a new notification
-	 * 
+	 *
 	 */
 	public function createNotification($hook, $type, $return, $params = array()){
 		$defaults = array(
@@ -201,7 +210,7 @@ class start extends \ElggPlugin{
 				$notification->save();
 		//	}
             $message = "";
-            
+
             switch($params['notification_view']){
                 case "friends":
 		    $message = \Minds\Core\session::getLoggedinUser()->name . " subscribed to you";
@@ -223,7 +232,7 @@ class start extends \ElggPlugin{
                     break;
                 case "boost_request":
                     $message = \Minds\Core\session::getLoggedinUser()->name . " has requested a boost for " . $params['points'] . " points";
-                    break;  
+                    break;
                 case "boost_accepted":
                     $message = $params['impressions'] . " views for " . $params['title'] . ' were accepted';
                     break;
@@ -248,7 +257,7 @@ class start extends \ElggPlugin{
 		}
 		return $return;
 	}
-	
+
 	/**
 	 * Notifications cron handler
 	 * @return void
@@ -260,9 +269,9 @@ class start extends \ElggPlugin{
 		if($_SERVER['HTTP_HOST'] != 'localhost'){
 			return false;
 		}
-		
+
 		$queue = \elgg_get_entities(array('type'=>'notification', 'subtype'=>'email', 'limit'=>0));
-		
+
 		foreach($queue as $q){
 			if($q->send()){
 				echo 'sent';
@@ -273,7 +282,7 @@ class start extends \ElggPlugin{
 				echo $q->state;
 			}
 		}
-		
+
 		$mail = new \ElggNotificationEmail();
 		switch($type){
 			case 'daily':
@@ -288,7 +297,7 @@ class start extends \ElggPlugin{
 				break;
 		}
 	}
-	
+
 	/**
 	 * Create hook
 	 * @return void
@@ -300,7 +309,7 @@ class start extends \ElggPlugin{
 			if($type == 'comment')
 				$message = $params->description;
 		    if($params->title)
-                $message .= $params->title;    
+                $message .= $params->title;
 			if (preg_match_all('!@(.+)(?:\s|$)!U', $message, $matches)){
 				$usernames = $matches[1];
 				$to = array();
@@ -311,7 +320,7 @@ class start extends \ElggPlugin{
 				}
 				if($to)
 					\elgg_trigger_plugin_hook('notification', 'activity', array(
-						'to'=>$to, 
+						'to'=>$to,
 						'object_guid' => $params->guid,
 						'notification_view' => 'tag',
 						'description' => $params->message,
@@ -328,7 +337,7 @@ class start extends \ElggPlugin{
  *
  */
 function notifications_plugin_pagesetup() {
-	
+
 if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
 
 		$user = elgg_get_page_owner_entity();
@@ -342,7 +351,7 @@ if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
 			'href' => "notifications/personal/{$user->username}",
 		);
 		elgg_register_menu_item('page', $params);
-		
+
 		/*if (elgg_is_active_plugin('groups')) {
 			$params = array(
 				'name' => '2_group_notify',
@@ -382,12 +391,12 @@ function notification_create($to, $from, $object, $params){
 			$notification->access_id = 2;
 			$notification->params = serialize($params);
 			$notification->time_created = time();
-		
+
 			$notification->save();
 		}
 	}
 	//}
-	
+
 	return true;
-	
+
 }

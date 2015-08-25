@@ -18,7 +18,7 @@
 		"videlalvaro/php-amqplib": "dev-master@dev",
 		"Minds/Surge": "dev-master@dev",
 		"zircote/swagger-php": "2.*@dev",
-        "vscn/cruftflake": "dev-master@dev"
+        	"vscn/cruftflake": "dev-master@dev"
    	},
 	"repositories": [
 		{

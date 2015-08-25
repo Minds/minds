@@ -30,8 +30,8 @@ $args = array(
     'site_name' => 'Minds',
     'site_url' => 'http://localhost/',
     'site_email' => 'dev@minds.io',
-    
-    'username' => 'minds', 
+
+    'username' => 'minds',
     'password' => 'password',
     'email' => 'dev@minds.io'
 );
@@ -62,15 +62,13 @@ try{
         echo "Keyspace already installed. Done. \n";
         exit;
     }
-    $attrs = array(   "strategy_options" => array("replication_factor" => "3"));    
+    $attrs = array(   "strategy_options" => array("replication_factor" => "3"));
     $db->createKeyspace($attrs);
     $db->installSchema();
 } catch (Exception $e){
     echo "Failed.. $e->why \n";
 }
-
 $minds->loadConfigs();
-
 /**
  * Setup sites
  */
@@ -81,7 +79,6 @@ $site->url = $args['site_url'];
 $site->access_id = ACCESS_PUBLIC;
 $site->email = $args['site_email'];
 $guid = $site->save();
-
 /**
  * Setup default user
  */
@@ -97,5 +94,13 @@ $user->validated = true;
 $user->validated_method = 'admin_user';
 $user->save();
 
+/**
+ * Configure plugins
+ */
+$db = new Minds\Core\Data\Call('plugin', $args['cassandra_keyspace'], array($args['cassandra_server']));
+$plugins = array('channel', 'thumbs', 'payments', 'blog');
+foreach($plugins as $plugin){
+  $db->insert($plugin, array('type'=>'plugin', 'active'=>1, 'access_id'=>2));
+}
 
 echo "minds is complete \n";

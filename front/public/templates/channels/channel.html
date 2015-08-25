@@ -1,0 +1,111 @@
+<div class="mdl-grid channel-grid" style="max-width:900px" *ng-if="error">
+  <h1>{{error}}</h1>
+</div>
+
+
+<header  *ng-if="user">
+
+  <div class="minds-carousel">
+
+    <div class="inner" >
+
+      <a *ng-for="#carousel of user.carousels" class="minds-carousel-item" style="opacity:1">
+        <img [src]="carousel.src" />
+        <div class="minds-carousel-overlay"></div>
+      </a>
+      <a *ng-if="!user.carousels" class="minds-carousel-item placeholder">
+        <div class="minds-carousel-overlay"></div>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="mdl-grid channel-grid" style="max-width:900px">
+    <div class="mdl-cell mdl-cell--4-col minds-channel-title">
+
+      <div class="avatar">
+        <img src="/icon/{{user.guid}}/large" class="mdl-shadow--4dp" />
+      </div>
+
+      <div class="body">
+        <div class="flex-bottom  mdl-color-text--blue-grey-50">
+          <h1>{{user.name}}</h1>
+          <h3>@{{user.username}}</h3>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mdl-cell mdl-cell--8-col minds-tabs mdl-tabs__tab-bar">
+        <a class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+          <span>Feed</span>
+          <b>0</b>
+        </a>
+        <a class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+          <span>Subscribers</span>
+          <b>{{user.subscribers_count}}</b>
+        </a>
+        <a class="mdl-tabs__tab  mdl-color-text--blue-grey-50">
+          <span>Subscriptions</span>
+          <b>{{user.subscriptions_count}}</b>
+        </a>
+        <a class="mdl-tabs__tab  mdl-color-text--blue-grey-50">
+          <span>Views</span>
+          <b>{{user.impressions}}</b>
+        </a>
+    </div>
+  </div>
+</header>
+
+<div class="mdl-grid channel-grid" style="max-width:900px" *ng-if="user">
+
+  <section class="mdl-cell mdl-cell--4-col">
+      <div class="mdl-card mdl-shadow--2dp minds-channel-bio">
+        <div class="mdl-card__title">
+          <h2 class="mdl-card__title-text">Bio</h2>
+        </div>
+
+        <div class="mdl-card__supporting-text" id="bio" *ng-if="!isOwner()" style="white-space:pre-line">{{user.briefdescription}}</div>
+
+        <!-- OWNER EDIT FORM -->
+        <div class="mdl-card__supporting-text" *ng-if="isOwner()">
+          <textarea
+            (click)="editing = 'bio'"
+            [auto-grow]
+            class="mdl-textfield__input"
+            type="text"
+            id="message"
+            [(ng-model)]="user.briefdescription"
+          ></textarea>
+        </div>
+
+        <!-- OWNER EDIT BUTTONS -->
+        <div class="mdl-card__menu" *ng-if="isOwner()" >
+          <button class="mdl-button mdl-button--icon" >
+            <i class="material-icons" (click)="updateField('briefdescription')" [hidden]="editing != 'bio'">save</i>
+          </button>
+        </div>
+      </div>
+
+      <div class="minds-spacer-2x"></div>
+
+  </section>
+
+  <section class="mdl-cell mdl-cell--8-col">
+
+    <div class="minds-list">
+
+        <minds-activity *ng-for="#activity of feed" [object]="activity" class="mdl-card mdl-shadow--4dp item"></minds-activity>
+        <infinite-scroll
+            distance="25%"
+            (load)="loadFeed()"
+            *ng-if="moreData"
+            />
+            <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+        </infinite-scroll>
+
+    </div>
+
+  </section>
+
+</div>

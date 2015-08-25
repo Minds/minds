@@ -1,0 +1,129 @@
+/**
+ * Colours
+ */
+/**
+ * Padding, Margins and Offset
+ */
+/**
+ * Newsfeed and timelines
+ */
+minds-newsfeed, minds-channel {
+  /**
+    * Activity card
+    */
+  /**
+    * Post form
+    */ }
+  minds-newsfeed .item.mdl-card, minds-channel .item.mdl-card {
+    width: auto;
+    min-height: 0;
+    margin-bottom: 16px;
+    border-radius: 3px;
+    /**
+      * Action tabs
+      */
+    /**
+      * Rich embeds
+      */
+    /**
+      * Remind
+      */
+    /**
+      * Owner block
+      */ }
+    minds-newsfeed .item.mdl-card .mdl-card__supporting-text, minds-channel .item.mdl-card .mdl-card__supporting-text {
+      width: 100%;
+      box-sizing: border-box; }
+    minds-newsfeed .item.mdl-card .mdl-card__supporting-text.message, minds-channel .item.mdl-card .mdl-card__supporting-text.message {
+      white-space: pre-line; }
+    minds-newsfeed .item.mdl-card .tabs, minds-channel .item.mdl-card .tabs {
+      padding: 8px 16px;
+      display: flex;
+      box-sizing: border-box; }
+      minds-newsfeed .item.mdl-card .tabs a, minds-channel .item.mdl-card .tabs a {
+        display: flex;
+        flex-direction: column;
+        flex: auto;
+        text-align: center;
+        cursor: pointer; }
+      minds-newsfeed .item.mdl-card .tabs .selected, minds-channel .item.mdl-card .tabs .selected {
+        color: #4690D6 !important; }
+    minds-newsfeed .item.mdl-card .minds-more, minds-channel .item.mdl-card .minds-more {
+      height: 50px;
+      width: 24px; }
+      minds-newsfeed .item.mdl-card .minds-more i, minds-channel .item.mdl-card .minds-more i {
+        font-size: 50px;
+        width: 50px;
+        left: 50%;
+        transform: translate(-25px, -12px);
+        font-weight: 100; }
+    minds-newsfeed .item.mdl-card .minds-rich-embed img, minds-channel .item.mdl-card .minds-rich-embed img {
+      width: 100%; }
+    minds-newsfeed .item.mdl-card .minds-rich-embed .meta, minds-channel .item.mdl-card .minds-rich-embed .meta {
+      padding: 16px;
+      display: block;
+      text-decoration: none; }
+    minds-newsfeed .item.mdl-card minds-remind, minds-channel .item.mdl-card minds-remind {
+      margin: 16px; }
+    minds-newsfeed .item.mdl-card .owner-block, minds-channel .item.mdl-card .owner-block {
+      padding: 16px;
+      display: flex; }
+      minds-newsfeed .item.mdl-card .owner-block .avatar, minds-channel .item.mdl-card .owner-block .avatar {
+        display: flex;
+        flex-direction: column; }
+        minds-newsfeed .item.mdl-card .owner-block .avatar img, minds-channel .item.mdl-card .owner-block .avatar img {
+          border-radius: 3px;
+          max-height: 50px; }
+      minds-newsfeed .item.mdl-card .owner-block .body, minds-channel .item.mdl-card .owner-block .body {
+        display: flex;
+        flex-direction: column;
+        margin-left: 16px;
+        margin-top: 8px; }
+      minds-newsfeed .item.mdl-card .owner-block a, minds-channel .item.mdl-card .owner-block a {
+        text-decoration: none;
+        font-weight: 500;
+        color: #333; }
+      minds-newsfeed .item.mdl-card .owner-block span, minds-channel .item.mdl-card .owner-block span {
+        color: #888;
+        font-size: 11px; }
+      minds-newsfeed .item.mdl-card .owner-block img, minds-channel .item.mdl-card .owner-block img {
+        border-radius: 3px; }
+  minds-newsfeed .post, minds-channel .post {
+    padding: 16px;
+    margin-bottom: 16px;
+    width: 100%;
+    min-height: 0; }
+    minds-newsfeed .post .mdl-textfield, minds-channel .post .mdl-textfield {
+      width: 100%;
+      padding-top: 0; }
+    minds-newsfeed .post .mdl-button, minds-channel .post .mdl-button {
+      width: 0;
+      float: right; }
+    minds-newsfeed .post .post-preview, minds-channel .post .post-preview {
+      margin: -16px; }
+      minds-newsfeed .post .post-preview .mdl-spinner, minds-channel .post .post-preview .mdl-spinner {
+        margin: 16px auto;
+        display: block; }
+
+.notifications-grid .mdl-card {
+  width: 100%;
+  min-height: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: row; }
+  .notifications-grid .mdl-card .avatar {
+    display: flex;
+    flex-direction: column; }
+    .notifications-grid .mdl-card .avatar img {
+      border-radius: 3px;
+      max-height: 50px; }
+  .notifications-grid .mdl-card .body {
+    padding: 0 16px; }
+    .notifications-grid .mdl-card .body a {
+      color: #333;
+      text-decoration: none; }
+    .notifications-grid .mdl-card .body p {
+      padding: 0;
+      margin: 0; }
+    .notifications-grid .mdl-card .body .ts {
+      font-size: 11px; }
