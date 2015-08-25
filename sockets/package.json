@@ -12,6 +12,10 @@
     "express": "^4.9.0",
     "lodash-node": "^2.4.1",
     "socket.io": "^1.1.0",
-    "twilio": "^2.2.1"
+    "twilio": "^2.2.1",
+    "redis": "0.12.1",
+    "socket.io-redis": "git+https://github.com/markharding/socket.io-redis.git",
+    "msgpack-js": "0.3.0",
+    "cassandra-driver": "2.2.0"
   }
 }

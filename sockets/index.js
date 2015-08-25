@@ -1,125 +1,144 @@
 var app = require('express')();
 var http = require('http').Server(app);
+var config = require('./config');
 var io = require('socket.io')(http);
-var redis = require('socket.io-redis');
+var ioRedis = require('socket.io-redis');
+var redis = require("redis");
+var cassandra = require('cassandra-driver');
 var _ = require('lodash-node');
-var twilio = require('twilio')('AC2e0a25157a4e150f3a87fd6e2f21730c', 'add6d113b8a62e1111c4795e375071de');
+var msgpack = require('msgpack-js');
+var twilio = require('twilio')(config.TWILIO.ID, config.TWILIO.SECRET);
 
-var users = [];
-var call_queue = [];
+var cassandraClient = new cassandra.Client({ contactPoints: config.CASSANDRA.SERVERS, keyspace: config.CASSANDRA.KEYSPACE });
+var redisClient = redis.createClient(config.REDIS.PORT, config.REDIS.HOST);
 
-io.adapter(redis({ host: '10.0.3.218', port: 6379 }));
+//a local cache of users
+var mem_users = [];
+io.adapter(ioRedis({ 
+    pubClient: redis.createClient(config.REDIS.PORT, config.REDIS.HOST), 
+    subClient: redis.createClient(config.REDIS.PORT, config.REDIS.HOST, {detect_buffers: true}) 
+}));
 
 app.get('/', function (req, res){
   res.sendStatus(200);
 });
 
+setInterval(function(){
+    console.log("Sockets: " + io.sockets.sockets.length);
+}, 5000);
+
 io.on('connection', function (socket) {
-  socket.on('register', function (guid) {
-    console.log('connect emited');
-    // if this socket is already connected,
-    // send a failed login message
-    if (_.findIndex(users, { socket: socket.id }) !== -1) {
-      socket.emit('login_error', 'You are already connected.');
-    }
 
-    // if this name is already registered,
-    // send a failed login message
-    if (_.findIndex(users, { guid: guid }) !== -1) {
-      socket.emit('connect_error', 'This guid already exists.');
-      return; 
-    }
-
+  /**
+   * Register and authenticates a user, based on their access token
+   */
+  socket.on('register', function (guid, access_token) {
     if(!guid){
+        console.log("guid not sent along with " + socket.id);
         socket.emit('connect_error', 'Guid must be set..');
         return;
     }
 
-    users.push({ 
-      guid: guid,
-      socket: socket.id
-    });
+    console.log('register from: ' + guid);
 
-    socket.emit('connect_successful', _.pluck(users, 'guid'));
-    socket.broadcast.emit('online', guid);
+    cassandraClient.execute(
+      "SELECT * FROM entities WHERE \"KEY\"=?",
+      [access_token],
+      {prepare: true},
+      function(err, result) {
+        if(err){
+          socket.emit('connect_error', 'Could not authenticate..');
+          return;
+        }
 
-    io.to(socket).emit('connect', guid);
+        if(!result.rows || result.rows.length == 0){
+            //console.log("false login attempt from " + guid);
+            return;
+        }
 
-    console.log(guid + ' logged in');
+        for(var i=0; i < result.rows.length; i++){
+            var row = result.rows[i];
+            if(row.column1 == "user_id" && row.value != guid){
+                console.log("false login attempty from " + guid);
+                socket.emit('connect_error', 'guid does not match');
+                return;
+            }
+
+            if(row.column1 == "expires" && row.value <= (Date.now() - 3600) /1000){
+                console.log(row.value, (Date.now() - 3600));
+                console.log("expired token " + guid);
+                socket.emit('connect_error', 'expired token');
+                return;
+            }
+        }
+
+
+        //socket.emit('connect_successful', _.pluck(users, 'guid'));
+        socket.broadcast.emit('online', guid);
+
+        io.to(socket).emit('connect', guid);
+
+        //set two lookups, by guid and by socket
+        redisClient.set('sockets:guid:'+guid, socket.id);
+        redisClient.set('sockets:socket:'+socket.id, guid);
+
+        console.log('authenticated: ' + guid);
+      });
 
   });
 
+  /**
+   * Sends a message to a user
+   */
   socket.on('sendMessage', function (guid, message) {
-    var currentUser = _.find(users, { socket: socket.id });
-    if (!currentUser) { 
-        console.log("could not find current user.. logged in?");
-        return; 
-    }
 
-    var contact = _.find(users, { guid: guid });
-    if (!contact) { 
-        console.log("could not find " + guid);
-        return;
-    }
-    
-    io.to(contact.socket)
-      .emit('messageReceived', currentUser.guid, message);
-    console.log(guid + " was sent a " + message.type);
+    redisClient.get("sockets:socket:" + socket.id, function(err, reply){
+        if(err)
+            return;
+
+        var from_guid = reply;
+
+        redisClient.get("sockets:guid:" + guid, function(err, reply){
+            if(err)
+                return;
+            var to_socket = reply;
+            if(!to_socket){
+                //console.log('could not find ' + guid);
+                return;
+            }
+            io.to(reply).emit('messageReceived', from_guid, message);
+            console.log(guid + " was sent a " + message.type);
+        });
+    });
   });
 
   socket.on('turnToken', function(guid){
-    var currentUser = _.find(users, { socket: socket.id });
-    if(!currentUser) {
-        console.log("could not find current user.. logged in?");
-        return;
-    }
-
     twilio.tokens.create(function(err, response){
         if(err){
             console.log(err);
         } else {
-       //     io.to(currentUser.socket)
-         //       .emit('turnToken', response);
             socket.emit('turnToken', response);
-             //console.log(response);
-            console.log(currentUser.guid + ' sent a twillio token');
+            console.log('sent a twillio token: ' + socket.id);
         }
     });
   });
 
-  socket.on('queue', function(guid){
-    var currentUser = _.find(users, { socket: socket.id });
-    if (!currentUser) {
-        console.log("could not find current user.. logged in?");
-        return;
-    }
-  
-    if(!guid){
-        var queue = _.find(call_queue, { receiver: currentUser.guid });
-        io.to(currentUser.socket)
-              .emit('messageReceived', currentUser.guid, {type:'queue', queue: queue});
-        console.log('sending queue to ' + currentUser.guid);
-        return;
-    }
-    
-    call_queue.push({
-        caller: currentUser.guid, 
-        receiver: guid
-    });
-    console.log("Added " + guid + " to the caller queue");   
-  });
-
   socket.on('disconnect', function () {
-    var index = _.findIndex(users, { socket: socket.id });
-    if (index !== -1) {
-      socket.broadcast.emit('offline', users[index].guid);
-      console.log(users[index].guid + ' disconnected');
-
-      users.splice(index, 1);
-    }
+      redisClient.get('sockets:socket:'+socket.id, function(err, reply){
+        if(err)
+           return;
+        redisClient.del('sockets:socket:'+socket.id);
+        if(reply){
+            redisClient.del('sockets:guid:'+reply);
+            console.log('Logged out: ' + reply);
+        }
+      });
   });
+
 });
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });
+
+
