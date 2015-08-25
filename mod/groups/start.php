@@ -15,14 +15,33 @@ elgg_register_event_handler('init', 'system', 'groups_fields_setup', 10000);
  */
 function groups_init() {
 
-	$root_link = new Core\Navigation\Item();
-	Core\Navigation\Manager::add($root_link
-		->setPriority(5)
+	$featured_link = new Minds\Core\Navigation\Item();
+	$featured_link
+		->setPriority(1)
+		->setIcon('star')
+		->setName('Featured')
+		->setTitle('Featured (Groups)')
+		->setPath('/groups')
+		->setParams(array('filter'=>'featured'));
+	$my_link = new Minds\Core\Navigation\Item();
+	$my_link
+		->setPriority(2)
+		->setIcon('person_pin')
+		->setName('My')
+		->setTitle('My (Groups)')
+		->setPath('/groups')
+		->setParams(array('filter'=>'member'));
+
+	$root_link = new Minds\Core\Navigation\Item();
+	Minds\Core\Navigation\Manager::add($root_link
+		->setPriority(7)
 		->setIcon('group_work')
 		->setName('Groups')
 		->setTitle('Groups')
 		->setPath('/groups')
 		->setParams(array('filter'=>'featured'))
+		->addSubItem($featured_link)
+		->addSubItem($my_link)
 	);
 
 	// Register a page handler, so we can have nice URLs

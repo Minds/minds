@@ -161,6 +161,7 @@ class Item{
 		return array(
 			"name" => $this->name,
 			"path" => $this->path,
+			"params" => $this->params,
 			"submenus" => $subitems,
 			"title" => $this->title,
 			"text" => $this->name,

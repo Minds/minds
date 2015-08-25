@@ -407,42 +407,8 @@ infinite-scroll {
     background-color: #4690C3;
     opacity: 1; }
 
-/**
- * Colours
- */
-/**
- * Padding, Margins and Offset
- */
-minds-groups-create form {
+minds-gatherings .minds-gatherings-search {
   width: 100%; }
-
-minds-groups-create .minds-groups-name {
-  width: 100%; }
-  minds-groups-create .minds-groups-name input {
-    padding: 16px; }
-  minds-groups-create .minds-groups-name label {
-    padding: 12px 16px; }
-
-minds-groups-create .minds-groups-brief {
-  width: 100%; }
-  minds-groups-create .minds-groups-brief textarea {
-    padding: 16px; }
-  minds-groups-create .minds-groups-brief label {
-    top: inherit;
-    bottom: 24px;
-    padding: 12px 16px; }
-
-minds-groups-create .minds-groups-brief.is-focused label {
-  bottom: 0;
-  top: 24px; }
-
-minds-groups-create .minds-groups-visibilty .mdl-radio {
-  display: block; }
-
-minds-groups-create .minds-groups-save {
-  margin-top: 16px; }
-  minds-groups-create .minds-groups-save button {
-    float: right; }
 
 minds-card-user {
   min-height: 0; }
