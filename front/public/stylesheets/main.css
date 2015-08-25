@@ -410,34 +410,71 @@ infinite-scroll {
 minds-gatherings .minds-gatherings-search {
   width: 100%; }
 
-minds-card-user {
+/**
+ * Colours
+ */
+/**
+ * Padding, Margins and Offset
+ */
+minds-groups-create form {
+  width: 100%; }
+
+minds-groups-create .minds-groups-name {
+  width: 100%; }
+  minds-groups-create .minds-groups-name input {
+    padding: 16px; }
+  minds-groups-create .minds-groups-name label {
+    padding: 12px 16px; }
+
+minds-groups-create .minds-groups-brief {
+  width: 100%; }
+  minds-groups-create .minds-groups-brief textarea {
+    padding: 16px; }
+  minds-groups-create .minds-groups-brief label {
+    top: inherit;
+    bottom: 24px;
+    padding: 12px 16px; }
+
+minds-groups-create .minds-groups-brief.is-focused label {
+  bottom: 0;
+  top: 24px; }
+
+minds-groups-create .minds-groups-visibilty .mdl-radio {
+  display: block; }
+
+minds-groups-create .minds-groups-save {
+  margin-top: 16px; }
+  minds-groups-create .minds-groups-save button {
+    float: right; }
+
+minds-card-user, .minds-banner-card {
   min-height: 0; }
-  minds-card-user .minds-usercard-banner {
+  minds-card-user .minds-usercard-banner, .minds-banner-card .minds-usercard-banner {
     width: 100%;
     height: 120px;
     overflow: hidden;
     position: relative; }
-    minds-card-user .minds-usercard-banner > img {
+    minds-card-user .minds-usercard-banner > img, .minds-banner-card .minds-usercard-banner > img {
       min-width: 100%;
       max-height: 100%; }
-    minds-card-user .minds-usercard-banner .minds-banner-overlay {
+    minds-card-user .minds-usercard-banner .minds-banner-overlay, .minds-banner-card .minds-usercard-banner .minds-banner-overlay {
       position: absolute;
       top: 60px;
       left: 0;
       width: 100%;
       height: 60px;
       background: linear-gradient(transparent, rgba(0, 0, 0, 0.8)); }
-  minds-card-user .minds-usercard-block {
+  minds-card-user .minds-usercard-block, .minds-banner-card .minds-usercard-block {
     margin-top: -72px;
     padding-bottom: 0;
     position: relative;
     display: flex;
     text-decoration: none;
     color: #FFF; }
-    minds-card-user .minds-usercard-block .body {
+    minds-card-user .minds-usercard-block .body, .minds-banner-card .minds-usercard-block .body {
       flex: 1;
       margin: 16px; }
-      minds-card-user .minds-usercard-block .body h3 {
+      minds-card-user .minds-usercard-block .body h3, .minds-banner-card .minds-usercard-block .body h3 {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -445,18 +482,18 @@ minds-card-user {
         line-height: 18px;
         padding: 0;
         margin: 0; }
-      minds-card-user .minds-usercard-block .body button {
+      minds-card-user .minds-usercard-block .body button, .minds-banner-card .minds-usercard-block .body button {
         margin-top: 8px;
         width: 100%; }
-  minds-card-user .minds-tabs {
+  minds-card-user .minds-tabs, .minds-banner-card .minds-tabs {
     flex: 1;
     align-items: flex-start;
     justify-content: flex-start;
     border: 0; }
-    minds-card-user .minds-tabs a {
+    minds-card-user .minds-tabs a, .minds-banner-card .minds-tabs a {
       padding: 0 8px;
       flex: auto; }
-      minds-card-user .minds-tabs a span {
+      minds-card-user .minds-tabs a span, .minds-banner-card .minds-tabs a span {
         width: 100%;
         display: block;
         font-size: 11px;

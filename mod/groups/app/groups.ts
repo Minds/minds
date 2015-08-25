@@ -4,6 +4,7 @@ import { RouterLink, Router, RouteParams } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
+import { InfiniteScroll } from '../../directives/infinite-scroll';
 
 import { GroupsCreator } from './groups-creator';
 
@@ -13,12 +14,15 @@ import { GroupsCreator } from './groups-creator';
 })
 @View({
   templateUrl: 'templates/plugins/groups/groups.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink ]
+  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll ]
 })
 
 export class Groups {
 
   offset : string = "";
+  moreDate : boolean = true;
+  inProgress : boolean = false;
+  groups : Array<any> = [];
   session = SessionFactory.build();
   _filter : string = "featured";
 
@@ -27,12 +31,33 @@ export class Groups {
     @Inject(RouteParams) public params: RouteParams
     ){
       this._filter = params.params['filter'];
+      this.minds = window.Minds;
+      this.load();
   }
 
-  load(){
-    this.client.get('api/v1/groups/' + this.page, { limit: 12, offset: this.offset})
+  load(refresh : boolean = false){
+    var self = this;
+    this.inProgress = true;
+    this.client.get('api/v1/groups/' + this._filter, { limit: 12, offset: this.offset})
       .then((response) => {
 
+        if(!response.groups){
+          self.moreData = false;
+          self.inProgress = false;
+          return false;
+        }
+
+        if(refresh){
+          self.groups = response.groups;
+        } else {
+          if(self.offset)
+            response.groups.shift();
+          for(let group of response.groups)
+            self.groups.push(group);
+        }
+
+        self.offset = response['load-next'];
+        self.inProgress = false;
       })
       .catch((e)=>{
 

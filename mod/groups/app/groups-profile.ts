@@ -1,5 +1,5 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable, FORM_DIRECTIVES} from 'angular2/angular2';
-import { RouterLink } from "angular2/router";
+import { Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { RouterLink, RouteParams } from "angular2/router";
 
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
@@ -7,7 +7,7 @@ import { Material } from 'src/directives/material';
 
 @Component({
   selector: 'minds-groups',
-  viewInjector: [ Client ]
+  viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/plugins/groups/profile.html',
@@ -16,16 +16,23 @@ import { Material } from 'src/directives/material';
 
 export class GroupsProfile {
 
+  guid;
+  group;
   offset : string = "";
   session = SessionFactory.build();
 
-	constructor(public client: Client){
+	constructor(public client: Client,
+    @Inject(RouteParams) public params: RouteParams
+    ){
+      this.guid = this.params.guid;
+      this.load();
 	}
 
   load(){
-    this.client.get('api/v1/groups/' + this.page, { limit: 12, offset: this.offset})
+    var self = this;
+    this.client.get('api/v1/groups/group/' + this.guid, {})
       .then((response) => {
-
+          self.group = response.group;
       })
       .catch((e)=>{
 

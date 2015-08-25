@@ -31,9 +31,7 @@
           id="open"
           class="mdl-radio__button"
           name="options"
-          value="2"
-          [(ng-model)]="group.membership"
-          [(ng-value)]="2"
+          (change)="membershipChange(2)"
           />
         <span class="mdl-radio__label">Open - anyone can join</span>
       </label>
@@ -43,16 +41,14 @@
           id="closed"
           class="mdl-radio__button"
           name="options"
-          value="0"
-          [(ng-model)]="group.membership"
-          [(ng-value)]="0"
+          (change)="membershipChange(0)"
           />
         <span class="mdl-radio__label">Closed - invite or request to join</span>
       </label>
     </div>
 
     <div class="minds-groups-save">
-     <button class="mdl-button mdl-button--raised mdl-button--colored"(click)="save()">Create</button>
+     <button class="mdl-button mdl-button--raised mdl-button--colored">Create</button>
     </div>
 
   </form>
