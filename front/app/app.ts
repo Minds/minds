@@ -20,6 +20,7 @@ import {Notifications} from './src/controllers/notifications/notifications';
  */
 import {Gatherings} from './src/plugins/gatherings/gatherings';
 import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups';
+import {Wallet} from './src/plugins/payments/payments';
 
 @Component({
   selector: 'minds-app',
@@ -40,6 +41,8 @@ import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups'
   { path: '/groups/:filter', component: Groups, as: 'groups'},
   { path: '/groups/create', component: GroupsCreator, as: 'groups-create'},
   { path: '/groups/profile/:guid', component: GroupsProfile, as: 'groups-profile'},
+
+  { path: '/wallet', component: Wallet, as: 'wallet'},
 
 
   { path: '/:username', component: Channel, as: 'channel' },

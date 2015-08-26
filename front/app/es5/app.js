@@ -24,6 +24,7 @@ var channel_1 = require('./src/controllers/channels/channel');
 var notifications_1 = require('./src/controllers/notifications/notifications');
 var gatherings_1 = require('./src/plugins/gatherings/gatherings');
 var groups_1 = require('./src/plugins/groups/groups');
+var payments_1 = require('./src/plugins/payments/payments');
 var Minds = (function () {
     function Minds() {
         this.name = 'Minds';
@@ -44,6 +45,7 @@ var Minds = (function () {
             { path: '/groups/:filter', component: groups_1.Groups, as: 'groups' },
             { path: '/groups/create', component: groups_1.GroupsCreator, as: 'groups-create' },
             { path: '/groups/profile/:guid', component: groups_1.GroupsProfile, as: 'groups-profile' },
+            { path: '/wallet', component: payments_1.Wallet, as: 'wallet' },
             { path: '/:username', component: channel_1.Channel, as: 'channel' },
             { path: '/', redirectTo: '/newsfeed' }
         ]),

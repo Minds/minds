@@ -447,6 +447,9 @@ minds-groups-create .minds-groups-save {
   minds-groups-create .minds-groups-save button {
     float: right; }
 
+minds-gatherings .minds-gatherings-search {
+  width: 100%; }
+
 minds-card-user, .minds-banner-card {
   min-height: 0; }
   minds-card-user .minds-usercard-banner, .minds-banner-card .minds-usercard-banner {

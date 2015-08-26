@@ -1,0 +1,7 @@
+{
+  "name": "payments",
+  "version": "1.0.0",
+  "routes": {
+    "/gatherings": "app/src/payments"
+  }
+}

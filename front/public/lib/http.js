@@ -4224,62 +4224,41 @@ System.register("angular2/di", ["angular2/src/di/metadata", "angular2/src/di/dec
   };
 });
 
-System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/decorators", "http/src/interfaces", "http/src/static_request", "http/src/base_request_options", "http/src/enums"], function($__export) {
+System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_xhr", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/http";
+  var __moduleName = "http/src/backends/xhr_backend";
   var __decorate,
       __metadata,
-      isString,
-      isPresent,
-      makeTypeError,
+      RequestMethodsMap,
+      ResponseTypes,
+      Response,
+      ResponseOptions,
       Injectable,
-      ConnectionBackend,
-      Request,
-      RequestOptions,
-      RequestMethods,
-      Http,
-      Jsonp;
-  function httpRequest(backend, request) {
-    return backend.createConnection(request).response;
-  }
-  function mergeOptions(defaultOpts, providedOpts, method, url) {
-    var newOptions = defaultOpts;
-    if (isPresent(providedOpts)) {
-      newOptions = newOptions.merge(new RequestOptions({
-        method: providedOpts.method,
-        url: providedOpts.url,
-        search: providedOpts.search,
-        headers: providedOpts.headers,
-        body: providedOpts.body,
-        mode: providedOpts.mode,
-        credentials: providedOpts.credentials,
-        cache: providedOpts.cache
-      }));
-    }
-    if (isPresent(method)) {
-      return newOptions.merge(new RequestOptions({
-        method: method,
-        url: url
-      }));
-    } else {
-      return newOptions.merge(new RequestOptions({url: url}));
-    }
-  }
+      BrowserXhr,
+      EventEmitter,
+      ObservableWrapper,
+      isPresent,
+      ENUM_INDEX,
+      XHRConnection,
+      XHRBackend;
   return {
     setters: [function($__m) {
-      isString = $__m.isString;
-      isPresent = $__m.isPresent;
-      makeTypeError = $__m.makeTypeError;
+      RequestMethodsMap = $__m.RequestMethodsMap;
+      ResponseTypes = $__m.ResponseTypes;
+    }, function($__m) {
+      Response = $__m.Response;
+    }, function($__m) {
+      ResponseOptions = $__m.ResponseOptions;
     }, function($__m) {
       Injectable = $__m.Injectable;
     }, function($__m) {
-      ConnectionBackend = $__m.ConnectionBackend;
+      BrowserXhr = $__m.BrowserXhr;
     }, function($__m) {
-      Request = $__m.Request;
+      EventEmitter = $__m.EventEmitter;
+      ObservableWrapper = $__m.ObservableWrapper;
     }, function($__m) {
-      RequestOptions = $__m.RequestOptions;
-    }, function($__m) {
-      RequestMethods = $__m.RequestMethods;
+      isPresent = $__m.isPresent;
+      ENUM_INDEX = $__m.ENUM_INDEX;
     }],
     execute: function() {
       __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
@@ -4304,60 +4283,60 @@ System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/d
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
           return Reflect.metadata(k, v);
       };
-      Http = ($traceurRuntime.createClass)(function(_backend, _defaultOptions) {
-        this._backend = _backend;
-        this._defaultOptions = _defaultOptions;
-      }, {
-        request: function(url, options) {
-          var responseObservable;
-          if (isString(url)) {
-            responseObservable = httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
-          } else if (url instanceof Request) {
-            responseObservable = httpRequest(this._backend, url);
+      XHRConnection = function() {
+        function XHRConnection(req, browserXHR, baseResponseOptions) {
+          var $__3 = this;
+          var requestMethodsMap = new RequestMethodsMap();
+          this.request = req;
+          this.response = new EventEmitter();
+          this._xhr = browserXHR.build();
+          this._xhr.open(requestMethodsMap.getMethod(ENUM_INDEX(req.method)), req.url);
+          this._xhr.addEventListener('load', function(_) {
+            var response = isPresent($__3._xhr.response) ? $__3._xhr.response : $__3._xhr.responseText;
+            var status = $__3._xhr.status === 1223 ? 204 : $__3._xhr.status;
+            if (status === 0) {
+              status = response ? 200 : 0;
+            }
+            var responseOptions = new ResponseOptions({
+              body: response,
+              status: status
+            });
+            if (isPresent(baseResponseOptions)) {
+              responseOptions = baseResponseOptions.merge(responseOptions);
+            }
+            ObservableWrapper.callNext($__3.response, new Response(responseOptions));
+            ObservableWrapper.callReturn($__3.response);
+          });
+          this._xhr.addEventListener('error', function(err) {
+            var responseOptions = new ResponseOptions({
+              body: err,
+              type: ResponseTypes.Error
+            });
+            if (isPresent(baseResponseOptions)) {
+              responseOptions = baseResponseOptions.merge(responseOptions);
+            }
+            ObservableWrapper.callThrow($__3.response, new Response(responseOptions));
+          });
+          if (isPresent(req.headers)) {
+            req.headers.forEach(function(value, name) {
+              $__3._xhr.setRequestHeader(name, value);
+            });
           }
-          return responseObservable;
-        },
-        get: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
-        },
-        post: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.POST, url)));
-        },
-        put: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PUT, url)));
-        },
-        delete: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.DELETE, url)));
-        },
-        patch: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PATCH, url)));
-        },
-        head: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.HEAD, url)));
+          this._xhr.send(this.request.text());
         }
-      }, {});
-      $__export("Http", Http);
-      $__export("Http", Http = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Http));
-      Jsonp = function($__super) {
-        function $__0(backend, defaultOptions) {
-          $traceurRuntime.superConstructor($__0).call(this, backend, defaultOptions);
-        }
-        return ($traceurRuntime.createClass)($__0, {request: function(url, options) {
-            var responseObservable;
-            if (isString(url)) {
-              url = new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url));
-            }
-            if (url instanceof Request) {
-              if (url.method !== RequestMethods.GET) {
-                makeTypeError('JSONP requests must use GET request method.');
-              }
-              responseObservable = httpRequest(this._backend, url);
-            }
-            return responseObservable;
-          }}, {}, $__super);
-      }(Http);
-      $__export("Jsonp", Jsonp);
-      $__export("Jsonp", Jsonp = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Jsonp));
+        return ($traceurRuntime.createClass)(XHRConnection, {dispose: function() {
+            this._xhr.abort();
+          }}, {});
+      }();
+      $__export("XHRConnection", XHRConnection);
+      XHRBackend = ($traceurRuntime.createClass)(function(_browserXHR, _baseResponseOptions) {
+        this._browserXHR = _browserXHR;
+        this._baseResponseOptions = _baseResponseOptions;
+      }, {createConnection: function(request) {
+          return new XHRConnection(request, this._browserXHR, this._baseResponseOptions);
+        }}, {});
+      $__export("XHRBackend", XHRBackend);
+      $__export("XHRBackend", XHRBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserXhr, ResponseOptions])], XHRBackend));
     }
   };
 });
@@ -4768,123 +4747,6 @@ System.register("angular2/src/facade/lang", [], function($__export) {
   };
 });
 
-System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_xhr", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/backends/xhr_backend";
-  var __decorate,
-      __metadata,
-      RequestMethodsMap,
-      ResponseTypes,
-      Response,
-      ResponseOptions,
-      Injectable,
-      BrowserXhr,
-      EventEmitter,
-      ObservableWrapper,
-      isPresent,
-      ENUM_INDEX,
-      XHRConnection,
-      XHRBackend;
-  return {
-    setters: [function($__m) {
-      RequestMethodsMap = $__m.RequestMethodsMap;
-      ResponseTypes = $__m.ResponseTypes;
-    }, function($__m) {
-      Response = $__m.Response;
-    }, function($__m) {
-      ResponseOptions = $__m.ResponseOptions;
-    }, function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
-      BrowserXhr = $__m.BrowserXhr;
-    }, function($__m) {
-      EventEmitter = $__m.EventEmitter;
-      ObservableWrapper = $__m.ObservableWrapper;
-    }, function($__m) {
-      isPresent = $__m.isPresent;
-      ENUM_INDEX = $__m.ENUM_INDEX;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      XHRConnection = function() {
-        function XHRConnection(req, browserXHR, baseResponseOptions) {
-          var $__3 = this;
-          var requestMethodsMap = new RequestMethodsMap();
-          this.request = req;
-          this.response = new EventEmitter();
-          this._xhr = browserXHR.build();
-          this._xhr.open(requestMethodsMap.getMethod(ENUM_INDEX(req.method)), req.url);
-          this._xhr.addEventListener('load', function(_) {
-            var response = isPresent($__3._xhr.response) ? $__3._xhr.response : $__3._xhr.responseText;
-            var status = $__3._xhr.status === 1223 ? 204 : $__3._xhr.status;
-            if (status === 0) {
-              status = response ? 200 : 0;
-            }
-            var responseOptions = new ResponseOptions({
-              body: response,
-              status: status
-            });
-            if (isPresent(baseResponseOptions)) {
-              responseOptions = baseResponseOptions.merge(responseOptions);
-            }
-            ObservableWrapper.callNext($__3.response, new Response(responseOptions));
-            ObservableWrapper.callReturn($__3.response);
-          });
-          this._xhr.addEventListener('error', function(err) {
-            var responseOptions = new ResponseOptions({
-              body: err,
-              type: ResponseTypes.Error
-            });
-            if (isPresent(baseResponseOptions)) {
-              responseOptions = baseResponseOptions.merge(responseOptions);
-            }
-            ObservableWrapper.callThrow($__3.response, new Response(responseOptions));
-          });
-          if (isPresent(req.headers)) {
-            req.headers.forEach(function(value, name) {
-              $__3._xhr.setRequestHeader(name, value);
-            });
-          }
-          this._xhr.send(this.request.text());
-        }
-        return ($traceurRuntime.createClass)(XHRConnection, {dispose: function() {
-            this._xhr.abort();
-          }}, {});
-      }();
-      $__export("XHRConnection", XHRConnection);
-      XHRBackend = ($traceurRuntime.createClass)(function(_browserXHR, _baseResponseOptions) {
-        this._browserXHR = _browserXHR;
-        this._baseResponseOptions = _baseResponseOptions;
-      }, {createConnection: function(request) {
-          return new XHRConnection(request, this._browserXHR, this._baseResponseOptions);
-        }}, {});
-      $__export("XHRBackend", XHRBackend);
-      $__export("XHRBackend", XHRBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserXhr, ResponseOptions])], XHRBackend));
-    }
-  };
-});
-
 System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_jsonp", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "http/src/backends/jsonp_backend";
@@ -5024,6 +4886,107 @@ System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/
   };
 });
 
+System.register("http/src/base_request_options", ["angular2/src/facade/lang", "http/src/headers", "http/src/enums", "angular2/di", "http/src/url_search_params"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/base_request_options";
+  var __decorate,
+      __metadata,
+      isPresent,
+      isString,
+      Headers,
+      RequestModesOpts,
+      RequestMethods,
+      Injectable,
+      URLSearchParams,
+      RequestOptions,
+      BaseRequestOptions;
+  return {
+    setters: [function($__m) {
+      isPresent = $__m.isPresent;
+      isString = $__m.isString;
+    }, function($__m) {
+      Headers = $__m.Headers;
+    }, function($__m) {
+      RequestModesOpts = $__m.RequestModesOpts;
+      RequestMethods = $__m.RequestMethods;
+    }, function($__m) {
+      Injectable = $__m.Injectable;
+    }, function($__m) {
+      URLSearchParams = $__m.URLSearchParams;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      RequestOptions = function() {
+        function RequestOptions() {
+          var $__4 = arguments[0] !== (void 0) ? arguments[0] : {},
+              method = $__4.method,
+              headers = $__4.headers,
+              body = $__4.body,
+              mode = $__4.mode,
+              credentials = $__4.credentials,
+              cache = $__4.cache,
+              url = $__4.url,
+              search = $__4.search;
+          this.method = isPresent(method) ? method : null;
+          this.headers = isPresent(headers) ? headers : null;
+          this.body = isPresent(body) ? body : null;
+          this.mode = isPresent(mode) ? mode : null;
+          this.credentials = isPresent(credentials) ? credentials : null;
+          this.cache = isPresent(cache) ? cache : null;
+          this.url = isPresent(url) ? url : null;
+          this.search = isPresent(search) ? (isString(search) ? new URLSearchParams((search)) : (search)) : null;
+        }
+        return ($traceurRuntime.createClass)(RequestOptions, {merge: function(options) {
+            return new RequestOptions({
+              method: isPresent(options) && isPresent(options.method) ? options.method : this.method,
+              headers: isPresent(options) && isPresent(options.headers) ? options.headers : this.headers,
+              body: isPresent(options) && isPresent(options.body) ? options.body : this.body,
+              mode: isPresent(options) && isPresent(options.mode) ? options.mode : this.mode,
+              credentials: isPresent(options) && isPresent(options.credentials) ? options.credentials : this.credentials,
+              cache: isPresent(options) && isPresent(options.cache) ? options.cache : this.cache,
+              url: isPresent(options) && isPresent(options.url) ? options.url : this.url,
+              search: isPresent(options) && isPresent(options.search) ? (isString(options.search) ? new URLSearchParams((options.search)) : (options.search).clone()) : this.search
+            });
+          }}, {});
+      }();
+      $__export("RequestOptions", RequestOptions);
+      BaseRequestOptions = function($__super) {
+        function $__2() {
+          $traceurRuntime.superConstructor($__2).call(this, {
+            method: RequestMethods.GET,
+            headers: new Headers(),
+            mode: RequestModesOpts.Cors
+          });
+        }
+        return ($traceurRuntime.createClass)($__2, {}, {}, $__super);
+      }(RequestOptions);
+      $__export("BaseRequestOptions", BaseRequestOptions);
+      $__export("BaseRequestOptions", BaseRequestOptions = __decorate([Injectable(), __metadata('design:paramtypes', [])], BaseRequestOptions));
+    }
+  };
+});
+
 System.register("http/src/backends/browser_xhr", ["angular2/di"], function($__export) {
   "use strict";
   var __moduleName = "http/src/backends/browser_xhr";
@@ -5152,137 +5115,47 @@ System.register("http/src/backends/browser_jsonp", ["angular2/di", "angular2/src
   };
 });
 
-System.register("http/src/base_request_options", ["angular2/src/facade/lang", "http/src/headers", "http/src/enums", "angular2/di", "http/src/url_search_params"], function($__export) {
+System.register("http/src/static_request", ["http/src/headers", "angular2/src/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/base_request_options";
-  var __decorate,
-      __metadata,
+  var __moduleName = "http/src/static_request";
+  var Headers,
       isPresent,
-      isString,
-      Headers,
-      RequestModesOpts,
-      RequestMethods,
-      Injectable,
-      URLSearchParams,
-      RequestOptions,
-      BaseRequestOptions;
+      StringWrapper,
+      Request;
   return {
     setters: [function($__m) {
-      isPresent = $__m.isPresent;
-      isString = $__m.isString;
-    }, function($__m) {
       Headers = $__m.Headers;
     }, function($__m) {
-      RequestModesOpts = $__m.RequestModesOpts;
-      RequestMethods = $__m.RequestMethods;
-    }, function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
-      URLSearchParams = $__m.URLSearchParams;
+      isPresent = $__m.isPresent;
+      StringWrapper = $__m.StringWrapper;
     }],
     execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
+      Request = function() {
+        function Request(requestOptions) {
+          var url = requestOptions.url;
+          this.url = requestOptions.url;
+          if (isPresent(requestOptions.search)) {
+            var search = requestOptions.search.toString();
+            if (search.length > 0) {
+              var prefix = '?';
+              if (StringWrapper.contains(this.url, '?')) {
+                prefix = (this.url[this.url.length - 1] == '&') ? '' : '&';
+              }
+              this.url = url + prefix + search;
+            }
+          }
+          this._body = requestOptions.body;
+          this.method = requestOptions.method;
+          this.mode = requestOptions.mode;
+          this.credentials = requestOptions.credentials;
+          this.headers = new Headers(requestOptions.headers);
+          this.cache = requestOptions.cache;
         }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      RequestOptions = function() {
-        function RequestOptions() {
-          var $__4 = arguments[0] !== (void 0) ? arguments[0] : {},
-              method = $__4.method,
-              headers = $__4.headers,
-              body = $__4.body,
-              mode = $__4.mode,
-              credentials = $__4.credentials,
-              cache = $__4.cache,
-              url = $__4.url,
-              search = $__4.search;
-          this.method = isPresent(method) ? method : null;
-          this.headers = isPresent(headers) ? headers : null;
-          this.body = isPresent(body) ? body : null;
-          this.mode = isPresent(mode) ? mode : null;
-          this.credentials = isPresent(credentials) ? credentials : null;
-          this.cache = isPresent(cache) ? cache : null;
-          this.url = isPresent(url) ? url : null;
-          this.search = isPresent(search) ? (isString(search) ? new URLSearchParams((search)) : (search)) : null;
-        }
-        return ($traceurRuntime.createClass)(RequestOptions, {merge: function(options) {
-            return new RequestOptions({
-              method: isPresent(options) && isPresent(options.method) ? options.method : this.method,
-              headers: isPresent(options) && isPresent(options.headers) ? options.headers : this.headers,
-              body: isPresent(options) && isPresent(options.body) ? options.body : this.body,
-              mode: isPresent(options) && isPresent(options.mode) ? options.mode : this.mode,
-              credentials: isPresent(options) && isPresent(options.credentials) ? options.credentials : this.credentials,
-              cache: isPresent(options) && isPresent(options.cache) ? options.cache : this.cache,
-              url: isPresent(options) && isPresent(options.url) ? options.url : this.url,
-              search: isPresent(options) && isPresent(options.search) ? (isString(options.search) ? new URLSearchParams((options.search)) : (options.search).clone()) : this.search
-            });
+        return ($traceurRuntime.createClass)(Request, {text: function() {
+            return isPresent(this._body) ? this._body.toString() : '';
           }}, {});
       }();
-      $__export("RequestOptions", RequestOptions);
-      BaseRequestOptions = function($__super) {
-        function $__2() {
-          $traceurRuntime.superConstructor($__2).call(this, {
-            method: RequestMethods.GET,
-            headers: new Headers(),
-            mode: RequestModesOpts.Cors
-          });
-        }
-        return ($traceurRuntime.createClass)($__2, {}, {}, $__super);
-      }(RequestOptions);
-      $__export("BaseRequestOptions", BaseRequestOptions);
-      $__export("BaseRequestOptions", BaseRequestOptions = __decorate([Injectable(), __metadata('design:paramtypes', [])], BaseRequestOptions));
-    }
-  };
-});
-
-System.register("http/src/interfaces", ["angular2/src/facade/lang", "http/src/url_search_params"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/interfaces";
-  var BaseException,
-      URLSearchParamsUnionFixer,
-      URLSearchParams_UnionFixer,
-      ConnectionBackend,
-      Connection;
-  return {
-    setters: [function($__m) {
-      BaseException = $__m.BaseException;
-    }, function($__m) {
-      URLSearchParamsUnionFixer = $__m.URLSearchParamsUnionFixer;
-    }],
-    execute: function() {
-      URLSearchParams_UnionFixer = URLSearchParamsUnionFixer;
-      ConnectionBackend = function() {
-        function ConnectionBackend() {}
-        return ($traceurRuntime.createClass)(ConnectionBackend, {createConnection: function(request) {
-            throw new BaseException('Abstract!');
-          }}, {});
-      }();
-      $__export("ConnectionBackend", ConnectionBackend);
-      Connection = function() {
-        function Connection() {}
-        return ($traceurRuntime.createClass)(Connection, {dispose: function() {
-            throw new BaseException('Abstract!');
-          }}, {});
-      }();
-      $__export("Connection", Connection);
+      $__export("Request", Request);
     }
   };
 });
@@ -5372,6 +5245,98 @@ System.register("http/src/base_response_options", ["angular2/di", "angular2/src/
       }(ResponseOptions);
       $__export("BaseResponseOptions", BaseResponseOptions);
       $__export("BaseResponseOptions", BaseResponseOptions = __decorate([Injectable(), __metadata('design:paramtypes', [])], BaseResponseOptions));
+    }
+  };
+});
+
+System.register("http/src/headers", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/headers";
+  var isBlank,
+      BaseException,
+      isListLikeIterable,
+      Map,
+      MapWrapper,
+      ListWrapper,
+      StringMap,
+      Headers;
+  return {
+    setters: [function($__m) {
+      isBlank = $__m.isBlank;
+      BaseException = $__m.BaseException;
+    }, function($__m) {
+      isListLikeIterable = $__m.isListLikeIterable;
+      Map = $__m.Map;
+      MapWrapper = $__m.MapWrapper;
+      ListWrapper = $__m.ListWrapper;
+      StringMap = $__m.StringMap;
+    }],
+    execute: function() {
+      Headers = function() {
+        function Headers(headers) {
+          var $__2 = this;
+          if (isBlank(headers)) {
+            this._headersMap = new Map();
+            return;
+          }
+          if (headers instanceof Headers) {
+            this._headersMap = headers._headersMap;
+          } else if (headers instanceof StringMap) {
+            this._headersMap = MapWrapper.createFromStringMap(headers);
+            MapWrapper.forEach(this._headersMap, function(v, k) {
+              if (!isListLikeIterable(v)) {
+                var list = [];
+                list.push(v);
+                $__2._headersMap.set(k, list);
+              }
+            });
+          }
+        }
+        return ($traceurRuntime.createClass)(Headers, {
+          append: function(name, value) {
+            var mapName = this._headersMap.get(name);
+            var list = isListLikeIterable(mapName) ? mapName : [];
+            list.push(value);
+            this._headersMap.set(name, list);
+          },
+          delete: function(name) {
+            MapWrapper.delete(this._headersMap, name);
+          },
+          forEach: function(fn) {
+            MapWrapper.forEach(this._headersMap, fn);
+          },
+          get: function(header) {
+            return ListWrapper.first(this._headersMap.get(header));
+          },
+          has: function(header) {
+            return this._headersMap.has(header);
+          },
+          keys: function() {
+            return MapWrapper.keys(this._headersMap);
+          },
+          set: function(header, value) {
+            var list = [];
+            if (isListLikeIterable(value)) {
+              var pushValue = value.join(',');
+              list.push(pushValue);
+            } else {
+              list.push(value);
+            }
+            this._headersMap.set(header, list);
+          },
+          values: function() {
+            return MapWrapper.values(this._headersMap);
+          },
+          getAll: function(header) {
+            var headers = this._headersMap.get(header);
+            return isListLikeIterable(headers) ? headers : [];
+          },
+          entries: function() {
+            throw new BaseException('"entries" method is not implemented on Headers class');
+          }
+        }, {});
+      }();
+      $__export("Headers", Headers);
     }
   };
 });
@@ -5498,51 +5463,6 @@ System.register("http/src/backends/mock_backend", ["angular2/di", "http/src/stat
   };
 });
 
-System.register("http/src/static_request", ["http/src/headers", "angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/static_request";
-  var Headers,
-      isPresent,
-      StringWrapper,
-      Request;
-  return {
-    setters: [function($__m) {
-      Headers = $__m.Headers;
-    }, function($__m) {
-      isPresent = $__m.isPresent;
-      StringWrapper = $__m.StringWrapper;
-    }],
-    execute: function() {
-      Request = function() {
-        function Request(requestOptions) {
-          var url = requestOptions.url;
-          this.url = requestOptions.url;
-          if (isPresent(requestOptions.search)) {
-            var search = requestOptions.search.toString();
-            if (search.length > 0) {
-              var prefix = '?';
-              if (StringWrapper.contains(this.url, '?')) {
-                prefix = (this.url[this.url.length - 1] == '&') ? '' : '&';
-              }
-              this.url = url + prefix + search;
-            }
-          }
-          this._body = requestOptions.body;
-          this.method = requestOptions.method;
-          this.mode = requestOptions.mode;
-          this.credentials = requestOptions.credentials;
-          this.headers = new Headers(requestOptions.headers);
-          this.cache = requestOptions.cache;
-        }
-        return ($traceurRuntime.createClass)(Request, {text: function() {
-            return isPresent(this._body) ? this._body.toString() : '';
-          }}, {});
-      }();
-      $__export("Request", Request);
-    }
-  };
-});
-
 System.register("http/src/static_response", ["angular2/src/facade/lang", "http/src/http_utils"], function($__export) {
   "use strict";
   var __moduleName = "http/src/static_response";
@@ -5591,98 +5511,6 @@ System.register("http/src/static_response", ["angular2/src/facade/lang", "http/s
         }, {});
       }();
       $__export("Response", Response);
-    }
-  };
-});
-
-System.register("http/src/headers", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/headers";
-  var isBlank,
-      BaseException,
-      isListLikeIterable,
-      Map,
-      MapWrapper,
-      ListWrapper,
-      StringMap,
-      Headers;
-  return {
-    setters: [function($__m) {
-      isBlank = $__m.isBlank;
-      BaseException = $__m.BaseException;
-    }, function($__m) {
-      isListLikeIterable = $__m.isListLikeIterable;
-      Map = $__m.Map;
-      MapWrapper = $__m.MapWrapper;
-      ListWrapper = $__m.ListWrapper;
-      StringMap = $__m.StringMap;
-    }],
-    execute: function() {
-      Headers = function() {
-        function Headers(headers) {
-          var $__2 = this;
-          if (isBlank(headers)) {
-            this._headersMap = new Map();
-            return;
-          }
-          if (headers instanceof Headers) {
-            this._headersMap = headers._headersMap;
-          } else if (headers instanceof StringMap) {
-            this._headersMap = MapWrapper.createFromStringMap(headers);
-            MapWrapper.forEach(this._headersMap, function(v, k) {
-              if (!isListLikeIterable(v)) {
-                var list = [];
-                list.push(v);
-                $__2._headersMap.set(k, list);
-              }
-            });
-          }
-        }
-        return ($traceurRuntime.createClass)(Headers, {
-          append: function(name, value) {
-            var mapName = this._headersMap.get(name);
-            var list = isListLikeIterable(mapName) ? mapName : [];
-            list.push(value);
-            this._headersMap.set(name, list);
-          },
-          delete: function(name) {
-            MapWrapper.delete(this._headersMap, name);
-          },
-          forEach: function(fn) {
-            MapWrapper.forEach(this._headersMap, fn);
-          },
-          get: function(header) {
-            return ListWrapper.first(this._headersMap.get(header));
-          },
-          has: function(header) {
-            return this._headersMap.has(header);
-          },
-          keys: function() {
-            return MapWrapper.keys(this._headersMap);
-          },
-          set: function(header, value) {
-            var list = [];
-            if (isListLikeIterable(value)) {
-              var pushValue = value.join(',');
-              list.push(pushValue);
-            } else {
-              list.push(value);
-            }
-            this._headersMap.set(header, list);
-          },
-          values: function() {
-            return MapWrapper.values(this._headersMap);
-          },
-          getAll: function(header) {
-            var headers = this._headersMap.get(header);
-            return isListLikeIterable(headers) ? headers : [];
-          },
-          entries: function() {
-            throw new BaseException('"entries" method is not implemented on Headers class');
-          }
-        }, {});
-      }();
-      $__export("Headers", Headers);
     }
   };
 });
@@ -5895,157 +5723,174 @@ System.register("http/src/url_search_params", ["angular2/src/facade/lang", "angu
   };
 });
 
-System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"], function($__export) {
+System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/decorators", "http/src/interfaces", "http/src/static_request", "http/src/base_request_options", "http/src/enums"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/facade/async";
-  var global,
-      Rx,
-      PromiseWrapper,
-      TimerWrapper,
-      ObservableWrapper,
-      Observable,
-      EventEmitter;
+  var __moduleName = "http/src/http";
+  var __decorate,
+      __metadata,
+      isString,
+      isPresent,
+      makeTypeError,
+      Injectable,
+      ConnectionBackend,
+      Request,
+      RequestOptions,
+      RequestMethods,
+      Http,
+      Jsonp;
+  function httpRequest(backend, request) {
+    return backend.createConnection(request).response;
+  }
+  function mergeOptions(defaultOpts, providedOpts, method, url) {
+    var newOptions = defaultOpts;
+    if (isPresent(providedOpts)) {
+      newOptions = newOptions.merge(new RequestOptions({
+        method: providedOpts.method,
+        url: providedOpts.url,
+        search: providedOpts.search,
+        headers: providedOpts.headers,
+        body: providedOpts.body,
+        mode: providedOpts.mode,
+        credentials: providedOpts.credentials,
+        cache: providedOpts.cache
+      }));
+    }
+    if (isPresent(method)) {
+      return newOptions.merge(new RequestOptions({
+        method: method,
+        url: url
+      }));
+    } else {
+      return newOptions.merge(new RequestOptions({url: url}));
+    }
+  }
   return {
     setters: [function($__m) {
-      global = $__m.global;
+      isString = $__m.isString;
+      isPresent = $__m.isPresent;
+      makeTypeError = $__m.makeTypeError;
     }, function($__m) {
-      Rx = $__m;
+      Injectable = $__m.Injectable;
+    }, function($__m) {
+      ConnectionBackend = $__m.ConnectionBackend;
+    }, function($__m) {
+      Request = $__m.Request;
+    }, function($__m) {
+      RequestOptions = $__m.RequestOptions;
+    }, function($__m) {
+      RequestMethods = $__m.RequestMethods;
     }],
     execute: function() {
-      $__export("Promise", Promise);
-      PromiseWrapper = function() {
-        function PromiseWrapper() {}
-        return ($traceurRuntime.createClass)(PromiseWrapper, {}, {
-          resolve: function(obj) {
-            return Promise.resolve(obj);
-          },
-          reject: function(obj, _) {
-            return Promise.reject(obj);
-          },
-          catchError: function(promise, onError) {
-            return promise.catch(onError);
-          },
-          all: function(promises) {
-            if (promises.length == 0)
-              return Promise.resolve([]);
-            return Promise.all(promises);
-          },
-          then: function(promise, success, rejection) {
-            return promise.then(success, rejection);
-          },
-          wrap: function(computation) {
-            return new Promise(function(res, rej) {
-              try {
-                res(computation());
-              } catch (e) {
-                rej(e);
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      Http = ($traceurRuntime.createClass)(function(_backend, _defaultOptions) {
+        this._backend = _backend;
+        this._defaultOptions = _defaultOptions;
+      }, {
+        request: function(url, options) {
+          var responseObservable;
+          if (isString(url)) {
+            responseObservable = httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
+          } else if (url instanceof Request) {
+            responseObservable = httpRequest(this._backend, url);
+          }
+          return responseObservable;
+        },
+        get: function(url, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
+        },
+        post: function(url, body, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.POST, url)));
+        },
+        put: function(url, body, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PUT, url)));
+        },
+        delete: function(url, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.DELETE, url)));
+        },
+        patch: function(url, body, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PATCH, url)));
+        },
+        head: function(url, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.HEAD, url)));
+        }
+      }, {});
+      $__export("Http", Http);
+      $__export("Http", Http = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Http));
+      Jsonp = function($__super) {
+        function $__0(backend, defaultOptions) {
+          $traceurRuntime.superConstructor($__0).call(this, backend, defaultOptions);
+        }
+        return ($traceurRuntime.createClass)($__0, {request: function(url, options) {
+            var responseObservable;
+            if (isString(url)) {
+              url = new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url));
+            }
+            if (url instanceof Request) {
+              if (url.method !== RequestMethods.GET) {
+                makeTypeError('JSONP requests must use GET request method.');
               }
-            });
-          },
-          completer: function() {
-            var resolve;
-            var reject;
-            var p = new Promise(function(res, rej) {
-              resolve = res;
-              reject = rej;
-            });
-            return {
-              promise: p,
-              resolve: resolve,
-              reject: reject
-            };
-          }
-        });
-      }();
-      $__export("PromiseWrapper", PromiseWrapper);
-      TimerWrapper = function() {
-        function TimerWrapper() {}
-        return ($traceurRuntime.createClass)(TimerWrapper, {}, {
-          setTimeout: function(fn, millis) {
-            return global.setTimeout(fn, millis);
-          },
-          clearTimeout: function(id) {
-            global.clearTimeout(id);
-          },
-          setInterval: function(fn, millis) {
-            return global.setInterval(fn, millis);
-          },
-          clearInterval: function(id) {
-            global.clearInterval(id);
-          }
-        });
-      }();
-      $__export("TimerWrapper", TimerWrapper);
-      ObservableWrapper = function() {
-        function ObservableWrapper() {}
-        return ($traceurRuntime.createClass)(ObservableWrapper, {}, {
-          subscribe: function(emitter, onNext) {
-            var onThrow = arguments[2] !== (void 0) ? arguments[2] : null;
-            var onReturn = arguments[3] !== (void 0) ? arguments[3] : null;
-            return emitter.observer({
-              next: onNext,
-              throw: onThrow,
-              return: onReturn
-            });
-          },
-          isObservable: function(obs) {
-            return obs instanceof Observable;
-          },
-          dispose: function(subscription) {
-            subscription.dispose();
-          },
-          callNext: function(emitter, value) {
-            emitter.next(value);
-          },
-          callThrow: function(emitter, error) {
-            emitter.throw(error);
-          },
-          callReturn: function(emitter) {
-            emitter.return(null);
-          }
-        });
-      }();
-      $__export("ObservableWrapper", ObservableWrapper);
-      Observable = function() {
-        function Observable() {}
-        return ($traceurRuntime.createClass)(Observable, {observer: function(generator) {
-            return null;
+              responseObservable = httpRequest(this._backend, url);
+            }
+            return responseObservable;
+          }}, {}, $__super);
+      }(Http);
+      $__export("Jsonp", Jsonp);
+      $__export("Jsonp", Jsonp = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Jsonp));
+    }
+  };
+});
+
+System.register("http/src/interfaces", ["angular2/src/facade/lang", "http/src/url_search_params"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/interfaces";
+  var BaseException,
+      URLSearchParamsUnionFixer,
+      URLSearchParams_UnionFixer,
+      ConnectionBackend,
+      Connection;
+  return {
+    setters: [function($__m) {
+      BaseException = $__m.BaseException;
+    }, function($__m) {
+      URLSearchParamsUnionFixer = $__m.URLSearchParamsUnionFixer;
+    }],
+    execute: function() {
+      URLSearchParams_UnionFixer = URLSearchParamsUnionFixer;
+      ConnectionBackend = function() {
+        function ConnectionBackend() {}
+        return ($traceurRuntime.createClass)(ConnectionBackend, {createConnection: function(request) {
+            throw new BaseException('Abstract!');
           }}, {});
       }();
-      $__export("Observable", Observable);
-      EventEmitter = function($__super) {
-        function EventEmitter() {
-          $traceurRuntime.superConstructor(EventEmitter).call(this);
-          this._subject = new Rx.Subject();
-          this._immediateScheduler = Rx.Scheduler.immediate;
-        }
-        return ($traceurRuntime.createClass)(EventEmitter, {
-          observer: function(generator) {
-            return this._subject.observeOn(this._immediateScheduler).subscribe(function(value) {
-              setTimeout(function() {
-                return generator.next(value);
-              });
-            }, function(error) {
-              return generator.throw ? generator.throw(error) : null;
-            }, function() {
-              return generator.return ? generator.return() : null;
-            });
-          },
-          toRx: function() {
-            return this._subject;
-          },
-          next: function(value) {
-            this._subject.onNext(value);
-          },
-          throw: function(error) {
-            this._subject.onError(error);
-          },
-          return: function(value) {
-            this._subject.onCompleted();
-          }
-        }, {}, $__super);
-      }(Observable);
-      $__export("EventEmitter", EventEmitter);
+      $__export("ConnectionBackend", ConnectionBackend);
+      Connection = function() {
+        function Connection() {}
+        return ($traceurRuntime.createClass)(Connection, {dispose: function() {
+            throw new BaseException('Abstract!');
+          }}, {});
+      }();
+      $__export("Connection", Connection);
     }
   };
 });
@@ -6490,6 +6335,161 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
   };
 });
 
+System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/facade/async";
+  var global,
+      Rx,
+      PromiseWrapper,
+      TimerWrapper,
+      ObservableWrapper,
+      Observable,
+      EventEmitter;
+  return {
+    setters: [function($__m) {
+      global = $__m.global;
+    }, function($__m) {
+      Rx = $__m;
+    }],
+    execute: function() {
+      $__export("Promise", Promise);
+      PromiseWrapper = function() {
+        function PromiseWrapper() {}
+        return ($traceurRuntime.createClass)(PromiseWrapper, {}, {
+          resolve: function(obj) {
+            return Promise.resolve(obj);
+          },
+          reject: function(obj, _) {
+            return Promise.reject(obj);
+          },
+          catchError: function(promise, onError) {
+            return promise.catch(onError);
+          },
+          all: function(promises) {
+            if (promises.length == 0)
+              return Promise.resolve([]);
+            return Promise.all(promises);
+          },
+          then: function(promise, success, rejection) {
+            return promise.then(success, rejection);
+          },
+          wrap: function(computation) {
+            return new Promise(function(res, rej) {
+              try {
+                res(computation());
+              } catch (e) {
+                rej(e);
+              }
+            });
+          },
+          completer: function() {
+            var resolve;
+            var reject;
+            var p = new Promise(function(res, rej) {
+              resolve = res;
+              reject = rej;
+            });
+            return {
+              promise: p,
+              resolve: resolve,
+              reject: reject
+            };
+          }
+        });
+      }();
+      $__export("PromiseWrapper", PromiseWrapper);
+      TimerWrapper = function() {
+        function TimerWrapper() {}
+        return ($traceurRuntime.createClass)(TimerWrapper, {}, {
+          setTimeout: function(fn, millis) {
+            return global.setTimeout(fn, millis);
+          },
+          clearTimeout: function(id) {
+            global.clearTimeout(id);
+          },
+          setInterval: function(fn, millis) {
+            return global.setInterval(fn, millis);
+          },
+          clearInterval: function(id) {
+            global.clearInterval(id);
+          }
+        });
+      }();
+      $__export("TimerWrapper", TimerWrapper);
+      ObservableWrapper = function() {
+        function ObservableWrapper() {}
+        return ($traceurRuntime.createClass)(ObservableWrapper, {}, {
+          subscribe: function(emitter, onNext) {
+            var onThrow = arguments[2] !== (void 0) ? arguments[2] : null;
+            var onReturn = arguments[3] !== (void 0) ? arguments[3] : null;
+            return emitter.observer({
+              next: onNext,
+              throw: onThrow,
+              return: onReturn
+            });
+          },
+          isObservable: function(obs) {
+            return obs instanceof Observable;
+          },
+          dispose: function(subscription) {
+            subscription.dispose();
+          },
+          callNext: function(emitter, value) {
+            emitter.next(value);
+          },
+          callThrow: function(emitter, error) {
+            emitter.throw(error);
+          },
+          callReturn: function(emitter) {
+            emitter.return(null);
+          }
+        });
+      }();
+      $__export("ObservableWrapper", ObservableWrapper);
+      Observable = function() {
+        function Observable() {}
+        return ($traceurRuntime.createClass)(Observable, {observer: function(generator) {
+            return null;
+          }}, {});
+      }();
+      $__export("Observable", Observable);
+      EventEmitter = function($__super) {
+        function EventEmitter() {
+          $traceurRuntime.superConstructor(EventEmitter).call(this);
+          this._subject = new Rx.Subject();
+          this._immediateScheduler = Rx.Scheduler.immediate;
+        }
+        return ($traceurRuntime.createClass)(EventEmitter, {
+          observer: function(generator) {
+            return this._subject.observeOn(this._immediateScheduler).subscribe(function(value) {
+              setTimeout(function() {
+                return generator.next(value);
+              });
+            }, function(error) {
+              return generator.throw ? generator.throw(error) : null;
+            }, function() {
+              return generator.return ? generator.return() : null;
+            });
+          },
+          toRx: function() {
+            return this._subject;
+          },
+          next: function(value) {
+            this._subject.onNext(value);
+          },
+          throw: function(error) {
+            this._subject.onError(error);
+          },
+          return: function(value) {
+            this._subject.onCompleted();
+          }
+        }, {}, $__super);
+      }(Observable);
+      $__export("EventEmitter", EventEmitter);
+    }
+  };
+});
+
 System.register("angular2/src/di/metadata", ["angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/metadata";
@@ -6613,150 +6613,6 @@ System.register("angular2/src/di/decorators", ["angular2/src/di/metadata", "angu
       $__export("Host", Host);
       SkipSelf = makeParamDecorator(SkipSelfMetadata);
       $__export("SkipSelf", SkipSelf);
-    }
-  };
-});
-
-System.register("angular2/src/util/decorators", ["angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/util/decorators";
-  var global,
-      isFunction,
-      stringify,
-      Reflect;
-  function extractAnnotation(annotation) {
-    if (isFunction(annotation) && annotation.hasOwnProperty('annotation')) {
-      annotation = annotation.annotation;
-    }
-    return annotation;
-  }
-  function applyParams(fnOrArray, key) {
-    if (fnOrArray === Object || fnOrArray === String || fnOrArray === Function || fnOrArray === Number || fnOrArray === Array) {
-      throw new Error(("Can not use native " + stringify(fnOrArray) + " as constructor"));
-    }
-    if (isFunction(fnOrArray)) {
-      return fnOrArray;
-    } else if (fnOrArray instanceof Array) {
-      var annotations = fnOrArray;
-      var fn = fnOrArray[fnOrArray.length - 1];
-      if (!isFunction(fn)) {
-        throw new Error(("Last position of Class method array must be Function in key " + key + " was '" + stringify(fn) + "'"));
-      }
-      var annoLength = annotations.length - 1;
-      if (annoLength != fn.length) {
-        throw new Error(("Number of annotations (" + annoLength + ") does not match number of arguments (" + fn.length + ") in the function: " + stringify(fn)));
-      }
-      var paramsAnnotations = [];
-      for (var i = 0,
-          ii = annotations.length - 1; i < ii; i++) {
-        var paramAnnotations = [];
-        paramsAnnotations.push(paramAnnotations);
-        var annotation = annotations[i];
-        if (annotation instanceof Array) {
-          for (var j = 0; j < annotation.length; j++) {
-            paramAnnotations.push(extractAnnotation(annotation[j]));
-          }
-        } else if (isFunction(annotation)) {
-          paramAnnotations.push(extractAnnotation(annotation));
-        } else {
-          paramAnnotations.push(annotation);
-        }
-      }
-      Reflect.defineMetadata('parameters', paramsAnnotations, fn);
-      return fn;
-    } else {
-      throw new Error(("Only Function or Array is supported in Class definition for key '" + key + "' is '" + stringify(fnOrArray) + "'"));
-    }
-  }
-  function Class(clsDef) {
-    var constructor = applyParams(clsDef.hasOwnProperty('constructor') ? clsDef.constructor : undefined, 'constructor');
-    var proto = constructor.prototype;
-    if (clsDef.hasOwnProperty('extends')) {
-      if (isFunction(clsDef.extends)) {
-        constructor.prototype = proto = Object.create(clsDef.extends.prototype);
-      } else {
-        throw new Error(("Class definition 'extends' property must be a constructor function was: " + stringify(clsDef.extends)));
-      }
-    }
-    for (var key in clsDef) {
-      if (key != 'extends' && key != 'prototype' && clsDef.hasOwnProperty(key)) {
-        proto[key] = applyParams(clsDef[key], key);
-      }
-    }
-    if (this && this.annotations instanceof Array) {
-      Reflect.defineMetadata('annotations', this.annotations, constructor);
-    }
-    return constructor;
-  }
-  function makeDecorator(annotationCls) {
-    var chainFn = arguments[1] !== (void 0) ? arguments[1] : null;
-    function DecoratorFactory(objOrType) {
-      var annotationInstance = new annotationCls(objOrType);
-      if (this instanceof annotationCls) {
-        return annotationInstance;
-      } else {
-        var chainAnnotation = isFunction(this) && this.annotations instanceof Array ? this.annotations : [];
-        chainAnnotation.push(annotationInstance);
-        var TypeDecorator = function TypeDecorator(cls) {
-          var annotations = Reflect.getOwnMetadata('annotations', cls);
-          annotations = annotations || [];
-          annotations.push(annotationInstance);
-          Reflect.defineMetadata('annotations', annotations, cls);
-          return cls;
-        };
-        TypeDecorator.annotations = chainAnnotation;
-        TypeDecorator.Class = Class;
-        if (chainFn)
-          chainFn(TypeDecorator);
-        return TypeDecorator;
-      }
-    }
-    DecoratorFactory.prototype = Object.create(annotationCls.prototype);
-    return DecoratorFactory;
-  }
-  function makeParamDecorator(annotationCls) {
-    function ParamDecoratorFactory() {
-      for (var args = [],
-          $__1 = 0; $__1 < arguments.length; $__1++)
-        args[$__1] = arguments[$__1];
-      var annotationInstance = Object.create(annotationCls.prototype);
-      annotationCls.apply(annotationInstance, args);
-      if (this instanceof annotationCls) {
-        return annotationInstance;
-      } else {
-        ParamDecorator.annotation = annotationInstance;
-        return ParamDecorator;
-      }
-      function ParamDecorator(cls, unusedKey, index) {
-        var parameters = Reflect.getMetadata('parameters', cls);
-        parameters = parameters || [];
-        while (parameters.length <= index) {
-          parameters.push(null);
-        }
-        parameters[index] = parameters[index] || [];
-        var annotationsForParam = parameters[index];
-        annotationsForParam.push(annotationInstance);
-        Reflect.defineMetadata('parameters', parameters, cls);
-        return cls;
-      }
-    }
-    ParamDecoratorFactory.prototype = Object.create(annotationCls.prototype);
-    return ParamDecoratorFactory;
-  }
-  $__export("Class", Class);
-  $__export("makeDecorator", makeDecorator);
-  $__export("makeParamDecorator", makeParamDecorator);
-  return {
-    setters: [function($__m) {
-      global = $__m.global;
-      isFunction = $__m.isFunction;
-      stringify = $__m.stringify;
-    }],
-    execute: function() {
-      Reflect = global.Reflect;
-      if (!(Reflect && Reflect.getMetadata)) {
-        throw 'reflect-metadata shim is required when using class decorators';
-      }
     }
   };
 });
@@ -7789,83 +7645,6 @@ System.register("angular2/src/reflection/reflection", ["angular2/src/reflection/
   };
 });
 
-System.register("angular2/src/di/key", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/di/type_literal", "angular2/src/di/forward_ref"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/di/key";
-  var MapWrapper,
-      stringify,
-      isBlank,
-      BaseException,
-      TypeLiteral,
-      resolveForwardRef,
-      Key,
-      KeyRegistry,
-      _globalKeyRegistry;
-  return {
-    setters: [function($__m) {
-      MapWrapper = $__m.MapWrapper;
-    }, function($__m) {
-      stringify = $__m.stringify;
-      isBlank = $__m.isBlank;
-      BaseException = $__m.BaseException;
-    }, function($__m) {
-      TypeLiteral = $__m.TypeLiteral;
-      $__export({TypeLiteral: $__m.TypeLiteral});
-    }, function($__m) {
-      resolveForwardRef = $__m.resolveForwardRef;
-    }],
-    execute: function() {
-      Key = function() {
-        function Key(token, id) {
-          this.token = token;
-          this.id = id;
-          if (isBlank(token)) {
-            throw new BaseException('Token must be defined!');
-          }
-        }
-        return ($traceurRuntime.createClass)(Key, {get displayName() {
-            return stringify(this.token);
-          }}, {
-          get: function(token) {
-            return _globalKeyRegistry.get(resolveForwardRef(token));
-          },
-          get numberOfKeys() {
-            return _globalKeyRegistry.numberOfKeys;
-          }
-        });
-      }();
-      $__export("Key", Key);
-      KeyRegistry = function() {
-        function KeyRegistry() {
-          this._allKeys = new Map();
-        }
-        return ($traceurRuntime.createClass)(KeyRegistry, {
-          get: function(token) {
-            if (token instanceof Key)
-              return token;
-            var theToken = token;
-            if (token instanceof TypeLiteral) {
-              theToken = token.type;
-            }
-            token = theToken;
-            if (this._allKeys.has(token)) {
-              return this._allKeys.get(token);
-            }
-            var newKey = new Key(token, Key.numberOfKeys);
-            this._allKeys.set(token, newKey);
-            return newKey;
-          },
-          get numberOfKeys() {
-            return MapWrapper.size(this._allKeys);
-          }
-        }, {});
-      }();
-      $__export("KeyRegistry", KeyRegistry);
-      _globalKeyRegistry = new KeyRegistry();
-    }
-  };
-});
-
 System.register("angular2/src/di/exceptions", ["angular2/src/facade/collection", "angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/exceptions";
@@ -8054,6 +7833,83 @@ System.register("angular2/src/di/opaque_token", ["angular2/src/facade/lang"], fu
   };
 });
 
+System.register("angular2/src/di/key", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/di/type_literal", "angular2/src/di/forward_ref"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/key";
+  var MapWrapper,
+      stringify,
+      isBlank,
+      BaseException,
+      TypeLiteral,
+      resolveForwardRef,
+      Key,
+      KeyRegistry,
+      _globalKeyRegistry;
+  return {
+    setters: [function($__m) {
+      MapWrapper = $__m.MapWrapper;
+    }, function($__m) {
+      stringify = $__m.stringify;
+      isBlank = $__m.isBlank;
+      BaseException = $__m.BaseException;
+    }, function($__m) {
+      TypeLiteral = $__m.TypeLiteral;
+      $__export({TypeLiteral: $__m.TypeLiteral});
+    }, function($__m) {
+      resolveForwardRef = $__m.resolveForwardRef;
+    }],
+    execute: function() {
+      Key = function() {
+        function Key(token, id) {
+          this.token = token;
+          this.id = id;
+          if (isBlank(token)) {
+            throw new BaseException('Token must be defined!');
+          }
+        }
+        return ($traceurRuntime.createClass)(Key, {get displayName() {
+            return stringify(this.token);
+          }}, {
+          get: function(token) {
+            return _globalKeyRegistry.get(resolveForwardRef(token));
+          },
+          get numberOfKeys() {
+            return _globalKeyRegistry.numberOfKeys;
+          }
+        });
+      }();
+      $__export("Key", Key);
+      KeyRegistry = function() {
+        function KeyRegistry() {
+          this._allKeys = new Map();
+        }
+        return ($traceurRuntime.createClass)(KeyRegistry, {
+          get: function(token) {
+            if (token instanceof Key)
+              return token;
+            var theToken = token;
+            if (token instanceof TypeLiteral) {
+              theToken = token.type;
+            }
+            token = theToken;
+            if (this._allKeys.has(token)) {
+              return this._allKeys.get(token);
+            }
+            var newKey = new Key(token, Key.numberOfKeys);
+            this._allKeys.set(token, newKey);
+            return newKey;
+          },
+          get numberOfKeys() {
+            return MapWrapper.size(this._allKeys);
+          }
+        }, {});
+      }();
+      $__export("KeyRegistry", KeyRegistry);
+      _globalKeyRegistry = new KeyRegistry();
+    }
+  };
+});
+
 System.register("http/src/http_utils", ["angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "http/src/http_utils";
@@ -8065,141 +7921,146 @@ System.register("http/src/http_utils", ["angular2/src/facade/lang"], function($_
   };
 });
 
-System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+System.register("angular2/src/util/decorators", ["angular2/src/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/reflection/reflector";
-  var isPresent,
-      Map,
-      StringMapWrapper,
-      ReflectionInfo,
-      Reflector;
-  function _mergeMaps(target, config) {
-    StringMapWrapper.forEach(config, function(v, k) {
-      return target.set(k, v);
-    });
+  var __moduleName = "angular2/src/util/decorators";
+  var global,
+      isFunction,
+      stringify,
+      Reflect;
+  function extractAnnotation(annotation) {
+    if (isFunction(annotation) && annotation.hasOwnProperty('annotation')) {
+      annotation = annotation.annotation;
+    }
+    return annotation;
   }
+  function applyParams(fnOrArray, key) {
+    if (fnOrArray === Object || fnOrArray === String || fnOrArray === Function || fnOrArray === Number || fnOrArray === Array) {
+      throw new Error(("Can not use native " + stringify(fnOrArray) + " as constructor"));
+    }
+    if (isFunction(fnOrArray)) {
+      return fnOrArray;
+    } else if (fnOrArray instanceof Array) {
+      var annotations = fnOrArray;
+      var fn = fnOrArray[fnOrArray.length - 1];
+      if (!isFunction(fn)) {
+        throw new Error(("Last position of Class method array must be Function in key " + key + " was '" + stringify(fn) + "'"));
+      }
+      var annoLength = annotations.length - 1;
+      if (annoLength != fn.length) {
+        throw new Error(("Number of annotations (" + annoLength + ") does not match number of arguments (" + fn.length + ") in the function: " + stringify(fn)));
+      }
+      var paramsAnnotations = [];
+      for (var i = 0,
+          ii = annotations.length - 1; i < ii; i++) {
+        var paramAnnotations = [];
+        paramsAnnotations.push(paramAnnotations);
+        var annotation = annotations[i];
+        if (annotation instanceof Array) {
+          for (var j = 0; j < annotation.length; j++) {
+            paramAnnotations.push(extractAnnotation(annotation[j]));
+          }
+        } else if (isFunction(annotation)) {
+          paramAnnotations.push(extractAnnotation(annotation));
+        } else {
+          paramAnnotations.push(annotation);
+        }
+      }
+      Reflect.defineMetadata('parameters', paramsAnnotations, fn);
+      return fn;
+    } else {
+      throw new Error(("Only Function or Array is supported in Class definition for key '" + key + "' is '" + stringify(fnOrArray) + "'"));
+    }
+  }
+  function Class(clsDef) {
+    var constructor = applyParams(clsDef.hasOwnProperty('constructor') ? clsDef.constructor : undefined, 'constructor');
+    var proto = constructor.prototype;
+    if (clsDef.hasOwnProperty('extends')) {
+      if (isFunction(clsDef.extends)) {
+        constructor.prototype = proto = Object.create(clsDef.extends.prototype);
+      } else {
+        throw new Error(("Class definition 'extends' property must be a constructor function was: " + stringify(clsDef.extends)));
+      }
+    }
+    for (var key in clsDef) {
+      if (key != 'extends' && key != 'prototype' && clsDef.hasOwnProperty(key)) {
+        proto[key] = applyParams(clsDef[key], key);
+      }
+    }
+    if (this && this.annotations instanceof Array) {
+      Reflect.defineMetadata('annotations', this.annotations, constructor);
+    }
+    return constructor;
+  }
+  function makeDecorator(annotationCls) {
+    var chainFn = arguments[1] !== (void 0) ? arguments[1] : null;
+    function DecoratorFactory(objOrType) {
+      var annotationInstance = new annotationCls(objOrType);
+      if (this instanceof annotationCls) {
+        return annotationInstance;
+      } else {
+        var chainAnnotation = isFunction(this) && this.annotations instanceof Array ? this.annotations : [];
+        chainAnnotation.push(annotationInstance);
+        var TypeDecorator = function TypeDecorator(cls) {
+          var annotations = Reflect.getOwnMetadata('annotations', cls);
+          annotations = annotations || [];
+          annotations.push(annotationInstance);
+          Reflect.defineMetadata('annotations', annotations, cls);
+          return cls;
+        };
+        TypeDecorator.annotations = chainAnnotation;
+        TypeDecorator.Class = Class;
+        if (chainFn)
+          chainFn(TypeDecorator);
+        return TypeDecorator;
+      }
+    }
+    DecoratorFactory.prototype = Object.create(annotationCls.prototype);
+    return DecoratorFactory;
+  }
+  function makeParamDecorator(annotationCls) {
+    function ParamDecoratorFactory() {
+      for (var args = [],
+          $__1 = 0; $__1 < arguments.length; $__1++)
+        args[$__1] = arguments[$__1];
+      var annotationInstance = Object.create(annotationCls.prototype);
+      annotationCls.apply(annotationInstance, args);
+      if (this instanceof annotationCls) {
+        return annotationInstance;
+      } else {
+        ParamDecorator.annotation = annotationInstance;
+        return ParamDecorator;
+      }
+      function ParamDecorator(cls, unusedKey, index) {
+        var parameters = Reflect.getMetadata('parameters', cls);
+        parameters = parameters || [];
+        while (parameters.length <= index) {
+          parameters.push(null);
+        }
+        parameters[index] = parameters[index] || [];
+        var annotationsForParam = parameters[index];
+        annotationsForParam.push(annotationInstance);
+        Reflect.defineMetadata('parameters', parameters, cls);
+        return cls;
+      }
+    }
+    ParamDecoratorFactory.prototype = Object.create(annotationCls.prototype);
+    return ParamDecoratorFactory;
+  }
+  $__export("Class", Class);
+  $__export("makeDecorator", makeDecorator);
+  $__export("makeParamDecorator", makeParamDecorator);
   return {
     setters: [function($__m) {
-      isPresent = $__m.isPresent;
-    }, function($__m) {
-      Map = $__m.Map;
-      StringMapWrapper = $__m.StringMapWrapper;
+      global = $__m.global;
+      isFunction = $__m.isFunction;
+      stringify = $__m.stringify;
     }],
     execute: function() {
-      ReflectionInfo = function() {
-        function ReflectionInfo(annotations, parameters, factory, interfaces) {
-          this._annotations = annotations;
-          this._parameters = parameters;
-          this._factory = factory;
-          this._interfaces = interfaces;
-        }
-        return ($traceurRuntime.createClass)(ReflectionInfo, {}, {});
-      }();
-      $__export("ReflectionInfo", ReflectionInfo);
-      Reflector = function() {
-        function Reflector(reflectionCapabilities) {
-          this._injectableInfo = new Map();
-          this._getters = new Map();
-          this._setters = new Map();
-          this._methods = new Map();
-          this.reflectionCapabilities = reflectionCapabilities;
-        }
-        return ($traceurRuntime.createClass)(Reflector, {
-          isReflectionEnabled: function() {
-            return this.reflectionCapabilities.isReflectionEnabled();
-          },
-          registerFunction: function(func, funcInfo) {
-            this._injectableInfo.set(func, funcInfo);
-          },
-          registerType: function(type, typeInfo) {
-            this._injectableInfo.set(type, typeInfo);
-          },
-          registerGetters: function(getters) {
-            _mergeMaps(this._getters, getters);
-          },
-          registerSetters: function(setters) {
-            _mergeMaps(this._setters, setters);
-          },
-          registerMethods: function(methods) {
-            _mergeMaps(this._methods, methods);
-          },
-          factory: function(type) {
-            if (this._containsReflectionInfo(type)) {
-              var res = this._injectableInfo.get(type)._factory;
-              return isPresent(res) ? res : null;
-            } else {
-              return this.reflectionCapabilities.factory(type);
-            }
-          },
-          parameters: function(typeOrFunc) {
-            if (this._injectableInfo.has(typeOrFunc)) {
-              var res = this._injectableInfo.get(typeOrFunc)._parameters;
-              return isPresent(res) ? res : [];
-            } else {
-              return this.reflectionCapabilities.parameters(typeOrFunc);
-            }
-          },
-          annotations: function(typeOrFunc) {
-            if (this._injectableInfo.has(typeOrFunc)) {
-              var res = this._injectableInfo.get(typeOrFunc)._annotations;
-              return isPresent(res) ? res : [];
-            } else {
-              return this.reflectionCapabilities.annotations(typeOrFunc);
-            }
-          },
-          interfaces: function(type) {
-            if (this._injectableInfo.has(type)) {
-              var res = this._injectableInfo.get(type)._interfaces;
-              return isPresent(res) ? res : [];
-            } else {
-              return this.reflectionCapabilities.interfaces(type);
-            }
-          },
-          getter: function(name) {
-            if (this._getters.has(name)) {
-              return this._getters.get(name);
-            } else {
-              return this.reflectionCapabilities.getter(name);
-            }
-          },
-          setter: function(name) {
-            if (this._setters.has(name)) {
-              return this._setters.get(name);
-            } else {
-              return this.reflectionCapabilities.setter(name);
-            }
-          },
-          method: function(name) {
-            if (this._methods.has(name)) {
-              return this._methods.get(name);
-            } else {
-              return this.reflectionCapabilities.method(name);
-            }
-          },
-          _containsReflectionInfo: function(typeOrFunc) {
-            return this._injectableInfo.has(typeOrFunc);
-          }
-        }, {});
-      }();
-      $__export("Reflector", Reflector);
-    }
-  };
-});
-
-System.register("angular2/src/di/type_literal", [], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/di/type_literal";
-  var TypeLiteral;
-  return {
-    setters: [],
-    execute: function() {
-      TypeLiteral = function() {
-        function TypeLiteral() {}
-        return ($traceurRuntime.createClass)(TypeLiteral, {get type() {
-            throw new Error("Type literals are only supported in Dart");
-          }}, {});
-      }();
-      $__export("TypeLiteral", TypeLiteral);
+      Reflect = global.Reflect;
+      if (!(Reflect && Reflect.getMetadata)) {
+        throw 'reflect-metadata shim is required when using class decorators';
+      }
     }
   };
 });
@@ -8388,6 +8249,145 @@ System.register("angular2/src/reflection/reflection_capabilities", ["angular2/sr
         }, {});
       }();
       $__export("ReflectionCapabilities", ReflectionCapabilities);
+    }
+  };
+});
+
+System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/reflection/reflector";
+  var isPresent,
+      Map,
+      StringMapWrapper,
+      ReflectionInfo,
+      Reflector;
+  function _mergeMaps(target, config) {
+    StringMapWrapper.forEach(config, function(v, k) {
+      return target.set(k, v);
+    });
+  }
+  return {
+    setters: [function($__m) {
+      isPresent = $__m.isPresent;
+    }, function($__m) {
+      Map = $__m.Map;
+      StringMapWrapper = $__m.StringMapWrapper;
+    }],
+    execute: function() {
+      ReflectionInfo = function() {
+        function ReflectionInfo(annotations, parameters, factory, interfaces) {
+          this._annotations = annotations;
+          this._parameters = parameters;
+          this._factory = factory;
+          this._interfaces = interfaces;
+        }
+        return ($traceurRuntime.createClass)(ReflectionInfo, {}, {});
+      }();
+      $__export("ReflectionInfo", ReflectionInfo);
+      Reflector = function() {
+        function Reflector(reflectionCapabilities) {
+          this._injectableInfo = new Map();
+          this._getters = new Map();
+          this._setters = new Map();
+          this._methods = new Map();
+          this.reflectionCapabilities = reflectionCapabilities;
+        }
+        return ($traceurRuntime.createClass)(Reflector, {
+          isReflectionEnabled: function() {
+            return this.reflectionCapabilities.isReflectionEnabled();
+          },
+          registerFunction: function(func, funcInfo) {
+            this._injectableInfo.set(func, funcInfo);
+          },
+          registerType: function(type, typeInfo) {
+            this._injectableInfo.set(type, typeInfo);
+          },
+          registerGetters: function(getters) {
+            _mergeMaps(this._getters, getters);
+          },
+          registerSetters: function(setters) {
+            _mergeMaps(this._setters, setters);
+          },
+          registerMethods: function(methods) {
+            _mergeMaps(this._methods, methods);
+          },
+          factory: function(type) {
+            if (this._containsReflectionInfo(type)) {
+              var res = this._injectableInfo.get(type)._factory;
+              return isPresent(res) ? res : null;
+            } else {
+              return this.reflectionCapabilities.factory(type);
+            }
+          },
+          parameters: function(typeOrFunc) {
+            if (this._injectableInfo.has(typeOrFunc)) {
+              var res = this._injectableInfo.get(typeOrFunc)._parameters;
+              return isPresent(res) ? res : [];
+            } else {
+              return this.reflectionCapabilities.parameters(typeOrFunc);
+            }
+          },
+          annotations: function(typeOrFunc) {
+            if (this._injectableInfo.has(typeOrFunc)) {
+              var res = this._injectableInfo.get(typeOrFunc)._annotations;
+              return isPresent(res) ? res : [];
+            } else {
+              return this.reflectionCapabilities.annotations(typeOrFunc);
+            }
+          },
+          interfaces: function(type) {
+            if (this._injectableInfo.has(type)) {
+              var res = this._injectableInfo.get(type)._interfaces;
+              return isPresent(res) ? res : [];
+            } else {
+              return this.reflectionCapabilities.interfaces(type);
+            }
+          },
+          getter: function(name) {
+            if (this._getters.has(name)) {
+              return this._getters.get(name);
+            } else {
+              return this.reflectionCapabilities.getter(name);
+            }
+          },
+          setter: function(name) {
+            if (this._setters.has(name)) {
+              return this._setters.get(name);
+            } else {
+              return this.reflectionCapabilities.setter(name);
+            }
+          },
+          method: function(name) {
+            if (this._methods.has(name)) {
+              return this._methods.get(name);
+            } else {
+              return this.reflectionCapabilities.method(name);
+            }
+          },
+          _containsReflectionInfo: function(typeOrFunc) {
+            return this._injectableInfo.has(typeOrFunc);
+          }
+        }, {});
+      }();
+      $__export("Reflector", Reflector);
+    }
+  };
+});
+
+System.register("angular2/src/di/type_literal", [], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/type_literal";
+  var TypeLiteral;
+  return {
+    setters: [],
+    execute: function() {
+      TypeLiteral = function() {
+        function TypeLiteral() {}
+        return ($traceurRuntime.createClass)(TypeLiteral, {get type() {
+            throw new Error("Type literals are only supported in Dart");
+          }}, {});
+      }();
+      $__export("TypeLiteral", TypeLiteral);
     }
   };
 });
