@@ -4158,69 +4158,141 @@ System.register("http/http", ["angular2/di", "http/src/http", "http/src/backends
   };
 });
 
-System.register("angular2/di", ["angular2/src/di/metadata", "angular2/src/di/decorators", "angular2/src/di/forward_ref", "angular2/src/di/injector", "angular2/src/di/binding", "angular2/src/di/key", "angular2/src/di/exceptions", "angular2/src/di/opaque_token"], function($__export) {
+System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/decorators", "http/src/interfaces", "http/src/static_request", "http/src/base_request_options", "http/src/enums"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/di";
-  var $__exportNames = {undefined: true};
+  var __moduleName = "http/src/http";
+  var __decorate,
+      __metadata,
+      isString,
+      isPresent,
+      makeTypeError,
+      Injectable,
+      ConnectionBackend,
+      Request,
+      RequestOptions,
+      RequestMethods,
+      Http,
+      Jsonp;
+  function httpRequest(backend, request) {
+    return backend.createConnection(request).response;
+  }
+  function mergeOptions(defaultOpts, providedOpts, method, url) {
+    var newOptions = defaultOpts;
+    if (isPresent(providedOpts)) {
+      newOptions = newOptions.merge(new RequestOptions({
+        method: providedOpts.method,
+        url: providedOpts.url,
+        search: providedOpts.search,
+        headers: providedOpts.headers,
+        body: providedOpts.body,
+        mode: providedOpts.mode,
+        credentials: providedOpts.credentials,
+        cache: providedOpts.cache
+      }));
+    }
+    if (isPresent(method)) {
+      return newOptions.merge(new RequestOptions({
+        method: method,
+        url: url
+      }));
+    } else {
+      return newOptions.merge(new RequestOptions({url: url}));
+    }
+  }
   return {
     setters: [function($__m) {
-      $__export({
-        InjectMetadata: $__m.InjectMetadata,
-        OptionalMetadata: $__m.OptionalMetadata,
-        InjectableMetadata: $__m.InjectableMetadata,
-        SelfMetadata: $__m.SelfMetadata,
-        HostMetadata: $__m.HostMetadata,
-        SkipSelfMetadata: $__m.SkipSelfMetadata,
-        DependencyMetadata: $__m.DependencyMetadata
-      });
+      isString = $__m.isString;
+      isPresent = $__m.isPresent;
+      makeTypeError = $__m.makeTypeError;
     }, function($__m) {
-      var exportObj = Object.create(null);
-      Object.keys($__m).forEach(function(p) {
-        if (p !== 'default' && !$__exportNames[p])
-          exportObj[p] = $__m[p];
-      });
-      $__export(exportObj);
+      Injectable = $__m.Injectable;
     }, function($__m) {
-      $__export({
-        forwardRef: $__m.forwardRef,
-        resolveForwardRef: $__m.resolveForwardRef
-      });
+      ConnectionBackend = $__m.ConnectionBackend;
     }, function($__m) {
-      $__export({
-        Injector: $__m.Injector,
-        ProtoInjector: $__m.ProtoInjector,
-        BindingWithVisibility: $__m.BindingWithVisibility,
-        Visibility: $__m.Visibility,
-        UNDEFINED: $__m.UNDEFINED
-      });
+      Request = $__m.Request;
     }, function($__m) {
-      $__export({
-        Binding: $__m.Binding,
-        BindingBuilder: $__m.BindingBuilder,
-        ResolvedBinding: $__m.ResolvedBinding,
-        Dependency: $__m.Dependency,
-        bind: $__m.bind
-      });
+      RequestOptions = $__m.RequestOptions;
     }, function($__m) {
-      $__export({
-        Key: $__m.Key,
-        KeyRegistry: $__m.KeyRegistry,
-        TypeLiteral: $__m.TypeLiteral
-      });
-    }, function($__m) {
-      $__export({
-        NoBindingError: $__m.NoBindingError,
-        AbstractBindingError: $__m.AbstractBindingError,
-        CyclicDependencyError: $__m.CyclicDependencyError,
-        InstantiationError: $__m.InstantiationError,
-        InvalidBindingError: $__m.InvalidBindingError,
-        NoAnnotationError: $__m.NoAnnotationError,
-        OutOfBoundsError: $__m.OutOfBoundsError
-      });
-    }, function($__m) {
-      $__export({OpaqueToken: $__m.OpaqueToken});
+      RequestMethods = $__m.RequestMethods;
     }],
-    execute: function() {}
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      Http = ($traceurRuntime.createClass)(function(_backend, _defaultOptions) {
+        this._backend = _backend;
+        this._defaultOptions = _defaultOptions;
+      }, {
+        request: function(url, options) {
+          var responseObservable;
+          if (isString(url)) {
+            responseObservable = httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
+          } else if (url instanceof Request) {
+            responseObservable = httpRequest(this._backend, url);
+          }
+          return responseObservable;
+        },
+        get: function(url, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
+        },
+        post: function(url, body, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.POST, url)));
+        },
+        put: function(url, body, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PUT, url)));
+        },
+        delete: function(url, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.DELETE, url)));
+        },
+        patch: function(url, body, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PATCH, url)));
+        },
+        head: function(url, options) {
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.HEAD, url)));
+        }
+      }, {});
+      $__export("Http", Http);
+      $__export("Http", Http = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Http));
+      Jsonp = function($__super) {
+        function $__0(backend, defaultOptions) {
+          $traceurRuntime.superConstructor($__0).call(this, backend, defaultOptions);
+        }
+        return ($traceurRuntime.createClass)($__0, {request: function(url, options) {
+            var responseObservable;
+            if (isString(url)) {
+              url = new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url));
+            }
+            if (url instanceof Request) {
+              if (url.method !== RequestMethods.GET) {
+                makeTypeError('JSONP requests must use GET request method.');
+              }
+              responseObservable = httpRequest(this._backend, url);
+            }
+            return responseObservable;
+          }}, {}, $__super);
+      }(Http);
+      $__export("Jsonp", Jsonp);
+      $__export("Jsonp", Jsonp = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Jsonp));
+    }
   };
 });
 
@@ -4338,6 +4410,1082 @@ System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/st
       $__export("XHRBackend", XHRBackend);
       $__export("XHRBackend", XHRBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserXhr, ResponseOptions])], XHRBackend));
     }
+  };
+});
+
+System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_jsonp", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/backends/jsonp_backend";
+  var __decorate,
+      __metadata,
+      ReadyStates,
+      RequestMethods,
+      Response,
+      ResponseOptions,
+      Injectable,
+      BrowserJsonp,
+      EventEmitter,
+      ObservableWrapper,
+      StringWrapper,
+      isPresent,
+      makeTypeError,
+      JSONPConnection,
+      JSONPBackend;
+  return {
+    setters: [function($__m) {
+      ReadyStates = $__m.ReadyStates;
+      RequestMethods = $__m.RequestMethods;
+    }, function($__m) {
+      Response = $__m.Response;
+    }, function($__m) {
+      ResponseOptions = $__m.ResponseOptions;
+    }, function($__m) {
+      Injectable = $__m.Injectable;
+    }, function($__m) {
+      BrowserJsonp = $__m.BrowserJsonp;
+    }, function($__m) {
+      EventEmitter = $__m.EventEmitter;
+      ObservableWrapper = $__m.ObservableWrapper;
+    }, function($__m) {
+      StringWrapper = $__m.StringWrapper;
+      isPresent = $__m.isPresent;
+      makeTypeError = $__m.makeTypeError;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      JSONPConnection = function() {
+        function JSONPConnection(req, _dom, baseResponseOptions) {
+          var $__3 = this;
+          this._dom = _dom;
+          this.baseResponseOptions = baseResponseOptions;
+          this._finished = false;
+          if (req.method !== RequestMethods.GET) {
+            throw makeTypeError("JSONP requests must use GET request method.");
+          }
+          this.request = req;
+          this.response = new EventEmitter();
+          this.readyState = ReadyStates.LOADING;
+          this._id = _dom.nextRequestID();
+          _dom.exposeConnection(this._id, this);
+          var callback = _dom.requestCallback(this._id);
+          var url = req.url;
+          if (url.indexOf('=JSONP_CALLBACK&') > -1) {
+            url = StringWrapper.replace(url, '=JSONP_CALLBACK&', ("=" + callback + "&"));
+          } else if (url.lastIndexOf('=JSONP_CALLBACK') === url.length - '=JSONP_CALLBACK'.length) {
+            url = StringWrapper.substring(url, 0, url.length - '=JSONP_CALLBACK'.length) + ("=" + callback);
+          }
+          var script = this._script = _dom.build(url);
+          script.addEventListener('load', function(event) {
+            if ($__3.readyState === ReadyStates.CANCELLED)
+              return;
+            $__3.readyState = ReadyStates.DONE;
+            _dom.cleanup(script);
+            if (!$__3._finished) {
+              ObservableWrapper.callThrow($__3.response, makeTypeError('JSONP injected script did not invoke callback.'));
+              return;
+            }
+            var responseOptions = new ResponseOptions({body: $__3._responseData});
+            if (isPresent($__3.baseResponseOptions)) {
+              responseOptions = $__3.baseResponseOptions.merge(responseOptions);
+            }
+            ObservableWrapper.callNext($__3.response, new Response(responseOptions));
+          });
+          script.addEventListener('error', function(error) {
+            if ($__3.readyState === ReadyStates.CANCELLED)
+              return;
+            $__3.readyState = ReadyStates.DONE;
+            _dom.cleanup(script);
+            ObservableWrapper.callThrow($__3.response, error);
+          });
+          _dom.send(script);
+        }
+        return ($traceurRuntime.createClass)(JSONPConnection, {
+          finished: function(data) {
+            this._finished = true;
+            this._dom.removeConnection(this._id);
+            if (this.readyState === ReadyStates.CANCELLED)
+              return;
+            this._responseData = data;
+          },
+          dispose: function() {
+            this.readyState = ReadyStates.CANCELLED;
+            var script = this._script;
+            this._script = null;
+            if (isPresent(script)) {
+              this._dom.cleanup(script);
+            }
+            ObservableWrapper.callReturn(this.response);
+          }
+        }, {});
+      }();
+      $__export("JSONPConnection", JSONPConnection);
+      JSONPBackend = ($traceurRuntime.createClass)(function(_browserJSONP, _baseResponseOptions) {
+        this._browserJSONP = _browserJSONP;
+        this._baseResponseOptions = _baseResponseOptions;
+      }, {createConnection: function(request) {
+          return new JSONPConnection(request, this._browserJSONP, this._baseResponseOptions);
+        }}, {});
+      $__export("JSONPBackend", JSONPBackend);
+      $__export("JSONPBackend", JSONPBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserJsonp, ResponseOptions])], JSONPBackend));
+    }
+  };
+});
+
+System.register("http/src/backends/browser_xhr", ["angular2/di"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/backends/browser_xhr";
+  var __decorate,
+      __metadata,
+      Injectable,
+      BrowserXhr;
+  return {
+    setters: [function($__m) {
+      Injectable = $__m.Injectable;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      BrowserXhr = ($traceurRuntime.createClass)(function() {}, {build: function() {
+          return (new XMLHttpRequest());
+        }}, {});
+      $__export("BrowserXhr", BrowserXhr);
+      $__export("BrowserXhr", BrowserXhr = __decorate([Injectable(), __metadata('design:paramtypes', [])], BrowserXhr));
+    }
+  };
+});
+
+System.register("http/src/backends/browser_jsonp", ["angular2/di", "angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/backends/browser_jsonp";
+  var __decorate,
+      __metadata,
+      Injectable,
+      global,
+      _nextRequestId,
+      JSONP_HOME,
+      _jsonpConnections,
+      BrowserJsonp;
+  function _getJsonpConnections() {
+    if (_jsonpConnections === null) {
+      _jsonpConnections = global[JSONP_HOME] = {};
+    }
+    return _jsonpConnections;
+  }
+  return {
+    setters: [function($__m) {
+      Injectable = $__m.Injectable;
+    }, function($__m) {
+      global = $__m.global;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      _nextRequestId = 0;
+      JSONP_HOME = '__ng_jsonp__';
+      $__export("JSONP_HOME", JSONP_HOME);
+      _jsonpConnections = null;
+      BrowserJsonp = ($traceurRuntime.createClass)(function() {}, {
+        build: function(url) {
+          var node = document.createElement('script');
+          node.src = url;
+          return node;
+        },
+        nextRequestID: function() {
+          return ("__req" + _nextRequestId++);
+        },
+        requestCallback: function(id) {
+          return (JSONP_HOME + "." + id + ".finished");
+        },
+        exposeConnection: function(id, connection) {
+          var connections = _getJsonpConnections();
+          connections[id] = connection;
+        },
+        removeConnection: function(id) {
+          var connections = _getJsonpConnections();
+          connections[id] = null;
+        },
+        send: function(node) {
+          document.body.appendChild((node));
+        },
+        cleanup: function(node) {
+          if (node.parentNode) {
+            node.parentNode.removeChild((node));
+          }
+        }
+      }, {});
+      $__export("BrowserJsonp", BrowserJsonp);
+      $__export("BrowserJsonp", BrowserJsonp = __decorate([Injectable(), __metadata('design:paramtypes', [])], BrowserJsonp));
+    }
+  };
+});
+
+System.register("http/src/base_request_options", ["angular2/src/facade/lang", "http/src/headers", "http/src/enums", "angular2/di", "http/src/url_search_params"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/base_request_options";
+  var __decorate,
+      __metadata,
+      isPresent,
+      isString,
+      Headers,
+      RequestModesOpts,
+      RequestMethods,
+      Injectable,
+      URLSearchParams,
+      RequestOptions,
+      BaseRequestOptions;
+  return {
+    setters: [function($__m) {
+      isPresent = $__m.isPresent;
+      isString = $__m.isString;
+    }, function($__m) {
+      Headers = $__m.Headers;
+    }, function($__m) {
+      RequestModesOpts = $__m.RequestModesOpts;
+      RequestMethods = $__m.RequestMethods;
+    }, function($__m) {
+      Injectable = $__m.Injectable;
+    }, function($__m) {
+      URLSearchParams = $__m.URLSearchParams;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      RequestOptions = function() {
+        function RequestOptions() {
+          var $__4 = arguments[0] !== (void 0) ? arguments[0] : {},
+              method = $__4.method,
+              headers = $__4.headers,
+              body = $__4.body,
+              mode = $__4.mode,
+              credentials = $__4.credentials,
+              cache = $__4.cache,
+              url = $__4.url,
+              search = $__4.search;
+          this.method = isPresent(method) ? method : null;
+          this.headers = isPresent(headers) ? headers : null;
+          this.body = isPresent(body) ? body : null;
+          this.mode = isPresent(mode) ? mode : null;
+          this.credentials = isPresent(credentials) ? credentials : null;
+          this.cache = isPresent(cache) ? cache : null;
+          this.url = isPresent(url) ? url : null;
+          this.search = isPresent(search) ? (isString(search) ? new URLSearchParams((search)) : (search)) : null;
+        }
+        return ($traceurRuntime.createClass)(RequestOptions, {merge: function(options) {
+            return new RequestOptions({
+              method: isPresent(options) && isPresent(options.method) ? options.method : this.method,
+              headers: isPresent(options) && isPresent(options.headers) ? options.headers : this.headers,
+              body: isPresent(options) && isPresent(options.body) ? options.body : this.body,
+              mode: isPresent(options) && isPresent(options.mode) ? options.mode : this.mode,
+              credentials: isPresent(options) && isPresent(options.credentials) ? options.credentials : this.credentials,
+              cache: isPresent(options) && isPresent(options.cache) ? options.cache : this.cache,
+              url: isPresent(options) && isPresent(options.url) ? options.url : this.url,
+              search: isPresent(options) && isPresent(options.search) ? (isString(options.search) ? new URLSearchParams((options.search)) : (options.search).clone()) : this.search
+            });
+          }}, {});
+      }();
+      $__export("RequestOptions", RequestOptions);
+      BaseRequestOptions = function($__super) {
+        function $__2() {
+          $traceurRuntime.superConstructor($__2).call(this, {
+            method: RequestMethods.GET,
+            headers: new Headers(),
+            mode: RequestModesOpts.Cors
+          });
+        }
+        return ($traceurRuntime.createClass)($__2, {}, {}, $__super);
+      }(RequestOptions);
+      $__export("BaseRequestOptions", BaseRequestOptions);
+      $__export("BaseRequestOptions", BaseRequestOptions = __decorate([Injectable(), __metadata('design:paramtypes', [])], BaseRequestOptions));
+    }
+  };
+});
+
+System.register("http/src/interfaces", ["angular2/src/facade/lang", "http/src/url_search_params"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/interfaces";
+  var BaseException,
+      URLSearchParamsUnionFixer,
+      URLSearchParams_UnionFixer,
+      ConnectionBackend,
+      Connection;
+  return {
+    setters: [function($__m) {
+      BaseException = $__m.BaseException;
+    }, function($__m) {
+      URLSearchParamsUnionFixer = $__m.URLSearchParamsUnionFixer;
+    }],
+    execute: function() {
+      URLSearchParams_UnionFixer = URLSearchParamsUnionFixer;
+      ConnectionBackend = function() {
+        function ConnectionBackend() {}
+        return ($traceurRuntime.createClass)(ConnectionBackend, {createConnection: function(request) {
+            throw new BaseException('Abstract!');
+          }}, {});
+      }();
+      $__export("ConnectionBackend", ConnectionBackend);
+      Connection = function() {
+        function Connection() {}
+        return ($traceurRuntime.createClass)(Connection, {dispose: function() {
+            throw new BaseException('Abstract!');
+          }}, {});
+      }();
+      $__export("Connection", Connection);
+    }
+  };
+});
+
+System.register("http/src/base_response_options", ["angular2/di", "angular2/src/facade/lang", "http/src/headers", "http/src/enums"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/base_response_options";
+  var __decorate,
+      __metadata,
+      Injectable,
+      isPresent,
+      Headers,
+      ResponseTypes,
+      ResponseOptions,
+      BaseResponseOptions;
+  return {
+    setters: [function($__m) {
+      Injectable = $__m.Injectable;
+    }, function($__m) {
+      isPresent = $__m.isPresent;
+    }, function($__m) {
+      Headers = $__m.Headers;
+    }, function($__m) {
+      ResponseTypes = $__m.ResponseTypes;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      ResponseOptions = function() {
+        function ResponseOptions() {
+          var $__4 = arguments[0] !== (void 0) ? arguments[0] : {},
+              body = $__4.body,
+              status = $__4.status,
+              headers = $__4.headers,
+              statusText = $__4.statusText,
+              type = $__4.type,
+              url = $__4.url;
+          this.body = isPresent(body) ? body : null;
+          this.status = isPresent(status) ? status : null;
+          this.headers = isPresent(headers) ? headers : null;
+          this.statusText = isPresent(statusText) ? statusText : null;
+          this.type = isPresent(type) ? type : null;
+          this.url = isPresent(url) ? url : null;
+        }
+        return ($traceurRuntime.createClass)(ResponseOptions, {merge: function(options) {
+            return new ResponseOptions({
+              body: isPresent(options) && isPresent(options.body) ? options.body : this.body,
+              status: isPresent(options) && isPresent(options.status) ? options.status : this.status,
+              headers: isPresent(options) && isPresent(options.headers) ? options.headers : this.headers,
+              statusText: isPresent(options) && isPresent(options.statusText) ? options.statusText : this.statusText,
+              type: isPresent(options) && isPresent(options.type) ? options.type : this.type,
+              url: isPresent(options) && isPresent(options.url) ? options.url : this.url
+            });
+          }}, {});
+      }();
+      $__export("ResponseOptions", ResponseOptions);
+      BaseResponseOptions = function($__super) {
+        function $__2() {
+          $traceurRuntime.superConstructor($__2).call(this, {
+            status: 200,
+            statusText: 'Ok',
+            type: ResponseTypes.Default,
+            headers: new Headers()
+          });
+        }
+        return ($traceurRuntime.createClass)($__2, {}, {}, $__super);
+      }(ResponseOptions);
+      $__export("BaseResponseOptions", BaseResponseOptions);
+      $__export("BaseResponseOptions", BaseResponseOptions = __decorate([Injectable(), __metadata('design:paramtypes', [])], BaseResponseOptions));
+    }
+  };
+});
+
+System.register("http/src/backends/mock_backend", ["angular2/di", "http/src/static_request", "http/src/enums", "http/src/interfaces", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/backends/mock_backend";
+  var __decorate,
+      __metadata,
+      Injectable,
+      Request,
+      ReadyStates,
+      Connection,
+      ConnectionBackend,
+      ObservableWrapper,
+      EventEmitter,
+      isPresent,
+      IMPLEMENTS,
+      BaseException,
+      MockConnection,
+      MockBackend;
+  return {
+    setters: [function($__m) {
+      Injectable = $__m.Injectable;
+    }, function($__m) {
+      Request = $__m.Request;
+    }, function($__m) {
+      ReadyStates = $__m.ReadyStates;
+    }, function($__m) {
+      Connection = $__m.Connection;
+      ConnectionBackend = $__m.ConnectionBackend;
+    }, function($__m) {
+      ObservableWrapper = $__m.ObservableWrapper;
+      EventEmitter = $__m.EventEmitter;
+    }, function($__m) {
+      isPresent = $__m.isPresent;
+      IMPLEMENTS = $__m.IMPLEMENTS;
+      BaseException = $__m.BaseException;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      MockConnection = ($traceurRuntime.createClass)(function(req) {
+        this.response = new EventEmitter();
+        this.readyState = ReadyStates.OPEN;
+        this.request = req;
+      }, {
+        dispose: function() {
+          if (this.readyState !== ReadyStates.DONE) {
+            this.readyState = ReadyStates.CANCELLED;
+          }
+        },
+        mockRespond: function(res) {
+          if (this.readyState === ReadyStates.DONE || this.readyState === ReadyStates.CANCELLED) {
+            throw new BaseException('Connection has already been resolved');
+          }
+          this.readyState = ReadyStates.DONE;
+          ObservableWrapper.callNext(this.response, res);
+          ObservableWrapper.callReturn(this.response);
+        },
+        mockDownload: function(res) {},
+        mockError: function(err) {
+          this.readyState = ReadyStates.DONE;
+          ObservableWrapper.callThrow(this.response, err);
+          ObservableWrapper.callReturn(this.response);
+        }
+      }, {});
+      $__export("MockConnection", MockConnection);
+      $__export("MockConnection", MockConnection = __decorate([IMPLEMENTS(Connection), __metadata('design:paramtypes', [Request])], MockConnection));
+      MockBackend = ($traceurRuntime.createClass)(function() {
+        var $__5 = this;
+        this.connectionsArray = [];
+        this.connections = new EventEmitter();
+        ObservableWrapper.subscribe(this.connections, function(connection) {
+          return $__5.connectionsArray.push(connection);
+        });
+        this.pendingConnections = new EventEmitter();
+      }, {
+        verifyNoPendingRequests: function() {
+          var pending = 0;
+          ObservableWrapper.subscribe(this.pendingConnections, function(c) {
+            return pending++;
+          });
+          if (pending > 0)
+            throw new BaseException((pending + " pending connections to be resolved"));
+        },
+        resolveAllConnections: function() {
+          ObservableWrapper.subscribe(this.connections, function(c) {
+            return c.readyState = 4;
+          });
+        },
+        createConnection: function(req) {
+          if (!isPresent(req) || !(req instanceof Request)) {
+            throw new BaseException(("createConnection requires an instance of Request, got " + req));
+          }
+          var connection = new MockConnection(req);
+          ObservableWrapper.callNext(this.connections, connection);
+          return connection;
+        }
+      }, {});
+      $__export("MockBackend", MockBackend);
+      $__export("MockBackend", MockBackend = __decorate([Injectable(), IMPLEMENTS(ConnectionBackend), __metadata('design:paramtypes', [])], MockBackend));
+    }
+  };
+});
+
+System.register("http/src/static_response", ["angular2/src/facade/lang", "http/src/http_utils"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/static_response";
+  var BaseException,
+      isString,
+      Json,
+      isJsObject,
+      Response;
+  return {
+    setters: [function($__m) {
+      BaseException = $__m.BaseException;
+      isString = $__m.isString;
+      Json = $__m.Json;
+    }, function($__m) {
+      isJsObject = $__m.isJsObject;
+    }],
+    execute: function() {
+      Response = function() {
+        function Response(responseOptions) {
+          this._body = responseOptions.body;
+          this.status = responseOptions.status;
+          this.statusText = responseOptions.statusText;
+          this.headers = responseOptions.headers;
+          this.type = responseOptions.type;
+          this.url = responseOptions.url;
+        }
+        return ($traceurRuntime.createClass)(Response, {
+          blob: function() {
+            throw new BaseException('"blob()" method not implemented on Response superclass');
+          },
+          json: function() {
+            var jsonResponse;
+            if (isJsObject(this._body)) {
+              jsonResponse = this._body;
+            } else if (isString(this._body)) {
+              jsonResponse = Json.parse(this._body);
+            }
+            return jsonResponse;
+          },
+          text: function() {
+            return this._body.toString();
+          },
+          arrayBuffer: function() {
+            throw new BaseException('"arrayBuffer()" method not implemented on Response superclass');
+          }
+        }, {});
+      }();
+      $__export("Response", Response);
+    }
+  };
+});
+
+System.register("http/src/static_request", ["http/src/headers", "angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/static_request";
+  var Headers,
+      isPresent,
+      StringWrapper,
+      Request;
+  return {
+    setters: [function($__m) {
+      Headers = $__m.Headers;
+    }, function($__m) {
+      isPresent = $__m.isPresent;
+      StringWrapper = $__m.StringWrapper;
+    }],
+    execute: function() {
+      Request = function() {
+        function Request(requestOptions) {
+          var url = requestOptions.url;
+          this.url = requestOptions.url;
+          if (isPresent(requestOptions.search)) {
+            var search = requestOptions.search.toString();
+            if (search.length > 0) {
+              var prefix = '?';
+              if (StringWrapper.contains(this.url, '?')) {
+                prefix = (this.url[this.url.length - 1] == '&') ? '' : '&';
+              }
+              this.url = url + prefix + search;
+            }
+          }
+          this._body = requestOptions.body;
+          this.method = requestOptions.method;
+          this.mode = requestOptions.mode;
+          this.credentials = requestOptions.credentials;
+          this.headers = new Headers(requestOptions.headers);
+          this.cache = requestOptions.cache;
+        }
+        return ($traceurRuntime.createClass)(Request, {text: function() {
+            return isPresent(this._body) ? this._body.toString() : '';
+          }}, {});
+      }();
+      $__export("Request", Request);
+    }
+  };
+});
+
+System.register("http/src/enums", [], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/enums";
+  var RequestModesOpts,
+      RequestCacheOpts,
+      RequestCredentialsOpts,
+      RequestMethods,
+      RequestMethodsMap,
+      ReadyStates,
+      ResponseTypes;
+  return {
+    setters: [],
+    execute: function() {
+      $__export("RequestModesOpts", RequestModesOpts);
+      (function(RequestModesOpts) {
+        RequestModesOpts[RequestModesOpts["Cors"] = 0] = "Cors";
+        RequestModesOpts[RequestModesOpts["NoCors"] = 1] = "NoCors";
+        RequestModesOpts[RequestModesOpts["SameOrigin"] = 2] = "SameOrigin";
+      })(RequestModesOpts || ($__export("RequestModesOpts", RequestModesOpts = {})));
+      $__export("RequestCacheOpts", RequestCacheOpts);
+      (function(RequestCacheOpts) {
+        RequestCacheOpts[RequestCacheOpts["Default"] = 0] = "Default";
+        RequestCacheOpts[RequestCacheOpts["NoStore"] = 1] = "NoStore";
+        RequestCacheOpts[RequestCacheOpts["Reload"] = 2] = "Reload";
+        RequestCacheOpts[RequestCacheOpts["NoCache"] = 3] = "NoCache";
+        RequestCacheOpts[RequestCacheOpts["ForceCache"] = 4] = "ForceCache";
+        RequestCacheOpts[RequestCacheOpts["OnlyIfCached"] = 5] = "OnlyIfCached";
+      })(RequestCacheOpts || ($__export("RequestCacheOpts", RequestCacheOpts = {})));
+      $__export("RequestCredentialsOpts", RequestCredentialsOpts);
+      (function(RequestCredentialsOpts) {
+        RequestCredentialsOpts[RequestCredentialsOpts["Omit"] = 0] = "Omit";
+        RequestCredentialsOpts[RequestCredentialsOpts["SameOrigin"] = 1] = "SameOrigin";
+        RequestCredentialsOpts[RequestCredentialsOpts["Include"] = 2] = "Include";
+      })(RequestCredentialsOpts || ($__export("RequestCredentialsOpts", RequestCredentialsOpts = {})));
+      $__export("RequestMethods", RequestMethods);
+      (function(RequestMethods) {
+        RequestMethods[RequestMethods["GET"] = 0] = "GET";
+        RequestMethods[RequestMethods["POST"] = 1] = "POST";
+        RequestMethods[RequestMethods["PUT"] = 2] = "PUT";
+        RequestMethods[RequestMethods["DELETE"] = 3] = "DELETE";
+        RequestMethods[RequestMethods["OPTIONS"] = 4] = "OPTIONS";
+        RequestMethods[RequestMethods["HEAD"] = 5] = "HEAD";
+        RequestMethods[RequestMethods["PATCH"] = 6] = "PATCH";
+      })(RequestMethods || ($__export("RequestMethods", RequestMethods = {})));
+      RequestMethodsMap = function() {
+        function RequestMethodsMap() {
+          this._methods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'];
+        }
+        return ($traceurRuntime.createClass)(RequestMethodsMap, {getMethod: function(method) {
+            return this._methods[method];
+          }}, {});
+      }();
+      $__export("RequestMethodsMap", RequestMethodsMap);
+      $__export("ReadyStates", ReadyStates);
+      (function(ReadyStates) {
+        ReadyStates[ReadyStates["UNSENT"] = 0] = "UNSENT";
+        ReadyStates[ReadyStates["OPEN"] = 1] = "OPEN";
+        ReadyStates[ReadyStates["HEADERS_RECEIVED"] = 2] = "HEADERS_RECEIVED";
+        ReadyStates[ReadyStates["LOADING"] = 3] = "LOADING";
+        ReadyStates[ReadyStates["DONE"] = 4] = "DONE";
+        ReadyStates[ReadyStates["CANCELLED"] = 5] = "CANCELLED";
+      })(ReadyStates || ($__export("ReadyStates", ReadyStates = {})));
+      $__export("ResponseTypes", ResponseTypes);
+      (function(ResponseTypes) {
+        ResponseTypes[ResponseTypes["Basic"] = 0] = "Basic";
+        ResponseTypes[ResponseTypes["Cors"] = 1] = "Cors";
+        ResponseTypes[ResponseTypes["Default"] = 2] = "Default";
+        ResponseTypes[ResponseTypes["Error"] = 3] = "Error";
+        ResponseTypes[ResponseTypes["Opaque"] = 4] = "Opaque";
+      })(ResponseTypes || ($__export("ResponseTypes", ResponseTypes = {})));
+    }
+  };
+});
+
+System.register("http/src/headers", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/headers";
+  var isBlank,
+      BaseException,
+      isListLikeIterable,
+      Map,
+      MapWrapper,
+      ListWrapper,
+      StringMap,
+      Headers;
+  return {
+    setters: [function($__m) {
+      isBlank = $__m.isBlank;
+      BaseException = $__m.BaseException;
+    }, function($__m) {
+      isListLikeIterable = $__m.isListLikeIterable;
+      Map = $__m.Map;
+      MapWrapper = $__m.MapWrapper;
+      ListWrapper = $__m.ListWrapper;
+      StringMap = $__m.StringMap;
+    }],
+    execute: function() {
+      Headers = function() {
+        function Headers(headers) {
+          var $__2 = this;
+          if (isBlank(headers)) {
+            this._headersMap = new Map();
+            return;
+          }
+          if (headers instanceof Headers) {
+            this._headersMap = headers._headersMap;
+          } else if (headers instanceof StringMap) {
+            this._headersMap = MapWrapper.createFromStringMap(headers);
+            MapWrapper.forEach(this._headersMap, function(v, k) {
+              if (!isListLikeIterable(v)) {
+                var list = [];
+                list.push(v);
+                $__2._headersMap.set(k, list);
+              }
+            });
+          }
+        }
+        return ($traceurRuntime.createClass)(Headers, {
+          append: function(name, value) {
+            var mapName = this._headersMap.get(name);
+            var list = isListLikeIterable(mapName) ? mapName : [];
+            list.push(value);
+            this._headersMap.set(name, list);
+          },
+          delete: function(name) {
+            MapWrapper.delete(this._headersMap, name);
+          },
+          forEach: function(fn) {
+            MapWrapper.forEach(this._headersMap, fn);
+          },
+          get: function(header) {
+            return ListWrapper.first(this._headersMap.get(header));
+          },
+          has: function(header) {
+            return this._headersMap.has(header);
+          },
+          keys: function() {
+            return MapWrapper.keys(this._headersMap);
+          },
+          set: function(header, value) {
+            var list = [];
+            if (isListLikeIterable(value)) {
+              var pushValue = value.join(',');
+              list.push(pushValue);
+            } else {
+              list.push(value);
+            }
+            this._headersMap.set(header, list);
+          },
+          values: function() {
+            return MapWrapper.values(this._headersMap);
+          },
+          getAll: function(header) {
+            var headers = this._headersMap.get(header);
+            return isListLikeIterable(headers) ? headers : [];
+          },
+          entries: function() {
+            throw new BaseException('"entries" method is not implemented on Headers class');
+          }
+        }, {});
+      }();
+      $__export("Headers", Headers);
+    }
+  };
+});
+
+System.register("http/src/url_search_params", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/url_search_params";
+  var CONST_EXPR,
+      isPresent,
+      StringWrapper,
+      Map,
+      MapWrapper,
+      ListWrapper,
+      isListLikeIterable,
+      URLSearchParamsUnionFixer,
+      URLSearchParams;
+  function paramParser() {
+    var rawParams = arguments[0] !== (void 0) ? arguments[0] : '';
+    var map = new Map();
+    if (rawParams.length > 0) {
+      var params = StringWrapper.split(rawParams, new RegExp('&'));
+      ListWrapper.forEach(params, function(param) {
+        var split = StringWrapper.split(param, new RegExp('='));
+        var key = ListWrapper.get(split, 0);
+        var val = ListWrapper.get(split, 1);
+        var list = isPresent(map.get(key)) ? map.get(key) : [];
+        list.push(val);
+        map.set(key, list);
+      });
+    }
+    return map;
+  }
+  return {
+    setters: [function($__m) {
+      CONST_EXPR = $__m.CONST_EXPR;
+      isPresent = $__m.isPresent;
+      StringWrapper = $__m.StringWrapper;
+    }, function($__m) {
+      Map = $__m.Map;
+      MapWrapper = $__m.MapWrapper;
+      ListWrapper = $__m.ListWrapper;
+      isListLikeIterable = $__m.isListLikeIterable;
+    }],
+    execute: function() {
+      URLSearchParamsUnionFixer = CONST_EXPR("UnionFixer");
+      $__export("URLSearchParamsUnionFixer", URLSearchParamsUnionFixer);
+      URLSearchParams = function() {
+        function URLSearchParams() {
+          var rawParams = arguments[0] !== (void 0) ? arguments[0] : '';
+          this.rawParams = rawParams;
+          this.paramsMap = paramParser(rawParams);
+        }
+        return ($traceurRuntime.createClass)(URLSearchParams, {
+          clone: function() {
+            var clone = new URLSearchParams();
+            clone.appendAll(this);
+            return clone;
+          },
+          has: function(param) {
+            return this.paramsMap.has(param);
+          },
+          get: function(param) {
+            var storedParam = this.paramsMap.get(param);
+            if (isListLikeIterable(storedParam)) {
+              return ListWrapper.first(storedParam);
+            } else {
+              return null;
+            }
+          },
+          getAll: function(param) {
+            var mapParam = this.paramsMap.get(param);
+            return isPresent(mapParam) ? mapParam : [];
+          },
+          set: function(param, val) {
+            var mapParam = this.paramsMap.get(param);
+            var list = isPresent(mapParam) ? mapParam : [];
+            ListWrapper.clear(list);
+            list.push(val);
+            this.paramsMap.set(param, list);
+          },
+          setAll: function(searchParams) {
+            var $__2 = this;
+            MapWrapper.forEach(searchParams.paramsMap, function(value, param) {
+              var mapParam = $__2.paramsMap.get(param);
+              var list = isPresent(mapParam) ? mapParam : [];
+              ListWrapper.clear(list);
+              list.push(value[0]);
+              $__2.paramsMap.set(param, list);
+            });
+          },
+          append: function(param, val) {
+            var mapParam = this.paramsMap.get(param);
+            var list = isPresent(mapParam) ? mapParam : [];
+            list.push(val);
+            this.paramsMap.set(param, list);
+          },
+          appendAll: function(searchParams) {
+            var $__2 = this;
+            MapWrapper.forEach(searchParams.paramsMap, function(value, param) {
+              var mapParam = $__2.paramsMap.get(param);
+              var list = isPresent(mapParam) ? mapParam : [];
+              for (var i = 0; i < value.length; ++i) {
+                list.push(value[i]);
+              }
+              $__2.paramsMap.set(param, list);
+            });
+          },
+          replaceAll: function(searchParams) {
+            var $__2 = this;
+            MapWrapper.forEach(searchParams.paramsMap, function(value, param) {
+              var mapParam = $__2.paramsMap.get(param);
+              var list = isPresent(mapParam) ? mapParam : [];
+              ListWrapper.clear(list);
+              for (var i = 0; i < value.length; ++i) {
+                list.push(value[i]);
+              }
+              $__2.paramsMap.set(param, list);
+            });
+          },
+          toString: function() {
+            var paramsList = [];
+            MapWrapper.forEach(this.paramsMap, function(values, k) {
+              ListWrapper.forEach(values, function(v) {
+                paramsList.push(k + '=' + v);
+              });
+            });
+            return ListWrapper.join(paramsList, '&');
+          },
+          delete: function(param) {
+            MapWrapper.delete(this.paramsMap, param);
+          }
+        }, {});
+      }();
+      $__export("URLSearchParams", URLSearchParams);
+    }
+  };
+});
+
+System.register("angular2/di", ["angular2/src/di/metadata", "angular2/src/di/decorators", "angular2/src/di/forward_ref", "angular2/src/di/injector", "angular2/src/di/binding", "angular2/src/di/key", "angular2/src/di/exceptions", "angular2/src/di/opaque_token"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/di";
+  var $__exportNames = {undefined: true};
+  return {
+    setters: [function($__m) {
+      $__export({
+        InjectMetadata: $__m.InjectMetadata,
+        OptionalMetadata: $__m.OptionalMetadata,
+        InjectableMetadata: $__m.InjectableMetadata,
+        SelfMetadata: $__m.SelfMetadata,
+        HostMetadata: $__m.HostMetadata,
+        SkipSelfMetadata: $__m.SkipSelfMetadata,
+        DependencyMetadata: $__m.DependencyMetadata
+      });
+    }, function($__m) {
+      var exportObj = Object.create(null);
+      Object.keys($__m).forEach(function(p) {
+        if (p !== 'default' && !$__exportNames[p])
+          exportObj[p] = $__m[p];
+      });
+      $__export(exportObj);
+    }, function($__m) {
+      $__export({
+        forwardRef: $__m.forwardRef,
+        resolveForwardRef: $__m.resolveForwardRef
+      });
+    }, function($__m) {
+      $__export({
+        Injector: $__m.Injector,
+        ProtoInjector: $__m.ProtoInjector,
+        BindingWithVisibility: $__m.BindingWithVisibility,
+        Visibility: $__m.Visibility,
+        UNDEFINED: $__m.UNDEFINED
+      });
+    }, function($__m) {
+      $__export({
+        Binding: $__m.Binding,
+        BindingBuilder: $__m.BindingBuilder,
+        ResolvedBinding: $__m.ResolvedBinding,
+        Dependency: $__m.Dependency,
+        bind: $__m.bind
+      });
+    }, function($__m) {
+      $__export({
+        Key: $__m.Key,
+        KeyRegistry: $__m.KeyRegistry,
+        TypeLiteral: $__m.TypeLiteral
+      });
+    }, function($__m) {
+      $__export({
+        NoBindingError: $__m.NoBindingError,
+        AbstractBindingError: $__m.AbstractBindingError,
+        CyclicDependencyError: $__m.CyclicDependencyError,
+        InstantiationError: $__m.InstantiationError,
+        InvalidBindingError: $__m.InvalidBindingError,
+        NoAnnotationError: $__m.NoAnnotationError,
+        OutOfBoundsError: $__m.OutOfBoundsError
+      });
+    }, function($__m) {
+      $__export({OpaqueToken: $__m.OpaqueToken});
+    }],
+    execute: function() {}
   };
 });
 
@@ -4747,1150 +5895,214 @@ System.register("angular2/src/facade/lang", [], function($__export) {
   };
 });
 
-System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_jsonp", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
+System.register("http/src/http_utils", ["angular2/src/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/backends/jsonp_backend";
-  var __decorate,
-      __metadata,
-      ReadyStates,
-      RequestMethods,
-      Response,
-      ResponseOptions,
-      Injectable,
-      BrowserJsonp,
-      EventEmitter,
+  var __moduleName = "http/src/http_utils";
+  return {
+    setters: [function($__m) {
+      $__export({isJsObject: $__m.isJsObject});
+    }],
+    execute: function() {}
+  };
+});
+
+System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/facade/async";
+  var global,
+      Rx,
+      PromiseWrapper,
+      TimerWrapper,
       ObservableWrapper,
-      StringWrapper,
-      isPresent,
-      makeTypeError,
-      JSONPConnection,
-      JSONPBackend;
+      Observable,
+      EventEmitter;
   return {
     setters: [function($__m) {
-      ReadyStates = $__m.ReadyStates;
-      RequestMethods = $__m.RequestMethods;
-    }, function($__m) {
-      Response = $__m.Response;
-    }, function($__m) {
-      ResponseOptions = $__m.ResponseOptions;
-    }, function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
-      BrowserJsonp = $__m.BrowserJsonp;
-    }, function($__m) {
-      EventEmitter = $__m.EventEmitter;
-      ObservableWrapper = $__m.ObservableWrapper;
-    }, function($__m) {
-      StringWrapper = $__m.StringWrapper;
-      isPresent = $__m.isPresent;
-      makeTypeError = $__m.makeTypeError;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      JSONPConnection = function() {
-        function JSONPConnection(req, _dom, baseResponseOptions) {
-          var $__3 = this;
-          this._dom = _dom;
-          this.baseResponseOptions = baseResponseOptions;
-          this._finished = false;
-          if (req.method !== RequestMethods.GET) {
-            throw makeTypeError("JSONP requests must use GET request method.");
-          }
-          this.request = req;
-          this.response = new EventEmitter();
-          this.readyState = ReadyStates.LOADING;
-          this._id = _dom.nextRequestID();
-          _dom.exposeConnection(this._id, this);
-          var callback = _dom.requestCallback(this._id);
-          var url = req.url;
-          if (url.indexOf('=JSONP_CALLBACK&') > -1) {
-            url = StringWrapper.replace(url, '=JSONP_CALLBACK&', ("=" + callback + "&"));
-          } else if (url.lastIndexOf('=JSONP_CALLBACK') === url.length - '=JSONP_CALLBACK'.length) {
-            url = StringWrapper.substring(url, 0, url.length - '=JSONP_CALLBACK'.length) + ("=" + callback);
-          }
-          var script = this._script = _dom.build(url);
-          script.addEventListener('load', function(event) {
-            if ($__3.readyState === ReadyStates.CANCELLED)
-              return;
-            $__3.readyState = ReadyStates.DONE;
-            _dom.cleanup(script);
-            if (!$__3._finished) {
-              ObservableWrapper.callThrow($__3.response, makeTypeError('JSONP injected script did not invoke callback.'));
-              return;
-            }
-            var responseOptions = new ResponseOptions({body: $__3._responseData});
-            if (isPresent($__3.baseResponseOptions)) {
-              responseOptions = $__3.baseResponseOptions.merge(responseOptions);
-            }
-            ObservableWrapper.callNext($__3.response, new Response(responseOptions));
-          });
-          script.addEventListener('error', function(error) {
-            if ($__3.readyState === ReadyStates.CANCELLED)
-              return;
-            $__3.readyState = ReadyStates.DONE;
-            _dom.cleanup(script);
-            ObservableWrapper.callThrow($__3.response, error);
-          });
-          _dom.send(script);
-        }
-        return ($traceurRuntime.createClass)(JSONPConnection, {
-          finished: function(data) {
-            this._finished = true;
-            this._dom.removeConnection(this._id);
-            if (this.readyState === ReadyStates.CANCELLED)
-              return;
-            this._responseData = data;
-          },
-          dispose: function() {
-            this.readyState = ReadyStates.CANCELLED;
-            var script = this._script;
-            this._script = null;
-            if (isPresent(script)) {
-              this._dom.cleanup(script);
-            }
-            ObservableWrapper.callReturn(this.response);
-          }
-        }, {});
-      }();
-      $__export("JSONPConnection", JSONPConnection);
-      JSONPBackend = ($traceurRuntime.createClass)(function(_browserJSONP, _baseResponseOptions) {
-        this._browserJSONP = _browserJSONP;
-        this._baseResponseOptions = _baseResponseOptions;
-      }, {createConnection: function(request) {
-          return new JSONPConnection(request, this._browserJSONP, this._baseResponseOptions);
-        }}, {});
-      $__export("JSONPBackend", JSONPBackend);
-      $__export("JSONPBackend", JSONPBackend = __decorate([Injectable(), __metadata('design:paramtypes', [BrowserJsonp, ResponseOptions])], JSONPBackend));
-    }
-  };
-});
-
-System.register("http/src/base_request_options", ["angular2/src/facade/lang", "http/src/headers", "http/src/enums", "angular2/di", "http/src/url_search_params"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/base_request_options";
-  var __decorate,
-      __metadata,
-      isPresent,
-      isString,
-      Headers,
-      RequestModesOpts,
-      RequestMethods,
-      Injectable,
-      URLSearchParams,
-      RequestOptions,
-      BaseRequestOptions;
-  return {
-    setters: [function($__m) {
-      isPresent = $__m.isPresent;
-      isString = $__m.isString;
-    }, function($__m) {
-      Headers = $__m.Headers;
-    }, function($__m) {
-      RequestModesOpts = $__m.RequestModesOpts;
-      RequestMethods = $__m.RequestMethods;
-    }, function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
-      URLSearchParams = $__m.URLSearchParams;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      RequestOptions = function() {
-        function RequestOptions() {
-          var $__4 = arguments[0] !== (void 0) ? arguments[0] : {},
-              method = $__4.method,
-              headers = $__4.headers,
-              body = $__4.body,
-              mode = $__4.mode,
-              credentials = $__4.credentials,
-              cache = $__4.cache,
-              url = $__4.url,
-              search = $__4.search;
-          this.method = isPresent(method) ? method : null;
-          this.headers = isPresent(headers) ? headers : null;
-          this.body = isPresent(body) ? body : null;
-          this.mode = isPresent(mode) ? mode : null;
-          this.credentials = isPresent(credentials) ? credentials : null;
-          this.cache = isPresent(cache) ? cache : null;
-          this.url = isPresent(url) ? url : null;
-          this.search = isPresent(search) ? (isString(search) ? new URLSearchParams((search)) : (search)) : null;
-        }
-        return ($traceurRuntime.createClass)(RequestOptions, {merge: function(options) {
-            return new RequestOptions({
-              method: isPresent(options) && isPresent(options.method) ? options.method : this.method,
-              headers: isPresent(options) && isPresent(options.headers) ? options.headers : this.headers,
-              body: isPresent(options) && isPresent(options.body) ? options.body : this.body,
-              mode: isPresent(options) && isPresent(options.mode) ? options.mode : this.mode,
-              credentials: isPresent(options) && isPresent(options.credentials) ? options.credentials : this.credentials,
-              cache: isPresent(options) && isPresent(options.cache) ? options.cache : this.cache,
-              url: isPresent(options) && isPresent(options.url) ? options.url : this.url,
-              search: isPresent(options) && isPresent(options.search) ? (isString(options.search) ? new URLSearchParams((options.search)) : (options.search).clone()) : this.search
-            });
-          }}, {});
-      }();
-      $__export("RequestOptions", RequestOptions);
-      BaseRequestOptions = function($__super) {
-        function $__2() {
-          $traceurRuntime.superConstructor($__2).call(this, {
-            method: RequestMethods.GET,
-            headers: new Headers(),
-            mode: RequestModesOpts.Cors
-          });
-        }
-        return ($traceurRuntime.createClass)($__2, {}, {}, $__super);
-      }(RequestOptions);
-      $__export("BaseRequestOptions", BaseRequestOptions);
-      $__export("BaseRequestOptions", BaseRequestOptions = __decorate([Injectable(), __metadata('design:paramtypes', [])], BaseRequestOptions));
-    }
-  };
-});
-
-System.register("http/src/backends/browser_xhr", ["angular2/di"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/backends/browser_xhr";
-  var __decorate,
-      __metadata,
-      Injectable,
-      BrowserXhr;
-  return {
-    setters: [function($__m) {
-      Injectable = $__m.Injectable;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      BrowserXhr = ($traceurRuntime.createClass)(function() {}, {build: function() {
-          return (new XMLHttpRequest());
-        }}, {});
-      $__export("BrowserXhr", BrowserXhr);
-      $__export("BrowserXhr", BrowserXhr = __decorate([Injectable(), __metadata('design:paramtypes', [])], BrowserXhr));
-    }
-  };
-});
-
-System.register("http/src/backends/browser_jsonp", ["angular2/di", "angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/backends/browser_jsonp";
-  var __decorate,
-      __metadata,
-      Injectable,
-      global,
-      _nextRequestId,
-      JSONP_HOME,
-      _jsonpConnections,
-      BrowserJsonp;
-  function _getJsonpConnections() {
-    if (_jsonpConnections === null) {
-      _jsonpConnections = global[JSONP_HOME] = {};
-    }
-    return _jsonpConnections;
-  }
-  return {
-    setters: [function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
       global = $__m.global;
+    }, function($__m) {
+      Rx = $__m;
     }],
     execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      _nextRequestId = 0;
-      JSONP_HOME = '__ng_jsonp__';
-      $__export("JSONP_HOME", JSONP_HOME);
-      _jsonpConnections = null;
-      BrowserJsonp = ($traceurRuntime.createClass)(function() {}, {
-        build: function(url) {
-          var node = document.createElement('script');
-          node.src = url;
-          return node;
-        },
-        nextRequestID: function() {
-          return ("__req" + _nextRequestId++);
-        },
-        requestCallback: function(id) {
-          return (JSONP_HOME + "." + id + ".finished");
-        },
-        exposeConnection: function(id, connection) {
-          var connections = _getJsonpConnections();
-          connections[id] = connection;
-        },
-        removeConnection: function(id) {
-          var connections = _getJsonpConnections();
-          connections[id] = null;
-        },
-        send: function(node) {
-          document.body.appendChild((node));
-        },
-        cleanup: function(node) {
-          if (node.parentNode) {
-            node.parentNode.removeChild((node));
-          }
-        }
-      }, {});
-      $__export("BrowserJsonp", BrowserJsonp);
-      $__export("BrowserJsonp", BrowserJsonp = __decorate([Injectable(), __metadata('design:paramtypes', [])], BrowserJsonp));
-    }
-  };
-});
-
-System.register("http/src/static_request", ["http/src/headers", "angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/static_request";
-  var Headers,
-      isPresent,
-      StringWrapper,
-      Request;
-  return {
-    setters: [function($__m) {
-      Headers = $__m.Headers;
-    }, function($__m) {
-      isPresent = $__m.isPresent;
-      StringWrapper = $__m.StringWrapper;
-    }],
-    execute: function() {
-      Request = function() {
-        function Request(requestOptions) {
-          var url = requestOptions.url;
-          this.url = requestOptions.url;
-          if (isPresent(requestOptions.search)) {
-            var search = requestOptions.search.toString();
-            if (search.length > 0) {
-              var prefix = '?';
-              if (StringWrapper.contains(this.url, '?')) {
-                prefix = (this.url[this.url.length - 1] == '&') ? '' : '&';
-              }
-              this.url = url + prefix + search;
-            }
-          }
-          this._body = requestOptions.body;
-          this.method = requestOptions.method;
-          this.mode = requestOptions.mode;
-          this.credentials = requestOptions.credentials;
-          this.headers = new Headers(requestOptions.headers);
-          this.cache = requestOptions.cache;
-        }
-        return ($traceurRuntime.createClass)(Request, {text: function() {
-            return isPresent(this._body) ? this._body.toString() : '';
-          }}, {});
-      }();
-      $__export("Request", Request);
-    }
-  };
-});
-
-System.register("http/src/base_response_options", ["angular2/di", "angular2/src/facade/lang", "http/src/headers", "http/src/enums"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/base_response_options";
-  var __decorate,
-      __metadata,
-      Injectable,
-      isPresent,
-      Headers,
-      ResponseTypes,
-      ResponseOptions,
-      BaseResponseOptions;
-  return {
-    setters: [function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
-      isPresent = $__m.isPresent;
-    }, function($__m) {
-      Headers = $__m.Headers;
-    }, function($__m) {
-      ResponseTypes = $__m.ResponseTypes;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      ResponseOptions = function() {
-        function ResponseOptions() {
-          var $__4 = arguments[0] !== (void 0) ? arguments[0] : {},
-              body = $__4.body,
-              status = $__4.status,
-              headers = $__4.headers,
-              statusText = $__4.statusText,
-              type = $__4.type,
-              url = $__4.url;
-          this.body = isPresent(body) ? body : null;
-          this.status = isPresent(status) ? status : null;
-          this.headers = isPresent(headers) ? headers : null;
-          this.statusText = isPresent(statusText) ? statusText : null;
-          this.type = isPresent(type) ? type : null;
-          this.url = isPresent(url) ? url : null;
-        }
-        return ($traceurRuntime.createClass)(ResponseOptions, {merge: function(options) {
-            return new ResponseOptions({
-              body: isPresent(options) && isPresent(options.body) ? options.body : this.body,
-              status: isPresent(options) && isPresent(options.status) ? options.status : this.status,
-              headers: isPresent(options) && isPresent(options.headers) ? options.headers : this.headers,
-              statusText: isPresent(options) && isPresent(options.statusText) ? options.statusText : this.statusText,
-              type: isPresent(options) && isPresent(options.type) ? options.type : this.type,
-              url: isPresent(options) && isPresent(options.url) ? options.url : this.url
-            });
-          }}, {});
-      }();
-      $__export("ResponseOptions", ResponseOptions);
-      BaseResponseOptions = function($__super) {
-        function $__2() {
-          $traceurRuntime.superConstructor($__2).call(this, {
-            status: 200,
-            statusText: 'Ok',
-            type: ResponseTypes.Default,
-            headers: new Headers()
-          });
-        }
-        return ($traceurRuntime.createClass)($__2, {}, {}, $__super);
-      }(ResponseOptions);
-      $__export("BaseResponseOptions", BaseResponseOptions);
-      $__export("BaseResponseOptions", BaseResponseOptions = __decorate([Injectable(), __metadata('design:paramtypes', [])], BaseResponseOptions));
-    }
-  };
-});
-
-System.register("http/src/headers", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/headers";
-  var isBlank,
-      BaseException,
-      isListLikeIterable,
-      Map,
-      MapWrapper,
-      ListWrapper,
-      StringMap,
-      Headers;
-  return {
-    setters: [function($__m) {
-      isBlank = $__m.isBlank;
-      BaseException = $__m.BaseException;
-    }, function($__m) {
-      isListLikeIterable = $__m.isListLikeIterable;
-      Map = $__m.Map;
-      MapWrapper = $__m.MapWrapper;
-      ListWrapper = $__m.ListWrapper;
-      StringMap = $__m.StringMap;
-    }],
-    execute: function() {
-      Headers = function() {
-        function Headers(headers) {
-          var $__2 = this;
-          if (isBlank(headers)) {
-            this._headersMap = new Map();
-            return;
-          }
-          if (headers instanceof Headers) {
-            this._headersMap = headers._headersMap;
-          } else if (headers instanceof StringMap) {
-            this._headersMap = MapWrapper.createFromStringMap(headers);
-            MapWrapper.forEach(this._headersMap, function(v, k) {
-              if (!isListLikeIterable(v)) {
-                var list = [];
-                list.push(v);
-                $__2._headersMap.set(k, list);
+      $__export("Promise", Promise);
+      PromiseWrapper = function() {
+        function PromiseWrapper() {}
+        return ($traceurRuntime.createClass)(PromiseWrapper, {}, {
+          resolve: function(obj) {
+            return Promise.resolve(obj);
+          },
+          reject: function(obj, _) {
+            return Promise.reject(obj);
+          },
+          catchError: function(promise, onError) {
+            return promise.catch(onError);
+          },
+          all: function(promises) {
+            if (promises.length == 0)
+              return Promise.resolve([]);
+            return Promise.all(promises);
+          },
+          then: function(promise, success, rejection) {
+            return promise.then(success, rejection);
+          },
+          wrap: function(computation) {
+            return new Promise(function(res, rej) {
+              try {
+                res(computation());
+              } catch (e) {
+                rej(e);
               }
             });
+          },
+          completer: function() {
+            var resolve;
+            var reject;
+            var p = new Promise(function(res, rej) {
+              resolve = res;
+              reject = rej;
+            });
+            return {
+              promise: p,
+              resolve: resolve,
+              reject: reject
+            };
           }
-        }
-        return ($traceurRuntime.createClass)(Headers, {
-          append: function(name, value) {
-            var mapName = this._headersMap.get(name);
-            var list = isListLikeIterable(mapName) ? mapName : [];
-            list.push(value);
-            this._headersMap.set(name, list);
-          },
-          delete: function(name) {
-            MapWrapper.delete(this._headersMap, name);
-          },
-          forEach: function(fn) {
-            MapWrapper.forEach(this._headersMap, fn);
-          },
-          get: function(header) {
-            return ListWrapper.first(this._headersMap.get(header));
-          },
-          has: function(header) {
-            return this._headersMap.has(header);
-          },
-          keys: function() {
-            return MapWrapper.keys(this._headersMap);
-          },
-          set: function(header, value) {
-            var list = [];
-            if (isListLikeIterable(value)) {
-              var pushValue = value.join(',');
-              list.push(pushValue);
-            } else {
-              list.push(value);
-            }
-            this._headersMap.set(header, list);
-          },
-          values: function() {
-            return MapWrapper.values(this._headersMap);
-          },
-          getAll: function(header) {
-            var headers = this._headersMap.get(header);
-            return isListLikeIterable(headers) ? headers : [];
-          },
-          entries: function() {
-            throw new BaseException('"entries" method is not implemented on Headers class');
-          }
-        }, {});
-      }();
-      $__export("Headers", Headers);
-    }
-  };
-});
-
-System.register("http/src/backends/mock_backend", ["angular2/di", "http/src/static_request", "http/src/enums", "http/src/interfaces", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/backends/mock_backend";
-  var __decorate,
-      __metadata,
-      Injectable,
-      Request,
-      ReadyStates,
-      Connection,
-      ConnectionBackend,
-      ObservableWrapper,
-      EventEmitter,
-      isPresent,
-      IMPLEMENTS,
-      BaseException,
-      MockConnection,
-      MockBackend;
-  return {
-    setters: [function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
-      Request = $__m.Request;
-    }, function($__m) {
-      ReadyStates = $__m.ReadyStates;
-    }, function($__m) {
-      Connection = $__m.Connection;
-      ConnectionBackend = $__m.ConnectionBackend;
-    }, function($__m) {
-      ObservableWrapper = $__m.ObservableWrapper;
-      EventEmitter = $__m.EventEmitter;
-    }, function($__m) {
-      isPresent = $__m.isPresent;
-      IMPLEMENTS = $__m.IMPLEMENTS;
-      BaseException = $__m.BaseException;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      MockConnection = ($traceurRuntime.createClass)(function(req) {
-        this.response = new EventEmitter();
-        this.readyState = ReadyStates.OPEN;
-        this.request = req;
-      }, {
-        dispose: function() {
-          if (this.readyState !== ReadyStates.DONE) {
-            this.readyState = ReadyStates.CANCELLED;
-          }
-        },
-        mockRespond: function(res) {
-          if (this.readyState === ReadyStates.DONE || this.readyState === ReadyStates.CANCELLED) {
-            throw new BaseException('Connection has already been resolved');
-          }
-          this.readyState = ReadyStates.DONE;
-          ObservableWrapper.callNext(this.response, res);
-          ObservableWrapper.callReturn(this.response);
-        },
-        mockDownload: function(res) {},
-        mockError: function(err) {
-          this.readyState = ReadyStates.DONE;
-          ObservableWrapper.callThrow(this.response, err);
-          ObservableWrapper.callReturn(this.response);
-        }
-      }, {});
-      $__export("MockConnection", MockConnection);
-      $__export("MockConnection", MockConnection = __decorate([IMPLEMENTS(Connection), __metadata('design:paramtypes', [Request])], MockConnection));
-      MockBackend = ($traceurRuntime.createClass)(function() {
-        var $__5 = this;
-        this.connectionsArray = [];
-        this.connections = new EventEmitter();
-        ObservableWrapper.subscribe(this.connections, function(connection) {
-          return $__5.connectionsArray.push(connection);
         });
-        this.pendingConnections = new EventEmitter();
-      }, {
-        verifyNoPendingRequests: function() {
-          var pending = 0;
-          ObservableWrapper.subscribe(this.pendingConnections, function(c) {
-            return pending++;
-          });
-          if (pending > 0)
-            throw new BaseException((pending + " pending connections to be resolved"));
-        },
-        resolveAllConnections: function() {
-          ObservableWrapper.subscribe(this.connections, function(c) {
-            return c.readyState = 4;
-          });
-        },
-        createConnection: function(req) {
-          if (!isPresent(req) || !(req instanceof Request)) {
-            throw new BaseException(("createConnection requires an instance of Request, got " + req));
-          }
-          var connection = new MockConnection(req);
-          ObservableWrapper.callNext(this.connections, connection);
-          return connection;
-        }
-      }, {});
-      $__export("MockBackend", MockBackend);
-      $__export("MockBackend", MockBackend = __decorate([Injectable(), IMPLEMENTS(ConnectionBackend), __metadata('design:paramtypes', [])], MockBackend));
-    }
-  };
-});
-
-System.register("http/src/static_response", ["angular2/src/facade/lang", "http/src/http_utils"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/static_response";
-  var BaseException,
-      isString,
-      Json,
-      isJsObject,
-      Response;
-  return {
-    setters: [function($__m) {
-      BaseException = $__m.BaseException;
-      isString = $__m.isString;
-      Json = $__m.Json;
-    }, function($__m) {
-      isJsObject = $__m.isJsObject;
-    }],
-    execute: function() {
-      Response = function() {
-        function Response(responseOptions) {
-          this._body = responseOptions.body;
-          this.status = responseOptions.status;
-          this.statusText = responseOptions.statusText;
-          this.headers = responseOptions.headers;
-          this.type = responseOptions.type;
-          this.url = responseOptions.url;
-        }
-        return ($traceurRuntime.createClass)(Response, {
-          blob: function() {
-            throw new BaseException('"blob()" method not implemented on Response superclass');
-          },
-          json: function() {
-            var jsonResponse;
-            if (isJsObject(this._body)) {
-              jsonResponse = this._body;
-            } else if (isString(this._body)) {
-              jsonResponse = Json.parse(this._body);
-            }
-            return jsonResponse;
-          },
-          text: function() {
-            return this._body.toString();
-          },
-          arrayBuffer: function() {
-            throw new BaseException('"arrayBuffer()" method not implemented on Response superclass');
-          }
-        }, {});
       }();
-      $__export("Response", Response);
-    }
-  };
-});
-
-System.register("http/src/enums", [], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/enums";
-  var RequestModesOpts,
-      RequestCacheOpts,
-      RequestCredentialsOpts,
-      RequestMethods,
-      RequestMethodsMap,
-      ReadyStates,
-      ResponseTypes;
-  return {
-    setters: [],
-    execute: function() {
-      $__export("RequestModesOpts", RequestModesOpts);
-      (function(RequestModesOpts) {
-        RequestModesOpts[RequestModesOpts["Cors"] = 0] = "Cors";
-        RequestModesOpts[RequestModesOpts["NoCors"] = 1] = "NoCors";
-        RequestModesOpts[RequestModesOpts["SameOrigin"] = 2] = "SameOrigin";
-      })(RequestModesOpts || ($__export("RequestModesOpts", RequestModesOpts = {})));
-      $__export("RequestCacheOpts", RequestCacheOpts);
-      (function(RequestCacheOpts) {
-        RequestCacheOpts[RequestCacheOpts["Default"] = 0] = "Default";
-        RequestCacheOpts[RequestCacheOpts["NoStore"] = 1] = "NoStore";
-        RequestCacheOpts[RequestCacheOpts["Reload"] = 2] = "Reload";
-        RequestCacheOpts[RequestCacheOpts["NoCache"] = 3] = "NoCache";
-        RequestCacheOpts[RequestCacheOpts["ForceCache"] = 4] = "ForceCache";
-        RequestCacheOpts[RequestCacheOpts["OnlyIfCached"] = 5] = "OnlyIfCached";
-      })(RequestCacheOpts || ($__export("RequestCacheOpts", RequestCacheOpts = {})));
-      $__export("RequestCredentialsOpts", RequestCredentialsOpts);
-      (function(RequestCredentialsOpts) {
-        RequestCredentialsOpts[RequestCredentialsOpts["Omit"] = 0] = "Omit";
-        RequestCredentialsOpts[RequestCredentialsOpts["SameOrigin"] = 1] = "SameOrigin";
-        RequestCredentialsOpts[RequestCredentialsOpts["Include"] = 2] = "Include";
-      })(RequestCredentialsOpts || ($__export("RequestCredentialsOpts", RequestCredentialsOpts = {})));
-      $__export("RequestMethods", RequestMethods);
-      (function(RequestMethods) {
-        RequestMethods[RequestMethods["GET"] = 0] = "GET";
-        RequestMethods[RequestMethods["POST"] = 1] = "POST";
-        RequestMethods[RequestMethods["PUT"] = 2] = "PUT";
-        RequestMethods[RequestMethods["DELETE"] = 3] = "DELETE";
-        RequestMethods[RequestMethods["OPTIONS"] = 4] = "OPTIONS";
-        RequestMethods[RequestMethods["HEAD"] = 5] = "HEAD";
-        RequestMethods[RequestMethods["PATCH"] = 6] = "PATCH";
-      })(RequestMethods || ($__export("RequestMethods", RequestMethods = {})));
-      RequestMethodsMap = function() {
-        function RequestMethodsMap() {
-          this._methods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'];
-        }
-        return ($traceurRuntime.createClass)(RequestMethodsMap, {getMethod: function(method) {
-            return this._methods[method];
+      $__export("PromiseWrapper", PromiseWrapper);
+      TimerWrapper = function() {
+        function TimerWrapper() {}
+        return ($traceurRuntime.createClass)(TimerWrapper, {}, {
+          setTimeout: function(fn, millis) {
+            return global.setTimeout(fn, millis);
+          },
+          clearTimeout: function(id) {
+            global.clearTimeout(id);
+          },
+          setInterval: function(fn, millis) {
+            return global.setInterval(fn, millis);
+          },
+          clearInterval: function(id) {
+            global.clearInterval(id);
+          }
+        });
+      }();
+      $__export("TimerWrapper", TimerWrapper);
+      ObservableWrapper = function() {
+        function ObservableWrapper() {}
+        return ($traceurRuntime.createClass)(ObservableWrapper, {}, {
+          subscribe: function(emitter, onNext) {
+            var onThrow = arguments[2] !== (void 0) ? arguments[2] : null;
+            var onReturn = arguments[3] !== (void 0) ? arguments[3] : null;
+            return emitter.observer({
+              next: onNext,
+              throw: onThrow,
+              return: onReturn
+            });
+          },
+          isObservable: function(obs) {
+            return obs instanceof Observable;
+          },
+          dispose: function(subscription) {
+            subscription.dispose();
+          },
+          callNext: function(emitter, value) {
+            emitter.next(value);
+          },
+          callThrow: function(emitter, error) {
+            emitter.throw(error);
+          },
+          callReturn: function(emitter) {
+            emitter.return(null);
+          }
+        });
+      }();
+      $__export("ObservableWrapper", ObservableWrapper);
+      Observable = function() {
+        function Observable() {}
+        return ($traceurRuntime.createClass)(Observable, {observer: function(generator) {
+            return null;
           }}, {});
       }();
-      $__export("RequestMethodsMap", RequestMethodsMap);
-      $__export("ReadyStates", ReadyStates);
-      (function(ReadyStates) {
-        ReadyStates[ReadyStates["UNSENT"] = 0] = "UNSENT";
-        ReadyStates[ReadyStates["OPEN"] = 1] = "OPEN";
-        ReadyStates[ReadyStates["HEADERS_RECEIVED"] = 2] = "HEADERS_RECEIVED";
-        ReadyStates[ReadyStates["LOADING"] = 3] = "LOADING";
-        ReadyStates[ReadyStates["DONE"] = 4] = "DONE";
-        ReadyStates[ReadyStates["CANCELLED"] = 5] = "CANCELLED";
-      })(ReadyStates || ($__export("ReadyStates", ReadyStates = {})));
-      $__export("ResponseTypes", ResponseTypes);
-      (function(ResponseTypes) {
-        ResponseTypes[ResponseTypes["Basic"] = 0] = "Basic";
-        ResponseTypes[ResponseTypes["Cors"] = 1] = "Cors";
-        ResponseTypes[ResponseTypes["Default"] = 2] = "Default";
-        ResponseTypes[ResponseTypes["Error"] = 3] = "Error";
-        ResponseTypes[ResponseTypes["Opaque"] = 4] = "Opaque";
-      })(ResponseTypes || ($__export("ResponseTypes", ResponseTypes = {})));
-    }
-  };
-});
-
-System.register("http/src/url_search_params", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/url_search_params";
-  var CONST_EXPR,
-      isPresent,
-      StringWrapper,
-      Map,
-      MapWrapper,
-      ListWrapper,
-      isListLikeIterable,
-      URLSearchParamsUnionFixer,
-      URLSearchParams;
-  function paramParser() {
-    var rawParams = arguments[0] !== (void 0) ? arguments[0] : '';
-    var map = new Map();
-    if (rawParams.length > 0) {
-      var params = StringWrapper.split(rawParams, new RegExp('&'));
-      ListWrapper.forEach(params, function(param) {
-        var split = StringWrapper.split(param, new RegExp('='));
-        var key = ListWrapper.get(split, 0);
-        var val = ListWrapper.get(split, 1);
-        var list = isPresent(map.get(key)) ? map.get(key) : [];
-        list.push(val);
-        map.set(key, list);
-      });
-    }
-    return map;
-  }
-  return {
-    setters: [function($__m) {
-      CONST_EXPR = $__m.CONST_EXPR;
-      isPresent = $__m.isPresent;
-      StringWrapper = $__m.StringWrapper;
-    }, function($__m) {
-      Map = $__m.Map;
-      MapWrapper = $__m.MapWrapper;
-      ListWrapper = $__m.ListWrapper;
-      isListLikeIterable = $__m.isListLikeIterable;
-    }],
-    execute: function() {
-      URLSearchParamsUnionFixer = CONST_EXPR("UnionFixer");
-      $__export("URLSearchParamsUnionFixer", URLSearchParamsUnionFixer);
-      URLSearchParams = function() {
-        function URLSearchParams() {
-          var rawParams = arguments[0] !== (void 0) ? arguments[0] : '';
-          this.rawParams = rawParams;
-          this.paramsMap = paramParser(rawParams);
+      $__export("Observable", Observable);
+      EventEmitter = function($__super) {
+        function EventEmitter() {
+          $traceurRuntime.superConstructor(EventEmitter).call(this);
+          this._subject = new Rx.Subject();
+          this._immediateScheduler = Rx.Scheduler.immediate;
         }
-        return ($traceurRuntime.createClass)(URLSearchParams, {
-          clone: function() {
-            var clone = new URLSearchParams();
-            clone.appendAll(this);
-            return clone;
-          },
-          has: function(param) {
-            return this.paramsMap.has(param);
-          },
-          get: function(param) {
-            var storedParam = this.paramsMap.get(param);
-            if (isListLikeIterable(storedParam)) {
-              return ListWrapper.first(storedParam);
-            } else {
-              return null;
-            }
-          },
-          getAll: function(param) {
-            var mapParam = this.paramsMap.get(param);
-            return isPresent(mapParam) ? mapParam : [];
-          },
-          set: function(param, val) {
-            var mapParam = this.paramsMap.get(param);
-            var list = isPresent(mapParam) ? mapParam : [];
-            ListWrapper.clear(list);
-            list.push(val);
-            this.paramsMap.set(param, list);
-          },
-          setAll: function(searchParams) {
-            var $__2 = this;
-            MapWrapper.forEach(searchParams.paramsMap, function(value, param) {
-              var mapParam = $__2.paramsMap.get(param);
-              var list = isPresent(mapParam) ? mapParam : [];
-              ListWrapper.clear(list);
-              list.push(value[0]);
-              $__2.paramsMap.set(param, list);
-            });
-          },
-          append: function(param, val) {
-            var mapParam = this.paramsMap.get(param);
-            var list = isPresent(mapParam) ? mapParam : [];
-            list.push(val);
-            this.paramsMap.set(param, list);
-          },
-          appendAll: function(searchParams) {
-            var $__2 = this;
-            MapWrapper.forEach(searchParams.paramsMap, function(value, param) {
-              var mapParam = $__2.paramsMap.get(param);
-              var list = isPresent(mapParam) ? mapParam : [];
-              for (var i = 0; i < value.length; ++i) {
-                list.push(value[i]);
-              }
-              $__2.paramsMap.set(param, list);
-            });
-          },
-          replaceAll: function(searchParams) {
-            var $__2 = this;
-            MapWrapper.forEach(searchParams.paramsMap, function(value, param) {
-              var mapParam = $__2.paramsMap.get(param);
-              var list = isPresent(mapParam) ? mapParam : [];
-              ListWrapper.clear(list);
-              for (var i = 0; i < value.length; ++i) {
-                list.push(value[i]);
-              }
-              $__2.paramsMap.set(param, list);
-            });
-          },
-          toString: function() {
-            var paramsList = [];
-            MapWrapper.forEach(this.paramsMap, function(values, k) {
-              ListWrapper.forEach(values, function(v) {
-                paramsList.push(k + '=' + v);
+        return ($traceurRuntime.createClass)(EventEmitter, {
+          observer: function(generator) {
+            return this._subject.observeOn(this._immediateScheduler).subscribe(function(value) {
+              setTimeout(function() {
+                return generator.next(value);
               });
+            }, function(error) {
+              return generator.throw ? generator.throw(error) : null;
+            }, function() {
+              return generator.return ? generator.return() : null;
             });
-            return ListWrapper.join(paramsList, '&');
           },
-          delete: function(param) {
-            MapWrapper.delete(this.paramsMap, param);
+          toRx: function() {
+            return this._subject;
+          },
+          next: function(value) {
+            this._subject.onNext(value);
+          },
+          throw: function(error) {
+            this._subject.onError(error);
+          },
+          return: function(value) {
+            this._subject.onCompleted();
           }
-        }, {});
-      }();
-      $__export("URLSearchParams", URLSearchParams);
+        }, {}, $__super);
+      }(Observable);
+      $__export("EventEmitter", EventEmitter);
     }
   };
 });
 
-System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/decorators", "http/src/interfaces", "http/src/static_request", "http/src/base_request_options", "http/src/enums"], function($__export) {
+System.register("angular2/src/di/decorators", ["angular2/src/di/metadata", "angular2/src/util/decorators"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/http";
-  var __decorate,
-      __metadata,
-      isString,
-      isPresent,
-      makeTypeError,
+  var __moduleName = "angular2/src/di/decorators";
+  var InjectMetadata,
+      OptionalMetadata,
+      InjectableMetadata,
+      SelfMetadata,
+      HostMetadata,
+      SkipSelfMetadata,
+      makeDecorator,
+      makeParamDecorator,
+      Inject,
+      Optional,
       Injectable,
-      ConnectionBackend,
-      Request,
-      RequestOptions,
-      RequestMethods,
-      Http,
-      Jsonp;
-  function httpRequest(backend, request) {
-    return backend.createConnection(request).response;
-  }
-  function mergeOptions(defaultOpts, providedOpts, method, url) {
-    var newOptions = defaultOpts;
-    if (isPresent(providedOpts)) {
-      newOptions = newOptions.merge(new RequestOptions({
-        method: providedOpts.method,
-        url: providedOpts.url,
-        search: providedOpts.search,
-        headers: providedOpts.headers,
-        body: providedOpts.body,
-        mode: providedOpts.mode,
-        credentials: providedOpts.credentials,
-        cache: providedOpts.cache
-      }));
-    }
-    if (isPresent(method)) {
-      return newOptions.merge(new RequestOptions({
-        method: method,
-        url: url
-      }));
-    } else {
-      return newOptions.merge(new RequestOptions({url: url}));
-    }
-  }
+      Self,
+      Host,
+      SkipSelf;
   return {
     setters: [function($__m) {
-      isString = $__m.isString;
-      isPresent = $__m.isPresent;
-      makeTypeError = $__m.makeTypeError;
+      InjectMetadata = $__m.InjectMetadata;
+      OptionalMetadata = $__m.OptionalMetadata;
+      InjectableMetadata = $__m.InjectableMetadata;
+      SelfMetadata = $__m.SelfMetadata;
+      HostMetadata = $__m.HostMetadata;
+      SkipSelfMetadata = $__m.SkipSelfMetadata;
     }, function($__m) {
-      Injectable = $__m.Injectable;
-    }, function($__m) {
-      ConnectionBackend = $__m.ConnectionBackend;
-    }, function($__m) {
-      Request = $__m.Request;
-    }, function($__m) {
-      RequestOptions = $__m.RequestOptions;
-    }, function($__m) {
-      RequestMethods = $__m.RequestMethods;
+      makeDecorator = $__m.makeDecorator;
+      makeParamDecorator = $__m.makeParamDecorator;
     }],
     execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      Http = ($traceurRuntime.createClass)(function(_backend, _defaultOptions) {
-        this._backend = _backend;
-        this._defaultOptions = _defaultOptions;
-      }, {
-        request: function(url, options) {
-          var responseObservable;
-          if (isString(url)) {
-            responseObservable = httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
-          } else if (url instanceof Request) {
-            responseObservable = httpRequest(this._backend, url);
-          }
-          return responseObservable;
-        },
-        get: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
-        },
-        post: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.POST, url)));
-        },
-        put: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PUT, url)));
-        },
-        delete: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.DELETE, url)));
-        },
-        patch: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PATCH, url)));
-        },
-        head: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.HEAD, url)));
-        }
-      }, {});
-      $__export("Http", Http);
-      $__export("Http", Http = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Http));
-      Jsonp = function($__super) {
-        function $__0(backend, defaultOptions) {
-          $traceurRuntime.superConstructor($__0).call(this, backend, defaultOptions);
-        }
-        return ($traceurRuntime.createClass)($__0, {request: function(url, options) {
-            var responseObservable;
-            if (isString(url)) {
-              url = new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url));
-            }
-            if (url instanceof Request) {
-              if (url.method !== RequestMethods.GET) {
-                makeTypeError('JSONP requests must use GET request method.');
-              }
-              responseObservable = httpRequest(this._backend, url);
-            }
-            return responseObservable;
-          }}, {}, $__super);
-      }(Http);
-      $__export("Jsonp", Jsonp);
-      $__export("Jsonp", Jsonp = __decorate([Injectable(), __metadata('design:paramtypes', [ConnectionBackend, RequestOptions])], Jsonp));
-    }
-  };
-});
-
-System.register("http/src/interfaces", ["angular2/src/facade/lang", "http/src/url_search_params"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/interfaces";
-  var BaseException,
-      URLSearchParamsUnionFixer,
-      URLSearchParams_UnionFixer,
-      ConnectionBackend,
-      Connection;
-  return {
-    setters: [function($__m) {
-      BaseException = $__m.BaseException;
-    }, function($__m) {
-      URLSearchParamsUnionFixer = $__m.URLSearchParamsUnionFixer;
-    }],
-    execute: function() {
-      URLSearchParams_UnionFixer = URLSearchParamsUnionFixer;
-      ConnectionBackend = function() {
-        function ConnectionBackend() {}
-        return ($traceurRuntime.createClass)(ConnectionBackend, {createConnection: function(request) {
-            throw new BaseException('Abstract!');
-          }}, {});
-      }();
-      $__export("ConnectionBackend", ConnectionBackend);
-      Connection = function() {
-        function Connection() {}
-        return ($traceurRuntime.createClass)(Connection, {dispose: function() {
-            throw new BaseException('Abstract!');
-          }}, {});
-      }();
-      $__export("Connection", Connection);
+      Inject = makeParamDecorator(InjectMetadata);
+      $__export("Inject", Inject);
+      Optional = makeParamDecorator(OptionalMetadata);
+      $__export("Optional", Optional);
+      Injectable = makeDecorator(InjectableMetadata);
+      $__export("Injectable", Injectable);
+      Self = makeParamDecorator(SelfMetadata);
+      $__export("Self", Self);
+      Host = makeParamDecorator(HostMetadata);
+      $__export("Host", Host);
+      SkipSelf = makeParamDecorator(SkipSelfMetadata);
+      $__export("SkipSelf", SkipSelf);
     }
   };
 });
@@ -6331,288 +6543,6 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
         });
       }();
       $__export("SetWrapper", SetWrapper);
-    }
-  };
-});
-
-System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/facade/async";
-  var global,
-      Rx,
-      PromiseWrapper,
-      TimerWrapper,
-      ObservableWrapper,
-      Observable,
-      EventEmitter;
-  return {
-    setters: [function($__m) {
-      global = $__m.global;
-    }, function($__m) {
-      Rx = $__m;
-    }],
-    execute: function() {
-      $__export("Promise", Promise);
-      PromiseWrapper = function() {
-        function PromiseWrapper() {}
-        return ($traceurRuntime.createClass)(PromiseWrapper, {}, {
-          resolve: function(obj) {
-            return Promise.resolve(obj);
-          },
-          reject: function(obj, _) {
-            return Promise.reject(obj);
-          },
-          catchError: function(promise, onError) {
-            return promise.catch(onError);
-          },
-          all: function(promises) {
-            if (promises.length == 0)
-              return Promise.resolve([]);
-            return Promise.all(promises);
-          },
-          then: function(promise, success, rejection) {
-            return promise.then(success, rejection);
-          },
-          wrap: function(computation) {
-            return new Promise(function(res, rej) {
-              try {
-                res(computation());
-              } catch (e) {
-                rej(e);
-              }
-            });
-          },
-          completer: function() {
-            var resolve;
-            var reject;
-            var p = new Promise(function(res, rej) {
-              resolve = res;
-              reject = rej;
-            });
-            return {
-              promise: p,
-              resolve: resolve,
-              reject: reject
-            };
-          }
-        });
-      }();
-      $__export("PromiseWrapper", PromiseWrapper);
-      TimerWrapper = function() {
-        function TimerWrapper() {}
-        return ($traceurRuntime.createClass)(TimerWrapper, {}, {
-          setTimeout: function(fn, millis) {
-            return global.setTimeout(fn, millis);
-          },
-          clearTimeout: function(id) {
-            global.clearTimeout(id);
-          },
-          setInterval: function(fn, millis) {
-            return global.setInterval(fn, millis);
-          },
-          clearInterval: function(id) {
-            global.clearInterval(id);
-          }
-        });
-      }();
-      $__export("TimerWrapper", TimerWrapper);
-      ObservableWrapper = function() {
-        function ObservableWrapper() {}
-        return ($traceurRuntime.createClass)(ObservableWrapper, {}, {
-          subscribe: function(emitter, onNext) {
-            var onThrow = arguments[2] !== (void 0) ? arguments[2] : null;
-            var onReturn = arguments[3] !== (void 0) ? arguments[3] : null;
-            return emitter.observer({
-              next: onNext,
-              throw: onThrow,
-              return: onReturn
-            });
-          },
-          isObservable: function(obs) {
-            return obs instanceof Observable;
-          },
-          dispose: function(subscription) {
-            subscription.dispose();
-          },
-          callNext: function(emitter, value) {
-            emitter.next(value);
-          },
-          callThrow: function(emitter, error) {
-            emitter.throw(error);
-          },
-          callReturn: function(emitter) {
-            emitter.return(null);
-          }
-        });
-      }();
-      $__export("ObservableWrapper", ObservableWrapper);
-      Observable = function() {
-        function Observable() {}
-        return ($traceurRuntime.createClass)(Observable, {observer: function(generator) {
-            return null;
-          }}, {});
-      }();
-      $__export("Observable", Observable);
-      EventEmitter = function($__super) {
-        function EventEmitter() {
-          $traceurRuntime.superConstructor(EventEmitter).call(this);
-          this._subject = new Rx.Subject();
-          this._immediateScheduler = Rx.Scheduler.immediate;
-        }
-        return ($traceurRuntime.createClass)(EventEmitter, {
-          observer: function(generator) {
-            return this._subject.observeOn(this._immediateScheduler).subscribe(function(value) {
-              setTimeout(function() {
-                return generator.next(value);
-              });
-            }, function(error) {
-              return generator.throw ? generator.throw(error) : null;
-            }, function() {
-              return generator.return ? generator.return() : null;
-            });
-          },
-          toRx: function() {
-            return this._subject;
-          },
-          next: function(value) {
-            this._subject.onNext(value);
-          },
-          throw: function(error) {
-            this._subject.onError(error);
-          },
-          return: function(value) {
-            this._subject.onCompleted();
-          }
-        }, {}, $__super);
-      }(Observable);
-      $__export("EventEmitter", EventEmitter);
-    }
-  };
-});
-
-System.register("angular2/src/di/metadata", ["angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/di/metadata";
-  var __decorate,
-      __metadata,
-      CONST,
-      stringify,
-      InjectMetadata,
-      OptionalMetadata,
-      DependencyMetadata,
-      InjectableMetadata,
-      SelfMetadata,
-      SkipSelfMetadata,
-      HostMetadata;
-  return {
-    setters: [function($__m) {
-      CONST = $__m.CONST;
-      stringify = $__m.stringify;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      InjectMetadata = ($traceurRuntime.createClass)(function(token) {
-        this.token = token;
-      }, {toString: function() {
-          return ("@Inject(" + stringify(this.token) + ")");
-        }}, {});
-      $__export("InjectMetadata", InjectMetadata);
-      $__export("InjectMetadata", InjectMetadata = __decorate([CONST(), __metadata('design:paramtypes', [Object])], InjectMetadata));
-      OptionalMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
-          return "@Optional()";
-        }}, {});
-      $__export("OptionalMetadata", OptionalMetadata);
-      $__export("OptionalMetadata", OptionalMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], OptionalMetadata));
-      DependencyMetadata = ($traceurRuntime.createClass)(function() {}, {get token() {
-          return null;
-        }}, {});
-      $__export("DependencyMetadata", DependencyMetadata);
-      $__export("DependencyMetadata", DependencyMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], DependencyMetadata));
-      InjectableMetadata = ($traceurRuntime.createClass)(function() {}, {}, {});
-      $__export("InjectableMetadata", InjectableMetadata);
-      $__export("InjectableMetadata", InjectableMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], InjectableMetadata));
-      SelfMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
-          return "@Self()";
-        }}, {});
-      $__export("SelfMetadata", SelfMetadata);
-      $__export("SelfMetadata", SelfMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], SelfMetadata));
-      SkipSelfMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
-          return "@SkipSelf()";
-        }}, {});
-      $__export("SkipSelfMetadata", SkipSelfMetadata);
-      $__export("SkipSelfMetadata", SkipSelfMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], SkipSelfMetadata));
-      HostMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
-          return "@Host()";
-        }}, {});
-      $__export("HostMetadata", HostMetadata);
-      $__export("HostMetadata", HostMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], HostMetadata));
-    }
-  };
-});
-
-System.register("angular2/src/di/decorators", ["angular2/src/di/metadata", "angular2/src/util/decorators"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/di/decorators";
-  var InjectMetadata,
-      OptionalMetadata,
-      InjectableMetadata,
-      SelfMetadata,
-      HostMetadata,
-      SkipSelfMetadata,
-      makeDecorator,
-      makeParamDecorator,
-      Inject,
-      Optional,
-      Injectable,
-      Self,
-      Host,
-      SkipSelf;
-  return {
-    setters: [function($__m) {
-      InjectMetadata = $__m.InjectMetadata;
-      OptionalMetadata = $__m.OptionalMetadata;
-      InjectableMetadata = $__m.InjectableMetadata;
-      SelfMetadata = $__m.SelfMetadata;
-      HostMetadata = $__m.HostMetadata;
-      SkipSelfMetadata = $__m.SkipSelfMetadata;
-    }, function($__m) {
-      makeDecorator = $__m.makeDecorator;
-      makeParamDecorator = $__m.makeParamDecorator;
-    }],
-    execute: function() {
-      Inject = makeParamDecorator(InjectMetadata);
-      $__export("Inject", Inject);
-      Optional = makeParamDecorator(OptionalMetadata);
-      $__export("Optional", Optional);
-      Injectable = makeDecorator(InjectableMetadata);
-      $__export("Injectable", Injectable);
-      Self = makeParamDecorator(SelfMetadata);
-      $__export("Self", Self);
-      Host = makeParamDecorator(HostMetadata);
-      $__export("Host", Host);
-      SkipSelf = makeParamDecorator(SkipSelfMetadata);
-      $__export("SkipSelf", SkipSelf);
     }
   };
 });
@@ -7381,6 +7311,164 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
   };
 });
 
+System.register("angular2/src/di/metadata", ["angular2/src/facade/lang"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/metadata";
+  var __decorate,
+      __metadata,
+      CONST,
+      stringify,
+      InjectMetadata,
+      OptionalMetadata,
+      DependencyMetadata,
+      InjectableMetadata,
+      SelfMetadata,
+      SkipSelfMetadata,
+      HostMetadata;
+  return {
+    setters: [function($__m) {
+      CONST = $__m.CONST;
+      stringify = $__m.stringify;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      InjectMetadata = ($traceurRuntime.createClass)(function(token) {
+        this.token = token;
+      }, {toString: function() {
+          return ("@Inject(" + stringify(this.token) + ")");
+        }}, {});
+      $__export("InjectMetadata", InjectMetadata);
+      $__export("InjectMetadata", InjectMetadata = __decorate([CONST(), __metadata('design:paramtypes', [Object])], InjectMetadata));
+      OptionalMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
+          return "@Optional()";
+        }}, {});
+      $__export("OptionalMetadata", OptionalMetadata);
+      $__export("OptionalMetadata", OptionalMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], OptionalMetadata));
+      DependencyMetadata = ($traceurRuntime.createClass)(function() {}, {get token() {
+          return null;
+        }}, {});
+      $__export("DependencyMetadata", DependencyMetadata);
+      $__export("DependencyMetadata", DependencyMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], DependencyMetadata));
+      InjectableMetadata = ($traceurRuntime.createClass)(function() {}, {}, {});
+      $__export("InjectableMetadata", InjectableMetadata);
+      $__export("InjectableMetadata", InjectableMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], InjectableMetadata));
+      SelfMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
+          return "@Self()";
+        }}, {});
+      $__export("SelfMetadata", SelfMetadata);
+      $__export("SelfMetadata", SelfMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], SelfMetadata));
+      SkipSelfMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
+          return "@SkipSelf()";
+        }}, {});
+      $__export("SkipSelfMetadata", SkipSelfMetadata);
+      $__export("SkipSelfMetadata", SkipSelfMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], SkipSelfMetadata));
+      HostMetadata = ($traceurRuntime.createClass)(function() {}, {toString: function() {
+          return "@Host()";
+        }}, {});
+      $__export("HostMetadata", HostMetadata);
+      $__export("HostMetadata", HostMetadata = __decorate([CONST(), __metadata('design:paramtypes', [])], HostMetadata));
+    }
+  };
+});
+
+System.register("angular2/src/di/key", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/di/type_literal", "angular2/src/di/forward_ref"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/key";
+  var MapWrapper,
+      stringify,
+      isBlank,
+      BaseException,
+      TypeLiteral,
+      resolveForwardRef,
+      Key,
+      KeyRegistry,
+      _globalKeyRegistry;
+  return {
+    setters: [function($__m) {
+      MapWrapper = $__m.MapWrapper;
+    }, function($__m) {
+      stringify = $__m.stringify;
+      isBlank = $__m.isBlank;
+      BaseException = $__m.BaseException;
+    }, function($__m) {
+      TypeLiteral = $__m.TypeLiteral;
+      $__export({TypeLiteral: $__m.TypeLiteral});
+    }, function($__m) {
+      resolveForwardRef = $__m.resolveForwardRef;
+    }],
+    execute: function() {
+      Key = function() {
+        function Key(token, id) {
+          this.token = token;
+          this.id = id;
+          if (isBlank(token)) {
+            throw new BaseException('Token must be defined!');
+          }
+        }
+        return ($traceurRuntime.createClass)(Key, {get displayName() {
+            return stringify(this.token);
+          }}, {
+          get: function(token) {
+            return _globalKeyRegistry.get(resolveForwardRef(token));
+          },
+          get numberOfKeys() {
+            return _globalKeyRegistry.numberOfKeys;
+          }
+        });
+      }();
+      $__export("Key", Key);
+      KeyRegistry = function() {
+        function KeyRegistry() {
+          this._allKeys = new Map();
+        }
+        return ($traceurRuntime.createClass)(KeyRegistry, {
+          get: function(token) {
+            if (token instanceof Key)
+              return token;
+            var theToken = token;
+            if (token instanceof TypeLiteral) {
+              theToken = token.type;
+            }
+            token = theToken;
+            if (this._allKeys.has(token)) {
+              return this._allKeys.get(token);
+            }
+            var newKey = new Key(token, Key.numberOfKeys);
+            this._allKeys.set(token, newKey);
+            return newKey;
+          },
+          get numberOfKeys() {
+            return MapWrapper.size(this._allKeys);
+          }
+        }, {});
+      }();
+      $__export("KeyRegistry", KeyRegistry);
+      _globalKeyRegistry = new KeyRegistry();
+    }
+  };
+});
+
 System.register("angular2/src/di/binding", ["angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/reflection/reflection", "angular2/src/di/key", "angular2/src/di/metadata", "angular2/src/di/exceptions", "angular2/src/di/forward_ref"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/binding";
@@ -7622,29 +7710,6 @@ System.register("angular2/src/di/binding", ["angular2/src/facade/lang", "angular
   };
 });
 
-System.register("angular2/src/reflection/reflection", ["angular2/src/reflection/reflector", "angular2/src/reflection/reflection_capabilities"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/reflection/reflection";
-  var Reflector,
-      ReflectionCapabilities,
-      reflector;
-  return {
-    setters: [function($__m) {
-      Reflector = $__m.Reflector;
-      $__export({
-        Reflector: $__m.Reflector,
-        ReflectionInfo: $__m.ReflectionInfo
-      });
-    }, function($__m) {
-      ReflectionCapabilities = $__m.ReflectionCapabilities;
-    }],
-    execute: function() {
-      reflector = new Reflector(new ReflectionCapabilities());
-      $__export("reflector", reflector);
-    }
-  };
-});
-
 System.register("angular2/src/di/exceptions", ["angular2/src/facade/collection", "angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "angular2/src/di/exceptions";
@@ -7833,91 +7898,26 @@ System.register("angular2/src/di/opaque_token", ["angular2/src/facade/lang"], fu
   };
 });
 
-System.register("angular2/src/di/key", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/di/type_literal", "angular2/src/di/forward_ref"], function($__export) {
+System.register("angular2/src/reflection/reflection", ["angular2/src/reflection/reflector", "angular2/src/reflection/reflection_capabilities"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/key";
-  var MapWrapper,
-      stringify,
-      isBlank,
-      BaseException,
-      TypeLiteral,
-      resolveForwardRef,
-      Key,
-      KeyRegistry,
-      _globalKeyRegistry;
+  var __moduleName = "angular2/src/reflection/reflection";
+  var Reflector,
+      ReflectionCapabilities,
+      reflector;
   return {
     setters: [function($__m) {
-      MapWrapper = $__m.MapWrapper;
+      Reflector = $__m.Reflector;
+      $__export({
+        Reflector: $__m.Reflector,
+        ReflectionInfo: $__m.ReflectionInfo
+      });
     }, function($__m) {
-      stringify = $__m.stringify;
-      isBlank = $__m.isBlank;
-      BaseException = $__m.BaseException;
-    }, function($__m) {
-      TypeLiteral = $__m.TypeLiteral;
-      $__export({TypeLiteral: $__m.TypeLiteral});
-    }, function($__m) {
-      resolveForwardRef = $__m.resolveForwardRef;
+      ReflectionCapabilities = $__m.ReflectionCapabilities;
     }],
     execute: function() {
-      Key = function() {
-        function Key(token, id) {
-          this.token = token;
-          this.id = id;
-          if (isBlank(token)) {
-            throw new BaseException('Token must be defined!');
-          }
-        }
-        return ($traceurRuntime.createClass)(Key, {get displayName() {
-            return stringify(this.token);
-          }}, {
-          get: function(token) {
-            return _globalKeyRegistry.get(resolveForwardRef(token));
-          },
-          get numberOfKeys() {
-            return _globalKeyRegistry.numberOfKeys;
-          }
-        });
-      }();
-      $__export("Key", Key);
-      KeyRegistry = function() {
-        function KeyRegistry() {
-          this._allKeys = new Map();
-        }
-        return ($traceurRuntime.createClass)(KeyRegistry, {
-          get: function(token) {
-            if (token instanceof Key)
-              return token;
-            var theToken = token;
-            if (token instanceof TypeLiteral) {
-              theToken = token.type;
-            }
-            token = theToken;
-            if (this._allKeys.has(token)) {
-              return this._allKeys.get(token);
-            }
-            var newKey = new Key(token, Key.numberOfKeys);
-            this._allKeys.set(token, newKey);
-            return newKey;
-          },
-          get numberOfKeys() {
-            return MapWrapper.size(this._allKeys);
-          }
-        }, {});
-      }();
-      $__export("KeyRegistry", KeyRegistry);
-      _globalKeyRegistry = new KeyRegistry();
+      reflector = new Reflector(new ReflectionCapabilities());
+      $__export("reflector", reflector);
     }
-  };
-});
-
-System.register("http/src/http_utils", ["angular2/src/facade/lang"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/http_utils";
-  return {
-    setters: [function($__m) {
-      $__export({isJsObject: $__m.isJsObject});
-    }],
-    execute: function() {}
   };
 });
 
@@ -8061,6 +8061,145 @@ System.register("angular2/src/util/decorators", ["angular2/src/facade/lang"], fu
       if (!(Reflect && Reflect.getMetadata)) {
         throw 'reflect-metadata shim is required when using class decorators';
       }
+    }
+  };
+});
+
+System.register("angular2/src/di/type_literal", [], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/di/type_literal";
+  var TypeLiteral;
+  return {
+    setters: [],
+    execute: function() {
+      TypeLiteral = function() {
+        function TypeLiteral() {}
+        return ($traceurRuntime.createClass)(TypeLiteral, {get type() {
+            throw new Error("Type literals are only supported in Dart");
+          }}, {});
+      }();
+      $__export("TypeLiteral", TypeLiteral);
+    }
+  };
+});
+
+System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+  "use strict";
+  var __moduleName = "angular2/src/reflection/reflector";
+  var isPresent,
+      Map,
+      StringMapWrapper,
+      ReflectionInfo,
+      Reflector;
+  function _mergeMaps(target, config) {
+    StringMapWrapper.forEach(config, function(v, k) {
+      return target.set(k, v);
+    });
+  }
+  return {
+    setters: [function($__m) {
+      isPresent = $__m.isPresent;
+    }, function($__m) {
+      Map = $__m.Map;
+      StringMapWrapper = $__m.StringMapWrapper;
+    }],
+    execute: function() {
+      ReflectionInfo = function() {
+        function ReflectionInfo(annotations, parameters, factory, interfaces) {
+          this._annotations = annotations;
+          this._parameters = parameters;
+          this._factory = factory;
+          this._interfaces = interfaces;
+        }
+        return ($traceurRuntime.createClass)(ReflectionInfo, {}, {});
+      }();
+      $__export("ReflectionInfo", ReflectionInfo);
+      Reflector = function() {
+        function Reflector(reflectionCapabilities) {
+          this._injectableInfo = new Map();
+          this._getters = new Map();
+          this._setters = new Map();
+          this._methods = new Map();
+          this.reflectionCapabilities = reflectionCapabilities;
+        }
+        return ($traceurRuntime.createClass)(Reflector, {
+          isReflectionEnabled: function() {
+            return this.reflectionCapabilities.isReflectionEnabled();
+          },
+          registerFunction: function(func, funcInfo) {
+            this._injectableInfo.set(func, funcInfo);
+          },
+          registerType: function(type, typeInfo) {
+            this._injectableInfo.set(type, typeInfo);
+          },
+          registerGetters: function(getters) {
+            _mergeMaps(this._getters, getters);
+          },
+          registerSetters: function(setters) {
+            _mergeMaps(this._setters, setters);
+          },
+          registerMethods: function(methods) {
+            _mergeMaps(this._methods, methods);
+          },
+          factory: function(type) {
+            if (this._containsReflectionInfo(type)) {
+              var res = this._injectableInfo.get(type)._factory;
+              return isPresent(res) ? res : null;
+            } else {
+              return this.reflectionCapabilities.factory(type);
+            }
+          },
+          parameters: function(typeOrFunc) {
+            if (this._injectableInfo.has(typeOrFunc)) {
+              var res = this._injectableInfo.get(typeOrFunc)._parameters;
+              return isPresent(res) ? res : [];
+            } else {
+              return this.reflectionCapabilities.parameters(typeOrFunc);
+            }
+          },
+          annotations: function(typeOrFunc) {
+            if (this._injectableInfo.has(typeOrFunc)) {
+              var res = this._injectableInfo.get(typeOrFunc)._annotations;
+              return isPresent(res) ? res : [];
+            } else {
+              return this.reflectionCapabilities.annotations(typeOrFunc);
+            }
+          },
+          interfaces: function(type) {
+            if (this._injectableInfo.has(type)) {
+              var res = this._injectableInfo.get(type)._interfaces;
+              return isPresent(res) ? res : [];
+            } else {
+              return this.reflectionCapabilities.interfaces(type);
+            }
+          },
+          getter: function(name) {
+            if (this._getters.has(name)) {
+              return this._getters.get(name);
+            } else {
+              return this.reflectionCapabilities.getter(name);
+            }
+          },
+          setter: function(name) {
+            if (this._setters.has(name)) {
+              return this._setters.get(name);
+            } else {
+              return this.reflectionCapabilities.setter(name);
+            }
+          },
+          method: function(name) {
+            if (this._methods.has(name)) {
+              return this._methods.get(name);
+            } else {
+              return this.reflectionCapabilities.method(name);
+            }
+          },
+          _containsReflectionInfo: function(typeOrFunc) {
+            return this._injectableInfo.has(typeOrFunc);
+          }
+        }, {});
+      }();
+      $__export("Reflector", Reflector);
     }
   };
 });
@@ -8249,145 +8388,6 @@ System.register("angular2/src/reflection/reflection_capabilities", ["angular2/sr
         }, {});
       }();
       $__export("ReflectionCapabilities", ReflectionCapabilities);
-    }
-  };
-});
-
-System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/reflection/reflector";
-  var isPresent,
-      Map,
-      StringMapWrapper,
-      ReflectionInfo,
-      Reflector;
-  function _mergeMaps(target, config) {
-    StringMapWrapper.forEach(config, function(v, k) {
-      return target.set(k, v);
-    });
-  }
-  return {
-    setters: [function($__m) {
-      isPresent = $__m.isPresent;
-    }, function($__m) {
-      Map = $__m.Map;
-      StringMapWrapper = $__m.StringMapWrapper;
-    }],
-    execute: function() {
-      ReflectionInfo = function() {
-        function ReflectionInfo(annotations, parameters, factory, interfaces) {
-          this._annotations = annotations;
-          this._parameters = parameters;
-          this._factory = factory;
-          this._interfaces = interfaces;
-        }
-        return ($traceurRuntime.createClass)(ReflectionInfo, {}, {});
-      }();
-      $__export("ReflectionInfo", ReflectionInfo);
-      Reflector = function() {
-        function Reflector(reflectionCapabilities) {
-          this._injectableInfo = new Map();
-          this._getters = new Map();
-          this._setters = new Map();
-          this._methods = new Map();
-          this.reflectionCapabilities = reflectionCapabilities;
-        }
-        return ($traceurRuntime.createClass)(Reflector, {
-          isReflectionEnabled: function() {
-            return this.reflectionCapabilities.isReflectionEnabled();
-          },
-          registerFunction: function(func, funcInfo) {
-            this._injectableInfo.set(func, funcInfo);
-          },
-          registerType: function(type, typeInfo) {
-            this._injectableInfo.set(type, typeInfo);
-          },
-          registerGetters: function(getters) {
-            _mergeMaps(this._getters, getters);
-          },
-          registerSetters: function(setters) {
-            _mergeMaps(this._setters, setters);
-          },
-          registerMethods: function(methods) {
-            _mergeMaps(this._methods, methods);
-          },
-          factory: function(type) {
-            if (this._containsReflectionInfo(type)) {
-              var res = this._injectableInfo.get(type)._factory;
-              return isPresent(res) ? res : null;
-            } else {
-              return this.reflectionCapabilities.factory(type);
-            }
-          },
-          parameters: function(typeOrFunc) {
-            if (this._injectableInfo.has(typeOrFunc)) {
-              var res = this._injectableInfo.get(typeOrFunc)._parameters;
-              return isPresent(res) ? res : [];
-            } else {
-              return this.reflectionCapabilities.parameters(typeOrFunc);
-            }
-          },
-          annotations: function(typeOrFunc) {
-            if (this._injectableInfo.has(typeOrFunc)) {
-              var res = this._injectableInfo.get(typeOrFunc)._annotations;
-              return isPresent(res) ? res : [];
-            } else {
-              return this.reflectionCapabilities.annotations(typeOrFunc);
-            }
-          },
-          interfaces: function(type) {
-            if (this._injectableInfo.has(type)) {
-              var res = this._injectableInfo.get(type)._interfaces;
-              return isPresent(res) ? res : [];
-            } else {
-              return this.reflectionCapabilities.interfaces(type);
-            }
-          },
-          getter: function(name) {
-            if (this._getters.has(name)) {
-              return this._getters.get(name);
-            } else {
-              return this.reflectionCapabilities.getter(name);
-            }
-          },
-          setter: function(name) {
-            if (this._setters.has(name)) {
-              return this._setters.get(name);
-            } else {
-              return this.reflectionCapabilities.setter(name);
-            }
-          },
-          method: function(name) {
-            if (this._methods.has(name)) {
-              return this._methods.get(name);
-            } else {
-              return this.reflectionCapabilities.method(name);
-            }
-          },
-          _containsReflectionInfo: function(typeOrFunc) {
-            return this._injectableInfo.has(typeOrFunc);
-          }
-        }, {});
-      }();
-      $__export("Reflector", Reflector);
-    }
-  };
-});
-
-System.register("angular2/src/di/type_literal", [], function($__export) {
-  "use strict";
-  var __moduleName = "angular2/src/di/type_literal";
-  var TypeLiteral;
-  return {
-    setters: [],
-    execute: function() {
-      TypeLiteral = function() {
-        function TypeLiteral() {}
-        return ($traceurRuntime.createClass)(TypeLiteral, {get type() {
-            throw new Error("Type literals are only supported in Dart");
-          }}, {});
-      }();
-      $__export("TypeLiteral", TypeLiteral);
     }
   };
 });

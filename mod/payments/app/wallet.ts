@@ -40,21 +40,20 @@ export class Wallet {
     this.inProgress = true;
     this.client.get('api/v1/wallet/transactions', { limit: 12, offset: this.offset})
       .then((response) => {
-          console.log(response);
-          return;
-        if(!response.groups){
+
+        if(!response.transactions){
           self.moreData = false;
           self.inProgress = false;
           return false;
         }
 
         if(refresh){
-          self.groups = response.groups;
+          self.transactions = response.transactions
         } else {
           if(self.offset)
-            response.groups.shift();
-          for(let group of response.groups)
-            self.groups.push(group);
+            response.transactions.shift();
+          for(let transaction of response.transactions)
+            self.transactions.push(transaction);
         }
 
         self.offset = response['load-next'];

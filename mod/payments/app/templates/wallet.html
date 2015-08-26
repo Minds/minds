@@ -1,7 +1,22 @@
-<div class="mdl-grid newsfeed-grid" style="max-width:900px">
+<div class="mdl-grid wallet-grid" style="max-width:900px">
 
   <div class="mdl-cell mdl-cell--4-col">
     {{points}} points
+  </div>
+
+  <div class="mdl-cell mdl-cell--8-col">
+    <div class="mdl-card mdl-shadow--2dp minds-banner-card" *ng-for="#transaction of transactions">
+      <div class="mdl-card__title mdl-card--expand">
+        {{transaction.points}}
+      </div>
+      <div class="mdl-card__actions mdl-card--border">
+        <p>
+          {{transaction.description}}
+        </p>
+        <div class="mdl-layout-spacer"></div>
+        <i class="material-icons">event</i>
+      </div>
+    </div>
   </div>
 
 </div>
