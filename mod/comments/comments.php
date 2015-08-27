@@ -2,38 +2,50 @@
 /**
  * Minds Comments
  */
- 
+
 namespace minds\plugin\comments;
 
 use Minds\Core;
 use Minds\Api;
 
 class comments extends \ElggPlugin{
-	
+
 	/**
 	 * Initialise the plugin
 	 */
 	public function init(){
 		core\router::registerRoutes($this->registerRoutes());
-        Api\Routes::add('v1/comments', "minds\\plugin\\comments\\api\\v1\\comments");
-        
+    Api\Routes::add('v1/comments', "minds\\plugin\\comments\\api\\v1\\comments");
+
 		\elgg_register_plugin_hook_handler('comments', 'all', array($this, 'displayHook'));
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			//var_dump($row);
 			if($row->type == 'comment')
 				return new entities\comment($row);
 		});
-		
+
+    Core\Events\Dispatcher::register('export:extender', 'all', function($event){
+        $params = $event->getParameters();
+        $export = array();
+        $db = new Core\Data\Call('entities_by_time');
+        if($params['entity']->entity_guid)
+          $count = $db->countRow('comments:' . $params['entity']->entity_guid);
+        else
+          $count = $db->countRow('comments:' . $params['entity']->guid);
+        $export['comments:count'] = $count;
+        $event->setResponse($export);
+    });
+
 		\elgg_register_plugin_hook_handler('register', 'menu:comments', array($this,'menu'));
-		
+
 		core\resources::registerView('comments', 'minds_comments');
 		core\resources::load('comments');
-		
+
 		core\resources::registerView('comments', 'minds_comments', 'js', 'footer');
 		core\resources::load('comments', 'js');
 
 	}
-	
+
 	/**
 	 * Register page routes for comments (replaces actions)
 	 * @return array
@@ -45,7 +57,7 @@ class comments extends \ElggPlugin{
 			'/comments' => "$path\\pages\\comments"
 		);
 	}
-	 
+
 	/**
 	 * Override the default comments display
 	 */
@@ -63,7 +75,7 @@ class comments extends \ElggPlugin{
 		$guids = $indexes->get($entity->guid, array('limit'=>$limit, 'offset'=>$offset, 'reversed'=>true));
 		if($guids)
 			$comments = \elgg_get_entities(array('guids'=>$guids, 'limit'=>$limit, 'offset'=>$offset));
-		else 
+		else
 			$comments = array();
 
 		if($comments)
@@ -74,23 +86,23 @@ class comments extends \ElggPlugin{
 		    'parent_guid'=>$entity->guid,
 		    'show_form'=>$form
 		));
-		
+
 		//$comments .= \elgg_view('comments/input', array(
 		// 	'entity'=>$entity
 		//));
 
 		return $comments;
 	}
-	
-	/** 
+
+	/**
 	 * Comments menu
 	 */
 	public function menu($hook, $type, $return, $params) {
-	
+
 		$comment = $params['comment'];
-	
+
 		//unset($return);
-		
+
 		/**
 		 * Delete
 		 */
@@ -106,8 +118,8 @@ class comments extends \ElggPlugin{
 			);
 			$return[] = \ElggMenuItem::factory($delete);
 		 }
-	
+
 		return $return;
 	}
-	
+
 }
