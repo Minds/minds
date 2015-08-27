@@ -210,7 +210,9 @@ class start extends \ElggPlugin{
 				$notification->save();
 		//	}
             $message = "";
-
+            
+            $params['title'] = htmlspecialchars_decode( $params['title']);
+            $params['description'] = htmlspecialchars_decode( $params['description'] ); 
             switch($params['notification_view']){
                 case "friends":
 		    $message = \Minds\Core\session::getLoggedinUser()->name . " subscribed to you";
