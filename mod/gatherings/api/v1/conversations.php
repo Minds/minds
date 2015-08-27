@@ -113,10 +113,10 @@ class conversations implements interfaces\api{
                                                     "message"=> \Minds\Core\session::getLoggedInUser()->name . " is calling you.",
                                                     "uri" => 'call',
                                                     "sound" => 'ringing-1.m4a',
-                                                    "json" => array(
+                                                    "json" => json_encode(array(
                                                         "from_guid"=>\Minds\Core\session::getLoggedInUser()->guid,
                                                         "from_name"=>\Minds\Core\session::getLoggedInUser()->name
-                                                    )
+                                                    ))
                                                 ));
                 break;
             case 'no-answer':
