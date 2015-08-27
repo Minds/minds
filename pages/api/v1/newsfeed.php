@@ -66,16 +66,18 @@ class newsfeed implements interfaces\api{
 
         if($pages[0] == 'network'){
             try{
-                $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
-                if($boost && $boost['guid']){
-                    $boost_guid = $boost['guid'];
-                    $boost_object = new entities\activity($boost['guid']);
-                    $boost_object->boosted = true;
-                    array_unshift($activity, $boost_object);
-                    if(get_input('offset')){
-                        //bug: sometimes views weren't being calculated on scroll down
-                        \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
-                        \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                $boosts = Core\Boost\Factory::build("Newsfeed")->getBoosts();
+                foreach($boosts as $boost){
+                    if($boost && $boost['guid']){
+                        $boost_guid = $boost['guid'];
+                        $boost_object = new entities\activity($boost['guid']);
+                        $boost_object->boosted = true;
+                        array_unshift($activity, $boost_object);
+                        if(get_input('offset')){
+                            //bug: sometimes views weren't being calculated on scroll down
+                            \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
+                            \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                        }
                     }
                 }
             }catch(\Exception $e){
@@ -152,12 +154,12 @@ class newsfeed implements interfaces\api{
             break;
             default:
                 $activity = new entities\activity();
-
-                if(isset($_POST['message']) && $_POST['message'])
+                //error_log(print_r($_POST, true));
+                if(isset($_POST['message']))
                     $activity->setMessage(urldecode($_POST['message']));
 
-                if(isset($_POST['title']) && $_POST['title']){
-                        $activity->setTitle($_POST['title'])
+                if(isset($_POST['title'])){
+                        $activity->setTitle(urldecode($_POST['title']))
                             ->setBlurb(urldecode($_POST['description']))
                             ->setURL(\elgg_normalize_url(urldecode($_POST['url'])))
                             ->setThumbnail(urldecode($_POST['thumbnail']));
