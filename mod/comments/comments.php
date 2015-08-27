@@ -27,6 +27,7 @@ class comments extends \ElggPlugin{
     Core\Events\Dispatcher::register('export:extender', 'all', function($event){
         $params = $event->getParameters();
         $export = array();
+            $cacher = Core\Data\cache\factory::build();
         $db = new Core\Data\Call('entities_by_time');
        if($params['entity']->entity_guid){
 					$guid = $params['entity']->entity_guid;
