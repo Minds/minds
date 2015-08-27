@@ -28,10 +28,21 @@ class comments extends \ElggPlugin{
         $params = $event->getParameters();
         $export = array();
         $db = new Core\Data\Call('entities_by_time');
-        if($params['entity']->entity_guid)
-          $count = $db->countRow('comments:' . $params['entity']->entity_guid);
-        else
-          $count = $db->countRow('comments:' . $params['entity']->guid);
+       if($params['entity']->entity_guid){
+					$guid = $params['entity']->entity_guid;
+        } else {
+          $guid = $params['entity']->guid;
+				}
+
+				$cached = $cacher->get("comments:count:$guid");
+				if($cached !== FALSE){
+					$count = $cached;
+				} else {
+					$count = $db->countRow('comments:' . $params['entity']->entity_guid);
+					$cacher->set("comments:count:$guid", $count);
+				}
+
+
         $export['comments:count'] = $count;
         $event->setResponse($export);
     });
