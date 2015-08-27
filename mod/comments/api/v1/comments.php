@@ -49,7 +49,6 @@ class comments implements interfaces\api{
         $response['comments'] = factory::exportable($comments);
         $response['load-next'] = (string) end($comments)->guid;
         $response['load-previous'] = (string) reset($comments)->guid;
-        $response['load-previous'] = (string) key($comments)->guid;
 
         return Factory::response($response);
 
