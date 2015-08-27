@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Comments API
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -17,43 +17,45 @@ class comments implements interfaces\api{
     /**
      * Returns the comments
      * @param array $pages
-     * 
+     *
      * API:: /v1/comment/:guid
-     */      
+     */
     public function get($pages){
-        
+
         $response = array();
         $guid = $pages[0];
-        
+
         $indexes = new core\Data\indexes('comments');
-        $guids = $indexes->get($guid, array('limit'=>\get_input('limit',3), 'offset'=>\get_input('offset',''), 'reversed'=>false));
+        $guids = $indexes->get($guid, array('limit'=>\get_input('limit',3), 'offset'=>\get_input('offset',''), 'reversed'=>\get_input('reversed', false)));
         if(isset($guids[get_input('offset')]))
             unset($guids[get_input('offset')]);
 
         if($guids)
             $comments = \elgg_get_entities(array('guids'=>$guids));
-        else 
+        else
             $comments = array();
 
-        usort($comments, function($a, $b){ return $a->time_created - $b->time_created;});
-	    foreach($comments as $k => $comment){
+        usort($comments, function($a, $b){
+          return $a->time_created - $b->time_created;
+        );
+  	    foreach($comments as $k => $comment){
             if(!$comment->guid){
                 unset($comments[$k]);
                 continue;
             }
-		    $owner = $comment->getOwnerEntity();
-		    $comments[$k]->ownerObj = $owner->export();
-	    }
+  		      $owner = $comment->getOwnerEntity();
+  		      $comments[$k]->ownerObj = $owner->export();
+  	    }
         $response['comments'] = factory::exportable($comments);
         $response['load-next'] = (string) end($comments)->guid;
-        $response['load-previous'] = (string) key($comments)->guid;       
-    
+        $response['load-previous'] = (string) key($comments)->guid;
+
         return Factory::response($response);
-        
+
     }
-    
+
     public function post($pages){
-       
+
         $parent = new \Minds\entities\entity($pages[0]);
     	$comment = new \Minds\plugin\comments\entities\comment();
         $comment->description = urldecode($_POST['comment']);
@@ -72,35 +74,34 @@ class comments implements interfaces\api{
                 'description'=>$comment->description,
                 'notification_view'=>'comment'
             ));
-            
+
             \elgg_trigger_event('comment:create', 'comment', $data);
-            
+
             $indexes = new data\indexes();
             $indexes->set('comments:subscriptions:'.$parent->guid, array($comment->owner_guid => $comment->owner_guid));
-        } 
+        }
         $comment->ownerObj = Core\session::getLoggedinUser()->export();
         $response['comment'] = $comment->export();
 
         return Factory::response($response);
     }
-    
+
     public function put($pages){
-        
+
         return Factory::response(array());
-        
+
     }
-    
+
     public function delete($pages){
 
-         
+
         $comment = new \Minds\plugin\comments\entities\comment($pages[0]);
         if($comment->canEdit()){
             $comment->delete();
         }
 
         return Factory::response(array());
-        
+
     }
-    
+
 }
-        
