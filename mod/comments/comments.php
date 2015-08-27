@@ -39,7 +39,7 @@ class comments extends \ElggPlugin{
 				if($cached !== FALSE){
 					$count = $cached;
 				} else {
-					$count = $db->countRow('comments:' . $params['entity']->entity_guid);
+					$count = $db->countRow("comments:$guid");
 					$cacher->set("comments:count:$guid", $count);
 				}
 
