@@ -9,6 +9,9 @@ if(!$from){
 }
 
 $entity =  Minds\Core\entities::build(new minds\entities\entity($notification->object_guid));
+if(!$entity)
+    return false;
+
 
 $body .= elgg_view('output/url', array('href' => $from->getURL(), 'text' => $from->name));
 $body .= ' tagged you in a ';
