@@ -12,7 +12,7 @@ import {ComingSoon} from './src/controllers/comingsoon';
 import {Newsfeed} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';
 import {Discovery} from './src/controllers/discovery/discovery';
-import {Channel} from './src/controllers/channels/channel';
+import {Channel, ChannelSubscribers, ChannelSubscriptions} from './src/controllers/channels/channel';
 import {Notifications} from './src/controllers/notifications/notifications';
 
 /**
@@ -46,6 +46,7 @@ import {Wallet} from './src/plugins/payments/payments';
 
 
   { path: '/:username', component: Channel, as: 'channel' },
+  { path: '/:username/:filter', component: Channel, as: 'channel-filter' },
 
   { path: '/', redirectTo: '/newsfeed' }
 ])

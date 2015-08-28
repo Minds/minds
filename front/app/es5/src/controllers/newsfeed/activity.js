@@ -18,6 +18,7 @@ var remind_1 = require('./remind');
 var Activity = (function () {
     function Activity(client) {
         this.client = client;
+        this.menuToggle = false;
         this.session = session_1.SessionFactory.build();
     }
     Object.defineProperty(Activity.prototype, "object", {
@@ -35,8 +36,9 @@ var Activity = (function () {
         this.client.delete('api/v1/newsfeed/' + this.activity.guid);
         delete this.activity;
     };
-    Activity.prototype.toDate = function (timestamp) {
-        return new Date(timestamp * 1000);
+    Activity.prototype.openMenu = function () {
+        this.menuToggle = !this.menuToggle;
+        console.log(this.menuToggle);
     };
     Activity.prototype.thumbsUp = function () {
         this.client.put('api/v1/thumbs/' + this.activity.guid + '/up', {});

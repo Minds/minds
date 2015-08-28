@@ -47,6 +47,7 @@ var Minds = (function () {
             { path: '/groups/profile/:guid', component: groups_1.GroupsProfile, as: 'groups-profile' },
             { path: '/wallet', component: payments_1.Wallet, as: 'wallet' },
             { path: '/:username', component: channel_1.Channel, as: 'channel' },
+            { path: '/:username/:filter', component: channel_1.Channel, as: 'channel-filter' },
             { path: '/', redirectTo: '/newsfeed' }
         ]),
         angular2_1.View({

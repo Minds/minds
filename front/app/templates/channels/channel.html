@@ -91,7 +91,8 @@
 
   </section>
 
-  <section class="mdl-cell mdl-cell--8-col">
+  <!-- Feed list -->
+  <section class="mdl-cell mdl-cell--8-col" *ng-if="_filter == 'feed'">
 
     <div class="minds-list">
 
@@ -105,6 +106,20 @@
         </infinite-scroll>
 
     </div>
+
+  </section>
+
+  <!-- Subscriptions list -->
+  <section class="mdl-cell mdl-cell--8-col" *ng-if="_filter == 'subscriptions'">
+
+    <minds-channel-subscriptions></minds-channel-subscriptions>
+
+  </section>
+
+  <!-- Subscriptions list -->
+  <section class="mdl-cell mdl-cell--8-col" *ng-if="_filter == 'subscribers'">
+
+    <minds-channel-subscribers></minds-channel-subscribers>
 
   </section>
 

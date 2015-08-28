@@ -7,16 +7,22 @@ import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { AutoGrow } from '../../directives/autogrow';
 import { Activity } from 'src/controllers/newsfeed/activity';
 
+import { ChannelSubscribers } from './subscribers';
+import { ChannelSubscriptions } from './subscriptions';
+
 @Component({
   selector: 'minds-channel',
   viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
-  directives: [ NgFor, NgIf, Material, FORM_DIRECTIVES, InfiniteScroll, Activity, AutoGrow ]
+  directives: [ NgFor, NgIf, Material, FORM_DIRECTIVES, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions ]
 })
 
+
 export class Channel {
+
+  _filter : string = "feed";
   session = SessionFactory.build();
   username : string;
   user : Object;
@@ -32,6 +38,8 @@ export class Channel {
     @Inject(RouteParams) public params: RouteParams
     ){
       this.username = params.params['username'];
+      if(params.params['filter'])
+        this._filter = params.params['filter'];
       this.load();
   }
 
@@ -44,7 +52,8 @@ export class Channel {
                   return false;
                 }
                 self.user = data.channel;
-                self.loadFeed(true);
+                if(self._filter == "feed")
+                  self.loadFeed(true);
                 })
               .catch((e) => {
                 console.log('couldnt load channel', e);
@@ -114,3 +123,6 @@ export class Channel {
   }
 
 }
+
+export { ChannelSubscribers } from './subscribers';
+export { ChannelSubscriptions } from './subscriptions';

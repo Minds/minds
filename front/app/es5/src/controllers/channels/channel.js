@@ -20,11 +20,14 @@ var session_1 = require('../../services/session');
 var infinite_scroll_1 = require('../../directives/infinite-scroll');
 var autogrow_1 = require('../../directives/autogrow');
 var activity_1 = require('src/controllers/newsfeed/activity');
+var subscribers_1 = require('./subscribers');
+var subscriptions_1 = require('./subscriptions');
 var Channel = (function () {
     function Channel(client, router, params) {
         this.client = client;
         this.router = router;
         this.params = params;
+        this._filter = "feed";
         this.session = session_1.SessionFactory.build();
         this.feed = [];
         this.offset = "";
@@ -33,6 +36,8 @@ var Channel = (function () {
         this.editing = "";
         this.error = "";
         this.username = params.params['username'];
+        if (params.params['filter'])
+            this._filter = params.params['filter'];
         this.load();
     }
     Channel.prototype.load = function () {
@@ -44,7 +49,8 @@ var Channel = (function () {
                 return false;
             }
             self.user = data.channel;
-            self.loadFeed(true);
+            if (self._filter == "feed")
+                self.loadFeed(true);
         })
             .catch(function (e) {
             console.log('couldnt load channel', e);
@@ -114,7 +120,7 @@ var Channel = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/channels/channel.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.FORM_DIRECTIVES, infinite_scroll_1.InfiniteScroll, activity_1.Activity, autogrow_1.AutoGrow]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.FORM_DIRECTIVES, infinite_scroll_1.InfiniteScroll, activity_1.Activity, autogrow_1.AutoGrow, subscribers_1.ChannelSubscribers, subscriptions_1.ChannelSubscriptions]
         }),
         __param(1, angular2_1.Inject(router_1.Router)),
         __param(2, angular2_1.Inject(router_1.RouteParams)), 
@@ -123,4 +129,8 @@ var Channel = (function () {
     return Channel;
 })();
 exports.Channel = Channel;
+var subscribers_2 = require('./subscribers');
+exports.ChannelSubscribers = subscribers_2.ChannelSubscribers;
+var subscriptions_2 = require('./subscriptions');
+exports.ChannelSubscriptions = subscriptions_2.ChannelSubscriptions;
 //# sourceMappingURL=channel.js.map

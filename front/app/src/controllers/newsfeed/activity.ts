@@ -16,7 +16,9 @@ import { Remind } from './remind';
 })
 
 export class Activity {
+
   activity : any;
+  menuToggle : boolean = false;
   session = SessionFactory.build();
 
 	constructor(public client: Client){
@@ -35,12 +37,10 @@ export class Activity {
     delete this.activity;
   }
 
-	/**
-	 * A temporary hack, because pipes don't seem to work
-	 */
-	toDate(timestamp){
-		return new Date(timestamp*1000);
-	}
+  openMenu(){
+    this.menuToggle = !this.menuToggle;
+    console.log(this.menuToggle);
+  }
 
   thumbsUp(){
     this.client.put('api/v1/thumbs/' + this.activity.guid + '/up', {});
