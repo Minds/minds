@@ -60,9 +60,14 @@ class storage{
             $cacher = Core\Data\cache\factory::build();
             $cacher->destroy("counter:$entity->entity_guid:thumbs:$direction");
         } elseif($entity->remind_object && isset($entity->remind_object['guid'])){
-            Helpers\Counters::increment($entity->remind_object['guid'], "thumbs:$direction");
+            if($entity->remind_object['entity_guid'){
+                $remind_guid = $entity->remind_object['entity_guid'];
+            } else {
+                $remind_guid = $entity->remind_object['guid'];
+            }
+            Helpers\Counters::increment($remind_guid, "thumbs:$direction");
             $cacher = Core\Data\cache\factory::build();
-            $cacher->destroy("counter:".$entity->remind_object['guid'].":thumbs:$direction");
+            $cacher->destroy("counter:$remind_guid:thumbs:$direction");
         }
 
         if($entity->owner_guid != Core\session::getLoggedinUser()->guid)        
