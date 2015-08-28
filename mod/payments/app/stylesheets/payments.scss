@@ -1,0 +1,37 @@
+@import 'defaults.scss';
+
+.minds-wallet-points{
+  width: auto;
+  min-height: 0;
+
+  h2{
+    color:green;
+  }
+}
+
+.minds-transaction-card{
+  width:auto;
+  min-height:0;
+  margin-bottom:$minds-padding * 2;
+
+  .minds-transaction-points{
+    font-size:30px;
+    .positive{
+      color:green;
+    }
+    .negative{
+      color:red;
+    }
+  }
+
+  .minds-transaction-details{
+    display:flex;
+    p{
+      margin:0;
+    }
+    .ts{
+      font-size:11px;
+      padding-left:$minds-padding;
+    }
+  }
+}

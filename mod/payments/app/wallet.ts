@@ -3,6 +3,7 @@ import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
+import { InfiniteScroll } from 'src/directives/infinite-scroll';
 
 @Component({
   selector: 'minds-wallet',
@@ -10,7 +11,7 @@ import { Material } from 'src/directives/material';
 })
 @View({
   templateUrl: 'templates/plugins/payments/wallet.html',
-  directives: [ NgFor, NgIf, NgClass, Material, FORM_DIRECTIVES ]
+  directives: [ NgFor, NgIf, NgClass, Material, FORM_DIRECTIVES, InfiniteScroll ]
 })
 
 export class Wallet {
