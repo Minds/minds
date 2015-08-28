@@ -55,6 +55,14 @@ class storage{
             }elseif($direction == 'down'){
                 Core\Data\Client::build('Neo4j')->request($prepared->createVoteDOWN($guid, $subtype));
             }
+        } elseif($entity->entity_guid){
+            Helpers\Counters::increment($entity->entity_guid, "thumbs:$direction");
+            $cacher = Core\Data\cache\factory::build();
+            $cacher->destroy("counter:$entity->entity_guid:thumbs:$direction");
+        } elseif($entity->remind_object && isset($entity->remind_object['guid'])){
+            Helpers\Counters::increment($entity->remind_object['guid'], "thumbs:$direction");
+            $cacher = Core\Data\cache\factory::build();
+            $cacher->destroy("counter:".$entity->remind_object['guid'].":thumbs:$direction");
         }
 
         if($entity->owner_guid != Core\session::getLoggedinUser()->guid)        
