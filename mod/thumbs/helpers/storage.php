@@ -60,7 +60,7 @@ class storage{
             $cacher = Core\Data\cache\factory::build();
             $cacher->destroy("counter:$entity->entity_guid:thumbs:$direction");
         } elseif($entity->remind_object && isset($entity->remind_object['guid'])){
-            if($entity->remind_object['entity_guid'){
+            if($entity->remind_object['entity_guid']){
                 $remind_guid = $entity->remind_object['entity_guid'];
             } else {
                 $remind_guid = $entity->remind_object['guid'];
