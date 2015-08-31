@@ -7,7 +7,8 @@ import { InfiniteScroll } from '../../directives/infinite-scroll';
 
 @Component({
   selector: 'minds-channel-subscribers',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  properties: ['channel']
 })
 @View({
   templateUrl: 'templates/channels/subscribers.html',
@@ -16,6 +17,7 @@ import { InfiniteScroll } from '../../directives/infinite-scroll';
 
 export class ChannelSubscribers {
   session = SessionFactory.build();
+
   guid : string;
   users : Array<any> = [];
 
@@ -23,15 +25,16 @@ export class ChannelSubscribers {
   moreData : boolean = true;
   inProgress : boolean = false;
 
-  constructor(public client: Client,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
-    ){
-      this.guid = params.params['guid'];
-      this.load();
+  constructor(public client: Client){
+  }
+
+  set channel(value: any) {
+    this.guid = value.guid;
+    this.load();
   }
 
   load(){
+
     var self = this;
     this.inProgress = true;
     this.client.get('api/v1/subscribe/subscribers/' + this.guid, {})

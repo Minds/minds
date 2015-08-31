@@ -1,5 +1,5 @@
 import { Component, View, NgFor, NgIf, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
-import { Router, RouteParams } from 'angular2/router';
+import { Router, RouterLink, RouteParams } from 'angular2/router';
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from '../../services/session';
@@ -16,7 +16,7 @@ import { ChannelSubscriptions } from './subscriptions';
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
-  directives: [ NgFor, NgIf, Material, FORM_DIRECTIVES, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions ]
+  directives: [ RouterLink, NgFor, NgIf, Material, FORM_DIRECTIVES, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions ]
 })
 
 

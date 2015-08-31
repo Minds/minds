@@ -120,7 +120,7 @@ var Channel = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/channels/channel.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.FORM_DIRECTIVES, infinite_scroll_1.InfiniteScroll, activity_1.Activity, autogrow_1.AutoGrow, subscribers_1.ChannelSubscribers, subscriptions_1.ChannelSubscriptions]
+            directives: [router_1.RouterLink, angular2_1.NgFor, angular2_1.NgIf, material_1.Material, angular2_1.FORM_DIRECTIVES, infinite_scroll_1.InfiniteScroll, activity_1.Activity, autogrow_1.AutoGrow, subscribers_1.ChannelSubscribers, subscriptions_1.ChannelSubscriptions]
         }),
         __param(1, angular2_1.Inject(router_1.Router)),
         __param(2, angular2_1.Inject(router_1.RouteParams)), 

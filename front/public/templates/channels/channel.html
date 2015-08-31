@@ -37,15 +37,15 @@
     </div>
 
     <div class="mdl-cell mdl-cell--8-col minds-tabs mdl-tabs__tab-bar">
-        <a class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+        <a [router-link]="['/channel-filter', {username: user.username, filter: 'feed'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
           <span>Feed</span>
           <b>0</b>
         </a>
-        <a class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+        <a [router-link]="['/channel-filter', {username: user.username, filter: 'subscribers'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
           <span>Subscribers</span>
           <b>{{user.subscribers_count}}</b>
         </a>
-        <a class="mdl-tabs__tab  mdl-color-text--blue-grey-50">
+        <a [router-link]="['/channel-filter', {username: user.username, filter: 'subscriptions'}]" class="mdl-tabs__tab  mdl-color-text--blue-grey-50">
           <span>Subscriptions</span>
           <b>{{user.subscriptions_count}}</b>
         </a>
@@ -112,14 +112,14 @@
   <!-- Subscriptions list -->
   <section class="mdl-cell mdl-cell--8-col" *ng-if="_filter == 'subscriptions'">
 
-    <minds-channel-subscriptions></minds-channel-subscriptions>
+    <minds-channel-subscriptions [channel]="user"></minds-channel-subscriptions>
 
   </section>
 
   <!-- Subscriptions list -->
   <section class="mdl-cell mdl-cell--8-col" *ng-if="_filter == 'subscribers'">
 
-    <minds-channel-subscribers></minds-channel-subscribers>
+    <minds-channel-subscribers [channel]="user"></minds-channel-subscribers>
 
   </section>
 
