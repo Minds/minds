@@ -14,6 +14,7 @@ var api_1 = require('src/services/api');
 var material_1 = require('src/directives/material');
 var session_1 = require('../../services/session');
 var infinite_scroll_1 = require('../../directives/infinite-scroll');
+var cards_1 = require('src/controllers/cards/cards');
 var ChannelSubscribers = (function () {
     function ChannelSubscribers(client) {
         this.client = client;
@@ -36,6 +37,7 @@ var ChannelSubscribers = (function () {
         this.inProgress = true;
         this.client.get('api/v1/subscribe/subscribers/' + this.guid, {})
             .then(function (response) {
+            console.log(response);
             if (response.status != "success") {
                 return false;
             }
@@ -59,7 +61,7 @@ var ChannelSubscribers = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/channels/subscribers.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, infinite_scroll_1.InfiniteScroll]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, infinite_scroll_1.InfiniteScroll, cards_1.UserCard]
         }), 
         __metadata('design:paramtypes', [Client])
     ], ChannelSubscribers);

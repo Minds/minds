@@ -4,6 +4,8 @@ import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from '../../services/session';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
+import { UserCard } from 'src/controllers/cards/cards';
+
 
 @Component({
   selector: 'minds-channel-subscriptions',
@@ -12,7 +14,7 @@ import { InfiniteScroll } from '../../directives/infinite-scroll';
 })
 @View({
   templateUrl: 'templates/channels/subscriptions.html',
-  directives: [ NgFor, NgIf, Material, InfiniteScroll ]
+  directives: [ NgFor, NgIf, Material, InfiniteScroll, UserCard ]
 })
 
 export class ChannelSubscriptions {
@@ -25,7 +27,7 @@ export class ChannelSubscriptions {
   moreData : boolean = true;
   inProgress : boolean = false;
 
-  constructor(public client: Client){    
+  constructor(public client: Client){
   }
 
 

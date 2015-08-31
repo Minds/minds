@@ -59,7 +59,7 @@
 
 <div class="mdl-grid channel-grid" style="max-width:900px" *ng-if="user">
 
-  <section class="mdl-cell mdl-cell--4-col">
+  <section class="mdl-cell mdl-cell--4-col minds-channel-sidebar">
       <div class="mdl-card mdl-shadow--2dp minds-channel-bio">
         <div class="mdl-card__title">
           <h2 class="mdl-card__title-text">Bio</h2>
@@ -112,14 +112,14 @@
   <!-- Subscriptions list -->
   <section class="mdl-cell mdl-cell--8-col" *ng-if="_filter == 'subscriptions'">
 
-    <minds-channel-subscriptions [channel]="user"></minds-channel-subscriptions>
+    <minds-channel-subscriptions [channel]="user" class="mdl-grid"></minds-channel-subscriptions>
 
   </section>
 
   <!-- Subscriptions list -->
   <section class="mdl-cell mdl-cell--8-col" *ng-if="_filter == 'subscribers'">
 
-    <minds-channel-subscribers [channel]="user"></minds-channel-subscribers>
+    <minds-channel-subscribers [channel]="user" class="mdl-grid"></minds-channel-subscribers>
 
   </section>
 

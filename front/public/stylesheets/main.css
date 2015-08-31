@@ -352,7 +352,7 @@ minds-channel header {
       vertical-align: middle;
       line-height: 36px; }
 
-minds-channel .mdl-card {
+minds-channel .minds-channel-sidebar .mdl-card {
   width: 100%;
   min-height: 0; }
 
@@ -407,9 +407,6 @@ infinite-scroll {
     background-color: #4690C3;
     opacity: 1; }
 
-minds-gatherings .minds-gatherings-search {
-  width: 100%; }
-
 /**
  * Colours
  */
@@ -446,6 +443,9 @@ minds-groups-create .minds-groups-save {
   margin-top: 16px; }
   minds-groups-create .minds-groups-save button {
     float: right; }
+
+minds-gatherings .minds-gatherings-search {
+  width: 100%; }
 
 /**
  * Colours

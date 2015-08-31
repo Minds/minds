@@ -14,6 +14,7 @@ var api_1 = require('src/services/api');
 var material_1 = require('src/directives/material');
 var session_1 = require('../../services/session');
 var infinite_scroll_1 = require('../../directives/infinite-scroll');
+var cards_1 = require('src/controllers/cards/cards');
 var ChannelSubscriptions = (function () {
     function ChannelSubscriptions(client) {
         this.client = client;
@@ -59,7 +60,7 @@ var ChannelSubscriptions = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/channels/subscriptions.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, infinite_scroll_1.InfiniteScroll]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, material_1.Material, infinite_scroll_1.InfiniteScroll, cards_1.UserCard]
         }), 
         __metadata('design:paramtypes', [Client])
     ], ChannelSubscriptions);

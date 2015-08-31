@@ -1,6 +1,3 @@
-minds-gatherings .minds-gatherings-search {
-  width: 100%; }
-
 /**
  * Colours
  */
@@ -37,6 +34,9 @@ minds-groups-create .minds-groups-save {
   margin-top: 16px; }
   minds-groups-create .minds-groups-save button {
     float: right; }
+
+minds-gatherings .minds-gatherings-search {
+  width: 100%; }
 
 /**
  * Colours

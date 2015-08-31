@@ -4,6 +4,7 @@ import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from '../../services/session';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
+import { UserCard } from 'src/controllers/cards/cards';
 
 @Component({
   selector: 'minds-channel-subscribers',
@@ -12,7 +13,7 @@ import { InfiniteScroll } from '../../directives/infinite-scroll';
 })
 @View({
   templateUrl: 'templates/channels/subscribers.html',
-  directives: [ NgFor, NgIf, Material, InfiniteScroll ]
+  directives: [ NgFor, NgIf, Material, InfiniteScroll, UserCard ]
 })
 
 export class ChannelSubscribers {
@@ -39,7 +40,7 @@ export class ChannelSubscribers {
     this.inProgress = true;
     this.client.get('api/v1/subscribe/subscribers/' + this.guid, {})
       .then((response : any) => {
-
+        console.log(response);
         if(response.status != "success"){
           return false;
         }

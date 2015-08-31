@@ -49,6 +49,6 @@ minds-channel header {
       vertical-align: middle;
       line-height: 36px; }
 
-minds-channel .mdl-card {
+minds-channel .minds-channel-sidebar .mdl-card {
   width: 100%;
   min-height: 0; }
