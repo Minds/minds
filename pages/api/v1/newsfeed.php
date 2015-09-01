@@ -54,7 +54,7 @@ class newsfeed implements Interfaces\Api{
         //daily campaign reward
         Helpers\Campaigns\DailyRewards::reward();
 
-        $activity = core\Entities::get(array_merge(array(
+        $activity = Core\Entities::get(array_merge(array(
             'type' => 'activity',
             'limit' => get_input('limit', 5),
             'offset'=> get_input('offset', '')
