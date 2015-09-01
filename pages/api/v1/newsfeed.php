@@ -8,6 +8,7 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
+use Minds\Helpers;
 use minds\entities;
 use minds\interfaces;
 use Minds\Api\Factory;
@@ -48,6 +49,9 @@ class newsfeed implements interfaces\api{
             );
             break;
         }
+
+        //daily campaign reward
+        Helpers\Campaigns\DailyRewards::reward();
 
         $activity = core\entities::get(array_merge(array(
             'type' => 'activity',
