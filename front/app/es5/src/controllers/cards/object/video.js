@@ -35,7 +35,7 @@ var VideoCard = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/cards/object/video.html',
-            directives: [angular2_1.NgFor, angular2_1.NgIf, angular2_1.NgClass, material_1.Material, router_1.RouterLink]
+            directives: [angular2_1.NgFor, angular2_1.NgIf, angular2_1.NgClass, angular2_1.NgStyle, material_1.Material, router_1.RouterLink]
         }), 
         __metadata('design:paramtypes', [Client])
     ], VideoCard);

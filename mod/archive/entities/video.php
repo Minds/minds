@@ -1,7 +1,7 @@
 <?php
 /**
  * A minds archive video entity
- * 
+ *
  * Handles basic communication with cinemr
  */
 namespace minds\plugin\archive\entities;
@@ -11,9 +11,9 @@ use cinemr;
 use Minds\Helpers;
 
 class video extends object{
-	
+
 	private $cinemr;
-	
+
 	protected function initializeAttributes() {
 		parent::initializeAttributes();
 
@@ -21,11 +21,11 @@ class video extends object{
 		$this->attributes['subtype'] = "video";
 	}
 
-	
+
 	public function __construct($guid = NULL){
-		parent::__construct($guid);	
+		parent::__construct($guid);
 	}
-	
+
 	public function cinemr(){
 		return new cinemr\sdk\client(array(
 				'account_guid' => '335988155444367360',
@@ -42,17 +42,17 @@ class video extends object{
                 $data = $cinemr::factory('media')->get($this->cinemr_guid);
 		return $data['status'];
 	}
-	
+
 	/**
-	 * Return the source url of the remote video 
-	 * @param string $transcode 
+	 * Return the source url of the remote video
+	 * @param string $transcode
 	 * @return string
 	 */
 	public function getSourceUrl($transcode = '720.mp4'){
 		$cacher = \Minds\Core\Data\cache\factory::build();
 		if($return = $cacher->get("$this->guid:transcode:$transcode"))
 			return $return;
-		
+
 		$cinemr = $this->cinemr();
 		$expires = time() + ((60*60*60)*24*7*4);
 		if($this->access_id == 0)
@@ -61,12 +61,12 @@ class video extends object{
 		$cacher->set("$this->guid:transcode:$transcode", $url, 1440);
 		return $url;
 	}
-	
+
 	/**
 	 * Uploads to remote
-	 * 
+	 *
 	 */
-	 
+
 	public function upload($filepath){
 		$cinemr = $this->cinemr();
 		$data = $cinemr::factory('media')->put(NULL, $filepath);
@@ -79,12 +79,8 @@ class video extends object{
 		if(isset($CONFIG->cdn_url))
 			$domain = $CONFIG->cdn_url;
 
-		//if($this->thumbnail){
-			return $domain . 'archive/thumbnail/'.$this->guid.'/'.$this->thumbnail.'/3';
-		//} else {
-		//	$cinemr = $this->cinemr();
-       	       // 	return $cinemr::factory('media')->get($this->cinemr_guid.'/thumbnail');
-		//}
+		return $domain . 'api/v1/archive/thumbnails/'.$this->guid;
+
 	}
 
 	public function getURL(){
@@ -93,7 +89,7 @@ class video extends object{
 
 	/**
 	 * Extend the default entity save function to update the remote service
-	 * 
+	 *
 	 */
 	public function save($force = false){
 		$this->super_subtype = 'archive';
@@ -114,16 +110,16 @@ class video extends object{
 			));
 		return $this->guid;
 	}
-	
+
 	/**
 	 * Extend the default delete function to remove from the remote service
 	 */
 	public function delete(){
 		$result = parent::delete();
-		
+
 		$cinemr = $this->cinemr();
 		$cinemr::factory('media')->delete($this->cinemr_guid);
-		
+
 		return $result;
 	}
 

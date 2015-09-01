@@ -200,9 +200,6 @@ minds-newsfeed, minds-channel {
       */
     /**
       * Remind
-      */
-    /**
-      * Owner block
       */ }
     minds-newsfeed .item.mdl-card .mdl-card__supporting-text, minds-channel .item.mdl-card .mdl-card__supporting-text {
       width: 100%;
@@ -238,29 +235,6 @@ minds-newsfeed, minds-channel {
       text-decoration: none; }
     minds-newsfeed .item.mdl-card minds-remind, minds-channel .item.mdl-card minds-remind {
       margin: 16px; }
-    minds-newsfeed .item.mdl-card .owner-block, minds-channel .item.mdl-card .owner-block {
-      padding: 16px;
-      display: flex; }
-      minds-newsfeed .item.mdl-card .owner-block .avatar, minds-channel .item.mdl-card .owner-block .avatar {
-        display: flex;
-        flex-direction: column; }
-        minds-newsfeed .item.mdl-card .owner-block .avatar img, minds-channel .item.mdl-card .owner-block .avatar img {
-          border-radius: 3px;
-          max-height: 50px; }
-      minds-newsfeed .item.mdl-card .owner-block .body, minds-channel .item.mdl-card .owner-block .body {
-        display: flex;
-        flex-direction: column;
-        margin-left: 16px;
-        margin-top: 8px; }
-      minds-newsfeed .item.mdl-card .owner-block a, minds-channel .item.mdl-card .owner-block a {
-        text-decoration: none;
-        font-weight: 500;
-        color: #333; }
-      minds-newsfeed .item.mdl-card .owner-block span, minds-channel .item.mdl-card .owner-block span {
-        color: #888;
-        font-size: 11px; }
-      minds-newsfeed .item.mdl-card .owner-block img, minds-channel .item.mdl-card .owner-block img {
-        border-radius: 3px; }
   minds-newsfeed .post, minds-channel .post {
     padding: 16px;
     margin-bottom: 16px;
@@ -300,6 +274,39 @@ minds-newsfeed, minds-channel {
       margin: 0; }
     .notifications-grid .mdl-card .body .ts {
       font-size: 11px; }
+
+.minds-video-thumbnail span {
+  color: #FFF;
+  font-size: 72px;
+  text-align: center;
+  width: 100%; }
+
+/**
+ * Owner block
+ */
+.owner-block {
+  padding: 16px;
+  display: flex; }
+  .owner-block .avatar {
+    display: flex;
+    flex-direction: column; }
+    .owner-block .avatar img {
+      border-radius: 3px;
+      max-height: 50px; }
+  .owner-block .body {
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px;
+    margin-top: 8px; }
+  .owner-block a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #333; }
+  .owner-block span {
+    color: #888;
+    font-size: 11px; }
+  .owner-block img {
+    border-radius: 3px; }
 
 /**
  * Colours
@@ -407,6 +414,9 @@ infinite-scroll {
     background-color: #4690C3;
     opacity: 1; }
 
+minds-gatherings .minds-gatherings-search {
+  width: 100%; }
+
 /**
  * Colours
  */
@@ -443,9 +453,6 @@ minds-groups-create .minds-groups-save {
   margin-top: 16px; }
   minds-groups-create .minds-groups-save button {
     float: right; }
-
-minds-gatherings .minds-gatherings-search {
-  width: 100%; }
 
 /**
  * Colours

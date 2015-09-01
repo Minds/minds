@@ -1,6 +1,6 @@
 <?php
 /**
-* Minds Archive 
+* Minds Archive
 * @package minds.archive
 * @author Mark Harding (mark@minds.com)
 **/
@@ -31,16 +31,17 @@ function minds_archive_init() {
 				case 'video':
 					return new minds\plugin\archive\entities\video($row);
 			}
-		} 
+		}
 	});
-    
+
     Minds\Api\Routes::add('v1/archive', "\\minds\\plugin\\archive\\api\\v1\\archive");
+		Minds\Api\Routes::add('v1/archive/thumbnails', "\\minds\\plugin\\archive\\api\\v1\\thumbnails");
 
 	elgg_register_viewtype_fallback('spotlight');
 	elgg_register_viewtype_fallback('embed');
 
 	elgg_extend_view('page/elements/head', 'archive/meta');
-	
+
 	//list featured in sidebar
 	elgg_extend_view('page/elements/sidebar', 'archive/featured');
 
@@ -84,9 +85,9 @@ function minds_archive_init() {
 			'title' =>  elgg_echo('minds:archive'),
 			'priority' => 4
 	));*/
-	
+
 	$prompt = elgg_get_plugin_user_setting('upload', elgg_get_logged_in_user_guid(), 'archive') ? '' : elgg_view('orientation/navigation_prompt', array('message'=>'Upload your media'));
-			
+
 	elgg_register_menu_item('site', array(
 		'name' => elgg_echo('minds:upload'),
 		'href' => 'archive/upload',
@@ -94,7 +95,7 @@ function minds_archive_init() {
 		'title' => elgg_echo('minds:upload'),
 		'priority' => 4
 	));
-	
+
 	elgg_register_menu_item('site', array(
 			'name' => 'archive',
 			//'href' => elgg_is_active_plugin('analytics') ? 'archive/trending' : 'archive/all',
@@ -103,7 +104,7 @@ function minds_archive_init() {
 			'title' =>  elgg_echo('minds:archive'),
 			'priority' => 4
 	));
-		
+
 	elgg_extend_view('css','archive/css');
 
 	// Photo related JS/CSS
@@ -118,16 +119,16 @@ function minds_archive_init() {
 
 	// Register a page handler, so we can have nice URLs (fallback in case some links go to old kaltura_video)
 	elgg_register_page_handler('archive','minds_archive_page_handler');
-		
+
 	//override icon urls
-	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'minds_archive_file_icon_url_override');	
+	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'minds_archive_file_icon_url_override');
 
 	// Listen to notification events and supply a more useful message
 	elgg_register_plugin_hook_handler('notify:entity:message', 'object', 'kaltura_notify_message');
 
 	// Add profile widget
     elgg_register_widget_type('kaltura_video',elgg_echo('kalturavideo:label:latest'),elgg_echo('kalturavideo:text:widgetdesc'));
-	
+
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'archive/actions/';
 
@@ -138,13 +139,13 @@ function minds_archive_init() {
 	elgg_register_action("archive/feature", $action_path . "feature.php");
 	elgg_register_action("archive/save", $action_path . "save.php");
 	elgg_register_action("archive/add_album", $action_path . "add_album.php");
-	
+
     elgg_register_action("archive/upload", $action_path . "upload.php");
 	 elgg_register_action("archive/batch", $action_path . "batch.php");
-	 
+
     elgg_register_action("archive/deleteElggVideo" , $action_path . "deleteAngular.php");
     elgg_register_action("archive/selectAlbum" , $action_path . "tidypics/album.php");
-	
+
 	elgg_register_event_handler('pagesetup','system','minds_archive_page_setup');
 }
 
@@ -153,9 +154,9 @@ function minds_archive_page_setup() {
 
 	$page_owner = elgg_get_page_owner_entity();
 	$user = elgg_get_logged_in_user_entity();
-	
+
 	/**
-	 * EMBED 
+	 * EMBED
 	 */
 	// embed support
 	$item = ElggMenuItem::factory(array(
@@ -212,9 +213,9 @@ function minds_archive_page_setup() {
 }
 
 function minds_archive_page_handler($page) {
-		
+
 	global $CONFIG;
-	
+
 	switch($page[0]) {
 		case 'all':
 			include('pages/archive/all.php');
@@ -226,7 +227,7 @@ function minds_archive_page_handler($page) {
 			if(isset($page[1]))
 				set_input('subtype', $page[1]);
 			include('pages/archive/featured.php');
-			break;	
+			break;
 		case 'trending':
 			include('pages/archive/trending.php');
 			break;
@@ -255,11 +256,11 @@ function minds_archive_page_handler($page) {
 			$user = $entity->getOwnerEntity(false);
 			if(isset($user->legacy_guid) && $user->legacy_guid)
 				$user_guid = $user->legacy_guid;
-			else 
+			else
 				$user_guid = $user->guid;
-			
+
 			$user_path = date('Y/m/d/', $user->time_created) . $user_guid;
-			
+
 			$data_root = $CONFIG->dataroot;
 			$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
 
@@ -268,11 +269,11 @@ function minds_archive_page_handler($page) {
 				case 'image':
 					if($entity->filename)
 						$filename = "$data_root$user_path/$entity->filename";
-					
+
 					if(isset($page[2])  && $size = $page[2]){
 						if(!isset($entity->batch_guid))
 							$entity->batch_guid = $this->container_guid;
-						
+
 						$filename = "$data_root$user_path/image/$entity->batch_guid/$entity->guid/$size.jpg";
 					}
 					break;
@@ -292,12 +293,12 @@ function minds_archive_page_handler($page) {
                     $filename = elgg_get_site_url() . 'mod/archive/graphics/wave.png';
                     break;
 			}
-		
+
 			if(!file_exists($filename)){
 				$user_path = date('Y/m/d/', $user->time_created) . $user->guid;
 				$filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
 			}
-	
+
 			$contents = @file_get_contents($filename);
 
 			header("Content-type: image/jpeg");
@@ -311,7 +312,7 @@ function minds_archive_page_handler($page) {
 			echo $chunk;
 			}
 			exit;
-			break;	
+			break;
 		case 'embed':
 			set_input('subtype', $page[1]);
 			include('pages/archive/embed.php');
@@ -324,7 +325,7 @@ function minds_archive_page_handler($page) {
 				set_input('guid',$page[1]);
 			}
 			include('pages/archive/view.php');
-			return true;			
+			return true;
 			break;
 		case 'inline':
 			set_input('video_id',$page[1]);
@@ -344,7 +345,7 @@ function minds_archive_page_handler($page) {
 		case 'network':
 			set_input('username', $page[1]);
 			include(dirname(__FILE__) . "/pages/archive/network.php");
-			break;	
+			break;
 		// Image lightbox
 		case 'image':
 			if (!elgg_is_xhr()) {
@@ -365,7 +366,7 @@ function minds_archive_page_handler($page) {
 					case 'show':
 					case 'view':
 						set_input('videopost',$page[2]);
-						include(dirname(__FILE__) . "/pages/archive/show.php");	
+						include(dirname(__FILE__) . "/pages/archive/show.php");
 						break;
 					default:
 						include(dirname(__FILE__) . "/pages/archive/owner.php");
@@ -489,12 +490,12 @@ function minds_archive_file_icon_url_override($hook, $type, $returnvalue, $param
 		} else {
 			$ext = '';
 		}
-		
+
 		$url = $CONFIG->cdn_url . "mod/archive/graphics/icons/{$type}{$ext}.gif";
 		$url = elgg_trigger_plugin_hook('file:icon:url', 'override', $params, $url);
 		return $url;
 	} elseif(elgg_instanceof($entity, 'object', 'kaltura_video')) {
-	
+
 		return kaltura_get_thumnail($entity->kaltura_video_id, 120,68, 100);
 	}
 }

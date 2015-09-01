@@ -1,3 +1,7 @@
+<div class="mdl-card__title minds-video-thumbnail" style="height:200px; background:#333" [ng-style]="{background: '#333 url(' + entity.thumbnail_src + ') center center'}">
+	<span class="material-icons">play_circle_outline</span>
+</div>
+
 <!-- Owner block -->
 <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="entity.ownerObj && entity.ownerObj.username">
 
@@ -8,12 +12,10 @@
 	</div>
 
 	<div class="body">
-		<a [router-link]="['/channel', {username: entity.ownerObj.username}]">
-			<strong>{{entity.ownerObj.name}}</strong>
+		<a >
+			<strong>{{ entity.title }}</strong>
 		</a>
-		<span></span>
+		<span>{{ entity.time_created * 1000 | date:'medium' }}</span>
 	</div>
 
 </div>
-
-THIS IS A VIDEO

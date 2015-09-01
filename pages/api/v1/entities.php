@@ -68,6 +68,18 @@ class entities implements interfaces\api{
             $type="user";
         }
 
+        if($pages[0] == "all" && $pages[1] != "all"){
+          switch($pages[1]){
+            case "images":
+              $type = "object";
+              $subtype = "image";
+              break;
+            case "videos":
+              $type = "object";
+              $subtype = "video";
+          }
+        }
+
         //the allowed, plus default, options
         $options = array(
             'type' => $type,

@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable} from 'angular2/angular2';
+import { Component, View, NgFor, NgIf, NgClass, NgStyle, Observable} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
@@ -11,7 +11,7 @@ import { Material } from 'src/directives/material';
 })
 @View({
   templateUrl: 'templates/cards/object/video.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink]
+  directives: [ NgFor, NgIf, NgClass, NgStyle, Material, RouterLink]
 })
 
 export class VideoCard {
