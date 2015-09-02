@@ -1,0 +1,45 @@
+<div class="mdl-grid wallet-grid" style="max-width:900px">
+
+  <div class="mdl-cell mdl-cell--4-col">
+
+    <div class="mdl-card mdl-shadow--2dp minds-wallet-points">
+      <div class="mdl-card__title mdl-card--expand minds-transaction-points">
+        <h2>{{points}} points</h2>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mdl-cell mdl-cell--8-col">
+
+    <div class="mdl-card mdl-shadow--2dp minds-transaction-card" *ng-for="#transaction of transactions">
+      <div class="mdl-card__title mdl-card--expand minds-transaction-points">
+        <span [hidden]="transaction.points < 0" class="positive">
+          + {{transaction.points}}
+        </span>
+        <span [hidden]="transaction.points >= 0" class="negative">
+          {{transaction.points}}
+        </span>
+
+      </div>
+      <div class="mdl-card__actions mdl-card--border minds-transaction-details">
+        <p>
+          {{transaction.description}}
+        </p>
+        <div class="mdl-layout-spacer"></div>
+        <i class="material-icons mdl-color-text--grey-400">access_time</i>
+        <p class="ts mdl-color-text--grey-400">{{transaction.time_created * 1000 | date:'medium'}}</p>
+      </div>
+    </div>
+
+    <infinite-scroll
+        distance="25%"
+        (load)="loadTransactions()"
+        *ng-if="moreData"
+        />
+        <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+    </infinite-scroll>
+
+  </div>
+
+</div>
