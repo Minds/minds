@@ -28,7 +28,7 @@ class DailyRewards{
               'message'=>$message
               ));
         }
-        $cacher->set('rewarded:' . Core\Session::getLoggedinUser()->guid, true, strtotime('tomorrow', time()));
+        $cacher->set('rewarded:' . Core\Session::getLoggedinUser()->guid, true, strtotime('tomorrow', time()) - time());
     }
 
 }
