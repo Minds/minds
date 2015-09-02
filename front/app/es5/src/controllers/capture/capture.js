@@ -26,29 +26,29 @@ var Capture = (function () {
     };
     Capture.prototype.uploadFile = function () {
         var self = this;
-        var file = {
+        var data = {
             guid: null,
             state: 'created',
             progress: 0
         };
         var fileInfo = document.getElementById("file").files[0];
         if (fileInfo.type.indexOf('image') > -1) {
-            file.type = "image";
+            data.type = "image";
         }
         else if (fileInfo.type.indexOf('video') > -1) {
-            file.type = "video";
+            data.type = "video";
         }
         else if (fileInfo.type.indexOf('audio') > -1) {
-            file.type = "audio";
+            data.type = "audio";
         }
         else {
-            file.type = "unknown";
+            data.type = "unknown";
         }
-        file.name = fileInfo.name;
-        file.file = fileInfo;
-        var index = this.uploads.push(file) - 1;
-        this.upload.post('api/v1/archive', this.uploads[index], function (progress) {
+        data.name = fileInfo.name;
+        var index = this.uploads.push(data) - 1;
+        this.upload.post('api/v1/archive', [fileInfo], data, function (progress) {
             console.log('progress update');
+            console.log(progress);
             self.uploads[index].progress = progress;
         })
             .then(function (response) {

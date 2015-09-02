@@ -28,30 +28,32 @@ export class Capture {
 
   uploadFile(){
     var self = this;
-    var file : any = {
+    var data : any = {
       guid: null,
       state: 'created',
       progress: 0
     }
+
     var fileInfo = document.getElementById("file").files[0];
 
     if(fileInfo.type.indexOf('image') > -1){
-      file.type = "image";
+      data.type = "image";
     } else if(fileInfo.type.indexOf('video') > -1){
-      file.type = "video";
+      data.type = "video";
     } else if(fileInfo.type.indexOf('audio') > -1){
-      file.type = "audio";
+      data.type = "audio";
     } else {
-      file.type = "unknown";
+      data.type = "unknown";
     }
 
-    file.name = fileInfo.name;
-    file.file = fileInfo;
+    data.name = fileInfo.name;
+    //file.file = fileInfo;
 
-    let index = this.uploads.push(file) - 1;
+    let index = this.uploads.push(data) - 1;
 
-    this.upload.post('api/v1/archive', this.uploads[index], (progress) => {
+    this.upload.post('api/v1/archive', [fileInfo], data, (progress) => {
       console.log('progress update');
+      console.log(progress);
       self.uploads[index].progress = progress;
       })
 				.then((response : any) => {

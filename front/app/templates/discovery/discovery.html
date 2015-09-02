@@ -9,6 +9,7 @@
     <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp" *ng-for="#entity of entities">
 
       <minds-card-video [object]="entity" *ng-if="entity.subtype == 'video'"></minds-card-video>
+      <minds-card-image [object]="entity" *ng-if="entity.subtype == 'image'"></minds-card-image>
 
       <!-- START: User Only -->
       <minds-card-user [object]="entity" *ng-if="entity.type == 'user'"></minds-card-user>

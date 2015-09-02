@@ -30,8 +30,16 @@ var Upload = (function () {
         if (!data.filekey) {
             data.filekey = "file";
         }
-        for (var file in files)
-            formData.append(data.filekey + "[]", file);
+        if (files.length > 1) {
+            for (var _i = 0; _i < files.length; _i++) {
+                var file = files[_i];
+                formData.append(data.filekey + "[]", file);
+            }
+        }
+        else {
+            formData.append(data.filekey, files[0]);
+        }
+        delete data.filekey;
         for (var key in data) {
             formData.append(key, data[key]);
         }
@@ -39,7 +47,7 @@ var Upload = (function () {
             var xhr = new XMLHttpRequest();
             xhr.open('POST', self.base + endpoint, true);
             xhr.onprogress = function (e) {
-                progress(e.loaded / e.total);
+                progress(e.loaded);
             };
             xhr.onload = function () {
                 if (this.status == 200) {

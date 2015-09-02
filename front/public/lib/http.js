@@ -5024,6 +5024,49 @@ System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/
   };
 });
 
+System.register("http/src/backends/browser_xhr", ["angular2/di"], function($__export) {
+  "use strict";
+  var __moduleName = "http/src/backends/browser_xhr";
+  var __decorate,
+      __metadata,
+      Injectable,
+      BrowserXhr;
+  return {
+    setters: [function($__m) {
+      Injectable = $__m.Injectable;
+    }],
+    execute: function() {
+      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+          return Reflect.decorate(decorators, target, key, desc);
+        switch (arguments.length) {
+          case 2:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(o)) || o;
+            }, target);
+          case 3:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key)), void 0;
+            }, void 0);
+          case 4:
+            return decorators.reduceRight(function(o, d) {
+              return (d && d(target, key, o)) || o;
+            }, desc);
+        }
+      };
+      __metadata = (this && this.__metadata) || function(k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+          return Reflect.metadata(k, v);
+      };
+      BrowserXhr = ($traceurRuntime.createClass)(function() {}, {build: function() {
+          return (new XMLHttpRequest());
+        }}, {});
+      $__export("BrowserXhr", BrowserXhr);
+      $__export("BrowserXhr", BrowserXhr = __decorate([Injectable(), __metadata('design:paramtypes', [])], BrowserXhr));
+    }
+  };
+});
+
 System.register("http/src/backends/browser_jsonp", ["angular2/di", "angular2/src/facade/lang"], function($__export) {
   "use strict";
   var __moduleName = "http/src/backends/browser_jsonp";
@@ -5105,49 +5148,6 @@ System.register("http/src/backends/browser_jsonp", ["angular2/di", "angular2/src
       }, {});
       $__export("BrowserJsonp", BrowserJsonp);
       $__export("BrowserJsonp", BrowserJsonp = __decorate([Injectable(), __metadata('design:paramtypes', [])], BrowserJsonp));
-    }
-  };
-});
-
-System.register("http/src/backends/browser_xhr", ["angular2/di"], function($__export) {
-  "use strict";
-  var __moduleName = "http/src/backends/browser_xhr";
-  var __decorate,
-      __metadata,
-      Injectable,
-      BrowserXhr;
-  return {
-    setters: [function($__m) {
-      Injectable = $__m.Injectable;
-    }],
-    execute: function() {
-      __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-          return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-          case 2:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(o)) || o;
-            }, target);
-          case 3:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key)), void 0;
-            }, void 0);
-          case 4:
-            return decorators.reduceRight(function(o, d) {
-              return (d && d(target, key, o)) || o;
-            }, desc);
-        }
-      };
-      __metadata = (this && this.__metadata) || function(k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-          return Reflect.metadata(k, v);
-      };
-      BrowserXhr = ($traceurRuntime.createClass)(function() {}, {build: function() {
-          return (new XMLHttpRequest());
-        }}, {});
-      $__export("BrowserXhr", BrowserXhr);
-      $__export("BrowserXhr", BrowserXhr = __decorate([Injectable(), __metadata('design:paramtypes', [])], BrowserXhr));
     }
   };
 });

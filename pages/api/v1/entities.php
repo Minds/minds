@@ -74,6 +74,10 @@ class entities implements interfaces\api{
               $type = "object";
               $subtype = "image";
               break;
+            case "albums":
+              $type = "object";
+              $subtype = "album";
+              break;
             case "videos":
               $type = "object";
               $subtype = "video";
@@ -96,7 +100,7 @@ class entities implements interfaces\api{
 
 
         $entities = core\entities::get($options);
-
+        $response = array();
         if($entities){
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->guid;

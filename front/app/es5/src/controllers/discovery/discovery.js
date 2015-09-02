@@ -54,7 +54,8 @@ var Discovery = (function () {
                 self.entities = data.entities;
             }
             else {
-                data.entities.shift();
+                if (self.offset)
+                    data.entities.shift();
                 for (var _i = 0, _a = data.entities; _i < _a.length; _i++) {
                     var entity = _a[_i];
                     self.entities.push(entity);
@@ -71,7 +72,7 @@ var Discovery = (function () {
         }),
         angular2_1.View({
             templateUrl: 'templates/discovery/discovery.html',
-            directives: [router_1.RouterLink, angular2_1.NgFor, angular2_1.NgIf, material_1.Material, infinite_scroll_1.InfiniteScroll, angular2_1.NgClass, cards_1.UserCard, cards_1.VideoCard]
+            directives: [router_1.RouterLink, angular2_1.NgFor, angular2_1.NgIf, material_1.Material, infinite_scroll_1.InfiniteScroll, angular2_1.NgClass, cards_1.UserCard, cards_1.VideoCard, cards_1.ImageCard]
         }),
         __param(1, angular2_1.Inject(router_1.Router)),
         __param(2, angular2_1.Inject(router_1.RouteParams)), 

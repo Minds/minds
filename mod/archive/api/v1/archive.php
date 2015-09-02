@@ -60,7 +60,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
             //images should still use put, large videos use post because of memory issues.
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
 
-            if(@is_array(getimagesize($_FILES['file']['tmp_name']))){
+            if(strpos($_FILES['file']['type'], 'image') !== FALSE || @is_array(getimagesize($_FILES['file']['tmp_name']))){
                 //error_log('image as a video..');
                 $image = new \minds\plugin\archive\entities\image();
                 $image->batch_guid = 0;
@@ -195,49 +195,49 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
      */
     public function put($pages){
 
-	switch($pages[0]){
+    	switch($pages[0]){
 
-		case 'video':
-			//error_log(print_r($_FILES,true));
-			$video = new entities\video();
+    		case 'video':
+    			//error_log(print_r($_FILES,true));
+    			$video = new entities\video();
 
-			$fp = tmpfile();
-			$metaDatas = stream_get_meta_data($fp);
-			$tmpFilename = $metaDatas['uri'];
-			$req = $this->parsePut();
-                        $body = $req['body'];
-            fwrite($fp, $body);
-            $video->access_id = 0;
-			$video->upload($tmpFilename);
-			$guid = $video->save();
-			 fclose($fp);
-			break;
-		case 'image':
-			$image = new \minds\plugin\archive\entities\image();
-			$image->batch_guid = 0;
-			$image->access_id = 0;
-			$guid = $image->save();
-			$dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";
-			$image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
-			if (!file_exists($dir)) {
-				mkdir($dir, 0755, true);
-			}
+    			$fp = tmpfile();
+    			$metaDatas = stream_get_meta_data($fp);
+    			$tmpFilename = $metaDatas['uri'];
+    			$req = $this->parsePut();
+                            $body = $req['body'];
+                fwrite($fp, $body);
+                $video->access_id = 0;
+    			$video->upload($tmpFilename);
+    			$guid = $video->save();
+    			 fclose($fp);
+    			break;
+    		case 'image':
+    			$image = new \minds\plugin\archive\entities\image();
+    			$image->batch_guid = 0;
+    			$image->access_id = 0;
+    			$guid = $image->save();
+    			$dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";
+    			$image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
+    			if (!file_exists($dir)) {
+    				mkdir($dir, 0755, true);
+    			}
 
-			/**
-			 * PHP PUT is a bit tricky, this should really be in a helper function
-			 * @todo ^^
-			 */
-			$fp = fopen("$dir/master.jpg", "w");
-			$req = $this->parsePut();
-			$body = $req['body'];
-			fwrite($fp, $body);
-			fclose($fp);
+    			/**
+    			 * PHP PUT is a bit tricky, this should really be in a helper function
+    			 * @todo ^^
+    			 */
+    			$fp = fopen("$dir/master.jpg", "w");
+    			$req = $this->parsePut();
+    			$body = $req['body'];
+    			fwrite($fp, $body);
+    			fclose($fp);
 
 
-			$loc = $image->getFilenameOnFilestore();
-			$image->createThumbnails();
-			$image->save();
-	}
+    			$loc = $image->getFilenameOnFilestore();
+    			$image->createThumbnails();
+    			$image->save();
+    	}
 
         return Factory::response(array('guid'=>$guid, "location"=>$loc));
 

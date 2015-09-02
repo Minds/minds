@@ -8,19 +8,19 @@ use minds\entities;
 use Minds\Helpers;
 
 class image extends entities\file{
-	
-			
+
+
 	protected function initializeAttributes() {
 		parent::initializeAttributes();
 
 		$this->attributes['super_subtype'] = 'archive';
 		$this->attributes['subtype'] = "image";
 	}
-	
+
 	public function getUrl(){
 		return elgg_get_site_url() . "archive/view/$this->container_guid/$this->guid";
 	}
-	
+
 	public function getIconUrl($size = 'large'){
 		global $CONFIG; //@todo remove globals!
 		if($this->time_created <= 1407542400)
@@ -35,16 +35,16 @@ class image extends entities\file{
 			$base_url = \elgg_get_site_url();
 		}
 
-		return $base_url. 'archive/thumbnail/' . $this->guid . '/'.$size;
+		return $base_url. 'api/v1/archive/thumbnails/' . $this->guid . '/'.$size;
 	}
 
 	/**
 	 * Extend the default entity save function to update the remote service
-	 * 
+	 *
 	 */
 	public function save($index = true){
 		$this->super_subtype = 'archive';
-			
+
 		parent::save($index);
 
 		try{
@@ -54,42 +54,42 @@ class image extends entities\file{
 
         return $this->guid;
 	}
-	
+
 	/**
 	 * Extend the default delete function to remove from the remote service
 	 */
 	public function delete(){
 		return parent::delete();
-		
+
 		//remove from the filestore
 	}
-	
+
 	/**
 	 * Return the folder in which this image is stored
 	 */
 	public function getFilePath(){
 		return str_replace($this->getFilename(), '', $this->getFilenameOnFilestore());
 	}
-	
-	
+
+
 	public function upload($file){
-				
+
 		if(!$this->guid){
 			$this->guid = \Minds\Core\Guid::build();
 		}
-		
+
 		if(!$this->filename){
 			$dir = $this->getFilenameOnFilestore() . "/image/$this->batch_guid/$this->guid";
 			if (!file_exists($dir)) {
 				mkdir($dir, 0755, true);
 			}
 		}
-		
+
 		if(!$file['tmp_name'])
 			throw new \Exception("Upload failed. The image may be too large");
-		
+
 		$this->filename = "image/$this->batch_guid/$this->guid/".$file['name'];
-		
+
 		$filename = $this->getFilenameOnFilestore();
 		$result = move_uploaded_file($file['tmp_name'], $filename);
 
@@ -99,7 +99,7 @@ class image extends entities\file{
 
 		return $result;
 	}
-	
+
 	public function createThumbnails($sizes = array('small', 'medium','large', 'xlarge')){
 		$master = $this->getFilenameOnFilestore();
 		foreach($sizes as $size){
