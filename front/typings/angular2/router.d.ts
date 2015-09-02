@@ -1,4 +1,4 @@
-// Type definitions for Angular v2.0.0-local_sha.f0e7f13
+// Type definitions for Angular v2.0.0-alpha.36
 // Project: http://angular.io/
 // Definitions by: angular team <https://github.com/angular/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -13,7 +13,7 @@
 // If you don't have them installed you can install them using TSD
 // https://github.com/DefinitelyTyped/tsd
 
-///<reference path="../es6-promise/es6-promise.d.ts"/>
+///<reference path="./angular2.d.ts"/>
 
 
 
@@ -214,7 +214,7 @@ declare module ngRouter {
 
      visibleHref: string;
 
-     routeParams: void;
+     routeParams: any;
 
      onClick(): boolean;
   }
@@ -291,7 +291,7 @@ declare module ngRouter {
      back(): void;
   }
 
-  class HTML5LocationStrategy extends LocationStrategy {
+  class PathLocationStrategy extends LocationStrategy {
 
      onPopState(fn: EventListener): void;
 
@@ -551,13 +551,13 @@ declare module ngRouter {
 
      params: StringMap<string, any>;
 
-     componentType: void;
+     componentType: any;
 
      resolveComponentType(): Promise<Type>;
 
-     specificity: void;
+     specificity: any;
 
-     terminal: void;
+     terminal: any;
 
      routeData(): Object;
   }
@@ -593,6 +593,8 @@ declare module ngRouter {
      new(args: any): any;
 
   }
+
+  const ROUTE_DATA : OpaqueToken ;
 
   const ROUTER_DIRECTIVES : List<any> ;
 
@@ -667,9 +669,7 @@ declare module ngRouter {
      data?: any;
   }
 
-  const ROUTE_DATA : OpaqueToken ;
-
-  var RouteConfig : (configs: List<RouteDefinition|Object>) => ClassDecorator ;
+  var RouteConfig : (configs: List<RouteDefinition>) => ClassDecorator ;
 
   interface ComponentDefinition {
 

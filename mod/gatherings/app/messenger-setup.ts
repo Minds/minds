@@ -6,7 +6,7 @@ import { Material } from 'src/directives/material';
 
 @Component({
   selector: 'minds-messenger-setup',
-  viewInjector: [ Client ]
+  viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/messenger-setup.html',

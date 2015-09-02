@@ -9,7 +9,7 @@ import { Material } from 'src/directives/material';
 
 @Component({
   selector: 'minds-gatherings',
-  viewInjector: [ Client ]
+  viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/gatherings.html',

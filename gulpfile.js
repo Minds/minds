@@ -130,31 +130,32 @@ gulp.task('clean.tmp', function(done) {
 
 // -------------
 // Build plugins.
-gulp.task('build.plugins', function () {
+gulp.task('build.plugins', function (cb) {
 //  var result = gulp.src('./front/app/**/*scss');
   var plugins = fs.readdirSync(PATH.src.plugins);
-  plugins.map(function(plugin){
+  plugins.map(function(plugin, i){
     var path = PATH.src.plugins + '/' + plugin;
     try {
       var info = require(path + '/plugin.json');
-    } catch (error) {
-      if(error.code == 'MODULE_NOT_FOUND')
-        return false;
 
-      console.log(error);
-      return false;
+      // ----------
+      // Build plugins to source
+      gulp.src(path + '/app/**/*ts')
+        .pipe(gulp.dest('./front/app/src/plugins/' + plugin));
+
+      gulp.src(path + '/app/templates/**/*html')
+        .pipe(gulp.dest('./front/app/templates/plugins/' + plugin));
+
+      gulp.src(path + '/app/stylesheets/**/*scss')
+        .pipe(gulp.dest('./front/app/stylesheets/plugins/' + plugin));
+
+    } catch (error) {
+      if(error.code != 'MODULE_NOT_FOUND')
+        console.log(error);
     }
 
-    // ----------
-    // Build plugins to source
-    gulp.src(path + '/app/**/*ts')
-      .pipe(gulp.dest('./front/app/src/plugins/' + plugin));
-
-    gulp.src(path + '/app/templates/**/*html')
-      .pipe(gulp.dest('./front/app/templates/plugins/' + plugin));
-
-    gulp.src(path + '/app/stylesheets/**/*scss')
-      .pipe(gulp.dest('./front/app/stylesheets/plugins/' + plugin));
+    if(i == plugins.length -1)
+      cb();
 
   });
 
