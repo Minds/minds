@@ -21,7 +21,8 @@ class actions extends core\page implements interfaces\page{
 		
 		$entity = core\Entities::build(new \minds\entities\entity($guid));
 		if(!$entity)
-			throw new \Exception("Entity $guid not found");
+            return;
+            //throw new \Exception("Entity $guid not found");
 		
 		//if($entity instanceof \minds\entities\activity && $entity->entity_guid)
 		//	$entity = core\Entities::build(new \minds\entities\entity($entity->entity_guid));
