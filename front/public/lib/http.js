@@ -4062,9 +4062,9 @@ System.registerDynamic("rx", [], true, function(require, exports, module) {
   return module.exports;
 });
 
-System.register("http/http", ["angular2/di", "http/src/http", "http/src/backends/xhr_backend", "http/src/backends/jsonp_backend", "http/src/backends/browser_xhr", "http/src/backends/browser_jsonp", "http/src/base_request_options", "http/src/interfaces", "http/src/base_response_options", "http/src/backends/mock_backend", "http/src/static_request", "http/src/static_response", "http/src/headers", "http/src/enums", "http/src/url_search_params"], function($__export) {
+System.register("angular2/http", ["angular2/di", "http/src/http", "http/src/backends/xhr_backend", "http/src/backends/jsonp_backend", "http/src/backends/browser_xhr", "http/src/backends/browser_jsonp", "http/src/base_request_options", "http/src/interfaces", "http/src/base_response_options", "http/src/backends/mock_backend", "http/src/static_request", "http/src/static_response", "http/src/headers", "http/src/enums", "http/src/url_search_params"], function($__export) {
   "use strict";
-  var __moduleName = "http/http";
+  var __moduleName = "angular2/http";
   var bind,
       Http,
       Jsonp,

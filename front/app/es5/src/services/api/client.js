@@ -13,7 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var angular2_1 = require('angular2/angular2');
-var http_1 = require('http/http');
+var http_1 = require('angular2/http');
 var cookie_1 = require('src/services/cookie');
 var Client = (function () {
     function Client(http) {
@@ -114,7 +114,7 @@ var Client = (function () {
     };
     Client = __decorate([
         __param(0, angular2_1.Inject(http_1.Http)), 
-        __metadata('design:paramtypes', [Http])
+        __metadata('design:paramtypes', [(typeof Http !== 'undefined' && Http) || Object])
     ], Client);
     return Client;
 })();

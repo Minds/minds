@@ -1,4 +1,4 @@
-// Type definitions for Angular v2.0.0-local_sha.f0e7f13
+// Type definitions for Angular v2.0.0-local_sha.77ccc1c
 // Project: http://angular.io/
 // Definitions by: angular team <https://github.com/angular/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -952,6 +952,6 @@ declare module ngHttp {
 
 }
 
-declare module "http/http" {
+declare module "angular2/http" {
   export = ngHttp;
 }

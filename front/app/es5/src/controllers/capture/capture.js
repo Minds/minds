@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var angular2_1 = require('angular2/angular2');
-var http_1 = require('http/http');
+var http_1 = require('angular2/http');
 var upload_1 = require('src/services/api/upload');
 var client_1 = require('src/services/api/client');
 var Capture = (function () {

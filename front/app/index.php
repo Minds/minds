@@ -52,8 +52,7 @@ ini_set( 'display_errors','1');
           baseURL: './',
           paths: {
             '*': '*.js',
-            'angular2/*': 'lib/*.js',
-            'http/http': 'lib/http.js'
+            'angular2/*': 'lib/*.js'
           }
         });
 

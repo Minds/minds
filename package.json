@@ -6,9 +6,9 @@
     "definition": "front/typings/tsd.d.ts"
   },
   "dependencies": {
-    "angular2": "2.0.0-alpha.33",
-    "es6-module-loader": "^0.15.0",
-    "systemjs": "^0.16.0",
+    "angular2": "2.0.0-alpha.36",
+    "es6-module-loader": "^0.16.2",
+    "systemjs": "^0.18.1",
     "zone.js": "^0.4.1",
     "reflect-metadata": "0.1.0"
   },
@@ -34,7 +34,7 @@
     "semver": "^4.3.6",
     "serve-static": "^1.9.2",
     "stream-series": "^0.1.1",
-    "systemjs-builder": "^0.10.6",
-    "typescript": "~1.5.0-beta"
+    "systemjs-builder": "^0.13.3",
+    "typescript": "~1.5.0"
   }
 }

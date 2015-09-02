@@ -1,5 +1,5 @@
 import { Component, View, NgFor, FORM_DIRECTIVES } from 'angular2/angular2';
-import { Http, Headers } from 'http/http';
+import { Http, Headers } from 'angular2/http';
 
 import { Upload } from 'src/services/api/upload';
 import { Client } from 'src/services/api/client';
