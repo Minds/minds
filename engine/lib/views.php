@@ -218,7 +218,7 @@ function elgg_register_ajax_view($view) {
 
 /**
  * Unregister a view for ajax calls
- * 
+ *
  * @param string $view The view name
  * @return void
  * @since 1.8.3
@@ -248,7 +248,7 @@ function elgg_get_view_location($view, $viewtype = '') {
 	if (empty($viewtype)) {
 		$viewtype = elgg_get_viewtype();
 	}
-	
+
 	if (!isset($CONFIG->views->locations[$viewtype][$view])) {
 		if (!isset($CONFIG->viewpath)) {
 			return dirname(dirname(dirname(__FILE__))) . "/views/";
@@ -484,7 +484,7 @@ function elgg_view($view, $vars = array(), $bypass = false, $ignored = false, $v
 
 	foreach ($viewlist as $priority => $view) {
 
-		$view_location = elgg_get_view_location($view, $viewtype);  
+		$view_location = elgg_get_view_location($view, $viewtype);
 		$view_file = "$view_location$viewtype/$view.php";
 
 		// try to include view
@@ -506,7 +506,7 @@ function elgg_view($view, $vars = array(), $bypass = false, $ignored = false, $v
 					$error = "Neither $viewtype/$view nor default/$view view exists.";
 				}
 			}
-			
+
 			// log warning
 			elgg_log($error, 'NOTICE');
 		}
@@ -620,7 +620,7 @@ function elgg_unextend_view($view, $view_extension) {
  * @since  1.8
  */
 function elgg_view_page($title, $body, $page_shell = 'default', $vars = array()) {
-	
+
 	$messages['error'] = system_messages(NULL, "error");
 	$messages['success'] = system_messages(NULL, "success");
 
@@ -629,7 +629,7 @@ function elgg_view_page($title, $body, $page_shell = 'default', $vars = array())
 	$vars['sysmessages'] = (array)$messages;
 
 	$vars = elgg_trigger_plugin_hook('output:before', 'page', null, $vars);
-	
+
 	// check for deprecated view
 	if ($page_shell == 'default' && elgg_view_exists('pageshells/pageshell')) {
 		elgg_deprecated_notice("pageshells/pageshell is deprecated by page/$page_shell", 1.8);
@@ -806,7 +806,7 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 	if (!$entity || !($entity instanceof ElggEntity)) {
 		return false;
 	}
-	
+
 	global $autofeed;
 	$autofeed = true;
 
@@ -830,7 +830,7 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 	if (is_string($view)) {
 		return elgg_view($view, $vars, $bypass, $debug);
 	}
-	
+
 	$entity_type = $entity->getType();
 	$subtype = $entity->getSubtype();
 	if (empty($subtype)) {
@@ -844,7 +844,7 @@ function elgg_view_entity(ElggEntity $entity, $vars = array(), $bypass = true, $
 	if (empty($contents)) {
 		$contents = elgg_view("$entity_type/default", $vars, $bypass, $debug);
 	}
-	
+
 	return $contents;
 }
 
@@ -977,7 +977,7 @@ $list_type_toggle = true, $pagination = true) {
 		elgg_deprecated_notice("'listtype' has been deprecated by 'list_type' for lists", 1.8);
 		$list_type = get_input('listtype');
 	}
-	
+
 	if (is_array($vars)) {
 		// new function
 		$defaults = array(
@@ -1205,7 +1205,7 @@ function elgg_view_river_item($item, array $vars = array()) {
 	if (!$view || !elgg_view_exists($view, 'default')) {
 		return '';
 	}
-	
+
 	$subject = $item->getSubjectEntity();
 	$object = $item->getObjectEntity();
 	if (!$subject || !$object) {
@@ -1293,25 +1293,25 @@ function elgg_view_form($action, $form_vars = array(), $body_vars = array()) {
  */
 function elgg_view_list_item($item, array $vars = array()) {
 	global $CONFIG;
-	
+
 	$type = $item->getType();
-	
+
 	if ($type == 'river') {
 		return elgg_view_river_item($item, $vars);
 	}
-	
-	
+
+
 	return elgg_view_entity($item, $vars);
 }
 
 /**
  * View one of the elgg sprite icons
- * 
+ *
  * Shorthand for <span class="elgg-icon elgg-icon-$name"></span>
- * 
+ *
  * @param string $name  The specific icon to display
  * @param string $class Additional class: float, float-alt, or custom class
- * 
+ *
  * @return string The html for displaying an icon
  */
 function elgg_view_icon($name, $class = '') {
@@ -1551,83 +1551,3 @@ function elgg_views_handle_deprecated_views() {
 		elgg_extend_view('page_elements/contentwrapper', 'page/elements/wrapper');
 	}
 }
-
-/**
- * Initialize viewtypes on system boot event
- * This ensures simplecache is cleared during upgrades. See #2252
- *
- * @return void
- * @access private
- * @elgg_event_handler boot system
- */
-function elgg_views_boot() {
-	global $CONFIG;
-	$base_url = isset($CONFIG->cdn_url) ? $CONFIG->cdn_url : elgg_get_site_url();
-
-
-	elgg_register_simplecache_view('css/ie');
-	elgg_register_simplecache_view('css/ie6');
-	elgg_register_simplecache_view('css/ie7');
-
-	elgg_register_js('jquery', $base_url .'vendors/jquery/jquery-1.11.0.js', 'head');
-	elgg_register_js('jquery-ui', $base_url.'vendors/jquery/jquery-ui-1.10.4.min.js', 'footer');
-	elgg_register_js('jquery.form', $base_url . 'vendors/jquery/jquery.form.js');
-
-	elgg_register_simplecache_view('js/elgg');
-	$elgg_js_url = elgg_get_simplecache_url('js', 'elgg');
-	elgg_register_js('elgg', $elgg_js_url, 'footer',-500);
-
-	elgg_load_js('jquery');
-	elgg_load_js('jquery-ui');
-	elgg_load_js('elgg');
-
-	elgg_register_simplecache_view('js/lightbox');
-	$lightbox_js_url = elgg_get_simplecache_url('js', 'lightbox');
-	elgg_register_js('lightbox', $lightbox_js_url);
-
-	elgg_register_simplecache_view('css/lightbox');
-	$lightbox_css_url = elgg_get_simplecache_url('css', 'lightbox');
-	elgg_register_css('lightbox', $lightbox_css_url);
-
-
-	elgg_register_css('select2', $base_url . 'vendor/ivaynberg/select2/select2.css');
-	elgg_register_js('select2', $base_url . 'vendor/ivaynberg/select2/select2.js');
-
-	elgg_register_simplecache_view('css/elgg');
-	$elgg_css_url = elgg_get_simplecache_url('css', 'elgg');
-	elgg_register_css('elgg', $elgg_css_url,1);
-
-	elgg_load_css('elgg');
-
-	elgg_register_ajax_view('js/languages');
-
-	elgg_register_plugin_hook_handler('output:before', 'layout', 'elgg_views_add_rss_link');
-
-	// discover the built-in view types
-	// @todo the cache is loaded in load_plugins() but we need to know view_types earlier
-	$view_path = $CONFIG->viewpath;
-
-	$views = scandir($view_path);
-
-	foreach ($views as $view) {
-		if ($view[0] !== '.' && is_dir($view_path . $view)) {
-			elgg_register_viewtype($view);
-		}
-	}
-
-	// set default icon sizes - can be overridden in settings.php or with plugin
-	if (!isset($CONFIG->icon_sizes)) {
-		$icon_sizes = array(
-			'topbar' => array('w' => 16, 'h' => 16, 'square' => TRUE, 'upscale' => TRUE),
-			'tiny' => array('w' => 25, 'h' => 25, 'square' => TRUE, 'upscale' => TRUE),
-			'small' => array('w' => 40, 'h' => 40, 'square' => TRUE, 'upscale' => TRUE),
-			'medium' => array('w' => 100, 'h' => 100, 'square' => TRUE, 'upscale' => TRUE),
-			'large' => array('w' => 200, 'h' => 200, 'square' => FALSE, 'upscale' => FALSE),
-			'master' => array('w' => 550, 'h' => 550, 'square' => FALSE, 'upscale' => FALSE),
-		);
-		elgg_set_config('icon_sizes', $icon_sizes);
-	}
-}
-
-elgg_register_event_handler('boot', 'system', 'elgg_views_boot');
-elgg_register_event_handler('init', 'system', 'elgg_views_handle_deprecated_views');
