@@ -11,7 +11,6 @@ ini_set( 'display_errors','1');
   <head>
     <title>Minds <?= "" ?></title>
     <base href="/" />
-    <script>baseElement = document.querySelector('base');baseElement.attr = baseElement.getAttribute;</script>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
     <!-- temporary design -->
@@ -47,16 +46,9 @@ ini_set( 'display_errors','1');
         ?>
         window.Minds = <?= json_encode($minds, JSON_PRETTY_PRINT) ?>;
 
-        System.config({
-          defaultJSExtensions: true,
-          baseURL: './',
-          paths: {
-            '*': '*.js',
-            'angular2/*': 'lib/*.js'
-          }
-        });
-
-        System.import('app');
+        System.import('app')
+          .catch(function(){console.error(e,
+            'Report this error at https://github.com/mgechev/angular2-seed/issues')});
 
     </script>
   </body>

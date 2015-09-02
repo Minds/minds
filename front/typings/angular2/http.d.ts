@@ -952,6 +952,6 @@ declare module ngHttp {
 
 }
 
-declare module "angular2/http" {
+declare module "http/http" {
   export = ngHttp;
 }

@@ -11,7 +11,6 @@ ini_set( 'display_errors','1');
   <head>
     <title>Minds <?= "" ?></title>
     <base href="/" />
-    <script>baseElement = document.querySelector('base');baseElement.attr = baseElement.getAttribute;</script>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
     <!-- temporary design -->
@@ -36,10 +35,10 @@ ini_set( 'display_errors','1');
   	 <script src="/lib/es6-module-loader-sans-promises.js?v=0.0.1"></script>
   	 <script src="/lib/Reflect.js?v=0.0.1"></script>
   	 <script src="/lib/system.src.js?v=0.0.1"></script>
-  	 <script src="/lib/zone.js?v=0.0.1"></script>
-  	 <script src="/lib/http.js?v=0.0.1"></script>
-  	 <script src="/lib/angular2.js?v=0.0.1"></script>
-  	 <script src="/lib/router.js?v=0.0.1"></script>
+  	 <script src="/lib/system.config.js?v=0.0.1"></script>
+  	 <script src="/lib/angular2.dev.js?v=0.0.1"></script>
+  	 <script src="/lib/router.dev.js?v=0.0.1"></script>
+  	 <script src="/lib/http.dev.js?v=0.0.1"></script>
   	 <!-- endinject -->
 
     <script>
@@ -55,16 +54,9 @@ ini_set( 'display_errors','1');
         ?>
         window.Minds = <?= json_encode($minds, JSON_PRETTY_PRINT) ?>;
 
-        System.config({
-          defaultJSExtensions: true,
-          baseURL: './',
-          paths: {
-            '*': '*.js',
-            'angular2/*': 'lib/*.js'
-          }
-        });
-
-        System.import('app');
+        System.import('app')
+          .catch(function(){console.error(e,
+            'Report this error at https://github.com/mgechev/angular2-seed/issues')});
 
     </script>
   </body>
