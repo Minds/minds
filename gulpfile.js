@@ -138,8 +138,11 @@ gulp.task('build.plugins', function () {
     try {
       var info = require(path + '/plugin.json');
     } catch (error) {
-        console.log(error);
+      if(error.code == 'MODULE_NOT_FOUND')
         return false;
+
+      console.log(error);
+      return false;
     }
 
     // ----------
@@ -155,10 +158,15 @@ gulp.task('build.plugins', function () {
 
   });
 
-  gulp.src('./front/app/stylesheets/plugins/**/*scss')
-    .pipe(concat('plugins.scss'))
-    .pipe(gulp.dest('./front/app/stylesheets/'));
+});
 
+
+// ----------
+// Builds scss for plugins
+gulp.task('build.plugins.scss', function () {
+    gulp.src('./front/app/stylesheets/plugins/**/*scss')
+      .pipe(concat('plugins.scss'))
+      .pipe(gulp.dest('./front/app/stylesheets/'));
 });
 
 // --------------
@@ -177,7 +185,7 @@ gulp.task('build.lib.dev', ['build.ng2.dev'], function () {
 /**
  * Build CSS from SCSS
  */
-gulp.task('build.scss', function () {
+gulp.task('build.scss', ['build.plugins.scss'], function () {
 	  var result = gulp.src('./front/app/**/*scss')
 	    .pipe(sass().on('error', sass.logError))
 	    .pipe(gulp.dest(PATH.dest.dev.all));
