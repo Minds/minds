@@ -10,7 +10,7 @@ Production | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token
 Angular | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=angular)](https://magnum.travis-ci.com/Minds/Minds) | a new front end
 
 ## Introduction
-Minds is the free and open-source social networking platform. 
+Minds is the free and open-source social networking platform.
 
 This *readme* file should hopefuly explain all you need to get started, if not, please add to it or email **mark@minds.com**.
 
@@ -23,6 +23,7 @@ We recommend you use our vagrant/chef cookbook for quick setup. https://github.c
 
 ### Requirements
 - PHP 5.4+
+- Nodejs (npm)
 - Cassandra
 - Nginx
 - RabbitMQ (ability to disable to low traffic sites coming soon)
@@ -45,16 +46,16 @@ _Optional_
 
 - Visit https://nodejs.org/ and install nodejs
 
-##### Gulp 
+##### Gulp
 
 - Run `sudo npm install -g gulp`
 
 
-### Setup
+### Building
 
-The new minds front end requires plugins to be compiled. Run `gulp build`.
+- `gulp postinstall` - this generates the typings for TypeScript. (you should only have to run this after an update)
+- `gulp build.dev` - run this after any changes to compile to javascript
 
-- Go to localhost/install.php and follow the instruction. (debugging may be needed)
 
 ### Generate new docs (core devs only)
 
@@ -62,12 +63,16 @@ The new minds front end requires plugins to be compiled. Run `gulp build`.
 
 --------
 
+--------
+
+# The below documentation needs updating
+
 ## Getting started
 Minds is gradually implementing an Object Orientated code base. Elgg functions can still be called, but it is preferred for new plugins to follow the following structure.
 
 
 ### Calling the database
-Minds implements Cassandra as its database. Cassandra is a NoSQL datastore. 
+Minds implements Cassandra as its database. Cassandra is a NoSQL datastore.
 
 You should generally store your indexes on **write** and retrieve later with a lookup query.
 
@@ -82,7 +87,7 @@ $index->set('index:key:separated:by:colon', array('key'=>'value'));
 
 ```
 ##### Example user lookup
-``` 
+```
 $email = 'mark@minds.com'
 $lookup = new \Minds\Core\Data\lookup();
 
@@ -106,7 +111,7 @@ $object = entities\object(1234345662);
 
 --------
 ### Writing a plugin
-The core Minds plugins are gradually being migrated to the newly structured Minds OOP method. OOP (Object Orientated PHP) provides a much cleaner code base and avoids replicated code and complexity. 
+The core Minds plugins are gradually being migrated to the newly structured Minds OOP method. OOP (Object Orientated PHP) provides a much cleaner code base and avoids replicated code and complexity.
 
 ##### Setup
 - You need a manifest file
@@ -116,19 +121,19 @@ The core Minds plugins are gradually being migrated to the newly structured Mind
 Below is an example of how to start your plugin.
 
 ```
-<?php 
+<?php
 namespace minds\plugin\myplugin;
 
 use Minds\Core;
 
 class myplugin extends core\plugin{
 	public function init(){
-		//this is called upon every page load. 
+		//this is called upon every page load.
 	}
 }
 ```
 ##### Handling pages
-The old Elgg page handler only supported *GET* requests by default and brought with it an uneeded level of complexity. 
+The old Elgg page handler only supported *GET* requests by default and brought with it an uneeded level of complexity.
 
 ```
 	//place this in the init of your plugin
@@ -144,7 +149,7 @@ The old Elgg page handler only supported *GET* requests by default and brought w
 For example, when you hit http://MYSITE/myplugin, minds will now load your page handler found in **mod/myplugin/pages/default.php** and it should have the following structure
 
 ```
-<?php 
+<?php
 namespace minds\plugin\myplugin\pages;
 
 use minds\interfaces;
@@ -167,7 +172,7 @@ http://minds.com, http://minds.org
 
 *Minds.org, Inc.* is a free and open source social network.
 
-####Co-Creators 
+####Co-Creators
 - Mark Harding (mark@minds.com)
 - Bill Ottman (bill@minds.com)
 - John Ottman (john@minds.com)
@@ -176,7 +181,7 @@ http://minds.com, http://minds.org
 
 
 
-Minds is released under the GNU Affero General Public License (AGPL) Version 3. See LICENSE.txt 
+Minds is released under the GNU Affero General Public License (AGPL) Version 3. See LICENSE.txt
 in the root of the package you downloaded.
 
 For installation instructions, see INSTALL.txt.
