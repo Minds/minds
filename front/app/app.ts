@@ -18,6 +18,7 @@ import {Notifications} from './src/controllers/notifications/notifications';
  * TODO: Load these automagically from gulp
  */
 import {Gatherings} from './src/plugins/gatherings/gatherings';
+import {Blog} from './src/plugins/blog/blog';
 import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups';
 import {Wallet} from './src/plugins/payments/payments';
 
@@ -34,6 +35,8 @@ import {Wallet} from './src/plugins/payments/payments';
   { path: '/discovery/:filter/:type', component: Discovery, as: 'discovery'},
 
   { path: '/messenger', component:  Gatherings, as: 'messenger'},
+
+  { path: '/blog/:filter', component:  Blog, as: 'blog'},
 
   { path: '/notifications', component: Notifications, as: 'notifications'},
 

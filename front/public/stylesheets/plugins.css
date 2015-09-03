@@ -1,6 +1,39 @@
 minds-gatherings .minds-gatherings-search {
   width: 100%; }
 
+minds-gatherings .minds-gatherings-search {
+  width: 100%; }
+
+/**
+ * Colours
+ */
+/**
+ * Padding, Margins and Offset
+ */
+.minds-wallet-points {
+  width: auto;
+  min-height: 0; }
+  .minds-wallet-points h2 {
+    color: green; }
+
+.minds-transaction-card {
+  width: auto;
+  min-height: 0;
+  margin-bottom: 16px; }
+  .minds-transaction-card .minds-transaction-points {
+    font-size: 30px; }
+    .minds-transaction-card .minds-transaction-points .positive {
+      color: green; }
+    .minds-transaction-card .minds-transaction-points .negative {
+      color: red; }
+  .minds-transaction-card .minds-transaction-details {
+    display: flex; }
+    .minds-transaction-card .minds-transaction-details p {
+      margin: 0; }
+    .minds-transaction-card .minds-transaction-details .ts {
+      font-size: 11px;
+      padding-left: 8px; }
+
 /**
  * Colours
  */
@@ -37,33 +70,3 @@ minds-groups-create .minds-groups-save {
   margin-top: 16px; }
   minds-groups-create .minds-groups-save button {
     float: right; }
-
-/**
- * Colours
- */
-/**
- * Padding, Margins and Offset
- */
-.minds-wallet-points {
-  width: auto;
-  min-height: 0; }
-  .minds-wallet-points h2 {
-    color: green; }
-
-.minds-transaction-card {
-  width: auto;
-  min-height: 0;
-  margin-bottom: 16px; }
-  .minds-transaction-card .minds-transaction-points {
-    font-size: 30px; }
-    .minds-transaction-card .minds-transaction-points .positive {
-      color: green; }
-    .minds-transaction-card .minds-transaction-points .negative {
-      color: red; }
-  .minds-transaction-card .minds-transaction-details {
-    display: flex; }
-    .minds-transaction-card .minds-transaction-details p {
-      margin: 0; }
-    .minds-transaction-card .minds-transaction-details .ts {
-      font-size: 11px;
-      padding-left: 8px; }

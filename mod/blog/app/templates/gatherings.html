@@ -1,0 +1,17 @@
+<div class="mdl-grid newsfeed-grid" style="max-width:900px">
+
+    <div class="mdl-cell mdl-cell--4-col">
+      <form action="#">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-gatherings-search" [mdl]>
+          <input class="mdl-textfield__input" type="text" id="sample3" />
+          <label class="mdl-textfield__label" for="sample3"><i class="material-icons">search</i> Search users...</label>
+        </div>
+    </form>
+  </div>
+
+    <div class="mdl-cell mdl-cell--8-col" >
+      <minds-messenger-setup *ng-if="!setup"></minds-messenger-setup>
+      <minds-messenger-conversation *ng-if="setup"></minds-messenger-conversation>
+    </div>
+
+</div>

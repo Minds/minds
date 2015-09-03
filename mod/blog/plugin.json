@@ -1,0 +1,7 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "routes": {
+    "/blog": "app/src/blog"
+  }
+}
