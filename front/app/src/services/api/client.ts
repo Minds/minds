@@ -43,7 +43,7 @@ export class Client {
 				.toRx()
 				.subscribe(res => {
 						if(res.status != 200){
-							return reject("Header: " + status);
+							return reject(res.json());
 						}
 						var data = res.json();
 						if(data.status != 'success')
@@ -68,7 +68,7 @@ export class Client {
 				.toRx()
 				.subscribe(res => {
 						if(res.status != 200){
-							return reject("Header: " + status);
+							return reject(res.json());
 						}
 						var data = res.json();
 						if(data.status != 'success')
@@ -93,7 +93,7 @@ export class Client {
 				.toRx()
 				.subscribe(res => {
 						if(res.status != 200){
-							return reject("Header: " + status);
+							return reject(res.json());
 						}
 						var data = res.json();
 						if(data.status != 'success')
@@ -117,7 +117,7 @@ export class Client {
 				.toRx()
 				.subscribe(res => {
 						if(res.status != 200){
-							return reject("Header: " + status);
+							return reject(res.json());
 						}
 						var data = res.json();
 						if(data.status != 'success')

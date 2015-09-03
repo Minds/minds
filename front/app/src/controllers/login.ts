@@ -35,6 +35,7 @@ export class Login {
 				self.router.parent.navigate('/newsfeed');
 			})
 			.catch((e) => {
+        console.log(e);
         if(e.status == 'failed'){
           //incorrect login details
           self.errorMessage = "Incorrect username/password. Please try again.";
