@@ -1,5 +1,5 @@
 {
-    "version": "1.5.0",
+    "version": "1.5.3",
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
@@ -8,12 +8,13 @@
         "removeComments": true,
         "noLib": false,
         "emitDecoratorMetadata": true,
-        "outDir": "./front/app/es5",
+        "experimentalDecorators": true,
         "sourceMap": true
     },
     "filesGlob": [
         "./front/app/**/*.ts",
-        "./front/typings/**/*.ts"
+        "./front/typings/**/*.ts",
+        "./tsd_typings/**/*.d.ts"
     ],
     "files": [
         "./front/app/app.ts",
@@ -60,13 +61,12 @@
         "./front/app/src/services/ui/loader.ts",
         "./front/app/src/services/ui/material.ts",
         "./front/app/src/services/ui/sidebar.ts",
-        "./front/typings/angular2/angular2.d.ts",
-        "./front/typings/angular2/http.d.ts",
-        "./front/typings/angular2/router.d.ts",
-        "./front/typings/es6-promise/es6-promise.d.ts",
-        "./front/typings/minds/minds.d.ts",
-        "./front/typings/rx/rx-lite.d.ts",
-        "./front/typings/rx/rx.d.ts",
-        "./front/typings/tsd.d.ts"
-    ]
+        "./front/app/typings/_custom.d.ts",
+        "./front/app/typings/http.d.ts",
+        "./front/app/typings/minds.d.ts",
+        "./tsd_typings/jasmine/jasmine.d.ts",
+        "./tsd_typings/systemjs/systemjs.d.ts",
+        "./tsd_typings/tsd.d.ts"
+    ],
+    "compileOnSave": false
 }

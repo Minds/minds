@@ -8,6 +8,8 @@
 /front/app/stylesheets/plugins.scss
 /front/app/stylesheets/plugins
 
+tsd_typings
+
 /.htaccess
 .htaccess
 /2

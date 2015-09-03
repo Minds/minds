@@ -215,6 +215,7 @@ gulp.task('build.dev', function (done) {
 // Post install
 
 gulp.task('install.typings', ['clean.tsd_typings'], shell.task([
+  'rm -rf node_modules/angular2/bundles/typings/angular2/http.d.ts', //temporary hack because http.d.ts has a syntax error
   'tsd reinstall --overwrite',
   'tsd link',
   'tsd rebundle'
