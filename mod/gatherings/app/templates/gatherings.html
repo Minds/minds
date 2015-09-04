@@ -1,17 +1,63 @@
 <div class="mdl-grid newsfeed-grid" style="max-width:900px">
-
-    <div class="mdl-cell mdl-cell--4-col">
-      <form action="#">
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-gatherings-search" [mdl]>
-          <input class="mdl-textfield__input" type="text" id="sample3" />
-          <label class="mdl-textfield__label" for="sample3"><i class="material-icons">search</i> Search users...</label>
-        </div>
-    </form>
-  </div>
-
-    <div class="mdl-cell mdl-cell--8-col" >
-      <minds-messenger-setup *ng-if="!setup"></minds-messenger-setup>
-      <minds-messenger-conversation *ng-if="setup"></minds-messenger-conversation>
+  <div class="mdl-cell mdl-cell--4-col">
+    <div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-gatherings-search" [mdl]>
+        <input class="mdl-textfield__input" type="text" id="sample3" (keyup)="doneTyping($event)" />
+        <label class="mdl-textfield__label" for="sample3"><i class="material-icons">search</i> Search users...</label>
+      </div>
     </div>
 
-</div>
+    <div class="minds-gatherings-conversation-container">
+      <ul class="conversation-list" >
+        <li *ng-for="#conversation of conversations">
+          <div class="icon"  *ng-if="conversation.subscribed && conversation.subscriber" (click)="showConversation(conversation.guid , conversation.name)">
+            <div class="elgg-avatar elgg-avatar-small">
+              <a (mouseover) = "showHovercard(conversation)"  href="{{baseMindsURL}}/{{conversation.username}}"class="">
+                <img src="https://d3ae0shxev0cb7.cloudfront.net/icon/{{conversation.guid}}/small"alt={{conversation.username}} title={{conversation.username}} class="">
+              </a>
+            </div>
+            <div class="minds-hovercard" *ng-if="conversation.hover" >
+
+              <div class="hovercard-banner">
+                <img src="https://d3ae0shxev0cb7.cloudfront.net/{{conversation.username}}/banner/{{conversation.guid}}" class="hovercard-banner-img">
+                <div class="top-arrow"><img src="https://d3ae0shxev0cb7.cloudfront.net/{{conversation.username}}/banner/{{conversation.guid}}" class="hovercard-banner-img"></div>
+                <div class="gradient"></div>
+              </div>
+
+              <a href="{{baseMindsURL}}/{{conversation.username}}">
+                <div class="hovercard-container">
+                  <div class="hovercard-icon">
+                    <img src="https://d3ae0shxev0cb7.cloudfront.net/icon/{{conversation.guid}}/small" alt={{conversation.username}} title={{conversation.username}}>
+                  	</div>
+                    <h3>{{conversation.username}}</h3>
+                  </div>
+                </a>
+                <!--
+                <div class="overview">
+                  <div class="subscribe-button tooltip n" original-title="click to unsubscribe">
+                    <a href="https://www.minds.com/action/friends/remove?friend=435414169743790080&amp;__elgg_ts=1441367103&amp;__elgg_token=fe3860cdd524c8bd6f50f1714b658ed4">
+                      <span class="text">
+                        Subscribed		</span>
+                        <span class="subscribers-count">
+                      </span>
+                    </a>
+                  </div>
+                </div>
+                -->
+                <ul class="elgg-menu elgg-menu-hovercard"></ul></div>
+              </div>
+
+              <a class="conversation-item" href="{{baseMindsURL}}/messenger/conversation/{{conversation.username}}">
+                <div class="conversation-item-username">{{conversation.username}}</div>
+                <span class="ts">{{conversation.last_msg * 1000 | date:'shortTime'}} - {{conversation.last_msg * 1000 | date:'longDate'}}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mdl-cell mdl-cell--8-col" >
+        <minds-messenger-setup *ng-if="!setup"></minds-messenger-setup>
+        <minds-messenger-conversation *ng-if="setup"></minds-messenger-conversation>
+      </div>
+    </div>

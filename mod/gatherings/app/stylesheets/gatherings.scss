@@ -2,4 +2,102 @@ minds-gatherings{
   .minds-gatherings-search{
     width:100%;
   }
+  .minds-gatherings-conversation-container{
+    width:100%;
+  }
+  .conversation-list{
+    border-right: 1px solid #EEE;
+    height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
+    border-bottom: 4px solid #DDD;
+  }
+
+  .conversation-item {
+    display: block;
+    width: 100%;
+    height: 50px;
+   }
+
+  .conversation-item-username {
+    color: #333;
+    font-size: 16px;
+    float: left;
+    width: auto;
+    margin: 2px 16px;
+    max-width: 55%;
+    white-space: nowrap;
+  }
+  .conversation-item .ts {
+    float: right;
+    font-size: 11px;
+    color: #DDD;
+    margin: 12px 0;
+  }
+  .icon{
+    float: left;
+  }
+  .conversations-list > li.active {
+    background: #4690D6;
+    color: #FFF;
+  }
+  .elgg-avatar{
+    position: relative;
+    display: inline-block;
+  }
+  .minds-hovercard {
+    display: none;
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    margin-top: 8px;
+    box-shadow: 0 0 3px #888;
+    background: #FAFAFA;
+    z-index: 1000;
+  }
+  .hovercard-banner {
+    width: 100%;
+    height: 120px;
+    overflow: hidden;
+    display: block;
+  }
+  .hovercard-banner-img {
+    min-width: 300px;
+    height: 120px;
+  }
+  .top-arrow {
+    z-index: -1;
+    transform: translate(24px, -10px) rotate(45deg);
+    -webkit-transform-origin: 0 0;
+    background: #FFF;
+    box-shadow: 0 0 3px #888;
+    display: block;
+    height: 15px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 15px;
+  }
+  .gradient {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 300px;
+    height: 60px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  }
+  .hovercard-container {
+    position: absolute;
+    top: 72px;
+    width: 300px;
+  }
+  .overview {
+    height: 40px;
+    display: BLOCK;
+    width: 300px;
+    margin-top: 8px;
+  }
+  .message-list{
+    height : 200px;
+  }
 }
