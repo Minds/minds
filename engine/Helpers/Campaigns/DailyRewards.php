@@ -19,12 +19,13 @@ class DailyRewards{
           $db->insert("analytics:rewarded:day:$ts", array(Core\Session::getLoggedinUser()->guid => time()));
 
           \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 10, Core\Session::getLoggedinUser()->guid, "Daily login reward.");
+          $message = "You have received 10 points as a daily login reward.  Log back in again tomorrow to receive more points!";
           Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
               'to'=>array(Core\Session::getLoggedinUser()->guid),
               'from' => 100000000000000519,
               'notification_view' => 'custom_message',
-              'params' => array('message'=>"We gave you 10 points for logging in!"),
-              'message'=>"We gave you 10 points for logging in!"
+              'params' => array('message'=>$message),
+              'message'=>$message
               ));
         }
         $cacher->set('rewarded:' . Core\Session::getLoggedinUser()->guid, true, strtotime('tomorrow', time()));
