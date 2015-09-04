@@ -1,7 +1,5 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable, FORM_DIRECTIVES} from 'angular2/angular2';
-import { RouterLink } from "angular2/router";
-import { MessengerConversation } from "./messenger-conversation";
-import { MessengerSetup } from "./messenger-setup";
+import { Component, View, NgFor, NgIf, NgClass, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Router, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
@@ -13,10 +11,10 @@ import { Material } from 'src/directives/material';
 })
 @View({
   templateUrl: 'templates/plugins/blog/view.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, MessengerConversation, MessengerSetup]
+  directives: [ NgFor, NgIf, NgClass, Material, ROUTER_DIRECTIVES]
 })
 
-export class Gatherings {
+export class BlogView {
   activity : any;
   session = SessionFactory.build();
   setup : boolean = false;

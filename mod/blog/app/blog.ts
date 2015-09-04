@@ -33,12 +33,13 @@ export class Blog {
   }
 
   load(refresh : boolean = false){
-    return;
+
     var self = this;
     this.inProgress = true;
-    this.client.get('api/v1/groups/' + this._filter, { limit: 12, offset: this.offset})
+    this.client.get('api/v1/blog/' + this._filter, { limit: 12, offset: this.offset})
       .then((response) => {
-
+        console.log(response);
+        return;
         if(!response.groups){
           self.moreData = false;
           self.inProgress = false;
@@ -63,5 +64,5 @@ export class Blog {
   }
 }
 
-
-//export { BlogView } from './blog-view';
+export { BlogView } from './blog-view';
+export { BlogEdit } from './blog-edit';

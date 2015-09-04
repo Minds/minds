@@ -13,6 +13,8 @@ class start extends Components\Plugin{
 
 	public function __construct(){
 
+		Api\Routes::add('v1/blog', '\\minds\\plugin\\blog\\api\\v1\\blog');
+
 		//@todo update this to OOP
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			if($row->type == 'object' && $row->subtype == 'blog')

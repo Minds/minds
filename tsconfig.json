@@ -40,6 +40,7 @@
         "./front/app/src/directives/infinite-scroll.ts",
         "./front/app/src/directives/loggedin.ts",
         "./front/app/src/directives/material.ts",
+        "./front/app/src/plugins/blog/blog-edit.ts",
         "./front/app/src/plugins/blog/blog-view.ts",
         "./front/app/src/plugins/blog/blog.ts",
         "./front/app/src/plugins/gatherings/gatherings.ts",
