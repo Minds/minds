@@ -28,36 +28,37 @@
                 <div class="hovercard-container">
                   <div class="hovercard-icon">
                     <img src="https://d3ae0shxev0cb7.cloudfront.net/icon/{{conversation.guid}}/small" alt={{conversation.username}} title={{conversation.username}}>
-                  	</div>
-                    <h3>{{conversation.username}}</h3>
                   </div>
-                </a>
-                <!--
-                <div class="overview">
-                  <div class="subscribe-button tooltip n" original-title="click to unsubscribe">
-                    <a href="https://www.minds.com/action/friends/remove?friend=435414169743790080&amp;__elgg_ts=1441367103&amp;__elgg_token=fe3860cdd524c8bd6f50f1714b658ed4">
-                      <span class="text">
-                        Subscribed		</span>
-                        <span class="subscribers-count">
-                      </span>
-                    </a>
-                  </div>
+                  <h3>{{conversation.username}}</h3>
                 </div>
-                -->
-                <ul class="elgg-menu elgg-menu-hovercard"></ul></div>
-              </div>
-
-              <a class="conversation-item" href="{{baseMindsURL}}/messenger/conversation/{{conversation.username}}">
-                <div class="conversation-item-username">{{conversation.username}}</div>
-                <span class="ts">{{conversation.last_msg * 1000 | date:'shortTime'}} - {{conversation.last_msg * 1000 | date:'longDate'}}</span>
               </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+              <!--
+              <div class="overview">
+              <div class="subscribe-button tooltip n" original-title="click to unsubscribe">
+              <a href="https://www.minds.com/action/friends/remove?friend=435414169743790080&amp;__elgg_ts=1441367103&amp;__elgg_token=fe3860cdd524c8bd6f50f1714b658ed4">
+              <span class="text">
+              Subscribed		</span>
+              <span class="subscribers-count">
+              </span>
+              </a>
+              </div>
+              </div>
+              -->
+              <ul class="elgg-menu elgg-menu-hovercard"></ul>
+            </div>
+          </div>
 
-      <div class="mdl-cell mdl-cell--8-col" >
-        <minds-messenger-setup *ng-if="!setup"></minds-messenger-setup>
-        <minds-messenger-conversation *ng-if="setup"></minds-messenger-conversation>
-      </div>
+          <a class="conversation-item" href="{{baseMindsURL}}/messenger/conversation/{{conversation.username}}">
+            <div class="conversation-item-username">{{conversation.username}}</div>
+            <span class="ts">{{conversation.last_msg * 1000 | date:'shortTime'}} - {{conversation.last_msg * 1000 | date:'longDate'}}</span>
+          </a>
+        </li>
+      </ul>
     </div>
+  </div>
+
+  <div class="mdl-cell mdl-cell--8-col" >
+    <minds-messenger-setup *ng-if="!setup"></minds-messenger-setup>
+    <minds-messenger-conversation *ng-if="setup"></minds-messenger-conversation>
+  </div>
+</div>
