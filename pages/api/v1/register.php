@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Subscriptions
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -16,17 +16,17 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
 
     /**
      * NOT AVAILABLE
-     */      
+     */
     public function get($pages){
-                
+
         return Factory::response(array('status'=>'error', 'message'=>'GET is not supported for this endpoint'));
-        
+
     }
-    
+
     /**
      * Registers a user
      * @param array $pages
-     * 
+     *
      * @SWG\Post(
      *     summary="Create a new channel",
      *     path="/v1/register",
@@ -34,7 +34,7 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
      * )
      */
     public function post($pages){
-       
+
         try{
             $guid = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
             $params = array(
@@ -44,7 +44,7 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
                 'invitecode' => ""
             );
             elgg_trigger_plugin_hook('register', 'user', $params, TRUE);
-            
+
             \Minds\plugin\payments\start::createTransaction($guid, 100, $guid, "Welcome.");
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($guid),
@@ -60,7 +60,7 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
                 'to'=>array($guid),
                 'from' => "100000000000000519",
                 'notification_view' => $notif_type,
-                )); 
+                ));
             }
 
             //@todo again, maybe in a background task?
@@ -72,17 +72,19 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
             }
 
 
-            $response = array('guid'=>$guid);
+            $response = array(
+              'guid' => $guid,
+              'user' => $params['user']->export()
+            );
         } catch (\Exception $e){
             $response = array('status'=>'error', 'message'=>$e->getMessage());
         }
         return Factory::response($response);
-        
+
     }
-    
+
     public function put($pages){}
-    
+
     public function delete($pages){}
-    
+
 }
-        

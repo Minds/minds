@@ -7,6 +7,7 @@ import {Navigation} from './src/components/navigation';
 
 import {Login} from './src/controllers/login';
 import {Logout} from './src/controllers/logout';
+import {Register} from './src/controllers/register';
 import {ComingSoon} from './src/controllers/comingsoon';
 import {Newsfeed} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';
@@ -28,6 +29,8 @@ import {Wallet} from './src/plugins/payments/payments';
 @RouteConfig([
   new Route({ path: '/login', component: Login, as: 'login' }),
   { path: '/logout', component: Logout, as: 'logout' },
+  { path: '/register', component: Register, as: 'register' },
+
   { path: '/newsfeed', component: Newsfeed, as: 'newsfeed' },
   { path: '/capture', component: Capture, as: 'capture' },
 
