@@ -1,9 +1,14 @@
-import { Component, View, NgFor, NgIf, NgClass, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
-import { RouterLink, Router, RouteParams } from "angular2/router";
+import { Component, View, CORE_DIRECTIVES, NgStyle, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
 
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
+
+interface MindsBlogResponse extends MindsResponse {
+  blogs : Array<any>,
+  'load-next' : string
+}
 
 @Component({
   selector: 'minds-blog',
@@ -11,13 +16,15 @@ import { Material } from 'src/directives/material';
 })
 @View({
   templateUrl: 'templates/plugins/blog/list.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, NgStyle, Material ]
 })
 
 export class Blog {
 
+  minds;
+
   offset : string = "";
-  moreDate : boolean = true;
+  moreData : boolean = true;
   inProgress : boolean = false;
   blogs : Array<any> = [];
   session = SessionFactory.build();
@@ -37,22 +44,21 @@ export class Blog {
     var self = this;
     this.inProgress = true;
     this.client.get('api/v1/blog/' + this._filter, { limit: 12, offset: this.offset})
-      .then((response) => {
-        console.log(response);
-        return;
-        if(!response.groups){
+      .then((response : MindsBlogResponse) => {
+
+        if(!response.blogs){
           self.moreData = false;
           self.inProgress = false;
           return false;
         }
 
         if(refresh){
-          self.groups = response.groups;
+          self.blogs = response.blogs;
         } else {
           if(self.offset)
-            response.groups.shift();
-          for(let group of response.groups)
-            self.groups.push(group);
+            response.blogs.shift();
+          for(let blog of response.blogs)
+            self.blogs.push(blog);
         }
 
         self.offset = response['load-next'];

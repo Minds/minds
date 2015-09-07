@@ -33,6 +33,7 @@ class blog implements interfaces\api{
   				  if(!$guids)
               break;
   				  $entities = core\entities::get(array('guids'=>$guids));
+            $response['blogs'] = Factory::exportable($entities);
             break;
           case "trending":
             break;
@@ -41,8 +42,11 @@ class blog implements interfaces\api{
               'subtype' => 'blog',
               'owner_guid' => isset($pages[1]) ? $pages[1] : \Minds\Core\session::getLoggedInUser()->guid
             ));
+            $response['blogs'] = Factory::exportable($entities);
             break;
           case is_numeric($pages[0]):
+            $blog = new entities\Blog($pages[0]);
+            $response['blog'] = $blog->export();
             break;
         }
 
@@ -51,6 +55,26 @@ class blog implements interfaces\api{
     }
 
     public function post($pages){
+
+        $response = array();
+
+        if(isset($pages[0]) && is_numeric($pages[0]))
+          $blog = new entities\Blog($pages[0]);
+        else
+          $blog = new entities\Blog();
+
+        $allowed = array('title', 'description', 'access_id', 'status');
+
+        foreach($allowed as $v){
+          if(isset($_POST[$v]))
+            $blog->$v = $_POST[$v];
+        }
+
+        $blog->save();
+
+        $response['guid'] = $blog->guid;
+
+        return Factory::response($response);
 
     }
 

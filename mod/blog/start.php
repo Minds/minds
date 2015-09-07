@@ -18,7 +18,7 @@ class start extends Components\Plugin{
 		//@todo update this to OOP
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			if($row->type == 'object' && $row->subtype == 'blog')
-				return new \ElggBlog($row);
+				return new entities\Blog($row);
 		});
 
 		$featured_link = new Core\Navigation\Item();

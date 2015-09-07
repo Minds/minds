@@ -18,3 +18,9 @@ declare var window:Window;
 interface MindsActivityObject {
 	activity : Array<any>;
 }
+
+
+/**
+ * Minds response object
+ */
+interface MindsResponse {}

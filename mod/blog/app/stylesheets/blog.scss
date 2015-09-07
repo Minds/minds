@@ -1,0 +1,45 @@
+.minds-blog-ownerblock{
+  display:table;
+
+  .minds-avatar img{
+    width:50px;
+    border-radius:50%;
+  }
+  .minds-body{
+    display:table-cell;
+    vertical-align: middle;
+    a {
+      display:block;
+      text-decoration: none;
+    }
+    span{
+      font-size:11px;
+    }
+  }
+}
+
+minds-blog-view{
+  h1{
+    margin:0;
+  }
+}
+.minds-blog-body{
+  padding-top:$minds-padding * 2;
+}
+
+.minds-blog-actions{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+// remove this from here soon
+.minds-blog-subscribe{
+  background: transparent;
+  border: 1px solid #78909c;
+  color: #78909c;
+  padding: 8px 16px;
+  font-size: 12px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
