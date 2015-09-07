@@ -146,7 +146,7 @@ gulp.task('build.plugins', function (cb) {
 // ----------
 // Builds scss for plugins
 gulp.task('build.plugins.scss', function () {
-    gulp.src('./front/app/stylesheets/plugins/**/*scss')
+    return gulp.src('./front/app/stylesheets/plugins/**/*scss')
       .pipe(concat('plugins.scss'))
       .pipe(gulp.dest('./front/app/stylesheets/'));
 });
