@@ -1,5 +1,5 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable} from 'angular2/angular2';
-import { RouterLink } from "angular2/router";
+import { Component, View, NgFor, NgIf, NgClass, Inject, Observable} from 'angular2/angular2';
+import { Router, RouteParams, RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
@@ -28,14 +28,18 @@ export class MessengerConversation {
   timeout: {};
 
 
-	constructor(public client: Client){
-    this.loadMore();
+  constructor(public client: Client,
+    @Inject(Router) public router: Router,
+    @Inject(RouteParams) public params: RouteParams
+  ){
+    this.guid = params.params['guid'];
+    this.load();
 	}
 
   /**
 	 * Load more posts
 	 */
-	loadMore() {
+	load() {
     var self = this;
 		this.inProgress = true;
 

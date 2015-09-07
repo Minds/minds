@@ -5,102 +5,59 @@ minds-gatherings{
   .minds-gatherings-conversation-container{
     width:100%;
   }
-  .conversation-list{
-    border-right: 1px solid #EEE;
-    height: 300px;
-    overflow: hidden;
-    overflow-y: scroll;
-    border-bottom: 4px solid #DDD;
+  .minds-gatherings-ownerblock {
+    display: table;
   }
-
-  .conversation-item {
+  .minds-gatherings-ownerblock .minds-avatar img {
+    width: 50px;
+    border-radius: 50%;
+  }
+  .minds-gatherings-ownerblock .minds-body {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .minds-gatherings-ownerblock .minds-body a {
     display: block;
-    width: 100%;
-    height: 50px;
-   }
-
-  .conversation-item-username {
-    color: #333;
-    font-size: 16px;
-    float: left;
-    width: auto;
-    margin: 2px 16px;
-    max-width: 55%;
-    white-space: nowrap;
+    text-decoration: none;
   }
-  .conversation-item .ts {
-    float: right;
+  .minds-gatherings-ownerblock .minds-body span {
     font-size: 11px;
-    color: #DDD;
-    margin: 12px 0;
   }
-  .icon{
-    float: left;
+
+  .minds-gatherings-view h1 {
+    margin: 0;
   }
-  .conversations-list > li.active {
-    background: #4690D6;
-    color: #FFF;
+
+  .minds-gatherings-view .minds-gatherings-header {
+    max-height: 300px;
+    overflow: hidden;
   }
-  .elgg-avatar{
-    position: relative;
-    display: inline-block;
-  }
-  .minds-hovercard {
-    display: none;
-    position: absolute;
-    width: 300px;
-    height: 200px;
-    margin-top: 8px;
-    box-shadow: 0 0 3px #888;
-    background: #FAFAFA;
-    z-index: 1000;
-  }
-  .hovercard-banner {
+
+  .minds-gatherings-view .minds-gatherings-header img {
     width: 100%;
-    height: 120px;
-    overflow: hidden;
-    display: block;
   }
-  .hovercard-banner-img {
-    min-width: 300px;
-    height: 120px;
+
+  .minds-gatherings-view a {
+    color: #607d8b;
   }
-  .top-arrow {
-    z-index: -1;
-    transform: translate(24px, -10px) rotate(45deg);
-    -webkit-transform-origin: 0 0;
-    background: #FFF;
-    box-shadow: 0 0 3px #888;
-    display: block;
-    height: 15px;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    width: 15px;
+
+  .minds-gatherings-body {
+    padding-top: 16px;
   }
-  .gradient {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 300px;
-    height: 60px;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+
+  .minds-gatherings-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
-  .hovercard-container {
-    position: absolute;
-    top: 72px;
-    width: 300px;
-  }
-  .overview {
-    height: 40px;
-    display: BLOCK;
-    width: 300px;
-    margin-top: 8px;
-  }
-  .message-list{
-    height : 200px;
-  }
-  .textfield-chat{
-    width: 500px;
+
+  .minds-gatherings-subscribe {
+    background: transparent;
+    border: 1px solid #78909c;
+    color: #78909c;
+    padding: 8px 16px;
+    font-size: 12px;
+    border-radius: 2px;
+    text-transform: uppercase;
   }
 }
