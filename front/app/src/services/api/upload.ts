@@ -50,6 +50,8 @@ export class Upload  {
 			xhr.onreadystatechange = function(){
 				console.log(this);
 			}
+			var XSRF_TOKEN = this.cookie.get('XSRF-TOKEN');
+			xhr.setRequestHeader('X-XSRF-TOKEN', XSRF_TOKEN);
 			xhr.send(formData);
 		});
 	}
