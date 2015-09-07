@@ -211,6 +211,31 @@ gulp.task('build.dev', function (done) {
   runSequence('clean.dev', 'build.lib.dev', 'build.app.dev', done);
 });
 
+gulp.task('build.bundle', ['build.dev'], function (){
+
+  var builder = new Builder();
+  builder.config({
+    baseURL: './front/public',
+    defaultJSExtensions: true,
+    paths: {
+      '*': './front/public/*.js'
+    },
+    meta: {
+      'angular2/angular2': { build: false },
+      'angular2/router': { build: false },
+      'http/http': { build: false }
+    }
+  });
+  builder.build('app', './front/public/app.min.js', {minify: false})
+    .then(function(){
+
+    })
+    .catch(function(e){
+        console.error('errored to build', e);
+    });
+
+});
+
 // --------------
 // Post install
 
