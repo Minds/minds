@@ -4,6 +4,7 @@ import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
+import { InfiniteScroll } from 'src/directives/infinite-scroll';
 
 interface MindsBlogResponse extends MindsResponse {
   blogs : Array<any>,
@@ -16,7 +17,7 @@ interface MindsBlogResponse extends MindsResponse {
 })
 @View({
   templateUrl: 'templates/plugins/blog/list.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, NgStyle, Material ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, NgStyle, Material, InfiniteScroll ]
 })
 
 export class Blog {
