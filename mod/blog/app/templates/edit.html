@@ -2,7 +2,20 @@
   <h1>{{error}}</h1>
 </div>
 
+<div class="minds-blog-header">
+</div>
+
 <form (submit)="save()" class="mdl-grid blogs-grid" style="max-width:660px">
+
+  <div>
+    <input
+      type="file"
+      id="file"
+      #file
+      (change)="addHeader(file)"
+    />
+
+  </div>
 
   <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-blog-title" [mdl]>
     <input

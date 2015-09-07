@@ -1,7 +1,7 @@
 <div class="mdl-grid blogs-grid" style="max-width:900px">
   <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp minds-banner-card" *ng-for="#blog of blogs">
 
-    <a [router-link]="['/blog-view', {guid: blog.guid}]" class="mdl-card__title minds-blog-thumbnail" style="height:200px; background:#333" [ng-style]="{background: '#333 url(' + blog.thumbnail_src + ') center center'}">
+    <a [router-link]="['/blog-view', {guid: blog.guid}]" class="mdl-card__title minds-blog-thumbnail" style="height:200px; background:#333" [ng-style]="{background: '#333 url(/api/v1/blog/header/' + blog.guid + ') center center'}">
     </a>
 
     <!-- Owner block -->

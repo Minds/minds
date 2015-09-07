@@ -56,6 +56,21 @@ class blog implements interfaces\api{
             $blog = new entities\Blog($pages[0]);
             $response['blog'] = $blog->export();
             break;
+          case "header":
+            $blog = new entities\Blog($pages[1]);
+            $header = new \ElggFile();
+      			$header->owner_guid = $blog->owner_guid;
+      			$header->setFilename("blog/{$blog->guid}.jpg");
+      			header('Content-Type: image/jpeg');
+      			header('Expires: ' . date('r', time() + 864000));
+      			header("Pragma: public");
+       			header("Cache-Control: public");
+
+      			try{
+      				echo file_get_contents($header->getFilenameOnFilestore());
+      			}catch(\Exception $e){}
+      			exit;
+            break;
         }
 
 
@@ -78,9 +93,21 @@ class blog implements interfaces\api{
             $blog->$v = $_POST[$v];
         }
 
+        if(is_uploaded_file($_FILES['header']['tmp_name'])){
+          $resized = get_resized_image_from_uploaded_file('header', 2000);
+          $file = new \ElggFile();
+          $file->owner_guid = $blog->owner_guid;
+          $file->setFilename("blog/{$blog->guid}.jpg");
+          $file->open('write');
+          $file->write($resized);
+          $file->close();
+          $blog->header_bg = true;
+          $blog->last_updated = time();
+        }
+
         $blog->save();
 
-        $response['guid'] = $blog->guid;
+        $response['guid'] = (string) $blog->guid;
 
         return Factory::response($response);
 
@@ -88,15 +115,30 @@ class blog implements interfaces\api{
 
     public function put($pages){
 
+        if(isset($pages[0]) && is_numeric($pages[0]))
+          $blog = new entities\Blog($pages[0]);
+        else
+          $blog = new entities\Blog();
+
+        if(is_uploaded_file($_FILES['header']['tmp_name'])){
+          $resized = get_resized_image_from_uploaded_file('header', 2000);
+          $file = new \ElggFile();
+          $file->owner_guid = $blog->owner_guid;
+          $file->setFilename("blog/{$blog->guid}.jpg");
+          $file->open('write');
+          $file->write($resized);
+          $file->close();
+          $blog->header_bg = true;
+          $blog->last_updated = time();
+        }
+
+        $blog->save();
 
         return Factory::response(array());
-
     }
 
     public function delete($pages){
-
         return Factory::response(array());
-
     }
 
 }

@@ -1,13 +1,13 @@
 import { Component, View, Inject, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
-import { Client } from 'src/services/api';
+import { Client, Upload } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 
 @Component({
   selector: 'minds-blog-edit',
-  viewBindings: [ Client ]
+  viewBindings: [ Client, Upload ]
 })
 @View({
   templateUrl: 'templates/plugins/blog/edit.html',
@@ -25,8 +25,10 @@ export class BlogEdit {
     description: '',
     access_id: 2
   };
+  header : any;
 
   constructor(public client: Client,
+    public upload: Upload,
     @Inject(Router) public router: Router,
     @Inject(RouteParams) public params: RouteParams
     ){
@@ -54,12 +56,36 @@ export class BlogEdit {
   save(){
     var self = this;
     this.client.post('api/v1/blog/' + this.guid, this.blog)
-      .then((response) => {
+      .then((response : any) => {
         console.log(response);
+        if(self.header)
+          self.uploadHeader();
+        else
+          self.router.navigate('/blog/view/' + response.guid);
       })
       .catch((e) => {
 
       });
+  }
+
+  addHeader(file){
+    this.header = file.files[0];
+  }
+
+  uploadHeader() : boolean {
+    if(!this.header)
+      return true;
+    var self = this;
+    this.upload.post('api/v1/blog/' + this.guid, [this.header], { filekey: 'header'}, (progress) => {
+      console.log('progress update');
+      console.log(progress);
+      })
+			.then((response : any) => {
+        self.router.navigate('/blog/view/' + response.guid);
+			})
+			.catch(function(e){
+				console.error(e);
+			});
   }
 
 }
