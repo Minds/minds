@@ -234,6 +234,10 @@ minds-topbar {
   width:$minds-padding*2;
 }
 
+blockquote { quotes: ''; }
+blockquote:before { content: '\201C'; }
+blockquote:after { content: '\201D'; }
+
 @import 'feeds.scss';
 @import 'channels.scss';
 @import 'directives.scss';
