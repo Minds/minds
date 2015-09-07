@@ -22,9 +22,17 @@ class start extends Components\Plugin{
 				return new entities\Blog($row);
 		});
 
+		$add_link = new Core\Navigation\Item();
+		$add_link
+			->setPriority(1)
+			->setIcon('add')
+			->setName('Compose')
+			->setTitle('Compose (Blogs)')
+			->setPath('/blog-edit')
+			->setParams(array('guid'=>'new'));
 		$featured_link = new Core\Navigation\Item();
 		$featured_link
-			->setPriority(1)
+			->setPriority(2)
 			->setIcon('star')
 			->setName('Featured')
 			->setTitle('Featured (Blogs)')
@@ -32,7 +40,7 @@ class start extends Components\Plugin{
 			->setParams(array('filter'=>'featured'));
 		$trending_link = new Core\Navigation\Item();
 		$trending_link
-			->setPriority(2)
+			->setPriority(3)
 			->setIcon('trending_up')
 			->setName('Trending')
 			->setTitle('Trending (Blogs)')
@@ -40,7 +48,7 @@ class start extends Components\Plugin{
 			->setParams(array('filter'=>'trending'));
 		$my_link = new Core\Navigation\Item();
 		$my_link
-			->setPriority(3)
+			->setPriority(4)
 			->setIcon('person_pin')
 			->setName('My')
 			->setTitle('My (Blogs)')
@@ -55,6 +63,7 @@ class start extends Components\Plugin{
 			->setTitle('Blogs')
 			->setPath('/blog')
 			->setParams(array('filter'=>'featured'))
+			->addSubItem($add_link)
 			->addSubItem($featured_link)
 			->addSubItem($trending_link)
 			->addSubItem($my_link)
