@@ -33,7 +33,14 @@ class blog implements interfaces\api{
   				  if(!$guids)
               break;
   				  $entities = core\entities::get(array('guids'=>$guids));
+            usort($entities, function($a, $b){
+    					if ((int)$a->featured_id == (int) $b->featured_id) { 
+    					   return 0;
+    					 }
+    					return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+    				});
             $response['blogs'] = Factory::exportable($entities);
+            $response['load-next'] = end($entities)->featured_id;
             break;
           case "trending":
             break;
@@ -43,6 +50,7 @@ class blog implements interfaces\api{
               'owner_guid' => isset($pages[1]) ? $pages[1] : \Minds\Core\session::getLoggedInUser()->guid
             ));
             $response['blogs'] = Factory::exportable($entities);
+            $response['load-next'] = end($entities)->guid;
             break;
           case is_numeric($pages[0]):
             $blog = new entities\Blog($pages[0]);
