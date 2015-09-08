@@ -38,7 +38,7 @@ class authenticate implements interfaces\api, interfaces\ApiIgnorePam{
             return false;
         }
 
-        $user = new entities\user($_POST['username']);
+        $user = new entities\user(strtolower($_POST['username']));
         if($user->isEnabled() && $user->username){
             //is twofactor authentication setup?
             try{
