@@ -9,6 +9,7 @@ namespace minds\plugin\blog\api\v1;
 
 use Minds\Core;
 use minds\plugin\blog\entities;
+use minds\entities\user;
 use minds\interfaces;
 use Minds\Api\Factory;
 
@@ -62,6 +63,9 @@ class blog implements interfaces\api{
           case is_numeric($pages[0]):
             $blog = new entities\Blog($pages[0]);
             $response['blog'] = $blog->export();
+            //provide correct subscribe info for userobj (renormalize)
+            $owner = new user($blog->ownerObj);
+            $response['blog']['ownerObj'] = $owner->export();
             break;
           case "header":
             $blog = new entities\Blog($pages[1]);
