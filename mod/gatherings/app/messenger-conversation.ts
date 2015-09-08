@@ -18,7 +18,7 @@ export class MessengerConversation {
   session = SessionFactory.build();
   guid :string;
   name: string;
-  messages: [];
+  conversations : Array<any> = [];
   next: string
   previous: string;
   hasMoreData: boolean = true;

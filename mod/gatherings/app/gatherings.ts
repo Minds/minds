@@ -20,7 +20,7 @@ import { InfiniteScroll } from 'src/directives/infinite-scroll';
 export class Gatherings {
   activity : any;
   session = SessionFactory.build();
-  conversations : [];
+  conversations : Array<any> = [];
   next : string =  "";
   setup : boolean = false;
   hasMoreData : boolean =  true;
