@@ -30,7 +30,6 @@ export class GroupsCreator {
   membershipChange(value){
     console.log(value);
     this.group.membership = value;
-    this.group.foo = 'bar';
   }
 
   save(){

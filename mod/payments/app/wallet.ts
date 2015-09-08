@@ -31,7 +31,7 @@ export class Wallet {
   getBalance(){
     var self = this;
     this.client.get('api/v1/wallet/count', {})
-      .then((response) => {
+      .then((response : any) => {
         self.points = response.count
         });
   }
@@ -40,7 +40,7 @@ export class Wallet {
     var self = this;
     this.inProgress = true;
     this.client.get('api/v1/wallet/transactions', { limit: 12, offset: this.offset})
-      .then((response) => {
+      .then((response : any) => {
 
         if(!response.transactions){
           self.moreData = false;

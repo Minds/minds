@@ -23,7 +23,8 @@ export class Client {
 		var XSRF_TOKEN = this.cookie.get('XSRF-TOKEN');
 		var headers = new Headers();
 		headers.append('X-XSRF-TOKEN', XSRF_TOKEN);
-		return Object.assign(options, {
+		var Objecti : any = Object;
+		return Objecti.assign(options, {
 					headers: headers,
 					cache: true
 				});

@@ -1,5 +1,5 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, Inject } from 'angular2/angular2';
-import { Router, RouterLink, RouteParams } from 'angular2/router';
+import { Router, ROUTER_DIRECTIVES, RouteParams } from 'angular2/router';
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from 'src/services/session';
@@ -11,22 +11,33 @@ import { Activity } from 'src/controllers/newsfeed/activity';
 import { ChannelSubscribers } from './subscribers';
 import { ChannelSubscriptions } from './subscriptions';
 
+interface MindsChannelResponse extends MindsResponse {
+  status : string,
+  message : string,
+  channel : MindsUser
+}
+
+interface MindsUser {
+  guid : string,
+  name : string,
+  username : string
+}
+
 @Component({
   selector: 'minds-channel',
   viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
-  directives: [ RouterLink, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions, SubscribeButton ]
+  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions, SubscribeButton ]
 })
-
 
 export class Channel {
 
   _filter : string = "feed";
   session = SessionFactory.build();
   username : string;
-  user : Object;
+  user : MindsUser;
   feed : Array<Object> = [];
   offset : string = "";
   moreData : boolean = true;
@@ -34,10 +45,8 @@ export class Channel {
   editing : string = "";
   error: string = "";
 
-  constructor(public client: Client,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
-    ){
+
+  constructor(public client: Client, params: RouteParams){
       this.username = params.params['username'];
       if(params.params['filter'])
         this._filter = params.params['filter'];
@@ -47,7 +56,7 @@ export class Channel {
   load(){
     var self = this;
     this.client.get('api/v1/channel/' + this.username, {})
-              .then((data : Array<any>) => {
+              .then((data : MindsChannelResponse) => {
                 if(data.status != "success"){
                   self.error = data.message;
                   return false;
