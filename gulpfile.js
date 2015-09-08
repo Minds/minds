@@ -211,7 +211,7 @@ gulp.task('build.dev', function (done) {
   runSequence('clean.dev', 'build.lib.dev', 'build.app.dev', done);
 });
 
-gulp.task('build.bundle', ['build.dev'], function (){
+gulp.task('build.bundle', ['build.dev'], function (cb){
 
   var builder = new Builder();
   builder.config({
@@ -226,15 +226,21 @@ gulp.task('build.bundle', ['build.dev'], function (){
       'http/http': { build: false }
     }
   });
-  builder.build('app', './front/public/app.min.js', {minify: false})
+  builder.build('app', './front/public/app.js', {minify: true})
     .then(function(){
-
+        cb();
     })
     .catch(function(e){
         console.error('errored to build', e);
     });
 
 });
+
+gulp.task('build.prod', function(done){
+  PATH.src.lib = PATH.src.loader
+      .concat(PATH.src.angular);
+  runSequence('build.bundle', done);
+})
 
 // --------------
 // Post install
