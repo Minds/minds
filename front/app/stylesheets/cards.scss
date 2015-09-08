@@ -1,0 +1,82 @@
+@import 'defaults.scss';
+
+
+minds-card-user, .minds-banner-card{
+  min-height:0;
+
+  .minds-usercard-banner{
+    width: 100%;
+    height: 120px;
+    overflow: hidden;
+    position:relative;
+
+    > img{
+      min-width:100%;
+      max-height:100%;
+    }
+
+    .minds-banner-overlay{
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    }
+  }
+
+  .minds-usercard-block{
+    margin-top: -72px;
+    padding-bottom:0;
+    position:relative;
+    display:flex;
+    text-decoration: none;
+    color:$minds-white;
+
+    .body{
+      flex:1;
+      margin: $minds-margin*2;
+
+      h3{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 16px;
+        line-height: 18px;
+        padding: 0;
+        margin: 0;
+      }
+      button{
+        margin-top:$minds-margin;
+        width:100%;
+      }
+    }
+  }
+
+  subscribe-button{
+    position: absolute;
+    margin: -38px 130px;
+  }
+
+  .minds-tabs{
+    flex: 1;
+    align-items: flex-start;
+    justify-content: flex-start;
+    border:0;
+
+    a {
+      padding: 0 $minds-padding;
+      flex: auto;
+
+      span {
+        width: 100%;
+        display: block;
+        font-size:11px;
+        height: 11px;
+        vertical-align: middle;
+        line-height: 36px;
+      }
+    }
+
+  }
+}

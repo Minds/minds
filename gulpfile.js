@@ -146,7 +146,7 @@ gulp.task('build.plugins', function (cb) {
 // ----------
 // Builds scss for plugins
 gulp.task('build.plugins.scss', function () {
-    gulp.src('./front/app/stylesheets/plugins/**/*scss')
+    return gulp.src('./front/app/stylesheets/plugins/**/*scss')
       .pipe(concat('plugins.scss'))
       .pipe(gulp.dest('./front/app/stylesheets/'));
 });
@@ -210,6 +210,37 @@ gulp.task('build.app.dev', function (done) {
 gulp.task('build.dev', function (done) {
   runSequence('clean.dev', 'build.lib.dev', 'build.app.dev', done);
 });
+
+gulp.task('build.bundle', ['build.dev'], function (cb){
+
+  var builder = new Builder();
+  builder.config({
+    baseURL: './front/public',
+    defaultJSExtensions: true,
+    paths: {
+      '*': './front/public/*.js'
+    },
+    meta: {
+      'angular2/angular2': { build: false },
+      'angular2/router': { build: false },
+      'http/http': { build: false }
+    }
+  });
+  builder.build('app', './front/public/app.js', {minify: true})
+    .then(function(){
+        cb();
+    })
+    .catch(function(e){
+        console.error('errored to build', e);
+    });
+
+});
+
+gulp.task('build.prod', function(done){
+  PATH.src.lib = PATH.src.loader
+      .concat(PATH.src.angular);
+  runSequence('build.bundle', done);
+})
 
 // --------------
 // Post install

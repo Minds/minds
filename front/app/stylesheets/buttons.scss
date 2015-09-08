@@ -1,0 +1,20 @@
+@import 'defaults.scss';
+
+subscribe-button{
+
+  button{
+    cursor:pointer;
+    background: transparent;
+    border: 1px solid #78909c;
+    color: #78909c;
+    padding: 8px 16px;
+    font-size: 12px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  button:hover,button.subscribed{
+    background-color: #78909c;
+    color:#FFF;
+  }
+}

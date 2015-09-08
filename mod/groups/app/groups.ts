@@ -8,6 +8,11 @@ import { InfiniteScroll } from '../../directives/infinite-scroll';
 
 import { GroupsCreator } from './groups-creator';
 
+interface MindsGroupResponse extends MindsResponse {
+  groups : Array<any>,
+  'load-next' : string
+}
+
 @Component({
   selector: 'minds-groups',
   viewBindings: [ Client ]
@@ -19,8 +24,10 @@ import { GroupsCreator } from './groups-creator';
 
 export class Groups {
 
+  minds;
+
   offset : string = "";
-  moreDate : boolean = true;
+  moreData : boolean = true;
   inProgress : boolean = false;
   groups : Array<any> = [];
   session = SessionFactory.build();
@@ -39,7 +46,7 @@ export class Groups {
     var self = this;
     this.inProgress = true;
     this.client.get('api/v1/groups/' + this._filter, { limit: 12, offset: this.offset})
-      .then((response) => {
+      .then((response : MindsGroupResponse) => {
 
         if(!response.groups){
           self.moreData = false;

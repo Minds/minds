@@ -5,6 +5,15 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 
+interface MindsGroupResponse extends MindsResponse{
+  group : MindsGroup
+}
+interface MindsGroup {
+  guid : string,
+  name : string,
+  banner : boolean
+}
+
 @Component({
   selector: 'minds-groups',
   viewBindings: [ Client ]
@@ -17,21 +26,21 @@ import { Material } from 'src/directives/material';
 export class GroupsProfile {
 
   guid;
-  group;
+  group : MindsGroup;
   offset : string = "";
   session = SessionFactory.build();
 
 	constructor(public client: Client,
     @Inject(RouteParams) public params: RouteParams
     ){
-      this.guid = this.params.guid;
+      this.guid = params.params['guid'];
       this.load();
 	}
 
   load(){
     var self = this;
     this.client.get('api/v1/groups/group/' + this.guid, {})
-      .then((response) => {
+      .then((response : MindsGroupResponse) => {
           self.group = response.group;
       })
       .catch((e)=>{

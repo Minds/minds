@@ -1,5 +1,5 @@
 import {Component, View, bootstrap} from 'angular2/angular2';
-import {RouteConfig, RouterOutlet, RouterLink, Route, ROUTER_BINDINGS} from 'angular2/router';
+import {RouteConfig, Route, ROUTER_DIRECTIVES, ROUTER_BINDINGS} from 'angular2/router';
 import {HTTP_BINDINGS} from 'http/http';
 
 import {Topbar} from './src/components/topbar';
@@ -7,6 +7,7 @@ import {Navigation} from './src/components/navigation';
 
 import {Login} from './src/controllers/login';
 import {Logout} from './src/controllers/logout';
+import {Register} from './src/controllers/register';
 import {ComingSoon} from './src/controllers/comingsoon';
 import {Newsfeed} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';
@@ -18,7 +19,7 @@ import {Notifications} from './src/controllers/notifications/notifications';
  * TODO: Load these automagically from gulp
  */
 import {Gatherings} from './src/plugins/gatherings/gatherings';
-import {Blog} from './src/plugins/blog/blog';
+import {Blog, BlogView, BlogEdit} from './src/plugins/blog/blog';
 import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups';
 import {Wallet} from './src/plugins/payments/payments';
 
@@ -28,6 +29,8 @@ import {Wallet} from './src/plugins/payments/payments';
 @RouteConfig([
   new Route({ path: '/login', component: Login, as: 'login' }),
   { path: '/logout', component: Logout, as: 'logout' },
+  { path: '/register', component: Register, as: 'register' },
+
   { path: '/newsfeed', component: Newsfeed, as: 'newsfeed' },
   { path: '/capture', component: Capture, as: 'capture' },
 
@@ -38,6 +41,8 @@ import {Wallet} from './src/plugins/payments/payments';
   { path: '/messenger/:guid', component:  Gatherings, as: 'messenger-conversation'},
 
   { path: '/blog/:filter', component:  Blog, as: 'blog'},
+  { path: '/blog/view/:guid', component:  BlogView, as: 'blog-view'},
+  { path: '/blog/edit/:guid', component:  BlogEdit, as: 'blog-edit'},
 
   { path: '/notifications', component: Notifications, as: 'notifications'},
 
@@ -47,7 +52,6 @@ import {Wallet} from './src/plugins/payments/payments';
 
   { path: '/wallet', component: Wallet, as: 'wallet'},
 
-
   { path: '/:username', component: Channel, as: 'channel' },
   { path: '/:username/:filter', component: Channel, as: 'channel-filter' },
 
@@ -55,7 +59,7 @@ import {Wallet} from './src/plugins/payments/payments';
 ])
 @View({
   templateUrl: './templates/index.html',
-  directives: [Topbar, Navigation, RouterOutlet, RouterLink]
+  directives: [Topbar, Navigation, ROUTER_DIRECTIVES]
 })
 
 class Minds {

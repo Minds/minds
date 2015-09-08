@@ -1,10 +1,11 @@
-import { Component, View, NgFor, NgIf, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, Inject } from 'angular2/angular2';
 import { Router, RouterLink, RouteParams } from 'angular2/router';
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
-import { SessionFactory } from '../../services/session';
-import { InfiniteScroll } from '../../directives/infinite-scroll';
-import { AutoGrow } from '../../directives/autogrow';
+import { SessionFactory } from 'src/services/session';
+import { InfiniteScroll } from 'src/directives/infinite-scroll';
+import { SubscribeButton } from 'src/directives/subscribe-button';
+import { AutoGrow } from 'src/directives/autogrow';
 import { Activity } from 'src/controllers/newsfeed/activity';
 
 import { ChannelSubscribers } from './subscribers';
@@ -16,7 +17,7 @@ import { ChannelSubscriptions } from './subscriptions';
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
-  directives: [ RouterLink, NgFor, NgIf, Material, FORM_DIRECTIVES, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions ]
+  directives: [ RouterLink, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions, SubscribeButton ]
 })
 
 
