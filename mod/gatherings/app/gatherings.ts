@@ -21,10 +21,10 @@ export class Gatherings {
   activity : any;
   session = SessionFactory.build();
   conversations : Array<any> = [];
-  next : string =  "";
+  offset : string =  "";
   setup : boolean = false;
   hasMoreData : boolean =  true;
-  inprogress : boolean = false;
+  inProgress : boolean = false;
   cb : Date = new Date();
   search : {};
   storage: Storage;
@@ -55,17 +55,17 @@ export class Gatherings {
 
   load(refresh : boolean) {
     var self = this;
-    if (this.inprogress || !this.storage.get('private-key')){
+    if (this.inProgress || !this.storage.get('private-key')){
       return false;
     }
-    this.inprogress = true;
+    this.inProgress = true;
     this.client.get('api/v1/conversations',
-    {	limit: 12,offset: this.next, cb: this.cb
+    {	limit: 12,offset: this.offset, cb: this.cb
     })
     .then(function(data) {
       if (!data.conversations) {
         self.hasMoreData = false;
-        self.inprogress = false;
+        self.inProgress = false;
         return false;
       } else {
         self.hasMoreData = true;
@@ -78,12 +78,12 @@ export class Gatherings {
         self.conversations.push(entity);
       }
 
-      self.next = data['load-next'];
-      self.inprogress = false;
+      self.offset = data['load-next'];
+      self.inProgress = false;
     })
     .catch( function(error) {
       console.log("got error" + error);
-      self.inprogress = true;
+      self.inProgress = true;
     });
   };
 
@@ -114,8 +114,8 @@ export class Gatherings {
   };
   refresh() {
     this.search = {};
-    this.inprogress = false;
-    this.next = "";
+    this.inProgress = false;
+    this.offset = "";
     this.previous = "";
     this.cb = new Date();
     this.hasMoreData = true;

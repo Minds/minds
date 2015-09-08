@@ -18,8 +18,8 @@ export class MessengerConversation {
   session = SessionFactory.build();
   guid :string;
   name: string;
-  conversations : Array<any> = [];
-  next: string
+  messages : Array<any> = [];
+  offset: string;
   previous: string;
   hasMoreData: boolean = true;
   inProgress: boolean = false;
@@ -47,11 +47,11 @@ export class MessengerConversation {
     var self = this;
     this.inProgress = true;
 
-    console.log('loading messages from:' + this.next);
+    console.log('loading messages from:' + this.offset);
 
     this.client.get('api/v1/conversations/' + this.guid, {
       limit: 6,
-      offset: this.next,
+      offset: this.offset,
       cachebreak: Date.now()
     })
     .then(function(data) {
@@ -90,7 +90,7 @@ export class MessengerConversation {
 
       console.log("------ MESSAGES ARE LOADED ------");
 
-      self.next = data['load-previous'];
+      self.offset = data['load-previous'];
       self.previous = data['load-next'];
       //self.$broadcast('scroll.refreshComplete');
 
