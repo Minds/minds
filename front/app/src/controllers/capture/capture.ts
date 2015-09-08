@@ -33,7 +33,8 @@ export class Capture {
       progress: 0
     }
 
-    var fileInfo = document.getElementById("file").files[0];
+    var file : any = document.getElementById("file");
+    var fileInfo = file.files[0];
 
     if(fileInfo.type.indexOf('image') > -1){
       data.type = "image";

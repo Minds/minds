@@ -16,7 +16,7 @@ import { InfiniteScroll } from '../../directives/infinite-scroll';
 
 export class Notifications {
 
-  notificatons : Array<Object> = [];
+  notifications : Array<Object> = [];
   moreData : boolean = true;
   offset: string = "";
   inProgress : boolean = false;
