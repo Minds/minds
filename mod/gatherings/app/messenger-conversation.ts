@@ -16,8 +16,8 @@ import { Material } from 'src/directives/material';
 export class MessengerConversation {
   activity : any;
   session = SessionFactory.build();
-  guid :string;//= $stateParams.username;
-	name: string;//= $stateParams.name;
+  guid :string;
+  name: string;
   messages: [];
   next: string
   previous: string;
@@ -32,80 +32,84 @@ export class MessengerConversation {
     @Inject(Router) public router: Router,
     @Inject(RouteParams) public params: RouteParams
   ){
-    this.guid = params.params['guid'];
-    this.load();
-	}
+    console.log("PARAMS :" + params);
+    if (params.params['guid']){
+      this.guid = params.params['guid'];
+      console.log("PARAMS GUID: "+ params.params['guid']);
+      this.load();
+    }
+  }
 
   /**
-	 * Load more posts
-	 */
-	load() {
+  * Load more posts
+  */
+  load() {
     var self = this;
-		this.inProgress = true;
+    this.inProgress = true;
 
-		console.log('loading messages from:' + this.next);
+    console.log('loading messages from:' + this.next);
 
     this.client.get('api/v1/conversations/' + this.guid, {
-				limit: 6,
-				offset: this.next,
-				cachebreak: Date.now()
-			})
-      .then(function(data) {
-				self.newChat = false;
-				self.inProgress = false;
-				//now update the public keys
-				self.publickeys = data.publickeys;
+      limit: 6,
+      offset: this.next,
+      cachebreak: Date.now()
+    })
+    .then(function(data) {
+      self.newChat = false;
+      self.inProgress = false;
+      //now update the public keys
+      self.publickeys = data.publickeys;
 
-				if (!self.publickeys[self.guid]) {
-					alert({
-						title: 'Sorry!',
-						template: self.name + " has not yet configured their encrypted chat yet."
-					});
-					//$state.go('tab.chat');
-					return true;
-				}
+      if (!self.publickeys[self.guid]) {
+        alert({
+          title: 'Sorry!',
+          template: self.name + " has not yet configured their encrypted chat yet."
+        });
+        //$state.go('tab.chat');
+        return true;
+      }
 
-				if (!data.messages) {
-					self.hasMoreData = false;
-					return false;
-				} else {
-					self.hasMoreData = true;
-				};
+      if (!data.messages) {
+        self.hasMoreData = false;
+        return false;
+      } else {
+        self.hasMoreData = true;
+      };
 
-				var first;
-				if (self.messages.length === 0) {
-					first = true;
-				} else {
-					first = false;
-				}
+      var first;
+      if (self.messages.length === 0) {
+        first = true;
+      } else {
+        first = false;
+      }
 
-        for (var _i = 0, _obj = data.messages; _i < _a.length; _i++) {
-            var message = _obj[_i];
-            self.messages.push(conversation);
-        }
+      for (var _i = 0, _obj = data.messages; _i < _a.length; _i++) {
+        var message = _obj[_i];
+        self.messages.push(conversation);
+      }
 
-				console.log("------ MESSAGES ARE LOADED ------");
+      console.log("------ MESSAGES ARE LOADED ------");
 
-				self.next = data['load-previous'];
-				self.previous = data['load-next'];
-				//self.$broadcast('scroll.refreshComplete');
+      self.next = data['load-previous'];
+      self.previous = data['load-next'];
+      //self.$broadcast('scroll.refreshComplete');
 
-				if (first) {
-          //Must Scroll Bottom
-          /*
-					$timeout(function() {
-						$ionicScrollDelegate.scrollBottom();
-					}, 1000);
-          */
-				}
+      if (first) {
+        //Must Scroll Bottom
+        /*
+        $timeout(function() {
+        $ionicScrollDelegate.scrollBottom();
+      }, 1000);
+      */
+    }
 
-				self.poll = true;
+    self.poll = true;
 
-			})
-      .catch(function(error) {
-				self.inProgress = false;
-			});
+  })
+  .catch(function(error) {
+    self.inProgress = false;
+  });
 
-		};
+};
 
 }
