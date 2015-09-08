@@ -24,9 +24,7 @@
       </div>
     </div>
     <div class="mdl-cell mdl-cell--6-col minds-blog-actions">
-      <div>
-        <button class="minds-blog-subscribe">Subscribe</button>
-      </div>
+      <subscribe-button [user]="blog.ownerObj" *ng-if="blog.ownerObj.guid != session.getLoggedInUser().guid"></subscribe-button>
     </div>
 
   </div>

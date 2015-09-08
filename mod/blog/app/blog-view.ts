@@ -4,6 +4,7 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
+import { SubscribeButton } from 'src/directives/subscribe-button';
 
 interface MindsBlogResponse extends MindsResponse {
   blog : any
@@ -21,7 +22,7 @@ interface MindsBlogEntity {
 })
 @View({
   templateUrl: 'templates/plugins/blog/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, SubscribeButton ]
 })
 
 export class BlogView {
