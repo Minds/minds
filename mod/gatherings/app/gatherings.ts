@@ -116,7 +116,6 @@ export class Gatherings {
     this.search = {};
     this.inProgress = false;
     this.offset = "";
-    this.previous = "";
     this.cb = new Date();
     this.hasMoreData = true;
     this.load(true);
