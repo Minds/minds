@@ -41,6 +41,8 @@
         "./front/app/src/directives/infinite-scroll.ts",
         "./front/app/src/directives/loggedin.ts",
         "./front/app/src/directives/material.ts",
+        "./front/app/src/directives/subscribe-button.ts",
+        "./front/app/src/helpers/subscribe.ts",
         "./front/app/src/plugins/blog/blog-edit.ts",
         "./front/app/src/plugins/blog/blog-view.ts",
         "./front/app/src/plugins/blog/blog.ts",
