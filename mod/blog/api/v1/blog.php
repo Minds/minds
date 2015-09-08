@@ -28,6 +28,13 @@ class blog implements interfaces\api{
           $pages[0] = "featured";
 
         switch($pages[0]){
+          case "all":
+            $entities = core\entities::get(array(
+              'subtype' => 'blog'
+            ));
+            $response['blogs'] = Factory::exportable($entities);
+            $response['load-next'] = (string) end($entities)->guid;
+            break;
           case "featured":
             $guids = Core\Data\indexes::fetch('object:blog:featured', array('offset'=> isset($_GET['offset']) ? $_GET['offset'] : "", 'limit'=> isset($_GET['limit']) ? $_GET['limit'] : 12 ));
   				  if(!$guids)
