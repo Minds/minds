@@ -38,6 +38,7 @@ import {Wallet} from './src/plugins/payments/payments';
   { path: '/discovery/:filter/:type', component: Discovery, as: 'discovery'},
 
   { path: '/messenger', component:  Gatherings, as: 'messenger'},
+  { path: '/messenger/:guid', component:  Gatherings, as: 'messenger-conversation'},
 
   { path: '/blog/:filter', component:  Blog, as: 'blog'},
   { path: '/blog/view/:guid', component:  BlogView, as: 'blog-view'},

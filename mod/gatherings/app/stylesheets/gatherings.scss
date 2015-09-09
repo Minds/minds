@@ -2,4 +2,62 @@ minds-gatherings{
   .minds-gatherings-search{
     width:100%;
   }
+  .minds-gatherings-conversation-container{
+    width:100%;
+  }
+  .minds-gatherings-ownerblock {
+    display: table;
+  }
+  .minds-gatherings-ownerblock .minds-avatar img {
+    width: 50px;
+    border-radius: 50%;
+  }
+  .minds-gatherings-ownerblock .minds-body {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .minds-gatherings-ownerblock .minds-body a {
+    display: block;
+    text-decoration: none;
+  }
+  .minds-gatherings-ownerblock .minds-body span {
+    font-size: 11px;
+  }
+
+  .minds-gatherings-view h1 {
+    margin: 0;
+  }
+
+  .minds-gatherings-view .minds-gatherings-header {
+    max-height: 300px;
+    overflow: hidden;
+  }
+
+  .minds-gatherings-view .minds-gatherings-header img {
+    width: 100%;
+  }
+
+  .minds-gatherings-view a {
+    color: #607d8b;
+  }
+
+  .minds-gatherings-body {
+    padding-top: 16px;
+  }
+
+  .minds-gatherings-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .minds-gatherings-subscribe {
+    background: transparent;
+    border: 1px solid #78909c;
+    color: #78909c;
+    padding: 8px 16px;
+    font-size: 12px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
 }
