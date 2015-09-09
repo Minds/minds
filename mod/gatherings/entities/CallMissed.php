@@ -20,7 +20,7 @@ class CallMissed extends message{
 
     parent::__construct($guid, $passphrase);
 
-		$this->subtype = 'call_ended';
+		$this->subtype = 'call_missed';
 
 	}
 
