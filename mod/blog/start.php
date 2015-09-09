@@ -16,6 +16,18 @@ class start extends Components\Plugin{
 		Api\Routes::add('v1/blog', '\\minds\\plugin\\blog\\api\\v1\\blog');
 		Api\Routes::add('v1/blog/header', '\\minds\\plugin\\blog\\api\\v1\\header');
 
+		Core\SEO\Manager::add('/blog/view', function($slugs = array()){
+			$guid = $slugs[0];
+			$blog = new entities\Blog($guid);
+			if(!$blog->title)
+				return array();
+
+			return $meta = array(
+				'title' => $blog->title,
+				'description' => $blog->description
+			);
+		});
+
 		//@todo update this to OOP
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			if($row->type == 'object' && $row->subtype == 'blog')
