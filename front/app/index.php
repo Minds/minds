@@ -16,6 +16,8 @@ ini_set( 'display_errors','1');
     <?php
       $meta = Minds\Core\SEO\Manager::get();
       foreach($meta as $name => $content){
+        $name = strip_tags($name);
+        $content = strip_tags($content);
         switch($name){
           case "title":
             echo "<title>$content | Minds</title>\n";
