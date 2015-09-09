@@ -12,7 +12,7 @@ class CallMissed extends message{
 
 	private $conversation;
 	private $message;
-	public $subtype = 'call_ended';
+	public $subtype = 'call_missed';
 	private $passphrase = NULL;
 	public $client_encrypted = false;
 
