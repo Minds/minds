@@ -18,7 +18,7 @@ ini_set( 'display_errors','1');
       foreach($meta as $name => $content){
         switch($name){
           case "title":
-            echo "<title>Minds - $content</title>\n";
+            echo "<title>$content | Minds</title>\n";
             break;
           case strpos($name, ":") !== FALSE:
             echo "<meta property=\"$name\" content=\"$content\">\n";
