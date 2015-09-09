@@ -5,16 +5,9 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { SubscribeButton } from 'src/directives/subscribe-button';
+import { MindsBlogResponse } from 'src/interfaces/responses';
+import { MindsBlogEntity } from 'src/interfaces/entities';
 
-interface MindsBlogResponse extends MindsResponse {
-  blog : any
-}
-interface MindsBlogEntity {
-  guid : string,
-  title : string,
-  description : string,
-  ownerObj : any
-}
 
 @Component({
   selector: 'minds-blog-view',
