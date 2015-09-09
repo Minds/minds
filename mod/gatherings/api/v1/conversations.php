@@ -128,9 +128,10 @@ class conversations implements interfaces\api{
               Core\Queue\Client::build()->setExchange("mindsqueue")
                                         ->setQueue("Push")
                                         ->send(array(
-                                              "user_guid"=>$pages[0],
+                                              "user_guid"=>$pages[1],
                                               "message"=> \Minds\Core\session::getLoggedInUser()->name . " tried to call you.",
-                                              "uri" => 'chat'
+                                              "uri" => 'chat',
+
                                              ));
               break;
             case 'ended':
