@@ -4,7 +4,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Storage } from 'src/services/storage';
 import { Material } from 'src/directives/material';
-
+import { MindsKeysResponse } from 'src/interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-setup',
@@ -18,7 +18,7 @@ import { Material } from 'src/directives/material';
 export class MessengerSetup {
   session = SessionFactory.build();
   configured: boolean = false;
-  data: {};
+  data: any = {};
   storage: Storage;
 
   constructor(public client: Client){
@@ -31,6 +31,7 @@ export class MessengerSetup {
     passwords.value = {};
     return true;
   }
+
   unlock(password) {
     console.log("UNLOCK: "+password);
     var self = this;
@@ -38,7 +39,7 @@ export class MessengerSetup {
       password: password.value.password,
       new_password: 'abc123'
     })
-    .then(function(data) {
+    .then(function(data : MindsKeysResponse) {
       if (data.key) {
         self.storage.set('private-key', data.key);
         //$state.go('tab.chat');
@@ -75,7 +76,7 @@ export class MessengerSetup {
     this.client.post('api/v1/keys/setup', {
       password: passwords.value.password1
     })
-    .then(function(data) {
+    .then(function(data : MindsKeysResponse) {
       console.log("Data: " + data.key+ " Storage: "+ self.storage);
       if (data.key) {
         self.storage.set('private-key', data.key);

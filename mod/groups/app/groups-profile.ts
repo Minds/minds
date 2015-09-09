@@ -4,15 +4,8 @@ import { RouterLink, RouteParams } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-
-interface MindsGroupResponse extends MindsResponse{
-  group : MindsGroup
-}
-interface MindsGroup {
-  guid : string,
-  name : string,
-  banner : boolean
-}
+import { MindsGroupResponse } from 'src/interfaces/responses';
+import { MindsGroup } from 'src/interfaces/entities';
 
 @Component({
   selector: 'minds-groups',
