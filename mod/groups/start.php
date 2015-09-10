@@ -15,6 +15,18 @@ elgg_register_event_handler('init', 'system', 'groups_fields_setup', 10000);
  */
 function groups_init() {
 
+	Minds\Core\SEO\Manager::add('/groups/profile', function($slugs = array()){
+		$guid = $slugs[0];
+		$group = new Minds\plugin\groups\entities\Group($guid);
+		if(!$group->name)
+			return array();
+
+		return $meta = array(
+			'title' => $group->name,
+			'description' => $group->briefdescription
+		);
+	});
+
 	$featured_link = new Minds\Core\Navigation\Item();
 	$featured_link
 		->setPriority(1)

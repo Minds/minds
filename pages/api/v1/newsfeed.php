@@ -27,21 +27,26 @@ class newsfeed implements interfaces\api{
             $pages[0] = 'network';
 
         switch($pages[0]){
-            case 'single':
-                $activity = new \Minds\entities\activity($pages[1]);
-                return Factory::response(array('activity'=>$activity->export()));
-                break;
-            default:
-            case 'personal':
+          case 'single':
+              $activity = new \Minds\entities\activity($pages[1]);
+              return Factory::response(array('activity'=>$activity->export()));
+              break;
+          default:
+          case 'personal':
         		$options = array(
         			'owner_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
         		);
-        		break;
+      		  break;
     	    case 'network':
-                $options = array(
-                    'network' => isset($pages[1]) ? $pages[1] : core\session::getLoggedInUserGuid()
-                );
-                break;
+            $options = array(
+                'network' => isset($pages[1]) ? $pages[1] : core\session::getLoggedInUserGuid()
+            );
+            break;
+          case 'container':
+            $options = array(
+              'container_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
+            );
+            break;
         }
 
         $activity = core\entities::get(array_merge(array(
@@ -153,6 +158,10 @@ class newsfeed implements interfaces\api{
                             ->setURL(\elgg_normalize_url(urldecode($_POST['url'])))
                             ->setThumbnail(urldecode($_POST['thumbnail']));
                 }
+
+                if(isset($_POST['container_guid']))
+                  $activity->container_guid = $_POST['container_guid'];
+
                 if($guid = $activity->save()){
 
                     Core\Events\Dispatcher::trigger('social', 'dispatch', array(
