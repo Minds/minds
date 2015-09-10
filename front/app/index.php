@@ -9,9 +9,27 @@ ini_set( 'display_errors','1');
 ?>
 <html>
   <head>
-    <title>Minds <?= "" ?></title>
+
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+    <?php
+      $meta = Minds\Core\SEO\Manager::get();
+      foreach($meta as $name => $content){
+        $name = strip_tags($name);
+        $content = strip_tags($content);
+        switch($name){
+          case "title":
+            echo "<title>$content | Minds</title>\n";
+            break;
+          case strpos($name, ":") !== FALSE:
+            echo "<meta property=\"$name\" content=\"$content\">\n";
+            break;
+          default:
+            echo "<meta name=\"$name\" content=\"$content\">\n";
+        }
+      }
+    ?>
 
     <!-- temporary design -->
      <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.blue_grey-amber.min.css" />
