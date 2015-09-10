@@ -4,6 +4,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { MindsUserConversationResponse } from 'src/interfaces/responses';
+import { MindsMessageResponse } from 'src/interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-conversation',
@@ -17,8 +18,8 @@ import { MindsUserConversationResponse } from 'src/interfaces/responses';
 export class MessengerConversation {
   activity : any;
   session = SessionFactory.build();
-  guid :string;
-  name: string;
+  guid : string;
+  name : string;
   messages : Array<any> = [];
   offset: string;
   previous: string;
@@ -28,13 +29,14 @@ export class MessengerConversation {
   poll: boolean = true;
   publickeys: any;
   timeout: any;
-
+  minds: Minds;
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
     @Inject(RouteParams) public params: RouteParams
   ){
     console.log("PARAMS :" + params);
+    this.minds = window.Minds;
     if (params.params && params.params['guid']){
       this.guid = params.params['guid'];
       console.log("PARAMS GUID: "+ params.params['guid']);
@@ -67,7 +69,6 @@ export class MessengerConversation {
           title: 'Sorry!',
           template: self.name + " has not yet configured their encrypted chat yet."
         });
-        //$state.go('tab.chat');
         return true;
       }
 
@@ -86,7 +87,7 @@ export class MessengerConversation {
       }
 
       for(let message of data.messages){
-          self.messages.push(message);
+        self.messages.push(message);
       }
 
 
@@ -102,14 +103,40 @@ export class MessengerConversation {
         $ionicScrollDelegate.scrollBottom();
       }, 1000);
       */
+      }
+
+      self.poll = true;
+
+    })
+    .catch(function(error) {
+      self.inProgress = false;
+    });
+  };
+
+  sendMessage(chat : string){
+    console.log("BEFORE: " +chat);
+    var pushed = false;
+    var self = this;
+    this.client.post('api/v1/conversations/' + this.guid, chat)
+    .then(function(data : MindsMessageResponse) {
+      console.log(data);
+      if (!pushed) {
+        self.messages.push(data.message);
+        self.previous = data.message.guid;
+        pushed = true;
+      }
+    })
+    .catch(function(error) {
+      alert('sorry, your message could not be sent');
+      console.log(error);
+    });
+  }
+
+  doneTyping($event) {
+    if($event.which === 13) {
+      this.sendMessage($event.target.value);
+      $event.target.value = null;
     }
-
-    self.poll = true;
-
-  })
-  .catch(function(error) {
-    self.inProgress = false;
-  });
-};
+  };
 
 }

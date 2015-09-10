@@ -18,7 +18,7 @@ import {Notifications} from './src/controllers/notifications/notifications';
 /**
  * TODO: Load these automagically from gulp
  */
-import {Gatherings} from './src/plugins/gatherings/gatherings';
+import {Gatherings, MessengerConversation, MessengerSetup} from './src/plugins/gatherings/gatherings';
 import {Blog, BlogView, BlogEdit} from './src/plugins/blog/blog';
 import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups';
 import {Wallet} from './src/plugins/payments/payments';

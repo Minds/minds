@@ -1,5 +1,7 @@
 import { MindsUser } from 'src/interfaces/entities';
 import { MindsGroup } from 'src/interfaces/entities';
+import { MindsMessage } from 'src/interfaces/entities';
+
 /*
 * Minds response object
 */
@@ -27,7 +29,7 @@ export interface MindsConversationResponse extends MindsResponse {
 
 export interface MindsUserConversationResponse extends MindsResponse{
   publickeys : any,
-  messages : Array<any>,
+  messages : Array<MindsMessage>,
   'load-previous' : string,
   'load-next' : string
 }
@@ -46,4 +48,8 @@ export interface MindsGroupResponse extends MindsResponse{
 export interface MindsGroupListResponse extends MindsResponse {
   groups : Array<any>,
   'load-next' : string
+}
+
+export interface MindsMessageResponse extends MindsResponse{
+  message : MindsMessage
 }

@@ -1,5 +1,6 @@
 import { Component, View, NgFor, NgIf, NgClass, Inject, Observable, FORM_DIRECTIVES} from 'angular2/angular2';
-import { Router, RouteParams, RouterLink } from "angular2/router";
+import { ROUTER_DIRECTIVES, Router, RouteParams, RouterLink } from "angular2/router";
+
 import { MessengerConversation } from "./messenger-conversation";
 import { MessengerSetup } from "./messenger-setup";
 import { Storage } from 'src/services/storage';
@@ -18,7 +19,7 @@ import { MindsGatheringsSearchResponse } from 'src/interfaces/responses';
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/gatherings.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
+  directives: [ ROUTER_DIRECTIVES, NgFor, NgIf, NgClass, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
 })
 
 export class Gatherings {
@@ -58,7 +59,7 @@ export class Gatherings {
     }
   }
 
-  load(refresh : boolean) {
+  load(refresh : boolean = false) {
     var self = this;
     if (this.inProgress || !this.storage.get('private-key')){
       return false;
@@ -118,12 +119,6 @@ export class Gatherings {
       $event.target.value = null;
     }
   };
-  refresh() {
-    this.search = {};
-    this.inProgress = false;
-    this.offset = "";
-    this.cb = new Date();
-    this.hasMoreData = true;
-    this.load(true);
-  };
 }
+export { MessengerConversation } from './messenger-conversation';
+export { MessengerSetup } from './messenger-setup';
