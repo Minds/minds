@@ -3,8 +3,8 @@ import { Router, RouteParams, RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-import { MindsUserConversationResponse } from 'src/interfaces/responses';
-import { MindsMessageResponse } from 'src/interfaces/responses';
+import { MindsUserConversationResponse } from './interfaces/responses';
+import { MindsMessageResponse } from './interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-conversation',
@@ -35,11 +35,9 @@ export class MessengerConversation {
     @Inject(Router) public router: Router,
     @Inject(RouteParams) public params: RouteParams
   ){
-    console.log("PARAMS :" + params);
     this.minds = window.Minds;
     if (params.params && params.params['guid']){
       this.guid = params.params['guid'];
-      console.log("PARAMS GUID: "+ params.params['guid']);
       this.load();
     }
   }
@@ -58,7 +56,7 @@ export class MessengerConversation {
       offset: this.offset,
       cachebreak: Date.now()
     })
-    .then(function(data : MindsUserConversationResponse) {
+    .then((data : MindsUserConversationResponse) =>{
       self.newChat = false;
       self.inProgress = false;
       //now update the public keys
@@ -113,12 +111,12 @@ export class MessengerConversation {
     });
   };
 
-  sendMessage(chat : string){
-    console.log("BEFORE: " +chat);
+  sendMessage(message){
+    console.log("BEFORE: " +message.value);
     var pushed = false;
     var self = this;
-    this.client.post('api/v1/conversations/' + this.guid, chat)
-    .then(function(data : MindsMessageResponse) {
+    this.client.post('api/v1/conversations/' + this.guid, message.value)
+    .then((data : MindsMessageResponse) =>{
       console.log(data);
       if (!pushed) {
         self.messages.push(data.message);
@@ -134,7 +132,7 @@ export class MessengerConversation {
 
   doneTyping($event) {
     if($event.which === 13) {
-      this.sendMessage($event.target.value);
+      this.sendMessage($event.target);
       $event.target.value = null;
     }
   };

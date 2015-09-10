@@ -8,9 +8,9 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
-import { Conversation } from 'src/interfaces/entities';
-import { MindsConversationResponse } from 'src/interfaces/responses';
-import { MindsGatheringsSearchResponse } from 'src/interfaces/responses';
+import { Conversation } from './interfaces/entities';
+import { MindsConversationResponse } from './interfaces/responses';
+import { MindsGatheringsSearchResponse } from './interfaces/responses';
 
 
 @Component({
@@ -68,7 +68,7 @@ export class Gatherings {
     this.client.get('api/v1/conversations',
     {	limit: 12,offset: this.offset, cb: this.cb
     })
-    .then(function(data : MindsConversationResponse) {
+    .then((data : MindsConversationResponse) => {
       if (!data.conversations) {
         self.hasMoreData = false;
         self.inProgress = false;
@@ -88,7 +88,7 @@ export class Gatherings {
       self.offset = data['load-next'];
       self.inProgress = false;
     })
-    .catch( function(error) {
+    .catch((error) => {
       console.log("got error" + error);
       self.inProgress = true;
     });
@@ -103,10 +103,10 @@ export class Gatherings {
     }
     console.log("searching " + query);
     this.client.get('api/v1/gatherings/search', {q: query,type: 'user',view: 'json'})
-    .then(function(success : MindsGatheringsSearchResponse) {
+    .then((success : MindsGatheringsSearchResponse) =>{
       self.conversations = success.user[0];
     })
-    .catch(function(error){
+    .catch((error)=>{
       console.log(error);
     });
   };

@@ -4,7 +4,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Storage } from 'src/services/storage';
 import { Material } from 'src/directives/material';
-import { MindsKeysResponse } from 'src/interfaces/responses';
+import { MindsKeysResponse } from './interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-setup',
@@ -39,7 +39,7 @@ export class MessengerSetup {
       password: password.value.password,
       new_password: 'abc123'
     })
-    .then(function(data : MindsKeysResponse) {
+    .then((data : MindsKeysResponse) => {
       if (data.key) {
         self.storage.set('private-key', data.key);
         //$state.go('tab.chat');
@@ -50,7 +50,7 @@ export class MessengerSetup {
         });
       }
     })
-    .catch(function(error) {
+    .catch((error) =>{
     });
   };
 
@@ -76,11 +76,10 @@ export class MessengerSetup {
     this.client.post('api/v1/keys/setup', {
       password: passwords.value.password1
     })
-    .then(function(data : MindsKeysResponse) {
+    .then((data : MindsKeysResponse) =>{
       console.log("Data: " + data.key+ " Storage: "+ self.storage);
       if (data.key) {
         self.storage.set('private-key', data.key);
-        //$state.go('tab.chat');
       } else {
         alert({
           title: 'Ooops..',
@@ -88,7 +87,7 @@ export class MessengerSetup {
         });
       }
     })
-    .catch(function(error) {
+    .catch((error) =>{
       console.log(error);
     });
   };
