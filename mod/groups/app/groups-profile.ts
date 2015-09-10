@@ -16,6 +16,7 @@ interface MindsGroup {
   banner : boolean
 }
 
+
 @Component({
   selector: 'minds-groups-profile',
   viewBindings: [ Client ]

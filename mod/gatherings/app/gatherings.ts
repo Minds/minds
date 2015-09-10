@@ -7,6 +7,10 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
+import { Conversation } from 'src/interfaces/entities';
+import { MindsConversationResponse } from 'src/interfaces/responses';
+import { MindsGatheringsSearchResponse } from 'src/interfaces/responses';
+
 
 @Component({
   selector: 'minds-gatherings',
@@ -20,15 +24,16 @@ import { InfiniteScroll } from 'src/directives/infinite-scroll';
 export class Gatherings {
   activity : any;
   session = SessionFactory.build();
-  conversations : Array<any> = [];
+  conversations : Array<Conversation> = [];
   offset : string =  "";
   setup : boolean = false;
   hasMoreData : boolean =  true;
   inProgress : boolean = false;
   cb : Date = new Date();
-  search : {};
+  search : any = {};
+  minds: Minds;
   storage: Storage;
-  minds: {};
+
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
@@ -62,7 +67,7 @@ export class Gatherings {
     this.client.get('api/v1/conversations',
     {	limit: 12,offset: this.offset, cb: this.cb
     })
-    .then(function(data) {
+    .then(function(data : MindsConversationResponse) {
       if (!data.conversations) {
         self.hasMoreData = false;
         self.inProgress = false;
@@ -74,8 +79,9 @@ export class Gatherings {
       if(refresh){
         self.conversations = data.conversations;
       }else{
-        for(let conversation of data.conversations)
-        self.conversations.push(entity);
+        for(let conversation of data.conversations){
+            self.conversations.push(conversation);
+        }
       }
 
       self.offset = data['load-next'];
@@ -96,7 +102,7 @@ export class Gatherings {
     }
     console.log("searching " + query);
     this.client.get('api/v1/gatherings/search', {q: query,type: 'user',view: 'json'})
-    .then(function(success) {
+    .then(function(success : MindsGatheringsSearchResponse) {
       self.conversations = success.user[0];
     })
     .catch(function(error){

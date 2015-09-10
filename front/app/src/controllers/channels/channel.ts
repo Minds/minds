@@ -7,21 +7,12 @@ import { InfiniteScroll } from 'src/directives/infinite-scroll';
 import { SubscribeButton } from 'src/directives/subscribe-button';
 import { AutoGrow } from 'src/directives/autogrow';
 import { Activity } from 'src/controllers/newsfeed/activity';
+import { MindsActivityObject } from 'src/interfaces/entities';
+import { MindsUser } from 'src/interfaces/entities';
+import { MindsChannelResponse } from 'src/interfaces/responses';
 
 import { ChannelSubscribers } from './subscribers';
 import { ChannelSubscriptions } from './subscriptions';
-
-interface MindsChannelResponse extends MindsResponse {
-  status : string,
-  message : string,
-  channel : MindsUser
-}
-
-interface MindsUser {
-  guid : string,
-  name : string,
-  username : string
-}
 
 @Component({
   selector: 'minds-channel',

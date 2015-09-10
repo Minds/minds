@@ -1,26 +1,13 @@
 // Type definitions for Minds
+interface Minds{
+ LoggedIn : boolean;
+ user: Object;
+ navigation: Array<any>;
+ cdn_url: string;
+}
 
-
-interface Window {
-	Minds : {
-		LoggedIn : boolean,
-		user: Object,
-		navigation: Array<any>
-	};
+ interface Window {
+	Minds : Minds;
 	componentHandler : any;
 }
 declare var window:Window;
-
-
-/**
- * Activity Object
- */
-interface MindsActivityObject {
-	activity : Array<any>;
-}
-
-
-/**
- * Minds response object
- */
-interface MindsResponse {}

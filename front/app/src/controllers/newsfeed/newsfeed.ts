@@ -3,6 +3,7 @@ import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { Activity } from './activity';
+import { MindsActivityObject } from 'src/interfaces/entities';
 
 @Component({
   selector: 'minds-newsfeed',

@@ -5,11 +5,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
-
-interface MindsBlogResponse extends MindsResponse {
-  blogs : Array<any>,
-  'load-next' : string
-}
+import { MindsBlogListResponse } from 'src/interfaces/responses';
 
 @Component({
   selector: 'minds-blog',
@@ -45,7 +41,7 @@ export class Blog {
     var self = this;
     this.inProgress = true;
     this.client.get('api/v1/blog/' + this._filter, { limit: 12, offset: this.offset})
-      .then((response : MindsBlogResponse) => {
+      .then((response : MindsBlogListResponse) => {
 
         if(!response.blogs){
           self.moreData = false;

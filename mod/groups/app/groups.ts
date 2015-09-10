@@ -5,13 +5,8 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
-
+import { MindsGroupListResponse } from 'src/interfaces/responses';
 import { GroupsCreator } from './groups-creator';
-
-interface MindsGroupResponse extends MindsResponse {
-  groups : Array<any>,
-  'load-next' : string
-}
 
 @Component({
   selector: 'minds-groups',
@@ -46,7 +41,7 @@ export class Groups {
     var self = this;
     this.inProgress = true;
     this.client.get('api/v1/groups/' + this._filter, { limit: 12, offset: this.offset})
-      .then((response : MindsGroupResponse) => {
+      .then((response : MindsGroupListResponse) => {
 
         if(!response.groups){
           self.moreData = false;

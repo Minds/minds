@@ -3,6 +3,7 @@ import { Router, RouteParams, RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
+import { MindsUserConversationResponse } from 'src/interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-conversation',
@@ -23,9 +24,10 @@ export class MessengerConversation {
   previous: string;
   hasMoreData: boolean = true;
   inProgress: boolean = false;
+  newChat: boolean;
   poll: boolean = true;
-  publickeys: {};
-  timeout: {};
+  publickeys: any;
+  timeout: any;
 
 
   constructor(public client: Client,
@@ -33,7 +35,7 @@ export class MessengerConversation {
     @Inject(RouteParams) public params: RouteParams
   ){
     console.log("PARAMS :" + params);
-    if (params.params['guid']){
+    if (params.params && params.params['guid']){
       this.guid = params.params['guid'];
       console.log("PARAMS GUID: "+ params.params['guid']);
       this.load();
@@ -54,7 +56,7 @@ export class MessengerConversation {
       offset: this.offset,
       cachebreak: Date.now()
     })
-    .then(function(data) {
+    .then(function(data : MindsUserConversationResponse) {
       self.newChat = false;
       self.inProgress = false;
       //now update the public keys
@@ -83,16 +85,15 @@ export class MessengerConversation {
         first = false;
       }
 
-      for (var _i = 0, _obj = data.messages; _i < _a.length; _i++) {
-        var message = _obj[_i];
-        self.messages.push(conversation);
+      for(let message of data.messages){
+          self.messages.push(message);
       }
+
 
       console.log("------ MESSAGES ARE LOADED ------");
 
       self.offset = data['load-previous'];
       self.previous = data['load-next'];
-      //self.$broadcast('scroll.refreshComplete');
 
       if (first) {
         //Must Scroll Bottom
@@ -109,7 +110,6 @@ export class MessengerConversation {
   .catch(function(error) {
     self.inProgress = false;
   });
-
 };
 
 }
