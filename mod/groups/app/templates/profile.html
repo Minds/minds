@@ -9,7 +9,7 @@
 <div class="mdl-tabs__tab-bar groups-tabs" *ng-if="group">
   <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'activity'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'activity'}">Feed</a>
   <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'members'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'members'}">{{group['members:count']}} members</a>
-  <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'requests'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'requests'}">{{group['requests:count']}} requests</a>
+  <a *ng-if="group.membership != 2" [router-link]="['/groups-profile', {guid: group.guid, filter: 'requests'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'requests'}">{{group['requests:count']}} requests</a>
   <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'settings'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'settings'}">Settings</a>
 
 </div>

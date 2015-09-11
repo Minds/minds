@@ -35,6 +35,7 @@ class membership implements interfaces\api{
 
       switch($pages[1]){
         case "requests":
+          $response = array();
           break;
         case "members":
         default:

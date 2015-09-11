@@ -1,1 +1,11 @@
-Requests page
+<div class="mdl-cell mdl-cell--6-col mdl-card mdl-shadow--2dp" *ng-for="#user of users">
+  <minds-card-user [object]="user"></minds-card-user>
+</div>
+
+<infinite-scroll
+    distance="25%"
+    (load)="load()"
+    *ng-if="moreData"
+    />
+    <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+</infinite-scroll>

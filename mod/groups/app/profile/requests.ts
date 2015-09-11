@@ -4,7 +4,8 @@ import { RouterLink, RouteParams } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-import { Activity } from 'src/controllers/newsfeed/activity';
+import { InfiniteScroll } from 'src/directives/infinite-scroll';
+import { UserCard } from 'src/controllers/cards/cards';
 
 @Component({
   selector: 'minds-groups-profile-requests',
@@ -13,7 +14,7 @@ import { Activity } from 'src/controllers/newsfeed/activity';
 })
 @View({
   templateUrl: 'templates/plugins/groups/profile/requests.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Activity ]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, InfiniteScroll, UserCard ]
 })
 
 export class GroupsProfileRequests {
@@ -21,7 +22,7 @@ export class GroupsProfileRequests {
   group : any;
   session = SessionFactory.build();
 
-  members : Array<any> = [];
+  users : Array<any> = [];
   offset : string = "";
   inProgress : boolean = false;
   moreData : boolean = true;
@@ -30,17 +31,32 @@ export class GroupsProfileRequests {
 
 	}
 
-  set group(value : any){
+  set _group(value : any){
     this.group = value;
+    this.load();
   }
 
-  load(){
+  load(refresh : boolean = false){
     var self = this;
-    this.client.get('api/v1/groups/group/' + this.guid, {})
-      .then((response : MindsGroupResponse) => {
-          self.group = response.group;
-          self.group.members = [];
-          self.loadFeed();
+    this.inProgress = true;
+    this.client.get('api/v1/groups/membership/' + this.group.guid + '/requests', { limit: 12, offset: this.offset })
+      .then((response : any) => {
+
+        if(!response.users){
+          self.moreData = false;
+          self.inProgress = false;
+          return false;
+        }
+
+        if(self.users && !refresh){
+          for(let user of response.users)
+            self.users.push(user);
+        } else {
+             self.users = response.users;
+        }
+        self.offset = response['load-next'];
+        self.inProgress = false;
+
       })
       .catch((e)=>{
 

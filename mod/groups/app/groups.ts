@@ -66,6 +66,14 @@ export class Groups {
       });
   }
 
+  /**
+   * Join a group
+   */
+  join(group : any){
+  //  this.client.post('')
+
+  }
+
 }
 
 export { GroupsProfile } from './groups-profile';

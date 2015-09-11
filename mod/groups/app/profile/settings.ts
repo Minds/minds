@@ -34,6 +34,11 @@ export class GroupsProfileSettings {
     this.group = value;
   }
 
+  membershipChange(value){
+    console.log(value);
+    this.group.membership = value;
+  }
+
   save(){
     var self = this;
     this.client.post('api/v1/groups/group/' + this.group.guid, this.group)

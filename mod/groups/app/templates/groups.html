@@ -15,7 +15,7 @@
       	<div class="body">
       		<h3>{{group.name}}</h3>
 
-      		<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" (click)="join()" [hidden]="group.member">
+      		<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" (click)="join(group)" [hidden]="group.member && group.membership == 2">
       			Join
       		</button>
       		<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" [hidden]="!group.member">
