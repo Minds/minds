@@ -1,0 +1,54 @@
+<div class="mdl-card mdl-shadow--4dp post">
+
+  <form #postobj="form" (submit)="post()">
+
+      <div class="mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
+          <textarea
+            ng-control="message"
+            class="mdl-textfield__input"
+            type="text"
+            id="message"
+            #message
+            [(ng-model)]="postMeta.message"
+            (keyup)="getPostPreview(message)"
+          ></textarea>
+          <label class="mdl-textfield__label" for="message">Status</label>
+      </div>
+
+      <!-- Post preview box -->
+      <div class="post-preview" *ng-if="postMeta.active">
+        <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="postMeta.title"></div>
+        <div class="minds-rich-embed" *ng-if="postMeta.title">
+
+          <a>
+            <img src="{{postMeta.thumbnail}}" />
+          </a>
+          <a class="meta mdl-color-text--blue-grey-900">
+            <h2 class="mdl-card__title-text">{{postMeta.title}}</h2>
+            <p>{{postMeta.description}}</p>
+          </a>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="mdl-button mdl-button--raised mdl-button--colored"
+        >
+        Post
+      </button>
+
+    </form>
+</div>
+
+<div class="minds-list">
+
+    <minds-activity *ng-for="#a of activity" [object]="a" class="mdl-card mdl-shadow--2dp item"></minds-activity>
+    <infinite-scroll
+        distance="25%"
+        (load)="load()"
+        *ng-if="moreData"
+        />
+        <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+    </infinite-scroll>
+
+</div>

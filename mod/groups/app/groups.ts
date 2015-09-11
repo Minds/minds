@@ -43,7 +43,7 @@ export class Groups {
     this.client.get('api/v1/groups/' + this._filter, { limit: 12, offset: this.offset})
       .then((response : MindsGroupListResponse) => {
 
-        if(!response.groups){
+        if(!response.groups || response.groups.length == 0){
           self.moreData = false;
           self.inProgress = false;
           return false;

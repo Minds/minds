@@ -15,4 +15,3 @@
 /*
  * http override (fixes syntax bug)
  */
-/// <reference path="./http.d.ts" />

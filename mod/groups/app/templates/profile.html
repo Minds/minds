@@ -6,65 +6,59 @@
 
 </div>
 
-<div class="mdl-grid groups-grid newsfeed-grid" style="max-width:900px">
+<div class="mdl-tabs__tab-bar groups-tabs" *ng-if="group">
+  <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'activity'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'activity'}">Feed</a>
+  <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'members'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'members'}">{{group['members:count']}} members</a>
+  <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'requests'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'requests'}">{{group['requests:count']}} requests</a>
+  <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'settings'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'settings'}">Settings</a>
 
-  <div class="mdl-cell mdl-cell--8-col">
+</div>
 
-    <div class="mdl-card mdl-shadow--4dp post">
+<div class="mdl-grid groups-grid newsfeed-grid" style="max-width:900px" *ng-if="group">
 
-      <form #postobj="form" (submit)="post()">
+  <!-- Activity feed -->
+  <minds-groups-profile-feed [group]="group" class="mdl-cell mdl-cell--8-col" *ng-if="filter == 'activity'">
+  </minds-groups-profile-feed>
+  <!-- END: Activity feed -->
 
-          <div class="mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
-              <textarea
-                ng-control="message"
-                class="mdl-textfield__input"
-                type="text"
-                id="message"
-                #message
-                [(ng-model)]="postMeta.message"
-                (keyup)="getPostPreview(message)"
-              ></textarea>
-              <label class="mdl-textfield__label" for="message">Status</label>
-          </div>
+  <!-- Members filter -->
+  <minds-groups-profile-members [group]="group" class="mdl-cell mdl-cell--8-col mdl-grid" *ng-if="filter == 'members'">
+  </minds-groups-profile-members>
+  <!-- END: Members filter -->
 
-          <!-- Post preview box -->
-          <div class="post-preview" *ng-if="postMeta.active">
-            <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="postMeta.title"></div>
-            <div class="minds-rich-embed" *ng-if="postMeta.title">
+  <!-- Requests Filter -->
+  <minds-groups-profile-requests [group]="group" class="mdl-cell mdl-cell--8-col mdl-grid" *ng-if="filter == 'requests'">
+  </minds-groups-profile-requests>
+  <!-- END: Requests filter -->
 
-              <a>
-                <img src="{{postMeta.thumbnail}}" />
-              </a>
-              <a class="meta mdl-color-text--blue-grey-900">
-                <h2 class="mdl-card__title-text">{{postMeta.title}}</h2>
-                <p>{{postMeta.description}}</p>
-              </a>
-            </div>
-          </div>
+  <!-- Settings Filter -->
+  <minds-groups-profile-settings [group]="group" class="mdl-cell mdl-cell--8-col" *ng-if="filter == 'settings'">
+  </minds-groups-profile-settings>
+  <!-- END: Settings filter -->
 
-          <button
-            type="submit"
-            class="mdl-button mdl-button--raised mdl-button--colored"
-            >
-            Post
-          </button>
-
-        </form>
+  <!-- Sidebar -->
+  <div class="mdl-cell mdl-cell--4-col">
+    <!-- Members -->
+    <div class="mdl-card mdl-shadow--4dp" style="width:auto">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Members</h2>
       </div>
 
-      <div class="minds-list">
-
-          <minds-activity *ng-for="#a of activity" [object]="a" class="mdl-card mdl-shadow--2dp item"></minds-activity>
-          <infinite-scroll
-              distance="25%"
-              (load)="load()"
-              *ng-if="moreData"
-              />
-              <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
-          </infinite-scroll>
-
+      <!-- Avatars of latest users -->
+      <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="group.members">
+        <a [router-link]="['/channel', {username: member.username}]" *ng-for="#member of group.members">
+          <img src=""/>
+        </a>
       </div>
+      <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+        <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'members'}]">{{group['members:count']}} Members</a>
+        <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'requests'}]">{{group['requests:count']}} Requests </a>
+      </div>
+
+      <div class="mdl-card__actions mdl-card--border">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Add members</a>
+      </div>
+    </div>
 
   </div>
-
 </div>

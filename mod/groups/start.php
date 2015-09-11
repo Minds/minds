@@ -56,8 +56,9 @@ function groups_init() {
 		->addSubItem($my_link)
 	);
 
-	Minds\Api\Routes::add('v1/groups/group', '\\minds\\plugin\\groups\\api\\v1\\group');
 	Minds\Api\Routes::add('v1/groups', '\\minds\\plugin\\groups\\api\\v1\\groups');
+	Minds\Api\Routes::add('v1/groups/group', '\\minds\\plugin\\groups\\api\\v1\\group');
+	Minds\Api\Routes::add('v1/groups/membership', '\\minds\\plugin\\groups\\api\\v1\\membership');
 
 	elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 		if($row->type == 'group')

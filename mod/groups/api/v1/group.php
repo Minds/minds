@@ -9,6 +9,7 @@ namespace minds\plugin\groups\api\v1;
 
 use Minds\Core;
 use Minds\plugin\groups\entities;
+use Minds\plugin\groups\helpers;
 use minds\interfaces;
 use Minds\Api\Factory;
 
@@ -24,6 +25,10 @@ class group implements interfaces\api{
 
         $group = new entities\Group($pages[0]);
         $response['group'] = $group->export();
+        $response['group']['members'] = Factory::exportable(helpers\Membership::getMembers($group));
+        $response['group']['members:count'] = helpers\Membership::getMembersCount($group);
+        $response['group']['requests'] = array();
+        $response['group']['requests:count'] = 0;
 
         return Factory::response($response);
 
