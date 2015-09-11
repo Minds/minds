@@ -19,7 +19,8 @@ export interface Message {
 export interface MindsUser {
 	guid : string,
 	name : string,
-	username : string
+	username : string,
+	chat : any
 }
 
 export interface MindsGroup {

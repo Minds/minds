@@ -47,10 +47,6 @@ export class Gatherings {
     this.minds.cdn_url = "https://d3ae0shxev0cb7.cloudfront.net";
   }
 
-  showConversation (guid: string, name: string){
-
-  }
-
   checkSetup(){
     var self = this;
     var key = this.storage.get('private-key');
@@ -113,7 +109,6 @@ export class Gatherings {
 
 
   doneTyping($event) {
-    console.log("typing " + $event.target.value);
     if($event.which === 13) {
       this.doSearch($event.target.value)
       $event.target.value = null;

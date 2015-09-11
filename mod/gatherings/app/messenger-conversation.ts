@@ -30,6 +30,7 @@ export class MessengerConversation {
   publickeys: any;
   timeout: any;
   minds: Minds;
+  isSendingMessage : boolean = false;
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
@@ -112,20 +113,24 @@ export class MessengerConversation {
   };
 
   sendMessage(message){
-    console.log("BEFORE: " +message.value);
+    this.isSendingMessage = true;
     var pushed = false;
     var self = this;
     this.client.post('api/v1/conversations/' + this.guid, message.value)
     .then((data : MindsMessageResponse) =>{
-      console.log(data);
+      self.isSendingMessage = false;
+      message.value = null;
       if (!pushed) {
         self.messages.push(data.message);
         self.previous = data.message.guid;
         pushed = true;
+
       }
     })
     .catch(function(error) {
       alert('sorry, your message could not be sent');
+      message.value = null;
+      self.isSendingMessage = false;
       console.log(error);
     });
   }
@@ -133,7 +138,6 @@ export class MessengerConversation {
   doneTyping($event) {
     if($event.which === 13) {
       this.sendMessage($event.target);
-      $event.target.value = null;
     }
   };
 

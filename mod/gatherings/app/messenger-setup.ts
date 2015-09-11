@@ -5,6 +5,7 @@ import { SessionFactory } from 'src/services/session';
 import { Storage } from 'src/services/storage';
 import { Material } from 'src/directives/material';
 import { MindsKeysResponse } from './interfaces/responses';
+import { MindsChannelResponse } from 'src/interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-setup',
@@ -25,11 +26,14 @@ export class MessengerSetup {
     this.storage = new Storage();
   }
 
-  setupTest(passwords){
-    console.log(passwords);
-    console.log(passwords.value);
-    passwords.value = {};
-    return true;
+  checkChatConfiguration(){
+    var self = this;
+    this.client.get('api/v1/channel/me', {})
+    .then((me : MindsChannelResponse) => {
+        if (me.channel.chat) {
+          self.configured = true;
+        }
+      });
   }
 
   unlock(password) {
@@ -42,7 +46,6 @@ export class MessengerSetup {
     .then((data : MindsKeysResponse) => {
       if (data.key) {
         self.storage.set('private-key', data.key);
-        //$state.go('tab.chat');
       } else {
         alert({
           title: 'Ooops..',
