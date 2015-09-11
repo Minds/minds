@@ -21,9 +21,12 @@ export class MessengerSetup {
   configured: boolean = false;
   data: any = {};
   storage: Storage;
+  show :  boolean = false;
+  inProgress : boolean = false;
 
   constructor(public client: Client){
     this.storage = new Storage();
+    this.checkChatConfiguration();
   }
 
   checkChatConfiguration(){
@@ -32,13 +35,14 @@ export class MessengerSetup {
     .then((me : MindsChannelResponse) => {
         if (me.channel.chat) {
           self.configured = true;
+          self.show = true;
         }
       });
   }
 
   unlock(password) {
-    console.log("UNLOCK: "+password);
     var self = this;
+    this.inProgress = true;
     this.client.get('api/v1/keys', {
       password: password.value.password,
       new_password: 'abc123'
@@ -52,13 +56,17 @@ export class MessengerSetup {
           template: 'We couldn\'t unlock your chat. Please check your password is correct.'
         });
       }
+      this.inProgress = false;
     })
     .catch((error) =>{
+      this.inProgress = false;
+      console.log(error);
     });
   };
 
   setup(passwords) {
     var self = this;
+    this.inProgress = true;
     if (!passwords.value.password1) {
       alert({
         title: 'Ooops..',
@@ -89,8 +97,10 @@ export class MessengerSetup {
           template: 'We couldn\'t unlock your chat. Please check your password is correct.'
         });
       }
+      this.inProgress = false;
     })
     .catch((error) =>{
+      this.inProgress = false;
       console.log(error);
     });
   };

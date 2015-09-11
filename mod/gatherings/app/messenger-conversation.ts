@@ -50,7 +50,7 @@ export class MessengerConversation {
     var self = this;
     this.inProgress = true;
 
-    console.log('loading messages from:' + this.offset);
+    console.log('loading messages from:' + this.guid);
 
     this.client.get('api/v1/conversations/' + this.guid, {
       limit: 6,
@@ -64,10 +64,7 @@ export class MessengerConversation {
       self.publickeys = data.publickeys;
 
       if (!self.publickeys[self.guid]) {
-        alert({
-          title: 'Sorry!',
-          template: self.name + " has not yet configured their encrypted chat yet."
-        });
+        alert('Sorry! That user has not yet configured their encrypted chat yet.');
         return true;
       }
 
