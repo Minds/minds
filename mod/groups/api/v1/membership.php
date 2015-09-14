@@ -36,6 +36,11 @@ class membership implements interfaces\api{
       switch($pages[1]){
         case "requests":
           $response = array();
+          $users = helpers\Membership::getRequests($group, $options);
+          if(!$users)
+            return Factory::response(array());
+          $response['users'] = Factory::exportable($users);
+          $response['load-next'] = end($users)->user;
           break;
         case "members":
         default:

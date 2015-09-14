@@ -2,12 +2,12 @@
 
 class userTest extends Minds_PHPUnit_Framework_TestCase {
 
-        protected function setUp() {
-        }
+    protected function setUp() {
+    }
 
-        public function testCanConstructWithoutArguments() {
-                $this->assertNotNull(new minds\entities\object());
-        }
+    public function testCanConstructWithoutArguments() {
+            $this->assertNotNull(new minds\entities\object());
+    }
 
 		private function setupUser($space =1){
 			$user = new minds\entities\user();

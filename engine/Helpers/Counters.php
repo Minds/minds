@@ -10,13 +10,13 @@ class Counters{
 
     /**
      * Increment a count
-     * 
+     *
      * @param mixed Entity or number - $entity
      * @param string $metric
      * @param int $value - defaults to 1
      * @return void
      */
-    public static function increment($entity, $metric, $value = 1){
+    public static function increment($entity, $metric, $value = 1, $client = NULL){
         if(is_numeric($entity) || is_string($entity)){
             $guid = $entity;
             //error_log($guid);
@@ -26,7 +26,8 @@ class Counters{
             else
                 return null;
         }
-        $client =Core\Data\Client::build('Cassandra');
+        if(!$client)
+          $client = Core\Data\Client::build('Cassandra');
         $query = new Core\Data\Cassandra\Prepared\Counters();
         try{
             $client->request($query->update($guid, $metric, $value));
@@ -35,15 +36,15 @@ class Counters{
         $cacher = Core\Data\cache\factory::build();
         //$cacher->destroy("counter:$guid:$metric");
     }
-    
+
     /**
      * Decrement a count
-     * 
+     *
      * @param mixed Entity or number - $entity
      * @param string $metric
      * @return void
      */
-    public static function decrement($entity, $metric, $value = 1){
+    public static function decrement($entity, $metric, $value = 1, $client = NULL){
         if(is_numeric($entity) || is_string($entity)){
             $guid = $entity;
         } else {
@@ -51,7 +52,8 @@ class Counters{
         }
         $value = $value * -1; //force negative
         try{
-            $client =Core\Data\Client::build('Cassandra');
+            if(!$client)
+              $client =Core\Data\Client::build('Cassandra');
             $query = new Core\Data\Cassandra\Prepared\Counters();
             $client->request($query->update($guid, $metric, $value));
 
@@ -59,14 +61,15 @@ class Counters{
             //$cacher->destroy("counter:$guid:$metric");
         }catch(\Exception $e){}
     }
-    
+
     /**
      * Increment a batch
      * @return $this
      */
-    public static function incrementBatch($entities, $metric, $value = 1){
+    public static function incrementBatch($entities, $metric, $value = 1, $client = NULL){
         $prepared = array();
-        $client = Core\Data\Client::build('Cassandra');
+        if(!$client)
+          $client = Core\Data\Client::build('Cassandra');
         $query = new Core\Data\Cassandra\Prepared\Counters();
         foreach($entities as $entity){
             if(is_numeric($entity) || is_string($entity)){
@@ -84,16 +87,16 @@ class Counters{
             $client->batchRequest($prepared);
         } catch(\Exception $e){
             error_log("exception in batch increment " . $e->getMessage());
-        }  
+        }
      }
-    
+
     /**
      * Return the count for a single entity/metric
      * @param mixed Entity or number - $entity
      * @param string $metric
      * @return int
      */
-    public static function get($entity, $metric, $cache = true){
+    public static function get($entity, $metric, $cache = true, $client = NULL){
         $cacher = Core\Data\cache\factory::build();
         if(is_numeric($entity) || is_string($entity)){
             $guid = $entity;
@@ -104,18 +107,19 @@ class Counters{
         if($cached !== FALSE && $cache){
             return (int) $cached;
         }
-        $client = Core\Data\Client::build('Cassandra');
+        if(!$client)
+          $client = Core\Data\Client::build('Cassandra');
         $query = new Core\Data\Cassandra\Prepared\Counters();
         try{
-	    $result = $client->request($query->get($guid, $metric));
+	          $result = $client->request($query->get($guid, $metric));
             if(isset($result[0]) && isset($result[0]['count']))
                 $count = $result[0]['count'];
-            else 
+            else
                 $count =  0;
        	 } catch(\Exception $e){
-		return 0;
-	}
-	 $cacher->set("counter:$guid:$metric", $count, 360); //cache for 10 minutes
+		         return 0;
+	       }
+	        $cacher->set("counter:$guid:$metric", $count, 360); //cache for 10 minutes
         return (int) $count;
     }
 
@@ -123,10 +127,10 @@ class Counters{
      * Reset a counter
      * @param mixed - Entity or number $entity
      * @param string $metric
-     * @param int $value (optional) 
+     * @param int $value (optional)
      * @return void;
      */
-    public static function clear($entity, $metric, $value = 0){
+    public static function clear($entity, $metric, $value = 0, $client = NULL){
         if(is_numeric($entity) || is_string($entity)){
             $guid = $entity;
         } else {
@@ -135,11 +139,12 @@ class Counters{
             else
                 return null;
         }
-        $client =Core\Data\Client::build('Cassandra');
+        if(!$client)
+          $client =Core\Data\Client::build('Cassandra');
         $query = new Core\Data\Cassandra\Prepared\Counters();
         //$client->request($query->clear($guid, $metric));
-        $count = self::get($entity, $metric, false);
-        self::decrement($entity, $metric, $count);
-    } 
-            
-}   
+        $count = self::get($entity, $metric, false, $client);
+        self::decrement($entity, $metric, $count, $client);
+    }
+
+}

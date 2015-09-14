@@ -1,98 +1,87 @@
 <?php
 
-use Minds\Core\data;
+use Minds\Core\Data;
+use Minds\tests\phpunit\mocks;
 
 class dataTest extends \Minds_PHPUnit_Framework_TestCase {
-		
-		static $db = null;
-		static $key = 'test_key';
-		static $values = array('k1'=>'v1', 'k2'=>'v2', 'index'=>'index');
+
+		private $db;
 
 		/**
 		 * Set up the new column family
-		 * 
+		 *
 		 * @return void
 		 */
-        public static function setUpBeforeClass() {
-			self::$db = new Data\Call();
-			self::$db->createCF('test', array('index'=> 'UTF8Type'));
-			self::$db = new Data\Call('test'); 
-        }
-		
+    public static function setUpBeforeClass() {
+
+    }
+
 		/**
 		 * Run before each test
-		 * 
+		 *
 		 * @return void
 		 */
 		protected function setUp() {
-		}
-	
-		/**
-		 * Test inserting into the database
-		 * 
-		 * @return void
-		 */
-       	public function testInsert(){
-			$this->assertEquals(self::$key, self::$db->insert(self::$key, self::$values));
-       	}
-		
-		/**
-		 * Test retrieving a row from the database
-		 * 
-		 * @return void
-		 */
-		public function testGetRow(){
-			$this->assertEquals(self::$values, self::$db->getRow(self::$key));
-		}
-		
-		/**
-		 * Test retrieving multiple rows from the database
-		 * 
-		 * @return void
-		 */
-		public function testGetRows(){
-			$this->assertCount(1, self::$db->getRows(array(self::$key)));
-			$this->assertArrayHasKey(self::$key, self::$db->getRows(array(self::$key)));
-		}
-		
-		/**
-		 * Test querying
-		 * 
-		 * @return void
-		 */
-		public function testGetByIndex(){
-			///$this->assertCount(1, self::$db->getByIndex(array('index'=>'index')));
-		}
-			
-		/**
-		 * Test removing an attribute (column) from a row
-		 * 
-		 * @return void
-		 */	
-		public function testRemoveAttributes(){
-			self::$db->removeAttributes(self::$key, array('k1'));//delete k1
-			$row = self::$db->getRow(self::$key);
-			$this->assertFALSE(isset($row['k1']));
-		}
-		
-		/**
-		 * Test removing a row
-		 * 
-		 * @return void
-		 */
-		public function testRemoveRow(){
-			self::$db->removeRow(self::$key);//delete
-			//we can't find, then its good!
-			$this->assertFalse(self::$db->getRow(self::$key));
+			$this->db = new Data\Call('test');
+			$mock = mocks\MockCassandra::build('test');
+      $mock->preload(array(
+				'test_get' => array('foo' => 'bar'),
+				'test_multiget_1' => array('foo' => 'bar'),
+				'test_multiget_2' => array('foo' => 'bar'),
+				'test_remove_attributes' => array('foo' => 'bar', 'bar' => 'foo'),
+				'test_remove' => array('foo' => 'bar')
+			));
 		}
 
 		/**
-		 * Delete the new column family
-		 * 
+		 * Test inserting into the database
+		 *
 		 * @return void
 		 */
-		static public function tearDownAfterClass(){
-			self::$db->removeCF();
+    public function testInsert(){
+			$this->assertEquals('test_insert', $this->db->insert('test_insert', array('foo'=>'bar')));
+    }
+
+		/**
+		 * Test retrieving a row from the database
+		 *
+		 * @return void
+		 */
+		public function testGetRow(){
+			$this->assertEquals(array('foo'=>'bar'), $this->db->getRow('test_get'));
+		}
+
+		/**
+		 * Test retrieving multiple rows from the database
+		 *
+		 * @return void
+		 */
+		public function testGetRows(){
+			$this->assertCount(2, $this->db->getRows(array('test_multiget_1', 'test_multiget_2')));
+			$this->assertArrayHasKey('test_multiget_1', $this->db->getRows(array('test_multiget_1')));
+		}
+
+		/**
+		 * Test removing an attribute (column) from a row
+		 *
+		 * @return void
+		 */
+		public function testRemoveAttributes(){
+			$this->db->removeAttributes('test_remove_attributes', array('bar'));
+			$row = $this->db->getRow('test_remove_attributes');
+			$this->assertFALSE(isset($row['bar']));
+			$this->assertTrue(isset($row['foo']));
+		}
+
+		/**
+		 * Test removing a row
+		 *
+		 * @return void
+		 */
+		public function testRemoveRow(){
+			$this->db->removeRow('test_remove');
+			//we can't find, then its good!
+			$this->assertFalse($this->db->getRow('test_remove'));
 		}
 
 }

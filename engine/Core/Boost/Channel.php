@@ -11,9 +11,9 @@ use minds\entities;
  * Channel boost handler
  */
 class Channel implements interfaces\BoostHandlerInterface{
-    
+
     private $guid;
-   
+
     public function __construct($options){
         if(isset($options['destination'])){
         	if(is_numeric($options['destination'])){
@@ -24,7 +24,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         	}
         }
     }
-    
+
    /**
      * Boost an entity
      * @param object/int $entity - the entity to boost
@@ -32,16 +32,16 @@ class Channel implements interfaces\BoostHandlerInterface{
      * @return boolean
      */
     public function boost($entity, $points){
-            
+
         if(is_object($entity)){
             $guid = $entity->guid;
         } else {
             $guid = $entity;
         }
-        
+
         $db = new Data\Call('entities_by_time');
         $result = $db->insert("boost:channel:$this->guid:review", array($guid => $points));
-   
+
         //send a notification of boost offer
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to' => array($this->guid),
@@ -50,22 +50,22 @@ class Channel implements interfaces\BoostHandlerInterface{
                 'params' => array('points'=>$points),
                 'points' => $points
                 ));
-       
+
         //send back to use
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array(Core\session::getLoggedinUser()->guid),
                 'object_guid' => $guid,
                 'notification_view' => 'boost_submitted_p2p',
                 'params' => array(
-                    'points' => $points, 
+                    'points' => $points,
                     'channel' => isset($_POST['destination']) ? $_POST['destination'] : $this->guid
                  ),
                 'points' => $points
-                )); 
+                ));
 
         return $result;
     }
-    
+
      /**
      * Return boosts for review
      * @param int $limit
@@ -77,7 +77,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         $guids = $db->getRow("boost:channel:$this->guid:review", array('limit'=>$limit, 'offset'=>$offset, 'reversed'=>false));
         return $guids;
     }
-    
+
     /**
      * Accept a boost and do a remind
      * @param object/int $entity
@@ -91,10 +91,10 @@ class Channel implements interfaces\BoostHandlerInterface{
         } else {
             $guid = $entity;
         }
-        
+
         $db = new Data\Call('entities_by_time');
-        
-        
+
+
         $embeded = new entities\entity($guid);
         $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
         \Minds\Helpers\Counters::increment($guid, 'remind');
@@ -109,9 +109,9 @@ class Channel implements interfaces\BoostHandlerInterface{
                     $activity->setRemind($embeded->export())->save();
             break;
             case 'object':
-            
-                
-                
+
+
+
             break;
             default:
                  /**
@@ -157,12 +157,12 @@ class Channel implements interfaces\BoostHandlerInterface{
      * @return boolean
      */
     public function reject($entity){
-        
+
         ///
         /// REFUND THE POINTS TO THE USER
         ///
-        
-        
+
+
         if(is_object($entity)){
             $guid = $entity->guid;
         } else {
@@ -181,17 +181,17 @@ class Channel implements interfaces\BoostHandlerInterface{
             ));
         return true;//need to double check somehow..
     }
-    
+
     /**
      * Return a boost
      * @return array
      */
     public function getBoost($offset = ""){
-       
+
        ///
        //// THIS DOES NOT APPLY BECAUSE IT'S PRE-AGREED
        ///
-       
+
     }
 
     public function autoExpire(){
@@ -209,16 +209,16 @@ class Channel implements interfaces\BoostHandlerInterface{
                 if(!$destination){
                     echo "$guid issue with destination.. \n";
                     continue;
-                } 
+                }
                 echo "$guid has expired. refunding ($points) points to $destination \n";
-                
+
                 $db->removeAttributes("boost:channel:all:review", array($boost));
                 $db->removeAttributes("boost:channel:$destination:review", array($guid));
-               
+
                 $entity =  new \Minds\entities\activity($guid);
-               
+
                 \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $guid, "boost refund");
-               
+
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                     'to'=>array($entity->owner_guid),
                     'from'=> $destination,
