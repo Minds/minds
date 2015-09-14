@@ -103,7 +103,7 @@ class Membership{
       return false;
 
     if($group->membership == 2 || $group->canEdit()){
-      //open group, so just join
+      Data\Relationships::build()->remove($user->guid, 'membership_request', $group->guid);
       return Data\Relationships::build()->create($user->guid, 'member', $group->guid);
     }
 
