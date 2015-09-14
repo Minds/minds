@@ -6,6 +6,7 @@ import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { Activity } from 'src/controllers/newsfeed/activity';
 
+import { GroupsJoinButton } from './groups-join-button';
 import { GroupsProfileMembers } from './profile/members';
 import { GroupsProfileRequests } from './profile/requests';
 import { GroupsProfileFeed } from './profile/feed';
@@ -28,8 +29,8 @@ interface MindsGroup {
 })
 @View({
   templateUrl: 'templates/plugins/groups/profile.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Activity, GroupsProfileMembers,
-    GroupsProfileFeed, GroupsProfileSettings, GroupsProfileRequests ]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Activity, GroupsJoinButton,
+    GroupsProfileMembers, GroupsProfileFeed, GroupsProfileSettings, GroupsProfileRequests ]
 })
 
 export class GroupsProfile {

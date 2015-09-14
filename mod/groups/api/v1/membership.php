@@ -60,11 +60,27 @@ class membership implements interfaces\api{
     }
 
     public function put($pages){
+      $group = new entities\Group($pages[0]);
+
+      if($group->join())
         return Factory::response(array());
+
+      return Factory::response(array(
+        'status' => 'error',
+        'message' => 'Could not join group'
+      ));
     }
 
     public function delete($pages){
+      $group = new entities\Group($pages[0]);
+
+      if($group->leave())
         return Factory::response(array());
+
+      return Factory::response(array(
+        'status' => 'error',
+        'message' => 'Could not leave group'
+      ));
     }
 
 }

@@ -51,6 +51,7 @@
         "./front/app/src/plugins/gatherings/messenger-conversation.ts",
         "./front/app/src/plugins/gatherings/messenger-setup.ts",
         "./front/app/src/plugins/groups/groups-creator.ts",
+        "./front/app/src/plugins/groups/groups-join-button.ts",
         "./front/app/src/plugins/groups/groups-profile.ts",
         "./front/app/src/plugins/groups/groups.ts",
         "./front/app/src/plugins/groups/models/group.ts",

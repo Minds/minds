@@ -44,10 +44,7 @@ class Membership{
     if(!$group)
       return 0;
 
-    $key = "$group->guid:member:inverted";
-
-    $db = new Data\Call('relationships');
-    return $db->countRow($key);
+    return Data\Relationships::build()->count($group->guid, "member", true);
   }
 
   /**
@@ -89,26 +86,46 @@ class Membership{
     if(!$group)
       return 0;
 
-    $key = "$group->guid:membership_request:inverted";
-
-    $db = new Data\Call('relationships');
-    return $db->countRow($key);
+    return Data\Relationships::build()->count($group->guid, "membership_request", true);
   }
 
   /**
-   * Request membership to a Group
+   * Join or Request membership to a Group
    * @param entities\Group $group
    * @param user $user
    * @return bool
    */
-  static public function requestMembership($group, $user = NULL){
+  static public function join($group, $user = NULL){
     if($user == NULL)
       $user = Core\session::getLoggedinUser();
 
     if(!$group)
       return false;
 
-    
+    if($group->membership == 2 || $group->canEdit()){
+      //open group, so just join
+      return Data\Relationships::build()->create($user->guid, 'member', $group->guid);
+    }
+
+    return Data\Relationships::build()->create($user->guid, 'membership_request', $group->guid);
+
+  }
+
+  /**
+   * Leave a group
+   * @param entities\Group $group
+   * @param user $user
+   * @return bool
+   */
+  static public function leave($group, $user = NULL){
+    if($user == NULL)
+      $user = Core\session::getLoggedinUser();
+
+    if(!$group)
+      return false;
+
+    return Data\Relationships::build()->remove($user->guid, 'member', $group->guid);
+
   }
 
 }

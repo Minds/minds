@@ -7,6 +7,7 @@ import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { MindsGroupListResponse } from 'src/interfaces/responses';
 import { GroupsCreator } from './groups-creator';
+import { GroupsJoinButton } from './groups-join-button';
 
 @Component({
   selector: 'minds-groups',
@@ -14,7 +15,7 @@ import { GroupsCreator } from './groups-creator';
 })
 @View({
   templateUrl: 'templates/plugins/groups/groups.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll ]
+  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll, GroupsJoinButton ]
 })
 
 export class Groups {

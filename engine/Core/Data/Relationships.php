@@ -6,6 +6,7 @@ namespace Minds\Core\Data;
 
 class Relationships {
 
+  static $relationships;
   private $db = NULL;
 
   public function __construct($db = NULL){
@@ -99,6 +100,34 @@ class Relationships {
 
   	return false;
 
+  }
+
+  /**
+   * Count the number of relationships
+   * @param string $guid_one
+   * @param string $relationship
+   * @param string $guid_two
+   * @return bool
+   */
+  public function count($guid, $relationship, $inverse = false){
+
+    if(!$guid)
+      throw new \Exception("\$guid must be provided");
+    if(!$relationship)
+      throw new \Exception("\$relationship must be provided");
+
+    $key = $guid . ':' . $relationship;
+    if($inverse)
+      $key = "$key:inverted";
+
+    return $this->db->countRow($key);
+
+  }
+
+  public static function build(){
+    if(!self::$relationships)
+      self::$relationships = new Relationships();
+    return self::$relationships;
   }
 
 }

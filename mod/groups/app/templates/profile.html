@@ -12,6 +12,8 @@
   <a *ng-if="group.membership != 2" [router-link]="['/groups-profile', {guid: group.guid, filter: 'requests'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'requests'}">{{group['requests:count']}} requests</a>
   <a [router-link]="['/groups-profile', {guid: group.guid, filter: 'settings'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'settings'}">Settings</a>
 
+  <minds-groups-join-button [group]="group"></minds-groups-join-button>
+
 </div>
 
 <div class="mdl-grid groups-grid newsfeed-grid" style="max-width:900px" *ng-if="group">
