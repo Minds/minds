@@ -8,17 +8,13 @@ php:
   - nightly
 
 services:
-#  - cassandra
+  - cassandra
   - mongodb
   - redis
   - elasticsearch
   - rabbitmq
 
 before_install:
-    # Cassandra 2.1 install
-    - sudo rm -rf /var/lib/cassandra/*
-    - wget http://www.us.apache.org/dist/cassandra/2.1.8/apache-cassandra-2.1.8-bin.tar.gz && tar -xvzf apache-cassandra-2.1.8-bin.tar.gz && sudo sh apache-cassandra-2.1.8/bin/cassandra
-    - sleep 10
     # Neo4j 2.2 install
     - wget dist.neo4j.org/neo4j-community-2.2.0-unix.tar.gz
     - tar -xzf neo4j-community-2.2.0-unix.tar.gz
