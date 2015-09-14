@@ -128,4 +128,15 @@ class Membership{
 
   }
 
+  static public function cancelRequest($group, $user = NULL){
+    if($user == NULL)
+      $user = Core\session::getLoggedinUser();
+
+    if(!$group)
+      return false;
+
+    return Data\Relationships::build()->remove($user->guid, 'membership_request', $group->guid);
+
+  }
+
 }

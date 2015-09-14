@@ -19,6 +19,7 @@ import { UserCard } from 'src/controllers/cards/cards';
 
 export class GroupsProfileRequests {
 
+  minds;
   group : any;
   session = SessionFactory.build();
 
@@ -34,6 +35,7 @@ export class GroupsProfileRequests {
   set _group(value : any){
     this.group = value;
     this.load();
+    this.minds = window.Minds;
   }
 
   load(refresh : boolean = false){
@@ -42,7 +44,7 @@ export class GroupsProfileRequests {
     this.client.get('api/v1/groups/membership/' + this.group.guid + '/requests', { limit: 12, offset: this.offset })
       .then((response : any) => {
 
-        if(!response.users){
+        if(!response.users || response.users.length == 0){
           self.moreData = false;
           self.inProgress = false;
           return false;
@@ -59,6 +61,32 @@ export class GroupsProfileRequests {
 
       })
       .catch((e)=>{
+
+      });
+  }
+
+  accept(user : any){
+    var self = this;
+    this.client.put('api/v1/groups/membership/' + this.group.guid + '/' + user.guid)
+      .then((response : any) => {
+        for(var i in self.users){
+          delete self.users[i];
+        }
+      })
+      .catch((e) => {
+
+      });
+  }
+
+  reject(user : any){
+    var self = this;
+    this.client.delete('api/v1/groups/membership/' + this.group.guid + '/' + user.guid)
+      .then((response : any) => {
+        for(var i in self.users){
+          delete self.users[i];
+        }
+      })
+      .catch((e) => {
 
       });
   }

@@ -62,6 +62,13 @@ class membership implements interfaces\api{
     public function put($pages){
       $group = new entities\Group($pages[0]);
 
+      if(isset($pages[1])){
+        //Admin approval
+        $user = new \Minds\entities\user($pages[1]);
+        if($group->join($user))
+          return Factory::response(array());
+      }
+
       if($group->join())
         return Factory::response(array());
 
@@ -73,6 +80,12 @@ class membership implements interfaces\api{
 
     public function delete($pages){
       $group = new entities\Group($pages[0]);
+
+      if(isset($pages[1])){
+        //Admin approval
+        helpers\Membership::cancelRequest($group, new \Minds\entities\user($pages[1]));
+        return Factory::response(array());
+      }
 
       if($group->leave())
         return Factory::response(array());

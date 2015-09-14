@@ -28,7 +28,7 @@ class group implements interfaces\api{
         $response['group']['members'] = Factory::exportable(helpers\Membership::getMembers($group));
         $response['group']['members:count'] = helpers\Membership::getMembersCount($group);
         $response['group']['requests'] = array();
-        $response['group']['requests:count'] = 0;
+        $response['group']['requests:count'] = helpers\Membership::getRequestsCount($group);
 
         return Factory::response($response);
 
