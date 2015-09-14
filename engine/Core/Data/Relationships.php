@@ -57,10 +57,10 @@ class Relationships {
     if(!$guid_two)
       throw new \Exception("\$guid_two must be provided");
 
-    if($db->removeAttributes($guid_one . ':' . $relationship, array($guid_two)) === false)
+    if($this->db->removeAttributes($guid_one . ':' . $relationship, array($guid_two)) === false)
       return false;
 
-    if($db->removeAttributes($guid_two . ':' . $relationship . ':inverted', array($guid_one)) === false)
+    if($this->db->removeAttributes($guid_two . ':' . $relationship . ':inverted', array($guid_one)) === false)
       return false;
 
     return true;

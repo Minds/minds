@@ -25,7 +25,8 @@ class RelationshipsTest extends \Minds_PHPUnit_Framework_TestCase {
       $mock = mocks\MockCassandra::build('relationships');
       $mock->preload(array(
         "guid1:test" => array("guid2" => time()),
-        "guid1:test:inverted" => array("guid2" => time())
+        "guid1:test:inverted" => array("guid2" => time()),
+        "guid5:test" => array("guid6" => time())
       ));
 
       $this->client = new Data\Relationships();
@@ -44,6 +45,12 @@ class RelationshipsTest extends \Minds_PHPUnit_Framework_TestCase {
 
      public function testCheckInverse(){
        $this->assertTrue($this->client->check("guid2", "test", "guid1"));
+     }
+
+     public function testRemove(){
+       $this->assertTrue($this->client->check("guid5", "test", "guid6"));
+       $this->assertTrue($this->client->remove("guid5", "test", "guid6"));
+       $this->assertFalse($this->client->check("guid5", "test", "guid6"));
      }
 
 }
