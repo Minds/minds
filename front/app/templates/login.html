@@ -7,9 +7,66 @@
               </div>
           </div>
     </div>
+    <!-- START: Register -->
+    <div class="mdl-cell mdl-cell--6-col" [hidden]="hideLogin">
+
+        <div class="mdl-card mdl-color--blue-grey-500 mdl-color-text--blue-grey-50  mdl-shadow--2dp minds-login-box">
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" [mdl]>
+
+              <input class="mdl-textfield__input"
+                      type="text"
+                      id="registerusername"
+                      #registerusername
+                  />
+              <label class="mdl-textfield__label mdl-color-text--blue-grey-50"  for="registerusername">Username</label>
+
+            </div>
+            <div></div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" [mdl]>
+
+              <input class="mdl-textfield__input"
+                      type="text"
+                      id="email"
+                      #email
+                  />
+              <label class="mdl-textfield__label mdl-color-text--blue-grey-50"  for="email">Email</label>
+
+            </div>
+            <div></div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" [mdl]>
+                  <input class="mdl-textfield__input"
+                          type="password"
+                          id="registerpassword"
+                          #registerpassword
+                      />
+                  <label class="mdl-textfield__label mdl-color-text--blue-grey-50" for="registerpassword">Password</label>
+            </div>
+            <div></div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" [mdl]>
+                  <input class="mdl-textfield__input"
+                          type="password"
+                          id="registerpassword2"
+                          #registerpassword
+                      />
+                  <label class="mdl-textfield__label mdl-color-text--blue-grey-50" for="registerpassword2">Password (confirm) </label>
+            </div>
+            <div></div>
+
+            <button class="mdl-button mdl-button--raised mdl-color--blue-grey-200" (click)="register(registerusername, registerpassword, email);"  [disabled]="inProgress">
+                Signup
+            </button>
+
+        </div>
+
+    </div>
+    <!-- END: Register -->
 
     <!-- START: LOGIN -->
-    <div class="mdl-cell mdl-cell--12-col" [hidden]="hideLogin">
+    <div class="mdl-cell mdl-cell--6-col" [hidden]="hideLogin">
 
         <div class="mdl-card mdl-color--blue-grey-500 mdl-color-text--blue-grey-50  mdl-shadow--2dp minds-login-box">
 
@@ -35,7 +92,7 @@
             </div>
             <div></div>
 
-            <button class="mdl-button mdl-button--raised mdl-color--blue-grey-200" (click)="login(username, password);">
+            <button class="mdl-button mdl-button--raised mdl-color--blue-grey-200" (click)="login(username, password);" [disabled]="inProgress">
                 Login
             </button>
 
