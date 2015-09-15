@@ -50,3 +50,35 @@ minds-groups-create{
   }
 
 }
+
+.groups-tabs{
+  max-width: 900px;
+  margin: auto;
+  justify-content: left;
+}
+
+minds-groups-profile-requests{
+  .mdl-cell{
+    min-height:0;
+  }
+
+  .mdl-card__title{
+    padding:$minds-padding;
+  }
+
+  .minds-avatar{
+    margin-right:$minds-margin;
+    img{
+      width:50px;
+    }
+  }
+
+  .mdl-card__actions{
+    border-top: 0;
+    width: auto;
+    right: 0;
+    position: absolute;
+    top: 0;
+    padding: $minds-padding*2;
+  }
+}

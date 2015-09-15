@@ -34,7 +34,7 @@ function elgg_get_site_url($site_guid = 0) {
 
 //	$site = get_entity($site_guid);
 	$site = elgg_get_site_entity(); // We only have one site, so pull it out by another method
-	
+
 	if (!$site instanceof ElggSite) {
 		return false;
 	}
@@ -96,12 +96,12 @@ function elgg_get_config($name, $site_guid = 0) {
 
 	// installation wide setting
 	$value = datalist_get($name);
-	
+
 	// @todo document why we don't cache false
 	if ($value === false) {
 		return null;
 	}
-	
+
 	$CONFIG->$name = $value;
 	return $value;
 }
@@ -212,7 +212,7 @@ function datalist_get($name) {
 	$name = trim($name);
 
 	// cannot store anything longer than 255 characters in db, so catch here
-	if (elgg_strlen($name) > 255) {
+	if (strlen($name) > 255) {
 		elgg_log("The name length for configuration variables cannot be greater than 255", "ERROR");
 		return false;
 	}
@@ -221,7 +221,7 @@ function datalist_get($name) {
 		return $DATALIST_CACHE[$name];
 	}
 
-	//check if this is set in settings.php	
+	//check if this is set in settings.php
 	foreach($CONFIG as $k=>$v){
 		if($k == $name){
 			return $v;
@@ -250,7 +250,7 @@ function datalist_get($name) {
 			return $site->$name;
 		}
 	}
-	
+
 	return null;
 }
 
@@ -266,13 +266,13 @@ function datalist_get($name) {
 function datalist_set($name, $value) {
 	global $CONFIG, $DATALIST_CACHE;
 
-        $site = elgg_get_site_entity(); 
+        $site = elgg_get_site_entity();
         if ($site) {
 			$name = "config:$name";
             $site->$name = $value;
         	return $site->save();
-	} 
-        
+	}
+
 	return true;
 }
 
@@ -391,10 +391,10 @@ function set_config($name, $value, $site_guid = 0) {
 //		$site_guid = (int) $CONFIG->site_id;
 //	}
 	$CONFIG->$name = $value;
-	
+
 	$site = get_entity($site_guid, 'site');
 	$site->$name = json_encode($value);
-	
+
 	if($site->save()){
 		return true;
 	}
@@ -513,7 +513,7 @@ function _elgg_load_site_config() {
 
 	$CONFIG->site_guid = 1;
 	$CONFIG->site_id = $CONFIG->site_guid;
-		
+
 	//can we load from settings.php? (this code is duplicated!)
 	if(isset($CONFIG->site_name)){
 		$site = new ElggSite();
@@ -531,7 +531,7 @@ function _elgg_load_site_config() {
 		throw new InstallationException(elgg_echo('InstallationException:SiteNotInstalled'));
 	}
 
-	if(!isset($CONFIG->wwwroot))	
+	if(!isset($CONFIG->wwwroot))
 	$CONFIG->wwwroot = $CONFIG->site->getURL();
 	$CONFIG->sitename = $CONFIG->site->name;
 	$CONFIG->sitedescription = $CONFIG->site->description;
@@ -590,7 +590,7 @@ function _elgg_load_application_config() {
 	} else {
 		$CONFIG->system_cache_enabled = 1;
 	}
-		
+
 	//say we are using cassandra!
 	//$CONFIG->cassandra = true;
 
@@ -599,7 +599,7 @@ function _elgg_load_application_config() {
 
 	// needs to be set before system, init for links in html head
 	$viewtype = get_input('view', 'default');
-	
+
 	if(!isset($CONFIG->lastcache)){
 		$lastcached = datalist_get("simplecache_lastcached_$viewtype") ?: datalist_get("lastcache");
 		if($lastcached)

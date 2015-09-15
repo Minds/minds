@@ -69,7 +69,7 @@ class SuggestedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
         $this->assertEquals($result['err'], NULL);
     }
 
-    public function testCanExpireBoost(){
+    /*public function testCanExpireBoost(){
         $collection_mock = new \Minds\tests\phpunit\mocks\MockMongoCursor(array(array('_id'=>'abc123', 'guid'=>'abc123', 'impressions'=>-1)));
 
         $db = $this->mock();
@@ -82,7 +82,7 @@ class SuggestedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
             ->with("boost", array('_id' => "abc123"))
             ->will($this->returnValue(array('err'=>NULL)));
 
-        //$result = Boost\Factory::build('Suggested', array(), $db)->getBoost();
-    }
+        $result = Boost\Factory::build('Suggested', array(), $db)->getBoost();
+    }*/
 
 }

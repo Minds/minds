@@ -46,7 +46,10 @@ class Client implements Interfaces\QueueClient{
         if(isset($options['password']))
             $password = $options['password'];
 
-        $this->connection = new AMQPConnection($host, $port, $username, $password, '/');
+        if(isset($CONFIG->rabbitmq) && $CONFIG->rabbitmq['host']  == 'unit_tests')
+          $this->connection = new \Minds\tests\phpunit\mocks\MockAMQPConnection();
+        else
+          $this->connection = new AMQPConnection($host, $port, $username, $password, '/');
         $this->channel = $this->connection->channel();
 
         register_shutdown_function(function($channel, $connection){

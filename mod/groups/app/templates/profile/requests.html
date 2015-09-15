@@ -1,0 +1,29 @@
+<div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--2dp" *ng-for="#user of users">
+
+  <div class="mdl-card__title">
+
+    <div class="minds-avatar">
+      <a [router-link]="['/channel', {username: user.username}]">
+        <img src="{{minds.cdn_url}}/icon/{{user.guid}}/small}}" class="mdl-shadow--2dp"/>
+      </a>
+    </div>
+    <div class="minds-body">
+      <a [router-link]="['/channel', {username: user.username}]" class="mdl-color-text--blue-grey-500">{{user.name}}</a>
+      <span>@{{user.username}}</span>
+    </div>
+
+  </div>
+
+  <div class="mdl-card__actions">
+    <a class="mdl-button mdl-js-button mdl-js-ripple-effect" (click)="accept(user)">Accept</a>
+    <a class="mdl-button mdl-js-button mdl-js-ripple-effect" (click)="reject(user)">Reject</a>
+  </div>
+</div>
+
+<infinite-scroll
+    distance="25%"
+    (load)="load()"
+    *ng-if="moreData"
+    />
+    <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+</infinite-scroll>

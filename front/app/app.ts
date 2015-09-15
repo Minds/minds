@@ -1,6 +1,6 @@
 import {Component, View, bootstrap} from 'angular2/angular2';
 import {RouteConfig, Route, ROUTER_DIRECTIVES, ROUTER_BINDINGS} from 'angular2/router';
-import {HTTP_BINDINGS} from 'http/http';
+import {HTTP_BINDINGS} from 'angular2/http';
 
 import {Topbar} from './src/components/topbar';
 import {Navigation} from './src/components/navigation';
@@ -27,7 +27,7 @@ import {Wallet} from './src/plugins/payments/payments';
   selector: 'minds-app',
 })
 @RouteConfig([
-  new Route({ path: '/login', component: Login, as: 'login' }),
+  { path: '/login', component: Login, as: 'login' },
   { path: '/logout', component: Logout, as: 'logout' },
   { path: '/register', component: Register, as: 'register' },
 
@@ -49,6 +49,7 @@ import {Wallet} from './src/plugins/payments/payments';
   { path: '/groups/:filter', component: Groups, as: 'groups'},
   { path: '/groups/create', component: GroupsCreator, as: 'groups-create'},
   { path: '/groups/profile/:guid', component: GroupsProfile, as: 'groups-profile'},
+  { path: '/groups/profile/:guid/:filter', component: GroupsProfile, as: 'groups-profile'},
 
   { path: '/wallet', component: Wallet, as: 'wallet'},
 

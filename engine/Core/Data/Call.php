@@ -21,40 +21,46 @@ use Minds\Core\config;
 
 class Call extends core\base{
 
-	static $keys = array();	
+	static $keys = array();
 	static $reads = 0;
 	static $writes = 0;
 	static $deletes = 0;
 	static $counts = 0;
     private $pool;
-	
+
 	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL, $sendTimeout = 800, $receiveTimeout = 2000){
 		global $CONFIG;
-	//	require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/vendors/phpcassa/lib/autoload.php');
-		
+
 		$this->servers = $servers ?: $CONFIG->cassandra->servers;
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
-		
+
+		//nasty hack... @todo think of something not as dumb
+		if($this->keyspace == "unit_tests"){
+			$this->cf = \Minds\tests\phpunit\mocks\MockCassandra::build($cf);
+			return;
+		}
+
+
 		try{
-            if(!$this->pool)
-                $this->pool = Pool::build($this->keyspace, $this->servers, NULL, 2, $sendTimeout, $receiveTimeout);
-		
+      if(!$this->pool)
+          $this->pool = Pool::build($this->keyspace, $this->servers, NULL, 2, $sendTimeout, $receiveTimeout);
+
 			if($cf){
 				$this->cf_name = $cf;
 				$this->cf = $this->getCf($cf);
 			}
 		}catch(\Exception $e){
-			
+
 		}
 	}
-	
+
 	/**
 	 * Install the schema
-	 * 
+	 *
 	 * @return void
 	 */
 	public function installSchema(){
-		$cfs = array(	
+		$cfs = array(
 			//'site' => array('site_id' => 'UTF8Type'),
 			'plugin' => array('active' => 'IntegerType'),
 			//'config' => array(),
@@ -94,7 +100,7 @@ class Call extends core\base{
             exit;
         }
 	}
-	
+
 	/**
 	 * Loads the cf interface
 	 * @param string $cf - the cf name
@@ -105,7 +111,7 @@ class Call extends core\base{
 	public function getCf($cf){
 		return new ColumnFamily($this->pool, $cf);
 	}
-	
+
 	public function insert($guid = NULL, array $data = array(), $ttl = NULL){
 		if(!$guid){
 			$guid = Core\Guid::build();
@@ -124,10 +130,10 @@ class Call extends core\base{
 		}
 		return $guid;
 	}
-	
+
 	/**
-	 * Performs a standard get. NOTE - this will not return ordered content. 
-	 * 
+	 * Performs a standard get. NOTE - this will not return ordered content.
+	 *
 	 * @param array $options - a mixed array
 	 * @return array - raw data
 	 */
@@ -135,13 +141,13 @@ class Call extends core\base{
 		self::$reads++;
 		return $this->cf->get_range($offset,"", $limit, new ColumnSlice('','',10000));
 	}
-	
+
 	/**
 	 * Performs a query based on indexes. The indexes must be predefined and this function
 	 * will not return ordered content. It is recommended to store your own index and query from there
-	 * 
-	 * This function is good, however, for doing batch processing based on an index value. 
-	 * 
+	 *
+	 * This function is good, however, for doing batch processing based on an index value.
+	 *
 	 * @param $expressions - an array of expressions
 	 * @return array
 	 */
@@ -152,10 +158,10 @@ class Call extends core\base{
 		$index_clause = new IndexClause($index_exps, $offset, $limit);
 		return $this->cf->get_indexed_slices($index_clause);
 	}
-	
+
 	/**
 	 * Performs a get request for a keys, to be used when an ID is known
-	 * 
+	 *
 	 * @param int/string $key - the key (row)
 	 * @param array $options - by default contains offset and limit for the row
 	 */
@@ -170,7 +176,7 @@ class Call extends core\base{
 							);
 		$options = array_merge($defaults, $options);
 		$slice = new ColumnSlice($options['offset'], $options['finish'], $options['limit'], $options['reversed']);
-	
+
 		if(!$this->cf){
 			return false;
 		}
@@ -185,10 +191,10 @@ class Call extends core\base{
 			return false;
 		}
 	 }
-	 
+
 	/**
 	 * Performs a get requests for multiple keys
-	 * 
+	 *
 	 * @param int/string $key - the key (row)
 	 * @param array $options - by default contains offset and limit for the row
 	 */
@@ -196,7 +202,7 @@ class Call extends core\base{
 		$options['multi'] = true;
 		return $this->getRow($keys, $options);
 	}
-	
+
 	/**
 	 * Count the columns of a row
 	 */
@@ -213,7 +219,7 @@ class Call extends core\base{
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * Removes a row from a column family
 	 * @param int/string $key - the key
@@ -228,7 +234,7 @@ class Call extends core\base{
             return $this->cf->remove($key);
         return false;
 	}
-	
+
 	/**
 	 * Removes multiple rows from a column family
 	 * @param array $keys - array of keys to delete
@@ -240,7 +246,7 @@ class Call extends core\base{
 		}
 		return $return;
 	}
-	
+
 	/**
 	 * Removes attributes (columns) from a row
 	 * @param int/string $key - the key
@@ -265,14 +271,14 @@ class Call extends core\base{
 		}
 
 		if(!$verify)
-			return;		
+			return;
 
 		return false;
 	}
 
 	/**
 	 * Create a column family
-	 * 
+	 *
 	 * @param string $name - the name of the column family
 	 * @param array $indexes - an array of indexes
 	 * @param array $attrs - any specific attributes for the column family to have
@@ -282,38 +288,38 @@ class Call extends core\base{
 
 		try{
 		$sys = new SystemManager($this->servers[0]);
-	
+
 		$defaults = array(	"comparator_type" => "UTF8Type",
 				"key_validation_class" => 'UTF8Type',
 				"default_validation_class" => 'UTF8Type'
 				);
 		$attrs = array_merge($defaults, $attrs);
-	
+
 		$sys->create_column_family($this->keyspace, $name, $attrs);
-	
+
 		foreach($indexes as $index => $data_type){
-	
+
 			$sys->create_index($this->keyspace, $name, $index, $data_type);
-	
+
 		}
 		} catch(\Exception $e){
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Remove a CF
-	 * 
+	 *
 	 * !DANGEROUS!
 	 */
 	public function removeCF(){
 		$sys = new SystemManager($this->servers[0]);
 		return (bool) $sys->drop_column_family($this->keyspace, $this->cf_name);
 	}
-	
+
 	/**
 	 * Does the keyspace exits
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function keyspaceExists(){
@@ -332,27 +338,27 @@ class Call extends core\base{
         }
 		return $exists;
 	}
-	
+
 	/**
 	 * Create a keyspace
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function createKeyspace(array $attrs = array()){
 		$sys = new SystemManager($this->servers[0]);
 		$keyspace = $sys->create_keyspace($this->keyspace, $attrs);
-		
+
 		self::__construct(null, $this->keyspace, $this->servers);
-		
+
 		return (bool) $keyspace;
 	}
-	
+
 	/**
 	 * Drop keyspace
-	 * 
+	 *
 	 * !DANGEROUS... extremely...!
 	 * @param bool $confirm - set to true to double check...
-	 * 
+	 *
 	 * @return void
 	 */
 	public function dropKeyspace($confirm = false){
@@ -369,15 +375,15 @@ class Call extends core\base{
 	}
 	/**
 	 * Create and index for a column family
-	 * 
-	 * NOTE: This function should be called by a plugin if it needs to query by 'metadata'. 
-	 * You should favour a design in which you use your own indexing system though. 
+	 *
+	 * NOTE: This function should be called by a plugin if it needs to query by 'metadata'.
+	 * You should favour a design in which you use your own indexing system though.
 	 */
 	public function createIndex(){}
-	
+
 	/**
 	 * Create an object from an array
-	 * 
+	 *
 	 * @param array $array - the array
 	 * @return object $object - the object
 	 * @todo Make a DB specific object rather than stdClass.
@@ -388,12 +394,12 @@ class Call extends core\base{
 		foreach($array as $k=>$v){
 			$obj->$k = $v;
 		}
-		
+
 		return $obj;
 	}
 
 	public function stats(){
 		return $this->pool->stats();
 	}
-	
+
 }

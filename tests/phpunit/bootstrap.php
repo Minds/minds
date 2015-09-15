@@ -30,16 +30,10 @@ error_reporting(E_ALL | E_STRICT);
  * Check to see if we are installed. If not, install
  */
 try{
-	require_once($root .'/install/ElggInstaller.php');
-
-    $CONFIG->cassandra = (object) array( 'servers'=> array('localhost'), 'keyspace'=>'minds_test_phpcassa', 'cql_servers'=> array('localhost'));
-
-	$db = new Minds\Core\Data\Call(null, 'minds_test_phpcassa', array('localhost'));
-	//if($db->keyspaceExists()){
-		$db->dropKeyspace(true);
-	//}
-	$db->createKeyspace();
-	$db->installSchema();
+  $CONFIG->cassandra = (object) array(
+    'servers'=> array('localhost'),
+    'keyspace'=>'unit_tests',
+    'cql_servers'=> array('localhost'));
 
 	//bootstrap the cassandra config
 
@@ -55,14 +49,17 @@ try{
 	$CONFIG->site = $site;
 	$CONFIG->site_email = $site->email;
 
-    $CONFIG->mongodb_db = 'unittest';
+  $CONFIG->mongodb_db = 'unittest';
+  $CONFIG->rabbitmq = array(
+    'host' => 'unit_tests'
+  );
 
-    //for testing email encryption/decryption
-    $CONFIG->encryptionKeys = array(
-        'email' => array(
-            'public' => dirname(__FILE__) . '/keys/email-public.key',
-            'private' => dirname(__FILE__) . '/keys/email-private.key'
-        ));
+  //for testing email encryption/decryption
+  $CONFIG->encryptionKeys = array(
+      'email' => array(
+          'public' => dirname(__FILE__) . '/keys/email-public.key',
+          'private' => dirname(__FILE__) . '/keys/email-private.key'
+      ));
 }catch(Exception $e){
 	var_dump($e);
 	exit;
