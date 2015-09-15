@@ -60,4 +60,23 @@ minds-gatherings{
     border-radius: 2px;
     text-transform: uppercase;
   }
+
+  .minds-gatherings-conversation-list{
+      height: 400px;
+      overflow-y: scroll;
+  }
+
+  .minds-gatherings-message-list{
+    height: 360px;
+    overflow-y: scroll;
+  }
+
+  .minds-gatherings-message-time{
+    float:right;
+  }
+
+  .minds-gatherings-chat-box{
+    padding-left:20px;
+  }
+
 }

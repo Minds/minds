@@ -116,13 +116,13 @@ export class MessengerConversation {
     this.client.post('api/v1/conversations/' + this.guid, message.value)
     .then((data : MindsMessageResponse) =>{
       self.isSendingMessage = false;
-      message.value = null;
       if (!pushed) {
+        data.message.message = message.value;
         self.messages.push(data.message);
         self.previous = data.message.guid;
         pushed = true;
-
       }
+      message.value = null;
     })
     .catch(function(error) {
       alert('sorry, your message could not be sent');
