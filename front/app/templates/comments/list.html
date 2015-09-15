@@ -27,17 +27,15 @@
 
         <form #postobj="form" (submit)="post()">
 
-            <div class="mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
-                <textarea
-                  ng-control="message"
-                  class="mdl-textfield__input"
-                  type="text"
-                  id="message"
-                  #message
-                  [(ng-model)]="postMeta.comment"
-                ></textarea>
-                <label class="mdl-textfield__label" for="message">Enter your comment here...</label>
-            </div>
+            <textarea
+              ng-control="message"
+              class="mdl-textfield__input"
+              type="text"
+              id="message"
+              #message
+              [(ng-model)]="postMeta.comment"
+              placeholder="Enter your comment"
+            ></textarea>
 
             <button
               type="submit"

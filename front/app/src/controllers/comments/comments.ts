@@ -58,7 +58,7 @@ export class Comments {
         }
         if(self.comments && !refresh){
           for(let comment of response.comments)
-            self.comments.push(comment);
+            self.comments.unshift(comment);
         } else {
              self.comments = response.comments;
         }

@@ -1,7 +1,14 @@
 @import 'defaults.scss';
 
 minds-comments{
+  margin-top:50px;
   width:100%;
+
+  .load-earlier-comments{
+    margin-left: 16px;
+    font-size: 12px;
+    color: #888;
+  }
 
   .minds-comment{
     min-height:0;
@@ -26,4 +33,22 @@ minds-comments{
       }
     }
   }
+
+  form{
+    .mdl-textfield__input{
+      width:400px;
+      border:0;
+      float:left;
+      resize:none;
+    }
+    .mdl-textfield__input:focus{
+      border:0;
+      outline:none;
+
+    }
+    .mdl-button{
+      float:right;
+    }
+  }
+
 }
