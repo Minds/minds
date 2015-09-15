@@ -57,7 +57,7 @@
             </div>
             <div></div>
 
-            <button class="mdl-button mdl-button--raised mdl-color--blue-grey-200" (click)="register(username, password, email);">
+            <button class="mdl-button mdl-button--raised mdl-color--blue-grey-200" (click)="register(username, password, email);" [disabled]="inProgress">
                 Signup
             </button>
 

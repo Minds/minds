@@ -3,13 +3,14 @@ import { Router } from 'angular2/router';
 import { Material } from 'src/directives/material';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
+import { Register } from './register';
 
 @Component({
   viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/login.html',
-  directives: [ Material ]
+  directives: [ Material, Register ]
 })
 
 export class Login {
@@ -22,38 +23,6 @@ export class Login {
 
 	constructor(public client : Client, @Inject(Router) public router: Router){
 		window.componentHandler.upgradeDom();
-	}
-
-  register(registerUsername, registerPassword, email){
-    this.errorMessage = "";
-    this.inProgress = true;
-		var self = this; //this <=> that for promises
-		this.client.post('api/v1/register', {username: registerUsername.value, password: registerPassword.value, email: email.value})
-			.then((data : any) => {
-				registerUsername.value = '';
-				registerPassword.value = '';
-        email.value = '';
-
-        this.inProgress = false;
-				self.session.login(data.user);
-				self.router.parent.navigate('/newsfeed');
-			})
-			.catch((e) => {
-        console.log(e);
-        this.inProgress = false;
-        if(e.status == 'failed'){
-          //incorrect login details
-          self.errorMessage = "Incorrect username/password. Please try again.";
-          self.session.logout();
-        }
-
-        if(e.status == 'error'){
-          //two factor?
-          self.errorMessage = e.message;
-          self.session.logout();
-        }
-
-			});
 	}
 
 	login(username, password){
