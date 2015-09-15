@@ -37,7 +37,7 @@ class comments implements interfaces\api{
 
         usort($comments, function($a, $b){
           return $a->time_created - $b->time_created;
-        );
+        });
   	    foreach($comments as $k => $comment){
             if(!$comment->guid){
                 unset($comments[$k]);
@@ -48,7 +48,7 @@ class comments implements interfaces\api{
   	    }
         $response['comments'] = factory::exportable($comments);
         $response['load-next'] = (string) end($comments)->guid;
-        $response['load-previous'] = (string) key($comments)->guid;
+        $response['load-previous'] = (string) reset($comments)->guid;
 
         return Factory::response($response);
 
@@ -57,7 +57,7 @@ class comments implements interfaces\api{
     public function post($pages){
 
         $parent = new \Minds\entities\entity($pages[0]);
-    	$comment = new \Minds\plugin\comments\entities\comment();
+        $comment = new \Minds\plugin\comments\entities\comment();
         $comment->description = urldecode($_POST['comment']);
         $comment->parent_guid = $pages[0];
         if($comment->save()){
@@ -66,7 +66,7 @@ class comments implements interfaces\api{
             if(isset($subscribers[$comment->owner_guid]))
                 unset($subscribers[$comment->owner_guid]);
 
-	    \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
+	          \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
 
             \elgg_trigger_plugin_hook('notification', 'all', array(
                 'to' => $subscribers,

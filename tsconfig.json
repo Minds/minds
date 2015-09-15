@@ -29,6 +29,7 @@
         "./front/app/src/controllers/channels/subscribers.ts",
         "./front/app/src/controllers/channels/subscriptions.ts",
         "./front/app/src/controllers/comingsoon.ts",
+        "./front/app/src/controllers/comments/comments.ts",
         "./front/app/src/controllers/discovery/discovery.ts",
         "./front/app/src/controllers/login.ts",
         "./front/app/src/controllers/logout.ts",

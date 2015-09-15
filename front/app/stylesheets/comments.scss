@@ -1,0 +1,29 @@
+@import 'defaults.scss';
+
+minds-comments{
+  width:100%;
+
+  .minds-comment{
+    min-height:0;
+    padding:$minds-padding*2;
+    background-color: transparent;
+    border-bottom:1px solid #DDD;
+
+    .minds-avatar{
+      img{
+        width:50px;
+        border-radius:50%;
+      }
+    }
+
+    .minds-body{
+      margin-left:$minds-margin;
+      a {
+        text-decoration: none;
+      }
+      p{
+        margin:0;
+      }
+    }
+  }
+}

@@ -234,6 +234,17 @@ minds-topbar {
   width:$minds-padding*2;
 }
 
+
+.minds-block {
+  flex-direction:row;
+  .minds-avatar{
+    margin-right:$minds-margin;
+  }
+  .minds-body{
+    flex:1;
+  }
+}
+
 blockquote { quotes: ''; }
 blockquote:before { content: '\201C'; }
 blockquote:after { content: '\201D'; }
@@ -243,5 +254,6 @@ blockquote:after { content: '\201D'; }
 @import 'directives.scss';
 @import 'buttons.scss';
 @import 'cards.scss';
+@import 'comments.scss';
 
 @import 'plugins.scss';

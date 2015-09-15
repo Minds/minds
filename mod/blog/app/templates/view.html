@@ -35,3 +35,7 @@
   </div>
 
 </div>
+
+<div class="mdl-grid blogs-grid" style="max-width:660px" *ng-if="blog.guid">
+  <minds-comments [object]="blog"></minds-comments>
+</div>
