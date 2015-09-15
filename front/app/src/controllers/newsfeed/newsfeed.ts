@@ -1,5 +1,5 @@
 import { Component, View, NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/angular2';
-import { Client } from 'src/services/api';
+import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { Activity } from './activity';
@@ -7,7 +7,7 @@ import { MindsActivityObject } from 'src/interfaces/entities';
 
 @Component({
   selector: 'minds-newsfeed',
-  viewBindings: [ Client ]
+  viewBindings: [ Client, Upload ]
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
@@ -21,7 +21,7 @@ export class Newsfeed {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-  postMeta = {
+  postMeta : any = {
     title: "",
     description: "",
     thumbnail: "",
@@ -29,7 +29,7 @@ export class Newsfeed {
     active: false
   }
 
-	constructor(public client: Client){
+	constructor(public client: Client, public upload: Upload){
 		this.load();
 	}
 
@@ -75,23 +75,35 @@ export class Newsfeed {
 	 */
 	post(){
 		var self = this;
-		this.client.post('api/v1/newsfeed', this.postMeta)
-				.then(function(data){
-					self.load(true);
-          console.log(data);
-          //reset
-          self.postMeta = {
-            message: "",
-            title: "",
-            description: "",
-            thumbnail: "",
-            url: "",
-            active: false
-          }
-				})
-				.catch(function(e){
-					console.log(e);
-				});
+
+    var file : any = document.getElementById("file");
+    var fileInfo = file.files[0];
+
+    var poster;
+
+    //upload to archive if attachment, or else use newsfeed
+    if(fileInfo){
+      poster = this.upload.post('api/v1/archive', fileInfo, this.postMeta);
+    } else {
+      poster = this.client.post('api/v1/newsfeed', this.postMeta);
+    }
+
+		poster.then(function(data){
+			self.load(true);
+      console.log(data);
+      //reset
+      self.postMeta = {
+        message: "",
+        title: "",
+        description: "",
+        thumbnail: "",
+        url: "",
+        active: false
+      }
+		})
+		.catch(function(e){
+			console.log(e);
+		});
 	}
 
   /**
