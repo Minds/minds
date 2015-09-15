@@ -43,20 +43,22 @@ minds-topbar {
     }
   }
 
-  .minds-search-bar{
+  minds-search-bar{
     width:60%;
-    .material-icons{
-      position:absolute;
-      margin:6px;
+    .mdl-textfield {
+      width:100%;
+      .material-icons{
+        position:absolute;
+        margin:6px;
+      }
+      input{
+        border: 1px solid rgba(0,0,0,.12);
+      }
+      input, label{
+        padding:$minds-padding $minds-padding*4;
+        box-sizing: border-box;
+      }
     }
-    input{
-      border: 1px solid rgba(0,0,0,.12);
-    }
-    input, label{
-      padding:$minds-padding $minds-padding*4;
-      box-sizing: border-box;
-    }
-
   }
 
   .minds-account{

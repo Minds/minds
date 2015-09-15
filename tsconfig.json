@@ -38,6 +38,8 @@
         "./front/app/src/controllers/newsfeed/remind.ts",
         "./front/app/src/controllers/notifications/notifications.ts",
         "./front/app/src/controllers/register.ts",
+        "./front/app/src/controllers/search/bar.ts",
+        "./front/app/src/controllers/search/search.ts",
         "./front/app/src/directives/autogrow.ts",
         "./front/app/src/directives/infinite-scroll.ts",
         "./front/app/src/directives/loggedin.ts",

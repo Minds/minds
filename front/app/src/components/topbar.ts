@@ -4,6 +4,7 @@ import { Material } from 'src/directives/material';
 import { Storage } from 'src/services/storage';
 import { Sidebar } from 'src/services/ui/sidebar';
 import { SessionFactory } from 'src/services/session';
+import { SearchBar } from 'src/controllers/search/bar';
 
 @Component({
   selector: 'minds-topbar',
@@ -11,7 +12,7 @@ import { SessionFactory } from 'src/services/session';
 })
 @View({
   templateUrl: 'templates/components/topbar.html',
-  directives: [ NgIf, RouterLink, Material ]
+  directives: [ NgIf, RouterLink, Material, SearchBar ]
 })
 
 export class Topbar{
