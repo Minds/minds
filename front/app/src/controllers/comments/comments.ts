@@ -56,12 +56,9 @@ export class Comments {
           self.inProgress = false;
           return false;
         }
-        if(self.comments && !refresh){
-          for(let comment of response.comments)
-            self.comments.unshift(comment);
-        } else {
-             self.comments = response.comments;
-        }
+
+        self.comments = response.comments.concat(self.comments);
+
         self.offset = response['load-previous'];
         if(!self.offset || self.offset == null)
           self.moreData = false;
