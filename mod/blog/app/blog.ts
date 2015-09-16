@@ -7,13 +7,15 @@ import { Material } from 'src/directives/material';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
 import { MindsBlogListResponse } from 'src/interfaces/responses';
 
+import { BlogCard } from './blog-card';
+
 @Component({
   selector: 'minds-blog',
   viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/plugins/blog/list.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, NgStyle, Material, InfiniteScroll ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, NgStyle, Material, InfiniteScroll, BlogCard ]
 })
 
 export class Blog {

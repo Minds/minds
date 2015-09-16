@@ -1,5 +1,5 @@
-import { Component, View, NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/angular2';
-import { Router } from 'angular2/router';
+import { Component, View, NgFor, NgIf, FORM_DIRECTIVES, Inject} from 'angular2/angular2';
+import { Router, Location } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
@@ -27,6 +27,14 @@ export class SearchBar {
   q : string = "";
 
   constructor(public router : Router){
+    this.listen();
+  }
+
+  listen(){
+    this.router.subscribe((route : string) => {
+      if(route.indexOf('search') == -1)
+        this.q = "";
+    });
   }
 
   search(){

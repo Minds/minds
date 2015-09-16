@@ -47,6 +47,7 @@
         "./front/app/src/directives/subscribe-button.ts",
         "./front/app/src/interfaces/entities.ts",
         "./front/app/src/interfaces/responses.ts",
+        "./front/app/src/plugins/blog/blog-card.ts",
         "./front/app/src/plugins/blog/blog-edit.ts",
         "./front/app/src/plugins/blog/blog-view.ts",
         "./front/app/src/plugins/blog/blog.ts",

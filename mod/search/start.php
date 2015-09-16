@@ -2,36 +2,37 @@
 /**
  * Search plugin
  */
- 
+
 namespace minds\plugin\search;
 
+use Minds\Api;
 use Minds\Core;
 
 class start extends \minds\Components\Plugin{
-	
-	public function init(){
-		$routes = core\router::registerRoutes($this->registerRoutes());
-		\elgg_extend_view('css/elgg', 'search/css');
 
-		\elgg_register_js('search', \elgg_get_simplecache_url('js', 'search'));
-		\elgg_load_js('search');
-		
+	public function init(){
+
+    Api\Routes::add('v1/search', '\\minds\\plugin\\search\\api\\v1\\search');
+
+		$routes = core\router::registerRoutes($this->registerRoutes());
+
+
 		//makeshift indexer for testing
-		/*foreach(elgg_get_entities(array('type'=>'user','limit'=>500)) as $entity){
+		/*foreach(\elgg_get_entities(array('type'=>'user','limit'=>500)) as $entity){
 			if($entity->access_id == 2)
 				$this->createDocument($entity);
-		}*/
-		/*foreach(elgg_get_entities(array('type'=>'object','limit'=>500)) as $entity){
+		}
+		foreach(\elgg_get_entities(array('type'=>'object','limit'=>500)) as $entity){
 			if($entity->access_id == 2)
 				$this->createDocument($entity);
 		}*/
 		\elgg_register_event_handler('create', 'user', array($this, 'hook'));
 		\elgg_register_event_handler('create', 'object', array($this, 'hook'));
 	}
-	
+
 	/**
 	 * Handler the pages
-	 * 
+	 *
 	 * @param array $pages - the page slugs
 	 * @return bool
 	 */
@@ -42,7 +43,7 @@ class start extends \minds\Components\Plugin{
 			'/search/result' => "$path\\pages\\hack"
 		);
 	}
-	
+
 	/**
 	 * Create a search document
 	 */
@@ -56,18 +57,18 @@ class start extends \minds\Components\Plugin{
 			$data = $entity->export();
 			foreach($data as $k =>$v){
 				if(is_numeric($v))
-					$v = (string) $v;	
-				
+					$v = (string) $v;
+
 				if(is_bool($v))
 					continue;
 
 				$params['body'][$k]  = $v;
 			}
-			
+
 			$params['index'] = $CONFIG->cassandra->keyspace;
 			$params['type']  = $entity->type;
 			$params['id']    = $entity->guid;
-			
+
 			// Document will be indexed to my_index/my_type/my_id
 			$ret = $client->index($params);
 			return $ret;
@@ -75,15 +76,15 @@ class start extends \minds\Components\Plugin{
 			return false;
 		}
 	}
-	
+
 	public function hook($hook, $type, $entity, $params = array()){
 		if($entity && $entity->access_id == 2){
 			try{
 				$this->createDocument($entity);
 			} catch(\Exception $e){
-				
+
 			}
 		}
 	}
-	
+
 }
