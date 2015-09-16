@@ -34,7 +34,12 @@
                 </div>
 
                 <!-- Attachements -->
-                <input type="file" type="file" name="attachment"/>
+                <div class="attachment-button">
+                  <i class="material-icons">attachment</i>
+                  <input type="file" type="file" id="file" name="attachment" (change)="uploadAttachment()"/>
+                </div>
+                <!-- Attachment preview -->
+                <img [src]="attachment_preview" class="attachment-button" *ng-if="attachment_preview"/>
 
                 <button
                   type="submit"

@@ -103,6 +103,28 @@
          display:block;
        }
      }
+     .attachment-button:before{
+       color: #888;
+       font-family:'material icons';
+       content: 'attachment';
+       position: absolute;
+       top: 7px;
+       left: 6px;
+     }
+     .attachment-button{
+
+       input{
+         position: absolute;
+          color: #888;
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          top: 0;
+          left: 0;
+          cursor: pointer;
+          opacity: 0;
+       }
+     }
    }
  }
 

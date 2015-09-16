@@ -21,12 +21,15 @@ export class Newsfeed {
   inProgress : boolean = false;
   moreData : boolean = true;
 
+  attachment_preview;
+
   postMeta : any = {
     title: "",
     description: "",
     thumbnail: "",
     url: "",
-    active: false
+    active: false,
+    access_id: 2
   }
 
 	constructor(public client: Client, public upload: Upload){
@@ -76,35 +79,44 @@ export class Newsfeed {
 	post(){
 		var self = this;
 
-    var file : any = document.getElementById("file");
-    var fileInfo = file.files[0];
-
-    var poster;
-
-    //upload to archive if attachment, or else use newsfeed
-    if(fileInfo){
-      poster = this.upload.post('api/v1/archive', fileInfo, this.postMeta);
-    } else {
-      poster = this.client.post('api/v1/newsfeed', this.postMeta);
-    }
-
-		poster.then(function(data){
-			self.load(true);
-      console.log(data);
-      //reset
-      self.postMeta = {
-        message: "",
-        title: "",
-        description: "",
-        thumbnail: "",
-        url: "",
-        active: false
-      }
-		})
-		.catch(function(e){
-			console.log(e);
-		});
+    this.client.post('api/v1/newsfeed', this.postMeta)
+      .then(function(data){
+  			self.load(true);
+        console.log(data);
+        //reset
+        self.postMeta = {
+          message: "",
+          title: "",
+          description: "",
+          thumbnail: "",
+          url: "",
+          active: false
+        }
+  		})
+  		.catch(function(e){
+  			console.log(e);
+  		});
 	}
+
+  uploadAttachment(){
+    var file : any = document.getElementById("file");
+    var fileInfo = file ? file.files[0] : null;
+
+    /**
+     * Give a live preview
+     */
+    var reader  = new FileReader();
+    reader.onloadend = () => {
+      this.attachment_preview = reader.result;
+    }
+    reader.readAsDataURL(fileInfo);
+
+    this.upload.post('api/v1/archive', [fileInfo], this.postMeta)
+      .then((response : any) => {
+
+      });
+
+  }
 
   /**
    * Get rich embed data
