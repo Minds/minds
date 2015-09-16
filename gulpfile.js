@@ -5,6 +5,7 @@ var bump = require('gulp-bump');
 var concat = require('gulp-concat');
 var filter = require('gulp-filter');
 var inject = require('gulp-inject');
+var inlineNg2Template = require('gulp-inline-ng2-template');
 var sass = require('gulp-sass');
 var minifyCSS = require('gulp-minify-css');
 var minifyHTML = require('gulp-minify-html');
@@ -20,6 +21,7 @@ var Builder = require('systemjs-builder');
 var del = require('del');
 var fs = require('fs');
 var join = require('path').join;
+var karma = require('karma').server;
 var runSequence = require('run-sequence');
 var semver = require('semver');
 var series = require('stream-series');
@@ -107,6 +109,30 @@ gulp.task('clean.test', function(done) {
 
 gulp.task('clean.tsd_typings', function(done) {
   del('tsd_typings', done);
+});
+
+// ----
+// Tests
+gulp.task('build.test', function() {
+  var result = gulp.src(['./front/app/**/*.ts', '!./front/app/init.ts'])
+    .pipe(plumber())
+    .pipe(inlineNg2Template({ base: 'front/app' }))
+    .pipe(tsc(tsProject));
+
+  return result.js
+    .pipe(gulp.dest('./tests/ng-spec'));
+});
+
+gulp.task('karma.start', ['build.test'], function(done) {
+
+  karma.start({
+    configFile: join(__dirname, 'karma.conf.js'),
+    singleRun: true
+  }, done);
+});
+
+gulp.task('test', ['karma.start'], function() {
+
 });
 
 // -------------

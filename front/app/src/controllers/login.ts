@@ -5,6 +5,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 
 @Component({
+  selector: 'minds-login',
   viewBindings: [ Client ]
 })
 @View({
@@ -19,7 +20,7 @@ export class Login {
   twofactorToken : string = "";
   hideLogin : boolean = false;
 
-	constructor(public client : Client, @Inject(Router) public router: Router){
+	constructor(public client : Client, public router: Router){
 		window.componentHandler.upgradeDom();
 	}
 

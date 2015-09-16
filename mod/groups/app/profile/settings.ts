@@ -42,7 +42,7 @@ export class GroupsProfileSettings {
   save(){
     var self = this;
     this.client.post('api/v1/groups/group/' + this.group.guid, this.group)
-      .then((response : MindsGroupResponse) => {
+      .then((response : any) => {
         self.router.navigate('/groups/profile/'+self.group.guid);
       })
       .catch((e)=>{

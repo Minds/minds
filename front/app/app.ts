@@ -63,7 +63,7 @@ import {Wallet} from './src/plugins/payments/payments';
   directives: [Topbar, Navigation, ROUTER_DIRECTIVES]
 })
 
-class Minds {
+export class Minds {
   name: string;
 
   constructor() {
