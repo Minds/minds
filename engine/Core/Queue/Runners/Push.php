@@ -57,6 +57,7 @@ class Push implements Interfaces\QueueRunner{
                     echo "Failed to send push notification \n";
                 }
                });
+       $this->run();
    }   
            
 }   
