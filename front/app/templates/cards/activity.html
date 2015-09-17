@@ -51,7 +51,7 @@
 	<a class="material-icons mdl-color-text--blue-grey-800" (click)="thumbsDown(activity.guid)" [ng-class]="{'selected': hasThumbedDown()}">thumb_down</a>
 	<a class="material-icons mdl-color-text--blue-grey-800" (click)="comment(activity.guid)">chat_bubble</a>
 	<a class="material-icons mdl-color-text--blue-grey-800" (click)="remind(activity.guid)" [ng-class]="{'selected': hasReminded()}">repeat</a>
-
+	<a class="mdl-button mdl-button--raised mdl-button--colored" [router-link]="['/boost', {guid: activity.guid, owner_guid: activity.owner_guid}]">Boost</a>
 </div>
 
 <div class="mdl-card__menu" *ng-if="!hideTabs">
