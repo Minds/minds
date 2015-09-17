@@ -1,0 +1,86 @@
+<div  class="mdl-grid" style="max-width:900px">
+  <!--HEADER-->
+    <div class="mdl-cell mdl-cell--12-col">
+    <h1 class="title">Boost Post</h1>
+    <div class="mdl-card__supporting-text mdl-color--blue-grey-50">
+      <a class="mdl-button mdl-button--raised mdl-button--colored" [router-link]="['/wallet']" (click)="modal.remove()">
+        wallet points
+        <!--
+        <wallet-counter></wallet-counter>
+        -->
+      </a>
+    </div>
+  </div>
+
+  <!--CONTENT-->
+  <div class="mdl-cell mdl-cell--12-col">
+    <div *ng-if="data.step == 1">
+
+      <div class="wallet-points-input wallet-destination-select">
+
+        <h3>Channel</h3>
+        <textarea type="text" #destination placeholder="Tap to search..." (keyup)="changeDestination($event)" />
+        <p>Select a channel above to have your post distributed to their subscribers in exchange for points.</p>
+
+        <div class="wallet-users-list" [hidden]="!searching">
+          <div ng-for="#user of results" (click)="selectDestination(user);">
+
+            <img src="{{minds.cdn_url}}/icon/{{user.guid}}/small" />
+            @{{user.username}}
+          </div>
+        </div>
+      </div>
+
+      <div class="wallet-points-input wallet-destination-select" (click)="nextStep()">
+
+        <h3>Full Network</h3>
+        <p>Your post will appear at the top of everyone's newsfeed until your views are met.</p>
+        <a class="mdl-button mdl-button--raised mdl-button--colored" (click)="nextStep()" style="width:100%;">Select</a>
+
+      </div>
+
+    </div>
+
+    <div class="mdl-cell mdl-cell--12-col" *ng-if="data.step == 2">
+
+      <div class="wallet-points-input">
+        <div class="cell">
+          <textarea type="number" #points placeholder="Tap to enter points"/>
+        </div>
+        <div class="cell">
+          <label>Points</label>
+        </div>
+      </div>
+
+      <div class="wallet-points-input" *ng-if="!data.destination">
+        <div class="cell">
+          <textarea type="number" #impressions disabled/>
+        </div>
+        <div class="cell">
+          <label>Views</label>
+        </div>
+      </div>
+
+      <div class="wallet-points-input" *ng-if="!data.destination">
+        <p style="color:#888;
+        padding:0 16px;
+        font-size:11px;">
+        Transactions are non-refundable.
+        You will be notified when your post reaches the requested number of views.
+        The amount of time this will take depends on site activity, so don't worry if you don't hear from us for a while; we will keep it in circulation until it reaches the goal!
+        </p>
+      </div>
+
+      <div class="wallet-points-input" *ng-if="data.destination">
+        <p style="color:#888;
+        padding:0 16px;
+        font-size:11px;">
+        You will be notified if you post is accepted or rejected by {{data.destination}}. Once they accept, this post will not be able to be deleted.
+        </p>
+      </div>
+
+      <button class="mdl-button mdl-button--raised mdl-button--colored" (click)="boost()">Boost!</button>
+
+    </div>
+  </div>
+</div>

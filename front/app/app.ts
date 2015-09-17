@@ -11,6 +11,7 @@ import {Logout} from './src/controllers/logout';
 import {Register} from './src/controllers/register';
 import {ComingSoon} from './src/controllers/comingsoon';
 import {Newsfeed} from './src/controllers/newsfeed/newsfeed';
+import {Boost} from './src/controllers/newsfeed/boost';
 import {Capture} from './src/controllers/capture/capture';
 import {Discovery} from './src/controllers/discovery/discovery';
 import {Channel, ChannelSubscribers, ChannelSubscriptions} from './src/controllers/channels/channel';
@@ -60,7 +61,11 @@ import {Wallet} from './src/plugins/payments/payments';
   { path: '/:username', component: Channel, as: 'channel' },
   { path: '/:username/:filter', component: Channel, as: 'channel-filter' },
 
-  { path: '/', component: Homepage, as: 'homepage' }
+
+  { path: '/', component: Homepage, as: 'homepage' },
+
+  { path: '/boost/:guid/:owner_guid', component: Boost, as: 'boost' }
+
 ])
 @View({
   templateUrl: './templates/index.html',
