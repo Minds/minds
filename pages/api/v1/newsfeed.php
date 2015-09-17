@@ -40,7 +40,7 @@ class newsfeed implements interfaces\api{
       		  break;
     	    case 'network':
             $options = array(
-                'network' => isset($pages[1]) ? $pages[1] : core\session::getLoggedInUserGuid()
+                'network' => isset($pages[1]) ? $pages[1] : core\Session::getLoggedInUserGuid()
             );
             break;
           case 'container':
@@ -111,12 +111,12 @@ class newsfeed implements interfaces\api{
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
 
-                if($embeded->owner_guid != Core\session::getLoggedinUser()->guid){
+                if($embeded->owner_guid != Core\Session::getLoggedinUser()->guid){
                     $cacher = \Minds\Core\Data\cache\Factory::build();
-                    if(!$cacher->get(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
-                        $cacher->set(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
+                    if(!$cacher->get(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
+                        $cacher->set(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
 
-                        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
+                        \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
                         \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
                     }
                 }

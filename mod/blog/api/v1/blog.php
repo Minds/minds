@@ -55,7 +55,7 @@ class blog implements interfaces\api{
           case "owner":
             $entities = core\Entities::get(array(
               'subtype' => 'blog',
-              'owner_guid' => isset($pages[1]) ? $pages[1] : \Minds\Core\session::getLoggedInUser()->guid
+              'owner_guid' => isset($pages[1]) ? $pages[1] : \Minds\Core\Session::getLoggedInUser()->guid
             ));
             $response['blogs'] = Factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->guid;

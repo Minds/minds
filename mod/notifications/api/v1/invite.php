@@ -30,7 +30,7 @@ class invite implements interfaces\api{
      */
     public function post($pages){
 
-        $user = Core\session::getLoggedinUser();
+        $user = Core\Session::getLoggedinUser();
        
         if(isset($_POST['contacts'])){         
             $contacts = $_POST['contacts'];

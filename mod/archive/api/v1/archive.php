@@ -182,7 +182,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
                 'perma_url' => $entity->getURL()
             )
         ));
-        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $entity->guid, 'upload');
+        \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $entity->guid, 'upload');
         return Factory::response(array('guid'=>$entity->guid, 'activity_guid'=>$activity->guid));
 
     }

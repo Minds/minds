@@ -32,7 +32,7 @@ class Newsfeed implements BoostHandlerInterface{
         } else {
             $guid = $entity;
         }
-        return $this->db->insert("boost", array('guid'=>$guid, 'owner_guid'=>Core\session::getLoggedinUser()->guid, 'impressions'=>$impressions, 'state' => 'review', 'type'=> 'newsfeed'));
+        return $this->db->insert("boost", array('guid'=>$guid, 'owner_guid'=>Core\Session::getLoggedinUser()->guid, 'impressions'=>$impressions, 'state' => 'review', 'type'=> 'newsfeed'));
     }
 
      /**
@@ -131,7 +131,7 @@ class Newsfeed implements BoostHandlerInterface{
 
     public function getBoosts($limit = 2){
         $cacher = Core\Data\cache\factory::build('apcu');
-        $mem_log =  $cacher->get(Core\session::getLoggedinUser()->guid . ":seenboosts") ?: array();
+        $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts") ?: array();
 
         $boosts = $this->db->find("boost", array('type'=>'newsfeed', 'state'=>'approved'));
 
@@ -172,7 +172,7 @@ class Newsfeed implements BoostHandlerInterface{
                 continue; //max count met
             }
             array_push($mem_log, (string) $boost['_id']);
-            $cacher->set(Core\session::getLoggedinUser()->guid . ":seenboosts", $mem_log, (12 * 3600));
+            $cacher->set(Core\Session::getLoggedinUser()->guid . ":seenboosts", $mem_log, (12 * 3600));
             $return[] = $boost;
         }
         return $return;

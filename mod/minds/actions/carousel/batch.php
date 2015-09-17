@@ -117,7 +117,7 @@ foreach($items as $k=>$item){
 	//}
 }
 
-$user = \Minds\Core\session::getLoggedinUser();
+$user = \Minds\Core\Session::getLoggedinUser();
 $user->icontime = time();
 $user->save();
 

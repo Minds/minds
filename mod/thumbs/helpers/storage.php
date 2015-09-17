@@ -77,7 +77,7 @@ class storage{
             $cacher->destroy("counter:$remind_guid:thumbs:$direction");
         }
 
-        if($entity->owner_guid != Core\session::getLoggedinUser()->guid)
+        if($entity->owner_guid != Core\Session::getLoggedinUser()->guid)
             elgg_trigger_plugin_hook('notification', 'thumbs', array('to'=>array($entity->owner_guid), 'notification_view'=>'like', 'title'=>$entity->title, 'object_guid'=>$entity->guid));
     }
 

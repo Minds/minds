@@ -86,7 +86,7 @@ class newsfeed extends core\page implements interfaces\page{
 	 */
 	public function get($pages){
 
-		if(!\Minds\Core\session::isLoggedin() && !isset($pages[0]))
+		if(!\Minds\Core\Session::isLoggedin() && !isset($pages[0]))
 			$this->forward('login');
 
 		\elgg_register_plugin_hook_handler('register', 'menu:entity', array($this, 'pageSetup'));
@@ -99,7 +99,7 @@ class newsfeed extends core\page implements interfaces\page{
 		//	$this->forward('login');
 		//}
 
-		if(!is_numeric($pages[0]) && \Minds\Core\session::isLoggedin() && elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0 && !elgg_get_logged_in_user_entity()->base_node){
+		if(!is_numeric($pages[0]) && \Minds\Core\Session::isLoggedin() && elgg_get_logged_in_user_entity()->getSubscriptionsCount() == 0 && !elgg_get_logged_in_user_entity()->base_node){
 			$pages[0] = 'featured';
 		}
 
@@ -354,11 +354,11 @@ class newsfeed extends core\page implements interfaces\page{
                 \Minds\Helpers\Counters::increment($pages[1], 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
 
-                if($embeded->owner_guid != Core\session::getLoggedinUser()->guid){
+                if($embeded->owner_guid != Core\Session::getLoggedinUser()->guid){
                     $cacher = \Minds\Core\Data\cache\Factory::build();
-                    if(!$cacher->get(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
-                        $cacher->set(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
-                        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
+                    if(!$cacher->get(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
+                        $cacher->set(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
+                        \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
                         \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
                     }
                 }

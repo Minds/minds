@@ -85,7 +85,7 @@ class subscribe implements interfaces\api{
         
 	    $success = elgg_get_logged_in_user_entity()->subscribe($pages[0]);
         $response = array('status'=>'success');
-         \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $pages[0], 'subscribed');
+         \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'subscribed');
         if(!$success){
             $response = array(
                 'status' => 'error'
@@ -101,7 +101,7 @@ class subscribe implements interfaces\api{
     public function delete($pages){
        $success = elgg_get_logged_in_user_entity()->unSubscribe($pages[0]);
         $response = array('status'=>'success');
-         \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, -1, $pages[0], 'unsubscribed');
+         \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $pages[0], 'unsubscribed');
         if(!$success){
             $response = array(
                 'status' => 'error'

@@ -32,7 +32,7 @@ function _elgg_session_boot($force = false) {
  * @return ElggUser
  */
 function elgg_get_logged_in_user_entity() {
-	return Minds\Core\session::getLoggedinUser();
+	return Minds\Core\Session::getLoggedinUser();
 }
 
 /**
@@ -56,7 +56,7 @@ function elgg_get_logged_in_user_guid() {
  * @return bool
  */
 function elgg_is_logged_in() {
-	return Minds\Core\session::isLoggedin();
+	return Minds\Core\Session::isLoggedin();
 }
 
 /**

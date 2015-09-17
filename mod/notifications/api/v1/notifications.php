@@ -57,7 +57,7 @@ class notifications implements interfaces\api{
      * Not supported
      */
     public function post($pages){
-//        if(!Core\session::isLoggedIn()){
+//        if(!Core\Session::isLoggedIn()){
   //         header("HTTP/1.1 401 Unauthorized");
     //        error_log('not logged in, but trying to register push notification id');
       //     exit;
@@ -72,7 +72,7 @@ class notifications implements interfaces\api{
                     'token'=>$device_id
                     ));
        
-        $user_guid = Core\session::getLoggedinUser()->guid;
+        $user_guid = Core\Session::getLoggedinUser()->guid;
         $db = new Core\Data\Call('entities');
         $db->insert($user_guid, array('surge_token' => $token));
         

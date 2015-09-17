@@ -12,7 +12,7 @@ class Groups{
   static public function getGroups($user, $options = array()){
 
     if(!$user)
-      $user = Core\session::getLoggedInUser();
+      $user = Core\Session::getLoggedInUser();
 
     $options = array_merge(array(
       'limit' => 12,

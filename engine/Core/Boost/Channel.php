@@ -53,7 +53,7 @@ class Channel implements interfaces\BoostHandlerInterface{
 
         //send back to use
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                'to'=>array(Core\session::getLoggedinUser()->guid),
+                'to'=>array(Core\Session::getLoggedinUser()->guid),
                 'object_guid' => $guid,
                 'notification_view' => 'boost_submitted_p2p',
                 'params' => array(

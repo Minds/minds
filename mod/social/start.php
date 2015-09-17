@@ -85,7 +85,7 @@ class start extends Components\Plugin{
 	
 	static public function userConfiguredServices($user = NULL){
 		if(!$user)
-			$user = core\session::getLoggedinUser();
+			$user = core\Session::getLoggedinUser();
 		
 		$services = array();
 		foreach(self::$services as $service){

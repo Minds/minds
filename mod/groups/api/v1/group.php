@@ -47,7 +47,7 @@ class group implements interfaces\api{
       $group->membership = $_POST['membership'];
       $group->save();
       //now join
-      $group->join(Core\session::getLoggedInUser());
+      $group->join(Core\Session::getLoggedInUser());
 
       $response = array();
       $response['guid'] = $group->guid;

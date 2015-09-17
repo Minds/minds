@@ -77,10 +77,10 @@ class channel implements interfaces\api{
 
     public function post($pages){
 
-        $owner = Core\session::getLoggedinUser();
-        $guid = Core\session::getLoggedinUser()->guid;
-        if(Core\session::getLoggedinUser()->legacy_guid)
-            $guid = Core\session::getLoggedinUser()->legacy_guid;
+        $owner = Core\Session::getLoggedinUser();
+        $guid = Core\Session::getLoggedinUser()->guid;
+        if(Core\Session::getLoggedinUser()->legacy_guid)
+            $guid = Core\Session::getLoggedinUser()->legacy_guid;
 
         switch($pages[0]){
             case "avatar":
@@ -95,7 +95,7 @@ class channel implements interfaces\api{
                     if ($resized) {
                         //@todo Make these actual entities.  See exts #348.
                         $file = new ElggFile();
-                        $file->owner_guid = Core\session::getLoggedinUser()->guid;
+                        $file->owner_guid = Core\Session::getLoggedinUser()->guid;
                         $file->setFilename("profile/{$guid}{$name}.jpg");
                         $file->open('write');
                         $file->write($resized);
@@ -202,7 +202,7 @@ class channel implements interfaces\api{
                 $db = new Core\Data\Call('entities');
                 $db->insert($owner->guid, $update);
                 //update session also
-                Core\session::regenerate();
+                Core\Session::regenerate();
        }
 
        return Factory::response(array());
@@ -220,11 +220,11 @@ class channel implements interfaces\api{
      */
     public function delete($pages){
 
-        if(!Core\session::getLoggedinUser()){
+        if(!Core\Session::getLoggedinUser()){
             return Factory::response(array('status'=>'error', 'message'=>'not logged in'));
         }
 
-        $channel = Core\session::getLoggedinUser();
+        $channel = Core\Session::getLoggedinUser();
         $channel->enabled = 'no';
         $channel->save();
 

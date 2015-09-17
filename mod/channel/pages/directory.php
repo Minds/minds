@@ -90,7 +90,7 @@ class directory extends core\page implements interfaces\page{
 			    }
 				break;
             case 'suggested':
-                if(!\Minds\Core\session::isLoggedin())
+                if(!\Minds\Core\Session::isLoggedin())
                     exit;
                 $client = \Minds\Core\Data\Client::build('Neo4j');
                 $prepared = new Prepared\Common();

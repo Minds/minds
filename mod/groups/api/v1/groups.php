@@ -34,7 +34,7 @@ class groups implements interfaces\api{
             //$guids = $db->getRow("")
             break;
           case "member":
-            $groups = helpers\Groups::getGroups(Core\session::getLoggedInUser(), array(
+            $groups = helpers\Groups::getGroups(Core\Session::getLoggedInUser(), array(
               'limit' => 12,
               'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
             ));

@@ -7,7 +7,7 @@ namespace Minds\Core;
 use Minds\Core;
 use minds\entities;
 
-class session extends base{
+class Session extends base{
 
 	private $session_name = 'minds';
 

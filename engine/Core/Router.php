@@ -36,7 +36,7 @@ class Router{
     if($method == 'post' && !$_POST)
         $this->postDataFix();
 
-		if(session::isLoggedin())
+		if(Session::isLoggedin())
 			Helpers\Analytics::increment("active");
 
 		$loop = count($segments);

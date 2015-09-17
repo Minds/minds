@@ -28,7 +28,7 @@ class wallet implements interfaces\api{
         switch($pages[0]){
             
             case "count":
-                $count = (int) \Minds\Helpers\Counters::get(Core\session::getLoggedinUser()->guid, 'points', false);
+                $count = (int) \Minds\Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
                 
                 $satoshi_rate = 1;//@todo make this configurable for admins
                 $satoshi = $count * $satoshi_rate;
@@ -47,7 +47,7 @@ class wallet implements interfaces\api{
                 break;
                 
             case "transactions":
-                $entities = Core\Entities::get(array('subtype'=>'points_transaction', 'owner_guid'=> Core\session::getLoggedinUser()->guid, 'limit'=>isset($_GET['limit']) ? $_GET['limit'] : 12, 'offset'=>isset($_GET['offset']) ? $_GET['offset'] : ""));
+                $entities = Core\Entities::get(array('subtype'=>'points_transaction', 'owner_guid'=> Core\Session::getLoggedinUser()->guid, 'limit'=>isset($_GET['limit']) ? $_GET['limit'] : 12, 'offset'=>isset($_GET['offset']) ? $_GET['offset'] : ""));
                 if(isset($_GET['offset']) && $_GET['offset'])
                     array_shift($entities);
 
@@ -91,7 +91,7 @@ class wallet implements interfaces\api{
 
                 $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->card_id);
                 if($response['id']){
-                    \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, NULL, "purchase");
+                    \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, $points, NULL, "purchase");
                 }
                 break;
             case "paypal":
@@ -104,7 +104,7 @@ class wallet implements interfaces\api{
                         $payment = \Minds\plugin\payments\services\paypal::factory()->capture($_POST['id'], $usd);
                         if($payment->getId()){
                              //ok, now charge!
-                             \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, NULL, "purchase");
+                             \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, $points, NULL, "purchase");
                         } else {
                             $response['status'] = 'error';
                         }

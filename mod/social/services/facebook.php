@@ -25,7 +25,7 @@ class facebook extends core\base{
 		FacebookSession::setDefaultApplication(elgg_get_plugin_setting('facebook_api_key','social'),elgg_get_plugin_setting('facebook_api_secret', 'social'));
         $this->redirect_uri = elgg_get_site_url() . 'plugin/social/redirect/facebook';
        if(!$this->access_token)
-            $this->access_token = \elgg_get_plugin_user_setting('facebook_access_token', core\session::getLoggedinUser()->guid, 'social');
+            $this->access_token = \elgg_get_plugin_user_setting('facebook_access_token', core\Session::getLoggedinUser()->guid, 'social');
     }
 	
 	public function authorizeURL(){
@@ -53,8 +53,8 @@ class facebook extends core\base{
 			$accessToken = $session->getAccessToken();
   			$at = $accessToken->extend();
 			
-			\elgg_set_plugin_user_setting('facebook', 'enabled', core\session::getLoggedinUser()->guid, 'social');
-			\elgg_set_plugin_user_setting('facebook_access_token', (string) $at, core\session::getLoggedinUser()->guid, 'social');
+			\elgg_set_plugin_user_setting('facebook', 'enabled', core\Session::getLoggedinUser()->guid, 'social');
+			\elgg_set_plugin_user_setting('facebook_access_token', (string) $at, core\Session::getLoggedinUser()->guid, 'social');
 			
 			echo elgg_view('social/callback/facebook');
 		}
@@ -86,7 +86,7 @@ class facebook extends core\base{
 		
 		if(isset($activity['thumbnail_src']) && $activity['thumbnail_src']){
             $data['picture'] = $activity['thumbnail_src'];
-            $data['description'] = $activity['description'] ?: '@' . core\session::getLoggedinUser()->username;
+            $data['description'] = $activity['description'] ?: '@' . core\Session::getLoggedinUser()->username;
         }
        error_log(print_r($data, true)); 
 
@@ -101,7 +101,7 @@ class facebook extends core\base{
 	//		echo "Exception occured, code: " . $e->getCode();
       //      echo " with message: " . $e->getMessage();
             error_log("FB POST ERROR " .  $e->getCode());
-			\elgg_set_plugin_user_setting('facebook', 'failed', core\session::getLoggedinUser()->guid, 'social');	
+			\elgg_set_plugin_user_setting('facebook', 'failed', core\Session::getLoggedinUser()->guid, 'social');	
 			error_log($e->getMessage());	
 		  }   
 	}

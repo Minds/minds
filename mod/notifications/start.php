@@ -215,25 +215,25 @@ class start extends \ElggPlugin{
             $params['description'] = htmlspecialchars_decode( $params['description'] ); 
             switch($params['notification_view']){
                 case "friends":
-		    $message = \Minds\Core\session::getLoggedinUser()->name . " subscribed to you";
+		    $message = \Minds\Core\Session::getLoggedinUser()->name . " subscribed to you";
 		    break;
 	        case "comment":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " commented: " . $params['description'];
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " commented: " . $params['description'];
                     break;
                 case "like":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " voted up " . $params['title'];
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " voted up " . $params['title'];
                     break;
                 case "tag":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " mentioned you in a post: " . $params['description'];
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " mentioned you in a post: " . $params['description'];
                     break;
                 case "remind":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " reminded " . $params['title'];
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " reminded " . $params['title'];
                     break;
                 case "boost_gift":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " view";
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " view";
                     break;
                 case "boost_request":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " has requested a boost for " . $params['points'] . " points";
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " has requested a boost for " . $params['points'] . " points";
                     break;
                 case "boost_accepted":
                     $message = $params['impressions'] . " views for " . $params['title'] . ' were accepted';

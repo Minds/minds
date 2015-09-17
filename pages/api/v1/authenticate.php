@@ -42,7 +42,7 @@ class authenticate implements interfaces\api, interfaces\ApiIgnorePam{
         if($user->isEnabled() && $user->username){
             //is twofactor authentication setup?
             try{
-                if(login($user) && Core\session::isLoggedIn()){
+                if(login($user) && Core\Session::isLoggedIn()){
                   $response['status'] = 'success';
                   $response['user'] = $user->export();
                 }

@@ -54,7 +54,7 @@ class boost implements interfaces\api{
     	        $entity = entities\Factory::build($pages[0]);
     		    $response['entity'] = $entity->export();
         		//going to assume this is a channel only review for now
-    	        $boost_ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+    	        $boost_ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
         		$guids = $boost_ctrl->getReviewQueue(1, $pages[0]);
                 if(!$guids || key($guids) != $pages[0]){
     	    	    return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
@@ -68,7 +68,7 @@ class boost implements interfaces\api{
     	    break;
             case "p2p":
                 $db = new Core\Data\Call('entities_by_time');
-                $queue_guids = $db->getRow("boost:channel:" . Core\session::getLoggedinUser()->guid  . ":review");
+                $queue_guids = $db->getRow("boost:channel:" . Core\Session::getLoggedinUser()->guid  . ":review");
                 if($queue_guids){
                     $entities =  core\Entities::get(array('guids'=>array_keys($queue_guids)));
                     foreach($entities as $guid =>$entity){
@@ -115,9 +115,9 @@ class boost implements interfaces\api{
             else
                 $points = 0 - ($_POST['impressions'] / $this->rate); //make it negative
 
-            \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, $pages[1], "boost");
+            \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[1], "boost");
             //a boost gift
-            if(isset($pages[2]) && $pages[2] != Core\session::getLoggedinUser()->guid){
+            if(isset($pages[2]) && $pages[2] != Core\Session::getLoggedinUser()->guid){
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($pages[2]),
                 'object_guid' => $pages[1],
@@ -127,7 +127,7 @@ class boost implements interfaces\api{
                 ));
             } elseif($pages[0] != 'channel') {
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                'to'=>array(Core\session::getLoggedinUser()->guid),
+                'to'=>array(Core\Session::getLoggedinUser()->guid),
                 'object_guid' => $pages[1],
                 'notification_view' => 'boost_submitted',
                 'params' => array('impressions'=>$_POST['impressions']),
@@ -148,13 +148,13 @@ class boost implements interfaces\api{
      */
     public function put($pages){
 	    //validate the points
-    	$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+    	$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
 	    $guids = $ctrl->getReviewQueue(1, $pages[0]);
 	    if(!$guids){
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
         }
 	    $points = reset($guids);
-        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, $pages[0], "boost (remind)");
+        \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[0], "boost (remind)");
 	    $accept = $ctrl->accept($pages[0], $points);
 	    return Factory::response(array());
     }
@@ -163,7 +163,7 @@ class boost implements interfaces\api{
      * Called when a boost is rejected (assume channels only right now)
      */
     public function delete($pages){
-	    $ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+	    $ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
         $guids = $ctrl->getReviewQueue(1, $pages[0]);
         if(!$guids){
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));

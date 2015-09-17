@@ -97,7 +97,7 @@ class Membership{
    */
   static public function join($group, $user = NULL){
     if($user == NULL)
-      $user = Core\session::getLoggedinUser();
+      $user = Core\Session::getLoggedinUser();
 
     if(!$group)
       return false;
@@ -119,7 +119,7 @@ class Membership{
    */
   static public function leave($group, $user = NULL){
     if($user == NULL)
-      $user = Core\session::getLoggedinUser();
+      $user = Core\Session::getLoggedinUser();
 
     if(!$group)
       return false;
@@ -130,7 +130,7 @@ class Membership{
 
   static public function cancelRequest($group, $user = NULL){
     if($user == NULL)
-      $user = Core\session::getLoggedinUser();
+      $user = Core\Session::getLoggedinUser();
 
     if(!$group)
       return false;

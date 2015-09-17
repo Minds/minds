@@ -37,9 +37,9 @@ class minds extends base{
 		/**
 		 * Load session info
 		 */
-		new session();
+		new Session();
 
-        Security\XSRF::setCookie();
+    Security\XSRF::setCookie();
 
 		/**
 		 * Boot the system, @todo this should be oop?
@@ -101,7 +101,7 @@ class minds extends base{
 			'elgglib.php', 'access.php', 'actions.php', 'admin.php', 'annotations.php', 'cache.php',
 			'calendar.php', 'configuration.php', 'cron.php', 'database.php',
 			'entities.php', 'export.php', 'extender.php', 'filestore.php', 'group.php',
-			'input.php', 'languages.php', 'location.php', 
+			'input.php', 'languages.php', 'location.php',
 			'memcache.php', 'metadata.php', 'metastrings.php', 'navigation.php',
 			'notification.php', 'objects.php', 'opendd.php', 'output.php',
 			'pagehandler.php', 'pageowner.php', 'pam.php', 'plugins.php',
