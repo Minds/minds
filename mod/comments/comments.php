@@ -14,7 +14,7 @@ class comments extends \ElggPlugin{
 	 * Initialise the plugin
 	 */
 	public function init(){
-		core\router::registerRoutes($this->registerRoutes());
+		core\Router::registerRoutes($this->registerRoutes());
     Api\Routes::add('v1/comments', "minds\\plugin\\comments\\api\\v1\\comments");
 
 		\elgg_register_plugin_hook_handler('comments', 'all', array($this, 'displayHook'));

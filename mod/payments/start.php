@@ -32,7 +32,7 @@ class start extends Components\Plugin{
 		 * Register our page end points
 		 */
 		$path = "minds\\plugin\\payments\\pages";
-		core\router::registerRoutes(array(
+		core\Router::registerRoutes(array(
 			'/wallet' => "minds\\plugin\\payments\\pages\\wallet",
 			'/api/v1/wallet' => "minds\\plugin\\payments\\api\\v1\\wallet"
 		));

@@ -30,7 +30,7 @@ class start extends Components\Plugin{
 			plugins::factory('payments')->activate();
 		}
 		
-		//$routes = router::registerRoutes($this->registerRoutes());
+		//$routes = Router::registerRoutes($this->registerRoutes());
 		$this->registerClasses();	
 		\add_subtype('object', 'node', 'MindsNode');
 		\add_subtype('object', 'minds_tier', 'MindsTier');

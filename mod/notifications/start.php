@@ -27,7 +27,7 @@ class start extends \ElggPlugin{
 				return new entities\notification($row);
 		});
 
-		core\router::registerRoutes($this->registerRoutes());
+		core\Router::registerRoutes($this->registerRoutes());
     Api\Routes::add('v1/notifications', "minds\\plugin\\notifications\\api\\v1\\notifications");
     Api\Routes::add('v1/invite', "minds\\plugin\\notifications\\api\\v1\\invite");
 

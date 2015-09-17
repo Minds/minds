@@ -31,7 +31,7 @@ class start extends Components\Plugin{
 		\elgg_extend_view('login/extend', 'guard/twofactor/authorise');
 		elgg_register_event_handler('pagesetup', 'system', array($this,'twofactorPagesetup'));
 
-		$routes = core\router::registerRoutes($this->registerRoutes());
+		$routes = core\Router::registerRoutes($this->registerRoutes());
 	}
 
 	/**

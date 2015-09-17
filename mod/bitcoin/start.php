@@ -23,7 +23,7 @@ class start extends Components\Plugin{
 		 * Register our page end points
 		 */
 		$path = "minds\\plugin\\bitcoin";
-		core\router::registerRoutes(array(
+		core\Router::registerRoutes(array(
 				'/bitcoin' => "$path\\pages\\index",
 				'/bitcoin/wallet' => "$path\\pages\\wallet",
 				'/bitcoin/send' => "$path\\pages\\send",

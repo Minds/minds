@@ -14,7 +14,7 @@ class start extends \minds\Components\Plugin{
 
     Api\Routes::add('v1/search', '\\minds\\plugin\\search\\api\\v1\\search');
 
-		$routes = core\router::registerRoutes($this->registerRoutes());
+		$routes = core\Router::registerRoutes($this->registerRoutes());
 
 
 		//makeshift indexer for testing

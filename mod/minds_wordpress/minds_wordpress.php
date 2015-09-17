@@ -19,7 +19,7 @@ class minds_wordpress extends \ElggPlugin{
 	 * Initilialise the plugin
 	 */
 	public function init(){
-		$routes = core\router::registerRoutes($this->registerRoutes());
+		$routes = core\Router::registerRoutes($this->registerRoutes());
 		
 		//sync comment with wordpress
 		\elgg_register_event_handler('comment:create', 'comment', array($this, 'commentHook'));

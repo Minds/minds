@@ -34,7 +34,7 @@ class start extends \ElggPlugin{
         elgg_register_admin_menu_item('configure', 'oauth2', 'settings');
         
         
-        core\router::registerRoutes(array(
+        core\Router::registerRoutes(array(
             '/oauth2/token' => "\\minds\\plugin\\oauth2\\pages\\token",
             '/oauth2/grant' => "\\minds\\plugin\\oauth2\\pages\\token", //this is soon to be deprecated
             '/oauth2/authorize' => "\\minds\\plugin\\oauth2\\pages\\authorize",

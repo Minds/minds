@@ -21,7 +21,7 @@ class start extends Components\Plugin{
 		 * Register our page end points
 		 */
 		$path = "minds\\plugin\\cms";
-		core\router::registerRoutes(array(
+		core\Router::registerRoutes(array(
 				'/p' => "$path\\pages\\page",
 				'/p/header' => "$path\\pages\\header",
 				'/s' => "$path\\pages\\sections",

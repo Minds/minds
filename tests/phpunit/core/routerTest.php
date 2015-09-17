@@ -16,7 +16,7 @@ class routerTest extends \Minds_PHPUnit_Framework_TestCase {
 		}
 		
 		private function register(){
-			return core\router::registerRoutes(array(
+			return core\Router::registerRoutes(array(
        			'/test' => "minds\\pages\\test",
 			));
 		}

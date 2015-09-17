@@ -27,7 +27,7 @@ class start extends \ElggPlugin{
 			'priority' => 2
 		));
 
-		core\router::registerRoutes(array(
+		core\Router::registerRoutes(array(
       '/profile' => "\\minds\\plugin\\channel\\pages\\channel",
       '/channel' => "\\minds\\plugin\\channel\\pages\\channel",
 			'/channels' => "\\minds\\plugin\\channel\\pages\\directory",

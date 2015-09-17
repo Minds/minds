@@ -24,7 +24,7 @@ class start extends Components\Plugin{
 		 * Register our page end points
 		 */
 		$path = "minds\\plugin\\social";
-		core\router::registerRoutes(array(
+		core\Router::registerRoutes(array(
 		    '/plugin/social/redirect' => "$path\\pages\\redirect",
 	            '/plugin/social/authorize' => "$path\\pages\\authorize"
                 ));

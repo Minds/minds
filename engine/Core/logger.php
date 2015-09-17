@@ -12,7 +12,7 @@ class logger extends base{
 		\elgg_register_event_handler('update', 'all', array($this,'log'));
 		\elgg_register_event_handler('delete', 'all', array($this,'log'));
 		
-		router::registerRoutes(array('/admin/log'=>"\\minds\pages\logger"));
+		Router::registerRoutes(array('/admin/log'=>"\\minds\pages\logger"));
 	}
 	
 	public function log($event, $object_type, $object) {

@@ -138,7 +138,7 @@ The old Elgg page handler only supported *GET* requests by default and brought w
 ```
 	//place this in the init of your plugin
 	public funciton init(){
-		\Minds\Core\router::registerRoutes(array(
+		\Minds\Core\Router::registerRoutes(array(
 			'/myplugin' => '\minds\plugin\myplugin\pages\default',
 			'/myplugin/another_page' => '\minds\plugin\myplugin\pages\another_page'
 		));
