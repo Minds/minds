@@ -81,7 +81,7 @@ function groups_handle_featured_page(){
 	
 	$guids = Minds\Core\Data\indexes::fetch("group:featured", array('limit'=>get_input('limit', 10), 'offset'=>get_input('offset', '')));
 	if(is_array($guids)){
-		$entities = Minds\Core\entities::get(array('guids'=>$guids));
+		$entities = Minds\Core\Entities::get(array('guids'=>$guids));
 		usort($entities, function($a, $b){
 		    if ((int)$a->featured_id == (int) $b->featured_id) { //imposisble
                 return 0;

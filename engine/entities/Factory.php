@@ -21,7 +21,7 @@ class Factory{
 		    $row = $db->getRow($value);
 		    $row['guid'] = $value;
         }
-		return Core\entities::build((object) $row);
+		return Core\Entities::build((object) $row);
 	    }
 	}
 

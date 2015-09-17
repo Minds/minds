@@ -30,7 +30,7 @@ class blog implements interfaces\api{
 
         switch($pages[0]){
           case "all":
-            $entities = core\entities::get(array(
+            $entities = core\Entities::get(array(
               'subtype' => 'blog'
             ));
             $response['blogs'] = Factory::exportable($entities);
@@ -40,7 +40,7 @@ class blog implements interfaces\api{
             $guids = Core\Data\indexes::fetch('object:blog:featured', array('offset'=> isset($_GET['offset']) ? $_GET['offset'] : "", 'limit'=> isset($_GET['limit']) ? $_GET['limit'] : 12 ));
   				  if(!$guids)
               break;
-  				  $entities = core\entities::get(array('guids'=>$guids));
+  				  $entities = core\Entities::get(array('guids'=>$guids));
             usort($entities, function($a, $b){
     					if ((int)$a->featured_id == (int) $b->featured_id) {
     					   return 0;
@@ -53,7 +53,7 @@ class blog implements interfaces\api{
           case "trending":
             break;
           case "owner":
-            $entities = core\entities::get(array(
+            $entities = core\Entities::get(array(
               'subtype' => 'blog',
               'owner_guid' => isset($pages[1]) ? $pages[1] : \Minds\Core\session::getLoggedInUser()->guid
             ));

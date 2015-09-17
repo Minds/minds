@@ -56,7 +56,7 @@ class checkout extends core\page implements interfaces\page{
 				$guids = array_keys($basket->items);
 				$items = array();
 				$total = 0;
-				foreach(core\entities::get(array('guids'=>$guids)) as $item){
+				foreach(core\Entities::get(array('guids'=>$guids)) as $item){
 					$items[$item->guid] = array_merge($item->export(), array('quantity'=>$basket->items[$item->guid]['quantity']));
 					$total = $total + ($items[$item->guid]['price'] * $items[$item->guid]['quantity']);
 				}

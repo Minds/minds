@@ -14,7 +14,7 @@ $offset = "";
 
 while(true){
     echo "commencing offset: $offset \n";
-    $users = Minds\Core\entities::get(array('subtype'=>'video', 'limit'=>200, 'offset'=>$offset));
+    $users = Minds\Core\Entities::get(array('subtype'=>'video', 'limit'=>200, 'offset'=>$offset));
     $offset= end($users)->guid;
     foreach($users as $user){
         Minds\plugin\search\start::createDocument($user);

@@ -185,7 +185,7 @@ class newsfeed extends core\page implements interfaces\page{
 
 		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data', 'class'=> 'enable-social-share'));
 
-		$entities = core\entities::get(array_merge(array(
+		$entities = core\Entities::get(array_merge(array(
 			'type' => 'activity',
             'limit' => get_input('limit', 5),
             'offset' => get_input('offset','')
@@ -350,7 +350,7 @@ class newsfeed extends core\page implements interfaces\page{
 				exit;
 			case 'remind':
                 $embeded = new entities\entity($pages[1]);
-                $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+                $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
                 \Minds\Helpers\Counters::increment($pages[1], 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
 

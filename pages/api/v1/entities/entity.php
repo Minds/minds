@@ -37,7 +37,7 @@ class entity implements interfaces\api{
         if(!isset($pages[0])){
             $response['status'] = 'error';
         } else {
-            $entity = Core\entities::build(new entities\entity($pages[0]));
+            $entity = Core\Entities::build(new entities\entity($pages[0]));
             if($entity instanceof \ElggEntity){
                 $response['entity'] = $entity->export();
                 $response['entity']['guid'] = (string) $entity->guid;

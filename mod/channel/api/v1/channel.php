@@ -56,7 +56,7 @@ class channel implements interfaces\api{
         $response['channel']['gender'] = $response['channel']['gender'] ?: "";
         $response['channel']['dob'] = $response['channel']['dob'] ?: "";
 
-        $carousels = core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
+        $carousels = core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
         if($carousels){
             foreach($carousels as $carousel){
                 global $CONFIG;

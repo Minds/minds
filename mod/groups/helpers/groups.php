@@ -27,7 +27,7 @@ class Groups{
     if(!$guids)
       return array();
 
-    $groups = Core\entities::get(array('guids'=>array_keys($guids)));
+    $groups = Core\Entities::get(array('guids'=>array_keys($guids)));
 
     return $groups;
   }

@@ -96,7 +96,7 @@ class Channel implements interfaces\BoostHandlerInterface{
 
 
         $embeded = new entities\entity($guid);
-        $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+        $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
         \Minds\Helpers\Counters::increment($guid, 'remind');
 
         $activity = new entities\activity();

@@ -30,7 +30,7 @@ class Membership{
     if(!$guids)
       return array();
 
-    $users = Core\entities::get(array('guids'=>array_keys($guids)));
+    $users = Core\Entities::get(array('guids'=>array_keys($guids)));
 
     return $users;
   }
@@ -71,7 +71,7 @@ class Membership{
     if(!$guids)
       return array();
 
-    $users = Core\entities::get(array('guids'=>array_keys($guids)));
+    $users = Core\Entities::get(array('guids'=>array_keys($guids)));
 
     return $users;
 

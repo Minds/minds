@@ -129,7 +129,7 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
         
 	    $options['guids'] = $guids;
  
-        $entities = Core\entities::get($options);
+        $entities = Core\Entities::get($options);
         $boost = Core\Boost\Factory::build("Suggested")->getBoost();
         if($boost && $boost['guid']){
             $boost_guid = $boost['guid'];

@@ -19,7 +19,7 @@ class orders extends core\page implements interfaces\page{
 			$order = new entities\order($pages[0]);
 			$content = elgg_view_entity($order, array('full_view'=>true));
 		} else {
-			$content = core\entities::view(array('subtype'=>'market_order', 'owner_guid'=>elgg_get_logged_in_user_guid(), 'full_view'=>false, 'list_class'=>'minds-market-order-items', 'masonry'=>false));
+			$content = core\Entities::view(array('subtype'=>'market_order', 'owner_guid'=>elgg_get_logged_in_user_guid(), 'full_view'=>false, 'list_class'=>'minds-market-order-items', 'masonry'=>false));
 		}
 		$body = \elgg_view_layout('one_sidebar', array(
 			'content' => $content,

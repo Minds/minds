@@ -96,7 +96,7 @@ class featured implements interfaces\api{
     	}
         
         $options = array('guids'=>$guids);
-        $entities = core\entities::get($options);
+        $entities = core\Entities::get($options);
  	
 
         if($entities){

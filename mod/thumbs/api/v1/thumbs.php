@@ -26,7 +26,7 @@ class thumbs implements interfaces\api{
         $guid = $pages[0];
         $direction = $pages[1];
         
-        $entity = core\entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \minds\entities\entity($guid));
         if(!$entity->guid)
             return Factory::response(array('status'=>'error', 'message'=>'entity not found'));
 
@@ -48,7 +48,7 @@ class thumbs implements interfaces\api{
         $guid = $pages[0];
         $direction = $pages[1];
         
-        $entity = core\entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \minds\entities\entity($guid));
         
         if($entity->guid){
             if(helpers\buttons::hasThumbed($entity, $direction)){
@@ -87,7 +87,7 @@ class thumbs implements interfaces\api{
         $guid = $pages[0];
         $direction = $pages[1];
         
-        $entity = core\entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \minds\entities\entity($guid));
         
         if($entity->guid)
             helpers\storage::cancel($direction, $entity);

@@ -99,7 +99,7 @@ class entities implements interfaces\api{
         }
 
 
-        $entities = core\entities::get($options);
+        $entities = core\Entities::get($options);
         $response = array();
         if($entities){
             $response['entities'] = factory::exportable($entities);

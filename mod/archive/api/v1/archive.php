@@ -25,7 +25,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
         $response = array();
 
         if(is_numeric($pages[0])){
-            $entity = core\entities::build(new \minds\entities\entity($pages[0]));
+            $entity = core\Entities::build(new \minds\entities\entity($pages[0]));
             Helpers\Counters::increment($pages[0], 'plays');
             if(is_string($pages[1]) && $pages[1] == 'play'){
                 //echo $entity->getSourceUrl('360.mp4'); exit;
@@ -102,7 +102,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
         $guid = $pages[0];
         $album = NULL;
 
-        $entity = core\entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \minds\entities\entity($guid));
 
         if($entity->subtype == 'image'){
             if(isset($_POST['album_guid'])){
@@ -111,7 +111,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
                     return Factory::response(array('error'=>'Sorry, the album was not found'));
             } else {
                 //does the user already have and album?
-                $albums = core\entities::get(array('subtype'=>'album', 'owner_guid'=>elgg_get_logged_in_user_guid()));
+                $albums = core\Entities::get(array('subtype'=>'album', 'owner_guid'=>elgg_get_logged_in_user_guid()));
                 if($albums){
                     if(isset($_POST['album_title'])){
                         foreach($albums as $a){

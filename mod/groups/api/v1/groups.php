@@ -41,7 +41,7 @@ class groups implements interfaces\api{
             break;
           case "all":
           default:
-            $groups = Core\entities::get(array(
+            $groups = Core\Entities::get(array(
               'type' => 'group'
             ));
         }

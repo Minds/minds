@@ -68,7 +68,7 @@ class trending implements interfaces\api{
                 foreach($rows['object'] as $object){
                     $guids[] = $object['guid'];
                 } 
-                $entities = core\entities::get(array('guids'=>$guids));       
+                $entities = core\Entities::get(array('guids'=>$guids));       
                 break;
 
             case 'video':
@@ -80,7 +80,7 @@ class trending implements interfaces\api{
                 foreach($rows['object'] as $object){
                     $guids[] = $object['guid'];
                 } 
-                $entities = core\entities::get(array('guids'=>$guids));       
+                $entities = core\Entities::get(array('guids'=>$guids));       
                 break;
             default:
                 $opts = array('timespan' => get_input('timespan', 'day'));
@@ -90,7 +90,7 @@ class trending implements interfaces\api{
                     return Factory::response(array('status'=>'error', 'message'=>'not found'));
                 }
                 $options['guids'] = $guids;
-                $entities = core\entities::get($options);
+                $entities = core\Entities::get($options);
 
 
         }
@@ -117,7 +117,7 @@ class trending implements interfaces\api{
             return Factory::response(array('status'=>'error', 'message'=>'not found'));
         }
     	$options['guids'] = $guids;
-    	$entities = core\entities::get($options);
+    	$entities = core\Entities::get($options);
         }
          */
         if($entities){

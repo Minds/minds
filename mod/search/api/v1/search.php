@@ -69,7 +69,7 @@ class search implements interfaces\api{
 
       $response = array();
       if($guids)
-        $response['entities'] = Factory::exportable(Core\entities::get(array('guids'=>$guids)));
+        $response['entities'] = Factory::exportable(Core\Entities::get(array('guids'=>$guids)));
 
       return Factory::response($response);
 

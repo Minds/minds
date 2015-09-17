@@ -53,7 +53,7 @@ class newsfeed implements interfaces\api{
         //daily campaign reward
         Helpers\Campaigns\DailyRewards::reward();
 
-        $activity = core\entities::get(array_merge(array(
+        $activity = core\Entities::get(array_merge(array(
             'type' => 'activity',
             'limit' => get_input('limit', 5),
             'offset'=> get_input('offset', '')
@@ -107,7 +107,7 @@ class newsfeed implements interfaces\api{
         switch($pages[0]){
             case 'remind':
                 $embeded = new entities\entity($pages[1]);
-                $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+                $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
 

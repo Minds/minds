@@ -31,7 +31,7 @@ class lists extends core\page implements interfaces\page{
 					echo "The user could not be found \n";
 					return false;
 				}
-				$content = core\entities::view(array('subtype'=>'market', 'owner_guid'=>$owner->guid, 'limit'=>$limit, 'offset'=> $offset, 'full_view'=>false));
+				$content = core\Entities::view(array('subtype'=>'market', 'owner_guid'=>$owner->guid, 'limit'=>$limit, 'offset'=> $offset, 'full_view'=>false));
 				break;
 			case 'category':
 				if(!isset($pages[1])){
@@ -40,14 +40,14 @@ class lists extends core\page implements interfaces\page{
 				}
 				$guids = $db->getRow("object:market:category:".$pages[1], array('limit'=>$limit, 'offset'=>$offset));
 				if($guids)
-					$content = core\entities::view(array('guids'=>$guids, 'full_view'=>false));
+					$content = core\Entities::view(array('guids'=>$guids, 'full_view'=>false));
 				else 
 					$content = '';
 				break;
 			case 'featured':
 				$guids = $db->getRow("object:market:featured", array('limit'=>$limit, 'offset'=>$offset));
 				if($guids)
-					$content = core\entities::view(array('guids'=>$guids, 'full_view'=>false));
+					$content = core\Entities::view(array('guids'=>$guids, 'full_view'=>false));
 				else 
 					$content = '';
 				break;
@@ -55,7 +55,7 @@ class lists extends core\page implements interfaces\page{
 			default:
 				$guids = $db->getRow("object:market", array('limit'=>$limit, 'offset'=>$offset));
 				if($guids)
-					$content = core\entities::view(array('guids'=>$guids, 'full_view'=>false));
+					$content = core\Entities::view(array('guids'=>$guids, 'full_view'=>false));
 				else 
 					$content = '';
 		}

@@ -39,7 +39,7 @@ class conversations implements interfaces\api{
 
             if($guids){
 
-                $messages = core\entities::get(array('guids'=>$guids));
+                $messages = core\Entities::get(array('guids'=>$guids));
 
                 if($messages){
 

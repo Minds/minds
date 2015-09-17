@@ -33,7 +33,7 @@ class lists{
 		$guids = self::getUserThumbsGuids($user, $type, $options);
 		
 		if($guids)
-			return entities::get(array('guids'=>$guids));
+			return Entities::get(array('guids'=>$guids));
 		
 		return false;
 	}

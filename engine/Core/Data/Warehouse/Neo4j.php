@@ -64,7 +64,7 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
         $offset = '100000000000002247';
         while(true){
             error_log("Syncing 50 users from $offset");
-            $users = core\entities::get(array('type'=>'user', 'offset'=>$offset, 'limit'=>50));
+            $users = core\Entities::get(array('type'=>'user', 'offset'=>$offset, 'limit'=>50));
             if(!is_array($users) || end($users)->guid == $offset)
                 break;
             $last_offset = $offset;
@@ -111,7 +111,7 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
         $offset = "";
         while(true){
             error_log("Syncing 250 videos from $offset");
-            $videos = core\entities::get(array('subtype'=>'video', 'offset'=>$offset, 'limit'=>250));
+            $videos = core\Entities::get(array('subtype'=>'video', 'offset'=>$offset, 'limit'=>250));
             if(!is_array($videos) || end($videos)->guid == $offset)
                 break;
             $offset = end($videos)->guid;
@@ -128,7 +128,7 @@ class Neo4j implements Interfaces\WarehouseJobInterface{
         $offset = "";
         while(true){
             error_log("Syncing 250 images from $offset");
-            $images = core\entities::get(array('subtype'=>'image', 'offset'=>$offset, 'limit'=>250));
+            $images = core\Entities::get(array('subtype'=>'image', 'offset'=>$offset, 'limit'=>250));
             if(!is_array($images) || end($images)->guid == $offset)
                 break;
             $offset = end($images)->guid;

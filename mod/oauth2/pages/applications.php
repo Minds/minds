@@ -23,7 +23,7 @@ class applications extends core\page implements interfaces\page{
         
         $content = elgg_view_form('oauth2/register', array('action'=>'oauth2/applications'));
         
-        $content .= core\entities::view(array(
+        $content .= core\Entities::view(array(
             'type'       => 'object',
             'subtype'    => 'oauth2_client',
             'owner_guid' => elgg_get_logged_in_user_guid(),
