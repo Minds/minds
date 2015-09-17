@@ -1,9 +1,11 @@
 import { Component, View, NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/angular2';
+import { ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { Activity } from './activity';
 import { MindsActivityObject } from 'src/interfaces/entities';
+import { SessionFactory } from 'src/services/session';
 
 @Component({
   selector: 'minds-newsfeed',
@@ -11,7 +13,7 @@ import { MindsActivityObject } from 'src/interfaces/entities';
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
-  directives: [ Activity, NgFor, NgIf, Material, FORM_DIRECTIVES, InfiniteScroll ]
+  directives: [ Activity, NgFor, NgIf, Material, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
 })
 
 export class Newsfeed {
@@ -20,6 +22,8 @@ export class Newsfeed {
 	offset : string = "";
   inProgress : boolean = false;
   moreData : boolean = true;
+  session = SessionFactory.build();
+  minds;
 
   attachment_preview;
 
@@ -29,11 +33,12 @@ export class Newsfeed {
     thumbnail: "",
     url: "",
     active: false,
-    access_id: 2
+    attachment_guid: null
   }
 
 	constructor(public client: Client, public upload: Upload){
 		this.load();
+    this.minds = window.Minds;
 	}
 
 	/**
@@ -90,8 +95,10 @@ export class Newsfeed {
           description: "",
           thumbnail: "",
           url: "",
-          active: false
+          active: false,
+          attachment_guid: null
         }
+        self.attachment_preview = null;
   		})
   		.catch(function(e){
   			console.log(e);
@@ -99,6 +106,7 @@ export class Newsfeed {
 	}
 
   uploadAttachment(){
+    var self = this;
     var file : any = document.getElementById("file");
     var fileInfo = file ? file.files[0] : null;
 
@@ -111,9 +119,12 @@ export class Newsfeed {
     }
     reader.readAsDataURL(fileInfo);
 
+    /**
+     * Upload to the archive and return the attachment guid
+     */
     this.upload.post('api/v1/archive', [fileInfo], this.postMeta)
       .then((response : any) => {
-
+        self.postMeta.attachment_guid = response.guid;
       });
 
   }

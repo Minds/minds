@@ -158,11 +158,28 @@ class newsfeed implements interfaces\api{
                 if(isset($_POST['message']))
                     $activity->setMessage(urldecode($_POST['message']));
 
-                if(isset($_POST['title'])){
-                        $activity->setTitle(urldecode($_POST['title']))
-                            ->setBlurb(urldecode($_POST['description']))
-                            ->setURL(\elgg_normalize_url(urldecode($_POST['url'])))
-                            ->setThumbnail(urldecode($_POST['thumbnail']));
+                if(isset($_POST['title']) && $_POST['title']){
+                    $activity->setTitle(urldecode($_POST['title']))
+                        ->setBlurb(urldecode($_POST['description']))
+                        ->setURL(\elgg_normalize_url(urldecode($_POST['url'])))
+                        ->setThumbnail(urldecode($_POST['thumbnail']));
+                }
+
+                if(isset($_POST['attachment_guid']) && $_POST['attachment_guid']){
+                  $attachment = entities\Factory::build($_POST['attachment_guid']);
+                  if(!$attachment)
+                    break;
+                  $attachment->title = $activity->message;
+                  $attachment->access_id = 2;
+                  $attachment->save();
+
+                  $activity->setCustom('batch', array(
+                    array(
+                      'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
+                      'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid
+                    )))
+                      ->setFromEntity($attachment)
+                      ->setTitle($attachment->message);
                 }
 
                 if(isset($_POST['container_guid']))

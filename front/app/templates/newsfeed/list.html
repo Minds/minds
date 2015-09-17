@@ -2,22 +2,26 @@
 
     <div class="mdl-cell mdl-cell--8-col">
 
-        <div class="mdl-card mdl-shadow--4dp post">
+        <div class="mdl-card mdl-shadow--4dp post" *ng-if="session.isLoggedIn()">
+
+            <div class="minds-avatar">
+              <a [router-link]="['/channel', {username: session.getLoggedInUser().username}]">
+                <img src="{{minds.cdn_url}}/icon/{{session.getLoggedInUser().guid}}/medium" class="mdl-shadow--2dp"/>
+              </a>
+            </div>
 
             <form #postobj="form" (submit)="post()">
 
-                <div class="mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
-                    <textarea
-                      ng-control="message"
-                      class="mdl-textfield__input"
-                      type="text"
-                      id="message"
-                      #message
-                      [(ng-model)]="postMeta.message"
-                      (keyup)="getPostPreview(message)"
-                    ></textarea>
-                    <label class="mdl-textfield__label" for="message">Status</label>
-                </div>
+                <textarea
+                  ng-control="message"
+                  class="mdl-textfield__input"
+                  type="text"
+                  id="message"
+                  #message
+                  [(ng-model)]="postMeta.message"
+                  (keyup)="getPostPreview(message)"
+                  placeholder="Enter your status here"
+                ></textarea>
 
                 <div class="post-preview" *ng-if="postMeta.active">
                   <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="postMeta.title"></div>
@@ -33,22 +37,25 @@
             	    </div>
                 </div>
 
-                <!-- Attachements -->
-                <div class="attachment-button">
-                  <i class="material-icons">attachment</i>
-                  <input type="file" type="file" id="file" name="attachment" (change)="uploadAttachment()"/>
-                </div>
-                <!-- Attachment preview -->
-                <img [src]="attachment_preview" class="attachment-button" *ng-if="attachment_preview"/>
+                <div class="mdl-card__actions">
+                  <!-- Attachements -->
+                  <div class="attachment-button">
+                    <i class="material-icons">attachment</i>
+                    <input type="file" type="file" id="file" name="attachment" (change)="uploadAttachment()"/>
+                  </div>
 
-                <button
-                  type="submit"
-                  class="mdl-button mdl-button--raised mdl-button--colored"
-                  >
-                  Post
-                </button>
+                  <button
+                    type="submit"
+                    class="mdl-button"
+                    >
+                    Post
+                  </button>
+                </div>
 
             </form>
+
+            <!-- Attachment preview -->
+            <img [src]="attachment_preview" class="attachment-button" *ng-if="attachment_preview"/>
 
         </div>
 

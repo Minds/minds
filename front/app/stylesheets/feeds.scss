@@ -87,44 +87,76 @@
      margin-bottom:$minds-padding * 2;
      width:100%;
      min-height:0;
+     flex-direction: row;
 
-     .mdl-textfield{
-       width:100%;
-       padding-top:0;
-     }
-     .mdl-button {
-       width:0;
-       float:right;
-     }
-     .post-preview{
-       margin:-$minds-padding*2;
-       .mdl-spinner{
-         margin: $minds-padding * 2 auto;
-         display:block;
+     .minds-avatar{
+       margin-right:$minds-margin;
+       img{
+         width: 50px;
+         border-radius: 3px;
        }
      }
-     .attachment-button:before{
-       color: #888;
-       font-family:'material icons';
-       content: 'attachment';
-       position: absolute;
-       top: 7px;
-       left: 6px;
-     }
-     .attachment-button{
 
-       input{
+     form{
+       flex:1;
+       margin-bottom:0;
+
+       .mdl-textfield__input{
+         width:100%;
+         padding-top:0;
+         border:0;
+         font-size: 13px;
+         padding: 8px;
+       }
+       .mdl-textfield__input:focus{
+         outline:none;
+       }
+       .post-preview{
+         margin:-$minds-padding*2;
+         .mdl-spinner{
+           margin: $minds-padding * 2 auto;
+           display:block;
+         }
+       }
+     }
+
+     .mdl-card__actions{
+       text-align:right;
+
+       .attachment-button:before{
+         color: #888;
+         font-family:'material icons';
+         content: 'attachment';
          position: absolute;
-          color: #888;
-          position: absolute;
-          height: 100%;
-          width: 100%;
-          top: 0;
-          left: 0;
-          cursor: pointer;
-          opacity: 0;
+         top: 7px;
+         left: 6px;
        }
+
+       .attachment-button{
+         display:inline-block;
+         vertical-align:middle;
+         position:relative;
+         overflow:hidden;
+         cursor:pointer;
+
+         input{
+           position: absolute;
+            color: #888;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            opacity: 0;
+         }
+       }
+       .mdl-button {
+         width:0;
+       }
+
      }
+
    }
  }
 
