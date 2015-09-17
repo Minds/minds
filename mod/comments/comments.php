@@ -50,12 +50,6 @@ class comments extends \ElggPlugin{
 
 		\elgg_register_plugin_hook_handler('register', 'menu:comments', array($this,'menu'));
 
-		core\resources::registerView('comments', 'minds_comments');
-		core\resources::load('comments');
-
-		core\resources::registerView('comments', 'minds_comments', 'js', 'footer');
-		core\resources::load('comments', 'js');
-
 	}
 
 	/**

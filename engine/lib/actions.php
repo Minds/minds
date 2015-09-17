@@ -78,15 +78,15 @@ function action($action, $forwarder = "") {
 		'user/passwordreset',
 		'security/refreshtoken',
 		'file/download',
-            
+
                 // We need to have this here to disable tokens for node registration. This modification to actions is required until fixed in upstream Elgg.
                 'registernewnode',
 	);
-	
+
 	if($CONFIG->actions[$action]['access'] == 'public'){
 		array_push($exceptions, $action);
 	}
-	
+
 	if (!in_array($action, $exceptions)) {
 		// All actions require a token.
 		action_gatekeeper();
@@ -220,7 +220,7 @@ function elgg_unregister_action($action) {
  */
 function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL) {
 	global $CONFIG;
-	
+
 	if (!$token) {
 		$token = get_input('__elgg_token');
 	}
@@ -242,7 +242,7 @@ function validate_action_token($visibleerrors = TRUE, $token = NULL, $ts = NULL)
 			$hour = 60 * 60;
 			$timeout = $timeout * $hour;
 			$now = time();
-			
+
 			// Validate time to ensure its not crazy
 			if ($timeout == 0 || ($ts > $now - $timeout) && ($ts < $now + $timeout)) {
 				// We have already got this far, so unless anything
@@ -336,7 +336,7 @@ function generate_action_token($timestamp) {
 
 	$site_secret = get_site_secret();
 	// Session token
-	$st = $_SESSION['__elgg_session']; 
+	$st = $_SESSION['__elgg_session'];
 
 	if (($site_secret)) {
 		return md5($site_secret . $timestamp);
@@ -355,8 +355,8 @@ function generate_action_token($timestamp) {
  * @todo Move to better file.
  */
 function init_site_secret() {
-	$secret = md5(rand() . microtime()); 
-	if (datalist_set('__site_secret__', $secret)) { 
+	$secret = md5(rand() . microtime());
+	if (datalist_set('__site_secret__', $secret)) {
 		return $secret;
 	}
 
@@ -373,8 +373,8 @@ function init_site_secret() {
  * @todo Move to better file.
  */
 function get_site_secret() {
-	$secret = datalist_get('__site_secret__'); 
-	if (!$secret) { 
+	$secret = datalist_get('__site_secret__');
+	if (!$secret) {
 		$secret = init_site_secret();
 	}
 	return $secret;
@@ -487,18 +487,3 @@ function ajax_action_hook() {
 		ob_start();
 	}
 }
-
-/**
- * Initialize some ajaxy actions features
- * @access private
- */
-function actions_init() {
-	elgg_register_action('security/refreshtoken', '', 'public');
-
-	elgg_register_simplecache_view('js/languages/en');
-
-	elgg_register_plugin_hook_handler('action', 'all', 'ajax_action_hook');
-	elgg_register_plugin_hook_handler('forward', 'all', 'ajax_forward_hook');
-}
-
-elgg_register_event_handler('init', 'system', 'actions_init');
