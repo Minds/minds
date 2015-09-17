@@ -116,6 +116,7 @@ export class Boost{
   }
 
 
+  //for Channel Boost
   changeDestination(e) {
     this.searching = true;
     if (this.data.destination.charAt(0) != '@' && this.data.destination.length !== 0) {
@@ -149,14 +150,6 @@ export class Boost{
   selectDestination(user) {
     this.searching = false;
     this.data.destination = '@' + user.username;
-    this.nextStep();
   };
 
-  nextStep() {
-    this.data.step = 2;
-  };
-
-  purchase() {
-
-  };
 }
