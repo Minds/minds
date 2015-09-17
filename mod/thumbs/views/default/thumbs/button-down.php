@@ -25,7 +25,8 @@ if($already)
 else
 	$url = elgg_get_site_url() . "thumbs/actions/$guid/down";
 
-$count = $vars['entity']->{'thumbs:down:count'};
+$export = $vars['entity']->export();
+$count = $export['thumbs:down:count'];
   
 
 $params = array(
