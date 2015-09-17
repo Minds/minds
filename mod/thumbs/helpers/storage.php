@@ -91,6 +91,8 @@ class storage{
         Helpers\Counters::increment($entity->guid, "thumbs:$direction", -1);
         if($entity->type == 'activity' && $entity->entity_guid)
             Helpers\Counters::increment($entity->entity_guid, "thumbs:$direction", -1);
+        $cacher = Core\Data\cache\factory::build();
+        $cacher->destroy("counter:$entity->guid:thumbs:$direction");
 
 
         $user_guids = $entity->{"thumbs:$direction:user_guids"} ? : array();
