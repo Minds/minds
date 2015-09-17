@@ -80,7 +80,11 @@ class actions extends core\page implements interfaces\page{
 	}
 
 	private function magicCancel($direction = 'up', $entity){
-		
+
+        helpers\storage::cancel($direction, $entity);
+
+        return;
+
 		$db = new core\Data\Call('entities');
 		$indexes = new core\Data\Call('entities_by_time');
 		
