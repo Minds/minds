@@ -66,8 +66,6 @@ class minds extends base{
 		 */
 		\elgg_trigger_event('ready', 'system');
 
-		//new logger();
-
 	}
 
 	/**
@@ -106,7 +104,7 @@ class minds extends base{
 			'notification.php', 'objects.php', 'opendd.php', 'output.php',
 			'pagehandler.php', 'pageowner.php', 'pam.php', 'plugins.php',
 			'private_settings.php', 'relationships.php', 'river.php', 'sessions.php',
-			'sites.php', 'statistics.php', 'system_log.php', 'tags.php',
+			'sites.php', 'statistics.php', 'tags.php',
 			'user_settings.php', 'users.php', 'upgrade.php', 'views.php',
 			'web_services.php', 'widgets.php', 'xml.php', 'xml-rpc.php',
 
