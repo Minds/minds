@@ -147,7 +147,10 @@ class activity extends entity{
 				$export['thumbs:up:count'] = Helpers\Counters::get($this->remind_object['guid'],'thumbs:up');
 				$export['thumbs:down:count'] = Helpers\Counters::get($this->remind_object['guid'],'thumbs:down');
 			}
-		}
+        } else {
+            $export['thumbs:up:count'] = Helpers\Counters::get($this,'thumbs:up');
+            $export['thumbs:down:count'] = Helpers\Counters::get($this,'thumbs:down');
+        }
 
 		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 
