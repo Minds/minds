@@ -5,6 +5,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 
 @Component({
+  selector: 'minds-register',
   viewBindings: [ Client ]
 })
 @View({
@@ -18,6 +19,7 @@ export class Register {
   errorMessage : string = "";
   twofactorToken : string = "";
   hideLogin : boolean = false;
+  inProgress : boolean = false;
 
 	constructor(public client : Client, @Inject(Router) public router: Router){
 		window.componentHandler.upgradeDom();
@@ -25,6 +27,7 @@ export class Register {
 
 	register(username, password, email){
     this.errorMessage = "";
+    this.inProgress = true;
 		var self = this; //this <=> that for promises
 		this.client.post('api/v1/register', {username: username.value, password: password.value, email: email.value})
 			.then((data : any) => {
@@ -32,12 +35,13 @@ export class Register {
 				password.value = '';
         email.value = '';
 
-
+        this.inProgress = false;
 				self.session.login(data.user);
 				self.router.parent.navigate('/newsfeed');
 			})
 			.catch((e) => {
         console.log(e);
+        this.inProgress = false;
         if(e.status == 'failed'){
           //incorrect login details
           self.errorMessage = "Incorrect username/password. Please try again.";
