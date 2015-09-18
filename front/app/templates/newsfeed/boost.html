@@ -1,4 +1,11 @@
 <div  class="mdl-grid mdl-shadow--4dp" style="background: #fff; border-radius: 2px; max-width:900px;">
+  <div class="mdl-cell mdl-cell--12-col" [hidden]="!errorMessage">
+    <div class="mdl-card mdl-color--red-500 mdl-color-text--blue-grey-50  mdl-shadow--2dp minds-login-box" style="min-height:0;">
+      <div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
+        {{errorMessage}}
+      </div>
+    </div>
+  </div>
   <!--CONTENT-->
   <div class="mdl-cell mdl-cell--12-col">
     <div>
@@ -13,8 +20,13 @@
 
       <div>
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-          <input class="mdl-textfield__input" type="number" id="points" #points/>
-          <label class="mdl-textfield__label" for="points">Enter Points Here</label>
+          <input class="mdl-textfield__input" type="number" id="points" #points placeholder="Enter Points Here" (keyup)="updateFields($event)"/>
+        </div>
+      </div>
+
+      <div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="number" id="impressions" #impressions placeholder="Views" value="{{data.impressions}}" disabled/>
         </div>
       </div>
 
@@ -28,7 +40,7 @@
         </p>
       </div>
 
-      <button class="mdl-button mdl-button--raised mdl-button--colored" (click)="boost()">Boost!</button>
+      <button class="mdl-button mdl-button--raised mdl-button--colored" (click)="boost()" [disabled]="inProgress">Boost!</button>
     </div>
   </div>
 </div>

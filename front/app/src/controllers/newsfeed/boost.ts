@@ -3,6 +3,10 @@ import { Router, RouteParams, RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { Activity } from './activity';
+import { MindsWalletResponse } from 'src/interfaces/responses';
+import { MindsUserSearchResponse } from 'src/interfaces/responses';
+import { MindsBoostResponse } from 'src/interfaces/responses';
+import { MindsBoostRateResponse } from 'src/interfaces/responses';
 
 @Component({
   selector: 'minds-boost',
@@ -18,16 +22,18 @@ export class Boost{
 
   guid : string;
   owner_guid : string;
+  errorMessage : string = "";
   data = {
     destination: '',
     points: null,
-    impressions: 0,
+    impressions: null,
     rate: 1,
     step: 1
   };
   searching: boolean = false;
   results = [];
   minds : Minds;
+  inProgress : boolean = false;
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
@@ -39,82 +45,98 @@ export class Boost{
     this.minds.cdn_url = "https://d3ae0shxev0cb7.cloudfront.net";
     this.client.get('api/v1/boost/rates', {
       cb: Date.now()
-      }).then((success) => {
+    }).then((success : MindsBoostRateResponse) => {
       this.data.rate = success.rate;
     });
   }
 
   boost() {
+    var self =  this;
+    this.inProgress = true;
+
     if (this.data.points % 1 !== 0) {
       this.data.points = Math.round(this.data.points);
-      alert('Sorry, you must enter a whole point.');
-
+      this.errorMessage = 'Sorry, you must enter a whole point.';
+      this.inProgress = false;
       return false;
     }
 
     if (this.data.points === 0 || !this.data.points) {
       this.data.points = 1;
-      alert('Sorry, you must enter a whole point.');
+      this.errorMessage ='Sorry, you must enter a whole point.';
+      this.inProgress = false;
       return false;
     }
 
     if (this.data.destination === '' && (this.data.impressions === 0 || Math.round(this.data.impressions) === 0)) {
-      alert('Sorry, you must have at least 1 impression.');
-
+      this.errorMessage = 'Sorry, you must have at least 1 impression.';
+      this.inProgress = false;
       return false;
     }
 
     //validate our points
     this.client.get('api/v1/wallet/count', {
       cb: Date.now()
-    }).then((success)=> {
+    }).then((success : MindsWalletResponse)=> {
       //lets deal with the failures first..
       //not enough points?
-      if (success.count < this.data.points) {
-        alert('Ooops! You don\;t have enough points')
+      if (success.count < self.data.points) {
+        self.handleErrorMessage('Ooops! You don\'t have enough points');
         return false;
       }
 
       //over the cap?
-      if (this.data.points > success.cap) {
-        alert('Ooops! Sorry, there is a limit on how many points can be spent.');
+      if (self.data.points > success.cap) {
+        self.handleErrorMessage('Ooops! Sorry, there is a limit on how many points can be spent.');
         return false;
       }
 
       //under the min?
-      if (this.data.points < success.min) {
-        alert('Ooops! Sorry, you need to enter at least ' + success.min + ' points');
+      if (self.data.points < success.min) {
+        self.handleErrorMessage('Ooops! Sorry, you need to enter at least ' + success.min + ' points');
         return false;
       }
 
       //check if the user has enough points
-      if (success.count >= this.data.points) {
+      if (success.count >= self.data.points) {
 
-        var endpoint = 'api/v1/boost/newsfeed/' + this.guid + '/' + this.owner_guid;
-        if (this.data.destination) {
-          endpoint = 'api/v1/boost/channel/' + this.guid + '/' + this.owner_guid;
+        var endpoint = 'api/v1/boost/newsfeed/' + self.guid + '/' + self.owner_guid;
+        if (self.data.destination) {
+          endpoint = 'api/v1/boost/channel/' + self.guid + '/' + self.owner_guid;
         }
         //commence the boost
-        this.client.post(endpoint, {
-          impressions: this.data.impressions,
-          destination: this.data.destination.charAt(0) == '@' ? this.data.destination.substr(1) : this.data.destination
-        }).then((success) => {
+        self.client.post(endpoint, {
+          impressions: self.data.impressions,
+          destination: self.data.destination.charAt(0) == '@' ? self.data.destination.substr(1) : self.data.destination
+        }).then((success : MindsBoostResponse) => {
+          self.inProgress = false;
           if (success.status == 'success') {
             return true;
           } else {
             return false;
           }
+
         }).catch((fail) => {
-          alert('Sorry, something went wrong.')
+          self.handleErrorMessage('Sorry, something went wrong.');
           return false;
         });
       }
 
       }).catch((error) => {
+        self.handleErrorMessage('Sorry, something went wrong.');
         return false;
       });
   }
 
+  handleErrorMessage(message : string){
+    this.errorMessage = message;
+    this.inProgress = false;
+  }
+
+  updateFields($event){
+    this.data.points = $event.target.value;
+    this.data.impressions = $event.target.value;
+  }
 
   //for Channel Boost
   changeDestination(e) {
@@ -136,7 +158,7 @@ export class Boost{
       type: 'user',
       view: 'json',
       limit: 5
-    }).then((success)=> {
+    }).then((success : MindsUserSearchResponse)=> {
       this.results = success.user[0];
     });
 
@@ -151,5 +173,4 @@ export class Boost{
     this.searching = false;
     this.data.destination = '@' + user.username;
   };
-
 }
