@@ -116,8 +116,10 @@
      }
 
      .post-preview{
-       margin:-$minds-padding*2;
+       margin:-$minds-padding * 2;
        position:relative;
+       width:110%;
+
        .mdl-spinner{
          margin: $minds-padding * 2 auto;
          display:block;
