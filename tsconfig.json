@@ -52,6 +52,8 @@
         "./front/app/src/plugins/blog/blog-view.ts",
         "./front/app/src/plugins/blog/blog.ts",
         "./front/app/src/plugins/gatherings/gatherings.ts",
+        "./front/app/src/plugins/gatherings/interfaces/entities.ts",
+        "./front/app/src/plugins/gatherings/interfaces/responses.ts",
         "./front/app/src/plugins/gatherings/messenger-conversation.ts",
         "./front/app/src/plugins/gatherings/messenger-setup.ts",
         "./front/app/src/plugins/groups/groups-creator.ts",

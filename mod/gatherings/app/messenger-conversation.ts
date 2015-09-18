@@ -3,7 +3,8 @@ import { Router, RouteParams, RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-import { MindsUserConversationResponse } from 'src/interfaces/responses';
+import { MindsUserConversationResponse } from './interfaces/responses';
+import { MindsMessageResponse } from './interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-conversation',
@@ -17,8 +18,8 @@ import { MindsUserConversationResponse } from 'src/interfaces/responses';
 export class MessengerConversation {
   activity : any;
   session = SessionFactory.build();
-  guid :string;
-  name: string;
+  guid : string;
+  name : string;
   messages : Array<any> = [];
   offset: string;
   previous: string;
@@ -28,16 +29,16 @@ export class MessengerConversation {
   poll: boolean = true;
   publickeys: any;
   timeout: any;
-
+  minds: Minds;
+  isSendingMessage : boolean = false;
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
     @Inject(RouteParams) public params: RouteParams
   ){
-    console.log("PARAMS :" + params);
+    this.minds = window.Minds;
     if (params.params && params.params['guid']){
       this.guid = params.params['guid'];
-      console.log("PARAMS GUID: "+ params.params['guid']);
       this.load();
     }
   }
@@ -49,25 +50,21 @@ export class MessengerConversation {
     var self = this;
     this.inProgress = true;
 
-    console.log('loading messages from:' + this.offset);
+    console.log('loading messages from:' + this.guid);
 
     this.client.get('api/v1/conversations/' + this.guid, {
       limit: 6,
       offset: this.offset,
       cachebreak: Date.now()
     })
-    .then(function(data : MindsUserConversationResponse) {
+    .then((data : MindsUserConversationResponse) =>{
       self.newChat = false;
       self.inProgress = false;
       //now update the public keys
       self.publickeys = data.publickeys;
 
       if (!self.publickeys[self.guid]) {
-        alert({
-          title: 'Sorry!',
-          template: self.name + " has not yet configured their encrypted chat yet."
-        });
-        //$state.go('tab.chat');
+        alert('Sorry! That user has not yet configured their encrypted chat yet.');
         return true;
       }
 
@@ -86,7 +83,7 @@ export class MessengerConversation {
       }
 
       for(let message of data.messages){
-          self.messages.push(message);
+        self.messages.push(message);
       }
 
 
@@ -102,14 +99,43 @@ export class MessengerConversation {
         $ionicScrollDelegate.scrollBottom();
       }, 1000);
       */
+      }
+
+      self.poll = true;
+
+    })
+    .catch(function(error) {
+      self.inProgress = false;
+    });
+  };
+
+  sendMessage(message){
+    this.isSendingMessage = true;
+    var pushed = false;
+    var self = this;
+    this.client.post('api/v1/conversations/' + this.guid, message.value)
+    .then((data : MindsMessageResponse) =>{
+      self.isSendingMessage = false;
+      if (!pushed) {
+        data.message.message = message.value;
+        self.messages.push(data.message);
+        self.previous = data.message.guid;
+        pushed = true;
+      }
+      message.value = null;
+    })
+    .catch(function(error) {
+      alert('sorry, your message could not be sent');
+      message.value = null;
+      self.isSendingMessage = false;
+      console.log(error);
+    });
+  }
+
+  doneTyping($event) {
+    if($event.which === 13) {
+      this.sendMessage($event.target);
     }
-
-    self.poll = true;
-
-  })
-  .catch(function(error) {
-    self.inProgress = false;
-  });
-};
+  };
 
 }
