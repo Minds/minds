@@ -23,23 +23,9 @@
                   placeholder="Enter your status here"
                 ></textarea>
 
-                <div class="post-preview" *ng-if="postMeta.active">
-                  <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="postMeta.title"></div>
-                  <div class="minds-rich-embed" *ng-if="postMeta.title">
-
-                    <a>
-                      <img src="{{postMeta.thumbnail}}" />
-                    </a>
-                    <a class="meta mdl-color-text--blue-grey-900">
-            		      <h2 class="mdl-card__title-text">{{postMeta.title}}</h2>
-                      <p>{{postMeta.description}}</p>
-                    </a>
-            	    </div>
-                </div>
-
                 <div class="mdl-card__actions">
                   <!-- Attachements -->
-                  <div class="attachment-button">
+                  <div class="attachment-button" [ng-class]="{'mdl-color-text--amber-500': attachment_preview}">
                     <i class="material-icons">attachment</i>
                     <input type="file" type="file" id="file" name="attachment" (change)="uploadAttachment()"/>
                   </div>
@@ -54,8 +40,29 @@
 
             </form>
 
+            <!-- Rich embed preview -->
+            <div class="post-preview" *ng-if="postMeta.active">
+              <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="postMeta.title"></div>
+              <div class="minds-rich-embed" *ng-if="postMeta.title">
+
+                <a>
+                  <img src="{{postMeta.thumbnail}}" />
+                </a>
+                <a class="meta mdl-color-text--blue-grey-900">
+                  <h2 class="mdl-card__title-text">{{postMeta.title}}</h2>
+                  <p>{{postMeta.description}}</p>
+                </a>
+              </div>
+            </div>
+
             <!-- Attachment preview -->
-            <img [src]="attachment_preview" class="attachment-button" *ng-if="attachment_preview"/>
+            <div class="post-preview" *ng-if="attachment_preview" (click)="removeAttachment()">
+              <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="attachment_preview"></div>
+              <img [src]="attachment_preview" class="attachment-preview"/>
+              <div class="attachment-preview-delete">
+                <i class="material-icons">delete</i>
+              </div>
+            </div>
 
         </div>
 

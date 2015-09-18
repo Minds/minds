@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
@@ -13,7 +13,7 @@ import { SessionFactory } from 'src/services/session';
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
-  directives: [ Activity, NgFor, NgIf, Material, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
+  directives: [ Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
 })
 
 export class Newsfeed {
@@ -108,7 +108,11 @@ export class Newsfeed {
   uploadAttachment(){
     var self = this;
     var file : any = document.getElementById("file");
+    console.log(file);
     var fileInfo = file ? file.files[0] : null;
+
+    if(!fileInfo)
+      return;
 
     /**
      * Give a live preview
@@ -127,6 +131,18 @@ export class Newsfeed {
         self.postMeta.attachment_guid = response.guid;
       });
 
+  }
+
+  removeAttachment(){
+    var self = this;
+    var file : any = document.getElementById("file");
+    file.value = "";
+
+    this.attachment_preview = null;
+    this.client.delete('api/v1/archive/' + this.postMeta.attachment_guid)
+      .then((response) => {
+        self.postMeta.attachment_guid = null;
+      });
   }
 
   /**
