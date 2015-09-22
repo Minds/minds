@@ -33,6 +33,7 @@ export class Boost{
   results = [];
   minds : Minds;
   inProgress : boolean = false;
+  notEnoughPoints : boolean = false;
 
   constructor(public client: Client
     ){
@@ -81,6 +82,7 @@ export class Boost{
       //not enough points?
       if (success.count < self.data.points) {
         self.handleErrorMessage('Ooops! You don\'t have enough points');
+        this.notEnoughPoints = true;
         return false;
       }
 
@@ -99,6 +101,7 @@ export class Boost{
       if (success.count >= self.data.points) {
 
         var endpoint = 'api/v1/boost/newsfeed/' + self.activity.guid + '/' + self.activity.owner_guid;
+        //Keep for destination
         if (self.data.destination) {
           endpoint = 'api/v1/boost/channel/' + self.activity.guid + '/' + self.activity.owner_guid;
         }
