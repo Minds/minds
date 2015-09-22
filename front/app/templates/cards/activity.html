@@ -51,13 +51,25 @@
 	<minds-button-thumbs-down [object]="activity"></minds-button-thumbs-down>
 	<minds-button-comment [object]="activity"></minds-button-comment>
 	<minds-button-remind [object]="activity"></minds-button-remind>
-	<a class="mdl-button mdl-button--raised mdl-button--colored"
-	style=" width: 10px; background-color: #4690D6;"
-	*ng-if ="session.getLoggedInUser().guid == activity.owner_guid"
-	(click)="showBoost()">
-	Boost
-	</a>
+	<div *ng-if ="session.getLoggedInUser().guid == activity.owner_guid">
+		<button class="mdl-button mdl-button--raised mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+						id="boost-actions"
+						style="background-color: #4690D6;"
+						[mdl]
+						(click)="closeBoost()">
+						Boost
+	  </button>
+
+		<ul class="mdl-menu mdl-menu--top-right mdl-js-menu mdl-js-ripple-effect"
+				for="boost-actions"
+				[mdl]>
+				<li class="mdl-menu__item" (click)="showBoost('fullNetwork')">Full Network Boost</li>
+				<li class="mdl-menu__item" (click)="showBoost('channel')">Channel Boost</li>
+		</ul>
+	</div>
+
 </div>
+
 <div class="mdl-card__supporting-text mdl-color--blue-grey-50 tabs" *ng-if="showBoostOptions">
 	<minds-boost [object]="activity"></minds-boost>
 </div>
@@ -66,10 +78,8 @@
 	<button class="mdl-button mdl-js-button mdl-button--icon minds-more mdl-color-text--grey-400">
 		<i class="material-icons">more_vert</i>
 	</button>
-
 	<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" [mdl]>
 		<li class="mdl-menu__item" disabled>Share</li>
 		<li class="mdl-menu__item" *ng-if="activity.owner_guid == session.getLoggedInUser().guid" (click)="delete()">Delete</li>
 	</ul>
-
 </div>

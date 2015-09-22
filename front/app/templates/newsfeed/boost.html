@@ -1,38 +1,6 @@
 <div  class="mdl-grid" style="max-width:900px;">
-  <div class="mdl-cell mdl-cell--12-col" [hidden]="!errorMessage">
-    <div class="mdl-card mdl-color--red-500 mdl-color-text--blue-grey-50  mdl-shadow--2dp minds-login-box" style="min-height:0;">
-      <div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
-        {{errorMessage}}
-      </div>
 
-    </div>
-    <div class="mdl-color-text--blue-grey-50 minds-login-box" style="width: 250px; text-align: center;">
-      <div class="mdl-card__supporting-text" style="min-height:0;"[hidden]="!notEnoughPoints">
-        Do you want to buy more points?
-        <a class="mdl-button mdl-button--raised mdl-button--colored" [router-link]="['/wallet']">Buy more points!</a>
-      </div>
-    </div>
-  </div>
-  <!--CONTENT-->
-  <div class="mdl-cell mdl-cell--12-col">
-      <div class="mdl-card__supporting-text">
-        Your post will appear at the top of everyone's newsfeed until your views are met.
+  <minds-boost-full-network [object]="activity" *ng-if="(activity.boostType == 'fullNetwork')"></minds-boost-full-network>
+  <minds-boost-p2p [object]="activity" *ng-if="(activity.boostType == 'channel')"></minds-boost-p2p>
 
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-          <input class="mdl-textfield__input" type="number" id="points" #points placeholder="Enter Points Here" (keyup)="updateFields($event)"/>
-        </div>
-
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-          <input class="mdl-textfield__input" type="number" id="impressions" #impressions placeholder="Views" value="{{data.impressions}}" disabled/>
-        </div>
-
-        <p style="color:#888;
-        font-size:11px;">
-        Transactions are non-refundable.
-        You will be notified when your post reaches the requested number of views.
-        The amount of time this will take depends on site activity, so don't worry if you don't hear from us for a while; we will keep it in circulation until it reaches the goal!
-        </p>
-        <button class="mdl-button mdl-button--raised mdl-button--colored" style="background-color: #4690D6;" (click)="boost()" [disabled]="inProgress">Boost!</button>
-      </div>
-  </div>
 </div>
