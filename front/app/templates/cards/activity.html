@@ -21,23 +21,23 @@
 
 <!-- Rich content -->
 <div class="minds-rich-embed" *ng-if="activity.perma_url">
-  <a [href]="activity.perma_url" target="_blank">
-    <img [src]="activity.thumbnail_src" />
-  </a>
-  <a [href]="activity.perma_url" target="_blank" class="meta mdl-color-text--blue-grey-900">
-    <h2 class="mdl-card__title-text" *ng-if="activity.title">{{activity.title}}</h2>
-    <p>{{activity.blurb}}</p>
-  </a>
+	<a [href]="activity.perma_url" target="_blank">
+		<img [src]="activity.thumbnail_src" />
+	</a>
+	<a [href]="activity.perma_url" target="_blank" class="meta mdl-color-text--blue-grey-900">
+		<h2 class="mdl-card__title-text" *ng-if="activity.title">{{activity.title}}</h2>
+		<p>{{activity.blurb}}</p>
+	</a>
 </div>
 
 <!-- Images -->
 <div class="item item-image allow-select" *ng-if="activity.thumbnail_src && !activity.perma_url">
-		<img [src]="activity.thumbnail_src">
+	<img [src]="activity.thumbnail_src">
 </div>
 
 <!-- Custom type:: batch -->
 <div class="item item-image allow-select" *ng-if="activity.custom_type == 'batch'">
-		<img [src]="activity.custom_data[0].src" style="width:100%">
+	<img [src]="activity.custom_data[0].src" style="width:100%">
 </div>
 
 <!-- Reminds -->
@@ -51,10 +51,15 @@
 	<minds-button-thumbs-down [object]="activity"></minds-button-thumbs-down>
 	<minds-button-comment [object]="activity"></minds-button-comment>
 	<minds-button-remind [object]="activity"></minds-button-remind>
-	<a class="mdl-button mdl-button--raised mdl-button--colored" *ng-if ="session.getLoggedInUser().guid == activity.owner_guid" (click)="showBoost()">Boost</a>
+	<a class="mdl-button mdl-button--raised mdl-button--colored"
+	style=" width: 10px; background-color: #4690D6;"
+	*ng-if ="session.getLoggedInUser().guid == activity.owner_guid"
+	(click)="showBoost()">
+	Boost
+	</a>
 </div>
 <div class="mdl-card__supporting-text mdl-color--blue-grey-50 tabs" *ng-if="showBoostOptions">
-	<minds-boost  [object]="activity"></minds-boost>
+	<minds-boost [object]="activity"></minds-boost>
 </div>
 
 <div class="mdl-card__menu" *ng-if="!hideTabs">
