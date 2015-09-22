@@ -1,5 +1,5 @@
 import { Component, View, NgFor, NgIf, NgClass, Observable, Inject} from 'angular2/angular2';
-import { Router, RouteParams, RouterLink } from "angular2/router";
+import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { Activity } from './activity';
@@ -20,8 +20,7 @@ import { MindsBoostRateResponse } from 'src/interfaces/responses';
 
 export class Boost{
 
-  guid : string;
-  owner_guid : string;
+  activity : any;
   errorMessage : string = "";
   data = {
     destination: '',
@@ -35,12 +34,8 @@ export class Boost{
   minds : Minds;
   inProgress : boolean = false;
 
-  constructor(public client: Client,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
+  constructor(public client: Client
     ){
-    this.guid = params.params['guid'];
-    this.owner_guid = params.params['owner_guid'];
     this.minds = window.Minds;
     this.minds.cdn_url = "https://d3ae0shxev0cb7.cloudfront.net";
     this.client.get('api/v1/boost/rates', {
@@ -48,6 +43,10 @@ export class Boost{
     }).then((success : MindsBoostRateResponse) => {
       this.data.rate = success.rate;
     });
+  }
+
+  set object(value: any) {
+    this.activity = value;
   }
 
   boost() {
@@ -96,19 +95,20 @@ export class Boost{
         self.handleErrorMessage('Ooops! Sorry, you need to enter at least ' + success.min + ' points');
         return false;
       }
-
       //check if the user has enough points
       if (success.count >= self.data.points) {
 
-        var endpoint = 'api/v1/boost/newsfeed/' + self.guid + '/' + self.owner_guid;
+        var endpoint = 'api/v1/boost/newsfeed/' + self.activity.guid + '/' + self.activity.owner_guid;
         if (self.data.destination) {
-          endpoint = 'api/v1/boost/channel/' + self.guid + '/' + self.owner_guid;
+          endpoint = 'api/v1/boost/channel/' + self.activity.guid + '/' + self.activity.owner_guid;
         }
         //commence the boost
         self.client.post(endpoint, {
           impressions: self.data.impressions,
           destination: self.data.destination.charAt(0) == '@' ? self.data.destination.substr(1) : self.data.destination
         }).then((success : MindsBoostResponse) => {
+          console.log("SUCCESS");
+          console.log(success);
           self.inProgress = false;
           if (success.status == 'success') {
             return true;
@@ -120,6 +120,9 @@ export class Boost{
           self.handleErrorMessage('Sorry, something went wrong.');
           return false;
         });
+      }
+      else{
+        this.inProgress = false;
       }
 
       }).catch((error) => {

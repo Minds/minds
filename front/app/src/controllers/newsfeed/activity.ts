@@ -4,6 +4,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { Remind } from './remind';
+import { Boost } from './boost';
 
 @Component({
   selector: 'minds-activity',
@@ -12,7 +13,7 @@ import { Remind } from './remind';
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
-  directives: [ NgFor, NgIf, NgClass, Material, Remind, RouterLink]
+  directives: [ Boost, NgFor, NgIf, NgClass, Material, Remind, RouterLink]
 })
 
 export class Activity {
@@ -20,6 +21,7 @@ export class Activity {
   activity : any;
   menuToggle : boolean = false;
   session = SessionFactory.build();
+  showBoostOptions : boolean = false;
 
 	constructor(public client: Client){
 	}
@@ -95,5 +97,9 @@ export class Activity {
 
   hasReminded(){
     return false;
+  }
+
+  showBoost(){
+      this.showBoostOptions = true;
   }
 }
