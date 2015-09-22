@@ -5,6 +5,7 @@ import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { Remind } from './remind';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
+import { Boost } from './boost';
 
 @Component({
   selector: 'minds-activity',
@@ -13,7 +14,7 @@ import { BUTTON_COMPONENTS } from 'src/components/buttons';
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
-  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Material, Remind, RouterLink]
+  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Boost, Material, Remind, RouterLink]
 })
 
 export class Activity {
@@ -21,6 +22,7 @@ export class Activity {
   activity : any;
   menuToggle : boolean = false;
   session = SessionFactory.build();
+  showBoostOptions : boolean = false;
 
 	constructor(public client: Client){
 	}
