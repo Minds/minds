@@ -22,6 +22,7 @@ export class Activity {
   menuToggle : boolean = false;
   session = SessionFactory.build();
   showBoostOptions : boolean = false;
+  type : string;
 
 	constructor(public client: Client){
 	}
@@ -99,7 +100,11 @@ export class Activity {
     return false;
   }
 
-  showBoost(){
+  showBoost(boostType : string){
+      this.activity.boostType = boostType;
       this.showBoostOptions = true;
+  }
+  closeBoost(){
+    this.showBoostOptions = false;
   }
 }
