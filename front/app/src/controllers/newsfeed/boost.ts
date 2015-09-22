@@ -35,8 +35,7 @@ export class Boost{
   inProgress : boolean = false;
   notEnoughPoints : boolean = false;
 
-  constructor(public client: Client
-    ){
+  constructor(public client: Client){
     this.minds = window.Minds;
     this.minds.cdn_url = "https://d3ae0shxev0cb7.cloudfront.net";
     this.client.get('api/v1/boost/rates', {
@@ -110,8 +109,6 @@ export class Boost{
           impressions: self.data.impressions,
           destination: self.data.destination.charAt(0) == '@' ? self.data.destination.substr(1) : self.data.destination
         }).then((success : MindsBoostResponse) => {
-          console.log("SUCCESS");
-          console.log(success);
           self.inProgress = false;
           if (success.status == 'success') {
             return true;
