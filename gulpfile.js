@@ -59,6 +59,7 @@ var PATH = {
       './node_modules/es6-module-loader/dist/es6-module-loader-sans-promises.js.map',
       './node_modules/reflect-metadata/Reflect.js',
       './node_modules/reflect-metadata/Reflect.js.map',
+      './node_modules/systemjs/dist/system-polyfills.src.js',
       './node_modules/systemjs/dist/system.src.js'
     ],
     loaderConfig: [
