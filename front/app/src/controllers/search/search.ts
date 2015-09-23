@@ -38,9 +38,11 @@ export class Search {
    */
    search(refresh : boolean = true){
      var self = this;
+     this.inProgress = true;
      this.client.get('api/v1/search', { q: this.q, type: this.type, limit: 12 })
       .then((response: any) => {
           self.entities = response.entities;
+          self.inProgress = false;
       })
       .catch((e) => {
 
