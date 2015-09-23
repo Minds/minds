@@ -8,8 +8,8 @@
 
  class Group extends \ElggEntity{
 
-   public function isMember(){
-     return helpers::isMember();
+   public function isMember($user = NULL){
+     return helpers\Membership::isMember($this, $user);
    }
 
    public function join($user = NULL){
