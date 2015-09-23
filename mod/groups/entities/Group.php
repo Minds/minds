@@ -6,7 +6,11 @@
 
  use Minds\plugin\groups\helpers;
 
- class Group extends \ElggGroup{
+ class Group extends \ElggEntity{
+
+   public function isMember(){
+     return helpers::isMember();
+   }
 
    public function join($user = NULL){
      return helpers\Membership::join($this, $user);

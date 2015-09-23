@@ -128,6 +128,22 @@ class Membership{
 
   }
 
+  /**
+   * Check if a user is a member
+   * @param entities\Group $group
+   * @param user $user
+   * @return bool
+   */
+  static public function isMember($group, $user = NULL){
+    if($user == NULL)
+      $user = Core\Session::getLoggedinUser();
+
+    if(!$group)
+      return false;
+
+    return Data\Relationships::build()->check($user->guid, 'member', $group->guid);
+  }
+
   static public function cancelRequest($group, $user = NULL){
     if($user == NULL)
       $user = Core\Session::getLoggedinUser();
