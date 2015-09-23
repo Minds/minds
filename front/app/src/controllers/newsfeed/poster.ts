@@ -1,30 +1,28 @@
-import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter } from 'angular2/angular2';
 import { ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
-import { Poster } from './poster';
 import { Activity } from './activity';
 import { MindsActivityObject } from 'src/interfaces/entities';
 import { SessionFactory } from 'src/services/session';
 
 @Component({
-  selector: 'minds-newsfeed',
-  viewBindings: [ Client, Upload ]
+  selector: 'minds-newsfeed-poster',
+  viewBindings: [ Client, Upload ],
+  properties: ['_container_guid: containerGuid'],
+  events: ['loadHandler: load']
 })
 @View({
-  templateUrl: 'templates/newsfeed/list.html',
-  directives: [ Poster, Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
+  templateUrl: 'templates/newsfeed/poster.html',
+  directives: [ Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
 })
 
-export class Newsfeed {
+export class Poster {
 
-	newsfeed : Array<Object> = [];
-	offset : string = "";
-  inProgress : boolean = false;
-  moreData : boolean = true;
   session = SessionFactory.build();
   minds;
+  loadHandler: EventEmitter = new EventEmitter();
 
   attachment_preview;
 
@@ -34,50 +32,17 @@ export class Newsfeed {
     thumbnail: "",
     url: "",
     active: false,
-    attachment_guid: null
+    attachment_guid: null,
+    container_guid: 0
   }
 
 	constructor(public client: Client, public upload: Upload){
-		this.load();
     this.minds = window.Minds;
 	}
 
-	/**
-	 * Load newsfeed
-	 */
-	load(refresh : boolean = false){
-		var self = this;
-    if(this.inProgress){
-      //console.log('already loading more..');
-      return false;
-    }
-
-    if(refresh){
-      this.offset = "";
-    }
-
-    this.inProgress = true;
-
-		this.client.get('api/v1/newsfeed', {limit:12, offset: this.offset}, {cache: true})
-				.then((data : MindsActivityObject) => {
-					if(!data.activity){
-            self.moreData = false;
-            self.inProgress = false;
-						return false;
-					}
-          if(self.newsfeed && !refresh){
-            for(let activity of data.activity)
-              self.newsfeed.push(activity);
-          } else {
-					     self.newsfeed = data.activity;
-          }
-					self.offset = data['load-next'];
-          self.inProgress = false;
-				})
-				.catch(function(e){
-					console.log(e);
-				});
-	}
+  set _container_guid(value : any){
+    this.postMeta.container_guid = value;
+  }
 
 	/**
 	 * Post to the newsfeed
@@ -87,7 +52,7 @@ export class Newsfeed {
 
     this.client.post('api/v1/newsfeed', this.postMeta)
       .then(function(data){
-  			self.load(true);
+  			self.loadHandler.next(true);
         console.log(data);
         //reset
         self.postMeta = {
@@ -97,7 +62,8 @@ export class Newsfeed {
           thumbnail: "",
           url: "",
           active: false,
-          attachment_guid: null
+          attachment_guid: null,
+          container_guid: self.postMeta.container_guid
         }
         self.attachment_preview = null;
   		})
@@ -190,12 +156,4 @@ export class Newsfeed {
     }, 600);
   }
 
-
-
-	/**
-	 * A temporary hack, because pipes don't seem to work
-	 */
-	toDate(timestamp){
-		return new Date(timestamp*1000);
-	}
 }
