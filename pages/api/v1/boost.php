@@ -1,14 +1,15 @@
 <?php
 /**
  * Minds Boost Api endpoint
- * 
+ *
  * @version 1
  * @author Mark Harding
- * 
+ *
  */
 namespace minds\pages\api\v1;
 
 use Minds\Core;
+use Minds\Helpers;
 use minds\entities;
 use minds\interfaces;
 use Minds\Api\Factory;
@@ -20,7 +21,7 @@ class boost implements interfaces\api{
     /**
      * Return impressions/points for a request
      * @param array $pages
-     * 
+     *
      * @SWG\GET(
      *     tags={"boost"},
      *     summary="Returns information regarding a boost, or the current boost rates",
@@ -45,7 +46,7 @@ class boost implements interfaces\api{
      *         }
      *     }
      * )
-     */      
+     */
     public function get($pages){
         $response = array();
 
@@ -62,9 +63,10 @@ class boost implements interfaces\api{
     	    	$response['points'] = reset($guids);
     	    break;
     	    case "rates":
+              $response['balance'] = (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
     	        $response['rate'] = $this->rate;
-                $response['cap'] = 800;
-                $response['min'] = 5;
+              $response['cap'] = 800;
+              $response['min'] = 5;
     	    break;
             case "p2p":
                 $db = new Core\Data\Call('entities_by_time');
@@ -82,21 +84,21 @@ class boost implements interfaces\api{
 
         return Factory::response($response);
     }
-    
+
     /**
      * Boost an entity
      * @param array $pages
-     * 
+     *
      * API:: /v1/boost/:type/:guid
      */
     public function post($pages){
-        
+
         if(!isset($pages[0]))
              return Factory::response(array('status' => 'error', 'message' => ':type must be passed in uri'));
-        
+
         if(!isset($pages[1]))
             return Factory::response(array('status' => 'error', 'message' => ':guid must be passed in uri'));
-        
+
         if(!isset($_POST['impressions']))
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be sent in post body'));
 
@@ -133,15 +135,15 @@ class boost implements interfaces\api{
                 'params' => array('impressions'=>$_POST['impressions']),
                 'impressions' => $_POST['impressions']
                 ));
-            } 
+            }
         } else {
 	        $response['status'] = 'error';
         }
 
         return Factory::response($response);
-        
+
     }
-    
+
     /**
      * Called when a boost is to be accepted (assume channels only right now
      * @param array $pages
@@ -158,7 +160,7 @@ class boost implements interfaces\api{
 	    $accept = $ctrl->accept($pages[0], $points);
 	    return Factory::response(array());
     }
-    
+
     /**
      * Called when a boost is rejected (assume channels only right now)
      */
@@ -173,6 +175,5 @@ class boost implements interfaces\api{
         \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $pages[0], "boost refund");
     	$ctrl->reject($pages[0]);
     }
-    
+
 }
-        
