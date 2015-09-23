@@ -2,8 +2,19 @@
 
 require_once(dirname(dirname(__FILE__)) . "/engine/start.php");
 
-$plugins = array('guard');
-foreach($plugins as $plugin_id){
-	$plugin = new ElggPlugin($plugin_id);
-	$plugin->activate();
+
+$db = new Minds\Core\Data\Call('plugin');
+$plugins = array('channel', 'thumbs', 'payments', 'blog', 'guard', 'notifications', 'groups', 'gatherings', 'archive', 'search');
+foreach($plugins as $plugin){
+  $db->insert($plugin, array('type'=>'plugin', 'active'=>1, 'access_id'=>2));
+}
+
+$search = new minds\plugin\search\start(array('active'=>true));
+foreach(\elgg_get_entities(array('type'=>'user','limit'=>500)) as $entity){
+	if($entity->access_id == 2)
+		$search->createDocument($entity);
+}
+foreach(\elgg_get_entities(array('type'=>'object','limit'=>500)) as $entity){
+	if($entity->access_id == 2)
+		$search->createDocument($entity);
 }

@@ -14,34 +14,8 @@ class start extends \minds\Components\Plugin{
 
     Api\Routes::add('v1/search', '\\minds\\plugin\\search\\api\\v1\\search');
 
-		$routes = core\Router::registerRoutes($this->registerRoutes());
-
-
-		//makeshift indexer for testing
-		/*foreach(\elgg_get_entities(array('type'=>'user','limit'=>500)) as $entity){
-			if($entity->access_id == 2)
-				$this->createDocument($entity);
-		}
-		foreach(\elgg_get_entities(array('type'=>'object','limit'=>500)) as $entity){
-			if($entity->access_id == 2)
-				$this->createDocument($entity);
-		}*/
 		\elgg_register_event_handler('create', 'user', array($this, 'hook'));
 		\elgg_register_event_handler('create', 'object', array($this, 'hook'));
-	}
-
-	/**
-	 * Handler the pages
-	 *
-	 * @param array $pages - the page slugs
-	 * @return bool
-	 */
-	public function registerRoutes(){
-		$path = "minds\\plugin\\search";
-		return array(
-			'/search' => "$path\\pages\\search",
-			'/search/result' => "$path\\pages\\hack"
-		);
 	}
 
 	/**
