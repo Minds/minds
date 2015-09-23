@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable, Inject} from 'angular2/angular2';
+import { Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
@@ -15,7 +15,7 @@ import { MindsBoostRateResponse } from 'src/interfaces/responses';
 })
 @View({
   templateUrl: 'templates/newsfeed/boostFullNetwork.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink]
+  directives: [ FORM_DIRECTIVES, NgFor, NgIf, NgClass, Material, RouterLink]
 })
 
 export class BoostFullNetwork{
@@ -25,20 +25,19 @@ export class BoostFullNetwork{
   data = {
     destination: '',
     points: null,
-    impressions: null,
-    rate: 1,
-    step: 1
+    impressions: null
   };
   searching: boolean = false;
   results = [];
   inProgress : boolean = false;
   notEnoughPoints : boolean = false;
+  rate : MindsBoostRateResponse;
 
   constructor(public client: Client){
     this.client.get('api/v1/boost/rates', {
       cb: Date.now()
     }).then((success : MindsBoostRateResponse) => {
-      this.data.rate = success.rate;
+      this.rate = success;
     });
   }
 
@@ -51,7 +50,7 @@ export class BoostFullNetwork{
     this.inProgress = true;
     this.notEnoughPoints = false;
     this.errorMessage = "";
-    
+
     if (this.data.points % 1 !== 0) {
       this.data.points = Math.round(this.data.points);
       this.errorMessage = 'Sorry, you must enter a whole point.';
@@ -72,58 +71,29 @@ export class BoostFullNetwork{
       return false;
     }
 
-    //validate our points
-    this.client.get('api/v1/wallet/count', {
-      cb: Date.now()
-    }).then((success : MindsWalletResponse)=> {
-      //lets deal with the failures first..
-      //not enough points?
-      if (success.count < self.data.points) {
-        self.handleErrorMessage('Ooops! You don\'t have enough points');
-        this.notEnoughPoints = true;
-        return false;
-      }
+    if (this.checkBalance()) {
 
-      //over the cap?
-      if (self.data.points > success.cap) {
-        self.handleErrorMessage('Ooops! Sorry, there is a limit on how many points can be spent.');
-        return false;
-      }
-
-      //under the min?
-      if (self.data.points < success.min) {
-        self.handleErrorMessage('Ooops! Sorry, you need to enter at least ' + success.min + ' points');
-        return false;
-      }
-      //check if the user has enough points
-      if (success.count >= self.data.points) {
-
-        var endpoint = 'api/v1/boost/newsfeed/' + self.activity.guid + '/' + self.activity.owner_guid;
-        //commence the boost
-        self.client.post(endpoint, {
-          impressions: self.data.impressions,
-          destination: self.data.destination
-        }).then((success : MindsBoostResponse) => {
-          self.inProgress = false;
-          if (success.status == 'success') {
-            return true;
-          } else {
-            return false;
-          }
-
-        }).catch((fail) => {
-          self.handleErrorMessage('Sorry, something went wrong.');
+      var endpoint = 'api/v1/boost/newsfeed/' + self.activity.guid + '/' + self.activity.owner_guid;
+      //commence the boost
+      this.client.post(endpoint, {
+        impressions: this.data.impressions,
+        destination: this.data.destination
+      }).then((success : MindsBoostResponse) => {
+        self.inProgress = false;
+        if (success.status == 'success') {
+          return true;
+        } else {
           return false;
-        });
-      }
-      else{
-        this.inProgress = false;
-      }
+        }
 
-      }).catch((error) => {
+      }).catch((fail) => {
         self.handleErrorMessage('Sorry, something went wrong.');
         return false;
       });
+    }
+    else{
+      this.inProgress = false;
+    }
   }
 
   handleErrorMessage(message : string){
@@ -131,9 +101,32 @@ export class BoostFullNetwork{
     this.inProgress = false;
   }
 
-  updateFields($event){
-    this.data.points = $event.target.value;
-    this.data.impressions = $event.target.value;
+  checkBalance(){
+    if (this.rate.balance < this.data.points) {
+      this.handleErrorMessage('Ooops! You don\'t have enough points');
+      this.notEnoughPoints = true;
+      return false;
+    }
+
+    //over the cap?
+    if (this.data.points > this.rate.cap) {
+      this.handleErrorMessage('Ooops! Sorry, there is a limit on how many points can be spent.');
+      return false;
+    }
+
+    //under the min?
+    if (this.data.points < this.rate.min) {
+      this.handleErrorMessage('Ooops! Sorry, you need to enter at least ' + this.rate.min + ' points');
+      return false;
+    }
+    //check if the user has enough points
+    if (this.rate.balance >= this.data.points){
+      return true;
+    }
+  }
+
+  calculateImpressions(){
+    this.data.impressions = Math.round(this.data.points * this.rate.rate);
   }
 
 }

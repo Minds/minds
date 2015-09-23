@@ -15,26 +15,30 @@
 <!--CONTENT-->
 <div class="mdl-cell mdl-cell--12-col">
   <div class="mdl-card__supporting-text">
-    <h1 class="mdl-card__subtitle-text" >
-      Channel Boost
-    </h1>
+
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="channel" #points placeholder="Channel" (keyup)="changeDestination($event)"/>
+      <input class="mdl-textfield__input" type="text" id="channel" #channel placeholder="Channel" (keyup)="changeDestination($event)"/>
+      <p style="color:#888;
+         font-size:11px;">
+         Select a channel above to have your post distributed to their subscribers in exchange for points.
+      </p>
+      <div [hidden]="!searching">
+        <div *ng-for="#user of results" (click)="selectDestination(user);">
+            <img src="{{minds.cdn_url}}/icon/{{user.guid}}/small" />
+                @{{user.username}}
+          </div>
+      </div>
     </div>
 
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="number" id="points" #points placeholder="Enter Points Here" (keyup)="updateFields($event)"/>
-    </div>
+      <input class="mdl-textfield__input" type="number" id="points" #points placeholder="Enter Points Here" [(ng-model)]= "data.points"/>
 
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="number" id="impressions" #impressions placeholder="Views" value="{{data.impressions}}" disabled/>
     </div>
 
     <p style="color:#888;
        font-size:11px;">
-       Transactions are non-refundable.
-       You will be notified when your post reaches the requested number of views.
-       The amount of time this will take depends on site activity, so don't worry if you don't hear from us for a while; we will keep it in circulation until it reaches the goal!
+       You will be noticed if your post is accepted or rejected by the user.
+       Once they accept, this post will not be able to be deleted.
      </p>
      <button class="mdl-button mdl-button--raised mdl-button--colored" style="background-color: #4690D6;" (click)="boost()" [disabled]="inProgress">Boost!</button>
    </div>

@@ -25,7 +25,7 @@ export class Boost{
   minds : Minds;
   activity : any;
   type : string;
-
+  
   constructor(public client: Client){
     this.minds = window.Minds;
     this.minds.cdn_url = "https://d3ae0shxev0cb7.cloudfront.net";

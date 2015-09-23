@@ -1,5 +1,6 @@
 import { MindsUser } from 'src/interfaces/entities';
 import { MindsGroup } from 'src/interfaces/entities';
+
 /*
 * Minds response object
 */
@@ -19,6 +20,7 @@ export interface MindsBlogListResponse extends MindsResponse {
   blogs : Array<any>,
   'load-next' : string
 }
+
 
 export interface MindsConversationResponse extends MindsResponse {
   conversations : Array<any>,
@@ -62,7 +64,10 @@ export interface MindsWalletResponse extends MindsResponse{
 }
 
 export interface MindsBoostRateResponse extends MindsResponse{
-  rate : number
+  rate : number,
+  balance : number,
+  min : number,
+  cap : number
 }
 
 export interface MindsBoostResponse extends MindsResponse{

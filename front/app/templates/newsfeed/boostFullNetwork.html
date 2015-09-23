@@ -15,16 +15,12 @@
 <!--CONTENT-->
 <div class="mdl-cell mdl-cell--12-col">
   <div class="mdl-card__supporting-text">
-    <h1 class="mdl-card__subtitle-text" >
-      Full Network Boost
-    </h1>
-
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="number" id="points" #points placeholder="Enter Points Here" (keyup)="updateFields($event)"/>
+      <input class="mdl-textfield__input" type="number" id="points" #points placeholder="Enter Points Here" [(ng-model)]= "data.points" (keyup)="calculateImpressions()"/>
     </div>
 
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="number" id="impressions" #impressions placeholder="Views" value="{{data.impressions}}" disabled/>
+      <input class="mdl-textfield__input" type="number" id="impressions" #impressions placeholder="Views" [(ng-model)] = "data.impressions" disabled/>
     </div>
 
     <p style="color:#888;

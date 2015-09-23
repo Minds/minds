@@ -100,11 +100,7 @@ export class Activity {
     return false;
   }
 
-  showBoost(boostType : string){
-      this.activity.boostType = boostType;
-      this.showBoostOptions = true;
-  }
-  closeBoost(){
-    this.showBoostOptions = false;
+  showBoost(){
+      this.showBoostOptions = !this.showBoostOptions;
   }
 }
