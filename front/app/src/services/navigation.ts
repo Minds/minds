@@ -6,9 +6,10 @@ export class Navigation {
 	constructor(@Inject(Router) public router: Router, @Inject(Location) public location: Location){
 	}
 
-	getItems() : Array<any> {
+	getItems(container : string = "sidebar") : Array<any> {
 
-		var items : Array<any> = window.Minds.navigation;
+		var navigation : Array<any> = window.Minds.navigation;
+		var items : Array<any> = navigation[container];
 		if(!items)
 			return [];
 

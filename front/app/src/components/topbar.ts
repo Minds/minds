@@ -5,6 +5,7 @@ import { Storage } from 'src/services/storage';
 import { Sidebar } from 'src/services/ui/sidebar';
 import { SessionFactory } from 'src/services/session';
 import { SearchBar } from 'src/controllers/search/bar';
+import { TopbarNavigation } from './topbar-navigation';
 
 @Component({
   selector: 'minds-topbar',
@@ -12,7 +13,7 @@ import { SearchBar } from 'src/controllers/search/bar';
 })
 @View({
   templateUrl: 'templates/components/topbar.html',
-  directives: [ NgIf, RouterLink, Material, SearchBar ]
+  directives: [ NgIf, RouterLink, Material, SearchBar, TopbarNavigation ]
 })
 
 export class Topbar{

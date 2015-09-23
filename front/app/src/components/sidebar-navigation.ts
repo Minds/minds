@@ -5,25 +5,21 @@ import { Navigation as NavigationService } from 'src/services/navigation';
 import { SessionFactory } from 'src/services/session';
 
 @Component({
-  selector: 'minds-navigation',
-  viewBindings: [NavigationService]
+  selector: 'minds-sidebar-navigation',
+  viewBindings: [ NavigationService ]
 })
 @View({
-  templateUrl: 'templates/components/navigation.html',
+  templateUrl: 'templates/components/sidebar-navigation.html',
   directives: [RouterLink, NgIf, NgFor, NgClass]
 })
 
-export class Navigation {
+export class SidebarNavigation {
 	user;
 	session = SessionFactory.build();
 	items;
 	constructor(public navigation : NavigationService){
 		var self = this;
-    this.items = navigation.getItems();
-		//Factory.build(LoggedIn).listen(()=>{
-		//	console.log('receieved session event');
-		//	this.getUser();
-		//})
+    this.items = navigation.getItems('sidebar');
 		this.getUser();
 
 		//listen to click events to close nav

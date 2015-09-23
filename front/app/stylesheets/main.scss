@@ -61,6 +61,24 @@ minds-topbar {
     }
   }
 
+  minds-topbar-navigation{
+    nav{
+      display:flex;
+      flex-direction: row;
+
+      a {
+        display:flex;
+        align-items:center;
+        padding-right: $minds-padding;
+
+        .counter{
+          padding:$minds-padding/2;
+        }
+      }
+
+    }
+  }
+
   .minds-account{
     img{
       max-height: 42px;
@@ -87,6 +105,9 @@ minds-topbar {
     .mdl-layout__header-row{
       padding-left:72px;
     }
+    minds-search-bar{
+      width:45%;
+    }
   }
   .mdl-layout__drawer {
     top:56px;
@@ -105,15 +126,17 @@ minds-topbar {
   margin-left: 100px;
   width: calc(100% - 100px);
 }
+
 @media screen and (max-width: 850px){
   .mdl-layout--fixed-drawer>.mdl-layout__content {
     margin-left:0;
   }
 }
+
 .minds-sidebar{
   border:0;
 
-  minds-navigation{
+  minds-sidebar-navigation{
     padding-top:0 !important;
 
     .minds-account{

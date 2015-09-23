@@ -20,6 +20,8 @@
 
     <div class="mdl-layout-spacer"></div>
 
+    <minds-topbar-navigation></minds-topbar-navigation>
+
     <div class="minds-account" *ng-if="loggedin">
       <a [router-link]="['/channel', {username: session.getLoggedInUser().username}]">
         <img src="/icon/{{session.getLoggedInUser().guid}}/small" />

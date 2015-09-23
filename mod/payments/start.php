@@ -5,6 +5,7 @@
 
 namespace minds\plugin\payments;
 
+use Minds\Api;
 use Minds\Components;
 use Minds\Core;
 use Minds\Core\Events;
@@ -20,6 +21,10 @@ class start extends Components\Plugin{
 			->setName('Wallet')
 			->setTitle('Wallet')
 			->setPath('/wallet')
+			->setExtras(array(
+				'counter' => (int) Core\Session::isLoggedIn() ? \Minds\Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) : 0
+			)),
+			"topbar"
 		);
 
     \elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
@@ -28,14 +33,7 @@ class start extends Components\Plugin{
         }
     });
 
-		/**
-		 * Register our page end points
-		 */
-		$path = "minds\\plugin\\payments\\pages";
-		core\Router::registerRoutes(array(
-			'/wallet' => "minds\\plugin\\payments\\pages\\wallet",
-			'/api/v1/wallet' => "minds\\plugin\\payments\\api\\v1\\wallet"
-		));
+		Api\Routes::add('v1/wallet', "minds\\plugin\\payments\\api\\v1\\wallet");
 
 	}
 
