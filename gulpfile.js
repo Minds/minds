@@ -250,7 +250,7 @@ gulp.task('build.bundle', ['build.dev'], function (cb){
     meta: {
       'angular2/angular2': { build: false },
       'angular2/router': { build: false },
-      'http/http': { build: false }
+      'angular2/http': { build: false }
     }
   });
   builder.build('app', './front/public/app.js', {minify: true})

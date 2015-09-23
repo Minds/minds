@@ -26,12 +26,6 @@ class start extends \ElggPlugin{
     //    var_dump( $user_auth_result ); exit;
     
     	elgg_register_plugin_hook_handler('logged_in_user', 'user', array($this, 'loggedInUserEntity'));
-    
-        elgg_extend_view('js/elgg', 'js/oauth2/oauth2');
-    	elgg_extend_view('css/elgg', 'oauth2/css');
-    
-        // Admin menu to manage applications
-        elgg_register_admin_menu_item('configure', 'oauth2', 'settings');
         
         
         core\Router::registerRoutes(array(
