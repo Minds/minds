@@ -1,6 +1,6 @@
 <form (submit)="save()" *ng-if="group">
 
-  <div class="mdl-textfield mdl-js-textfield minds-groups-name" [mdl]>
+  <div class="mdl-textfield mdl-js-textfield minds-groups-name" [mdl] [mdl-textfield]>
     <input
       class="mdl-textfield__input"
       type="text"
@@ -10,7 +10,7 @@
     <label class="mdl-textfield__label" for="name">Name</label>
   </div>
 
-  <div class="mdl-textfield mdl-js-textfield minds-groups-brief">
+  <div class="mdl-textfield mdl-js-textfield minds-groups-brief" [mdl-textfield]>
     <textarea
       class="mdl-textfield__input"
       type="text"

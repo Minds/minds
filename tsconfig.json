@@ -46,6 +46,7 @@
         "./front/app/src/directives/infinite-scroll.ts",
         "./front/app/src/directives/loggedin.ts",
         "./front/app/src/directives/material.ts",
+        "./front/app/src/directives/material/text-field.ts",
         "./front/app/src/directives/subscribe-button.ts",
         "./front/app/src/interfaces/entities.ts",
         "./front/app/src/interfaces/responses.ts",
