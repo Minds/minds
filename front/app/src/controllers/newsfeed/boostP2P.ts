@@ -151,8 +151,8 @@ export class BoostP2P{
       view: 'json',
       limit: 5
     }).then((success : MindsUserSearchResponse)=> {
-      if (success.user){
-        this.results = success.user[0];
+      if (success.entities){
+        this.results = success.entities;
       }
     })
     .catch((error)=>{

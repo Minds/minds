@@ -73,7 +73,7 @@ export class BoostFullNetwork{
 
     if (this.checkBalance()) {
 
-      var endpoint = 'api/v1/boost/newsfeed/' + self.activity.guid + '/' + self.activity.owner_guid;
+      var endpoint = 'api/v1/boost/newsfeed/' + this.activity.guid + '/' + this.activity.owner_guid;
       //commence the boost
       this.client.post(endpoint, {
         impressions: this.data.impressions,

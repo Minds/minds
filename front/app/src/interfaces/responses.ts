@@ -75,5 +75,5 @@ export interface MindsBoostResponse extends MindsResponse{
 }
 
 export interface MindsUserSearchResponse extends MindsResponse{
-  user : Array<any>
+  entities : Array<any>
 }
