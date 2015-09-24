@@ -4,7 +4,7 @@
 
     <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp minds-banner-card" *ng-for="#group of groups">
       <div class="minds-usercard-banner">
-      	<img src="{{minds.cdn_url}}/groups/banner/{{group.guid}}"/>
+      	<img src="{{minds.cdn_url}}/fs/banners/{{group.guid}}"/>
       	<div class="minds-banner-overlay"></div>
       </div>
 
@@ -13,13 +13,13 @@
       			<img src="{{minds.cdn_url}}/icon/{{group.guid}}/small}}" class="mdl-shadow--2dp"/>
       	</div>
       	<div class="body">
-      		<h3>{{group.name}}</h3>          
+      		<h3>{{group.name}}</h3>
       	</div>
       </a>
 
       <minds-groups-join-button [group]="group"></minds-groups-join-button>
 
-      <div class="minds-tabs mdl-tabs__tab-bar">
+      <!--<div class="minds-tabs mdl-tabs__tab-bar">
       		<a class="mdl-tabs__tab mdl-color-text--blue-grey-500 1">
       			<span>Members</span>
       			<b>{{group['members:count']}}</b>
@@ -28,7 +28,7 @@
       			<span></span>
       			<b></b>
       		</a>
-      </div>
+      </div>-->
     </div>
 
       <infinite-scroll

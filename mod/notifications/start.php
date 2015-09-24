@@ -38,7 +38,7 @@ class start extends \ElggPlugin{
 			->setTitle('Notificaitons')
 			->setPath('/notifications')
 			->setExtras(array(
-				'counter' => (int) Core\Session::isLoggedIn() ? self::getCount() : 0
+				'counter' => (string) Core\Session::isLoggedIn() ? self::getCount() : 0
 			)),
 			"topbar"
 		);
@@ -56,13 +56,13 @@ class start extends \ElggPlugin{
 	static public function getCount($cache =true){
 		if($cache){
 			$user = \elgg_get_logged_in_user_entity();
-			return $user->notifications_count;
+			//return $user->notifications_count;
 		}
 
 		$lu = new core\Data\lookup();
 		$result = $lu->get("notifications:count", array('offset'=>elgg_get_logged_in_user_guid()));
 		if(!isset($result[elgg_get_logged_in_user_guid()])){
-			return 0;
+			return (int) 0;
 		}
 		return (int) $result[elgg_get_logged_in_user_guid()];
 

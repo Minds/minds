@@ -14,8 +14,8 @@ import { GroupsCreator } from './groups-creator';
   properties: ['_group: group']
 })
 @View({
-  template: '<button class="minds-group-join-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="!group.member" (click)="join()">Join</button> \
-    <button class="minds-group-join-button subscribed mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="group.member" (click)="leave()">Leave</button>',
+  template: '<button class="minds-group-join-button" *ng-if="!group.member" (click)="join()">Join</button> \
+    <button class="minds-group-join-button subscribed " *ng-if="group.member" (click)="leave()">Leave</button>',
   directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll ]
 })
 
