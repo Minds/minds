@@ -28,7 +28,7 @@ export class BoostP2P{
     impressions: null
   };
   searching: boolean = false;
-  results : Array<any>;
+  results : Array<any> = [];
   minds : Minds;
   inProgress : boolean = false;
   notEnoughPoints : boolean = false;
@@ -129,11 +129,12 @@ export class BoostP2P{
 
   //for Channel Boost
   changeDestination($event) {
-    console.log($event);
     this.searching = true;
-    if (this.data.destination.charAt(0) != '@' && this.data.destination.length !== 0) {
+    if ($event.target.value.charAt(0) != '@') {
       this.data.destination = '@' + $event.target.value;
     }
+    else this.data.destination =  $event.target.value;
+
     if ($event.which === 13) {
       this.searching = false;
     }
@@ -150,13 +151,13 @@ export class BoostP2P{
       view: 'json',
       limit: 5
     }).then((success : MindsUserSearchResponse)=> {
-      this.results = success.user[0];
+      if (success.user){
+        this.results = success.user[0];
+      }
     })
     .catch((error)=>{
       console.log(error);
     });
-
-    console.log('changing');
 
     if (!this.data.destination) {
       this.searching = false;

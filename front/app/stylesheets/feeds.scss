@@ -87,22 +87,117 @@
      margin-bottom:$minds-padding * 2;
      width:100%;
      min-height:0;
+     flex-direction: row;
+     flex-wrap:wrap;
 
-     .mdl-textfield{
-       width:100%;
-       padding-top:0;
+     .minds-avatar{
+       margin-right:$minds-margin;
+       img{
+         width: 50px;
+         border-radius: 3px;
+       }
      }
-     .mdl-button {
-       width:0;
-       float:right;
+
+     form{
+       flex:1;
+       margin-bottom:0;
+
+       .mdl-textfield__input{
+         width:100%;
+         padding-top:0;
+         border:0;
+         font-size: 13px;
+         padding: 8px;
+       }
+       .mdl-textfield__input:focus{
+         outline:none;
+       }
+
      }
+
      .post-preview{
-       margin:-$minds-padding*2;
+       margin:-$minds-padding * 2;
+       position:relative;
+       width:110%;
+
        .mdl-spinner{
          margin: $minds-padding * 2 auto;
          display:block;
        }
+       .attachment-preview{
+         width:100%;
+       }
+       .attachment-preview-delete{
+         display:none;
+       }
      }
+     .post-preview:hover{
+
+       .attachment-preview-delete{
+          display:block;
+         position:absolute;
+         top:0;
+         left:0;
+         width:100%;
+         height:100%;
+         background:rgba(0,0,0,0.6);
+         align-items: center;
+         i{
+          font-size:40px;
+          color:#FFF;
+          top: calc(50% - 20px);
+          left: calc(50% - 20px);
+          position: absolute;
+         }
+       }
+
+     }
+
+     .mdl-card__actions{
+       text-align:right;
+
+       .attachment-button:before{
+         color: #888;
+         font-family:'material icons';
+         content: 'attachment';
+         position: absolute;
+         top: 7px;
+         left: 6px;
+       }
+
+       .attachment-button{
+         display:inline-block;
+         vertical-align:middle;
+         position:relative;
+         overflow:hidden;
+         cursor:pointer;
+
+         i{
+           cursor:pointer;
+         }
+
+         input{
+           position: absolute;
+            color: #888;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            opacity: 0;
+         }
+         input::-webkit-file-upload-button{
+           cursor:pointer;
+         }
+
+       }
+       .mdl-button {
+         width:0;
+       }
+
+     }
+
    }
  }
 
@@ -194,4 +289,28 @@
   img {
     border-radius:3px;
   }
+}
+
+.search-users-list{
+	position: absolute;
+	margin-top: -60px;
+	left: 8px;
+	width: calc(100% - 16px);
+	opacity:1;
+	z-index:9;
+}
+.search-users-list > div{
+	padding:8px;
+	font-size:22px;
+	font-weight:bold;
+	text-align:left;
+}
+.search-users-list > div img{
+	vertical-align: middle;
+	border-radius:2px;
+	box-shadow:0 0 3px #888;
+	width:35px;
+	height:35px;
+	overflow:hidden;
+	position:relative;
 }

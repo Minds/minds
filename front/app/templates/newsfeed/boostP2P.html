@@ -17,22 +17,22 @@
   <div class="mdl-card__supporting-text">
 
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="channel" #channel placeholder="Channel" (keyup)="changeDestination($event)"/>
+      <input class="mdl-textfield__input" type="text" id="channel" #channel placeholder="Channel" [(ng-model)] = "data.destination" (keyup)="changeDestination($event)"/>
       <p style="color:#888;
          font-size:11px;">
          Select a channel above to have your post distributed to their subscribers in exchange for points.
       </p>
-      <div [hidden]="!searching">
+
+      <div class="search-users-list mdl-card" *ng-if="results.length > 0 && searching">
         <div *ng-for="#user of results" (click)="selectDestination(user);">
-            <img src="{{minds.cdn_url}}/icon/{{user.guid}}/small" />
-                @{{user.username}}
+          <img src="{{minds.cdn_url}}/icon/{{user.guid}}/small" />
+            @{{user.username}}
           </div>
       </div>
     </div>
 
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
       <input class="mdl-textfield__input" type="number" id="points" #points placeholder="Enter Points Here" [(ng-model)]= "data.points"/>
-
     </div>
 
     <p style="color:#888;
