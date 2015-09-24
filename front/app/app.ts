@@ -5,6 +5,7 @@ import {HTTP_BINDINGS} from 'angular2/http';
 import {Topbar} from './src/components/topbar';
 import {SidebarNavigation} from './src/components/sidebar-navigation';
 
+import { Homepage } from 'src/controllers/homepage';
 import {Login} from './src/controllers/login';
 import {Logout} from './src/controllers/logout';
 import {Register} from './src/controllers/register';
@@ -59,7 +60,7 @@ import {Wallet} from './src/plugins/payments/payments';
   { path: '/:username', component: Channel, as: 'channel' },
   { path: '/:username/:filter', component: Channel, as: 'channel-filter' },
 
-  { path: '/', redirectTo: '/newsfeed' }
+  { path: '/', component: Homepage, as: 'homepage' }
 ])
 @View({
   templateUrl: './templates/index.html',
