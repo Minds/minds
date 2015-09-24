@@ -1,5 +1,5 @@
 @import 'defaults.scss';
-@import url(https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,300italic,700italic|Indie+Flower);
+@import url(https://fonts.googleapis.com/css?family=Lato:100,200,300,400,700,900,300italic,700italic|Indie+Flower);
 
 h1,h2,h3,h4{
   font-family:'Lato';
@@ -188,7 +188,7 @@ minds-topbar {
         align-items: center;
         font-weight: 700;
         padding: 16px 38px;
-        font-weight:100;
+        font-weight:200;
         font-size:11px;
         text-transform: lowercase;
         font-family: 'Lato', 'Helvetica', sans-serif;
