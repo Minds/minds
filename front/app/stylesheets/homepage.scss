@@ -7,9 +7,15 @@
 
   .video{
     video{
-      max-width:100%;
-      min-height:100%;
+      height:100%;
+      width:auto;
       background-image:url('assets/videos/traffic-1/traffic-1.png');
+    }
+    @media (min-width: 1600px){
+      video{
+        height: auto;
+        width: 100%;
+      }
     }
   }
 
@@ -40,5 +46,16 @@
       font-weight:200;
       margin:0;
     }
+
+    @media (max-width: 620px){
+      h1{
+        font-size: 42px;
+        font-weight: 200;
+      }
+      h3{
+        font-size:18px;
+      }
+    }
+
   }
 }
