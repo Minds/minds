@@ -52,9 +52,8 @@
 	<minds-button-comment [object]="activity"></minds-button-comment>
 	<minds-button-remind [object]="activity"></minds-button-remind>
 	<div *ng-if ="session.getLoggedInUser().guid == activity.owner_guid">
-		<button class="mdl-button mdl-button--raised mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+		<button class="mdl-button mdl-button--raised mdl-button--colored mdl-js-button minds-boost-button"
 						id="boost-actions"
-						style="background-color: #4690D6;"
 						[mdl]
 						(click)="closeBoost()">
 						Boost
@@ -76,7 +75,7 @@
 
 <div class="mdl-card__menu" *ng-if="!hideTabs">
 	<button class="mdl-button mdl-js-button mdl-button--icon minds-more mdl-color-text--grey-400">
-		<i class="material-icons">more_vert</i>
+		<i class="material-icons">keyboard_arrow_down</i>
 	</button>
 	<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" [mdl]>
 		<li class="mdl-menu__item" disabled>Share</li>

@@ -70,7 +70,7 @@ class start extends Components\Plugin{
 		$link = new Core\Navigation\Item();
 		Core\Navigation\Manager::add($link
 			->setPriority(4)
-			->setIcon('description')
+			->setIcon('subject')
 			->setName('Blogs')
 			->setTitle('Blogs')
 			->setPath('/blog')
