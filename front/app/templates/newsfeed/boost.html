@@ -1,0 +1,6 @@
+<div  class="mdl-grid" style="max-width:900px;">
+
+  <minds-boost-full-network [object]="activity" *ng-if="(activity.boostType == 'fullNetwork')"></minds-boost-full-network>
+  <minds-boost-p2p [object]="activity" *ng-if="(activity.boostType == 'channel')"></minds-boost-p2p>
+
+</div>

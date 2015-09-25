@@ -61,6 +61,7 @@ import {Wallet} from './src/plugins/payments/payments';
   { path: '/:username/:filter', component: Channel, as: 'channel-filter' },
 
   { path: '/', component: Homepage, as: 'homepage' }
+
 ])
 @View({
   templateUrl: './templates/index.html',
