@@ -7,8 +7,8 @@
 
   .video{
     video{
-      height:100%;
-      width:auto;
+      min-height:100%;
+      width:100%;
       background-image:url('assets/videos/traffic-1/traffic-1.png');
     }
     @media (min-width: 1600px){
@@ -16,6 +16,10 @@
         height: auto;
         width: 100%;
       }
+    }
+    @media (max-height: 800px){
+      height:auto;
+      width:100%;
     }
   }
 
