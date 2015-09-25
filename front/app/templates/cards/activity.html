@@ -49,9 +49,12 @@
 
 	<minds-button-thumbs-up [object]="activity"></minds-button-thumbs-up>
 	<minds-button-thumbs-down [object]="activity"></minds-button-thumbs-down>
-	<minds-button-comment [object]="activity"></minds-button-comment>
+	<minds-button-comment [object]="activity" (click)="openComments()"></minds-button-comment>
 	<minds-button-remind [object]="activity"></minds-button-remind>
+</div>
 
+<div class="mdl-grid blogs-grid mdl-color--blue-grey-50" *ng-if="commentsToggle">
+	<minds-comments [object]="activity"></minds-comments>
 </div>
 
 <div class="mdl-card__menu" *ng-if="!hideTabs">
