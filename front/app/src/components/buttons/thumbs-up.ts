@@ -11,7 +11,7 @@ import { Client } from "src/services/api";
   template: `
     <a class="mdl-color-text--blue-grey-800" (click)="thumb()" [ng-class]="{'selected': has() }">
       <i class="material-icons">thumb_up</i>
-      <counter [ng-class]="{'has-value': object['thumbs:up:count'] > 0}">{{object['thumbs:up:count']}}</counter>
+      <counter *ng-if="object['thumbs:up:count'] > 0">{{object['thumbs:up:count']}}</counter>
     </a>
   `,
   directives: [CORE_DIRECTIVES]

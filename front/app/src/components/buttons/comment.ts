@@ -10,7 +10,7 @@ import { Client } from "src/services/api";
   template: `
     <a class="mdl-color-text--blue-grey-800" (click)="remind()">
       <i class="material-icons">chat_bubble</i>
-      <counter [ng-class]="{'has-value': object['comments:count'] > 0}">{{object['comments:count']}}</counter>
+      <counter *ng-if="object['comments:count'] > 0">{{object['comments:count']}}</counter>
     </a>
   `,
   directives: [CORE_DIRECTIVES]

@@ -44,20 +44,20 @@
          vertical-align: middle;
        }
 
-        counter.has-value:before{
-          content:'( ';
-        }
-       counter{
-         font-family:"Lato", "Helvetica", "Roboto", sans-serif;
-         display:inline-block;
-         font-size:12px;
+      counter:before{
+        content:'( ';
+      }
+      counter{
+        font-family:"Lato", "Helvetica", "Roboto", sans-serif;
+        display:inline-block;
+        font-size:12px;
         // font-weight:bold;
-         vertical-align: middle;
-         padding:0 $minds-padding;
-       }
-       counter.has-value:after{
+        vertical-align: middle;
+        padding:0 $minds-padding;
+      }
+      counter:after{
          content:' )';
-       }
+      }
      }
 
      .minds-more{
