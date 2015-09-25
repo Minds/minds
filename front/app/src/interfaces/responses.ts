@@ -22,11 +22,6 @@ export interface MindsBlogListResponse extends MindsResponse {
 }
 
 
-export interface MindsConversationResponse extends MindsResponse {
-  conversations : Array<any>,
-  'load-next' : string
-}
-
 export interface MindsUserConversationResponse extends MindsResponse{
   publickeys : any,
   messages : Array<any>,
@@ -40,6 +35,11 @@ export interface MindsGatheringsSearchResponse extends MindsResponse{
 
 export interface MindsKeysResponse extends MindsResponse{
   key : any
+}
+
+export interface MindsConversationResponse extends MindsResponse {
+  conversations : Array<any>,
+  'load-next' : string
 }
 
 export interface MindsGroupResponse extends MindsResponse{

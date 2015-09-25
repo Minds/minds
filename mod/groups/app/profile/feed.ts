@@ -4,6 +4,8 @@ import { RouterLink, RouteParams } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
+
+import { Poster } from 'src/controllers/newsfeed/poster';
 import { Activity } from 'src/controllers/newsfeed/activity';
 
 
@@ -25,7 +27,7 @@ interface MindsGroup {
 })
 @View({
   templateUrl: 'templates/plugins/groups/profile/feed.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Activity ]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Poster, Activity ]
 })
 
 export class GroupsProfileFeed {
@@ -33,10 +35,6 @@ export class GroupsProfileFeed {
   guid;
   group : any;
 
-  postMeta : any = {
-    message: '',
-    container_guid: 0
-  };
   session = SessionFactory.build();
 
   activity : Array<any> = [];
@@ -50,7 +48,6 @@ export class GroupsProfileFeed {
   set _group(value : any){
     this.group = value;
     this.guid = value.guid;
-    this.postMeta.container_guid = this.guid;
     this.load();
   }
 
@@ -87,72 +84,6 @@ export class GroupsProfileFeed {
       .catch((e)=>{
 
       });
-  }
-
-  post(){
-    console.log('posting', this.postMeta);
-    var self = this;
-		this.client.post('api/v1/newsfeed', this.postMeta)
-				.then((data) => {
-					self.load(true);
-          console.log(data);
-          //reset
-          self.postMeta = {
-            message: "",
-            title: "",
-            description: "",
-            thumbnail: "",
-            url: "",
-            active: false
-          }
-				})
-				.catch((e) => {
-					console.log(e);
-				});
-  }
-
-  /**
-   * Get rich embed data
-   */
-  timeout;
-  getPostPreview(message){
-    var self = this;
-
-    var match = message.value.match(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig);
-		if (!match) return;
-    var url;
-
-		if ( match instanceof Array) {
-			url = match[0];
-		} else {
-			url = match;
-		}
-
-		if (!url.length) return;
-
-		url = url.replace("http://", '');
-		url = url.replace("https://", '');
-    console.log('found url was ' + url)
-
-    self.postMeta.active = true;
-
-    if(this.timeout)
-      clearTimeout(this.timeout);
-
-    this.timeout = setTimeout(()=>{
-      this.client.get('api/v1/newsfeed/preview', {url: url})
-        .then((data : any) => {
-          console.log(data);
-          self.postMeta.title = data.meta.title;
-          self.postMeta.url = data.meta.canonical;
-          self.postMeta.description = data.meta.description;
-          for (var link of data.links) {
-              if (link.rel.indexOf('thumbnail') > -1) {
-                  self.postMeta.thumbnail = link.href;
-              }
-          }
-        });
-    }, 600);
   }
 
 }

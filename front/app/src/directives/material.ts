@@ -1,5 +1,8 @@
-import { Directive, ViewContainerRef, ProtoViewRef } from 'angular2/angular2';
+import { Directive, ViewContainerRef, ProtoViewRef, Type } from 'angular2/angular2';
 import { Material as MaterialService } from "src/services/ui";
+
+import { MaterialTextfield } from './material/text-field';
+import { MaterialUpload } from './material/upload';
 
 @Directive({
   selector: '[mdl]',
@@ -12,3 +15,5 @@ export class Material{
     MaterialService.updateElement(viewContainer.element.nativeElement);
   }
 }
+
+export const MDL_DIRECTIVES: Type[] = [Material, MaterialTextfield, MaterialUpload];

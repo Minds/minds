@@ -215,7 +215,7 @@ gulp.task('build.js.dev', function () {
  * Build assets (Dev)
  */
 gulp.task('build.assets.dev', ['build.scss', 'build.js.dev'], function () {
-  return gulp.src([join(PATH.src.all, '**/*.html'), join(PATH.src.all, '**/*.css'), join(PATH.src.all, '**/*.png'), join(PATH.src.all, '**/*.jpg')])
+  return gulp.src([join(PATH.src.all, '**/*.html'), join(PATH.src.all, '**/*.css'), join(PATH.src.all, '**/*.png'), join(PATH.src.all, '**/*.*')])
     .pipe(gulp.dest(PATH.dest.dev.all));
 });
 

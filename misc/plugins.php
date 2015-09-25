@@ -11,7 +11,7 @@ foreach($plugins as $plugin){
 
 $search = new minds\plugin\search\start(array('active'=>true));
 foreach(\elgg_get_entities(array('type'=>'user','limit'=>500)) as $entity){
-	if($entity->access_id == 2)
+///	if($entity->access_id == 2)
 		$search->createDocument($entity);
 }
 foreach(\elgg_get_entities(array('type'=>'object','limit'=>500)) as $entity){

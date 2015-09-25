@@ -1,5 +1,12 @@
 @import 'defaults.scss';
 
+.minds-banner-card{
+  minds-groups-join-button{
+    position: absolute;
+    margin: -38px 130px;
+  }
+}
+
 minds-groups-create{
   form{
     width:100%;

@@ -1,5 +1,6 @@
-import { Component, View, NgFor, FORM_DIRECTIVES } from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
 
+import { MDL_DIRECTIVES } from 'src/directives/material';
 import { Upload } from 'src/services/api/upload';
 import { Client } from 'src/services/api/client';
 
@@ -9,62 +10,109 @@ import { Client } from 'src/services/api/client';
 })
 @View({
   templateUrl: 'templates/capture/capture.html',
-  directives: [ NgFor, FORM_DIRECTIVES ]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES ]
 })
 
 export class Capture {
 
   uploads : Array<any> = [];
+
   postMeta : any = {}; //TODO: make this object
 
-	constructor(public upload: Upload, public client: Client){
+  albums : Array<any> = [];
+  offset : string = "";
+  inProgress : boolean = false;
+
+	constructor(public _upload: Upload, public client: Client){
     this.domListeners();
+    this.getAlbums();
 	}
 
   domListeners(){
 
   }
 
-  uploadFile(){
+  getAlbums(){
     var self = this;
-    var data : any = {
-      guid: null,
-      state: 'created',
-      progress: 0
-    }
-
-    var file : any = document.getElementById("file");
-    var fileInfo = file.files[0];
-
-    if(fileInfo.type.indexOf('image') > -1){
-      data.type = "image";
-    } else if(fileInfo.type.indexOf('video') > -1){
-      data.type = "video";
-    } else if(fileInfo.type.indexOf('audio') > -1){
-      data.type = "audio";
-    } else {
-      data.type = "unknown";
-    }
-
-    data.name = fileInfo.name;
-    //file.file = fileInfo;
-
-    let index = this.uploads.push(data) - 1;
-
-    this.upload.post('api/v1/archive', [fileInfo], data, (progress) => {
-      console.log('progress update');
-      console.log(progress);
-      self.uploads[index].progress = progress;
+    this.client.get('api/v1/entities/all/albums', { limit: 5, offset: this.offset })
+      .then((response : any) => {
+        console.log(response);
+        self.albums = response.entities;
       })
-				.then((response : any) => {
-          console.log(response, response.guid);
-          self.uploads[index].guid = response.guid;
-          self.uploads[index].state = 'uploaded';
-          self.uploads[index].progress = 100;
-				})
-				.catch(function(e){
-					console.error(e);
-				});
+      .catch((e) => {
+
+      });
+  }
+
+  createAlbum(album){
+    var self = this;
+    this.inProgress = true;
+    this.client.post('api/v1/archive/albums', { title: album.value })
+      .then((response : any) => {
+        self.albums.unshift(response.album);
+        self.postMeta.album_guid = response.album.guid;
+        self.inProgress = false;
+        album.value = '';
+      })
+      .catch((e) => {
+
+      });
+  }
+
+  selectAlbum(album){
+    this.postMeta.album_guid = album.guid;
+  }
+
+  /**
+   * Add a file to the upload queue
+   */
+  add(){
+    var self = this;
+    var file : any = document.getElementById("file");
+    for(var i in file.files){
+
+      var data : any = {
+        guid: null,
+        state: 'created',
+        progress: 0
+      }
+
+      var fileInfo = file.files[i];
+
+      if(fileInfo.type && fileInfo.type.indexOf('image') > -1){
+        data.type = "image";
+      } else if(fileInfo.type && fileInfo.type.indexOf('video') > -1){
+        data.type = "video";
+      } else if(fileInfo.type && fileInfo.type.indexOf('audio') > -1){
+        data.type = "audio";
+      } else {
+        data.type = "unknown";
+      }
+
+      data.name = fileInfo.name;
+
+      var upload_i = this.uploads.push(data) - 1;
+      this.uploads[upload_i].index = upload_i;
+
+      this.upload(this.uploads[upload_i], fileInfo);
+
+    }
+
+  }
+
+  upload(data, fileInfo){
+    var self = this;
+    this._upload.post('api/v1/archive', [fileInfo], this.uploads[data.index], (progress) => {
+        self.uploads[data.index].progress = progress;
+      })
+      .then((response : any) => {
+        self.uploads[data.index].guid = response.guid;
+        self.uploads[data.index].state = 'uploaded';
+        self.uploads[data.index].progress = 100;
+      })
+      .catch(function(e){
+        console.error(e);
+      });
   }
 
   modify(index){
@@ -88,6 +136,25 @@ export class Capture {
           console.log('response from modify', response);
         });
     });
+  }
+
+  /**
+   * Publish our uploads to an album
+   */
+  publish(){
+    if(!this.postMeta.album_guid)
+      return alert('You must select an album first');
+    var self = this;
+    var guids = this.uploads.map((upload) => {
+      return upload.guid;
+    });
+    this.client.post('api/v1/archive/albums/' + this.postMeta.album_guid, { guids: guids })
+      .then((response : any) => {
+
+      })
+      .catch((e) => {
+
+      });
   }
 
 }

@@ -3,7 +3,7 @@ import { Router, RouterLink, RouteParams } from "angular2/router";
 
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
-import { Material } from 'src/directives/material';
+import { MDL_DIRECTIVES } from 'src/directives/material';
 import { Activity } from 'src/controllers/newsfeed/activity';
 
 @Component({
@@ -13,7 +13,7 @@ import { Activity } from 'src/controllers/newsfeed/activity';
 })
 @View({
   templateUrl: 'templates/plugins/groups/profile/settings.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Activity ]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, RouterLink, Activity ]
 })
 
 export class GroupsProfileSettings {

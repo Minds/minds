@@ -3,6 +3,7 @@ import { ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
+import { Poster } from './poster';
 import { Activity } from './activity';
 import { MindsActivityObject } from 'src/interfaces/entities';
 import { SessionFactory } from 'src/services/session';
@@ -13,7 +14,7 @@ import { SessionFactory } from 'src/services/session';
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
-  directives: [ Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
+  directives: [ Poster, Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
 })
 
 export class Newsfeed {

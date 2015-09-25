@@ -39,6 +39,7 @@ class start extends Components\Plugin{
 		});
 
 	  Api\Routes::add('v1/archive', "\\minds\\plugin\\archive\\api\\v1\\archive");
+		Api\Routes::add('v1/archive/albums', "\\minds\\plugin\\archive\\api\\v1\\albums");
 		Api\Routes::add('v1/archive/thumbnails', "\\minds\\plugin\\archive\\api\\v1\\thumbnails");
 
 		// Register a page handler, so we can have nice URLs (fallback in case some links go to old kaltura_video)

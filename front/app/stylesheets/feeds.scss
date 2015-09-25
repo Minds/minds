@@ -30,7 +30,7 @@
        display:flex;
        box-sizing:border-box;
 
-       a {
+       > * {
          display:flex;
          flex-direction: column;
          flex:auto;
@@ -40,6 +40,24 @@
        .selected{
          color:$minds-blue !important;
        }
+       i{
+         vertical-align: middle;
+       }
+
+      counter:before{
+        content:'( ';
+      }
+      counter{
+        font-family:"Lato", "Helvetica", "Roboto", sans-serif;
+        display:inline-block;
+        font-size:12px;
+        // font-weight:bold;
+        vertical-align: middle;
+        padding:0 $minds-padding;
+      }
+      counter:after{
+         content:' )';
+      }
      }
 
      .minds-more{
@@ -313,4 +331,11 @@
 	height:35px;
 	overflow:hidden;
 	position:relative;
+}
+.search-results{
+
+  .mdl-card{
+    margin-bottom:$minds-margin;
+    width:100%;
+  }
 }

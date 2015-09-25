@@ -52,6 +52,20 @@ class search implements interfaces\api{
       if(isset($_GET['type']))
         $params['type'] = $_GET['type'];
 
+      if($params['type']){
+        switch($params['type']){
+          case "channels":
+            $params['type'] = 'user';
+            break;
+          case "videos":
+            $params['type'] = 'video';
+            break;
+          case "images":
+            $params['type'] = 'image';
+            break;
+        }
+      }
+
       $params['size'] = $_GET['limit'] ?: 12;
       if(isset($_GET['offset']))
         $params['from'] = $_GET['offset'];
