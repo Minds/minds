@@ -1,37 +1,96 @@
-
 <div class="mdl-grid capture-grid" style="max-width:900px">
 
-  <form #postobj="form" (submit)="uploadFile()">
+    <div class="mdl-cell mdl-cell--4-col">
+
+      <div class="mdl-card minds-albums-selector" #toggle>
+        <div class="mdl-card__title">
+          <h2 class="mdl-card__title-text">
+            Album
+          </h2>
+          <button class="mdl-button mdl-button--fab mdl-button--colored minds-album-add" (click)="toggle.value = !toggle.value">
+            <i class="material-icons">add</i>
+          </button>
+        </div>
 
 
-      <input
-        type="file"
-        id="file"
-        #file
-        [(ng-model)]="postMeta.file"
-        (change)="uploadFile()"
-      />
+        <div class="mdl-card minds-album minds-album-create mdl-color--blue-grey-500" *ng-if="toggle.value">
+
+          <div class="mdl-card__title">
+            <input
+              type="text"
+              #newalbum
+
+              />
+            <button class="mdl-button mdl-button--colored mdl-color-text--white" (click)="createAlbum(newalbum); toggle.value = false">Create</button>
+
+          </div>
+
+        </div>
+
+        <div
+          class="mdl-progress mdl-js-progress mdl-progress__indeterminate"
+          [hidden]="albums.length > 0 && !inProgress"
+          [mdl]
+          ></div>
+        <div *ng-for="#album of albums"
+          class="mdl-card minds-album mdl-color--blue-grey-50 mdl-color-text--blue-grey-500"
+          [ng-class]="{'mdl-color--blue-grey-500': postMeta.album_guid == album.guid, 'mdl-color-text--blue-grey-50': postMeta.album_guid == album.guid}"
+          (click)="selectAlbum(album)">
+
+            <div class="mdl-card__title" [ng-class]="{'mdl-color-text--blue-grey-50': postMeta.album_guid == album.guid}">
+              <h2>{{album.title}}</h2>
+            </div>
+
+        </div>
+      </div>
+
+    </div>
 
 
-      <button
-        type="submit"
-        class="mdl-button mdl-button--raised mdl-button--colored"
-        >
-        Post
-      </button>
 
-  </form>
+  <!-- Upload output -->
+  <div class="mdl-cell mdl-cell--8-col">
 
-</div>
+    <form class="mdl-card">
+      <div class="mdl-card__actions" style="display:flex;">
+          <div class="upload-button">
+            <button class="mdl-button mdl-button--raised">
+              <i class="material-icons">attachment</i>
+              <span>Add file</span>
+            </button>
 
-<div class="mdl-grid capture-grid" style="max-width:900px">
-  <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp" *ng-for="#upload of uploads; #i = index">
-    <input
-      type="text"
-      [(ng-model)]="upload.name"
-      (change)="modify(i)"
-      />
-    <br/>
-    {{upload.progress}}/100
+            <input
+              type="file"
+              id="file"
+              name="file"
+              [(ng-model)]="postMeta.file"
+              (change)="add()"
+              multiple
+              />
+          </div>
+
+          <div class="mdl-layout-spacer"></div>
+
+          <button class="mdl-button mdl-button--raised mdl-button--colored" (click)="publish()" [disabled]="!uploads">
+            <span>Save to album</span>
+          </button>
+      </div>
+    </form>
+
+    <div class="mdl-card mdl-shadow--2dp minds-upload" *ng-for="#upload of uploads; #i = index">
+      <div class="mdl-card__title">
+        <input
+          type="text"
+          [(ng-model)]="upload.name"
+          (change)="modify(i)"
+          />
+      </div>
+
+      <div class="mdl-progress mdl-js-progress"
+        [mdl-upload]
+        [progress]="upload.progress"
+        ></div>
+    </div>
   </div>
+
 </div>

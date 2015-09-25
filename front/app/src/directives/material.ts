@@ -2,6 +2,7 @@ import { Directive, ViewContainerRef, ProtoViewRef, Type } from 'angular2/angula
 import { Material as MaterialService } from "src/services/ui";
 
 import { MaterialTextfield } from './material/text-field';
+import { MaterialUpload } from './material/upload';
 
 @Directive({
   selector: '[mdl]',
@@ -15,4 +16,4 @@ export class Material{
   }
 }
 
-export const MDL_DIRECTIVES: Type[] = [Material, MaterialTextfield];
+export const MDL_DIRECTIVES: Type[] = [Material, MaterialTextfield, MaterialUpload];

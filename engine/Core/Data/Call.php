@@ -131,6 +131,10 @@ class Call extends core\base{
 		return $guid;
 	}
 
+	public function insertBatch($rows = array()){
+			return $this->cf->batch_insert($rows);
+	}
+
 	/**
 	 * Performs a standard get. NOTE - this will not return ordered content.
 	 *
