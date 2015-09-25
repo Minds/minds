@@ -30,7 +30,7 @@
        display:flex;
        box-sizing:border-box;
 
-       a {
+       > * {
          display:flex;
          flex-direction: column;
          flex:auto;
@@ -39,6 +39,24 @@
        }
        .selected{
          color:$minds-blue !important;
+       }
+       i{
+         vertical-align: middle;
+       }
+
+        counter.has-value:before{
+          content:'( ';
+        }
+       counter{
+         font-family:"Lato", "Helvetica", "Roboto", sans-serif;
+         display:inline-block;
+         font-size:12px;
+        // font-weight:bold;
+         vertical-align: middle;
+         padding:0 $minds-padding;
+       }
+       counter.has-value:after{
+         content:' )';
        }
      }
 
