@@ -100,7 +100,10 @@ if($user->canEdit() ){
 	}
 }
 ?>
-<a href="<?=$user->getURL()?>" class="name"><h1><?= $user->name ?></h1></a>
+<a href="<?=$user->getURL()?>" class="name">
+    <h1><?= $user->name ?></h1>
+    <p>@<?= $user->username ?></p>
+</a>
 <?php //$user->website ? elgg_view('output/url', array('text'=>$user->website, 'href'=>$user->website)) : false ?>
 
 <?php 

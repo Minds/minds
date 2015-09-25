@@ -6,6 +6,7 @@ import { SessionFactory } from 'src/services/session';
 import { Register } from './register';
 
 @Component({
+  selector: 'minds-login',
   viewBindings: [ Client ]
 })
 @View({
@@ -21,7 +22,7 @@ export class Login {
   hideLogin : boolean = false;
   inProgress : boolean = false;
 
-	constructor(public client : Client, @Inject(Router) public router: Router){
+	constructor(public client : Client, public router: Router){
 		window.componentHandler.upgradeDom();
 	}
 

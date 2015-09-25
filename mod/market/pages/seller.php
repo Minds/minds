@@ -22,7 +22,7 @@ class seller extends core\page implements interfaces\page{
 					$content = ' ';
 					break;
 				}
-				$content = core\entities::view(array('guids'=>$guids, 'full_view'=>false, 'list_class'=>'minds-market-order-items', 'masonry'=>false));
+				$content = core\Entities::view(array('guids'=>$guids, 'full_view'=>false, 'list_class'=>'minds-market-order-items', 'masonry'=>false));
 				break;
 		}
 		

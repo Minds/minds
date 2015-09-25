@@ -37,9 +37,9 @@ class minds extends base{
 		/**
 		 * Load session info
 		 */
-		new session();
+		new Session();
 
-        Security\XSRF::setCookie();
+    Security\XSRF::setCookie();
 
 		/**
 		 * Boot the system, @todo this should be oop?
@@ -65,8 +65,6 @@ class minds extends base{
 		 * System loaded and ready
 		 */
 		\elgg_trigger_event('ready', 'system');
-
-		//new logger();
 
 	}
 
@@ -98,15 +96,15 @@ class minds extends base{
 	public function loadLegacy(){
 		// load the rest of the library files from engine/lib/
 		$lib_files = array(
-			'elgglib.php', 'access.php', 'actions.php', 'admin.php', 'annotations.php', 'cache.php',
+			'elgglib.php', 'access.php', 'actions.php', 'annotations.php',
 			'calendar.php', 'configuration.php', 'cron.php', 'database.php',
 			'entities.php', 'export.php', 'extender.php', 'filestore.php', 'group.php',
-			'input.php', 'languages.php', 'location.php', 
+			'input.php', 'languages.php', 'location.php',
 			'memcache.php', 'metadata.php', 'metastrings.php', 'navigation.php',
 			'notification.php', 'objects.php', 'opendd.php', 'output.php',
 			'pagehandler.php', 'pageowner.php', 'pam.php', 'plugins.php',
-			'private_settings.php', 'relationships.php', 'river.php', 'sessions.php',
-			'sites.php', 'statistics.php', 'system_log.php', 'tags.php',
+			'private_settings.php', 'sessions.php',
+			'sites.php', 'statistics.php',
 			'user_settings.php', 'users.php', 'upgrade.php', 'views.php',
 			'web_services.php', 'widgets.php', 'xml.php', 'xml-rpc.php',
 

@@ -8,6 +8,7 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
+use Minds\Helpers;
 use minds\entities;
 use minds\interfaces;
 use Minds\Api\Factory;
@@ -39,7 +40,7 @@ class newsfeed implements interfaces\api{
       		  break;
     	    case 'network':
             $options = array(
-                'network' => isset($pages[1]) ? $pages[1] : core\session::getLoggedInUserGuid()
+                'network' => isset($pages[1]) ? $pages[1] : core\Session::getLoggedInUserGuid()
             );
             break;
           case 'container':
@@ -49,7 +50,10 @@ class newsfeed implements interfaces\api{
             break;
         }
 
-        $activity = core\entities::get(array_merge(array(
+        //daily campaign reward
+        Helpers\Campaigns\DailyRewards::reward();
+
+        $activity = core\Entities::get(array_merge(array(
             'type' => 'activity',
             'limit' => get_input('limit', 5),
             'offset'=> get_input('offset', '')
@@ -62,16 +66,18 @@ class newsfeed implements interfaces\api{
 
         if($pages[0] == 'network'){
             try{
-                $boost = Core\Boost\Factory::build("Newsfeed")->getBoost();
-                if($boost && $boost['guid']){
-                    $boost_guid = $boost['guid'];
-                    $boost_object = new entities\activity($boost['guid']);
-                    $boost_object->boosted = true;
-                    array_unshift($activity, $boost_object);
-                    if(get_input('offset')){
-                        //bug: sometimes views weren't being calculated on scroll down
-                        \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
-                        \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                $boosts = Core\Boost\Factory::build("Newsfeed")->getBoosts();
+                foreach($boosts as $boost){
+                    if($boost && $boost['guid']){
+                        $boost_guid = $boost['guid'];
+                        $boost_object = new entities\activity($boost['guid']);
+                        $boost_object->boosted = true;
+                        array_unshift($activity, $boost_object);
+                        if(get_input('offset')){
+                            //bug: sometimes views weren't being calculated on scroll down
+                            \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
+                            \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                        }
                     }
                 }
             }catch(\Exception $e){
@@ -101,16 +107,16 @@ class newsfeed implements interfaces\api{
         switch($pages[0]){
             case 'remind':
                 $embeded = new entities\entity($pages[1]);
-                $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+                $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
 
-                if($embeded->owner_guid != Core\session::getLoggedinUser()->guid){
+                if($embeded->owner_guid != Core\Session::getLoggedinUser()->guid){
                     $cacher = \Minds\Core\Data\cache\Factory::build();
-                    if(!$cacher->get(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
-                        $cacher->set(Core\session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
+                    if(!$cacher->get(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
+                        $cacher->set(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
 
-                        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
+                        \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
                         \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
                     }
                 }
@@ -148,15 +154,32 @@ class newsfeed implements interfaces\api{
             break;
             default:
                 $activity = new entities\activity();
-
-                if(isset($_POST['message']) && $_POST['message'])
+                //error_log(print_r($_POST, true));
+                if(isset($_POST['message']))
                     $activity->setMessage(urldecode($_POST['message']));
 
                 if(isset($_POST['title']) && $_POST['title']){
-                        $activity->setTitle($_POST['title'])
-                            ->setBlurb(urldecode($_POST['description']))
-                            ->setURL(\elgg_normalize_url(urldecode($_POST['url'])))
-                            ->setThumbnail(urldecode($_POST['thumbnail']));
+                    $activity->setTitle(urldecode($_POST['title']))
+                        ->setBlurb(urldecode($_POST['description']))
+                        ->setURL(\elgg_normalize_url(urldecode($_POST['url'])))
+                        ->setThumbnail(urldecode($_POST['thumbnail']));
+                }
+
+                if(isset($_POST['attachment_guid']) && $_POST['attachment_guid']){
+                  $attachment = entities\Factory::build($_POST['attachment_guid']);
+                  if(!$attachment)
+                    break;
+                  $attachment->title = $activity->message;
+                  $attachment->access_id = 2;
+                  $attachment->save();
+
+                  $activity->setCustom('batch', array(
+                    array(
+                      'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
+                      'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid
+                    )))
+                      ->setFromEntity($attachment)
+                      ->setTitle($attachment->message);
                 }
 
                 if(isset($_POST['container_guid']))

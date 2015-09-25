@@ -6,7 +6,7 @@ namespace Minds\Core\Navigation;
 
 class Manager{
 
-	static private $items = array();
+	static private $containers = array();
 
 	static private function defaults(){
 		$newsfeed = new Item();
@@ -79,31 +79,39 @@ class Manager{
 
 	/**
 	 * Add an item to the Navigation
+	 * @param Item $item - the item to add to the navigation
+	 * @param string $container - the container to add the item to
 	 * @return void
 	 */
-	static public function add($item){
+	static public function add($item, $container = "sidebar"){
 		if($item instanceof Item)
-			self::$items[] = $item;
+			self::getContainer($container)->add($item);
+	}
+
+	/**
+	 * Indepotent get or create container
+	 * @param string $container - the name or ID of the container
+	 * @return Container
+	 */
+	static private function getContainer($container){
+		if(!isset(self::$containers[$container]))
+			self::$containers[$container] = new Container();
+		return self::$containers[$container];
 	}
 
 	/**
 	 * Return items
+	 * @param string $container - the container to export
 	 * @return array
 	 */
-	static public function export(){
+	static public function export($container = NULL){
 		self::defaults();
-		$items = array();
+		$containers = array();
 
-		usort(self::$items, function($a, $b){
-			if($a->getPriority() > $b->getPriority())
-				return 1;
-			return -1;
-		});
-
-		foreach(self::$items as $item){
-			$items[] = $item->export();
+		foreach(self::$containers as $id => $container){
+			$containers[$id] = $container->export();
 		}
-		return $items;
+		return $containers;
 	}
 
 }

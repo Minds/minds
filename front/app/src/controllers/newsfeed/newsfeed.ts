@@ -1,17 +1,19 @@
-import { Component, View, NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/angular2';
-import { Client } from 'src/services/api';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
+import { ROUTER_DIRECTIVES } from 'angular2/router';
+import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { Activity } from './activity';
 import { MindsActivityObject } from 'src/interfaces/entities';
+import { SessionFactory } from 'src/services/session';
 
 @Component({
   selector: 'minds-newsfeed',
-  viewBindings: [ Client ]
+  viewBindings: [ Client, Upload ]
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
-  directives: [ Activity, NgFor, NgIf, Material, FORM_DIRECTIVES, InfiniteScroll ]
+  directives: [ Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
 })
 
 export class Newsfeed {
@@ -20,17 +22,23 @@ export class Newsfeed {
 	offset : string = "";
   inProgress : boolean = false;
   moreData : boolean = true;
+  session = SessionFactory.build();
+  minds;
 
-  postMeta = {
+  attachment_preview;
+
+  postMeta : any = {
     title: "",
     description: "",
     thumbnail: "",
     url: "",
-    active: false
+    active: false,
+    attachment_guid: null
   }
 
-	constructor(public client: Client){
+	constructor(public client: Client, public upload: Upload){
 		this.load();
+    this.minds = window.Minds;
 	}
 
 	/**
@@ -75,24 +83,67 @@ export class Newsfeed {
 	 */
 	post(){
 		var self = this;
-		this.client.post('api/v1/newsfeed', this.postMeta)
-				.then(function(data){
-					self.load(true);
-          console.log(data);
-          //reset
-          self.postMeta = {
-            message: "",
-            title: "",
-            description: "",
-            thumbnail: "",
-            url: "",
-            active: false
-          }
-				})
-				.catch(function(e){
-					console.log(e);
-				});
+
+    this.client.post('api/v1/newsfeed', this.postMeta)
+      .then(function(data){
+  			self.load(true);
+        console.log(data);
+        //reset
+        self.postMeta = {
+          message: "",
+          title: "",
+          description: "",
+          thumbnail: "",
+          url: "",
+          active: false,
+          attachment_guid: null
+        }
+        self.attachment_preview = null;
+  		})
+  		.catch(function(e){
+  			console.log(e);
+  		});
 	}
+
+  uploadAttachment(){
+    var self = this;
+    var file : any = document.getElementById("file");
+    console.log(file);
+    var fileInfo = file ? file.files[0] : null;
+
+    if(!fileInfo)
+      return;
+
+    /**
+     * Give a live preview
+     */
+    var reader  = new FileReader();
+    reader.onloadend = () => {
+      this.attachment_preview = reader.result;
+    }
+    reader.readAsDataURL(fileInfo);
+
+    /**
+     * Upload to the archive and return the attachment guid
+     */
+    this.upload.post('api/v1/archive', [fileInfo], this.postMeta)
+      .then((response : any) => {
+        self.postMeta.attachment_guid = response.guid;
+      });
+
+  }
+
+  removeAttachment(){
+    var self = this;
+    var file : any = document.getElementById("file");
+    file.value = "";
+
+    this.attachment_preview = null;
+    this.client.delete('api/v1/archive/' + this.postMeta.attachment_guid)
+      .then((response) => {
+        self.postMeta.attachment_guid = null;
+      });
+  }
 
   /**
    * Get rich embed data

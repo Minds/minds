@@ -53,7 +53,7 @@
           <span>Views</span>
           <b>{{user.impressions}}</b>
         </a>
-        <subscribe-button [user]="user" class="mdl-tabs__tab"></subscribe-button>
+        <subscribe-button [user]="user" class="mdl-tabs__tab" *ng-if="session.getLoggedInUser().guid != user.guid"></subscribe-button>
     </div>
   </div>
 </header>

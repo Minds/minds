@@ -31,7 +31,7 @@ class start extends Components\Plugin{
 				return new entities\order($row);
 		});
 		
-		$routes = core\router::registerRoutes($this->registerRoutes());
+		$routes = core\Router::registerRoutes($this->registerRoutes());
 		
 		\elgg_extend_view('css/elgg', 'market/css', 800);
 		

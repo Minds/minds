@@ -27,7 +27,6 @@ class start extends \ElggPlugin{
 				return new entities\notification($row);
 		});
 
-		core\router::registerRoutes($this->registerRoutes());
     Api\Routes::add('v1/notifications', "minds\\plugin\\notifications\\api\\v1\\notifications");
     Api\Routes::add('v1/invite', "minds\\plugin\\notifications\\api\\v1\\invite");
 
@@ -38,77 +37,16 @@ class start extends \ElggPlugin{
 			->setName('Notifications')
 			->setTitle('Notificaitons')
 			->setPath('/notifications')
+			->setExtras(array(
+				'counter' => (int) Core\Session::isLoggedIn() ? self::getCount() : 0
+			)),
+			"topbar"
 		);
-
-		elgg_register_event_handler('pagesetup', 'system', 'notifications_plugin_pagesetup');
-		elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
-
-		// Unset the default notification settings
-		\elgg_unregister_plugin_hook_handler('usersettings:save', 'user', 'notification_user_settings_save');
 
 		\elgg_register_plugin_hook_handler('notification', 'all', array($this,'createNotification'));
 
-		//\elgg_register_event_handler('create', 'object', 'notifications_notify');
-
-		\elgg_extend_view('js/elgg','js/notifications/notify');
-		\elgg_extend_view('css/elgg','notifications/css');
-
 		\elgg_register_event_handler('create', 'all', array($this, 'createHook'));
 
-
-		/*$actions_base = elgg_get_plugins_path() . 'notifications/actions';
-		elgg_register_action("notificationsettings/save", "$actions_base/save.php");
-		elgg_register_action("notificationsettings/groupsave", "$actions_base/groupsave.php");*/
-	}
-
-	/**
-	 * Page registrations
-	 *
-	 * @return bool
-	 */
-	public function registerRoutes(){
-		$path = "minds\\plugin\\notifications";
-		return array(
-			'/notifications' => "$path\\pages\\view",
-			'/notifications/count' => "$path\\pages\\count"
-		);
-	}
-
-	/**
-	 * Notifications pagesetup
-	 * - Adds the 'notifier' icon to the header
-	 */
-	public function pageSetup(){
-		if (\elgg_is_logged_in()) {
-
-			//\elgg_extend_view('page/elements/topbar', 'notifications/popup');
-
-			$class = "notification notifier entypo";
-			$text = "<span class='$class'>&#59141;</span>";
-			$tooltip = \elgg_echo("notification");
-
-			// get unread messages
-			$num_notifications = $this->getCount();
-			if ($num_notifications > 0) {
-				$class = "notification notifier entypo new";
-				$text = "<span class='$class'>&#59141;" .
-							"<span class=\"notification-new\">$num_notifications</span>" .
-						  "</span>";
-				$tooltip .= " (" . \elgg_echo("notifications:unread", array($num_notifications)) . ")";
-			}
-
-			\elgg_register_menu_item('notifications', array(
-				'name' => 'notification',
-				'href' => '/notifications',
-			//	'rel' => 'popup',
-				'text' => $text,
-				'priority' => 600,
-				'class' => 'entypo',
-				'title' => $tooltip,
-				'id'=>'notify_button',
-				'section' => 'alt',//this is custom to the minds theme.
-			));
-		}
 	}
 
 	/**
@@ -211,27 +149,29 @@ class start extends \ElggPlugin{
 		//	}
             $message = "";
 
+            $params['title'] = htmlspecialchars_decode( $params['title']);
+            $params['description'] = htmlspecialchars_decode( $params['description'] );
             switch($params['notification_view']){
                 case "friends":
-		    $message = \Minds\Core\session::getLoggedinUser()->name . " subscribed to you";
+		    $message = \Minds\Core\Session::getLoggedinUser()->name . " subscribed to you";
 		    break;
 	        case "comment":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " commented: " . $params['description'];
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " commented: " . $params['description'];
                     break;
                 case "like":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " voted up " . $params['title'];
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " voted up " . $params['title'];
                     break;
                 case "tag":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " mentioned you in a post: " . $params['description'];
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " mentioned you in a post: " . $params['description'];
                     break;
                 case "remind":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " reminded " . $params['title'];
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " reminded " . $params['title'];
                     break;
                 case "boost_gift":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " view";
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " gifted you " . $params['impressions'] . " view";
                     break;
                 case "boost_request":
-                    $message = \Minds\Core\session::getLoggedinUser()->name . " has requested a boost for " . $params['points'] . " points";
+                    $message = \Minds\Core\Session::getLoggedinUser()->name . " has requested a boost for " . $params['points'] . " points";
                     break;
                 case "boost_accepted":
                     $message = $params['impressions'] . " views for " . $params['title'] . ' were accepted';

@@ -13,5 +13,6 @@
 /// <reference path="../../../tsd_typings/tsd.d.ts" />
 
 /*
- * http override (fixes syntax bug)
+ * ng-test
  */
+/// <reference path="./ng2_test.d.ts" />

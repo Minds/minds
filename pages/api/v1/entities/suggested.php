@@ -62,11 +62,11 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
 	    $ts = microtime(true);
         switch($pages[1]){
             case 'video':
-                $result= Data\Client::build('Neo4j')->requestRead($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'video', $_GET['skip']));
+                $result= Data\Client::build('Neo4j')->requestRead($prepared->getSuggestedObjects(Core\Session::getLoggedInUser()->guid, 'video', $_GET['skip']));
                 
                 $rows = $result->getRows();
                 if(!$rows){
-                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getObjects(Core\session::getLoggedInUser()->guid, 'video'));
+                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getObjects(Core\Session::getLoggedInUser()->guid, 'video'));
                     $rows = $result->getRows();
                 }              
  
@@ -84,11 +84,11 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
                 }
                 break;
             case 'image':
-                $result= Data\Client::build('Neo4j')->requestRead($prepared->getSuggestedObjects(Core\session::getLoggedInUser()->guid, 'image', $_GET['skip']));
+                $result= Data\Client::build('Neo4j')->requestRead($prepared->getSuggestedObjects(Core\Session::getLoggedInUser()->guid, 'image', $_GET['skip']));
 
                 $rows = $result->getRows();
                 if(!$rows){
-                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getObjects(Core\session::getLoggedInUser()->guid, 'image'));
+                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getObjects(Core\Session::getLoggedInUser()->guid, 'image'));
                     $rows = $result->getRows();
                 }
                 
@@ -102,7 +102,7 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
             
                 if(isset($_GET['nearby']) && $_GET['nearby'] === "true"){
                     //error_log($_GET['coordinates']);
-                    $p = $prepared->getUserByLocation(Core\session::getLoggedInUser(), isset($_GET['coordinates']) && $_GET['coordinates'] != "false" ? $_GET['coordinates'] : NULL, isset($_GET['distance']) ? $_GET['distance'] : 25, 12, $_GET['skip']);
+                    $p = $prepared->getUserByLocation(Core\Session::getLoggedInUser(), isset($_GET['coordinates']) && $_GET['coordinates'] != "false" ? $_GET['coordinates'] : NULL, isset($_GET['distance']) ? $_GET['distance'] : 25, 12, $_GET['skip']);
                     if($p)
                         $result= Data\Client::build('Neo4j')->requestRead($p);
                     else 
@@ -111,7 +111,7 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
                          return Factory::response(array('status'=>'error', 'message'=>'not found'));
                     }
                 } else {                
-                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getSubscriptionsOfSubscriptions(Core\session::getLoggedInUser(), $_GET['skip']));
+                    $result= Data\Client::build('Neo4j')->requestRead($prepared->getSubscriptionsOfSubscriptions(Core\Session::getLoggedInUser(), $_GET['skip']));
                 }
 
                 $rows = $result->getRows();
@@ -129,7 +129,7 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
         
 	    $options['guids'] = $guids;
  
-        $entities = Core\entities::get($options);
+        $entities = Core\Entities::get($options);
         $boost = Core\Boost\Factory::build("Suggested")->getBoost();
         if($boost && $boost['guid']){
             $boost_guid = $boost['guid'];
@@ -177,8 +177,8 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
         switch($pages[0]){
             case 'pass':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
-                Core\Data\Client::build('Neo4j')->request($prepared->createPass(Core\session::getLoggedinUser()->guid, $pages[1]));
-                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $pages[1], 'pass');
+                Core\Data\Client::build('Neo4j')->request($prepared->createPass(Core\Session::getLoggedinUser()->guid, $pages[1]));
+                \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[1], 'pass');
                 break;
             case 'acted':
                 Helpers\Counters::increment($boost, "boost_swipes", 1);

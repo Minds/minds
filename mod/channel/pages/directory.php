@@ -66,7 +66,7 @@ class directory extends core\page implements interfaces\page{
 				break;
 				
 			case 'sites':
-				$content = core\entities::view(array('subtype'=>'node', 'limit'=>$limit, 'offset'=>$offset, 'directory_output'=>true,  'list_class'=>"nodes-directory-list"));
+				$content = core\Entities::view(array('subtype'=>'node', 'limit'=>$limit, 'offset'=>$offset, 'directory_output'=>true,  'list_class'=>"nodes-directory-list"));
 
 				//$content = elgg_view('minds_nodes/directory', array('nodes'=>$nodes));
 				break;
@@ -90,7 +90,7 @@ class directory extends core\page implements interfaces\page{
 			    }
 				break;
             case 'suggested':
-                if(!\Minds\Core\session::isLoggedin())
+                if(!\Minds\Core\Session::isLoggedin())
                     exit;
                 $client = \Minds\Core\Data\Client::build('Neo4j');
                 $prepared = new Prepared\Common();

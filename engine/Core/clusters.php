@@ -19,7 +19,7 @@ class clusters extends base{
 		 * Register our page end points
 		 */
 		$path = "minds\\pages\\clusters";
-		router::registerRoutes(array(
+		Router::registerRoutes(array(
 			"/api/v1/cluster" => "$path\\index",
 			"/api/v1/cluster/authenticate" => "$path\\authenticate",
 			"/api/v1/clusyer/subscriptions" => "$path\\subscriptions"

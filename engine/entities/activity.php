@@ -129,15 +129,27 @@ class activity extends entity{
 		$export = parent::export();
 		if($this->entity_guid)
 			$export['entity_guid'] = (string) $this->entity_guid;
-       		$export['impressions'] = $this->getImpressions();
-            $export['reminds'] = $this->getRemindCount();
-            if($this->message)
-                $export['message'] = strip_tags($this->message);
-         if($this->entity_guid){
-                $export['thumbs:up:count'] = Helpers\Counters::get($this->entity_guid,'thumbs:up');
-                $export['thumbs:down:count'] = Helpers\Counters::get($this->entity_guid,'thumbs:down');
-            }
-      		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
+
+   	$export['impressions'] = $this->getImpressions();
+    $export['reminds'] = $this->getRemindCount();
+
+    if($this->message)
+        $export['message'] = strip_tags($this->message);
+
+		if($this->entity_guid && !$this->remind_object){
+		    $export['thumbs:up:count'] = Helpers\Counters::get($this->entity_guid,'thumbs:up');
+		    $export['thumbs:down:count'] = Helpers\Counters::get($this->entity_guid,'thumbs:down');
+		} elseif($this->remind_object){
+			if($this->remind_object['entity_guid']){
+				$export['thumbs:up:count'] = Helpers\Counters::get($this->remind_object['entity_guid'],'thumbs:up');
+				$export['thumbs:down:count'] = Helpers\Counters::get($this->remind_object['entity_guid'],'thumbs:down');
+			} else {
+				$export['thumbs:up:count'] = Helpers\Counters::get($this->remind_object['guid'],'thumbs:up');
+				$export['thumbs:down:count'] = Helpers\Counters::get($this->remind_object['guid'],'thumbs:down');
+			}
+		}
+
+		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 
 		return $export;
 	}

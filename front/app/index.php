@@ -54,12 +54,12 @@ ini_set( 'display_errors','1');
     <script>
         <?php
             $minds = array(
-                "LoggedIn" => Minds\Core\session::isLoggedIn() ? true : false,
+                "LoggedIn" => Minds\Core\Session::isLoggedIn() ? true : false,
                 "cdn_url" => Minds\Core\Config::get('cdn_url'),
                 "navigation" => Minds\Core\Navigation\Manager::export()
               );
-            if(Minds\Core\session::isLoggedIn()){
-                $minds['user'] = Minds\Core\session::getLoggedinUser()->export();
+            if(Minds\Core\Session::isLoggedIn()){
+                $minds['user'] = Minds\Core\Session::getLoggedinUser()->export();
             }
         ?>
         window.Minds = <?= json_encode($minds, JSON_PRETTY_PRINT) ?>;

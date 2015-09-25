@@ -46,7 +46,7 @@ class page extends base{
 	 * No actions should use the GET method, instead all POST request, unless specifically stated via the $csrf attribute, will be featured. 
 	 */
 	public function checkCSRF(){
-		if(!session::isLoggedIn())
+		if(!Session::isLoggedIn())
 			return true;
 
 		if(empty($_POST))

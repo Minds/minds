@@ -98,7 +98,7 @@ $user->save();
  * Configure plugins
  */
 $db = new Minds\Core\Data\Call('plugin', $args['cassandra_keyspace'], array($args['cassandra_server']));
-$plugins = array('channel', 'thumbs', 'payments', 'blog', 'guard', 'notifications', 'groups', 'gatherings', 'archive');
+$plugins = array('channel', 'thumbs', 'payments', 'blog', 'guard', 'notifications', 'groups', 'gatherings', 'archive', 'search');
 foreach($plugins as $plugin){
   $db->insert($plugin, array('type'=>'plugin', 'active'=>1, 'access_id'=>2));
 }

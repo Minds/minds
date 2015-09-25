@@ -47,7 +47,7 @@ class channel extends core\page implements interfaces\page{
 			return true;
 		}
 		
-		$carousels = core\entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
+		$carousels = core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
 		$carousel = elgg_view('carousel/carousel', array('items'=>$carousels));
 	
 		$post = elgg_view_form('activity/post', array('action'=>'newsfeed/post', 'enctype'=>'multipart/form-data', 'class'=> elgg_get_logged_in_user_guid() == $user->guid ? 'enable-social-share' : ''),array('to_guid'=>$user->guid));
@@ -215,7 +215,7 @@ class channel extends core\page implements interfaces\page{
 			case 'votes':
 				$guids = \minds\plugin\thumbs\helpers\lists::getUserThumbsGuids($user, false, array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
 				if($guids)
-					$content .= core\entities::view(array('guids'=>$guids, 'full_view'=>false, 'list_class' => 'list-newsfeed'));
+					$content .= core\Entities::view(array('guids'=>$guids, 'full_view'=>false, 'list_class' => 'list-newsfeed'));
 				$class = 'single-column';
 				break;
 			case 'news':
@@ -223,7 +223,7 @@ class channel extends core\page implements interfaces\page{
 			default:
 				\elgg_register_plugin_hook_handler('register', 'menu:entity', array('\minds\pages\newsfeed\newsfeed', 'pageSetup'));
 				//$content = elgg_list_river(array('type'=>'timeline','owner_guid'=>'personal:'.$user->guid, 'list_class'=>'minds-list-river'));
-				$entities = \Minds\Core\entities::get(array(
+				$entities = \Minds\Core\Entities::get(array(
 					'type' => 'activity',
 					'limit' => get_input('limit', 5),
                     'offset' => get_input('offset', ""),

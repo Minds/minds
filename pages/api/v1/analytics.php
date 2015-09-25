@@ -47,6 +47,22 @@ class analytics implements interfaces\api{
         switch($pages[0]){
             case 'open':
                 Helpers\Analytics::increment("app-opens");
+                //CAMPAIGN:: Reward 10 points per day if a user opens their app
+                $db = new Core\Data\Call('entities_by_time');
+                $ts = Helpers\Analytics::buildTS("day", time());
+                $row = $db->getRow("analytics:rewarded:day:$ts", array('offset'=>Core\Session::getLoggedinUser()->guid, 'limit'=>1));
+                if(!$row || key($row) != Core\Session::getLoggedinUser()->guid){
+                  $db->insert("analytics:rewarded:day:$ts", array(Core\Session::getLoggedinUser()->guid => time()));
+
+                  \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 10, Core\Session::getLoggedinUser()->guid, "Daily login reward.");
+                  Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                      'to'=>array(Core\Session::getLoggedinUser()->guid),
+                      'from' => 100000000000000519,
+                      'notification_view' => 'custom_message',
+                      'params' => array('message'=>"We gave you 10 points for logging in!"),
+                      'message'=>"We gave you 10 points for logging in!"
+                      ));
+                }
             break;
         }
 

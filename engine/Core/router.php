@@ -6,7 +6,7 @@ namespace Minds\Core;
 
 use Minds\Helpers;
 
-class router{
+class Router{
 
 	// these are core pages, other pages are registered by plugins
 	static $routes = array(
@@ -36,18 +36,8 @@ class router{
     if($method == 'post' && !$_POST)
         $this->postDataFix();
 
-		if(session::isLoggedin())
+		if(Session::isLoggedin())
 			Helpers\Analytics::increment("active");
-
-		//@todo handler the homepage better
-		if(count($segments) == 1 && $segments[0] == ""){
-	    	//we load the homepage controller
-			$handler = new \minds\pages\index();
-            if(method_exists($handler, $method))
-                return $handler->$method(array());
-            else
-                exit;
-	    }
 
 		$loop = count($segments);
 		while($loop >= 0){
@@ -70,37 +60,28 @@ class router{
 			--$loop;
 		}
 
+		if(!$this->legacyRoute($uri))
+			include(dirname(dirname(dirname((__FILE__)))) . '/front/public/index.php');
+
 	}
 
 	/**
 	 * Legacy fallback...
 	 */
-	public function legacyRoute($handler, $page){
+	public function legacyRoute($uri){
+
+		$path = explode('/', substr($uri,1));
+		$handler = array_shift($path);
+		$page = implode('/',$path);
 
 		new page(false); //just to load init etc
 
 		if (!\page_handler($handler, $page)) {
-			//try a profile then
-			if(!\page_handler('channel', "$handler/$page")){
-				//forward('', '404');
-				header("HTTP/1.0 404 Not Found");
-				$buttons = \elgg_view('output/url', array('onclick'=>'window.history.back()', 'text'=>'Go back...', 'class'=>'elgg-button elgg-button-action'));
-				$header = <<<HTML
-<div class="elgg-head clearfix">
-	<h2>404</h2>
-	<h3>Ooooopppsss.... we couldn't find the page you where looking for! </h3>
-	<div class="front-page-buttons">
-		$buttons
-	</div>
-</div>
-HTML;
-				$body = \elgg_view_layout( "one_column", array(
-							'content' => null,
-							'header'=>$header
-						));
-				echo \elgg_view_page('404', $body);
-			}
+			return false;
 		}
+
+		return true;
+
 	}
 
 	/**

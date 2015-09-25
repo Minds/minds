@@ -21,7 +21,7 @@ class start extends Components\Plugin{
 		 * Register our page end points
 		 */
 		$path = "minds\\plugin\\cms";
-		core\router::registerRoutes(array(
+		core\Router::registerRoutes(array(
 				'/p' => "$path\\pages\\page",
 				'/p/header' => "$path\\pages\\header",
 				'/s' => "$path\\pages\\sections",
@@ -146,7 +146,7 @@ class start extends Components\Plugin{
 		if(!$guids)
 			$sections = array();
 		else
-			$sections = core\entities::get(array('guids'=>$guids));
+			$sections = core\Entities::get(array('guids'=>$guids));
 		$return .= elgg_view('cms/sections', array('sections'=>$sections, 'group'=>'index'));
 		$return .= $add;
 		

@@ -10,7 +10,7 @@ use Minds\Helpers;
  */
 class Newsfeed implements BoostHandlerInterface{
 
-    private $db;    
+    private $db;
 
     public function __construct($options = array(), Data\Interfaces\ClientInterface $db = NULL){
         if($db){
@@ -19,7 +19,7 @@ class Newsfeed implements BoostHandlerInterface{
             $this->db = Data\Client::build('MongoDB');
         }
     }
- 
+
     /**
      * Boost an entity
      * @param object/int $entity - the entity to boost
@@ -32,9 +32,9 @@ class Newsfeed implements BoostHandlerInterface{
         } else {
             $guid = $entity;
         }
-        return $this->db->insert("boost", array('guid'=>$guid, 'impressions'=>$impressions, 'state' => 'review', 'type'=> 'newsfeed'));
+        return $this->db->insert("boost", array('guid'=>$guid, 'owner_guid'=>Core\Session::getLoggedinUser()->guid, 'impressions'=>$impressions, 'state' => 'review', 'type'=> 'newsfeed'));
     }
-    
+
      /**
      * Return boosts for review
      * @param int $limit
@@ -53,7 +53,7 @@ class Newsfeed implements BoostHandlerInterface{
         }
         return $boosts;
     }
-    
+
     /**
      * Return the review count
      * @return int
@@ -63,7 +63,7 @@ class Newsfeed implements BoostHandlerInterface{
         $count = $this->db->count("boost", $query);
         return $count;
     }
-    
+
     /**
      * Accept a boost
      * @param mixed $_id
@@ -106,9 +106,9 @@ class Newsfeed implements BoostHandlerInterface{
         $boost_data= $this->db->find("boost", array('_id' => $_id));
         $boost_data->next();
         $boost = $boost_data->current();
-        
+
         $this->db->remove("boost", array('_id'=>$_id));
-        
+
         $entity = new \Minds\entities\activity($boost['guid']);
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
             'to'=>array($entity->owner_guid),
@@ -119,15 +119,20 @@ class Newsfeed implements BoostHandlerInterface{
             ));
         return true;//need to double check somehow..
     }
-    
+
     /**
      * Return a boost
      * @return array
      */
     public function getBoost($offset = ""){
+        $boosts = $this->getBoosts(1);
+        return $boosts[0];
+    }
+
+    public function getBoosts($limit = 2){
         $cacher = Core\Data\cache\factory::build('apcu');
-        $mem_log =  $cacher->get(Core\session::getLoggedinUser()->guid . ":seenboosts") ?: array();
-          
+        $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts") ?: array();
+
         $boosts = $this->db->find("boost", array('type'=>'newsfeed', 'state'=>'approved'));
 
         if(!$boosts){
@@ -135,7 +140,11 @@ class Newsfeed implements BoostHandlerInterface{
         }
         $boosts->sort(array('_id'=> 1));
         $boosts->limit(15);
+        $return = array();
         foreach($boosts as $boost){
+            if(count($return) >= $limit){
+                break;
+            }
             if(in_array((string)$boost['_id'], $mem_log)){
                 continue; // already seen
             }
@@ -145,7 +154,7 @@ class Newsfeed implements BoostHandlerInterface{
             Helpers\Counters::increment((string) $boost['_id'], "boost_impressions", 1);
             //get the current impressions count for this boost
             Helpers\Counters::increment(0, "boost_impressions", 1);
-            $count = Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false); 
+            $count = Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
 
             if($count > $impressions){
                 //remove from boost queue
@@ -163,9 +172,10 @@ class Newsfeed implements BoostHandlerInterface{
                 continue; //max count met
             }
             array_push($mem_log, (string) $boost['_id']);
-            $cacher->set(Core\session::getLoggedinUser()->guid . ":seenboosts", $mem_log, (12 * 3600));
-            return $boost;
+            $cacher->set(Core\Session::getLoggedinUser()->guid . ":seenboosts", $mem_log, (12 * 3600));
+            $return[] = $boost;
         }
+        return $return;
     }
-        
+
 }

@@ -4,7 +4,7 @@
  */
 $notification = elgg_extract('entity', $vars);
 
-$from =  Minds\Core\entities::build(new minds\entities\entity($notification->from_guid));
+$from =  Minds\Core\Entities::build(new minds\entities\entity($notification->from_guid));
 
 if(!$from){
 	return false;

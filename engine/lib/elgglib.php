@@ -267,9 +267,6 @@ function elgg_get_loaded_css() {
  * @return void
  */
 function elgg_register_external_file($type, $name, $url, $location, $priority = 500) {
-	if($location == 'head')
-		$location = 'header';
-	Minds\Core\resources::register($name, $url, $type, $location, $priority);
 }
 
 /**
@@ -282,7 +279,6 @@ function elgg_register_external_file($type, $name, $url, $location, $priority = 
  * @since 1.8.0
  */
 function elgg_unregister_external_file($type, $name) {
-	Minds\Core\resources::unRegister($name, $type);
 }
 
 /**
@@ -295,7 +291,6 @@ function elgg_unregister_external_file($type, $name) {
  * @since 1.8.0
  */
 function elgg_load_external_file($type, $name) {
-	Minds\Core\resources::load($name, $type);
 }
 
 /**
@@ -308,9 +303,6 @@ function elgg_load_external_file($type, $name) {
  * @since 1.8.0
  */
 function elgg_get_loaded_external_files($type, $location) {
-	if($location == 'head')
-		$location = 'header';
-	return Minds\Core\resources::getLoaded($type, $location);
 }
 
 /**
@@ -417,8 +409,8 @@ function system_messages($message = null, $register = "success", $count = false)
 	static $messageSet = false;
 	$cookie_id = 'mindsMessages';
 	$messages = isset($_COOKIE[$cookie_id]) ? json_decode($_COOKIE[$cookie_id], true) : array('error'=>array(), 'success'=>array());
-	
-	
+
+
 	if(!is_null($message)){
 		if($register == 'error'){
 			$messages['error'][] = $message;
@@ -430,8 +422,8 @@ function system_messages($message = null, $register = "success", $count = false)
 		$messageSet = false;
 		return;
 	}
-	
-	
+
+
 	if (!$count) {
 		if(isset($_COOKIE[$cookie_id]) && !$messageSet)
 			setcookie($cookie_id, '', time()-36000, '/');
@@ -538,7 +530,7 @@ function register_error($error) {
  * @example events/all.php      Example of how to use the 'all' keyword.
  * @deprecated Use Minds\Core\Events
  */
-function elgg_register_event_handler($event, $object_type, $callback, $priority = 500) { 
+function elgg_register_event_handler($event, $object_type, $callback, $priority = 500) {
 	return \Minds\Core\Events\Dispatcher::register($event, "elgg/event/$object_type", $callback, $priority); // Register event with new system, but prefix it in the oldstyle namespace
 	/*global $CONFIG;
 
@@ -728,7 +720,7 @@ function elgg_trigger_event($event, $object_type, $object = null) {
  * @deprecated Use Minds\Core\Events
  */
 function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 500) {
-    return \Minds\Core\Events\Dispatcher::register($hook, "elgg/hook/$type", $callback, $priority); 
+    return \Minds\Core\Events\Dispatcher::register($hook, "elgg/hook/$type", $callback, $priority);
 }
 
 /**
@@ -881,7 +873,7 @@ function _elgg_php_exception_handler($exception) {
 		$body .= "<p><b>User:</b> $username</p>";
 		$body .= "<p><b>Stack:</b></p>";
 	    $body .= nl2br(htmlentities(print_r($exception, true), ENT_QUOTES, 'UTF-8'));
-	
+
 		//elgg_send_email('minds@minds.com', 'mark@minds.com', 'Exception ' . get_class($vars['object']), nl2br(htmlentities(print_r($vars['object'], true), ENT_QUOTES, 'UTF-8')));
 		if(function_exists('phpmailer_send')){
 			phpmailer_send(
@@ -898,7 +890,7 @@ function _elgg_php_exception_handler($exception) {
 		}
 
 		echo file_get_contents(dirname(dirname(dirname(__FILE__))) . '/errors/500.html');
-		
+
 	} catch (Exception $e) {
 		$timestamp = time();
 		$message = $e->getMessage();
@@ -933,7 +925,7 @@ function _elgg_php_exception_handler($exception) {
  */
 function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars = array()) {
 	$error = date("Y-m-d H:i:s (T)") . ": \"$errmsg\" in file $filename (line $linenum)";
-	
+
 	switch ($errno) {
 		case E_USER_ERROR:
 			error_log("PHP ERROR: $error");
@@ -946,7 +938,7 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars = a
 		case E_WARNING :
 		case E_USER_WARNING :
 		case E_RECOVERABLE_ERROR: // (e.g. type hint violation)
-			
+
 			// check if the error wasn't suppressed by the error control operator (@)
 			if (error_reporting()) {
 				error_log("PHP WARNING: $error");
@@ -982,9 +974,9 @@ function recordStats(){
 register_shutdown_function('fatalErrorShutdownHandler');
 
 function fatalErrorShutdownHandler(){
-	
+
 	$last_error = error_get_last();
-	
+
 	if($last_error['type'] == E_ERROR){
 		error_log('Fatal error: '.nl2br(htmlentities(print_r($last_error, true), ENT_QUOTES, 'UTF-8')));
 		// Wipe any existing output buffer
@@ -992,7 +984,7 @@ function fatalErrorShutdownHandler(){
 		_elgg_php_error_handler($last_error['type'], $last_error['message'], $last_error['file'], $last_error['line']);
 		// Wipe any existing output buffer
 		ob_end_clean();
-		header('Fatal error', true, 500);	
+		header('Fatal error', true, 500);
 
 		echo file_get_contents(dirname(dirname(dirname(__FILE__))) . '/errors/500.html');
 	}
@@ -1019,7 +1011,7 @@ function fatalErrorShutdownHandler(){
  */
 function elgg_log($message, $level = 'NOTICE') {
 	global $CONFIG;
-	
+
 	// only log when debugging is enabled
 	if (isset($CONFIG->debug)) {
 		// debug to screen or log?
@@ -1070,7 +1062,7 @@ function elgg_log($message, $level = 'NOTICE') {
  */
 function elgg_dump($value, $to_screen = TRUE, $level = 'NOTICE') {
 	global $CONFIG;
-	
+
 	// plugin can return false to stop the default logging method
 	$params = array(
 		'level' => $level,
@@ -1087,7 +1079,7 @@ function elgg_dump($value, $to_screen = TRUE, $level = 'NOTICE') {
 	if (!isset($CONFIG->pagesetupdone)) {
 		$to_screen = FALSE;
 	}
-	
+
 	if ($to_screen == TRUE) {
 		echo '<pre>';
 		print_r($value);
@@ -1130,11 +1122,11 @@ function elgg_deprecated_notice($msg, $dep_version, $backtrace_level = 1) {
 	// if it's a 1 minor release behind, visual and logged
 	// if it's for current minor release, logged.
 	// bugfixes don't matter because we are not deprecating between them
-	
+
 	if (!$dep_version) {
 		return false;
 	}
-	
+
 	$elgg_version = get_version(true);
 	$elgg_version_arr = explode('.', $elgg_version);
 	$elgg_major_version = (int)$elgg_version_arr[0];
@@ -1161,15 +1153,15 @@ function elgg_deprecated_notice($msg, $dep_version, $backtrace_level = 1) {
 	// function itself.
 	$msg .= " Called from ";
 	$stack = array();
-	
+
 	return false;
-$backtrace = @debug_backtrace(false, 3); 
+$backtrace = @debug_backtrace(false, 3);
 	if(!$backtrace)
 		return false; //something is odd
 	// never show this call.
 	array_shift($backtrace);
 	$i = count($backtrace);
-	
+
 	foreach ($backtrace as $trace) {
 		$stack[] = "[#$i] {$trace['file']}:{$trace['line']}";
 		$i--;
@@ -1181,11 +1173,11 @@ $backtrace = @debug_backtrace(false, 3);
 			$backtrace_level--;
 		}
 	}
-	
+
 	$msg .= implode("<br /> -> ", $stack);
-	
+
 	elgg_log($msg, 'WARNING');
-	
+
 	return true;
 }
 
@@ -1752,7 +1744,7 @@ function elgg_css_page_handler($page) {
 		// default css
 		$page[0] = 'elgg';
 	}
-	
+
 	return elgg_cacheable_view_page_handler($page, 'css');
 }
 
@@ -1795,13 +1787,13 @@ function elgg_cacheable_view_page_handler($page, $type) {
 		preg_match($regex, $page, $matches);
 		$view = $matches[1];
 		$return = elgg_view("$type/$view");
-	
+
 		if($type == 'js'){
 		//	$return = JSMin::minify($return);
 		} elseif($type == 'css'){
 			$return = CssMin::minify($return);
 		}
-	
+
 		header("Content-type: $content_type");
 
 		// @todo should js be cached when simple cache turned off
@@ -1963,7 +1955,7 @@ function elgg_walled_garden_index($hook, $type, $value, $params) {
 
 	elgg_load_css('elgg.walled_garden');
 	elgg_load_js('elgg.walled_garden');
-	
+
 	$content = elgg_view('core/walled_garden/login');
 
 	$params = array(
@@ -2063,11 +2055,6 @@ function _elgg_engine_boot() {
 
 	_elgg_load_site_config();
 
-	//_elgg_session_boot();
-
-	_elgg_load_cache();
-
-	_elgg_load_translations();
 }
 
 /**
@@ -2083,7 +2070,7 @@ function elgg_init() {
 	global $CONFIG;
 
 	$base_url = isset($CONFIG->cdn_url) ? $CONFIG->cdn_url : elgg_get_site_url();
-	
+
 	elgg_register_action('comments/add');
 	elgg_register_action('comments/delete');
 
@@ -2095,7 +2082,7 @@ function elgg_init() {
 	elgg_register_js('jquery.ui.autocomplete.html', $base_url . 'vendors/jquery/jquery.ui.autocomplete.html.js','footer');
 	elgg_register_js('elgg.userpicker', $base_url . 'js/lib/ui.userpicker.js','footer');
 	elgg_register_js('elgg.friendspicker', $base_url . 'js/lib/ui.friends_picker.js','head');//because of inline code
-	
+
 	elgg_register_js('jquery.autocomplete', $base_url . 'vendors/jquery/jquery.autocomplete.min.js');
 	elgg_register_js('jquery.easing', $base_url . 'vendors/jquery/jquery.easing.1.3.packed.js');
 	elgg_register_js('elgg.avatar_cropper', $base_url . 'js/lib/ui.avatar_cropper.js', 'footer');
@@ -2103,10 +2090,10 @@ function elgg_init() {
 	elgg_register_js('elgg.ui.river', $base_url . 'js/lib/ui.river.js','footer');
 
 	elgg_register_css('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect-0.9.8/css/imgareaselect-deprecated.css');
-	
+
 	// Trigger the shutdown:system event upon PHP shutdown.
 	register_shutdown_function('_elgg_shutdown_hook');
-	
+
 	// Sets a blacklist of words in the current language.
 	// This is a comma separated list in word:blacklist.
 	// @todo possibly deprecate
@@ -2121,13 +2108,13 @@ function elgg_init() {
 
 /**
  * Check if this is a multisite
- * 
+ *
  * @return bool
  */
 function minds_is_multisite(){
 	if(isset($CONFIG->multisite))
 		return true;
-	
+
 	return false;
 }
 

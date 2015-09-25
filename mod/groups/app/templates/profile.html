@@ -49,7 +49,7 @@
       <!-- Avatars of latest users -->
       <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="group.members">
         <a [router-link]="['/channel', {username: member.username}]" *ng-for="#member of group.members">
-          <img src=""/>
+          <img src="{{minds.cdn_url}}/icon/{{member.guid}}/small"/>
         </a>
       </div>
       <div class="mdl-card__supporting-text mdl-color-text--grey-600">

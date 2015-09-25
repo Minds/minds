@@ -256,7 +256,7 @@ class Common implements Interfaces\PreparedInterface{
      */
     public function createVoteUP($guid, $subtype, $user_guid = NULL){
         if(!$user_guid)
-            $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
+            $user_guid = \Minds\Core\Session::getLoggedinUser()->guid;
         //error_log("NEO4j vote up for $guid :: $subtype :: $user_guid");
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
                             "(object:$subtype {guid: {object_guid}}) " . 
@@ -277,7 +277,7 @@ class Common implements Interfaces\PreparedInterface{
      */
     public function createVoteDOWN($guid, $subtype, $user_guid = NULL){
         if(!$user_guid)
-            $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
+            $user_guid = \Minds\Core\Session::getLoggedinUser()->guid;
         //error_log("NEO4j vote down for $guid :: $subtype :: $user_guid");
 
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
@@ -298,7 +298,7 @@ class Common implements Interfaces\PreparedInterface{
      */
     public function getActed($guids, $user_guid = NULL){
         if(!$user_guid)
-                        $user_guid = \Minds\Core\session::getLoggedinUser()->guid;
+                        $user_guid = \Minds\Core\Session::getLoggedinUser()->guid;
 
         foreach($guids as $k => $guid){
             $guids[$k] = (string) $guid;

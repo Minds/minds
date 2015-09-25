@@ -13,6 +13,7 @@ class Item{
 	private $icon = "home";
 	private $class = "";
 	private $priority = 500;
+	private $extras = array();
 
 	/**
 	 * Set name
@@ -150,6 +151,24 @@ class Item{
 	}
 
 	/**
+	 * Set extras
+	 * @param array $extras
+	 * @return $this
+	 */
+	public function setExtras($extras = array()){
+		$this->extras = $extras;
+		return $this;
+	}
+
+	/**
+	 * Get extras
+	 * @return array
+	 */
+	public function getExtras(){
+ 		return $this->extras;
+ 	}
+
+	/**
 	 * Export the item to an array
 	 * @return array
 	 */
@@ -166,7 +185,8 @@ class Item{
 			"title" => $this->title,
 			"text" => $this->name,
 			"icon" => $this->icon,
-			"class" => $this->class
+			"class" => $this->class,
+			"extras" => $this->extras
 		);
 	}
 

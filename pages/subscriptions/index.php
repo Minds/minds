@@ -47,7 +47,7 @@ class index extends core\page implements interfaces\page{
 					}
 					
 					
-					if(core\session::getLoggedinUser()->subscribe($user->guid)){
+					if(core\Session::getLoggedinUser()->subscribe($user->guid)){
 									
 						\system_message('Success!');
 						
@@ -69,7 +69,7 @@ class index extends core\page implements interfaces\page{
 				try{
 	
 					$parts = explode('@', $_POST['address']);
-					$data = core\clusters::call('POST', "https://$parts[1]", '/api/v1/subscriptions/subscribe/'.$parts[0], array_merge(core\session::getLoggedinUser()->export(), array(
+					$data = core\clusters::call('POST', "https://$parts[1]", '/api/v1/subscriptions/subscribe/'.$parts[0], array_merge(core\Session::getLoggedinUser()->export(), array(
 								'guid'=>elgg_get_logged_in_user_guid(), 
 								'host'=>elgg_get_site_url()
 								)));
@@ -77,7 +77,7 @@ class index extends core\page implements interfaces\page{
 
 					$data['success']['host'] = "https://$parts[1]/";
 					
-					if(core\session::getLoggedinUser()->subscribe($data['success']['guid'], $data['success'])){
+					if(core\Session::getLoggedinUser()->subscribe($data['success']['guid'], $data['success'])){
 						\system_message('Success!');
 						
 						

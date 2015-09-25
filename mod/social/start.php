@@ -24,7 +24,7 @@ class start extends Components\Plugin{
 		 * Register our page end points
 		 */
 		$path = "minds\\plugin\\social";
-		core\router::registerRoutes(array(
+		core\Router::registerRoutes(array(
 		    '/plugin/social/redirect' => "$path\\pages\\redirect",
 	            '/plugin/social/authorize' => "$path\\pages\\authorize"
                 ));
@@ -85,7 +85,7 @@ class start extends Components\Plugin{
 	
 	static public function userConfiguredServices($user = NULL){
 		if(!$user)
-			$user = core\session::getLoggedinUser();
+			$user = core\Session::getLoggedinUser();
 		
 		$services = array();
 		foreach(self::$services as $service){

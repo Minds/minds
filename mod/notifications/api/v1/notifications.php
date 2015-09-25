@@ -30,12 +30,12 @@ class notifications implements interfaces\api{
        if(!$guids){
             $response = array();
         } else {
-            $notifications = core\entities::get(array('guids'=>$guids));
+            $notifications = core\Entities::get(array('guids'=>$guids));
             $response['notifications'] = factory::exportable($notifications);
             foreach($response['notifications'] as $k => $data){
                 $owner = new \minds\entities\user($data['owner_guid']);
                 $from = new \minds\entities\user($data['from_guid']);
-                $entity = \Minds\Core\entities::build(new \minds\entities\entity($data['object_guid']));
+                $entity = \Minds\Core\Entities::build(new \minds\entities\entity($data['object_guid']));
                 $response['notifications'][$k]['ownerObj'] = $owner->export();
                 $response['notifications'][$k]['fromObj'] = $from->export();
 		        $response['notifications'][$k]['fromObj']['guid'] = (string) $from->guid;
@@ -57,7 +57,7 @@ class notifications implements interfaces\api{
      * Not supported
      */
     public function post($pages){
-//        if(!Core\session::isLoggedIn()){
+//        if(!Core\Session::isLoggedIn()){
   //         header("HTTP/1.1 401 Unauthorized");
     //        error_log('not logged in, but trying to register push notification id');
       //     exit;
@@ -72,7 +72,7 @@ class notifications implements interfaces\api{
                     'token'=>$device_id
                     ));
        
-        $user_guid = Core\session::getLoggedinUser()->guid;
+        $user_guid = Core\Session::getLoggedinUser()->guid;
         $db = new Core\Data\Call('entities');
         $db->insert($user_guid, array('surge_token' => $token));
         

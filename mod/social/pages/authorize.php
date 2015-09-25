@@ -19,7 +19,7 @@ class authorize extends core\page implements interfaces\page{
 
         if($_REQUEST['access_token']){
             setcookie('loggedin', 1, time() + (60 * 60 * 24 * 30), '/'); 
-            $_SESSION['user'] = core\session::getLoggedinUser(); //hate this hack..    
+            $_SESSION['user'] = core\Session::getLoggedinUser(); //hate this hack..    
         }
 
 		try{

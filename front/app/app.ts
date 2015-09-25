@@ -3,7 +3,7 @@ import {RouteConfig, Route, ROUTER_DIRECTIVES, ROUTER_BINDINGS} from 'angular2/r
 import {HTTP_BINDINGS} from 'angular2/http';
 
 import {Topbar} from './src/components/topbar';
-import {Navigation} from './src/components/navigation';
+import {SidebarNavigation} from './src/components/sidebar-navigation';
 
 import {Login} from './src/controllers/login';
 import {Logout} from './src/controllers/logout';
@@ -14,6 +14,7 @@ import {Capture} from './src/controllers/capture/capture';
 import {Discovery} from './src/controllers/discovery/discovery';
 import {Channel, ChannelSubscribers, ChannelSubscriptions} from './src/controllers/channels/channel';
 import {Notifications} from './src/controllers/notifications/notifications';
+import {Search} from './src/controllers/search/search';
 
 /**
  * TODO: Load these automagically from gulp
@@ -53,6 +54,8 @@ import {Wallet} from './src/plugins/payments/payments';
 
   { path: '/wallet', component: Wallet, as: 'wallet'},
 
+  { path: '/search', component: Search, as: 'search' },
+
   { path: '/:username', component: Channel, as: 'channel' },
   { path: '/:username/:filter', component: Channel, as: 'channel-filter' },
 
@@ -60,10 +63,10 @@ import {Wallet} from './src/plugins/payments/payments';
 ])
 @View({
   templateUrl: './templates/index.html',
-  directives: [Topbar, Navigation, ROUTER_DIRECTIVES]
+  directives: [Topbar, SidebarNavigation, ROUTER_DIRECTIVES]
 })
 
-class Minds {
+export class Minds {
   name: string;
 
   constructor() {

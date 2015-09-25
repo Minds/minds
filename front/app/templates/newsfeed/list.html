@@ -2,45 +2,67 @@
 
     <div class="mdl-cell mdl-cell--8-col">
 
-        <div class="mdl-card mdl-shadow--4dp post">
+        <div class="mdl-card mdl-shadow--4dp post" *ng-if="session.isLoggedIn()">
+
+            <div class="minds-avatar">
+              <a [router-link]="['/channel', {username: session.getLoggedInUser().username}]">
+                <img src="{{minds.cdn_url}}/icon/{{session.getLoggedInUser().guid}}/medium" class="mdl-shadow--2dp"/>
+              </a>
+            </div>
 
             <form #postobj="form" (submit)="post()">
 
-                <div class="mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
-                    <textarea
-                      ng-control="message"
-                      class="mdl-textfield__input"
-                      type="text"
-                      id="message"
-                      #message
-                      [(ng-model)]="postMeta.message"
-                      (keyup)="getPostPreview(message)"
-                    ></textarea>
-                    <label class="mdl-textfield__label" for="message">Status</label>
+                <textarea
+                  ng-control="message"
+                  class="mdl-textfield__input"
+                  type="text"
+                  id="message"
+                  #message
+                  [(ng-model)]="postMeta.message"
+                  (keyup)="getPostPreview(message)"
+                  placeholder="Enter your status here"
+                ></textarea>
+
+                <div class="mdl-card__actions">
+                  <!-- Attachements -->
+                  <div class="attachment-button" [ng-class]="{'mdl-color-text--amber-500': attachment_preview}">
+                    <i class="material-icons">attachment</i>
+                    <input type="file" type="file" id="file" name="attachment" (change)="uploadAttachment()"/>
+                  </div>
+
+                  <button
+                    type="submit"
+                    class="mdl-button"
+                    >
+                    Post
+                  </button>
                 </div>
-
-                <div class="post-preview" *ng-if="postMeta.active">
-                  <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="postMeta.title"></div>
-                  <div class="minds-rich-embed" *ng-if="postMeta.title">
-
-                    <a>
-                      <img src="{{postMeta.thumbnail}}" />
-                    </a>
-                    <a class="meta mdl-color-text--blue-grey-900">
-            		      <h2 class="mdl-card__title-text">{{postMeta.title}}</h2>
-                      <p>{{postMeta.description}}</p>
-                    </a>
-            	    </div>
-                </div>
-
-                <button
-                  type="submit"
-                  class="mdl-button mdl-button--raised mdl-button--colored"
-                  >
-                  Post
-                </button>
 
             </form>
+
+            <!-- Rich embed preview -->
+            <div class="post-preview" *ng-if="postMeta.active">
+              <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="postMeta.title"></div>
+              <div class="minds-rich-embed" *ng-if="postMeta.title">
+
+                <a>
+                  <img src="{{postMeta.thumbnail}}" />
+                </a>
+                <a class="meta mdl-color-text--blue-grey-900">
+                  <h2 class="mdl-card__title-text">{{postMeta.title}}</h2>
+                  <p>{{postMeta.description}}</p>
+                </a>
+              </div>
+            </div>
+
+            <!-- Attachment preview -->
+            <div class="post-preview" *ng-if="attachment_preview" (click)="removeAttachment()">
+              <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="attachment_preview"></div>
+              <img [src]="attachment_preview" class="attachment-preview"/>
+              <div class="attachment-preview-delete">
+                <i class="material-icons">delete</i>
+              </div>
+            </div>
 
         </div>
 
@@ -71,16 +93,6 @@
     	</div>
 
       <div class="minds-spacer minds-spacer-2x"></div>
-
-    	<div class="mdl-card mdl-color--amber-500 mdl-shadow--2dp ad mobile-ad">
-        <div class="mdl-card__title">
-          <h2 class="mdl-card__title-text mdl-color-text--white">Mobile</h2>
-        </div>
-
-    		<div class="mdl-card__actions mdl-card--border">
-    			<a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Go Mobile!</a>
-    		</div>
-    	</div>
 
     </div>
 

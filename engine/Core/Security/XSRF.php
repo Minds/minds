@@ -9,7 +9,7 @@ use Minds\Core;
 class XSRF{
  
     public static function buildToken(){
-        $user = Core\session::getLoggedinUser();
+        $user = Core\Session::getLoggedinUser();
         return md5($_SESSION['__elgg_session'] . rand(1000,9000));
     }
     

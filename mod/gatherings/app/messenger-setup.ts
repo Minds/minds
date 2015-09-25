@@ -4,7 +4,8 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Storage } from 'src/services/storage';
 import { Material } from 'src/directives/material';
-import { MindsKeysResponse } from 'src/interfaces/responses';
+import { MindsKeysResponse } from './interfaces/responses';
+import { MindsChannelResponse } from 'src/interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-setup',
@@ -20,42 +21,52 @@ export class MessengerSetup {
   configured: boolean = false;
   data: any = {};
   storage: Storage;
+  show :  boolean = false;
+  inProgress : boolean = false;
 
   constructor(public client: Client){
     this.storage = new Storage();
+    this.checkChatConfiguration();
   }
 
-  setupTest(passwords){
-    console.log(passwords);
-    console.log(passwords.value);
-    passwords.value = {};
-    return true;
+  checkChatConfiguration(){
+    var self = this;
+    this.client.get('api/v1/channel/me', {})
+    .then((me : MindsChannelResponse) => {
+        if (me.channel.chat) {
+          self.configured = true;
+          self.show = true;
+        }
+      });
   }
 
   unlock(password) {
-    console.log("UNLOCK: "+password);
     var self = this;
+    this.inProgress = true;
     this.client.get('api/v1/keys', {
       password: password.value.password,
       new_password: 'abc123'
     })
-    .then(function(data : MindsKeysResponse) {
+    .then((data : MindsKeysResponse) => {
       if (data.key) {
         self.storage.set('private-key', data.key);
-        //$state.go('tab.chat');
       } else {
         alert({
           title: 'Ooops..',
           template: 'We couldn\'t unlock your chat. Please check your password is correct.'
         });
       }
+      this.inProgress = false;
     })
-    .catch(function(error) {
+    .catch((error) =>{
+      this.inProgress = false;
+      console.log(error);
     });
   };
 
   setup(passwords) {
     var self = this;
+    this.inProgress = true;
     if (!passwords.value.password1) {
       alert({
         title: 'Ooops..',
@@ -76,19 +87,20 @@ export class MessengerSetup {
     this.client.post('api/v1/keys/setup', {
       password: passwords.value.password1
     })
-    .then(function(data : MindsKeysResponse) {
+    .then((data : MindsKeysResponse) =>{
       console.log("Data: " + data.key+ " Storage: "+ self.storage);
       if (data.key) {
         self.storage.set('private-key', data.key);
-        //$state.go('tab.chat');
       } else {
         alert({
           title: 'Ooops..',
           template: 'We couldn\'t unlock your chat. Please check your password is correct.'
         });
       }
+      this.inProgress = false;
     })
-    .catch(function(error) {
+    .catch((error) =>{
+      this.inProgress = false;
       console.log(error);
     });
   };

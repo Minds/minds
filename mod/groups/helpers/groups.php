@@ -12,7 +12,7 @@ class Groups{
   static public function getGroups($user, $options = array()){
 
     if(!$user)
-      $user = Core\session::getLoggedInUser();
+      $user = Core\Session::getLoggedInUser();
 
     $options = array_merge(array(
       'limit' => 12,
@@ -27,7 +27,7 @@ class Groups{
     if(!$guids)
       return array();
 
-    $groups = Core\entities::get(array('guids'=>array_keys($guids)));
+    $groups = Core\Entities::get(array('guids'=>array_keys($guids)));
 
     return $groups;
   }

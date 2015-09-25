@@ -29,7 +29,7 @@ class basket extends core\page implements interfaces\page{
 		
 		$guids = array_keys($basket->items);
 		if($guids){
-			$items = core\entities::get(array('guids'=>$guids, 'pagination'=>false));
+			$items = core\Entities::get(array('guids'=>$guids, 'pagination'=>false));
 			foreach($items as $k => $item){
 				$items[$k]->quantity = $basket->items[$item->guid]['quantity'];
 			}

@@ -26,7 +26,7 @@ class thumbs implements interfaces\api{
         $guid = $pages[0];
         $direction = $pages[1];
         
-        $entity = core\entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \minds\entities\entity($guid));
         if(!$entity->guid)
             return Factory::response(array('status'=>'error', 'message'=>'entity not found'));
 
@@ -48,16 +48,16 @@ class thumbs implements interfaces\api{
         $guid = $pages[0];
         $direction = $pages[1];
         
-        $entity = core\entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \minds\entities\entity($guid));
         
         if($entity->guid){
             if(helpers\buttons::hasThumbed($entity, $direction)){
 	            helpers\storage::cancel($direction, $entity);
-                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, -1, $guid, 'vote removed');
+                \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $guid, 'vote removed');
             } else {
 	            helpers\storage::insert($direction, $entity);
-                \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, 1, $guid, 'vote');
-                if($entity->owner_guid != Core\session::getLoggedinUser()->guid){
+                \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $guid, 'vote');
+                if($entity->owner_guid != Core\Session::getLoggedinUser()->guid){
                     \Minds\plugin\payments\start::createTransaction($entity->owner_guid, 1, $guid, 'vote');
                 }
             }
@@ -87,7 +87,7 @@ class thumbs implements interfaces\api{
         $guid = $pages[0];
         $direction = $pages[1];
         
-        $entity = core\entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \minds\entities\entity($guid));
         
         if($entity->guid)
             helpers\storage::cancel($direction, $entity);

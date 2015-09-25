@@ -1,14 +1,15 @@
 <?php
 /**
  * Minds Boost Api endpoint
- * 
+ *
  * @version 1
  * @author Mark Harding
- * 
+ *
  */
 namespace minds\pages\api\v1;
 
 use Minds\Core;
+use Minds\Helpers;
 use minds\entities;
 use minds\interfaces;
 use Minds\Api\Factory;
@@ -20,7 +21,7 @@ class boost implements interfaces\api{
     /**
      * Return impressions/points for a request
      * @param array $pages
-     * 
+     *
      * @SWG\GET(
      *     tags={"boost"},
      *     summary="Returns information regarding a boost, or the current boost rates",
@@ -45,7 +46,7 @@ class boost implements interfaces\api{
      *         }
      *     }
      * )
-     */      
+     */
     public function get($pages){
         $response = array();
 
@@ -54,7 +55,7 @@ class boost implements interfaces\api{
     	        $entity = entities\Factory::build($pages[0]);
     		    $response['entity'] = $entity->export();
         		//going to assume this is a channel only review for now
-    	        $boost_ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+    	        $boost_ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
         		$guids = $boost_ctrl->getReviewQueue(1, $pages[0]);
                 if(!$guids || key($guids) != $pages[0]){
     	    	    return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
@@ -62,15 +63,16 @@ class boost implements interfaces\api{
     	    	$response['points'] = reset($guids);
     	    break;
     	    case "rates":
+              $response['balance'] = (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
     	        $response['rate'] = $this->rate;
-                $response['cap'] = 800;
-                $response['min'] = 5;
+              $response['cap'] = 800;
+              $response['min'] = 5;
     	    break;
             case "p2p":
                 $db = new Core\Data\Call('entities_by_time');
-                $queue_guids = $db->getRow("boost:channel:" . Core\session::getLoggedinUser()->guid  . ":review");
+                $queue_guids = $db->getRow("boost:channel:" . Core\Session::getLoggedinUser()->guid  . ":review");
                 if($queue_guids){
-                    $entities =  core\entities::get(array('guids'=>array_keys($queue_guids)));
+                    $entities =  core\Entities::get(array('guids'=>array_keys($queue_guids)));
                     foreach($entities as $guid =>$entity){
                         $entities[$guid]->points = $queue_guids[$entity->guid];
                     }
@@ -82,21 +84,21 @@ class boost implements interfaces\api{
 
         return Factory::response($response);
     }
-    
+
     /**
      * Boost an entity
      * @param array $pages
-     * 
+     *
      * API:: /v1/boost/:type/:guid
      */
     public function post($pages){
-        
+
         if(!isset($pages[0]))
              return Factory::response(array('status' => 'error', 'message' => ':type must be passed in uri'));
-        
+
         if(!isset($pages[1]))
             return Factory::response(array('status' => 'error', 'message' => ':guid must be passed in uri'));
-        
+
         if(!isset($_POST['impressions']))
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be sent in post body'));
 
@@ -115,9 +117,9 @@ class boost implements interfaces\api{
             else
                 $points = 0 - ($_POST['impressions'] / $this->rate); //make it negative
 
-            \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, $pages[1], "boost");
+            \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[1], "boost");
             //a boost gift
-            if(isset($pages[2]) && $pages[2] != Core\session::getLoggedinUser()->guid){
+            if(isset($pages[2]) && $pages[2] != Core\Session::getLoggedinUser()->guid){
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($pages[2]),
                 'object_guid' => $pages[1],
@@ -127,43 +129,43 @@ class boost implements interfaces\api{
                 ));
             } elseif($pages[0] != 'channel') {
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                'to'=>array(Core\session::getLoggedinUser()->guid),
+                'to'=>array(Core\Session::getLoggedinUser()->guid),
                 'object_guid' => $pages[1],
                 'notification_view' => 'boost_submitted',
                 'params' => array('impressions'=>$_POST['impressions']),
                 'impressions' => $_POST['impressions']
                 ));
-            } 
+            }
         } else {
 	        $response['status'] = 'error';
         }
 
         return Factory::response($response);
-        
+
     }
-    
+
     /**
      * Called when a boost is to be accepted (assume channels only right now
      * @param array $pages
      */
     public function put($pages){
 	    //validate the points
-    	$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+    	$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
 	    $guids = $ctrl->getReviewQueue(1, $pages[0]);
 	    if(!$guids){
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
         }
 	    $points = reset($guids);
-        \Minds\plugin\payments\start::createTransaction(Core\session::getLoggedinUser()->guid, $points, $pages[0], "boost (remind)");
+        \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[0], "boost (remind)");
 	    $accept = $ctrl->accept($pages[0], $points);
 	    return Factory::response(array());
     }
-    
+
     /**
      * Called when a boost is rejected (assume channels only right now)
      */
     public function delete($pages){
-	    $ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\session::getLoggedinUser()->guid));
+	    $ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
         $guids = $ctrl->getReviewQueue(1, $pages[0]);
         if(!$guids){
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
@@ -173,6 +175,5 @@ class boost implements interfaces\api{
         \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $pages[0], "boost refund");
     	$ctrl->reject($pages[0]);
     }
-    
+
 }
-        

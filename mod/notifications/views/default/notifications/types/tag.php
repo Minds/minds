@@ -2,13 +2,16 @@
 
 $notification = elgg_extract('entity', $vars);
 
-$from =  Minds\Core\entities::build(new minds\entities\entity($notification->from_guid));
+$from =  Minds\Core\Entities::build(new minds\entities\entity($notification->from_guid));
 
 if(!$from){
 	return false;
 }
 
-$entity =  Minds\Core\entities::build(new minds\entities\entity($notification->object_guid));
+$entity =  Minds\Core\Entities::build(new minds\entities\entity($notification->object_guid));
+if(!$entity)
+    return false;
+
 
 $body .= elgg_view('output/url', array('href' => $from->getURL(), 'text' => $from->name));
 $body .= ' tagged you in a ';

@@ -18,7 +18,7 @@ class redirect extends core\page implements interfaces\page{
 		}
 
         if($_REQUEST['access_token']){
-                        $_SESSION['user'] = core\session::getLoggedinUser(); //hate this hack..    
+                        $_SESSION['user'] = core\Session::getLoggedinUser(); //hate this hack..    
         }
 
 		try{

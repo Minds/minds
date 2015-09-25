@@ -34,13 +34,13 @@ class twitter extends core\base{
 	}
 	
 	public function authorizeCallback(){
-        if(core\session::getLoggedinUser()->guid && !isset($_REQUEST['client_id'])){
+        if(core\Session::getLoggedinUser()->guid && !isset($_REQUEST['client_id'])){
             $tw = $this->tw();
             $response = $tw->oAuthAccessToken($_REQUEST['oauth_token'], $_REQUEST['oauth_verifier']);
             
-            \elgg_set_plugin_user_setting('twitter', 'enabled', core\session::getLoggedinUser()->guid, 'social');
-            \elgg_set_plugin_user_setting('twitter_access_token', (string) $response['oauth_token'], core\session::getLoggedinUser()->guid, 'social');
-            \elgg_set_plugin_user_setting('twitter_access_secret', (string) $response['oauth_token_secret'], core\session::getLoggedinUser()->guid, 'social');
+            \elgg_set_plugin_user_setting('twitter', 'enabled', core\Session::getLoggedinUser()->guid, 'social');
+            \elgg_set_plugin_user_setting('twitter_access_token', (string) $response['oauth_token'], core\Session::getLoggedinUser()->guid, 'social');
+            \elgg_set_plugin_user_setting('twitter_access_secret', (string) $response['oauth_token_secret'], core\Session::getLoggedinUser()->guid, 'social');
             echo elgg_view('social/callback/twitter');
         } else {
             $tw = $this->tw();
@@ -65,8 +65,8 @@ class twitter extends core\base{
 			return true;
 		$tw = $this->tw();
    
-        $tw->setOAuthToken($this->token ?: \elgg_get_plugin_user_setting('twitter_access_token', core\session::getLoggedinUser()->guid, 'social'));
-		$tw->setOAuthTokenSecret($this->secret ?: \elgg_get_plugin_user_setting('twitter_access_secret', core\session::getLoggedinUser()->guid, 'social'));
+        $tw->setOAuthToken($this->token ?: \elgg_get_plugin_user_setting('twitter_access_token', core\Session::getLoggedinUser()->guid, 'social'));
+		$tw->setOAuthTokenSecret($this->secret ?: \elgg_get_plugin_user_setting('twitter_access_secret', core\Session::getLoggedinUser()->guid, 'social'));
 		$tw->statusesUpdate($message);
         error_log("set API request to twitter");
 

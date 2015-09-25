@@ -53,7 +53,7 @@ class Channel implements interfaces\BoostHandlerInterface{
 
         //send back to use
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                'to'=>array(Core\session::getLoggedinUser()->guid),
+                'to'=>array(Core\Session::getLoggedinUser()->guid),
                 'object_guid' => $guid,
                 'notification_view' => 'boost_submitted_p2p',
                 'params' => array(
@@ -96,7 +96,7 @@ class Channel implements interfaces\BoostHandlerInterface{
 
 
         $embeded = new entities\entity($guid);
-        $embeded = core\entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+        $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
         \Minds\Helpers\Counters::increment($guid, 'remind');
 
         $activity = new entities\activity();

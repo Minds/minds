@@ -39,7 +39,7 @@ class conversations implements interfaces\api{
 
             if($guids){
 
-                $messages = core\entities::get(array('guids'=>$guids));
+                $messages = core\Entities::get(array('guids'=>$guids));
 
                 if($messages){
 
@@ -110,13 +110,13 @@ class conversations implements interfaces\api{
                                                 ->setQueue("Push")
                                                 ->send(array(
                                                      "user_guid"=>$pages[1],
-                                                    "message"=> \Minds\Core\session::getLoggedInUser()->name . " is calling you.",
+                                                    "message"=> \Minds\Core\Session::getLoggedInUser()->name . " is calling you.",
                                                     "uri" => 'call',
                                                     "sound" => 'ringing-1.m4a',
-                                                    "json" => array(
-                                                        "from_guid"=>\Minds\Core\session::getLoggedInUser()->guid,
-                                                        "from_name"=>\Minds\Core\session::getLoggedInUser()->name
-                                                    )
+                                                    "json" => json_encode(array(
+                                                        "from_guid"=>\Minds\Core\Session::getLoggedInUser()->guid,
+                                                        "from_name"=>\Minds\Core\Session::getLoggedInUser()->name
+                                                    ))
                                                 ));
                 break;
             case 'no-answer':
@@ -128,9 +128,10 @@ class conversations implements interfaces\api{
               Core\Queue\Client::build()->setExchange("mindsqueue")
                                         ->setQueue("Push")
                                         ->send(array(
-                                              "user_guid"=>$pages[0],
-                                              "message"=> \Minds\Core\session::getLoggedInUser()->name . " tried to call you.",
-                                              "uri" => 'chat'
+                                              "user_guid"=>$pages[1],
+                                              "message"=> \Minds\Core\Session::getLoggedInUser()->name . " tried to call you.",
+                                              "uri" => 'chat',
+
                                              ));
               break;
             case 'ended':

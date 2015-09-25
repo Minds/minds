@@ -14,7 +14,7 @@ class comments extends \ElggPlugin{
 	 * Initialise the plugin
 	 */
 	public function init(){
-		core\router::registerRoutes($this->registerRoutes());
+		core\Router::registerRoutes($this->registerRoutes());
     Api\Routes::add('v1/comments', "minds\\plugin\\comments\\api\\v1\\comments");
 
 		\elgg_register_plugin_hook_handler('comments', 'all', array($this, 'displayHook'));
@@ -27,22 +27,28 @@ class comments extends \ElggPlugin{
     Core\Events\Dispatcher::register('export:extender', 'all', function($event){
         $params = $event->getParameters();
         $export = array();
+            $cacher = Core\Data\cache\factory::build();
         $db = new Core\Data\Call('entities_by_time');
-        if($params['entity']->entity_guid)
-          $count = $db->countRow('comments:' . $params['entity']->entity_guid);
-        else
-          $count = $db->countRow('comments:' . $params['entity']->guid);
+       if($params['entity']->entity_guid){
+					$guid = $params['entity']->entity_guid;
+        } else {
+          $guid = $params['entity']->guid;
+				}
+
+				$cached = $cacher->get("comments:count:$guid");
+				if($cached !== FALSE){
+					$count = $cached;
+				} else {
+					$count = $db->countRow("comments:$guid");
+					$cacher->set("comments:count:$guid", $count);
+				}
+
+
         $export['comments:count'] = $count;
         $event->setResponse($export);
     });
 
 		\elgg_register_plugin_hook_handler('register', 'menu:comments', array($this,'menu'));
-
-		core\resources::registerView('comments', 'minds_comments');
-		core\resources::load('comments');
-
-		core\resources::registerView('comments', 'minds_comments', 'js', 'footer');
-		core\resources::load('comments', 'js');
 
 	}
 
