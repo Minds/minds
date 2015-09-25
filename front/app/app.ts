@@ -60,9 +60,7 @@ import {Wallet} from './src/plugins/payments/payments';
   { path: '/:username', component: Channel, as: 'channel' },
   { path: '/:username/:filter', component: Channel, as: 'channel-filter' },
 
-  { path: '/', component: Homepage, as: 'homepage' },
-
-  { path: '/boost/:guid/:owner_guid', component: Boost, as: 'boost' }
+  { path: '/', component: Homepage, as: 'homepage' }
 
 ])
 @View({
