@@ -1,0 +1,35 @@
+<div class="mdl-grid" style="max-width:900px">
+
+  <div class="mdl-card mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col minds-settings-menu-container">
+    <ul class="minds-settings-menu">
+      <li class="minds-settings-item" (click)="showSettings('general')">
+        <a class ="mdl-color-text--blue-grey-500">
+          Change your settings
+        </a>
+      </li>
+      <li class="minds-settings-item" (click)="showSettings('statistics')">
+        <a class ="mdl-color-text--blue-grey-500" >
+          Account statistics
+        </a>
+      </li>
+      <li class="minds-settings-item" (click)="showSettings('disableChannel')">
+        <a class ="mdl-color-text--blue-grey-500" >
+          Deactivate channel
+        </a>
+      </li>
+      <li class="minds-settings-item" (click)="showSettings('twoFactor')">
+        <a class ="mdl-color-text--blue-grey-500" >
+          Two factor authentication
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="mdl-card mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--8-col">
+    <minds-settings-general *ng-if="settings == 'general'"></minds-settings-general>
+    <minds-settings-statistics *ng-if="settings == 'statistics'"></minds-settings-statistics>
+    <minds-settings-disable-channel *ng-if="settings == 'disableChannel'"></minds-settings-disable-channel>
+    <minds-settings-two-factor *ng-if="settings == 'twoFactor'"></minds-settings-two-factor>
+  </div>
+
+</div>
