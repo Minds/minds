@@ -45,7 +45,7 @@ class token extends core\page implements interfaces\page{
         );
         
         if($_REQUEST['grant_type'] == 'password')
-            $config['access_lifetime'] = 3600 * 24 * 30;
+            $config['access_lifetime'] = 3600 * 24 * 30 * 6;
         
         $server = new OAuth2\Server($storage, $config, $grantTypes);
 	    $server->addResponseType(new \minds\plugin\oauth2\tokenResponse($storage, $storage, $config), 'token');
