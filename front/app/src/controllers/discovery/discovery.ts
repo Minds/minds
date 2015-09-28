@@ -4,7 +4,7 @@ import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from '../../services/session';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
-import { UserCard, VideoCard, ImageCard } from 'src/controllers/cards/cards';
+import { CARDS } from 'src/controllers/cards/cards';
 import { Activity } from 'src/controllers/newsfeed/activity';
 
 @Component({
@@ -13,7 +13,7 @@ import { Activity } from 'src/controllers/newsfeed/activity';
 })
 @View({
   templateUrl: 'templates/discovery/discovery.html',
-  directives: [ RouterLink, NgFor, NgIf, Material, InfiniteScroll, NgClass, UserCard, VideoCard, ImageCard ]
+  directives: [ RouterLink, NgFor, NgIf, Material, InfiniteScroll, NgClass, CARDS ]
 })
 
 export class Discovery {
