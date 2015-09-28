@@ -1,11 +1,11 @@
-<div  class="mdl-grid" style="width:100%;">
+<div  class="mdl-grid">
 
-  <div class="mdl-grid" *ng-if="(!type)" style="width:100%;">
+  <div class="mdl-grid minds-boost-container" *ng-if="(!type)">
 
     <div class="mdl-cell mdl-cell--6-col">
       <div class="mdl-card__supporting-text">
         <a (click)="showBoost('fullNetwork')">
-          <h1 class="mdl-card__subtitle-text" style="color:#4690D6; font-weight:500;">
+          <h1 class="mdl-card__subtitle-text minds-boost-button-selector">
             Full Network
           </h1>
         </a>
@@ -15,7 +15,7 @@
     <div class="mdl-cell mdl-cell--6-col">
       <div class="mdl-card__supporting-text">
         <a (click)="showBoost('channel')">
-          <h1 class="mdl-card__subtitle-text" style="color:#4690D6; font-weight:500;">
+          <h1 class="mdl-card__subtitle-text minds-boost-button-selector">
             Channel
           </h1>
         </a>

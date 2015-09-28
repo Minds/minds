@@ -50,8 +50,7 @@
 	<minds-button-thumbs-down [object]="activity"></minds-button-thumbs-down>
 	<minds-button-comment [object]="activity"></minds-button-comment>
 	<minds-button-remind [object]="activity"></minds-button-remind>
-	<a class="mdl-button mdl-button--raised mdl-button--colored"
-		 style=" width: 10px; background-color: #4690D6;"
+	<a class="mdl-button mdl-button--raised mdl-button--colored minds-boost-button"
 		 *ng-if ="session.getLoggedInUser().guid == activity.owner_guid"
 		 id="boost-actions"
 		 (click)="showBoost()">
@@ -59,8 +58,8 @@
 	</a>
 </div>
 
-<div class="mdl-card__supporting-text mdl-color--blue-grey-50 tabs" *ng-if="showBoostOptions">
-	<minds-boost [object]="activity" style="width:100%" ></minds-boost>
+<div class="mdl-card__supporting-text mdl-color--blue-grey-50" *ng-if="showBoostOptions">
+	<minds-boost [object]="activity" class="minds-boost-container" ></minds-boost>
 </div>
 
 <div class="mdl-card__menu" *ng-if="!hideTabs">
