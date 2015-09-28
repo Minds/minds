@@ -5,16 +5,16 @@ import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 
 @Component({
-  selector: 'minds-card-video',
+  selector: 'minds-card-album',
   viewBindings: [ Client ],
   properties: ['object']
 })
 @View({
-  templateUrl: 'templates/cards/object/video.html',
+  templateUrl: 'templates/cards/object/album.html',
   directives: [ CORE_DIRECTIVES, NgStyle, Material, RouterLink]
 })
 
-export class VideoCard {
+export class AlbumCard {
   entity : any;
   session = SessionFactory.build();
   minds: {};

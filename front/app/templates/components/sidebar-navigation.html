@@ -12,7 +12,7 @@
   	</a>
 
     <div *ng-for="#subitem of item.submenus" [hidden]="!item.active">
-      <a class="mdl-navigation__link mdl-color-text--white"
+      <a class="mdl-navigation__link mdl-color-text--white subitem"
         [ng-class]="{'mdl-color--blue-grey-500' : subitem.active, 'mdl-color--blue-grey-700': !subitem.active}"
         [router-link]="[subitem.path, subitem.params]"
         >

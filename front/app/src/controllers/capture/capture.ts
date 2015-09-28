@@ -66,10 +66,10 @@ export class Capture {
   /**
    * Add a file to the upload queue
    */
-  add(){
+  add(file : any){
     var self = this;
-    var file : any = document.getElementById("file");
-    for(var i in file.files){
+
+    for(var i = 0; i < file.files.length; i++){
 
       var data : any = {
         guid: null,

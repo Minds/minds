@@ -80,3 +80,40 @@ minds-card-user, .minds-banner-card{
 
   }
 }
+
+minds-card-album{
+  .minds-album-tiles{
+    margin: -16px;
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+
+    > a{
+      flex: auto;
+      width: 30%;
+
+    img{
+      max-height: 100%;
+      max-width: 100%;
+      }
+    }
+  }
+
+  .minds-album-tiles.tiles-1 > a{
+      width:100%;
+  }
+  .minds-album-tiles.tiles-2 > a{
+    width:50%;
+    img{
+      max-height:150%;
+      max-width:150%;
+    }
+  }
+  .minds-album-tiles.tiles-3 >a{
+    width:33%;
+  }
+
+}

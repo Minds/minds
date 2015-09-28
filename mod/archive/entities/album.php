@@ -33,7 +33,10 @@ class album extends object{
 
 	public function getChildrenGuids($limit = 1000000, $offset = ''){
 		$index = new Data\indexes('object:container');
-		return $index->get($this->guid, array('limit'=>$limit, 'offset'=>$offset));
+		if($guids = $index->get($this->guid, array('limit'=>$limit, 'offset'=>$offset))){
+			return array_keys($guids);
+		}
+		return false;
 	}
 
 	public function getChildren(){
@@ -43,8 +46,8 @@ class album extends object{
 
 	public function addChildren($guids){
 		$rows = array();
-		foreach($guids as $guid){
-			$rows[$guid] = array('container_guid' => $album->guid);
+		foreach($guids as $guid => $ts){
+			$rows[$guid] = array('container_guid' => $this->guid);
 		}
 
 		if($rows){
@@ -87,7 +90,7 @@ class album extends object{
 	}
 
 	 public function export(){
-		$this->images = $this->getChildrenGuids();
+		$this->images = $this->getChildrenGuids(5);
 		return parent::export();
 	 }
 }

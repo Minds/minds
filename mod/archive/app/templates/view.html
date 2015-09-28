@@ -1,0 +1,38 @@
+
+<div class="minds-archive-theatre" *ng-if="entity.guid">
+  <div class="minds-archive-stage">
+    <img src="/archive/thumbnail/{{entity.guid}}/xlarge"/>
+  </div>
+</div>
+
+<div class="mdl-grid archive-grid" style="max-width:660px" *ng-if="entity.guid">
+
+  <div class="mdl-grid" style="width:100%">
+    <div class="mdl-cell mdl-cell--12-col">
+      <h1>{{entity.title}}</h1>
+    </div>
+
+    <!-- Owner box -->
+    <div class="mdl-cell mdl-cell--5-col minds-blog-ownerblock">
+
+      <div class="minds-avatar">
+        <a [router-link]="['/channel', {username: entity.ownerObj.username}]">
+          <img src="{{minds.cdn_url}}/icon/{{entity.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
+        </a>
+      </div>
+      <div class="minds-body">
+        <a [router-link]="['/channel', {username: entity.ownerObj.username}]" class="mdl-color-text--blue-grey-500">{{entity.ownerObj.name}}</a>
+        <span>{{ entity.time_created * 1000 | date: 'medium'}}</span>
+      </div>
+    </div>
+    <div class="mdl-cell mdl-cell--6-col minds-blog-actions">
+      <subscribe-button [user]="entity.ownerObj" *ng-if="entity.ownerObj.guid != session.getLoggedInUser().guid"></subscribe-button>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="mdl-grid archive-grid" style="max-width:660px" *ng-if="entity.guid">
+  <minds-comments [object]="entity"></minds-comments>
+</div>

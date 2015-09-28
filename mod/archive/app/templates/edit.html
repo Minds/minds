@@ -1,0 +1,46 @@
+<div class="mdl-grid blogs-grid" style="max-width:900px" *ng-if="error">
+  <h1>{{error}}</h1>
+</div>
+
+<div class="minds-blog-header">
+</div>
+
+<form (submit)="save()" class="mdl-grid blogs-grid" style="max-width:660px">
+
+  <div>
+    <input
+      type="file"
+      id="file"
+      #file
+      (change)="addHeader(file)"
+    />
+
+  </div>
+
+  <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-blog-title" [mdl]>
+    <input
+      class="mdl-textfield__input"
+      type="text"
+      id="name"
+      [(ng-model)]="blog.title"
+      />
+    <label class="mdl-textfield__label" for="name">Title</label>
+  </div>
+
+  <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-blog-descriptions" [mdl]>
+    <textarea
+      class="mdl-textfield__input"
+      type="text"
+      rows= "10"
+      id="body"
+      [(ng-model)]="blog.description"
+      ></textarea>
+    <label class="mdl-textfield__label" for="body">Type your blog here (gui editor to come soon...)</label>
+  </div>
+
+  <div class="minds-blog-save">
+   <button class="mdl-button mdl-button--raised mdl-button--accent" (click)="blog.status = 'draft'">Save (draft)</button>
+   <button class="mdl-button mdl-button--raised mdl-button--colored" (click)="blog.status = 'published'">Publish</button>
+  </div>
+
+</form>

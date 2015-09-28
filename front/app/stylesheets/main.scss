@@ -175,6 +175,14 @@ minds-topbar{
           color: rgba(255, 255, 255, 0.56);
         }
       }
+
+      .mdl-navigation__link.subitem{
+        padding:$minds-padding*1.5 38px;
+        .material-icons {
+          font-size: 24px;
+        }
+      }
+
     }
 
   }

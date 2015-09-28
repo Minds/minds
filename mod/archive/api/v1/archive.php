@@ -65,6 +65,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
                 $image = new \minds\plugin\archive\entities\image();
                 $image->batch_guid = 0;
                 $image->access_id = 2;
+                $image->title = isset($_POST['name']) ? $_POST['name'] : '';
                 $guid = $image->save();
                 $dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";
                 $image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";

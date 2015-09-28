@@ -1,0 +1,23 @@
+.minds-archive-theatre{
+  width: 100%;
+  background-color: #222;
+  align-items: text;
+  overflow: hidden;
+  position: relative;
+  /* max-height: 70vh; */
+  /* max-height: 400px; */
+  height: 70vh;
+
+  .minds-archive-stage{
+    margin: auto;
+    max-width: 60%;
+    height: 100%;
+    position: relative;
+    text-align: center;
+
+    img{
+      max-width:100%;
+      max-height:100%;
+    }
+  }
+}

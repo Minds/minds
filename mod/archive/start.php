@@ -122,7 +122,6 @@ class start extends Components\Plugin{
 				break;
 		}
 
-		return true;
 	}
 
 }

@@ -1,0 +1,7 @@
+{
+  "name": "archive",
+  "version": "1.0.0",
+  "routes": {
+    "/archive": "app/src/archive"
+  }
+}
