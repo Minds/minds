@@ -17,7 +17,8 @@ minds-app{
 .minds-noshadow{
   box-shadow:0 0 0 !important;
 }
-minds-topbar {
+minds-topbar{
+
   .mdl-layout__drawer-button{
     color: rgba(0, 0, 0, 0.54) !important;
   }
@@ -94,47 +95,22 @@ minds-topbar {
     }
   }
 }
-@media screen and (max-width: 790px){
-  minds-topbar {
-    .minds-logo{
-      display:none;
-    }
-    .minds-menu-button{
-      display:block;
-    }
-    .mdl-layout__header-row{
-      padding-left:72px;
-    }
-    minds-search-bar{
-      width:45%;
-    }
-  }
-  .mdl-layout__drawer {
-    top:56px;
-  }
-}
+
 
 .mdl-layout__drawer {
-  width:100px;
+  /*width:100px;*/
+  width:80px;
   //height:calc(100% - 64px);
   //top: 64px;
 }
 .mdl-layout--fixed-drawer>.mdl-layout__content{
-  margin-left:100px;
-}
-.mdl-layout--fixed-drawer:not(.is-small-screen)>.mdl-layout__header{
-  margin-left: 100px;
-  width: calc(100% - 100px);
+  margin-left:80px;
 }
 
-@media screen and (max-width: 850px){
-  .mdl-layout--fixed-drawer>.mdl-layout__content {
-    margin-left:0;
-  }
-}
 
 .minds-sidebar{
   border:0;
+  margin-top:64px;
 
   minds-sidebar-navigation{
     padding-top:0 !important;
@@ -187,19 +163,49 @@ minds-topbar {
         -ms-flex-align: center;
         align-items: center;
         font-weight: 700;
-        padding: 16px 38px;
+        padding: 24px 38px;
         font-weight:200;
         font-size:11px;
         text-transform: lowercase;
         font-family: 'Lato', 'Helvetica', sans-serif;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
 
         .material-icons {
-          font-size: 24px;
+          font-size: 26px;
           color: rgba(255, 255, 255, 0.56);
         }
       }
     }
 
+  }
+}
+
+@media screen and (max-width: 1024px){
+  minds-topbar {
+
+    .minds-menu-button{
+      display:block;
+    }
+    .mdl-layout__header-row{
+      padding-left:72px;
+    }
+    minds-search-bar{
+      width:45%;
+    }
+  }
+  .mdl-layout__drawer {
+    margin-top:56px;
+  }
+  .mdl-layout--fixed-drawer>.mdl-layout__content {
+    margin-left:0;
+  }
+}
+
+@media screen and (max-width: 720px){
+  minds-topbar {
+    .minds-logo{
+      display:none;
+    }
   }
 }
 
@@ -286,3 +292,4 @@ blockquote:after { content: '\201D'; }
 @import 'boost.scss';
 
 @import 'plugins.scss';
+@import 'overrides.scss';

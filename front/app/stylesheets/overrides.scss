@@ -1,0 +1,29 @@
+@import 'defaults.scss';
+/**
+ * Override the basic layout
+ */
+/*.mdl-layout--fixed-drawer:not(.is-small-screen){
+
+   > .mdl-layout__header{
+     margin-left:80px;
+     width:calc(100% - 80px);
+
+     .mdl-layout__header-row{
+       padding-left:28px;
+       padding-right:$minds-padding * 2;
+     }
+   }
+}*/
+
+.mdl-layout--fixed-drawer:not(.is-small-screen){
+
+  > .mdl-layout__header{
+    margin-left:0;
+    width:100%;
+  }
+
+  .mdl-layout__header-row{
+    padding-left:28px;
+    padding-right:$minds-padding * 2;
+  }
+}

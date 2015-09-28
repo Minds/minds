@@ -3,23 +3,22 @@
   <div *ng-for="#item of navigation.getItems()">
 
   	<a class="mdl-navigation__link mdl-color-text--white"
-  		[ng-class]="{'mdl-color--blue-grey-700' : item.active, 'mdl-color--blue-grey-800': !item.active}"
+  		[ng-class]="{'mdl-color--blue-grey-600' : item.active, 'mdl-color--blue-grey-800': !item.active}"
   		[router-link]="[item.path, item.params]"
   		>
 
-  		<i class="mdl-color-text--amber-500 material-icons" [ng-class]="{'mdl-color-text--amber-500' : true}">{{item.icon}}</i>
-  		{{item.text}}
+  		<i class="material-icons" [ng-class]="{'mdl-color-text--blue-grey-100': !item.active, 'mdl-color-text--amber-400' : item.active}">{{item.icon}}</i>
 
   	</a>
 
     <div *ng-for="#subitem of item.submenus" [hidden]="!item.active">
       <a class="mdl-navigation__link mdl-color-text--white"
-        [ng-class]="{'mdl-color--blue-grey-600' : subitem.active, 'mdl-color--blue-grey-700': !subitem.active}"
+        [ng-class]="{'mdl-color--blue-grey-500' : subitem.active, 'mdl-color--blue-grey-700': !subitem.active}"
         [router-link]="[subitem.path, subitem.params]"
         >
 
-        <i class="mdl-color-text--amber-500 material-icons" [ng-class]="{'mdl-color-text--amber-500' : true}">{{subitem.icon}}</i>
-        {{subitem.text}}
+        <i class="material-icons" [ng-class]="{'mdl-color-text--blue-grey-100': !subitem.active, 'mdl-color-text--amber-500' : subitem.active}">{{subitem.icon}}</i>
+        <!--{{subitem.text}}-->
 
       </a>
     </div>
