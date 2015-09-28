@@ -1,4 +1,4 @@
-<minds-archive-theatre [object]="entity" *ng-if="entity.subtype != 'album'" [hidden]="true"></minds-archive-theatre>
+<minds-archive-theatre [object]="entity" *ng-if="entity.subtype != 'album'" [hidden]="entity.subtype != 'album'"></minds-archive-theatre>
 
 <div class="mdl-grid archive-grid" style="max-width:660px" *ng-if="entity.guid">
 
