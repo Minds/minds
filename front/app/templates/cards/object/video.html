@@ -12,7 +12,7 @@
 	</div>
 
 	<div class="body">
-		<a >
+		<a [router-link]="['/archive-view', {guid: entity.guid}]">
 			<strong>{{ entity.title }}</strong>
 		</a>
 		<span>{{ entity.time_created * 1000 | date:'medium' }}</span>

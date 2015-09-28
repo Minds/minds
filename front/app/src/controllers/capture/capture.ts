@@ -1,4 +1,5 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
+import { Router } from 'angular2/router';
 
 import { MDL_DIRECTIVES } from 'src/directives/material';
 import { Upload } from 'src/services/api/upload';
@@ -23,7 +24,7 @@ export class Capture {
   offset : string = "";
   inProgress : boolean = false;
 
-	constructor(public _upload: Upload, public client: Client){
+	constructor(public _upload: Upload, public client: Client, public router: Router){
     this.domListeners();
     this.getAlbums();
 	}
@@ -150,7 +151,7 @@ export class Capture {
     });
     this.client.post('api/v1/archive/albums/' + this.postMeta.album_guid, { guids: guids })
       .then((response : any) => {
-
+      //  self.router.navigate('archive/view/' + this.postMeta.album_guid)
       })
       .catch((e) => {
 

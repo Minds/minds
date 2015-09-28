@@ -1,15 +1,14 @@
-
-<div class="minds-archive-theatre" *ng-if="entity.guid">
-  <div class="minds-archive-stage">
-    <img src="/archive/thumbnail/{{entity.guid}}/xlarge"/>
-  </div>
-</div>
+<minds-archive-theatre [object]="entity" *ng-if="entity.subtype != 'album'" [hidden]="true"></minds-archive-theatre>
 
 <div class="mdl-grid archive-grid" style="max-width:660px" *ng-if="entity.guid">
 
   <div class="mdl-grid" style="width:100%">
     <div class="mdl-cell mdl-cell--12-col">
       <h1>{{entity.title}}</h1>
+      <a class="album_backlink mdl-color-text--blue-grey-400"
+        [router-link]="['/archive-view', {guid: entity.container_guid}]"
+        [hidden]="entity.subtype == 'album'"
+        >Back to album</a>
     </div>
 
     <!-- Owner box -->
@@ -33,6 +32,9 @@
 
 </div>
 
-<div class="mdl-grid archive-grid" style="max-width:660px" *ng-if="entity.guid">
+<minds-archive-grid [object]="entity" *ng-if="entity.subtype == 'album'"></minds-archive-grid>
+
+<!-- Don't show comments for albums -->
+<div class="mdl-grid archive-grid" style="max-width:660px" *ng-if="entity.guid && entity.subtype != 'album'">
   <minds-comments [object]="entity"></minds-comments>
 </div>

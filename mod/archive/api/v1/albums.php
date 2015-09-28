@@ -13,7 +13,7 @@ use minds\interfaces;
 use minds\plugin\archive\entities;
 use Minds\Api\Factory;
 
-class albums implements interfaces\api, interfaces\ApiIgnorePam{
+class albums implements interfaces\api{
 
     /**
      * Return the archive items
@@ -23,7 +23,24 @@ class albums implements interfaces\api, interfaces\ApiIgnorePam{
      */
     public function get($pages){
         $response = array();
+        $album_guid = $pages[0];
 
+        $db = new Core\Data\Call('entities_by_time');
+        $guids = $db->getRow("object:container:$album_guid", array(
+          'limit' => isset($_GET['limit']) ? $_GET['limit'] : 12,
+          'offset' => isset($_GET['offset']) ? $_GET['offset'] : ""
+        ));
+        var_dump($guids);exit;
+
+        $entities = Core\Entities::get(array(
+          'guids' => array_keys($guids)
+        ));
+
+        if($entities){
+          $response["entities"] = Factory::exportable($entities);
+          $response['load-next'] = (string) end($entities)->guid;
+          $response['load-previous'] = (string) reset($entities)->guid;
+        }
 
         return Factory::response($response);
 

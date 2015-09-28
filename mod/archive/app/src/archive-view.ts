@@ -8,13 +8,16 @@ import { SubscribeButton } from 'src/directives/subscribe-button';
 
 import { Comments } from 'src/controllers/comments/comments';
 
+import { ArchiveTheatre } from './views/theatre';
+import { ArchiveGrid } from './views/grid';
+
 @Component({
   selector: 'minds-archive-view',
   viewBindings: [ Client ]
 })
 @View({
   templateUrl: 'templates/plugins/archive/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, SubscribeButton, Comments ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, SubscribeButton, Comments, ArchiveTheatre, ArchiveGrid ]
 })
 
 export class ArchiveView {
@@ -35,7 +38,7 @@ export class ArchiveView {
   load(refresh : boolean = false){
     var self = this;
     this.inProgress = true;
-    this.client.get('api/v1/entities/entity/' + this.guid, {})
+    this.client.get('api/v1/entities/entity/' + this.guid, { children: false })
       .then((response : any) => {
         self.inProgress = false;
         console.log(response);

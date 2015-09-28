@@ -7,6 +7,8 @@
 namespace minds\plugin\archive\entities;
 
 use minds\entities\object;
+use Minds\Api;
+use Minds\Core;
 use Minds\Core\Data;
 
 class album extends object{
@@ -39,9 +41,12 @@ class album extends object{
 		return false;
 	}
 
-	public function getChildren(){
-		//$guids = $this->getChildrenGuids();
-
+	public function getChildren($limit = 12){
+		$guids = $this->getChildrenGuids($limit);
+		if(!$guids)
+			return array();
+		$entities = Core\Entities::get(array('guids'=>$guids));
+		return $entities;
 	}
 
 	public function addChildren($guids){
@@ -90,7 +95,8 @@ class album extends object{
 	}
 
 	 public function export(){
-		$this->images = $this->getChildrenGuids(5);
-		return parent::export();
+		$export = parent::export();
+		$export['images'] = $this->getChildrenGuids(5);
+		return $export;
 	 }
 }
