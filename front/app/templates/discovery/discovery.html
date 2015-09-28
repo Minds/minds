@@ -10,6 +10,7 @@
 
       <minds-card-video [object]="entity" *ng-if="entity.subtype == 'video'"></minds-card-video>
       <minds-card-image [object]="entity" *ng-if="entity.subtype == 'image'"></minds-card-image>
+      <minds-card-album [object]="entity" *ng-if="entity.subtype == 'album'"></minds-card-album>
 
       <!-- START: User Only -->
       <minds-card-user [object]="entity" *ng-if="entity.type == 'user'"></minds-card-user>

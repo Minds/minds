@@ -50,8 +50,12 @@ class albums implements interfaces\api, interfaces\ApiIgnorePam{
         }
 
         $album = new entities\album($pages[0]);
-        $entity_guids = $_POST['entity_guids'];
-        $album->addChildren($entity_guids);
+        $entity_guids = $_POST['guids'];
+        $guids = array();
+        foreach($entity_guids as $guid){
+          $guids[$guid] = time();
+        }
+        $album->addChildren($guids);
 
         return Factory::response(array('status'=>'success'));
 

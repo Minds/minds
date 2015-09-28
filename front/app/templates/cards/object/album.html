@@ -1,8 +1,14 @@
-<div class="mdl-card__title minds-video-thumbnail"
-	style="height:200px; background-color:#333; background-position: center center; background-size:cover;"
-	[ng-style]="{'background-image': 'url(' + entity.thumbnail_src + ')'}"
-	[router-link]="['/archive-view', {guid: entity.guid}]"
-	>
+<div class="mdl-card__title minds-archive-albums-card"
+	style="height:200px; background:#333" >
+
+	<div *ng-if="entity.images" class="minds-album-tiles tiles-{{entity.images.length}}">
+		<a class=""
+			 *ng-for="#image of entity.images"
+			 [router-link]="['/archive-view', {guid: image}]">
+			<img src="archive/thumbnail/{{image}}/medium" />
+		</a>
+	</div>
+
 </div>
 
 <!-- Owner block -->
@@ -15,7 +21,7 @@
 	</div>
 
 	<div class="body">
-		<a >
+		<a [router-link]="['/archive-view', {guid: entity.guid}]">
 			<strong>{{ entity.title }}</strong>
 		</a>
 		<span>{{ entity.time_created * 1000 | date:'medium' }}</span>

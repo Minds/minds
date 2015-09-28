@@ -22,6 +22,7 @@ import {Search} from './src/controllers/search/search';
  */
 import {Gatherings} from './src/plugins/gatherings/gatherings';
 import {Blog, BlogView, BlogEdit} from './src/plugins/blog/blog';
+import {ArchiveView} from './src/plugins/archive/archive';
 import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups';
 import {Wallet} from './src/plugins/payments/payments';
 
@@ -45,6 +46,8 @@ import {Wallet} from './src/plugins/payments/payments';
   { path: '/blog/:filter', component:  Blog, as: 'blog'},
   { path: '/blog/view/:guid', component:  BlogView, as: 'blog-view'},
   { path: '/blog/edit/:guid', component:  BlogEdit, as: 'blog-edit'},
+
+  { path: '/archive/view/:guid', component: ArchiveView, as: 'archive-view'},
 
   { path: '/notifications', component: Notifications, as: 'notifications'},
 

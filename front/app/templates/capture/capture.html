@@ -62,9 +62,8 @@
             <input
               type="file"
               id="file"
-              name="file"
-              [(ng-model)]="postMeta.file"
-              (change)="add()"
+              #file
+              (change)="add(file)"
               multiple
               />
           </div>
