@@ -1,6 +1,30 @@
-<div  class="mdl-grid" style="max-width:900px;">
+<div  class="mdl-grid">
 
-  <minds-boost-full-network [object]="activity" *ng-if="(activity.boostType == 'fullNetwork')"></minds-boost-full-network>
-  <minds-boost-p2p [object]="activity" *ng-if="(activity.boostType == 'channel')"></minds-boost-p2p>
+  <div class="mdl-grid minds-boost-container" *ng-if="(!type)">
+
+    <div class="mdl-cell mdl-cell--6-col">
+      <div class="mdl-card__supporting-text">
+        <a (click)="showBoost('fullNetwork')">
+          <h1 class="mdl-card__subtitle-text minds-boost-button-selector">
+            Full Network
+          </h1>
+        </a>
+      </div>
+    </div>
+
+    <div class="mdl-cell mdl-cell--6-col">
+      <div class="mdl-card__supporting-text">
+        <a (click)="showBoost('channel')">
+          <h1 class="mdl-card__subtitle-text minds-boost-button-selector">
+            Channel
+          </h1>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <minds-boost-full-network [object]="activity" *ng-if="(type == 'fullNetwork')"></minds-boost-full-network>
+  <minds-boost-p2p [object]="activity" *ng-if="(type == 'channel')"></minds-boost-p2p>
 
 </div>

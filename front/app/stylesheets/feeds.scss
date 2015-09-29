@@ -309,6 +309,29 @@
   }
 }
 
+.search-users-list{
+	position: absolute;
+	margin-top: -60px;
+	left: 8px;
+	width: calc(100% - 16px);
+	opacity:1;
+	z-index:9;
+}
+.search-users-list > div{
+	padding:8px;
+	font-size:22px;
+	font-weight:bold;
+	text-align:left;
+}
+.search-users-list > div img{
+	vertical-align: middle;
+	border-radius:2px;
+	box-shadow:0 0 3px #888;
+	width:35px;
+	height:35px;
+	overflow:hidden;
+	position:relative;
+}
 .search-results{
 
   .mdl-card{
