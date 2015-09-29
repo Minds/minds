@@ -51,4 +51,7 @@ export class Activity {
     this.commentsToggle = !this.commentsToggle;
   }
 
+  showBoost(){
+      this.showBoostOptions = !this.showBoostOptions;
+  }
 }

@@ -21,10 +21,6 @@ export interface MindsBlogListResponse extends MindsResponse {
   'load-next' : string
 }
 
-export interface MindsConversationResponse extends MindsResponse {
-  conversations : Array<any>,
-  'load-next' : string
-}
 
 export interface MindsUserConversationResponse extends MindsResponse{
   publickeys : any,
@@ -39,6 +35,11 @@ export interface MindsGatheringsSearchResponse extends MindsResponse{
 
 export interface MindsKeysResponse extends MindsResponse{
   key : any
+}
+
+export interface MindsConversationResponse extends MindsResponse {
+  conversations : Array<any>,
+  'load-next' : string
 }
 
 export interface MindsGroupResponse extends MindsResponse{
@@ -63,7 +64,10 @@ export interface MindsWalletResponse extends MindsResponse{
 }
 
 export interface MindsBoostRateResponse extends MindsResponse{
-  rate : number
+  rate : number,
+  balance : number,
+  min : number,
+  cap : number
 }
 
 export interface MindsBoostResponse extends MindsResponse{
@@ -71,5 +75,5 @@ export interface MindsBoostResponse extends MindsResponse{
 }
 
 export interface MindsUserSearchResponse extends MindsResponse{
-  user : Array<any>
+  entities : Array<any>
 }

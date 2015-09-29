@@ -1,0 +1,34 @@
+@import 'defaults.scss';
+
+.minds-boost-container{
+  width : 100%;
+  text-align: center;
+}
+
+.minds-boost-button{
+  background-color:$minds-blue !important;
+}
+
+.minds-boost-button-selector{
+  color:$minds-blue;
+  font-weight:500;
+  cursor: pointer;
+}
+
+.minds-boost-wallet-message{
+  width: 250px;
+  text-align: center;
+  min-height:0;
+}
+.minds-boost-block{
+  text-align: left;
+
+  p{
+   color:#888;
+   font-size:11px;
+  }
+}
+
+.minds-boost-error-message{
+  min-height: 0px;
+}
