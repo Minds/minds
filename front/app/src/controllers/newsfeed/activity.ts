@@ -5,7 +5,7 @@ import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { Remind } from './remind';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
-import { Boost } from './boost';
+import { Comments } from 'src/controllers/comments/comments';
 
 @Component({
   selector: 'minds-activity',
@@ -14,13 +14,14 @@ import { Boost } from './boost';
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
-  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Boost, Material, Remind, RouterLink]
+  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Comments, Material, Remind, RouterLink]
 })
 
 export class Activity {
 
   activity : any;
   menuToggle : boolean = false;
+  commentsToggle : boolean = false;
   session = SessionFactory.build();
   showBoostOptions : boolean = false;
   type : string;
@@ -46,12 +47,8 @@ export class Activity {
     console.log(this.menuToggle);
   }
 
-  showBoost(boostType : string){
-      this.activity.boostType = boostType;
-      this.showBoostOptions = true;
-  }
-  closeBoost(){
-    this.showBoostOptions = false;
+  openComments(){
+    this.commentsToggle = !this.commentsToggle;
   }
 
 }
