@@ -5,6 +5,7 @@ import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { Remind } from './remind';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
+import { Boost } from './boost';
 import { Comments } from 'src/controllers/comments/comments';
 
 @Component({
@@ -14,7 +15,7 @@ import { Comments } from 'src/controllers/comments/comments';
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
-  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Comments, Material, Remind, RouterLink]
+  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Boost, Comments, Material, Remind, RouterLink]
 })
 
 export class Activity {
