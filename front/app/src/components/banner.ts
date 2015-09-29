@@ -8,7 +8,12 @@ import { Material } from 'src/directives/material';
   properties: ['_object: object']
 })
 @View({
-  templateUrl: 'templates/components/banner.html',
+  template: `
+  <div class="minds-banner" *ng-if="object">
+    <img *ng-if="object.subtype == 'blog' && object.header_bg == 1" src="/api/v1/blog/header/{{object.guid}}"/>
+    <img *ng-if="object.subtype != 'blog' && object.banner" src="{{minds.cdn_url}}/fs/banners/{{object.guid}}"/>
+  </div>
+  `,
   directives: [ NgIf, RouterLink, Material ]
 })
 
