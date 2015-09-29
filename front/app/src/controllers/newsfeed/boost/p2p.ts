@@ -1,8 +1,7 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
-import { Activity } from './activity';
 import { MindsWalletResponse } from 'src/interfaces/responses';
 import { MindsUserSearchResponse } from 'src/interfaces/responses';
 import { MindsBoostResponse } from 'src/interfaces/responses';
@@ -14,8 +13,8 @@ import { MindsBoostRateResponse } from 'src/interfaces/responses';
   properties: ['object']
 })
 @View({
-  templateUrl: 'templates/newsfeed/boostP2P.html',
-  directives: [ FORM_DIRECTIVES, NgFor, NgIf, NgClass, Material, RouterLink]
+  templateUrl: 'templates/newsfeed/boost/p2p.html',
+  directives: [ FORM_DIRECTIVES, CORE_DIRECTIVES, Material, RouterLink]
 })
 
 export class BoostP2P{

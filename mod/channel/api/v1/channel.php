@@ -56,6 +56,10 @@ class channel implements interfaces\api{
         $response['channel']['gender'] = $response['channel']['gender'] ?: "";
         $response['channel']['dob'] = $response['channel']['dob'] ?: "";
 
+        $db = new Core\Data\Call('entities_by_time');
+        $feed_count = $db->countRow("activity:user:" . $user->guid);
+        $response['channel']['activity_count'] = $feed_count;
+
         $carousels = core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
         if($carousels){
             foreach($carousels as $carousel){
@@ -130,7 +134,7 @@ class channel implements interfaces\api{
                     $db->removeRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
                     //}
                 }catch(\Exception $e){}
-             
+
                 $item = new \minds\entities\carousel();
                 $item->title = '';
                 $item->owner_guid = elgg_get_logged_in_user_guid();
