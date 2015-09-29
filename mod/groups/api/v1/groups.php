@@ -24,6 +24,7 @@ class groups implements interfaces\api{
     public function get($pages){
 
         $e = new Core\Data\Call('entities');
+        $t = new Core\Data\Call('entities_by_time');
         $r = new Core\Data\Call('relationships');
 
         if(!isset($pages[0]))
@@ -31,7 +32,15 @@ class groups implements interfaces\api{
 
         switch($pages[0]){
           case "featured":
-            //$guids = $db->getRow("")
+            $guids = $t->getRow("group:featured", array(
+              'limit' => 12,
+              'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
+            ));
+            if(!$guids)
+              break;
+            $groups = Core\Entities::get(array(
+              'guids' => $guids
+            ));
             break;
           case "member":
             $groups = helpers\Groups::getGroups(Core\Session::getLoggedInUser(), array(
