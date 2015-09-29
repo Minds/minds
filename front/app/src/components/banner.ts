@@ -19,12 +19,10 @@ export class MindsBanner{
 
 	constructor(){
     this.minds = window.Minds;
-    console.log("BANNER CREATED");
 	}
 
   set _object(value : any){
     this.object = value;
-    console.log(this.object);
   }
 
 }
