@@ -8,7 +8,8 @@ import { MindsMessageResponse } from './interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-conversation',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  properties: [ '_conversation: conversation' ]
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/messenger-conversation.html',
@@ -16,31 +17,37 @@ import { MindsMessageResponse } from './interfaces/responses';
 })
 
 export class MessengerConversation {
-  activity : any;
+
+  minds: Minds;
   session = SessionFactory.build();
   guid : string;
-  name : string;
+
   messages : Array<any> = [];
   offset: string;
   previous: string;
   hasMoreData: boolean = true;
   inProgress: boolean = false;
+
   newChat: boolean;
   poll: boolean = true;
-  publickeys: any;
+
+  enabled : boolean = true;
+
   timeout: any;
-  minds: Minds;
+
   isSendingMessage : boolean = false;
 
-  constructor(public client: Client,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
-  ){
+  constructor(public client: Client, public router: Router, public params: RouteParams){
     this.minds = window.Minds;
     if (params.params && params.params['guid']){
       this.guid = params.params['guid'];
       this.load();
     }
+  }
+
+  set _conversation(value : any){
+    this.guid = value;
+    this.load();
   }
 
   /**
@@ -50,63 +57,41 @@ export class MessengerConversation {
     var self = this;
     this.inProgress = true;
 
-    console.log('loading messages from:' + this.guid);
+    this.client.get('api/v1/conversations/' + this.guid,
+      {
+        limit: 6,
+        offset: this.offset,
+        cachebreak: Date.now()
+      })
+      .then((data : MindsUserConversationResponse) =>{
+        self.newChat = false;
+        self.inProgress = false;
 
-    this.client.get('api/v1/conversations/' + this.guid, {
-      limit: 6,
-      offset: this.offset,
-      cachebreak: Date.now()
-    })
-    .then((data : MindsUserConversationResponse) =>{
-      self.newChat = false;
-      self.inProgress = false;
-      //now update the public keys
-      self.publickeys = data.publickeys;
+        if (!self.publickeys[self.guid]) {
+          self.enabled = false;
+          return true;
+        }
 
-      if (!self.publickeys[self.guid]) {
-        alert('Sorry! That user has not yet configured their encrypted chat yet.');
-        return true;
-      }
+        if (!data.messages) {
+          self.hasMoreData = false;
+          return false;
+        }
 
-      if (!data.messages) {
-        self.hasMoreData = false;
-        return false;
-      } else {
-        self.hasMoreData = true;
-      };
+        for(let message of data.messages){
+          self.messages.push(message);
+        }
 
-      var first;
-      if (self.messages.length === 0) {
-        first = true;
-      } else {
-        first = false;
-      }
+        console.log("------ MESSAGES ARE LOADED ------");
 
-      for(let message of data.messages){
-        self.messages.push(message);
-      }
+        self.offset = data['load-previous'];
+        self.previous = data['load-next'];
 
+        self.poll = true;
 
-      console.log("------ MESSAGES ARE LOADED ------");
-
-      self.offset = data['load-previous'];
-      self.previous = data['load-next'];
-
-      if (first) {
-        //Must Scroll Bottom
-        /*
-        $timeout(function() {
-        $ionicScrollDelegate.scrollBottom();
-      }, 1000);
-      */
-      }
-
-      self.poll = true;
-
-    })
-    .catch(function(error) {
-      self.inProgress = false;
-    });
+      })
+      .catch(function(error) {
+        self.inProgress = false;
+      });
   };
 
   sendMessage(message){
@@ -114,22 +99,22 @@ export class MessengerConversation {
     var pushed = false;
     var self = this;
     this.client.post('api/v1/conversations/' + this.guid, message.value)
-    .then((data : MindsMessageResponse) =>{
-      self.isSendingMessage = false;
-      if (!pushed) {
-        data.message.message = message.value;
-        self.messages.push(data.message);
-        self.previous = data.message.guid;
-        pushed = true;
-      }
-      message.value = null;
-    })
-    .catch(function(error) {
-      alert('sorry, your message could not be sent');
-      message.value = null;
-      self.isSendingMessage = false;
-      console.log(error);
-    });
+      .then((data : MindsMessageResponse) =>{
+        self.isSendingMessage = false;
+        if (!pushed) {
+          data.message.message = message.value;
+          self.messages.push(data.message);
+          self.previous = data.message.guid;
+          pushed = true;
+        }
+        message.value = null;
+      })
+      .catch(function(error) {
+        alert('sorry, your message could not be sent');
+        message.value = null;
+        self.isSendingMessage = false;
+        console.log(error);
+      });
   }
 
   doneTyping($event) {

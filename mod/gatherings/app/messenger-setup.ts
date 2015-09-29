@@ -1,107 +1,118 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Storage } from 'src/services/storage';
 import { Material } from 'src/directives/material';
+
 import { MindsKeysResponse } from './interfaces/responses';
 import { MindsChannelResponse } from 'src/interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-setup',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  events: [ 'done' ]
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/messenger-setup.html',
-  directives: [ NgFor, NgIf, NgClass, Material, FORM_DIRECTIVES]
+  directives: [ CORE_DIRECTIVES, Material, FORM_DIRECTIVES ]
 })
 
 export class MessengerSetup {
+
   session = SessionFactory.build();
+  storage: Storage = new Storage;
+
   configured: boolean = false;
+  show : boolean = false;
   data: any = {};
-  storage: Storage;
-  show :  boolean = false;
+
   inProgress : boolean = false;
+  error : string = "";
+  done : EventEmitter = new EventEmitter;
 
   constructor(public client: Client){
-    this.storage = new Storage();
-    this.checkChatConfiguration();
+    this.check();
   }
 
-  checkChatConfiguration(){
+  check(){
     var self = this;
+    if(this.session.getLoggedInUser().chat){
+      self.configured = true;
+      this.show = true;
+      return true;
+    }
     this.client.get('api/v1/channel/me', {})
-    .then((me : MindsChannelResponse) => {
-        if (me.channel.chat) {
+      .then((response : MindsChannelResponse) => {
+        if (response.channel.chat)
           self.configured = true;
-          self.show = true;
-        }
+        self.show = true;
       });
   }
 
+  /**
+   * Unlock a users chat messages
+   */
   unlock(password) {
     var self = this;
     this.inProgress = true;
-    this.client.get('api/v1/keys', {
-      password: password.value.password,
-      new_password: 'abc123'
-    })
-    .then((data : MindsKeysResponse) => {
-      if (data.key) {
-        self.storage.set('private-key', data.key);
-      } else {
-        alert({
-          title: 'Ooops..',
-          template: 'We couldn\'t unlock your chat. Please check your password is correct.'
-        });
-      }
-      this.inProgress = false;
-    })
-    .catch((error) =>{
-      this.inProgress = false;
-      console.log(error);
-    });
-  };
+    this.client.get('api/v1/keys',
+      {
+        password: password.value.password,
+        new_password: 'abc123'
+      })
+      .then((data : MindsKeysResponse) => {
 
+        if (!data.key) {
+          self.error = 'We couldn\'t unlock your chat. Please check your password is correct.';
+          return false;
+        }
+
+        self.storage.set('private-key', data.key);
+        this.inProgress = false;
+        self.done.next(true);
+      })
+      .catch((error) =>{
+        this.inProgress = false;
+        console.log(error);
+      });
+  }
+
+  /**
+   * Setup a users chat
+   */
   setup(passwords) {
     var self = this;
     this.inProgress = true;
+
     if (!passwords.value.password1) {
-      alert({
-        title: 'Ooops..',
-        template: 'You must enter a password.'
-      });
-      console.log("You must enter a password.");
-      return false;
-    }
-    if (passwords.value.password1 != passwords.value.password2) {
-      alert({
-        title: 'Ooops..',
-        template: 'Your passwords must match.'
-      });
-      console.log("Your passwords must match.");
+      this.error = 'You need to enter a password';
       return false;
     }
 
-    this.client.post('api/v1/keys/setup', {
-      password: passwords.value.password1
-    })
-    .then((data : MindsKeysResponse) =>{
-      console.log("Data: " + data.key+ " Storage: "+ self.storage);
-      if (data.key) {
+    if (passwords.value.password1 != passwords.value.password2) {
+      this.error = "Your passwords must match.";
+      return false;
+    }
+
+    this.client.post('api/v1/keys/setup', { password: passwords.value.password1 })
+      .then((data : MindsKeysResponse) =>{
+
+        if (!data.key){
+          self.error = 'We couldn\'t unlock your chat. Please check your password is correct.';
+          return false;
+        }
+
+
+
         self.storage.set('private-key', data.key);
-      } else {
-        alert({
-          title: 'Ooops..',
-          template: 'We couldn\'t unlock your chat. Please check your password is correct.'
-        });
-      }
-      this.inProgress = false;
-    })
-    .catch((error) =>{
-      this.inProgress = false;
-      console.log(error);
-    });
-  };
+        self.done.next(true);
+        this.inProgress = false;
+      })
+      .catch((error) =>{
+        this.inProgress = false;
+        console.log(error);
+      });
+  }
+
 }

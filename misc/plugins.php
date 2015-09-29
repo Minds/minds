@@ -4,7 +4,7 @@ require_once(dirname(dirname(__FILE__)) . "/engine/start.php");
 
 
 $db = new Minds\Core\Data\Call('plugin');
-$plugins = array('channel', 'thumbs', 'payments', 'blog', 'guard', 'notifications', 'groups', 'gatherings', 'archive', 'search');
+$plugins = array('channel', 'thumbs', 'payments', 'blog', 'guard', 'notifications', 'groups', 'gatherings', 'archive', 'search', 'comments');
 foreach($plugins as $plugin){
   $db->insert($plugin, array('type'=>'plugin', 'active'=>1, 'access_id'=>2));
 }

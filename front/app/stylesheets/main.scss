@@ -17,6 +17,7 @@ minds-app{
 .minds-noshadow{
   box-shadow:0 0 0 !important;
 }
+
 minds-topbar{
 
   .mdl-layout__drawer-button{
@@ -283,6 +284,14 @@ minds-topbar{
   .minds-body{
     flex:1;
   }
+}
+
+.minds-error{
+  display: inline-block;
+  vertical-align: middle;
+  padding: 8px;
+  font-size: 13px;
+  border-radius: 3px;
 }
 
 blockquote { quotes: ''; }

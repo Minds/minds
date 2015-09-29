@@ -1,21 +1,30 @@
 <div class="mdl-card mdl-shadow--2dp" style="width:100%">
+
   <div class="mdl-card__title">
     <h2 class="mdl-card__title-text">Conversation</h2>
   </div>
+
   <div class="minds-gatherings-message-list">
-    <div  class="mdl-grid mdl-shadow--2dp" *ng-for="#message of messages" >
+
+    <div  class="mdl-grid mdl-shadow--2dp" *ng-for="#message of messages">
+
       <div class="mdl-cell mdl-cell--12-col minds-gatherings-ownerblock">
+  
         <div class="minds-avatar">
             <img src="{{minds.cdn_url}}/icon/{{message.owner_guid}}/small" class="mdl-shadow--2dp" alt={{message.ownerObj.username}} title={{message.ownerObj.username}}>
         </div>
+
         <div class="minds-body">
           <label class="mdl-color-text--grey-500 ng-binding">
             {{message.message}}
           </label>
           <span class="minds-gatherings-message-time">{{message.time_created * 1000 | date:'shortTime'}} - {{message.time_created * 1000 | date:'longDate'}}</span>
         </div>
+
       </div>
+
     </div>
+
   </div>
 
   <div class="minds-gatherings-chat-box">
@@ -27,4 +36,5 @@
       Send
     </button>
   </div>
+
 </div>

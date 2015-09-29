@@ -23,7 +23,7 @@ import { MindsGatheringsSearchResponse } from './interfaces/responses';
 })
 
 export class Gatherings {
-  activity : any;
+
   session = SessionFactory.build();
   conversations : Array<Conversation> = [];
   offset : string =  "";
@@ -33,78 +33,69 @@ export class Gatherings {
   cb : Date = new Date();
   search : any = {};
   minds: Minds;
-  storage: Storage;
+  storage: Storage = new Storage();
 
 
-  constructor(public client: Client,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
-  ){
-    this.storage = new Storage();
+  constructor(public client: Client, public router: Router, public params: RouteParams){
+    this.minds = window.Minds;
     this.checkSetup();
     this.load(true);
-    this.minds = window.Minds;
-    this.minds.cdn_url = "https://d3ae0shxev0cb7.cloudfront.net";
   }
 
   checkSetup(){
     var self = this;
     var key = this.storage.get('private-key');
-    if (key){
+    if (key)
       this.setup = true;
-    }
   }
 
   load(refresh : boolean = false) {
     var self = this;
-    if (this.inProgress || !this.storage.get('private-key')){
+    if(this.inProgress)
       return false;
-    }
     this.inProgress = true;
+
     this.client.get('api/v1/conversations',
-    {	limit: 12,offset: this.offset, cb: this.cb
-    })
-    .then((data : MindsConversationResponse) => {
-      if (!data.conversations) {
-        self.hasMoreData = false;
-        self.inProgress = false;
-        return false;
-      } else {
-        self.hasMoreData = true;
-      };
+      {
+        limit: 12,offset: this.offset, cb: this.cb
+      })
+      .then((data : MindsConversationResponse) => {
 
-      if(refresh){
-        self.conversations = data.conversations;
-      }else{
-        for(let conversation of data.conversations){
-            self.conversations.push(conversation);
+        if (!data.conversations) {
+          self.hasMoreData = false;
+          self.inProgress = false;
+          return false;
         }
-      }
 
-      self.offset = data['load-next'];
-      self.inProgress = false;
-    })
-    .catch((error) => {
-      console.log("got error" + error);
-      self.inProgress = true;
-    });
-  };
+        if(refresh){
+          self.conversations = data.conversations;
+        } else {
+          self.conversations = self.conversations.concat(data.conversations);
+        }
+
+        self.offset = data['load-next'];
+        self.inProgress = false;
+      })
+      .catch((error) => {
+        console.log("got error" + error);
+        self.inProgress = true;
+      });
+  }
 
   doSearch(query: string) {
     var self = this;
     if (!query){
-      console.log("clearing");
       this.load(true);
       return true;
     }
     console.log("searching " + query);
-    this.client.get('api/v1/gatherings/search', {q: query,type: 'user',view: 'json'})
-    .then((success : MindsGatheringsSearchResponse) =>{
-      self.conversations = success.user[0];
-    })
-    .catch((error)=>{
-      console.log(error);
-    });
+    this.client.get('api/v1/search', {q: query,type: 'user',view: 'json'})
+      .then((success : MindsGatheringsSearchResponse) =>{
+        self.conversations = success.user[0];
+      })
+      .catch((error)=>{
+        console.log(error);
+      });
   };
 
 
@@ -114,6 +105,7 @@ export class Gatherings {
       $event.target.value = null;
     }
   };
+
 }
 export { MessengerConversation } from './messenger-conversation';
 export { MessengerSetup } from './messenger-setup';

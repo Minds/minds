@@ -1,40 +1,44 @@
 <div class="mdl-grid newsfeed-grid" style="max-width:900px">
+
+  <!-- START: SEARCH BAR -->
   <div class="mdl-cell mdl-cell--4-col">
-    <div>
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-gatherings-search" [mdl]>
-        <input class="mdl-textfield__input" type="text" id="sample3" (keyup)="doneTyping($event)" />
-        <label class="mdl-textfield__label" for="sample3"><i class="material-icons">search</i> Search users...</label>
-      </div>
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-gatherings-search" [mdl]>
+      <input class="mdl-textfield__input" type="text" id="sample3" (keyup)="doneTyping($event)" />
+      <label class="mdl-textfield__label" for="sample3"><i class="material-icons">search</i> Search users...</label>
     </div>
 
+    <!-- START: Users -->
     <div class="minds-gatherings-conversation-list">
-      <div  class="mdl-grid mdl-shadow--2dp" *ng-for="#conversation of conversations" >
-        <div class="mdl-cell mdl-cell--12-col minds-gatherings-ownerblock">
+        <div class="mdl-card minds-block" *ng-for="#user of conversations">
           <div class="minds-avatar">
-            <a  [router-link]="['/messenger', {guid: conversation.guid}]" class="">
-              <img src="{{minds.cdn_url}}/icon/{{conversation.guid}}/small" class="mdl-shadow--2dp" alt={{conversation.username}} title={{conversation.username}}>
+            <a [router-link]="['/messenger-conversation', {guid: user.guid}]" (click)="conversation = user">
+              <img src="{{minds.cdn_url}}/icon/{{user.guid}}/small" class="mdl-shadow--2dp" alt={{user.username}} title={{user.username}}>
             </a>
           </div>
           <div class="minds-body">
-            <a [router-link]="['/messenger', {guid: conversation.guid}]" class="mdl-color-text--blue-grey-500 ng-binding">
-              {{conversation.username}}
+            <a [router-link]="['/messenger-conversation', {guid: user.guid}]" class="mdl-color-text--blue-grey-500" (click)="conversation = user">
+              <h3>{{user.username}}</h3>
+              <span>{{user.last_msg * 1000 | date:'shortTime'}} - {{user.last_msg * 1000 | date:'longDate'}}</span>
             </a>
-            <span>{{conversation.last_msg * 1000 | date:'shortTime'}} - {{conversation.last_msg * 1000 | date:'longDate'}}</span>
           </div>
         </div>
-      </div>
 
       <infinite-scroll
-      distance="25%"
-      (load)="load()"
-      *ng-if="hasMoreData"
-      />
-      <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+        distance="25%"
+        (load)="load()"
+        *ng-if="hasMoreData"
+        >
+        <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+      </infinite-scroll>
+
     </div>
+    <!-- END: Users -->
   </div>
+  <!-- END: SEARCH BAR -->
 
   <div class="mdl-cell mdl-cell--8-col" >
-    <minds-messenger-setup *ng-if="!setup"></minds-messenger-setup>
-    <minds-messenger-conversation *ng-if="setup"></minds-messenger-conversation>
+    <minds-messenger-setup *ng-if="!setup" (done)="setup = true"></minds-messenger-setup>
+    <minds-messenger-conversation *ng-if="setup" [conversation]="conversation"></minds-messenger-conversation>
   </div>
 </div>

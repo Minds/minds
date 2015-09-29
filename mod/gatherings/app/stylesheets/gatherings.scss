@@ -64,6 +64,23 @@ minds-gatherings{
   .minds-gatherings-conversation-list{
       height: 400px;
       overflow-y: scroll;
+
+      .mdl-card{
+        min-height:0;
+        padding:$minds-padding;
+
+        a{
+          text-decoration: none;
+        }
+        h3{
+          margin: 0;
+          font-size: 18px;
+          line-height: 24px;
+        }
+        span{
+          font-size:11px;
+        }
+      }
   }
 
   .minds-gatherings-message-list{
@@ -77,6 +94,14 @@ minds-gatherings{
 
   .minds-gatherings-chat-box{
     padding-left:20px;
+  }
+
+
+
+  .minds-messenger-setup-actions{
+    button{
+      float:right;
+    }
   }
 
 }
