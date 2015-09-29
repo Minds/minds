@@ -39,7 +39,7 @@
     <div class="mdl-cell mdl-cell--8-col minds-tabs mdl-tabs__tab-bar">
         <a [router-link]="['/channel-filter', {username: user.username, filter: 'feed'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
           <span>Feed</span>
-          <b>0</b>
+          <b>{{user.activity_count}}</b>
         </a>
         <a [router-link]="['/channel-filter', {username: user.username, filter: 'subscribers'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
           <span>Subscribers</span>
