@@ -30,6 +30,23 @@
 	</a>
 </div>
 
+<div class="item item-image item-image-video" *ng-if="activity.custom_type == 'video'">
+		 <video
+			 	id="video"
+				width="300px"
+				height="300px;"
+				style="background:#000;" p
+				reload="auto"
+				loop
+				controls
+				muted
+				autoplay
+				poster="{{activity.custom_data.thumbnail_src}}"
+			>
+			<source src="api/v1/archive/{{activity.custom_data.guid}}/play"></source>
+		</video>
+ </div>
+
 <!-- Images -->
 <div class="item item-image allow-select" *ng-if="activity.thumbnail_src && !activity.perma_url">
 	<img [src]="activity.thumbnail_src">
