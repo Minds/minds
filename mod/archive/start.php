@@ -10,6 +10,7 @@ namespace Minds\plugin\archive;
 use Minds\Api;
 use Minds\Core;
 use Minds\Components;
+use Minds\entities as CoreEntities;
 
 class start extends Components\Plugin{
 
@@ -42,7 +43,22 @@ class start extends Components\Plugin{
 		Api\Routes::add('v1/archive/albums', "\\minds\\plugin\\archive\\api\\v1\\albums");
 		Api\Routes::add('v1/archive/thumbnails', "\\minds\\plugin\\archive\\api\\v1\\thumbnails");
 
-		// Register a page handler, so we can have nice URLs (fallback in case some links go to old kaltura_video)
+		Core\SEO\Manager::add('/archive/view', function($slugs = array()){
+			$guid = $slugs[0];
+			$entity = CoreEntities\Factory::build($guid);
+			if(!$entity)
+				return array();
+
+			return $meta = array(
+				'title' => $entity->title,
+				'description' => $entity->description,
+				'og:type' => $entity->subtype == 'video' ? 'video' : 'article',
+				'og:url' => $entity->perma_url,
+				'og:image' => $entity->getIconUrl('xlarge')
+			);
+		});
+
+		// this is legacy fallback for thumbnails
 		\elgg_register_page_handler('archive', array($this, 'pageHandler'));
 
 	}

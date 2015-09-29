@@ -36,7 +36,11 @@ class album extends object{
 	public function getChildrenGuids($limit = 1000000, $offset = ''){
 		$index = new Data\indexes('object:container');
 		if($guids = $index->get($this->guid, array('limit'=>$limit, 'offset'=>$offset))){
-			return array_keys($guids);
+			$return = array();
+			foreach($guids as $guid => $ts){
+				$return[] = (string) $guid;
+			}
+			return $return;
 		}
 		return false;
 	}
