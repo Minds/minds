@@ -1,8 +1,4 @@
-
-<div class="minds-blog-header" *ng-if="blog.header_bg == 1">
-  <img src="/api/v1/blog/header/{{blog.guid}}"/>
-</div>
-
+<minds-banner [object]="blog"></minds-banner>
 <div class="mdl-grid blogs-grid" style="max-width:660px" *ng-if="blog.guid">
 
   <div class="mdl-grid" style="width:100%">

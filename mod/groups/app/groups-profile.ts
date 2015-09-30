@@ -5,7 +5,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
 import { Activity } from 'src/controllers/newsfeed/activity';
-
+import { MindsBanner } from 'src/components/banner'
 import { GroupsJoinButton } from './groups-join-button';
 import { GroupsProfileMembers } from './profile/members';
 import { GroupsProfileRequests } from './profile/requests';
@@ -30,7 +30,7 @@ interface MindsGroup {
 @View({
   templateUrl: 'templates/plugins/groups/profile.html',
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, RouterLink, Activity, GroupsJoinButton,
-    GroupsProfileMembers, GroupsProfileFeed, GroupsProfileSettings, GroupsProfileRequests ]
+    GroupsProfileMembers, GroupsProfileFeed, GroupsProfileSettings, GroupsProfileRequests, MindsBanner ]
 })
 
 export class GroupsProfile {
