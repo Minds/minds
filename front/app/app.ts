@@ -16,6 +16,7 @@ import {Discovery} from './src/controllers/discovery/discovery';
 import {Channel, ChannelSubscribers, ChannelSubscriptions} from './src/controllers/channels/channel';
 import {Notifications} from './src/controllers/notifications/notifications';
 import {Search} from './src/controllers/search/search';
+import {Settings} from './src/controllers/settings/settings';
 
 /**
  * TODO: Load these automagically from gulp
@@ -62,6 +63,8 @@ import {Wallet} from './src/plugins/payments/payments';
 
   { path: '/:username', component: Channel, as: 'channel' },
   { path: '/:username/:filter', component: Channel, as: 'channel-filter' },
+
+  {path: '/settings', component: Settings, as: 'settings'},
 
   { path: '/', component: Homepage, as: 'homepage' }
 

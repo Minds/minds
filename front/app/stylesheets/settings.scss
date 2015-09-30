@@ -1,0 +1,47 @@
+.minds-settings-menu-container{
+  height: 100px;
+}
+
+.minds-settings-menu{
+  list-style: none;
+  width: 100%;
+  padding: 8px 0;
+  margin: 0;
+}
+
+.minds-settings-item{
+   text-align: left;
+   padding: 0 16px;
+   cursor: pointer;
+   height: 47px;
+   line-height: 46px;
+   width: auto;
+   border-bottom: 1px solid rgba(0,0,0,.12);
+}
+
+.minds-settings-menu li:hover{
+   background-color: #EEE;
+   text-decoration: none;
+}
+
+.minds-settings-text{
+  position: relative;
+  font-size: 16px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 20px 0;
+}
+
+.minds-settings-data-text-container{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.minds-settings-data-text{
+  position: relative;
+  font-size: 16px;
+  display: inline-block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 20px 0;
+  width: 200px;
+}
