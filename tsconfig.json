@@ -18,6 +18,7 @@
     ],
     "files": [
         "./front/app/app.ts",
+        "./front/app/src/components/banner.ts",
         "./front/app/src/components/buttons.ts",
         "./front/app/src/components/buttons/comment.ts",
         "./front/app/src/components/buttons/remind.ts",
