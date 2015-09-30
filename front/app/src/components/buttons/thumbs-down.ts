@@ -9,7 +9,7 @@ import { Client } from "src/services/api";
 })
 @View({
   template: `
-    <a class="mdl-color-text--blue-grey-800" (click)="thumb()" [ng-class]="{'selected': has() }">
+    <a class="mdl-color-text--blue-grey-500" (click)="thumb()" [ng-class]="{'selected': has() }">
       <i class="material-icons">thumb_down</i>
       <counter *ng-if="object['thumbs:down:count'] > 0">{{object['thumbs:down:count']}}</counter>
     </a>
@@ -27,6 +27,8 @@ export class ThumbsDownButton {
 
   set _object(value : any){
     this.object = value;
+    if(!this.object['thumbs:down:user_guids'])
+      this.object['thumbs:down:user_guids'] = [];
   }
 
   thumb(){

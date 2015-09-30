@@ -48,20 +48,6 @@
          vertical-align: middle;
        }
 
-      counter:before{
-        content:'( ';
-      }
-      counter{
-        font-family:"Lato", "Helvetica", "Roboto", sans-serif;
-        display:inline-block;
-        font-size:12px;
-        // font-weight:bold;
-        vertical-align: middle;
-        padding:0 $minds-padding;
-      }
-      counter:after{
-         content:' )';
-      }
      }
 
      .minds-more{

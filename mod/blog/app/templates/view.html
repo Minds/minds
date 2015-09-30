@@ -23,8 +23,12 @@
         <span>{{ blog.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
-    <div class="mdl-cell mdl-cell--6-col minds-blog-actions">
+    <div class="mdl-cell mdl-cell--6-col minds-actions-block">
       <subscribe-button [user]="blog.ownerObj" *ng-if="blog.ownerObj.guid != session.getLoggedInUser().guid"></subscribe-button>
+      <div class="mdl-layout-spacer"></div>
+      <minds-button-remind [object]="blog"></minds-button-remind>
+      <minds-button-thumbs-up [object]="blog"></minds-button-thumbs-up>
+      <minds-button-thumbs-down [object]="blog"></minds-button-thumbs-down>
     </div>
 
   </div>

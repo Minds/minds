@@ -8,7 +8,7 @@ import { Client } from "src/services/api";
 })
 @View({
   template: `
-    <a class="mdl-color-text--blue-grey-800" [ng-class]="{'selected': object['comments:count'] > 0 }">
+    <a class="mdl-color-text--blue-grey-500" [ng-class]="{'selected': object['comments:count'] > 0 }">
       <i class="material-icons">chat_bubble</i>
       <counter *ng-if="object['comments:count'] > 0">{{object['comments:count']}}</counter>
     </a>

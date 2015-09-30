@@ -7,6 +7,7 @@ import { Remind } from './remind';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
 import { Boost } from './boost';
 import { Comments } from 'src/controllers/comments/comments';
+import { TagsPipe } from 'src/pipes/tags';
 
 @Component({
   selector: 'minds-activity',
@@ -15,7 +16,8 @@ import { Comments } from 'src/controllers/comments/comments';
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
-  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Boost, Comments, Material, Remind, RouterLink]
+  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Boost, Comments, Material, Remind, RouterLink],
+  pipes: [ TagsPipe ]
 })
 
 export class Activity {

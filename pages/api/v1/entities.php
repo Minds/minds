@@ -63,12 +63,17 @@ class entities implements interfaces\api{
 
         $type = "object";
         $subtype = NULL;
+        $owner = NULL;
         switch($pages[0]){
           case "all":
             $type="user";
+            break;
+          case "owner":
+            $owner = Core\Session::getLoggedInUser()->guid;
+            $subtype = "archive";
         }
 
-        if($pages[0] == "all" && $pages[1] != "all"){
+        if($pages[1] != "all"){
           switch($pages[1]){
             case "images":
               $type = "object";
@@ -88,7 +93,7 @@ class entities implements interfaces\api{
         $options = array(
             'type' => $type,
             'subtype' => $subtype,
-            'owner_guid'=> NULL,
+            'owner_guid'=> $owner,
             'limit'=>12,
             'offset'=>''
             );
@@ -99,7 +104,7 @@ class entities implements interfaces\api{
         }
 
 
-        $entities = core\Entities::get($options);
+        $entities = Core\Entities::get($options);
         $response = array();
         if($entities){
             $response['entities'] = factory::exportable($entities);

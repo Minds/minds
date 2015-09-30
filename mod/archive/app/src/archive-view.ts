@@ -7,6 +7,7 @@ import { Material } from 'src/directives/material';
 import { SubscribeButton } from 'src/directives/subscribe-button';
 
 import { Comments } from 'src/controllers/comments/comments';
+import { BUTTON_COMPONENTS } from 'src/components/buttons';
 
 import { ArchiveTheatre } from './views/theatre';
 import { ArchiveGrid } from './views/grid';
@@ -17,7 +18,7 @@ import { ArchiveGrid } from './views/grid';
 })
 @View({
   templateUrl: 'templates/plugins/archive/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, SubscribeButton, Comments, ArchiveTheatre, ArchiveGrid ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, SubscribeButton, Comments, ArchiveTheatre, ArchiveGrid ]
 })
 
 export class ArchiveView {

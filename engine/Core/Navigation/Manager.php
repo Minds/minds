@@ -60,6 +60,17 @@ class Manager{
 				'filter' => 'featured',
 				'type' => ''
 			));
+		$discovery_my = new Item();
+		$discovery_my
+			->setPriority(4)
+			->setIcon('person_pin')
+			->setName('My')
+			->setTitle('My (Discovery)')
+			->setPath('/discovery')
+			->setParams(array(
+				'filter' => 'owner',
+				'type' => ''
+				));
 
 		$discovery = new Item();
 		$discovery->setPriority(3)
@@ -73,7 +84,8 @@ class Manager{
 			))
 			->addSubItem($discovery_suggested)
 			->addSubItem($discovery_trending)
-			->addSubItem($discovery_featured);
+			->addSubItem($discovery_featured)
+			->addSubItem($discovery_my);
 		self::add($discovery);
 	}
 

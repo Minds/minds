@@ -286,6 +286,20 @@ minds-topbar{
   }
 }
 
+.minds-actions-block{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  > * {
+    margin-right:$minds-margin*2;
+
+    i {
+      vertical-align: middle;
+    }
+  }
+}
+
 .minds-error{
   display: inline-block;
   vertical-align: middle;

@@ -61,6 +61,7 @@
         "./front/app/src/directives/subscribe-button.ts",
         "./front/app/src/interfaces/entities.ts",
         "./front/app/src/interfaces/responses.ts",
+        "./front/app/src/pipes/tags.ts",
         "./front/app/src/plugins/archive/archive-edit.ts",
         "./front/app/src/plugins/archive/archive-view.ts",
         "./front/app/src/plugins/archive/archive.ts",

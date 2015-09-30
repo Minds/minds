@@ -17,7 +17,7 @@
 </div>
 
 <!-- Messages -->
-<div class="mdl-card__supporting-text message" [hidden]="!activity.message">{{activity.message}}</div>
+<div class="mdl-card__supporting-text message" [hidden]="!activity.message">{{activity.message | tags}}</div>
 
 <!-- Rich content -->
 <div class="minds-rich-embed" *ng-if="activity.perma_url">

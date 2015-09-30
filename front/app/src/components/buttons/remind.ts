@@ -8,7 +8,7 @@ import { Client } from "src/services/api";
 })
 @View({
   template: `
-    <a class="mdl-color-text--blue-grey-800" (click)="remind()" [ng-class]="{'selected': object.reminded }">
+    <a class="mdl-color-text--blue-grey-500" (click)="remind()" [ng-class]="{'selected': object.reminded }">
       <i class="material-icons">repeat</i>
       <counter *ng-if="object['reminds:count'] > 0">{{object['reminds:count']}}</counter>
     </a>

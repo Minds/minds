@@ -33,3 +33,22 @@ subscribe-button, minds-groups-join-button{
   margin: -3px 0;
   display: block;
 }
+
+.selected{
+  color:$minds-blue !important;
+}
+
+counter:before{
+  content:'( ';
+}
+counter{
+  font-family:"Lato", "Helvetica", "Roboto", sans-serif;
+  display:inline-block;
+  font-size:12px;
+  // font-weight:bold;
+  vertical-align: middle;
+  padding:0;
+}
+counter:after{
+   content:' )';
+}

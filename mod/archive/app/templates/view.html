@@ -24,8 +24,12 @@
         <span>{{ entity.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
-    <div class="mdl-cell mdl-cell--6-col minds-blog-actions">
+    <div class="mdl-cell mdl-cell--6-col minds-actions-block">
       <subscribe-button [user]="entity.ownerObj" *ng-if="entity.ownerObj.guid != session.getLoggedInUser().guid"></subscribe-button>
+      <div class="mdl-layout-spacer"></div>
+      <minds-button-remind [object]="entity"></minds-button-remind>
+      <minds-button-thumbs-up [object]="entity"></minds-button-thumbs-up>
+      <minds-button-thumbs-down [object]="entity"></minds-button-thumbs-down>
     </div>
 
   </div>

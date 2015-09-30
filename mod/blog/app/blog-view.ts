@@ -9,6 +9,7 @@ import { MindsBlogResponse } from 'src/interfaces/responses';
 import { MindsBlogEntity } from 'src/interfaces/entities';
 
 import { Comments } from 'src/controllers/comments/comments';
+import { BUTTON_COMPONENTS } from 'src/components/buttons';
 
 @Component({
   selector: 'minds-blog-view',
@@ -16,7 +17,7 @@ import { Comments } from 'src/controllers/comments/comments';
 })
 @View({
   templateUrl: 'templates/plugins/blog/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, SubscribeButton, Comments ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, SubscribeButton, Comments ]
 })
 
 export class BlogView {
