@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
@@ -9,8 +9,8 @@ import { Material } from 'src/directives/material';
   properties: ['object']
 })
 @View({
-  templateUrl: 'templates/settings/disableChannel.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, FORM_DIRECTIVES]
+  templateUrl: 'templates/settings/disable.html',
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES]
 })
 
 export class SettingsDisableChannel{
@@ -21,7 +21,6 @@ export class SettingsDisableChannel{
 
   constructor(public client: Client){
     this.minds = window.Minds;
-    this.minds.cdn_url = "https://d3ae0shxev0cb7.cloudfront.net";
   }
 
   disable(){

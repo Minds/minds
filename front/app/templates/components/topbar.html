@@ -32,7 +32,7 @@
         [mdl]
         >
       <li class="mdl-menu__item" *ng-if="loggedin" [router-link]="['/logout']">Logout</li>
-      <li class="mdl-menu__item" *ng-if="loggedin" [router-link]="['/settings']">Settings</li>
+      <li class="mdl-menu__item" *ng-if="loggedin" [router-link]="['/settings', {'filter': 'general'}]">Settings</li>
     </ul>
 
     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="!loggedin" [router-link]="['/login']">

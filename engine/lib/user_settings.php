@@ -27,7 +27,7 @@ function users_settings_save() {
 
 /**
  * Set a user's password
- * 
+ *
  * @return bool
  * @since 1.8.0
  * @access private
@@ -74,7 +74,7 @@ function elgg_set_user_password() {
 		if ($result) {
 			if ($password == $password2) {
 				$user->salt = generate_random_cleartext_password(); // Reset the salt
-				
+
 				$algo = 'sha256';
 				if(strlen($user->password) == 32)
 					$algo = 'md5';
@@ -98,135 +98,7 @@ function elgg_set_user_password() {
 		// no change
 		return null;
 	}
-	
-	return false;
-}
 
-/**
- * Set a user's display name
- * 
- * @return bool
- * @since 1.8.0
- * @access private
- */
-function elgg_set_user_name() {
-	$name = strip_tags(get_input('name'));
-	$user_id = get_input('guid');
-
-	if (!$user_id) {
-		$user = elgg_get_logged_in_user_entity();
-	} else {
-		$user = get_entity($user_id,'user');
-	}
-
-	if (elgg_strlen($name) > 50) {
-		register_error(elgg_echo('user:name:fail'));
-		return false;
-	}
-
-	if (($user) && ($user->canEdit()) && ($name)) {
-	
-    	if ($name != $user->name) {
-			$user->name = $name;
-            if ($guid = $user->save()) {
-				system_message(elgg_echo('user:name:success'));
-                return true;
-			} else {
-				register_error(elgg_echo('user:name:fail'));
-			}
-		} else {
-			// no change
-			return null;
-		}
-	} else {
-		register_error(elgg_echo('user:name:fail'));
-	}
-	return false;
-}
-
-/**
- * Set a user's language
- * 
- * @return bool
- * @since 1.8.0
- * @access private
- */
-function elgg_set_user_language() {
-	$language = get_input('language');
-	$user_id = get_input('guid');
-
-	if (!$user_id) {
-		$user = elgg_get_logged_in_user_entity();
-	} else {
-		$user = get_entity($user_id,'user');
-	}
-
-	if (($user) && ($user->canEdit()) && ($language)) {
-		if (strcmp($language, $user->language) != 0) {
-			$user->language = $language;
-			if ($user->save()) {
-				system_message(elgg_echo('user:language:success'));
-				return true;
-			} else {
-				register_error(elgg_echo('user:language:fail'));
-			}
-		} else {
-			// no change
-			return null;
-		}
-	} else {
-		register_error(elgg_echo('user:language:fail'));
-	}
-	return false;
-}
-
-/**
- * Set a user's email address
- *
- * @return bool
- * @since 1.8.0
- * @access private
- */
-function elgg_set_user_email() {
-	$email = get_input('email');
-	$user_id = get_input('guid');
-
-	if (!$user_id) {
-		$user = elgg_get_logged_in_user_entity();
-	} else {
-		$user = get_entity($user_id,'user');
-	}
-
-	if (!is_email_address($email)) {
-		register_error(elgg_echo('email:save:fail'));
-		return false;
-	}
-
-    $user = new Minds\entities\user($user);
-    if(!$user->canEdit()){
-        register_error(elgg_echo('email:save:fail'));
-        return false;
-    }
-
-	if ($user) {
-		if (strcmp($email, $user->email) != 0) {
-				if ($user->getEmail() != $email) {
-
-					$user->setEmail($email);
-					if ($user->save()) {
-						system_message(elgg_echo('email:save:success'));
-						return true;
-					} else {
-						register_error(elgg_echo('email:save:fail'));
-					}
-				}
-		} else {
-			// no change
-			return null;
-		}
-	} else {
-		register_error(elgg_echo('email:save:fail'));
-	}
 	return false;
 }
 
@@ -271,104 +143,3 @@ function elgg_set_user_default_access() {
 
 	return false;
 }
-
-/**
- * Set up the menu for user settings
- *
- * @return void
- * @access private
- */
-function usersettings_pagesetup() {
-	$user = elgg_get_page_owner_entity();
-
-	if ($user && elgg_get_context() == "settings") {
-		$params = array(
-			'name' => '1_account',
-			'text' => elgg_echo('usersettings:user:opt:linktext'),
-			'href' => "settings/user/{$user->username}",
-		);
-		elgg_register_menu_item('page', $params);
-		$params = array(
-			'name' => '1_plugins',
-			'text' => elgg_echo('usersettings:plugins:opt:linktext'),
-			'href' => "settings/plugins/{$user->username}",
-		);
-	//	elgg_register_menu_item('page', $params);
-		$params = array(
-			'name' => '1_statistics',
-			'text' => elgg_echo('usersettings:statistics:opt:linktext'),
-			'href' => "settings/statistics/{$user->username}",
-		);
-		elgg_register_menu_item('page', $params);
-	}
-}
-
-/**
- * Page handler for user settings
- *
- * @param array $page Pages array
- *
- * @return bool
- * @access private
- */
-function usersettings_page_handler($page) {
-	global $CONFIG;
-
-	if (!isset($page[0])) {
-		$page[0] = 'user';
-	}
-
-	if (isset($page[1])) {
-		$user = get_user_by_username($page[1]);
-		elgg_set_page_owner_guid($user->guid);
-	} else {
-		$user = elgg_get_logged_in_user_guid();
-		elgg_set_page_owner_guid($user->guid);
-	}
-
-	elgg_push_breadcrumb(elgg_echo('settings'), "settings/user/$user->username");
-
-	switch ($page[0]) {
-		case 'statistics':
-			elgg_push_breadcrumb(elgg_echo('usersettings:statistics:opt:linktext'));
-			$path = $CONFIG->path . "pages/settings/statistics.php";
-			break;
-		case 'plugins':
-			elgg_push_breadcrumb(elgg_echo('usersettings:plugins:opt:linktext'));
-			$path = $CONFIG->path . "pages/settings/tools.php";
-			break;
-		case 'user':
-			$path = $CONFIG->path . "pages/settings/account.php";
-			break;
-	}
-
-	if (isset($path)) {
-		require $path;
-		return true;
-	}
-	return false;
-}
-
-/**
- * Initialize the user settings library
- *
- * @return void
- * @access private
- */
-function usersettings_init() {
-	elgg_register_page_handler('settings', 'usersettings_page_handler');
-
-	elgg_register_plugin_hook_handler('usersettings:save', 'user', 'users_settings_save');
-
-	elgg_register_action("usersettings/save");
-
-	// extend the account settings form
-	elgg_extend_view('forms/account/settings', 'core/settings/account/name', 100);
-	elgg_extend_view('forms/account/settings', 'core/settings/account/password', 100);
-	elgg_extend_view('forms/account/settings', 'core/settings/account/email', 100);
-	elgg_extend_view('forms/account/settings', 'core/settings/account/language', 100);
-	elgg_extend_view('forms/account/settings', 'core/settings/account/default_access', 100);
-}
-
-elgg_register_event_handler('init', 'system', 'usersettings_init');
-elgg_register_event_handler('pagesetup', 'system', 'usersettings_pagesetup');
