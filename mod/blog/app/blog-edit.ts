@@ -3,7 +3,8 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { Client, Upload } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
-import { Material } from 'src/directives/material';
+import { MDL_DIRECTIVES } from 'src/directives/material';
+import { MindsTinymce } from 'src/components/editors/tinymce';
 
 @Component({
   selector: 'minds-blog-edit',
@@ -11,7 +12,7 @@ import { Material } from 'src/directives/material';
 })
 @View({
   templateUrl: 'templates/plugins/blog/edit.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, Material ]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, MindsTinymce, MDL_DIRECTIVES ]
 })
 
 export class BlogEdit {
@@ -27,11 +28,7 @@ export class BlogEdit {
   };
   header : any;
 
-  constructor(public client: Client,
-    public upload: Upload,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
-    ){
+  constructor(public client: Client, public upload: Upload, public router: Router, public params: RouteParams){
       if(params.params['guid'])
         this.guid = params.params['guid'];
       this.minds = window.Minds;

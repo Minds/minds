@@ -5,7 +5,7 @@
 <div class="minds-blog-header">
 </div>
 
-<form (submit)="save()" class="mdl-grid blogs-grid" style="max-width:660px">
+<form (submit)="save()" class="mdl-grid blogs-grid" style="max-width:660px" *ng-if="blog.guid || !guid">
 
   <div>
     <input
@@ -17,7 +17,7 @@
 
   </div>
 
-  <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-blog-title" [mdl]>
+  <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-blog-title" [mdl-textfield]>
     <input
       class="mdl-textfield__input"
       type="text"
@@ -27,15 +27,8 @@
     <label class="mdl-textfield__label" for="name">Title</label>
   </div>
 
-  <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-blog-descriptions" [mdl]>
-    <textarea
-      class="mdl-textfield__input"
-      type="text"
-      rows= "10"
-      id="body"
-      [(ng-model)]="blog.description"
-      ></textarea>
-    <label class="mdl-textfield__label" for="body">Type your blog here (gui editor to come soon...)</label>
+  <div class="mdl-cell mdl-cell--12-col minds-blog-descriptions" >
+    <minds-tinymce [(content)]="blog.description"></minds-tinymce>
   </div>
 
   <div class="minds-blog-save">

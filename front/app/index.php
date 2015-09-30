@@ -31,11 +31,8 @@ ini_set( 'display_errors','1');
       }
     ?>
 
-    <!-- temporary design -->
-     <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.blue_grey-amber.min.css" />
-    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.blue_grey-amber.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,700'>
     <link rel="stylesheet" href="stylesheets/main.css"/>
 
@@ -63,12 +60,15 @@ ini_set( 'display_errors','1');
                 $minds['user']['chat'] = (bool) elgg_get_plugin_user_setting('option', Minds\Core\Session::getLoggedinUser()->guid, 'gatherings') == 1 ? true : false;
             }
         ?>
-        window.Minds = <?= json_encode($minds, JSON_PRETTY_PRINT) ?>;
+        window.Minds = <?= json_encode($minds) ?>;
 
         System.import('app')
           .catch(function(){console.error(e,
             'Report this error at https://github.com/mgechev/angular2-seed/issues')});
 
     </script>
+    <script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
+
   </body>
 </html>
