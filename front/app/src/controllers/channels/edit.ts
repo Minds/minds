@@ -5,6 +5,7 @@ import { Storage } from 'src/services/storage';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from '../../services/session';
 import { UserCard } from 'src/controllers/cards/cards';
+import { MindsUser } from 'src/interfaces/entities';
 
 @Component({
   selector: 'minds-channel-edit',
@@ -18,10 +19,17 @@ import { UserCard } from 'src/controllers/cards/cards';
 
 export class ChannelEdit {
   session = SessionFactory.build();
-  user;
+  user : MindsUser;
   imagefile;
+  imageSrc = "/icon/{{user.guid}}/large";
   inProgress : boolean = false;
   storage : Storage;
+  filekey = {
+				quality: 50,
+				destinationType: 'Camera.DestinationType.FILE_URI',
+				sourceType: 0,
+				correctOrientation: true
+			}
 
   constructor(public client: Client,
     public upload: Upload,
@@ -34,20 +42,20 @@ export class ChannelEdit {
   }
 
   changeAvatar(file){
-    this.imagefile = file.files[0];
+    this.imagefile = file ? file.files[0] : null;
   }
 
   uploadAvatar(){
     var self = this;
-    this.upload.post('api/v1/channel/avatar', [this.imagefile], { Authorization: "Bearer " + this.storage.get('access_token')}, (progress) => {
-      console.log('progress update');
-      console.log(progress);
-      })
-			.then((response : any) => {
-        self.router.navigate('/' + self.user.guid);
-			})
-			.catch(function(e){
-				console.error(e);
-			});
+    var reader  = new FileReader();
+    reader.onloadend = () => {
+      this.imageSrc = reader.result;
+    }
+    reader.readAsDataURL(this.imagefile);
+    this.upload.post('api/v1/channel/avatar', [this.imagefile], {filekey : 'file'})
+      .then((response : any) => {
+        console.log(response);
+        self.router.navigate('/' + self.user.username);
+      });
   }
 }
