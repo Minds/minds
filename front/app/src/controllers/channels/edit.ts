@@ -24,12 +24,6 @@ export class ChannelEdit {
   imageSrc = "/icon/{{user.guid}}/large";
   inProgress : boolean = false;
   storage : Storage;
-  filekey = {
-				quality: 50,
-				destinationType: 'Camera.DestinationType.FILE_URI',
-				sourceType: 0,
-				correctOrientation: true
-			}
 
   constructor(public client: Client,
     public upload: Upload,
@@ -55,7 +49,6 @@ export class ChannelEdit {
     this.upload.post('api/v1/channel/avatar', [this.imagefile], {filekey : 'file'})
       .then((response : any) => {
         console.log(response);
-        self.router.navigate('/' + self.user.username);
       });
   }
 }
