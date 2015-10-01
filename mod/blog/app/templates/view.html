@@ -20,7 +20,10 @@
       </div>
     </div>
     <div class="mdl-cell mdl-cell--6-col minds-actions-block">
-      <subscribe-button [user]="blog.ownerObj" *ng-if="blog.ownerObj.guid != session.getLoggedInUser().guid"></subscribe-button>
+      <minds-button-subscribe [user]="blog.ownerObj" *ng-if="blog.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
+      <minds-button-edit [router-link]="['/blog-edit', { guid: blog.guid }]" *ng-if="blog.ownerObj.guid == session.getLoggedInUser().guid || blog.canEdit">
+        <button>Edit</button>
+      </minds-button-edit>
       <div class="mdl-layout-spacer"></div>
       <minds-button-remind [object]="blog"></minds-button-remind>
       <minds-button-thumbs-up [object]="blog"></minds-button-thumbs-up>

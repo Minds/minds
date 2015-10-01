@@ -4,7 +4,8 @@ import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from 'src/services/session';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
-import { SubscribeButton } from 'src/directives/subscribe-button';
+import { BUTTON_COMPONENTS } from 'src/components/buttons';
+
 import { AutoGrow } from 'src/directives/autogrow';
 import { Activity } from 'src/controllers/newsfeed/activity';
 import { MindsActivityObject } from 'src/interfaces/entities';
@@ -20,7 +21,7 @@ import { ChannelSubscriptions } from './subscriptions';
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
-  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions, SubscribeButton ]
+  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS ]
 })
 
 export class Channel {

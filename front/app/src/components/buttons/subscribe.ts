@@ -2,7 +2,7 @@ import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
 import { Client } from "src/services/api";
 
 @Component({
-  selector: 'subscribe-button',
+  selector: 'minds-button-subscribe',
   properties: ['user']
 })
 @View({

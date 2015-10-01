@@ -4,11 +4,7 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-import { SubscribeButton } from 'src/directives/subscribe-button';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
-
-
-import { Comments } from 'src/controllers/comments/comments';
 
 @Component({
   selector: 'minds-archive-grid',
@@ -30,7 +26,7 @@ import { Comments } from 'src/controllers/comments/comments';
         <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
     </infinite-scroll>
   `,
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, InfiniteScroll, SubscribeButton, Comments ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, InfiniteScroll ]
 })
 
 export class ArchiveGrid {

@@ -4,7 +4,6 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-import { SubscribeButton } from 'src/directives/subscribe-button';
 
 import { Comments } from 'src/controllers/comments/comments';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
@@ -18,7 +17,7 @@ import { ArchiveGrid } from './views/grid';
 })
 @View({
   templateUrl: 'templates/plugins/archive/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, SubscribeButton, Comments, ArchiveTheatre, ArchiveGrid ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid ]
 })
 
 export class ArchiveView {

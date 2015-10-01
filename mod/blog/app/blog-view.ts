@@ -4,12 +4,13 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-import { SubscribeButton } from 'src/directives/subscribe-button';
-import { MindsBlogResponse } from 'src/interfaces/responses';
-import { MindsBlogEntity } from 'src/interfaces/entities';
+
 import { MindsBanner } from 'src/components/banner';
 import { Comments } from 'src/controllers/comments/comments';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
+
+import { MindsBlogResponse } from 'src/interfaces/responses';
+import { MindsBlogEntity } from 'src/interfaces/entities';
 
 @Component({
   selector: 'minds-blog-view',
@@ -17,7 +18,7 @@ import { BUTTON_COMPONENTS } from 'src/components/buttons';
 })
 @View({
   templateUrl: 'templates/plugins/blog/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, SubscribeButton, Comments, MindsBanner ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsBanner ]
 })
 
 export class BlogView {

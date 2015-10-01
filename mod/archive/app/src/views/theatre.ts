@@ -3,9 +3,6 @@ import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-import { SubscribeButton } from 'src/directives/subscribe-button';
-
-import { Comments } from 'src/controllers/comments/comments';
 
 @Component({
   selector: 'minds-archive-theatre',
@@ -23,7 +20,7 @@ import { Comments } from 'src/controllers/comments/comments';
       </video>
     </div>
   `,
-  directives: [ CORE_DIRECTIVES,  Material, SubscribeButton, Comments ]
+  directives: [ CORE_DIRECTIVES,  Material ]
 })
 
 export class ArchiveTheatre {

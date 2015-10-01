@@ -1,9 +1,9 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, Observable} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-import { SubscribeButton } from 'src/directives/subscribe-button';
+import { BUTTON_COMPONENTS } from 'src/components/buttons';
 
 @Component({
   selector: 'minds-card-user',
@@ -12,7 +12,7 @@ import { SubscribeButton } from 'src/directives/subscribe-button';
 })
 @View({
   templateUrl: 'templates/cards/user.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, SubscribeButton ]
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, BUTTON_COMPONENTS ]
 })
 
 export class UserCard {

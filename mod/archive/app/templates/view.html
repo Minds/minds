@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="mdl-cell mdl-cell--6-col minds-actions-block">
-      <subscribe-button [user]="entity.ownerObj" *ng-if="entity.ownerObj.guid != session.getLoggedInUser().guid"></subscribe-button>
+      <minds-button-subscribe [user]="entity.ownerObj" *ng-if="entity.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
       <div class="mdl-layout-spacer"></div>
       <minds-button-remind [object]="entity"></minds-button-remind>
       <minds-button-thumbs-up [object]="entity"></minds-button-thumbs-up>
