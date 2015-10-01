@@ -31,9 +31,10 @@ minds-blog-view{
 }
 
 .minds-blog-actions{
-  display: flex;
-  flex-direction: row;
+  @include flex-display();
+  @include flex-direction(row);
   align-items: center;
+  -webkit-align-items: center;
 }
 
 // remove this from here soon

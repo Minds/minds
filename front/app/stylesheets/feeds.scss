@@ -28,13 +28,14 @@
       */
      .tabs{
        padding:$minds-padding $minds-padding*2;
-       display:flex;
+       @include flex-display();
        box-sizing:border-box;
 
        > * {
-         display:flex;
-         flex-direction: column;
-         flex:1;
+         @include flex-display();
+         @include flex-direction(column);
+         @include flex(1);
+
          text-align:center;
          cursor:pointer;
        }
@@ -91,8 +92,8 @@
      margin-bottom:$minds-padding * 2;
      width:100%;
      min-height:0;
-     flex-direction: row;
-     flex-wrap:wrap;
+     @include flex-direction(row);
+     @include flex-wrap(wrap);
 
      .minds-avatar{
        margin-right:$minds-margin;
@@ -103,7 +104,7 @@
      }
 
      form{
-       flex:1;
+       @include flex(1);
        margin-bottom:0;
 
        .mdl-textfield__input{
@@ -146,6 +147,7 @@
          height:100%;
          background:rgba(0,0,0,0.6);
          align-items: center;
+         -webkit-align-items: center; 
          i{
           font-size:40px;
           color:#FFF;
@@ -211,12 +213,12 @@
     width:100%;
     min-height:0;
     padding:$minds-padding * 2;
-    display:flex;
-    flex-direction: row;
+    @include flex-display();
+    @include flex-direction(row);
 
     .avatar{
-      display:flex;
-      flex-direction: column;
+      @include flex-display();
+      @include flex-direction(column);
 
       img{
         border-radius: 3px;
@@ -260,11 +262,11 @@
  */
 .owner-block{
   padding:$minds-padding * 2;
-  display:flex;
+  @include flex-display();
 
   .avatar{
-    display:flex;
-    flex-direction: column;
+    @include flex-display();
+    @include flex-direction(column);
 
     img{
       border-radius: 3px;
@@ -273,8 +275,8 @@
   }
 
   .body{
-    display:flex;
-    flex-direction: column;
+    @include flex-display();
+    @include flex-direction(column);
     margin-left:$minds-margin * 2;
     margin-top:$minds-margin;
   }

@@ -14,6 +14,7 @@ minds-archive-theatre{
   width: 100%;
   background-color: #222;
   align-items: text;
+  -webkit-align-items: text;
   overflow: hidden;
   position: relative;
   height: auto;
@@ -45,10 +46,11 @@ minds-archive-theatre{
 
 
 minds-archive-grid{
-  display: flex;
+  @include flex-display();
   align-items: stretch;
-  flex-wrap: wrap;
-  flex-direction: row;
+  -webkit-align-items: stretch;
+  @include flex-wrap(wrap);
+  @include flex-direction(row);
 
   > a{
     width: 33.333%;

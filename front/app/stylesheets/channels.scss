@@ -6,8 +6,9 @@
 minds-channel{
 
   header{
-    display:flex;
+    @include flex-display();
     align-items: flex-end;
+    -webkit-align-items: -webkit-flex-end;
     height:330px;
     box-sizing:content-box;
     position:relative;
@@ -15,11 +16,12 @@ minds-channel{
 
     .channel-grid{
       align-items:flex-end;
+      -webkit-align-items: flex-end;
       padding:0;
     }
 
     .minds-channel-title{
-      display:flex;
+      @include flex-display();
       margin:0;
 
       .avatar{
@@ -32,8 +34,9 @@ minds-channel{
       }
 
       > div{
-        display:flex;
+        @include flex-display();
         align-items: flex-end;
+        -webkit-align-items: flex-end;
         padding:$minds-padding;
 
         .flex-bottom{
@@ -56,8 +59,9 @@ minds-channel{
 
 
   .minds-tabs{
-    flex: 1;
+    @include flex(1);
     align-items: flex-start;
+    -webkit-align-items: -webkit-flex-start;
     justify-content: flex-start;
     border:0;
 

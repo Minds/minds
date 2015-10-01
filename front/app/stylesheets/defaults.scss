@@ -13,3 +13,29 @@ $minds-padding: 8px;
 $minds-margin: 8px;
 $minds-top-height: 50px;
 $minds-navigation-width: 232px;
+
+
+@mixin flex-display(){
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+@mixin flex-direction($direction){
+  -webkit-flex-direction: $direction;
+  -moz-flex-direction: $direction;
+  -ms-flexbox-direction: $direction;
+  flex-direction: $direction;
+}
+@mixin flex-wrap($wrap){
+  -webkit-flex-wrap: $wrap;
+  -moz-flex-wrap: $wrap;
+  -ms-flexbox-wrap: $wrap;
+  flex-wrap: $wrap;
+}
+@mixin flex($flex){
+  -webkit-flex: $flex;
+  -moz-flex: $flex;
+  -ms-flexbox: $flex;
+  flex: $flex;
+}

@@ -61,6 +61,7 @@ minds-card-user, .minds-banner-card{
   .minds-tabs{
     flex: 1;
     align-items: flex-start;
+    -webkit-align-items: -webkit-flex-start;
     justify-content: flex-start;
     border:0;
 
@@ -86,10 +87,11 @@ minds-card-album{
     margin: -16px;
     height: 200px;
     overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    @include flex-display();
+    @include flex-direction(row);
+    @include flex-wrap(wrap);
     align-items: stretch;
+    -webkit-align-items: stretch;
 
     > a{
       flex: auto;

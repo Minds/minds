@@ -58,8 +58,9 @@
 
 
   .minds-boost-points-input{
-    display:flex;
+    @include flex-display();
     align-items:center;
+    -webkit-align-items: center;
     padding:0;
     margin:0;
 
@@ -67,10 +68,10 @@
       padding: $minds-padding;
     }
     > div:nth-of-type(1){
-      flex:3;
+      @include flex(3);
     }
     > div:nth-of-type(2){
-      flex:1;
+      @include flex(1);
     }
 
     input{

@@ -65,12 +65,13 @@ minds-topbar{
 
   minds-topbar-navigation{
     nav{
-      display:flex;
-      flex-direction: row;
+      @include flex-display();
+      @include flex-direction(row);
 
       a {
-        display:flex;
+        @include flex-display();
         align-items:center;
+        -webkit-align-items: center;
         padding-right: $minds-padding;
 
         .counter{
@@ -124,16 +125,11 @@ minds-topbar{
       }
 
       .minds-account-dropdown{
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
+        @include flex-display();
+
         position: relative;
         -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-        -webkit-flex-direction: row;
-        -ms-flex-direction: row;
-        flex-direction: row;
+        @include flex-direction(row);
         -webkit-box-align: center;
         -webkit-align-items: center;
         -ms-flex-align: center;
@@ -144,9 +140,7 @@ minds-topbar{
 
     nav.minds-navigation{
       padding-top:0 !important;
-      -webkit-box-flex: 1;
-      -webkit-flex-grow: 1;
-      -ms-flex-positive: 1;
+      @include flex(1);
       flex-grow: 1;
 
       .mdl-navigation__link{
@@ -253,8 +247,9 @@ minds-topbar{
   section {
     height: 300px;
     align-items: center;
+    -webkit-align-items: center;
     justify-content: center;
-    display: flex;
+    @include flex-display();
     padding: 55px;
     text-transform: uppercase;
     font-weight: 100;
@@ -277,7 +272,9 @@ minds-topbar{
 
 
 .minds-block {
-  flex-direction:row;
+  @include flex-display();
+  @include flex-direction(row);
+
   .minds-avatar{
     margin-right:$minds-margin;
   }
@@ -287,9 +284,10 @@ minds-topbar{
 }
 
 .minds-actions-block{
-  display: flex;
-  flex-direction: row;
+  @include flex-display();
+  @include flex-direction(row);
   align-items: center;
+  -webkit-align-items: center;
 
   > * {
     margin-right:$minds-margin*2;
