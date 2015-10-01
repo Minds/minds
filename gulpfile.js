@@ -60,15 +60,17 @@ var PATH = {
       './node_modules/reflect-metadata/Reflect.js',
       './node_modules/reflect-metadata/Reflect.js.map',
       './node_modules/systemjs/dist/system-polyfills.src.js',
-      './node_modules/systemjs/dist/system.src.js'
+      './node_modules/systemjs/dist/system.src.js',
+      './node_modules/intl/dist/intl.min.js',
+      './node_modules/intl/locale-data/jsonp/en.js'
     ],
     loaderConfig: [
       APP_SRC + '/system.config.js'
     ],
     angular: [
-      ANGULAR_BUNDLES + '/angular2.dev.js',
+      ANGULAR_BUNDLES + '/angular2.min.js',
       ANGULAR_BUNDLES + '/router.dev.js',
-      ANGULAR_BUNDLES + '/http.dev.js'
+      ANGULAR_BUNDLES + '/http.min.js'
     ],
     plugins: './mod'
   }

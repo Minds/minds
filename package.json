@@ -11,7 +11,8 @@
     "es6-module-loader": "^0.16.2",
     "systemjs": "^0.18.1",
     "zone.js": "^0.4.1",
-    "reflect-metadata": "0.1.0"
+    "reflect-metadata": "0.1.0",
+    "intl": "^1.0.0"
   },
   "devDependencies": {
     "connect": "^3.3.5",
