@@ -1,10 +1,8 @@
-import { Component, View, NgFor, NgIf, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, NgIf, Inject} from 'angular2/angular2';
 import { Router, RouteParams } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
-import { Storage } from 'src/services/storage';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from '../../services/session';
-import { UserCard } from 'src/controllers/cards/cards';
 import { MindsUser } from 'src/interfaces/entities';
 
 @Component({
@@ -14,21 +12,18 @@ import { MindsUser } from 'src/interfaces/entities';
 })
 @View({
   templateUrl: 'templates/channels/edit.html',
-  directives: [ NgFor, NgIf, Material, UserCard, FORM_DIRECTIVES]
+  directives: [ NgIf, Material]
 })
 
 export class ChannelEdit {
   session = SessionFactory.build();
   user : MindsUser;
+  cb = Date.now();
   imagefile;
-  imageSrc = "/icon/{{user.guid}}/large";
-  inProgress : boolean = false;
-  storage : Storage;
 
   constructor(public client: Client,
     public upload: Upload,
     @Inject(Router) public router: Router){
-    this.storage = new Storage();
   }
 
   set channel(value: any) {
@@ -42,13 +37,12 @@ export class ChannelEdit {
   uploadAvatar(){
     var self = this;
     var reader  = new FileReader();
-    reader.onloadend = () => {
-      this.imageSrc = reader.result;
-    }
     reader.readAsDataURL(this.imagefile);
+
     this.upload.post('api/v1/channel/avatar', [this.imagefile], {filekey : 'file'})
       .then((response : any) => {
-        console.log(response);
+        self.imagefile = null;
+        self.cb = Date.now();
       });
   }
 }
