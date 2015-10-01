@@ -83,12 +83,15 @@
 	<minds-boost [object]="activity" class="minds-boost-container" (done)="showBoostOptions = false"></minds-boost>
 </div>
 
-<div class="mdl-card__menu" *ng-if="!hideTabs">
-	<button class="mdl-button mdl-js-button mdl-button--icon minds-more mdl-color-text--grey-400">
+
+<div class="mdl-card__menu mdl-color-text--blue-grey-300" #toggle>
+	<!-- Right aligned menu below button -->
+	<button class="mdl-button minds-more mdl-button--icon" (click)="toggle.value = !toggle.value">
 		<i class="material-icons">keyboard_arrow_down</i>
 	</button>
-	<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" [mdl]>
+
+	<ul class="minds-dropdown-menu" [hidden]="!toggle.value">
 		<li class="mdl-menu__item" disabled>Share</li>
-		<li class="mdl-menu__item" *ng-if="activity.owner_guid == session.getLoggedInUser().guid" (click)="delete()">Delete</li>
+		<li class="mdl-menu__item" *ng-if="activity.owner_guid == session.getLoggedInUser().guid" (click)="delete(); toggle.value = !toggle.value">Delete</li>
 	</ul>
 </div>
