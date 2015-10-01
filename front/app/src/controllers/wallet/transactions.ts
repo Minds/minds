@@ -10,7 +10,7 @@ import { InfiniteScroll } from 'src/directives/infinite-scroll';
   viewBindings: [ Client ]
 })
 @View({
-  templateUrl: 'templates/plugins/payments/transactions.html',
+  templateUrl: 'templates/wallet/transactions.html',
   directives: [ CORE_DIRECTIVES, MDL_DIRECTIVES, FORM_DIRECTIVES, InfiniteScroll ]
 })
 

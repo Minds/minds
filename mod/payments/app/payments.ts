@@ -1,1 +1,0 @@
-export { Wallet } from './wallet';

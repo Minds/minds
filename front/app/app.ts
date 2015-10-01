@@ -16,6 +16,7 @@ import {Discovery} from './src/controllers/discovery/discovery';
 import {Channel, ChannelSubscribers, ChannelSubscriptions, ChannelEdit} from './src/controllers/channels/channel';
 import {Notifications} from './src/controllers/notifications/notifications';
 import {Search} from './src/controllers/search/search';
+import {Wallet} from './src/controllers/wallet/wallet';
 import {Settings} from './src/controllers/settings/settings';
 
 /**
@@ -25,7 +26,6 @@ import {Gatherings} from './src/plugins/gatherings/gatherings';
 import {Blog, BlogView, BlogEdit} from './src/plugins/blog/blog';
 import {ArchiveView} from './src/plugins/archive/archive';
 import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups';
-import {Wallet} from './src/plugins/payments/payments';
 
 @Component({
   selector: 'minds-app',

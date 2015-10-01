@@ -58,6 +58,7 @@ ini_set( 'display_errors','1');
             if(Minds\Core\Session::isLoggedIn()){
                 $minds['user'] = Minds\Core\Session::getLoggedinUser()->export();
                 $minds['user']['chat'] = (bool) elgg_get_plugin_user_setting('option', Minds\Core\Session::getLoggedinUser()->guid, 'gatherings') == 1 ? true : false;
+                $minds['wallet'] = array('balance' => Minds\Helpers\Counters::get(Minds\Core\Session::getLoggedinUser()->guid, 'points', false));
             }
         ?>
         window.Minds = <?= json_encode($minds) ?>;

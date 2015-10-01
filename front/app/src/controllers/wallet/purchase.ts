@@ -1,7 +1,7 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
-import { WalletService } from './wallet-service';
+import { WalletService } from 'src/services/wallet';
 import { Storage } from 'src/services/storage';
 import { MDL_DIRECTIVES } from 'src/directives/material';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
@@ -21,7 +21,7 @@ interface CreditCard {
   viewBindings: [ Client ]
 })
 @View({
-  templateUrl: 'templates/plugins/payments/purchase.html',
+  templateUrl: 'templates/wallet/purchase.html',
   directives: [ CORE_DIRECTIVES, MDL_DIRECTIVES, FORM_DIRECTIVES, InfiniteScroll ]
 })
 

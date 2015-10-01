@@ -51,6 +51,7 @@ export class Session {
 	login(user : any = null){
 		this.userEmitter.next(user);
 		window.Minds.user = user;
+		window.Minds.LoggedIn = true;
 		this.loggedinEmitter.next(true);
 	}
 
@@ -58,8 +59,9 @@ export class Session {
 	 * Emit logout event
 	 */
 	logout(){
-		this.loggedinEmitter.next(false);
 		this.userEmitter.next(null);
+		delete window.Minds.user;
+		window.Minds.LoggedIn = false;
 	}
 
 }

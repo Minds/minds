@@ -17,22 +17,10 @@ import { TopbarNavigation } from './topbar-navigation';
 })
 
 export class Topbar{
-	loggedin = false;
+
 	session = SessionFactory.build();
 
 	constructor(public storage: Storage, public sidebar : Sidebar){
-		this.showLogin();
-	}
-
-	/**
-	 * Determine if login button should be shown
-	 */
-	showLogin(){
-		var self = this;
-		this.loggedin = this.session.isLoggedIn((loggedin) => {
-			console.log(loggedin)
-			self.loggedin = loggedin;
-			});
 	}
 
 	/**

@@ -1,10 +1,11 @@
 import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
 import { SessionFactory } from 'src/services/session';
 import { Client } from "src/services/api";
-
+import { WalletService } from 'src/services/wallet';
 
 @Component({
   selector: 'minds-button-thumbs-down',
+  viewBindings: [ Client, WalletService ],
   properties: ['_object: object']
 })
 @View({
@@ -22,7 +23,7 @@ export class ThumbsDownButton {
   object;
   session = SessionFactory.build();
 
-  constructor(public client : Client) {
+  constructor(public client : Client, public wallet : WalletService) {
   }
 
   set _object(value : any){
@@ -37,12 +38,14 @@ export class ThumbsDownButton {
     if(!this.has()){
       this.object['thumbs:down:user_guids'].push(this.session.getLoggedInUser().guid);
       this.object['thumbs:down:count']++;
+      self.wallet.increment();
     } else {
       for(let key in this.object['thumbs:down:user_guids']){
         if(this.object['thumbs:down:user_guids'][key] == this.session.getLoggedInUser().guid)
           delete this.object['thumbs:down:user_guids'][key];
       }
       this.object['thumbs:down:count']--;
+      self.wallet.decrement();
     }
   }
 

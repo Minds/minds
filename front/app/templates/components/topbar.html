@@ -16,7 +16,7 @@
 
     <minds-topbar-navigation></minds-topbar-navigation>
 
-    <div class="minds-account" *ng-if="loggedin">
+    <div class="minds-account" *ng-if="session.isLoggedIn()">
       <a [router-link]="['/channel', {username: session.getLoggedInUser().username}]">
         <img src="/icon/{{session.getLoggedInUser().guid}}/small" />
       </a>
@@ -31,11 +31,11 @@
         for="header-actions"
         [mdl]
         >
-      <li class="mdl-menu__item" *ng-if="loggedin" [router-link]="['/logout']">Logout</li>
-      <li class="mdl-menu__item" *ng-if="loggedin" [router-link]="['/settings', {'filter': 'general'}]">Settings</li>
+      <li class="mdl-menu__item" *ng-if="session.isLoggedIn()" [router-link]="['/logout']">Logout</li>
+      <li class="mdl-menu__item" *ng-if="session.isLoggedIn()" [router-link]="['/settings', {'filter': 'general'}]">Settings</li>
     </ul>
 
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="!loggedin" [router-link]="['/login']">
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="!session.isLoggedIn()" [router-link]="['/login']">
       Login
     </button>
 </div>

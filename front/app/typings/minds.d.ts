@@ -2,6 +2,7 @@
 interface Minds{
  LoggedIn : boolean;
  user: Object;
+ wallet : any;
  navigation: MindsNavigation | any;
  cdn_url: string;
 }
