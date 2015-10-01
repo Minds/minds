@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace Minds\Api;
 use Minds\interfaces;
 use Minds\Helpers;
@@ -8,7 +8,7 @@ use Minds\Core\Security;
  * The minds API factory
   */
 class Factory{
-    
+
     /**
      * Builds the api controller
      * This is almost like an autoloader
@@ -17,20 +17,20 @@ class Factory{
         try{
         Helpers\RequestMetrics::increment('api');
         } catch(\Exception $e){}
-       
+
         $method = strtolower($_SERVER['REQUEST_METHOD']);
-        
+
         $route = implode('\\',$segments);
         $loop = count($segments);
         while($loop >= 0){
-            
-            $offset = $loop -1; 
+
+            $offset = $loop -1;
             if($loop < count($segments)){
                 $slug_length = strlen($segments[$offset+1].'\\');
                 $route_length = strlen($route);
                 $route = substr($route, 0, $route_length-$slug_length);
             }
-           
+
             //Literal routes
             $actual = str_replace('\\', '/', $route);
             if(isset(Routes::$routes[$actual])){
@@ -41,7 +41,7 @@ class Factory{
                         self::pamCheck();
                     $pages = array_splice($segments, $loop) ?: array();
                     return $handler->$method($pages);
-                
+
                 }
             }
 
@@ -53,22 +53,22 @@ class Factory{
                     self::pamCheck();
                 $pages = array_splice($segments, $loop) ?: array();
                 return $handler->$method($pages);
-                
+
             }
             --$loop;
         }
     }
-    
+
     /**
      * PAM checker
      */
     public static function pamCheck(){
 	    //error_log("checking pam");
         $user_pam = new \ElggPAM('user');
-        $api_pam = new \ElggPAM('api'); 
+        $api_pam = new \ElggPAM('api');
         $user_auth_result = $user_pam->authenticate();
         if($user_auth_result && $api_pam->authenticate() || Security\XSRF::validateRequest()){
-           
+
         } else {
              error_log('failed authentication:: OAUTH via API');
              ob_end_clean();
@@ -80,26 +80,26 @@ class Factory{
 
         }
     }
-    
+
     /**
      * Builds an api response
      * @param array $data
-     * 
+     *
      */
     public static function response($data = array()){
-        
+
         $data = array_merge(array(
             'status' => 'success', //should success be assumed?
         ), $data);
-        
+
         ob_end_clean();
-        
+
         header('Content-type: application/json');
         header("Access-Control-Allow-Origin: *");
         echo json_encode($data);
-        
+
     }
-    
+
     /**
      * Returns the exportable form of the entities
      * @param array $entities - an array of entities
@@ -117,6 +117,5 @@ class Factory{
         }
         return $entities;
     }
-    
+
 }
-    

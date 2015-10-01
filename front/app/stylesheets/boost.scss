@@ -53,9 +53,9 @@
 }
 
 .minds-boost-points-wrapper{
+  @include flex-display();
   padding:0;
   margin:0;
-
 
   .minds-boost-points-input{
     @include flex-display();
@@ -86,6 +86,9 @@
       -webkit-box-shadow: inset 0 0 3px #888;
       box-shadow: inset 0 0 3px #888;
       width: 100%;
+    }
+    input:disabled{
+      background:#FAFAFA;
     }
     label {
       font-weight: 200;

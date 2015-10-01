@@ -9,6 +9,67 @@
   }
 }
 
+.minds-quote-card{
+  width:100%;
+  min-height:0;
+
+  margin-bottom:$minds-margin*2;
+
+  .minds-boost-points-input{
+    input{
+      background: rgba(255,255,255,0.3);
+      color:#DDD;
+    }
+    input:disabled{
+      background: rgba(255,255,255,0.3);
+    }
+  }
+}
+
+.minds-purchase-card{
+  width:100%;
+  min-height:0;
+
+  .minds-purchase-vendors{
+    span{
+      font-size:16px;
+      padding:16px;
+    }
+  }
+
+  .mdl-grid{
+
+    .mdl-cell{
+      margin:0;
+      padding:0;
+      @include flex-display();
+      align-items: center;
+      -webkit-align-items: center;
+    }
+  }
+
+  select{
+    padding: 8px 16px;
+    margin-right: 16px;
+    font-size: 16px;
+    -webkit-appearance: none;
+    border: 1px solid #EEE;
+    /* border-right: 1px solid #DDD; */
+    background-color: #FAFAFA;
+    border-radius: 0;
+  }
+}
+
+.minds-purchase-card-confirm{
+  width:100%;
+  min-height:0;
+  margin-top:$minds-margin;
+
+  button {
+    float:right;
+  }
+}
+
 .minds-transaction-card{
   width:auto;
   min-height:0;

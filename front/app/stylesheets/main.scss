@@ -113,6 +113,7 @@ minds-topbar{
 .minds-sidebar{
   border:0;
   margin-top:64px;
+  height: calc(100% - 64px);
 
   minds-sidebar-navigation{
     padding-top:0 !important;

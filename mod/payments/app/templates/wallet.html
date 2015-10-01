@@ -4,7 +4,7 @@
 
     <div class="mdl-card mdl-shadow--2dp minds-wallet-points">
       <div class="mdl-card__title mdl-card--expand minds-transaction-points">
-        <h2>{{points}} points</h2>
+        <h2>{{wallet.points}} points</h2>
       </div>
     </div>
 
@@ -23,6 +23,7 @@
   <div class="mdl-cell mdl-cell--8-col">
 
     <minds-wallet-transactions *ng-if="filter == 'transactions'"></minds-wallet-transactions>
+    <minds-wallet-purchase *ng-if="filter == 'purchase'"></minds-wallet-purchase>
 
   </div>
 

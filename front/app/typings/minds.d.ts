@@ -2,11 +2,16 @@
 interface Minds{
  LoggedIn : boolean;
  user: Object;
- navigation: Array<any>;
+ navigation: MindsNavigation | any;
  cdn_url: string;
 }
 
- interface Window {
+interface MindsNavigation {
+  topbar: any,
+  sidebar: any
+}
+
+interface Window {
 	Minds : Minds;
 	componentHandler : any;
 }

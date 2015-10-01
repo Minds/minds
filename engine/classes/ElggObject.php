@@ -14,7 +14,7 @@
  *
  * @package    Elgg.Core
  * @subpackage DataModel.Object
- * 
+ *
  * @property string $title       The title, name, or summary of this object
  * @property string $description The body, description, or content of the object
  * @property array  $tags        Array of tags that describe the object
@@ -58,7 +58,7 @@ class ElggObject extends ElggEntity {
 
 		// compatibility for 1.7 api.
 		$this->initialise_attributes(false);
-		
+
 		parent::__construct($guid);
 	}
 
@@ -73,10 +73,10 @@ class ElggObject extends ElggEntity {
 	protected function load($guid) {
 		foreach($guid as $k => $v){
 			$this->attributes[$k] = $v;
-		}		
+		}
 
 		cache_entity($this);
-		
+
 		return true;
 	}
 
@@ -181,19 +181,19 @@ class ElggObject extends ElggEntity {
 					$array = array_merge($this->ownerObj, array('icontime'=>$CONFIG->lastcache));
 				else
 					$array = $this->ownerObj;
-				
+
 				$cache = true;
 				if(elgg_get_logged_in_user_guid() == $this->owner_guid)
 					$cache = false;
-				return new ElggUser($array, $cache);
+				return new Minds\entities\User($array, $cache);
 			}  else {
 				if($this->canEdit()){
 	//				$this->save();
 				}
 			}
 		}
-		
-		$owner = new ElggUser($this->owner_guid, false);
+
+		$owner = new Minds\entities\User($this->owner_guid, false);
  		return $owner;
 	}
 	/**
@@ -206,7 +206,7 @@ class ElggObject extends ElggEntity {
 		//cache owner_guid for brief
 		if($owner = $this->getOwnerEntity(false))
 			$this->ownerObj = $owner->export();
-		
+
 		$guid = parent::save($index);
         if($this->subtype == "video" || $this->subtype == "image"){
         try{
@@ -217,4 +217,3 @@ class ElggObject extends ElggEntity {
         return $guid;
 	}
 }
-	

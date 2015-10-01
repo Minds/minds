@@ -45,11 +45,8 @@ class start extends Components\Plugin{
 		$transaction->card = $card;
 		$transaction->save(); //save as pending.
 
-		try{
-			$paypal_obj= services\paypal::factory()->payment($amount, $currency = 'USD', $details, $card);
-		}catch(\Exception $e){
-			var_dump($e); exit;
-		}
+		$paypal_obj= services\paypal::factory()->payment($amount, $currency = 'USD', $details, $card);
+
 		$transaction->paypal_id = $paypal_obj->getID();
 		$transaction->status = 'complete';
 
