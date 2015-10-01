@@ -8,40 +8,31 @@
  */
 namespace Minds\Core;
 
-class Config extends base implements \ArrayAccess{
+class Config{
 
-	static public $config = array();
+	static public $_;
+	private $config = array();
 
 	public function init(){
 		//$this->lastcache = 0;
 	}
 
 	public function get($key){
-		global $CONFIG;
-		return $CONFIG->$key;
+		if(isset($this->config[$key]))
+			return $this->config[$key];
+		return null;
 	}
 
 	public function set($key, $value){
-
+		$this->config[$key] = $value;
 	}
 
-	public function offsetSet($offset, $value) {
-        if (is_null($offset)) {
-            self::$config[] = $value;
-        } else {
-            self::$config[$offset] = $value;
-        }
-    }
-
-    public function offsetExists($offset) {
-        return isset(self::$config[$offset]);
-    }
-
-    public function offsetUnset($offset) {
-        unset(self::$config[$offset]);
-    }
-
-    public function offsetGet($offset) {
-        return isset(self::$config[$offset]) ? self::$config[$offset] : null;
-    }
+	/**
+	 * Build the configuration
+	 */
+	static public function build(){
+		if(!self::$_)
+			self::$_ = new Config();
+		return self::$_;
+	}
 }

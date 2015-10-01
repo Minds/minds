@@ -21,25 +21,22 @@ use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 
 class paypal extends core\base{
-    
+
 	protected $context;
-	
+
 	/**
 	 * Init
 	 */
 	public function init(){
 		$this->context = new ApiContext(
 			new OAuthTokenCredential(
-				elgg_get_plugin_setting('paypalKey', 'payments') ?: 'AaUOIRC8rTb2jXZtnUvjMXWH1BH-5spBnL2kILF2AEPygMxvWOqME3e06hnj',
-				elgg_get_plugin_setting('paypalSecret', 'payments')?: 'EOWEZBB5n4Kc84mxXQhqF1rgz0GMKXyJ_fmWi5s1sk7k_35GeWTtXIwU6p2t'
-				//'ATAByBA7wVln5oky2XKkglEoH7k0DJmZVOz3S-DGJYkrNrHcIjZCdX1HHLwH',
-				//'EAJfIhCZXGo6L4YAiyFjlpPVKVspjwD5pYUanSPIDzTHU0lRLf8SP22BX2Q9'
+				Core\Config::build()->payments['paypalKey'] ?: 'AaUOIRC8rTb2jXZtnUvjMXWH1BH-5spBnL2kILF2AEPygMxvWOqME3e06hnj',
+				Core\Config::build()->payments['paypalSecret'] ?: 'EOWEZBB5n4Kc84mxXQhqF1rgz0GMKXyJ_fmWi5s1sk7k_35GeWTtXIwU6p2t'
 			)
 		);
 		$this->context->setConfig(
 			array(
-				'mode' => 'live',
-		//		'mode' => 'sandbox',
+				'mode' => Core\Config::build()->payments['paypal_mode'] ?: 'sandbox',
 				'http.ConnectionTimeOut' => 30,
 				'log.LogEnabled' => true,
 				'log.FileName' => '/tmp/PayPal.log',
@@ -47,15 +44,15 @@ class paypal extends core\base{
 			)
 		);
 	}
-	
+
 	/**
 	 * Create a credit card in the vault
-	 * 
-	 * @param array $params 
+	 *
+	 * @param array $params
 	 * @return CreditCard Object (paypal)
 	 */
 	public function createCard($params = array()){
-		
+
 		$params = array_merge(array(
 			'type' => NULL,
 			'number' => NULL,
@@ -65,7 +62,7 @@ class paypal extends core\base{
 			'name' => NULL,
 			'name2' => NULL
 		), $params);
-		
+
 		$card = new CreditCard();
 		$card->setType($params['type'])
 			->setNumber($params['number'])
@@ -74,20 +71,20 @@ class paypal extends core\base{
 			->setCvv2($params['sec'])
 			->setFirstName($params['name'])
 			->setLastName($params['name2']);
-			
+
 		return $card->create($this->context);
 	}
 
 	/**
 	 * Return credit card information from the vault (not the info but just what we need from paypal)
-	 * 
+	 *
 	 * @param string $id
 	 * @return CreditCard Object (paypal)
 	 */
 	public function getCard($id){
 		return CreditCard::get($id, $this->context);
-	}	
-	
+	}
+
 	/**
 	 * Perform a payment
 	 */
@@ -102,28 +99,28 @@ class paypal extends core\base{
 			$creditCardToken = new CreditCardToken();
 			$creditCardToken->setCreditCardId($card);
 			$fi->setCreditCardToken($creditCardToken);
-		}else{ 
+		}else{
 			$fi->setCreditCard($card);
 		}
-		
+
 		/** Payer **/
 		$payer = new Payer();
 		$payer->setPaymentMethod("credit_card")
 			->setFundingInstruments(array($fi));
-		
-		
+
+
 		/** Amount **/
 		$amount = new Amount();
 		$amount->setCurrency("USD")
 			->setTotal(number_format($amount_val, 2));
-		
+
 		/**
 		 * Transaction Object
 		 */
 		$transaction = new Transaction();
 		$transaction->setAmount($amount)
 			->setDescription("Minds: $description");
-		
+
 		/*
 		 * Payment object
 		 */
@@ -131,7 +128,7 @@ class paypal extends core\base{
 		$payment->setIntent("sale")
 			->setPayer($payer)
 			->setTransactions(array($transaction));
-			
+
 		return $payment->create($this->context);
 	}
 
@@ -161,7 +158,7 @@ class paypal extends core\base{
         $capture->setAmount($amt);
         return $auth->capture($capture, $this->context);
     }
-	
+
 	/**
 	 * Factory
 	 */
