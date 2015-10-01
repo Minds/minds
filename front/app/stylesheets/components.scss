@@ -1,3 +1,5 @@
+@import 'defaults.scss';
+
 .minds-banner{
   max-height:300px;
   overflow:hidden;
@@ -22,5 +24,37 @@
   .mdl-menu__item{
     opacity:1;
   }
+
+}
+
+.minds-card-navigation, .minds-settings-nav{
+
+  list-style: none;
+  min-height:0;
+  width:auto;
+  padding:0;
+  margin:0;
+
+  li{
+   text-align: left;
+   padding: 0;
+   margin:0;
+   cursor: pointer;
+   font-size: 14px;
+   width: auto;
+   border-bottom: 1px solid rgba(0,0,0,.12);
+
+   :hover{
+     background-color: #EEE;
+     text-decoration: none;
+   }
+
+   a{
+     display:block;
+     padding:$minds-padding *2;
+     text-decoration: none;
+   }
+
+ }
 
 }

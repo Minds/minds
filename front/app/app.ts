@@ -58,6 +58,7 @@ import {Wallet} from './src/plugins/payments/payments';
   { path: '/groups/profile/:guid/:filter', component: GroupsProfile, as: 'groups-profile'},
 
   { path: '/wallet', component: Wallet, as: 'wallet'},
+  { path: '/wallet/:filter', component: Wallet, as: 'wallet-filter'},
 
   { path: '/search', component: Search, as: 'search' },
 
