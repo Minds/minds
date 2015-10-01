@@ -95,4 +95,22 @@ minds-channel{
      min-height:0;
    }
  }
+
+ .minds-channel-edit-avatar{
+   max-height: 180px;
+   max-width: 100%;
+   border-radius: 3px;
+  }
+
+  .minds-channel-edit-upload-separator{
+    border-left: 1px solid #ccc;
+    
+    input{
+      padding: 16px;
+    }
+
+    button{
+      margin-left: 16px;
+    }
+  }
 }

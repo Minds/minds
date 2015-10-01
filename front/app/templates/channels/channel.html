@@ -54,6 +54,9 @@
           <b>{{user.impressions}}</b>
         </a>
         <minds-button-subscribe [user]="user" class="mdl-tabs__tab" *ng-if="session.getLoggedInUser().guid != user.guid"></minds-button-subscribe>
+        <a [router-link]="['/channel-filter', {username: user.username, filter: 'edit'}]" class="mdl-tabs__tab  mdl-color-text--blue-grey-50" *ng-if="session.getLoggedInUser().guid == user.guid">
+          <span>Edit</span>
+        </a>
     </div>
   </div>
 </header>
@@ -121,6 +124,13 @@
   <section class="mdl-cell mdl-cell--8-col" *ng-if="_filter == 'subscribers'">
 
     <minds-channel-subscribers [channel]="user" class="mdl-grid"></minds-channel-subscribers>
+
+  </section>
+
+  <!-- Edit Channel -->
+  <section class="mdl-cell mdl-cell--8-col" *ng-if="_filter == 'edit'">
+
+    <minds-channel-edit [channel]="user" class="mdl-grid"></minds-channel-edit>
 
   </section>
 

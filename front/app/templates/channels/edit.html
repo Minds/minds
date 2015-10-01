@@ -1,0 +1,15 @@
+<div class="mdl-grid mdl-cell mdl-cell--12-col mdl-card mdl-shadow--2dp">
+  <div class="mdl-cell mdl-cell--4-col">
+    <div class="mdl-card__supporting-text">
+      Current Avatar
+    </div>
+
+    <img src="/icon/{{user.guid}}/large/{{cb}}" class="minds-channel-edit-avatar" />
+  </div>
+
+  <div class="mdl-cell mdl-cell--8-col minds-channel-edit-upload-separator">
+    <div class="mdl-card__supporting-text">Upload a new avatar</div>
+    <input type="file" id="file" #file (change)="changeAvatar(file)"/>
+    <button class="mdl-button mdl-button--raised mdl-button--colored" [disabled]="!imagefile" (click)="uploadAvatar()">Upload</button>
+  </div>
+</div>

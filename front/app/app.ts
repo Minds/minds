@@ -13,7 +13,7 @@ import {ComingSoon} from './src/controllers/comingsoon';
 import {Newsfeed} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';
 import {Discovery} from './src/controllers/discovery/discovery';
-import {Channel, ChannelSubscribers, ChannelSubscriptions} from './src/controllers/channels/channel';
+import {Channel, ChannelSubscribers, ChannelSubscriptions, ChannelEdit} from './src/controllers/channels/channel';
 import {Notifications} from './src/controllers/notifications/notifications';
 import {Search} from './src/controllers/search/search';
 import {Settings} from './src/controllers/settings/settings';

@@ -14,6 +14,7 @@ import { MindsChannelResponse } from 'src/interfaces/responses';
 
 import { ChannelSubscribers } from './subscribers';
 import { ChannelSubscriptions } from './subscriptions';
+import { ChannelEdit } from './edit';
 
 @Component({
   selector: 'minds-channel',
@@ -21,7 +22,7 @@ import { ChannelSubscriptions } from './subscriptions';
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
-  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS ]
+  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS, ChannelEdit ]
 })
 
 export class Channel {
@@ -128,3 +129,4 @@ export class Channel {
 
 export { ChannelSubscribers } from './subscribers';
 export { ChannelSubscriptions } from './subscriptions';
+export { ChannelEdit } from './edit';
