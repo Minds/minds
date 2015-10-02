@@ -42,7 +42,8 @@ export class ChannelEdit {
     this.upload.post('api/v1/channel/avatar', [this.imagefile], {filekey : 'file'})
       .then((response : any) => {
         self.imagefile = null;
-        self.cb = Date.now();
+        self.user.icontime = Date.now();
+        window.Minds.user.icontime = Date.now();
       });
   }
 }

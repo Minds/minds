@@ -1,7 +1,7 @@
 // Type definitions for Minds
 interface Minds{
  LoggedIn : boolean;
- user: Object;
+ user: any;
  wallet : any;
  navigation: MindsNavigation | any;
  cdn_url: string;

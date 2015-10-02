@@ -20,7 +20,8 @@ export interface MindsUser {
 	guid : string,
 	name : string,
 	username : string,
-	chat : any
+	chat : boolean,
+	icontime : number
 }
 
 export interface MindsGroup {

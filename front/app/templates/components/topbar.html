@@ -18,7 +18,7 @@
 
     <div class="minds-account" *ng-if="session.isLoggedIn()">
       <a [router-link]="['/channel', {username: session.getLoggedInUser().username}]">
-        <img src="/icon/{{session.getLoggedInUser().guid}}/small" />
+        <img src="/icon/{{session.getLoggedInUser().guid}}/small/{{session.getLoggedInUser().icontime}}" />
       </a>
     </div>
 

@@ -2,7 +2,7 @@
 
     <div class="minds-avatar">
       <a [router-link]="['/channel', {username: session.getLoggedInUser().username}]">
-        <img src="{{minds.cdn_url}}/icon/{{session.getLoggedInUser().guid}}/medium" class="mdl-shadow--2dp"/>
+        <img src="{{minds.cdn_url}}/icon/{{session.getLoggedInUser().guid}}/medium/{{session.getLoggedInUser().icontime}}/" class="mdl-shadow--2dp"/>
       </a>
     </div>
 
