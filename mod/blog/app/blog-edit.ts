@@ -21,7 +21,7 @@ export class BlogEdit {
 
   guid : string;
   blog : Object = {
-    guid: '',
+    guid: 'new',
     title: '',
     description: '',
     access_id: 2
