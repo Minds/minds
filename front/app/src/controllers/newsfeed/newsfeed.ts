@@ -8,13 +8,16 @@ import { Activity } from './activity';
 import { MindsActivityObject } from 'src/interfaces/entities';
 import { SessionFactory } from 'src/services/session';
 
+import { GraphImpressions } from 'src/components/graphs/impressions';
+
 @Component({
   selector: 'minds-newsfeed',
   viewBindings: [ Client, Upload ]
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
-  directives: [ Poster, Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
+  directives: [ Poster, Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES,
+    InfiniteScroll, GraphImpressions ]
 })
 
 export class Newsfeed {
