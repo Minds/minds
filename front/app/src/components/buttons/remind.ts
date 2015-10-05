@@ -9,7 +9,7 @@ import { Client } from "src/services/api";
 })
 @View({
   template: `
-    <a class="mdl-color-text--blue-grey-500" (click)="remind()" [ng-class]="{'selected': (object.reminds > 0) }">
+    <a class="mdl-color-text--blue-grey-500" (click)="remind()" [ng-class]="{'selected': object.reminded }">
       <i class="material-icons">repeat</i>
       <counter *ng-if="object.reminds > 0">{{object.reminds}}</counter>
     </a>
@@ -31,14 +31,16 @@ export class RemindButton {
 
   remind(){
     var self = this;
+
+    if (this.object.reminded)
+      return false;
+
     this.client.post('api/v1/newsfeed/remind/' + this.object.guid, {})
       .then((response : any) => {
-          console.log(response);
-          console.log(this.object);
+          this.object.reminded = true;
           this.object.reminds++;
       })
       .catch((e) => {
-        console.log(e);
       });
   }
 
