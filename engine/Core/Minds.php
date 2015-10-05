@@ -75,7 +75,7 @@ class minds extends base{
 
 		global $CONFIG;
 		if(!isset($CONFIG))
-			$CONFIG = new Config();
+			$CONFIG = Config::build();
 
 		// Load the system settings
 		if (file_exists(__MINDS_ROOT__ . '/engine/settings.php')){
