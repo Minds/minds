@@ -1,7 +1,8 @@
-import { Component, View, NgFor, NgIf, NgClass, Inject, Observable} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES} from 'angular2/angular2';
 import { Router, RouteParams, RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
+import { Storage } from 'src/services/storage';
 import { Material } from 'src/directives/material';
 import { MindsUserConversationResponse } from './interfaces/responses';
 import { MindsMessageResponse } from './interfaces/responses';
@@ -13,17 +14,18 @@ import { MindsMessageResponse } from './interfaces/responses';
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/messenger-conversation.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink]
+  directives: [ CORE_DIRECTIVES, Material, RouterLink ]
 })
 
 export class MessengerConversation {
 
   minds: Minds;
   session = SessionFactory.build();
+  storage = new Storage;
   guid : string;
 
   messages : Array<any> = [];
-  offset: string;
+  offset: string = "";
   previous: string;
   hasMoreData: boolean = true;
   inProgress: boolean = false;
@@ -35,17 +37,18 @@ export class MessengerConversation {
 
   timeout: any;
 
-  isSendingMessage : boolean = false;
+  isSending : boolean = false;
 
   constructor(public client: Client, public router: Router, public params: RouteParams){
     this.minds = window.Minds;
     if (params.params && params.params['guid']){
       this.guid = params.params['guid'];
-      this.load();
     }
   }
 
   set _conversation(value : any){
+    if(!value)
+      return;
     this.guid = value;
     this.load();
   }
@@ -56,21 +59,16 @@ export class MessengerConversation {
   load() {
     var self = this;
     this.inProgress = true;
-
     this.client.get('api/v1/conversations/' + this.guid,
       {
         limit: 6,
         offset: this.offset,
-        cachebreak: Date.now()
+        cachebreak: Date.now(),
+        decrypt: true,
+        password: this.storage.get('private-key')
       })
       .then((data : MindsUserConversationResponse) =>{
-        self.newChat = false;
         self.inProgress = false;
-
-        if (!self.publickeys[self.guid]) {
-          self.enabled = false;
-          return true;
-        }
 
         if (!data.messages) {
           self.hasMoreData = false;
@@ -81,39 +79,37 @@ export class MessengerConversation {
           self.messages.push(message);
         }
 
-        console.log("------ MESSAGES ARE LOADED ------");
-
         self.offset = data['load-previous'];
         self.previous = data['load-next'];
-
-        self.poll = true;
-
       })
       .catch(function(error) {
         self.inProgress = false;
       });
   };
 
-  sendMessage(message){
-    this.isSendingMessage = true;
-    var pushed = false;
+  /**
+   * Send
+   */
+  send(message){
     var self = this;
-    this.client.post('api/v1/conversations/' + this.guid, message.value)
+    this.isSending = true;
+    this.client.post('api/v1/conversations/' + this.guid,
+      {
+        message: message.value,
+        encrypt: true
+      })
       .then((data : MindsMessageResponse) =>{
-        self.isSendingMessage = false;
-        if (!pushed) {
-          data.message.message = message.value;
-          self.messages.push(data.message);
-          self.previous = data.message.guid;
-          pushed = true;
-        }
+        self.isSending = false;
+
+        self.messages.push(data.message);
+        self.previous = data.message.guid;
+
         message.value = null;
       })
       .catch(function(error) {
         alert('sorry, your message could not be sent');
         message.value = null;
-        self.isSendingMessage = false;
-        console.log(error);
+        self.isSending = false;
       });
   }
 

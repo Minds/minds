@@ -17,8 +17,7 @@
       - It is important so that no one other than you and the people you are communicating with can access the content of your messages. <br/>
     </div>
 
-
-      <form #passwords="form" class="mdl-grid minds-messenger-setup-grid" (submit)="setup(passwords)">
+    <form #passwords="form" class="mdl-grid minds-messenger-setup-grid" (submit)="setup(passwords)">
 
         <div class="mdl-cell mdl-cell--6-col mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
           <input class="mdl-textfield__input"
@@ -31,9 +30,9 @@
 
         <div class="mdl-cell mdl-cell--6-col mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
           <input class="mdl-textfield__input"
-          type="password"
-          id="password2"
-          ng-control="password2"
+            type="password"
+            id="password2"
+            ng-control="password2"
           />
           <label class="mdl-textfield__label" for="password2">Enter again to confirm...</label>
         </div>
@@ -47,7 +46,7 @@
           </div>
         </div>
 
-      </form>
+    </form>
 
 
   </div>
@@ -70,6 +69,9 @@
         </div>
 
         <div class="mdl-cell mdl-cell--12-col minds-messenger-setup-actions">
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" (click)="configured = false">
+            Reset
+          </button>
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
             Unlock
           </button>
@@ -77,7 +79,6 @@
             {{error}}
           </div>
         </div>
-
 
       </form>
 

@@ -29,7 +29,12 @@ class conversations implements interfaces\api{
             $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
             $conversation->clearCount();
             $ik = $conversation->getIndexKeys();
-            $guids = core\Data\indexes::fetch("object:gathering:conversation:".$ik[0], array('limit'=>get_input('limit',12), 'offset'=>get_input('offset', ''), 'finish'=>get_input('start', ''), 'reversed'=>true));
+            $guids = core\Data\indexes::fetch("object:gathering:conversation:".$ik[0], array(
+              'limit'=>get_input('limit',12),
+              'offset'=>get_input('offset', ''),
+              'finish'=>get_input('start', ''),
+              'reversed'=>true
+            ));
             if(isset($guids[get_input('start')])){
                 unset($guids[get_input('start')]);
             }
@@ -44,8 +49,12 @@ class conversations implements interfaces\api{
                 if($messages){
 
                     foreach($messages as $k => $message){
+                      if(isset($_GET['decrypt']) && $_GET['decrypt']){
+                        $messages[$k]->decryptMessage(Core\Session::getLoggedInUser()->guid, $_GET['password']);
+                      } else {
                         $key = "message:".elgg_get_logged_in_user_guid();
                         $messages[$k]->message = $messages[$k]->$key;
+                      }
                     }
 
                     $messages = array_reverse($messages);
@@ -83,19 +92,25 @@ class conversations implements interfaces\api{
         $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
 
         $message = new entities\message($conversation);
-        $message->client_encrypted = true;
-        foreach($conversation->participants as $guid){
-          $key = "message:$guid";
-          $message->$key = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
-          //error_log(print_r($message->$key, true));
+        if(isset($_POST['encrypt']) && $_POST['encrypt']){
+          $message->message = $_POST['message'];
+        } else {
+          $message->client_encrypted = true;
+          foreach($conversation->participants as $guid){
+              $key = "message:$guid";
+              $message->$key = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
+          }
         }
-        //	error_log(print_r($message, true));
+
         $message->save();
 
         $conversation->update();
         $conversation->notify();
 
-        $key = "message:".elgg_get_logged_in_user_guid();
+        if($message->client_encrypted)
+          $key = "message:".elgg_get_logged_in_user_guid();
+        else
+          $key = "message";
         $message->message = $message->$key;
         $response["message"] = $message->export();
 

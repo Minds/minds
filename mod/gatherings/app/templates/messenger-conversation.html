@@ -1,40 +1,31 @@
-<div class="mdl-card mdl-shadow--2dp" style="width:100%">
-
-  <div class="mdl-card__title">
-    <h2 class="mdl-card__title-text">Conversation</h2>
-  </div>
-
-  <div class="minds-gatherings-message-list">
-
-    <div  class="mdl-grid mdl-shadow--2dp" *ng-for="#message of messages">
-
-      <div class="mdl-cell mdl-cell--12-col minds-gatherings-ownerblock">
-  
-        <div class="minds-avatar">
-            <img src="{{minds.cdn_url}}/icon/{{message.owner_guid}}/small" class="mdl-shadow--2dp" alt={{message.ownerObj.username}} title={{message.ownerObj.username}}>
-        </div>
-
-        <div class="minds-body">
-          <label class="mdl-color-text--grey-500 ng-binding">
-            {{message.message}}
-          </label>
-          <span class="minds-gatherings-message-time">{{message.time_created * 1000 | date:'shortTime'}} - {{message.time_created * 1000 | date:'longDate'}}</span>
-        </div>
-
+<div class="minds-messagenger-messenger">
+  <div  class="mdl-card mdl-shadow--2dp minds-messenger-message" *ng-for="#message of messages">
+    <div class="minds-block">
+      <div class="minds-avatar">
+          <img src="{{minds.cdn_url}}/icon/{{message.owner_guid}}/small" class="mdl-shadow--2dp" alt={{message.ownerObj.username}} title={{message.ownerObj.username}}>
       </div>
 
+      <div class="minds-body">
+        <p *ng-if="message.message">{{message.message}}</p>
+        <p *ng-if="!message.message"><i>Could not decrypt message</i></p>
+        <span class="minds-gatherings-message-time mdl-color-text--grey-500">{{message.time_created * 1000 | date:'shortTime'}} - {{message.time_created * 1000 | date:'longDate'}}</span>
+      </div>
     </div>
-
   </div>
+</div>
 
-  <div class="minds-gatherings-chat-box">
-    <div class="mdl-textfield mdl-js-textfield textfield-demo textfield-chat" [mdl]>
-      <input #message class="mdl-textfield__input" type="text"  id="chatText" (keyup)="doneTyping($event)"/>
-      <label class="mdl-textfield__label" for="chatText">Write your message here...</label>
-    </div>
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" [disabled]="isSendingMessage" (click)="sendMessage(message)">
-      Send
-    </button>
-  </div>
-
+<div class="mdl-card minds-gatherings-send">
+  <input #message
+    type="text"
+    id="chatText"
+    (keyup)="doneTyping($event)"
+    placeholder="Enter your message here..."
+    />
+  <button class="mdl-button mdl-js-button mdl-button--colored"
+    [disabled]="isSending"
+    (click)="send(message)"
+    >
+    Send
+    <i class="material-icons">send</i>
+  </button>
 </div>

@@ -26,6 +26,7 @@ export class MessengerSetup {
   configured: boolean = false;
   show : boolean = false;
   data: any = {};
+  password : string = "abc123";
 
   inProgress : boolean = false;
   error : string = "";
@@ -56,19 +57,19 @@ export class MessengerSetup {
   unlock(password) {
     var self = this;
     this.inProgress = true;
-    this.client.get('api/v1/keys',
+    this.client.post('api/v1/keys',
       {
         password: password.value.password,
-        new_password: 'abc123'
+        download: false
       })
       .then((data : MindsKeysResponse) => {
 
-        if (!data.key) {
+        if (!data.password) {
           self.error = 'We couldn\'t unlock your chat. Please check your password is correct.';
           return false;
         }
 
-        self.storage.set('private-key', data.key);
+        self.storage.set('private-key', data.password);
         this.inProgress = false;
         self.done.next(true);
       })
@@ -95,7 +96,12 @@ export class MessengerSetup {
       return false;
     }
 
-    this.client.post('api/v1/keys/setup', { password: passwords.value.password1 })
+    this.client.post('api/v1/keys/setup',
+      {
+        password: passwords.value.password1,
+        unlock_password: this.password,
+        download: false
+      })
       .then((data : MindsKeysResponse) =>{
 
         if (!data.key){
@@ -103,9 +109,8 @@ export class MessengerSetup {
           return false;
         }
 
-
-
-        self.storage.set('private-key', data.key);
+        //self.storage.set('private-key', data.key);
+        self.storage.set('private-key', self.password);
         self.done.next(true);
         this.inProgress = false;
       })

@@ -1,3 +1,57 @@
+
+minds-messenger-conversation{
+  .mdl-card{
+    width:100%;
+    min-height:0;
+    margin-bottom:$minds-margin*2;
+  }
+
+  .minds-messagenger-messenger{
+    max-height:500px;
+    max-height:60vh;
+    display:block;
+    overflow-y: scroll;
+  }
+
+  .minds-messenger-message{
+    padding:$minds-padding;
+    margin-bottom:$minds-margin;
+
+    .minds-body{
+      @include flex-display();
+      @include flex-direction(row);
+      align-items: center;
+      -webkit-align-items: center;
+
+      > p {
+        @include flex-display();
+        @include flex(3);
+      }
+      > span {
+        @include flex-display();
+        @include flex(1);
+        font-size:10px;
+      }
+    }
+  }
+
+  .minds-gatherings-send{
+    padding: $minds-padding;
+
+    input{
+      width: 90%;
+      padding: 12px;
+      border: 0;
+    }
+    .mdl-button{
+      position: absolute;
+      right: 8px;
+      top: 8px;
+    }
+  }
+}
+
+
 minds-gatherings{
   .minds-gatherings-search{
     width:100%;
@@ -12,37 +66,22 @@ minds-gatherings{
     width: 50px;
     border-radius: 50%;
   }
-  .minds-gatherings-ownerblock .minds-body {
-    display: table-cell;
-    vertical-align: middle;
-  }
-  .minds-gatherings-ownerblock .minds-body a {
-    display: block;
-    text-decoration: none;
-  }
-  .minds-gatherings-ownerblock .minds-body span {
-    font-size: 11px;
-  }
 
-  .minds-gatherings-view h1 {
-    margin: 0;
-  }
+  .minds-gatherings-view {
+    h1 {
+      margin: 0;
+    }
 
-  .minds-gatherings-view .minds-gatherings-header {
-    max-height: 300px;
-    overflow: hidden;
-  }
+    .minds-gatherings-header {
+      max-height: 300px;
+      overflow: hidden;
+    }
 
-  .minds-gatherings-view .minds-gatherings-header img {
-    width: 100%;
-  }
-
-  .minds-gatherings-view a {
-    color: #607d8b;
-  }
-
-  .minds-gatherings-body {
-    padding-top: 16px;
+    .minds-gatherings-header {
+      img {
+        width: 100%;
+      }
+    }
   }
 
   .minds-gatherings-actions {
@@ -75,11 +114,11 @@ minds-gatherings{
         }
         h3{
           margin: 0;
-          font-size: 18px;
-          line-height: 24px;
+          font-size: 16px;
+          line-height: 18px;
         }
         span{
-          font-size:11px;
+          font-size:10px;
         }
       }
   }
@@ -92,12 +131,6 @@ minds-gatherings{
   .minds-gatherings-message-time{
     float:right;
   }
-
-  .minds-gatherings-chat-box{
-    padding-left:20px;
-  }
-
-
 
   .minds-messenger-setup-actions{
     button{

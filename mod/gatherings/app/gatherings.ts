@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, NgClass, Inject, Observable, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { ROUTER_DIRECTIVES, Router, RouteParams, RouterLink } from "angular2/router";
 
 import { MessengerConversation } from "./messenger-conversation";
@@ -19,12 +19,13 @@ import { MindsGatheringsSearchResponse } from './interfaces/responses';
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/gatherings.html',
-  directives: [ ROUTER_DIRECTIVES, NgFor, NgIf, NgClass, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
+  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
 })
 
 export class Gatherings {
 
   session = SessionFactory.build();
+  conversation;
   conversations : Array<Conversation> = [];
   offset : string =  "";
   setup : boolean = false;
@@ -38,6 +39,9 @@ export class Gatherings {
 
   constructor(public client: Client, public router: Router, public params: RouteParams){
     this.minds = window.Minds;
+    if (params.params && params.params['guid']){
+      this.conversation = params.params['guid'];
+    }
     this.checkSetup();
     this.load(true);
   }
