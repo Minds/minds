@@ -147,7 +147,7 @@
          height:100%;
          background:rgba(0,0,0,0.6);
          align-items: center;
-         -webkit-align-items: center; 
+         -webkit-align-items: center;
          i{
           font-size:40px;
           color:#FFF;
@@ -213,6 +213,8 @@
     width:100%;
     min-height:0;
     padding:$minds-padding * 2;
+    margin-bottom:$minds-margin*2;
+
     @include flex-display();
     @include flex-direction(row);
 

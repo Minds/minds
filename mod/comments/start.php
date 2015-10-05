@@ -28,12 +28,15 @@ class start extends Components\Plugin{
     Core\Events\Dispatcher::register('export:extender', 'all', function($event){
         $params = $event->getParameters();
         $export = array();
-            $cacher = Core\Data\cache\factory::build();
+        $cacher = Core\Data\cache\factory::build();
+				if($params['entity']->type != 'activty')
+					return false;
+
         $db = new Core\Data\Call('entities_by_time');
-       if($params['entity']->entity_guid){
+				if($params['entity']->entity_guid){
 					$guid = $params['entity']->entity_guid;
-        } else {
-          $guid = $params['entity']->guid;
+				} else {
+				  $guid = $params['entity']->guid;
 				}
 
 				$cached = $cacher->get("comments:count:$guid");

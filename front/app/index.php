@@ -52,7 +52,7 @@ ini_set( 'display_errors','1');
         <?php
             $minds = array(
                 "LoggedIn" => Minds\Core\Session::isLoggedIn() ? true : false,
-                "cdn_url" => Minds\Core\Config::get('cdn_url'),
+                "cdn_url" => Minds\Core\Config::build()->cdn_url,
                 "navigation" => Minds\Core\Navigation\Manager::export()
               );
             if(Minds\Core\Session::isLoggedIn()){
