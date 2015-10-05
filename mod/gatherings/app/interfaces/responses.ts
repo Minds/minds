@@ -22,5 +22,6 @@ export interface MindsGatheringsSearchResponse extends MindsResponse{
 }
 
 export interface MindsKeysResponse extends MindsResponse{
-  key : any
+  key ?: string
+  password ?: string
 }

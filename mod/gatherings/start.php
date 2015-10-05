@@ -47,7 +47,7 @@ class start extends Components\Plugin{
 				->setIcon('chat_bubble')
 				->setName('Messenger')
 				->setTitle('Messenger')
-				->setPath('/messenger')
+				->setPath('/Messenger')
 			);
 
 			//@todo move to new oop style

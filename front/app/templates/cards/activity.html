@@ -2,13 +2,13 @@
 <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="activity.ownerObj && activity.ownerObj.username">
 
 	<div class="avatar">
-		<a [router-link]="['/channel', {username: activity.ownerObj.username}]">
+		<a [router-link]="['/Channel', {username: activity.ownerObj.username}]">
 			<img src="/icon/{{activity.ownerObj.guid}}/small/{{activity.ownerObj.icontime}}" class="mdl-shadow--2dp"/>
 		</a>
 	</div>
 
 	<div class="body">
-		<a [router-link]="['/channel', {username: activity.ownerObj.username}]">
+		<a [router-link]="['/Channel', {username: activity.ownerObj.username}]">
 			<strong>{{activity.ownerObj.name}}</strong>
 		</a>
 		<span>{{activity.time_created * 1000 | date:'medium'}}</span>

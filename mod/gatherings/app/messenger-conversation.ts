@@ -115,7 +115,7 @@ export class MessengerConversation {
 
   doneTyping($event) {
     if($event.which === 13) {
-      this.sendMessage($event.target);
+      this.send($event.target);
     }
   };
 

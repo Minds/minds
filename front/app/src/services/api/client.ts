@@ -41,7 +41,6 @@ export class Client {
 					self.base + endpoint,
 					this.buildOptions(options)
 				)
-				.toRx()
 				.subscribe(res => {
 						if(res.status != 200){
 							return reject(res.json());
@@ -66,7 +65,6 @@ export class Client {
 					JSON.stringify(data),
 					this.buildOptions(options)
 				)
-				.toRx()
 				.subscribe(res => {
 						if(res.status != 200){
 							return reject(res.json());
@@ -91,7 +89,6 @@ export class Client {
 					JSON.stringify(data),
 					this.buildOptions(options)
 				)
-				.toRx()
 				.subscribe(res => {
 						if(res.status != 200){
 							return reject(res.json());
@@ -115,7 +112,6 @@ export class Client {
 					self.base + endpoint,
 					this.buildOptions(options)
 				)
-				.toRx()
 				.subscribe(res => {
 						if(res.status != 200){
 							return reject(res.json());

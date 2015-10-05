@@ -4,7 +4,7 @@
 	<div *ng-if="entity.images" class="minds-album-tiles tiles-{{entity.images.length}}">
 		<a class=""
 			 *ng-for="#image of entity.images"
-			 [router-link]="['/archive-view', {guid: image}]">
+			 [router-link]="['/Archive-View', {guid: image}]">
 			<img src="archive/thumbnail/{{image}}/medium" />
 		</a>
 	</div>
@@ -15,13 +15,13 @@
 <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="entity.ownerObj && entity.ownerObj.username">
 
 	<div class="avatar">
-		<a [router-link]="['/channel', {username: entity.ownerObj.username}]">
+		<a [router-link]="['/Channel', {username: entity.ownerObj.username}]">
 			<img src="/icon/{{entity.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
 		</a>
 	</div>
 
 	<div class="body">
-		<a [router-link]="['/archive-view', {guid: entity.guid}]">
+		<a [router-link]="['/Archive-View', {guid: entity.guid}]">
 			<strong>{{ entity.title }}</strong>
 		</a>
 		<span>{{ entity.time_created * 1000 | date:'medium' }}</span>

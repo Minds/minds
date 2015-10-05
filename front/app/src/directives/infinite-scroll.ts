@@ -1,9 +1,9 @@
-import { Directive, View, EventEmitter, ViewContainerRef, ProtoViewRef, DomRenderer } from 'angular2/angular2';
+import { Directive, View, EventEmitter, ViewContainerRef, ProtoViewRef, Inject } from 'angular2/angular2';
 import { Material as MaterialService } from "src/services/ui";
 
 @Directive({
   selector: 'infinite-scroll',
-  properties: ['distance', 'on'],
+  inputs: ['distance', 'on'],
   events: ['loadHandler: load']
 })
 @View({
@@ -19,7 +19,7 @@ export class InfiniteScroll{
   _content : any;
   _listener : Function;
 
-  constructor(viewContainer: ViewContainerRef) {
+  constructor(@Inject(ViewContainerRef) viewContainer: ViewContainerRef) {
     this.scroll();
   }
 

@@ -37,7 +37,7 @@ export class Register {
 
         this.inProgress = false;
 				self.session.login(data.user);
-				self.router.parent.navigate('/newsfeed');
+				self.router.navigate(['/Newsfeed', {}]);
 			})
 			.catch((e) => {
         console.log(e);

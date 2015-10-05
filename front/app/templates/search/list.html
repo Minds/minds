@@ -1,7 +1,7 @@
 <div class="mdl-tabs__tab-bar">
-    <a [router-link]="['/search', {q: q, type: 'videos'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': type == 'videos' || type == ''}">Videos</a>
-    <a [router-link]="['/search', {q: q, type: 'images'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': type == 'images' || type == ''}">Images</a>
-    <a [router-link]="['/search', {q: q, type: 'channels'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': type == 'channels' || type == ''}">Channels</a>
+    <a [router-link]="['/Search', {q: q, type: 'videos'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': type == 'videos' || type == ''}">Videos</a>
+    <a [router-link]="['/Search', {q: q, type: 'images'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': type == 'images' || type == ''}">Images</a>
+    <a [router-link]="['/Search', {q: q, type: 'channels'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': type == 'channels' || type == ''}">Channels</a>
 </div>
 
 <div class="mdl-grid search-grid" style="max-width:900px">

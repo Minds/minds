@@ -14,7 +14,7 @@ class Manager{
 			->setIcon('home')
 			->setName('Newsfeed')
 			->setTitle('Newsfeed')
-			->setPath('/newsfeed');
+			->setPath('/Newsfeed');
 		self::add($newsfeed);
 
 		$capture = new Item();
@@ -22,7 +22,7 @@ class Manager{
 			->setIcon('videocam')
 			->setName('Capture')
 			->setTitle('Capture')
-			->setPath('/capture');
+			->setPath('/Capture');
 		self::add($capture);
 
 		$discovery_suggested = new Item();
@@ -31,7 +31,7 @@ class Manager{
 			->setIcon('call_split')
 			->setName('Suggested')
 			->setTitle('Suggested (Discovery)')
-			->setPath('/discovery')
+			->setPath('/Discovery')
 			->setParams(array(
 				'filter' => 'suggested',
 				'type' => ''
@@ -43,7 +43,7 @@ class Manager{
 			->setIcon('trending_up')
 			->setName('Trending')
 			->setTitle('Trending (Discovery)')
-			->setPath('/discovery')
+			->setPath('/Discovery')
 			->setParams(array(
 				'filter' => 'trending',
 				'type' => ''
@@ -55,7 +55,7 @@ class Manager{
 			->setIcon('star')
 			->setName('Featured')
 			->setTitle('Featured (Discovery)')
-			->setPath('/discovery')
+			->setPath('/Discovery')
 			->setParams(array(
 				'filter' => 'featured',
 				'type' => ''
@@ -66,7 +66,7 @@ class Manager{
 			->setIcon('person_pin')
 			->setName('My')
 			->setTitle('My (Discovery)')
-			->setPath('/discovery')
+			->setPath('/Discovery')
 			->setParams(array(
 				'filter' => 'owner',
 				'type' => ''
@@ -77,7 +77,7 @@ class Manager{
 			->setIcon('search')
 			->setName('Discovery')
 			->setTitle('Discovery')
-			->setPath('/discovery')
+			->setPath('/Discovery')
 			->setParams(array(
 				'filter' => 'featured',
 				'type' => ''

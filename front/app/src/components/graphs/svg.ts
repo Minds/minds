@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, ViewContainerRef } from 'angular2/angular2';
+import { Directive, EventEmitter, ViewContainerRef, Inject } from 'angular2/angular2';
 
 @Directive({
   selector: 'svg',
@@ -9,11 +9,12 @@ export class GraphSVG {
 
   element : any;
 
-  constructor(viewContainer: ViewContainerRef){
+  constructor(@Inject(ViewContainerRef) viewContainer: ViewContainerRef){
     this.element = viewContainer.element.nativeElement;
   }
 
   set height(value : any){
+    console.log(this.element, value);
     this.element.setAttribute('height', value);
   }
 

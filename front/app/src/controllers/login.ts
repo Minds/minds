@@ -36,7 +36,7 @@ export class Login {
 				password.value = '';
         this.inProgress = false;
 				self.session.login(data.user);
-				self.router.parent.navigate('/newsfeed');
+				self.router.navigate(['/Newsfeed', {}]);
 			})
 			.catch((e) => {
         console.log(e);
@@ -61,7 +61,7 @@ export class Login {
     this.client.post('api/v1/authenticate/two-factor', {token: this.twofactorToken, code: code.value})
         .then((data : any) => {
           self.session.login(data.user);
-          self.router.parent.navigate('/newsfeed');
+          self.router.navigate(['/Newsfeed', {}]);
         })
         .catch((e) => {
           self.errorMessage = "Sorry, we couldn't verify your two factor code. Please try logging again.";

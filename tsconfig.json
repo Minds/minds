@@ -1,5 +1,5 @@
 {
-    "version": "1.5.3",
+    "version": "1.6.2",
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
@@ -9,13 +9,15 @@
         "noLib": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "moduleResolution": "classic"
     },
     "filesGlob": [
         "./front/app/**/*.ts",
         "./front/typings/**/*.ts",
         "./tsd_typings/**/*.d.ts"
     ],
+    "compileOnSave": false,
     "files": [
         "./front/app/app.ts",
         "./front/app/src/components/banner.ts",
@@ -26,6 +28,9 @@
         "./front/app/src/components/buttons/thumbs-down.ts",
         "./front/app/src/components/buttons/thumbs-up.ts",
         "./front/app/src/components/editors/tinymce.ts",
+        "./front/app/src/components/graphs/impressions.ts",
+        "./front/app/src/components/graphs/points.ts",
+        "./front/app/src/components/graphs/svg.ts",
         "./front/app/src/components/sidebar-navigation.ts",
         "./front/app/src/components/topbar-navigation.ts",
         "./front/app/src/components/topbar.ts",
@@ -61,6 +66,9 @@
         "./front/app/src/controllers/settings/settings.ts",
         "./front/app/src/controllers/settings/statistics.ts",
         "./front/app/src/controllers/settings/twoFactor.ts",
+        "./front/app/src/controllers/wallet/purchase.ts",
+        "./front/app/src/controllers/wallet/transactions.ts",
+        "./front/app/src/controllers/wallet/wallet.ts",
         "./front/app/src/directives/autogrow.ts",
         "./front/app/src/directives/infinite-scroll.ts",
         "./front/app/src/directives/loggedin.ts",
@@ -70,8 +78,6 @@
         "./front/app/src/interfaces/entities.ts",
         "./front/app/src/interfaces/responses.ts",
         "./front/app/src/pipes/tags.ts",
-        "./front/app/src/plugins/archive/archive-edit.ts",
-        "./front/app/src/plugins/archive/archive-view.ts",
         "./front/app/src/plugins/archive/archive.ts",
         "./front/app/src/plugins/archive/src/archive-edit.ts",
         "./front/app/src/plugins/archive/src/archive-view.ts",
@@ -96,6 +102,9 @@
         "./front/app/src/plugins/groups/profile/requests.ts",
         "./front/app/src/plugins/groups/profile/settings.ts",
         "./front/app/src/plugins/payments/payments.ts",
+        "./front/app/src/plugins/payments/src/purchase.ts",
+        "./front/app/src/plugins/payments/src/transactions.ts",
+        "./front/app/src/plugins/payments/src/wallet-service.ts",
         "./front/app/src/plugins/payments/wallet.ts",
         "./front/app/src/services/api.ts",
         "./front/app/src/services/api/client.ts",
@@ -109,13 +118,12 @@
         "./front/app/src/services/ui/loader.ts",
         "./front/app/src/services/ui/material.ts",
         "./front/app/src/services/ui/sidebar.ts",
+        "./front/app/src/services/wallet.ts",
         "./front/app/tests/controllers/login_spec.ts",
         "./front/app/typings/_custom.d.ts",
         "./front/app/typings/minds.d.ts",
-        "./front/app/typings/ng2_test.d.ts",
         "./tsd_typings/jasmine/jasmine.d.ts",
         "./tsd_typings/systemjs/systemjs.d.ts",
         "./tsd_typings/tsd.d.ts"
-    ],
-    "compileOnSave": false
+    ]
 }

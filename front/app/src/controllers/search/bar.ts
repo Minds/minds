@@ -8,8 +8,8 @@ import { MindsActivityObject } from 'src/interfaces/entities';
 @Component({
   selector: 'minds-search-bar',
   viewBindings: [ Client ],
-  host : {
-    '(keyup)' : 'keyup($event)'
+  host: {
+    '(keyup)': 'keyup($event)'
   }
 })
 @View({
@@ -38,7 +38,7 @@ export class SearchBar {
   }
 
   search(){
-    this.router.navigate('search?q=' + this.q);
+    this.router.navigate(['/Search', {q: this.q}]);
   }
 
   keyup(e){

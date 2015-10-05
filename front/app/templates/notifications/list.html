@@ -5,7 +5,7 @@
       <div *ng-for="#notification of notifications" class="mdl-card mdl-shadow--2dp item">
 
         <div class="avatar">
-          <a [router-link]="['/channel', {username: notification.ownerObj.username}]">
+          <a [router-link]="['/Channel', {username: notification.ownerObj.username}]">
             <img src="/icon/{{notification.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
           </a>
         </div>

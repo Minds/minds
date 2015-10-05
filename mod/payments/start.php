@@ -20,7 +20,7 @@ class start extends Components\Plugin{
 			->setIcon('account_balance')
 			->setName('Wallet')
 			->setTitle('Wallet')
-			->setPath('/wallet')
+			->setPath('/Wallet')
 			->setExtras(array(
 				'counter' => (int) Core\Session::isLoggedIn() ? \Minds\Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) : 0
 			)),

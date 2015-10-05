@@ -36,7 +36,7 @@ class start extends \ElggPlugin{
 			->setIcon('notifications')
 			->setName('Notifications')
 			->setTitle('Notificaitons')
-			->setPath('/notifications')
+			->setPath('/Notifications')
 			->setExtras(array(
 				'counter' => (string) Core\Session::isLoggedIn() ? self::getCount() : 0
 			)),

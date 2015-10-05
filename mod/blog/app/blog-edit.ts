@@ -58,7 +58,7 @@ export class BlogEdit {
         if(self.header)
           self.uploadHeader();
         else
-          self.router.navigate('/blog/view/' + response.guid);
+          self.router.navigate(['/Blog-View', {guid: response.guid}]);
       })
       .catch((e) => {
 
@@ -78,7 +78,7 @@ export class BlogEdit {
       console.log(progress);
       })
 			.then((response : any) => {
-        self.router.navigate('/blog/view/' + response.guid);
+        self.router.navigate(['/Blog-View', {guid: response.guid}]);
 			})
 			.catch(function(e){
 				console.error(e);

@@ -5,7 +5,7 @@
 <div class="mdl-layout__header-row">
 
     <div class="minds-logo">
-      <a [router-link]="['/newsfeed']">
+      <a [router-link]="['/Newsfeed']">
         <img src="/assets/logos/small.png"/>
       </a>
     </div>
@@ -17,7 +17,7 @@
     <minds-topbar-navigation></minds-topbar-navigation>
 
     <div class="minds-account" *ng-if="session.isLoggedIn()">
-      <a [router-link]="['/channel', {username: session.getLoggedInUser().username}]">
+      <a [router-link]="['/Channel', {username: session.getLoggedInUser().username}]">
         <img src="/icon/{{session.getLoggedInUser().guid}}/small/{{session.getLoggedInUser().icontime}}" />
       </a>
     </div>
@@ -31,11 +31,11 @@
         for="header-actions"
         [mdl]
         >
-      <li class="mdl-menu__item" *ng-if="session.isLoggedIn()" [router-link]="['/logout']">Logout</li>
-      <li class="mdl-menu__item" *ng-if="session.isLoggedIn()" [router-link]="['/settings', {'filter': 'general'}]">Settings</li>
+      <li class="mdl-menu__item" *ng-if="session.isLoggedIn()" [router-link]="['/Logout']">Logout</li>
+      <li class="mdl-menu__item" *ng-if="session.isLoggedIn()" [router-link]="['/Settings', {'filter': 'general'}]">Settings</li>
     </ul>
 
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="!session.isLoggedIn()" [router-link]="['/login']">
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" *ng-if="!session.isLoggedIn()" [router-link]="['/Login']">
       Login
     </button>
 </div>

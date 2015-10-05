@@ -16,7 +16,7 @@ export class Navigation {
 		var path = this.location.path();
 		for(var item of items){
 
-			if(path == item.path || (path && path.indexOf(item.path) > -1))
+			if(path == item.path || (path && path.indexOf(item.path.toLowerCase()) > -1))
 				item.active = true;
 			else
 				item.active = false;
@@ -30,7 +30,8 @@ export class Navigation {
 						if(subitem.params[p])
 							sub_path +=  '/' + subitem.params[p];
 					}
-					if(path && path.indexOf(sub_path) > -1)
+
+					if(path && path.indexOf(sub_path.toLowerCase()) > -1)
 						subitem.active = true;
 					else
 						subitem.active = false;

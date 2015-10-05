@@ -8,9 +8,9 @@ import { InfiniteScroll } from 'src/directives/infinite-scroll';
 @Component({
   selector: 'minds-comments',
   viewBindings: [ Client ],
-  properties: ['_object : object', '_reversed : reversed'],
+  inputs: ['_object : object', '_reversed : reversed'],
   host: {
-   '(keyup)': 'keyup($event)'
+   'keyup': 'keyup($event)'
   }
 })
 @View({

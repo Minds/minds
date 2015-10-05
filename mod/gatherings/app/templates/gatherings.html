@@ -12,12 +12,12 @@
     <div class="minds-gatherings-conversation-list">
         <div class="mdl-card minds-block" *ng-for="#user of conversations" [ng-class]="{'mdl-color--blue-grey-600': user.guid == conversation}">
           <div class="minds-avatar">
-            <a [router-link]="['/messenger-conversation', {guid: user.guid}]" (click)="conversation = user.guid">
+            <a [router-link]="['/Messenger-Conversation', {guid: user.guid}]" (click)="conversation = user.guid">
               <img src="{{minds.cdn_url}}/icon/{{user.guid}}/small" class="mdl-shadow--2dp" alt={{user.username}} title={{user.username}}>
             </a>
           </div>
           <div class="minds-body">
-            <a [router-link]="['/messenger-conversation', {guid: user.guid}]"
+            <a [router-link]="['/Messenger-Conversation', {guid: user.guid}]"
               (click)="conversation = user"
               [ng-class]="{'mdl-color-text--blue-grey-100': user.guid == conversation, 'mdl-color-text--blue-grey-500': user.guid != conversation}"
               >

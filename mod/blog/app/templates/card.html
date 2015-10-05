@@ -1,17 +1,17 @@
-<a [router-link]="['/blog-view', {guid: blog.guid}]" class="mdl-card__title minds-blog-thumbnail" style="height:200px; background:#333" [ng-style]="{background: '#333 url(/api/v1/blog/header/' + blog.guid + ') center center'}">
+<a [router-link]="['/Blog-View', {guid: blog.guid}]" class="mdl-card__title minds-blog-thumbnail" style="height:200px; background:#333" [ng-style]="{background: '#333 url(/api/v1/blog/header/' + blog.guid + ') center center'}">
 </a>
 
 <!-- Owner block -->
 <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="blog.ownerObj && blog.ownerObj.username">
 
   <div class="avatar">
-    <a [router-link]="['/channel', {username: blog.ownerObj.username}]">
+    <a [router-link]="['/Channel', {username: blog.ownerObj.username}]">
       <img src="/icon/{{blog.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
     </a>
   </div>
 
   <div class="body">
-    <a [router-link]="['/blog-view', {guid: blog.guid}]">
+    <a [router-link]="['/Blog-View', {guid: blog.guid}]">
       <strong>{{ blog.title }}</strong>
     </a>
     <span>{{ blog.time_created * 1000 | date:'medium' }}</span>

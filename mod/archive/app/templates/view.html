@@ -6,7 +6,7 @@
     <div class="mdl-cell mdl-cell--12-col">
       <h1>{{entity.title}}</h1>
       <a class="album_backlink mdl-color-text--blue-grey-400"
-        [router-link]="['/archive-view', {guid: entity.container_guid}]"
+        [router-link]="['/Archive-View', {guid: entity.container_guid}]"
         [hidden]="entity.subtype == 'album'"
         >Back to album</a>
     </div>
@@ -15,12 +15,12 @@
     <div class="mdl-cell mdl-cell--5-col minds-blog-ownerblock">
 
       <div class="minds-avatar">
-        <a [router-link]="['/channel', {username: entity.ownerObj.username}]">
+        <a [router-link]="['/Channel', {username: entity.ownerObj.username}]">
           <img src="{{minds.cdn_url}}/icon/{{entity.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
         </a>
       </div>
       <div class="minds-body">
-        <a [router-link]="['/channel', {username: entity.ownerObj.username}]" class="mdl-color-text--blue-grey-500">{{entity.ownerObj.name}}</a>
+        <a [router-link]="['/Channel', {username: entity.ownerObj.username}]" class="mdl-color-text--blue-grey-500">{{entity.ownerObj.name}}</a>
         <span>{{ entity.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>

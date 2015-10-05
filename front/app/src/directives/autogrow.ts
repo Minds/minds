@@ -1,20 +1,19 @@
-import { Directive,  EventEmitter, ViewContainerRef, ProtoViewRef, DomRenderer } from 'angular2/angular2';
+import { Directive,  EventEmitter, ViewContainerRef, ProtoViewRef, Inject } from 'angular2/angular2';
 import { Material as MaterialService } from "src/services/ui";
 
 @Directive({
   selector: '[auto-grow]',
-  properties: ['autoGrow', 'for']
+  inputs: ['autoGrow', 'for']
 })
 
 
 export class AutoGrow{
-  viewContainer: ViewContainerRef;
+
   _listener : Function;
   _element : any;
-//  growHandler: EventEmitter = new EventEmitter();
 
-  constructor(viewContainer: ViewContainerRef) {
-    this.viewContainer = viewContainer;
+  constructor(@Inject(ViewContainerRef) viewContainer: ViewContainerRef) {
+
     var self = this;
     this._listener = () => {
       self.grow();

@@ -4,16 +4,16 @@ import { GraphPoints } from './points';
 
 @Component({
   selector: 'minds-graph-impressions',
-  properties: [ '_impressions: impressions', 'y: height', 'x: width' ]
+  inputs: [ '_impressions: impressions', 'y: height', 'x: width' ]
 })
 @View({
   template: `
-    <svg fill="currentColor" [viewBox]="'0 0 ' + x + ' ' + y" style="stroke:#757575; opacity:0.8">
+    <svg fill="currentColor" [viewBox]="'0 0 ' + x + ' ' + y" style="stroke:#757575; opacity:0.8" xmlns="http://www.w3.org/2000/svg" >
       <!-- X Y, X Y (from top to bottom) -->
       <polyline [points]="points"
         style="fill:none;stroke-width:4"
       />
-      
+
     </svg>
   `,
   directives: [ CORE_DIRECTIVES, GraphSVG, GraphPoints ]
@@ -65,6 +65,7 @@ export class GraphImpressions {
       var y_stat = this.y - (stat / y_divi);
       this.points += ", " + x_ticker + " " + y_stat;
     }
+    console.log(this.points);
   }
 
 

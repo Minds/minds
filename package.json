@@ -7,11 +7,11 @@
     "postinstall": "gulp postinstall"
   },
   "dependencies": {
-    "angular2": "2.0.0-alpha.37",
+    "angular2": "2.0.0-alpha.38",
     "es6-module-loader": "^0.16.2",
     "systemjs": "^0.18.1",
     "zone.js": "^0.4.1",
-    "reflect-metadata": "0.1.0",
+    "reflect-metadata": "0.1.2",
     "intl": "^1.0.0"
   },
   "devDependencies": {
@@ -30,7 +30,7 @@
     "gulp-sass": "^2.0.3",
     "gulp-sourcemaps": "~1.5.2",
     "gulp-template": "^3.0.0",
-    "gulp-typescript": "~2.7.5",
+    "gulp-typescript": "~2.9.2",
     "gulp-uglify": "^1.2.0",
     "gulp-watch": "^4.2.4",
     "jasmine-core": "~2.3.4",
@@ -44,6 +44,6 @@
     "serve-static": "^1.9.2",
     "stream-series": "^0.1.1",
     "systemjs-builder": "^0.13.3",
-    "typescript": "~1.5.0"
+    "typescript": "~1.6.2"
   }
 }

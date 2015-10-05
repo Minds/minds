@@ -29,7 +29,7 @@ class start extends Components\Plugin{
 			->setIcon('star')
 			->setName('Featured')
 			->setTitle('Featured (Groups)')
-			->setPath('/groups')
+			->setPath('/Groups')
 			->setParams(array('filter'=>'featured'));
 		$my_link = new Core\Navigation\Item();
 		$my_link
@@ -37,7 +37,7 @@ class start extends Components\Plugin{
 			->setIcon('person_pin')
 			->setName('My')
 			->setTitle('My (Groups)')
-			->setPath('/groups')
+			->setPath('/Groups')
 			->setParams(array('filter'=>'member'));
 
 		$root_link = new Core\Navigation\Item();
@@ -46,7 +46,7 @@ class start extends Components\Plugin{
 			->setIcon('group_work')
 			->setName('Groups')
 			->setTitle('Groups')
-			->setPath('/groups')
+			->setPath('/Groups')
 			->setParams(array('filter'=>'featured'))
 			->addSubItem($featured_link)
 			->addSubItem($my_link)

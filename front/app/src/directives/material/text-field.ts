@@ -1,17 +1,17 @@
-import { Directive, ViewContainerRef, ProtoViewRef } from 'angular2/angular2';
+import { Directive, ViewContainerRef, ProtoViewRef, Inject } from 'angular2/angular2';
 import { Material as MaterialService } from "src/services/ui";
 
 @Directive({
   selector: '[mdl-textfield]',
-  properties: ['mdlTextfield'],
-  host : {
-    '(change)': 'change()'
-  }
+  inputs: ['mdlTextfield'],
+  events : [
+    '(change): change()'
+  ]
 })
 
 export class MaterialTextfield{
 
-  constructor(viewContainer: ViewContainerRef) {
+  constructor(@Inject(ViewContainerRef) viewContainer: ViewContainerRef) {
 
     MaterialService.updateElement(viewContainer.element.nativeElement);
     setTimeout(() => {

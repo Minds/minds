@@ -1,15 +1,15 @@
-import { Directive, EventEmitter, ViewContainerRef } from 'angular2/angular2';
+import { Directive, EventEmitter, ViewContainerRef, Inject } from 'angular2/angular2';
 
 @Directive({
   selector: '[points]',
-  properties: [ '_points: points' ]
+  inputs: [ '_points: points' ]
 })
 
 export class GraphPoints {
 
   element : any;
 
-  constructor(viewContainer: ViewContainerRef){
+  constructor(@Inject(ViewContainerRef) viewContainer: ViewContainerRef){
     this.element = viewContainer.element.nativeElement;
   }
 

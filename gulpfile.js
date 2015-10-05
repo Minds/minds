@@ -68,7 +68,7 @@ var PATH = {
       APP_SRC + '/system.config.js'
     ],
     angular: [
-      ANGULAR_BUNDLES + '/angular2.min.js',
+      ANGULAR_BUNDLES + '/angular2.js',
       ANGULAR_BUNDLES + '/router.dev.js',
       ANGULAR_BUNDLES + '/http.min.js'
     ],
@@ -205,6 +205,7 @@ gulp.task('build.js.dev', function () {
                          '!' + join(PATH.src.all, '**/*_spec.ts')])
     .pipe(plumber())
     .pipe(sourcemaps.init())
+    .pipe(inlineNg2Template({ base: 'front/app' }))
     .pipe(tsc(tsProject));
 
   return result.js
@@ -275,7 +276,6 @@ gulp.task('build.prod', function(done){
 // Post install
 
 gulp.task('install.typings', ['clean.tsd_typings'], shell.task([
-  //'rm -rf node_modules/angular2/bundles/typings/angular2/http.d.ts', //temporary hack because http.d.ts has a syntax error
   'tsd reinstall --overwrite',
   'tsd link',
   'tsd rebundle'

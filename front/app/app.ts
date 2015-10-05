@@ -1,5 +1,5 @@
-import {Component, View, bootstrap} from 'angular2/angular2';
-import {RouteConfig, Route, ROUTER_DIRECTIVES, ROUTER_BINDINGS} from 'angular2/router';
+import {Component, View, bind, bootstrap} from 'angular2/angular2';
+import {RouteConfig, Route, ROUTER_DIRECTIVES, ROUTER_BINDINGS, ROUTER_PRIMARY_COMPONENT} from 'angular2/router';
 import {HTTP_BINDINGS} from 'angular2/http';
 
 import {Topbar} from './src/components/topbar';
@@ -31,43 +31,43 @@ import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups'
   selector: 'minds-app',
 })
 @RouteConfig([
-  { path: '/login', component: Login, as: 'login' },
-  { path: '/logout', component: Logout, as: 'logout' },
-  { path: '/register', component: Register, as: 'register' },
+  { path: '/login', component: Login, as: 'Login' },
+  { path: '/logout', component: Logout, as: 'Logout' },
+  { path: '/register', component: Register, as: 'Register' },
 
-  { path: '/newsfeed', component: Newsfeed, as: 'newsfeed' },
-  { path: '/capture', component: Capture, as: 'capture' },
+  { path: '/newsfeed', component: Newsfeed, as: 'Newsfeed' },
+  { path: '/capture', component: Capture, as: 'Capture' },
 
-  { path: '/discovery/:filter', component: Discovery, as: 'discovery'},
-  { path: '/discovery/:filter/:type', component: Discovery, as: 'discovery'},
+  { path: '/discovery/:filter', component: Discovery, as: 'Discovery'},
+  { path: '/discovery/:filter/:type', component: Discovery, as: 'Discovery'},
 
-  { path: '/messenger', component:  Gatherings, as: 'messenger'},
-  { path: '/messenger/:guid', component:  Gatherings, as: 'messenger-conversation'},
+  { path: '/messenger', component:  Gatherings, as: 'Messenger'},
+  { path: '/messenger/:guid', component:  Gatherings, as: 'Messenger-Conversation'},
 
-  { path: '/blog/:filter', component:  Blog, as: 'blog'},
-  { path: '/blog/view/:guid', component:  BlogView, as: 'blog-view'},
-  { path: '/blog/edit/:guid', component:  BlogEdit, as: 'blog-edit'},
+  { path: '/blog/:filter', component:  Blog, as: 'Blog'},
+  { path: '/blog/view/:guid', component:  BlogView, as: 'Blog-View'},
+  { path: '/blog/edit/:guid', component:  BlogEdit, as: 'Blog-Edit'},
 
-  { path: '/archive/view/:guid', component: ArchiveView, as: 'archive-view'},
+  { path: '/archive/view/:guid', component: ArchiveView, as: 'Archive-View'},
 
-  { path: '/notifications', component: Notifications, as: 'notifications'},
+  { path: '/notifications', component: Notifications, as: 'Notifications'},
 
-  { path: '/groups/:filter', component: Groups, as: 'groups'},
-  { path: '/groups/create', component: GroupsCreator, as: 'groups-create'},
-  { path: '/groups/profile/:guid', component: GroupsProfile, as: 'groups-profile'},
-  { path: '/groups/profile/:guid/:filter', component: GroupsProfile, as: 'groups-profile'},
+  { path: '/groups/:filter', component: Groups, as: 'Groups'},
+  { path: '/groups/create', component: GroupsCreator, as: 'Groups-Create'},
+  { path: '/groups/profile/:guid', component: GroupsProfile, as: 'Groups-Profile'},
+  { path: '/groups/profile/:guid/:filter', component: GroupsProfile, as: 'Groups-Profile'},
 
-  { path: '/wallet', component: Wallet, as: 'wallet'},
-  { path: '/wallet/:filter', component: Wallet, as: 'wallet-filter'},
+  { path: '/wallet', component: Wallet, as: 'Wallet'},
+  { path: '/wallet/:filter', component: Wallet, as: 'Wallet-Filter'},
 
-  { path: '/search', component: Search, as: 'search' },
+  { path: '/search', component: Search, as: 'Search' },
 
-  { path: '/:username', component: Channel, as: 'channel' },
-  { path: '/:username/:filter', component: Channel, as: 'channel-filter' },
+  { path: '/:username', component: Channel, as: 'Channel' },
+  { path: '/:username/:filter', component: Channel, as: 'Channel-Filter' },
 
-  { path: '/settings/:filter', component: Settings, as: 'settings' },
+  { path: '/settings/:filter', component: Settings, as: 'Settings' },
 
-  { path: '/', component: Homepage, as: 'homepage' }
+  { path: '/', component: Homepage, as: 'Homepage' }
 
 ])
 @View({
@@ -83,4 +83,4 @@ export class Minds {
   }
 }
 
-bootstrap(Minds, [ROUTER_BINDINGS, HTTP_BINDINGS]);
+bootstrap(Minds, [ROUTER_BINDINGS, bind(ROUTER_PRIMARY_COMPONENT).toValue(Minds), HTTP_BINDINGS]);

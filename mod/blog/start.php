@@ -40,7 +40,7 @@ class start extends Components\Plugin{
 			->setIcon('add')
 			->setName('Compose')
 			->setTitle('Compose (Blogs)')
-			->setPath('/blog-edit')
+			->setPath('/Blog-Edit')
 			->setParams(array('guid'=>'new'));
 		$featured_link = new Core\Navigation\Item();
 		$featured_link
@@ -48,7 +48,7 @@ class start extends Components\Plugin{
 			->setIcon('star')
 			->setName('Featured')
 			->setTitle('Featured (Blogs)')
-			->setPath('/blog')
+			->setPath('/Blog')
 			->setParams(array('filter'=>'featured'));
 		$trending_link = new Core\Navigation\Item();
 		$trending_link
@@ -56,7 +56,7 @@ class start extends Components\Plugin{
 			->setIcon('trending_up')
 			->setName('Trending')
 			->setTitle('Trending (Blogs)')
-			->setPath('/blog')
+			->setPath('/Blog')
 			->setParams(array('filter'=>'trending'));
 		$my_link = new Core\Navigation\Item();
 		$my_link
@@ -64,7 +64,7 @@ class start extends Components\Plugin{
 			->setIcon('person_pin')
 			->setName('My')
 			->setTitle('My (Blogs)')
-			->setPath('/blog')
+			->setPath('/Blog')
 			->setParams(array('filter'=>'owner'));
 
 		$link = new Core\Navigation\Item();
@@ -73,7 +73,7 @@ class start extends Components\Plugin{
 			->setIcon('subject')
 			->setName('Blogs')
 			->setTitle('Blogs')
-			->setPath('/blog')
+			->setPath('/Blog')
 			->setParams(array('filter'=>'featured'))
 			->addSubItem($add_link)
 			->addSubItem($featured_link)

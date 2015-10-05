@@ -10,18 +10,18 @@
     <div class="mdl-cell mdl-cell--5-col minds-blog-ownerblock">
 
       <div class="minds-avatar">
-        <a [router-link]="['/channel', {username: blog.ownerObj.username}]">
+        <a [router-link]="['/Channel', {username: blog.ownerObj.username}]">
           <img src="{{minds.cdn_url}}/icon/{{blog.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
         </a>
       </div>
       <div class="minds-body">
-        <a [router-link]="['/channel', {username: blog.ownerObj.username}]" class="mdl-color-text--blue-grey-500">{{blog.ownerObj.name}}</a>
+        <a [router-link]="['/Channel', {username: blog.ownerObj.username}]" class="mdl-color-text--blue-grey-500">{{blog.ownerObj.name}}</a>
         <span>{{ blog.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
     <div class="mdl-cell mdl-cell--6-col minds-actions-block">
       <minds-button-subscribe [user]="blog.ownerObj" *ng-if="blog.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
-      <minds-button-edit [router-link]="['/blog-edit', { guid: blog.guid }]" *ng-if="blog.ownerObj.guid == session.getLoggedInUser().guid || blog.canEdit">
+      <minds-button-edit [router-link]="['/Blog-Edit', { guid: blog.guid }]" *ng-if="blog.ownerObj.guid == session.getLoggedInUser().guid || blog.canEdit">
         <button>Edit</button>
       </minds-button-edit>
       <div class="mdl-layout-spacer"></div>

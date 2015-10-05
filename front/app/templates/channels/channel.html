@@ -37,15 +37,15 @@
     </div>
 
     <div class="mdl-cell mdl-cell--8-col minds-tabs mdl-tabs__tab-bar">
-        <a [router-link]="['/channel-filter', {username: user.username, filter: 'feed'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+        <a [router-link]="['/Channel-Filter', {username: user.username, filter: 'feed'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
           <span>Feed</span>
           <b>{{user.activity_count}}</b>
         </a>
-        <a [router-link]="['/channel-filter', {username: user.username, filter: 'subscribers'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+        <a [router-link]="['/Channel-Filter', {username: user.username, filter: 'subscribers'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
           <span>Subscribers</span>
           <b>{{user.subscribers_count}}</b>
         </a>
-        <a [router-link]="['/channel-filter', {username: user.username, filter: 'subscriptions'}]" class="mdl-tabs__tab  mdl-color-text--blue-grey-50">
+        <a [router-link]="['/Channel-Filter', {username: user.username, filter: 'subscriptions'}]" class="mdl-tabs__tab  mdl-color-text--blue-grey-50">
           <span>Subscriptions</span>
           <b>{{user.subscriptions_count}}</b>
         </a>
@@ -54,7 +54,7 @@
           <b>{{user.impressions}}</b>
         </a>
         <minds-button-subscribe [user]="user" class="mdl-tabs__tab" *ng-if="session.getLoggedInUser().guid != user.guid"></minds-button-subscribe>
-        <a [router-link]="['/channel-filter', {username: user.username, filter: 'edit'}]" class="mdl-tabs__tab  mdl-color-text--blue-grey-50" *ng-if="session.getLoggedInUser().guid == user.guid">
+        <a [router-link]="['/Channel-Filter', {username: user.username, filter: 'edit'}]" class="mdl-tabs__tab  mdl-color-text--blue-grey-50" *ng-if="session.getLoggedInUser().guid == user.guid">
           <span>Edit</span>
         </a>
     </div>
