@@ -27,7 +27,6 @@ export class MessengerConversation {
   previous: string;
   hasMoreData: boolean = true;
   inProgress: boolean = false;
-
   newChat: boolean;
   poll: boolean = true;
 
@@ -57,6 +56,9 @@ export class MessengerConversation {
     var self = this;
     this.inProgress = true;
 
+    if (!this.guid)
+	     return false;
+
     this.client.get('api/v1/conversations/' + this.guid,
       {
         limit: 6,
@@ -64,13 +66,9 @@ export class MessengerConversation {
         cachebreak: Date.now()
       })
       .then((data : MindsUserConversationResponse) =>{
+        console.log(data);
         self.newChat = false;
         self.inProgress = false;
-
-        if (!self.publickeys[self.guid]) {
-          self.enabled = false;
-          return true;
-        }
 
         if (!data.messages) {
           self.hasMoreData = false;

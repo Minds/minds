@@ -69,11 +69,11 @@ export class MessengerSetup {
         }
 
         self.storage.set('private-key', data.key);
-        this.inProgress = false;
+        self.inProgress = false;
         self.done.next(true);
       })
       .catch((error) =>{
-        this.inProgress = false;
+        self.inProgress = false;
         console.log(error);
       });
   }
@@ -102,9 +102,7 @@ export class MessengerSetup {
           self.error = 'We couldn\'t unlock your chat. Please check your password is correct.';
           return false;
         }
-
-
-
+        
         self.storage.set('private-key', data.key);
         self.done.next(true);
         this.inProgress = false;
