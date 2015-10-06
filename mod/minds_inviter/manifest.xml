@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plugin_manifest>
-        <field key="author" value="Mark Harding (Kramnorth)" />
-        <field key="version" value="1.0" />
-        <field key="description" value="Contact inviter" />
-        <field key="website" value="http://www.minds.com/" />
-        <field key="copyright" value="(C) Minds.org, INC 2012" />
-        <field key="elgg_version" value="1.8" />
-</plugin_manifest>
