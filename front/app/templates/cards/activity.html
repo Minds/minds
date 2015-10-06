@@ -3,7 +3,7 @@
 
 	<div class="avatar">
 		<a [router-link]="['/Channel', {username: activity.ownerObj.username}]">
-			<img src="/icon/{{activity.ownerObj.guid}}/small/{{activity.ownerObj.icontime}}" class="mdl-shadow--2dp"/>
+			<img src="/icon/{{activity.ownerObj.guid}}/medium/{{activity.ownerObj.icontime}}" class="mdl-shadow--2dp"/>
 		</a>
 	</div>
 
@@ -67,13 +67,15 @@
 	<minds-button-thumbs-down [object]="activity"></minds-button-thumbs-down>
 	<minds-button-comment [object]="activity" (click)="openComments()"></minds-button-comment>
 	<minds-button-remind [object]="activity"></minds-button-remind>
-  <a class="mdl-button mdl-button--raised mdl-button--colored minds-boost-button"
+  <a class="mdl-button mdl-color-text--white mdl-button--colored minds-boost-button"
     *ng-if ="session.getLoggedInUser().guid == activity.owner_guid"
     id="boost-actions"
     (click)="showBoost()">
     Boost
   </a>
 </div>
+
+<span class="impressions-tag">{{activity.impressions}} views</span>
 
 <div class="mdl-grid blogs-grid mdl-color--blue-grey-50" *ng-if="commentsToggle">
 	<minds-comments [object]="activity"></minds-comments>

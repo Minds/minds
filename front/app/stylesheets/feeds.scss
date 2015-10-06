@@ -13,6 +13,7 @@
      min-height:0;
      margin-bottom:16px;
      border-radius:3px;
+     overflow:visible;
 
      .mdl-card__supporting-text{
        width:100%;
@@ -27,7 +28,7 @@
       * Action tabs
       */
      .tabs{
-       padding:$minds-padding $minds-padding*2;
+       padding:$minds-padding+2 $minds-padding*2;
        @include flex-display();
        box-sizing:border-box;
 
@@ -39,16 +40,35 @@
          text-align:center;
          cursor:pointer;
        }
-       > template{
+       > template, script{
          display:none;
+       }
+       > a.minds-boost-button{
+         max-width:40px;
        }
        .selected{
          color:$minds-blue !important;
        }
        i{
          vertical-align: middle;
+         font-size:22px;
        }
 
+     }
+
+     .impressions-tag{
+       position: absolute;
+       z-index: 999;
+       right: -5px;
+       bottom: -8px;
+       background-color: #888;
+       padding: 3px 8px;
+       font-size: 10px;
+       line-height: 9px;
+       color: #FFF;
+       border-radius: 3px;
+       vertical-align: middle;
+       text-align: center;
      }
 
      .minds-more{
