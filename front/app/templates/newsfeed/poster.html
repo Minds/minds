@@ -54,7 +54,8 @@
     <!-- Attachment preview -->
     <div class="post-preview" *ng-if="attachment_preview" (click)="removeAttachment()">
       <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="attachment_preview"></div>
-      <img [src]="attachment_preview" class="attachment-preview"/>
+      <video *ng-if="video" [src]="attachment_preview" width="580" height="420" controls></video>
+      <img *ng-if="!video" [src]="attachment_preview" class="attachment-preview"/>
       <div class="attachment-preview-delete">
         <i class="material-icons">delete</i>
       </div>
