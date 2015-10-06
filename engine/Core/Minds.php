@@ -96,7 +96,7 @@ class minds extends base{
 	public function loadLegacy(){
 		// load the rest of the library files from engine/lib/
 		$lib_files = array(
-			'elgglib.php', 'access.php', 'actions.php', 'annotations.php',
+			'elgglib.php', 'access.php', 'actions.php', 
 			'configuration.php', 'cron.php',
 			'entities.php', 'extender.php', 'filestore.php', 'group.php',
 			'input.php', 'languages.php', 'location.php',
