@@ -1,4 +1,5 @@
 import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
+import { SessionFactory } from 'src/services/session';
 import { Client } from "src/services/api";
 
 
@@ -10,7 +11,7 @@ import { Client } from "src/services/api";
   template: `
     <a class="mdl-color-text--blue-grey-500" (click)="remind()" [ng-class]="{'selected': object.reminded }">
       <i class="material-icons">repeat</i>
-      <counter *ng-if="object['reminds:count'] > 0">{{object['reminds:count']}}</counter>
+      <counter *ng-if="object.reminds > 0">{{object.reminds}}</counter>
     </a>
   `,
   directives: [CORE_DIRECTIVES]
@@ -19,6 +20,7 @@ import { Client } from "src/services/api";
 export class RemindButton {
 
   object;
+  session = SessionFactory.build();
 
   constructor(public client : Client) {
   }
@@ -29,12 +31,16 @@ export class RemindButton {
 
   remind(){
     var self = this;
-    this.client.post('api/v1/subscribe/' + this.object.guid, {})
+
+    if (this.object.reminded)
+      return false;
+
+    this.client.post('api/v1/newsfeed/remind/' + this.object.guid, {})
       .then((response : any) => {
-          this.object.subscribed = true;
+          this.object.reminded = true;
+          this.object.reminds++;
       })
       .catch((e) => {
-        this.object.subscribed = false;
       });
   }
 
