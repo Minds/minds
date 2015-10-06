@@ -105,7 +105,7 @@ class minds extends base{
 			'pagehandler.php', 'pageowner.php', 'pam.php', 'plugins.php',
 			'private_settings.php', 'sessions.php',
 			'sites.php', 'statistics.php',
-			'user_settings.php', 'users.php', 'upgrade.php', 'views.php',
+			'user_settings.php', 'users.php', 'views.php',
 			'widgets.php', 'xml.php', 'xml-rpc.php',
 
 			// backward compatibility
@@ -140,5 +140,9 @@ class minds extends base{
 				exit;
 			}
 		}
+	}
+
+	public static function getVersion(){
+		return false;
 	}
 }

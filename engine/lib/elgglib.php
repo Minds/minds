@@ -1127,7 +1127,7 @@ function elgg_deprecated_notice($msg, $dep_version, $backtrace_level = 1) {
 		return false;
 	}
 
-	$elgg_version = get_version(true);
+	$elgg_version = Minds\Core\Minds::getVersion();
 	$elgg_version_arr = explode('.', $elgg_version);
 	$elgg_major_version = (int)$elgg_version_arr[0];
 	$elgg_minor_version = (int)$elgg_version_arr[1];
