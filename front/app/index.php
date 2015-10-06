@@ -35,18 +35,21 @@ ini_set( 'display_errors','1');
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,700'>
     <link rel="stylesheet" href="stylesheets/main.css"/>
+    <script src="//storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
 
   </head>
   <body>
 
 
     <!-- The app component created in app.ts -->
-    <minds-app  class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header  mdl-layout--overlay-drawer-button">
+    <minds-app  class="mdl-layout mdl-layout--fixed-drawer mdl-layout--fixed-header  mdl-layout--overlay-drawer-button">
         <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate initial-loading"></div>
     </minds-app>
 
      <!-- inject:js -->
   	 <!-- endinject -->
+     <script src="app.js"></script>
+
 
     <script>
         <?php
@@ -69,7 +72,6 @@ ini_set( 'display_errors','1');
 
     </script>
     <script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>
-    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
 
   </body>
 </html>
