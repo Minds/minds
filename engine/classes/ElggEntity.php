@@ -18,8 +18,6 @@
  * @property-read string $enabled
  */
 abstract class ElggEntity extends ElggData implements
-	Notable,    // Calendar interface
-	Locatable,  // Geocoding interface
 	Importable // Allow import of data
 {
 
@@ -1336,60 +1334,6 @@ abstract class ElggEntity extends ElggData implements
 	 */
 	public function getLongitude() {
 		return (float)$this->get('geo:long');
-	}
-
-	/*
-	 * NOTABLE INTERFACE
-	 */
-
-	/**
-	 * Set the time and duration of an object
-	 *
-	 * @param int $hour     If ommitted, now is assumed.
-	 * @param int $minute   If ommitted, now is assumed.
-	 * @param int $second   If ommitted, now is assumed.
-	 * @param int $day      If ommitted, now is assumed.
-	 * @param int $month    If ommitted, now is assumed.
-	 * @param int $year     If ommitted, now is assumed.
-	 * @param int $duration Duration of event, remainder of the day is assumed.
-	 *
-	 * @return true
-	 * @todo Unimplemented
-	 */
-	public function setCalendarTimeAndDuration($hour = NULL, $minute = NULL, $second = NULL,
-	$day = NULL, $month = NULL, $year = NULL, $duration = NULL) {
-
-		$start = mktime($hour, $minute, $second, $month, $day, $year);
-		$end = $start + abs($duration);
-		if (!$duration) {
-			$end = get_day_end($day, $month, $year);
-		}
-
-		$this->calendar_start = $start;
-		$this->calendar_end = $end;
-
-		return true;
-	}
-
-	/**
-	 * Returns the start timestamp.
-	 *
-	 * @return int
-	 * @todo Unimplemented
-	 */
-	public function getCalendarStartTime() {
-		return (int)$this->calendar_start;
-	}
-
-	/**
-	 * Returns the end timestamp.
-	 *
-	 * @todo Unimplemented
-	 *
-	 * @return int
-	 */
-	public function getCalendarEndTime() {
-		return (int)$this->calendar_end;
 	}
 
 	/*
