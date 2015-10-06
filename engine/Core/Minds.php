@@ -106,7 +106,7 @@ class minds extends base{
 			'private_settings.php', 'sessions.php',
 			'sites.php', 'statistics.php',
 			'user_settings.php', 'users.php', 'upgrade.php', 'views.php',
-			'web_services.php', 'widgets.php', 'xml.php', 'xml-rpc.php',
+			'widgets.php', 'xml.php', 'xml-rpc.php',
 
 			// backward compatibility
 			'deprecated-1.7.php', 'deprecated-1.8.php',
