@@ -8,38 +8,23 @@
 elgg_register_event_handler('init', 'system', 'analytics_init', 1);
 
 function analytics_init() {
-	
+
 	//register google library
 	elgg_register_library('google:client', elgg_get_plugins_path() . 'analytics/vendors/google-api-php-client/src/Google_Client.php');
 	elgg_load_library('google:client');
 	elgg_register_library('google:analytics', elgg_get_plugins_path() . 'analytics/vendors/google-api-php-client/src/contrib/Google_AnalyticsService.php');
 	elgg_load_library('google:analytics');
-	
-	
+
+
 	//extend footer to add google analytics code
 	elgg_extend_view('page/elements/head','analytics/trackingcode', 90000); //such a large number so it is always at the bottom
-	
+
 	//page handler to listen for auth callbacks
 	elgg_register_page_handler('analytics','analytics_page_handler');
 
 	elgg_register_plugin_hook_handler('cron', 'minute', 'analytics_cron');
-	
-	$trending_menu = array('day', 'week', 'month', 'year', 'entire');
-    foreach($trending_menu as $trending){
-        if(strpos($_SERVER['REQUEST_URI'], 'blog') !== FALSE){
-            $url = elgg_get_site_url() . 'blog/trending';
-        } elseif(strpos($_SERVER['REQUEST_URI'], 'archive') !== FALSE){
-             $url = elgg_get_site_url() . 'archive/trending';
-        } elseif(strpos($_SERVER['REQUEST_URI'], 'channels') !== FALSE){
-                         $url = elgg_get_site_url() . 'channels/trending';
-                                 }
-		/*elgg_register_menu_item('trending', array(	
-				'name'=>$trending,
-				'text'=> elgg_echo('trending:'.$trending),
-				'href'=> "$url?timespan=$trending",
-				'selected'=> $trending == get_input('timespan','day')
-            ));*/
-	}
+
+
 }
 
 function analytics_cron(){
@@ -55,8 +40,8 @@ function analytics_page_handler($page) {
 	if($page[0] == 'callback'){
 		return anayltics_authenticate_google();
 	}
-	
-	return false; 
+
+	return false;
 }
 
 /**
@@ -65,9 +50,9 @@ function analytics_page_handler($page) {
 function analytics_retrieve(array $options = array()){
 
 	$db = new Minds\Core\Data\Call('entities_by_time');
-	
+
 	$g = new GUID();
-	
+
 	$defaults = array(
 		'context'=> '',
 		'filter' => 'trending',
@@ -76,7 +61,7 @@ function analytics_retrieve(array $options = array()){
 		'offset' => ''
 	);
 	$options = array_merge($defaults, $options);
-	
+
 	if($options['filter'] == 'trending'){
 		try{
 			//try from cache. all trending caches are valid for 1 hour
@@ -87,14 +72,14 @@ function analytics_retrieve(array $options = array()){
 			} elseif($options['offset'] > 0){
 				$options['limit']++;
 			}
-			
-			$guids = $db->getRow('trending:'.$context, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=>false));			
+
+			$guids = $db->getRow('trending:'.$context, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=>false));
 
 			return $guids;
 		} catch(Exception $e){
 		//	register_error($e->getMessage());
 			//show featured instead...
-			//return minds_get_featured($options['context'], $offset['limit'], 'guids');	
+			//return minds_get_featured($options['context'], $offset['limit'], 'guids');
 			return minds_get_featured('',12,'guids');
 		}
 	} else {
@@ -104,9 +89,9 @@ function analytics_retrieve(array $options = array()){
 
 //Gather the analytics data and store in a row
 function analytics_fetch(){
-	
+
 	$client = analytics_register_client();
-	$analytics = new Google_AnalyticsService($client);	
+	$analytics = new Google_AnalyticsService($client);
 
 	$today = date('o-m-d', time());
 	$yesterday = date('o-m-d', time() - 60 * 60 * 24);
@@ -149,9 +134,9 @@ function analytics_fetch(){
 		if(in_array($entity->subtype, array('image','file','kaltura_video'))){
                 	 $objects['archive'][] = $guid;
 		}
-		
+
 		$user_guids[] = $entity->owner_guid;
-	}	
+	}
 	} catch(Exception $e) {
 		//get the feature list if something went wrong with analytics...
 	/*	$featured = minds_get_featured('',250);
@@ -164,11 +149,11 @@ function analytics_fetch(){
                 	}
 		}*/
 	}
-	
+
 	//add an all row
 	foreach($objects as $subtype => $guids){
 		$data = $guids;
-		
+
 		if($data){
 			//we want to start removing old ones soon...
 			$db = new Minds\Core\Data\Call('entities_by_time');
@@ -178,7 +163,7 @@ function analytics_fetch(){
 			echo "Successfuly imported '$subtype' to trending \n";
 		}
 	}
-	
+
 	$user_occurances = array_count_values($user_guids);
 	arsort($user_occurances);
 	$user_guids = array_keys($user_occurances);
@@ -186,10 +171,10 @@ function analytics_fetch(){
 	$db = new Minds\Core\Data\Call('entities_by_time');
 	$db->removeRow('trending:users');
 	$db->insert('trending:users', $user_guids);
-			
+
 	return;
 }
-/** 
+/**
  * Naming conventions for subtypes
  */
 function analytics_get_guid_from_url($url){

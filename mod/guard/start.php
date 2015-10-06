@@ -28,9 +28,6 @@ class start extends Components\Plugin{
 
 		\elgg_register_event_handler('login', 'user', array($this,'loginHook'));
 
-		\elgg_extend_view('login/extend', 'guard/twofactor/authorise');
-		elgg_register_event_handler('pagesetup', 'system', array($this,'twofactorPagesetup'));
-
 		$routes = core\Router::registerRoutes($this->registerRoutes());
 	}
 
@@ -116,20 +113,6 @@ class start extends Components\Plugin{
 			throw new Exceptions\TwoFactorRequired($key);
 
 			return false;
-		}
-	}
-
-	/**
-	 * twofactor pagesetup (adds the menus etc)
-	 */
-	public function twofactorPagesetup(){
-		if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
-			$params = array(
-				'name' => 'twofactor',
-				'text' => elgg_echo('guard:twofactor'),
-				'href' => "settings/twofactor",
-			);
-			elgg_register_menu_item('page', $params);
 		}
 	}
 

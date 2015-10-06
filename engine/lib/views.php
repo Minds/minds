@@ -1520,23 +1520,7 @@ function autoregister_views($view_base, $folder, $base_location_path, $viewtype)
  * @access private
  */
 function elgg_views_add_rss_link() {
-	global $autofeed;
-	if (isset($autofeed) && $autofeed == true) {
-		$url = full_url();
-		if (substr_count($url, '?')) {
-			$url .= "&view=rss";
-		} else {
-			$url .= "?view=rss";
-		}
 
-		$url = elgg_format_url($url);
-		elgg_register_menu_item('extras', array(
-			'name' => 'rss',
-			'text' => elgg_view_icon('rss'),
-			'href' => $url,
-			'title' => elgg_echo('feed:rss'),
-		));
-	}
 }
 
 /**

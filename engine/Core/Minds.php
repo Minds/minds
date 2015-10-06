@@ -100,7 +100,7 @@ class minds extends base{
 			'configuration.php', 'cron.php',
 			'entities.php', 'extender.php', 'filestore.php', 'group.php',
 			'input.php', 'languages.php', 'location.php',
-			'memcache.php', 'navigation.php',
+			'memcache.php', 
 			'notification.php', 'objects.php', 'output.php',
 			'pagehandler.php', 'pageowner.php', 'pam.php', 'plugins.php',
 			'private_settings.php', 'sessions.php',

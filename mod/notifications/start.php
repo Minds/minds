@@ -271,39 +271,6 @@ class start extends \ElggPlugin{
 	}
 }
 
-
-/**
- * Notification settings sidebar menu
- *
- */
-function notifications_plugin_pagesetup() {
-
-if (elgg_get_context() == "settings" && elgg_get_logged_in_user_guid()) {
-
-		$user = elgg_get_page_owner_entity();
-		if (!$user) {
-			$user = elgg_get_logged_in_user_entity();
-		}
-
-		$params = array(
-			'name' => '2_a_user_notify',
-			'text' => elgg_echo('notifications:subscriptions:changesettings'),
-			'href' => "notifications/personal/{$user->username}",
-		);
-		elgg_register_menu_item('page', $params);
-
-		/*if (elgg_is_active_plugin('groups')) {
-			$params = array(
-				'name' => '2_group_notify',
-				'text' => elgg_echo('notifications:subscriptions:changesettings:groups'),
-				'href' => "notifications/group/{$user->username}",
-			);
-			elgg_register_menu_item('page', $params);
-		}*/
-	}
-
-}
-
 /**
  * Create a notification
  *

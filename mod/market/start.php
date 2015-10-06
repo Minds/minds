@@ -1,9 +1,9 @@
 <?php
 /**
  * Minds Market
- * 
- * This is an OOP plugin and is an example of the new structure Minds plugins should follow. 
- * 
+ *
+ * This is an OOP plugin and is an example of the new structure Minds plugins should follow.
+ *
  * @package Minds.Core
  * @subpackage Plugins
  * @author Mark Harding (mark@minds.com)
@@ -15,45 +15,33 @@ use Minds\Core;
 use Minds\Components;
 
 class start extends Components\Plugin{
-	
+
 	public function __construct(){
 		parent::__construct('market');
-		
+
 		$this->init();
 	}
-	
+
 	public function init(){
-		
+
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			if($row->subtype == 'market')
 				return new entities\item($row);
 			if($row->subtype == 'market_order')
 				return new entities\order($row);
 		});
-		
+
 		$routes = core\Router::registerRoutes($this->registerRoutes());
-		
+
 		\elgg_extend_view('css/elgg', 'market/css', 800);
-		
-		/**
-		 * Register a site menu 
-		 * @todo make this oop friendly
-		 */
-		\elgg_register_menu_item('site', array(
-		    'name' => 'market',
-		    'text' => '<span class="entypo">&#59197;</span> Market',
-		    'href' => 'market',
-		    'title' => elgg_echo('market')
-	    ));
-		
-		
+
 		\elgg_register_plugin_hook_handler('register', 'menu:entity',array($this, 'menuOverride'), 900);
 		\elgg_register_plugin_hook_handler('acl', 'all', array($this, 'acl'));
 	}
-	
+
 	/**
 	 * Handler the pages
-	 * 
+	 *
 	 * @param array $pages - the page slugs
 	 * @return bool
 	 */
@@ -71,22 +59,22 @@ class start extends Components\Plugin{
 			'/market/seller' => "$path\\pages\\seller"
 		);
 	}
-	
+
 	/**
 	 * Categories for market items
-	 * 
-	 * Categories are seperated by a ":" colon. 
+	 *
+	 * Categories are seperated by a ":" colon.
 	 * @return array
 	 */
 	static public function getCategories(){
-		
+
 		if($categories = \elgg_get_plugin_setting('categories', 'market')){
-			
+
 			$categories = explode(',',$categories);
 			return $categories;
-			
+
 		}
-		
+
 		return array(
 			'uncategorised',
 			'food',
@@ -100,16 +88,16 @@ class start extends Components\Plugin{
 			'services'
 		);
 	}
-	
+
 	public function menuOverride($hook, $type, $return, $params){
 		if(isset($params['entity']) &&  $params['entity']->subtype == 'market'){
-		
+
 		$entity = $params['entity'];
 		foreach($return as $k => $item){
 			if(in_array($item->getName(), array('access', 'thumbs:up', 'thumbs:down', 'delete')))
 				unset($return[$k]);
 		}
-		
+
 		$options = array(
 						'name' => 'edit',
 						'href' => "market/item/edit/$entity->guid",
@@ -117,8 +105,8 @@ class start extends Components\Plugin{
 						'title' => elgg_echo('edit'),
 						'priority' => 1,
 					);
-		$return[] = \ElggMenuItem::factory($options);	
-		
+		$return[] = \ElggMenuItem::factory($options);
+
 		$options = array(
 						'name' => 'delete',
 						'href' => "market/item/delete/$entity->guid",
@@ -126,13 +114,13 @@ class start extends Components\Plugin{
 						'title' => elgg_echo('delete'),
 						'class'=>'ajax-non-action'
 					);
-		$return[] = \ElggMenuItem::factory($options);	
-		
-		
+		$return[] = \ElggMenuItem::factory($options);
+
+
 		return $return;
 		}
 	}
-	
+
 	/**
 	 * ACL extension to allow for seller access to placed orders
 	 */

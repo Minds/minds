@@ -16,16 +16,7 @@ class start extends \ElggPlugin{
 	 */
 	public function init(){
 
-		global $CONFIG;
-		$CONFIG->minusername = 2;
-
-		elgg_register_menu_item('site', array(
-			'name' => 'channels',
-			'text' => '<span class="entypo">&#59254;</span> Directory',
-			'href' => 'channels/featured',
-			'title' => elgg_echo('channels'),
-			'priority' => 2
-		));
+		Core\Config::build()->minusername = 2;
 
 		core\Router::registerRoutes(array(
       '/profile' => "\\minds\\plugin\\channel\\pages\\channel",
