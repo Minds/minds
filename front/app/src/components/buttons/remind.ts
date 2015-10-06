@@ -35,12 +35,16 @@ export class RemindButton {
     if (this.object.reminded)
       return false;
 
+    this.object.reminded = true;
+    this.object.reminds++;
+
     this.client.post('api/v1/newsfeed/remind/' + this.object.guid, {})
       .then((response : any) => {
-          this.object.reminded = true;
-          this.object.reminds++;
+
       })
       .catch((e) => {
+        this.object.reminded = false;
+        this.object.reminds--;
       });
   }
 
