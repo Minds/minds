@@ -92,7 +92,8 @@ export class SettingsGeneral{
       {
         name: this.name,
         email: this.email,
-        password: this.password2
+        password: this.password,
+        new_password: this.password2
       })
       .then((response : any) => {
         self.changed = false;

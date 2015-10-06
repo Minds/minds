@@ -39,7 +39,9 @@ class authenticate implements interfaces\api, interfaces\ApiIgnorePam{
         }
 
         $user = new entities\user(strtolower($_POST['username']));
-        if($user->isEnabled() && $user->username){
+        if($user->isEnabled() &&
+          $user->username &&
+          Core\Security\Password::check($user, $_POST['password'])){
             //is twofactor authentication setup?
             try{
                 if(login($user) && Core\Session::isLoggedIn()){

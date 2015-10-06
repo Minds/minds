@@ -4,9 +4,9 @@ import { Material as MaterialService } from "src/services/ui";
 @Directive({
   selector: '[mdl-textfield]',
   inputs: ['mdlTextfield'],
-  events : [
-    '(change): change()'
-  ]
+  host: {
+    "(change)": 'change()'
+  }
 })
 
 export class MaterialTextfield{
