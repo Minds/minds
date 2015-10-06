@@ -98,10 +98,10 @@ class minds extends base{
 		$lib_files = array(
 			'elgglib.php', 'access.php', 'actions.php', 'annotations.php',
 			'configuration.php', 'cron.php',
-			'entities.php', 'export.php', 'extender.php', 'filestore.php', 'group.php',
+			'entities.php', 'extender.php', 'filestore.php', 'group.php',
 			'input.php', 'languages.php', 'location.php',
 			'memcache.php', 'metadata.php', 'metastrings.php', 'navigation.php',
-			'notification.php', 'objects.php', 'opendd.php', 'output.php',
+			'notification.php', 'objects.php', 'output.php',
 			'pagehandler.php', 'pageowner.php', 'pam.php', 'plugins.php',
 			'private_settings.php', 'sessions.php',
 			'sites.php', 'statistics.php',
