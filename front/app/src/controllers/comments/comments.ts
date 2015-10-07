@@ -22,6 +22,7 @@ export class Comments {
 
   minds;
   object;
+  guid: string = "";
   comments : Array<any> = [];
   postMeta : any = {};
   reversed : boolean = false;
@@ -37,6 +38,9 @@ export class Comments {
 
   set _object(value: any) {
     this.object = value;
+    this.guid = this.object.guid;
+    if(this.object.entity_guid)
+      this.guid = this.object.entity_guid;
     this.load();
   }
 
@@ -49,7 +53,7 @@ export class Comments {
 
   load(refresh : boolean = false){
     var self = this;
-    this.client.get('api/v1/comments/' + this.object.guid, { limit: 3, offset: this.offset, reversed: true })
+    this.client.get('api/v1/comments/' + this.guid, { limit: 3, offset: this.offset, reversed: true })
       .then((response : any) => {
         if(!response.comments){
           self.moreData = false;
@@ -71,7 +75,7 @@ export class Comments {
 
   post(){
     var self = this;
-    this.client.post('api/v1/comments/' + this.object.guid, { comment: this.postMeta.comment })
+    this.client.post('api/v1/comments/' + this.guid, { comment: this.postMeta.comment })
       .then((response : any) => {
         self.postMeta.comment = "";
         self.comments.push(response.comment);
