@@ -358,7 +358,7 @@ class ElggPlugin extends ElggEntity {
 		}
 
 		$name = elgg_namespace_plugin_private_setting('user_setting', $name, $this->getID());
-        $user = new \Minds\Entities\user($user_guid);
+        $user = new \Minds\Entities\User($user_guid);
         return $user->$name;
         //return get_private_setting($user_guid,'user', $name);
 	}

@@ -6,7 +6,7 @@ class subscriptionsTest extends \Minds_PHPUnit_Framework_TestCase {
 
 
         private function setupUser($space =1){
-            $user = new Minds\Entities\user();
+            $user = new Minds\Entities\User();
             $user->username = "user$space";
             $user->email = "user$space@minds.com";
             $user->name = "Test user";

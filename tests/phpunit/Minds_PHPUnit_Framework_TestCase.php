@@ -16,9 +16,9 @@ class Minds_PHPUnit_Framework_TestCase extends PHPUnit_Framework_TestCase {
 		public function setUser(){
 			elgg_register_plugin_hook_handler('logged_in_user', 'user', function(){
 				try{
-					$user = new Minds\Entities\user('unit');
+					$user = new Minds\Entities\User('unit');
 				}catch(Exception $e){
-					$user = new Minds\Entities\user();
+					$user = new Minds\Entities\User();
 					$user->username = 'unit';
 					$user->name = 'Unit Tester';
 					$user->email = 'unit@minds.com';

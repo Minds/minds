@@ -33,9 +33,9 @@ class notifications implements Interfaces\api{
             $notifications = core\Entities::get(array('guids'=>$guids));
             $response['notifications'] = factory::exportable($notifications);
             foreach($response['notifications'] as $k => $data){
-                $owner = new \Minds\Entities\user($data['owner_guid']);
-                $from = new \Minds\Entities\user($data['from_guid']);
-                $entity = \Minds\Core\Entities::build(new \Minds\Entities\entity($data['object_guid']));
+                $owner = new \Minds\Entities\User($data['owner_guid']);
+                $from = new \Minds\Entities\User($data['from_guid']);
+                $entity = \Minds\Core\Entities::build(new \Minds\Entities\Entity($data['object_guid']));
                 $response['notifications'][$k]['ownerObj'] = $owner->export();
                 $response['notifications'][$k]['fromObj'] = $from->export();
 		        $response['notifications'][$k]['fromObj']['guid'] = (string) $from->guid;

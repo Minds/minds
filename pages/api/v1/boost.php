@@ -171,7 +171,7 @@ class boost implements Interfaces\api{
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
         }
         $points = reset($guids);
-        $entity = new \Minds\Entities\activity($pages[0]);
+        $entity = new \Minds\Entities\Activity($pages[0]);
         \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $pages[0], "boost refund");
     	$ctrl->reject($pages[0]);
     }

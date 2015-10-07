@@ -37,7 +37,7 @@ class ChannelBoostTest extends \Minds_PHPUnit_Framework_TestCase {
 
     public function testCanAcceptBoost(){
 
-        $tmp_entity = new Minds\Entities\object();
+        $tmp_entity = new Minds\Entities\Object();
         $tmp_entity->save();
 
         Boost\Factory::build('Channel', array('destination'=>'p2p-001'))->boost($tmp_entity->guid, 10);

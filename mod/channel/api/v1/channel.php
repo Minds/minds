@@ -135,7 +135,7 @@ class channel implements Interfaces\api{
                     //}
                 }catch(\Exception $e){}
 
-                $item = new \Minds\Entities\carousel();
+                $item = new \Minds\Entities\Carousel();
                 $item->title = '';
                 $item->owner_guid = elgg_get_logged_in_user_guid();
                 $item->access_id = ACCESS_PUBLIC;

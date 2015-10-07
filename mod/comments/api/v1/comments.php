@@ -56,7 +56,7 @@ class comments implements Interfaces\api{
 
     public function post($pages){
 
-        $parent = new \Minds\Entities\entity($pages[0]);
+        $parent = new \Minds\Entities\Entity($pages[0]);
         $comment = new \Minds\plugin\comments\entities\comment();
         $comment->description = urldecode($_POST['comment']);
         $comment->parent_guid = $pages[0];

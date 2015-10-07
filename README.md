@@ -92,7 +92,7 @@ $email = 'mark@minds.com'
 $lookup = new \Minds\Core\Data\lookup();
 
 $guid = $lookup->get($email, array('limit'=>1));
-$user = new \Minds\Entities\user($guid);
+$user = new \Minds\Entities\User($guid);
 
 ```
 

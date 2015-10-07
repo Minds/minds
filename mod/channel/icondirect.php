@@ -21,7 +21,7 @@ if($cached = $cacher->get("usericon:$guid")){
     $join_date = $cached;
 } else {
 
-    $user = new Minds\Entities\user($guid);
+    $user = new Minds\Entities\User($guid);
     if(isset($user->legacy_guid) && $user->legacy_guid)
         $guid = $user->legacy_guid;
 

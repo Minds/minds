@@ -3,9 +3,9 @@
 require_once(dirname(dirname(__FILE__)) . "/engine/start.php");
 
 //create a newspost
-$user = new Minds\Entities\user('minds');
+$user = new Minds\Entities\User('minds');
 
-$activity = new Minds\Entities\activity();
+$activity = new Minds\Entities\Activity();
 $activity->setMessage("Hello Minds!");
 $guid = $activity->save();
 

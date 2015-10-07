@@ -81,8 +81,8 @@ class order extends Entities\Object{
 	
 	public function getSellerEntity($brief = true){
 		if($this->item['owner'] && $brief)
-			return new \Minds\Entities\user($this->item['owner']);
+			return new \Minds\Entities\User($this->item['owner']);
 		
-		return new \Minds\Entities\user($this->item['owner_guid']);
+		return new \Minds\Entities\User($this->item['owner_guid']);
 	}
 }

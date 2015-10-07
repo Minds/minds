@@ -45,7 +45,7 @@ class neo implements Interfaces\api{
     }
     
     public function delete($pages){
-	$activity = new entities\activity($pages[0]); 
+	$activity = new Entities\Activity($pages[0]); 
 	if(!$activity->guid)
 		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));      
  
