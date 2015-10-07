@@ -12,7 +12,7 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Fs\Factory;
 
-class fs implements Interfaces\fs{
+class fs implements Interfaces\Fs{
 
 	public function get($pages){
 

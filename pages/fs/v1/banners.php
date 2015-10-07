@@ -20,6 +20,7 @@ class banners implements Interfaces\FS{
     $filepath = "";
     switch($entity->type){
       case "user":
+        $size = isset($pages[1]) ? $pages[1] : 'fat';
         $carousels = Core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$entity->guid));
         if($carousels)
           $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
