@@ -12,7 +12,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class register implements Interfaces\api, Interfaces\ApiIgnorePam{
+class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     /**
      * NOT AVAILABLE

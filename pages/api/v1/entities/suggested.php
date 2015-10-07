@@ -14,7 +14,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class suggested implements Interfaces\api, Interfaces\ApiIgnorePam{
+class suggested implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     /**
      * Returns the entities

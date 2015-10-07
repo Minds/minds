@@ -13,7 +13,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class thumbnails implements Interfaces\api, Interfaces\ApiIgnorePam{
+class thumbnails implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     /**
      * Return the archive items

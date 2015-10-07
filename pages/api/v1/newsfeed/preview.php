@@ -12,7 +12,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class preview implements Interfaces\api{
+class preview implements Interfaces\Api{
 
     /**
      * Returns a preview of a url

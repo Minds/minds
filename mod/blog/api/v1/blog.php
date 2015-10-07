@@ -13,7 +13,7 @@ use Minds\Entities\User;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class blog implements Interfaces\api{
+class blog implements Interfaces\Api{
 
     /**
      * Returns the conversations or conversation

@@ -15,7 +15,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class analytics implements Interfaces\api{
+class analytics implements Interfaces\Api{
 
     public function get($pages){
     }

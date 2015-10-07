@@ -12,7 +12,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class authenticate implements Interfaces\api, Interfaces\ApiIgnorePam{
+class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     /**
      * NOT AVAILABLE
