@@ -54,7 +54,7 @@ minds-archive-grid{
 
   > a{
     width: 33.333%;
-    position:absolute;
+    position:relative;
     img{
       width: 100%;
       height: auto;
@@ -62,7 +62,7 @@ minds-archive-grid{
     }
     span{
       color: #FFF;
-      font-size: 72px;
+      font-size: 72px !important;
       text-align: center;
       width: 100%;
       position: absolute;
