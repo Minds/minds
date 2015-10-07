@@ -7,11 +7,11 @@
  */
 namespace minds\pages\api\v1;
 use Minds\Core;
-use minds\entities;
+use Minds\Entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class logout implements interfaces\api{
+class logout implements Interfaces\api{
 
     public function get($pages){}
     

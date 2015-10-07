@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
-use minds\entities;
+use Minds\Entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class settings implements interfaces\api{
+class settings implements Interfaces\api{
 
     /**
      * Extended channel

@@ -89,7 +89,7 @@ $guid = register_user(
                     $args['username'],
                     $args['email']
                     );
-$user = new Minds\entities\user($guid);
+$user = new Minds\Entities\user($guid);
 $user->validated = true;
 $user->validated_method = 'admin_user';
 $user->save();
@@ -106,7 +106,7 @@ foreach($plugins as $plugin){
 /**
  * A test post
  */
- $activity = new Minds\entities\activity();
+ $activity = new Minds\Entities\activity();
  $activity->owner_guid = $guid;
  $activity->setMessage("Hello Minds!");
  $guid = $activity->save();

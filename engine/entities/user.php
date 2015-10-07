@@ -4,12 +4,12 @@
  * (this will replace the outdated Elgg entity system in the near future)
  */
 
-namespace minds\entities;
+namespace Minds\Entities;
 
 use Minds\Core;
 use Minds\Helpers;
 
-class user extends \ElggUser{
+class User extends \ElggUser{
 
     /**
      * Sets and encrypts a users email address

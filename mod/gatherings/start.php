@@ -113,7 +113,7 @@ class start extends Components\Plugin{
 					$unread = $data['unread'];
 					$ts = $data['ts'];
 				}
-				$u = new \minds\entities\user($user_guid);
+				$u = new \Minds\Entities\user($user_guid);
 				$u->last_msg = $ts;
 				$u->unread = $unread;
 				if($u->username && $u->guid != core\Session::getLoggedinUser()->guid){

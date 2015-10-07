@@ -10,11 +10,11 @@ namespace minds\plugin\channel\api\v1;
 use Minds\Core;
 use Minds\Helpers;
 use minds\interfaces;
-use minds\entities;
+use Minds\Entities;
 use Minds\Api\Factory;
 use ElggFile;
 
-class channel implements interfaces\api{
+class channel implements Interfaces\api{
 
     /**
      * Return channel profile information
@@ -31,7 +31,7 @@ class channel implements interfaces\api{
             $pages[0] = strtolower($pages[0]);
         }
 
-        $user = new entities\user($pages[0]);
+        $user = new Entities\User($pages[0]);
         if(!$user->username){
             return Factory::response(array('status'=>'error', 'message'=>'The user could not be found'));
         }
@@ -135,7 +135,7 @@ class channel implements interfaces\api{
                     //}
                 }catch(\Exception $e){}
 
-                $item = new \minds\entities\carousel();
+                $item = new \Minds\Entities\carousel();
                 $item->title = '';
                 $item->owner_guid = elgg_get_logged_in_user_guid();
                 $item->access_id = ACCESS_PUBLIC;

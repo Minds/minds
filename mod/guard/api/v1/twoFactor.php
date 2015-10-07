@@ -8,12 +8,12 @@
 namespace minds\plugin\guard\api\v1;
 
 use Minds\Core;
-use minds\entities;
+use Minds\Entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 use Minds\plugin\guard\lib;
 
-class twoFactor implements interfaces\api, interfaces\ApiIgnorePam{
+class twoFactor implements Interfaces\api, Interfaces\ApiIgnorePam{
 
     /**
      * NOT AVAILABLE
@@ -48,7 +48,7 @@ class twoFactor implements interfaces\api, interfaces\ApiIgnorePam{
 
     		//we allow for 120 seconds (2 mins) after we send a code
     		if($return['_guid'] && $return['ts'] > time()-120){
-    			$user = new entities\user($return['_guid']);
+    			$user = new Entities\User($return['_guid']);
     			$secret = $return['secret'];
     		}else {
           header('HTTP/1.1 401 Unauthorized', true, 401);

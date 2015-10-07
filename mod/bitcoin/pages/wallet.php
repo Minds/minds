@@ -7,7 +7,7 @@ use minds\interfaces;
 //use minds\plugin\comments;
 use minds\plugin\bitcoin\entities;
 
-class wallet extends core\page implements interfaces\page {
+class wallet extends core\page implements Interfaces\page {
 
     public $context = 'bitcoin';
 

@@ -849,7 +849,7 @@ abstract class ElggEntity extends ElggData implements
 				$owner = json_decode(json_encode($this->ownerObj), true);
 			}
 			if(isset($owner['name']) || $owner->name){
-				return new Minds\entities\User($owner);
+				return new Minds\Entities\User($owner);
 			}  else {
 				if($this->canEdit()){
 					//$this->save();
@@ -857,7 +857,7 @@ abstract class ElggEntity extends ElggData implements
 			}
        		}
 
-		return new Minds\entities\User($this->owner_guid);
+		return new Minds\Entities\User($this->owner_guid);
 	}
 
 	/**

@@ -185,7 +185,7 @@ class ElggObject extends ElggEntity {
 				$cache = true;
 				if(elgg_get_logged_in_user_guid() == $this->owner_guid)
 					$cache = false;
-				return new Minds\entities\User($array, $cache);
+				return new Minds\Entities\User($array, $cache);
 			}  else {
 				if($this->canEdit()){
 	//				$this->save();
@@ -193,7 +193,7 @@ class ElggObject extends ElggEntity {
 			}
 		}
 
-		$owner = new Minds\entities\User($this->owner_guid, false);
+		$owner = new Minds\Entities\User($this->owner_guid, false);
  		return $owner;
 	}
 	/**

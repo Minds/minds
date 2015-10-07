@@ -12,7 +12,7 @@ use Minds\Core\Data;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class comments implements interfaces\api{
+class comments implements Interfaces\api{
 
     /**
      * Returns the comments
@@ -56,7 +56,7 @@ class comments implements interfaces\api{
 
     public function post($pages){
 
-        $parent = new \Minds\entities\entity($pages[0]);
+        $parent = new \Minds\Entities\entity($pages[0]);
         $comment = new \Minds\plugin\comments\entities\comment();
         $comment->description = urldecode($_POST['comment']);
         $comment->parent_guid = $pages[0];

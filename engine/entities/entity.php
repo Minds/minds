@@ -4,8 +4,8 @@
  * (this will replace the outdated Elgg entity system in the near future)
  */
 
-namespace minds\entities;
+namespace Minds\Entities;
 
-class entity extends \ElggEntity{
-	
+class Entity extends \ElggEntity{
+
 }

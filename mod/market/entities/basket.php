@@ -8,9 +8,9 @@
  
 namespace minds\plugin\market\entities;
 
-use minds\entities;
+use Minds\Entities;
 
-class basket extends entities\entity{
+class basket extends Entities\Entity{
 	
 	protected $cookie_id = 'mindsMarketBasket';
 	public $items = array(); //ITEM_GUID => QUANTITY

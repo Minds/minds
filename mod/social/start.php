@@ -53,7 +53,7 @@ class start extends Components\Plugin{
 	 * @return void 
 	 */
 	public function postHook($event, $type, $activity){
-		if($activity instanceof \minds\entities\activity){
+		if($activity instanceof \Minds\Entities\activity){
 			try{
 				if(isset($_REQUEST['social_triggers'])){
 					foreach($_REQUEST['social_triggers'] as $service => $selected){

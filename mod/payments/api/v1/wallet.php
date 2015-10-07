@@ -11,7 +11,7 @@ use Minds\Core;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class wallet implements interfaces\api{
+class wallet implements Interfaces\api{
 
     private $ex_rate = 0.005;
 

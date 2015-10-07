@@ -6,10 +6,10 @@
 namespace minds\plugin\cms\entities;
  
 use minds\plugin\cms\exceptions;
-use minds\entities;
+use Minds\Entities;
 use Minds\Core\Data;
 use Minds\Core;
-class page extends entities\object{
+class page extends Entities\Object{
 	
 	/**
 	 * Initialise attributes

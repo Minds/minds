@@ -9,11 +9,11 @@ namespace minds\pages\api\v1;
 
 use Minds\Core;
 use Minds\Helpers;
-use minds\entities;
+use Minds\Entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class newsfeed implements interfaces\api{
+class newsfeed implements Interfaces\api{
 
     /**
      * Returns the newsfeed
@@ -29,7 +29,7 @@ class newsfeed implements interfaces\api{
 
         switch($pages[0]){
           case 'single':
-              $activity = new \Minds\entities\activity($pages[1]);
+              $activity = new \Minds\Entities\activity($pages[1]);
               return Factory::response(array('activity'=>$activity->export()));
               break;
           default:
@@ -106,7 +106,7 @@ class newsfeed implements interfaces\api{
         //factory::authorize();
         switch($pages[0]){
             case 'remind':
-                $embeded = new entities\entity($pages[1]);
+                $embeded = new Entities\Entity($pages[1]);
                 $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));

@@ -7,7 +7,7 @@ namespace minds\pages\emails;
 use Minds\Core;
 use minds\interfaces;
 
-class unsubscribe extends core\page implements interfaces\page{
+class unsubscribe extends core\page implements Interfaces\page{
 
 	/**
 	 * Get requests
@@ -16,7 +16,7 @@ class unsubscribe extends core\page implements interfaces\page{
 
         \elgg_set_ignore_access();
         $username = $pages[0];
-        $user = new \Minds\entities\user($username);
+        $user = new \Minds\Entities\user($username);
 
         if($user->getEmail() == $pages[1]){
             $user->disabled_emails = true;

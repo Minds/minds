@@ -5,10 +5,10 @@
  
 namespace minds\plugin\bitcoin\entities;
  
-use minds\entities;
+use Minds\Entities;
 use minds\plugin\bitcoin\services\blockchain;
 
-class wallet extends entities\object{
+class wallet extends Entities\Object{
 	
 	protected $cache = false; //because we load from the user..
 	public $password = NULL;

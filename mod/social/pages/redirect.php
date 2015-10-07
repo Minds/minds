@@ -6,7 +6,7 @@ use Minds\Core;
 use minds\interfaces;
 use minds\plugin\social\services;
 
-class redirect extends core\page implements interfaces\page{
+class redirect extends core\page implements Interfaces\page{
 		
 	/**
 	 * Get requests

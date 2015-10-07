@@ -5,13 +5,13 @@
 $notification = elgg_extract('entity', $vars);
 
     
-$entity =  Minds\entities\Factory::build($notification->object_guid);
+$entity =  Minds\Entities\Factory::build($notification->object_guid);
 if (!$entity) {
     echo "Sorry, we could not this notification";
     return true;
 } 
 
-$from = Minds\entities\Factory::build($notification->from_guid);
+$from = Minds\Entities\Factory::build($notification->from_guid);
 
 $points = (int) $notification->params['points'];
 

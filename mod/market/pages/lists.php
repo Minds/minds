@@ -7,9 +7,9 @@ namespace minds\plugin\market\pages;
 use Minds\Core;
 use minds\interfaces;
 use minds\plugin\market;
-use minds\entities;
+use Minds\Entities;
 
-class lists extends core\page implements interfaces\page{
+class lists extends core\page implements Interfaces\page{
 	
 	/**
 	 * Get requests
@@ -26,7 +26,7 @@ class lists extends core\page implements interfaces\page{
 		
 		switch($pages[0]){
 			case 'owner':
-				$owner = new entities\user($pages[1]);
+				$owner = new Entities\User($pages[1]);
 				if(!$owner->username){
 					echo "The user could not be found \n";
 					return false;

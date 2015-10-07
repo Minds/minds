@@ -3,7 +3,7 @@ namespace Minds\Core\Queue\Runners;
 use Minds\Core\Queue\Interfaces;
 use Minds\Core\Queue;
 use Minds\Core\Data;
-use Minds\entities;
+use Minds\Entities;
 use Surge;
 
 /**

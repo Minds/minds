@@ -12,6 +12,7 @@ class Router{
 	static $routes = array(
 		"/icon" => "minds\\pages\\icon",
 		"/api" => "minds\\pages\\api\\api",
+		"/fs" => "minds\\pages\\fs\\fs",
     //  "/app" => "minds\\pages\\app",
     "/emails/unsubscribe" => "minds\\pages\\emails\\unsubscribe"
 	);

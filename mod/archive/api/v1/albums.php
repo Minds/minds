@@ -13,7 +13,7 @@ use minds\interfaces;
 use minds\plugin\archive\entities;
 use Minds\Api\Factory;
 
-class albums implements interfaces\api{
+class albums implements Interfaces\api{
 
     /**
      * Return the archive items

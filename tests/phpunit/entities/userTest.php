@@ -6,11 +6,11 @@ class userTest extends Minds_PHPUnit_Framework_TestCase {
     }
 
     public function testCanConstructWithoutArguments() {
-            $this->assertNotNull(new minds\entities\object());
+            $this->assertNotNull(new Minds\Entities\object());
     }
 
 		private function setupUser($space =1){
-			$user = new minds\entities\user();
+			$user = new Minds\Entities\user();
 			$user->username = "user$space";
 			$user->email = "user$space@minds.com";
 			$user->name = "Test user";
@@ -26,7 +26,7 @@ class userTest extends Minds_PHPUnit_Framework_TestCase {
 			$guid = $this->setupUser(2);
 			invalidate_cache_for_entity($guid);
 
-			$user = new minds\entities\user($guid);
+			$user = new Minds\Entities\user($guid);
 			$this->assertEquals('user2', $user->username);
 		}
 
@@ -34,13 +34,13 @@ class userTest extends Minds_PHPUnit_Framework_TestCase {
 			$guid = $this->setupUser(3);
 			invalidate_cache_for_entity($guid);
 
-			$user = new minds\entities\user('user3');
+			$user = new Minds\Entities\user('user3');
 			$this->assertEquals('user3@minds.com', $user->email);
 			$this->assertNotNull($user->guid);
 		}
 
     public function testEmail(){
-        $user = new minds\entities\user();
+        $user = new Minds\Entities\user();
         $user->setEmail("mail@minds.com");
         $this->assertNotNull($user->email);
         $this->assertNotEquals("mail@minds.com", $user->email);

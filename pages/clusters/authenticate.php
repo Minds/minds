@@ -6,9 +6,9 @@ namespace minds\pages\clusters;
 
 use Minds\Core;
 use minds\interfaces;
-use minds\entities;
+use Minds\Entities;
 
-class authenticate extends core\page implements interfaces\page{
+class authenticate extends core\page implements Interfaces\page{
 	
 	public $csrf = false; //ignore CSRF as we can't avoid. 
 	
@@ -23,7 +23,7 @@ class authenticate extends core\page implements interfaces\page{
 			
 		}else {
 			
-			$user = new entities\user(get_input('username'));
+			$user = new Entities\User(get_input('username'));
 			
 			$return = $user->export();
 			$return['email'] = $user->getEmail();

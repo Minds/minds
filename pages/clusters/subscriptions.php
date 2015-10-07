@@ -6,9 +6,9 @@ namespace minds\pages\clusters;
 
 use Minds\Core;
 use minds\interfaces;
-use minds\entities;
+use Minds\Entities;
 
-class subscriptions extends core\page implements interfaces\page{
+class subscriptions extends core\page implements Interfaces\page{
 	
 	public $csrf = false; //ignore csrf
 	
@@ -39,7 +39,7 @@ class subscriptions extends core\page implements interfaces\page{
 		switch($pages[0]){
 			case 'subscribe':
 				$secret = core\clusters::generateSecret();
-				$user = new entities\user($user_guid);
+				$user = new Entities\User($user_guid);
 				if(!$user->guid){
 					echo json_encode(array('error'=>'The user couldn\'t be found'));
                         		return false;

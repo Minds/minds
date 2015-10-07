@@ -1,11 +1,11 @@
 <?php
 /**
- * Minds site entity. 
+ * Minds site entity.
  * (this will replace the outdated Elgg entity system in the near future & also act as an interim for multisites)
  */
 
-namespace minds\entities;
+namespace Minds\Entities;
 
-class site extends \ElggSite{
-	
+class Site extends \ElggSite{
+
 }

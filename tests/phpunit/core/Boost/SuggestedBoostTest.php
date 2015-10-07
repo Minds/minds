@@ -21,7 +21,7 @@ class SuggestedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
     public function testCanLoadFromFactory() {
         $suggested = Boost\Factory::build('Suggested', array(), $this->mock());
         $this->assertInstanceOf('\Minds\Core\Boost\Suggested', $suggested);
-        $this->assertInstanceOf('\Minds\interfaces\BoostHandlerInterface', $suggested);
+        $this->assertInstanceOf('\Minds\Interfaces\BoostHandlerInterface', $suggested);
     }
 
     public function testCanRequestBoost(){

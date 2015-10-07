@@ -6,9 +6,9 @@
  
 namespace minds\plugin\market\entities;
 
-use minds\entities;
+use Minds\Entities;
 
-class item extends entities\object{
+class item extends Entities\Object{
 	
 	public function initializeAttributes(){
 		$this->attributes = array_merge($this->attributes, array(

@@ -3,11 +3,11 @@
  * Minds activity entity.
  */
 
-namespace minds\entities;
+namespace Minds\Entities;
 use Minds\Helpers;
 use Minds\Core\Queue;
 
-class activity extends entity{
+class Activity extends Entity{
 
 	public $indexes = NULL;
 
@@ -228,7 +228,7 @@ class activity extends entity{
 	 */
 	public function setOwner($owner){
 		if(is_numeric($owner)){
-			$owner = new \minds\entities\user($owner);
+			$owner = new \Minds\Entities\user($owner);
 			$owner = $owner->export();
 		}
 

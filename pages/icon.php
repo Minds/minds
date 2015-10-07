@@ -5,10 +5,10 @@
 namespace minds\pages;
 
 use Minds\Core;
-use Minds\entities;
+use Minds\Entities;
 use minds\interfaces;
 
-class icon extends core\page implements interfaces\page{
+class icon extends core\page implements Interfaces\page{
 
 	/**
 	 * Get requests
@@ -20,7 +20,7 @@ class icon extends core\page implements interfaces\page{
         if($cached = $cacher->get("usericon:$guid")){
                 $join_date = $cached;
         } else {
-            $user = new entities\user($guid);
+            $user = new Entities\User($guid);
             if(isset($user->legacy_guid) && $user->legacy_guid)
                 $guid = $user->legacy_guid;
             $join_date = $user->time_created;

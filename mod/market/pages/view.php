@@ -8,7 +8,7 @@ use Minds\Core;
 use minds\interfaces;
 use minds\plugin\market\entities;
 
-class view extends core\page implements interfaces\page{
+class view extends core\page implements Interfaces\page{
 	
 	/**
 	 * Get requests

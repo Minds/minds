@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1\data;
 
 use Minds\Core;
-use minds\entities;
+use Minds\Entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class warehouse implements interfaces\api{
+class warehouse implements Interfaces\api{
 
     /**
      * Data warehouse

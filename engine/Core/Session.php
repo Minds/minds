@@ -5,7 +5,7 @@
 namespace Minds\Core;
 
 use Minds\Core;
-use minds\entities;
+use Minds\Entities;
 
 class Session extends base{
 
@@ -87,7 +87,7 @@ class Session extends base{
 	}
 
 	static public function regenerate(){
-		$_SESSION['user'] = new entities\user($_SESSION['guid'], false);
+		$_SESSION['user'] = new Entities\User($_SESSION['guid'], false);
 		session_regenerate_id(true);
 	}
 
@@ -97,7 +97,7 @@ class Session extends base{
 	static public function isLoggedin(){
 		$user = self::getLoggedinUser();
 
-		if ((isset($user)) && ($user instanceof \ElggUser || $user instanceof entities\user) && $user->guid) {
+		if ((isset($user)) && ($user instanceof \ElggUser || $user instanceof Entities\User) && $user->guid) {
 			return true;
 		}
 
@@ -115,14 +115,14 @@ class Session extends base{
 		 */
 		if($user = \elgg_trigger_plugin_hook('logged_in_user', 'user')){
             if(is_object($user) || is_array($user)){
-			    return new entities\user($user);
+			    return new Entities\User($user);
             }
 		}
 
 		if (isset($_SESSION['user'])) {
 			//cache username
 			$USERNAME_TO_GUID_MAP_CACHE[$_SESSION['username']] = $_SESSION['guid'];
-			return new entities\user($_SESSION['user']);
+			return new Entities\User($_SESSION['user']);
 		}
 
 		return NULL;

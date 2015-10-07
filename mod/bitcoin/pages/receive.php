@@ -7,7 +7,7 @@ use minds\interfaces;
 //use minds\plugin\comments;
 use minds\plugin\bitcoin\entities;
 
-class receive extends core\page implements interfaces\page {
+class receive extends core\page implements Interfaces\page {
 
     /**
      * Get requests

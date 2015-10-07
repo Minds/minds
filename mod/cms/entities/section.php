@@ -5,9 +5,9 @@
  
 namespace minds\plugin\cms\entities;
  
-use minds\entities;
+use Minds\Entities;
 
-class section extends entities\object{
+class section extends Entities\Object{
 
 	public $version = 1;
 	

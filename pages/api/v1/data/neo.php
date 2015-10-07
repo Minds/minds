@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
-use minds\entities;
+use Minds\Entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class neo implements interfaces\api{
+class neo implements Interfaces\api{
 
     /**
      * Neo test functions
@@ -25,14 +25,14 @@ class neo implements interfaces\api{
 
         $prepared =  new \Minds\Core\Data\Neo4j\Prepared\Common();
         //create john
-        $neo->request($prepared->createUser(new entities\user('john')));
+        $neo->request($prepared->createUser(new Entities\User('john')));
         //create mark
-        $neo->request($prepared->createUser(new entities\user('mark')));
+        $neo->request($prepared->createUser(new Entities\User('mark')));
 
-        $prepared->createSubscription(new entities\user('john'), elgg_get_logged_in_user_entity());
+        $prepared->createSubscription(new Entities\User('john'), elgg_get_logged_in_user_entity());
         $req = $neo->request($prepared);
 
-        $req = $neo->request($prepared->getSubscribers(new entities\user('john')));
+        $req = $neo->request($prepared->getSubscribers(new Entities\User('john')));
             
     }
     

@@ -6,7 +6,7 @@
  */
 namespace minds\plugin\archive\entities;
 
-use minds\entities\object;
+use Minds\Entities\object;
 use Minds\Api;
 use Minds\Core;
 use Minds\Core\Data;

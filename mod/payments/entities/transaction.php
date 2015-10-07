@@ -5,9 +5,9 @@
  
 namespace minds\plugin\payments\entities;
  
-use minds\entities;
+use Minds\Entities;
 
-class transaction extends entities\object{
+class transaction extends Entities\Object{
 	
 	/**
 	 * Initialise attributes

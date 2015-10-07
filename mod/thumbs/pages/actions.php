@@ -8,7 +8,7 @@ use Minds\Core;
 use minds\interfaces;
 use Minds\plugin\thumbs\helpers;
 
-class actions extends core\page implements interfaces\page{
+class actions extends core\page implements Interfaces\page{
 	
 	
 	public function get($pages){}
@@ -19,13 +19,13 @@ class actions extends core\page implements interfaces\page{
 		$guid = $pages[0];
 		$action = $pages[1];
 		
-		$entity = core\Entities::build(new \minds\entities\entity($guid));
+		$entity = core\Entities::build(new \Minds\Entities\entity($guid));
 		if(!$entity)
             return;
             //throw new \Exception("Entity $guid not found");
 		
-		//if($entity instanceof \minds\entities\activity && $entity->entity_guid)
-		//	$entity = core\Entities::build(new \minds\entities\entity($entity->entity_guid));
+		//if($entity instanceof \Minds\Entities\activity && $entity->entity_guid)
+		//	$entity = core\Entities::build(new \Minds\Entities\entity($entity->entity_guid));
 		
 		switch($action){
 			case "up":

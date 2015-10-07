@@ -15,7 +15,7 @@ use OAuth2\GrantType\UserCredentials;
 use OAuth2\GrantType\RefreshToken;
 use OAuth2\HttpFoundationBridge\Response as BridgeResponse;
 
-class token extends core\page implements interfaces\page{
+class token extends core\page implements Interfaces\page{
 
     public $csrf = false;	
 	

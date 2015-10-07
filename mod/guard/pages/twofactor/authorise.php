@@ -6,10 +6,10 @@ namespace minds\plugin\guard\pages\twofactor;
 
 use Minds\Core;
 use minds\interfaces;
-use minds\entities;
+use Minds\Entities;
 use minds\plugin\guard\lib;
 
-class authorise extends core\page implements interfaces\page{
+class authorise extends core\page implements Interfaces\page{
 
 	public $csrf = false;
 	

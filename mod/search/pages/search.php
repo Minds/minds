@@ -6,10 +6,10 @@ namespace minds\plugin\search\pages;
 
 use Minds\Core;
 use minds\interfaces;
-use minds\entities;
+use Minds\Entities;
 use minds\plugin\search\services\elasticsearch;
 
-class search extends core\page implements interfaces\page{
+class search extends core\page implements Interfaces\page{
 	
 	/**
 	 * Get requests

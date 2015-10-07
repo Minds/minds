@@ -8,7 +8,7 @@ use minds\interfaces;
 use minds\plugin\cms\entities;
 use minds\plugin\cms\exceptions;
 
-class page extends core\page implements interfaces\page{
+class page extends core\page implements Interfaces\page{
 	
 	public $context = 'cms';
 	

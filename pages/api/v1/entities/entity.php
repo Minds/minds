@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1\entities;
 
 use Minds\Core;
-use minds\entities;
+use Minds\Entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class entity implements interfaces\api{
+class entity implements Interfaces\api{
 
     /**
      * Returns the entities
@@ -37,7 +37,7 @@ class entity implements interfaces\api{
         if(!isset($pages[0])){
             $response['status'] = 'error';
         } else {
-            $entity = Core\Entities::build(new entities\entity($pages[0]));
+            $entity = Core\Entities::build(new Entities\Entity($pages[0]));
             if($entity instanceof \ElggEntity){
                 $response['entity'] = $entity->export();
                 $response['entity']['guid'] = (string) $entity->guid;

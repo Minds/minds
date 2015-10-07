@@ -7,7 +7,7 @@ use minds\interfaces;
 //use minds\plugin\comments;
 use minds\plugin\bitcoin\entities;
 
-class send extends core\page implements interfaces\page {
+class send extends core\page implements Interfaces\page {
 
     public $context = 'bitcoin';
 

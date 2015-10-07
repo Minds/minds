@@ -13,7 +13,7 @@ use Minds\plugin\groups\helpers;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class membership implements interfaces\api{
+class membership implements Interfaces\api{
 
     /**
      * Returns the conversations or conversation
@@ -64,7 +64,7 @@ class membership implements interfaces\api{
 
       if(isset($pages[1])){
         //Admin approval
-        $user = new \Minds\entities\user($pages[1]);
+        $user = new \Minds\Entities\user($pages[1]);
         if($group->join($user))
           return Factory::response(array());
       }
@@ -83,7 +83,7 @@ class membership implements interfaces\api{
 
       if(isset($pages[1])){
         //Admin approval
-        helpers\Membership::cancelRequest($group, new \Minds\entities\user($pages[1]));
+        helpers\Membership::cancelRequest($group, new \Minds\Entities\user($pages[1]));
         return Factory::response(array());
       }
 

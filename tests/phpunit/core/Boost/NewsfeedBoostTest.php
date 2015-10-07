@@ -21,7 +21,7 @@ class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
     public function testCanLoadFromFactory() {
         $newsfeed = Boost\Factory::build('Newsfeed', array(), $this->mock());
         $this->assertInstanceOf('\Minds\Core\Boost\Newsfeed', $newsfeed);
-        $this->assertInstanceOf('\Minds\interfaces\BoostHandlerInterface', $newsfeed);
+        $this->assertInstanceOf('\Minds\Interfaces\BoostHandlerInterface', $newsfeed);
     }
 
     public function testCanRequestBoost(){

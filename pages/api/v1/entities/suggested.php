@@ -10,11 +10,11 @@ namespace minds\pages\api\v1\entities;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Helpers;
-use minds\entities;
+use Minds\Entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class suggested implements interfaces\api, interfaces\ApiIgnorePam{
+class suggested implements Interfaces\api, Interfaces\ApiIgnorePam{
 
     /**
      * Returns the entities

@@ -5,10 +5,10 @@
 
 namespace minds\plugin\comments\entities;
 
-use minds\entities;
+use Minds\Entities;
 use Minds\Core;
 
-class comment extends entities\entity{
+class comment extends Entities\Entity{
 
     public function initializeAttributes(){
         parent::initializeAttributes();
@@ -51,7 +51,7 @@ class comment extends entities\entity{
 
     public function getURL(){
 
-        $entity = \Minds\Core\Entities::build(new entities\entity($this->parent_guid));
+        $entity = \Minds\Core\Entities::build(new Entities\Entity($this->parent_guid));
         if($entity)
             return $entity->getURL();
 

@@ -2,7 +2,7 @@
 
 $notification = elgg_extract('entity', $vars);
 
-$entity =  Minds\Core\Entities::build(new minds\entities\entity($notification->object_guid));
+$entity =  Minds\Core\Entities::build(new Minds\Entities\entity($notification->object_guid));
 if($entity){
 	
 	$actor = get_entity($entity->from_guid);

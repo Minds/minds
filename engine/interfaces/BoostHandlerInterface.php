@@ -1,11 +1,11 @@
 <?php
-namespace minds\interfaces;
+namespace Minds\Interfaces;
 
 /**
  * Interface for Boost Handlers
  */
 interface BoostHandlerInterface{
-	
+
     /**
      * Boost an entity, place in a review queue first
      * @param object/int $entity - the entity to boost
@@ -13,8 +13,8 @@ interface BoostHandlerInterface{
      * @return boolean
      */
 	public function boost($entity, $impressions);
-	
-    
+
+
     /**
      * Return boosts for review
      * @param int $limit
@@ -22,7 +22,7 @@ interface BoostHandlerInterface{
      * @return array
      */
     public function getReviewQueue($limit, $offset = "");
-    
+
     /**
      * Accept a boost
      * @param object/int $entity
@@ -30,7 +30,7 @@ interface BoostHandlerInterface{
      * @return boolean
      */
     public function accept($entity, $impressions);
-    
+
     /**
      * Return a boost
      * @return array

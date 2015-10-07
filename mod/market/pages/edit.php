@@ -9,7 +9,7 @@ use minds\interfaces;
 use minds\plugin\market;
 use minds\plugin\market\entities;
 
-class edit extends core\page implements interfaces\page{
+class edit extends core\page implements Interfaces\page{
 	
 	/**
 	 * Display the edit page for the item

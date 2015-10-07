@@ -9,11 +9,11 @@ namespace minds\plugin\archive\api\v1;
 
 use Minds\Core;
 use Minds\Helpers;
-use Minds\entities;
+use Minds\Entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class thumbnails implements interfaces\api, interfaces\ApiIgnorePam{
+class thumbnails implements Interfaces\api, Interfaces\ApiIgnorePam{
 
     /**
      * Return the archive items

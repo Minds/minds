@@ -9,11 +9,11 @@ namespace minds\plugin\blog\api\v1;
 
 use Minds\Core;
 use minds\plugin\blog\entities;
-use minds\entities\user;
+use Minds\Entities\user;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class blog implements interfaces\api{
+class blog implements Interfaces\api{
 
     /**
      * Returns the conversations or conversation

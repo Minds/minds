@@ -9,11 +9,11 @@ namespace minds\plugin\thumbs\api\v1;
 
 use Minds\Core;
 use minds\interfaces;
-use minds\entities;
+use Minds\Entities;
 use Minds\Api\Factory;
 use minds\plugin\thumbs\helpers;
 
-class thumbs implements interfaces\api{
+class thumbs implements Interfaces\api{
 
     /**
      * Return the thumbs information for an entity
@@ -26,7 +26,7 @@ class thumbs implements interfaces\api{
         $guid = $pages[0];
         $direction = $pages[1];
         
-        $entity = core\Entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \Minds\Entities\entity($guid));
         if(!$entity->guid)
             return Factory::response(array('status'=>'error', 'message'=>'entity not found'));
 
@@ -48,7 +48,7 @@ class thumbs implements interfaces\api{
         $guid = $pages[0];
         $direction = $pages[1];
         
-        $entity = core\Entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \Minds\Entities\entity($guid));
         
         if($entity->guid){
             if(helpers\buttons::hasThumbed($entity, $direction)){
@@ -87,7 +87,7 @@ class thumbs implements interfaces\api{
         $guid = $pages[0];
         $direction = $pages[1];
         
-        $entity = core\Entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \Minds\Entities\entity($guid));
         
         if($entity->guid)
             helpers\storage::cancel($direction, $entity);

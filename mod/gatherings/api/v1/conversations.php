@@ -12,7 +12,7 @@ use minds\plugin\gatherings\entities;
 use minds\interfaces;
 use Minds\Api\Factory;
 
-class conversations implements interfaces\api{
+class conversations implements Interfaces\api{
 
     /**
      * Returns the conversations or conversation

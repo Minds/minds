@@ -1,11 +1,11 @@
 <?php
 /**
- * Minds object entity. 
+ * Minds object entity.
  * (this will replace the outdated Elgg entity system in the near future)
  */
 
-namespace minds\entities;
+namespace Minds\Entities;
 
-class object extends \ElggObject{
-	
+class Object extends \ElggObject{
+
 }

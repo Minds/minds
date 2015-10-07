@@ -19,7 +19,7 @@ class Factory{
         $handler = "Minds\\Core\\Boost\\$handler";
         if(class_exists($handler)){
             $class = new $handler($options, $db);
-            if($class instanceof interfaces\BoostHandlerInterface){
+            if($class instanceof Interfaces\BoostHandlerInterface){
                 return $class;
             }
         }

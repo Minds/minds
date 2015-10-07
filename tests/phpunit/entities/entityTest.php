@@ -7,18 +7,18 @@ class entityTest extends Minds_PHPUnit_Framework_TestCase {
     }
 
     public function testCanConstructWithoutArguments() {
-            $this->assertNotNull(new minds\entities\entity());
+            $this->assertNotNull(new Minds\Entities\entity());
     }
 
 		private function setupEntity($space =1){
-			$entity = new minds\entities\entity();
+			$entity = new Minds\Entities\entity();
 			$entity->title = "entity $space";
 			$entity->description = "description $space";
 			return $entity->save();
 		}
 
 		public function testSave(){
-			$entity = new minds\entities\entity();
+			$entity = new Minds\Entities\entity();
 			$entity->title = "object test";
 			$entity->description = "";
 			//$this->assertInternalType('string', $entity->save());
@@ -28,9 +28,9 @@ class entityTest extends Minds_PHPUnit_Framework_TestCase {
 			/*$guid = $this->setupEntity(2);
 			invalidate_cache_for_entity($guid);
 
-			$entity = new minds\entities\entity($guid);
+			$entity = new Minds\Entities\entity($guid);
 			$this->assertEquals('entity 2', $entity->title);
 			//$this->assertInternalType('array',$entity->ownerObj);
-			$this->assertInstanceOf('minds\entities\user', $entity->getOwnerEntity());*/
+			$this->assertInstanceOf('Minds\Entities\user', $entity->getOwnerEntity());*/
 		}
 }

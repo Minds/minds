@@ -13,7 +13,7 @@ use minds\interfaces;
 use minds\plugin\archive\entities;
 use Minds\Api\Factory;
 
-class archive implements interfaces\api, interfaces\ApiIgnorePam{
+class archive implements Interfaces\api, Interfaces\ApiIgnorePam{
 
     /**
      * Return the archive items
@@ -25,7 +25,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
         $response = array();
 
         if(is_numeric($pages[0])){
-            $entity = core\Entities::build(new \minds\entities\entity($pages[0]));
+            $entity = core\Entities::build(new \Minds\Entities\entity($pages[0]));
             Helpers\Counters::increment($pages[0], 'plays');
             if(is_string($pages[1]) && $pages[1] == 'play'){
                 //echo $entity->getSourceUrl('360.mp4'); exit;
@@ -103,7 +103,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
         $guid = $pages[0];
         $album = NULL;
 
-        $entity = core\Entities::build(new \minds\entities\entity($guid));
+        $entity = core\Entities::build(new \Minds\Entities\entity($guid));
 
         if($entity->subtype == 'image'){
             if(isset($_POST['album_guid'])){
@@ -136,7 +136,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
                 }
             }
             $entity->container_guid = $album->guid;
-            $activity = new \minds\entities\activity();
+            $activity = new \Minds\Entities\activity();
                 $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
                         //->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
                     ->setFromEntity($entity)
@@ -160,7 +160,7 @@ class archive implements interfaces\api, interfaces\ApiIgnorePam{
 
         if($entity->subtype == 'video'){
 
-            $activity = new \minds\entities\activity();
+            $activity = new \Minds\Entities\activity();
             $activity->setFromEntity($entity)
                 ->setCustom('video', array(
                 'thumbnail_src'=>$entity->getIconUrl(),

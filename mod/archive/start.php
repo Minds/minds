@@ -10,7 +10,7 @@ namespace Minds\plugin\archive;
 use Minds\Api;
 use Minds\Core;
 use Minds\Components;
-use Minds\entities as CoreEntities;
+use Minds\Entities as CoreEntities;
 
 class start extends Components\Plugin{
 
@@ -74,7 +74,7 @@ class start extends Components\Plugin{
 		switch($page[0]) {
 
 			case 'thumbnail':
-				$entity = \Minds\entities\Factory::build($page[1]);
+				$entity = \Minds\Entities\Factory::build($page[1]);
 				if(!$entity){
 					forward(elgg_get_site_url() . '_graphics/placeholder.png');
 				}

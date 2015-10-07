@@ -8,7 +8,7 @@ use Minds\Core;
 use minds\interfaces;
 use minds\plugin\minds_wordpress;
 
-class wp extends core\page implements interfaces\page{
+class wp extends core\page implements Interfaces\page{
 	
 	
 	public function get($pages){

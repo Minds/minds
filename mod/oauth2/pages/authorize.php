@@ -14,7 +14,7 @@ use OAuth2\GrantType\UserCredentials;
 use OAuth2\GrantType\RefreshToken;
 use OAuth2\HttpFoundationBridge\Response as BridgeResponse;
 
-class authorize extends core\page implements interfaces\page{
+class authorize extends core\page implements Interfaces\page{
 	
 	
 	public function get($pages){

@@ -5,7 +5,7 @@
 namespace Minds\Core\Security;
 
 use Minds\Core;
-use Minds\entities;
+use Minds\Entities;
 
 class Password {
 
@@ -17,7 +17,7 @@ class Password {
      */
     public function check($user, $password){
       if(is_numeric($user) || is_string($user))
-        $user = new entities\user($user);
+        $user = new Entities\User($user);
 
       $algo = 'sha256';
     	if(strlen($user->password) == 32) //legacy users might still be using md5
