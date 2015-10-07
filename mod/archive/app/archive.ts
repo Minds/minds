@@ -1,2 +1,2 @@
 export { ArchiveView } from './src/archive-view';
-//export { * } from './archive-edit';
+export { ArchiveEdit } from './src/archive-edit';
