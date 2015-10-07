@@ -14,7 +14,7 @@ use Minds\Entities;
 use Minds\Api\Factory;
 use ElggFile;
 
-class channel implements Interfaces\api{
+class channel implements Interfaces\Api{
 
     /**
      * Return channel profile information

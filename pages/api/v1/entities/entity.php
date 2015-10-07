@@ -12,7 +12,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class entity implements Interfaces\api{
+class entity implements Interfaces\Api{
 
     /**
      * Returns the entities

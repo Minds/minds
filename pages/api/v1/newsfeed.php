@@ -13,7 +13,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class newsfeed implements Interfaces\api{
+class newsfeed implements Interfaces\Api{
 
     /**
      * Returns the newsfeed

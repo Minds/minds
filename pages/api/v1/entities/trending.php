@@ -12,7 +12,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class trending implements Interfaces\api{
+class trending implements Interfaces\Api{
 
     /**
      * Returns the entities

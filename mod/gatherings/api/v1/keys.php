@@ -13,7 +13,7 @@ use minds\plugin\gatherings\helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class keys implements Interfaces\api{
+class keys implements Interfaces\Api{
 
     /**
      * Returns the private key belonging to a user

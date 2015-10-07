@@ -11,7 +11,7 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class search implements Interfaces\api{
+class search implements Interfaces\Api{
 
     /**
      * Searches

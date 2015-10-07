@@ -12,7 +12,7 @@ use Minds\Core\Data;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class comments implements Interfaces\api{
+class comments implements Interfaces\Api{
 
     /**
      * Returns the comments

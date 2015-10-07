@@ -11,7 +11,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class logout implements Interfaces\api{
+class logout implements Interfaces\Api{
 
     public function get($pages){}
     

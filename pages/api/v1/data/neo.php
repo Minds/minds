@@ -12,7 +12,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class neo implements Interfaces\api{
+class neo implements Interfaces\Api{
 
     /**
      * Neo test functions

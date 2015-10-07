@@ -13,7 +13,7 @@ use Minds\plugin\groups\helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class group implements Interfaces\api{
+class group implements Interfaces\Api{
 
     /**
      * Returns the conversations or conversation

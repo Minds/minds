@@ -13,7 +13,7 @@ use Minds\Entities;
 use Minds\Api\Factory;
 use minds\plugin\thumbs\helpers;
 
-class thumbs implements Interfaces\api{
+class thumbs implements Interfaces\Api{
 
     /**
      * Return the thumbs information for an entity

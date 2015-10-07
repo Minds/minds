@@ -12,7 +12,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class geolocation implements Interfaces\api, Interfaces\ApiIgnorePam{
+class geolocation implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     public function get($pages){
 

@@ -11,7 +11,7 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class notifications implements Interfaces\api{
+class notifications implements Interfaces\Api{
 
     /**
      * Return a list of notifications

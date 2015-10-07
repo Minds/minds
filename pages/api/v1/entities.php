@@ -11,7 +11,7 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class entities implements Interfaces\api{
+class entities implements Interfaces\Api{
 
     /**
      * Returns the entities

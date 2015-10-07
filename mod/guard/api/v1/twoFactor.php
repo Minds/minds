@@ -13,7 +13,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\plugin\guard\lib;
 
-class twoFactor implements Interfaces\api, Interfaces\ApiIgnorePam{
+class twoFactor implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     /**
      * NOT AVAILABLE

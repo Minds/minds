@@ -12,7 +12,7 @@ use minds\plugin\blog\entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class header implements Interfaces\api, Interfaces\ApiIgnorePam{
+class header implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     /**
      * Returns the conversations or conversation

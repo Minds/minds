@@ -12,7 +12,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class warehouse implements Interfaces\api{
+class warehouse implements Interfaces\Api{
 
     /**
      * Data warehouse

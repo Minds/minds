@@ -43,7 +43,7 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class api implements Interfaces\api{
+class api implements Interfaces\Api{
 
 	public function get($pages){
         
