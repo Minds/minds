@@ -30,6 +30,8 @@
 	</a>
 </div>
 
+<div class="mdl-card__supporting-text message" [hidden]="!activity.title || activity.perma_url" [tags]>{{activity.title}}</div>
+
 <div class="item item-image item-image-video" *ng-if="activity.custom_type == 'video'">
 		 <video
 			 	id="video"
