@@ -24,13 +24,24 @@ export class Discovery {
   offset: string = "";
   inProgress : boolean = false;
 
-  constructor(public client: Client,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
-    ){
+  constructor(public client: Client, public router: Router, public params: RouteParams){
     this._filter = params.params['filter'];
+
+    switch(this._filter){
+      case "suggested":
+        this._type = "channels";
+        break;
+      case "trending":
+        this._type = "images";
+        break;
+      case "featured":
+        this._type = "channels";
+        break;
+    }
+
     if(params.params['type'])
       this._type = params.params['type'];
+
     this.load(true);
   }
 
