@@ -102,6 +102,15 @@
          display:block;
          text-decoration: none;
          width: calc(100% - 32px);
+
+         p{
+            font-size:13px;
+            text-overflow: ellipsis;
+            text-rendering: auto;
+            white-space: pre-wrap;
+            overflow: hidden;
+            max-height: 45px;
+         }
        }
      }
 
