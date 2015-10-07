@@ -1,4 +1,8 @@
-<div class="mdl-card__title minds-video-thumbnail" style="height:200px; background:#333" [ng-style]="{background: '#333 url(' + entity.thumbnail_src + ') center center'}">
+<div class="mdl-card__title minds-video-thumbnail"
+	style="height:200px; background:#333"
+	[ng-style]="{background: '#333 url(' + entity.thumbnail_src + ') center center'}"
+	[router-link]="['/Archive-View', {guid: entity.guid}]">
+	>
 	<span class="material-icons">play_circle_outline</span>
 </div>
 
