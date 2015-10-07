@@ -26,7 +26,7 @@ class thumbnails implements interfaces\api, interfaces\ApiIgnorePam{
         global $CONFIG;
 
         if(is_numeric($pages[0])){
-          $entity = entities\Factory::build($pages[0]);
+            $entity = entities\Factory::build($pages[0]);
           if(!$entity)
             exit;
 
@@ -57,19 +57,19 @@ class thumbnails implements interfaces\api, interfaces\ApiIgnorePam{
     				case 'album':
     					//get the first image attached to this album
     					$image_guids = $entity->getChildrenGuids();
-    					$this->forward($CONFIG->cdn_url.'archive/thumbnail/'.current($image_guids));
+    					forward($CONFIG->cdn_url.'archive/thumbnail/'.current($image_guids));
     					break;
     				case 'video':
     					if(!$entity->thumbnail){
     						$cinemr = $entity->cinemr();
-                $ret = $cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail');
-                //$this->forward($ret);
-                exit;
+                            $ret = $cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail');
+                            forward($ret);
+                            exit;
     					}
-              break;
-            case 'audio':
-              $filename = elgg_get_site_url() . 'mod/archive/graphics/wave.png';
-              break;
+                      break;
+                    case 'audio':
+                        $filename = elgg_get_site_url() . 'mod/archive/graphics/wave.png';
+                        break;
     			}
 
     			if(!file_exists($filename)){

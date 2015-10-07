@@ -74,7 +74,7 @@ class start extends Components\Plugin{
 		switch($page[0]) {
 
 			case 'thumbnail':
-				$entity = get_entity($page[1]);
+				$entity = \Minds\entities\Factory::build($page[1]);
 				if(!$entity){
 					forward(elgg_get_site_url() . '_graphics/placeholder.png');
 				}
@@ -108,13 +108,14 @@ class start extends Components\Plugin{
 						break;
 					case 'video':
 						if(!$entity->thumbnail){
-							$cinemr = $entity->cinemr();
-	            forward($cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail'));
+						  $cinemr = $entity->cinemr();
+                          $uri = $cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail');
+                          var_dump($uri); exit;
 						}
-	          break;
-	        case 'audio':
-	          $filename = elgg_get_site_url() . 'mod/archive/graphics/wave.png';
-	        	break;
+	                break;
+	                case 'audio':
+	                    $filename = elgg_get_site_url() . 'mod/archive/graphics/wave.png';
+	        	    break;
 				}
 
 				if(!file_exists($filename)){
