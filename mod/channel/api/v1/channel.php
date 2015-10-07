@@ -63,14 +63,8 @@ class channel implements Interfaces\Api{
         $carousels = core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
         if($carousels){
             foreach($carousels as $carousel){
-                global $CONFIG;
-                if(!$CONFIG->cdn_url)
-                    $CONFIG->cdn_url = elgg_get_site_url();
-               // else
-                    //$CONFIG->cdn_url .= '/';
-
                $response['channel']['carousels'][] = array(
-                    'src'=> $carousel->ext_bg ? str_replace('/thin', '/fat', $carousel->ext_bg) : $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
+                    'src'=> $CONFIG->cdn_url . "fs/v1/banners/$carousel->guid/fat/$carousel->last_updated"
                 );
             }
         }
