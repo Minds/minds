@@ -24,7 +24,7 @@ import {Settings} from './src/controllers/settings/settings';
  */
 import {Gatherings} from './src/plugins/gatherings/gatherings';
 import {Blog, BlogView, BlogEdit} from './src/plugins/blog/blog';
-import {ArchiveView} from './src/plugins/archive/archive';
+import {ArchiveView, ArchiveEdit} from './src/plugins/archive/archive';
 import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups';
 
 @Component({
@@ -49,6 +49,7 @@ import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups'
   { path: '/blog/edit/:guid', component:  BlogEdit, as: 'Blog-Edit'},
 
   { path: '/archive/view/:guid', component: ArchiveView, as: 'Archive-View'},
+  { path: '/archive/edit/:guid', component: ArchiveEdit, as: 'Archive-Edit'},
 
   { path: '/notifications', component: Notifications, as: 'Notifications'},
 
