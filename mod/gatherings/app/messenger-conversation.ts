@@ -29,7 +29,6 @@ export class MessengerConversation {
   previous: string;
   hasMoreData: boolean = true;
   inProgress: boolean = false;
-
   newChat: boolean;
   poll: boolean = true;
 
@@ -59,6 +58,7 @@ export class MessengerConversation {
   load() {
     var self = this;
     this.inProgress = true;
+    
     this.client.get('api/v1/conversations/' + this.guid,
       {
         limit: 6,
@@ -68,6 +68,7 @@ export class MessengerConversation {
         password: this.storage.get('private-key')
       })
       .then((data : MindsUserConversationResponse) =>{
+        
         self.inProgress = false;
 
         if (!data.messages) {
