@@ -60,6 +60,7 @@ class trending implements interfaces\api{
 
         switch($pages[1]){
             case 'image':
+            case 'images':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
                 $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('image', get_input('offset', 0)));
                 $rows = $result->getRows();
@@ -70,7 +71,7 @@ class trending implements interfaces\api{
                 } 
                 $entities = core\Entities::get(array('guids'=>$guids));       
                 break;
-
+            case 'videos':
             case 'video':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('video', get_input('offset', 0)));
@@ -83,9 +84,7 @@ class trending implements interfaces\api{
                 $entities = core\Entities::get(array('guids'=>$guids));       
                 break;
             default:
-                $opts = array('timespan' => get_input('timespan', 'day'));
-                $trending = new \MindsTrending(array('google'), $opts);
-                $guids = $trending->getList(array('type'=>'user', 'limit'=>12, 'offset'=>get_input('offset', '')));
+                
                 if(!$guids){
                     return Factory::response(array('status'=>'error', 'message'=>'not found'));
                 }
