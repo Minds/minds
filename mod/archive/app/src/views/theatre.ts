@@ -16,8 +16,8 @@ import { Material } from 'src/directives/material';
     </div>
     <div class="minds-archive-stage" *ng-if="object.subtype == 'video'">
       <video autoplay controls width="100%">
-        <source src="{{entity.src['720.mp4']}}" type="video/mp4" data-res="720p"></source>
-        <source src="{{entity.src['360.mp4']}}" type="video/mp4" data-res="360p"></source>
+        <source src="{{object.src['720.mp4']}}" type="video/mp4" data-res="720p"></source>
+        <source src="{{object.src['360.mp4']}}" type="video/mp4" data-res="360p"></source>
       </video>
     </div>
   `,
