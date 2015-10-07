@@ -57,7 +57,8 @@ class trending implements Interfaces\Api{
         //temp hack..
         //if(isset($pages[1]) && $pages[1] == 'video')
           //  $pages[1] = 'kaltura_video';
-
+        if(!isset($pages[1]))
+            $pages[1] = $pages[0];
         switch($pages[1]){
             case 'image':
             case 'images':
