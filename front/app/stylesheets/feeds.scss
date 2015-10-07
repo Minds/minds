@@ -106,6 +106,20 @@
        }
      }
 
+     .is-boosted{
+       color:#888;
+       padding:$minds-padding;
+
+       i{
+         top: 6px;
+          position: relative;
+       }
+       a{
+         color:#888;
+         font-weight:bold;
+       }
+     }
+
      /**
       * Remind
       */

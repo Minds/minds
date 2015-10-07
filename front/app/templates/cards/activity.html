@@ -62,6 +62,11 @@
 	<minds-remind [object]="activity.remind_object" class="mdl-card mdl-shadow--6dp item"></minds-remind>
 </div>
 
+<div class="mdl-card__supporting-text is-boosted" *ng-if="activity.boosted">
+	<i class="material-icons">trending_up</i>
+	<a>Boosted</a>
+</div>
+
 <div class="mdl-card__supporting-text mdl-color--blue-grey-50 tabs" *ng-if="!hideTabs">
 	<minds-button-thumbs-up [object]="activity"></minds-button-thumbs-up>
 	<minds-button-thumbs-down [object]="activity"></minds-button-thumbs-down>
@@ -84,7 +89,6 @@
 <div class="mdl-card__supporting-text mdl-color--blue-grey-50" *ng-if="showBoostOptions">
 	<minds-boost [object]="activity" class="minds-boost-container" (done)="showBoostOptions = false"></minds-boost>
 </div>
-
 
 <div class="mdl-card__menu mdl-color-text--blue-grey-300" #toggle>
 	<!-- Right aligned menu below button -->
