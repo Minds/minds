@@ -51,7 +51,7 @@ class Entities extends base{
 			}
 		}
 
-		$default = "minds\\entities\\$row->type";
+		$default = "minds\\entities\\" . ucfirst($row->type);
 		if(class_exists($default)){
 			return new $default($row, $cache);
 		}
