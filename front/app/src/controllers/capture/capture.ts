@@ -7,7 +7,12 @@ import { Client } from 'src/services/api/client';
 
 @Component({
   selector: 'minds-capture',
-  viewBindings: [ Upload, Client ]
+  viewBindings: [ Upload, Client ],
+  host : {
+    '(dragover)': 'dragover($event)',
+    '(dragleave)': 'dragleave($event)',
+    '(drop)': 'drop($event)'
+  }
 })
 @View({
   templateUrl: 'templates/capture/capture.html',
@@ -23,6 +28,8 @@ export class Capture {
   albums : Array<any> = [];
   offset : string = "";
   inProgress : boolean = false;
+
+  dragging : boolean = false;
 
 	constructor(public _upload: Upload, public client: Client, public router: Router){
     this.domListeners();
@@ -156,6 +163,30 @@ export class Capture {
       .catch((e) => {
 
       });
+  }
+
+  /**
+   * Make sure the browser doesn't freak
+   */
+  dragover(e){
+    e.preventDefault();
+    this.dragging = true;
+  }
+
+  /**
+   * Tell the app we have stopped dragging
+   */
+  dragleave(e){
+    e.preventDefault();
+    console.log(e);
+    if(e.layerX < 0)
+      this.dragging = false;
+  }
+
+  drop(e){
+    e.preventDefault();
+    this.dragging = false;
+    this.add(e.dataTransfer);
   }
 
 }
