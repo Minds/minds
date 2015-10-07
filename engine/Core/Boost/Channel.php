@@ -99,7 +99,7 @@ class Channel implements Interfaces\BoostHandlerInterface{
         $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
         \Minds\Helpers\Counters::increment($guid, 'remind');
 
-        $activity = new entities\activity();
+        $activity = new Entities\Activity();
         $activity->p2p_boosted = true;
         switch($embeded->type){
             case 'activity':

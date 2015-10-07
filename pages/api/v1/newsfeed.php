@@ -70,7 +70,7 @@ class newsfeed implements Interfaces\api{
                 foreach($boosts as $boost){
                     if($boost && $boost['guid']){
                         $boost_guid = $boost['guid'];
-                        $boost_object = new entities\activity($boost['guid']);
+                        $boost_object = new Entities\Activity($boost['guid']);
                         $boost_object->boosted = true;
                         array_unshift($activity, $boost_object);
                         if(get_input('offset')){
@@ -121,7 +121,7 @@ class newsfeed implements Interfaces\api{
                     }
                 }
 
-                $activity = new entities\activity();
+                $activity = new Entities\Activity();
                 switch($embeded->type){
                     case 'activity':
                         if($embeded->remind_object){
@@ -153,7 +153,7 @@ class newsfeed implements Interfaces\api{
                 return Factory::response(array('guid'=>$activity->guid));
             break;
             default:
-                $activity = new entities\activity();
+                $activity = new Entities\Activity();
                 //error_log(print_r($_POST, true));
                 if(isset($_POST['message']))
                     $activity->setMessage(urldecode($_POST['message']));
@@ -208,7 +208,7 @@ class newsfeed implements Interfaces\api{
 
     public function put($pages){
 
-        $activity = new entities\activity($pages[0]);
+        $activity = new Entities\Activity($pages[0]);
         if(!$activity->guid)
             return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
 
@@ -227,7 +227,7 @@ class newsfeed implements Interfaces\api{
     }
 
     public function delete($pages){
-	$activity = new entities\activity($pages[0]);
+	$activity = new Entities\Activity($pages[0]);
 	if(!$activity->guid)
 		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
 
