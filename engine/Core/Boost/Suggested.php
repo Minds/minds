@@ -5,7 +5,7 @@ namespace Minds\Core\Boost;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Helpers;
-use minds\interfaces;
+use Minds\Interfaces;
 /**
  * Suggested boost handler
  */

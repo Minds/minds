@@ -5,7 +5,7 @@
 namespace minds\plugin\market\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use minds\plugin\market\entities;
 
 class image extends core\page implements Interfaces\page{

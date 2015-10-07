@@ -6,7 +6,7 @@ namespace minds\pages;
 
 use Minds\Core;
 use Minds\Entities;
-use minds\interfaces;
+use Minds\Interfaces;
 
 class icon extends core\page implements Interfaces\page{
 

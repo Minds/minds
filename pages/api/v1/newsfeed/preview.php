@@ -9,7 +9,7 @@ namespace minds\pages\api\v1\newsfeed;
 
 use Minds\Core;
 use Minds\Entities;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class preview implements Interfaces\api{

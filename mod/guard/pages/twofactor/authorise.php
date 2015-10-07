@@ -5,7 +5,7 @@
 namespace minds\plugin\guard\pages\twofactor;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Entities;
 use minds\plugin\guard\lib;
 

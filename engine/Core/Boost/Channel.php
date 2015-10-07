@@ -4,7 +4,7 @@ namespace Minds\Core\Boost;
 
 use Minds\Core;
 use Minds\Core\Data;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Entities;
 
 /**

@@ -11,7 +11,7 @@ use Minds\Core;
 use Minds\Core\Data;
 use Minds\Helpers;
 use Minds\Entities;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class suggested implements Interfaces\api, Interfaces\ApiIgnorePam{

@@ -152,7 +152,7 @@ For example, when you hit http://MYSITE/myplugin, minds will now load your page 
 <?php
 namespace minds\plugin\myplugin\pages;
 
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Core;
 class default extends core\page inherits Interfaces\page{
 	public function get($pages){

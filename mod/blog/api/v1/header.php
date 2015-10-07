@@ -9,7 +9,7 @@ namespace minds\plugin\blog\api\v1;
 
 use Minds\Core;
 use minds\plugin\blog\entities;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class header implements Interfaces\api, Interfaces\ApiIgnorePam{

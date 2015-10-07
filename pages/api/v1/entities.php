@@ -8,7 +8,7 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class entities implements Interfaces\api{

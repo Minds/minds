@@ -3,7 +3,7 @@
 namespace minds\plugin\social\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use minds\plugin\social\services;
 
 class authorize extends core\page implements Interfaces\page{

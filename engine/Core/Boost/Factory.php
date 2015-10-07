@@ -1,7 +1,7 @@
 <?php
 namespace Minds\Core\Boost;
 use Minds\Core\Data;
-use minds\interfaces;
+use Minds\Interfaces;
 
 /**
  * A factory providing handlers boosting items
