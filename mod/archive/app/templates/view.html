@@ -26,6 +26,9 @@
     </div>
     <div class="mdl-cell mdl-cell--6-col minds-actions-block">
       <minds-button-subscribe [user]="entity.ownerObj" *ng-if="entity.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
+      <minds-button-edit [router-link]="['/Archive-Edit', { guid: entity.guid }]" *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid">
+        <button>Edit</button>
+      </minds-button-edit>
       <div class="mdl-layout-spacer"></div>
       <minds-button-remind [object]="entity"></minds-button-remind>
       <minds-button-thumbs-up [object]="entity"></minds-button-thumbs-up>
