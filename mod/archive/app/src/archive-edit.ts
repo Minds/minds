@@ -1,13 +1,13 @@
-import { Component, View, CORE_DIRECTIVES, Inject } from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, Inject, FORM_DIRECTIVES } from 'angular2/angular2';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { Client, Upload } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-
+import { MDL_DIRECTIVES } from 'src/directives/material';
 import { Comments } from 'src/controllers/comments/comments';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
-
+import { MindsTinymce } from 'src/components/editors/tinymce';
 import { ArchiveTheatre } from './views/theatre';
 import { ArchiveGrid } from './views/grid';
 
@@ -17,7 +17,7 @@ import { ArchiveGrid } from './views/grid';
 })
 @View({
   templateUrl: 'templates/plugins/archive/edit.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid ]
+  directives: [ MDL_DIRECTIVES, FORM_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, MindsTinymce, Material, Comments, ArchiveTheatre, ArchiveGrid ]
 })
 
 export class ArchiveEdit {
@@ -25,9 +25,13 @@ export class ArchiveEdit {
   minds;
   session = SessionFactory.build();
   guid : string;
-  entity : any = {};
-  attachment : any;
+  entity : any  = {
+    title: "",
+    description: "",
+    subtype: ""
+  };
   inProgress : boolean;
+  error : string;
 
   constructor(public client: Client,
     public upload: Upload,
@@ -47,8 +51,12 @@ export class ArchiveEdit {
       .then((response : any) => {
         self.inProgress = false;
         console.log(response);
-        if(response.entity)
+        if(response.entity){
+          if (!response.entity.description)
+            response.entity.description = "";
+
           self.entity = response.entity;
+        }
       })
       .catch((e) => {
 
@@ -60,38 +68,11 @@ export class ArchiveEdit {
     this.client.post('api/v1/archive/' + this.guid, this.entity)
       .then((response : any) => {
         console.log(response);
-        if(self.attachment)
-          self.uploadAttachment();
-        //else
-          //self.router.navigate(['/Archive-View', {guid: response.guid}]);
+        self.router.navigate(['/Archive-View', {guid: self.guid}]);
       })
       .catch((e) => {
-
+        this.error ="There was an error while trying to update";
       });
-  }
-
-  addAttachment(file){
-    this.attachment = file ? file.files[0] : null;
-  }
-
-  uploadAttachment(){
-    /**
-     * Give a live preview
-     */
-    var reader  = new FileReader();
-    reader.onloadend = () => {
-      //this.attachment_preview = reader.result;
-    }
-    reader.readAsDataURL(this.attachment);
-
-    /**
-     * Upload to the archive and return the attachment guid
-     */
-    this.upload.post('api/v1/archive', [this.attachment], this.entity)
-      .then((response : any) => {
-
-      });
-
   }
 
 }

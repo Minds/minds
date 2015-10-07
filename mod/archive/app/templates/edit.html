@@ -1,18 +1,11 @@
+<minds-archive-theatre [object]="entity" *ng-if="entity && entity.subtype != 'album'" [hidden]="!entity.subtype || entity.subtype == 'album'"></minds-archive-theatre>
+
 <div class="mdl-grid archive-grid" style="max-width:900px" *ng-if="error">
   <h1>{{error}}</h1>
 </div>
 
 <form (submit)="save()" class="mdl-grid archive-grid" style="max-width:660px">
 
-  <div>
-    <input
-      type="file"
-      id="file"
-      #file
-      (change)="addAttachment(file)"
-    />
-
-  </div>
 
   <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-archive-title" [mdl]>
     <input
@@ -22,6 +15,10 @@
       [(ng-model)]="entity.title"
       />
     <label class="mdl-textfield__label" for="name">{{entity.title}}</label>
+  </div>
+
+  <div class="mdl-cell mdl-cell--12-col" >
+    <minds-tinymce [(content)]="entity.description"></minds-tinymce>
   </div>
 
   <div class="mdl-cell mdl-cell--12-col">
