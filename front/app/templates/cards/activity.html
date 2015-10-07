@@ -21,7 +21,7 @@
 
 <!-- Rich content -->
 <div class="minds-rich-embed" *ng-if="activity.perma_url">
-	<a [href]="activity.perma_url" target="_blank">
+	<a [href]="activity.perma_url" target="_blank" [hidden]="!activity.thumbnail_src">
 		<img [src]="activity.thumbnail_src" />
 	</a>
 	<a [href]="activity.perma_url" target="_blank" class="meta mdl-color-text--blue-grey-900">

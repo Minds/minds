@@ -29,7 +29,8 @@ class start extends Components\Plugin{
         $params = $event->getParameters();
         $export = array();
         $cacher = Core\Data\cache\factory::build();
-				if($params['entity']->type != 'activty')
+
+				if($params['entity']->type != 'activity')
 					return false;
 
         $db = new Core\Data\Call('entities_by_time');
