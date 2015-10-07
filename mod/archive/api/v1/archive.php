@@ -25,7 +25,7 @@ class archive implements Interfaces\api, Interfaces\ApiIgnorePam{
         $response = array();
 
         if(is_numeric($pages[0])){
-            $entity = core\Entities::build(new \Minds\Entities\entity($pages[0]));
+            $entity = core\Entities::build(new \Minds\Entities\Entity($pages[0]));
             Helpers\Counters::increment($pages[0], 'plays');
             if(is_string($pages[1]) && $pages[1] == 'play'){
                 //echo $entity->getSourceUrl('360.mp4'); exit;
@@ -103,7 +103,7 @@ class archive implements Interfaces\api, Interfaces\ApiIgnorePam{
         $guid = $pages[0];
         $album = NULL;
 
-        $entity = core\Entities::build(new \Minds\Entities\entity($guid));
+        $entity = core\Entities::build(new \Minds\Entities\Entity($guid));
 
         if($entity->subtype == 'image'){
             if(isset($_POST['album_guid'])){
@@ -136,7 +136,7 @@ class archive implements Interfaces\api, Interfaces\ApiIgnorePam{
                 }
             }
             $entity->container_guid = $album->guid;
-            $activity = new \Minds\Entities\activity();
+            $activity = new \Minds\Entities\Activity();
                 $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
                         //->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
                     ->setFromEntity($entity)
@@ -160,7 +160,7 @@ class archive implements Interfaces\api, Interfaces\ApiIgnorePam{
 
         if($entity->subtype == 'video'){
 
-            $activity = new \Minds\Entities\activity();
+            $activity = new \Minds\Entities\Activity();
             $activity->setFromEntity($entity)
                 ->setCustom('video', array(
                 'thumbnail_src'=>$entity->getIconUrl(),

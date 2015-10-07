@@ -33,11 +33,11 @@ class subscribe implements Interfaces\api{
                         continue;
                     if(is_numeric($subscriber)){
                         //this is a local, old style subscription
-                        $users[] = new \Minds\Entities\user($guid);
+                        $users[] = new \Minds\Entities\User($guid);
                         continue;
                     } 
                     
-                    $users[] = new \Minds\Entities\user(json_decode($subscriber,true));
+                    $users[] = new \Minds\Entities\User(json_decode($subscriber,true));
                 }
                 $response['users'] = factory::exportable($users);
                 $response['load-next'] = (string) end($users)->guid;
@@ -57,11 +57,11 @@ class subscribe implements Interfaces\api{
                         }
                         if(is_numeric($subscriber)){
                             //this is a local, old style subscription
-                            $users[] = new \Minds\Entities\user($guid);
+                            $users[] = new \Minds\Entities\User($guid);
                             continue;
                         } 
                         
-                        $users[] = new \Minds\Entities\user(json_decode($subscriber,true));
+                        $users[] = new \Minds\Entities\User(json_decode($subscriber,true));
                     }
             
                     $response['users'] = factory::exportable($users);

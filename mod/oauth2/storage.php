@@ -394,7 +394,7 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      */
     public function getUserDetails($username=null){
 	$username = strtolower($username);
-        $user = new \Minds\Entities\user($username);
+        $user = new \Minds\Entities\User($username);
         if($user->guid)
             return array(
                 'user_id' => (string) $user->guid,

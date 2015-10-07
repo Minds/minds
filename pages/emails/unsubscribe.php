@@ -16,7 +16,7 @@ class unsubscribe extends core\page implements Interfaces\page{
 
         \elgg_set_ignore_access();
         $username = $pages[0];
-        $user = new \Minds\Entities\user($username);
+        $user = new \Minds\Entities\User($username);
 
         if($user->getEmail() == $pages[1]){
             $user->disabled_emails = true;

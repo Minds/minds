@@ -19,13 +19,13 @@ class actions extends core\page implements Interfaces\page{
 		$guid = $pages[0];
 		$action = $pages[1];
 		
-		$entity = core\Entities::build(new \Minds\Entities\entity($guid));
+		$entity = core\Entities::build(new \Minds\Entities\Entity($guid));
 		if(!$entity)
             return;
             //throw new \Exception("Entity $guid not found");
 		
-		//if($entity instanceof \Minds\Entities\activity && $entity->entity_guid)
-		//	$entity = core\Entities::build(new \Minds\Entities\entity($entity->entity_guid));
+		//if($entity instanceof \Minds\Entities\Activity && $entity->entity_guid)
+		//	$entity = core\Entities::build(new \Minds\Entities\Entity($entity->entity_guid));
 		
 		switch($action){
 			case "up":

@@ -11,7 +11,7 @@ namespace minds\plugin\market;
 
 use Minds\Core;
 use Minds\Components;
-use Minds\Entities\user;
+use Minds\Entities\User;
 
 class notifications extends Components\Plugin{
 	

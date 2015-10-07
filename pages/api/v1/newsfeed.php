@@ -29,7 +29,7 @@ class newsfeed implements Interfaces\api{
 
         switch($pages[0]){
           case 'single':
-              $activity = new \Minds\Entities\activity($pages[1]);
+              $activity = new \Minds\Entities\Activity($pages[1]);
               return Factory::response(array('activity'=>$activity->export()));
               break;
           default:

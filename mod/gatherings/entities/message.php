@@ -7,7 +7,7 @@
 
 namespace minds\plugin\gatherings\entities;
 
-use Minds\Entities\object;
+use Minds\Entities\Object;
 use minds\plugin\gatherings\helpers;
 
 class message extends object{

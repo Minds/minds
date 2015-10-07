@@ -254,7 +254,7 @@ class start extends \ElggPlugin{
 				$usernames = $matches[1];
 				$to = array();
 				foreach($usernames as $username){
-					$user= new \Minds\Entities\user(strtolower($username));
+					$user= new \Minds\Entities\User(strtolower($username));
 					if($user->guid)
 						$to[] = $user->guid;
 				}

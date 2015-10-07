@@ -9,7 +9,7 @@ namespace minds\plugin\blog\api\v1;
 
 use Minds\Core;
 use minds\plugin\blog\entities;
-use Minds\Entities\user;
+use Minds\Entities\User;
 use minds\interfaces;
 use Minds\Api\Factory;
 

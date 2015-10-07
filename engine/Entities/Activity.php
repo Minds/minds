@@ -228,7 +228,7 @@ class Activity extends Entity{
 	 */
 	public function setOwner($owner){
 		if(is_numeric($owner)){
-			$owner = new \Minds\Entities\user($owner);
+			$owner = new \Minds\Entities\User($owner);
 			$owner = $owner->export();
 		}
 

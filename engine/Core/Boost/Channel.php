@@ -139,7 +139,7 @@ class Channel implements Interfaces\BoostHandlerInterface{
         $db->removeAttributes("boost:channel:$this->guid:review", array($guid));
         $db->removeAttributes("boost:channel:all:review", array("$this->guid:$guid"));
 
-        $entity = new \Minds\Entities\activity($guid);
+        $entity = new \Minds\Entities\Activity($guid);
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
             'to'=>array($entity->owner_guid),
             'object_guid' => $guid,
@@ -172,7 +172,7 @@ class Channel implements Interfaces\BoostHandlerInterface{
         $db->removeAttributes("boost:channel:$this->guid:review", array($guid));
         $db->removeAttributes("boost:channel:all:review", array("$this->guid:$guid"));
 
-        $entity = new \Minds\Entities\activity($guid);
+        $entity = new \Minds\Entities\Activity($guid);
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
             'to'=>array($entity->owner_guid),
             'object_guid' => $guid,
@@ -215,7 +215,7 @@ class Channel implements Interfaces\BoostHandlerInterface{
                 $db->removeAttributes("boost:channel:all:review", array($boost));
                 $db->removeAttributes("boost:channel:$destination:review", array($guid));
 
-                $entity =  new \Minds\Entities\activity($guid);
+                $entity =  new \Minds\Entities\Activity($guid);
 
                 \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $guid, "boost refund");
 
