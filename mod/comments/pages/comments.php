@@ -6,7 +6,7 @@ namespace minds\plugin\comments\pages;
 
 use Minds\Core;
 use Minds\Core\data;
-use minds\interfaces;
+use Minds\Interfaces;
 //use minds\plugin\comments;
 use minds\plugin\comments\entities;
 

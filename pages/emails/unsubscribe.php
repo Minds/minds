@@ -5,7 +5,7 @@
 namespace minds\pages\emails;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 
 class unsubscribe extends core\page implements Interfaces\page{
 

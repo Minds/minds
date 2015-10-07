@@ -5,7 +5,7 @@
 namespace minds\plugin\search\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Entities;
 use minds\plugin\search\services\elasticsearch;
 

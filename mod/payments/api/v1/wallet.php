@@ -8,7 +8,7 @@
 namespace minds\plugin\payments\api\v1;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class wallet implements Interfaces\api{

@@ -5,7 +5,7 @@
 namespace minds\pages\clusters;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Entities;
 
 class index extends core\page implements Interfaces\page{

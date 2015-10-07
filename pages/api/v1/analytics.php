@@ -12,7 +12,7 @@ use Swagger\Annotations as SWG;
 use Minds\Core;
 use Minds\Helpers;
 use Minds\Entities;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class analytics implements Interfaces\api{

@@ -5,7 +5,7 @@
 namespace minds\pages\clusters;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Entities;
 
 class subscriptions extends core\page implements Interfaces\page{

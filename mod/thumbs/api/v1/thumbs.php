@@ -8,7 +8,7 @@
 namespace minds\plugin\thumbs\api\v1;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Entities;
 use Minds\Api\Factory;
 use minds\plugin\thumbs\helpers;

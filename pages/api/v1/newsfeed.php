@@ -10,7 +10,7 @@ namespace minds\pages\api\v1;
 use Minds\Core;
 use Minds\Helpers;
 use Minds\Entities;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class newsfeed implements Interfaces\api{

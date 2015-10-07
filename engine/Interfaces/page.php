@@ -2,7 +2,7 @@
 /**
  * Minds page interfact. All pages implement this class
  */
-namespace minds\interfaces;
+namespace Minds\Interfaces;
 
 interface page{
 	

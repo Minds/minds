@@ -40,7 +40,7 @@
 namespace minds\pages\api;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class api implements Interfaces\api{

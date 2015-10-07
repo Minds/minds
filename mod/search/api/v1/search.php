@@ -8,7 +8,7 @@
 namespace minds\plugin\search\api\v1;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class search implements Interfaces\api{

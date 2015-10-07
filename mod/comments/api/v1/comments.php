@@ -9,7 +9,7 @@ namespace minds\plugin\comments\api\v1;
 
 use Minds\Core;
 use Minds\Core\Data;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class comments implements Interfaces\api{

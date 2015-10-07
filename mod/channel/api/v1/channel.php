@@ -9,7 +9,7 @@ namespace minds\plugin\channel\api\v1;
 
 use Minds\Core;
 use Minds\Helpers;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Entities;
 use Minds\Api\Factory;
 use ElggFile;

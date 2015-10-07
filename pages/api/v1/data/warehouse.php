@@ -9,7 +9,7 @@ namespace minds\pages\api\v1\data;
 
 use Minds\Core;
 use Minds\Entities;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
 class warehouse implements Interfaces\api{

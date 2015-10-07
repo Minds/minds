@@ -5,7 +5,7 @@
 namespace minds\plugin\oauth2\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use minds\plugin\gatherings\entities;
 use minds\plugin\gatherings\helpers;
 use minds\plugin\oauth2\storage;
