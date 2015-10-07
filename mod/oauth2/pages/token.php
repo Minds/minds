@@ -5,7 +5,7 @@
 namespace minds\plugin\oauth2\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use minds\plugin\gatherings\entities;
 use minds\plugin\gatherings\helpers;
 use minds\plugin\oauth2\storage;
@@ -15,7 +15,7 @@ use OAuth2\GrantType\UserCredentials;
 use OAuth2\GrantType\RefreshToken;
 use OAuth2\HttpFoundationBridge\Response as BridgeResponse;
 
-class token extends core\page implements interfaces\page{
+class token extends core\page implements Interfaces\page{
 
     public $csrf = false;	
 	

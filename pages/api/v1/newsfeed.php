@@ -9,11 +9,11 @@ namespace minds\pages\api\v1;
 
 use Minds\Core;
 use Minds\Helpers;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class newsfeed implements interfaces\api{
+class newsfeed implements Interfaces\Api{
 
     /**
      * Returns the newsfeed
@@ -29,7 +29,7 @@ class newsfeed implements interfaces\api{
 
         switch($pages[0]){
           case 'single':
-              $activity = new \Minds\entities\activity($pages[1]);
+              $activity = new \Minds\Entities\Activity($pages[1]);
               return Factory::response(array('activity'=>$activity->export()));
               break;
           default:
@@ -70,7 +70,7 @@ class newsfeed implements interfaces\api{
                 foreach($boosts as $boost){
                     if($boost && $boost['guid']){
                         $boost_guid = $boost['guid'];
-                        $boost_object = new entities\activity($boost['guid']);
+                        $boost_object = new Entities\Activity($boost['guid']);
                         $boost_object->boosted = true;
                         array_unshift($activity, $boost_object);
                         if(get_input('offset')){
@@ -106,7 +106,7 @@ class newsfeed implements interfaces\api{
         //factory::authorize();
         switch($pages[0]){
             case 'remind':
-                $embeded = new entities\entity($pages[1]);
+                $embeded = new Entities\Entity($pages[1]);
                 $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
@@ -121,7 +121,7 @@ class newsfeed implements interfaces\api{
                     }
                 }
 
-                $activity = new entities\activity();
+                $activity = new Entities\Activity();
                 switch($embeded->type){
                     case 'activity':
                         if($embeded->remind_object){
@@ -153,7 +153,7 @@ class newsfeed implements interfaces\api{
                 return Factory::response(array('guid'=>$activity->guid));
             break;
             default:
-                $activity = new entities\activity();
+                $activity = new Entities\Activity();
                 //error_log(print_r($_POST, true));
                 if(isset($_POST['message']))
                     $activity->setMessage(urldecode($_POST['message']));
@@ -208,7 +208,7 @@ class newsfeed implements interfaces\api{
 
     public function put($pages){
 
-        $activity = new entities\activity($pages[0]);
+        $activity = new Entities\Activity($pages[0]);
         if(!$activity->guid)
             return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
 
@@ -227,7 +227,7 @@ class newsfeed implements interfaces\api{
     }
 
     public function delete($pages){
-	$activity = new entities\activity($pages[0]);
+	$activity = new Entities\Activity($pages[0]);
 	if(!$activity->guid)
 		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
 

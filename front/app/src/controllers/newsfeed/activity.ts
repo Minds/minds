@@ -8,6 +8,7 @@ import { BUTTON_COMPONENTS } from 'src/components/buttons';
 import { Boost } from './boost';
 import { Comments } from 'src/controllers/comments/comments';
 import { TagsPipe } from 'src/pipes/tags';
+import { TagsLinks } from 'src/directives/tags';
 import { ScrollFactory } from 'src/services/ux/scroll';
 
 @Component({
@@ -17,7 +18,7 @@ import { ScrollFactory } from 'src/services/ux/scroll';
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
-  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Boost, Comments, Material, Remind, RouterLink],
+  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Boost, Comments, Material, Remind, RouterLink, TagsLinks ],
   pipes: [ TagsPipe ]
 })
 

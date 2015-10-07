@@ -9,12 +9,12 @@ namespace minds\plugin\channel\api\v1;
 
 use Minds\Core;
 use Minds\Helpers;
-use minds\interfaces;
-use minds\entities;
+use Minds\Interfaces;
+use Minds\Entities;
 use Minds\Api\Factory;
 use ElggFile;
 
-class channel implements interfaces\api{
+class channel implements Interfaces\Api{
 
     /**
      * Return channel profile information
@@ -31,7 +31,7 @@ class channel implements interfaces\api{
             $pages[0] = strtolower($pages[0]);
         }
 
-        $user = new entities\user($pages[0]);
+        $user = new Entities\User($pages[0]);
         if(!$user->username){
             return Factory::response(array('status'=>'error', 'message'=>'The user could not be found'));
         }
@@ -63,14 +63,8 @@ class channel implements interfaces\api{
         $carousels = core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
         if($carousels){
             foreach($carousels as $carousel){
-                global $CONFIG;
-                if(!$CONFIG->cdn_url)
-                    $CONFIG->cdn_url = elgg_get_site_url();
-               // else
-                    //$CONFIG->cdn_url .= '/';
-
                $response['channel']['carousels'][] = array(
-                    'src'=> $carousel->ext_bg ? str_replace('/thin', '/fat', $carousel->ext_bg) : $bg =  $CONFIG->cdn_url . "carousel/background/$carousel->guid/$carousel->last_updated/$CONFIG->lastcache/fat"
+                    'src'=> $CONFIG->cdn_url . "fs/v1/banners/$carousel->guid/fat/$carousel->last_updated"
                 );
             }
         }
@@ -135,7 +129,7 @@ class channel implements interfaces\api{
                     //}
                 }catch(\Exception $e){}
 
-                $item = new \minds\entities\carousel();
+                $item = new \Minds\Entities\Carousel();
                 $item->title = '';
                 $item->owner_guid = elgg_get_logged_in_user_guid();
                 $item->access_id = ACCESS_PUBLIC;

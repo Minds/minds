@@ -5,9 +5,9 @@
 
 namespace minds\plugin\notifications\entities;
 
-use minds\entities;
+use Minds\Entities;
 
-class notification extends entities\entity{
+class notification extends Entities\Entity{
 
 	public function initializeAttributes(){
 		parent::initializeAttributes();

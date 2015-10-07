@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1\data;
 
 use Minds\Core;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class warehouse implements interfaces\api{
+class warehouse implements Interfaces\Api{
 
     /**
      * Data warehouse
@@ -36,7 +36,7 @@ class warehouse implements interfaces\api{
     }
     
     public function delete($pages){
-	$activity = new entities\activity($pages[0]); 
+	$activity = new Entities\Activity($pages[0]); 
 	if(!$activity->guid)
 		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));      
  

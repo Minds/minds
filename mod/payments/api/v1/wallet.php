@@ -8,10 +8,10 @@
 namespace minds\plugin\payments\api\v1;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class wallet implements interfaces\api{
+class wallet implements Interfaces\Api{
 
     private $ex_rate = 0.005;
 

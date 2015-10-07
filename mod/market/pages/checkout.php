@@ -5,12 +5,12 @@
 namespace minds\plugin\market\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use minds\plugin\market\entities;
 use minds\plugin\market\notifications;
 use minds\plugin\payments;
 
-class checkout extends core\page implements interfaces\page{
+class checkout extends core\page implements Interfaces\page{
 	
 	/**
 	 * Get requests

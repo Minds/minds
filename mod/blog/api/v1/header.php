@@ -9,10 +9,10 @@ namespace minds\plugin\blog\api\v1;
 
 use Minds\Core;
 use minds\plugin\blog\entities;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class header implements interfaces\api, interfaces\ApiIgnorePam{
+class header implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     /**
      * Returns the conversations or conversation

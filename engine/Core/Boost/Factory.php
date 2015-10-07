@@ -1,7 +1,7 @@
 <?php
 namespace Minds\Core\Boost;
 use Minds\Core\Data;
-use minds\interfaces;
+use Minds\Interfaces;
 
 /**
  * A factory providing handlers boosting items
@@ -19,7 +19,7 @@ class Factory{
         $handler = "Minds\\Core\\Boost\\$handler";
         if(class_exists($handler)){
             $class = new $handler($options, $db);
-            if($class instanceof interfaces\BoostHandlerInterface){
+            if($class instanceof Interfaces\BoostHandlerInterface){
                 return $class;
             }
         }

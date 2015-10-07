@@ -1022,7 +1022,7 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	access_show_hidden_entities($access_status);
 
 	// Create user
-	$user = new Minds\entities\user();
+	$user = new Minds\Entities\User();
 	$user->username = $username;
 	$user->setEmail($email);
 	$user->name = $name;

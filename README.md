@@ -92,21 +92,21 @@ $email = 'mark@minds.com'
 $lookup = new \Minds\Core\Data\lookup();
 
 $guid = $lookup->get($email, array('limit'=>1));
-$user = new \minds\entities\user($guid);
+$user = new \Minds\Entities\User($guid);
 
 ```
 
 --------
 ### Entities
-Elgg's 'classes' folder is large and unstructured. Entities have now been moved to their own folder in **engine/entities** and can be called with the new namespace **minds\entities**.
+Elgg's 'classes' folder is large and unstructured. Entities have now been moved to their own folder in **engine/entities** and can be called with the new namespace **Minds\Entities**.
 
 ```
-use minds\entities;
+use Minds\Entities;
 // load a user
-$user = entities\user('mark);
+$user = Entities\User('mark);
 
 // load an object
-$object = entities\object(1234345662);
+$object = Entities\Object(1234345662);
 ```
 
 --------
@@ -152,9 +152,9 @@ For example, when you hit http://MYSITE/myplugin, minds will now load your page 
 <?php
 namespace minds\plugin\myplugin\pages;
 
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Core;
-class default extends core\page inherits interfaces\page{
+class default extends core\page inherits Interfaces\page{
 	public function get($pages){
 		echo "This is my plugin default page";
 	}

@@ -1,7 +1,7 @@
 <?php
 
 namespace Minds\Api;
-use Minds\interfaces;
+use Minds\Interfaces;
 use Minds\Helpers;
 use Minds\Core\Security;
 /**
@@ -37,7 +37,7 @@ class Factory{
                 $class_name = Routes::$routes[$actual];
                 if(class_exists($class_name)){
                     $handler = new $class_name();
-                    if(!$handler instanceof interfaces\ApiIgnorePam)
+                    if(!$handler instanceof Interfaces\ApiIgnorePam)
                         self::pamCheck();
                     $pages = array_splice($segments, $loop) ?: array();
                     return $handler->$method($pages);
@@ -49,7 +49,7 @@ class Factory{
             $class_name = "\\minds\\pages\\api\\$route";
             if(class_exists($class_name)){
                 $handler = new $class_name();
-                if(!$handler instanceof interfaces\ApiIgnorePam)
+                if(!$handler instanceof Interfaces\ApiIgnorePam)
                     self::pamCheck();
                 $pages = array_splice($segments, $loop) ?: array();
                 return $handler->$method($pages);

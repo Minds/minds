@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class authenticate implements interfaces\api, interfaces\ApiIgnorePam{
+class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     /**
      * NOT AVAILABLE
@@ -38,7 +38,7 @@ class authenticate implements interfaces\api, interfaces\ApiIgnorePam{
             return false;
         }
 
-        $user = new entities\user(strtolower($_POST['username']));
+        $user = new Entities\User(strtolower($_POST['username']));
         if($user->isEnabled() &&
           $user->username &&
           Core\Security\Password::check($user, $_POST['password'])){

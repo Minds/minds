@@ -4,6 +4,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { Activity } from './activity';
+import { TagsLinks } from 'src/directives/tags';
 import { TagsPipe } from 'src/pipes/tags';
 
 @Component({
@@ -13,7 +14,7 @@ import { TagsPipe } from 'src/pipes/tags';
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink],
+  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, TagsLinks],
   pipes: [ TagsPipe ]
 })
 

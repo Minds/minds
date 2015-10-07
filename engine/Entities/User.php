@@ -4,12 +4,12 @@
  * (this will replace the outdated Elgg entity system in the near future)
  */
 
-namespace minds\entities;
+namespace Minds\Entities;
 
 use Minds\Core;
 use Minds\Helpers;
 
-class user extends \ElggUser{
+class User extends \ElggUser{
 
     /**
      * Sets and encrypts a users email address
@@ -136,7 +136,7 @@ class user extends \ElggUser{
         if($this->username != "minds")
             $export['subscribers_count'] = $this->getSubscribersCount();
         $export['subscriptions_count'] = $this->getSubscriptionsCount();
-        $export['impressions'] = Helpers\Counters::get($user->guid, 'impression');
+        $export['impressions'] = Helpers\Counters::get($this->guid, 'impression');
     		return $export;
   	}
 

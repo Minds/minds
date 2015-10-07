@@ -13,7 +13,7 @@ import { InfiniteScroll } from 'src/directives/infinite-scroll';
 })
 @View({
   template: `
-    <a *ng-for="#item of items" [router-link]="['/archive-view', {guid: item.guid}]">
+    <a *ng-for="#item of items" [router-link]="['/Archive-View', {guid: item.guid}]">
       <img src="/archive/thumbnail/{{item.guid}}/large" />
       	<span class="material-icons" [hidden]="item.subtype !='video'">play_circle_outline</span>
     </a>

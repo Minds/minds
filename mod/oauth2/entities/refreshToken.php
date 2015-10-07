@@ -5,10 +5,10 @@
 
 namespace minds\plugin\oauth2\entities;
 
-use minds\entities;
+use Minds\Entities;
 use Minds\Core\data;
 
-class refreshToken extends entities\entity{
+class refreshToken extends Entities\Entity{
 	
 	protected $attributes = array(
 		'type' => 'oauth2',

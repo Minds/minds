@@ -10,7 +10,7 @@ import { Material } from 'src/directives/material';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
 import { Conversation } from './interfaces/entities';
 import { MindsConversationResponse } from './interfaces/responses';
-import { MindsGatheringsSearchResponse } from './interfaces/responses';
+import { MindsUserSearchResponse } from 'src/interfaces/responses';
 
 
 @Component({
@@ -64,7 +64,6 @@ export class Gatherings {
         limit: 12,offset: this.offset, cb: this.cb
       })
       .then((data : MindsConversationResponse) => {
-
         if (!data.conversations) {
           self.hasMoreData = false;
           self.inProgress = false;
@@ -87,18 +86,28 @@ export class Gatherings {
   }
 
   doSearch(query: string) {
+    this.inProgress = true;
     var self = this;
     if (!query){
       this.load(true);
       return true;
     }
+
     console.log("searching " + query);
-    this.client.get('api/v1/search', {q: query,type: 'user',view: 'json'})
-      .then((success : MindsGatheringsSearchResponse) =>{
-        self.conversations = success.user[0];
+    this.client.get('api/v1/search', {
+      q: query,
+      type: 'user',
+      view: 'json',
+      limit: 5
+      }).then((success : MindsUserSearchResponse) =>{
+        if (success.entities){
+          self.conversations = success.entities;
+        }
+        self.inProgress = false;
       })
       .catch((error)=>{
         console.log(error);
+        self.inProgress = false;
       });
   };
 

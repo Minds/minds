@@ -5,10 +5,10 @@
 namespace minds\pages\clusters;
 
 use Minds\Core;
-use minds\interfaces;
-use minds\entities;
+use Minds\Interfaces;
+use Minds\Entities;
 
-class index extends core\page implements interfaces\page{
+class index extends core\page implements Interfaces\page{
 	
 	public function get($pages){
 		

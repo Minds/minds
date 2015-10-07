@@ -2,16 +2,16 @@
 /**
  * Minds API request interface.
  */
-namespace minds\interfaces;
+namespace minds\Interfaces;
 
-interface api{
-	
+interface Api{
+
 	public function get($pages);
-	
+
 	public function post($pages);
-	
+
 	public function put($pages);
-	
+
 	public function delete($pages);
-	
+
 }

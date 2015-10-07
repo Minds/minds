@@ -10,11 +10,11 @@ namespace minds\pages\api\v1\entities;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Helpers;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class suggested implements interfaces\api, interfaces\ApiIgnorePam{
+class suggested implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     /**
      * Returns the entities
@@ -61,6 +61,7 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
             $pages[1] = $pages[0];
 	    $ts = microtime(true);
         switch($pages[1]){
+            case 'videos':
             case 'video':
                 $result= Data\Client::build('Neo4j')->requestRead($prepared->getSuggestedObjects(Core\Session::getLoggedInUser()->guid, 'video', $_GET['skip']));
                 
@@ -83,6 +84,7 @@ class suggested implements interfaces\api, interfaces\ApiIgnorePam{
                     $guids = $trending->getList(array('type'=>'object', 'subtype'=>'kaltura_video', 'limit'=>6));
                 }
                 break;
+            case 'images':
             case 'image':
                 $result= Data\Client::build('Neo4j')->requestRead($prepared->getSuggestedObjects(Core\Session::getLoggedInUser()->guid, 'image', $_GET['skip']));
 

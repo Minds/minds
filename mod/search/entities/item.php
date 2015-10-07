@@ -6,9 +6,9 @@
  
 namespace minds\plugin\search\entities;
 
-use minds\entities;
+use Minds\Entities;
 
-class item extends entities\object{
+class item extends Entities\Object{
 	
 	
 		

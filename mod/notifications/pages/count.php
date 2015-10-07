@@ -5,9 +5,9 @@
 namespace minds\plugin\notifications\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 
-class count extends core\page implements interfaces\page{
+class count extends core\page implements Interfaces\page{
 	
 	public function get($pages){
 

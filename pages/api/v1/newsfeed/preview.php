@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1\newsfeed;
 
 use Minds\Core;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class preview implements interfaces\api{
+class preview implements Interfaces\Api{
 
     /**
      * Returns a preview of a url

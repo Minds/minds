@@ -2,8 +2,9 @@
   <h1>{{error}}</h1>
 </div>
 
+<header [hidden]="!isLocked"></header>
 
-<header  *ng-if="user">
+<header  *ng-if="user" [ng-class]="{'isLocked': isLocked}">
 
   <div class="minds-carousel">
 

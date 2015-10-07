@@ -17,10 +17,6 @@ export interface MindsUserConversationResponse extends MindsResponse{
   'load-next' : string
 }
 
-export interface MindsGatheringsSearchResponse extends MindsResponse{
-  user : Array<any>
-}
-
 export interface MindsKeysResponse extends MindsResponse{
   key ?: string
   password ?: string

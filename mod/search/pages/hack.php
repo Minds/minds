@@ -5,11 +5,11 @@
 namespace minds\plugin\search\pages;
 
 use Minds\Core;
-use minds\interfaces;
-use minds\entities;
+use Minds\Interfaces;
+use Minds\Entities;
 use minds\plugin\search\services\elasticsearch;
 
-class hack extends core\page implements interfaces\page {
+class hack extends core\page implements Interfaces\page {
         
         /**
          * Get requests

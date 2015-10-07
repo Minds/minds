@@ -1,5 +1,5 @@
 <?php
-namespace minds\entities;
+namespace Minds\Entities;
 use Minds\Core;
 use Minds\Core\Data;
 /**

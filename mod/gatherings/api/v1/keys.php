@@ -10,10 +10,10 @@ namespace minds\plugin\gatherings\api\v1;
 use Minds\Core;
 use minds\plugin\gatherings\entities;
 use minds\plugin\gatherings\helpers;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class keys implements interfaces\api{
+class keys implements Interfaces\Api{
 
     /**
      * Returns the private key belonging to a user
@@ -24,7 +24,7 @@ class keys implements interfaces\api{
     public function get($pages){
 
         $response = array();
-       // $_SESSION['user'] = new \Minds\entities\user($_SESSION['user']->guid, false);
+       // $_SESSION['user'] = new \Minds\Entities\User($_SESSION['user']->guid, false);
         $unlock_password = get_input('password');
         $new_password = get_input('new_password');
         $pub = \elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings');

@@ -5,10 +5,10 @@
  
 namespace minds\plugin\payments\entities;
  
-use minds\entities;
+use Minds\Entities;
 use minds\plugin\payments\services\paypal;
 
-class card extends entities\object{
+class card extends Entities\Object{
 	
 	public $card = NULL;
 	

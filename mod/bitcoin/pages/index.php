@@ -3,11 +3,11 @@
 namespace minds\plugin\bitcoin\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 //use minds\plugin\comments;
 use minds\plugin\bitcoin\entities;
 
-class index extends core\page implements interfaces\page{
+class index extends core\page implements Interfaces\page{
 	
 	/**
 	 * Get requests

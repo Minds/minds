@@ -8,10 +8,10 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class entities implements interfaces\api{
+class entities implements Interfaces\Api{
 
     /**
      * Returns the entities

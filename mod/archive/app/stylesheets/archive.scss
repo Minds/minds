@@ -54,10 +54,19 @@ minds-archive-grid{
 
   > a{
     width: 33.333%;
+    position:relative;
     img{
       width: 100%;
       height: auto;
       max-height: 100%;
+    }
+    span{
+      color: #FFF;
+      font-size: 72px !important;
+      text-align: center;
+      width: 100%;
+      position: absolute;
+      top: calc(50% - 36px);
     }
   }
 

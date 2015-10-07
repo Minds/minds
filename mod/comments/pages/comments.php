@@ -6,11 +6,11 @@ namespace minds\plugin\comments\pages;
 
 use Minds\Core;
 use Minds\Core\data;
-use minds\interfaces;
+use Minds\Interfaces;
 //use minds\plugin\comments;
 use minds\plugin\comments\entities;
 
-class comments extends core\page implements interfaces\page{
+class comments extends core\page implements Interfaces\page{
 	
 	/**
 	 * Get requests

@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class register implements interfaces\api, interfaces\ApiIgnorePam{
+class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     /**
      * NOT AVAILABLE
@@ -38,7 +38,7 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
         try{
             $guid = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
             $params = array(
-                'user' => new entities\user($guid),
+                'user' => new Entities\User($guid),
                 'password' => $_POST['password'],
                 'friend_guid' => "",
                 'invitecode' => ""
@@ -65,7 +65,7 @@ class register implements interfaces\api, interfaces\ApiIgnorePam{
 
             //@todo again, maybe in a background task?
             if(isset($_POST['referrer']) && $_POST['referrer']){
-                $user = new entities\user(strtolower(ltrim($_POST['referrer'],'@')));
+                $user = new Entities\User(strtolower(ltrim($_POST['referrer'],'@')));
                 if($user->guid){
                      \Minds\plugin\payments\start::createTransaction($user->guid, 100, $guid, "Referred @" . $_POST['username']);
                 }

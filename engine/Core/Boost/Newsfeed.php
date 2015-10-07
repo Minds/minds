@@ -1,6 +1,6 @@
 <?php
 namespace Minds\Core\Boost;
-use Minds\interfaces\BoostHandlerInterface;
+use Minds\Interfaces\BoostHandlerInterface;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Helpers;
@@ -81,7 +81,7 @@ class Newsfeed implements BoostHandlerInterface{
             //clear the counter for boost_impressions
             //Helpers\Counters::clear($guid, "boost_impressions");
 
-            $entity = new \Minds\entities\activity($boost['guid']);
+            $entity = new \Minds\Entities\Activity($boost['guid']);
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($entity->owner_guid),
                 'object_guid' => $entity->guid,
@@ -109,7 +109,7 @@ class Newsfeed implements BoostHandlerInterface{
 
         $this->db->remove("boost", array('_id'=>$_id));
 
-        $entity = new \Minds\entities\activity($boost['guid']);
+        $entity = new \Minds\Entities\Activity($boost['guid']);
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
             'to'=>array($entity->owner_guid),
             'from'=> 100000000000000519,
@@ -159,7 +159,7 @@ class Newsfeed implements BoostHandlerInterface{
             if($count > $impressions){
                 //remove from boost queue
                 $this->db->remove("boost", array('_id' => $boost['_id']));
-                $entity = new \Minds\entities\activity($boost['guid']);
+                $entity = new \Minds\Entities\Activity($boost['guid']);
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($entity->owner_guid),
                 'from'=> 100000000000000519,

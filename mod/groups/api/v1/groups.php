@@ -10,10 +10,10 @@ namespace minds\plugin\groups\api\v1;
 use Minds\Core;
 use Minds\plugin\groups\entities;
 use Minds\plugin\groups\helpers;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class groups implements interfaces\api{
+class groups implements Interfaces\Api{
 
     /**
      * Returns the conversations or conversation

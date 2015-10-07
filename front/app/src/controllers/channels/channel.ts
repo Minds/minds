@@ -3,6 +3,7 @@ import { Router, ROUTER_DIRECTIVES, RouteParams } from 'angular2/router';
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from 'src/services/session';
+import { ScrollFactory } from 'src/services/ux/scroll';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
 
@@ -29,6 +30,9 @@ export class Channel {
 
   _filter : string = "feed";
   session = SessionFactory.build();
+  scroll = ScrollFactory.build();
+  isLocked : boolean = false;
+
   username : string;
   user : MindsUser;
   feed : Array<Object> = [];
@@ -44,6 +48,7 @@ export class Channel {
       if(params.params['filter'])
         this._filter = params.params['filter'];
       this.load();
+      this.onScroll();
   }
 
   load(){
@@ -106,6 +111,15 @@ export class Channel {
       this.editing = "";
     else
       this.editing = section;
+  }
+
+  onScroll(){
+    var listen = this.scroll.listen((view) => {
+      if(view.top > 250)
+        this.isLocked = true;
+      if(view.top < 250)
+        this.isLocked = false;
+    });
   }
 
   updateField(field : string){

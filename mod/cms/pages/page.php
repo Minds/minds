@@ -3,12 +3,12 @@
 namespace minds\plugin\cms\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 //use minds\plugin\comments;
 use minds\plugin\cms\entities;
 use minds\plugin\cms\exceptions;
 
-class page extends core\page implements interfaces\page{
+class page extends core\page implements Interfaces\page{
 	
 	public $context = 'cms';
 	

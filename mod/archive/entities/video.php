@@ -6,7 +6,7 @@
  */
 namespace minds\plugin\archive\entities;
 
-use minds\entities\object;
+use Minds\Entities\Object;
 use cinemr;
 use Minds\Helpers;
 

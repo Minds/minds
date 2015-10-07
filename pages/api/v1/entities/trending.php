@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1\entities;
 
 use Minds\Core;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class trending implements interfaces\api{
+class trending implements Interfaces\Api{
 
     /**
      * Returns the entities
@@ -57,9 +57,11 @@ class trending implements interfaces\api{
         //temp hack..
         //if(isset($pages[1]) && $pages[1] == 'video')
           //  $pages[1] = 'kaltura_video';
-
+        if(!isset($pages[1]))
+            $pages[1] = $pages[0];
         switch($pages[1]){
             case 'image':
+            case 'images':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
                 $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('image', get_input('offset', 0)));
                 $rows = $result->getRows();
@@ -70,7 +72,7 @@ class trending implements interfaces\api{
                 } 
                 $entities = core\Entities::get(array('guids'=>$guids));       
                 break;
-
+            case 'videos':
             case 'video':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('video', get_input('offset', 0)));
@@ -83,9 +85,7 @@ class trending implements interfaces\api{
                 $entities = core\Entities::get(array('guids'=>$guids));       
                 break;
             default:
-                $opts = array('timespan' => get_input('timespan', 'day'));
-                $trending = new \MindsTrending(array('google'), $opts);
-                $guids = $trending->getList(array('type'=>'user', 'limit'=>12, 'offset'=>get_input('offset', '')));
+                
                 if(!$guids){
                     return Factory::response(array('status'=>'error', 'message'=>'not found'));
                 }

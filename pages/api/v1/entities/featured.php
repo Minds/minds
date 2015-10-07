@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1\entities;
 
 use Minds\Core;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class featured implements interfaces\api{
+class featured implements Interfaces\Api{
 
     /**
      * Returns the entities

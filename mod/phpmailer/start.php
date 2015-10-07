@@ -40,7 +40,7 @@ function phpmailer_notify_handler(ElggEntity $from, ElggUser $to, $subject, $mes
 		throw new NotificationException(sprintf(elgg_echo('NotificationException:MissingParameter'), 'to'));
 	}
     
-    $to = new Minds\entities\user($to);
+    $to = new Minds\Entities\User($to);
 
 
 	if ($to->email == "") {

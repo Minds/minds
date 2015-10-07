@@ -9,7 +9,7 @@ $lu = new Minds\Core\Data\Call('user_index_to_guid');
 $campaign = $argv[1];
 echo "Emailing out $campaign \n";
 
-$users = array(new Minds\entities\user('mark'));
+$users = array(new Minds\Entities\User('mark'));
 
 
 
@@ -25,7 +25,7 @@ while(true){
     echo "Batch: ";
  */
     foreach($users as $guid => $data){
-        $user = new Minds\entities\user($data);
+        $user = new Minds\Entities\User($data);
         if(!$user->guid)
           continue;
 

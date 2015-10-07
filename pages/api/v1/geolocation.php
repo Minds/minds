@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class geolocation implements interfaces\api, interfaces\ApiIgnorePam{
+class geolocation implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     public function get($pages){
 

@@ -10,11 +10,11 @@ namespace minds\pages\api\v1;
 
 use Minds\Core;
 use Minds\Helpers;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class boost implements interfaces\api{
+class boost implements Interfaces\Api{
 
     private $rate = 1;
 
@@ -171,7 +171,7 @@ class boost implements interfaces\api{
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
         }
         $points = reset($guids);
-        $entity = new \Minds\entities\activity($pages[0]);
+        $entity = new \Minds\Entities\Activity($pages[0]);
         \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $pages[0], "boost refund");
     	$ctrl->reject($pages[0]);
     }

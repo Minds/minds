@@ -4,10 +4,10 @@
  */
 namespace minds\plugin\archive\entities;
 
-use minds\entities;
+use Minds\Entities;
 use Minds\Helpers;
 
-class image extends entities\file{
+class image extends Entities\File{
 
 
 	protected function initializeAttributes() {

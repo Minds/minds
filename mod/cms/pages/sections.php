@@ -3,10 +3,10 @@
 namespace minds\plugin\cms\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use minds\plugin\cms\entities;
 
-class sections extends core\page implements interfaces\page{
+class sections extends core\page implements Interfaces\page{
 	
 	public $context = 'cms';
 	

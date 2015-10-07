@@ -9,11 +9,11 @@ namespace minds\plugin\archive\api\v1;
 
 use Minds\Core;
 use Minds\Helpers;
-use minds\interfaces;
+use Minds\Interfaces;
 use minds\plugin\archive\entities;
 use Minds\Api\Factory;
 
-class albums implements interfaces\api{
+class albums implements Interfaces\Api{
 
     /**
      * Return the archive items

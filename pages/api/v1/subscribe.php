@@ -8,11 +8,11 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class subscribe implements interfaces\api{
+class subscribe implements Interfaces\Api{
 
     /**
      * Returns the entities
@@ -33,11 +33,11 @@ class subscribe implements interfaces\api{
                         continue;
                     if(is_numeric($subscriber)){
                         //this is a local, old style subscription
-                        $users[] = new \minds\entities\user($guid);
+                        $users[] = new \Minds\Entities\User($guid);
                         continue;
                     } 
                     
-                    $users[] = new \minds\entities\user(json_decode($subscriber,true));
+                    $users[] = new \Minds\Entities\User(json_decode($subscriber,true));
                 }
                 $response['users'] = factory::exportable($users);
                 $response['load-next'] = (string) end($users)->guid;
@@ -57,11 +57,11 @@ class subscribe implements interfaces\api{
                         }
                         if(is_numeric($subscriber)){
                             //this is a local, old style subscription
-                            $users[] = new \minds\entities\user($guid);
+                            $users[] = new \Minds\Entities\User($guid);
                             continue;
                         } 
                         
-                        $users[] = new \minds\entities\user(json_decode($subscriber,true));
+                        $users[] = new \Minds\Entities\User(json_decode($subscriber,true));
                     }
             
                     $response['users'] = factory::exportable($users);

@@ -40,10 +40,10 @@
 namespace minds\pages\api;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class api implements interfaces\api{
+class api implements Interfaces\Api{
 
 	public function get($pages){
         

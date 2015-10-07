@@ -5,7 +5,7 @@
 namespace minds\plugin\oauth2\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use minds\plugin\oauth2\entities;
 use minds\plugin\oauth2\storage;
 use OAuth2;
@@ -14,7 +14,7 @@ use OAuth2\GrantType\UserCredentials;
 use OAuth2\GrantType\RefreshToken;
 use OAuth2\HttpFoundationBridge\Response as BridgeResponse;
 
-class authorize extends core\page implements interfaces\page{
+class authorize extends core\page implements Interfaces\page{
 	
 	
 	public function get($pages){

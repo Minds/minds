@@ -59,7 +59,7 @@ class Push {
             foreach($jobs as $guid => $job){
                 echo "sending $guid \n";
                 $job = json_decode($job, true);
-                $user = new \Minds\entities\user($job['user_guid'], false); //dont cache... or find a better way to grab token id
+                $user = new \Minds\Entities\User($job['user_guid'], false); //dont cache... or find a better way to grab token id
                 if($user->surge_token)
                     self::send($job['message'], $user->surge_token);
                 echo "Surge token was :: $user->surge_token \n";

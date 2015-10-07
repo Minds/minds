@@ -37,7 +37,7 @@ class Membership{
 
   /**
    * Return the count of members in a group
-   * @param entities\group $group
+   * @param Entities\Group $group
    * @return int
    */
   static public function getMembersCount($group){

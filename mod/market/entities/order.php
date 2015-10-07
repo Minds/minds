@@ -5,11 +5,11 @@
  
 namespace minds\plugin\market\entities;
 
-use minds\entities;
+use Minds\Entities;
 use minds\plugin\market\entities\basket;
 use Minds\Core;
 
-class order extends entities\object{
+class order extends Entities\Object{
 
 	public function initializeAttributes(){
 		parent::initializeAttributes();
@@ -81,8 +81,8 @@ class order extends entities\object{
 	
 	public function getSellerEntity($brief = true){
 		if($this->item['owner'] && $brief)
-			return new \minds\entities\user($this->item['owner']);
+			return new \Minds\Entities\User($this->item['owner']);
 		
-		return new \minds\entities\user($this->item['owner_guid']);
+		return new \Minds\Entities\User($this->item['owner_guid']);
 	}
 }

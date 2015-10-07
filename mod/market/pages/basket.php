@@ -5,10 +5,10 @@
 namespace minds\plugin\market\pages;
 
 use Minds\Core;
-use minds\interfaces;
+use Minds\Interfaces;
 use minds\plugin\market\entities;
 
-class basket extends core\page implements interfaces\page{
+class basket extends core\page implements Interfaces\page{
 	
 	/**
 	 * Get requests

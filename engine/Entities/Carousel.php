@@ -1,13 +1,13 @@
 <?php
 /**
- * Minds object entity. 
+ * Minds object entity.
  * (this will replace the outdated Elgg entity system in the near future)
  */
 
-namespace minds\entities;
+namespace Minds\Entities;
 
-class carousel extends object{
-	
+class Carousel extends Object{
+
 	/**
 	 * Initialise attributes
 	 * @return void
@@ -20,5 +20,5 @@ class carousel extends object{
 			'subtype' => 'carousel'
 		));
 	}
-	
+
 }

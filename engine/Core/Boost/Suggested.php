@@ -5,11 +5,11 @@ namespace Minds\Core\Boost;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Helpers;
-use minds\interfaces;
+use Minds\Interfaces;
 /**
  * Suggested boost handler
  */
-class Suggested implements interfaces\BoostHandlerInterface{
+class Suggested implements Interfaces\BoostHandlerInterface{
 
     private $db;
 
@@ -75,7 +75,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
         $boost = $boost_data->current();
         $accept = $this->db->update("boost", array('_id' => $_id), array('state'=>'approved'));
         if($accept){
-            $entity = \Minds\entities\Factory::build($boost['guid']);
+            $entity = \Minds\Entities\Factory::build($boost['guid']);
             if($entity){
                 $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
@@ -105,7 +105,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
 
         $this->db->remove("boost", array('_id'=>$_id));
 
-        $entity = \Minds\entities\Factory::build($boost['guid']);
+        $entity = \Minds\Entities\Factory::build($boost['guid']);
         if($entity){
             $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
@@ -158,7 +158,7 @@ class Suggested implements interfaces\BoostHandlerInterface{
             if($count > $boost['impressions']){
                 //remove from boost queue
                 $this->db->remove("boost", array('_id' => $boost['_id']));
-                $entity = \Minds\entities\Factory::build($boost['guid']);
+                $entity = \Minds\Entities\Factory::build($boost['guid']);
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($entity->owner_guid),
                 'from' => 100000000000000519,

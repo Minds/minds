@@ -19,7 +19,7 @@ while(true){
     echo "Encrypting";
 
     foreach($users as $guid => $data){
-        $user = new Minds\entities\user($data);
+        $user = new Minds\Entities\User($data);
         $user->setEmail($user->getEmail());
 
         $entities->insert($guid, array('email'=>$user->email));

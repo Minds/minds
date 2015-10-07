@@ -89,13 +89,49 @@
       * Rich embeds
       */
      .minds-rich-embed{
+
+       a{
+         width:100%;
+       }
        img {
          width:100%;
        }
+
        .meta{
          padding:$minds-padding*2;
          display:block;
          text-decoration: none;
+         width: calc(100% - 32px);
+
+         p{
+            font-size:13px;
+            text-overflow: ellipsis;
+            text-rendering: auto;
+            white-space: pre-wrap;
+            overflow: hidden;
+            max-height: 45px;
+         }
+       }
+     }
+
+     .item-image-video{
+       video{
+         width:100%;
+         height:auto;
+       }
+     }
+
+     .is-boosted{
+       color:#888;
+       padding:$minds-padding;
+
+       i{
+         top: 6px;
+          position: relative;
+       }
+       a{
+         color:#888;
+         font-weight:bold;
        }
      }
 
@@ -149,6 +185,22 @@
        margin:-$minds-padding * 2;
        position:relative;
        width:110%;
+
+       .minds-rich-embed{
+         a{
+           width:100%;
+         }
+         img {
+           width:100%;
+         }
+
+         .meta{
+           padding:$minds-padding*2;
+           display:block;
+           text-decoration: none;
+           width: calc(100% - 32px);
+         }
+       }
 
        .mdl-spinner{
          margin: $minds-padding * 2 auto;

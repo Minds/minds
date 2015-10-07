@@ -5,10 +5,10 @@
  
 namespace minds\plugin\bitcoin\entities;
  
-use minds\entities;
+use Minds\Entities;
 use minds\plugin\bitcoin\services\blockchain;
 
-class transaction extends entities\object{
+class transaction extends Entities\Object{
 	
 	/**
 	 * Initialise attributes

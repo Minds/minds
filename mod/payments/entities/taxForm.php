@@ -5,10 +5,10 @@
  
 namespace minds\plugin\payments\entities;
  
-use minds\entities;
+use Minds\Entities;
 use Minds\Core;
 
-class taxForm extends entities\object{
+class taxForm extends Entities\Object{
 	
 	/**
 	 * Initialise attributes

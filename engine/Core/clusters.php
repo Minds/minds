@@ -158,7 +158,7 @@ class clusters extends base{
 		 * @todo maybe integrate OAuth2.0 at the point
 		 */
 		
-		$user = new \minds\entities\user($authenticate['guid']);
+		$user = new \Minds\Entities\User($authenticate['guid']);
 		if(!$user->username){
 			while(get_user_by_username($username)){
 				$username .= rand(1000,9000);
@@ -284,7 +284,7 @@ class clusters extends base{
 	public function syncFeeds($user){
 		
 		//first, lets check that it is an external account
-		if(!$user instanceof \minds\entities\user && !$user->base_node)
+		if(!$user instanceof \Minds\Entities\User && !$user->base_node)
 			return false;
 	
 		foreach(array('network', 'user') as $feed){	
@@ -295,7 +295,7 @@ class clusters extends base{
 			if($data){
 				foreach($data['activity'][''] as $activity){
 					$activity['ownerObj']['base_node'] = $user->base_node;
-					$new = new \minds\entities\activity($activity);
+					$new = new \Minds\Entities\Activity($activity);
 					$new->external = true;
 					$new->node = $user->base_node;
 					$new->indexes = array(
@@ -312,7 +312,7 @@ class clusters extends base{
 	 */
 	public function syncCarousels($user){
 		//first, lets check that it is an external account
-		if(!$user instanceof \minds\entities\user && !$user->base_node)
+		if(!$user instanceof \Minds\Entities\User && !$user->base_node)
 			return false;
 		
 		try{
@@ -321,7 +321,7 @@ class clusters extends base{
 		
 		if($data){
 			foreach($data as $d){
-				$item = new \minds\entities\carousel();
+				$item = new \Minds\Entities\Carousel();
 				$item->guid = $d['guid'];
 				$item->title = $d['title'];
 				$item->href = $d['href'];

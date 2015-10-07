@@ -11,11 +11,11 @@ use Swagger\Annotations as SWG;
 
 use Minds\Core;
 use Minds\Helpers;
-use minds\entities;
-use minds\interfaces;
+use Minds\Entities;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class analytics implements interfaces\api{
+class analytics implements Interfaces\Api{
 
     public function get($pages){
     }

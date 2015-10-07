@@ -4,13 +4,13 @@ namespace Minds\Core\Boost;
 
 use Minds\Core;
 use Minds\Core\Data;
-use minds\interfaces;
-use minds\entities;
+use Minds\Interfaces;
+use Minds\Entities;
 
 /**
  * Channel boost handler
  */
-class Channel implements interfaces\BoostHandlerInterface{
+class Channel implements Interfaces\BoostHandlerInterface{
 
     private $guid;
 
@@ -95,11 +95,11 @@ class Channel implements interfaces\BoostHandlerInterface{
         $db = new Data\Call('entities_by_time');
 
 
-        $embeded = new entities\entity($guid);
+        $embeded = new Entities\Entity($guid);
         $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
         \Minds\Helpers\Counters::increment($guid, 'remind');
 
-        $activity = new entities\activity();
+        $activity = new Entities\Activity();
         $activity->p2p_boosted = true;
         switch($embeded->type){
             case 'activity':
@@ -139,7 +139,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         $db->removeAttributes("boost:channel:$this->guid:review", array($guid));
         $db->removeAttributes("boost:channel:all:review", array("$this->guid:$guid"));
 
-        $entity = new \Minds\entities\activity($guid);
+        $entity = new \Minds\Entities\Activity($guid);
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
             'to'=>array($entity->owner_guid),
             'object_guid' => $guid,
@@ -172,7 +172,7 @@ class Channel implements interfaces\BoostHandlerInterface{
         $db->removeAttributes("boost:channel:$this->guid:review", array($guid));
         $db->removeAttributes("boost:channel:all:review", array("$this->guid:$guid"));
 
-        $entity = new \Minds\entities\activity($guid);
+        $entity = new \Minds\Entities\Activity($guid);
         Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
             'to'=>array($entity->owner_guid),
             'object_guid' => $guid,
@@ -215,7 +215,7 @@ class Channel implements interfaces\BoostHandlerInterface{
                 $db->removeAttributes("boost:channel:all:review", array($boost));
                 $db->removeAttributes("boost:channel:$destination:review", array($guid));
 
-                $entity =  new \Minds\entities\activity($guid);
+                $entity =  new \Minds\Entities\Activity($guid);
 
                 \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $guid, "boost refund");
 

@@ -75,6 +75,7 @@
         "./front/app/src/directives/material.ts",
         "./front/app/src/directives/material/text-field.ts",
         "./front/app/src/directives/material/upload.ts",
+        "./front/app/src/directives/tags.ts",
         "./front/app/src/interfaces/entities.ts",
         "./front/app/src/interfaces/responses.ts",
         "./front/app/src/pipes/tags.ts",

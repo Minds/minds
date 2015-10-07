@@ -49,8 +49,9 @@ class Subscriptions{
         $cacher->set("$to_guid:isSubscriber:$user_guid", true);
         //$cacher->destroy("friendsof:$to_guid");
         //$cacher->destroy("friends:$user_guid");
-        //$cacher->destroy("$to_guid:friendofcount");
-        //$cacher->destroy("$user_guid:friendscount");
+
+        $cacher->destroy("$to_guid:friendsofcount");
+        $cacher->destroy("$user_guid:friendscount");
 
         //\Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
         Events\Dispatcher::trigger('subscribe', 'all', array('user_guid'=>$user_guid, 'to_guid'=>$to_guid));        
@@ -91,6 +92,9 @@ class Subscriptions{
         $cacher->set("$from:isSubscriber:$user", false);
         //$cacher->destroy("friendsof:$from");
         //$cacher->destroy("friends:$user");
+
+        $cacher->destroy("$from:friendsofcount");
+        $cacher->destroy("$user:friendscount");
 
         //\Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
         return (bool) $return;

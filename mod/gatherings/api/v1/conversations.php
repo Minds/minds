@@ -9,10 +9,10 @@ namespace minds\plugin\gatherings\api\v1;
 
 use Minds\Core;
 use minds\plugin\gatherings\entities;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class conversations implements interfaces\api{
+class conversations implements Interfaces\Api{
 
     /**
      * Returns the conversations or conversation

@@ -74,7 +74,7 @@ export class MessengerSetup {
         self.done.next(true);
       })
       .catch((error) =>{
-        this.inProgress = false;
+        self.inProgress = false;
         console.log(error);
       });
   }

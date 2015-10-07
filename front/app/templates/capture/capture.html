@@ -1,4 +1,12 @@
-<div class="mdl-grid capture-grid" style="max-width:900px">
+<div class="drag-animation mdl-color--blue-grey-600 mdl-color-text--blue-grey-50" [hidden]="!dragging">
+  <div class="drop">
+    <i class="material-icons">file_upload</i>
+    <p>Drop your files here</p>
+  </div>
+
+</div>
+
+<div class="mdl-grid capture-grid" style="max-width:900px" >
 
     <div class="mdl-cell mdl-cell--4-col">
 
@@ -46,10 +54,10 @@
 
     </div>
 
-
-
   <!-- Upload output -->
   <div class="mdl-cell mdl-cell--8-col">
+
+
 
     <form class="mdl-card">
       <div class="mdl-card__actions" style="display:flex;">

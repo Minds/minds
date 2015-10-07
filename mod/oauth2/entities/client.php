@@ -5,10 +5,10 @@
 
 namespace minds\plugin\oauth2\entities;
 
-use minds\entities;
+use Minds\Entities;
 use Minds\Core\data;
 
-class client extends entities\object{
+class client extends Entities\Object{
 	
 	protected $attributes = array(
 		'type' => 'object',

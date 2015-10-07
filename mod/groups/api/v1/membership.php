@@ -10,10 +10,10 @@ namespace minds\plugin\groups\api\v1;
 use Minds\Core;
 use Minds\plugin\groups\entities;
 use Minds\plugin\groups\helpers;
-use minds\interfaces;
+use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class membership implements interfaces\api{
+class membership implements Interfaces\Api{
 
     /**
      * Returns the conversations or conversation
@@ -64,7 +64,7 @@ class membership implements interfaces\api{
 
       if(isset($pages[1])){
         //Admin approval
-        $user = new \Minds\entities\user($pages[1]);
+        $user = new \Minds\Entities\User($pages[1]);
         if($group->join($user))
           return Factory::response(array());
       }
@@ -83,7 +83,7 @@ class membership implements interfaces\api{
 
       if(isset($pages[1])){
         //Admin approval
-        helpers\Membership::cancelRequest($group, new \Minds\entities\user($pages[1]));
+        helpers\Membership::cancelRequest($group, new \Minds\Entities\User($pages[1]));
         return Factory::response(array());
       }
 
