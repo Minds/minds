@@ -136,7 +136,7 @@ class User extends \ElggUser{
         if($this->username != "minds")
             $export['subscribers_count'] = $this->getSubscribersCount();
         $export['subscriptions_count'] = $this->getSubscriptionsCount();
-        $export['impressions'] = Helpers\Counters::get($user->guid, 'impression');
+        $export['impressions'] = Helpers\Counters::get($this->guid, 'impression');
     		return $export;
   	}
 
