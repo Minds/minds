@@ -1,5 +1,5 @@
 <div class="mdl-tabs__tab-bar">
-    <a [router-link]="['/Discovery', {filter: _filter, type: 'albums'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': _type == 'albums' || _type == 'all'}">Albums</a>
+    <a [router-link]="['/Discovery', {filter: _filter, type: 'albums'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': _type == 'albums' || _type == 'all'}" [hidden]="_filter != 'owner'">Albums</a>
     <a [router-link]="['/Discovery', {filter: _filter, type: 'videos'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': _type == 'videos' || _type == 'all'}">Videos</a>
     <a [router-link]="['/Discovery', {filter: _filter, type: 'images'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': _type == 'images' || _type == 'all'}">Images</a>
     <a [router-link]="['/Discovery', {filter: _filter, type: 'channels'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': _type == 'channels' || _type == 'all'}" [hidden]="_filter == 'owner'">Channels</a>
