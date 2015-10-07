@@ -22,6 +22,7 @@ export class Poster {
 
   session = SessionFactory.build();
   minds;
+  video: boolean = false;
   loadHandler: EventEmitter = new EventEmitter();
 
   attachment_preview;
@@ -75,6 +76,7 @@ export class Poster {
   uploadAttachment(){
     var self = this;
     var file : any = document.getElementById("file");
+
     console.log(file);
     var fileInfo = file ? file.files[0] : null;
 
@@ -84,6 +86,8 @@ export class Poster {
     /**
      * Give a live preview
      */
+    this.video = this.isVideo(fileInfo.name);
+
     var reader  = new FileReader();
     reader.onloadend = () => {
       this.attachment_preview = reader.result;
@@ -154,6 +158,22 @@ export class Poster {
           }
         });
     }, 600);
+  }
+
+  getExtension(filename) {
+    var parts = filename.split('.');
+    return parts[parts.length - 1];
+  }
+
+  isVideo(filename) {
+    var ext = this.getExtension(filename);
+    switch (ext.toLowerCase()) {
+    case 'mp4':
+    case 'ogg':
+    case 'webm':
+        return true;
+    }
+    return false;
   }
 
 }
