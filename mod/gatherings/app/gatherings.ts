@@ -6,6 +6,7 @@ import { MessengerSetup } from "./messenger-setup";
 import { Storage } from 'src/services/storage';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
+import { BUTTON_COMPONENTS } from 'src/components/buttons';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
 import { Conversation } from './interfaces/entities';
@@ -19,7 +20,7 @@ import { MindsUserSearchResponse } from 'src/interfaces/responses';
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/gatherings.html',
-  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
+  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, BUTTON_COMPONENTS, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
 })
 
 export class Gatherings {
@@ -70,6 +71,9 @@ export class Gatherings {
           return false;
         }
 
+        if(self.conversations.length == 0)
+          self.conversation = data.conversations[0].guid;
+
         if(refresh){
           self.conversations = data.conversations;
         } else {
@@ -111,12 +115,17 @@ export class Gatherings {
       });
   };
 
-
-  doneTyping($event) {
-    if($event.which === 13) {
-      this.doSearch($event.target.value)
-      $event.target.value = null;
+  timeout : any;
+  doneTyping(event) {
+    if(this.timeout)
+      clearTimeout(this.timeout);
+    if(event.keyCode === 13) {
+      this.doSearch(event.target.value);
+      return;
     }
+    this.timeout = setTimeout(() => {
+      this.doSearch(event.target.value);
+    }, 300);
   };
 
 }

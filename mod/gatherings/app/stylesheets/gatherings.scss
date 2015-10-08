@@ -39,7 +39,7 @@ minds-messenger-conversation{
     padding: $minds-padding;
 
     input{
-      width: 90%;
+      width: 80%;
       padding: 12px;
       border: 0;
     }
@@ -107,18 +107,34 @@ minds-gatherings{
 
       .mdl-card{
         min-height:0;
+        width:auto;
         padding:$minds-padding;
 
         a{
           text-decoration: none;
-        }
-        h3{
+          display: block;
           margin: 0;
-          font-size: 16px;
-          line-height: 18px;
+          float: left;
+
+          &.not-subscribed{
+            width: 50%;
+          }
+
+          h3{
+            margin: 0;
+            font-size: 16px;
+            line-height: 18px;
+            width: 100%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+          span{
+            font-size:9px;
+          }
         }
-        span{
-          font-size:10px;
+        minds-button-subscribe{
+          float:right;
         }
       }
   }

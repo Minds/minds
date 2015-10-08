@@ -8,6 +8,7 @@
 namespace minds\plugin\gatherings\api\v1;
 
 use Minds\Core;
+use Minds\Helpers;
 use minds\plugin\gatherings\entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -27,6 +28,19 @@ class conversations implements Interfaces\Api{
         if(isset($pages[0])){
 
             $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
+            $user = \Minds\Entities\Factory::build($pages[0]);
+            $is_subscribed = Core\Session::getLoggedInUser()->isSubscribed($pages[0]);
+            $is_subscriber = $user->isSubscribed(Core\Session::getLoggedInUser()->guid);
+            if(!$is_subscribed || !$is_subscriber){
+              return Factory::response(array(
+                'status'=>'error',
+                'message' => "No mutual subscription",
+                'subscribed' => (bool) $is_subscribed,
+                'subscriber' => (bool) $is_subscriber,
+                'user' => $user->export()
+              ));
+            }
+
             $conversation->clearCount();
             $ik = $conversation->getIndexKeys();
             $guids = core\Data\indexes::fetch("object:gathering:conversation:".$ik[0], array(

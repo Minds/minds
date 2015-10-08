@@ -3,9 +3,9 @@
   <!-- START: SEARCH BAR -->
   <div class="mdl-cell mdl-cell--4-col">
 
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-gatherings-search" [mdl]>
-      <input class="mdl-textfield__input" type="text" id="sample3" (keyup)="doneTyping($event)" />
-      <label class="mdl-textfield__label" for="sample3"><i class="material-icons">search</i> Search users...</label>
+    <div class="mdl-textfield mdl-js-textfield minds-gatherings-search" [mdl]>
+      <input class="mdl-textfield__input" type="text" id="gathering-search" (keyup)="doneTyping($event)" />
+      <label class="mdl-textfield__label" for="gathering-search"><i class="material-icons">search</i> Search users...</label>
     </div>
 
     <!-- START: Users -->
@@ -18,12 +18,13 @@
           </div>
           <div class="minds-body">
             <a [router-link]="['/Messenger-Conversation', {guid: user.guid}]"
-              (click)="conversation = user"
-              [ng-class]="{'mdl-color-text--blue-grey-100': user.guid == conversation, 'mdl-color-text--blue-grey-500': user.guid != conversation}"
+              (click)="conversation = user.guid"
+              [ng-class]="{'mdl-color-text--blue-grey-100': user.guid == conversation, 'mdl-color-text--blue-grey-500': user.guid != conversation, 'not-subscribed': !user.subscribed}"
               >
               <h3>{{user.username}}</h3>
               <span *ng-if="user.last_msg" class="mdl-color-text--grey-500">{{user.last_msg * 1000 | date:'shortTime'}} - {{user.last_msg * 1000 | date:'longDate'}}</span>
             </a>
+            <minds-button-subscribe [user]="user" [hidden]="user.subscribed"></minds-button-subscribe>
           </div>
         </div>
 

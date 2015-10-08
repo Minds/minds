@@ -29,8 +29,13 @@ export class MessengerConversation {
   previous: string;
   hasMoreData: boolean = true;
   inProgress: boolean = false;
+  ready : boolean = false;
   newChat: boolean;
   poll: boolean = true;
+
+  isSubscribed : boolean = true;
+  isSubscriber : boolean = true;
+  user : any;
 
   enabled : boolean = true;
 
@@ -58,7 +63,7 @@ export class MessengerConversation {
   load() {
     var self = this;
     this.inProgress = true;
-    
+
     this.client.get('api/v1/conversations/' + this.guid,
       {
         limit: 6,
@@ -68,8 +73,9 @@ export class MessengerConversation {
         password: this.storage.get('private-key')
       })
       .then((data : MindsUserConversationResponse) =>{
-        
+
         self.inProgress = false;
+        self.ready = true;
 
         if (!data.messages) {
           self.hasMoreData = false;
@@ -83,8 +89,13 @@ export class MessengerConversation {
         self.offset = data['load-previous'];
         self.previous = data['load-next'];
       })
-      .catch(function(error) {
+      .catch((e) => {
+
         self.inProgress = false;
+        self.isSubscribed = e.subscribed;
+        self.isSubscriber = e.subscriber;
+        self.user = e.user;
+
       });
   };
 

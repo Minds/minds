@@ -1,4 +1,14 @@
 <div class="minds-messagenger-messenger">
+
+  <div  class="mdl-card mdl-shadow--2dp minds-messenger-message"  *ng-if="!isSubscriber || !isSubscribed">
+    <div class="mdl-card__supporting-text" [hidden]="isSubscribed">
+      You are not subscribed to @{{user.username}}
+    </div>
+    <div class="mdl-card__supporting-text" [hidden]="isSubscriber">
+      You can only chat with @{{user.username}} when they subscribe to you
+    </div>
+  </div>
+
   <div  class="mdl-card mdl-shadow--2dp minds-messenger-message" *ng-for="#message of messages">
     <div class="minds-block">
       <div class="minds-avatar">
@@ -14,7 +24,7 @@
   </div>
 </div>
 
-<div class="mdl-card minds-gatherings-send">
+<div class="mdl-card minds-gatherings-send" *ng-if="ready && isSubscriber && isSubscribed">
   <input #message
     type="text"
     id="chatText"
