@@ -98,7 +98,7 @@ export class Channel {
           self.inProgress = false;
         })
         .catch(function(e){
-          console.log(e);
+          self.inProgress = false;
         });
   }
 
