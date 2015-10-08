@@ -226,7 +226,8 @@ gulp.task('build.assets.dev', ['build.scss', 'build.js.dev'], function () {
  * Compile index page (Dev)
  */
 gulp.task('build.index.dev', function() {
-  var target = gulp.src(injectableDevAssetsRef(), { read: false });
+  var assets = injectableAssets();
+  var target = gulp.src(assets, { read: false });
   return gulp.src(join(PATH.src.all, 'index.php'))
     .pipe(inject(target, { transform: transformPath('dev') }))
     .pipe(template(templateLocals()))
@@ -300,7 +301,7 @@ gulp.task('bump.reset', function() {
 // Utils.
 
 function transformPath(env) {
-  var v = '?v=' + getVersion();
+  var v = '?v=' + Date.now();
    return function (filepath) {
      var filename = filepath.replace('/' + PATH.dest[env].all, '') + v;
      arguments[0] = join(APP_BASE, filename);
@@ -308,11 +309,12 @@ function transformPath(env) {
    };
 }
 
-function injectableDevAssetsRef() {
+function injectableAssets() {
   var src = PATH.src.lib.map(function(path) {
     return join(PATH.dest.dev.lib, path.split('/').pop());
   });
   src.push(join(PATH.dest.dev.all, '**/*.css'));
+  src.push('front/public/app.js');
   return src;
 }
 

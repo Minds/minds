@@ -48,8 +48,6 @@ ini_set( 'display_errors','1');
 
      <!-- inject:js -->
   	 <!-- endinject -->
-     <script src="app.js"></script>
-
 
     <script>
         <?php
