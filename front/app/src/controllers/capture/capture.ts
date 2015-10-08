@@ -48,7 +48,7 @@ export class Capture {
 
   getAlbums(){
     var self = this;
-    this.client.get('api/v1/entities/all/albums', { limit: 5, offset: this.offset })
+    this.client.get('api/v1/entities/owner/albums', { limit: 5, offset: this.offset })
       .then((response : any) => {
         console.log(response);
         self.albums = response.entities;
