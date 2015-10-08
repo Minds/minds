@@ -56,7 +56,6 @@
       <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="attachment_preview"></div>
       <video *ng-if="type.isVideo"  width="580" height="420" autoplay muted loop>
           <source [src]="attachment_preview" [type]='type.mimeType'>
-	          <p>Your browser doesn't support video preview.</p>
       </video>
       <img *ng-if="!type.isVideo" [src]="attachment_preview" class="attachment-preview"/>
       <div class="attachment-preview-delete">
