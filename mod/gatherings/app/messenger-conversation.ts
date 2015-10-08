@@ -129,6 +129,14 @@ export class MessengerConversation {
     if($event.which === 13) {
       this.send($event.target);
     }
-  };
+  }
+
+  delete(message, index){
+    var self = this;
+    this.client.delete('api/v1/conversations/' + this.guid + '/' + message.guid)
+      .then((response : any) => {
+        delete self.messages[index];
+      });
+  }
 
 }

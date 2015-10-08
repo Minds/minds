@@ -32,6 +32,15 @@ minds-messenger-conversation{
         @include flex(1);
         font-size:10px;
       }
+      .delete{
+        display: none;
+      }
+      &:hover{
+        .delete{
+          display:block;
+          cursor:pointer;
+        }
+      }
     }
   }
 

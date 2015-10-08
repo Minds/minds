@@ -176,6 +176,11 @@ class conversations implements Interfaces\Api{
 
     public function delete($pages){
 
+      $message = \Minds\entities\Factory::build($pages[1]);        
+      if($message->canEdit()){
+          $message->delete();
+      }
+
         return Factory::response(array());
 
     }
