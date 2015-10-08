@@ -9,9 +9,9 @@
       <img src="{{minds.cdn_url}}/icon/{{comment.ownerObj.guid}}/small" />
     </a>
   </div>
-  <div class="minds-body">
+  <div class="minds-body" >
     <a [router-link]="['/Channel', {username: comment.ownerObj.username}]" class="username mdl-color-text--blue-grey-500">{{comment.ownerObj.name}} @{{comment.ownerObj.username}}</a>
-    <p>{{comment.description}}</p>
+    <p [tags]>{{comment.description}}</p>
   </div>
 </div>
 
@@ -35,7 +35,8 @@
               #message
               [(ng-model)]="postMeta.comment"
               placeholder="Enter your comment"
-            ></textarea>
+              (keydown.enter)="post()"
+              [tags] ></textarea>
 
             <button
               type="submit"

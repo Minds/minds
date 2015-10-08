@@ -4,18 +4,18 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
+import { TagsPipe } from 'src/pipes/tags';
+import { TagsLinks } from 'src/directives/tags';
 
 @Component({
   selector: 'minds-comments',
   viewBindings: [ Client ],
-  inputs: ['_object : object', '_reversed : reversed'],
-  host: {
-   'keyup': 'keyup($event)'
-  }
+  inputs: ['_object : object', '_reversed : reversed']
 })
 @View({
   templateUrl: 'templates/comments/list.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll, FORM_DIRECTIVES ]
+  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll, FORM_DIRECTIVES, TagsLinks ],
+  pipes: [ TagsPipe ]
 })
 
 export class Comments {
@@ -83,11 +83,6 @@ export class Comments {
       .catch((e) => {
 
       });
-  }
-
-  keyup(e){
-    if(e.keyCode == 13)
-      this.post();
   }
 
 }
