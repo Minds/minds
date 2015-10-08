@@ -43,7 +43,6 @@ export class Activity {
 	}
 
   set object(value: any) {
-    console.log('value', value);
     if(!value)
       return;
     this.activity = value;
