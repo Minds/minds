@@ -56,4 +56,16 @@ export class BlogView {
       });
   }
 
+  delete(){
+    var self = this;
+    this.client.delete('api/v1/blog' + this.guid)
+      .then((response : any) => {
+        console.log(response);
+        self.router.navigate(['/Blog', {filter: 'owner'}]);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
 }
