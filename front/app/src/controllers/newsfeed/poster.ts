@@ -86,7 +86,10 @@ export class Poster {
     /**
      * Give a live preview
      */
-    this.video = this.isVideo(fileInfo.name);
+    console.log(fileInfo);
+    return false;
+
+    this.video = this.isVideo(fileInfo.type);
 
     var reader  = new FileReader();
     reader.onloadend = () => {
@@ -160,17 +163,12 @@ export class Poster {
     }, 600);
   }
 
-  getExtension(filename) {
-    var parts = filename.split('.');
-    return parts[parts.length - 1];
-  }
-
-  isVideo(filename) {
-    var ext = this.getExtension(filename);
-    switch (ext.toLowerCase()) {
-    case 'mp4':
-    case 'ogg':
-    case 'webm':
+  isVideo(mimeType) {
+    switch (mimeType) {
+    case 'video/mp4':
+    case 'video/ogg':
+    case 'video/webm':
+    case 'video/quicktime':
         return true;
     }
     return false;
