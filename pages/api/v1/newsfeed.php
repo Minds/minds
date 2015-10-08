@@ -199,7 +199,7 @@ class newsfeed implements Interfaces\Api{
                             'description' => isset($_POST['description']) ? $_POST['description'] : null
                         )
                     ));
-                    return Factory::response(array('guid'=>$guid));
+                    return Factory::response(array('guid'=>$guid, 'activity'=> $activity->export()));
                 } else {
                     return Factory::response(array('status'=>'failed', 'message'=>'could not save'));
                 }

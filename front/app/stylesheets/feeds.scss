@@ -149,136 +149,143 @@
     * Post form
     */
    .post{
-     padding:$minds-padding * 2;
+
      margin-bottom:$minds-padding * 2;
      width:100%;
      min-height:0;
-     @include flex-direction(row);
-     @include flex-wrap(wrap);
 
-     .minds-avatar{
-       margin-right:$minds-margin;
-       img{
-         width: 50px;
-         border-radius: 3px;
-       }
-     }
 
-     form{
-       @include flex(1);
-       margin-bottom:0;
+     > div {
+       @include flex-direction(row);
+       @include flex-wrap(wrap);
+       @include flex-display();
+       width: 100%;
+       box-sizing: border-box;
 
-       .mdl-textfield__input{
-         width:100%;
-         padding-top:0;
-         border:0;
-         font-size: 13px;
-         padding: 8px;
-       }
-       .mdl-textfield__input:focus{
-         outline:none;
+       .minds-avatar{
+         margin-right:$minds-margin;
+         img{
+           width: 50px;
+           border-radius: 3px;
+         }
        }
 
-     }
+       form{
+         @include flex(1);
+         margin-bottom:0;
 
-     .post-preview{
-       margin:-$minds-padding * 2;
-       position:relative;
-       width:110%;
-
-       .minds-rich-embed{
-         a{
+         .mdl-textfield__input{
            width:100%;
+           padding-top:0;
+           border:0;
+           font-size: 13px;
+           padding: 8px;
          }
-         img {
-           width:100%;
+         .mdl-textfield__input:focus{
+           outline:none;
          }
 
-         .meta{
-           padding:$minds-padding*2;
-           display:block;
-           text-decoration: none;
-           width: calc(100% - 32px);
-         }
        }
 
-       .mdl-spinner{
-         margin: $minds-padding * 2 auto;
-         display:block;
-       }
-       .attachment-preview{
-         width:100%;
-       }
-       .attachment-preview-delete{
-         display:none;
-       }
-     }
-     .post-preview:hover{
-
-       .attachment-preview-delete{
-          display:block;
-         position:absolute;
-         top:0;
-         left:0;
-         width:100%;
-         height:100%;
-         background:rgba(0,0,0,0.6);
-         align-items: center;
-         -webkit-align-items: center;
-         i{
-          font-size:40px;
-          color:#FFF;
-          top: calc(50% - 20px);
-          left: calc(50% - 20px);
-          position: absolute;
-         }
-       }
-
-     }
-
-     .mdl-card__actions{
-       text-align:right;
-
-       .attachment-button:before{
-         color: #888;
-         font-family:'material icons';
-         content: 'attachment';
-         position: absolute;
-         top: 7px;
-         left: 6px;
-       }
-
-       .attachment-button{
-         display:inline-block;
-         vertical-align:middle;
+       .post-preview{
+         margin:-$minds-padding * 2;
          position:relative;
-         overflow:hidden;
-         cursor:pointer;
+         width:110%;
 
-         i{
-           cursor:pointer;
+         .minds-rich-embed{
+           a{
+             width:100%;
+           }
+           img {
+             width:100%;
+           }
+
+           .meta{
+             padding:$minds-padding*2;
+             display:block;
+             text-decoration: none;
+             width: calc(100% - 32px);
+           }
          }
 
-         input{
-           position: absolute;
-            color: #888;
+         .mdl-spinner{
+           margin: $minds-padding * 2 auto;
+           display:block;
+         }
+         .attachment-preview{
+           width:100%;
+         }
+         .attachment-preview-delete{
+           display:none;
+         }
+       }
+       .post-preview:hover{
+
+         .attachment-preview-delete{
+            display:block;
+           position:absolute;
+           top:0;
+           left:0;
+           width:100%;
+           height:100%;
+           background:rgba(0,0,0,0.6);
+           align-items: center;
+           -webkit-align-items: center;
+           i{
+            font-size:40px;
+            color:#FFF;
+            top: calc(50% - 20px);
+            left: calc(50% - 20px);
             position: absolute;
-            height: 100%;
-            width: 100%;
-            top: 0;
-            left: 0;
-            cursor: pointer;
-            opacity: 0;
+           }
          }
-         input::-webkit-file-upload-button{
+
+       }
+
+       .mdl-card__actions{
+         text-align:right;
+
+         .attachment-button:before{
+           color: #888;
+           font-family:'material icons';
+           content: 'attachment';
+           position: absolute;
+           top: 7px;
+           left: 6px;
+         }
+
+         .attachment-button{
+           display:inline-block;
+           vertical-align:middle;
+           position:relative;
+           overflow:hidden;
            cursor:pointer;
+
+           i{
+             cursor:pointer;
+           }
+
+           input{
+             position: absolute;
+              color: #888;
+              position: absolute;
+              height: 100%;
+              width: 100%;
+              top: 0;
+              left: 0;
+              cursor: pointer;
+              opacity: 0;
+           }
+           input::-webkit-file-upload-button{
+             cursor:pointer;
+           }
+
+         }
+         .mdl-button {
+           width:0;
          }
 
        }
-       .mdl-button {
-         width:0;
-       }
-
      }
 
    }

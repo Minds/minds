@@ -24,6 +24,7 @@ export class Poster {
   minds;
   video: boolean = false;
   loadHandler: EventEmitter = new EventEmitter();
+  inProgress : boolean = false;
 
   attachment_preview;
 
@@ -50,11 +51,11 @@ export class Poster {
 	 */
 	post(){
 		var self = this;
-
+    this.inProgress = true;
     this.client.post('api/v1/newsfeed', this.postMeta)
       .then(function(data){
-  			self.loadHandler.next(true);
-        console.log(data);
+  			self.loadHandler.next(data.activity);
+        self.inProgress = false;
         //reset
         self.postMeta = {
           message: "",
@@ -69,7 +70,7 @@ export class Poster {
         self.attachment_preview = null;
   		})
   		.catch(function(e){
-  			console.log(e);
+  			self.inProgress = false;
   		});
 	}
 

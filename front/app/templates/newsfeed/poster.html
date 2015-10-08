@@ -1,41 +1,41 @@
 <div class="mdl-card mdl-shadow--4dp post" *ng-if="session.isLoggedIn()">
-
-    <div class="minds-avatar">
-      <a [router-link]="['/Channel', {username: session.getLoggedInUser().username}]">
-        <img src="{{minds.cdn_url}}/icon/{{session.getLoggedInUser().guid}}/medium/{{session.getLoggedInUser().icontime}}/" class="mdl-shadow--2dp"/>
-      </a>
-    </div>
-
-    <form #postobj="form" (submit)="post()">
-
-        <textarea
-          ng-control="message"
-          class="mdl-textfield__input"
-          type="text"
-          id="message"
-          #message
-          [(ng-model)]="postMeta.message"
-          (keyup)="getPostPreview(message)"
-          placeholder="Enter your status here"
-        ></textarea>
-
-        <div class="mdl-card__actions">
-          <!-- Attachements -->
-          <div class="attachment-button" [ng-class]="{'mdl-color-text--amber-500': attachment_preview}">
-            <i class="material-icons">attachment</i>
-            <input type="file" type="file" id="file" name="attachment" (change)="uploadAttachment()"/>
-          </div>
-
-          <button
-            type="submit"
-            class="mdl-button"
-            >
-            Post
-          </button>
+    <div class="mdl-card__supporting-text">
+        <div class="minds-avatar">
+          <a [router-link]="['/Channel', {username: session.getLoggedInUser().username}]">
+            <img src="{{minds.cdn_url}}/icon/{{session.getLoggedInUser().guid}}/medium/{{session.getLoggedInUser().icontime}}/" class="mdl-shadow--2dp"/>
+          </a>
         </div>
 
-    </form>
+        <form #postobj="form" (submit)="post()">
 
+            <textarea
+              ng-control="message"
+              class="mdl-textfield__input"
+              type="text"
+              id="message"
+              #message
+              [(ng-model)]="postMeta.message"
+              (keyup)="getPostPreview(message)"
+              placeholder="Enter your status here"
+            ></textarea>
+
+            <div class="mdl-card__actions">
+              <!-- Attachements -->
+              <div class="attachment-button" [ng-class]="{'mdl-color-text--amber-500': attachment_preview}">
+                <i class="material-icons">attachment</i>
+                <input type="file" type="file" id="file" name="attachment" (change)="uploadAttachment()"/>
+              </div>
+
+              <button
+                type="submit"
+                class="mdl-button"
+                >
+                Post
+              </button>
+            </div>
+
+        </form>
+    </div>
     <!-- Rich embed preview -->
     <div class="post-preview" *ng-if="postMeta.active">
       <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="postMeta.title"></div>
@@ -60,5 +60,7 @@
         <i class="material-icons">delete</i>
       </div>
     </div>
+
+    <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate" [mdl] [hidden]="!inProgress"></div>
 
 </div>

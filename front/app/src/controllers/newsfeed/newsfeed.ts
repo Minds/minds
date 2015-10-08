@@ -12,7 +12,8 @@ import { GraphImpressions } from 'src/components/graphs/impressions';
 
 @Component({
   selector: 'minds-newsfeed',
-  viewBindings: [ Client, Upload ]
+  viewBindings: [ Client, Upload ],
+//  inputs: [ "prepend" ]
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
@@ -86,123 +87,12 @@ export class Newsfeed {
 				});
 	}
 
-	/**
-	 * Post to the newsfeed
-	 */
-	post(){
-		var self = this;
-
-    this.client.post('api/v1/newsfeed', this.postMeta)
-      .then(function(data){
-  			self.load(true);
-        console.log(data);
-        //reset
-        self.postMeta = {
-          message: "",
-          title: "",
-          description: "",
-          thumbnail: "",
-          url: "",
-          active: false,
-          attachment_guid: null
-        }
-        self.attachment_preview = null;
-  		})
-  		.catch(function(e){
-  			console.log(e);
-  		});
-	}
-
-  uploadAttachment(){
-    var self = this;
-    var file : any = document.getElementById("file");
-    console.log(file);
-    var fileInfo = file ? file.files[0] : null;
-
-    if(!fileInfo)
-      return;
-
-    /**
-     * Give a live preview
-     */
-    var reader  = new FileReader();
-    reader.onloadend = () => {
-      this.attachment_preview = reader.result;
-    }
-    reader.readAsDataURL(fileInfo);
-
-    /**
-     * Upload to the archive and return the attachment guid
-     */
-    this.upload.post('api/v1/archive', [fileInfo], this.postMeta)
-      .then((response : any) => {
-        self.postMeta.attachment_guid = response.guid;
-      });
-
+  set prepend(activity){
+    this.newsfeed.unshift(activity);
   }
 
-  removeAttachment(){
-    var self = this;
-    var file : any = document.getElementById("file");
-    file.value = "";
-
-    this.attachment_preview = null;
-    this.client.delete('api/v1/archive/' + this.postMeta.attachment_guid)
-      .then((response) => {
-        self.postMeta.attachment_guid = null;
-      });
+  delete(index){
+    alert('asked to delete');
+    delete this.newsfeed[index];
   }
-
-  /**
-   * Get rich embed data
-   */
-  timeout;
-  getPostPreview(message){
-    var self = this;
-
-    var match = message.value.match(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig);
-		if (!match) return;
-    var url;
-
-		if ( match instanceof Array) {
-			url = match[0];
-		} else {
-			url = match;
-		}
-
-		if (!url.length) return;
-
-		url = url.replace("http://", '');
-		url = url.replace("https://", '');
-    console.log('found url was ' + url)
-
-    self.postMeta.active = true;
-
-    if(this.timeout)
-      clearTimeout(this.timeout);
-
-    this.timeout = setTimeout(()=>{
-      this.client.get('api/v1/newsfeed/preview', {url: url})
-        .then((data : any) => {
-          console.log(data);
-          self.postMeta.title = data.meta.title;
-          self.postMeta.url = data.meta.canonical;
-          self.postMeta.description = data.meta.description;
-          for (var link of data.links) {
-              if (link.rel.indexOf('thumbnail') > -1) {
-                  self.postMeta.thumbnail = link.href;
-              }
-          }
-        });
-    }, 600);
-  }
-
-
-
-	/**
-	 * A temporary hack, because pipes don't seem to work
-	 */
-	toDate(timestamp){
-		return new Date(timestamp*1000);
-	}
 }

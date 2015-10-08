@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES, Inject, ElementRef} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, EventEmitter, Inject, ElementRef} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
@@ -14,7 +14,8 @@ import { ScrollFactory } from 'src/services/ux/scroll';
 @Component({
   selector: 'minds-activity',
   viewBindings: [ Client ],
-  properties: ['object']
+  properties: ['object'],
+  outputs: [ '_delete: delete']
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
@@ -34,22 +35,23 @@ export class Activity {
   element : any;
   visible : boolean = false;
 
+  _delete: EventEmitter = new EventEmitter();
+
 	constructor(public client: Client, @Inject(ElementRef) _element: ElementRef){
     this.element = _element.nativeElement;
     this.isVisible();
 	}
 
   set object(value: any) {
+    console.log('value', value);
+    if(!value)
+      return;
     this.activity = value;
-    if(!this.activity['thumbs:up:user_guids'])
-      this.activity['thumbs:up:user_guids'] = [];
-    if(!this.activity['thumbs:down:user_guids'])
-      this.activity['thumbs:down:user_guids'] = [];
   }
 
   delete(){
     this.client.delete('api/v1/newsfeed/'+this.activity.guid);
-    delete this.activity;
+    this._delete.next(true);
   }
 
   openMenu(){

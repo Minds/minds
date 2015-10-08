@@ -2,11 +2,13 @@
 
     <div class="mdl-cell mdl-cell--8-col">
 
-        <minds-newsfeed-poster (load)="load(true)"></minds-newsfeed-poster>
+        <minds-newsfeed-poster [(load)]="prepend"></minds-newsfeed-poster>
 
         <div class="minds-list">
 
-            <minds-activity *ng-for="#activity of newsfeed" [object]="activity" class="mdl-card mdl-shadow--2dp item"></minds-activity>
+            <div *ng-for="#activity of newsfeed; #i = index">
+              <minds-activity *ng-if="activity" [object]="activity" (delete)="delete(i)" class="mdl-card mdl-shadow--2dp item"></minds-activity>
+            </div>
             <infinite-scroll
                 distance="25%"
                 (load)="load()"

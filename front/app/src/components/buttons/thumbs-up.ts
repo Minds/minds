@@ -20,13 +20,17 @@ import { WalletService } from 'src/services/wallet';
 
 export class ThumbsUpButton {
 
-  object;
+  object = {
+    'thumbs:up:user_guids': []
+  };
   session = SessionFactory.build();
 
   constructor(public client : Client, public wallet : WalletService) {
   }
 
   set _object(value : any){
+    if(!value)
+      return;
     this.object = value;
     if(!this.object['thumbs:up:user_guids'])
       this.object['thumbs:up:user_guids'] = [];
