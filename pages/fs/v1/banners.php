@@ -27,8 +27,9 @@ class banners implements Interfaces\FS{
         break;
       case "group":
         $f = new Entities\File();
-			  $f->owner_guid = $entity->owner_guid;
+        $f->owner_guid = $entity->owner_guid;
         $f->setFilename("group/{$entity->guid}.jpg");
+        $filepath = $f->getFilenameOnFilestore();
       case "object":
         break;
     }
