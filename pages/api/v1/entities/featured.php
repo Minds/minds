@@ -64,7 +64,7 @@ class featured implements Interfaces\Api{
                 $subtype = "video";
                 break;
             case "images":
-                $subtype = "images";
+                $subtype = "image";
                 break;
             case "channels":
                 $type = "user";
