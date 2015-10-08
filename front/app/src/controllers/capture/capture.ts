@@ -50,6 +50,8 @@ export class Capture {
     var self = this;
     this.client.get('api/v1/entities/owner/albums', { limit: 5, offset: this.offset })
       .then((response : any) => {
+        if(!response.entities)
+          return;
         console.log(response);
         self.albums = response.entities;
       })
