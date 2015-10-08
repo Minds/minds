@@ -22,6 +22,7 @@
             type="text"
             id="username"
             #username
+            (keydown.enter)="login(username, password)"
             />
             <label class="mdl-textfield__label mdl-color-text--blue-grey-50"  for="username">Username</label>
 
@@ -33,6 +34,7 @@
             type="password"
             id="password"
             #password
+            (keydown.enter)="login(username, password)"
             />
             <label class="mdl-textfield__label mdl-color-text--blue-grey-50" for="password">Password</label>
           </div>
@@ -63,6 +65,7 @@
             type="text"
             id="code"
             #code
+            (keydown.enter)="twofactorAuth(code)"
             />
             <label class="mdl-textfield__label mdl-color-text--blue-grey-50" for="code">Enter your code here</label>
           </div>

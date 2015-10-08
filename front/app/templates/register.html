@@ -52,6 +52,7 @@
                           type="password"
                           id="password2"
                           #password
+                          (keydown.enter)="register(username, password, email)"
                       />
                   <label class="mdl-textfield__label mdl-color-text--blue-grey-50" for="password2">Password (confirm) </label>
             </div>
