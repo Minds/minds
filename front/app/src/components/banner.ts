@@ -11,7 +11,7 @@ import { Material } from 'src/directives/material';
   template: `
   <div class="minds-banner" *ng-if="object">
     <img *ng-if="object.subtype == 'blog' && object.header_bg == 1" src="/api/v1/blog/header/{{object.guid}}"/>
-    <img *ng-if="object.subtype != 'blog' && object.banner" src="{{minds.cdn_url}}/fs/banners/{{object.guid}}"/>
+    <img *ng-if="object.subtype != 'blog' && object.banner" src="{{minds.cdn_url}}/fs/v1/banners/{{object.guid}}"/>
   </div>
   `,
   directives: [ NgIf, RouterLink, Material ]
