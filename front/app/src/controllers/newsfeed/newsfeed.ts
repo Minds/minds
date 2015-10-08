@@ -98,3 +98,5 @@ export class Newsfeed {
     }
   }
 }
+
+export { NewsfeedSingle } from './single';
