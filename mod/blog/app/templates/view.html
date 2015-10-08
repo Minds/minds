@@ -24,8 +24,8 @@
       <minds-button-edit [router-link]="['/Blog-Edit', { guid: blog.guid }]" *ng-if="blog.ownerObj.guid == session.getLoggedInUser().guid || blog.canEdit">
         <button>Edit</button>
       </minds-button-edit>
-      <minds-button-edit (click) ="delete()"  *ng-if="blog.ownerObj.guid == session.getLoggedInUser().guid">
-        <button>Delete</button>
+      <minds-button-edit (click)="delete()"  *ng-if="blog.ownerObj.guid == session.getLoggedInUser().guid">
+        <button>X</button>
       </minds-button-edit>
       <div class="mdl-layout-spacer"></div>
       <minds-button-remind [object]="blog"></minds-button-remind>
