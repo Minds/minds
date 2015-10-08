@@ -57,6 +57,7 @@
         "./front/app/src/controllers/newsfeed/newsfeed.ts",
         "./front/app/src/controllers/newsfeed/poster.ts",
         "./front/app/src/controllers/newsfeed/remind.ts",
+        "./front/app/src/controllers/newsfeed/single.ts",
         "./front/app/src/controllers/notifications/notifications.ts",
         "./front/app/src/controllers/register.ts",
         "./front/app/src/controllers/search/bar.ts",
@@ -123,7 +124,6 @@
         "./front/app/tests/controllers/login_spec.ts",
         "./front/app/typings/_custom.d.ts",
         "./front/app/typings/minds.d.ts",
-        "./tsd_typings/jasmine/jasmine.d.ts",
         "./tsd_typings/systemjs/systemjs.d.ts",
         "./tsd_typings/tsd.d.ts"
     ]
