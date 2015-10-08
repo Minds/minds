@@ -6,8 +6,8 @@
 
         <div class="minds-list">
 
-            <div *ng-for="#activity of newsfeed; #i = index">
-              <minds-activity *ng-if="activity" [object]="activity" (delete)="delete(i)" class="mdl-card mdl-shadow--2dp item"></minds-activity>
+            <div *ng-for="#activity of newsfeed">
+              <minds-activity *ng-if="activity" [object]="activity" (delete)="delete(activity)" class="mdl-card mdl-shadow--2dp item"></minds-activity>
             </div>
             <infinite-scroll
                 distance="25%"

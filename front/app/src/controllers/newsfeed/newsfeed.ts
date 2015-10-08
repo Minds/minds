@@ -91,8 +91,11 @@ export class Newsfeed {
     this.newsfeed.unshift(activity);
   }
 
-  delete(index){
+  delete(activity){
     alert('asked to delete');
-    delete this.newsfeed[index];
+    for(var i in this.newsfeed){
+      if(this.newsfeed[i] == activity)
+        delete this.newsfeed[i];
+    }
   }
 }
