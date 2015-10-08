@@ -25,6 +25,10 @@ class banners implements Interfaces\FS{
         if($carousels)
           $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
         break;
+      case "group":
+        $f = new Entities\File();
+			  $f->owner_guid = $entity->owner_guid;
+        $f->setFilename("group/{$entity->guid}.jpg");
       case "object":
         break;
     }
