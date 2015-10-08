@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES, Inject} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES} from 'angular2/angular2';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { Client } from 'src/services/api';
@@ -28,9 +28,7 @@ export class ArchiveView {
   session = SessionFactory.build();
   inProgress : boolean = true;
 
-  constructor(public client: Client,
-    @Inject(Router) public router: Router,
-    public params: RouteParams){
+  constructor(public client: Client,public router: Router, public params: RouteParams){
       if(params.params['guid'])
         this.guid = params.params['guid'];
       this.minds = window.Minds;
