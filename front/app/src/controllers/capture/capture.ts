@@ -158,10 +158,10 @@ export class Capture {
     });
     this.client.post('api/v1/archive/albums/' + this.postMeta.album_guid, { guids: guids })
       .then((response : any) => {
-      //  self.router.navigate('archive/view/' + this.postMeta.album_guid)
+        self.router.navigate(['/Archive-View', {guid: this.postMeta.album_guid}]);
       })
       .catch((e) => {
-
+          alert("there was a problem.");
       });
   }
 
