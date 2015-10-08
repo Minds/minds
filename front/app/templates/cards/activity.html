@@ -20,7 +20,7 @@
 <div class="mdl-card__supporting-text message" [hidden]="!activity.message" [tags]>{{activity.message | tags}}</div>
 
 <!-- Rich content -->
-<div class="minds-rich-embed" *ng-if="activity.perma_url">
+<div class="minds-rich-embed" *ng-if="activity.perma_url && activity.title">
 	<a [href]="activity.perma_url" target="_blank" *ng-if="activity.thumbnail_src">
 		<img [src]="activity.thumbnail_src" />
 	</a>
