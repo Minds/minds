@@ -19,7 +19,7 @@ export class TagsLinks {
 
   render() {
 
-    if(!this.rendered)
+    if(this.element.classList.contains('rendered') === true)
       return;
 
     var value = this.element.innerHTML;
@@ -37,7 +37,7 @@ export class TagsLinks {
     value = value.replace(at, '$1<a href="/$2" target="_blank" class="mdl-color-text--blue-grey-500">@$2</a>');
 
     this.element.innerHTML = value;
-    this.rendered = true;
+    this.element.className += " rendered";
   }
 
 }
