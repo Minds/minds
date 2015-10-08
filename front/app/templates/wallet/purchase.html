@@ -35,9 +35,9 @@
 <div class="mdl-card mdl-shadow--2dp minds-purchase-card" [hidden]="inProgress || confirmation">
 
   <div class="mdl-card__supporting-text minds-purchase-vendors">
-    <span (click)="card.type = 'amex'">Amex</span>
-    <span (click)="card.type = 'visa'">Visa</span>
-    <span (click)="card.type = 'mastercard'">MasterCard</span>
+    <span (click)="card.type = 'amex'" [ng-class]="{'mdl-color-text--blue-grey-600': card.type == 'amex'}">Amex</span>
+    <span (click)="card.type = 'visa'" [ng-class]="{'mdl-color-text--blue-grey-600': card.type == 'visa'}">Visa</span>
+    <span (click)="card.type = 'mastercard'" [ng-class]="{'mdl-color-text--blue-grey-600': card.type == 'mastercard'}">MasterCard</span>
   </div>
   <div class="mdl-card__supporting-text mdl-grid">
 
