@@ -23,7 +23,7 @@ class notifications implements Interfaces\Api{
 	   $response = array();
 
 	   $db = new \Minds\Core\Data\Call('entities_by_time');
-       $guids = $db->getRow('notifications:'.elgg_get_logged_in_user_guid(), array('limit'=> get_input('limit', 5), 'offset'=>get_input('offset','')));
+       $guids = $db->getRow('notifications:'.elgg_get_logged_in_user_guid(), array('limit'=> get_input('limit', 12), 'offset'=>get_input('offset','')));
        if(get_input('offset')){
         array_shift($guids);
        }
@@ -33,8 +33,8 @@ class notifications implements Interfaces\Api{
             $notifications = core\Entities::get(array('guids'=>$guids));
             $response['notifications'] = factory::exportable($notifications);
             foreach($response['notifications'] as $k => $data){
-                $owner = new \Minds\Entities\User($data['owner_guid']);
-                $from = new \Minds\Entities\User($data['from_guid']);
+           //     $owner = new \Minds\Entities\User($data['owner_guid']);
+                $owner = $from = new \Minds\Entities\User($data['from_guid']);
                 $entity = \Minds\Core\Entities::build(new \Minds\Entities\Entity($data['object_guid']));
                 $response['notifications'][$k]['ownerObj'] = $owner->export();
                 $response['notifications'][$k]['fromObj'] = $from->export();
