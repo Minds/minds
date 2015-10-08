@@ -1,6 +1,7 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
 import { Router } from 'angular2/router';
 
+import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
 import { Upload } from 'src/services/api/upload';
 import { Client } from 'src/services/api/client';
@@ -21,6 +22,7 @@ import { Client } from 'src/services/api/client';
 
 export class Capture {
 
+  session = SessionFactory.build();
   uploads : Array<any> = [];
 
   postMeta : any = {}; //TODO: make this object
@@ -32,8 +34,12 @@ export class Capture {
   dragging : boolean = false;
 
 	constructor(public _upload: Upload, public client: Client, public router: Router){
-    this.domListeners();
-    this.getAlbums();
+    if(!this.session.isLoggedIn()){
+      router.navigate(['/Login']);
+    } else {
+      this.domListeners();
+      this.getAlbums();
+    }
 	}
 
   domListeners(){

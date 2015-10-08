@@ -41,7 +41,8 @@ class start extends Components\Plugin{
 			->setName('Compose')
 			->setTitle('Compose (Blogs)')
 			->setPath('/Blog-Edit')
-			->setParams(array('guid'=>'new'));
+			->setParams(array('guid'=>'new'))
+			->setVisibility(0); //only show for loggedin
 		$featured_link = new Core\Navigation\Item();
 		$featured_link
 			->setPriority(2)
@@ -65,7 +66,8 @@ class start extends Components\Plugin{
 			->setName('My')
 			->setTitle('My (Blogs)')
 			->setPath('/Blog')
-			->setParams(array('filter'=>'owner'));
+			->setParams(array('filter'=>'owner'))
+			->setVisibility(0); //only show for loggedin
 
 		$link = new Core\Navigation\Item();
 		Core\Navigation\Manager::add($link

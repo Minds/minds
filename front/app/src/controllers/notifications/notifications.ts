@@ -1,5 +1,5 @@
 import { Component, View, NgFor, NgIf, NgSwitch, NgSwitchWhen, NgSwitchDefault, Inject, NgClass } from 'angular2/angular2';
-import { RouterLink } from 'angular2/router';
+import { Router, RouterLink } from 'angular2/router';
 import { Client } from 'src/services/api';
 import { SessionFactory } from '../../services/session';
 import { Material } from 'src/directives/material';
@@ -22,8 +22,12 @@ export class Notifications {
   inProgress : boolean = false;
   session = SessionFactory.build();
 
-  constructor(public client: Client){
-    this.load(true);
+  constructor(public client: Client, public router: Router){
+    if(!this.session.isLoggedIn()){
+      router.navigate(['/Login']);
+    } else {
+      this.load(true);
+    }
   }
 
   load(refresh : boolean = false){

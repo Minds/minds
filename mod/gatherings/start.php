@@ -48,6 +48,7 @@ class start extends Components\Plugin{
 				->setName('Messenger')
 				->setTitle('Messenger')
 				->setPath('/Messenger')
+				//->setVisibility(0) //only show for loggedin
 			);
 
 			//@todo move to new oop style

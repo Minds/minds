@@ -5,6 +5,7 @@
   	<a class="mdl-navigation__link mdl-color-text--white"
   		[ng-class]="{'mdl-color--blue-grey-600' : item.active, 'mdl-color--blue-grey-800': !item.active}"
   		[router-link]="[item.path, item.params]"
+      *ng-if="!(!session.isLoggedIn() && item.visibility < 2)"
   		>
 
   		<i class="material-icons" [ng-class]="{'mdl-color-text--blue-grey-100': !item.active, 'mdl-color-text--amber-400' : item.active}">{{item.icon}}</i>
@@ -15,6 +16,7 @@
       <a class="mdl-navigation__link mdl-color-text--white subitem"
         [ng-class]="{'mdl-color--blue-grey-500' : subitem.active, 'mdl-color--blue-grey-700': !subitem.active}"
         [router-link]="[subitem.path, subitem.params]"
+        *ng-if="!(!session.isLoggedIn() && subitem.visibility < 2)"
         >
 
         <i class="material-icons" [ng-class]="{'mdl-color-text--blue-grey-100': !subitem.active, 'mdl-color-text--amber-500' : subitem.active}">{{subitem.icon}}</i>

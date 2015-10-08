@@ -70,7 +70,8 @@ class Manager{
 			->setParams(array(
 				'filter' => 'owner',
 				'type' => ''
-				));
+				))
+			->setVisibility(0); //only show for loggedin
 
 		$discovery = new Item();
 		$discovery->setPriority(3)

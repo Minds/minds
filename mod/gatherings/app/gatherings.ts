@@ -34,17 +34,20 @@ export class Gatherings {
   inProgress : boolean = false;
   cb : Date = new Date();
   search : any = {};
-  minds: Minds;
+  minds: Minds = window.Minds;
   storage: Storage = new Storage();
 
 
   constructor(public client: Client, public router: Router, public params: RouteParams){
-    this.minds = window.Minds;
-    if (params.params && params.params['guid']){
-      this.conversation = params.params['guid'];
+    if(!this.session.isLoggedIn()){
+      router.navigate(['/Login']);
+    } else {
+      if (params.params && params.params['guid']){
+        this.conversation = params.params['guid'];
+      }
+      this.checkSetup();
+      this.load(true);
     }
-    this.checkSetup();
-    this.load(true);
   }
 
   checkSetup(){

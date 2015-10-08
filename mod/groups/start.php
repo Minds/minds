@@ -38,7 +38,8 @@ class start extends Components\Plugin{
 			->setName('My')
 			->setTitle('My (Groups)')
 			->setPath('/Groups')
-			->setParams(array('filter'=>'member'));
+			->setParams(array('filter'=>'member'))
+			->setVisibility(2); //only show for loggedin
 		$create_link = new Core\Navigation\Item();
 		$create_link
 			->setPriority(3)
@@ -46,7 +47,8 @@ class start extends Components\Plugin{
 			->setName('Create')
 			->setTitle('Create (Groups)')
 			->setPath('/Groups-Create')
-			->setParams(array());
+			->setParams(array())
+			->setVisibility(0); //only show for loggedin
 
 		$root_link = new Core\Navigation\Item();
 		Core\Navigation\Manager::add($root_link

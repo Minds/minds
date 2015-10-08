@@ -13,6 +13,7 @@ class Item{
 	private $icon = "home";
 	private $class = "";
 	private $priority = 500;
+	private $visibility = 2;
 	private $extras = array();
 
 	/**
@@ -151,6 +152,24 @@ class Item{
 	}
 
 	/**
+	 * Set the visibility
+	 * @param access_id eg. 2=>PUBLIC 0=>LOGGEDIN
+	 * @return $this
+	 */
+	public function setVisibility($access_id = 2){
+		$this->visibility = $access_id;
+		return $this;
+	}
+
+	/**
+	 * Get visibility
+	 * @return int
+	 */
+	public function getVisibility(){
+		return $this->visibility;
+	}
+
+	/**
 	 * Set extras
 	 * @param array $extras
 	 * @return $this
@@ -186,6 +205,7 @@ class Item{
 			"text" => $this->name,
 			"icon" => $this->icon,
 			"class" => $this->class,
+			"visibility" => $this->visibility,
 			"extras" => $this->extras
 		);
 	}

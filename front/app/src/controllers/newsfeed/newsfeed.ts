@@ -1,5 +1,5 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
-import { ROUTER_DIRECTIVES } from 'angular2/router';
+import { Router, ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
@@ -40,9 +40,13 @@ export class Newsfeed {
     attachment_guid: null
   }
 
-	constructor(public client: Client, public upload: Upload){
-		this.load();
-    this.minds = window.Minds;
+	constructor(public client: Client, public upload: Upload, public router: Router){
+    if(!this.session.isLoggedIn()){
+      router.navigate(['/Login']);
+    } else {
+  		this.load();
+      this.minds = window.Minds;
+    }
 	}
 
 	/**
