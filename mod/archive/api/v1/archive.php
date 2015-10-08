@@ -252,7 +252,10 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
      */
     public function delete($pages){
 
-         return Factory::response();
+        $entity = \Minds\Entities\Factory::build($pages[0]);
+        $entity->delete();
+
+        return Factory::response();
 
     }
 

@@ -149,7 +149,9 @@ class blog implements Interfaces\Api{
     }
 
     public function delete($pages){
-        return Factory::response(array());
+      $blog = new entities\Blog($pages[0]);
+      $blog->delete();
+      return Factory::response(array());
     }
 
 }
