@@ -92,10 +92,9 @@ export class Newsfeed {
   }
 
   delete(activity){
-    alert('asked to delete');
     for(var i in this.newsfeed){
       if(this.newsfeed[i] == activity)
-        delete this.newsfeed[i];
+        this.newsfeed.splice(i,1);
     }
   }
 }
