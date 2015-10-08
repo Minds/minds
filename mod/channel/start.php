@@ -7,6 +7,7 @@
 namespace minds\plugin\channel;
 
 use Minds\Core;
+use Minds\Entities;
 use Minds\Api;
 
 class start extends \ElggPlugin{
@@ -18,12 +19,20 @@ class start extends \ElggPlugin{
 
 		Core\Config::build()->minusername = 2;
 
-		core\Router::registerRoutes(array(
-      '/profile' => "\\minds\\plugin\\channel\\pages\\channel",
-      '/channel' => "\\minds\\plugin\\channel\\pages\\channel",
-			'/channels' => "\\minds\\plugin\\channel\\pages\\directory",
-			'/directory' => "\\minds\\plugin\\channel\\pages\\directory"
-		));
+		Core\SEO\Manager::add('/', function($slugs = array()){
+
+			if(isset($slugs[0]) && is_string($slugs[0])){
+				$user = new Entities\User($slugs[0]);
+				if(!$user->guid)
+					return array();
+
+				return $meta = array(
+					'title' => $user->name,
+					'description' => "Subscribe to @$user->username on Minds. " . strip_tags($user->briefdescription)
+				);
+			}
+
+		});
 
 	  Api\Routes::add('v1/channel', "\\minds\\plugin\\channel\\api\\v1\\channel");
 		\Minds\Core\Events\Dispatcher::register('export:extender', 'all', function($event){

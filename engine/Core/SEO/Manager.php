@@ -47,7 +47,10 @@ class Manager {
         break;
       } else {
         $slugs[] = substr($route, strrpos($route,'/')+1);
-        $route = substr($route, 0, strrpos($route,'/'));
+        if(strrpos($route, '/') === 0)
+          $route = '/';
+        else
+          $route = substr($route, 0, strrpos($route,'/'));
       }
     }
 
