@@ -22,7 +22,10 @@ export class Poster {
 
   session = SessionFactory.build();
   minds;
-  video: boolean = false;
+  type = {
+    isVideo : false,
+    mimeType : ""
+  }
   loadHandler: EventEmitter = new EventEmitter();
   inProgress : boolean = false;
 
@@ -87,7 +90,9 @@ export class Poster {
     /**
      * Give a live preview
      */
-    this.video = this.isVideo(fileInfo.name);
+    console.log(fileInfo);
+
+    this.checkVideoType(fileInfo.type);
 
     var reader  = new FileReader();
     reader.onloadend = () => {
@@ -161,20 +166,11 @@ export class Poster {
     }, 600);
   }
 
-  getExtension(filename) {
-    var parts = filename.split('.');
-    return parts[parts.length - 1];
-  }
-
-  isVideo(filename) {
-    var ext = this.getExtension(filename);
-    switch (ext.toLowerCase()) {
-    case 'mp4':
-    case 'ogg':
-    case 'webm':
-        return true;
+  checkVideoType(mimeType) {
+    if (mimeType.startsWith("video")){
+      this.type.isVideo=true;
+      this.type.mimeType=mimeType;
     }
-    return false;
   }
 
 }
