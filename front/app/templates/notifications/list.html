@@ -51,6 +51,41 @@
                 <span class="minds-blue">{{notification.entityObj.title}}</span>
               </p>
             </a>
+
+            <!-- Blog -->
+            <a *ng-if="notification.entityObj.type == 'blog'"
+              [router-link]="['/Archive-View', {guid: notification.entityObj.guid}]">
+              <p *ng-if="notification.entityObj.owner_guid == session.getLoggedInUser().guid && !notification.entityObj.title">
+                {{notification.fromObj.name}} commented on
+                <span class="minds-blue">your blog</span>
+              </p>
+              <p *ng-if="notification.entityObj.owner_guid != session.getLoggedInUser().guid  && !notification.entityObj.title">
+                {{notification.fromObj.name}} commented on
+                <span class="minds-blue">{{notification.entityObj.ownerObj.name}}'s blog</span>
+              </p>
+              <p *ng-if="notification.entityObj.title">
+                {{notification.fromObj.name}} commented on
+                <span class="minds-blue">{{notification.entityObj.title}}</span>
+              </p>
+            </a>
+
+            <!-- Archive -->
+            <a *ng-if="notification.entityObj.type == 'album'"
+              [router-link]="['/Blog-View', {guid: notification.entityObj.guid}]">
+              <p *ng-if="notification.entityObj.owner_guid == session.getLoggedInUser().guid && !notification.entityObj.title">
+                {{notification.fromObj.name}} commented on
+                <span class="minds-blue">your album</span>
+              </p>
+              <p *ng-if="notification.entityObj.owner_guid != session.getLoggedInUser().guid  && !notification.entityObj.title">
+                {{notification.fromObj.name}} commented on
+                <span class="minds-blue">{{notification.entityObj.ownerObj.name}}'s album</span>
+              </p>
+              <p *ng-if="notification.entityObj.title">
+                {{notification.fromObj.name}} commented on
+                <span class="minds-blue">{{notification.entityObj.title}}</span>
+              </p>
+            </a>
+
             <!-- Default -->
             <a *ng-if="notification.entityObj && notification.entityObj.type != 'object' && notification.entityObj.type != 'activity'">
               <p style="font-style:italic">
