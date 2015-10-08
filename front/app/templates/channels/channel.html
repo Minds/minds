@@ -54,10 +54,10 @@
           <span>Views</span>
           <b>{{user.impressions}}</b>
         </a>
-        <minds-button-subscribe [user]="user" class="mdl-tabs__tab" *ng-if="session.getLoggedInUser().guid != user.guid"></minds-button-subscribe>
-        <a [router-link]="['/Channel-Filter', {username: user.username, filter: 'edit'}]" class="mdl-tabs__tab  mdl-color-text--blue-grey-50" *ng-if="session.getLoggedInUser().guid == user.guid">
-          <span>Edit</span>
-        </a>
+        <minds-button-subscribe [user]="user" class="mdl-tabs__tab" *ng-if="session.isLoggedIn() && session.getLoggedInUser().guid != user.guid"></minds-button-subscribe>
+        <minds-button-edit [router-link]="['/Channel-Filter', {username: user.username, filter: 'edit'}]" class="mdl-tabs__t"  *ng-if="session.getLoggedInUser().guid == user.guid">
+          <button class="material-icons">edit</button>
+        </minds-button-edit>
     </div>
   </div>
 </header>
