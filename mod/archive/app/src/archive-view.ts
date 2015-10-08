@@ -53,13 +53,11 @@ export class ArchiveView {
   delete(){
     var self = this;
     this.inProgress = true;
-    this.client.delete('api/v1/archive' + this.guid, { children: false })
+    this.client.delete('api/v1/archive' + this.guid)
       .then((response : any) => {
         self.inProgress = false;
-        console.log(response);
       })
       .catch((e) => {
-        console.log(error);
       });
   }
 
