@@ -27,8 +27,10 @@ class XSRF{
      * Set the cookie
      * @return void
      */
-    public static function setCookie(){
+    public static function setCookie($force = false){
+        if(!$force && isset($_COOKIE['XSRF-TOKEN']))
+          return;
         $token = self::buildToken();
-        setcookie('XSRF-TOKEN', $token, 0, '/');   
+        setcookie('XSRF-TOKEN', $token, 0, '/');
     }
 }
