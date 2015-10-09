@@ -9,6 +9,7 @@ import { Homepage } from 'src/controllers/homepage';
 import {Login} from './src/controllers/login';
 import {Logout} from './src/controllers/logout';
 import {Register} from './src/controllers/register';
+import {ResetPassword} from './src/controllers/resetPassword';
 import {ComingSoon} from './src/controllers/comingsoon';
 import {Newsfeed, NewsfeedSingle} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';
@@ -34,6 +35,7 @@ import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups'
   { path: '/login', component: Login, as: 'Login' },
   { path: '/logout', component: Logout, as: 'Logout' },
   { path: '/register', component: Register, as: 'Register' },
+  { path: '/reset', component: ResetPassword, as: 'Reset' },
 
   { path: '/newsfeed', component: Newsfeed, as: 'Newsfeed' },
   { path: '/newsfeed/:guid', component: NewsfeedSingle, as: 'Activity' },
