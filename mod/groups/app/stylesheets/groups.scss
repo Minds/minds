@@ -64,7 +64,11 @@ minds-groups-create{
 .groups-tabs{
   max-width: 900px;
   margin: auto;
-  justify-content: left;
+  justify-content: unset !important;
+
+  minds-groups-join-button{
+    padding:$minds-padding $minds-padding*2;
+  }
 }
 
 minds-groups-profile-requests{

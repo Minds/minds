@@ -35,7 +35,7 @@
   <!-- END: Requests filter -->
 
   <!-- Settings Filter -->
-  <minds-groups-profile-settings [group]="group" class="mdl-cell mdl-cell--8-col" *ng-if="filter == 'settings'">
+  <minds-groups-profile-settings [group]="group" class="mdl-cell mdl-cell--8-col" *ng-if="filter == 'settings' && group.owner_guid == session.getLoggedInUser().guid">
   </minds-groups-profile-settings>
   <!-- END: Settings filter -->
 
@@ -48,19 +48,12 @@
       </div>
 
       <!-- Avatars of latest users -->
-      <div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="group.members">
-        <a [router-link]="['/Channel', {username: member.username}]" *ng-for="#member of group.members">
-          <img src="{{minds.cdn_url}}/icon/{{member.guid}}/small"/>
+      <div class="mdl-card__supporting-text mdl-color-text--grey-600" style="min-height:0;">
+        <a *ng-for="#member of group.members" [router-link]="['/Channel', {username: member.username}]" >
+          <img src="/icon/{{member.guid}}/small"/>
         </a>
       </div>
-      <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-        <a [router-link]="['/Groups-Profile', {guid: group.guid, filter: 'members'}]">{{group['members:count']}} Members</a>
-        <a [router-link]="['/Groups-Profile', {guid: group.guid, filter: 'requests'}]">{{group['requests:count']}} Requests </a>
-      </div>
 
-      <div class="mdl-card__actions mdl-card--border">
-        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Add members</a>
-      </div>
     </div>
 
   </div>
